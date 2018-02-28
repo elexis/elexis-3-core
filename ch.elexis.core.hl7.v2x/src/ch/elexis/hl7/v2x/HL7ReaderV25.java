@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,19 +14,23 @@ import ca.uhn.hl7v2.model.AbstractPrimitive;
 import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.model.v25.datatype.CE;
 import ca.uhn.hl7v2.model.v25.datatype.ED;
+import ca.uhn.hl7v2.model.v25.datatype.FN;
 import ca.uhn.hl7v2.model.v25.datatype.FT;
 import ca.uhn.hl7v2.model.v25.datatype.NM;
 import ca.uhn.hl7v2.model.v25.datatype.SN;
 import ca.uhn.hl7v2.model.v25.datatype.ST;
 import ca.uhn.hl7v2.model.v25.datatype.TX;
 import ca.uhn.hl7v2.model.v25.datatype.XAD;
+import ca.uhn.hl7v2.model.v25.datatype.XCN;
 import ca.uhn.hl7v2.model.v25.group.ORU_R01_OBSERVATION;
 import ca.uhn.hl7v2.model.v25.group.ORU_R01_ORDER_OBSERVATION;
+import ca.uhn.hl7v2.model.v25.group.ORU_R01_PATIENT_RESULT;
 import ca.uhn.hl7v2.model.v25.message.ORU_R01;
 import ca.uhn.hl7v2.model.v25.segment.MSH;
 import ca.uhn.hl7v2.model.v25.segment.NTE;
 import ca.uhn.hl7v2.model.v25.segment.OBR;
 import ca.uhn.hl7v2.model.v25.segment.OBX;
+import ca.uhn.hl7v2.model.v25.segment.ORC;
 import ca.uhn.hl7v2.model.v25.segment.PID;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.exceptions.ElexisException;
@@ -37,7 +42,9 @@ import ch.elexis.hl7.HL7Reader;
 import ch.elexis.hl7.model.EncapsulatedData;
 import ch.elexis.hl7.model.LabResultData;
 import ch.elexis.hl7.model.ObservationMessage;
+import ch.elexis.hl7.model.OrcMessage;
 import ch.elexis.hl7.model.TextData;
+import ch.elexis.hl7.util.HL7Helper;
 import ch.elexis.hl7.v26.HL7Constants;
 import ch.elexis.hl7.v26.HL7_ORU_R01;
 import ch.elexis.hl7.v26.Messages;
@@ -50,6 +57,7 @@ public class HL7ReaderV25 extends HL7Reader {
 		super(message);
 	}
 	
+
 	@Override
 	public String getSender() throws ElexisException{
 		String sender;
@@ -69,27 +77,37 @@ public class HL7ReaderV25 extends HL7Reader {
 	public ObservationMessage readObservation(HL7PatientResolver patientResolver,
 		boolean createIfNotFound) throws ElexisException{
 		observation = null;
-		ORU_R01 oru = (ORU_R01) message;
+		// http://hl7-definition.caristix.com:9010/Default.aspx?version=HL7+v2.3&triggerEvent=ORU_R01
+		ORU_R01 oru_r01 = (ORU_R01) message;
 		try {
 			this.patientResolver = patientResolver;
-			setPatient(oru, createIfNotFound);
+			setPatient(oru_r01, createIfNotFound);
 			
-			int obsCount = oru.getPATIENT_RESULT().getORDER_OBSERVATIONReps();
-			for (int idx = 0; idx < obsCount; idx++) {
-				OBR obr = oru.getPATIENT_RESULT().getORDER_OBSERVATION(idx).getOBR();
+			int oderObservationGroupCount = oru_r01.getPATIENT_RESULT().getORDER_OBSERVATIONReps();
+			for (int idx = 0; idx < oderObservationGroupCount; idx++) {
+				ORU_R01_ORDER_OBSERVATION orderObservationGroup =
+					oru_r01.getPATIENT_RESULT().getORDER_OBSERVATION(idx);
+				OBR obr = orderObservationGroup.getOBR();
 				String obrObservationDateTime =
 					obr.getObr7_ObservationDateTime().getTs1_Time().getValue();
 				
-				setOrderComment(oru, idx, obrObservationDateTime);
+				setOrderComment(oru_r01, idx, obrObservationDateTime);
 				
-				for (int i = 0; i < oru.getPATIENT_RESULT().getORDER_OBSERVATION(idx)
-					.getOBSERVATIONReps(); i++) {
-					ORU_R01_ORDER_OBSERVATION obs =
-						oru.getPATIENT_RESULT().getORDER_OBSERVATION(idx);
-					// get notes and comments
-					String commentNTE = getComments(obs, i);
+				int observationGroupCount = orderObservationGroup.getOBSERVATIONReps();
+				for (int i = 0; i < observationGroupCount; i++) {
+					ORU_R01_OBSERVATION observationGroup = orderObservationGroup.getOBSERVATION(i);
 					
-					// groupe and sequence
+					OBX obx = observationGroup.getOBX();
+					if ("MAT"
+						.equals(obx.getObservationIdentifier().getCe1_Identifier().toString())) {
+						// we skip the material entry
+						continue;
+					}
+					
+					// get notes and comments
+					String commentNTE = getComments(orderObservationGroup, i);
+					
+					// group and sequence
 					String group = "";
 					String sequence = "";
 					for (int k = 0; k < 2; k++) {
@@ -106,7 +124,7 @@ public class HL7ReaderV25 extends HL7Reader {
 					}
 					
 					// result
-					readOBXResults(obs.getOBSERVATION(i), commentNTE, group, sequence,
+					readOBXResults(observationGroup, obr, commentNTE, group, sequence,
 						obrObservationDateTime);
 				}
 			}
@@ -281,9 +299,9 @@ public class HL7ReaderV25 extends HL7Reader {
 		return commentNTE;
 	}
 	
-	private void readOBXResults(ORU_R01_OBSERVATION obs, String commentNTE, String group,
-		String sequence, String defaultDateTime) throws ParseException{
-		OBX obx = obs.getOBX();
+	private void readOBXResults(ORU_R01_OBSERVATION observationGroup, OBR obr, String commentNTE,
+		String group, String sequence, String defaultDateTime) throws ParseException{
+		OBX obx = observationGroup.getOBX();
 		String valueType = obx.getObx2_ValueType().getValue();
 		String name = "";
 		String itemCode = "";
@@ -291,7 +309,7 @@ public class HL7ReaderV25 extends HL7Reader {
 		String range = "";
 		String observationTime = "";
 		String status = "";
-		boolean flag = false;
+		Boolean flag;
 		
 		if (valueType != null && valueType.equals(HL7Constants.OBX_VALUE_TYPE_ED)) {
 			String observationId =
@@ -312,13 +330,7 @@ public class HL7ReaderV25 extends HL7Reader {
 			observation.add(new EncapsulatedData(filename, encoding, data, observationTime,
 				commentNTE, group, sequence));
 		} else if (valueType != null && isTextOrNumeric(valueType)) {
-			name = obx.getObx4_ObservationSubID().getValue();
-			if (name == null) {
-				name = obx.getObx3_ObservationIdentifier().getCe2_Text().getValue();
-				if (name == null) {
-					name = obx.getObx3_ObservationIdentifier().getCe1_Identifier().getValue();
-				}
-			}
+			name = determineName(obx, obr);
 			String value = "";
 			Object tmp = obx.getObx5_ObservationValue(0).getData();
 			
@@ -348,7 +360,8 @@ public class HL7ReaderV25 extends HL7Reader {
 			
 			LabResultData lrd =
 				new LabResultData(itemCode, name, unit, value, range, flag, defaultDateTime,
-					observationTime, commentNTE, group, sequence, status);
+					observationTime, commentNTE, group, sequence, status,
+					extractName(obx.getObx4_ObservationSubID()));
 			
 			if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_NM)
 				|| valueType.equals(HL7Constants.OBX_VALUE_TYPE_SN)) {
@@ -363,5 +376,59 @@ public class HL7ReaderV25 extends HL7Reader {
 		} else {
 			logger.error(MessageFormat.format("Value type {0} is not implemented!", valueType));
 		}
+	}
+	
+	private String determineName(OBX obx, OBR obr){
+		String prefix = "";
+		ST ce2_Text = obr.getUniversalServiceIdentifier().getCe2_Text();
+		if (ce2_Text != null && StringUtils.isNotBlank(ce2_Text.toString())) {
+			prefix = ce2_Text.toString() + " - ";
+		}
+		
+		List<String> possibleNames = new ArrayList<>();
+		possibleNames.add(prefix + obx.getObx4_ObservationSubID().getValue());
+		possibleNames.add(prefix + obx.getObx3_ObservationIdentifier().getCe2_Text().getValue());
+		possibleNames
+			.add(prefix + obx.getObx3_ObservationIdentifier().getCe1_Identifier().getValue());
+		return HL7Helper.determineName(possibleNames);
+	}
+	
+	@Override
+	public OrcMessage getOrcMessage(){
+		try {
+			ORU_R01 oru = (ORU_R01) message;
+			if (oru != null) {
+				ORU_R01_PATIENT_RESULT pr = oru.getPATIENT_RESULT();
+				if (pr != null) {
+					ORU_R01_ORDER_OBSERVATION oo = pr.getORDER_OBSERVATION();
+					if (oo != null) {
+						return extractOrc(oo.getORC());
+					}
+				}
+			}
+		} catch (Exception e) {
+			LoggerFactory.getLogger(HL7Reader.class).warn("orc parsing failed", e);
+		}
+		return null;
+	}
+
+	private OrcMessage extractOrc(ORC orc) throws HL7Exception{
+		if (orc != null) {
+			OrcMessage orcMessage = new OrcMessage();
+			XCN[] ops = orc.getOrderingProvider();
+			for (XCN op : ops) {
+				FN fn = op.getFamilyName();
+				ST familyName = null;
+				if (fn != null) {
+					familyName = fn.getSurname();
+					if (familyName == null) {
+						familyName = fn.getOwnSurname();
+					}
+				}
+				addNameValuesToOrcMessage(op.getGivenName(), familyName, orcMessage);
+			}
+			return orcMessage;
+		}
+		return null;
 	}
 }

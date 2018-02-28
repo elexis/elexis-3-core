@@ -58,7 +58,7 @@ public class ScriptUtil {
 			ref = Konsultation.getAktuelleKons();
 		}
 		for (IConfigurationElement ic : Extensions
-			.getExtensions(ExtensionPointConstantsData.DATA_ACCESS)) {
+			.getExtensions(ExtensionPointConstantsData.DATA_ACCESS, "DataAccess")) {
 			String icName = ic.getAttribute("name");
 			if (icName.equals(plugin)) {
 				IDataAccess ida;

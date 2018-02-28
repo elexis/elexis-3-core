@@ -204,6 +204,13 @@ public class MedicationTableViewerItem {
 		return image != null ? image : Images.IMG_EMPTY_TRANSPARENT.getImage();
 	}
 	
+	/**
+	 * Resolve the properties, blocks until resolved.
+	 */
+	public void resolve(){
+		new ResolveLazyFieldsRunnable(null, this).run();
+	}
+	
 	private static class ResolveLazyFieldsRunnable implements Runnable {
 		private MedicationTableViewerItem item;
 		private StructuredViewer viewer;
@@ -227,16 +234,18 @@ public class MedicationTableViewerItem {
 		}
 		
 		private void updateViewer(){
-			Control control = viewer.getControl();
-			if (control != null && !control.isDisposed()) {
-				viewer.getControl().getDisplay().asyncExec(new Runnable() {
-					@Override
-					public void run(){
-						if (!control.isDisposed() && control.isVisible()) {
-							viewer.update(item, null);
+			if (viewer != null) {
+				Control control = viewer.getControl();
+				if (control != null && !control.isDisposed()) {
+					viewer.getControl().getDisplay().asyncExec(new Runnable() {
+						@Override
+						public void run(){
+							if (!control.isDisposed() && control.isVisible()) {
+								viewer.update(item, null);
+							}
 						}
-					}
-				});
+					});
+				}
 			}
 		}
 		
@@ -308,22 +317,22 @@ public class MedicationTableViewerItem {
 		}
 		
 		private void resolvePrescriptorLabel(){
+			
+			item.prescriptorLabel = "";
 			if (item.prescriptorId != null && !item.prescriptorId.isEmpty()) {
-				Anwender prescriptor = Anwender.load(item.prescriptorId);
-				if (prescriptor != null && prescriptor.exists()) {
-					item.prescriptorLabel = prescriptor.getKuerzel();
-					if (item.prescriptorLabel == null || item.prescriptorLabel.isEmpty()) {
-						Query<User> query = new Query<>(User.class);
-						query.add(User.FLD_ASSOC_CONTACT, Query.EQUALS, item.prescriptorId);
-						List<User> users = query.execute();
-						if (!users.isEmpty()) {
-							item.prescriptorLabel = users.get(0).getId();
-						}
+				Query<User> query = new Query<>(User.class);
+				query.add(User.FLD_ASSOC_CONTACT, Query.EQUALS, item.prescriptorId);
+				List<User> users = query.execute();
+				if (!users.isEmpty()) {
+					item.prescriptorLabel = users.get(0).getId();
+				}
+				if (item.prescriptorLabel == null || item.prescriptorLabel.isEmpty()) {
+					Anwender prescriptor = Anwender.load(item.prescriptorId);
+					if (prescriptor != null && prescriptor.exists()) {
+						item.prescriptorLabel = prescriptor.getKuerzel();
 					}
-					return;
 				}
 			}
-			item.prescriptorLabel = "";
 		}
 		
 		private void resolveDisposalComment(){

@@ -67,6 +67,11 @@
             id="ch.elexis.userSetting2"
             name="%page.name.2">
       </page>
+      <page
+            class="ch.elexis.core.ui.contacts.preferences.BezugsKontaktSettings"
+            id="ch.elexis.bezugskontaktSettings"
+            name="Bezugskontakt">
+      </page>
    </extension>
    <extension
          point="org.eclipse.ui.menus">

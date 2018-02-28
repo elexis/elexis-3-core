@@ -76,7 +76,7 @@ public class MahnlaufCommand extends AbstractHandler {
 			rn.setStatus(RnStatus.MAHNUNG_1);
 			if (!betrag.isZero()) {
 				rn.addZahlung(new Money(betrag).multiply(-1.0),
-					Messages.MahnlaufCommand_Mahngebuehr1, null);
+					ch.elexis.data.Messages.Rechnung_Mahngebuehr1, null);
 			}
 		}
 		// 1. Mahnung zu 2. Mahnung
@@ -98,7 +98,7 @@ public class MahnlaufCommand extends AbstractHandler {
 			rn.setStatus(RnStatus.MAHNUNG_2);
 			if (!betrag.isZero()) {
 				rn.addZahlung(new Money(betrag).multiply(-1.0),
-					Messages.MahnlaufCommand_Mahngebuehr2, null);
+					ch.elexis.data.Messages.Rechnung_Mahngebuehr2, null);
 			}
 		}
 		// 2. Mahnung zu 3. Mahnung
@@ -120,7 +120,7 @@ public class MahnlaufCommand extends AbstractHandler {
 			rn.setStatus(RnStatus.MAHNUNG_3);
 			if (!betrag.isZero()) {
 				rn.addZahlung(new Money(betrag).multiply(-1.0),
-					Messages.MahnlaufCommand_Mahngebuehr3, null);
+					ch.elexis.data.Messages.Rechnung_Mahngebuehr3, null);
 			}
 		}
 	}

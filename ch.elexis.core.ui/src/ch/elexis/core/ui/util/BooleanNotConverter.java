@@ -13,6 +13,6 @@ public class BooleanNotConverter extends Converter {
 	
 	@Override
 	public Object convert(Object fromObject){
-		return !(Boolean) fromObject;
+		return fromObject == null || !(Boolean) fromObject;
 	}
 }

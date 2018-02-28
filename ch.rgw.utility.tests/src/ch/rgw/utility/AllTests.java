@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 import ch.rgw.tools.Test_SqlSettings;
+import ch.rgw.tools.Test_StringTool;
 import ch.rgw.tools.Test_TimeTool;
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -23,7 +24,8 @@ import junit.framework.TestSuite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	ch.rgw.tools.Test_VersionInfo.class, ch.rgw.tools.Test_Money.class,
-	ch.rgw.tools.Test_JdbcLink.class, Test_SqlSettings.class, Test_TimeTool.class
+	ch.rgw.tools.Test_JdbcLink.class, Test_SqlSettings.class, Test_TimeTool.class,
+	Test_StringTool.class
 })
 public class AllTests {
 	public static Test suite() throws ClassNotFoundException{

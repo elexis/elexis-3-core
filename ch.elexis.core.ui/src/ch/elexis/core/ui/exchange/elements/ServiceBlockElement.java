@@ -32,6 +32,7 @@ import ch.elexis.data.Eigenleistung;
 import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.PersistentObjectFactory;
+import ch.elexis.data.dto.CodeElementDTO;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 
@@ -75,11 +76,14 @@ public class ServiceBlockElement extends XChangeElement {
 	public ServiceBlockElement asExporter(XChangeExporter p, Leistungsblock lb){
 		asExporter(p);
 		setAttribute(ATTR_NAME, lb.getName());
-		List<ICodeElement> ics = lb.getElements();
+		List<ICodeElement> ics = lb.getElementReferences();
 		for (ICodeElement ic : ics) {
 			if (ic instanceof IVerrechenbar) {
 				IVerrechenbar iv = (IVerrechenbar) ic;
 				ServiceElement se = new ServiceElement().asExporter(sender, iv);
+				add(se);
+			} else if (ic instanceof CodeElementDTO) {
+				ServiceElement se = new ServiceElement().asExporter(sender, (CodeElementDTO) ic);
 				add(se);
 			}
 		}
@@ -89,63 +93,93 @@ public class ServiceBlockElement extends XChangeElement {
 	public void doImport(){
 		String name = getAttr(ATTR_NAME);
 		if (!StringTool.isNothing(name)) {
-			Leistungsblock ret = new Leistungsblock(name, CoreHub.actMandant);
+			Leistungsblock block = new Leistungsblock(name, CoreHub.actMandant);
 			List<ServiceElement> lService =
 				(List<ServiceElement>) getChildren(ServiceElement.XMLNAME, ServiceElement.class);
 			for (ServiceElement se : lService) {
-				XidElement xid = se.getXid();
-				List<IPersistentObject> ls = xid.findObject();
-				boolean bFound = false;
-				for (IPersistentObject po : ls) {
-					if (po instanceof IVerrechenbar) {
-						ret.addElement((IVerrechenbar) po);
-						bFound = true;
-						break;
-					}
-				}
-				if (!bFound) {
-					if (!bFound) { // we do not have a object with matching XID
-						String contract = se.getAttr("contractName");
-						String code = se.getAttr("contractCode");
-						String lname = se.getAttr("name");
-						boolean bMatched = false;
-						for (ICodeElement ice : codeElements) {
-							if (ice.getCodeSystemName().equals(contract)) {
-								CodeSelectorFactory cof = factories.get(ice);
-								if (cof != null) {
-									PersistentObject po = cof.findElement(code);
-									if (po != null && po.exists()) {
-										bMatched = true;
-										ret.addElement((ICodeElement) po);
-										break;
-									} else {
-										Eigenleistung custom = Eigenleistung.load(code);
-										if (custom.exists()) {
-											ret.addElement(custom);
-											bMatched = true;
-											break;
-										}
-									}
-								}
-							}
-						}
-						if (!bMatched) {
-							Eigenleistung custom = new Eigenleistung(code, lname,
-								se.getAttr("cost"), se.getAttr("price"));
-							ret.addElement(custom);
-						}
-					}
-					
-					/*
-					 * ret.addElement(new
-					 * Eigenleistung(se.getAttr(ServiceElement.ATTR_CONTRACT_CODE),
-					 * se.getAttr(ServiceElement.ATTR_NAME), se.getAttr(ServiceElement.ATTR_COST),
-					 * se.getAttr(ServiceElement.ATTR_PRICE)));
-					 */
+				if (!importCodeElement(block, se)) {
+					importXidElement(block, se);
 				}
 			}
 		}
-		
+	}
+	
+	/**
+	 * Try loading using {@link XidElement}, if the {@link ICodeElement} referenced by the
+	 * {@link XidElement} is not present, the CodeSelectorFactory is used as lookup.
+	 * 
+	 * @param block
+	 * @param se
+	 * 
+	 * @deprecated use {@link ServiceBlockElement#importCodeElement(Leistungsblock, ServiceElement)}
+	 */
+	private void importXidElement(Leistungsblock block, ServiceElement se){
+		XidElement xid = se.getXid();
+		List<IPersistentObject> ls = xid.findObject();
+		boolean bFound = false;
+		for (IPersistentObject po : ls) {
+			if (po instanceof IVerrechenbar) {
+				block.addElement((IVerrechenbar) po);
+				bFound = true;
+				break;
+			}
+		}
+		if (!bFound) { // we do not have a object with matching XID
+			String contract = se.getAttr("contractName");
+			String code = se.getAttr("contractCode");
+			String lname = se.getAttr("name");
+			boolean bMatched = false;
+			for (ICodeElement ice : codeElements) {
+				if (ice.getCodeSystemName().equals(contract)) {
+					CodeSelectorFactory cof = factories.get(ice);
+					if (cof != null) {
+						PersistentObject po = cof.findElement(code);
+						if (po != null && po.exists()) {
+							bMatched = true;
+							block.addElement((ICodeElement) po);
+							break;
+						} else {
+							Eigenleistung custom = Eigenleistung.load(code);
+							if (custom.exists()) {
+								block.addElement(custom);
+								bMatched = true;
+								break;
+							}
+						}
+					}
+				}
+			}
+			if (!bMatched) {
+				Eigenleistung custom =
+					new Eigenleistung(code, lname, se.getAttr("cost"), se.getAttr("price"));
+				block.addElement(custom);
+			}
+		}
+	}
+	
+	/**
+	 * If information of the {@link ServiceElement} includes contractName and contractCode, a new
+	 * {@link CodeElementDTO} is added to the block. This implementation does not care if the actual
+	 * {@link ICodeElement} is available.
+	 * 
+	 * @param block
+	 * @param se
+	 * @return
+	 */
+	private boolean importCodeElement(Leistungsblock block, ServiceElement se){
+		String codeSystemName = se.getAttr("contractName");
+		String code = se.getAttr("contractCode");
+		String name = se.getAttr("name");
+		if (codeSystemName != null && !codeSystemName.isEmpty() && code != null
+			&& !code.isEmpty()) {
+			CodeElementDTO codeElement = new CodeElementDTO(codeSystemName, code);
+			if (name != null && !name.isEmpty()) {
+				codeElement.setText(name);
+			}
+			block.addElement(codeElement);
+			return true;
+		}
+		return false;
 	}
 	
 	@Override

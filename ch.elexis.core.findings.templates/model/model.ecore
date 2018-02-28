@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="model" nsURI="http://ch.elexis.core.findings.templates" nsPrefix="ch.elexis.core.findings.templates">
+  <eClassifiers xsi:type="ecore:EClass" name="FindingsTemplates">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="findingsTemplates" upperBound="-1"
+        eType="#//FindingsTemplate" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FindingsTemplate">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//Type"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inputData" eType="#//InputData"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="codeElement" eType="#//CodeElement"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="DataType">
+    <eLiterals name="NUMERIC" value="1"/>
+    <eLiterals name="TEXT" value="100"/>
+    <eLiterals name="GROUP" value="200" literal="GROUP"/>
+    <eLiterals name="GROUP_COMPONENT" value="300" literal="GROUP_COMPONENT"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="Type">
+    <eLiterals name="OBSERVATION_VITAL" value="1" literal="OBSERVATION_VITAL"/>
+    <eLiterals name="PROCEDURE" value="100"/>
+    <eLiterals name="CONDITION" value="200" literal="CONDITION"/>
+    <eLiterals name="EVALUATION" value="300"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InputData" abstract="true" interface="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="InputDataNumeric" eSuperTypes="#//InputData">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unit" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="decimalPlace" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dataType" eType="#//DataType"
+        changeable="false" defaultValueLiteral="NUMERIC"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="script" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InputDataText" eSuperTypes="#//InputData">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dataType" eType="#//DataType"
+        changeable="false" defaultValueLiteral="TEXT"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InputDataGroup" eSuperTypes="#//InputData">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="findingsTemplates" upperBound="-1"
+        eType="#//FindingsTemplate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dataType" eType="#//DataType"
+        changeable="false" defaultValueLiteral="GROUP"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InputDataGroupComponent" eSuperTypes="#//InputData">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="findingsTemplates" upperBound="-1"
+        eType="#//FindingsTemplate" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dataType" eType="#//DataType"
+        changeable="false" defaultValueLiteral="GROUP_COMPONENT"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="textSeparator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=" "/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CodeElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="system" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="display" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+</ecore:EPackage>

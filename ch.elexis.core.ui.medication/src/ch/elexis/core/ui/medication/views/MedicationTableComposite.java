@@ -2,16 +2,28 @@ package ch.elexis.core.ui.medication.views;
 
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.NotEnabledException;
+import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.IPersistentObject;
@@ -19,6 +31,7 @@ import ch.elexis.data.Prescription;
 
 public class MedicationTableComposite extends Composite {
 	
+	private static Logger log = LoggerFactory.getLogger(MedicationTableComposite.class);
 	private TableViewer viewer;
 	private TableColumnLayout layout;
 	
@@ -52,6 +65,26 @@ public class MedicationTableComposite extends Composite {
 				ElexisEventDispatcher
 					.fireSelectionEvent((presc != null) ? presc.getPrescription() : null);
 			}
+		});
+		viewer.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
+			public void doubleClick(DoubleClickEvent event){
+				StructuredSelection ss = (StructuredSelection) event.getSelection();
+				if (ss != null && !ss.isEmpty()) {
+					try {
+					IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow().getService(IHandlerService.class);
+						handlerService.executeCommand(
+							"ch.elexis.core.ui.medication.OpenArticelDetailDialog", null);
+					} catch (ExecutionException | NotDefinedException | NotEnabledException
+							| NotHandledException e) {
+						MessageDialog.openError(getShell(), "Fehler",
+							"Eigenschaften konnten nicht geöffnet werden.");
+						log.error("cannot open article detail dialog", e);
+					}
+				}
+			}
+			
 		});
 		
 		MedicationViewerHelper.createTypeColumn(viewer, layout, 0);

@@ -1,5 +1,6 @@
 package ch.elexis.core.status;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 /**
@@ -28,6 +29,11 @@ public class ObjectStatus extends Status {
 	
 	public ObjectStatus(int severity, String pluginId, String message, Object object){
 		super(severity, pluginId, message);
+		this.object = object;
+	}
+	
+	public ObjectStatus(IStatus status, Object object) {
+		super(status.getSeverity(), status.getPlugin(), status.getMessage());
 		this.object = object;
 	}
 	

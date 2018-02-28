@@ -92,7 +92,7 @@ public class Test_StockService extends AbstractPersistentObjectTest {
 				assertEquals("TMP", s.getCode());
 			} else if (i == 2) {
 				assertEquals(Integer.valueOf(5), Integer.valueOf(s.getPriority()));
-				assertEquals("A", s.getCode());
+				assertEquals("A", s.getCode().trim()); // trim() needed for postgres
 			} else if (i == 3) {
 				assertEquals(Integer.valueOf(10), Integer.valueOf(s.getPriority()));
 				assertEquals("PRV", s.getCode());
@@ -125,7 +125,7 @@ public class Test_StockService extends AbstractPersistentObjectTest {
 		assertEquals("STD", stockEntry_A_STD.getStock().getCode());
 		IStockEntry stockEntry_A_PUB = stockService
 			.findStockEntryForArticleInStock(stock_A_5_public, artikel_A.storeToString());
-		assertEquals("A", stockEntry_A_PUB.getStock().getCode());
+		assertEquals("A", stockEntry_A_PUB.getStock().getCode().trim()); // trim() needed for postgres
 		
 		IStockEntry stockEntry = stockService
 			.findPreferredStockEntryForArticle(artikel_A.storeToString(), stock_B_10_owner.getId());

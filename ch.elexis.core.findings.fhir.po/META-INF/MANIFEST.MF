@@ -12,14 +12,17 @@ Require-Bundle: ch.elexis.core.findings;bundle-version="1.0.0",
  ch.elexis.core.data;bundle-version="3.2.0",
  org.eclipse.core.runtime;bundle-version="3.8.0",
  org.eclipse.osgi.services,
- hapi-fhir-osgi-core;bundle-version="2.0.0",
- com.google.gson;bundle-version="2.7.0",
  net.sf.saxon.Saxon-HE;bundle-version="9.6.0",
  org.thymeleaf;bundle-version="3.0.1",
  ognl;bundle-version="3.1.10",
  org.attoparser;bundle-version="2.0.0",
- org.unbescape;bundle-version="1.1.3"
-Import-Package: ch.rgw.tools,
+ org.unbescape;bundle-version="1.1.3",
+ hapi-fhir-osgi-core;bundle-version="2.4.0",
+ org.springframework.spring-web
+Import-Package: ch.elexis.core.findings.templates.model,
+ ch.elexis.core.findings.templates.service,
+ ch.rgw.io,
+ ch.rgw.tools,
  org.apache.commons.io
 Service-Component: OSGI-INF/ch.elexis.core.findings.fhir.po.service.FindingsService.xml,
  OSGI-INF/ch.elexis.core.findings.fhir.po.codes.LocalCodingContribution.xml,
@@ -28,3 +31,4 @@ Service-Component: OSGI-INF/ch.elexis.core.findings.fhir.po.service.FindingsServ
 Bundle-ClassPath: lib/httpcore-4.4.4.jar,
  lib/httpclient-4.5.1.jar,
  .
+Export-Package: ch.elexis.core.findings.fhir.po.codes

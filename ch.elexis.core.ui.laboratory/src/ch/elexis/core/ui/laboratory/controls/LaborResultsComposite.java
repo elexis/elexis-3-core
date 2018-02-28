@@ -6,6 +6,7 @@ import java.util.List;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
@@ -23,28 +24,26 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.laboratory.actions.LaborParameterEditAction;
 import ch.elexis.core.ui.laboratory.actions.LaborResultDeleteAction;
 import ch.elexis.core.ui.laboratory.actions.LaborResultEditDetailAction;
-import ch.elexis.core.ui.laboratory.actions.TogglePathologicAction;
+import ch.elexis.core.ui.laboratory.actions.LaborResultSetNonPathologicAction;
+import ch.elexis.core.ui.laboratory.actions.LaborResultSetPathologicAction;
 import ch.elexis.core.ui.laboratory.controls.model.LaborItemResults;
 import ch.elexis.core.ui.laboratory.controls.util.ChangeNewDateSelection;
 import ch.elexis.core.ui.laboratory.controls.util.ChangeResultsDateSelection;
 import ch.elexis.core.ui.laboratory.controls.util.DisplayDoubleClickListener;
 import ch.elexis.core.ui.laboratory.controls.util.LabResultEditingSupport;
 import ch.elexis.core.ui.laboratory.controls.util.LaborResultsLabelProvider;
-import ch.elexis.data.LabItem;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Person;
 import ch.rgw.tools.TimeTool;
 
 public class LaborResultsComposite extends Composite {
-	private static Logger logger = LoggerFactory.getLogger(LaborResultsComposite.class); //$NON-NLS-1$
 	
 	private final FormToolkit tk = UiDesk.getToolkit();
 	private Form form;
@@ -56,7 +55,7 @@ public class LaborResultsComposite extends Composite {
 	
 	private TreeViewerColumn newColumn;
 	private int newColumnIndex;
-
+	
 	public final static String COLUMN_DATE_KEY = "labresult.date"; //$NON-NLS-1$
 	private List<TreeViewerColumn> resultColumns = new ArrayList<TreeViewerColumn>();
 	
@@ -125,13 +124,12 @@ public class LaborResultsComposite extends Composite {
 			public void menuAboutToShow(IMenuManager manager){
 				List<LabResult> results = getSelectedResults();
 				if (results != null) {
-					mgr.add(new TogglePathologicAction(results, viewer));
-				}
-				if (results != null) {
+					mgr.add(new LaborResultSetPathologicAction(results, viewer));
+					mgr.add(new LaborResultSetNonPathologicAction(results, viewer));
 					mgr.add(new LaborResultEditDetailAction(results, viewer));
-				}
-				if (results != null) {
 					mgr.add(new LaborResultDeleteAction(results, viewer));
+					mgr.add(new Separator());
+					mgr.add(new LaborParameterEditAction(results, viewer));
 				}
 			}
 		});
@@ -188,7 +186,7 @@ public class LaborResultsComposite extends Composite {
 		newColumn.setLabelProvider(new LaborResultsLabelProvider(newColumn));
 		newColumn.setEditingSupport(new LabResultEditingSupport(this, viewer, newColumn));
 		newColumnIndex = 2;
-
+		
 		for (int i = 0; i < COLUMNS_PER_PAGE; i++) {
 			column = new TreeViewerColumn(viewer, SWT.NONE);
 			column.getColumn().setWidth(75);
@@ -310,7 +308,7 @@ public class LaborResultsComposite extends Composite {
 		}
 		return super.setFocus();
 	}
-
+	
 	public Patient getPatient(){
 		return actPatient;
 	}

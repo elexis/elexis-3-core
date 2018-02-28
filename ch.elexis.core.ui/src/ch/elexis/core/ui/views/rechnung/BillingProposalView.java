@@ -375,8 +375,8 @@ public class BillingProposalView extends ViewPart {
 		}
 		
 		public String getPatientName(){
-			if (patientName == null) {
-				patientName = fall.getPatient().getLabel(true);
+			if (patientName == null && fall != null) {
+				patientName = fall.getPatient().getPersonalia();
 			}
 			return patientName;
 		}

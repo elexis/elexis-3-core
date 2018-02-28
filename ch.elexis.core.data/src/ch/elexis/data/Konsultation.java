@@ -22,13 +22,14 @@ import java.util.List;
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IOptifier;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.exceptions.PersistenceException;
+import ch.elexis.core.model.IDiagnose;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.text.model.Samdas;
 import ch.rgw.tools.ExHandler;
@@ -101,16 +102,40 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	}
 	
 	/** Die Konsultation einem Fall zuordnen */
+	@Deprecated
 	public void setFall(Fall f){
-		if (isEditable(true)) {
+		transferToFall(f, false, true);
+	}
+	
+	/**
+	 * Transfers a {@link Konsultation} to a {@link Fall}
+	 * 
+	 * @param f
+	 *            transfered fall
+	 * @param ignoreEditable
+	 *            ignores konsultations editable
+	 * @param setToStandartPreis
+	 *            sets to the standard price
+	 * @since 3.3
+	 */
+	public void transferToFall(Fall f, boolean ignoreEditable, boolean setToStandartPreis){
+		if (ignoreEditable || isEditable(true)) {
 			Fall alt = getFall();
 			set(FLD_CASE_ID, f.getId());
 			if (alt != null) {
 				List<Verrechnet> vv = getLeistungen();
-				for (Verrechnet v : vv) {
-					v.setStandardPreis();
+				for (Verrechnet verrechnet : vv) {
+					if (setToStandartPreis) {
+						verrechnet.setStandardPreis();
+					} else {
+						IVerrechenbar v = verrechnet.getVerrechenbar();
+						TimeTool date = new TimeTool(verrechnet.getKons().getDatum());
+						double factor = v.getFactor(date, f);
+						verrechnet.set(Verrechnet.SCALE_SELLING, Double.toString(factor));
+					}
 				}
 			}
+			refreshLastUpdateAndSendUpdateEvent(FLD_CASE_ID);
 		}
 	}
 	
@@ -177,6 +202,10 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 *            text to insert
 	 */
 	public void addXRef(String provider, String id, int pos, String text){
+		// fire prerelease triggers save
+		ElexisEventDispatcher.getInstance().fire(new ElexisEvent(this, Konsultation.class,
+			ElexisEvent.EVENT_LOCK_PRERELEASE, ElexisEvent.PRIORITY_SYNC));
+		
 		VersionedResource vr = getEintrag();
 		String ntext = vr.getHead();
 		Samdas samdas = new Samdas(ntext);
@@ -184,14 +213,18 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		String recText = record.getText();
 		if ((pos == -1) || pos > recText.length()) {
 			pos = recText.length();
-			recText += text;
+			recText += "\n" + text;
 		} else {
-			recText = recText.substring(0, pos) + text + recText.substring(pos);
+			recText = recText.substring(0, pos) + "\n" + text + recText.substring(pos);
 		}
 		record.setText(recText);
-		Samdas.XRef xref = new Samdas.XRef(provider, id, pos, text.length());
+		// ++pos because \n has been added
+		Samdas.XRef xref = new Samdas.XRef(provider, id, ++pos, text.length());
 		record.add(xref);
 		updateEintrag(samdas.toString(), true); // XRefs may always be added
+		// update with the added content
+		ElexisEventDispatcher.getInstance().fire(new ElexisEvent(this, Konsultation.class,
+			ElexisEvent.EVENT_UPDATE, ElexisEvent.PRIORITY_NORMAL));
 	}
 	
 	private Samdas getEntryRaw(){
@@ -333,7 +366,11 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	}
 	
 	public Rechnung getRechnung(){
-		return Rechnung.load(get(FLD_BILL_ID));
+		String invoiceId = get(FLD_BILL_ID);
+		if (invoiceId == null) {
+			return null;
+		}
+		return Rechnung.load(invoiceId);
 	}
 	
 	/**
@@ -455,9 +492,12 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	}
 	
 	public int getStatus(){
-		Rechnung r = getRechnung();
-		if (r != null) {
-			return r.getStatus();
+		return getStatus(getRechnung());
+	}
+	
+	private int getStatus(Rechnung invoice){
+		if (invoice != null) {
+			return invoice.getStatus();
 		}
 		Mandant rm = getMandant();
 		if ((rm != null) && (rm.equals(ElexisEventDispatcher.getSelected(Mandant.class)))) {
@@ -469,11 +509,19 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		} else {
 			return RnStatus.NICHT_VON_IHNEN;
 		}
-		
 	}
 	
 	public String getStatusText(){
-		return RnStatus.getStatusText(getStatus());
+		String statusText = "";
+		
+		Rechnung rechnung = getRechnung();
+		if (rechnung != null) {
+			statusText += "RG " + rechnung.getNr() + ": ";
+		}
+		
+		statusText += RnStatus.getStatusText(getStatus(rechnung));
+		
+		return statusText;
 	}
 	
 	/** Eine einzeilige Beschreibung dieser Konsultation holen */
@@ -637,6 +685,35 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		return qbe.execute();
 	}
 	
+	/** Die zu dieser Konsultation gehörenden Leistungen holen */
+	public List<Verrechnet> getLeistungen(String[] prefetch){
+		Query<Verrechnet> qbe =
+			new Query<Verrechnet>(Verrechnet.class, Verrechnet.KONSULTATION, getId(),
+				Verrechnet.TABLENAME, prefetch);
+		qbe.orderBy(false, Verrechnet.CLASS, Verrechnet.LEISTG_CODE);
+		return qbe.execute();
+	}
+	
+	/**
+	 * Liefert eine Verrechnete Leistung anhand verrechnbar id
+	 * 
+	 * @param code
+	 * @return
+	 */
+	public Verrechnet getVerrechnet(IVerrechenbar iVerrechenbar){
+		if (iVerrechenbar != null && iVerrechenbar.getId() != null) {
+			Query<Verrechnet> qbe = new Query<Verrechnet>(Verrechnet.class);
+			qbe.add(Verrechnet.KONSULTATION, Query.EQUALS, getId());
+			qbe.add(Verrechnet.LEISTG_CODE, Query.EQUALS, iVerrechenbar.getId());
+			
+			List<Verrechnet> verrechnets = qbe.execute();
+			if (verrechnets.size() == 1) {
+				return verrechnets.get(0);
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * Eine Verrechenbar aus der Konsultation entfernen
 	 * 
@@ -677,7 +754,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 * @return ein Verifier-Resultat.
 	 */
 	public Result<IVerrechenbar> addLeistung(IVerrechenbar l){
-		if (isEditable(false)) {
+		if (isEditable(true)) {
 			// TODO: ch.elexis.data.Konsultation.java: Weitere Leistungestypen
 			// ausser Medikamente_BAG und arzttarif_ch=Tarmed,
 			// TODO: ch.elexis.data.Konsultation.java: beim/nach dem Hinzufügen
@@ -686,6 +763,25 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			// existierenden Prüfungen durch eine zentrale hier mitersetzen.
 			IOptifier optifier = l.getOptifier();
 			Result<IVerrechenbar> result = optifier.add(l, this);
+			if (!result.isOK() && result.getCode() == 11) {
+				String initialResult = result.toString();
+				// code 11 is tarmed exclusion due to side see TarmedOptifier#EXKLUSIONSIDE
+				// set a context variable to specify the side see TarmedLeistung#SIDE, TarmedLeistung#SIDE_L, TarmedLeistung#SIDE_R
+				optifier.putContext("Seite", "r");
+				result = optifier.add(l, this);
+				if (!result.isOK() && result.getCode() == 11) {
+					optifier.putContext("Seite", "l");
+					result = optifier.add(l, this);
+				}
+				if (result.isOK()) {
+					MessageEvent.fireInformation("Info",
+						"Achtung: " + initialResult + "\n\n Es wurde bei der Position "
+							+ l.getCode()
+							+ " automatisch die Seite gewechselt."
+							+ " Bitte korrigieren Sie die Leistung falls dies nicht korrekt ist.");
+				}
+				optifier.clearContext();
+			}
 			if (result.isOK()) {
 				ElexisEventDispatcher.update(this);
 				// Statistik nachführen
@@ -988,5 +1084,35 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			ret = (IDiagnose) CoreHub.poFactory.createFromString(diagnoseId);
 		}
 		return ret;
+	}
+	
+	/**
+	 * Makes a simple copy for a {@link Konsultation} of some attributes. This method should only be
+	 * used for {@link Rechnung} proposes.
+	 * 
+	 * @param fall
+	 * @param invoiceSrc
+	 * @return
+	 */
+	public Konsultation createCopy(Fall fall, Rechnung invoiceSrc){
+		if (fall != null && invoiceSrc != null) {
+			Konsultation clone = fall.neueKonsultation();
+			Mandant m = getMandant();
+			if (m != null) {
+				clone.setMandant(m);
+			}
+			clone.setDatum(getDatum(), true);
+			for (IDiagnose diagnose : getDiagnosen()) {
+				clone.addDiagnose(diagnose);
+			}
+			VersionedResource vr = clone.getEintrag();
+			vr.update(
+				"Diese Konsultation wurde durch die Korrektur der Rechnung "
+					+ invoiceSrc.getNr() + " erstellt.",
+				"Rechnungskorrektur");
+			clone.setEintrag(vr, true);
+			return clone;
+		}
+		return null;
 	}
 }

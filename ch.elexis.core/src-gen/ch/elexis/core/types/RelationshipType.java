@@ -57,26 +57,6 @@ public enum RelationshipType implements Enumerator {
 	BUSINESS_EMPLOYEE(101, "BUSINESS_EMPLOYEE", "BUSINESS_EMPLOYEE"),
 
 	/**
-	 * The '<em><b>FAMILY HUSBAND</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #FAMILY_HUSBAND_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	FAMILY_HUSBAND(200, "FAMILY_HUSBAND", "FAMILY_HUSBAND"),
-
-	/**
-	 * The '<em><b>FAMILY WIFE</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #FAMILY_WIFE_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	FAMILY_WIFE(201, "FAMILY_WIFE", ""),
-
-	/**
 	 * The '<em><b>FAMILY PARENT</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -84,7 +64,7 @@ public enum RelationshipType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	FAMILY_PARENT(210, "FAMILY_PARENT", "FAMILY_PARENT"),
+	FAMILY_PARENT(200, "FAMILY_PARENT", "FAMILY_PARENT"),
 
 	/**
 	 * The '<em><b>FAMILY CHILD</b></em>' literal object.
@@ -94,9 +74,33 @@ public enum RelationshipType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	FAMILY_CHILD(211, "FAMILY_CHILD", "FAMILY_CHILD"),
+	FAMILY_CHILD(210, "FAMILY_CHILD", "FAMILY_CHILD"),
 
 	/**
+	 * The '<em><b>FAMILY GUARDIAN</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #FAMILY_GUARDIAN_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	FAMILY_GUARDIAN(220, "FAMILY_GUARDIAN", "FAMILY_GUARDIAN"), /**
+	 * The '<em><b>FAMILY ICE</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #FAMILY_ICE_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	FAMILY_ICE(230, "FAMILY_ICE", "FAMILY_ICE"), /**
+	 * The '<em><b>FAMILY ALTERNATIVE</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #FAMILY_ALTERNATIVE_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	FAMILY_ALTERNATIVE(290, "FAMILY_ALTERNATIVE", "FAMILY_ALTERNATIVE"), /**
 	 * The '<em><b>WELFARE GENERAL PRACTITIONER</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -192,36 +196,6 @@ public enum RelationshipType implements Enumerator {
 	public static final int BUSINESS_EMPLOYEE_VALUE = 101;
 
 	/**
-	 * The '<em><b>FAMILY HUSBAND</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>FAMILY HUSBAND</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @see #FAMILY_HUSBAND
-	 * @model
-	 * @generated
-	 * @ordered
-	 */
-	public static final int FAMILY_HUSBAND_VALUE = 200;
-
-	/**
-	 * The '<em><b>FAMILY WIFE</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>FAMILY WIFE</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @see #FAMILY_WIFE
-	 * @model literal=""
-	 * @generated
-	 * @ordered
-	 */
-	public static final int FAMILY_WIFE_VALUE = 201;
-
-	/**
 	 * The '<em><b>FAMILY PARENT</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -234,7 +208,7 @@ public enum RelationshipType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FAMILY_PARENT_VALUE = 210;
+	public static final int FAMILY_PARENT_VALUE = 200;
 
 	/**
 	 * The '<em><b>FAMILY CHILD</b></em>' literal value.
@@ -249,7 +223,52 @@ public enum RelationshipType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FAMILY_CHILD_VALUE = 211;
+	public static final int FAMILY_CHILD_VALUE = 210;
+
+	/**
+	 * The '<em><b>FAMILY GUARDIAN</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>FAMILY GUARDIAN</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #FAMILY_GUARDIAN
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FAMILY_GUARDIAN_VALUE = 220;
+
+	/**
+	 * The '<em><b>FAMILY ICE</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>FAMILY ICE</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #FAMILY_ICE
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FAMILY_ICE_VALUE = 230;
+
+	/**
+	 * The '<em><b>FAMILY ALTERNATIVE</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>FAMILY ALTERNATIVE</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #FAMILY_ALTERNATIVE
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FAMILY_ALTERNATIVE_VALUE = 290;
 
 	/**
 	 * The '<em><b>WELFARE GENERAL PRACTITIONER</b></em>' literal value.
@@ -337,10 +356,11 @@ public enum RelationshipType implements Enumerator {
 			AGENERIC,
 			BUSINESS_EMPLOYER,
 			BUSINESS_EMPLOYEE,
-			FAMILY_HUSBAND,
-			FAMILY_WIFE,
 			FAMILY_PARENT,
 			FAMILY_CHILD,
+			FAMILY_GUARDIAN,
+			FAMILY_ICE,
+			FAMILY_ALTERNATIVE,
 			WELFARE_GENERAL_PRACTITIONER,
 			WELFARE_PATIENT,
 			WELFARE_CONSULTANT,
@@ -405,10 +425,11 @@ public enum RelationshipType implements Enumerator {
 			case AGENERIC_VALUE: return AGENERIC;
 			case BUSINESS_EMPLOYER_VALUE: return BUSINESS_EMPLOYER;
 			case BUSINESS_EMPLOYEE_VALUE: return BUSINESS_EMPLOYEE;
-			case FAMILY_HUSBAND_VALUE: return FAMILY_HUSBAND;
-			case FAMILY_WIFE_VALUE: return FAMILY_WIFE;
 			case FAMILY_PARENT_VALUE: return FAMILY_PARENT;
 			case FAMILY_CHILD_VALUE: return FAMILY_CHILD;
+			case FAMILY_GUARDIAN_VALUE: return FAMILY_GUARDIAN;
+			case FAMILY_ICE_VALUE: return FAMILY_ICE;
+			case FAMILY_ALTERNATIVE_VALUE: return FAMILY_ALTERNATIVE;
 			case WELFARE_GENERAL_PRACTITIONER_VALUE: return WELFARE_GENERAL_PRACTITIONER;
 			case WELFARE_PATIENT_VALUE: return WELFARE_PATIENT;
 			case WELFARE_CONSULTANT_VALUE: return WELFARE_CONSULTANT;

@@ -1,26 +1,32 @@
 package ch.elexis.core.findings.fhir.po.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.hl7.fhir.dstu3.model.IdType;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.findings.IAllergyIntolerance;
 import ch.elexis.core.findings.IClinicalImpression;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.IEncounter;
+import ch.elexis.core.findings.IFamilyMemberHistory;
 import ch.elexis.core.findings.IFinding;
-import ch.elexis.core.findings.IFindingsFactory;
 import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IProcedureRequest;
+import ch.elexis.core.findings.fhir.po.model.AllergyIntolerance;
 import ch.elexis.core.findings.fhir.po.model.ClinicalImpression;
 import ch.elexis.core.findings.fhir.po.model.Condition;
 import ch.elexis.core.findings.fhir.po.model.Encounter;
+import ch.elexis.core.findings.fhir.po.model.FamilyMemberHistory;
 import ch.elexis.core.findings.fhir.po.model.Observation;
 import ch.elexis.core.findings.fhir.po.model.ProcedureRequest;
+import ch.elexis.core.findings.util.ModelUtil;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
@@ -29,8 +35,9 @@ import ch.elexis.data.Query;
 public class FindingsService implements IFindingsService {
 	private Logger logger = LoggerFactory.getLogger(FindingsService.class);
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<IFinding> getPatientsFindings(String patientId, Class<? extends IFinding> filter){
+	public <T extends IFinding> List<T> getPatientsFindings(String patientId, Class<T> filter){
 		List<IFinding> ret = new ArrayList<>();
 		if (patientId != null && !patientId.isEmpty()) {
 			if (filter.isAssignableFrom(IEncounter.class)) {
@@ -48,8 +55,14 @@ public class FindingsService implements IFindingsService {
 			if (filter.isAssignableFrom(IProcedureRequest.class)) {
 				ret.addAll(getProcedureRequests(patientId, null));
 			}
+			if (filter.isAssignableFrom(IFamilyMemberHistory.class)) {
+				ret.addAll(getFamilyMemberHistory(patientId));
+			}
+			if (filter.isAssignableFrom(IAllergyIntolerance.class)) {
+				ret.addAll(getAllergyIntolerance(patientId));
+			}
 		}
-		return ret;
+		return (List<T>) ret;
 	}
 	
 	private List<ProcedureRequest> getProcedureRequests(String patientId, String encounterId){
@@ -82,6 +95,22 @@ public class FindingsService implements IFindingsService {
 		return query.execute();
 	}
 	
+	private List<FamilyMemberHistory> getFamilyMemberHistory(String patientId){
+		Query<FamilyMemberHistory> query = new Query<>(FamilyMemberHistory.class);
+		if (patientId != null) {
+			query.add(FamilyMemberHistory.FLD_PATIENTID, Query.EQUALS, patientId);
+		}
+		return query.execute();
+	}
+	
+	private List<AllergyIntolerance> getAllergyIntolerance(String patientId){
+		Query<AllergyIntolerance> query = new Query<>(AllergyIntolerance.class);
+		if (patientId != null) {
+			query.add(AllergyIntolerance.FLD_PATIENTID, Query.EQUALS, patientId);
+		}
+		return query.execute();
+	}
+	
 	private List<Observation> getObservations(String patientId, String encounterId){
 		Query<Observation> query = new Query<>(Observation.class);
 		if (patientId != null) {
@@ -101,9 +130,10 @@ public class FindingsService implements IFindingsService {
 		return query.execute();
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<IFinding> getConsultationsFindings(String consultationId,
-		Class<? extends IFinding> filter){
+	public <T extends IFinding> List<T> getConsultationsFindings(String consultationId,
+		Class<T> filter){
 		List<IFinding> ret = new ArrayList<>();
 		if (consultationId != null && !consultationId.isEmpty()) {
 			Optional<IEncounter> encounter = getEncounter(consultationId);
@@ -122,7 +152,7 @@ public class FindingsService implements IFindingsService {
 				}
 			}
 		}
-		return ret;
+		return (List<T>) ret;
 	}
 	
 	private Optional<IEncounter> getEncounter(String consultationId){
@@ -168,25 +198,77 @@ public class FindingsService implements IFindingsService {
 	}
 	
 	@Override
-	public IFindingsFactory getFindingsFactory(){
-		return new FindingsFactory();
-	}
-	
-	@Override
-	public Optional<IFinding> findById(String idPart){
-		// TODO ...
-		return Optional.empty();
-	}
-	
-	@Override
-	public Optional<IFinding> findById(String id, Class<? extends IFinding> clazz){
+	public <T extends IFinding> Optional<T> findById(String id, Class<T> clazz, boolean skipChecks){
 		IFinding loadedObj = null;
 		if (clazz.isAssignableFrom(ICondition.class)) {
 			loadedObj = Condition.load(id);
 		}
-		if (loadedObj != null && ((IPersistentObject) loadedObj).exists()) {
-			return Optional.of(loadedObj);
+		else if (clazz.isAssignableFrom(IObservation.class)) {
+			loadedObj = Observation.load(id);
+		}
+		if (loadedObj != null) {
+			if (!skipChecks) {
+				if (((IPersistentObject) loadedObj).exists()) {
+					return Optional.of(clazz.cast(loadedObj));
+				}
+			} else {
+				return Optional.of(clazz.cast(loadedObj));
+			}
 		}
 		return Optional.empty();
+	}
+	
+	@Override
+	public <T extends IFinding> T create(Class<T> type){
+		if (type.equals(IEncounter.class)) {
+			Encounter ret = (Encounter) new Encounter().create();
+			org.hl7.fhir.dstu3.model.Encounter fhirEncounter =
+				new org.hl7.fhir.dstu3.model.Encounter();
+			fhirEncounter.setId(new IdType("Encounter", ret.getId()));
+			ModelUtil.saveResource(fhirEncounter, ret);
+			return type.cast(ret);
+		}
+		else if (type.equals(IObservation.class)) {
+			Observation ret = (Observation) new Observation().create();
+			org.hl7.fhir.dstu3.model.Observation fhirOberservation =
+				new org.hl7.fhir.dstu3.model.Observation();
+			fhirOberservation.setId(new IdType("Observation", ret.getId()));
+			ModelUtil.saveResource(fhirOberservation, ret);
+			return type.cast(ret);
+		}
+		else if (type.equals(ICondition.class)) {
+			Condition ret = (Condition) new Condition().create();
+			org.hl7.fhir.dstu3.model.Condition fhirCondition =
+				new org.hl7.fhir.dstu3.model.Condition();
+			fhirCondition.setId(new IdType("Condition", ret.getId()));
+			fhirCondition.setAssertedDate(new Date());
+			ModelUtil.saveResource(fhirCondition, ret);
+			return type.cast(ret);
+		}
+		else if (type.equals(IClinicalImpression.class)) {
+			ClinicalImpression ret = new ClinicalImpression();
+			return type.cast((IClinicalImpression) ret.create());
+		}
+		else if (type.equals(IProcedureRequest.class)) {
+			ProcedureRequest ret = new ProcedureRequest();
+			return type.cast((IProcedureRequest) ret.create());
+		}
+		else if (type.equals(IFamilyMemberHistory.class)) {
+			FamilyMemberHistory ret = (FamilyMemberHistory) new FamilyMemberHistory().create();
+			org.hl7.fhir.dstu3.model.FamilyMemberHistory fhFamilyMemberHistory =
+				new org.hl7.fhir.dstu3.model.FamilyMemberHistory();
+			fhFamilyMemberHistory.setId(new IdType("FamilyMemberHistory", ret.getId()));
+			ModelUtil.saveResource(fhFamilyMemberHistory, ret);
+			return type.cast(ret);
+		}
+		else if (type.equals(IAllergyIntolerance.class)) {
+			AllergyIntolerance ret = (AllergyIntolerance) new AllergyIntolerance().create();
+			org.hl7.fhir.dstu3.model.AllergyIntolerance fhAllergyIntolerance =
+				new org.hl7.fhir.dstu3.model.AllergyIntolerance();
+			fhAllergyIntolerance.setId(new IdType("AllergyIntolerance", ret.getId()));
+			ModelUtil.saveResource(fhAllergyIntolerance, ret);
+			return type.cast(ret);
+		}
+		return null;
 	}
 }

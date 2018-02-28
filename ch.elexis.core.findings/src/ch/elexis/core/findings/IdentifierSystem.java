@@ -2,7 +2,8 @@ package ch.elexis.core.findings;
 
 public enum IdentifierSystem {
 	ELEXIS_OBJID("www.elexis.info/objid"), ELEXIS_PATNR("www.elexis.info/patnr"), ELEXIS_CONSID(
-			"www.elexis.info/consultationid");
+			"www.elexis.info/consultationid"),
+		ELEXIS_SOAP("www.elexis.info/soap"), ELEXIS_ANAMNESE("www.elexis.info/anamnese");
 
 	private String system;
 

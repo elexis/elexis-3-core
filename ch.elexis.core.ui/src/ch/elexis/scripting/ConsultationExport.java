@@ -38,7 +38,7 @@ public class ConsultationExport {
 			Query<Patient> qbe = new Query<Patient>(Patient.class);
 			if (stickerName != null) {
 				List<Sticker> ls =
-					new Query<Sticker>(Sticker.class, Sticker.NAME, stickerName).execute();
+					new Query<Sticker>(Sticker.class, Sticker.FLD_NAME, stickerName).execute();
 				if (ls != null && ls.size() > 0) {
 					final Sticker sticker = ls.get(0);
 					

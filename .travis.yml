@@ -1,18 +1,21 @@
 ---
 language: java
-script: 
-  - mvn --version
-  - mvn clean install -f ch.elexis.core.releng/pom.xml
+
+install: mvn  -V -DskipTests=true -Dmaven.javadoc.skip=true -B validate
+
+script: mvn  -V --quiet clean verify -Dall-archs=true && find . -name "*.zip"
   
 notifications:
   email:
   - niklaus.giger@member.fsf.org
 jdk:
-  - openjdk6
-  - oraclejdk7
-  - openjdk7
+  - oraclejdk8
 
-# whitelist of branches to build
-branches:
-  only:
-    - master
+cache:
+  directories:
+  - $HOME/.m2
+
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start

@@ -13,17 +13,20 @@ import ca.uhn.hl7v2.model.AbstractPrimitive;
 import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.model.v22.datatype.AD;
 import ca.uhn.hl7v2.model.v22.datatype.CE;
+import ca.uhn.hl7v2.model.v22.datatype.CN;
 import ca.uhn.hl7v2.model.v22.datatype.FT;
 import ca.uhn.hl7v2.model.v22.datatype.NM;
 import ca.uhn.hl7v2.model.v22.datatype.ST;
 import ca.uhn.hl7v2.model.v22.datatype.TX;
 import ca.uhn.hl7v2.model.v22.group.ORU_R01_OBSERVATION;
 import ca.uhn.hl7v2.model.v22.group.ORU_R01_ORDER_OBSERVATION;
+import ca.uhn.hl7v2.model.v22.group.ORU_R01_PATIENT_RESULT;
 import ca.uhn.hl7v2.model.v22.message.ORU_R01;
 import ca.uhn.hl7v2.model.v22.segment.MSH;
 import ca.uhn.hl7v2.model.v22.segment.NTE;
 import ca.uhn.hl7v2.model.v22.segment.OBR;
 import ca.uhn.hl7v2.model.v22.segment.OBX;
+import ca.uhn.hl7v2.model.v22.segment.ORC;
 import ca.uhn.hl7v2.model.v22.segment.PID;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.exceptions.ElexisException;
@@ -34,6 +37,7 @@ import ch.elexis.hl7.HL7PatientResolver;
 import ch.elexis.hl7.HL7Reader;
 import ch.elexis.hl7.model.LabResultData;
 import ch.elexis.hl7.model.ObservationMessage;
+import ch.elexis.hl7.model.OrcMessage;
 import ch.elexis.hl7.model.TextData;
 import ch.elexis.hl7.v26.HL7Constants;
 import ch.elexis.hl7.v26.HL7_ORU_R01;
@@ -278,7 +282,7 @@ public class HL7ReaderV22 extends HL7Reader {
 		String range = "";
 		String observationTime = "";
 		String status = "";
-		boolean flag = false;
+		Boolean flag;
 		
 		if (isTextOrNumeric(valueType)) {
 			name = obx.getObx3_ObservationIdentifier().getCe2_Text().getValue();
@@ -311,7 +315,8 @@ public class HL7ReaderV22 extends HL7Reader {
 			status = obx.getObx11_ObservationResultStatus().getValue();
 			
 			LabResultData lrd = new LabResultData(itemCode, name, unit, value, range, flag,
-				defaultDateTime, observationTime, commentNTE, group, sequence, status);
+				defaultDateTime, observationTime, commentNTE, group, sequence, status,
+				extractName(obx.getObx4_ObservationSubID()));
 				
 			if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_NM)) {
 				lrd.setIsNumeric(true);
@@ -325,6 +330,35 @@ public class HL7ReaderV22 extends HL7Reader {
 		} else {
 			logger.error(MessageFormat.format("Value type {0} is not implemented!", valueType));
 		}
+	}
+	
+	@Override
+	public OrcMessage getOrcMessage(){
+		try {
+			ORU_R01 oru = (ORU_R01) message;
+			if (oru != null) {
+				ORU_R01_PATIENT_RESULT pr = oru.getPATIENT_RESULT();
+				if (pr != null) {
+					ORU_R01_ORDER_OBSERVATION oo = pr.getORDER_OBSERVATION();
+					if (oo != null) {
+						return extractOrc(oo.getORC());
+					}
+				}
+			}
+		} catch (Exception e) {
+			LoggerFactory.getLogger(HL7Reader.class).warn("orc parsing failed", e);
+		}
+		return null;
+	}
+	
+	private OrcMessage extractOrc(ORC orc) throws HL7Exception{
+		if (orc != null) {
+			OrcMessage orcMessage = new OrcMessage();
+			CN ops = orc.getOrderingProvider();
+			addNameValuesToOrcMessage(ops.getFamilyName(), ops.getGivenName(), orcMessage);
+			return orcMessage;
+		}
+		return null;
 	}
 	
 }

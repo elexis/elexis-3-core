@@ -26,23 +26,25 @@ public class LabResultData extends AbstractData {
 	private String unit;
 	private String value;
 	private String range;
+	private String subId;
 	private LabResultStatus resultStatus;
 	private Date obrDateTime;
-	private boolean flag;
+	private Boolean flag;
 	private boolean isNumeric = false;
 	private boolean isFormatedText = false;
 	private boolean isPlainText = false;
 	
 	public LabResultData(String code, String name, String unit, String value, String range,
-		boolean flag, String obrDateTime, String dateStr, String comment, String group,
-		String sequence, String resultStatus) throws ParseException{
+		Boolean flag, String obrDateTime, String dateStr, String comment, String group,
+		String sequence, String resultStatus, String subId) throws ParseException{
 		super(name, dateStr, comment, group, sequence);
 		
 		this.setCode(code);
 		this.setUnit(unit);
 		this.setValue(value);
 		this.setRange(range);
-		this.setFlagged(flag);
+		this.setFlag(flag);
+		this.subId = subId;
 		this.resultStatus = LabResultStatus.getStatus(resultStatus);
 		if (obrDateTime != null && obrDateTime.length() > 0) {
 			this.obrDateTime = HL7Helper.stringToDate(obrDateTime);
@@ -99,11 +101,11 @@ public class LabResultData extends AbstractData {
 		}
 	}
 	
-	public boolean isFlagged(){
+	public Boolean getFlag(){
 		return flag;
 	}
 	
-	public void setFlagged(boolean flag){
+	public void setFlag(Boolean flag){
 		this.flag = flag;
 	}
 	
@@ -129,6 +131,14 @@ public class LabResultData extends AbstractData {
 	
 	public void setIsPlainText(boolean isPlainText){
 		this.isPlainText = isPlainText;
+	}
+	
+	public String getSubId(){
+		return subId;
+	}
+	
+	public void setSubId(String subId){
+		this.subId = subId;
 	}
 	
 }

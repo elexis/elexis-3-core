@@ -37,6 +37,8 @@ import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
+import ch.elexis.core.types.PathologicDescription;
+import ch.elexis.core.types.PathologicDescription.Description;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
@@ -59,10 +61,14 @@ public class LabResult extends PersistentObject implements ILabResult {
 	public static final String REFMALE = "refmale"; //$NON-NLS-1$
 	public static final String REFFEMALE = "reffemale"; //$NON-NLS-1$
 	public static final String ORIGIN_ID = "OriginID"; //$NON-NLS-1$
+	public static final String PATHODESC = "pathodesc"; //$NON-NLS-1$
+	
+	public static final String EXTINFO_HL7_SUBID = "Hl7SubId";
 	
 	private static final String TABLENAME = "LABORWERTE"; //$NON-NLS-1$
 	private final String SMALLER = "<";
 	private final String BIGGER = ">";
+	private PathologicDescription pathologicDescription;
 	
 	private static Pattern refValuesPattern = Pattern.compile("\\((.*?)\\)"); //$NON-NLS-1$
 	private static String[] VALID_ABS_VALUES = new String[] {
@@ -79,7 +85,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	static {
 		addMapping(TABLENAME, PATIENT_ID, DATE_COMPOUND, ITEM_ID, RESULT, COMMENT, FLAGS,
 			"Quelle=Origin", TIME, UNIT, ANALYSETIME, OBSERVATIONTIME, TRANSMISSIONTIME, REFMALE, //$NON-NLS-1$
-			REFFEMALE, ORIGIN_ID);
+			REFFEMALE, ORIGIN_ID, PATHODESC);
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT LW.ID, LW." + OBSERVATIONTIME + ", LW." + DATE + ", LW." + TIME + ", ");
@@ -189,34 +195,69 @@ public class LabResult extends PersistentObject implements ILabResult {
 		this(p, date, item, result, comment, null, origin);
 	}
 	
-	private boolean isPathologic(final Gender g, final ILabItem item, final String result){
+	private boolean isPathologic(final Gender g, final ILabItem item, final String result,
+		boolean updateDescription){
 		if (item.getTyp().equals(LabItemTyp.ABSOLUTE)) {
 			if (result.toLowerCase().startsWith("pos")) { //$NON-NLS-1$
+				if (updateDescription) {
+					setPathologicDescription(
+						new PathologicDescription(Description.PATHO_ABSOLUT, "pos"));
+				}
 				return true;
 			}
 			if (result.trim().startsWith("+")) { //$NON-NLS-1$
+				if (updateDescription) {
+					setPathologicDescription(
+						new PathologicDescription(Description.PATHO_ABSOLUT, "+"));
+				}
 				return true;
 			}
-		} else /* if(item.getTyp().equals(LabItem.typ.NUMERIC)) */{
+			if(updateDescription) {
+				setPathologicDescription(new PathologicDescription(Description.PATHO_ABSOLUT, result));
+			}
+			return false;
+		} else {
 			String nr;
+			boolean usedItemRef = false;
 			if (g == Gender.MALE) {
 				nr = getRefMale();
-				if (nr == null || nr.isEmpty()) {
-					nr = item.getReferenceMale();
-				}
+				usedItemRef = isUsingItemRef(REFMALE);
 			} else {
 				nr = getRefFemale();
-				if (nr == null || nr.isEmpty()) {
-					nr = item.getReferenceFemale();
-				}
+				usedItemRef = isUsingItemRef(REFFEMALE);
 			}
 			List<String> refStrings = parseRefString(nr);
 			// only test first string as range is defined in one string
-			if (!refStrings.isEmpty() && result != null) {
-				return testRef(refStrings.get(0), result);
+			if (result != null && !refStrings.isEmpty() && !refStrings.get(0).isEmpty()) {
+				if (updateDescription) {
+					if (usedItemRef) {
+						setPathologicDescription(new PathologicDescription(
+							Description.PATHO_REF_ITEM, refStrings.get(0)));
+					} else {
+						setPathologicDescription(
+							new PathologicDescription(Description.PATHO_REF, refStrings.get(0)));
+					}
+				}
+				Boolean testResult = testRef(refStrings.get(0), result);
+				if (testResult != null) {
+					return testResult;
+				} else {
+					if (updateDescription) {
+						setPathologicDescription(
+							new PathologicDescription(Description.PATHO_NOREF, refStrings.get(0)));
+					}
+					return false;
+				}
 			}
 		}
+		if (updateDescription) {
+			setPathologicDescription(new PathologicDescription(Description.PATHO_NOREF));
+		}
 		return false;
+	}
+	
+	private boolean isPathologic(final Gender g, final ILabItem item, final String result){
+		return isPathologic(g, item, result, true);
 	}
 	
 	public boolean isLongText(){
@@ -228,7 +269,16 @@ public class LabResult extends PersistentObject implements ILabResult {
 		return false;
 	}
 	
-	private boolean testRef(String ref, String result){
+	/**
+	 * Test result against the provided reference value to determine wheter it is pathologic
+	 * 
+	 * @param ref
+	 * @param result
+	 * @return <code>true</code> if pathologic, <code>false</code> if not, <code>null</code> if we
+	 *         don't know
+	 * @since 3.4 if we can't test a value, as there are no rules, return <code>null</code>
+	 */
+	private Boolean testRef(String ref, String result){
 		try {
 			if (ref.trim().startsWith(SMALLER) || ref.trim().startsWith(BIGGER)) {
 				String resultSign = null;
@@ -240,29 +290,24 @@ public class LabResult extends PersistentObject implements ILabResult {
 				}
 				double val = Double.parseDouble(result);
 				if (ref.trim().startsWith(SMALLER)) {
-					if (val >= refVal && !(val == refVal && SMALLER.equals(resultSign))) {
-						return true;
-					}
+					return (val >= refVal && !(val == refVal && SMALLER.equals(resultSign)));
 				} else {
-					if (val <= refVal && !(val == refVal && BIGGER.equals(resultSign))) {
-						return true;
-					}
+					return (val <= refVal && !(val == refVal && BIGGER.equals(resultSign)));
 				}
-			} else {
+			} else if (ref.contains("-")) {
 				String[] range = ref.split("\\s*-\\s*"); //$NON-NLS-1$
 				if (range.length == 2) {
 					double lower = Double.parseDouble(range[0]);
 					double upper = Double.parseDouble(range[1]);
 					double val = Double.parseDouble(result);
-					if ((val < lower) || (val > upper)) {
-						return true;
-					}
+					return ((val < lower) || (val > upper));
 				}
 			}
 		} catch (NumberFormatException nfe) {
 			// don't mind
 		}
-		return false;
+		// we can't test as we don't have a testing rule
+		return null;
 	}
 	
 	private static List<String> parseRefString(String ref){
@@ -408,8 +453,33 @@ public class LabResult extends PersistentObject implements ILabResult {
 		setInt(FLAGS, flags);
 	}
 	
+	/**
+	 * if 1 is pathologic<br>
+	 * if 0 non-pathologic or indetermined (see {@link #getPathologicDescription()}<br>
+	 * <code>flags</code> is indetermined for the following states:<br>
+	 * {@link Description#PATHO_NOREF}, {@link Description#UNKNOWN} and
+	 * {@link Description#PATHO_IMPORT_NO_INFO}
+	 */
 	public int getFlags(){
 		return checkZero(get(FLAGS));
+	}
+	
+	/**
+	 * Do we really know about the state of the pathologic flag, or is it set to non-pathologic
+	 * because we simply don't now or can't determine?
+	 * 
+	 * @param pathologicDescription
+	 *            if <code>null</code> will fetch via db call
+	 * @return <code>true</code> if don't know, or can't determine
+	 * @since 3.4
+	 */
+	public boolean isPathologicFlagIndetermined(PathologicDescription pathologicDescription){
+		if (pathologicDescription == null) {
+			pathologicDescription = getPathologicDescription();
+		}
+		Description desc = pathologicDescription.getDescription();
+		return (Description.PATHO_NOREF == desc || Description.UNKNOWN == desc
+			|| Description.PATHO_IMPORT_NO_INFO == desc);
 	}
 	
 	@Override
@@ -542,6 +612,34 @@ public class LabResult extends PersistentObject implements ILabResult {
 				return localRef;
 			}
 			return ref;
+		}
+	}
+	
+	/**
+	 * Test if we use the reference value from the result or the item on
+	 * {@link LabResult#resolvePreferedRefValue(String, String)}.
+	 * 
+	 * @param refField
+	 * @return
+	 */
+	private boolean isUsingItemRef(String refField){
+		boolean useLocalRefs =
+			CoreHub.userCfg.get(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
+		String localRef;
+		if (REFMALE.equals(refField)) {
+			localRef = getItem().getReferenceMale();
+		} else {
+			localRef = getItem().getReferenceFemale();
+		}
+		
+		if (useLocalRefs && localRef != null && !localRef.isEmpty()) {
+			return true;
+		} else {
+			String ref = checkNull(get(refField));
+			if (ref.isEmpty()) {
+				return true;
+			}
+			return false;
 		}
 	}
 	
@@ -709,6 +807,20 @@ public class LabResult extends PersistentObject implements ILabResult {
 			return Kontakt.load(id);
 		}
 		return null;
+	}
+	
+	@Override
+	public PathologicDescription getPathologicDescription(){
+		if (pathologicDescription == null) {
+			pathologicDescription = PathologicDescription.of(get(PATHODESC));
+		}
+		return pathologicDescription;
+	}
+	
+	@Override
+	public void setPathologicDescription(PathologicDescription description){
+		this.pathologicDescription = description;
+		set(PATHODESC, description.toString());
 	}
 	
 	public static boolean isValidNumericRefValue(String value){

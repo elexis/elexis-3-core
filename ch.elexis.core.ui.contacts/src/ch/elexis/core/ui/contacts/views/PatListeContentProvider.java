@@ -236,7 +236,10 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 		if (pats.length > index) {
 			tv.replace(pats[index], index);
 		} else {
-			tv.replace(StringConstants.DASH, index);
+			Object elementAt = tv.getElementAt(index);
+			if(elementAt != null) {
+				tv.replace(StringConstants.DASH, index);
+			}
 		}
 	}
 	
@@ -253,7 +256,12 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 	 * @since 3.2
 	 */
 	void temporaryAddObject(Object newObject){
-		ArrayList<Object> temp = new ArrayList<Object>(Arrays.asList(pats));
+		ArrayList<Object> temp = null;
+		if (pats != null) {
+			temp = new ArrayList<Object>(Arrays.asList(pats));
+		} else {
+			temp = new ArrayList<>();
+		}
 		temp.add(newObject);
 		pats = temp.toArray();
 		((TableViewer) viewer.getViewerWidget()).setItemCount(pats.length);

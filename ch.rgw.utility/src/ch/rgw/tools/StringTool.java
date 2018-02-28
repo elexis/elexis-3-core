@@ -614,6 +614,42 @@ public class StringTool {
 		return s.toString();
 	}
 	
+	/**
+	 * Compares two numeric strings
+	 * 
+	 * @param first
+	 * @param seconds
+	 * @return
+	 * @since 3.4
+	 */
+	public static int compareNumericStrings(String first, String seconds){
+		int i1 = 0;
+		int i2 = 0;
+		boolean a1 = isNumeric(first);
+		boolean a2 = isNumeric(seconds);
+		
+		if (a1 && a2) {
+			i1 = Integer.parseInt(first);
+			i2 = Integer.parseInt(seconds);
+			return Integer.compare(i1, i2);
+		}
+		return Boolean.compare(a1, a2);
+	}
+	
+	/**
+	 * Checks if a string is numeric
+	 * 
+	 * @param str
+	 * @return
+	 * @since 3.4
+	 */
+	public static boolean isNumeric(String str){
+		if (str != null) {
+			return str.matches("-?\\d+");
+		}
+		return false;
+	}
+	
 	public static String RectangleToString(int x, int y, int w, int h){
 		StringBuilder sb = new StringBuilder();
 		sb.append(x).append(",").append(y).append(",").append(w).append(",").append(h);
@@ -995,13 +1031,36 @@ public class StringTool {
 	}
 	
 	/**
-	 * Return the first line if the given String but at most maxChars
+	 * Return the first line if the given String but at most maxChars. What is recognized as line is
+	 * defined by the default lineSeparators used to call {@link String#split(String)}
+	 * [\\n\\r\\.\\?!;].
+	 * 
+	 * @param in
+	 * @param maxChars
+	 * @return
 	 */
 	public static String getFirstLine(final String in, final int maxChars){
+		return getFirstLine(in, maxChars, lineSeparators);
+	}
+	
+	/**
+	 * Return the first line if the given String but at most maxChars. What is recognized as line
+	 * can be defined using the lineSeparators String that is used to call
+	 * {@link String#split(String)} (default is [\\n\\r\\.\\?!;]).
+	 * 
+	 * @param in
+	 * @param maxChars
+	 * @param separators
+	 * @return
+	 */
+	public static String getFirstLine(final String in, final int maxChars, String separators){
 		if (isNothing(in)) {
 			return "";
 		}
-		String[] lines = in.split(lineSeparators);
+		if (separators == null) {
+			separators = lineSeparators;
+		}
+		String[] lines = in.split(separators);
 		if (lines[0].length() > maxChars) {
 			int ix = lines[0].lastIndexOf(' ', maxChars);
 			return lines[0].substring(0, ix);

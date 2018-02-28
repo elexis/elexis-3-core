@@ -32,28 +32,26 @@ public class ConditionTest {
 	
 	@Test
 	public void manyConditions() {
-		IFindingsFactory factory = FindingsServiceComponent.getService().getFindingsFactory();
-		assertNotNull(factory);
 		// create many
 		for (int i = 0; i < 1000; i++) {
-			ICondition condition = factory.createCondition();
+			ICondition condition = FindingsServiceComponent.getService().create(ICondition.class);
 			assertNotNull(condition);
 			// set the properties
 			condition.setPatientId(AllTests.PATIENT_ID);
 			LocalDate dateRecorded = LocalDate.of(2016, Month.DECEMBER, 29);
 			condition.setDateRecorded(dateRecorded);
-			condition.setCategory(ConditionCategory.DIAGNOSIS);
+			condition.setCategory(ConditionCategory.PROBLEMLISTITEM);
 			condition.setStatus(ConditionStatus.ACTIVE);
 			condition.setText("Condition " + i);
 			FindingsServiceComponent.getService().saveFinding(condition);
 		}
 		// test many
-		List<IFinding> findings = FindingsServiceComponent.getService().getPatientsFindings(AllTests.PATIENT_ID,
+		List<ICondition> findings = FindingsServiceComponent.getService()
+			.getPatientsFindings(AllTests.PATIENT_ID,
 				ICondition.class);
 		assertEquals(1000, findings.size());
-		for (IFinding iFinding : findings) {
-			assertTrue(iFinding instanceof ICondition);
-			Optional<LocalDate> dateRecorded = ((ICondition)iFinding).getDateRecorded();
+		for (ICondition iFinding : findings) {
+			Optional<LocalDate> dateRecorded = iFinding.getDateRecorded();
 			assertTrue(dateRecorded.isPresent());
 			assertEquals(LocalDate.of(2016, Month.DECEMBER, 29), dateRecorded.get());
 		}
@@ -61,15 +59,13 @@ public class ConditionTest {
 
 	@Test
 	public void getProperties(){
-		IFindingsFactory factory = FindingsServiceComponent.getService().getFindingsFactory();
-		assertNotNull(factory);
-		ICondition condition = factory.createCondition();
+		ICondition condition = FindingsServiceComponent.getService().create(ICondition.class);
 		assertNotNull(condition);
 		// set the properties
 		condition.setPatientId(AllTests.PATIENT_ID);
 		LocalDate dateRecorded = LocalDate.of(2016, Month.OCTOBER, 19);
 		condition.setDateRecorded(dateRecorded);
-		condition.setCategory(ConditionCategory.DIAGNOSIS);
+		condition.setCategory(ConditionCategory.PROBLEMLISTITEM);
 		condition.setStatus(ConditionStatus.ACTIVE);
 		
 		condition.addNote("first note");
@@ -101,13 +97,13 @@ public class ConditionTest {
 		
 		FindingsServiceComponent.getService().saveFinding(condition);
 		
-		List<IFinding> conditions = FindingsServiceComponent.getService()
+		List<ICondition> conditions = FindingsServiceComponent.getService()
 			.getPatientsFindings(AllTests.PATIENT_ID, ICondition.class);
 		assertNotNull(conditions);
 		assertFalse(conditions.isEmpty());
 		assertEquals(1, conditions.size());
 		// read condition and test the properties
-		ICondition readcondition = (ICondition) conditions.get(0);
+		ICondition readcondition = conditions.get(0);
 		assertEquals(AllTests.PATIENT_ID,
 			readcondition.getPatientId());
 		assertTrue(readcondition.getDateRecorded().isPresent());

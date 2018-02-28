@@ -1475,13 +1475,22 @@ public interface ModelPackage extends EPackage {
 	int ILAB_RESULT__ITEM = IDENTIFIABLE_FEATURE_COUNT + 11;
 
 	/**
+	 * The feature id for the '<em><b>Pathologic Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_RESULT__PATHOLOGIC_DESCRIPTION = IDENTIFIABLE_FEATURE_COUNT + 12;
+
+	/**
 	 * The number of structural features of the '<em>ILab Result</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 12;
+	int ILAB_RESULT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 13;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ILabOrder <em>ILab Order</em>}' class.
@@ -1567,13 +1576,223 @@ public interface ModelPackage extends EPackage {
 	int IPERIOD_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 2;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IDocument <em>IDocument</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IDocument
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDocument()
+	 * @generated
+	 */
+	int IDOCUMENT = 15;
+
+	/**
+	 * The feature id for the '<em><b>Patient Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT__PATIENT_ID = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Author Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT__AUTHOR_ID = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Title</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT__TITLE = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT__DESCRIPTION = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Status</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT__STATUS = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Created</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT__CREATED = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Lastchanged</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT__LASTCHANGED = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The feature id for the '<em><b>Mime Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT__MIME_TYPE = IDENTIFIABLE_FEATURE_COUNT + 7;
+
+	/**
+	 * The feature id for the '<em><b>Category</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT__CATEGORY = IDENTIFIABLE_FEATURE_COUNT + 8;
+
+	/**
+	 * The feature id for the '<em><b>History</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT__HISTORY = IDENTIFIABLE_FEATURE_COUNT + 9;
+
+	/**
+	 * The feature id for the '<em><b>Store Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT__STORE_ID = IDENTIFIABLE_FEATURE_COUNT + 10;
+
+	/**
+	 * The feature id for the '<em><b>Extension</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT__EXTENSION = IDENTIFIABLE_FEATURE_COUNT + 11;
+
+	/**
+	 * The feature id for the '<em><b>Keywords</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT__KEYWORDS = IDENTIFIABLE_FEATURE_COUNT + 12;
+
+	/**
+	 * The number of structural features of the '<em>IDocument</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 13;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.ICategory <em>ICategory</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.ICategory
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getICategory()
+	 * @generated
+	 */
+	int ICATEGORY = 16;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICATEGORY__NAME = 0;
+
+	/**
+	 * The number of structural features of the '<em>ICategory</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICATEGORY_FEATURE_COUNT = 1;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IHistory <em>IHistory</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IHistory
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIHistory()
+	 * @generated
+	 */
+	int IHISTORY = 17;
+
+	/**
+	 * The feature id for the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IHISTORY__DATE = 0;
+
+	/**
+	 * The feature id for the '<em><b>Status</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IHISTORY__STATUS = 1;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IHISTORY__DESCRIPTION = 2;
+
+	/**
+	 * The number of structural features of the '<em>IHistory</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IHISTORY_FEATURE_COUNT = 3;
+
+	/**
 	 * The meta object id for the '<em>String Array</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getStringArray()
 	 * @generated
 	 */
-	int STRING_ARRAY = 15;
+	int STRING_ARRAY = 18;
 
 
 	/**
@@ -2400,6 +2619,17 @@ public interface ModelPackage extends EPackage {
 	EReference getILabResult_Item();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ILabResult#getPathologicDescription <em>Pathologic Description</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Pathologic Description</em>'.
+	 * @see ch.elexis.core.model.ILabResult#getPathologicDescription()
+	 * @see #getILabResult()
+	 * @generated
+	 */
+	EAttribute getILabResult_PathologicDescription();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.ILabOrder <em>ILab Order</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2473,6 +2703,223 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getIPeriod_EndTime();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IDocument <em>IDocument</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IDocument</em>'.
+	 * @see ch.elexis.core.model.IDocument
+	 * @generated
+	 */
+	EClass getIDocument();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IDocument#getPatientId <em>Patient Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Patient Id</em>'.
+	 * @see ch.elexis.core.model.IDocument#getPatientId()
+	 * @see #getIDocument()
+	 * @generated
+	 */
+	EAttribute getIDocument_PatientId();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IDocument#getAuthorId <em>Author Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Author Id</em>'.
+	 * @see ch.elexis.core.model.IDocument#getAuthorId()
+	 * @see #getIDocument()
+	 * @generated
+	 */
+	EAttribute getIDocument_AuthorId();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IDocument#getTitle <em>Title</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Title</em>'.
+	 * @see ch.elexis.core.model.IDocument#getTitle()
+	 * @see #getIDocument()
+	 * @generated
+	 */
+	EAttribute getIDocument_Title();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IDocument#getDescription <em>Description</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Description</em>'.
+	 * @see ch.elexis.core.model.IDocument#getDescription()
+	 * @see #getIDocument()
+	 * @generated
+	 */
+	EAttribute getIDocument_Description();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IDocument#getStatus <em>Status</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Status</em>'.
+	 * @see ch.elexis.core.model.IDocument#getStatus()
+	 * @see #getIDocument()
+	 * @generated
+	 */
+	EAttribute getIDocument_Status();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IDocument#getCreated <em>Created</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Created</em>'.
+	 * @see ch.elexis.core.model.IDocument#getCreated()
+	 * @see #getIDocument()
+	 * @generated
+	 */
+	EAttribute getIDocument_Created();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IDocument#getLastchanged <em>Lastchanged</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Lastchanged</em>'.
+	 * @see ch.elexis.core.model.IDocument#getLastchanged()
+	 * @see #getIDocument()
+	 * @generated
+	 */
+	EAttribute getIDocument_Lastchanged();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IDocument#getMimeType <em>Mime Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Mime Type</em>'.
+	 * @see ch.elexis.core.model.IDocument#getMimeType()
+	 * @see #getIDocument()
+	 * @generated
+	 */
+	EAttribute getIDocument_MimeType();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IDocument#getCategory <em>Category</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Category</em>'.
+	 * @see ch.elexis.core.model.IDocument#getCategory()
+	 * @see #getIDocument()
+	 * @generated
+	 */
+	EReference getIDocument_Category();
+
+	/**
+	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IDocument#getHistory <em>History</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>History</em>'.
+	 * @see ch.elexis.core.model.IDocument#getHistory()
+	 * @see #getIDocument()
+	 * @generated
+	 */
+	EReference getIDocument_History();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IDocument#getStoreId <em>Store Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Store Id</em>'.
+	 * @see ch.elexis.core.model.IDocument#getStoreId()
+	 * @see #getIDocument()
+	 * @generated
+	 */
+	EAttribute getIDocument_StoreId();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IDocument#getExtension <em>Extension</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Extension</em>'.
+	 * @see ch.elexis.core.model.IDocument#getExtension()
+	 * @see #getIDocument()
+	 * @generated
+	 */
+	EAttribute getIDocument_Extension();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IDocument#getKeywords <em>Keywords</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Keywords</em>'.
+	 * @see ch.elexis.core.model.IDocument#getKeywords()
+	 * @see #getIDocument()
+	 * @generated
+	 */
+	EAttribute getIDocument_Keywords();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.ICategory <em>ICategory</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>ICategory</em>'.
+	 * @see ch.elexis.core.model.ICategory
+	 * @generated
+	 */
+	EClass getICategory();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ICategory#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see ch.elexis.core.model.ICategory#getName()
+	 * @see #getICategory()
+	 * @generated
+	 */
+	EAttribute getICategory_Name();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IHistory <em>IHistory</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IHistory</em>'.
+	 * @see ch.elexis.core.model.IHistory
+	 * @generated
+	 */
+	EClass getIHistory();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IHistory#getDate <em>Date</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Date</em>'.
+	 * @see ch.elexis.core.model.IHistory#getDate()
+	 * @see #getIHistory()
+	 * @generated
+	 */
+	EAttribute getIHistory_Date();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IHistory#getStatus <em>Status</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Status</em>'.
+	 * @see ch.elexis.core.model.IHistory#getStatus()
+	 * @see #getIHistory()
+	 * @generated
+	 */
+	EAttribute getIHistory_Status();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IHistory#getDescription <em>Description</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Description</em>'.
+	 * @see ch.elexis.core.model.IHistory#getDescription()
+	 * @see #getIHistory()
+	 * @generated
+	 */
+	EAttribute getIHistory_Description();
 
 	/**
 	 * Returns the meta object for data type '<em>String Array</em>'.
@@ -3141,6 +3588,14 @@ public interface ModelPackage extends EPackage {
 		EReference ILAB_RESULT__ITEM = eINSTANCE.getILabResult_Item();
 
 		/**
+		 * The meta object literal for the '<em><b>Pathologic Description</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ILAB_RESULT__PATHOLOGIC_DESCRIPTION = eINSTANCE.getILabResult_PathologicDescription();
+
+		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.ILabOrder <em>ILab Order</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -3199,6 +3654,172 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IPERIOD__END_TIME = eINSTANCE.getIPeriod_EndTime();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IDocument <em>IDocument</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IDocument
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDocument()
+		 * @generated
+		 */
+		EClass IDOCUMENT = eINSTANCE.getIDocument();
+
+		/**
+		 * The meta object literal for the '<em><b>Patient Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IDOCUMENT__PATIENT_ID = eINSTANCE.getIDocument_PatientId();
+
+		/**
+		 * The meta object literal for the '<em><b>Author Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IDOCUMENT__AUTHOR_ID = eINSTANCE.getIDocument_AuthorId();
+
+		/**
+		 * The meta object literal for the '<em><b>Title</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IDOCUMENT__TITLE = eINSTANCE.getIDocument_Title();
+
+		/**
+		 * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IDOCUMENT__DESCRIPTION = eINSTANCE.getIDocument_Description();
+
+		/**
+		 * The meta object literal for the '<em><b>Status</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IDOCUMENT__STATUS = eINSTANCE.getIDocument_Status();
+
+		/**
+		 * The meta object literal for the '<em><b>Created</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IDOCUMENT__CREATED = eINSTANCE.getIDocument_Created();
+
+		/**
+		 * The meta object literal for the '<em><b>Lastchanged</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IDOCUMENT__LASTCHANGED = eINSTANCE.getIDocument_Lastchanged();
+
+		/**
+		 * The meta object literal for the '<em><b>Mime Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IDOCUMENT__MIME_TYPE = eINSTANCE.getIDocument_MimeType();
+
+		/**
+		 * The meta object literal for the '<em><b>Category</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IDOCUMENT__CATEGORY = eINSTANCE.getIDocument_Category();
+
+		/**
+		 * The meta object literal for the '<em><b>History</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IDOCUMENT__HISTORY = eINSTANCE.getIDocument_History();
+
+		/**
+		 * The meta object literal for the '<em><b>Store Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IDOCUMENT__STORE_ID = eINSTANCE.getIDocument_StoreId();
+
+		/**
+		 * The meta object literal for the '<em><b>Extension</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IDOCUMENT__EXTENSION = eINSTANCE.getIDocument_Extension();
+
+		/**
+		 * The meta object literal for the '<em><b>Keywords</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IDOCUMENT__KEYWORDS = eINSTANCE.getIDocument_Keywords();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.ICategory <em>ICategory</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.ICategory
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getICategory()
+		 * @generated
+		 */
+		EClass ICATEGORY = eINSTANCE.getICategory();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ICATEGORY__NAME = eINSTANCE.getICategory_Name();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IHistory <em>IHistory</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IHistory
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIHistory()
+		 * @generated
+		 */
+		EClass IHISTORY = eINSTANCE.getIHistory();
+
+		/**
+		 * The meta object literal for the '<em><b>Date</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IHISTORY__DATE = eINSTANCE.getIHistory_Date();
+
+		/**
+		 * The meta object literal for the '<em><b>Status</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IHISTORY__STATUS = eINSTANCE.getIHistory_Status();
+
+		/**
+		 * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IHISTORY__DESCRIPTION = eINSTANCE.getIHistory_Description();
 
 		/**
 		 * The meta object literal for the '<em>String Array</em>' data type.

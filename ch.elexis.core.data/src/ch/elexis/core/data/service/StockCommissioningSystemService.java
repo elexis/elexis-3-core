@@ -1,6 +1,7 @@
 package ch.elexis.core.data.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.eclipse.core.runtime.IStatus;
@@ -39,18 +40,19 @@ public class StockCommissioningSystemService implements IStockCommissioningSyste
 	}
 	
 	@Override
-	public IStatus performArticleOutlay(IStockEntry stockEntry, int quantity, Object data){
+	public IStatus performArticleOutlay(IStockEntry stockEntry, int quantity,
+		Map<String, Object> data){
 		StockEntry se = (StockEntry) stockEntry;
 		if (se == null) {
 			return new Status(Status.ERROR, CoreHub.PLUGIN_ID, "stock entry is null");
 		}
+				
 		ElexisEvent performOutlayEvent = new ElexisEvent();
 		performOutlayEvent.setTopic(ElexisEventTopics.STOCK_COMMISSIONING_OUTLAY);
 		performOutlayEvent.getProperties()
 			.put(ElexisEventTopics.STOCK_COMMISSIONING_PROPKEY_STOCKENTRY_ID, se.getId());
 		performOutlayEvent.getProperties().put(
-			ElexisEventTopics.STOCK_COMMISSIONING_PROPKEY_QUANTITY,
-			Integer.toString(quantity));
+			ElexisEventTopics.STOCK_COMMISSIONING_PROPKEY_QUANTITY, Integer.toString(quantity));
 		return CoreHub.getElexisServerEventService().postEvent(performOutlayEvent);
 	}
 	
@@ -60,11 +62,12 @@ public class StockCommissioningSystemService implements IStockCommissioningSyste
 	}
 	
 	@Override
-	public IStatus synchronizeInventory(IStock stock, List<String> articleIds, Object data){
+	public IStatus synchronizeInventory(IStock stock, List<String> articleIds,
+		Map<String, Object> data){
 		ElexisEvent synchronizeEvent = new ElexisEvent();
 		synchronizeEvent.setTopic(ElexisEventTopics.STOCK_COMMISSIONING_SYNC_STOCK);
-		synchronizeEvent.getProperties()
-			.put(ElexisEventTopics.STOCK_COMMISSIONING_PROPKEY_STOCK_ID, stock.getId());
+		synchronizeEvent.getProperties().put(ElexisEventTopics.STOCK_COMMISSIONING_PROPKEY_STOCK_ID,
+			stock.getId());
 		// TODO enable transfer of list
 		return CoreHub.getElexisServerEventService().postEvent(synchronizeEvent);
 	}

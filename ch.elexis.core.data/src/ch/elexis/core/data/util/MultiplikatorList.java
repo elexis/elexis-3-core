@@ -10,16 +10,21 @@
  ******************************************************************************/
 package ch.elexis.core.data.util;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.slf4j.LoggerFactory;
+
+import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
-import ch.rgw.tools.StringTool;
 import ch.rgw.tools.JdbcLink.Stm;
+import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
 /**
@@ -147,6 +152,24 @@ public class MultiplikatorList {
 		}
 	}
 	
+	public void removeMultiplikator(TimeTool dateFrom, String value){
+		PreparedStatement statement = PersistentObject.getDefaultConnection().getPreparedStatement(getPreparedStatementSql());
+		try {
+			statement.setString(1, value);
+			statement.setString(2, dateFrom.toString(TimeTool.DATE_COMPACT));
+			statement.setString(3, typ);
+			statement.execute();
+		} catch (SQLException e) {
+			LoggerFactory.getLogger(getClass()).error("Could not delete multiplikator", e);
+		} finally {
+			PersistentObject.getDefaultConnection().releasePreparedStatement(statement);
+		}
+	}
+	
+	private String getPreparedStatementSql(){
+		return "DELETE FROM " + table + " WHERE MULTIPLIKATOR=? AND DATUM_VON=? AND TYP=?";
+	}
+	
 	public synchronized double getMultiplikator(TimeTool date){
 		// get Mutliplikator for date
 		fetchResultSet();
@@ -180,5 +203,48 @@ public class MultiplikatorList {
 			this.validTo = validTo;
 			this.multiplikator = multiplikator;
 		}
+	}
+	
+	private static String[] getEigenleistungUseMultiSystems(){
+		String systems =
+			CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS, "");
+		return systems.split("\\|\\|");
+	}
+	
+	public static boolean isEigenleistungUseMulti(String system){
+		String[] systems = getEigenleistungUseMultiSystems();
+		for (String string : systems) {
+			if (system.equals(string)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static void setEigenleistungUseMulti(String system){
+		String systems =
+			CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS, "");
+		if (!systems.isEmpty()) {
+			systems = systems.concat("||");
+		}
+		systems = systems.concat(system);
+		CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS, systems);
+		CoreHub.globalCfg.flush();
+	}
+	
+	public static void removeEigenleistungUseMulti(String system){
+		String[] systems = getEigenleistungUseMultiSystems();
+		StringBuilder sb = new StringBuilder();
+		for (String string : systems) {
+			if (!system.equals(string)) {
+				if (!(sb.length() == 0)) {
+					sb.append("||");
+				}
+				sb.append(string);
+			}
+		}
+		CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS,
+			sb.toString());
+		CoreHub.globalCfg.flush();
 	}
 }

@@ -57,7 +57,7 @@ public class TimeTool extends GregorianCalendar {
 				Messages.getString("TimeTool.sa")),
 			SUNDAY(Calendar.SUNDAY, Messages.getString("TimeTool.sunday"),
 				Messages.getString("TimeTool.su"));
-				
+		
 		public int numericDayValue;
 		public String fullName;
 		public String abbreviatedName;
@@ -184,7 +184,7 @@ public class TimeTool extends GregorianCalendar {
 	private static final SimpleDateFormat timestamp = new SimpleDateFormat("yyyyMMddHHmmss");
 	private static final SimpleDateFormat datetime_xml =
 		new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		
+	
 	private static SimpleDateFormat pref_full = full_ger;
 	private static SimpleDateFormat pref_small = date_ger;
 	private static boolean wrap = true;
@@ -736,8 +736,21 @@ public class TimeTool extends GregorianCalendar {
 	 * @return
 	 */
 	public String getDurationToNowString(){
+		return getDurationToTimeAsString(LocalDateTime.now());
+	}
+	
+	/**
+	 * Get a String representation of the duration of the date compared to the given time. Returns
+	 * an internationalized String.<br />
+	 * Examples: 2 weeks ago, in 1 week, 1 year ago, in 2 years
+	 * 
+	 * @since 3.2
+	 * 
+	 * @return
+	 */
+	public String getDurationToTimeAsString(LocalDateTime localDateTime){
 		LocalDateTime date = toLocalDateTime();
-		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime now = localDateTime;
 		
 		int years = (int) now.until(date, ChronoUnit.YEARS);
 		int weeks = (int) now.until(date, ChronoUnit.WEEKS);
@@ -753,7 +766,7 @@ public class TimeTool extends GregorianCalendar {
 			String format = getYearsFormat(years);
 			return String.format(format, Math.abs(years));
 		}
-		if (months != 0 && Math.abs(days) > 28) {
+		if (months != 0 && Math.abs(days) > 63) {
 			String format = getMonthsFormat(months);
 			return String.format(format, Math.abs(months));
 		}
@@ -898,7 +911,7 @@ public class TimeTool extends GregorianCalendar {
 	/**
 	 * @since 3.2
 	 */
-	public LocalDateTime toLocalDateTime() {
+	public LocalDateTime toLocalDateTime(){
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setTimeInMillis(getTimeInMillis());
 		return gc.toZonedDateTime().toLocalDateTime();
@@ -988,5 +1001,26 @@ public class TimeTool extends GregorianCalendar {
 			return 1;
 		}
 		return 0;
+	}
+	
+	/**
+	 * Null-safe static compare method, null is always in the max past, thus being lower
+	 * 
+	 * @param dateDue may be <code>null</code>
+	 * @param dateDue2 may be <code>null</code>
+	 * @return 0 if equal, -1 if dd is greater, 1 if dd2 is greater
+	 * @since 3.4
+	 */
+	public static int compare(TimeTool dd,  TimeTool dd2){
+		if (dd == null || dd2 == null) {
+			if (dd != null) {
+				return -1;
+			}
+			if (dd2 != null) {
+				return 1;
+			}
+			return 0;
+		}
+		return dd2.compareTo(dd);
 	}
 }

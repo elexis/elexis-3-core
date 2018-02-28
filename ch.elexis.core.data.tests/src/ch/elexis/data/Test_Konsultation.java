@@ -1,6 +1,7 @@
 package ch.elexis.data;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
@@ -72,7 +73,7 @@ public class Test_Konsultation extends AbstractPersistentObjectTest {
 			.queryString("SELECT LASTUPDATE FROM DIAGNOSEN WHERE KLASSE="
 				+ JdbcLink.wrap(ftd.getClass().getName()) + " AND DG_CODE="
 				+ JdbcLink.wrap(ftd.getCode()));
-		assertTrue(currentTimeMillis < Long.valueOf(lastUpdateSet));
+		assertTrue(currentTimeMillis <= Long.valueOf(lastUpdateSet));
 		
 		kons.removeDiagnose(ftd);
 		assertEquals(0, kons.getDiagnosen().size());

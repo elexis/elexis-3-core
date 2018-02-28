@@ -8,19 +8,23 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import ch.elexis.core.findings.AllergyIntoleranceTest;
 import ch.elexis.core.findings.ConditionTest;
 import ch.elexis.core.findings.CreateFindingsTest;
 import ch.elexis.core.findings.EncounterTest;
+import ch.elexis.core.findings.FamilyMemberHistoryTest;
 import ch.elexis.core.findings.FindingsServiceComponent;
 import ch.elexis.core.findings.FindingsServiceTest;
 import ch.elexis.core.findings.IFinding;
+import ch.elexis.core.findings.ObservationTest;
 import ch.elexis.core.findings.ProcedureRequestTest;
 import ch.elexis.core.findings.codings.CodingServiceTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
 	FindingsServiceTest.class, CreateFindingsTest.class, EncounterTest.class, ConditionTest.class,
-		CodingServiceTest.class, ProcedureRequestTest.class
+	CodingServiceTest.class, ProcedureRequestTest.class, ObservationTest.class,
+	FamilyMemberHistoryTest.class, AllergyIntoleranceTest.class
 })
 public class AllTests {
 	public static final String PATIENT_ID = "defaultPatient";
@@ -37,6 +41,7 @@ public class AllTests {
 	@BeforeClass
 	public static void beforeClass() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
 			NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
+
 		// check if for server test mode and init db if so
 		String testMode = System.getProperty("es.test");
 		if (testMode != null && !testMode.isEmpty()) {

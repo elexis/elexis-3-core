@@ -13,6 +13,31 @@
             class="ch.elexis.core.findings.fhir.po.dataaccess.FindingsDataAccessor"
             name="Befunde">
       </DataAccess>
+      <TextPlaceHolder
+            name="Risiken"
+            resolver="ch.elexis.core.findings.fhir.po.text.RiskResolver"
+            type="ch.elexis.data.Patient">
+      </TextPlaceHolder>
+      <TextPlaceHolder
+            name="Diagnosen"
+            resolver="ch.elexis.core.findings.fhir.po.text.DiagnosisResolver"
+            type="ch.elexis.data.Patient">
+      </TextPlaceHolder>
+      <TextPlaceHolder
+            name="PersAnamnese"
+            resolver="ch.elexis.core.findings.fhir.po.text.PersAnamnesisResolver"
+            type="ch.elexis.data.Patient">
+      </TextPlaceHolder>
+      <TextPlaceHolder
+            name="Allergien"
+            resolver="ch.elexis.core.findings.fhir.po.text.AllergiesResolver"
+            type="ch.elexis.data.Patient">
+      </TextPlaceHolder>
+      <TextPlaceHolder
+            name="FamilienAnamnese"
+            resolver="ch.elexis.core.findings.fhir.po.text.FamAnamnesisResolver"
+            type="ch.elexis.data.Patient">
+      </TextPlaceHolder>
    </extension>
 
 </plugin>

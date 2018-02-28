@@ -44,23 +44,23 @@ public class LockInfo {
 	}
 
 	/**
-	 * Get the class name of the element, equals storeToString without the id.
-	 * 
-	 * @return
+	 * @return class name of the element, equals storeToString without the id.
 	 */
 	public String getElementType() {
 		return elementType;
 	}
 
 	/**
-	 * Get the local id of the element, equals storeToString without the class name.
-	 * 
-	 * @return
+	 * @return local id of the element, equals storeToString without the class name.
 	 */
 	public String getElementId() {
 		return elementId;
 	}
 
+	/**
+	 * 
+	 * @return user the lock is allocated to
+	 */
 	public String getUser() {
 		return user;
 	}
@@ -98,4 +98,11 @@ public class LockInfo {
 		}
 		return false;
 	}
+
+	@Override
+	public String toString() {
+		return "LockInfo [elementType=" + elementType + ", elementId=" + elementId + ", user=" + user + ", systemUuid="
+				+ systemUuid + ", creationDate=" + creationDate + ", refreshMillis=" + refreshMillis + "]";
+	}
+
 }

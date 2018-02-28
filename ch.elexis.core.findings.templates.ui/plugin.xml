@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="ch.elexis.core.findings.templates.ui.command.finding.create"
+            name="Create Finding">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="ch.elexis.core.findings.templates.ui.handler.FindingCreateHandler"
+            commandId="ch.elexis.core.findings.templates.ui.command.finding.create">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.core.findings.ui.views.FindingsView">
+         <command
+               commandId="ch.elexis.core.findings.templates.ui.command.finding.create"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/new.png"
+               label="Neuen Befund anlegen"
+               style="push">
+         </command>
+      </menuContribution>
+    </extension> 
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="ch.elexis.core.findings.ui"
+            class="ch.elexis.core.findings.templates.ui.perferences.FindingsTemplateSettings"
+            id="ch.elexis.core.findings.templates.ui.perferences.FindingsTemplateSettings"
+            name="Vorlagen">
+      </page>
+      <page
+            category="ch.elexis.core.findings.ui"
+            class="ch.elexis.core.findings.templates.ui.perferences.CodeSystemSettings"
+            id="ch.elexis.core.findings.templates.ui.perferences.CodeSystemSettings"
+            name="Codesysteme">
+      </page>
+   </extension>
+   <extension
+         point="ch.elexis.core.data.DataAccess">
+      <DataAccess
+            class="ch.elexis.core.findings.templates.ui.dataaccess.FindingDataAccessor"
+            name="Befunde-Neu">
+      </DataAccess>
+   </extension>
+</plugin>

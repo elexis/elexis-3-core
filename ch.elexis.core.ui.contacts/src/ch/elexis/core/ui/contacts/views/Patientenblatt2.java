@@ -82,6 +82,7 @@ import ch.elexis.core.ui.dialogs.AnschriftEingabeDialog;
 import ch.elexis.core.ui.dialogs.KontaktDetailDialog;
 import ch.elexis.core.ui.dialogs.KontaktExtDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
+import ch.elexis.core.ui.dialogs.ZusatzAdresseEingabeDialog;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.events.ElexisUiSyncEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
@@ -111,6 +112,7 @@ import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Person;
 import ch.elexis.data.Xid;
 import ch.elexis.data.Xid.XIDDomain;
+import ch.elexis.data.ZusatzAdresse;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -123,8 +125,10 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	private static final String KEY_PATIENTENBLATT = "Patientenblatt/"; //$NON-NLS-1$
 	private final FormToolkit tk;
 	private InputPanel ipp;
-	private IAction removeZAAction, showZAAction, copySelectedContactInfosToClipboardAction,
-			copySelectedAddressesToClipboardAction;
+	private IAction removeZAAction, showZAAction, showBKAction,
+			copySelectedContactInfosToClipboardAction,
+			copySelectedAddressesToClipboardAction, removeAdditionalAddressAction,
+			showAdditionalAddressAction;
 	// MenuItem delZA;
 	public final static String CFG_BEZUGSKONTAKTTYPEN = "views/patientenblatt/Bezugskontakttypen"; //$NON-NLS-1$
 	public final static String CFG_EXTRAFIELDS = "views/patientenblatt/extrafelder"; //$NON-NLS-1$
@@ -185,13 +189,15 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			}
 		};
 	
-	private static ArrayList<String> lbExpandable = new ArrayList<>(Arrays.asList(
+	private ArrayList<String> lbExpandable =
+		new ArrayList<>(Arrays.asList(
 		Messages.Patientenblatt2_diagnosesLbl, Messages.Patientenblatt2_persAnamnesisLbl,
 		Messages.Patientenblatt2_allergiesLbl, Messages.Patientenblatt2_risksLbl,
 		Messages.Patientenblatt2_remarksLbk
 	));
 	private final List<Text> txExpandable = new ArrayList<>();
-	private static ArrayList<String> dfExpandable = new ArrayList<>(Arrays.asList(
+	private ArrayList<String> dfExpandable =
+		new ArrayList<>(Arrays.asList(
 		"Diagnosen", "PersAnamnese", //$NON-NLS-1$ //$NON-NLS-2$
 		"Allergien", "Risiken", "Bemerkung" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 	));
@@ -199,14 +205,15 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	private final static String FIXMEDIKATION = Messages.Patientenblatt2_fixmedication; // $NON-NLS-1$
 	// private final static String[] lbLists={"Fixmedikation"/*,"Reminders" */};
 	private final FormText inpAdresse;
-	private final ListDisplay<BezugsKontakt> inpZusatzAdresse /* , dlReminder */;
+	private final ListDisplay<BezugsKontakt> inpZusatzAdresse;
+	private final ListDisplay<ZusatzAdresse> additionalAddresses; /* , dlReminder */;
 	private final FixMediDisplay dmd;
 	Patient actPatient;
 	IViewSite viewsite;
 	private final Hyperlinkreact hr = new Hyperlinkreact();
 	private final ScrolledForm form;
 	private final ViewMenus viewmenu;
-	private final ExpandableComposite ecdm, ecZA;
+	private final ExpandableComposite ecdm, ecZA, compAdditionalAddresses;
 	private boolean bLocked = true;
 	private Composite cUserfields;
 	Hyperlink hHA;
@@ -306,6 +313,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				}
 				
 				public void reloadContent(PersistentObject po, InputData ltf){
+					if(bLocked) {
+						return;
+					}
 					KontaktSelektor ks = new KontaktSelektor(getShell(), Kontakt.class,
 						Messages.Patientenblatt2_selectRegularPhysicianTitle,
 						Messages.Patientenblatt2_selectRegularPhysicianMessage, null);
@@ -332,6 +342,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				}
 				
 				public void reloadContent(final PersistentObject po, final InputData ltf){
+					if(bLocked) {
+						return;
+					}
 					ArrayList<String> extFlds = new ArrayList<String>();
 					Kontakt k = (Kontakt) po;
 					for (String dom : Xid.getXIDDomains()) {
@@ -368,6 +381,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				
 				@Override
 				public void reloadContent(PersistentObject po, InputData ltf){
+					if(bLocked) {
+						return;
+					}
 					KontaktSelektor ks = new KontaktSelektor(getShell(), Kontakt.class,
 						Messages.Patientenblatt2_selectLegalGuardianTitle,
 						Messages.Patientenblatt2_selectLegalGuardianMessage, null);
@@ -447,9 +463,27 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		for (IViewContribution ivc : filtered) {
 			if (ivc.getClass().getPackage().getName()
 				.startsWith("ch.elexis.core.findings.ui.viewcontributions")) {
-				// remove unstructured diagnosis ui
-				lbExpandable.remove(Messages.Patientenblatt2_diagnosesLbl);
-				dfExpandable.remove("Diagnosen");
+				if (ivc.isAvailable()) {
+					// remove unstructured diagnosis ui
+					if (ivc.getClass().getSimpleName().equals("DiagnoseViewContribution")) {
+						lbExpandable.remove(Messages.Patientenblatt2_diagnosesLbl);
+						dfExpandable.remove("Diagnosen");
+					}
+					if (ivc.getClass().getSimpleName()
+						.equals("PersonalAnamnesisViewContribution")) {
+						lbExpandable.remove(Messages.Patientenblatt2_persAnamnesisLbl);
+						dfExpandable.remove("PersAnamnese");
+					}
+					if (ivc.getClass().getSimpleName().equals("RiskViewContribution")) {
+						lbExpandable.remove(Messages.Patientenblatt2_risksLbl);
+						dfExpandable.remove("Risiken");
+					}
+					if (ivc.getClass().getSimpleName()
+						.equals("AllergyIntoleranceViewContribution")) {
+						lbExpandable.remove(Messages.Patientenblatt2_allergiesLbl);
+						dfExpandable.remove("Allergien");
+					}
+				}
 			}
 			ExpandableComposite ec =
 				WidgetFactory.createExpandableComposite(tk, form, ivc.getLocalizedTitle());
@@ -482,18 +516,18 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						Messages.Patientenblatt2_contactForAdditionalAddress,
 						Messages.Patientenblatt2_pleaseSelectardress, sortFields); // $NON-NLS-1$
 																																																		// //$NON-NLS-2$
-					if (ksl.open() == Dialog.OK) {
+					if (ksl.open() == Dialog.OK && actPatient != null) {
 						Kontakt k = (Kontakt) ksl.getSelection();
-						BezugsKontaktAuswahl bza = new BezugsKontaktAuswahl();
-						// InputDialog id=new
-						// InputDialog(getShell(),"Bezugstext für Adresse","Geben
-						// Sie bitte einen Text ein, der die Bedeutung dieser
-						// Adresse erklärt","",null);
-						if (bza.open() == Dialog.OK) {
-							String bezug = bza.getResult();
-							BezugsKontakt bk = actPatient.addBezugsKontakt(k, bezug);
-							inpZusatzAdresse.add(bk);
-							form.reflow(true);
+						if (k != null) {
+							BezugsKontaktAuswahl bza = new BezugsKontaktAuswahl(
+								actPatient.getLabel(true), k.istPerson()
+										? Person.load(k.getId()).getLabel(true) : k.getLabel(true));
+							if (bza.open() == Dialog.OK) {
+								BezugsKontakt bk =
+									actPatient.addBezugsKontakt(k, bza.getBezugKonkaktRelation());
+								inpZusatzAdresse.add(bk);
+								form.reflow(true);
+							}
 						}
 						
 					}
@@ -547,10 +581,55 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		// Das Kontext-Menü jedes Eintrags in der Adressliste erzeugen
 		
 		// inpZusatzAdresse.setMenu(createZusatzAdressMenu());
-		inpZusatzAdresse.setMenu(removeZAAction, showZAAction,
+		inpZusatzAdresse.setMenu(removeZAAction, showZAAction, showBKAction,
 			copySelectedContactInfosToClipboardAction, copySelectedAddressesToClipboardAction);
 		
 		ecZA.setClient(inpZusatzAdresse);
+		
+		// zusatz adressen
+		compAdditionalAddresses = WidgetFactory.createExpandableComposite(tk, form,
+			"Zusatzadressen"); // $NON-NLS-1$
+		compAdditionalAddresses.addExpansionListener(ecExpansionListener);
+		
+		additionalAddresses = new ListDisplay<ZusatzAdresse>(compAdditionalAddresses, SWT.NONE,
+			new ListDisplay.LDListener() {
+				/*
+				 * public boolean dropped(final PersistentObject dropped) { return
+				 * false; }
+				 */
+				
+				public void hyperlinkActivated(final String l){
+					if (actPatient != null) {
+						ZusatzAdresseEingabeDialog aed =
+							new ZusatzAdresseEingabeDialog(form.getShell(), actPatient);
+						if (aed.open() == Dialog.OK) {
+							additionalAddresses.add(aed.getZusatzAdresse());
+							form.reflow(true);
+						}
+					}
+				}
+				
+				public String getLabel(Object o){
+					ZusatzAdresse address = (ZusatzAdresse) o;
+					if (address != null) {
+						return address.getLabel();
+					}
+					return "?"; //$NON-NLS-1$
+				}
+			});
+		
+		// Hyperlink "Hinzu..." über der Adressliste hinzufügen
+		additionalAddresses.addHyperlinks(Messages.Patientenblatt2_add); // $NON-NLS-1$
+		
+		// Das Kontext-Menü jedes Eintrags in der Adressliste erzeugen
+		
+		// inpZusatzAdresse.setMenu(createZusatzAdressMenu());
+		makeAdditionalAddressActions();
+		additionalAddresses.setMenu(removeAdditionalAddressAction, showAdditionalAddressAction);
+		
+		compAdditionalAddresses.setClient(additionalAddresses);
+		
+		//-------------------------------------------------------------
 		
 		for (int i = 0; i < lbExpandable.size(); i++) {
 			ec.add(WidgetFactory.createExpandableComposite(tk, form, lbExpandable.get(i)));
@@ -568,6 +647,13 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 								.unNull(actPatient.get((String) src.getData(KEY_DBFIELD))));
 						} else {
 							tx.setText(""); //$NON-NLS-1$
+						}
+					} else {
+						if (actPatient != null) {
+							Text tx = (Text) src.getClient();
+							if (tx.getText() != null) {
+								actPatient.set((String) src.getData(KEY_DBFIELD), tx.getText());
+							}
 						}
 					}
 					UserSettings.saveExpandedState(KEY_PATIENTENBLATT + src.getText(),
@@ -597,12 +683,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		List<IViewContribution> lContrib =
 			ViewContributionHelper.getFilteredAndPositionSortedContributions(detailComposites, 1);
 		for (IViewContribution ivc : lContrib) {
-			if (ivc.getClass().getPackage().getName()
-				.startsWith("ch.elexis.core.findings.ui.viewcontributions")) {
-				// remove unstructured diagnosis ui
-				lbExpandable.remove(Messages.Patientenblatt2_diagnosesLbl);
-				dfExpandable.remove("Diagnosen");
-			}
 			ExpandableComposite ec =
 				WidgetFactory.createExpandableComposite(tk, form, ivc.getLocalizedTitle());
 			ec.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
@@ -615,7 +695,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		
 		viewmenu = new ViewMenus(viewsite);
 		viewmenu.createMenu(GlobalActions.printEtikette, GlobalActions.printAdresse,
-			GlobalActions.printBlatt, GlobalActions.printRoeBlatt,
+			GlobalActions.printBlatt, GlobalActions.showBlatt, GlobalActions.printRoeBlatt,
 			copySelectedContactInfosToClipboardAction, copySelectedAddressesToClipboardAction);
 		
 		viewmenu.createToolbar(copySelectedContactInfosToClipboardAction);
@@ -624,14 +704,14 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		tk.paintBordersFor(form.getBody());
 	}
 	
-	private void save(){
+	protected void save(){
 		if (actPatient != null) {
 			if (ipp != null) {
 				ipp.save();
 			}
 			for (int i = 0; i < txExpandable.size(); i++) {
 				String field = dfExpandable.get(i);
-				String oldvalue = actPatient.get(field);
+				String oldvalue = StringTool.unNull(actPatient.get(field));
 				String newvalue = txExpandable.get(i).getText();
 				if (bLocked) {
 					txExpandable.get(i).setText(oldvalue);
@@ -686,8 +766,14 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	
 	@SuppressWarnings("unchecked")
 	public void setPatient(final Patient p){
-		save();
 		actPatient = p;
+		
+		refreshUi();
+		
+		setUnlocked(CoreHub.getLocalLockService().isLockedLocal(p));
+	}
+	
+	public void refreshUi(){
 		ipp.getAutoForm().reload(actPatient);
 		
 		detailComposites.forEach(dc -> dc.setDetailObject(actPatient, null));
@@ -700,28 +786,56 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			return;
 		}
 		
-		form.setText(StringTool.unNull(p.getName()) + StringConstants.SPACE
-			+ StringTool.unNull(p.getVorname()) + " (" //$NON-NLS-1$
-			+ p.getPatCode() + ")"); //$NON-NLS-1$
-		inpAdresse.setText(p.getPostAnschrift(false), false, false);
+		form.setText(StringTool.unNull(actPatient.getName()) + StringConstants.SPACE
+			+ StringTool.unNull(actPatient.getVorname()) + " (" //$NON-NLS-1$
+			+ actPatient.getPatCode() + ")"); //$NON-NLS-1$
+		inpAdresse.setText(actPatient.getPostAnschrift(false), false, false);
 		UserSettings.setExpandedState(ecZA, "Patientenblatt/Zusatzadressen"); //$NON-NLS-1$
 		inpZusatzAdresse.clear();
-		for (BezugsKontakt za : p.getBezugsKontakte()) {
+		for (BezugsKontakt za : actPatient.getBezugsKontakte()) {
 			inpZusatzAdresse.add(za);
+		}
+		
+		additionalAddresses.clear();
+		for (ZusatzAdresse zusatzAdresse : actPatient.getZusatzAdressen()) {
+			additionalAddresses.add(zusatzAdresse);
 		}
 		
 		for (int i = 0; i < dfExpandable.size(); i++) {
 			UserSettings.setExpandedState(ec.get(i), KEY_PATIENTENBLATT + ec.get(i).getText());
-			txExpandable.get(i).setText(p.get(dfExpandable.get(i)));
+			txExpandable.get(i).setText(StringTool.unNull(actPatient.get(dfExpandable.get(i))));
 		}
 		dmd.reload();
-		form.reflow(true);
-		
-		setUnlocked(CoreHub.getLocalLockService().isLockedLocal(p));
+		refresh();
 	}
 	
 	public void refresh(){
 		form.reflow(true);
+	}
+	
+	private void makeAdditionalAddressActions(){
+		removeAdditionalAddressAction = new Action(Messages.Patientenblatt2_removeAddress) {
+			@Override
+			public void run(){
+				if (!bLocked) {
+					ZusatzAdresse a = (ZusatzAdresse) additionalAddresses.getSelection();
+					a.delete();
+					setPatient(actPatient);
+				}
+			}
+		};
+		
+		showAdditionalAddressAction = new Action(Messages.Patientenblatt2_showAddress) {
+			@Override
+			public void run(){
+				ZusatzAdresse zusatzAdresse = (ZusatzAdresse) additionalAddresses.getSelection();
+				ZusatzAdresseEingabeDialog aed = new ZusatzAdresseEingabeDialog(form.getShell(),
+					actPatient, zusatzAdresse, bLocked);
+				if (aed.open() == Dialog.OK) {
+					setPatient(actPatient);
+				}
+			}
+		};
 	}
 	
 	private void makeActions(){
@@ -742,8 +856,29 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			public void doRun(){
 				Kontakt a = Kontakt.load(
 					((BezugsKontakt) inpZusatzAdresse.getSelection()).get(BezugsKontakt.OTHER_ID));
-				KontaktDetailDialog kdd = new KontaktDetailDialog(form.getShell(), a);
-				kdd.open();
+				KontaktDetailDialog kdd = new KontaktDetailDialog(form.getShell(), a, bLocked);
+				if (kdd.open() == Dialog.OK) {
+					setPatient(actPatient);
+				}
+			}
+		};
+		
+		showBKAction = new RestrictedAction(AccessControlDefaults.PATIENT_DISPLAY,
+			Messages.Patientenblatt2_showBezugKontaktRelation) {
+			@Override
+			public void doRun(){
+				BezugsKontakt bezugsKontakt = (BezugsKontakt) inpZusatzAdresse.getSelection();
+				if (bezugsKontakt != null) {
+					Kontakt k = Kontakt.load(bezugsKontakt.get(BezugsKontakt.OTHER_ID));
+					BezugsKontaktAuswahl bza = new BezugsKontaktAuswahl(actPatient.getLabel(true),
+						k.istPerson() ? Person.load(k.getId()).getLabel(true) : k.getLabel(true),
+						bezugsKontakt, bLocked);
+					if (bezugsKontakt != null && bza.open() == Dialog.OK
+						&& bza.getBezugKonkaktRelation() != null) {
+						bezugsKontakt.updateRelation(bza.getBezugKonkaktRelation());
+						setPatient(actPatient);
+					}
+				}
 			}
 		};
 		
@@ -1245,7 +1380,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		hHA.setEnabled(unlocked);
 		// delZA.setEnabled(!bLock);
 		removeZAAction.setEnabled(unlocked);
-		dmd.setUnlocked(false); // https://redmine.medelexis.ch/issues/4602
+		removeAdditionalAddressAction.setEnabled(unlocked);
+		additionalAddresses.setUnlocked(unlocked);
+		dmd.setUnlocked(unlocked);
 		if (unlocked) {
 			hHA.setForeground(UiDesk.getColor(UiDesk.COL_BLUE));
 		} else {

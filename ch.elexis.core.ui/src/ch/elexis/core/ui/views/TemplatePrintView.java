@@ -88,16 +88,34 @@ public class TemplatePrintView extends ViewPart {
 	
 	public void useItem(int idx, String template, Kontakt adressat){
 		CTabItem item = ctab.getItem(idx);
-		Brief brief = (Brief) item.getData(KEY_BRIEF);
-		TextContainer text = (TextContainer) item.getData(KEY_TEXT);
-		text.saveBrief(brief, Brief.UNKNOWN);
-		String betreff = brief.getBetreff();
-		brief.delete();
-		if (template != null) {
-			Brief actBrief =
-				text.createFromTemplateName(Konsultation.getAktuelleKons(), template,
-					Brief.UNKNOWN, adressat, betreff);
-			item.setData(KEY_BRIEF, actBrief);
+		if (!item.isDisposed()) {
+			Brief brief = (Brief) item.getData(KEY_BRIEF);
+			TextContainer text = (TextContainer) item.getData(KEY_TEXT);
+			text.saveBrief(brief, Brief.UNKNOWN);
+			String betreff = brief.getBetreff();
+			brief.delete();
+			if (template != null) {
+				Brief actBrief = text.createFromTemplateName(Konsultation.getAktuelleKons(),
+					template, Brief.UNKNOWN, adressat, betreff);
+				item.setData(KEY_BRIEF, actBrief);
+			}
+		}
+	}
+	
+	/**
+	 * Show the generated template in the view
+	 * 
+	 * @param pat
+	 * @param templateName
+	 */
+	public void doShow(Patient pat, String templateName){
+		existing = ctab.getItems().length;
+		
+		if (--existing < 0) {
+			addItem(templateName, templateName, pat);
+		} else {
+			ctab.getItem(0);
+			useItem(0, templateName, pat);
 		}
 	}
 	

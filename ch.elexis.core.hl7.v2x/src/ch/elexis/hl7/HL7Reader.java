@@ -7,9 +7,11 @@ import org.slf4j.LoggerFactory;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.Message;
+import ca.uhn.hl7v2.model.Primitive;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.hl7.model.ObservationMessage;
+import ch.elexis.hl7.model.OrcMessage;
 import ch.elexis.hl7.v26.HL7Constants;
 import ch.elexis.hl7.v26.Messages;
 import ch.rgw.tools.StringTool;
@@ -25,6 +27,8 @@ public abstract class HL7Reader {
 	public HL7Reader(Message message){
 		this.message = message;
 	}
+	
+	public abstract OrcMessage getOrcMessage();
 	
 	public abstract String getSender() throws ElexisException;
 	
@@ -73,7 +77,7 @@ public abstract class HL7Reader {
 		}
 	}
 	
-	public boolean isPathologic(String abnormalValue){
+	public Boolean isPathologic(String abnormalValue){
 		if (!StringTool.isNothing(abnormalValue)) {
 			for (String startChar : abnormalFlagStartCharacters) {
 				if (abnormalValue.startsWith(startChar)) {
@@ -81,7 +85,7 @@ public abstract class HL7Reader {
 				}
 			}
 		}
-		return false;
+		return null;
 	}
 	
 	public IPatient getPatient(){
@@ -118,5 +122,51 @@ public abstract class HL7Reader {
 		// currently we use the default, please augment
 		// on specific requirements
 		return parseTextValue(ftValue);
+	}
+	
+	/**
+	 * Extracts and trims the String value from a {@link Primitive}
+	 * 
+	 * @param nameObj
+	 * @return
+	 */
+	public String extractName(Primitive nameObj){
+		if (nameObj != null) {
+			String val = nameObj.getValue();
+			if (val != null) {
+				return val.trim();
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Collects all potential not null name values and adds them to the OrcMessage. All not null
+	 * values like firstName, secondName and combination of firstName and secondName will also be
+	 * added to the OrcMessage.
+	 * 
+	 * Example firstName is Max and secondName is Muster: Method collects: Max, Muster, Max Muster
+	 * in OrcMessage
+	 * 
+	 * @param firstName
+	 * @param secondName
+	 * @param orcMessage
+	 */
+	public void addNameValuesToOrcMessage(Primitive firstName, Primitive secondName,
+		OrcMessage orcMessage){
+		if (orcMessage != null) {
+			String name = extractName(firstName);
+			if (name != null) {
+				orcMessage.getNames().add(name);
+			}
+			
+			String name2 = extractName(secondName);
+			if (name2 != null) {
+				orcMessage.getNames().add(name2);
+				if (name != null) {
+					orcMessage.getNames().add(name + " " + name2);
+				}
+			}
+		}
 	}
 }

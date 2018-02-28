@@ -32,6 +32,7 @@ import ch.elexis.core.ui.util.Log;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldListener;
+import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListBottomComposite;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
@@ -96,11 +97,12 @@ class RnContentProvider implements ViewerConfigurer.ICommonViewerContentProvider
 					rlv.getSite().getShell().getDisplay().syncExec(new Runnable() {
 						@Override
 						public void run(){
-							if (rlv.tPat != null) {
-								rlv.tPat.setText(Integer.toString(iPat));
-								rlv.tRn.setText(Integer.toString(iRn));
-								rlv.tSum.setText(mAmount.getAmountAsString());
-								rlv.tOpen.setText(mOpen.getAmountAsString());
+							InvoiceListBottomComposite invoiceListeBottomComposite =
+								rlv.getInvoiceListeBottomComposite();
+							if (invoiceListeBottomComposite != null) {
+								invoiceListeBottomComposite.update(Integer.toString(iPat),
+									Integer.toString(iRn), mAmount.getAmountAsString(),
+									mOpen.getAmountAsString());
 							}
 						}
 					});

@@ -29,7 +29,8 @@ public interface IFindingsService {
 	 * @param filter
 	 * @return
 	 */
-	public List<IFinding> getPatientsFindings(String patientId, Class<? extends IFinding> filter);
+	public <T extends IFinding> List<T> getPatientsFindings(String patientId,
+		Class<T> filter);
 
 	/**
 	 * Find {@link IFinding} instances referring to the consultationId. With the filter parameter
@@ -39,7 +40,8 @@ public interface IFindingsService {
 	 * @param filter
 	 * @return
 	 */
-	public List<IFinding> getConsultationsFindings(String consultationId, Class<? extends IFinding> filter);
+	public <T extends IFinding> List<T> getConsultationsFindings(String consultationId,
+		Class<T> filter);
 
 	/**
 	 * Save the {@link IFinding} instance to a persistent state.
@@ -56,28 +58,36 @@ public interface IFindingsService {
 	public void deleteFinding(IFinding finding);
 
 	/**
-	 * Get a {@link IFindingsFactory} that can be used to create implementations of
-	 * {@link IFinding}.
+	 * Factory method to create new {@link IFinding} instances.
 	 * 
+	 * @param type
 	 * @return
 	 */
-	public IFindingsFactory getFindingsFactory();
-
-	/**
-	 * Try to load an {@link IFinding} instance by its id.
-	 * 
-	 * @param idPart
-	 * @return
-	 */
-	public Optional<IFinding> findById(String idPart);
+	public <T extends IFinding> T create(Class<T> type);
 	
 	/**
-	 * Try to load an {@link IFinding} instance by its id, using a specific IFinding class for
-	 * better performance than {@link IFindingsService#findById(String)}.
+	 * Try to load an {@link IFinding} instance by its id, using a specific IFinding class. Equals
+	 * {@link IFindingsService#findById(String, Class, boolean)} with skipChecks false. If checks
+	 * can be skipped use {@link IFindingsService#findById(String, Class, boolean)} for better
+	 * performance.
 	 * 
 	 * @param id
 	 * @param clazz
 	 * @return
 	 */
-	public Optional<IFinding> findById(String id, Class<? extends IFinding> clazz);
+	public default <T extends IFinding> Optional<T> findById(String id, Class<T> clazz){
+		return findById(id, clazz, false);
+	}
+	
+	/**
+	 * Try to load an {@link IFinding} instance by its id, using a specific IFinding class. Skipping
+	 * test can be used, if the id is already verified (e.g. by a SQL query), for better
+	 * performance.
+	 * 
+	 * @param id
+	 * @param clazz
+	 * @param skipChecks
+	 * @return
+	 */
+	public <T extends IFinding> Optional<T> findById(String id, Class<T> clazz, boolean skipChecks);
 }

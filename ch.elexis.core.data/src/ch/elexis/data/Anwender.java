@@ -19,7 +19,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import com.google.common.base.Strings;
+import javax.security.auth.login.LoginException;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
@@ -169,7 +169,7 @@ public class Anwender extends Person {
 			hashSet.remove(m);
 		}
 		List<String> edList = hashSet.stream().map(p -> p.getLabel()).collect(Collectors.toList());
-		setExtInfoStoredObjectByKey(FLD_EXTINFO_MANDATORS, ts(edList));
+		setExtInfoStoredObjectByKey(FLD_EXTINFO_MANDATORS, edList.isEmpty() ? "" : ts(edList));
 	}
 
 	@Override
@@ -179,7 +179,11 @@ public class Anwender extends Person {
 	
 	@Override
 	protected void setConstraint(){
-		set(Kontakt.FLD_IS_USER, StringConstants.ONE);
+		set(new String[] {
+			FLD_IS_USER, FLD_IS_PERSON
+		}, new String[] {
+			StringConstants.ONE, StringConstants.ONE
+		});
 	}
 	
 	protected Anwender(){/* leer */
@@ -246,9 +250,28 @@ public class Anwender extends Person {
 			return false;
 		}
 
+		// check anwender is valid
+		Anwender anwender = Anwender.load(user.getAssignedContactId());
+		if (anwender == null) {
+			log.error("username: {}", username, new LoginException("anwender is null"));
+			return false;
+		}
+		
+		if (!anwender.isValid()) {
+			log.error("username: {}", username,
+				new LoginException("anwender is invalid or deleted"));
+			return false;
+		}
+		
+		if (!anwender.istAnwender()) {
+			log.error("username: {}", username,
+				new LoginException("anwender is not a istAnwender"));
+			return false;
+		}
+		
 		// set user in system
 		ElexisEventDispatcher.getInstance().fire(new ElexisEvent(user, User.class, ElexisEvent.EVENT_SELECTED));
-		CoreHub.actUser = Anwender.load(user.getAssignedContactId());
+		CoreHub.actUser = anwender;
 		ElexisEventDispatcher.getInstance()
 				.fire(new ElexisEvent(CoreHub.actUser, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
 

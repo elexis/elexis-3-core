@@ -6,12 +6,13 @@ import java.util.List;
 import java.util.Optional;
 
 import ch.elexis.core.findings.ICoding;
+import ch.elexis.core.findings.ILocalCoding;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.util.model.TransientCoding;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.VersionInfo;
 
-public class LocalCoding extends PersistentObject implements ICoding {
+public class LocalCoding extends PersistentObject implements ICoding, ILocalCoding {
 	
 	protected static final String TABLENAME = "CH_ELEXIS_CORE_FINDINGS_LOCALCODING";
 	protected static final String VERSION = "1.0.0";
@@ -88,11 +89,7 @@ public class LocalCoding extends PersistentObject implements ICoding {
 		return "[" + getCode() + "] " + getDisplay();
 	}
 	
-	/**
-	 * Get mapped codes. Codings are mapped if their meaning is the same.
-	 * 
-	 * @return
-	 */
+	@Override
 	public List<ICoding> getMappedCodes(){
 		String mappedString = checkNull(get(FLD_MAPPED));
 		if (!mappedString.isEmpty()) {
@@ -101,11 +98,7 @@ public class LocalCoding extends PersistentObject implements ICoding {
 		return Collections.emptyList();
 	}
 	
-	/**
-	 * Set mapped codes. Codings are mapped if their meaning is the same.
-	 * 
-	 * @return
-	 */
+	@Override
 	public void setMappedCodes(List<ICoding> mappedCodes){
 		String encoded = "";
 		if (mappedCodes != null && !mappedCodes.isEmpty()) {
@@ -147,12 +140,13 @@ public class LocalCoding extends PersistentObject implements ICoding {
 			for (String string : codeStrings) {
 				getCodingFromString(string).ifPresent(c -> ret.add(c));
 			}
+			return ret;
 		}
 		return Collections.emptyList();
 	}
 	
 	private Optional<ICoding> getCodingFromString(String encoded){
-		String[] codingParts = encoded.split(MAPPED_FIELD_SEPARATOR);
+		String[] codingParts = encoded.split("\\" + MAPPED_FIELD_SEPARATOR);
 		if (codingParts != null && codingParts.length > 1) {
 			if (codingParts.length == 2) {
 				return Optional.of(new TransientCoding(codingParts[0], codingParts[1], ""));

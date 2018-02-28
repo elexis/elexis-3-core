@@ -26,15 +26,28 @@ import org.eclipse.swt.widgets.Shell;
 
 import ch.rgw.tools.TimeTool;
 
+/**
+ * Use this Calendar for date or datetime selection
+ * 
+ * @author med1
+ *
+ */
 public class DateTimeSelectorDialog extends Dialog {
 	private TimeTool date;
 	private DateTime timeSelection;
 	private DateTime dateSelection;
 	private TimeTool ret;
+	private boolean showAsCalendar;
 	
 	public DateTimeSelectorDialog(Shell parent, TimeTool date){
 		super(parent);
 		this.date = date;
+	}
+	
+	public DateTimeSelectorDialog(Shell parent, TimeTool date, boolean showAsCalendar){
+		super(parent);
+		this.date = date;
+		this.showAsCalendar = showAsCalendar;
 	}
 	
 	public DateTimeSelectorDialog(Shell parentShell){
@@ -43,6 +56,39 @@ public class DateTimeSelectorDialog extends Dialog {
 	
 	@Override
 	protected Control createDialogArea(Composite parent){
+		if (showAsCalendar) {
+			return createCalendarArea(parent);
+		} else {
+			return createDefaultArea(parent);
+		}
+	}
+	
+	private Composite createCalendarArea(Composite parent){
+		Composite composite = new Composite(parent, SWT.NONE);
+		GridLayout gd = new GridLayout(1, false);
+		gd.marginLeft = 2; // SWT BUG 
+		composite.setLayout(gd);
+		dateSelection = new DateTime(composite, SWT.CALENDAR);
+		dateSelection.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
+		Composite dateComposite = new Composite(composite, SWT.NONE);
+		dateComposite.setLayout(new GridLayout(2, true));
+		dateComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		Label label = new Label(dateComposite, SWT.NONE);
+		label.setText("Zeitpunkt");
+		label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
+		
+		timeSelection = new DateTime(dateComposite, SWT.TIME);
+		timeSelection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		timeSelection.setTime(date.get(Calendar.HOUR_OF_DAY), date.get(Calendar.MINUTE),
+			date.get(Calendar.SECOND));
+		dateSelection.setDate(date.get(Calendar.YEAR), date.get(Calendar.MONTH),
+			date.get(Calendar.DAY_OF_MONTH));
+		
+		getShell().setText(Messages.DateTimeSelectorDialog_enterDate); //$NON-NLS-1$
+		return composite;
+	}
+
+	private Composite createDefaultArea(Composite parent){
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
 		Label label = new Label(composite, SWT.NONE);
@@ -53,7 +99,7 @@ public class DateTimeSelectorDialog extends Dialog {
 		dateComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		timeSelection = new DateTime(dateComposite, SWT.TIME);
 		timeSelection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		dateSelection = new DateTime(dateComposite, SWT.DATE);
+		dateSelection = new DateTime(dateComposite, SWT.CALENDAR);
 		dateSelection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		timeSelection.setTime(date.get(Calendar.HOUR_OF_DAY), date.get(Calendar.MINUTE),

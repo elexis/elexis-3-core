@@ -25,6 +25,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -54,9 +55,10 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
-import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.model.IDiagnose;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
@@ -70,6 +72,7 @@ import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
 import ch.elexis.data.Artikel;
+import ch.elexis.data.Eigenleistung;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.PersistentObject;
@@ -87,8 +90,10 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private IWorkbenchPage page;
 	private final Hyperlink hVer;
 	private final PersistentObjectDropTarget dropTarget;
-	private IAction applyMedicationAction, chPriceAction, chCountAction, chTextAction, removeAction,
+	private IAction applyMedicationAction, chPriceAction, chCountAction,
+			chTextAction, removeAction,
 			removeAllAction;
+	private static final String INDICATED_MEDICATION = Messages.VerrechnungsDisplay_indicatedMedication;
 	private static final String APPLY_MEDICATION = Messages.VerrechnungsDisplay_applyMedication;
 	private static final String CHPRICE = Messages.VerrechnungsDisplay_changePrice;
 	private static final String CHCOUNT = Messages.VerrechnungsDisplay_changeNumber;
@@ -147,13 +152,6 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				TableItem[] selection = tVerr.getSelection();
 				Verrechnet verrechnet = (Verrechnet) selection[0].getData();
 				ElexisEventDispatcher.fireSelectionEvent(verrechnet);
-				
-				applyMedicationAction.setEnabled(false);
-				
-				IVerrechenbar verrechenbar = verrechnet.getVerrechenbar();
-				if (verrechenbar != null && (verrechenbar instanceof Artikel)) {
-					applyMedicationAction.setEnabled(true);
-				}
 			}
 		});
 		tVerr.addKeyListener(new KeyListener() {
@@ -194,6 +192,28 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	public void addPersistentObject(PersistentObject o){
 		Konsultation actKons = (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
 		if (actKons != null) {
+			if (o instanceof Leistungsblock) {
+				Leistungsblock block = (Leistungsblock) o;
+				List<ICodeElement> elements = block.getElements();
+				for (ICodeElement element : elements) {
+					if (element instanceof PersistentObject) {
+						addPersistentObject((PersistentObject) element);
+					}
+				}
+				List<ICodeElement> diff = block.getDiffToReferences(elements);
+				if (!diff.isEmpty()) {
+					StringBuilder sb = new StringBuilder();
+					diff.forEach(r -> {
+						if (sb.length() > 0) {
+							sb.append("\n");
+						}
+						sb.append(r);
+					});
+					MessageDialog.openWarning(getShell(), "Warnung",
+						"Warnung folgende Leistungen konnten im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.\n"
+							+ sb.toString());
+				}
+			}
 			if (o instanceof Prescription) {
 				Prescription presc = (Prescription) o;
 				o = presc.getArtikel();
@@ -219,7 +239,9 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	
 	private final class DropReceiver implements PersistentObjectDropTarget.IReceiver {
 		public void dropped(PersistentObject o, DropTargetEvent ev){
-			addPersistentObject(o);
+			if (accept(o)) {
+				addPersistentObject(o);
+			}
 		}
 		
 		public boolean accept(PersistentObject o){
@@ -228,6 +250,9 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					return !((Artikel) o).isProduct();
 				}
 				if (o instanceof IVerrechenbar) {
+					return true;
+				}
+				if (o instanceof IDiagnose) {
 					return true;
 				}
 				if (o instanceof Leistungsblock) {
@@ -256,7 +281,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			int z = lst.getZahl();
 			Money preis = lst.getNettoPreis().multiply(z);
 			sum.addMoney(preis);
-			sdg.append(z).append(" ").append(lst.getCode()).append(" ").append(lst.getText()) //$NON-NLS-1$ //$NON-NLS-2$
+			sdg.append(z).append(" ").append(getServiceCode(lst)).append(" ").append(lst.getText()) //$NON-NLS-1$ //$NON-NLS-2$
 				.append(" (").append(preis.getAmountAsString()).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
 			TableItem ti = new TableItem(tVerr, SWT.WRAP);
 			ti.setText(sdg.toString());
@@ -292,6 +317,26 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		hVer.setText(sdg.toString());
 	}
 	
+	/**
+	 * Filter codes of {@link Verrechnet} where ID is used as code. This is relevant for {@link Eigenleistung} and Eigenartikel.
+	 * 
+	 * @param lst
+	 * @return
+	 */
+	private String getServiceCode(Verrechnet verrechnet){
+		String ret = verrechnet.getCode();
+		IVerrechenbar verrechenbar = verrechnet.getVerrechenbar();
+		if (verrechenbar != null) {
+			if (verrechenbar instanceof Eigenleistung || (verrechenbar instanceof Artikel
+				&& "Eigenartikel".equals(((Artikel) verrechenbar).get(Artikel.FLD_TYP)))) {
+				if (verrechenbar.getId().equals(ret)) {
+					ret = "";
+				}
+			}
+		}
+		return ret;
+	}
+	
 	private Menu createVerrMenu(){
 		contextMenuManager = new MenuManager();
 		contextMenuManager.setRemoveAllWhenShown(true);
@@ -305,7 +350,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					if (sel != -1) {
 						TableItem ti = tVerr.getItem(sel);
 						Verrechnet v = (Verrechnet) ti.getData();
-						manager.add(applyMedicationAction);
+						IVerrechenbar verrechenbar = v.getVerrechenbar();
+						
 						manager.add(chPriceAction);
 						manager.add(chCountAction);
 						IVerrechenbar vbar = v.getVerrechenbar();
@@ -323,6 +369,41 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						manager.add(removeAction);
 						manager.add(new Separator());
 						manager.add(removeAllAction);
+						if (verrechenbar instanceof Artikel) {
+							manager.add(new Separator());
+							manager.add(applyMedicationAction);
+							// #8796
+							manager.add(new Action(INDICATED_MEDICATION, Action.AS_CHECK_BOX) {
+								@Override
+								public void run(){
+									Verrechnet v = loadSelectedVerrechnet();
+									AcquireLockUi.aquireAndRun(v,
+										new LockDeniedNoActionLockHandler() {
+											
+											@Override
+											public void lockAcquired(){
+												if (isIndicated()) {
+													v.setDetail(Verrechnet.INDICATED, "false");
+												} else {
+													v.setDetail(Verrechnet.INDICATED, "true");
+												}
+											}
+										});
+									
+								}
+								
+								private boolean isIndicated(){
+									Verrechnet v = loadSelectedVerrechnet();
+									String value = v.getDetail(Verrechnet.INDICATED);
+									return "true".equalsIgnoreCase(value);
+								}
+								
+								@Override
+								public boolean isChecked(){
+									return isIndicated();
+								}
+							});
+						}
 					}
 				}
 			}
@@ -450,6 +531,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 									newPrice = new Money(val);
 									v.setTP(newPrice.getCents());
 									v.setSecondaryScaleFactor(1);
+									// mark as changed price
+									v.setDetail(Verrechnet.FLD_EXT_CHANGEDPRICE, "true");
 								}
 								// v.setPreis(newPrice);
 								setLeistungen(

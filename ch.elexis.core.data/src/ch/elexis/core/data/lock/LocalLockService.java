@@ -25,6 +25,8 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.server.ElexisServerInstanceService;
+import ch.elexis.core.data.server.ElexisServerLockService;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.lock.ILocalLockService;
 import ch.elexis.core.lock.types.LockInfo;
@@ -88,8 +90,8 @@ public class LocalLockService implements ILocalLockService {
 		if (restUrl != null && restUrl.length() > 0) {
 			standalone = false;
 			logger.info("Operating against elexis-server instance on " + restUrl);
-			ils = ConsumerFactory.createConsumer(restUrl, ILockService.class);
-			iis = ConsumerFactory.createConsumer(restUrl, IInstanceService.class);
+			ils = new ElexisServerLockService(restUrl);
+			iis = new ElexisServerInstanceService(restUrl);
 			String identId = CoreHub.localCfg.get(Preferences.STATION_IDENT_ID, "");
 			String identTxt = CoreHub.localCfg.get(Preferences.STATION_IDENT_TEXT, "");
 			inst.setIdentifier(identTxt + " [" + identId + "]");
@@ -148,7 +150,7 @@ public class LocalLockService implements ILocalLockService {
 			return LockResponse.DENIED(null);
 		}
 		if (monitor != null) {
-			monitor.beginTask("Acquiring Lock for [" + po.getLabel() + "]", secTimeout * 2);
+			monitor.beginTask("Acquiring Lock for [" + po.getLabel() + "]", (secTimeout * 10) + 1);
 		}
 		logger.debug("Acquiring lock blocking on [" + po + "]");
 		String storeToString = po.storeToString();
@@ -156,13 +158,14 @@ public class LocalLockService implements ILocalLockService {
 		LockResponse response = acquireLock(storeToString);
 		int sleptMilli = 0;
 		while (!response.isOk()) {
+			if (response.getStatus() == LockResponse.Status.DENIED_PERMANENT) {
+				return response;
+			}
+			
 			try {
-				Thread.sleep(1000);
-				sleptMilli += 1000;
+				Thread.sleep(100);
+				sleptMilli += 100;
 				response = acquireLock(storeToString);
-				if (response.getStatus() == LockResponse.Status.DENIED_PERMANENT) {
-					return response;
-				}
 				if (sleptMilli > (secTimeout * 1000)) {
 					return response;
 				}
@@ -170,7 +173,7 @@ public class LocalLockService implements ILocalLockService {
 				if (monitor != null) {
 					monitor.worked(1);
 					if (monitor.isCanceled()) {
-						return LockResponse.DENIED(response.getLockInfos());
+						return LockResponse.DENIED(response.getLockInfo());
 					}
 				}
 			} catch (InterruptedException e) {
@@ -209,7 +212,7 @@ public class LocalLockService implements ILocalLockService {
 	@Override
 	public LockResponse acquireOrReleaseLocks(LockRequest lockRequest){
 		if (standalone) {
-			return LockResponse.OK;
+			return LockResponse.OK(lockRequest.getLockInfo());
 		}
 		
 		if (ils == null) {
@@ -219,7 +222,7 @@ public class LocalLockService implements ILocalLockService {
 			ElexisEventDispatcher
 				.fireElexisStatusEvent(new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
 					CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, message, null));
-			return LockResponse.ERROR;
+			return new LockResponse(LockResponse.Status.ERROR, lockRequest.getLockInfo());
 		}
 		
 		LockInfo lockInfo = lockRequest.getLockInfo();
@@ -229,14 +232,14 @@ public class LocalLockService implements ILocalLockService {
 			if (LockRequest.Type.ACQUIRE == lockRequest.getRequestType()
 				&& locks.keySet().contains(lockInfo.getElementId())) {
 				incrementLockCount(lockInfo);
-				return LockResponse.OK;
+				return LockResponse.OK(lockRequest.getLockInfo());
 			}
 			
 			// do not release lock if it was locked multiple times
 			if (LockRequest.Type.RELEASE == lockRequest.getRequestType()
 				&& getCurrentLockCount(lockInfo) > 1) {
 				decrementLockCount(lockInfo);
-				return LockResponse.OK;
+				return LockResponse.OK(lockRequest.getLockInfo());
 			}
 			// TODO should we release all locks on acquiring a new one?
 			// if yes, this has to be dependent upon the strategy
@@ -267,6 +270,8 @@ public class LocalLockService implements ILocalLockService {
 							new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_LOCK_AQUIRED));
 					}
 				}
+				
+				return lr;
 			} catch (Exception e) {
 				// if we have an exception here, our lock copies never get
 				// deleted!!!
@@ -275,7 +280,7 @@ public class LocalLockService implements ILocalLockService {
 				ElexisEventDispatcher
 					.fireElexisStatusEvent(new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
 						CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, message, e));
-				return LockResponse.ERROR;
+				return new LockResponse(LockResponse.Status.ERROR, lockRequest.getLockInfo());
 			} finally {
 				if (LockRequest.Type.RELEASE.equals(lockRequest.getRequestType())) {
 					// RELEASE ACTIONS
@@ -292,8 +297,6 @@ public class LocalLockService implements ILocalLockService {
 					}
 				}
 			}
-			
-			return LockResponse.OK;
 		}
 	}
 	
@@ -410,16 +413,17 @@ public class LocalLockService implements ILocalLockService {
 				final String restUrl = System
 					.getProperty(ElexisSystemPropertyConstants.ELEXIS_SERVER_REST_INTERFACE_URL);
 				if (restUrl != null && !restUrl.isEmpty()) {
+					final String testRestUrl = restUrl + "/elexis/lockservice/lockInfo";
 					// if service is available but we are not using it -> use it
 					// if service not available but we are using it -> dont use it
-					if (testRestUrl(restUrl) && ils instanceof DenyAllLockService
+					if (testRestUrl(testRestUrl) && ils instanceof DenyAllLockService
 						&& restService != null) {
 						ils = restService;
 						iis = ConsumerFactory.createConsumer(restUrl, IInstanceService.class);
 						// publish change
 						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(null,
 							ILocalLockService.class, ElexisEvent.EVENT_RELOAD));
-					} else if (!testRestUrl(restUrl) && !(ils instanceof DenyAllLockService)) {
+					} else if (!testRestUrl(testRestUrl) && !(ils instanceof DenyAllLockService)) {
 						restService = ils;
 						iis = null;
 						ils = new DenyAllLockService();
@@ -467,7 +471,7 @@ public class LocalLockService implements ILocalLockService {
 				HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
 				urlConn.connect();
 				
-				return HttpURLConnection.HTTP_OK == urlConn.getResponseCode();
+				return (urlConn.getResponseCode() >= 200 && urlConn.getResponseCode() < 300);
 			} catch (IOException e) {
 				return false;
 			}

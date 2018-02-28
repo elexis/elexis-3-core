@@ -4,6 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -11,6 +14,7 @@ import org.junit.Test;
 
 import ch.rgw.io.Settings;
 import ch.rgw.io.SqlSettings;
+import junit.framework.Assert;
 
 public class Test_SqlSettings {
 
@@ -229,6 +233,43 @@ public class Test_SqlSettings {
 		link.disconnect();
 	}
 	
+	@Test
+	public void testPrimaryKeys() throws SQLException{
+		JdbcLink link = getJdbcLink(false);
+		// create 2 keys
+		SqlSettings userSettings = new SqlSettings(link, "USERCONFIG", "Param", "Value", "UserID='1'");
+		userSettings.set("key1", 1);
+		userSettings.set("key2", 2);
+		userSettings.flush();
+		
+		ResultSet res = link.getStatement().query("SELECT COUNT(*) FROM USERCONFIG WHERE UserID=1");
+		res.next();
+		Assert.assertEquals(2, res.getInt(1)); // size is 2
+		
+		// update to key 1
+		userSettings.set("key1", 1);
+		userSettings.flush();
+		res = link.getStatement().query("SELECT COUNT(*) FROM USERCONFIG WHERE UserID=1");
+		res.next();
+	
+		// size is same
+		Assert.assertEquals(2, res.getInt(1));
+		
+		try
+		{
+			link.getStatement().exec("INSERT INTO USERCONFIG (USERID, PARAM, VALUE) VALUES ('1', 'key1', 'test')");
+			Assert.fail("primary key violation -exeception should happend");
+		}
+		catch(JdbcLinkException e)
+		{
+			// ignore
+		}
+		res = link.getStatement().query("SELECT COUNT(*) FROM USERCONFIG WHERE UserID=1");
+		res.next();
+		Assert.assertEquals(2, res.getInt(1));
+		link.disconnect();
+	}
+	
 	private static JdbcLink getJdbcLink(boolean create){
 		JdbcLink link = new JdbcLink("org.h2.Driver", "jdbc:h2:mem:test_settings_mem", "");
 		link.connect("", "");
@@ -238,7 +279,7 @@ public class Test_SqlSettings {
 			link.exec(
 				"CREATE TABLE CONFIG(lastupdate BIGINT, param VARCHAR(80) primary key, wert TEXT);");
 			link.exec(
-				"CREATE TABLE USERCONFIG( lastupdate BIGINT, UserID VARCHAR(25), Param VARCHAR(80), Value TEXT);");
+				"CREATE TABLE USERCONFIG( lastupdate BIGINT, UserID VARCHAR(25), Param VARCHAR(80), Value TEXT);ALTER TABLE USERCONFIG ALTER COLUMN USERID SET NOT NULL;ALTER TABLE USERCONFIG ALTER COLUMN PARAM SET NOT NULL;ALTER TABLE USERCONFIG ADD PRIMARY KEY (USERID , PARAM);");
 		}
 		return link;
 	}

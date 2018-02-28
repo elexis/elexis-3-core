@@ -10,5 +10,4 @@ Require-Bundle: org.eclipse.core.runtime,
  ch.rgw.utility;bundle-version="3.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
-Import-Package: org.eclipse.ui.services,
- org.slf4j
+Import-Package: org.slf4j

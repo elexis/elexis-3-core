@@ -27,7 +27,7 @@ import java.util.List;
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getISticker()
- * @model interface="true" abstract="true" superTypes="ch.elexis.core.types.Comparable<ch.elexis.core.model.ISticker>"
+ * @model interface="true" abstract="true" superTypes="ch.elexis.core.types.Comparable&lt;ch.elexis.core.model.ISticker&gt;"
  * @generated
  */
 public interface ISticker extends Comparable<ISticker> {

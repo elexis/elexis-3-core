@@ -20,7 +20,6 @@ public class Messages extends NLS {
 	public static String AccountListView_firstname;
 	public static String AccountListView_loadingData;
 	public static String AccountListView_name;
-	public static String AccountView_23;
 	public static String AccountView_NoPatientSelected;
 	public static String AccountView_account;
 	public static String AccountView_accountAmount;
@@ -94,6 +93,10 @@ public class Messages extends NLS {
 	public static String KonsZumVerrechnenView2_refreshList;
 	public static String RechnungsBlatt_adressee;
 	public static String RechnungsBlatt_amountOpen;
+	public static String RechnungsBlatt_compensateAmount;
+	public static String RechnungsBlatt_compensateAmountTitle;
+	public static String RechnungsBlatt_compensateAmountMessage;
+	public static String RechnungsBlatt_missingReason;
 	public static String RechnungsBlatt_amountTotal;
 	public static String RechnungsBlatt_billDate;
 	public static String RechnungsBlatt_billNumber;
@@ -268,6 +271,26 @@ public class Messages extends NLS {
 	public static String VerrDetailDialog_NoPatientSelected;
 	public static String VerrDetailDialog_billingData;
 	public static String VerrDetailDialog_detailsOfOpenKons;
+	public static String InvoiceListView_tblclmnInvoiceNo_text;
+	public static String InvoiceListView_tblclmnInvoiceState_text;
+	public static String InvoiceListView_tblclmnPatient_text;
+	public static String InvoiceListView_tblclmnLaw_text;
+	public static String InvoiceListView_tblclmnType_text;
+	public static String InvoiceListView_tblclmnReceiver_text;
+	public static String InvoiceListView_tblclmnTreatmentperiod_text;
+	public static String InvoiceListView_tblclmnOpenAmount_text;
+	public static String InvoiceListView_tblclmnTotalAmount_text;
+	public static String InvoiceListView_tblclmnInvoiceStateDateSince_text;
+	public static String InvoiceListHeaderComposite_lblType_text;
+	public static String InvoiceListHeaderComposite_lblNewLabel_text;
+	public static String InvoiceListHeaderComposite_btnClear_text;
+	public static String InvoiceListHeaderComposite_btnNewButton_text;
+	public static String InvoiceListHeaderComposite_btnLimit_toolTipText;
+	public static String InvoiceListHeaderComposite_limitControlDecoration_descriptionText;
+	public static String StatusAendernDialog_btnStatusTemporrndern_text;
+	public static String StatusAendernDialog_btnCheckButton_text;
+	public static String InvoiceListHeaderComposite_txtAmount_toolTipText;
+	public static String InvoiceListHeaderComposite_txtRgTotal;
 	
 	static {
 		// load message values from bundle file

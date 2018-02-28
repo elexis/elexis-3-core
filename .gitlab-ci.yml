@@ -1,0 +1,27 @@
+# Build script used by gitlab.medelexis.ch
+variables:
+   ORIGIN_BRANCH: master 
+
+stages:
+    - build
+    - trigger_other_builds
+
+build:
+  stage: build
+  script: 
+  - xvfb-run mvn clean verify -B -Pall-archs
+  - jo token="$WEBHOOK_TOKEN" info="elexis-3-core $CI_JOB_ID $ORIGIN_BRANCH $CI_COMMIT_REF_NAME $CI_COMMIT_SHA" binary=%$(find ch.elexis.core.p2site/target/ch.elexis.core.p2site*.zip) destDir=elexis/$CI_COMMIT_REF_NAME/p2/elexis-3-core | curl -k -H "Content-Type:application/json" -X POST -d @- $WEBHOOK_URL/deploy-zip
+  - for file in ch.elexis.core.p2site/target/products/*.zip; do jo token="$WEBHOOK_TOKEN" destFilename="${file##*/}" binary=%${file} destDir=elexis/$CI_COMMIT_REF_NAME/products/ | curl -k -H "Content-Type:application/json" -X POST -d @- $WEBHOOK_URL/deploy-file; done
+  only:
+  - master@elexis/elexis-3-core
+  - /^\d*[.]\d*$/@elexis/elexis-3-core
+  - /^[bf]\d*$/@elexis/elexis-3-core
+
+trigger_elexis-3-base_build:
+    stage: trigger_other_builds
+    script:
+    - "curl -X POST -F token=$TRIGGER_TOKEN_ELEXIS_3_BASE -F ref=$CI_COMMIT_REF_NAME https://gitlab.medelexis.ch/api/v4/projects/14/trigger/pipeline"
+    only:
+    - master@elexis/elexis-3-core
+    - /^\d*[.]\d*$/@elexis/elexis-3-core
+    - /^[bf]\d*$/@elexis/elexis-3-core

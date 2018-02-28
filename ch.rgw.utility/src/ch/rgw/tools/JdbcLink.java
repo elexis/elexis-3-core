@@ -63,6 +63,7 @@ public class JdbcLink {
 	
 	private int keepAliveCount;
 	private Timer keepAliveTimer = new Timer();
+	
 	private class KeepAliveTask extends TimerTask {
 		
 		private Connection connection;
@@ -85,7 +86,7 @@ public class JdbcLink {
 			}
 		}
 	}
-
+	
 	PreparedStatement preparedStatementKeepAlive;
 	
 	private static Log log;
@@ -275,15 +276,14 @@ public class JdbcLink {
 			connectionPool.setMaxWait(10000);
 			connectionPool.setTestOnBorrow(true);
 			
-			new PoolableConnectionFactory(connectionFactory, connectionPool, null,
-				VALIDATION_QUERY, false,
-				true);
+			new PoolableConnectionFactory(connectionFactory, connectionPool, null, VALIDATION_QUERY,
+				false, true);
 			dataSource = new PoolingDataSource(connectionPool);
 			
 			// test establishing a connection
 			Connection conn = dataSource.getConnection();
 			conn.close();
-
+			
 			lastErrorCode = CONNECT_SUCCESS;
 			lastErrorString = "Connect successful";
 			log.log("Connect successful", Log.DEBUGMSG);
@@ -319,6 +319,9 @@ public class JdbcLink {
 	 * @param s
 	 *            der String
 	 * @return Datenbankkonform eingepackte String
+	 * 
+	 * @deprecated only escapes for DBFLAVOR_MYSQL, use {@link JdbcLink#wrapFlavored(String)} for
+	 *             correct wrapping
 	 */
 	public static String wrap(String s){
 		if (StringTool.isNothing(s)) {
@@ -363,7 +366,7 @@ public class JdbcLink {
 			switch (in[i]) {
 			case 0:
 			case 34:
-				
+			
 			case '\'':
 				if (flavor.startsWith(DBFLAVOR_POSTGRESQL) || flavor.startsWith("hsql")) {
 					out[j++] = '\'';
@@ -399,12 +402,12 @@ public class JdbcLink {
 		} catch (SQLException ex) {
 			lastErrorCode = CONNECT_FAILED;
 			lastErrorString = "SQL exception: " + ex.getMessage();
-			throw JdbcLinkExceptionTranslation.translateException("Connect failed: "
-				+ lastErrorString, ex);
+			throw JdbcLinkExceptionTranslation
+				.translateException("Connect failed: " + lastErrorString, ex);
 		}
 		return conncetion;
 	}
-
+	
 	/**
 	 * This method is deprecated. Use the methods getStatement and releaseStatement instead.
 	 * 
@@ -417,8 +420,8 @@ public class JdbcLink {
 		} catch (SQLException ex) {
 			lastErrorCode = CONNECT_FAILED;
 			lastErrorString = "SQL exception: " + ex.getMessage();
-			throw JdbcLinkExceptionTranslation.translateException("Connect failed: "
-				+ lastErrorString, ex);
+			throw JdbcLinkExceptionTranslation
+				.translateException("Connect failed: " + lastErrorString, ex);
 		}
 	}
 	
@@ -510,7 +513,7 @@ public class JdbcLink {
 		}
 		preparedConnections.remove(statement);
 	}
-
+	
 	/**
 	 * Ein Prepared Statement anlegen
 	 * 
@@ -550,22 +553,22 @@ public class JdbcLink {
 		case Types.SMALLINT:
 		case Types.TINYINT:
 			return INTEGRAL;
-			
+		
 		case Types.VARCHAR:
 		case Types.CHAR:
 		case Types.LONGVARCHAR:
 			return TEXT;
-			
+		
 		case Types.BINARY:
 		case Types.BLOB:
 		case Types.CLOB:
 		case Types.LONGVARBINARY:
 		case Types.VARBINARY:
 			return BINARY;
-			
+		
 		default:
 			return OTHER;
-			
+		
 		}
 	}
 	
@@ -787,7 +790,7 @@ public class JdbcLink {
 				}
 				
 				boolean throwException =
-					DatabaseNativeExceptionHandler.handleException(DBFlavor, e);	
+					DatabaseNativeExceptionHandler.handleException(DBFlavor, e);
 				if (throwException) {
 					throw JdbcLinkExceptionTranslation.translateException("Fehler bei: " + SQLText,
 						e);
@@ -1063,5 +1066,13 @@ public class JdbcLink {
 			/* /experimental */
 		}
 		return sql;
+	}
+	
+	/**
+	 * @since 3.4 - used for parameterized unit tests output
+	 */
+	@Override
+	public String toString(){
+		return DBFlavor + " " + verMajor + "." + verMinor;
 	}
 }

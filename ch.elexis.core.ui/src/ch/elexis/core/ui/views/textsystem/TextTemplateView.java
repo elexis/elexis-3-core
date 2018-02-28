@@ -45,10 +45,13 @@ import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.events.ElexisEvent;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.commands.LoadTemplateCommand;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
+import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.text.ITextPlugin;
 import ch.elexis.core.ui.text.ITextTemplateRequirement;
@@ -77,6 +80,14 @@ public class TextTemplateView extends ViewPart {
 	public TextTemplateView(){
 		initActiveTextPlugin();
 		loadRequiredAndExistingTemplates();
+		
+		ElexisEventDispatcher.getInstance()
+			.addListeners(new ElexisUiEventListenerImpl(Brief.class, ElexisEvent.EVENT_RELOAD) {
+				@Override
+				public void runInUi(ElexisEvent ev){
+					refresh();
+				}
+		});
 	}
 	
 	private void loadRequiredAndExistingTemplates(){
@@ -563,7 +574,7 @@ public class TextTemplateView extends ViewPart {
 		tableViewer.refresh();
 	}
 	
-	public void refresh(){
+	private void refresh(){
 		// load existing templates from database
 		Query<Brief> qbe = new Query<Brief>(Brief.class);
 		qbe.add(Brief.FLD_TYPE, Query.EQUALS, Brief.TEMPLATE);

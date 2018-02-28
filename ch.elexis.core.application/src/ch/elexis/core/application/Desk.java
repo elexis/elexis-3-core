@@ -17,16 +17,20 @@ import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.application.advisors.ApplicationWorkbenchAdvisor;
 import ch.elexis.core.application.advisors.Messages;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
 import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
+import ch.elexis.core.data.util.LocalLock;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.io.FileTool;
@@ -100,6 +104,7 @@ public class Desk implements IApplication {
 		}
 		
 		// care for log-in
+		WorkbenchPlugin.unsetSplashShell(UiDesk.getDisplay());
 		cod.performLogin(UiDesk.getDisplay().getActiveShell());
 		if ((CoreHub.actUser == null) || !CoreHub.actUser.isValid()) {
 			// no valid user, exit (don't consider this as an error)
@@ -107,6 +112,8 @@ public class Desk implements IApplication {
 			PersistentObject.disconnect();
 			System.exit(0);
 		}
+		// make sure identifiers are initialized
+		initIdentifiers();
 		
 		// start the workbench
 		try {
@@ -127,7 +134,27 @@ public class Desk implements IApplication {
 			log.error("Exception caught", ex);
 			ex.printStackTrace();
 			return -1;
+		} finally {
+			ElexisEventDispatcher.getInstance().shutDown();
+			// give ElexisEventDispatcher time to shut down
+			Thread.sleep(100);
+			UiDesk.getDisplay().dispose();
 		}
+	}
+		
+	protected void initIdentifiers(){
+		if (CoreHub.globalCfg.get(Preferences.INSTALLATION_TIMESTAMP, null) == null) {
+			LocalLock localLock = new LocalLock("initInstallationTimestamp");
+			if (localLock.tryLock()) {
+				CoreHub.globalCfg.set(Preferences.INSTALLATION_TIMESTAMP,
+					Long.toString(System.currentTimeMillis()));
+				CoreHub.globalCfg.flush();
+			}
+			localLock.unlock();
+		}
+		// TODO add elexis OID if available
+		CoreHub.localCfg.set(ch.elexis.core.constants.Preferences.SOFTWARE_OID, "");
+		CoreHub.localCfg.flush();
 	}
 	
 	@Override

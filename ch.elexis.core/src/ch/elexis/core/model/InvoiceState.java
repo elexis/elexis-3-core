@@ -1,37 +1,40 @@
 package ch.elexis.core.model;
 
+import java.util.ResourceBundle;
+
+import ch.elexis.core.interfaces.ILocalizedEnum;
 import ch.elexis.core.interfaces.INumericEnum;
 
-public enum InvoiceState implements INumericEnum {
+public enum InvoiceState implements INumericEnum, ILocalizedEnum {
 	//@formatter:off
-	UNBEKANNT(0),
-	VERRECHNET(1),
-	NICHT_VERRECHNET(2),
-	LAUFEND(3),
-	OFFEN(4),
-	OFFEN_UND_GEDRUCKT(5),
-	MAHNUNG_1(6),
-	MAHNUNG_1_GEDRUCKT(7),
-	MAHNUNG_2(8),
-	MAHNUNG_2_GEDRUCKT(9),
-	MAHNUNG_3(10),
-	MAHNUNG_3_GEDRUCKT(11),
-	IN_BETREIBUNG(12),
-	TEILVERLUST(13),
-	TOTALVERLUST(14),
-	TEILZAHLUNG(15),
-	BEZAHLT(16),
-	ZUVIEL_BEZAHLT(17),
-	STORNIERT(18),
-	VON_HEUTE(19),
-	NICHT_VON_HEUTE(20),
-	NICHT_VON_IHNEN(21),
-	FEHLERHAFT(22),
-	ZU_DRUCKEN(23),
-	AUSSTEHEND(24),
-	MAHNSTOPP(25),
-	ABGESCHRIEBEN(26), // Storniert und Kons nicht mehr freigegeben
-	ZURUECKGEWIESEN(27);
+	UNKNOWN(0),
+	BILLED(1),
+	NOT_BILLED(2),
+	ONGOING(3),
+	OPEN(4),
+	OPEN_AND_PRINTED(5),
+	DEMAND_NOTE_1(6),
+	DEMAND_NOTE_1_PRINTED(7),
+	DEMAND_NOTE_2(8),
+	DEMAND_NOTE_2_PRINTED(9),
+	DEMAND_NOTE_3(10),
+	DEMAND_NOTE_3_PRINTED(11),
+	IN_EXECUTION(12),
+	PARTIAL_LOSS(13),
+	TOTAL_LOSS(14),
+	PARTIAL_PAYMENT(15),
+	PAID(16),
+	EXCESSIVE_PAYMENT(17),
+	CANCELLED(18),
+	FROM_TODAY(19),
+	NOT_FROM_TODAY(20),
+	NOT_FROM_YOU(21),
+	DEFECTIVE(22),
+	TO_PRINT(23),
+	OWING(24),
+	STOP_LEGAL_PROCEEDING(25),
+	DEPRECIATED(26), // (Abgeschrieben) Storniert und Kons nicht mehr freigegeben
+	REJECTED(27);
 	//@formatter:on
 	
 	private int state;
@@ -55,19 +58,38 @@ public enum InvoiceState implements INumericEnum {
 	}
 	
 	/**
+	 * @return the combined (or) states that represent the owing state
+	 */
+	public static InvoiceState[] owingStates(){
+		return new InvoiceState[] {
+			OPEN_AND_PRINTED, DEMAND_NOTE_1_PRINTED, DEMAND_NOTE_2_PRINTED, DEMAND_NOTE_3_PRINTED
+		};
+	}
+	
+	/**
+	 * 
+	 * @return the combined (or) states that represent the to print state
+	 */
+	public static InvoiceState[] toPrintStates() {
+		return new InvoiceState[] {
+			OPEN, DEMAND_NOTE_1, DEMAND_NOTE_2, DEMAND_NOTE_3
+		};
+	}
+	
+	/**
 	 * Decide whether this state means an "active" state, i.e. the bill is not paid or closed by any
 	 * means
 	 * 
 	 * @return true if there are still payments awaited
 	 */
 	public boolean isActive(){
-		if (state > LAUFEND.getState() && state < TEILVERLUST.getState()) {
+		if (state > ONGOING.getState() && state < PARTIAL_LOSS.getState()) {
 			return true;
 		}
-		if (state == TEILZAHLUNG.getState()) {
+		if (state == PARTIAL_PAYMENT.getState()) {
 			return true;
 		}
-		if (state > FEHLERHAFT.getState() && state < ABGESCHRIEBEN.getState()) {
+		if (state > DEFECTIVE.getState() && state < DEPRECIATED.getState()) {
 			return true;
 		}
 		return false;
@@ -79,7 +101,17 @@ public enum InvoiceState implements INumericEnum {
 				return is;
 			}
 		}
-		return InvoiceState.UNBEKANNT;
+		return InvoiceState.UNKNOWN;
+	}
+
+	@Override
+	public String getLocaleText(){
+		try {
+			return ResourceBundle.getBundle("ch.elexis.core.model.messages")
+				.getString(InvoiceState.class.getSimpleName() + "." + this.name());
+		} catch (Exception e) {
+			return this.name();
+		}
 	}
 
 

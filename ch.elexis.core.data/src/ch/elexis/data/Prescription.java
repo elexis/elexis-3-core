@@ -351,7 +351,7 @@ public class Prescription extends PersistentObject {
 	}
 	
 	/**
-	 * the prescription order for the intake (Einnahmevorschrift)
+	 * Get the prescription order for the intake (Anwendungsinstruktion)
 	 * 
 	 * @return
 	 */
@@ -360,12 +360,17 @@ public class Prescription extends PersistentObject {
 		
 	}
 	
+	/**
+	 * Set the prescription order for the intake (Anwendungsinstruktion)
+	 * 
+	 * @param value
+	 */
 	public void setBemerkung(String value){
 		set(FLD_REMARK, checkNull(value));
 	}
 	
 	/**
-	 * @return a disposal comment (Abgabekommentar)
+	 * @return a disposal comment (Anwendungsgrund)
 	 * @since 3.1.0
 	 */
 	public String getDisposalComment(){
@@ -374,7 +379,7 @@ public class Prescription extends PersistentObject {
 	}
 	
 	/**
-	 * set a disposal comment (Abgabekommentar)
+	 * set a disposal comment (Anwendungsgrund)
 	 * 
 	 * @param disposalComment
 	 * @since 3.1.0
@@ -398,11 +403,39 @@ public class Prescription extends PersistentObject {
 	 * Mark this prescription as an applied article. Typically only prescriptions with
 	 * {@link EntryType.SELF_DISPENSED} are marked as applied.
 	 * 
-	 * @param disposalComment
+	 * @param value
 	 * @since 3.1.0
 	 */
 	public void setApplied(Boolean value){
 		setExtInfoStoredObjectByKey(Constants.FLD_EXT_IS_APPLIED, Boolean.toString(value));
+	}
+	
+	/**
+	 * @return Index of the prescription on the recipe. Should only be used for {@link Prescription}
+	 *         with type {@link EntryType#RECIPE}.
+	 * @since 3.1.0
+	 */
+	public int getRecipeOrder(){
+		String value = checkNull((String) getExtInfoStoredObjectByKey(Constants.FLD_EXT_RECIPE_ORDER));
+		if (value != null && !value.isEmpty()) {
+			try {
+				return Integer.valueOf(value);
+			} catch (NumberFormatException e) {
+				// ignore and return 0
+			}
+		}
+		return 0;
+	}
+	
+	/**
+	 * Set the index of the prescription on the recipe. Should only be used for {@link Prescription}
+	 * with type {@link EntryType#RECIPE}.
+	 * 
+	 * @param value
+	 * @since 3.1.0
+	 */
+	public void setRecipeOrder(int value){
+		setExtInfoStoredObjectByKey(Constants.FLD_EXT_RECIPE_ORDER, Integer.toString(value));
 	}
 	
 	/**
@@ -537,6 +570,9 @@ public class Prescription extends PersistentObject {
 				if (n.endsWith(".")) {
 					n = n.substring(0, n.length() - 1);
 				}
+				if (n.isEmpty()) {
+					return 0.0f;
+				}
 				return Float.parseFloat(n);
 			}
 		} catch (NumberFormatException e) {
@@ -643,8 +679,8 @@ public class Prescription extends PersistentObject {
 			return EntryType.byNumeric(typeNum);
 		}
 		
-		String rezeptId = get(FLD_REZEPT_ID);
-		if (rezeptId != null && !rezeptId.isEmpty()) {
+		String rezeptId = getRaw(FLD_REZEPT_ID);
+		if (rezeptId != null) {
 			// this is necessary due to a past impl. where self dispensed was not set as entry type
 			if (rezeptId.equals(Prescription.FLD_REZEPTID_VAL_DIREKTABGABE)) {
 				setEntryType(EntryType.SELF_DISPENSED);
@@ -702,8 +738,8 @@ public class Prescription extends PersistentObject {
 		if (StringTool.leer.equals(rezeptId)) {
 			// fixed medication - need to find the last disposition by querying db
 			Query<Prescription> qre = new Query<Prescription>(Prescription.class);
-			qre.add(Prescription.FLD_PATIENT_ID, Query.LIKE, get(Prescription.FLD_PATIENT_ID));
-			qre.add(Prescription.FLD_ARTICLE, Query.LIKE, get(Prescription.FLD_ARTICLE));
+			qre.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, get(Prescription.FLD_PATIENT_ID));
+			qre.add(Prescription.FLD_ARTICLE, Query.EQUALS, get(Prescription.FLD_ARTICLE));
 			qre.add(Prescription.FLD_REZEPT_ID, Query.NOT_EQUAL, StringTool.leer);
 			qre.orderBy(true, PersistentObject.FLD_LASTUPDATE);
 			List<Prescription> execute = qre.execute();
@@ -714,8 +750,8 @@ public class Prescription extends PersistentObject {
 			}
 		} else {
 			Query<Prescription> qre = new Query<Prescription>(Prescription.class);
-			qre.add(Prescription.FLD_PATIENT_ID, Query.LIKE, get(Prescription.FLD_PATIENT_ID));
-			qre.add(Prescription.FLD_ARTICLE, Query.LIKE, get(Prescription.FLD_ARTICLE));
+			qre.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, get(Prescription.FLD_PATIENT_ID));
+			qre.add(Prescription.FLD_ARTICLE, Query.EQUALS, get(Prescription.FLD_ARTICLE));
 			qre.add(Prescription.FLD_REZEPT_ID, Query.NOT_EQUAL, FLD_REZEPTID_VAL_DIREKTABGABE);
 			qre.add(Prescription.FLD_REZEPT_ID, Query.NOT_EQUAL, StringTool.leer);
 			qre.orderBy(true, PersistentObject.FLD_LASTUPDATE);

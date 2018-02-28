@@ -18,13 +18,17 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.lock.ILocalLockService;
 import ch.elexis.core.ui.actions.GlobalActions;
+import ch.elexis.core.ui.actions.GlobalEventDispatcher;
+import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.views.Messages;
 import ch.elexis.data.Patient;
 
-public class PatientDetailView2 extends ViewPart implements ISaveablePart2 {
+public class PatientDetailView2 extends ViewPart implements ISaveablePart2, IActivationListener {
 	public static final String ID = "ch.elexis.PatDetail_v2"; //$NON-NLS-1$
 	Patientenblatt2 pb;
 	
@@ -36,6 +40,7 @@ public class PatientDetailView2 extends ViewPart implements ISaveablePart2 {
 		parent.setLayout(new FillLayout());
 		pb = new Patientenblatt2(parent, getViewSite());
 		
+		GlobalEventDispatcher.addActivationListener(this, this);
 	}
 	
 	public void refresh(){
@@ -88,5 +93,21 @@ public class PatientDetailView2 extends ViewPart implements ISaveablePart2 {
 	
 	public boolean isSaveOnCloseNeeded(){
 		return true;
+	}
+	
+	@Override
+	public void activation(boolean mode){
+		if (!mode) {
+			// save does not happen via locking in standalone mode
+			if (CoreHub.getLocalLockService().getStatus() == ILocalLockService.Status.STANDALONE) {
+				pb.save();
+			}
+		} else {
+			pb.refreshUi();
+		}
+	}
+	
+	@Override
+	public void visible(boolean mode){
 	}
 }

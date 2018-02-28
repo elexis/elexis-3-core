@@ -100,4 +100,16 @@ public interface IKonsExtension extends IExecutableExtension {
 	 * Anwender hat eine XRef gelöscht -> ggf. damit verbundene Daten müssen jetzt entfernt werden
 	 */
 	public void removeXRef(String refProvider, String refID);
+	
+	/**
+	 * Get an updated String for the XRef. The string is used to replace the existing text of the
+	 * XRef. If null is returned nothing is replaced.
+	 * 
+	 * @param provider
+	 * @param id
+	 * @return
+	 */
+	default String updateXRef(String provider, String id){
+		return null;
+	}
 }

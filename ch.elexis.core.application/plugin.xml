@@ -2,30 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         id="product"
-         point="org.eclipse.core.runtime.products">
-      <product
-            application="ch.elexis.core.application.ElexisApp"
-            name="Elexis OpenSource">
-         <property
-               name="appName"
-               value="Elexis OpenSource">
-         </property>
-         <property
-               name="windowImages"
-               value="rsc/elexis2_16.gif,rsc/elexis32_2.gif,rsc/elexis48.gif">
-         </property>
-         <property
-               name="aboutText"
-               value="Elexis 3.0 - www.elexis.info">
-         </property>
-         <property
-               name="aboutImage"
-               value="rsc/elexislogo2.png">
-         </property>
-      </product>
-   </extension>
-   <extension
          point="org.eclipse.ui.views">
       <view
             class="ch.elexis.core.ui.views.TemplatePrintView"
@@ -384,6 +360,18 @@
             name="%elexis.BillingProposalView"
             restorable="true">
       </view>
+      <view
+            class="ch.elexis.core.ui.views.rechnung.InvoiceListView"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/page_copy.png"
+            id="ch.elexis.core.ui.views.rechnung.InvoiceListView"
+            name="Rechnungsliste (beta)">
+      </view>
+      <view
+            class="ch.elexis.core.ui.views.rechnung.InvoiceCorrectionView"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/page_copy.png"
+            id="ch.elexis.core.ui.views.rechnung.InvoiceCorrectionView"
+            name="Rechnungskorrektur (beta)">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">
@@ -516,5 +504,46 @@
              style="toggle">
        </command>
     </menuContribution>
+    <menuContribution
+          allPopups="false"
+          locationURI="toolbar:ch.elexis.core.ui.views.rechnung.InvoiceCorrectionView">
+       <command
+             commandId="ch.elexis.core.ui.command.ToggleCurrentInvoiceLockCommand"
+             icon="icon://IMG_LOCK_CLOSED"
+             style="toggle">
+       </command>
+    </menuContribution>
+ </extension>
+ <extension
+       id="product"
+       point="org.eclipse.core.runtime.products">
+    <product
+          application="ch.elexis.core.application.ElexisApp"
+          name="Elexis OpenSource">
+       <property
+             name="windowImages"
+             value="rsc/elexis2_16.gif,rsc/elexis32_2.gif,rsc/elexis48.gif">
+       </property>
+       <property
+             name="aboutText"
+             value="Elexis 3.3 - www.elexis.info">
+       </property>
+       <property
+             name="aboutImage"
+             value="rsc/elexislogo2.png">
+       </property>
+       <property
+             name="appName"
+             value="Elexis OpenSource">
+       </property>
+       <property
+        name="rendererFactoryUri"
+        value="bundleclass://ch.elexis.core.ui/ch.elexis.core.ui.renderer.ElexisRendererFactory">
+      </property>
+       <property
+             name="applicationCSS"
+             value="platform:/plugin/ch.elexis.core.ui/rsc/css/style.css">
+       </property>
+    </product>
  </extension>
 </plugin>

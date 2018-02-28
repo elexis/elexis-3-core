@@ -44,7 +44,6 @@ public class Messages extends NLS {
 	public static String MedicationComposite_txtIntakeOrder_message;
 	public static String MedicationComposite_lblNewLabel_text;
 	public static String MedicationComposite_lblNewLabel_text_1;
-	public static String MedicationComposite_btnNewButton_text;
 	public static String MedicationComposite_btnConfirm;
 	public static String MedicationComposite_btnStop;
 	public static String MedicationComposite_btnPRNMedication_text;
@@ -70,6 +69,11 @@ public class Messages extends NLS {
 	public static String MedicationComposite_btnCheckButton_text;
 	public static String MedicationComposite_btnShowHistory_toolTipText;
 	public static String MedicationComposite_btnIsFixmedication_toolTipText;
+	public static String MedicationComposite_column_type;
+	public static String MedicationComposite_column_sortBy;
+	public static String MedicationComposite_column_beginDate;
+	public static String MedicationComposite_column_endDate;
+	public static String MedicationComposite_column_mandant;
 	
 	static {
 		// load message values from bundle file

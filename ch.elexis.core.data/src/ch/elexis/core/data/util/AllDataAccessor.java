@@ -28,7 +28,9 @@ public class AllDataAccessor implements IDataAccess {
 	
 	private Element[] elements = {
 		new Element(IDataAccess.TYPE.STRING, "Konsultationen", //$NON-NLS-1$
-			"[Alle:-:-:Konsultationen]", null, 0) //$NON-NLS-1$
+			"[Alle:-:-:Konsultationen]", null, 0), //$NON-NLS-1$
+		new Element(IDataAccess.TYPE.STRING, "Konsultationen mit Fall", //$NON-NLS-1$
+			"[Alle:-:-:KonsultationenFall]", null, 0) //$NON-NLS-1$
 		};
 	
 	ArrayList<Element> elementsList;
@@ -63,18 +65,27 @@ public class AllDataAccessor implements IDataAccess {
 		if (descriptor.equals("Konsultationen")) { //$NON-NLS-1$
 			Patient patient = ElexisEventDispatcher.getSelectedPatient();
 			if (patient != null)
-				ret = new Result<Object>(getAllKonsultations(patient));
+				ret = new Result<Object>(getAllKonsultations(patient, false));
 			else
 				ret =
 					new Result<Object>(Result.SEVERITY.ERROR, IDataAccess.OBJECT_NOT_FOUND,
 						"Kein Patient selektiert.", //$NON-NLS-1$
 						null, false);
 		}
+		else if (descriptor.equals("KonsultationenFall")) { //$NON-NLS-1$
+			Patient patient = ElexisEventDispatcher.getSelectedPatient();
+			if (patient != null)
+				ret = new Result<Object>(getAllKonsultations(patient, true));
+			else
+				ret = new Result<Object>(Result.SEVERITY.ERROR, IDataAccess.OBJECT_NOT_FOUND,
+					"Kein Patient selektiert.", //$NON-NLS-1$
+					null, false);
+		}
 		return ret;
 		
 	}
 	
-	private Object getAllKonsultations(Patient patient){
+	private Object getAllKonsultations(Patient patient, boolean withFall){
 		StringBuilder sb = new StringBuilder();
 		
 		TimeTool date = new TimeTool();
@@ -83,6 +94,15 @@ public class AllDataAccessor implements IDataAccess {
 			for (Konsultation kons : fall.getBehandlungen(true)) {
 				date.set(kons.getDatum());
 				sb.append(date.toString(TimeTool.DATE_GER));
+				
+				if (withFall) {
+					sb.append(" ");
+					sb.append(kons.getMandant().getLabel(false));
+					sb.append(" - ");
+					sb.append(fall.getBezeichnung());
+					sb.append(" ");
+				}
+				
 				sb.append("\n"); //$NON-NLS-1$
 				
 				Samdas samdas = new Samdas(kons.getEintrag().getHead());

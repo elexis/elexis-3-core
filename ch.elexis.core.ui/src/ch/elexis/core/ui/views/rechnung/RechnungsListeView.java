@@ -19,21 +19,12 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.forms.widgets.Form;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -42,8 +33,6 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
-import ch.elexis.core.ui.util.MoneyInput;
-import ch.elexis.core.ui.util.NumberInput;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
@@ -51,6 +40,8 @@ import ch.elexis.core.ui.util.viewers.CommonViewer.DoubleClickListener;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.views.FallDetailView;
+import ch.elexis.core.ui.views.rechnung.invoice.InvoiceActions;
+import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListBottomComposite;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Kontakt;
@@ -59,7 +50,6 @@ import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Rechnung;
 import ch.rgw.io.Settings;
-import ch.rgw.tools.Money;
 import ch.rgw.tools.Tree;
 
 /**
@@ -70,11 +60,6 @@ import ch.rgw.tools.Tree;
  * 
  */
 public class RechnungsListeView extends ViewPart implements ElexisEventListener {
-	private static final String REMINDER_3 = Messages.RechnungsListeView_reminder3; //$NON-NLS-1$
-	
-	private static final String REMINDER_2 = Messages.RechnungsListeView_reminder2; //$NON-NLS-1$
-	
-	private static final String REMINDER_1 = Messages.RechnungsListeView_reminder1; //$NON-NLS-1$
 	
 	public final static String ID = "ch.elexis.RechnungsListeView"; //$NON-NLS-1$
 	
@@ -84,27 +69,26 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 	RnContentProvider cntp;
 	RnControlFieldProvider cfp;
 	
-	Text tPat, tRn, tSum, tOpen;
-	NumberInput niDaysTo1st, niDaysTo2nd, niDaysTo3rd;
-	MoneyInput mi1st, mi2nd, mi3rd;
-	SelectionListener mahnWizardListener;
-	FormToolkit tk = UiDesk.getToolkit();
-	Settings rnStellerSettings;
+	private Settings rnStellerSettings;
 	
-	private ElexisEventListener eeli_mandant = new ElexisUiEventListenerImpl(Mandant.class,
-		ElexisEvent.EVENT_MANDATOR_CHANGED) {
-		
-		@Override
-		public void runInUi(ElexisEvent ev){
-			Mandant m = (Mandant) ElexisEventDispatcher.getSelected(Mandant.class);
-			if (m != null) {
-				rnStellerSettings = CoreHub.getUserSetting(m.getRechnungssteller());
-				checkRnStellerSettingsValidity(m);
-				//				cv.notify(CommonViewer.Message.update);
-				updateMahnAutomatic();
+	private InvoiceListBottomComposite invoiceListeBottomComposite;
+	
+	private ElexisEventListener eeli_mandant =
+		new ElexisUiEventListenerImpl(Mandant.class, ElexisEvent.EVENT_MANDATOR_CHANGED) {
+			
+			@Override
+			public void runInUi(ElexisEvent ev){
+				Mandant m = (Mandant) ElexisEventDispatcher.getSelected(Mandant.class);
+				if (m != null) {
+					rnStellerSettings = CoreHub.getUserSetting(m.getRechnungssteller());
+					checkRnStellerSettingsValidity(m);
+					//				cv.notify(CommonViewer.Message.update);
+					if (invoiceListeBottomComposite != null) {
+						invoiceListeBottomComposite.updateMahnAutomatic();
+					}
+				}
 			}
-		}
-	};
+		};
 	
 	public RechnungsListeView(){
 		Mandant currMandant = (Mandant) ElexisEventDispatcher.getSelected(Mandant.class);
@@ -117,13 +101,12 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 		if (rnStellerSettings == null) {
 			Kontakt k = null;
 			
-			KontaktSelektor ksDialog =
-				new KontaktSelektor(UiDesk.getTopShell(), Anwender.class,
-					Messages.RechnungsListeView_selectRnSteller,
-					Messages.RechnungsListeView_selectRnStellerMsg, new String[] {
-						Anwender.FLD_NAME1, Anwender.FLD_NAME2
-					});
-			
+			KontaktSelektor ksDialog = new KontaktSelektor(UiDesk.getTopShell(), Anwender.class,
+				Messages.RechnungsListeView_selectRnSteller,
+				Messages.RechnungsListeView_selectRnStellerMsg, new String[] {
+					Anwender.FLD_NAME1, Anwender.FLD_NAME2
+				});
+				
 			if (ksDialog.open() == Dialog.OK) {
 				if (ksDialog.getSelection() != null) {
 					k = (Kontakt) ksDialog.getSelection();
@@ -151,10 +134,9 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 		cv = new CommonViewer();
 		cntp = new RnContentProvider(this, cv);
 		cfp = new RnControlFieldProvider();
-		vc =
-			new ViewerConfigurer(cntp, new ViewerConfigurer.TreeLabelProvider(), cfp,
-				new ViewerConfigurer.DefaultButtonProvider(), new SimpleWidgetProvider(
-					SimpleWidgetProvider.TYPE_TREE, SWT.V_SCROLL | SWT.MULTI, cv));
+		vc = new ViewerConfigurer(cntp, new ViewerConfigurer.TreeLabelProvider(), cfp,
+			new ViewerConfigurer.DefaultButtonProvider(),
+			new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_TREE, SWT.V_SCROLL | SWT.MULTI, cv));
 		// rnFilter=FilterFactory.createFilter(Rechnung.class,"Rn
 		// Nummer","Name","Vorname","Betrag");
 		cv.create(vc, comp, SWT.BORDER, getViewSite());
@@ -190,86 +172,8 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 			}
 		});
 		
-		Composite bottom = new Composite(comp, SWT.NONE);
-		
-		RowLayout rowLayout = new RowLayout();
-		rowLayout.wrap = false;
-		rowLayout.pack = true;
-		rowLayout.justify = true;
-		rowLayout.fill = true;
-		rowLayout.type = SWT.HORIZONTAL;
-		rowLayout.marginLeft = 0;
-		rowLayout.marginTop = 0;
-		rowLayout.marginRight = 0;
-		rowLayout.marginBottom = 0;
-		rowLayout.spacing = 5;
-		
-		mahnWizardListener = new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent e){
-				rnStellerSettings.set(Preferences.RNN_DAYSUNTIL1ST, niDaysTo1st.getValue());
-				rnStellerSettings.set(Preferences.RNN_DAYSUNTIL2ND, niDaysTo2nd.getValue());
-				rnStellerSettings.set(Preferences.RNN_DAYSUNTIL3RD, niDaysTo3rd.getValue());
-				rnStellerSettings.set(Preferences.RNN_AMOUNT1ST, mi1st.getMoney(false)
-					.getAmountAsString());
-				rnStellerSettings.set(Preferences.RNN_AMOUNT2ND, mi2nd.getMoney(false)
-					.getAmountAsString());
-				rnStellerSettings.set(Preferences.RNN_AMOUNT3RD, mi3rd.getMoney(false)
-					.getAmountAsString());
-				rnStellerSettings.flush();
-			}
-			
-		};
-		
-		bottom.setLayout(rowLayout);
-		Form fSum = tk.createForm(bottom);
-		Form fWizard = tk.createForm(bottom);
-		fSum.setText(Messages.RechnungsListeView_sum); //$NON-NLS-1$
-		fWizard.setText(Messages.RechnungsListeView_dunningAutomatics); //$NON-NLS-1$
-		Composite cSum = fSum.getBody();
-		cSum.setLayout(new GridLayout(2, false));
-		tk.createLabel(cSum, Messages.RechnungsListeView_patInList); //$NON-NLS-1$
-		tPat = tk.createText(cSum, "", SWT.BORDER | SWT.READ_ONLY); //$NON-NLS-1$
-		tPat.setLayoutData(new GridData(100, SWT.DEFAULT));
-		tk.createLabel(cSum, Messages.RechnungsListeView_accountsInList); //$NON-NLS-1$
-		tRn = tk.createText(cSum, "", SWT.BORDER | SWT.READ_ONLY); //$NON-NLS-1$
-		tRn.setLayoutData(new GridData(100, SWT.DEFAULT));
-		tk.createLabel(cSum, Messages.RechnungsListeView_sumInList); //$NON-NLS-1$
-		tSum = SWTHelper.createText(tk, cSum, 1, SWT.BORDER | SWT.READ_ONLY);
-		tSum.setLayoutData(new GridData(100, SWT.DEFAULT));
-		tk.createLabel(cSum, Messages.RechnungsListeView_paidInList); //$NON-NLS-1$
-		tOpen = SWTHelper.createText(tk, cSum, 1, SWT.BORDER | SWT.READ_ONLY);
-		tOpen.setLayoutData(new GridData(100, SWT.DEFAULT));
-		Composite cW = fWizard.getBody();
-		cW.setLayout(new GridLayout(4, true));
-		
-		tk.createLabel(cW, Messages.RechnungsListeView_delayInDays); //$NON-NLS-1$
-		
-		niDaysTo1st = new NumberInput(cW, REMINDER_1);
-		niDaysTo1st.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		niDaysTo1st.getControl().addSelectionListener(mahnWizardListener);
-		niDaysTo1st.setValue(rnStellerSettings.get(Preferences.RNN_DAYSUNTIL1ST, 30));
-		niDaysTo2nd = new NumberInput(cW, REMINDER_2);
-		niDaysTo2nd.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		niDaysTo2nd.getControl().addSelectionListener(mahnWizardListener);
-		niDaysTo2nd.setValue(rnStellerSettings.get(Preferences.RNN_DAYSUNTIL2ND, 10));
-		niDaysTo3rd = new NumberInput(cW, REMINDER_3);
-		niDaysTo3rd.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		niDaysTo3rd.getControl().addSelectionListener(mahnWizardListener);
-		niDaysTo3rd.setValue(rnStellerSettings.get(Preferences.RNN_DAYSUNTIL3RD, 5));
-		tk.createLabel(cW, Messages.RechnungsListeView_fine); //$NON-NLS-1$
-		mi1st = new MoneyInput(cW, REMINDER_1);
-		mi1st.addSelectionListener(mahnWizardListener);
-		mi1st.setMoney(rnStellerSettings.get(Preferences.RNN_AMOUNT1ST,
-			new Money().getAmountAsString()));
-		mi2nd = new MoneyInput(cW, REMINDER_2);
-		mi2nd.addSelectionListener(mahnWizardListener);
-		mi2nd.setMoney(rnStellerSettings.get(Preferences.RNN_AMOUNT2ND,
-			new Money().getAmountAsString()));
-		mi3rd = new MoneyInput(cW, REMINDER_3);
-		mi3rd.addSelectionListener(mahnWizardListener);
-		mi3rd.setMoney(rnStellerSettings.get(Preferences.RNN_AMOUNT3RD,
-			new Money().getAmountAsString()));
+		invoiceListeBottomComposite =
+			new InvoiceListBottomComposite(comp, SWT.NONE, rnStellerSettings);
 		
 		ElexisEventDispatcher.getInstance().addListeners(this);
 		cv.getViewerWidget().getControl()
@@ -285,6 +189,10 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 		mgr.addMenuListener(new RnMenuListener(this));
 		cv.setContextMenu(mgr);
 		cntp.startListening();
+	}
+	
+	public InvoiceListBottomComposite getInvoiceListeBottomComposite(){
+		return invoiceListeBottomComposite;
 	}
 	
 	@Override
@@ -337,23 +245,11 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 		cv.notify(CommonViewer.Message.update);
 	}
 	
-	private final ElexisEvent eetmpl = new ElexisEvent(null, Rechnung.class,
-		ElexisEvent.EVENT_RELOAD);
+	private final ElexisEvent eetmpl =
+		new ElexisEvent(null, Rechnung.class, ElexisEvent.EVENT_RELOAD);
 	
 	public ElexisEvent getElexisEventFilter(){
 		return eetmpl;
-	}
-	
-	private void updateMahnAutomatic(){
-		niDaysTo1st.setValue(rnStellerSettings.get(Preferences.RNN_DAYSUNTIL1ST, 30));
-		niDaysTo2nd.setValue(rnStellerSettings.get(Preferences.RNN_DAYSUNTIL2ND, 10));
-		niDaysTo3rd.setValue(rnStellerSettings.get(Preferences.RNN_DAYSUNTIL3RD, 5));
-		mi1st.setMoney(rnStellerSettings.get(Preferences.RNN_AMOUNT1ST,
-			new Money().getAmountAsString()));
-		mi2nd.setMoney(rnStellerSettings.get(Preferences.RNN_AMOUNT2ND,
-			new Money().getAmountAsString()));
-		mi3rd.setMoney(rnStellerSettings.get(Preferences.RNN_AMOUNT3RD,
-			new Money().getAmountAsString()));
 	}
 	
 }

@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.util.IRunnableWithProgress;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.article.IArticle;
@@ -91,11 +92,9 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 					throws InvocationTargetException, InterruptedException{
 					log.debug("Migrating stock information");
 					qbe.startGroup();
-					qbe.add(MINBESTAND, Query.NOT_EQUAL, null);
+					qbe.add(ISTBESTAND, Query.GREATER, "0");
 					qbe.or();
-					qbe.add(ISTBESTAND, Query.NOT_EQUAL, null);
-					qbe.add(MAXBESTAND, Query.NOT_EQUAL, null);
-					qbe.add(LIEFERANT_ID, Query.NOT_EQUAL, null);
+					qbe.add(MAXBESTAND, Query.GREATER, "0");
 					qbe.endGroup();
 					List<? extends Artikel> stockArticles = qbe.execute();
 					monitor.beginTask(
@@ -116,17 +115,25 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 						String[] values = art.get(false, fields);
 						String anbruch = art.getExt(ANBRUCH);
 						if (anbruch != null && anbruch.length() > 0) {
-							se.setFractionUnits(Integer.valueOf(anbruch));
+							int anbruchValue = 0;
+							try {
+								anbruchValue = Integer.valueOf(anbruch);
+							} catch (NumberFormatException nfe) {
+								log.warn(
+									"Error converting fraction value [{}] for id [{}], setting 0.",
+									anbruch, art.getId(), nfe);
+							}
+							se.setFractionUnits(anbruchValue);
 							art.setExt(ANBRUCH, null);
 						}
 						for (int i = 0; i < values.length; i++) {
 							if (values[i] != null && values[i].length() > 0) {
 								if (i == 0) {
-									se.setMinimumStock(Integer.valueOf(values[i].trim()));
+									se.setMinimumStock(StringTool.parseSafeInt(values[i]));
 								} else if (i == 1) {
-									se.setCurrentStock(Integer.valueOf(values[i].trim()));
+									se.setCurrentStock(StringTool.parseSafeInt(values[i]));
 								} else if (i == 2) {
-									se.setMaximumStock(Integer.valueOf(values[i].trim()));
+									se.setMaximumStock(StringTool.parseSafeInt(values[i]));
 								} else if (i == 3) {
 									se.setProvider(values[i]);
 								}
@@ -448,7 +455,7 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public int getPreis(final TimeTool dat, final Fall fall){
+	public int getPreis(final TimeTool dat, final IFall fall){
 		double vkt = checkZeroDouble(get(FLD_VK_PREIS));
 		Map ext = getMap(FLD_EXTINFO);
 		double vpe = checkZeroDouble((String) ext.get(VERPACKUNGSEINHEIT));
@@ -474,11 +481,11 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 		}
 	}
 	
-	public int getTP(final TimeTool date, final Fall fall){
+	public int getTP(final TimeTool date, final IFall fall){
 		return getPreis(date, fall);
 	}
 	
-	public double getFactor(final TimeTool date, final Fall fall){
+	public double getFactor(final TimeTool date, final IFall fall){
 		return 1.0;
 	}
 	
@@ -495,11 +502,5 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 		String pharmacode = getExt(FLD_PHARMACODE);
 		String ean = get(FLD_EAN);
 		return ean + "_" + pharmacode;
-	}
-	
-	@Override
-	public List<Object> getActions(Object kontext){
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

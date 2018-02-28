@@ -12,6 +12,9 @@
 
 package ch.elexis.data;
 
+import ch.elexis.core.types.LocalizeUtil;
+import ch.elexis.core.types.RelationshipType;
+
 public class BezugsKontakt extends PersistentObject {
 	public static final String RELATION = "Bezug"; //$NON-NLS-1$
 	public static final String OTHER_ID = "otherID"; //$NON-NLS-1$
@@ -25,22 +28,69 @@ public class BezugsKontakt extends PersistentObject {
 		addMapping(TABLENAME, MY_ID, OTHER_ID, RELATION, FLD_MY_RTYPE, FLD_OTHER_RTYPE);
 	}
 	
+	/**
+	 * @deprecated
+	 * @param kontakt
+	 * @param adr
+	 * @param bezug
+	 */
 	public BezugsKontakt(Kontakt kontakt, Kontakt adr, String bezug){
+		this(kontakt, adr,
+			new BezugsKontaktRelation(bezug, RelationshipType.AGENERIC, RelationshipType.AGENERIC));
+	}
+	
+	/**
+	 * 
+	 * @param kontakt
+	 * @param adr
+	 * @param bezugsKontaktType
+	 * @since 3.2
+	 */
+	public BezugsKontakt(Kontakt kontakt, Kontakt adr, BezugsKontaktRelation bezugsKontaktType){
 		create(null);
+		
 		set(new String[] {
-			MY_ID, OTHER_ID, RELATION
-		}, kontakt.getId(), adr.getId(), bezug);
+			MY_ID, OTHER_ID, RELATION, FLD_MY_RTYPE, FLD_OTHER_RTYPE
+		}, kontakt.getId(), adr.getId(), bezugsKontaktType.getName(),
+			String.valueOf(bezugsKontaktType.getDestRelationType().getValue()),
+			String.valueOf(bezugsKontaktType.getSrcRelationType().getValue()));
+	}
+	
+	/**
+	 * Updates the relation of a {@link BezugsKontakt}
+	 * 
+	 * @param bezugsKontaktRelation
+	 */
+	public void updateRelation(BezugsKontaktRelation bezugsKontaktRelation){
+		set(new String[] {
+			BezugsKontakt.RELATION, BezugsKontakt.FLD_MY_RTYPE, BezugsKontakt.FLD_OTHER_RTYPE
+		}, bezugsKontaktRelation.getName(),
+			String.valueOf(bezugsKontaktRelation.getDestRelationType().getValue()),
+			String.valueOf(bezugsKontaktRelation.getSrcRelationType().getValue()));
 	}
 	
 	@Override
 	public String getLabel(){
 		Kontakt k = Kontakt.load(get(OTHER_ID));
 		if (k.isValid()) {
-			return get(RELATION) + ": " + k.getLabel(); //$NON-NLS-1$
+			String rel = get(RELATION);
+			if (rel.isEmpty()) {
+				rel = get(FLD_OTHER_RTYPE);
+				if (!rel.isEmpty()) {
+					try {
+						RelationshipType type = RelationshipType.get(Integer.parseInt(rel));
+						if (type != null) {
+							rel = LocalizeUtil.getLocaleText(type);
+						}
+					} catch (Exception e) {
+						
+					}
+				}
+			}
+			return rel + ": " + k.getLabel(); //$NON-NLS-1$
 		} else {
 			return Messages.BezugsKontakt_ContactDoesntExist;
 		}
-		
 	}
 	
 	public static BezugsKontakt load(String id){
@@ -65,5 +115,4 @@ public class BezugsKontakt extends PersistentObject {
 	protected BezugsKontakt(String id){
 		super(id);
 	}
-	
 }

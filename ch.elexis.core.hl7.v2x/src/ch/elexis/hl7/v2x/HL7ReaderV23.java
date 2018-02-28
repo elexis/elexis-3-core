@@ -19,13 +19,16 @@ import ca.uhn.hl7v2.model.v23.datatype.SN;
 import ca.uhn.hl7v2.model.v23.datatype.ST;
 import ca.uhn.hl7v2.model.v23.datatype.TX;
 import ca.uhn.hl7v2.model.v23.datatype.XAD;
+import ca.uhn.hl7v2.model.v23.datatype.XCN;
 import ca.uhn.hl7v2.model.v23.group.ORU_R01_OBSERVATION;
 import ca.uhn.hl7v2.model.v23.group.ORU_R01_ORDER_OBSERVATION;
+import ca.uhn.hl7v2.model.v23.group.ORU_R01_RESPONSE;
 import ca.uhn.hl7v2.model.v23.message.ORU_R01;
 import ca.uhn.hl7v2.model.v23.segment.MSH;
 import ca.uhn.hl7v2.model.v23.segment.NTE;
 import ca.uhn.hl7v2.model.v23.segment.OBR;
 import ca.uhn.hl7v2.model.v23.segment.OBX;
+import ca.uhn.hl7v2.model.v23.segment.ORC;
 import ca.uhn.hl7v2.model.v23.segment.PID;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.exceptions.ElexisException;
@@ -37,6 +40,7 @@ import ch.elexis.hl7.HL7Reader;
 import ch.elexis.hl7.model.EncapsulatedData;
 import ch.elexis.hl7.model.LabResultData;
 import ch.elexis.hl7.model.ObservationMessage;
+import ch.elexis.hl7.model.OrcMessage;
 import ch.elexis.hl7.model.TextData;
 import ch.elexis.hl7.util.HL7Helper;
 import ch.elexis.hl7.v26.HL7Constants;
@@ -288,7 +292,7 @@ public class HL7ReaderV23 extends HL7Reader {
 		String range = "";
 		String observationTime = "";
 		String status = "";
-		boolean flag = false;
+		Boolean flag;
 		
 		if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_ED)) {
 			String observationId =
@@ -345,7 +349,8 @@ public class HL7ReaderV23 extends HL7Reader {
 			status = obx.getObx11_ObservResultStatus().getValue();
 			
 			LabResultData lrd = new LabResultData(itemCode, name, unit, value, range, flag,
-				defaultDateTime, observationTime, commentNTE, group, sequence, status);
+				defaultDateTime, observationTime, commentNTE, group, sequence, status,
+				extractName(obx.getObx4_ObservationSubID()));
 				
 			if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_NM)
 				|| valueType.equals(HL7Constants.OBX_VALUE_TYPE_SN)) {
@@ -360,5 +365,36 @@ public class HL7ReaderV23 extends HL7Reader {
 		} else {
 			logger.error(MessageFormat.format("Value type {0} is not implemented!", valueType));
 		}
+	}
+	
+	@Override
+	public OrcMessage getOrcMessage(){
+		try {
+			ORU_R01 oru = (ORU_R01) message;
+			if (oru != null) {
+				ORU_R01_RESPONSE pr = oru.getRESPONSE();
+				if (pr != null) {
+					ORU_R01_ORDER_OBSERVATION oo = pr.getORDER_OBSERVATION();
+					if (oo != null) {
+						return extractOrc(oo.getORC());
+					}
+				}
+			}
+		} catch (Exception e) {
+			LoggerFactory.getLogger(HL7Reader.class).warn("orc parsing failed", e);
+		}
+		return null;
+	}
+	
+	private OrcMessage extractOrc(ORC orc) throws HL7Exception{
+		if (orc != null) {
+			OrcMessage orcMessage = new OrcMessage();
+			XCN[] ops = orc.getOrderingProvider();
+			for (XCN op : ops) {
+				addNameValuesToOrcMessage(op.getFamilyName(), op.getGivenName(), orcMessage);
+			}
+			return orcMessage;
+		}
+		return null;
 	}
 }

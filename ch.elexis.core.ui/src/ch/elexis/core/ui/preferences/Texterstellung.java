@@ -11,19 +11,30 @@
  *******************************************************************************/
 package ch.elexis.core.ui.preferences;
 
+
+import java.io.File;
 import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
-import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.services.ILocalDocumentService;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
+import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
+import ch.elexis.core.ui.util.SWTHelper;
 
 /**
  * Einstellungen zur Verknüpfung mit einem externen Texterstellungs-Modul
@@ -47,6 +58,25 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 				Messages.Texterstellung_Support_Legacy, getFieldEditorParent()));
 		addField(new BooleanFieldEditor(Preferences.P_TEXT_RENAME_WITH_F2,
 				Messages.Texterstellung_Rename_with_F2, getFieldEditorParent()));
+		
+		addField(new BooleanFieldEditor(Preferences.P_TEXT_EDIT_LOCAL,
+			Messages.Texterstellung_texteditlocaldesc,
+			getFieldEditorParent()));
+		
+		if (LocalDocumentServiceHolder.getService().isPresent())
+		{
+			ILocalDocumentService documentService = LocalDocumentServiceHolder.getService().get();
+			Composite compBackupDir = new Composite(getFieldEditorParent(), SWT.NONE);
+			compBackupDir.setLayout(new GridLayout(1, false));
+			compBackupDir.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+			new Label(compBackupDir, SWT.NONE).setText(Messages.Texterstellung_backupdir);
+			Text backupDir = new Text(compBackupDir, SWT.BORDER);
+			backupDir.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			backupDir.setText(documentService.getDocumentCachePath() + File.separator + "backup");
+			backupDir.setEditable(false);
+		}
+		
+				
 		String[][] rows = new String[list.size()][];
 		int i = 0;
 		for (IConfigurationElement ice : list) {

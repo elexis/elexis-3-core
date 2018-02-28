@@ -1,5 +1,6 @@
 package ch.elexis.core.mail.ui.dialogs;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +38,7 @@ import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
 
 public class SendMailDialog extends TitleAreaDialog {
-
+	
 	private ComboViewer accountsViewer;
 	private MailAccount account;
 	private Text toText;
@@ -139,7 +140,8 @@ public class SendMailDialog extends TitleAreaDialog {
 			lbl = new Label(container, SWT.NONE);
 			lbl.setText("Anhang");
 			attachmentsLabel = new Label(container, SWT.NONE);
-			attachmentsLabel.setText(attachmentsString);
+			attachmentsLabel.setToolTipText(attachmentsString);
+			attachmentsLabel.setText(getAttachmentNames(attachmentsString));
 			attachmentsLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			
 			lbl = new Label(container, SWT.NONE);
@@ -168,9 +170,25 @@ public class SendMailDialog extends TitleAreaDialog {
 		return area;
 	}
 	
+	public String getAttachmentNames(String attachmentAsString){
+		StringBuilder build = new StringBuilder();
+		if (attachmentAsString != null) {
+			String [] attachments = attachmentAsString.split(",\n");
+			for (String f : attachments)
+			{
+				if (build.length() > 0) {
+					build.append(",\n");
+				}
+				build.append(Paths.get(f).getFileName());
+				
+			}
+		}
+		return build.toString();
+	}
+	
 	public void setAttachments(String attachments){
 		if (attachments != null && !attachments.isEmpty()) {
-			attachmentsString = attachments;
+			attachmentsString = attachments.replaceAll(":::", ",\n");
 		}
 	}
 	

@@ -29,6 +29,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -76,6 +77,10 @@ public class StockManagementPreferencePage extends PreferencePage
 	private Label lblMachineuuid;
 	
 	private Label lblDefaultArticleProvider;
+	private Button btnMachineOutlayPartialPackages;
+	
+	private Button btnStoreBelow;
+	private Button btnStoreAtMin;
 	
 	/**
 	 * Create the preference page.
@@ -385,8 +390,35 @@ public class StockManagementPreferencePage extends PreferencePage
 		txtMachineConfig = new Text(compositeDetail, SWT.BORDER);
 		txtMachineConfig.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		
+		btnMachineOutlayPartialPackages = new Button(compositeDetail, SWT.CHECK);
+		btnMachineOutlayPartialPackages
+			.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1));
+		btnMachineOutlayPartialPackages
+			.setText(Messages.StockManagementPreferencePage_btnMachineOutlayPartialPackages_text);
+		boolean outlayPartialPackages =
+			CoreHub.globalCfg.get(Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
+				Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES_DEFAULT);
+		btnMachineOutlayPartialPackages.setSelection(outlayPartialPackages);
+		
 		btnChkStoreInvalidNumbers = new Button(container, SWT.CHECK);
 		btnChkStoreInvalidNumbers.setText(Messages.LagerverwaltungPrefs_checkForInvalid);
+		
+		
+		Group group1 = new Group(container, SWT.SHADOW_IN);
+	    group1.setText(Messages.LagerverwaltungPrefs_orderCriteria);
+	    group1.setLayout(new RowLayout(SWT.VERTICAL));
+		btnStoreBelow = new Button(group1, SWT.RADIO);
+		btnStoreBelow.setText(Messages.LagerverwaltungPrefs_orderWhenBelowMi);
+		btnStoreAtMin = new Button(group1, SWT.RADIO);
+		btnStoreAtMin.setText(Messages.LagerverwaltungPrefs_orderWhenAtMin);
+		
+		int valInventoryOrderTrigger =
+				CoreHub.globalCfg.get(Preferences.INVENTORY_ORDER_TRIGGER,
+				Preferences.INVENTORY_ORDER_TRIGGER_DEFAULT);
+		boolean isInventoryOrderEqualValue =
+			Preferences.INVENTORY_ORDER_TRIGGER_EQUAL == valInventoryOrderTrigger;
+		btnStoreAtMin.setSelection(isInventoryOrderEqualValue);
+		btnStoreBelow.setSelection(!isInventoryOrderEqualValue);
 		
 		Composite compDefaultProvider = new Composite(container, SWT.NONE);
 		compDefaultProvider.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
@@ -491,6 +523,11 @@ public class StockManagementPreferencePage extends PreferencePage
 	public boolean performOk(){
 		getPreferenceStore().setValue(Preferences.INVENTORY_CHECK_ILLEGAL_VALUES,
 			btnChkStoreInvalidNumbers.getSelection());
+		getPreferenceStore().setValue(Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
+			btnMachineOutlayPartialPackages.getSelection());
+		getPreferenceStore().setValue(Preferences.INVENTORY_ORDER_TRIGGER,
+			btnStoreBelow.getSelection() ? Preferences.INVENTORY_ORDER_TRIGGER_BELOW
+					: Preferences.INVENTORY_ORDER_TRIGGER_EQUAL);
 		
 		((SettingsPreferenceStore) getPreferenceStore()).flush();
 		

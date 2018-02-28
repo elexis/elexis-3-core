@@ -40,5 +40,12 @@ public abstract class AbstractReferenceDataImporter {
 	 *         is not determined, return -1
 	 */
 	public abstract int getCurrentVersion();
+
+	/**
+	 * @return if this importer is enabled. Defaults to <code>true</code>, implementations may override.
+	 */
+	public boolean isEnabled(){
+		return true;
+	}
 	
 }

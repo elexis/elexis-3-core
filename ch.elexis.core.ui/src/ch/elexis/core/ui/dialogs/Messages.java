@@ -210,6 +210,8 @@ public class Messages extends NLS {
 	public static String MediDetailDialog_lunch;
 	public static String MediDetailDialog_evening;
 	public static String MediDetailDialog_night;
+	public static String MediDetailDialog_freetext;
+	public static String MediDetailDialog_tooltipDosageType;
 	public static String MediDetailDialog_intakeOrder;
 	public static String MediDetailDialog_disposalComment;
 	public static String MediDetailDialog_btnReserveMedication;
@@ -223,6 +225,8 @@ public class Messages extends NLS {
 	public static String NeuerFallDialog_createNewCase;
 	public static String NeuerFallDialog_enterCaseData;
 	public static String NeuerFallDialog_newCase;
+	public static String FallEditDialog_editCase;
+	public static String FallEditDialog_enterCaseData;
 	public static String PatientErfassenDialog_Name;
 	public static String PatientErfassenDialog_birthDate;
 	public static String PatientErfassenDialog_city;
@@ -247,6 +251,36 @@ public class Messages extends NLS {
 	public static String SelectFallDialog_selectFall;
 	public static String DiagnoseSelektorDialog_Title;
 	public static String DiagnoseSelektorDialog_Message;
+	public static String LocalDocumentsDialog_abortall;
+
+	public static String LocalDocumentsDialog_abortquestion;
+
+	public static String LocalDocumentsDialog_aborttitle;
+
+	public static String LocalDocumentsDialog_actionaborttext;
+
+	public static String LocalDocumentsDialog_actionendtext;
+
+	public static String LocalDocumentsDialog_dialogmessage;
+
+	public static String LocalDocumentsDialog_dialogtitle;
+
+	public static String LocalDocumentsDialog_document;
+
+	public static String LocalDocumentsDialog_endall;
+
+	public static String LocalDocumentsDialog_endquestion;
+
+	public static String LocalDocumentsDialog_endttile;
+
+	public static String LocalDocumentsDialog_errorabortmessage;
+
+	public static String LocalDocumentsDialog_errorendmessage;
+
+	public static String LocalDocumentsDialog_errortitle;
+
+	public static String LocalDocumentsDialog_patient;
+
 	public static String LoginDialog_0;
 	public static String LoginDialog_1;
 	public static String LoginDialog_4;
@@ -271,6 +305,7 @@ public class Messages extends NLS {
 	public static String ReminderDetailDialog_labelAction_toolTipText;
 	public static String ReminderDetailDialog_labelAction_text;
 	public static String DailyOrderDialog_text_text;
+	public static String ReminderDetailDialog_txtDescription_message;
 	
 	static {
 		// load message values from bundle file

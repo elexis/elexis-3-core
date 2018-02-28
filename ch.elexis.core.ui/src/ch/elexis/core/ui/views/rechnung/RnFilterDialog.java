@@ -36,8 +36,27 @@ public class RnFilterDialog extends TitleAreaDialog {
 	MoneyInput miVon, miBis;
 	DateInput diRnVon, diRnBis, diStatVon, diStatBis;
 	
+	private TimeTool invoiceDateFrom;
+	private TimeTool invoiceDateTo;
+	private TimeTool invoiceStateDateFrom;
+	private TimeTool invoiceStateDateTo;
+	
+	private boolean includeMoneySelector;
+	
 	public RnFilterDialog(final Shell parentShell){
+		this(parentShell, true);
+	}
+	
+	/**
+	 * 
+	 * @param parentShell
+	 * @param includeMoneySelector
+	 *            whether to show and populate the money selection
+	 * @since 3.2
+	 */
+	public RnFilterDialog(final Shell parentShell, boolean includeMoneySelector){
 		super(parentShell);
+		this.includeMoneySelector = includeMoneySelector;
 	}
 	
 	@Override
@@ -45,9 +64,11 @@ public class RnFilterDialog extends TitleAreaDialog {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ret.setLayout(new GridLayout(3, false));
-		new Label(ret, SWT.NONE).setText(Messages.RnFilterDialog_amount); //$NON-NLS-1$
-		miVon = new MoneyInput(ret, FROM);
-		miBis = new MoneyInput(ret, UNTIL);
+		if (includeMoneySelector) {
+			new Label(ret, SWT.NONE).setText(Messages.RnFilterDialog_amount); //$NON-NLS-1$
+			miVon = new MoneyInput(ret, FROM);
+			miBis = new MoneyInput(ret, UNTIL);
+		}
 		new Label(ret, SWT.NONE).setText(Messages.RnFilterDialog_billDate); //$NON-NLS-1$
 		diRnVon = new DateInput(ret, FROM);
 		diRnBis = new DateInput(ret, UNTIL);
@@ -60,42 +81,66 @@ public class RnFilterDialog extends TitleAreaDialog {
 	@Override
 	public void create(){
 		super.create();
-		setTitle(Messages.RnFilterDialog_billsFilterCaption); //$NON-NLS-1$
-		setMessage(Messages.RnFilterDialog_billsFilterMessage); //$NON-NLS-1$
-		getShell().setText(Messages.RnFilterDialog_billsList); //$NON-NLS-1$
+		setTitle(Messages.RnFilterDialog_billsFilterCaption);
+		setMessage(Messages.RnFilterDialog_billsFilterMessage);
+		getShell().setText(Messages.RnFilterDialog_billsList);
+	}
+	
+	public TimeTool getInvoiceDateFrom(){
+		return invoiceDateFrom;
+	}
+	
+	public TimeTool getInvoiceDateTo(){
+		return invoiceDateTo;
+	}
+	
+	public TimeTool getInvoiceStateDateFrom(){
+		return invoiceStateDateFrom;
+	}
+	
+	public TimeTool getInvoiceStateDateTo(){
+		return invoiceStateDateTo;
 	}
 	
 	@Override
 	protected void okPressed(){
 		ArrayList<String> al = new ArrayList<String>();
-		Money mFrom = miVon.getMoney(true);
-		Money mUntil = miBis.getMoney(true);
 		
-		if (mFrom != null) {
-			// String sFrom=StringTool.pad(SWT.LEFT, '0', mFrom.getCentsAsString(), 9);
-			al.add(PersistentObject.getConnection().translateFlavor(
-				"cast(Betrag as SIGNED) >=" + mFrom.getCentsAsString())); //$NON-NLS-1$
+		if (includeMoneySelector) {
+			Money mFrom = miVon.getMoney(true);
+			Money mUntil = miBis.getMoney(true);
+			
+			if (mFrom != null) {
+				// String sFrom=StringTool.pad(SWT.LEFT, '0', mFrom.getCentsAsString(), 9);
+				al.add(PersistentObject.getConnection()
+					.translateFlavor("cast(Betrag as SIGNED) >=" + mFrom.getCentsAsString())); //$NON-NLS-1$
+			}
+			if (mUntil != null) {
+				// String sUntil=StringTool.pad(SWT.LEFT, '0', mUntil.getCentsAsString(), 9);
+				al.add(PersistentObject.getConnection()
+					.translateFlavor("cast(Betrag as SIGNED) <=" + mUntil.getCentsAsString())); //$NON-NLS-1$
+			}
 		}
-		if (mUntil != null) {
-			// String sUntil=StringTool.pad(SWT.LEFT, '0', mUntil.getCentsAsString(), 9);
-			al.add(PersistentObject.getConnection().translateFlavor(
-				"cast(Betrag as SIGNED) <=" + mUntil.getCentsAsString())); //$NON-NLS-1$
+		
+		invoiceDateFrom = diRnVon.getDate();
+		if (invoiceDateFrom != null) {
+			al.add("RnDatum >=" + PersistentObject.getConnection() //$NON-NLS-1$
+				.wrapFlavored(invoiceDateFrom.toString(TimeTool.DATE_COMPACT)));
 		}
-		TimeTool tt = diRnVon.getDate();
-		if (tt != null) {
-			al.add("RnDatum >=" + PersistentObject.getConnection().wrapFlavored(tt.toString(TimeTool.DATE_COMPACT))); //$NON-NLS-1$
+		invoiceDateTo = diRnBis.getDate();
+		if (invoiceDateTo != null) {
+			al.add("RnDatum <=" + PersistentObject.getConnection() //$NON-NLS-1$
+				.wrapFlavored(invoiceDateTo.toString(TimeTool.DATE_COMPACT)));
 		}
-		tt = diRnBis.getDate();
-		if (tt != null) {
-			al.add("RnDatum <=" + PersistentObject.getConnection().wrapFlavored(tt.toString(TimeTool.DATE_COMPACT))); //$NON-NLS-1$
+		invoiceStateDateFrom = diStatVon.getDate();
+		if (invoiceStateDateFrom != null) {
+			al.add("StatusDatum >=" + PersistentObject.getConnection() //$NON-NLS-1$
+				.wrapFlavored(invoiceStateDateFrom.toString(TimeTool.DATE_COMPACT)));
 		}
-		tt = diStatVon.getDate();
-		if (tt != null) {
-			al.add("StatusDatum >=" + PersistentObject.getConnection().wrapFlavored(tt.toString(TimeTool.DATE_COMPACT))); //$NON-NLS-1$
-		}
-		tt = diStatBis.getDate();
-		if (tt != null) {
-			al.add("StatusDatum <=" + PersistentObject.getConnection().wrapFlavored(tt.toString(TimeTool.DATE_COMPACT))); //$NON-NLS-1$
+		invoiceStateDateTo = diStatBis.getDate();
+		if (invoiceStateDateTo != null) {
+			al.add("StatusDatum <=" + PersistentObject.getConnection() //$NON-NLS-1$
+				.wrapFlavored(invoiceStateDateTo.toString(TimeTool.DATE_COMPACT)));
 		}
 		if (al.size() > 0) {
 			ret = al.toArray(new String[0]);

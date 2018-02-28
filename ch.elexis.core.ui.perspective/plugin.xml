@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:openPerspective">
+         <command
+               commandId="ch.elexis.core.ui.perspective.handler.import"
+               label="Perspektive Import..."
+               style="push">
+         </command>
+         <command
+               commandId="ch.elexis.core.ui.perspective.handler.export"
+               label="Perspektive Export..."
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+       <command
+            defaultHandler="ch.elexis.core.ui.perspective.handler.PerspektiveImportHandler"
+            id="ch.elexis.core.ui.perspective.handler.import"
+            name="Perspektive Import">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.perspective.handler.PerspektiveExportHandler"
+            id="ch.elexis.core.ui.perspective.handler.export"
+            name="Perspektive Export">
+      </command>
+   </extension>
+
+</plugin>

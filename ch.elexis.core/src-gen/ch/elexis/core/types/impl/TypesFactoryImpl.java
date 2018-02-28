@@ -10,6 +10,7 @@
  */
 package ch.elexis.core.types.impl;
 
+import ch.elexis.core.types.AddressType;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -20,8 +21,10 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import ch.elexis.core.types.ContactGender;
 import ch.elexis.core.types.ContactType;
 import ch.elexis.core.types.Country;
+import ch.elexis.core.types.DocumentStatus;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
+import ch.elexis.core.types.PathologicDescription;
 import ch.elexis.core.types.RelationshipType;
 import ch.elexis.core.types.TypesFactory;
 import ch.elexis.core.types.TypesPackage;
@@ -91,6 +94,10 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createContactGenderFromString(eDataType, initialValue);
 			case TypesPackage.RELATIONSHIP_TYPE:
 				return createRelationshipTypeFromString(eDataType, initialValue);
+			case TypesPackage.ADDRESS_TYPE:
+				return createAddressTypeFromString(eDataType, initialValue);
+			case TypesPackage.DOCUMENT_STATUS:
+				return createDocumentStatusFromString(eDataType, initialValue);
 			case TypesPackage.MONEY:
 				return createMoneyFromString(eDataType, initialValue);
 			case TypesPackage.TIME_TOOL:
@@ -101,6 +108,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createLabItemTypFromString(eDataType, initialValue);
 			case TypesPackage.COUNTRY:
 				return createCountryFromString(eDataType, initialValue);
+			case TypesPackage.PATHOLOGIC_DESCRIPTION:
+				return createPathologicDescriptionFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -120,6 +129,10 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertContactGenderToString(eDataType, instanceValue);
 			case TypesPackage.RELATIONSHIP_TYPE:
 				return convertRelationshipTypeToString(eDataType, instanceValue);
+			case TypesPackage.ADDRESS_TYPE:
+				return convertAddressTypeToString(eDataType, instanceValue);
+			case TypesPackage.DOCUMENT_STATUS:
+				return convertDocumentStatusToString(eDataType, instanceValue);
 			case TypesPackage.MONEY:
 				return convertMoneyToString(eDataType, instanceValue);
 			case TypesPackage.TIME_TOOL:
@@ -130,6 +143,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertLabItemTypToString(eDataType, instanceValue);
 			case TypesPackage.COUNTRY:
 				return convertCountryToString(eDataType, instanceValue);
+			case TypesPackage.PATHOLOGIC_DESCRIPTION:
+				return convertPathologicDescriptionToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -192,6 +207,46 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	public String convertRelationshipTypeToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public AddressType createAddressTypeFromString(EDataType eDataType, String initialValue) {
+		AddressType result = AddressType.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertAddressTypeToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public DocumentStatus createDocumentStatusFromString(EDataType eDataType, String initialValue) {
+		DocumentStatus result = DocumentStatus.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertDocumentStatusToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 
@@ -282,6 +337,24 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	public String convertCountryToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public PathologicDescription createPathologicDescriptionFromString(EDataType eDataType, String initialValue) {
+		return (PathologicDescription)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertPathologicDescriptionToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

@@ -8,6 +8,9 @@ import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
+import ch.elexis.core.types.PathologicDescription;
+import ch.elexis.core.types.PathologicDescription.Description;
+import ch.elexis.hl7.model.OrcMessage;
 import ch.rgw.tools.TimeTool;
 
 public class TransientLabResult {
@@ -20,7 +23,8 @@ public class TransientLabResult {
 	private String refMale;
 	private String refFemale;
 	private String unit;
-	private int flags;
+	private String subId;
+	private Integer flags;
 	
 	private TimeTool date;
 	private TimeTool analyseTime;
@@ -29,6 +33,8 @@ public class TransientLabResult {
 	
 	private Map<String, String> setProperties;
 	private ILabImportUtil labImportUtil;
+	
+	private OrcMessage orcMessage;
 	
 	private TransientLabResult(Builder builder, ILabImportUtil labImportUtil){
 		this.patient = builder.patient;
@@ -50,6 +56,8 @@ public class TransientLabResult {
 		this.setProperties = builder.setProperties;
 		
 		this.labImportUtil = labImportUtil;
+		this.orcMessage = builder.orcMessage;
+		this.subId = builder.subId;
 	}
 	
 	/**
@@ -88,6 +96,14 @@ public class TransientLabResult {
 		// pathologic check takes place in labResult if it is numeric
 		if (labItem.getTyp() == LabItemTyp.NUMERIC) {
 			flags = labResult.getFlags();
+		} else {
+			if (flags != null) {
+				labResult
+					.setPathologicDescription(new PathologicDescription(Description.PATHO_IMPORT));
+			} else {
+				labResult.setPathologicDescription(
+					new PathologicDescription(Description.PATHO_IMPORT_NO_INFO));
+			}
 		}
 		setFields(labResult);
 	}
@@ -101,13 +117,22 @@ public class TransientLabResult {
 			refVal = refFemale;
 		}
 		
-		ILabResult labResult =
-			labImportUtil.createLabResult(patient, date, labItem, result, comment, refVal, origin);
+		ILabResult labResult = labImportUtil.createLabResult(patient, date, labItem, result,
+			comment, refVal, origin, subId);
 		// pathologic check takes place in labResult if it is numeric
 		if (labItem.getTyp() == LabItemTyp.NUMERIC) {
 			flags = labResult.getFlags();
+		} else {
+			if (flags != null) {
+				labResult
+					.setPathologicDescription(new PathologicDescription(Description.PATHO_IMPORT));
+			} else {
+				labResult.setPathologicDescription(
+					new PathologicDescription(Description.PATHO_IMPORT_NO_INFO));
+			}
 		}
 		setFields(labResult);
+		
 		return labResult;
 	}
 	
@@ -123,7 +148,7 @@ public class TransientLabResult {
 		StringBuilder sb = new StringBuilder();
 		sb.append(labItem.getLabel()).append(", date ")
 			.append(getDate().toString(TimeTool.TIMESTAMP));
-			
+		
 		if (refMale != null) {
 			sb.append(" refm ").append(refMale);
 		}
@@ -181,14 +206,14 @@ public class TransientLabResult {
 			labResult.setTransmissionTime(transmissionTime);
 		}
 		// set all flags at once, flags is a string in the database
-		labResult.setFlags(flags);
-		
-//		if (setProperties != null) {
-//			Set<String> keys = setProperties.keySet();
-//			for (String string : keys) {
-//				labResult.set(string, setProperties.get(string));
-//			}
-//		}
+		labResult.setFlags((flags == null) ? 0 : flags);
+		labImportUtil.updateLabResult(labResult, this);
+		//		if (setProperties != null) {
+		//			Set<String> keys = setProperties.keySet();
+		//			for (String string : keys) {
+		//				labResult.set(string, setProperties.get(string));
+		//			}
+		//		}
 	}
 	
 	public IPatient getPatient(){
@@ -229,6 +254,14 @@ public class TransientLabResult {
 	
 	public TimeTool getAnalyseTime(){
 		return analyseTime;
+	}
+	
+	public OrcMessage getOrcMessage(){
+		return orcMessage;
+	}
+	
+	public String getSubId(){
+		return subId;
 	}
 	
 	/**
@@ -277,13 +310,14 @@ public class TransientLabResult {
 		private ILabItem labItem;
 		private IContact origin;
 		private String result;
+		private String subId;
 		
 		// optional parameters
 		private String comment;
 		private String refMale;
 		private String refFemale;
 		private String unit;
-		private int flags;
+		private Integer flags;
 		
 		private TimeTool date;
 		private TimeTool analyseTime;
@@ -291,6 +325,7 @@ public class TransientLabResult {
 		private TimeTool transmissionTime;
 		
 		private Map<String, String> setProperties;
+		private OrcMessage orcMessage;
 		
 		public Builder(IPatient patient, IContact origin, ILabItem labItem, String result){
 			this.patient = patient;
@@ -328,7 +363,7 @@ public class TransientLabResult {
 			return this;
 		}
 		
-		public Builder flags(int flags){
+		public Builder flags(Integer flags){
 			this.flags = flags;
 			return this;
 		}
@@ -357,12 +392,22 @@ public class TransientLabResult {
 			return new TransientLabResult(this, labImportUtil);
 		}
 		
-//		public Builder setProperty(String property, String value){
-//			if (setProperties == null) {
-//				setProperties = new HashMap<String, String>();
-//			}
-//			setProperties.put(property, value);
-//			return this;
-//		}
+		public Builder orcMessage(OrcMessage orcMessage){
+			this.orcMessage = orcMessage;
+			return this;
+		}
+		
+		public Builder subId(String subId){
+			this.subId = subId;
+			return this;
+		}
+		
+		//		public Builder setProperty(String property, String value){
+		//			if (setProperties == null) {
+		//				setProperties = new HashMap<String, String>();
+		//			}
+		//			setProperties.put(property, value);
+		//			return this;
+		//		}
 	}
 }

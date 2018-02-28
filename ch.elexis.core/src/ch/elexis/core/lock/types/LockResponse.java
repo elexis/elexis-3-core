@@ -33,20 +33,16 @@ public class LockResponse {
 		this.status = status;
 	}
 
-	/**
-	 * @return if {@link #getStatus()} {@link Status#DENIED} contains the
-	 *         {@link LockInfo} the request failed upon, else <code>null</code>
-	 */
-	public LockInfo getLockInfos() {
+	public LockInfo getLockInfo() {
 		return lockInfo;
 	}
 
-	public void setLockInfos(LockInfo lockInfo) {
+	public void setLockInfo(LockInfo lockInfo) {
 		this.lockInfo = lockInfo;
 	}
 
-	public static LockResponse OK() {
-		return new LockResponse();
+	public static LockResponse OK(LockInfo lie) {
+		return new LockResponse(Status.OK, lie);
 	}
 
 	public static LockResponse DENIED(LockInfo lie) {

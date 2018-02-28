@@ -3,21 +3,17 @@ package ch.elexis.core.ui.medication.views;
 import java.text.MessageFormat;
 
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 import ch.elexis.core.constants.StringConstants;
@@ -25,8 +21,6 @@ import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.medication.action.MovePrescriptionPositionInTableDownAction;
-import ch.elexis.core.ui.medication.action.MovePrescriptionPositionInTableUpAction;
 import ch.elexis.data.Rezept;
 import ch.elexis.data.Verrechnet;
 
@@ -36,7 +30,11 @@ public class MedicationViewerHelper {
 		int columnIndex){
 		TableViewerColumn ret = new TableViewerColumn(viewer, SWT.NONE);
 		TableColumn tblclmnStateDisposition = ret.getColumn();
+		tblclmnStateDisposition.setToolTipText(Messages.MedicationComposite_column_sortBy + " " 
+			+ Messages.MedicationComposite_column_type);
 		layout.setColumnData(tblclmnStateDisposition, new ColumnPixelData(20, false, false));
+		tblclmnStateDisposition.addSelectionListener(
+			getSelectionAdapter(viewer, tblclmnStateDisposition, columnIndex));
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
 			@Override
 			public String getText(Object element){
@@ -57,6 +55,8 @@ public class MedicationViewerHelper {
 		final TableColumn tblclmnArticle = ret.getColumn();
 		layout.setColumnData(tblclmnArticle, new ColumnPixelData(250, true, true));
 		tblclmnArticle.setText(Messages.TherapieplanComposite_tblclmnArticle_text);
+		tblclmnArticle.setToolTipText(Messages.MedicationComposite_column_sortBy + " "
+			+ Messages.TherapieplanComposite_tblclmnArticle_text);
 		tblclmnArticle
 			.addSelectionListener(getSelectionAdapter(viewer, tblclmnArticle, columnIndex));
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
@@ -76,6 +76,13 @@ public class MedicationViewerHelper {
 					String date = pres.getBeginDate();
 					if (date != null && !date.isEmpty()) {
 						label = MessageFormat.format(Messages.MedicationComposite_startedAt, date);
+					}
+					// check if stop date is set
+					String endDate = pres.getEndDate();
+					if (endDate != null && !endDate.isEmpty()) {
+						String reason = pres.getStopReason() == null ? "?" : pres.getStopReason();
+						label += ("\n" + MessageFormat.format(
+							Messages.MedicationComposite_stopDateAndReason, endDate, reason));
 					}
 				} else {
 					IPersistentObject po = pres.getLastDisposed();
@@ -133,6 +140,8 @@ public class MedicationViewerHelper {
 		layout.setColumnData(tblclmnEnacted, new ColumnPixelData(60, true, true));
 		tblclmnEnacted.setImage(Images.resize(Images.IMG_NEXT_WO_SHADOW.getImage(),
 			ImageSize._12x12_TableColumnIconSize));
+		tblclmnEnacted.setToolTipText(Messages.MedicationComposite_column_sortBy + " "
+			+ Messages.MedicationComposite_column_beginDate);
 		tblclmnEnacted
 			.addSelectionListener(getSelectionAdapter(viewer, tblclmnEnacted, columnIndex));
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
@@ -153,8 +162,12 @@ public class MedicationViewerHelper {
 		layout.setColumnData(tblclmnComment,
 			new ColumnWeightData(1, ColumnWeightData.MINIMUM_WIDTH, true));
 		tblclmnComment.setText(Messages.TherapieplanComposite_tblclmnComment_text);
+		tblclmnComment.setToolTipText(Messages.MedicationComposite_column_sortBy + " "
+			+ Messages.TherapieplanComposite_tblclmnComment_text);
 		tblclmnComment
 			.addSelectionListener(getSelectionAdapter(viewer, tblclmnComment, columnIndex));
+		tblclmnComment.setToolTipText(Messages.MedicationComposite_column_sortBy + " "
+			+ Messages.TherapieplanComposite_tblclmnComment_text);
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
 			
 			@Override
@@ -174,6 +187,8 @@ public class MedicationViewerHelper {
 		layout.setColumnData(tblclmnStop, stopColumnPixelData);
 		tblclmnStop.setImage(Images.resize(Images.IMG_ARROWSTOP_WO_SHADOW.getImage(),
 			ImageSize._12x12_TableColumnIconSize));
+		tblclmnStop.setToolTipText(Messages.MedicationComposite_column_sortBy + " "
+			+ Messages.MedicationComposite_column_endDate);
 		tblclmnStop.addSelectionListener(getSelectionAdapter(viewer, tblclmnStop, columnIndex));
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
 			@Override
@@ -198,6 +213,8 @@ public class MedicationViewerHelper {
 			new ColumnWeightData(1, ColumnWeightData.MINIMUM_WIDTH, true);
 		layout.setColumnData(tblclmnReason, reasonColumnWeightData);
 		tblclmnReason.setText(Messages.MedicationComposite_stopReason);
+		tblclmnReason.setToolTipText(Messages.MedicationComposite_column_sortBy + " "
+			+ Messages.MedicationComposite_stopReason);
 		tblclmnReason.addSelectionListener(getSelectionAdapter(viewer, tblclmnReason, columnIndex));
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
 			@Override
@@ -223,7 +240,8 @@ public class MedicationViewerHelper {
 		ColumnWeightData mandantColumnWeightData =
 			new ColumnWeightData(0, 50, true);
 		layout.setColumnData(tblclmnMandant, mandantColumnWeightData);
-		tblclmnMandant.setText("Anwender");
+		tblclmnMandant.setText(Messages.MedicationComposite_column_mandant);
+		tblclmnMandant.setToolTipText(Messages.MedicationComposite_column_mandant);
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
 			@Override
 			public String getText(Object element){
@@ -265,53 +283,11 @@ public class MedicationViewerHelper {
 		IWorkbenchPartSite site){
 		// register context menu for table viewer
 		MenuManager menuManager = new MenuManager();
-		menuManager.add(new MovePrescriptionPositionInTableUpAction(viewer, medicationComposite));
-		menuManager.add(new MovePrescriptionPositionInTableDownAction(viewer, medicationComposite));
-		menuManager.add(new Separator());
-		menuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		Menu menu = menuManager.createContextMenu(viewer.getTable());
 		
 		viewer.getTable().setMenu(menu);
 		if (site != null) {
 			site.registerContextMenu("ch.elexis.core.ui.medication.tables", menuManager, viewer);
-		}
-	}
-	
-	public static void addKeyMoveUpDown(TableViewer viewer,
-		MedicationComposite medicationComposite){
-		viewer.getTable().addKeyListener(new UpDownKeyAdapter(viewer, medicationComposite));
-	}
-	
-	private static class UpDownKeyAdapter extends KeyAdapter {
-		private MovePrescriptionPositionInTableUpAction upAction;
-		private MovePrescriptionPositionInTableDownAction downAction;
-		
-		public UpDownKeyAdapter(TableViewer viewer, MedicationComposite medicationComposite){
-			upAction = new MovePrescriptionPositionInTableUpAction(viewer, medicationComposite);
-			downAction = new MovePrescriptionPositionInTableDownAction(viewer, medicationComposite);
-		}
-		
-		@Override
-		public void keyPressed(KeyEvent e){
-			if ((e.stateMask == SWT.COMMAND || e.stateMask == SWT.CTRL)
-				&& (e.keyCode == SWT.ARROW_UP || e.keyCode == SWT.ARROW_DOWN)) {
-				if (e.keyCode == SWT.ARROW_UP) {
-					upAction.run();
-				} else if (e.keyCode == SWT.ARROW_DOWN) {
-					downAction.run();
-				}
-				e.doit = false;
-			} else {
-				super.keyPressed(e);
-			}
-		}
-		
-		@Override
-		public void keyReleased(KeyEvent e){
-			if (e.stateMask == SWT.COMMAND
-				&& (e.keyCode == SWT.ARROW_UP || e.keyCode == SWT.ARROW_DOWN))
-				return;
-			super.keyReleased(e);
 		}
 	}
 	

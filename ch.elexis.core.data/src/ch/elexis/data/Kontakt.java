@@ -73,14 +73,6 @@ public class Kontakt extends PersistentObject {
 		FLD_NAME1, FLD_NAME2, FLD_STREET, FLD_PLACE
 	};
 	
-	public static final String DOMAIN_KONTAKT = XidConstants.DOMAIN_ELEXIS + "/kontakt/";
-	public static final String XID_KONTAKT_ANREDE = DOMAIN_KONTAKT + "anrede";
-	public static final String XID_KONTAKT_KANTON = DOMAIN_KONTAKT + "kanton";
-	public static final String XID_KONTAKT_SPEZ = DOMAIN_KONTAKT + "spez";
-	public static final String XID_KONTAKT_ROLLE = DOMAIN_KONTAKT + "rolle";
-	public static final String XID_KONTAKT_LAB_SENDING_FACILITY = DOMAIN_KONTAKT
-		+ "lab/sendingfacility";
-	
 	volatile String Bezug;
 	
 	protected String getTableName(){
@@ -100,18 +92,18 @@ public class Kontakt extends PersistentObject {
 			FLD_IS_LAB, FLD_STREET, FLD_ZIP, FLD_PLACE, FLD_COUNTRY, FLD_FAX, FLD_ANSCHRIFT,
 			FLD_MOBILEPHONE);
 		
-		Xid.localRegisterXIDDomainIfNotExists(XID_KONTAKT_ANREDE, "Anrede", Xid.ASSIGNMENT_REGIONAL);
-		Xid.localRegisterXIDDomainIfNotExists(XID_KONTAKT_KANTON, "Kanton", Xid.ASSIGNMENT_REGIONAL);
-		Xid.localRegisterXIDDomainIfNotExists(XID_KONTAKT_SPEZ, "Spezialität",
+		Xid.localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_ANREDE, "Anrede", Xid.ASSIGNMENT_REGIONAL);
+		Xid.localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_KANTON, "Kanton", Xid.ASSIGNMENT_REGIONAL);
+		Xid.localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_SPEZ, "Spezialität",
 			Xid.ASSIGNMENT_REGIONAL);
-		Xid.localRegisterXIDDomainIfNotExists(XID_KONTAKT_ROLLE, "Rolle", Xid.ASSIGNMENT_REGIONAL);
-		Xid.localRegisterXIDDomainIfNotExists(XID_KONTAKT_LAB_SENDING_FACILITY,
+		Xid.localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_ROLLE, "Rolle", Xid.ASSIGNMENT_REGIONAL);
+		Xid.localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY,
 			"Sendende Institution", Xid.ASSIGNMENT_REGIONAL);
 		
-		Xid.getDomain(XID_KONTAKT_ANREDE).addDisplayOption(Person.class);
-		Xid.getDomain(XID_KONTAKT_KANTON).addDisplayOption(Person.class);
-		Xid.getDomain(XID_KONTAKT_SPEZ).addDisplayOption(Person.class);
-		Xid.getDomain(XID_KONTAKT_LAB_SENDING_FACILITY).addDisplayOption(Labor.class);
+		Xid.getDomain(XidConstants.XID_KONTAKT_ANREDE).addDisplayOption(Person.class);
+		Xid.getDomain(XidConstants.XID_KONTAKT_KANTON).addDisplayOption(Person.class);
+		Xid.getDomain(XidConstants.XID_KONTAKT_SPEZ).addDisplayOption(Person.class);
+		Xid.getDomain(XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY).addDisplayOption(Labor.class);
 	}
 	
 	/**
@@ -185,6 +177,18 @@ public class Kontakt extends PersistentObject {
 		return qbe.execute();
 	}
 	
+	/**
+	 * Ein Array mit allen zu diesem Kontakt definierten {@link ZusatzAdresse} holen
+	 * 
+	 * @return Ein {@link ZusatzAdresse}-Array
+	 */
+	public List<ZusatzAdresse> getZusatzAdressen(){
+		Query<ZusatzAdresse> qbe = new Query<ZusatzAdresse>(ZusatzAdresse.class);
+		qbe.add(ZusatzAdresse.KONTAKT_ID, StringTool.equals, getId()); //$NON-NLS-1$
+		qbe.orderBy(false, ZusatzAdresse.TYPE, ZusatzAdresse.FLD_LASTUPDATE);
+		return qbe.execute();
+	}
+	
 	/** Die Anschrift dieses Kontakts holen */
 	public Anschrift getAnschrift(){
 		return new Anschrift(this);
@@ -214,7 +218,16 @@ public class Kontakt extends PersistentObject {
 	
 	public String createStdAnschrift(){
 		Anschrift an = getAnschrift();
-		String ret = StringTool.leer;
+		String ret = getSalutation() + an.getEtikette(false, true);
+		// create the postal if it does not exist yet
+		String old = get(FLD_ANSCHRIFT);
+		if (StringTool.isNothing(old)) {
+			set(FLD_ANSCHRIFT, ret);
+		}
+		return ret;
+	}
+	
+	public String getSalutation(){
 		StringBuilder sb = new StringBuilder();
 		if (istPerson() == true) {
 			Person p = Person.load(getId());
@@ -235,8 +248,7 @@ public class Kontakt extends PersistentObject {
 			}
 			sb.append(p.getVorname()).append(StringTool.space).append(p.getName())
 				.append(StringTool.lf);
-			sb.append(an.getEtikette(false, true));
-			ret = sb.toString();
+			
 		} else {
 			Organisation o = Organisation.load(getId());
 			String[] rx = new String[2];
@@ -245,18 +257,8 @@ public class Kontakt extends PersistentObject {
 			}, rx);
 			sb.append(rx[0]).append(StringTool.space).append(checkNull(rx[1]))
 				.append(StringTool.lf);
-			sb.append(an.getEtikette(false, true));
-			ret = sb.toString();
 		}
-		/*
-		 * else{ ret= an.getEtikette(true, true); }
-		 */
-		// create the postal if it does not exist yet
-		String old = get(FLD_ANSCHRIFT);
-		if (StringTool.isNothing(old)) {
-			set(FLD_ANSCHRIFT, ret);
-		}
-		return ret;
+		return sb.toString();
 	}
 	
 	/**
@@ -356,6 +358,25 @@ public class Kontakt extends PersistentObject {
 	/**
 	 * Eine neue Zusatzadresse zu diesem Kontakt zufügen
 	 * 
+	 * @since 3.2
+	 * @param adr
+	 *            die Adresse
+	 * @param sBezug
+	 *            ein Text, der die Beziehung dieser Adresse zum Kontakt definiert (z.B.
+	 *            "Geschäftlich" oder "Orthopäde" oder so)
+	 */
+	public BezugsKontakt addBezugsKontakt(Kontakt adr,
+		BezugsKontaktRelation bezugsKontaktRelation){
+		if (adr != null && bezugsKontaktRelation != null) {
+			return new BezugsKontakt(this, adr, bezugsKontaktRelation);
+		}
+		return null;
+	}
+	
+	/**
+	 * Eine neue Zusatzadresse zu diesem Kontakt zufügen
+	 * 
+	 * @deprecated
 	 * @param adr
 	 *            die Adresse
 	 * @param sBezug
@@ -632,5 +653,13 @@ public class Kontakt extends PersistentObject {
 	
 	public boolean istOrganisation(){
 		return checkNull(get(FLD_IS_ORGANIZATION)).equals(StringConstants.ONE);
+	}
+	
+	/**
+	 * @since 3.3
+	 * @return
+	 */
+	public boolean istAnwender(){
+		return checkNull(get(FLD_IS_USER)).equals(StringConstants.ONE);
 	}
 }

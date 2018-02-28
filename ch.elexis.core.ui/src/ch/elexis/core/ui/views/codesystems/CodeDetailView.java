@@ -56,6 +56,7 @@ import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.views.FavoritenCTabItem;
 import ch.elexis.core.ui.views.IDetailDisplay;
+import ch.elexis.core.ui.views.MakrosCTabItem;
 
 public class CodeDetailView extends ViewPart implements IActivationListener, ISaveablePart2 {
 	public final static String ID = "ch.elexis.codedetailview"; //$NON-NLS-1$
@@ -91,8 +92,9 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 					}
 				}
 				
-				if (selected instanceof FavoritenCTabItem)
+				if (selected instanceof FavoritenCTabItem || selected instanceof MakrosCTabItem) {
 					return;
+				}
 				
 				if (selected != null) {
 					String t = selected.getText();
@@ -151,11 +153,13 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 	private void addAllPages(){
 		String settings = CoreHub.userCfg.get(Preferences.USR_SERVICES_DIAGNOSES_CODES, null);
 		if (settings == null) {
+			new MakrosCTabItem(ctab, SWT.NONE);
 			new FavoritenCTabItem(ctab, SWT.None);
 			addPagesFor(ExtensionPointConstantsUi.DIAGNOSECODE);
 			addPagesFor(ExtensionPointConstantsUi.VERRECHNUNGSCODE);
 			addPagesFor(ExtensionPointConstantsUi.GENERICCODE);
 		} else {
+			new MakrosCTabItem(ctab, SWT.NONE);
 			addUserSpecifiedPages(settings);
 		}
 		
@@ -339,7 +343,7 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 	/** Vom ActivationListener */
 	public void activation(boolean mode){
 		CTabItem selected = ctab.getSelection();
-		if (selected instanceof FavoritenCTabItem)
+		if (selected instanceof FavoritenCTabItem || selected instanceof MakrosCTabItem)
 			return;
 		if (selected != null) {
 			MasterDetailsPage page = (MasterDetailsPage) selected.getControl();

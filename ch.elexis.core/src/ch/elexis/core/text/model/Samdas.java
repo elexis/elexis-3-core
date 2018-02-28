@@ -261,6 +261,10 @@ public class Samdas {
 		public int getLength(){
 			return Integer.parseInt(el.getAttributeValue(ATTR_LENGTH));
 		}
+		
+		public void setLength(int length){
+			el.setAttribute(ATTR_LENGTH, Integer.toString(length));
+		}
 	}
 	
 	/**

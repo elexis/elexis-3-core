@@ -18,7 +18,17 @@ import java.util.ResourceBundle;
 
 public interface ICondition extends IFinding {
 	public enum ConditionCategory {
-			UNKNOWN, DIAGNOSIS, COMPLAINT;
+		UNKNOWN("unknown"), PROBLEMLISTITEM("problem-list-item"), ENCOUNTERDIAGNOSIS("encounter-diagnosis");
+
+		private String code;
+
+		private ConditionCategory(String code) {
+			this.code = code;
+		}
+
+		public String getCode() {
+			return code;
+		}
 		
 		public String getLocalized(){
 			try {

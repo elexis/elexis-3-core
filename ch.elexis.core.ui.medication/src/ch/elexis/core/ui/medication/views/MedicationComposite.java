@@ -22,7 +22,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.dnd.DropTargetEvent;
@@ -40,6 +40,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -186,7 +187,6 @@ public class MedicationComposite extends Composite
 		medicationTableComposite =
 			new MedicationTableComposite(tablesComposite, SWT.NONE | SWT.VIRTUAL);
 		medicationTableComposite.setMedicationComposite(this);
-		MedicationViewerHelper.addKeyMoveUpDown(medicationTableComposite.getTableViewer(), this);
 		MedicationViewerHelper.addContextMenu(medicationTableComposite.getTableViewer(), this,
 			partSite);
 		// this composite manages selection of both tables
@@ -195,8 +195,6 @@ public class MedicationComposite extends Composite
 		medicationHistoryTableComposite =
 			new MedicationHistoryTableComposite(tablesComposite, SWT.NONE | SWT.VIRTUAL);
 		medicationHistoryTableComposite.setMedicationComposite(this);
-		MedicationViewerHelper.addKeyMoveUpDown(medicationHistoryTableComposite.getTableViewer(),
-			this);
 		MedicationViewerHelper.addContextMenu(medicationHistoryTableComposite.getTableViewer(),
 			this, partSite);
 		// this composite manages selection of both tables
@@ -208,13 +206,7 @@ public class MedicationComposite extends Composite
 		tablesLayout.topControl = medicationTableComposite;
 	}
 	
-	public void switchToViewerSoftOrderIfNotActive(ViewerSortOrder vso){
-		ViewerSortOrder order = MedicationViewHelper.getSelectedComparator();
-		
-		if (order.equals(vso)) {
-			return;
-		}
-
+	public void setViewerSortOrder(ViewerSortOrder vso){
 		medicationTableComposite.getTableViewer().setComparator(vso.vc);
 		medicationHistoryTableComposite.getTableViewer().setComparator(vso.vc);
 		
@@ -271,7 +263,7 @@ public class MedicationComposite extends Composite
 					tablesLayout.topControl = medicationHistoryTableComposite;
 					medicationHistoryTableComposite.setPendingInput();
 					medicationHistoryTableComposite.getTableViewer().refresh();
-					switchToViewerSoftOrderIfNotActive(ViewerSortOrder.DEFAULT);
+					setViewerSortOrder(ViewerSortOrder.DEFAULT);
 					contentProviderComp.setContentProvider(
 						(MedicationTableViewerContentProvider) medicationHistoryTableComposite
 							.getTableViewer().getContentProvider());
@@ -290,6 +282,13 @@ public class MedicationComposite extends Composite
 				updateUi(pat, false);
 			}
 		});
+	}
+	
+	public boolean isShowingHistory(){
+		if (btnShowHistory != null && !btnShowHistory.isDisposed()) {
+			return btnShowHistory.getSelection();
+		}
+		return false;
 	}
 	
 	private void medicationDetailComposite(){
@@ -607,7 +606,7 @@ public class MedicationComposite extends Composite
 			@Override
 			public void lockAcquired(){
 				Prescription oldPrescription = pres.getPrescription();
-				
+				String endDate = pres.getEndDate();
 				if (!btnStopMedication.getSelection()) {
 					Prescription newPrescription = new Prescription(oldPrescription);
 					newPrescription.setDosis(getDosisStringFromSignatureTextArray());
@@ -621,12 +620,27 @@ public class MedicationComposite extends Composite
 				} else {
 					oldPrescription.stop(null);
 				}
-				// apply stop reason if set
-				if (txtStopComment.getText() == null || txtStopComment.getText().isEmpty()) {
-					oldPrescription.setStopReason("Geändert durch " + CoreHub.actUser.getLabel());
-				} else {
-					oldPrescription.setStopReason(txtStopComment.getText());
+				if (endDate != null && !endDate.isEmpty()) {
+					// create new stopped prescription
+					Prescription newStoppedPrescription = new Prescription(oldPrescription);
+					newStoppedPrescription.setBeginDate(oldPrescription.getBeginTime());
+					TimeTool ttEndDate = new TimeTool(pres.getEndTime());
+					newStoppedPrescription.stop(ttEndDate);
+					newStoppedPrescription
+						.setStopReason("Änderung des Stop Datums von " + endDate);
+					// stop the old prescription with current time
+					oldPrescription.stop(null);
 				}
+				else {
+					// apply stop reason if set
+					if (txtStopComment.getText() == null || txtStopComment.getText().isEmpty()) {
+						oldPrescription
+							.setStopReason("Geändert durch " + CoreHub.actUser.getLabel());
+					} else {
+						oldPrescription.setStopReason(txtStopComment.getText());
+					}
+				}
+				
 			}
 		});
 		activateConfirmButton(false);
@@ -634,7 +648,8 @@ public class MedicationComposite extends Composite
 			showMedicationDetailComposite(null);
 
 		ElexisEventDispatcher.getInstance()
-			.fire(new ElexisEvent(null, Prescription.class, ElexisEvent.EVENT_UPDATE));
+			.fire(new ElexisEvent(pres.getPrescription(), Prescription.class,
+				ElexisEvent.EVENT_UPDATE));
 	}
 	
 	/**
@@ -658,10 +673,18 @@ public class MedicationComposite extends Composite
 			} else {
 				stackLayout.topControl = compositeMedicationTextDetails;
 			}
+			txtEvening.setEnabled(!stopped);
+			txtMorning.setEnabled(!stopped);
+			txtNight.setEnabled(!stopped);
+			txtNoon.setEnabled(!stopped);
+			txtIntakeOrder.setEnabled(!stopped);
+			txtDisposalComment.setEnabled(!stopped);
+			txtStopComment.setEnabled(!stopped);
+			txtFreeText.setEnabled(!stopped);
 			dateStopped.setEnabled(false);
 			timeStopped.setEnabled(false);
 			
-			btnStopMedication.setEnabled(!stopped && presc.isFixedMediation());
+			btnStopMedication.setEnabled(presc.isFixedMediation());
 			stackedMedicationDetailComposite.layout();
 			
 			//set default color
@@ -716,6 +739,18 @@ public class MedicationComposite extends Composite
 		} else {
 			lblDailyTherapyCost.setText("");
 		}
+	}
+	
+	@Override
+	public boolean setFocus(){
+		if (medicationTableComposite != null && medicationTableComposite.isVisible()) {
+			medicationTableComposite.setPendingInput();
+		}
+		if (medicationHistoryTableComposite != null && medicationHistoryTableComposite.isVisible()) {
+			medicationHistoryTableComposite.setPendingInput();
+		}
+		
+		return super.setFocus();
 	}
 	
 	private void setValuesForTextSignature(String[] signatureArray){
@@ -779,7 +814,7 @@ public class MedicationComposite extends Composite
 
 		MedicationTableViewerItem pres = (MedicationTableViewerItem) selectedMedication.getValue();
 		if (pres == null || pres.isStopped()) {
-			activate = false;
+			//activate = false;
 		}
 		
 		if (activate) {
@@ -860,9 +895,14 @@ public class MedicationComposite extends Composite
 		medicationHistoryTableComposite.getTableViewer().refresh();
 	}
 	
-	public void setComparator(ViewerComparator vc){
-		medicationTableComposite.getTableViewer().setComparator(vc);
-		medicationHistoryTableComposite.getTableViewer().setComparator(vc);
+	public TableViewer getActiveTableViewer(){
+		Control topControl = tablesLayout.topControl;
+		if (topControl instanceof MedicationTableComposite) {
+			return ((MedicationTableComposite) topControl).getTableViewer();
+		} else if (topControl instanceof MedicationHistoryTableComposite) {
+			return ((MedicationHistoryTableComposite) topControl).getTableViewer();
+		}
+		return null;
 	}
 	
 	/**

@@ -12,6 +12,9 @@
 
 package ch.elexis.data;
 
+/**
+ * @deprecated please replace with InvoiceState
+ */
 public class RnStatus {
 	public static final int UNBEKANNT = 0;
 	public static final int VERRECHNET = 1;

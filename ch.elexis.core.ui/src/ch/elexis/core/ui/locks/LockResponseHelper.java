@@ -26,10 +26,10 @@ public class LockResponseHelper {
 			if (log != null) {
 				log.warn("Unable to acquire lock for "
 					+ ((object != null) ? object.storeToString() : "null") + " - "
-					+ lr.getLockInfos().getUser() + "@" + lr.getLockInfos().getSystemUuid());
+					+ lr.getLockInfo().getUser() + "@" + lr.getLockInfo().getSystemUuid());
 			}
 			String format = MessageFormat.format(Messages.DenyLock_Message,
-				lr.getLockInfos().getUser() + "@" + lr.getLockInfos().getSystemUuid());
+				lr.getLockInfo().getUser() + "@" + lr.getLockInfo().getSystemUuid());
 			SWTHelper.showError(Messages.DenyLock_Title, format);
 		}
 	}

@@ -56,18 +56,15 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 		strings[2] = new DecoratedString(ProcessStatus.DUE.getLocaleText());
 		strings[3] = new DecoratedString(ProcessStatus.OVERDUE.getLocaleText());
 		
-		choosenFields =
-			CoreHub.userCfg.get(Preferences.USR_REMINDER_PAT_LABEL_CHOOSEN,
-				Reminder.LabelFields.LASTNAME.toString()).split(",");
+		choosenFields = CoreHub.userCfg.get(Preferences.USR_REMINDER_PAT_LABEL_CHOOSEN,
+			Reminder.LabelFields.LASTNAME.toString()).split(",");
 		if (choosenFields.length == 3) {
 			availableFields = new String[] {};
 		} else {
-			String defValue =
-				Reminder.LabelFields.PAT_ID.toString() + ","
-					+ Reminder.LabelFields.FIRSTNAME.toString();
-			availableFields =
-				CoreHub.userCfg.get(Preferences.USR_REMINDER_PAT_LABEL_AVAILABLE, defValue).split(
-					",");
+			String defValue = Reminder.LabelFields.PAT_ID.toString() + ","
+				+ Reminder.LabelFields.FIRSTNAME.toString();
+			availableFields = CoreHub.userCfg
+				.get(Preferences.USR_REMINDER_PAT_LABEL_AVAILABLE, defValue).split(",");
 		}
 		
 	}
@@ -83,10 +80,10 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 		showRemindersOnPatientSelectionEventBtn = new Button(ret, SWT.CHECK);
 		showRemindersOnPatientSelectionEventBtn
 			.setText(Messages.ReminderPrefences_ShowPatientSelectionRedminders);
-		showRemindersOnPatientSelectionEventBtn.setSelection(CoreHub.userCfg.get(
-			Preferences.USR_SHOWPATCHGREMINDER, false));
-		showRemindersOnPatientSelectionEventBtn.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,
-			false, 3, 1));
+		showRemindersOnPatientSelectionEventBtn
+			.setSelection(CoreHub.userCfg.get(Preferences.USR_SHOWPATCHGREMINDER, false));
+		showRemindersOnPatientSelectionEventBtn
+			.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 3, 1));
 		
 		new Label(ret, SWT.NONE);
 		new Label(ret, SWT.NONE);
@@ -97,7 +94,7 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 		
 		Label lblLabelConfig = new Label(ret, SWT.NONE);
 		lblLabelConfig.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-		lblLabelConfig.setText("Pendenzen Label Optionen");
+		lblLabelConfig.setText("Pendenzen (mit Patienten-Bezug) Label Optionen");
 		
 		Label lblChoosen = new Label(ret, SWT.NONE);
 		lblChoosen.setText("Gewählt");
@@ -163,11 +160,13 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 	
 	private String getPreviewLabel(){
 		StringBuilder sb = new StringBuilder();
-		for (String s : lViewerChoosen.getList().getItems()) {
-			sb.append(s);
-			sb.append(" ");
+		for (int i = 0; i < lViewerChoosen.getList().getItems().length; i++) {
+			sb.append(lViewerChoosen.getList().getItems()[i]);
+			if (i < lViewerChoosen.getList().getItems().length - 1) {
+				sb.append(", ");
+			}
 		}
-		return prefixPrevLabel + ":\t" + sb.toString();
+		return prefixPrevLabel + ":\t\t" + sb.toString();
 	}
 	
 	public void init(IWorkbench workbench){

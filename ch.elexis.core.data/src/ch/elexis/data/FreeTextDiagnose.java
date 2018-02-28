@@ -11,9 +11,7 @@
  *******************************************************************************/
 package ch.elexis.data;
 
-import java.util.List;
-
-import ch.elexis.core.data.interfaces.IDiagnose;
+import ch.elexis.core.model.IDiagnose;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.VersionInfo;
 
@@ -108,12 +106,6 @@ public class FreeTextDiagnose extends PersistentObject implements IDiagnose {
 	@Override
 	public String getText(){
 		return get(FLD_TEXT);
-	}
-	
-	@Override
-	public List<Object> getActions(Object context){
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 }

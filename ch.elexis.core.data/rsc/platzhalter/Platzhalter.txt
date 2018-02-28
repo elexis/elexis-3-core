@@ -79,11 +79,13 @@ Patient.Geburtsdatum=Geburtsdatum des aktuell selektierten Patienten
 Patient.Geschlecht=Geschlecht des aktuell selektierten Patienten
 Patient.PersAnamnese=Anamnese wie auf dem Titelblatt
 Patient.Medikation=Aktuelle Fixmedikation des aktuell selektierten Patienten
+Patient.ReserveMedikation=Aktuelle Reservemedikation des aktuell selektierten Patienten
 Patient.Allergien=Allergien wie auf dem Titelblatt
 Patient.Diagnosen=Diagnosen wie auf dem Titelblatt genannt
 Patient.Stammarzt=Hausarzt des Patienten
 Patient:mw:Er/Sie='Er' oder 'Sie' je nach Geschlecht
 Patient:mw:Herr/Frau='Herr' oder 'Frau' je nach Geschlecht
+Patient.FamilienAnamnese=Familienanamnese wie auf dem Titelblatt
 
 Rechnung.RnDatumBis
 Rechnung.RnDatumVon=Nur für den Rechnungsdruck. Funktioniert nicht in allgemeinen Briefen.

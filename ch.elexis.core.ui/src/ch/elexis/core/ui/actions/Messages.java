@@ -13,7 +13,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "ch.elexis.core.ui.actions.messages";//$NON-NLS-1$
-	
+
 	public static String BackgroundJob_0;
 	public static String BackgroundJob_1;
 	public static String BackgroundJob_2;
@@ -40,6 +40,7 @@ public class Messages extends NLS {
 	public static String GlobalActions_ImportDlgMessage;
 	public static String GlobalActions_ImportDlgShelltext;
 	public static String GlobalActions_ImportDlgTitle;
+	public static String GlobalActions_PreferencesHandbook_URL;
 	public static String GlobalActions_LockPerspectives;
 	public static String GlobalActions_LockPerspectivesToolTip;
 	public static String GlobalActions_Login;
@@ -69,6 +70,7 @@ public class Messages extends NLS {
 	public static String GlobalActions_PrintContactLabel;
 	public static String GlobalActions_PrintContactLabelToolTip;
 	public static String GlobalActions_PrintEMR;
+	public static String GlobalActions_ShowEMR;
 	public static String GlobalActions_PrintLabel;
 	public static String GlobalActions_PrintLabelJobName;
 	public static String GlobalActions_PrintLabelToolTip;
@@ -91,7 +93,7 @@ public class Messages extends NLS {
 	public static String PersistentObjectLoader_LoadingData;
 	public static String ToggleVerrechenbarFavoriteAction_Favorize;
 	public static String ToggleVerrechenbarFavoriteAction_DeFavorize;
-	
+
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

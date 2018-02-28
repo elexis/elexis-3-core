@@ -31,6 +31,7 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.services.IEvaluationService;
 
 import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
@@ -129,7 +130,8 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 					} else if (o instanceof Prescription) {
 						List<Prescription> existing =
 							((Patient) ElexisEventDispatcher.getSelected(Patient.class))
-								.getMedication(null);
+								.getMedication(EntryType.FIXED_MEDICATION,
+									EntryType.RESERVE_MEDICATION, EntryType.SYMPTOMATIC_MEDICATION);
 						Prescription pre = (Prescription) o;
 						for (Prescription pe : existing) {
 							if (pe.equals(pre)) {
@@ -193,15 +195,17 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 	}
 	
 	public void reload(){
-		clear();
-		Patient act = ElexisEventDispatcher.getSelectedPatient();
-		if (act != null) {
-			List<Prescription> fix = act.getMedication(EntryType.FIXED_MEDICATION);
-			fix.stream().forEach(p -> add(p));
-			
-			lCost.setText(MedicationViewHelper.calculateDailyCostAsString(fix));
+		if (!isDisposed()) {
+			clear();
+			Patient act = ElexisEventDispatcher.getSelectedPatient();
+			if (act != null) {
+				List<Prescription> fix = act.getMedication(EntryType.FIXED_MEDICATION);
+				fix.stream().forEach(p -> add(p));
+				
+				lCost.setText(MedicationViewHelper.calculateDailyCostAsString(fix));
+			}
+			sortList();
 		}
-		sortList();
 	}
 	
 	class DauerMediListener implements LDListener {
@@ -217,14 +221,18 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 					site.getPage().showView(LeistungenView.ID);
 					CodeSelectorHandler.getInstance().setCodeSelectorTarget(target);
 				} else if (l.equals(LISTE)) {
+					HashMap<String, String> parameterMap = new HashMap<>();
+					parameterMap.put("ch.elexis.core.ui.medication.commandParameter.medication", "fix");
 					IEvaluationService evaluationService =
 						(IEvaluationService) viewSite.getService(IEvaluationService.class);
-					new PrintTakingsListHandler().execute(new ExecutionEvent(null, new HashMap(),
+					new PrintTakingsListHandler().execute(new ExecutionEvent(null, parameterMap,
 						null, evaluationService.getCurrentState()));
 				} else if (l.equals(REZEPT)) {
+					HashMap<String, String> parameterMap = new HashMap<>();
+					parameterMap.put("ch.elexis.core.ui.medication.commandParameter.medication", "fix");
 					IEvaluationService evaluationService =
 						(IEvaluationService) viewSite.getService(IEvaluationService.class);
-					new PrintRecipeHandler().execute(new ExecutionEvent(null, new HashMap(), null,
+					new PrintRecipeHandler().execute(new ExecutionEvent(null, parameterMap, null,
 						evaluationService.getCurrentState()));
 				} else if (l.equals(KOPIEREN)) {
 					toClipBoard(true);
@@ -258,7 +266,9 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 				public void doRun(){
 					Prescription pr = getSelection();
 					if (pr != null) {
-						new MediDetailDialog(getShell(), pr).open();
+						MediDetailDialog md = new MediDetailDialog(getShell(), pr, true);
+						md.setExecutedFrom(FixMediDisplay.class.getSimpleName());
+						md.open();
 						ElexisEventDispatcher.getInstance().fire(
 							new ElexisEvent(pr, Prescription.class, ElexisEvent.EVENT_UPDATE));
 					}
@@ -285,7 +295,10 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 							
 							@Override
 							public void lockAcquired(){
-								pr.delete(); // this does not delete but stop the Medication. Sorry for that
+								if (pr.delete()) {
+									pr.setStopReason(
+										"Geändert durch " + CoreHub.actUser.getLabel());
+								}
 							}
 						});
 						ElexisEventDispatcher.getInstance().fire(

@@ -13,20 +13,25 @@ import ca.uhn.hl7v2.model.AbstractPrimitive;
 import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.model.v251.datatype.CE;
 import ca.uhn.hl7v2.model.v251.datatype.ED;
+import ca.uhn.hl7v2.model.v251.datatype.FN;
 import ca.uhn.hl7v2.model.v251.datatype.FT;
 import ca.uhn.hl7v2.model.v251.datatype.NM;
 import ca.uhn.hl7v2.model.v251.datatype.SN;
 import ca.uhn.hl7v2.model.v251.datatype.ST;
 import ca.uhn.hl7v2.model.v251.datatype.TX;
 import ca.uhn.hl7v2.model.v251.datatype.XAD;
+import ca.uhn.hl7v2.model.v251.datatype.XCN;
 import ca.uhn.hl7v2.model.v251.group.ORU_R01_ORDER_OBSERVATION;
+import ca.uhn.hl7v2.model.v251.group.ORU_R01_PATIENT_RESULT;
 import ca.uhn.hl7v2.model.v251.group.OUL_R22_ORDER;
+import ca.uhn.hl7v2.model.v251.group.OUL_R22_SPECIMEN;
 import ca.uhn.hl7v2.model.v251.message.ORU_R01;
 import ca.uhn.hl7v2.model.v251.message.OUL_R22;
 import ca.uhn.hl7v2.model.v251.segment.MSH;
 import ca.uhn.hl7v2.model.v251.segment.NTE;
 import ca.uhn.hl7v2.model.v251.segment.OBR;
 import ca.uhn.hl7v2.model.v251.segment.OBX;
+import ca.uhn.hl7v2.model.v251.segment.ORC;
 import ca.uhn.hl7v2.model.v251.segment.PID;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.exceptions.ElexisException;
@@ -38,7 +43,9 @@ import ch.elexis.hl7.HL7Reader;
 import ch.elexis.hl7.model.EncapsulatedData;
 import ch.elexis.hl7.model.LabResultData;
 import ch.elexis.hl7.model.ObservationMessage;
+import ch.elexis.hl7.model.OrcMessage;
 import ch.elexis.hl7.model.TextData;
+import ch.elexis.hl7.util.HL7Helper;
 import ch.elexis.hl7.v26.HL7Constants;
 import ch.elexis.hl7.v26.HL7_ORU_R01;
 import ch.elexis.hl7.v26.Messages;
@@ -366,7 +373,7 @@ public class HL7ReaderV251 extends HL7Reader {
 		String range = "";
 		String observationTime = obx.getObx14_DateTimeOfTheObservation().getTs1_Time().getValue();
 		String status = "";
-		boolean flag = false;
+		Boolean flag;
 		
 		if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_ED)) {
 			String observationId =
@@ -389,13 +396,7 @@ public class HL7ReaderV251 extends HL7Reader {
 			observation.add(new EncapsulatedData(filename, encoding, data, observationTime,
 				commentNTE, group, sequence));
 		} else if (isTextOrNumeric(valueType)) {
-			name = obx.getObx4_ObservationSubID().getValue();
-			if (name == null) {
-				name = obx.getObx3_ObservationIdentifier().getCe2_Text().getValue();
-				if (name == null) {
-					name = obx.getObx3_ObservationIdentifier().getCe1_Identifier().getValue();
-				}
-			}
+			name = determineName(obx);
 			
 			String value = "";
 			Object tmp = obx.getObx5_ObservationValue(0).getData();
@@ -431,7 +432,8 @@ public class HL7ReaderV251 extends HL7Reader {
 			status = obx.getObx11_ObservationResultStatus().getValue();
 			
 			LabResultData lrd = new LabResultData(itemCode, name, unit, value, range, flag,
-				defaultDateTime, observationTime, commentNTE, group, sequence, status);
+				defaultDateTime, observationTime, commentNTE, group, sequence, status,
+				extractName(obx.getObx4_ObservationSubID()));
 				
 			if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_NM)
 				|| valueType.equals(HL7Constants.OBX_VALUE_TYPE_SN)) {
@@ -446,5 +448,65 @@ public class HL7ReaderV251 extends HL7Reader {
 		} else {
 			logger.error(MessageFormat.format("Value type {0} is not implemented!", valueType));
 		}
+	}
+	
+	private String determineName(OBX obx){
+		List<String> possibleNames = new ArrayList<>();
+		possibleNames.add(obx.getObx4_ObservationSubID().getValue());
+		possibleNames.add(obx.getObx3_ObservationIdentifier().getCe2_Text().getValue());
+		possibleNames.add(obx.getObx3_ObservationIdentifier().getCe1_Identifier().getValue());
+		return HL7Helper.determineName(possibleNames);
+	}
+
+	@Override
+	public OrcMessage getOrcMessage(){
+		try {
+			if (message instanceof ORU_R01) {
+				ORU_R01 oru = (ORU_R01) message;
+				if (oru != null) {
+					ORU_R01_PATIENT_RESULT pr = oru.getPATIENT_RESULT();
+					if (pr != null) {
+						ORU_R01_ORDER_OBSERVATION oo = pr.getORDER_OBSERVATION();
+						if (oo != null) {
+							return extractOrc(oo.getORC());
+						}
+					}
+				}
+			} else if (message instanceof OUL_R22) {
+				OUL_R22 oul = (OUL_R22) message;
+				if (oul != null) {
+					OUL_R22_SPECIMEN specimen = oul.getSPECIMEN();
+					if (specimen != null) {
+						OUL_R22_ORDER oo = specimen.getORDER();
+						if (oo != null) {
+							return extractOrc(oo.getORC());
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			LoggerFactory.getLogger(HL7Reader.class).warn("orc parsing failed", e);
+		}
+		return null;
+	}
+	
+	private OrcMessage extractOrc(ORC orc) throws HL7Exception{
+		if (orc != null) {
+			OrcMessage orcMessage = new OrcMessage();
+			XCN[] ops = orc.getOrderingProvider();
+			for (XCN op : ops) {
+				FN fn = op.getFamilyName();
+				ST familyName = null;
+				if (fn != null) {
+					familyName = fn.getSurname();
+					if (familyName == null) {
+						familyName = fn.getOwnSurname();
+					}
+				}
+				addNameValuesToOrcMessage(op.getGivenName(), familyName, orcMessage);
+			}
+			return orcMessage;
+		}
+		return null;
 	}
 }

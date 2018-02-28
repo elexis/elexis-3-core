@@ -10,6 +10,8 @@ import org.eclipse.swt.widgets.Display;
 
 import ch.elexis.core.model.LabResultConstants;
 import ch.elexis.core.types.LabItemTyp;
+import ch.elexis.core.types.PathologicDescription;
+import ch.elexis.core.types.PathologicDescription.Description;
 import ch.elexis.core.ui.laboratory.controls.LaborResultsComposite;
 import ch.elexis.core.ui.laboratory.controls.Messages;
 import ch.elexis.core.ui.laboratory.controls.model.LaborItemResults;
@@ -71,6 +73,25 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 		}
 	}
 	
+	private String getPathologicString(LabResult labResult){
+		PathologicDescription pathologicDescription = labResult.getPathologicDescription();
+		StringBuilder sb = new StringBuilder();
+		if (labResult.isFlag(LabResultConstants.PATHOLOGIC)) {
+			sb.append("pathologisch");
+		} else {
+			if (labResult.isPathologicFlagIndetermined(pathologicDescription)) {
+				sb.append("nicht bestimmt");
+			} else {
+				sb.append("nicht pathologisch");
+			}
+		}
+		if (pathologicDescription != null
+			&& !(pathologicDescription.getDescription() == Description.UNKNOWN)) {
+			sb.append(" - ").append(pathologicDescription.getLabel());
+		}
+		return sb.toString();
+	}
+	
 	private String getNonEmptyResultString(LabResult labResult){
 		String result = labResult.getResult();
 		if (result != null && result.isEmpty()) {
@@ -127,6 +148,7 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 							sb.append(" - "); //$NON-NLS-1$
 							sb.append(getResultString(labResult));
 							sb.append(getUnitAndReferenceString(labResult));
+							sb.append("\n").append(getPathologicString(labResult));
 							sb.append(getCommentString(labResult));
 						} else {
 							sb.append(",\n"); //$NON-NLS-1$
@@ -134,6 +156,7 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 							sb.append(" - "); //$NON-NLS-1$
 							sb.append(getResultString(labResult));
 							sb.append(getUnitAndReferenceString(labResult));
+							sb.append("\n").append(getPathologicString(labResult));
 							sb.append(getCommentString(labResult));
 						}
 					}
@@ -167,5 +190,33 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 			}
 		}
 		return Display.getCurrent().getSystemColor(SWT.COLOR_BLACK);
+	}
+	
+	@Override
+	public Color getBackground(Object element){
+		if (element instanceof LaborItemResults) {
+			TimeTool date =
+				(TimeTool) column.getColumn().getData(LaborResultsComposite.COLUMN_DATE_KEY);
+			if (date != null) {
+				List<LabResult> results =
+					((LaborItemResults) element).getResult(date.toString(TimeTool.DATE_COMPACT));
+				if (results != null) {
+					boolean pathologic = false;
+					boolean indetermined = false;
+					for (LabResult labResult : results) {
+						if (labResult.isFlag(LabResultConstants.PATHOLOGIC)) {
+							pathologic = true;
+							break;
+						} else {
+							indetermined = labResult.isPathologicFlagIndetermined(null);
+						}
+					}
+					if (!pathologic && indetermined) {
+						return Display.getCurrent().getSystemColor(SWT.COLOR_YELLOW);
+					}
+				}
+			}
+		}
+		return null;
 	}
 }

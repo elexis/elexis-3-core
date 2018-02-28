@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IPerspectiveRegistry;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
@@ -26,7 +27,6 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
 import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
@@ -47,8 +47,8 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	
 	private Logger log = LoggerFactory.getLogger(ApplicationWorkbenchAdvisor.class.getName());
 	
-	protected static AbstractCoreOperationAdvisor cod = CoreOperationExtensionPoint
-		.getCoreOperationAdvisor();
+	protected static AbstractCoreOperationAdvisor cod =
+		CoreOperationExtensionPoint.getCoreOperationAdvisor();
 	
 	@Override
 	public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(
@@ -78,15 +78,22 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	public void postStartup(){
 		List<Reminder> reminderList = Reminder.findToShowOnStartup(CoreHub.actUser);
 		if (reminderList.size() > 0) {
-			StringBuilder sb = new StringBuilder();
+			final StringBuilder sb = new StringBuilder();
 			for (Reminder reminder : reminderList) {
 				sb.append(reminder.getKontakt().getLabel() + ", Id["
 					+ reminder.getKontakt().getPatCode() + "]:\n");
-				sb.append(reminder.getMessage()).append("\n\n"); //$NON-NLS-1$		
+				sb.append(reminder.getSubject() + "\n" + reminder.getMessage()).append("\n\n");	
 			}
 			
-			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-				.getShell(), Messages.ReminderView_importantRemindersOnLogin, sb.toString());
+			// must be called inside display thread
+			Display.getDefault().asyncExec(new Runnable() {
+				@Override
+				public void run(){
+					MessageDialog.openInformation(
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+						Messages.ReminderView_importantRemindersOnLogin, sb.toString());
+				}
+			});
 		}
 	}
 	
@@ -106,8 +113,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	
 	@Override
 	public void eventLoopException(final Throwable exception){
-		log.error(Messages.ApplicationWorkbenchAdvisor_10 + exception.getMessage());
-		exception.printStackTrace();
+		log.error(Messages.ApplicationWorkbenchAdvisor_10 + exception.getMessage(), exception);
 		ExHandler.handle(exception);
 		super.eventLoopException(exception);
 	}

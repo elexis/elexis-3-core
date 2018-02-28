@@ -6,7 +6,10 @@ import ch.elexis.core.interfaces.ILocalizedEnum;
 import ch.elexis.core.interfaces.INumericEnum;
 
 public enum Visibility implements INumericEnum, ILocalizedEnum {
-	ON_PATIENT_SELECTION(0), ALWAYS(1), POPUP_ON_PATIENT_SELECTION(2), POPUP_ON_LOGIN(3);
+	ON_PATIENT_SELECTION(0), 
+	ALWAYS(1), 
+	POPUP_ON_PATIENT_SELECTION(2), 
+	POPUP_ON_LOGIN(3);
 
 	private final int numeric;
 

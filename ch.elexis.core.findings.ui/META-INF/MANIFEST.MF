@@ -20,9 +20,18 @@ Require-Bundle: ch.elexis.core.data,
  org.eclipse.core.databinding,
  org.eclipse.jface.databinding,
  org.eclipse.core.databinding.beans,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ ch.elexis.core.findings.templates
 Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/ch.elexis.core.findings.ui.services.FindingsServiceComponent.xml,
  OSGI-INF/ch.elexis.core.findings.ui.services.CodingServiceComponent.xml,
- OSGI-INF/ch.elexis.core.findings.ui.services.MigratorServiceComponent.xml
-Import-Package: ch.rgw.io
+ OSGI-INF/ch.elexis.core.findings.ui.services.MigratorServiceComponent.xml,
+ OSGI-INF/ch.elexis.core.findings.ui.services.FindingsTemplateServiceComponent.xml
+Import-Package: ch.rgw.io,
+ ch.rgw.tools,
+ org.apache.commons.lang3;version="3.1.0",
+ org.apache.commons.lang3.math;version="3.1.0",
+ org.eclipse.core.databinding.property.value,
+ org.eclipse.e4.core.contexts
+Export-Package: ch.elexis.core.findings.ui.composites,
+ ch.elexis.core.findings.ui.util

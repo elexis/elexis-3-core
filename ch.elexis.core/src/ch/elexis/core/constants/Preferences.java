@@ -48,6 +48,25 @@ public class Preferences {
 	public static final String STATION_IDENT_ID = "station/identId";
 	public static final String STATION_IDENT_TEXT = "station/identText";
 	
+	/**
+	 * Time stamp of the first time an Elexis was connected to the database. Used as identifier of
+	 * the installation.
+	 * 
+	 * @since 3.3
+	 */
+	public static final String INSTALLATION_TIMESTAMP = "installation/timestamp";
+	
+	/**
+	 * OID of the running software. Can be uninitialized.
+	 * 
+	 * @since 3.3
+	 */
+	public static final String SOFTWARE_OID = "software/oid";
+	/**
+	 * OID subdomain that will be used in Elexis for patient master data.
+	 */
+	public static final String OID_SUBDOMAIN_PATIENTMASTERDATA = "100";
+	
 	// Ablauf
 	public static final String ABL_LANGUAGE = "ablauf/sprache"; //$NON-NLS-1$
 	public static final String ABL_LOGFILE = "ablauf/Log-Datei"; //$NON-NLS-1$
@@ -70,6 +89,7 @@ public class Preferences {
 	public static final String P_TEXT_SUPPORT_LEGACY = "briefe/Textmodul_Support_Legacy"; //$NON-NLS-1$
 	public static final String P_TEXT_RENAME_WITH_F2 = "briefe/rename_with_f2"; //$NON-NLS-1$
 	public final static String P_OOBASEDIR = "briefe/OOBasis"; //$NON-NLS-1$
+	public static final String P_TEXT_EDIT_LOCAL = "briefe/Textmodul_Edit_Local"; //$NON-NLS-1$
 	
 	// Gruppen und Rechte
 	public static final String ACC_GROUPS = "groupNames"; //$NON-NLS-1$
@@ -140,11 +160,18 @@ public class Preferences {
 	public static final String RNN_AMOUNT1ST = "rechnung/amount_1st"; //$NON-NLS-1$
 	public static final String RNN_AMOUNT2ND = "rechnung/amount_2nd"; //$NON-NLS-1$
 	public static final String RNN_AMOUNT3RD = "rechnung/amount_3rd"; //$NON-NLS-1$
-	
+	public static final String RNN_REMOVE_OPEN_REMINDER = "rechnung/reminder/removeopen";
 	// Lager
 	public static final String INVENTORY_CHECK_ILLEGAL_VALUES = "inventory/check_values"; //$NON-NLS-1$
 	public static final boolean INVENTORY_CHECK_ILLEGAL_VALUES_DEFAULT = true;
 	public static final String INVENTORY_DEFAULT_ARTICLE_PROVIDER = "inventory/defaultArticleProvider"; //$NON-NLS-1$
+	public static final String INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES = "inventory/machineOutlayPartialPackages"; //$NON-NLS-1$
+	public static final boolean INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES_DEFAULT = false;
+	public static final String INVENTORY_ORDER_TRIGGER = "inventory/order_trigger";
+	public static final int INVENTORY_ORDER_TRIGGER_EQUAL = 1;
+	public static final int INVENTORY_ORDER_TRIGGER_BELOW = 0;
+	public static final int INVENTORY_ORDER_TRIGGER_DEFAULT =
+		INVENTORY_ORDER_TRIGGER_BELOW;
 	
 	// Labor
 	public static final String DAYS_TO_KEEP_UNSEEN_LAB_RESULTS = "3"; //$NON-NLS-1$
@@ -166,6 +193,9 @@ public class Preferences {
 	public final static String LEISTUNGSCODES_BILLING_STRICT = "billing/strict"; //$NON-NLS-1$
 	public final static String LEISTUNGSCODES_BILLING_ZERO_CHECK = "billing/zero_check"; //$NON-NLS-1$
 	public final static String LEISTUNGSCODES_OPTIFY = "billing/optify"; //$NON-NLS-1$
+	public final static String LEISTUNGSCODES_OPTIFY_XRAY = "billing/optify/XRAY"; //$NON-NLS-1$
 	public final static String LEISTUNGSCODES_COLOR = "billing/color/"; //$NON-NLS-1$
+	public final static String LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS =
+		"billing/eigenleistung/usemultiplier/systems"; //$NON-NLS-1$
 	
 }

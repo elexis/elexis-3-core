@@ -9,12 +9,6 @@ import org.junit.Test;
 public class FindingsServiceTest {
 	
 	@Test
-	public void getFactory(){
-		IFindingsFactory factory = FindingsServiceComponent.getService().getFindingsFactory();
-		assertNotNull(factory);
-	}
-	
-	@Test
 	public void getFindingsForPatient(){
 		List<IFinding> finding =
 			FindingsServiceComponent.getService().getPatientsFindings("abc", IFinding.class);

@@ -89,6 +89,36 @@ public class Messages extends NLS {
 	public static String BestellView_NoSupplierArticle;
 	public static String BestellView_NoSupplierArticleMsg;
 	public static String BestellView_CantOrderNoSupplier;
+	public static String BezugsKonktat_Reference;
+	public static String Bezugskontakt_ReferenceTooltip;
+	public static String BezugsKonktat_FormalerReference;
+	public static String Bezugskontakt_Title;
+	public static String Bezugskontakt_Definition;
+	public static String Bezugskontakt_ConfirmDelete;
+	public static String Bezugskontakt_ConfirmDeleteText;
+	public static String Bezugskontakt_Add;
+	public static String Bezugskontakt_Delete;
+	public static String Bezugskontakt_RelationFrom;
+	public static String Bezugskontakt_RelationTo;
+	public static String Bezugskontakt_Is;
+	public static String Bezugskontakt_ConfirmUpdateExisting;
+	public static String Bezugskontakt_NameMustBeUnique;
+	public static String BriefAuswahl_actionlocaleditabortmessage;
+
+	public static String BriefAuswahl_actionlocaleditstopmessage;
+
+	public static String BriefAuswahl_actionlocaledittext;
+
+	public static String BriefAuswahl_erroreditmessage;
+
+	public static String BriefAuswahl_errorlocaleditabortmessage;
+
+	public static String BriefAuswahl_errorlocaleditendmessage;
+
+	public static String BriefAuswahl_errortitle;
+
+	public static String BriefAuswahl_errorttile;
+
 	public static String BriefAuswahlAllLetters;
 	public static String BriefAuswahlAllLetters2;
 	public static String BriefAuswahlCouldNotLoadText;
@@ -282,6 +312,11 @@ public class Messages extends NLS {
 	public static String LagerView_gtin;
 	public static String LagerView_stock;
 	public static String LagerView_pharmacode;
+	public static String LagerView_exportAction;
+	public static String LagerView_deleteAction;
+	public static String LagerView_deleteActionConfirmCaption;
+	public static String LagerView_deleteActionToolTip;
+	public static String LagerView_deleteConfirmBody;
 	public static String Leistungscodes_necessaryData;
 	public static String MediVerlaufView_dateFrom;
 	public static String MediVerlaufView_dateUntil;
@@ -318,7 +353,6 @@ public class Messages extends NLS {
 	public static String PatHeuteView_noCase;
 	public static String PatHeuteView_onlyOpen;
 	public static String PatHeuteView_open;
-	public static String PatHeuteView_partName;
 	public static String PatHeuteView_printBillingExpl;
 	public static String PatHeuteView_printBillingList;
 	public static String PatHeuteView_printList;
@@ -404,6 +438,7 @@ public class Messages extends NLS {
 	public static String Patientenblatt2_selectRegularPhysicianMessage;
 	public static String Patientenblatt2_sex;
 	public static String Patientenblatt2_showAddress;
+	public static String Patientenblatt2_showBezugKontaktRelation;
 	public static String Patientenblatt2_ahvNumber;
 	public static String Patientenblatt2_legalGuardian;
 	public static String Patientenblatt2_selectLegalGuardianTitle;
@@ -425,6 +460,9 @@ public class Messages extends NLS {
 	public static String ReminderView_onlyDueToolTip;
 	public static String ReminderView_onePatOnly;
 	public static String ReminderView_onlyOnePatientForActivation;
+	public static String ReminderView_sortByDueDate;
+	public static String ReminderView_sortByDueDateAscending;
+	public static String ReminderView_sortByDueDateDescending;
 	public static String RezeptBlatt_4;
 	public static String RezeptBlatt_6;
 	public static String RezeptBlatt_TemplateNameList;
@@ -483,6 +521,10 @@ public class Messages extends NLS {
 	public static String TextView_couldNotCreateTextView;
 	public static String TextView_couldNotLoadTextPlugin;
 	public static String TextView_enterTitle;
+	public static String TextView_errorlocaleditmessage;
+
+	public static String TextView_errortitle;
+
 	public static String TextView_exportText;
 	public static String TextView_importText;
 	public static String TextView_importMultiText;
@@ -529,8 +571,10 @@ public class Messages extends NLS {
 	public static String VerrechnungsDisplay_removeAll;
 	public static String VerrechnungsDisplay_removeElements;
 	public static String VerrechnungsDisplay_applyMedication;
+	public static String VerrechnungsDisplay_indicatedMedication;
 	public static String VerrechnungsDisplay_fixMedication;
 	public static String BriefAuswahlNotAllowedToRunStresstess;
+	public static String ReminderView_txtSearch_message;
 	
 	static {
 		// load message values from bundle file

@@ -20,8 +20,8 @@ public class AbstractPersistentObjectTest {
 	protected String testUserName;
 	protected final String PASSWORD = "password";
 	
-	@Parameters
-	public static Collection<Object[]> data() throws IOException{
+	@Parameters(name = "{0}")
+	public static Collection<JdbcLink[]> data() throws IOException{
 		return AllDataTests.getConnections();
 	}
 	
@@ -38,7 +38,8 @@ public class AbstractPersistentObjectTest {
 		User existingUser = User.load(testUserName);
 		if (!existingUser.exists()) {
 			new Anwender(testUserName, PASSWORD);
-		} 
+			new Mandant("ut_mandator_" + link.DBFlavor, PASSWORD);
+		}
 		
 		boolean succ = Anwender.login(testUserName, PASSWORD);
 		assertTrue(succ);

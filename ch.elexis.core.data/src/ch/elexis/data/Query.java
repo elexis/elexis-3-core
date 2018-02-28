@@ -431,6 +431,24 @@ public class Query<T> {
 	}
 	
 	/**
+	 * Finds one entry - in difference to {@link #findSingle(String, String, String)} the value is
+	 * wrapped by the underlying db flavor
+	 * 
+	 * @param f
+	 * @param op
+	 * @param v
+	 * @param wrapValue
+	 * @return
+	 */
+	public String findOne(final String f, final String op, final String v){
+		clear();
+		JdbcLink connection = PersistentObject.getConnection();
+		sql.append(link).append(template.map(f)).append(op).append(connection.wrapFlavored(v));
+		String ret = connection.queryString(sql.toString());
+		return ret;
+	}
+	
+	/**
 	 * Bequemlichkeitsmethode, um gleich mehrere Felder auf einmal anzugeben, welche mit AND
 	 * verknüpft werden. Dies ist dasselbe, wie mehrere Aufrufe nacheinander von add() und and(),
 	 * aber die Abfrage wird gleich ausgeführt und die Resultate werden nach den übergebenen Feldern
@@ -640,7 +658,7 @@ public class Query<T> {
 			ElexisStatus status =
 				new ElexisStatus(ElexisStatus.ERROR, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
 					"Fehler bei Datenbankabfrage " + ex.getMessage(), ex, ElexisStatus.LOG_ERRORS);
-			log.warn("Fehler bei Datenbankabfrage: " + ex.getMessage());
+			log.warn("Fehler [{}] bei Datenbankabfrage:\n[{};]", ex.getMessage(), expr);
 			throw new PersistenceException(status);
 		} finally {
 			connection.releaseStatement(stm);

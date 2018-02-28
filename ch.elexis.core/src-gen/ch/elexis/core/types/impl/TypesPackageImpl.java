@@ -10,6 +10,7 @@
  */
 package ch.elexis.core.types.impl;
 
+import ch.elexis.core.types.AddressType;
 import java.util.List;
 import java.util.Map;
 
@@ -22,8 +23,10 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 import ch.elexis.core.types.ContactGender;
 import ch.elexis.core.types.ContactType;
 import ch.elexis.core.types.Country;
+import ch.elexis.core.types.DocumentStatus;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
+import ch.elexis.core.types.PathologicDescription;
 import ch.elexis.core.types.RelationshipType;
 import ch.elexis.core.types.TypesFactory;
 import ch.elexis.core.types.TypesPackage;
@@ -85,6 +88,20 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EEnum addressTypeEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum documentStatusEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EDataType moneyEDataType = null;
 
 	/**
@@ -114,6 +131,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EDataType countryEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType pathologicDescriptionEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -235,6 +259,24 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EEnum getAddressType() {
+		return addressTypeEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EEnum getDocumentStatus() {
+		return documentStatusEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EDataType getMoney() {
 		return moneyEDataType;
 	}
@@ -280,6 +322,15 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EDataType getPathologicDescription() {
+		return pathologicDescriptionEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public TypesFactory getTypesFactory() {
 		return (TypesFactory)getEFactoryInstance();
 	}
@@ -313,6 +364,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		contactTypeEEnum = createEEnum(CONTACT_TYPE);
 		contactGenderEEnum = createEEnum(CONTACT_GENDER);
 		relationshipTypeEEnum = createEEnum(RELATIONSHIP_TYPE);
+		addressTypeEEnum = createEEnum(ADDRESS_TYPE);
+		documentStatusEEnum = createEEnum(DOCUMENT_STATUS);
 
 		// Create data types
 		moneyEDataType = createEDataType(MONEY);
@@ -320,6 +373,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		genderEDataType = createEDataType(GENDER);
 		labItemTypEDataType = createEDataType(LAB_ITEM_TYP);
 		countryEDataType = createEDataType(COUNTRY);
+		pathologicDescriptionEDataType = createEDataType(PATHOLOGIC_DESCRIPTION);
 	}
 
 	/**
@@ -382,15 +436,35 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.AGENERIC);
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.BUSINESS_EMPLOYER);
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.BUSINESS_EMPLOYEE);
-		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.FAMILY_HUSBAND);
-		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.FAMILY_WIFE);
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.FAMILY_PARENT);
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.FAMILY_CHILD);
+		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.FAMILY_GUARDIAN);
+		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.FAMILY_ICE);
+		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.FAMILY_ALTERNATIVE);
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.WELFARE_GENERAL_PRACTITIONER);
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.WELFARE_PATIENT);
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.WELFARE_CONSULTANT);
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.WELFARE_INSURER);
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.WELFARE_INSUREE);
+
+		initEEnum(addressTypeEEnum, AddressType.class, "AddressType");
+		addEEnumLiteral(addressTypeEEnum, AddressType.PRINCIPAL_RESIDENCE);
+		addEEnumLiteral(addressTypeEEnum, AddressType.SECONDARY_RESIDENCE);
+		addEEnumLiteral(addressTypeEEnum, AddressType.HOLIDAY_HOME);
+		addEEnumLiteral(addressTypeEEnum, AddressType.PLACE_OF_RESIDENCE);
+		addEEnumLiteral(addressTypeEEnum, AddressType.EMPLOYER);
+		addEEnumLiteral(addressTypeEEnum, AddressType.FAMILY_FRIENDS);
+		addEEnumLiteral(addressTypeEEnum, AddressType.ATTACHMENT_FIGURE);
+		addEEnumLiteral(addressTypeEEnum, AddressType.PRISON);
+		addEEnumLiteral(addressTypeEEnum, AddressType.NURSING_HOME);
+		addEEnumLiteral(addressTypeEEnum, AddressType.OTHER);
+
+		initEEnum(documentStatusEEnum, DocumentStatus.class, "DocumentStatus");
+		addEEnumLiteral(documentStatusEEnum, DocumentStatus.NEW);
+		addEEnumLiteral(documentStatusEEnum, DocumentStatus.CHANGED);
+		addEEnumLiteral(documentStatusEEnum, DocumentStatus.VALIDATED);
+		addEEnumLiteral(documentStatusEEnum, DocumentStatus.SENT);
+		addEEnumLiteral(documentStatusEEnum, DocumentStatus.RECIVED);
 
 		// Initialize data types
 		initEDataType(moneyEDataType, Money.class, "Money", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
@@ -398,6 +472,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEDataType(genderEDataType, Gender.class, "Gender", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(labItemTypEDataType, LabItemTyp.class, "LabItemTyp", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(countryEDataType, Country.class, "Country", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(pathologicDescriptionEDataType, PathologicDescription.class, "PathologicDescription", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

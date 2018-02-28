@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -40,6 +41,8 @@ public class StockService implements IStockService {
 	
 	private static final String PS_AVAIL_CURRENT =
 		"SELECT MAX(CASE WHEN CURRENT <= 0 THEN 0 WHEN (ABS(MIN)-CURRENT) >=0 THEN 1 ELSE 2 END) FROM STOCK_ENTRY WHERE ARTICLE_ID = ? AND ARTICLE_TYPE = ? AND DELETED = '0'";
+	private static final String PS_AVAIL_CURRENT_BELOW =
+		"SELECT MAX(CASE WHEN CURRENT <= 0 THEN 0 WHEN (ABS(MIN)-CURRENT) >0 THEN 1 ELSE 2 END) FROM STOCK_ENTRY WHERE ARTICLE_ID = ? AND ARTICLE_TYPE = ? AND DELETED = '0'";
 	
 	@Override
 	public Integer getCumulatedStockForArticle(IArticle article){
@@ -89,6 +92,18 @@ public class StockService implements IStockService {
 		}
 		
 		if (se.getStock().isCommissioningSystem()) {
+			int sellingUnit = article.getSellingUnit();
+			boolean isPartialUnitOutput =
+				(sellingUnit > 0 && sellingUnit < article.getPackageUnit());
+			if (isPartialUnitOutput) {
+					boolean performPartialOutlay =
+						CoreHub.globalCfg.get(Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
+							Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES_DEFAULT);
+					if (!performPartialOutlay) {
+						return Status.OK_STATUS;
+					}
+			}
+			
 			return CoreHub.getStockCommissioningSystemService().performArticleOutlay(se, count,
 				null);
 		} else {
@@ -189,11 +204,22 @@ public class StockService implements IStockService {
 		return new Status(Status.WARNING, CoreHub.PLUGIN_ID, "Could not acquire lock");
 	}
 	
+	private static boolean isTriggerStockAvailabilityOnBelow(){
+		int trigger =
+			CoreHub.globalCfg.get(ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER,
+				ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER_DEFAULT);
+		return trigger == ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER_BELOW;
+	}
+	
 	@Override
 	public Availability getCumulatedAvailabilityForArticle(IArticle article){
 		Artikel art = (Artikel) article;
+		
 		DBConnection dbConnection = PersistentObject.getDefaultConnection();
-		PreparedStatement ps = dbConnection.getPreparedStatement(PS_AVAIL_CURRENT);
+		
+		PreparedStatement ps = dbConnection
+			.getPreparedStatement(
+				isTriggerStockAvailabilityOnBelow() ? PS_AVAIL_CURRENT_BELOW : PS_AVAIL_CURRENT);
 		try {
 			ps.setString(1, art.getId());
 			ps.setString(2, art.getClass().getName());
@@ -228,7 +254,8 @@ public class StockService implements IStockService {
 		int min = Integer.valueOf(values[0]);
 		int current = Integer.valueOf(values[1]);
 		
-		return IStockService.determineAvailability(current, min);
+		return IStockService.determineAvailability(current, min,
+			isTriggerStockAvailabilityOnBelow());
 	}
 	
 	public List<StockEntry> getAllStockEntries(){
@@ -280,7 +307,8 @@ public class StockService implements IStockService {
 	
 	public Availability getArticleAvailabilityForStock(IStock stock, String article){
 		IStockEntry se = findStockEntryForArticleInStock(stock, article);
-		return IStockService.determineAvailability(se.getCurrentStock(), se.getMinimumStock());
+		return IStockService.determineAvailability(se.getCurrentStock(), se.getMinimumStock(),
+			isTriggerStockAvailabilityOnBelow());
 	}
 	
 	@Override

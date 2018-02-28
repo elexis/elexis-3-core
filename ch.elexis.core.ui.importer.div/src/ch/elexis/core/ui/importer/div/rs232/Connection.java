@@ -24,6 +24,7 @@ import java.util.TooManyListenersException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.ui.util.SWTHelper;
 import ch.rgw.io.FileTool;
 import ch.rgw.tools.ExHandler;
 import gnu.io.CommPortIdentifier;
@@ -353,6 +354,10 @@ public class Connection implements PortEventListener {
 	}
 	
 	public void close(){
+		close(5000);
+	}
+	
+	public void close(int sleepTime){
 		if ((watchdogThread != null) && watchdogThread.isAlive()) {
 			watchdogThread.interrupt();
 		}
@@ -361,7 +366,7 @@ public class Connection implements PortEventListener {
 			
 			public void run(){
 				try {
-					Thread.sleep(5000);
+					Thread.sleep(sleepTime);
 					sPort.close();
 					bOpen = false;
 					
@@ -404,11 +409,17 @@ public class Connection implements PortEventListener {
 	
 	@SuppressWarnings("unchecked")
 	public static String[] getComPorts(){
-		Enumeration<CommPortIdentifier> ports = CommPortIdentifier.getPortIdentifiers();
 		ArrayList<String> p = new ArrayList<String>();
-		while (ports.hasMoreElements()) {
-			CommPortIdentifier port = ports.nextElement();
-			p.add(port.getName());
+		try {
+			Enumeration<CommPortIdentifier> ports = CommPortIdentifier.getPortIdentifiers();
+			
+			while (ports.hasMoreElements()) {
+				CommPortIdentifier port = ports.nextElement();
+				p.add(port.getName());
+			}
+		} catch (LinkageError error) {
+			SWTHelper.showError("COM Port Initialization Error", error.getMessage()+"\nPlease see log file and/or https://wiki.elexis.info/SerialConfiguration.");
+			log.error("COM Port Initialization", error);
 		}
 		return p.toArray(new String[0]);
 	}
@@ -425,5 +436,13 @@ public class Connection implements PortEventListener {
 			listener.timeout();
 		}
 		
+	}
+	
+	public String getName(){
+		return name;
+	}
+	
+	public String getMyPort(){
+		return myPort;
 	}
 }

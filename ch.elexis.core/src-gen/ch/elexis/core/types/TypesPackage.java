@@ -151,6 +151,26 @@ public interface TypesPackage extends EPackage {
 	int RELATIONSHIP_TYPE = 5;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.types.AddressType <em>Address Type</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.types.AddressType
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getAddressType()
+	 * @generated
+	 */
+	int ADDRESS_TYPE = 6;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.types.DocumentStatus <em>Document Status</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.types.DocumentStatus
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getDocumentStatus()
+	 * @generated
+	 */
+	int DOCUMENT_STATUS = 7;
+
+	/**
 	 * The meta object id for the '<em>Money</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -158,7 +178,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getMoney()
 	 * @generated
 	 */
-	int MONEY = 6;
+	int MONEY = 8;
 
 	/**
 	 * The meta object id for the '<em>Time Tool</em>' data type.
@@ -168,7 +188,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getTimeTool()
 	 * @generated
 	 */
-	int TIME_TOOL = 7;
+	int TIME_TOOL = 9;
 
 	/**
 	 * The meta object id for the '<em>Gender</em>' data type.
@@ -178,7 +198,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getGender()
 	 * @generated
 	 */
-	int GENDER = 8;
+	int GENDER = 10;
 
 
 	/**
@@ -189,7 +209,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLabItemTyp()
 	 * @generated
 	 */
-	int LAB_ITEM_TYP = 9;
+	int LAB_ITEM_TYP = 11;
 
 
 	/**
@@ -200,7 +220,18 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getCountry()
 	 * @generated
 	 */
-	int COUNTRY = 10;
+	int COUNTRY = 12;
+
+
+	/**
+	 * The meta object id for the '<em>Pathologic Description</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.types.PathologicDescription
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getPathologicDescription()
+	 * @generated
+	 */
+	int PATHOLOGIC_DESCRIPTION = 13;
 
 
 	/**
@@ -267,6 +298,26 @@ public interface TypesPackage extends EPackage {
 	EEnum getRelationshipType();
 
 	/**
+	 * Returns the meta object for enum '{@link ch.elexis.core.types.AddressType <em>Address Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Address Type</em>'.
+	 * @see ch.elexis.core.types.AddressType
+	 * @generated
+	 */
+	EEnum getAddressType();
+
+	/**
+	 * Returns the meta object for enum '{@link ch.elexis.core.types.DocumentStatus <em>Document Status</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Document Status</em>'.
+	 * @see ch.elexis.core.types.DocumentStatus
+	 * @generated
+	 */
+	EEnum getDocumentStatus();
+
+	/**
 	 * Returns the meta object for data type '{@link ch.rgw.tools.Money <em>Money</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -320,6 +371,17 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EDataType getCountry();
+
+	/**
+	 * Returns the meta object for data type '{@link ch.elexis.core.types.PathologicDescription <em>Pathologic Description</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Pathologic Description</em>'.
+	 * @see ch.elexis.core.types.PathologicDescription
+	 * @model instanceClass="ch.elexis.core.types.PathologicDescription"
+	 * @generated
+	 */
+	EDataType getPathologicDescription();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -404,6 +466,26 @@ public interface TypesPackage extends EPackage {
 		EEnum RELATIONSHIP_TYPE = eINSTANCE.getRelationshipType();
 
 		/**
+		 * The meta object literal for the '{@link ch.elexis.core.types.AddressType <em>Address Type</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.types.AddressType
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getAddressType()
+		 * @generated
+		 */
+		EEnum ADDRESS_TYPE = eINSTANCE.getAddressType();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.types.DocumentStatus <em>Document Status</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.types.DocumentStatus
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getDocumentStatus()
+		 * @generated
+		 */
+		EEnum DOCUMENT_STATUS = eINSTANCE.getDocumentStatus();
+
+		/**
 		 * The meta object literal for the '<em>Money</em>' data type.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -452,6 +534,16 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType COUNTRY = eINSTANCE.getCountry();
+
+		/**
+		 * The meta object literal for the '<em>Pathologic Description</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.types.PathologicDescription
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getPathologicDescription()
+		 * @generated
+		 */
+		EDataType PATHOLOGIC_DESCRIPTION = eINSTANCE.getPathologicDescription();
 
 	}
 

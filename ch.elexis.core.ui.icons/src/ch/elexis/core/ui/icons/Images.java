@@ -12,6 +12,7 @@ package ch.elexis.core.ui.icons;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -66,6 +67,8 @@ public enum Images {
 		IMG_MAIL_SEND,
 		/** a web icon */
 		IMG_WEB,
+		/** new comment */
+		IMG_COMMENT_ADD,
 		/** a contact detail icon */
 		IMG_CONTACT_DETAIL,
 		/** deleting items */
@@ -84,10 +87,15 @@ public enum Images {
 		IMG_VIP_OVERLAY,
 		/** a printer */
 		IMG_PRINTER,
-		/** a big printer icon */
-		IMG_PRINTER_BIG,
+			/** a big printer icon */
+	IMG_PRINTER_BIG,
+	/** a big printer icon */
+	IMG_PRINT_FIX,
+	/** a big printer icon */
+	IMG_PRINT_RESERVE,
 		/** a filter */
 		IMG_FILTER,
+		IMG_FOLDER,
 		/** creating a new Object */
 		IMG_NEW,
 		/** importing items */
@@ -96,6 +104,7 @@ public enum Images {
 		IMG_EXPORT, IMG_GOFURTHER,
 		/** editing an item */
 		IMG_EDIT,
+		IMG_EDIT_DONE, IMG_EDIT_ABORT,
 		/** warning */
 		IMG_ACHTUNG,
 		/** red bullet */
@@ -140,6 +149,9 @@ public enum Images {
 		IMG_DISK,
 		/** a closed lock */
 		IMG_LOCK_CLOSED,
+		IMG_LOCK_CLOSED_YELLOW,
+		IMG_LOCK_CLOSED_GREEN,
+		IMG_LOCK_CLOSED_GREY,
 		/** An opened lock */
 		IMG_LOCK_OPEN,
 		/** Clipboard symbol */
@@ -192,12 +204,20 @@ public enum Images {
 		IMG_PERSPECTIVE_ORDERS,
 		/** a document of type text */
 		IMG_DOCUMENT_TEXT,
+		/** a multi document with clip */
+		IMG_DOCUMENT_STAND_UP,
+		/** a multi document of type text */
+		IMG_DOCUMENT_STACK,
+		/** a default document */
+		IMG_DOCUMENT,
 		/** add document */
 		IMG_DOCUMENT_ADD,
 		/** write document */
 		IMG_DOCUMENT_WRITE,
 		/** remove document */
 		IMG_DOCUMENT_REMOVE, IMG_MENUBAR, IMG_TOOLBAR,
+		/** recipe */
+		IMG_RECIPE_FIX, IMG_RECIPE_RESERVE,
 		/** a bill */
 		IMG_BILL, IMG_VIEW_WORK_INCAPABLE, IMG_VIEW_CONSULTATION_DETAIL, IMG_VIEW_LABORATORY, IMG_VIEW_PATIENT_DETAIL, IMG_VIEW_RECIPES, IMG_DATABASE, IMG_CONFLICT, IMG_QUESTION_MARK, IMG_FLAG_AT, IMG_FLAG_DE, IMG_FLAG_CH, IMG_FLAG_FR, IMG_FLAG_IT, IMG_FLAG_FL,
 		/** a generic group icon */
@@ -245,7 +265,14 @@ public enum Images {
 		/** shopping cart **/
 		IMG_CART,
 		/** wizard for some day event **/
-		IMG_WIZ_DAY, IMG_CALENDAR;
+		IMG_WIZ_DAY, IMG_CALENDAR,
+		IMG_COUNTER_STOP,
+		IMG_USER_IDLE, 
+		IMG_SYSTEM_MONITOR,
+		IMG_BELL_EXCLAMATION,
+		IMG_SORT_DATE,
+		IMG_SORT_DATE_DESCENDING,
+		IMG_CARDS;
 		
 	private Images(){}
 	
@@ -304,7 +331,7 @@ public enum Images {
 	 * 
 	 * @return an {@link Image}
 	 */
-	public Image getImage(ImageSize is){
+	public synchronized Image getImage(ImageSize is){
 		Image image = JFaceResources.getImageRegistry().get(this.name() + is.name);
 		if (image == null) {
 			addIconImageDescriptor(this.name(), is);
@@ -318,6 +345,21 @@ public enum Images {
 	 */
 	public ImageDescriptor getImageDescriptor(ImageSize is){
 		return getImageDescriptor(this.name(), is);
+	}
+	
+	/**
+	 * 
+	 * @return an {@link ImageDescriptor} of type URLImageDescriptor
+	 * @since 3.3
+	 */
+	public ImageDescriptor getURLImageDescriptor(){
+		try {
+			URL imageDesciptorUrl = new URL(getIconURI());
+			return ImageDescriptor.createFromURL(imageDesciptorUrl);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	/**

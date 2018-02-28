@@ -16,7 +16,10 @@
 
 source 'https://rubygems.org'
 
-gem 'rubyzip', '<1.0'
+gem 'rubyzip', '~> 1.2.1'
 gem 'xml-simple'
-gem 'eclipse-plugin'
-gem 'elexis-wiki-interface'
+gem 'eclipse-plugin',  '~> 0.4'
+gem 'elexis-wiki-interface', '>= 0.5.4'
+gem 'oga'
+gem 'rugged'
+gem 'trollop'

@@ -1,16 +1,13 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <url>http://www.elexis.info/</url>
-  <modelVersion>4.0.0 </modelVersion>
+	<url>http://www.elexis.info/</url>
+	<modelVersion>4.0.0 </modelVersion>
 	<groupId>ch.elexis</groupId>
 	<artifactId>elexis-3-core</artifactId>
-	<name>Elexis 3 Core for ${repo_variant}</name>
-	<version>3.2.0-SNAPSHOT</version>
+	<version>3.5.0-SNAPSHOT</version>
+	<name>Elexis 3 Core for ${project.version}</name>
 	<packaging>pom</packaging>
-	<prerequisites>
-		<maven>3.0.5</maven>
-	</prerequisites>
 	<profiles>
 		<profile>
 			<id>windows-x86</id>
@@ -125,7 +122,7 @@
 			<id>macosx</id>
 			<activation>
 				<os>
-					<name>Mac OS X</name>
+					<family>mac</family>
 				</os>
 			</activation>
 			<build>
@@ -195,24 +192,6 @@
 				</plugins>
 			</build>
 		</profile>
-		<profile>
-			<id>prerelease</id>
-			<activation>
-				<property>
-					<name>repo_variant</name>
-					<value>prerelease</value>
-				</property>
-			</activation>
-		</profile>
-		<profile>
-			<id>release</id>
-			<activation>
-				<property>
-					<name>repo_variant</name>
-					<value>release</value>
-				</property>
-			</activation>
-		</profile>
 	</profiles>
 	<reporting>
 		<plugins>
@@ -228,12 +207,12 @@
 					<failsOnError>false</failsOnError>
 					<headerLocation>ch.elexis.core.releng/epl-v10.html</headerLocation>
 					<configLocation>ch.elexis.core.releng/checkstyle.xml</configLocation>
-            <suppressionsLocation>ch.elexis.core.releng/checkstyle-suppressions.xml</suppressionsLocation>
+					<suppressionsLocation>ch.elexis.core.releng/checkstyle-suppressions.xml</suppressionsLocation>
 				</configuration>
 				<reportSets>
 					<reportSet>
-            <inherited>false</inherited>
-            <reports>
+						<inherited>false</inherited>
+						<reports>
 							<report>checkstyle-aggregate</report>
 						</reports>
 					</reportSet>
@@ -244,6 +223,7 @@
 	<modules>
 		<module>ch.elexis.target</module>
 		<module>ch.elexis.core</module>
+		<module>ch.elexis.core.product</module>
 		<module>ch.elexis.core.application</module>
 		<module>ch.elexis.core.application.feature</module>
 		<module>ch.elexis.core.common.feature</module>
@@ -254,11 +234,11 @@
 		<module>ch.elexis.core.eigendiagnosen</module>
 		<module>ch.elexis.core.logging.feature</module>
 		<module>ch.elexis.core.logging.default_configuration</module>
-		<module>ch.elexis.core.logging</module>
+		<module>ch.elexis.core.logging.osgi</module>
 		<module>ch.elexis.core.scripting.beanshell</module>
 		<module>ch.elexis.core.mail</module>
 		<module>ch.elexis.core.mail.ui</module>
-    <module>ch.elexis.core.releng</module>
+		<module>ch.elexis.core.releng</module>
 		<module>ch.elexis.core.ui</module>
 		<module>ch.elexis.core.ui.eigenartikel</module>
 		<module>ch.elexis.core.ui.eigendiagnosen</module>
@@ -280,28 +260,37 @@
 		<module>ch.elexis.core.findings.util</module>
 		<module>ch.elexis.core.findings.fhir.po</module>
 		<module>ch.elexis.core.findings.ui</module>
-    <module>org.iatrix.help.wiki</module>
+		<module>ch.elexis.core.findings.templates</module>
+		<module>ch.elexis.core.findings.templates.po</module>
+		<module>ch.elexis.core.findings.templates.ui</module>
+		<module>ch.elexis.core.findings.templates.edit</module>
+		<module>ch.elexis.core.documents</module>
+		<module>ch.elexis.core.ui.documents</module>
+		<module>org.iatrix.help.wiki</module>
 		<module>ch.rgw.utility</module>
 		<module>ch.rgw.utility.tests</module>
 		<module>ch.elexis.core.data.tests</module>
 		<module>ch.elexis.core.ui.importer.div.tests</module>
 		<module>ch.elexis.core.hl7.v2x.tests</module>
-		<!-- the ch.elexis.core.p2site creates an zipped installable application
+		<module>ch.elexis.core.ui.perspective</module>
+		<module>ch.elexis.core.ui.stock</module>
+		<module>ch.elexis.core.ui.usage</module>
+		<!-- the ch.elexis.core.p2site creates an zipped installable application 
 			and a p2 update site -->
-    <module>ch.elexis.core.p2site</module>
+		<module>ch.elexis.core.p2site</module>
 	</modules>
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<scm_url>git@github.com:elexis/elexis-3-core.git</scm_url>
-		<tycho-version>0.22.0</tycho-version>
+		<tycho-version>1.0.0</tycho-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-extras.version>${tycho-version}</tycho-extras.version>
 		<repo_name>elexis.3.core</repo_name>
-		<repo_variant>snapshot</repo_variant>
 		<ROOT>${project.basedir}/compositeRepository</ROOT>
 	</properties>
 	<build>
 		<plugins>
-      <plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<version>2.17</version>
@@ -313,59 +302,90 @@
 					<failsOnError>false</failsOnError>
 					<headerLocation>ch.elexis.core.releng/epl-v10.html</headerLocation>
 					<configLocation>ch.elexis.core.releng/checkstyle.xml</configLocation>
-            <suppressionsLocation>ch.elexis.core.releng/checkstyle-suppressions.xml</suppressionsLocation>
+					<suppressionsLocation>ch.elexis.core.releng/checkstyle-suppressions.xml</suppressionsLocation>
 				</configuration>
+			</plugin>
+			<plugin>
+				<!--https://books.sonatype.com/mcookbook/reference/ch02s03.html#ex-groovy-script-ex -->
+				<groupId>org.codehaus.gmavenplus</groupId>
+				<artifactId>gmavenplus-plugin</artifactId>
+				<version>1.5</version>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>execute</goal>
+						</goals>
+						<configuration>
+							<scripts>
+								<script><![CDATA[
+  import java.text.SimpleDateFormat;
+  HINT_GENERATED    = "#  ${project.name}: Generated from pom.xml groovy shell using gmavenplus-plugin at ${new Date()}\n"
+  HINT_LAST_CHANGED = "# Last changed from pom.xml groovy shell by gmavenplus-plugin in pom.xml at ${new Date()}\n"
+
+  // Returns the current branchName
+  public String createVersionProperties(String filename) {
+      branch =  System.getenv()['CI_COMMIT_REF_NAME']
+      if (branch != null ) {
+        println "branch name set to ${branch} because of CI_COMMIT_REF_NAME environment variable"
+      } else {
+        branch="git rev-parse --abbrev-ref HEAD".execute().text.replaceAll("\n", '')
+        println "NO CI_COMMIT_REF_NAME environment branch is now ${branch}"
+      }
+      commit_id="git rev-parse HEAD".execute().text.replaceAll("\n", '')
+      elexis_version = "${project.version}".replace("-SNAPSHOT", ".") + new SimpleDateFormat("yyyyMMdd-HHmm").format(Calendar.getInstance().getTime())
+      tags =  "git tag --contains ${commit_id}".execute().text.split("\n")
+      for ( i in tags ) {
+          if (i ==~/release\/(.*)/ ) {
+              elexis_version = (i=~ /release\//).replaceFirst("")
+              break
+          }
+      }
+      // Set property git_branch, but this property cannot be used in maven/pom.xml
+      // But it is used to invoke the modification only once per run
+      System.setProperty("git_branch",  branch)
+      System.setProperty("elexis_version",  elexis_version)
+      repo_version_file = new File(filename)
+      repo_version_file.write(HINT_GENERATED)
+      repo_version_file.append("elexis.version=${elexis_version}\n")
+      println("${project.name}: Created ${repo_version_file} with elexis_version ${elexis_version} from commit_id ${commit_id}")
+      return branch;
+  }
+  // Write a repo.properties file
+  public void createRepoProperties(String repo_properties_name, String branch) {
+    // Now we are have the info to crate teh repo.properties
+    repo_version_file = new File(repo_properties_name)
+    repo_version_file.write(HINT_GENERATED)
+    repo_version_file.append("repoVariant=${branch}\n")
+    repo_version_file.append("project.id=${project.id}\n")
+    repo_version_file.append("project.name=${project.name}\n")
+    repo_version_file.append("project.version=${project.version}\n")
+    repo_version_file.append("projectVersion=${elexis_version}\n")
+    println("Created ${repo_properties_name}")
+  }
+
+if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core.data') {
+  branch = createVersionProperties('ch.elexis.core.data/rsc/version.properties')
+  createRepoProperties('ch.elexis.core.p2site/repo.properties', branch)
+}
+]]></script>
+							</scripts>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.codehaus.groovy</groupId>
+						<artifactId>groovy-all</artifactId>
+						<!-- any version of Groovy \>= 1.5.0 should work here -->
+						<version>2.4.4</version>
+						<scope>runtime</scope>
+					</dependency>
+				</dependencies>
 			</plugin>
 			<plugin>
 				<artifactId>maven-deploy-plugin</artifactId>
 				<version>2.8.2</version>
-			</plugin>
-			<plugin>
-				<groupId>com.github.goldin</groupId>
-				<artifactId>properties-maven-plugin</artifactId>
-				<version>0.2.5</version>
-				<executions>
-					<execution>
-						<id>set-properties</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>set-properties</goal>
-						</goals>
-						<configuration>
-							<properties>
-								<property>
-									<name>timestamp_format</name>
-									<value>{{"'" +
-										"${repo_variant}".substring(0,1).replaceFirst('s','a').replaceFirst('^p','r')+"'yyyyMMdd-HHmm"
-										}}</value>
-								</property>
-							</properties>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-p2-plugin </artifactId>
-				<version>${tycho-version}</version>
-				<configuration>
-					<baselineMode>warn</baselineMode>
-					<baselineReplace>none</baselineReplace>
-					<baselineRepositories>
-						<repository>
-							<url>http://download.elexis.info/mirror.4.elexis/${repo_variant}</url>
-						</repository>
-					</baselineRepositories>
-					<executions>
-						<execution>
-							<id>attach-p2-metadata</id>
-							<phase>package</phase>
-							<goals>
-								<goal>p2-metadata</goal>
-							</goals>
-						</execution>
-					</executions>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
@@ -373,15 +393,27 @@
 				<version>${tycho-version}</version>
 			</plugin>
 			<plugin>
-				<!-- we want to ensure that the bin directory created by the Eclipse
-					gets cleaned, too. Without it Maven would put two versions of each class
-					file into the jars -->
-				<artifactId>maven-clean-plugin </artifactId>
-				<version>2.6.1</version>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>3.0.0</version>
 				<configuration>
 					<filesets>
 						<fileset>
-							<directory>bin </directory>
+							<directory>${project.basedir}/ch.elexis.core.data/rsc</directory>
+							<includes>
+								<include>version.properties</include>
+							</includes>
+						</fileset>
+						<fileset>
+							<directory>${project.basedir}/ch.elexis.core.p2site</directory>
+							<includes>
+								<include>repo.properties</include>
+							</includes>
+						</fileset>
+						<fileset>
+							<!-- we want to ensure that the bin directory created by the Eclipse 
+								gets cleaned, too. Without it Maven would put two versions of each class 
+								file into the jars -->
+							<directory>${project.basedir}/bin</directory>
 						</fileset>
 					</filesets>
 				</configuration>
@@ -389,7 +421,7 @@
 			<plugin>
 				<!-- Use compiler plugin with tycho as the adapter to the JDT compiler. -->
 				<artifactId>maven-compiler-plugin </artifactId>
-				<version>3.3</version>
+				<version>3.2</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8 </target>
@@ -426,18 +458,18 @@
 							</requirement>
 						</extraRequirements>
 					</dependency-resolution>
-					<!-- see http://wiki.eclipse.org/Tycho/Target_Platform we want to use
-						the first alternative: If you are already using a target file in Eclipse,
-						and that target file only contains "Software Site" locations (i.e. location
-						elements with type="InstallableUnit"), use that target file for the Tycho
-						build. This approach is the only way to share the same target platform configuration
+					<!-- see http://wiki.eclipse.org/Tycho/Target_Platform we want to use 
+						the first alternative: If you are already using a target file in Eclipse, 
+						and that target file only contains "Software Site" locations (i.e. location 
+						elements with type="InstallableUnit"), use that target file for the Tycho 
+						build. This approach is the only way to share the same target platform configuration 
 						between Tycho and Eclipse. -->
 					<target>
 						<artifact>
 							<groupId>ch.elexis</groupId>
-							<artifactId>juno-target</artifactId>
-							<version>3.2.0-SNAPSHOT</version>
-							<!-- we cannot use a classifier here, or mvn compile would file in
+							<artifactId>elexis</artifactId>
+							<version>3.3.0-SNAPSHOT</version>
+							<!-- we cannot use a classifier here, or mvn compile would file in 
 								any other project!! classifier>elexis-3</classifier -->
 						</artifact>
 					</target>
@@ -506,7 +538,7 @@
 				</plugin>
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
-					<artifactId>tycho-packaging-plugin </artifactId>
+					<artifactId>tycho-packaging-plugin</artifactId>
 					<version>${tycho-version}</version>
 					<dependencies>
 						<dependency>
@@ -516,7 +548,7 @@
 						</dependency>
 					</dependencies>
 					<configuration>
-						<strictBinIncludes>false </strictBinIncludes>
+						<strictBinIncludes>false</strictBinIncludes>
 						<format>${timestamp_format}</format>
 						<timestampProvider>jgit </timestampProvider>
 						<jgit.ignore>pom.xml</jgit.ignore>
@@ -563,40 +595,10 @@
 					<configuration>
 						<additionalparam>-Xdoclint:none</additionalparam>
 						<aggregate>true</aggregate>
-						<doctitle>Dokumentation der Java Schnittstellen f&#xFC;r Elexis
+						<doctitle>Dokumentation der Java Schnittstellen für Elexis
 							${project.version}.</doctitle>
 						<header><![CDATA[Elexis ${project.version}. See also <a href="http://elexis.info">http://elexis.info</a>]]></header>
 						<bottom><![CDATA[Copyright 2006-2013 Gerry Weirich and many more. See also <a href="http://elexis.info">Elexis</a>: eine freie Software von Ärzten für Ärzte]]></bottom>
-					</configuration>
-				</plugin>
-				<!--This plugin's configuration is used to store Eclipse m2e settings
-					only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>com.github.goldin</groupId>
-										<artifactId>
-											properties-maven-plugin
-										</artifactId>
-										<versionRange>
-											[0.2.5,)
-										</versionRange>
-										<goals>
-											<goal>set-properties</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
 					</configuration>
 				</plugin>
 			</plugins>

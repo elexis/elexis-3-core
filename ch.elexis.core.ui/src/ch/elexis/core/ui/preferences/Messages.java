@@ -86,6 +86,8 @@ public class Messages extends NLS {
 	public static String LabSettings_validateMappings;
 	public static String LabSettings_validateMappingsResult;
 	public static String LaborPrefs2_LabItemsAndGroups;
+	public static String LabSettings_enableUseLocalLabRefValues_title;
+	public static String LabSettings_enableUseLocalLabRefValues_text;
 	public static String LaborPrefs_34;
 	public static String LaborPrefs_35;
 	public static String LaborPrefs_36;
@@ -201,6 +203,7 @@ public class Messages extends NLS {
 	public static String Leistungscodes_necessaryData;
 	public static String Leistungscodes_new;
 	public static String Leistungscodes_notUndoable;
+	public static String Leistungscodes_optifyXrayPositions;
 	public static String Leistungscodes_optionalData;
 	public static String Leistungscodes_pleaseEnterDataForBillingSystem;
 	public static String Leistungscodes_pleaseEnterName;
@@ -212,6 +215,10 @@ public class Messages extends NLS {
 	public static String Leistungscodes_reallyDelete;
 	public static String Leistungscodes_reallyWantToDeleteItem;
 	public static String Leistungscodes_removeConstraintTT;
+
+	public static String Leistungscodes_removeOpenReminders;
+	public static String Leistungscodes_separateObligations;
+
 	public static String Leistungscodes_strictValidityCheck;
 	public static String Leistungscodes_systemDisabled;
 	public static String Leistungscodes_text;
@@ -283,6 +290,8 @@ public class Messages extends NLS {
 	public static String Texterstellung_TextProcessor;
 	public static String Texterstellung_Support_Legacy;
 	public static String Texterstellung_Rename_with_F2;
+	public static String Texterstellung_backupdir;
+	public static String Texterstellung_texteditlocaldesc;
 	public static String UserCasePreferences_Cases;
 	public static String UserCasePreferences_DefaultBillingSystem;
 	public static String UserCasePreferences_DefaultDiagnose;
@@ -316,7 +325,6 @@ public class Messages extends NLS {
 	public static String UserPreferences_SaveSettingsTo;
 	public static String UserPreferences_WorkspaceSettingsSaveTo;
 	public static String UserSettings2_AddidtionalFields;
-	public static String UserSettings2_AdditionalXids;
 	public static String UserSettings2_AlwaysClosed;
 	public static String UserSettings2_AlwaysOpen;
 	public static String UserSettings2_Birthdate;
@@ -363,6 +371,7 @@ public class Messages extends NLS {
 	public static String StockManagementPreferencePage_btnPreferMandatorOwnedStocks_toolTipText;
 	public static String StockManagementPreferencePage_btnPreferMandatorOwnedStocks_text;
 	public static String StockManagementPreferencePage_btnCheckButton_text;
+	public static String StockManagementPreferencePage_btnMachineOutlayPartialPackages_text;
 	public static String StockManagementPreferencePage_lblNewLabel_1_text;
 	public static String StockManagementPreferencePage_btnRadioButton_text;
 	public static String StockManagementPreferencePage_btnRadioButton_1_text;

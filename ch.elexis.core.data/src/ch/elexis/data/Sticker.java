@@ -30,8 +30,10 @@ import ch.rgw.tools.JdbcLink.Stm;
  * @since 3.0.0 - division between core and Ui, see UiSticker class
  */
 public class Sticker extends PersistentObject implements ISticker {
-	public static final String NAME = "Name";
+
 	public static final String TABLENAME = "ETIKETTEN";
+	
+	public static final String FLD_NAME = "Name";
 	public static final String FLD_LINKTABLE = "ETIKETTEN_OBJECT_LINK";
 	public static final String FLD_CLASSLINK = "ETIKETTEN_OBJCLASS_LINK";
 	public static final String FLD_BACKGROUND = "bg";
@@ -46,7 +48,7 @@ public class Sticker extends PersistentObject implements ISticker {
 	
 	static {
 		addMapping(TABLENAME, DATE_COMPOUND, FLD_IMAGE_ID + "=Image",
-			FLD_FOREGROUND + "=foreground", FLD_BACKGROUND + "=background", NAME,
+			FLD_FOREGROUND + "=foreground", FLD_BACKGROUND + "=background", FLD_NAME,
 			FLD_VALUE + "=importance");
 	}
 	
@@ -59,7 +61,7 @@ public class Sticker extends PersistentObject implements ISticker {
 			bg = RGB_WHITE;
 		}
 		set(new String[] {
-			NAME, FLD_FOREGROUND, FLD_BACKGROUND
+			FLD_NAME, FLD_FOREGROUND, FLD_BACKGROUND
 		}, new String[] {
 			name, fg, bg
 		});
@@ -78,7 +80,7 @@ public class Sticker extends PersistentObject implements ISticker {
 	
 	@Override
 	public String getLabel(){
-		return get(NAME);
+		return get(FLD_NAME);
 	}
 	
 	public int getWert(){

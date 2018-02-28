@@ -14,18 +14,46 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "ch.elexis.core.ui.commands.messages";//$NON-NLS-1$
 	
+	public static String AbortLocalDocumentHandler_infomessage;
+
+	public static String AbortLocalDocumentHandler_infotitle;
+
+	public static String EndLocalDocumentHandler_conflictmessage;
+
+	public static String EndLocalDocumentHandler_conflicttitle;
+
+	public static String EndLocalDocumentHandler_errormessage;
+
+	public static String EndLocalDocumentHandler_errorttitle;
+
+	public static String EndLocalDocumentHandler_infomessage;
+
+	public static String EndLocalDocumentHandler_infotitle;
+
 	public static String FallPlaneRechnung_PlanBillingAfterDays;
 	public static String FallPlaneRechnung_PlanBillingHeading;
 	public static String FallPlaneRechnung_PlanBillingPleaseEnterPositiveInteger;
-	public static String MahnlaufCommand_Mahngebuehr2;
-	public static String MahnlaufCommand_Mahngebuehr1;
-	public static String MahnlaufCommand_Mahngebuehr3;
+	
 	public static String FallCopyCommand_RelatedConsultations;
 	public static String FallCopyCommand_TransferConsultations;
 	public static String FallCopyCommand_AttentionTransferConsultations;
 	public static String LoadTemplateCommand_Error;
 	public static String LoadTemplateCommand_NoTextTemplate;
 	
+	public static String StartEditLocalDocumentHandler_alreadyOpenEnd;
+
+	public static String StartEditLocalDocumentHandler_alreadyOpenStart;
+
+	public static String StartEditLocalDocumentHandler_conflictmessage;
+
+	public static String StartEditLocalDocumentHandler_conflicttitle;
+
+	public static String StartEditLocalDocumentHandler_errormessage;
+
+	public static String StartEditLocalDocumentHandler_errortitle;
+
+	public static String StartEditLocalDocumentHandler_warning;
+
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

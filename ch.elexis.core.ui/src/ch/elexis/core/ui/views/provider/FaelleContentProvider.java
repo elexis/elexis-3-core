@@ -1,12 +1,12 @@
 package ch.elexis.core.ui.views.provider;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.ui.util.FallComparator;
 import ch.elexis.core.ui.views.FaelleView;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Patient;
@@ -16,22 +16,20 @@ import ch.elexis.data.Patient;
  */
 public class FaelleContentProvider implements IStructuredContentProvider {
 	
+	private FallComparator comparator;
+	
+	public FaelleContentProvider(){
+		comparator = new FallComparator();
+	}
+	
 	public Object[] getElements(final Object inputElement){
 		Patient act = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
 		if (act == null) {
 			return new Object[0];
 		} else {
 			Fall[] cases = act.getFaelle();
-			List<Fall> caseList = new ArrayList<Fall>();
-			
-			for (Fall fall : cases) {
-				if (fall.isOpen()) {
-					caseList.add(0, fall);
-				} else {
-					caseList.add(fall);
-				}
-			}
-			return caseList.toArray();
+			Arrays.sort(cases, comparator);
+			return cases;
 		}
 		
 	}
@@ -43,5 +41,5 @@ public class FaelleContentProvider implements IStructuredContentProvider {
 	public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput){
 		
 	}
-	
 }
+	

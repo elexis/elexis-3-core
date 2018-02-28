@@ -30,6 +30,7 @@ import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.LockResponseHelper;
+import ch.elexis.core.ui.text.EditLocalDocumentUtil;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.ITextPlugin.Parameter;
 import ch.elexis.core.ui.text.TextContainer;
@@ -60,13 +61,15 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 	}
 	
 	private void updateTextLock(){
-		// test lock and set read only before opening the Brief
-		LockResponse result = CoreHub.getLocalLockService().acquireLock(actBrief);
-		if (result.isOk()) {
-			text.getPlugin().setParameter(null);
-		} else {
-			LockResponseHelper.showInfo(result, actBrief, null);
-			text.getPlugin().setParameter(Parameter.READ_ONLY);
+		if (actBrief != null) {
+			// test lock and set read only before opening the Brief
+			LockResponse result = CoreHub.getLocalLockService().acquireLock(actBrief);
+			if (result.isOk()) {
+				text.getPlugin().setParameter(null);
+			} else {
+				LockResponseHelper.showInfo(result, actBrief, null);
+				text.getPlugin().setParameter(Parameter.READ_ONLY);
+			}
 		}
 	}
 	
@@ -84,6 +87,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		updateTextLock();
 		text.open(brief);
 		rp.setBrief(actBrief);
+		EditLocalDocumentUtil.startEditLocalDocument(this, brief);
 	}
 	
 	@Override
@@ -133,6 +137,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 				getSite().getPage().hideView(this);
 			}
 			text.saveBrief(actBrief, Brief.RP);
+			EditLocalDocumentUtil.startEditLocalDocument(this, actBrief);
 			return true;
 		}
 		text.saveBrief(actBrief, Brief.RP);
@@ -172,6 +177,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 				getSite().getPage().hideView(this);
 			}
 			text.saveBrief(actBrief, Brief.UNKNOWN);
+			EditLocalDocumentUtil.startEditLocalDocument(this, actBrief);
 			return true;
 		}
 		text.saveBrief(actBrief, Brief.UNKNOWN);

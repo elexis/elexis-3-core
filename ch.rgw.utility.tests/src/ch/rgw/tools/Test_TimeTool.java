@@ -1,8 +1,15 @@
 package ch.rgw.tools;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.Date;
 
 import org.junit.Test;
 
@@ -25,7 +32,8 @@ public class Test_TimeTool {
 		assertTrue(split.length == 2);
 		assertNotNull(timeTool.toString(), split[0]);
 		assertNotNull(timeTool.toString(), split[1]);
-		assertTrue(duration.startsWith(split[0]) && duration.endsWith(split[1]));
+		assertTrue(printFailure(timeTool, duration, split),
+			duration.startsWith(split[0]) && duration.endsWith(split[1]));
 		
 		timeTool = new TimeTool();
 		timeTool.addDays(-1);
@@ -36,7 +44,7 @@ public class Test_TimeTool {
 		assertTrue(split.length == 2);
 		assertNotNull(timeTool.toString(), split[0]);
 		assertNotNull(timeTool.toString(), split[1]);
-		assertTrue(timeTool.toString(),
+		assertTrue(printFailure(timeTool, duration, split),
 			duration.startsWith(split[0]) && duration.endsWith(split[1]));
 		
 		timeTool = new TimeTool();
@@ -51,7 +59,7 @@ public class Test_TimeTool {
 		assertTrue(split.length == 2);
 		assertNotNull(timeTool.toString(), split[0]);
 		assertNotNull(timeTool.toString(), split[1]);
-		assertTrue(timeTool.toString() + ": " + duration + " | " + split[0] + " | " + split[1],
+		assertTrue(printFailure(timeTool, duration, split),
 			duration.startsWith(split[0]) && duration.endsWith(split[1]));
 		
 		timeTool = new TimeTool();
@@ -63,23 +71,36 @@ public class Test_TimeTool {
 		assertTrue(split.length == 2);
 		assertNotNull(timeTool.toString(), split[0]);
 		assertNotNull(timeTool.toString(), split[1]);
-		assertTrue(timeTool.toString(),
+		assertTrue(printFailure(timeTool, duration, split),
 			duration.startsWith(split[0]) && duration.endsWith(split[1]));
 		
 		timeTool = new TimeTool();
-		timeTool.addDays(62);
-		duration = timeTool.getDurationToNowString();
+		Date d = timeTool.getTime();
+		timeTool.addDays(64);
+		LocalDateTime now = LocalDateTime.now();
+		
+		int days = (int) now.until(timeTool.toLocalDateTime(), ChronoUnit.DAYS);
+		duration = timeTool.getDurationToTimeAsString(now);
+		
 		assertNotNull(timeTool.toString(), duration);
 		assertTrue(containsDigit(duration));
-		split = splitByFormat(timeTool.getMonthsFormat(2));
+		if (days == 64) {
+			split = splitByFormat(timeTool.getMonthsFormat(2));
+		} else if (days == 63) {
+			// if the execution of this testcase is too slow we have after adding of 64 days only 63 days and 23:59 left
+			split = splitByFormat(timeTool.getWeeksFormat(2));
+		}
+		else {
+			fail("invalid until date calculation: " + days);
+		}
 		assertTrue(split.length == 2);
 		assertNotNull(timeTool.toString(), split[0]);
 		assertNotNull(timeTool.toString(), split[1]);
-		assertTrue(timeTool.toString(),
+		assertTrue(printFailure(timeTool, duration, split),
 			duration.startsWith(split[0]) && duration.endsWith(split[1]));
 		
 		timeTool = new TimeTool();
-		timeTool.addDays(-62);
+		timeTool.addDays(-64);
 		duration = timeTool.getDurationToNowString();
 		assertNotNull(timeTool.toString(), duration);
 		assertTrue(containsDigit(duration));
@@ -87,7 +108,7 @@ public class Test_TimeTool {
 		assertTrue(split.length == 2);
 		assertNotNull(timeTool.toString(), split[0]);
 		assertNotNull(timeTool.toString(), split[1]);
-		assertTrue(timeTool.toString(),
+		assertTrue(printFailure(timeTool, duration, split),
 			duration.startsWith(split[0]) && duration.endsWith(split[1]));
 		
 		timeTool = new TimeTool();
@@ -99,7 +120,7 @@ public class Test_TimeTool {
 		assertTrue(split.length == 2);
 		assertNotNull(timeTool.toString(), split[0]);
 		assertNotNull(timeTool.toString(), split[1]);
-		assertTrue(timeTool.toString(),
+		assertTrue(printFailure(timeTool, duration, split),
 			duration.startsWith(split[0]) && duration.endsWith(split[1]));
 		
 		timeTool = new TimeTool();
@@ -111,8 +132,24 @@ public class Test_TimeTool {
 		assertTrue(split.length == 2);
 		assertNotNull(timeTool.toString(), split[0]);
 		assertNotNull(timeTool.toString(), split[1]);
-		assertTrue(timeTool.toString(),
+		assertTrue(printFailure(timeTool, duration, split),
 			duration.startsWith(split[0]) && duration.endsWith(split[1]));
+	}
+	
+	@Test
+	public void testNullSafeCompareTo() {
+		TimeTool timeTool = new TimeTool();
+		timeTool.addDays(-732);
+		assertEquals(1, TimeTool.compare(null, timeTool));
+		assertEquals(-1, TimeTool.compare(timeTool, null));
+		assertEquals(0, TimeTool.compare(null, null));
+		assertEquals(0, TimeTool.compare(timeTool, timeTool));
+		assertEquals(1, TimeTool.compare(timeTool, new TimeTool()));
+		assertEquals(-1, TimeTool.compare(new TimeTool(), timeTool));
+	}
+	
+	private String printFailure(TimeTool timeTool, String duration, String[] split){
+		return timeTool.toDBString(true) + ": duration=" + duration + ", " + Arrays.toString(split);
 	}
 	
 	private boolean containsDigit(String duration){
@@ -128,4 +165,5 @@ public class Test_TimeTool {
 	private String[] splitByFormat(String format){
 		return format.split("%d");
 	}
+	
 }

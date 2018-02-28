@@ -528,7 +528,7 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 		private Gender switchSex(String labels){
 			if (labels == null || labels.length() < 1)
 				return Gender.UNKNOWN;
-			switch (labels.charAt(0)) {
+			switch (labels.toLowerCase().charAt(0)) {
 			case 'w':
 				return Gender.FEMALE;
 			case 'f':

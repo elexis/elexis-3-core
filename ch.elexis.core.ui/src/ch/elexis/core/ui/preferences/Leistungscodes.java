@@ -44,7 +44,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
@@ -230,9 +229,23 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		bOptify.setSelection(CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_OPTIFY, true));
 		bOptify.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		
+		final Button bOptifyXray = new Button(ret, SWT.CHECK);
+		bOptifyXray.setText(Messages.Leistungscodes_optifyXrayPositions);
+		bOptifyXray.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e){
+				CoreHub.userCfg.set(Preferences.LEISTUNGSCODES_OPTIFY_XRAY,
+					bOptifyXray.getSelection());
+			}
+			
+		});
+		bOptifyXray.setSelection(CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_OPTIFY_XRAY, true));
+		bOptifyXray.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
+		
+
 		// *** checkbox for enforcing separate Fall for obligations and non obligations
 		final Button bObligation = new Button(ret, SWT.CHECK);
-		bObligation.setText("Pflichtleistungen und Nichtpflichtleistungen trennen");
+		bObligation.setText(Messages.Leistungscodes_separateObligations);
 		bObligation.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e){
@@ -243,6 +256,21 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		});
 		bObligation.setSelection(CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_OBLIGATION, false));
 		bObligation.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
+		
+		// *** checkbox for removing open reminders if bill is fully payed
+		final Button bRemoveOpenReminders = new Button(ret, SWT.CHECK);
+		bRemoveOpenReminders.setText(Messages.Leistungscodes_removeOpenReminders);
+		bRemoveOpenReminders.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e){
+				CoreHub.globalCfg.set(Preferences.RNN_REMOVE_OPEN_REMINDER,
+					bRemoveOpenReminders.getSelection());
+			}
+			
+		});
+		bRemoveOpenReminders
+			.setSelection(CoreHub.globalCfg.get(Preferences.RNN_REMOVE_OPEN_REMINDER, false));
+		bRemoveOpenReminders.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		
 		// *** populate the table with items
 		reload();
@@ -669,6 +697,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		ListDisplay<String> ldRequirements;
 		ListDisplay<String> ldOptional;
 		ListDisplay<String> ldUnused;
+		private Button bUseMultiForEigenleistung;
 		
 		/**
 		 * the constructor,
@@ -773,6 +802,11 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			mke = new MultiplikatorEditor(leftMiddlePart, name);
 			mke.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			
+			bUseMultiForEigenleistung = new Button(leftMiddlePart, SWT.CHECK);
+			bUseMultiForEigenleistung.setText("Multiplikator bei Eigenleistungen anwenden.");
+			bUseMultiForEigenleistung
+				.setSelection(MultiplikatorList.isEigenleistungUseMulti(tName.getText()));
+			
 			// *** label/editor for case constants
 			new Label(rightMiddlePart, SWT.NONE).setText(Messages.Leistungscodes_caseConstants);
 			ldConstants =
@@ -814,19 +848,27 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				}
 			}
 			ldConstants.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-			Menu menu2 = new Menu(ldConstants);
-			MenuItem del2 = new MenuItem(menu2, SWT.NONE);
-			del2.setText(Messages.Leistungscodes_delText);
-			del2.addSelectionListener(new SelectionAdapter() {
+			
+			Action actionDel = new Action() {
 				@Override
-				public void widgetSelected(final SelectionEvent e){
+				public String getText(){
+					return Messages.Leistungscodes_delText;
+				}
+				
+				@Override
+				public ImageDescriptor getImageDescriptor(){
+					return null;
+				}
+				
+				@Override
+				public void run(){
 					String sel = ldConstants.getSelection();
 					ldConstants.remove(sel);
 					Fall.removeBillingSystemConstant(result[0], sel);
 				}
-				
-			});
-			ldConstants.setMenu(menu2);
+			};
+			
+			ldConstants.setMenu(actionDel);
 			
 			// *** separator
 			Label separator = new Label(middlePartComp, SWT.SEPARATOR | SWT.HORIZONTAL);
@@ -928,6 +970,15 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				result[5] = StringTool.join(ldUnused.getAll(), DEFINITIONSDELIMITER);
 			}
 			result[6] = (cbDisabled.getSelection() == true) ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
+			if (bUseMultiForEigenleistung.getSelection()) {
+				if (!MultiplikatorList.isEigenleistungUseMulti(tName.getText())) {
+					MultiplikatorList.setEigenleistungUseMulti(tName.getText());
+				}
+			} else {
+				if (MultiplikatorList.isEigenleistungUseMulti(tName.getText())) {
+					MultiplikatorList.removeEigenleistungUseMulti(tName.getText());
+				}
+			}
 			super.okPressed();
 		}
 		

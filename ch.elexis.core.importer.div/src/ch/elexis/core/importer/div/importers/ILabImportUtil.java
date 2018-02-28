@@ -26,6 +26,8 @@ public interface ILabImportUtil {
 	void createDocumentManagerEntry(String title, String lab, byte[] data, String mimeType, TimeTool date, IPatient pat);
 
 	ILabResult createLabResult(IPatient patient, TimeTool date, ILabItem labItem, String result,
-		String comment, String refVal, IContact origin);
+		String comment, String refVal, IContact origin, String subId);
 
+	void updateLabResult(ILabResult iLabResult, TransientLabResult transientLabResult);
+	
 }

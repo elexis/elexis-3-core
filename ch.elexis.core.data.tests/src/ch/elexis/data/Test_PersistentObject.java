@@ -18,7 +18,6 @@ import ch.elexis.data.po.OtherListPersistentObject;
 import ch.elexis.data.po.PersistentObjectImpl;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
-import ch.rgw.tools.JdbcLinkSyntaxException;
 
 public class Test_PersistentObject extends AbstractPersistentObjectTest {
 	
@@ -212,17 +211,6 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 		assertEquals(false, PersistentObject.tableExists("THIS_TABLE_SHOULD_NOT_EXISTS"));
 	}
 	
-	@Ignore
-	public void testCaseSensitiveIdLoad(){
-		//#5514
-		Anwender anw = new Anwender("Username", "Uservorname", "16.1.1973", "w");
-		new User(anw, "user", "pass");
-		
-		assertFalse(User.load("USER").exists());
-		assertFalse(User.load("User").exists());
-		assertTrue(User.load("user").exists());
-	}
-	
 	@Test
 	public void testCreateOrModifyTable(){
 		/** Definition of the database table */
@@ -249,5 +237,30 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 		Stm statement = getLink().getStatement();
 		statement.exec("INSERT INTO Dummy (ID, BoreFactor) VALUES ('TEST', '1234567890');");
 		getLink().releaseStatement(statement);
+	}
+	
+	@Test
+	public void testAddRemoveSticker(){
+		Sticker sticker = new Sticker("TestSticker", "fg", "bg");
+		sticker.setClassForSticker(PersistentObject.class);
+		sticker.setWert(100);
+		
+		Sticker sticker200 = new Sticker("TestSticker200", "fg", "bg");
+		sticker200.setClassForSticker(PersistentObject.class);
+		sticker200.setWert(200);
+		
+		PersistentObjectImpl impl = new PersistentObjectImpl();
+		
+		impl.addSticker(sticker200);
+		impl.addSticker(sticker);
+		impl.addSticker(sticker);
+		assertTrue(impl.getStickers().contains(sticker));
+		
+		assertEquals(200, impl.getStickers().get(0).getWert());
+		assertEquals(100, impl.getStickers().get(1).getWert());
+		
+		impl.removeSticker(sticker);
+		assertFalse(impl.getStickers().contains(sticker));
+		
 	}
 }

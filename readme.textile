@@ -1,23 +1,39 @@
 h1. Elexis 3 Core Repository
 
+<a href="https://gitlab.medelexis.ch/elexis/elexis-3-core/commits/master"><img alt="build status" src="https://gitlab.medelexis.ch/elexis/elexis-3-core/badges/master/build.svg" /></a>
+
 *IMPORTANT* Please employ the @3lexisFormatterProfile.xml@ as Eclipse default formatter prior to development and pull requests.
 This accounts for all Elexis 3 related development.
 
 h2. Install latest build
 
-Go to "Jenkins-CI Builds":https://srv.elexis.info/jenkins/view/3.0/job/Elexis-3.0-Core/lastSuccessfulBuild/artifact/ch.elexis.core.p2site/target/products/. Download and unzip the zip file for your machine.
+Go to "Jenkins-CI Builds":https://download.elexis.info/elexis/master/products.
+
+Download and unzip the zip file for your machine.
 
 Install Oracle java 1.8 from "http://www.java.com/de/download/manual.jsp":http://www.java.com/de/download/manual.jsp
 
 Start the Elexis3 application.
 
+Use Help..Install New Software to add the desired features from the elexis-3-base P2 repository.
 
 h2. Building
 
-You need Java 1.8+. Maven 3.0.x (Higher version do NOT work due to plugin incompatibilities). Then you should be able to generate the application and p2 update site using the following calls:
+h3. Maven based build
+
+You need Java 1.8+. Maven >= 3.3. Then you should be able to generate the application and p2 update site using the following calls:
 
 @git clone https://github.com/elexis/elexis-3-core@
-@mvn clean install@
+@mvn -V clean verify  -Dtycho.localArtifacts=ignore -Dmaven.test.skip=true -P all-archs@
+
+Explanation of the used options
+* -V: emits version of Java, Maven, GUI-Toolkit, Architecture. Handy when you ask a problem
+* clean: Build everything from scratch
+* verify: Compile, test and build a P2-site including products. But does NOT install maven artefacts
+* -Dtycho.localArtifacts=ignore: Do not use any locally built maven artefacts
+* -Dmaven.test.skip=true: Skip unit tests (Use it only if you want to speed up the build)
+* -P all-archs: This a work-around for bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=491951. We will get rid of around April 2018 when its fix will be in the next Oxygen Release
+* --quiet: Used for travis builds to generate Quiet output - only show errors. Without it the log would bee too long and make the travis-build fail.
 
 It will be built for your OS/Window-System/Architecture combination. You will find the executables under @ch.elexis.core.p2site/target/products/ch.elexis.core.application.ElexisApp/*/*/*@ 
 
@@ -28,9 +44,46 @@ Note: This will fail in MacOSX. Build instructions for Mac:
 @git clone https://github.com/elexis/elexis-3-core@
 @mvn clean install -Pall-archs -Dmaven.test.skip=true@
 
+h3. Continuos Intergration builds
 
+We use Travis-CI to ensure that our build system works using a well documented environment. The status for the different branches can be founde under "Travis-CI elexis-3-core":https://travis-ci.org/elexis/elexis-3-core/branches
+
+The downloads found under "http://download.elexis.info/elexis/":http://download.elexis.info/elexis/ are produced by jobs running via the "Medelexis GitLab":https://gitlab.medelexis.ch/elexis/elexis-3-core/-/jobs/
+
+h3. Building via Eclipse IDE
 
 If you want a complete development environment, try "Oomph":https://github.com/elexis/elexis-3-core/tree/master/ch.elexis.sdk
+
+h3. Eclipse IDE-Preferences
+
+We recommend (and if you want to submit patches, you have to respect) the following settings in the Eclipse IDE, reachabel via Window..Preferences:
+
+* General..Workspace
+** Select UTF-8 as "Textfile encoding"
+** Select UNIX as "New text file line delimiter"
+* Java..Code Style..Formatter
+** Click on "Import.." and select the 3lexisFormatterProfile.xml from the root directory of the elexis-3-core checkout
+** Select "3lexis Formatter" as "Active Formater"
+* Java..Editor..Save Action
+** Select: Perform the selected actions on save
+** Do NOT select: Format source code
+** Select: Organize imports
+** Do NOT select: Additional actions
+* Maven..Errors/Warning
+** Set "Plugin execution not covered by lifecycle configuration" to "Ignore"
+
+h3. Submitting patches
+
+To submit patches you have to
+
+* Fork our github repository to your personal account
+* Clone this repository on your devevelopment machine
+* Create a new branch (eg. @git checkout -b my_branch@)
+* Commit your change (eg. @git commmit -m "My cool changes")
+* Push it to your account (eg. @git push --set-upstream origin my_branch@)
+* Go to your github repository and create a pull requests by clicking on the greeen button "Compare & pull request"
+* Review your changes. There should be only the lines that contribute to the problem. If you have too many changes look at the remarks about Eclipse IDE-Preferences
+
 
 h2. Developer Overview
 
@@ -82,3 +135,17 @@ It uses the rules defined in @ch.elexis.core.releng/checkstyle.xml@ to generate 
 
 If you want to add even more checks, look at ch.elexis.core.releng/checkstyle_full.xml. Adding new checks should be discussed on the developers mailing list.
 
+
+h2. Updating all versions for a newer ID
+
+We do this for all new major version, eg. 3.3 -> 3.4. See also http://www.mojohaus.org/versions-maven-plugin/usage.html
+
+Steps to follow are:
+
+* Update the version in master pom.xml
+* Run @mvn -N versions:update-child-modules@
+* Update the version in the following files
+** ch.elexis.core.p2site/category.xml
+** ch.elexis.core.application/META-INF/MANIFEST.MF
+** ch.elexis.core.console.application/META-INF/MANIFEST.MF
+** other manifests if build fails

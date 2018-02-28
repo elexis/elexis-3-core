@@ -31,6 +31,7 @@ import javax.xml.validation.Validator;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
+import org.jdom.Verifier;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.xml.sax.ErrorHandler;
@@ -347,4 +348,14 @@ public class XMLTool {
 		
 	}
 	
+	public static String getValidXMLString(String source){
+		StringBuilder ret = new StringBuilder();
+		for (int i = 0, len = source.length(); i < len; i++) {
+			// skip non valid XML characters
+			if (Verifier.isXMLCharacter(source.charAt(i))) {
+				ret.append(source.charAt(i));
+			}
+		}
+		return ret.toString();
+	}
 }

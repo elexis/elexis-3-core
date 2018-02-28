@@ -312,6 +312,14 @@ public class LabeledInputField extends Composite {
 		return viewer;
 	}
 	
+	@Override
+	public void setEnabled(boolean enabled){
+		if (ctl != null && !ctl.isDisposed()) {
+			ctl.setEnabled(enabled);
+		}
+		super.setEnabled(enabled);
+	}
+	
 	public static class Tableau extends Composite {
 		public Tableau(Composite parent, int minColumns, int maxColumns){
 			super(parent, SWT.BORDER);

@@ -141,4 +141,9 @@ public class VerrechnetCopy extends Verrechnet {
 		}
 		return new Money((int) Math.round(tpw * tp));
 	}
+	
+	@Override
+	public Konsultation getKons(){
+		return Konsultation.load(get(BEHANDLUNGID));
+	}
 }

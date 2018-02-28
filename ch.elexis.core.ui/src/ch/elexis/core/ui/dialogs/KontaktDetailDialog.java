@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.dialogs;
 
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -56,6 +57,7 @@ public class KontaktDetailDialog extends TitleAreaDialog {
 	String[] vals;
 	int type = 0;
 	ButtonAdapter ba = new ButtonAdapter();
+	private boolean locked = false;
 	
 	public KontaktDetailDialog(Shell parentShell, Kontakt kt){
 		super(parentShell);
@@ -65,6 +67,11 @@ public class KontaktDetailDialog extends TitleAreaDialog {
 	public KontaktDetailDialog(Shell parentShell, String[] v){
 		super(parentShell);
 		vals = v;
+	}
+	
+	public KontaktDetailDialog(Shell parentShell, Kontakt kt, boolean locked){
+		this(parentShell, kt);
+		this.locked = locked;
 	}
 	
 	@Override
@@ -144,6 +151,13 @@ public class KontaktDetailDialog extends TitleAreaDialog {
 			setTitle(Messages.KontaktDetailDialog_newContact); //$NON-NLS-1$
 		}
 		setMessage(Messages.KontaktDetailDialog_enterData); //$NON-NLS-1$
+		
+		if (locked) {
+			Button btnOk = getButton(IDialogConstants.OK_ID);
+			if (btnOk != null) {
+				btnOk.setEnabled(false);
+			}
+		}
 	}
 	
 	@Override

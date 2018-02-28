@@ -21,7 +21,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.ObjectStreamClass;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -170,8 +172,8 @@ public abstract class PersistentObject implements IPersistentObject {
 	};
 	
 	/**
-	 * the possible states of a tristate checkbox: true/checked, false/unchecked, undefined/
-	 * "filled with a square"/"partly selected"
+	 * the possible states of a tristate checkbox: true/checked, false/unchecked, undefined/ "filled
+	 * with a square"/"partly selected"
 	 * 
 	 * @since 3.0.0
 	 */
@@ -578,14 +580,16 @@ public abstract class PersistentObject implements IPersistentObject {
 				long timestamp = System.currentTimeMillis();
 				// Gibt es das angeforderte Lock schon?
 				String oldlock = stm
-					.queryString("SELECT wert FROM CONFIG WHERE param=" + JdbcLink.wrap(lockname));
+					.queryString("SELECT wert FROM CONFIG WHERE param="
+						+ getConnection().wrapFlavored(lockname));
 				if (!StringTool.isNothing(oldlock)) {
 					// Ja, wie alt ist es?
 					String[] def = oldlock.split("#");
 					long locktime = Long.parseLong(def[1]);
 					long age = timestamp - locktime;
 					if (age > 2000L) { // Älter als zwei Sekunden -> Löschen
-						stm.exec("DELETE FROM CONFIG WHERE param=" + JdbcLink.wrap(lockname));
+						stm.exec("DELETE FROM CONFIG WHERE param="
+							+ getConnection().wrapFlavored(lockname));
 					} else {
 						if (wait == false) {
 							return null;
@@ -604,7 +608,8 @@ public abstract class PersistentObject implements IPersistentObject {
 				// Prüfen, ob wir es wirklich haben, oder ob doch jemand anders
 				// schneller war.
 				String check = stm
-					.queryString("SELECT wert FROM CONFIG WHERE param=" + JdbcLink.wrap(lockname));
+					.queryString("SELECT wert FROM CONFIG WHERE param="
+						+ getConnection().wrapFlavored(lockname));
 				if (check.equals(lockstring)) {
 					break;
 				}
@@ -627,13 +632,15 @@ public abstract class PersistentObject implements IPersistentObject {
 	public static synchronized boolean unlock(final String name, final String id){
 		String lockname = "lock" + name;
 		String lock = getConnection()
-			.queryString("SELECT wert from CONFIG WHERE param=" + JdbcLink.wrap(lockname));
+			.queryString("SELECT wert from CONFIG WHERE param="
+				+ getConnection().wrapFlavored(lockname));
 		if (StringTool.isNothing(lock)) {
 			return false;
 		}
 		String[] res = lock.split("#");
 		if (res[0].equals(id)) {
-			getConnection().exec("DELETE FROM CONFIG WHERE param=" + JdbcLink.wrap(lockname));
+			getConnection().exec("DELETE FROM CONFIG WHERE param="
+				+ getConnection().wrapFlavored(lockname));
 			return true;
 		}
 		return false;
@@ -692,7 +699,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * Die ID in einen datenbankgeeigneten Wrapper verpackt (je nach Datenbank; meist Hochkommata).
 	 */
 	public String getWrappedId(){
-		return JdbcLink.wrap(id);
+		return getDBConnection().getJdbcLink().wrapFlavored(id);
 	}
 	
 	/** Der Konstruktor erstellt die ID */
@@ -737,7 +744,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	
 	public int state(){
-		if (StringTool.isNothing(getId())) {
+		if (StringTool.isNothing(getId()) || getId().contains("'")) {
 			return INVALID_ID;
 		}
 		
@@ -897,7 +904,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * 
 	 * @return a List of Sticker objects
 	 */
-	private static String queryStickersString =
+	private final String queryStickersString =
 		"SELECT etikette FROM " + Sticker.FLD_LINKTABLE + " WHERE obj=?";
 	
 	/**
@@ -908,9 +915,8 @@ public abstract class PersistentObject implements IPersistentObject {
 	@SuppressWarnings("unchecked")
 	public List<ISticker> getStickers(){
 		DBConnection dbConnection = getDBConnection();
-		String ID = new StringBuilder().append("ETK").append(getId()).toString();
-		ArrayList<ISticker> ret =
-			(ArrayList<ISticker>) dbConnection.getCache().get(ID, getCacheTime());
+		final String ID = "ETK" + getId();
+		List<ISticker> ret = (ArrayList<ISticker>) dbConnection.getCache().get(ID, getCacheTime());
 		if (ret != null) {
 			return ret;
 		}
@@ -918,15 +924,15 @@ public abstract class PersistentObject implements IPersistentObject {
 		PreparedStatement queryStickers = dbConnection.getPreparedStatement(queryStickersString);
 		try {
 			queryStickers.setString(1, id);
-			ResultSet res = queryStickers.executeQuery();
-			while (res.next()) {
-				Sticker et = Sticker.load(res.getString(1));
-				et.setDBConnection(dbConnection);
-				if (et != null && et.exists()) {
-					ret.add(et);
+			try (ResultSet res = queryStickers.executeQuery()) {
+				while (res.next()) {
+					Sticker et = Sticker.load(res.getString(1));
+					et.setDBConnection(dbConnection);
+					if (et != null && et.exists()) {
+						ret.add(et);
+					}
 				}
 			}
-			res.close();
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
 			return ret;
@@ -948,20 +954,22 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * 
 	 * @param et
 	 *            the Sticker to remove
+	 * @since 3.4 sends update event
 	 */
-	@SuppressWarnings("unchecked")
 	public void removeSticker(ISticker et){
-		DBConnection dbConnection = getDBConnection();
-		String ID = new StringBuilder().append("ETK").append(getId()).toString();
-		ArrayList<Sticker> ret =
-			(ArrayList<Sticker>) dbConnection.getCache().get(ID, getCacheTime());
-		if (ret != null) {
-			ret.remove(et);
+		List<ISticker> ret = getStickers();
+		if (ret.contains(et)) {
+			DBConnection dbConnection = getDBConnection();
+			String remove = "DELETE FROM " + Sticker.FLD_LINKTABLE + " WHERE obj=" + getWrappedId()
+				+ " AND etikette=" + getDBConnection().getJdbcLink().wrapFlavored(et.getId());
+			int exec = dbConnection.exec(remove);
+			if (exec > 0) {
+				ret.remove(et);
+				Collections.sort(ret);
+				
+				refreshLastUpdateAndSendUpdateEvent(Sticker.FLD_LINKTABLE);
+			}
 		}
-		StringBuilder sb = new StringBuilder();
-		sb.append("DELETE FROM ").append(Sticker.FLD_LINKTABLE).append(" WHERE obj=")
-			.append(getWrappedId()).append(" AND etikette=").append(JdbcLink.wrap(et.getId()));
-		dbConnection.exec(sb.toString());
 	}
 	
 	/**
@@ -969,23 +977,23 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * 
 	 * @param st
 	 *            the Sticker to add
+	 * @since 3.4 sends update event
 	 */
-	@SuppressWarnings("unchecked")
 	public void addSticker(ISticker st){
-		DBConnection dbConnection = getDBConnection();
-		String ID = new StringBuilder().append("STK").append(getId()).toString();
-		List<ISticker> ret = (List<ISticker>) dbConnection.getCache().get(ID, getCacheTime());
-		if (ret == null) {
-			ret = getStickers();
-		}
+		List<ISticker> ret = getStickers();
 		if (!ret.contains(st)) {
-			ret.add(st);
-			Collections.sort(ret);
-			StringBuilder sb = new StringBuilder();
-			sb.append("INSERT INTO ").append(Sticker.FLD_LINKTABLE)
-				.append("(obj,etikette) VALUES (").append(getWrappedId()).append(",")
-				.append(JdbcLink.wrap(st.getId())).append(");");
-			dbConnection.exec(sb.toString());
+			DBConnection dbConnection = getDBConnection();
+			String update = "INSERT INTO " + Sticker.FLD_LINKTABLE
+				+ " (obj,etikette,lastupdate) VALUES (" + getWrappedId() + ","
+				+ getDBConnection().getJdbcLink().wrapFlavored(st.getId()) + ","
+				+ Long.toString(System.currentTimeMillis()) + ")";
+			int exec = dbConnection.exec(update);
+			if (exec == 1) {
+				ret.add(st);
+				Collections.sort(ret);
+				
+				refreshLastUpdateAndSendUpdateEvent(Sticker.FLD_LINKTABLE);
+			}
 		}
 	}
 	
@@ -1082,7 +1090,10 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return Der Inhalt des Felds (kann auch null sein), oder **ERROR**, wenn versucht werden
 	 *         sollte, ein nicht existierendes Feld auszulesen
 	 */
-	public String get(final String field){
+	public @Nullable String get(final String field){
+		if (getId() == null || getId().isEmpty()) {
+			log.error("Get with no ID on object of type [" + this.getClass().getName() + "]");
+		}
 		DBConnection dbConnection = getDBConnection();
 		String key = getKey(field);
 		Object ret = dbConnection.getCache().get(key, getCacheTime());
@@ -1190,10 +1201,38 @@ public abstract class PersistentObject implements IPersistentObject {
 				} else {
 					res = rs.getString(mapped);
 				}
+				getDBConnection().getCache().put(key, res, getCacheTime());
 				if (res == null) {
 					res = "";
 				}
-				getDBConnection().getCache().put(key, res, getCacheTime());
+			}
+		} catch (SQLException ex) {
+			ExHandler.handle(ex);
+		} finally {
+			getDBConnection().releaseStatement(stm);
+		}
+		return res;
+	}
+	
+	/**
+	 * Similar to {@link PersistentObject#get(String)}, but never use cache, checkNull or decode.
+	 * Simply read the value from the database. <b>Only use with non encoded fields!</b>
+	 * 
+	 * @param field
+	 * @return
+	 */
+	protected String getRaw(String field){
+		StringBuffer sql = new StringBuffer();
+		String mapped = map(field);
+		String table = getTableName();
+		sql.append("SELECT ").append(mapped).append(" FROM ").append(table).append(" WHERE ID='")
+			.append(id).append("'");
+		
+		Stm stm = getDBConnection().getStatement();
+		String res = null;
+		try (ResultSet rs = executeSqlQuery(sql.toString(), stm)) {
+			if ((rs != null) && (rs.next() == true)) {
+				res = rs.getString(mapped);
 			}
 		} catch (SQLException ex) {
 			ExHandler.handle(ex);
@@ -1431,7 +1470,8 @@ public abstract class PersistentObject implements IPersistentObject {
 				
 				sql.append("SELECT ID FROM ").append(m[2]).append(" WHERE ");
 				if (!includeDeleted) {
-					sql.append("deleted=").append(JdbcLink.wrap("0")).append(" AND ");
+					sql.append("deleted=").append(getDBConnection().getJdbcLink().wrapFlavored("0"))
+						.append(" AND ");
 				}
 				
 				sql.append(m[1]).append("=").append(getWrappedId());
@@ -1600,7 +1640,7 @@ public abstract class PersistentObject implements IPersistentObject {
 													// existing code.
 													// return false; // See api doc. Return false on errors.
 		} finally {
-			if(pst!=null) {
+			if (pst != null) {
 				try {
 					pst.close();
 				} catch (SQLException e) {}
@@ -1712,60 +1752,83 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return 0 bei Fehler
 	 */
 	public int addToList(final String field, final String oID, final String... extra){
+		return addAllToList(field, Collections.singletonList(oID), extra);
+	}
+	
+	/**
+	 * Set multiple elements on an n:m relation. Use the table definition for mapping.
+	 * 
+	 * @param field
+	 *            the n:m field of the entries to insert to
+	 * @param oID
+	 *            ids of the targeted objects to which the entry should be added
+	 * @param extra
+	 * @return 0 in case of error
+	 * @since 3.4
+	 */
+	public int addAllToList(final String field, final List<String> objectIds,
+		final String... extra){
 		String mapped = map(field);
+		
 		DBConnection dbConnection = getDBConnection();
 		int numberOfAffectedRows = 0;
-		if (mapped.startsWith("JOINT:")) {
-			String[] m = mapped.split(":");// m[1] FremdID, m[2] eigene ID, m[3]
-			// Name Joint
-			if (m.length > 3) {
-				StringBuffer head = new StringBuffer(100);
-				StringBuffer tail = new StringBuffer(100);
-				
-				head.append("INSERT INTO ").append(m[3]).append("(ID,").append(m[2]).append(",")
-					.append(m[1]);
-				tail.append(") VALUES (").append(JdbcLink.wrap(StringTool.unique("aij")))
-					.append(",").append(getWrappedId()).append(",").append(JdbcLink.wrap(oID));
-				if (extra != null) {
-					for (String s : extra) {
-						String[] def = s.split("=");
-						if (def.length != 2) {
-							log.error("Fehlerhafter Aufruf addToList " + s);
-							return 0;
+		
+		for (String objectId : objectIds) {
+			if (mapped.startsWith("JOINT:")) {
+				String[] m = mapped.split(":");// m[1] FremdID, m[2] eigene ID, m[3]
+				// Name Joint
+				if (m.length > 3) {
+					StringBuffer head = new StringBuffer(100);
+					StringBuffer tail = new StringBuffer(100);
+					
+					head.append("INSERT INTO ").append(m[3]).append("(ID,").append(m[2]).append(",")
+						.append(m[1]);
+					tail.append(") VALUES (").append(
+						getDBConnection().getJdbcLink().wrapFlavored(StringTool.unique("aij")))
+						.append(",").append(getWrappedId()).append(",")
+						.append(getDBConnection().getJdbcLink().wrapFlavored(objectId));
+					if (extra != null) {
+						for (String s : extra) {
+							String[] def = s.split("=");
+							if (def.length != 2) {
+								log.error("Fehlerhafter Aufruf addToList " + s);
+								return 0;
+							}
+							head.append(",").append(def[0]);
+							tail.append(",")
+								.append(getDBConnection().getJdbcLink().wrapFlavored(def[1]));
 						}
-						head.append(",").append(def[0]);
-						tail.append(",").append(JdbcLink.wrap(def[1]));
+					}
+					head.append(tail).append(")");
+					if (dbConnection.isTrace()) {
+						String sql = head.toString();
+						dbConnection.doTrace(sql);
+						return dbConnection.exec(sql);
+					}
+					numberOfAffectedRows += dbConnection.exec(head.toString());
+				}
+			} else if (mapped.startsWith("LIST:")) {
+				// LIST:EigeneID:Tabelle:orderby[:type]
+				String[] m = mapped.split(":");
+				if (m.length > 2) {
+					PreparedStatement ps = null;
+					try {
+						String psString = "INSERT INTO " + m[2] + " (ID, deleted, " + m[1]
+							+ ") VALUES (?, 0, ?);";
+						ps = dbConnection.getPreparedStatement(psString);
+						ps.setString(1, objectId);
+						ps.setString(2, getId());
+						numberOfAffectedRows += ps.executeUpdate();
+					} catch (SQLException e) {
+						log.error("Error executing prepared statement.", e);
+					} finally {
+						dbConnection.releasePreparedStatement(ps);
 					}
 				}
-				head.append(tail).append(")");
-				if (dbConnection.isTrace()) {
-					String sql = head.toString();
-					dbConnection.doTrace(sql);
-					return dbConnection.exec(sql);
-				}
-				numberOfAffectedRows = dbConnection.exec(head.toString());
+			} else {
+				log.error("Fehlerhaftes Mapping: " + mapped);
+				return 0;
 			}
-		} else if (mapped.startsWith("LIST:")) {
-			// LIST:EigeneID:Tabelle:orderby[:type]
-			String[] m = mapped.split(":");
-			if (m.length > 2) {
-				PreparedStatement ps = null;
-				try {
-					String psString =
-						"INSERT INTO " + m[2] + " (ID, deleted, " + m[1] + ") VALUES (?, 0, ?);";
-					ps = dbConnection.getPreparedStatement(psString);
-					ps.setString(1, oID);
-					ps.setString(2, getId());
-					numberOfAffectedRows = ps.executeUpdate();
-				} catch (SQLException e) {
-					log.error("Error executing prepared statement.", e);
-				} finally {
-					dbConnection.releasePreparedStatement(ps);
-				}
-			}
-		} else {
-			log.error("Fehlerhaftes Mapping: " + mapped);
-			return 0;
 		}
 		
 		if (numberOfAffectedRows > 0) {
@@ -1820,7 +1883,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				StringBuilder sql = new StringBuilder(200);
 				sql.append("DELETE FROM ").append(m[3]).append(" WHERE ").append(m[2]).append("=")
 					.append(getWrappedId()).append(" AND ").append(m[1]).append("=")
-					.append(JdbcLink.wrap(oID));
+					.append(getDBConnection().getJdbcLink().wrapFlavored(oID));
 				if (dbConnection.isTrace()) {
 					String sq = sql.toString();
 					dbConnection.doTrace(sq);
@@ -1901,7 +1964,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		sql.append(
 			fieldS.stream().map(s -> map(s)).reduce((u, t) -> u + StringConstants.COMMA + t).get());
 		sql.append(") VALUES (");
-		sql.append(valuesS.stream().map(s -> JdbcLink.wrap(ts(s)))
+		sql.append(valuesS.stream().map(s -> getDBConnection().getJdbcLink().wrapFlavored(ts(s)))
 			.reduce((u, t) -> u + StringConstants.COMMA + t).get());
 		sql.append(")");
 		
@@ -2095,6 +2158,9 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return true if values were set, else <code>false</code> and exception is created
 	 */
 	public boolean get(final String[] fields, final String[] values){
+		if (getId() == null || getId().isEmpty()) {
+			log.error("Get with no ID on object of type [" + this.getClass().getName() + "]");
+		}
 		if ((fields == null) || (values == null) || (fields.length != values.length)) {
 			log.error("Falscher Aufruf von get(String[],String[]");
 			return false;
@@ -2133,9 +2199,10 @@ public abstract class PersistentObject implements IPersistentObject {
 						if (decode[i] == true) {
 							values[i] = decode(fields[i], rs);
 						} else {
-							values[i] = checkNull(rs.getString(map(fields[i])));
+							String dbValue = rs.getString(map(fields[i]));
+							values[i] = checkNull(dbValue);
+							dbConnection.getCache().put(getKey(fields[i]), dbValue, getCacheTime());
 						}
-						dbConnection.getCache().put(getKey(fields[i]), values[i], getCacheTime());
 					}
 				}
 			}
@@ -2494,10 +2561,13 @@ public abstract class PersistentObject implements IPersistentObject {
 		String result = getDBConnection().queryString(
 			"SELECT LASTUPDATE FROM " + getTableName() + " WHERE ID=" + getWrappedId());
 		if (result != null) {
-			return Long.parseLong(result);
-		} else {
-			return 0L;
+			try {
+				return Long.parseLong(result);
+			} catch (NumberFormatException e) {
+				// ignore and return 0L
+			}
 		}
+		return 0L;
 	}
 	
 	/**
@@ -2705,20 +2775,65 @@ public abstract class PersistentObject implements IPersistentObject {
 	}
 	
 	/**
-	 * Unfold a byte array as stored by {@link #flatten(Hashtable)}
+	 * Recreate a Hashtable from a byte array as created by flatten()
 	 * 
 	 * @param flat
-	 * @return
-	 * @since 3.1
+	 *            the byte array
+	 * @return the original Hashtable or null if no Hashtable could be created from the array
+	 */
+	@SuppressWarnings("unchecked")
+	public static Hashtable<Object, Object> fold(final byte[] flat, IClassResolver resolver){
+		return (Hashtable<Object, Object>) foldObject(flat, resolver);
+	}
+	
+	/**
+	 * Recreate a Hashtable from a byte array as created by flatten()
+	 * 
+	 * @param flat
+	 *            the byte array
+	 * 
+	 * @return the original Hashtable or null if no Hashtable could be created from the array
 	 */
 	public static Object foldObject(final byte[] flat){
+		return foldObject(flat, null);
+	}
+	
+	/**
+	 * Interface for use with {@link PersistentObject#foldObject(byte[], IClassResolver)} to map
+	 * classes on deserialisation using {@link ObjectInputStream}.
+	 *
+	 */
+	public static interface IClassResolver {
+		public Class<?> resolveClass(ObjectStreamClass desc) throws ClassNotFoundException;
+	}
+	
+	/**
+	 * Recreate a Hashtable from a byte array as created by flatten()
+	 * 
+	 * @param flat
+	 *            the byte array
+	 * @param resolver
+	 *            {@link IClassResolver} implementation used for class resolving / mapping
+	 * @return the original Hashtable or null if no Hashtable could be created from the array
+	 */
+	public static Object foldObject(final byte[] flat, IClassResolver resolver){
 		if (flat.length == 0) {
 			return null;
 		}
 		try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(flat))) {
 			ZipEntry entry = zis.getNextEntry();
 			if (entry != null) {
-				try (ObjectInputStream ois = new ObjectInputStream(zis)) {
+				try (ObjectInputStream ois = new ObjectInputStream(zis) {
+					protected java.lang.Class<?> resolveClass(java.io.ObjectStreamClass desc)
+						throws IOException, ClassNotFoundException{
+						if (resolver != null) {
+							Class<?> resolved = resolver.resolveClass(desc);
+							return (resolved != null) ? resolved : super.resolveClass(desc);
+						} else {
+							return super.resolveClass(desc);
+						}
+					};
+				}) {
 					return ois.readObject();
 				}
 			} else {
@@ -2920,35 +3035,43 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *            name of the table to check existence for
 	 */
 	public static boolean tableExists(String tableName){
+		return tableExists(tableName, false);
+	}
+	
+	/**
+	 * 
+	 * @param tableName
+	 * @param considerViews
+	 *            consider views too in searching for existing elements
+	 * @since 3.2
+	 * @return
+	 */
+	public static boolean tableExists(String tableName, boolean considerViews){
 		int nrFounds = 0;
 		// Vergleich schaut nicht auf Gross/Klein-Schreibung, da thomas
 		// schon H2-DB gesehen hat, wo entweder alles gross oder alles klein war
-		Connection conn = null;
-		try {
-			conn = defaultConnection.getConnection();
+		try (Connection conn = defaultConnection.getConnection()) {
 			DatabaseMetaData dmd = conn.getMetaData();
-			String[] onlyTables = {
-				"TABLE"
-			};
-			ResultSet rs = dmd.getTables(null, null, "%", onlyTables);
-			if (rs != null) {
-				while (rs.next()) {
-					// DatabaseMetaData#getTables() specifies TABLE_NAME is in
-					// column 3
-					if (rs.getString(3).equalsIgnoreCase(tableName))
-						nrFounds++;
-				}
+			String[] searchBase;
+			if (considerViews) {
+				searchBase = new String[] {
+					"TABLE", "VIEW"
+				};
+			} else {
+				searchBase = new String[] {
+					"TABLE"
+				};
 			}
+			ResultSet rs = dmd.getTables(null, null, "%", searchBase);
+			while (rs.next()) {
+				// DatabaseMetaData#getTables() specifies TABLE_NAME is in
+				// column 3
+				if (rs.getString(3).equalsIgnoreCase(tableName))
+					nrFounds++;
+			}
+			
 		} catch (SQLException je) {
 			log.error("Fehler beim abrufen der Datenbank Tabellen Information.", je);
-		} finally {
-			try {
-				if (conn != null) {
-					conn.close();
-				}
-			} catch (SQLException e) {
-				log.error("Error closing connection " + e);
-			}
 		}
 		if (nrFounds > 1) {
 			// Dies kann vorkommen, wenn man eine MySQL-datenbank von Windows ->
@@ -3029,13 +3152,20 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * 
 	 * @param clazz
 	 * @since 3.1
+	 * @since 3.2 considers db flavor specific sql files, return value on error
 	 */
 	public static void executeDBInitScriptForClass(Class<?> clazz, @Nullable VersionInfo vi){
 		String resourceName = "/rsc/dbScripts/" + clazz.getName();
-		if (vi == null) {
-			resourceName += ".sql";
+		if (vi != null) {
+			resourceName += "_" + vi.version();
+		}
+		
+		String dbFlavor = getConnection().DBFlavor;
+		URL resource = PersistentObject.class.getResource(resourceName + "_" + dbFlavor + ".sql");
+		if (resource != null) {
+			resourceName += "_" + dbFlavor + ".sql";
 		} else {
-			resourceName += "_" + vi.version() + ".sql";
+			resourceName += ".sql";
 		}
 		
 		Stm stm = defaultConnection.getStatement();

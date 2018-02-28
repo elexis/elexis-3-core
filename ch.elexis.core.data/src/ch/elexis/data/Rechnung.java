@@ -28,8 +28,9 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.elexis.core.model.IDiagnose;
+import ch.elexis.core.model.InvoiceState;
 import ch.rgw.io.Settings;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
@@ -40,6 +41,9 @@ import ch.rgw.tools.TimeTool;
 
 public class Rechnung extends PersistentObject {
 	public static final String REMARK = "Bemerkung";
+	/**
+	 * The date the current state was set, if in the future, we have a temporary state
+	 */
 	public static final String BILL_STATE_DATE = "StatusDatum";
 	public static final String BILL_DATE = "RnDatum";
 	public static final String BILL_AMOUNT_CENTS = "Betragx100";
@@ -58,6 +62,7 @@ public class Rechnung extends PersistentObject {
 	public static final String REJECTED = "Zurückgewiesen";
 	public static final String OUTPUT = "Ausgegeben";
 	public static final String REMARKS = "Bemerkungen";
+	public static final String INVOICE_CORRECTION = "Rechnungskorrektur";
 	
 	static {
 		addMapping(TABLENAME, BILL_NUMBER, CASE_ID, MANDATOR_ID, "RnDatum=S:D:RnDatum", BILL_STATE,
@@ -176,6 +181,7 @@ public class Rechnung extends PersistentObject {
 		
 		Rechnung ret = new Rechnung();
 		ret.create(null);
+		CoreHub.getLocalLockService().acquireLock(ret);
 		TimeTool startDate = new TimeTool("31.12.2999");
 		TimeTool endDate = new TimeTool("01.01.2000");
 		TimeTool actDate = new TimeTool();
@@ -293,6 +299,7 @@ public class Rechnung extends PersistentObject {
 		ret.set(BILL_NUMBER, nr);
 		if (!result.isOK()) {
 			ret.delete();
+			CoreHub.getLocalLockService().releaseLock(ret);
 			return result;
 		}
 		
@@ -315,6 +322,7 @@ public class Rechnung extends PersistentObject {
 			}
 		}
 		
+		CoreHub.getLocalLockService().releaseLock(ret);
 		return result.add(Result.SEVERITY.OK, 0, "OK", ret, false);
 	}
 	
@@ -377,31 +385,46 @@ public class Rechnung extends PersistentObject {
 	}
 	
 	/**
+	 * @deprecated use {@link #stornoBill(boolean)} instead
+	 */
+	@Deprecated
+	public void storno(final boolean reopen){
+		stornoBill(reopen);
+	}
+	
+	/**
 	 * Rechnung stornieren. Allenfalls bereits erfolgte Zahlungen für diese Rechnungen bleiben
 	 * verbucht (das Konto weist dann einen Plus-Saldo auf). Der Rechnungsbetrag wird per
-	 * Stornobuchung gutgeschrieben.
+	 * Stornobuchung gutgeschrieben. Sofern konsultationen freigegeben wurden, werden diese
+	 * zurückgegeben.
 	 * 
 	 * @param reopen
 	 *            wenn True werden die in dieser Rechnung enthaltenen Behandlungen wieder
 	 *            freigegeben, andernfalls bleiben sie abgeschlossen.
+	 * @return if reopen is true the released konsultations from the bill will be returned
+	 * @since 3.3
 	 */
-	public void storno(final boolean reopen){
+	public List<Konsultation> stornoBill(final boolean reopen){
 		Money betrag = getBetrag();
 		new Zahlung(this, betrag, "Storno", null);
 		if (reopen == true) {
+			List<Konsultation> kons = new ArrayList<>();
 			Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
 			qbe.add(Konsultation.FLD_BILL_ID, Query.EQUALS, getId());
 			for (Konsultation k : qbe.execute()) {
 				k.set(Konsultation.FLD_BILL_ID, null);
+				kons.add(k);
 			}
 			/*
 			 * getConnection().exec( "UPDATE BEHANDLUNGEN SET RECHNUNGSID=NULL WHERE RECHNUNGSID=" +
 			 * getWrappedId());
 			 */
 			setStatus(RnStatus.STORNIERT);
+			return kons;
 		} else {
 			
 			setStatus(RnStatus.ABGESCHRIEBEN);
+			return null;
 		}
 	}
 	
@@ -454,7 +477,7 @@ public class Rechnung extends PersistentObject {
 				String message =
 					"Der errechnete Rechnungsbetrag (" + betrag.getAmountAsString()
 						+ ") weicht vom Rechnungsbetrag (" + old.getAmountAsString()
-						+ ") ab. Trotzdem weriterfahren?";
+						+ ") ab. Trotzdem weiterfahren?";
 				if (!cod.openQuestion("Differenz bei der Rechnung " + nr, message)) {
 					return false;
 				}
@@ -505,24 +528,82 @@ public class Rechnung extends PersistentObject {
 		return total;
 	}
 	
-	/** Rechnungsstatus holen */
+	/**
+	 * @return the current {@link InvoiceState} numeric value
+	 * @since 3.2 resolves via {@link #getInvoiceState()}
+	 */
 	public int getStatus(){
-		try {
-			int i = Integer.parseInt(checkNull(get(BILL_STATE)));
-			if ((i < 0) || (i >= RnStatus.getStatusTexts().length)) {
-				return RnStatus.UNBEKANNT;
-			}
-			return i;
-		} catch (NumberFormatException e) {
-			return RnStatus.UNBEKANNT;
-		}
+		return getInvoiceState().numericValue();
 	}
 	
-	/** Rechnungsstatus setzen */
-	public void setStatus(final int stat){
-		set(BILL_STATE, Integer.toString(stat));
+	/**
+	 * Resolves the current state of the invoice. If a temporary state has been set, the
+	 * {@link #BILL_STATE_DATE} lies ahead. In this case the current state is resolved out of the
+	 * trace histories last state value.
+	 * 
+	 * @return the {@link InvoiceState} of this invoice
+	 * @since 3.2
+	 */
+	public InvoiceState getInvoiceState(){
+		String[] values = new String[2];
+		get(new String[] {
+			BILL_STATE, BILL_STATE_DATE
+		}, values);
+		
+		int stateNumeric = 0;
+		
+		TimeTool stateDate = new TimeTool(values[1]);
+		if (stateDate.isAfterOrEqual(new TimeTool())) {
+			// state date is in the future, hence we have a temporary state change
+			// fetch current state from history
+			
+			@SuppressWarnings("unchecked")
+			List<String> stateChanges = (List<String>) getExtInfoStoredObjectByKey(STATUS_CHANGED);
+			String lastElement = stateChanges.get(stateChanges.size() - 1);
+			String[] split = lastElement.split(": ");
+			try {
+				stateNumeric = Integer.parseInt(split[1]);
+			} catch (NumberFormatException nfe) {
+				log.error("Error resolving invoice state [{}] in element [{}], returning UNKNOWN.",
+					split[1], lastElement);
+			}
+		} else {
+			try {
+				stateNumeric = Integer.parseInt(checkNull(get(BILL_STATE)));
+			} catch (NumberFormatException nfe) {
+				log.error("Error resolving invoice state [{}], returning UNKNOWN.", stateNumeric);
+			}
+		}
+		return InvoiceState.fromState(stateNumeric);
+	}
+	
+	/**
+	 * Set a temporary state for this bill.
+	 * 
+	 * @param state
+	 *            the temporary state to set.
+	 * @param expiryDate
+	 *            the date this temporary state will expire, setting the invoice back to the former
+	 *            state.
+	 * @since 3.2
+	 */
+	public void setTemporaryState(final int temporaryState, TimeTool expiryDate){
+		addTrace(STATUS_CHANGED, Integer.toString(temporaryState));
+		setExtInfo("TEMPORARY_STATE", Integer.toString(temporaryState));
+		set(BILL_STATE_DATE, expiryDate.toString(TimeTool.DATE_GER));
+	}
+	
+	/**
+	 * Set the new invoice state. Setting the value will also update {@link #BILL_STATE_DATE} and
+	 * add a trace entry.
+	 * 
+	 * @param state
+	 *            as defined by {@link InvoiceState#numericValue()}
+	 */
+	public void setStatus(final int state){
+		set(BILL_STATE, Integer.toString(state));
 		set(BILL_STATE_DATE, new TimeTool().toString(TimeTool.DATE_GER));
-		addTrace(STATUS_CHANGED, Integer.toString(stat));
+		addTrace(STATUS_CHANGED, Integer.toString(state));
 	}
 	
 	/**
@@ -534,6 +615,12 @@ public class Rechnung extends PersistentObject {
 		if (betrag.isZero()) {
 			return null;
 		}
+		// reset open reminder bookings if configured and bill will be fully payed
+		if (CoreHub.globalCfg.get(Preferences.RNN_REMOVE_OPEN_REMINDER, false)
+			&& shouldRemoveOpenReminders(betrag)) {
+			removeOpenReminders();
+		}
+		
 		Money oldOffen = getOffenerBetrag();
 		int oldOffenCents = oldOffen.getCents();
 		Money newOffen = new Money(oldOffen);
@@ -574,6 +661,50 @@ public class Rechnung extends PersistentObject {
 			setStatus(RnStatus.TEILZAHLUNG);
 		}
 		return new Zahlung(this, betrag, text, date);
+	}
+	
+	private boolean shouldRemoveOpenReminders(Money betrag){
+		if (hasReminders()) {
+			Money open = getOffenerBetrag();
+			return open.subtractMoney(betrag).equals(getRemindersBetrag());
+		}
+		return false;
+	}
+	
+	public Money getRemindersBetrag(){
+		Money ret = new Money(0);
+		for (Zahlung zahlung : getZahlungen()) {
+			String comment = zahlung.getBemerkung();
+			if (comment.equals(Messages.Rechnung_Mahngebuehr1)
+				|| comment.equals(Messages.Rechnung_Mahngebuehr2)
+				|| comment.equals(Messages.Rechnung_Mahngebuehr3)) {
+				ret.addMoney(zahlung.getBetrag());
+			}
+		}
+		return ret.isNegative() ? ret.multiply(-1d) : ret;
+	}
+	
+	public boolean hasReminders(){
+		for (Zahlung zahlung : getZahlungen()) {
+			String comment = zahlung.getBemerkung();
+			if (comment.equals(Messages.Rechnung_Mahngebuehr1)
+				|| comment.equals(Messages.Rechnung_Mahngebuehr2)
+				|| comment.equals(Messages.Rechnung_Mahngebuehr3)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private void removeOpenReminders(){
+		for (Zahlung zahlung : getZahlungen()) {
+			String comment = zahlung.getBemerkung();
+			if (comment.equals(Messages.Rechnung_Mahngebuehr1)
+				|| comment.equals(Messages.Rechnung_Mahngebuehr2)
+				|| comment.equals(Messages.Rechnung_Mahngebuehr3)) {
+				zahlung.delete();
+			}
+		}
 	}
 	
 	/** EIne Liste aller Zahlungen holen */
@@ -831,4 +962,54 @@ public class Rechnung extends PersistentObject {
 		return TABLENAME;
 	}
 	
+	/**
+	 * Checks if a bill is correctable by state
+	 * 
+	 * @return
+	 */
+	public boolean isCorrectable(){
+		String rechnungsNr = getNr();
+		if (rechnungsNr != null && rechnungsNr.isEmpty()) {
+			return false;
+		}
+		InvoiceState invoiceState = getInvoiceState();
+		
+		if (invoiceState != null) {
+			switch (invoiceState) {
+			case OWING:
+			case TO_PRINT:
+			case PARTIAL_LOSS:
+			case TOTAL_LOSS:
+			case DEPRECIATED:
+			case CANCELLED:
+				return false;
+			case BILLED:
+			case DEFECTIVE:
+			case DEMAND_NOTE_1:
+			case DEMAND_NOTE_1_PRINTED:
+			case DEMAND_NOTE_2:
+			case DEMAND_NOTE_2_PRINTED:
+			case DEMAND_NOTE_3:
+			case DEMAND_NOTE_3_PRINTED:
+			case EXCESSIVE_PAYMENT:
+			case FROM_TODAY:
+			case IN_EXECUTION:
+			case NOT_BILLED:
+			case NOT_FROM_TODAY:
+			case NOT_FROM_YOU:
+			case ONGOING:
+			case OPEN:
+			case OPEN_AND_PRINTED:
+			case PAID:
+			case PARTIAL_PAYMENT:
+			case REJECTED:
+			case STOP_LEGAL_PROCEEDING:
+			case UNKNOWN:
+				return true;
+			default:
+				break;
+			}
+		}
+		return false;
+	}
 }

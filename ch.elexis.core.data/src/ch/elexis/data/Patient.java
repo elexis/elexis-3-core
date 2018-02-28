@@ -15,11 +15,19 @@ package ch.elexis.data;
 import static ch.elexis.core.model.PatientConstants.FLD_EXTINFO_LEGAL_GUARDIAN;
 import static ch.elexis.core.model.PatientConstants.FLD_EXTINFO_STAMMARZT;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
@@ -99,6 +107,9 @@ public class Patient extends Person {
 		return get("PersAnamnese");
 	}
 	
+	/**
+	 * @deprecated unused, to be removed
+	 */
 	public String getSystemAnamnese(){
 		return get("Systemanamnese");
 	}
@@ -182,7 +193,7 @@ public class Patient extends Person {
 	 *            or null
 	 * @return
 	 */
-	public List<Prescription> getMedication(@Nullable EntryType filterType){
+	public List<Prescription> getMedication(@Nullable EntryType... filterType){
 		// prefetch the values needed for filter operations
 		Query<Prescription> qbe = new Query<Prescription>(Prescription.class, null, null,
 			Prescription.TABLENAME, new String[] {
@@ -193,14 +204,16 @@ public class Patient extends Person {
 		List<Prescription> prescriptions = qbe.execute();
 		// make sure just now closed are not included
 		TimeTool now = new TimeTool();
-		now.add(TimeTool.SECOND, 5);
+		now.add(TimeTool.SECOND, 10);
 		
-		if (filterType != null) {
-			return prescriptions.parallelStream().filter(p -> !p.isStopped(now) && p.getEntryType() == filterType)
+		if (filterType != null && filterType.length > 0) {
+			EnumSet<EntryType> entryTypes = EnumSet.copyOf(Arrays.asList(filterType));
+			return prescriptions.parallelStream()
+				.filter(p -> entryTypes.contains(p.getEntryType()) && !p.isStopped(now))
 				.collect(Collectors.toList());
 		} else {
 			return prescriptions.parallelStream().filter(p -> !p.isStopped(now))
-					.collect(Collectors.toList());
+				.collect(Collectors.toList());
 		}
 	}
 	
@@ -247,19 +260,21 @@ public class Patient extends Person {
 	}
 	
 	/**
+	 * ReserveMedikation als Text wird unter anderem fuer Platzhalter verwendet
+	 * 
+	 * @return
+	 */
+	public String getReserveMedikation(){
+		return getMedicationText(EntryType.RESERVE_MEDICATION);
+	}
+	
+	/**
 	 * Fixmedikation als Text
 	 * 
 	 * @return
-	 * @deprecated does not filter by EntryType, use {@link Patient#getMedication(EntryType)}
-	 *             instead.
 	 */
 	public String getMedikation(){
-		Prescription[] pre = getFixmedikation();
-		StringBuilder sb = new StringBuilder();
-		for (Prescription p : pre) {
-			sb.append(p.getLabel()).append(StringTool.lf);
-		}
-		return sb.toString();
+		return getMedicationText(EntryType.FIXED_MEDICATION);
 	}
 	
 	/**
@@ -312,6 +327,35 @@ public class Patient extends Person {
 		} else {
 			return list.get(0);
 		}
+	}
+	
+	/**
+	 * Finds the last non deleted {@link Konsultation} over all mandants
+	 * 
+	 * @return
+	 */
+	public Konsultation getLastKonsultation(){
+		Konsultation fromDB = null;
+		if (getId() != null) {
+			PreparedStatement preparedStatement =
+				PersistentObject.getDefaultConnection().getPreparedStatement(
+					"SELECT BH.id FROM BEHANDLUNGEN BH LEFT JOIN FAELLE FA ON BH.FallID = FA.id AND BH.deleted = FA.deleted WHERE FA.PatientID = ? and FA.deleted = '0' order by BH.Datum desc, BH.lastupdate desc limit 1");
+			try {
+				preparedStatement.setString(1, getId());
+				ResultSet results = preparedStatement.executeQuery();
+				// map key date string, list string ids of results
+				if ((results != null) && (results.next() == true)) {
+					String consId = results.getString(1);
+					fromDB = Konsultation.load(consId);
+				}
+			} catch (SQLException e) {
+				LoggerFactory.getLogger(Patient.class)
+					.error("Could not load consultations of patient [" + getId() + "]", e);
+			} finally {
+				PersistentObject.getDefaultConnection().releasePreparedStatement(preparedStatement);
+			}
+		}
+		return fromDB;
 	}
 	
 	public Konsultation createFallUndKons(){
@@ -606,14 +650,7 @@ public class Patient extends Person {
 	 * @return Das Alter in ganzen Jahren als String
 	 */
 	public String getAlter(){
-		TimeTool now = new TimeTool();
-		TimeTool bd = new TimeTool(getGeburtsdatum());
-		int jahre = now.get(TimeTool.YEAR) - bd.get(TimeTool.YEAR);
-		bd.set(TimeTool.YEAR, now.get(TimeTool.YEAR));
-		if (bd.isAfter(now)) {
-			jahre -= 1;
-		}
-		return Integer.toString(jahre);
+		return Long.toString(getAgeAt(LocalDateTime.now(), ChronoUnit.YEARS));
 	}
 	
 	/**
@@ -734,5 +771,10 @@ public class Patient extends Person {
 		Map h = getMap(FLD_EXTINFO);
 		h.remove(key);
 		setMap(FLD_EXTINFO, h);
+	}
+	
+	public long getAgeAt(LocalDateTime dateTime, ChronoUnit chronoUnit){
+		LocalDateTime birthDateTime = new TimeTool(getGeburtsdatum()).toLocalDateTime();
+		return chronoUnit.between(birthDateTime, dateTime);
 	}
 }

@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.locks;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.swt.SWT;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.lock.types.LockResponse;
@@ -19,7 +20,11 @@ public abstract class LockRequestingAction<T extends PersistentObject> extends A
 	private T object;
 
 	public LockRequestingAction(String text) {
-		super(text);
+		this(text, SWT.NONE);
+	}
+
+	public LockRequestingAction(String text, int style){
+		super(text, style);
 		setEnabled(true);
 	}
 
@@ -37,7 +42,11 @@ public abstract class LockRequestingAction<T extends PersistentObject> extends A
 			LockResponseHelper.showInfo(lr, object, null);
 		}
 	};
-
+	
+	/**
+	 * 
+	 * @return the object the lock is requested for, or <code>null</code> to return without action
+	 */
 	public abstract T getTargetedObject();
 
 	public abstract void doRun(T element);

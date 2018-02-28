@@ -43,6 +43,7 @@ import ch.elexis.core.ui.dialogs.DocumentSelectDialog;
 import ch.elexis.core.ui.dialogs.SelectFallDialog;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.LockResponseHelper;
+import ch.elexis.core.ui.text.EditLocalDocumentUtil;
 import ch.elexis.core.ui.text.ITextPlugin;
 import ch.elexis.core.ui.text.ITextPlugin.Parameter;
 import ch.elexis.core.ui.text.TextContainer;
@@ -146,7 +147,7 @@ public class TextView extends ViewPart implements IActivationListener {
 				}
 				try {
 					File tmp = File.createTempFile("elexis", "brief." + ext); //$NON-NLS-1$ //$NON-NLS-2$
-					log.debug("TextView.openDocument createTempFile: " + tmp.getAbsolutePath() + " mime " + doc.getMimeType()); //$NON-NLS-1$
+					log.debug("TextView.openDocument createTempFile: " + tmp.getAbsolutePath() + " mime " + doc.getMimeType()); //$NON-NLS-1$ //$NON-NLS-2$
 					tmp.deleteOnExit();
 					byte[] buffer = doc.loadBinary();
 					if (buffer == null) {
@@ -165,7 +166,7 @@ public class TextView extends ViewPart implements IActivationListener {
 				}
 				return false;
 			} else {
-				log.warn("TextView.openDocument: Preferences do not allow alternative method of documents created with legacy text-plugins");
+				log.warn("TextView.openDocument: Preferences do not allow alternative method of documents created with legacy text-plugins"); //$NON-NLS-1$
 				// Do not show a message box, as this happens often when you load a document
 				// with an invalid content. Eg. with demoDB and Rezept of Absolut Erfunden
 				return false;
@@ -220,6 +221,7 @@ public class TextView extends ViewPart implements IActivationListener {
 		actBrief =
 			txt.createFromTemplate(Konsultation.getAktuelleKons(), template, Brief.UNKNOWN,
 				adressat, subject);
+		EditLocalDocumentUtil.startEditLocalDocument(this, actBrief);
 		setName();
 		if (actBrief == null) {
 			return false;
