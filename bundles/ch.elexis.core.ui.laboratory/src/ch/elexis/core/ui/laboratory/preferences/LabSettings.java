@@ -17,8 +17,10 @@ import java.util.List;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -37,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.preferences.Messages;
 import ch.elexis.core.ui.preferences.SettingsPreferenceStore;
 import ch.elexis.core.ui.preferences.inputs.PrefAccessDenied;
@@ -69,7 +72,7 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 	protected void createFieldEditors(){
 		addField(new BooleanFieldEditor(Preferences.LABSETTINGS_CFG_SHOW_MANDANT_ORDERS_ONLY,
 			Messages.LabSettings_showOrdersActiveMandant, getFieldEditorParent()));
-			
+		
 		addField(new RadioGroupFieldEditor(Preferences.LABSETTINGS_CFG_LABNEW_HEARTRATE,
 			Messages.LabSettings_frequencyNewLabvalues, 3, new String[][] {
 				{
@@ -79,11 +82,11 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 				}, {
 					Messages.LabSettings_slow, "3" //$NON-NLS-1$
 				}
-		}, getFieldEditorParent()));
-		
+			}, getFieldEditorParent()));
+			
 		addField(new BooleanFieldEditor(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES,
 			Messages.LabSettings_useLocalLabRefValues, getFieldEditorParent()));
-			
+		
 		Composite area = new Composite(getFieldEditorParent(), SWT.NONE);
 		area.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 		area.setLayout(new GridLayout(2, false));
@@ -124,6 +127,21 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 			CoreHub.globalCfg.set(Preferences.LABSETTINGS_CFG_KEEP_UNSEEN_LAB_RESULTS,
 				Preferences.DAYS_TO_KEEP_UNSEEN_LAB_RESULTS);
 			daysKeepUnseen = Preferences.DAYS_TO_KEEP_UNSEEN_LAB_RESULTS;
+		}
+	}
+	
+	@Override
+	public void propertyChange(PropertyChangeEvent event){
+		super.propertyChange(event);
+		if (event.getSource() instanceof FieldEditor) {
+			FieldEditor fe = ((FieldEditor) event.getSource());
+			if (Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES.equals(fe.getPreferenceName())) {
+				if (event.getNewValue().equals(Boolean.TRUE)) {
+					MessageDialog.openInformation(UiDesk.getTopShell(),
+						Messages.LabSettings_enableUseLocalLabRefValues_title,
+						Messages.LabSettings_enableUseLocalLabRefValues_text);
+				}
+			}
 		}
 	}
 	

@@ -179,12 +179,16 @@ public class HL7Parser {
 					if (importAsLongText) {
 						TimeTool obrDateTime = new TimeTool(hl7LabResult.getOBRDateTime());
 						TimeTool obxDateTime = new TimeTool(hl7LabResult.getDate());
+						Integer flag = null;
+						if(hl7LabResult.getFlag()!=null) {
+							flag = (hl7LabResult.getFlag().booleanValue()) ? LabResultConstants.PATHOLOGIC : 0;
+						}
 						TransientLabResult importedResult =
 							new TransientLabResult.Builder(pat, labor, labItem, "text")
 								.date(obrDateTime)
 								.comment(StringTool.unNull(hl7LabResult.getValue()) + "\n"
 									+ StringTool.unNull(hl7LabResult.getComment()))
-								.flags(hl7LabResult.isFlagged() ? LabResultConstants.PATHOLOGIC : 0)
+								.flags(flag)
 								.unit(hl7LabResult.getUnit()).ref(hl7LabResult.getRange())
 								.observationTime(obrDateTime).analyseTime(obxDateTime)
 								.transmissionTime(transmissionTime)
@@ -195,12 +199,15 @@ public class HL7Parser {
 					} else {
 						TimeTool obrDateTime = new TimeTool(hl7LabResult.getOBRDateTime());
 						TimeTool obxDateTime = new TimeTool(hl7LabResult.getDate());
+						Integer flag = null;
+						if(hl7LabResult.getFlag()!=null) {
+							flag = (hl7LabResult.getFlag().booleanValue()) ? LabResultConstants.PATHOLOGIC : 0;
+						}
 						TransientLabResult importedResult =
 							new TransientLabResult.Builder(pat, labor, labItem,
 								hl7LabResult.getValue()).date(obrDateTime)
 									.comment(StringTool.unNull(hl7LabResult.getComment()))
-									.flags(hl7LabResult.isFlagged() ? LabResultConstants.PATHOLOGIC
-											: 0)
+									.flags(flag)
 									.unit(hl7LabResult.getUnit()).ref(hl7LabResult.getRange())
 									.observationTime(obrDateTime).analyseTime(obxDateTime)
 									.transmissionTime(transmissionTime)

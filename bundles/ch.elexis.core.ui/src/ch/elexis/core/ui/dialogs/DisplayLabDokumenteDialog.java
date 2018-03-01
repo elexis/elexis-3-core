@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Date;
 
+import javax.activation.MimeType;
+import javax.activation.MimeTypeParseException;
+
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
@@ -42,6 +45,7 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.Patient;
 import ch.rgw.io.FileTool;
+import ch.rgw.tools.MimeTool;
 import ch.rgw.tools.TimeSpan;
 import ch.rgw.tools.TimeTool;
 
@@ -127,8 +131,24 @@ public class DisplayLabDokumenteDialog extends TitleAreaDialog {
 				}
 				int counter = 0;
 				for (IOpaqueDocument document : documentList) {
-					String ext = FileTool.getExtension(docName);
-					File temp = File.createTempFile("lab" + counter, "doc." + ext); //$NON-NLS-1$ //$NON-NLS-2$
+					String fileExtension = null; 
+					try {
+						MimeType docMimeType = new MimeType(document.getMimeType());
+						fileExtension = MimeTool.getExtension(docMimeType.toString());
+					}
+					catch(MimeTypeParseException mpe) {
+						fileExtension = FileTool.getExtension(document.getMimeType());
+						
+						if(fileExtension == null) {
+							fileExtension = FileTool.getExtension(docName);
+						}
+					}
+					
+					if(fileExtension == null) {
+						fileExtension = "";
+					}
+					
+					File temp = File.createTempFile("lab" + counter, "doc." + fileExtension); //$NON-NLS-1$ //$NON-NLS-2$
 					temp.deleteOnExit();
 					byte[] b = document.getContentsAsBytes();
 					if (b == null) {
@@ -137,7 +157,8 @@ public class DisplayLabDokumenteDialog extends TitleAreaDialog {
 					FileOutputStream fos = new FileOutputStream(temp);
 					fos.write(b);
 					fos.close();
-					Program proggie = Program.findProgram(FileTool.getExtension(ext));
+					
+					Program proggie = Program.findProgram(FileTool.getExtension(fileExtension));
 					if (proggie != null) {
 						proggie.execute(temp.getAbsolutePath());
 					} else {

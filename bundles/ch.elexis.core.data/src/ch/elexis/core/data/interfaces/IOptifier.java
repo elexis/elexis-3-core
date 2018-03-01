@@ -57,4 +57,22 @@ public interface IOptifier {
 	 */
 	public @Nullable Verrechnet getCreatedVerrechnet();
 	
+	/**
+	 * Add an object to the context of the {@link IOptifier} implementation. If a object for the
+	 * provided key already exists, the value is replaced.
+	 * 
+	 * @param key
+	 * @param value
+	 */
+	default void putContext(String key, Object value){
+		// default do nothing implement in subclass
+	}
+	
+	/**
+	 * Add an implementation specific context object. If a object for the provided key already
+	 * exists, the value is replaced.
+	 */
+	default void clearContext(){
+		// default do nothing implement in subclass
+	}
 }

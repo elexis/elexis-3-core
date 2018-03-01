@@ -29,13 +29,13 @@ public class LabResultData extends AbstractData {
 	private String subId;
 	private LabResultStatus resultStatus;
 	private Date obrDateTime;
-	private boolean flag;
+	private Boolean flag;
 	private boolean isNumeric = false;
 	private boolean isFormatedText = false;
 	private boolean isPlainText = false;
 	
 	public LabResultData(String code, String name, String unit, String value, String range,
-		boolean flag, String obrDateTime, String dateStr, String comment, String group,
+		Boolean flag, String obrDateTime, String dateStr, String comment, String group,
 		String sequence, String resultStatus, String subId) throws ParseException{
 		super(name, dateStr, comment, group, sequence);
 		
@@ -43,7 +43,7 @@ public class LabResultData extends AbstractData {
 		this.setUnit(unit);
 		this.setValue(value);
 		this.setRange(range);
-		this.setFlagged(flag);
+		this.setFlag(flag);
 		this.subId = subId;
 		this.resultStatus = LabResultStatus.getStatus(resultStatus);
 		if (obrDateTime != null && obrDateTime.length() > 0) {
@@ -101,11 +101,11 @@ public class LabResultData extends AbstractData {
 		}
 	}
 	
-	public boolean isFlagged(){
+	public Boolean getFlag(){
 		return flag;
 	}
 	
-	public void setFlagged(boolean flag){
+	public void setFlag(Boolean flag){
 		this.flag = flag;
 	}
 	

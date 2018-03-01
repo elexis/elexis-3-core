@@ -738,8 +738,8 @@ public class Prescription extends PersistentObject {
 		if (StringTool.leer.equals(rezeptId)) {
 			// fixed medication - need to find the last disposition by querying db
 			Query<Prescription> qre = new Query<Prescription>(Prescription.class);
-			qre.add(Prescription.FLD_PATIENT_ID, Query.LIKE, get(Prescription.FLD_PATIENT_ID));
-			qre.add(Prescription.FLD_ARTICLE, Query.LIKE, get(Prescription.FLD_ARTICLE));
+			qre.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, get(Prescription.FLD_PATIENT_ID));
+			qre.add(Prescription.FLD_ARTICLE, Query.EQUALS, get(Prescription.FLD_ARTICLE));
 			qre.add(Prescription.FLD_REZEPT_ID, Query.NOT_EQUAL, StringTool.leer);
 			qre.orderBy(true, PersistentObject.FLD_LASTUPDATE);
 			List<Prescription> execute = qre.execute();
@@ -750,8 +750,8 @@ public class Prescription extends PersistentObject {
 			}
 		} else {
 			Query<Prescription> qre = new Query<Prescription>(Prescription.class);
-			qre.add(Prescription.FLD_PATIENT_ID, Query.LIKE, get(Prescription.FLD_PATIENT_ID));
-			qre.add(Prescription.FLD_ARTICLE, Query.LIKE, get(Prescription.FLD_ARTICLE));
+			qre.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, get(Prescription.FLD_PATIENT_ID));
+			qre.add(Prescription.FLD_ARTICLE, Query.EQUALS, get(Prescription.FLD_ARTICLE));
 			qre.add(Prescription.FLD_REZEPT_ID, Query.NOT_EQUAL, FLD_REZEPTID_VAL_DIREKTABGABE);
 			qre.add(Prescription.FLD_REZEPT_ID, Query.NOT_EQUAL, StringTool.leer);
 			qre.orderBy(true, PersistentObject.FLD_LASTUPDATE);

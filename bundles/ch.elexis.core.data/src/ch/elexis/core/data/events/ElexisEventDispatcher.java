@@ -13,9 +13,7 @@
 package ch.elexis.core.data.events;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.PriorityQueue;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -30,7 +28,6 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.server.ServerEventMapper;
 import ch.elexis.core.data.status.ElexisStatus;
-import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.data.Anwender;
@@ -61,7 +58,6 @@ public final class ElexisEventDispatcher extends Job {
 	
 	private final ListenerList<ElexisEventListener> listeners;
 	private static ElexisEventDispatcher theInstance;
-	private final Map<Class<?>, IElexisEventDispatcher> dispatchers;
 	private final PriorityQueue<ElexisEvent> eventQueue;
 	private final ArrayList<ElexisEvent> eventCopy;
 	private transient boolean bStop = false;
@@ -70,7 +66,7 @@ public final class ElexisEventDispatcher extends Job {
 	
 	private List<Integer> blockEventTypes;
 	
-	public static ElexisEventDispatcher getInstance(){
+	public static synchronized ElexisEventDispatcher getInstance(){
 		if (theInstance == null) {
 			theInstance = new ElexisEventDispatcher();
 			theInstance.schedule();
@@ -84,54 +80,10 @@ public final class ElexisEventDispatcher extends Job {
 		setUser(false);
 		setPriority(Job.SHORT);
 		listeners = new ListenerList<ElexisEventListener>();
-		dispatchers = new HashMap<Class<?>, IElexisEventDispatcher>();
 		eventQueue = new PriorityQueue<ElexisEvent>(50);
 		eventCopy = new ArrayList<ElexisEvent>(50);
 		
 		elexisUIContext = new ElexisContext();
-	}
-	
-	/**
-	 * It is possible to register a dispatcher for a given class. If such a dispatcher exists, as an
-	 * event of this class is fired, the event will be routed through that dispatcher. Only one
-	 * dispatcher can be registered for a given class. The main purpose of this feature is to allow
-	 * plugins to take care of their data classes by themselves.
-	 * 
-	 * @param eventClass
-	 *            A Subclass of PersistentObject the dispatcher will take care of
-	 * @param ied
-	 *            the dispatcher to register
-	 * @throws ElexisException
-	 *             if there is already a dispatcher registered for that class.
-	 */
-	
-	public void registerDispatcher(final Class<? extends PersistentObject> eventClass,
-		final IElexisEventDispatcher ied) throws ElexisException{
-		log.debug("Registering dispatcher for "+eventClass);
-		if (dispatchers.get(eventClass) != null) {
-			throw new ElexisException(getClass(), "Duplicate dispatcher for "
-				+ eventClass.getName(), ElexisException.EE_DUPLICATE_DISPATCHER);
-		}
-		dispatchers.put(eventClass, ied);
-	}
-	
-	/**
-	 * Unregister a previously registered dispatcher
-	 * 
-	 * @param ec
-	 *            the class the dispatcher takes care of
-	 * @param ied
-	 *            the dispatcher to unregister
-	 * @throws ElexisException
-	 *             if the dispatcher was not registered, or if the class was registered with a
-	 *             different dispatcher
-	 */
-	public void unregisterDispatcher(final Class<? extends PersistentObject> ec,
-		final IElexisEventDispatcher ied) throws ElexisException{
-		if (ied != dispatchers.get(ec)) {
-			throw new ElexisException(getClass(), "Tried to remove unowned dispatcher "
-				+ ec.getName(), ElexisException.EE_BAD_DISPATCHER);
-		}
 	}
 	
 	/**
@@ -144,17 +96,8 @@ public final class ElexisEventDispatcher extends Job {
 	 *            el.getElexisEventFilter()
 	 */
 	public void addListeners(final ElexisEventListener... els){
-		synchronized (listeners) {
-			for (ElexisEventListener el : els) {
-				ElexisEvent event = el.getElexisEventFilter();
-				Class<?> cl = event.getObjectClass();
-				IElexisEventDispatcher ed = dispatchers.get(cl);
-				if (ed != null) {
-					ed.addListener(el);
-				} else {
-					listeners.add(el);
-				}
-			}
+		for (ElexisEventListener el : els) {
+			listeners.add(el);
 		}
 	}
 	
@@ -166,17 +109,8 @@ public final class ElexisEventDispatcher extends Job {
 	 *            The Listener to remove
 	 */
 	public void removeListeners(ElexisEventListener... els){
-		synchronized (listeners) {
-			for (ElexisEventListener el : els) {
-				final ElexisEvent ev = el.getElexisEventFilter();
-				Class<?> cl = ev.getObjectClass();
-				IElexisEventDispatcher ed = dispatchers.get(cl);
-				if (ed != null) {
-					ed.removeListener(el);
-				} else {
-					listeners.remove(el);
-				}
-			}
+		for (ElexisEventListener el : els) {
+			listeners.remove(el);
 		}
 	}
 	
@@ -237,11 +171,6 @@ public final class ElexisEventDispatcher extends Job {
 						(eventType == ElexisEvent.EVENT_SELECTED) ? ee.getObject() : null);
 				
 				for (ElexisEvent elexisEvent : eventsToThrow) {
-					IElexisEventDispatcher ied = dispatchers.get(elexisEvent.getObjectClass());
-					if (ied != null) {
-						ied.fire(elexisEvent);
-					}
-					
 					synchronized (eventQueue) {
 						eventQueue.offer(elexisEvent);
 					}
@@ -252,11 +181,6 @@ public final class ElexisEventDispatcher extends Job {
 				elexisUIContext.setSelection(Mandant.class, ee.getObject());
 			} else if (eventType == ElexisEvent.EVENT_USER_CHANGED) {
 				elexisUIContext.setSelection(Anwender.class, ee.getObject());
-			}
-			
-			IElexisEventDispatcher ied = dispatchers.get(ee.getObjectClass());
-			if (ied != null) {
-				ied.fire(ee);
 			}
 			
 			synchronized (eventQueue) {
@@ -377,6 +301,10 @@ public final class ElexisEventDispatcher extends Job {
 		return (Mandant) getSelected(Mandant.class);
 	}
 	
+	/**
+	 * Cancel rescheduling of the EventDispatcher. Events already in the event queue will still be
+	 * dispatched.
+	 */
 	public void shutDown(){
 		bStop = true;
 	}

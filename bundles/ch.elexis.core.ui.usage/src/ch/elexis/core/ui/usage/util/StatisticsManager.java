@@ -154,7 +154,7 @@ public class StatisticsManager {
 		Map<String, Object> m = reg.getExtensionToFactoryMap();
 		m.put("xmi", new XMIResourceFactoryImpl());
 		ResourceSet resSet = new ResourceSetImpl();
-		Resource resource = resSet.createResource(URI.createURI("findingsTemplate.xml"));
+		Resource resource = resSet.createResource(URI.createURI("statistics.xml"));
 		resource.getContents().add(statistics);
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		

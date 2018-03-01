@@ -113,8 +113,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	
 	@Override
 	public void eventLoopException(final Throwable exception){
-		log.error(Messages.ApplicationWorkbenchAdvisor_10 + exception.getMessage());
-		exception.printStackTrace();
+		log.error(Messages.ApplicationWorkbenchAdvisor_10 + exception.getMessage(), exception);
 		ExHandler.handle(exception);
 		super.eventLoopException(exception);
 	}

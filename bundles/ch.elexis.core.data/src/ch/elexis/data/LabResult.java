@@ -212,7 +212,11 @@ public class LabResult extends PersistentObject implements ILabResult {
 				}
 				return true;
 			}
-		} else /* if(item.getTyp().equals(LabItem.typ.NUMERIC)) */ {
+			if(updateDescription) {
+				setPathologicDescription(new PathologicDescription(Description.PATHO_ABSOLUT, result));
+			}
+			return false;
+		} else {
 			String nr;
 			boolean usedItemRef = false;
 			if (g == Gender.MALE) {
@@ -234,7 +238,16 @@ public class LabResult extends PersistentObject implements ILabResult {
 							new PathologicDescription(Description.PATHO_REF, refStrings.get(0)));
 					}
 				}
-				return testRef(refStrings.get(0), result);
+				Boolean testResult = testRef(refStrings.get(0), result);
+				if (testResult != null) {
+					return testResult;
+				} else {
+					if (updateDescription) {
+						setPathologicDescription(
+							new PathologicDescription(Description.PATHO_NOREF, refStrings.get(0)));
+					}
+					return false;
+				}
 			}
 		}
 		if (updateDescription) {
@@ -256,7 +269,16 @@ public class LabResult extends PersistentObject implements ILabResult {
 		return false;
 	}
 	
-	private boolean testRef(String ref, String result){
+	/**
+	 * Test result against the provided reference value to determine wheter it is pathologic
+	 * 
+	 * @param ref
+	 * @param result
+	 * @return <code>true</code> if pathologic, <code>false</code> if not, <code>null</code> if we
+	 *         don't know
+	 * @since 3.4 if we can't test a value, as there are no rules, return <code>null</code>
+	 */
+	private Boolean testRef(String ref, String result){
 		try {
 			if (ref.trim().startsWith(SMALLER) || ref.trim().startsWith(BIGGER)) {
 				String resultSign = null;
@@ -268,29 +290,24 @@ public class LabResult extends PersistentObject implements ILabResult {
 				}
 				double val = Double.parseDouble(result);
 				if (ref.trim().startsWith(SMALLER)) {
-					if (val >= refVal && !(val == refVal && SMALLER.equals(resultSign))) {
-						return true;
-					}
+					return (val >= refVal && !(val == refVal && SMALLER.equals(resultSign)));
 				} else {
-					if (val <= refVal && !(val == refVal && BIGGER.equals(resultSign))) {
-						return true;
-					}
+					return (val <= refVal && !(val == refVal && BIGGER.equals(resultSign)));
 				}
-			} else {
+			} else if (ref.contains("-")) {
 				String[] range = ref.split("\\s*-\\s*"); //$NON-NLS-1$
 				if (range.length == 2) {
 					double lower = Double.parseDouble(range[0]);
 					double upper = Double.parseDouble(range[1]);
 					double val = Double.parseDouble(result);
-					if ((val < lower) || (val > upper)) {
-						return true;
-					}
+					return ((val < lower) || (val > upper));
 				}
 			}
 		} catch (NumberFormatException nfe) {
 			// don't mind
 		}
-		return false;
+		// we can't test as we don't have a testing rule
+		return null;
 	}
 	
 	private static List<String> parseRefString(String ref){
@@ -436,8 +453,33 @@ public class LabResult extends PersistentObject implements ILabResult {
 		setInt(FLAGS, flags);
 	}
 	
+	/**
+	 * if 1 is pathologic<br>
+	 * if 0 non-pathologic or indetermined (see {@link #getPathologicDescription()}<br>
+	 * <code>flags</code> is indetermined for the following states:<br>
+	 * {@link Description#PATHO_NOREF}, {@link Description#UNKNOWN} and
+	 * {@link Description#PATHO_IMPORT_NO_INFO}
+	 */
 	public int getFlags(){
 		return checkZero(get(FLAGS));
+	}
+	
+	/**
+	 * Do we really know about the state of the pathologic flag, or is it set to non-pathologic
+	 * because we simply don't now or can't determine?
+	 * 
+	 * @param pathologicDescription
+	 *            if <code>null</code> will fetch via db call
+	 * @return <code>true</code> if don't know, or can't determine
+	 * @since 3.4
+	 */
+	public boolean isPathologicFlagIndetermined(PathologicDescription pathologicDescription){
+		if (pathologicDescription == null) {
+			pathologicDescription = getPathologicDescription();
+		}
+		Description desc = pathologicDescription.getDescription();
+		return (Description.PATHO_NOREF == desc || Description.UNKNOWN == desc
+			|| Description.PATHO_IMPORT_NO_INFO == desc);
 	}
 	
 	@Override

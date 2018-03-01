@@ -204,7 +204,7 @@ public class Patient extends Person {
 		List<Prescription> prescriptions = qbe.execute();
 		// make sure just now closed are not included
 		TimeTool now = new TimeTool();
-		now.add(TimeTool.SECOND, 5);
+		now.add(TimeTool.SECOND, 10);
 		
 		if (filterType != null && filterType.length > 0) {
 			EnumSet<EntryType> entryTypes = EnumSet.copyOf(Arrays.asList(filterType));

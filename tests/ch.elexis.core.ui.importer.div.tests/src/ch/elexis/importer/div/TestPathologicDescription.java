@@ -20,6 +20,7 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.importer.div.importers.HL7Parser;
 import ch.elexis.core.model.LabResultConstants;
+import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.PathologicDescription;
 import ch.elexis.core.types.PathologicDescription.Description;
 import ch.elexis.core.ui.importer.div.importers.TestHL7Parser;
@@ -134,14 +135,14 @@ public class TestPathologicDescription {
 				j++;
 			}
 		}
-		assertEquals(3, qrr.size());
+		assertEquals(2, qrr.size());
 		boolean foundpatho1 = false;
 		for (j = 0; j < qrr.size(); j++) {
-			if (qrr.get(j).getItem().getName().equalsIgnoreCase("Keimzahl")) {
+			if (qrr.get(j).getItem().getName().equalsIgnoreCase("URIN-VACUTAINER - Keimzahl")) {
 				assertFalse(qrr.get(j).isFlag(LabResultConstants.PATHOLOGIC));
 				PathologicDescription description = qrr.get(j).getPathologicDescription();
 				assertNotNull(description);
-				assertEquals(Description.PATHO_IMPORT, description.getDescription());
+				assertEquals(Description.PATHO_IMPORT_NO_INFO, description.getDescription());
 				assertEquals("", description.getReference());
 				foundpatho1 = true;
 			}
@@ -209,6 +210,45 @@ public class TestPathologicDescription {
 		assertTrue(foundpatho3);
 	}
 	
+	@Test
+	public void testAnalyticaStringResults_10786() throws IOException{
+		removeAllPatientsAndDependants();
+		removeAllLaboWerte();
+		
+		parseOneHL7file(new File(workDir.toString(), "Analytica/0116294364_6412642631625.hl7"),
+			false, true);
+		
+		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
+		List<LabResult> qrr = qr.execute();
+		assertEquals(7, qrr.size());
+		for (LabResult labResult : qrr) {
+			assertEquals(LabItemTyp.TEXT, labResult.getItem().getTyp());
+			PathologicDescription pathologicDescription = labResult.getPathologicDescription();
+			if (labResult.getItem().getLabel().contains("Borrelien (IgM)")) {
+				// OBX|500505|FT|BORRM^Borrelien (IgM)^^^BORRELIEN IGM||positiv||  negativ||||C||||||
+				assertEquals(Description.PATHO_NOREF, pathologicDescription.getDescription());
+				assertEquals("negativ", pathologicDescription.getReference());
+				assertEquals("positiv", labResult.getResult());
+				// it is pathologic, but we don't know - we can't interpret
+				assertEquals(0, labResult.getFlags());
+				assertTrue(labResult.isPathologicFlagIndetermined(pathologicDescription));
+				assertEquals("", labResult.getItem().getUnit());
+			} else if (labResult.getItem().getLabel().equalsIgnoreCase("TestStupidValues")) {
+				assertEquals(Description.PATHO_NOREF, pathologicDescription.getDescription());
+				assertEquals("hund", pathologicDescription.getReference());
+				assertEquals("katze", labResult.getResult());
+				assertEquals(0, labResult.getFlags());
+			}else if (labResult.getItem().getLabel().equalsIgnoreCase("TestImportHighFlag")) {
+				assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
+				assertEquals("bar", pathologicDescription.getReference());
+				assertEquals("foo", labResult.getResult());
+				assertEquals(1, labResult.getFlags());
+			}
+			
+		}
+		
+	}
+	
 	private void parseOneHL7file(File f, boolean deleteAll, boolean alsoFailing) throws IOException{
 		String name = f.getAbsolutePath();
 		if (f.canRead() && (name.toLowerCase().endsWith(".hl7"))) {
@@ -261,8 +301,10 @@ public class TestPathologicDescription {
 		}
 		qr = new Query<LabResult>(LabResult.class);
 		qrr = qr.execute();
+		assertEquals(0, qrr.size());
 		qrli = new Query<LabItem>(LabItem.class);
 		qLi = qrli.execute();
+		assertEquals(0, qLi.size());
 	}
 	
 	static private void removeAllPatientsAndDependants(){

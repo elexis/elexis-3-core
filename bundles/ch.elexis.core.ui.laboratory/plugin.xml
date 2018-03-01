@@ -11,7 +11,7 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            class="ch.elexis.core.ui.laboratory.preferences.LaborPrefs"
+            class="ch.elexis.core.ui.laboratory.preferences.LabSettings"
             id="ch.elexis.LaborPref"
             name="%elexis.labPrefs">
       </page>
@@ -23,9 +23,9 @@
       </page>
       <page
             category="ch.elexis.LaborPref"
-            class="ch.elexis.core.ui.laboratory.preferences.LabSettings"
-            id="ch.elexis.LaborNeuPrefs"
-            name="%page.name.3">
+            class="ch.elexis.core.ui.laboratory.preferences.LaborPrefs"
+            id="ch.elexis.LaborParameterPrefs"
+            name="%elexis.labParameterPrefs">
       </page>
    </extension>
 

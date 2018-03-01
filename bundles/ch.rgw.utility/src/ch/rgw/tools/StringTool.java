@@ -1031,13 +1031,36 @@ public class StringTool {
 	}
 	
 	/**
-	 * Return the first line if the given String but at most maxChars
+	 * Return the first line if the given String but at most maxChars. What is recognized as line is
+	 * defined by the default lineSeparators used to call {@link String#split(String)}
+	 * [\\n\\r\\.\\?!;].
+	 * 
+	 * @param in
+	 * @param maxChars
+	 * @return
 	 */
 	public static String getFirstLine(final String in, final int maxChars){
+		return getFirstLine(in, maxChars, lineSeparators);
+	}
+	
+	/**
+	 * Return the first line if the given String but at most maxChars. What is recognized as line
+	 * can be defined using the lineSeparators String that is used to call
+	 * {@link String#split(String)} (default is [\\n\\r\\.\\?!;]).
+	 * 
+	 * @param in
+	 * @param maxChars
+	 * @param separators
+	 * @return
+	 */
+	public static String getFirstLine(final String in, final int maxChars, String separators){
 		if (isNothing(in)) {
 			return "";
 		}
-		String[] lines = in.split(lineSeparators);
+		if (separators == null) {
+			separators = lineSeparators;
+		}
+		String[] lines = in.split(separators);
 		if (lines[0].length() > maxChars) {
 			int ix = lines[0].lastIndexOf(' ', maxChars);
 			return lines[0].substring(0, ix);

@@ -282,7 +282,7 @@ public class HL7ReaderV22 extends HL7Reader {
 		String range = "";
 		String observationTime = "";
 		String status = "";
-		boolean flag = false;
+		Boolean flag;
 		
 		if (isTextOrNumeric(valueType)) {
 			name = obx.getObx3_ObservationIdentifier().getCe2_Text().getValue();
