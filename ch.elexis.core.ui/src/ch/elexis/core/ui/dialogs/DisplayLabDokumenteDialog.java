@@ -134,7 +134,7 @@ public class DisplayLabDokumenteDialog extends TitleAreaDialog {
 					String fileExtension = null; 
 					try {
 						MimeType docMimeType = new MimeType(document.getMimeType());
-						fileExtension = MimeTool.getExtension(docMimeType.getPrimaryType());
+						fileExtension = MimeTool.getExtension(docMimeType.toString());
 					}
 					catch(MimeTypeParseException mpe) {
 						fileExtension = FileTool.getExtension(document.getMimeType());
