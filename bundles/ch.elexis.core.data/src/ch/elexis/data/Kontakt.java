@@ -73,14 +73,6 @@ public class Kontakt extends PersistentObject {
 		FLD_NAME1, FLD_NAME2, FLD_STREET, FLD_PLACE
 	};
 	
-	public static final String DOMAIN_KONTAKT = XidConstants.DOMAIN_ELEXIS + "/kontakt/";
-	public static final String XID_KONTAKT_ANREDE = DOMAIN_KONTAKT + "anrede";
-	public static final String XID_KONTAKT_KANTON = DOMAIN_KONTAKT + "kanton";
-	public static final String XID_KONTAKT_SPEZ = DOMAIN_KONTAKT + "spez";
-	public static final String XID_KONTAKT_ROLLE = DOMAIN_KONTAKT + "rolle";
-	public static final String XID_KONTAKT_LAB_SENDING_FACILITY = DOMAIN_KONTAKT
-		+ "lab/sendingfacility";
-	
 	volatile String Bezug;
 	
 	protected String getTableName(){
@@ -100,18 +92,18 @@ public class Kontakt extends PersistentObject {
 			FLD_IS_LAB, FLD_STREET, FLD_ZIP, FLD_PLACE, FLD_COUNTRY, FLD_FAX, FLD_ANSCHRIFT,
 			FLD_MOBILEPHONE);
 		
-		Xid.localRegisterXIDDomainIfNotExists(XID_KONTAKT_ANREDE, "Anrede", Xid.ASSIGNMENT_REGIONAL);
-		Xid.localRegisterXIDDomainIfNotExists(XID_KONTAKT_KANTON, "Kanton", Xid.ASSIGNMENT_REGIONAL);
-		Xid.localRegisterXIDDomainIfNotExists(XID_KONTAKT_SPEZ, "Spezialität",
+		Xid.localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_ANREDE, "Anrede", Xid.ASSIGNMENT_REGIONAL);
+		Xid.localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_KANTON, "Kanton", Xid.ASSIGNMENT_REGIONAL);
+		Xid.localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_SPEZ, "Spezialität",
 			Xid.ASSIGNMENT_REGIONAL);
-		Xid.localRegisterXIDDomainIfNotExists(XID_KONTAKT_ROLLE, "Rolle", Xid.ASSIGNMENT_REGIONAL);
-		Xid.localRegisterXIDDomainIfNotExists(XID_KONTAKT_LAB_SENDING_FACILITY,
+		Xid.localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_ROLLE, "Rolle", Xid.ASSIGNMENT_REGIONAL);
+		Xid.localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY,
 			"Sendende Institution", Xid.ASSIGNMENT_REGIONAL);
 		
-		Xid.getDomain(XID_KONTAKT_ANREDE).addDisplayOption(Person.class);
-		Xid.getDomain(XID_KONTAKT_KANTON).addDisplayOption(Person.class);
-		Xid.getDomain(XID_KONTAKT_SPEZ).addDisplayOption(Person.class);
-		Xid.getDomain(XID_KONTAKT_LAB_SENDING_FACILITY).addDisplayOption(Labor.class);
+		Xid.getDomain(XidConstants.XID_KONTAKT_ANREDE).addDisplayOption(Person.class);
+		Xid.getDomain(XidConstants.XID_KONTAKT_KANTON).addDisplayOption(Person.class);
+		Xid.getDomain(XidConstants.XID_KONTAKT_SPEZ).addDisplayOption(Person.class);
+		Xid.getDomain(XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY).addDisplayOption(Labor.class);
 	}
 	
 	/**

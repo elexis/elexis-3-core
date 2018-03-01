@@ -36,6 +36,7 @@ public class Messages {
 	public static String LaborView_nextPage = ch.elexis.core.l10n.Messages.LaborView_nextPage;
 	public static String LaborView_parameter = ch.elexis.core.l10n.Messages.LaborView_parameter;
 	public static String LaborView_pathologic = ch.elexis.core.l10n.Messages.LaborView_pathologic;
+	public static String LaborView_nonPathologic = ch.elexis.core.l10n.Messages.LaborView_nonPathologic;
 	public static String LaborView_prevPage = ch.elexis.core.l10n.Messages.LaborView_prevPage;
 	public static String LaborView_print = ch.elexis.core.l10n.Messages.LaborView_print;
 	public static String LaborView_printOrders = ch.elexis.core.l10n.Messages.LaborView_printOrders;

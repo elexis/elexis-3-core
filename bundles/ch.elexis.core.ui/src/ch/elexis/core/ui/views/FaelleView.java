@@ -63,10 +63,12 @@ public class FaelleView extends ViewPart implements IActivationListener {
 	private final ElexisUiEventListenerImpl eeli_pat =
 		new ElexisUiEventListenerImpl(Patient.class) {
 			public void runInUi(ElexisEvent ev){
-				tv.refresh();
-				Fall currentFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
-				if (currentFall != null)
-					tv.setSelection(new StructuredSelection(currentFall));
+				if (tv != null && tv.getControl() != null && !tv.getControl().isDisposed()) {
+					tv.refresh();
+					Fall currentFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
+					if (currentFall != null)
+						tv.setSelection(new StructuredSelection(currentFall));
+				}
 			}
 		};
 	
@@ -75,13 +77,15 @@ public class FaelleView extends ViewPart implements IActivationListener {
 			| ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_UPDATE) {
 		
 		public void runInUi(final ElexisEvent ev){
-			if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
-				tv.refresh(true);
-				if (konsFilterAction.isChecked()) {
-					filter.setFall((Fall) ev.getObject());
+			if (tv != null && tv.getControl() != null && !tv.getControl().isDisposed()) {
+				if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
+					tv.refresh(true);
+					if (konsFilterAction.isChecked()) {
+						filter.setFall((Fall) ev.getObject());
+					}
+				} else {
+					tv.refresh(true);
 				}
-			} else {
-				tv.refresh(true);
 			}
 		}
 	};

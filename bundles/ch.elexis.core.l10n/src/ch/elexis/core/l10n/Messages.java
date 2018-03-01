@@ -746,7 +746,9 @@ public class Messages extends NLS {
 	public static String LabSettings_useLocalLabRefValues;
 	public static String LabSettings_validateMappings;
 	public static String LabSettings_validateMappingsResult;
-	
+	public static String LabSettings_enableUseLocalLabRefValues_title;
+	public static String LabSettings_enableUseLocalLabRefValues_text;
+
 	public static String LagerverwaltungPrefs_markOrdered;
 	public static String Leistungscodes_optifyXrayPositions;
 	
@@ -1199,6 +1201,9 @@ public class Messages extends NLS {
 	public static String ReminderView_foreignAction;
 	public static String ReminderView_foreignTooltip;
 	public static String ReminderView_importantRemindersCaption;
+	public static String ReminderView_sortByDueDate;
+	public static String ReminderView_sortByDueDateAscending;
+	public static String ReminderView_sortByDueDateDescending;	
 	public static String ArtikelContextMenu_create;
 	public static String ArtikelContextMenu_deleteAction;
 	public static String ArtikelContextMenu_deleteActionConfirmCaption;
@@ -1661,7 +1666,9 @@ public class Messages extends NLS {
 	public static String AccessControlDefaults_terminate;
 	public static String AccessControlDefaults_user;
 	public static String AccessControlDefaults_viewAll;
-	public static String AccessControl_GroupAll;
+	public static String AccessControlDefaults_GroupAdminLaboratory;
+    public static String AccessControlDefaults_EditLaboratoryParameter;
+    public static String AccessControl_GroupAll;
 	public static String AnwenderPref_12;
 	public static String AnwenderPref_fuerMandant;
 	public static String AnwenderPref_gruppe;
@@ -2186,6 +2193,7 @@ public class Messages extends NLS {
 	public static String LaborView_nextPage;
 	public static String LaborView_parameter;
 	public static String LaborView_pathologic;
+	public static String LaborView_nonPathologic;
 	public static String LaborView_prevPage;
 	public static String LaborView_print;
 	public static String LaborView_printOrders;
@@ -2515,7 +2523,9 @@ public class Messages extends NLS {
 	public static String TimeTool_yearToFormat;
 	public static String TimeTool_yearsAgoFormat;
 	public static String TimeTool_yearsToFormat;
-	public static String TogglePathologic_title;
+	public static String LabResultDeleteAction_title;
+	public static String SetPathologic;
+	public static String SetNonPathologic;
 	public static String TreeContentProvider_loadData;
 	public static String UserCasePreferences_Cases;
 	public static String UserCasePreferences_DefaultBillingSystem;

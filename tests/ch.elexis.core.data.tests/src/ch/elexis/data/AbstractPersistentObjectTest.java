@@ -38,7 +38,8 @@ public class AbstractPersistentObjectTest {
 		User existingUser = User.load(testUserName);
 		if (!existingUser.exists()) {
 			new Anwender(testUserName, PASSWORD);
-		} 
+			new Mandant("ut_mandator_" + link.DBFlavor, PASSWORD);
+		}
 		
 		boolean succ = Anwender.login(testUserName, PASSWORD);
 		assertTrue(succ);

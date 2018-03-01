@@ -102,24 +102,26 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 	private final ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 		
 		public void runInUi(ElexisEvent ev){
-			if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
-				Patient newPatient = (Patient) ev.getObject();
-				if ((actPatient == null) || (!actPatient.equals(newPatient))) {
-					actPatient = newPatient;
-					
-					ElexisEventDispatcher.getInstance().fire(
-						new ElexisEvent(null, Rezept.class, ElexisEvent.EVENT_DESELECTED));
-					
-					addLineAction.setEnabled(false);
-					printAction.setEnabled(false);
-					tv.refresh(true);
+			if (tv != null && tv.getControl() != null && !tv.getControl().isDisposed()) {
+				if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
+					Patient newPatient = (Patient) ev.getObject();
+					if ((actPatient == null) || (!actPatient.equals(newPatient))) {
+						actPatient = newPatient;
+						
+						ElexisEventDispatcher.getInstance().fire(
+							new ElexisEvent(null, Rezept.class, ElexisEvent.EVENT_DESELECTED));
+						
+						addLineAction.setEnabled(false);
+						printAction.setEnabled(false);
+						tv.refresh(true);
+						refresh();
+						master.setText(actPatient.getLabel());
+					}
+				} else if (ev.getType() == ElexisEvent.EVENT_DESELECTED) {
+					actPatient = null;
+					ElexisEventDispatcher.clearSelection(Rezept.class);
 					refresh();
-					master.setText(actPatient.getLabel());
 				}
-			} else if (ev.getType() == ElexisEvent.EVENT_DESELECTED) {
-				actPatient = null;
-				ElexisEventDispatcher.clearSelection(Rezept.class);
-				refresh();
 			}
 		}
 	};
@@ -128,14 +130,15 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 		ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_UPDATE) {
 		
 		public void runInUi(ElexisEvent ev){
-			if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
-				actPatient = ((Rezept) ev.getObject()).getPatient();
-				refresh();
-			} else if (ev.getType() == ElexisEvent.EVENT_UPDATE) {
-				actPatient = ((Rezept) ev.getObject()).getPatient();
-				tv.refresh(true);
+			if (tv != null && tv.getControl() != null && !tv.getControl().isDisposed()) {
+				if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
+					actPatient = ((Rezept) ev.getObject()).getPatient();
+					refresh();
+				} else if (ev.getType() == ElexisEvent.EVENT_UPDATE) {
+					actPatient = ((Rezept) ev.getObject()).getPatient();
+					tv.refresh(true);
+				}
 			}
-			
 		}
 	};
 	

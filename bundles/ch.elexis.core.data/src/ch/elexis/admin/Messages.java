@@ -85,4 +85,6 @@ public class Messages {
 	public static String AccessControlDefaults_viewAll = ch.elexis.core.l10n.Messages.AccessControlDefaults_viewAll;
 	public static String ACE_implicit = ch.elexis.core.l10n.Messages.ACE_implicit;
 	public static String ACE_root = ch.elexis.core.l10n.Messages.ACE_root;
+	public static String AccessControlDefaults_GroupAdminLaboratory = ch.elexis.core.l10n.Messages.AccessControlDefaults_GroupAdminLaboratory;
+	public static String AccessControlDefaults_EditLaboratoryParameter = ch.elexis.core.l10n.Messages.AccessControlDefaults_EditLaboratoryParameter;
 }

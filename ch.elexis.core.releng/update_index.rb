@@ -17,23 +17,11 @@ end
 
 root_dir = Dir.pwd
 v5_files = {}
-v4_files = {}
-p_files = {}
-n_files = {}
 
-Versions =  { # 'v1' => 'Für Versuche mit Elexis 2.1.7',
-              'v2' => '(nicht mehr unterstütz) Elexis 3.0',
-              'v3' => '(nicht mehr unterstütz) Elexis 3.1',
-              'v5' => '(v3 und v5) Dateien direkt aus oddb2xml generiert',
+Versions =  { 'v5' => 'v5 Dateien direkt aus oddb2xml generiert',
               }
 Versions.keys.each do |version|
-  v4_files[version] = Dir.glob(root_dir+"/#{version}/*/artikelstamm_??????.xml")
   v5_files[version] = Dir.glob(root_dir+"/#{version}/*/artikelstamm_*_v5.xml")
-  p_files[version] = Dir.glob(root_dir+"/#{version}/*/artikelstamm_P_*.xml")
-  n_files[version] = Dir.glob(root_dir+"/#{version}/*/artikelstamm_N_*.xml")
-  p_files[version].sort!{ |x,y| File.basename(y) <=> File.basename(x) }
-  n_files[version].sort!{ |x,y| File.basename(y) <=> File.basename(x) }
-  v4_files[version].sort!{ |x,y| File.basename(y) <=> File.basename(x) }
   v5_files[version].sort!{ |x,y| File.basename(y) <=> File.basename(x) }
 end
 
@@ -64,7 +52,7 @@ Besten Dank an unsere Sponsoren,
 </ul>
 welche uns ermöglichen, jeden Monat die aktuellsten Medikamentedaten zu beziehen!
 <br>
-<p> Seit Ende 2017 werden die Dateien direkt mit Hilfe <A HREF="https://github.com/ngiger/oddb2xml/blob/artikelstamm_v5/README.md">oddb2ml</A> erstellt. Alle Ursprungsdateien sind öffentlich zugänglich und der gesamte Quellcode untersteht der GPL-v3.0 oder später.
+<p> Seit Ende 2017 werden die Dateien direkt mit Hilfe <A HREF="https://github.com/ngiger/oddb2xml/blob/artikelstamm_v5/README.md">oddb2ml</A> erstellt. Alle Ursprungsdateien sind öffentlich zugänglich und der gesamte Quellcode untersteht der GPL-v3.0 oder später. Unter  <A HREF="https://github.com/ngiger/oddb2xml/blob/artikelstamm_v5/artikelstamm.md">artikelstamm readme</A> finden Sie weiter Angaben zum gebrauchten Ruby-Quellcode.
 <p>
 OpenSource Anwender mit Elexis 3.1 oder höher müssen jeweils die richtige Version 3 des Artikelsstamm aus den unten angebenen Link herunterladen und importieren.
 </p>
@@ -74,9 +62,7 @@ Um die grossen (>10MB) Dateien runterzuladen, lohnt es sich, den Link nicht zu �
 footer = %(
 </ul>
 <p>
-Die Artikelstamm Versionen 4 (für Elexis 3.4 Versionen) wurden nur für einige wenige Praxen verwendet.
-Die Artikelstamm Versionen 2 (für frühe Elexis 3.0 Versionen) und 1 (für Test-Versionen basieren auf Elexis 2.1.7) werden nicht mehr mit aktuellen Daten beliefert.
-</p>
+Da wegen dem neuen Tarmed alle uns bekannten Anwender von Elexis auf Version 3.4 umsteigen mussten, werden keine Daten für frühere Elexis-Versionen mehr erzeugt.
 </HTML>
 )
 ausgabe=File.open(OUTPUTFILE, 'w+')
@@ -97,16 +83,8 @@ end
 Versions.sort.reverse.each do |version, explanation|
 
   ausgabe.puts "<li><b><a href=\"#{version}\"> #{version}</a>: Zu verwenden mit #{explanation}</b><ul>"
-  if p_files[version]
-    newest =  p_files[version].first.sub('_v5', '_v3')
-    emit_line_item(ausgabe, version, 'n', newest, 'Nur Pharma Artikel') if newest
-  end
-  if n_files[version]
-    newest =  n_files[version].first.sub('_v5', '_v3')
-    emit_line_item(ausgabe, version, 'p', newest, 'Nur Non-Pharma Artikel') if newest
-  end
   if v5_files[version]
-    newest =  v5_files[version].first
+    newest =  v5_files[version].sort.reverse.first
     emit_line_item(ausgabe, version, 'all', newest, 'Vereinheitlichter Artikelstamm') if newest
   end
   ausgabe.puts '</ul></li>'

@@ -20,7 +20,7 @@ public class LaborResultDeleteAction extends Action implements IAction {
 	private List<LabResult> results;
 	
 	public LaborResultDeleteAction(List<LabResult> currentSelection, StructuredViewer viewer){
-		super("entfernen");
+		super(Messages.LabResultDeleteAction_title);
 		if (!currentSelection.isEmpty()) {
 			Object firstObject = currentSelection.get(0);
 			if (firstObject instanceof LabResult) {

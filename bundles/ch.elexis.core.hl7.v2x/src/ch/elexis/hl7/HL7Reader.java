@@ -77,7 +77,7 @@ public abstract class HL7Reader {
 		}
 	}
 	
-	public boolean isPathologic(String abnormalValue){
+	public Boolean isPathologic(String abnormalValue){
 		if (!StringTool.isNothing(abnormalValue)) {
 			for (String startChar : abnormalFlagStartCharacters) {
 				if (abnormalValue.startsWith(startChar)) {
@@ -85,7 +85,7 @@ public abstract class HL7Reader {
 				}
 			}
 		}
-		return false;
+		return null;
 	}
 	
 	public IPatient getPatient(){

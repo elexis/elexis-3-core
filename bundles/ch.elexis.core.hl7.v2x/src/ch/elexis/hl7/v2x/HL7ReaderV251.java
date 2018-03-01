@@ -373,7 +373,7 @@ public class HL7ReaderV251 extends HL7Reader {
 		String range = "";
 		String observationTime = obx.getObx14_DateTimeOfTheObservation().getTs1_Time().getValue();
 		String status = "";
-		boolean flag = false;
+		Boolean flag;
 		
 		if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_ED)) {
 			String observationId =

@@ -300,19 +300,22 @@ public class BlockSelector extends CodeSelectorFactory {
 				@Override
 				public void run(){
 					StructuredViewer viewer = cv.getViewerWidget();
-					viewer.setSelection(new StructuredSelection());
-					viewer.getControl().setRedraw(false);
-					viewer.refresh();
-					if ((queryFilter != null && queryFilter.length() > 2)) {
-						if (!selector.searchBlocksOnly.isChecked()) {
-							if (viewer instanceof TreeViewer) {
-								((TreeViewer) viewer).expandAll();
+					if (viewer != null && viewer.getControl() != null
+						&& !viewer.getControl().isDisposed()) {
+						viewer.setSelection(new StructuredSelection());
+						viewer.getControl().setRedraw(false);
+						viewer.refresh();
+						if ((queryFilter != null && queryFilter.length() > 2)) {
+							if (!selector.searchBlocksOnly.isChecked()) {
+								if (viewer instanceof TreeViewer) {
+									((TreeViewer) viewer).expandAll();
+								}
 							}
+						} else {
+							((TreeViewer) viewer).collapseAll();
 						}
-					} else {
-						((TreeViewer) viewer).collapseAll();
+						viewer.getControl().setRedraw(true);
 					}
-					viewer.getControl().setRedraw(true);
 				}
 			});
 		}

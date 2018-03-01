@@ -9,14 +9,16 @@ import ch.elexis.core.model.LabResultConstants;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.PathologicDescription;
 import ch.elexis.core.types.PathologicDescription.Description;
+import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
+import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.data.LabResult;
 
-public class TogglePathologicAction extends Action {
+public class LaborResultSetPathologicAction extends Action {
 	private List<LabResult> results;
 	private StructuredViewer viewer;
 	
-	public TogglePathologicAction(List<LabResult> results, StructuredViewer viewer){
-		super(Messages.TogglePathologic_title, Action.AS_CHECK_BOX); //$NON-NLS-1$
+	public LaborResultSetPathologicAction(List<LabResult> results, StructuredViewer viewer){
+		super(Messages.SetPathologic);
 		this.results = results;
 		this.viewer = viewer;
 	}
@@ -24,8 +26,18 @@ public class TogglePathologicAction extends Action {
 	@Override
 	public void run(){
 		for (LabResult result : results) {
-			result.setFlag(LabResultConstants.PATHOLOGIC, !isChecked());
-			result.setPathologicDescription(new PathologicDescription(Description.PATHO_MANUAL));
+			AcquireLockBlockingUi.aquireAndRun(result, new ILockHandler() {
+				@Override
+				public void lockFailed(){
+					// do nothing
+				}
+				
+				@Override
+				public void lockAcquired(){
+					result.setFlag(LabResultConstants.PATHOLOGIC, true);
+					result.setPathologicDescription(new PathologicDescription(Description.PATHO_MANUAL));
+				}
+			});
 		}
 		viewer.refresh();
 	}

@@ -52,7 +52,9 @@ public class AccessControlDefaults {
 	public static final ACE ACCOUNTING_BILLMODIFY =
 		new ACE(ACCOUNTING_GLOBAL, "modifyBills", Messages.AccessControlDefaults_modifyBills); //$NON-NLS-1$
 		
-	public final static ACE LABITEM_MERGE = new ACE(ADMIN, "Laborparamter vereinen", //$NON-NLS-1$
+	public final static ACE ADMIN_LABORATORY = new ACE(ADMIN, "laboratory", Messages.AccessControlDefaults_GroupAdminLaboratory);
+	public final static ACE LABPARAM_EDIT = new ACE(ADMIN_LABORATORY, "edit_laboratory_parameter", Messages.AccessControlDefaults_EditLaboratoryParameter);
+	public final static ACE LABITEM_MERGE = new ACE(ADMIN_LABORATORY, "unite_laboratory_parameter", //$NON-NLS-1$
 		Messages.AccessControlDefaults_mergeLabItems);
 		
 	public static final ACE ACE_ACCESS =

@@ -456,6 +456,9 @@ public class Messages {
 	public static String ReminderView_onlyDueToolTip = ch.elexis.core.l10n.Messages.ReminderView_onlyDueToolTip;
 	public static String ReminderView_onePatOnly = ch.elexis.core.l10n.Messages.ReminderView_onePatOnly;
 	public static String ReminderView_onlyOnePatientForActivation = ch.elexis.core.l10n.Messages.ReminderView_onlyOnePatientForActivation;
+	public static String ReminderView_sortByDueDate = ch.elexis.core.l10n.Messages.ReminderView_sortByDueDate;
+	public static String ReminderView_sortByDueDateAscending = ch.elexis.core.l10n.Messages.ReminderView_sortByDueDateAscending;
+	public static String ReminderView_sortByDueDateDescending = ch.elexis.core.l10n.Messages.ReminderView_sortByDueDateDescending;
 	public static String RezeptBlatt_4 = ch.elexis.core.l10n.Messages.RezeptBlatt_4;
 	public static String RezeptBlatt_6 = ch.elexis.core.l10n.Messages.RezeptBlatt_6;
 	public static String RezeptBlatt_TemplateNameList = ch.elexis.core.l10n.Messages.RezeptBlatt_TemplateNameList;

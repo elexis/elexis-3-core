@@ -73,6 +73,8 @@ public class Messages {
 	public static String LabGroupPrefs_remove = ch.elexis.core.l10n.Messages.LabGroupPrefs_remove;
 	public static String LabGroupPrefs_selectLabItems = ch.elexis.core.l10n.Messages.LabGroupPrefs_selectLabItems;
 	public static String LabGroupPrefs_selectNameForLabGroup = ch.elexis.core.l10n.Messages.LabGroupPrefs_selectNameForLabGroup;
+	public static String LabSettings_enableUseLocalLabRefValues_title = ch.elexis.core.l10n.Messages.LabSettings_enableUseLocalLabRefValues_title;
+	public static String LabSettings_enableUseLocalLabRefValues_text = ch.elexis.core.l10n.Messages.LabSettings_enableUseLocalLabRefValues_text;
 	public static String LabSettings_frequencyNewLabvalues = ch.elexis.core.l10n.Messages.LabSettings_frequencyNewLabvalues;
 	public static String LabSettings_medium = ch.elexis.core.l10n.Messages.LabSettings_medium;
 	public static String LabSettings_normal = ch.elexis.core.l10n.Messages.LabSettings_normal;

@@ -38,7 +38,11 @@ public class StartupHandler implements EventHandler {
 		}
 	}
 	
-	public void registerNotifications(){
+	/**
+	 * Register event listeners for various statistics. Including shutdown listener, exporting
+	 * statistics to writable user directory statistics.
+	 */
+	private void registerNotifications(){
 		//Command.DEBUG_COMMAND_EXECUTION = true; can be activated if logging for command execution is needed
 		IEventBroker b = PlatformUI.getWorkbench().getService(IEventBroker.class);
 		b.subscribe(UIEvents.UILifeCycle.BRINGTOTOP, new EventHandler() {
