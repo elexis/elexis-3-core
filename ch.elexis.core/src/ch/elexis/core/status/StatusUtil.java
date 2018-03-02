@@ -4,10 +4,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.slf4j.Logger;
+
+import ch.elexis.core.jdt.NonNull;
 
 // TODO refactor ...
 public class StatusUtil {
@@ -31,6 +34,16 @@ public class StatusUtil {
 		print(out, "", status);
 	}
 
+	public static String printStatus(IStatus status) {
+		try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			PrintStream ps = new PrintStream(baos);
+			printStatus(ps, status);
+			return baos.toString(Charset.defaultCharset().toString());
+		} catch (IOException e) {
+			return e.getMessage();
+		}
+	}
+
 	private static void print(PrintStream printStream, String indent, IStatus status) {
 		if (status.isMultiStatus()) {
 			printStream.print(indent + status.getMessage());
@@ -46,29 +59,30 @@ public class StatusUtil {
 		}
 	}
 
+	/**
+	 * Create a Status.ERROR telling the user to search the logfile for explanation.
+	 * 
+	 * @param pluginId
+	 * @return
+	 */
 	public static IStatus errorSeeLog(String pluginId) {
 		return new Status(Status.ERROR, pluginId, "Execution error, see log.");
 	}
 
-	public static String printStatus(IStatus status) {
-		try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-			PrintStream ps = new PrintStream(baos);
-			printStatus(ps, status);
-			return baos.toString(Charset.defaultCharset().toString());
-		} catch (IOException e) {
-			return e.getMessage();
-		}
-	}
-
-	public static void logStatus(Logger log, IStatus status, boolean includeExceptionIfAvailable) {
-
-		String message;
-		if (status.isMultiStatus()) {
-			message = status.getMessage();
-		} else {
-			message = status.getMessage();
+	/**
+	 * Log a status to the corresponding log-level; does nothing if
+	 * {@link Status#isOK()}
+	 * 
+	 * @param log
+	 * @param status
+	 * @param includeExceptionIfAvailable
+	 */
+	public static void logStatus(@NonNull Logger log, @NonNull IStatus status, boolean includeExceptionIfAvailable) {
+		if (status.isOK()) {
+			return;
 		}
 
+		String message = (status.isMultiStatus()) ? "[MULTISTATUS] " + status.getMessage() : status.getMessage();
 		boolean includeException = (includeExceptionIfAvailable && status.getException() != null);
 
 		int severity = status.getSeverity();
@@ -95,16 +109,23 @@ public class StatusUtil {
 				log.info(message);
 			}
 			break;
-		case Status.OK:
-			if (includeException) {
-				log.debug(message, status.getException());
-			} else {
-				log.debug(message);
-			}
-			break;
 		default:
 			break;
 		}
+
+		if (status.isMultiStatus()) {
+			Arrays.asList(status.getChildren()).stream().forEach(c -> logStatus(log, c, true));
+		}
+	}
+
+	/**
+	 * convenience method
+	 * 
+	 * @param log
+	 * @param status
+	 */
+	public static void logStatus(Logger log, IStatus status) {
+		logStatus(log, status, true);
 	}
 
 }

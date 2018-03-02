@@ -57,6 +57,16 @@ public class ObjectStatus extends Status {
 	 * @param object
 	 * @return
 	 */
+	public static ObjectStatus WARNING_STATUS(Object object){
+		return new ObjectStatus(WARNING, unknownId, WARNING, "warn", null, object);
+	}
+	
+	/**
+	 * Default status without pluginId and default message
+	 * 
+	 * @param object
+	 * @return
+	 */
 	public static ObjectStatus CANCEL_STATUS(Object object){
 		return new ObjectStatus(CANCEL, unknownId, CANCEL, "cancel", null, object);
 	}
