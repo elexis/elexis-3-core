@@ -686,7 +686,7 @@ public class TimeTool extends GregorianCalendar {
 	
 	/**
 	 * Test if this isBeforeOrEqual o. <br />
-	 * <b>ATTENTION</b> resolution is used on millis comparison. See
+	 * <b>WARNING</b> resolution is used on millis comparison. See
 	 * {@link TimeTool#setResolution(long)}.
 	 * 
 	 * @param o
@@ -697,8 +697,19 @@ public class TimeTool extends GregorianCalendar {
 	}
 	
 	/**
+	 * Test if this isBeforeOrEqual o using the specified resolution.
+	 * 
+	 * @param o
+	 * @param res
+	 * @return
+	 */
+	public boolean isBeforeOrEqual(final TimeTool o, int res){
+		return (diff(o, res) <= 0) ? true : false;
+	}
+	
+	/**
 	 * Test if this isBeforeOrEqual o. <br />
-	 * <b>ATTENTION</b> resolution is used on millis comparison. See
+	 * <b>WARNING</b> resolution is used on millis comparison. See
 	 * {@link TimeTool#setResolution(long)}.
 	 * 
 	 * @param o
@@ -709,8 +720,19 @@ public class TimeTool extends GregorianCalendar {
 	}
 	
 	/**
+	 * Test if this isBeforeOrEqual o using the specified resolution.
+	 * 
+	 * @param o
+	 * @param res
+	 * @return
+	 */
+	public boolean isBefore(final TimeTool o, int res){
+		return (diff(o, res) < 0) ? true : false;
+	}
+	
+	/**
 	 * Test if this isAfterOrEqual o. <br />
-	 * <b>ATTENTION</b> resolution is used on millis comparison. See
+	 * <b>WARNING</b> resolution is used on millis comparison. See
 	 * {@link TimeTool#setResolution(long)}.
 	 * 
 	 * @param o
@@ -721,8 +743,19 @@ public class TimeTool extends GregorianCalendar {
 	}
 	
 	/**
+	 * Test if this isAfterOrEqual o using the specified resolution.
+	 * 
+	 * @param o
+	 * @param res
+	 * @return
+	 */
+	public boolean isAfterOrEqual(final TimeTool o, int res){
+		return (diff(o, res) >= 0) ? true : false;
+	}
+	
+	/**
 	 * Test if this isAfter o. <br />
-	 * <b>ATTENTION</b> resolution is used on millis comparison. See
+	 * <b>WARNING</b> resolution is used on millis comparison. See
 	 * {@link TimeTool#setResolution(long)}.
 	 * 
 	 * @param o
@@ -733,8 +766,19 @@ public class TimeTool extends GregorianCalendar {
 	}
 	
 	/**
+	 * Test if this isAfter o using the specified resolution.
+	 * 
+	 * @param o
+	 * @param res
+	 * @return
+	 */
+	public boolean isAfter(final TimeTool o, int res){
+		return (diff(o, res) > 0) ? true : false;
+	}
+	
+	/**
 	 * Test if this isEqual o. <br />
-	 * <b>ATTENTION</b> resolution is used on millis comparison. See
+	 * <b>WARNING</b> resolution is used on millis comparison. See
 	 * {@link TimeTool#setResolution(long)}.
 	 * 
 	 * @param o
@@ -742,6 +786,17 @@ public class TimeTool extends GregorianCalendar {
 	 */
 	public boolean isEqual(final TimeTool o){
 		return (diff(o, resolution) == 0);
+	}
+	
+	/**
+	 * Test if this isEqual o using the specified resolution.
+	 * 
+	 * @param o
+	 * @param res
+	 * @return
+	 */
+	public boolean isEqual(final TimeTool o, int res){
+		return (diff(o, res) == 0);
 	}
 	
 	/**
