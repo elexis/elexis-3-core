@@ -135,7 +135,7 @@ public class TestPathologicDescription {
 				j++;
 			}
 		}
-		assertEquals(2, qrr.size());
+		assertEquals(3, qrr.size());
 		boolean foundpatho1 = false;
 		for (j = 0; j < qrr.size(); j++) {
 			if (qrr.get(j).getItem().getName().equalsIgnoreCase("URIN-VACUTAINER - Keimzahl")) {

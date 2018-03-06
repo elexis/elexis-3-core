@@ -97,13 +97,6 @@ public class HL7ReaderV25 extends HL7Reader {
 				for (int i = 0; i < observationGroupCount; i++) {
 					ORU_R01_OBSERVATION observationGroup = orderObservationGroup.getOBSERVATION(i);
 					
-					OBX obx = observationGroup.getOBX();
-					if ("MAT"
-						.equals(obx.getObservationIdentifier().getCe1_Identifier().toString())) {
-						// we skip the material entry
-						continue;
-					}
-					
 					// get notes and comments
 					String commentNTE = getComments(orderObservationGroup, i);
 					
