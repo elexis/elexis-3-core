@@ -53,7 +53,7 @@ public abstract class HL7Reader {
 	}
 	
 	private String[] abnormalFlagStartCharacters = {
-		"-", "+", "<", ">", "L", "H"
+		"-", "+", "<", ">", "L", "H", "A"
 	};
 	
 	protected void resolvePatient(String firstName, String lastName, String birthDate){
