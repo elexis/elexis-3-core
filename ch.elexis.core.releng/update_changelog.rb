@@ -206,7 +206,7 @@ end
 
 def emit_mediawiki_changelog(all_commits, file)
   mediawiki = File.open(file, 'w+')
-  mediawiki.puts "= Changelog für Elexis 3.4 ab 3.4.0 ="
+  mediawiki.puts "= Changelog für Elexis 3.5 ab 3.5.0 ="
   mediawiki.puts ""
   mediawiki.puts "Die Zahlen in Klammern beziehen sich auf das nicht öffentlich zugängliche Ticket-System der Firma Medelexis AG"
   mediawiki.puts ""
