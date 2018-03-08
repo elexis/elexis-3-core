@@ -1,4 +1,4 @@
-target "Neon for Elexis 3.3" with source allEnvironments
+target "Neon for Elexis 3.5" with source allEnvironments
 
 location "http://download.eclipse.org/e4/snapshots/org.eclipse.e4.tools/latest/" {
 	org.eclipse.e4.tools.spies.feature.feature.group
