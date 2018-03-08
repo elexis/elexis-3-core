@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Elexis OpenSource" uid="ch.elexis.core.application.ElexisApp" id="ch.elexis.core.application.product" application="ch.elexis.core.application.ElexisApp" version="3.3.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="Elexis OpenSource" uid="ch.elexis.core.application.ElexisApp" id="ch.elexis.core.application.product" application="ch.elexis.core.application.ElexisApp" version="3.6.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="rsc/elexislogo2.png"/>
       <text>
-         Elexis 3.3 - www.elexis.info
+         Elexis 3.6 - www.elexis.info
       </text>
    </aboutInfo>
 
