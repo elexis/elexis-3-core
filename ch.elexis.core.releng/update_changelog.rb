@@ -192,7 +192,7 @@ def read_issue(id = 5760)
   issue.subject = issue.subject[0..79] if issue.subject
   puts "Fetched ticket #{id} #{issue.status}" if $VERBOSE
   @nr_loaded += 1
-  $stdout.write "\n (re-)loaded #{@nr_loaded} tickets." if @nr_loaded % 100 == 0
+  $stdout.write "\n (re-)loaded #{@nr_loaded}/#{@ticket_cache.size} tickets." if @nr_loaded % 100 == 0
   $stdout.write '.'
   @ticket_cache[id] = issue
   issue
@@ -301,7 +301,6 @@ at_exit do
   end if @nr_loaded.size != @ticket_cache.size
 end
 # Order of next calls is necessary!
-@history = []
 if @options[:mediawiki]
   raise "from and to must be given" unless @options[:from] && @options[:to]
   git_directories = (Dir.glob('.git') + Dir.glob('*/.git')).collect{|x| File.expand_path(File.dirname(x)) }
