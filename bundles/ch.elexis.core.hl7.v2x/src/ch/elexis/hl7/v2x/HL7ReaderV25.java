@@ -97,13 +97,6 @@ public class HL7ReaderV25 extends HL7Reader {
 				for (int i = 0; i < observationGroupCount; i++) {
 					ORU_R01_OBSERVATION observationGroup = orderObservationGroup.getOBSERVATION(i);
 					
-					OBX obx = observationGroup.getOBX();
-					if ("MAT"
-						.equals(obx.getObservationIdentifier().getCe1_Identifier().toString())) {
-						// we skip the material entry
-						continue;
-					}
-					
 					// get notes and comments
 					String commentNTE = getComments(orderObservationGroup, i);
 					
@@ -310,6 +303,7 @@ public class HL7ReaderV25 extends HL7Reader {
 		String observationTime = "";
 		String status = "";
 		Boolean flag;
+		String rawAbnormalFlags;
 		
 		if (valueType != null && valueType.equals(HL7Constants.OBX_VALUE_TYPE_ED)) {
 			String observationId =
@@ -354,12 +348,13 @@ public class HL7ReaderV25 extends HL7Reader {
 			itemCode = obx.getObx3_ObservationIdentifier().getCe1_Identifier().getValue();
 			unit = obx.getObx6_Units().getCe1_Identifier().getValue();
 			range = obx.getObx7_ReferencesRange().getValue();
-			flag = isPathologic(obx.getObx8_AbnormalFlags(0).getValue());
+			rawAbnormalFlags = obx.getObx8_AbnormalFlags(0).getValue();
+			flag = isPathologic(rawAbnormalFlags);
 			observationTime = obx.getObx14_DateTimeOfTheObservation().getTs1_Time().getValue();
 			status = obx.getObx11_ObservationResultStatus().getValue();
 			
 			LabResultData lrd =
-				new LabResultData(itemCode, name, unit, value, range, flag, defaultDateTime,
+				new LabResultData(itemCode, name, unit, value, range, flag, rawAbnormalFlags, defaultDateTime,
 					observationTime, commentNTE, group, sequence, status,
 					extractName(obx.getObx4_ObservationSubID()));
 			

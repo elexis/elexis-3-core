@@ -1,0 +1,188 @@
+MSH|^~\&|OPMED|17647|OPMED|18635|20180217123041||ORU^R01|176471863520180219143653675|P|2.3||||||8859/1||
+PID|1|1234|21935||TESTPERSON^ARMESWESEN||19500101|F|||M�llerwis 7^^Greifensee^^8606^CH|||
+ORC|RE||L18070354||CM||||20180217123041|invenimus AG||MBRUH^J�rg Bruhin^Manuela^^^Dr. med.|||20180217120944|||||
+OBR|1||L18070354|10^H�matologie^LX||20180217120944|20180217120944|||||||20180217120944||MBRUH^J�rg Bruhin^Manuela^^^Dr. med.|||||||||F|||
+OBX|1|NM|EC^Erythrozyten^LX||5.1|T/l|3.9 - 5.2||||F||||||
+OBX|2|NM|HK^H�matokrit^LX||0.44|I/l|0.34 - 0.45||||F||||||
+OBX|3|NM|HB^H�moglobin^LX||120|g/l|117.0 - 157.0||||F||||||
+OBX|4|NM|MCV^MCV^LX||90|fl|80 - 100||||F||||||
+OBX|5|NM|MCH^MCH^LX||26.0|pg|25.6 - 32.2||||F||||||
+OBX|6|NM|MCHC^MCHC^LX||32.0|g/dl|31.0 - 35.5||||F||||||
+OBX|7|NM|RDW^RDW^LX||40.0|fl|36.0 - 48.0||||F||||||
+OBX|8|NM|RETA^Retikulozyten absolut^LX||26.0|G/l|25.0 - 102.0||||F||||||
+OBX|9|NM|RET^Retikulozyten^LX||0.7|%|0.5 - 2.0||||F||||||
+OBX|10|NM|TC^Thrombozyten^LX||361|G/l|182 - 369||||F||||||
+OBX|11|NM|LC^Leukozyten^LX||4.5|G/l|3.6 - 10.5||||F||||||
+OBX|12|NM|NEUA^Neutrophile Automat^LX||1.70|G/l|1.56 - 6.13||||F||||||
+OBX|13|NM|NEUP^Neutrophile Automat %^LX||35|%|34 - 71||||F||||||
+OBX|14|NM|LYMA^Lymphozyten Automat^LX||1.20|G/l|1.18 - 3.74||||F||||||
+OBX|15|NM|LYMP^Lymphozyten Automat %^LX||20|%|19 - 52||||F||||||
+OBX|16|NM|MONA^Monozyten Automat^LX||0.26|G/l|0.24 - 0.36||||F||||||
+OBX|17|NM|MONP^Monozyten Automat %^LX||4.8|%|4.7 - 12.5||||F||||||
+OBX|18|NM|EOSA^Eosinophile Automat^LX||0.05|G/l|0.04 - 0.36||||F||||||
+OBX|19|NM|EOSP^Eosinophile Automat %^LX||0.9|%|0.7 - 5.8||||F||||||
+OBX|20|NM|BASA^Basophile Automat^LX||0.02|G/l|0.01 - 0.08||||F||||||
+OBX|21|NM|BASP^Basophile Automat %^LX||1|%|0 - 1||||F||||||
+OBR|2||L18070354|15^Gerinnung^LX||20180217120944|20180217120944|||||||20180217120944||MBRUH^J�rg Bruhin^Manuela^^^Dr. med.|||||||||F|||
+OBX|1|NM|APTT^aPTT (aktivierte partielle Thromboplastinzeit)^LX||30.0|sek.|25.0 - 35.0||||F||||||
+OBX|2|NM|QUICK^Quick (Thromboplastinzeit)^LX||99.0|%|> 70.0||||F||||||
+OBX|3|NM|INR^INR^LX||1.00||0.85 - 1.25||||F||||||
+OBR|3||L18070354|20^Klinische Chemie^LX||20180217120944|20180217120944|||||||20180217120944||MBRUH^J�rg Bruhin^Manuela^^^Dr. med.|||||||||F|||
+OBX|1|NM|GLUN^Glukose n�chtern^LX||8.5|mmol/l|3.3 - 6.1|HH|||F||||||
+NTE|1|L|Glukosekonzentrationen im N�chternplasma >= 7 mmol/l oder im postprandialen Plasma >= 11.1 mmol/l sprechen f�r einen
+NTE|1|L|Diabetes mellitus.
+OBX|2|NM|KREA^Kreatinin im Serum^LX||96|umol/l|49 - 90|HH|||F||||||
+OBX|3|NM|FER^Ferritin^LX||200.0|ug/l|14.0 - 300.0||||F||||||
+OBX|4|NM|UREA^Harnstoff^LX||7.0|mmol/l|3.5 - 7.2||||F||||||
+OBX|5|NM|URIC^Harns�ure^LX||151|umol/l|150 - 350||||F||||||
+OBX|6|NM|ALT^ALT (GPT)^LX||45|U/l|< 35|HH|||F||||||
+OBX|7|NM|AP^AP (Alkalische Phosphatase)^LX||40|U/l|40 - 150||||F||||||
+OBX|8|NM|AST^AST (GOT)^LX||32|U/l|< 35||||F||||||
+OBX|9|NM|BILA^Gallens�uren im Serum^LX||3.0|umol/l|2.5 - 7.0||||F||||||
+NTE|9|L|bili�re Obstruktion: > 180 �mol/l
+NTE|9|L|intrahepatische Cholestase: ca. 100 �mol/l
+NTE|9|L|erh�hte Darmmotilit�t: 25-50 �mol/l
+NTE|9|L|Malabsorbtion: 10 �mol/l
+OBX|10|NM|BILG^Bilirubin gesamt^LX||25.0|umol/l|3.4 - 20.5|HH|||F||||||
+OBX|11|NM|GGT^GGT (Gamma-Glutamyl-Transferase)^LX||34|U/l|< 36||||F||||||
+OBX|12|NM|PAMY^Pankreas-Amylase^LX||60|U/l|8 - 51|HH|||F||||||
+OBX|13|NM|NA^Natrium^LX||137|mmol/l|136 - 145||||F||||||
+OBX|14|NM|K^Kalium^LX||5.0|mmol/l|3.5 - 5.1||||F||||||
+OBX|15|NM|CA^Calcium^LX||2.5|mmol/l|2.1 - 2.6||||F||||||
+OBX|16|NM|SE^Selen^LX||117|ug/l|39 - 118||||F||||||
+OBX|17|NM|ZN^Zink^LX||20.0|umol/l|10.0 - 22.0||||F||||||
+OBX|18|NM|ALB^Albumin^LX||47.0|g/l|34.0 - 48.0||||F||||||
+OBX|19|NM|IGA^IgA (Immunglobulin A)^LX||0.8|g/l|0.7 - 4.0||||F||||||
+OBX|20|NM|IGE^IgE (Immunglobulin E)^LX||255.0|U/ml|< 100.0|HH|||F||||||
+OBX|21|NM|TP^Protein gesamt^LX||50.0|g/l|64.0 - 83.0|LL|||F||||||
+OBX|22|NM|CHOL^Cholesterin gesamt^LX||5.10|mmol/l|< 5.20||||F||||||
+OBX|23|NM|HDL^HDL-Cholesterin^LX||1.40|mmol/l|> 1.55|LL|||F||||||
+NTE|23|L|Hohes Risiko ab < 1.04 mmol/l
+OBX|24|NM|LDL^LDL-Cholesterin^LX||3.00|mmol/l|< 3.30||||F||||||
+NTE|24|L|Idealwert: <3.3 mmol/l
+NTE|24|L|grenzwertig erh�ht: 3.4-4.0 mmol/l
+NTE|24|L|erh�ht: 4.1-4.9 mmol/l
+NTE|24|L|stark erh�ht: >4.9 mmol/l
+OBX|25|NM|TRIG^Triglyceride^LX||1.4|mmol/l|< 1.7||||F||||||
+OBR|4||L18070354|24^Hormone^LX||20180217120944|20180217120944|||||||20180217120944||MBRUH^J�rg Bruhin^Manuela^^^Dr. med.|||||||||F|||
+OBX|1|NM|BHCG^beta-HCG^LX||<5.0|mIU/ml|< 5.0||||F||||||
+NTE|1|L|        [mIU/ml]
+NTE|1|L| 3. SSW 6 - 70
+NTE|1|L| 4. SSW 10 - 750
+NTE|1|L| 5. SSW 220 - 7'140
+NTE|1|L| 6. SSW 160 - 31'800
+NTE|1|L| 7. SSW 3'700 - 164'000
+NTE|1|L| 8. SSW 32'000 - 150'000
+NTE|1|L| 9. SSW 63'800 - 151'400
+NTE|1|L|10. SSW 46'500 - 187'000
+NTE|1|L|12. SSW 27'800 - 211'000
+NTE|1|L|14. SSW 14'000 - 62'500
+OBX|2|NM|CORM^Cortisol (8.00 Uhr) morgens^LX||155|nmol/l|101 - 497||||F||||||
+OBX|3|NM|DHEAS^DHEAS (Dehydroepiandrosteron-Sulfat)^LX||6.80|umol/l|0.26 - 6.68|HH|||F||||||
+OBX|4|NM|E1^�stron (E1)^LX||25|ng/l|||||F||||||
+NTE|4|L|follikul�r: 50 - 100
+NTE|4|L|luteal: 100 - 300
+NTE|4|L|Postmenopause: 10 - 60
+OBX|5|NM|E2^�stradiol (E2)^LX||<37|pmol/l|||||F||||||
+NTE|5|L|follikul�r: 77 - 921
+NTE|5|L|Zyklusmitte: 139 - 2382
+NTE|5|L|luteal: 77 - 1178
+NTE|5|L|Postmenopause
+NTE|5|L|ohne Hormonth.: <36.7 - 102.8
+NTE|5|L|mit Hormonth.: <36.7 - 528.5
+OBX|6|NM|FSH^FSH^LX||333.00|mIU/ml|||||F||||||
+NTE|6|L|follikul�r: 3.03-8.08
+NTE|6|L|Zyklusmitte: 2.55-16.69
+NTE|6|L|luteal: 1.38-5.47
+NTE|6|L|postmenopausal: 18.0-134.8
+OBX|7|NM|LH^LH^LX||222.00|mIU/ml|||||F||||||
+NTE|7|L|follikul�r: 1.80-11.78
+NTE|7|L|Zyklusmitte: 7.59-89.08
+NTE|7|L|luteal: 0.56-14.00
+NTE|7|L|postmenopausal: 5.16-61.99
+OBX|8|NM|PROG^Progesteron^LX||1.12|nmol/l|||||F||||||
+NTE|8|L|follikul�r: <0.32-0.95
+NTE|8|L|luteal: 3.82-50.56
+NTE|8|L|1. Trimeon: 8.90-468.44
+NTE|8|L|2. Trimeon: 71.55-303.05
+NTE|8|L|3. Trimeon: 88.72-771.15
+NTE|8|L|postmenopausal: <0.32-0.64
+OBX|9|NM|PROL^Prolaktin^LX||11.0|ng/ml|5.2 - 26.5||||F||||||
+OBX|10|NM|SHBG^SHBG (Sex Hormone-Binding Globulin)^LX||100.0|nmol/l|19.8 - 155.2||||F||||||
+OBX|11|NM|TESTG^Testosteron gesamt^LX||0.90|nmol/l|0.30 - 1.28||||F||||||
+OBX|12|NM|TESTF^Testosteron frei^LX||0.002|nmol/l|0.001 - 0.022||||F||||||
+OBX|13|NM|FAI^freier Androgenindex (FAI)^LX||0.9|Index|< 5.5||||F||||||
+OBX|14|NM|FT3^fT3 (Trijodthyronin frei)^LX||5.0|pmol/l|2.6 - 5.7||||F||||||
+OBX|15|NM|FT4^fT4 (Thyroxin frei)^LX||10.0|pmol/l|9.0 - 19.1||||F||||||
+OBX|16|NM|TSH^TSH basal 3. Generation^LX||8.500|mIU/l|0.400 - 4.900|HH|||F||||||
+OBR|5||L18070354|28^Tumormarker^LX||20180217120944|20180217120944|||||||20180217120944||MBRUH^J�rg Bruhin^Manuela^^^Dr. med.|||||||||F|||
+OBX|1|NM|BHCGT^beta-HCG (Tumormarker)^LX||9.0|mIU/ml|< 10.0||||F||||||
+OBX|2|NM|CA125^CA 125 (Ovarial-Ca)^LX||40.0|U/ml|< 35.0|HH|||F||||||
+OBX|3|NM|CA153^CA 15-3 (Mamma-Ca)^LX||20.0|U/ml|< 33.0||||F||||||
+OBX|4|NM|CA199^CA 19-9 (Pankreas-Ca)^LX||15|U/ml|< 37||||F||||||
+OBX|5|NM|CA724^CA 72-4^LX||10.0|kU/l|< 6.7|HH|||F||||||
+OBX|6|NM|CEA^CEA (Carcinoembryonales Antigen)^LX||<0.5|ug/l|< 5.0||||F||||||
+NTE|6|L|Grenzwert f�r Raucher: < 10 �g/l
+OBX|7|NM|PSAF^PSA frei^LX||<0.01|ug/l|||||F||||||
+OBX|8|NM|PSAG^PSA gesamt^LX||<0.01|ug/l|< 4.00||||F||||||
+OBX|9|NM|PSAQ^PSA Quotient^LX||<1.00||> 0.19||||F||||||
+NTE|9|L|Werte > 0.19 sprechen eher f�r eine benigne Hyperplasie
+NTE|9|L|Werte < 0.19 sprechen eher f�r ein Prostata-Ca
+OBR|6||L18070354|32^Medikamente^LX||20180217120944|20180217120944|||||||20180217120944||MBRUH^J�rg Bruhin^Manuela^^^Dr. med.|||||||||F|||
+OBX|1|NM|AMIO^Amiodaron^LX||660|ug/l|650 - 2500||||F||||||
+OBX|2|NM|DESAM^Desethyl-Amiodaron^LX||150|ug/l|300 - 2200|LL|||F||||||
+OBX|3|NM|CARB^Carbamazepin (Tegretol)^LX||41|umol/l|17 - 42||||F||||||
+OBX|4|NM|CLON^Clonazepam (Rivotril)^LX||500||||||F||||||
+OBX|5|NM|DIGO^Digoxin^LX||2.8|nmol/l|1.0 - 2.6|HH|||F||||||
+OBX|6|NM|LAMO^Lamotrigin (Lamictal)^LX||54.0|umol/l|11.7 - 54.7||||F||||||
+OBX|7|NM|LI^Lithium^LX||1.20|mmol/l|< 1.30||||F||||||
+NTE|7|L|Therapeutischer Bereich: 1.0-1.2 mmol/l
+OBX|8|NM|MOXCA^10-Monohydroxy-Oxcarbazepin (Trileptal)^LX||11.9|umol/l|11.8 - 138||||F||||||
+OBX|9|NM|PHENO^Phenobarbital (Luminal)^LX||1212||||||F||||||
+OBX|10|NM|PHEN^Phenytoin (Diphenylhydantoin)^LX||12.5|umol/l|12.0 - 80.0||||F||||||
+OBX|11|NM|VALP^Valproat (Depakine)^LX||180|umol/l|170 - 700||||F||||||
+OBR|7||L18070354|35^Infektserologie^LX||20180217120944|20180217120944|||||||20180217120944||MBRUH^J�rg Bruhin^Manuela^^^Dr. med.|||||||||F|||
+OBX|1|NM|BBG^Borrelia burgdorferi Screen IgG^LX||5|AU/ml|< 10||||F||||||
+OBX|2|NM|BBIG^Borrelia burgdorf.-Immunoblot-IgG^LX||255|Score|< 6|HH|||F||||||
+OBX|3|NM|BBM^Borrelia burgdorferi Screen IgM^LX||25|AU/ml|< 18|HH|||F||||||
+OBX|4|NM|BBIM^Borrelia burgdorf.-Immunoblot-IgM^LX||1.0|Score|< 6||||F||||||
+OBX|5|TX|HPG^Helicobacter pylori IgG^LX||negativ||negativ||||F||||||
+NTE|5|L|Aufgrund der hohen Sensitivit�t und Spezifit�t m�chten wir auf den Helicobacter pylori Antigennachweis im Stuhl hinweisen.
+NTE|5|L|Dieser stellt eine hochwertige Alternative zum 13C-Harnstoff-Atemtest dar.
+NTE|5|L|Zum Nachweis der Eradikation, zur Umgehung einer Gastroskopie und zur Differentialdiagnose zwischen akuter,
+NTE|5|L|persistierender oder zur�ckliegender Infektion stellt der Antigennachweis im Stuhl die Methode der Wahl dar.
+OBX|6|TX|LUES^Lues (Screen)^LX||negativ|Index|negativ||||F||||||
+OBX|7|NM|RPR^Rapid-Plasma-Reagin Test^LX||1:4|Titer|negativ||||F||||||
+OBX|8|NM|LUESM^Treponema (Lues) IgM^LX||1.50|Ratio|< 0.80|HH|||F||||||
+OBX|9|TX|CHIKG^Chikungunya IgG^LX||negativ|Index|negativ||||F||||||
+OBX|10|TX|CHIKM^Chikungunya IgM^LX||negativ|Index|negativ||||F||||||
+OBX|11|NM|CMVG^Cytomegalie-Virus (CMV) IgG^LX||25|U/ml|< 12|HH|||F||||||
+OBX|12|NM|CMVM^Cytomegalie-Virus (CMV) IgM^LX||10|U/ml|< 22||||F||||||
+OBX|13|TX|DENG^Dengue-Virus IgG^LX||negativ|Index|negativ||||F||||||
+OBX|14|TX|DENM^Dengue-Virus IgM^LX||negativ|Index|negativ||||F||||||
+OBX|15|TX|DENAG^Dengue-Virus NS1 Ag^LX||negativ|Index|negativ||||F||||||
+OBX|16|TX|HSV1G^Herpes-Simplex-Virus Typ 1 IgG^LX||negativ|Index|negativ||||F||||||
+OBX|17|TX|HSV2G^Herpes-Simplex-Virus Typ 2 IgG^LX||negativ|Index|negativ||||F||||||
+OBX|18|TX|HSVM^HSV Typ 1+2 Ak IgM^LX||positiv|Index|negativ|A|||F||||||
+OBX|19|NM|RUBG^R�teln Immunit�t IgG^LX||45|U/ml|> 11||||F||||||
+OBX|20|TX|ZIKG^Zika Virus IgG^LX||negativ|Index|negativ||||F||||||
+OBX|21|TX|ZIKM^Zika Virus IgM^LX||negativ|index|negativ||||F||||||
+OBX|22|TX|EBVS^EBV-Schnelltest (Monotest)^LX||negativ||negativ||||F||||||
+OBX|23|TX|VCAG^Epstein-Barr-Virus VCA-IgG^LX||positiv||negativ|A|||F||||||
+OBX|24|TX|EBNAG^Epstein-Barr-Virus EBNA IgG^LX||positiv||negativ|A|||F||||||
+OBX|25|TX|EBVM^Epstein-Barr-Virus IgM^LX||negativ||negativ||||F||||||
+NTE|25|L|Die EBV-Serologie weist auf eine l�nger zur�ckliegende Infektion hin.
+OBX|26|NM|HBSAK^Hepatitis B Impftiter^LX||244|U/l|> 100||||F||||||
+NTE|26|L|> 100 U/l ausreichender Impfschutz
+NTE|26|L|< 100 U/l kein ausreichender Impfschutz
+OBX|27|TX|HBSAG^HBs-Antigen^LX||negativ|Index|negativ||||F||||||
+OBX|28|TX|HBCG^HBc-Antik�rper, IgG^LX||negativ|Index|negativ||||F||||||
+OBX|29|TX|HIV^HIV Ag/Ak Screen^LX||negativ|Index|negativ||||F||||||
+OBX|30|NM|TOXG^Toxoplasma IgG^LX||45.0|IU/ml|< 7.2|HH|||F||||||
+OBX|31|NM|TOXM^Toxoplasma IgM^LX||5.0|AU/ml|< 10.0||||F||||||
+OBR|8||L18070354|40^Autoantik�rper^LX||20180217120944|20180217120944|||||||20180217120944||MBRUH^J�rg Bruhin^Manuela^^^Dr. med.|||||||||F|||
+OBX|1|NM|TGA^Anti-Transglutaminase IgA^LX||7.0|AU/ml|< 8.0||||F||||||
+NTE|1|L|Gem�ss UpToDate� Empfehlung vom 22.05.17 kann initial auf die Bestimmung von Anti-Gliadin Ak verzichtet werden.
+OBX|2|NM|TAK^TAK (Anti-Thyreoglobulin-Ak)^LX||25|IU/ml|< 100||||F||||||
+OBX|3|NM|TPO^TPO (Anti-Thyreoid-Peroxidase Ak )^LX||45|IU/ml|< 16|HH|||F||||||
+OBX|4|NM|TRAK^TRAK (TSH-Rezeptor-Autoantik�rper)^LX||1.9|U/l|< 2.0||||F||||||

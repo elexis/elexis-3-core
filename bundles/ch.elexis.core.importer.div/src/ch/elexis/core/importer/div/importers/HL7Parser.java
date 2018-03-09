@@ -189,6 +189,7 @@ public class HL7Parser {
 								.comment(StringTool.unNull(hl7LabResult.getValue()) + "\n"
 									+ StringTool.unNull(hl7LabResult.getComment()))
 								.flags(flag)
+								.rawAbnormalFlags(hl7LabResult.getRawAbnormalFlag())
 								.unit(hl7LabResult.getUnit()).ref(hl7LabResult.getRange())
 								.observationTime(obrDateTime).analyseTime(obxDateTime)
 								.transmissionTime(transmissionTime)
@@ -208,6 +209,7 @@ public class HL7Parser {
 								hl7LabResult.getValue()).date(obrDateTime)
 									.comment(StringTool.unNull(hl7LabResult.getComment()))
 									.flags(flag)
+									.rawAbnormalFlags(hl7LabResult.getRawAbnormalFlag())
 									.unit(hl7LabResult.getUnit()).ref(hl7LabResult.getRange())
 									.observationTime(obrDateTime).analyseTime(obxDateTime)
 									.transmissionTime(transmissionTime)

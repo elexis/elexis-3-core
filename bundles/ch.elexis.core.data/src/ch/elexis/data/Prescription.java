@@ -650,7 +650,7 @@ public class Prescription extends PersistentObject {
 		String timestamp = checkNull(get(FLD_DATE_UNTIL));
 		if (!timestamp.isEmpty()) {
 			TimeTool timetool = new TimeTool(timestamp);
-			return timetool.isBefore(time);
+			return timetool.isBefore(time, 1000);
 		}
 		return false;
 	}

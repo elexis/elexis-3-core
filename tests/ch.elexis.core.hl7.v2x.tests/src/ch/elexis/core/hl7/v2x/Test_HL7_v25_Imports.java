@@ -48,9 +48,9 @@ public class Test_HL7_v25_Imports {
 		ObservationMessage observationMsg = reader.readObservation(resolver, false);
 		List<IValueType> observations = observationMsg.getObservations();
 		System.out.println("Observations [" + observations.size() + "]");
-		assertEquals(3, observations.size());
+		assertEquals(5, observations.size());
 		
-		LabResultData lrd = (LabResultData) observations.get(0);
+		LabResultData lrd = (LabResultData) observations.get(1);
 		assertEquals("VAGINA-ABSTRICH - Grampräparat", lrd.getName());
 		assertEquals("GRAM", lrd.getCode());
 		assertTrue(lrd.getValue().startsWith("Leukozyten"));
@@ -62,7 +62,7 @@ public class Test_HL7_v25_Imports {
 		assertEquals("", lrd.getGroup());
 		assertEquals(LabResultStatus.FINAL, lrd.getResultStatus());
 		
-		lrd = (LabResultData) observations.get(1);
+		lrd = (LabResultData) observations.get(2);
 		assertEquals("VAGINA-ABSTRICH - Kultur aerob", lrd.getName());
 		assertEquals("KULA", lrd.getCode());
 		assertTrue(lrd.getValue().startsWith("Candida albicans"));
@@ -72,7 +72,7 @@ public class Test_HL7_v25_Imports {
 		assertNull(lrd.getUnit());
 		assertEquals(LabResultStatus.FINAL, lrd.getResultStatus());
 		
-		lrd = (LabResultData) observations.get(2);
+		lrd = (LabResultData) observations.get(4);
 		assertEquals("VAGINA-ABSTRICH - Chlamydia trachomatis PCR", lrd.getName());
 		assertEquals("CHLATP", lrd.getCode());
 		assertTrue(lrd.getValue().equals("positiv"));
@@ -97,9 +97,9 @@ public class Test_HL7_v25_Imports {
 		ObservationMessage observationMsg = reader.readObservation(resolver, false);
 		List<IValueType> observations = observationMsg.getObservations();
 		System.out.println("Observations [" + observations.size() + "]");
-		assertEquals(1, observations.size());
+		assertEquals(2, observations.size());
 		
-		LabResultData lrd = (LabResultData) observations.get(0);
+		LabResultData lrd = (LabResultData) observations.get(1);
 		assertEquals("STUHL - Helicobacter pylori  (Ag-Nachweis)", lrd.getName());
 		assertEquals("HELP", lrd.getCode());
 		assertTrue(lrd.getValue().equals("positiv"));

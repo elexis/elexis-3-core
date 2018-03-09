@@ -13,6 +13,7 @@ require 'open-uri'
 require 'yaml'
 require 'csv'
 require 'fileutils'
+require 'active_support/all'
 
 ISSUE_URL = 'https://redmine.medelexis.ch/issues'
 CACHE_FILE = File.join(Dir.home, '.cache/redmine_issues.yaml')
@@ -36,15 +37,24 @@ EOS
   opt :changelog,       'Name of file to be written', :type => String, :default => 'Changelog'
   opt :from,            'Only a difference from the given tag', :type => String, :default => nil
   opt :to,              'Only a difference to the given tag', :type => String, :default => nil
+  opt :mediawiki,       'Create Changelog.mediawiki with a summary grouped by weekyl changes/ticket'
 end
 
 require 'rugged'
 MAX_ID = 999
 FORCE_TAG_NUMERIC = (MAX_ID.to_s*4).to_i
 DATE_FORMAT = '%Y.%m.%d'
+MEDIAWIKI_FILE = 'Changelog.mediawiki'
 Issue = Struct.new(:id, :subject, :fixed_version, :git_version,  :status, :project, :last_api_fetch)
 CommitInfo = Struct.new(:ticket, :author_date, :committer_date, :text)
+class CommitInfo
+  def commit_week
+    date = Date.parse(committer_date)
+    sprintf('%04d Woche %02d', date.year, date.cweek)
+  end
+end
 @scriptStarted = Time.now
+@options[:with_tickets] = true if @options[:mediawiki]
 if @options[:with_tickets]
   @csv_file_name = "#{@options[:changelog]}.csv"
 end
@@ -194,6 +204,33 @@ rescue => error
   puts error.backtrace.join("\n")
 end
 
+def emit_mediawiki_changelog(all_commits, file)
+  mediawiki = File.open(file, 'w+')
+  mediawiki.puts "= Changelog für Elexis 3.6 ab 3.6.0 ="
+  mediawiki.puts ""
+  mediawiki.puts "Die Zahlen in Klammern beziehen sich auf das nicht öffentlich zugängliche Ticket-System der Firma Medelexis AG"
+  mediawiki.puts ""
+  sorted = all_commits.sort{|left, right| left.committer_date <=> right.committer_date}
+  by_week = {}
+  sorted.reverse.each do |commit|
+    next unless commit.ticket && commit.ticket.id
+    by_week[commit.commit_week] ||= {}
+    by_week[commit.commit_week] [commit.ticket.id] = commit
+    by_week[commit.commit_week] [:sunday] = Date.parse(commit.committer_date).sunday
+  end
+  by_week.each do | week, values|
+    ids = values.keys.find_all{|x| x.is_a?(String)}.uniq.sort;
+    mediawiki.puts "==  #{values[:sunday].strftime('%Y.%m.%d')}: #{ids.size} gelöste Tickets =="
+    mediawiki.puts ""
+    ids.each do |id|
+      ti = values[id].ticket
+      line = "* #{sprintf("%14s", "'''([https://redmine.medelexis.ch/issues/" + ti.id + ' ' + ti.id + "])'''")} #{ti.subject.gsub(/\n|\r\n/, ',').strip}"
+      mediawiki.puts line
+    end
+    mediawiki.puts ""
+  end
+end
+
 def emit_changes(ausgabe, from=nil, to=nil)
   raise "from and to must be given" unless to && from
   from_tag =@all_taginfos.find{|x| x.tag_name == from}
@@ -265,13 +302,37 @@ at_exit do
 end
 # Order of next calls is necessary!
 @history = []
-get_release_tags
-if @options[:from] && @options[:to]
-  emit_history(@options[:changelog], @options[:from], @options[:to])
+if @options[:mediawiki]
+  raise "from and to must be given" unless @options[:from] && @options[:to]
+  git_directories = (Dir.glob('.git') + Dir.glob('*/.git')).collect{|x| File.expand_path(File.dirname(x)) }
+  mediawiki_file = File.join(Dir.pwd, MEDIAWIKI_FILE)
+  history_all = []
+  git_directories.each do |repo|
+    Dir.chdir(repo)
+    @all_taginfos = []
+    @history = []
+    get_release_tags
+    from_tag =@all_taginfos.find{|x| x.tag_name ==  @options[:from] }
+    unless from_tag
+      puts "Skipping #{repo} as there is no tag #{@options[:from]}"
+      next
+    end
+    to_tag =@all_taginfos.find{|x| x.tag_name ==  @options[:to]}
+    info = get_history(from_tag.commit_id, to_tag.commit_id, to_tag.tag_name)
+    history_all +=info.commits
+    puts "  #{repo}: found #{info.commits.size} history_all now #{history_all.size}"
+  end
+  emit_mediawiki_changelog(history_all, mediawiki_file)
+  puts "Created #{mediawiki_file} #{File.size(mediawiki_file)} bytes"
 else
-  find_tags_in_current_branch
-  build_branch_history
-  emit_history(@options[:changelog])
+  get_release_tags
+  if @options[:from] && @options[:to]
+    emit_history(@options[:changelog], @options[:from], @options[:to])
+  else
+    find_tags_in_current_branch
+    build_branch_history
+    emit_history(@options[:changelog])
+  end
 end
 puts "\nCreated #{File.expand_path(@options[:changelog])}" +
     "#{@csv_file_name ? ' and ' +  File.expand_path(@csv_file_name) : ' '}" +

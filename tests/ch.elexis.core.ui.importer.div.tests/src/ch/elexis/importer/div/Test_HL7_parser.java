@@ -48,6 +48,7 @@ import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.PathologicDescription.Description;
 import ch.elexis.core.ui.importer.div.importers.TestHL7Parser;
 import ch.elexis.data.LabItem;
+import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
@@ -89,6 +90,11 @@ public class Test_HL7_parser {
 		for (int j = 0; j < qrr.size(); j++) {
 			qrr.get(j).delete();
 		}
+		Query<LabOrder> qro = new Query<LabOrder>(LabOrder.class);
+		List<LabOrder> qrro = qro.execute();
+		for (int j = 0; j < qrro.size(); j++) {
+			qrro.get(j).delete();
+		}
 		Query<LabItem> qrli = new Query<LabItem>(LabItem.class);
 		List<LabItem> qLi = qrli.execute();
 		for (int j = 0; j < qLi.size(); j++) {
@@ -100,10 +106,6 @@ public class Test_HL7_parser {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		qr = new Query<LabResult>(LabResult.class);
-		qrr = qr.execute();
-		qrli = new Query<LabItem>(LabItem.class);
-		qLi = qrli.execute();
 	}
 	
 	static private void removeAllPatientsAndDependants(){
@@ -290,11 +292,11 @@ public class Test_HL7_parser {
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		List<LabResult> results = qr.execute();
 		assertFalse(results.isEmpty());
-		assertEquals(2, results.size());
-		LabResult result = results.get(1);
+		assertEquals(3, results.size());
+		LabResult result = results.get(2);
 		String resultString = result.getComment();
-		assertFalse(resultString.contains("\\.br\\"));
-		assertTrue(resultString.contains("\n"));
+		assertFalse(resultString, resultString.contains("\\.br\\"));
+		assertTrue(resultString, resultString.contains("\n"));
 	}
 	
 	/**
@@ -368,7 +370,7 @@ public class Test_HL7_parser {
 		
 		qr = new Query<>(LabResult.class);
 		qr.add(LabResult.PATIENT_ID, Query.EQUALS, labResult.getPatient().getId());
-		assertEquals(4, qr.execute().size());
+		assertEquals(6, qr.execute().size());
 		
 		parseOneHL7file(
 			new File(workDir.toString(), "Analytica/zweites Resultat0217330708_6452745605734.hl7"),
@@ -391,7 +393,7 @@ public class Test_HL7_parser {
 			true);
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		qr.orderBy(false, LabResult.ITEM_ID, LabResult.DATE, LabResult.RESULT);
-		assertEquals(2, qr.execute().size());
+		assertEquals(3, qr.execute().size());
 		
 		int j = 0;
 		Query<LabItem> query = new Query<LabItem>(LabItem.class);
@@ -420,7 +422,7 @@ public class Test_HL7_parser {
 			false, true);
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		List<LabResult> qrr = qr.execute();
-		assertEquals(3, qrr.size());
+		assertEquals(5, qrr.size());
 		
 		qr = new Query<LabResult>(LabResult.class);
 		qr.add(LabResult.COMMENT, Query.LIKE, "Candida albicans%");
@@ -437,5 +439,18 @@ public class Test_HL7_parser {
 		ILabItem item = labResult.getItem();
 		assertEquals("VAGINA-ABSTRICH - Kultur aerob", item.getName());
 		assertTrue(item.getGroup(), item.getGroup().startsWith("Z Automatisch"));
+	}
+	
+	@Test
+	public void testImportForMissingLabOrder() throws IOException {
+		removeAllPatientsAndDependants();
+		removeAllLaboWerte();
+		parseOneHL7file(new File(workDir.toString(), "Analytica/01TEST5005.hl7"),
+			false, true);
+		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
+		List<LabResult> qrr = qr.execute();
+		// diese zeile kommt auch rein NTE|1||Das ist eine Bemerkung zum Befund\.br\Das ist eine weitere Bemerkung zum Befund|RE
+		assertEquals(7, qrr.size());
+		assertEquals(6, new Query<>(LabOrder.class).execute().size());
 	}
 }
