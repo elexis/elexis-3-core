@@ -9,10 +9,11 @@
   <packaging>pom</packaging>
 
   <parent>
-    <artifactId>elexis-3-core</artifactId>
     <groupId>ch.elexis.core</groupId>
-    <version>3.5.0-SNAPSHOT</version>
+    <artifactId>elexis-3-core</artifactId>
+    <version>3.6.0-SNAPSHOT</version>
   </parent>
+
   <modules>
     <module>ch.elexis.core.l10n</module>
     <module>ch.elexis.core.l10n.de</module>

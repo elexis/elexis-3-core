@@ -3,7 +3,7 @@
   <parent>
     <groupId>ch.elexis.core</groupId>
     <artifactId>ch.elexis.core.tests</artifactId>
-    <version>3.5.0-SNAPSHOT</version>
+    <version>3.6.0-SNAPSHOT</version>
   </parent>
   <artifactId>ch.elexis.core.data.tests</artifactId>
   <packaging>eclipse-test-plugin</packaging>
@@ -30,5 +30,4 @@
       </plugin>
     </plugins>
   </build>
-<version>3.2.0-SNAPSHOT</version>
 </project>

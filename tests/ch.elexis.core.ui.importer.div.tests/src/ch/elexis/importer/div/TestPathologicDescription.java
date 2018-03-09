@@ -135,7 +135,7 @@ public class TestPathologicDescription {
 				j++;
 			}
 		}
-		assertEquals(2, qrr.size());
+		assertEquals(3, qrr.size());
 		boolean foundpatho1 = false;
 		for (j = 0; j < qrr.size(); j++) {
 			if (qrr.get(j).getItem().getName().equalsIgnoreCase("URIN-VACUTAINER - Keimzahl")) {
@@ -226,19 +226,19 @@ public class TestPathologicDescription {
 			PathologicDescription pathologicDescription = labResult.getPathologicDescription();
 			if (labResult.getItem().getLabel().contains("Borrelien (IgM)")) {
 				// OBX|500505|FT|BORRM^Borrelien (IgM)^^^BORRELIEN IGM||positiv||  negativ||||C||||||
-				assertEquals(Description.PATHO_NOREF, pathologicDescription.getDescription());
-				assertEquals("negativ", pathologicDescription.getReference());
+				assertEquals(Description.PATHO_IMPORT_NO_INFO, pathologicDescription.getDescription());
+				assertEquals("", pathologicDescription.getReference());
 				assertEquals("positiv", labResult.getResult());
 				// it is pathologic, but we don't know - we can't interpret
 				assertEquals(0, labResult.getFlags());
 				assertTrue(labResult.isPathologicFlagIndetermined(pathologicDescription));
 				assertEquals("", labResult.getItem().getUnit());
 			} else if (labResult.getItem().getLabel().equalsIgnoreCase("TestStupidValues")) {
-				assertEquals(Description.PATHO_NOREF, pathologicDescription.getDescription());
+				assertEquals(Description.PATHO_IMPORT_NO_INFO, pathologicDescription.getDescription());
 				assertEquals("hund", pathologicDescription.getReference());
 				assertEquals("katze", labResult.getResult());
 				assertEquals(0, labResult.getFlags());
-			}else if (labResult.getItem().getLabel().equalsIgnoreCase("TestImportHighFlag")) {
+			} else if (labResult.getItem().getLabel().equalsIgnoreCase("TestImportHighFlag")) {
 				assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
 				assertEquals("bar", pathologicDescription.getReference());
 				assertEquals("foo", labResult.getResult());
@@ -247,6 +247,60 @@ public class TestPathologicDescription {
 			
 		}
 		
+	}
+	
+	@Test
+	public void testOpenMedicalMissingImportPathFlag_10962() throws IOException{
+		removeAllPatientsAndDependants();
+		removeAllLaboWerte();
+		
+		parseOneHL7file(new File(workDir.toString(),
+			"OpenMedical/176471863520180219143653675__20180217123041_L18070354_20180217_TESTPERSON_19500101_1234_18635.hl7"),
+			false, true);
+		
+		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
+		List<LabResult> qrr = qr.execute();
+		assertEquals(120, qrr.size());
+		for (LabResult labResult : qrr) {
+			PathologicDescription pathologicDescription = labResult.getPathologicDescription();
+			String itemCode = labResult.getItem().getKuerzel();
+			switch (itemCode) {
+			case "VCAG":
+				assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
+				assertEquals("A", pathologicDescription.getReference());
+				assertEquals(1, labResult.getFlags());
+				assertEquals(LabItemTyp.TEXT, labResult.getItem().getTyp());
+				assertFalse(labResult.isPathologicFlagIndetermined(null));
+				break;
+			case "EBNAG":
+				assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
+				assertEquals("A", pathologicDescription.getReference());
+				assertEquals(1, labResult.getFlags());
+				assertEquals(LabItemTyp.TEXT, labResult.getItem().getTyp());
+				assertFalse(labResult.isPathologicFlagIndetermined(null));
+				break;
+			case "BBIG":
+				assertEquals(Description.PATHO_REF_ITEM, pathologicDescription.getDescription());
+				assertEquals("< 6", pathologicDescription.getReference());
+				assertEquals(1, labResult.getFlags());
+				assertFalse(labResult.isPathologicFlagIndetermined(null));
+				break;
+			case "HSVM":
+				assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
+				assertEquals("A", pathologicDescription.getReference());
+				assertEquals(1, labResult.getFlags());
+				assertFalse(labResult.isPathologicFlagIndetermined(null));
+				break;
+			case "ZIKG":
+				assertEquals(Description.PATHO_IMPORT_NO_INFO, pathologicDescription.getDescription());
+				assertEquals("", pathologicDescription.getReference());
+				assertEquals(0, labResult.getFlags());
+				assertTrue(labResult.isPathologicFlagIndetermined(null));
+				break;
+			default:
+				break;
+			}
+		}
 	}
 	
 	private void parseOneHL7file(File f, boolean deleteAll, boolean alsoFailing) throws IOException{

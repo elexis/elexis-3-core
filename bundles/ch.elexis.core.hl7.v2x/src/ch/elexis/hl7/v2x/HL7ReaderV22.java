@@ -283,6 +283,7 @@ public class HL7ReaderV22 extends HL7Reader {
 		String observationTime = "";
 		String status = "";
 		Boolean flag;
+		String rawAbnormalFlags;
 		
 		if (isTextOrNumeric(valueType)) {
 			name = obx.getObx3_ObservationIdentifier().getCe2_Text().getValue();
@@ -309,12 +310,13 @@ public class HL7ReaderV22 extends HL7Reader {
 			itemCode = obx.getObx3_ObservationIdentifier().getCe1_Identifier().getValue();
 			unit = obx.getObx6_Units().getCe1_Identifier().getValue();
 			range = obx.getObx7_ReferencesRange().getValue();
-			flag = isPathologic(obx.getObx8_AbnormalFlags(0).getValue());
+			rawAbnormalFlags = obx.getObx8_AbnormalFlags(0).getValue();
+			flag = isPathologic(rawAbnormalFlags);
 			observationTime =
 				obx.getObx14_DateTimeOfTheObservation().getTs1_TimeOfAnEvent().getValue();
 			status = obx.getObx11_ObservationResultStatus().getValue();
 			
-			LabResultData lrd = new LabResultData(itemCode, name, unit, value, range, flag,
+			LabResultData lrd = new LabResultData(itemCode, name, unit, value, range, flag, rawAbnormalFlags,
 				defaultDateTime, observationTime, commentNTE, group, sequence, status,
 				extractName(obx.getObx4_ObservationSubID()));
 				

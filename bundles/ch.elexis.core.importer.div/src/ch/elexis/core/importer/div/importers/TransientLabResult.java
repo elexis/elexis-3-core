@@ -25,6 +25,7 @@ public class TransientLabResult {
 	private String unit;
 	private String subId;
 	private Integer flags;
+	private String rawAbnormalFlags;
 	
 	private TimeTool date;
 	private TimeTool analyseTime;
@@ -47,6 +48,7 @@ public class TransientLabResult {
 		this.refFemale = builder.refFemale;
 		this.unit = builder.unit;
 		this.flags = builder.flags;
+		this.rawAbnormalFlags = builder.rawAbnormalFlags;
 		
 		this.date = builder.date;
 		this.analyseTime = builder.analyseTime;
@@ -93,19 +95,22 @@ public class TransientLabResult {
 	public void overwriteExisting(ILabResult labResult){
 		labResult.setComment(comment);
 		labResult.setResult(result);
+		
+		setFieldsAndInterpret(labResult);
+		
 		// pathologic check takes place in labResult if it is numeric
 		if (labItem.getTyp() == LabItemTyp.NUMERIC) {
 			flags = labResult.getFlags();
 		} else {
 			if (flags != null) {
-				labResult
-					.setPathologicDescription(new PathologicDescription(Description.PATHO_IMPORT));
+				labResult.setPathologicDescription(
+					new PathologicDescription(Description.PATHO_IMPORT, rawAbnormalFlags));
 			} else {
 				labResult.setPathologicDescription(
-					new PathologicDescription(Description.PATHO_IMPORT_NO_INFO));
+					new PathologicDescription(Description.PATHO_IMPORT_NO_INFO, rawAbnormalFlags));
 			}
 		}
-		setFields(labResult);
+		
 	}
 	
 	public ILabResult persist(){
@@ -119,19 +124,21 @@ public class TransientLabResult {
 		
 		ILabResult labResult = labImportUtil.createLabResult(patient, date, labItem, result,
 			comment, refVal, origin, subId);
+		
+		setFieldsAndInterpret(labResult);
+		
 		// pathologic check takes place in labResult if it is numeric
 		if (labItem.getTyp() == LabItemTyp.NUMERIC) {
 			flags = labResult.getFlags();
 		} else {
 			if (flags != null) {
-				labResult
-					.setPathologicDescription(new PathologicDescription(Description.PATHO_IMPORT));
+				labResult.setPathologicDescription(
+					new PathologicDescription(Description.PATHO_IMPORT, rawAbnormalFlags));
 			} else {
 				labResult.setPathologicDescription(
-					new PathologicDescription(Description.PATHO_IMPORT_NO_INFO));
+					new PathologicDescription(Description.PATHO_IMPORT_NO_INFO, rawAbnormalFlags));
 			}
 		}
-		setFields(labResult);
 		
 		return labResult;
 	}
@@ -172,7 +179,7 @@ public class TransientLabResult {
 		return sb.toString();
 	}
 	
-	private void setFields(ILabResult labResult){
+	private void setFieldsAndInterpret(ILabResult labResult){
 		if (refMale != null) {
 			labResult.setRefMale(refMale);
 			ILabItem item = labResult.getItem();
@@ -208,12 +215,6 @@ public class TransientLabResult {
 		// set all flags at once, flags is a string in the database
 		labResult.setFlags((flags == null) ? 0 : flags);
 		labImportUtil.updateLabResult(labResult, this);
-		//		if (setProperties != null) {
-		//			Set<String> keys = setProperties.keySet();
-		//			for (String string : keys) {
-		//				labResult.set(string, setProperties.get(string));
-		//			}
-		//		}
 	}
 	
 	public IPatient getPatient(){
@@ -318,6 +319,7 @@ public class TransientLabResult {
 		private String refFemale;
 		private String unit;
 		private Integer flags;
+		private String rawAbnormalFlags;
 		
 		private TimeTool date;
 		private TimeTool analyseTime;
@@ -365,6 +367,11 @@ public class TransientLabResult {
 		
 		public Builder flags(Integer flags){
 			this.flags = flags;
+			return this;
+		}
+		
+		public Builder rawAbnormalFlags(String rawAbnormalFlags){
+			this.rawAbnormalFlags = rawAbnormalFlags;
 			return this;
 		}
 		

@@ -61,7 +61,7 @@ public class PathologicDescription {
 	
 	public PathologicDescription(Description description, String reference){
 		this.description = description;
-		this.reference = reference;
+		this.reference = (reference != null) ? reference : "";
 	}
 	
 	private PathologicDescription(){
