@@ -34,7 +34,15 @@ public class ElexisUiEventListenerImpl extends ElexisEventListenerImpl {
 		if (!isStopped()) {
 			UiDesk.asyncExec(new Runnable() {
 				public void run(){
+					if (performanceStatisticHandler != null) {
+						performanceStatisticHandler.startCatchEvent(ev,
+							ElexisUiEventListenerImpl.this);
+					}
 					runInUi(ev);
+					if (performanceStatisticHandler != null) {
+						performanceStatisticHandler.endCatchEvent(ev,
+							ElexisUiEventListenerImpl.this);
+					}
 				}
 			});
 		}

@@ -40,6 +40,15 @@ public interface ModelFactory extends EFactory {
 	SimpleStatistic createSimpleStatistic();
 
 	/**
+	 * Returns a new object of class '<em>Event Statistic</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Event Statistic</em>'.
+	 * @generated
+	 */
+	EventStatistic createEventStatistic();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

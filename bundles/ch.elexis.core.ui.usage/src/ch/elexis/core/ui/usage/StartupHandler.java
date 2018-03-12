@@ -17,6 +17,9 @@ import org.osgi.service.event.EventHandler;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.events.ElexisEventDispatcher.IPerformanceStatisticHandler;
+import ch.elexis.core.ui.performance.EventPerformanceStatisticHandler;
 import ch.elexis.core.ui.usage.settings.UsageSettings;
 import ch.elexis.core.ui.usage.util.StatisticsManager;
 import ch.elexis.core.ui.util.PerspectiveUtil;
@@ -28,14 +31,28 @@ public class StartupHandler implements EventHandler {
 	public void handleEvent(Event event){
 		if (CoreHub.globalCfg.get(UsageSettings.CONFIG_USAGE_STATISTICS, false)) {
 			registerNotifications();
-			StatisticsManager.getInstance().getStatistics().setFrom(new Date());
+			StatisticsManager.INSTANCE.getStatistics().setFrom(new Date());
 			// add start perspective to statistics
 			MPerspective mPerspective = PerspectiveUtil.getActivePerspective();
 			if (mPerspective != null) {
-				StatisticsManager.getInstance().addCallingStatistic(mPerspective.getElementId(),
+				StatisticsManager.INSTANCE.addCallingStatistic(mPerspective.getElementId(),
 					true);
 			}
 		}
+		if (CoreHub.globalCfg.get(UsageSettings.CONFIG_USAGE_STATISTICS, false)) {
+			registerEventPerformance();
+		}
+	}
+	
+	/**
+	 * Create and register a {@link IPerformanceStatisticHandler}.
+	 * 
+	 */
+	private void registerEventPerformance(){
+		EventPerformanceStatisticHandler eventStatisticHandler =
+			new EventPerformanceStatisticHandler();
+		ElexisEventDispatcher.getInstance().setPerformanceStatisticHandler(eventStatisticHandler);
+		StatisticsManager.INSTANCE.setEventPerformanceStatisticHandler(eventStatisticHandler);
 	}
 	
 	/**
@@ -54,7 +71,7 @@ public class StartupHandler implements EventHandler {
 					MPart mPart = (MPart) part;
 					
 					if (mPart.isToBeRendered()) {
-						StatisticsManager.getInstance().addCallingStatistic(mPart.getElementId(),
+						StatisticsManager.INSTANCE.addCallingStatistic(mPart.getElementId(),
 							false);
 					}
 					
@@ -69,7 +86,7 @@ public class StartupHandler implements EventHandler {
 				if (placeholder instanceof MPlaceholder) {
 					MPlaceholder mPlaceholder = (MPlaceholder) placeholder;
 					if (!mPlaceholder.isToBeRendered()) {
-						StatisticsManager.getInstance()
+						StatisticsManager.INSTANCE
 							.addClosingStatistic(mPlaceholder.getElementId(), false);
 					}
 					
@@ -82,7 +99,7 @@ public class StartupHandler implements EventHandler {
 			public void handleEvent(Event event){
 				
 				try {
-					StatisticsManager.getInstance().autoExportStatistics();
+					StatisticsManager.INSTANCE.autoExportStatistics();
 				} catch (IOException e) {
 					LoggerFactory.getLogger(StartupHandler.class)
 						.error("cannot export usage on application exist statistics", e);
@@ -99,7 +116,7 @@ public class StartupHandler implements EventHandler {
 						MPerspectiveStack mpartStack = (MPerspectiveStack) stack;
 						MPerspective selectedPerspective = mpartStack.getSelectedElement();
 						if (selectedPerspective != null) {
-							StatisticsManager.getInstance()
+							StatisticsManager.INSTANCE
 								.addCallingStatistic(selectedPerspective.getElementId(), true);
 						}
 						

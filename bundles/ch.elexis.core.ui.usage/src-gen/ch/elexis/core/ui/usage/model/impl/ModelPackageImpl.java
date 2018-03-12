@@ -2,6 +2,7 @@
  */
 package ch.elexis.core.ui.usage.model.impl;
 
+import ch.elexis.core.ui.usage.model.EventStatistic;
 import ch.elexis.core.ui.usage.model.IStatistic;
 import ch.elexis.core.ui.usage.model.ModelFactory;
 import ch.elexis.core.ui.usage.model.ModelPackage;
@@ -41,6 +42,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass simpleStatisticEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass eventStatisticEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -198,6 +206,51 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getEventStatistic() {
+		return eventStatisticEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getEventStatistic_MinDuration() {
+		return (EAttribute)eventStatisticEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getEventStatistic_MaxDuration() {
+		return (EAttribute)eventStatisticEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getEventStatistic_AvgDuration() {
+		return (EAttribute)eventStatisticEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getEventStatistic_LastStart() {
+		return (EAttribute)eventStatisticEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ModelFactory getModelFactory() {
 		return (ModelFactory)getEFactoryInstance();
 	}
@@ -233,6 +286,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iStatisticEClass, ISTATISTIC__ACTION_TYPE);
 
 		simpleStatisticEClass = createEClass(SIMPLE_STATISTIC);
+
+		eventStatisticEClass = createEClass(EVENT_STATISTIC);
+		createEAttribute(eventStatisticEClass, EVENT_STATISTIC__MIN_DURATION);
+		createEAttribute(eventStatisticEClass, EVENT_STATISTIC__MAX_DURATION);
+		createEAttribute(eventStatisticEClass, EVENT_STATISTIC__AVG_DURATION);
+		createEAttribute(eventStatisticEClass, EVENT_STATISTIC__LAST_START);
 	}
 
 	/**
@@ -264,6 +323,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		// Add supertypes to classes
 		simpleStatisticEClass.getESuperTypes().add(this.getIStatistic());
+		eventStatisticEClass.getESuperTypes().add(this.getIStatistic());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(statisticsEClass, Statistics.class, "Statistics", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -278,6 +338,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIStatistic_ActionType(), ecorePackage.getEString(), "actionType", null, 0, 1, IStatistic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(simpleStatisticEClass, SimpleStatistic.class, "SimpleStatistic", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(eventStatisticEClass, EventStatistic.class, "EventStatistic", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getEventStatistic_MinDuration(), ecorePackage.getEInt(), "minDuration", null, 0, 1, EventStatistic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getEventStatistic_MaxDuration(), ecorePackage.getEInt(), "maxDuration", null, 0, 1, EventStatistic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getEventStatistic_AvgDuration(), ecorePackage.getELong(), "avgDuration", null, 0, 1, EventStatistic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getEventStatistic_LastStart(), ecorePackage.getELong(), "lastStart", null, 0, 1, EventStatistic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);
