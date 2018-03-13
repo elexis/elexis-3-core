@@ -7,6 +7,17 @@ public class ElexisEventTopics {
 	public static final String PROPKEY_ID = "id";
 	public static final String PROPKEY_CLASS = "cl";
 	public static final String PROPKEY_USER = "us";
+	public static final String PROPKEY_OBJECT = "obj";
+	
+	/**
+	 * ElexisContext events
+	 */
+	public static final String CONTEXT_EVENT = BASE + "ctx/";
+	/**
+	 * An object was selected, see {@link #PROPKEY_CLASS} for its type, and {@link #PROPKEY_ID} for
+	 * its id
+	 */
+	public static final String CONTEXT_EVENT_SELECTION = CONTEXT_EVENT + "select";
 	
 	/**
 	 * Topics concerning persistent object events
@@ -21,8 +32,7 @@ public class ElexisEventTopics {
 	 * Topics concerning stock commissioning systems
 	 */
 	public static final String BASE_STOCK_COMMISSIONING = BASE + "stockCommissioning/";
-	public static final String STOCK_COMMISSIONING_OUTLAY =
-		BASE_STOCK_COMMISSIONING + "outlay";
+	public static final String STOCK_COMMISSIONING_OUTLAY = BASE_STOCK_COMMISSIONING + "outlay";
 	public static final String STOCK_COMMISSIONING_PROPKEY_STOCKENTRY_ID = "stockEntryId";
 	public static final String STOCK_COMMISSIONING_PROPKEY_QUANTITY = "quantity";
 	

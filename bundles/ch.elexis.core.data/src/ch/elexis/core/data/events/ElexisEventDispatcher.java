@@ -153,6 +153,8 @@ public final class ElexisEventDispatcher extends Job {
 	 */
 	public void fire(final ElexisEvent... ees){
 		for (ElexisEvent ee : ees) {
+			EventAdminConsumer.sendElexisEvent(ee);
+			
 			if (blockEventTypes != null && blockEventTypes.contains(ee.getType())) {
 				continue;
 			}
