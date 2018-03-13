@@ -91,6 +91,7 @@ public class Messages extends NLS {
 	public static String KonsZumVerrechnenView2_databaseRequest;
 	public static String KonsZumVerrechnenView2_refresh;
 	public static String KonsZumVerrechnenView2_refreshList;
+	public static String CompensateAmountDialog_selectAccount;
 	public static String RechnungsBlatt_adressee;
 	public static String RechnungsBlatt_amountOpen;
 	public static String RechnungsBlatt_compensateAmount;
