@@ -40,6 +40,7 @@ import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.actions.ObjectFilterRegistry;
 import ch.elexis.core.ui.actions.ObjectFilterRegistry.IObjectFilterProvider;
+import ch.elexis.core.ui.e4.parts.CoverageSelectorPart;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -53,10 +54,11 @@ import ch.rgw.tools.ExHandler;
 
 /**
  * Eine alternative, platzsparendere Fälle-View
+ * @deprecated replaced by e4 {@link CoverageSelectorPart}
  */
-public class FaelleView extends ViewPart implements IActivationListener {
+public class FaelleViewOld extends ViewPart implements IActivationListener {
 	
-	private static Logger log = LoggerFactory.getLogger(FaelleView.class);
+	private static Logger log = LoggerFactory.getLogger(FaelleViewOld.class);
 	
 	public static final String ID = "ch.elexis.schoebufaelle"; //$NON-NLS-1$
 	TableViewer tv;
@@ -95,7 +97,7 @@ public class FaelleView extends ViewPart implements IActivationListener {
 		}
 	};
 	
-	public FaelleView(){
+	public FaelleViewOld(){
 		makeActions();
 	}
 	

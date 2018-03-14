@@ -15,6 +15,8 @@ package ch.elexis.core.ui.views;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DropTargetEvent;
@@ -63,43 +65,69 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 	private final Button addFreeTextBtn;
 	private final Hyperlink hDg;
 	private final PersistentObjectDropTarget dropTarget;
-
-	private final ElexisEventListener eeli_update = new ElexisUiEventListenerImpl(
-		Konsultation.class, ElexisEvent.EVENT_UPDATE) {
-		@Override
-		public void runInUi(ElexisEvent ev){
-			Konsultation actKons =
-				(Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
-			if (actKons != null) {
-				setDiagnosen(actKons);
-			}
-		}
-	};
 	
-	public void setEnabled(boolean enabled) {
+	private final ElexisEventListener eeli_update =
+		new ElexisUiEventListenerImpl(Konsultation.class, ElexisEvent.EVENT_UPDATE) {
+			@Override
+			public void runInUi(ElexisEvent ev){
+				Konsultation actKons =
+					(Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
+				if (actKons != null) {
+					setDiagnosen(actKons);
+				}
+			}
+		};
+	
+	public void setEnabled(boolean enabled){
 		addFreeTextBtn.setEnabled(enabled);
 		hDg.setEnabled(enabled);
 		super.setEnabled(enabled);
 	};
-
+	
+	/**
+	 * e4 style
+	 * @param partService used to open a specific MPart
+	 * @param parent
+	 * @param style
+	 */
+	public DiagnosenDisplay(final EPartService partService, final Composite parent,
+		final int style){
+		this((Object) partService, parent, style);
+	}
+	
+	/**
+	 * e3 style
+	 * @param page used to open a specific view
+	 * @param parent
+	 * @param style
+	 */
 	public DiagnosenDisplay(final IWorkbenchPage page, final Composite parent, final int style){
+		this((Object) page, parent, style);
+	}
+	
+	private DiagnosenDisplay(final Object pageOpener, Composite parent, final int style){
 		super(parent, style);
 		setLayout(new GridLayout(2, false));
-		hDg =
-			UiDesk.getToolkit()
-				.createHyperlink(this, Messages.DiagnosenDisplay_Diagnoses, SWT.NONE); //$NON-NLS-1$
+		hDg = UiDesk.getToolkit().createHyperlink(this, Messages.DiagnosenDisplay_Diagnoses,
+			SWT.NONE); //$NON-NLS-1$
 		hDg.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
 		hDg.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(final HyperlinkEvent e){
 				try {
-					page.showView(DiagnosenView.ID);
+					if (pageOpener instanceof IWorkbenchPage) {
+						((IWorkbenchPage) pageOpener).showView(DiagnosenView.ID);
+					} else if(pageOpener instanceof EPartService) {
+						EPartService partService = (EPartService) pageOpener;
+						MPart diagnosenPart = partService.findPart(DiagnosenView.ID);
+						partService.activate(diagnosenPart);
+					}
 					CodeSelectorHandler.getInstance().setCodeSelectorTarget(dropTarget);
 				} catch (Exception ex) {
 					ElexisStatus status =
 						new ElexisStatus(ElexisStatus.ERROR, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
-							Messages.DiagnosenDisplay_ErrorStartingCodeSystem + ex.getMessage(),
-							ex, ElexisStatus.LOG_ERRORS);
+							Messages.DiagnosenDisplay_ErrorStartingCodeSystem + ex.getMessage(), ex,
+							ElexisStatus.LOG_ERRORS);
 					StatusManager.getManager().handle(status, StatusManager.SHOW);
 				}
 			}
@@ -120,24 +148,23 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 				}
 			}
 		});
-
+		
 		tDg = UiDesk.getToolkit().createTable(this, SWT.SINGLE | SWT.WRAP);
 		tDg.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		tDg.setMenu(createDgMenu());
-
+		
 		// new PersistentObjectDragSource()
-		dropTarget =
-			new PersistentObjectDropTarget(Messages.DiagnosenDisplay_DiagnoseTarget, tDg,
-				new DropReceiver()); //$NON-NLS-1$
+		dropTarget = new PersistentObjectDropTarget(Messages.DiagnosenDisplay_DiagnoseTarget, tDg,
+			new DropReceiver()); //$NON-NLS-1$
 		new PersistentObjectDragSource(tDg, this);
-
+		
 		ElexisEventDispatcher.getInstance().addListeners(eeli_update);
 	}
-
+	
 	public void clear(){
 		tDg.removeAll();
 	}
-
+	
 	private final class DropReceiver implements PersistentObjectDropTarget.IReceiver {
 		@Override
 		public void dropped(final PersistentObject o, final DropTargetEvent ev){
@@ -153,7 +180,7 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 				}
 			}
 		}
-
+		
 		@Override
 		public boolean accept(final PersistentObject o){
 			if (o instanceof IVerrechenbar) {
@@ -165,7 +192,7 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 			return false;
 		}
 	}
-
+	
 	public void setDiagnosen(final Konsultation b){
 		List<IDiagnose> dgl = b.getDiagnosen();
 		tDg.removeAll();
@@ -176,7 +203,7 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 		}
 		// tDg.setEnabled(b.getStatus()==RnStatus.NICHT_VON_HEUTE);
 	}
-
+	
 	private Menu createDgMenu(){
 		Menu ret = new Menu(tDg);
 		MenuItem delDg = new MenuItem(ret, SWT.NONE);
@@ -184,7 +211,7 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 		delDg.addSelectionListener(new delDgListener());
 		return ret;
 	}
-
+	
 	class delDgListener extends SelectionAdapter {
 		@Override
 		public void widgetSelected(final SelectionEvent e){
@@ -198,7 +225,7 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 			// setBehandlung(actBehandlung);
 		}
 	}
-
+	
 	@Override
 	public List<PersistentObject> getSelection(){
 		TableItem[] sel = tDg.getSelection();
@@ -212,9 +239,9 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 		}
 		return ret;
 	}
-
+	
 	@Override
-	public void setUnlocked(boolean unlocked) {
+	public void setUnlocked(boolean unlocked){
 		setEnabled(unlocked);
 		redraw();
 	}

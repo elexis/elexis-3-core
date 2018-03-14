@@ -7,13 +7,9 @@ import org.eclipse.jface.viewers.Viewer;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.util.FallComparator;
-import ch.elexis.core.ui.views.FaelleView;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Patient;
 
-/**
- * @since 3.0.0 extracted from {@link FaelleView}
- */
 public class FaelleContentProvider implements IStructuredContentProvider {
 	
 	private FallComparator comparator;

@@ -4,12 +4,8 @@ import org.eclipse.swt.graphics.Image;
 
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
-import ch.elexis.core.ui.views.FaelleView;
 import ch.elexis.data.Fall;
 
-/**
- * @since 3.0.0 extracted from {@link FaelleView}
- */
 public class FaelleLabelProvider extends DefaultLabelProvider {
 	
 	@Override

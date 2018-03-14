@@ -225,13 +225,6 @@
             name="%elexis.fixMediView">
       </view>
       <view
-            category="ch.elexis.konsultationKategorie"
-            class="ch.elexis.core.ui.views.FaelleView"
-            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/documents_stack.png"
-            id="ch.elexis.schoebufaelle"
-            name="%elexis.casesListView">
-      </view>
-      <view
             class="ch.elexis.core.ui.views.ReminderView"
             icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/bell__exclamation.png"
             id="ch.elexis.reminderview"
@@ -372,6 +365,22 @@
             id="ch.elexis.core.ui.views.rechnung.InvoiceCorrectionView"
             name="Rechnungskorrektur (beta)">
       </view>
+      <e4view
+            category="ch.elexis.konsultationKategorie"
+            class="ch.elexis.core.ui.e4.parts.CoverageSelectorPart"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/documents_stack.png"
+            id="ch.elexis.core.ui.e4.parts.CoverageSelectorPart"
+            name="%elexis.casesListView"
+            restorable="true">
+      </e4view>
+      <e4view
+            category="ch.elexis.konsultationKategorie"
+            class="ch.elexis.core.ui.e4.parts.EncounterHistoryPart"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/book_open_view.png"
+            id="ch.elexis.core.ui.e4.parts.EncounterHistoryPart"
+            name="Verlauf neu"
+            restorable="true">
+      </e4view>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">

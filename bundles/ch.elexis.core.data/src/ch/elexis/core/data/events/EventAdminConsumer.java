@@ -62,13 +62,20 @@ public class EventAdminConsumer {
 		String topic = "";
 		Map<String, Object> properties = new HashMap<String, Object>();
 		
+		boolean addObjectContent = false;
+		
 		switch (ee.type) {
 		case ElexisEvent.EVENT_CREATE:
 			topic = ElexisEventTopics.PERSISTENCE_EVENT_CREATE;
 			break;
 		case ElexisEvent.EVENT_SELECTED:
 			topic = ElexisEventTopics.CONTEXT_EVENT_SELECTION;
-			topic += "/" + ee.getObject().getClass().getSimpleName().toLowerCase();
+			topic += "/" + ee.getObjectClass().getSimpleName().toLowerCase();
+			addObjectContent = true;
+			break;
+		case ElexisEvent.EVENT_DESELECTED:
+			topic = ElexisEventTopics.CONTEXT_EVENT_SELECTION;
+			topic += "/" + ee.getObjectClass().getSimpleName().toLowerCase();
 			break;
 		default:
 			topic = ElexisEventTopics.CONTEXT_EVENT + "eventid/" + Integer.toString(ee.type);
@@ -77,9 +84,11 @@ public class EventAdminConsumer {
 		
 		IPersistentObject object = ee.getObject();
 		if (object != null) {
-			properties.put(ElexisEventTopics.PROPKEY_ID, object.getId());
-			properties.put(ElexisEventTopics.PROPKEY_CLASS, object.getClass().getName());
-			properties.put(ElexisEventTopics.PROPKEY_OBJECT, object);
+			properties.put(ElexisEventTopics.PROPKEY_CLASS, object.getClass());
+			if(addObjectContent) {
+				properties.put(ElexisEventTopics.PROPKEY_ID, object.getId());
+				properties.put(ElexisEventTopics.PROPKEY_OBJECT, object);
+			}
 		}
 		
 		IPersistentObject user = ElexisEventDispatcher.getSelected(User.class);

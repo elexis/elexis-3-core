@@ -63,11 +63,19 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 	
 	private PagingComposite pagingComposite;
 	
+	public HistoryDisplay(Composite parent) {
+		this(parent, null, false);
+	}
+	
 	public HistoryDisplay(Composite parent, final IViewSite site){
 		this(parent, site, false);
 	}
 	
 	public HistoryDisplay(Composite parent, final IViewSite site, boolean multiline){
+		this(parent, multiline);
+	}
+	
+	public HistoryDisplay(Composite parent, boolean multiline){
 		super(parent, SWT.NONE);
 		setLayout(SWTHelper.createGridLayout(true, 1));
 		setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, true));

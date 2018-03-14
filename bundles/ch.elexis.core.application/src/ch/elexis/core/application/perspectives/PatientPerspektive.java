@@ -19,12 +19,12 @@ import org.eclipse.ui.IPerspectiveFactory;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.compatibility.ElexisFastViewUtil;
 import ch.elexis.core.ui.constants.UiResourceConstants;
+import ch.elexis.core.ui.e4.parts.CoverageSelectorPart;
+import ch.elexis.core.ui.e4.parts.EncounterHistoryPart;
 import ch.elexis.core.ui.views.AUF2;
-import ch.elexis.core.ui.views.FaelleView;
 import ch.elexis.core.ui.views.FallDetailView;
 import ch.elexis.core.ui.views.KompendiumView;
 import ch.elexis.core.ui.views.KonsDetailView;
-import ch.elexis.core.ui.views.KonsListe;
 import ch.elexis.core.ui.views.PatHeuteView;
 import ch.elexis.core.ui.views.RezepteView;
 import ch.elexis.core.ui.views.TextView;
@@ -50,7 +50,7 @@ public class PatientPerspektive implements IPerspectiveFactory {
 		
 		main.addView(UiResourceConstants.PatientDetailView2_ID);
 		left.addView(UiResourceConstants.PatientenListeView_ID);
-		leftbottom.addView(FaelleView.ID);
+		leftbottom.addView(CoverageSelectorPart.ID);
 		left.addView(PatHeuteView.ID);
 		main.addView(KonsDetailView.ID);
 		
@@ -58,7 +58,7 @@ public class PatientPerspektive implements IPerspectiveFactory {
 		main.addView(RezepteView.ID);
 		main.addView(AUF2.ID);
 		
-		right.addView(KonsListe.ID);
+		right.addView(EncounterHistoryPart.ID);
 		
 		main.addPlaceholder(FallDetailView.ID);
 		main.addPlaceholder(TextView.ID);
@@ -68,8 +68,8 @@ public class PatientPerspektive implements IPerspectiveFactory {
 		layout.addShowViewShortcut(UiResourceConstants.PatientDetailView2_ID);
 		layout.addShowViewShortcut(UiResourceConstants.PatientenListeView_ID);
 		// layout.addShowViewShortcut(FallListeView.ID);
-		layout.addPerspectiveShortcut(FaelleView.ID);
-		layout.addShowViewShortcut(KonsListe.ID);
+		layout.addPerspectiveShortcut(CoverageSelectorPart.ID);
+		layout.addShowViewShortcut(EncounterHistoryPart.ID);
 		layout.addShowViewShortcut(PatHeuteView.ID);
 		layout.addShowViewShortcut(KonsDetailView.ID);
 		layout.addShowViewShortcut(RezepteView.ID);

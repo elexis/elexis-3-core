@@ -17,6 +17,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -70,6 +72,7 @@ import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.locks.LockDeniedNoActionLockHandler;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.core.ui.views.codesystems.DiagnosenView;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Eigenleistung;
@@ -87,7 +90,6 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	TableViewer viewer;
 	MenuManager contextMenuManager;
 	private String defaultRGB;
-	private IWorkbenchPage page;
 	private final Hyperlink hVer;
 	private final PersistentObjectDropTarget dropTarget;
 	private IAction applyMedicationAction, chPriceAction, chCountAction,
@@ -111,10 +113,29 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		}
 	};
 	
+	/**
+	 * e4 style
+	 * @param partService used to open a specific MPart
+	 * @param parent
+	 * @param style
+	 */
+	public VerrechnungsDisplay(final EPartService partService, Composite parent, int style){
+		this((Object) partService, parent, style);
+	}
+	
+	/**
+	 * e3 style
+	 * @param p
+	 * @param parent
+	 * @param style
+	 */
 	public VerrechnungsDisplay(final IWorkbenchPage p, Composite parent, int style){
+		this((Object) p, parent, style);
+	}
+	
+	private VerrechnungsDisplay(final Object pageOpener, Composite parent, int style){
 		super(parent, style);
 		setLayout(new GridLayout());
-		this.page = p;
 		defaultRGB = UiDesk.createColor(new RGB(255, 255, 255));
 		
 		hVer =
@@ -128,7 +149,13 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					if (StringTool.isNothing(LeistungenView.ID)) {
 						SWTHelper.alert(Messages.VerrechnungsDisplay_error, "LeistungenView.ID"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
-					page.showView(LeistungenView.ID);
+					if (pageOpener instanceof IWorkbenchPage) {
+						((IWorkbenchPage) pageOpener).showView(DiagnosenView.ID);
+					} else if(pageOpener instanceof EPartService) {
+						EPartService partService = (EPartService) pageOpener;
+						MPart diagnosenPart = partService.findPart(DiagnosenView.ID);
+						partService.activate(diagnosenPart);
+					}
 					CodeSelectorHandler.getInstance().setCodeSelectorTarget(dropTarget);
 				} catch (Exception ex) {
 					ElexisStatus status =
@@ -657,6 +684,14 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					Messages.VerrechnungsDisplay_invalidEntryBody); //$NON-NLS-1$
 			}
 		}
+	}
+	
+	public TableViewer getViewer(){
+		return viewer;
+	}
+	
+	public Table gettVerr(){
+		return tVerr;
 	}
 	
 	@Override

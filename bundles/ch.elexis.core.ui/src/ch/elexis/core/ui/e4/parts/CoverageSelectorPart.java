@@ -1,21 +1,27 @@
+/*******************************************************************************
+ * Copyright (c) 2018, MEDEVIT and Elexis
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    MEDEVIT <office@medevit.at> - initial implementation
+ *******************************************************************************/
+package ch.elexis.core.ui.e4.parts;
 
-package ch.elexis.core.ui.views;
-
-import static ch.elexis.core.ui.actions.GlobalActions.delFallAction;
-import static ch.elexis.core.ui.actions.GlobalActions.makeBillAction;
-import static ch.elexis.core.ui.actions.GlobalActions.neuerFallAction;
-import static ch.elexis.core.ui.actions.GlobalActions.openFallaction;
-import static ch.elexis.core.ui.actions.GlobalActions.reopenFallAction;
-
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.eclipse.e4.core.contexts.Active;
 import org.eclipse.e4.core.di.annotations.Optional;
-import org.eclipse.e4.ui.di.UIEventTopic;
+import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
-import org.eclipse.e4.ui.model.application.ui.menu.MToolBar;
+import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.action.Action;
@@ -33,48 +39,57 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
-import org.osgi.service.event.Event;
 
-import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.ObjectFilterRegistry;
 import ch.elexis.core.ui.actions.ObjectFilterRegistry.IObjectFilterProvider;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.FallComparator;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.core.ui.util.ViewMenus;
+import ch.elexis.core.ui.views.FallDetailView;
+import ch.elexis.core.ui.views.Messages;
 import ch.elexis.core.ui.views.provider.FaelleLabelProvider;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
 
-public class FaellePart {
+public class CoverageSelectorPart {
+	
+	public static final String ID = CoverageSelectorPart.class.getName();
 	
 	@Inject
+	MPart mPart;
+	@Inject
 	EPartService partService;
+	@Inject
+	UISynchronize uisync;
+	@Inject
+	EMenuService menuService;
 	
-	private TableViewer tv;
+	private TableViewer tableViewer;
 	private IAction konsFilterAction;
 	private IAction filterClosedAction;
 	private final FallKonsFilter filter = new FallKonsFilter();
 	
-	public FaellePart(){
+	public CoverageSelectorPart(){
 		makeActions();
 	}
 	
 	@PostConstruct
-	public void postConstruct(Composite parent, MPart mPart, EModelService modelService){
+	public void postConstruct(Composite parent, EModelService modelService){
 		parent.setLayout(new GridLayout());
 		
-		tv = new TableViewer(parent);
-		Table table = tv.getTable();
+		tableViewer = new TableViewer(parent);
+		Table table = tableViewer.getTable();
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tv.getControl().setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		tv.setContentProvider(ArrayContentProvider.getInstance());
-		tv.setLabelProvider(new FaelleLabelProvider());
-		tv.addSelectionChangedListener(GlobalEventDispatcher.getInstance().getDefaultListener());
-		tv.addDoubleClickListener(new IDoubleClickListener() {
+		tableViewer.getControl().setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
+		tableViewer.setContentProvider(ArrayContentProvider.getInstance());
+		tableViewer.setLabelProvider(new FaelleLabelProvider());
+		tableViewer
+			.addSelectionChangedListener(GlobalEventDispatcher.getInstance().getDefaultListener());
+		tableViewer.addDoubleClickListener(new IDoubleClickListener() {
 			@Override
 			public void doubleClick(DoubleClickEvent event){
 				MPart findPart = partService.findPart(FallDetailView.ID);
@@ -82,45 +97,41 @@ public class FaellePart {
 			}
 		});
 		
-//		final MToolBar mBar = modelService.createModelElement(MToolBar.class);
-//		mPart.setToolbar(mBar);
-//		mBar.getChildren().add(modelService.createM)
-		
-//		menus = new ViewMenus(getViewSite());
-//		menus.createToolbar(neuerFallAction, konsFilterAction, filterClosedAction);
-//		menus.createViewerContextMenu(tv, delFallAction, openFallaction, reopenFallAction,
-//			makeBillAction);
+		PartMenus partMenus = new PartMenus();
+		partMenus.createViewerContextMenu(menuService, ID, table, GlobalActions.delFallAction,
+			GlobalActions.openFallaction, GlobalActions.reopenFallAction,
+			GlobalActions.makeBillAction);
+		partMenus.createToolbar(modelService, mPart, GlobalActions.neuerFallAction,
+			konsFilterAction, filterClosedAction);
 	}
 	
 	@Inject
-	@Optional
-	private void patientChangeListener(
-		@UIEventTopic(ElexisEventTopics.CONTEXT_EVENT_SELECTION + "/patient") Event object,
-		MPart thisPart, EPartService partService){
-		
-		if (partService.isPartVisible(thisPart)) {
-			Patient patient = (Patient) object.getProperty(ElexisEventTopics.PROPKEY_OBJECT);
-			if (patient != null) {
-				Fall[] cases = patient.getFaelle();
-				Arrays.sort(cases, new FallComparator());
-				tv.setInput(cases);
-				
-				Fall currentFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
-				if (currentFall != null) {
-					tv.setSelection(new StructuredSelection(currentFall));
-				}
-			} else {
-				tv.setInput(new Object[0]);
+	private void context(@Optional @Active Patient currentPatient,
+		@Optional @Active Fall currentCoverage){
+		if (partService.isPartVisible(mPart)) {
+			List<Fall> cases = new ArrayList<Fall>();
+			if (currentPatient != null) {
+				Fall[] casesA = currentPatient.getFaelle();
+				Arrays.sort(casesA, new FallComparator());
+				cases.addAll(Arrays.asList(casesA));
 			}
+			
+			if (currentCoverage != null && konsFilterAction.isChecked()) {
+				filter.setFall(currentCoverage);
+			}
+			
+			uisync.asyncExec(() -> {
+				if (!tableViewer.getTable().isDisposed()) {
+					tableViewer.setInput(cases);
+					if (currentCoverage != null) {
+						StructuredSelection ss = (StructuredSelection) tableViewer.getSelection();
+						if (!ss.isEmpty() && !ss.getFirstElement().equals(currentCoverage)) {
+							tableViewer.setSelection(new StructuredSelection(currentCoverage));
+						}
+					}
+				}
+			});
 		}
-	}
-	
-	@Inject
-	@Optional
-	private void fallChangeListener(
-		@UIEventTopic(ElexisEventTopics.CONTEXT_EVENT_SELECTION + "/fall") Event object,
-		MPart thisPart, EPartService partService){
-		
 	}
 	
 	private void makeActions(){
@@ -164,9 +175,9 @@ public class FaellePart {
 			@Override
 			public void run(){
 				if (!isChecked()) {
-					tv.removeFilter(closedFilter);
+					tableViewer.removeFilter(closedFilter);
 				} else {
-					tv.addFilter(closedFilter);
+					tableViewer.addFilter(closedFilter);
 				}
 			}
 		};

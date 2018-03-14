@@ -28,6 +28,7 @@ import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.actions.KonsFilter;
 import ch.elexis.core.ui.dialogs.KonsFilterDialog;
+import ch.elexis.core.ui.e4.parts.EncounterHistoryPart;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -36,7 +37,10 @@ import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
 
-public class KonsListe extends ViewPart implements IActivationListener, ISaveablePart2 {
+/**
+ * @deprecated replaced by {@link EncounterHistoryPart}
+ */
+public class KonsListeOld extends ViewPart implements IActivationListener, ISaveablePart2 {
 	public static final String ID = "ch.elexis.HistoryView"; //$NON-NLS-1$
 	HistoryDisplay liste;
 	Patient actPatient;
