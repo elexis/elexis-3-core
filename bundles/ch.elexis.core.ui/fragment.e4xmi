@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="ASCII"?>
-<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_OaQqQCa7EeiD1ZpyPzRBag">
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/descriptor/basic" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_OaQqQCa7EeiD1ZpyPzRBag">
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_cMXIMCa7EeiD1ZpyPzRBag" featurename="addons" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="application:Addon" xmi:id="_CJsfACdUEei2QKORDx_ymg" elementId="ch.elexis.core.ui.addon.ElexisApplicationContextAddon" contributionURI="bundleclass://ch.elexis.core.ui/ch.elexis.core.ui.e4.addons.ElexisApplicationContextAddon"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_29dXkCg5Eei4YfK6wPWr1Q" featurename="descriptors" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="basic:PartDescriptor" xmi:id="_A9w-4Cg6Eei4YfK6wPWr1Q" elementId="ch.elexis.core.ui.partdescriptor.0">
+      <menus xmi:id="_CB7xoCg6Eei4YfK6wPWr1Q" elementId="ch.elexis.core.ui.menu.0">
+        <tags>ViewMenu</tags>
+      </menus>
+    </elements>
   </fragments>
 </fragment:ModelFragments>

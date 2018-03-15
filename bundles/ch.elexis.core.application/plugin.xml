@@ -381,6 +381,14 @@
             name="Verlauf neu"
             restorable="true">
       </e4view>
+      <e4view
+            category="ch.elexis.konsultationKategorie"
+            class="ch.elexis.core.ui.e4.parts.EncounterDetailPart"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/consult_view.png"
+            id="ch.elexis.core.ui.e4.parts.EncounterDetailPart"
+            name="Konsultation neu"
+            restorable="true">
+      </e4view>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">
