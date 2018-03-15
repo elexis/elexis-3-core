@@ -41,9 +41,9 @@ location "http://download.eclipse.org/nebula/releases/latest/" {
 	org.eclipse.nebula.widgets.tablecombo.feature.feature.group
 }
 
-location "http://hstaudacher.github.io/osgi-jax-rs-connector/5.3.1/" {
-	com.eclipsesource.jaxrs.consumer [5.3.1.201602281253,5.3.1.201602281253]
-	com.eclipsesource.jaxrs.jersey-min [2.22.2,2.23.0)
+location "http://medevit.github.io/osgi-jax-rs-connector/5.3.100/" {
+	com.eclipsesource.jaxrs.consumer
+	com.eclipsesource.jaxrs.jersey-all-nojavax
 }
 
 // Eclipse Orbit Recommended Tue, 7 Mar 2017 -- 18:06 (UTC)	Neon.3

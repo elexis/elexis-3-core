@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="Neon for Elexis 3.3" sequenceNumber="1510844678">
+<target name="Neon for Elexis 3.3" sequenceNumber="1521114593">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.17.0.v20170601-1400"/>
+      <unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.18.0.v20171217-2215"/>
       <repository location="http://download.eclipse.org/e4/snapshots/org.eclipse.e4.tools/latest/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
@@ -45,9 +45,9 @@
       <repository location="http://download.eclipse.org/nebula/releases/latest/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="com.eclipsesource.jaxrs.consumer" version="5.3.1.201602281253"/>
-      <unit id="com.eclipsesource.jaxrs.jersey-min" version="2.22.2"/>
-      <repository location="http://hstaudacher.github.io/osgi-jax-rs-connector/5.3.1/"/>
+      <unit id="com.eclipsesource.jaxrs.consumer" version="5.3.1.201803151143"/>
+      <unit id="com.eclipsesource.jaxrs.jersey-all-nojavax" version="2.24.1"/>
+      <repository location="http://medevit.github.io/osgi-jax-rs-connector/5.3.100/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.apache.httpcomponents.httpcore" version="4.4.6.v20170210-0925"/>
