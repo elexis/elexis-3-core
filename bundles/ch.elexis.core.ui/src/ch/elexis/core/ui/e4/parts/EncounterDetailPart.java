@@ -10,6 +10,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.eclipse.e4.core.contexts.Active;
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.di.PersistState;
 import org.eclipse.e4.ui.di.UISynchronize;
@@ -113,7 +115,7 @@ public class EncounterDetailPart implements IUnlockable {
 	UISynchronize uisync;
 	@Inject
 	EMenuService menuService;
-
+	
 	Hashtable<String, IKonsExtension> hXrefs;
 	EnhancedTextField text;
 	private Label lBeh;
@@ -141,14 +143,16 @@ public class EncounterDetailPart implements IUnlockable {
 	private SashForm diagAndChargeSash;
 	private ComboFallSelectionListener comboFallSelectionListener;
 	
-	private final ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class,
-		ElexisEvent.EVENT_UPDATE | ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_RELOAD) {
-		@Override
-		public void runInUi(ElexisEvent ev){
-			actPat = null; // make sure patient will be updated
-			setPatient((Patient) ev.getObject());
-		};
-	};
+
+	@Inject
+	private void context(@Optional @Active Patient currentPatient){
+		if (partService.isPartVisible(mPart)) {
+			uisync.asyncExec(() -> {
+				actPat = null; // make sure patient will be updated
+				setPatient(currentPatient);
+			});
+		}
+	}
 	
 	private final ElexisEventListener eeli_user =
 		new ElexisUiEventListenerImpl(Anwender.class, ElexisEvent.EVENT_USER_CHANGED) {
@@ -177,44 +181,42 @@ public class EncounterDetailPart implements IUnlockable {
 			}
 		};
 	
-	private final ElexisEventListener eeli_kons =
-		new ElexisUiEventListenerImpl(Konsultation.class,
-			ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_DESELECTED
-				| ElexisEvent.EVENT_LOCK_AQUIRED | ElexisEvent.EVENT_LOCK_RELEASED
-				| ElexisEvent.EVENT_UPDATE) {
-			@Override
-			public void runInUi(ElexisEvent ev){
-				Konsultation kons = (Konsultation) ev.getObject();
-				Konsultation deselectedKons = null;
-				switch (ev.getType()) {
-				case ElexisEvent.EVENT_SELECTED:
-					deselectedKons = actKons;
+	private final ElexisEventListener eeli_kons = new ElexisUiEventListenerImpl(Konsultation.class,
+		ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_DESELECTED | ElexisEvent.EVENT_LOCK_AQUIRED
+			| ElexisEvent.EVENT_LOCK_RELEASED | ElexisEvent.EVENT_UPDATE) {
+		@Override
+		public void runInUi(ElexisEvent ev){
+			Konsultation kons = (Konsultation) ev.getObject();
+			Konsultation deselectedKons = null;
+			switch (ev.getType()) {
+			case ElexisEvent.EVENT_SELECTED:
+				deselectedKons = actKons;
+				setKons(kons);
+				releaseAndRefreshLock(deselectedKons,
+					ToggleCurrentKonsultationLockHandler.COMMAND_ID);
+				break;
+			case ElexisEvent.EVENT_UPDATE:
+				if (kons != null && kons.equals(actKons)) {
 					setKons(kons);
-					releaseAndRefreshLock(deselectedKons,
-						ToggleCurrentKonsultationLockHandler.COMMAND_ID);
-					break;
-				case ElexisEvent.EVENT_UPDATE:
-					if (kons != null && kons.equals(actKons)) {
-						setKons(kons);
-					}
-					break;
-				case ElexisEvent.EVENT_DESELECTED:
-					deselectedKons = actKons;
-					setKons(null);
-					releaseAndRefreshLock(deselectedKons,
-						ToggleCurrentKonsultationLockHandler.COMMAND_ID);
-					break;
-				case ElexisEvent.EVENT_LOCK_AQUIRED:
-				case ElexisEvent.EVENT_LOCK_RELEASED:
-					if (kons.equals(actKons)) {
-						setUnlocked(ev.getType() == ElexisEvent.EVENT_LOCK_AQUIRED);
-					}
-					break;
-				default:
-					break;
 				}
+				break;
+			case ElexisEvent.EVENT_DESELECTED:
+				deselectedKons = actKons;
+				setKons(null);
+				releaseAndRefreshLock(deselectedKons,
+					ToggleCurrentKonsultationLockHandler.COMMAND_ID);
+				break;
+			case ElexisEvent.EVENT_LOCK_AQUIRED:
+			case ElexisEvent.EVENT_LOCK_RELEASED:
+				if (kons.equals(actKons)) {
+					setUnlocked(ev.getType() == ElexisEvent.EVENT_LOCK_AQUIRED);
+				}
+				break;
+			default:
+				break;
 			}
-		};
+		}
+	};
 	
 	private void releaseAndRefreshLock(IPersistentObject object, String commandId){
 		if (object != null && CoreHub.getLocalLockService().isLockedLocal(object)) {
@@ -243,19 +245,19 @@ public class EncounterDetailPart implements IUnlockable {
 		boolean cbFallEnabled = actKons != null && actKons.isEditable(false) && unlocked;
 		comboViewerFall.getCombo().setEnabled(cbFallEnabled);
 		text.setEditable(unlocked);
-
+		
 		// update the UI
 		//TODO
-//		IToolBarManager mgr = ((IViewSite) getSite()).getActionBars().getToolBarManager();
-//		IContributionItem[] items = mgr.getItems();
-//		for (IContributionItem iContributionItem : items) {
-//			iContributionItem.update();
-//		}
+		//		IToolBarManager mgr = ((IViewSite) getSite()).getActionBars().getToolBarManager();
+		//		IContributionItem[] items = mgr.getItems();
+		//		for (IContributionItem iContributionItem : items) {
+		//			iContributionItem.update();
+		//		}
 	}
 	
 	@PostConstruct
 	public void postConstruct(Composite parent, EModelService modelService){
-//		setTitleImage(Images.IMG_VIEW_CONSULTATION_DETAIL.getImage());
+		//		setTitleImage(Images.IMG_VIEW_CONSULTATION_DETAIL.getImage());
 		sash = new SashForm(parent, SWT.VERTICAL);
 		
 		tk = UiDesk.getToolkit();
@@ -279,7 +281,7 @@ public class EncounterDetailPart implements IUnlockable {
 			@Override
 			public void linkActivated(HyperlinkEvent e){
 				KontaktSelektor ksl = new KontaktSelektor(Hub.getActiveShell(), Mandant.class,
-					Messages.KonsDetailView_SelectMandatorCaption, 
+					Messages.KonsDetailView_SelectMandatorCaption,
 					Messages.KonsDetailView_SelectMandatorBody, new String[] {
 						Mandant.FLD_SHORT_LABEL, Mandant.FLD_NAME1, Mandant.FLD_NAME2
 				}); // $NON-NLS-1$
@@ -341,36 +343,37 @@ public class EncounterDetailPart implements IUnlockable {
 		verrechnungsDisplay.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		
 		PartMenus partMenus = new PartMenus();
-		partMenus.createViewerContextMenu(menuService, ID, verrechnungsDisplay.getViewer().getTable());
-//		getSite().registerContextMenu(ID + ".VerrechnungsDisplay", verrechnungsDisplay.contextMenuManager,
-//			verrechnungsDisplay.viewer);
+		partMenus.createViewerContextMenu(menuService, ID,
+			verrechnungsDisplay.getViewer().getTable());
+		//		getSite().registerContextMenu(ID + ".VerrechnungsDisplay", verrechnungsDisplay.contextMenuManager,
+		//			verrechnungsDisplay.viewer);
 		//TODO
-//		getSite().setSelectionProvider(verrechnungsDisplay.viewer);
+		//		getSite().setSelectionProvider(verrechnungsDisplay.viewer);
 		
 		diagAndChargeSash.setWeights(diagAndChargeSashWeights == null ? new int[] {
 			40, 60
 		} : diagAndChargeSashWeights);
 		
 		makeActions();
-//		ViewMenus menu = new ViewMenus(getViewSite());
-		partMenus.createViewMenu(modelService, mPart, versionDisplayAction, versionFwdAction, versionBackAction,
-			GlobalActions.neueKonsAction, GlobalActions.delKonsAction, GlobalActions.redateAction,
-			assignStickerAction, purgeAction);
-//		menu.createMenu(versionDisplayAction, versionFwdAction, versionBackAction,
-//			GlobalActions.neueKonsAction, GlobalActions.delKonsAction, GlobalActions.redateAction,
-//			assignStickerAction, purgeAction);
-		partMenus.createToolbar(modelService, mPart,GlobalActions.neueKonsAction, saveAction);
+		//		ViewMenus menu = new ViewMenus(getViewSite());
+		partMenus.createViewMenu(modelService, mPart, versionDisplayAction, versionFwdAction,
+			versionBackAction, GlobalActions.neueKonsAction, GlobalActions.delKonsAction,
+			GlobalActions.redateAction, assignStickerAction, purgeAction);
+		//		menu.createMenu(versionDisplayAction, versionFwdAction, versionBackAction,
+		//			GlobalActions.neueKonsAction, GlobalActions.delKonsAction, GlobalActions.redateAction,
+		//			assignStickerAction, purgeAction);
+		partMenus.createToolbar(modelService, mPart, GlobalActions.neueKonsAction, saveAction);
 		
 		sash.setWeights(sashWeights == null ? new int[] {
 			80, 20
 		} : sashWeights);
 		
-//		menu.createToolbar(GlobalActions.neueKonsAction, saveAction);
-//		GlobalEventDispatcher.addActivationListener(this, this);
-		ElexisEventDispatcher.getInstance().addListeners(eeli_kons, eeli_kons_sync, eeli_pat,
+		//		menu.createToolbar(GlobalActions.neueKonsAction, saveAction);
+		//		GlobalEventDispatcher.addActivationListener(this, this);
+		ElexisEventDispatcher.getInstance().addListeners(eeli_kons, eeli_kons_sync,
 			eeli_user, eeli_fall);
 		// TODO
-//		text.connectGlobalActions(getViewSite());
+		//		text.connectGlobalActions(getViewSite());
 		
 		adaptMenus();
 		setKons((Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class));
@@ -379,36 +382,35 @@ public class EncounterDetailPart implements IUnlockable {
 		init(mPart);
 	}
 	
-
-	public void init( MPart mPart) {
-//		if (memento == null) {
-//			sashWeights = new int[] {
-//				80, 20
-//			};
-//			diagAndChargeSashWeights = new int[] {
-//				40, 60
-//			};
-//		} else {
-			String state = mPart.getPersistedState().get(CFG_VERTRELATION);
-			if (state == null) {
-				state = "80,20"; //$NON-NLS-1$
-			}
-			String[] sw = state.split(StringConstants.COMMA);
-			sashWeights = new int[] {
-				Integer.parseInt(sw[0]), Integer.parseInt(sw[1])
-			};
-			
-			state = mPart.getPersistedState().get(CFG_HORIZRELATION);
-			if (state == null) {
-				state = "40,60"; //$NON-NLS-1$
-			}
-			sw = state.split(StringConstants.COMMA);
-			diagAndChargeSashWeights = new int[] {
-				Integer.parseInt(sw[0]), Integer.parseInt(sw[1])
-			};
-			
-//		}
-//		super.init(site, memento);
+	public void init(MPart mPart){
+		//		if (memento == null) {
+		//			sashWeights = new int[] {
+		//				80, 20
+		//			};
+		//			diagAndChargeSashWeights = new int[] {
+		//				40, 60
+		//			};
+		//		} else {
+		String state = mPart.getPersistedState().get(CFG_VERTRELATION);
+		if (state == null) {
+			state = "80,20"; //$NON-NLS-1$
+		}
+		String[] sw = state.split(StringConstants.COMMA);
+		sashWeights = new int[] {
+			Integer.parseInt(sw[0]), Integer.parseInt(sw[1])
+		};
+		
+		state = mPart.getPersistedState().get(CFG_HORIZRELATION);
+		if (state == null) {
+			state = "40,60"; //$NON-NLS-1$
+		}
+		sw = state.split(StringConstants.COMMA);
+		diagAndChargeSashWeights = new int[] {
+			Integer.parseInt(sw[0]), Integer.parseInt(sw[1])
+		};
+		
+		//		}
+		//		super.init(site, memento);
 	}
 	
 	/*
@@ -416,16 +418,16 @@ public class EncounterDetailPart implements IUnlockable {
 	 * 
 	 * @see org.eclipse.ui.part.WorkbenchPart#dispose()
 	 */
-//	@Override
-//	public void dispose(){
-		// TODO
-//		GlobalEventDispatcher.removeActivationListener(this, this);
-//		ElexisEventDispatcher.getInstance().removeListeners(eeli_kons, eeli_kons_sync, eeli_pat,
-//			eeli_user, eeli_fall);
-//		text.disconnectGlobalActions(getViewSite());
-		// emFont.dispose();
-//		super.dispose();
-//	}
+	//	@Override
+	//	public void dispose(){
+	// TODO
+	//		GlobalEventDispatcher.removeActivationListener(this, this);
+	//		ElexisEventDispatcher.getInstance().removeListeners(eeli_kons, eeli_kons_sync, eeli_pat,
+	//			eeli_user, eeli_fall);
+	//		text.disconnectGlobalActions(getViewSite());
+	// emFont.dispose();
+	//		super.dispose();
+	//	}
 	
 	/** Aktuellen patient setzen */
 	private synchronized void setPatient(Patient pat){
@@ -629,7 +631,7 @@ public class EncounterDetailPart implements IUnlockable {
 					return;
 				}
 				if (MessageDialog.openConfirm(Hub.getActiveShell(),
-					Messages.KonsDetailView_ReplaceKonsTextCaption, 
+					Messages.KonsDetailView_ReplaceKonsTextCaption,
 					Messages.KonsDetailView_ReplaceKonsTextBody)) {
 					setKonsText(actKons, displayedVersion - 1);
 					text.setDirty(true);
@@ -700,7 +702,8 @@ public class EncounterDetailPart implements IUnlockable {
 	}
 	
 	public void adaptMenus(){
-		verrechnungsDisplay.gettVerr().getMenu().setEnabled(CoreHub.acl.request(AccessControlDefaults.LSTG_VERRECHNEN));
+		verrechnungsDisplay.gettVerr().getMenu()
+			.setEnabled(CoreHub.acl.request(AccessControlDefaults.LSTG_VERRECHNEN));
 	}
 	
 	/*
@@ -708,56 +711,55 @@ public class EncounterDetailPart implements IUnlockable {
 	 * benötigen das Interface nur, um das Schliessen einer View zu verhindern,
 	 * wenn die Perspektive fixiert ist. Gibt es da keine einfachere Methode?
 	 */
-//	@Override
-//	public int promptToSaveOnClose(){
-//		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
-//				: ISaveablePart2.NO;
-//	}
+	//	@Override
+	//	public int promptToSaveOnClose(){
+	//		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
+	//				: ISaveablePart2.NO;
+	//	}
 	
-	
-//	@Override
-//	public boolean isDirty(){
-//		return true;
-//	}
-//	
-//	@Override
-//	public boolean isSaveAsAllowed(){
-//		return false;
-//	}
-//	
-//	@Override
-//	public boolean isSaveOnCloseNeeded(){
-//		return true;
-//	}
+	//	@Override
+	//	public boolean isDirty(){
+	//		return true;
+	//	}
+	//	
+	//	@Override
+	//	public boolean isSaveAsAllowed(){
+	//		return false;
+	//	}
+	//	
+	//	@Override
+	//	public boolean isSaveOnCloseNeeded(){
+	//		return true;
+	//	}
 	
 	public void addToVerechnung(Artikel artikel){
 		verrechnungsDisplay.addPersistentObject(artikel);
 	}
-
+	
 	// TODO
-//	@Override
-//	public void activation(boolean mode){
-//		if (mode == false) {
-//			// save entry on deactivation if text was edited
-//			if (actKons != null && (text.isDirty())) {
-//				actKons.updateEintrag(text.getContentsAsXML(), false);
-//				text.setDirty(false);
-//			}
-//		} else {
-//			// load newest version on activation, if there are no local changes
-//			if (actKons != null && !text.isDirty()) {
-//				setKonsText(actKons, actKons.getHeadVersion());
-//			}
-//		}
-//	}
-
+	//	@Override
+	//	public void activation(boolean mode){
+	//		if (mode == false) {
+	//			// save entry on deactivation if text was edited
+	//			if (actKons != null && (text.isDirty())) {
+	//				actKons.updateEintrag(text.getContentsAsXML(), false);
+	//				text.setDirty(false);
+	//			}
+	//		} else {
+	//			// load newest version on activation, if there are no local changes
+	//			if (actKons != null && !text.isDirty()) {
+	//				setKonsText(actKons, actKons.getHeadVersion());
+	//			}
+	//		}
+	//	}
+	
 	// TODO
-//	@Override
-//	public void visible(boolean mode){
-//		if (mode == true) {
-//			adaptMenus();
-//		}
-//	}
+	//	@Override
+	//	public void visible(boolean mode){
+	//		if (mode == true) {
+	//			adaptMenus();
+	//		}
+	//	}
 	
 	private class ComboFallSelectionListener implements ISelectionChangedListener {
 		private boolean ignoreEventSelectionChanged;
@@ -796,8 +798,7 @@ public class EncounterDetailPart implements IUnlockable {
 										new Object[] {
 											fallLabel, nFall.getLabel()
 										}), MessageDialog.QUESTION, new String[] {
-											Messages.KonsDetailView_Yes,
-											Messages.KonsDetailView_No
+											Messages.KonsDetailView_Yes, Messages.KonsDetailView_No
 									}, 0);
 								if (msd.open() == Window.OK) {
 									actKons.setFall(nFall);
@@ -814,6 +815,5 @@ public class EncounterDetailPart implements IUnlockable {
 			ignoreEventSelectionChanged = false;
 		}
 		
-
 	}
 }
