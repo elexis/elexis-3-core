@@ -27,8 +27,8 @@ location "http://download.elexis.info/elexis/master/p2/target/" {
 	org.eclipse.nebula.widgets.cdatetime.feature.feature.group
 	org.eclipse.nebula.widgets.tablecombo.feature.feature.group
 
-	com.eclipsesource.jaxrs.consumer [5.3.1.201602281253,5.3.1.201602281253]
-	com.eclipsesource.jaxrs.jersey-min [2.22.2,2.23.0)
+	com.eclipsesource.jaxrs.consumer
+	com.eclipsesource.jaxrs.jersey-all-nojavax
 	
 	org.apache.httpcomponents.httpcore
 	org.apache.httpcomponents.httpclient
