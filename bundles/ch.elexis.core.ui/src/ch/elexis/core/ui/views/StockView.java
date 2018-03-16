@@ -14,40 +14,48 @@ package ch.elexis.core.ui.views;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.FocusCellHighlighter;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DropTargetEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.statushandlers.StatusManager;
@@ -55,9 +63,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.service.StockService;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.services.IStockService.Availability;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -70,12 +80,8 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
-import ch.elexis.core.ui.util.viewers.CommonViewer;
-import ch.elexis.core.ui.util.viewers.CommonViewer.Message;
-import ch.elexis.core.ui.util.viewers.DefaultContentProvider;
-import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
-import ch.elexis.core.ui.util.viewers.ViewerConfigurer.WidgetProvider;
 import ch.elexis.core.ui.views.provider.StockEntryLabelProvider;
+import ch.elexis.core.ui.views.provider.StockEntryLabelProvider.ColumnStockEntryLabelProvider;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.PersistentObject;
@@ -91,45 +97,203 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 	public static final String ID = "ch.elexis.core.ui.views.StockView"; //$NON-NLS-1$
 	private Logger log = LoggerFactory.getLogger(StockView.class);
 	
-	private CommonViewer cv;
-	private ViewerConfigurer vc;
+	private Text filterText;
+	private StockEntryLoader loader;
+	
+	private TableViewer viewer;
+	private StockEntryLabelProvider labelProvider;
+	
 	private ViewMenus viewMenus;
 	private IAction refreshAction, exportAction;
 	
+	String[] columns = {
+		Messages.LagerView_stock, Messages.LagerView_pharmacode, Messages.LagerView_gtin,
+		Messages.LagerView_name, Messages.LagerView_minBestand, Messages.LagerView_istBestand,
+		Messages.LagerView_maxBestand, Messages.LagerView_dealer
+	};
+	int[] colwidth = {
+		40, 75, 90, 250, 35, 35, 35, 150
+	};
+	
+	private void refreshConsiderFilter(){
+		if (!refreshUseFilter()) {
+			loader = new StockEntryLoader(viewer);
+			loader.schedule();
+		}
+	}
+	
+	private boolean refreshUseFilter(){
+		String search = filterText.getText();
+		if (search != null && search.length() > 2) {
+			if (loader != null) {
+				loader.cancel();
+			}
+			loader = new StockEntryLoader(viewer, search);
+			loader.schedule();
+			return true;
+		}
+		return false;
+	}
+	
 	@Override
 	public void createPartControl(Composite parent){
-		parent.setLayout(new GridLayout());
-		cv = new CommonViewer();
-		vc = new ViewerConfigurer(new DefaultContentProvider(cv, StockEntry.class) {
+		labelProvider = new StockEntryLabelProvider();
+		parent.setLayout(new GridLayout(2, false));
+		
+		filterText = new Text(parent, SWT.BORDER | SWT.SEARCH);
+		filterText.setMessage("Filter");
+		filterText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		filterText.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e){
+				if (!refreshUseFilter()) {
+					// reload all if empty
+					if (filterText.getText().isEmpty()) {
+						loader = new StockEntryLoader(viewer);
+						loader.schedule();
+					}
+				}
+			}
+		});
+		ToolBarManager tbm = new ToolBarManager();
+		tbm.add(new Action("", Action.AS_CHECK_BOX) {
 			@Override
-			public Object[] getElements(Object inputElement){
-				return new Query<StockEntry>(StockEntry.class).execute().toArray();
+			public ImageDescriptor getImageDescriptor(){
+				return Images.IMG_FILTER.getImageDescriptor();
 			}
 			
-		}, new StockEntryLabelProvider() {}, null, new ViewerConfigurer.DefaultButtonProvider(),
-			new LagerWidgetProvider());
-		cv.create(vc, parent, SWT.NONE, getViewSite());
-		cv.getConfigurer().getContentProvider().startListening();
+			@Override
+			public String getToolTipText(){
+				return "Nur zu bestellende anzeigen";
+			}
+			
+			@Override
+			public void run(){
+				StockEntryLoader.setFilterOrderOnly(isChecked());
+				refreshConsiderFilter();
+			}
+		});
+		tbm.createControl(parent);
+		
+		viewer = new TableViewer(parent,
+			SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE | SWT.VIRTUAL);
+		viewer.getTable().setHeaderVisible(true);
+		viewer.setContentProvider(ArrayContentProvider.getInstance());
+		viewer.setLabelProvider(labelProvider);
+		viewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		
+		for (int i = 0; i < columns.length; i++) {
+			TableViewerColumn tvc = new TableViewerColumn(viewer, SWT.NONE);
+			tvc.setLabelProvider(new ColumnStockEntryLabelProvider(i, labelProvider));
+			TableColumn tc = tvc.getColumn();
+			tc.setText(columns[i]);
+			tc.setWidth(colwidth[i]);
+			tc.setData(i);
+			
+			PersistentObjectEditingSupport poes = null;
+			if (i == 4) {
+				poes = new PersistentObjectEditingSupport(viewer, StockEntry.FLD_MIN, Integer.class,
+					true);
+			} else if (i == 5) {
+				poes = new PersistentObjectEditingSupport(viewer, StockEntry.FLD_CURRENT,
+					Integer.class, true) {
+					protected boolean canEdit(Object element){
+						boolean canEdit = super.canEdit(element);
+						if (canEdit) {
+							StockEntry se = (StockEntry) element;
+							return !se.getStock().isCommissioningSystem();
+						}
+						return true;
+					};
+				};
+			} else if (i == 6) {
+				poes = new PersistentObjectEditingSupport(viewer, StockEntry.FLD_MAX, Integer.class,
+					true);
+			}
+			
+			if (poes != null) {
+				tvc.setEditingSupport(poes);
+			}
+			
+			if (i == 7) {
+				EditingSupport providerEditingSupport = new EditingSupport(viewer) {
+					
+					@Override
+					protected void setValue(Object element, Object value){
+						StockEntry se = (StockEntry) element;
+						if (se == null) {
+							return;
+						}
+						
+						LockResponse lr = CoreHub.getLocalLockService().acquireLock(se);
+						if (!lr.isOk()) {
+							return;
+						}
+						
+						se.setProvider((Kontakt) value);
+						
+						lr = CoreHub.getLocalLockService().releaseLock((se));
+						if (!lr.isOk()) {
+							log.warn("Error releasing lock for [{}]: {}", se.getId(),
+								lr.getStatus());
+						}
+						getViewer().refresh();
+					}
+					
+					@Override
+					protected Object getValue(Object element){
+						IStockEntry se = (IStockEntry) element;
+						if (se == null) {
+							return null;
+						}
+						return (Kontakt) se.getProvider();
+					}
+					
+					@Override
+					protected CellEditor getCellEditor(Object element){
+						return new KontaktSelektorDialogCellEditor(
+							((TableViewer) getViewer()).getTable(), "Lieferant auswählen",
+							"Bitte selektieren Sie den Lieferant");
+					}
+					
+					@Override
+					protected boolean canEdit(Object element){
+						StockEntry stockEntry = (StockEntry) element;
+						return (stockEntry != null && stockEntry.getArticle() != null);
+					}
+				};
+				tvc.setEditingSupport(providerEditingSupport);
+			}
+		}
+		TableViewerFocusCellManager focusCellManager =
+			new TableViewerFocusCellManager(viewer, new FocusCellHighlighter(viewer) {});
+		ColumnViewerEditorActivationStrategy editorActivationStrategy =
+			new ColumnViewerEditorActivationStrategy(viewer) {
+				@Override
+				protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event){
+					ViewerCell cell = (ViewerCell) event.getSource();
+					return cell.getColumnIndex() > 3 && cell.getColumnIndex() < 7;
+				}
+			};
+		TableViewerEditor.create(viewer, focusCellManager, editorActivationStrategy,
+			TableViewerEditor.TABBING_HORIZONTAL);
 		
 		MenuManager contextMenu = new MenuManager();
 		contextMenu.setRemoveAllWhenShown(true);
 		
 		contextMenu.addMenuListener(new IMenuListener() {
-			@Override
+			
 			public void menuAboutToShow(IMenuManager manager){
-				manager.add(new CheckInOrderedAction(cv.getViewerWidget()));
-				manager.add(new DeleteStockEntryAction(cv.getViewerWidget()));
-				ArticleMachineOutputAction amoa =
-					new ArticleMachineOutputAction(cv.getViewerWidget());
+				manager.add(new CheckInOrderedAction(viewer));
+				manager.add(new DeleteStockEntryAction(viewer));
+				ArticleMachineOutputAction amoa = new ArticleMachineOutputAction(viewer);
 				if (amoa.isVisible()) {
 					manager.add(amoa);
-					manager.add(new FullMachineInventoryAction(cv.getViewerWidget()));
+					manager.add(new FullMachineInventoryAction(viewer));
 				}
-				
 			}
 		});
 		
-		new PersistentObjectDropTarget(cv.getViewerWidget().getControl(),
+		new PersistentObjectDropTarget(viewer.getControl(),
 			new PersistentObjectDropTarget.IReceiver() {
 				
 				@Override
@@ -145,7 +309,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 								if (stock != null) {
 									CoreHub.getStockService().storeArticleInStock(stock,
 										art.storeToString());
-									cv.notify(Message.update);
+									viewer.refresh();
 								}
 							}
 						}
@@ -162,7 +326,8 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 				}
 			});
 		
-		cv.setContextMenu(contextMenu);
+		Menu menu = contextMenu.createContextMenu(viewer.getControl());
+		viewer.getControl().setMenu(menu);
 		
 		makeActions();
 		viewMenus = new ViewMenus(getViewSite());
@@ -180,7 +345,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 			
 			@Override
 			public void run(){
-				cv.notify(Message.update);
+				refreshConsiderFilter();
 			}
 		};
 		
@@ -215,7 +380,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 							};
 							csv.writeNext(header);
 							
-							for (Object o : vc.getContentProvider().getElements(null)) {
+							for (Object o : new Query<StockEntry>(StockEntry.class).execute()) {
 								if (o instanceof StockEntry) {
 									String[] line = new String[header.length];
 									StockEntry stockEntry = (StockEntry) o;
@@ -287,159 +452,15 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 	
 	@Override
 	public void setFocus(){
-		// cv.getConfigurer().getControlFieldProvider().setFocus();
+		filterText.setFocus();
 	}
 	
 	@Override
 	public void dispose(){
-		cv.getConfigurer().getContentProvider().stopListening();
 		GlobalEventDispatcher.removeActivationListener(this, this);
 		super.dispose();
 	}
-	
-	class LagerWidgetProvider implements WidgetProvider {
-		String[] columns = {
-			Messages.LagerView_stock, Messages.LagerView_pharmacode, Messages.LagerView_gtin,
-			Messages.LagerView_name, Messages.LagerView_minBestand, Messages.LagerView_istBestand,
-			Messages.LagerView_maxBestand, Messages.LagerView_dealer
-		};
-		int[] colwidth = {
-			40, 75, 90, 250, 35, 35, 35, 150
-		};
 		
-		public StructuredViewer createViewer(Composite parent){
-			Table table =
-				new Table(parent, SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE | SWT.VIRTUAL);
-			table.setHeaderVisible(true);
-			table.setLinesVisible(false);
-			TableViewer ret = new TableViewer(table);
-			for (int i = 0; i < columns.length; i++) {
-				TableViewerColumn tvc = new TableViewerColumn(ret, SWT.NONE);
-				TableColumn tc = tvc.getColumn();
-				tc.setText(columns[i]);
-				tc.setWidth(colwidth[i]);
-				tc.setData(i);
-				tc.addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e){
-						cv.getViewerWidget().setSorter(new LagerTableSorter(
-							(Integer) ((TableColumn) e.getSource()).getData()));
-					}
-				});
-				
-				PersistentObjectEditingSupport poes = null;
-				if (i == 4) {
-					poes = new PersistentObjectEditingSupport(ret, StockEntry.FLD_MIN,
-						Integer.class, true);
-				} else if (i == 5) {
-					poes = new PersistentObjectEditingSupport(ret, StockEntry.FLD_CURRENT,
-						Integer.class, true) {
-						protected boolean canEdit(Object element){
-							boolean canEdit = super.canEdit(element);
-							if (canEdit) {
-								StockEntry se = (StockEntry) element;
-								return !se.getStock().isCommissioningSystem();
-							}
-							return true;
-						};
-					};
-				} else if (i == 6) {
-					poes = new PersistentObjectEditingSupport(ret, StockEntry.FLD_MAX,
-						Integer.class, true);
-				}
-				
-				if (poes != null) {
-					tvc.setEditingSupport(poes);
-				}
-				
-				if (i == 7) {
-					EditingSupport providerEditingSupport = new EditingSupport(ret) {
-						
-						@Override
-						protected void setValue(Object element, Object value){
-							StockEntry se = (StockEntry) element;
-							if (se == null) {
-								return;
-							}
-							
-							LockResponse lr = CoreHub.getLocalLockService().acquireLock(se);
-							if (!lr.isOk()) {
-								return;
-							}
-							
-							se.setProvider((Kontakt) value);
-							
-							lr = CoreHub.getLocalLockService().releaseLock((se));
-							if (!lr.isOk()) {
-								log.warn("Error releasing lock for [{}]: {}", se.getId(),
-									lr.getStatus());
-							}
-							getViewer().refresh();
-						}
-						
-						@Override
-						protected Object getValue(Object element){
-							IStockEntry se = (IStockEntry) element;
-							if (se == null) {
-								return null;
-							}
-							return (Kontakt) se.getProvider();
-						}
-						
-						@Override
-						protected CellEditor getCellEditor(Object element){
-							return new KontaktSelektorDialogCellEditor(
-								((TableViewer) getViewer()).getTable(), "Lieferant auswählen",
-								"Bitte selektieren Sie den Lieferant");
-						}
-						
-						@Override
-						protected boolean canEdit(Object element){
-							StockEntry stockEntry = (StockEntry) element;
-							return (stockEntry != null && stockEntry.getArticle() != null);
-						}
-					};
-					tvc.setEditingSupport(providerEditingSupport);
-				}
-			}
-			ret.setSorter(new LagerTableSorter(3));
-			
-			TableViewerFocusCellManager focusCellManager =
-				new TableViewerFocusCellManager(ret, new FocusCellHighlighter(ret) {});
-			ColumnViewerEditorActivationStrategy editorActivationStrategy =
-				new ColumnViewerEditorActivationStrategy(ret) {
-					@Override
-					protected boolean isEditorActivationEvent(
-						ColumnViewerEditorActivationEvent event){
-						ViewerCell cell = (ViewerCell) event.getSource();
-						return cell.getColumnIndex() > 3 && cell.getColumnIndex() < 7;
-					}
-				};
-			TableViewerEditor.create(ret, focusCellManager, editorActivationStrategy,
-				TableViewerEditor.TABBING_HORIZONTAL);
-			
-			return ret;
-		}
-		
-		class LagerTableSorter extends ViewerSorter {
-			int col;
-			
-			LagerTableSorter(int c){
-				col = c;
-			}
-			
-			@Override
-			public int compare(Viewer viewer, Object e1, Object e2){
-				String s1 = ((StockEntryLabelProvider) cv.getConfigurer().getLabelProvider())
-					.getColumnText(e1, col).toLowerCase();
-				String s2 = ((StockEntryLabelProvider) cv.getConfigurer().getLabelProvider())
-					.getColumnText(e2, col).toLowerCase();
-				return s1.compareTo(s2);
-			}
-			
-		}
-	}
-	
 	public class FullMachineInventoryAction extends Action {
 		private Viewer viewer;
 		
@@ -606,6 +627,88 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		}
 	}
 	
+	private static class StockEntryLoader extends Job {
+		private Viewer viewer;
+		
+		private static boolean filterOrderOnly = false;
+		private String filter;
+		
+		private List<StockEntry> loaded;
+		
+		public StockEntryLoader(Viewer viewer, String filter){
+			super("Stock loading ...");
+			this.viewer = viewer;
+			this.filter = filter;
+		}
+		
+		public static void setFilterOrderOnly(boolean checked){
+			filterOrderOnly = checked;
+		}
+		
+		public StockEntryLoader(Viewer viewer){
+			super("Stock loading ...");
+			this.viewer = viewer;
+		}
+		
+		@Override
+		protected IStatus run(IProgressMonitor monitor){
+			monitor.beginTask("Stock loading ...", IProgressMonitor.UNKNOWN);
+			loaded = new Query<StockEntry>(StockEntry.class, null, null, StockEntry.TABLENAME,
+					new String[] {
+						StockEntry.FLD_ARTICLE_ID
+					}).execute();
+			if (filterOrderOnly) {
+				loaded = loaded.parallelStream().filter(se -> selectOrderOnly(se))
+					.collect(Collectors.toList());
+			}
+			if (filter != null) {
+				loaded = loaded.parallelStream().filter(se -> selectFilter(se, filter))
+					.collect(Collectors.toList());
+			}
+			
+			loaded.sort((l, r) -> {
+				if(l.getArticle() != null && r.getArticle() != null) {
+					return l.getArticle().getLabel().compareTo(r.getArticle().getLabel());
+				}
+				return 0;
+			});
+			
+			if (monitor.isCanceled()) {
+				return Status.CANCEL_STATUS;
+			}
+			monitor.done();
+			Display.getDefault().asyncExec(new Runnable() {
+				
+				@Override
+				public void run(){
+					viewer.setInput(loaded);
+				}
+			});
+			return Status.OK_STATUS;
+		}
+		
+		private boolean selectOrderOnly(StockEntry se){
+			Availability availability = StockService.determineAvailability(se);
+			if (availability != null) {
+				switch (availability) {
+				case CRITICAL_STOCK:
+				case OUT_OF_STOCK:
+					return true;
+				default:
+					return false;
+				}
+			}
+			return false;
+		}
+		
+		private boolean selectFilter(StockEntry se, String filter){
+			if (se.getArticle() != null && se.getArticle().getLabel() != null) {
+				return se.getArticle().getLabel().toLowerCase().contains(filter.toLowerCase());
+			}
+			return false;
+		}
+	}
+	
 	/***********************************************************************************************
 	 * Die folgenden 6 Methoden implementieren das Interface ISaveablePart2 Wir benötigen das
 	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
@@ -637,8 +740,11 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 	public void activation(boolean mode){}
 	
 	public void visible(boolean mode){
-		if (mode) {
-			cv.notify(CommonViewer.Message.update);
+		List<StockEntry> allEntries = new Query<StockEntry>(StockEntry.class).execute();
+		if (viewer != null && !viewer.getControl().isDisposed()) {
+			viewer
+				.setInput(Collections.singletonList(
+					new String("Es sind " + allEntries.size() + " Lagereinträge vorhanden")));
 		}
 	}
 }

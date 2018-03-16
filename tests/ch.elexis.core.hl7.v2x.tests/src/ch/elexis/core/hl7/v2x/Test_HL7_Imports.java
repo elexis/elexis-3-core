@@ -6,18 +6,14 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import ch.elexis.core.data.beans.ContactBean;
 import ch.elexis.core.data.util.PlatformHelper;
 import ch.elexis.core.exceptions.ElexisException;
-import ch.elexis.core.model.IPatient;
 import ch.elexis.data.Patient;
-import ch.elexis.hl7.HL7PatientResolver;
 import ch.elexis.hl7.HL7Reader;
 import ch.elexis.hl7.HL7ReaderFactory;
 import ch.elexis.hl7.model.IValueType;
@@ -118,47 +114,5 @@ public class Test_HL7_Imports {
 		System.out.println("testHL7files in elexis-import_test/rsc: This will take some time");
 		getReadersAllHL7files(new File(PlatformHelper.getBasePath("ch.elexis.core.hl7.v2x.tests"),
 			"rsc"), TestType.READ);
-	}
-	
-	public static class DummyPatientResolver extends HL7PatientResolver {
-		
-		private Patient patient;
-		
-		public Patient getPatient(){
-			return patient;
-		}
-		
-		public DummyPatientResolver(Patient dummyPatient){
-			this.patient = dummyPatient;
-		}
-
-		@Override
-		public boolean matchPatient(IPatient patient, String firstname, String lastname,
-			String birthDate){
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public IPatient createPatient(String lastName, String firstName, String birthDate,
-			String sex){
-			return new ContactBean(new Patient(lastName, firstName, birthDate, sex));
-		}
-
-		@Override
-		public List<IPatient> getPatientById(String patid){
-			return Collections.singletonList(new ContactBean(patient));
-		}
-
-		@Override
-		public List<IPatient> findPatientByNameAndBirthdate(String lastName, String firstName,
-			String birthDate){
-			return Collections.singletonList(new ContactBean(patient));
-		}
-
-		@Override
-		public IPatient resolvePatient(String firstname, String lastname, String birthDate){
-			return new ContactBean(patient);
-		}
 	}
 }

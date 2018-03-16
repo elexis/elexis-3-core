@@ -88,6 +88,7 @@ public class Messages {
 	public static String KonsZumVerrechnenView2_databaseRequest = ch.elexis.core.l10n.Messages.KonsZumVerrechnenView2_databaseRequest;
 	public static String KonsZumVerrechnenView2_refresh = ch.elexis.core.l10n.Messages.KonsZumVerrechnenView2_refresh;
 	public static String KonsZumVerrechnenView2_refreshList = ch.elexis.core.l10n.Messages.KonsZumVerrechnenView2_refreshList;
+	public static String CompensateAmountDialog_selectAccount = ch.elexis.core.l10n.Messages.CompensateAmountDialog_selectAccount;
 	public static String RechnungsBlatt_adressee = ch.elexis.core.l10n.Messages.RechnungsBlatt_adressee;
 	public static String RechnungsBlatt_amountOpen = ch.elexis.core.l10n.Messages.RechnungsBlatt_amountOpen;
 	public static String RechnungsBlatt_compensateAmount = ch.elexis.core.l10n.Messages.RechnungsBlatt_compensateAmount;

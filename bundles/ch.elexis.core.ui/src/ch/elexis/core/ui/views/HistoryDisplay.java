@@ -170,18 +170,8 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 	 * @param ev
 	 */
 	public void load(Patient pat, @Nullable ElexisEvent ev){
-		// lazy loading konsultations		
-		if (pat != null) {
-			lKons.clear();
-			Fall[] faelle = pat.getFaelle();
-			for (Fall f : faelle) {
-				load(f, false);
-			}
-			pagingComposite.setup(1, lKons.size(), PAGING_FETCHSIZE);
-		}
-		
 		if (ev == null || ev.getObject() instanceof Patient) {
-			UiDesk.getDisplay().asyncExec(new Runnable() {
+			UiDesk.getDisplay().syncExec(new Runnable() {
 				public void run(){
 					if (!isDisposed()) {
 						scrolledComposite.setOrigin(0, 0);
@@ -193,6 +183,16 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 					}
 				}
 			});
+		}
+		
+		// lazy loading konsultations		
+		if (pat != null) {
+			lKons.clear();
+			Fall[] faelle = pat.getFaelle();
+			for (Fall f : faelle) {
+				load(f, false);
+			}
+			pagingComposite.setup(1, lKons.size(), PAGING_FETCHSIZE);
 		}
 	}
 	

@@ -12,6 +12,7 @@
 
 package ch.elexis.core.data.events;
 
+import ch.elexis.core.data.events.ElexisEventDispatcher.IPerformanceStatisticHandler;
 import ch.elexis.data.PersistentObject;
 
 /**
@@ -25,7 +26,19 @@ import ch.elexis.data.PersistentObject;
 public class ElexisEventListenerImpl implements ElexisEventListener {
 	private final ElexisEvent template;
 	private boolean bStopped = false;
+	
+	protected IPerformanceStatisticHandler performanceStatisticHandler;
 
+	/**
+	 * Method to set a {@link IPerformanceStatisticHandler} implementation. Setting null, will
+	 * disable calling the statistic handler.
+	 * 
+	 * @param handler
+	 */
+	public void setPerformanceStatisticHandler(IPerformanceStatisticHandler handler){
+		this.performanceStatisticHandler = handler;
+	}
+	
 	public ElexisEventListenerImpl(final Class<?> clazz) {
 		template = new ElexisEvent(null, clazz, ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_DESELECTED
 				| ElexisEvent.EVENT_LOCK_AQUIRED | ElexisEvent.EVENT_LOCK_RELEASED);
@@ -56,8 +69,14 @@ public class ElexisEventListenerImpl implements ElexisEventListener {
 	 * Thread by definition
 	 */
 	public void catchElexisEvent(final ElexisEvent ev) {
+		if (performanceStatisticHandler != null) {
+			performanceStatisticHandler.startCatchEvent(ev, this);
+		}
 		if (!bStopped) {
 			run(ev);
+		}
+		if (performanceStatisticHandler != null) {
+			performanceStatisticHandler.endCatchEvent(ev, this);
 		}
 	}
 

@@ -286,7 +286,9 @@ public class HL7ReaderV25 extends HL7Reader {
 				} else {
 					commentNTE = "";
 				}
-				commentNTE += comment.getValue();
+				if(comment.getValue() != null) {
+					commentNTE += comment.getValue();
+				}
 			}
 		}
 		return commentNTE;

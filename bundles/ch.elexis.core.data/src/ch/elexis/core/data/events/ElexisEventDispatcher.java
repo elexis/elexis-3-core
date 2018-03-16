@@ -66,6 +66,8 @@ public final class ElexisEventDispatcher extends Job {
 	
 	private List<Integer> blockEventTypes;
 	
+	private volatile IPerformanceStatisticHandler performanceStatisticHandler;
+	
 	public static synchronized ElexisEventDispatcher getInstance(){
 		if (theInstance == null) {
 			theInstance = new ElexisEventDispatcher();
@@ -335,14 +337,39 @@ public final class ElexisEventDispatcher extends Job {
 		if (ee != null) {
 			for (ElexisEventListener l : listeners) {
 				if (ee.matches(l.getElexisEventFilter())) {
+					// handle performance statistics if necessary
+					if (performanceStatisticHandler != null) {
+						startStatistics(ee, l);
+					}
+					
 					try {
 						l.catchElexisEvent(ee);
 					} catch (Exception e) {
 						log.error(ee.toString(), e);
 						throw e;
 					}
+					
+					// handle performance statistics if necessary
+					if (performanceStatisticHandler != null) {
+						endStatistics(ee, l);
+					}
 				}
 			}
+		}
+	}
+	
+	private void endStatistics(ElexisEvent ee, ElexisEventListener l){
+		if (!(l instanceof ElexisEventListenerImpl)) {
+			performanceStatisticHandler.endCatchEvent(ee, l);
+		}
+	}
+	
+	private void startStatistics(ElexisEvent ee, ElexisEventListener l){
+		if (l instanceof ElexisEventListenerImpl) {
+			((ElexisEventListenerImpl) l)
+				.setPerformanceStatisticHandler(performanceStatisticHandler);
+		} else {
+			performanceStatisticHandler.startCatchEvent(ee, l);
 		}
 	}
 	
@@ -384,5 +411,25 @@ public final class ElexisEventDispatcher extends Job {
 		}
 		sb.append("\n--------------\n");
 		log.debug(sb.toString());
+	}
+	
+	/**
+	 * Method to set a {@link IPerformanceStatisticHandler} implementation. Setting null, will
+	 * disable calling the statistic handler.
+	 * 
+	 * @param handler
+	 */
+	public void setPerformanceStatisticHandler(IPerformanceStatisticHandler handler){
+		this.performanceStatisticHandler = handler;
+	}
+	
+	/**
+	 * Statistics handler interface.
+	 * 
+	 */
+	public interface IPerformanceStatisticHandler {
+		void startCatchEvent(ElexisEvent ee, ElexisEventListener listener);
+		
+		void endCatchEvent(ElexisEvent ee, ElexisEventListener listener);
 	}
 }

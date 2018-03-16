@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="Elexis" sequenceNumber="1510846809">
+<target name="Elexis" sequenceNumber="1521115836">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.equinox.executable.feature.group" version="3.6.300.v20161122-1740"/>
@@ -27,8 +27,8 @@
       <unit id="org.eclipse.nebula.cwt.feature.feature.group" version="1.0.0.201711021145"/>
       <unit id="org.eclipse.nebula.widgets.cdatetime.feature.feature.group" version="1.1.0.201711021145"/>
       <unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="1.1.0.201711021145"/>
-      <unit id="com.eclipsesource.jaxrs.consumer" version="5.3.1.201602281253"/>
-      <unit id="com.eclipsesource.jaxrs.jersey-min" version="2.22.2"/>
+      <unit id="com.eclipsesource.jaxrs.consumer" version="5.3.1.201803151143"/>
+      <unit id="com.eclipsesource.jaxrs.jersey-all-nojavax" version="2.24.1"/>
       <unit id="org.apache.httpcomponents.httpcore" version="4.4.6.v20170210-0925"/>
       <unit id="org.apache.httpcomponents.httpclient" version="4.5.2.v20170210-0925"/>
       <unit id="edu.emory.mathcs.backport" version="3.1.0.v201505121915"/>

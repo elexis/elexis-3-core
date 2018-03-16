@@ -240,6 +240,106 @@ public interface ModelPackage extends EPackage {
 	int SIMPLE_STATISTIC_OPERATION_COUNT = ISTATISTIC_OPERATION_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.ui.usage.model.impl.EventStatisticImpl <em>Event Statistic</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.ui.usage.model.impl.EventStatisticImpl
+	 * @see ch.elexis.core.ui.usage.model.impl.ModelPackageImpl#getEventStatistic()
+	 * @generated
+	 */
+	int EVENT_STATISTIC = 3;
+
+	/**
+	 * The feature id for the '<em><b>Action</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EVENT_STATISTIC__ACTION = ISTATISTIC__ACTION;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EVENT_STATISTIC__VALUE = ISTATISTIC__VALUE;
+
+	/**
+	 * The feature id for the '<em><b>Time</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EVENT_STATISTIC__TIME = ISTATISTIC__TIME;
+
+	/**
+	 * The feature id for the '<em><b>Action Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EVENT_STATISTIC__ACTION_TYPE = ISTATISTIC__ACTION_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Min Duration</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EVENT_STATISTIC__MIN_DURATION = ISTATISTIC_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Max Duration</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EVENT_STATISTIC__MAX_DURATION = ISTATISTIC_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Avg Duration</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EVENT_STATISTIC__AVG_DURATION = ISTATISTIC_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Last Start</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EVENT_STATISTIC__LAST_START = ISTATISTIC_FEATURE_COUNT + 3;
+
+	/**
+	 * The number of structural features of the '<em>Event Statistic</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EVENT_STATISTIC_FEATURE_COUNT = ISTATISTIC_FEATURE_COUNT + 4;
+
+	/**
+	 * The number of operations of the '<em>Event Statistic</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EVENT_STATISTIC_OPERATION_COUNT = ISTATISTIC_OPERATION_COUNT + 0;
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.ui.usage.model.Statistics <em>Statistics</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -345,6 +445,60 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getSimpleStatistic();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.ui.usage.model.EventStatistic <em>Event Statistic</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Event Statistic</em>'.
+	 * @see ch.elexis.core.ui.usage.model.EventStatistic
+	 * @generated
+	 */
+	EClass getEventStatistic();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.ui.usage.model.EventStatistic#getMinDuration <em>Min Duration</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Min Duration</em>'.
+	 * @see ch.elexis.core.ui.usage.model.EventStatistic#getMinDuration()
+	 * @see #getEventStatistic()
+	 * @generated
+	 */
+	EAttribute getEventStatistic_MinDuration();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.ui.usage.model.EventStatistic#getMaxDuration <em>Max Duration</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Max Duration</em>'.
+	 * @see ch.elexis.core.ui.usage.model.EventStatistic#getMaxDuration()
+	 * @see #getEventStatistic()
+	 * @generated
+	 */
+	EAttribute getEventStatistic_MaxDuration();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.ui.usage.model.EventStatistic#getAvgDuration <em>Avg Duration</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Avg Duration</em>'.
+	 * @see ch.elexis.core.ui.usage.model.EventStatistic#getAvgDuration()
+	 * @see #getEventStatistic()
+	 * @generated
+	 */
+	EAttribute getEventStatistic_AvgDuration();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.ui.usage.model.EventStatistic#getLastStart <em>Last Start</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Last Start</em>'.
+	 * @see ch.elexis.core.ui.usage.model.EventStatistic#getLastStart()
+	 * @see #getEventStatistic()
+	 * @generated
+	 */
+	EAttribute getEventStatistic_LastStart();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -454,6 +608,48 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EClass SIMPLE_STATISTIC = eINSTANCE.getSimpleStatistic();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.ui.usage.model.impl.EventStatisticImpl <em>Event Statistic</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.ui.usage.model.impl.EventStatisticImpl
+		 * @see ch.elexis.core.ui.usage.model.impl.ModelPackageImpl#getEventStatistic()
+		 * @generated
+		 */
+		EClass EVENT_STATISTIC = eINSTANCE.getEventStatistic();
+
+		/**
+		 * The meta object literal for the '<em><b>Min Duration</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EVENT_STATISTIC__MIN_DURATION = eINSTANCE.getEventStatistic_MinDuration();
+
+		/**
+		 * The meta object literal for the '<em><b>Max Duration</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EVENT_STATISTIC__MAX_DURATION = eINSTANCE.getEventStatistic_MaxDuration();
+
+		/**
+		 * The meta object literal for the '<em><b>Avg Duration</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EVENT_STATISTIC__AVG_DURATION = eINSTANCE.getEventStatistic_AvgDuration();
+
+		/**
+		 * The meta object literal for the '<em><b>Last Start</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EVENT_STATISTIC__LAST_START = eINSTANCE.getEventStatistic_LastStart();
 
 	}
 

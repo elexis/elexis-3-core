@@ -99,7 +99,7 @@ public class UsageSettings extends PreferencePage implements IWorkbenchPreferenc
 
 		viewer.setContentProvider(cp);
 		
-		ECollections.sort(StatisticsManager.getInstance().getStatistics().getStatistics(),
+		ECollections.sort(StatisticsManager.INSTANCE.getStatistics().getStatistics(),
 			new Comparator<IStatistic>() {
 				public int compare(IStatistic o1, IStatistic o2){
 					int i = o2.getTime().compareTo(o1.getTime());
@@ -112,7 +112,7 @@ public class UsageSettings extends PreferencePage implements IWorkbenchPreferenc
 			});
 		viewer.setInput(
 			EMFProperties.list(ModelPackage.Literals.STATISTICS__STATISTICS)
-				.observe(StatisticsManager.getInstance().getStatistics()));
+				.observe(StatisticsManager.INSTANCE.getStatistics()));
 
 		addContextMenuSupport(viewer, createMenu(viewer));
 		
@@ -142,7 +142,7 @@ public class UsageSettings extends PreferencePage implements IWorkbenchPreferenc
 			
 			@Override
 			public void run(){
-				StatisticsManager.getInstance().getStatistics().getStatistics().clear();
+				StatisticsManager.INSTANCE.getStatistics().getStatistics().clear();
 				tableViewer.refresh();
 			}
 		};
@@ -168,7 +168,7 @@ public class UsageSettings extends PreferencePage implements IWorkbenchPreferenc
 				String path = dialog.open();
 				if (path != null) {
 					try {
-						StatisticsManager.getInstance().exportStatisticsToFile(path);
+						StatisticsManager.INSTANCE.exportStatisticsToFile(path);
 					} catch (IOException e) {
 						LoggerFactory.getLogger(UsageSettings.class)
 							.error("statistics export error", e);

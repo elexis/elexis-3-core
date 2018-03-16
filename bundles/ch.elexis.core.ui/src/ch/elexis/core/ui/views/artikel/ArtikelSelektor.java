@@ -94,13 +94,19 @@ public class ArtikelSelektor extends ViewPart implements ISaveablePart2 {
 			@Override
 			public String getColumnText(Object element, int columnIndex){
 				StockEntry se = (StockEntry) element;
-				String ret = se.getArticle().getName();
-				Integer amount =
-					CoreHub.getStockService().getCumulatedStockForArticle(se.getArticle());
-				if (amount != null) {
-					ret += " (" + Integer.toString(amount) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+				if (se.getArticle() != null) {
+					String ret = se.getArticle().getName();
+					Integer amount =
+						CoreHub.getStockService().getCumulatedStockForArticle(se.getArticle());
+					if (amount != null) {
+						ret += " (" + Integer.toString(amount) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+					}
+					return ret;
+				} else {
+					String[] vals =
+						se.get(false, StockEntry.FLD_ARTICLE_TYPE, StockEntry.FLD_ARTICLE_ID);
+					return vals[0] + "[" + vals[1] + "]";
 				}
-				return ret;
 			}
 		});
 		tv.setInput(this);

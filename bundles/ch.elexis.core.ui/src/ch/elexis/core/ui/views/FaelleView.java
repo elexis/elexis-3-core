@@ -31,6 +31,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -53,6 +55,9 @@ import ch.rgw.tools.ExHandler;
  * Eine alternative, platzsparendere Fälle-View
  */
 public class FaelleView extends ViewPart implements IActivationListener {
+	
+	private static Logger log = LoggerFactory.getLogger(FaelleView.class);
+	
 	public static final String ID = "ch.elexis.schoebufaelle"; //$NON-NLS-1$
 	TableViewer tv;
 	ViewMenus menus;
@@ -141,6 +146,8 @@ public class FaelleView extends ViewPart implements IActivationListener {
 	}
 	
 	public void visible(final boolean mode){
+		log.debug("visible [{}]", mode);
+		
 		if (mode) {
 			tv.refresh(true);
 			ElexisEventDispatcher.getInstance().addListeners(eeli_fall, eeli_pat);

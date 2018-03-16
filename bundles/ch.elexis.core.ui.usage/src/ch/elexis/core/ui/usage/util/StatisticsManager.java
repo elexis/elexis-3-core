@@ -23,24 +23,28 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.ui.performance.EventPerformanceStatisticHandler;
 import ch.elexis.core.ui.usage.model.IStatistic;
 import ch.elexis.core.ui.usage.model.ModelFactory;
 import ch.elexis.core.ui.usage.model.Statistics;
 import ch.rgw.tools.TimeTool;
 
-public class StatisticsManager {
+public enum StatisticsManager {
+	
+		INSTANCE;
 	
 	private Statistics statistics = ModelFactory.eINSTANCE.createStatistics();
 	
+	private EventPerformanceStatisticHandler eventStatisticHandler;
+	
 	private boolean disableAutoExport = false;
 	
-	// Initialization-on-demand holder idiom
-	private static class SingletonHolder {
-		public static final StatisticsManager instance = new StatisticsManager();
+	public StatisticsManager getInstance(){
+		return INSTANCE;
 	}
 	
-	public static StatisticsManager getInstance(){
-		return SingletonHolder.instance;
+	public void setEventPerformanceStatisticHandler(EventPerformanceStatisticHandler eventStatisticHandler){
+		this.eventStatisticHandler = eventStatisticHandler;
 	}
 	
 	/**
@@ -59,7 +63,6 @@ public class StatisticsManager {
 		}
 		
 		updateStastic(action, type);
-		
 	}
 	
 	/**
@@ -135,21 +138,38 @@ public class StatisticsManager {
 				LoggerFactory.getLogger(getClass()).warn("Cannot delete old files.", e);
 			}
 			exportStatisticsToFile(dir + File.separator + fileName);
+			if (eventStatisticHandler != null) {
+				exportEventStatisticsToFile(dir + File.separator + "evt_" + fileName,
+					eventStatisticHandler);
+			}
 			disableAutoExport = true;
 		}
 	}
 	
-	public void exportStatisticsToFile(String path) throws IOException{
-		if (statistics != null) {
+	private void exportEventStatisticsToFile(String path,
+		EventPerformanceStatisticHandler eventStatisticHandler) throws IOException{
+		if (eventStatisticHandler != null) {
+			Statistics statistics = ModelFactory.eINSTANCE.createStatistics();
+			statistics.getStatistics().addAll(eventStatisticHandler.getStatistics());
 			File toExport = new File(path);
-			String content = createXMI();
+			String content = createXMI(statistics);
 			if (content != null) {
 				FileUtils.writeStringToFile(toExport, content);
 			}
 		}
 	}
 	
-	private String createXMI(){
+	public void exportStatisticsToFile(String path) throws IOException{
+		if (statistics != null) {
+			File toExport = new File(path);
+			String content = createXMI(statistics);
+			if (content != null) {
+				FileUtils.writeStringToFile(toExport, content);
+			}
+		}
+	}
+	
+	private String createXMI(Statistics statistics){
 		Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
 		Map<String, Object> m = reg.getExtensionToFactoryMap();
 		m.put("xmi", new XMIResourceFactoryImpl());
