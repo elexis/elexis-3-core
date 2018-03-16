@@ -479,7 +479,11 @@ Without it Maven would put two versions of each class file into the jars
           <strictBinIncludes>false</strictBinIncludes>
           <format>yyyyMMdd-HHmm</format>
           <timestampProvider>jgit</timestampProvider>
-          <jgit.ignore>pom.xml</jgit.ignore>
+           <timestampProvider>jgit</timestampProvider>
+           <jgit.ignore>
+             pom.xml
+             .polyglot.build.properties
+           </jgit.ignore>
           <jgit.dirtyWorkingTree>warning</jgit.dirtyWorkingTree>
         </configuration>
       </plugin>
