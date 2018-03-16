@@ -24,29 +24,36 @@ public class StockEntryLabelProvider extends LabelProvider
 	}
 	
 	public String getColumnText(Object element, int columnIndex){
-		StockEntry se = (StockEntry) element;
-		Artikel article = se.getArticle();
-		switch (columnIndex) {
-		case 0:
-			return se.getStock().getCode();
-		case 1:
-			return (article != null) ? article.getPharmaCode() : "";
-		case 2:
-			return (article != null) ? article.getEAN() : "";
-		case 3:
-			return (article != null) ? article.getLabel() : "";
-		case 4:
-			return Integer.toString(se.getMinimumStock());
-		case 5:
-			return Integer.toString(se.getCurrentStock());
-		case 6:
-			return Integer.toString(se.getMaximumStock());
-		case 7:
-			return (se.getProvider() != null) ? se.getProvider().getLabel() : StringConstants.EMPTY;
-		default:
-			return StringConstants.EMPTY;
+		if (element instanceof StockEntry) {
+			StockEntry se = (StockEntry) element;
+			Artikel article = se.getArticle();
+			switch (columnIndex) {
+			case 0:
+				return se.getStock().getCode();
+			case 1:
+				return (article != null) ? article.getPharmaCode() : "";
+			case 2:
+				return (article != null) ? article.getEAN() : "";
+			case 3:
+				return (article != null) ? article.getLabel() : "";
+			case 4:
+				return Integer.toString(se.getMinimumStock());
+			case 5:
+				return Integer.toString(se.getCurrentStock());
+			case 6:
+				return Integer.toString(se.getMaximumStock());
+			case 7:
+				return (se.getProvider() != null) ? se.getProvider().getLabel()
+						: StringConstants.EMPTY;
+			default:
+				return StringConstants.EMPTY;
+			}
+		} else if (element instanceof String) {
+			if (columnIndex == 3) {
+				return (String) element;
+			}
 		}
-		
+		return null;
 	}
 	
 	/**
@@ -71,10 +78,12 @@ public class StockEntryLabelProvider extends LabelProvider
 	}
 	
 	public Color getBackground(Object element, int columnIndex){
-		StockEntry se = (StockEntry) element;
-		Mandant owner = se.getStock().getOwner();
-		if (owner != null) {
-			return UiMandant.getColorForMandator(owner);
+		if (element instanceof StockEntry) {
+			StockEntry se = (StockEntry) element;
+			Mandant owner = se.getStock().getOwner();
+			if (owner != null) {
+				return UiMandant.getColorForMandator(owner);
+			}
 		}
 		return null;
 	}
