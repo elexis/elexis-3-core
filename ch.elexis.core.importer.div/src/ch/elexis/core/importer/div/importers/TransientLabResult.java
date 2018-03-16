@@ -127,14 +127,14 @@ public class TransientLabResult {
 		
 		setFieldsAndInterpret(labResult);
 		
-		// pathologic check takes place in labResult if it is numeric
-		if (labItem.getTyp() == LabItemTyp.NUMERIC) {
-			flags = labResult.getFlags();
+		if (flags != null) {
+			// if the pathologic flag is already set during import
+			// keep it
+			labResult.setPathologicDescription(
+				new PathologicDescription(Description.PATHO_IMPORT, rawAbnormalFlags));
 		} else {
-			if (flags != null) {
-				labResult.setPathologicDescription(
-					new PathologicDescription(Description.PATHO_IMPORT, rawAbnormalFlags));
-			} else {
+			// if not, at last for numeric values keep the evaluation done in setFieldsAndInterpret 
+			if (!(LabItemTyp.NUMERIC == labItem.getTyp())) {
 				labResult.setPathologicDescription(
 					new PathologicDescription(Description.PATHO_IMPORT_NO_INFO, rawAbnormalFlags));
 			}

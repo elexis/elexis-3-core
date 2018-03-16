@@ -93,8 +93,8 @@ public class TestPathologicDescription {
 				assertTrue(qrr.get(j).isFlag(LabResultConstants.PATHOLOGIC));
 				PathologicDescription description = qrr.get(j).getPathologicDescription();
 				assertNotNull(description);
-				assertEquals(Description.PATHO_REF_ITEM, description.getDescription());
-				assertEquals("4.0-9.4", description.getReference());
+				assertEquals(Description.PATHO_IMPORT, description.getDescription());
+				assertEquals("H", description.getReference());
 				foundpatho2 = true;
 			}
 			if (qrr.get(j).getItem().getName().equalsIgnoreCase("Progesteron")) {
@@ -192,8 +192,8 @@ public class TestPathologicDescription {
 				PathologicDescription description = qrr.get(j).getPathologicDescription();
 				assertNotNull(description);
 				// default use local ref is true
-				assertEquals(Description.PATHO_REF, description.getDescription());
-				assertEquals("4.0-9.4", description.getReference());
+				assertEquals(Description.PATHO_IMPORT, description.getDescription());
+				assertEquals("H", description.getReference());
 				foundpatho2 = true;
 			}
 			if (qrr.get(j).getItem().getName().equalsIgnoreCase("Progesteron")) {
@@ -226,7 +226,8 @@ public class TestPathologicDescription {
 			PathologicDescription pathologicDescription = labResult.getPathologicDescription();
 			if (labResult.getItem().getLabel().contains("Borrelien (IgM)")) {
 				// OBX|500505|FT|BORRM^Borrelien (IgM)^^^BORRELIEN IGM||positiv||  negativ||||C||||||
-				assertEquals(Description.PATHO_IMPORT_NO_INFO, pathologicDescription.getDescription());
+				assertEquals(Description.PATHO_IMPORT_NO_INFO,
+					pathologicDescription.getDescription());
 				assertEquals("", pathologicDescription.getReference());
 				assertEquals("positiv", labResult.getResult());
 				// it is pathologic, but we don't know - we can't interpret
@@ -234,7 +235,8 @@ public class TestPathologicDescription {
 				assertTrue(labResult.isPathologicFlagIndetermined(pathologicDescription));
 				assertEquals("", labResult.getItem().getUnit());
 			} else if (labResult.getItem().getLabel().equalsIgnoreCase("TestStupidValues")) {
-				assertEquals(Description.PATHO_IMPORT_NO_INFO, pathologicDescription.getDescription());
+				assertEquals(Description.PATHO_IMPORT_NO_INFO,
+					pathologicDescription.getDescription());
 				assertEquals("hund", pathologicDescription.getReference());
 				assertEquals("katze", labResult.getResult());
 				assertEquals(0, labResult.getFlags());
@@ -271,6 +273,7 @@ public class TestPathologicDescription {
 				assertEquals(1, labResult.getFlags());
 				assertEquals(LabItemTyp.TEXT, labResult.getItem().getTyp());
 				assertFalse(labResult.isPathologicFlagIndetermined(null));
+				assertEquals(LabItemTyp.TEXT, labResult.getItem().getTyp());
 				break;
 			case "EBNAG":
 				assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
@@ -278,24 +281,82 @@ public class TestPathologicDescription {
 				assertEquals(1, labResult.getFlags());
 				assertEquals(LabItemTyp.TEXT, labResult.getItem().getTyp());
 				assertFalse(labResult.isPathologicFlagIndetermined(null));
+				assertEquals(LabItemTyp.TEXT, labResult.getItem().getTyp());
 				break;
 			case "BBIG":
-				assertEquals(Description.PATHO_REF_ITEM, pathologicDescription.getDescription());
-				assertEquals("< 6", pathologicDescription.getReference());
+				assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
+				assertEquals("HH", pathologicDescription.getReference());
 				assertEquals(1, labResult.getFlags());
 				assertFalse(labResult.isPathologicFlagIndetermined(null));
+				assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
+				break;
+			case "PHEN":
+				assertEquals(Description.PATHO_REF_ITEM, pathologicDescription.getDescription());
+				assertEquals("12.0 - 80.0", pathologicDescription.getReference());
+				assertEquals(0, labResult.getFlags());
+				assertFalse(labResult.isPathologicFlagIndetermined(null));
+				assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
 				break;
 			case "HSVM":
 				assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
 				assertEquals("A", pathologicDescription.getReference());
 				assertEquals(1, labResult.getFlags());
 				assertFalse(labResult.isPathologicFlagIndetermined(null));
+				assertEquals(LabItemTyp.TEXT, labResult.getItem().getTyp());
 				break;
 			case "ZIKG":
-				assertEquals(Description.PATHO_IMPORT_NO_INFO, pathologicDescription.getDescription());
+				assertEquals(Description.PATHO_IMPORT_NO_INFO,
+					pathologicDescription.getDescription());
 				assertEquals("", pathologicDescription.getReference());
 				assertEquals(0, labResult.getFlags());
 				assertTrue(labResult.isPathologicFlagIndetermined(null));
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	
+	@Test
+	public void testLabCubeNumberMissingImportPathFlag_11057() throws IOException{
+		removeAllPatientsAndDependants();
+		removeAllLaboWerte();
+		
+		parseOneHL7file(new File(workDir.toString(),
+			"LabCube/5083_LabCube_DriChem7000_20180314131140_288107.hl7"), false, true);
+		
+		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
+		List<LabResult> qrr = qr.execute();
+		assertEquals(8, qrr.size());
+		for (LabResult labResult : qrr) {
+			PathologicDescription pathologicDescription = labResult.getPathologicDescription();
+			String itemCode = labResult.getItem().getKuerzel();
+			switch (itemCode) {
+			case "HDLC-P":
+				assertEquals(Description.PATHO_REF, pathologicDescription.getDescription());
+				assertEquals("0.93-1.78", pathologicDescription.getReference());
+				assertEquals(0, labResult.getFlags());
+				assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
+				assertFalse(labResult.isPathologicFlagIndetermined(null));
+				assertEquals("1.69", labResult.getResult());
+				break;
+			case "TCHO-P":
+				assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
+				assertEquals("HH", pathologicDescription.getReference());
+				assertEquals(1, labResult.getFlags());
+				assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
+				assertFalse(labResult.isPathologicFlagIndetermined(null));
+				assertEquals("6.19", labResult.getResult());
+				assertEquals("3.88-5.66", labResult.getItem().getReferenceFemale());
+				break;
+			case "GPT-P":
+				assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
+				assertEquals("LL", pathologicDescription.getReference());
+				assertEquals(1, labResult.getFlags());
+				assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
+				assertFalse(labResult.isPathologicFlagIndetermined(null));
+				assertEquals("<10", labResult.getResult());
+				assertEquals("4-44", labResult.getItem().getReferenceFemale());
 				break;
 			default:
 				break;
