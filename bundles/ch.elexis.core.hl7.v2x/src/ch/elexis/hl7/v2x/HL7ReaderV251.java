@@ -188,7 +188,9 @@ public class HL7ReaderV251 extends HL7Reader {
 						} else {
 							commentNTE = "";
 						}
-						commentNTE += comment.getValue();
+						if(comment.getValue() != null) {
+							commentNTE += comment.getValue();
+						}
 					}
 				}
 			}

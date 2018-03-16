@@ -14,7 +14,6 @@ import org.junit.Test;
 
 import ch.elexis.core.data.util.PlatformHelper;
 import ch.elexis.core.exceptions.ElexisException;
-import ch.elexis.core.hl7.v2x.Test_HL7_Imports.DummyPatientResolver;
 import ch.elexis.data.Patient;
 import ch.elexis.hl7.HL7Reader;
 import ch.elexis.hl7.HL7ReaderFactory;

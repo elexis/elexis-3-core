@@ -18,7 +18,6 @@ import com.ibm.icu.text.SimpleDateFormat;
 
 import ch.elexis.core.data.util.PlatformHelper;
 import ch.elexis.core.exceptions.ElexisException;
-import ch.elexis.core.hl7.v2x.Test_HL7_Imports.DummyPatientResolver;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.types.Gender;
 import ch.elexis.data.Patient;
