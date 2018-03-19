@@ -341,7 +341,6 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 				def[1].setLabel(VORNAME);
 				def[2].setLabel(ZUSATZ);
 				def[3].setEditable(true);
-				def[10].setLabel(MOBIL);
 				setOrganisationFieldsVisible(false);
 			}
 			lbAnschrift.setText(actKontakt.getPostAnschrift(false));
