@@ -76,18 +76,17 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 	
 	@Override
 	public Result<Object> execute(File file, Map<String, Object> context, HL7Parser hl7parser, IPersistenceHandler persistenceHandler){
-		if (this.docManager == null) {
-			if(moveAfterImport) {
-				FileImportStrategyUtil.moveAfterImport(false, file);
-			}
-			return new Result<Object>(SEVERITY.ERROR, 2,
-				MessageFormat.format(Messages.DefaultPDFImportStrategy_NoDocManager, file.getName(),
-					patient.getLabel()),
-				patient.getId(), true);
-		}
-		
 		try {
 			initValuesFromContext(context);
+			if (this.docManager == null) {
+				if (moveAfterImport) {
+					FileImportStrategyUtil.moveAfterImport(false, file);
+				}
+				return new Result<Object>(SEVERITY.ERROR, 2,
+					MessageFormat.format(Messages.DefaultPDFImportStrategy_NoDocManager,
+						file.getName(), patient.getLabel()),
+					patient.getId(), true);
+			}
 		} catch (IllegalStateException ise) {
 			if (moveAfterImport) {
 				FileImportStrategyUtil.moveAfterImport(false, file);
