@@ -130,6 +130,7 @@ public class TransientLabResult {
 		if (flags != null) {
 			// if the pathologic flag is already set during import
 			// keep it
+			labResult.setFlags(flags);
 			labResult.setPathologicDescription(
 				new PathologicDescription(Description.PATHO_IMPORT, rawAbnormalFlags));
 		} else {
@@ -212,8 +213,7 @@ public class TransientLabResult {
 		if (transmissionTime != null) {
 			labResult.setTransmissionTime(transmissionTime);
 		}
-		// set all flags at once, flags is a string in the database
-		labResult.setFlags((flags == null) ? 0 : flags);
+
 		labImportUtil.updateLabResult(labResult, this);
 	}
 	
