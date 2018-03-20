@@ -52,6 +52,7 @@ public class MultiFileParserTests {
 	
 	@Test
 	public void testImportFromFile(){
+		// requires omnivore
 		File hl7File = new File(workDir.toString(), "Synlab/Labor-Befund.HL7");
 		Result<Object> result = mfParser.importFromFile(hl7File, new DefaultImportStrategyFactory(),
 			hl7Parser, persistenceHandler);
@@ -61,7 +62,9 @@ public class MultiFileParserTests {
 			removeAllPatientsAndDependants();
 		} else {
 			String msg = "Import of 'Labor-Befund.HL7' failed";
-			fail(msg);
+			if (msg.contains("Omnivore") && System.getProperty("doNotFailOnMissingOmnivore") == null) {
+				fail(msg + " " + result.toString());
+			}
 		}
 	}
 	
@@ -77,7 +80,9 @@ public class MultiFileParserTests {
 			removeAllPatientsAndDependants();
 		} else {
 			String msg = "Import of 'Laborbefund-Musterfrau.HL7' failed";
-			fail(msg);
+			if (msg.contains("Omnivore") && System.getProperty("doNotFailOnMissingOmnivore") == null) {
+				fail(msg + " " + result.toString());
+			}
 		}
 	}
 	
@@ -100,7 +105,9 @@ public class MultiFileParserTests {
 			removeAllPatientsAndDependants();
 		} else {
 			String msg = "Import of 'Laborbefund-Musterfrau.HL7' failed";
-			fail(msg);
+			if (msg.contains("Omnivore") && System.getProperty("doNotFailOnMissingOmnivore") == null) {
+				fail(msg + " " + result.toString());
+			}
 		}
 	}
 	

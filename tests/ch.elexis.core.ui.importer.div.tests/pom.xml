@@ -17,7 +17,7 @@
         <configuration>
           <application>ch.elexis.core.application.ElexisApp</application>
           <testClass>ch.elexis.importer.div.AllTests</testClass>
-          <argLine>${elexis.ui.test.vmargs}</argLine>
+          <argLine>${elexis.ui.test.vmargs} -DdoNotFailOnMissingOmnivore</argLine>
           <useUIThread>true</useUIThread>
           <useUIHarness>true</useUIHarness>
           <showEclipseLog>true</showEclipseLog>
