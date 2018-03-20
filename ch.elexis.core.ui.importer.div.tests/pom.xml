@@ -16,7 +16,8 @@
         <artifactId>tycho-surefire-plugin</artifactId>
         <configuration>
           <application>ch.elexis.core.application.ElexisApp</application>
-          <argLine>-debug -DjdbcLink=org.h2.Driver:mem:mem_test;AUTO_SERVER=TRUE -Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch</argLine>
+          <testClass>ch.elexis.importer.div.AllTests</testClass>
+          <argLine>-debug -DjdbcLink=org.h2.Driver:mem:mem_test;AUTO_SERVER=TRUE -Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch  -DdoNotFailOnMissingOmnivore</argLine>
           <useUIThread>true</useUIThread>
           <useUIHarness>true</useUIHarness>
           <showEclipseLog>true</showEclipseLog>
