@@ -37,7 +37,6 @@ Import-Package: ch.elexis.core.findings,
  org.eclipse.e4.core.contexts,
  org.eclipse.emf.databinding,
  org.eclipse.emf.edit.ui.provider,
- org.eclipse.equinox.internal.ds,
  org.eclipse.jface.databinding.swt,
  org.eclipse.jface.databinding.viewers,
  org.osgi.service.component.annotations;version="1.2.0"

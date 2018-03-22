@@ -22,6 +22,7 @@ location "http://download.elexis.info/elexis/master/p2/target/" {
 	org.eclipse.nebula.widgets.nattable.core
 	org.eclipse.nebula.widgets.nattable.extension.glazedlists
 	ca.odell.glazedlists
+	org.jsoup
 
 	org.eclipse.nebula.cwt.feature.feature.group
 	org.eclipse.nebula.widgets.cdatetime.feature.feature.group
