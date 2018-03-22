@@ -1847,6 +1847,11 @@ public class Messages extends NLS {
 	public static String EigenartikelDisplay_typ;
 	public static String Eigenartikel_WarningPharmacodeChange;
 	public static String Eigenartikel_WarningPharmacodeChange_Title;
+	public static String EigenartikelTyp_MAGISTERY;
+	public static String EigenartikelTyp_NONPHARMA;
+	public static String EigenartikelTyp_PHARMA;
+	public static String EigenartikelTyp_UNKNOWN;
+	public static String EigenartikelTyp_COMPLEMENTARY; 
 	public static String EigendiagnoseSelector_Shortcut_Label;
 	public static String EigendiagnoseSelector_Text_Label;
 	public static String Eigendiagnosen_BadFileFormat;

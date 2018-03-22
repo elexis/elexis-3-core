@@ -1,0 +1,13 @@
+MSH|^~\&|MOLIS|ZURANA|Analytica|HL7|20180316174010||ORU^R01|4526221|P|2.5|||NE|AL||8859/1|
+PID||8994|1347276^^^MOLIS^PI||Testperson^Armeswesen^^^^^L||19510916|F|||Täfernstrasse 16^^Dättwil^^5405|||||||
+PV1||N|BUAND||||||||||||||||8994||||||||||||||||||||||||||
+ORC|SC|3263282^01|0118116530||CM||^^^^^R|||||BUAND^^^^^^^^^^^^MOLIS~BUAND^BURKHART ANDREAS^^^^^^CORPRESC^^^^^MOLIS~Y280631^BURKHART ANDREAS^^^^^^CORPRESC^^^^^AGRNB
+OBR|2800|||2800^|||20180315180800|||||||20180316161439|||||||||||||||||||||||||||||||||
+OBR|2802|||2802^|||20180315180800|||||||20180316161439|||||||||||||||||||||||||||||||||
+OBX|280203|NM|TSH^TSH basal^^^TSH BASAL||2.07|mU/l|0.55 - 4.78||||F||||||
+OBR|6000|||6000^Analysen aus Urin :|||20180315180800|||||||20180316161439|||||||||||||||||||||||||||||||||
+OBR|6000|||6000^|||20180315180800|||||||20180316161439|||||||||||||||||||||||||||||||||
+OBX|600008|NM|KRUS^Kreatinin im Urin^^^KREATININ U||14.5|mmol/l|||||F||||||
+OBR|6008|||6008^|||20180315180800|||||||20180316161439|||||||||||||||||||||||||||||||||
+OBX|600803|NM|MIKA^Mikroalbumin^^^MIKROALBUMIN||404|mg/l|||||F||||||
+OBX|600806|NM|MIKAQ^Mikroalbumin/Kreat.-Quot.^^^MIKROALBUMIN QUOT||27.9|g/mol|     <  2.3|H|||F||||||

@@ -27,16 +27,22 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.interfaces.IOptifier;
+import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.util.IRunnableWithProgress;
 import ch.elexis.core.model.eigenartikel.Constants;
 import ch.elexis.core.model.eigenartikel.EigenartikelTyp;
 import ch.elexis.data.Artikel;
+import ch.elexis.data.Konsultation;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.Money;
+import ch.rgw.tools.Result;
 
 public class Eigenartikel extends Artikel {
+	
+	private static IOptifier OPTIFIER;
 	
 	static {
 		final String isConvertedTo32Key = "Eigenartikel32Format";
@@ -85,6 +91,14 @@ public class Eigenartikel extends Artikel {
 	@Override
 	public String getCodeSystemName(){
 		return TYPNAME;
+	}
+	
+	@Override
+	public String getCodeSystemCode(){
+		if (getTyp() == EigenartikelTyp.COMPLEMENTARY) {
+			return "590";
+		}
+		return super.getCodeSystemCode();
 	}
 	
 	@Override
@@ -154,6 +168,7 @@ public class Eigenartikel extends Artikel {
 		case MAGISTERY:
 			return VatInfo.VAT_CH_ISMEDICAMENT;
 		case NONPHARMA:
+		case COMPLEMENTARY:
 			return VatInfo.VAT_CH_NOTMEDICAMENT;
 		default:
 			break;
@@ -320,4 +335,37 @@ public class Eigenartikel extends Artikel {
 		return (Eigenartikel.load(extId).isValid());
 	}
 	
+	@Override
+	public IOptifier getOptifier(){
+		if (OPTIFIER == null) {
+			OPTIFIER = new DefaultOptifier() {
+				@Override
+				public Result<IVerrechenbar> add(IVerrechenbar code, Konsultation kons){
+					boolean valid = true;
+					// test VVG if is typ EigenartikelTyp.COMPLEMENTARY
+					if (code instanceof Eigenartikel) {
+						Eigenartikel article = (Eigenartikel) code;
+						if (article.getTyp() == EigenartikelTyp.COMPLEMENTARY) {
+							String gesetz = kons.getFall().getRequiredString("Gesetz");
+							String system = kons.getFall().getAbrechnungsSystem();
+							if (gesetz.isEmpty()) {
+								if (!"vvg".equalsIgnoreCase(system)) {
+									valid = false;
+								}
+							} else {
+								if (!"vvg".equalsIgnoreCase(gesetz)) {
+									valid = false;
+								}
+							}
+						}
+					}
+					return valid ? super.add(code, kons)
+							: new Result<IVerrechenbar>(Result.SEVERITY.WARNING, 0,
+								"Komplementärmedizinische Artikel können nur auf eine Fall mit Gesetz oder Name VVG verrechnet werden.",
+								null, false);
+				}
+			};
+		}
+		return OPTIFIER;
+	}
 }

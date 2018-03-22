@@ -20,7 +20,8 @@
   Test_HL7_parser.testAnalyticaFollowUpResultMissing_9252:361 expected:<1> but was:<0>
           -->
           <application>ch.elexis.core.application.ElexisApp</application>
-          <argLine>${elexis.ui.test.vmargs}</argLine>
+          <testClass>ch.elexis.importer.div.AllTests</testClass>
+          <argLine>${elexis.ui.test.vmargs} -DdoNotFailOnMissingOmnivore</argLine>
           <useUIThread>true</useUIThread>
           <useUIHarness>true</useUIHarness>
           <showEclipseLog>true</showEclipseLog>

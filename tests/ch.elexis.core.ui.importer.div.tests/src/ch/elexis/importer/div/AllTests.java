@@ -12,9 +12,11 @@
 
 package ch.elexis.importer.div;
 
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import ch.elexis.data.Labor;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -24,6 +26,14 @@ import junit.framework.TestSuite;
 	TestPathologicDescription.class
 })
 public class AllTests {
+	
+	public static Labor testLab;
+	
+	@BeforeClass
+	public static void beforeClass() {
+		testLab = new Labor("HL7_Test", "HL7_Test");
+	}
+	
 	public static Test suite() throws ClassNotFoundException{
 		return new TestSuite("Importer Tests");
 	}

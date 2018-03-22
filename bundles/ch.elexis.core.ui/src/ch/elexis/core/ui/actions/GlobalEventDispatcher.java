@@ -22,12 +22,17 @@ import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.PlatformUI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.Tree;
 
 public class GlobalEventDispatcher implements IPartListener2 {
+	
+	private static Logger logger = LoggerFactory.getLogger(GlobalEventDispatcher.class);
+	
 	private static GlobalEventDispatcher theInstance;
 	private final ConcurrentHashMap<IWorkbenchPart, LinkedList<IActivationListener>> activationListeners;
 	private final GlobalListener globalListener = new GlobalListener();
@@ -67,6 +72,7 @@ public class GlobalEventDispatcher implements IPartListener2 {
 	 */
 	public static void addActivationListener(final IActivationListener l,
 		final IWorkbenchPart part){
+		logger.debug("addActivationListener adding " + l + " for " + part);
 		LinkedList<IActivationListener> list = getInstance().activationListeners.get(part);
 		if (list == null) {
 			list = new LinkedList<IActivationListener>();
@@ -128,9 +134,11 @@ public class GlobalEventDispatcher implements IPartListener2 {
 	}
 	
 	public void partHidden(final IWorkbenchPartReference partRef){
+		logger.debug("partHidden " + partRef.getPart(false));
 		LinkedList<IActivationListener> list = activationListeners.get(partRef.getPart(false));
 		if (list != null) {
 			for (IActivationListener l : list) {
+				logger.debug("Calling partHidden listener " + l);
 				l.visible(false);
 			}
 		}
@@ -138,9 +146,11 @@ public class GlobalEventDispatcher implements IPartListener2 {
 	}
 	
 	public void partVisible(final IWorkbenchPartReference partRef){
+		logger.debug("partVisible " + partRef.getPart(false));
 		LinkedList<IActivationListener> list = activationListeners.get(partRef.getPart(false));
 		if (list != null) {
 			for (IActivationListener l : list) {
+				logger.debug("Calling partVisible listener " + l);
 				l.visible(true);
 			}
 		}

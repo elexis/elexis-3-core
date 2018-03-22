@@ -35,8 +35,12 @@ public class TestPathologicDescription {
 	
 	private static Path workDir = null;
 	
+	private static HL7Parser hlp;
+	
 	@BeforeClass
-	public static void setUpBeforeClass() throws Exception{}
+	public static void setUpBeforeClass() throws Exception{
+		hlp = new TestHL7Parser("HL7_Test");
+	}
 	
 	@Before
 	public void setup() throws Exception{
@@ -50,8 +54,6 @@ public class TestPathologicDescription {
 			Helpers.removeTempDirectory(workDir);
 		}
 	}
-	
-	private HL7Parser hlp = new TestHL7Parser("HL7_Test");
 	
 	@Test
 	public void testAnalyticaHL7UseLocalRef() throws IOException{
@@ -357,6 +359,58 @@ public class TestPathologicDescription {
 				assertFalse(labResult.isPathologicFlagIndetermined(null));
 				assertEquals("<10", labResult.getResult());
 				assertEquals("4-44", labResult.getItem().getReferenceFemale());
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	
+	@Test
+	public void test_ImportOnExistingLabItemRefValue_11114() throws IOException{
+		removeAllPatientsAndDependants();
+		removeAllLaboWerte();
+		
+		LabItem liKrus = new LabItem("KRUS", "Kreatinin im Urin", AllTests.testLab, "> 60", "> 60",
+			"mmol/l", LabItemTyp.NUMERIC, "Urin", "42");
+		
+		parseOneHL7file(new File(workDir.toString(), "Analytica/Albumin.hl7"), false, true);
+		
+		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
+		List<LabResult> qrr = qr.execute();
+		assertEquals(4, qrr.size());
+		for (LabResult labResult : qrr) {
+			PathologicDescription pathologicDescription = labResult.getPathologicDescription();
+			String itemCode = labResult.getItem().getKuerzel();
+			switch (itemCode) {
+			case "KRUS":
+				assertEquals(labResult.getOrigin().getLabel(), AllTests.testLab.getId(),
+					labResult.getOrigin().getId());
+				assertEquals(liKrus.getId(), labResult.getItem().getId());
+				assertEquals(Description.PATHO_REF_ITEM, pathologicDescription.getDescription());
+				assertEquals("> 60", pathologicDescription.getReference());
+				assertEquals(1, labResult.getFlags());
+				assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
+				assertFalse(labResult.isPathologicFlagIndetermined(null));
+				assertEquals("14.5", labResult.getResult());
+				break;
+			case "MIKA":
+				assertEquals(labResult.getOrigin().getLabel(), AllTests.testLab.getId(),
+					labResult.getOrigin().getId());
+				assertEquals(Description.PATHO_NOREF, pathologicDescription.getDescription());
+				assertEquals(0, labResult.getFlags());
+				assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
+				assertTrue(labResult.isPathologicFlagIndetermined(null));
+				assertEquals("404", labResult.getResult());
+				break;
+			case "MIKAQ":
+				assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
+				assertEquals("H", pathologicDescription.getReference());
+				assertEquals(1, labResult.getFlags());
+				assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
+				assertFalse(labResult.isPathologicFlagIndetermined(null));
+				assertEquals("g/mol", labResult.getUnit());
+				assertEquals("27.9", labResult.getResult());
 				break;
 			default:
 				break;
