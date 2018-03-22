@@ -1,10 +1,10 @@
-target "Neon for Elexis 3.3" with source allEnvironments
+target "Oxygen.3 for Elexis" with source allEnvironments
 
 location "http://download.eclipse.org/e4/snapshots/org.eclipse.e4.tools/latest/" {
 	org.eclipse.e4.tools.spies.feature.feature.group
 }
 
-location "http://download.eclipse.org/eclipse/updates/4.6/" {
+location "http://download.eclipse.org/eclipse/updates/4.7/" {
 	org.eclipse.equinox.executable.feature.group
 	org.eclipse.rcp.feature.group
 	org.eclipse.platform.feature.group
@@ -22,7 +22,7 @@ location "http://download.eclipse.org/eclipse/updates/4.6/" {
 	org.eclipse.e4.tools.emf.ui
 }
 
-location "http://download.eclipse.org/releases/neon" {
+location "http://download.eclipse.org/releases/oxygen" {
 	ch.qos.logback.classic
 	ch.qos.logback.core
 	ch.qos.logback.slf4j
@@ -33,6 +33,7 @@ location "http://download.eclipse.org/releases/neon" {
 	org.eclipse.nebula.widgets.nattable.core
 	org.eclipse.nebula.widgets.nattable.extension.glazedlists
 	ca.odell.glazedlists
+	org.jsoup
 }
 
 location "http://download.eclipse.org/nebula/releases/latest/" {
@@ -46,8 +47,8 @@ location "http://medevit.github.io/osgi-jax-rs-connector/5.3.100/" {
 	com.eclipsesource.jaxrs.jersey-all-nojavax
 }
 
-// Eclipse Orbit Recommended Tue, 7 Mar 2017 -- 18:06 (UTC)	Neon.3
-location "http://download.eclipse.org/tools/orbit/downloads/drops/R20170307180635/repository/" {
+// Eclipse Orbit Recommended Tue, 6 Feb 2018 -- 16:31 (UTC) Oxygen.3
+location "http://download.eclipse.org/tools/orbit/downloads/drops/R20180206163158/repository/" {
 	org.apache.httpcomponents.httpcore
 	org.apache.httpcomponents.httpclient
 	edu.emory.mathcs.backport [3.1.0,3.1.1)
