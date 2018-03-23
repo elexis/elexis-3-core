@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.views.provider;
 
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -76,5 +77,35 @@ public class StockEntryLabelProvider extends LabelProvider
 			return UiMandant.getColorForMandator(owner);
 		}
 		return null;
+	}
+	
+	public static class ColumnStockEntryLabelProvider extends ColumnLabelProvider {
+		private int index;
+		private StockEntryLabelProvider labelProvider;
+		
+		public ColumnStockEntryLabelProvider(int index, StockEntryLabelProvider labelProvider){
+			this.labelProvider = labelProvider;
+			this.index = index;
+		}
+		
+		@Override
+		public String getText(Object element){
+			return labelProvider.getColumnText(element, index);
+		}
+		
+		@Override
+		public Image getImage(Object element){
+			return labelProvider.getColumnImage(element, index);
+		}
+		
+		@Override
+		public Color getForeground(Object element){
+			return labelProvider.getForeground(element, index);
+		}
+		
+		@Override
+		public Color getBackground(Object element){
+			return labelProvider.getBackground(element, index);
+		}
 	}
 }
