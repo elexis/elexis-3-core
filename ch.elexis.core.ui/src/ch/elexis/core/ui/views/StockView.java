@@ -14,6 +14,7 @@ package ch.elexis.core.ui.views;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -738,5 +739,12 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 	
 	public void activation(boolean mode){}
 	
-	public void visible(boolean mode){}
+	public void visible(boolean mode){
+		List<StockEntry> allEntries = new Query<StockEntry>(StockEntry.class).execute();
+		if (viewer != null && !viewer.getControl().isDisposed()) {
+			viewer
+				.setInput(Collections.singletonList(
+					new String("Es sind " + allEntries.size() + " Lagereinträge vorhanden")));
+		}
+	}
 }
