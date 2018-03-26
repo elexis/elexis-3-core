@@ -1831,7 +1831,7 @@ public class Messages extends NLS {
 	public static String EigenartikelDisplay_PiecesPerPack;
 	public static String EigenartikelDisplay_actualOnStockPacks;
 	public static String EigenartikelDisplay_actualOnStockPieces;
-	public static String EigenartikelDisplay_articleName = null;
+	public static String EigenartikelDisplay_articleName;
 	public static String EigenartikelDisplay_atcCode;
 	public static String EigenartikelDisplay_buyPrice;
 	public static String EigenartikelDisplay_dealer;
