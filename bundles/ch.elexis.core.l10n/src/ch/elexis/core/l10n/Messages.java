@@ -2592,6 +2592,25 @@ public class Messages extends NLS {
 	public static String XIDEdit_ShowWith;
 	public static String XIDEdit_XidOpetions;
 	public static String Zugriff_AccessRights;
+	public static String ProcessStatus_CLOSED;
+	public static String ProcessStatus_DUE;
+	public static String ProcessStatus_IN_PROGRESS;
+	public static String ProcessStatus_ON_HOLD;
+	public static String ProcessStatus_OPEN;
+	public static String ProcessStatus_OVERDUE;
+	public static String Type_CHECK_LAB_RESULT;
+	public static String Type_COMMON;
+	public static String Type_DISPENSE_MEDICATION;
+	public static String Type_MAKE_APPOINTMENT;
+	public static String Type_PRINT;
+	public static String Type_PRINT_DRUG_STICKER;
+	public static String Type_PROCESS_SERVICE_RECORDING;
+	public static String Type_READ_DOCUMENT;
+	public static String Type_SEND_DOCUMENT;
+	public static String Visibility_ALWAYS;
+	public static String Visibility_ON_PATIENT_SELECTION;
+	public static String Visibility_POPUP_ON_LOGIN;
+	public static String Visibility_POPUP_ON_PATIENT_SELECTION;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

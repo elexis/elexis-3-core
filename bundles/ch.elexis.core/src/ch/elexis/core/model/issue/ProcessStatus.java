@@ -4,7 +4,6 @@ import java.util.ResourceBundle;
 
 import ch.elexis.core.interfaces.ILocalizedEnum;
 import ch.elexis.core.interfaces.INumericEnum;
-import ch.elexis.core.model.MaritalStatus;
 
 public enum ProcessStatus implements INumericEnum, ILocalizedEnum {
 	OPEN(0),
