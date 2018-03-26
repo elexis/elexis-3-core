@@ -11,22 +11,13 @@
  *******************************************************************************/
 package ch.elexis.core.ui.importer.div.matchers;
 
-import org.eclipse.osgi.util.NLS;
-
-public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "ch.elexis.matchers.messages"; //$NON-NLS-1$
-	public static String ConflictResolveDialog_CannotDecideAutomatically;
-	public static String ConflictResolveDialog_ImportCaption;
-	public static String ConflictResolveDialog_OrCreateNew;
-	public static String ConflictResolveDialog_Pleaseselectbelow;
-	public static String ConflictResolveDialog_whethercontainedinDatavase;
-	public static String Verifier_AddressHeading;
-	public static String Verifier_NameHeading;
-	public static String Verifier_PleaseSelectCorrectContact;
-	static {
-		// initialize resource bundle
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	}
-	
-	private Messages(){}
+public class Messages {
+	public static String ConflictResolveDialog_CannotDecideAutomatically = ch.elexis.core.l10n.Messages.ConflictResolveDialog_CannotDecideAutomatically;
+	public static String ConflictResolveDialog_ImportCaption = ch.elexis.core.l10n.Messages.ConflictResolveDialog_ImportCaption;
+	public static String ConflictResolveDialog_OrCreateNew = ch.elexis.core.l10n.Messages.ConflictResolveDialog_OrCreateNew;
+	public static String ConflictResolveDialog_Pleaseselectbelow = ch.elexis.core.l10n.Messages.ConflictResolveDialog_Pleaseselectbelow;
+	public static String ConflictResolveDialog_whethercontainedinDatavase = ch.elexis.core.l10n.Messages.ConflictResolveDialog_whethercontainedinDatavase;
+	public static String Verifier_AddressHeading = ch.elexis.core.l10n.Messages.Verifier_AddressHeading;
+	public static String Verifier_NameHeading = ch.elexis.core.l10n.Messages.Verifier_NameHeading;
+	public static String Verifier_PleaseSelectCorrectContact = ch.elexis.core.l10n.Messages.Verifier_PleaseSelectCorrectContact;
 }

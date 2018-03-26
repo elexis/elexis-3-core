@@ -280,8 +280,9 @@ public class KontaktSelektor extends TitleAreaDialog implements DoubleClickListe
 			// new LazyContentProvider(cv,dataloader, null),
 				kl, new KontaktSelektorLabelProvider(), new DefaultControlFieldProvider(cv,
 					new String[] {
-						Messages.KontaktSelector_abbreviation,
-						Messages.KontaktSelector_expression1, Messages.KontaktSelector_birthDate
+						"Kuerzel=" + Messages.KontaktSelector_abbreviation, //$NON-NLS-1$
+						"Bezeichnung1=" + Messages.KontaktSelector_expression1, //$NON-NLS-1$
+						"Geburtsdatum=" + Messages.KontaktSelector_birthDate //$NON-NLS-1$
 					}), new ViewerConfigurer.ButtonProvider() {
 					
 					public Button createButton(final Composite parent){

@@ -17,8 +17,8 @@ public enum EigenartikelTyp implements ILocalizedEnum {
 	@Override
 	public String getLocaleText(){
 		try {
-			return ResourceBundle.getBundle("ch.elexis.core.model.eigenartikel.messages")
-				.getString(EigenartikelTyp.class.getSimpleName() + "." + this.name());
+			return ResourceBundle.getBundle(ch.elexis.core.l10n.Messages.BUNDLE_NAME)
+					.getString(EigenartikelTyp.class.getSimpleName() + "_" + this.name());
 		} catch (Exception e) {
 			return this.name();
 		}

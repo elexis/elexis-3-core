@@ -9,24 +9,15 @@
  **********************************************************************/
 package ch.elexis.core.ui.exchange.elements;
 
-import org.eclipse.osgi.util.NLS;
-
-public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "ch.elexis.core.ui.exchange.elements.messages";//$NON-NLS-1$
-	// Created by JInto - www.guh-software.de
-	// Mon Nov 30 16:02:12 CET 2009
-	public static String ContactElement_Name;
-	public static String ContactElement_gebdat;
-	public static String ContactElement_vorname;
-	public static String MedicalElement_Documents;
-	public static String MedicalElement_EMREntries;
-	public static String MedicalElement_Findings;
-	public static String MedicalElement_Medcaments;
-	public static String RecordElement_CreatedBy;
-	public static String RecordElement_EntryDate;
+public class Messages {
+	public static String ContactElement_Name = ch.elexis.core.l10n.Messages.ContactElement_Name;
+	public static String ContactElement_gebdat = ch.elexis.core.l10n.Messages.ContactElement_gebdat;
+	public static String ContactElement_vorname = ch.elexis.core.l10n.Messages.ContactElement_vorname;
+	public static String MedicalElement_Documents = ch.elexis.core.l10n.Messages.MedicalElement_Documents;
+	public static String MedicalElement_EMREntries = ch.elexis.core.l10n.Messages.MedicalElement_EMREntries;
+	public static String MedicalElement_Findings = ch.elexis.core.l10n.Messages.MedicalElement_Findings;
+	public static String MedicalElement_Medcaments = ch.elexis.core.l10n.Messages.MedicalElement_Medcaments;
+	public static String RecordElement_CreatedBy = ch.elexis.core.l10n.Messages.RecordElement_CreatedBy;
+	public static String RecordElement_EntryDate = ch.elexis.core.l10n.Messages.RecordElement_EntryDate;
 	
-	static {
-		// load message values from bundle file
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	}
 }

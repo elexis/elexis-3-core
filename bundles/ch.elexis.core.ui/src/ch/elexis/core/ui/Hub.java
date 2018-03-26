@@ -100,7 +100,7 @@ public class Hub extends AbstractUIPlugin {
 		log.debug("Stopping " + this.getClass().getName());
 		
 		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat);
-		
+			
 		super.stop(context);
 	}
 	

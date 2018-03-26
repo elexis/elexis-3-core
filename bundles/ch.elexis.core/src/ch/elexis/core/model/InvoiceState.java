@@ -107,8 +107,8 @@ public enum InvoiceState implements INumericEnum, ILocalizedEnum {
 	@Override
 	public String getLocaleText(){
 		try {
-			return ResourceBundle.getBundle("ch.elexis.core.model.messages")
-				.getString(InvoiceState.class.getSimpleName() + "." + this.name());
+			return ResourceBundle.getBundle(ch.elexis.core.l10n.Messages.BUNDLE_NAME)
+					.getString(InvoiceState.class.getSimpleName() + "_" + this.name());
 		} catch (Exception e) {
 			return this.name();
 		}

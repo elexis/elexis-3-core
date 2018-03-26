@@ -9,25 +9,17 @@
  **********************************************************************/
 package ch.elexis.core.ui.preferences.inputs;
 
-import org.eclipse.osgi.util.NLS;
-
-public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "ch.elexis.core.ui.preferences.inputs.messages";//$NON-NLS-1$
+public class Messages  {
+	public static String DecoratedStringChooser_howToChange = ch.elexis.core.l10n.Messages.DecoratedStringChooser_howToChange;
+	public static String KontaktFieldEditor_PleaseSelect = ch.elexis.core.l10n.Messages.KontaktFieldEditor_PleaseSelect;
+	public static String KontaktFieldEditor_PleaseSelectContact = ch.elexis.core.l10n.Messages.KontaktFieldEditor_PleaseSelectContact;
+	public static String KontaktFieldEditor_SelectContact = ch.elexis.core.l10n.Messages.KontaktFieldEditor_SelectContact;
+	public static String MultiplikatorEditor_5 = ch.elexis.core.l10n.Messages.MultiplikatorEditor_5;
+	public static String MultiplikatorEditor_BegiNDate = ch.elexis.core.l10n.Messages.MultiplikatorEditor_BegiNDate;
+	public static String MultiplikatorEditor_NewMultipilcator = ch.elexis.core.l10n.Messages.MultiplikatorEditor_NewMultipilcator;
+	public static String MultiplikatorEditor_PleaseEnterBeginDate = ch.elexis.core.l10n.Messages.MultiplikatorEditor_PleaseEnterBeginDate;
+	public static String MultiplikatorEditor_add = ch.elexis.core.l10n.Messages.MultiplikatorEditor_add;
+	public static String MultiplikatorEditor_from = ch.elexis.core.l10n.Messages.MultiplikatorEditor_from;
+	public static String PrefAccessDenied_PageLocked = ch.elexis.core.l10n.Messages.PrefAccessDenied_PageLocked;
 	
-	public static String DecoratedStringChooser_howToChange;
-	public static String KontaktFieldEditor_PleaseSelect;
-	public static String KontaktFieldEditor_PleaseSelectContact;
-	public static String KontaktFieldEditor_SelectContact;
-	public static String MultiplikatorEditor_5;
-	public static String MultiplikatorEditor_BegiNDate;
-	public static String MultiplikatorEditor_NewMultipilcator;
-	public static String MultiplikatorEditor_PleaseEnterBeginDate;
-	public static String MultiplikatorEditor_add;
-	public static String MultiplikatorEditor_from;
-	public static String PrefAccessDenied_PageLocked;
-	
-	static {
-		// load message values from bundle file
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	}
 }

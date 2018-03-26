@@ -38,7 +38,7 @@ public interface IObservation extends IFinding {
 		
 		public String getLocalized(){
 			try {
-				String localized = ResourceBundle.getBundle("ch.elexis.core.findings.messages")
+				String localized = ResourceBundle.getBundle(ch.elexis.core.l10n.Messages.BUNDLE_NAME)
 					.getString(this.getClass().getSimpleName() + "_" + this.name());
 				return localized;
 			} catch (MissingResourceException e) {

@@ -27,7 +27,7 @@ public class InMemorySettings extends Settings {
 	private static final long serialVersionUID = 0xeee1231L;
 	
 	public static final String Version(){
-		return Messages.getString("InMemorySettings.0");} //$NON-NLS-1$
+		return Messages.InMemorySettings_0;} //$NON-NLS-1$
 	
 	public InMemorySettings(){
 		super();
@@ -41,9 +41,9 @@ public class InMemorySettings extends Settings {
 	 */
 	public InMemorySettings(String[] preset){
 		for (int i = 0; i < preset.length; i++) {
-			String[] pair = preset[i].split(Messages.getString("InMemorySettings.1")); //$NON-NLS-1$
+			String[] pair = preset[i].split(Messages.InMemorySettings_1); //$NON-NLS-1$
 			if (pair.length != 2) {
-				log.error(Messages.getString("InMemorySettings.badDefinition") + preset[i]); //$NON-NLS-1$
+				log.error(Messages.InMemorySettings_badDefinition + preset[i]); //$NON-NLS-1$
 			}
 			set((pair[0]).trim(), pair[1].trim());
 		}

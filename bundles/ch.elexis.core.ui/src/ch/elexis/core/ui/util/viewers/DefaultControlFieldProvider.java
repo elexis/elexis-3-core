@@ -66,7 +66,17 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 	boolean bCeaseFire;
 	
 	private Composite inner;
-
+	
+	/**
+	 * Default implementation of a ControlFieldProvider. Creates a composite with a text input field
+	 * for each of the fiels passed to the constructor.
+	 * 
+	 * Fires a ChangedEvent whenever at least tow chars are entered in one of the fields
+	 * 
+	 * @viewer Composite, where the viewer should be placed
+	 * @flds Array of fields to be placed. Each field is the name of a field, optionally followed by
+	 *       '=' and the localized to be displayed name
+	 */
 	public DefaultControlFieldProvider(final CommonViewer viewer, final String[] flds){
 		myViewer = viewer;
 		updateFields(flds, false);
@@ -219,7 +229,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 	/**
 	 * Reaktion auf Eingaben in die Filterfelder. Reagiert erst wenn mindestens zwei Zeichen
 	 * eingegeben wurden oder das Feld geleert wurde.
-	 * */
+	 */
 	class ModListener implements ModifyListener {
 		@Override
 		public void modifyText(final ModifyEvent e){
@@ -261,8 +271,8 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 				@Override
 				public void run(){
 					HashMap<String, String> hm = new HashMap<String, String>();
-					for (int i = 0; i < fields.length; i++) {
-						hm.put(fields[i], lastFiltered[i]);
+					for (int i = 0; i < dbFields.length; i++) {
+						hm.put(dbFields[i], lastFiltered[i]);
 					}
 					for (ControlFieldListener lis : listeners) {
 						lis.changed(hm);
@@ -349,7 +359,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 	@Override
 	public void setQuery(final Query q){
 		boolean ch = false;
-		for (int i = 0; i < fields.length; i++) {
+		for (int i = 0; i < dbFields.length; i++) {
 			if (!lastFiltered[i].equals(StringTool.leer)) {
 				q.add(dbFields[i], "LIKE", lastFiltered[i] + "%", true); //$NON-NLS-1$ //$NON-NLS-2$
 				q.and();

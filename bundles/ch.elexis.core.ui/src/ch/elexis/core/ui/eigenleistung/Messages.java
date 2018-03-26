@@ -9,20 +9,13 @@
  **********************************************************************/
 package ch.elexis.core.ui.eigenleistung;
 
-import org.eclipse.osgi.util.NLS;
-
-public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "ch.elexis.core.ui.eigenleistung.messages";//$NON-NLS-1$
-	public static String EigenleistungContextMenu_deleteAction;
-	public static String EigenleistungContextMenu_deleteActionConfirmCaption;
-	public static String EigenleistungContextMenu_deleteActionToolTip;
-	public static String EigenleistungContextMenu_deleteConfirmBody;
-	public static String EigenleistungContextMenu_pleaseEnterNameForArticle;
-	public static String EigenleistungContextMenu_propertiesAction;
-	public static String EigenleistungContextMenu_propertiesTooltip;
+public class Messages {
+	public static String EigenleistungContextMenu_deleteAction = ch.elexis.core.l10n.Messages.EigenleistungContextMenu_deleteAction;
+	public static String EigenleistungContextMenu_deleteActionConfirmCaption = ch.elexis.core.l10n.Messages.EigenleistungContextMenu_deleteActionConfirmCaption;
+	public static String EigenleistungContextMenu_deleteActionToolTip = ch.elexis.core.l10n.Messages.EigenleistungContextMenu_deleteActionToolTip;
+	public static String EigenleistungContextMenu_deleteConfirmBody = ch.elexis.core.l10n.Messages.EigenleistungContextMenu_deleteConfirmBody;
+	public static String EigenleistungContextMenu_pleaseEnterNameForArticle = ch.elexis.core.l10n.Messages.EigenleistungContextMenu_pleaseEnterNameForArticle;
+	public static String EigenleistungContextMenu_propertiesAction = ch.elexis.core.l10n.Messages.EigenleistungContextMenu_propertiesAction;
+	public static String EigenleistungContextMenu_propertiesTooltip = ch.elexis.core.l10n.Messages.EigenleistungContextMenu_propertiesTooltip;
 	
-	static {
-		// load message values from bundle file
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	}
 }

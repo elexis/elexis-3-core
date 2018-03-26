@@ -21,8 +21,8 @@ public enum Priority implements INumericEnum, ILocalizedEnum {
 	@Override
 	public String getLocaleText() {
 		try {
-			return ResourceBundle.getBundle("ch.elexis.core.model.issue.messages")
-					.getString(Priority.class.getSimpleName() + "." + this.name());
+			return ResourceBundle.getBundle(ch.elexis.core.l10n.Messages.BUNDLE_NAME)
+					.getString(Priority.class.getSimpleName() + "_" + this.name());
 		} catch (Exception e) {
 			return this.name();
 		}

@@ -149,3 +149,7 @@ Steps to follow are:
 ** ch.elexis.core.application/META-INF/MANIFEST.MF
 ** ch.elexis.core.console.application/META-INF/MANIFEST.MF
 ** other manifests if build fails
+
+h2. Localisation / translation
+
+We are in a transition phase to use trema and support french and italien versions of elexis. For details see "l10n.md":bundles/ch.elexis.core.l10n/doc/l10n.md

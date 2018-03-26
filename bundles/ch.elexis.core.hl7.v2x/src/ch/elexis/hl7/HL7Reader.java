@@ -59,17 +59,17 @@ public abstract class HL7Reader {
 	protected void resolvePatient(String firstName, String lastName, String birthDate){
 		pat = patientResolver.resolvePatient(firstName, lastName, birthDate);
 		if (pat == null) {
-			logger.warn(Messages.getString("HL7_PatientNotInDatabase"));
+			logger.warn(Messages.HL7_PatientNotInDatabase);
 		}
 	}
 	
 	protected void checkConflict(String firstName, String lastName, String birthDate, String sex){
 		if (!patientResolver.matchPatient(pat, firstName, lastName, birthDate)) {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Messages.getString("HL7_NameConflictWithID")).append(":\n")
-				.append(Messages.getString("HL7_Lab")).append(lastName).append(StringTool.space)
+			sb.append(Messages.HL7_NameConflictWithID).append(":\n")
+				.append(Messages.HL7_Lab).append(lastName).append(StringTool.space)
 				.append(firstName).append("(").append(sex).append("),").append(birthDate)
-				.append("\n").append(Messages.getString("HL7_Database")).append(pat.getLabel());
+				.append("\n").append(Messages.HL7_Database).append(pat.getLabel());
 			pat = null;
 			logger.warn(sb.toString());
 			

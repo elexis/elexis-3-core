@@ -10,27 +10,18 @@
  ******************************************************************************/
 package ch.elexis.core.ui.exchange;
 
-import org.eclipse.osgi.util.NLS;
-
-public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "ch.elexis.core.ui.exchange.messages"; //$NON-NLS-1$
-	public static String BlockContainer_Blockbeschreibung;
-	public static String BlockContainer_xchangefiles;
-	public static String KontaktMatcher_noauto1;
-	public static String KontaktMatcher_noauto2;
-	public static String KontaktMatcher_noauto3;
-	public static String KontaktMatcher_noauto4;
-	public static String KontaktMatcher_noauto5;
-	public static String KontaktMatcher_OrganizationNotFound;
-	public static String KontaktMatcher_OrganizationNotUnique;
-	public static String KontaktMatcher_PersonNotFound;
-	public static String KontaktMatcher_PersonNotUnique;
-	public static String XChangeContainer_kg;
-	public static String XChangeContainer_kontakte;
-	static {
-		// initialize resource bundle
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	}
-	
-	private Messages(){}
+public class Messages  {
+	public static String BlockContainer_Blockbeschreibung = ch.elexis.core.l10n.Messages.BlockContainer_Blockbeschreibung;
+	public static String BlockContainer_xchangefiles = ch.elexis.core.l10n.Messages.BlockContainer_xchangefiles;
+	public static String KontaktMatcher_noauto1 = ch.elexis.core.l10n.Messages.KontaktMatcher_noauto1;
+	public static String KontaktMatcher_noauto2 = ch.elexis.core.l10n.Messages.KontaktMatcher_noauto2;
+	public static String KontaktMatcher_noauto3 = ch.elexis.core.l10n.Messages.KontaktMatcher_noauto3;
+	public static String KontaktMatcher_noauto4 = ch.elexis.core.l10n.Messages.KontaktMatcher_noauto4;
+	public static String KontaktMatcher_noauto5 = ch.elexis.core.l10n.Messages.KontaktMatcher_noauto5;
+	public static String KontaktMatcher_OrganizationNotFound = ch.elexis.core.l10n.Messages.KontaktMatcher_OrganizationNotFound;
+	public static String KontaktMatcher_OrganizationNotUnique = ch.elexis.core.l10n.Messages.KontaktMatcher_OrganizationNotUnique;
+	public static String KontaktMatcher_PersonNotFound = ch.elexis.core.l10n.Messages.KontaktMatcher_PersonNotFound;
+	public static String KontaktMatcher_PersonNotUnique = ch.elexis.core.l10n.Messages.KontaktMatcher_PersonNotUnique;
+	public static String XChangeContainer_kg = ch.elexis.core.l10n.Messages.XChangeContainer_kg;
+	public static String XChangeContainer_kontakte = ch.elexis.core.l10n.Messages.XChangeContainer_kontakte;
 }

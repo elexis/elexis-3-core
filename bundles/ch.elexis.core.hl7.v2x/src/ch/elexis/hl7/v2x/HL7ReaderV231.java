@@ -309,7 +309,7 @@ public class HL7ReaderV231 extends HL7Reader {
 				
 			if (!"DOCUMENT".equals(observationId)) {
 				logger.warn(MessageFormat.format(
-					Messages.getString("HL7_ORU_R01.Error_WrongObsIdentifier"), observationId));
+					Messages.HL7_ORU_R01_Error_WrongObsIdentifier, observationId));
 			}
 			
 			ED ed = (ED) obx.getObx5_ObservationValue(0).getData();

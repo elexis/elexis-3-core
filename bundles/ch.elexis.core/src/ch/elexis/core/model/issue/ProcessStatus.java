@@ -31,8 +31,8 @@ public enum ProcessStatus implements INumericEnum, ILocalizedEnum {
 
 	public String getLocaleText() {
 		try {
-			return ResourceBundle.getBundle("ch.elexis.core.model.issue.messages")
-					.getString(ProcessStatus.class.getSimpleName() + "." + this.name());
+			return ResourceBundle.getBundle(ch.elexis.core.l10n.Messages.BUNDLE_NAME)
+					.getString(ProcessStatus.class.getSimpleName() + "_" + this.name());
 		} catch (Exception e) {
 			return this.name();
 		}
