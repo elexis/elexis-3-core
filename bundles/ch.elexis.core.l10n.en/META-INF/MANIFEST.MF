@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: l10n.en
-Bundle-SymbolicName: ch.elexis.core.l10n.en
-Bundle-Version: 1.0.0.qualifier
-Fragment-Host: ch.elexis.core.l10n
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
