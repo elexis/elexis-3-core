@@ -10,12 +10,12 @@
  ******************************************************************************/
 package ch.elexis.core.console.application.listeners;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Listens to generic MessageEvents thrown by the core that should be presented to the user.
@@ -31,6 +31,6 @@ public class MessageEventListener extends ElexisEventListenerImpl {
 	@Override
 	public void run(ElexisEvent ev){
 		MessageEvent me = (MessageEvent) ev.getGenericObject();
-		log.info("MessageEvent [TITLE] " + me.title + " [MESSAGE] " + me.message);
+		log.debug("MessageEvent [" + me.mt + "]  [" + me.title + "] [" + me.message + "]");
 	}
 }
