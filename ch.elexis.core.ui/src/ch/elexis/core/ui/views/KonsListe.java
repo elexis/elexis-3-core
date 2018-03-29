@@ -24,11 +24,10 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.ui.actions.GlobalActions;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher;
-import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.actions.KonsFilter;
 import ch.elexis.core.ui.dialogs.KonsFilterDialog;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
@@ -36,15 +35,17 @@ import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
 
-public class KonsListe extends ViewPart implements IActivationListener, ISaveablePart2 {
+public class KonsListe extends ViewPart implements IRefreshable, ISaveablePart2 {
 	public static final String ID = "ch.elexis.HistoryView"; //$NON-NLS-1$
 	HistoryDisplay liste;
 	Patient actPatient;
 	ViewMenus menus;
 	private Action filterAction;
 	private KonsFilter filter;
-	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
-		
+	
+	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
+	
+	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {	
 		public void runInUi(final ElexisEvent ev){
 			if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
 				if ((actPatient == null)
@@ -95,40 +96,33 @@ public class KonsListe extends ViewPart implements IActivationListener, ISaveabl
 		makeActions();
 		menus = new ViewMenus(getViewSite());
 		menus.createToolbar(GlobalActions.neueKonsAction, filterAction);
-		GlobalEventDispatcher.addActivationListener(this, this);
+		ElexisEventDispatcher.getInstance().addListeners(eeli_fall, eeli_pat, eeli_kons);
+		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 	
 	@Override
 	public void dispose(){
+		getSite().getPage().removePartListener(udpateOnVisible);
+		ElexisEventDispatcher.getInstance().removeListeners(eeli_fall, eeli_kons, eeli_pat);
 		liste.stop();
-		GlobalEventDispatcher.removeActivationListener(this, this);
-		// GlobalEvents.getInstance().removeSelectionListener(this);
+		super.dispose();
 	}
 	
 	@Override
 	public void setFocus(){
-		
+		liste.setFocus();
+		refresh();
+	}
+	
+	@Override
+	public void refresh(){
+		eeli_pat.catchElexisEvent(ElexisEvent.createPatientEvent());		
 	}
 	
 	private void restart(ElexisEvent ev){
 		liste.stop();
 		liste.load(actPatient, ev);
 		liste.start(filter);
-	}
-	
-	/* ActivationListener */
-	public void activation(final boolean mode){ /* leer */
-	}
-	
-	public void visible(final boolean mode){
-		if (mode) {
-			ElexisEventDispatcher.getInstance().addListeners(eeli_fall, eeli_pat, eeli_kons);
-			eeli_pat.catchElexisEvent(new ElexisEvent(ElexisEventDispatcher.getSelectedPatient(),
-				null, ElexisEvent.EVENT_SELECTED));
-		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_fall, eeli_kons, eeli_pat);
-		}
-		
 	}
 	
 	private void makeActions(){
