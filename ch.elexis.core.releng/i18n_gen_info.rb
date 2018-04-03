@@ -464,7 +464,7 @@ class I18nInfo
     LanguageViews.keys.each do |lang|
       lang_file = filename.sub('.properties', (lang.eql?('Java') ? '' : '_' + lang) + '.properties')
       File.open(lang_file, 'w:ISO-8859-1') do |file|
-        keys.each do |tag_name|
+        keys.sort.uniq.each do |tag_name|
           next if /_false$/.match(tag_name)
           translations =   @@all_msgs[tag_name]        
           unless translations
@@ -477,6 +477,7 @@ class I18nInfo
           lang_value = translations[L10N_Cache::JavaLanguage] if !lang_value || lang_value.empty?
           tag2write = tag_name.sub(project_name+'_','')
           next if tag2write.eql?('false')
+          next unless plugin_key_hash.keys.find_all{|x| /#{tag_name}$/.match(x)}.size > 0
           if !lang_value || lang_value.empty?
             puts "no #{lang} value found for #{tag2write}"
             next
