@@ -460,7 +460,7 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 		Map ext = getMap(FLD_EXTINFO);
 		double vpe = checkZeroDouble((String) ext.get(VERPACKUNGSEINHEIT));
 		double vke = checkZeroDouble((String) ext.get(VERKAUFSEINHEIT));
-		if ((vpe > 0.0) && (vke > 0.0) && (vpe != vke)) {
+		if ((vpe > 0.0 && vke > 0.0) && (vpe != vke)) {
 			return (int) Math.round(vke * (vkt / vpe));
 		} else {
 			return (int) Math.round(vkt);
@@ -474,7 +474,7 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 		Map ext = getMap(FLD_EXTINFO);
 		double vpe = checkZeroDouble((String) ext.get(VERPACKUNGSEINHEIT));
 		double vke = checkZeroDouble((String) ext.get(VERKAUFSEINHEIT));
-		if (vpe != vke) {
+		if ((vpe > 0.0 && vke > 0.0) && (vpe != vke)) {
 			return new Money((int) Math.round(vke * (vkt / vpe)));
 		} else {
 			return new Money((int) Math.round(vkt));
