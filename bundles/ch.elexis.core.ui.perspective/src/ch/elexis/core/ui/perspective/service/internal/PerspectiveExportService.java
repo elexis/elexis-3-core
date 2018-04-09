@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.service.component.annotations.Component;
 
+import ch.elexis.core.ui.compatibility.ElexisFastViewUtil;
 import ch.elexis.core.ui.perspective.service.IPerspectiveExportService;
 
 @Component
@@ -104,10 +105,13 @@ public class PerspectiveExportService implements IPerspectiveExportService {
 				placeholder.setRef(null);
 			}
 			
+			ElexisFastViewUtil.transferFastViewPersistedState(window, clone);
+			
 			// add the cloned model element to the resource so that it may be stored
 			resource.getContents().add((EObject) clone);
 			
 			resource.save(outputStream, null);
 		}
 	}
+	
 }
