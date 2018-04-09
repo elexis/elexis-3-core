@@ -381,6 +381,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	}
 	
 	public String getResult(){
+		String result = checkNull(get(RESULT));
 		if (getItem().getTyp() == LabItemTyp.FORMULA) {
 			String value = null;
 			// get the LabOrder for this LabResult
@@ -397,9 +398,12 @@ public class LabResult extends PersistentObject implements ILabResult {
 				}
 				value = evaluateWithDateContext(time);
 			}
-			setResult(value);
+			if (!result.equals(value)) {
+				setResult(value);
+				result = checkNull(get(RESULT));
+			}
 		}
-		return checkNull(get(RESULT));
+		return result;
 	}
 	
 	private String evaluteWithOrderContext(LabOrder order){
