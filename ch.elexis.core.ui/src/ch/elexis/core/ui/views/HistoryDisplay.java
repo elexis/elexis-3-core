@@ -62,6 +62,7 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 	private static final int PAGING_FETCHSIZE = 20;
 	
 	private PagingComposite pagingComposite;
+	private Patient actPatient;
 	
 	public HistoryDisplay(Composite parent, final IViewSite site){
 		this(parent, site, false);
@@ -170,6 +171,11 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 	 * @param ev
 	 */
 	public void load(Patient pat, @Nullable ElexisEvent ev){
+		int page = 1;
+		// remember page if patient did not change
+		if (actPatient != null && actPatient.equals(pat)) {
+			page = pagingComposite.getCurrentPage();
+		}
 		if (ev == null || ev.getObject() instanceof Patient) {
 			UiDesk.getDisplay().syncExec(new Runnable() {
 				public void run(){
@@ -192,8 +198,9 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 			for (Fall f : faelle) {
 				load(f, false);
 			}
-			pagingComposite.setup(1, lKons.size(), PAGING_FETCHSIZE);
+			pagingComposite.setup(page, lKons.size(), PAGING_FETCHSIZE);
 		}
+		actPatient = pat;
 	}
 	
 	public void jobFinished(BackgroundJob j){
