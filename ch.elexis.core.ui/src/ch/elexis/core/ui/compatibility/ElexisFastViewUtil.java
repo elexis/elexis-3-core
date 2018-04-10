@@ -1,6 +1,8 @@
 package ch.elexis.core.ui.compatibility;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
@@ -190,7 +192,9 @@ public class ElexisFastViewUtil {
 			mToolControl.setToBeRendered(true);
 			mToolControl.setVisible(true);
 			mToolControl.getTags().add("TrimStack");
-			mToolControl.getPersistedState().put("YSize", "600");
+			if (!hasFastViewPersistedState(mPerspective)) {
+				mToolControl.getPersistedState().put("YSize", "600");
+			}
 			mTrimBar.getChildren().add(0, mToolControl);
 			mTrimBar.setVisible(true);
 			mTrimBar.setToBeRendered(true);
@@ -205,8 +209,7 @@ public class ElexisFastViewUtil {
 	}
 	
 	private static String getToolControlId(MUIElement window, String perspectiveId){
-		return ELEXIS_FASTVIEW_STACK + "("
-			+ perspectiveId + ")";
+		return ELEXIS_FASTVIEW_STACK + "(" + perspectiveId + ")";
 	}
 	
 	private static <T> T getService(final Class<T> clazz){
@@ -223,7 +226,7 @@ public class ElexisFastViewUtil {
 		}
 		return false;
 	}
-
+	
 	/**
 	 * Registers a perspective listener
 	 */
@@ -241,7 +244,20 @@ public class ElexisFastViewUtil {
 						UiDesk.asyncExec(new Runnable() {
 							@Override
 							public void run(){
-								changeFastViewBarFromLeftToBottom();
+								EModelService eModelService = getService(EModelService.class);
+								MApplication mApplication = getService(MApplication.class);
+								if (eModelService != null && mApplication != null
+									&& mApplication.isToBeRendered()) {
+									MTrimmedWindow mWindow =
+										getCurrentWindow(eModelService, mApplication);
+									if (mWindow != null && mWindow.isToBeRendered()) {
+										changeFastViewBarFromLeftToBottom();
+										
+										MPerspective mPerspective =
+											eModelService.getActivePerspective(mWindow);
+										transferFastViewPersistedState(mPerspective, mWindow);
+									}
+								}
 							}
 						});
 					}
@@ -254,16 +270,52 @@ public class ElexisFastViewUtil {
 						
 						@Override
 						public void run(){
-							changeFastViewBarFromLeftToBottom();
+							EModelService eModelService = getService(EModelService.class);
+							MApplication mApplication = getService(MApplication.class);
+							if (eModelService != null && mApplication != null
+								&& mApplication.isToBeRendered()) {
+								MTrimmedWindow mWindow =
+									getCurrentWindow(eModelService, mApplication);
+								if (mWindow != null && mWindow.isToBeRendered()) {
+									changeFastViewBarFromLeftToBottom();
+									
+									MPerspective mPerspective =
+										eModelService.getActivePerspective(mWindow);
+									if (hasFastViewPersistedState(mPerspective)
+										&& !hasFastViewPersistedState(mWindow,
+											mPerspective.getElementId())) {
+										transferFastViewPersistedState(mPerspective, mWindow);
+									}
+								}
+							}
 						}
 					});
-					
 				}
 			});
 		}
 	}
 	
-	private static MToolControl findFastViewToolControl(EModelService eModelService,
+	private static boolean hasFastViewPersistedState(MTrimmedWindow mWindow, String perspectiveId){
+		EModelService eModelService = getService(EModelService.class);
+		Optional<MToolControl> mToolControl =
+			getFastViewToolControl(eModelService, mWindow, perspectiveId, SideValue.BOTTOM);
+		if (mToolControl.isPresent()) {
+			Map<String, String> persistedState = mToolControl.get().getPersistedState();
+			return persistedState != null && !persistedState.isEmpty();
+		}
+		return false;
+	}
+	
+	private static boolean hasFastViewPersistedState(MPerspective mPerspective){
+		Optional<MPartStack> mStack = getFastViewPartStack(mPerspective);
+		if (mStack.isPresent()) {
+			Map<String, String> persistedState = mStack.get().getPersistedState();
+			return persistedState != null && !persistedState.isEmpty();
+		}
+		return false;
+	}
+	
+	private static Optional<MToolControl> getFastViewToolControl(EModelService eModelService,
 		MTrimmedWindow workbenchWindow, String perspectiveId, SideValue sideValue){
 		if (workbenchWindow != null) {
 			MTrimBar trimbar = findTrimBar(eModelService, workbenchWindow, sideValue);
@@ -278,10 +330,22 @@ public class ElexisFastViewUtil {
 						toolControl.setElementId(getToolControlId(workbenchWindow, perspectiveId));
 					}
 				}
-				return toolControl;
+				if (toolControl != null) {
+					return Optional.of(toolControl);
+				}
 			}
 		}
-		return null;
+		return Optional.empty();
+	}
+	
+	private static Optional<MPartStack> getFastViewPartStack(MPerspective mPerspective){
+		EModelService modelService = getService(EModelService.class);
+		MPartStack stack =
+			(MPartStack) modelService.find(ElexisFastViewUtil.ELEXIS_FASTVIEW_STACK, mPerspective);
+		if (stack != null) {
+			return Optional.of(stack);
+		}
+		return Optional.empty();
 	}
 	
 	private static MTrimBar findTrimBar(EModelService eModelService, MTrimmedWindow workbenchWindow,
@@ -294,9 +358,60 @@ public class ElexisFastViewUtil {
 	}
 	
 	/**
+	 * Transfer persisted state (incl. size) of fastview {@link MToolControl} defined in window, to
+	 * fastview defined in perspective.
+	 * 
+	 * @param fromWindow
+	 * @param toPerspective
+	 */
+	public static void transferFastViewPersistedState(MTrimmedWindow fromWindow,
+		MPerspective toPerspective){
+		EModelService modelService = getService(EModelService.class);
+		// check if toolcontrol exists
+		MToolControl toolControl = (MToolControl) modelService
+			.find(ElexisFastViewUtil.getToolControlId(fromWindow, toPerspective), fromWindow);
+		if (toolControl != null && toolControl.getPersistedState() != null) {
+			Optional<MPartStack> mStack = getFastViewPartStack(toPerspective);
+			mStack.ifPresent(stack -> {
+				Map<String, String> perspectiveState = stack.getPersistedState();
+				for (String key : toolControl.getPersistedState().keySet()) {
+					perspectiveState.put(key, toolControl.getPersistedState().get(key));
+				}
+			});
+		}
+	}
+	
+	/**
+	 * Transfer persisted state (incl. size) of fastview defined in perspective, to fastview
+	 * {@link MToolControl} defined in window.
+	 * 
+	 * @param fromPerspective
+	 * @param toWindow
+	 */
+	public static void transferFastViewPersistedState(MPerspective fromPerspective,
+		MTrimmedWindow toWindow){
+		EModelService modelService = getService(EModelService.class);
+		String perspectiveId = fromPerspective.getElementId();
+		
+		Optional<MToolControl> mToolControl =
+			getFastViewToolControl(modelService, toWindow, perspectiveId, SideValue.BOTTOM);
+		mToolControl.ifPresent(toolControl -> {
+			Optional<MPartStack> mStack = getFastViewPartStack(fromPerspective);
+			mStack.ifPresent(stack -> {
+				if (stack.getPersistedState() != null && !stack.getPersistedState().isEmpty()) {
+					for (String key : stack.getPersistedState().keySet()) {
+						toolControl.getPersistedState().put(key,
+							stack.getPersistedState().get(key));
+					}
+				}
+			});
+		});
+	}
+	
+	/**
 	 * Changes the fastviews position from left trimbar to bottom trimbar
 	 */
-	public static void changeFastViewBarFromLeftToBottom(){
+	private static void changeFastViewBarFromLeftToBottom(){
 		EModelService eModelService = getService(EModelService.class);
 		MApplication mApplication = getService(MApplication.class);
 		MTrimmedWindow mWindow = getCurrentWindow(eModelService, mApplication);
@@ -306,40 +421,39 @@ public class ElexisFastViewUtil {
 			if (mPerspective != null) {
 				String perspectiveId = mPerspective.getElementId();
 				
-				MToolControl mToolControl =
-					findFastViewToolControl(eModelService, mWindow, perspectiveId,
-						SideValue.BOTTOM);
-				if (mToolControl == null) {
-					mToolControl = findFastViewToolControl(eModelService, mWindow, perspectiveId,
+				Optional<MToolControl> mToolControl =
+					getFastViewToolControl(eModelService, mWindow, perspectiveId, SideValue.BOTTOM);
+				if (!mToolControl.isPresent()) {
+					mToolControl = getFastViewToolControl(eModelService, mWindow, perspectiveId,
 						SideValue.LEFT);
-					if (mToolControl != null) {
+					mToolControl.ifPresent(toolControl -> {
 						MTrimBar trimBarBottom =
 							findTrimBar(eModelService, mWindow, SideValue.BOTTOM);
 						if (trimBarBottom != null) {
 							MToolControl copyToolcontrol =
 								eModelService.createModelElement(MToolControl.class);
-							copyToolcontrol.setElementId(mToolControl.getElementId());
+							copyToolcontrol.setElementId(toolControl.getElementId());
 							copyToolcontrol.setContributionURI(
 								"bundleclass://org.eclipse.e4.ui.workbench.addons.swt/org.eclipse.e4.ui.workbench.addons.minmax.TrimStack");
 							copyToolcontrol.setToBeRendered(true);
 							copyToolcontrol.setVisible(true);
 							copyToolcontrol.getTags().add("TrimStack");
 							
-							copyToolcontrol.getPersistedState().put("YSize", "600");
+							if (!hasFastViewPersistedState(mPerspective)) {
+								copyToolcontrol.getPersistedState().put("YSize", "600");
+							}
 							trimBarBottom.getChildren().add(0, copyToolcontrol);
 							
-							mToolControl.setToBeRendered(false);
-							mToolControl.setVisible(false);
-							mToolControl.getParent().getChildren().remove(mToolControl);
-							mToolControl.setParent(null);
+							toolControl.setToBeRendered(false);
+							toolControl.setVisible(false);
+							toolControl.getParent().getChildren().remove(toolControl);
+							toolControl.setParent(null);
 							trimBarBottom.setVisible(true);
 							trimBarBottom.setToBeRendered(true);
 						}
-						
-					}
-				}
-				else {
-					mToolControl.setToBeRendered(true);
+					});
+				} else {
+					mToolControl.get().setToBeRendered(true);
 				}
 			}
 		}
