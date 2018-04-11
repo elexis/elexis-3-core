@@ -46,6 +46,7 @@ public abstract class Settings implements Serializable, Cloneable {
 	protected Hashtable node;
 	private volatile String path = null;
 	private volatile boolean dirty = false;
+	private ISettingChangedListener settingChangedListener = null;
 	// protected String name;
 	
 	static {
@@ -66,6 +67,14 @@ public abstract class Settings implements Serializable, Cloneable {
 	protected Settings(Hashtable n){
 		node = (n == null) ? new Hashtable() : n;
 		dirty = true;
+	}
+	
+	public void setSettingChangedListener(ISettingChangedListener settingChangedListener){
+		this.settingChangedListener = settingChangedListener;
+	}
+	
+	public ISettingChangedListener getSettingChangedListener(){
+		return settingChangedListener;
 	}
 	
 	protected void cleaned(){
@@ -125,8 +134,10 @@ public abstract class Settings implements Serializable, Cloneable {
 		}
 		Hashtable subnode = findParent(key, true);
 		dirty = true;
+		if(settingChangedListener!=null) {
+			settingChangedListener.settingChanged(key, value);
+		}
 		return (subnode.put(getLeaf(key), value) != null);
-		
 	}
 	
 	private String getLeaf(String key){
@@ -372,6 +383,9 @@ public abstract class Settings implements Serializable, Cloneable {
 	public void remove(String key){
 		Hashtable p = findParent(key, false);
 		if (p != null) {
+			if(settingChangedListener!=null) {
+				settingChangedListener.settingRemoved(key);
+			}
 			p.remove(getLeaf(key));
 			dirty = true;
 		}

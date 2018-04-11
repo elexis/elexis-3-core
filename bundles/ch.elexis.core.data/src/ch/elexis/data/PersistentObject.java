@@ -73,6 +73,7 @@ import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IXid;
 import ch.elexis.data.Xid.XIDException;
 import ch.rgw.compress.CompEx;
+import ch.rgw.io.ISettingChangedListener;
 import ch.rgw.io.Settings;
 import ch.rgw.io.SqlSettings;
 import ch.rgw.tools.ExHandler;
@@ -463,6 +464,20 @@ public abstract class PersistentObject implements IPersistentObject {
 				connection.releaseStatement(stm);
 			}
 		}
+		
+		CoreHub.globalCfg.setSettingChangedListener(new ISettingChangedListener() {
+			
+			@Override
+			public void settingDeleted(String key){
+				Trace.addTraceEntry("W globalCfg key ["+key+"] => removed");
+			}
+			
+			@Override
+			public void settingWritten(String key, String value){
+				Trace.addTraceEntry("W globalCfg key ["+key+"] => value ["+value+"]");
+			}
+		});
+		
 		// Zugriffskontrolle initialisieren
 		VersionInfo vi = new VersionInfo(CoreHub.globalCfg.get("dbversion", "0.0.0"));
 		log.info("Verlangte Datenbankversion: " + CoreHub.DBVersion);
@@ -506,7 +521,6 @@ public abstract class PersistentObject implements IPersistentObject {
 			}
 		}
 		
-		connection.initTrace();
 		return true;
 	}
 	

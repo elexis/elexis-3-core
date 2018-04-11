@@ -172,6 +172,9 @@ public class SqlSettings extends Settings {
 							if (constraintKey != null && constraintValue != null) {
 								deleteStatement.setString(2, constraintValue);
 							}
+							if(getSettingChangedListener() != null) {
+								getSettingChangedListener().settingRemoved(parameterName);
+							}
 							deleteStatement.executeUpdate();
 							// sql=new
 							// StringBuilder("DELETE from "+tbl+" WHERE "+constraint+" AND param="+JdbcLink.wrap(a))
@@ -183,6 +186,9 @@ public class SqlSettings extends Settings {
 								updateStatement.setString(4, constraintValue);
 							}
 							updateStatement.executeUpdate();
+							if(getSettingChangedListener() != null) {
+								getSettingChangedListener().settingWritten(parameterName, parameterValue);
+							}
 							setLastUpdate(parameterName, timestamp);
 							// sql=new
 							// StringBuilder("UPDATE "+tbl+" SET wert="+JdbcLink.wrap(v)+" WHERE "+constraint+" AND param="+JdbcLink.wrap(a));
@@ -199,6 +205,9 @@ public class SqlSettings extends Settings {
 						insertStatement.setString(4, constraintValue);
 					}
 					insertStatement.executeUpdate();
+					if(getSettingChangedListener() != null) {
+						getSettingChangedListener().settingWritten(parameterName, parameterValue);
+					}
 					setLastUpdate(parameterName, timestamp);
 					// sql="INSERT INTO "+tbl+" (param,wert,"+cn[0]+") VALUES ("+JdbcLink.wrap(a)+","+JdbcLink.wrap(v)+","+cn[1]+")";
 				}

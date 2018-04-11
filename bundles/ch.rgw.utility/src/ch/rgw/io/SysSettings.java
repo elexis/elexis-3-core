@@ -137,8 +137,14 @@ public class SysSettings extends Settings {
 			}
 			if (StringTool.isNothing(value)) {
 				sub.remove(key);
+				if(getSettingChangedListener() != null) {
+					getSettingChangedListener().settingRemoved(key);
+				}
 			} else {
 				sub.put(key, (String) value);
+				if(getSettingChangedListener() != null) {
+					getSettingChangedListener().settingWritten(key, (String) value);
+				}
 			}
 		}
 		try {

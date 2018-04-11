@@ -70,20 +70,6 @@ public class DBConnection {
 		logger.info("Cache setup: default_lifetime " + default_lifetime);
 	}
 	
-	/**
-	 * Lookup if {@link Preferences.ABL_TRACE} in global and local config, and start trace if set.
-	 * 
-	 */
-	public void initTrace(){
-		// Wenn trace global eingeschaltet ist, gilt es für alle
-		setTrace(CoreHub.globalCfg.get(Preferences.ABL_TRACE, null));
-		// wenn trace global nicht eingeschaltet ist, kann es immer noch für
-		// diese Station eingeschaltet sein
-		if (tracetable == null) {
-			setTrace(CoreHub.localCfg.get(Preferences.ABL_TRACE, null));
-		}
-	}
-	
 	public void setDBPassword(String password){
 		this.dbPw = password;
 	}
@@ -242,23 +228,6 @@ public class DBConnection {
 		dbUser = "sa";
 		dbPw = StringTool.leer;
 		jdbcLink = JdbcLink.createH2Link(runFromScratchDB.getAbsolutePath());
-	}
-	
-	/**
-	 * Trace (protokollieren aller Schreibvorgänge) ein- und ausschalten. Die Trace-Tabelle muss
-	 * folgende Spalten haben: logtime (long), Workstation (VARCHAR), Username(Varchar), action
-	 * (Text/Longvarchar)
-	 * 
-	 * @param Tablename
-	 *            Name der Trace-tabelle oder null: Trace aus.
-	 */
-	public void setTrace(String Tablename){
-		if ((Tablename != null) && (Tablename.equals("none") || Tablename.equals(""))) {
-			Tablename = null;
-		}
-		tracetable = Tablename;
-		username = JdbcLink.wrap(System.getProperty("user.name"));
-		pcname = JdbcLink.wrap(NetTool.hostname);
 	}
 	
 	public void disconnect(){
