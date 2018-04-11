@@ -181,6 +181,13 @@ public class Preferences {
 	public static final String LABSETTINGS_CFG_LABNEW_HEARTRATE = "lab/heartrate_unseen"; //$NON-NLS-1$
 	public static final String LABSETTINGS_CFG_LOCAL_REFVALUES = "lab/localRefValues"; //$NON-NLS-1$
 	public static final String LABSETTINGS_CFG_SHOW_MANDANT_ORDERS_ONLY = "lab/showMandantOnly"; //$NON-NLS-1$
+	public static final String LABSETTINGS_PREFIX_CFG_EVAL = "lab/eval/"; //$NON-NLS-1$
+	public static final String LABSETTINGS_CFG_EVAL_PREFIX_TYPE_ABSOLUT =
+		LABSETTINGS_PREFIX_CFG_EVAL + "tAbsolut/"; //$NON-NLS-1$
+	public static final String LABSETTINGS_CFG_EVAL_PREFIX_TYPE_TEXT =
+		LABSETTINGS_PREFIX_CFG_EVAL + "tText/"; //$NON-NLS-1$
+	public static final String LABSETTINGS_CFG_EVAL_REFVAL_NON_EQUAL_RESVAL_MEANS_PATHOLOGIC =
+		"refValNonEqualResValMeansPath"; //$NON-NLS-1$
 	
 	// Scanner
 	public static final String SCANNER_PREFIX_CODE = "scanner/prefixcode"; //$NON-NLS-1$

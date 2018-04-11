@@ -29,6 +29,8 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.beans.ContactBean;
+import ch.elexis.core.data.lab.LabResultEvaluationResult;
+import ch.elexis.core.data.lab.LabResultEvaluator;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IContact;
@@ -197,59 +199,48 @@ public class LabResult extends PersistentObject implements ILabResult {
 	
 	private boolean isPathologic(final Gender g, final ILabItem item, final String result,
 		boolean updateDescription){
-		if (item.getTyp().equals(LabItemTyp.ABSOLUTE)) {
-			if (result.toLowerCase().startsWith("pos")) { //$NON-NLS-1$
-				if (updateDescription) {
-					setPathologicDescription(
-						new PathologicDescription(Description.PATHO_ABSOLUT, "pos"));
-				}
-				return true;
+		
+		LabResultEvaluationResult er = new LabResultEvaluator().evaluate(this);
+		if (er.isFinallyDetermined()) {
+			if (updateDescription && er.getPathologicDescription() != null) {
+				setPathologicDescription(er.getPathologicDescription());
 			}
-			if (result.trim().startsWith("+")) { //$NON-NLS-1$
-				if (updateDescription) {
-					setPathologicDescription(
-						new PathologicDescription(Description.PATHO_ABSOLUT, "+"));
-				}
-				return true;
-			}
-			if(updateDescription) {
-				setPathologicDescription(new PathologicDescription(Description.PATHO_ABSOLUT, result));
-			}
-			return false;
+			return er.isPathologic();
+		}
+		
+		String nr;
+		boolean usedItemRef = false;
+		if (g == Gender.MALE) {
+			nr = getRefMale();
+			usedItemRef = isUsingItemRef(REFMALE);
 		} else {
-			String nr;
-			boolean usedItemRef = false;
-			if (g == Gender.MALE) {
-				nr = getRefMale();
-				usedItemRef = isUsingItemRef(REFMALE);
-			} else {
-				nr = getRefFemale();
-				usedItemRef = isUsingItemRef(REFFEMALE);
-			}
-			List<String> refStrings = parseRefString(nr);
-			// only test first string as range is defined in one string
-			if (result != null && !refStrings.isEmpty() && !refStrings.get(0).isEmpty()) {
-				if (updateDescription) {
-					if (usedItemRef) {
-						setPathologicDescription(new PathologicDescription(
-							Description.PATHO_REF_ITEM, refStrings.get(0)));
-					} else {
-						setPathologicDescription(
-							new PathologicDescription(Description.PATHO_REF, refStrings.get(0)));
-					}
-				}
-				Boolean testResult = testRef(refStrings.get(0), result);
-				if (testResult != null) {
-					return testResult;
+			nr = getRefFemale();
+			usedItemRef = isUsingItemRef(REFFEMALE);
+		}
+		List<String> refStrings = parseRefString(nr);
+		// only test first string as range is defined in one string
+		if (result != null && !refStrings.isEmpty() && !refStrings.get(0).isEmpty()) {
+			if (updateDescription) {
+				if (usedItemRef) {
+					setPathologicDescription(
+						new PathologicDescription(Description.PATHO_REF_ITEM, refStrings.get(0)));
 				} else {
-					if (updateDescription) {
-						setPathologicDescription(
-							new PathologicDescription(Description.PATHO_NOREF, refStrings.get(0)));
-					}
-					return false;
+					setPathologicDescription(
+						new PathologicDescription(Description.PATHO_REF, refStrings.get(0)));
 				}
+			}
+			Boolean testResult = testRef(refStrings.get(0), result);
+			if (testResult != null) {
+				return testResult;
+			} else {
+				if (updateDescription) {
+					setPathologicDescription(
+						new PathologicDescription(Description.PATHO_NOREF, refStrings.get(0)));
+				}
+				return false;
 			}
 		}
+		
 		if (updateDescription) {
 			setPathologicDescription(new PathologicDescription(Description.PATHO_NOREF));
 		}

@@ -27,6 +27,12 @@
             id="ch.elexis.LaborParameterPrefs"
             name="%elexis.labParameterPrefs">
       </page>
+        <page
+            category="ch.elexis.LaborPref"
+            class="ch.elexis.core.ui.laboratory.preferences.LabEvaluationRulesPreferencePage"
+            id="ch.elexis.LabEvaluationRulesPreferencePage"
+            name="%elexis.labEvaluationRulesPreferencePage">
+      </page>
    </extension>
 
       <extension

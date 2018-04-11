@@ -18,7 +18,8 @@ Require-Bundle: org.eclipse.ui,
  ch.elexis.core.l10n;bundle-version="3.5.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Import-Package: org.slf4j
+Import-Package: org.eclipse.ui,
+ org.slf4j
 Export-Package: ch.elexis.core.ui.laboratory.controls,
  ch.elexis.core.ui.laboratory.dialogs,
  ch.elexis.core.ui.laboratory.laborlink,
