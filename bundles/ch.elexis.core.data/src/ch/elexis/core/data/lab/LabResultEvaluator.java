@@ -14,7 +14,7 @@ import ch.elexis.data.LabResult;
 public class LabResultEvaluator {
 	
 	private LabResultEvaluationResult evaluateTextualResult(LabResult labResult,
-		boolean isAbsoluteItem){
+		final boolean isAbsoluteItem){
 		
 		String lcResult = labResult.getResult().trim();
 		Object[] ref = getReferenceValueForLabResult(labResult);
@@ -35,11 +35,14 @@ public class LabResultEvaluator {
 			}
 		}
 		
+		String SELECTED_BASE =
+			(isAbsoluteItem) ? Preferences.LABSETTINGS_CFG_EVAL_PREFIX_TYPE_ABSOLUT
+					: Preferences.LABSETTINGS_CFG_EVAL_PREFIX_TYPE_TEXT;
 		if (CoreHub.globalCfg.get(
-			Preferences.LABSETTINGS_CFG_EVAL_PREFIX_TYPE_ABSOLUT
+			SELECTED_BASE
 				+ Preferences.LABSETTINGS_CFG_EVAL_REFVAL_NON_EQUAL_RESVAL_MEANS_PATHOLOGIC,
 			false)) {
-			
+	
 			if (!lcResult.equalsIgnoreCase(refValue)) {
 				return new LabResultEvaluationResult(true, true,
 					new PathologicDescription(description, lcResult));
