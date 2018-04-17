@@ -10,6 +10,8 @@
  ******************************************************************************/
 package ch.elexis.core.ui.events;
 
+import org.eclipse.swt.widgets.Control;
+
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.ui.UiDesk;
@@ -46,6 +48,16 @@ public class ElexisUiEventListenerImpl extends ElexisEventListenerImpl {
 				}
 			});
 		}
+	}
+	
+	/**
+	 * Test if the control is not disposed and visible.
+	 * 
+	 * @param control
+	 * @return
+	 */
+	protected boolean isActiveControl(Control control) {
+		return control != null && !control.isDisposed() && control.isVisible();
 	}
 	
 	/**
