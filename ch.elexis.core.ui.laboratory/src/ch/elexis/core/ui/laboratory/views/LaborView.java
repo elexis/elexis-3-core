@@ -54,6 +54,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.laboratory.controls.LaborOrdersComposite;
 import ch.elexis.core.ui.laboratory.controls.LaborResultsComposite;
@@ -62,6 +63,7 @@ import ch.elexis.core.ui.util.Importer;
 import ch.elexis.core.ui.util.Log;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
+import ch.elexis.core.ui.views.IRefreshable;
 import ch.elexis.data.LabItem;
 import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabResult;
@@ -82,7 +84,7 @@ import ch.rgw.tools.TimeTool;
  * 
  * @author gerry
  */
-public class LaborView extends ViewPart implements ISaveablePart2 {
+public class LaborView extends ViewPart implements ISaveablePart2, IRefreshable {
 	
 	public static final String ID = "ch.elexis.Labor"; //$NON-NLS-1$
 	private static Log log = Log.get("LaborView"); //$NON-NLS-1$
@@ -95,11 +97,15 @@ public class LaborView extends ViewPart implements ISaveablePart2 {
 			newColumnAction, refreshAction, expandAllAction, collapseAllAction;
 	private ViewMenus menu;
 	
+	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
+	
 	private ElexisUiEventListenerImpl eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 		@Override
 		public void runInUi(ElexisEvent ev){
-			resultsComposite.selectPatient((Patient) ev.getObject());
-			ordersComposite.selectPatient((Patient) ev.getObject());
+			if(!resultsComposite.isDisposed() && !ordersComposite.isDisposed()) {
+				resultsComposite.selectPatient((Patient) ev.getObject());
+				ordersComposite.selectPatient((Patient) ev.getObject());
+			}
 		}
 	};
 	
@@ -237,13 +243,15 @@ public class LaborView extends ViewPart implements ISaveablePart2 {
 		if ((act != null && act != resultsComposite.getPatient())) {
 			resultsComposite.selectPatient(act);
 		}
+		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 	
 	@Override
 	public void dispose(){
-		super.dispose();
+		getSite().getPage().removePartListener(udpateOnVisible);
 		ElexisEventDispatcher.getInstance().removeListeners(eeli_labitem, eeli_laborder,
 			eeli_labresult, eeli_pat);
+		super.dispose();
 	}
 	
 	@Override
@@ -253,6 +261,11 @@ public class LaborView extends ViewPart implements ISaveablePart2 {
 		} else if (ordersComposite.isVisible()) {
 			ordersComposite.setFocus();
 		}
+	}
+	
+	@Override
+	public void refresh(){
+		eeli_pat.catchElexisEvent(ElexisEvent.createPatientEvent());
 	}
 	
 	private void makeActions(){
@@ -549,5 +562,4 @@ public class LaborView extends ViewPart implements ISaveablePart2 {
 			
 		}
 	}
-	
 }

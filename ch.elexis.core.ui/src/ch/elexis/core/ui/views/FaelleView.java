@@ -35,10 +35,10 @@ import org.eclipse.ui.part.ViewPart;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
-import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.actions.ObjectFilterRegistry;
 import ch.elexis.core.ui.actions.ObjectFilterRegistry.IObjectFilterProvider;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
@@ -52,7 +52,7 @@ import ch.rgw.tools.ExHandler;
 /**
  * Eine alternative, platzsparendere Fälle-View
  */
-public class FaelleView extends ViewPart implements IActivationListener {
+public class FaelleView extends ViewPart implements IRefreshable {
 	public static final String ID = "ch.elexis.schoebufaelle"; //$NON-NLS-1$
 	TableViewer tv;
 	ViewMenus menus;
@@ -60,14 +60,22 @@ public class FaelleView extends ViewPart implements IActivationListener {
 	private IAction filterClosedAction;
 	private final FallKonsFilter filter = new FallKonsFilter();
 	
+	private Patient actPatient;
+	
+	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
+	
 	private final ElexisUiEventListenerImpl eeli_pat =
 		new ElexisUiEventListenerImpl(Patient.class) {
 			public void runInUi(ElexisEvent ev){
-				if (tv != null && tv.getControl() != null && !tv.getControl().isDisposed()) {
-					tv.refresh();
-					Fall currentFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
-					if (currentFall != null)
-						tv.setSelection(new StructuredSelection(currentFall));
+				if(isActiveControl(tv.getControl())) {
+					if(actPatient != ev.getObject()) {
+						actPatient = (Patient) ev.getObject();
+						tv.refresh();
+						Fall currentFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
+						if (currentFall != null) {
+							tv.setSelection(new StructuredSelection(currentFall));
+						}
+					}
 				}
 			}
 		};
@@ -77,9 +85,13 @@ public class FaelleView extends ViewPart implements IActivationListener {
 			| ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_UPDATE) {
 		
 		public void runInUi(final ElexisEvent ev){
-			if (tv != null && tv.getControl() != null && !tv.getControl().isDisposed()) {
+			if (isActiveControl(tv.getControl())) {
 				if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
 					tv.refresh(true);
+					Fall currentFall = (Fall) ev.getObject();
+					if (currentFall != null) {
+						tv.setSelection(new StructuredSelection(currentFall));
+					}
 					if (konsFilterAction.isChecked()) {
 						filter.setFall((Fall) ev.getObject());
 					}
@@ -107,7 +119,6 @@ public class FaelleView extends ViewPart implements IActivationListener {
 		menus.createToolbar(neuerFallAction, konsFilterAction, filterClosedAction);
 		menus.createViewerContextMenu(tv, delFallAction, openFallaction, reopenFallAction,
 			makeBillAction);
-		GlobalEventDispatcher.addActivationListener(this, this);
 		tv.setInput(getViewSite());
 		tv.addDoubleClickListener(new IDoubleClickListener() {
 			@Override
@@ -120,33 +131,26 @@ public class FaelleView extends ViewPart implements IActivationListener {
 				}
 			}
 		});
+		ElexisEventDispatcher.getInstance().addListeners(eeli_fall, eeli_pat);
+		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 	
 	@Override
 	public void dispose(){
-		GlobalEventDispatcher.removeActivationListener(this, this);
+		getSite().getPage().removePartListener(udpateOnVisible);
+		ElexisEventDispatcher.getInstance().removeListeners(eeli_fall, eeli_pat);
 		super.dispose();
 	}
 	
 	@Override
 	public void setFocus(){
-		Fall currentFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
-		if (currentFall != null) {
-			tv.setSelection(new StructuredSelection(currentFall));
-		}
+		tv.getControl().setFocus();
+		refresh();
 	}
 	
-	public void activation(final boolean mode){
-		
-	}
-	
-	public void visible(final boolean mode){
-		if (mode) {
-			tv.refresh(true);
-			ElexisEventDispatcher.getInstance().addListeners(eeli_fall, eeli_pat);
-		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_fall, eeli_pat);
-		}
+	@Override
+	public void refresh(){
+		eeli_pat.catchElexisEvent(ElexisEvent.createPatientEvent());
 	}
 	
 	private void makeActions(){
@@ -246,10 +250,4 @@ public class FaelleView extends ViewPart implements IActivationListener {
 		}
 		
 	}
-	/*
-	 * private final ElexisEvent template = new ElexisEvent(null, null, ElexisEvent.EVENT_SELECTED |
-	 * ElexisEvent.EVENT_DESELECTED | ElexisEvent.EVENT_RELOAD);
-	 * 
-	 * public ElexisEvent getElexisEventFilter(){ return template; }
-	 */
 }
