@@ -102,8 +102,10 @@ public class LaborView extends ViewPart implements ISaveablePart2, IRefreshable 
 	private ElexisUiEventListenerImpl eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 		@Override
 		public void runInUi(ElexisEvent ev){
-			resultsComposite.selectPatient((Patient) ev.getObject());
-			ordersComposite.selectPatient((Patient) ev.getObject());
+			if(!resultsComposite.isDisposed() && !ordersComposite.isDisposed()) {
+				resultsComposite.selectPatient((Patient) ev.getObject());
+				ordersComposite.selectPatient((Patient) ev.getObject());
+			}
 		}
 	};
 	
