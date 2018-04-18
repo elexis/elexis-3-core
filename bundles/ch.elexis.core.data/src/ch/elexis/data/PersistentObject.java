@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -1937,7 +1938,18 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return true bei Erfolg
 	 */
 	protected boolean create(final String customID){
-		return create(customID, null, null);
+		return create(customID, null, null, true);
+	}
+	
+	/**
+	 * @see PersistentObject#create(String, String[], String[], boolean)
+	 * @param customID
+	 * @param fields
+	 * @param values
+	 * @return
+	 */
+	protected boolean create(final String customID, final String[] fields, final String[] values){
+		return create(customID, fields, values, true);
 	}
 	
 	/**
@@ -1946,16 +1958,21 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @param customID
 	 *            if <code>null</code> generates an ID, else uses the provided
 	 * @param fields
-	 *            the fields to include in the insert statement, does currently NOT support special
-	 *            field types as defined in {@link #addMapping(String, String...)}. Use
+	 *            the fields to include in the insert statement, does currently partially support
+	 *            special field types as defined in {@link #addMapping(String, String...)}. Use
 	 *            <code>null</code> if not applied
 	 * @param values
 	 *            the values, the length of this array must be equal to the fields array length. Use
 	 *            <code>null</code> if not applied
+	 * @param sendEvent
+	 *            send ElexisEvent.EVENT_CREATE
 	 * @return <code>true</code> if operation successful
 	 * @since 3.2
+	 * @since 3.5 supports date (S:D:) special field type, please be sure to use a field value in
+	 *        format TimeTool.DATE_COMPACT
 	 */
-	protected boolean create(final String customID, final String[] fields, final String[] values){
+	protected boolean create(final String customID, final String[] fields, final String[] values,
+		final boolean sendEvent){
 		if (customID != null) {
 			id = customID;
 		}
@@ -1975,8 +1992,15 @@ public abstract class PersistentObject implements IPersistentObject {
 			valuesS.addAll(Arrays.asList(values));
 		}
 		
-		sql.append(
-			fieldS.stream().map(s -> map(s)).reduce((u, t) -> u + StringConstants.COMMA + t).get());
+		Function<String, String> fixDate = (String s) -> {
+			if (s.startsWith("S:D:")) {
+				return s.substring(4);
+			}
+			return s;
+		};
+		
+		sql.append(fieldS.stream().map(s -> map(s)).map(fixDate)
+			.reduce((u, t) -> u + StringConstants.COMMA + t).get());
 		sql.append(") VALUES (");
 		sql.append(valuesS.stream().map(s -> getDBConnection().getJdbcLink().wrapFlavored(ts(s)))
 			.reduce((u, t) -> u + StringConstants.COMMA + t).get());
@@ -1984,11 +2008,20 @@ public abstract class PersistentObject implements IPersistentObject {
 		
 		if (getDBConnection().exec(sql.toString()) != 0) {
 			setConstraint();
-			ElexisEventDispatcher.getInstance()
-				.fire(new ElexisEvent(this, getClass(), ElexisEvent.EVENT_CREATE));
+			if (sendEvent) {
+				sendElexisEvent(ElexisEvent.EVENT_CREATE);
+			}
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Send an {@link ElexisEvent} concerning this object
+	 * @param eventType
+	 */
+	protected void sendElexisEvent(int eventType){
+		ElexisEventDispatcher.getInstance().fire(new ElexisEvent(this, this.getClass(), eventType));
 	}
 	
 	/**
@@ -2008,8 +2041,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			if ((sel != null) && sel.equals(this)) {
 				ElexisEventDispatcher.clearSelection(this.getClass());
 			}
-			ElexisEventDispatcher.getInstance()
-				.fire(new ElexisEvent(this, getClass(), ElexisEvent.EVENT_DELETE));
+			sendElexisEvent(ElexisEvent.EVENT_DELETE);
 			getDBConnection().getCache().remove(getKey(FLD_DELETED));
 			return true;
 		}
@@ -2066,8 +2098,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				xid.undelete();
 			}
 			new DBLog(this, DBLog.TYP.UNDELETE);
-			ElexisEventDispatcher.getInstance()
-				.fire(new ElexisEvent(this, getClass(), ElexisEvent.EVENT_CREATE));
+			sendElexisEvent(ElexisEvent.EVENT_CREATE);
 			return true;
 		}
 		return false;
@@ -2118,8 +2149,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		try {
 			pst.setLong(fields.length + 1, System.currentTimeMillis());
 			pst.executeUpdate();
-			ElexisEventDispatcher.getInstance()
-				.fire(new ElexisEvent(this, this.getClass(), ElexisEvent.EVENT_UPDATE));
+			sendElexisEvent(ElexisEvent.EVENT_UPDATE);
 			return true;
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
