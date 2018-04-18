@@ -104,7 +104,23 @@ public class LabResult extends PersistentObject implements ILabResult {
 	protected LabResult(final String id){
 		super(id);
 	}
-
+	
+	/**
+	 * create a new LabResult. If the type is numeric, we'll check whether it's pathologic
+	 */
+	public LabResult(final Patient p, final TimeTool date, final LabItem item, final String result,
+		final String comment){
+		this(p, date, item, result, comment, null, null);
+	}
+	
+	/**
+	 * Create a new LabResult and set the origin
+	 */
+	public LabResult(final Patient p, final TimeTool date, final LabItem item, final String result,
+		final String comment, final Kontakt origin){
+		this(p, date, item, result, comment, null, origin);
+	}
+	
 	/**
 	 * @since 3.2
 	 * @since 3.5 via
@@ -757,7 +773,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 		}
 		return new ContactBean(origin);
 	}
-
+	
 	@Override
 	public void setOriginContact(IContact value){
 		Kontakt load = Kontakt.load(value.getId());
