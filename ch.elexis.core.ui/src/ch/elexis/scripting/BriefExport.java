@@ -76,10 +76,10 @@ public class BriefExport {
 				for (Brief brief : briefe) {
 					Person pers = brief.getPatient();
 					if (pers != null) {
+						if (!pers.istPatient()) {
+							continue;
+						}
 						if (sticker != null) {
-							if (!pers.istPatient()) {
-								continue;
-							}
 							if (pf.accept(Patient.load(pers.getId()), sticker) != IPatFilter.ACCEPT) {
 								continue;
 							}
