@@ -210,7 +210,7 @@ public class ImportArticleDialog extends TitleAreaDialog {
 							xl.setFieldTypes(new Class[] {
 								Integer.class, String.class, String.class, String.class,
 								String.class, String.class, Integer.class, String.class,
-								String.class
+								String.class, String.class
 							});
 							MessageDialog dialog = new MessageDialog(getShell(), "Datenimport",
 								null, "Wie sollen die Datenbestände importiert werden ?",
