@@ -11,8 +11,21 @@
  *******************************************************************************/
 package ch.elexis.data;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Optional;
+
+import org.slf4j.LoggerFactory;
+
+import com.google.common.io.Files;
+
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IOutputter;
+import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.elexis.core.data.interfaces.events.MessageEvent.MessageType;
+import ch.elexis.core.data.util.BriefExternUtil;
 import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.text.XRefExtensionConstants;
 import ch.rgw.compress.CompEx;
@@ -102,7 +115,6 @@ public class Brief extends PersistentObject {
 				Betreff, pat, dat, Absender == null ? StringTool.leer : Absender.getId(), dat, dst,
 				bhdl, typ, StringConstants.ZERO
 			});
-			new contents(this);
 		} catch (Throwable ex) {
 			ExHandler.handle(ex);
 		}
@@ -126,7 +138,7 @@ public class Brief extends PersistentObject {
 	
 	/** Speichern als Text */
 	public boolean save(String cnt){
-		contents c = contents.load(getId());
+		Content c = getOrCreateContent();
 		c.save(cnt);
 		set(FLD_DATE_MODIFIED, new TimeTool().toString(TimeTool.TIMESTAMP));
 		return true;
@@ -135,28 +147,27 @@ public class Brief extends PersistentObject {
 	/** Speichern in Binärformat */
 	public boolean save(byte[] in, String mimetype){
 		if (in != null) {
-			// if(mimetype.equalsIgnoreCase(MIMETYPE_OO2)){
-			contents c = contents.load(getId());
+			set(FLD_MIME_TYPE, mimetype);
+			Content c = getOrCreateContent();
 			c.save(in);
 			set(FLD_DATE_MODIFIED, new TimeTool().toString(TimeTool.TIMESTAMP));
-			set(FLD_MIME_TYPE, mimetype);
 			return true;
-			// }
-			// return false;
 		}
 		return false;
 	}
 	
 	/** Binärformat laden */
 	public byte[] loadBinary(){
-		contents c = contents.load(getId());
-		c.setDBConnection(getDBConnection());
+		Content c = getContent().orElse(Content.DUMMY);
+		if (c instanceof HeapContent) {
+			((HeapContent) c).setDBConnection(getDBConnection());
+		}
 		return c.getBinary();
 	}
 	
 	/** Textformat laden */
 	public String read(){
-		contents c = contents.load(getId());
+		Content c = getContent().orElse(Content.DUMMY);
 		return c.read();
 	}
 	
@@ -177,7 +188,7 @@ public class Brief extends PersistentObject {
 	}
 	
 	public boolean delete(){
-		getConnection().exec("UPDATE HEAP SET deleted='1' WHERE ID=" + getWrappedId());
+		getContent().ifPresent(c -> c.delete());
 		String konsID = get(FLD_KONSULTATION_ID);
 		if (!StringTool.isNothing(konsID) && (!konsID.equals(SYS_TEMPLATE))) {
 			Konsultation kons = Konsultation.load(konsID);
@@ -194,14 +205,8 @@ public class Brief extends PersistentObject {
 	
 	/** Einen Brief unwiederruflich löschen */
 	public boolean remove(){
-		try {
-			getConnection().exec("DELETE FROM HEAP WHERE ID=" + getWrappedId());
-			getConnection().exec("DELETE FROM BRIEFE WHERE ID=" + getWrappedId());
-		} catch (Throwable ex) {
-			ExHandler.handle(ex);
-			return false;
-		}
-		return true;
+		Content content = getContent().orElse(Content.DUMMY);
+		return content.remove();
 	}
 	
 	public String getBetreff(){
@@ -237,7 +242,193 @@ public class Brief extends PersistentObject {
 		return checkNull(get(FLD_DATE)) + StringTool.space + checkNull(get(FLD_SUBJECT));
 	}
 	
-	private static class contents extends PersistentObject {
+	/**
+	 * Get an existing {@link Content} implementation for the {@link Brief}. Create a new one if no existing is found.
+	 * 
+	 * @return
+	 */
+	private Content getOrCreateContent(){
+		Optional<Content> existing = getContent();
+		if(existing.isPresent()) {
+			return existing.get();
+		} else {
+			if (BriefExternUtil.isExternFile() && getPatient() != null) {
+				return FileContent.create(this);
+			} else {
+				return new HeapContent(this);
+			}
+		}
+	}
+	
+	/**
+	 * Get a existing {@link Content} implementation for the {@link Brief}. {@link Optional#empty()}
+	 * if none exists.
+	 * 
+	 * @return
+	 */
+	private Optional<Content> getContent(){
+		Content ret = null;
+		if (BriefExternUtil.isExternFile() && getPatient() != null) {
+			Optional<File> file = BriefExternUtil.getExternFile(this);
+			if (file.isPresent()) {
+				ret = new FileContent(file.get());
+			} else {
+				// lookup in heap even if extern configured
+				HeapContent heap = HeapContent.load(getId());
+				if (heap.exists()) {
+					ret = heap;
+				}
+			}
+		} else {
+			HeapContent heap = HeapContent.load(getId());
+			if (heap.exists()) {
+				ret = heap;
+			}
+		}
+		return Optional.ofNullable(ret);
+	}
+	
+	/**
+	 * Interface for different {@link Brief} content providers.
+	 * 
+	 * @author thomas
+	 *
+	 */
+	private static interface Content {
+		
+		Content DUMMY = new Content() {
+			
+			@Override
+			public byte[] getBinary(){
+				return new byte[0];
+			}
+			
+			@Override
+			public String read(){
+				return "";
+			}
+			
+			@Override
+			public void save(String contents){
+				// ignore
+			}
+			
+			@Override
+			public void save(byte[] contents){
+				// ignore
+			}
+			
+			@Override
+			public boolean delete(){
+				return false;
+			}
+			
+			@Override
+			public boolean remove(){
+				return false;
+			}
+		};
+		
+		public byte[] getBinary();
+		
+		public String read();
+		
+		public void save(String contents);
+		
+		public void save(byte[] contents);
+		
+		public boolean delete();
+		
+		public boolean remove();
+	}
+	
+	/**
+	 * Brief content Provider from {@link File} based persistence.
+	 * 
+	 * @author thomas
+	 *
+	 */
+	private static class FileContent implements Content {
+		
+		private File file;
+		
+		public FileContent(File file){
+			this.file = file;
+		}
+		
+		public static FileContent create(Brief brief){
+			Optional<File> created = BriefExternUtil.createExternFile(brief);
+			return new FileContent(created.get());
+		}
+		
+		public static boolean exists(Brief brief){
+			Optional<File> existing = BriefExternUtil.getExternFile(brief);
+			return existing.isPresent();
+		}
+		
+		@Override
+		public byte[] getBinary(){
+			try {
+				return Files.toByteArray(file);
+			} catch (IOException e) {
+				LoggerFactory.getLogger(getClass()).error("Could not access file", e);
+			}
+			return new byte[0];
+		}
+		
+		@Override
+		public String read(){
+			try {
+				return Files.toString(file, Charset.defaultCharset());
+			} catch (IOException e) {
+				LoggerFactory.getLogger(getClass()).error("Could not access file", e);
+			}
+			return new String();
+		}
+		
+		@Override
+		public void save(String contents){
+			try {
+				Files.write(contents, file, Charset.defaultCharset());
+			} catch (IOException e) {
+				LoggerFactory.getLogger(getClass()).error("Could not access file", e);
+				// try to show to user
+				ElexisEventDispatcher.getInstance().fireMessageEvent(new MessageEvent(
+					MessageType.ERROR, "Error writing file", e.getLocalizedMessage()));
+			}
+		}
+		
+		@Override
+		public void save(byte[] contents){
+			try {
+				Files.write(contents, file);
+			} catch (IOException e) {
+				LoggerFactory.getLogger(getClass()).error("Could not access file", e);
+				// try to show to user
+				ElexisEventDispatcher.getInstance().fireMessageEvent(new MessageEvent(
+					MessageType.ERROR, "Error writing file", e.getLocalizedMessage()));
+			}
+		}
+		
+		@Override
+		public boolean delete(){
+			// do nothing, Brief is marked deleted, file is not seen in elexis
+			return true;
+		}
+		
+		@Override
+		public boolean remove(){
+			return file.delete();
+		}
+	}
+	
+	/**
+	 * Brief content provider for HEAP database table based persistence.
+	 * 
+	 * @author thomas
+	 *
+	 */
+	private static class HeapContent extends PersistentObject implements Content {
 		private static final String CONTENTS = "inhalt";
 		static final String CONTENT_TABLENAME = "HEAP";
 		
@@ -245,19 +436,20 @@ public class Brief extends PersistentObject {
 			addMapping(CONTENT_TABLENAME, CONTENTS);
 		}
 		
-		private contents(Brief br){
+		private HeapContent(Brief br){
 			create(br.getId());
 		}
 		
-		private contents(String id){
+		private HeapContent(String id){
 			super(id);
 		}
 		
-		byte[] getBinary(){
+		public byte[] getBinary(){
+			System.out.println("Getting binary of " + getId());
 			return getBinary(CONTENTS);
 		}
 		
-		private String read(){
+		public String read(){
 			byte[] raw = getBinary();
 			if (raw != null) {
 				byte[] ret = CompEx.expand(raw);
@@ -266,12 +458,13 @@ public class Brief extends PersistentObject {
 			return "";
 		}
 		
-		private void save(String contents){
+		public void save(String contents){
 			byte[] comp = CompEx.Compress(contents, CompEx.BZIP2);
 			setBinary(CONTENTS, comp);
 		}
 		
-		private void save(byte[] contents){
+		public void save(byte[] contents){
+			System.out.println("Setting binary of " + getId() + " " + contents.length);
 			setBinary(CONTENTS, contents);
 		}
 		
@@ -280,8 +473,8 @@ public class Brief extends PersistentObject {
 			return getId();
 		}
 		
-		static contents load(String id){
-			return new contents(id);
+		static HeapContent load(String id){
+			return new HeapContent(id);
 		}
 		
 		@Override
@@ -289,5 +482,22 @@ public class Brief extends PersistentObject {
 			return CONTENT_TABLENAME;
 		}
 		
+		@Override
+		public boolean remove(){
+			try {
+				getConnection().exec("DELETE FROM HEAP WHERE ID=" + getWrappedId());
+				getConnection().exec("DELETE FROM BRIEFE WHERE ID=" + getWrappedId());
+			} catch (Throwable ex) {
+				ExHandler.handle(ex);
+				return false;
+			}
+			return true;
+		}
+		
+		@Override
+		public boolean delete(){
+			getConnection().exec("UPDATE HEAP SET deleted='1' WHERE ID=" + getWrappedId());
+			return true;
+		}
 	}
 }
