@@ -13,11 +13,16 @@ package ch.elexis.core.ui.preferences;
 
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
@@ -34,6 +39,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
@@ -43,6 +49,8 @@ import ch.elexis.core.services.ILocalDocumentService;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.Brief;
+import ch.elexis.data.Query;
 
 /**
  * Einstellungen zur Verknüpfung mit einem externen Texterstellungs-Modul
@@ -53,6 +61,7 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 	
 	private Text externPath;
 	private ControlDecoration externPathDeco;
+	private Button allExtern;
 	
 	public Texterstellung(){
 		super(GRID);
@@ -114,6 +123,7 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 			public void widgetSelected(SelectionEvent e){
 				CoreHub.globalCfg.set(Preferences.P_TEXT_EXTERN_FILE, check.getSelection());
 				externPath.setEnabled(check.getSelection());
+				allExtern.setEnabled(check.getSelection());
 				externPathDeco.hide();
 			}
 		});
@@ -128,17 +138,53 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 			}
 		});
 		externPathDeco = new ControlDecoration(externPath, SWT.LEFT | SWT.TOP);
-		updateExternPathDeco(externPath.getText());
+		
+		allExtern = new Button(compExtern, SWT.PUSH);
+		allExtern.setText("Alle Brief extern speichern");
+		allExtern.setEnabled(check.getSelection());
+		allExtern.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent ev){
+				if (MessageDialog.openQuestion(getShell(), "Extern speichern",
+					"Wollen sie wirklich alle Briefe extern speichern, und aus der Datenbank entfernen?")) {
+					ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(getShell());
+					try {
+						progressDialog.run(true, true, new IRunnableWithProgress() {
+							public void run(IProgressMonitor monitor)
+								throws InvocationTargetException, InterruptedException{
+								Query<Brief> query = new Query<>(Brief.class);
+								List<Brief> allBrief = query.execute();
+								monitor.beginTask("Alle Briefe extern speichern", allBrief.size());
+								for (Brief brief : allBrief) {
+									BriefExternUtil.exportToExtern(brief);
+									monitor.worked(1);
+								}
+							}
+						});
+					} catch (InvocationTargetException | InterruptedException e) {
+						MessageDialog.openError(getShell(), "Extern speichern",
+							"Fehler beim Briefe extern speichern.");
+						LoggerFactory.getLogger(getClass())
+							.error("Error creating saving Brief extern", e);
+					}
+				}
+			}
+		});
+		if (check.getSelection()) {
+			updateExternPathDeco(externPath.getText());
+		}
 	}
 	
 	private void updateExternPathDeco(String path){
 		if (BriefExternUtil.isValidExternPath(path, false)) {
 			externPathDeco.hide();
+			allExtern.setEnabled(true);
 		} else {
 			externPathDeco.setImage(FieldDecorationRegistry.getDefault()
 				.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage());
 			externPathDeco.setDescriptionText(getPathDiagnoseString(path));
 			externPathDeco.show();
+			allExtern.setEnabled(false);
 		}
 	}
 	

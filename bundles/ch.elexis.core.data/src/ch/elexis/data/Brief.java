@@ -203,8 +203,12 @@ public class Brief extends PersistentObject {
 		return new OutputLog(this, outputter);
 	}
 	
-	/** Einen Brief unwiederruflich löschen */
-	public boolean remove(){
+	/**
+	 * Remove the content. Can not be reverted.
+	 * 
+	 * @return
+	 */
+	public boolean removeContent(){
 		Content content = getContent().orElse(Content.DUMMY);
 		return content.remove();
 	}
@@ -295,7 +299,9 @@ public class Brief extends PersistentObject {
 	 *
 	 */
 	private static interface Content {
-		
+		/**
+		 * Dummy implementation, can be used if no real implementation present.
+		 */
 		Content DUMMY = new Content() {
 			
 			@Override
@@ -329,16 +335,46 @@ public class Brief extends PersistentObject {
 			}
 		};
 		
+		/**
+		 * Get contents binary
+		 * 
+		 * @return
+		 */
 		public byte[] getBinary();
 		
+		/**
+		 * Read the contents
+		 * 
+		 * @return
+		 */
 		public String read();
 		
+		/**
+		 * Save the contents
+		 * 
+		 * @param contents
+		 */
 		public void save(String contents);
 		
+		/**
+		 * Save the contents
+		 * 
+		 * @param contents
+		 */
 		public void save(byte[] contents);
 		
+		/**
+		 * Mark as deleted
+		 * 
+		 * @return
+		 */
 		public boolean delete();
 		
+		/**
+		 * Remove from persistence
+		 * 
+		 * @return
+		 */
 		public boolean remove();
 	}
 	
@@ -359,11 +395,6 @@ public class Brief extends PersistentObject {
 		public static FileContent create(Brief brief){
 			Optional<File> created = BriefExternUtil.createExternFile(brief);
 			return new FileContent(created.get());
-		}
-		
-		public static boolean exists(Brief brief){
-			Optional<File> existing = BriefExternUtil.getExternFile(brief);
-			return existing.isPresent();
 		}
 		
 		@Override
@@ -425,8 +456,6 @@ public class Brief extends PersistentObject {
 	/**
 	 * Brief content provider for HEAP database table based persistence.
 	 * 
-	 * @author thomas
-	 *
 	 */
 	private static class HeapContent extends PersistentObject implements Content {
 		private static final String CONTENTS = "inhalt";
@@ -486,7 +515,6 @@ public class Brief extends PersistentObject {
 		public boolean remove(){
 			try {
 				getConnection().exec("DELETE FROM HEAP WHERE ID=" + getWrappedId());
-				getConnection().exec("DELETE FROM BRIEFE WHERE ID=" + getWrappedId());
 			} catch (Throwable ex) {
 				ExHandler.handle(ex);
 				return false;

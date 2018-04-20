@@ -46,7 +46,7 @@ public class BriefExternUtil {
 	}
 	
 	/**
-	 * Get a {@link File} for the {@link Brief}.
+	 * Get an existing extern {@link File} for the {@link Brief}.
 	 * 
 	 * @param brief
 	 * @return Brief or empty if no such file is found
@@ -144,6 +144,27 @@ public class BriefExternUtil {
 			}
 		} else if (log) {
 			LoggerFactory.getLogger(BriefExternUtil.class).warn("No path configured");
+		}
+		return false;
+	}
+	
+	/**
+	 * Try to save the {@link Brief} extern. Extern file configuration has to be valid.
+	 * 
+	 * @param brief
+	 * @return
+	 */
+	public static boolean exportToExtern(Brief brief){
+		if (brief != null && brief.getPatient() != null && isExternFile()) {
+			Optional<File> existing = getExternFile(brief);
+			if (existing.isPresent()) {
+				return true;
+			} else {
+				byte[] content = brief.loadBinary();
+				brief.removeContent();
+				brief.save(content, brief.getMimeType());
+				return true;
+			}
 		}
 		return false;
 	}
