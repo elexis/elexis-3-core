@@ -53,15 +53,20 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.model.article.IArticle;
 import ch.elexis.core.ui.actions.ScannerEvents;
 import ch.elexis.core.ui.text.ElexisText;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Bestellung;
 import ch.elexis.data.BestellungEntry;
+import ch.elexis.data.Kontakt;
 import ch.elexis.data.Stock;
 import ch.elexis.data.StockEntry;
 
@@ -102,7 +107,21 @@ public class OrderImportDialog extends TitleAreaDialog {
 					.findStockEntryForArticleInStock(stock, item.getArticle().storeToString());
 				if (stockEntry != null) {
 					OrderElement orderElement =
-						new OrderElement((StockEntry) stockEntry, item.getCount());
+						new OrderElement(stockEntry, item.getCount());
+					orderElements.add(orderElement);
+				}
+			} else {
+				// check if a stock entry was created since the order was created
+				IStockEntry stockEntry = CoreHub.getStockService()
+					.findPreferredStockEntryForArticle(item.getArticle().storeToString(),
+						ElexisEventDispatcher.getSelectedMandator().getId());
+				if (stockEntry != null) {
+					OrderElement orderElement = new OrderElement(stockEntry, item.getCount());
+					orderElements.add(orderElement);
+				} else {
+					IStockEntry transienStockEntry = new TransientStockEntry(item.getArticle());
+					OrderElement orderElement =
+						new OrderElement(transienStockEntry, item.getCount());
 					orderElements.add(orderElement);
 				}
 			}
@@ -435,7 +454,11 @@ public class OrderImportDialog extends TitleAreaDialog {
 		try {
 			for (OrderElement orderElement : orderElements) {
 				if (orderElement.isVerified()) {
-					StockEntry stockEntry = (StockEntry) orderElement.getStockEntry();
+					IStockEntry stockEntry = orderElement.getStockEntry();
+					if (stockEntry instanceof TransientStockEntry) {
+						// create a non transient stock entry for the article
+						stockEntry = ((TransientStockEntry) stockEntry).create(orderElement);
+					}
 					LockResponse lockResponse = CoreHub.getLocalLockService()
 						.acquireLockBlocking((StockEntry) stockEntry, 1, new NullProgressMonitor());
 					if (lockResponse.isOk()) {
@@ -463,7 +486,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 		viewer.refresh();
 	}
 	
-	class ViewerContentProvider implements IStructuredContentProvider {
+	private class ViewerContentProvider implements IStructuredContentProvider {
 		public Object[] getElements(Object inputElement){
 			return orderElements.toArray();
 		}
@@ -477,7 +500,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 		}
 	}
 	
-	class BaseLabelProvider extends ColumnLabelProvider {
+	private class BaseLabelProvider extends ColumnLabelProvider {
 		public Color getForeground(Object element){
 			Color color = null;
 			
@@ -505,7 +528,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 		}
 	}
 	
-	class CheckboxLabelProvider extends BaseLabelProvider {
+	private class CheckboxLabelProvider extends BaseLabelProvider {
 		public String getText(Object element){
 			String text = "";
 			
@@ -520,7 +543,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 		}
 	}
 	
-	class AmountLabelProvider extends BaseLabelProvider {
+	private class AmountLabelProvider extends BaseLabelProvider {
 		public String getText(Object element){
 			String text = "";
 			
@@ -533,20 +556,31 @@ public class OrderImportDialog extends TitleAreaDialog {
 		}
 	}
 	
-	class StockLabelProvider extends BaseLabelProvider {
+	private class StockLabelProvider extends BaseLabelProvider {
 		public String getText(Object element){
 			String text = "";
 			
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
-				text = new Integer(orderElement.getStockEntry().getCurrentStock()).toString();
+				IStockEntry stockEntry = orderElement.getStockEntry();
+				
+				if (stockEntry instanceof TransientStockEntry) {
+					if(((TransientStockEntry) stockEntry).isCreated()) {
+						IStockEntry created = ((TransientStockEntry) stockEntry).getCreated();
+						text = new Integer(created.getCurrentStock()).toString();
+					} else {
+						text = "bisher kein Lagerartikel";
+					}
+				} else {
+					text = new Integer(stockEntry.getCurrentStock()).toString();
+				}
 			}
 			
 			return text;
 		}
 	}
 	
-	class PharamcodeLabelProvider extends BaseLabelProvider {
+	private class PharamcodeLabelProvider extends BaseLabelProvider {
 		public String getText(Object element){
 			String text = "";
 			
@@ -559,7 +593,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 		}
 	}
 	
-	class EANLabelProvider extends BaseLabelProvider {
+	private class EANLabelProvider extends BaseLabelProvider {
 		public String getText(Object element){
 			String text = "";
 			
@@ -572,7 +606,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 		}
 	}
 	
-	class DescriptionLabelProvider extends BaseLabelProvider {
+	private class DescriptionLabelProvider extends BaseLabelProvider {
 		public String getText(Object element){
 			String text = "";
 			
@@ -585,13 +619,103 @@ public class OrderImportDialog extends TitleAreaDialog {
 		}
 	}
 	
-	class OrderElement {
+	private class TransientStockEntry implements IStockEntry {
+		
+		private Artikel article;
+		
+		private IStockEntry created = null;
+		
+		public TransientStockEntry(Artikel article){
+			this.article = article;
+		}
+		
+		public IStockEntry create(OrderElement orderElement){
+			Stock stock = Stock.load(Stock.DEFAULT_STOCK_ID);
+			created = CoreHub.getStockService().storeArticleInStock(stock, article.storeToString());
+			created.setMinimumStock(1);
+			created.setMaximumStock(orderElement.getAmount());
+			return created;
+		}
+		
+		public boolean isCreated(){
+			return created != null;
+		}
+		
+		public IStockEntry getCreated(){
+			return created;
+		}
+		
+		@Override
+		public IArticle getArticle(){
+			return article;
+		}
+		
+		@Override
+		public int getMinimumStock(){
+			return 0;
+		}
+		
+		@Override
+		public void setMinimumStock(int minStock){
+		}
+		
+		@Override
+		public int getCurrentStock(){
+			return 0;
+		}
+		
+		@Override
+		public void setCurrentStock(int currentStock){
+		}
+		
+		@Override
+		public int getMaximumStock(){
+			return 0;
+		}
+		
+		@Override
+		public void setMaximumStock(int maxStock){
+		}
+		
+		@Override
+		public int getFractionUnits(){
+			return 0;
+		}
+		
+		@Override
+		public void setFractionUnits(int rest){
+		}
+		
+		@Override
+		public Object getProvider(){
+			String providerId =
+				CoreHub.globalCfg.get(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
+			if (providerId != null) {
+				Kontakt defProvider = Kontakt.load(providerId);
+				if (defProvider.exists()) {
+					return defProvider;
+				}
+			}
+			return null;
+		}
+		
+		@Override
+		public void setProvider(Object provider){
+		}
+		
+		@Override
+		public IStock getStock(){
+			return Stock.load(Stock.DEFAULT_STOCK_ID);
+		}
+	}
+	
+	private class OrderElement {
 		private boolean verified = false;
 		
-		private final StockEntry stockEntry;
+		private final IStockEntry stockEntry;
 		private int amount;
 		
-		OrderElement(StockEntry stockEntry, int amount){
+		OrderElement(IStockEntry stockEntry, int amount){
 			this.stockEntry = stockEntry;
 			this.amount = amount;
 		}
@@ -611,7 +735,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 		}
 		
 		public Artikel getArticle(){
-			return stockEntry.getArticle();
+			return (Artikel) stockEntry.getArticle();
 		}
 		
 		String getAmountAsString(){
