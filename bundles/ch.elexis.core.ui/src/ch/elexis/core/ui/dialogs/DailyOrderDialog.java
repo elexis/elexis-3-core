@@ -118,8 +118,6 @@ public class DailyOrderDialog extends TitleAreaDialog {
 		qbe.add(Konsultation.FLD_DATE, Query.EQUALS, date);
 		List<Konsultation> cons = qbe.execute();
 		
-		StringBuilder sb = new StringBuilder();
-		
 		for (Konsultation c : cons) {
 			List<Verrechnet> leistungen = c.getLeistungen();
 			for (Verrechnet v : leistungen) {
@@ -135,7 +133,7 @@ public class DailyOrderDialog extends TitleAreaDialog {
 						currOrder.addBestellungEntry(se.getArticle(), se.getStock(),
 							se.getProvider(), v.getZahl());
 					} else {
-						sb.append(art.getLabel() + " ist kein Lagerartikel.\n");
+						currOrder.addBestellungEntry(art, null, null, v.getZahl());
 					}
 				}
 			}
