@@ -55,6 +55,7 @@ import org.eclipse.ui.part.ViewPart;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
@@ -215,6 +216,15 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 						if(art.isProduct()) {
 							// TODO user message?
 							return;
+						}
+						// use StockEntry if possible
+						if (CoreHub.getStockService() != null) {
+							IStockEntry se = CoreHub.getStockService()
+								.findPreferredStockEntryForArticle(obj, null);
+							if (se != null) {
+								stockEntriesToOrder.add((StockEntry) se);
+								continue;
+							}
 						}
 						// SINGLE SHOT ORDER
 						actBestellung.addBestellungEntry((Artikel) dropped, null, null, 1);
