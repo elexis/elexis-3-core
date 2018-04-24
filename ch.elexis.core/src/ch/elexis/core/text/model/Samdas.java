@@ -19,6 +19,7 @@ import java.util.List;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
+import org.jdom.Verifier;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
@@ -172,7 +173,7 @@ public class Samdas {
 		
 		public void setText(String t){
 			Element eText = getTextElement();
-			eText.setText(t);
+			eText.setText(getValidXMLString(t));
 		}
 		
 		public String getText(){
@@ -216,6 +217,17 @@ public class Samdas {
 		
 		public void remove(Range x){
 			eRecord.removeContent(x.el);
+		}
+		
+		private String getValidXMLString(String source){
+			StringBuilder ret = new StringBuilder();
+			for (int i = 0, len = source.length(); i < len; i++) {
+				// skip non valid XML characters
+				if (Verifier.isXMLCharacter(source.charAt(i))) {
+					ret.append(source.charAt(i));
+				}
+			}
+			return ret.toString();
 		}
 	}
 	
