@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.codec.DecoderException;
+import org.apache.commons.lang.StringUtils;
+import org.jboss.aerogear.security.otp.Totp;
+import org.jboss.aerogear.security.otp.api.Base32;
 
 import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.jdt.Nullable;
@@ -30,18 +33,19 @@ public class User extends PersistentObject {
 	
 	public static final String FLD_IS_ACTIVE = "IS_ACTIVE";
 	public static final String FLD_IS_ADMINISTRATOR = "IS_ADMINISTRATOR";
+	public static final String FLD_ALLOW_EXTERNAL = "ALLOW_EXTERNAL";
 	public static final String FLD_ASSOC_CONTACT = "KONTAKT_ID";
 	public static final String FLD_HASHED_PASSWORD = "HASHED_PASSWORD";
 	public static final String FLD_SALT = "SALT";
 	public static final String FLD_KEYSTORE = "KEYSTORE";
-	public static final String FLD_APIKEY = "APIKEY";
+	public static final String FLD_TOTP = "TOTP";
 	public static final String FLD_JOINT_ROLES = "Roles";
 	
 	private static PasswordEncryptionService pes = new PasswordEncryptionService();
 	
 	static {
 		addMapping(TABLENAME, FLD_ID, FLD_IS_ACTIVE, FLD_IS_ADMINISTRATOR, FLD_ASSOC_CONTACT,
-			FLD_HASHED_PASSWORD, FLD_SALT, FLD_KEYSTORE, FLD_APIKEY,
+			FLD_HASHED_PASSWORD, FLD_SALT, FLD_KEYSTORE, FLD_TOTP, FLD_ALLOW_EXTERNAL,
 			FLD_JOINT_ROLES + "=LIST:USER_ID:USER_ROLE_JOINT");
 			
 		initTables();
@@ -142,6 +146,40 @@ public class User extends PersistentObject {
 			
 			// TODO delete the information from contact table?
 		}
+	}
+	
+	/**
+	 * Get the time-based One-time Password secret (initializes a secret if none yet set)
+	 * 
+	 * @return
+	 * @since 3.6
+	 */
+	public String getTotp(){
+		String totp = get(FLD_TOTP);
+		if (StringUtils.isEmpty(totp)) {
+			resetTotp();
+		}
+		return totp;
+	}
+	
+	/**
+	 * Verify an otp token for this user
+	 * @param otp
+	 * @return
+	 * @since 3.6
+	 */
+	public boolean verifyTotp(String otp) {
+		Totp totp = new Totp(getTotp());
+		return totp.verify(otp);
+	}
+	
+	/**
+	 * Reset the time-based One-time Password secret
+	 * @since 3.6
+	 */
+	public void resetTotp() {
+		String totp = Base32.random();
+		set(FLD_TOTP, totp);
 	}
 	
 	/**

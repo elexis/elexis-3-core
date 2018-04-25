@@ -1,14 +1,8 @@
 package ch.elexis.data;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.commons.lang.RandomStringUtils;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -53,16 +47,6 @@ public class Test_User extends AbstractPersistentObjectTest {
 		assertTrue(user.delete());
 		assertFalse(user.exists());
 		assertFalse(User.verifyUsernameNotTaken("anw"));
-	}
-	
-	@Test
-	public void testApiKey(){
-		User user2 = new User(anwender, "anw2", "password");
-		String apiKey = RandomStringUtils.randomAlphanumeric(64);
-		user2.set(User.FLD_APIKEY, apiKey);
-		
-		List<User> result = new Query<User>(User.class, User.FLD_APIKEY, apiKey).execute();
-		assertThat(result, is(Arrays.asList(user2)));
 	}
 	
 }

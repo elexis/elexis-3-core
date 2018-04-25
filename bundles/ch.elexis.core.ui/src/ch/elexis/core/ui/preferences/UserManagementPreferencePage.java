@@ -16,6 +16,7 @@ import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -49,9 +50,9 @@ import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.StringConstants;
@@ -64,7 +65,9 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.coolbar.MandantSelectionContributionItem;
 import ch.elexis.core.ui.data.UiMandant;
+import ch.elexis.core.ui.dialogs.ChangePasswordDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
+import ch.elexis.core.ui.dialogs.TotpDialog;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.locks.LockedRestrictedAction;
@@ -85,9 +88,8 @@ public class UserManagementPreferencePage extends PreferencePage
 		implements IWorkbenchPreferencePage, IUnlockable {
 	private TableViewer tableViewerUsers;
 	
-	private WritableValue wvUser = new WritableValue(null, User.class);
-	private WritableValue wvAnwender = new WritableValue(null, Anwender.class);
-	private Label lblUsername;
+	private WritableValue<User> wvUser = new WritableValue<User>(null, User.class);
+	private WritableValue<Anwender> wvAnwender = new WritableValue<Anwender>(null, Anwender.class);
 	private Button btnIsExecutiveDoctor;
 	private Label lblRespPhysColor;
 	
@@ -95,8 +97,6 @@ public class UserManagementPreferencePage extends PreferencePage
 	
 	public static final String CHANGE_LINK = "<a>ändern</a>";
 	private Link linkContact;
-	private Text txtPassword;
-	private Text txtPassword2;
 	private CheckboxTableViewer checkboxTableViewerAssociation;
 	private CheckboxTableViewer checkboxTableViewerRoles;
 	private Link linkChangePassword;
@@ -105,6 +105,9 @@ public class UserManagementPreferencePage extends PreferencePage
 	private Link linkRechnungssteller;
 	private RestrictedAction addUserAction, deleteUserAction, lockUserAction;
 	private Button btnUserIsLocked;
+	private Link linkTotp;
+	private Button btnAllowExternalAccess;
+	private Label userInfoLabel;
 	
 	/**
 	 * Create the preference page.
@@ -158,10 +161,10 @@ public class UserManagementPreferencePage extends PreferencePage
 							return null;
 						}
 					};
-					InputDialog id =
-						new InputDialog(Hub.getActiveShell(), "Benutzernamen festlegen",
-							"Benutzernamen festlegen - dieser kann nicht mehr geändert, sowie zukünftig anderweitig verwendet werden.",
-							null, iiv);
+					InputDialog id = new InputDialog(Hub.getActiveShell(),
+						"Benutzernamen festlegen",
+						"Benutzernamen festlegen - dieser kann nicht mehr geändert, sowie zukünftig anderweitig verwendet werden.",
+						null, iiv);
 					int retVal = id.open();
 					if (retVal == Dialog.OK) {
 						User newUser = new User(null, id.getValue(), "");
@@ -286,6 +289,13 @@ public class UserManagementPreferencePage extends PreferencePage
 		compositeEdit.setLayout(gl_compositeEdit);
 		compositeEdit.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
+		userInfoLabel = new Label(compositeEdit, SWT.NONE);
+		userInfoLabel.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		userInfoLabel.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BORDER));
+		userInfoLabel.setFont(SWTResourceManager.getFont(".AppleSystemUIFont", 14, SWT.BOLD));
+		userInfoLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(compositeEdit, SWT.None);
+		
 		tableViewerUsers = new TableViewer(compositeSelectorTable, SWT.BORDER | SWT.FULL_SELECTION);
 		tableViewerUsers.setContentProvider(ArrayContentProvider.getInstance());
 		Table tableUsers = tableViewerUsers.getTable();
@@ -294,7 +304,7 @@ public class UserManagementPreferencePage extends PreferencePage
 			releaseLockIfRequired();
 			
 			StructuredSelection ss = (StructuredSelection) e.getSelection();
-			wvUser.setValue(ss == null ? null : ss.getFirstElement());
+			wvUser.setValue(ss == null ? null : (User) ss.getFirstElement());
 			setUnlocked(Status.STANDALONE == CoreHub.getLocalLockService().getStatus());
 			
 			compositeEdit.layout(true, true);
@@ -307,57 +317,79 @@ public class UserManagementPreferencePage extends PreferencePage
 		
 		Menu menu = popManager.createContextMenu(tableUsers);
 		tableUsers.setMenu(menu);
+		new Label(compositeEdit, SWT.NONE);
+		new Label(compositeEdit, SWT.NONE);
 		
 		Group grpSysAccess = new Group(compositeEdit, SWT.NONE);
 		grpSysAccess.setText("Systemzugang");
-		grpSysAccess.setLayout(new GridLayout(4, false));
+		grpSysAccess.setLayout(new GridLayout(3, true));
 		grpSysAccess.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 		
-		Label lblBenutzername = new Label(grpSysAccess, SWT.NONE);
-		lblBenutzername.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblBenutzername.setText("Benutzername");
-		
-		lblUsername = new Label(grpSysAccess, SWT.BORDER);
-		lblUsername.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		linkChangePassword = new Link(grpSysAccess, SWT.NONE);
+		linkChangePassword.setText("<a>Passwort ändern</a>");
+		linkChangePassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		linkChangePassword.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				User user = wvUser.getValue();
+				if (user == null) {
+					return;
+				}
+				new ChangePasswordDialog(UiDesk.getTopShell(), user).open();
+			}
+		});
 		
 		btnUserIsAdmin = new Button(grpSysAccess, SWT.CHECK);
 		btnUserIsAdmin.setToolTipText("Administratoren unterliegen keinerlei Beschränkungen.");
 		btnUserIsAdmin.setText("Administrator");
 		
 		btnUserIsLocked = new Button(grpSysAccess, SWT.CHECK);
+		btnUserIsLocked.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 		btnUserIsLocked.setToolTipText("Sperrt die Möglichkeit sich am System anzumelden.");
-		btnUserIsLocked.setText("Gesperrt");
+		btnUserIsLocked.setText("Zugang sperren");
 		
-		Label lblPasswort = new Label(grpSysAccess, SWT.NONE);
-		lblPasswort.setText("Passwort");
-		
-		Composite composite = new Composite(grpSysAccess, SWT.NONE);
-		composite.setLayout(new FillLayout(SWT.HORIZONTAL));
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
-		
-		txtPassword = new Text(composite, SWT.BORDER | SWT.PASSWORD);
-		txtPassword2 = new Text(composite, SWT.BORDER | SWT.PASSWORD);
-		txtPassword.setToolTipText("Password hier eingeben. Nur * werden angezeigt");
-		txtPassword2.setToolTipText(
-			"Zur Kontrolle Password hier nochmals eingeben. Nur * werden angezeigt");
-		
-		linkChangePassword = new Link(grpSysAccess, SWT.NONE);
-		linkChangePassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
-		linkChangePassword.addSelectionListener(new SelectionAdapter() {
+		linkTotp = new Link(grpSysAccess, SWT.NONE);
+		linkTotp.setText("<a>Einmalkennwort</a>");
+		linkTotp.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				String pw1 = txtPassword.getText();
-				String pw2 = txtPassword2.getText();
-				if (pw1 != null && pw1.length() > 2 && pw1.equals(pw2)) {
-					setErrorMessage(null);
-					User u = (User) wvUser.getValue();
-					u.setPassword(pw1);
-					linkChangePassword.setText(CHANGE_LINK + " OK");
-				} else {
-					setErrorMessage(
-						"Passwörter nicht ident, oder Passwort zu kurz (min 3 Zeichen)");
+				User user = wvUser.getValue();
+				if (user == null) {
+					return;
 				}
+				new TotpDialog(UiDesk.getTopShell(), user).open();
 			}
+		});
+		
+		btnAllowExternalAccess = new Button(grpSysAccess, SWT.CHECK);
+		btnAllowExternalAccess.setToolTipText(
+			"Diese Option aktiviert den Zugriff über die Schnittstellen des Elexis-Servers");
+		btnAllowExternalAccess.setText("Externer Zugriff");
+		new Label(grpSysAccess, SWT.NONE);
+		btnAllowExternalAccess.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e){
+				User user = wvUser.getValue();
+				if (user == null) {
+					return;
+				}
+				if (((Button) e.getSource()).getSelection()) {
+					MessageDialog.openInformation(UiDesk.getTopShell(),
+						"Aktivierung des externen Zugangs",
+						"Um den externen Zugang zu aktivieren, muss ein starkes Passwort gesetzt, sowie das Einmalkennwort konfiguriert sein. Dies geschieht in den folgenden Dialogen.");
+					int password = new ChangePasswordDialog(UiDesk.getTopShell(), user).open();
+					if (password != Dialog.OK) {
+						MessageDialog.openError(UiDesk.getTopShell(), "Starkes Passwort benötigt",
+							"Für den externen Zugriff wird ein starkes Passwort benötigt.");
+					} else {
+						new TotpDialog(UiDesk.getTopShell(), user).open();
+						user.set(User.FLD_ALLOW_EXTERNAL, StringConstants.ONE);
+					}
+				} else {
+					user.set(User.FLD_ALLOW_EXTERNAL, StringConstants.ZERO);
+				}
+				btnAllowExternalAccess
+					.setSelection(user.get(User.FLD_ALLOW_EXTERNAL).equals(StringConstants.ONE));
+			};
 		});
 		
 		grpAccounting = new Group(compositeEdit, SWT.NONE);
@@ -469,7 +501,7 @@ public class UserManagementPreferencePage extends PreferencePage
 		btnIsExecutiveDoctor.setText("ist verantwortlicher Arzt");
 		
 		Composite compositeAccounting = new Composite(grpAccounting, SWT.NONE);
-		compositeAccounting.setLayout(new GridLayout(2, false));
+		compositeAccounting.setLayout(new GridLayout(2, true));
 		compositeAccounting.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		
 		Group grpAssociation = new Group(compositeAccounting, SWT.NONE);
@@ -514,6 +546,7 @@ public class UserManagementPreferencePage extends PreferencePage
 		checkboxTableViewerRoles =
 			CheckboxTableViewer.newCheckList(compositeRoles, SWT.BORDER | SWT.FULL_SELECTION);
 		new Label(compositeEdit, SWT.NONE);
+		new Label(compositeEdit, SWT.NONE);
 		checkboxTableViewerRoles.setContentProvider(ArrayContentProvider.getInstance());
 		checkboxTableViewerRoles.setLabelProvider(new DefaultLabelProvider() {
 			@Override
@@ -537,6 +570,8 @@ public class UserManagementPreferencePage extends PreferencePage
 				return m.getName() + " " + m.getVorname();
 			}
 		});
+		updateRoles();
+		updateAssociations();
 		
 		initDataBindings();
 		
@@ -566,7 +601,7 @@ public class UserManagementPreferencePage extends PreferencePage
 		tableViewerUsers.setInput(query);
 	}
 	
-	private class ValueChangedAdapter implements IValueChangeListener {
+	private class ValueChangedAdapter implements IValueChangeListener<User> {
 		
 		@Override
 		public void handleValueChange(ValueChangeEvent event){
@@ -578,23 +613,22 @@ public class UserManagementPreferencePage extends PreferencePage
 			
 			setErrorMessage(null);
 			
-			txtPassword.setText("");
-			txtPassword2.setText("");
-			lblUsername.setText(user.getUsername());
-			linkChangePassword.setText(CHANGE_LINK + " (Passwort gesetzt)");
-			
 			Anwender anw = user.getAssignedContact();
 			wvAnwender.setValue(anw);
 			String text = (anw != null) ? anw.getPersonalia() : "Nicht gesetzt";
 			linkContact.setText(text + " " + CHANGE_LINK);
 			
-			List<Role> roles = new Query<Role>(Role.class).execute();
-			checkboxTableViewerRoles.setInput(roles);
+			userInfoLabel.setText(text + " [" + user.getId() + "]");
+			
+			updateRoles();
+			
 			Object[] assignedRoles = user.getAssignedRoles().toArray();
 			checkboxTableViewerRoles.setCheckedElements(assignedRoles);
 			
-			checkboxTableViewerAssociation.setInput(new Query<Mandant>(Mandant.class).execute());
-			checkboxTableViewerAssociation.setCheckedElements(new Mandant[] {});
+			updateAssociations();
+			
+			btnAllowExternalAccess
+				.setSelection(user.get(User.FLD_ALLOW_EXTERNAL).equals(StringConstants.ONE));
 			
 			linkRechnungssteller.setText("- " + CHANGE_LINK);
 			lblRespPhysColor.setBackground(lblRespPhysColorDefColor);
@@ -613,6 +647,17 @@ public class UserManagementPreferencePage extends PreferencePage
 				}
 			}
 		}
+		
+	}
+	
+	private void updateRoles(){
+		List<Role> roles = new Query<Role>(Role.class).execute();
+		checkboxTableViewerRoles.setInput(roles);
+	}
+	
+	private void updateAssociations(){
+		checkboxTableViewerAssociation.setInput(new Query<Mandant>(Mandant.class).execute());
+		checkboxTableViewerAssociation.setCheckedElements(new Mandant[] {});
 	}
 	
 	private class AnwenderCellLabelProvider extends CellLabelProvider {
@@ -691,11 +736,11 @@ public class UserManagementPreferencePage extends PreferencePage
 	
 	@Override
 	public void setUnlocked(boolean unlocked){
+		btnAllowExternalAccess.setEnabled(unlocked);
 		btnIsExecutiveDoctor.setEnabled(unlocked);
-		txtPassword.setEnabled(unlocked);
-		txtPassword2.setEnabled(unlocked);
 		linkChangePassword.setEnabled(unlocked);
 		linkContact.setEnabled(unlocked);
+		linkTotp.setEnabled(unlocked);
 		linkRechnungssteller.setEnabled(unlocked);
 		btnUserIsAdmin.setEnabled(unlocked);
 		btnUserIsLocked.setEnabled(unlocked);

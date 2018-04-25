@@ -15,6 +15,8 @@ package ch.rgw.utility;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import ch.rgw.tools.PasswordEncryptionServiceTest;
+import ch.rgw.tools.PasswordValidatorTest;
 import ch.rgw.tools.Test_SqlSettings;
 import ch.rgw.tools.Test_StringTool;
 import ch.rgw.tools.Test_TimeTool;
@@ -25,7 +27,7 @@ import junit.framework.TestSuite;
 @Suite.SuiteClasses({
 	ch.rgw.tools.Test_VersionInfo.class, ch.rgw.tools.Test_Money.class,
 	ch.rgw.tools.Test_JdbcLink.class, Test_SqlSettings.class, Test_TimeTool.class,
-	Test_StringTool.class
+	Test_StringTool.class, PasswordValidatorTest.class, PasswordEncryptionServiceTest.class
 })
 public class AllTests {
 	public static Test suite() throws ClassNotFoundException{

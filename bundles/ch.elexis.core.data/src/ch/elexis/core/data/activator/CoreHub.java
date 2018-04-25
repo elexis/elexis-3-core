@@ -73,10 +73,10 @@ public class CoreHub implements BundleActivator {
 	/*
 	 * This version is needed to compare the DB
 	 */
-	public static String Version = "3.4.0.qualifier"; //$NON-NLS-1$
+	public static String Version = "3.6.0.qualifier"; //$NON-NLS-1$
 	public static final String APPLICATION_NAME = "Elexis Core"; //$NON-NLS-1$
 	static final String neededJRE = "1.8.0"; //$NON-NLS-1$
-	public static final String DBVersion = "3.5.0"; //$NON-NLS-1$
+	public static final String DBVersion = "3.6.0"; //$NON-NLS-1$
 	
 	protected static Logger log = LoggerFactory.getLogger(CoreHub.class.getName());
 	
