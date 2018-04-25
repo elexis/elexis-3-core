@@ -42,11 +42,17 @@ public class Preferences {
 	
 	// Locale
 	/** 5292 assert network wide locale equality **/
-	public static final String CFG_LOCALE = "locale";
+	public static final String CFG_LOCALE = "locale"; //$NON-NLS-1$
 	
 	// Station
-	public static final String STATION_IDENT_ID = "station/identId";
-	public static final String STATION_IDENT_TEXT = "station/identText";
+	public static final String STATION_IDENT_ID = "station/identId"; //$NON-NLS-1$
+	public static final String STATION_IDENT_TEXT = "station/identText"; //$NON-NLS-1$
+	
+	/**
+	 * The contact representing the customer organization itself
+	 * @since 3.6
+	 */
+	public static final String SELFCONTACT_ID = "mainContactId"; //$NON-NLS-1$
 	
 	/**
 	 * Time stamp of the first time an Elexis was connected to the database. Used as identifier of

@@ -373,6 +373,7 @@ public class Messages {
 	public static String StockManagementPreferencePage_lblMachineConfig_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblMachineConfig_text;
 	public static String SystemPreferencePage_editor_labelText = ch.elexis.core.l10n.Messages.SystemPreferencePage_editor_labelText;
 	public static String SystemPreferencePage_editor_labelText_1 = ch.elexis.core.l10n.Messages.SystemPreferencePage_editor_labelText_1;
+	public static String SystemPreferencePage_editor_selfContact_label = ch.elexis.core.l10n.Messages.SystemPreferencePage_editor_selfContact_label;
 	public static String StockManagementPreferencePage_linkDefaultArticleProvider_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_linkDefaultArticleProvider_text;
 	public static String StockManagementPreferencePage_linkDefaultArticleProvider_toolTipText = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_linkDefaultArticleProvider_toolTipText;
 	public static String StockManagementPreferencePage_lblNewLabel_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblNewLabel_text;

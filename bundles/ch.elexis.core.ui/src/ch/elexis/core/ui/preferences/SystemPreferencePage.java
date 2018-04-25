@@ -8,6 +8,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.ui.preferences.inputs.KontaktFieldEditor;
 
 public class SystemPreferencePage extends FieldEditorPreferencePage
 		implements IWorkbenchPreferencePage {
@@ -32,12 +33,16 @@ public class SystemPreferencePage extends FieldEditorPreferencePage
 	protected void createFieldEditors(){
 		FieldEditor editor;
 		
-		editor = new StringFieldEditor(Preferences.STATION_IDENT_TEXT, Messages.SystemPreferencePage_editor_labelText,
-			getFieldEditorParent());
+		editor = new StringFieldEditor(Preferences.STATION_IDENT_TEXT,
+			Messages.SystemPreferencePage_editor_labelText, getFieldEditorParent());
 		addField(editor);
 		
-		editor = new StringFieldEditor(Preferences.STATION_IDENT_ID, Messages.SystemPreferencePage_editor_labelText_1,
-			getFieldEditorParent());
+		editor = new StringFieldEditor(Preferences.STATION_IDENT_ID,
+			Messages.SystemPreferencePage_editor_labelText_1, getFieldEditorParent());
+		addField(editor);
+		
+		editor = new KontaktFieldEditor(CoreHub.globalCfg, Preferences.SELFCONTACT_ID,
+			Messages.SystemPreferencePage_editor_selfContact_label, getFieldEditorParent());
 		addField(editor);
 	}
 	

@@ -1476,6 +1476,7 @@ public class Messages extends NLS {
 	public static String StockManagementPreferencePage_lblMachineConfig_text;
 	public static String SystemPreferencePage_editor_labelText;
 	public static String SystemPreferencePage_editor_labelText_1;
+	public static String SystemPreferencePage_editor_selfContact_label;
 	public static String StockManagementPreferencePage_linkDefaultArticleProvider_text;
 	public static String StockManagementPreferencePage_linkDefaultArticleProvider_toolTipText;
 	public static String StockManagementPreferencePage_lblNewLabel_text;
