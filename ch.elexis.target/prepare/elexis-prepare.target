@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="Oxygen.3 for Elexis" sequenceNumber="1521707943">
+<target name="Oxygen.3 for Elexis" sequenceNumber="1524577122">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.18.0.v20171217-2215"/>
@@ -98,6 +98,8 @@
       <unit id="org.attoparser" version="2.0.1.RELEASE"/>
       <unit id="org.unbescape" version="1.1.4.RELEASE"/>
       <unit id="com.healthmarketscience.jackcess" version="2.1.9"/>
+      <unit id="org.jboss.aerogear.otp-java" version="1.0.0"/>
+      <unit id="com.google.zxing.core" version="3.3.2"/>
       <repository location="http://download.elexis.info/elexis-server/elexis-server-dependencies"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">

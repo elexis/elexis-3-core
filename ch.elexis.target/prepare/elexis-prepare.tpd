@@ -96,6 +96,8 @@ location "http://download.elexis.info/elexis-server/elexis-server-dependencies" 
 	org.attoparser
 	org.unbescape
 	com.healthmarketscience.jackcess
+	org.jboss.aerogear.otp-java
+	com.google.zxing.core
 }
 
 location "http://download.elexis.info/elexis.3.3rdparty.libraries/snapshot" {
