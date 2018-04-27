@@ -632,8 +632,8 @@ public class OrderImportDialog extends TitleAreaDialog {
 		public IStockEntry create(OrderElement orderElement){
 			Stock stock = Stock.load(Stock.DEFAULT_STOCK_ID);
 			created = CoreHub.getStockService().storeArticleInStock(stock, article.storeToString());
-			created.setMinimumStock(1);
-			created.setMaximumStock(orderElement.getAmount());
+			created.setMinimumStock(0);
+			created.setMaximumStock(0);
 			return created;
 		}
 		

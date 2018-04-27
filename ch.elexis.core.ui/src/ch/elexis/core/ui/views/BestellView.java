@@ -51,6 +51,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
@@ -384,7 +385,14 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 					StockEntry.FLD_MIN);
 				List<StockEntry> stockEntries = qbe.execute();
 				for (StockEntry se : stockEntries) {
-					CoreHub.getOrderService().addRefillForStockEntryToOrder(se, actBestellung);
+					if (se.getArticle() != null) {
+						CoreHub.getOrderService().addRefillForStockEntryToOrder(se, actBestellung);
+					} else {
+						LoggerFactory.getLogger(getClass())
+							.warn("Could not resolve article " + se.get(StockEntry.FLD_ARTICLE_TYPE)
+								+ se.get(StockEntry.FLD_ARTICLE_ID) + " of stock entry "
+								+ se.getId());
+					}
 				}
 				tv.refresh(true);
 			}
