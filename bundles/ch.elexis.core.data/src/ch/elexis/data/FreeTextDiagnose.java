@@ -11,7 +11,7 @@
  *******************************************************************************/
 package ch.elexis.data;
 
-import ch.elexis.core.model.IDiagnose;
+import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.VersionInfo;
 

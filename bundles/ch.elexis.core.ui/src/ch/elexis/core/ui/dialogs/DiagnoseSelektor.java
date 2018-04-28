@@ -30,8 +30,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.FilteredItemsSelectionDialog;
 import org.eclipse.ui.internal.WorkbenchMessages;
 
+import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.util.Extensions;
-import ch.elexis.core.model.IDiagnose;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;

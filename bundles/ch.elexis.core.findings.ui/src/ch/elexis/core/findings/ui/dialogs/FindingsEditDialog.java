@@ -31,7 +31,7 @@ import ch.elexis.core.findings.ui.composites.ICompositeSaveable;
 import ch.elexis.core.findings.ui.util.FindingsUiUtil;
 import ch.elexis.core.findings.util.ModelUtil;
 import ch.elexis.core.findings.util.commands.UpdateFindingTextCommand;
-import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.data.PersistentObject;
 
 public class FindingsEditDialog extends TitleAreaDialog {

@@ -8,7 +8,7 @@
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  */
-package ch.elexis.core.model;
+package ch.elexis.core.data.interfaces;
 
 import java.util.List;
 

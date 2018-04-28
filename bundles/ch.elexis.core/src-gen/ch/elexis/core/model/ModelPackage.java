@@ -74,7 +74,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIdentifiable()
 	 * @generated
 	 */
-	int IDENTIFIABLE = 9;
+	int IDENTIFIABLE = 7;
 
 	/**
 	 * The number of structural features of the '<em>Identifiable</em>' class.
@@ -285,43 +285,6 @@ public interface ModelPackage extends EPackage {
 	int ICONTACT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 20;
 
 	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.IPersistentObject <em>IPersistent Object</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.IPersistentObject
-	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPersistentObject()
-	 * @generated
-	 */
-	int IPERSISTENT_OBJECT = 1;
-
-	/**
-	 * The feature id for the '<em><b>Xid</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IPERSISTENT_OBJECT__XID = IDENTIFIABLE_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Xids</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IPERSISTENT_OBJECT__XIDS = IDENTIFIABLE_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of structural features of the '<em>IPersistent Object</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IPERSISTENT_OBJECT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 2;
-
-	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IXid <em>IXid</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -329,79 +292,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIXid()
 	 * @generated
 	 */
-	int IXID = 2;
-
-	/**
-	 * The feature id for the '<em><b>Xid</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IXID__XID = IPERSISTENT_OBJECT__XID;
-
-	/**
-	 * The feature id for the '<em><b>Xids</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IXID__XIDS = IPERSISTENT_OBJECT__XIDS;
-
-	/**
-	 * The feature id for the '<em><b>Domain</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IXID__DOMAIN = IPERSISTENT_OBJECT_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Domain Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IXID__DOMAIN_ID = IPERSISTENT_OBJECT_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Object</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IXID__OBJECT = IPERSISTENT_OBJECT_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Quality</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IXID__QUALITY = IPERSISTENT_OBJECT_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>GUID</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IXID__GUID = IPERSISTENT_OBJECT_FEATURE_COUNT + 4;
-
-	/**
-	 * The number of structural features of the '<em>IXid</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IXID_FEATURE_COUNT = IPERSISTENT_OBJECT_FEATURE_COUNT + 5;
+	int IXID = 1;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ICodeElement <em>ICode Element</em>}' class.
@@ -411,7 +302,138 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getICodeElement()
 	 * @generated
 	 */
-	int ICODE_ELEMENT = 3;
+	int ICODE_ELEMENT = 2;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.ISticker <em>ISticker</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.ISticker
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getISticker()
+	 * @generated
+	 */
+	int ISTICKER = 3;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IPerson
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPerson()
+	 * @generated
+	 */
+	int IPERSON = 4;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IPatient <em>IPatient</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IPatient
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPatient()
+	 * @generated
+	 */
+	int IPATIENT = 5;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IUser <em>IUser</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IUser
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIUser()
+	 * @generated
+	 */
+	int IUSER = 6;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.Deleteable <em>Deleteable</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.Deleteable
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getDeleteable()
+	 * @generated
+	 */
+	int DELETEABLE = 8;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELETEABLE__DELETED = 0;
+
+	/**
+	 * The number of structural features of the '<em>Deleteable</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELETEABLE_FEATURE_COUNT = 1;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IXID__DELETED = DELETEABLE__DELETED;
+
+	/**
+	 * The feature id for the '<em><b>Domain</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IXID__DOMAIN = DELETEABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Domain Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IXID__DOMAIN_ID = DELETEABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Object</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IXID__OBJECT = DELETEABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Quality</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IXID__QUALITY = DELETEABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>GUID</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IXID__GUID = DELETEABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The number of structural features of the '<em>IXid</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IXID_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The number of structural features of the '<em>ICode Element</em>' class.
@@ -423,33 +445,13 @@ public interface ModelPackage extends EPackage {
 	int ICODE_ELEMENT_FEATURE_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.IChangeListener <em>IChange Listener</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.IChangeListener
-	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIChangeListener()
-	 * @generated
-	 */
-	int ICHANGE_LISTENER = 4;
-
-	/**
-	 * The number of structural features of the '<em>IChange Listener</em>' class.
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ICHANGE_LISTENER_FEATURE_COUNT = 0;
-
-	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.ISticker <em>ISticker</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.ISticker
-	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getISticker()
-	 * @generated
-	 */
-	int ISTICKER = 5;
+	int ISTICKER__DELETED = TypesPackage.COMPARABLE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Background</b></em>' attribute.
@@ -458,7 +460,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ISTICKER__BACKGROUND = TypesPackage.COMPARABLE_FEATURE_COUNT + 0;
+	int ISTICKER__BACKGROUND = TypesPackage.COMPARABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Foreground</b></em>' attribute.
@@ -467,7 +469,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ISTICKER__FOREGROUND = TypesPackage.COMPARABLE_FEATURE_COUNT + 1;
+	int ISTICKER__FOREGROUND = TypesPackage.COMPARABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Visible</b></em>' attribute.
@@ -476,7 +478,16 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ISTICKER__VISIBLE = TypesPackage.COMPARABLE_FEATURE_COUNT + 2;
+	int ISTICKER__VISIBLE = TypesPackage.COMPARABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTICKER__VALUE = TypesPackage.COMPARABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>ISticker</em>' class.
@@ -485,17 +496,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ISTICKER_FEATURE_COUNT = TypesPackage.COMPARABLE_FEATURE_COUNT + 3;
-
-	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.IPerson
-	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPerson()
-	 * @generated
-	 */
-	int IPERSON = 6;
+	int ISTICKER_FEATURE_COUNT = TypesPackage.COMPARABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -721,16 +722,6 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IPERSON_FEATURE_COUNT = ICONTACT_FEATURE_COUNT + 4;
-
-	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.IPatient <em>IPatient</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.IPatient
-	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPatient()
-	 * @generated
-	 */
-	int IPATIENT = 7;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -1003,16 +994,6 @@ public interface ModelPackage extends EPackage {
 	int IPATIENT_FEATURE_COUNT = IPERSON_FEATURE_COUNT + 5;
 
 	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.IUser <em>IUser</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.IUser
-	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIUser()
-	 * @generated
-	 */
-	int IUSER = 8;
-
-	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1220,34 +1201,6 @@ public interface ModelPackage extends EPackage {
 	int IUSER_FEATURE_COUNT = ICONTACT_FEATURE_COUNT + 2;
 
 	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.Deleteable <em>Deleteable</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.Deleteable
-	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getDeleteable()
-	 * @generated
-	 */
-	int DELETEABLE = 10;
-
-	/**
-	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DELETEABLE__DELETED = 0;
-
-	/**
-	 * The number of structural features of the '<em>Deleteable</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DELETEABLE_FEATURE_COUNT = 1;
-
-	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ILabItem <em>ILab Item</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1255,7 +1208,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getILabItem()
 	 * @generated
 	 */
-	int ILAB_ITEM = 11;
+	int ILAB_ITEM = 9;
 
 	/**
 	 * The feature id for the '<em><b>Typ</b></em>' attribute.
@@ -1364,7 +1317,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getILabResult()
 	 * @generated
 	 */
-	int ILAB_RESULT = 12;
+	int ILAB_RESULT = 10;
 
 	/**
 	 * The feature id for the '<em><b>Ref Male</b></em>' attribute.
@@ -1500,7 +1453,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getILabOrder()
 	 * @generated
 	 */
-	int ILAB_ORDER = 13;
+	int ILAB_ORDER = 11;
 
 	/**
 	 * The feature id for the '<em><b>Lab Result</b></em>' reference.
@@ -1546,7 +1499,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPeriod()
 	 * @generated
 	 */
-	int IPERIOD = 14;
+	int IPERIOD = 12;
 
 	/**
 	 * The feature id for the '<em><b>Start Time</b></em>' attribute.
@@ -1583,7 +1536,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDocument()
 	 * @generated
 	 */
-	int IDOCUMENT = 15;
+	int IDOCUMENT = 13;
 
 	/**
 	 * The feature id for the '<em><b>Patient Id</b></em>' attribute.
@@ -1719,7 +1672,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getICategory()
 	 * @generated
 	 */
-	int ICATEGORY = 16;
+	int ICATEGORY = 14;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1747,7 +1700,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIHistory()
 	 * @generated
 	 */
-	int IHISTORY = 17;
+	int IHISTORY = 15;
 
 	/**
 	 * The feature id for the '<em><b>Date</b></em>' attribute.
@@ -1786,13 +1739,79 @@ public interface ModelPackage extends EPackage {
 	int IHISTORY_FEATURE_COUNT = 3;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IDiagnose <em>IDiagnose</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IDiagnose
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDiagnose()
+	 * @generated
+	 */
+	int IDIAGNOSE = 16;
+
+	/**
+	 * The number of structural features of the '<em>IDiagnose</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDIAGNOSE_FEATURE_COUNT = ICODE_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IBillable <em>IBillable</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IBillable
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBillable()
+	 * @generated
+	 */
+	int IBILLABLE = 17;
+
+	/**
+	 * The number of structural features of the '<em>IBillable</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBILLABLE_FEATURE_COUNT = ICODE_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.ICoverage <em>ICoverage</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.ICoverage
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getICoverage()
+	 * @generated
+	 */
+	int ICOVERAGE = 18;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICOVERAGE__DELETED = DELETEABLE__DELETED;
+
+	/**
+	 * The number of structural features of the '<em>ICoverage</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICOVERAGE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 0;
+
+	/**
 	 * The meta object id for the '<em>String Array</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getStringArray()
 	 * @generated
 	 */
-	int STRING_ARRAY = 18;
+	int STRING_ARRAY = 19;
 
 
 	/**
@@ -2015,38 +2034,6 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIContact_Comment();
 
 	/**
-	 * Returns the meta object for class '{@link ch.elexis.core.model.IPersistentObject <em>IPersistent Object</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>IPersistent Object</em>'.
-	 * @see ch.elexis.core.model.IPersistentObject
-	 * @generated
-	 */
-	EClass getIPersistentObject();
-
-	/**
-	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IPersistentObject#getXid <em>Xid</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Xid</em>'.
-	 * @see ch.elexis.core.model.IPersistentObject#getXid()
-	 * @see #getIPersistentObject()
-	 * @generated
-	 */
-	EReference getIPersistentObject_Xid();
-
-	/**
-	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IPersistentObject#getXids <em>Xids</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Xids</em>'.
-	 * @see ch.elexis.core.model.IPersistentObject#getXids()
-	 * @see #getIPersistentObject()
-	 * @generated
-	 */
-	EReference getIPersistentObject_Xids();
-
-	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IXid <em>IXid</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2122,16 +2109,6 @@ public interface ModelPackage extends EPackage {
 	EClass getICodeElement();
 
 	/**
-	 * Returns the meta object for class '{@link ch.elexis.core.model.IChangeListener <em>IChange Listener</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>IChange Listener</em>'.
-	 * @see ch.elexis.core.model.IChangeListener
-	 * @generated
-	 */
-	EClass getIChangeListener();
-
-	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.ISticker <em>ISticker</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2173,6 +2150,17 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getISticker_Visible();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ISticker#getValue <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Value</em>'.
+	 * @see ch.elexis.core.model.ISticker#getValue()
+	 * @see #getISticker()
+	 * @generated
+	 */
+	EAttribute getISticker_Value();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}'.
@@ -2922,6 +2910,36 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIHistory_Description();
 
 	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IDiagnose <em>IDiagnose</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IDiagnose</em>'.
+	 * @see ch.elexis.core.model.IDiagnose
+	 * @generated
+	 */
+	EClass getIDiagnose();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IBillable <em>IBillable</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IBillable</em>'.
+	 * @see ch.elexis.core.model.IBillable
+	 * @generated
+	 */
+	EClass getIBillable();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.ICoverage <em>ICoverage</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>ICoverage</em>'.
+	 * @see ch.elexis.core.model.ICoverage
+	 * @generated
+	 */
+	EClass getICoverage();
+
+	/**
 	 * Returns the meta object for data type '<em>String Array</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3116,32 +3134,6 @@ public interface ModelPackage extends EPackage {
 		EAttribute ICONTACT__COMMENT = eINSTANCE.getIContact_Comment();
 
 		/**
-		 * The meta object literal for the '{@link ch.elexis.core.model.IPersistentObject <em>IPersistent Object</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see ch.elexis.core.model.IPersistentObject
-		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPersistentObject()
-		 * @generated
-		 */
-		EClass IPERSISTENT_OBJECT = eINSTANCE.getIPersistentObject();
-
-		/**
-		 * The meta object literal for the '<em><b>Xid</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference IPERSISTENT_OBJECT__XID = eINSTANCE.getIPersistentObject_Xid();
-
-		/**
-		 * The meta object literal for the '<em><b>Xids</b></em>' reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference IPERSISTENT_OBJECT__XIDS = eINSTANCE.getIPersistentObject_Xids();
-
-		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IXid <em>IXid</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -3202,16 +3194,6 @@ public interface ModelPackage extends EPackage {
 		EClass ICODE_ELEMENT = eINSTANCE.getICodeElement();
 
 		/**
-		 * The meta object literal for the '{@link ch.elexis.core.model.IChangeListener <em>IChange Listener</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see ch.elexis.core.model.IChangeListener
-		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIChangeListener()
-		 * @generated
-		 */
-		EClass ICHANGE_LISTENER = eINSTANCE.getIChangeListener();
-
-		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.ISticker <em>ISticker</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -3244,6 +3226,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ISTICKER__VISIBLE = eINSTANCE.getISticker_Visible();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ISTICKER__VALUE = eINSTANCE.getISticker_Value();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}' class.
@@ -3820,6 +3810,36 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IHISTORY__DESCRIPTION = eINSTANCE.getIHistory_Description();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IDiagnose <em>IDiagnose</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IDiagnose
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDiagnose()
+		 * @generated
+		 */
+		EClass IDIAGNOSE = eINSTANCE.getIDiagnose();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IBillable <em>IBillable</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IBillable
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBillable()
+		 * @generated
+		 */
+		EClass IBILLABLE = eINSTANCE.getIBillable();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.ICoverage <em>ICoverage</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.ICoverage
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getICoverage()
+		 * @generated
+		 */
+		EClass ICOVERAGE = eINSTANCE.getICoverage();
 
 		/**
 		 * The meta object literal for the '<em>String Array</em>' data type.

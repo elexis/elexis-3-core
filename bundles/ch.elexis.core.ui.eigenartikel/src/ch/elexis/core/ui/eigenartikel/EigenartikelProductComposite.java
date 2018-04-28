@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Text;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.eigenartikel.Eigenartikel;
-import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.model.eigenartikel.EigenartikelTyp;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;

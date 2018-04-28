@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;

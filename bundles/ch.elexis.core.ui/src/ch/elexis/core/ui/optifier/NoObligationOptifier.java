@@ -17,9 +17,9 @@ import org.eclipse.swt.widgets.Display;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.interfaces.IVerrechenbar.DefaultOptifier;
-import ch.elexis.core.model.IDiagnose;
 import ch.elexis.core.ui.dialogs.SelectFallNoObligationDialog;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;

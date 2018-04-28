@@ -6,9 +6,9 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.model.IPersistentObject;
-import ch.elexis.core.services.ICodeElementService;
-import ch.elexis.core.services.ICodeElementService.ContextKeys;
+import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.data.services.ICodeElementService;
+import ch.elexis.core.data.services.ICodeElementService.ContextKeys;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 

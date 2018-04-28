@@ -2,7 +2,6 @@ package ch.elexis.core.data.interfaces;
 
 import java.util.Map;
 
-import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;

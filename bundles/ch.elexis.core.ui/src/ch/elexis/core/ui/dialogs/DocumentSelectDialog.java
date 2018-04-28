@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.model.ISticker;
+import ch.elexis.core.data.interfaces.ISticker;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;

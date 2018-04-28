@@ -9,7 +9,6 @@ import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.IDocument;
-import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.model.ITag;
 
 /**
@@ -155,5 +154,5 @@ public interface IDocumentStore {
 	 * @param iDocument
 	 * @return
 	 */
-	public Optional<IPersistentObject> getPersistenceObject(IDocument iDocument);
+	public Optional<Object> getPersistenceObject(IDocument iDocument);
 }

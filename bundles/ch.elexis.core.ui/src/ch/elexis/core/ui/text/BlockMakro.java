@@ -7,10 +7,10 @@ import org.eclipse.swt.widgets.Display;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.interfaces.ICodeElement;
+import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
-import ch.elexis.core.model.ICodeElement;
-import ch.elexis.core.model.IDiagnose;
 import ch.elexis.core.ui.util.IKonsMakro;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Leistungsblock;

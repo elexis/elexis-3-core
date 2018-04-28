@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
-import ch.elexis.core.lock.ILocalLockService.Status;
+import ch.elexis.core.data.services.ILocalLockService.Status;
 import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.data.PersistentObject;

@@ -61,6 +61,9 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
 import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
+import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.data.interfaces.ISticker;
+import ch.elexis.core.data.interfaces.IXid;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.data.util.DBUpdate;
@@ -68,10 +71,6 @@ import ch.elexis.core.data.util.SqlRunner;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.jdt.Nullable;
-import ch.elexis.core.model.IChangeListener;
-import ch.elexis.core.model.IPersistentObject;
-import ch.elexis.core.model.ISticker;
-import ch.elexis.core.model.IXid;
 import ch.elexis.data.Xid.XIDException;
 import ch.rgw.compress.CompEx;
 import ch.rgw.io.ISettingChangedListener;
@@ -3165,14 +3164,6 @@ public abstract class PersistentObject implements IPersistentObject {
 				.reduce((u, t) -> u + StringConstants.COMMA + t).get();
 		}
 		return "";
-	}
-	
-	public void addChangeListener(IChangeListener listener, String fieldToObserve){
-		
-	}
-	
-	public void removeChangeListener(IChangeListener listener, String fieldObserved){
-		
 	}
 	
 	/**

@@ -1,6 +1,6 @@
 package ch.elexis.data.dto;
 
-import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.data.interfaces.ICodeElement;
 
 public class CodeElementDTO implements ICodeElement {
 	

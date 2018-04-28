@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.lock.types.LockResponse;
-import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.services.IConflictHandler;
 import ch.elexis.core.services.IConflictHandler.Result;
 import ch.elexis.core.services.ILocalDocumentService;

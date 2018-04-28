@@ -42,7 +42,7 @@ import ch.elexis.core.findings.ui.services.CodingServiceComponent;
 import ch.elexis.core.findings.util.commands.FindingDeleteCommand;
 import ch.elexis.core.findings.util.commands.ILockingProvider;
 import ch.elexis.core.lock.types.LockResponse;
-import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.ui.actions.CommentAction;
 import ch.elexis.core.ui.util.SWTHelper;
 

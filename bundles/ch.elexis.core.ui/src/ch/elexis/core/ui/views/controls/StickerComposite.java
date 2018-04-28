@@ -32,7 +32,7 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.model.ISticker;
+import ch.elexis.core.data.interfaces.ISticker;
 import ch.elexis.core.ui.data.UiSticker;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Sticker;

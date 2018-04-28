@@ -14,12 +14,12 @@ import java.util.Optional;
 
 import org.jdom.Element;
 
+import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.data.interfaces.IFall;
+import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.service.CodeElementServiceHolder;
-import ch.elexis.core.model.ICodeElement;
-import ch.elexis.core.model.IPersistentObject;
-import ch.elexis.core.services.ICodeElementService;
+import ch.elexis.core.data.services.ICodeElementService;
 import ch.elexis.core.ui.exchange.XChangeContainer;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.data.Eigenleistung;

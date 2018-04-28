@@ -10,8 +10,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.interfaces.IXid;
 import ch.elexis.core.exceptions.PersistenceException;
-import ch.elexis.core.model.IXid;
 import ch.elexis.data.po.InvalidPersistentObjectImpl;
 import ch.elexis.data.po.OtherJointPersistentObject;
 import ch.elexis.data.po.OtherListPersistentObject;

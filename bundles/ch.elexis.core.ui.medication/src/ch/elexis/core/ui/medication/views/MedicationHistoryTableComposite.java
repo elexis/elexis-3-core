@@ -14,7 +14,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.data.Prescription;
 
 public class MedicationHistoryTableComposite extends Composite {

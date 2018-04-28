@@ -24,7 +24,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.jdt.Nullable;
-import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.model.prescription.Constants;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.model.prescription.Methods;

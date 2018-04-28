@@ -82,17 +82,10 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ModelPackage.IPERSISTENT_OBJECT: {
-				IPersistentObject iPersistentObject = (IPersistentObject)theEObject;
-				T1 result = caseIPersistentObject(iPersistentObject);
-				if (result == null) result = caseIdentifiable(iPersistentObject);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case ModelPackage.IXID: {
 				IXid iXid = (IXid)theEObject;
 				T1 result = caseIXid(iXid);
-				if (result == null) result = caseIPersistentObject(iXid);
+				if (result == null) result = caseDeleteable(iXid);
 				if (result == null) result = caseIdentifiable(iXid);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -103,16 +96,12 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ModelPackage.ICHANGE_LISTENER: {
-				IChangeListener iChangeListener = (IChangeListener)theEObject;
-				T1 result = caseIChangeListener(iChangeListener);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case ModelPackage.ISTICKER: {
 				ISticker iSticker = (ISticker)theEObject;
 				T1 result = caseISticker(iSticker);
 				if (result == null) result = caseComparable(iSticker);
+				if (result == null) result = caseDeleteable(iSticker);
+				if (result == null) result = caseIdentifiable(iSticker);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -203,6 +192,30 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ModelPackage.IDIAGNOSE: {
+				IDiagnose iDiagnose = (IDiagnose)theEObject;
+				T1 result = caseIDiagnose(iDiagnose);
+				if (result == null) result = caseICodeElement(iDiagnose);
+				if (result == null) result = caseIdentifiable(iDiagnose);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IBILLABLE: {
+				IBillable iBillable = (IBillable)theEObject;
+				T1 result = caseIBillable(iBillable);
+				if (result == null) result = caseICodeElement(iBillable);
+				if (result == null) result = caseIdentifiable(iBillable);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.ICOVERAGE: {
+				ICoverage iCoverage = (ICoverage)theEObject;
+				T1 result = caseICoverage(iCoverage);
+				if (result == null) result = caseDeleteable(iCoverage);
+				if (result == null) result = caseIdentifiable(iCoverage);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -219,21 +232,6 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIContact(IContact object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>IPersistent Object</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>IPersistent Object</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseIPersistentObject(IPersistentObject object) {
 		return null;
 	}
 
@@ -264,21 +262,6 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseICodeElement(ICodeElement object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>IChange Listener</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>IChange Listener</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseIChangeListener(IChangeListener object) {
 		return null;
 	}
 
@@ -474,6 +457,51 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIHistory(IHistory object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IDiagnose</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IDiagnose</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIDiagnose(IDiagnose object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IBillable</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IBillable</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIBillable(IBillable object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>ICoverage</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>ICoverage</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseICoverage(ICoverage object) {
 		return null;
 	}
 

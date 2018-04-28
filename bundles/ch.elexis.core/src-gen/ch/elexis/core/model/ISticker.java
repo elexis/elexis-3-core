@@ -24,13 +24,14 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.ISticker#getBackground <em>Background</em>}</li>
  *   <li>{@link ch.elexis.core.model.ISticker#getForeground <em>Foreground</em>}</li>
  *   <li>{@link ch.elexis.core.model.ISticker#isVisible <em>Visible</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ISticker#getValue <em>Value</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getISticker()
- * @model interface="true" abstract="true" superTypes="ch.elexis.core.types.Comparable&lt;ch.elexis.core.model.ISticker&gt;"
+ * @model interface="true" abstract="true" superTypes="ch.elexis.core.types.Comparable&lt;ch.elexis.core.model.ISticker&gt; ch.elexis.core.model.Deleteable ch.elexis.core.model.Identifiable"
  * @generated
  */
-public interface ISticker extends Comparable<ISticker> {
+public interface ISticker extends Comparable<ISticker>, Deleteable, Identifiable {
 	/**
 	 * Returns the value of the '<em><b>Background</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -110,12 +111,30 @@ public interface ISticker extends Comparable<ISticker> {
 	void setVisible(boolean value);
 
 	/**
+	 * Returns the value of the '<em><b>Value</b></em>' attribute.
 	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Value</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
 	 * <!-- end-user-doc -->
-	 * @model kind="operation"
+	 * @return the value of the '<em>Value</em>' attribute.
+	 * @see #setValue(int)
+	 * @see ch.elexis.core.model.ModelPackage#getISticker_Value()
+	 * @model
 	 * @generated
 	 */
-	String getId();
+	int getValue();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.ISticker#getValue <em>Value</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Value</em>' attribute.
+	 * @see #getValue()
+	 * @generated
+	 */
+	void setValue(int value);
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -124,30 +143,6 @@ public interface ISticker extends Comparable<ISticker> {
 	 * @generated
 	 */
 	String getLabel();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation"
-	 * @generated
-	 */
-	int getWert();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model
-	 * @generated
-	 */
-	void setWert(int w);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model
-	 * @generated
-	 */
-	boolean delete();
 
 	/**
 	 * <!-- begin-user-doc -->

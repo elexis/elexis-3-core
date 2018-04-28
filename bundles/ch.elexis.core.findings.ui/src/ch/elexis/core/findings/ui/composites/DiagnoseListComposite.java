@@ -45,7 +45,7 @@ import ch.elexis.core.findings.ICondition.ConditionStatus;
 import ch.elexis.core.findings.ui.dialogs.ConditionEditDialog;
 import ch.elexis.core.findings.ui.services.CodingServiceComponent;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
-import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.AcquireLockUi;

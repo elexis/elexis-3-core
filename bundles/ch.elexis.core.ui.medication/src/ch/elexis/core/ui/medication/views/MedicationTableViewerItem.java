@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Control;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.data.Anwender;

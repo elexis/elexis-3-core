@@ -10,9 +10,9 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.model.ICodeElement;
-import ch.elexis.core.services.ICodeElementService;
-import ch.elexis.core.services.ICodeElementServiceContribution;
+import ch.elexis.core.data.interfaces.ICodeElement;
+import ch.elexis.core.data.services.ICodeElementService;
+import ch.elexis.core.data.services.ICodeElementServiceContribution;
 
 @Component
 public class CodeElementService implements ICodeElementService {

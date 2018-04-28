@@ -8,9 +8,11 @@
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  */
-package ch.elexis.core.model;
+package ch.elexis.core.data.interfaces;
 
 import java.util.List;
+
+import ch.elexis.core.model.Identifiable;
 
 /**
  * <!-- begin-user-doc -->
@@ -21,8 +23,8 @@ import java.util.List;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.model.IPersistentObject#getXid <em>Xid</em>}</li>
- *   <li>{@link ch.elexis.core.model.IPersistentObject#getXids <em>Xids</em>}</li>
+ *   <li>{@link ch.elexis.core.data.interfaces.IPersistentObject#getXid <em>Xid</em>}</li>
+ *   <li>{@link ch.elexis.core.data.interfaces.IPersistentObject#getXids <em>Xids</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIPersistentObject()

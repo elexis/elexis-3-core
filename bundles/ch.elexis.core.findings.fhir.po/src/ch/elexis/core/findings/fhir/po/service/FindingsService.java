@@ -27,7 +27,7 @@ import ch.elexis.core.findings.fhir.po.model.FamilyMemberHistory;
 import ch.elexis.core.findings.fhir.po.model.Observation;
 import ch.elexis.core.findings.fhir.po.model.ProcedureRequest;
 import ch.elexis.core.findings.util.ModelUtil;
-import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 

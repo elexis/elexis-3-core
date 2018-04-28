@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Optional;
 
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;

@@ -14,7 +14,7 @@ package ch.elexis.core.ui.exchange.elements;
 
 import java.util.List;
 
-import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.ui.exchange.KontaktMatcher;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.data.Kontakt;

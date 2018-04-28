@@ -10,7 +10,7 @@
  *    
  *******************************************************************************/
 
-package ch.elexis.core.model;
+package ch.elexis.core.data.interfaces;
 
 /**
  * Diagnosen sind ebensop wie Leistungen "Pluggable" definiert, damit neue Codesysteme leicht

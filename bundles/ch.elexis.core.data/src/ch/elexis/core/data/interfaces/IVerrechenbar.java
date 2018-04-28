@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.jdt.Nullable;
-import ch.elexis.core.model.ICodeElement;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Verrechnet;

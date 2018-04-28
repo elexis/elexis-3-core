@@ -25,11 +25,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.server.ServerEventMapper;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.jdt.Nullable;
-import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;

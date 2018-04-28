@@ -3,8 +3,8 @@ package ch.elexis.data.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.exceptions.ElexisException;
-import ch.elexis.core.model.IDiagnose;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Verrechnet;

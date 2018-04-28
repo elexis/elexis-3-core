@@ -49,7 +49,7 @@ import ch.elexis.core.findings.templates.model.ModelPackage;
 import ch.elexis.core.findings.templates.model.Type;
 import ch.elexis.core.findings.templates.ui.dlg.FindingsSelectionDialog;
 import ch.elexis.core.findings.templates.ui.util.FindingsServiceHolder;
-import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.ui.dialogs.base.InputDialog;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.WidgetFactory;

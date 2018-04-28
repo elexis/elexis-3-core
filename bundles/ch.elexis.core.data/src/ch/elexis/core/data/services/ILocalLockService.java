@@ -1,12 +1,12 @@
-package ch.elexis.core.lock;
+package ch.elexis.core.data.services;
 
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
+import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockResponse;
-import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.server.ILockService;
 
 /**

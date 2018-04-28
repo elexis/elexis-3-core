@@ -23,43 +23,13 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="mobile" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="IPersistentObject" abstract="true" interface="true"
-      eSuperTypes="#//Identifiable">
-    <eOperations name="getLastUpdate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
-    <eOperations name="isValid" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eOperations name="storeToString" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eOperations name="state" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eOperations name="exists" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eOperations name="isAvailable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eOperations name="getXid" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eParameters name="domain" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eOperations>
-    <eOperations name="addXid" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
-      <eParameters name="domain" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-      <eParameters name="domain_id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-      <eParameters name="updateIfExists" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    </eOperations>
-    <eOperations name="get" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
-      <eParameters name="fields" eType="#//StringArray"/>
-      <eParameters name="values" eType="#//StringArray"/>
-    </eOperations>
-    <eOperations name="get" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eParameters name="field" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eOperations>
-    <eOperations name="set" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
-      <eParameters name="field" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-      <eParameters name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eOperations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="xid" eType="#//IXid" changeable="false"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="xids" upperBound="-1" eType="#//IXid"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IXid" abstract="true" interface="true"
-      eSuperTypes="#//IPersistentObject">
+      eSuperTypes="#//Deleteable #//Identifiable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="domain" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         changeable="false"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="domainId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         changeable="false"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="object" eType="#//IPersistentObject"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="object" eType="#//Identifiable"
         changeable="false"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="quality" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
         changeable="false"/>
@@ -69,32 +39,11 @@
   <eClassifiers xsi:type="ecore:EClass" name="ICodeElement" abstract="true" interface="true">
     <eOperations name="getCodeSystemName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eOperations name="getCodeSystemCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eOperations name="getId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eOperations name="getCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eOperations name="getText" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eOperations name="getActions" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject">
-      <eParameters name="context" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
-    </eOperations>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="IChangeListener" abstract="true" interface="true">
-    <eOperations name="valueChanged">
-      <eParameters name="object" eType="#//IPersistentObject"/>
-      <eParameters name="field" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-      <eParameters name="oldValue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
-      <eParameters name="newValue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
-    </eOperations>
-    <eOperations name="objectDisposing">
-      <eParameters name="object" eType="#//IPersistentObject"/>
-    </eOperations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ISticker" abstract="true" interface="true">
-    <eOperations name="getId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eOperations name="getLabel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eOperations name="getWert" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eOperations name="setWert">
-      <eParameters name="w" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    </eOperations>
-    <eOperations name="delete" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eOperations name="setClassForSticker">
       <eParameters name="clazz">
         <eGenericType eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaClass">
@@ -113,9 +62,12 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="background" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="foreground" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="visible" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eGenericSuperTypes eClassifier="ecore:EClass types.ecore#//Comparable">
       <eTypeArguments eClassifier="#//ISticker"/>
     </eGenericSuperTypes>
+    <eGenericSuperTypes eClassifier="#//Deleteable"/>
+    <eGenericSuperTypes eClassifier="#//Identifiable"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="StringArray" instanceClassName="java.lang.String[]"/>
   <eClassifiers xsi:type="ecore:EClass" name="IPerson" abstract="true" interface="true"
@@ -227,4 +179,10 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="ecore:EEnum types.ecore#//DocumentStatus"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IDiagnose" abstract="true" interface="true"
+      eSuperTypes="#//ICodeElement #//Identifiable"/>
+  <eClassifiers xsi:type="ecore:EClass" name="IBillable" abstract="true" interface="true"
+      eSuperTypes="#//ICodeElement #//Identifiable"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ICoverage" abstract="true" interface="true"
+      eSuperTypes="#//Deleteable #//Identifiable"/>
 </ecore:EPackage>

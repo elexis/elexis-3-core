@@ -69,7 +69,7 @@ import ch.elexis.core.data.interfaces.text.ReplaceCallback;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.ScriptUtil;
 import ch.elexis.core.exceptions.ElexisException;
-import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.text.XRefExtensionConstants;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.ui.UiDesk;

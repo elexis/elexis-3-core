@@ -8,7 +8,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 
 import ch.elexis.core.data.interfaces.IFall;
-import ch.elexis.core.model.IXid;
+import ch.elexis.core.data.interfaces.IXid;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;

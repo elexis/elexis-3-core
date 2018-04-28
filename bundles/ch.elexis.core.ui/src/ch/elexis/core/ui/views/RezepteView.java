@@ -52,7 +52,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.interfaces.IOutputter;
 import ch.elexis.core.data.util.Extensions;
-import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.GlobalActions;

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.lock.types.LockResponse;
-import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.data.interfaces.IPersistentObject;
 
 public class AcquireLockBlockingUi {
 	private static Logger logger = LoggerFactory.getLogger(AcquireLockBlockingUi.class);

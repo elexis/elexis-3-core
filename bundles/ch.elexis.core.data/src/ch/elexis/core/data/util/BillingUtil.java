@@ -25,11 +25,11 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IFall;
+import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.exceptions.ElexisException;
-import ch.elexis.core.model.IDiagnose;
-import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;

@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.SelectionDialog;
 
-import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.laboratory.controls.LaborMappingComposite;
 import ch.elexis.core.ui.util.SWTHelper;

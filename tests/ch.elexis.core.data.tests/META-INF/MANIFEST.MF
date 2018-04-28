@@ -15,5 +15,6 @@ Require-Bundle: org.junit;bundle-version="4.12.0",
  org.hamcrest.library;bundle-version="1.3.0"
 Bundle-ClassPath: .,
  rsc/
-Import-Package: ch.elexis.core.data.activator
+Import-Package: ch.elexis.core.data.activator,
+ ch.elexis.core.data.interfaces
 Export-Package: ch.elexis.admin

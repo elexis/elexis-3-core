@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.IDocument;
-import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
 
 public class DocumentLocalEditHandler extends AbstractHandler implements IHandler {

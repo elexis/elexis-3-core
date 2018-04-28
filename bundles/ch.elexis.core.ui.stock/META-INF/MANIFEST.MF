@@ -15,6 +15,7 @@ Service-Component: OSGI-INF/ch.elexis.core.ui.stock.service.internal.ArticleServ
 Bundle-ActivationPolicy: lazy
 Import-Package: ch.elexis.core.data.activator,
  ch.elexis.core.data.service,
+ ch.elexis.core.data.services,
  ch.elexis.core.importer.div.importers,
  ch.elexis.data,
  ch.rgw.tools,

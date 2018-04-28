@@ -12,10 +12,8 @@
 
 package ch.elexis.data;
 
-
-
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.types.Gender;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;

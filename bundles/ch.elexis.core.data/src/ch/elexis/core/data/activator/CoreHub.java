@@ -47,7 +47,7 @@ import ch.elexis.core.data.server.ElexisServerEventService;
 import ch.elexis.core.data.service.OrderService;
 import ch.elexis.core.data.service.StockCommissioningSystemService;
 import ch.elexis.core.data.service.StockService;
-import ch.elexis.core.lock.ILocalLockService;
+import ch.elexis.core.data.services.ILocalLockService;
 import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.services.IStockCommissioningSystemService;
 import ch.elexis.data.Anwender;

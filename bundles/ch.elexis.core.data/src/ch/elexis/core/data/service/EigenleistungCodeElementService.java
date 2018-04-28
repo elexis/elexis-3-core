@@ -5,8 +5,8 @@ import java.util.Optional;
 
 import org.osgi.service.component.annotations.Component;
 
-import ch.elexis.core.model.ICodeElement;
-import ch.elexis.core.services.ICodeElementServiceContribution;
+import ch.elexis.core.data.interfaces.ICodeElement;
+import ch.elexis.core.data.services.ICodeElementServiceContribution;
 import ch.elexis.data.Eigenleistung;
 import ch.elexis.data.Query;
 

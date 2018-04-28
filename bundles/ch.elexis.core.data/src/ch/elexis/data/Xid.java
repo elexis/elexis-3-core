@@ -12,17 +12,23 @@
 
 package ch.elexis.data;
 
+import static ch.elexis.core.constants.XidConstants.CH_AHV;
+import static ch.elexis.core.constants.XidConstants.CH_AHV_QUALITY;
+import static ch.elexis.core.constants.XidConstants.DOMAIN_AHV;
+import static ch.elexis.core.constants.XidConstants.DOMAIN_EAN;
+import static ch.elexis.core.constants.XidConstants.DOMAIN_OID;
+import static ch.elexis.core.constants.XidConstants.ELEXIS;
+import static ch.elexis.core.constants.XidConstants.ELEXIS_QUALITY;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import static ch.elexis.core.constants.XidConstants.*;
-
 import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.model.IPersistentObject;
-import ch.elexis.core.model.IXid;
+import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.data.interfaces.IXid;
 import ch.rgw.tools.Log;
 import ch.rgw.tools.VersionInfo;
 

@@ -1,6 +1,6 @@
 package ch.elexis.data.dto;
 
-import ch.elexis.core.model.IDiagnose;
+import ch.elexis.core.data.interfaces.IDiagnose;
 
 public class DiagnosesDTO {
 	private final String id;

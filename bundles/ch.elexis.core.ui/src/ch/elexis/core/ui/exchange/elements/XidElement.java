@@ -13,10 +13,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import ch.elexis.core.constants.XidConstants;
+import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
+import ch.elexis.core.data.interfaces.IXid;
 import ch.elexis.core.model.ILabItem;
-import ch.elexis.core.model.IPersistentObject;
-import ch.elexis.core.model.IXid;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Kontakt;

@@ -1,7 +1,7 @@
 package ch.elexis.core.ui.views.textsystem.model;
 
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.model.ISticker;
+import ch.elexis.core.data.interfaces.ISticker;
 import ch.elexis.core.ui.dialogs.DocumentSelectDialog;
 import ch.elexis.core.ui.text.MimeTypeUtil;
 import ch.elexis.core.ui.views.textsystem.TextTemplatePrintSettings;

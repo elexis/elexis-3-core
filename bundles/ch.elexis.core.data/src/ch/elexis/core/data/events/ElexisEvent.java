@@ -13,8 +13,8 @@
 package ch.elexis.core.data.events;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.jdt.Nullable;
-import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
@@ -81,7 +81,8 @@ public final class ElexisEvent implements Comparable<ElexisEvent> {
 	 * @param type
 	 *            the type of Event. One of the EVENT_ constants
 	 */
-	public ElexisEvent(final IPersistentObject o, final Class<?> c, final int type){
+	public ElexisEvent(final IPersistentObject o, final Class<?> c,
+		final int type){
 		this(o, c, type, PRIORITY_NORMAL);
 	}
 	

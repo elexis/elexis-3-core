@@ -31,7 +31,7 @@ package ch.elexis.core.model;
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface IXid extends IPersistentObject {
+public interface IXid extends Deleteable, Identifiable {
 	/**
 	 * Returns the value of the '<em><b>Domain</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -75,7 +75,7 @@ public interface IXid extends IPersistentObject {
 	 * @model changeable="false"
 	 * @generated
 	 */
-	IPersistentObject getObject();
+	Identifiable getObject();
 
 	/**
 	 * Returns the value of the '<em><b>Quality</b></em>' attribute.

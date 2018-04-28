@@ -20,10 +20,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.interfaces.ICodeElement;
+import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.util.Extensions;
-import ch.elexis.core.model.ICodeElement;
-import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.core.ui.util.SWTHelper;
