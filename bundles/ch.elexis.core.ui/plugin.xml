@@ -326,6 +326,16 @@
                style="push">
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.core.ui.medication.views.MedicationView">
+         <command
+               commandId="ch.elexis.core.ui.command.openCompendium"
+               icon="icon://IMG_WEB"
+               label="Compendium suchen ..."
+               style="push">
+         </command>
+      </menuContribution>
    </extension>
       <extension
          point="org.eclipse.ui.preferencePages">
