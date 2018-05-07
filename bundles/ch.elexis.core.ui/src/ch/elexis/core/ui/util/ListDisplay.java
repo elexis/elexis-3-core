@@ -30,6 +30,7 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
@@ -230,6 +231,16 @@ public class ListDisplay<T> extends Composite implements IUnlockable {
 	
 	public void removeListener(final SelectionListener l){
 		list.removeSelectionListener(l);
+	}
+	
+	/**
+	 *
+	 * @param eventType
+	 * @param listener
+	 * @since 3.6
+	 */
+	public void addListenerToSelectionList(final int eventType, final Listener listener) {
+		list.addListener(eventType, listener);
 	}
 	
 }

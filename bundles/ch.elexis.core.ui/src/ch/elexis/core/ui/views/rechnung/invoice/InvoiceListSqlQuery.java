@@ -35,6 +35,7 @@ public class InvoiceListSqlQuery {
 	
 	public static final String REPLACEMENT_INVOICE_INNER_CONDITION =
 		"REPLACE_WITH_INVOICE_INNER_CONDITION";
+	public static final String REPLACEMENT_OUTER_CONDITION = "REPLACE_WITH_OUTER_CONDITION";
 	
 	public static String getSqlCountStats(boolean withConditions){
 		return "SELECT COUNT(InvoiceId), COUNT(DISTINCT (patientid)), SUM(invoiceTotal), SUM(openAmount) FROM "
@@ -49,16 +50,19 @@ public class InvoiceListSqlQuery {
 			query =
 				"( SELECT rz.id AS InvoiceId, rz.RnNummer AS InvoiceNo, rz.rndatum, rz.rndatumvon, rz.rndatumbis, rz.statusdatum, rz.InvoiceState, rz.InvoiceTotal, rz.MandantId, f.patientid AS PatientId, k.bezeichnung1 AS PatName1, k.bezeichnung2 AS PatName2, k.geschlecht AS PatSex, k.geburtsdatum AS PatDob, f.id AS FallId, f.gesetz AS FallGesetz, f.garantID AS FallGarantId, f.KostentrID AS FallKostentrID, rz.paymentCount, rz.paidAmount, rz.openAmount FROM (SELECT r.id, r.rnnummer, r.rndatum, r.rndatumvon, r.rndatumbis, r.statusdatum, r.fallid, r.MandantId, CAST(r.rnstatus AS NUMERIC) AS InvoiceState, CAST(r.betrag AS NUMERIC) AS InvoiceTotal, COUNT(z.id) AS paymentCount, CASE WHEN COUNT(z.id) = '0' THEN 0 ELSE SUM(CAST(z.betrag AS NUMERIC)) END paidAmount, CASE WHEN COUNT(z.id) = '0' THEN CAST(r.betrag AS NUMERIC) ELSE (CAST(r.betrag AS NUMERIC) - SUM(CAST(z.betrag AS NUMERIC))) END openAmount FROM RECHNUNGEN r LEFT JOIN zahlungen z ON z.rechnungsID = r.id AND z.deleted = '0' WHERE r.deleted = '0'"
 				+ " " + InvoiceListSqlQuery.REPLACEMENT_INVOICE_INNER_CONDITION
-					+ " GROUP BY r.id) rz LEFT JOIN faelle f ON rz.FallID = f.ID LEFT JOIN kontakt k ON f.PatientID = k.id)x ";
+					+ " GROUP BY r.id) rz LEFT JOIN faelle f ON rz.FallID = f.ID LEFT JOIN kontakt k ON f.PatientID = k.id)x "
+					+ InvoiceListSqlQuery.REPLACEMENT_OUTER_CONDITION+ " ";
 		}
 		else
 		{
 			query = "( SELECT rz.id AS InvoiceId, rz.RnNummer AS InvoiceNo, rz.rndatum, rz.rndatumvon, rz.rndatumbis, rz.statusdatum, rz.InvoiceState, rz.InvoiceTotal, rz.MandantId, f.patientid AS PatientId, k.bezeichnung1 AS PatName1, k.bezeichnung2 AS PatName2, k.geschlecht AS PatSex, k.geburtsdatum AS PatDob, f.id AS FallId, f.gesetz AS FallGesetz, f.garantID AS FallGarantId, f.KostentrID AS FallKostentrID, rz.paymentCount, rz.paidAmount, rz.openAmount FROM (SELECT r.id, r.rnnummer, r.rndatum, r.rndatumvon, r.rndatumbis, r.statusdatum, r.fallid, r.MandantId, CAST(r.rnstatus AS SIGNED) AS InvoiceState, CAST(r.betrag AS SIGNED) AS InvoiceTotal, COUNT(z.id) AS paymentCount, CASE WHEN COUNT(z.id) = 0 THEN 0 ELSE SUM(CAST(z.betrag AS SIGNED)) END paidAmount, CASE WHEN COUNT(z.id) = 0 THEN CAST(r.betrag AS SIGNED) ELSE (CAST(r.betrag AS SIGNED) - SUM(CAST(z.betrag AS SIGNED))) END openAmount FROM RECHNUNGEN r LEFT JOIN zahlungen z ON z.rechnungsID = r.id AND z.deleted = 0 WHERE r.deleted = 0"
 			+ " " + InvoiceListSqlQuery.REPLACEMENT_INVOICE_INNER_CONDITION
-					+ " GROUP BY r.id) rz LEFT JOIN faelle f ON rz.FallID = f.ID LEFT JOIN kontakt k ON f.PatientID = k.id )x ";
+					+ " GROUP BY r.id) rz LEFT JOIN faelle f ON rz.FallID = f.ID LEFT JOIN kontakt k ON f.PatientID = k.id )x "
+			+ InvoiceListSqlQuery.REPLACEMENT_OUTER_CONDITION+ " ";
 		}
 		if (!withConditions && query != null) {
 			query = query.replaceAll(InvoiceListSqlQuery.REPLACEMENT_INVOICE_INNER_CONDITION, "");
+			query = query.replace(InvoiceListSqlQuery.REPLACEMENT_OUTER_CONDITION, "");
 		}
 		return query;
 	}
@@ -86,7 +90,7 @@ public class InvoiceListSqlQuery {
 					InvoiceListSqlQuery.VIEW_FLD_OPENAMOUNT + "," +
 					InvoiceListSqlQuery.VIEW_FLD_INVOICESTATEDATE +
 					" FROM" + 
-					" " +getSqlInvoice(true)+ 
+					" " +getSqlInvoice(true)+
 					"REPLACE_WITH_ORDER " + 
 					"REPLACE_WITH_LIMIT";
 		//@formatter:on

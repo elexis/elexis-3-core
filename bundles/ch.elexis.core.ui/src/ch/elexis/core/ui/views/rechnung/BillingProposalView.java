@@ -512,9 +512,9 @@ public class BillingProposalView extends ViewPart {
 			}
 			
 			private void resolveInsurer(){
-				String insurerId = (String) item.fall.getInfoElement("Kostenträger");
-				if (insurerId != null && !insurerId.isEmpty()) {
-					item.insurerName = Kontakt.load(insurerId).getLabel(true);
+				Kontakt costBearer = item.fall.getCostBearer();
+				if (costBearer != null) {
+					item.insurerName = costBearer.getLabel(true);
 				} else {
 					item.insurerName = "";
 				}

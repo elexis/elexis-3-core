@@ -37,7 +37,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.util.DayDateCombo;
 import ch.elexis.core.ui.util.MoneyInput;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.Fall;
+import ch.elexis.data.BillingSystem;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
 
@@ -152,7 +152,7 @@ public class KonsZumVerrechnenWizardDialog extends TitleAreaDialog {
 		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
 		cAccountingSys.setContentProvider(ArrayContentProvider.getInstance());
 		cAccountingSys.setLabelProvider(new LabelProvider());
-		String[] accSystems = Fall.getAbrechnungsSysteme();
+		String[] accSystems = BillingSystem.getAbrechnungsSysteme();
 		cAccountingSys.setInput(accSystems);
 		cAccountingSys.setSelection(new StructuredSelection(accSystems[0]));
 		

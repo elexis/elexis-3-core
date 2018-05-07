@@ -127,7 +127,7 @@ public class SelectFallNoObligationDialog extends TitleAreaDialog {
 		ArrayList<Fall> ret = new ArrayList<Fall>();
 		Fall[] faelle = oblFall.getPatient().getFaelle();
 		for (Fall f : faelle) {
-			String gesetz = f.getRequiredString("Gesetz");
+			String gesetz = f.getConfiguredBillingSystemLaw().name();
 			if (f.isOpen() && !gesetz.equalsIgnoreCase("KVG")) //$NON-NLS-1$
 				ret.add(f);
 		}

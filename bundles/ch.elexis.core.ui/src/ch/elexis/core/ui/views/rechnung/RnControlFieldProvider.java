@@ -38,7 +38,7 @@ import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldListener;
-import ch.elexis.data.Fall;
+import ch.elexis.data.BillingSystem;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
 import ch.elexis.data.RnStatus;
@@ -56,22 +56,15 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 	// final String[]
 	// stats={"Alle","Bezahlt","Offen","Offen&Gedruckt","1. Mahnung","2. Mahnung","3. Mahnung","In Betreibung","Teilverlust","Totalverlust"};
 	final static String[] stats = {
-		Messages.RnControlFieldProvider_all,
-		Messages.RnControlFieldProvider_open,
-		Messages.RnControlFieldProvider_openAndPrinted,
-		Messages.RnControlFieldProvider_partlyPaid,
-		Messages.RnControlFieldProvider_paid,
-		Messages.RnControlFieldProvider_overpaid, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-		Messages.RnControlFieldProvider_reminder,
-		Messages.RnControlFieldProvider_reminderPrinted,
-		Messages.RnControlFieldProvider_reminder2,
-		Messages.RnControlFieldProvider_reminder2Printed,
+		Messages.RnControlFieldProvider_all, Messages.RnControlFieldProvider_open,
+		Messages.RnControlFieldProvider_openAndPrinted, Messages.RnControlFieldProvider_partlyPaid,
+		Messages.RnControlFieldProvider_paid, Messages.RnControlFieldProvider_overpaid, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+		Messages.RnControlFieldProvider_reminder, Messages.RnControlFieldProvider_reminderPrinted,
+		Messages.RnControlFieldProvider_reminder2, Messages.RnControlFieldProvider_reminder2Printed,
 		Messages.RnControlFieldProvider_reminder3, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		Messages.RnControlFieldProvider_reminder3Printed,
-		Messages.RnControlFieldProvider_enforcement,
-		Messages.RnControlFieldProvider_partlyLost,
-		Messages.RnControlFieldProvider_totallyLost,
-		Messages.RnControlFieldProvider_storno, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+		Messages.RnControlFieldProvider_enforcement, Messages.RnControlFieldProvider_partlyLost,
+		Messages.RnControlFieldProvider_totallyLost, Messages.RnControlFieldProvider_storno, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		Messages.RnControlFieldProvider_erroneous, Messages.RnControlFieldProvider_toPrint,
 		Messages.RnControlFieldProvider_toBePaid, Messages.RnControlFieldProvider_dontRemind,
 		Messages.RnControlFieldProvider_writtenOff, Messages.RnControlFieldProvider_rejected
@@ -96,8 +89,8 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 	private List<ControlFieldListener> listeners;
 	private final SelectionAdapter csel = new CtlSelectionListener();
 	private boolean bDateAsStatus;
-	private HyperlinkAdapter /* hlStatus, */hlPatient;
-	private Label /* hDateFrom, hDateUntil, */lPatient;
+	private HyperlinkAdapter /* hlStatus, */ hlPatient;
+	private Label /* hDateFrom, hDateUntil, */ lPatient;
 	Text tNr, tBetrag;
 	String oldSelectedBillingSystem = ""; //$NON-NLS-1$
 	
@@ -112,10 +105,9 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 			@Override
 			public void linkActivated(final HyperlinkEvent e){
 				Patient oldPatient = actPatient;
-				KontaktSelektor ksl =
-					new KontaktSelektor(parent.getShell(), Patient.class,
-						Messages.RnControlFieldProvider_selectPatientCaption, //$NON-NLS-1$
-						Messages.RnControlFieldProvider_selectPatientMessage, true); //$NON-NLS-1$
+				KontaktSelektor ksl = new KontaktSelektor(parent.getShell(), Patient.class,
+					Messages.RnControlFieldProvider_selectPatientCaption, //$NON-NLS-1$
+					Messages.RnControlFieldProvider_selectPatientMessage, true); //$NON-NLS-1$
 				if (ksl.open() == Dialog.OK) {
 					actPatient = (Patient) ksl.getSelection();
 					if (actPatient != null) {
@@ -157,8 +149,8 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 		lPatient.setText(ALLE);
 		cbZType = new Combo(ret, SWT.SINGLE | SWT.READ_ONLY);
 		// sort items according to prefs
-		cbZType.setItems(ch.elexis.core.ui.preferences.UserCasePreferences.sortBillingSystems(Fall
-			.getAbrechnungsSysteme()));
+		cbZType.setItems(ch.elexis.core.ui.preferences.UserCasePreferences
+			.sortBillingSystems(BillingSystem.getAbrechnungsSysteme()));
 		cbZType.add(ALL);
 		// focus listener needed because view may be created BEFORE a user is active
 		// but for the sorting we need the user prefs for sorting
@@ -168,9 +160,8 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 			public void focusGained(FocusEvent e){
 				// only set items if there ARE changes to avoid unnecessary flickering
 				String[] currItems = cbZType.getItems();
-				String[] newItems =
-					ch.elexis.core.ui.preferences.UserCasePreferences.sortBillingSystems(Fall
-						.getAbrechnungsSysteme());
+				String[] newItems = ch.elexis.core.ui.preferences.UserCasePreferences
+					.sortBillingSystems(BillingSystem.getAbrechnungsSysteme());
 				if (!Arrays.equals(currItems, newItems)) {
 					String savedItem = cbZType.getText();
 					cbZType.setItems(newItems);
@@ -189,9 +180,8 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 		cbZType.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				int separatorPos =
-					ch.elexis.core.ui.preferences.UserCasePreferences
-						.getBillingSystemsMenuSeparatorPos(Fall.getAbrechnungsSysteme());
+				int separatorPos = ch.elexis.core.ui.preferences.UserCasePreferences
+					.getBillingSystemsMenuSeparatorPos(BillingSystem.getAbrechnungsSysteme());
 				if (cbZType.getSelectionIndex() == separatorPos)
 					cbZType.select(cbZType.indexOf(oldSelectedBillingSystem));
 				else

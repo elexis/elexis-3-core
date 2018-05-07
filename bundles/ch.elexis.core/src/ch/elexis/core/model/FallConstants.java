@@ -1,6 +1,9 @@
 package ch.elexis.core.model;
 
 public class FallConstants {
+	/**
+	 * @deprecated - value moved to row BillingSystem
+	 */
 	public static final String FLD_EXTINFO_BILLING = "billing"; //$NON-NLS-1$
 	
 	public static final String TYPE_DISEASE = Messages.Fall_Disease; //$NON-NLS-1$

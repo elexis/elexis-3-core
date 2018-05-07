@@ -38,6 +38,10 @@ public interface IFall extends IPersistentObject {
 	
 	public void setGarant(Kontakt sel);
 	
+	public void setCostBearer(Kontakt costBearer);
+	
+	public Kontakt getCostBearer();
+	
 	public void setBezeichnung(String bezeichnung);
 	
 	public String getBezeichnung();
@@ -51,8 +55,6 @@ public interface IFall extends IPersistentObject {
 	public boolean getCopyForPatient();
 	
 	public Kontakt getGarant();
-	
-	public String getRequirementsBySystem(String abrechnungsSystem);
 	
 	public String getOptionals();
 	
