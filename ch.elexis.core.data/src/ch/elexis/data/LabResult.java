@@ -29,6 +29,7 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.beans.ContactBean;
+import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IContact;
@@ -103,84 +104,8 @@ public class LabResult extends PersistentObject implements ILabResult {
 	}
 
 	/**
-	 * @since 3.2
-	 */
-	public LabResult(IPatient p, TimeTool date, ILabItem item, String result, String comment,
-		IContact origin){
-		create(null);
-		String[] fields = {
-			PATIENT_ID, DATE, ITEM_ID, RESULT, COMMENT
-		};
-		String[] vals =
-			new String[] {
-				p.getId(),
-				date == null ? new TimeTool().toString(TimeTool.DATE_GER) : date
-					.toString(TimeTool.DATE_GER), item.getId(), result, comment
-			};
-		set(fields, vals);
-		// do we have an initial reference value?
-		
-		int flags = isPathologic(p.getGender(), item, result) ? PATHOLOGIC : 0;
-		set(FLAGS, Integer.toString(flags));
-		
-		// do we have an initial origin (sending facility)
-		if (origin != null) {
-			set(ORIGIN_ID, origin.getId());
-		} else {
-			set(ORIGIN_ID, "");
-		}
-		addToUnseen();
-	}
-
-	/**
-	 * Creates a new LabResult. If the type is numeric, a pathologic check will be applied.
-	 * 
-	 * @param p
-	 * @param date
-	 * @param item
-	 * @param result
-	 * @param comment
-	 * @param refVal
-	 *            valid for gender of {@link Patient} p
-	 * @param origin
-	 *            sending facility
-	 * @since 3.1
-	 */
-	public LabResult(final Patient p, final TimeTool date, final ILabItem item, final String result,
-		final String comment, @Nullable String refVal, @Nullable
-		final Kontakt origin){
-		create(null);
-		String[] fields = {
-			PATIENT_ID, DATE, ITEM_ID, RESULT, COMMENT
-		};
-		String[] vals =
-			new String[] {
-				p.getId(),
-				date == null ? new TimeTool().toString(TimeTool.DATE_GER) : date
-					.toString(TimeTool.DATE_GER), item.getId(), result, comment
-			};
-		set(fields, vals);
-		// do we have an initial reference value?
-		if (refVal != null) {
-			if (Person.MALE.equalsIgnoreCase(p.getGeschlecht())) {
-				setRefMale(refVal);
-			} else {
-				setRefFemale(refVal);
-			}
-		}
-		
-		int flags = isPathologic(p.getGender(), item, result) ? PATHOLOGIC : 0;
-		set(FLAGS, Integer.toString(flags));
-		
-		// do we have an initial origin (sending facility)
-		if (origin != null) {
-			setOrigin(origin);
-		}
-		addToUnseen();
-	}
-	
-	/**
 	 * create a new LabResult. If the type is numeric, we'll check whether it's pathologic
+	 * @since 3.5
 	 */
 	public LabResult(final Patient p, final TimeTool date, final LabItem item, final String result,
 		final String comment){
@@ -189,10 +114,79 @@ public class LabResult extends PersistentObject implements ILabResult {
 	
 	/**
 	 * Create a new LabResult and set the origin
+	 * @since 3.5
 	 */
 	public LabResult(final Patient p, final TimeTool date, final LabItem item, final String result,
 		final String comment, final Kontakt origin){
 		this(p, date, item, result, comment, null, origin);
+	}
+	
+	/**
+	 * @since 3.2
+	 * @since 3.5 via
+	 *        {@link #LabResult(String, Gender, TimeTool, ILabItem, String, String, String, Kontakt)}
+	 */
+	public LabResult(IPatient p, TimeTool date, ILabItem item, String result, String comment,
+		IContact origin){
+		this(p.getId(), p.getGender(), date, item, result, comment, null,
+			(origin != null) ? origin.getId() : null);
+	}
+	
+	/**
+	 * @since 3.5 via
+	 *        {@link #LabResult(String, Gender, TimeTool, ILabItem, String, String, String, Kontakt)}
+	 */
+	public LabResult(final Patient p, final TimeTool date, final ILabItem item, final String result,
+		final String comment, @Nullable String refVal, @Nullable
+		final Kontakt origin){
+		this(p.getId(), p.getGender(), date, item, result, comment, refVal,
+			(origin != null) ? origin.getId() : null);
+	}
+	
+	/**
+	 * 
+	 * @param patientId
+	 * @param gender
+	 * @param date
+	 * @param item
+	 * @param result
+	 * @param comment
+	 * @param refVal
+	 * @param origin
+	 * @since 3.5 refactored, send {@link ElexisEvent#EVENT_CREATE} after full initialization of the
+	 *        object
+	 */
+	public LabResult(final String patientId, final Gender gender, final TimeTool date,
+		final ILabItem item, final String result, final String comment, @Nullable String refVal,
+		@Nullable
+		final String originId){
+			
+		create(null, null, null, false);
+		String _date = (date == null) ? new TimeTool().toString(TimeTool.DATE_COMPACT)
+				: date.toString(TimeTool.DATE_COMPACT);
+		String[] fields = {
+			PATIENT_ID, DATE, ITEM_ID, RESULT, COMMENT, ORIGIN_ID
+		};
+		String[] vals = new String[] {
+			patientId, _date, item.getId(), result, comment, originId
+		};
+		set(fields, vals);
+		
+		// do we have an initial reference value?
+		if (refVal != null) {
+			if (Gender.MALE == gender) {
+				setRefMale(refVal);
+			} else {
+				setRefFemale(refVal);
+			}
+		}
+		
+		int flags = isPathologic(gender, item, result) ? PATHOLOGIC : 0;
+		set(FLAGS, Integer.toString(flags));
+		
+		addToUnseen();
+		
+		sendElexisEvent(ElexisEvent.EVENT_CREATE);
 	}
 	
 	private boolean isPathologic(final Gender g, final ILabItem item, final String result,
