@@ -429,9 +429,10 @@ public class BillingSystem {
 	 * @since 3.6
 	 */
 	public static void moveCostBearerFromExtinfoToDBRow(String billingSystem, String fieldName){
-		List<Fall> qre =
-			new Query<Fall>(Fall.class, Fall.FLD_BILLINGSYSTEM, billingSystem).execute();
-		for (Fall fall : qre) {
+		Query<Fall> qre = new Query<Fall>(Fall.class, Fall.FLD_BILLINGSYSTEM, billingSystem);
+		qre.clear(true);
+		List<Fall> qbe = qre.execute();
+		for (Fall fall : qbe) {
 			String contactId = (String) fall.getExtInfoStoredObjectByKey(fieldName);
 			if (contactId != null) {
 				log.info("Moving Fall [{}] ExtInfo key [{}] value [{}] to db table", fall.getId(),
@@ -452,9 +453,10 @@ public class BillingSystem {
 	 */
 	public static void removeExtInfoValueForAllFaelleOfBillingSystem(String billingSystem,
 		String fieldName){
-		List<Fall> qre =
-			new Query<Fall>(Fall.class, Fall.FLD_BILLINGSYSTEM, billingSystem).execute();
-		for (Fall fall : qre) {
+		Query<Fall> qre = new Query<Fall>(Fall.class, Fall.FLD_BILLINGSYSTEM, billingSystem);
+		qre.clear(true);
+		List<Fall> qbe = qre.execute();
+		for (Fall fall : qbe) {
 			log.info("Removing Fall [{}] ExtInfo key [{}]", fall.getId(), fieldName);
 			fall.setExtInfoStoredObjectByKey(fieldName, null);
 		}
