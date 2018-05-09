@@ -68,18 +68,15 @@ public class ConsultationExport {
 					f.setAttribute("Bezeichnung", fall.getBezeichnung());
 					f.setAttribute("BeginnDatum", fall.getBeginnDatum());
 					f.setAttribute("EndDatum", fall.getEndDatum());
-					f.setAttribute("Gesetz", fall.getRequiredString("Gesetz"));
+					f.setAttribute("Gesetz", fall.getConfiguredBillingSystemLaw().name());
 					f.setAttribute("Abrechnungssystem", fall.getAbrechnungsSystem());
 					Kontakt k = fall.getGarant();
 					if (k != null) {
 						f.setAttribute("Garant", fall.getGarant().getLabel());
 					}
-					Kontakt vers = fall.getRequiredContact("Kostenträger");
-					if (vers == null) {
-						vers = fall.getRequiredContact("Kostentraeger");
-					}
-					if (vers != null) {
-						f.setAttribute("Kostentraeger", vers.getLabel());
+					Kontakt costBearer = fall.getCostBearer();
+					if (costBearer != null) {
+						f.setAttribute("Kostentraeger", costBearer.getLabel());
 						f.setAttribute("Versicherungsnummer",
 							fall.getRequiredString("Versicherungsnummer"));
 					}

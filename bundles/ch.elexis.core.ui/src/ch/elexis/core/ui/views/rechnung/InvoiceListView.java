@@ -201,15 +201,15 @@ public class InvoiceListView extends ViewPart {
 		});
 		tblclmnPatient.addSelectionListener(sortAdapter);
 		
-		TableViewerColumn tvcLaw = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
-		TableColumn tblclmnLaw = tvcLaw.getColumn();
+		TableViewerColumn tvcBillingSystem = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
+		TableColumn tblclmnLaw = tvcBillingSystem.getColumn();
 		tcl_compositeInvoiceList.setColumnData(tblclmnLaw, new ColumnPixelData(50, true, true));
 		tblclmnLaw.setText(Messages.InvoiceListView_tblclmnLaw_text);
-		tvcLaw.setLabelProvider(new ColumnLabelProvider() {
+		tvcBillingSystem.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
 				if (element instanceof InvoiceEntry) {
-					return ((InvoiceEntry) element).getLaw();
+					return ((InvoiceEntry) element).getBillingSystem();
 				}
 				return super.getText(element);
 			}

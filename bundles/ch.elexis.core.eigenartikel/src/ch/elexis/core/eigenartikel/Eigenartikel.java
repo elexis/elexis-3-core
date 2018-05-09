@@ -346,7 +346,7 @@ public class Eigenartikel extends Artikel {
 					if (code instanceof Eigenartikel) {
 						Eigenartikel article = (Eigenartikel) code;
 						if (article.getTyp() == EigenartikelTyp.COMPLEMENTARY) {
-							String gesetz = kons.getFall().getRequiredString("Gesetz");
+							String gesetz = kons.getFall().getConfiguredBillingSystemLaw().name();
 							String system = kons.getFall().getAbrechnungsSystem();
 							if (gesetz.isEmpty()) {
 								if (!"vvg".equalsIgnoreCase(system)) {

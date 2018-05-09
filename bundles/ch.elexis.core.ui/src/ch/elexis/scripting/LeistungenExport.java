@@ -116,21 +116,18 @@ public class LeistungenExport {
 						pu.anzahlKons += 1;
 						String fallid = fall.getId();
 						String Bezeichnung = fall.getBezeichnung();
-						String gesetz = fall.getRequiredString("Gesetz");
+						String gesetz = fall.getConfiguredBillingSystemLaw().name();
 						String abr = fall.getAbrechnungsSystem();
 						Kontakt kt = fall.getGarant();
 						String rechnungsempfaenger = "";
 						if (kt != null) {
 							rechnungsempfaenger = fall.getGarant().getLabel();
 						}
-						Kontakt vers = fall.getRequiredContact("Kostenträger");
-						if (vers == null) {
-							vers = fall.getRequiredContact("Kostentraeger");
-						}
+						Kontakt costBearer = fall.getCostBearer();
 						String kostentraeger = "";
 						String versnr = "";
-						if (vers != null) {
-							kostentraeger = vers.getLabel();
+						if (costBearer != null) {
+							kostentraeger = costBearer.getLabel();
 							versnr = fall.getRequiredString("Versicherungsnummer");
 						}
 						List<Verrechnet> vr = k.getLeistungen();

@@ -16,19 +16,27 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -63,13 +71,16 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.MultiplikatorList;
+import ch.elexis.core.model.ch.BillingLaw;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
+import ch.elexis.core.ui.dialogs.provider.ILocalizedEnumLabelProvider;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.preferences.inputs.MultiplikatorEditor;
 import ch.elexis.core.ui.util.ListDisplay;
 import ch.elexis.core.ui.util.Log;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.BillingSystem;
 import ch.elexis.data.Fall;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.JdbcLink;
@@ -81,10 +92,10 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 	private static final String ARGUMENTSSDELIMITER = ":"; //$NON-NLS-1$
 	private static final String ITEMDELIMITER = "\t"; //$NON-NLS-1$
 	private static final String FOURLINESPLACEHOLDER = "\n\n\n\nd"; //$NON-NLS-1$
-	List<IConfigurationElement> lo = Extensions
-		.getExtensions(ExtensionPointConstantsData.RECHNUNGS_MANAGER); //$NON-NLS-1$
-	List<IConfigurationElement> ll = Extensions
-		.getExtensions(ExtensionPointConstantsUi.VERRECHNUNGSCODE); //$NON-NLS-1$
+	List<IConfigurationElement> lo =
+		Extensions.getExtensions(ExtensionPointConstantsData.RECHNUNGS_MANAGER); //$NON-NLS-1$
+	List<IConfigurationElement> ll =
+		Extensions.getExtensions(ExtensionPointConstantsUi.VERRECHNUNGSCODE); //$NON-NLS-1$
 	String[] systeme = CoreHub.globalCfg.nodes(Preferences.LEISTUNGSCODES_CFG_KEY);
 	Table table;
 	String[] tableCols = {
@@ -122,6 +133,10 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					CoreHub.globalCfg.set(key + "/fakultativ", result[4]); //$NON-NLS-1$
 					CoreHub.globalCfg.set(key + "/unused", result[5]); //$NON-NLS-1$
 					CoreHub.globalCfg.set(key + "/disabled", result[6]); //$NON-NLS-1$
+					BillingSystem.setConfigurationValue(result[0], BillingSystem.CFG_BILLINGLAW,
+						result[7]);
+					BillingSystem.setConfigurationValue(result[0], BillingSystem.CFG_NOCOSTBEARER,
+						result[8]);
 					systeme = CoreHub.globalCfg.nodes(Preferences.LEISTUNGSCODES_CFG_KEY);
 					reload();
 				}
@@ -135,7 +150,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				if (SWTHelper.askYesNo(
 					MessageFormat.format(Messages.Leistungscodes_reallyDelete, bName),
 					Messages.Leistungscodes_notUndoable)) {
-					Fall.removeAbrechnungssystem(bName);
+					BillingSystem.removeAbrechnungssystem(bName);
 					systeme = CoreHub.globalCfg.nodes(Preferences.LEISTUNGSCODES_CFG_KEY);
 					reload();
 				}
@@ -160,14 +175,20 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					String ssel = sel.getText(0);
 					for (String s1 : systeme) {
 						if (s1.equals(ssel)) {
-							String[] pre = new String[7];
+							String[] pre = new String[9];
+							
 							pre[0] = s1;
-							pre[1] = Fall.getCodeSystem(s1);
-							pre[2] = Fall.getDefaultPrintSystem(s1);
-							pre[3] = Fall.getRequirements(s1);
-							pre[4] = Fall.getOptionals(s1);
-							pre[5] = Fall.getUnused(s1);
-							pre[6] = "" + isBillingSystemDisabled(s1); //$NON-NLS-1$
+							pre[1] = BillingSystem.getCodeSystem(s1);
+							pre[2] = BillingSystem.getDefaultPrintSystem(s1);
+							pre[3] = BillingSystem.getRequirements(s1);
+							pre[4] = BillingSystem.getOptionals(s1);
+							pre[5] = BillingSystem.getUnused(s1);
+							pre[6] = Boolean.toString(BillingSystem.isDisabled(s1));
+							pre[7] = BillingSystem.getConfigurationValue(s1,
+								BillingSystem.CFG_BILLINGLAW, BillingLaw.KVG.name());
+							pre[8] = BillingSystem.getConfigurationValue(s1,
+								BillingSystem.CFG_NOCOSTBEARER, Boolean.FALSE.toString());
+							
 							AbrechnungsTypDialog at = new AbrechnungsTypDialog(getShell(), pre);
 							if (at.open() == Dialog.OK) {
 								String[] result = at.getResult();
@@ -179,6 +200,10 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 								CoreHub.globalCfg.set(key + "/fakultativ", result[4]); //$NON-NLS-1$
 								CoreHub.globalCfg.set(key + "/unused", result[5]); //$NON-NLS-1$
 								CoreHub.globalCfg.set(key + "/disabled", result[6]); //$NON-NLS-1$
+								BillingSystem.setConfigurationValue(result[0],
+									BillingSystem.CFG_BILLINGLAW, result[7]);
+								BillingSystem.setConfigurationValue(result[0],
+									BillingSystem.CFG_NOCOSTBEARER, result[8]);
 								systeme =
 									CoreHub.globalCfg.nodes(Preferences.LEISTUNGSCODES_CFG_KEY);
 								reload();
@@ -200,8 +225,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					bCheckZero.getSelection());
 			}
 		});
-		bCheckZero.setSelection(CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_BILLING_ZERO_CHECK,
-			false));
+		bCheckZero.setSelection(
+			CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_BILLING_ZERO_CHECK, false));
 		bCheckZero.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		
 		bStrictCheck = new Button(ret, SWT.CHECK);
@@ -213,8 +238,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					bStrictCheck.getSelection());
 			}
 		});
-		bStrictCheck.setSelection(CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_BILLING_STRICT,
-			true));
+		bStrictCheck
+			.setSelection(CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_BILLING_STRICT, true));
 		bStrictCheck.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		
 		final Button bOptify = new Button(ret, SWT.CHECK);
@@ -242,7 +267,6 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		bOptifyXray.setSelection(CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_OPTIFY_XRAY, true));
 		bOptifyXray.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		
-
 		// *** checkbox for enforcing separate Fall for obligations and non obligations
 		final Button bObligation = new Button(ret, SWT.CHECK);
 		bObligation.setText(Messages.Leistungscodes_separateObligations);
@@ -276,21 +300,6 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		reload();
 		
 		return ret;
-	}
-	
-	/**
-	 * returns true if the billing system specified by the param is DISabled else returns false
-	 * 
-	 * @param billingSystem
-	 *            String, the name of the billing system to be tested
-	 */
-	public static boolean isBillingSystemDisabled(final String billingSystem){
-		String ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
-			+ billingSystem + "/disabled", "0"); //$NON-NLS-1$ //$NON-NLS-2$
-		if (ret.equalsIgnoreCase("0")) //$NON-NLS-1$
-			return false;
-		else
-			return true;
 	}
 	
 	/**
@@ -334,27 +343,21 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 	 * <br>
 	 * <b> for text: </b>
 	 * <ul>
-	 * <li>
-	 * checkbox for multiline text input</li>
-	 * <li>
-	 * checkbox for styled text input</li>
+	 * <li>checkbox for multiline text input</li>
+	 * <li>checkbox for styled text input</li>
 	 * </ul>
 	 * <b> for date: </b>
 	 * <ul>
-	 * <li>
-	 * simple text input</li>
+	 * <li>simple text input</li>
 	 * </ul>
 	 * <b> for combo, list, radiogroup: </b>
 	 * <ul>
-	 * <li>
-	 * field displayed for entering item values</li>
-	 * <li>
-	 * checkbox for saving as numeric value</li>
+	 * <li>field displayed for entering item values</li>
+	 * <li>checkbox for saving as numeric value</li>
 	 * </ul>
 	 * <b> for checkboxes: </b>
 	 * <ul>
-	 * <li>
-	 * field displayed for entering item values</li>
+	 * <li>field displayed for entering item values</li>
 	 * </ul>
 	 * <br>
 	 * 
@@ -441,12 +444,14 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			cHasNumericCheckbox = false;
 			cHasStyledCheckbox = false;
 			cHasMultilineCheckbox = false;
-			if (cCurrentFieldType.equalsIgnoreCase(Messages.Leistungscodes_contactHL)) {} else if (cCurrentFieldType
-				.equalsIgnoreCase(Messages.Leistungscodes_textHL)) {
+			if (cCurrentFieldType
+				.equalsIgnoreCase(Messages.Leistungscodes_contactHL)) {} else if (cCurrentFieldType
+					.equalsIgnoreCase(Messages.Leistungscodes_textHL)) {
 				cHasStyledCheckbox = true;
 				cHasMultilineCheckbox = true;
-			} else if (cCurrentFieldType.equalsIgnoreCase(Messages.Leistungscodes_dateHL)) {} else if (cCurrentFieldType
-				.equalsIgnoreCase(Messages.Leistungscodes_comboHL)) {
+			} else if (cCurrentFieldType
+				.equalsIgnoreCase(Messages.Leistungscodes_dateHL)) {} else if (cCurrentFieldType
+					.equalsIgnoreCase(Messages.Leistungscodes_comboHL)) {
 				cHasTextEditor = true;
 				cHasNumericCheckbox = true;
 			} else if (cCurrentFieldType.equalsIgnoreCase(Messages.Leistungscodes_listHL)) {
@@ -536,8 +541,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			// *** add change fieldType combo
 			if (cChangeTypeItems != null) {
 				// *** placeholder
-				new Label(ret, SWT.SEPARATOR | SWT.HORIZONTAL).setLayoutData(SWTHelper
-					.getFillGridData(2, true, 1, false));
+				new Label(ret, SWT.SEPARATOR | SWT.HORIZONTAL)
+					.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 				Label currentTypeLabel = new Label(ret, SWT.NONE);
 				currentTypeLabel.setText("Aktueller Feldtyp: "); //$NON-NLS-1$);
 				Label currentType = new Label(ret, SWT.NONE);
@@ -586,35 +591,29 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		 * validate input if not ok then display error message and return false, <br>
 		 * else create result as String[] containing:
 		 * <ul>
-		 * <li>
-		 * [0] fieldName</li>
-		 * <li>
-		 * [1] options for combo/list/checkboxes/radiogroup</li>
-		 * <li>
-		 * [2] boolean numeric</li>
-		 * <li>
-		 * [3] boolean multiline</li>
-		 * <li>
-		 * [4] boolean styled text</li>
-		 * <li>
-		 * [5] String new field type</li>
-		 * <li>
-		 * [6] boolean billing system disabled</li>
+		 * <li>[0] fieldName</li>
+		 * <li>[1] options for combo/list/checkboxes/radiogroup</li>
+		 * <li>[2] boolean numeric</li>
+		 * <li>[3] boolean multiline</li>
+		 * <li>[4] boolean styled text</li>
+		 * <li>[5] String new field type</li>
+		 * <li>[6] boolean billing system disabled</li>
+		 * <li>[7] the {@link BillingLaw} defined for this biling system</li>
+		 * <li>[8] whether to exclude the definition of a cost bearer</li>
 		 */
 		@Override
 		protected void okPressed(){
 			// *** build result String Array
-			result = new String[7];
+			result = new String[9];
 			result[0] = tName.getText();
-			result[1] =
-				(tTextEditor == null || tTextEditor.isDisposed()) ? StringTool.leer : tTextEditor
-					.getText();
-			result[2] =
-				(chNumeric == null || chNumeric.isDisposed()) ? "0" : ((chNumeric.getSelection()) ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			result[3] =
-				(chMultiline == null || chMultiline.isDisposed()) ? "0" : ((chMultiline.getSelection()) ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			result[4] =
-				(chStyled == null || chStyled.isDisposed()) ? "0" : ((chStyled.getSelection()) ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			result[1] = (tTextEditor == null || tTextEditor.isDisposed()) ? StringTool.leer
+					: tTextEditor.getText();
+			result[2] = (chNumeric == null || chNumeric.isDisposed()) ? "0" //$NON-NLS-1$
+					: ((chNumeric.getSelection()) ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$
+			result[3] = (chMultiline == null || chMultiline.isDisposed()) ? "0" //$NON-NLS-1$
+					: ((chMultiline.getSelection()) ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$
+			result[4] = (chStyled == null || chStyled.isDisposed()) ? "0" //$NON-NLS-1$
+					: ((chStyled.getSelection()) ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$
 			result[5] = cCurrentFieldType;
 			result[6] = cBilllingSystemDisabled;
 			
@@ -650,8 +649,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 							errorString = errorString + Messages.Leistungscodes_ErrorAtLeast2Items;
 						}
 						if (!tmp.isEmpty()) {
-							if ((tmp.substring(0, 1).equalsIgnoreCase(DEFINITIONSDELIMITER))
-								|| (tmp.indexOf(DEFINITIONSDELIMITER + DEFINITIONSDELIMITER) >= 0)) {
+							if ((tmp.substring(0, 1).equalsIgnoreCase(DEFINITIONSDELIMITER)) || (tmp
+								.indexOf(DEFINITIONSDELIMITER + DEFINITIONSDELIMITER) >= 0)) {
 								errorString =
 									errorString + Messages.Leistungscodes_ErrorNoEmptyItemsAllowed;
 							}
@@ -689,7 +688,9 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		Text tName;
 		Combo cbLstg;
 		Combo cbRechn;
+		ComboViewer cbLaw;
 		Button cbDisabled;
+		Button bNoCostBearer;
 		Label lbTaxp;
 		String[] result;
 		MultiplikatorEditor mke;
@@ -729,6 +730,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			new Label(upperPartComp, SWT.NONE).setText(Messages.Leistungscodes_nameLabel);
 			tName = new Text(upperPartComp, SWT.BORDER);
 			tName.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+			tName.setTextLimit(20);
 			tName.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(final FocusEvent e){
@@ -753,15 +755,28 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				cbRechn.add(ic.getAttribute("name")); //$NON-NLS-1$
 			}
 			
+			// *** label/combo for law
+			new Label(upperPartComp, SWT.NONE).setText(Messages.Leistungscodes_defaultLawLabel);
+			cbLaw = new ComboViewer(upperPartComp, SWT.READ_ONLY);
+			cbLaw.getCombo().setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+			cbLaw.setContentProvider(ArrayContentProvider.getInstance());
+			cbLaw.setLabelProvider(ILocalizedEnumLabelProvider.getInstance());
+			cbLaw.setInput(BillingLaw.values());
+			
 			// *** checkbox if system is disabled
-			new Label(upperPartComp, SWT.NONE).setText(""); //$NON-NLS-1$
+			new Label(upperPartComp, SWT.NONE);
 			cbDisabled = new Button(upperPartComp, SWT.CHECK);
 			cbDisabled.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			cbDisabled.setText(Messages.Leistungscodes_systemDisabled);
 			
+			new Label(upperPartComp, SWT.NONE);
+			bNoCostBearer = new Button(upperPartComp, SWT.CHECK);
+			bNoCostBearer.setText(Messages.Leistungscodes_maskCostBearer);
+			bNoCostBearer.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+			
 			// *** separator
-			new Label(ret, SWT.SEPARATOR | SWT.HORIZONTAL).setLayoutData(SWTHelper.getFillGridData(
-				2, true, 1, false));
+			new Label(ret, SWT.SEPARATOR | SWT.HORIZONTAL)
+				.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 			
 			// *** setting the values
 			String name = "default"; //$NON-NLS-1$
@@ -774,6 +789,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					|| (result[6].equalsIgnoreCase("0")) || (result[6].equalsIgnoreCase("false"))) //$NON-NLS-1$ //$NON-NLS-2$
 					checked = false;
 				cbDisabled.setSelection(checked);
+				cbLaw.setSelection(new StructuredSelection(BillingLaw.valueOf(result[7])));
+				bNoCostBearer.setSelection(Boolean.valueOf(result[8]));
 				name = result[0];
 			}
 			
@@ -803,7 +820,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			mke.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			
 			bUseMultiForEigenleistung = new Button(leftMiddlePart, SWT.CHECK);
-			bUseMultiForEigenleistung.setText("Multiplikator bei Eigenleistungen anwenden.");
+			bUseMultiForEigenleistung
+				.setText(Messages.Leistungscodes_useMultiplierForCustomServices);
 			bUseMultiForEigenleistung
 				.setSelection(MultiplikatorList.isEigenleistungUseMulti(tName.getText()));
 			
@@ -817,9 +835,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					
 					public void hyperlinkActivated(String l){
 						String msg = Messages.Leistungscodes_pleaseEnterNameAndValue;
-						InputDialog inp =
-							new InputDialog(getShell(), l + Messages.Leistungscodes_add, msg,
-								StringTool.leer, null); //$NON-NLS-1$
+						InputDialog inp = new InputDialog(getShell(),
+							l + Messages.Leistungscodes_add, msg, StringTool.leer, null); //$NON-NLS-1$
 						if (inp.open() == Dialog.OK) {
 							String[] req = inp.getValue().split("="); //$NON-NLS-1$
 							if (req.length != 2) {
@@ -835,7 +852,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 									SWTHelper.showError(Messages.Leistungscodes_badEntryCaptiob,
 										Messages.Leistungscodes_badEntryText);
 								} else {
-									Fall.addBillingSystemConstant(bs, inp.getValue());
+									BillingSystem.addBillingSystemConstant(bs, inp.getValue());
 								}
 							}
 						}
@@ -843,7 +860,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				});
 			ldConstants.addHyperlinks(Messages.Leistungscodes_constantHL);
 			if (result != null) {
-				for (String con : Fall.getBillingSystemConstants(result[0])) {
+				for (String con : BillingSystem.getBillingSystemConstants(result[0])) {
 					ldConstants.add(con);
 				}
 			}
@@ -864,11 +881,17 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				public void run(){
 					String sel = ldConstants.getSelection();
 					ldConstants.remove(sel);
-					Fall.removeBillingSystemConstant(result[0], sel);
+					BillingSystem.removeBillingSystemConstant(result[0], sel);
 				}
 			};
 			
 			ldConstants.setMenu(actionDel);
+			ldConstants.addListenerToSelectionList(SWT.KeyDown, (event) -> {
+				if (event.keyCode == 0x6b) {
+					// CTRL + K #6105 move cost bearer from extinfo to table
+					removeRequiredStringGesetzFromFallExtInfo();
+				}
+			});
 			
 			// *** separator
 			Label separator = new Label(middlePartComp, SWT.SEPARATOR | SWT.HORIZONTAL);
@@ -885,6 +908,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				data = result[3].split(DEFINITIONSDELIMITER);
 			FieldDefsDisplay fdReq = new FieldDefsDisplay(lowerPartComp, SWT.BORDER, data);
 			fdReq.setLabel(Messages.Leistungscodes_necessaryData);
+			fdReq.setData(tName.getText());
 			ldRequirements = fdReq.getListDisplay();
 			
 			// *** label/editor field for optional fields
@@ -907,8 +931,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				fdUnused.addMoveToAction(ldRequirements,
 					Messages.Leistungscodes_moveItemToRequiredData,
 					Images.IMG_MOVETOUPPERLIST.getImageDescriptor(), true);
-				fdUnused.addMoveToAction(ldOptional,
-					Messages.Leistungscodes_moveItemToOptionalData,
+				fdUnused.addMoveToAction(ldOptional, Messages.Leistungscodes_moveItemToOptionalData,
 					Images.IMG_MOVETOLOWERLIST.getImageDescriptor(), true);
 				fdUnused.setNoDuplicatesList(ldRequirements, ldOptional);
 				fdUnused.setNoDuplicatesCreateList(ldRequirements, ldOptional);
@@ -947,6 +970,26 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			return scroller;
 		}
 		
+		// #6105
+		private void removeRequiredStringGesetzFromFallExtInfo(){
+			String selection = ldConstants.getSelection();
+			if (selection != null && StringUtils.containsIgnoreCase(selection, "Gesetz")) {
+				String[] split = selection.split("=");
+				String message = MessageFormat
+					.format("Remove the selected field [{0}] from all Faelle?\nPlease validate that a law is set!", split[0]);
+				boolean performDelete =
+					MessageDialog.openQuestion(UiDesk.getTopShell(), "Remove from Faelle", message);
+				if (performDelete) {
+					BusyIndicator.showWhile(UiDesk.getDisplay(), () -> {
+						BillingSystem.removeExtInfoValueForAllFaelleOfBillingSystem(tName.getText(),
+							split[0]);
+						ldConstants.remove(selection);
+						BillingSystem.removeBillingSystemConstant(result[0], selection);
+					});
+				}
+			}
+		}
+		
 		@Override
 		public void create(){
 			super.create();
@@ -960,7 +1003,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		 */
 		@Override
 		protected void okPressed(){
-			result = new String[7];
+			result = new String[9];
 			result[0] = tName.getText();
 			result[1] = cbLstg.getText();
 			result[2] = cbRechn.getText();
@@ -979,6 +1022,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					MultiplikatorList.removeEigenleistungUseMulti(tName.getText());
 				}
 			}
+			result[7] = ((BillingLaw) cbLaw.getStructuredSelection().getFirstElement()).name();
+			result[8] = Boolean.toString(bNoCostBearer.getSelection());
 			super.okPressed();
 		}
 		
@@ -1140,10 +1185,10 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			if (toolBar != null) {
 				Short newItemIx = (short) (LASTFIXEDITEM + additionalItemsCount + 1);
 				moveTo_DestinationLists.add(destinationList);
-				addToolItem(toolBar, imageDescriptor.createImage(), toolTipText, newItemIx, enabled);
-				ListPopUpMenuAction newAction =
-					new ListPopUpMenuAction(toolTipText, imageDescriptor, toolTipText, newItemIx,
-						destinationList, enabled);
+				addToolItem(toolBar, imageDescriptor.createImage(), toolTipText, newItemIx,
+					enabled);
+				ListPopUpMenuAction newAction = new ListPopUpMenuAction(toolTipText,
+					imageDescriptor, toolTipText, newItemIx, destinationList, enabled);
 				IAction[] extended = new IAction[LASTFIXEDITEM + additionalItemsCount + 1 + 1];
 				System.arraycopy(actions, 0, extended, 0, LASTFIXEDITEM + additionalItemsCount + 1);
 				extended[LASTFIXEDITEM + additionalItemsCount + 1] = newAction;
@@ -1153,7 +1198,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			}
 		}
 		
-		public FieldDefsDisplay(Composite parent, int style, String[] listItems){
+		private FieldDefsDisplay(Composite parent, int style, String[] listItems){
 			super(parent, SWT.NONE);
 			this.setLayoutData(SWTHelper.getFillGridData(2, true, 1, true));
 			GridLayout navGridMain = new GridLayout(2, false);
@@ -1216,22 +1261,18 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			addToolItem(toolBar, null, Messages.Leistungscodes_moveItemDown, -1, false);
 			
 			// ****** create popupmenu for this list (same actions)
-			ListPopUpMenuAction moveItemUpAction =
-				new ListPopUpMenuAction(Messages.Leistungscodes_moveItemUp,
-					Images.IMG_ARROWUP.getImageDescriptor(), Messages.Leistungscodes_moveItemUp,
-					MOVEITEMUP, listDisplay, true);
-			ListPopUpMenuAction moveItemDownAction =
-				new ListPopUpMenuAction(Messages.Leistungscodes_moveItemDown,
-					Images.IMG_ARROWDOWN.getImageDescriptor(),
-					Messages.Leistungscodes_moveItemDown, MOVEITEMDOWN, listDisplay, true);
-			ListPopUpMenuAction delItemAction =
-				new ListPopUpMenuAction(Messages.Leistungscodes_deleteAction,
-					Images.IMG_REMOVEITEM.getImageDescriptor(),
-					Messages.Leistungscodes_removeConstraintTT, DELETEITEM, listDisplay, true);
-			ListPopUpMenuAction changeItemAction =
-				new ListPopUpMenuAction(Messages.Leistungscodes_editItem,
-					Images.IMG_EDIT.getImageDescriptor(), Messages.Leistungscodes_editItem,
-					EDITITEM, listDisplay, true);
+			ListPopUpMenuAction moveItemUpAction = new ListPopUpMenuAction(
+				Messages.Leistungscodes_moveItemUp, Images.IMG_ARROWUP.getImageDescriptor(),
+				Messages.Leistungscodes_moveItemUp, MOVEITEMUP, listDisplay, true);
+			ListPopUpMenuAction moveItemDownAction = new ListPopUpMenuAction(
+				Messages.Leistungscodes_moveItemDown, Images.IMG_ARROWDOWN.getImageDescriptor(),
+				Messages.Leistungscodes_moveItemDown, MOVEITEMDOWN, listDisplay, true);
+			ListPopUpMenuAction delItemAction = new ListPopUpMenuAction(
+				Messages.Leistungscodes_deleteAction, Images.IMG_REMOVEITEM.getImageDescriptor(),
+				Messages.Leistungscodes_removeConstraintTT, DELETEITEM, listDisplay, true);
+			ListPopUpMenuAction changeItemAction = new ListPopUpMenuAction(
+				Messages.Leistungscodes_editItem, Images.IMG_EDIT.getImageDescriptor(),
+				Messages.Leistungscodes_editItem, EDITITEM, listDisplay, true);
 			actions[MOVEITEMUP] = moveItemUpAction;
 			actions[MOVEITEMDOWN] = moveItemDownAction;
 			actions[2] = null;
@@ -1278,6 +1319,47 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					
 					@Override
 					public void mouseUp(MouseEvent e){}
+				});
+				child.addKeyListener(new KeyListener() {
+					
+					@Override
+					public void keyPressed(KeyEvent e){
+						if (e.keyCode == 0x6b) {
+							// CTRL + K #6105 move cost bearer from extinfo to table
+							moveCostBearerFromExtInfoToDBRow(child);
+						}
+					}
+					
+					// #6105
+					private void moveCostBearerFromExtInfoToDBRow(
+						org.eclipse.swt.widgets.List child){
+						String[] selection = child.getSelection();
+						if (selection != null && selection.length == 1) {
+							String[] fields = selection[0].split(ARGUMENTSSDELIMITER);
+							String fieldType = fields[0];
+							final String fieldName =
+								(StringUtils.isNotBlank(fields[1])) ? fields[1].trim() : null;
+							// contains e.g. Kontakt:  Kostenträger\
+							if ("K".equals(fieldType.substring(0, 1)) && fieldName != null
+								&& getData() != null) {
+								String message = MessageFormat.format(
+									"Move the selected field [{0}] to cost bearer table for billing systems [{1}]?",
+									fieldName, (String) getData());
+								boolean performMove = MessageDialog.openQuestion(
+									UiDesk.getTopShell(), "Move to cost bearer table", message);
+								if (performMove) {
+									BusyIndicator.showWhile(UiDesk.getDisplay(), () -> {
+										BillingSystem.moveCostBearerFromExtinfoToDBRow(
+											(String) getData(), fieldName);
+										deleteListItem();
+									});
+								}
+							}
+						}
+					}
+					
+					@Override
+					public void keyReleased(KeyEvent e){}
 				});
 			}
 		}
@@ -1470,7 +1552,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				default:
 					if (type > LASTFIXEDITEM) {
 						moveItemToOtherList(listDisplay,
-							moveTo_DestinationLists.get(type - LASTFIXEDITEM - 1), noDuplicatesList);
+							moveTo_DestinationLists.get(type - LASTFIXEDITEM - 1),
+							noDuplicatesList);
 					}
 					break;
 				}
@@ -1501,7 +1584,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			 * @since 3.0.0 constructor signature changed to ImageDescriptor
 			 */
 			public ListPopUpMenuAction(String actionName, ImageDescriptor imageDescriptor,
-				String toolTipText, int actionType, ListDisplay<String> listDisplay, boolean enabled){
+				String toolTipText, int actionType, ListDisplay<String> listDisplay,
+				boolean enabled){
 				super(actionName);
 				this.actionType = actionType;
 				setImageDescriptor(imageDescriptor);
@@ -1573,18 +1657,18 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				} else if (l[1].equals("RN")) { //$NON-NLS-1$
 					type = Messages.Leistungscodes_radiogroupNumeric;
 				}
-				String opt =
-					(l.length >= 3) ? "   (" + l[2].replaceAll(ITEMDELIMITER, "; ") + ")" : StringTool.leer; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				String opt = (l.length >= 3) ? "   (" + l[2].replaceAll(ITEMDELIMITER, "; ") + ")" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+						: StringTool.leer;
 				if (opt.trim().equalsIgnoreCase("(SQL)")) { //$NON-NLS-1$
-					opt =
-						(l.length >= 4) ? "   (SQL: " + l[3].replaceAll(ITEMDELIMITER, "; ") + ")" : StringTool.leer; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					opt = (l.length >= 4) ? "   (SQL: " + l[3].replaceAll(ITEMDELIMITER, "; ") + ")" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+							: StringTool.leer;
 					return type + " " + l[0] + opt; //$NON-NLS-1$
 				} else {
 					return type + " " + l[0] + opt; //$NON-NLS-1$
 				}
 			} else {
-				String opt =
-					(l.length >= 3) ? "   (" + l[2].replaceAll(ITEMDELIMITER, "; ") + ")" : StringTool.leer; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				String opt = (l.length >= 3) ? "   (" + l[2].replaceAll(ITEMDELIMITER, "; ") + ")" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+						: StringTool.leer;
 				return "? " + " " + l[0] + opt; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
@@ -1640,19 +1724,18 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				}
 			}
 			String msg = Messages.Leistungscodes_pleaseEnterName;
-			String[] changeItems =
-				{
-					Messages.Leistungscodes_contactHL, Messages.Leistungscodes_textHL,
-					Messages.Leistungscodes_dateHL, Messages.Leistungscodes_comboHL,
-					Messages.Leistungscodes_listHL, Messages.Leistungscodes_checkboxHL,
-					Messages.Leistungscodes_radioHL
-				};
+			String[] changeItems = {
+				Messages.Leistungscodes_contactHL, Messages.Leistungscodes_textHL,
+				Messages.Leistungscodes_dateHL, Messages.Leistungscodes_comboHL,
+				Messages.Leistungscodes_listHL, Messages.Leistungscodes_checkboxHL,
+				Messages.Leistungscodes_radioHL
+			};
 			AbrechnungsTypDialog_InputDialog inputDlg =
-				new AbrechnungsTypDialog_InputDialog(getShell(), ll
-					+ (isChanging ? Messages.Leistungscodes_changeTextInTitleBar
-							: Messages.Leistungscodes_add), msg, fieldName, noDuplicatesListCreate,
-					optionsIn, isNumericChecked, isStyledChecked, isMultilineChecked,
-					isChanging ? changeItems : null);
+				new AbrechnungsTypDialog_InputDialog(getShell(),
+					ll + (isChanging ? Messages.Leistungscodes_changeTextInTitleBar
+							: Messages.Leistungscodes_add),
+					msg, fieldName, noDuplicatesListCreate, optionsIn, isNumericChecked,
+					isStyledChecked, isMultilineChecked, isChanging ? changeItems : null);
 			if (inputDlg.open() == Dialog.OK) {
 				String[] result = inputDlg.getResult();
 				String req = result[0];
@@ -1663,7 +1746,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					// *** this is calculated on the fly in the view
 					// FallDetailBlatt2
 				}
-				if ((options.length() > 4) && (options.substring(0, 4).equalsIgnoreCase("SCRIPT:"))) { //$NON-NLS-1$
+				if ((options.length() > 4)
+					&& (options.substring(0, 4).equalsIgnoreCase("SCRIPT:"))) { //$NON-NLS-1$
 					// *** this is calculated on the fly in the view
 					// FallDetailBlatt2
 				}

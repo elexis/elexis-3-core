@@ -11,7 +11,7 @@ import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.Result;
 
 public class FallDataAccessor implements IDataAccess {
-	private static final String KOSTENTRAEGER_UMLAUT = "Kostenträger";
+	private static final String KOSTENTRAEGER_UMLAUT = Fall.FLD_EXT_KOSTENTRAEGER;
 	private static final String KOSTENTRAEGER_KUERZEL_UMLAUT = "KostenträgerKürzel";
 	private static final String KOSTENTRAEGER_ORT_UMLAUT = "KostenträgerOrt";
 	
@@ -21,8 +21,8 @@ public class FallDataAccessor implements IDataAccess {
 	
 	ArrayList<Element> elementsList;
 	private Element[] elements = {
-		new Element(IDataAccess.TYPE.STRING, KOSTENTRAEGER_UMLAUT, "[Fall:-:-:Kostentraeger]",
-			null, 0),
+		new Element(IDataAccess.TYPE.STRING, KOSTENTRAEGER_UMLAUT, "[Fall:-:-:Kostentraeger]", null,
+			0),
 		new Element(IDataAccess.TYPE.STRING, KOSTENTRAEGER_KUERZEL_UMLAUT,
 			"[Fall:-:-:KostentraegerKuerzel]", null, 0),
 		new Element(IDataAccess.TYPE.STRING, KOSTENTRAEGER_ORT_UMLAUT,
@@ -57,25 +57,26 @@ public class FallDataAccessor implements IDataAccess {
 		Result<Object> result = null;
 		
 		Fall fall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
-		String id = fall.getInfoString(KOSTENTRAEGER_UMLAUT);
-		Kontakt kostentraeger = Kontakt.load(id);
+		Kontakt costBearer = fall.getCostBearer();
 		
 		if (descriptor.equalsIgnoreCase(KOSTENTRAEGER)
 			|| descriptor.equalsIgnoreCase(KOSTENTRAEGER_UMLAUT)) {
-			result = new Result<Object>(kostentraeger.getPostAnschrift(true));
+			result = new Result<Object>(costBearer.getPostAnschrift(true));
+			
 		} else if (descriptor.equalsIgnoreCase(KOSTENTRAEGER_KUERZEL)
 			|| descriptor.equalsIgnoreCase(KOSTENTRAEGER_KUERZEL_UMLAUT)) {
-			String label = kostentraeger.getLabel();
+			String label = costBearer.getLabel();
 			String fullName = label.substring(0, label.indexOf(","));
 			result = new Result<Object>(fullName);
+			
 		} else if (descriptor.equalsIgnoreCase(KOSTENTRAEGER_ORT)
 			|| descriptor.equalsIgnoreCase(KOSTENTRAEGER_ORT_UMLAUT)) {
-			result = new Result<Object>(kostentraeger.getAnschrift().getOrt());
+			result = new Result<Object>(costBearer.getAnschrift().getOrt());
+			
 		} else {
-			result =
-				new Result<Object>(Result.SEVERITY.ERROR, IDataAccess.OBJECT_NOT_FOUND,
-					"Kein Kostenträger gefunden", //$NON-NLS-1$
-					null, false);
+			result = new Result<Object>(Result.SEVERITY.ERROR, IDataAccess.OBJECT_NOT_FOUND,
+				"Kein Kostenträger gefunden", //$NON-NLS-1$
+				null, false);
 		}
 		return result;
 	}
