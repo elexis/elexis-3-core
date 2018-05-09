@@ -77,6 +77,7 @@ import ch.elexis.core.ui.dialogs.StockSelectorDialog;
 import ch.elexis.core.ui.editors.KontaktSelektorDialogCellEditor;
 import ch.elexis.core.ui.editors.PersistentObjectEditingSupport;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.util.PersistentObjectDragSource;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
@@ -325,6 +326,9 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 					return false;
 				}
 			});
+		
+		// add drag support
+		new PersistentObjectDragSource(viewer);
 		
 		Menu menu = contextMenu.createContextMenu(viewer.getControl());
 		viewer.getControl().setMenu(menu);
