@@ -14,6 +14,8 @@ import static ch.elexis.core.ui.views.rechnung.invoice.InvoiceListSqlQuery.VIEW_
 import static ch.elexis.core.ui.views.rechnung.invoice.InvoiceListSqlQuery.VIEW_FLD_INVOICETOTAL;
 import static ch.elexis.core.ui.views.rechnung.invoice.InvoiceListSqlQuery.VIEW_FLD_OPENAMOUNT;
 
+import java.util.List;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -41,6 +43,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceActions;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListBottomComposite;
@@ -325,6 +328,22 @@ public class InvoiceListView extends ViewPart {
 		menuManager.add(new Separator());
 		menuManager.add(invoiceActions.changeStatusAction);
 		menuManager.add(invoiceActions.stornoAction);
+		menuManager.add(new Separator());
+		menuManager.add(invoiceActions.deleteAction);
+		menuManager.add(invoiceActions.reactivateAction);
+		
+		menuManager.addMenuListener((mats) -> {
+			@SuppressWarnings("unchecked")
+			List<InvoiceEntry> selectedElements =
+				(List<InvoiceEntry>) ((StructuredSelection) tableViewerInvoiceList.getSelection())
+					.toList();
+			
+			boolean allDefective = selectedElements.stream()
+				.allMatch(f -> InvoiceState.DEFECTIVE == f.getInvoiceState());
+			
+			invoiceActions.deleteAction.setEnabled(allDefective);
+			invoiceActions.reactivateAction.setEnabled(allDefective);
+		});
 		
 		Menu contextMenu = menuManager.createContextMenu(tableViewerInvoiceList.getTable());
 		tableInvoiceList.setMenu(contextMenu);

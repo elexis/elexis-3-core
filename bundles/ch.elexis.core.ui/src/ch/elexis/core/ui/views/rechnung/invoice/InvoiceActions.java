@@ -18,6 +18,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.commands.Handler;
 import ch.elexis.core.ui.commands.MahnlaufCommand;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.locks.AllOrNoneLockRequestingAction;
 import ch.elexis.core.ui.locks.AllOrNoneLockRequestingRestrictedAction;
 import ch.elexis.core.ui.locks.LockRequestingAction;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -37,7 +38,7 @@ public class InvoiceActions {
 	
 	public Action addPaymentAction, rnExportAction, increaseLevelAction, addExpenseAction,
 			stornoAction, addAccountExcessAction, printListeAction, mahnWizardAction,
-			changeStatusAction;
+			changeStatusAction, deleteAction, reactivateAction;
 	
 	private final StructuredViewer viewer;
 	private final IViewSite iViewSite;
@@ -274,6 +275,38 @@ public class InvoiceActions {
 				}
 			}
 		};
+		
+		deleteAction =
+			new AllOrNoneLockRequestingAction<Rechnung>(Messages.RnActions_deleteBillAction) {
+				
+				@Override
+				public List<Rechnung> getTargetedObjects(){
+					return getInvoiceSelections(viewer);
+				}
+				
+				@Override
+				public void doRun(List<Rechnung> lockedElements){
+					for (Rechnung rn : lockedElements) {
+						rn.stornoBill(true);
+					}
+				}
+			};
+		
+		reactivateAction =
+			new AllOrNoneLockRequestingAction<Rechnung>(Messages.RnActions_reactivateBillAction) {
+				
+				@Override
+				public List<Rechnung> getTargetedObjects(){
+					return getInvoiceSelections(viewer);
+				}
+				
+				@Override
+				public void doRun(List<Rechnung> lockedElements){
+					for (Rechnung rn : lockedElements) {
+						rn.setStatus(RnStatus.OFFEN);
+					}
+				}
+			};
 	}
 	
 	private List<Rechnung> getInvoiceSelections(StructuredViewer viewer){
