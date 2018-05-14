@@ -1,0 +1,1 @@
+CREATE INDEX idxResult ON LABORDER(Result);
