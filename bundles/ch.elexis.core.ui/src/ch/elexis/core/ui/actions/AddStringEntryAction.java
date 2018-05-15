@@ -26,7 +26,7 @@ public class AddStringEntryAction extends Action {
 		this.targetCollection = targetCollection;
 		
 		setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
-		setText("Hinzufügen");
+		setText(ch.elexis.core.l10n.Messages.LabGroupPrefs_add);
 	}
 	
 	public AddStringEntryAction(StructuredViewer structuredViewer){

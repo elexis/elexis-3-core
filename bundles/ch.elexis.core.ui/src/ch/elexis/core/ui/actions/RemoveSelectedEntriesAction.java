@@ -23,7 +23,7 @@ public class RemoveSelectedEntriesAction extends Action {
 		this.targetCollection = targetCollection;
 		
 		setImageDescriptor(Images.IMG_REMOVEITEM.getImageDescriptor());
-		setText("Entfernen");
+		setText(ch.elexis.core.l10n.Messages.LabGroupPrefs_delete);
 	}
 	
 	public RemoveSelectedEntriesAction(StructuredViewer structuredViewer){
