@@ -72,7 +72,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 	}
 	
 	private static final String SQL_CONDITION_INVOICE_FALL_PATIENT =
-		"r.fallid IN (SELECT fa.id FROM faelle fa WHERE  fa.PatientID = ?)";
+		"r.fallid IN (SELECT fa.id FROM faelle fa WHERE fa.PatientID = ?)";
 	private static final String SQL_CONDITION_INVOICE_NUMBER = "r.RnNummer = ?";
 	private static final String SQL_CONDITION_INVOICE_MANDANT = "r.MandantId = ?";
 	private static final String SQL_CONDITION_INVOICE_DATE_SINCE = "r.RnDatum >= ?";
@@ -88,7 +88,9 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		"CAST(r.betrag AS SIGNED) >= ?";
 	private static final String SQL_CONDITION_INVOICE_AMOUNT_LESSER =
 		"CAST(r.betrag AS SIGNED) <= ?";
-	
+	private static final String SQL_CONDITION_INVOICE_TYPE_TP = "FallGarantId IS NOT NULL AND FallGarantId = FallKostentrID";
+	private static final String SQL_CONDITION_INVOICE_TYPE_TG = "NOT(FallGarantId IS NOT NULL AND FallGarantId = FallKostentrID)";
+	private static final String SQL_CONDITION_BILLING_SYSTEM = "FallGesetz = ?";
 	//@formatter:on
 	
 	public static String orderBy = "";
@@ -134,12 +136,12 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			QueryBuilder queryBuilder = performPreparedStatementReplacements(
 				InvoiceListSqlQuery.getSqlCountStats(true), false, false);
 			PreparedStatement ps = queryBuilder.createPreparedStatement(dbConnection);
+			System.out.println(ps);
 			try (ResultSet res = ps.executeQuery()) {
 				while (res.next()) {
 					countInvoicesWoLimit = res.getInt(1);
 					countPatientsWoLimit = res.getInt(2);
 				}
-				System.out.println(ps);
 			} catch (SQLException e) {
 				ElexisStatus elexisStatus = new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
 					CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, "Count stats failed", e);
@@ -164,7 +166,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			queryBuilder =
 				performPreparedStatementReplacements(InvoiceListSqlQuery.getSqlFetch(), true, true);
 			ps = queryBuilder.createPreparedStatement(dbConnection);
-			
+			System.out.println(ps);
 			int openAmounts = 0;
 			int owingAmounts = 0;
 			Set<String> countPatients = new HashSet<>();
@@ -231,7 +233,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 	private QueryBuilder performPreparedStatementReplacements(String preparedStatement,
 		boolean includeLimitReplacement, boolean includeOrderReplacement){
 		QueryBuilder queryBuilder = determinePreparedStatementConditionals();
-		
+			
 		if (includeOrderReplacement) {
 			preparedStatement = preparedStatement.replaceAll("REPLACE_WITH_ORDER", orderBy);
 		}
@@ -358,6 +360,24 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 				// invalid value entered - do nothing
 			}
 		}
+		
+		String type = invoiceListHeaderComposite.getSelectedInvoiceType();
+		if (type != null) {
+			QueryBuilder qb;
+			if ("TP".equals(type)) {
+				qb = queryBuilder.build(SQL_CONDITION_INVOICE_TYPE_TP, (String) null);
+			} else {
+				qb = queryBuilder.build(SQL_CONDITION_INVOICE_TYPE_TG, (String) null);
+			}
+			qb.setInnerCondition(false);
+		}
+		
+		String billingSystem = invoiceListHeaderComposite.getSelectedBillingSystem();
+		if (billingSystem != null) {
+			QueryBuilder qb = queryBuilder.build(SQL_CONDITION_BILLING_SYSTEM, billingSystem);
+			qb.setInnerCondition(false);
+		}
+		
 		return queryBuilder;
 	}
 	
@@ -420,7 +440,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		private String patientName;
 		
 		private String payerType; // req resolv
-		private String law; // req resolv
+		private String billingSystem; // req resolv
 		private String garantLabel; // req resolv
 		private int invoiceStateSinceDays;
 		
@@ -530,11 +550,11 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			return payerType;
 		}
 		
-		public String getLaw(){
+		public String getBillingSystem(){
 			if (!isResolved()) {
 				return "...";
 			}
-			return law;
+			return billingSystem;
 		}
 		
 		public String getPatientName(){
@@ -585,7 +605,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 				if (r.exists()) {
 					Fall fall = r.getFall();
 					if (fall.exists()) {
-						law = fall.getAbrechnungsSystem();
+						billingSystem = fall.getAbrechnungsSystem();
 					}
 				}
 			}
@@ -597,9 +617,9 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 				if (r.exists()) {
 					Fall fall = r.getFall();
 					if (fall.exists()) {
-						String kostentraeger = (String) fall.getInfoElement("Kostenträger");
-						if (kostentraeger != null) {
-							if (garantId != null && garantId.equals(kostentraeger)) {
+						Kontakt costBearer = fall.getCostBearer();
+						if (costBearer != null) {
+							if (garantId != null && garantId.equals(costBearer.getId())) {
 								payerType = "TP";
 								return;
 							}
@@ -624,6 +644,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		}
 		
 		static class QueryBuilder {
+			private boolean isInnerCondition = true;
 			private String mainQuery;
 			private String condition;
 			private Object[] values;
@@ -642,10 +663,18 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 				this.values = values;
 			}
 			
-			public void build(String query, Object... values){
-				if (queryBuilders != null) {
-					queryBuilders.add(new QueryBuilder(query, values));
-				}
+			public QueryBuilder build(String query, Object... values){
+				QueryBuilder queryBuilder = new QueryBuilder(query, values);
+				queryBuilders.add(queryBuilder);
+				return queryBuilder;
+			}
+			
+			public void setInnerCondition(boolean isInnerCondition){
+				this.isInnerCondition = isInnerCondition;
+			}
+			
+			public boolean isInnerCondition(){
+				return isInnerCondition;
 			}
 			
 			private Object[] getValue(){
@@ -662,21 +691,30 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			
 			public String getQuery(){
 				if (queryBuilders != null && mainQuery != null) {
-					StringBuilder sb = new StringBuilder();
+					StringBuilder sbInner = new StringBuilder();
+					StringBuilder sbOuter = new StringBuilder();
 					for (QueryBuilder builder : queryBuilders) {
-						if (sb.length() > 0) {
-							sb.append(" AND ");
+						StringBuilder used = builder.isInnerCondition() ? sbInner: sbOuter;
+						if (used.length() > 0) {
+							used.append(" AND ");
 						}
-						sb.append(builder.getCondition());
+						used.append(builder.getCondition());
 					}
-					if (sb.length() > 0) {
-						return mainQuery.replace(
+					String mainQueryRet;
+					if (sbInner.length() > 0) {
+						mainQueryRet = mainQuery.replace(
 							InvoiceListSqlQuery.REPLACEMENT_INVOICE_INNER_CONDITION,
-							" AND " + sb.toString());
+							" AND " + sbInner.toString());
 					} else {
-						return mainQuery
+						mainQueryRet =  mainQuery
 							.replace(InvoiceListSqlQuery.REPLACEMENT_INVOICE_INNER_CONDITION, "");
 					}
+					if(sbOuter.length() > 0) {
+						mainQueryRet = mainQueryRet.replace(InvoiceListSqlQuery.REPLACEMENT_OUTER_CONDITION, " WHERE "+sbOuter.toString());
+					} else {
+						mainQueryRet = mainQueryRet.replace(InvoiceListSqlQuery.REPLACEMENT_OUTER_CONDITION, "");
+					}
+					return mainQueryRet;
 				}
 				return "";
 			}

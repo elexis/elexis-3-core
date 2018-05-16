@@ -1,5 +1,7 @@
 package ch.elexis.core.ui.dialogs;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Hashtable;
 
 import org.apache.commons.lang3.StringUtils;
@@ -22,6 +24,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.zxing.BarcodeFormat;
@@ -31,10 +34,15 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
+import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.data.Kontakt;
 import ch.elexis.data.User;
 
 public class TotpDialog extends TitleAreaDialog {
+	
+	protected static Logger log = LoggerFactory.getLogger(TotpDialog.class);
 	
 	private Image image;
 	private Text text;
@@ -66,8 +74,23 @@ public class TotpDialog extends TitleAreaDialog {
 			image.dispose();
 		}
 		
+		String issuer = "Elexis";
+		
+		String selfContactId = CoreHub.globalCfg.get(Preferences.SELFCONTACT_ID, "");
+		if (!StringUtils.isEmpty(selfContactId)) {
+			Kontakt selfContact = Kontakt.load(selfContactId);
+			if (selfContact.isAvailable()) {
+				try {
+					issuer =
+						URLEncoder.encode(selfContact.get(Kontakt.FLD_NAME1), "UTF-8").toString();
+				} catch (UnsupportedEncodingException e) {
+					log.error("Error encoding issuer", e);
+				}
+			}
+		}
+		
 		String otpAuthString = String.format("otpauth://totp/%s:%s?secret=%s&issuer=%s", "Elexis",
-			user.getId(), user.getTotp(), "Elexis");
+			user.getId(), user.getTotp(), issuer);
 		Hashtable<EncodeHintType, Object> hintMap = new Hashtable<>();
 		hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
 		QRCodeWriter qrCodeWriter = new QRCodeWriter();

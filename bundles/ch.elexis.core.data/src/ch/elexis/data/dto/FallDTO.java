@@ -246,11 +246,6 @@ public class FallDTO implements IFall {
 	}
 	
 	@Override
-	public String getRequirementsBySystem(String abrechnungsSystem){
-		return iFall.getRequirementsBySystem(abrechnungsSystem);
-	}
-	
-	@Override
 	public String getOptionals(){
 		return iFall.getOptionals();
 	}
@@ -258,6 +253,16 @@ public class FallDTO implements IFall {
 	@Override
 	public String getUnused(){
 		return iFall.getUnused();
+	}
+	
+	@Override
+	public void setCostBearer(Kontakt costBearer){
+		iFall.setCostBearer(costBearer);
+	}
+
+	@Override
+	public Kontakt getCostBearer(){
+		return iFall.getCostBearer();
 	}
 	
 	

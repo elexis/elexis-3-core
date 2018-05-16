@@ -63,7 +63,8 @@ public class DBUpdate {
 		"1.4.5", "1.4.6", "1.5.0", "1.6.0", "1.6.1", "1.6.2", "1.6.3", "1.6.4", "1.7.0", "1.7.1",
 		"1.7.2", "1.8.0", "1.8.1", "1.8.2", "1.8.3", "1.8.4", "1.8.5", "1.8.6", "1.8.7", "1.8.8",
 		"1.8.9", "1.8.10", "1.8.11", "1.8.12", "1.8.13", "1.8.14", "1.8.15", "1.8.16", "1.9.0", "3.0.0",
-		"3.1.0", "3.2.0", "3.2.1", "3.2.2", "3.2.3", "3.2.4", "3.2.5", "3.2.6", "3.2.7", "3.4.0", "3.4.1", "3.4.2", "3.4.3"
+		"3.1.0", "3.2.0", "3.2.1", "3.2.2", "3.2.3", "3.2.4", "3.2.5", "3.2.6", "3.2.7", "3.4.0", "3.4.1", 
+		"3.4.2", "3.4.3", "3.5.0", "3.6.0"
 	};
 	static final String[] cmds =
 		{
@@ -434,6 +435,10 @@ public class DBUpdate {
 			FILE_LOCATED,
 			// 3.4.3
 			"ALTER TABLE LABORWERTE ADD pathodesc VARCHAR(128);",
+			// 3.5.0
+			FILE_LOCATED,
+			// 3.6.0
+			FILE_LOCATED
 			};
 	//@formatter:on
 	
@@ -502,6 +507,8 @@ public class DBUpdate {
 				+ " successful.");
 		} else {
 			log.error("DBUpdate from Version " + dbv + " to Version "
+				+ versions[versions.length - 1] + " failed.");
+			System.out.println("DBUpdate from Version " + dbv + " to Version "
 				+ versions[versions.length - 1] + " failed.");
 		}
 		return success;

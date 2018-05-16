@@ -31,7 +31,7 @@ public class NoObligationOptifier extends DefaultOptifier {
 	
 	@Override
 	public Result<IVerrechenbar> add(IVerrechenbar code, Konsultation kons){
-		String gesetz = kons.getFall().getRequiredString("Gesetz");
+		String gesetz = kons.getFall().getConfiguredBillingSystemLaw().name();
 		
 		boolean forceObligation = CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_OBLIGATION, false);
 		

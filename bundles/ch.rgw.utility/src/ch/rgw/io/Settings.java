@@ -15,9 +15,12 @@ package ch.rgw.io;
 import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -543,6 +546,32 @@ public abstract class Settings implements Serializable, Cloneable {
 			}
 		}
 		
+	}
+	
+	/**
+	 * 
+	 * @param key
+	 * @return the results or an empty list
+	 * @since 3.6
+	 */
+	public List<String> getAsList(String key){
+		String string = get(key, (String) null);
+		String[] split = string.split(",");
+		if (split != null && split.length > 0) {
+			return Arrays.asList(split);
+		}
+		return Collections.emptyList();
+	}
+	
+	/**
+	 * 
+	 * @param key
+	 * @param values
+	 * @since 3.6
+	 */
+	public void setAsList(String key, List<String> values){
+		String value = values.stream().map(o -> o.toString()).reduce((u, t) -> u + "," + t).get();
+		set(key, value);
 	}
 	
 }

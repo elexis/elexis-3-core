@@ -51,7 +51,7 @@ public class RoleBasedAccessControlTest extends AbstractPersistentObjectTest {
 			+ rights.stream().map(r -> r.getLabel()).collect(Collectors.joining(",")));
 		assertTrue(rights.size() >= 40);
 		List<Role> roles = new Query<Role>(Role.class).execute();
-		assertEquals(6, roles.size());
+		assertEquals(8, roles.size());
 		Role ur = Role.load(RoleConstants.SYSTEMROLE_LITERAL_USER);
 		ACE[] assignedUserRights = ur.getAssignedAccessRights();
 		assertEquals(55, assignedUserRights.length);

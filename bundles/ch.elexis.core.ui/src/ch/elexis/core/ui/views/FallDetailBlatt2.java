@@ -54,6 +54,7 @@ import com.tiff.common.ui.datepicker.EnhancedDatePickerCombo;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IFall;
@@ -61,12 +62,12 @@ import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.locks.IUnlockable;
-import ch.elexis.core.ui.preferences.Leistungscodes;
 import ch.elexis.core.ui.preferences.UserCasePreferences;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.core.ui.util.DayDateCombo;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.BillingSystem;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.PersistentObject;
@@ -84,18 +85,18 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		Messages.FallDetailBlatt2_PleaseSelectContactFor; //$NON-NLS-1$
 	private static final String SELECT_CONTACT_CAPTION =
 		Messages.FallDetailBlatt2_PleaseSelectCpntactCaption; //$NON-NLS-1$
-	private static final String LABEL = "Bezeichnung"; //$NON-NLS-1$
-	private static final String RECHNUNGSEMPFAENGER = Messages.FallDetailBlatt2_BillAdressee; //$NON-NLS-1$
-	private static final String VERSICHERUNGSNUMMER = Messages.FallDetailBlatt2_InsuranceNumber; //$NON-NLS-1$
-	private static final String KOSTENTRAEGER = Messages.FallDetailBlatt2_Guarantor; //$NON-NLS-1$
-	private static final String ABRECHNUNGSMETHODE = Messages.FallDetailBlatt2_BillingMethod; //$NON-NLS-1$
+	private static final String LABEL = Messages.FallDetailBlatt2_29;
+	private static final String RECHNUNGSEMPFAENGER = Messages.FallDetailBlatt2_BillAdressee;
+	private static final String VERSICHERUNGSNUMMER = Messages.FallDetailBlatt2_InsuranceNumber;
+	private static final String KOSTENTRAEGER = Messages.FallDetailBlatt2_Guarantor;
+	private static final String ABRECHNUNGSMETHODE = Messages.FallDetailBlatt2_BillingMethod;
 	private static final String DEFINITIONSDELIMITER = ";"; //$NON-NLS-1$
 	private static final String ARGUMENTSSDELIMITER = ":"; //$NON-NLS-1$
 	private static final String ITEMDELIMITER = "\t"; //$NON-NLS-1$
 	private final FormToolkit tk;
 	private final ScrolledForm form;
 	String[] Abrechnungstypen =
-		UserCasePreferences.sortBillingSystems(Fall.getAbrechnungsSysteme());
+		UserCasePreferences.sortBillingSystems(BillingSystem.getAbrechnungsSysteme());
 	private IFall actFall;
 	DayDateCombo ddc;
 	
@@ -108,8 +109,8 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	public static final String[] dgsys = null;
 	Combo cAbrechnung, cReason;
 	DatePickerCombo dpVon, dpBis;
-	Text tBezeichnung, tGarant;
-	Hyperlink autoFill, hlGarant;
+	Text tBezeichnung, tGarant, tCostBearer;
+	Hyperlink autoFill, hlGarant, hlCostBearer;
 	List<Control> lReqs = new ArrayList<Control>();
 	List<Control> keepEditable = new ArrayList<Control>();
 	Button btnCopyForPatient;
@@ -220,7 +221,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				String abrechungsMethodeStr = cAbrechnung.getItem(i);
 				int separatorPos =
 					UserCasePreferences.getBillingSystemsMenuSeparatorPos(Abrechnungstypen);
-				boolean isDisabled = Leistungscodes.isBillingSystemDisabled(abrechungsMethodeStr);
+				boolean isDisabled = BillingSystem.isDisabled(abrechungsMethodeStr);
 				IFall fall = getSelectedFall();
 				// get previously selected item/gesetz if we need to reset
 				String gesetz = ""; //$NON-NLS-1$
@@ -277,7 +278,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				// only set items if there ARE changes to avoid unnecessary flickering
 				String[] currItems = cAbrechnung.getItems();
 				String[] newItems =
-					UserCasePreferences.sortBillingSystems(Fall.getAbrechnungsSysteme());
+					UserCasePreferences.sortBillingSystems(BillingSystem.getAbrechnungsSysteme());
 				if (!Arrays.equals(currItems, newItems)) {
 					String savedItem = cAbrechnung.getText();
 					cAbrechnung.setItems(newItems);
@@ -376,8 +377,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			};
 		});
 		
-		new Label(top, SWT.NONE);
-		
+		new Label(top, SWT.NONE);	
 		hlGarant = tk.createHyperlink(top, RECHNUNGSEMPFAENGER, SWT.NONE);
 		hlGarant.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
@@ -395,10 +395,30 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				}
 			}
 		});
-		
 		tGarant = tk.createText(top, StringTool.leer);
-		
 		tGarant.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+
+		hlCostBearer = tk.createHyperlink(top, KOSTENTRAEGER, SWT.NONE);
+		hlCostBearer.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent e){
+				KontaktSelektor ksl = new KontaktSelektor(getShell(), Kontakt.class,
+					Messages.FallDetailBlatt2_SelectCostBearerCaption,
+					Messages.FallDetailBlatt2_SelectCostBearerBody, true, Kontakt.DEFAULT_SORT);
+				Kontakt selection = null;
+				if (ksl.open() == Dialog.OK) {
+					selection = (Kontakt) ksl.getSelection();
+				} 
+				IFall fall = getSelectedFall();
+				if (fall != null) {
+					fall.setCostBearer(selection);
+					setFall(fall);
+				}
+			}
+		});
+		tCostBearer = tk.createText(top,  StringTool.leer);
+		tCostBearer.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		
 		tk.paintBordersFor(top);
 		setFall(getSelectedFall());
 		
@@ -410,7 +430,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	 * selected
 	 */
 	public void reloadBillingSystemsMenu(){
-		Abrechnungstypen = UserCasePreferences.sortBillingSystems(Fall.getAbrechnungsSysteme());
+		Abrechnungstypen = UserCasePreferences.sortBillingSystems(BillingSystem.getAbrechnungsSysteme());
 		String currItem = cAbrechnung.getText();
 		cAbrechnung.setItems(Abrechnungstypen);
 		cAbrechnung.setText(currItem);
@@ -563,8 +583,6 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		lReqs.clear();
 		keepEditable.clear();
 		
-
-		
 		// *** fill billing systems into combo, set current system
 		cAbrechnung.setItems(Abrechnungstypen);
 		if (f == null) {
@@ -575,9 +593,9 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			return;
 		}
 		
-		String abr = f.getAbrechnungsSystem();
+		String billingSystem = f.getAbrechnungsSystem();
 		// auto select accident if uvg is selected
-		if ("UVG".equals(abr)) {
+		if ("UVG".equals(billingSystem)) {
 			int idx = ArrayUtils.indexOf(Reasons, FallConstants.TYPE_ACCIDENT);
 			if (idx > -1) {
 				f.setGrund(Reasons[idx]);
@@ -597,7 +615,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		}
 		cReason.select(ix);
 		
-		cAbrechnung.setText(abr);
+		cAbrechnung.setText(billingSystem);
 		
 		// *** set startDate/EndDate
 		TimeTool tt = new TimeTool();
@@ -618,8 +636,19 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		// *** set Garant
 		tGarant.setText(f.getGarant().getLabel());
 		
+		// *** set cost bearer (if enabled for billing system)
+		boolean costBearerDisabled = BillingSystem.isCostBearerDisabled(billingSystem);
+		tCostBearer.setVisible(!costBearerDisabled);
+		hlCostBearer.setVisible(!costBearerDisabled);
+		if(!costBearerDisabled) {
+			Kontakt costBearer = f.getCostBearer();
+			tCostBearer.setText((costBearer!=null) ? costBearer.getLabel() : f.getPatient().getLabel());
+		} else {
+			tCostBearer.setText(StringConstants.EMPTY);
+		}
+		
 		// *** adding required fields defined in prefs
-		String reqs = f.getRequirementsBySystem(f.getAbrechnungsSystem());
+		String reqs = BillingSystem.getRequirementsBySystem(billingSystem);
 		if ((reqs != null) && (reqs.length() > 0)) {
 			// *** do not display a title bar since this is already displayed
 			// above Rechnungsempfänger!
@@ -638,7 +667,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		
 		// *** display all unused field having a display specification
 		String[] reqsArray =
-			f.getRequirementsBySystem(f.getAbrechnungsSystem()).split(DEFINITIONSDELIMITER);
+			BillingSystem.getRequirementsBySystem(billingSystem).split(DEFINITIONSDELIMITER);
 		for (int reqI = 0; reqI < reqsArray.length; reqI++) {
 			reqsArray[reqI] = reqsArray[reqI].split(ARGUMENTSSDELIMITER)[0];
 		}
@@ -834,6 +863,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	
 	private void allowFieldUpdate(boolean lockEnabled){
 		boolean allowFieldUpdate = true;
+		boolean costBearerEnabled = true;
 		if (actFall != null) {
 			Query<Rechnung> rQuery = new Query<Rechnung>(Rechnung.class);
 			rQuery.add(Rechnung.CASE_ID, Query.EQUALS, actFall.getId());
@@ -842,6 +872,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			if (billMatch != null && !billMatch.isEmpty()) {
 				allowFieldUpdate = false;
 			}
+			costBearerEnabled = !BillingSystem.isCostBearerDisabled(actFall.getAbrechnungsSystem());
 		}
 		
 		boolean enable = lockEnabled && (allowFieldUpdate || invoiceCorrection);
@@ -854,6 +885,12 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		tGarant.setForeground(
 			enable ? UiDesk.getColor(UiDesk.COL_BLACK) : UiDesk.getColor(UiDesk.COL_GREY60));
 		tGarant.setEditable(enable);
+		
+		tCostBearer.setForeground((enable && costBearerEnabled) ? UiDesk.getColor(UiDesk.COL_BLACK)
+				: UiDesk.getColor(UiDesk.COL_GREY60));
+		tCostBearer.setEditable(enable && costBearerEnabled);
+		hlCostBearer.setEnabled(enable && costBearerEnabled);
+		
 		autoFill.setEnabled(enable);
 		
 		for (Control req : lReqs) {

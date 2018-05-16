@@ -39,6 +39,7 @@ import ch.elexis.core.data.util.BillingUtil;
 import ch.elexis.core.ui.views.controls.GenericSelectionComposite;
 import ch.elexis.core.ui.views.controls.KontaktSelectionComposite;
 import ch.elexis.core.ui.views.controls.TimeSpanSelectionComposite;
+import ch.elexis.data.BillingSystem;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;
@@ -138,7 +139,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		accountingOnly = new Button(content, SWT.CHECK);
 		accountingOnly.setText("nur von folgenden Abrechnungssystemen");
 		accountingSelector = new GenericSelectionComposite(content, SWT.NONE);
-		accountingSelector.setInput(Arrays.asList(Fall.getAbrechnungsSysteme()));
+		accountingSelector.setInput(Arrays.asList(BillingSystem.getAbrechnungsSysteme()));
 		accountingSelector.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
 		accountingSelector.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
@@ -237,10 +238,10 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 					@Override
 					public boolean select(Object element){
 						Fall fall = ((Konsultation) element).getFall();
-						String garantId = fall.getInfoString("Kostenträger");
-						if (garantId != null && !garantId.isEmpty()) {
+						Kontakt costBearer = fall.getCostBearer();
+						if (costBearer != null) {
 							for (Kontakt insurer : insurers) {
-								if (garantId.equals(insurer.getId())) {
+								if (costBearer.getId().equals(insurer.getId())) {
 									return true;
 								}
 							}

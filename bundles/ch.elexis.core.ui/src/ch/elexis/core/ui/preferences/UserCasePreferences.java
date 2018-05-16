@@ -38,11 +38,13 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.SortedList;
 import ch.elexis.core.ui.dialogs.DiagnoseSelektor;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.BillingSystem;
 import ch.elexis.data.Fall;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.io.InMemorySettings;
@@ -233,7 +235,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 		sorterListComp.setLayout(sorterListLayout);
 		
 		sorterList2 = new List(sorterListComp, SWT.BORDER);
-		sorterList2.setItems(sortBillingSystems(Fall.getAbrechnungsSysteme(), topItemsLinkedList,
+		sorterList2.setItems(sortBillingSystems(BillingSystem.getAbrechnungsSysteme(), topItemsLinkedList,
 			true));
 		sorterList2.addSelectionListener(new SelectionListener() {
 			@Override
@@ -325,7 +327,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 		String[] selStr = sorterList2.getSelection();
 		topItemsLinkedList.add(selStr[0]);
 		topItemsLinkedList.remove(""); //$NON-NLS-1$ // remove any empty items
-		sorterList2.setItems(sortBillingSystems(Fall.getAbrechnungsSysteme(), topItemsLinkedList,
+		sorterList2.setItems(sortBillingSystems(BillingSystem.getAbrechnungsSysteme(), topItemsLinkedList,
 			true));
 		sorterList2.select(topItemsLinkedList.size() - 1);
 		setButtonEnabling();
@@ -335,7 +337,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 		String[] selStr = sorterList2.getSelection();
 		topItemsLinkedList.remove(selStr[0]);
 		topItemsLinkedList.remove(""); //$NON-NLS-1$ // remove any empty items
-		sorterList2.setItems(sortBillingSystems(Fall.getAbrechnungsSysteme(), topItemsLinkedList,
+		sorterList2.setItems(sortBillingSystems(BillingSystem.getAbrechnungsSysteme(), topItemsLinkedList,
 			true));
 		int newSel = sorterList2.indexOf(selStr[0]);
 		sorterList2.select(newSel);
@@ -358,8 +360,8 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 		int newIx = selIx + step;
 		topItemsLinkedList.remove(selIx);
 		topItemsLinkedList.add(newIx, selStr[0]);
-		topItemsLinkedList.remove(""); //$NON-NLS-1$ // remove any empty items
-		sorterList2.setItems(sortBillingSystems(Fall.getAbrechnungsSysteme(), topItemsLinkedList,
+		topItemsLinkedList.remove(StringConstants.EMPTY); // remove any empty items
+		sorterList2.setItems(sortBillingSystems(BillingSystem.getAbrechnungsSysteme(), topItemsLinkedList,
 			true));
 		sorterList2.select(newIx);
 		setButtonEnabling();

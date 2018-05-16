@@ -182,6 +182,8 @@ public class Messages {
 	public static String FallDetailBlatt2_unusedFieldsWithDefinition = ch.elexis.core.l10n.Messages.FallDetailBlatt2_unusedFieldsWithDefinition;
 	public static String FallDetailBlatt2_unusedFieldsWithoutDefinition = ch.elexis.core.l10n.Messages.FallDetailBlatt2_unusedFieldsWithoutDefinition;
 	public static String FallDetailBlatt2_CopyToPatient = ch.elexis.core.l10n.Messages.FallDetailBlatt2_CopyToPatient;
+	public static String FallDetailBlatt2_SelectCostBearerCaption = ch.elexis.core.l10n.Messages.FallDetailBlatt2_SelectCostBearerCaption;
+	public static String FallDetailBlatt2_SelectCostBearerBody = ch.elexis.core.l10n.Messages.FallDetailBlatt2_SelectCostBearerBody;
 	public static String FallListeView_Cases = ch.elexis.core.l10n.Messages.FallListeView_Cases;
 	public static String FallListeView_Date = ch.elexis.core.l10n.Messages.FallListeView_Date;
 	public static String FallListeView_Illness = ch.elexis.core.l10n.Messages.FallListeView_Illness;

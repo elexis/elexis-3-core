@@ -316,6 +316,26 @@
             </command>
          </toolbar>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:ch.elexis.core.ui.medication.tables?after=ch.elexis.core.ui.medication.separator1">
+         <command
+               commandId="ch.elexis.core.ui.command.openCompendium"
+               icon="icon://IMG_WEB"
+               label="Compendium suchen ..."
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.core.ui.medication.views.MedicationView">
+         <command
+               commandId="ch.elexis.core.ui.command.openCompendium"
+               icon="icon://IMG_WEB"
+               label="Compendium suchen ..."
+               style="push">
+         </command>
+      </menuContribution>
    </extension>
       <extension
          point="org.eclipse.ui.preferencePages">
@@ -734,6 +754,10 @@
             id="ch.elexis.core.ui.command.ToggleCurrentInvoiceLockCommand"
             name="Toggle current invoice lock">
       </command>
+      <command
+            id="ch.elexis.core.ui.command.openCompendium"
+            name="Open Compendium Website">
+      </command>
    </extension>
       <extension
             point="ch.elexis.core.ui.KonsExtension">
@@ -868,6 +892,10 @@
          <handler
                class="ch.elexis.core.ui.commands.StartEditLocalDocumentHandler"
                commandId="ch.elexis.core.ui.command.startEditLocalDocument">
+         </handler>
+         <handler
+               class="ch.elexis.core.ui.commands.OpenCompendiumHandler"
+               commandId="ch.elexis.core.ui.command.openCompendium">
          </handler>
       </extension>
       <extension

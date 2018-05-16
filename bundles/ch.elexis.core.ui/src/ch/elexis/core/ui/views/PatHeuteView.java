@@ -94,6 +94,7 @@ import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
+import ch.elexis.data.BillingSystem;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
@@ -228,7 +229,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 		cAccountingSys.setLabelProvider(new LabelProvider());
 		
 		String allCases = Messages.PatHeuteView_all;
-		List<String> faelle = Arrays.asList(Fall.getAbrechnungsSysteme());
+		List<String> faelle = Arrays.asList(BillingSystem.getAbrechnungsSysteme());
 		
 		List<String> accountingSys = new ArrayList<String>();
 		accountingSys.add(allCases);
