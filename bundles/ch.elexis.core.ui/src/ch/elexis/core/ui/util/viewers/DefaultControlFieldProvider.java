@@ -125,6 +125,19 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 		}
 	}
 	
+	private String getDbFieldForField(String text){
+		if (fields != null) {
+			for (int i = 0; i < fields.length; i++) {
+				if (fields[i] != null && fields[i].equals(text)) {
+					if (dbFields.length >= i && dbFields[i] != null) {
+						return dbFields[i];
+					}
+				}
+			}
+		}
+		return text;
+	}
+	
 	private void populateInnerComposite(){
 		for (String l : fields) {
 			Hyperlink hl = tk.createHyperlink(inner, l, SWT.NONE);
@@ -133,9 +146,10 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 				@Override
 				public void linkActivated(final HyperlinkEvent e){
 					Hyperlink h = (Hyperlink) e.getSource();
-					fireSortEvent(h.getText());
+					String dbField = getDbFieldForField(h.getText());
+					
+					fireSortEvent(dbField);
 				}
-				
 			});
 			hl.setBackground(inner.getBackground());
 		}
