@@ -34,6 +34,10 @@ location "http://download.eclipse.org/releases/oxygen" {
 	org.eclipse.nebula.widgets.nattable.extension.glazedlists
 	ca.odell.glazedlists
 	org.jsoup
+	
+	javax.persistence
+	org.eclipse.persistence.core
+	org.eclipse.persistence.jpa
 }
 
 location "http://download.eclipse.org/nebula/releases/latest/" {
