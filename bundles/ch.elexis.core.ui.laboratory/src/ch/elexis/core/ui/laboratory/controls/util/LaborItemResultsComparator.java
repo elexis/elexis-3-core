@@ -2,7 +2,7 @@ package ch.elexis.core.ui.laboratory.controls.util;
 
 import java.util.Comparator;
 
-import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.data.interfaces.ILabItem;
 import ch.elexis.core.ui.laboratory.controls.model.LaborItemResults;
 
 public class LaborItemResultsComparator implements Comparator<LaborItemResults> {

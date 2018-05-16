@@ -5,11 +5,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import ch.elexis.core.data.interfaces.ILabOrder;
+import ch.elexis.core.data.interfaces.ILabResult;
 import ch.elexis.core.importer.div.importers.HL7Parser;
 import ch.elexis.core.importer.div.importers.IPersistenceHandler;
 import ch.elexis.core.importer.div.importers.multifile.IMultiFileParser;
-import ch.elexis.core.model.ILabOrder;
-import ch.elexis.core.model.ILabResult;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.TimeTool;
 

@@ -672,6 +672,15 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getIUser_AssignedContact() {
+		return (EReference)iUserEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getIdentifiable() {
 		return identifiableEClass;
 	}
@@ -1278,6 +1287,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iUserEClass = createEClass(IUSER);
 		createEAttribute(iUserEClass, IUSER__USERNAME);
 		createEAttribute(iUserEClass, IUSER__PASSWORD);
+		createEReference(iUserEClass, IUSER__ASSIGNED_CONTACT);
 
 		identifiableEClass = createEClass(IDENTIFIABLE);
 
@@ -1398,7 +1408,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iStickerEClass.getEGenericSuperTypes().add(g1);
 		iPersonEClass.getESuperTypes().add(this.getIContact());
 		iPatientEClass.getESuperTypes().add(this.getIPerson());
-		iUserEClass.getESuperTypes().add(this.getIContact());
+		iUserEClass.getESuperTypes().add(this.getDeleteable());
+		iUserEClass.getESuperTypes().add(this.getIdentifiable());
 		iLabItemEClass.getESuperTypes().add(this.getIdentifiable());
 		iLabResultEClass.getESuperTypes().add(this.getIdentifiable());
 		iLabOrderEClass.getESuperTypes().add(this.getIdentifiable());
@@ -1499,6 +1510,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEClass(iUserEClass, IUser.class, "IUser", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIUser_Username(), ecorePackage.getEString(), "username", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIUser_Password(), ecorePackage.getEString(), "password", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIUser_AssignedContact(), this.getIContact(), null, "assignedContact", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(identifiableEClass, Identifiable.class, "Identifiable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

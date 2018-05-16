@@ -11,11 +11,27 @@
 package ch.elexis.core.model.util;
 
 import ch.elexis.core.model.*;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.util.Switch;
+
+import ch.elexis.core.model.Deleteable;
+import ch.elexis.core.model.IBillable;
+import ch.elexis.core.model.ICategory;
+import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IDiagnose;
+import ch.elexis.core.model.IDocument;
+import ch.elexis.core.model.IHistory;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IPeriod;
+import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.ISticker;
+import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.IXid;
+import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.model.ModelPackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -127,9 +143,8 @@ public class ModelSwitch<T1> extends Switch<T1> {
 			case ModelPackage.IUSER: {
 				IUser iUser = (IUser)theEObject;
 				T1 result = caseIUser(iUser);
-				if (result == null) result = caseIContact(iUser);
-				if (result == null) result = caseIdentifiable(iUser);
 				if (result == null) result = caseDeleteable(iUser);
+				if (result == null) result = caseIdentifiable(iUser);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}

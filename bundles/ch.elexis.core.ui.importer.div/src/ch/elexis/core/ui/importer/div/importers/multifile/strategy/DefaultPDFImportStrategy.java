@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.beans.ContactBean;
+import ch.elexis.core.data.interfaces.ILabItem;
 import ch.elexis.core.data.interfaces.text.IOpaqueDocument;
 import ch.elexis.core.data.services.GlobalServiceDescriptors;
 import ch.elexis.core.data.services.IDocumentManager;
@@ -26,7 +27,6 @@ import ch.elexis.core.importer.div.importers.multifile.IMultiFileParser;
 import ch.elexis.core.importer.div.importers.multifile.strategy.FileImportStrategyUtil;
 import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategy;
 import ch.elexis.core.model.IContact;
-import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.importer.div.importers.DefaultLabImportUiHandler;

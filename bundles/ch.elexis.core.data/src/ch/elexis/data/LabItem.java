@@ -20,10 +20,10 @@ import java.util.regex.Pattern;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.constants.TextContainerConstants;
+import ch.elexis.core.data.interfaces.ILabItem;
+import ch.elexis.core.data.interfaces.ILabResult;
 import ch.elexis.core.data.interfaces.scripting.Interpreter;
 import ch.elexis.core.exceptions.ElexisException;
-import ch.elexis.core.model.ILabItem;
-import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.types.LabItemTyp;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;

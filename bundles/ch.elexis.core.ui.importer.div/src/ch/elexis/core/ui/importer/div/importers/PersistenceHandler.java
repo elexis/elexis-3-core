@@ -3,8 +3,8 @@ package ch.elexis.core.ui.importer.div.importers;
 import java.util.List;
 
 import ch.elexis.core.data.beans.ContactBean;
+import ch.elexis.core.data.interfaces.ILabOrder;
 import ch.elexis.core.importer.div.importers.IPersistenceHandler;
-import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.data.LabOrder;
 import ch.elexis.data.Patient;

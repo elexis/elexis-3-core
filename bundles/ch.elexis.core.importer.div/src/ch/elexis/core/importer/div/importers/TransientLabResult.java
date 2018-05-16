@@ -2,9 +2,9 @@ package ch.elexis.core.importer.div.importers;
 
 import java.util.Map;
 
+import ch.elexis.core.data.interfaces.ILabItem;
+import ch.elexis.core.data.interfaces.ILabResult;
 import ch.elexis.core.model.IContact;
-import ch.elexis.core.model.ILabItem;
-import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;

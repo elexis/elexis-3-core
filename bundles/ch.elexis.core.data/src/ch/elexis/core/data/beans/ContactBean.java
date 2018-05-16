@@ -15,7 +15,6 @@ import ch.elexis.core.data.beans.base.BeanPersistentObject;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
-import ch.elexis.core.model.IUser;
 import ch.elexis.core.types.ContactType;
 import ch.elexis.core.types.Country;
 import ch.elexis.core.types.Gender;
@@ -27,7 +26,7 @@ import ch.elexis.data.Person;
 import ch.rgw.tools.TimeTool;
 
 public class ContactBean extends BeanPersistentObject<Kontakt> implements IContact, IPerson,
-		IPatient, IUser {
+		IPatient {
 	
 	private ContactCache cache;
 	
@@ -471,19 +470,6 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 		setCode(value);
 	}
 	
-	// User ---
-	@Override
-	public String getUsername(){
-		return cache.description3;
-	}
-	
-	@Override
-	public void setUsername(String value){
-		String old = getUsername();
-		entity.set(Kontakt.FLD_NAME3, value);
-		firePropertyChange("username", old, value);
-	}
-	
 	/**
 	 * This class caches contact properties to speed up the current {@link PersistentObject}
 	 * dependent implementation, where every access is executed synchronous to the DB.
@@ -541,18 +527,6 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 				return Gender.UNKNOWN;
 			}
 		}
-	}
-
-	@Override
-	public String getPassword(){
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setPassword(String value){
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

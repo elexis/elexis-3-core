@@ -1,6 +1,6 @@
 package ch.elexis.core.importer.div.importers;
 
-import ch.elexis.core.model.ILabResult;
+import ch.elexis.core.data.interfaces.ILabResult;
 import ch.elexis.core.model.IPatient;
 
 public abstract class ImportHandler {

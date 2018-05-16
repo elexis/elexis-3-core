@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="model" nsURI="http://ch.elexis.corel/model/model" nsPrefix="ch.elexis.core.model">
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="model" nsURI="http://ch.elexis.core/model/model" nsPrefix="ch.elexis.core.model">
   <eClassifiers xsi:type="ecore:EClass" name="IContact" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="contactType" eType="ecore:EEnum types.ecore#//ContactType"/>
@@ -93,9 +93,10 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="allergies" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IUser" abstract="true" interface="true"
-      eSuperTypes="#//IContact">
+      eSuperTypes="#//Deleteable #//Identifiable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="username" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="password" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="assignedContact" eType="#//IContact"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Identifiable" abstract="true" interface="true">
     <eOperations name="getId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
@@ -113,7 +114,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="deleted" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ILabItem" abstract="true" interface="true"
-      eSuperTypes="#//Identifiable">
+      eSuperTypes="#//Identifiable #//Deleteable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="typ" eType="ecore:EDataType types.ecore#//LabItemTyp"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="referenceMale" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="referenceFemale" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -126,7 +127,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="visible" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ILabResult" abstract="true" interface="true"
-      eSuperTypes="#//Identifiable">
+      eSuperTypes="#//Identifiable #//Deleteable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="refMale" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="refFemale" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="unit" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -143,18 +144,18 @@
         eType="ecore:EDataType types.ecore#//PathologicDescription"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ILabOrder" abstract="true" interface="true"
-      eSuperTypes="#//Identifiable">
+      eSuperTypes="#//Identifiable #//Deleteable">
     <eStructuralFeatures xsi:type="ecore:EReference" name="labResult" eType="#//ILabResult"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="labItem" eType="#//ILabItem"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="patientContact" eType="#//IPatient"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IPeriod" abstract="true" interface="true"
-      eSuperTypes="#//Identifiable">
+      eSuperTypes="#//Identifiable #//Deleteable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="startTime" eType="ecore:EDataType types.ecore#//TimeTool"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="endTime" eType="ecore:EDataType types.ecore#//TimeTool"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IDocument" abstract="true" interface="true"
-      eSuperTypes="#//Identifiable">
+      eSuperTypes="#//Identifiable #//Deleteable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="patientId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="authorId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

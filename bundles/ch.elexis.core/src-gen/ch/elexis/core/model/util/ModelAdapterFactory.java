@@ -11,13 +11,28 @@
 package ch.elexis.core.model.util;
 
 import ch.elexis.core.model.*;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
+
+import ch.elexis.core.model.Deleteable;
+import ch.elexis.core.model.IBillable;
+import ch.elexis.core.model.ICategory;
+import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IDiagnose;
+import ch.elexis.core.model.IDocument;
+import ch.elexis.core.model.IHistory;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IPeriod;
+import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.ISticker;
+import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.IXid;
+import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.model.ModelPackage;
 
 /**
  * <!-- begin-user-doc -->

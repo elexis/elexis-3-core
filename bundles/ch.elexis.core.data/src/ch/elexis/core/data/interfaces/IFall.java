@@ -7,6 +7,9 @@ import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
 import ch.rgw.tools.TimeTool;
 
+/**
+ * Copy of core interface, used while refactoring.
+ */
 public interface IFall extends IPersistentObject {
 	
 	public String getAbrechnungsSystem();

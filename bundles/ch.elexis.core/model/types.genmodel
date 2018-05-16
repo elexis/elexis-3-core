@@ -9,7 +9,11 @@
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="types.ecore#//ContactType">
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactType/PERSON"/>
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactType/ORGANIZATION"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactType/MANDATOR"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactType/LABORATORY"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactType/PATIENT"/>
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactType/UNKNOWN"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactType/USER"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="types.ecore#//ContactGender">
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactGender/MALE"/>
@@ -17,33 +21,46 @@
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactGender/UNDEFINED"/>
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactGender/UNKNOWN"/>
     </genEnums>
-    <genEnums typeSafeEnumCompatible="false" ecoreEnum="types.ecore#//CountryCode">
-      <genEnumLiterals ecoreEnumLiteral="types.ecore#//CountryCode/NDF"/>
-      <genEnumLiterals ecoreEnumLiteral="types.ecore#//CountryCode/AT"/>
-      <genEnumLiterals ecoreEnumLiteral="types.ecore#//CountryCode/CH"/>
-      <genEnumLiterals ecoreEnumLiteral="types.ecore#//CountryCode/DE"/>
-      <genEnumLiterals ecoreEnumLiteral="types.ecore#//CountryCode/FR"/>
-      <genEnumLiterals ecoreEnumLiteral="types.ecore#//CountryCode/LI"/>
-    </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="types.ecore#//RelationshipType">
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/A_GENERIC"/>
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/BUSINESS_EMPLOYER"/>
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/BUSINESS_EMPLOYEE"/>
-      <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/FAMILY_HUSBAND"/>
-      <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/FAMILY_WIFE"/>
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/FAMILY_PARENT"/>
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/FAMILY_CHILD"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/FAMILY_GUARDIAN"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/FAMILY_ICE"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/FAMILY_ALTERNATIVE"/>
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/WELFARE_GENERAL_PRACTITIONER"/>
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/WELFARE_PATIENT"/>
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/WELFARE_CONSULTANT"/>
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/WELFARE_INSURER"/>
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/WELFARE_INSUREE"/>
     </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="types.ecore#//AddressType">
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//AddressType/PRINCIPAL_RESIDENCE"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//AddressType/SECONDARY_RESIDENCE"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//AddressType/HOLIDAY_HOME"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//AddressType/PLACE_OF_RESIDENCE"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//AddressType/EMPLOYER"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//AddressType/FAMILY_FRIENDS"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//AddressType/ATTACHMENT_FIGURE"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//AddressType/PRISON"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//AddressType/NURSING_HOME"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//AddressType/OTHER"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="types.ecore#//DocumentStatus">
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//DocumentStatus/NEW"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//DocumentStatus/CHANGED"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//DocumentStatus/VALIDATED"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//DocumentStatus/SENT"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//DocumentStatus/RECIVED"/>
+    </genEnums>
     <genDataTypes ecoreDataType="types.ecore#//Money"/>
     <genDataTypes ecoreDataType="types.ecore#//TimeTool"/>
     <genDataTypes ecoreDataType="types.ecore#//Gender"/>
     <genDataTypes ecoreDataType="types.ecore#//LabItemTyp"/>
     <genDataTypes ecoreDataType="types.ecore#//Country"/>
+    <genDataTypes ecoreDataType="types.ecore#//PathologicDescription"/>
     <genClasses image="false" ecoreClass="types.ecore#//Comparable">
       <genTypeParameters ecoreTypeParameter="types.ecore#//Comparable/T"/>
     </genClasses>

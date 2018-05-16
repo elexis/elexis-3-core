@@ -4,7 +4,7 @@ import org.apache.commons.lang.StringUtils;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.data.interfaces.ILabItem;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.PathologicDescription;

@@ -40,9 +40,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import ch.elexis.core.data.interfaces.ILabItem;
 import ch.elexis.core.importer.div.importers.HL7Parser;
 import ch.elexis.core.importer.div.importers.Messages;
-import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.LabResultConstants;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.PathologicDescription.Description;

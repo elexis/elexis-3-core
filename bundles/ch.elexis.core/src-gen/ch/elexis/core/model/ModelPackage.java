@@ -1000,178 +1000,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IUSER__DELETED = ICONTACT__DELETED;
-
-	/**
-	 * The feature id for the '<em><b>Contact Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IUSER__CONTACT_TYPE = ICONTACT__CONTACT_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Mandator</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IUSER__MANDATOR = ICONTACT__MANDATOR;
-
-	/**
-	 * The feature id for the '<em><b>User</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IUSER__USER = ICONTACT__USER;
-
-	/**
-	 * The feature id for the '<em><b>Patient</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IUSER__PATIENT = ICONTACT__PATIENT;
-
-	/**
-	 * The feature id for the '<em><b>Description1</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IUSER__DESCRIPTION1 = ICONTACT__DESCRIPTION1;
-
-	/**
-	 * The feature id for the '<em><b>Description2</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IUSER__DESCRIPTION2 = ICONTACT__DESCRIPTION2;
-
-	/**
-	 * The feature id for the '<em><b>Description3</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IUSER__DESCRIPTION3 = ICONTACT__DESCRIPTION3;
-
-	/**
-	 * The feature id for the '<em><b>Code</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IUSER__CODE = ICONTACT__CODE;
-
-	/**
-	 * The feature id for the '<em><b>Country</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IUSER__COUNTRY = ICONTACT__COUNTRY;
-
-	/**
-	 * The feature id for the '<em><b>Zip</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IUSER__ZIP = ICONTACT__ZIP;
-
-	/**
-	 * The feature id for the '<em><b>City</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IUSER__CITY = ICONTACT__CITY;
-
-	/**
-	 * The feature id for the '<em><b>Street</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IUSER__STREET = ICONTACT__STREET;
-
-	/**
-	 * The feature id for the '<em><b>Phone1</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IUSER__PHONE1 = ICONTACT__PHONE1;
-
-	/**
-	 * The feature id for the '<em><b>Phone2</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IUSER__PHONE2 = ICONTACT__PHONE2;
-
-	/**
-	 * The feature id for the '<em><b>Fax</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IUSER__FAX = ICONTACT__FAX;
-
-	/**
-	 * The feature id for the '<em><b>Email</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IUSER__EMAIL = ICONTACT__EMAIL;
-
-	/**
-	 * The feature id for the '<em><b>Website</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IUSER__WEBSITE = ICONTACT__WEBSITE;
-
-	/**
-	 * The feature id for the '<em><b>Mobile</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IUSER__MOBILE = ICONTACT__MOBILE;
-
-	/**
-	 * The feature id for the '<em><b>Comment</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IUSER__COMMENT = ICONTACT__COMMENT;
+	int IUSER__DELETED = DELETEABLE__DELETED;
 
 	/**
 	 * The feature id for the '<em><b>Username</b></em>' attribute.
@@ -1180,7 +1009,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IUSER__USERNAME = ICONTACT_FEATURE_COUNT + 0;
+	int IUSER__USERNAME = DELETEABLE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Password</b></em>' attribute.
@@ -1189,7 +1018,16 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IUSER__PASSWORD = ICONTACT_FEATURE_COUNT + 1;
+	int IUSER__PASSWORD = DELETEABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Assigned Contact</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IUSER__ASSIGNED_CONTACT = DELETEABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>IUser</em>' class.
@@ -1198,7 +1036,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IUSER_FEATURE_COUNT = ICONTACT_FEATURE_COUNT + 2;
+	int IUSER_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ILabItem <em>ILab Item</em>}' class.
@@ -2314,6 +2152,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIUser_Password();
 
 	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IUser#getAssignedContact <em>Assigned Contact</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Assigned Contact</em>'.
+	 * @see ch.elexis.core.model.IUser#getAssignedContact()
+	 * @see #getIUser()
+	 * @generated
+	 */
+	EReference getIUser_AssignedContact();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3352,6 +3201,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IUSER__PASSWORD = eINSTANCE.getIUser_Password();
+
+		/**
+		 * The meta object literal for the '<em><b>Assigned Contact</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IUSER__ASSIGNED_CONTACT = eINSTANCE.getIUser_AssignedContact();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}' class.

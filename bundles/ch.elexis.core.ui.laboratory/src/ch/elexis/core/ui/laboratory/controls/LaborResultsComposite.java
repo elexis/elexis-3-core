@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.data.interfaces.ILabItem;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.laboratory.actions.LaborParameterEditAction;
 import ch.elexis.core.ui.laboratory.actions.LaborResultDeleteAction;

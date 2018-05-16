@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 import ch.elexis.core.data.beans.ContactBean;
-import ch.elexis.core.model.ILabItem;
-import ch.elexis.core.model.ILabOrder;
-import ch.elexis.core.model.ILabResult;
+import ch.elexis.core.data.interfaces.ILabItem;
+import ch.elexis.core.data.interfaces.ILabOrder;
+import ch.elexis.core.data.interfaces.ILabResult;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.types.LabItemTyp;

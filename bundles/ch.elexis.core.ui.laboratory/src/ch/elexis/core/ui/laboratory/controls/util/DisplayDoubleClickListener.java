@@ -9,7 +9,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.data.interfaces.ILabItem;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.dialogs.DisplayLabDokumenteDialog;
 import ch.elexis.core.ui.dialogs.DisplayTextDialog;

@@ -22,13 +22,14 @@ package ch.elexis.core.model;
  * <ul>
  *   <li>{@link ch.elexis.core.model.IUser#getUsername <em>Username</em>}</li>
  *   <li>{@link ch.elexis.core.model.IUser#getPassword <em>Password</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IUser#getAssignedContact <em>Assigned Contact</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIUser()
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface IUser extends IContact {
+public interface IUser extends Deleteable, Identifiable {
 	/**
 	 * Returns the value of the '<em><b>Username</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -80,5 +81,31 @@ public interface IUser extends IContact {
 	 * @generated
 	 */
 	void setPassword(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Assigned Contact</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Assigned Contact</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Assigned Contact</em>' reference.
+	 * @see #setAssignedContact(IContact)
+	 * @see ch.elexis.core.model.ModelPackage#getIUser_AssignedContact()
+	 * @model
+	 * @generated
+	 */
+	IContact getAssignedContact();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IUser#getAssignedContact <em>Assigned Contact</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Assigned Contact</em>' reference.
+	 * @see #getAssignedContact()
+	 * @generated
+	 */
+	void setAssignedContact(IContact value);
 
 } // IUser

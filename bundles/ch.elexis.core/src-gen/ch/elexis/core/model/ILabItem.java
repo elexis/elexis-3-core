@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2013 MEDEVIT <office@medevit.at>.
+ * Copyright (c) 2018 MEDEVIT <office@medevit.at>.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,6 @@
 package ch.elexis.core.model;
 
 import ch.elexis.core.types.LabItemTyp;
-
 
 /**
  * <!-- begin-user-doc -->
@@ -39,7 +38,6 @@ import ch.elexis.core.types.LabItemTyp;
  * @generated
  */
 public interface ILabItem extends Identifiable {
-
 	/**
 	 * Returns the value of the '<em><b>Typ</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -299,4 +297,5 @@ public interface ILabItem extends Identifiable {
 	 * @generated
 	 */
 	void setVisible(boolean value);
+
 } // ILabItem
