@@ -22,6 +22,7 @@ import ch.elexis.core.importer.div.importers.ImportHandler;
 import ch.elexis.core.importer.div.importers.TransientLabResult;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.types.LabItemTyp;
@@ -38,7 +39,6 @@ import ch.elexis.data.LabResult;
 import ch.elexis.data.Labor;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
-import ch.elexis.data.Person;
 import ch.elexis.data.Query;
 import ch.elexis.data.Xid;
 import ch.elexis.hl7.model.OrcMessage;
@@ -380,30 +380,26 @@ public class LabImportUtil implements ILabImportUtil {
 	
 	public ILabResult createLabResult(TransientLabResult transientLabResult, String orderId,
 		String mandantId){
-		ILabResult labResult = transientLabResult.persist();
+		ILabResult labResult = null;
 		
 		List<LabOrder> existing = LabOrder.getLabOrders(transientLabResult.getPatient().getId(),
 			null, transientLabResult.getLabItem(), null, null, null, State.ORDERED);
 		
 		LabOrder labOrder = null;
 		if (existing == null || existing.isEmpty()) {
+
 			TimeTool time = transientLabResult.getObservationTime();
 			if (time == null) {
 				time = transientLabResult.getDate();
-				if (time == null) {
-					logger.warn(
-						"Could not resolve observation time and time for ILabResult [{}], defaulting to now.",
-						labResult.getId());
-					time = new TimeTool();
-				}
 			}
-			labOrder = new LabOrder(CoreHub.actUser.getId(), mandantId,
-				transientLabResult.getPatient().getId(), transientLabResult.getLabItem(),
-				labResult.getId(), orderId, "Import", time);
+
+			labResult = transientLabResult.persist(null, orderId, mandantId, time, "Import");
+			labOrder = (LabOrder) labResult.getLabOrder();
+			
 		} else {
 			// TODO for multiple entries we could check on which one the observationtime matches
 			labOrder = existing.get(0);
-			labOrder.setLabResultIdAsString(labResult.getId());
+			labResult = transientLabResult.persist(labOrder, null, null, null, null);
 		}
 		
 		labOrder.setState(State.DONE_IMPORT);
@@ -539,20 +535,18 @@ public class LabImportUtil implements ILabImportUtil {
 	
 	@Override
 	public ILabResult createLabResult(IPatient patient, TimeTool date, ILabItem labItem,
-		String result, String comment, String refVal, IContact origin, String subId){
+		String result, String comment, String refVal, IContact origin, String subId,
+		ILabOrder labOrder, String orderId, String mandantId, TimeTool time, String groupName){
+		
 		Patient pat = Patient.load(patient.getId());
 		LabItem item = LabItem.load(labItem.getId());
 		Labor labor = Labor.load(origin.getId());
 		logger.debug("Creating result with patient [" + pat.getId() + "] labitem [" + item.getId()
 			+ "] origin [" + labor.getId() + "]");
-		LabResult labResult = new LabResult(pat, date, item, result, comment, labor);
-		if (refVal != null) {
-			if (Person.MALE.equalsIgnoreCase(pat.getGeschlecht())) {
-				labResult.setRefMale(refVal);
-			} else {
-				labResult.setRefFemale(refVal);
-			}
-		}
+		
+		LabResult labResult = LabResult.createLabResultAndAssertLabOrder(pat, date, item, result,
+			comment, labor, refVal, labOrder, orderId, mandantId, time, groupName);
+		
 		if (subId != null) {
 			labResult.setDetail(LabResult.EXTINFO_HL7_SUBID, subId);
 		}

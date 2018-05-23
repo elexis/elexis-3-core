@@ -4,6 +4,7 @@ import java.util.Map;
 
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.types.Gender;
@@ -113,7 +114,8 @@ public class TransientLabResult {
 		
 	}
 	
-	public ILabResult persist(){
+	public ILabResult persist(ILabOrder labOrder, String orderId,
+		String mandantId, TimeTool time, String groupName){
 		// determine gender, set refVal
 		String refVal;
 		if (Gender.MALE == patient.getGender()) {
@@ -122,8 +124,9 @@ public class TransientLabResult {
 			refVal = refFemale;
 		}
 		
-		ILabResult labResult = labImportUtil.createLabResult(patient, date, labItem, result,
-			comment, refVal, origin, subId);
+		ILabResult labResult =
+			labImportUtil.createLabResult(patient, date, labItem, result, comment, refVal, origin,
+				subId, labOrder, orderId, mandantId, time, groupName);
 		
 		setFieldsAndInterpret(labResult);
 		
