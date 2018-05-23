@@ -365,5 +365,12 @@ public interface ILabResult extends Identifiable {
 	 * @generated
 	 */
 	void setPathologicDescription(PathologicDescription value);
+
+	/**
+	 * @return the {@link ILabOrder} linked to this {@link ILabResult} or <code>null</code>
+	 * @since 3.5
+	 */
+	ILabOrder getLabOrder();
+	
 	
 } // ILabResult

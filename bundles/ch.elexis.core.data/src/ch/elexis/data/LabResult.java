@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.LoggerFactory;
+
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
@@ -36,6 +38,7 @@ import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.types.Gender;
@@ -143,6 +146,13 @@ public class LabResult extends PersistentObject implements ILabResult {
 			(origin != null) ? origin.getId() : null);
 	}
 	
+	public LabResult(final String patientId, final Gender gender, final TimeTool date,
+		final ILabItem item, final String result, final String comment, @Nullable String refVal,
+		@Nullable
+		final String originId){
+		this(patientId, gender, date, item, result, comment, refVal, originId, true);
+	}
+	
 	/**
 	 * 
 	 * @param patientId
@@ -153,13 +163,15 @@ public class LabResult extends PersistentObject implements ILabResult {
 	 * @param comment
 	 * @param refVal
 	 * @param origin
+	 * @param sendEvent
+	 *            send create event
 	 * @since 3.5 refactored, send {@link ElexisEvent#EVENT_CREATE} after full initialization of the
 	 *        object
 	 */
 	public LabResult(final String patientId, final Gender gender, final TimeTool date,
 		final ILabItem item, final String result, final String comment, @Nullable String refVal,
 		@Nullable
-		final String originId){
+		final String originId, boolean sendEvent){
 			
 		create(null, null, null, false);
 		String _date = (date == null) ? new TimeTool().toString(TimeTool.DATE_COMPACT)
@@ -186,7 +198,66 @@ public class LabResult extends PersistentObject implements ILabResult {
 		
 		addToUnseen();
 		
-		sendElexisEvent(ElexisEvent.EVENT_CREATE);
+		if (sendEvent) {
+			sendElexisEvent(ElexisEvent.EVENT_CREATE);
+		}
+		
+	}
+	
+	/**
+	 * Create a LabResult and assert that an according LabOrder exists and is linked with this
+	 * result. This ensures, that the combination of both is properly initialized before the
+	 * LabResult create event is sent.
+	 * 
+	 * @param labor
+	 * @param comment
+	 * @param result
+	 * @param item
+	 * @param date
+	 * @param pat
+	 * @param refValFemale
+	 * @param refValMale
+	 * @param labOrder
+	 * @return
+	 * @since 3.5
+	 */
+	public static LabResult createLabResultAndAssertLabOrder(Patient pat, TimeTool date,
+		LabItem item, String result, String comment, @Nullable Labor origin, String refVal,
+		ILabOrder labOrder, String orderId, String mandantId, TimeTool time, String groupName){
+		
+		LabResult labResult = new LabResult(pat.getId(), pat.getGender(), date, item, result,
+			comment, refVal, (origin != null) ? origin.getId() : null, false);
+		
+		if (labOrder == null) {
+			if (time == null) {
+				LoggerFactory.getLogger(LabResult.class).warn(
+					"Could not resolve observation time and time for ILabResult [{}], defaulting to now.",
+					labResult.getId());
+				time = new TimeTool();
+			}
+			new LabOrder(CoreHub.actUser.getId(), mandantId, pat.getId(), item, labResult.getId(),
+				orderId, groupName, time);
+		} else {
+			((LabOrder) labOrder).setLabResultIdAsString(labResult.getId());
+		}
+		
+		labResult.sendElexisEvent(ElexisEvent.EVENT_CREATE);
+		
+		return labResult;
+	}
+	
+	/**
+	 * Return the LabOrder linked to this LabResult
+	 * 
+	 * @since 3.5
+	 */
+	public @Nullable LabOrder getLabOrder(){
+		Query<LabOrder> qre = new Query<LabOrder>(LabOrder.class, LabResult.RESULT, getId());
+		List<LabOrder> execute = qre.execute();
+		if (execute.size() > 0) {
+			return execute.get(0);
+		}
+		return null;
 	}
 	
 	private boolean isPathologic(final Gender g, final ILabItem item, final String result,

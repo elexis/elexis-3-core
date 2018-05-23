@@ -2,6 +2,7 @@ package ch.elexis.data;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.BeforeClass;
@@ -60,5 +61,14 @@ public class Test_LabResult {
 		assertTrue(result.isFlag(LabResultConstants.PATHOLOGIC));
 		assertFalse(result.isPathologicFlagIndetermined(null));
 		assertEquals(Description.PATHO_ABSOLUT, result.getPathologicDescription().getDescription());
-	}	
+	}
+	
+	@Test
+	public void testCreateLabResultAssertLabOrder(){
+		LabResult labResult = LabResult.createLabResultAndAssertLabOrder(patient, new TimeTool(),
+			absoluteLabItem, REFVAL, "", null, REFVAL, null, "orderId", null, null, "testGroup");
+		assertNotNull(labResult.getId());
+		assertNotNull(labResult.getLabOrder());
+	}
+	
 }
