@@ -34,10 +34,22 @@ location "http://download.eclipse.org/releases/oxygen" {
 	org.eclipse.nebula.widgets.nattable.extension.glazedlists
 	ca.odell.glazedlists
 	org.jsoup
-	
+
+	osgi.enterprise
+}
+
+location "http://download.eclipse.org/rt/eclipselink/updates/" {
 	javax.persistence
+	org.eclipse.persistence.asm
+	org.eclipse.persistence.antlr
 	org.eclipse.persistence.core
+	org.eclipse.persistence.jpa.jpql
 	org.eclipse.persistence.jpa
+	org.eclipse.persistence.extension
+}
+
+location "http://download.elexis.info/elexis-server/misc/gemini-jpa/" {
+	org.eclipse.gemini.jpa.feature.feature.group
 }
 
 location "http://download.eclipse.org/nebula/releases/latest/" {
