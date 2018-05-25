@@ -1,18 +1,19 @@
 package ch.elexis.core.jpa.entities;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.eclipse.persistence.annotations.Convert;
+import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 
 @Entity
 @Table(name = "RIGHT_")
 public class Right extends AbstractDBObjectIdDeleted {
 
-	@Convert("booleanStringConverter")
+	@Convert(converter = BooleanCharacterConverterSafe.class)
 	@Column(name = "LOG_EXECUTION")
 	protected boolean logExecution;
 

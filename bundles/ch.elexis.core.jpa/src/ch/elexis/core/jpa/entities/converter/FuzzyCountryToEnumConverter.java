@@ -10,9 +10,8 @@
  ******************************************************************************/
 package ch.elexis.core.jpa.entities.converter;
 
-import org.eclipse.persistence.mappings.DatabaseMapping;
-import org.eclipse.persistence.mappings.converters.Converter;
-import org.eclipse.persistence.sessions.Session;
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 
 import ch.elexis.core.types.Country;
 
@@ -23,35 +22,24 @@ import ch.elexis.core.types.Country;
  * it can't be guaranteed, so in case a value not equal to the defined set is
  * observed it simply returns null instead of an Exception.
  */
-public class FuzzyCountryToEnumConverter implements Converter {
-
-	private static final long serialVersionUID = 439835332745734218L;
+@Converter
+public class FuzzyCountryToEnumConverter implements AttributeConverter<Country, String> {
 
 	@Override
-	public String convertObjectValueToDataValue(Object objectValue, Session session) {
+	public String convertToDatabaseColumn(Country objectValue){
 		if (objectValue == null) {
 			return "";
 		}
 		Country c = (Country) objectValue;
 		return c.name();
 	}
-
+	
 	@Override
-	public Country convertDataValueToObjectValue(Object dataValue, Session session) {
+	public Country convertToEntityAttribute(String dataValue){
 		try {
 			return Country.valueOf((String) dataValue);
 		} catch (IllegalArgumentException | NullPointerException e) {
 			return Country.NDF;
-		} 
+		}
 	}
-
-	@Override
-	public boolean isMutable() {
-		return false;
-	}
-
-	@Override
-	public void initialize(DatabaseMapping mapping, Session session) {
-	}
-
 }

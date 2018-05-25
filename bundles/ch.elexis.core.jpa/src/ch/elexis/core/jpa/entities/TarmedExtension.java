@@ -5,13 +5,14 @@ import java.util.Map;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
-import org.eclipse.persistence.annotations.Convert;
+import ch.elexis.core.jpa.entities.converter.ElexisExtInfoMapConverter;
 
 @Entity
 @Table(name = "TARMED_EXTENSION")
@@ -22,7 +23,7 @@ public class TarmedExtension {
 	private String code;
 
 	@Basic(fetch = FetchType.LAZY)
-	@Convert(value = "ElexisExtInfoMapConverter")
+	@Convert(converter = ElexisExtInfoMapConverter.class)
 	private Map<String, String> limits = new Hashtable<String, String>();
 
 	@Lob

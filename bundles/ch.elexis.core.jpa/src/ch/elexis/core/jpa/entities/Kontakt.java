@@ -23,6 +23,7 @@ import java.util.Map;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
@@ -34,11 +35,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.eclipse.persistence.annotations.Cache;
-import org.eclipse.persistence.annotations.CacheType;
-import org.eclipse.persistence.annotations.Convert;
-import org.eclipse.persistence.annotations.Converter;
-
+import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
+import ch.elexis.core.jpa.entities.converter.ElexisDBCompressedStringConverter;
 import ch.elexis.core.jpa.entities.converter.FuzzyCountryToEnumConverter;
 import ch.elexis.core.jpa.entities.converter.FuzzyGenderToEnumConverter;
 import ch.elexis.core.jpa.entities.listener.KontaktEntityListener;
@@ -58,7 +56,6 @@ import ch.rgw.tools.TimeTool;
 @Entity
 @Table(name = "KONTAKT")
 @XmlRootElement(name = "contact")
-@Cache(type = CacheType.NONE)
 @EntityListeners(KontaktEntityListener.class)
 public class Kontakt extends AbstractDBObjectIdDeletedExtInfo implements Serializable, IPatient {
 	protected static final long serialVersionUID = 1L;
@@ -91,7 +88,7 @@ public class Kontakt extends AbstractDBObjectIdDeletedExtInfo implements Seriali
 	protected String description3;
 
 	@Basic(fetch = FetchType.LAZY)
-	@Convert(value = "ElexisDBCompressedStringConverter")
+	@Convert(converter = ElexisDBCompressedStringConverter.class)
 	@Column(columnDefinition = "BLOB")
 	protected String diagnosen;
 
@@ -99,12 +96,12 @@ public class Kontakt extends AbstractDBObjectIdDeletedExtInfo implements Seriali
 	protected String email;
 
 	// @Basic(fetch = FetchType.LAZY)
-	@Convert(value = "ElexisDBCompressedStringConverter")
+	@Convert(converter = ElexisDBCompressedStringConverter.class)
 	@Column(name = "famAnamnese", columnDefinition = "BLOB")
 	protected String familyAnamnese;
 
 	// @Basic(fetch = FetchType.LAZY)
-	@Convert(value = "ElexisDBCompressedStringConverter")
+	@Convert(converter = ElexisDBCompressedStringConverter.class)
 	@Column(name = "persAnamnese", columnDefinition = "BLOB")
 	protected String personalAnamnese;
 
@@ -114,41 +111,39 @@ public class Kontakt extends AbstractDBObjectIdDeletedExtInfo implements Seriali
 	@Column(name = "geburtsdatum", length = 8)
 	protected LocalDate dob;
 
-	@Converter(name = "FuzzyGenderToEnumConverter", converterClass = FuzzyGenderToEnumConverter.class)
-	@Convert("FuzzyGenderToEnumConverter")
+	@Convert(converter = FuzzyGenderToEnumConverter.class)
 	@Column(name = "geschlecht")
 	protected Gender gender;
 
 	@Column(length = 10)
 	protected String gruppe;
 
-	@Convert("booleanStringConverter")
+	@Convert(converter = BooleanCharacterConverterSafe.class)
 	@Column(name = "istPerson")
 	protected boolean person;
 
-	@Convert("booleanStringConverter")
+	@Convert(converter = BooleanCharacterConverterSafe.class)
 	@Column(name = "istPatient")
 	protected boolean patient;
 
-	@Convert("booleanStringConverter")
+	@Convert(converter = BooleanCharacterConverterSafe.class)
 	@Column(name = "istAnwender")
 	protected boolean user;
 
-	@Convert("booleanStringConverter")
+	@Convert(converter = BooleanCharacterConverterSafe.class)
 	@Column(name = "istMandant")
 	protected boolean mandator;
 
-	@Convert("booleanStringConverter")
+	@Convert(converter = BooleanCharacterConverterSafe.class)
 	@Column(name = "istOrganisation")
 	protected boolean organisation;
 
-	@Convert("booleanStringConverter")
+	@Convert(converter = BooleanCharacterConverterSafe.class)
 	@Column(name = "istLabor")
 	protected boolean laboratory;
 
 	@Column(length = 3, name = "land")
-	@Converter(name = "FuzzyCountryToEnumConverter", converterClass = FuzzyCountryToEnumConverter.class)
-	@Convert(value = "FuzzyCountryToEnumConverter")
+	@Convert(converter = FuzzyCountryToEnumConverter.class)
 	protected Country country;
 
 	@Column(length = 30, name = "natelNr")

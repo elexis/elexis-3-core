@@ -2,16 +2,12 @@ package ch.elexis.core.jpa.entities;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
-import org.eclipse.persistence.annotations.Convert;
 
 import ch.elexis.core.model.prescription.EntryType;
 
@@ -22,10 +18,8 @@ public class Prescription extends AbstractDBObjectIdDeletedExtInfo {
 	@Column(length = 3)
 	private String anzahl;
 
-	@Basic(fetch = FetchType.LAZY)
-	@Column
-	@Convert(value = "ElexisDBStoreToStringConverter")
-	private AbstractDBObjectIdDeleted artikel;
+	@Column(length = 255)
+	private String artikel;
 
 	@Column(length = 255)
 	private String bemerkung;
@@ -88,11 +82,11 @@ public class Prescription extends AbstractDBObjectIdDeletedExtInfo {
 		this.anzahl = anzahl;
 	}
 
-	public AbstractDBObjectIdDeleted getArtikel() {
+	public String getArtikel(){
 		return artikel;
 	}
 
-	public void setArtikel(AbstractDBObjectIdDeleted artikel) {
+	public void setArtikel(String artikel){
 		this.artikel = artikel;
 	}
 
@@ -154,6 +148,6 @@ public class Prescription extends AbstractDBObjectIdDeletedExtInfo {
 
 	@Override
 	public String getLabel() {
-		return (getArtikel() != null ? getArtikel().getLabel() : "FEHLER") + " " + getDosis();
+		return (getArtikel() != null ? getArtikel() : "FEHLER") + " " + getDosis();
 	}
 }

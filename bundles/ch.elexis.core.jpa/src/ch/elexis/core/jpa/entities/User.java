@@ -5,6 +5,7 @@ import java.util.HashSet;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -15,7 +16,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.eclipse.persistence.annotations.Convert;
+import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 
 @Entity
 @Table(name = "USER_")
@@ -32,15 +33,15 @@ public class User extends AbstractDBObjectIdDeletedExtInfo {
 	@Column(length = 64)
 	protected String salt;
 
-	@Convert("booleanStringConverter")
+	@Convert(converter = BooleanCharacterConverterSafe.class)
 	@Column(name = "is_active")
 	protected boolean active;
 
-	@Convert("booleanStringConverter")
+	@Convert(converter = BooleanCharacterConverterSafe.class)
 	@Column(name = "is_administrator")
 	protected boolean administrator;
 
-	@Convert("booleanStringConverter")
+	@Convert(converter = BooleanCharacterConverterSafe.class)
 	@Column(name = "allow_external")
 	protected boolean allowExternal;
 	

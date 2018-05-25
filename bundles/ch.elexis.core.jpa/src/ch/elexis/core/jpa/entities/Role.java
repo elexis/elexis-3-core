@@ -3,19 +3,20 @@ package ch.elexis.core.jpa.entities;
 import java.util.Collection;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.persistence.JoinColumn;
 
-import org.eclipse.persistence.annotations.Convert;
+import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 
 @Entity
 @Table(name = "ROLE")
 public class Role extends AbstractDBObjectIdDeletedExtInfo {
 
-	@Convert("booleanStringConverter")
+	@Convert(converter = BooleanCharacterConverterSafe.class)
 	@Column(name = "ISSYSTEMROLE")
 	protected boolean systemRole;
 

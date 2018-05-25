@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -13,8 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.eclipse.persistence.annotations.Convert;
-
+import ch.elexis.core.jpa.entities.converter.VersionedResourceConverter;
 import ch.rgw.tools.VersionedResource;
 
 @Entity
@@ -47,7 +47,7 @@ public class Behandlung extends AbstractDBObjectIdDeleted {
 	private String leistungenId;
 
 	@Basic(fetch = FetchType.LAZY)
-	@Convert(value = "VersionedResourceConverter")
+	@Convert(converter = VersionedResourceConverter.class)
 	private VersionedResource eintrag;
 
 	public Fall getFall() {

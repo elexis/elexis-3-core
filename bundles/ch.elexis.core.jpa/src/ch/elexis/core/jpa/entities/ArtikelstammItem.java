@@ -1,12 +1,14 @@
 package ch.elexis.core.jpa.entities;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.eclipse.persistence.annotations.Convert;
+import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
+import ch.elexis.core.jpa.entities.converter.IntegerStringConverter;
 
 @Entity
 @Table(name = "artikelstamm_ch")
@@ -53,16 +55,16 @@ public class ArtikelstammItem extends AbstractDBObjectIdDeletedExtInfo {
 	@Column(length = 10)
 	private String ppub;
 
-	@Convert(value = "IntegerStringConverter")
+	@Convert(converter = IntegerStringConverter.class)
 	private int pkg_size = 0;
 
-	@Convert(value = "booleanStringConverter")
+	@Convert(converter = BooleanCharacterConverterSafe.class)
 	private boolean sl_entry;
 
 	@Column(length = 1)
 	private String ikscat;
 
-	@Convert(value = "booleanStringConverter")
+	@Convert(converter = BooleanCharacterConverterSafe.class)
 	private boolean limitation = false;
 
 	// spell error in creating table :(
@@ -76,16 +78,16 @@ public class ArtikelstammItem extends AbstractDBObjectIdDeletedExtInfo {
 	@Column(length = 1)
 	private String generic_type;
 
-	@Convert(value = "booleanStringConverter")
+	@Convert(converter = BooleanCharacterConverterSafe.class)
 	private boolean has_generic;
 
-	@Convert(value = "booleanStringConverter")
+	@Convert(converter = BooleanCharacterConverterSafe.class)
 	private boolean lppv;
 
 	@Column(length = 6)
 	private String deductible;
 
-	@Convert(value = "booleanStringConverter")
+	@Convert(converter = BooleanCharacterConverterSafe.class)
 	private boolean narcotic;
 
 	@Column(length = 20)
@@ -94,7 +96,7 @@ public class ArtikelstammItem extends AbstractDBObjectIdDeletedExtInfo {
 	@Column(length = 1)
 	private String vaccine;
 
-	@Convert(value = "IntegerStringConverter")
+	@Convert(converter = IntegerStringConverter.class)
 	private int verkaufseinheit;
 
 	@Column(length = 10)
@@ -313,69 +315,4 @@ public class ArtikelstammItem extends AbstractDBObjectIdDeletedExtInfo {
 	public String getLabel() {
 		return (getAdddscr() != null && getAdddscr().length() > 0) ? getDscr() + " (" + getAdddscr() + ")" : getDscr();
 	}
-
-	//	@Transient
-	//	@Override
-	//	public int getPackageUnit() {
-	//		return getPkg_size();
-	//	}
-	//
-	//	@Transient
-	//	@Override
-	//	public int getSellingUnit() {
-	//		return getVerkaufseinheit();
-	//	}
-	//
-	//	@Transient
-	//	@Override
-	//	public boolean isProduct() {
-	//		return (TYPE.X == getTYPE());
-	//	}
-	//
-	//	@Transient
-	//	@Override
-	//	public String getName() {
-	//		return getDscr();
-	//	}
-	//
-	//	@Transient
-	//	public TYPE getTYPE() {
-	//		try {
-	//			String string = getType();
-	//			if (string != null && string.length() > 0) {
-	//				return Enum.valueOf(TYPE.class, Character.toString(string.charAt(0)).toUpperCase());
-	//			}
-	//			return TYPE.N;
-	//		} catch (IllegalArgumentException iae) {
-	//			return null;
-	//		}
-	//	}
-	//
-	//	@Override
-	//	public String getCodeSystemName() {
-	//		return CODESYSTEM_NAME;
-	//	}
-	//
-	//	@Override
-	//	public String getCode() {
-	//		return getPhar();
-	//	}
-	//
-	//	@Override
-	//	public String getText() {
-	//		return getLabel();
-	//	}
-	//
-	//	@Override
-	//	public String getCodeSystemCode() {
-	//		String gtin = getGTIN();
-	//		if (gtin != null && gtin.length() > 3) {
-	//			if (getTYPE() == TYPE.P) {
-	//				return "402";
-	//			} else if (getTYPE() == TYPE.N) {
-	//				return "406";
-	//			}
-	//		}
-	//		return ICodeElement.super.getCodeSystemCode();
-	//	}
 }

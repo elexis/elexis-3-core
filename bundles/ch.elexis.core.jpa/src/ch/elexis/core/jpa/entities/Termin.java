@@ -4,12 +4,13 @@ import java.time.LocalDate;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
-import org.eclipse.persistence.annotations.Convert;
+import ch.elexis.core.jpa.entities.converter.IntegerStringConverter;
 
 @Entity
 @Table(name = "AGNTERMINE")
@@ -66,16 +67,16 @@ public class Termin extends AbstractDBObjectIdDeleted {
 	@Lob()
 	private String statusHistory;
 
-	@Convert(value = "IntegerStringConverter")
+	@Convert(converter = IntegerStringConverter.class)
 	private int priority = 0;
 
-	@Convert(value = "IntegerStringConverter")
+	@Convert(converter = IntegerStringConverter.class)
 	private int caseType = 0;
 
-	@Convert(value = "IntegerStringConverter")
+	@Convert(converter = IntegerStringConverter.class)
 	private int insuranceType = 0;
 
-	@Convert(value = "IntegerStringConverter")
+	@Convert(converter = IntegerStringConverter.class)
 	private int treatmentReason = 0;
 
 	public String getPatId() {

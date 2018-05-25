@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -14,7 +15,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
-import org.eclipse.persistence.annotations.Convert;
+import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 
 @Entity
 @Table(name = "BRIEFE")
@@ -67,7 +68,7 @@ public class Brief extends AbstractDBObjectIdDeleted {
 	protected String note;
 
 	@Column
-	@Convert("booleanStringConverter")
+	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean geloescht = false;
 
 	public Brief() {

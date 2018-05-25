@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
@@ -11,8 +12,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.eclipse.persistence.annotations.Convert;
-
+import ch.elexis.core.jpa.entities.converter.IntegerStringConverter;
+import ch.elexis.core.jpa.entities.converter.PathologicDescriptionConverter;
 import ch.elexis.core.types.PathologicDescription;
 import ch.elexis.core.types.PathologicDescription.Description;
 
@@ -37,7 +38,7 @@ public class LabResult extends AbstractDBObjectIdDeletedExtInfo {
 	@Column(length = 255, name = "resultat")
 	private String result;
 
-	@Convert(value = "IntegerStringConverter")
+	@Convert(converter = IntegerStringConverter.class)
 	private int flags;
 	
 	@Lob
@@ -67,6 +68,7 @@ public class LabResult extends AbstractDBObjectIdDeletedExtInfo {
 	private Kontakt origin;
 
 	@Column(length = 128, name = "pathoDesc")
+	@Convert(converter = PathologicDescriptionConverter.class)
 	private PathologicDescription pathologicDescription = new PathologicDescription(Description.UNKNOWN);
 
 	@Transient

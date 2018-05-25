@@ -1,0 +1,1843 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="thomas (generated)" id="1527175239251-1">
+        <createTable tableName="AGNTERMINE">
+            <column name="ID" type="VARCHAR(127)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_A22"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column name="PATID" type="VARCHAR(80)"/>
+            <column name="BEREICH" type="VARCHAR(25)"/>
+            <column name="TAG" type="CHAR(8)"/>
+            <column name="BEGINN" type="CHAR(4)"/>
+            <column name="DAUER" type="CHAR(4)"/>
+            <column name="GRUND" type="VARCHAR(2147483647)"/>
+            <column name="TERMINTYP" type="VARCHAR(50)"/>
+            <column name="TERMINSTATUS" type="VARCHAR(50)"/>
+            <column name="ERSTELLTVON" type="VARCHAR(25)"/>
+            <column name="ANGELEGT" type="VARCHAR(10)"/>
+            <column name="LASTEDIT" type="VARCHAR(10)"/>
+            <column defaultValueNumeric="0" name="PALMID" type="INT"/>
+            <column name="FLAGS" type="VARCHAR(10)"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(2)"/>
+            <column name="EXTENSION" type="VARCHAR(2147483647)"/>
+            <column name="LINKGROUP" type="VARCHAR(50)"/>
+            <column name="STATUSHISTORY" type="VARCHAR(2147483647)"/>
+            <column name="PRIORITY" type="CHAR(1)"/>
+            <column name="CASETYPE" type="CHAR(1)"/>
+            <column name="INSURANCETYPE" type="CHAR(1)"/>
+            <column name="TREATMENTREASON" type="CHAR(1)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-2">
+        <createTable tableName="ARTIKEL">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_F"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="EAN" type="VARCHAR(15)"/>
+            <column name="SUBID" type="VARCHAR(20)"/>
+            <column name="LIEFERANTID" type="VARCHAR(25)"/>
+            <column name="KLASSE" type="VARCHAR(80)"/>
+            <column name="NAME" type="VARCHAR(254)"/>
+            <column name="NAME_INTERN" type="VARCHAR(254)"/>
+            <column name="MAXBESTAND" type="CHAR(4)"/>
+            <column name="MINBESTAND" type="CHAR(4)"/>
+            <column name="ISTBESTAND" type="CHAR(4)"/>
+            <column name="EK_PREIS" type="CHAR(8)"/>
+            <column name="VK_PREIS" type="CHAR(8)"/>
+            <column name="TYP" type="VARCHAR(15)"/>
+            <column name="CODECLASS" type="VARCHAR(10)"/>
+            <column name="EXTID" type="VARCHAR(25)"/>
+            <column name="LASTIMPORT" type="CHAR(8)"/>
+            <column name="VALIDFROM" type="CHAR(8)"/>
+            <column name="VALIDTO" type="CHAR(8)"/>
+            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+            <column name="ATC_CODE" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-3">
+        <createTable tableName="ARTIKELSTAMM_CH">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_96"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="TYPE" type="CHAR(1)"/>
+            <column name="BB" type="CHAR(1)"/>
+            <column name="CUMM_VERSION" type="CHAR(4)"/>
+            <column name="GTIN" type="VARCHAR(14)"/>
+            <column name="PHAR" type="CHAR(7)"/>
+            <column name="DSCR" type="VARCHAR(100)"/>
+            <column name="ADDDSCR" type="VARCHAR(50)"/>
+            <column name="ATC" type="CHAR(10)"/>
+            <column name="COMP_GLN" type="CHAR(13)"/>
+            <column name="COMP_NAME" type="VARCHAR(255)"/>
+            <column name="PEXF" type="CHAR(10)"/>
+            <column name="PPUB" type="CHAR(10)"/>
+            <column name="PKG_SIZE" type="CHAR(6)"/>
+            <column name="SL_ENTRY" type="CHAR(1)"/>
+            <column name="IKSCAT" type="CHAR(1)"/>
+            <column name="LIMITATION" type="CHAR(1)"/>
+            <column name="LIMITIATION_PTS" type="CHAR(4)"/>
+            <column name="LIMITATION_TXT" type="VARCHAR(2147483647)"/>
+            <column name="GENERIC_TYPE" type="CHAR(1)"/>
+            <column name="HAS_GENERIC" type="CHAR(1)"/>
+            <column name="LPPV" type="CHAR(1)"/>
+            <column name="DEDUCTIBLE" type="CHAR(6)"/>
+            <column name="NARCOTIC" type="CHAR(1)"/>
+            <column name="NARCOTIC_CAS" type="VARCHAR(20)"/>
+            <column name="VACCINE" type="CHAR(1)"/>
+            <column name="VERKAUFSEINHEIT" type="VARCHAR(4)"/>
+            <column name="PRODNO" type="VARCHAR(10)"/>
+            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+            <column name="MAXBESTAND" type="CHAR(4)"/>
+            <column name="MINBESTAND" type="CHAR(4)"/>
+            <column name="ISTBESTAND" type="CHAR(4)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-4">
+        <createTable tableName="ARTIKEL_DETAILS">
+            <column name="ARTICLE_ID" type="VARCHAR(25)"/>
+            <column name="NOTES" type="VARCHAR(2147483647)"/>
+            <column name="IMAGE" type="VARBINARY(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-5">
+        <createTable tableName="AT_MEDEVIT_ELEXIS_LOINC">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_3E"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="CODE" type="VARCHAR(128)"/>
+            <column name="LONGNAME" type="VARCHAR(2147483647)"/>
+            <column name="SHORTNAME" type="VARCHAR(255)"/>
+            <column name="CLASS" type="VARCHAR(128)"/>
+            <column name="UNIT" type="VARCHAR(128)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-6">
+        <createTable tableName="AUF">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_FE"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="PATIENTID" type="VARCHAR(25)"/>
+            <column name="FALLID" type="VARCHAR(25)"/>
+            <column name="BRIEFID" type="VARCHAR(25)"/>
+            <column name="PROZENT" type="CHAR(3)"/>
+            <column name="DATUMAUZ" type="CHAR(8)"/>
+            <column name="DATUMVON" type="CHAR(8)"/>
+            <column name="DATUMBIS" type="CHAR(8)"/>
+            <column name="GRUND" type="VARCHAR(50)"/>
+            <column name="AUFZUSATZ" type="VARCHAR(254)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-7">
+        <createTable tableName="BBS">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_10"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="REFERENCE" type="VARCHAR(25)"/>
+            <column name="TOPIC" type="VARCHAR(80)"/>
+            <column name="DATE" type="CHAR(8)"/>
+            <column name="TIME" type="CHAR(4)"/>
+            <column name="AUTHORID" type="VARCHAR(25)"/>
+            <column name="MESSAGE" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-8">
+        <createTable tableName="BEHANDLUNGEN">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_B"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="FALLID" type="VARCHAR(25)"/>
+            <column name="MANDANTID" type="VARCHAR(25)"/>
+            <column name="RECHNUNGSID" type="VARCHAR(25)"/>
+            <column name="DATUM" type="CHAR(8)"/>
+            <column name="DIAGNOSEN" type="VARCHAR(25)"/>
+            <column name="LEISTUNGEN" type="VARCHAR(25)"/>
+            <column name="EINTRAG" type="VARBINARY(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-9">
+        <createTable tableName="BEHDL_DG_JOINT">
+            <column name="ID" type="VARCHAR(25)"/>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="BEHANDLUNGSID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_B0"/>
+            </column>
+            <column name="DIAGNOSEID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_B0"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-10">
+        <createTable tableName="BESTELLUNGEN">
+            <column name="ID" type="VARCHAR(80)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_3"/>
+            </column>
+            <column defaultValueComputed="NULL" name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="DATUM" type="CHAR(8)"/>
+            <column name="CONTENTS" type="VARBINARY(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-11">
+        <createTable tableName="BESTELLUNG_ENTRY">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_DD"/>
+            </column>
+            <column defaultValueComputed="NULL" name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="BESTELLUNG" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STOCK" type="VARCHAR(25)"/>
+            <column name="ARTICLE_TYPE" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ARTICLE_ID" type="VARCHAR(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="COUNT" type="INT"/>
+            <column name="PROVIDER" type="VARCHAR(25)"/>
+            <column defaultValueNumeric="0" name="STATE" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-12">
+        <createTable tableName="BRIEFE">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_75"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="BETREFF" type="VARCHAR(255)"/>
+            <column name="DATUM" type="CHAR(24)"/>
+            <column name="MODIFIZIERT" type="CHAR(24)"/>
+            <column name="GEDRUCKT" type="CHAR(8)"/>
+            <column name="GELOESCHT" type="CHAR(2)"/>
+            <column name="ABSENDERID" type="VARCHAR(25)"/>
+            <column name="DESTID" type="VARCHAR(25)"/>
+            <column name="BEHANDLUNGSID" type="VARCHAR(25)"/>
+            <column name="PATIENTID" type="VARCHAR(25)"/>
+            <column name="TYP" type="VARCHAR(30)"/>
+            <column name="MIMETYPE" type="VARCHAR(80)"/>
+            <column name="PATH" type="VARCHAR(2147483647)"/>
+            <column name="NOTE" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-13">
+        <createTable tableName="CH_BERCHTOLD_PRIVATRECHNUNG">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_4B"/>
+            </column>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column name="PARENT" type="VARCHAR(80)"/>
+            <column name="NAME" type="VARCHAR(499)"/>
+            <column name="SHORT" type="VARCHAR(80)"/>
+            <column name="COST" type="CHAR(8)"/>
+            <column name="PRICE" type="CHAR(8)"/>
+            <column name="TIME" type="CHAR(4)"/>
+            <column name="SUBSYSTEM" type="VARCHAR(25)"/>
+            <column name="VALID_FROM" type="CHAR(8)"/>
+            <column name="VALID_UNTIL" type="CHAR(8)"/>
+            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-14">
+        <createTable tableName="CH_ELEXIS_AGENDA_DAYMSG">
+            <column name="ID" type="VARCHAR(8)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_83"/>
+            </column>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="KURZ" type="VARCHAR(80)"/>
+            <column name="MSG" type="VARCHAR(2147483647)"/>
+            <column defaultValueNumeric="0" name="LASTUPDATE" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-15">
+        <createTable tableName="CH_ELEXIS_ARZTTARIFE_CH_COMPLEMENTARY">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_2E"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="CHAPTER" type="VARCHAR(255)"/>
+            <column name="CODE" type="VARCHAR(16)"/>
+            <column name="CODETEXT" type="VARCHAR(255)"/>
+            <column name="DESCRIPTION" type="VARCHAR(2147483647)"/>
+            <column name="FIXEDVALUE" type="VARCHAR(16)"/>
+            <column name="VALIDFROM" type="CHAR(8)"/>
+            <column name="VALIDTO" type="CHAR(8)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-16">
+        <createTable tableName="CH_ELEXIS_ARZTTARIFE_CH_PHYSIO">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_67"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="VALIDFROM" type="CHAR(8)"/>
+            <column name="VALIDUNTIL" type="CHAR(8)"/>
+            <column name="TP" type="CHAR(8)"/>
+            <column name="ZIFFER" type="VARCHAR(6)"/>
+            <column name="TITEL" type="VARCHAR(255)"/>
+            <column name="DESCRIPTION" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-17">
+        <createTable tableName="CH_ELEXIS_CORE_FINDINGS_OBSERVATION">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_77"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="TYPE" type="CHAR(8)"/>
+            <column defaultValue="0" name="REFERENCED" type="CHAR(1)"/>
+            <column name="PATIENTID" type="VARCHAR(80)"/>
+            <column name="ENCOUNTERID" type="VARCHAR(80)"/>
+            <column name="PERFORMERID" type="VARCHAR(80)"/>
+            <column name="ORIGINURI" type="VARCHAR(255)"/>
+            <column name="DECIMALPLACE" type="VARCHAR(8)"/>
+            <column name="FORMAT" type="VARCHAR(2147483647)"/>
+            <column name="SCRIPT" type="VARCHAR(2147483647)"/>
+            <column name="CONTENT" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-18">
+        <createTable tableName="CH_ELEXIS_EIGENDIAGNOSEN">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_E75"/>
+            </column>
+            <column name="LASTUPDARE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="PARENT" type="VARCHAR(20)"/>
+            <column name="CODE" type="VARCHAR(20)"/>
+            <column name="TITLE" type="VARCHAR(80)"/>
+            <column name="COMMENT" type="VARCHAR(2147483647)"/>
+            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-19">
+        <createTable tableName="CH_ELEXIS_ICPC">
+            <column name="ID" type="CHAR(3)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_8C"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="COMPONENT" type="CHAR(2)"/>
+            <column name="SHORT" type="VARCHAR(80)"/>
+            <column name="SYNONYMS" type="VARCHAR(250)"/>
+            <column name="ICD10" type="VARCHAR(2147483647)"/>
+            <column name="TXT" type="VARCHAR(2147483647)"/>
+            <column name="CRITERIA" type="VARCHAR(2147483647)"/>
+            <column name="INCLUSION" type="VARCHAR(2147483647)"/>
+            <column name="EXCLUSION" type="VARCHAR(2147483647)"/>
+            <column name="CONSIDER" type="VARCHAR(2147483647)"/>
+            <column name="NOTE" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-20">
+        <createTable tableName="CH_ELEXIS_ICPC_ENCOUNTER">
+            <column name="ID" type="VARCHAR(25)"/>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="KONS" type="VARCHAR(25)"/>
+            <column name="EPISODE" type="VARCHAR(25)"/>
+            <column name="RFE" type="CHAR(4)"/>
+            <column name="DIAG" type="CHAR(4)"/>
+            <column name="PROC" type="CHAR(4)"/>
+            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-21">
+        <createTable tableName="CH_ELEXIS_ICPC_EPISODES">
+            <column name="ID" type="VARCHAR(25)"/>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="PATIENTID" type="VARCHAR(25)"/>
+            <column name="TITLE" type="VARCHAR(256)"/>
+            <column name="STARTDATE" type="VARCHAR(20)"/>
+            <column name="NUMBER" type="VARCHAR(10)"/>
+            <column defaultValue="1" name="STATUS" type="CHAR(1)"/>
+            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-22">
+        <createTable tableName="CH_ELEXIS_ICPC_EPISODES_DIAGNOSES_LINK">
+            <column name="ID" type="VARCHAR(25)"/>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="EPISODE" type="VARCHAR(25)"/>
+            <column name="DIAGNOSIS" type="VARCHAR(80)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-23">
+        <createTable tableName="CH_ELEXIS_IMPFPLAN_VACCINATION_TYPES">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_5"/>
+            </column>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column name="NAME" type="VARCHAR(80)"/>
+            <column name="PRODUCT" type="VARCHAR(80)"/>
+            <column name="DELAY_1TO2" type="VARCHAR(10)"/>
+            <column name="DELAY_2TO3" type="VARCHAR(10)"/>
+            <column name="DELAY_3TO4" type="VARCHAR(10)"/>
+            <column name="DELAY_4TO5" type="VARCHAR(10)"/>
+            <column name="DELAY_REP" type="VARCHAR(10)"/>
+            <column name="RECOMMENDEDAGE" type="VARCHAR(10)"/>
+            <column name="REMARKS" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-24">
+        <createTable tableName="CH_ELEXIS_MESSAGES">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_C"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="ORIGIN" type="VARCHAR(25)"/>
+            <column name="DESTINATION" type="VARCHAR(25)"/>
+            <column name="DATETIME" type="CHAR(14)"/>
+            <column name="MSG" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-25">
+        <createTable tableName="CH_ELEXIS_NOTES">
+            <column name="ID" type="VARCHAR(25)"/>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="PARENT" type="VARCHAR(25)"/>
+            <column name="TITLE" type="VARCHAR(80)"/>
+            <column name="DATE" type="CHAR(8)"/>
+            <column name="CONTENTS" type="VARBINARY(2147483647)"/>
+            <column name="KEYWORDS" type="VARCHAR(255)"/>
+            <column name="MIMETYPE" type="VARCHAR(80)"/>
+            <column name="REFS" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-26">
+        <createTable tableName="CH_ELEXIS_OMNIVORE_DATA">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_A2"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="PATID" type="VARCHAR(25)"/>
+            <column name="DATUM" type="CHAR(8)"/>
+            <column name="CATEGORY" type="VARCHAR(80)"/>
+            <column name="TITLE" type="VARCHAR(255)"/>
+            <column name="MIMETYPE" type="VARCHAR(255)"/>
+            <column name="KEYWORDS" type="VARCHAR(255)"/>
+            <column name="PATH" type="VARCHAR(255)"/>
+            <column name="DOC" type="VARBINARY(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-27">
+        <createTable tableName="CH_ELEXIS_PRIVATRECHNUNG">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_40F"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="PARENT" type="VARCHAR(80)"/>
+            <column name="NAME" type="VARCHAR(499)"/>
+            <column name="SHORT" type="VARCHAR(80)"/>
+            <column name="COST" type="CHAR(8)"/>
+            <column name="PRICE" type="CHAR(8)"/>
+            <column name="TIME" type="CHAR(4)"/>
+            <column name="SUBSYSTEM" type="VARCHAR(25)"/>
+            <column name="VALID_FROM" type="CHAR(8)"/>
+            <column name="VALID_UNTIL" type="CHAR(8)"/>
+            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-28">
+        <createTable tableName="CH_MEDELEXIS_LABORTARIF2009">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_40"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="CHAPTER" type="VARCHAR(255)"/>
+            <column name="CODE" type="VARCHAR(12)"/>
+            <column name="TP" type="VARCHAR(10)"/>
+            <column name="NAME" type="VARCHAR(255)"/>
+            <column name="LIMITATIO" type="VARCHAR(2147483647)"/>
+            <column name="FACHBEREICH" type="VARCHAR(10)"/>
+            <column name="PRAXISTYP" type="VARCHAR(2)"/>
+            <column name="GUELTIGVON" type="CHAR(8)"/>
+            <column name="GUELTIGBIS" type="CHAR(8)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-29">
+        <createTable tableName="CONFIG">
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column name="PARAM" type="VARCHAR(80)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_76"/>
+            </column>
+            <column name="WERT" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-30">
+        <createTable tableName="DBIMAGE">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_81"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="DATUM" type="CHAR(8)"/>
+            <column name="PREFIX" type="VARCHAR(80)"/>
+            <column name="TITLE" type="VARCHAR(80)"/>
+            <column name="BILD" type="VARBINARY(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-31">
+        <createTable tableName="DIAGNOSEN">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_E"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="DG_TXT" type="VARCHAR(255)"/>
+            <column name="DG_CODE" type="VARCHAR(25)"/>
+            <column name="KLASSE" type="VARCHAR(80)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-32">
+        <createTable tableName="EIGENLEISTUNGEN">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_D8"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="CODE" type="VARCHAR(20)"/>
+            <column name="BEZEICHNUNG" type="VARCHAR(80)"/>
+            <column name="EK_PREIS" type="CHAR(6)"/>
+            <column name="VK_PREIS" type="CHAR(6)"/>
+            <column name="ZEIT" type="CHAR(4)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-33">
+        <createTable tableName="EK_PREISE">
+            <column name="TYP" type="VARCHAR(80)"/>
+            <column name="ID" type="VARCHAR(25)"/>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column name="DATUM_VON" type="CHAR(8)"/>
+            <column name="DATUM_BIS" type="CHAR(8)"/>
+            <column name="MULTIPLIKATOR" type="VARCHAR(8)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-34">
+        <createTable tableName="ELEXISBEFUNDE">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_BF"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="PATIENTID" type="VARCHAR(25)"/>
+            <column name="NAME" type="VARCHAR(80)"/>
+            <column name="DATUM" type="CHAR(8)"/>
+            <column name="BEFUNDE" type="VARBINARY(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-35">
+        <createTable tableName="ETIKETTEN">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_A5"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column name="IMAGE" type="VARCHAR(25)"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="IMPORTANCE" type="VARCHAR(7)"/>
+            <column name="NAME" type="VARCHAR(40)"/>
+            <column name="FOREGROUND" type="CHAR(6)"/>
+            <column name="BACKGROUND" type="CHAR(6)"/>
+            <column name="CLASSES" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-36">
+        <createTable tableName="ETIKETTEN_OBJCLASS_LINK">
+            <column name="OBJCLASS" type="VARCHAR(80)"/>
+            <column name="STICKER" type="VARCHAR(25)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-37">
+        <createTable tableName="ETIKETTEN_OBJECT_LINK">
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column name="OBJ" type="VARCHAR(25)"/>
+            <column name="ETIKETTE" type="VARCHAR(25)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-38">
+        <createTable tableName="FAELLE">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_7"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="PATIENTID" type="VARCHAR(25)"/>
+            <column name="GARANTID" type="VARCHAR(25)"/>
+            <column name="KOSTENTRID" type="VARCHAR(25)"/>
+            <column name="VERSNUMMER" type="VARCHAR(25)"/>
+            <column name="FALLNUMMER" type="VARCHAR(25)"/>
+            <column name="BETRIEBSNUMMER" type="VARCHAR(25)"/>
+            <column name="DIAGNOSEN" type="VARCHAR(80)"/>
+            <column name="DATUMVON" type="CHAR(8)"/>
+            <column name="DATUMBIS" type="CHAR(8)"/>
+            <column name="BEZEICHNUNG" type="VARCHAR(80)"/>
+            <column name="GRUND" type="VARCHAR(80)"/>
+            <column name="GESETZ" type="VARCHAR(20)"/>
+            <column name="STATUS" type="VARCHAR(80)"/>
+            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-39">
+        <createTable tableName="HEAP">
+            <column name="ID" type="VARCHAR(80)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_2"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="INHALT" type="VARBINARY(2147483647)"/>
+            <column name="DATUM" type="CHAR(8)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-40">
+        <createTable tableName="HEAP2">
+            <column name="ID" type="VARCHAR(80)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_41"/>
+            </column>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="DATUM" type="CHAR(8)"/>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column name="CONTENTS" type="VARBINARY(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-41">
+        <createTable tableName="IATRIX_PROBLEM_BEHDL_JOINT">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_80"/>
+            </column>
+            <column name="PROBLEMID" type="VARCHAR(25)"/>
+            <column name="BEHANDLUNGSID" type="VARCHAR(25)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-42">
+        <createTable tableName="IATRIX_PROBLEM_DAUERMEDIKATION_JOINT">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_2C"/>
+            </column>
+            <column name="PROBLEMID" type="VARCHAR(25)"/>
+            <column name="DAUERMEDIKATIONID" type="VARCHAR(25)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-43">
+        <createTable tableName="IATRIX_PROBLEM_DG_JOINT">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_15D"/>
+            </column>
+            <column name="PROBLEMID" type="VARCHAR(25)"/>
+            <column name="DIAGNOSEID" type="VARCHAR(25)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-44">
+        <createTable tableName="ICD10">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_42"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="PARENT" type="VARCHAR(25)"/>
+            <column name="ICDCODE" type="VARCHAR(10)"/>
+            <column name="ENCODED" type="VARCHAR(2147483647)"/>
+            <column name="ICDTXT" type="VARCHAR(2147483647)"/>
+            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-45">
+        <createTable tableName="KONTAKT">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_A"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column defaultValue="0" name="ISTORGANISATION" type="CHAR(1)"/>
+            <column defaultValue="0" name="ISTPERSON" type="CHAR(1)"/>
+            <column defaultValue="0" name="ISTPATIENT" type="CHAR(1)"/>
+            <column defaultValue="0" name="ISTANWENDER" type="CHAR(1)"/>
+            <column defaultValue="0" name="ISTMANDANT" type="CHAR(1)"/>
+            <column defaultValue="0" name="ISTLABOR" type="CHAR(1)"/>
+            <column name="LAND" type="CHAR(3)"/>
+            <column name="GEBURTSDATUM" type="CHAR(8)"/>
+            <column name="GESCHLECHT" type="CHAR(1)"/>
+            <column name="TITEL" type="VARCHAR(255)"/>
+            <column name="BEZEICHNUNG1" type="VARCHAR(255)"/>
+            <column name="BEZEICHNUNG2" type="VARCHAR(255)"/>
+            <column name="BEZEICHNUNG3" type="VARCHAR(255)"/>
+            <column name="STRASSE" type="VARCHAR(255)"/>
+            <column name="PLZ" type="VARCHAR(6)"/>
+            <column name="ORT" type="VARCHAR(255)"/>
+            <column name="TELEFON1" type="VARCHAR(254)"/>
+            <column name="TELEFON2" type="VARCHAR(30)"/>
+            <column name="FAX" type="VARCHAR(30)"/>
+            <column name="NATELNR" type="VARCHAR(254)"/>
+            <column name="EMAIL" type="VARCHAR(255)"/>
+            <column name="WEBSITE" type="VARCHAR(255)"/>
+            <column name="GRUPPE" type="VARCHAR(10)"/>
+            <column name="PATIENTNR" type="VARCHAR(40)"/>
+            <column name="ANSCHRIFT" type="VARCHAR(2147483647)"/>
+            <column name="BEMERKUNG" type="VARCHAR(2147483647)"/>
+            <column name="DIAGNOSEN" type="VARBINARY(2147483647)"/>
+            <column name="PERSANAMNESE" type="VARBINARY(2147483647)"/>
+            <column name="SYSANAMNESE" type="VARBINARY(2147483647)"/>
+            <column name="FAMANAMNESE" type="VARBINARY(2147483647)"/>
+            <column name="RISIKEN" type="VARCHAR(2147483647)"/>
+            <column name="ALLERGIEN" type="VARCHAR(2147483647)"/>
+            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+            <column name="TITELSUFFIX" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-46">
+        <createTable tableName="KONTAKT_ADRESS_JOINT">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_1"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="MYID" type="VARCHAR(25)"/>
+            <column name="OTHERID" type="VARCHAR(25)"/>
+            <column name="BEZUG" type="VARCHAR(80)"/>
+            <column name="MYRTYPE" type="CHAR(4)"/>
+            <column name="OTHERRTYPE" type="CHAR(4)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-47">
+        <createTable tableName="KONTO">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_4"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="PATIENTID" type="VARCHAR(25)"/>
+            <column name="RECHNUNGSID" type="VARCHAR(25)"/>
+            <column name="ZAHLUNGSID" type="VARCHAR(25)"/>
+            <column name="BETRAG" type="CHAR(8)"/>
+            <column name="DATUM" type="CHAR(8)"/>
+            <column name="BEMERKUNG" type="VARCHAR(80)"/>
+            <column name="ACCOUNT" type="CHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-48">
+        <createTable tableName="LABGROUPS">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_8"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="NAME" type="VARCHAR(30)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-49">
+        <createTable tableName="LABGROUP_ITEM_JOINT">
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column name="GROUPID" type="VARCHAR(25)"/>
+            <column name="ITEMID" type="VARCHAR(25)"/>
+            <column name="COMMENT" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-50">
+        <createTable tableName="LABORDER">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_BA"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="USERID" type="VARCHAR(128)"/>
+            <column name="MANDANT" type="VARCHAR(128)"/>
+            <column name="PATIENT" type="VARCHAR(128)"/>
+            <column name="ITEM" type="VARCHAR(128)"/>
+            <column name="RESULT" type="VARCHAR(128)"/>
+            <column name="ORDERID" type="VARCHAR(128)"/>
+            <column name="GROUPNAME" type="VARCHAR(255)"/>
+            <column name="TIME" type="VARCHAR(24)"/>
+            <column name="OBSERVATIONTIME" type="VARCHAR(24)"/>
+            <column name="STATE" type="CHAR(1)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-51">
+        <createTable tableName="LABORITEMS">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_D6"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="KUERZEL" type="VARCHAR(80)"/>
+            <column name="TITEL" type="VARCHAR(80)"/>
+            <column name="LABORID" type="VARCHAR(25)"/>
+            <column name="REFMANN" type="VARCHAR(256)"/>
+            <column name="REFFRAUORTX" type="VARCHAR(256)"/>
+            <column name="EINHEIT" type="VARCHAR(20)"/>
+            <column name="TYP" type="CHAR(1)"/>
+            <column name="GRUPPE" type="VARCHAR(25)"/>
+            <column name="PRIO" type="CHAR(3)"/>
+            <column name="BILLINGCODE" type="VARCHAR(128)"/>
+            <column name="EXPORT" type="VARCHAR(100)"/>
+            <column name="LOINCCODE" type="VARCHAR(128)"/>
+            <column name="VISIBLE" type="VARCHAR(1)"/>
+            <column name="DIGITS" type="VARCHAR(16)"/>
+            <column name="FORMULA" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-52">
+        <createTable tableName="LABORWERTE">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_D7"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="PATIENTID" type="VARCHAR(25)"/>
+            <column name="DATUM" type="CHAR(8)"/>
+            <column name="ZEIT" type="CHAR(6)"/>
+            <column name="ITEMID" type="VARCHAR(25)"/>
+            <column name="RESULTAT" type="VARCHAR(255)"/>
+            <column name="FLAGS" type="VARCHAR(10)"/>
+            <column name="ORIGIN" type="VARCHAR(30)"/>
+            <column name="KOMMENTAR" type="VARCHAR(2147483647)"/>
+            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+            <column name="UNIT" type="VARCHAR(255)"/>
+            <column name="ANALYSETIME" type="VARCHAR(24)"/>
+            <column name="OBSERVATIONTIME" type="VARCHAR(24)"/>
+            <column name="TRANSMISSIONTIME" type="VARCHAR(24)"/>
+            <column name="REFMALE" type="VARCHAR(255)"/>
+            <column name="REFFEMALE" type="VARCHAR(255)"/>
+            <column name="ORIGINID" type="VARCHAR(25)"/>
+            <column name="PATHODESC" type="VARCHAR(128)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-53">
+        <createTable tableName="LEISTUNGEN">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_D"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="BEHANDLUNG" type="VARCHAR(25)"/>
+            <column name="LEISTG_TXT" type="VARCHAR(255)"/>
+            <column name="LEISTG_CODE" type="VARCHAR(25)"/>
+            <column name="KLASSE" type="VARCHAR(80)"/>
+            <column name="ZAHL" type="CHAR(3)"/>
+            <column name="EK_KOSTEN" type="CHAR(8)"/>
+            <column name="VK_TP" type="VARCHAR(8)"/>
+            <column name="VK_SCALE" type="VARCHAR(8)"/>
+            <column name="VK_PREIS" type="CHAR(8)"/>
+            <column defaultValue="100" name="SCALE" type="CHAR(4)"/>
+            <column defaultValue="100" name="SCALE2" type="CHAR(4)"/>
+            <column name="DETAIL" type="VARBINARY(2147483647)"/>
+            <column name="USERID" type="VARCHAR(25)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-54">
+        <createTable tableName="LEISTUNGSBLOCK">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_15"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="MANDANTID" type="VARCHAR(25)"/>
+            <column name="NAME" type="VARCHAR(30)"/>
+            <column name="LEISTUNGEN" type="VARBINARY(2147483647)"/>
+            <column name="MACRO" type="VARCHAR(30)"/>
+            <column name="CODEELEMENTS" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-55">
+        <createTable tableName="LOGS">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_23"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="OID" type="VARCHAR(255)"/>
+            <column name="DATUM" type="CHAR(8)"/>
+            <column name="TYP" type="VARCHAR(20)"/>
+            <column name="USERID" type="VARCHAR(25)"/>
+            <column name="STATION" type="VARCHAR(255)"/>
+            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-56">
+        <createTable tableName="OUTPUT_LOG">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_D1"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="OBJECTID" type="VARCHAR(25)"/>
+            <column name="OBJECTTYPE" type="VARCHAR(80)"/>
+            <column name="DATUM" type="CHAR(8)"/>
+            <column name="OUTPUTTER" type="VARCHAR(80)"/>
+            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-57">
+        <createTable tableName="PATIENT_ARTIKEL_JOINT">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_6"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="PATIENTID" type="VARCHAR(25)"/>
+            <column name="ARTIKELID" type="VARCHAR(25)"/>
+            <column name="ARTIKEL" type="VARCHAR(255)"/>
+            <column name="REZEPTID" type="VARCHAR(25)"/>
+            <column name="DATEFROM" type="CHAR(24)"/>
+            <column name="DATEUNTIL" type="CHAR(24)"/>
+            <column name="DOSIS" type="VARCHAR(255)"/>
+            <column name="ANZAHL" type="CHAR(3)"/>
+            <column name="BEMERKUNG" type="VARCHAR(255)"/>
+            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+            <column name="PRESCTYPE" type="CHAR(2)"/>
+            <column name="SORTORDER" type="CHAR(3)"/>
+            <column name="PRESCDATE" type="CHAR(8)"/>
+            <column name="PRESCRIPTOR" type="VARCHAR(25)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-58">
+        <createTable tableName="RECHNUNGEN">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_D0"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="RNNUMMER" type="VARCHAR(8)"/>
+            <column name="FALLID" type="VARCHAR(25)"/>
+            <column name="MANDANTID" type="VARCHAR(25)"/>
+            <column name="RNDATUM" type="CHAR(8)"/>
+            <column name="RNSTATUS" type="VARCHAR(20)"/>
+            <column name="RNDATUMVON" type="CHAR(8)"/>
+            <column name="RNDATUMBIS" type="CHAR(8)"/>
+            <column name="BETRAG" type="CHAR(8)"/>
+            <column name="STATUSDATUM" type="CHAR(8)"/>
+            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-59">
+        <createTable tableName="REMINDERS">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_E7D"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="IDENTID" type="VARCHAR(25)"/>
+            <column name="ORIGINID" type="VARCHAR(25)"/>
+            <column name="RESPONSIBLE" type="VARCHAR(25)"/>
+            <column name="DATEDUE" type="CHAR(8)"/>
+            <column name="STATUS" type="VARCHAR(1)"/>
+            <column name="TYP" type="VARCHAR(1)"/>
+            <column name="PARAMS" type="VARCHAR(2147483647)"/>
+            <column name="MESSAGE" type="VARCHAR(2147483647)"/>
+            <column name="PRIORITY" type="CHAR(1)"/>
+            <column name="ACTIONTYPE" type="CHAR(2)"/>
+            <column name="SUBJECT" type="VARCHAR(160)"/>
+            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-60">
+        <createTable tableName="REMINDERS_RESPONSIBLE_LINK">
+            <column name="ID" type="VARCHAR(25)"/>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="REMINDERID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_E9"/>
+            </column>
+            <column name="RESPONSIBLEID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_E9"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-61">
+        <createTable tableName="REZEPTE">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_6C"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="PATIENTID" type="VARCHAR(25)"/>
+            <column name="MANDANTID" type="VARCHAR(25)"/>
+            <column name="BRIEFID" type="VARCHAR(25)"/>
+            <column name="DATUM" type="CHAR(8)"/>
+            <column name="RPTXT" type="VARCHAR(2147483647)"/>
+            <column name="RPZUSATZ" type="VARCHAR(80)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-62">
+        <createTable tableName="RIGHT_">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_90"/>
+            </column>
+            <column defaultValueComputed="NULL" name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="LOG_EXECUTION" type="CHAR(1)"/>
+            <column name="NAME" type="VARCHAR(256)"/>
+            <column name="PARENTID" type="VARCHAR(25)"/>
+            <column name="I18N_NAME" type="VARCHAR(256)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-63">
+        <createTable tableName="ROLE">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_26"/>
+            </column>
+            <column defaultValueComputed="NULL" name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+            <column defaultValue="0" name="ISSYSTEMROLE" type="CHAR(1)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-64">
+        <createTable tableName="ROLE_RIGHT_JOINT">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_DF"/>
+            </column>
+            <column defaultValueComputed="NULL" name="LASTUPDATE" type="BIGINT"/>
+            <column name="DELETED" type="CHAR(1)"/>
+            <column name="ROLE_ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_DF"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-65">
+        <createTable tableName="STOCK">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_4B8"/>
+            </column>
+            <column defaultValueComputed="NULL" name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column defaultValueNumeric="255" name="PRIORITY" type="INT"/>
+            <column name="CODE" type="CHAR(3)"/>
+            <column name="DESCRIPTION" type="VARCHAR(255)"/>
+            <column name="LOCATION" type="VARCHAR(255)"/>
+            <column name="OWNER" type="VARCHAR(25)"/>
+            <column name="RESPONSIBLE" type="VARCHAR(25)"/>
+            <column name="DRIVER_UUID" type="VARCHAR(64)"/>
+            <column name="DRIVER_CONFIG" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-66">
+        <createTable tableName="STOCK_ENTRY">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_84"/>
+            </column>
+            <column defaultValueComputed="NULL" name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="STOCK" type="VARCHAR(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ARTICLE_TYPE" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ARTICLE_ID" type="VARCHAR(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="MIN" type="INT"/>
+            <column defaultValueNumeric="0" name="CURRENT" type="INT"/>
+            <column defaultValueNumeric="0" name="MAX" type="INT"/>
+            <column defaultValueNumeric="0" name="FRACTIONUNITS" type="INT"/>
+            <column name="PROVIDER" type="VARCHAR(25)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-67">
+        <createTable tableName="TARMED">
+            <column name="ID" type="VARCHAR(32)"/>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="PARENT" type="VARCHAR(32)"/>
+            <column name="DIGNIQUANTI" type="CHAR(5)"/>
+            <column name="DIGNIQUALI" type="CHAR(4)"/>
+            <column name="SPARTE" type="CHAR(4)"/>
+            <column name="GUELTIGVON" type="CHAR(8)"/>
+            <column name="GUELTIGBIS" type="CHAR(8)"/>
+            <column name="NICKNAME" type="VARCHAR(25)"/>
+            <column name="TX255" type="VARCHAR(255)"/>
+            <column name="CODE" type="VARCHAR(25)"/>
+            <column name="LAW" type="VARCHAR(3)"/>
+            <column defaultValue="0" name="ISCHAPTER" type="CHAR(1)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-68">
+        <createTable tableName="TARMED_DATEN">
+            <column name="PARAMETER" type="VARCHAR(80)"/>
+            <column name="DATUMVON" type="CHAR(8)"/>
+            <column name="DATUMBIS" type="CHAR(8)"/>
+            <column name="WERT" type="VARCHAR(10)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-69">
+        <createTable tableName="TARMED_DEFINITIONEN">
+            <column name="SPALTE" type="VARCHAR(20)"/>
+            <column name="KUERZEL" type="VARCHAR(5)"/>
+            <column name="TITEL" type="VARCHAR(255)"/>
+            <column name="ID" type="VARCHAR(25)"/>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="LAW" type="VARCHAR(3)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-70">
+        <createTable tableName="TARMED_EXTENSION">
+            <column name="CODE" type="VARCHAR(32)"/>
+            <column name="LIMITS" type="VARBINARY(2147483647)"/>
+            <column name="MED_INTERPRET" type="VARCHAR(2147483647)"/>
+            <column name="TECH_INTERPRET" type="VARCHAR(2147483647)"/>
+            <column name="ID" type="VARCHAR(25)"/>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-71">
+        <createTable tableName="TARMED_KUMULATION">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_2B"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="MASTERCODE" type="VARCHAR(25)"/>
+            <column name="MASTERART" type="CHAR(1)"/>
+            <column name="SLAVECODE" type="VARCHAR(25)"/>
+            <column name="SLAVEART" type="CHAR(1)"/>
+            <column name="TYP" type="CHAR(1)"/>
+            <column name="VIEW" type="CHAR(1)"/>
+            <column name="VALIDSIDE" type="CHAR(1)"/>
+            <column name="VALIDFROM" type="CHAR(10)"/>
+            <column name="VALIDTO" type="CHAR(10)"/>
+            <column name="LAW" type="VARCHAR(3)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-72">
+        <createTable tableName="TRACES">
+            <column name="LOGTIME" type="BIGINT"/>
+            <column name="WORKSTATION" type="VARCHAR(40)"/>
+            <column name="USERNAME" type="VARCHAR(30)"/>
+            <column name="ACTION" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-73">
+        <createTable tableName="USERCONFIG">
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column name="USERID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_9"/>
+            </column>
+            <column name="PARAM" type="VARCHAR(80)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_9"/>
+            </column>
+            <column name="VALUE" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-74">
+        <createTable tableName="USER_">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_4D"/>
+            </column>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="KONTAKT_ID" type="VARCHAR(25)"/>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column name="HASHED_PASSWORD" type="VARCHAR(64)"/>
+            <column name="SALT" type="VARCHAR(64)"/>
+            <column defaultValue="1" name="IS_ACTIVE" type="CHAR(1)"/>
+            <column defaultValue="0" name="IS_ADMINISTRATOR" type="CHAR(1)"/>
+            <column name="KEYSTORE" type="VARCHAR(2147483647)"/>
+            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+            <column name="APIKEY" type="VARCHAR(64)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-75">
+        <createTable tableName="USER_ROLE_JOINT">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_D1B"/>
+            </column>
+            <column defaultValueComputed="NULL" name="LASTUPDATE" type="BIGINT"/>
+            <column name="DELETED" type="CHAR(1)"/>
+            <column name="USER_ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_D1B"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-76">
+        <createTable tableName="VK_PREISE">
+            <column name="TYP" type="VARCHAR(80)"/>
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_6C8"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column name="DATUM_VON" type="CHAR(8)"/>
+            <column name="DATUM_BIS" type="CHAR(8)"/>
+            <column name="MULTIPLIKATOR" type="VARCHAR(8)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-77">
+        <createTable tableName="XID">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_153"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="TYPE" type="VARCHAR(80)"/>
+            <column name="OBJECT" type="VARCHAR(25)"/>
+            <column name="DOMAIN" type="VARCHAR(255)"/>
+            <column name="DOMAIN_ID" type="VARCHAR(255)"/>
+            <column defaultValue="0" name="QUALITY" type="CHAR(1)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-78">
+        <createTable tableName="ZAHLUNGEN">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_E7"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="RECHNUNGSID" type="VARCHAR(25)"/>
+            <column name="BETRAG" type="CHAR(8)"/>
+            <column name="DATUM" type="CHAR(8)"/>
+            <column name="BEMERKUNG" type="VARCHAR(80)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-79">
+        <createTable tableName="ZUSATZADRESSE">
+            <column name="ID" type="VARCHAR(41)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_C7"/>
+            </column>
+            <column defaultValueComputed="NULL" name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="KONTAKT_ID" type="VARCHAR(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STRASSE1" type="VARCHAR(255)"/>
+            <column name="STRASSE2" type="VARCHAR(255)"/>
+            <column name="PLZ" type="VARCHAR(6)"/>
+            <column name="ORT" type="VARCHAR(255)"/>
+            <column name="LAND" type="CHAR(3)"/>
+            <column defaultValue="0" name="TYP" type="CHAR(4)"/>
+            <column name="ANSCHRIFT" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-80">
+        <createIndex indexName="AGNBEREICH" tableName="AGNTERMINE">
+            <column name="BEREICH"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-81">
+        <createIndex indexName="AIJ1" tableName="KONTAKT_ADRESS_JOINT">
+            <column name="MYID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-82">
+        <createIndex indexName="APIKEY_UNIQUE" tableName="USER_" unique="true">
+            <column name="APIKEY"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-83">
+        <createIndex indexName="ART1" tableName="ARTIKEL">
+            <column name="SUBID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-84">
+        <createIndex indexName="ART2" tableName="ARTIKEL">
+            <column name="TYP"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-85">
+        <createIndex indexName="ART3" tableName="ARTIKEL">
+            <column name="CODECLASS"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-86">
+        <createIndex indexName="AUF1" tableName="AUF">
+            <column name="PATIENTID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-87">
+        <createIndex indexName="BAL_I1" tableName="OUTPUT_LOG">
+            <column name="OBJECTID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-88">
+        <createIndex indexName="BBS1" tableName="BBS">
+            <column name="REFERENCE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-89">
+        <createIndex indexName="BDG1" tableName="BEHDL_DG_JOINT">
+            <column name="BEHANDLUNGSID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-90">
+        <createIndex indexName="BLOCK1" tableName="LEISTUNGSBLOCK">
+            <column name="NAME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-91">
+        <createIndex indexName="BLOCK2" tableName="LEISTUNGSBLOCK">
+            <column name="MANDANTID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-92">
+        <createIndex indexName="BLOCK3" tableName="LEISTUNGSBLOCK">
+            <column name="MACRO"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-93">
+        <createIndex indexName="CHEACP" tableName="CH_ELEXIS_ARZTTARIFE_CH_PHYSIO">
+            <column name="ZIFFER"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-94">
+        <createIndex indexName="CHELPR_IDX1" tableName="CH_ELEXIS_PRIVATRECHNUNG">
+            <column name="PARENT"/>
+            <column name="NAME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-95">
+        <createIndex indexName="CHELPR_IDX2" tableName="CH_ELEXIS_PRIVATRECHNUNG">
+            <column name="VALID_FROM"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-96">
+        <createIndex indexName="CH_ELEXIS_CORE_FINDINGS_OBSERVATION_IDX1" tableName="CH_ELEXIS_CORE_FINDINGS_OBSERVATION">
+            <column name="PATIENTID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-97">
+        <createIndex indexName="CH_ELEXIS_CORE_FINDINGS_OBSERVATION_IDX2" tableName="CH_ELEXIS_CORE_FINDINGS_OBSERVATION">
+            <column name="ENCOUNTERID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-98">
+        <createIndex indexName="CH_ELEXIS_CORE_FINDINGS_OBSERVATION_IDX3" tableName="CH_ELEXIS_CORE_FINDINGS_OBSERVATION">
+            <column name="ORIGINURI"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-99">
+        <createIndex indexName="CH_ELEXIS_EIGENDIAGNOSEN_IDX1" tableName="CH_ELEXIS_EIGENDIAGNOSEN">
+            <column name="PARENT"/>
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-100">
+        <createIndex indexName="CH_ELEXIS_ICPC_ENCOUNTER1" tableName="CH_ELEXIS_ICPC_ENCOUNTER">
+            <column name="KONS"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-101">
+        <createIndex indexName="CH_ELEXIS_ICPC_ENCOUNTER2" tableName="CH_ELEXIS_ICPC_ENCOUNTER">
+            <column name="EPISODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-102">
+        <createIndex indexName="CH_ELEXIS_ICPC_EPISODES1" tableName="CH_ELEXIS_ICPC_EPISODES">
+            <column name="PATIENTID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-103">
+        <createIndex indexName="CH_ELEXIS_ICPC_EPISODES2" tableName="CH_ELEXIS_ICPC_EPISODES">
+            <column name="TITLE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-104">
+        <createIndex indexName="CH_ELEXIS_ICPC_IDX1" tableName="CH_ELEXIS_ICPC">
+            <column name="COMPONENT"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-105">
+        <createIndex indexName="COMPLEMENTARYINDEX" tableName="CH_ELEXIS_ARZTTARIFE_CH_COMPLEMENTARY">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-106">
+        <createIndex indexName="DBIMAGE1" tableName="DBIMAGE">
+            <column name="TITLE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-107">
+        <createIndex indexName="DG1" tableName="DIAGNOSEN">
+            <column name="KLASSE"/>
+            <column name="DG_CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-108">
+        <createIndex indexName="EKP1" tableName="EK_PREISE">
+            <column name="TYP"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-109">
+        <createIndex indexName="EKP2" tableName="EK_PREISE">
+            <column name="DATUM_VON"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-110">
+        <createIndex indexName="EOL1" tableName="ETIKETTEN_OBJCLASS_LINK">
+            <column name="OBJCLASS"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-111">
+        <createIndex indexName="ETIKETTE1" tableName="ETIKETTEN">
+            <column name="NAME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-112">
+        <createIndex indexName="ETIKETTE2" tableName="ETIKETTEN_OBJECT_LINK">
+            <column name="OBJ"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-113">
+        <createIndex indexName="ETIKETTE3" tableName="ETIKETTEN_OBJECT_LINK">
+            <column name="ETIKETTE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-114">
+        <createIndex indexName="FK_BESTELLUNG_ENTRY_BESTELLUNG_ID_INDEX_D" tableName="BESTELLUNG_ENTRY">
+            <column name="BESTELLUNG"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-115">
+        <createIndex indexName="FK_ZUSATZADRESSE_KONTAKT_ID_INDEX_C" tableName="ZUSATZADRESSE">
+            <column name="KONTAKT_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-116">
+        <createIndex indexName="I3" tableName="FAELLE">
+            <column name="PATIENTID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-117">
+        <createIndex indexName="I4" tableName="BEHANDLUNGEN">
+            <column name="FALLID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-118">
+        <createIndex indexName="I5" tableName="ARTIKEL">
+            <column name="NAME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-119">
+        <createIndex indexName="I8" tableName="BRIEFE">
+            <column name="BEHANDLUNGSID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-120">
+        <createIndex indexName="ICD1" tableName="ICD10">
+            <column name="PARENT"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-121">
+        <createIndex indexName="ICD2" tableName="ICD10">
+            <column name="ICDCODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-122">
+        <createIndex indexName="IDXAIBB" tableName="ARTIKELSTAMM_CH">
+            <column name="BB"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-123">
+        <createIndex indexName="IDXAIGTIN" tableName="ARTIKELSTAMM_CH">
+            <column name="GTIN"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-124">
+        <createIndex indexName="IDXAIITEMTYPE" tableName="ARTIKELSTAMM_CH">
+            <column name="TYPE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-125">
+        <createIndex indexName="IDXAIMONTH" tableName="ARTIKELSTAMM_CH">
+            <column name="CUMM_VERSION"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-126">
+        <createIndex indexName="IDXAIPHAR" tableName="ARTIKELSTAMM_CH">
+            <column name="PHAR"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-127">
+        <createIndex indexName="IDXRNID" tableName="BEHANDLUNGEN">
+            <column name="RECHNUNGSID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-128">
+        <createIndex indexName="IDX_ELBF1" tableName="ELEXISBEFUNDE">
+            <column name="DATUM"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-129">
+        <createIndex indexName="IDX_ELBF2" tableName="ELEXISBEFUNDE">
+            <column name="PATIENTID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-130">
+        <createIndex indexName="IT" tableName="AGNTERMINE">
+            <column name="TAG"/>
+            <column name="BEGINN"/>
+            <column name="BEREICH"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-131">
+        <createIndex indexName="K0" tableName="KONTAKT">
+            <column name="BEZEICHNUNG1"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-132">
+        <createIndex indexName="KONTO1" tableName="KONTO">
+            <column name="DATUM"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-133">
+        <createIndex indexName="KONTO2" tableName="KONTO">
+            <column name="PATIENTID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-134">
+        <createIndex indexName="LABIT1" tableName="LABORITEMS">
+            <column name="KUERZEL"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-135">
+        <createIndex indexName="LABIT2" tableName="LABORITEMS">
+            <column name="LABORID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-136">
+        <createIndex indexName="LABOR1" tableName="LABORWERTE">
+            <column name="PATIENTID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-137">
+        <createIndex indexName="LABOR2" tableName="LABORWERTE">
+            <column name="DATUM"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-138">
+        <createIndex indexName="LABOR3" tableName="LABORWERTE">
+            <column name="ITEMID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-139">
+        <createIndex indexName="LABORDER1" tableName="LABORDER">
+            <column name="TIME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-140">
+        <createIndex indexName="LABORDER2" tableName="LABORDER">
+            <column name="MANDANT"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-141">
+        <createIndex indexName="LABORDER3" tableName="LABORDER">
+            <column name="PATIENT"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-142">
+        <createIndex indexName="LABORDER4" tableName="LABORDER">
+            <column name="ORDERID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-143">
+        <createIndex indexName="LOINC1" tableName="AT_MEDEVIT_ELEXIS_LOINC">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-144">
+        <createIndex indexName="LST1" tableName="LEISTUNGEN">
+            <column name="BEHANDLUNG"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-145">
+        <createIndex indexName="LST2" tableName="LEISTUNGEN">
+            <column name="KLASSE"/>
+            <column name="LEISTG_CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-146">
+        <createIndex indexName="OMN1" tableName="CH_ELEXIS_OMNIVORE_DATA">
+            <column name="PATID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-147">
+        <createIndex indexName="OMN2" tableName="CH_ELEXIS_OMNIVORE_DATA">
+            <column name="KEYWORDS"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-148">
+        <createIndex indexName="OMN3" tableName="CH_ELEXIS_OMNIVORE_DATA">
+            <column name="CATEGORY"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-149">
+        <createIndex indexName="OMN4" tableName="CH_ELEXIS_OMNIVORE_DATA">
+            <column name="MIMETYPE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-150">
+        <createIndex indexName="OMN5" tableName="CH_ELEXIS_OMNIVORE_DATA">
+            <column name="DELETED"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-151">
+        <createIndex indexName="OMN6" tableName="CH_ELEXIS_OMNIVORE_DATA">
+            <column name="TITLE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-152">
+        <createIndex indexName="PAJ1" tableName="PATIENT_ARTIKEL_JOINT">
+            <column name="PATIENTID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-153">
+        <createIndex indexName="PAJ2" tableName="PATIENT_ARTIKEL_JOINT">
+            <column name="REZEPTID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-154">
+        <createIndex indexName="PATTERN" tableName="AGNTERMINE">
+            <column name="PATID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-155">
+        <createIndex indexName="PROBLEMBEHDL1" tableName="IATRIX_PROBLEM_BEHDL_JOINT">
+            <column name="PROBLEMID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-156">
+        <createIndex indexName="PROBLEMDAUERMEDIKATION1" tableName="IATRIX_PROBLEM_DAUERMEDIKATION_JOINT">
+            <column name="PROBLEMID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-157">
+        <createIndex indexName="PROBLEMDG1" tableName="IATRIX_PROBLEM_DG_JOINT">
+            <column name="PROBLEMID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-158">
+        <createIndex indexName="REM1" tableName="REMINDERS">
+            <column name="IDENTID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-159">
+        <createIndex indexName="REM2" tableName="REMINDERS">
+            <column name="DATEDUE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-160">
+        <createIndex indexName="REM3" tableName="REMINDERS">
+            <column name="RESPONSIBLE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-161">
+        <createIndex indexName="RN1" tableName="RECHNUNGEN">
+            <column name="FALLID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-162">
+        <createIndex indexName="RN2" tableName="RECHNUNGEN">
+            <column name="MANDANTID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-163">
+        <createIndex indexName="RN3" tableName="RECHNUNGEN">
+            <column name="RNSTATUS"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-164">
+        <createIndex indexName="RN4" tableName="RECHNUNGEN">
+            <column name="RNDATUMVON"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-165">
+        <createIndex indexName="RN5" tableName="RECHNUNGEN">
+            <column name="RNDATUMBIS"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-166">
+        <createIndex indexName="RP1" tableName="REZEPTE">
+            <column name="PATIENTID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-167">
+        <createIndex indexName="RRL1" tableName="REMINDERS_RESPONSIBLE_LINK">
+            <column name="REMINDERID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-168">
+        <createIndex indexName="RRL2" tableName="REMINDERS_RESPONSIBLE_LINK">
+            <column name="RESPONSIBLEID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-169">
+        <createIndex indexName="STOCK_ENTRY_ID0" tableName="STOCK_ENTRY">
+            <column name="ARTICLE_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-170">
+        <createIndex indexName="STOCK_ENTRY_STOCK0" tableName="STOCK_ENTRY">
+            <column name="STOCK"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-171">
+        <createIndex indexName="STOCK_ENTRY_TYPE0" tableName="STOCK_ENTRY">
+            <column name="ARTICLE_TYPE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-172">
+        <createIndex indexName="TARMED2" tableName="TARMED">
+            <column name="PARENT"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-173">
+        <createIndex indexName="TARMED3" tableName="TARMED_DEFINITIONEN">
+            <column name="SPALTE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-174">
+        <createIndex indexName="TARMED4" tableName="TARMED_EXTENSION">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-175">
+        <createIndex indexName="TARMED5" tableName="TARMED_DATEN">
+            <column name="PARAMETER"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-176">
+        <createIndex indexName="TARMEDDEFINITIONEN" tableName="TARMED_DEFINITIONEN">
+            <column name="KUERZEL"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-177">
+        <createIndex indexName="TARMEDDEFINITIONEN_IDX1" tableName="TARMED_DEFINITIONEN">
+            <column name="LAW"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-178">
+        <createIndex indexName="TARMEDKUMULATION" tableName="TARMED_KUMULATION">
+            <column name="MASTERCODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-179">
+        <createIndex indexName="TARMEDKUMULATION_IDX1" tableName="TARMED_KUMULATION">
+            <column name="LAW"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-180">
+        <createIndex indexName="TARMED_ID" tableName="TARMED">
+            <column name="ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-181">
+        <createIndex indexName="TRACE1" tableName="TRACES">
+            <column name="LOGTIME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-182">
+        <createIndex indexName="TRACE2" tableName="TRACES">
+            <column name="USERNAME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-183">
+        <createIndex indexName="UCFG" tableName="USERCONFIG">
+            <column name="PARAM"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-184">
+        <createIndex indexName="UCFG2" tableName="USERCONFIG">
+            <column name="USERID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-185">
+        <createIndex indexName="VKP1" tableName="VK_PREISE">
+            <column name="TYP"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-186">
+        <createIndex indexName="VKP2" tableName="VK_PREISE">
+            <column name="DATUM_VON"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-187">
+        <createIndex indexName="XIDIDX1" tableName="XID">
+            <column name="DOMAIN"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-188">
+        <createIndex indexName="XIDIDX2" tableName="XID">
+            <column name="DOMAIN_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-189">
+        <createIndex indexName="XIDIDX3" tableName="XID">
+            <column name="OBJECT"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-190">
+        <createIndex indexName="ZAHL1" tableName="ZAHLUNGEN">
+            <column name="RECHNUNGSID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-191">
+        <addForeignKeyConstraint baseColumnNames="BESTELLUNG" baseTableName="BESTELLUNG_ENTRY" constraintName="FK_BESTELLUNG_ENTRY_BESTELLUNG_ID" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="BESTELLUNGEN" validate="true"/>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-192">
+        <addForeignKeyConstraint baseColumnNames="STOCK" baseTableName="STOCK_ENTRY" constraintName="FK_STOCK_ENTRY_STOCK_ID" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="STOCK" validate="true"/>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-193">
+        <addForeignKeyConstraint baseColumnNames="KONTAKT_ID" baseTableName="ZUSATZADRESSE" constraintName="FK_ZUSATZADRESSE_KONTAKT_ID" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="KONTAKT" validate="true"/>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-194">
+        <createView fullDefinition="false" remarks="" viewName="RIGHTS_PER_ROLE">SELECT
+    R.ID AS ROLE_ID,
+    RI.ID AS RIGHT_ID
+FROM PUBLIC.ROLE R
+    
+LEFT OUTER JOIN PUBLIC.ROLE_RIGHT_JOINT RRJ
+    /* PUBLIC.ROLE_RIGHT_JOINT.tableScan */
+    ON R.ID = RRJ.ROLE_ID
+LEFT OUTER JOIN PUBLIC.RIGHT_ RI
+    /* PUBLIC.PRIMARY_KEY_90: ID = RRJ.ID */
+    ON RRJ.ID = RI.ID
+ORDER BY 1
+/* index sorted */</createView>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-195">
+        <createView fullDefinition="false" remarks="" viewName="RIGHTS_PER_USER">SELECT
+    U.ID AS USER_ID,
+    RI.ID AS RIGHT_ID,
+    RI.NAME AS RIGHT_NAME
+FROM PUBLIC.USER_ U
+    
+LEFT OUTER JOIN PUBLIC.USER_ROLE_JOINT URJ
+    /* PUBLIC.USER_ROLE_JOINT.tableScan */
+    ON U.ID = URJ.USER_ID
+LEFT OUTER JOIN PUBLIC.ROLE R
+    /* PUBLIC.PRIMARY_KEY_26: ID = URJ.ID */
+    ON URJ.ID = R.ID
+LEFT OUTER JOIN PUBLIC.ROLE_RIGHT_JOINT RRJ
+    /* PUBLIC.ROLE_RIGHT_JOINT.tableScan */
+    ON R.ID = RRJ.ROLE_ID
+LEFT OUTER JOIN PUBLIC.RIGHT_ RI
+    /* PUBLIC.PRIMARY_KEY_90: ID = RRJ.ID */
+    ON RRJ.ID = RI.ID
+ORDER BY 1
+/* index sorted */</createView>
+    </changeSet>
+</databaseChangeLog>

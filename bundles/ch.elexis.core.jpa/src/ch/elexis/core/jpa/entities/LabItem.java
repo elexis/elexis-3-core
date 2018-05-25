@@ -1,14 +1,15 @@
 package ch.elexis.core.jpa.entities;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.eclipse.persistence.annotations.Convert;
-
+import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
+import ch.elexis.core.jpa.entities.converter.IntegerStringConverter;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.types.LabItemTyp;
 import ch.rgw.tools.StringTool;
@@ -54,10 +55,10 @@ public class LabItem extends AbstractDBObjectIdDeleted implements ILabItem {
 	@Column(length = 128)
 	private String loinccode;
 
-	@Convert("booleanStringConverter")
+	@Convert(converter = BooleanCharacterConverterSafe.class)
 	private boolean visible = true;
 
-	@Convert(value = "IntegerStringConverter")
+	@Convert(converter = IntegerStringConverter.class)
 	private int digits;
 
 	@Column(length = 255)

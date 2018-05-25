@@ -1,12 +1,13 @@
 package ch.elexis.core.jpa.entities;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.eclipse.persistence.annotations.Convert;
+import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 
 @Entity
 @Table(name = "AT_MEDEVIT_ELEXIS_LABMAP")
@@ -24,7 +25,7 @@ public class LabMapping extends AbstractDBObjectIdDeleted {
 	protected LabItem labItem;
 
 	@Column(length = 1)
-	@Convert("booleanStringConverter")
+	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean charge;
 
 	public String getItemname() {

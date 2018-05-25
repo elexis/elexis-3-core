@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -12,7 +13,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.eclipse.persistence.annotations.Convert;
+import ch.elexis.core.jpa.entities.converter.ElexisExtInfoMapConverter;
+import ch.elexis.core.jpa.entities.converter.IntegerStringConverter;
 
 @Entity
 @Table(name = "LEISTUNGEN")
@@ -34,25 +36,25 @@ public class Verrechnet extends AbstractDBObjectIdDeleted {
 	@JoinColumn(name = "BEHANDLUNG")
 	private Behandlung behandlung;
 
-	@Convert(value = "IntegerStringConverter")
+	@Convert(converter = IntegerStringConverter.class)
 	private int zahl;
 
-	@Convert(value = "IntegerStringConverter")
+	@Convert(converter = IntegerStringConverter.class)
 	private int ek_kosten;
 
-	@Convert(value = "IntegerStringConverter")
+	@Convert(converter = IntegerStringConverter.class)
 	private int vk_tp;
 
 	@Column(length = 8)
 	private String vk_scale;
 
-	@Convert(value = "IntegerStringConverter")
+	@Convert(converter = IntegerStringConverter.class)
 	private int vk_preis;
 
-	@Convert(value = "IntegerStringConverter")
+	@Convert(converter = IntegerStringConverter.class)
 	private int scale;
 
-	@Convert(value = "IntegerStringConverter")
+	@Convert(converter = IntegerStringConverter.class)
 	private int scale2;
 
 	@OneToOne
@@ -60,7 +62,7 @@ public class Verrechnet extends AbstractDBObjectIdDeleted {
 	private Kontakt user;
 
 	@Basic(fetch = FetchType.LAZY)
-	@Convert(value = "ElexisExtInfoMapConverter")
+	@Convert(converter = ElexisExtInfoMapConverter.class)
 	private Map<Object, Object> detail;
 
 	@Transient

@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import ch.rgw.tools.StringTool;
+import org.apache.commons.lang3.StringUtils;
 
 @Entity
 @Table(name = "artikel")
@@ -73,7 +73,7 @@ public class Artikel extends AbstractDBObjectIdDeletedExtInfo {
 
 	public String getLabel() {
 		String ret = getNameIntern();
-		if (StringTool.isNothing(ret)) {
+		if (StringUtils.isEmpty(ret)) {
 			ret = getName();
 		}
 		return ret;
@@ -195,39 +195,4 @@ public class Artikel extends AbstractDBObjectIdDeletedExtInfo {
 	public void setAtcCode(String atcCode) {
 		this.atcCode = atcCode;
 	}
-
-	//	@Transient
-	//	public int getPackageUnit() {
-	//		String extInfoAsString = getExtInfoAsString(Constants.FLD_EXT_PACKAGE_UNIT_INT);
-	//		return EntitiesUtil.checkZero(extInfoAsString);
-	//	}
-	//
-	//	@Transient
-	//	public int getSellingUnit() {
-	//		String extInfoAsString = getExtInfoAsString(Constants.FLD_EXT_SELL_UNIT);
-	//		return EntitiesUtil.checkZero(extInfoAsString);
-	//	}
-	//
-	//	@Transient
-	//	public boolean isProduct() {
-	//		return false;
-	//	}
-	//
-	//	public String getCodeSystemName() {
-	//		if (TYP_EIGENARTIKEL.equals(getTyp())) {
-	//			return TYP_EIGENARTIKEL;
-	//		}
-	//		return CODESYSTEM_NAME;
-	//	}
-	//
-	//	public String getCode() {
-	//		if (TYP_EIGENARTIKEL.equals(getTyp())) {
-	//			return getSubId();
-	//		}
-	//		return getId();
-	//	}
-	//
-	//	public String getText() {
-	//		return getNameIntern();
-	//	}
 }

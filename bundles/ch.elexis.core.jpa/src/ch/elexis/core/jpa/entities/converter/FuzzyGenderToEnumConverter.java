@@ -10,9 +10,8 @@
  ******************************************************************************/
 package ch.elexis.core.jpa.entities.converter;
 
-import org.eclipse.persistence.mappings.DatabaseMapping;
-import org.eclipse.persistence.mappings.converters.Converter;
-import org.eclipse.persistence.sessions.Session;
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 
 import ch.elexis.core.types.Gender;
 
@@ -22,16 +21,14 @@ import ch.elexis.core.types.Gender;
  * it can't be guaranteed, so in case a value not equal to the defined set is
  * observed it simply returns null instead of an Exception.
  */
-public class FuzzyGenderToEnumConverter implements Converter {
-
-	private static final long serialVersionUID = 1L;
+@Converter
+public class FuzzyGenderToEnumConverter implements AttributeConverter<Gender, Character> {
 
 	@Override
-	public Character convertObjectValueToDataValue(Object objectValue, Session session) {
-		Gender g = (Gender) objectValue;
-		if (g == null)
+	public Character convertToDatabaseColumn(Gender objectValue){
+		if (objectValue == null)
 			return 'x';
-		switch (g) {
+		switch (objectValue) {
 		case MALE:
 			return 'm';
 		case FEMALE:
@@ -40,31 +37,22 @@ public class FuzzyGenderToEnumConverter implements Converter {
 			return 'x';
 		}
 	}
-
+	
 	@Override
-	public Gender convertDataValueToObjectValue(Object dataValue, Session session) {
+	public Gender convertToEntityAttribute(Character dataValue){
 		if (dataValue == null)
 			return Gender.UNKNOWN;
-		int in = ((String) dataValue).trim().toLowerCase().hashCode();
-		switch (in) {
-		case 119:
-			return Gender.FEMALE; // 'w'
-		case 102:
-			return Gender.FEMALE; // 'f'
-		case 109:
-			return Gender.MALE; // 'm'
+		switch (dataValue) {
+		case 'w':
+		case 'W':
+		case 'f':
+		case 'F':
+			return Gender.FEMALE;
+		case 'm':
+		case 'M':
+			return Gender.MALE;
 		default:
 			return Gender.UNKNOWN;
 		}
 	}
-
-	@Override
-	public boolean isMutable() {
-		return false;
-	}
-
-	@Override
-	public void initialize(DatabaseMapping mapping, Session session) {
-	}
-
 }

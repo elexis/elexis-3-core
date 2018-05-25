@@ -1,7 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -9,9 +7,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import ch.elexis.core.jpa.entities.converter.ICodeElementListConverter;
+import ch.elexis.core.jpa.entities.converter.ElexisDBCompressedStringConverter;
 import ch.elexis.core.model.ICodeElement;
-
 
 @Entity
 @Table(name = "leistungsblock")
@@ -26,9 +23,9 @@ public class Leistungsblock extends AbstractDBObjectIdDeleted implements ICodeEl
 	@Column(length = 30)
 	private String name;
 
-	@Convert(converter = ICodeElementListConverter.class)
-	@Column(name = "leistungen")
-	private List<ICodeElement> services;
+	@Convert(converter = ElexisDBCompressedStringConverter.class)
+	@Column(name = "leistungen", columnDefinition = "BLOB")
+	private String services;
 
 	@Column(length = 30)
 	private String macro;
@@ -47,14 +44,6 @@ public class Leistungsblock extends AbstractDBObjectIdDeleted implements ICodeEl
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public List<ICodeElement> getServices() {
-		return services;
-	}
-
-	public void setServices(List<ICodeElement> services) {
-		this.services = services;
 	}
 
 	public String getMacro() {
@@ -80,4 +69,11 @@ public class Leistungsblock extends AbstractDBObjectIdDeleted implements ICodeEl
 		return getName();
 	}
 
+	public String getServices(){
+		return services;
+	}
+	
+	public void setServices(String services){
+		this.services = services;
+	}
 }

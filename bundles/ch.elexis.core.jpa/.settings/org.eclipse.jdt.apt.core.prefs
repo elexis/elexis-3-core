@@ -1,0 +1,6 @@
+eclipse.preferences.version=1
+org.eclipse.jdt.apt.aptEnabled=true
+org.eclipse.jdt.apt.genSrcDir=src-gen/
+org.eclipse.jdt.apt.processorOptions/eclipselink.canonicalmodel.generate_timestamp=false
+org.eclipse.jdt.apt.processorOptions/eclipselink.persistencexml=../META-INF/persistence.xml
+org.eclipse.jdt.apt.reconcileEnabled=true

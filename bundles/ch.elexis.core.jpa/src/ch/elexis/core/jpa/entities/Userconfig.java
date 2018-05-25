@@ -8,12 +8,8 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.eclipse.persistence.annotations.Cache;
-import org.eclipse.persistence.annotations.CacheType;
-
 @Entity
 @Table(name = "userconfig")
-@Cache(type=CacheType.NONE)
 public class Userconfig extends AbstractDBObject {
 
 	@ManyToOne()

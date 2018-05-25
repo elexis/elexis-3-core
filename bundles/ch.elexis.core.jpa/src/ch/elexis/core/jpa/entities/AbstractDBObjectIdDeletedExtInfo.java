@@ -5,17 +5,18 @@ import java.util.Map;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.FetchType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
-import org.eclipse.persistence.annotations.Convert;
+import ch.elexis.core.jpa.entities.converter.ElexisExtInfoMapConverter;
 
 @MappedSuperclass
 public abstract class AbstractDBObjectIdDeletedExtInfo extends AbstractDBObjectIdDeleted {
 
 	@Basic(fetch = FetchType.LAZY)
-	@Convert(value = "ElexisExtInfoMapConverter")
+	@Convert(converter = ElexisExtInfoMapConverter.class)
 	@Column(columnDefinition = "BLOB")
 	protected Map<Object, Object> extInfo = new Hashtable<Object, Object>();
 

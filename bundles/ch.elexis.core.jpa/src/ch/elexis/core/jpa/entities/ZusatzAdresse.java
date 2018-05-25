@@ -1,13 +1,11 @@
 package ch.elexis.core.jpa.entities;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.Table;
-
-import org.eclipse.persistence.annotations.Convert;
-import org.eclipse.persistence.annotations.Converter;
 
 import ch.elexis.core.jpa.entities.converter.FuzzyCountryToEnumConverter;
 import ch.elexis.core.types.AddressType;
@@ -36,8 +34,7 @@ public class ZusatzAdresse extends AbstractDBObjectIdDeleted {
 	public String city;
 
 	@Column(length = 255, name = "land")
-	@Converter(name = "FuzzyCountryToEnumConverter", converterClass = FuzzyCountryToEnumConverter.class)
-	@Convert(value = "FuzzyCountryToEnumConverter")
+	@Convert(converter = FuzzyCountryToEnumConverter.class)
 	public Country country;
 
 	@Lob
