@@ -97,6 +97,8 @@ public class Eigenartikel extends Artikel {
 	public String getCodeSystemCode(){
 		if (getTyp() == EigenartikelTyp.COMPLEMENTARY) {
 			return "590";
+		} else if (getTyp() == EigenartikelTyp.ADDITIVE) {
+			return "406";
 		}
 		return super.getCodeSystemCode();
 	}
