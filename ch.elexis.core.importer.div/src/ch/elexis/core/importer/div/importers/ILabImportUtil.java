@@ -4,6 +4,7 @@ import java.util.List;
 
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.types.LabItemTyp;
@@ -26,8 +27,10 @@ public interface ILabImportUtil {
 	void createDocumentManagerEntry(String title, String lab, byte[] data, String mimeType, TimeTool date, IPatient pat);
 
 	ILabResult createLabResult(IPatient patient, TimeTool date, ILabItem labItem, String result,
-		String comment, String refVal, IContact origin, String subId);
-
+		String comment, String refVal, IContact origin, String subId, ILabOrder labOrder,
+		String labOrderorderId, String labOrdermandantId,
+		TimeTool labOrdertime, String labOrdergroupName);
+	
 	void updateLabResult(ILabResult iLabResult, TransientLabResult transientLabResult);
 	
 }

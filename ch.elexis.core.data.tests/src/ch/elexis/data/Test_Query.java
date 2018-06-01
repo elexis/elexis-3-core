@@ -204,6 +204,15 @@ public class Test_Query extends AbstractPersistentObjectTest {
 	}
 	
 	@Test
+	public void testQueryWithDefinedConditionEqualsAddedCondition() {
+		Query<Artikel> qbe = new Query<Artikel>(Artikel.class);
+		qbe.add(Artikel.FLD_SUB_ID, Query.EQUALS, "17");
+		
+		Query<Artikel> qbe2 = new Query<Artikel>(Artikel.class, Artikel.FLD_SUB_ID, "17");
+		assertEquals(qbe.getActualQuery(), qbe2.getActualQuery());
+	}
+	
+	@Test
 	public void testQueryWithApostrophe() {
 		Patient testPatient = new Patient("D'Andrea", "Max", "1.1.2000", "m");
 		assertEquals("D'Andrea", testPatient.getName());
