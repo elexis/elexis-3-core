@@ -252,9 +252,12 @@ public class LabResult extends PersistentObject implements ILabResult {
 	 * @since 3.5
 	 */
 	public @Nullable LabOrder getLabOrder(){
-		Query<LabOrder> qre = new Query<LabOrder>(LabOrder.class, LabResult.RESULT, getId());
+		Query<LabOrder> qre = new Query<LabOrder>(LabOrder.class, LabOrder.FLD_RESULT, getId());
 		List<LabOrder> execute = qre.execute();
 		if (execute.size() > 0) {
+			if (execute.size() > 1) {
+				log.warn("Multiple LabOrders for LabResult [{}] found, please check", getId());
+			}
 			return execute.get(0);
 		}
 		return null;
