@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<contexts>
+   <context id="DBCheckTrayDialog" title="Elexis Datenbank Wartungs Tool">
+      <description>Elexis Datenbank Wartungs Tool</description>
+      <topic href="html/documentation.html" label="Dokumentation des Tools"/>
+   </context>
+</contexts>

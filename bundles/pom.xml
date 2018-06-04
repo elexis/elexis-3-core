@@ -40,6 +40,7 @@
     <module>ch.elexis.core.scheduler</module>
     <module>ch.elexis.core.scripting.beanshell</module>
     <module>ch.elexis.core.ui.contacts</module>
+    <module>ch.elexis.core.ui.dbcheck</module>
     <module>ch.elexis.core.ui.documents</module>
     <module>ch.elexis.core.ui.eigenartikel</module>
     <module>ch.elexis.core.ui.eigendiagnosen</module>
