@@ -848,8 +848,9 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		
 		tBezeichnung.setEditable(lockEnabled);
 		
-		dpBis.setEnabled(enable);
-		dpVon.setEnabled(enable);		
+		dpVon.setEnabled(enable);
+		dpBis.setEnabled(lockEnabled); // coverage must be endable - even if invoices exist
+		
 		cAbrechnung.setEnabled(enable);
 		cReason.setEnabled(enable);
 		hlGarant.setEnabled(enable);
