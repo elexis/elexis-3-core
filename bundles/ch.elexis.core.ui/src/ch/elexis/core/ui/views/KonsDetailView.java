@@ -796,8 +796,7 @@ public class KonsDetailView extends ViewPart
 											Messages.KonsDetailView_No
 									}, 0); // $NON-NLS-1$
 								if (msd.open() == Window.OK) {
-									actKons.setFall(nFall);
-									setKons(actKons);
+									actKons.transferToFall(nFall, false, false);
 								} else {
 									ignoreSelectionEventOnce();
 									comboViewerFall.setSelection(new StructuredSelection(actFall));
