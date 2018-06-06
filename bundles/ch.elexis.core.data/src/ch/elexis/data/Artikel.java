@@ -150,7 +150,7 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 					monitor.done();
 				}
 			};
-			PersistentObject.cod.showProgress(irwp);
+			PersistentObject.cod.showProgress(irwp, "Migrate stock format to 3.2");
 		}
 	}
 	

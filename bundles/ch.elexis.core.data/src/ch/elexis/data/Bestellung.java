@@ -124,7 +124,7 @@ public class Bestellung extends PersistentObject implements IOrder {
 					order.set(FLD_ITEMS, null);
 				}
 			};
-			PersistentObject.cod.showProgress(irwp);
+			PersistentObject.cod.showProgress(irwp, "Migrate orders format to 3.2");
 		}
 		
 	}

@@ -25,6 +25,7 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
+import ch.elexis.core.data.dbupdate.FallUpdatesFor36;
 import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.interfaces.IRnOutputter;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
@@ -95,6 +96,8 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 			FLD_FALL_NUMMER, 
 			FLD_RN_PLANUNG 		+"=BetriebsNummer", //$NON-NLS-1$
 			FLD_EXTINFO);
+		
+		FallUpdatesFor36.transferLawAndCostBearerTo36Model();
 	}
 	//@formatter:on
 	

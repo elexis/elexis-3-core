@@ -58,7 +58,7 @@ public class Eigenartikel extends Artikel {
 					EigenartikelDatabaseConverter.performConversionTo32Format(monitor);
 				}
 			};
-			PersistentObject.cod.showProgress(irwp);
+			PersistentObject.cod.showProgress(irwp, "Migrate Eigenartikel to v3.2");
 			
 			CoreHub.globalCfg.set(isConvertedTo32Key, true);
 		}

@@ -141,7 +141,7 @@ public class BillingSystem {
 	}
 	
 	/**
-	 * 
+	 * Get the constant for a billing system (the constant is treated case-insensitive)
 	 * @param billingSystem
 	 * @param constant
 	 * @return
