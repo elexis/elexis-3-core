@@ -445,20 +445,22 @@ public class BillingSystem {
 	}
 	
 	/**
-	 * Remove a value stored in ExtInfo for all Faelle of a BillingSystem.
+	 * Remove values stored in ExtInfo for all Faelle of a BillingSystem.
 	 * 
 	 * @param billingSystem
-	 * @param fieldName
+	 * @param fieldNames
 	 * @since 3.6
 	 */
 	public static void removeExtInfoValueForAllFaelleOfBillingSystem(String billingSystem,
-		String fieldName){
+		List<String> fieldNames){
 		Query<Fall> qre = new Query<Fall>(Fall.class, Fall.FLD_BILLINGSYSTEM, billingSystem);
 		qre.clear(true);
 		List<Fall> qbe = qre.execute();
 		for (Fall fall : qbe) {
-			log.info("Removing Fall [{}] ExtInfo key [{}]", fall.getId(), fieldName);
-			fall.setExtInfoStoredObjectByKey(fieldName, null);
+			log.info("Removing Fall [{}] ExtInfo keys [{}]", fall.getId(), fieldNames);
+			for (String fieldName : fieldNames) {
+				fall.setExtInfoStoredObjectByKey(fieldName, null);
+			}
 		}
 	}
 }

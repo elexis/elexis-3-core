@@ -14,6 +14,7 @@ package ch.elexis.core.ui.preferences;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -982,7 +983,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				if (performDelete) {
 					BusyIndicator.showWhile(UiDesk.getDisplay(), () -> {
 						BillingSystem.removeExtInfoValueForAllFaelleOfBillingSystem(tName.getText(),
-							split[0]);
+							Collections.singletonList(split[0]));
 						ldConstants.remove(selection);
 						BillingSystem.removeBillingSystemConstant(result[0], selection);
 					});

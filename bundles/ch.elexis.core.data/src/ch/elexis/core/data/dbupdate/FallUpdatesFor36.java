@@ -1,6 +1,7 @@
 package ch.elexis.core.data.dbupdate;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -27,6 +28,7 @@ public class FallUpdatesFor36 {
 	
 	/**
 	 * https://redmine.medelexis.ch/issues/11487
+	 * 
 	 * @since 3.6
 	 */
 	public static void transferLawAndCostBearerTo36Model(){
@@ -70,10 +72,14 @@ public class FallUpdatesFor36 {
 									BillingSystem.CFG_BILLINGLAW, billingLaw.name());
 								// remove from all faelle#extinfo
 								BillingSystem.removeExtInfoValueForAllFaelleOfBillingSystem(
-									abrechnungsSystemGesetz, "gesetz");
+									abrechnungsSystemGesetz, Arrays.asList(new String[] {
+										"gesetz", "Gesetz"
+								}));
 								// remove constant from billing system
 								BillingSystem.removeBillingSystemConstant(abrechnungssystem,
 									"gesetz=" + abrechnungsSystemGesetz);
+								BillingSystem.removeBillingSystemConstant(abrechnungssystem,
+									"Gesetz=" + abrechnungsSystemGesetz);
 							} catch (IllegalArgumentException iae) {
 								log.error("Could not resolve law [{}] from billing systeem [{}]",
 									abrechnungsSystemGesetz, abrechnungssystem);
