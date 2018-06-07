@@ -16,8 +16,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
@@ -27,10 +29,15 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IOptifier;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.elexis.core.data.service.CodeElementServiceHolder;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.exceptions.PersistenceException;
+import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.IDiagnose;
+import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.ICodeElementService;
+import ch.elexis.core.services.ICodeElementService.ContextKeys;
 import ch.elexis.core.text.model.Samdas;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
@@ -123,20 +130,57 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			Fall alt = getFall();
 			set(FLD_CASE_ID, f.getId());
 			if (alt != null) {
+				ICodeElementService codeElementService = CodeElementServiceHolder.getService();
+				HashMap<Object, Object> context = getCodeElementServiceContext();
 				List<Verrechnet> vv = getLeistungen();
 				for (Verrechnet verrechnet : vv) {
 					if (setToStandartPreis) {
 						verrechnet.setStandardPreis();
 					} else {
 						IVerrechenbar v = verrechnet.getVerrechenbar();
-						TimeTool date = new TimeTool(verrechnet.getKons().getDatum());
-						double factor = v.getFactor(date, f);
-						verrechnet.set(Verrechnet.SCALE_SELLING, Double.toString(factor));
+						// tarmed needs to be recharged
+						if (isTarmed(verrechnet)) {
+							// make sure verrechenbar is matching for the kons
+							Optional<ICodeElement> matchingVerrechenbar = codeElementService
+								.createFromString(v.getCodeSystemName(), v.getCode(), context);
+							if (matchingVerrechenbar.isPresent()) {
+								int amount = verrechnet.getZahl();
+								removeLeistung(verrechnet);
+								for (int i = 0; i < amount; i++) {
+									addLeistung((IVerrechenbar) matchingVerrechenbar.get());
+								}
+							} else {
+								MessageEvent.fireInformation("Info",
+									"Achtung: durch den Fall wechsel wurde die Position "
+										+ v.getCode()
+										+ " automatisch entfernt, da diese im neuen Fall nicht vorhanden ist.");
+								removeLeistung(verrechnet);
+							}
+						} else {
+							TimeTool date = new TimeTool(verrechnet.getKons().getDatum());
+							double factor = v.getFactor(date, f);
+							verrechnet.set(Verrechnet.SCALE_SELLING, Double.toString(factor));
+						}
 					}
 				}
 			}
 			refreshLastUpdateAndSendUpdateEvent(FLD_CASE_ID);
 		}
+	}
+	
+	private HashMap<Object, Object> getCodeElementServiceContext(){
+		HashMap<Object, Object> ret = new HashMap<>();
+		ret.put(ContextKeys.CONSULTATION, this);
+		IPersistentObject coverage = getFall();
+		if (coverage != null) {
+			ret.put(ContextKeys.COVERAGE, coverage);
+		}
+		return ret;
+	}
+	
+	private boolean isTarmed(Verrechnet verrechnet){
+		String fullname = verrechnet.get(Verrechnet.CLASS);
+		return fullname.contains("TarmedLeistung");
 	}
 	
 	/** Eine neue Konsultation zu einem Fall erstellen */
