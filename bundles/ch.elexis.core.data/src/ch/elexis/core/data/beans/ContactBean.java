@@ -528,13 +528,11 @@ public class ContactBean extends BeanPersistentObject<Kontakt>
 	
 	@Override
 	public String getFirstName(){
-		// TODO Auto-generated method stub
-		return null;
+		return cache.description2;
 	}
 	
 	@Override
 	public String getFamilyName(){
-		// TODO Auto-generated method stub
-		return null;
+		return cache.description1;
 	}
 }
