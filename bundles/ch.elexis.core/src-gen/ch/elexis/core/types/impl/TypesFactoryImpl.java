@@ -10,7 +10,8 @@
  */
 package ch.elexis.core.types.impl;
 
-import ch.elexis.core.types.AddressType;
+import java.time.LocalDateTime;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -18,8 +19,8 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
+import ch.elexis.core.types.AddressType;
 import ch.elexis.core.types.ContactGender;
-import ch.elexis.core.types.ContactType;
 import ch.elexis.core.types.Country;
 import ch.elexis.core.types.DocumentStatus;
 import ch.elexis.core.types.Gender;
@@ -29,7 +30,6 @@ import ch.elexis.core.types.RelationshipType;
 import ch.elexis.core.types.TypesFactory;
 import ch.elexis.core.types.TypesPackage;
 import ch.rgw.tools.Money;
-import ch.rgw.tools.TimeTool;
 
 /**
  * <!-- begin-user-doc -->
@@ -88,8 +88,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
-			case TypesPackage.CONTACT_TYPE:
-				return createContactTypeFromString(eDataType, initialValue);
 			case TypesPackage.CONTACT_GENDER:
 				return createContactGenderFromString(eDataType, initialValue);
 			case TypesPackage.RELATIONSHIP_TYPE:
@@ -100,8 +98,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createDocumentStatusFromString(eDataType, initialValue);
 			case TypesPackage.MONEY:
 				return createMoneyFromString(eDataType, initialValue);
-			case TypesPackage.TIME_TOOL:
-				return createTimeToolFromString(eDataType, initialValue);
 			case TypesPackage.GENDER:
 				return createGenderFromString(eDataType, initialValue);
 			case TypesPackage.LAB_ITEM_TYP:
@@ -110,6 +106,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createCountryFromString(eDataType, initialValue);
 			case TypesPackage.PATHOLOGIC_DESCRIPTION:
 				return createPathologicDescriptionFromString(eDataType, initialValue);
+			case TypesPackage.LOCAL_DATE_TIME:
+				return createLocalDateTimeFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -123,8 +121,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
-			case TypesPackage.CONTACT_TYPE:
-				return convertContactTypeToString(eDataType, instanceValue);
 			case TypesPackage.CONTACT_GENDER:
 				return convertContactGenderToString(eDataType, instanceValue);
 			case TypesPackage.RELATIONSHIP_TYPE:
@@ -135,8 +131,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertDocumentStatusToString(eDataType, instanceValue);
 			case TypesPackage.MONEY:
 				return convertMoneyToString(eDataType, instanceValue);
-			case TypesPackage.TIME_TOOL:
-				return convertTimeToolToString(eDataType, instanceValue);
 			case TypesPackage.GENDER:
 				return convertGenderToString(eDataType, instanceValue);
 			case TypesPackage.LAB_ITEM_TYP:
@@ -145,29 +139,11 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertCountryToString(eDataType, instanceValue);
 			case TypesPackage.PATHOLOGIC_DESCRIPTION:
 				return convertPathologicDescriptionToString(eDataType, instanceValue);
+			case TypesPackage.LOCAL_DATE_TIME:
+				return convertLocalDateTimeToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ContactType createContactTypeFromString(EDataType eDataType, String initialValue) {
-		ContactType result = ContactType.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
-		return result;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertContactTypeToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
 	}
 
 	/**
@@ -273,24 +249,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public TimeTool createTimeToolFromString(EDataType eDataType, String initialValue) {
-		return (TimeTool)super.createFromString(eDataType, initialValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertTimeToolToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(eDataType, instanceValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public Gender createGenderFromString(EDataType eDataType, String initialValue) {
 		return (Gender)super.createFromString(eDataType, initialValue);
 	}
@@ -355,6 +313,24 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	public String convertPathologicDescriptionToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public LocalDateTime createLocalDateTimeFromString(EDataType eDataType, String initialValue) {
+		return (LocalDateTime)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertLocalDateTimeToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

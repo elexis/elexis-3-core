@@ -25,6 +25,9 @@ import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IDiagnose;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IHistory;
+import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.model.ILabOrder;
+import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPeriod;
 import ch.elexis.core.model.IPerson;
@@ -165,6 +168,14 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseICoverage(ICoverage object) {
 				return createICoverageAdapter();
+			}
+			@Override
+			public Adapter caseIOrganization(IOrganization object) {
+				return createIOrganizationAdapter();
+			}
+			@Override
+			public Adapter caseILaboratory(ILaboratory object) {
+				return createILaboratoryAdapter();
 			}
 			@Override
 			public <T> Adapter caseComparable(Comparable<T> object) {
@@ -453,6 +464,34 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createICoverageAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IOrganization <em>IOrganization</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IOrganization
+	 * @generated
+	 */
+	public Adapter createIOrganizationAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.ILaboratory <em>ILaboratory</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.ILaboratory
+	 * @generated
+	 */
+	public Adapter createILaboratoryAdapter() {
 		return null;
 	}
 

@@ -178,6 +178,15 @@ public abstract class AbstractDocumentDTO implements IDocument {
 		return extension;
 	}
 	
+	@Override
+	public boolean isDeleted(){
+		return false;
+	}
+	
+	@Override
+	public void setDeleted(boolean value){
+	}
+	
 	public String evaluateExtension(String input){
 		String ext = MimeTool.getExtension(input);
 		if (StringUtils.isEmpty(ext)) {

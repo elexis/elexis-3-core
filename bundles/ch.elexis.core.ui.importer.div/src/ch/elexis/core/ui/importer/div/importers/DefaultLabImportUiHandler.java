@@ -4,9 +4,9 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
 
 import ch.elexis.core.data.interfaces.ILabResult;
+import ch.elexis.core.data.interfaces.IPatient;
 import ch.elexis.core.importer.div.importers.ImportHandler;
 import ch.elexis.core.importer.div.importers.TransientLabResult;
-import ch.elexis.core.model.IPatient;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.importer.div.importers.dialog.QueryOverwriteDialog;
 

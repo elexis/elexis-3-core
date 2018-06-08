@@ -10,13 +10,12 @@ import javax.persistence.Transient;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.IntegerStringConverter;
-import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.types.LabItemTyp;
 import ch.rgw.tools.StringTool;
 
 @Entity
 @Table(name = "laboritems")
-public class LabItem extends AbstractDBObjectIdDeleted implements ILabItem {
+public class LabItem extends AbstractDBObjectIdDeleted {
 
 	@Column(name = "kuerzel", length = 80)
 	private String code;
@@ -201,64 +200,64 @@ public class LabItem extends AbstractDBObjectIdDeleted implements ILabItem {
 		this.name = name;
 	}
 
-	@Override
-	@Transient
-	public LabItemTyp getTyp() {
-		int typ = 1;
-		try {
-			typ = Integer.parseInt(getType());
-		} catch (NumberFormatException nfe) {
-		}
-
-		switch (typ) {
-		case 0:
-			return LabItemTyp.NUMERIC;
-		case 1:
-			return LabItemTyp.TEXT;
-		case 2:
-			return LabItemTyp.ABSOLUTE;
-		case 3:
-			return LabItemTyp.FORMULA;
-		case 4:
-			return LabItemTyp.DOCUMENT;
-		default:
-			return LabItemTyp.TEXT;
-		}
-	}
-
-	@Override
-	@Transient
-	public void setTyp(LabItemTyp type) {
-		String tp = "1";
-		if (type == LabItemTyp.NUMERIC) {
-			tp = "0";
-		} else if (type == LabItemTyp.ABSOLUTE) {
-			tp = "2";
-		} else if (type == LabItemTyp.FORMULA) {
-			tp = "3";
-		} else if (type == LabItemTyp.DOCUMENT) {
-			tp = "4";
-		}
-		setType(tp);
-	}
-
-	@Override
-	@Transient
-	public String getKuerzel() {
-		return getCode();
-	}
-
-	@Override
-	@Transient
-	public void setKuerzel(String value) {
-		setCode(value);
-	}
+	//	@Override
+	//	@Transient
+	//	public LabItemTyp getTyp() {
+	//		int typ = 1;
+	//		try {
+	//			typ = Integer.parseInt(getType());
+	//		} catch (NumberFormatException nfe) {
+	//		}
+	//
+	//		switch (typ) {
+	//		case 0:
+	//			return LabItemTyp.NUMERIC;
+	//		case 1:
+	//			return LabItemTyp.TEXT;
+	//		case 2:
+	//			return LabItemTyp.ABSOLUTE;
+	//		case 3:
+	//			return LabItemTyp.FORMULA;
+	//		case 4:
+	//			return LabItemTyp.DOCUMENT;
+	//		default:
+	//			return LabItemTyp.TEXT;
+	//		}
+	//	}
+	//
+	//	@Override
+	//	@Transient
+	//	public void setTyp(LabItemTyp type) {
+	//		String tp = "1";
+	//		if (type == LabItemTyp.NUMERIC) {
+	//			tp = "0";
+	//		} else if (type == LabItemTyp.ABSOLUTE) {
+	//			tp = "2";
+	//		} else if (type == LabItemTyp.FORMULA) {
+	//			tp = "3";
+	//		} else if (type == LabItemTyp.DOCUMENT) {
+	//			tp = "4";
+	//		}
+	//		setType(tp);
+	//	}
+	//
+	//	@Override
+	//	@Transient
+	//	public String getKuerzel() {
+	//		return getCode();
+	//	}
+	//
+	//	@Override
+	//	@Transient
+	//	public void setKuerzel(String value) {
+	//		setCode(value);
+	//	}
 
 	@Override
 	public String getLabel() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(getCode()).append(", ").append(getName());
-		if (LabItemTyp.NUMERIC == getTyp()) {
+		if (LabItemTyp.NUMERIC == LabItemTyp.fromType(getType())) {
 			sb.append(" (").append(getReferenceMale()).append("/").append(getReferenceFemale()).append(" ")
 					.append(getUnit()).append(")");
 		} else {

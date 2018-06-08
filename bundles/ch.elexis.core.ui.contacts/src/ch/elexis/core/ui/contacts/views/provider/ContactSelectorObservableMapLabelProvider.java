@@ -18,9 +18,8 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import ch.elexis.core.data.beans.ContactBean;
-import ch.elexis.core.model.IContact;
-import ch.elexis.core.model.IPerson;
-import ch.elexis.core.types.ContactGender;
+import ch.elexis.core.data.interfaces.IContact;
+import ch.elexis.core.data.interfaces.IPerson;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.icons.Images;
 

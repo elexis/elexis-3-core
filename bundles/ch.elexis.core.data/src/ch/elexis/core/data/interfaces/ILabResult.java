@@ -10,7 +10,6 @@
  */
 package ch.elexis.core.data.interfaces;
 
-import ch.elexis.core.model.IContact;
 import ch.elexis.core.types.PathologicDescription;
 import ch.rgw.tools.TimeTool;
 

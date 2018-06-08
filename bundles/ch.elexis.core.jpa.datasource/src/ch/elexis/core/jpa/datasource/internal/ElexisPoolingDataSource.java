@@ -18,7 +18,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.DBConnection;
+import ch.elexis.core.common.DBConnection.DBType;
 import ch.elexis.core.services.IElexisDataSource;
+import ch.elexis.core.utils.CoreUtil;
 
 @Component(property = "name=elexis.datasource")
 public class ElexisPoolingDataSource extends PoolingDataSource
@@ -82,8 +84,23 @@ public class ElexisPoolingDataSource extends PoolingDataSource
 		return getConnection();
 	}
 
+	/**
+	 * @return an h2 based test database connection
+	 */
+	private DBConnection getTestDatabaseConnection(){
+		DBConnection retVal = new DBConnection();
+		retVal.connectionString = "jdbc:h2:mem:elexisTest;DB_CLOSE_DELAY=-1";
+		retVal.rdbmsType = DBType.H2;
+		retVal.username = "sa";
+		retVal.password = "";
+		return retVal;
+	}
+	
 	@Override
 	public Connection getConnection() throws SQLException {
+		if (CoreUtil.isTestMode() && connectionPool == null) {
+			setDBConnection(getTestDatabaseConnection());
+		}
 		return super.getConnection();
 	}
 }

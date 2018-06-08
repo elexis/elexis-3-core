@@ -10,10 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.jpa.entities;
 
-import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -32,7 +29,6 @@ import javax.persistence.Lob;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
@@ -40,11 +36,8 @@ import ch.elexis.core.jpa.entities.converter.ElexisDBCompressedStringConverter;
 import ch.elexis.core.jpa.entities.converter.FuzzyCountryToEnumConverter;
 import ch.elexis.core.jpa.entities.converter.FuzzyGenderToEnumConverter;
 import ch.elexis.core.jpa.entities.listener.KontaktEntityListener;
-import ch.elexis.core.model.IPatient;
-import ch.elexis.core.types.ContactType;
 import ch.elexis.core.types.Country;
 import ch.elexis.core.types.Gender;
-import ch.rgw.tools.TimeTool;
 
 
 /**
@@ -57,8 +50,7 @@ import ch.rgw.tools.TimeTool;
 @Table(name = "KONTAKT")
 @XmlRootElement(name = "contact")
 @EntityListeners(KontaktEntityListener.class)
-public class Kontakt extends AbstractDBObjectIdDeletedExtInfo implements Serializable, IPatient {
-	protected static final long serialVersionUID = 1L;
+public class Kontakt extends AbstractDBObjectIdDeletedExtInfo {
 
 	@Basic(fetch = FetchType.LAZY)
 	@Lob()
@@ -510,22 +502,6 @@ public class Kontakt extends AbstractDBObjectIdDeletedExtInfo implements Seriali
 		this.country = country;
 	}
 
-	@Override
-	@Transient
-	public ContactType getContactType() {
-		if (isOrganisation()) {
-			if (isLaboratory()) {
-				return ContactType.LABORATORY;
-			}
-			return ContactType.ORGANIZATION;
-		} else {
-			if (isPatient()) {
-				return ContactType.PATIENT;
-			}
-			return ContactType.PERSON;
-		}
-	}
-
 	public Gender getGender() {
 		return gender;
 	}
@@ -548,59 +524,5 @@ public class Kontakt extends AbstractDBObjectIdDeletedExtInfo implements Seriali
 
 	public void setPersonalAnamnese(String personalAnamnese) {
 		this.personalAnamnese = personalAnamnese;
-	}
-
-	@Override
-	@Transient
-	public void setContactType(ContactType value) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	@Transient
-	public TimeTool getDateOfBirth() {
-		return new TimeTool(getDob());
-	}
-
-	@Override
-	@Transient
-	public void setDateOfBirth(TimeTool value) {
-		setDob(value.toLocalDate());
-	}
-
-	@Override
-	@Transient
-	public String getFirstName() {
-		return getDescription2();
-	}
-
-	@Override
-	@Transient
-	public String getFamilyName() {
-		return getDescription1();
-	}
-
-	@Override
-	@Transient
-	public String getPatientNr() {
-		return getCode();
-	}
-
-	@Override
-	@Transient
-	public void setPatientNr(String patientNr) {
-		setCode(patientNr);
-	}
-
-	@Override
-	@Transient
-	public String getPatientLabel() {
-		return getLabel();
-	}
-	
-	@Transient
-	public long getAgeAt(LocalDateTime dateTime, ChronoUnit chronoUnit){
-		LocalDateTime birthDateTime = new TimeTool(getDateOfBirth()).toLocalDateTime();
-		return chronoUnit.between(birthDateTime, dateTime);
 	}
 }

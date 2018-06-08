@@ -12,12 +12,9 @@ package ch.elexis.core.ui.contacts.views.filter;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.PlatformUI;
 
-import ch.elexis.core.model.IContact;
+import ch.elexis.core.data.interfaces.IContact;
 
 public class KontaktAnzeigeTypViewerFilter extends ViewerFilter {
 	

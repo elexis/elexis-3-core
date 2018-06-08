@@ -8,30 +8,13 @@ import java.util.Optional;
 
 import javax.persistence.EntityManager;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.entitymanager.ElexisEntityManger;
-import ch.elexis.core.jpa.test.AllPluginTests;
-import ch.elexis.core.services.IElexisDataSource;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class InitPersistenceUnit {
-	
-	private static IElexisDataSource elexisDataSource;
-	
-	@BeforeClass
-	public static void beforeClass(){
-		elexisDataSource = OsgiServiceUtil.getService(IElexisDataSource.class).get();
-		elexisDataSource.setDBConnection(AllPluginTests.getTestDatabaseConnection());
-	}
-	
-	@AfterClass
-	public static void afterClass(){
-		OsgiServiceUtil.ungetService(elexisDataSource);
-	}
 	
 	@Test
 	public void getEntityManger(){

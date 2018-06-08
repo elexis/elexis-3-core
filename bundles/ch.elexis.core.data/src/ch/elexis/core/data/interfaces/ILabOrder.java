@@ -10,8 +10,6 @@
  */
 package ch.elexis.core.data.interfaces;
 
-import ch.elexis.core.model.IPatient;
-
 /**
  * Copy of core interface, used while refactoring.
  */

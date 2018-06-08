@@ -25,7 +25,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated model -->
       <package
-            uri="http://ch.elexis.corel/model/model"
+            uri="http://ch.elexis.core/model/model"
             class="ch.elexis.core.model.ModelPackage"
             genModel="model/model.genmodel"/>
    </extension>

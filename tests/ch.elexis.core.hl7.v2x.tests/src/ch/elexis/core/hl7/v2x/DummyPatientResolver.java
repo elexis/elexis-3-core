@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import ch.elexis.core.data.beans.ContactBean;
-import ch.elexis.core.model.IPatient;
+import ch.elexis.core.data.interfaces.IPatient;
 import ch.elexis.data.Patient;
 import ch.elexis.hl7.HL7PatientResolver;
 

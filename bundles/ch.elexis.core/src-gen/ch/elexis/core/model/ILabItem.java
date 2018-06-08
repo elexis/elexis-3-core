@@ -37,7 +37,7 @@ import ch.elexis.core.types.LabItemTyp;
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface ILabItem extends Identifiable {
+public interface ILabItem extends Identifiable, Deleteable {
 	/**
 	 * Returns the value of the '<em><b>Typ</b></em>' attribute.
 	 * <!-- begin-user-doc -->

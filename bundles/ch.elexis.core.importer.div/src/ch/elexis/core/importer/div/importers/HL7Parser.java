@@ -21,10 +21,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.data.interfaces.IContact;
 import ch.elexis.core.data.interfaces.ILabItem;
+import ch.elexis.core.data.interfaces.IPatient;
 import ch.elexis.core.exceptions.ElexisException;
-import ch.elexis.core.model.IContact;
-import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.LabResultConstants;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;

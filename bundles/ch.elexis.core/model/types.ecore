@@ -14,15 +14,6 @@
     <eTypeParameters name="K"/>
     <eTypeParameters name="V"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="ContactType">
-    <eLiterals name="PERSON"/>
-    <eLiterals name="ORGANIZATION" value="1"/>
-    <eLiterals name="MANDATOR" value="2" literal=""/>
-    <eLiterals name="LABORATORY" value="3"/>
-    <eLiterals name="PATIENT" value="4"/>
-    <eLiterals name="UNKNOWN" value="9"/>
-    <eLiterals name="USER" value="5"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="ContactGender">
     <eLiterals name="MALE"/>
     <eLiterals name="FEMALE" value="1"/>
@@ -45,7 +36,6 @@
     <eLiterals name="WELFARE_INSUREE" value="411"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="Money" instanceClassName="ch.rgw.tools.Money"/>
-  <eClassifiers xsi:type="ecore:EDataType" name="TimeTool" instanceClassName="ch.rgw.tools.TimeTool"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Gender" instanceClassName="ch.elexis.core.types.Gender"/>
   <eClassifiers xsi:type="ecore:EDataType" name="LabItemTyp" instanceClassName="ch.elexis.core.types.LabItemTyp"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Country" instanceClassName="ch.elexis.core.types.Country"/>
@@ -69,4 +59,5 @@
     <eLiterals name="RECIVED" value="4"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="PathologicDescription" instanceClassName="ch.elexis.core.types.PathologicDescription"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="LocalDateTime" instanceClassName="java.time.LocalDateTime"/>
 </ecore:EPackage>

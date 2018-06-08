@@ -10,7 +10,6 @@
  */
 package ch.elexis.core.model;
 
-import ch.elexis.core.types.ContactType;
 import ch.elexis.core.types.Country;
 
 /**
@@ -22,10 +21,12 @@ import ch.elexis.core.types.Country;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.model.IContact#getContactType <em>Contact Type</em>}</li>
  *   <li>{@link ch.elexis.core.model.IContact#isMandator <em>Mandator</em>}</li>
  *   <li>{@link ch.elexis.core.model.IContact#isUser <em>User</em>}</li>
  *   <li>{@link ch.elexis.core.model.IContact#isPatient <em>Patient</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IContact#isPerson <em>Person</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IContact#isOrganization <em>Organization</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IContact#isLaboratory <em>Laboratory</em>}</li>
  *   <li>{@link ch.elexis.core.model.IContact#getDescription1 <em>Description1</em>}</li>
  *   <li>{@link ch.elexis.core.model.IContact#getDescription2 <em>Description2</em>}</li>
  *   <li>{@link ch.elexis.core.model.IContact#getDescription3 <em>Description3</em>}</li>
@@ -48,35 +49,6 @@ import ch.elexis.core.types.Country;
  * @generated
  */
 public interface IContact extends Identifiable, Deleteable {
-	/**
-	 * Returns the value of the '<em><b>Contact Type</b></em>' attribute.
-	 * The literals are from the enumeration {@link ch.elexis.core.types.ContactType}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Contact Type</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Contact Type</em>' attribute.
-	 * @see ch.elexis.core.types.ContactType
-	 * @see #setContactType(ContactType)
-	 * @see ch.elexis.core.model.ModelPackage#getIContact_ContactType()
-	 * @model
-	 * @generated
-	 */
-	ContactType getContactType();
-
-	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getContactType <em>Contact Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Contact Type</em>' attribute.
-	 * @see ch.elexis.core.types.ContactType
-	 * @see #getContactType()
-	 * @generated
-	 */
-	void setContactType(ContactType value);
-
 	/**
 	 * Returns the value of the '<em><b>Mandator</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -154,6 +126,84 @@ public interface IContact extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	void setPatient(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Person</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Person</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Person</em>' attribute.
+	 * @see #setPerson(boolean)
+	 * @see ch.elexis.core.model.ModelPackage#getIContact_Person()
+	 * @model
+	 * @generated
+	 */
+	boolean isPerson();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IContact#isPerson <em>Person</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Person</em>' attribute.
+	 * @see #isPerson()
+	 * @generated
+	 */
+	void setPerson(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Laboratory</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Laboratory</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Laboratory</em>' attribute.
+	 * @see #setLaboratory(boolean)
+	 * @see ch.elexis.core.model.ModelPackage#getIContact_Laboratory()
+	 * @model
+	 * @generated
+	 */
+	boolean isLaboratory();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IContact#isLaboratory <em>Laboratory</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Laboratory</em>' attribute.
+	 * @see #isLaboratory()
+	 * @generated
+	 */
+	void setLaboratory(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Organization</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Organization</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Organization</em>' attribute.
+	 * @see #setOrganization(boolean)
+	 * @see ch.elexis.core.model.ModelPackage#getIContact_Organization()
+	 * @model
+	 * @generated
+	 */
+	boolean isOrganization();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IContact#isOrganization <em>Organization</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Organization</em>' attribute.
+	 * @see #isOrganization()
+	 * @generated
+	 */
+	void setOrganization(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Description1</b></em>' attribute.

@@ -3,10 +3,12 @@
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="model" nsURI="http://ch.elexis.core/model/model" nsPrefix="ch.elexis.core.model">
   <eClassifiers xsi:type="ecore:EClass" name="IContact" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="contactType" eType="ecore:EEnum types.ecore#//ContactType"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="mandator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="user" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="patient" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="person" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="organization" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="laboratory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description2" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description3" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -72,12 +74,12 @@
   <eClassifiers xsi:type="ecore:EDataType" name="StringArray" instanceClassName="java.lang.String[]"/>
   <eClassifiers xsi:type="ecore:EClass" name="IPerson" abstract="true" interface="true"
       eSuperTypes="#//IContact">
-    <eOperations name="getFirstName" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eOperations name="getFamilyName" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateOfBirth" eType="ecore:EDataType types.ecore#//TimeTool"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateOfBirth" eType="ecore:EDataType types.ecore#//LocalDateTime"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="gender" eType="ecore:EDataType types.ecore#//Gender"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="titel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="titelSuffix" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="firstName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IPatient" abstract="true" interface="true"
       eSuperTypes="#//IPerson">
@@ -131,9 +133,9 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="refMale" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="refFemale" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="unit" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="analyseTime" eType="ecore:EDataType types.ecore#//TimeTool"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="observationTime" eType="ecore:EDataType types.ecore#//TimeTool"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="transmissionTime" eType="ecore:EDataType types.ecore#//TimeTool"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="analyseTime" eType="ecore:EDataType types.ecore#//LocalDateTime"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="observationTime" eType="ecore:EDataType types.ecore#//LocalDateTime"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="transmissionTime" eType="ecore:EDataType types.ecore#//LocalDateTime"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="result" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="flags" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -151,8 +153,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IPeriod" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="startTime" eType="ecore:EDataType types.ecore#//TimeTool"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="endTime" eType="ecore:EDataType types.ecore#//TimeTool"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="startTime" eType="ecore:EDataType types.ecore#//LocalDateTime"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="endTime" eType="ecore:EDataType types.ecore#//LocalDateTime"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IDocument" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable">
@@ -186,4 +188,8 @@
       eSuperTypes="#//ICodeElement #//Identifiable"/>
   <eClassifiers xsi:type="ecore:EClass" name="ICoverage" abstract="true" interface="true"
       eSuperTypes="#//Deleteable #//Identifiable"/>
+  <eClassifiers xsi:type="ecore:EClass" name="IOrganization" abstract="true" interface="true"
+      eSuperTypes="#//IContact"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ILaboratory" abstract="true" interface="true"
+      eSuperTypes="#//IOrganization"/>
 </ecore:EPackage>

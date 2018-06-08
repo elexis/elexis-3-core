@@ -13,9 +13,9 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import ch.elexis.core.data.interfaces.IPatient;
 import ch.elexis.core.data.util.PlatformHelper;
 import ch.elexis.core.exceptions.ElexisException;
-import ch.elexis.core.model.IPatient;
 import ch.elexis.core.types.Gender;
 import ch.elexis.data.Patient;
 import ch.elexis.hl7.HL7Reader;

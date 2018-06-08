@@ -25,7 +25,7 @@ import static ch.elexis.core.ui.dialogs.KontaktSelektor.HINT_ZIP;
 import java.util.List;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.model.IPatient;
+import ch.elexis.core.data.interfaces.IPatient;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.data.Anschrift;
 import ch.elexis.data.Kontakt;

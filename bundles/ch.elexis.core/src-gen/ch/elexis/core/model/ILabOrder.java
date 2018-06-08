@@ -29,7 +29,7 @@ package ch.elexis.core.model;
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface ILabOrder extends Identifiable {
+public interface ILabOrder extends Identifiable, Deleteable {
 	/**
 	 * Returns the value of the '<em><b>Lab Result</b></em>' reference.
 	 * <!-- begin-user-doc -->

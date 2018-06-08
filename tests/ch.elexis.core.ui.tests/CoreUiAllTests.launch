@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.pde.ui.JunitLaunchConfig">
 <setAttribute key="additional_plugins">
-<setEntry value="ch.elexis.base.ch.arzttarife:3.1.0.qualifier:default:false"/>
+<setEntry value="ch.elexis.base.ch.arzttarife:3.4.0.qualifier:default:false"/>
 </setAttribute>
 <booleanAttribute key="append.args" value="true"/>
 <booleanAttribute key="askclear" value="false"/>

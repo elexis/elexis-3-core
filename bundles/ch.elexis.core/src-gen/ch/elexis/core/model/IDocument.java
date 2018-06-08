@@ -43,7 +43,7 @@ import ch.elexis.core.types.DocumentStatus;
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface IDocument extends Identifiable {
+public interface IDocument extends Identifiable, Deleteable {
 	/**
 	 * Returns the value of the '<em><b>Patient Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->

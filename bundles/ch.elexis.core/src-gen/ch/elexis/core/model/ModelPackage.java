@@ -48,7 +48,7 @@ public interface ModelPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://ch.elexis.corel/model/model";
+	String eNS_URI = "http://ch.elexis.core/model/model";
 
 	/**
 	 * The package namespace name.
@@ -105,22 +105,13 @@ public interface ModelPackage extends EPackage {
 	int ICONTACT__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Contact Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ICONTACT__CONTACT_TYPE = IDENTIFIABLE_FEATURE_COUNT + 1;
-
-	/**
 	 * The feature id for the '<em><b>Mandator</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__MANDATOR = IDENTIFIABLE_FEATURE_COUNT + 2;
+	int ICONTACT__MANDATOR = IDENTIFIABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>User</b></em>' attribute.
@@ -129,7 +120,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__USER = IDENTIFIABLE_FEATURE_COUNT + 3;
+	int ICONTACT__USER = IDENTIFIABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Patient</b></em>' attribute.
@@ -138,7 +129,34 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__PATIENT = IDENTIFIABLE_FEATURE_COUNT + 4;
+	int ICONTACT__PATIENT = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Person</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICONTACT__PERSON = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Organization</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICONTACT__ORGANIZATION = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Laboratory</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICONTACT__LABORATORY = IDENTIFIABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Description1</b></em>' attribute.
@@ -147,7 +165,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__DESCRIPTION1 = IDENTIFIABLE_FEATURE_COUNT + 5;
+	int ICONTACT__DESCRIPTION1 = IDENTIFIABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Description2</b></em>' attribute.
@@ -156,7 +174,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__DESCRIPTION2 = IDENTIFIABLE_FEATURE_COUNT + 6;
+	int ICONTACT__DESCRIPTION2 = IDENTIFIABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Description3</b></em>' attribute.
@@ -165,7 +183,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__DESCRIPTION3 = IDENTIFIABLE_FEATURE_COUNT + 7;
+	int ICONTACT__DESCRIPTION3 = IDENTIFIABLE_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
@@ -174,7 +192,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__CODE = IDENTIFIABLE_FEATURE_COUNT + 8;
+	int ICONTACT__CODE = IDENTIFIABLE_FEATURE_COUNT + 10;
 
 	/**
 	 * The feature id for the '<em><b>Country</b></em>' attribute.
@@ -183,7 +201,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__COUNTRY = IDENTIFIABLE_FEATURE_COUNT + 9;
+	int ICONTACT__COUNTRY = IDENTIFIABLE_FEATURE_COUNT + 11;
 
 	/**
 	 * The feature id for the '<em><b>Zip</b></em>' attribute.
@@ -192,7 +210,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__ZIP = IDENTIFIABLE_FEATURE_COUNT + 10;
+	int ICONTACT__ZIP = IDENTIFIABLE_FEATURE_COUNT + 12;
 
 	/**
 	 * The feature id for the '<em><b>City</b></em>' attribute.
@@ -201,7 +219,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__CITY = IDENTIFIABLE_FEATURE_COUNT + 11;
+	int ICONTACT__CITY = IDENTIFIABLE_FEATURE_COUNT + 13;
 
 	/**
 	 * The feature id for the '<em><b>Street</b></em>' attribute.
@@ -210,7 +228,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__STREET = IDENTIFIABLE_FEATURE_COUNT + 12;
+	int ICONTACT__STREET = IDENTIFIABLE_FEATURE_COUNT + 14;
 
 	/**
 	 * The feature id for the '<em><b>Phone1</b></em>' attribute.
@@ -219,7 +237,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__PHONE1 = IDENTIFIABLE_FEATURE_COUNT + 13;
+	int ICONTACT__PHONE1 = IDENTIFIABLE_FEATURE_COUNT + 15;
 
 	/**
 	 * The feature id for the '<em><b>Phone2</b></em>' attribute.
@@ -228,7 +246,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__PHONE2 = IDENTIFIABLE_FEATURE_COUNT + 14;
+	int ICONTACT__PHONE2 = IDENTIFIABLE_FEATURE_COUNT + 16;
 
 	/**
 	 * The feature id for the '<em><b>Fax</b></em>' attribute.
@@ -237,7 +255,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__FAX = IDENTIFIABLE_FEATURE_COUNT + 15;
+	int ICONTACT__FAX = IDENTIFIABLE_FEATURE_COUNT + 17;
 
 	/**
 	 * The feature id for the '<em><b>Email</b></em>' attribute.
@@ -246,7 +264,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__EMAIL = IDENTIFIABLE_FEATURE_COUNT + 16;
+	int ICONTACT__EMAIL = IDENTIFIABLE_FEATURE_COUNT + 18;
 
 	/**
 	 * The feature id for the '<em><b>Website</b></em>' attribute.
@@ -255,7 +273,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__WEBSITE = IDENTIFIABLE_FEATURE_COUNT + 17;
+	int ICONTACT__WEBSITE = IDENTIFIABLE_FEATURE_COUNT + 19;
 
 	/**
 	 * The feature id for the '<em><b>Mobile</b></em>' attribute.
@@ -264,7 +282,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__MOBILE = IDENTIFIABLE_FEATURE_COUNT + 18;
+	int ICONTACT__MOBILE = IDENTIFIABLE_FEATURE_COUNT + 20;
 
 	/**
 	 * The feature id for the '<em><b>Comment</b></em>' attribute.
@@ -273,7 +291,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT__COMMENT = IDENTIFIABLE_FEATURE_COUNT + 19;
+	int ICONTACT__COMMENT = IDENTIFIABLE_FEATURE_COUNT + 21;
 
 	/**
 	 * The number of structural features of the '<em>IContact</em>' class.
@@ -282,7 +300,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 20;
+	int ICONTACT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 22;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IXid <em>IXid</em>}' class.
@@ -508,15 +526,6 @@ public interface ModelPackage extends EPackage {
 	int IPERSON__DELETED = ICONTACT__DELETED;
 
 	/**
-	 * The feature id for the '<em><b>Contact Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IPERSON__CONTACT_TYPE = ICONTACT__CONTACT_TYPE;
-
-	/**
 	 * The feature id for the '<em><b>Mandator</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -542,6 +551,33 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IPERSON__PATIENT = ICONTACT__PATIENT;
+
+	/**
+	 * The feature id for the '<em><b>Person</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPERSON__PERSON = ICONTACT__PERSON;
+
+	/**
+	 * The feature id for the '<em><b>Organization</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPERSON__ORGANIZATION = ICONTACT__ORGANIZATION;
+
+	/**
+	 * The feature id for the '<em><b>Laboratory</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPERSON__LABORATORY = ICONTACT__LABORATORY;
 
 	/**
 	 * The feature id for the '<em><b>Description1</b></em>' attribute.
@@ -715,13 +751,31 @@ public interface ModelPackage extends EPackage {
 	int IPERSON__TITEL_SUFFIX = ICONTACT_FEATURE_COUNT + 3;
 
 	/**
+	 * The feature id for the '<em><b>First Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPERSON__FIRST_NAME = ICONTACT_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Last Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPERSON__LAST_NAME = ICONTACT_FEATURE_COUNT + 5;
+
+	/**
 	 * The number of structural features of the '<em>IPerson</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IPERSON_FEATURE_COUNT = ICONTACT_FEATURE_COUNT + 4;
+	int IPERSON_FEATURE_COUNT = ICONTACT_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -731,15 +785,6 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IPATIENT__DELETED = IPERSON__DELETED;
-
-	/**
-	 * The feature id for the '<em><b>Contact Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IPATIENT__CONTACT_TYPE = IPERSON__CONTACT_TYPE;
 
 	/**
 	 * The feature id for the '<em><b>Mandator</b></em>' attribute.
@@ -767,6 +812,33 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IPATIENT__PATIENT = IPERSON__PATIENT;
+
+	/**
+	 * The feature id for the '<em><b>Person</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPATIENT__PERSON = IPERSON__PERSON;
+
+	/**
+	 * The feature id for the '<em><b>Organization</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPATIENT__ORGANIZATION = IPERSON__ORGANIZATION;
+
+	/**
+	 * The feature id for the '<em><b>Laboratory</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPATIENT__LABORATORY = IPERSON__LABORATORY;
 
 	/**
 	 * The feature id for the '<em><b>Description1</b></em>' attribute.
@@ -940,6 +1012,24 @@ public interface ModelPackage extends EPackage {
 	int IPATIENT__TITEL_SUFFIX = IPERSON__TITEL_SUFFIX;
 
 	/**
+	 * The feature id for the '<em><b>First Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPATIENT__FIRST_NAME = IPERSON__FIRST_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Last Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPATIENT__LAST_NAME = IPERSON__LAST_NAME;
+
+	/**
 	 * The feature id for the '<em><b>Diagnosen</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1049,13 +1139,22 @@ public interface ModelPackage extends EPackage {
 	int ILAB_ITEM = 9;
 
 	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_ITEM__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Typ</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_ITEM__TYP = IDENTIFIABLE_FEATURE_COUNT + 0;
+	int ILAB_ITEM__TYP = IDENTIFIABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Reference Male</b></em>' attribute.
@@ -1064,7 +1163,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_ITEM__REFERENCE_MALE = IDENTIFIABLE_FEATURE_COUNT + 1;
+	int ILAB_ITEM__REFERENCE_MALE = IDENTIFIABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Reference Female</b></em>' attribute.
@@ -1073,7 +1172,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_ITEM__REFERENCE_FEMALE = IDENTIFIABLE_FEATURE_COUNT + 2;
+	int ILAB_ITEM__REFERENCE_FEMALE = IDENTIFIABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Group</b></em>' attribute.
@@ -1082,7 +1181,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_ITEM__GROUP = IDENTIFIABLE_FEATURE_COUNT + 3;
+	int ILAB_ITEM__GROUP = IDENTIFIABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Priority</b></em>' attribute.
@@ -1091,7 +1190,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_ITEM__PRIORITY = IDENTIFIABLE_FEATURE_COUNT + 4;
+	int ILAB_ITEM__PRIORITY = IDENTIFIABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Unit</b></em>' attribute.
@@ -1100,7 +1199,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_ITEM__UNIT = IDENTIFIABLE_FEATURE_COUNT + 5;
+	int ILAB_ITEM__UNIT = IDENTIFIABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Kuerzel</b></em>' attribute.
@@ -1109,7 +1208,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_ITEM__KUERZEL = IDENTIFIABLE_FEATURE_COUNT + 6;
+	int ILAB_ITEM__KUERZEL = IDENTIFIABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1118,7 +1217,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_ITEM__NAME = IDENTIFIABLE_FEATURE_COUNT + 7;
+	int ILAB_ITEM__NAME = IDENTIFIABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Digits</b></em>' attribute.
@@ -1127,7 +1226,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_ITEM__DIGITS = IDENTIFIABLE_FEATURE_COUNT + 8;
+	int ILAB_ITEM__DIGITS = IDENTIFIABLE_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Visible</b></em>' attribute.
@@ -1136,7 +1235,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_ITEM__VISIBLE = IDENTIFIABLE_FEATURE_COUNT + 9;
+	int ILAB_ITEM__VISIBLE = IDENTIFIABLE_FEATURE_COUNT + 10;
 
 	/**
 	 * The number of structural features of the '<em>ILab Item</em>' class.
@@ -1145,7 +1244,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_ITEM_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 10;
+	int ILAB_ITEM_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 11;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ILabResult <em>ILab Result</em>}' class.
@@ -1158,13 +1257,22 @@ public interface ModelPackage extends EPackage {
 	int ILAB_RESULT = 10;
 
 	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_RESULT__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Ref Male</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__REF_MALE = IDENTIFIABLE_FEATURE_COUNT + 0;
+	int ILAB_RESULT__REF_MALE = IDENTIFIABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Ref Female</b></em>' attribute.
@@ -1173,7 +1281,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__REF_FEMALE = IDENTIFIABLE_FEATURE_COUNT + 1;
+	int ILAB_RESULT__REF_FEMALE = IDENTIFIABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Unit</b></em>' attribute.
@@ -1182,7 +1290,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__UNIT = IDENTIFIABLE_FEATURE_COUNT + 2;
+	int ILAB_RESULT__UNIT = IDENTIFIABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Analyse Time</b></em>' attribute.
@@ -1191,7 +1299,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__ANALYSE_TIME = IDENTIFIABLE_FEATURE_COUNT + 3;
+	int ILAB_RESULT__ANALYSE_TIME = IDENTIFIABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Observation Time</b></em>' attribute.
@@ -1200,7 +1308,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__OBSERVATION_TIME = IDENTIFIABLE_FEATURE_COUNT + 4;
+	int ILAB_RESULT__OBSERVATION_TIME = IDENTIFIABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Transmission Time</b></em>' attribute.
@@ -1209,7 +1317,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__TRANSMISSION_TIME = IDENTIFIABLE_FEATURE_COUNT + 5;
+	int ILAB_RESULT__TRANSMISSION_TIME = IDENTIFIABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Result</b></em>' attribute.
@@ -1218,7 +1326,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__RESULT = IDENTIFIABLE_FEATURE_COUNT + 6;
+	int ILAB_RESULT__RESULT = IDENTIFIABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Flags</b></em>' attribute.
@@ -1227,7 +1335,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__FLAGS = IDENTIFIABLE_FEATURE_COUNT + 7;
+	int ILAB_RESULT__FLAGS = IDENTIFIABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Comment</b></em>' attribute.
@@ -1236,7 +1344,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__COMMENT = IDENTIFIABLE_FEATURE_COUNT + 8;
+	int ILAB_RESULT__COMMENT = IDENTIFIABLE_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Origin Contact</b></em>' reference.
@@ -1245,7 +1353,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__ORIGIN_CONTACT = IDENTIFIABLE_FEATURE_COUNT + 9;
+	int ILAB_RESULT__ORIGIN_CONTACT = IDENTIFIABLE_FEATURE_COUNT + 10;
 
 	/**
 	 * The feature id for the '<em><b>Date</b></em>' attribute.
@@ -1254,7 +1362,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__DATE = IDENTIFIABLE_FEATURE_COUNT + 10;
+	int ILAB_RESULT__DATE = IDENTIFIABLE_FEATURE_COUNT + 11;
 
 	/**
 	 * The feature id for the '<em><b>Item</b></em>' reference.
@@ -1263,7 +1371,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__ITEM = IDENTIFIABLE_FEATURE_COUNT + 11;
+	int ILAB_RESULT__ITEM = IDENTIFIABLE_FEATURE_COUNT + 12;
 
 	/**
 	 * The feature id for the '<em><b>Pathologic Description</b></em>' attribute.
@@ -1272,7 +1380,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT__PATHOLOGIC_DESCRIPTION = IDENTIFIABLE_FEATURE_COUNT + 12;
+	int ILAB_RESULT__PATHOLOGIC_DESCRIPTION = IDENTIFIABLE_FEATURE_COUNT + 13;
 
 	/**
 	 * The number of structural features of the '<em>ILab Result</em>' class.
@@ -1281,7 +1389,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_RESULT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 13;
+	int ILAB_RESULT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 14;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ILabOrder <em>ILab Order</em>}' class.
@@ -1294,13 +1402,22 @@ public interface ModelPackage extends EPackage {
 	int ILAB_ORDER = 11;
 
 	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_ORDER__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Lab Result</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_ORDER__LAB_RESULT = IDENTIFIABLE_FEATURE_COUNT + 0;
+	int ILAB_ORDER__LAB_RESULT = IDENTIFIABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Lab Item</b></em>' reference.
@@ -1309,7 +1426,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_ORDER__LAB_ITEM = IDENTIFIABLE_FEATURE_COUNT + 1;
+	int ILAB_ORDER__LAB_ITEM = IDENTIFIABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Patient Contact</b></em>' reference.
@@ -1318,7 +1435,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_ORDER__PATIENT_CONTACT = IDENTIFIABLE_FEATURE_COUNT + 2;
+	int ILAB_ORDER__PATIENT_CONTACT = IDENTIFIABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of structural features of the '<em>ILab Order</em>' class.
@@ -1327,7 +1444,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_ORDER_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 3;
+	int ILAB_ORDER_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IPeriod <em>IPeriod</em>}' class.
@@ -1340,13 +1457,22 @@ public interface ModelPackage extends EPackage {
 	int IPERIOD = 12;
 
 	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPERIOD__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Start Time</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IPERIOD__START_TIME = IDENTIFIABLE_FEATURE_COUNT + 0;
+	int IPERIOD__START_TIME = IDENTIFIABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>End Time</b></em>' attribute.
@@ -1355,7 +1481,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IPERIOD__END_TIME = IDENTIFIABLE_FEATURE_COUNT + 1;
+	int IPERIOD__END_TIME = IDENTIFIABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>IPeriod</em>' class.
@@ -1364,7 +1490,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IPERIOD_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 2;
+	int IPERIOD_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IDocument <em>IDocument</em>}' class.
@@ -1377,13 +1503,22 @@ public interface ModelPackage extends EPackage {
 	int IDOCUMENT = 13;
 
 	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Patient Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__PATIENT_ID = IDENTIFIABLE_FEATURE_COUNT + 0;
+	int IDOCUMENT__PATIENT_ID = IDENTIFIABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Author Id</b></em>' attribute.
@@ -1392,7 +1527,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__AUTHOR_ID = IDENTIFIABLE_FEATURE_COUNT + 1;
+	int IDOCUMENT__AUTHOR_ID = IDENTIFIABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Title</b></em>' attribute.
@@ -1401,7 +1536,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__TITLE = IDENTIFIABLE_FEATURE_COUNT + 2;
+	int IDOCUMENT__TITLE = IDENTIFIABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -1410,7 +1545,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__DESCRIPTION = IDENTIFIABLE_FEATURE_COUNT + 3;
+	int IDOCUMENT__DESCRIPTION = IDENTIFIABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Status</b></em>' attribute.
@@ -1419,7 +1554,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__STATUS = IDENTIFIABLE_FEATURE_COUNT + 4;
+	int IDOCUMENT__STATUS = IDENTIFIABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Created</b></em>' attribute.
@@ -1428,7 +1563,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__CREATED = IDENTIFIABLE_FEATURE_COUNT + 5;
+	int IDOCUMENT__CREATED = IDENTIFIABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Lastchanged</b></em>' attribute.
@@ -1437,7 +1572,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__LASTCHANGED = IDENTIFIABLE_FEATURE_COUNT + 6;
+	int IDOCUMENT__LASTCHANGED = IDENTIFIABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Mime Type</b></em>' attribute.
@@ -1446,7 +1581,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__MIME_TYPE = IDENTIFIABLE_FEATURE_COUNT + 7;
+	int IDOCUMENT__MIME_TYPE = IDENTIFIABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Category</b></em>' reference.
@@ -1455,7 +1590,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__CATEGORY = IDENTIFIABLE_FEATURE_COUNT + 8;
+	int IDOCUMENT__CATEGORY = IDENTIFIABLE_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>History</b></em>' reference list.
@@ -1464,7 +1599,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__HISTORY = IDENTIFIABLE_FEATURE_COUNT + 9;
+	int IDOCUMENT__HISTORY = IDENTIFIABLE_FEATURE_COUNT + 10;
 
 	/**
 	 * The feature id for the '<em><b>Store Id</b></em>' attribute.
@@ -1473,7 +1608,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__STORE_ID = IDENTIFIABLE_FEATURE_COUNT + 10;
+	int IDOCUMENT__STORE_ID = IDENTIFIABLE_FEATURE_COUNT + 11;
 
 	/**
 	 * The feature id for the '<em><b>Extension</b></em>' attribute.
@@ -1482,7 +1617,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__EXTENSION = IDENTIFIABLE_FEATURE_COUNT + 11;
+	int IDOCUMENT__EXTENSION = IDENTIFIABLE_FEATURE_COUNT + 12;
 
 	/**
 	 * The feature id for the '<em><b>Keywords</b></em>' attribute.
@@ -1491,7 +1626,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__KEYWORDS = IDENTIFIABLE_FEATURE_COUNT + 12;
+	int IDOCUMENT__KEYWORDS = IDENTIFIABLE_FEATURE_COUNT + 13;
 
 	/**
 	 * The number of structural features of the '<em>IDocument</em>' class.
@@ -1500,7 +1635,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 13;
+	int IDOCUMENT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 14;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ICategory <em>ICategory</em>}' class.
@@ -1643,13 +1778,447 @@ public interface ModelPackage extends EPackage {
 	int ICOVERAGE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IOrganization <em>IOrganization</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IOrganization
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIOrganization()
+	 * @generated
+	 */
+	int IORGANIZATION = 19;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__DELETED = ICONTACT__DELETED;
+
+	/**
+	 * The feature id for the '<em><b>Mandator</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__MANDATOR = ICONTACT__MANDATOR;
+
+	/**
+	 * The feature id for the '<em><b>User</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__USER = ICONTACT__USER;
+
+	/**
+	 * The feature id for the '<em><b>Patient</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__PATIENT = ICONTACT__PATIENT;
+
+	/**
+	 * The feature id for the '<em><b>Person</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__PERSON = ICONTACT__PERSON;
+
+	/**
+	 * The feature id for the '<em><b>Organization</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__ORGANIZATION = ICONTACT__ORGANIZATION;
+
+	/**
+	 * The feature id for the '<em><b>Laboratory</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__LABORATORY = ICONTACT__LABORATORY;
+
+	/**
+	 * The feature id for the '<em><b>Description1</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__DESCRIPTION1 = ICONTACT__DESCRIPTION1;
+
+	/**
+	 * The feature id for the '<em><b>Description2</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__DESCRIPTION2 = ICONTACT__DESCRIPTION2;
+
+	/**
+	 * The feature id for the '<em><b>Description3</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__DESCRIPTION3 = ICONTACT__DESCRIPTION3;
+
+	/**
+	 * The feature id for the '<em><b>Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__CODE = ICONTACT__CODE;
+
+	/**
+	 * The feature id for the '<em><b>Country</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__COUNTRY = ICONTACT__COUNTRY;
+
+	/**
+	 * The feature id for the '<em><b>Zip</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__ZIP = ICONTACT__ZIP;
+
+	/**
+	 * The feature id for the '<em><b>City</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__CITY = ICONTACT__CITY;
+
+	/**
+	 * The feature id for the '<em><b>Street</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__STREET = ICONTACT__STREET;
+
+	/**
+	 * The feature id for the '<em><b>Phone1</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__PHONE1 = ICONTACT__PHONE1;
+
+	/**
+	 * The feature id for the '<em><b>Phone2</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__PHONE2 = ICONTACT__PHONE2;
+
+	/**
+	 * The feature id for the '<em><b>Fax</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__FAX = ICONTACT__FAX;
+
+	/**
+	 * The feature id for the '<em><b>Email</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__EMAIL = ICONTACT__EMAIL;
+
+	/**
+	 * The feature id for the '<em><b>Website</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__WEBSITE = ICONTACT__WEBSITE;
+
+	/**
+	 * The feature id for the '<em><b>Mobile</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__MOBILE = ICONTACT__MOBILE;
+
+	/**
+	 * The feature id for the '<em><b>Comment</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__COMMENT = ICONTACT__COMMENT;
+
+	/**
+	 * The number of structural features of the '<em>IOrganization</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION_FEATURE_COUNT = ICONTACT_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.ILaboratory <em>ILaboratory</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.ILaboratory
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getILaboratory()
+	 * @generated
+	 */
+	int ILABORATORY = 20;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__DELETED = IORGANIZATION__DELETED;
+
+	/**
+	 * The feature id for the '<em><b>Mandator</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__MANDATOR = IORGANIZATION__MANDATOR;
+
+	/**
+	 * The feature id for the '<em><b>User</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__USER = IORGANIZATION__USER;
+
+	/**
+	 * The feature id for the '<em><b>Patient</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__PATIENT = IORGANIZATION__PATIENT;
+
+	/**
+	 * The feature id for the '<em><b>Person</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__PERSON = IORGANIZATION__PERSON;
+
+	/**
+	 * The feature id for the '<em><b>Organization</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__ORGANIZATION = IORGANIZATION__ORGANIZATION;
+
+	/**
+	 * The feature id for the '<em><b>Laboratory</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__LABORATORY = IORGANIZATION__LABORATORY;
+
+	/**
+	 * The feature id for the '<em><b>Description1</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__DESCRIPTION1 = IORGANIZATION__DESCRIPTION1;
+
+	/**
+	 * The feature id for the '<em><b>Description2</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__DESCRIPTION2 = IORGANIZATION__DESCRIPTION2;
+
+	/**
+	 * The feature id for the '<em><b>Description3</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__DESCRIPTION3 = IORGANIZATION__DESCRIPTION3;
+
+	/**
+	 * The feature id for the '<em><b>Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__CODE = IORGANIZATION__CODE;
+
+	/**
+	 * The feature id for the '<em><b>Country</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__COUNTRY = IORGANIZATION__COUNTRY;
+
+	/**
+	 * The feature id for the '<em><b>Zip</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__ZIP = IORGANIZATION__ZIP;
+
+	/**
+	 * The feature id for the '<em><b>City</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__CITY = IORGANIZATION__CITY;
+
+	/**
+	 * The feature id for the '<em><b>Street</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__STREET = IORGANIZATION__STREET;
+
+	/**
+	 * The feature id for the '<em><b>Phone1</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__PHONE1 = IORGANIZATION__PHONE1;
+
+	/**
+	 * The feature id for the '<em><b>Phone2</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__PHONE2 = IORGANIZATION__PHONE2;
+
+	/**
+	 * The feature id for the '<em><b>Fax</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__FAX = IORGANIZATION__FAX;
+
+	/**
+	 * The feature id for the '<em><b>Email</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__EMAIL = IORGANIZATION__EMAIL;
+
+	/**
+	 * The feature id for the '<em><b>Website</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__WEBSITE = IORGANIZATION__WEBSITE;
+
+	/**
+	 * The feature id for the '<em><b>Mobile</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__MOBILE = IORGANIZATION__MOBILE;
+
+	/**
+	 * The feature id for the '<em><b>Comment</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__COMMENT = IORGANIZATION__COMMENT;
+
+	/**
+	 * The number of structural features of the '<em>ILaboratory</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY_FEATURE_COUNT = IORGANIZATION_FEATURE_COUNT + 0;
+
+	/**
 	 * The meta object id for the '<em>String Array</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getStringArray()
 	 * @generated
 	 */
-	int STRING_ARRAY = 19;
+	int STRING_ARRAY = 21;
 
 
 	/**
@@ -1661,17 +2230,6 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getIContact();
-
-	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getContactType <em>Contact Type</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Contact Type</em>'.
-	 * @see ch.elexis.core.model.IContact#getContactType()
-	 * @see #getIContact()
-	 * @generated
-	 */
-	EAttribute getIContact_ContactType();
 
 	/**
 	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#isMandator <em>Mandator</em>}'.
@@ -1705,6 +2263,39 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getIContact_Patient();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#isPerson <em>Person</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Person</em>'.
+	 * @see ch.elexis.core.model.IContact#isPerson()
+	 * @see #getIContact()
+	 * @generated
+	 */
+	EAttribute getIContact_Person();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#isLaboratory <em>Laboratory</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Laboratory</em>'.
+	 * @see ch.elexis.core.model.IContact#isLaboratory()
+	 * @see #getIContact()
+	 * @generated
+	 */
+	EAttribute getIContact_Laboratory();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#isOrganization <em>Organization</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Organization</em>'.
+	 * @see ch.elexis.core.model.IContact#isOrganization()
+	 * @see #getIContact()
+	 * @generated
+	 */
+	EAttribute getIContact_Organization();
 
 	/**
 	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getDescription1 <em>Description1</em>}'.
@@ -2053,6 +2644,28 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getIPerson_TitelSuffix();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPerson#getFirstName <em>First Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>First Name</em>'.
+	 * @see ch.elexis.core.model.IPerson#getFirstName()
+	 * @see #getIPerson()
+	 * @generated
+	 */
+	EAttribute getIPerson_FirstName();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPerson#getLastName <em>Last Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Last Name</em>'.
+	 * @see ch.elexis.core.model.IPerson#getLastName()
+	 * @see #getIPerson()
+	 * @generated
+	 */
+	EAttribute getIPerson_LastName();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IPatient <em>IPatient</em>}'.
@@ -2789,6 +3402,26 @@ public interface ModelPackage extends EPackage {
 	EClass getICoverage();
 
 	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IOrganization <em>IOrganization</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IOrganization</em>'.
+	 * @see ch.elexis.core.model.IOrganization
+	 * @generated
+	 */
+	EClass getIOrganization();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.ILaboratory <em>ILaboratory</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>ILaboratory</em>'.
+	 * @see ch.elexis.core.model.ILaboratory
+	 * @generated
+	 */
+	EClass getILaboratory();
+
+	/**
 	 * Returns the meta object for data type '<em>String Array</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2831,14 +3464,6 @@ public interface ModelPackage extends EPackage {
 		EClass ICONTACT = eINSTANCE.getIContact();
 
 		/**
-		 * The meta object literal for the '<em><b>Contact Type</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute ICONTACT__CONTACT_TYPE = eINSTANCE.getIContact_ContactType();
-
-		/**
 		 * The meta object literal for the '<em><b>Mandator</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2861,6 +3486,30 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ICONTACT__PATIENT = eINSTANCE.getIContact_Patient();
+
+		/**
+		 * The meta object literal for the '<em><b>Person</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ICONTACT__PERSON = eINSTANCE.getIContact_Person();
+
+		/**
+		 * The meta object literal for the '<em><b>Laboratory</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ICONTACT__LABORATORY = eINSTANCE.getIContact_Laboratory();
+
+		/**
+		 * The meta object literal for the '<em><b>Organization</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ICONTACT__ORGANIZATION = eINSTANCE.getIContact_Organization();
 
 		/**
 		 * The meta object literal for the '<em><b>Description1</b></em>' attribute feature.
@@ -3125,6 +3774,22 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IPERSON__TITEL_SUFFIX = eINSTANCE.getIPerson_TitelSuffix();
+
+		/**
+		 * The meta object literal for the '<em><b>First Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IPERSON__FIRST_NAME = eINSTANCE.getIPerson_FirstName();
+
+		/**
+		 * The meta object literal for the '<em><b>Last Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IPERSON__LAST_NAME = eINSTANCE.getIPerson_LastName();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IPatient <em>IPatient</em>}' class.
@@ -3697,6 +4362,26 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EClass ICOVERAGE = eINSTANCE.getICoverage();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IOrganization <em>IOrganization</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IOrganization
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIOrganization()
+		 * @generated
+		 */
+		EClass IORGANIZATION = eINSTANCE.getIOrganization();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.ILaboratory <em>ILaboratory</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.ILaboratory
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getILaboratory()
+		 * @generated
+		 */
+		EClass ILABORATORY = eINSTANCE.getILaboratory();
 
 		/**
 		 * The meta object literal for the '<em>String Array</em>' data type.

@@ -27,3 +27,6 @@ Service-Component: OSGI-INF/ch.elexis.core.jpa.entitymanager.ElexisEntityManger.
 Bundle-ClassPath: lib/liquibase-3.6.1.jar,
  lib/snakeyaml-1.18.jar,
  .
+Export-Package: ch.elexis.core.jpa.entities,
+ ch.elexis.core.jpa.entitymanager,
+ ch.elexis.core.jpa.model.adapter

@@ -12,10 +12,9 @@ package ch.elexis.core.data.beans;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.beans.base.BeanPersistentObject;
-import ch.elexis.core.model.IContact;
-import ch.elexis.core.model.IPatient;
-import ch.elexis.core.model.IPerson;
-import ch.elexis.core.types.ContactType;
+import ch.elexis.core.data.interfaces.IContact;
+import ch.elexis.core.data.interfaces.IPatient;
+import ch.elexis.core.data.interfaces.IPerson;
 import ch.elexis.core.types.Country;
 import ch.elexis.core.types.Gender;
 import ch.elexis.data.Kontakt;
@@ -25,8 +24,8 @@ import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Person;
 import ch.rgw.tools.TimeTool;
 
-public class ContactBean extends BeanPersistentObject<Kontakt> implements IContact, IPerson,
-		IPatient {
+public class ContactBean extends BeanPersistentObject<Kontakt>
+		implements IContact, IPerson, IPatient {
 	
 	private ContactCache cache;
 	
@@ -48,7 +47,6 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 		cache = new ContactCache();
 	}
 	
-	@Override
 	public ContactType getContactType(){
 		if (cache.isOrganization)
 			return ContactType.ORGANIZATION;
@@ -57,7 +55,6 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 		return ContactType.UNKNOWN;
 	}
 	
-	@Override
 	public void setContactType(ContactType type){
 		ContactType old = getContactType();
 		switch (type) {
@@ -528,14 +525,16 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 			}
 		}
 	}
-
+	
 	@Override
 	public String getFirstName(){
-		return getDescription2();
+		// TODO Auto-generated method stub
+		return null;
 	}
-
+	
 	@Override
 	public String getFamilyName(){
-		return getDescription1();
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

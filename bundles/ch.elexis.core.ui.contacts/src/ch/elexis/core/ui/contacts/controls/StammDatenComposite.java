@@ -54,7 +54,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.beans.ContactBean;
-import ch.elexis.core.model.IContact;
 import ch.elexis.core.types.ContactGender;
 import ch.elexis.core.types.Country;
 import ch.elexis.core.ui.contacts.proposalProvider.CityInformationProposalProvider;
@@ -71,7 +70,7 @@ public class StammDatenComposite extends AbstractComposite {
 	
 	private static Logger log = LoggerFactory.getLogger(StammDatenComposite.class);
 	
-	private IContact kontakt;
+	private ContactBean kontakt;
 	
 	private Label lblHeadline;
 	private Label lblContactType;

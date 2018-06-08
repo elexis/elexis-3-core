@@ -31,6 +31,8 @@ import ch.elexis.core.model.IHistory;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
+import ch.elexis.core.model.ILaboratory;
+import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPeriod;
 import ch.elexis.core.model.IPerson;
@@ -187,6 +189,20 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass iOrganizationEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iLaboratoryEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EDataType stringArrayEDataType = null;
 
 	/**
@@ -267,7 +283,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIContact_ContactType() {
+	public EAttribute getIContact_Mandator() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -276,7 +292,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIContact_Mandator() {
+	public EAttribute getIContact_User() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -285,7 +301,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIContact_User() {
+	public EAttribute getIContact_Patient() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -294,7 +310,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIContact_Patient() {
+	public EAttribute getIContact_Person() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -303,16 +319,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIContact_Description1() {
-		return (EAttribute)iContactEClass.getEStructuralFeatures().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getIContact_Description2() {
+	public EAttribute getIContact_Laboratory() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -321,7 +328,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIContact_Description3() {
+	public EAttribute getIContact_Organization() {
+		return (EAttribute)iContactEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIContact_Description1() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -330,7 +346,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIContact_Code() {
+	public EAttribute getIContact_Description2() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -339,7 +355,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIContact_Country() {
+	public EAttribute getIContact_Description3() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(8);
 	}
 
@@ -348,7 +364,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIContact_Zip() {
+	public EAttribute getIContact_Code() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(9);
 	}
 
@@ -357,7 +373,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIContact_City() {
+	public EAttribute getIContact_Country() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(10);
 	}
 
@@ -366,7 +382,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIContact_Street() {
+	public EAttribute getIContact_Zip() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(11);
 	}
 
@@ -375,7 +391,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIContact_Phone1() {
+	public EAttribute getIContact_City() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(12);
 	}
 
@@ -384,7 +400,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIContact_Phone2() {
+	public EAttribute getIContact_Street() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(13);
 	}
 
@@ -393,7 +409,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIContact_Fax() {
+	public EAttribute getIContact_Phone1() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(14);
 	}
 
@@ -402,7 +418,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIContact_Email() {
+	public EAttribute getIContact_Phone2() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(15);
 	}
 
@@ -411,7 +427,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIContact_Website() {
+	public EAttribute getIContact_Fax() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(16);
 	}
 
@@ -420,7 +436,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIContact_Mobile() {
+	public EAttribute getIContact_Email() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(17);
 	}
 
@@ -429,8 +445,26 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIContact_Comment() {
+	public EAttribute getIContact_Website() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(18);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIContact_Mobile() {
+		return (EAttribute)iContactEClass.getEStructuralFeatures().get(19);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIContact_Comment() {
+		return (EAttribute)iContactEClass.getEStructuralFeatures().get(20);
 	}
 
 	/**
@@ -584,6 +618,24 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 */
 	public EAttribute getIPerson_TitelSuffix() {
 		return (EAttribute)iPersonEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIPerson_FirstName() {
+		return (EAttribute)iPersonEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIPerson_LastName() {
+		return (EAttribute)iPersonEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -1203,6 +1255,24 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getIOrganization() {
+		return iOrganizationEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getILaboratory() {
+		return iLaboratoryEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EDataType getStringArray() {
 		return stringArrayEDataType;
 	}
@@ -1236,10 +1306,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		// Create classes and their features
 		iContactEClass = createEClass(ICONTACT);
-		createEAttribute(iContactEClass, ICONTACT__CONTACT_TYPE);
 		createEAttribute(iContactEClass, ICONTACT__MANDATOR);
 		createEAttribute(iContactEClass, ICONTACT__USER);
 		createEAttribute(iContactEClass, ICONTACT__PATIENT);
+		createEAttribute(iContactEClass, ICONTACT__PERSON);
+		createEAttribute(iContactEClass, ICONTACT__ORGANIZATION);
+		createEAttribute(iContactEClass, ICONTACT__LABORATORY);
 		createEAttribute(iContactEClass, ICONTACT__DESCRIPTION1);
 		createEAttribute(iContactEClass, ICONTACT__DESCRIPTION2);
 		createEAttribute(iContactEClass, ICONTACT__DESCRIPTION3);
@@ -1276,6 +1348,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iPersonEClass, IPERSON__GENDER);
 		createEAttribute(iPersonEClass, IPERSON__TITEL);
 		createEAttribute(iPersonEClass, IPERSON__TITEL_SUFFIX);
+		createEAttribute(iPersonEClass, IPERSON__FIRST_NAME);
+		createEAttribute(iPersonEClass, IPERSON__LAST_NAME);
 
 		iPatientEClass = createEClass(IPATIENT);
 		createEAttribute(iPatientEClass, IPATIENT__DIAGNOSEN);
@@ -1359,6 +1433,10 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		iCoverageEClass = createEClass(ICOVERAGE);
 
+		iOrganizationEClass = createEClass(IORGANIZATION);
+
+		iLaboratoryEClass = createEClass(ILABORATORY);
+
 		// Create data types
 		stringArrayEDataType = createEDataType(STRING_ARRAY);
 	}
@@ -1411,23 +1489,32 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iUserEClass.getESuperTypes().add(this.getDeleteable());
 		iUserEClass.getESuperTypes().add(this.getIdentifiable());
 		iLabItemEClass.getESuperTypes().add(this.getIdentifiable());
+		iLabItemEClass.getESuperTypes().add(this.getDeleteable());
 		iLabResultEClass.getESuperTypes().add(this.getIdentifiable());
+		iLabResultEClass.getESuperTypes().add(this.getDeleteable());
 		iLabOrderEClass.getESuperTypes().add(this.getIdentifiable());
+		iLabOrderEClass.getESuperTypes().add(this.getDeleteable());
 		iPeriodEClass.getESuperTypes().add(this.getIdentifiable());
+		iPeriodEClass.getESuperTypes().add(this.getDeleteable());
 		iDocumentEClass.getESuperTypes().add(this.getIdentifiable());
+		iDocumentEClass.getESuperTypes().add(this.getDeleteable());
 		iDiagnoseEClass.getESuperTypes().add(this.getICodeElement());
 		iDiagnoseEClass.getESuperTypes().add(this.getIdentifiable());
 		iBillableEClass.getESuperTypes().add(this.getICodeElement());
 		iBillableEClass.getESuperTypes().add(this.getIdentifiable());
 		iCoverageEClass.getESuperTypes().add(this.getDeleteable());
 		iCoverageEClass.getESuperTypes().add(this.getIdentifiable());
+		iOrganizationEClass.getESuperTypes().add(this.getIContact());
+		iLaboratoryEClass.getESuperTypes().add(this.getIOrganization());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(iContactEClass, IContact.class, "IContact", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIContact_ContactType(), theTypesPackage.getContactType(), "contactType", null, 0, 1, IContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIContact_Mandator(), ecorePackage.getEBoolean(), "mandator", null, 0, 1, IContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIContact_User(), ecorePackage.getEBoolean(), "user", null, 0, 1, IContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIContact_Patient(), ecorePackage.getEBoolean(), "patient", null, 0, 1, IContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIContact_Person(), ecorePackage.getEBoolean(), "person", null, 0, 1, IContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIContact_Organization(), ecorePackage.getEBoolean(), "organization", null, 0, 1, IContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIContact_Laboratory(), ecorePackage.getEBoolean(), "laboratory", null, 0, 1, IContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIContact_Description1(), ecorePackage.getEString(), "description1", null, 0, 1, IContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIContact_Description2(), ecorePackage.getEString(), "description2", null, 0, 1, IContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIContact_Description3(), ecorePackage.getEString(), "description3", null, 0, 1, IContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1484,14 +1571,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEOperation(iStickerEClass, ecorePackage.getEString(), "getClassesForSticker", 0, -1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iPersonEClass, IPerson.class, "IPerson", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIPerson_DateOfBirth(), theTypesPackage.getTimeTool(), "dateOfBirth", null, 0, 1, IPerson.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIPerson_DateOfBirth(), theTypesPackage.getLocalDateTime(), "dateOfBirth", null, 0, 1, IPerson.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIPerson_Gender(), theTypesPackage.getGender(), "gender", null, 0, 1, IPerson.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIPerson_Titel(), ecorePackage.getEString(), "titel", null, 0, 1, IPerson.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIPerson_TitelSuffix(), ecorePackage.getEString(), "titelSuffix", null, 0, 1, IPerson.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		addEOperation(iPersonEClass, ecorePackage.getEString(), "getFirstName", 1, 1, IS_UNIQUE, IS_ORDERED);
-
-		addEOperation(iPersonEClass, ecorePackage.getEString(), "getFamilyName", 1, 1, IS_UNIQUE, IS_ORDERED);
+		initEAttribute(getIPerson_FirstName(), ecorePackage.getEString(), "firstName", null, 0, 1, IPerson.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIPerson_LastName(), ecorePackage.getEString(), "lastName", null, 0, 1, IPerson.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iPatientEClass, IPatient.class, "IPatient", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIPatient_Diagnosen(), ecorePackage.getEString(), "diagnosen", null, 0, 1, IPatient.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1537,9 +1622,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getILabResult_RefMale(), ecorePackage.getEString(), "refMale", null, 0, 1, ILabResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getILabResult_RefFemale(), ecorePackage.getEString(), "refFemale", null, 0, 1, ILabResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getILabResult_Unit(), ecorePackage.getEString(), "unit", null, 0, 1, ILabResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getILabResult_AnalyseTime(), theTypesPackage.getTimeTool(), "analyseTime", null, 0, 1, ILabResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getILabResult_ObservationTime(), theTypesPackage.getTimeTool(), "observationTime", null, 0, 1, ILabResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getILabResult_TransmissionTime(), theTypesPackage.getTimeTool(), "transmissionTime", null, 0, 1, ILabResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getILabResult_AnalyseTime(), theTypesPackage.getLocalDateTime(), "analyseTime", null, 0, 1, ILabResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getILabResult_ObservationTime(), theTypesPackage.getLocalDateTime(), "observationTime", null, 0, 1, ILabResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getILabResult_TransmissionTime(), theTypesPackage.getLocalDateTime(), "transmissionTime", null, 0, 1, ILabResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getILabResult_Result(), ecorePackage.getEString(), "result", null, 0, 1, ILabResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getILabResult_Flags(), ecorePackage.getEInt(), "flags", null, 0, 1, ILabResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getILabResult_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, ILabResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1554,8 +1639,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEReference(getILabOrder_PatientContact(), this.getIPatient(), null, "patientContact", null, 0, 1, ILabOrder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iPeriodEClass, IPeriod.class, "IPeriod", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIPeriod_StartTime(), theTypesPackage.getTimeTool(), "startTime", null, 0, 1, IPeriod.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIPeriod_EndTime(), theTypesPackage.getTimeTool(), "endTime", null, 0, 1, IPeriod.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIPeriod_StartTime(), theTypesPackage.getLocalDateTime(), "startTime", null, 0, 1, IPeriod.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIPeriod_EndTime(), theTypesPackage.getLocalDateTime(), "endTime", null, 0, 1, IPeriod.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iDocumentEClass, IDocument.class, "IDocument", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIDocument_PatientId(), ecorePackage.getEString(), "patientId", null, 0, 1, IDocument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1585,6 +1670,10 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEClass(iBillableEClass, IBillable.class, "IBillable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(iCoverageEClass, ICoverage.class, "ICoverage", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(iOrganizationEClass, IOrganization.class, "IOrganization", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(iLaboratoryEClass, ILaboratory.class, "ILaboratory", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Initialize data types
 		initEDataType(stringArrayEDataType, String[].class, "StringArray", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);

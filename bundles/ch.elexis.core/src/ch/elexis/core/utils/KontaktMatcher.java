@@ -157,7 +157,7 @@ public class KontaktMatcher {
 	}
 	
 	/**
-	 * Decide whether a person is identical to given personal data. Normalize all names: Ulmlaute
+	 * Decide whether a person is identical to given personal data. Normalize all names: Umlaute
 	 * will be converted, accents will be eliminatet and double names will be reduced to their first
 	 * part.
 	 * 
@@ -166,7 +166,7 @@ public class KontaktMatcher {
 	public static boolean isSame(final IPerson a, final String nameB, final String firstnameB,
 		final String gebDatB){
 		try {
-			String name1 = StringTool.unambiguify(simpleName(a.getFamilyName()));
+			String name1 = StringTool.unambiguify(simpleName(a.getLastName()));
 			String name2 = StringTool.unambiguify(simpleName(nameB));
 			if (name1.equals(name2)) {
 				String vorname1 = StringTool.unambiguify(simpleName(a.getFirstName()));

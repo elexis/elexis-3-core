@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ch.elexis.core.data.beans.ContactBean;
-import ch.elexis.core.model.IPatient;
+import ch.elexis.core.data.interfaces.IPatient;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.exchange.KontaktMatcher;
 import ch.elexis.core.ui.exchange.KontaktMatcher.CreateMode;

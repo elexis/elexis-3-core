@@ -23,11 +23,11 @@ public class ElexisEvent {
 		this.topic = topic;
 	}
 
-	public Map<String, String> getProperties() {
+	public Map<String, String> getProperties(){
 		return properties;
 	}
 
-	public void setProperties(Map<String, String> properties) {
+	public void setProperties(Map<String, String> properties){
 		this.properties = properties;
 	}
 }

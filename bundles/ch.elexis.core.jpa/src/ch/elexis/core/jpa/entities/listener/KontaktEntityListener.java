@@ -6,11 +6,18 @@ import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.PrePersist;
 
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceReference;
+
 import ch.elexis.core.jpa.entities.Config;
 import ch.elexis.core.jpa.entities.Kontakt;
+import ch.elexis.core.jpa.entitymanager.ElexisEntityManger;
 
 public class KontaktEntityListener {
 
+	private ElexisEntityManger entityManager;
+	
 	@PrePersist
 	public void prePersist(Kontakt contact) {
 		if (contact.isPatient() && contact.getCode() == null) {
@@ -24,9 +31,9 @@ public class KontaktEntityListener {
 	 * 
 	 * @return
 	 */
-	private static int findAndIncrementPatientNr() {
+	private int findAndIncrementPatientNr(){
 		int ret = 0;
-		EntityManager em = null; // ProvidedEntityManager.em();
+		EntityManager em = getEntityManager();
 		try {
 			em.getTransaction().begin();
 			Config patNr = em.find(Config.class, "PatientNummer");
@@ -50,7 +57,6 @@ public class KontaktEntityListener {
 						ret += 1;
 					}
 				}
-
 				patNr.setWert(Integer.toString(ret));
 			}
 			em.getTransaction().commit();
@@ -58,5 +64,18 @@ public class KontaktEntityListener {
 		} finally {
 			em.close();
 		}
+	}
+	
+	private EntityManager getEntityManager(){
+		if (entityManager == null) {
+			// get ElexisEntityManger via osgi service reference
+			Bundle bundle = FrameworkUtil.getBundle(getClass());
+			ServiceReference<ElexisEntityManger> ref =
+				bundle.getBundleContext().getServiceReference(ElexisEntityManger.class);
+			if (ref != null) {
+				entityManager = bundle.getBundleContext().getService(ref);
+			}
+		}
+		return entityManager.getEntityManager();
 	}
 }

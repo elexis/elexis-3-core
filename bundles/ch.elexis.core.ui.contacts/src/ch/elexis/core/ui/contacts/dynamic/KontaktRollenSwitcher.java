@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
-import ch.elexis.core.model.IContact;
+import ch.elexis.core.data.interfaces.IContact;
 import ch.elexis.core.ui.contacts.views.filter.KontaktAnzeigeTypViewerFilter;
 
 public class KontaktRollenSwitcher extends ContributionItem {

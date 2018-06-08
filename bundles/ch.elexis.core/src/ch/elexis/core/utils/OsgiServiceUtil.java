@@ -17,7 +17,7 @@ public class OsgiServiceUtil {
 	
 	/**
 	 * Get a service from the OSGi service registry. <b>Always</b> release the service using the
-	 * {@link CoreUtil#ungetService(Object)} method after usage.
+	 * {@link OsgiServiceUtil#ungetService(Object)} method after usage.
 	 * 
 	 * @param clazz
 	 * @return
@@ -40,7 +40,8 @@ public class OsgiServiceUtil {
 	}
 	
 	/**
-	 * Release a service that was acquired using the {@link CoreUtil#getService(Class)} method.
+	 * Release a service that was acquired using the {@link OsgiServiceUtil#getService(Class)}
+	 * method.
 	 * 
 	 * @param service
 	 */

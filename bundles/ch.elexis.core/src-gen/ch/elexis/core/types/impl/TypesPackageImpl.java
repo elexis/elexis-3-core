@@ -10,7 +10,7 @@
  */
 package ch.elexis.core.types.impl;
 
-import ch.elexis.core.types.AddressType;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -20,8 +20,8 @@ import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
+import ch.elexis.core.types.AddressType;
 import ch.elexis.core.types.ContactGender;
-import ch.elexis.core.types.ContactType;
 import ch.elexis.core.types.Country;
 import ch.elexis.core.types.DocumentStatus;
 import ch.elexis.core.types.Gender;
@@ -31,8 +31,6 @@ import ch.elexis.core.types.RelationshipType;
 import ch.elexis.core.types.TypesFactory;
 import ch.elexis.core.types.TypesPackage;
 import ch.rgw.tools.Money;
-import ch.rgw.tools.TimeTool;
-import java.lang.Comparable;
 
 /**
  * <!-- begin-user-doc -->
@@ -61,13 +59,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EClass mapEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EEnum contactTypeEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -109,13 +100,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EDataType timeToolEDataType = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EDataType genderEDataType = null;
 
 	/**
@@ -138,6 +122,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EDataType pathologicDescriptionEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType localDateTimeEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -232,15 +223,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EEnum getContactType() {
-		return contactTypeEEnum;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EEnum getContactGender() {
 		return contactGenderEEnum;
 	}
@@ -286,15 +268,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EDataType getTimeTool() {
-		return timeToolEDataType;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EDataType getGender() {
 		return genderEDataType;
 	}
@@ -324,6 +297,15 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 */
 	public EDataType getPathologicDescription() {
 		return pathologicDescriptionEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EDataType getLocalDateTime() {
+		return localDateTimeEDataType;
 	}
 
 	/**
@@ -361,7 +343,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		mapEClass = createEClass(MAP);
 
 		// Create enums
-		contactTypeEEnum = createEEnum(CONTACT_TYPE);
 		contactGenderEEnum = createEEnum(CONTACT_GENDER);
 		relationshipTypeEEnum = createEEnum(RELATIONSHIP_TYPE);
 		addressTypeEEnum = createEEnum(ADDRESS_TYPE);
@@ -369,11 +350,11 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		// Create data types
 		moneyEDataType = createEDataType(MONEY);
-		timeToolEDataType = createEDataType(TIME_TOOL);
 		genderEDataType = createEDataType(GENDER);
 		labItemTypEDataType = createEDataType(LAB_ITEM_TYP);
 		countryEDataType = createEDataType(COUNTRY);
 		pathologicDescriptionEDataType = createEDataType(PATHOLOGIC_DESCRIPTION);
+		localDateTimeEDataType = createEDataType(LOCAL_DATE_TIME);
 	}
 
 	/**
@@ -417,15 +398,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEClass(mapEClass, Map.class, "Map", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Initialize enums and add enum literals
-		initEEnum(contactTypeEEnum, ContactType.class, "ContactType");
-		addEEnumLiteral(contactTypeEEnum, ContactType.PERSON);
-		addEEnumLiteral(contactTypeEEnum, ContactType.ORGANIZATION);
-		addEEnumLiteral(contactTypeEEnum, ContactType.MANDATOR);
-		addEEnumLiteral(contactTypeEEnum, ContactType.LABORATORY);
-		addEEnumLiteral(contactTypeEEnum, ContactType.PATIENT);
-		addEEnumLiteral(contactTypeEEnum, ContactType.UNKNOWN);
-		addEEnumLiteral(contactTypeEEnum, ContactType.USER);
-
 		initEEnum(contactGenderEEnum, ContactGender.class, "ContactGender");
 		addEEnumLiteral(contactGenderEEnum, ContactGender.MALE);
 		addEEnumLiteral(contactGenderEEnum, ContactGender.FEMALE);
@@ -468,11 +440,11 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		// Initialize data types
 		initEDataType(moneyEDataType, Money.class, "Money", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
-		initEDataType(timeToolEDataType, TimeTool.class, "TimeTool", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(genderEDataType, Gender.class, "Gender", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(labItemTypEDataType, LabItemTyp.class, "LabItemTyp", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(countryEDataType, Country.class, "Country", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(pathologicDescriptionEDataType, PathologicDescription.class, "PathologicDescription", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(localDateTimeEDataType, LocalDateTime.class, "LocalDateTime", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

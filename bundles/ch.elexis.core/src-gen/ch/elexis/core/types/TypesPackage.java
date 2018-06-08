@@ -121,16 +121,6 @@ public interface TypesPackage extends EPackage {
 	int MAP_FEATURE_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link ch.elexis.core.types.ContactType <em>Contact Type</em>}' enum.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.types.ContactType
-	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getContactType()
-	 * @generated
-	 */
-	int CONTACT_TYPE = 3;
-
-	/**
 	 * The meta object id for the '{@link ch.elexis.core.types.ContactGender <em>Contact Gender</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -138,7 +128,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getContactGender()
 	 * @generated
 	 */
-	int CONTACT_GENDER = 4;
+	int CONTACT_GENDER = 3;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.types.RelationshipType <em>Relationship Type</em>}' enum.
@@ -148,7 +138,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getRelationshipType()
 	 * @generated
 	 */
-	int RELATIONSHIP_TYPE = 5;
+	int RELATIONSHIP_TYPE = 4;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.types.AddressType <em>Address Type</em>}' enum.
@@ -158,7 +148,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getAddressType()
 	 * @generated
 	 */
-	int ADDRESS_TYPE = 6;
+	int ADDRESS_TYPE = 5;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.types.DocumentStatus <em>Document Status</em>}' enum.
@@ -168,7 +158,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getDocumentStatus()
 	 * @generated
 	 */
-	int DOCUMENT_STATUS = 7;
+	int DOCUMENT_STATUS = 6;
 
 	/**
 	 * The meta object id for the '<em>Money</em>' data type.
@@ -178,17 +168,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getMoney()
 	 * @generated
 	 */
-	int MONEY = 8;
-
-	/**
-	 * The meta object id for the '<em>Time Tool</em>' data type.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.rgw.tools.TimeTool
-	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getTimeTool()
-	 * @generated
-	 */
-	int TIME_TOOL = 9;
+	int MONEY = 7;
 
 	/**
 	 * The meta object id for the '<em>Gender</em>' data type.
@@ -198,7 +178,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getGender()
 	 * @generated
 	 */
-	int GENDER = 10;
+	int GENDER = 8;
 
 
 	/**
@@ -209,7 +189,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLabItemTyp()
 	 * @generated
 	 */
-	int LAB_ITEM_TYP = 11;
+	int LAB_ITEM_TYP = 9;
 
 
 	/**
@@ -220,7 +200,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getCountry()
 	 * @generated
 	 */
-	int COUNTRY = 12;
+	int COUNTRY = 10;
 
 
 	/**
@@ -231,7 +211,18 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getPathologicDescription()
 	 * @generated
 	 */
-	int PATHOLOGIC_DESCRIPTION = 13;
+	int PATHOLOGIC_DESCRIPTION = 11;
+
+
+	/**
+	 * The meta object id for the '<em>Local Date Time</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see java.time.LocalDateTime
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLocalDateTime()
+	 * @generated
+	 */
+	int LOCAL_DATE_TIME = 12;
 
 
 	/**
@@ -266,16 +257,6 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getMap();
-
-	/**
-	 * Returns the meta object for enum '{@link ch.elexis.core.types.ContactType <em>Contact Type</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for enum '<em>Contact Type</em>'.
-	 * @see ch.elexis.core.types.ContactType
-	 * @generated
-	 */
-	EEnum getContactType();
 
 	/**
 	 * Returns the meta object for enum '{@link ch.elexis.core.types.ContactGender <em>Contact Gender</em>}'.
@@ -329,17 +310,6 @@ public interface TypesPackage extends EPackage {
 	EDataType getMoney();
 
 	/**
-	 * Returns the meta object for data type '{@link ch.rgw.tools.TimeTool <em>Time Tool</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for data type '<em>Time Tool</em>'.
-	 * @see ch.rgw.tools.TimeTool
-	 * @model instanceClass="ch.rgw.tools.TimeTool"
-	 * @generated
-	 */
-	EDataType getTimeTool();
-
-	/**
 	 * Returns the meta object for data type '{@link ch.elexis.core.types.Gender <em>Gender</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -382,6 +352,17 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EDataType getPathologicDescription();
+
+	/**
+	 * Returns the meta object for data type '{@link java.time.LocalDateTime <em>Local Date Time</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Local Date Time</em>'.
+	 * @see java.time.LocalDateTime
+	 * @model instanceClass="java.time.LocalDateTime"
+	 * @generated
+	 */
+	EDataType getLocalDateTime();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -436,16 +417,6 @@ public interface TypesPackage extends EPackage {
 		EClass MAP = eINSTANCE.getMap();
 
 		/**
-		 * The meta object literal for the '{@link ch.elexis.core.types.ContactType <em>Contact Type</em>}' enum.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see ch.elexis.core.types.ContactType
-		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getContactType()
-		 * @generated
-		 */
-		EEnum CONTACT_TYPE = eINSTANCE.getContactType();
-
-		/**
 		 * The meta object literal for the '{@link ch.elexis.core.types.ContactGender <em>Contact Gender</em>}' enum.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -496,16 +467,6 @@ public interface TypesPackage extends EPackage {
 		EDataType MONEY = eINSTANCE.getMoney();
 
 		/**
-		 * The meta object literal for the '<em>Time Tool</em>' data type.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see ch.rgw.tools.TimeTool
-		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getTimeTool()
-		 * @generated
-		 */
-		EDataType TIME_TOOL = eINSTANCE.getTimeTool();
-
-		/**
 		 * The meta object literal for the '<em>Gender</em>' data type.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -544,6 +505,16 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType PATHOLOGIC_DESCRIPTION = eINSTANCE.getPathologicDescription();
+
+		/**
+		 * The meta object literal for the '<em>Local Date Time</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see java.time.LocalDateTime
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLocalDateTime()
+		 * @generated
+		 */
+		EDataType LOCAL_DATE_TIME = eINSTANCE.getLocalDateTime();
 
 	}
 

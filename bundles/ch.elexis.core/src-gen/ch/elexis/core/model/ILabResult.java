@@ -13,6 +13,7 @@ package ch.elexis.core.model;
 import ch.elexis.core.types.PathologicDescription;
 
 import ch.rgw.tools.TimeTool;
+import java.time.LocalDateTime;
 
 /**
  * <!-- begin-user-doc -->
@@ -42,7 +43,7 @@ import ch.rgw.tools.TimeTool;
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface ILabResult extends Identifiable {
+public interface ILabResult extends Identifiable, Deleteable {
 	/**
 	 * Returns the value of the '<em><b>Ref Male</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -130,12 +131,12 @@ public interface ILabResult extends Identifiable {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Analyse Time</em>' attribute.
-	 * @see #setAnalyseTime(TimeTool)
+	 * @see #setAnalyseTime(LocalDateTime)
 	 * @see ch.elexis.core.model.ModelPackage#getILabResult_AnalyseTime()
-	 * @model dataType="ch.elexis.core.types.TimeTool"
+	 * @model dataType="ch.elexis.core.types.LocalDateTime"
 	 * @generated
 	 */
-	TimeTool getAnalyseTime();
+	LocalDateTime getAnalyseTime();
 
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.ILabResult#getAnalyseTime <em>Analyse Time</em>}' attribute.
@@ -145,7 +146,7 @@ public interface ILabResult extends Identifiable {
 	 * @see #getAnalyseTime()
 	 * @generated
 	 */
-	void setAnalyseTime(TimeTool value);
+	void setAnalyseTime(LocalDateTime value);
 
 	/**
 	 * Returns the value of the '<em><b>Observation Time</b></em>' attribute.
@@ -156,12 +157,12 @@ public interface ILabResult extends Identifiable {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Observation Time</em>' attribute.
-	 * @see #setObservationTime(TimeTool)
+	 * @see #setObservationTime(LocalDateTime)
 	 * @see ch.elexis.core.model.ModelPackage#getILabResult_ObservationTime()
-	 * @model dataType="ch.elexis.core.types.TimeTool"
+	 * @model dataType="ch.elexis.core.types.LocalDateTime"
 	 * @generated
 	 */
-	TimeTool getObservationTime();
+	LocalDateTime getObservationTime();
 
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.ILabResult#getObservationTime <em>Observation Time</em>}' attribute.
@@ -171,7 +172,7 @@ public interface ILabResult extends Identifiable {
 	 * @see #getObservationTime()
 	 * @generated
 	 */
-	void setObservationTime(TimeTool value);
+	void setObservationTime(LocalDateTime value);
 
 	/**
 	 * Returns the value of the '<em><b>Transmission Time</b></em>' attribute.
@@ -182,12 +183,12 @@ public interface ILabResult extends Identifiable {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Transmission Time</em>' attribute.
-	 * @see #setTransmissionTime(TimeTool)
+	 * @see #setTransmissionTime(LocalDateTime)
 	 * @see ch.elexis.core.model.ModelPackage#getILabResult_TransmissionTime()
-	 * @model dataType="ch.elexis.core.types.TimeTool"
+	 * @model dataType="ch.elexis.core.types.LocalDateTime"
 	 * @generated
 	 */
-	TimeTool getTransmissionTime();
+	LocalDateTime getTransmissionTime();
 
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.ILabResult#getTransmissionTime <em>Transmission Time</em>}' attribute.
@@ -197,7 +198,7 @@ public interface ILabResult extends Identifiable {
 	 * @see #getTransmissionTime()
 	 * @generated
 	 */
-	void setTransmissionTime(TimeTool value);
+	void setTransmissionTime(LocalDateTime value);
 
 	/**
 	 * Returns the value of the '<em><b>Result</b></em>' attribute.

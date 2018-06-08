@@ -1,8 +1,8 @@
 package ch.elexis.core.ui.importer.div.importers;
 
 import ch.elexis.core.data.beans.ContactBean;
+import ch.elexis.core.data.interfaces.IContact;
 import ch.elexis.core.importer.div.importers.ILabContactResolver;
-import ch.elexis.core.model.IContact;
 
 public class DefaultLabContactResolver implements ILabContactResolver {
 	

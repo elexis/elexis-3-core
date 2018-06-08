@@ -1,6 +1,6 @@
 package ch.elexis.core.importer.div.importers;
 
-import ch.elexis.core.model.IContact;
+import ch.elexis.core.data.interfaces.IContact;
 
 public interface ILabContactResolver {
 	/**

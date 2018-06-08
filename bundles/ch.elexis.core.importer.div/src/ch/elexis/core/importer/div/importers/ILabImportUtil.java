@@ -2,10 +2,10 @@ package ch.elexis.core.importer.div.importers;
 
 import java.util.List;
 
+import ch.elexis.core.data.interfaces.IContact;
 import ch.elexis.core.data.interfaces.ILabItem;
 import ch.elexis.core.data.interfaces.ILabResult;
-import ch.elexis.core.model.IContact;
-import ch.elexis.core.model.IPatient;
+import ch.elexis.core.data.interfaces.IPatient;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.hl7.model.TextData;
 import ch.rgw.tools.TimeTool;

@@ -11,6 +11,7 @@
 package ch.elexis.core.model;
 
 import ch.rgw.tools.TimeTool;
+import java.time.LocalDateTime;
 
 /**
  * <!-- begin-user-doc -->
@@ -29,7 +30,7 @@ import ch.rgw.tools.TimeTool;
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface IPeriod extends Identifiable {
+public interface IPeriod extends Identifiable, Deleteable {
 	/**
 	 * Returns the value of the '<em><b>Start Time</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -39,12 +40,12 @@ public interface IPeriod extends Identifiable {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Start Time</em>' attribute.
-	 * @see #setStartTime(TimeTool)
+	 * @see #setStartTime(LocalDateTime)
 	 * @see ch.elexis.core.model.ModelPackage#getIPeriod_StartTime()
-	 * @model dataType="ch.elexis.core.types.TimeTool"
+	 * @model dataType="ch.elexis.core.types.LocalDateTime"
 	 * @generated
 	 */
-	TimeTool getStartTime();
+	LocalDateTime getStartTime();
 
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.IPeriod#getStartTime <em>Start Time</em>}' attribute.
@@ -54,7 +55,7 @@ public interface IPeriod extends Identifiable {
 	 * @see #getStartTime()
 	 * @generated
 	 */
-	void setStartTime(TimeTool value);
+	void setStartTime(LocalDateTime value);
 
 	/**
 	 * Returns the value of the '<em><b>End Time</b></em>' attribute.
@@ -65,12 +66,12 @@ public interface IPeriod extends Identifiable {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>End Time</em>' attribute.
-	 * @see #setEndTime(TimeTool)
+	 * @see #setEndTime(LocalDateTime)
 	 * @see ch.elexis.core.model.ModelPackage#getIPeriod_EndTime()
-	 * @model dataType="ch.elexis.core.types.TimeTool"
+	 * @model dataType="ch.elexis.core.types.LocalDateTime"
 	 * @generated
 	 */
-	TimeTool getEndTime();
+	LocalDateTime getEndTime();
 
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.IPeriod#getEndTime <em>End Time</em>}' attribute.
@@ -80,6 +81,6 @@ public interface IPeriod extends Identifiable {
 	 * @see #getEndTime()
 	 * @generated
 	 */
-	void setEndTime(TimeTool value);
+	void setEndTime(LocalDateTime value);
 
 } // IPeriod

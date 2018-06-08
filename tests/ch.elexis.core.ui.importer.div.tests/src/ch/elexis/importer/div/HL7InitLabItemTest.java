@@ -15,9 +15,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ch.elexis.core.data.beans.ContactBean;
+import ch.elexis.core.data.interfaces.IPatient;
 import ch.elexis.core.importer.div.importers.HL7Parser;
 import ch.elexis.core.importer.div.importers.OverwriteAllImportHandler;
-import ch.elexis.core.model.IPatient;
 import ch.elexis.core.ui.importer.div.importers.DefaultLabContactResolver;
 import ch.elexis.core.ui.importer.div.importers.ImporterPatientResolver;
 import ch.elexis.core.ui.importer.div.importers.LabImportUtil;

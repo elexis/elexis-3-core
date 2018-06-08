@@ -13,7 +13,7 @@ package ch.elexis.core.ui.contacts.adapter;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
-import ch.elexis.core.model.IContact;
+import ch.elexis.core.data.interfaces.IContact;
 
 public class ContactPropertyAdapter implements IPropertySource {
 	

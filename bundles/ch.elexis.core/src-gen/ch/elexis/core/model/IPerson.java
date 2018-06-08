@@ -13,6 +13,7 @@ package ch.elexis.core.model;
 import ch.elexis.core.types.Gender;
 
 import ch.rgw.tools.TimeTool;
+import java.time.LocalDateTime;
 
 /**
  * <!-- begin-user-doc -->
@@ -27,6 +28,8 @@ import ch.rgw.tools.TimeTool;
  *   <li>{@link ch.elexis.core.model.IPerson#getGender <em>Gender</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPerson#getTitel <em>Titel</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPerson#getTitelSuffix <em>Titel Suffix</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IPerson#getFirstName <em>First Name</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IPerson#getLastName <em>Last Name</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIPerson()
@@ -43,12 +46,12 @@ public interface IPerson extends IContact {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Date Of Birth</em>' attribute.
-	 * @see #setDateOfBirth(TimeTool)
+	 * @see #setDateOfBirth(LocalDateTime)
 	 * @see ch.elexis.core.model.ModelPackage#getIPerson_DateOfBirth()
-	 * @model dataType="ch.elexis.core.types.TimeTool"
+	 * @model dataType="ch.elexis.core.types.LocalDateTime"
 	 * @generated
 	 */
-	TimeTool getDateOfBirth();
+	LocalDateTime getDateOfBirth();
 
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.IPerson#getDateOfBirth <em>Date Of Birth</em>}' attribute.
@@ -58,7 +61,7 @@ public interface IPerson extends IContact {
 	 * @see #getDateOfBirth()
 	 * @generated
 	 */
-	void setDateOfBirth(TimeTool value);
+	void setDateOfBirth(LocalDateTime value);
 
 	/**
 	 * Returns the value of the '<em><b>Gender</b></em>' attribute.
@@ -139,19 +142,51 @@ public interface IPerson extends IContact {
 	void setTitelSuffix(String value);
 
 	/**
+	 * Returns the value of the '<em><b>First Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @model kind="operation" required="true"
+	 * @return the value of the '<em>First Name</em>' attribute.
+	 * @see #setFirstName(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIPerson_FirstName()
+	 * @model
 	 * @generated
 	 */
 	String getFirstName();
 
 	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IPerson#getFirstName <em>First Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @model kind="operation" required="true"
+	 * @param value the new value of the '<em>First Name</em>' attribute.
+	 * @see #getFirstName()
 	 * @generated
 	 */
-	String getFamilyName();
+	void setFirstName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Last Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Last Name</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Last Name</em>' attribute.
+	 * @see #setLastName(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIPerson_LastName()
+	 * @model
+	 * @generated
+	 */
+	String getLastName();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IPerson#getLastName <em>Last Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Last Name</em>' attribute.
+	 * @see #getLastName()
+	 * @generated
+	 */
+	void setLastName(String value);
 
 } // IPerson
