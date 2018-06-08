@@ -191,14 +191,19 @@ public class BillingSystem {
 	 */
 	public static void removeBillingSystemConstant(final String billingSystem,
 		final String constant){
-		String bc = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
-			+ billingSystem + "/constants", null); //$NON-NLS-1$
-		bc = bc.replaceAll(constant, ""); //$NON-NLS-1$
-		bc = bc.replaceAll("##", "#"); //$NON-NLS-1$ //$NON-NLS-2$
-		bc = bc.replaceFirst("#$", ""); //$NON-NLS-1$ //$NON-NLS-2$
-		bc = bc.replaceFirst("^#", ""); //$NON-NLS-1$ //$NON-NLS-2$
-		CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/" + billingSystem //$NON-NLS-1$
-			+ "/constants", bc); //$NON-NLS-1$
+		String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+			+ billingSystem + "/constants";
+		String bc = CoreHub.globalCfg.get(key, null); //$NON-NLS-1$
+		if (bc != null) {
+			bc = bc.replaceAll(constant, ""); //$NON-NLS-1$
+			bc = bc.replaceAll("##", "#"); //$NON-NLS-1$ //$NON-NLS-2$
+			bc = bc.replaceFirst("#$", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			bc = bc.replaceFirst("^#", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/" + billingSystem //$NON-NLS-1$
+				+ "/constants", bc); //$NON-NLS-1$
+		} else {
+			log.error("[" + key + "] is null");
+		}
 	}
 	
 	public static boolean isCostBearerDisabled(String billingSystemName){
