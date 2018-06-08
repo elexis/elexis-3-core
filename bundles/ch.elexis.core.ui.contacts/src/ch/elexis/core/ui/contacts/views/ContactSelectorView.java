@@ -10,7 +10,6 @@
  ******************************************************************************/
 package ch.elexis.core.ui.contacts.views;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +57,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 import ch.elexis.core.data.beans.ContactBeanFactory;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.model.IContact;
+import ch.elexis.core.data.interfaces.IContact;
 import ch.elexis.core.ui.contacts.views.comparator.ContactSelectorViewerComparator;
 import ch.elexis.core.ui.contacts.views.dnd.ContactSelectorDragListener;
 import ch.elexis.core.ui.contacts.views.dnd.ContactSelectorDropListener;
