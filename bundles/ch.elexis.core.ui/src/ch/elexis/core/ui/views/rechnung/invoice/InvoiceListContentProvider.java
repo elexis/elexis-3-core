@@ -88,8 +88,8 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		"CAST(r.betrag AS SIGNED) >= ?";
 	private static final String SQL_CONDITION_INVOICE_AMOUNT_LESSER =
 		"CAST(r.betrag AS SIGNED) <= ?";
-	private static final String SQL_CONDITION_INVOICE_TYPE_TP = "FallGarantId IS NOT NULL AND FallGarantId = FallKostentrID";
-	private static final String SQL_CONDITION_INVOICE_TYPE_TG = "NOT(FallGarantId IS NOT NULL AND FallGarantId = FallKostentrID)";
+	private static final String SQL_CONDITION_INVOICE_TYPE_TP = "FallGarantId = FallKostentrID";
+	private static final String SQL_CONDITION_INVOICE_TYPE_TG = "NOT(FallGarantId = FallKostentrID)";
 	private static final String SQL_CONDITION_BILLING_SYSTEM = "FallGesetz = ?";
 	//@formatter:on
 	
