@@ -11,6 +11,7 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.ch.BillingLaw;
 import ch.rgw.tools.JdbcLink;
 
 public class Test_Konsultation extends AbstractPersistentObjectTest {
@@ -34,6 +35,7 @@ public class Test_Konsultation extends AbstractPersistentObjectTest {
 		
 		pat = new Patient("Name", "Vorname", "26.8.2011", "m");
 		fall = new Fall(pat.getId(), "Bezeichnung", "Grund", "KVG");
+		assertEquals(BillingLaw.KVG, fall.getConfiguredBillingSystemLaw());
 		kons = new Konsultation(fall);
 		
 		FreeTextDiagnose.checkInitTable();

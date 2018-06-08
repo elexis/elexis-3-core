@@ -21,6 +21,7 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.model.ch.BillingLaw;
 import ch.rgw.tools.StringTool;
 
 /**
@@ -222,8 +223,6 @@ public class BillingSystem {
 				if (ic.getAttribute("name").startsWith("Tarmed")) { //$NON-NLS-1$ //$NON-NLS-2$
 					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/name", //$NON-NLS-1$
 						KVG_NAME);
-					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/gesetz", //$NON-NLS-1$
-						"KVG"); //$NON-NLS-1$
 					CoreHub.globalCfg.set(
 						Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/leistungscodes", //$NON-NLS-1$
 						CONST_TARMED_LEISTUNG);
@@ -232,6 +231,8 @@ public class BillingSystem {
 						CONST_TARMED_DRUCKER);
 					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/bedingungen", //$NON-NLS-1$
 						KVG_REQUIREMENTS);
+					BillingSystem.setConfigurationValue("KVG", BillingSystem.CFG_BILLINGLAW,
+						BillingLaw.KVG.name());
 					
 					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/name", //$NON-NLS-1$
 						UVG_NAME);
@@ -243,8 +244,8 @@ public class BillingSystem {
 						CONST_TARMED_DRUCKER);
 					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/bedingungen", //$NON-NLS-1$
 						UVG_REQUIREMENTS);
-					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/gesetz", //$NON-NLS-1$
-						"UVG"); //$NON-NLS-1$
+					BillingSystem.setConfigurationValue("UVG", BillingSystem.CFG_BILLINGLAW,
+						BillingLaw.UVG.name());
 					
 					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/name", IV_NAME); //$NON-NLS-1$
 					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/leistungscodes", //$NON-NLS-1$
@@ -253,9 +254,9 @@ public class BillingSystem {
 						Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/standardausgabe", //$NON-NLS-1$
 						CONST_TARMED_DRUCKER);
 					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/bedingungen", //$NON-NLS-1$
-						"KostentrÃ¤ger:K;Fallnummer:T"); //$NON-NLS-1$
-					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/gesetz", //$NON-NLS-1$
-						"IVG"); //$NON-NLS-1$
+						"Fallnummer:T"); //$NON-NLS-1$
+					BillingSystem.setConfigurationValue("IV", BillingSystem.CFG_BILLINGLAW,
+						BillingLaw.IVG.name());
 					
 					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/name", MV_NAME); //$NON-NLS-1$
 					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/leistungscodes", //$NON-NLS-1$
@@ -263,10 +264,8 @@ public class BillingSystem {
 					CoreHub.globalCfg.set(
 						Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/standardausgabe", //$NON-NLS-1$
 						CONST_TARMED_DRUCKER);
-					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/bedingungen", //$NON-NLS-1$
-						"KostentrÃ¤ger:K"); //$NON-NLS-1$
-					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/gesetz", //$NON-NLS-1$
-						"MVG"); //$NON-NLS-1$
+					BillingSystem.setConfigurationValue("MV", BillingSystem.CFG_BILLINGLAW,
+						BillingLaw.MVG.name());
 					
 					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/name", //$NON-NLS-1$
 						PRIVATE_NAME);
@@ -276,8 +275,10 @@ public class BillingSystem {
 					CoreHub.globalCfg.set(
 						Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/standardausgabe", //$NON-NLS-1$
 						CONST_TARMED_DRUCKER);
-					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/gesetz", //$NON-NLS-1$
-						"VVG"); //$NON-NLS-1$
+					BillingSystem.setConfigurationValue("privat", BillingSystem.CFG_BILLINGLAW,
+						BillingLaw.VVG.name());
+					BillingSystem.setConfigurationValue("privat", BillingSystem.CFG_NOCOSTBEARER,
+						StringConstants.ONE);
 					
 					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/name", //$NON-NLS-1$
 						VVG_NAME);
@@ -289,8 +290,8 @@ public class BillingSystem {
 						CONST_TARMED_DRUCKER);
 					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/bedingungen", //$NON-NLS-1$
 						KVG_REQUIREMENTS);
-					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/gesetz", //$NON-NLS-1$
-						"VVG"); //$NON-NLS-1$
+					BillingSystem.setConfigurationValue("VVG", BillingSystem.CFG_BILLINGLAW,
+						BillingLaw.VVG.name());
 					
 					PersistentObject.getConnection().exec(
 						"UPDATE VK_PREISE set typ='UVG' WHERE typ='ch.elexis.data.TarmedLeistungUVG'"); //$NON-NLS-1$
