@@ -77,6 +77,7 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 		if (isDisplayAvailable()) {
 			InfoDialogRunnable runnable = new InfoDialogRunnable(title, message);
 			Display.getDefault().syncExec(runnable);
+			return;
 		}
 		log.error("Could not show info [" + title + "] [" + message + "]");
 	}
