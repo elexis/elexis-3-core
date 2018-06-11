@@ -1,0 +1,16 @@
+MSH|^~\&|MOLIS|ZURANA|Analytica|HL7|20180607172018||ORU^R01|5548162|P|2.5|||NE|AL||8859/1|
+PID||8545|1364451^^^MOLIS^PI||Testperson^Armeswesen^^^^^L||19900510|M|||Täfernstrasse 16^^DAETTWIL^^5405|||||||
+PV1||N|BUAND||||||||||||||||8545||||||||||||||||||||||||||
+ORC|SC|3291388^01|0118234870||CM||^^^^^R|||||BUAND^^^^^^^^^^^^MOLIS~BUAND^BURKHART ANDREAS^^^^^^CORPRESC^^^^^MOLIS~Y280631^BURKHART ANDREAS^^^^^^CORPRESC^^^^^AGRNB
+OBR|1400|||1400^|||20180607125500|||||||20180607155124|||||||||||||||||||||||||||||||||
+OBR|1403|||1403^|||20180607125500|||||||20180607155124|||||||||||||||||||||||||||||||||
+OBX|140312|NM|HBA1^HbA1c^^^HBA1C||5.1|%|     < 5.7||||F||||||
+NTE|||Bemerkung zu HbA1c:
+NTE|||Risikobereiche gemäss American Diabetes Association (ADA) 2016 Guidelines:
+NTE|||Normbereich:                         < 5.7 %
+NTE|||Erhöhtes Diabetesrisiko:         5.7 - 6.4 %
+NTE|||Kriterium für Diabetesdiagnose:      > 6.5 %
+NTE|||Zielwerte unter Therapie gemäss American Diabetes Association (ADA) 2016 Guidelines:
+NTE|||ideal      :        < 7.0 %
+NTE|||akzeptabel :    7.0 - 8.0 %
+NTE|||ungenügend :        > 8.0 %
