@@ -60,7 +60,7 @@ public class HL7Helper {
 	public static String determineName(List<String> possibleNames){
 		String ret = "";
 		for (String possibleName : possibleNames) {
-			if (possibleName != null) {
+			if (possibleName != null && !"null".equals(possibleName)) {
 				int possibleNonDigitCount = getNonDigitCharacters(possibleName);
 				int retNonDigitCount = getNonDigitCharacters(ret);
 				if (possibleNonDigitCount > retNonDigitCount) {
