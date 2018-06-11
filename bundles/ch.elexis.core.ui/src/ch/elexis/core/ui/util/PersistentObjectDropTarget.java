@@ -109,7 +109,9 @@ public class PersistentObjectDropTarget implements DropTargetListener, ICodeSele
 		String[] dl = drp.split(","); //$NON-NLS-1$
 		for (String obj : dl) {
 			PersistentObject dropped = CoreHub.poFactory.createFromString(obj);
-			rc.dropped(dropped, event);
+			if(dropped != null) {
+				rc.dropped(dropped, event);
+			}
 		}
 	}
 	
