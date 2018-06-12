@@ -271,9 +271,10 @@ public class HL7ReaderV251 extends HL7Reader {
 				msh.getMsh3_SendingApplication().getHd1_NamespaceID().getValue();
 			String sendingFacility = msh.getMsh4_SendingFacility().getHd1_NamespaceID().getValue();
 			String dateTimeOfMessage = msh.getMsh7_DateTimeOfMessage().getTs1_Time().getValue();
+			String patientNotesAndComments  = ""; 
 			
 			observation = new ObservationMessage(sendingApplication, sendingFacility,
-				dateTimeOfMessage, patid, patientName, patid_alternative, orderNumber);
+				dateTimeOfMessage, patid, patientName, patientNotesAndComments, patid_alternative, orderNumber);
 				
 			birthDate = pid.getDateTimeOfBirth().getTs1_Time().getValue();
 			sex = pid.getAdministrativeSex().getValue();

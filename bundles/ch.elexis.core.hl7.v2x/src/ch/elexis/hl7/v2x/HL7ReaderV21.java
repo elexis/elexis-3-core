@@ -182,9 +182,10 @@ public class HL7ReaderV21 extends HL7Reader {
 			if (pid.getPid5_PATIENTNAME().getPn2_GivenName().getValue() != null)
 				firstName = pid.getPid5_PATIENTNAME().getGivenName().getValue();
 			String patientName = firstName + " " + lastName;
+			String patientNotesAndComments = readPatientNotesAndComments(oru.getPATIENT_RESULT().getPATIENT());
 			
 			observation = new ObservationMessage(sendingApplication, sendingFacility,
-				dateTimeOfMessage, patid, patientName, patid_alternative, orderNumber);
+				dateTimeOfMessage, patid, patientName, patientNotesAndComments, patid_alternative, orderNumber);
 				
 			birthDate = pid.getPid7_DATEOFBIRTH().getValue();
 			sex = pid.getPid8_SEX().getValue();
@@ -233,6 +234,18 @@ public class HL7ReaderV21 extends HL7Reader {
 				}
 			}
 		}
+	}
+	
+	private String readPatientNotesAndComments(ca.uhn.hl7v2.model.v21.group.ORU_R01_PATIENT oru_R01_PATIENT){
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < oru_R01_PATIENT.getNTEReps(); i++) {
+			TX comment = oru_R01_PATIENT.getNTE(i).getCOMMENT(0);
+			sb.append(comment.toString());
+			if (oru_R01_PATIENT.getNTEReps() > i) {
+				sb.append("\n");
+			}
+		}
+		return sb.toString();
 	}
 	
 	private void setOrderComment(ORU_R01 oru, int idx, String obsDate) throws ParseException{

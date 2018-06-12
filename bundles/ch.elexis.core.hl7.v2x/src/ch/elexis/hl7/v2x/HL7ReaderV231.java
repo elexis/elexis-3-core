@@ -87,7 +87,7 @@ public class HL7ReaderV231 extends HL7Reader {
 					.getOBR();
 				String obrObservationDateTime =
 					obr.getObr7_ObservationDateTime().getTs1_TimeOfAnEvent().getValue();
-					
+				
 				setOrderComment(oru, idx, obrObservationDateTime);
 				
 				for (int i = 0; i < oru.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI()
@@ -106,7 +106,7 @@ public class HL7ReaderV231 extends HL7Reader {
 							String code = "";
 							if (ce.getCe3_NameOfCodingSystem() != null)
 								code = ce.getCe3_NameOfCodingSystem().getValue();
-								
+							
 							group = getGroup(code, ce);
 							sequence = getSequence(code, ce);
 							
@@ -158,10 +158,10 @@ public class HL7ReaderV231 extends HL7Reader {
 				oru.getMSH().getMsh4_SendingFacility().getHd1_NamespaceID().getValue();
 			String dateTimeOfMessage =
 				oru.getMSH().getMsh7_DateTimeOfMessage().getTs1_TimeOfAnEvent().getValue();
-				
+			
 			PID pid =
 				oru.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getPIDPD1NK1NTEPV1PV2().getPID();
-				
+			
 			String patid = pid.getPid3_PatientIdentifierList(0).getCx1_ID().getValue();
 			String patid_alternative = pid.getPid4_AlternatePatientIDPID(0).getCx1_ID().getValue();
 			if (StringTool.isNothing(patid)) {
@@ -187,7 +187,7 @@ public class HL7ReaderV231 extends HL7Reader {
 			String orderNumber =
 				oru.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI().getORC()
 					.getOrc2_PlacerOrderNumber().getEi1_EntityIdentifier().getValue();
-					
+			
 			FN familyLastName = pid.getPid5_PatientName(0).getFamilyLastName();
 			if (familyLastName.getFn1_FamilyName().getValue() != null
 				|| familyLastName.getFn2_LastNamePrefix().getValue() != null)
@@ -197,10 +197,12 @@ public class HL7ReaderV231 extends HL7Reader {
 			if (pid.getPid5_PatientName(0).getGivenName().getValue() != null)
 				firstName = pid.getPid5_PatientName(0).getGivenName().getValue();
 			String patientName = firstName + " " + lastName;
+			String patientNotesAndComments = "";
 			
-			observation = new ObservationMessage(sendingApplication, sendingFacility,
-				dateTimeOfMessage, patid, patientName, patid_alternative, orderNumber);
-				
+			observation =
+				new ObservationMessage(sendingApplication, sendingFacility, dateTimeOfMessage,
+					patid, patientName, patientNotesAndComments, patid_alternative, orderNumber);
+			
 			birthDate = pid.getPid7_DateTimeOfBirth().getTs1_TimeOfAnEvent().getValue();
 			sex = pid.getSex().getValue();
 			
@@ -209,7 +211,7 @@ public class HL7ReaderV231 extends HL7Reader {
 				// name and birthdate
 				list =
 					patientResolver.findPatientByNameAndBirthdate(lastName, firstName, birthDate);
-					
+				
 				if ((list != null) && (list.size() == 1)) {
 					pat = list.get(0);
 				} else {
@@ -282,7 +284,7 @@ public class HL7ReaderV231 extends HL7Reader {
 				} else {
 					commentNTE = "";
 				}
-				if(comment.getValue() != null) {
+				if (comment.getValue() != null) {
 					commentNTE += comment.getValue();
 				}
 			}
@@ -306,10 +308,10 @@ public class HL7ReaderV231 extends HL7Reader {
 		if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_ED)) {
 			String observationId =
 				obx.getObx3_ObservationIdentifier().getCe1_Identifier().getValue();
-				
+			
 			if (!"DOCUMENT".equals(observationId)) {
-				logger.warn(MessageFormat.format(
-					Messages.HL7_ORU_R01_Error_WrongObsIdentifier, observationId));
+				logger.warn(MessageFormat.format(Messages.HL7_ORU_R01_Error_WrongObsIdentifier,
+					observationId));
 			}
 			
 			ED ed = (ED) obx.getObx5_ObservationValue(0).getData();
@@ -358,10 +360,10 @@ public class HL7ReaderV231 extends HL7Reader {
 				obx.getObx14_DateTimeOfTheObservation().getTs1_TimeOfAnEvent().getValue();
 			status = obx.getObx11_ObservationResultStatus().getValue();
 			
-			LabResultData lrd = new LabResultData(itemCode, name, unit, value, range, flag, rawAbnormalFlags,
-				defaultDateTime, observationTime, commentNTE, group, sequence, status,
-				extractName(obx.getObx4_ObservationSubID()));
-				
+			LabResultData lrd = new LabResultData(itemCode, name, unit, value, range, flag,
+				rawAbnormalFlags, defaultDateTime, observationTime, commentNTE, group, sequence,
+				status, extractName(obx.getObx4_ObservationSubID()));
+			
 			if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_NM)
 				|| valueType.equals(HL7Constants.OBX_VALUE_TYPE_SN)) {
 				lrd.setIsNumeric(true);

@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.AbstractPrimitive;
 import ca.uhn.hl7v2.model.Message;
+import ca.uhn.hl7v2.model.v24.group.ORU_R01_PATIENT;
 import ca.uhn.hl7v2.model.v24.datatype.CE;
 import ca.uhn.hl7v2.model.v24.datatype.FN;
 import ca.uhn.hl7v2.model.v24.datatype.FT;
@@ -84,7 +85,7 @@ public class HL7ReaderV24 extends HL7Reader {
 				OBR obr = oru.getPATIENT_RESULT().getORDER_OBSERVATION(idx).getOBR();
 				String obrObservationDateTime =
 					obr.getObr7_ObservationDateTime().getTs1_TimeOfAnEvent().getValue();
-					
+				
 				setOrderComment(oru, idx, obrObservationDateTime);
 				
 				for (int i = 0; i < oru.getPATIENT_RESULT().getORDER_OBSERVATION(idx)
@@ -103,7 +104,7 @@ public class HL7ReaderV24 extends HL7Reader {
 							String code = "";
 							if (ce.getCe3_NameOfCodingSystem() != null)
 								code = ce.getCe3_NameOfCodingSystem().getValue();
-								
+							
 							group = getGroup(code, ce);
 							sequence = getSequence(code, ce);
 							
@@ -155,7 +156,7 @@ public class HL7ReaderV24 extends HL7Reader {
 				oru.getMSH().getMsh4_SendingFacility().getHd1_NamespaceID().getValue();
 			String dateTimeOfMessage =
 				oru.getMSH().getMsh7_DateTimeOfMessage().getTs1_TimeOfAnEvent().getValue();
-				
+			
 			PID pid = oru.getPATIENT_RESULT().getPATIENT().getPID();
 			
 			String patid = pid.getPatientID().getCx1_ID().getValue();
@@ -188,16 +189,19 @@ public class HL7ReaderV24 extends HL7Reader {
 			// place order number
 			String orderNumber = oru.getPATIENT_RESULT().getORDER_OBSERVATION().getORC()
 				.getOrc2_PlacerOrderNumber().getEi1_EntityIdentifier().getValue();
-				
+			
 			if (pid.getPid5_PatientName(0).getFamilyName().getFn1_Surname().getValue() != null)
 				lastName = pid.getPid5_PatientName(0).getFamilyName().getFn1_Surname().getValue();
 			if (pid.getPid5_PatientName(0).getGivenName().getValue() != null)
 				firstName = pid.getPid5_PatientName(0).getGivenName().getValue();
 			String patientName = firstName + " " + lastName;
+			String patientNotesAndComments =
+				readPatientNotesAndComments(oru.getPATIENT_RESULT().getPATIENT());
 			
-			observation = new ObservationMessage(sendingApplication, sendingFacility,
-				dateTimeOfMessage, patid, patientName, patid_alternative, orderNumber);
-				
+			observation =
+				new ObservationMessage(sendingApplication, sendingFacility, dateTimeOfMessage,
+					patid, patientName, patientNotesAndComments, patid_alternative, orderNumber);
+			
 			birthDate = pid.getDateTimeOfBirth().getTs1_TimeOfAnEvent().getValue();
 			sex = pid.getAdministrativeSex().getValue();
 			
@@ -206,7 +210,7 @@ public class HL7ReaderV24 extends HL7Reader {
 				// name and birthdate
 				list =
 					patientResolver.findPatientByNameAndBirthdate(lastName, firstName, birthDate);
-					
+				
 				if ((list != null) && (list.size() == 1)) {
 					pat = list.get(0);
 				} else {
@@ -255,6 +259,18 @@ public class HL7ReaderV24 extends HL7Reader {
 		}
 	}
 	
+	private String readPatientNotesAndComments(ORU_R01_PATIENT patient){
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < patient.getNTEReps(); i++) {
+			FT comment = patient.getNTE(i).getComment(0);
+			sb.append(comment.toString());
+			if (patient.getNTEReps() > i) {
+				sb.append("\n");
+			}
+		}
+		return sb.toString();
+	}
+	
 	private void setOrderComment(ORU_R01 oru, int idx, String obsDate) throws ParseException{
 		String orderCommentNTE = getComments(oru.getPATIENT_RESULT().getORDER_OBSERVATION(idx), -1);
 		if (orderCommentNTE != null) {
@@ -282,10 +298,10 @@ public class HL7ReaderV24 extends HL7Reader {
 				} else {
 					commentNTE = "";
 				}
-				if(comment.getValue() != null) {
+				if (comment.getValue() != null) {
 					commentNTE += comment.getValue();
 				}
-
+				
 			}
 		}
 		return commentNTE;
@@ -307,10 +323,10 @@ public class HL7ReaderV24 extends HL7Reader {
 		if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_ED)) {
 			String observationId =
 				obx.getObx3_ObservationIdentifier().getCe1_Identifier().getValue();
-				
+			
 			if (!"DOCUMENT".equals(observationId)) {
-				logger.warn(MessageFormat.format(
-						Messages.HL7_ORU_R01_Error_WrongObsIdentifier, observationId));
+				logger.warn(MessageFormat.format(Messages.HL7_ORU_R01_Error_WrongObsIdentifier,
+					observationId));
 			}
 			
 			CE ce = obx.getObx3_ObservationIdentifier();
@@ -360,10 +376,10 @@ public class HL7ReaderV24 extends HL7Reader {
 				obx.getObx14_DateTimeOfTheObservation().getTs1_TimeOfAnEvent().getValue();
 			status = obx.getObx11_ObservationResultStatus().getValue();
 			
-			LabResultData lrd = new LabResultData(itemCode, name, unit, value, range, flag, rawAbnormalFlags,
-				defaultDateTime, observationTime, commentNTE, group, sequence, status,
-				extractName(obx.getObx4_ObservationSubId()));
-				
+			LabResultData lrd = new LabResultData(itemCode, name, unit, value, range, flag,
+				rawAbnormalFlags, defaultDateTime, observationTime, commentNTE, group, sequence,
+				status, extractName(obx.getObx4_ObservationSubId()));
+			
 			if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_NM)
 				|| valueType.equals(HL7Constants.OBX_VALUE_TYPE_SN)) {
 				lrd.setIsNumeric(true);
