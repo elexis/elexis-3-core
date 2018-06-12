@@ -83,4 +83,7 @@ public class Messages {
 	public static String EditLabItem_labelTypDocument = ch.elexis.core.l10n.Messages.EditLabItem_labelTypDocument;
 	public static String EditLabItem_title = ch.elexis.core.l10n.Messages.EditLabItem_title;
 	public static String EditLabItem_labelHintExportTag = ch.elexis.core.l10n.Messages.EditLabItem_labelHintExportTag;
+	public static String EditLabItem_OriginLaboratoryLabel = ch.elexis.core.l10n.Messages.EditLabItem_OriginLaboratoryLabel;
+	public static String EditLabItem_OriginLaboratorySelectorCaption = ch.elexis.core.l10n.Messages.EditLabItem_OriginLaboratorySelectorCaption;
+	public static String EditLabItem_OriginLaboratorySelectorBody = ch.elexis.core.l10n.Messages.EditLabItem_OriginLaboratorySelectorBody;
 }

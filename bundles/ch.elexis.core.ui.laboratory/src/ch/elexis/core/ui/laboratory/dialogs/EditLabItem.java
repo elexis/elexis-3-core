@@ -27,12 +27,14 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.SelectionDialog;
 
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.types.LabItemTyp;
+import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.laboratory.controls.LaborMappingComposite;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.WidgetFactory;
@@ -59,6 +61,8 @@ public class EditLabItem extends TitleAreaDialog {
 	
 	private Text loincCode;
 	private Button loincCodeSelection;
+	Label originLaboratory;
+	Button originLaboratorySelection;
 	
 	public EditLabItem(Shell parentShell, LabItem act){
 		super(parentShell);
@@ -172,6 +176,28 @@ public class EditLabItem extends TitleAreaDialog {
 		iPrio.setToolTipText(Messages.EditLabItem_labelGroupPosition);
 		iPrio.setTextLimit(3);
 		
+		WidgetFactory.createLabel(ret, Messages.EditLabItem_OriginLaboratoryLabel);
+		originLaboratory = new Label(ret, SWT.None);
+		originLaboratory.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		originLaboratory.setText((actLabor != null) ? actLabor.getLabel() : null);
+		originLaboratorySelection = new Button(ret, SWT.PUSH);
+		originLaboratorySelection.setText("..."); //$NON-NLS-1$
+		originLaboratorySelection.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				KontaktSelektor ksl = new KontaktSelektor(getShell(), Labor.class,
+					Messages.EditLabItem_OriginLaboratorySelectorCaption,
+					Messages.EditLabItem_OriginLaboratorySelectorBody, false);
+				if (ksl.open() == Dialog.OK) {
+					actLabor = (Labor) ksl.getSelection();
+					originLaboratory.setText(actLabor.getLabel());
+				} else {
+					actLabor = null;
+					originLaboratory.setText(null);
+				}
+			}
+		});
+		
 		WidgetFactory.createLabel(ret, "LOINC"); //$NON-NLS-1$
 		loincCode = new Text(ret, SWT.BORDER);
 		loincCode.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
@@ -283,11 +309,11 @@ public class EditLabItem extends TitleAreaDialog {
 			}
 			result.set(new String[] {
 				LabItem.SHORTNAME, LabItem.TITLE, LabItem.LAB_ID, LabItem.REF_MALE,
-				LabItem.REF_FEMALE_OR_TEXT, LabItem.UNIT, LabItem.TYPE, LabItem.GROUP,
-				LabItem.PRIO, LabItem.EXPORT
-			}, iKuerzel.getText(), iTitel.getText(), actLabor.getId(), iRef.getText(),
-				iRfF.getText(), iUnit.getText(), t, cGroup.getText(), iPrio.getText(),
-				cExportTag.getText());
+				LabItem.REF_FEMALE_OR_TEXT, LabItem.UNIT, LabItem.TYPE, LabItem.GROUP, LabItem.PRIO,
+				LabItem.EXPORT
+			}, iKuerzel.getText(), iTitel.getText(), (actLabor != null) ? actLabor.getId() : null,
+				iRef.getText(), iRfF.getText(), iUnit.getText(), t, cGroup.getText(),
+				iPrio.getText(), cExportTag.getText());
 		}
 		result.setLoincCode(loincCode.getText());
 		

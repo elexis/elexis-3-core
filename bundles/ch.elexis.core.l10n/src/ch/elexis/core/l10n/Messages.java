@@ -1799,6 +1799,9 @@ public class Messages extends NLS {
 	public static String EditLabItem_title;
 	public static String EditLabItem_titleScriptEditor;
 	public static String EditLabItem_tooltipGroup;
+	public static String EditLabItem_OriginLaboratoryLabel;
+	public static String EditLabItem_OriginLaboratorySelectorCaption;
+	public static String EditLabItem_OriginLaboratorySelectorBody;
 	public static String EditLabResultDialog_errorNoResult;
 	public static String EditLabResultDialog_errorRefFemaleNotNumber;
 	public static String EditLabResultDialog_errorRefMaleNotNumber;
