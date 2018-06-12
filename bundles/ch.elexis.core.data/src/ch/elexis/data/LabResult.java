@@ -668,8 +668,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 		} else {
 			String ref = checkNull(get(refField));
 			if (ref.isEmpty()) {
-				log.info("using local LabRefVal [" + localRef
-					+ "] as none could be resolved from labResult");
+				log.info("using local LabRefVal [{}] as none could be resolved from labResult", localRef);
 				return localRef;
 			}
 			return ref;

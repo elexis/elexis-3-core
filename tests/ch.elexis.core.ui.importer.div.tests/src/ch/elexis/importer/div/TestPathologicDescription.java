@@ -222,7 +222,7 @@ public class TestPathologicDescription {
 		
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		List<LabResult> qrr = qr.execute();
-		assertEquals(7, qrr.size());
+		assertEquals(8, qrr.size());
 		for (LabResult labResult : qrr) {
 			assertEquals(LabItemTyp.TEXT, labResult.getItem().getTyp());
 			PathologicDescription pathologicDescription = labResult.getPathologicDescription();

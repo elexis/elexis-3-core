@@ -105,5 +105,5 @@ public class Messages {
 	public static String DefaultPDFImportStrategy_Date = ch.elexis.core.l10n.Messages.DefaultPDFImportStrategy_Date;
 	public static String DefaultPDFImportStrategy_Group = ch.elexis.core.l10n.Messages.DefaultPDFImportStrategy_Group;
 	public static String DefaultPDFImportStrategy_Prio = ch.elexis.core.l10n.Messages.DefaultPDFImportStrategy_Prio;
-	
+	public static String HL7Parser_LabItem_Note_Name = ch.elexis.core.l10n.Messages.HL7Parser_LabItem_Note_Name;
 }

@@ -1958,6 +1958,7 @@ public class Messages extends NLS {
 	public static String HL7Parser_ErrorReading;
 	public static String HL7Parser_ExceptionWhileProcessingData;
 	public static String HL7Parser_LabAlreadyImported;
+	public static String HL7Parser_LabItem_Note_Name;
 	public static String HL7Parser_LabNotFound;
 	public static String HL7Parser_NoLab;
 	public static String HL7Parser_TheFile;

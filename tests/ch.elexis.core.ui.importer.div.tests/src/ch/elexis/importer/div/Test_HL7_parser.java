@@ -452,4 +452,42 @@ public class Test_HL7_parser {
 		assertEquals(7, qrr.size());
 		assertEquals(6, new Query<>(LabOrder.class).execute().size());
 	}
+	
+	@Test
+	public void testPatientRelatedNoteImportAsNoteLabResult_11154() throws IOException{
+		removeAllPatientsAndDependants();
+		removeAllLaboWerte();
+		parseOneHL7file(new File(workDir.toString(), "Analytica/Spermiogramm.hl7"), false, true);
+		
+		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
+		List<LabResult> qrr = qr.execute();
+		assertEquals(3, qrr.size());
+		
+		boolean noteExists = false;
+		boolean spernExists = false;
+		for (LabResult labResult : qrr) {
+			LabItem item = (LabItem) labResult.getItem();
+			switch (item.getKuerzel()) {
+			case "NOTE":
+				assertEquals("Allgemeine Notiz", item.getName());
+				assertEquals("AA", item.getGroup());
+				assertEquals("1", item.getPrio());
+				assertEquals("text", labResult.getResult());
+				assertTrue(labResult.getComment().startsWith("Untersuchungsdatum und Zeit"));
+				noteExists = true;
+				break;
+			case "SPERN":
+				assertEquals("Spermien: nachweisbar", labResult.getResult());
+				assertEquals("negativ", labResult.getRefMale());
+				spernExists = true;
+				break;
+			default:
+				break;
+			}
+		}
+		
+		assertTrue(spernExists);
+		assertTrue(noteExists);
+	}
+	
 }
