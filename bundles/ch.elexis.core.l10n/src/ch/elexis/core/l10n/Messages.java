@@ -2632,6 +2632,7 @@ public class Messages extends NLS {
 	public static String LabEvaluationRulesPreferencePage_btnCheckNonStringEqualRefValResValIsPathologicText_text;
 	public static String LabEvaluationRulesPreferencePage_lblWennKeineRegel_text;
 	public static String LabEvaluationRulesPreferencePage_lblResultatEndbestimmt_text;
+	public static String LabEvaluationRulesPreferencePage_lblLabNoPathFlagMeansNonPath_text;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

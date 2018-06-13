@@ -50,6 +50,7 @@ public class Preferences {
 	
 	/**
 	 * The contact representing the customer organization itself
+	 * 
 	 * @since 3.6
 	 */
 	public static final String SELFCONTACT_ID = "mainContactId"; //$NON-NLS-1$
@@ -172,14 +173,15 @@ public class Preferences {
 	// Lager
 	public static final String INVENTORY_CHECK_ILLEGAL_VALUES = "inventory/check_values"; //$NON-NLS-1$
 	public static final boolean INVENTORY_CHECK_ILLEGAL_VALUES_DEFAULT = true;
-	public static final String INVENTORY_DEFAULT_ARTICLE_PROVIDER = "inventory/defaultArticleProvider"; //$NON-NLS-1$
-	public static final String INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES = "inventory/machineOutlayPartialPackages"; //$NON-NLS-1$
+	public static final String INVENTORY_DEFAULT_ARTICLE_PROVIDER =
+		"inventory/defaultArticleProvider"; //$NON-NLS-1$
+	public static final String INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES =
+		"inventory/machineOutlayPartialPackages"; //$NON-NLS-1$
 	public static final boolean INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES_DEFAULT = false;
 	public static final String INVENTORY_ORDER_TRIGGER = "inventory/order_trigger";
 	public static final int INVENTORY_ORDER_TRIGGER_EQUAL = 1;
 	public static final int INVENTORY_ORDER_TRIGGER_BELOW = 0;
-	public static final int INVENTORY_ORDER_TRIGGER_DEFAULT =
-		INVENTORY_ORDER_TRIGGER_BELOW;
+	public static final int INVENTORY_ORDER_TRIGGER_DEFAULT = INVENTORY_ORDER_TRIGGER_BELOW;
 	
 	// Labor
 	public static final String DAYS_TO_KEEP_UNSEEN_LAB_RESULTS = "3"; //$NON-NLS-1$
@@ -196,6 +198,8 @@ public class Preferences {
 		LABSETTINGS_PREFIX_CFG_EVAL + "tText/"; //$NON-NLS-1$
 	public static final String LABSETTINGS_CFG_EVAL_REFVAL_NON_EQUAL_RESVAL_MEANS_PATHOLOGIC =
 		"refValNonEqualResValMeansPath"; //$NON-NLS-1$
+	public static final String LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES =
+		LABSETTINGS_PREFIX_CFG_EVAL + "missingPathologicFlagMeansNonPathologicFor"; //$NON-NLS-1$
 	
 	// Scanner
 	public static final String SCANNER_PREFIX_CODE = "scanner/prefixcode"; //$NON-NLS-1$
