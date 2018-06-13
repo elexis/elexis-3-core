@@ -133,6 +133,9 @@ public class HL7Parser {
 			List<IValueType> observations = obsMessage.getObservations();
 			initCommentDate(obsMessage);
 			
+			TimeTool obrDateTime = null;
+			TimeTool obxDateTime = null;
+			
 			for (IValueType iValueType : observations) {
 				if (iValueType instanceof LabResultData) {
 					LabResultData hl7LabResult = (LabResultData) iValueType;
@@ -147,6 +150,8 @@ public class HL7Parser {
 					if (hl7LabResult.getOBRDateTime() == null) {
 						hl7LabResult.setOBRDateTime(transmissionTime.toString(TimeTool.TIMESTAMP));
 					}
+					obrDateTime = new TimeTool(hl7LabResult.getOBRDateTime());
+					obxDateTime = new TimeTool(hl7LabResult.getDate());
 					
 					ILabItem labItem = labImportUtil.getLabItem(hl7LabResult.getCode(), labor);
 					if (labItem == null) {
@@ -178,8 +183,7 @@ public class HL7Parser {
 						}
 					}
 					if (importAsLongText) {
-						TimeTool obrDateTime = new TimeTool(hl7LabResult.getOBRDateTime());
-						TimeTool obxDateTime = new TimeTool(hl7LabResult.getDate());
+						
 						Integer flag = null;
 						if (hl7LabResult.getFlag() != null) {
 							flag = (hl7LabResult.getFlag().booleanValue())
@@ -199,8 +203,6 @@ public class HL7Parser {
 						results.add(importedResult);
 						logger.debug(importedResult.toString());
 					} else {
-						TimeTool obrDateTime = new TimeTool(hl7LabResult.getOBRDateTime());
-						TimeTool obxDateTime = new TimeTool(hl7LabResult.getDate());
 						Integer flag = null;
 						if (hl7LabResult.getFlag() != null) {
 							flag = (hl7LabResult.getFlag().booleanValue())
@@ -283,9 +285,11 @@ public class HL7Parser {
 							labor, "", "", "", LabItemTyp.TEXT, "AA", "1");
 					logger.debug("LabItem created [{}]", labItem);
 				}
+				
 				TransientLabResult patientNoteAndComment =
 					new TransientLabResult.Builder(pat, labor, labItem, "text")
-						.comment(obsMessage.getPatientNotesAndComments()).date(date).flags(0)
+						.comment(obsMessage.getPatientNotesAndComments()).date(obrDateTime).flags(0)
+						.observationTime(obrDateTime).analyseTime(obxDateTime)
 						.orcMessage(orcMessage).build(labImportUtil);
 				results.add(patientNoteAndComment);
 			}

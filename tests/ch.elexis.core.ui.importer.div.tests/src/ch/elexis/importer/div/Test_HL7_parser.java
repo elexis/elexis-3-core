@@ -435,6 +435,8 @@ public class Test_HL7_parser {
 		assertTrue(labResult.getComment(), labResult.getComment().startsWith("Candida albicans"));
 		assertTrue(StringUtils.isEmpty(labResult.getRefMale()));
 		assertTrue(StringUtils.isEmpty(labResult.getRefFemale()));
+		assertEquals(1517049608000l, labResult.getAnalyseTime().getTimeAsLong()); // 20180127114008
+		assertEquals(1516812120000l, labResult.getObservationTime().getTimeAsLong()); // 20180124174200
 		
 		ILabItem item = labResult.getItem();
 		assertEquals("VAGINA-ABSTRICH - Kultur aerob", item.getName());
@@ -484,6 +486,8 @@ public class Test_HL7_parser {
 			default:
 				break;
 			}
+			assertEquals(1520430605000l, labResult.getAnalyseTime().getTimeAsLong());
+			assertEquals(1520316000000l, labResult.getObservationTime().getTimeAsLong());
 		}
 		
 		assertTrue(spernExists);
