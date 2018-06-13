@@ -473,8 +473,8 @@ public abstract class Settings implements Serializable, Cloneable {
 		if (r.length != 4)
 			return null;
 		
-		return new Rectangle(Integer.parseInt(r[0]), Integer.parseInt(r[1]),
-			Integer.parseInt(r[2]), Integer.parseInt(r[3]));
+		return new Rectangle(Integer.parseInt(r[0]), Integer.parseInt(r[1]), Integer.parseInt(r[2]),
+			Integer.parseInt(r[3]));
 	}
 	
 	public boolean get(String key, boolean defvalue){
@@ -556,9 +556,11 @@ public abstract class Settings implements Serializable, Cloneable {
 	 */
 	public List<String> getAsList(String key){
 		String string = get(key, (String) null);
-		String[] split = string.split(",");
-		if (split != null && split.length > 0) {
-			return Arrays.asList(split);
+		if (string != null) {
+			String[] split = string.split(",");
+			if (split != null && split.length > 0) {
+				return Arrays.asList(split);
+			}
 		}
 		return Collections.emptyList();
 	}
