@@ -179,7 +179,7 @@ public class EditLabItem extends TitleAreaDialog {
 		WidgetFactory.createLabel(ret, Messages.EditLabItem_OriginLaboratoryLabel);
 		originLaboratory = new Label(ret, SWT.None);
 		originLaboratory.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		originLaboratory.setText((actLabor != null) ? actLabor.getLabel() : null);
+		originLaboratory.setText((actLabor != null) ? actLabor.getLabel() : "");
 		originLaboratorySelection = new Button(ret, SWT.PUSH);
 		originLaboratorySelection.setText("..."); //$NON-NLS-1$
 		originLaboratorySelection.addSelectionListener(new SelectionAdapter() {
@@ -193,7 +193,7 @@ public class EditLabItem extends TitleAreaDialog {
 					originLaboratory.setText(actLabor.getLabel());
 				} else {
 					actLabor = null;
-					originLaboratory.setText(null);
+					originLaboratory.setText("");
 				}
 			}
 		});
