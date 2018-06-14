@@ -47,19 +47,13 @@ public class HL7LabImportRulesPreferencePage extends PreferencePage
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setLayout(new GridLayout(1, false));
 		
-		Label lblLabImportRulesHeader = new Label(container, SWT.NONE);
-		lblLabImportRulesHeader
-			.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		lblLabImportRulesHeader
-			.setText(Messages.HL7LabImportRulesPreferencePage_lblLabImportRulesHeader_text);
-		
 		Composite composite = new Composite(container, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		composite.setLayout(new GridLayout(2, false));
 		
 		Label lblLabNoPathFlagMeansNonPath = new Label(composite, SWT.WRAP);
 		lblLabNoPathFlagMeansNonPath
-			.setText(Messages.LabEvaluationRulesPreferencePage_lblLabNoPathFlagMeansNonPath_text);
+			.setText(Messages.HL7LabImportRulesPreferencePage_lblLabImportRulesHeader_text);
 		
 		ToolBarManager toolbarmgr = new ToolBarManager();
 		toolbarmgr.add(new AddMissingPathFlagMeansNonPathLaboratoryAction());
