@@ -2622,6 +2622,7 @@ public class Messages extends NLS {
 	public static String Visibility_ON_PATIENT_SELECTION;
 	public static String Visibility_POPUP_ON_LOGIN;
 	public static String Visibility_POPUP_ON_PATIENT_SELECTION;
+	public static String HL7LabImportRulesPreferencePage_lblLabImportRulesHeader_text;
 	public static String LabEvaluationRulesPreferencePage_lblLabImportRulesHeader_text;
 	public static String LabEvaluationRulesPreferencePage_btnUseParameterRefValOnMissingResRefVal_text;
 	public static String LabEvaluationRulesPreferencePage_grpAbsoluteResults_text;
@@ -2633,6 +2634,8 @@ public class Messages extends NLS {
 	public static String LabEvaluationRulesPreferencePage_lblWennKeineRegel_text;
 	public static String LabEvaluationRulesPreferencePage_lblResultatEndbestimmt_text;
 	public static String LabEvaluationRulesPreferencePage_lblLabNoPathFlagMeansNonPath_text;
+	public static String MPF_Rule_PathDescriptionText;
+	
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

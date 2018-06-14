@@ -1,5 +1,6 @@
 package ch.elexis.importer.div;
 
+import static ch.elexis.importer.div.Helpers.removeAllPatientsAndDependants;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -7,7 +8,6 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -20,8 +20,6 @@ import ch.elexis.core.importer.div.importers.multifile.MultiFileParser;
 import ch.elexis.core.ui.importer.div.importers.PersistenceHandler;
 import ch.elexis.core.ui.importer.div.importers.TestHL7Parser;
 import ch.elexis.core.ui.importer.div.importers.multifile.strategy.DefaultImportStrategyFactory;
-import ch.elexis.data.Patient;
-import ch.elexis.data.Query;
 import ch.rgw.tools.Result;
 
 public class MultiFileParserTests {
@@ -109,16 +107,5 @@ public class MultiFileParserTests {
 				fail(msg + " " + result.toString());
 			}
 		}
-	}
-	
-	static private void removeAllPatientsAndDependants(){
-		Query<Patient> qr = new Query<Patient>(Patient.class);
-		List<Patient> qrr = qr.execute();
-		for (int j = 0; j < qrr.size(); j++) {
-			qrr.get(j).delete(true);
-		}
-		
-		qr = new Query<Patient>(Patient.class);
-		qrr = qr.execute();
 	}
 }

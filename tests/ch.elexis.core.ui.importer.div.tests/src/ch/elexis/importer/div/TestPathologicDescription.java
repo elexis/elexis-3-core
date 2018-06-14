@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static ch.elexis.importer.div.Helpers.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -373,58 +374,6 @@ public class TestPathologicDescription {
 		}
 	}
 	
-	@Test
-	public void test_ImportOnExistingLabItemRefValue_11114() throws IOException{
-		removeAllPatientsAndDependants();
-		removeAllLaboWerte();
-		
-		LabItem liKrus = new LabItem("KRUS", "Kreatinin im Urin", AllTests.testLab, "> 60", "> 60",
-			"mmol/l", LabItemTyp.NUMERIC, "Urin", "42");
-		
-		parseOneHL7file(new File(workDir.toString(), "Analytica/Albumin.hl7"), false, true);
-		
-		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
-		List<LabResult> qrr = qr.execute();
-		assertEquals(4, qrr.size());
-		for (LabResult labResult : qrr) {
-			PathologicDescription pathologicDescription = labResult.getPathologicDescription();
-			String itemCode = labResult.getItem().getKuerzel();
-			switch (itemCode) {
-			case "KRUS":
-				assertEquals(labResult.getOrigin().getLabel(), AllTests.testLab.getId(),
-					labResult.getOrigin().getId());
-				assertEquals(liKrus.getId(), labResult.getItem().getId());
-				assertEquals(Description.PATHO_REF_ITEM, pathologicDescription.getDescription());
-				assertEquals("> 60", pathologicDescription.getReference());
-				assertEquals(1, labResult.getFlags());
-				assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
-				assertFalse(labResult.isPathologicFlagIndetermined(null));
-				assertEquals("14.5", labResult.getResult());
-				break;
-			case "MIKA":
-				assertEquals(labResult.getOrigin().getLabel(), AllTests.testLab.getId(),
-					labResult.getOrigin().getId());
-				assertEquals(Description.PATHO_NOREF, pathologicDescription.getDescription());
-				assertEquals(0, labResult.getFlags());
-				assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
-				assertTrue(labResult.isPathologicFlagIndetermined(null));
-				assertEquals("404", labResult.getResult());
-				break;
-			case "MIKAQ":
-				assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
-				assertEquals("H", pathologicDescription.getReference());
-				assertEquals(1, labResult.getFlags());
-				assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
-				assertFalse(labResult.isPathologicFlagIndetermined(null));
-				assertEquals("g/mol", labResult.getUnit());
-				assertEquals("27.9", labResult.getResult());
-				break;
-			default:
-				break;
-			}
-		}
-	}
-	
 	private void parseOneHL7file(File f, boolean deleteAll, boolean alsoFailing) throws IOException{
 		String name = f.getAbsolutePath();
 		if (f.canRead() && (name.toLowerCase().endsWith(".hl7"))) {
@@ -483,14 +432,5 @@ public class TestPathologicDescription {
 		assertEquals(0, qLi.size());
 	}
 	
-	static private void removeAllPatientsAndDependants(){
-		Query<Patient> qr = new Query<Patient>(Patient.class);
-		List<Patient> qrr = qr.execute();
-		for (int j = 0; j < qrr.size(); j++) {
-			qrr.get(j).delete(true);
-		}
-		
-		qr = new Query<Patient>(Patient.class);
-		qrr = qr.execute();
-	}
+
 }

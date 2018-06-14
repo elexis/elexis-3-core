@@ -11,7 +11,8 @@ Require-Bundle: ch.elexis.core;bundle-version="3.1.0",
  ch.elexis.core.hl7.v2x;bundle-version="3.2.0",
  org.apache.poi;bundle-version="3.0.2",
  ch.elexis.core.l10n;bundle-version="3.5.0",
- org.apache.commons.lang3;bundle-version="3.1.0"
+ org.apache.commons.lang3;bundle-version="3.1.0",
+ ch.elexis.core.data
 Export-Package: ch.elexis.core.importer.div.importers,
  ch.elexis.core.importer.div.importers.multifile,
  ch.elexis.core.importer.div.importers.multifile.strategy

@@ -21,6 +21,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -568,12 +569,17 @@ public abstract class Settings implements Serializable, Cloneable {
 	/**
 	 * 
 	 * @param key
-	 * @param values
+	 * @param values an empty collection will remove the resp. key
 	 * @since 3.6
 	 */
 	public void setAsList(String key, List<String> values){
-		String value = values.stream().map(o -> o.toString()).reduce((u, t) -> u + "," + t).get();
-		set(key, value);
+		Optional<String> value =
+			values.stream().map(o -> o.toString()).reduce((u, t) -> u + "," + t);
+		if (value.isPresent()) {
+			set(key, value.get());
+		} else {
+			remove(key);
+		}
 	}
 	
 }
