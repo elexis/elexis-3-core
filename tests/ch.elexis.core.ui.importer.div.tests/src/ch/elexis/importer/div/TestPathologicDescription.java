@@ -360,6 +360,13 @@ public class TestPathologicDescription {
 				assertEquals("<10", labResult.getResult());
 				assertEquals("4-44", labResult.getItem().getReferenceFemale());
 				break;
+			case "CRE-P":
+				assertEquals(Description.PATHO_REF, pathologicDescription.getDescription());
+				assertEquals(0, labResult.getFlags());
+				assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
+				assertEquals("47", labResult.getResult());
+				assertFalse(labResult.isPathologicFlagIndetermined(null));
+				break;
 			default:
 				break;
 			}
