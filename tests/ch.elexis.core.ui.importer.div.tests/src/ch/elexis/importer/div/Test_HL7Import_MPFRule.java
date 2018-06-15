@@ -139,4 +139,42 @@ public class Test_HL7Import_MPFRule {
 		}
 	}
 	
+	@Test
+	public void test_ImportConsiderCorrectNPathologicFlag_11231() throws IOException{
+		
+		removeAllPatientsAndDependants();
+		removeAllLaboWerte();
+		
+		parseOneHL7file(hlp,
+			new File(workDir.toString(), "XLabResults/09168648_20150327102125_13382.hl7"), false,
+			true);
+		
+		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
+		List<LabResult> qrr = qr.execute();
+		assertEquals(26, qrr.size());
+		for (LabResult labResult : qrr) {
+			assertEquals(LabItemTyp.TEXT, labResult.getItem().getTyp());
+			
+			PathologicDescription pathologicDescription = labResult.getPathologicDescription();
+			String itemCode = labResult.getItem().getKuerzel();
+			switch (itemCode) {
+			case "na":
+				assertEquals("143", labResult.getResult());
+				assertEquals("mmol/l", labResult.getUnit());
+				assertEquals(0, labResult.getFlags());
+				assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
+				break;
+			case "rdwsd":
+				assertEquals("53.1", labResult.getResult());
+				assertEquals("fl", labResult.getUnit());
+				assertEquals(1, labResult.getFlags());
+				assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
+				break;
+			default:
+				break;
+			}
+		}
+		
+	}
+	
 }
