@@ -210,7 +210,8 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	}
 	
 	/**
-	 * Get a list of {@link ICodeElement} instances referenced by this block.
+	 * Get an instantiated list of {@link ICodeElement} instances referenced by this block,
+	 * non-resolvable elements are silently skipped.
 	 * 
 	 * @return a possibly empty list of ICodeElements
 	 */
