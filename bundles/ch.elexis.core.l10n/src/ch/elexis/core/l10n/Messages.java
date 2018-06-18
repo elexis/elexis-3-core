@@ -2541,6 +2541,7 @@ public class Messages extends NLS {
 	public static String TimeTool_yearsAgoFormat;
 	public static String TimeTool_yearsToFormat;
 	public static String LabResultDeleteAction_title;
+	public static String LabResultEvaluator_LabItemNoRefValue;
 	public static String SetPathologic;
 	public static String SetNonPathologic;
 	public static String TreeContentProvider_loadData;

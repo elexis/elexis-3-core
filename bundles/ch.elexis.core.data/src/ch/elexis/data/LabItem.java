@@ -59,6 +59,12 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 	static final String LABITEMS = "LABORITEMS"; //$NON-NLS-1$
 	private static final Pattern varPattern =
 		Pattern.compile(TextContainerConstants.MATCH_TEMPLATE);
+	
+	/**
+	 * Denotes that a labitem does not have a reference value, and hence
+	 * by definition always is considered non-pathologic (e.g. eye color - blue)
+	 */
+	public static final String REFVAL_INCONCLUSIVE = "inconclusive";
 		
 	@Override
 	protected String getTableName(){
@@ -73,9 +79,9 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 	/**
 	 * Erstellt ein neues LaborItem.
 	 * 
-	 * @param k
+	 * @param code
 	 *            Testkuerzel (e.g. BILI)
-	 * @param t
+	 * @param title
 	 *            Testname (e.g. Bilirubin gesamt)
 	 * @param labor
 	 *            Labor-Identitaet (e.g. Eigenlabor)
@@ -92,9 +98,9 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 	 * @param seq
 	 *            Sequenz-Nummer
 	 */
-	public LabItem(String k, String t, Kontakt labor, String RefMann, String RefFrau, String Unit,
+	public LabItem(String code, String title, Kontakt labor, String RefMann, String RefFrau, String Unit,
 		LabItemTyp type, String grp, String seq){
-		this(k, t, (labor != null) ? labor.getId() : null, RefMann, RefFrau, Unit, type, grp,
+		this(code, title, (labor != null) ? labor.getId() : null, RefMann, RefFrau, Unit, type, grp,
 			seq);
 	}
 	
@@ -102,7 +108,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 	 * @since 3.2
 	 * @since 3.4 new LabItems are by default set to visible
 	 */
-	public LabItem(String k, String t, String laborId, String RefMann, String RefFrau, String Unit,
+	public LabItem(String code, String title, String laborId, String RefMann, String RefFrau, String Unit,
 		LabItemTyp type, String grp, String seq){
 		String tp = "1"; //$NON-NLS-1$
 		if (type == LabItemTyp.NUMERIC) {
@@ -116,7 +122,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		}
 		create(null);
 		if (StringTool.isNothing(seq)) {
-			seq = t.substring(0, 1);
+			seq = title.substring(0, 1);
 		}
 		if (StringTool.isNothing(grp)) {
 			grp = Messages.LabItem_defaultGroup;
@@ -131,7 +137,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		}
 		set(new String[] {
 			SHORTNAME, TITLE, LAB_ID, REF_MALE, REF_FEMALE_OR_TEXT, UNIT, TYPE, GROUP, PRIO, VISIBLE
-		}, k, t, laborId, RefMann, RefFrau, Unit, tp, grp, seq, StringConstants.ONE);
+		}, code, title, laborId, RefMann, RefFrau, Unit, tp, grp, seq, StringConstants.ONE);
 	}
 	
 	protected LabItem(){/* leer */
@@ -628,5 +634,11 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 	@Override
 	public void setUnit(String value){
 		setEinheit(value);
+	}
+
+	@Override
+	public boolean isNoReferenceValueItem(){
+		String[] values = get(true, REF_MALE, REF_FEMALE_OR_TEXT);
+		return (REFVAL_INCONCLUSIVE.equals(values[0]) && REFVAL_INCONCLUSIVE.equals(values[1]));
 	}
 }

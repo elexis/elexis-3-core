@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
@@ -78,6 +79,10 @@ public class LabResultEvaluator {
 	
 	public LabResultEvaluationResult evaluate(LabResult labResult){
 		ILabItem item = labResult.getItem();
+		if(item.isNoReferenceValueItem()) {
+			return new LabResultEvaluationResult(true, false, new PathologicDescription(
+				Description.PATHO_REF_ITEM, Messages.LabResultEvaluator_LabItemNoRefValue));
+		}
 		if (LabItemTyp.ABSOLUTE == item.getTyp()) {
 			return evaluateTextualResult(labResult, true);
 		} else if (LabItemTyp.TEXT == item.getTyp()) {

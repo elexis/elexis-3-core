@@ -23,7 +23,7 @@ import junit.framework.TestSuite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	Test_HL7_parser.class, MultiFileParserTests.class, HL7InitLabItemTest.class,
-	TestPathologicDescription.class, Test_HL7Import_MPFRule.class
+	TestPathologicDescription.class, Test_HL7Import_MPFRule.class, Test_Import_LabItemInconclusiveRefValue.class
 })
 public class AllTests {
 	
