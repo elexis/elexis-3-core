@@ -61,6 +61,7 @@ public class Messages extends NLS {
 	public static String BillSummary_receiver;
 	public static String BillSummary_state;
 	public static String BillSummary_total;
+	public static String ContactNotAvailable;
 	public static String DefaultOutputter_defaultOutputForCase;
 	public static String DefaultOutputter_useIdividualPlugins;
 	public static String ErstelleRnnCommand_BadCaseDefinition;

@@ -33,6 +33,7 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -44,6 +45,7 @@ import org.eclipse.ui.part.ViewPart;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.InvoiceState;
+import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceActions;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListBottomComposite;
@@ -204,7 +206,8 @@ public class InvoiceListView extends ViewPart {
 		});
 		tblclmnPatient.addSelectionListener(sortAdapter);
 		
-		TableViewerColumn tvcBillingSystem = new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
+		TableViewerColumn tvcBillingSystem =
+			new TableViewerColumn(tableViewerInvoiceList, SWT.NONE);
 		TableColumn tblclmnLaw = tvcBillingSystem.getColumn();
 		tcl_compositeInvoiceList.setColumnData(tblclmnLaw, new ColumnPixelData(50, true, true));
 		tblclmnLaw.setText(Messages.InvoiceListView_tblclmnLaw_text);
@@ -241,9 +244,26 @@ public class InvoiceListView extends ViewPart {
 			@Override
 			public String getText(Object element){
 				if (element instanceof InvoiceEntry) {
-					return ((InvoiceEntry) element).getReceiverLabel();
+					String receiverLabel = ((InvoiceEntry) element).getReceiverLabel();
+					if (((InvoiceEntry) element).isResolved()) {
+						return (receiverLabel != null) ? receiverLabel
+								: Messages.ContactNotAvailable;
+					}
+					return null;
 				}
 				return super.getText(element);
+			}
+			
+			@Override
+			public Color getBackground(Object element){
+				if (element instanceof InvoiceEntry) {
+					String receiverLabel = ((InvoiceEntry) element).getReceiverLabel();
+					if (((InvoiceEntry) element).isResolved()) {
+						return (receiverLabel != null) ? null : UiDesk.getColor(UiDesk.COL_RED);
+					}
+					return null;
+				}
+				return super.getBackground(element);
 			}
 		});
 		
