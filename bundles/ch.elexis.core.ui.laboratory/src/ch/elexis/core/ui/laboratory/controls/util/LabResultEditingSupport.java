@@ -29,10 +29,13 @@ import ch.elexis.core.ui.laboratory.controls.Messages;
 import ch.elexis.core.ui.laboratory.controls.model.LaborItemResults;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.ILockHandler;
+import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.LabItem;
 import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabResult;
+import ch.elexis.data.Mandant;
+import ch.elexis.data.Patient;
 import ch.rgw.tools.TimeTool;
 
 public class LabResultEditingSupport extends EditingSupport {
@@ -205,14 +208,29 @@ public class LabResultEditingSupport extends EditingSupport {
 
 	private LabResult createResult(LabItem item, Kontakt origin){
 		TimeTool now = new TimeTool();
+		Patient patient = ElexisEventDispatcher.getSelectedPatient();
 		LabOrder order =
-			new LabOrder(CoreHub.actUser, CoreHub.actMandant,
-				ElexisEventDispatcher.getSelectedPatient(), item, null, LabOrder.getNextOrderId(),
+			new LabOrder(CoreHub.actUser, findMandant(patient), patient, item, null,
+				LabOrder.getNextOrderId(),
 				"Eingabe", now);
 		LabResult result = order.createResult(origin);
 		order.setState(LabOrder.State.DONE);
 		result.setTransmissionTime(now);
 		result.setObservationTime(getDate());
 		return result;
+	}
+	
+	private Mandant findMandant(Patient patient){
+		// lookup mandant of last kons
+		Konsultation konsultation = patient.getLastKonsultation();
+		if (konsultation != null && konsultation.exists()) {
+			Mandant mandant = konsultation.getMandant();
+			if (mandant != null && mandant.getId() != null) {
+				return mandant;
+			}
+		}
+		// use current mandant
+		Mandant mandant = ElexisEventDispatcher.getSelectedMandator();
+		return mandant;
 	}
 }
