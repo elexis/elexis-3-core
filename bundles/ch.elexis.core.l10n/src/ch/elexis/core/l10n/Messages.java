@@ -407,6 +407,8 @@ public class Messages extends NLS {
 	public static String GlobalActions_ChangeMandator;
 	public static String GlobalActions_ChangeMandatorMessage;
 	public static String GlobalActions_Connection;
+	public static String GlobalActions_CloseCase;
+	public static String GlobalActions_CloseCase_SelectCloseDate;
 	public static String GlobalActions_Copy;
 	public static String GlobalActions_CouldntDeleteCaseExplanation;
 	public static String GlobalActions_CouldntDeleteCaseMessage;

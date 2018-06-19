@@ -128,7 +128,7 @@ public class GlobalActions {
 	public static IAction printEtikette, printBlatt, printAdresse, printVersionedEtikette,
 			showBlatt;
 	public static IAction printRoeBlatt;
-	public static IAction openFallaction, filterAction, makeBillAction, planeRechnungAction;
+	public static IAction openFallaction, closeFallAction, filterAction, makeBillAction, planeRechnungAction;
 	public static RestrictedAction delKonsAction, delFallAction, reopenFallAction, neueKonsAction;
 	public static LockedAction<Konsultation> moveBehandlungAction, redateAction;
 	public static IAction neuerFallAction;
@@ -644,6 +644,26 @@ public class GlobalActions {
 				}
 			}
 			
+		};
+		closeFallAction = new LockedAction<Fall>(Messages.GlobalActions_CloseCase) {
+			
+			@Override
+			public Fall getTargetedObject(){
+				return (Fall) ElexisEventDispatcher.getSelected(Fall.class);
+			}
+			
+			@Override
+			public void doRun(Fall fall){
+				DateSelectorDialog dsd = new DateSelectorDialog(UiDesk.getTopShell(), null,
+					Messages.GlobalActions_CloseCase_SelectCloseDate);
+				int retVal = dsd.open();
+				if (Dialog.OK == retVal) {
+					TimeTool endDate = dsd.getSelectedDate();
+					fall.setEndDatum(new TimeTool(endDate.getTime()).toString(TimeTool.DATE_GER));
+					ElexisEventDispatcher.getInstance()
+						.fire(new ElexisEvent(fall, Fall.class, ElexisEvent.EVENT_UPDATE));
+				}
+			}
 		};
 		reopenFallAction = new LockedRestrictedAction<Fall>(AccessControlDefaults.CASE_REOPEN,
 			Messages.GlobalActions_ReopenCase) {

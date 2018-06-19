@@ -17,6 +17,7 @@ import static ch.elexis.core.ui.actions.GlobalActions.makeBillAction;
 import static ch.elexis.core.ui.actions.GlobalActions.neuerFallAction;
 import static ch.elexis.core.ui.actions.GlobalActions.openFallaction;
 import static ch.elexis.core.ui.actions.GlobalActions.reopenFallAction;
+import static ch.elexis.core.ui.actions.GlobalActions.closeFallAction;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -117,7 +118,7 @@ public class FaelleView extends ViewPart implements IRefreshable {
 		tv.addSelectionChangedListener(GlobalEventDispatcher.getInstance().getDefaultListener());
 		menus = new ViewMenus(getViewSite());
 		menus.createToolbar(neuerFallAction, konsFilterAction, filterClosedAction);
-		menus.createViewerContextMenu(tv, delFallAction, openFallaction, reopenFallAction,
+		menus.createViewerContextMenu(tv, openFallaction, closeFallAction, null, delFallAction, reopenFallAction,
 			makeBillAction);
 		tv.setInput(getViewSite());
 		tv.addDoubleClickListener(new IDoubleClickListener() {
