@@ -57,6 +57,7 @@ import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.IDiagnose;
+import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -70,8 +71,6 @@ import ch.elexis.core.ui.util.WidgetFactory;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.views.contribution.IViewContribution;
 import ch.elexis.core.ui.views.contribution.ViewContributionHelper;
-import ch.elexis.data.AccountTransaction;
-import ch.elexis.data.AccountTransaction.Account;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
@@ -85,7 +84,6 @@ import ch.elexis.data.VerrechnetCopy;
 import ch.elexis.data.Zahlung;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
-import ch.rgw.tools.TimeTool;
 
 public class RechnungsBlatt extends Composite implements IActivationListener {
 	
@@ -122,7 +120,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 				Rechnung invoice = (Rechnung) po;
 				Money openAmount = invoice.getOffenerBetrag();
 				ltf.setText(openAmount.getAmountAsString());
-				if (RnStatus.STORNIERT == invoice.getStatus()) {
+				if (InvoiceState.CANCELLED.numericValue() == invoice.getStatus()) {
 					ltf.setLabel(Messages.RechnungsBlatt_compensateAmount);
 				} else {
 					ltf.setLabel(Messages.RechnungsBlatt_amountOpen);
@@ -131,7 +129,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 			
 			public void reloadContent(PersistentObject po, InputData ltf){
 				Rechnung invoice = (Rechnung) po;
-				if (RnStatus.STORNIERT == invoice.getStatus()) {
+				if (InvoiceState.CANCELLED.numericValue() == invoice.getStatus()) {
 					Money openAmount = invoice.getOffenerBetrag();
 					if (openAmount.isZero()) {
 						return;
@@ -142,36 +140,17 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 							"Insufficient rights", "You are not authorized to perform this action");
 						return;
 					}
-					
-					CompensateAmountDialog compensateDialog = new CompensateAmountDialog(
-						Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						openAmount.toString());
-					int retVal = compensateDialog.open();
-					if (retVal == Dialog.OK) {
-						String text = compensateDialog.getValue();
-						if (text.length() > 80) {
-							text = text.substring(0, 80);
-						}
-						Account account = compensateDialog.getAccount();
-						Zahlung zahlung = new Zahlung(invoice, openAmount, text, new TimeTool());
-						if (account != null) {
-							AccountTransaction transaction = zahlung.getTransaction();
-							transaction.setAccount(account);
-						}
-						
-						ElexisEventDispatcher.update(invoice);
-					}
-				} else {
-					try {
-						if (new RnDialogs.BuchungHinzuDialog(
-							Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							(Rechnung) po).open() == Dialog.OK) {
-							ElexisEventDispatcher.update(po);
-						}
-					} catch (ElexisException e) {
-						SWTHelper.showError("Buchung kann nicht hinzugefügt werden",
-							e.getLocalizedMessage());
-					}
+				}
+				
+				try {
+					RnDialogs.BuchungHinzuDialog comp = new RnDialogs.BuchungHinzuDialog(
+						Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(), invoice,
+						true);
+					comp.open();
+					ElexisEventDispatcher.update(invoice);
+				} catch (ElexisException e) {
+					SWTHelper.showError("Buchung kann nicht hinzugefügt werden",
+						e.getLocalizedMessage());
 				}
 			}
 			
@@ -659,7 +638,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 					RnStatus.getStatusText(Integer.parseInt(stm[1])));
 				lbJournal.add(sb.toString());
 			}
-			if (actRn.getStatus() == RnStatus.FEHLERHAFT) {
+			if (actRn.getStatus() == InvoiceState.DEFECTIVE.numericValue()) {
 				List<String> rejects = actRn.getTrace(Rechnung.REJECTED);
 				StringBuilder rjj = new StringBuilder();
 				for (String r : rejects) {

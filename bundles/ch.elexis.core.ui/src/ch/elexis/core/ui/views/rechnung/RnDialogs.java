@@ -46,6 +46,7 @@ import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.interfaces.IRnOutputter;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.MoneyInput;
@@ -225,11 +226,26 @@ public class RnDialogs {
 		ComboViewer viewer;
 		
 		public BuchungHinzuDialog(Shell shell, Rechnung r) throws ElexisException{
+			this(shell, r, false);
+		}
+		
+		/**
+		 * 
+		 * @param shell
+		 * @param invoice
+		 * @param allowCancelledInvoices
+		 * @throws ElexisException
+		 * @since 3.6
+		 */
+		public BuchungHinzuDialog(Shell shell, Rechnung invoice, boolean allowCancelledInvoices)
+			throws ElexisException{
 			super(shell);
-			if (r.getStatus() == RnStatus.STORNIERT) {
-				throw new ElexisException(getClass(), RECHNUNG_IST_STORNIERT, ERR_STORNO);
+			if (invoice.getStatus() == InvoiceState.CANCELLED.numericValue()) {
+				if (!allowCancelledInvoices) {
+					throw new ElexisException(getClass(), RECHNUNG_IST_STORNIERT, ERR_STORNO);
+				}
 			}
-			rn = r;
+			rn = invoice;
 		}
 		
 		@Override
