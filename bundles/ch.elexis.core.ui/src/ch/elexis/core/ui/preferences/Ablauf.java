@@ -12,6 +12,10 @@
  *******************************************************************************/
 package ch.elexis.core.ui.preferences;
 
+import java.io.File;
+import java.nio.file.Paths;
+
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.IntegerFieldEditor;
@@ -19,17 +23,20 @@ import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.rgw.tools.StringTool;
 
 public class Ablauf extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	
 	public Ablauf(){
 		super(GRID);
 		setPreferenceStore(new SettingsPreferenceStore(CoreHub.localCfg));
-
-		setDescription(Messages.Ablauf_0);
+		String msg = Messages.Ablauf_0 + StringTool.lf + Messages.LogbackConfigDetails;
+		setDescription(msg);
 	}
 	
 	@Override
