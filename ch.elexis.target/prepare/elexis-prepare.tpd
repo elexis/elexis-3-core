@@ -98,6 +98,24 @@ location "http://download.elexis.info/elexis-server/elexis-server-dependencies" 
 	com.healthmarketscience.jackcess
 	org.jboss.aerogear.otp-java
 	com.google.zxing.core
+	ca.uhn.hapi.osgi-base
+	ca.uhn.hapi.osgi-base.source
+	ca.uhn.hapi.structures-v21
+	ca.uhn.hapi.structures-v21.source
+	ca.uhn.hapi.structures-v22
+	ca.uhn.hapi.structures-v22.source
+	ca.uhn.hapi.structures-v23
+	ca.uhn.hapi.structures-v23.source
+	ca.uhn.hapi.structures-v231
+	ca.uhn.hapi.structures-v231.source
+	ca.uhn.hapi.structures-v24
+	ca.uhn.hapi.structures-v24.source
+	ca.uhn.hapi.structures-v25
+	ca.uhn.hapi.structures-v25.source
+	ca.uhn.hapi.structures-v251
+	ca.uhn.hapi.structures-v251.source
+	ca.uhn.hapi.structures-v26
+	ca.uhn.hapi.structures-v26.source
 }
 
 location "http://download.elexis.info/elexis.3.3rdparty.libraries/snapshot" {
@@ -135,24 +153,6 @@ location "http://download.elexis.info/elexis.3.3rdparty.libraries/snapshot" {
 	bsf 2.4.0
 	c3p0 0.9.1.1
 	c3p0.source 0.9.1.1
-	ca.uhn.hapi.osgi-base 1.2.0
-	ca.uhn.hapi.osgi-base.source 1.2.0
-	ca.uhn.hapi.structures-v21 1.2.0
-	ca.uhn.hapi.structures-v21.source 1.2.0
-	ca.uhn.hapi.structures-v22 1.2.0
-	ca.uhn.hapi.structures-v22.source 1.2.0
-	ca.uhn.hapi.structures-v23 1.2.0
-	ca.uhn.hapi.structures-v23.source 1.2.0
-	ca.uhn.hapi.structures-v231 1.2.0
-	ca.uhn.hapi.structures-v231.source 1.2.0
-	ca.uhn.hapi.structures-v24 1.2.0
-	ca.uhn.hapi.structures-v24.source 1.2.0
-	ca.uhn.hapi.structures-v25 1.2.0
-	ca.uhn.hapi.structures-v25.source 1.2.0
-	ca.uhn.hapi.structures-v251 1.2.0
-	ca.uhn.hapi.structures-v251.source 1.2.0
-	ca.uhn.hapi.structures-v26 2.2.0
-	ca.uhn.hapi.structures-v26.source 2.2.0
 	cal10n.api 0.7.4
 	cal10n.api.source 0.7.4
 	cglib.nodep 2.2.2
