@@ -2,13 +2,14 @@ package ch.elexis.hl7.v231;
 
 import java.util.Date;
 
+import ca.uhn.hl7v2.DefaultHapiContext;
 import ca.uhn.hl7v2.HL7Exception;
+import ca.uhn.hl7v2.HapiContext;
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v231.message.ADT_A08;
 import ca.uhn.hl7v2.model.v231.segment.EVN;
 import ca.uhn.hl7v2.model.v231.segment.PV1;
 import ca.uhn.hl7v2.parser.Parser;
-import ca.uhn.hl7v2.parser.PipeParser;
 import ch.elexis.hl7.HL7Writer;
 import ch.elexis.hl7.data.HL7Konsultation;
 import ch.elexis.hl7.data.HL7Mandant;
@@ -48,7 +49,7 @@ public class HL7_ADT_A08 extends HL7Writer {
 		ADT_A08 adt = new ADT_A08();
 		// Message
 		fillMSH(adt.getMSH(), "ADT", "A08", mandant, this.uniqueMessageControlID, //$NON-NLS-1$ //$NON-NLS-2$
-			this.uniqueProcessingID, patient); //$NON-NLS-1$ //$NON-NLS-2$
+			"8859/1", patient); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		fillEVN(adt.getEVN());
 		
@@ -59,7 +60,8 @@ public class HL7_ADT_A08 extends HL7Writer {
 		fillPV1(adt.getPV1(), consultation);
 		
 		// Now, let's encode the message and look at the output
-		Parser parser = new PipeParser();
+		HapiContext context = new DefaultHapiContext();
+		Parser parser = context.getPipeParser();
 		return parser.encode(adt);
 	}
 	

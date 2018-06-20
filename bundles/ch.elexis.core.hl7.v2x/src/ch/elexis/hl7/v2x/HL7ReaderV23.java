@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.AbstractPrimitive;
 import ca.uhn.hl7v2.model.Message;
-import ca.uhn.hl7v2.model.v23.group.ORU_R01_PATIENT;
 import ca.uhn.hl7v2.model.v23.datatype.CE;
 import ca.uhn.hl7v2.model.v23.datatype.ED;
 import ca.uhn.hl7v2.model.v23.datatype.FT;
@@ -23,6 +22,7 @@ import ca.uhn.hl7v2.model.v23.datatype.XAD;
 import ca.uhn.hl7v2.model.v23.datatype.XCN;
 import ca.uhn.hl7v2.model.v23.group.ORU_R01_OBSERVATION;
 import ca.uhn.hl7v2.model.v23.group.ORU_R01_ORDER_OBSERVATION;
+import ca.uhn.hl7v2.model.v23.group.ORU_R01_PATIENT;
 import ca.uhn.hl7v2.model.v23.group.ORU_R01_RESPONSE;
 import ca.uhn.hl7v2.model.v23.message.ORU_R01;
 import ca.uhn.hl7v2.model.v23.segment.MSH;
@@ -188,10 +188,10 @@ public class HL7ReaderV23 extends HL7Reader {
 			String orderNumber = oru.getRESPONSE().getORDER_OBSERVATION().getORC()
 				.getOrc2_PlacerOrderNumber(0).getEi1_EntityIdentifier().getValue();
 			
-			if (pid.getPid5_PatientName().getFamilyName().getValue() != null)
-				lastName = pid.getPid5_PatientName().getFamilyName().getValue();
-			if (pid.getPid5_PatientName().getGivenName().getValue() != null)
-				firstName = pid.getPid5_PatientName().getGivenName().getValue();
+			if (pid.getPid5_PatientName(0).getFamilyName().getValue() != null)
+				lastName = pid.getPid5_PatientName(0).getFamilyName().getValue();
+			if (pid.getPid5_PatientName(0).getGivenName().getValue() != null)
+				firstName = pid.getPid5_PatientName(0).getGivenName().getValue();
 			String patientName = firstName + " " + lastName;
 			String patientNotesAndComments =
 				readPatientNotesAndComments(oru.getRESPONSE().getPATIENT());

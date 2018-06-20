@@ -155,7 +155,7 @@ public abstract class HL7Writer {
 	 */
 	protected void fillMSH(final ca.uhn.hl7v2.model.v231.segment.MSH msh, final String messageId,
 		final String event, final HL7Mandant mandant, final String uniqueMessageControlID,
-		final String uniqueProcessingID, final HL7Patient patient) throws DataTypeException{
+		final String encoding, final HL7Patient patient) throws DataTypeException{
 		msh.getMsh1_FieldSeparator().setValue("|"); //$NON-NLS-1$
 		msh.getMsh2_EncodingCharacters().setValue("^~\\&"); //$NON-NLS-1$
 		// Name der sendenden Anwendung. Dessen Eindeutigkeit im Kommunikations-Netzwerk liegt
@@ -195,10 +195,9 @@ public abstract class HL7Writer {
 		if (uniqueMessageControlID != null) {
 			msh.getMsh10_MessageControlID().setValue(uniqueMessageControlID);
 		}
-		if (uniqueProcessingID != null) {
-			msh.getMsh11_ProcessingID().getPt1_ProcessingID().setValue(uniqueProcessingID);
-		}
+		msh.getMsh11_ProcessingID().getPt1_ProcessingID().setValue("P");
 		msh.getMsh12_VersionID().getVid1_VersionID().setValue(getVersion());
+		msh.getMsh18_CharacterSet(0).setValue(encoding);
 	}
 	
 	/**

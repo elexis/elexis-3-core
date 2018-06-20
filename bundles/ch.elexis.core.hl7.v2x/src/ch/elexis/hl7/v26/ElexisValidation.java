@@ -2,6 +2,7 @@ package ch.elexis.hl7.v26;
 
 import java.util.Iterator;
 
+import ca.uhn.hl7v2.validation.PrimitiveTypeRule;
 import ca.uhn.hl7v2.validation.impl.DefaultValidation;
 import ca.uhn.hl7v2.validation.impl.RuleBinding;
 
@@ -16,7 +17,7 @@ public class ElexisValidation extends DefaultValidation {
 	
 	public ElexisValidation(){
 		super();
-		Iterator<RuleBinding> iter = getPrimitiveRuleBindings().listIterator();
+		Iterator<RuleBinding<PrimitiveTypeRule>> iter = getPrimitiveRuleBindings().listIterator();
 		for (int i = 0, n = getPrimitiveRuleBindings().size(); i < n; i++) {
 			Object o = iter.next();
 			if (o instanceof RuleBinding) {
