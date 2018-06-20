@@ -10,6 +10,9 @@
  ******************************************************************************/
 package ch.elexis.core.ui.views.controls;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -24,89 +27,77 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Spinner;
 
-import ch.rgw.tools.TimeSpan;
-import ch.rgw.tools.TimeTool;
-
-public class TimeSpanSelectionComposite extends Composite implements ISelectionProvider {
+public class DaysOrDateSelectionComposite extends Composite implements ISelectionProvider {
 	
 	private ListenerList selectionListeners = new ListenerList();
 	
-	private DateTime timespanFrom;
-	private DateTime timespanTo;
+	private Spinner days;
+	private DateTime date;
 	
-	private TimeSpan timeSpan;
+	private LocalDate dateValue;
+	private int daysValue;
 	
-	public TimeSpanSelectionComposite(Composite parent, int style){
+	public DaysOrDateSelectionComposite(Composite parent, int style){
 		super(parent, style);
 		createContent();
 	}
 	
 	private void createContent(){
 		setLayout(new GridLayout(4, false));
+		
 		Label label = new Label(this, SWT.NONE);
-		label.setText("Von");
-		timespanFrom = new DateTime(this, SWT.NONE);
-		timespanFrom.addSelectionListener(new SelectionAdapter() {
+		label.setText("Tage");
+		days = new Spinner(this, SWT.BORDER);
+		days.setMaximum(999);
+		days.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				updateTimeSpan(timespanFrom);
+				updateDays();
 				callSelectionListeners();
 			}
 		});
+		
 		label = new Label(this, SWT.NONE);
-		label.setText("Bis");
-		timespanTo = new DateTime(this, SWT.NONE);
-		timespanTo.addSelectionListener(new SelectionAdapter() {
+		label.setText("Datum");
+		date = new DateTime(this, SWT.NONE);
+		date.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				updateTimeSpan(timespanTo);
+				updateDate();
 				callSelectionListeners();
 			}
 		});
+		// initialize values and ui
+		setDate(LocalDate.now());
 	}
 	
-	private void updateTimeSpan(DateTime dateTime){
-		if (timeSpan == null) {
-			timeSpan = new TimeSpan();
-		}
-		if (timespanFrom == dateTime) {
-			setDateTime(dateTime, timeSpan.from);
-		} else if (timespanTo == dateTime) {
-			setDateTime(dateTime, timeSpan.until);
-		}
+	private void updateDays(){
+		daysValue = days.getSelection();
+		dateValue = LocalDate.now().minusDays(days.getSelection());
+		date.setDate(dateValue.getYear(), dateValue.getMonthValue() - 1, dateValue.getDayOfMonth());
 	}
 	
-	public void setTimeSpan(TimeSpan timeSpan){
-		this.timeSpan = timeSpan;
-		if(timeSpan != null) {
-			setDate(timeSpan.from, timespanFrom);
-			setDate(timeSpan.until, timespanTo);
-		}
+	private void updateDate(){
+		dateValue = LocalDate.of(date.getYear(), date.getMonth() + 1, date.getDay());
+		daysValue = (int) ChronoUnit.DAYS.between(dateValue, LocalDate.now());
+		days.setSelection(daysValue);
 	}
 	
 	/**
-	 * Update the date value of the DateTime.
+	 * Update the date value and the days value.
 	 * 
-	 * @param time
-	 * @param dateTime
+	 * @param newDate
 	 */
-	private void setDate(TimeTool time, DateTime dateTime){
-		dateTime.setDay(time.get(TimeTool.DAY_OF_MONTH));
-		dateTime.setMonth(time.get(TimeTool.MONTH));
-		dateTime.setYear(time.get(TimeTool.YEAR));
-	}
-	
-	/**
-	 * Update the date value of the TimeTool.
-	 * 
-	 * @param time
-	 * @param dateTime
-	 */
-	private void setDateTime(DateTime dateTime, TimeTool time){
-		time.set(TimeTool.DAY_OF_MONTH, dateTime.getDay());
-		time.set(TimeTool.MONTH, dateTime.getMonth());
-		time.set(TimeTool.YEAR, dateTime.getYear());
+	public void setDate(LocalDate newDate){
+		if (newDate != null) {
+			dateValue = newDate;
+			date.setDate(dateValue.getYear(), dateValue.getMonthValue() - 1,
+				dateValue.getDayOfMonth());
+			daysValue = (int) ChronoUnit.DAYS.between(dateValue, LocalDate.now());
+			days.setSelection(daysValue);
+		}
 	}
 	
 	private void callSelectionListeners(){
@@ -119,6 +110,7 @@ public class TimeSpanSelectionComposite extends Composite implements ISelectionP
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void addSelectionChangedListener(ISelectionChangedListener listener){
 		selectionListeners.add(listener);
@@ -126,8 +118,8 @@ public class TimeSpanSelectionComposite extends Composite implements ISelectionP
 	
 	@Override
 	public ISelection getSelection(){
-		if (timeSpan != null) {
-			return new StructuredSelection(timeSpan);
+		if (dateValue != null) {
+			return new StructuredSelection(dateValue);
 		}
 		return StructuredSelection.EMPTY;
 	}
@@ -142,11 +134,11 @@ public class TimeSpanSelectionComposite extends Composite implements ISelectionP
 		if (selection instanceof IStructuredSelection) {
 			if (!selection.isEmpty()) {
 				Object element = ((IStructuredSelection) selection).getFirstElement();
-				if (element instanceof TimeSpan) {
-					setTimeSpan((TimeSpan) element);
+				if (element instanceof LocalDate) {
+					setDate((LocalDate) element);
 				}
 			} else {
-				setTimeSpan(null);
+				setDate(null);
 			}
 		}
 	}

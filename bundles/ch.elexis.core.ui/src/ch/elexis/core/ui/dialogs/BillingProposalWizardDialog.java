@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.util.BillingUtil;
+import ch.elexis.core.ui.views.controls.DaysOrDateSelectionComposite;
 import ch.elexis.core.ui.views.controls.GenericSelectionComposite;
 import ch.elexis.core.ui.views.controls.KontaktSelectionComposite;
 import ch.elexis.core.ui.views.controls.TimeSpanSelectionComposite;
@@ -58,6 +59,9 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 	
 	private Button timeSpanOnly;
 	private TimeSpanSelectionComposite timeSpanSelection;
+	
+	private Button beforeTimeOnly;
+	private DaysOrDateSelectionComposite beforeDaysOrDate;
 	
 	private Button mandatorOnly;
 	private GenericSelectionComposite mandatorSelector;
@@ -110,6 +114,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 			public void selectionChanged(SelectionChangedEvent event){
 				if (event.getSelection() != null && !event.getSelection().isEmpty()) {
 					timeSpanOnly.setSelection(true);
+					beforeTimeOnly.setSelection(false);
 				} else {
 					timeSpanOnly.setSelection(false);
 				}
@@ -119,6 +124,23 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		timeSpanSelection
 			.setTimeSpan(
 				new TimeSpan(new TimeTool(dateNow.withDayOfMonth(1)), new TimeTool(dateNow)));
+		
+		beforeTimeOnly = new Button(content, SWT.CHECK);
+		beforeTimeOnly.setText("nur vor Tagen oder Datum");
+		beforeDaysOrDate = new DaysOrDateSelectionComposite(content, SWT.NONE);
+		beforeDaysOrDate.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
+		beforeDaysOrDate.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
+			public void selectionChanged(SelectionChangedEvent event){
+				if (event.getSelection() != null && !event.getSelection().isEmpty()) {
+					beforeTimeOnly.setSelection(true);
+					timeSpanOnly.setSelection(false);
+				} else {
+					beforeTimeOnly.setSelection(false);
+				}
+			}
+		});
+		beforeDaysOrDate.setDate(LocalDate.now().minusDays(30));
 		
 		mandatorOnly = new Button(content, SWT.CHECK);
 		mandatorOnly.setText("nur von folgenden Mandanten");
@@ -207,6 +229,19 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 						timeSpan.from.toString(TimeTool.DATE_COMPACT));
 					query.add(Konsultation.DATE, Query.LESS_OR_EQUAL,
 						timeSpan.until.toString(TimeTool.DATE_COMPACT));
+				}
+			}
+			if (beforeTimeOnly.getSelection()) {
+				IStructuredSelection selection =
+					(IStructuredSelection) beforeDaysOrDate.getSelection();
+				if (selection != null && !selection.isEmpty()) {
+					TimeTool nowTool = new TimeTool();
+					LocalDate fromDate = (LocalDate) selection.getFirstElement();
+					TimeTool fromTool = new TimeTool(fromDate);
+					query.add(Konsultation.DATE, Query.GREATER_OR_EQUAL,
+						fromTool.toString(TimeTool.DATE_COMPACT));
+					query.add(Konsultation.DATE, Query.LESS_OR_EQUAL,
+						nowTool.toString(TimeTool.DATE_COMPACT));					
 				}
 			}
 			if (mandatorOnly.getSelection()) {
