@@ -38,7 +38,7 @@ public class InvoiceActions {
 	
 	public Action addPaymentAction, rnExportAction, increaseLevelAction, addExpenseAction,
 			stornoAction, addAccountExcessAction, printListeAction, mahnWizardAction,
-			changeStatusAction, deleteAction, reactivateAction;
+			exportListAction, changeStatusAction, deleteAction, reactivateAction;
 	
 	private final StructuredViewer viewer;
 	private final IViewSite iViewSite;
@@ -241,6 +241,18 @@ public class InvoiceActions {
 					return;
 				}
 				Handler.execute(iViewSite, MahnlaufCommand.ID, null);
+			}
+		};
+		exportListAction = new Action(Messages.RnActions_exportListAction) {
+			{
+				setToolTipText(Messages.RnActions_exportListTooltip);
+				setImageDescriptor(Images.IMG_EXPORT.getImageDescriptor());
+			}
+			
+			@Override
+			public void run(){
+				List<Rechnung> invoiceSelections = getInvoiceSelections(viewer);
+				new RnDialogs.RnListeExportDialog(UiDesk.getTopShell(), invoiceSelections).open();
 			}
 		};
 		

@@ -332,6 +332,7 @@ public class InvoiceListView extends ViewPart {
 		IToolBarManager tbm = getViewSite().getActionBars().getToolBarManager();
 		tbm.add(reloadViewAction);
 		tbm.add(invoiceActions.mahnWizardAction);
+		tbm.add(invoiceActions.exportListAction);
 		tbm.add(invoiceListContentProvider.rnFilterAction);
 		tbm.add(new Separator());
 		tbm.add(invoiceActions.rnExportAction);
@@ -339,7 +340,8 @@ public class InvoiceListView extends ViewPart {
 		IMenuManager viewMenuManager = getViewSite().getActionBars().getMenuManager();
 		viewMenuManager.add(invoiceActions.printListeAction);
 		viewMenuManager.add(invoiceActions.addAccountExcessAction);
-		
+		viewMenuManager.add(invoiceActions.exportListAction);
+
 		MenuManager menuManager = new MenuManager();
 		menuManager.add(invoiceActions.rnExportAction);
 		menuManager.add(invoiceActions.addPaymentAction);
