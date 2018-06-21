@@ -1,6 +1,6 @@
 target "Elexis" with source
 
-location "http://download.elexis.info/elexis/master/p2/target/" {
+location "http://download.elexis.info/elexis/3.6/p2/target/" {
 	org.eclipse.equinox.executable.feature.group
 	org.eclipse.rcp.feature.group
 	org.eclipse.platform.feature.group

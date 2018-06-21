@@ -348,7 +348,6 @@ if @options[:mediawiki]
     end
     unless from_tag
       puts "Skipping #{repo} as there is no tag #{@options[:from]}"
-      @repo.ref_names.find{|x| /origin\/3.5/.match(x)}
       next
     end
     to_tag =@all_taginfos.find{|x| x.tag_name ==  @options[:to]}
