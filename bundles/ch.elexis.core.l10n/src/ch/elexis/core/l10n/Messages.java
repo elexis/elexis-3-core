@@ -194,6 +194,14 @@ public class Messages extends NLS {
 	public static String RnActions_deleteBillAction;
 	public static String RnActions_edirCaseAction;
 	public static String RnActions_expandAllAction;
+	public static String RnActions_exportListDirName;
+	public static String RnActions_exportListDirNameMissingCaption;
+	public static String RnActions_exportListDirNameMissingText;
+	public static String RnActions_exportListCaption;
+	public static String RnActions_exportListMessage;
+	public static String RnActions_exportListAction;
+	public static String RnActions_exportListTooltip;
+	public static String RnActions_exportSaveHelp;
 	public static String RnActions_filterLIstTooltip;
 	public static String RnActions_filterListAction;
 	public static String RnActions_increadeReminderLevelTooltip;
