@@ -151,6 +151,14 @@ public class Messages {
 	public static String RnActions_deleteBillAction = ch.elexis.core.l10n.Messages.RnActions_deleteBillAction;
 	public static String RnActions_edirCaseAction = ch.elexis.core.l10n.Messages.RnActions_edirCaseAction;
 	public static String RnActions_expandAllAction = ch.elexis.core.l10n.Messages.RnActions_expandAllAction;
+	public static String RnActions_exportListDirName = ch.elexis.core.l10n.Messages.RnActions_exportListDirName;
+	public static String RnActions_exportListDirNameMissingCaption = ch.elexis.core.l10n.Messages.RnActions_exportListDirNameMissingCaption;
+	public static String RnActions_exportListDirNameMissingText = ch.elexis.core.l10n.Messages.RnActions_exportListDirNameMissingText;
+	public static String RnActions_exportListCaption = ch.elexis.core.l10n.Messages.RnActions_exportListCaption;
+	public static String RnActions_exportListMessage = ch.elexis.core.l10n.Messages.RnActions_exportListMessage;
+	public static String RnActions_exportListAction = ch.elexis.core.l10n.Messages.RnActions_exportListAction;
+	public static String RnActions_exportListTooltip = ch.elexis.core.l10n.Messages.RnActions_exportListTooltip;
+	public static String RnActions_exportSaveHelp = ch.elexis.core.l10n.Messages.RnActions_exportSaveHelp;
 	public static String RnActions_filterLIstTooltip = ch.elexis.core.l10n.Messages.RnActions_filterLIstTooltip;
 	public static String RnActions_filterListAction = ch.elexis.core.l10n.Messages.RnActions_filterListAction;
 	public static String RnActions_increadeReminderLevelTooltip = ch.elexis.core.l10n.Messages.RnActions_increadeReminderLevelTooltip;
