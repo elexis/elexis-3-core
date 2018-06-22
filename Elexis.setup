@@ -55,7 +55,7 @@
       <setupTask
           xsi:type="setup:PreferenceTask"
           key="/instance/org.eclipse.ui.ide/WORKSPACE_NAME"
-          value="Elexis (${scope.project.stream.name})"/>
+          value="E ${core.git.clone.checkoutBranch}"/>
     </setupTask>
   </setupTask>
   <setupTask
@@ -232,8 +232,8 @@
   </setupTask>
   <setupTask
       xsi:type="pde:TargetPlatformTask"
-      id="ch.elexis.target.juno-target.target"
-      name="Juno for Elexis 3.0"/>
+      id="ch.elexis.target.elexis-prepare.target"
+      name="Prepare Target"/>
   <project name="Medelexis"
       label="">
     <setupTask

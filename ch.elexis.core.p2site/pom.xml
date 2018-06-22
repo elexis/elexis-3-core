@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>ch.elexis.core</groupId>
 		<artifactId>elexis-3-core</artifactId>
-		<version>3.6.0-SNAPSHOT</version>
+		<version>3.7.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>ch.elexis.core.p2site</artifactId>
 	<packaging>eclipse-repository</packaging>
