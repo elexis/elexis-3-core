@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ch.rgw.utility
 Bundle-SymbolicName: ch.rgw.utility;singleton:=true
-Bundle-Version: 3.6.0.qualifier
+Bundle-Version: 3.7.0.qualifier
 Bundle-Vendor: G. Weirich
 Eclipse-BuddyPolicy: registered
 Export-Package: ch.rgw.compress,

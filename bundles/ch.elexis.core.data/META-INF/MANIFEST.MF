@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Elexis Core Data
 Bundle-SymbolicName: ch.elexis.core.data;singleton:=true
-Bundle-Version: 3.6.0.qualifier
+Bundle-Version: 3.7.0.qualifier
 Bundle-Vendor: elexis.info
 Require-Bundle: org.slf4j.api;bundle-version="1.7.2";visibility:=reexport,
  org.eclipse.osgi.services;bundle-version="3.3.100",
