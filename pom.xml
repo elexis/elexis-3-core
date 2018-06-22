@@ -20,7 +20,7 @@
       </repository>
     </repositories>
     <properties>
-		<tycho.version>1.0.0</tycho.version>
+		<tycho.version>1.2.0</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
         <git.target.branch>master</git.target.branch>
@@ -57,7 +57,7 @@
 		<module>bundles</module>
 		<module>features</module>
 		<module>tests</module>
-		<module>ch.elexis.core.p2site</module>
+		<module>ch.elexis.core.p2site</module>    
 	</modules>
 	<profiles>
 		<profile>
@@ -261,7 +261,6 @@
 							<scripts>
 								<script><![CDATA[
   import java.text.SimpleDateFormat;
-  HINT_GENERATED    = "#  ${project.name}: Generated from pom.xml groovy shell using gmavenplus-plugin at ${new Date()}\n"
   HINT_LAST_CHANGED = "# Last changed from pom.xml groovy shell by gmavenplus-plugin in pom.xml at ${new Date()}\n"
 
   // Returns the current branchName
@@ -274,7 +273,13 @@
         println "NO CI_COMMIT_REF_NAME environment branch is now ${branch}"
       }
       commit_id="git rev-parse HEAD".execute().text.replaceAll("\n", '')
-      elexis_version = "${project.version}".replace("-SNAPSHOT", ".") + new SimpleDateFormat("yyyyMMdd-HHmm").format(Calendar.getInstance().getTime())
+      time_from_commit="git log -1 --format=%cD".execute().text.replaceAll("\n", '')
+      odt = java.time.LocalDateTime.parse (time_from_commit, java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME);
+      sdf = java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd-HHmm")
+      commit_time = odt.format(sdf)
+      println("${project.name}: commit_id ${commit_id} commit_time: ${commit_time}} time_from_commit ${time_from_commit}")
+      elexis_version = "${project.version}".replace("-SNAPSHOT", "${commit_time}")
+      println("${project.name}: commit_time ${commit_time} elexis_version ${elexis_version} from commit_id ${commit_id}")
       tags =  "git tag --contains ${commit_id}".execute().text.split("\n")
       for ( i in tags ) {
           if (i ==~/release\/(.*)/ ) {
@@ -287,6 +292,8 @@
       System.setProperty("git_branch",  branch)
       System.setProperty("elexis_version",  elexis_version)
       repo_version_file = new File(filename)
+      HINT_GENERATED    = "#  ${project.name}: Generated from pom.xml groovy shell using gmavenplus-plugin\n"
+      
       repo_version_file.write(HINT_GENERATED)
       repo_version_file.append("elexis.version=${elexis_version}\n")
       println("${project.name}: Created ${repo_version_file} with elexis_version ${elexis_version} from commit_id ${commit_id}")
@@ -297,6 +304,7 @@
     // Now we are have the info to crate teh repo.properties
     repo_version_file = new File(repo_properties_name)
     repo_version_file.write(HINT_GENERATED)
+    repo_version_file.append("// run at  ${new Date()}\n")
     repo_version_file.append("repoVariant=${branch}\n")
     repo_version_file.append("project.id=${project.id}\n")
     repo_version_file.append("project.name=${project.name}\n")
@@ -371,7 +379,52 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
         </execution>
       </executions>
     </plugin>
-  </plugins>
+      <plugin>
+        <groupId>pl.project13.maven</groupId>
+        <artifactId>git-commit-id-plugin</artifactId>
+        <version>2.2.4</version>
+        <executions>
+          <execution>
+            <id>retrieve-git-info</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>revision</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <injectAllReactorProjects>true</injectAllReactorProjects>
+          <runOnlyOnce>true</runOnlyOnce>
+          <skipPoms>false</skipPoms>
+          <dateFormat>yyyyMMddHHmmss</dateFormat>
+          <dateFormatTimeZone>UTC</dateFormatTimeZone>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>io.github.zlika</groupId>
+        <artifactId>reproducible-build-maven-plugin</artifactId>
+        <version>0.7</version>
+        <executions>
+          <execution>
+            <id>strip-jaxb</id>
+            <goals>
+              <goal>strip-jaxb</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>strip-jar</id>
+            <goals>
+              <goal>strip-jar</goal>
+            </goals>
+            <configuration>
+              <zipDateTime>${git.commit.time}</zipDateTime>
+              <!-- Set custom date/time format pattern, "yyyyMMddHHmmss" by default -->
+              <!-- <zipDateTimeFormatPattern>yyyyMMddHHmmss</zipDateTimeFormatPattern> -->
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   <pluginManagement>
     <plugins>
     		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
@@ -405,6 +458,16 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
 						</lifecycleMappingMetadata>
 					</configuration>
 				</plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.2.0</version>
+        <configuration>
+          <archive>
+            <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+          </archive>
+        </configuration>
+      </plugin>
       <plugin>
         <!-- Use compiler plugin with tycho as the adapter to the JDT compiler. -->
         <artifactId>maven-compiler-plugin </artifactId>
@@ -446,14 +509,6 @@ Without it Maven would put two versions of each class file into the jars
       </plugin>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
-        <artifactId>target-platform-configuration</artifactId>
-        <version>${tycho.version}</version>
-        <configuration>
-          <executionEnvironment>JavaSE-1.8</executionEnvironment>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-compiler-plugin</artifactId>
         <version>${tycho.version}</version>
         <configuration>
@@ -483,6 +538,7 @@ Without it Maven would put two versions of each class file into the jars
            <jgit.ignore>
              pom.xml
              .polyglot.build.properties
+             maven
            </jgit.ignore>
           <jgit.dirtyWorkingTree>warning</jgit.dirtyWorkingTree>
         </configuration>
@@ -520,6 +576,11 @@ Without it Maven would put two versions of each class file into the jars
         <artifactId>tycho-p2-plugin</artifactId>
         <version>${tycho.version}</version>
         <configuration>
+           <baselineRepositories>
+             <repository>
+              <url>http://download.eclipse.org/eclipse/updates/3.8</url>
+             </repository>
+           </baselineRepositories>
           <corelineMode>warn</corelineMode>
           <corelineReplace>none</corelineReplace>
           <corelineRepositories>
@@ -538,7 +599,7 @@ Without it Maven would put two versions of each class file into the jars
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.17</version>
+				<version>3.1.</version>
 				<configuration>
 					<includeTestResources>false</includeTestResources>
 					<linkXRef>true</linkXRef>
