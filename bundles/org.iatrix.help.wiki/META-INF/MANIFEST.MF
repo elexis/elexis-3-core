@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Iatrix Help Wiki
 Bundle-SymbolicName: org.iatrix.help.wiki; singleton:=true
-Bundle-Version: 3.2.0.qualifier
+Bundle-Version: 3.7.0.qualifier
 Bundle-Activator: org.iatrix.help.wiki.Activator
 Bundle-Vendor: org.iatrix
 Require-Bundle: org.eclipse.ui,

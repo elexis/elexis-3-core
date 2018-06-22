@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Elexis Core Contacts
 Bundle-SymbolicName: ch.elexis.core.ui.contacts;singleton:=true
-Bundle-Version: 3.3.0.qualifier
+Bundle-Version: 3.7.0.qualifier
 Bundle-Activator: ch.elexis.core.ui.contacts.Activator
 Bundle-Vendor: elexis.info
 Bundle-Localization: plugin

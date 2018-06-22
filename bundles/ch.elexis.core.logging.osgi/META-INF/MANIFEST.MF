@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: OSGI Slf4J Logging Adapter
 Bundle-SymbolicName: ch.elexis.core.logging.osgi
-Bundle-Version: 3.3.0.qualifier
+Bundle-Version: 3.7.0.qualifier
 Bundle-Vendor: elexis.info
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
