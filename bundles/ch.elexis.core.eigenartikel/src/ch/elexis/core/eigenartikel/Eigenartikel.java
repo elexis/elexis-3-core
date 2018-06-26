@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006-2016, G. Weirich and Elexis
+ * Copyright (c) 2006-2018, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *    G. Weirich - initial implementation
  *    M. Descher - extracted from elexis main and adapted for usage
  *    <office@medevit.at> - 3.2 format introduction (products and items)
+ *    <office@medevit.at> - 3.6 removal of 3.2 format conversion
  *******************************************************************************/
 
 package ch.elexis.core.eigenartikel;
@@ -18,23 +19,17 @@ import static ch.elexis.core.model.eigenartikel.Constants.FLD_EXT_HI_COST_ABSORP
 import static ch.elexis.core.model.eigenartikel.Constants.FLD_EXT_MEASUREMENT_UNIT;
 import static ch.elexis.core.model.eigenartikel.Constants.FLD_EXT_PACKAGE_SIZE_STRING;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IOptifier;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
-import ch.elexis.core.data.util.IRunnableWithProgress;
 import ch.elexis.core.model.eigenartikel.Constants;
 import ch.elexis.core.model.eigenartikel.EigenartikelTyp;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Konsultation;
-import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.Money;
@@ -43,29 +38,6 @@ import ch.rgw.tools.Result;
 public class Eigenartikel extends Artikel {
 	
 	private static IOptifier OPTIFIER;
-	
-	static {
-		final String isConvertedTo32Key = "Eigenartikel32Format";
-		boolean converted = CoreHub.globalCfg.get(isConvertedTo32Key, false);
-		if (!converted) {
-			log.info("Migrating Eigenartikel to v3.2");
-			
-			IRunnableWithProgress irwp = new IRunnableWithProgress() {
-				
-				@Override
-				public void run(IProgressMonitor monitor)
-					throws InvocationTargetException, InterruptedException{
-					EigenartikelDatabaseConverter.performConversionTo32Format(monitor);
-				}
-			};
-			PersistentObject.cod.showProgress(irwp, "Migrate Eigenartikel to v3.2");
-			
-			CoreHub.globalCfg.set(isConvertedTo32Key, true);
-		}
-		
-		transferAllStockInformationToNew32StockModel(new Query<Eigenartikel>(Eigenartikel.class),
-			Eigenartikel.class);
-	}
 	
 	public static final String TYPNAME = Constants.TYPE_NAME;
 	

@@ -11,18 +11,12 @@
  *******************************************************************************/
 package ch.elexis.data;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IFall;
-import ch.elexis.core.data.util.IRunnableWithProgress;
-import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.article.IArticle;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
@@ -49,25 +43,12 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 	public static final String FLD_NAME = "Name";
 	public static final String FLD_ATC_CODE = "ATC_code";
 	
-	/** Deprecated - will be removed in 3.3 (https://redmine.medelexis.ch/issues/5204) **/
-	@Deprecated
-	public static final String LIEFERANT_ID = "LieferantID";
-	@Deprecated
-	public static final String ISTBESTAND = "Istbestand";
-	@Deprecated
-	public static final String ANBRUCH = "Anbruch";
-	@Deprecated
-	public static final String MINBESTAND = "Minbestand";
-	@Deprecated
-	public static final String MAXBESTAND = "Maxbestand";
-	/** END **/
-	
 	public static final Pattern NAME_VE_PATTERN = Pattern.compile(".+ ([0-9]+) Stk.*");
 	
 	static {
-		addMapping(TABLENAME, LIEFERANT_ID, FLD_NAME, MAXBESTAND, MINBESTAND, ISTBESTAND,
-			FLD_EK_PREIS, FLD_VK_PREIS, FLD_TYP, FLD_EXTINFO, FLD_EAN, FLD_SUB_ID,
-			EIGENNAME + "=Name_intern", FLD_CODECLASS, FLD_KLASSE, FLD_ATC_CODE, FLD_EXTID);
+		addMapping(TABLENAME, FLD_NAME, FLD_EK_PREIS, FLD_VK_PREIS, FLD_TYP,
+			 FLD_EXTINFO, FLD_EAN, FLD_SUB_ID, EIGENNAME + "=Name_intern", 
+			 FLD_CODECLASS, FLD_KLASSE, FLD_ATC_CODE, FLD_EXTID);
 		Xid.localRegisterXIDDomainIfNotExists(XID_PHARMACODE, FLD_PHARMACODE,
 			Xid.ASSIGNMENT_REGIONAL);
 	}
@@ -75,83 +56,6 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 	@Override
 	protected String getTableName(){
 		return TABLENAME;
-	}
-	
-	/**
-	 * @param qbe
-	 * @param clazz
-	 * @deprecated to be removed in 3.3
-	 * @see https://redmine.medelexis.ch/issues/5204
-	 */
-	public static void transferAllStockInformationToNew32StockModel(Query<? extends Artikel> qbe,
-		Class<? extends Artikel> clazz){
-		if (!CoreHub.globalCfg.get(clazz.getSimpleName() + "StocksMigratedTo32", false)) {
-			IRunnableWithProgress irwp = new IRunnableWithProgress() {
-				@Override
-				public void run(IProgressMonitor monitor)
-					throws InvocationTargetException, InterruptedException{
-					log.debug("Migrating stock information");
-					qbe.startGroup();
-					qbe.add(ISTBESTAND, Query.GREATER, "0");
-					qbe.or();
-					qbe.add(MAXBESTAND, Query.GREATER, "0");
-					qbe.endGroup();
-					List<? extends Artikel> stockArticles = qbe.execute();
-					monitor.beginTask(
-						"Migrating " + clazz.getSimpleName() + " to new stock format.",
-						stockArticles.size());
-					Stock stdStock = Stock.load(Stock.DEFAULT_STOCK_ID);
-					for (Artikel art : stockArticles) {
-						if (art.isProduct()) {
-							log.warn("Article is product with stock [{}].", art.getId());
-							continue;
-						}
-						log.debug("Migrating stock information for [{}]", art.getLabel());
-						IStockEntry se = CoreHub.getStockService().storeArticleInStock(stdStock,
-							art.storeToString());
-						String[] fields = new String[] {
-							MINBESTAND, ISTBESTAND, MAXBESTAND, LIEFERANT_ID
-						};
-						String[] values = art.get(false, fields);
-						String anbruch = art.getExt(ANBRUCH);
-						if (anbruch != null && anbruch.length() > 0) {
-							int anbruchValue = 0;
-							try {
-								anbruchValue = Integer.valueOf(anbruch);
-							} catch (NumberFormatException nfe) {
-								log.warn(
-									"Error converting fraction value [{}] for id [{}], setting 0.",
-									anbruch, art.getId(), nfe);
-							}
-							se.setFractionUnits(anbruchValue);
-							art.setExt(ANBRUCH, null);
-						}
-						for (int i = 0; i < values.length; i++) {
-							if (values[i] != null && values[i].length() > 0) {
-								if (i == 0) {
-									se.setMinimumStock(StringTool.parseSafeInt(values[i]));
-								} else if (i == 1) {
-									se.setCurrentStock(StringTool.parseSafeInt(values[i]));
-								} else if (i == 2) {
-									se.setMaximumStock(StringTool.parseSafeInt(values[i]));
-								} else if (i == 3) {
-									se.setProvider(values[i]);
-								}
-							}
-						}
-						for (String field : fields) {
-							art.set(field, null);
-						}
-						monitor.worked(1);
-					}
-					
-					CoreHub.globalCfg.set(clazz.getSimpleName() + "StocksMigratedTo32", true);
-					CoreHub.globalCfg.flush();
-					monitor.done();
-				}
-			};
-			PersistentObject.cod.showProgress(irwp, "Migrate stock format to 3.2");
-		}
 	}
 	
 	public String getXidDomain(){
