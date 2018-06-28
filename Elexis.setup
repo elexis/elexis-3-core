@@ -32,6 +32,10 @@
           key="/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.problem.nullReference">
         <value>record</value>
       </detail>
+      <detail
+          key="/instance/org.eclipse.m2e.core/eclipse.m2.problem.notCoveredMojoExecution">
+        <value>record</value>
+      </detail>
     </annotation>
     <setupTask
         xsi:type="setup:CompoundTask"
@@ -48,6 +52,14 @@
           xsi:type="setup:PreferenceTask"
           key="/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.problem.potentialNullReference"
           value="error"/>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:CompoundTask"
+        name="org.eclipse.m2e.core">
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.m2e.core/eclipse.m2.problem.notCoveredMojoExecution"
+          value="ignore"/>
     </setupTask>
     <setupTask
         xsi:type="setup:CompoundTask"
