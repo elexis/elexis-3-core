@@ -247,7 +247,7 @@
   <setupTask
       xsi:type="pde:TargetPlatformTask"
       id="ch.elexis.target.elexis.target"
-      name="Elexis Target"/>
+      name="Elexis"/>
   <project name="Medelexis"
       label="">
     <setupTask
