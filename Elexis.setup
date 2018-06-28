@@ -226,14 +226,16 @@
   <setupTask
       xsi:type="projects:ProjectsImportTask">
     <sourceLocator
-        rootFolder="${core.git.clone.location}"/>
+        rootFolder="${core.git.clone.location}"
+        locateNestedProjects="true"/>
     <sourceLocator
-        rootFolder="${base.git.clone.location}"/>
+        rootFolder="${base.git.clone.location}"
+        locateNestedProjects="true"/>
   </setupTask>
   <setupTask
       xsi:type="pde:TargetPlatformTask"
-      id="ch.elexis.target.elexis-prepare.target"
-      name="Prepare Target"/>
+      id="ch.elexis.target.elexis.target"
+      name="Elexis Target"/>
   <project name="Medelexis"
       label="">
     <setupTask
