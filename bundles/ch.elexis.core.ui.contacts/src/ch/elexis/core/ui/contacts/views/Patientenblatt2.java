@@ -790,7 +790,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			+ StringTool.unNull(actPatient.getVorname()) + " (" //$NON-NLS-1$
 			+ actPatient.getPatCode() + ")"); //$NON-NLS-1$
 		inpAdresse.setText(actPatient.getPostAnschrift(false), false, false);
-		UserSettings.setExpandedState(ecZA, Messages.Patientenblatt2_additionalAdresses); //$NON-NLS-1$
+		UserSettings.setExpandedState(ecZA,  "Patientenblatt/Zusatzadressen");
 		inpZusatzAdresse.clear();
 		for (BezugsKontakt za : actPatient.getBezugsKontakte()) {
 			inpZusatzAdresse.add(za);

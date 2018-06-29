@@ -1,6 +1,7 @@
 package ch.elexis.data;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.junit.Test;
 
@@ -36,7 +37,7 @@ public class Test_ZusatzAdresse extends AbstractPersistentObjectTest {
 	public void TestZusatzAdresseWithKontakt() throws ElexisException{
 		Patient patient = new Patient("Mustermann", "Max", "1.1.2000", "m");
 		ZusatzAdresseDTO zusatzAdresseDTO = new ZusatzAdresseDTO();
-		zusatzAdresseDTO.setAddressType(AddressType.ATTACHMENT_FIGURE);
+		zusatzAdresseDTO.setAddressType(AddressType.PRISON);
 		zusatzAdresseDTO.setCountry("A");
 		zusatzAdresseDTO.setStreet1("Teststreet 1");
 		zusatzAdresseDTO.setKontaktId("1");
@@ -49,9 +50,19 @@ public class Test_ZusatzAdresse extends AbstractPersistentObjectTest {
 		
 		List<ZusatzAdresse> zusatzAdressen = patient.getZusatzAdressen();
 		Assert.assertTrue(zusatzAdressen.size() == 1);
-		
 		ZusatzAdresse savedZusatzAdresse = zusatzAdressen.get(0);
-		
+		Assert.assertEquals(AddressType.PRISON.getLiteral(), savedZusatzAdresse.getDTO().getAddressType().getLiteral());
+		if (Locale.getDefault().toString().equals("de_CH")) {
+			// System.out.println("found de_CH: " + savedZusatzAdresse.getLabel());
+			Assert.assertTrue(savedZusatzAdresse.getLabel().startsWith("Justizanstalt"));
+		} else {
+			System.out.println(Locale.getDefault().toString() );
+		}
+		if (Locale.getDefault().toString().equals("en_US")) {
+			// System.out.println("found en_US: " + savedZusatzAdresse.getLabel());
+			Assert.assertTrue(savedZusatzAdresse.getLabel().startsWith("prison"));
+		}
+		Assert.assertTrue(savedZusatzAdresse.getLabel().startsWith(ch.elexis.core.l10n.Messages.AddressType_PRISON));
 		Assert.assertNotNull(savedZusatzAdresse.getId());
 		Assert.assertEquals("Teststreet 1", savedZusatzAdresse.getDTO().getStreet1());
 		Assert.assertEquals("Teststreet 1", savedZusatzAdresse.get(ZusatzAdresse.STREET1));
