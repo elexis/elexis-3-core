@@ -496,8 +496,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		}
 		
 		ecZA = WidgetFactory.createExpandableComposite(tk, form,
-			Messages.Patientenblatt2_additionalAdresses); // $NON-NLS-1$
-		UserSettings.setExpandedState(ecZA, Messages.Patientenblatt2_additionalAdresses); //$NON-NLS-1$
+			Messages.Patientenblatt2_contactForAdditionalAddress); // $NON-NLS-1$
+		UserSettings.setExpandedState(ecZA, Messages.Patientenblatt2_contactForAdditionalAddress); //$NON-NLS-1$
 		
 		ecZA.addExpansionListener(ecExpansionListener);
 		
