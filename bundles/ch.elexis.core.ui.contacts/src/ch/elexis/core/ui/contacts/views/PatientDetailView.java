@@ -296,7 +296,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 		{
 			ExpandableComposite compAdditionalAddresses =
 				WidgetFactory.createExpandableComposite(toolkit, scrldfrm,
-				"Zusatzadressen"); // $NON-NLS-1$
+					Messages.Patientenblatt2_additionalAdresses);
 			compAdditionalAddresses.addExpansionListener(new SectionExpansionHandler());
 			
 			additionalAddresses = new ListDisplay<ZusatzAdresse>(compAdditionalAddresses, SWT.NONE,
