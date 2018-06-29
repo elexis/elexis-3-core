@@ -1,3 +1,5 @@
+instructions.install.import org.eclipse.equinox.p2.touchpoint.eclipse.uninstallBundle
+
 requires.0.namespace = org.eclipse.equinox.p2.iu
 requires.0.name = com.eclipsesource.jaxrs.jersey-min.fragment
 requires.0.range = 1.0.0
