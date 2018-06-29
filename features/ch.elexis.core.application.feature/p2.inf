@@ -1,9 +1,2 @@
-artifacts.0.classifier=osgi.bundle
-artifacts.0.name=com.eclipsesource.jaxrs.jersey-min
-artifacts.0.version=2.22.2
-
-instructions.install.import \
-    org.eclipse.equinox.p2.touchpoint.eclipse.uninstallBundle
-    
-instructions.install = \
-    uninstallBundle(bundle:${artifact})
+instructions.configure.import org.eclipse.equinox.p2.touchpoint.eclipse.uninstallBundle
+instructions.configure = uninstallBundle(bundle:com.eclipsesource.jaxrs.jersey-min)
