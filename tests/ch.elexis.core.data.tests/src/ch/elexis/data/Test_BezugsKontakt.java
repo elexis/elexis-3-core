@@ -39,7 +39,7 @@ public class Test_BezugsKontakt extends AbstractPersistentObjectTest {
 		}
 		if (Locale.getDefault().toString().equals("en_US")) {
 			// System.out.println("found en_US: " + savedZusatzAdresse.getLabel());
-			Assert.assertTrue(bezogenerKontakt.getLabel().startsWith("chiild"));
+			Assert.assertTrue(bezogenerKontakt.getLabel().startsWith("child"));
 		}
 		Assert.assertTrue(bezogenerKontakt.getLabel().startsWith(ch.elexis.core.l10n.Messages.RelationshipType_FAMILY_CHILD));
 		System.out.println(RelationshipType.FAMILY_CHILD.getName());
