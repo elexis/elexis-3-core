@@ -287,8 +287,9 @@ class I18nInfo
   def parse_plugin_xml(project_name, filename)
     return unless File.exist?(filename)
     keys = {}
+    # (?:|label=")|description="|tooltip="|name="|)%([\.\w]+)
     IO.readlines(filename).each do |line|
-      if (m = /name="%([\.\w]+)/i.match(line.chomp))
+      if (m = /%([\.\w]+)/i.match(line.chomp))
         key = [project_name, m[1] ].join('_')
         keys[key] = ''
       end
