@@ -10,7 +10,7 @@ Require-Bundle: org.junit;bundle-version="4.12.0",
  ch.rgw.utility,
  org.eclipse.swt,
  ch.elexis.core,
- ch.elexis.core.console.application;bundle-version="3.0.0";resolution:=optional,
+ ch.elexis.core.console.application;bundle-version="3.0.0",
  org.eclipse.equinox.ds,
  org.hamcrest.library;bundle-version="1.3.0"
 Bundle-ClassPath: .,
