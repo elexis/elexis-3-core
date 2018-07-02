@@ -75,6 +75,9 @@
 						<artifactId>target-platform-configuration</artifactId>
 						<version>${tycho.version}</version>
 						<configuration>
+							<dependency-resolution>
+              					<optionalDependencies>ignore</optionalDependencies>
+              				</dependency-resolution>
 							<environments>
 								<environment>
 									<os>win32</os>
@@ -102,6 +105,9 @@
 						<artifactId>target-platform-configuration</artifactId>
 						<version>${tycho.version}</version>
 						<configuration>
+							<dependency-resolution>
+              					<optionalDependencies>ignore</optionalDependencies>
+              				</dependency-resolution>
 							<environments>
 								<environment>
 									<os>win32</os>
@@ -129,6 +135,9 @@
 						<artifactId>target-platform-configuration</artifactId>
 						<version>${tycho.version}</version>
 						<configuration>
+							<dependency-resolution>
+              					<optionalDependencies>ignore</optionalDependencies>
+              				</dependency-resolution>
 							<executionEnvironment>JavaSE-1.8</executionEnvironment>
 							<environments>
 								<environment>
@@ -157,6 +166,9 @@
 						<artifactId>target-platform-configuration</artifactId>
 						<version>${tycho.version}</version>
 						<configuration>
+							<dependency-resolution>
+              					<optionalDependencies>ignore</optionalDependencies>
+              				</dependency-resolution>
 							<environments>
 								<environment>
 									<os>linux</os>
@@ -183,6 +195,9 @@
 						<artifactId>target-platform-configuration</artifactId>
 						<version>${tycho.version}</version>
 						<configuration>
+							<dependency-resolution>
+              					<optionalDependencies>ignore</optionalDependencies>
+              				</dependency-resolution>
 							<environments>
 								<environment>
 									<environment>
@@ -211,6 +226,9 @@
 						<artifactId>target-platform-configuration</artifactId>
 						<version>${tycho.version}</version>
 						<configuration>
+							<dependency-resolution>
+              					<optionalDependencies>ignore</optionalDependencies>
+              				</dependency-resolution>
 							<environments>
 								<environment>
 									<os>linux</os>
@@ -449,6 +467,9 @@ Without it Maven would put two versions of each class file into the jars
         <artifactId>target-platform-configuration</artifactId>
         <version>${tycho.version}</version>
         <configuration>
+        	<dependency-resolution>
+            	<optionalDependencies>ignore</optionalDependencies>
+            </dependency-resolution>
           <executionEnvironment>JavaSE-1.8</executionEnvironment>
         </configuration>
       </plugin>
