@@ -39,7 +39,6 @@ import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.types.AddressType;
-import ch.elexis.core.types.LocalizeUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.ZusatzAdresse;
@@ -105,7 +104,7 @@ public class ZusatzAdresseEingabeDialog extends TitleAreaDialog {
 		comboAddressType.setLabelProvider(new LabelProvider() {
 			@Override
 			public String getText(Object element){
-				return LocalizeUtil.getLocaleText((AddressType) element);
+				return ((AddressType) element).getLocaleText();
 			}
 		});
 		List<AddressType> comboValues = new ArrayList<>(Arrays.asList(AddressType.values()));

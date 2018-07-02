@@ -10,11 +10,10 @@
  */
 package ch.elexis.core.types;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.ResourceBundle;
 
-import org.eclipse.emf.common.util.Enumerator;
+import ch.elexis.core.interfaces.ILocalizedEnum;
+import ch.elexis.core.interfaces.INumericEnum;
 
 /**
  * <!-- begin-user-doc -->
@@ -25,393 +24,38 @@ import org.eclipse.emf.common.util.Enumerator;
  * @model
  * @generated
  */
-public enum RelationshipType implements Enumerator {
-	/**
-	 * The '<em><b>AGENERIC</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #AGENERIC_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	AGENERIC(0, "A_GENERIC", "A_GENERIC"),
+public enum RelationshipType implements INumericEnum, ILocalizedEnum {
+	//@formatter:off
+	AGENERIC(0),
+	BUSINESS_EMPLOYEE(101),
+	BUSINESS_EMPLOYER(100),
+	FAMILY_ALTERNATIVE(290),
+	FAMILY_CHILD(210),
+	FAMILY_GUARDIAN(220),
+	FAMILY_ICE(230),
+	FAMILY_PARENT(200),
+	WELFARE_CONSULTANT(310),
+	WELFARE_GENERAL_PRACTITIONER(300),
+	WELFARE_INSUREE(411),
+	WELFARE_INSURER(410),
+	WELFARE_PATIENT(301);
+	//@formatter:on
+	private int state;
 
-	/**
-	 * The '<em><b>BUSINESS EMPLOYER</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #BUSINESS_EMPLOYER_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	BUSINESS_EMPLOYER(100, "BUSINESS_EMPLOYER", "BUSINESS_EMPLOYER"),
-
-	/**
-	 * The '<em><b>BUSINESS EMPLOYEE</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #BUSINESS_EMPLOYEE_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	BUSINESS_EMPLOYEE(101, "BUSINESS_EMPLOYEE", "BUSINESS_EMPLOYEE"),
-
-	/**
-	 * The '<em><b>FAMILY PARENT</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #FAMILY_PARENT_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	FAMILY_PARENT(200, "FAMILY_PARENT", "FAMILY_PARENT"),
-
-	/**
-	 * The '<em><b>FAMILY CHILD</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #FAMILY_CHILD_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	FAMILY_CHILD(210, "FAMILY_CHILD", "FAMILY_CHILD"),
-
-	/**
-	 * The '<em><b>FAMILY GUARDIAN</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #FAMILY_GUARDIAN_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	FAMILY_GUARDIAN(220, "FAMILY_GUARDIAN", "FAMILY_GUARDIAN"), /**
-	 * The '<em><b>FAMILY ICE</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #FAMILY_ICE_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	FAMILY_ICE(230, "FAMILY_ICE", "FAMILY_ICE"), /**
-	 * The '<em><b>FAMILY ALTERNATIVE</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #FAMILY_ALTERNATIVE_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	FAMILY_ALTERNATIVE(290, "FAMILY_ALTERNATIVE", "FAMILY_ALTERNATIVE"), /**
-	 * The '<em><b>WELFARE GENERAL PRACTITIONER</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #WELFARE_GENERAL_PRACTITIONER_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	WELFARE_GENERAL_PRACTITIONER(300, "WELFARE_GENERAL_PRACTITIONER", "WELFARE_GENERAL_PRACTITIONER"),
-
-	/**
-	 * The '<em><b>WELFARE PATIENT</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #WELFARE_PATIENT_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	WELFARE_PATIENT(301, "WELFARE_PATIENT", "WELFARE_PATIENT"),
-
-	/**
-	 * The '<em><b>WELFARE CONSULTANT</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #WELFARE_CONSULTANT_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	WELFARE_CONSULTANT(310, "WELFARE_CONSULTANT", "WELFARE_CONSULTANT"),
-
-	/**
-	 * The '<em><b>WELFARE INSURER</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #WELFARE_INSURER_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	WELFARE_INSURER(410, "WELFARE_INSURER", "WELFARE_INSURER"),
-
-	/**
-	 * The '<em><b>WELFARE INSUREE</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #WELFARE_INSUREE_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	WELFARE_INSUREE(411, "WELFARE_INSUREE", "WELFARE_INSUREE");
-
-	/**
-	 * The '<em><b>AGENERIC</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>AGENERIC</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @see #AGENERIC
-	 * @model name="A_GENERIC"
-	 * @generated
-	 * @ordered
-	 */
-	public static final int AGENERIC_VALUE = 0;
-
-	/**
-	 * The '<em><b>BUSINESS EMPLOYER</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>BUSINESS EMPLOYER</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @see #BUSINESS_EMPLOYER
-	 * @model
-	 * @generated
-	 * @ordered
-	 */
-	public static final int BUSINESS_EMPLOYER_VALUE = 100;
-
-	/**
-	 * The '<em><b>BUSINESS EMPLOYEE</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>BUSINESS EMPLOYEE</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @see #BUSINESS_EMPLOYEE
-	 * @model
-	 * @generated
-	 * @ordered
-	 */
-	public static final int BUSINESS_EMPLOYEE_VALUE = 101;
-
-	/**
-	 * The '<em><b>FAMILY PARENT</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>FAMILY PARENT</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @see #FAMILY_PARENT
-	 * @model
-	 * @generated
-	 * @ordered
-	 */
-	public static final int FAMILY_PARENT_VALUE = 200;
-
-	/**
-	 * The '<em><b>FAMILY CHILD</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>FAMILY CHILD</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @see #FAMILY_CHILD
-	 * @model
-	 * @generated
-	 * @ordered
-	 */
-	public static final int FAMILY_CHILD_VALUE = 210;
-
-	/**
-	 * The '<em><b>FAMILY GUARDIAN</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>FAMILY GUARDIAN</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @see #FAMILY_GUARDIAN
-	 * @model
-	 * @generated
-	 * @ordered
-	 */
-	public static final int FAMILY_GUARDIAN_VALUE = 220;
-
-	/**
-	 * The '<em><b>FAMILY ICE</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>FAMILY ICE</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @see #FAMILY_ICE
-	 * @model
-	 * @generated
-	 * @ordered
-	 */
-	public static final int FAMILY_ICE_VALUE = 230;
-
-	/**
-	 * The '<em><b>FAMILY ALTERNATIVE</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>FAMILY ALTERNATIVE</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @see #FAMILY_ALTERNATIVE
-	 * @model
-	 * @generated
-	 * @ordered
-	 */
-	public static final int FAMILY_ALTERNATIVE_VALUE = 290;
-
-	/**
-	 * The '<em><b>WELFARE GENERAL PRACTITIONER</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>WELFARE GENERAL PRACTITIONER</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @see #WELFARE_GENERAL_PRACTITIONER
-	 * @model
-	 * @generated
-	 * @ordered
-	 */
-	public static final int WELFARE_GENERAL_PRACTITIONER_VALUE = 300;
-
-	/**
-	 * The '<em><b>WELFARE PATIENT</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>WELFARE PATIENT</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @see #WELFARE_PATIENT
-	 * @model
-	 * @generated
-	 * @ordered
-	 */
-	public static final int WELFARE_PATIENT_VALUE = 301;
-
-	/**
-	 * The '<em><b>WELFARE CONSULTANT</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>WELFARE CONSULTANT</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @see #WELFARE_CONSULTANT
-	 * @model
-	 * @generated
-	 * @ordered
-	 */
-	public static final int WELFARE_CONSULTANT_VALUE = 310;
-
-	/**
-	 * The '<em><b>WELFARE INSURER</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>WELFARE INSURER</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @see #WELFARE_INSURER
-	 * @model
-	 * @generated
-	 * @ordered
-	 */
-	public static final int WELFARE_INSURER_VALUE = 410;
-
-	/**
-	 * The '<em><b>WELFARE INSUREE</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>WELFARE INSUREE</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @see #WELFARE_INSUREE
-	 * @model
-	 * @generated
-	 * @ordered
-	 */
-	public static final int WELFARE_INSUREE_VALUE = 411;
-
-	/**
-	 * An array of all the '<em><b>Relationship Type</b></em>' enumerators.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private static final RelationshipType[] VALUES_ARRAY =
-		new RelationshipType[] {
-			AGENERIC,
-			BUSINESS_EMPLOYER,
-			BUSINESS_EMPLOYEE,
-			FAMILY_PARENT,
-			FAMILY_CHILD,
-			FAMILY_GUARDIAN,
-			FAMILY_ICE,
-			FAMILY_ALTERNATIVE,
-			WELFARE_GENERAL_PRACTITIONER,
-			WELFARE_PATIENT,
-			WELFARE_CONSULTANT,
-			WELFARE_INSURER,
-			WELFARE_INSUREE,
-		};
-
-	/**
-	 * A public read-only list of all the '<em><b>Relationship Type</b></em>' enumerators.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public static final List<RelationshipType> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
-
-	/**
-	 * Returns the '<em><b>Relationship Type</b></em>' literal with the specified literal value.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param literal the literal.
-	 * @return the matching enumerator or <code>null</code>.
-	 * @generated
-	 */
-	public static RelationshipType get(String literal) {
-		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
-			RelationshipType result = VALUES_ARRAY[i];
-			if (result.toString().equals(literal)) {
-				return result;
-			}
-		}
-		return null;
+	private RelationshipType(int state){
+		this.state = state;
+	}
+	
+	public int getState(){
+		return state;
+	}
+	
+	@Override
+	public int numericValue(){
+		return state;
 	}
 
 	/**
-	 * Returns the '<em><b>Relationship Type</b></em>' literal with the specified name.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param name the name.
-	 * @return the matching enumerator or <code>null</code>.
-	 * @generated
-	 */
-	public static RelationshipType getByName(String name) {
-		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
-			RelationshipType result = VALUES_ARRAY[i];
-			if (result.getName().equals(name)) {
-				return result;
-			}
-		}
-		return null;
-	}
-
 	/**
 	 * Returns the '<em><b>Relationship Type</b></em>' literal with the specified integer value.
 	 * <!-- begin-user-doc -->
@@ -421,20 +65,19 @@ public enum RelationshipType implements Enumerator {
 	 * @generated
 	 */
 	public static RelationshipType get(int value) {
-		switch (value) {
-			case AGENERIC_VALUE: return AGENERIC;
-			case BUSINESS_EMPLOYER_VALUE: return BUSINESS_EMPLOYER;
-			case BUSINESS_EMPLOYEE_VALUE: return BUSINESS_EMPLOYEE;
-			case FAMILY_PARENT_VALUE: return FAMILY_PARENT;
-			case FAMILY_CHILD_VALUE: return FAMILY_CHILD;
-			case FAMILY_GUARDIAN_VALUE: return FAMILY_GUARDIAN;
-			case FAMILY_ICE_VALUE: return FAMILY_ICE;
-			case FAMILY_ALTERNATIVE_VALUE: return FAMILY_ALTERNATIVE;
-			case WELFARE_GENERAL_PRACTITIONER_VALUE: return WELFARE_GENERAL_PRACTITIONER;
-			case WELFARE_PATIENT_VALUE: return WELFARE_PATIENT;
-			case WELFARE_CONSULTANT_VALUE: return WELFARE_CONSULTANT;
-			case WELFARE_INSURER_VALUE: return WELFARE_INSURER;
-			case WELFARE_INSUREE_VALUE: return WELFARE_INSUREE;
+		for (RelationshipType rType : RelationshipType.values()) {
+			 if (rType.state == value) {
+				 return rType;
+			}
+		}
+		return null;
+	}
+	
+	public static RelationshipType get(String initialValue) {
+		for (RelationshipType rType : RelationshipType.values()) {
+			 if (rType.getName().equals(initialValue)) {
+				 return rType;
+			}
 		}
 		return null;
 	}
@@ -444,50 +87,8 @@ public enum RelationshipType implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private final int value;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private final String name;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private final String literal;
-
-	/**
-	 * Only this class can construct instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private RelationshipType(int value, String name, String literal) {
-		this.value = value;
-		this.name = name;
-		this.literal = literal;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public int getValue() {
-	  return value;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public String getName() {
-	  return name;
+	  return this.getLocaleText();
 	}
 
 	/**
@@ -496,18 +97,23 @@ public enum RelationshipType implements Enumerator {
 	 * @generated
 	 */
 	public String getLiteral() {
-	  return literal;
+	  return this.name();
 	}
 
-	/**
-	 * Returns the literal value of the enumerator, which is its string representation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+
 	@Override
-	public String toString() {
-		return literal;
+	public String getLocaleText(){
+		try {
+			return ResourceBundle.getBundle(ch.elexis.core.l10n.Messages.BUNDLE_NAME)
+					.getString(RelationshipType.class.getSimpleName() + "_" + this.name());
+		} catch (Exception e) {
+			return this.name();
+		}
 	}
-	
+
+	public int getValue(){
+		return this.numericValue();
+	}
+
+
 } //RelationshipType

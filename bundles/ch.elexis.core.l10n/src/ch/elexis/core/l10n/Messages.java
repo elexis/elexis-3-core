@@ -5,7 +5,32 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 
 	public static final String BUNDLE_NAME = "ch.elexis.core.l10n.messages";
-    public static String ArticleDefaultSignatureComposite_applicationInstruction;
+	public static String AddressType_SECONDARY_RESIDENCE;
+	public static String AddressType_HOLIDAY_HOME;
+	public static String AddressType_PRINCIPAL_RESIDENCE;
+	public static String AddressType_PLACE_OF_RESIDENCE;
+	public static String AddressType_EMPLOYER;
+	public static String AddressType_FAMILY_FRIENDS;
+	public static String AddressType_ATTACHMENT_FIGURE;
+	public static String AddressType_PRISON;
+	public static String AddressType_NURSING_HOME;
+	public static String AddressType_OTHER;
+
+	public static String RelationshipType_A_GENERIC;
+	public static String RelationshipType_BUSINESS_EMPLOYER;
+	public static String RelationshipType_BUSINESS_EMPLOYEE;
+	public static String RelationshipType_FAMILY_PARENT;
+	public static String RelationshipType_FAMILY_CHILD;
+	public static String RelationshipType_FAMILY_GUARDIAN;
+	public static String RelationshipType_FAMILY_ICE;
+	public static String RelationshipType_FAMILY_ALTERNATIVE;
+	public static String RelationshipType_WELFARE_GENERAL_PRACTITIONER;
+	public static String RelationshipType_WELFARE_PATIENT;
+	public static String RelationshipType_WELFARE_CONSULTANT;
+	public static String RelationshipType_WELFARE_INSURER;
+	public static String RelationshipType_WELFARE_INSUREE;
+	
+	public static String ArticleDefaultSignatureComposite_applicationInstruction;
 	public static String ArticleDefaultSignatureComposite_dispensation;
 	public static String ArticleDefaultSignatureComposite_dosage;
 	public static String ArticleDefaultSignatureComposite_evening;
