@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Empty Jersey-min, remove javax.inject package export
+Bundle-SymbolicName: com.eclipsesource.jaxrs.jersey-min
+Bundle-Version: 2.22.100.qualifier
+Bundle-Vendor: medevit.at
+Automatic-Module-Name: com.eclipsesource.jaxrs.jersey-min
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
