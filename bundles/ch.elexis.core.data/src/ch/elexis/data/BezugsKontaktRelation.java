@@ -99,10 +99,10 @@ public class BezugsKontaktRelation {
 		buffer.append(name);
 		buffer.append(VALUE_SEPERATOR);
 		buffer.append(
-			srcRelationType != null ? srcRelationType.getValue() : RelationshipType.AGENERIC_VALUE);
+			srcRelationType != null ? srcRelationType.numericValue() : RelationshipType.AGENERIC);
 		buffer.append(VALUE_SEPERATOR);
-		buffer.append(destRelationType != null ? destRelationType.getValue()
-				: RelationshipType.AGENERIC_VALUE);
+		buffer.append(destRelationType != null ? destRelationType.numericValue()
+				: RelationshipType.AGENERIC);
 		return buffer.toString();
 	}
 	
@@ -112,7 +112,7 @@ public class BezugsKontaktRelation {
 		} catch (NumberFormatException e) {
 			
 		}
-		return RelationshipType.AGENERIC.getValue();
+		return RelationshipType.AGENERIC.numericValue();
 	}
 	
 	/**

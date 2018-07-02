@@ -10,7 +10,6 @@
  */
 package ch.elexis.core.types.impl;
 
-import ch.elexis.core.types.AddressType;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +19,7 @@ import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
+import ch.elexis.core.types.AddressType;
 import ch.elexis.core.types.ContactGender;
 import ch.elexis.core.types.ContactType;
 import ch.elexis.core.types.Country;
@@ -32,7 +32,6 @@ import ch.elexis.core.types.TypesFactory;
 import ch.elexis.core.types.TypesPackage;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
-import java.lang.Comparable;
 
 /**
  * <!-- begin-user-doc -->
@@ -433,31 +432,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		addEEnumLiteral(contactGenderEEnum, ContactGender.UNKNOWN);
 
 		initEEnum(relationshipTypeEEnum, RelationshipType.class, "RelationshipType");
-		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.AGENERIC);
-		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.BUSINESS_EMPLOYER);
-		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.BUSINESS_EMPLOYEE);
-		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.FAMILY_PARENT);
-		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.FAMILY_CHILD);
-		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.FAMILY_GUARDIAN);
-		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.FAMILY_ICE);
-		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.FAMILY_ALTERNATIVE);
-		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.WELFARE_GENERAL_PRACTITIONER);
-		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.WELFARE_PATIENT);
-		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.WELFARE_CONSULTANT);
-		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.WELFARE_INSURER);
-		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.WELFARE_INSUREE);
-
 		initEEnum(addressTypeEEnum, AddressType.class, "AddressType");
-		addEEnumLiteral(addressTypeEEnum, AddressType.PRINCIPAL_RESIDENCE);
-		addEEnumLiteral(addressTypeEEnum, AddressType.SECONDARY_RESIDENCE);
-		addEEnumLiteral(addressTypeEEnum, AddressType.HOLIDAY_HOME);
-		addEEnumLiteral(addressTypeEEnum, AddressType.PLACE_OF_RESIDENCE);
-		addEEnumLiteral(addressTypeEEnum, AddressType.EMPLOYER);
-		addEEnumLiteral(addressTypeEEnum, AddressType.FAMILY_FRIENDS);
-		addEEnumLiteral(addressTypeEEnum, AddressType.ATTACHMENT_FIGURE);
-		addEEnumLiteral(addressTypeEEnum, AddressType.PRISON);
-		addEEnumLiteral(addressTypeEEnum, AddressType.NURSING_HOME);
-		addEEnumLiteral(addressTypeEEnum, AddressType.OTHER);
 
 		initEEnum(documentStatusEEnum, DocumentStatus.class, "DocumentStatus");
 		addEEnumLiteral(documentStatusEEnum, DocumentStatus.NEW);

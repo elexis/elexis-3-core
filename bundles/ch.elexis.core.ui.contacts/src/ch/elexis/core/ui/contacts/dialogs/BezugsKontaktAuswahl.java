@@ -31,7 +31,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.types.LocalizeUtil;
 import ch.elexis.core.types.RelationshipType;
 import ch.elexis.core.ui.contacts.views.Patientenblatt2;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -159,7 +158,7 @@ public class BezugsKontaktAuswahl extends Dialog {
 		String[] displayValues = new String[allRelationshipTypes.length];
 		int idx = 0;
 		for (RelationshipType relationshipType : allRelationshipTypes) {
-			displayValues[idx++] = LocalizeUtil.getLocaleText(relationshipType);
+			displayValues[idx++] = relationshipType.getLocaleText();
 		}
 		return displayValues;
 	}
@@ -192,9 +191,9 @@ public class BezugsKontaktAuswahl extends Dialog {
 			selectedBezugKontaktRelation.setSrcRelationType(RelationshipType.AGENERIC);
 		}
 		if (autoSelect) {
-			cbTypeSrc.setText(LocalizeUtil.getLocaleText(selectedBezugKontaktRelation.getSrcRelationType()));
+			cbTypeSrc.setText(selectedBezugKontaktRelation.getSrcRelationType().getLocaleText());
 			cbTypeDest.setText(
-				LocalizeUtil.getLocaleText(selectedBezugKontaktRelation.getDestRelationType()));
+				selectedBezugKontaktRelation.getDestRelationType().getLocaleText());
 		}
 	}
 	

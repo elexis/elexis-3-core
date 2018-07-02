@@ -5,7 +5,6 @@ import org.apache.commons.lang.math.NumberUtils;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.interfaces.ITransferable;
 import ch.elexis.core.types.AddressType;
-import ch.elexis.core.types.LocalizeUtil;
 import ch.elexis.data.dto.ZusatzAdresseDTO;
 import ch.rgw.tools.StringTool;
 
@@ -92,8 +91,8 @@ public class ZusatzAdresse extends PersistentObject implements ITransferable<Zus
 	public String getLabel(){
 		String etikette = getEtikette(false, false);
 		if (get(TYPE) != null) {
-			return LocalizeUtil.getLocaleText(AddressType.get(NumberUtils.toInt(get(TYPE)))) + ": "
-				+ etikette;
+			AddressType adrType = AddressType.get(NumberUtils.toInt(get(TYPE)));
+			return adrType.getLocaleText() + ": " + etikette;
 		}
 		return etikette;
 	}
@@ -141,7 +140,6 @@ public class ZusatzAdresse extends PersistentObject implements ITransferable<Zus
 				zusatzAdresseDTO.getKontaktId()
 			});
 		}
-		
 		set(FIELDS, zusatzAdresseDTO.getKontaktId(), zusatzAdresseDTO.getStreet1(),
 			zusatzAdresseDTO.getStreet2(),
 			zusatzAdresseDTO.getCountry(), zusatzAdresseDTO.getPlace(), zusatzAdresseDTO.getZip(),

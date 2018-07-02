@@ -12,7 +12,6 @@
 
 package ch.elexis.data;
 
-import ch.elexis.core.types.LocalizeUtil;
 import ch.elexis.core.types.RelationshipType;
 
 public class BezugsKontakt extends PersistentObject {
@@ -65,8 +64,8 @@ public class BezugsKontakt extends PersistentObject {
 		set(new String[] {
 			BezugsKontakt.RELATION, BezugsKontakt.FLD_MY_RTYPE, BezugsKontakt.FLD_OTHER_RTYPE
 		}, bezugsKontaktRelation.getName(),
-			String.valueOf(bezugsKontaktRelation.getDestRelationType().getValue()),
-			String.valueOf(bezugsKontaktRelation.getSrcRelationType().getValue()));
+			bezugsKontaktRelation.getDestRelationType().getLiteral(),
+			bezugsKontaktRelation.getSrcRelationType().getLiteral());
 	}
 	
 	@Override
@@ -80,7 +79,7 @@ public class BezugsKontakt extends PersistentObject {
 					try {
 						RelationshipType type = RelationshipType.get(Integer.parseInt(rel));
 						if (type != null) {
-							rel = LocalizeUtil.getLocaleText(type);
+							rel = type.getLocaleText();
 						}
 					} catch (Exception e) {
 						

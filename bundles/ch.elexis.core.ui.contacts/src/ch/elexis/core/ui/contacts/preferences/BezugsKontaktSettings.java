@@ -49,7 +49,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.types.LocalizeUtil;
 import ch.elexis.core.types.RelationshipType;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.contacts.dialogs.BezugsKontaktAuswahl;
@@ -207,7 +206,7 @@ public class BezugsKontaktSettings extends PreferencePage implements IWorkbenchP
 				BezugsKontaktRelation s = (BezugsKontaktRelation) cell.getElement();
 				if (s == null)
 					return;
-				cell.setText(LocalizeUtil.getLocaleText(s.getDestRelationType()));
+				cell.setText(s.getDestRelationType().getLocaleText());
 			}
 		});
 		viewCol.setEditingSupport(new EditingSupport(tableViewer) {
@@ -265,7 +264,7 @@ public class BezugsKontaktSettings extends PreferencePage implements IWorkbenchP
 				BezugsKontaktRelation s = (BezugsKontaktRelation) cell.getElement();
 				if (s == null)
 					return;
-				cell.setText(LocalizeUtil.getLocaleText(s.getSrcRelationType()));
+				cell.setText(s.getSrcRelationType().getLocaleText());
 			}
 		});
 		viewCol.setEditingSupport(new EditingSupport(tableViewer) {

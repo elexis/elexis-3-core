@@ -34,13 +34,14 @@ public class Test_BezugsKontakt extends AbstractPersistentObjectTest {
 		
 		BezugsKontakt bezogenerKontakt = bezugsKontakte.get(0);
 		if (Locale.getDefault().toString().equals("de_CH")) {
-			// System.out.println("found de_CH: " + savedZusatzAdresse.getLabel());
+			// System.out.println("found de_CH: " + bezogenerKontakt.getLabel());
 			Assert.assertTrue(bezogenerKontakt.getLabel().startsWith("Kind"));
 		}
 		if (Locale.getDefault().toString().equals("en_US")) {
 			// System.out.println("found en_US: " + savedZusatzAdresse.getLabel());
 			Assert.assertTrue(bezogenerKontakt.getLabel().startsWith("child"));
 		}
+		Assert.assertTrue(bezogenerKontakt.getLabel().contains("Mustermann"));
 		Assert.assertTrue(bezogenerKontakt.getLabel().startsWith(ch.elexis.core.l10n.Messages.RelationshipType_FAMILY_CHILD));
 		System.out.println(RelationshipType.FAMILY_CHILD.getName());
 		Assert.assertNotNull(bezogenerKontakt.getId());
