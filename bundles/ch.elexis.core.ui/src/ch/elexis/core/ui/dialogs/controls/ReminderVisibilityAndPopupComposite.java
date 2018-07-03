@@ -15,9 +15,14 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.issue.Visibility;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.views.Messages;
+import ch.elexis.data.Patient;
 
 public class ReminderVisibilityAndPopupComposite extends Composite {
 	
@@ -149,7 +154,11 @@ public class ReminderVisibilityAndPopupComposite extends Composite {
 			popupOnLogin.setSelection(Visibility.POPUP_ON_LOGIN == visibility);
 		} else {
 			visibility = (visibility == null) ? Visibility.ALWAYS : visibility;
-			showOnlyOnSelectedPatient.setSelection(true);
+			Patient patient = ElexisEventDispatcher.getSelectedPatient();
+			boolean defaultPatientRelated = CoreHub.userCfg.get(Preferences.USR_REMINDER_DEFAULT_PATIENT_RELATED, true);
+			showOnlyOnSelectedPatient.setSelection(defaultPatientRelated && patient != null);
+			showOnlyOnSelectedPatient.setToolTipText(Messages.ReminderView_defaultPatientRelatedTooltip);
+			showOnlyOnSelectedPatient.setToolTipText("Der Vorgabewert kann unter Einstellungen..Anwender..Pendenzen geändert werden");
 			comboPopup.setEnabled(true);
 			if (Visibility.POPUP_ON_LOGIN == visibility
 				|| Visibility.POPUP_ON_PATIENT_SELECTION == visibility) {
@@ -158,7 +167,7 @@ public class ReminderVisibilityAndPopupComposite extends Composite {
 				cvPopup.setSelection(new StructuredSelection(StringConstants.EMPTY));
 				
 			}
-			showOnlyOnSelectedPatient.setSelection(!(Visibility.ALWAYS == visibility));
+			// showOnlyOnSelectedPatient.setSelection(!(Visibility.ALWAYS == visibility));
 		}
 		
 	}
