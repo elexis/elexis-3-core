@@ -1236,6 +1236,7 @@ public class Messages extends NLS {
 	public static String ReminderView_activatePatientAction;
 	public static String ReminderView_activatePatientTooltip;
 	public static String ReminderView_toggleSelectPatientActionTooltip;
+	public static String ReminderView_defaultPatientRelatedTooltip;
 	public static String ReminderView_deleteAction;
 	public static String ReminderView_deleteToolTip;
 	public static String ReminderView_foreignAction;
@@ -1478,6 +1479,7 @@ public class Messages extends NLS {
 	public static String VerrechnungsDisplay_fixMedication;
 	public static String BriefAuswahlNotAllowedToRunStresstess;
 	public static String ReminderView_txtSearch_message;
+	public static String ReminderPref_defaultPatientRelated;
 	public static String LimitedText_MaxLengthReached;
 	public static String CreatePrescriptionHelper_InfoDispensationArtikelstammTitel;
 	public static String CreatePrescriptionHelper_InfoDispensationArtikelstammUpate;

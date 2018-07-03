@@ -444,6 +444,7 @@ public class Messages {
 	public static String ReminderView_activatePatientAction = ch.elexis.core.l10n.Messages.ReminderView_activatePatientAction;
 	public static String ReminderView_activatePatientTooltip = ch.elexis.core.l10n.Messages.ReminderView_activatePatientTooltip;
 	public static String ReminderView_toggleSelectPatientActionTooltip = ch.elexis.core.l10n.Messages.ReminderView_toggleSelectPatientActionTooltip;
+	public static String ReminderView_defaultPatientRelatedTooltip = ch.elexis.core.l10n.Messages.ReminderView_defaultPatientRelatedTooltip;
 	public static String ReminderView_deleteAction = ch.elexis.core.l10n.Messages.ReminderView_deleteAction;
 	public static String ReminderView_deleteToolTip = ch.elexis.core.l10n.Messages.ReminderView_deleteToolTip;
 	public static String ReminderView_foreignAction = ch.elexis.core.l10n.Messages.ReminderView_foreignAction;
