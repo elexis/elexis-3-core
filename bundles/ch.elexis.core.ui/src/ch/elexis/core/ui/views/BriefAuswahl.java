@@ -492,12 +492,12 @@ public class BriefAuswahl extends ViewPart implements
 									try {
 										File temp = File.createTempFile("letter_", ".pdf"); //$NON-NLS-1$ //$NON-NLS-2$
 										temp.deleteOnExit();
-										FileOutputStream fos = new FileOutputStream(temp);
-										
-										fos.write(brief.loadBinary());
-										fos.close();
+										try (FileOutputStream fos = new FileOutputStream(temp)) {
+											fos.write(brief.loadBinary());
+										}
 										Program.launch(temp.getAbsolutePath());
 									} catch (IOException e) {
+										ExHandler.handle(e);
 										SWTHelper.alert(Messages.BriefAuswahlErrorHeading, //$NON-NLS-1$
 											Messages.BriefAuswahlCouldNotLoadText); //$NON-NLS-1$
 									}
