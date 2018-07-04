@@ -1512,31 +1512,13 @@ public interface ModelPackage extends EPackage {
 	int IDOCUMENT__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Patient Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IDOCUMENT__PATIENT_ID = IDENTIFIABLE_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Author Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IDOCUMENT__AUTHOR_ID = IDENTIFIABLE_FEATURE_COUNT + 2;
-
-	/**
 	 * The feature id for the '<em><b>Title</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__TITLE = IDENTIFIABLE_FEATURE_COUNT + 3;
+	int IDOCUMENT__TITLE = IDENTIFIABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -1545,7 +1527,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__DESCRIPTION = IDENTIFIABLE_FEATURE_COUNT + 4;
+	int IDOCUMENT__DESCRIPTION = IDENTIFIABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Status</b></em>' attribute.
@@ -1554,7 +1536,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__STATUS = IDENTIFIABLE_FEATURE_COUNT + 5;
+	int IDOCUMENT__STATUS = IDENTIFIABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Created</b></em>' attribute.
@@ -1563,7 +1545,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__CREATED = IDENTIFIABLE_FEATURE_COUNT + 6;
+	int IDOCUMENT__CREATED = IDENTIFIABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Lastchanged</b></em>' attribute.
@@ -1572,7 +1554,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__LASTCHANGED = IDENTIFIABLE_FEATURE_COUNT + 7;
+	int IDOCUMENT__LASTCHANGED = IDENTIFIABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Mime Type</b></em>' attribute.
@@ -1581,7 +1563,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__MIME_TYPE = IDENTIFIABLE_FEATURE_COUNT + 8;
+	int IDOCUMENT__MIME_TYPE = IDENTIFIABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Category</b></em>' reference.
@@ -1590,7 +1572,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__CATEGORY = IDENTIFIABLE_FEATURE_COUNT + 9;
+	int IDOCUMENT__CATEGORY = IDENTIFIABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>History</b></em>' reference list.
@@ -1599,7 +1581,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__HISTORY = IDENTIFIABLE_FEATURE_COUNT + 10;
+	int IDOCUMENT__HISTORY = IDENTIFIABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Store Id</b></em>' attribute.
@@ -1608,7 +1590,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__STORE_ID = IDENTIFIABLE_FEATURE_COUNT + 11;
+	int IDOCUMENT__STORE_ID = IDENTIFIABLE_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Extension</b></em>' attribute.
@@ -1617,7 +1599,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__EXTENSION = IDENTIFIABLE_FEATURE_COUNT + 12;
+	int IDOCUMENT__EXTENSION = IDENTIFIABLE_FEATURE_COUNT + 10;
 
 	/**
 	 * The feature id for the '<em><b>Keywords</b></em>' attribute.
@@ -1626,7 +1608,25 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT__KEYWORDS = IDENTIFIABLE_FEATURE_COUNT + 13;
+	int IDOCUMENT__KEYWORDS = IDENTIFIABLE_FEATURE_COUNT + 11;
+
+	/**
+	 * The feature id for the '<em><b>Patient</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT__PATIENT = IDENTIFIABLE_FEATURE_COUNT + 12;
+
+	/**
+	 * The feature id for the '<em><b>Author</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT__AUTHOR = IDENTIFIABLE_FEATURE_COUNT + 13;
 
 	/**
 	 * The number of structural features of the '<em>IDocument</em>' class.
@@ -2212,13 +2212,386 @@ public interface ModelPackage extends EPackage {
 	int ILABORATORY_FEATURE_COUNT = IORGANIZATION_FEATURE_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IDocumentLetter <em>IDocument Letter</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IDocumentLetter
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDocumentLetter()
+	 * @generated
+	 */
+	int IDOCUMENT_LETTER = 21;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_LETTER__DELETED = IDOCUMENT__DELETED;
+
+	/**
+	 * The feature id for the '<em><b>Title</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_LETTER__TITLE = IDOCUMENT__TITLE;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_LETTER__DESCRIPTION = IDOCUMENT__DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>Status</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_LETTER__STATUS = IDOCUMENT__STATUS;
+
+	/**
+	 * The feature id for the '<em><b>Created</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_LETTER__CREATED = IDOCUMENT__CREATED;
+
+	/**
+	 * The feature id for the '<em><b>Lastchanged</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_LETTER__LASTCHANGED = IDOCUMENT__LASTCHANGED;
+
+	/**
+	 * The feature id for the '<em><b>Mime Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_LETTER__MIME_TYPE = IDOCUMENT__MIME_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Category</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_LETTER__CATEGORY = IDOCUMENT__CATEGORY;
+
+	/**
+	 * The feature id for the '<em><b>History</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_LETTER__HISTORY = IDOCUMENT__HISTORY;
+
+	/**
+	 * The feature id for the '<em><b>Store Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_LETTER__STORE_ID = IDOCUMENT__STORE_ID;
+
+	/**
+	 * The feature id for the '<em><b>Extension</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_LETTER__EXTENSION = IDOCUMENT__EXTENSION;
+
+	/**
+	 * The feature id for the '<em><b>Keywords</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_LETTER__KEYWORDS = IDOCUMENT__KEYWORDS;
+
+	/**
+	 * The feature id for the '<em><b>Patient</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_LETTER__PATIENT = IDOCUMENT__PATIENT;
+
+	/**
+	 * The feature id for the '<em><b>Author</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_LETTER__AUTHOR = IDOCUMENT__AUTHOR;
+
+	/**
+	 * The number of structural features of the '<em>IDocument Letter</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_LETTER_FEATURE_COUNT = IDOCUMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IDocumentHandle <em>IDocument Handle</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IDocumentHandle
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDocumentHandle()
+	 * @generated
+	 */
+	int IDOCUMENT_HANDLE = 22;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_HANDLE__DELETED = IDOCUMENT__DELETED;
+
+	/**
+	 * The feature id for the '<em><b>Title</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_HANDLE__TITLE = IDOCUMENT__TITLE;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_HANDLE__DESCRIPTION = IDOCUMENT__DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>Status</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_HANDLE__STATUS = IDOCUMENT__STATUS;
+
+	/**
+	 * The feature id for the '<em><b>Created</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_HANDLE__CREATED = IDOCUMENT__CREATED;
+
+	/**
+	 * The feature id for the '<em><b>Lastchanged</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_HANDLE__LASTCHANGED = IDOCUMENT__LASTCHANGED;
+
+	/**
+	 * The feature id for the '<em><b>Mime Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_HANDLE__MIME_TYPE = IDOCUMENT__MIME_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Category</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_HANDLE__CATEGORY = IDOCUMENT__CATEGORY;
+
+	/**
+	 * The feature id for the '<em><b>History</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_HANDLE__HISTORY = IDOCUMENT__HISTORY;
+
+	/**
+	 * The feature id for the '<em><b>Store Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_HANDLE__STORE_ID = IDOCUMENT__STORE_ID;
+
+	/**
+	 * The feature id for the '<em><b>Extension</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_HANDLE__EXTENSION = IDOCUMENT__EXTENSION;
+
+	/**
+	 * The feature id for the '<em><b>Keywords</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_HANDLE__KEYWORDS = IDOCUMENT__KEYWORDS;
+
+	/**
+	 * The feature id for the '<em><b>Patient</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_HANDLE__PATIENT = IDOCUMENT__PATIENT;
+
+	/**
+	 * The feature id for the '<em><b>Author</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_HANDLE__AUTHOR = IDOCUMENT__AUTHOR;
+
+	/**
+	 * The number of structural features of the '<em>IDocument Handle</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_HANDLE_FEATURE_COUNT = IDOCUMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IConfig <em>IConfig</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IConfig
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIConfig()
+	 * @generated
+	 */
+	int ICONFIG = 23;
+
+	/**
+	 * The feature id for the '<em><b>Key</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICONFIG__KEY = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICONFIG__VALUE = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>IConfig</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICONFIG_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IUserConfig <em>IUser Config</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IUserConfig
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIUserConfig()
+	 * @generated
+	 */
+	int IUSER_CONFIG = 24;
+
+	/**
+	 * The feature id for the '<em><b>Key</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IUSER_CONFIG__KEY = ICONFIG__KEY;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IUSER_CONFIG__VALUE = ICONFIG__VALUE;
+
+	/**
+	 * The feature id for the '<em><b>Owner</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IUSER_CONFIG__OWNER = ICONFIG_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>IUser Config</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IUSER_CONFIG_FEATURE_COUNT = ICONFIG_FEATURE_COUNT + 1;
+
+	/**
 	 * The meta object id for the '<em>String Array</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getStringArray()
 	 * @generated
 	 */
-	int STRING_ARRAY = 21;
+	int STRING_ARRAY = 25;
 
 
 	/**
@@ -3165,28 +3538,6 @@ public interface ModelPackage extends EPackage {
 	EClass getIDocument();
 
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IDocument#getPatientId <em>Patient Id</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Patient Id</em>'.
-	 * @see ch.elexis.core.model.IDocument#getPatientId()
-	 * @see #getIDocument()
-	 * @generated
-	 */
-	EAttribute getIDocument_PatientId();
-
-	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IDocument#getAuthorId <em>Author Id</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Author Id</em>'.
-	 * @see ch.elexis.core.model.IDocument#getAuthorId()
-	 * @see #getIDocument()
-	 * @generated
-	 */
-	EAttribute getIDocument_AuthorId();
-
-	/**
 	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IDocument#getTitle <em>Title</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3308,6 +3659,28 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIDocument_Keywords();
 
 	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IDocument#getPatient <em>Patient</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Patient</em>'.
+	 * @see ch.elexis.core.model.IDocument#getPatient()
+	 * @see #getIDocument()
+	 * @generated
+	 */
+	EReference getIDocument_Patient();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IDocument#getAuthor <em>Author</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Author</em>'.
+	 * @see ch.elexis.core.model.IDocument#getAuthor()
+	 * @see #getIDocument()
+	 * @generated
+	 */
+	EReference getIDocument_Author();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.ICategory <em>ICategory</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3420,6 +3793,79 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getILaboratory();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IDocumentLetter <em>IDocument Letter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IDocument Letter</em>'.
+	 * @see ch.elexis.core.model.IDocumentLetter
+	 * @generated
+	 */
+	EClass getIDocumentLetter();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IDocumentHandle <em>IDocument Handle</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IDocument Handle</em>'.
+	 * @see ch.elexis.core.model.IDocumentHandle
+	 * @generated
+	 */
+	EClass getIDocumentHandle();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IConfig <em>IConfig</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IConfig</em>'.
+	 * @see ch.elexis.core.model.IConfig
+	 * @generated
+	 */
+	EClass getIConfig();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IConfig#getKey <em>Key</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Key</em>'.
+	 * @see ch.elexis.core.model.IConfig#getKey()
+	 * @see #getIConfig()
+	 * @generated
+	 */
+	EAttribute getIConfig_Key();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IConfig#getValue <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Value</em>'.
+	 * @see ch.elexis.core.model.IConfig#getValue()
+	 * @see #getIConfig()
+	 * @generated
+	 */
+	EAttribute getIConfig_Value();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IUserConfig <em>IUser Config</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IUser Config</em>'.
+	 * @see ch.elexis.core.model.IUserConfig
+	 * @generated
+	 */
+	EClass getIUserConfig();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IUserConfig#getOwner <em>Owner</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Owner</em>'.
+	 * @see ch.elexis.core.model.IUserConfig#getOwner()
+	 * @see #getIUserConfig()
+	 * @generated
+	 */
+	EReference getIUserConfig_Owner();
 
 	/**
 	 * Returns the meta object for data type '<em>String Array</em>'.
@@ -4178,22 +4624,6 @@ public interface ModelPackage extends EPackage {
 		EClass IDOCUMENT = eINSTANCE.getIDocument();
 
 		/**
-		 * The meta object literal for the '<em><b>Patient Id</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute IDOCUMENT__PATIENT_ID = eINSTANCE.getIDocument_PatientId();
-
-		/**
-		 * The meta object literal for the '<em><b>Author Id</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute IDOCUMENT__AUTHOR_ID = eINSTANCE.getIDocument_AuthorId();
-
-		/**
 		 * The meta object literal for the '<em><b>Title</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -4280,6 +4710,22 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IDOCUMENT__KEYWORDS = eINSTANCE.getIDocument_Keywords();
+
+		/**
+		 * The meta object literal for the '<em><b>Patient</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IDOCUMENT__PATIENT = eINSTANCE.getIDocument_Patient();
+
+		/**
+		 * The meta object literal for the '<em><b>Author</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IDOCUMENT__AUTHOR = eINSTANCE.getIDocument_Author();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.ICategory <em>ICategory</em>}' class.
@@ -4382,6 +4828,70 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EClass ILABORATORY = eINSTANCE.getILaboratory();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IDocumentLetter <em>IDocument Letter</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IDocumentLetter
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDocumentLetter()
+		 * @generated
+		 */
+		EClass IDOCUMENT_LETTER = eINSTANCE.getIDocumentLetter();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IDocumentHandle <em>IDocument Handle</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IDocumentHandle
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDocumentHandle()
+		 * @generated
+		 */
+		EClass IDOCUMENT_HANDLE = eINSTANCE.getIDocumentHandle();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IConfig <em>IConfig</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IConfig
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIConfig()
+		 * @generated
+		 */
+		EClass ICONFIG = eINSTANCE.getIConfig();
+
+		/**
+		 * The meta object literal for the '<em><b>Key</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ICONFIG__KEY = eINSTANCE.getIConfig_Key();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ICONFIG__VALUE = eINSTANCE.getIConfig_Value();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IUserConfig <em>IUser Config</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IUserConfig
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIUserConfig()
+		 * @generated
+		 */
+		EClass IUSER_CONFIG = eINSTANCE.getIUserConfig();
+
+		/**
+		 * The meta object literal for the '<em><b>Owner</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IUSER_CONFIG__OWNER = eINSTANCE.getIUserConfig_Owner();
 
 		/**
 		 * The meta object literal for the '<em>String Array</em>' data type.

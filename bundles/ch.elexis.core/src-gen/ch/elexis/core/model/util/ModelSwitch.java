@@ -255,6 +255,39 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ModelPackage.IDOCUMENT_LETTER: {
+				IDocumentLetter iDocumentLetter = (IDocumentLetter)theEObject;
+				T1 result = caseIDocumentLetter(iDocumentLetter);
+				if (result == null) result = caseIDocument(iDocumentLetter);
+				if (result == null) result = caseIdentifiable(iDocumentLetter);
+				if (result == null) result = caseDeleteable(iDocumentLetter);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IDOCUMENT_HANDLE: {
+				IDocumentHandle iDocumentHandle = (IDocumentHandle)theEObject;
+				T1 result = caseIDocumentHandle(iDocumentHandle);
+				if (result == null) result = caseIDocument(iDocumentHandle);
+				if (result == null) result = caseIdentifiable(iDocumentHandle);
+				if (result == null) result = caseDeleteable(iDocumentHandle);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.ICONFIG: {
+				IConfig iConfig = (IConfig)theEObject;
+				T1 result = caseIConfig(iConfig);
+				if (result == null) result = caseIdentifiable(iConfig);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IUSER_CONFIG: {
+				IUserConfig iUserConfig = (IUserConfig)theEObject;
+				T1 result = caseIUserConfig(iUserConfig);
+				if (result == null) result = caseIConfig(iUserConfig);
+				if (result == null) result = caseIdentifiable(iUserConfig);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -571,6 +604,66 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseILaboratory(ILaboratory object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IDocument Letter</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IDocument Letter</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIDocumentLetter(IDocumentLetter object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IDocument Handle</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IDocument Handle</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIDocumentHandle(IDocumentHandle object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IConfig</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IConfig</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIConfig(IConfig object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IUser Config</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IUser Config</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIUserConfig(IUserConfig object) {
 		return null;
 	}
 

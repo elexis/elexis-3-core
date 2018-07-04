@@ -526,7 +526,7 @@
        </property>
        <property
              name="aboutText"
-             value="Elexis 3.3 - www.elexis.info">
+             value="Elexis 3.6 - www.elexis.info">
        </property>
        <property
              name="aboutImage"
@@ -540,10 +540,6 @@
         name="rendererFactoryUri"
         value="bundleclass://ch.elexis.core.ui/ch.elexis.core.ui.renderer.ElexisRendererFactory">
       </property>
-       <property
-             name="applicationCSS"
-             value="platform:/plugin/ch.elexis.core.ui/rsc/css/style.css">
-       </property>
     </product>
  </extension>
 </plugin>

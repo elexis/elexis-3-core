@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.jpa.entities.AbstractDBObjectIdDeleted;
+import ch.elexis.core.jpa.entities.AbstractDBObjectId;
 import ch.elexis.core.model.Identifiable;
 
 public abstract class AbstractModelAdapterFactory {
@@ -26,13 +26,13 @@ public abstract class AbstractModelAdapterFactory {
 	protected abstract MappingEntry getMappingForInterface(Class<?> clazz);
 	
 	/**
-	 * Get the {@link MappingEntry} for the {@link AbstractIdDeleteModelAdapter}
+	 * Get the {@link MappingEntry} for the {@link AbstractIdModelAdapter}
 	 * 
 	 * @param adapter
 	 * @return
 	 */
 	protected abstract MappingEntry getMappingForAdapter(
-		Class<? extends AbstractIdDeleteModelAdapter<?>> adapter);
+		Class<? extends AbstractIdModelAdapter<?>> adapter);
 	
 	/**
 	 * Get the {@link MappingEntry} for the entity clazz. The interfaceClass parameter is optional,
@@ -43,17 +43,17 @@ public abstract class AbstractModelAdapterFactory {
 	 * @return
 	 */
 	protected abstract MappingEntry getMappingEntity(
-		Class<? extends AbstractDBObjectIdDeleted> entity, Class<?> interfaceClass);
+		Class<? extends AbstractDBObjectId> entity, Class<?> interfaceClass);
 	
 	/**
-	 * Get the {@link Constructor} for creating an instance of the
-	 * {@link AbstractIdDeleteModelAdapter} with a model object as parameter.
+	 * Get the {@link Constructor} for creating an instance of the {@link AbstractIdModelAdapter}
+	 * with a model object as parameter.
 	 * 
 	 * @param adapter
 	 * @return
 	 */
 	protected abstract Constructor<?> getAdapterConstructor(
-		Class<? extends AbstractIdDeleteModelAdapter<?>> adapter);
+		Class<? extends AbstractIdModelAdapter<?>> adapter);
 	
 	/**
 	 * Get a {@link Identifiable} model adapter instance. The interfaceClass parameter is optional,
@@ -63,13 +63,13 @@ public abstract class AbstractModelAdapterFactory {
 	 * @param interfaceClass
 	 * @return
 	 */
-	public Optional<Identifiable> getModelAdapter(AbstractDBObjectIdDeleted entity,
+	public Optional<Identifiable> getModelAdapter(AbstractDBObjectId entity,
 		Class<?> interfaceClass, boolean testPrecondition){
 		MappingEntry mapping = getMappingEntity(entity.getClass(), interfaceClass);
 		if (mapping != null) {
 			Identifiable adapter = getAdapterInstance(mapping.getAdapterClass(), entity);
 			if (testPrecondition) {
-				if (mapping.testAdapterPrecondition((AbstractIdDeleteModelAdapter<?>) adapter)) {
+				if (mapping.testAdapterPrecondition((AbstractIdModelAdapter<?>) adapter)) {
 					return Optional.of(adapter);
 				} else {
 					LoggerFactory.getLogger(getClass()).error("Adapter precondition failed for ["
@@ -83,27 +83,27 @@ public abstract class AbstractModelAdapterFactory {
 	}
 	
 	/**
-	 * Get the {@link AbstractDBObjectIdDeleted} class registered for the
-	 * {@link AbstractIdDeleteModelAdapter} class or the model Interface.
+	 * Get the {@link AbstractDBObjectId} class registered for the {@link AbstractIdModelAdapter}
+	 * class or the model Interface.
 	 * 
 	 * @param clazz
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public Class<? extends AbstractDBObjectIdDeleted> getEntityClass(Class<?> clazz){
+	public Class<? extends AbstractDBObjectId> getEntityClass(Class<?> clazz){
 		// test if the provided clazz is a known interface
 		MappingEntry mapping = getMappingForInterface(clazz);
 		if (mapping != null) {
 			return mapping.getEntityClass();
 		}
 		// test if the provided clazz is a known adapter class
-		mapping = getMappingForAdapter((Class<? extends AbstractIdDeleteModelAdapter<?>>) clazz);
+		mapping = getMappingForAdapter((Class<? extends AbstractIdModelAdapter<?>>) clazz);
 		return mapping != null ? mapping.getEntityClass() : null;
 	}
 	
 	private Identifiable getAdapterInstance(
-		Class<? extends AbstractIdDeleteModelAdapter<?>> adapterClass,
-		AbstractDBObjectIdDeleted dbObject){
+		Class<? extends AbstractIdModelAdapter<?>> adapterClass,
+		AbstractDBObjectId dbObject){
 		Constructor<?> constructor = getAdapterConstructor(adapterClass);
 		if (constructor != null) {
 			try {
@@ -126,8 +126,8 @@ public abstract class AbstractModelAdapterFactory {
 	 * @return
 	 */
 	protected Constructor<?> getAdapterConstructor(
-		Class<? extends AbstractIdDeleteModelAdapter<?>> adapterClass,
-		Class<? extends AbstractDBObjectIdDeleted> modelClass){
+		Class<? extends AbstractIdModelAdapter<?>> adapterClass,
+		Class<? extends AbstractDBObjectId> modelClass){
 		try {
 			return adapterClass.getConstructor(new Class[] {
 				modelClass
@@ -150,9 +150,10 @@ public abstract class AbstractModelAdapterFactory {
 		try {
 			MappingEntry mapping = getMappingForInterface(clazz);
 			if (mapping != null) {
-				AbstractDBObjectIdDeleted dbObject = mapping.getEntityClass().newInstance();
+				AbstractDBObjectId dbObject = mapping.getEntityClass().newInstance();
 				Optional<Identifiable> ret = getModelAdapter(dbObject, clazz, false);
 				if (ret.isPresent() && clazz.isAssignableFrom(ret.get().getClass())) {
+					mapping.initialize((AbstractIdModelAdapter<?>) ret.get());
 					return (T) ret.get();
 				} else {
 					throw new IllegalStateException(

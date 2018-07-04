@@ -23,10 +23,13 @@ import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IDiagnose;
 import ch.elexis.core.model.IDocument;
+import ch.elexis.core.model.IDocumentHandle;
+import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IHistory;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabOrder;
@@ -38,6 +41,7 @@ import ch.elexis.core.model.IPeriod;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelFactory;
@@ -197,6 +201,34 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass iLaboratoryEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iDocumentLetterEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iDocumentHandleEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iConfigEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iUserConfigEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1057,7 +1089,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIDocument_PatientId() {
+	public EAttribute getIDocument_Title() {
 		return (EAttribute)iDocumentEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -1066,7 +1098,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIDocument_AuthorId() {
+	public EAttribute getIDocument_Description() {
 		return (EAttribute)iDocumentEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -1075,7 +1107,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIDocument_Title() {
+	public EAttribute getIDocument_Status() {
 		return (EAttribute)iDocumentEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -1084,7 +1116,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIDocument_Description() {
+	public EAttribute getIDocument_Created() {
 		return (EAttribute)iDocumentEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -1093,7 +1125,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIDocument_Status() {
+	public EAttribute getIDocument_Lastchanged() {
 		return (EAttribute)iDocumentEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -1102,7 +1134,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIDocument_Created() {
+	public EAttribute getIDocument_MimeType() {
 		return (EAttribute)iDocumentEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -1111,26 +1143,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIDocument_Lastchanged() {
-		return (EAttribute)iDocumentEClass.getEStructuralFeatures().get(6);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getIDocument_MimeType() {
-		return (EAttribute)iDocumentEClass.getEStructuralFeatures().get(7);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EReference getIDocument_Category() {
-		return (EReference)iDocumentEClass.getEStructuralFeatures().get(8);
+		return (EReference)iDocumentEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -1139,7 +1153,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	public EReference getIDocument_History() {
-		return (EReference)iDocumentEClass.getEStructuralFeatures().get(9);
+		return (EReference)iDocumentEClass.getEStructuralFeatures().get(7);
 	}
 
 	/**
@@ -1148,7 +1162,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	public EAttribute getIDocument_StoreId() {
-		return (EAttribute)iDocumentEClass.getEStructuralFeatures().get(10);
+		return (EAttribute)iDocumentEClass.getEStructuralFeatures().get(8);
 	}
 
 	/**
@@ -1157,7 +1171,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	public EAttribute getIDocument_Extension() {
-		return (EAttribute)iDocumentEClass.getEStructuralFeatures().get(11);
+		return (EAttribute)iDocumentEClass.getEStructuralFeatures().get(9);
 	}
 
 	/**
@@ -1166,7 +1180,25 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	public EAttribute getIDocument_Keywords() {
-		return (EAttribute)iDocumentEClass.getEStructuralFeatures().get(12);
+		return (EAttribute)iDocumentEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIDocument_Patient() {
+		return (EReference)iDocumentEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIDocument_Author() {
+		return (EReference)iDocumentEClass.getEStructuralFeatures().get(12);
 	}
 
 	/**
@@ -1266,6 +1298,69 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 */
 	public EClass getILaboratory() {
 		return iLaboratoryEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getIDocumentLetter() {
+		return iDocumentLetterEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getIDocumentHandle() {
+		return iDocumentHandleEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getIConfig() {
+		return iConfigEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIConfig_Key() {
+		return (EAttribute)iConfigEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIConfig_Value() {
+		return (EAttribute)iConfigEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getIUserConfig() {
+		return iUserConfigEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIUserConfig_Owner() {
+		return (EReference)iUserConfigEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -1405,8 +1500,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iPeriodEClass, IPERIOD__END_TIME);
 
 		iDocumentEClass = createEClass(IDOCUMENT);
-		createEAttribute(iDocumentEClass, IDOCUMENT__PATIENT_ID);
-		createEAttribute(iDocumentEClass, IDOCUMENT__AUTHOR_ID);
 		createEAttribute(iDocumentEClass, IDOCUMENT__TITLE);
 		createEAttribute(iDocumentEClass, IDOCUMENT__DESCRIPTION);
 		createEAttribute(iDocumentEClass, IDOCUMENT__STATUS);
@@ -1418,6 +1511,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iDocumentEClass, IDOCUMENT__STORE_ID);
 		createEAttribute(iDocumentEClass, IDOCUMENT__EXTENSION);
 		createEAttribute(iDocumentEClass, IDOCUMENT__KEYWORDS);
+		createEReference(iDocumentEClass, IDOCUMENT__PATIENT);
+		createEReference(iDocumentEClass, IDOCUMENT__AUTHOR);
 
 		iCategoryEClass = createEClass(ICATEGORY);
 		createEAttribute(iCategoryEClass, ICATEGORY__NAME);
@@ -1436,6 +1531,17 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iOrganizationEClass = createEClass(IORGANIZATION);
 
 		iLaboratoryEClass = createEClass(ILABORATORY);
+
+		iDocumentLetterEClass = createEClass(IDOCUMENT_LETTER);
+
+		iDocumentHandleEClass = createEClass(IDOCUMENT_HANDLE);
+
+		iConfigEClass = createEClass(ICONFIG);
+		createEAttribute(iConfigEClass, ICONFIG__KEY);
+		createEAttribute(iConfigEClass, ICONFIG__VALUE);
+
+		iUserConfigEClass = createEClass(IUSER_CONFIG);
+		createEReference(iUserConfigEClass, IUSER_CONFIG__OWNER);
 
 		// Create data types
 		stringArrayEDataType = createEDataType(STRING_ARRAY);
@@ -1506,6 +1612,10 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iCoverageEClass.getESuperTypes().add(this.getIdentifiable());
 		iOrganizationEClass.getESuperTypes().add(this.getIContact());
 		iLaboratoryEClass.getESuperTypes().add(this.getIOrganization());
+		iDocumentLetterEClass.getESuperTypes().add(this.getIDocument());
+		iDocumentHandleEClass.getESuperTypes().add(this.getIDocument());
+		iConfigEClass.getESuperTypes().add(this.getIdentifiable());
+		iUserConfigEClass.getESuperTypes().add(this.getIConfig());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(iContactEClass, IContact.class, "IContact", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1643,8 +1753,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIPeriod_EndTime(), theTypesPackage.getLocalDateTime(), "endTime", null, 0, 1, IPeriod.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iDocumentEClass, IDocument.class, "IDocument", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIDocument_PatientId(), ecorePackage.getEString(), "patientId", null, 0, 1, IDocument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIDocument_AuthorId(), ecorePackage.getEString(), "authorId", null, 0, 1, IDocument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIDocument_Title(), ecorePackage.getEString(), "title", null, 0, 1, IDocument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIDocument_Description(), ecorePackage.getEString(), "description", null, 0, 1, IDocument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIDocument_Status(), theTypesPackage.getDocumentStatus(), "status", null, 0, 1, IDocument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1656,6 +1764,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIDocument_StoreId(), ecorePackage.getEString(), "storeId", null, 0, 1, IDocument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIDocument_Extension(), ecorePackage.getEString(), "extension", null, 0, 1, IDocument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIDocument_Keywords(), ecorePackage.getEString(), "keywords", null, 0, 1, IDocument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIDocument_Patient(), this.getIPatient(), null, "patient", null, 0, 1, IDocument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIDocument_Author(), this.getIContact(), null, "author", null, 0, 1, IDocument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		addEOperation(iDocumentEClass, theTypesPackage.getInputStream(), "getContent", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iDocumentEClass, null, "setContent", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, theTypesPackage.getInputStream(), "content", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iCategoryEClass, ICategory.class, "ICategory", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getICategory_Name(), ecorePackage.getEString(), "name", null, 0, 1, ICategory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1675,11 +1790,66 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		initEClass(iLaboratoryEClass, ILaboratory.class, "ILaboratory", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
+		initEClass(iDocumentLetterEClass, IDocumentLetter.class, "IDocumentLetter", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(iDocumentHandleEClass, IDocumentHandle.class, "IDocumentHandle", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(iConfigEClass, IConfig.class, "IConfig", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIConfig_Key(), ecorePackage.getEString(), "key", null, 0, 1, IConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIConfig_Value(), ecorePackage.getEString(), "value", null, 0, 1, IConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(iUserConfigEClass, IUserConfig.class, "IUserConfig", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getIUserConfig_Owner(), this.getIContact(), null, "owner", null, 0, 1, IUserConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		// Initialize data types
 		initEDataType(stringArrayEDataType, String[].class, "StringArray", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);
+
+		// Create annotations
+		// http://elexis.info/jpa/entity/attribute/mapping
+		createMappingAnnotations();
+	}
+
+	/**
+	 * Initializes the annotations for <b>http://elexis.info/jpa/entity/attribute/mapping</b>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void createMappingAnnotations() {
+		String source = "http://elexis.info/jpa/entity/attribute/mapping";	
+		addAnnotation
+		  (getIPerson_DateOfBirth(), 
+		   source, 
+		   new String[] {
+			 "attributeName", "dob"
+		   });	
+		addAnnotation
+		  (getIPerson_FirstName(), 
+		   source, 
+		   new String[] {
+			 "attributeName", "description2"
+		   });	
+		addAnnotation
+		  (getIPerson_LastName(), 
+		   source, 
+		   new String[] {
+			 "attributeName", "description1"
+		   });	
+		addAnnotation
+		  (getIDocument_Category(), 
+		   source, 
+		   new String[] {
+			 "Brief#attributeName", "typ"
+		   });	
+		addAnnotation
+		  (getIConfig_Key(), 
+		   source, 
+		   new String[] {
+			 "attributeName", "param"
+		   });
 	}
 
 } //ModelPackageImpl

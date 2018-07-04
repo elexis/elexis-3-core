@@ -16,7 +16,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -29,6 +31,8 @@ import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+
+import org.apache.commons.lang3.StringUtils;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -55,6 +59,15 @@ public class DBConnection implements Serializable {
 			this.driverName = driverName;
 			this.dbType = dbType;
 			this.defaultPort = defaultPort;
+		}
+		
+		public static Optional<DBType> valueOfDriver(String driver){
+			for (DBType dbType : values()) {
+				if (dbType.driverName.equals(driver)) {
+					return Optional.of(dbType);
+				}
+			}
+			return Optional.empty();
 		}
 	}
 	
@@ -137,7 +150,6 @@ public class DBConnection implements Serializable {
 		if(value==null) {
 			return null;
 		}
-		
 		try {
 			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(value.getBytes(StandardCharsets.UTF_8));
 			return unmarshall(byteArrayInputStream);
@@ -146,5 +158,35 @@ public class DBConnection implements Serializable {
 			e.printStackTrace();
 		}
 		return new DBConnection();
+	}
+	
+	public static Optional<String> getHostName(String url){
+		if (url.startsWith("jdbc:")) {
+			url = url.substring(5);
+		}
+		URI uri = URI.create(url);
+		String host = uri.getHost();
+		if (!StringUtils.isEmpty(host)) {
+			return Optional.of(host);
+		}
+		return Optional.empty();
+	}
+	
+	public static Optional<String> getDatabaseName(String url){
+		if (url.startsWith("jdbc:")) {
+			url = url.substring(5);
+		}
+		URI uri = URI.create(url);
+		String path = uri.getPath();
+		if (!StringUtils.isBlank(path)) {
+			if(path.startsWith("/")) {
+				path = path.substring(1);
+			}
+			if (path.contains("/")) {
+				path = path.substring(0, path.indexOf("/"));
+			}
+			return Optional.of(path);
+		}
+		return Optional.empty();
 	}
 }

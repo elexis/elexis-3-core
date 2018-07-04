@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.Identifiable;
 
 /**
@@ -19,6 +20,11 @@ public interface IModelService {
 	public final String SERVICEMODELNAME = "service.model.name";
 	
 	public final String DOUBLECOLON = "::";
+	
+	public final String EANNOTATION_ENTITY_ATTRIBUTE_MAPPING =
+		"http://elexis.info/jpa/entity/attribute/mapping";
+	
+	public final Object EANNOTATION_ENTITY_ATTRIBUTE_MAPPING_NAME = "attributeName";
 	
 	/**
 	 * Get a reference string that can be used to load the {@link Identifiable} using
@@ -82,4 +88,44 @@ public interface IModelService {
 	 * @return
 	 */
 	public boolean save(List<Identifiable> identifiables);
+	
+	/**
+	 * Remove the {@link Identifiable} from the database.
+	 * 
+	 * @param identifiable
+	 * @return
+	 */
+	public boolean remove(Identifiable identifiable);
+	
+	/**
+	 * Get a Query for objects of type clazz. If the clazz implements {@link Deleteable} no deleted
+	 * entities are included in the result. The Query is closed after the {@link IQuery#execute()}
+	 * method is called.
+	 * 
+	 * @param clazz
+	 * @param context
+	 * @return
+	 */
+	public default <T> IQuery<T> getQuery(Class<T> clazz){
+		return getQuery(clazz, false);
+	}
+	
+	/**
+	 * Get a Query for objects of type clazz. If the clazz implements {@link Deleteable}
+	 * includeDeleted determines if deleted entities are included in the result. The Query is closed
+	 * after the {@link IQuery#execute()} method is called.
+	 * 
+	 * @param clazz
+	 * @param includeDeleted
+	 * @return
+	 */
+	public <T> IQuery<T> getQuery(Class<T> clazz, boolean includeDeleted);
+	
+	/**
+	 * Convenience method setting deleted property and save the {@link Deleteable}.
+	 * 
+	 * @param deletable
+	 */
+	public void delete(Deleteable deletable);
+	
 }

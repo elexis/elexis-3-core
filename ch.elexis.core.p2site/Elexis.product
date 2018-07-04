@@ -35,7 +35,6 @@
       </win>
    </launcher>
 
-
    <vm>
       <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</linux>
       <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</macos>
@@ -56,6 +55,7 @@
       <feature id="ch.elexis.core.ui.feature" installMode="root"/>
       <feature id="ch.elexis.core.ui.p2.feature" installMode="root"/>
       <feature id="ch.elexis.core.ui.medication.os.feature" installMode="root"/>
+      <feature id="ch.elexis.core.persistence.feature" installMode="root"/>
    </features>
 
    <configurations>
@@ -68,6 +68,7 @@
       <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.p2.reconciler.dropins" autoStart="true" startLevel="4" />
+      <plugin id="org.eclipse.gemini.jpa" autoStart="true" startLevel="3" />
       <plugin id="org.eclipse.osgi.services" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="3" />
       <plugin id="org.slf4j.api" autoStart="false" startLevel="1" />

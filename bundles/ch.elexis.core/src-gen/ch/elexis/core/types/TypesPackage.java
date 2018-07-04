@@ -226,6 +226,27 @@ public interface TypesPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '<em>Input Stream</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see java.io.InputStream
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getInputStream()
+	 * @generated
+	 */
+	int INPUT_STREAM = 13;
+
+	/**
+	 * The meta object id for the '<em>Output Stream</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see java.io.OutputStream
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getOutputStream()
+	 * @generated
+	 */
+	int OUTPUT_STREAM = 14;
+
+
+	/**
 	 * Returns the meta object for class '{@link java.lang.Comparable <em>Comparable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -363,6 +384,28 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EDataType getLocalDateTime();
+
+	/**
+	 * Returns the meta object for data type '{@link java.io.InputStream <em>Input Stream</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Input Stream</em>'.
+	 * @see java.io.InputStream
+	 * @model instanceClass="java.io.InputStream"
+	 * @generated
+	 */
+	EDataType getInputStream();
+
+	/**
+	 * Returns the meta object for data type '{@link java.io.OutputStream <em>Output Stream</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Output Stream</em>'.
+	 * @see java.io.OutputStream
+	 * @model instanceClass="java.io.OutputStream"
+	 * @generated
+	 */
+	EDataType getOutputStream();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -515,6 +558,26 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType LOCAL_DATE_TIME = eINSTANCE.getLocalDateTime();
+
+		/**
+		 * The meta object literal for the '<em>Input Stream</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see java.io.InputStream
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getInputStream()
+		 * @generated
+		 */
+		EDataType INPUT_STREAM = eINSTANCE.getInputStream();
+
+		/**
+		 * The meta object literal for the '<em>Output Stream</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see java.io.OutputStream
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getOutputStream()
+		 * @generated
+		 */
+		EDataType OUTPUT_STREAM = eINSTANCE.getOutputStream();
 
 	}
 

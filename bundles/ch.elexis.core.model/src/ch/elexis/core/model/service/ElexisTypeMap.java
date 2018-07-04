@@ -2,6 +2,7 @@ package ch.elexis.core.model.service;
 
 import java.util.HashMap;
 
+import ch.elexis.core.jpa.entities.AbstractDBObjectId;
 import ch.elexis.core.jpa.entities.AbstractDBObjectIdDeleted;
 import ch.elexis.core.jpa.entities.Artikel;
 import ch.elexis.core.jpa.entities.ArtikelstammItem;
@@ -123,7 +124,7 @@ public class ElexisTypeMap {
 	 * @param obj
 	 * @return <code>null</code> if not resolvable, else the resp. Entity Type
 	 */
-	public static String getKeyForObject(AbstractDBObjectIdDeleted obj) {
+	public static String getKeyForObject(AbstractDBObjectId obj){
 		if (obj instanceof Kontakt) {
 			// TODO we can not deterministically map person to patient, anwender, mandant as
 			// we do not know what was initially intended
@@ -164,7 +165,7 @@ public class ElexisTypeMap {
 		return null;
 	}
 
-	public static Class<? extends AbstractDBObjectIdDeleted> get(String value) {
+	public static Class<? extends AbstractDBObjectId> get(String value){
 		return stsToClassMap.get(value);
 	}
 }

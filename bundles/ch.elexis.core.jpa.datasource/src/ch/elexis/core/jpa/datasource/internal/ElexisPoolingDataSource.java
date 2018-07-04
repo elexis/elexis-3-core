@@ -14,6 +14,7 @@ import org.apache.commons.dbcp.PoolingDataSource;
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.GenericObjectPool;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,12 +43,24 @@ public class ElexisPoolingDataSource extends PoolingDataSource
 		if (connectionPool != null) {
 			setPool(connectionPool);
 			try (Connection conn = getConnection()) {
-				log.info("db pool initialization success");
+				log.info("db connection pool initialization success");
 			} catch (SQLException e) {
-				log.error("db pool initialization error", e);
+				log.error("db connection pool initialization error", e);
 			}
 		} else {
-			log.error("db pool initialization failed - no connection pool");
+			log.error("db connection pool initialization failed - no connection pool");
+		}
+	}
+	
+	@Deactivate
+	public void deactivate(){
+		if (connectionPool != null) {
+			try {
+				log.info("Deactivating, closing db connection pool");
+				connectionPool.close();
+			} catch (Exception e) {
+				log.warn("Error closing db connection pool", e);
+			}
 		}
 	}
 	
@@ -74,7 +87,7 @@ public class ElexisPoolingDataSource extends PoolingDataSource
 			new PoolableConnectionFactory(connectionFactory, connectionPool, null, "SELECT 1;", false, true);
 			return connectionPool;
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-			log.error("pool initialization error", e);
+			log.error("db connection pool initialization error", e);
 			return null;
 		}
 	}
@@ -90,6 +103,10 @@ public class ElexisPoolingDataSource extends PoolingDataSource
 	private DBConnection getTestDatabaseConnection(){
 		DBConnection retVal = new DBConnection();
 		retVal.connectionString = "jdbc:h2:mem:elexisTest;DB_CLOSE_DELAY=-1";
+		String trace = System.getProperty("elexis.test.dbtrace");
+		if (trace != null && "true".equalsIgnoreCase(trace)) {
+			retVal.connectionString += ";TRACE_LEVEL_SYSTEM_OUT=2";
+		}
 		retVal.rdbmsType = DBType.H2;
 		retVal.username = "sa";
 		retVal.password = "";

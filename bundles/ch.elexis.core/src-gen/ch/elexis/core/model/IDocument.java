@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 import ch.elexis.core.types.DocumentStatus;
+import java.io.InputStream;
 
 /**
  * <!-- begin-user-doc -->
@@ -24,8 +25,6 @@ import ch.elexis.core.types.DocumentStatus;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.model.IDocument#getPatientId <em>Patient Id</em>}</li>
- *   <li>{@link ch.elexis.core.model.IDocument#getAuthorId <em>Author Id</em>}</li>
  *   <li>{@link ch.elexis.core.model.IDocument#getTitle <em>Title</em>}</li>
  *   <li>{@link ch.elexis.core.model.IDocument#getDescription <em>Description</em>}</li>
  *   <li>{@link ch.elexis.core.model.IDocument#getStatus <em>Status</em>}</li>
@@ -37,6 +36,8 @@ import ch.elexis.core.types.DocumentStatus;
  *   <li>{@link ch.elexis.core.model.IDocument#getStoreId <em>Store Id</em>}</li>
  *   <li>{@link ch.elexis.core.model.IDocument#getExtension <em>Extension</em>}</li>
  *   <li>{@link ch.elexis.core.model.IDocument#getKeywords <em>Keywords</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IDocument#getPatient <em>Patient</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IDocument#getAuthor <em>Author</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIDocument()
@@ -44,58 +45,6 @@ import ch.elexis.core.types.DocumentStatus;
  * @generated
  */
 public interface IDocument extends Identifiable, Deleteable {
-	/**
-	 * Returns the value of the '<em><b>Patient Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Patient Id</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Patient Id</em>' attribute.
-	 * @see #setPatientId(String)
-	 * @see ch.elexis.core.model.ModelPackage#getIDocument_PatientId()
-	 * @model
-	 * @generated
-	 */
-	String getPatientId();
-
-	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IDocument#getPatientId <em>Patient Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Patient Id</em>' attribute.
-	 * @see #getPatientId()
-	 * @generated
-	 */
-	void setPatientId(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Author Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Author Id</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Author Id</em>' attribute.
-	 * @see #setAuthorId(String)
-	 * @see ch.elexis.core.model.ModelPackage#getIDocument_AuthorId()
-	 * @model
-	 * @generated
-	 */
-	String getAuthorId();
-
-	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IDocument#getAuthorId <em>Author Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Author Id</em>' attribute.
-	 * @see #getAuthorId()
-	 * @generated
-	 */
-	void setAuthorId(String value);
-
 	/**
 	 * Returns the value of the '<em><b>Title</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -267,6 +216,7 @@ public interface IDocument extends Identifiable, Deleteable {
 	 * @see #setCategory(ICategory)
 	 * @see ch.elexis.core.model.ModelPackage#getIDocument_Category()
 	 * @model required="true"
+	 *        annotation="http://elexis.info/jpa/entity/attribute/mapping Brief#attributeName='typ'"
 	 * @generated
 	 */
 	ICategory getCategory();
@@ -374,5 +324,73 @@ public interface IDocument extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	void setKeywords(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Patient</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Patient</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Patient</em>' reference.
+	 * @see #setPatient(IPatient)
+	 * @see ch.elexis.core.model.ModelPackage#getIDocument_Patient()
+	 * @model
+	 * @generated
+	 */
+	IPatient getPatient();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IDocument#getPatient <em>Patient</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Patient</em>' reference.
+	 * @see #getPatient()
+	 * @generated
+	 */
+	void setPatient(IPatient value);
+
+	/**
+	 * Returns the value of the '<em><b>Author</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Author</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Author</em>' reference.
+	 * @see #setAuthor(IContact)
+	 * @see ch.elexis.core.model.ModelPackage#getIDocument_Author()
+	 * @model
+	 * @generated
+	 */
+	IContact getAuthor();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IDocument#getAuthor <em>Author</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Author</em>' reference.
+	 * @see #getAuthor()
+	 * @generated
+	 */
+	void setAuthor(IContact value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" dataType="ch.elexis.core.types.InputStream"
+	 * @generated
+	 */
+	InputStream getContent();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model contentDataType="ch.elexis.core.types.InputStream"
+	 * @generated
+	 */
+	void setContent(InputStream content);
 
 } // IDocument

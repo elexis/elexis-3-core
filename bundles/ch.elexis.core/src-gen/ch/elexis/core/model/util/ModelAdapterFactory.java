@@ -178,6 +178,22 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createILaboratoryAdapter();
 			}
 			@Override
+			public Adapter caseIDocumentLetter(IDocumentLetter object) {
+				return createIDocumentLetterAdapter();
+			}
+			@Override
+			public Adapter caseIDocumentHandle(IDocumentHandle object) {
+				return createIDocumentHandleAdapter();
+			}
+			@Override
+			public Adapter caseIConfig(IConfig object) {
+				return createIConfigAdapter();
+			}
+			@Override
+			public Adapter caseIUserConfig(IUserConfig object) {
+				return createIUserConfigAdapter();
+			}
+			@Override
 			public <T> Adapter caseComparable(Comparable<T> object) {
 				return createComparableAdapter();
 			}
@@ -492,6 +508,62 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createILaboratoryAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IDocumentLetter <em>IDocument Letter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IDocumentLetter
+	 * @generated
+	 */
+	public Adapter createIDocumentLetterAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IDocumentHandle <em>IDocument Handle</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IDocumentHandle
+	 * @generated
+	 */
+	public Adapter createIDocumentHandleAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IConfig <em>IConfig</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IConfig
+	 * @generated
+	 */
+	public Adapter createIConfigAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IUserConfig <em>IUser Config</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IUserConfig
+	 * @generated
+	 */
+	public Adapter createIUserConfigAdapter() {
 		return null;
 	}
 

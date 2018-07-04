@@ -20,12 +20,14 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.common.ElexisEvent;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.jpa.entities.AbstractDBObjectIdDeleted;
+import ch.elexis.core.jpa.entities.AbstractDBObjectId;
 import ch.elexis.core.jpa.entitymanager.ElexisEntityManger;
-import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
+import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractModelAdapterFactory;
+import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.IQuery;
 
 @Component(property = IModelService.SERVICEMODELNAME + "=ch.elexis.core.model")
 public class CoreModelService implements IModelService {
@@ -40,13 +42,13 @@ public class CoreModelService implements IModelService {
 	
 	@Activate
 	public void activate(){
-		adapterFactory = new CoreModelAdapterFactory();
+		adapterFactory = CoreModelAdapterFactory.getInstance();
 	}
 	
 	@Override
 	public Optional<String> storeToString(Identifiable identifiable){
 		String classKey = null;
-		Optional<AbstractDBObjectIdDeleted> dbObject = getDbObject(identifiable);
+		Optional<AbstractDBObjectId> dbObject = getDbObject(identifiable);
 		if (dbObject.isPresent()) {
 			classKey = ElexisTypeMap.getKeyForObject(dbObject.get());
 			if (classKey == null) {
@@ -72,7 +74,7 @@ public class CoreModelService implements IModelService {
 		// map string to classname
 		String className = split[0];
 		String id = split[1];
-		Class<? extends AbstractDBObjectIdDeleted> clazz = ElexisTypeMap.get(className);
+		Class<? extends AbstractDBObjectId> clazz = ElexisTypeMap.get(className);
 		if (clazz == null) {
 			LoggerFactory.getLogger(getClass()).warn("Could not resolve class [{}] from [{}]",
 				className, storeToString);
@@ -81,7 +83,7 @@ public class CoreModelService implements IModelService {
 		
 		EntityManager em = entityManager.getEntityManager();
 		try {
-			AbstractDBObjectIdDeleted dbObject = em.find(clazz, id);
+			AbstractDBObjectId dbObject = em.find(clazz, id);
 			return Optional
 				.ofNullable(adapterFactory.getModelAdapter(dbObject, null, false).orElse(null));
 		} finally {
@@ -99,13 +101,16 @@ public class CoreModelService implements IModelService {
 	public <T> Optional<T> load(String id, Class<T> clazz){
 		EntityManager em = entityManager.getEntityManager();
 		try {
-			Class<? extends AbstractDBObjectIdDeleted> dbObjectClass =
+			Class<? extends AbstractDBObjectId> dbObjectClass =
 				adapterFactory.getEntityClass(clazz);
-			AbstractDBObjectIdDeleted dbObject = em.find(dbObjectClass, id);
-			Optional<Identifiable> modelObject =
-				adapterFactory.getModelAdapter(dbObject, clazz, true);
-			if (modelObject.isPresent() && clazz.isAssignableFrom(modelObject.get().getClass())) {
-				return (Optional<T>) modelObject;
+			AbstractDBObjectId dbObject = em.find(dbObjectClass, id);
+			if (dbObject != null) {
+				Optional<Identifiable> modelObject =
+					adapterFactory.getModelAdapter(dbObject, clazz, true);
+				if (modelObject.isPresent()
+					&& clazz.isAssignableFrom(modelObject.get().getClass())) {
+					return (Optional<T>) modelObject;
+				}
 			}
 		} finally {
 			em.close();
@@ -115,7 +120,7 @@ public class CoreModelService implements IModelService {
 	
 	@Override
 	public boolean save(Identifiable identifiable){
-		Optional<AbstractDBObjectIdDeleted> dbObject = getDbObject(identifiable);
+		Optional<AbstractDBObjectId> dbObject = getDbObject(identifiable);
 		if (dbObject.isPresent()) {
 			EntityManager em = entityManager.getEntityManager();
 			try {
@@ -136,7 +141,7 @@ public class CoreModelService implements IModelService {
 	
 	@Override
 	public boolean save(List<Identifiable> identifiables){
-		Map<Identifiable, AbstractDBObjectIdDeleted> dbObjects = identifiables.parallelStream()
+		Map<Identifiable, AbstractDBObjectId> dbObjects = identifiables.parallelStream()
 			.collect(Collectors.toMap(Function.identity(), i -> getDbObject(i).orElse(null)));
 		if (!dbObjects.isEmpty()) {
 			EntityManager em = entityManager.getEntityManager();
@@ -144,7 +149,7 @@ public class CoreModelService implements IModelService {
 				List<ElexisEvent> createdEvents = new ArrayList<>();
 				em.getTransaction().begin();
 				for (Identifiable identifiable : dbObjects.keySet()) {
-					AbstractDBObjectIdDeleted dbObject = dbObjects.get(identifiable);
+					AbstractDBObjectId dbObject = dbObjects.get(identifiable);
 					if (dbObject != null) {
 						boolean newlyCreatedObject = (dbObject.getLastupdate() == null);
 						em.merge(dbObject);
@@ -163,12 +168,30 @@ public class CoreModelService implements IModelService {
 		return false;
 	}
 	
+	@Override
+	public boolean remove(Identifiable identifiable){
+		Optional<AbstractDBObjectId> dbObject = getDbObject(identifiable);
+		if (dbObject.isPresent()) {
+			EntityManager em = entityManager.getEntityManager();
+			try {
+				em.getTransaction().begin();
+				AbstractDBObjectId object = em.merge(dbObject.get());
+				em.remove(object);
+				em.getTransaction().commit();
+				return true;
+			} finally {
+				em.close();
+			}
+		}
+		return false;
+	}
+	
 	private ElexisEvent getCreateEvent(Identifiable identifiable){
 		ElexisEvent ee = new ElexisEvent();
 		ee.setTopic(ElexisEventTopics.PERSISTENCE_EVENT_CREATE);
-		if (identifiable instanceof AbstractIdDeleteModelAdapter<?>) {
-			AbstractDBObjectIdDeleted dbObject =
-				((AbstractIdDeleteModelAdapter<?>) identifiable).getEntity();
+		if (identifiable instanceof AbstractIdModelAdapter<?>) {
+			AbstractDBObjectId dbObject =
+				((AbstractIdModelAdapter<?>) identifiable).getEntity();
 			ee.getProperties().put(ElexisEventTopics.PROPKEY_ID, dbObject.getId());
 			ee.getProperties().put(ElexisEventTopics.PROPKEY_CLASS,
 				ElexisTypeMap.getKeyForObject(dbObject));
@@ -192,10 +215,21 @@ public class CoreModelService implements IModelService {
 		}
 	}
 	
-	private Optional<AbstractDBObjectIdDeleted> getDbObject(Identifiable identifiable){
-		if (identifiable instanceof AbstractIdDeleteModelAdapter<?>) {
-			return Optional.ofNullable(((AbstractIdDeleteModelAdapter<?>) identifiable).getEntity());
+	private Optional<AbstractDBObjectId> getDbObject(Identifiable identifiable){
+		if (identifiable instanceof AbstractIdModelAdapter<?>) {
+			return Optional.ofNullable(((AbstractIdModelAdapter<?>) identifiable).getEntity());
 		}
 		return Optional.empty();
+	}
+	
+	@Override
+	public <T> IQuery<T> getQuery(Class<T> clazz, boolean includeDeleted){
+		return new CoreQuery<>(clazz, entityManager.getEntityManager(), includeDeleted);
+	}
+	
+	@Override
+	public void delete(Deleteable deletable){
+		deletable.setDeleted(true);
+		save((Identifiable) deletable);
 	}
 }

@@ -1,14 +1,13 @@
 package ch.elexis.core.data.service.internal;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.io.IOUtils;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,21 +15,27 @@ import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.model.ICategory;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IDocument;
+import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ITag;
+import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IDocumentStore;
+import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.data.Brief;
-import ch.elexis.data.Kontakt;
-import ch.elexis.data.Query;
-import ch.elexis.data.dto.BriefDocumentDTO;
 import ch.elexis.data.dto.CategoryDocumentDTO;
-import ch.rgw.tools.TimeTool;
 
 @Component
 public class BriefDocumentStore implements IDocumentStore {
 	
 	private static final String STORE_ID = "ch.elexis.data.store.brief";
 	private static Logger log = LoggerFactory.getLogger(BriefDocumentStore.class);
+	
+	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
+	private IModelService modelService;
 	
 	@Override
 	public String getId(){
@@ -45,22 +50,29 @@ public class BriefDocumentStore implements IDocumentStore {
 	@Override
 	public List<IDocument> getDocuments(String patientId, String authorId, ICategory category,
 		List<ITag> tag){
-		Query<Brief> query = new Query<>(Brief.class);
-		query.add(Brief.FLD_PATIENT_ID, Query.EQUALS, patientId);
 		
-		if (authorId != null) {
-			query.add(Brief.FLD_SENDER_ID, Query.EQUALS, authorId);
+		Optional<IPatient> patient = modelService.load(patientId, IPatient.class);
+		if (patient.isPresent()) {
+			IQuery<IDocumentLetter> query = modelService.getQuery(IDocumentLetter.class);
+			query.add(ModelPackage.Literals.IDOCUMENT__PATIENT, COMPARATOR.EQUALS, patient.get());
+			
+			if (authorId != null) {
+				Optional<IContact> author = modelService.load(authorId, IContact.class);
+				author.ifPresent(a -> {
+					query.add(ModelPackage.Literals.IDOCUMENT__AUTHOR, COMPARATOR.EQUALS, a);
+				});
+			}
+			if (category != null && category.getName() != null) {
+				query.add(ModelPackage.Literals.IDOCUMENT__CATEGORY, COMPARATOR.EQUALS,
+					category.getName());
+			}
+			
+			@SuppressWarnings("unchecked")
+			List<IDocument> results = (List<IDocument>) ((List<?>) query.execute());
+			results.parallelStream().forEach(d -> d.setStoreId(STORE_ID));
+			return results;
 		}
-		if (category != null && category.getName() != null) {
-			query.add(Brief.FLD_TYPE, Query.EQUALS, category.getName());
-		}
-		
-		List<Brief> briefe = query.execute();
-		List<IDocument> results = new ArrayList<>();
-		for (Brief brief : briefe) {
-			results.add(new BriefDocumentDTO(brief, STORE_ID));
-		}
-		return results;
+		return Collections.emptyList();
 	}
 	
 	@Override
@@ -78,10 +90,10 @@ public class BriefDocumentStore implements IDocumentStore {
 	
 	@Override
 	public void removeDocument(IDocument document){
-		Brief brief = Brief.load(document.getId());
-		if (brief.exists()) {
-			brief.delete();
-		}
+		Optional<IDocumentLetter> existing = modelService.load(document.getId(), IDocumentLetter.class);
+		existing.ifPresent(d -> {
+			modelService.delete(d);
+		});
 	}
 	
 	@Override
@@ -96,66 +108,25 @@ public class BriefDocumentStore implements IDocumentStore {
 	
 	private IDocument save(IDocument document, InputStream content) throws ElexisException{
 		try {
-			Brief brief = Brief.load(document.getId());
-			if (brief.exists()) {
-				String category =
-					document.getCategory() != null ? document.getCategory().getName() : null;
-				// update an existing document
-				String[] fetch = new String[] {
-					Brief.FLD_PATIENT_ID, Brief.FLD_SENDER_ID, Brief.FLD_NOTE, Brief.FLD_SUBJECT,
-					Brief.FLD_MIME_TYPE, Brief.FLD_TYPE
-				};
-				String[] data = new String[] {
-					document.getPatientId(), document.getAuthorId(), document.getDescription(),
-					document.getTitle(), document.getMimeType(), category
-				};
-				brief.set(fetch, data);
-			} else {
-				// persist a new document
-				brief = new Brief(document.getTitle(),
-					document.getCreated() != null ? new TimeTool(document.getCreated()) : null,
-					Kontakt.load(document.getAuthorId()), null, null,
-					document.getCategory().getName());
-				brief.set(new String[] {
-					Brief.FLD_PATIENT_ID, Brief.FLD_MIME_TYPE, Brief.FLD_NOTE
-				}, new String[] {
-					document.getPatientId(), document.getMimeType(), document.getDescription()
-				});
-			}
-			
 			if (content != null) {
-				brief.save(IOUtils.toByteArray(content), document.getMimeType());
+				document.setContent(content);
 			}
-			return new BriefDocumentDTO(brief, STORE_ID);
-		} catch (IOException | PersistenceException e) {
+			modelService.save(document);
+			return document;
+		} catch (PersistenceException e) {
 			throw new ElexisException("cannot save", e);
-		} finally {
-			if (content != null) {
-				IOUtils.closeQuietly(content);
-			}
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public Optional<IDocument> loadDocument(String id){
-		Brief brief = Brief.load(id);
-		if (brief.exists()) {
-			return Optional.of(new BriefDocumentDTO(brief, STORE_ID));
-		}
-		return Optional.empty();
+		return (Optional<IDocument>) (Optional<?>) modelService.load(id, IDocumentLetter.class);
 	}
 	
 	@Override
 	public Optional<InputStream> loadContent(IDocument document){
-		Brief brief = Brief.load(document.getId());
-		if (brief.exists()) {
-			byte[] contents = brief.loadBinary();
-			if (contents == null) {
-				contents = new byte[0];
-			}
-			return Optional.of(new ByteArrayInputStream(contents));
-		}
-		return Optional.empty();
+		return Optional.ofNullable(document.getContent());
 	}
 	
 	@Override
@@ -168,13 +139,15 @@ public class BriefDocumentStore implements IDocumentStore {
 	
 	@Override
 	public IDocument createDocument(String patientId, String title, String categoryName){
-		BriefDocumentDTO briefDocumentDTO = new BriefDocumentDTO(STORE_ID);
-		briefDocumentDTO.setTitle(title);
-		briefDocumentDTO.setPatientId(patientId);
+		IDocumentLetter letter = modelService.create(IDocumentLetter.class);
+		letter.setStoreId(STORE_ID);
+		letter.setTitle(title);
+		letter.setPatient(modelService.load(patientId, IPatient.class).orElse(null));
 		ICategory iCategory =
 			categoryName != null ? new CategoryDocumentDTO(categoryName) : getCategoryDefault();
-		briefDocumentDTO.setCategory(iCategory);
-		return briefDocumentDTO;
+		letter.setCategory(iCategory);
+		modelService.save(letter);
+		return letter;
 	}
 	
 	@Override

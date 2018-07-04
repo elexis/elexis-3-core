@@ -60,4 +60,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="PathologicDescription" instanceClassName="ch.elexis.core.types.PathologicDescription"/>
   <eClassifiers xsi:type="ecore:EDataType" name="LocalDateTime" instanceClassName="java.time.LocalDateTime"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="InputStream" instanceClassName="java.io.InputStream"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="OutputStream" instanceClassName="java.io.OutputStream"/>
 </ecore:EPackage>

@@ -1,7 +1,6 @@
 package ch.elexis.core.jpa.entities;
 
 import java.util.Map;
-import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -17,7 +16,7 @@ import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 
 @MappedSuperclass
-public abstract class AbstractDBObjectIdDeleted extends AbstractDBObject {
+public abstract class AbstractDBObjectIdDeleted extends AbstractDBObjectId {
 
 	@Id
 	@GeneratedValue(generator = "system-uuid")
@@ -56,28 +55,6 @@ public abstract class AbstractDBObjectIdDeleted extends AbstractDBObject {
 
 	public void setXids(Map<String, Xid> xids) {
 		this.xids = xids;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		AbstractDBObjectIdDeleted other = (AbstractDBObjectIdDeleted) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(getClass(), id);
 	}
 
 	@Override

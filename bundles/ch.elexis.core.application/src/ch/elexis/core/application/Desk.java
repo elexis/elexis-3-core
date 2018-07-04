@@ -11,6 +11,7 @@
 package ch.elexis.core.application;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
@@ -23,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.application.advisors.ApplicationWorkbenchAdvisor;
 import ch.elexis.core.application.advisors.Messages;
+import ch.elexis.core.common.DBConnection;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
@@ -31,7 +33,10 @@ import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
 import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
 import ch.elexis.core.data.util.LocalLock;
+import ch.elexis.core.services.IElexisDataSource;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.utils.CoreUtil;
+import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.io.FileTool;
 
@@ -59,9 +64,20 @@ public class Desk implements IApplication {
 		}
 		
 		// connect to the database
+		Optional<IElexisDataSource> datasource =
+			OsgiServiceUtil.getService(IElexisDataSource.class);
 		try {
-			if (PersistentObject.connect(CoreHub.localCfg) == false)
+			if (PersistentObject.connect(CoreHub.localCfg) == false) {
 				log.error(PersistentObject.class.getName() + " initialization failed.");
+			}
+			Optional<DBConnection> connection = CoreUtil.getDBConnection(CoreHub.localCfg);
+			if (datasource.isPresent() && connection.isPresent()) {
+				datasource.get().setDBConnection(connection.get());
+			} else {
+				log.error(
+					"Can not connect to database, datasource or connection configuration missing. Datasource ["
+						+ datasource + "] Connection [" + connection + "]");
+			}
 		} catch (Throwable pe) {
 			// error in database connection, we have to exit
 			log.error("Database connection error", pe);
@@ -85,6 +101,10 @@ public class Desk implements IApplication {
 			}
 			
 			return IApplication.EXIT_OK;
+		} finally {
+			if (datasource.isPresent()) {
+				OsgiServiceUtil.ungetService(datasource.get());
+			}
 		}
 		
 		// check for initialization parameters

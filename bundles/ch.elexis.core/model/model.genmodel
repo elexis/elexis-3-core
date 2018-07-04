@@ -10,10 +10,12 @@
       ecorePackage="model.ecore#/">
     <genDataTypes ecoreDataType="model.ecore#//StringArray"/>
     <genClasses image="false" ecoreClass="model.ecore#//IContact">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/contactType"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/mandator"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/user"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/patient"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/person"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/organization"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/laboratory"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/description1"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/description2"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/description3"/>
@@ -62,8 +64,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPerson/gender"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPerson/titel"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPerson/titelSuffix"/>
-      <genOperations ecoreOperation="model.ecore#//IPerson/getFirstName"/>
-      <genOperations ecoreOperation="model.ecore#//IPerson/getFamilyName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPerson/firstName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPerson/lastName"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IPatient">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPatient/diagnosen"/>
@@ -151,5 +153,9 @@
     <genClasses image="false" ecoreClass="model.ecore#//IDiagnose"/>
     <genClasses image="false" ecoreClass="model.ecore#//IBillable"/>
     <genClasses image="false" ecoreClass="model.ecore#//ICoverage"/>
+    <genClasses image="false" ecoreClass="model.ecore#//IOrganization"/>
+    <genClasses image="false" ecoreClass="model.ecore#//ILaboratory"/>
+    <genClasses ecoreClass="model.ecore#//IDocumentLetter"/>
+    <genClasses ecoreClass="model.ecore#//IDocumentHandle"/>
   </genPackages>
 </genmodel:GenModel>

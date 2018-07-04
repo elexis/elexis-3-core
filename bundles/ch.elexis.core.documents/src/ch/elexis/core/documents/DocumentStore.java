@@ -23,12 +23,12 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 
-import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.ITag;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IDocumentStore;
 import ch.elexis.core.services.IDocumentStore.Capability;
 import ch.elexis.core.utils.FileUtil;
@@ -344,10 +344,10 @@ public class DocumentStore {
 		return false;
 	}
 	
-	public Optional<IPersistentObject> getPersistenceObject(IDocument document){
+	public Optional<Identifiable> getPersistenceObject(IDocument document){
 		Optional<Object> po = getService(document.getStoreId()).getPersistenceObject(document);
 		if (po.isPresent()) {
-			return Optional.of((IPersistentObject) po.get());
+			return Optional.of((Identifiable) po.get());
 		}
 		return Optional.empty();
 	}

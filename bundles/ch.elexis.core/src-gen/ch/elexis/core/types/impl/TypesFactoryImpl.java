@@ -30,6 +30,8 @@ import ch.elexis.core.types.RelationshipType;
 import ch.elexis.core.types.TypesFactory;
 import ch.elexis.core.types.TypesPackage;
 import ch.rgw.tools.Money;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * <!-- begin-user-doc -->
@@ -108,6 +110,10 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createPathologicDescriptionFromString(eDataType, initialValue);
 			case TypesPackage.LOCAL_DATE_TIME:
 				return createLocalDateTimeFromString(eDataType, initialValue);
+			case TypesPackage.INPUT_STREAM:
+				return createInputStreamFromString(eDataType, initialValue);
+			case TypesPackage.OUTPUT_STREAM:
+				return createOutputStreamFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -141,6 +147,10 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertPathologicDescriptionToString(eDataType, instanceValue);
 			case TypesPackage.LOCAL_DATE_TIME:
 				return convertLocalDateTimeToString(eDataType, instanceValue);
+			case TypesPackage.INPUT_STREAM:
+				return convertInputStreamToString(eDataType, instanceValue);
+			case TypesPackage.OUTPUT_STREAM:
+				return convertOutputStreamToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -331,6 +341,42 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	public String convertLocalDateTimeToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public InputStream createInputStreamFromString(EDataType eDataType, String initialValue) {
+		return (InputStream)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertInputStreamToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public OutputStream createOutputStreamFromString(EDataType eDataType, String initialValue) {
+		return (OutputStream)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertOutputStreamToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

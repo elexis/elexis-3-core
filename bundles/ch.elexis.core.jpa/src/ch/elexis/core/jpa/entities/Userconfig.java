@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "userconfig")
-public class Userconfig extends AbstractDBObject {
+public class Userconfig extends AbstractDBObjectId {
 
 	@ManyToOne()
 	@JoinColumn(name = "UserID")
@@ -47,4 +47,24 @@ public class Userconfig extends AbstractDBObject {
 		this.value = value;
 	}
 	
+	@Override
+	public String getId(){
+		return getParam();
+	}
+	
+	@Override
+	public void setId(String id){
+		setParam(id);
+	}
+	
+	@Override
+	public String getLabel(){
+		return toString();
+	}
+	
+	@Override
+	public String toString(){
+		return super.toString() + "owner=[" + getOwner() + "] param=[" + getParam() + "] wert=["
+			+ getValue() + "]";
+	}
 }

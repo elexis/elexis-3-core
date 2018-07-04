@@ -6,15 +6,6 @@
   <foreignModel>types.ecore</foreignModel>
   <genPackages prefix="Types" basePackage="ch.elexis.core" disposableProviderFactory="true"
       ecorePackage="types.ecore#/">
-    <genEnums typeSafeEnumCompatible="false" ecoreEnum="types.ecore#//ContactType">
-      <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactType/PERSON"/>
-      <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactType/ORGANIZATION"/>
-      <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactType/MANDATOR"/>
-      <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactType/LABORATORY"/>
-      <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactType/PATIENT"/>
-      <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactType/UNKNOWN"/>
-      <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactType/USER"/>
-    </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="types.ecore#//ContactGender">
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactGender/MALE"/>
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//ContactGender/FEMALE"/>
@@ -56,11 +47,11 @@
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//DocumentStatus/RECIVED"/>
     </genEnums>
     <genDataTypes ecoreDataType="types.ecore#//Money"/>
-    <genDataTypes ecoreDataType="types.ecore#//TimeTool"/>
     <genDataTypes ecoreDataType="types.ecore#//Gender"/>
     <genDataTypes ecoreDataType="types.ecore#//LabItemTyp"/>
     <genDataTypes ecoreDataType="types.ecore#//Country"/>
     <genDataTypes ecoreDataType="types.ecore#//PathologicDescription"/>
+    <genDataTypes ecoreDataType="types.ecore#//LocalDateTime"/>
     <genClasses image="false" ecoreClass="types.ecore#//Comparable">
       <genTypeParameters ecoreTypeParameter="types.ecore#//Comparable/T"/>
     </genClasses>

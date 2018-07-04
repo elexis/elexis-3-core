@@ -6,8 +6,8 @@ import ch.elexis.core.types.Country;
 
 public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements IContact {
 	
-	public Contact(Kontakt model){
-		super(model);
+	public Contact(Kontakt entity){
+		super(entity);
 	}
 	
 	@Override

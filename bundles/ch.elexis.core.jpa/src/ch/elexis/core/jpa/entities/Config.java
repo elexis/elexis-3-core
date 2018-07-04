@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "config")
-public class Config extends AbstractDBObject {
+public class Config extends AbstractDBObjectId {
 
 	@Id
 	@Column(unique = true, nullable = false, length = 80)
@@ -17,6 +17,16 @@ public class Config extends AbstractDBObject {
 	@Lob
 	private String wert;
 
+	@Override
+	public String getId(){
+		return getParam();
+	}
+	
+	@Override
+	public void setId(String id){
+		setParam(id);
+	}
+	
 	public String getParam() {
 		return param;
 	}
@@ -36,5 +46,10 @@ public class Config extends AbstractDBObject {
 	@Override
 	public String toString() {
 		return super.toString() + "param=[" + getParam() + "] wert=[" + getWert() + "]";
+	}
+	
+	@Override
+	public String getLabel(){
+		return toString();
 	}
 }

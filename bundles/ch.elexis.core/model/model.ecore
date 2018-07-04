@@ -74,12 +74,24 @@
   <eClassifiers xsi:type="ecore:EDataType" name="StringArray" instanceClassName="java.lang.String[]"/>
   <eClassifiers xsi:type="ecore:EClass" name="IPerson" abstract="true" interface="true"
       eSuperTypes="#//IContact">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateOfBirth" eType="ecore:EDataType types.ecore#//LocalDateTime"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateOfBirth" eType="ecore:EDataType types.ecore#//LocalDateTime">
+      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
+        <details key="attributeName" value="dob"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="gender" eType="ecore:EDataType types.ecore#//Gender"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="titel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="titelSuffix" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="firstName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="firstName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
+        <details key="attributeName" value="description2"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
+        <details key="attributeName" value="description1"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IPatient" abstract="true" interface="true"
       eSuperTypes="#//IPerson">
@@ -158,8 +170,10 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IDocument" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="patientId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="authorId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eOperations name="getContent" eType="ecore:EDataType types.ecore#//InputStream"/>
+    <eOperations name="setContent">
+      <eParameters name="content" eType="ecore:EDataType types.ecore#//InputStream"/>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="ecore:EEnum types.ecore#//DocumentStatus"/>
@@ -167,12 +181,18 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastchanged" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="mimeType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="category" lowerBound="1"
-        eType="#//ICategory"/>
+        eType="#//ICategory">
+      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
+        <details key="Brief#attributeName" value="typ"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="history" upperBound="-1"
         eType="#//IHistory"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="storeId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="extension" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="keywords" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="patient" eType="#//IPatient"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="author" eType="#//IContact"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ICategory" abstract="true" interface="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -192,4 +212,21 @@
       eSuperTypes="#//IContact"/>
   <eClassifiers xsi:type="ecore:EClass" name="ILaboratory" abstract="true" interface="true"
       eSuperTypes="#//IOrganization"/>
+  <eClassifiers xsi:type="ecore:EClass" name="IDocumentLetter" abstract="true" interface="true"
+      eSuperTypes="#//IDocument"/>
+  <eClassifiers xsi:type="ecore:EClass" name="IDocumentHandle" abstract="true" interface="true"
+      eSuperTypes="#//IDocument"/>
+  <eClassifiers xsi:type="ecore:EClass" name="IConfig" abstract="true" interface="true"
+      eSuperTypes="#//Identifiable">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
+        <details key="attributeName" value="param"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IUserConfig" abstract="true" interface="true"
+      eSuperTypes="#//IConfig">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="owner" eType="#//IContact"/>
+  </eClassifiers>
 </ecore:EPackage>

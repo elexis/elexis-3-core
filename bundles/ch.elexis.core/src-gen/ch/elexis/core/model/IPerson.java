@@ -49,6 +49,7 @@ public interface IPerson extends IContact {
 	 * @see #setDateOfBirth(LocalDateTime)
 	 * @see ch.elexis.core.model.ModelPackage#getIPerson_DateOfBirth()
 	 * @model dataType="ch.elexis.core.types.LocalDateTime"
+	 *        annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='dob'"
 	 * @generated
 	 */
 	LocalDateTime getDateOfBirth();
@@ -148,7 +149,7 @@ public interface IPerson extends IContact {
 	 * @return the value of the '<em>First Name</em>' attribute.
 	 * @see #setFirstName(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIPerson_FirstName()
-	 * @model
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='description2'"
 	 * @generated
 	 */
 	String getFirstName();
@@ -174,7 +175,7 @@ public interface IPerson extends IContact {
 	 * @return the value of the '<em>Last Name</em>' attribute.
 	 * @see #setLastName(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIPerson_LastName()
-	 * @model
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='description1'"
 	 * @generated
 	 */
 	String getLastName();

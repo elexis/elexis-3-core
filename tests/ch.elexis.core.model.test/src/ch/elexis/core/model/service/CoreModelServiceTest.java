@@ -73,7 +73,6 @@ public class CoreModelServiceTest {
 		assertNotNull(patient);
 		assertTrue(patient instanceof IPatient);
 		
-		patient.setPatient(true);
 		patient.setLastName("test lastname");
 		patient.setFirstName("test first name");
 		assertTrue(modelSerice.save(patient));
@@ -90,7 +89,6 @@ public class CoreModelServiceTest {
 		assertNotNull(person);
 		assertTrue(person instanceof IPerson);
 		
-		person.setPerson(true);
 		person.setLastName("test lastname");
 		person.setFirstName("test first name");
 		assertTrue(modelSerice.save(person));

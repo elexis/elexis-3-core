@@ -31,6 +31,9 @@ import ch.elexis.core.types.RelationshipType;
 import ch.elexis.core.types.TypesFactory;
 import ch.elexis.core.types.TypesPackage;
 import ch.rgw.tools.Money;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.Comparable;
 
 /**
  * <!-- begin-user-doc -->
@@ -129,6 +132,20 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EDataType localDateTimeEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType inputStreamEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType outputStreamEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -313,6 +330,24 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EDataType getInputStream() {
+		return inputStreamEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EDataType getOutputStream() {
+		return outputStreamEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public TypesFactory getTypesFactory() {
 		return (TypesFactory)getEFactoryInstance();
 	}
@@ -355,6 +390,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		countryEDataType = createEDataType(COUNTRY);
 		pathologicDescriptionEDataType = createEDataType(PATHOLOGIC_DESCRIPTION);
 		localDateTimeEDataType = createEDataType(LOCAL_DATE_TIME);
+		inputStreamEDataType = createEDataType(INPUT_STREAM);
+		outputStreamEDataType = createEDataType(OUTPUT_STREAM);
 	}
 
 	/**
@@ -445,6 +482,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEDataType(countryEDataType, Country.class, "Country", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(pathologicDescriptionEDataType, PathologicDescription.class, "PathologicDescription", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(localDateTimeEDataType, LocalDateTime.class, "LocalDateTime", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(inputStreamEDataType, InputStream.class, "InputStream", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(outputStreamEDataType, OutputStream.class, "OutputStream", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

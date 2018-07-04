@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="ch.elexis.core.model.ModelUtil">
+   <reference bind="setEntityManger" cardinality="1..1" interface="ch.elexis.core.jpa.entitymanager.ElexisEntityManger" name="EntityManger"/>
+   <reference bind="setModelService" interface="ch.elexis.core.services.IModelService" name="ModelService" target="(service.model.name=ch.elexis.core.model)"/>
+   <implementation class="ch.elexis.core.model.ModelUtil"/>
+</scr:component>
