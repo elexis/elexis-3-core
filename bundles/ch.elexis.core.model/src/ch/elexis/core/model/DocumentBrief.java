@@ -1,6 +1,10 @@
 package ch.elexis.core.model;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
@@ -194,6 +198,18 @@ public class DocumentBrief extends AbstractIdDeleteModelAdapter<Brief> implement
 	
 	@Override
 	public InputStream getContent(){
+		// test for file content first
+		if (ModelUtil.isExternFile() && getPatient() != null) {
+			Optional<File> file = ModelUtil.getExternFile(this);
+			if (file.isPresent()) {
+				try {
+					return new FileInputStream(file.get());
+				} catch (FileNotFoundException e) {
+					LoggerFactory.getLogger(getClass()).error("Error getting document content", e);
+				}
+			}
+		}
+		// fallback to Heap content
 		if (getEntity().getContent() != null) {
 			return new ByteArrayInputStream(getEntity().getContent().getInhalt());
 		}
@@ -202,6 +218,21 @@ public class DocumentBrief extends AbstractIdDeleteModelAdapter<Brief> implement
 	
 	@Override
 	public void setContent(InputStream content){
+		// set file content if configured 
+		if (ModelUtil.isExternFile() && getPatient() != null) {
+			Optional<File> file = ModelUtil.getExternFile(this);
+			if (!file.isPresent()) {
+				file = ModelUtil.createExternFile(this);
+			}
+			if (file.isPresent()) {
+				try (FileOutputStream fileOutput = new FileOutputStream(file.get())) {
+					IOUtils.copy(content, fileOutput);
+				} catch (IOException e) {
+					LoggerFactory.getLogger(getClass()).error("Error setting document content", e);
+				}
+			}
+		}
+		
 		if (getEntity().getContent() != null) {
 			try {
 				getEntity().getContent().setInhalt(IOUtils.toByteArray(content));

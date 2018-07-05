@@ -1,7 +1,9 @@
 package ch.elexis.core.model;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 
@@ -14,7 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.jpa.entities.AbstractDBObject;
-import ch.elexis.core.jpa.entities.Brief;
 import ch.elexis.core.jpa.entitymanager.ElexisEntityManger;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
@@ -74,7 +75,8 @@ public class ModelUtil {
 	}
 	
 	/**
-	 * Test if configuration of {@link Brief} as extern file is set and valid.
+	 * Test if configuration of {@value Preferences#P_TEXT_EXTERN_FILE} is set and pointing to a
+	 * valid directory.
 	 * 
 	 * @return
 	 */
@@ -86,6 +88,74 @@ public class ModelUtil {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * Read the configured {@value Preferences#P_TEXT_EXTERN_FILE_PATH} and return a {@link File}
+	 * representation of the document.
+	 * 
+	 * @param documentBrief
+	 * @return
+	 */
+	public static Optional<File> getExternFile(DocumentBrief documentBrief){
+		String path = getConfig(Preferences.P_TEXT_EXTERN_FILE_PATH, null);
+		if (pathExistsAndCanWrite(path, true)) {
+			File dir = new File(path);
+			StringBuilder sb = new StringBuilder();
+			IPatient patient = documentBrief.getPatient();
+			if (patient != null) {
+				sb.append(patient.getPatientNr()).append(File.separator)
+					.append(documentBrief.getId())
+					.append("." + evaluateFileExtension(documentBrief.getMimeType()));
+				File ret = new File(dir, sb.toString());
+				if (ret.exists() && ret.isFile()) {
+					return Optional.of(ret);
+				} else {
+					LoggerFactory.getLogger(ModelUtil.class).warn("File [" + ret.getAbsolutePath()
+						+ "] not valid e=" + ret.exists() + " f=" + ret.isFile());
+				}
+			} else {
+				LoggerFactory.getLogger(ModelUtil.class)
+					.warn("No patient for [" + documentBrief.getId() + "]");
+			}
+		}
+		return Optional.empty();
+	}
+	
+	/**
+	 * Create a external file at the directory configured with
+	 * {@value Preferences#P_TEXT_EXTERN_FILE_PATH} and the patient number.
+	 * 
+	 * @param documentBrief
+	 * @return
+	 */
+	public static Optional<File> createExternFile(DocumentBrief documentBrief){
+		String path = getConfig(Preferences.P_TEXT_EXTERN_FILE_PATH, null);
+		if (pathExistsAndCanWrite(path, true)) {
+			File dir = new File(path);
+			IPatient patient = documentBrief.getPatient();
+			if (patient != null) {
+				File patPath = new File(dir, patient.getPatientNr());
+				if (!patPath.exists()) {
+					patPath.mkdirs();
+				}
+				File ret = new File(patPath, documentBrief.getId() + "."
+					+ evaluateFileExtension(documentBrief.getMimeType()));
+				if (!ret.exists()) {
+					try {
+						ret.createNewFile();
+					} catch (IOException e) {
+						LoggerFactory.getLogger(ModelUtil.class).error("Error creating file", e);
+						return Optional.empty();
+					}
+				}
+				return Optional.of(ret);
+			} else {
+				LoggerFactory.getLogger(ModelUtil.class)
+					.warn("No patient for [" + documentBrief.getId() + "]");
+			}
+		}
+		return Optional.empty();
 	}
 	
 	/**
