@@ -10,6 +10,5 @@ target/
 jetty.log
 workspace/
 profile.tmp
-messages_*.properties
 .polyglot.build.properties
 bundles/ch.elexis.core.data/rsc/version.properties

@@ -496,8 +496,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		}
 		
 		ecZA = WidgetFactory.createExpandableComposite(tk, form,
-			Messages.Patientenblatt2_additionalAdresses); // $NON-NLS-1$
-		UserSettings.setExpandedState(ecZA, "Patientenblatt/Zusatzadressen"); //$NON-NLS-1$
+			Messages.Patientenblatt2_contactForAdditionalAddress); // $NON-NLS-1$
+		UserSettings.setExpandedState(ecZA, Messages.Patientenblatt2_contactForAdditionalAddress); //$NON-NLS-1$
 		
 		ecZA.addExpansionListener(ecExpansionListener);
 		
@@ -588,7 +588,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		
 		// zusatz adressen
 		compAdditionalAddresses = WidgetFactory.createExpandableComposite(tk, form,
-			"Zusatzadressen"); // $NON-NLS-1$
+			Messages.Patientenblatt2_additionalAdresses); // $NON-NLS-1$
 		compAdditionalAddresses.addExpansionListener(ecExpansionListener);
 		
 		additionalAddresses = new ListDisplay<ZusatzAdresse>(compAdditionalAddresses, SWT.NONE,
@@ -790,7 +790,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			+ StringTool.unNull(actPatient.getVorname()) + " (" //$NON-NLS-1$
 			+ actPatient.getPatCode() + ")"); //$NON-NLS-1$
 		inpAdresse.setText(actPatient.getPostAnschrift(false), false, false);
-		UserSettings.setExpandedState(ecZA, "Patientenblatt/Zusatzadressen"); //$NON-NLS-1$
+		UserSettings.setExpandedState(ecZA,  "Patientenblatt/Zusatzadressen"); //$NON-NLS-1$
 		inpZusatzAdresse.clear();
 		for (BezugsKontakt za : actPatient.getBezugsKontakte()) {
 			inpZusatzAdresse.add(za);

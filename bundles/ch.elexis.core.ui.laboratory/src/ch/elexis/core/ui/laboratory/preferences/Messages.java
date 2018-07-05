@@ -235,6 +235,7 @@ public class Messages {
 	public static String Mandanten_selectBiller = ch.elexis.core.l10n.Messages.Mandanten_selectBiller;
 	public static String PreferenceConstants_general = ch.elexis.core.l10n.Messages.PreferenceConstants_general;
 	public static String PreferenceConstants_illness = ch.elexis.core.l10n.Messages.PreferenceConstants_illness;
+	public static String LabEvaluationRulesPreferencePage_grpTextResults_text = ch.elexis.core.l10n.Messages.LabEvaluationRulesPreferencePage_grpTextResults_text;
 	public static String PrinterPreferencePage_ChosePrinterAlways = ch.elexis.core.l10n.Messages.PrinterPreferencePage_ChosePrinterAlways;
 	public static String PrinterPreferencePage_ClearPrinterSettings = ch.elexis.core.l10n.Messages.PrinterPreferencePage_ClearPrinterSettings;
 	public static String PrinterPreferencePage_LabelOrientation = ch.elexis.core.l10n.Messages.PrinterPreferencePage_LabelOrientation;

@@ -22,6 +22,7 @@ import ca.uhn.hl7v2.model.v23.datatype.XAD;
 import ca.uhn.hl7v2.model.v23.datatype.XCN;
 import ca.uhn.hl7v2.model.v23.group.ORU_R01_OBSERVATION;
 import ca.uhn.hl7v2.model.v23.group.ORU_R01_ORDER_OBSERVATION;
+import ca.uhn.hl7v2.model.v23.group.ORU_R01_PATIENT;
 import ca.uhn.hl7v2.model.v23.group.ORU_R01_RESPONSE;
 import ca.uhn.hl7v2.model.v23.message.ORU_R01;
 import ca.uhn.hl7v2.model.v23.segment.MSH;
@@ -107,7 +108,7 @@ public class HL7ReaderV23 extends HL7Reader {
 							String code = "";
 							if (ce.getCe3_NameOfCodingSystem() != null)
 								code = ce.getCe3_NameOfCodingSystem().getValue();
-								
+							
 							group = getGroup(code, ce);
 							sequence = getSequence(code, ce);
 							
@@ -159,7 +160,7 @@ public class HL7ReaderV23 extends HL7Reader {
 				oru.getMSH().getMsh4_SendingFacility().getHd1_NamespaceID().getValue();
 			String dateTimeOfMessage =
 				oru.getMSH().getMsh7_DateTimeOfMessage().getTs1_TimeOfAnEvent().getValue();
-				
+			
 			PID pid = oru.getRESPONSE().getPATIENT().getPID();
 			
 			String patid = pid.getPid3_PatientIDInternalID(0).getCx1_ID().getValue();
@@ -186,16 +187,19 @@ public class HL7ReaderV23 extends HL7Reader {
 			// place order number
 			String orderNumber = oru.getRESPONSE().getORDER_OBSERVATION().getORC()
 				.getOrc2_PlacerOrderNumber(0).getEi1_EntityIdentifier().getValue();
-				
-			if (pid.getPid5_PatientName().getFamilyName().getValue() != null)
-				lastName = pid.getPid5_PatientName().getFamilyName().getValue();
-			if (pid.getPid5_PatientName().getGivenName().getValue() != null)
-				firstName = pid.getPid5_PatientName().getGivenName().getValue();
-			String patientName = firstName + " " + lastName;
 			
-			observation = new ObservationMessage(sendingApplication, sendingFacility,
-				dateTimeOfMessage, patid, patientName, patid_alternative, orderNumber);
-				
+			if (pid.getPid5_PatientName(0).getFamilyName().getValue() != null)
+				lastName = pid.getPid5_PatientName(0).getFamilyName().getValue();
+			if (pid.getPid5_PatientName(0).getGivenName().getValue() != null)
+				firstName = pid.getPid5_PatientName(0).getGivenName().getValue();
+			String patientName = firstName + " " + lastName;
+			String patientNotesAndComments =
+				readPatientNotesAndComments(oru.getRESPONSE().getPATIENT());
+			
+			observation =
+				new ObservationMessage(sendingApplication, sendingFacility, dateTimeOfMessage,
+					patid, patientName, patientNotesAndComments, patid_alternative, orderNumber);
+			
 			birthDate = pid.getDateOfBirth().getTs1_TimeOfAnEvent().getValue();
 			sex = pid.getSex().getValue();
 			
@@ -204,7 +208,7 @@ public class HL7ReaderV23 extends HL7Reader {
 				// name and birthdate
 				list =
 					patientResolver.findPatientByNameAndBirthdate(lastName, firstName, birthDate);
-					
+				
 				if ((list != null) && (list.size() == 1)) {
 					pat = list.get(0);
 				} else {
@@ -276,7 +280,7 @@ public class HL7ReaderV23 extends HL7Reader {
 				} else {
 					commentNTE = "";
 				}
-				if(comment.getValue() != null) {
+				if (comment.getValue() != null) {
 					commentNTE += comment.getValue();
 				}
 			}
@@ -300,10 +304,10 @@ public class HL7ReaderV23 extends HL7Reader {
 		if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_ED)) {
 			String observationId =
 				obx.getObx3_ObservationIdentifier().getCe1_Identifier().getValue();
-				
+			
 			if (!"DOCUMENT".equals(observationId)) {
-				logger.warn(MessageFormat.format(
-						Messages.HL7_ORU_R01_Error_WrongObsIdentifier, observationId));
+				logger.warn(MessageFormat.format(Messages.HL7_ORU_R01_Error_WrongObsIdentifier,
+					observationId));
 			}
 			
 			ED ed = (ED) obx.getObx5_ObservationValue(0).getData();
@@ -352,10 +356,10 @@ public class HL7ReaderV23 extends HL7Reader {
 				obx.getObx14_DateTimeOfTheObservation().getTs1_TimeOfAnEvent().getValue();
 			status = obx.getObx11_ObservResultStatus().getValue();
 			
-			LabResultData lrd = new LabResultData(itemCode, name, unit, value, range, flag, rawAbnormalFlags,
-				defaultDateTime, observationTime, commentNTE, group, sequence, status,
-				extractName(obx.getObx4_ObservationSubID()));
-				
+			LabResultData lrd = new LabResultData(itemCode, name, unit, value, range, flag,
+				rawAbnormalFlags, defaultDateTime, observationTime, commentNTE, group, sequence,
+				status, extractName(obx.getObx4_ObservationSubID()));
+			
 			if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_NM)
 				|| valueType.equals(HL7Constants.OBX_VALUE_TYPE_SN)) {
 				lrd.setIsNumeric(true);
@@ -369,6 +373,18 @@ public class HL7ReaderV23 extends HL7Reader {
 		} else {
 			logger.error(MessageFormat.format("Value type {0} is not implemented!", valueType));
 		}
+	}
+	
+	private String readPatientNotesAndComments(ORU_R01_PATIENT patient){
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < patient.getNTEReps(); i++) {
+			FT comment = patient.getNTE(i).getComment(0);
+			sb.append(comment.toString());
+			if (patient.getNTEReps() > i) {
+				sb.append("\n");
+			}
+		}
+		return sb.toString();
 	}
 	
 	@Override

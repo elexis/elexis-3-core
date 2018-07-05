@@ -151,11 +151,13 @@ public class TextView extends ViewPart implements IActivationListener {
 					tmp.deleteOnExit();
 					byte[] buffer = doc.loadBinary();
 					if (buffer == null) {
+						log.warn("TextView.openDocument createTempFile [{}] -> loadBinary returned null array", doc.getId());
 						return false;
 					}
-					ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-					FileOutputStream fos = new FileOutputStream(tmp);
-					FileTool.copyStreams(bais, fos);
+					try (ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
+							FileOutputStream fos = new FileOutputStream(tmp);) {
+						FileTool.copyStreams(bais, fos);
+					}
 					File file = new File(tmp.getAbsolutePath());
 					file.setReadable(true);
 					file.setExecutable(false);
@@ -184,7 +186,7 @@ public class TextView extends ViewPart implements IActivationListener {
 	 * @return true bei erfolg
 	 */
 	public boolean createDocument(Brief template, String subject){
-		log.debug("TextView.createDocument: " + subject); //$NON-NLS-1$		
+		log.debug("TextView.createDocument [{}]: {}", (template != null) ? template.getLabel() : "null", subject); //$NON-NLS-1$
 		if (template == null) {
 			SWTHelper.showError(Messages.TextView_noTemplateSelected,
 				Messages.TextView_pleaseSelectTemplate); //$NON-NLS-1$ //$NON-NLS-2$
@@ -195,6 +197,7 @@ public class TextView extends ViewPart implements IActivationListener {
 				subject);
 		setName();
 		if (actBrief == null) {
+			log.debug("TextView.createDocument: createFromTemplate -> null");
 			return false;
 		}
 		return true;
@@ -212,7 +215,8 @@ public class TextView extends ViewPart implements IActivationListener {
 	 * @return true bei erfolg
 	 */
 	public boolean createDocument(Brief template, String subject, Kontakt adressat){
-		log.debug("TextView.createDocument: " + subject + " Kontakt"); //$NON-NLS-1$ //$NON-NLS-2$		
+		log.debug("TextView.createDocument [{}]: {} Kontakt", (template != null) ? template.getLabel() : "null", //$NON-NLS-1$
+				subject);
 		if (template == null) {
 			SWTHelper.showError(Messages.TextView_noTemplateSelected,
 				Messages.TextView_pleaseSelectTemplate); //$NON-NLS-1$ //$NON-NLS-2$
@@ -224,6 +228,7 @@ public class TextView extends ViewPart implements IActivationListener {
 		EditLocalDocumentUtil.startEditLocalDocument(this, actBrief);
 		setName();
 		if (actBrief == null) {
+			log.debug("TextView.createDocument: createFromTemplate -> null");
 			return false;
 		}
 		return true;

@@ -2,7 +2,7 @@
 <feature
       id="ch.elexis.core.application.feature"
       label="Elexis OpenSource Application Feature"
-      version="3.6.0.qualifier"
+      version="3.7.0.qualifier"
       provider-name="elexis.info">
 
    <description>
@@ -894,6 +894,13 @@
 
    <plugin
          id="org.jboss.aerogear.otp-java"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.google.zxing.core"
          download-size="0"
          install-size="0"
          version="0.0.0"

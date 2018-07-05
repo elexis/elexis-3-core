@@ -27,6 +27,7 @@ import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.exceptions.PersistenceException;
+import ch.elexis.core.jdt.Nullable;
 import ch.rgw.tools.ExHandler;
 
 public class PersistentObjectFactory implements IExecutableExtension {
@@ -125,8 +126,12 @@ public class PersistentObjectFactory implements IExecutableExtension {
 	 * @return the de-serialized object, or <code>null</code>
 	 */
 	@SuppressWarnings("unchecked")
-	public PersistentObject createFromString(final String code){
-		return createFromString(code, null);
+	public @Nullable PersistentObject createFromString(final String code){
+		PersistentObject po = createFromString(code, null);
+		if (po == null) {
+			log.warn("Could not createFromString [{}]", code);
+		}
+		return po;
 	}
 	
 	/**

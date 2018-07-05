@@ -84,6 +84,7 @@ public class Messages {
 	public static String KontaktImporterDialog_ImporterCaption = ch.elexis.core.l10n.Messages.KontaktImporterDialog_ImporterCaption;
 	public static String KontaktImporterDialog_ImportingContact = ch.elexis.core.l10n.Messages.KontaktImporterDialog_ImportingContact;
 	public static String KontaktImporterDialog_PleaseEnterFileTypeAndFile = ch.elexis.core.l10n.Messages.KontaktImporterDialog_PleaseEnterFileTypeAndFile;
+	public static String MPF_Rule_PathDescriptionText = ch.elexis.core.l10n.Messages.MPF_Rule_PathDescriptionText;
 	public static String Presets_ImportingContacts = ch.elexis.core.l10n.Messages.Presets_ImportingContacts;
 	public static String Presets_Insurance = ch.elexis.core.l10n.Messages.Presets_Insurance;
 	public static String Presets_InsuranceNumber = ch.elexis.core.l10n.Messages.Presets_InsuranceNumber;
@@ -105,5 +106,5 @@ public class Messages {
 	public static String DefaultPDFImportStrategy_Date = ch.elexis.core.l10n.Messages.DefaultPDFImportStrategy_Date;
 	public static String DefaultPDFImportStrategy_Group = ch.elexis.core.l10n.Messages.DefaultPDFImportStrategy_Group;
 	public static String DefaultPDFImportStrategy_Prio = ch.elexis.core.l10n.Messages.DefaultPDFImportStrategy_Prio;
-	
+	public static String HL7Parser_LabItem_Note_Name = ch.elexis.core.l10n.Messages.HL7Parser_LabItem_Note_Name;
 }

@@ -163,7 +163,9 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 				if (actualInvoice != null) {
 					releaseAndRefreshLock(actualInvoice,
 						ToggleCurrentInvoiceLockHandler.COMMAND_ID);
-					CoreHub.getLocalLockService().releaseLock(actualInvoice.getFall());
+					if(CoreHub.getLocalLockService().isLocked(actualInvoice.getFall())) {
+						CoreHub.getLocalLockService().releaseLock(actualInvoice.getFall());
+					}
 				}
 				reload((Rechnung) ev.getObject());
 				setUnlocked(CoreHub.getLocalLockService().isLocked(actualInvoice));

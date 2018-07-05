@@ -1,0 +1,63 @@
+1.0.1 - 18.04.2011
+	- Modified SyntacticCheckMySQL to care for upper case written Tables too
+	- Integrated Context-Help into TrayDialog
+1.0.2 - 09.05.2011
+	- Support for 1.8.7 and 1.8.8
+	- Datenbank Test wird nun aufgrund des Eintrages in der DB und nicht Hub.DBVersion gewählt
+1.0.3 - 09.05.2011
+	- Support for 1.8.9
+	- Fix after merge with 2.1.5.x
+1.0.4 - 10.05.2011
+	- Support for external Maintenance Codes (Extension Point and Superclass ExternalMaintenance.java)
+1.0.5 - 6.6.2011
+	- Fix for table name case sensitivity on MySQL
+1.0.6 - 10.6.2011
+	- Added contribution script to fix ticket #13
+1.0.7 - 21.6.2011
+	- Ticket #13 script now also checks deleted items, and sets articles with subid '' to '0000000'
+1.0.8 - 30.6.2011 - N. Giger
+	- Added support for DB Model 1.8.10
+1.0.9 - 30.6.2011 - M. Descher
+	- Fixed bug in DBTestDialog leading to InvocationTargetException when no file selected
+1.0.10 - 7.7.2011 - M. Descher
+	- Fixed bugs mentioned in Ticket #65, i.e.:
+		- Usability problem with selection of output file and possible creation of new log file
+		- The user now gets a more meaningful progress report
+		- Fixes for erroneous report of datatype comparison with MySQL
+		- Code cleaning
+	- Fixed InvocationTargetException in Referential Integrity Test Execution
+1.0.11 - 28.8.2011 - G. Weirich
+	- adapt to ch.elexis.core
+1.0.12 - 4.9.2011 - M. Descher
+	- Experimental implementation of fix script (MySQL only) (Ticket #580)
+	- Test-Integration table collation (Ticket #571)
+	- Minor fixes
+1.0.13 - 9.9.2011 - M. Descher
+	- Added support for DB Model 1.8.11
+1.0.14 - 13.1.2012 - M. Descher
+	- Fix for Pharmacode less seven contribution, ExtInfo was not taken into account
+1.0.15 - 1.2.2012 - M. Descher
+	- Fix for swallowed exceptions within external maintenance contributions
+	- Fix for NPE in FixPharmaCodeLessSeven external contribution script
+1.0.16 - 24.3.2012 - M. Descher
+	- Added support for DB Model 1.8.12
+1.0.17 - 28.3.2012 - M. Descher
+	- Referential Integrity: Identify multiple entries for Etiketten_Objclass_Link
+	- Minor cosmetic changes
+1.0.18 - 30.3.2012 - M. Descher
+	- Added support for DB Model 1.8.13
+1.0.19 - 18.4.2012 - M. Descher
+	- Added support for DB Model 1.8.14
+1.0.20 - 18.10.2012 - M. Descher
+	- Added support for DB Model 1.8.15 and 1.8.16
+	- Fix error in mysql selection of table collation (UPPER)
+1.0.21 - 17.12.2012 - T. Huster
+	- [1325] external fix to dbcheck for empty Bestellung after upgrade to 2.1.7
+1.0.22 - 8.1.2013 - T. Huster
+	- [1152] Maintenance tool to reset bestellt status of all articles
+1.0.23 - 15.1.2013 - T. Huster
+	- [754] Maintenance tool to add EAL 4708 to open Konsultations of 2013
+1.0.24 - 19.3.2013 - M. Descher
+	- [1439] External maintenance: Move AHV-Number definitions for a Fall to the contact
+3.0.0
+	- [2504] Added support for DB Model 1.9.0 and 3.0.0

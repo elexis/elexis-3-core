@@ -21,6 +21,8 @@ public class Messages {
 	public static String GlobalActions_ChangeMandator = ch.elexis.core.l10n.Messages.GlobalActions_ChangeMandator;
 	public static String GlobalActions_ChangeMandatorMessage = ch.elexis.core.l10n.Messages.GlobalActions_ChangeMandatorMessage;
 	public static String GlobalActions_Connection = ch.elexis.core.l10n.Messages.GlobalActions_Connection;
+	public static String GlobalActions_CloseCase = ch.elexis.core.l10n.Messages.GlobalActions_CloseCase;
+	public static String GlobalActions_CloseCase_SelectCloseDate = ch.elexis.core.l10n.Messages.GlobalActions_CloseCase_SelectCloseDate;
 	public static String GlobalActions_Copy = ch.elexis.core.l10n.Messages.GlobalActions_Copy;
 	public static String GlobalActions_CouldntDeleteCaseExplanation = ch.elexis.core.l10n.Messages.GlobalActions_CouldntDeleteCaseExplanation;
 	public static String GlobalActions_CouldntDeleteCaseMessage = ch.elexis.core.l10n.Messages.GlobalActions_CouldntDeleteCaseMessage;

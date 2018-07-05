@@ -45,6 +45,11 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 		return false;
 	}
 	
+	@Override
+	public void openInformation(String title, String message){
+		System.out.println("CoreOperationAdvisor: openInformation()");
+	}
+	
 	public void performLogin(Object shell){
 		String username = System.getProperty(ElexisSystemPropertyConstants.LOGIN_USERNAME);
 		String password = System.getProperty(ElexisSystemPropertyConstants.LOGIN_PASSWORD);
@@ -73,8 +78,8 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	}
 	
 	@Override
-	public void showProgress(IRunnableWithProgress irwp){
-		System.out.println("CoreOperationAdvisor: showProgress()");
+	public void showProgress(IRunnableWithProgress irwp, String taskName){
+		System.out.println("CoreOperationAdvisor: showProgress() taskName ["+taskName+"]");
 	}
 	
 }

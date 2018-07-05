@@ -120,8 +120,8 @@ public class HL7_ORU_R01 extends HL7Writer {
 		if (hl7Msg instanceof ORU_R01) {
 			return (ORU_R01) hl7Msg;
 		} else {
-			addError(MessageFormat.format(
-				Messages.HL7_ORU_R01_Error_WrongMsgType, hl7Msg.getName())); 
+			addError(
+				MessageFormat.format(Messages.HL7_ORU_R01_Error_WrongMsgType, hl7Msg.getName()));
 		}
 		return null;
 	}
@@ -138,8 +138,8 @@ public class HL7_ORU_R01 extends HL7Writer {
 	 * @throws ParseException
 	 * @throws ElexisException
 	 */
-	public ObservationMessage readObservation(final String text) throws IOException,
-		ElexisException{
+	public ObservationMessage readObservation(final String text)
+		throws IOException, ElexisException{
 		return readObservation(text, true);
 	}
 	
@@ -186,23 +186,23 @@ public class HL7_ORU_R01 extends HL7Writer {
 					pid5_patientFirstName = pid.getPid5_PatientName().getGivenName().getValue();
 				String pid7_patientBirthdate = pid.getPid7_DateOfBirth().getComponent(0).toString();
 				String pid8_patientSex = pid.getPid8_Sex().getValue();
+				FT[] nteAfterPid_patientNotesAndCommentsArray =
+					oru.getPATIENT_RESULT().getPATIENT().getNTE().getComment();
+				String nteAfterPid_patientNotesAndComments =
+					String.join("\n", nteAfterPid_patientNotesAndCommentsArray[0].getValue());
 				if ("W".equals(pid8_patientSex.toUpperCase()))
 					pid8_patientSex = "F";
-				String orc2_placerOrderNumber =
-					oru.getPATIENT_RESULT().getORDER_OBSERVATION().getORC()
-						.getOrc2_PlacerOrderNumber().getCm_placer1_UniquePlacerId().getValue();
-				String orc3_fillerOrderNumber =
-					oru.getPATIENT_RESULT().getORDER_OBSERVATION().getORC()
-						.getOrc3_FillerOrderNumber().getCm_filler1_UniqueFillerId().getValue();
-				String orc9_dateTimeOfTransaction =
-					oru.getPATIENT_RESULT().getORDER_OBSERVATION().getORC()
-						.getOrc9_DateTimeOfTransaction().getComponent(0).toString();
-				observation =
-					new ObservationMessage(msh3_sendingApplication, msh4_sendingFacility,
-						msh7_dateTimeOfMessage, msh10_messageControlId, orc9_dateTimeOfTransaction,
-						pid2_patientId, pid5_patientLastName, pid5_patientFirstName,
-						pid7_patientBirthdate, pid8_patientSex, pid4_alternatePatientId,
-						orc2_placerOrderNumber, orc3_fillerOrderNumber);
+				String orc2_placerOrderNumber = oru.getPATIENT_RESULT().getORDER_OBSERVATION()
+					.getORC().getOrc2_PlacerOrderNumber().getCm_placer1_UniquePlacerId().getValue();
+				String orc3_fillerOrderNumber = oru.getPATIENT_RESULT().getORDER_OBSERVATION()
+					.getORC().getOrc3_FillerOrderNumber().getCm_filler1_UniqueFillerId().getValue();
+				String orc9_dateTimeOfTransaction = oru.getPATIENT_RESULT().getORDER_OBSERVATION()
+					.getORC().getOrc9_DateTimeOfTransaction().getComponent(0).toString();
+				observation = new ObservationMessage(msh3_sendingApplication, msh4_sendingFacility,
+					msh7_dateTimeOfMessage, msh10_messageControlId, orc9_dateTimeOfTransaction,
+					pid2_patientId, pid5_patientLastName, pid5_patientFirstName,
+					nteAfterPid_patientNotesAndComments, pid7_patientBirthdate, pid8_patientSex,
+					pid4_alternatePatientId, orc2_placerOrderNumber, orc3_fillerOrderNumber);
 				
 				int obscount = oru.getPATIENT_RESULT().getORDER_OBSERVATIONReps();
 				for (int j = 0; j < obscount; j++) {
@@ -212,9 +212,8 @@ public class HL7_ORU_R01 extends HL7Writer {
 						obr.getObr7_ObservationDateTime().getComponent(0).toString();
 					
 					if ((obrDateOfObservation == null) || ("".equals(obrDateOfObservation)))
-						obrDateOfObservation =
-							obr.getObr22_ResultsReportStatusChangeDateTime().getComponent(0)
-								.toString();
+						obrDateOfObservation = obr.getObr22_ResultsReportStatusChangeDateTime()
+							.getComponent(0).toString();
 					
 					if ((obrDateOfObservation == null) || ("".equals(obrDateOfObservation)))
 						obrDateOfObservation = orc9_dateTimeOfTransaction;
@@ -238,9 +237,8 @@ public class HL7_ORU_R01 extends HL7Writer {
 						}
 					}
 					if (orderCommentNTE != null) {
-						TextData txtData =
-							new TextData(HL7Constants.COMMENT_NAME, orderCommentNTE,
-								obrDateOfObservation, HL7Constants.COMMENT_GROUP, null);
+						TextData txtData = new TextData(HL7Constants.COMMENT_NAME, orderCommentNTE,
+							obrDateOfObservation, HL7Constants.COMMENT_GROUP, null);
 						observation.add(txtData);
 					}
 					
@@ -250,9 +248,8 @@ public class HL7_ORU_R01 extends HL7Writer {
 						String commentNTE = null;
 						for (int n = 0; n < oru.getPATIENT_RESULT().getORDER_OBSERVATION(j)
 							.getOBSERVATION(i).getNTEReps(); n++) {
-							NTE nte =
-								oru.getPATIENT_RESULT().getORDER_OBSERVATION(j).getOBSERVATION(i)
-									.getNTE(n);
+							NTE nte = oru.getPATIENT_RESULT().getORDER_OBSERVATION(j)
+								.getOBSERVATION(i).getNTE(n);
 							AbstractPrimitive comment = nte.getNte3_Comment(0);
 							if (comment != null) {
 								if (commentNTE != null) {
@@ -265,17 +262,15 @@ public class HL7_ORU_R01 extends HL7Writer {
 						}
 						
 						// Resultate
-						OBX obx =
-							oru.getPATIENT_RESULT().getORDER_OBSERVATION(j).getOBSERVATION(i)
-								.getOBX();
+						OBX obx = oru.getPATIENT_RESULT().getORDER_OBSERVATION(j).getOBSERVATION(i)
+							.getOBX();
 						String valueType = obx.getObx2_ValueType().getValue();
 						if (HL7Constants.OBX_VALUE_TYPE_ED.equals(valueType)) {
 							String observationId =
 								obx.getObx3_ObservationIdentifier().getCe1_Identifier().getValue();
 							if (!"DOCUMENT".equals(observationId)) { //$NON-NLS-1$
 								addWarning(MessageFormat.format(
-									Messages.HL7_ORU_R01_Error_WrongObsIdentifier,
-									observationId));
+									Messages.HL7_ORU_R01_Error_WrongObsIdentifier, observationId));
 							}
 							ED ed = (ED) obx.getObx5_ObservationValue().getData();
 							String filename = ed.getEd3_DataSubtype().getValue();
@@ -284,9 +279,8 @@ public class HL7_ORU_R01 extends HL7Writer {
 							String data = ed.getEd5_Data().getValue();
 							String dateOfObservation =
 								obx.getObx14_DateTimeOfTheObservation().getComponent(0).toString();
-							EncapsulatedData encapsData =
-								new EncapsulatedData(filename, encoding, data, dateOfObservation,
-									commentNTE, null, null);
+							EncapsulatedData encapsData = new EncapsulatedData(filename, encoding,
+								data, dateOfObservation, commentNTE, null, null);
 							observation.add(encapsData);
 						} else if (HL7Constants.OBX_VALUE_TYPE_ST.equals(valueType)) {
 							String kuerzel =
@@ -304,9 +298,8 @@ public class HL7_ORU_R01 extends HL7Writer {
 							String range = obx.getObx7_ReferencesRange().getValue();
 							String dateOfObservation =
 								obx.getObx14_DateTimeOfTheObservation().getComponent(0).toString();
-							StringData strData =
-								new StringData(name, unit, valueST, range, dateOfObservation,
-									commentNTE, null, null);
+							StringData strData = new StringData(name, unit, valueST, range,
+								dateOfObservation, commentNTE, null, null);
 							observation.add(strData);
 						} else if (HL7Constants.OBX_VALUE_TYPE_TX.equals(valueType)) {
 							String valueTX = ""; //$NON-NLS-1$
@@ -343,9 +336,8 @@ public class HL7_ORU_R01 extends HL7Writer {
 							String range = obx.getObx7_ReferencesRange().getValue();
 							String dateOfObservation =
 								obx.getObx14_DateTimeOfTheObservation().getComponent(0).toString();
-							StringData data =
-								new StringData(name, unit, valueST, range, dateOfObservation,
-									commentNTE, null, null);
+							StringData data = new StringData(name, unit, valueST, range,
+								dateOfObservation, commentNTE, null, null);
 							observation.add(data);
 						} else {
 							addError(MessageFormat.format("Value type {0} is not implemented!", //$NON-NLS-1$

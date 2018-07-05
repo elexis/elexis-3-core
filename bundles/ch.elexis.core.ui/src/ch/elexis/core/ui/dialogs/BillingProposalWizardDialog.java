@@ -11,13 +11,19 @@
 package ch.elexis.core.ui.dialogs;
 
 import java.lang.reflect.InvocationTargetException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -36,6 +42,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.util.BillingUtil;
+import ch.elexis.core.ui.views.controls.DaysOrDateSelectionComposite;
 import ch.elexis.core.ui.views.controls.GenericSelectionComposite;
 import ch.elexis.core.ui.views.controls.KontaktSelectionComposite;
 import ch.elexis.core.ui.views.controls.TimeSpanSelectionComposite;
@@ -44,6 +51,7 @@ import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
+import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 import ch.rgw.tools.IFilter;
 import ch.rgw.tools.TimeSpan;
@@ -58,6 +66,9 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 	
 	private Button timeSpanOnly;
 	private TimeSpanSelectionComposite timeSpanSelection;
+	
+	private Button beforeTimeOnly;
+	private DaysOrDateSelectionComposite beforeDaysOrDate;
 	
 	private Button mandatorOnly;
 	private GenericSelectionComposite mandatorSelector;
@@ -86,6 +97,43 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		content.setLayout(new GridLayout(2, false));
 		content.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
+		timeSpanOnly = new Button(content, SWT.CHECK);
+		timeSpanOnly.setText("Offene Konsultationen innerhalb des Zeitraums");
+		timeSpanSelection = new TimeSpanSelectionComposite(content, SWT.NONE);
+		timeSpanSelection.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
+		timeSpanSelection.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
+			public void selectionChanged(SelectionChangedEvent event){
+				if (event.getSelection() != null && !event.getSelection().isEmpty()) {
+					timeSpanOnly.setSelection(true);
+					beforeTimeOnly.setSelection(false);
+				} else {
+					timeSpanOnly.setSelection(false);
+				}
+			}
+		});
+		LocalDate dateNow = LocalDate.now();
+		timeSpanSelection
+			.setTimeSpan(
+				new TimeSpan(new TimeTool(dateNow.withDayOfMonth(1)), new TimeTool(dateNow)));
+		
+		beforeTimeOnly = new Button(content, SWT.CHECK);
+		beforeTimeOnly.setText("Offene Behandlungsserien vor Tagen oder Datum");
+		beforeDaysOrDate = new DaysOrDateSelectionComposite(content, SWT.NONE);
+		beforeDaysOrDate.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
+		beforeDaysOrDate.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
+			public void selectionChanged(SelectionChangedEvent event){
+				if (event.getSelection() != null && !event.getSelection().isEmpty()) {
+					beforeTimeOnly.setSelection(true);
+					timeSpanOnly.setSelection(false);
+				} else {
+					beforeTimeOnly.setSelection(false);
+				}
+			}
+		});
+		beforeDaysOrDate.setDate(LocalDate.now().minusDays(30));
+		
 		insurerOnly = new Button(content, SWT.CHECK);
 		insurerOnly.setText("nur von folgendem Versicherer");
 		insurerSelection = new KontaktSelectionComposite(content, SWT.NONE | SWT.MULTI);
@@ -100,25 +148,6 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 				}
 			}
 		});
-		
-		timeSpanOnly = new Button(content, SWT.CHECK);
-		timeSpanOnly.setText("nur innerhalb des Zeitraums");
-		timeSpanSelection = new TimeSpanSelectionComposite(content, SWT.NONE);
-		timeSpanSelection.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
-		timeSpanSelection.addSelectionChangedListener(new ISelectionChangedListener() {
-			@Override
-			public void selectionChanged(SelectionChangedEvent event){
-				if (event.getSelection() != null && !event.getSelection().isEmpty()) {
-					timeSpanOnly.setSelection(true);
-				} else {
-					timeSpanOnly.setSelection(false);
-				}
-			}
-		});
-		LocalDate dateNow = LocalDate.now();
-		timeSpanSelection
-			.setTimeSpan(
-				new TimeSpan(new TimeTool(dateNow.withDayOfMonth(1)), new TimeTool(dateNow)));
 		
 		mandatorOnly = new Button(content, SWT.CHECK);
 		mandatorOnly.setText("nur von folgenden Mandanten");
@@ -187,6 +216,9 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 	
 	private class QueryProposalRunnable implements IRunnableWithProgress {
 		
+		private static final String PS_GETOPENKONSOFFALL =
+			"SELECT ID FROM BEHANDLUNGEN WHERE deleted='0' AND RechnungsID is null AND FallID=?";
+		
 		private boolean canceled = false;
 		private List<Konsultation> proposal = new ArrayList<>();
 		
@@ -194,6 +226,8 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		private IFilter accountingOnlyFilter;
 		private IFilter errorneousOnlyFilter;
 		private Query<Konsultation> query;
+		
+		private boolean addSeries;
 		
 		public QueryProposalRunnable(){
 			query = new Query<>(Konsultation.class);
@@ -207,6 +241,17 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 						timeSpan.from.toString(TimeTool.DATE_COMPACT));
 					query.add(Konsultation.DATE, Query.LESS_OR_EQUAL,
 						timeSpan.until.toString(TimeTool.DATE_COMPACT));
+				}
+			}
+			if (beforeTimeOnly.getSelection()) {
+				addSeries = true;
+				IStructuredSelection selection =
+					(IStructuredSelection) beforeDaysOrDate.getSelection();
+				if (selection != null && !selection.isEmpty()) {
+					LocalDate fromDate = (LocalDate) selection.getFirstElement();
+					TimeTool fromTool = new TimeTool(fromDate);
+					query.add(Konsultation.DATE, Query.LESS_OR_EQUAL,
+						fromTool.toString(TimeTool.DATE_COMPACT));
 				}
 			}
 			if (mandatorOnly.getSelection()) {
@@ -280,27 +325,72 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		public void run(IProgressMonitor monitor)
 			throws InvocationTargetException, InterruptedException{
 			List<Konsultation> initialList = query.execute();
-			monitor.beginTask("Vorschlag filter", initialList.size());
+			SubMonitor progress = SubMonitor.convert(monitor, 100);
+			
+			progress.setTaskName("Vorschlag filter");
+			if (addSeries) {
+				progress.setWorkRemaining(initialList.size() * 2);
+			} else {
+				progress.setWorkRemaining(initialList.size());
+			}
 			for (Konsultation konsultation : initialList) {
-				if (monitor.isCanceled()) {
+				if (progress.isCanceled()) {
 					canceled = true;
 					return;
 				}
 				
 				if (insurerOnlyFilter != null && !insurerOnlyFilter.select(konsultation)) {
-					monitor.worked(1);
+					progress.worked(1);
 					continue;
 				}
 				if (accountingOnlyFilter != null && !accountingOnlyFilter.select(konsultation)) {
-					monitor.worked(1);
+					progress.worked(1);
 					continue;
 				}
 				if (errorneousOnlyFilter != null && !errorneousOnlyFilter.select(konsultation)) {
-					monitor.worked(1);
+					progress.worked(1);
 					continue;
 				}
 				proposal.add(konsultation);
-				monitor.worked(1);
+				progress.worked(1);
+			}
+			if(addSeries) {
+				progress.setTaskName("Behandlungsserien laden");
+				progress.setWorkRemaining(proposal.size());
+				PreparedStatement ps = null;
+				try {
+					ps = PersistentObject.getDefaultConnection()
+						.getPreparedStatement(PS_GETOPENKONSOFFALL);
+					HashSet<String> knownIds = new HashSet<>();
+					// add all proposed
+					knownIds.addAll(
+						proposal.parallelStream().map(k -> k.getId()).collect(Collectors.toList()));
+					// work on copy and add to proposal list
+					for (Konsultation kons : proposal.toArray(new Konsultation[proposal.size()])) {
+						ps.setString(1, kons.getFall().getId());
+						ResultSet results = ps.executeQuery();
+						
+						while ((results != null) && (results.next() == true)) {
+							String konsId = results.getString(1);
+							if (!knownIds.contains(konsId)) {
+								proposal.add(Konsultation.load(konsId));
+							}
+						}
+						progress.worked(1);
+						if (progress.isCanceled()) {
+							canceled = true;
+							return;
+						}
+					}
+				} catch (SQLException e) {
+					LoggerFactory.getLogger(getClass()).error("Error loading series", e);
+					MessageDialog.openWarning(getShell(), "Fehler",
+						"Es ist ein Fehler beim Laden der Behandlungsserien aufgetreten.\nDer Vorschlag ist möglicherweise nicht vollständig.");
+				} finally {
+					if (ps != null) {
+						PersistentObject.getDefaultConnection().releasePreparedStatement(ps);
+					}
+				}
 			}
 			monitor.done();
 		}

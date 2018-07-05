@@ -11,6 +11,8 @@ import ca.uhn.hl7v2.model.AbstractPrimitive;
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.model.Type;
+import ca.uhn.hl7v2.model.v26.datatype.FT;
+import ca.uhn.hl7v2.model.v26.group.ORU_R01_PATIENT;
 import ca.uhn.hl7v2.model.v26.datatype.CWE;
 import ca.uhn.hl7v2.model.v26.datatype.ED;
 import ca.uhn.hl7v2.model.v26.datatype.NM;
@@ -139,12 +141,13 @@ public class HL7_ORU_R01 extends HL7Writer {
 			if (pid.getPid5_PatientName(0).getFamilyName() != null)
 				tmp2 = pid.getPid5_PatientName(0).getGivenName().getValue();
 			String pid5_patientName = tmp1 + " " + tmp2;
+			String nteAfterPid_patientNotesAndComments = readPatientNotesAndComments(oru.getPATIENT_RESULT().getPATIENT());
 			String orc2_placerOrderNumber =
 				oru.getPATIENT_RESULT().getORDER_OBSERVATION().getORC().getOrc2_PlacerOrderNumber()
 					.getEi1_EntityIdentifier().getValue();
 			observation =
 				new ObservationMessage(msh3_sendingApplication, msh4_sendingFacility,
-					msh7_dateTimeOfMessage, pid2_patientId, pid5_patientName,
+					msh7_dateTimeOfMessage, pid2_patientId, pid5_patientName, nteAfterPid_patientNotesAndComments,
 					pid4_alternatePatientId, orc2_placerOrderNumber);
 			
 			int obscount = oru.getPATIENT_RESULT().getORDER_OBSERVATIONReps();
@@ -280,6 +283,18 @@ public class HL7_ORU_R01 extends HL7Writer {
 		}
 		
 		return observation;
+	}
+	
+	private String readPatientNotesAndComments(ORU_R01_PATIENT patient){
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < patient.getNTEReps(); i++) {
+			FT comment = patient.getNTE(i).getComment(0);
+			sb.append(comment.toString());
+			if (patient.getNTEReps() > i) {
+				sb.append("\n");
+			}
+		}
+		return sb.toString();
 	}
 	
 	/**

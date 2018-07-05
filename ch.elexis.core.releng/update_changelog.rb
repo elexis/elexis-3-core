@@ -18,6 +18,7 @@ require 'active_support/all'
 ISSUE_URL = 'https://redmine.medelexis.ch/issues'
 CACHE_FILE = File.join(Dir.home, '.cache/redmine_issues.yaml')
 IGNORE_ISSUE_STATUS = /Abgewiesen|erledigt|zur*ckgestell/i
+
 @options = Trollop::options do
   version "#{File.basename(__FILE__)} (c) 2107 by Niklaus Giger <niklaus.giger@member.fsf.org>"
   banner <<-EOS
@@ -38,6 +39,7 @@ EOS
   opt :from,            'Only a difference from the given tag', :type => String, :default => nil
   opt :to,              'Only a difference to the given tag', :type => String, :default => nil
   opt :mediawiki,       'Create Changelog.mediawiki with a summary grouped by weekyl changes/ticket'
+  opt :by_week,         'Group tickets by week'
 end
 
 require 'rugged'
@@ -69,7 +71,11 @@ def tag_name_to_numerical_value(tag_name)
     items = tag_name.split('/').last.split('.').collect{|x| x.to_i}
     items.insert(-2, MAX_ID)
   end
-  sprintf('%03i%03i%03i%03i', items[0], items[1], items[2], items[3]).to_i
+  if items.size == 3
+    sprintf('%03i%03i%03i%03i', items[0], items[2], 0, 0).to_i
+  else
+    sprintf('%03i%03i%03i%03i', items[0], items[1], items[2], items[3]).to_i
+  end
 end
 
 TAG_INFO = Struct.new('TAG_INFO', :tag_name, :numerical, :tag, :commit_id, :parent, :tag_date)
@@ -97,6 +103,13 @@ def get_release_tags
     info.tag_date = (Date.today+1).strftime(DATE_FORMAT)
     @all_taginfos << info
   end
+  branch_names = @repo.branches.find_all{ |x| /origin\/\d+\.\d+$/.match(x.name)}.collect{|x| x.name}
+  branch_names.each do |name|
+    tag_id = `git merge-base master #{name}`.chomp
+    short_version = /[\d\.]+$/.match(name)[0]
+    tag = @repo.rev_parse(tag_id)
+    @all_taginfos <<  TAG_INFO.new(name, tag_name_to_numerical_value(short_version), tag, tag.oid, nil, tag.committer[:time].strftime(DATE_FORMAT))
+  end
   tags_hash
 rescue => error
   puts error
@@ -114,7 +127,7 @@ def find_tags_in_current_branch
   res.each do |commit|
     if (info = @all_taginfos.find{|taginfo| taginfo.commit_id == commit.oid})
       @tag_in_local_branch << info
-      puts "Adding local tag #{info.tag_name} commit #{info.commit_id}"  if $VERBOSE
+      puts "Adding local tag #{info.tag_name} commit #{info.commit_id}" if $VERBOSE
     end
   end
 end
@@ -206,29 +219,43 @@ end
 
 def emit_mediawiki_changelog(all_commits, file)
   mediawiki = File.open(file, 'w+')
-  mediawiki.puts "= Changelog für Elexis 3.6 ab 3.6.0 ="
+  short_version = /[\d\.]+$/.match(@options[:to])[0]
+  mediawiki.puts "= Changelog für Elexis #{short_version} ab #{@options[:from]} bis #{@options[:to]} ="
   mediawiki.puts ""
   mediawiki.puts "Die Zahlen in Klammern beziehen sich auf das nicht öffentlich zugängliche Ticket-System der Firma Medelexis AG"
   mediawiki.puts ""
-  sorted = all_commits.sort{|left, right| left.committer_date <=> right.committer_date}
-  by_week = {}
-  sorted.reverse.each do |commit|
-    next unless commit.ticket && commit.ticket.id
-    by_week[commit.commit_week] ||= {}
-    by_week[commit.commit_week] [commit.ticket.id] = commit
-    by_week[commit.commit_week] [:sunday] = Date.parse(commit.committer_date).sunday
-  end
-  by_week.each do | week, values|
-    ids = values.keys.find_all{|x| x.is_a?(String)}.uniq.sort;
-    mediawiki.puts "==  #{values[:sunday].strftime('%Y.%m.%d')}: #{ids.size} gelöste Tickets =="
-    mediawiki.puts ""
-    ids.each do |id|
-      ti = values[id].ticket
-      line = "* #{sprintf("%14s", "'''([https://redmine.medelexis.ch/issues/" + ti.id + ' ' + ti.id + "])'''")} #{ti.subject.gsub(/\n|\r\n/, ',').strip}"
-      mediawiki.puts line
+  if  @options[:by_week]
+    sorted = all_commits.sort{|left, right| left.committer_date <=> right.committer_date}
+    by_week = {}
+    sorted.reverse.each do |commit|
+      next unless commit.ticket && commit.ticket.id
+      by_week[commit.commit_week] ||= {}
+      by_week[commit.commit_week] [commit.ticket.id] = commit
+      by_week[commit.commit_week] [:sunday] = Date.parse(commit.committer_date).sunday
     end
-    mediawiki.puts ""
+    commits.each do | week, values|
+      ids = values.keys.find_all{|x| x.is_a?(String)}.uniq.sort;
+      mediawiki.puts "==  #{values[:sunday].strftime('%Y.%m.%d')}: #{ids.size} gelöste Tickets =="
+      mediawiki.puts ""
+      ids.each do |id|
+        ti = values[id].ticket
+        line = "* #{sprintf("%14s", "'''([https://redmine.medelexis.ch/issues/" + ti.id + ' ' + ti.id + "])'''")} #{ti.subject.gsub(/\n|\r\n/, ',').strip}"
+        mediawiki.puts line
+      end
+      mediawiki.puts ""
+    end
+  else
+    all_commits.find_all{|x| x.ticket.fixed_version.eql?(short_version)}.sort{|left, right| left.committer_date <=> right.committer_date}
+    sorted_by_ticket  = sorted.sort{|left, right| left.ticket.id <=> right.ticket.id}
+    emitted_ids = []
+    sorted_by_ticket.each do|commit|
+      next if emitted_ids.index(commit.ticket.id)
+      line = "* #{sprintf("%14s", "'''([https://redmine.medelexis.ch/issues/" + commit.ticket.id + ' ' + commit.ticket.id + "])'''")} #{commit.ticket.subject.gsub(/\n|\r\n/, ',').strip}"
+      mediawiki.puts line
+      emitted_ids << commit.ticket.id
+    end
   end
+  mediawiki.close
 end
 
 def emit_changes(ausgabe, from=nil, to=nil)
@@ -312,13 +339,20 @@ if @options[:mediawiki]
     @all_taginfos = []
     @history = []
     get_release_tags
-    from_tag =@all_taginfos.find{|x| x.tag_name ==  @options[:from] }
+    from_tag = @all_taginfos.find{|x| x.tag_name ==  @options[:from] }
+    if from_tag
+      from_id = from_tag.commit_id
+    else
+      from_tag ||= @repo.branches[@options[:from]]
+      from_id = from_tag.target.oid
+    end
     unless from_tag
       puts "Skipping #{repo} as there is no tag #{@options[:from]}"
+      @repo.ref_names.find{|x| /origin\/3.5/.match(x)}
       next
     end
     to_tag =@all_taginfos.find{|x| x.tag_name ==  @options[:to]}
-    info = get_history(from_tag.commit_id, to_tag.commit_id, to_tag.tag_name)
+    info = get_history(from_id, to_tag.commit_id, to_tag.tag_name)
     history_all +=info.commits
     puts "  #{repo}: found #{info.commits.size} history_all now #{history_all.size}"
   end
@@ -334,8 +368,8 @@ else
     emit_history(@options[:changelog])
   end
 end
-puts "\nCreated #{File.expand_path(@options[:changelog])}" +
-    "#{@csv_file_name ? ' and ' +  File.expand_path(@csv_file_name) : ' '}" +
+puts "\nCreated #{File.expand_path(@options[:changelog])} " +
+    "#{@csv_file_name ? ' and ' +  File.expand_path(@csv_file_name) : ' '} " +
     "for #{@options[:from] ? @options[:from] : 'first commit'} up to #{@options[:to] ? @options[:to] : 'HEAD'}"
 @scriptStopped = Time.now
 @diffSeconds = (@scriptStopped-@scriptStarted).to_i

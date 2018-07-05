@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>ch.elexis.core</groupId>
 		<artifactId>ch.elexis.core.bundles</artifactId>
-		<version>3.6.0-SNAPSHOT</version>
+		<version>3.7.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>ch.elexis.core.ui.importer.div.native64</artifactId>
 	<packaging> eclipse-plugin </packaging>

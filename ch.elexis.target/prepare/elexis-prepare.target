@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="Oxygen.3 for Elexis" sequenceNumber="1527195166">
+<target name="Oxygen.3 for Elexis" sequenceNumber="1530794435">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.18.0.v20171217-2215"/>
@@ -42,12 +42,12 @@
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="javax.persistence" version="2.2.0.v201708071007"/>
-      <unit id="org.eclipse.persistence.asm" version="6.0.0.v201710052159"/>
-      <unit id="org.eclipse.persistence.antlr" version="3.5.2.v201605171345"/>
-      <unit id="org.eclipse.persistence.core" version="2.7.1.v20171221-bd47e8f"/>
-      <unit id="org.eclipse.persistence.jpa.jpql" version="2.7.1.v20171221-bd47e8f"/>
-      <unit id="org.eclipse.persistence.jpa" version="2.7.1.v20171221-bd47e8f"/>
-      <unit id="org.eclipse.persistence.extension" version="2.7.1.v20171221-bd47e8f"/>
+      <unit id="org.eclipse.persistence.asm" version="6.1.1.v201804051226"/>
+      <unit id="org.eclipse.persistence.antlr" version="3.5.2.v201711011707"/>
+      <unit id="org.eclipse.persistence.core" version="2.7.2.v20180622-f627448"/>
+      <unit id="org.eclipse.persistence.jpa.jpql" version="2.7.2.v20180622-f627448"/>
+      <unit id="org.eclipse.persistence.jpa" version="2.7.2.v20180622-f627448"/>
+      <unit id="org.eclipse.persistence.extension" version="2.7.2.v20180622-f627448"/>
       <repository location="http://download.eclipse.org/rt/eclipselink/updates/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
@@ -115,6 +115,24 @@
       <unit id="com.healthmarketscience.jackcess" version="2.1.9"/>
       <unit id="org.jboss.aerogear.otp-java" version="1.0.0"/>
       <unit id="com.google.zxing.core" version="3.3.2"/>
+      <unit id="ca.uhn.hapi.osgi-base" version="2.3.0"/>
+      <unit id="ca.uhn.hapi.osgi-base.source" version="2.3.0"/>
+      <unit id="ca.uhn.hapi.structures-v21" version="2.3.0"/>
+      <unit id="ca.uhn.hapi.structures-v21.source" version="2.3.0"/>
+      <unit id="ca.uhn.hapi.structures-v22" version="2.3.0"/>
+      <unit id="ca.uhn.hapi.structures-v22.source" version="2.3.0"/>
+      <unit id="ca.uhn.hapi.structures-v23" version="2.3.0"/>
+      <unit id="ca.uhn.hapi.structures-v23.source" version="2.3.0"/>
+      <unit id="ca.uhn.hapi.structures-v231" version="2.3.0"/>
+      <unit id="ca.uhn.hapi.structures-v231.source" version="2.3.0"/>
+      <unit id="ca.uhn.hapi.structures-v24" version="2.3.0"/>
+      <unit id="ca.uhn.hapi.structures-v24.source" version="2.3.0"/>
+      <unit id="ca.uhn.hapi.structures-v25" version="2.3.0"/>
+      <unit id="ca.uhn.hapi.structures-v25.source" version="2.3.0"/>
+      <unit id="ca.uhn.hapi.structures-v251" version="2.3.0"/>
+      <unit id="ca.uhn.hapi.structures-v251.source" version="2.3.0"/>
+      <unit id="ca.uhn.hapi.structures-v26" version="2.3.0"/>
+      <unit id="ca.uhn.hapi.structures-v26.source" version="2.3.0"/>
       <repository location="http://download.elexis.info/elexis-server/elexis-server-dependencies"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
@@ -152,24 +170,6 @@
       <unit id="bsf" version="2.4.0"/>
       <unit id="c3p0" version="0.9.1.1"/>
       <unit id="c3p0.source" version="0.9.1.1"/>
-      <unit id="ca.uhn.hapi.osgi-base" version="1.2.0"/>
-      <unit id="ca.uhn.hapi.osgi-base.source" version="1.2.0"/>
-      <unit id="ca.uhn.hapi.structures-v21" version="1.2.0"/>
-      <unit id="ca.uhn.hapi.structures-v21.source" version="1.2.0"/>
-      <unit id="ca.uhn.hapi.structures-v22" version="1.2.0"/>
-      <unit id="ca.uhn.hapi.structures-v22.source" version="1.2.0"/>
-      <unit id="ca.uhn.hapi.structures-v23" version="1.2.0"/>
-      <unit id="ca.uhn.hapi.structures-v23.source" version="1.2.0"/>
-      <unit id="ca.uhn.hapi.structures-v231" version="1.2.0"/>
-      <unit id="ca.uhn.hapi.structures-v231.source" version="1.2.0"/>
-      <unit id="ca.uhn.hapi.structures-v24" version="1.2.0"/>
-      <unit id="ca.uhn.hapi.structures-v24.source" version="1.2.0"/>
-      <unit id="ca.uhn.hapi.structures-v25" version="1.2.0"/>
-      <unit id="ca.uhn.hapi.structures-v25.source" version="1.2.0"/>
-      <unit id="ca.uhn.hapi.structures-v251" version="1.2.0"/>
-      <unit id="ca.uhn.hapi.structures-v251.source" version="1.2.0"/>
-      <unit id="ca.uhn.hapi.structures-v26" version="2.2.0"/>
-      <unit id="ca.uhn.hapi.structures-v26.source" version="2.2.0"/>
       <unit id="cal10n.api" version="0.7.4"/>
       <unit id="cal10n.api.source" version="0.7.4"/>
       <unit id="cglib.nodep" version="2.2.2"/>

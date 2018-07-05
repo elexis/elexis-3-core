@@ -2,7 +2,7 @@
 <feature
       id="ch.elexis.core.ui.medication.os.feature"
       label="Elexis Medication UI Open Source"
-      version="3.6.0.qualifier"
+      version="3.7.0.qualifier"
       provider-name="elexis.info">
 
    <description url="http://www.example.com/description">

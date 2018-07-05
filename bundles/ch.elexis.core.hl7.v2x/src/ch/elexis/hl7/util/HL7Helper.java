@@ -2,6 +2,8 @@ package ch.elexis.hl7.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -57,10 +59,14 @@ public class HL7Helper {
 		return sdf.format(cal.getTime());
 	}
 	
+	public static String dateToString(LocalDateTime localDateTime){
+		return dateToString(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()));
+	}
+	
 	public static String determineName(List<String> possibleNames){
 		String ret = "";
 		for (String possibleName : possibleNames) {
-			if (possibleName != null) {
+			if (possibleName != null && !"null".equals(possibleName)) {
 				int possibleNonDigitCount = getNonDigitCharacters(possibleName);
 				int retNonDigitCount = getNonDigitCharacters(ret);
 				if (possibleNonDigitCount > retNonDigitCount) {

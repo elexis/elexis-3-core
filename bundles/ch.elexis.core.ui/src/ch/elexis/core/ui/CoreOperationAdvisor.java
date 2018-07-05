@@ -16,7 +16,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.slf4j.Logger;
@@ -70,6 +73,16 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	}
 	
 	@Override
+	public void openInformation(String title, String message){
+		if (isDisplayAvailable()) {
+			InfoDialogRunnable runnable = new InfoDialogRunnable(title, message);
+			Display.getDefault().syncExec(runnable);
+			return;
+		}
+		log.error("Could not show info [" + title + "] [" + message + "]");
+	}
+	
+	@Override
 	public boolean openQuestion(String title, String message){
 		if (isDisplayAvailable()) {
 			QuestionDialogRunnable runnable = new QuestionDialogRunnable(title, message);
@@ -98,6 +111,22 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 		
 		public boolean getResult(){
 			return result;
+		}
+	}
+	
+	private class InfoDialogRunnable implements Runnable {
+		private String title;
+		private String message;
+		
+		public InfoDialogRunnable(String title, String message){
+			this.title = title;
+			this.message = message;
+		}
+		
+		@Override
+		public void run(){
+			
+			MessageDialog.openInformation(Display.getDefault().getActiveShell(), title, message);
 		}
 	}
 	
@@ -131,13 +160,22 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	}
 	
 	@Override
-	public void showProgress(IRunnableWithProgress irwp){
+	public void showProgress(IRunnableWithProgress irwp, String taskName){
 		try {
 			if (isDisplayAvailable()) {
 				Display.getDefault().asyncExec(new Runnable() {
 					@Override
 					public void run(){
-						ProgressMonitorDialog pmd = new ProgressMonitorDialog(Hub.getActiveShell());
+						ProgressMonitorDialog pmd =
+							new ProgressMonitorDialog(Display.getDefault().getActiveShell()) {
+								@Override
+								protected void configureShell(Shell shell){
+									super.configureShell(shell);
+									if (taskName != null) {
+										shell.setText(taskName);
+									}
+								}
+							};
 						org.eclipse.jface.operation.IRunnableWithProgress irpwAdapter =
 							new org.eclipse.jface.operation.IRunnableWithProgress() {
 								
@@ -148,7 +186,7 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 								}
 							};
 						try {
-							pmd.run(false, true, irpwAdapter);
+							pmd.run(true, true, irpwAdapter);
 						} catch (InvocationTargetException | InterruptedException e) {
 							log.error("Execution error", e);
 						}

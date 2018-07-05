@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="ExternalMaintenance" name="ExternalMaintenance" schema="schema/ExternalMaintenance.exsd"/>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="ch.elexis.core.ui.dbcheck.commands.DBService"
+            id="ch.elexis.core.ui.dbcheck.commands.dbservice"
+            name="Datenbank Service durchführen">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:help">
+         <command
+               commandId="ch.elexis.core.ui.dbcheck.commands.dbservice"
+               label="DB Überprüfung"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.help.contexts">
+      <contexts
+            file="contexts.xml"
+            plugin="ch.elexis.core.ui.dbcheck">
+      </contexts>
+   </extension>
+   <extension
+         point="ch.elexis.core.ui.dbcheck.ExternalMaintenance">
+      <ExternalMaintenance
+            MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.FixPharmacodeLessSeven">
+      </ExternalMaintenance>
+      <ExternalMaintenance
+            MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.FixBestellungen217">
+      </ExternalMaintenance>
+      <ExternalMaintenance
+            MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.MoveFallAHVNrToContact">
+      </ExternalMaintenance>
+      <ExternalMaintenance
+            MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.FixLeistungenKlasseReferenz">
+      </ExternalMaintenance>
+      <ExternalMaintenance
+            MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.LabCleanup">
+      </ExternalMaintenance>
+      <ExternalMaintenance
+            MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.LabResetPathologic">
+      </ExternalMaintenance>
+      <ExternalMaintenance
+            MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.CheckKonsultationValidity">
+      </ExternalMaintenance>
+      <ExternalMaintenance
+            MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.FixEmptyDiagnoseKonsultation">
+      </ExternalMaintenance>
+      <ExternalMaintenance
+            MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.FixOmnivoreDirectCreationDate">
+      </ExternalMaintenance>
+      <ExternalMaintenance
+            MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.RenameAccountingSystemField">
+      </ExternalMaintenance>
+      <ExternalMaintenance
+            MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.BillAllOpenCons">
+      </ExternalMaintenance>
+      <ExternalMaintenance
+            MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.FixMultipleDiagnosis">
+      </ExternalMaintenance>
+            <ExternalMaintenance
+                  MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.ReChargeTarmedOpenCons">
+            </ExternalMaintenance>
+            <ExternalMaintenance
+                  MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.MoveFallExtInfoBillingToFallBillingSystem">
+            </ExternalMaintenance>
+   </extension>
+
+</plugin>

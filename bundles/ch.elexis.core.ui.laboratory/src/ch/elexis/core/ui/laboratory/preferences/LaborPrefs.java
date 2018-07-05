@@ -28,7 +28,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSourceAdapter;
@@ -133,18 +133,17 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 		tableViewer.addDoubleClickListener(new IDoubleClickListener() {
 			
 			public void doubleClick(DoubleClickEvent event){
-				IStructuredSelection sel = (IStructuredSelection) tableViewer.getSelection();
+				IStructuredSelection sel = tableViewer.getStructuredSelection();
 				Object o = sel.getFirstElement();
 				if (o instanceof LabItem) {
 					LabItem li = (LabItem) o;
 					EditLabItemUi.executeWithParams(li);
-					tableViewer.refresh();
+					tableViewer.refresh(li);
 				}
 			}
 			
 		});
-		tableViewer.setSorter(new ViewerSorter() {
-			
+		tableViewer.setComparator(new ViewerComparator() {
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2){
 				LabItem li1 = (LabItem) e1;
@@ -180,7 +179,6 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 				}
 				return res;
 			}
-			
 		});
 		
 		int operations = DND.DROP_COPY;

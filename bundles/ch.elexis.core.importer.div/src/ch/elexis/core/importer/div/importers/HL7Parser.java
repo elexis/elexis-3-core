@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,7 +88,7 @@ public class HL7Parser {
 	 * @param labItemResolver
 	 * @param labContactResolver
 	 * @param createPatientIfNotFound
-	 * 			
+	 * 
 	 * @return the orderId of the import
 	 */
 	public Result<Object> parse(final HL7Reader hl7Reader, ILabItemResolver labItemResolver,
@@ -113,7 +114,7 @@ public class HL7Parser {
 			
 			ObservationMessage obsMessage =
 				hl7Reader.readObservation(patientResolver, createPatientIfNotFound);
-				
+			
 			pat = hl7Reader.getPatient();
 			if (pat == null) {
 				return new Result<Object>(SEVERITY.ERROR, 2, Messages.HL7_PatientNotInDatabase,
@@ -126,11 +127,14 @@ public class HL7Parser {
 					logger.warn("Cannot parse mandant name for ORC message");
 				}
 			}
-
+			
 			int number = 0;
 			List<TransientLabResult> results = new ArrayList<TransientLabResult>();
 			List<IValueType> observations = obsMessage.getObservations();
 			initCommentDate(obsMessage);
+			
+			TimeTool obrDateTime = null;
+			TimeTool obxDateTime = null;
 			
 			for (IValueType iValueType : observations) {
 				if (iValueType instanceof LabResultData) {
@@ -146,6 +150,8 @@ public class HL7Parser {
 					if (hl7LabResult.getOBRDateTime() == null) {
 						hl7LabResult.setOBRDateTime(transmissionTime.toString(TimeTool.TIMESTAMP));
 					}
+					obrDateTime = new TimeTool(hl7LabResult.getOBRDateTime());
+					obxDateTime = new TimeTool(hl7LabResult.getDate());
 					
 					ILabItem labItem = labImportUtil.getLabItem(hl7LabResult.getCode(), labor);
 					if (labItem == null) {
@@ -177,44 +183,40 @@ public class HL7Parser {
 						}
 					}
 					if (importAsLongText) {
-						TimeTool obrDateTime = new TimeTool(hl7LabResult.getOBRDateTime());
-						TimeTool obxDateTime = new TimeTool(hl7LabResult.getDate());
+						
 						Integer flag = null;
-						if(hl7LabResult.getFlag()!=null) {
-							flag = (hl7LabResult.getFlag().booleanValue()) ? LabResultConstants.PATHOLOGIC : 0;
+						if (hl7LabResult.getFlag() != null) {
+							flag = (hl7LabResult.getFlag().booleanValue())
+									? LabResultConstants.PATHOLOGIC
+									: 0;
 						}
 						TransientLabResult importedResult =
 							new TransientLabResult.Builder(pat, labor, labItem, "text")
 								.date(obrDateTime)
 								.comment(StringTool.unNull(hl7LabResult.getValue()) + "\n"
 									+ StringTool.unNull(hl7LabResult.getComment()))
-								.flags(flag)
-								.rawAbnormalFlags(hl7LabResult.getRawAbnormalFlag())
+								.flags(flag).rawAbnormalFlags(hl7LabResult.getRawAbnormalFlag())
 								.unit(hl7LabResult.getUnit()).ref(hl7LabResult.getRange())
 								.observationTime(obrDateTime).analyseTime(obxDateTime)
-								.transmissionTime(transmissionTime)
-								.orcMessage(orcMessage).subId(hl7LabResult.getSubId())
-								.build(labImportUtil);
+								.transmissionTime(transmissionTime).orcMessage(orcMessage)
+								.subId(hl7LabResult.getSubId()).build(labImportUtil);
 						results.add(importedResult);
 						logger.debug(importedResult.toString());
 					} else {
-						TimeTool obrDateTime = new TimeTool(hl7LabResult.getOBRDateTime());
-						TimeTool obxDateTime = new TimeTool(hl7LabResult.getDate());
 						Integer flag = null;
-						if(hl7LabResult.getFlag()!=null) {
-							flag = (hl7LabResult.getFlag().booleanValue()) ? LabResultConstants.PATHOLOGIC : 0;
+						if (hl7LabResult.getFlag() != null) {
+							flag = (hl7LabResult.getFlag().booleanValue())
+									? LabResultConstants.PATHOLOGIC
+									: 0;
 						}
-						TransientLabResult importedResult =
-							new TransientLabResult.Builder(pat, labor, labItem,
-								hl7LabResult.getValue()).date(obrDateTime)
-									.comment(StringTool.unNull(hl7LabResult.getComment()))
-									.flags(flag)
-									.rawAbnormalFlags(hl7LabResult.getRawAbnormalFlag())
-									.unit(hl7LabResult.getUnit()).ref(hl7LabResult.getRange())
-									.observationTime(obrDateTime).analyseTime(obxDateTime)
-									.transmissionTime(transmissionTime)
-									.orcMessage(orcMessage).subId(hl7LabResult.getSubId())
-									.build(labImportUtil);
+						TransientLabResult importedResult = new TransientLabResult.Builder(pat,
+							labor, labItem, hl7LabResult.getValue()).date(obrDateTime)
+								.comment(StringTool.unNull(hl7LabResult.getComment())).flags(flag)
+								.rawAbnormalFlags(hl7LabResult.getRawAbnormalFlag())
+								.unit(hl7LabResult.getUnit()).ref(hl7LabResult.getRange())
+								.observationTime(obrDateTime).analyseTime(obxDateTime)
+								.transmissionTime(transmissionTime).orcMessage(orcMessage)
+								.subId(hl7LabResult.getSubId()).build(labImportUtil);
 						results.add(importedResult);
 						logger.debug(importedResult.toString());
 					}
@@ -249,14 +251,12 @@ public class HL7Parser {
 						ILabItem labItem = labImportUtil.getDocumentLabItem(liShort, liName, labor);
 						if (labItem == null) {
 							labItem = labImportUtil.createLabItem(liShort, liName, labor, "", "",
-								fileType,
-								LabItemTyp.DOCUMENT, hl7EncData.getGroup(), "");
+								fileType, LabItemTyp.DOCUMENT, hl7EncData.getGroup(), "");
 						}
 						
 						TransientLabResult importedResult =
 							new TransientLabResult.Builder(pat, labor, labItem, title).date(date)
-								.orcMessage(orcMessage)
-								.build(labImportUtil);
+								.orcMessage(orcMessage).build(labImportUtil);
 						results.add(importedResult);
 						
 						// create document manager (omnivore) entry
@@ -275,6 +275,23 @@ public class HL7Parser {
 						number++;
 					}
 				}
+			}
+			
+			if (StringUtils.isNotBlank(obsMessage.getPatientNotesAndComments())) {
+				ILabItem labItem = labImportUtil.getLabItem("NOTE", labor);
+				if (labItem == null) {
+					labItem =
+						labImportUtil.createLabItem("NOTE", Messages.HL7Parser_LabItem_Note_Name,
+							labor, "", "", "", LabItemTyp.TEXT, "AA", "1");
+					logger.debug("LabItem created [{}]", labItem);
+				}
+				
+				TransientLabResult patientNoteAndComment =
+					new TransientLabResult.Builder(pat, labor, labItem, "text")
+						.comment(obsMessage.getPatientNotesAndComments()).date(obrDateTime).flags(0)
+						.observationTime(obrDateTime).analyseTime(obxDateTime)
+						.orcMessage(orcMessage).build(labImportUtil);
+				results.add(patientNoteAndComment);
 			}
 			
 			orderId = labImportUtil.importLabResults(results, importHandler);
@@ -298,7 +315,7 @@ public class HL7Parser {
 	}
 	
 	/**
-	 * @throws IOException 
+	 * @throws IOException
 	 * @see HL7Parser#importFile(File, File, ILabItemResolver, ILabContactResolver, boolean)
 	 */
 	public Result<?> importFile(final File file, final File archiveDir,
@@ -307,11 +324,12 @@ public class HL7Parser {
 	}
 	
 	public Result<?> importFile(File hl7file, File archiveDir, ILabItemResolver labItemResolver,
-		ILabContactResolver labContactResolver, boolean bCreatePatientIfNotExists) throws IOException{
+		ILabContactResolver labContactResolver, boolean bCreatePatientIfNotExists)
+		throws IOException{
 		this.labContactResolver = labContactResolver;
 		return importFile(hl7file, archiveDir, labItemResolver, bCreatePatientIfNotExists);
 	}
-
+	
 	/**
 	 * Import the given HL7 file. Optionally, move the file into the given archive directory
 	 * 
@@ -414,7 +432,8 @@ public class HL7Parser {
 		return importFile(new File(filepath), null, bCreatePatientIfNotExists);
 	}
 	
-	public Result<?> importMessage(String message, boolean bCreatePatientIfNotExists) throws IOException{
+	public Result<?> importMessage(String message, boolean bCreatePatientIfNotExists)
+		throws IOException{
 		HL7Reader hl7Reader = HL7ReaderFactory.INSTANCE.getReader(message);
 		
 		this.hl7Reader = hl7Reader;

@@ -46,6 +46,12 @@ public class RnListeDruckDialog extends TitleAreaDialog implements ICallback {
 						for (Tree tRn : (Tree[]) tFall.getChildren().toArray(new Tree[0])) {
 							Rechnung rn = (Rechnung) tRn.contents;
 							rnn.add(rn);
+							// Rechnungen sollten nicht doppelt im Verarbeitungsergebnis auftreten,
+							// nur weil aufgeklappt und dann bis zu 3x etwas vom gleichen Patienten/Fall/Rechnung markiert war.
+							// deshalb prüfen, ob die rechnung schon drin ist, bevor sie hinzugefügt wird.
+							if (!rnn.contains(rn)) {
+								rnn.add(rn);
+							}
 						}
 					}
 				}

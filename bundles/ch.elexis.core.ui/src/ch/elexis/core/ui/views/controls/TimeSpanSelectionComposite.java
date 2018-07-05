@@ -23,6 +23,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;
+import org.eclipse.swt.widgets.Label;
 
 import ch.rgw.tools.TimeSpan;
 import ch.rgw.tools.TimeTool;
@@ -42,7 +43,9 @@ public class TimeSpanSelectionComposite extends Composite implements ISelectionP
 	}
 	
 	private void createContent(){
-		setLayout(new GridLayout(2, false));
+		setLayout(new GridLayout(4, false));
+		Label label = new Label(this, SWT.NONE);
+		label.setText("Von");
 		timespanFrom = new DateTime(this, SWT.NONE);
 		timespanFrom.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -51,6 +54,8 @@ public class TimeSpanSelectionComposite extends Composite implements ISelectionP
 				callSelectionListeners();
 			}
 		});
+		label = new Label(this, SWT.NONE);
+		label.setText("Bis");
 		timespanTo = new DateTime(this, SWT.NONE);
 		timespanTo.addSelectionListener(new SelectionAdapter() {
 			@Override

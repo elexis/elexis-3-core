@@ -108,4 +108,61 @@ public class Test_HL7_v25_Imports {
 		assertNull(lrd.getUnit());
 		assertEquals(LabResultStatus.FINAL, lrd.getResultStatus());
 	}
+	
+	@Test
+	public void testLabItemName_11507() throws IOException, ElexisException{
+		File importFile = new File(PlatformHelper.getBasePath("ch.elexis.core.hl7.v2x.tests"),
+			"rsc/Analytica/HBA1.hl7");
+		List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(importFile);
+		assertNotNull(hl7Readers);
+		assertEquals(1, hl7Readers.size());
+		HL7Reader reader = hl7Readers.get(0);
+		assertEquals(HL7ReaderV25.class, reader.getClass());
+		
+		ObservationMessage observationMsg = reader.readObservation(resolver, false);
+		List<IValueType> observations = observationMsg.getObservations();
+		assertEquals(1, observations.size());
+		
+		LabResultData lrd = (LabResultData) observations.get(0);
+		assertEquals("HbA1c", lrd.getName());
+		assertEquals("HBA1", lrd.getCode());
+		assertTrue(lrd.getValue().equals("5.1"));
+		assertNull(lrd.getFlag());
+		assertTrue(lrd.getComment().startsWith("Bemerkung zu HbA1c"));
+		assertEquals("< 5.7", lrd.getRange());
+		assertEquals("%", lrd.getUnit());
+		assertEquals(LabResultStatus.FINAL, lrd.getResultStatus());
+	}
+	
+	@Test
+	public void testLabItemName_11507_2() throws IOException, ElexisException{
+		File importFile = new File(PlatformHelper.getBasePath("ch.elexis.core.hl7.v2x.tests"),
+			"rsc/Analytica/Ferritin.hl7");
+		List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(importFile);
+		assertNotNull(hl7Readers);
+		assertEquals(1, hl7Readers.size());
+		HL7Reader reader = hl7Readers.get(0);
+		assertEquals(HL7ReaderV25.class, reader.getClass());
+		
+		ObservationMessage observationMsg = reader.readObservation(resolver, false);
+		List<IValueType> observations = observationMsg.getObservations();
+		assertEquals(3, observations.size());
+		
+		boolean found = false;
+		for (IValueType iValueType : observations) {
+			LabResultData lrd = (LabResultData) iValueType;
+			if ("Ferritin".equals(lrd.getName())) {
+				assertEquals("FERR", lrd.getCode());
+				assertTrue(lrd.getValue().equals("66"));
+				assertNull(lrd.getFlag());
+				assertNull(lrd.getComment());
+				assertEquals("ug/l", lrd.getUnit());
+				assertEquals("22 - 322", lrd.getRange());
+				assertEquals(LabResultStatus.FINAL, lrd.getResultStatus());
+				found = true;
+			}
+		}
+		assertTrue(found);
+		
+	}
 }

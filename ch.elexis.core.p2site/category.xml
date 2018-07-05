@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/ch.elexis.core.ui.p2.feature_3.6.0.qualifier.jar" id="ch.elexis.core.ui.p2.feature" version="3.6.0.qualifier">
+   <feature url="features/ch.elexis.core.ui.p2.feature_3.6.0.qualifier.jar" id="ch.elexis.core.ui.p2.feature" version="3.7.0.qualifier">
       <category name="elexis_3_core"/>
    </feature>
-   <feature url="features/ch.elexis.core.logging.feature_3.6.0.qualifier.jar" id="ch.elexis.core.logging.feature" version="3.6.0.qualifier">
+   <feature url="features/ch.elexis.core.logging.feature_3.6.0.qualifier.jar" id="ch.elexis.core.logging.feature" version="3.7.0.qualifier">
       <category name="elexis_3_core"/>
    </feature>
-   <feature url="features/ch.elexis.core.ui.medication.os.feature_3.6.0.qualifier.jar" id="ch.elexis.core.ui.medication.os.feature" version="3.6.0.qualifier">
+   <feature url="features/ch.elexis.core.ui.medication.os.feature_3.6.0.qualifier.jar" id="ch.elexis.core.ui.medication.os.feature" version="3.7.0.qualifier">
       <category name="elexis_3_core"/>
    </feature>
-   <feature url="features/ch.elexis.core.ui.feature_3.6.0.qualifier.jar" id="ch.elexis.core.ui.feature" version="3.6.0.qualifier">
+   <feature url="features/ch.elexis.core.ui.feature_3.6.0.qualifier.jar" id="ch.elexis.core.ui.feature" version="3.7.0.qualifier">
       <category name="elexis_3_core"/>
    </feature>
-   <feature url="features/ch.elexis.core.application.feature_3.6.0.qualifier.jar" id="ch.elexis.core.application.feature" version="3.6.0.qualifier">
+   <feature url="features/ch.elexis.core.application.feature_3.6.0.qualifier.jar" id="ch.elexis.core.application.feature" version="3.7.0.qualifier">
       <category name="elexis_3_core"/>
    </feature>
-   <feature url="features/ch.elexis.core.common.feature_3.6.0.qualifier.jar" id="ch.elexis.core.common.feature" version="3.6.0.qualifier">
+   <feature url="features/ch.elexis.core.common.feature_3.6.0.qualifier.jar" id="ch.elexis.core.common.feature" version="3.7.0.qualifier">
       <category name="elexis_3_core"/>
    </feature>
-   <bundle id="ch.elexis.core.data.tests" version="3.6.0.qualifier"/>
-   <bundle id="ch.elexis.core.ui.usage" version="1.0.0.qualifier"/>
+   <bundle id="ch.elexis.core.data.tests" version="3.7.0.qualifier"/>
+   <bundle id="ch.elexis.core.ui.usage" version="3.7.0.qualifier"/>
    <category-def name="elexis_3_core" label="Elexis 3 Kern"/>
 </site>

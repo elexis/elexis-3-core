@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: I18n
 Bundle-SymbolicName: ch.elexis.core.l10n;singleton:=true
-Bundle-Version: 3.6.0.qualifier
+Bundle-Version: 3.7.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: elexis.info
 Export-Package: ch.elexis.core.l10n;version="3.5.0.qualifier"

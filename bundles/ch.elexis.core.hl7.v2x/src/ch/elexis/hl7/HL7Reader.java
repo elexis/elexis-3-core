@@ -79,6 +79,9 @@ public abstract class HL7Reader {
 	
 	public Boolean isPathologic(String abnormalValue){
 		if (!StringTool.isNothing(abnormalValue)) {
+			if (abnormalValue.startsWith("N")) {
+				return false;
+			}
 			for (String startChar : abnormalFlagStartCharacters) {
 				if (abnormalValue.startsWith(startChar)) {
 					return true;

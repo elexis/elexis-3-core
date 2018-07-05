@@ -46,6 +46,7 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 	private String[] availableFields;
 	private Label lblInfo;
 	private String prefixPrevLabel = "Label Vorschau";
+	private Button defaultPatientRelated;
 	
 	public ReminderPrefences(){
 		super(Messages.ReminderPrefences_Reminders);
@@ -72,18 +73,31 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 	@Override
 	protected Control createContents(Composite parent){
 		Composite ret = new Composite(parent, SWT.NONE);
-		ret.setLayout(new GridLayout(3, true));
+		int nrElementsInTop = 3;
+		ret.setLayout(new GridLayout(nrElementsInTop, true));
 		new Label(ret, SWT.NONE).setText(Messages.ReminderPrefences_SetColors);
 		DecoratedStringChooser chooser = new DecoratedStringChooser(ret, cfg, strings);
-		chooser.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 3, 1));
-		
+		chooser.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, nrElementsInTop, 1));
+
 		showRemindersOnPatientSelectionEventBtn = new Button(ret, SWT.CHECK);
 		showRemindersOnPatientSelectionEventBtn
 			.setText(Messages.ReminderPrefences_ShowPatientSelectionRedminders);
 		showRemindersOnPatientSelectionEventBtn
 			.setSelection(CoreHub.userCfg.get(Preferences.USR_SHOWPATCHGREMINDER, false));
 		showRemindersOnPatientSelectionEventBtn
-			.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 3, 1));
+			.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, nrElementsInTop, 1));
+		
+		defaultPatientRelated = new Button(ret, SWT.CHECK);
+		defaultPatientRelated.setText(ch.elexis.core.l10n.Messages.ReminderPref_defaultPatientRelated);
+		defaultPatientRelated.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e){
+				CoreHub.userCfg.get(Preferences.USR_REMINDER_DEFAULT_PATIENT_RELATED, defaultPatientRelated.getSelection());
+			}
+		});
+		defaultPatientRelated.setSelection(
+			CoreHub.userCfg.get(Preferences.USR_REMINDER_DEFAULT_PATIENT_RELATED, true));
+		defaultPatientRelated.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, nrElementsInTop, 1));
 		
 		new Label(ret, SWT.NONE);
 		new Label(ret, SWT.NONE);
@@ -177,7 +191,8 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 	public boolean performOk(){
 		CoreHub.userCfg.set(Preferences.USR_SHOWPATCHGREMINDER,
 			showRemindersOnPatientSelectionEventBtn.getSelection());
-		
+		CoreHub.userCfg.set(Preferences.USR_REMINDER_DEFAULT_PATIENT_RELATED,
+			defaultPatientRelated.getSelection());
 		CoreHub.userCfg.set(Preferences.USR_REMINDER_PAT_LABEL_CHOOSEN,
 			getListAsString(lViewerChoosen.getList().getItems()));
 		CoreHub.userCfg.set(Preferences.USR_REMINDER_PAT_LABEL_AVAILABLE,

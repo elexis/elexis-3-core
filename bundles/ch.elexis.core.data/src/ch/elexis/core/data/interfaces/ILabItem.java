@@ -61,4 +61,6 @@ public interface ILabItem {
 	void setVisible(boolean value);
 	
 	String getLabel();
+	
+	boolean isNoReferenceValueItem();
 }

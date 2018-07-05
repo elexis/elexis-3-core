@@ -23,14 +23,14 @@ import junit.framework.TestSuite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	Test_HL7_parser.class, MultiFileParserTests.class, HL7InitLabItemTest.class,
-	TestPathologicDescription.class
+	TestPathologicDescription.class, Test_HL7Import_MPFRule.class, Test_Import_LabItemInconclusiveRefValue.class
 })
 public class AllTests {
 	
 	public static Labor testLab;
 	
 	@BeforeClass
-	public static void beforeClass() {
+	public static void beforeClass(){
 		testLab = new Labor("HL7_Test", "HL7_Test");
 	}
 	

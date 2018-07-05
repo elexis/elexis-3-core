@@ -207,7 +207,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 		// bezugs kontakte
 		{
 			ExpandableComposite ecZA = WidgetFactory.createExpandableComposite(toolkit, scrldfrm,
-					Messages.Patientenblatt2_additionalAdresses); // $NON-NLS-1$
+				Messages.Patientenblatt2_contactForAdditionalAddress); // $NON-NLS-1$
 			ecZA.setExpanded(CoreHub.localCfg.get(KEY_PATIENTENBLATT + ecZA.getText(), false));
 			ecZA.addExpansionListener(new SectionExpansionHandler());
 			inpZusatzAdresse = new ListDisplay<BezugsKontakt>(ecZA, SWT.NONE, new ListDisplay.LDListener() {
@@ -296,7 +296,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 		{
 			ExpandableComposite compAdditionalAddresses =
 				WidgetFactory.createExpandableComposite(toolkit, scrldfrm,
-				"Zusatzadressen"); // $NON-NLS-1$
+					Messages.Patientenblatt2_additionalAdresses);
 			compAdditionalAddresses.addExpansionListener(new SectionExpansionHandler());
 			
 			additionalAddresses = new ListDisplay<ZusatzAdresse>(compAdditionalAddresses, SWT.NONE,

@@ -23,11 +23,13 @@
  *******************************************************************************/
 package ch.elexis.importer.div;
 
+import static ch.elexis.importer.div.Helpers.parseOneHL7file;
+import static ch.elexis.importer.div.Helpers.removeAllLaboWerte;
+import static ch.elexis.importer.div.Helpers.removeAllPatientsAndDependants;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,9 +53,7 @@ import ch.elexis.data.LabItem;
 import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.Patient;
-import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
-import ch.rgw.tools.Result;
 
 public class Test_HL7_parser {
 	
@@ -84,74 +84,6 @@ public class Test_HL7_parser {
 			+ res.getResult());
 	}
 	
-	static private void removeAllLaboWerte(){
-		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
-		List<LabResult> qrr = qr.execute();
-		for (int j = 0; j < qrr.size(); j++) {
-			qrr.get(j).delete();
-		}
-		Query<LabOrder> qro = new Query<LabOrder>(LabOrder.class);
-		List<LabOrder> qrro = qro.execute();
-		for (int j = 0; j < qrro.size(); j++) {
-			qrro.get(j).delete();
-		}
-		Query<LabItem> qrli = new Query<LabItem>(LabItem.class);
-		List<LabItem> qLi = qrli.execute();
-		for (int j = 0; j < qLi.size(); j++) {
-			qLi.get(j).delete();
-		}
-		PersistentObject.clearCache();
-		try {
-			Thread.sleep(10);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	static private void removeAllPatientsAndDependants(){
-		Query<Patient> qr = new Query<Patient>(Patient.class);
-		List<Patient> qrr = qr.execute();
-		for (int j = 0; j < qrr.size(); j++) {
-			qrr.get(j).delete(true);
-		}
-		
-		qr = new Query<Patient>(Patient.class);
-		qrr = qr.execute();
-	}
-	
-	private void parseOneHL7file(File f, boolean deleteAll, boolean alsoFailing) throws IOException{
-		String name = f.getAbsolutePath();
-		if (f.canRead() && (name.toLowerCase().endsWith(".hl7"))) {
-			if (f.getName().equalsIgnoreCase("01TEST5005.hl7")
-				|| f.getName().equalsIgnoreCase("1_Kunde_20090612083757162_10009977_.HL7")) {
-				if (!alsoFailing) {
-					// System.out.println("Skipping " + name);
-					return;
-				}
-			}
-			// System.out.println("parseOneHL7file " + name + "  " + f.length() + " bytes ");
-			Result<?> rs = hlp.importFile(f, f.getParentFile(), true);
-			if (!rs.isOK()) {
-				String info = "Datei " + name + " fehlgeschlagen";
-				System.out.println(info);
-				fail(info);
-			} else {
-				assertTrue(true); // To show that we were successfull
-				// System.out.println("Datei " + name +
-				// " erfolgreich verarbeitet");
-				Query<LabResult> qr = new Query<LabResult>(LabResult.class);
-				List<LabResult> qrr = qr.execute();
-				if (qrr.size() <= 0)
-					fail("NoLabResult");
-				if (deleteAll) {
-					removeAllPatientsAndDependants();
-				}
-			}
-		} else {
-			System.out.println("Skipping Datei " + name);
-		}
-	}
-	
 	private void parseAllHL7files(File directory) throws IOException{
 		File[] files = directory.listFiles();
 		int nrFiles = 0;
@@ -161,7 +93,7 @@ public class Test_HL7_parser {
 				parseAllHL7files(file);
 			} else {
 				System.out.println("TESTING: " + file.getAbsolutePath());
-				parseOneHL7file(file, true, false);
+				parseOneHL7file(hlp, file, true, false);
 				nrFiles += 1;
 			}
 		}
@@ -186,7 +118,7 @@ public class Test_HL7_parser {
 		File overwrite_test_1 = new File(workDir.toString(), "overwrite_test_1.hl7");
 		assertEquals("Must be able to read: " + overwrite_test_1.getAbsoluteFile().toString(), true,
 			overwrite_test_1.canRead());
-		parseOneHL7file(new File(workDir.toString(), "overwrite_test_1.hl7"), false, true);
+		parseOneHL7file(hlp, new File(workDir.toString(), "overwrite_test_1.hl7"), false, true);
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		qr.orderBy(false, LabResult.ITEM_ID, LabResult.DATE, LabResult.RESULT);
 		List<LabResult> qrr = qr.execute();
@@ -212,7 +144,7 @@ public class Test_HL7_parser {
 	public void testRothenPatholical() throws IOException{
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
-		parseOneHL7file(
+		parseOneHL7file(hlp,
 			new File(workDir.toString(), "Rothen/1_Kunde_20090612083757162_10009977_.HL7"), false,
 			true);
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
@@ -270,7 +202,7 @@ public class Test_HL7_parser {
 	public void testTextResult() throws IOException{
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
-		parseOneHL7file(
+		parseOneHL7file(hlp,
 			new File(workDir.toString(), "Arnaboldi/1_20090729162631490_6038_09_12100.HL7"), false,
 			true);
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
@@ -287,7 +219,7 @@ public class Test_HL7_parser {
 	public void testTextResultMultiLinebreaks() throws IOException{
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
-		parseOneHL7file(new File(workDir.toString(), "Analytica/0216370074_6417526401671.hl7"),
+		parseOneHL7file(hlp, new File(workDir.toString(), "Analytica/0216370074_6417526401671.hl7"),
 			false, true);
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		List<LabResult> results = qr.execute();
@@ -309,7 +241,7 @@ public class Test_HL7_parser {
 	public void testAnalyticaHL7() throws IOException{
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
-		parseOneHL7file(new File(workDir.toString(), "Analytica/01TEST5005.hl7"), false, true);
+		parseOneHL7file(hlp, new File(workDir.toString(), "Analytica/01TEST5005.hl7"), false, true);
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		qr.orderBy(false, LabResult.ITEM_ID, LabResult.DATE, LabResult.RESULT);
 		List<LabResult> qrr = qr.execute();
@@ -358,7 +290,7 @@ public class Test_HL7_parser {
 	public void testAnalyticaFollowUpResultMissing_9252() throws IOException{
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
-		parseOneHL7file(
+		parseOneHL7file(hlp,
 			new File(workDir.toString(), "Analytica/erstes Resultat0217330708_6451725824332.hl7"),
 			false, true);
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
@@ -372,7 +304,7 @@ public class Test_HL7_parser {
 		qr.add(LabResult.PATIENT_ID, Query.EQUALS, labResult.getPatient().getId());
 		assertEquals(6, qr.execute().size());
 		
-		parseOneHL7file(
+		parseOneHL7file(hlp,
 			new File(workDir.toString(), "Analytica/zweites Resultat0217330708_6452745605734.hl7"),
 			false, true);
 		assertEquals("Trichophyton rubrum (nachweisbar)", labResult.getResult());
@@ -389,8 +321,8 @@ public class Test_HL7_parser {
 	public void testAnalyticaHL7LabItemName() throws IOException{
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
-		parseOneHL7file(new File(workDir.toString(), "Analytica/Influenza_Labresultat.hl7"), false,
-			true);
+		parseOneHL7file(hlp, new File(workDir.toString(), "Analytica/Influenza_Labresultat.hl7"),
+			false, true);
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		qr.orderBy(false, LabResult.ITEM_ID, LabResult.DATE, LabResult.RESULT);
 		assertEquals(3, qr.execute().size());
@@ -418,7 +350,7 @@ public class Test_HL7_parser {
 	public void testImport_10655() throws IOException{
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
-		parseOneHL7file(new File(workDir.toString(), "Analytica/0218040634_6467538389964.hl7"),
+		parseOneHL7file(hlp, new File(workDir.toString(), "Analytica/0218040634_6467538389964.hl7"),
 			false, true);
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		List<LabResult> qrr = qr.execute();
@@ -435,6 +367,8 @@ public class Test_HL7_parser {
 		assertTrue(labResult.getComment(), labResult.getComment().startsWith("Candida albicans"));
 		assertTrue(StringUtils.isEmpty(labResult.getRefMale()));
 		assertTrue(StringUtils.isEmpty(labResult.getRefFemale()));
+		assertEquals(1517049608000l, labResult.getAnalyseTime().getTimeAsLong()); // 20180127114008
+		assertEquals(1516812120000l, labResult.getObservationTime().getTimeAsLong()); // 20180124174200
 		
 		ILabItem item = labResult.getItem();
 		assertEquals("VAGINA-ABSTRICH - Kultur aerob", item.getName());
@@ -445,11 +379,52 @@ public class Test_HL7_parser {
 	public void testImportForMissingLabOrder() throws IOException{
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
-		parseOneHL7file(new File(workDir.toString(), "Analytica/01TEST5005.hl7"), false, true);
+		parseOneHL7file(hlp, new File(workDir.toString(), "Analytica/01TEST5005.hl7"), false, true);
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
 		List<LabResult> qrr = qr.execute();
 		// diese zeile kommt auch rein NTE|1||Das ist eine Bemerkung zum Befund\.br\Das ist eine weitere Bemerkung zum Befund|RE
 		assertEquals(7, qrr.size());
 		assertEquals(6, new Query<>(LabOrder.class).execute().size());
 	}
+	
+	@Test
+	public void testPatientRelatedNoteImportAsNoteLabResult_11154() throws IOException{
+		removeAllPatientsAndDependants();
+		removeAllLaboWerte();
+		parseOneHL7file(hlp, new File(workDir.toString(), "Analytica/Spermiogramm.hl7"), false,
+			true);
+		
+		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
+		List<LabResult> qrr = qr.execute();
+		assertEquals(3, qrr.size());
+		
+		boolean noteExists = false;
+		boolean spernExists = false;
+		for (LabResult labResult : qrr) {
+			LabItem item = (LabItem) labResult.getItem();
+			switch (item.getKuerzel()) {
+			case "NOTE":
+				assertEquals("Allgemeine Notiz", item.getName());
+				assertEquals("AA", item.getGroup());
+				assertEquals("1", item.getPrio());
+				assertEquals("text", labResult.getResult());
+				assertTrue(labResult.getComment().startsWith("Untersuchungsdatum und Zeit"));
+				noteExists = true;
+				break;
+			case "SPERN":
+				assertEquals("Spermien: nachweisbar", labResult.getResult());
+				assertEquals("negativ", labResult.getRefMale());
+				spernExists = true;
+				break;
+			default:
+				break;
+			}
+			assertEquals(1520430605000l, labResult.getAnalyseTime().getTimeAsLong());
+			assertEquals(1520316000000l, labResult.getObservationTime().getTimeAsLong());
+		}
+		
+		assertTrue(spernExists);
+		assertTrue(noteExists);
+	}
+	
 }

@@ -1,15 +1,20 @@
 package ch.elexis.core.importer.div.importers;
 
+import java.util.List;
 import java.util.Map;
 
+import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IContact;
 import ch.elexis.core.data.interfaces.ILabItem;
+import ch.elexis.core.data.interfaces.ILabOrder;
 import ch.elexis.core.data.interfaces.ILabResult;
 import ch.elexis.core.data.interfaces.IPatient;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.PathologicDescription;
 import ch.elexis.core.types.PathologicDescription.Description;
+import ch.elexis.data.LabItem;
 import ch.elexis.hl7.model.OrcMessage;
 import ch.rgw.tools.TimeTool;
 
@@ -113,7 +118,8 @@ public class TransientLabResult {
 		
 	}
 	
-	public ILabResult persist(){
+	public ILabResult persist(ILabOrder labOrder, String orderId,
+		String mandantId, TimeTool time, String groupName){
 		// determine gender, set refVal
 		String refVal;
 		if (Gender.MALE == patient.getGender()) {
@@ -122,8 +128,9 @@ public class TransientLabResult {
 			refVal = refFemale;
 		}
 		
-		ILabResult labResult = labImportUtil.createLabResult(patient, date, labItem, result,
-			comment, refVal, origin, subId);
+		ILabResult labResult =
+			labImportUtil.createLabResult(patient, date, labItem, result, comment, refVal, origin,
+				subId, labOrder, orderId, mandantId, time, groupName);
 		
 		setFieldsAndInterpret(labResult);
 		
@@ -134,11 +141,23 @@ public class TransientLabResult {
 			labResult.setPathologicDescription(
 				new PathologicDescription(Description.PATHO_IMPORT, rawAbnormalFlags));
 		} else {
+			
 			// if not, at last for numeric values keep the evaluation done in setFieldsAndInterpret 
 			if (!(LabItemTyp.NUMERIC == labItem.getTyp())) {
 				labResult.setPathologicDescription(
 					new PathologicDescription(Description.PATHO_IMPORT_NO_INFO, rawAbnormalFlags));
 			}
+			
+			// MPF Rule #11231
+			String originLaboratoryId = ((LabItem) labResult.getItem()).get(LabItem.LAB_ID);
+			List<String> mpfRuleContactIds = CoreHub.globalCfg.getAsList(
+				Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES);
+			if (mpfRuleContactIds.contains(originLaboratoryId)) {
+				labResult.setPathologicDescription(
+					new PathologicDescription(Description.PATHO_IMPORT, Messages.MPF_Rule_PathDescriptionText));
+				labResult.setFlags(0);
+			}
+			
 		}
 		
 		return labResult;

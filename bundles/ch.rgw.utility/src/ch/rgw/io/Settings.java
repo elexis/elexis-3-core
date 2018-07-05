@@ -21,6 +21,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -473,8 +474,8 @@ public abstract class Settings implements Serializable, Cloneable {
 		if (r.length != 4)
 			return null;
 		
-		return new Rectangle(Integer.parseInt(r[0]), Integer.parseInt(r[1]),
-			Integer.parseInt(r[2]), Integer.parseInt(r[3]));
+		return new Rectangle(Integer.parseInt(r[0]), Integer.parseInt(r[1]), Integer.parseInt(r[2]),
+			Integer.parseInt(r[3]));
 	}
 	
 	public boolean get(String key, boolean defvalue){
@@ -556,9 +557,11 @@ public abstract class Settings implements Serializable, Cloneable {
 	 */
 	public List<String> getAsList(String key){
 		String string = get(key, (String) null);
-		String[] split = string.split(",");
-		if (split != null && split.length > 0) {
-			return Arrays.asList(split);
+		if (string != null) {
+			String[] split = string.split(",");
+			if (split != null && split.length > 0) {
+				return Arrays.asList(split);
+			}
 		}
 		return Collections.emptyList();
 	}
@@ -566,12 +569,17 @@ public abstract class Settings implements Serializable, Cloneable {
 	/**
 	 * 
 	 * @param key
-	 * @param values
+	 * @param values an empty collection will remove the resp. key
 	 * @since 3.6
 	 */
 	public void setAsList(String key, List<String> values){
-		String value = values.stream().map(o -> o.toString()).reduce((u, t) -> u + "," + t).get();
-		set(key, value);
+		Optional<String> value =
+			values.stream().map(o -> o.toString()).reduce((u, t) -> u + "," + t);
+		if (value.isPresent()) {
+			set(key, value.get());
+		} else {
+			remove(key);
+		}
 	}
 	
 }

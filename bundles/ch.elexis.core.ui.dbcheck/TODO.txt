@@ -1,0 +1,3 @@
+* Beachten ob ein Eintrag auf deleted gesetzt ist!!
+* Wird bei PostgreSQL ein fehlendes Field erstellt, muss dies lowercase erfolgen, sämtliche fields sind in PGSQL per default lowercase.
+* Command that returns the string of syntactic check (integration qfeedback)

@@ -2,7 +2,7 @@
 <feature
       id="ch.elexis.core.ui.feature"
       label="Elexis Core UI Feature"
-      version="3.6.0.qualifier"
+      version="3.7.0.qualifier"
       provider-name="elexis.info">
 
    <description>
@@ -172,7 +172,7 @@
          unpack="false"/>
 
    <plugin
-         id="com.google.zxing.core"
+         id="ch.elexis.core.ui.dbcheck"
          download-size="0"
          install-size="0"
          version="0.0.0"

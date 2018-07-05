@@ -33,6 +33,12 @@
             id="ch.elexis.LabEvaluationRulesPreferencePage"
             name="%elexis.labEvaluationRulesPreferencePage">
       </page>
+        <page
+              category="ch.elexis.LaborPref"
+              class="ch.elexis.core.ui.laboratory.preferences.HL7LabImportRulesPreferencePage"
+              id="ch.elexis.HL7LabImportRulesPreferencePage"
+              name="%elexis.HL7LabImportRulesPreferencePage">
+        </page>
    </extension>
 
       <extension

@@ -712,3 +712,8 @@ ALTER TABLE BESTELLUNG_ENTRY
 
 INSERT INTO CONFIG (param,wert) VALUES ('dbversion','3.2.5');
 INSERT INTO CONFIG (param,wert) VALUES ('ElexisVersion','3.2.0');
+
+# Hack for Fall#Gesetz and cost-bearer transfer in 3.6
+# This script is clearly only executed on a new database, where we do not need
+# to transfer the old values, hence we initialize the resp. done flag
+INSERT INTO CONFIG (lastupdate,param,wert) VALUES (1,'FallGesetzCostBearerMigratedTo36','1');

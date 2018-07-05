@@ -59,6 +59,16 @@ public abstract class AbstractCoreOperationAdvisor {
 	public abstract boolean openQuestion(String title, String message);
 	
 	/**
+	 * Present an information to the user. This is analogous to
+	 * org.eclipse.jface.MessageDialog#openInfo
+	 * 
+	 * @param title
+	 * @param message
+	 * @since 3.6
+	 */
+	public abstract void openInformation(String title, String message);
+	
+	/**
 	 * Perform the login. May use {@link Anwender#login(String, String)} to initialize the log-in.
 	 * Required Post-Condition: {@link CoreHub#actUser} and {@link CoreHub#actMandant} have to
 	 * contain valid elements.
@@ -95,7 +105,8 @@ public abstract class AbstractCoreOperationAdvisor {
 	 * Provide progress information to the user
 	 * 
 	 * @param irwp
-	 * @since 3.2
+	 * @param taskName
+	 * @since 3.6 added taskName
 	 */
-	public abstract void showProgress(IRunnableWithProgress irwp);
+	public abstract void showProgress(IRunnableWithProgress irwp, String taskName);
 }

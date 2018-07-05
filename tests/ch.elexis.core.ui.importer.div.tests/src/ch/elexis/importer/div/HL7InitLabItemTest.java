@@ -3,6 +3,7 @@ package ch.elexis.importer.div;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static ch.elexis.importer.div.Helpers.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,14 +74,6 @@ public class HL7InitLabItemTest {
 		assertEquals("mmol/L", item.getEinheit());
 		assertEquals("2.20 - 2.65", item.getReferenceFemale());
 		assertEquals("2.20 - 2.65", item.getReferenceMale());
-	}
-	
-	static private void removeAllPatientsAndDependants(){
-		Query<Patient> qr = new Query<Patient>(Patient.class);
-		List<Patient> qrr = qr.execute();
-		for (int j = 0; j < qrr.size(); j++) {
-			qrr.get(j).delete(true);
-		}
 	}
 	
 	static private void removeExistingItems(){

@@ -11,6 +11,7 @@
 package ch.elexis.core.data.interfaces;
 
 import ch.elexis.core.types.PathologicDescription;
+import ch.elexis.data.LabOrder;
 import ch.rgw.tools.TimeTool;
 
 /**
@@ -73,4 +74,6 @@ public interface ILabResult {
 	void setPathologicDescription(PathologicDescription value);
 	
 	String getLabel();
+	
+	LabOrder getLabOrder();
 }

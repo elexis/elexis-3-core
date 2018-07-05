@@ -27,12 +27,14 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.SelectionDialog;
 
 import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.types.LabItemTyp;
+import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.laboratory.controls.LaborMappingComposite;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.WidgetFactory;
@@ -53,21 +55,24 @@ public class EditLabItem extends TitleAreaDialog {
 	String formel;
 	org.eclipse.swt.widgets.List labors;
 	Labor actLabor;
-	LabItem result;
+	LabItem actLabItem;
 	ArrayList<String> groups;
 	ArrayList<String> exportTags;
 	
 	private Text loincCode;
 	private Button loincCodeSelection;
+	Label originLaboratory;
+	Button originLaboratorySelection;
+	Button noRefValues;
 	
 	public EditLabItem(Shell parentShell, LabItem act){
 		super(parentShell);
 		
 		groups = new ArrayList<String>();
 		exportTags = new ArrayList<String>();
-		result = act;
+		actLabItem = act;
 		if (act != null) {
-			actLabor = act.getLabor();
+			actLabor = (actLabItem != null) ? actLabItem.getLabor() : null;
 		}
 	}
 	
@@ -85,7 +90,7 @@ public class EditLabItem extends TitleAreaDialog {
 		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, false, 4, 1);
 		layoutData.heightHint = 150;
 		mapping.setLayoutData(layoutData);
-		mapping.setLabItem(result);
+		mapping.setLabItem(actLabItem);
 		
 		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelShortLabel);
 		iKuerzel = new Text(ret, SWT.BORDER);
@@ -115,8 +120,8 @@ public class EditLabItem extends TitleAreaDialog {
 			public void widgetSelected(SelectionEvent e){
 				if (formula.getSelection()) {
 					
-					ScriptEditor se =
-						new ScriptEditor(getShell(), formel, Messages.EditLabItem_titleScriptEditor);
+					ScriptEditor se = new ScriptEditor(getShell(), formel,
+						Messages.EditLabItem_titleScriptEditor);
 					if (se.open() == Dialog.OK) {
 						formel = se.getScript();
 					}
@@ -137,11 +142,23 @@ public class EditLabItem extends TitleAreaDialog {
 		iRef = new Text(ret, SWT.BORDER);
 		iRef.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		iRef.setTextLimit(80);
+		iRef.setEnabled(actLabItem != null && !actLabItem.isNoReferenceValueItem());
 		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelRefFemale);
 		iRfF = new Text(ret, SWT.BORDER);
 		iRfF.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		iRfF.setTextLimit(80);
+		iRfF.setEnabled(actLabItem != null && !actLabItem.isNoReferenceValueItem());
 		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelUnit);
+		noRefValues = new Button(grp, SWT.CHECK);
+		noRefValues.setText(ch.elexis.core.l10n.Messages.LabResultEvaluator_LabItemNoRefValue);
+		noRefValues.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		noRefValues.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				iRef.setEnabled(!noRefValues.getSelection());
+				iRfF.setEnabled(!noRefValues.getSelection());
+			}
+		});
 		iUnit = new Text(ret, SWT.BORDER);
 		iUnit.setLayoutData(SWTHelper.getFillGridData(3, true, 1, false));
 		iUnit.setTextLimit(25);
@@ -171,6 +188,28 @@ public class EditLabItem extends TitleAreaDialog {
 		iPrio.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		iPrio.setToolTipText(Messages.EditLabItem_labelGroupPosition);
 		iPrio.setTextLimit(3);
+		
+		WidgetFactory.createLabel(ret, Messages.EditLabItem_OriginLaboratoryLabel);
+		originLaboratory = new Label(ret, SWT.None);
+		originLaboratory.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		originLaboratory.setText((actLabor != null) ? actLabor.getLabel() : "");
+		originLaboratorySelection = new Button(ret, SWT.PUSH);
+		originLaboratorySelection.setText("..."); //$NON-NLS-1$
+		originLaboratorySelection.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				KontaktSelektor ksl = new KontaktSelektor(getShell(), Labor.class,
+					Messages.EditLabItem_OriginLaboratorySelectorCaption,
+					Messages.EditLabItem_OriginLaboratorySelectorBody, false);
+				if (ksl.open() == Dialog.OK) {
+					actLabor = (Labor) ksl.getSelection();
+					originLaboratory.setText(actLabor.getLabel());
+				} else {
+					actLabor = null;
+					originLaboratory.setText("");
+				}
+			}
+		});
 		
 		WidgetFactory.createLabel(ret, "LOINC"); //$NON-NLS-1$
 		loincCode = new Text(ret, SWT.BORDER);
@@ -207,31 +246,31 @@ public class EditLabItem extends TitleAreaDialog {
 		cExportTag.setToolTipText(Messages.EditLabItem_labelHintExportTag);
 		cExportTag.setItems(exportTags.toArray(new String[0]));
 		
-		if (result != null) {
-			iKuerzel.setText(result.getKuerzel());
-			iTitel.setText(result.getName());
-			if (result.getTyp() == LabItemTyp.NUMERIC) {
+		if (actLabItem != null) {
+			iKuerzel.setText(actLabItem.getKuerzel());
+			iTitel.setText(actLabItem.getName());
+			if (actLabItem.getTyp() == LabItemTyp.NUMERIC) {
 				numeric.setSelection(true);
-			} else if (result.getTyp() == LabItemTyp.TEXT) {
+			} else if (actLabItem.getTyp() == LabItemTyp.TEXT) {
 				alph.setSelection(true);
-			} else if (result.getTyp() == LabItemTyp.ABSOLUTE) {
+			} else if (actLabItem.getTyp() == LabItemTyp.ABSOLUTE) {
 				abs.setSelection(true);
-			} else if (result.getTyp() == LabItemTyp.DOCUMENT) {
+			} else if (actLabItem.getTyp() == LabItemTyp.DOCUMENT) {
 				document.setSelection(true);
 				documentSelectionChanged();
 			} else {
 				formula.setSelection(true);
 			}
-			iUnit.setText(result.getEinheit());
-			iRef.setText(result.get(LabItem.REF_MALE));
-			iRfF.setText(result.getRefW());
-			cGroup.setText(result.getGroup());
-			iPrio.setText(result.getPrio());
-			iComma.setText(Integer.toString(result.getDigits()));
-			visible.setSelection(result.isVisible());
-			loincCode.setText(result.getLoincCode());
-			cExportTag.setText(result.getExport());
-			formel = result.getFormula();
+			iUnit.setText(actLabItem.getEinheit());
+			iRef.setText(actLabItem.get(LabItem.REF_MALE));
+			iRfF.setText(actLabItem.getRefW());
+			cGroup.setText(actLabItem.getGroup());
+			iPrio.setText(actLabItem.getPrio());
+			iComma.setText(Integer.toString(actLabItem.getDigits()));
+			visible.setSelection(actLabItem.isVisible());
+			loincCode.setText(actLabItem.getLoincCode());
+			cExportTag.setText(actLabItem.getExport());
+			formel = actLabItem.getFormula();
 		}
 		return ret;
 	}
@@ -255,21 +294,28 @@ public class EditLabItem extends TitleAreaDialog {
 		}
 		
 		if (numeric.getSelection() == true) {
-			typ =LabItemTyp.NUMERIC;
+			typ = LabItemTyp.NUMERIC;
 		} else if (abs.getSelection() == true) {
 			typ = LabItemTyp.ABSOLUTE;
 		} else if (formula.getSelection()) {
-			typ =LabItemTyp.FORMULA;
+			typ = LabItemTyp.FORMULA;
 		} else if (document.getSelection()) {
 			typ = LabItemTyp.DOCUMENT;
 		} else {
-			typ =LabItemTyp.TEXT;
+			typ = LabItemTyp.TEXT;
 		}
-		if (result == null) {
-			result = 
-				new LabItem(iKuerzel.getText(), iTitel.getText(), (Kontakt) null, iRef.getText(),
-					iRfF.getText(), iUnit.getText(), typ, cGroup.getText(), iPrio.getText());
-			mapping.persistTransientLabMappings(result);
+		
+		String refValMale = iRef.getText();
+		String refValFemale = iRef.getText();
+		if (noRefValues.getSelection()) {
+			refValMale = LabItem.REFVAL_INCONCLUSIVE;
+			refValFemale = LabItem.REFVAL_INCONCLUSIVE;
+		}
+		
+		if (actLabItem == null) {
+			actLabItem = new LabItem(iKuerzel.getText(), iTitel.getText(), (Kontakt) null,
+				refValMale, refValFemale, iUnit.getText(), typ, cGroup.getText(), iPrio.getText());
+			mapping.persistTransientLabMappings(actLabItem);
 		} else {
 			String t = "0"; //$NON-NLS-1$
 			if (typ == LabItemTyp.TEXT) {
@@ -281,25 +327,25 @@ public class EditLabItem extends TitleAreaDialog {
 			} else if (typ == LabItemTyp.DOCUMENT) {
 				t = "4"; //$NON-NLS-1$
 			}
-			result.set(new String[] {
+			actLabItem.set(new String[] {
 				LabItem.SHORTNAME, LabItem.TITLE, LabItem.LAB_ID, LabItem.REF_MALE,
-				LabItem.REF_FEMALE_OR_TEXT, LabItem.UNIT, LabItem.TYPE, LabItem.GROUP,
-				LabItem.PRIO, LabItem.EXPORT
-			}, iKuerzel.getText(), iTitel.getText(), actLabor.getId(), iRef.getText(),
-				iRfF.getText(), iUnit.getText(), t, cGroup.getText(), iPrio.getText(),
+				LabItem.REF_FEMALE_OR_TEXT, LabItem.UNIT, LabItem.TYPE, LabItem.GROUP, LabItem.PRIO,
+				LabItem.EXPORT
+			}, iKuerzel.getText(), iTitel.getText(), (actLabor != null) ? actLabor.getId() : null,
+				refValMale, refValFemale, iUnit.getText(), t, cGroup.getText(), iPrio.getText(),
 				cExportTag.getText());
 		}
-		result.setLoincCode(loincCode.getText());
+		actLabItem.setLoincCode(loincCode.getText());
 		
 		if (!iComma.getText().isEmpty()) {
-			result.setDigits(Integer.parseInt(iComma.getText()));
+			actLabItem.setDigits(Integer.parseInt(iComma.getText()));
 		} else {
-			result.setDigits(0);
+			actLabItem.setDigits(0);
 		}
-		result.setVisible(visible.getSelection());
+		actLabItem.setVisible(visible.getSelection());
 		
 		if (!StringTool.isNothing(formel)) {
-			result.setFormula(formel);
+			actLabItem.setFormula(formel);
 		}
 		super.okPressed();
 	}

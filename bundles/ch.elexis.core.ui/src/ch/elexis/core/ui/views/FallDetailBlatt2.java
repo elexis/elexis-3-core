@@ -862,7 +862,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	}
 	
 	private void allowFieldUpdate(boolean lockEnabled){
-		boolean allowFieldUpdate = true;
+		boolean noExistingInvoicesForThisCoverage = true;
 		boolean costBearerEnabled = true;
 		if (actFall != null) {
 			Query<Rechnung> rQuery = new Query<Rechnung>(Rechnung.class);
@@ -870,14 +870,17 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			List<Rechnung> billMatch = rQuery.execute();
 			
 			if (billMatch != null && !billMatch.isEmpty()) {
-				allowFieldUpdate = false;
+				noExistingInvoicesForThisCoverage = false;
 			}
 			costBearerEnabled = !BillingSystem.isCostBearerDisabled(actFall.getAbrechnungsSystem());
 		}
 		
-		boolean enable = lockEnabled && (allowFieldUpdate || invoiceCorrection);
+		boolean enable = lockEnabled && (noExistingInvoicesForThisCoverage || invoiceCorrection);
 		
 		tBezeichnung.setEditable(lockEnabled);
+		
+		dpVon.setEnabled(enable);
+		dpBis.setEnabled(lockEnabled); // coverage must be endable - even if invoices exist
 		
 		cAbrechnung.setEnabled(enable);
 		cReason.setEnabled(enable);
