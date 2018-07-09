@@ -188,8 +188,10 @@ public class HL7_ORU_R01 extends HL7Writer {
 				String pid8_patientSex = pid.getPid8_Sex().getValue();
 				FT[] nteAfterPid_patientNotesAndCommentsArray =
 					oru.getPATIENT_RESULT().getPATIENT().getNTE().getComment();
-				String nteAfterPid_patientNotesAndComments =
-					String.join("\n", nteAfterPid_patientNotesAndCommentsArray[0].getValue());
+				String nteAfterPid_patientNotesAndComments = String.join("\n",
+						(nteAfterPid_patientNotesAndCommentsArray.length > 0)
+								? nteAfterPid_patientNotesAndCommentsArray[0].getValue()
+								: null);
 				if ("W".equals(pid8_patientSex.toUpperCase()))
 					pid8_patientSex = "F";
 				String orc2_placerOrderNumber = oru.getPATIENT_RESULT().getORDER_OBSERVATION()
