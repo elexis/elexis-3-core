@@ -155,7 +155,7 @@ public class ReminderVisibilityAndPopupComposite extends Composite {
 		} else {
 			visibility = (visibility == null) ? Visibility.ALWAYS : visibility;
 			Patient patient = ElexisEventDispatcher.getSelectedPatient();
-			boolean defaultPatientRelated = CoreHub.userCfg.get(Preferences.USR_REMINDER_DEFAULT_PATIENT_RELATED, true);
+			boolean defaultPatientRelated = CoreHub.userCfg.get(Preferences.USR_REMINDER_DEFAULT_PATIENT_RELATED, false);
 			showOnlyOnSelectedPatient.setSelection(defaultPatientRelated && patient != null);
 			showOnlyOnSelectedPatient.setToolTipText(Messages.ReminderView_defaultPatientRelatedTooltip);
 			showOnlyOnSelectedPatient.setToolTipText("Der Vorgabewert kann unter Einstellungen..Anwender..Pendenzen geändert werden");
