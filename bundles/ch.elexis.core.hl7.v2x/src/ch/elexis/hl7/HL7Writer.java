@@ -448,11 +448,10 @@ public abstract class HL7Writer {
 			fax = kontakt.getFax();
 		}
 		if (phone1 != null) {
-			phone1 = phone1.replaceAll(" ", "");
+			phone1 = phone1.replaceAll("[^\\d.]", "");
 			xtn.getPhoneNumber().setValue(phone1);
 		}
 		if (email != null) {
-			email = email.replaceAll(" ", "");
 			xtn.getEmailAddress().setValue(email);
 		}
 		xtn.getXtn2_TelecommunicationUseCode().setValue(""); //$NON-NLS-1$
