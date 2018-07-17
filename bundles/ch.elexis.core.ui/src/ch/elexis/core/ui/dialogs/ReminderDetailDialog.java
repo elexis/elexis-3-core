@@ -403,7 +403,7 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 			rvapc.setConfiguredVisibility(reminder.getVisibility(),
 				reminder.isPatientRelated() && patient != null);
 		} else {
-			rvapc.setConfiguredVisibility(Visibility.ALWAYS, patient != null);
+			rvapc.setConfiguredVisibility(null, patient != null);
 		}
 		updateModelToTarget();
 	}
