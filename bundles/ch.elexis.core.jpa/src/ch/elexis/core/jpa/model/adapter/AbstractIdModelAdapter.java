@@ -1,5 +1,6 @@
 package ch.elexis.core.jpa.model.adapter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -7,6 +8,7 @@ import java.util.Date;
 
 import ch.elexis.core.jpa.entities.AbstractDBObjectId;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.IModelService;
 
 public abstract class AbstractIdModelAdapter<T extends AbstractDBObjectId> implements Identifiable {
 	
@@ -26,6 +28,18 @@ public abstract class AbstractIdModelAdapter<T extends AbstractDBObjectId> imple
 		return entity;
 	}
 	
+	/**
+	 * <b>IMPORTANT:</b> this method should only be used {@link IModelService} implementations to
+	 * update the entity on merge. This is needed if entity listeners update values of the entity on
+	 * persist, to update with the modified entity.
+	 * 
+	 * @param entity
+	 */
+	@SuppressWarnings("unchecked")
+	public void setEntity(AbstractDBObjectId entity){
+		this.entity = (T) entity;
+	}
+	
 	@Override
 	public String getId(){
 		return getEntity().getId();
@@ -38,6 +52,11 @@ public abstract class AbstractIdModelAdapter<T extends AbstractDBObjectId> imple
 	
 	protected Date toDate(LocalDateTime localDateTime){
 		ZonedDateTime atZone = localDateTime.atZone(ZoneId.systemDefault());
+		return Date.from(atZone.toInstant());
+	}
+	
+	protected Date toDate(LocalDate localDate){
+		ZonedDateTime atZone = localDate.atStartOfDay(ZoneId.systemDefault());
 		return Date.from(atZone.toInstant());
 	}
 	

@@ -8,9 +8,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.interfaces.IOrderEntry;
 import ch.elexis.core.data.service.StockService;
-import ch.elexis.core.model.IOrderEntry;
-import ch.elexis.core.services.IOrderService;
+import ch.elexis.core.data.services.IOrderService;
 import ch.rgw.tools.JdbcLink;
 
 

@@ -1,13 +1,6 @@
-package ch.elexis.core.model.article;
+package ch.elexis.core.data.interfaces;
 
-import ch.elexis.core.model.Identifiable;
-
-/**
- * @since 3.2
- * @since 3.4 extends {@link Identifiable}
- */
-public interface IArticle extends Identifiable {
-	
+public interface IArticle {
 	/**
 	 * @return the number of dispensable items available within a package, or 0 if unknown
 	 */
@@ -29,4 +22,6 @@ public interface IArticle extends Identifiable {
 	public boolean isProduct();
 	
 	public String getGTIN();
+	
+	public String getLabel();
 }

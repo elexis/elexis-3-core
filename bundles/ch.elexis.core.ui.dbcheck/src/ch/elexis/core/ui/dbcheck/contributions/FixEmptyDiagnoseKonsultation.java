@@ -8,7 +8,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.model.IDiagnose;
+import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.ui.dbcheck.external.ExternalMaintenance;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;

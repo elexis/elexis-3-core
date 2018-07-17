@@ -10,11 +10,14 @@
  ******************************************************************************/
 package ch.elexis.core.data.beans;
 
+import java.util.List;
+
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.beans.base.BeanPersistentObject;
 import ch.elexis.core.data.interfaces.IContact;
 import ch.elexis.core.data.interfaces.IPatient;
 import ch.elexis.core.data.interfaces.IPerson;
+import ch.elexis.core.data.interfaces.IXid;
 import ch.elexis.core.types.Country;
 import ch.elexis.core.types.Gender;
 import ch.elexis.data.Kontakt;
@@ -313,12 +316,10 @@ public class ContactBean extends BeanPersistentObject<Kontakt>
 		firePropertyChange("country", old, value);
 	}
 	
-	@Override
 	public boolean isDeleted(){
 		return cache.isDeleted;
 	}
 	
-	@Override
 	public void setDeleted(boolean value){
 		boolean old = isDeleted();
 		entity.delete();
@@ -534,5 +535,83 @@ public class ContactBean extends BeanPersistentObject<Kontakt>
 	@Override
 	public String getFamilyName(){
 		return cache.description1;
+	}
+	
+	@Override
+	public IXid getXid(){
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public List<IXid> getXids(){
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public long getLastUpdate(){
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	@Override
+	public boolean isValid(){
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	@Override
+	public String storeToString(){
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public int state(){
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	@Override
+	public boolean exists(){
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	@Override
+	public boolean isAvailable(){
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	@Override
+	public String getXid(String domain){
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public boolean addXid(String domain, String domain_id, boolean updateIfExists){
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	@Override
+	public boolean get(String[] fields, String[] values){
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	@Override
+	public String get(String field){
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public boolean set(String field, String value){
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

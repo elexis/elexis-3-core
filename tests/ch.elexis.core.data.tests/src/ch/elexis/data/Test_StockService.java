@@ -8,9 +8,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.interfaces.IStockEntry;
 import ch.elexis.core.data.service.StockService;
-import ch.elexis.core.model.IStockEntry;
-import ch.elexis.core.services.IStockService.Availability;
+import ch.elexis.core.data.services.IStockService.Availability;
 import ch.rgw.tools.JdbcLink;
 
 public class Test_StockService extends AbstractPersistentObjectTest {

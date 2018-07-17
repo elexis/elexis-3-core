@@ -53,6 +53,7 @@ import ch.elexis.data.LabItem;
 import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.Patient;
+import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 
 public class Test_HL7_parser {
@@ -279,8 +280,9 @@ public class Test_HL7_parser {
 		assertTrue(aItem.getName().contains("moglobin"));
 		assertEquals(LabItemTyp.NUMERIC, aItem.getTyp());
 		assertTrue(aItem.getGroup().contains(Messages.HL7Parser_AutomaticAddedGroup));
-		assertEquals("HL7_Test", aItem.getLabor().getKuerzel());
-		assertEquals(AllTests.testLab.getId(), aItem.getLabor().getId());
+		// dint test deprecated fields ...
+		//		assertEquals("HL7_Test", aItem.getLabor().getKuerzel());
+		//		assertEquals(AllTests.testLab.getId(), aItem.getLabor().getId());
 		Query<Patient> pqr = new Query<Patient>(Patient.class);
 		List<Patient> pqrr = pqr.execute();
 		assertEquals(1, pqrr.size());
@@ -307,6 +309,8 @@ public class Test_HL7_parser {
 		parseOneHL7file(hlp,
 			new File(workDir.toString(), "Analytica/zweites Resultat0217330708_6452745605734.hl7"),
 			false, true);
+		// clear cache, imported with JPA persistence API
+		PersistentObject.clearCache();
 		assertEquals("Trichophyton rubrum (nachweisbar)", labResult.getResult());
 		assertEquals("20170901144005", labResult.get(LabResult.ANALYSETIME));
 	}
@@ -384,7 +388,13 @@ public class Test_HL7_parser {
 		List<LabResult> qrr = qr.execute();
 		// diese zeile kommt auch rein NTE|1||Das ist eine Bemerkung zum Befund\.br\Das ist eine weitere Bemerkung zum Befund|RE
 		assertEquals(7, qrr.size());
-		assertEquals(6, new Query<>(LabOrder.class).execute().size());
+		Query<LabOrder> query = new Query<LabOrder>(LabOrder.class);
+		List<LabOrder> orders = query.execute();
+		String firstOrderId = orders.get(0).get(LabOrder.FLD_ORDERID);
+		for (LabOrder labOrder : orders) {
+			assertTrue(labOrder.getLabResult() != null);
+			assertEquals(firstOrderId, labOrder.get(LabOrder.FLD_ORDERID));
+		}
 	}
 	
 	@Test

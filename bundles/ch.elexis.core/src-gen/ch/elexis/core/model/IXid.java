@@ -22,9 +22,8 @@ package ch.elexis.core.model;
  * <ul>
  *   <li>{@link ch.elexis.core.model.IXid#getDomain <em>Domain</em>}</li>
  *   <li>{@link ch.elexis.core.model.IXid#getDomainId <em>Domain Id</em>}</li>
- *   <li>{@link ch.elexis.core.model.IXid#getObject <em>Object</em>}</li>
  *   <li>{@link ch.elexis.core.model.IXid#getQuality <em>Quality</em>}</li>
- *   <li>{@link ch.elexis.core.model.IXid#isGUID <em>GUID</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IXid#getObjectId <em>Object Id</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIXid()
@@ -41,11 +40,22 @@ public interface IXid extends Deleteable, Identifiable {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Domain</em>' attribute.
+	 * @see #setDomain(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIXid_Domain()
-	 * @model changeable="false"
+	 * @model
 	 * @generated
 	 */
 	String getDomain();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IXid#getDomain <em>Domain</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Domain</em>' attribute.
+	 * @see #getDomain()
+	 * @generated
+	 */
+	void setDomain(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Domain Id</b></em>' attribute.
@@ -56,26 +66,22 @@ public interface IXid extends Deleteable, Identifiable {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Domain Id</em>' attribute.
+	 * @see #setDomainId(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIXid_DomainId()
-	 * @model changeable="false"
+	 * @model
 	 * @generated
 	 */
 	String getDomainId();
 
 	/**
-	 * Returns the value of the '<em><b>Object</b></em>' reference.
+	 * Sets the value of the '{@link ch.elexis.core.model.IXid#getDomainId <em>Domain Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Object</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Object</em>' reference.
-	 * @see ch.elexis.core.model.ModelPackage#getIXid_Object()
-	 * @model changeable="false"
+	 * @param value the new value of the '<em>Domain Id</em>' attribute.
+	 * @see #getDomainId()
 	 * @generated
 	 */
-	Identifiable getObject();
+	void setDomainId(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Quality</b></em>' attribute.
@@ -86,25 +92,63 @@ public interface IXid extends Deleteable, Identifiable {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Quality</em>' attribute.
+	 * @see #setQuality(XidQuality)
 	 * @see ch.elexis.core.model.ModelPackage#getIXid_Quality()
-	 * @model changeable="false"
+	 * @model dataType="ch.elexis.core.types.XidQuality"
 	 * @generated
 	 */
-	int getQuality();
+	XidQuality getQuality();
 
 	/**
-	 * Returns the value of the '<em><b>GUID</b></em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IXid#getQuality <em>Quality</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Quality</em>' attribute.
+	 * @see #getQuality()
+	 * @generated
+	 */
+	void setQuality(XidQuality value);
+
+	/**
+	 * Returns the value of the '<em><b>Object Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>GUID</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Object Id</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>GUID</em>' attribute.
-	 * @see ch.elexis.core.model.ModelPackage#getIXid_GUID()
-	 * @model changeable="false"
+	 * @return the value of the '<em>Object Id</em>' attribute.
+	 * @see #setObjectId(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIXid_ObjectId()
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='object'"
 	 * @generated
 	 */
-	boolean isGUID();
+	String getObjectId();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IXid#getObjectId <em>Object Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Object Id</em>' attribute.
+	 * @see #getObjectId()
+	 * @generated
+	 */
+	void setObjectId(String value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	<T> T getObject(Class<T> clazz);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	void setObject(Object object);
 
 } // IXid

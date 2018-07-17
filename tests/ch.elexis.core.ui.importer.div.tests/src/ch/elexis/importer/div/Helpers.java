@@ -26,6 +26,7 @@ import org.apache.commons.io.FileUtils;
 import ch.elexis.core.data.util.PlatformHelper;
 import ch.elexis.core.importer.div.importers.HL7Parser;
 import ch.elexis.data.LabItem;
+import ch.elexis.data.LabMapping;
 import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.Patient;
@@ -87,6 +88,11 @@ public class Helpers {
 		List<LabOrder> qrro = qro.execute();
 		for (int j = 0; j < qrro.size(); j++) {
 			qrro.get(j).removeFromDatabase();
+		}
+		Query<LabMapping> qrlm = new Query<LabMapping>(LabMapping.class);
+		List<LabMapping> qMa = qrlm.execute();
+		for (int j = 0; j < qMa.size(); j++) {
+			qMa.get(j).removeFromDatabase();
 		}
 		Query<LabItem> qrli = new Query<LabItem>(LabItem.class);
 		List<LabItem> qLi = qrli.execute();

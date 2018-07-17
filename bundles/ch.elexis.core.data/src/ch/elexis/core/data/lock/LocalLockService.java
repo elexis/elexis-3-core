@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -20,27 +21,29 @@ import com.eclipsesource.jaxrs.consumer.ConsumerFactory;
 
 import ch.elexis.core.common.InstanceStatus;
 import ch.elexis.core.common.InstanceStatus.STATE;
+import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.server.ElexisServerInstanceService;
 import ch.elexis.core.data.server.ElexisServerLockService;
+import ch.elexis.core.data.service.ModelServiceHolder;
 import ch.elexis.core.data.services.ILocalLockService;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockRequest;
 import ch.elexis.core.lock.types.LockRequest.Type;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.server.IInstanceService;
 import ch.elexis.core.server.ILockService;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.User;
 
 /**
- * ILocalLockService implementation. Managing locks of PersistentObjects.</br>
+ * ILocalLockService implementation. Managing locks of PersistentObjects, or Identifiable.</br>
  * If the environment variable <b>ELEXIS_SERVER_REST_INTERFACE_URL</b> is set a connection to a
  * remote LockService will used internal.
  * 
@@ -128,6 +131,19 @@ public class LocalLockService implements ILocalLockService {
 	}
 	
 	@Override
+	public LockResponse releaseLock(Identifiable identifiable){
+		if (identifiable == null) {
+			return LockResponse.DENIED(null);
+		}
+		logger.debug("Releasing lock on [" + identifiable + "]");
+		Optional<String> storeToString = ModelServiceHolder.get().storeToString(identifiable);
+		if (storeToString.isPresent()) {
+			return releaseLock(storeToString.get());
+		}
+		throw new IllegalStateException("No storeToString for [" + identifiable + "]");
+	}
+	
+	@Override
 	public LockResponse releaseLock(LockInfo lockInfo){
 		if (lockInfo.getElementStoreToString() == null) {
 			return LockResponse.DENIED(null);
@@ -196,6 +212,25 @@ public class LocalLockService implements ILocalLockService {
 		}
 		
 		return lr;
+	}
+	
+	@Override
+	public LockResponse acquireLock(Identifiable identifiable){
+		if (identifiable == null) {
+			return LockResponse.DENIED(null);
+		}
+		logger.debug("Acquiring lock on [" + identifiable + "]");
+		Optional<String> storeToString = ModelServiceHolder.get().storeToString(identifiable);
+		if (storeToString.isPresent()) {
+			LockResponse lr = acquireLock(storeToString.get());
+			
+			if (lr.getStatus() == LockResponse.Status.ERROR) {
+				logger.warn("LockResponse ERROR");
+			}
+			
+			return lr;
+		}
+		throw new IllegalStateException("No storeToString for [" + identifiable + "]");
 	}
 	
 	private LockResponse acquireLock(String storeToString){

@@ -13,8 +13,6 @@ package ch.elexis.core.jpa.entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import ch.elexis.core.model.XidQuality;
@@ -27,13 +25,7 @@ import ch.elexis.core.model.XidQuality;
  */
 @Entity
 @Table(name = "xid")
-@NamedQueries({
-		@NamedQuery(name = Xid.QUERY_findAllIncludeDeletedForObject, query = "SELECT e FROM Xid e WHERE e.deleted LIKE '0' AND e.object LIKE :object"),
-		@NamedQuery(name = Xid.QUERY_findAllExcludeDeletedForObjectAndDomain, query = "SELECT e FROM Xid e WHERE e.deleted LIKE '0' AND e.object LIKE :object AND e.domain LIKE :domain") })
 public class Xid extends AbstractDBObjectIdDeleted {
-
-	public static final String QUERY_findAllIncludeDeletedForObject = "QUERY_findAllIncludeDeletedForObject";
-	public static final String QUERY_findAllExcludeDeletedForObjectAndDomain = "QUERY_findAllIncludeDeletedForObjectAndDomain";
 
 	@Column(length = 255)
 	protected String domain;

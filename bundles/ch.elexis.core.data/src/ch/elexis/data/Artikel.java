@@ -16,8 +16,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.interfaces.IArticle;
 import ch.elexis.core.data.interfaces.IFall;
-import ch.elexis.core.model.article.IArticle;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;

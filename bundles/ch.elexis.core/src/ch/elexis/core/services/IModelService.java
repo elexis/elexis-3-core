@@ -3,6 +3,7 @@ package ch.elexis.core.services;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.Identifiable;
@@ -42,7 +43,7 @@ public interface IModelService {
 	 * @param string
 	 * @return
 	 */
-	public Optional<Identifiable> loadFromString(String string);
+	public Optional<Identifiable> loadFromString(String storeToString);
 	
 	/**
 	 * Split a storeToString into an array containing the type and the id. Expected separator string
@@ -127,5 +128,22 @@ public interface IModelService {
 	 * @param deletable
 	 */
 	public void delete(Deleteable deletable);
+	
+	/**
+	 * Post an asynchronous event using the OSGi event admin. The event including the object is also
+	 * available to the e4 IEventBroker in the UI.
+	 * 
+	 * @param topic
+	 * @param object
+	 */
+	public void postEvent(String topic, Object object);
+	
+	/**
+	 * Execute the native query and return the result list.
+	 * 
+	 * @param sql
+	 * @return
+	 */
+	public Stream<?> executeNativeQuery(String sql);
 	
 }

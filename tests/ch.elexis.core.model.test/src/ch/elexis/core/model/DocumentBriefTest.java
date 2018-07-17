@@ -88,7 +88,7 @@ public class DocumentBriefTest {
 		assertTrue(modelSerice.save(letter2));
 		
 		IQuery<IDocumentLetter> query = modelSerice.getQuery(IDocumentLetter.class);
-		query.add(ModelPackage.Literals.IDOCUMENT__PATIENT, COMPARATOR.EQUALS, patient1);
+		query.and(ModelPackage.Literals.IDOCUMENT__PATIENT, COMPARATOR.EQUALS, patient1);
 		List<IDocumentLetter> existing = query.execute();
 		assertNotNull(existing);
 		assertFalse(existing.isEmpty());

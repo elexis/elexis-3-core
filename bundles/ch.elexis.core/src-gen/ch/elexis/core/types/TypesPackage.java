@@ -247,6 +247,39 @@ public interface TypesPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '<em>Local Date</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see java.time.LocalDate
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLocalDate()
+	 * @generated
+	 */
+	int LOCAL_DATE = 15;
+
+
+	/**
+	 * The meta object id for the '<em>Xid Quality</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.XidQuality
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getXidQuality()
+	 * @generated
+	 */
+	int XID_QUALITY = 16;
+
+
+	/**
+	 * The meta object id for the '<em>Lab Order State</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.LabOrderState
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLabOrderState()
+	 * @generated
+	 */
+	int LAB_ORDER_STATE = 17;
+
+
+	/**
 	 * Returns the meta object for class '{@link java.lang.Comparable <em>Comparable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -406,6 +439,39 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EDataType getOutputStream();
+
+	/**
+	 * Returns the meta object for data type '{@link java.time.LocalDate <em>Local Date</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Local Date</em>'.
+	 * @see java.time.LocalDate
+	 * @model instanceClass="java.time.LocalDate"
+	 * @generated
+	 */
+	EDataType getLocalDate();
+
+	/**
+	 * Returns the meta object for data type '{@link ch.elexis.core.model.XidQuality <em>Xid Quality</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Xid Quality</em>'.
+	 * @see ch.elexis.core.model.XidQuality
+	 * @model instanceClass="ch.elexis.core.model.XidQuality"
+	 * @generated
+	 */
+	EDataType getXidQuality();
+
+	/**
+	 * Returns the meta object for data type '{@link ch.elexis.core.model.LabOrderState <em>Lab Order State</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Lab Order State</em>'.
+	 * @see ch.elexis.core.model.LabOrderState
+	 * @model instanceClass="ch.elexis.core.model.LabOrderState"
+	 * @generated
+	 */
+	EDataType getLabOrderState();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -578,6 +644,36 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType OUTPUT_STREAM = eINSTANCE.getOutputStream();
+
+		/**
+		 * The meta object literal for the '<em>Local Date</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see java.time.LocalDate
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLocalDate()
+		 * @generated
+		 */
+		EDataType LOCAL_DATE = eINSTANCE.getLocalDate();
+
+		/**
+		 * The meta object literal for the '<em>Xid Quality</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.XidQuality
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getXidQuality()
+		 * @generated
+		 */
+		EDataType XID_QUALITY = eINSTANCE.getXidQuality();
+
+		/**
+		 * The meta object literal for the '<em>Lab Order State</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.LabOrderState
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLabOrderState()
+		 * @generated
+		 */
+		EDataType LAB_ORDER_STATE = eINSTANCE.getLabOrderState();
 
 	}
 

@@ -2,7 +2,12 @@ package ch.elexis.core.jpa.model.adapter;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import org.slf4j.LoggerFactory;
 
@@ -11,11 +16,60 @@ import ch.elexis.core.model.Identifiable;
 
 public abstract class AbstractModelAdapterFactory {
 	
+	protected Map<Class<? extends AbstractIdModelAdapter<?>>, List<MappingEntry>> adapterToEntryMap;
+	protected Map<Class<? extends AbstractDBObjectId>, List<MappingEntry>> entityToEntryMap;
+	protected Map<Class<?>, List<MappingEntry>> interfaceToEntryMap;
+	protected Map<Class<? extends AbstractIdModelAdapter<?>>, Constructor<?>> adapterConstructorMap;
+	
 	public AbstractModelAdapterFactory(){
+		adapterToEntryMap = new HashMap<>();
+		entityToEntryMap = new HashMap<>();
+		interfaceToEntryMap = new HashMap<>();
+		adapterConstructorMap = new HashMap<>();
+		
 		initializeMappings();
+		initializeAdapterContructors();
+	}
+	
+	private void initializeAdapterContructors(){
+		for (Class<? extends AbstractIdModelAdapter<?>> adapterClass : adapterToEntryMap.keySet()) {
+			List<MappingEntry> entries = adapterToEntryMap.get(adapterClass);
+			for (MappingEntry interfaceAdapterEntityEntry : entries) {
+				adapterConstructorMap.put(adapterClass, getAdapterConstructor(adapterClass,
+					interfaceAdapterEntityEntry.getEntityClass()));
+			}
+		}
 	}
 	
 	protected abstract void initializeMappings();
+	
+	/**
+	 * Add the {@link MappingEntry} to the maps.
+	 * 
+	 * @param entry
+	 */
+	protected void addMapping(MappingEntry entry){
+		List<MappingEntry> list = interfaceToEntryMap.get(entry.getInterfaceClass());
+		if (list == null) {
+			list = new ArrayList<>();
+		}
+		list.add(entry);
+		interfaceToEntryMap.put(entry.getInterfaceClass(), list);
+		
+		list = adapterToEntryMap.get(entry.getAdapterClass());
+		if (list == null) {
+			list = new ArrayList<>();
+		}
+		list.add(entry);
+		adapterToEntryMap.put(entry.getAdapterClass(), list);
+		
+		list = entityToEntryMap.get(entry.getEntityClass());
+		if (list == null) {
+			list = new ArrayList<>();
+		}
+		list.add(entry);
+		entityToEntryMap.put(entry.getEntityClass(), list);
+	}
 	
 	/**
 	 * Get the {@link MappingEntry} for the model interface clazz.
@@ -23,7 +77,10 @@ public abstract class AbstractModelAdapterFactory {
 	 * @param clazz
 	 * @return
 	 */
-	protected abstract MappingEntry getMappingForInterface(Class<?> clazz);
+	protected MappingEntry getMappingForInterface(Class<?> clazz){
+		List<MappingEntry> entryList = interfaceToEntryMap.get(clazz);
+		return getSingleEntry(entryList);
+	}
 	
 	/**
 	 * Get the {@link MappingEntry} for the {@link AbstractIdModelAdapter}
@@ -31,8 +88,10 @@ public abstract class AbstractModelAdapterFactory {
 	 * @param adapter
 	 * @return
 	 */
-	protected abstract MappingEntry getMappingForAdapter(
-		Class<? extends AbstractIdModelAdapter<?>> adapter);
+	protected MappingEntry getMappingForAdapter(Class<? extends AbstractIdModelAdapter<?>> adapter){
+		List<MappingEntry> entryList = adapterToEntryMap.get(adapter);
+		return getSingleEntry(entryList);
+	}
 	
 	/**
 	 * Get the {@link MappingEntry} for the entity clazz. The interfaceClass parameter is optional,
@@ -42,8 +101,15 @@ public abstract class AbstractModelAdapterFactory {
 	 * @param interfaceClass
 	 * @return
 	 */
-	protected abstract MappingEntry getMappingEntity(
-		Class<? extends AbstractDBObjectId> entity, Class<?> interfaceClass);
+	protected MappingEntry getMappingEntity(Class<? extends AbstractDBObjectId> entity,
+		Class<?> interfaceClass){
+		List<MappingEntry> entryList = entityToEntryMap.get(entity);
+		if (interfaceClass != null) {
+			return getSingleEntry(entryList, e -> e.getInterfaceClass() == interfaceClass);
+		} else {
+			return getSingleEntry(entryList);
+		}
+	}
 	
 	/**
 	 * Get the {@link Constructor} for creating an instance of the {@link AbstractIdModelAdapter}
@@ -52,8 +118,10 @@ public abstract class AbstractModelAdapterFactory {
 	 * @param adapter
 	 * @return
 	 */
-	protected abstract Constructor<?> getAdapterConstructor(
-		Class<? extends AbstractIdModelAdapter<?>> adapter);
+	protected Constructor<?> getAdapterConstructor(
+		Class<? extends AbstractIdModelAdapter<?>> adapter){
+		return adapterConstructorMap.get(adapter);
+	}
 	
 	/**
 	 * Get a {@link Identifiable} model adapter instance. The interfaceClass parameter is optional,
@@ -165,5 +233,26 @@ public abstract class AbstractModelAdapterFactory {
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new IllegalStateException("Error creating adapter", e);
 		}
+	}
+	
+	private MappingEntry getSingleEntry(List<MappingEntry> entryList){
+		if (entryList != null && !entryList.isEmpty()) {
+			return entryList.get(0);
+		}
+		return null;
+	}
+	
+	private MappingEntry getSingleEntry(List<MappingEntry> entryList,
+		Predicate<MappingEntry> matcher){
+		if (entryList != null && !entryList.isEmpty()) {
+			for (MappingEntry mappingEntry : entryList) {
+				if (matcher.test(mappingEntry)) {
+					return mappingEntry;
+				}
+			}
+			throw new IllegalStateException(
+				"Ambiguous adapter mapping for [" + entryList.get(0).getAdapterClass() + "]");
+		}
+		return null;
 	}
 }

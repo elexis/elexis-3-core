@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.server.ILockService;
 
 /**
@@ -23,7 +24,11 @@ public interface ILocalLockService extends ILockService {
 	
 	public LockResponse acquireLock(IPersistentObject po);
 	
+	public LockResponse acquireLock(Identifiable identifiable);
+	
 	public LockResponse releaseLock(IPersistentObject po);
+	
+	public LockResponse releaseLock(Identifiable identifiable);
 	
 	public LockResponse releaseLock(LockInfo lockInfo);
 	

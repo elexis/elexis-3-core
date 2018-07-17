@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 
+import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
-import ch.elexis.core.model.article.IArticle;
 
 public interface IStockService {
 

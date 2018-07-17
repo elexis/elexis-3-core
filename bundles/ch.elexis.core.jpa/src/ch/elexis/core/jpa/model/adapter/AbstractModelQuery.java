@@ -3,26 +3,43 @@ package ch.elexis.core.jpa.model.adapter;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.Stack;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
 
+import org.eclipse.emf.ecore.EAnnotation;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jpa.entities.AbstractDBObjectId;
-import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.jpa.entities.AbstractDBObjectIdDeleted;
+import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.IQuery;
 
-public abstract class AbstractModelQuery<T> {
+/**
+ * Abstract super class for JPA based {@link IQuery} implementations.
+ * 
+ * @author thomas
+ *
+ * @param <T>
+ */
+public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	
 	protected Class<T> clazz;
 	
 	protected EntityManager entityManager;
 	protected CriteriaBuilder criteriaBuilder;
+	
+	protected Stack<PredicateGroup> predicateGroups;
 	
 	protected CriteriaQuery<?> criteriaQuery;
 	protected Root<? extends AbstractDBObjectId> rootQuery;
@@ -38,8 +55,79 @@ public abstract class AbstractModelQuery<T> {
 		this.entityManager = entityManager;
 		this.criteriaBuilder = entityManager.getCriteriaBuilder();
 		this.includeDeleted = includeDeleted;
+		this.predicateGroups = new Stack<>();
 		
 		initialize();
+	}
+	
+	/**
+	 * Get the current (top) {@link PredicateGroup} from the stack, or create a new
+	 * {@link PredicateGroup} and put it on top of the stack.
+	 * 
+	 * @return
+	 */
+	protected PredicateGroup getCurrentPredicateGroup(){
+		PredicateGroup ret = null;
+		if (predicateGroups.isEmpty()) {
+			ret = createPredicateGroup();
+		} else {
+			return predicateGroups.peek();
+		}
+		return ret;
+	}
+	
+	/**
+	 * Create a new {@link PredicateGroup} on the stack.
+	 * 
+	 * @return
+	 */
+	protected PredicateGroup createPredicateGroup(){
+		PredicateGroup ret = new PredicateGroup(criteriaBuilder);
+		predicateGroups.push(ret);
+		return ret;
+	}
+	
+	/**
+	 * Join the 2 last created {@link PredicateGroup}s with and, and return the resulting
+	 * {@link PredicateGroup}. It is also the new top of the stack.
+	 * 
+	 * @return
+	 */
+	protected PredicateGroup andPredicateGroups(){
+		if (predicateGroups.size() > 1) {
+			PredicateGroup top = predicateGroups.pop();
+			PredicateGroup join = predicateGroups.pop();
+			return predicateGroups.push(new PredicateGroup(criteriaBuilder,
+				criteriaBuilder.and(join.getPredicate(), top.getPredicate())));
+		} else {
+			throw new IllegalStateException("At least 2 groups required for and operation");
+		}
+	}
+	
+	/**
+	 * Join the 2 last created {@link PredicateGroup}s with or, and return the resulting
+	 * {@link PredicateGroup}. It is also the new top of the stack.
+	 * 
+	 * @return
+	 */
+	protected PredicateGroup orPredicateGroups(){
+		if (predicateGroups.size() > 1) {
+			PredicateGroup top = predicateGroups.pop();
+			PredicateGroup join = predicateGroups.pop();
+			return predicateGroups.push(new PredicateGroup(criteriaBuilder,
+				criteriaBuilder.or(join.getPredicate(), top.getPredicate())));
+		} else {
+			throw new IllegalStateException("At least 2 groups required for or operation");
+		}
+	}
+	
+	/**
+	 * Get the current size of the {@link PredicateGroup} stack.
+	 * 
+	 * @return
+	 */
+	protected int getPredicateGroupsSize(){
+		return predicateGroups.size();
 	}
 	
 	/**
@@ -53,7 +141,7 @@ public abstract class AbstractModelQuery<T> {
 		"unchecked", "rawtypes"
 	})
 	protected Optional<Predicate> getPredicate(SingularAttribute attribute, COMPARATOR comparator,
-		Object value){
+		Object value, boolean ignoreCase){
 		switch (comparator) {
 		case EQUALS:
 			return Optional.of(criteriaBuilder.equal(rootQuery.get(attribute), value));
@@ -61,14 +149,27 @@ public abstract class AbstractModelQuery<T> {
 			return Optional.of(criteriaBuilder.notEqual(rootQuery.get(attribute), value));
 		case LIKE:
 			if (value instanceof String) {
-				return Optional.of(criteriaBuilder.like(rootQuery.get(attribute), (String) value));
+				if (ignoreCase) {
+					return Optional
+						.of(criteriaBuilder.like(criteriaBuilder.lower(rootQuery.get(attribute)),
+							((String) value).toLowerCase()));
+				} else {
+					return Optional
+						.of(criteriaBuilder.like(rootQuery.get(attribute), (String) value));
+				}
 			} else {
 				throw new IllegalStateException("[" + value + "] is not a known type");
 			}
 		case NOT_LIKE:
 			if (value instanceof String) {
-				return Optional
-					.of(criteriaBuilder.notLike(rootQuery.get(attribute), (String) value));
+				if (ignoreCase) {
+					return Optional
+						.of(criteriaBuilder.notLike(criteriaBuilder.lower(rootQuery.get(attribute)),
+							((String) value).toLowerCase()));
+				} else {
+					return Optional
+						.of(criteriaBuilder.notLike(rootQuery.get(attribute), (String) value));
+				}
 			} else {
 				throw new IllegalStateException("[" + value + "] is not a known type");
 			}
@@ -168,6 +269,110 @@ public abstract class AbstractModelQuery<T> {
 		Object ret = value;
 		if (value instanceof AbstractIdModelAdapter) {
 			ret = ((AbstractIdModelAdapter<?>) value).getEntity();
+		}
+		return ret;
+	}
+	
+	@Override
+	public void and(EStructuralFeature feature, COMPARATOR comparator, Object value,
+		boolean ignoreCase){
+		String entityAttributeName = getAttributeName(feature);
+		@SuppressWarnings("rawtypes")
+		Optional<SingularAttribute> attribute =
+			resolveAttribute(entityClazz.getName(), entityAttributeName);
+		value = resolveValue(value);
+		if (attribute.isPresent()) {
+			Optional<Predicate> predicate =
+				getPredicate(attribute.get(), comparator, value, ignoreCase);
+			predicate.ifPresent(p -> {
+				getCurrentPredicateGroup().and(p);
+			});
+		} else {
+			// feature could not be resolved, mapping?
+			throw new IllegalStateException(
+				"Could not resolve attribute [" + feature + "] of entity [" + entityClazz + "]");
+		}
+	}
+	
+	@Override
+	public void or(EStructuralFeature feature, COMPARATOR comparator, Object value,
+		boolean ignoreCase){
+		String entityAttributeName = getAttributeName(feature);
+		@SuppressWarnings("rawtypes")
+		Optional<SingularAttribute> attribute =
+			resolveAttribute(entityClazz.getName(), entityAttributeName);
+		value = resolveValue(value);
+		if (attribute.isPresent()) {
+			Optional<Predicate> predicate =
+				getPredicate(attribute.get(), comparator, value, ignoreCase);
+			predicate.ifPresent(p -> {
+				getCurrentPredicateGroup().or(p);
+			});
+		} else {
+			// feature could not be resolved, mapping?
+			throw new IllegalStateException(
+				"Could not resolve attribute [" + feature + "] of entity [" + entityClazz + "]");
+		}
+	}
+	
+	@Override
+	public void startGroup(){
+		createPredicateGroup();
+	}
+	
+	@Override
+	public void andJoinGroups(){
+		andPredicateGroups();
+	}
+	
+	@Override
+	public void orJoinGroups(){
+		orPredicateGroups();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<T> execute(){
+		try {
+			// apply the predicate groups to the criteriaQuery
+			int groups = getPredicateGroupsSize();
+			if (groups > 0) {
+				if (groups == 2 && (AbstractDBObjectIdDeleted.class.isAssignableFrom(entityClazz)
+					&& !includeDeleted)) {
+					andJoinGroups();
+					groups = getPredicateGroupsSize();
+				}
+				
+				if (groups == 1) {
+					criteriaQuery = criteriaQuery.where(getCurrentPredicateGroup().getPredicate());
+				} else {
+					throw new IllegalStateException("Query has open groups [" + groups + "]");
+				}
+			}
+			TypedQuery<?> query = (TypedQuery<?>) entityManager.createQuery(criteriaQuery);
+			List<T> ret = (List<T>) query
+				.getResultStream().parallel().map(e -> adapterFactory
+					.getModelAdapter((AbstractDBObjectId) e, clazz, true).orElse(null))
+				.filter(o -> o != null).collect(Collectors.toList());
+			return ret;
+		} finally {
+			entityManager.close();
+		}
+	}
+	
+	protected String getAttributeName(EStructuralFeature feature){
+		String ret = feature.getName();
+		EAnnotation mappingAnnotation =
+			feature.getEAnnotation(IModelService.EANNOTATION_ENTITY_ATTRIBUTE_MAPPING);
+		if (mappingAnnotation != null) {
+			// test class specific first
+			ret = mappingAnnotation.getDetails().get(entityClazz.getSimpleName() + "#"
+				+ IModelService.EANNOTATION_ENTITY_ATTRIBUTE_MAPPING_NAME);
+			if (ret == null) {
+				// fallback to direct mapping
+				ret = mappingAnnotation.getDetails()
+					.get(IModelService.EANNOTATION_ENTITY_ATTRIBUTE_MAPPING_NAME);
+			}
 		}
 		return ret;
 	}

@@ -11,8 +11,6 @@
 package ch.elexis.core.data.interfaces;
 
 import ch.elexis.core.data.beans.ContactType;
-import ch.elexis.core.model.Deleteable;
-import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.types.Country;
 
 /**
@@ -48,7 +46,7 @@ import ch.elexis.core.types.Country;
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface IContact extends Identifiable, Deleteable {
+public interface IContact extends IPersistentObject {
 	/**
 	 * Returns the value of the '<em><b>Contact Type</b></em>' attribute. The literals are from the
 	 * enumeration {@link ch.elexis.core.types.ContactType}. <!-- begin-user-doc -->

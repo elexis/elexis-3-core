@@ -13,6 +13,7 @@ package ch.elexis.core.model;
 import ch.elexis.core.types.PathologicDescription;
 
 import ch.rgw.tools.TimeTool;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -24,78 +25,27 @@ import java.time.LocalDateTime;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.model.ILabResult#getRefMale <em>Ref Male</em>}</li>
- *   <li>{@link ch.elexis.core.model.ILabResult#getRefFemale <em>Ref Female</em>}</li>
- *   <li>{@link ch.elexis.core.model.ILabResult#getUnit <em>Unit</em>}</li>
- *   <li>{@link ch.elexis.core.model.ILabResult#getAnalyseTime <em>Analyse Time</em>}</li>
- *   <li>{@link ch.elexis.core.model.ILabResult#getObservationTime <em>Observation Time</em>}</li>
- *   <li>{@link ch.elexis.core.model.ILabResult#getTransmissionTime <em>Transmission Time</em>}</li>
  *   <li>{@link ch.elexis.core.model.ILabResult#getResult <em>Result</em>}</li>
- *   <li>{@link ch.elexis.core.model.ILabResult#getFlags <em>Flags</em>}</li>
  *   <li>{@link ch.elexis.core.model.ILabResult#getComment <em>Comment</em>}</li>
- *   <li>{@link ch.elexis.core.model.ILabResult#getOriginContact <em>Origin Contact</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabResult#getReferenceMale <em>Reference Male</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabResult#getReferenceFemale <em>Reference Female</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabResult#getUnit <em>Unit</em>}</li>
  *   <li>{@link ch.elexis.core.model.ILabResult#getDate <em>Date</em>}</li>
- *   <li>{@link ch.elexis.core.model.ILabResult#getItem <em>Item</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabResult#getObservationTime <em>Observation Time</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabResult#getAnalyseTime <em>Analyse Time</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabResult#getTransmissionTime <em>Transmission Time</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabResult#isPathologic <em>Pathologic</em>}</li>
  *   <li>{@link ch.elexis.core.model.ILabResult#getPathologicDescription <em>Pathologic Description</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabResult#getOrigin <em>Origin</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabResult#getItem <em>Item</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabResult#getPatient <em>Patient</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getILabResult()
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface ILabResult extends Identifiable, Deleteable {
-	/**
-	 * Returns the value of the '<em><b>Ref Male</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Ref Male</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Ref Male</em>' attribute.
-	 * @see #setRefMale(String)
-	 * @see ch.elexis.core.model.ModelPackage#getILabResult_RefMale()
-	 * @model
-	 * @generated
-	 */
-	String getRefMale();
-
-	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.ILabResult#getRefMale <em>Ref Male</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Ref Male</em>' attribute.
-	 * @see #getRefMale()
-	 * @generated
-	 */
-	void setRefMale(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Ref Female</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Ref Female</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Ref Female</em>' attribute.
-	 * @see #setRefFemale(String)
-	 * @see ch.elexis.core.model.ModelPackage#getILabResult_RefFemale()
-	 * @model
-	 * @generated
-	 */
-	String getRefFemale();
-
-	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.ILabResult#getRefFemale <em>Ref Female</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Ref Female</em>' attribute.
-	 * @see #getRefFemale()
-	 * @generated
-	 */
-	void setRefFemale(String value);
-
+public interface ILabResult extends Deleteable, Identifiable, WithExtInfo {
 	/**
 	 * Returns the value of the '<em><b>Unit</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -201,6 +151,32 @@ public interface ILabResult extends Identifiable, Deleteable {
 	void setTransmissionTime(LocalDateTime value);
 
 	/**
+	 * Returns the value of the '<em><b>Pathologic</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Pathologic</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Pathologic</em>' attribute.
+	 * @see #setPathologic(boolean)
+	 * @see ch.elexis.core.model.ModelPackage#getILabResult_Pathologic()
+	 * @model
+	 * @generated
+	 */
+	boolean isPathologic();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.ILabResult#isPathologic <em>Pathologic</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Pathologic</em>' attribute.
+	 * @see #isPathologic()
+	 * @generated
+	 */
+	void setPathologic(boolean value);
+
+	/**
 	 * Returns the value of the '<em><b>Result</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -225,32 +201,6 @@ public interface ILabResult extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	void setResult(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Flags</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Flags</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Flags</em>' attribute.
-	 * @see #setFlags(int)
-	 * @see ch.elexis.core.model.ModelPackage#getILabResult_Flags()
-	 * @model
-	 * @generated
-	 */
-	int getFlags();
-
-	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.ILabResult#getFlags <em>Flags</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Flags</em>' attribute.
-	 * @see #getFlags()
-	 * @generated
-	 */
-	void setFlags(int value);
 
 	/**
 	 * Returns the value of the '<em><b>Comment</b></em>' attribute.
@@ -279,30 +229,56 @@ public interface ILabResult extends Identifiable, Deleteable {
 	void setComment(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Origin Contact</b></em>' reference.
+	 * Returns the value of the '<em><b>Reference Male</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Origin Contact</em>' reference isn't clear,
+	 * If the meaning of the '<em>Reference Male</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Origin Contact</em>' reference.
-	 * @see #setOriginContact(IContact)
-	 * @see ch.elexis.core.model.ModelPackage#getILabResult_OriginContact()
+	 * @return the value of the '<em>Reference Male</em>' attribute.
+	 * @see #setReferenceMale(String)
+	 * @see ch.elexis.core.model.ModelPackage#getILabResult_ReferenceMale()
 	 * @model
 	 * @generated
 	 */
-	IContact getOriginContact();
+	String getReferenceMale();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.ILabResult#getOriginContact <em>Origin Contact</em>}' reference.
+	 * Sets the value of the '{@link ch.elexis.core.model.ILabResult#getReferenceMale <em>Reference Male</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Origin Contact</em>' reference.
-	 * @see #getOriginContact()
+	 * @param value the new value of the '<em>Reference Male</em>' attribute.
+	 * @see #getReferenceMale()
 	 * @generated
 	 */
-	void setOriginContact(IContact value);
+	void setReferenceMale(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Reference Female</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Reference Female</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Reference Female</em>' attribute.
+	 * @see #setReferenceFemale(String)
+	 * @see ch.elexis.core.model.ModelPackage#getILabResult_ReferenceFemale()
+	 * @model
+	 * @generated
+	 */
+	String getReferenceFemale();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.ILabResult#getReferenceFemale <em>Reference Female</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Reference Female</em>' attribute.
+	 * @see #getReferenceFemale()
+	 * @generated
+	 */
+	void setReferenceFemale(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Date</b></em>' attribute.
@@ -313,12 +289,12 @@ public interface ILabResult extends Identifiable, Deleteable {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Date</em>' attribute.
-	 * @see #setDate(String)
+	 * @see #setDate(LocalDate)
 	 * @see ch.elexis.core.model.ModelPackage#getILabResult_Date()
-	 * @model
+	 * @model dataType="ch.elexis.core.types.LocalDate"
 	 * @generated
 	 */
-	String getDate();
+	LocalDate getDate();
 
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.ILabResult#getDate <em>Date</em>}' attribute.
@@ -328,7 +304,7 @@ public interface ILabResult extends Identifiable, Deleteable {
 	 * @see #getDate()
 	 * @generated
 	 */
-	void setDate(String value);
+	void setDate(LocalDate value);
 
 	/**
 	 * Returns the value of the '<em><b>Item</b></em>' reference.
@@ -357,6 +333,32 @@ public interface ILabResult extends Identifiable, Deleteable {
 	void setItem(ILabItem value);
 
 	/**
+	 * Returns the value of the '<em><b>Patient</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Patient</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Patient</em>' reference.
+	 * @see #setPatient(IPatient)
+	 * @see ch.elexis.core.model.ModelPackage#getILabResult_Patient()
+	 * @model
+	 * @generated
+	 */
+	IPatient getPatient();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.ILabResult#getPatient <em>Patient</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Patient</em>' reference.
+	 * @see #getPatient()
+	 * @generated
+	 */
+	void setPatient(IPatient value);
+
+	/**
 	 * Returns the value of the '<em><b>Pathologic Description</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -381,6 +383,32 @@ public interface ILabResult extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	void setPathologicDescription(PathologicDescription value);
+
+	/**
+	 * Returns the value of the '<em><b>Origin</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Origin</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Origin</em>' reference.
+	 * @see #setOrigin(IContact)
+	 * @see ch.elexis.core.model.ModelPackage#getILabResult_Origin()
+	 * @model
+	 * @generated
+	 */
+	IContact getOrigin();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.ILabResult#getOrigin <em>Origin</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Origin</em>' reference.
+	 * @see #getOrigin()
+	 * @generated
+	 */
+	void setOrigin(IContact value);
 
 	/**
 	 * @return the {@link ILabOrder} linked to this {@link ILabResult} or <code>null</code>

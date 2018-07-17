@@ -16,8 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.console.application.test.ApplicationTestCode;
+import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.data.Anwender;

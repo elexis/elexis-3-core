@@ -79,6 +79,10 @@ public class Test_HL7Import_MPFRule {
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
 		
+		// set the use local config to false
+		CoreHub.userCfg.set(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
+		CoreHub.userCfg.flush();
+		
 		LabItem liKrus = new LabItem("KRUS", "Kreatinin im Urin", AllTests.testLab, "> 60", "> 60",
 			"mmol/l", LabItemTyp.NUMERIC, "Urin", "42");
 		

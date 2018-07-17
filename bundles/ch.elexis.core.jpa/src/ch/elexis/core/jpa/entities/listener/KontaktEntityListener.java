@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.PrePersist;
+import javax.persistence.TypedQuery;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
@@ -49,9 +50,11 @@ public class KontaktEntityListener {
 				ret += 1;
 
 				while (true) {
-					@SuppressWarnings("rawtypes")
-					List resultList = em.createQuery("SELECT k FROM Kontakt k WHERE k.code=" + ret).getResultList();
-					if (resultList.size() == 0) {
+					TypedQuery<Kontakt> query =
+						em.createNamedQuery("Kontakt.getByCode", Kontakt.class);
+					query.setParameter("code", Integer.toString(ret));
+					List<Kontakt> results = query.getResultList();
+					if (results.isEmpty()) {
 						break;
 					} else {
 						ret += 1;

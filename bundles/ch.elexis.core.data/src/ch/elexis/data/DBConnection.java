@@ -1,6 +1,5 @@
 package ch.elexis.data;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.sql.Connection;
@@ -17,7 +16,6 @@ import ch.elexis.core.data.cache.MultiGuavaCache;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.StringTool;
-import ch.rgw.tools.net.NetTool;
 
 /**
  * Class managing a connection to a DB using a {@link JdbcLink}, and also the cache used by
@@ -54,8 +52,6 @@ public class DBConnection {
 	
 	private String dbConnectString;
 	private String dbDriver;
-	
-	private File runFromScratchDB = null;
 	
 	public DBConnection(){
 		default_lifetime =
@@ -222,12 +218,10 @@ public class DBConnection {
 	}
 	
 	public void runFromScatch() throws IOException{
-		runFromScratchDB = File.createTempFile("elexis", "db");
-		logger
-			.info("RunFromScratch test database created in " + runFromScratchDB.getAbsolutePath());
+		logger.info("RunFromScratch test database created in mem");
 		dbUser = "sa";
 		dbPw = StringTool.leer;
-		jdbcLink = JdbcLink.createH2Link(runFromScratchDB.getAbsolutePath());
+		jdbcLink = JdbcLink.createH2Link("jdbc:h2:mem:elexisFromScratch;DB_CLOSE_DELAY=-1");
 	}
 	
 	public void disconnect(){
@@ -237,12 +231,6 @@ public class DBConnection {
 		jdbcLink.disconnect();
 		logger.info("Verbindung zur Datenbank " + jdbcLink.getConnectString() + " getrennt.");
 		jdbcLink = null;
-		if (runFromScratchDB != null) {
-			File dbFile = new File(runFromScratchDB.getAbsolutePath() + ".h2.db");
-			logger.info("Deleting runFromScratchDB was " + runFromScratchDB + " and " + dbFile);
-			dbFile.delete();
-			runFromScratchDB.delete();
-		}
 		cache.stat();
 	}
 	

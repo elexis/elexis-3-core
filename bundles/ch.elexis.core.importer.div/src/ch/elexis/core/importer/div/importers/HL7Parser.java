@@ -22,10 +22,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.interfaces.IContact;
-import ch.elexis.core.data.interfaces.ILabItem;
-import ch.elexis.core.data.interfaces.IPatient;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.model.ILabResult;
+import ch.elexis.core.model.ILaboratory;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.LabResultConstants;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
@@ -105,7 +106,7 @@ public class HL7Parser {
 		}
 		
 		try {
-			IContact labor = labContactResolver.getLabContact(myLab, hl7Reader.getSender());
+			ILaboratory labor = labContactResolver.getLabContact(myLab, hl7Reader.getSender());
 			// stop here if lab does not exist
 			if (labor == null) {
 				logger.info("Exiting parsing process as labor is null");
@@ -115,7 +116,8 @@ public class HL7Parser {
 			ObservationMessage obsMessage =
 				hl7Reader.readObservation(patientResolver, createPatientIfNotFound);
 			
-			pat = hl7Reader.getPatient();
+			pat = labImportUtil.loadCoreModel(hl7Reader.getPatient().getId(), IPatient.class)
+				.orElse(null);
 			if (pat == null) {
 				return new Result<Object>(SEVERITY.ERROR, 2, Messages.HL7_PatientNotInDatabase,
 					obsMessage.getPatientId(), true);
@@ -159,14 +161,19 @@ public class HL7Parser {
 						if (hl7LabResult.isNumeric() == false) {
 							typ = LabItemTyp.TEXT;
 						}
-						labItem = labImportUtil
-							.createLabItem(hl7LabResult.getCode(), hl7LabResult.getName(), labor,
-								pat.getGender().equals(Gender.MALE) ? hl7LabResult.getRange() : "",
-								pat.getGender().equals(Gender.FEMALE) ? hl7LabResult.getRange()
-										: "",
-								hl7LabResult.getUnit(), typ,
-								labItemResolver.getTestGroupName(hl7LabResult),
-								labItemResolver.getNextTestGroupSequence(hl7LabResult));
+						String refMale = "";
+						String refFemale = "";
+						if (pat.getGender().equals(Gender.MALE)) {
+							refMale = hl7LabResult.getRange();
+						} else {
+							refFemale = hl7LabResult.getRange();
+						}
+						
+						labItem = labImportUtil.createLabItem(hl7LabResult.getCode(),
+							hl7LabResult.getName(), labor, refMale, refFemale,
+							hl7LabResult.getUnit(), typ,
+							labItemResolver.getTestGroupName(hl7LabResult),
+							labItemResolver.getNextTestGroupSequence(hl7LabResult));
 						logger.debug("LabItem created [{}]", labItem);
 					}
 					
@@ -248,7 +255,8 @@ public class HL7Parser {
 						String liShort = "doc";
 						String liName = "Dokument";
 						
-						ILabItem labItem = labImportUtil.getDocumentLabItem(liShort, liName, labor);
+						ILabItem labItem =
+							labImportUtil.getDocumentLabItem(liShort, liName, labor).orElse(null);
 						if (labItem == null) {
 							labItem = labImportUtil.createLabItem(liShort, liName, labor, "", "",
 								fileType, LabItemTyp.DOCUMENT, hl7EncData.getGroup(), "");
@@ -270,8 +278,38 @@ public class HL7Parser {
 					
 					// add comments as a LabResult
 					if (hl7TextData.getName().equals(HL7Constants.COMMENT_NAME)) {
-						labImportUtil.createCommentsLabResult(hl7TextData, pat, labor, number,
-							commentDate);
+						if (hl7TextData.getDate() == null) {
+							hl7TextData.setDate(commentDate.getTime());
+						}
+						TimeTool commentsDate = new TimeTool(hl7TextData.getDate());
+						
+						// find, or create LabItem
+						ILabItem labItem = labImportUtil
+							.getLabItem(HL7Constants.COMMENT_CODE, HL7Constants.COMMENT_NAME, labor)
+							.orElse(null);
+						if (labItem == null) {
+							labItem = labImportUtil.createLabItem(HL7Constants.COMMENT_CODE,
+								HL7Constants.COMMENT_NAME, labor, "", "", "", LabItemTyp.TEXT,
+								HL7Constants.COMMENT_GROUP, Integer.toString(number));
+						}
+						
+						// add LabResult, only add comments not yet existing
+						List<ILabResult> existingResults =
+							labImportUtil.getLabResults(pat, labItem, commentsDate, null, null);
+						if (existingResults.isEmpty()) {
+							StringBuilder comment = new StringBuilder();
+							if (hl7TextData.getText() != null) {
+								comment.append(hl7TextData.getText());
+							}
+							if (hl7TextData.getComment() != null) {
+								comment.append(hl7TextData.getComment());
+							}
+							TransientLabResult commentsResult =
+								new TransientLabResult.Builder(pat, labor, labItem, "text")
+									.date(commentsDate).comment(comment.toString())
+									.build(labImportUtil);
+							results.add(commentsResult);
+						}
 						number++;
 					}
 				}

@@ -5,10 +5,11 @@ import java.util.Optional;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
+import ch.elexis.core.model.mixin.IdentifiableWithXid;
 import ch.elexis.core.model.service.CoreModelAdapterFactory;
 
 public class UserConfig extends AbstractIdModelAdapter<ch.elexis.core.jpa.entities.Userconfig>
-		implements IUserConfig {
+		implements IdentifiableWithXid, IUserConfig {
 	
 	public UserConfig(ch.elexis.core.jpa.entities.Userconfig entity){
 		super(entity);

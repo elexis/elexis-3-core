@@ -10,6 +10,8 @@
  */
 package ch.elexis.core.types.impl;
 
+import ch.elexis.core.model.LabOrderState;
+import ch.elexis.core.model.XidQuality;
 import java.time.LocalDateTime;
 
 import org.eclipse.emf.ecore.EClass;
@@ -32,6 +34,7 @@ import ch.elexis.core.types.TypesPackage;
 import ch.rgw.tools.Money;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.LocalDate;
 
 /**
  * <!-- begin-user-doc -->
@@ -114,6 +117,12 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createInputStreamFromString(eDataType, initialValue);
 			case TypesPackage.OUTPUT_STREAM:
 				return createOutputStreamFromString(eDataType, initialValue);
+			case TypesPackage.LOCAL_DATE:
+				return createLocalDateFromString(eDataType, initialValue);
+			case TypesPackage.XID_QUALITY:
+				return createXidQualityFromString(eDataType, initialValue);
+			case TypesPackage.LAB_ORDER_STATE:
+				return createLabOrderStateFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -151,6 +160,12 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertInputStreamToString(eDataType, instanceValue);
 			case TypesPackage.OUTPUT_STREAM:
 				return convertOutputStreamToString(eDataType, instanceValue);
+			case TypesPackage.LOCAL_DATE:
+				return convertLocalDateToString(eDataType, instanceValue);
+			case TypesPackage.XID_QUALITY:
+				return convertXidQualityToString(eDataType, instanceValue);
+			case TypesPackage.LAB_ORDER_STATE:
+				return convertLabOrderStateToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -377,6 +392,60 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	public String convertOutputStreamToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public LocalDate createLocalDateFromString(EDataType eDataType, String initialValue) {
+		return (LocalDate)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertLocalDateToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public XidQuality createXidQualityFromString(EDataType eDataType, String initialValue) {
+		return (XidQuality)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertXidQualityToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public LabOrderState createLabOrderStateFromString(EDataType eDataType, String initialValue) {
+		return (LabOrderState)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertLabOrderStateToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

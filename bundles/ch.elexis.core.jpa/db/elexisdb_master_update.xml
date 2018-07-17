@@ -7,4 +7,5 @@
     xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog dbchangelog-3.1.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext dbchangelog-ext.xsd">
+    <include file="/db/elexisdb_create_optional.xml"/>
 </databaseChangeLog>

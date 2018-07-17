@@ -128,7 +128,7 @@ public class TarmedLeistung extends AbstractDBObjectIdDeleted implements ICodeEl
 	 */
 	@Transient
 	public static MandantType getMandantType(Kontakt mandant){
-		Object typeObj = mandant.getExtInfoAsString(MANDANT_TYPE_EXTINFO_KEY);
+		Object typeObj = mandant.getExtInfo(MANDANT_TYPE_EXTINFO_KEY);
 		if (typeObj instanceof String) {
 			return MandantType.valueOf((String) typeObj);
 		}

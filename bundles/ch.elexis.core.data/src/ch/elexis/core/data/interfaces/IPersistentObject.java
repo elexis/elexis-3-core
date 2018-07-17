@@ -12,8 +12,6 @@ package ch.elexis.core.data.interfaces;
 
 import java.util.List;
 
-import ch.elexis.core.model.Identifiable;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>IPersistent Object</b></em>'.
@@ -31,7 +29,7 @@ import ch.elexis.core.model.Identifiable;
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface IPersistentObject extends Identifiable {
+public interface IPersistentObject {
 	/**
 	 * Returns the value of the '<em><b>Xid</b></em>' reference.
 	 * <!-- begin-user-doc -->
@@ -151,4 +149,10 @@ public interface IPersistentObject extends Identifiable {
 	 */
 	boolean set(String field, String value);
 
+	String getLabel();
+	
+	String getId();
+	
+	boolean isDeleted();
+	
 } // IPersistentObject

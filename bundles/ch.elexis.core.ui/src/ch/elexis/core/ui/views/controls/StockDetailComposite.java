@@ -34,10 +34,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.interfaces.IStock;
+import ch.elexis.core.data.interfaces.IStockEntry;
 import ch.elexis.core.data.service.StockService;
 import ch.elexis.core.lock.types.LockResponse;
-import ch.elexis.core.model.IStock;
-import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.ui.editors.KontaktSelektorDialogCellEditor;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Kontakt;

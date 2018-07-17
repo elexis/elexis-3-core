@@ -1,4 +1,4 @@
-package ch.elexis.core.data.constants;
+package ch.elexis.core.constants;
 
 public class ElexisSystemPropertyConstants {
 	

@@ -9,7 +9,7 @@ import org.eclipse.swt.graphics.Image;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.service.StockService;
-import ch.elexis.core.services.IStockService.Availability;
+import ch.elexis.core.data.services.IStockService.Availability;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.data.UiMandant;
 import ch.elexis.data.Artikel;

@@ -3,13 +3,22 @@ package ch.elexis.core.jpa.entities;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import ch.elexis.core.jpa.entities.converter.LabOrderStateConverter;
+import ch.elexis.core.jpa.entities.listener.LabOrderEntityListener;
+import ch.elexis.core.model.LabOrderState;
+
 @Entity
 @Table(name = "laborder")
+@EntityListeners(LabOrderEntityListener.class)
+@NamedQuery(name = "LabOrder.getByOrderId", query = "SELECT lo FROM LabOrder lo WHERE lo.orderid = :orderid")
 public class LabOrder extends AbstractDBObjectIdDeleted {
 
 	@OneToOne
@@ -45,7 +54,8 @@ public class LabOrder extends AbstractDBObjectIdDeleted {
 	private LocalDateTime observationTime;
 
 	@Column(length = 1)
-	private String state;
+	@Convert(converter = LabOrderStateConverter.class)
+	private LabOrderState state;
 
 	public Kontakt getUser() {
 		return user;
@@ -119,11 +129,11 @@ public class LabOrder extends AbstractDBObjectIdDeleted {
 		this.observationTime = observationTime;
 	}
 
-	public String getState() {
+	public LabOrderState getState(){
 		return state;
 	}
 
-	public void setState(String state) {
+	public void setState(LabOrderState state){
 		this.state = state;
 	}
 

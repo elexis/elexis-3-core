@@ -1,11 +1,11 @@
 package ch.elexis.importer.div;
 
+import static ch.elexis.importer.div.Helpers.removeAllPatientsAndDependants;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static ch.elexis.importer.div.Helpers.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,8 +26,8 @@ import ch.elexis.core.types.PathologicDescription;
 import ch.elexis.core.types.PathologicDescription.Description;
 import ch.elexis.core.ui.importer.div.importers.TestHL7Parser;
 import ch.elexis.data.LabItem;
+import ch.elexis.data.LabMapping;
 import ch.elexis.data.LabResult;
-import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 import ch.rgw.tools.Result;
@@ -62,6 +62,7 @@ public class TestPathologicDescription {
 		removeAllLaboWerte();
 		// set the use local config to true
 		CoreHub.userCfg.set(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
+		CoreHub.userCfg.flush();
 		
 		parseOneHL7file(new File(workDir.toString(), "Analytica/01TEST5005.hl7"), false, true);
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
@@ -120,6 +121,7 @@ public class TestPathologicDescription {
 		removeAllLaboWerte();
 		// set the use local config to true
 		CoreHub.userCfg.set(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
+		CoreHub.userCfg.flush();
 		
 		parseOneHL7file(new File(workDir.toString(), "Analytica/0216370074_6417526401671.hl7"),
 			false, true);
@@ -159,6 +161,7 @@ public class TestPathologicDescription {
 		removeAllLaboWerte();
 		// set the use local config to false
 		CoreHub.userCfg.set(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, false);
+		CoreHub.userCfg.flush();
 		
 		parseOneHL7file(new File(workDir.toString(), "Analytica/01TEST5005.hl7"), false, true);
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
@@ -324,6 +327,9 @@ public class TestPathologicDescription {
 	public void testLabCubeNumberMissingImportPathFlag_11057() throws IOException{
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
+		// set the use local config to false
+		CoreHub.userCfg.set(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, false);
+		CoreHub.userCfg.flush();
 		
 		parseOneHL7file(new File(workDir.toString(),
 			"LabCube/5083_LabCube_DriChem7000_20180314131140_288107.hl7"), false, true);
@@ -412,6 +418,11 @@ public class TestPathologicDescription {
 		List<LabResult> qrr = qr.execute();
 		for (int j = 0; j < qrr.size(); j++) {
 			qrr.get(j).delete();
+		}
+		Query<LabMapping> qrma = new Query<LabMapping>(LabMapping.class);
+		List<LabMapping> qMa = qrma.execute();
+		for (int j = 0; j < qMa.size(); j++) {
+			qMa.get(j).delete();
 		}
 		Query<LabItem> qrli = new Query<LabItem>(LabItem.class);
 		List<LabItem> qLi = qrli.execute();

@@ -27,6 +27,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.MapKey;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -50,6 +51,7 @@ import ch.elexis.core.types.Gender;
 @Table(name = "KONTAKT")
 @XmlRootElement(name = "contact")
 @EntityListeners(KontaktEntityListener.class)
+@NamedQuery(name = "Kontakt.getByCode", query = "SELECT k FROM Kontakt k WHERE k.code = :code")
 public class Kontakt extends AbstractDBObjectIdDeletedExtInfo {
 
 	@Basic(fetch = FetchType.LAZY)

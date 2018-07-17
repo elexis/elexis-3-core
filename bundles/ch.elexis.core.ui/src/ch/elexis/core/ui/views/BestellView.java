@@ -55,8 +55,8 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.interfaces.IStockEntry;
 import ch.elexis.core.data.util.Extensions;
-import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;

@@ -43,12 +43,15 @@ public class ElexisPoolingDataSource extends PoolingDataSource
 		if (connectionPool != null) {
 			setPool(connectionPool);
 			try (Connection conn = getConnection()) {
-				log.info("db connection pool initialization success");
+				log.info("db connection pool [" + dbConnection.connectionString
+					+ "] initialization success");
 			} catch (SQLException e) {
-				log.error("db connection pool initialization error", e);
+				log.error("db connection pool [" + dbConnection.connectionString
+					+ "] initialization error", e);
 			}
 		} else {
-			log.error("db connection pool initialization failed - no connection pool");
+			log.error("db connection pool [" + dbConnection.connectionString
+				+ "] initialization failed - no connection pool");
 		}
 	}
 	

@@ -90,11 +90,15 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	@Override
 	protected T1 doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
-			case ModelPackage.ICONTACT: {
-				IContact iContact = (IContact)theEObject;
-				T1 result = caseIContact(iContact);
-				if (result == null) result = caseIdentifiable(iContact);
-				if (result == null) result = caseDeleteable(iContact);
+			case ModelPackage.IDENTIFIABLE: {
+				Identifiable identifiable = (Identifiable)theEObject;
+				T1 result = caseIdentifiable(identifiable);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.DELETEABLE: {
+				Deleteable deleteable = (Deleteable)theEObject;
+				T1 result = caseDeleteable(deleteable);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -106,18 +110,11 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ModelPackage.ICODE_ELEMENT: {
-				ICodeElement iCodeElement = (ICodeElement)theEObject;
-				T1 result = caseICodeElement(iCodeElement);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ModelPackage.ISTICKER: {
-				ISticker iSticker = (ISticker)theEObject;
-				T1 result = caseISticker(iSticker);
-				if (result == null) result = caseComparable(iSticker);
-				if (result == null) result = caseDeleteable(iSticker);
-				if (result == null) result = caseIdentifiable(iSticker);
+			case ModelPackage.ICONTACT: {
+				IContact iContact = (IContact)theEObject;
+				T1 result = caseIContact(iContact);
+				if (result == null) result = caseIdentifiable(iContact);
+				if (result == null) result = caseDeleteable(iContact);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -127,6 +124,25 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseIContact(iPerson);
 				if (result == null) result = caseIdentifiable(iPerson);
 				if (result == null) result = caseDeleteable(iPerson);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IORGANIZATION: {
+				IOrganization iOrganization = (IOrganization)theEObject;
+				T1 result = caseIOrganization(iOrganization);
+				if (result == null) result = caseIContact(iOrganization);
+				if (result == null) result = caseIdentifiable(iOrganization);
+				if (result == null) result = caseDeleteable(iOrganization);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.ILABORATORY: {
+				ILaboratory iLaboratory = (ILaboratory)theEObject;
+				T1 result = caseILaboratory(iLaboratory);
+				if (result == null) result = caseIOrganization(iLaboratory);
+				if (result == null) result = caseIContact(iLaboratory);
+				if (result == null) result = caseIdentifiable(iLaboratory);
+				if (result == null) result = caseDeleteable(iLaboratory);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -140,23 +156,20 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ModelPackage.IMANDATOR: {
+				IMandator iMandator = (IMandator)theEObject;
+				T1 result = caseIMandator(iMandator);
+				if (result == null) result = caseIContact(iMandator);
+				if (result == null) result = caseIdentifiable(iMandator);
+				if (result == null) result = caseDeleteable(iMandator);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ModelPackage.IUSER: {
 				IUser iUser = (IUser)theEObject;
 				T1 result = caseIUser(iUser);
 				if (result == null) result = caseDeleteable(iUser);
 				if (result == null) result = caseIdentifiable(iUser);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ModelPackage.IDENTIFIABLE: {
-				Identifiable identifiable = (Identifiable)theEObject;
-				T1 result = caseIdentifiable(identifiable);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ModelPackage.DELETEABLE: {
-				Deleteable deleteable = (Deleteable)theEObject;
-				T1 result = caseDeleteable(deleteable);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -171,8 +184,9 @@ public class ModelSwitch<T1> extends Switch<T1> {
 			case ModelPackage.ILAB_RESULT: {
 				ILabResult iLabResult = (ILabResult)theEObject;
 				T1 result = caseILabResult(iLabResult);
-				if (result == null) result = caseIdentifiable(iLabResult);
 				if (result == null) result = caseDeleteable(iLabResult);
+				if (result == null) result = caseIdentifiable(iLabResult);
+				if (result == null) result = caseWithExtInfo(iLabResult);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -184,11 +198,11 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ModelPackage.IPERIOD: {
-				IPeriod iPeriod = (IPeriod)theEObject;
-				T1 result = caseIPeriod(iPeriod);
-				if (result == null) result = caseIdentifiable(iPeriod);
-				if (result == null) result = caseDeleteable(iPeriod);
+			case ModelPackage.ILAB_MAPPING: {
+				ILabMapping iLabMapping = (ILabMapping)theEObject;
+				T1 result = caseILabMapping(iLabMapping);
+				if (result == null) result = caseDeleteable(iLabMapping);
+				if (result == null) result = caseIdentifiable(iLabMapping);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -197,6 +211,30 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				T1 result = caseIDocument(iDocument);
 				if (result == null) result = caseIdentifiable(iDocument);
 				if (result == null) result = caseDeleteable(iDocument);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IDOCUMENT_LETTER: {
+				IDocumentLetter iDocumentLetter = (IDocumentLetter)theEObject;
+				T1 result = caseIDocumentLetter(iDocumentLetter);
+				if (result == null) result = caseIDocument(iDocumentLetter);
+				if (result == null) result = caseIdentifiable(iDocumentLetter);
+				if (result == null) result = caseDeleteable(iDocumentLetter);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.ISTICKER: {
+				ISticker iSticker = (ISticker)theEObject;
+				T1 result = caseISticker(iSticker);
+				if (result == null) result = caseComparable(iSticker);
+				if (result == null) result = caseDeleteable(iSticker);
+				if (result == null) result = caseIdentifiable(iSticker);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.ICODE_ELEMENT: {
+				ICodeElement iCodeElement = (ICodeElement)theEObject;
+				T1 result = caseICodeElement(iCodeElement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -236,43 +274,6 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ModelPackage.IORGANIZATION: {
-				IOrganization iOrganization = (IOrganization)theEObject;
-				T1 result = caseIOrganization(iOrganization);
-				if (result == null) result = caseIContact(iOrganization);
-				if (result == null) result = caseIdentifiable(iOrganization);
-				if (result == null) result = caseDeleteable(iOrganization);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ModelPackage.ILABORATORY: {
-				ILaboratory iLaboratory = (ILaboratory)theEObject;
-				T1 result = caseILaboratory(iLaboratory);
-				if (result == null) result = caseIOrganization(iLaboratory);
-				if (result == null) result = caseIContact(iLaboratory);
-				if (result == null) result = caseIdentifiable(iLaboratory);
-				if (result == null) result = caseDeleteable(iLaboratory);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ModelPackage.IDOCUMENT_LETTER: {
-				IDocumentLetter iDocumentLetter = (IDocumentLetter)theEObject;
-				T1 result = caseIDocumentLetter(iDocumentLetter);
-				if (result == null) result = caseIDocument(iDocumentLetter);
-				if (result == null) result = caseIdentifiable(iDocumentLetter);
-				if (result == null) result = caseDeleteable(iDocumentLetter);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ModelPackage.IDOCUMENT_HANDLE: {
-				IDocumentHandle iDocumentHandle = (IDocumentHandle)theEObject;
-				T1 result = caseIDocumentHandle(iDocumentHandle);
-				if (result == null) result = caseIDocument(iDocumentHandle);
-				if (result == null) result = caseIdentifiable(iDocumentHandle);
-				if (result == null) result = caseDeleteable(iDocumentHandle);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case ModelPackage.ICONFIG: {
 				IConfig iConfig = (IConfig)theEObject;
 				T1 result = caseIConfig(iConfig);
@@ -285,6 +286,34 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				T1 result = caseIUserConfig(iUserConfig);
 				if (result == null) result = caseIConfig(iUserConfig);
 				if (result == null) result = caseIdentifiable(iUserConfig);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IPERIOD: {
+				IPeriod iPeriod = (IPeriod)theEObject;
+				T1 result = caseIPeriod(iPeriod);
+				if (result == null) result = caseIdentifiable(iPeriod);
+				if (result == null) result = caseDeleteable(iPeriod);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IARTICLE: {
+				IArticle iArticle = (IArticle)theEObject;
+				T1 result = caseIArticle(iArticle);
+				if (result == null) result = caseIdentifiable(iArticle);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.WITH_EXT_INFO: {
+				WithExtInfo withExtInfo = (WithExtInfo)theEObject;
+				T1 result = caseWithExtInfo(withExtInfo);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IROLE: {
+				IRole iRole = (IRole)theEObject;
+				T1 result = caseIRole(iRole);
+				if (result == null) result = caseIdentifiable(iRole);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -473,6 +502,21 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>ILab Mapping</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>ILab Mapping</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseILabMapping(ILabMapping object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>IPeriod</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -623,21 +667,6 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>IDocument Handle</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>IDocument Handle</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseIDocumentHandle(IDocumentHandle object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>IConfig</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -664,6 +693,66 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIUserConfig(IUserConfig object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IMandator</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IMandator</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIMandator(IMandator object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IArticle</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IArticle</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIArticle(IArticle object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>With Ext Info</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>With Ext Info</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseWithExtInfo(WithExtInfo object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IRole</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IRole</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIRole(IRole object) {
 		return null;
 	}
 

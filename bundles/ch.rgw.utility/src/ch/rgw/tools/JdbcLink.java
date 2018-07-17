@@ -172,7 +172,13 @@ public class JdbcLink {
 		if (database.contains(".zip!")) {
 			prefix += "zip:";
 		}
-		String connect = prefix + database + ";AUTO_SERVER=TRUE";
+		String connect = "";
+		// do not modify if database starts with in mem db prefix 
+		if (database.startsWith("jdbc:h2:mem:")) {
+			connect = database;
+		} else {
+			connect = prefix + database + ";AUTO_SERVER=TRUE";
+		}
 		return new JdbcLink(driver, connect, DBFLAVOR_H2);
 	}
 	

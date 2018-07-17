@@ -17,3 +17,5 @@ Export-Package: ch.elexis.core.importer.div.importers,
  ch.elexis.core.importer.div.importers.multifile,
  ch.elexis.core.importer.div.importers.multifile.strategy
 Import-Package: org.slf4j
+Service-Component: OSGI-INF/ch.elexis.core.importer.div.importers.internal.LabImportUtil.xml
+Bundle-ActivationPolicy: lazy

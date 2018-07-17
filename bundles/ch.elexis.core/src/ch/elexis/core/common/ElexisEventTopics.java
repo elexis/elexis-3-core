@@ -19,6 +19,13 @@ public class ElexisEventTopics {
 	public static final String PERSISTENCE_EVENT_CREATE = PERSISTENCE_EVENT + "create";
 	
 	/**
+	 * Basic event topics
+	 */
+	public static final String EVENT_CREATE = BASE + "create";
+	public static final String EVENT_UPDATE = BASE + "update";
+	public static final String EVENT_RELOAD = BASE + "reload";
+	
+	/**
 	 * Topics concerning stock commissioning systems
 	 */
 	public static final String BASE_STOCK_COMMISSIONING = BASE + "stockCommissioning/";

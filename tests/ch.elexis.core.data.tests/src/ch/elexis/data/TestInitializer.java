@@ -6,8 +6,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 

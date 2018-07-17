@@ -44,4 +44,20 @@ public interface Identifiable {
 	 */
 	String getLabel();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	boolean addXid(String domain, String id, boolean updateIfExists);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	IXid getXid(String domain);
+
 } // Identifiable

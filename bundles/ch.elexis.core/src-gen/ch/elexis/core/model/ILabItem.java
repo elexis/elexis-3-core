@@ -24,13 +24,16 @@ import ch.elexis.core.types.LabItemTyp;
  *   <li>{@link ch.elexis.core.model.ILabItem#getTyp <em>Typ</em>}</li>
  *   <li>{@link ch.elexis.core.model.ILabItem#getReferenceMale <em>Reference Male</em>}</li>
  *   <li>{@link ch.elexis.core.model.ILabItem#getReferenceFemale <em>Reference Female</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabItem#getUnit <em>Unit</em>}</li>
  *   <li>{@link ch.elexis.core.model.ILabItem#getGroup <em>Group</em>}</li>
  *   <li>{@link ch.elexis.core.model.ILabItem#getPriority <em>Priority</em>}</li>
- *   <li>{@link ch.elexis.core.model.ILabItem#getUnit <em>Unit</em>}</li>
- *   <li>{@link ch.elexis.core.model.ILabItem#getKuerzel <em>Kuerzel</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabItem#getCode <em>Code</em>}</li>
  *   <li>{@link ch.elexis.core.model.ILabItem#getName <em>Name</em>}</li>
  *   <li>{@link ch.elexis.core.model.ILabItem#getDigits <em>Digits</em>}</li>
  *   <li>{@link ch.elexis.core.model.ILabItem#isVisible <em>Visible</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabItem#getFormula <em>Formula</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabItem#getLoincCode <em>Loinc Code</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabItem#getBillingCode <em>Billing Code</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getILabItem()
@@ -169,6 +172,32 @@ public interface ILabItem extends Identifiable, Deleteable {
 	void setPriority(String value);
 
 	/**
+	 * Returns the value of the '<em><b>Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Code</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Code</em>' attribute.
+	 * @see #setCode(String)
+	 * @see ch.elexis.core.model.ModelPackage#getILabItem_Code()
+	 * @model
+	 * @generated
+	 */
+	String getCode();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.ILabItem#getCode <em>Code</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Code</em>' attribute.
+	 * @see #getCode()
+	 * @generated
+	 */
+	void setCode(String value);
+
+	/**
 	 * Returns the value of the '<em><b>Unit</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -193,32 +222,6 @@ public interface ILabItem extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	void setUnit(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Kuerzel</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Kuerzel</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Kuerzel</em>' attribute.
-	 * @see #setKuerzel(String)
-	 * @see ch.elexis.core.model.ModelPackage#getILabItem_Kuerzel()
-	 * @model
-	 * @generated
-	 */
-	String getKuerzel();
-
-	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.ILabItem#getKuerzel <em>Kuerzel</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Kuerzel</em>' attribute.
-	 * @see #getKuerzel()
-	 * @generated
-	 */
-	void setKuerzel(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
@@ -297,5 +300,83 @@ public interface ILabItem extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	void setVisible(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Formula</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Formula</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Formula</em>' attribute.
+	 * @see #setFormula(String)
+	 * @see ch.elexis.core.model.ModelPackage#getILabItem_Formula()
+	 * @model
+	 * @generated
+	 */
+	String getFormula();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.ILabItem#getFormula <em>Formula</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Formula</em>' attribute.
+	 * @see #getFormula()
+	 * @generated
+	 */
+	void setFormula(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Loinc Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Loinc Code</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Loinc Code</em>' attribute.
+	 * @see #setLoincCode(String)
+	 * @see ch.elexis.core.model.ModelPackage#getILabItem_LoincCode()
+	 * @model
+	 * @generated
+	 */
+	String getLoincCode();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.ILabItem#getLoincCode <em>Loinc Code</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Loinc Code</em>' attribute.
+	 * @see #getLoincCode()
+	 * @generated
+	 */
+	void setLoincCode(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Billing Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Billing Code</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Billing Code</em>' attribute.
+	 * @see #setBillingCode(String)
+	 * @see ch.elexis.core.model.ModelPackage#getILabItem_BillingCode()
+	 * @model
+	 * @generated
+	 */
+	String getBillingCode();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.ILabItem#getBillingCode <em>Billing Code</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Billing Code</em>' attribute.
+	 * @see #getBillingCode()
+	 * @generated
+	 */
+	void setBillingCode(String value);
 
 } // ILabItem

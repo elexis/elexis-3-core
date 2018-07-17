@@ -2,7 +2,7 @@ package ch.elexis.core.services;
 
 import java.util.Optional;
 
-import ch.elexis.core.model.article.IArticle;
+import ch.elexis.core.model.IArticle;
 
 public interface IArticleService {
 	

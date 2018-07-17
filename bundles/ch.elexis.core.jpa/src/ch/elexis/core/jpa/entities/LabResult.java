@@ -100,8 +100,6 @@ public class LabResult extends AbstractDBObjectIdDeletedExtInfo {
 		this.item = item;
 	}
 
-
-
 	public String getComment() {
 		return comment;
 	}
@@ -150,6 +148,14 @@ public class LabResult extends AbstractDBObjectIdDeletedExtInfo {
 		this.result = result;
 	}
 
+	public LocalDate getDate(){
+		return this.date;
+	}
+	
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
+	
 	public LocalDateTime getAnalysetime() {
 		return analysetime;
 	}

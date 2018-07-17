@@ -5,23 +5,25 @@ import java.util.Map;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.interfaces.IContact;
-import ch.elexis.core.data.interfaces.ILabItem;
-import ch.elexis.core.data.interfaces.ILabOrder;
-import ch.elexis.core.data.interfaces.ILabResult;
-import ch.elexis.core.data.interfaces.IPatient;
+import ch.elexis.core.data.service.ModelServiceHolder;
+import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.model.ILabOrder;
+import ch.elexis.core.model.ILabResult;
+import ch.elexis.core.model.ILaboratory;
+import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.LabResultConstants;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.PathologicDescription;
 import ch.elexis.core.types.PathologicDescription.Description;
-import ch.elexis.data.LabItem;
 import ch.elexis.hl7.model.OrcMessage;
 import ch.rgw.tools.TimeTool;
 
 public class TransientLabResult {
 	private IPatient patient;
 	private ILabItem labItem;
-	private IContact origin;
+	private ILaboratory origin;
 	
 	private String result;
 	private String comment;
@@ -75,12 +77,12 @@ public class TransientLabResult {
 	 */
 	public boolean isSameResult(ILabResult labResult){
 		if (refMale != null) {
-			if (!labResult.getRefMale().equals(refMale)) {
+			if (!labResult.getReferenceMale().equals(refMale)) {
 				return false;
 			}
 		}
 		if (refFemale != null) {
-			if (!labResult.getRefFemale().equals(refFemale)) {
+			if (!labResult.getReferenceFemale().equals(refFemale)) {
 				return false;
 			}
 		}
@@ -105,7 +107,7 @@ public class TransientLabResult {
 		
 		// pathologic check takes place in labResult if it is numeric
 		if (labItem.getTyp() == LabItemTyp.NUMERIC) {
-			flags = labResult.getFlags();
+			flags = labResult.isPathologic() ? LabResultConstants.PATHOLOGIC : 0;
 		} else {
 			if (flags != null) {
 				labResult.setPathologicDescription(
@@ -115,11 +117,11 @@ public class TransientLabResult {
 					new PathologicDescription(Description.PATHO_IMPORT_NO_INFO, rawAbnormalFlags));
 			}
 		}
-		
+		ModelServiceHolder.get().save(labResult);
 	}
 	
 	public ILabResult persist(ILabOrder labOrder, String orderId,
-		String mandantId, TimeTool time, String groupName){
+		IMandator mandantor, TimeTool time){
 		// determine gender, set refVal
 		String refVal;
 		if (Gender.MALE == patient.getGender()) {
@@ -130,14 +132,14 @@ public class TransientLabResult {
 		
 		ILabResult labResult =
 			labImportUtil.createLabResult(patient, date, labItem, result, comment, refVal, origin,
-				subId, labOrder, orderId, mandantId, time, groupName);
+				subId, labOrder, orderId, mandantor, time);
 		
 		setFieldsAndInterpret(labResult);
 		
 		if (flags != null) {
 			// if the pathologic flag is already set during import
 			// keep it
-			labResult.setFlags(flags);
+			labResult.setPathologic(flags > 0 ? true : false);
 			labResult.setPathologicDescription(
 				new PathologicDescription(Description.PATHO_IMPORT, rawAbnormalFlags));
 		} else {
@@ -149,17 +151,17 @@ public class TransientLabResult {
 			}
 			
 			// MPF Rule #11231
-			String originLaboratoryId = ((LabItem) labResult.getItem()).get(LabItem.LAB_ID);
-			List<String> mpfRuleContactIds = CoreHub.globalCfg.getAsList(
-				Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES);
-			if (mpfRuleContactIds.contains(originLaboratoryId)) {
-				labResult.setPathologicDescription(
-					new PathologicDescription(Description.PATHO_IMPORT, Messages.MPF_Rule_PathDescriptionText));
-				labResult.setFlags(0);
+			if (origin != null) {
+				List<String> mpfRuleContactIds = CoreHub.globalCfg.getAsList(
+					Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES);
+				if (mpfRuleContactIds.contains(origin.getId())) {
+					labResult.setPathologicDescription(new PathologicDescription(
+						Description.PATHO_IMPORT, Messages.MPF_Rule_PathDescriptionText));
+					labResult.setPathologic(false);
+				}
 			}
-			
 		}
-		
+		ModelServiceHolder.get().save(labResult);
 		return labResult;
 	}
 	
@@ -201,7 +203,7 @@ public class TransientLabResult {
 	
 	private void setFieldsAndInterpret(ILabResult labResult){
 		if (refMale != null) {
-			labResult.setRefMale(refMale);
+			labResult.setReferenceMale(refMale);
 			ILabItem item = labResult.getItem();
 			if (item != null) {
 				String itemRefMale = item.getReferenceMale();
@@ -211,7 +213,7 @@ public class TransientLabResult {
 			}
 		}
 		if (refFemale != null) {
-			labResult.setRefFemale(refFemale);
+			labResult.setReferenceFemale(refFemale);
 			ILabItem item = labResult.getItem();
 			if (item != null) {
 				String itemRefFemale = item.getReferenceFemale();
@@ -224,16 +226,18 @@ public class TransientLabResult {
 			labResult.setUnit(unit);
 		}
 		if (analyseTime != null) {
-			labResult.setAnalyseTime(analyseTime);
+			labResult.setAnalyseTime(analyseTime.toLocalDateTime());
 		}
 		if (observationTime != null) {
-			labResult.setObservationTime(observationTime);
+			labResult.setObservationTime(observationTime.toLocalDateTime());
 		}
 		if (transmissionTime != null) {
-			labResult.setTransmissionTime(transmissionTime);
+			labResult.setTransmissionTime(transmissionTime.toLocalDateTime());
 		}
 
 		labImportUtil.updateLabResult(labResult, this);
+		
+		ModelServiceHolder.get().save(labResult);
 	}
 	
 	public IPatient getPatient(){
@@ -328,7 +332,7 @@ public class TransientLabResult {
 		// required parameters
 		private IPatient patient;
 		private ILabItem labItem;
-		private IContact origin;
+		private ILaboratory origin;
 		private String result;
 		private String subId;
 		
@@ -348,7 +352,7 @@ public class TransientLabResult {
 		private Map<String, String> setProperties;
 		private OrcMessage orcMessage;
 		
-		public Builder(IPatient patient, IContact origin, ILabItem labItem, String result){
+		public Builder(IPatient patient, ILaboratory origin, ILabItem labItem, String result){
 			this.patient = patient;
 			this.labItem = labItem;
 			this.result = result;

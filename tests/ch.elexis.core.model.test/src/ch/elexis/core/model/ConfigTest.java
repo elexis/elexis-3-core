@@ -62,7 +62,7 @@ public class ConfigTest {
 		assertTrue(modelSerice.save(config2));
 		
 		IQuery<IConfig> query = modelSerice.getQuery(IConfig.class);
-		query.add(ModelPackage.Literals.ICONFIG__KEY, COMPARATOR.EQUALS, "test key 2");
+		query.and(ModelPackage.Literals.ICONFIG__KEY, COMPARATOR.EQUALS, "test key 2");
 		List<IConfig> existing = query.execute();
 		assertNotNull(existing);
 		assertFalse(existing.isEmpty());

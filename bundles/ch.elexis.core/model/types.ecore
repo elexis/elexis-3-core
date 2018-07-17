@@ -62,4 +62,7 @@
   <eClassifiers xsi:type="ecore:EDataType" name="LocalDateTime" instanceClassName="java.time.LocalDateTime"/>
   <eClassifiers xsi:type="ecore:EDataType" name="InputStream" instanceClassName="java.io.InputStream"/>
   <eClassifiers xsi:type="ecore:EDataType" name="OutputStream" instanceClassName="java.io.OutputStream"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="LocalDate" instanceClassName="java.time.LocalDate"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="XidQuality" instanceClassName="ch.elexis.core.model.XidQuality"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="LabOrderState" instanceClassName="ch.elexis.core.model.LabOrderState"/>
 </ecore:EPackage>

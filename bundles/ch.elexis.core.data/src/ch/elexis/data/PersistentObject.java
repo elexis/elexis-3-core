@@ -52,11 +52,11 @@ import org.eclipse.core.runtime.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;

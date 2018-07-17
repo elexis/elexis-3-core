@@ -318,5 +318,9 @@ public class FallDTO implements IFall {
 		public void changed(FallDTO fallDTO, boolean triggersRecalc);
 	}
 
+	@Override
+	public boolean isDeleted(){
+		return iFall.isDeleted();
+	}
 }
 

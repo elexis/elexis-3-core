@@ -1,24 +1,19 @@
 package ch.elexis.core.ui.importer.div.importers.multifile.strategy;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.beans.ContactBean;
-import ch.elexis.core.data.interfaces.IContact;
-import ch.elexis.core.data.interfaces.ILabItem;
-import ch.elexis.core.data.interfaces.IPatient;
-import ch.elexis.core.data.interfaces.text.IOpaqueDocument;
-import ch.elexis.core.data.services.GlobalServiceDescriptors;
-import ch.elexis.core.data.services.IDocumentManager;
-import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.importer.div.importers.HL7Parser;
 import ch.elexis.core.importer.div.importers.IPersistenceHandler;
@@ -28,20 +23,20 @@ import ch.elexis.core.importer.div.importers.TransientLabResult;
 import ch.elexis.core.importer.div.importers.multifile.IMultiFileParser;
 import ch.elexis.core.importer.div.importers.multifile.strategy.FileImportStrategyUtil;
 import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategy;
+import ch.elexis.core.model.ICategory;
+import ch.elexis.core.model.IDocument;
+import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.model.ILaboratory;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.importer.div.importers.DefaultLabImportUiHandler;
-import ch.elexis.core.ui.importer.div.importers.LabImportUtil;
 import ch.elexis.core.ui.importer.div.importers.Messages;
-import ch.elexis.core.ui.text.GenericDocument;
-import ch.elexis.data.LabItem;
+import ch.elexis.core.ui.importer.div.services.DocumentStoreServiceHolder;
+import ch.elexis.core.ui.importer.div.services.LabImportUtilHolder;
 import ch.elexis.data.LabResult;
-import ch.elexis.data.Labor;
-import ch.elexis.data.Patient;
-import ch.elexis.data.Query;
 import ch.rgw.io.FileTool;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
-import ch.rgw.tools.TimeSpan;
 import ch.rgw.tools.TimeTool;
 
 /**
@@ -50,35 +45,27 @@ import ch.rgw.tools.TimeTool;
  * @author lucia
  * 		
  */
+@Component
 public class DefaultPDFImportStrategy implements IFileImportStrategy {
 	private static final Logger log = LoggerFactory.getLogger(DefaultPDFImportStrategy.class);
 	
 	private static final String PDF = "pdf";
-	private IDocumentManager docManager;
-	private IContact myLab;
+	private ILaboratory myLab;
 	private String labName;
 	private IPatient patient;
 	private TimeTool dateTime;
 	private String group;
 	private String prio;
-	private LabImportUtil labImportUtil = new LabImportUtil();
 	
 	private boolean testMode = false;
 	
 	private boolean moveAfterImport;
 	
-	public DefaultPDFImportStrategy(){
-		Object os = Extensions.findBestService(GlobalServiceDescriptors.DOCUMENT_MANAGEMENT);
-		if (os != null) {
-			this.docManager = (IDocumentManager) os;
-		}
-	}
-	
 	@Override
 	public Result<Object> execute(File file, Map<String, Object> context, HL7Parser hl7parser, IPersistenceHandler persistenceHandler){
 		try {
 			initValuesFromContext(context);
-			if (this.docManager == null) {
+			if (DocumentStoreServiceHolder.isAvailable()) {
 				if (moveAfterImport) {
 					FileImportStrategyUtil.moveAfterImport(false, file);
 				}
@@ -99,9 +86,10 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		// get or create LabItem and create labresult
 		String name = "Dokument";
 		String shortname = "doc";
-		ILabItem labItem = getLabItem(shortname, name, LabItemTyp.DOCUMENT);
+		ILabItem labItem =
+			LabImportUtilHolder.get().getLabItem(shortname, name, LabItemTyp.DOCUMENT).orElse(null);
 		if (labItem == null) {
-			labItem = labImportUtil.createLabItem(shortname, name, myLab, "", "", PDF,
+			labItem = LabImportUtilHolder.get().createLabItem(shortname, name, myLab, "", "", PDF,
 				LabItemTyp.DOCUMENT, group, prio);
 			log.debug("LabItem created [{}]", labItem);
 		}
@@ -110,7 +98,7 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		
 		TransientLabResult importResult =
 			new TransientLabResult.Builder(patient, myLab, labItem, titel).date(dateTime)
-				.build(labImportUtil);
+				.build(LabImportUtilHolder.get());
 				
 		ImportHandler importHandler;
 		if (testMode) {
@@ -119,11 +107,12 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 			importHandler = new DefaultLabImportUiHandler();
 		}
 		String orderId =
-			labImportUtil.importLabResults(Collections.singletonList(importResult), importHandler);
+			LabImportUtilHolder.get().importLabResults(Collections.singletonList(importResult),
+				importHandler);
 			
 		// add doc to document manager
 		try {
-			addDocument(titel, labName, dateTime.toString(TimeTool.DATE_GER), file, file.getName());
+			addDocument(titel, labName, dateTime, file, file.getName());
 		} catch (IOException | ElexisException e) {
 			log.error(
 				"error saving pdf [" + file.getAbsolutePath() + "] in document manager (omnivore)");
@@ -142,7 +131,9 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 			sbFailed.append("; ");
 		}
 		
-		myLab = new ContactBean(Labor.load((String) context.get(IMultiFileParser.CTX_LABID)));
+		myLab = LabImportUtilHolder.get()
+			.loadCoreModel((String) context.get(IMultiFileParser.CTX_LABID), ILaboratory.class)
+			.get();
 		if (myLab == null) {
 			sbFailed.append(Messages.DefaultPDFImportStrategy_Lab);
 			sbFailed.append("; ");
@@ -177,21 +168,6 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		}
 	}
 	
-	private LabItem getLabItem(String shortname, String name, LabItemTyp type){
-		Query<LabItem> qbe = new Query<LabItem>(LabItem.class);
-		qbe.add(LabItem.SHORTNAME, Query.EQUALS, shortname);
-		qbe.add(LabItem.LAB_ID, Query.EQUALS, myLab.getId());
-		qbe.add(LabItem.TYPE, Query.EQUALS, new Integer(type.ordinal()).toString());
-		
-		LabItem labItem = null;
-		List<LabItem> itemList = qbe.execute();
-		if (itemList.size() > 0) {
-			labItem = itemList.get(0);
-		}
-		
-		return labItem;
-	}
-	
 	private String generatePDFTitle(String filename, TimeTool dateTime){
 		SimpleDateFormat sdfTitle = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //$NON-NLS-1$
 		String title = "Laborbefund" + sdfTitle.format(dateTime.getTime()) + "." //$NON-NLS-2$
@@ -200,40 +176,47 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		return title;
 	}
 	
-	private boolean addDocument(final String title, final String category, final String dateStr,
-		final File file, String keywords) throws IOException, ElexisException{
-		findOrCreateCategory(category);
+	private boolean addDocument(final String title, final String category,
+		final TimeTool creationTime, final File file, String keywords)
+		throws IOException, ElexisException{
+		ICategory iCategory = findOrCreateCategory(category);
 		
-		Patient pat = Patient.load(patient.getId());
-		List<IOpaqueDocument> documentList = this.docManager.listDocuments(pat, category, title,
-			null, new TimeSpan(dateStr + "-" + dateStr), null); //$NON-NLS-1$
-			
-		if (documentList == null || documentList.size() == 0) {
-			this.docManager.addDocument(new GenericDocument(pat, title, category, file, dateStr,
-				keywords, FileTool.getExtension(file.getName())));
+		List<IDocument> existing =
+			DocumentStoreServiceHolder.get().getDocuments(patient.getId(), null, iCategory, null);
+		existing = existing.stream().filter(d -> documentMatches(d, title, dateTime))
+			.collect(Collectors.toList());
+		
+		if (existing.isEmpty()) {
+			IDocument document =
+				DocumentStoreServiceHolder.get().createDocument(patient.getId(), title,
+					iCategory.getName());
+			document.setCreated(dateTime.getTime());
+			document.setExtension(FileTool.getExtension(file.getName()));
+			document.setKeywords(keywords);
+			DocumentStoreServiceHolder.get().saveDocument(document, new FileInputStream(file));
 			return true;
 		}
 		return false;
 	}
 	
-	private void findOrCreateCategory(String category){
-		if (category != null) {
-			boolean exists = false;
-			String[] categories = docManager.getCategories();
-			for (String cat : categories) {
-				if (category.equals(cat)) {
-					exists = true;
-				}
-			}
-			
-			if (!exists) {
-				if (docManager.addCategorie(category)) {
-					log.info("Created category " + category + " for multi file import");
-				} else {
-					log.warn("Could not create category " + category + " for multi file import");
-				}
+	private boolean documentMatches(IDocument document, String title, TimeTool timeTool){
+		return document.getTitle().equals(title)
+			&& document.getCreated().equals(timeTool.getTime());
+	}
+	
+	private ICategory findOrCreateCategory(String category){
+		if (category == null) {
+			return DocumentStoreServiceHolder.get().getCategoryDefault();
+		}
+		List<ICategory> categories = DocumentStoreServiceHolder.get().getCategories();
+		for (ICategory iCategory : categories) {
+			if (iCategory.getName().equals(category)) {
+				return iCategory;
 			}
 		}
+		// does not exist -> create
+		log.info("Created category " + category + " for multi file import");
+		return DocumentStoreServiceHolder.get().createCategory(category);
 	}
 	
 	@Override

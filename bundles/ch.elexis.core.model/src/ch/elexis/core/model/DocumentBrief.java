@@ -19,10 +19,12 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.jpa.entities.Brief;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
-import ch.elexis.core.model.service.CoreModelAdapterFactory;
+import ch.elexis.core.model.mixin.IdentifiableWithXid;
+import ch.elexis.core.model.util.ModelUtil;
 import ch.elexis.core.types.DocumentStatus;
 
-public class DocumentBrief extends AbstractIdDeleteModelAdapter<Brief> implements IDocumentLetter {
+public class DocumentBrief extends AbstractIdDeleteModelAdapter<Brief>
+		implements IdentifiableWithXid, IDocumentLetter {
 	
 	private ICategory category;
 	private DocumentStatus status;
@@ -160,12 +162,7 @@ public class DocumentBrief extends AbstractIdDeleteModelAdapter<Brief> implement
 	
 	@Override
 	public IPatient getPatient(){
-		if (getEntity().getPatient() != null) {
-			Optional<Identifiable> patient = CoreModelAdapterFactory.getInstance()
-				.getModelAdapter(getEntity().getPatient(), IPatient.class, true);
-			return (IPatient) patient.orElse(null);
-		}
-		return null;
+		return ModelUtil.getAdapter(getEntity().getPatient(), IPatient.class);
 	}
 	
 	@Override
@@ -179,12 +176,7 @@ public class DocumentBrief extends AbstractIdDeleteModelAdapter<Brief> implement
 	
 	@Override
 	public IContact getAuthor(){
-		if (getEntity().getSender() != null) {
-			Optional<Identifiable> patient = CoreModelAdapterFactory.getInstance()
-				.getModelAdapter(getEntity().getSender(), IContact.class, true);
-			return (IContact) patient.orElse(null);
-		}
-		return null;
+		return ModelUtil.getAdapter(getEntity().getSender(), IContact.class);
 	}
 	
 	@Override

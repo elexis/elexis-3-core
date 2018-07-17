@@ -1,4 +1,4 @@
-package ch.elexis.core.model;
+package ch.elexis.core.model.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +16,22 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.jpa.entities.AbstractDBObject;
+import ch.elexis.core.jpa.entities.AbstractDBObjectId;
+import ch.elexis.core.jpa.entities.Userconfig;
 import ch.elexis.core.jpa.entitymanager.ElexisEntityManger;
+import ch.elexis.core.model.Config;
+import ch.elexis.core.model.DocumentBrief;
+import ch.elexis.core.model.IConfig;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.IUserConfig;
+import ch.elexis.core.model.IXid;
+import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.model.service.CoreModelAdapterFactory;
+import ch.elexis.core.services.IContext;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
@@ -39,12 +54,19 @@ public class ModelUtil {
 		ModelUtil.entityManager = entityManager;
 	}
 	
+	private static IContextService contextService;
+	
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
+	public void setContextService(IContextService contextService){
+		ModelUtil.contextService = contextService;
+	}
+	
 	/**
 	 * Save an entity.
 	 * 
 	 * @param entity
 	 */
-	protected static void saveEntity(AbstractDBObject entity){
+	public static void saveEntity(AbstractDBObject entity){
 		if (entity != null) {
 			EntityManager em = entityManager.getEntityManager();
 			try {
@@ -193,8 +215,7 @@ public class ModelUtil {
 	 */
 	public static boolean isConfig(String key, boolean defaultValue){
 		IQuery<IConfig> configQuery = modelService.getQuery(IConfig.class);
-		configQuery.add(ModelPackage.Literals.ICONFIG__KEY, COMPARATOR.EQUALS,
-			Preferences.P_TEXT_EXTERN_FILE);
+		configQuery.and(ModelPackage.Literals.ICONFIG__KEY, COMPARATOR.EQUALS, key);
 		List<IConfig> configs = configQuery.execute();
 		if (configs.isEmpty()) {
 			return defaultValue;
@@ -210,6 +231,39 @@ public class ModelUtil {
 	}
 	
 	/**
+	 * Test if there is a matching {@link Userconfig} entry for the owner, with a value that can be
+	 * interpreted as true. If no {@link Userconfig} entry is present defaultValue is returned.
+	 * 
+	 * @param owner
+	 * @param key
+	 * @param defaultValue
+	 * @return
+	 */
+	public static boolean isUserConfig(IContact owner, String key, boolean defaultValue){
+		if (owner != null) {
+			IQuery<IUserConfig> configQuery = modelService.getQuery(IUserConfig.class);
+			configQuery.and(ModelPackage.Literals.IUSER_CONFIG__OWNER, COMPARATOR.EQUALS, owner);
+			configQuery.and(ModelPackage.Literals.ICONFIG__KEY, COMPARATOR.EQUALS, key);
+			List<IUserConfig> configs = configQuery.execute();
+			if (configs.isEmpty()) {
+				return defaultValue;
+			} else {
+				IConfig config = configs.get(0);
+				if (configs.size() > 1) {
+					LoggerFactory.getLogger(ModelUtil.class)
+						.warn("Multiple user config entries for [" + key + "] using first.");
+				}
+				String value = config.getValue();
+				return value != null
+					&& (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("1"));
+			}
+		}
+		LoggerFactory.getLogger(ModelUtil.class)
+			.warn("No user contact for query of key [" + key + "] returning default");
+		return defaultValue;
+	}
+	
+	/**
 	 * Get a matching {@link Config} entry and return its value. If no {@link Config} is present
 	 * defaultValue is returned.
 	 * 
@@ -219,7 +273,7 @@ public class ModelUtil {
 	 */
 	public static String getConfig(String key, String defaultValue){
 		IQuery<IConfig> configQuery = modelService.getQuery(IConfig.class);
-		configQuery.add(ModelPackage.Literals.ICONFIG__KEY, COMPARATOR.EQUALS,
+		configQuery.and(ModelPackage.Literals.ICONFIG__KEY, COMPARATOR.EQUALS,
 			Preferences.P_TEXT_EXTERN_FILE);
 		List<IConfig> configs = configQuery.execute();
 		if (configs.isEmpty()) {
@@ -232,5 +286,153 @@ public class ModelUtil {
 			}
 			return config.getValue();
 		}
+	}
+	
+	/**
+	 * Get the active {@link IContact} of the active {@link IUser} from the root {@link IContext}.
+	 * 
+	 * @return
+	 */
+	public static Optional<IContact> getActiveUserContact(){
+		if (contextService != null) {
+			Optional<IContact> ret = contextService.getRootContext().getActiveUserContact();
+			if (ret.isPresent()) {
+				return ret;
+			} else {
+				Optional<IUser> user = contextService.getRootContext().getActiveUser();
+				if (user.isPresent()) {
+					return Optional.ofNullable(user.get().getAssignedContact());
+				}
+			}
+		} else {
+			LoggerFactory.getLogger(ModelUtil.class)
+				.warn("No IContextService available.");
+		}
+		return Optional.empty();
+	}
+	
+	/**
+	 * Get a {@link IQuery} instance for the provided interfaceClazz.
+	 * 
+	 * @param interfaceClazz
+	 * @return
+	 */
+	public static <T> IQuery<T> getQuery(Class<T> interfaceClazz){
+		return modelService.getQuery(interfaceClazz);
+	}
+	
+	/**
+	 * Add an {@link IXid} to the {@link Identifiable}.
+	 * 
+	 * @param identifiable
+	 * @param domain
+	 * @param id
+	 * @param updateIfExists
+	 * @return
+	 */
+	public static boolean addXid(Identifiable identifiable, String domain, String id,
+		boolean updateIfExists){
+		Optional<IXid> existing = getXid(domain, id);
+		if (existing.isPresent()) {
+			if (updateIfExists) {
+				IXid xid = existing.get();
+				xid.setDomain(domain);
+				xid.setDomainId(id);
+				xid.setObject(identifiable);
+				return true;
+			}
+		} else {
+			IXid xid = modelService.create(IXid.class);
+			xid.setDomain(domain);
+			xid.setDomainId(id);
+			xid.setObject(identifiable);
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Get an {@link IXid} with matching domain and id.
+	 * 
+	 * @param domain
+	 * @param id
+	 * @return
+	 */
+	public static Optional<IXid> getXid(String domain, String id){
+		IQuery<IXid> query = modelService.getQuery(IXid.class);
+		query.and(ModelPackage.Literals.IXID__DOMAIN, COMPARATOR.EQUALS, domain);
+		query.and(ModelPackage.Literals.IXID__DOMAIN_ID, COMPARATOR.EQUALS, id);
+		List<IXid> xids = query.execute();
+		if (xids.size() > 0) {
+			if (xids.size() > 1) {
+				LoggerFactory.getLogger(ModelUtil.class).error(
+					"XID [" + domain + "] [" + id + "] on multiple objects, returning first.");
+			}
+			return Optional.of(xids.get(0));
+		}
+		return Optional.empty();
+	}
+	
+	/**
+	 * Get an {@link IXid} with matching {@link Identifiable} and domain.
+	 * 
+	 * @param identifiable
+	 * @param domain
+	 * @return
+	 */
+	public static Optional<IXid> getXid(Identifiable identifiable, String domain){
+		IQuery<IXid> query = modelService.getQuery(IXid.class);
+		query.and(ModelPackage.Literals.IXID__DOMAIN, COMPARATOR.EQUALS, domain);
+		query.and(ModelPackage.Literals.IXID__OBJECT_ID, COMPARATOR.EQUALS, identifiable.getId());
+		List<IXid> xids = query.execute();
+		if (xids.size() > 0) {
+			if (xids.size() > 1) {
+				LoggerFactory.getLogger(ModelUtil.class).error(
+					"XID [" + domain + "] [" + identifiable
+						+ "] on multiple objects, returning first.");
+			}
+			return Optional.of(xids.get(0));
+		}
+		return Optional.empty();
+	}
+	
+	/**
+	 * Load the object using the core model service
+	 * 
+	 * @param objectId
+	 * @param clazz
+	 * @return
+	 */
+	public static <T> T load(String objectId, Class<T> clazz){
+		Optional<T> ret = modelService.load(objectId, clazz);
+		return ret.orElse(null);
+	}
+	
+	/**
+	 * Wrap the entity in a new ModelAdapter matching the provided type clazz. If entity is null,
+	 * null is returned.
+	 * 
+	 * @param entity
+	 * @param clazz
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T getAdapter(AbstractDBObjectId entity, Class<T> clazz){
+		if (entity != null) {
+			Optional<Identifiable> adapter =
+				CoreModelAdapterFactory.getInstance().getModelAdapter(entity, clazz, true);
+			return (T) adapter.orElse(null);
+		}
+		return null;
+	}
+	
+	/**
+	 * verify whether the proposed username is not already in use
+	 * 
+	 * @param username
+	 * @return <code>true</code> if the given username may be used
+	 */
+	public static boolean verifyUsernameNotTaken(String username){
+		return !modelService.load(username, IUser.class).isPresent();
 	}
 }

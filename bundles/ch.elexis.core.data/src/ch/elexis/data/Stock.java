@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-import ch.elexis.core.model.IStock;
+import ch.elexis.core.data.interfaces.IStock;
 
 /**
  * A Stock is the definition of a storage for articles. A stock is referred to by {@link StockEntry}

@@ -28,7 +28,7 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.data.Brief;
 import ch.elexis.data.dto.CategoryDocumentDTO;
 
-@Component
+@Component(property = "storeid=ch.elexis.data.store.brief")
 public class BriefDocumentStore implements IDocumentStore {
 	
 	private static final String STORE_ID = "ch.elexis.data.store.brief";
@@ -54,16 +54,16 @@ public class BriefDocumentStore implements IDocumentStore {
 		Optional<IPatient> patient = modelService.load(patientId, IPatient.class);
 		if (patient.isPresent()) {
 			IQuery<IDocumentLetter> query = modelService.getQuery(IDocumentLetter.class);
-			query.add(ModelPackage.Literals.IDOCUMENT__PATIENT, COMPARATOR.EQUALS, patient.get());
+			query.and(ModelPackage.Literals.IDOCUMENT__PATIENT, COMPARATOR.EQUALS, patient.get());
 			
 			if (authorId != null) {
 				Optional<IContact> author = modelService.load(authorId, IContact.class);
 				author.ifPresent(a -> {
-					query.add(ModelPackage.Literals.IDOCUMENT__AUTHOR, COMPARATOR.EQUALS, a);
+					query.and(ModelPackage.Literals.IDOCUMENT__AUTHOR, COMPARATOR.EQUALS, a);
 				});
 			}
 			if (category != null && category.getName() != null) {
-				query.add(ModelPackage.Literals.IDOCUMENT__CATEGORY, COMPARATOR.EQUALS,
+				query.and(ModelPackage.Literals.IDOCUMENT__CATEGORY, COMPARATOR.EQUALS,
 					category.getName());
 			}
 			

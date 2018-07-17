@@ -10,6 +10,8 @@
  */
 package ch.elexis.core.types.impl;
 
+import ch.elexis.core.model.LabOrderState;
+import ch.elexis.core.model.XidQuality;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +36,7 @@ import ch.rgw.tools.Money;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.Comparable;
+import java.time.LocalDate;
 
 /**
  * <!-- begin-user-doc -->
@@ -146,6 +149,27 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EDataType outputStreamEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType localDateEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType xidQualityEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType labOrderStateEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -348,6 +372,33 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EDataType getLocalDate() {
+		return localDateEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EDataType getXidQuality() {
+		return xidQualityEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EDataType getLabOrderState() {
+		return labOrderStateEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public TypesFactory getTypesFactory() {
 		return (TypesFactory)getEFactoryInstance();
 	}
@@ -392,6 +443,9 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		localDateTimeEDataType = createEDataType(LOCAL_DATE_TIME);
 		inputStreamEDataType = createEDataType(INPUT_STREAM);
 		outputStreamEDataType = createEDataType(OUTPUT_STREAM);
+		localDateEDataType = createEDataType(LOCAL_DATE);
+		xidQualityEDataType = createEDataType(XID_QUALITY);
+		labOrderStateEDataType = createEDataType(LAB_ORDER_STATE);
 	}
 
 	/**
@@ -484,6 +538,9 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEDataType(localDateTimeEDataType, LocalDateTime.class, "LocalDateTime", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(inputStreamEDataType, InputStream.class, "InputStream", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(outputStreamEDataType, OutputStream.class, "OutputStream", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(localDateEDataType, LocalDate.class, "LocalDate", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(xidQualityEDataType, XidQuality.class, "XidQuality", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(labOrderStateEDataType, LabOrderState.class, "LabOrderState", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

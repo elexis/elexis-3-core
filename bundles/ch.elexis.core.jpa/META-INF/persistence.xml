@@ -13,6 +13,8 @@
 		<class>ch.elexis.core.jpa.entities.converter.IntegerStringConverter</class>
 		<class>ch.elexis.core.jpa.entities.converter.InvoiceStateConverter</class>
 		<class>ch.elexis.core.jpa.entities.converter.PathologicDescriptionConverter</class>
+		<class>ch.elexis.core.jpa.entities.converter.LabItemTypConverter</class>
+		<class>ch.elexis.core.jpa.entities.converter.LabOrderStateConverter</class>
 		<class>ch.elexis.core.jpa.entities.converter.VersionedResourceConverter</class>
 		<class>ch.elexis.core.jpa.entities.converter.auto.LocalDateConverter</class>
 		<class>ch.elexis.core.jpa.entities.converter.auto.LocalDateTimeConverter</class>

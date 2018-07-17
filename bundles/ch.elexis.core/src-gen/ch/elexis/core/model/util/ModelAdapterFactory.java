@@ -94,40 +94,44 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	protected ModelSwitch<Adapter> modelSwitch =
 		new ModelSwitch<Adapter>() {
 			@Override
-			public Adapter caseIContact(IContact object) {
-				return createIContactAdapter();
-			}
-			@Override
-			public Adapter caseIXid(IXid object) {
-				return createIXidAdapter();
-			}
-			@Override
-			public Adapter caseICodeElement(ICodeElement object) {
-				return createICodeElementAdapter();
-			}
-			@Override
-			public Adapter caseISticker(ISticker object) {
-				return createIStickerAdapter();
-			}
-			@Override
-			public Adapter caseIPerson(IPerson object) {
-				return createIPersonAdapter();
-			}
-			@Override
-			public Adapter caseIPatient(IPatient object) {
-				return createIPatientAdapter();
-			}
-			@Override
-			public Adapter caseIUser(IUser object) {
-				return createIUserAdapter();
-			}
-			@Override
 			public Adapter caseIdentifiable(Identifiable object) {
 				return createIdentifiableAdapter();
 			}
 			@Override
 			public Adapter caseDeleteable(Deleteable object) {
 				return createDeleteableAdapter();
+			}
+			@Override
+			public Adapter caseIXid(IXid object) {
+				return createIXidAdapter();
+			}
+			@Override
+			public Adapter caseIContact(IContact object) {
+				return createIContactAdapter();
+			}
+			@Override
+			public Adapter caseIPerson(IPerson object) {
+				return createIPersonAdapter();
+			}
+			@Override
+			public Adapter caseIOrganization(IOrganization object) {
+				return createIOrganizationAdapter();
+			}
+			@Override
+			public Adapter caseILaboratory(ILaboratory object) {
+				return createILaboratoryAdapter();
+			}
+			@Override
+			public Adapter caseIPatient(IPatient object) {
+				return createIPatientAdapter();
+			}
+			@Override
+			public Adapter caseIMandator(IMandator object) {
+				return createIMandatorAdapter();
+			}
+			@Override
+			public Adapter caseIUser(IUser object) {
+				return createIUserAdapter();
 			}
 			@Override
 			public Adapter caseILabItem(ILabItem object) {
@@ -142,12 +146,24 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createILabOrderAdapter();
 			}
 			@Override
-			public Adapter caseIPeriod(IPeriod object) {
-				return createIPeriodAdapter();
+			public Adapter caseILabMapping(ILabMapping object) {
+				return createILabMappingAdapter();
 			}
 			@Override
 			public Adapter caseIDocument(IDocument object) {
 				return createIDocumentAdapter();
+			}
+			@Override
+			public Adapter caseIDocumentLetter(IDocumentLetter object) {
+				return createIDocumentLetterAdapter();
+			}
+			@Override
+			public Adapter caseISticker(ISticker object) {
+				return createIStickerAdapter();
+			}
+			@Override
+			public Adapter caseICodeElement(ICodeElement object) {
+				return createICodeElementAdapter();
 			}
 			@Override
 			public Adapter caseICategory(ICategory object) {
@@ -170,28 +186,28 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createICoverageAdapter();
 			}
 			@Override
-			public Adapter caseIOrganization(IOrganization object) {
-				return createIOrganizationAdapter();
-			}
-			@Override
-			public Adapter caseILaboratory(ILaboratory object) {
-				return createILaboratoryAdapter();
-			}
-			@Override
-			public Adapter caseIDocumentLetter(IDocumentLetter object) {
-				return createIDocumentLetterAdapter();
-			}
-			@Override
-			public Adapter caseIDocumentHandle(IDocumentHandle object) {
-				return createIDocumentHandleAdapter();
-			}
-			@Override
 			public Adapter caseIConfig(IConfig object) {
 				return createIConfigAdapter();
 			}
 			@Override
 			public Adapter caseIUserConfig(IUserConfig object) {
 				return createIUserConfigAdapter();
+			}
+			@Override
+			public Adapter caseIPeriod(IPeriod object) {
+				return createIPeriodAdapter();
+			}
+			@Override
+			public Adapter caseIArticle(IArticle object) {
+				return createIArticleAdapter();
+			}
+			@Override
+			public Adapter caseWithExtInfo(WithExtInfo object) {
+				return createWithExtInfoAdapter();
+			}
+			@Override
+			public Adapter caseIRole(IRole object) {
+				return createIRoleAdapter();
 			}
 			@Override
 			public <T> Adapter caseComparable(Comparable<T> object) {
@@ -386,6 +402,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.ILabMapping <em>ILab Mapping</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.ILabMapping
+	 * @generated
+	 */
+	public Adapter createILabMappingAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IPeriod <em>IPeriod</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -526,20 +556,6 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IDocumentHandle <em>IDocument Handle</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see ch.elexis.core.model.IDocumentHandle
-	 * @generated
-	 */
-	public Adapter createIDocumentHandleAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IConfig <em>IConfig</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -564,6 +580,62 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIUserConfigAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IMandator <em>IMandator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IMandator
+	 * @generated
+	 */
+	public Adapter createIMandatorAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IArticle <em>IArticle</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IArticle
+	 * @generated
+	 */
+	public Adapter createIArticleAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.WithExtInfo <em>With Ext Info</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.WithExtInfo
+	 * @generated
+	 */
+	public Adapter createWithExtInfoAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IRole <em>IRole</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IRole
+	 * @generated
+	 */
+	public Adapter createIRoleAdapter() {
 		return null;
 	}
 

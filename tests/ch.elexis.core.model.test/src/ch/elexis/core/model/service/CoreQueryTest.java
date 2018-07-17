@@ -52,6 +52,64 @@ public class CoreQueryTest {
 	}
 	
 	@Test
+	public void queryDeleted(){
+		createContact("test1", "test1");
+		IContact contact2 = createContact("test2", "test2");
+		modelSerice.delete(contact2);
+		createContact("test3", "test3");
+		
+		// get query with existing where deleted group
+		IQuery<IContact> query = modelSerice.getQuery(IContact.class);
+		assertNotNull(query);
+		List<IContact> results = query.execute();
+		assertNotNull(results);
+		assertEquals(2, results.size());
+		
+		// get query without existing where deleted group
+		query = modelSerice.getQuery(IContact.class, true);
+		assertNotNull(query);
+		results = query.execute();
+		assertNotNull(results);
+		assertEquals(3, results.size());
+	}
+	
+	@Test
+	public void queryGroups(){
+		createContact("test1", "test1");
+		IContact contact2 = createContact("test2", "test2");
+		modelSerice.delete(contact2);
+		createContact("test3", "test3");
+		
+		// get query with existing where deleted group
+		IQuery<IContact> query = modelSerice.getQuery(IContact.class);
+		assertNotNull(query);
+		query.startGroup();
+		query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, "test%");
+		query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.EQUALS, "nonexisting");
+		query.startGroup();
+		query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, "test%");
+		query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.EQUALS, "nonexisting");
+		query.andJoinGroups();
+		List<IContact> results = query.execute();
+		assertNotNull(results);
+		assertEquals(2, results.size());
+		
+		// get query without existing where deleted group
+		query = modelSerice.getQuery(IContact.class, true);
+		assertNotNull(query);
+		query.startGroup();
+		query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, "test%");
+		query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.EQUALS, "nonexisting");
+		query.startGroup();
+		query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, "test%");
+		query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.EQUALS, "nonexisting");
+		query.orJoinGroups();
+		results = query.execute();
+		assertNotNull(results);
+		assertEquals(3, results.size());
+	}
+	
+	@Test
 	public void queryContact(){
 		createContact("test1", "test1");
 		createContact("test2", "test2");
@@ -70,14 +128,14 @@ public class CoreQueryTest {
 		
 		IQuery<IContact> query = modelSerice.getQuery(IContact.class);
 		assertNotNull(query);
-		query.add(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.EQUALS, "test1");
+		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.EQUALS, "test1");
 		List<IContact> results = query.execute();
 		assertNotNull(results);
 		assertEquals(1, results.size());
 		assertEquals("test1", results.get(0).getDescription1());
 		
 		query = modelSerice.getQuery(IContact.class);
-		query.add(ModelPackage.Literals.ICONTACT__DESCRIPTION3, COMPARATOR.EQUALS, (String) null);
+		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION3, COMPARATOR.EQUALS, (String) null);
 		results = query.execute();
 		assertNotNull(results);
 		assertEquals(2, results.size());
@@ -107,7 +165,7 @@ public class CoreQueryTest {
 		
 		IQuery<IPatient> query = modelSerice.getQuery(IPatient.class);
 		assertNotNull(query);
-		query.add(ModelPackage.Literals.IPERSON__FIRST_NAME, COMPARATOR.EQUALS, "patient1");
+		query.and(ModelPackage.Literals.IPERSON__FIRST_NAME, COMPARATOR.EQUALS, "patient1");
 		List<IPatient> results = query.execute();
 		assertNotNull(results);
 		assertEquals(1, results.size());
@@ -115,7 +173,7 @@ public class CoreQueryTest {
 		
 		query = modelSerice.getQuery(IPatient.class);
 		assertNotNull(query);
-		query.add(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS,
+		query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS,
 			LocalDate.of(1999, 1, 1));
 		results = query.execute();
 		assertNotNull(results);
@@ -124,8 +182,8 @@ public class CoreQueryTest {
 		
 		query = modelSerice.getQuery(IPatient.class);
 		assertNotNull(query);
-		query.add(ModelPackage.Literals.IPERSON__FIRST_NAME, COMPARATOR.EQUALS, "patient2");
-		query.add(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS,
+		query.and(ModelPackage.Literals.IPERSON__FIRST_NAME, COMPARATOR.EQUALS, "patient2");
+		query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS,
 			LocalDate.of(1999, 2, 2));
 		results = query.execute();
 		assertNotNull(results);
@@ -135,9 +193,9 @@ public class CoreQueryTest {
 		
 		query = modelSerice.getQuery(IPatient.class);
 		assertNotNull(query);
-		query.add(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.GREATER_OR_EQUAL,
+		query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.GREATER_OR_EQUAL,
 			LocalDate.of(1999, 2, 2));
-		query.add(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.LESS,
+		query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.LESS,
 			LocalDate.of(1999, 12, 12));
 		results = query.execute();
 		assertNotNull(results);
@@ -148,12 +206,12 @@ public class CoreQueryTest {
 	}
 	
 	private void clearContacts(){
-		IQuery<IContact> query = modelSerice.getQuery(IContact.class);
+		IQuery<IContact> query = modelSerice.getQuery(IContact.class, true);
 		List<IContact> results = query.execute();
 		results.parallelStream().forEach(c -> modelSerice.remove(c));
 	}
 	
-	private void createContact(String desc1, String desc2){
+	private IContact createContact(String desc1, String desc2){
 		IContact contact = modelSerice.create(IContact.class);
 		assertNotNull(contact);
 		assertTrue(contact instanceof IContact);
@@ -161,6 +219,7 @@ public class CoreQueryTest {
 		contact.setDescription1(desc1);
 		contact.setDescription2(desc2);
 		assertTrue(modelSerice.save(contact));
+		return contact;
 	}
 	
 	private void createPatient(String firstName, String lastName, LocalDate birthDate){

@@ -19,10 +19,10 @@ import java.util.List;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.interfaces.IOrder;
+import ch.elexis.core.data.interfaces.IOrderEntry;
+import ch.elexis.core.data.interfaces.IStock;
 import ch.elexis.core.jdt.Nullable;
-import ch.elexis.core.model.IOrder;
-import ch.elexis.core.model.IOrderEntry;
-import ch.elexis.core.model.IStock;
 import ch.rgw.tools.TimeTool;
 
 public class Bestellung extends PersistentObject implements IOrder {

@@ -1,7 +1,5 @@
 package ch.elexis.core.model;
 
-import ch.elexis.core.model.article.IArticle;
-
 public interface IStockEntry {
 	
 	public IArticle getArticle();

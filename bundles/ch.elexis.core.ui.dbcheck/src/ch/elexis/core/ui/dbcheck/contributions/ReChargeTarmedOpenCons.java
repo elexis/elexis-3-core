@@ -14,12 +14,12 @@ import org.osgi.framework.ServiceReference;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.interfaces.ICodeElement;
+import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
+import ch.elexis.core.data.services.ICodeElementService;
+import ch.elexis.core.data.services.ICodeElementService.ContextKeys;
 import ch.elexis.core.lock.types.LockResponse;
-import ch.elexis.core.model.ICodeElement;
-import ch.elexis.core.model.IPersistentObject;
-import ch.elexis.core.services.ICodeElementService;
-import ch.elexis.core.services.ICodeElementService.ContextKeys;
 import ch.elexis.core.ui.dbcheck.external.ExternalMaintenance;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Query;

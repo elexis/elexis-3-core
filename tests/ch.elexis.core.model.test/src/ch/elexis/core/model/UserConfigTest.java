@@ -80,7 +80,7 @@ public class UserConfigTest {
 		assertTrue(modelSerice.save(config2));
 		
 		IQuery<IUserConfig> query = modelSerice.getQuery(IUserConfig.class);
-		query.add(ModelPackage.Literals.IUSER_CONFIG__OWNER, COMPARATOR.EQUALS, contact2);
+		query.and(ModelPackage.Literals.IUSER_CONFIG__OWNER, COMPARATOR.EQUALS, contact2);
 		List<IUserConfig> existing = query.execute();
 		assertNotNull(existing);
 		assertFalse(existing.isEmpty());

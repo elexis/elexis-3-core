@@ -10,6 +10,8 @@
  */
 package ch.elexis.core.model;
 
+import java.util.List;
+
 
 /**
  * <!-- begin-user-doc -->
@@ -23,6 +25,7 @@ package ch.elexis.core.model;
  *   <li>{@link ch.elexis.core.model.IUser#getUsername <em>Username</em>}</li>
  *   <li>{@link ch.elexis.core.model.IUser#getPassword <em>Password</em>}</li>
  *   <li>{@link ch.elexis.core.model.IUser#getAssignedContact <em>Assigned Contact</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IUser#getRoles <em>Roles</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIUser()
@@ -107,5 +110,21 @@ public interface IUser extends Deleteable, Identifiable {
 	 * @generated
 	 */
 	void setAssignedContact(IContact value);
+
+	/**
+	 * Returns the value of the '<em><b>Roles</b></em>' reference list.
+	 * The list contents are of type {@link ch.elexis.core.model.IRole}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Roles</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Roles</em>' reference list.
+	 * @see ch.elexis.core.model.ModelPackage#getIUser_Roles()
+	 * @model
+	 * @generated
+	 */
+	List<IRole> getRoles();
 
 } // IUser

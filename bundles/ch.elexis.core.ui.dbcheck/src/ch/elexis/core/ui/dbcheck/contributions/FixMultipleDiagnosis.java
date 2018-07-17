@@ -21,8 +21,8 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
-import ch.elexis.core.model.IDiagnose;
 import ch.elexis.core.ui.dbcheck.external.ExternalMaintenance;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.PersistentObject;

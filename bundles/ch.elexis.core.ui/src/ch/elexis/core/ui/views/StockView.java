@@ -63,11 +63,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.interfaces.IStockEntry;
 import ch.elexis.core.data.service.StockService;
+import ch.elexis.core.data.services.IStockService.Availability;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.lock.types.LockResponse;
-import ch.elexis.core.model.IStockEntry;
-import ch.elexis.core.services.IStockService.Availability;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;

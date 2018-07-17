@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import com.eclipsesource.jaxrs.consumer.ConsumerFactory;
 
 import ch.elexis.core.common.ElexisEvent;
+import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.server.IEventService;
 
 public class ElexisServerEventService {

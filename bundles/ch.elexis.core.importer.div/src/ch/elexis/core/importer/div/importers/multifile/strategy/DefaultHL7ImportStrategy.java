@@ -2,14 +2,15 @@ package ch.elexis.core.importer.div.importers.multifile.strategy;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-import ch.elexis.core.data.interfaces.ILabOrder;
-import ch.elexis.core.data.interfaces.ILabResult;
 import ch.elexis.core.importer.div.importers.HL7Parser;
 import ch.elexis.core.importer.div.importers.IPersistenceHandler;
 import ch.elexis.core.importer.div.importers.multifile.IMultiFileParser;
+import ch.elexis.core.model.ILabOrder;
+import ch.elexis.core.model.ILabResult;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.TimeTool;
 
@@ -54,22 +55,22 @@ public class DefaultHL7ImportStrategy implements IFileImportStrategy {
 			List<ILabOrder> orders = persistenceHandler.getLabOrdersByOrderId((String) resultObj);
 			if (orders != null && !orders.isEmpty()) {
 				ILabOrder order = orders.get(0);
-				context.put(IMultiFileParser.CTX_PATIENT, order.getPatientContact());
-				context.put(IMultiFileParser.CTX_LABID, order.getLabResult().getOriginContact().getId());
-				context.put(IMultiFileParser.CTX_GROUP, order.getLabItem().getGroup());
-				context.put(IMultiFileParser.CTX_PRIO, order.getLabItem().getPriority());
-				context.put(IMultiFileParser.CTX_TIME, getDate(order.getLabResult()));
+				context.put(IMultiFileParser.CTX_PATIENT, order.getPatient());
+				context.put(IMultiFileParser.CTX_LABID, order.getResult().getOrigin().getId());
+				context.put(IMultiFileParser.CTX_GROUP, order.getItem().getGroup());
+				context.put(IMultiFileParser.CTX_PRIO, order.getItem().getPriority());
+				context.put(IMultiFileParser.CTX_TIME, getDate(order.getResult()));
 			}
 		}
 		return result;
 	}
 	
 	private TimeTool getDate(ILabResult result){
-		TimeTool observationTime = result.getObservationTime();
+		LocalDateTime observationTime = result.getObservationTime();
 		if (observationTime == null) {
 			return new TimeTool(result.getDate());
 		}
-		return observationTime;
+		return new TimeTool(observationTime);
 	}
 	
 	@Override

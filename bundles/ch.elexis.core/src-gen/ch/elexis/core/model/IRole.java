@@ -13,13 +13,13 @@ package ch.elexis.core.model;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>IDocument Handle</b></em>'.
+ * A representation of the model object '<em><b>IRole</b></em>'.
  * <!-- end-user-doc -->
  *
  *
- * @see ch.elexis.core.model.ModelPackage#getIDocumentHandle()
+ * @see ch.elexis.core.model.ModelPackage#getIRole()
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface IDocumentHandle extends IDocument {
-} // IDocumentHandle
+public interface IRole extends Identifiable {
+} // IRole

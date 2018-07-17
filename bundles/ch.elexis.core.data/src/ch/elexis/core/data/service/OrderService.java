@@ -2,10 +2,10 @@ package ch.elexis.core.data.service;
 
 import java.util.List;
 
-import ch.elexis.core.model.IOrder;
-import ch.elexis.core.model.IOrderEntry;
-import ch.elexis.core.model.IStockEntry;
-import ch.elexis.core.services.IOrderService;
+import ch.elexis.core.data.interfaces.IOrder;
+import ch.elexis.core.data.interfaces.IOrderEntry;
+import ch.elexis.core.data.interfaces.IStockEntry;
+import ch.elexis.core.data.services.IOrderService;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.BestellungEntry;
 import ch.elexis.data.Query;
