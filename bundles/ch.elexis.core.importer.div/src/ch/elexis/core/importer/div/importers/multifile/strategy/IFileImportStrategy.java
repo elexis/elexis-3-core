@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import ch.elexis.core.importer.div.importers.HL7Parser;
+import ch.elexis.core.importer.div.importers.ILabContactResolver;
 import ch.elexis.core.importer.div.importers.IPersistenceHandler;
 import ch.elexis.core.importer.div.importers.multifile.IMultiFileParser;
 import ch.rgw.tools.Result;
@@ -40,4 +41,12 @@ public interface IFileImportStrategy {
 	public IFileImportStrategy setMoveAfterImport(boolean value);
 	
 	public void setTestMode(boolean testing);
+	
+	/**
+	 * Add the {@link ILabContactResolver} that should be used on import.
+	 * 
+	 * @param resolver
+	 * @return
+	 */
+	public IFileImportStrategy setLabContactResolver(ILabContactResolver resolver);
 }

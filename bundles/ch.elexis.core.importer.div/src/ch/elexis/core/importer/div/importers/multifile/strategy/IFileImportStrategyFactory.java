@@ -3,6 +3,8 @@ package ch.elexis.core.importer.div.importers.multifile.strategy;
 import java.io.File;
 import java.util.Map;
 
+import ch.elexis.core.importer.div.importers.ILabContactResolver;
+
 /**
  * a factory containing information about all the available {@link IFileImportStrategy
  * IFileImportStrategies} and for which file type they are appropriate.
@@ -25,4 +27,20 @@ public interface IFileImportStrategyFactory {
 	 */
 	public Map<File, IFileImportStrategy> createImportStrategyMap(File hl7File);
 	
+	/**
+	 * Specify if imported files should be moved to archive and error directory inside the import
+	 * directory. Default is false.
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public IFileImportStrategyFactory setMoveAfterImport(boolean value);
+	
+	/**
+	 * Add the {@link ILabContactResolver} that should be used on import.
+	 * 
+	 * @param resolver
+	 * @return
+	 */
+	public IFileImportStrategyFactory setLabContactResolver(ILabContactResolver resolver);
 }
