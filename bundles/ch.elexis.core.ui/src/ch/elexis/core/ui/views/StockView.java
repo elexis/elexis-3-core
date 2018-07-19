@@ -66,6 +66,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.StockService;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.services.IStockService.Availability;
 import ch.elexis.core.ui.UiDesk;
@@ -576,11 +577,20 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		
 		@Override
 		public void run(){
-			OrderImportDialog dialog =
-				new OrderImportDialog(viewer.getControl().getShell(), stockEntry);
-			dialog.open();
-			viewer.refresh();
-			
+			stockEntry = null;
+			IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+			if (selection != null && !selection.isEmpty()
+				&& selection.getFirstElement() instanceof StockEntry) {
+				stockEntry = (StockEntry) selection.getFirstElement();
+				if (stockEntry.getArticle() != null) {
+					IOrderEntry order = CoreHub.getOrderService()
+						.findOpenOrderEntryForStockEntry(stockEntry);
+					OrderImportDialog dialog =
+						new OrderImportDialog(viewer.getControl().getShell(), order.getOrder());
+					dialog.open();
+					viewer.refresh();
+				}
+			}
 		}
 	}
 	

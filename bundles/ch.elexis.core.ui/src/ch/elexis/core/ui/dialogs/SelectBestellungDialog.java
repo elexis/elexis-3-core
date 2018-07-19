@@ -12,6 +12,7 @@ package ch.elexis.core.ui.dialogs;
 
 import java.util.List;
 
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -59,7 +60,7 @@ public class SelectBestellungDialog extends SelectionDialog {
 		Composite parent = (Composite) super.createDialogArea(container);
 		createMessageArea(parent);
 		fTableViewer = new TableViewer(parent, getTableStyle());
-		fTableViewer.setContentProvider(new BestellContentProvider());
+		fTableViewer.setContentProvider(ArrayContentProvider.getInstance());
 		
 		addColumns();
 		
@@ -85,6 +86,10 @@ public class SelectBestellungDialog extends SelectionDialog {
 		table.setLayoutData(gd);
 		table.setFont(container.getFont());
 		table.setHeaderVisible(true);
+		
+		Query<Bestellung> qbe = new Query<Bestellung>(Bestellung.class);
+		fTableViewer.setInput(qbe.execute());
+		
 		return parent;
 	}
 	
@@ -116,6 +121,22 @@ public class SelectBestellungDialog extends SelectionDialog {
 	}
 	
 	private void addColumns(){
+		TableViewerColumn closed = new TableViewerColumn(fTableViewer, SWT.NONE);
+		closed.getColumn().setWidth(50);
+		closed.getColumn().setText("Abg.");
+		closed.setLabelProvider(new ColumnLabelProvider() {
+			
+			@Override
+			public String getText(Object element){
+				Bestellung bestellung = (Bestellung) element;
+				if (bestellung.isDone()) {
+					return "*";
+				} else {
+					return "";
+				}
+			}
+		});
+		
 		TableViewerColumn time = new TableViewerColumn(fTableViewer, SWT.NONE);
 		time.getColumn().setWidth(125);
 		time.getColumn().setText("Datum");
@@ -170,18 +191,5 @@ public class SelectBestellungDialog extends SelectionDialog {
 		IStructuredSelection selection = (IStructuredSelection) fTableViewer.getSelection();
 		setResult(selection.toList());
 		super.okPressed();
-	}
-	
-	private static class BestellContentProvider implements IStructuredContentProvider {
-		
-		public Object[] getElements(final Object inputElement){
-			Query<Bestellung> qbe = new Query<Bestellung>(Bestellung.class);
-			return qbe.execute().toArray();
-		}
-		
-		public void dispose(){}
-		
-		public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput){}
-		
 	}
 }

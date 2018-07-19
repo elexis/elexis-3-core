@@ -23,7 +23,7 @@ public class OrderService implements IOrderService {
 		qre.add(BestellungEntry.FLD_STATE, Query.NOT_EQUAL,
 			Integer.toString(BestellungEntry.STATE_DONE));
 		List<BestellungEntry> execute = qre.execute();
-		if (execute.size() == 1) {
+		if (!execute.isEmpty()) {
 			return execute.get(0);
 		}
 		return null;

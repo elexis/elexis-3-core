@@ -2674,6 +2674,9 @@ public class Messages extends NLS {
 	public static String LabEvaluationRulesPreferencePage_lblResultatEndbestimmt_text;
 	public static String LabEvaluationRulesPreferencePage_lblLabNoPathFlagMeansNonPath_text;
 	public static String MPF_Rule_PathDescriptionText;
+	public static String BestellView_Title;
+	public static String BestellView_WizardAskNewOrder;
+	public static String BestellView_OrderIsClosed;
 	
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

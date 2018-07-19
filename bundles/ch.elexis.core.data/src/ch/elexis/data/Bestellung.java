@@ -161,4 +161,25 @@ public class Bestellung extends PersistentObject implements IOrder {
 	public void removeEntry(BestellungEntry entry){
 		entry.removeFromDatabase();
 	}
+	
+	public boolean isDone(){
+		List<BestellungEntry> entries = getEntries();
+		for (BestellungEntry bestellungEntry : entries) {
+			if (bestellungEntry.getState() != BestellungEntry.STATE_DONE) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public TimeTool getTime() {
+		TimeTool ret = new TimeTool();
+		try {
+			String[] i = getId().split(":"); //$NON-NLS-1$
+			ret.set(i[1]);
+		} catch (Exception e) {
+			ret.set("1.1.1970");
+		}
+		return ret;
+	}
 }
