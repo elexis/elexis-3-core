@@ -16,7 +16,7 @@ public class ArticleServiceHolder {
 	private static ArticleServiceStore articleServiceStore;
 	
 	@Reference(unbind = "-")
-	public static void bind(ArticleServiceStore service){
+	public void bind(ArticleServiceStore service){
 		ArticleServiceHolder.articleServiceStore = service;
 	}
 	
