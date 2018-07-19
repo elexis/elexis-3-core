@@ -18,6 +18,7 @@ import ch.elexis.core.data.services.IDocumentManager;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.importer.div.importers.HL7Parser;
+import ch.elexis.core.importer.div.importers.ILabContactResolver;
 import ch.elexis.core.importer.div.importers.IPersistenceHandler;
 import ch.elexis.core.importer.div.importers.ImportHandler;
 import ch.elexis.core.importer.div.importers.OverwriteAllImportHandler;
@@ -244,6 +245,17 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 	@Override
 	public IFileImportStrategy setMoveAfterImport(boolean value){
 		this.moveAfterImport = value;
+		return this;
+	}
+	
+	/**
+	 * Add the {@link ILabContactResolver} that should be used on import.
+	 * 
+	 * @param resolver
+	 * @return
+	 */
+	public IFileImportStrategy setLabContactResolver(ILabContactResolver resolver){
+		// currently no use for a contact resolver here
 		return this;
 	}
 }
