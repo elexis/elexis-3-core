@@ -75,6 +75,8 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	public static final String FLD_EXT_KOSTENTRAEGER = "Kostenträger"; //$NON-NLS-1$
 	public static final String FLD_EXT_RECHNUNGSEMPFAENGER = "Rechnungsempfänger"; //$NON-NLS-1$
 	
+	public static enum Tiers { PAYANT, GARANT};
+	
 	@Override
 	protected String getTableName(){
 		return TABLENAME;
@@ -100,6 +102,22 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 		FallUpdatesFor36.transferLawAndCostBearerTo36Model();
 	}
 	//@formatter:on
+	
+	
+	/**
+	 * @return the Tiers type determined for this Fall
+	 * @since 3.6
+	 */
+	public Tiers getTiersType() {
+		Kontakt kostentraeger = getCostBearer();
+		Kontakt rnAdressat = getGarant();
+		if ((kostentraeger != null) && kostentraeger.isValid() && kostentraeger.istOrganisation()) {
+			if (rnAdressat.equals(kostentraeger)) {
+				return Tiers.PAYANT;
+			}
+		}
+		return Tiers.GARANT;
+	}
 	
 	/**
 	 * Vorgeschlagenen Zeitpunkt für Rechnungsstellung holen (Eine Vorgabe die im fall gemacht wird)
@@ -278,7 +296,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	/**
 	 * Den Rechnungsempfänger liefern
 	 * 
-	 * @return
+	 * @return the guarantor, if null in the db returns the patient
 	 */
 	public Kontakt getGarant(){
 		Kontakt ret = Kontakt.load(get(FLD_GARANT_ID));
