@@ -19,6 +19,7 @@
   	<module>ch.elexis.core.jpa</module>
   	<module>ch.elexis.core.jpa.datasource</module>
   	<module>ch.elexis.core.jpa.entities</module>
+  	<module>ch.elexis.core.jpa.logging.slf4j</module>
     <module>ch.elexis.core.l10n</module>
     <module>ch.elexis.core.application</module>
     <module>ch.elexis.core.console.application</module>

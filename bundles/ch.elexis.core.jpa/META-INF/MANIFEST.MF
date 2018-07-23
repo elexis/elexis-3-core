@@ -9,6 +9,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: javax.persistence;bundle-version="2.2.0",
  ch.elexis.core.jpa.entities
 Import-Package: ch.elexis.core.common,
+ ch.elexis.core.jpa.model.adapter,
  ch.elexis.core.model,
  ch.elexis.core.services,
  org.eclipse.emf.common,
