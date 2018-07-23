@@ -22,7 +22,8 @@ public class UserConfig extends AbstractIdModelAdapter<ch.elexis.core.jpa.entiti
 	
 	@Override
 	public String getLabel(){
-		return getEntity().getLabel();
+		return getEntity().getOwner() + " " + getEntity().getParam() + " -> "
+			+ getEntity().getValue();
 	}
 	
 	@Override

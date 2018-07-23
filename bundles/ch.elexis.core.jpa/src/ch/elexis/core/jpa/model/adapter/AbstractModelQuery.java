@@ -20,8 +20,8 @@ import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.jpa.entities.AbstractDBObjectId;
-import ch.elexis.core.jpa.entities.AbstractDBObjectIdDeleted;
+import ch.elexis.core.jpa.entities.EntityWithDeleted;
+import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 
@@ -42,11 +42,11 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	protected Stack<PredicateGroup> predicateGroups;
 	
 	protected CriteriaQuery<?> criteriaQuery;
-	protected Root<? extends AbstractDBObjectId> rootQuery;
+	protected Root<? extends EntityWithId> rootQuery;
 	
 	protected AbstractModelAdapterFactory adapterFactory;
 	
-	protected Class<? extends AbstractDBObjectId> entityClazz;
+	protected Class<? extends EntityWithId> entityClazz;
 	
 	protected boolean includeDeleted;
 	
@@ -337,7 +337,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 			// apply the predicate groups to the criteriaQuery
 			int groups = getPredicateGroupsSize();
 			if (groups > 0) {
-				if (groups == 2 && (AbstractDBObjectIdDeleted.class.isAssignableFrom(entityClazz)
+				if (groups == 2 && (EntityWithDeleted.class.isAssignableFrom(entityClazz)
 					&& !includeDeleted)) {
 					andJoinGroups();
 					groups = getPredicateGroupsSize();
@@ -352,7 +352,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 			TypedQuery<?> query = (TypedQuery<?>) entityManager.createQuery(criteriaQuery);
 			List<T> ret = (List<T>) query
 				.getResultStream().parallel().map(e -> adapterFactory
-					.getModelAdapter((AbstractDBObjectId) e, clazz, true).orElse(null))
+					.getModelAdapter((EntityWithId) e, clazz, true).orElse(null))
 				.filter(o -> o != null).collect(Collectors.toList());
 			return ret;
 		} finally {

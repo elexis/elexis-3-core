@@ -17,9 +17,10 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jpa.liquibase.LiquibaseDBInitializer;
 import ch.elexis.core.jpa.liquibase.LiquibaseDBUpdater;
+import ch.elexis.core.services.IElexisEntityManager;
 
-@Component(service = ElexisEntityManger.class)
-public class ElexisEntityManger {
+@Component
+public class ElexisEntityManger implements IElexisEntityManager {
 	
 	private static Logger log = LoggerFactory.getLogger(ElexisEntityManger.class);
 	

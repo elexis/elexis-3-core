@@ -72,7 +72,7 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 			.adapterInitializer(adapter -> ((Laboratory) adapter).setLaboratory(true)));
 		addMapping(new MappingEntry(IMandator.class, Mandator.class, Kontakt.class)
 			.adapterPreCondition(adapter -> ((Kontakt) adapter.getEntity()).isMandator())
-			.adapterInitializer(adapter -> ((Laboratory) adapter).setMandator(true)));
+			.adapterInitializer(adapter -> ((Mandator) adapter).setMandator(true)));
 		
 		addMapping(new MappingEntry(IDocumentLetter.class, DocumentBrief.class, Brief.class));
 		

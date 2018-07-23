@@ -39,8 +39,9 @@ public enum ProcessStatus implements INumericEnum, ILocalizedEnum {
 	}
 
 	public static ProcessStatus byNumericSafe(String statusIn) {
+		int numeric = Integer.parseInt(statusIn);
 		for (ProcessStatus status : ProcessStatus.values()) {
-			if (Integer.toString(status.numericValue()).equalsIgnoreCase(statusIn)) {
+			if (status.numericValue() == numeric) {
 				return status;
 			}
 		}

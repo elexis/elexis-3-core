@@ -6,21 +6,21 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
-import ch.elexis.core.jpa.entities.AbstractDBObjectId;
+import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IModelService;
 
-public abstract class AbstractIdModelAdapter<T extends AbstractDBObjectId> implements Identifiable {
+public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements Identifiable {
 	
 	private T entity;
 	
 	public AbstractIdModelAdapter(T entity){
 		this.entity = entity;
 		// make sure model supports id and delete
-		if (!(entity instanceof AbstractDBObjectId)) {
+		if (!(entity instanceof EntityWithId)) {
 			throw new IllegalStateException(
 				"Model " + entity + " is no subclass of "
-					+ AbstractDBObjectId.class.getSimpleName());
+					+ EntityWithId.class.getSimpleName());
 		}
 	}
 	
@@ -36,7 +36,7 @@ public abstract class AbstractIdModelAdapter<T extends AbstractDBObjectId> imple
 	 * @param entity
 	 */
 	@SuppressWarnings("unchecked")
-	public void setEntity(AbstractDBObjectId entity){
+	public void setEntity(EntityWithId entity){
 		this.entity = (T) entity;
 	}
 	
@@ -47,7 +47,7 @@ public abstract class AbstractIdModelAdapter<T extends AbstractDBObjectId> imple
 	
 	@Override
 	public String getLabel(){
-		return getEntity().getLabel();
+		return getEntity().toString();
 	}
 	
 	protected Date toDate(LocalDateTime localDateTime){
@@ -63,8 +63,7 @@ public abstract class AbstractIdModelAdapter<T extends AbstractDBObjectId> imple
 	protected LocalDateTime toLocalDate(Date date){
 		return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
 	}
-	
-	// TODO maybe change to Objects 
+
 	@Override
 	public int hashCode(){
 		final int prime = 31;
@@ -73,7 +72,6 @@ public abstract class AbstractIdModelAdapter<T extends AbstractDBObjectId> imple
 		return result;
 	}
 	
-	// TODO maybe change to Objects 
 	@Override
 	public boolean equals(Object obj){
 		if (this == obj)
@@ -86,8 +84,15 @@ public abstract class AbstractIdModelAdapter<T extends AbstractDBObjectId> imple
 		if (entity == null) {
 			if (other.entity != null)
 				return false;
-		} else if (!entity.equals(other.entity))
+		} else if (!entityEqualId(entity, other.entity))
 			return false;
 		return true;
+	}
+	
+	private boolean entityEqualId(EntityWithId left, EntityWithId right){
+		if (left.getId() != null && right.getId() != null) {
+			return left.getId().equals(right.getId());
+		}
+		return false;
 	}
 }

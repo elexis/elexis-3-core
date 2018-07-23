@@ -101,6 +101,13 @@ public class Test_HL7_parser {
 		System.out.println("testHL7files: " + nrFiles + " files in " + directory.toString());
 	}
 	
+	@Test
+	public void testHL7FilePerf() throws IOException{
+		parseOneHL7file(hlp, new File(workDir.toString(),
+			"OpenMedical/176471863520180219143653675__20180217123041_L18070354_20180217_TESTPERSON_19500101_1234_18635.hl7"),
+			false, true);
+	}
+	
 	/**
 	 * Test method for {@link ch.elexis.importers.HL7#HL7(java.lang.String, java.lang.String)}.
 	 * 

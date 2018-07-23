@@ -17,7 +17,7 @@ public class Config extends AbstractIdModelAdapter<ch.elexis.core.jpa.entities.C
 	
 	@Override
 	public String getLabel(){
-		return getEntity().getLabel();
+		return getEntity().getParam() + " -> " + getEntity().getWert();
 	}
 	
 	@Override

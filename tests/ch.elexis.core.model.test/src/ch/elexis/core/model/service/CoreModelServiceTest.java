@@ -28,12 +28,11 @@ public class CoreModelServiceTest {
 	}
 	
 	@After
-	public void after() {
+	public void after(){
 		OsgiServiceUtil.ungetService(modelSerice);
 		modelSerice = null;
 	}
-	
-	
+
 	@Test
 	public void createContact(){
 		IContact contact = modelSerice.create(IContact.class);

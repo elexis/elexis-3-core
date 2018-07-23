@@ -4,7 +4,6 @@ import java.util.ResourceBundle;
 
 import ch.elexis.core.interfaces.ILocalizedEnum;
 import ch.elexis.core.interfaces.INumericEnum;
-import ch.elexis.core.model.MaritalStatus;
 
 public enum Type implements INumericEnum, ILocalizedEnum {
 
@@ -40,8 +39,9 @@ public enum Type implements INumericEnum, ILocalizedEnum {
 	}
 
 	public static Type byNumericSafe(String actionTypeIn) {
+		int numeric = Integer.parseInt(actionTypeIn);
 		for (Type actionType : Type.values()) {
-			if (Integer.toString(actionType.numericValue()).equalsIgnoreCase(actionTypeIn)) {
+			if (actionType.numericValue() == numeric) {
 				return actionType;
 			}
 		}

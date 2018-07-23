@@ -3,7 +3,7 @@ package ch.elexis.core.jpa.model.adapter;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import ch.elexis.core.jpa.entities.AbstractDBObjectId;
+import ch.elexis.core.jpa.entities.EntityWithId;
 
 /**
  * Tie interface, adapter and entity classes together. Needed to get the correct adapter class, if
@@ -16,14 +16,14 @@ public class MappingEntry {
 	
 	private Class<?> interfaceClass;
 	private Class<? extends AbstractIdModelAdapter<?>> adapterClass;
-	private Class<? extends AbstractDBObjectId> entityClass;
+	private Class<? extends EntityWithId> entityClass;
 	
 	private Predicate<AbstractIdModelAdapter<?>> preCondition;
 	private Consumer<AbstractIdModelAdapter<?>> initializer;
 	
 	public MappingEntry(Class<?> interfaceClass,
 		Class<? extends AbstractIdModelAdapter<?>> adapterClass,
-		Class<? extends AbstractDBObjectId> entityClass){
+		Class<? extends EntityWithId> entityClass){
 		this.interfaceClass = interfaceClass;
 		this.adapterClass = adapterClass;
 		this.entityClass = entityClass;
@@ -85,7 +85,7 @@ public class MappingEntry {
 		return adapterClass;
 	}
 	
-	public Class<? extends AbstractDBObjectId> getEntityClass(){
+	public Class<? extends EntityWithId> getEntityClass(){
 		return entityClass;
 	}
 }

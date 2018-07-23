@@ -15,10 +15,8 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.jpa.entities.AbstractDBObject;
-import ch.elexis.core.jpa.entities.AbstractDBObjectId;
+import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.entities.Userconfig;
-import ch.elexis.core.jpa.entitymanager.ElexisEntityManger;
 import ch.elexis.core.model.Config;
 import ch.elexis.core.model.DocumentBrief;
 import ch.elexis.core.model.IConfig;
@@ -32,6 +30,7 @@ import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.service.CoreModelAdapterFactory;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.IContextService;
+import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
@@ -47,10 +46,10 @@ public class ModelUtil {
 		ModelUtil.modelService = modelService;
 	}
 	
-	private static ElexisEntityManger entityManager;
+	private static IElexisEntityManager entityManager;
 	
 	@Reference(cardinality = ReferenceCardinality.MANDATORY)
-	public void setEntityManger(ElexisEntityManger entityManager){
+	public void setEntityManger(IElexisEntityManager entityManager){
 		ModelUtil.entityManager = entityManager;
 	}
 	
@@ -66,9 +65,9 @@ public class ModelUtil {
 	 * 
 	 * @param entity
 	 */
-	public static void saveEntity(AbstractDBObject entity){
+	public static void saveEntity(EntityWithId entity){
 		if (entity != null) {
-			EntityManager em = entityManager.getEntityManager();
+			EntityManager em = (EntityManager) entityManager.getEntityManager();
 			try {
 				em.getTransaction().begin();
 				em.merge(entity);
@@ -417,7 +416,7 @@ public class ModelUtil {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T getAdapter(AbstractDBObjectId entity, Class<T> clazz){
+	public static <T> T getAdapter(EntityWithId entity, Class<T> clazz){
 		if (entity != null) {
 			Optional<Identifiable> adapter =
 				CoreModelAdapterFactory.getInstance().getModelAdapter(entity, clazz, true);

@@ -123,6 +123,17 @@ public interface IModelService {
 	public <T> IQuery<T> getQuery(Class<T> clazz, boolean includeDeleted);
 	
 	/**
+	 * Get a named query for the clazz with the provided properties. The named query has to be
+	 * defined on the entity mapped to the class. The name must match
+	 * <i>className.propert[0]property[1]...</i>.
+	 * 
+	 * @param clazz
+	 * @param properties
+	 * @return
+	 */
+	public <T> INamedQuery<T> getNamedQuery(Class<T> clazz, String... properties);
+	
+	/**
 	 * Convenience method setting deleted property and save the {@link Deleteable}.
 	 * 
 	 * @param deletable
@@ -145,5 +156,4 @@ public interface IModelService {
 	 * @return
 	 */
 	public Stream<?> executeNativeQuery(String sql);
-	
 }

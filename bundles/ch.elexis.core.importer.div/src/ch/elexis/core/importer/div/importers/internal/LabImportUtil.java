@@ -3,6 +3,7 @@ package ch.elexis.core.importer.div.importers.internal;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +36,7 @@ import ch.elexis.core.model.LabOrderState;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IDocumentStore;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.types.Gender;
@@ -166,17 +168,14 @@ public class LabImportUtil implements ILabImportUtil {
 	 * @param itemName
 	 * @return
 	 */
-	public Optional<ILabMapping> getLabMapping(ILaboratory laboratory, String itemName){
-		IQuery<ILabMapping> query = modelService.getQuery(ILabMapping.class);
-		query.and(ModelPackage.Literals.ILAB_MAPPING__ORIGIN, COMPARATOR.EQUALS, laboratory);
-		query.and(ModelPackage.Literals.ILAB_MAPPING__ITEM_NAME, COMPARATOR.EQUALS, itemName);
-		List<ILabMapping> existing = query.execute();
-		if (!existing.isEmpty()) {
-			if (existing.size() > 1) {
+	public Optional<ILabMapping> getLabMapping(ILaboratory labor, String itemName){
+		List<ILabMapping> mappings = getLabMappings(labor, itemName);
+		if (!mappings.isEmpty()) {
+			if (mappings.size() > 1) {
 				throw new IllegalArgumentException(String.format(
-					"Found more then 1 mapping for origin id [%s] - [%s]", laboratory, itemName)); //$NON-NLS-1$
+					"Found more then 1 mapping for origin id [%s] - [%s]", labor, itemName)); //$NON-NLS-1$
 			}
-			return Optional.of(existing.get(0));
+			return Optional.of(mappings.get(0));
 		}
 		return Optional.empty();
 	}
@@ -410,9 +409,7 @@ public class LabImportUtil implements ILabImportUtil {
 		modelService.save(ret);
 		
 		Optional<ILabMapping> existingMapping = getLabMapping(origin, code);
-		if (existingMapping.isPresent()) {
-			System.out.println("!?");
-		} else {
+		if (!existingMapping.isPresent()) {
 			ILabMapping mapping = modelService.create(ILabMapping.class);
 			mapping.setItem(ret);
 			mapping.setOrigin(origin);
@@ -422,14 +419,37 @@ public class LabImportUtil implements ILabImportUtil {
 		return ret;
 	}
 	
+	private List<ILabMapping> getLabMappings(ILaboratory labor, String itemname){
+		INamedQuery<ILabMapping> query =
+			modelService.getNamedQuery(ILabMapping.class, "origin", "itemname");
+		HashMap<String, Object> parameters = new HashMap<>();
+		parameters.put("origin", labor);
+		parameters.put("itemname", itemname);
+		return query.executeWithParameters(parameters);
+	}
+	
+	private List<ILabItem> getLabItems(String code, String name, LabItemTyp typ){
+		INamedQuery<ILabItem> query =
+			modelService.getNamedQuery(ILabItem.class, "code", "name", "typ");
+		HashMap<String, Object> parameters = new HashMap<>();
+		parameters.put("code", code);
+		parameters.put("name", name);
+		parameters.put("typ", typ);
+		return query.executeWithParameters(parameters);
+	}
+	
+	private List<ILabItem> getLabItems(String code, String name){
+		INamedQuery<ILabItem> query = modelService.getNamedQuery(ILabItem.class, "code", "name");
+		HashMap<String, Object> parameters = new HashMap<>();
+		parameters.put("code", code);
+		parameters.put("name", name);
+		return query.executeWithParameters(parameters);
+	}
+	
 	@Override
 	public Optional<ILabItem> getDocumentLabItem(String shortname, String name, ILaboratory labor){
 		// lookup using mapping first
-		IQuery<ILabMapping> mappingQuery = modelService.getQuery(ILabMapping.class);
-		mappingQuery.and(ModelPackage.Literals.ILAB_MAPPING__ORIGIN, COMPARATOR.EQUALS, labor);
-		mappingQuery.and(ModelPackage.Literals.ILAB_MAPPING__ITEM_NAME, COMPARATOR.EQUALS,
-			shortname);
-		List<ILabMapping> mappings = mappingQuery.execute();
+		List<ILabMapping> mappings = getLabMappings(labor, shortname);
 		if (!mappings.isEmpty()) {
 			for (ILabMapping iLabMapping : mappings) {
 				if (iLabMapping.getItem().getTyp() == LabItemTyp.DOCUMENT) {
@@ -438,11 +458,7 @@ public class LabImportUtil implements ILabImportUtil {
 			}
 		}
 		// try with name and typ
-		IQuery<ILabItem> query = modelService.getQuery(ILabItem.class);
-		query.and(ModelPackage.Literals.ILAB_ITEM__CODE, COMPARATOR.EQUALS, shortname);
-		query.and(ModelPackage.Literals.ILAB_ITEM__NAME, COMPARATOR.EQUALS, name);
-		query.and(ModelPackage.Literals.ILAB_ITEM__TYP, COMPARATOR.EQUALS, LabItemTyp.DOCUMENT);
-		List<ILabItem> existing = query.execute();
+		List<ILabItem> existing = getLabItems(shortname, name, LabItemTyp.DOCUMENT);
 		if (!existing.isEmpty()) {
 			return Optional.of(existing.get(0));
 		}
@@ -451,11 +467,7 @@ public class LabImportUtil implements ILabImportUtil {
 	
 	public Optional<ILabItem> getLabItem(String shortname, String name, ILaboratory labor){
 		// lookup using mapping first
-		IQuery<ILabMapping> mappingQuery = modelService.getQuery(ILabMapping.class);
-		mappingQuery.and(ModelPackage.Literals.ILAB_MAPPING__ORIGIN, COMPARATOR.EQUALS, labor);
-		mappingQuery.and(ModelPackage.Literals.ILAB_MAPPING__ITEM_NAME, COMPARATOR.EQUALS,
-			shortname);
-		List<ILabMapping> mappings = mappingQuery.execute();
+		List<ILabMapping> mappings = getLabMappings(labor, shortname);
 		if (!mappings.isEmpty()) {
 			for (ILabMapping iLabMapping : mappings) {
 				if (iLabMapping.getItem().getTyp() == LabItemTyp.DOCUMENT) {
@@ -464,10 +476,7 @@ public class LabImportUtil implements ILabImportUtil {
 			}
 		}
 		// try with name ...
-		IQuery<ILabItem> query = modelService.getQuery(ILabItem.class);
-		query.and(ModelPackage.Literals.ILAB_ITEM__CODE, COMPARATOR.EQUALS, shortname);
-		query.and(ModelPackage.Literals.ILAB_ITEM__NAME, COMPARATOR.EQUALS, name);
-		List<ILabItem> existing = query.execute();
+		List<ILabItem> existing = getLabItems(shortname, name);
 		if (!existing.isEmpty()) {
 			return Optional.of(existing.get(0));
 		}
@@ -476,11 +485,7 @@ public class LabImportUtil implements ILabImportUtil {
 	
 	@Override
 	public Optional<ILabItem> getLabItem(String shortname, String name, LabItemTyp typ){
-		IQuery<ILabItem> query = modelService.getQuery(ILabItem.class);
-		query.and(ModelPackage.Literals.ILAB_ITEM__CODE, COMPARATOR.EQUALS, shortname);
-		query.and(ModelPackage.Literals.ILAB_ITEM__NAME, COMPARATOR.EQUALS, name);
-		query.and(ModelPackage.Literals.ILAB_ITEM__TYP, COMPARATOR.EQUALS, typ);
-		List<ILabItem> existing = query.execute();
+		List<ILabItem> existing = getLabItems(shortname, name, typ);
 		if (!existing.isEmpty()) {
 			return Optional.of(existing.get(0));
 		}
@@ -537,7 +542,6 @@ public class LabImportUtil implements ILabImportUtil {
 				order.setOrderId(orderId);
 			}
 			modelService.save(order);
-			System.out.println("LABORDER ---> " + order);
 		} else {
 			labOrder.setResult(labResult);
 		}
@@ -580,18 +584,13 @@ public class LabImportUtil implements ILabImportUtil {
 	}
 	
 	private List<ILabOrder> getLabOrders(IPatient patient, ILabItem labItem, LabOrderState state){
-		IQuery<ILabOrder> query = modelService.getQuery(ILabOrder.class);
-		query.and(ModelPackage.Literals.ILAB_ORDER__STATE, COMPARATOR.EQUALS, state);
-		query.and(ModelPackage.Literals.ILAB_ORDER__PATIENT, COMPARATOR.EQUALS, patient);
-		query.and(ModelPackage.Literals.ILAB_ORDER__ITEM, COMPARATOR.EQUALS, labItem);
-		return query.execute();
-	}
-	
-	private List<ILabOrder> getLabOrders(IPatient patient, ILabResult labResult){
-		IQuery<ILabOrder> query = modelService.getQuery(ILabOrder.class);
-		query.and(ModelPackage.Literals.ILAB_ORDER__PATIENT, COMPARATOR.EQUALS, patient);
-		query.and(ModelPackage.Literals.ILAB_ORDER__RESULT, COMPARATOR.EQUALS, labResult);
-		return query.execute();
+		INamedQuery<ILabOrder> query =
+			modelService.getNamedQuery(ILabOrder.class, "item", "patient", "state");
+		HashMap<String, Object> parameters = new HashMap<>();
+		parameters.put("item", labItem);
+		parameters.put("patient", patient);
+		parameters.put("state", state);
+		return query.executeWithParameters(parameters);
 	}
 	
 	@Override

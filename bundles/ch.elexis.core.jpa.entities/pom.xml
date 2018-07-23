@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  
+  <parent>
+    <groupId>ch.elexis.core</groupId>
+    <artifactId>ch.elexis.core.bundles</artifactId>
+    <version>3.7.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>ch.elexis.core.jpa.entities</artifactId>
+  <packaging>eclipse-test-plugin</packaging>
+  <properties>
+    <elexis.run.dbtests>false</elexis.run.dbtests>
+  </properties>
+
+  <!-- comment out to enable headless tests and add additional dependencies if needed
+    -->
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+	<plugins>
+		<plugin>
+			<groupId>de.empulse.eclipselink</groupId>
+			<artifactId>staticweave-maven-plugin</artifactId>
+			<version>1.0.0</version>
+			<executions>
+				<execution>
+					<phase>process-classes</phase>
+					<goals>
+						<goal>weave</goal>
+					</goals>
+					<configuration>
+						<persistenceXMLLocation>META-INF/persistence.xml</persistenceXMLLocation>
+						<logLevel>FINE</logLevel>
+					</configuration>
+				</execution>
+			</executions>
+			<dependencies>
+				<dependency>
+					<groupId>org.eclipse.persistence</groupId>
+					<artifactId>org.eclipse.persistence.jpa</artifactId>
+					<version>2.7.2</version>
+				</dependency>
+			</dependencies>
+		</plugin>
+	</plugins>
+  </build>
+</project>

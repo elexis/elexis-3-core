@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.StringJoiner;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -17,7 +18,7 @@ import org.osgi.service.event.EventAdmin;
 
 import ch.elexis.core.common.ElexisEvent;
 import ch.elexis.core.common.ElexisEventTopics;
-import ch.elexis.core.jpa.entities.AbstractDBObjectId;
+import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IModelService;
@@ -35,9 +36,9 @@ public abstract class AbstractModelService implements IModelService {
 	public <T> Optional<T> load(String id, Class<T> clazz){
 		EntityManager em = getEntityManager();
 		try {
-			Class<? extends AbstractDBObjectId> dbObjectClass =
+			Class<? extends EntityWithId> dbObjectClass =
 				adapterFactory.getEntityClass(clazz);
-			AbstractDBObjectId dbObject = em.find(dbObjectClass, id);
+			EntityWithId dbObject = em.find(dbObjectClass, id);
 			if (dbObject != null) {
 				Optional<Identifiable> modelObject =
 					adapterFactory.getModelAdapter(dbObject, clazz, true);
@@ -54,7 +55,7 @@ public abstract class AbstractModelService implements IModelService {
 	
 	@Override
 	public boolean save(Identifiable identifiable){
-		Optional<AbstractDBObjectId> dbObject = getDbObject(identifiable);
+		Optional<EntityWithId> dbObject = getDbObject(identifiable);
 		if (dbObject.isPresent()) {
 			EntityManager em = getEntityManager();
 			try {
@@ -75,7 +76,7 @@ public abstract class AbstractModelService implements IModelService {
 	
 	@Override
 	public boolean save(List<Identifiable> identifiables){
-		Map<Identifiable, AbstractDBObjectId> dbObjects = identifiables.parallelStream()
+		Map<Identifiable, EntityWithId> dbObjects = identifiables.parallelStream()
 			.collect(Collectors.toMap(Function.identity(), i -> getDbObject(i).orElse(null)));
 		if (!dbObjects.isEmpty()) {
 			EntityManager em = getEntityManager();
@@ -83,7 +84,7 @@ public abstract class AbstractModelService implements IModelService {
 				List<ElexisEvent> createdEvents = new ArrayList<>();
 				em.getTransaction().begin();
 				for (Identifiable identifiable : dbObjects.keySet()) {
-					AbstractDBObjectId dbObject = dbObjects.get(identifiable);
+					EntityWithId dbObject = dbObjects.get(identifiable);
 					if (dbObject != null) {
 						boolean newlyCreatedObject = (dbObject.getLastupdate() == null);
 						em.merge(dbObject);
@@ -104,12 +105,12 @@ public abstract class AbstractModelService implements IModelService {
 	
 	@Override
 	public boolean remove(Identifiable identifiable){
-		Optional<AbstractDBObjectId> dbObject = getDbObject(identifiable);
+		Optional<EntityWithId> dbObject = getDbObject(identifiable);
 		if (dbObject.isPresent()) {
 			EntityManager em = getEntityManager();
 			try {
 				em.getTransaction().begin();
-				AbstractDBObjectId object = em.merge(dbObject.get());
+				EntityWithId object = em.merge(dbObject.get());
 				em.remove(object);
 				em.getTransaction().commit();
 				return true;
@@ -146,14 +147,14 @@ public abstract class AbstractModelService implements IModelService {
 		}
 	}
 	
-	protected Optional<AbstractDBObjectId> getDbObject(Identifiable identifiable){
+	protected Optional<EntityWithId> getDbObject(Identifiable identifiable){
 		if (identifiable instanceof AbstractIdModelAdapter<?>) {
 			return Optional.ofNullable(((AbstractIdModelAdapter<?>) identifiable).getEntity());
 		}
 		return Optional.empty();
 	}
 	
-	protected void setDbObject(Identifiable identifiable, AbstractDBObjectId entity){
+	protected void setDbObject(Identifiable identifiable, EntityWithId entity){
 		if (identifiable instanceof AbstractIdModelAdapter<?>) {
 			((AbstractIdModelAdapter<?>) identifiable).setEntity(entity);
 		}
@@ -186,5 +187,15 @@ public abstract class AbstractModelService implements IModelService {
 	public Stream<?> executeNativeQuery(String sql){
 		Query query = getEntityManager().createNativeQuery(sql);
 		return query.getResultStream();
+	}
+	
+	protected String getNamedQueryName(Class<?> clazz, String... properties){
+		Class<? extends EntityWithId> entityClazz = adapterFactory.getEntityClass(clazz);
+		StringJoiner queryName = new StringJoiner(".");
+		queryName.add(entityClazz.getSimpleName());
+		for (String string : properties) {
+			queryName.add(string);
+		}
+		return queryName.toString();
 	}
 }

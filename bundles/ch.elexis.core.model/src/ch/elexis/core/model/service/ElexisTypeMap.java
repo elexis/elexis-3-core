@@ -2,14 +2,13 @@ package ch.elexis.core.model.service;
 
 import java.util.HashMap;
 
-import ch.elexis.core.jpa.entities.AbstractDBObjectId;
-import ch.elexis.core.jpa.entities.AbstractDBObjectIdDeleted;
 import ch.elexis.core.jpa.entities.Artikel;
 import ch.elexis.core.jpa.entities.ArtikelstammItem;
 import ch.elexis.core.jpa.entities.Behandlung;
 import ch.elexis.core.jpa.entities.Brief;
 import ch.elexis.core.jpa.entities.DocHandle;
 import ch.elexis.core.jpa.entities.Eigenleistung;
+import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.entities.Fall;
 import ch.elexis.core.jpa.entities.Invoice;
 import ch.elexis.core.jpa.entities.Kontakt;
@@ -35,8 +34,8 @@ import ch.elexis.core.services.IModelService;
  */
 public class ElexisTypeMap {
 	
-	private static final HashMap<String, Class<? extends AbstractDBObjectIdDeleted>> stsToClassMap;
-	private static final HashMap<Class<? extends AbstractDBObjectIdDeleted>, String> classToStsMap;
+	private static final HashMap<String, Class<? extends EntityWithId>> stsToClassMap;
+	private static final HashMap<Class<? extends EntityWithId>, String> classToStsMap;
 
 	public static final String TYPE_ARTIKEL = "ch.elexis.data.Artikel";
 	public static final String TYPE_ARTIKELSTAMM = "ch.artikelstamm.elexis.common.ArtikelstammItem";
@@ -68,8 +67,8 @@ public class ElexisTypeMap {
 	public static final String TYPE_VERRECHNET = "ch.elexis.data.Verrechnet"; 
 	
 	static {
-		stsToClassMap = new HashMap<String, Class<? extends AbstractDBObjectIdDeleted>>();
-		classToStsMap = new HashMap<Class<? extends AbstractDBObjectIdDeleted>, String>();
+		stsToClassMap = new HashMap<String, Class<? extends EntityWithId>>();
+		classToStsMap = new HashMap<Class<? extends EntityWithId>, String>();
 
 		// bi-directional mappable
 		stsToClassMap.put(TYPE_ARTIKELSTAMM, ArtikelstammItem.class);
@@ -124,7 +123,7 @@ public class ElexisTypeMap {
 	 * @param obj
 	 * @return <code>null</code> if not resolvable, else the resp. Entity Type
 	 */
-	public static String getKeyForObject(AbstractDBObjectId obj){
+	public static String getKeyForObject(EntityWithId obj){
 		if (obj instanceof Kontakt) {
 			// TODO we can not deterministically map person to patient, anwender, mandant as
 			// we do not know what was initially intended
@@ -165,7 +164,7 @@ public class ElexisTypeMap {
 		return null;
 	}
 
-	public static Class<? extends AbstractDBObjectId> get(String value){
+	public static Class<? extends EntityWithId> get(String value){
 		return stsToClassMap.get(value);
 	}
 }

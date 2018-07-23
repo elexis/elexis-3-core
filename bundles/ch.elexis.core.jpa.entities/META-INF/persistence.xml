@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+	<persistence-unit name="elexis"
+		transaction-type="RESOURCE_LOCAL">
+		<class>ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe</class>
+		<class>ch.elexis.core.jpa.entities.converter.ElexisDBCompressedStringConverter</class>
+		<class>ch.elexis.core.jpa.entities.converter.ElexisExtInfoMapConverter</class>
+		<class>ch.elexis.core.jpa.entities.converter.FuzzyCountryToEnumConverter</class>
+		<class>ch.elexis.core.jpa.entities.converter.FuzzyGenderToEnumConverter</class>
+		<class>ch.elexis.core.jpa.entities.converter.IntegerStringConverter</class>
+		<class>ch.elexis.core.jpa.entities.converter.InvoiceStateConverter</class>
+		<class>ch.elexis.core.jpa.entities.converter.PathologicDescriptionConverter</class>
+		<class>ch.elexis.core.jpa.entities.converter.LabItemTypConverter</class>
+		<class>ch.elexis.core.jpa.entities.converter.LabOrderStateConverter</class>
+		<class>ch.elexis.core.jpa.entities.converter.XidQualityConverter</class>
+		<class>ch.elexis.core.jpa.entities.converter.AddressTypeConverter</class>
+		<class>ch.elexis.core.jpa.entities.converter.ReminderVisibilityConverter</class>
+		<class>ch.elexis.core.jpa.entities.converter.ReminderPriorityConverter</class>
+		<class>ch.elexis.core.jpa.entities.converter.ReminderTypeConverter</class>
+		<class>ch.elexis.core.jpa.entities.converter.ReminderProcessStatusConverter</class>
+		<class>ch.elexis.core.jpa.entities.converter.VersionedResourceConverter</class>
+		<class>ch.elexis.core.jpa.entities.converter.auto.LocalDateConverter</class>
+		<class>ch.elexis.core.jpa.entities.converter.auto.LocalDateTimeConverter</class>
+		<class>ch.elexis.core.jpa.entities.ArtikelstammItem</class>
+		<class>ch.elexis.core.jpa.entities.Artikel</class>
+		<class>ch.elexis.core.jpa.entities.Behandlung</class>
+		<class>ch.elexis.core.jpa.entities.Brief</class>
+		<class>ch.elexis.core.jpa.entities.Config</class>
+		<class>ch.elexis.core.jpa.entities.Diagnosis</class>
+		<class>ch.elexis.core.jpa.entities.DbImage</class>
+		<class>ch.elexis.core.jpa.entities.DocHandle</class>
+		<class>ch.elexis.core.jpa.entities.Eigenleistung</class>
+		<class>ch.elexis.core.jpa.entities.Fall</class>
+		<class>ch.elexis.core.jpa.entities.Heap</class>
+		<class>ch.elexis.core.jpa.entities.Invoice</class>
+		<class>ch.elexis.core.jpa.entities.Kontakt</class>
+		<class>ch.elexis.core.jpa.entities.KontaktAdressJoint</class>
+		<class>ch.elexis.core.jpa.entities.LabOrder</class>
+		<class>ch.elexis.core.jpa.entities.LabMapping</class>
+		<class>ch.elexis.core.jpa.entities.LabItem</class>
+		<class>ch.elexis.core.jpa.entities.LabResult</class>
+		<class>ch.elexis.core.jpa.entities.Labor2009Tarif</class>
+		<class>ch.elexis.core.jpa.entities.Leistungsblock</class>
+		<class>ch.elexis.core.jpa.entities.ObjVatInfo</class>
+		<class>ch.elexis.core.jpa.entities.Prescription</class>
+		<class>ch.elexis.core.jpa.entities.PhysioLeistung</class>
+		<class>ch.elexis.core.jpa.entities.Reminder</class>
+		<class>ch.elexis.core.jpa.entities.Right</class>
+		<class>ch.elexis.core.jpa.entities.Role</class>
+		<class>ch.elexis.core.jpa.entities.Sticker</class>
+		<class>ch.elexis.core.jpa.entities.Stock</class>
+		<class>ch.elexis.core.jpa.entities.StockEntry</class>
+		<class>ch.elexis.core.jpa.entities.TarmedDefinitionen</class>
+		<class>ch.elexis.core.jpa.entities.TarmedExtension</class>
+		<class>ch.elexis.core.jpa.entities.TarmedGroup</class>
+		<class>ch.elexis.core.jpa.entities.TarmedLeistung</class>
+		<class>ch.elexis.core.jpa.entities.TarmedKumulation</class>
+		<class>ch.elexis.core.jpa.entities.Termin</class>
+		<class>ch.elexis.core.jpa.entities.User</class>
+		<class>ch.elexis.core.jpa.entities.Userconfig</class>
+		<class>ch.elexis.core.jpa.entities.Verrechnet</class>
+		<class>ch.elexis.core.jpa.entities.VKPreis</class>
+		<class>ch.elexis.core.jpa.entities.Xid</class>
+		<class>ch.elexis.core.jpa.entities.ZusatzAdresse</class>
+		<exclude-unlisted-classes>true</exclude-unlisted-classes>
+		<shared-cache-mode>NONE</shared-cache-mode>
+		<properties>
+			<property name="eclipselink.weaving" value="static" />
+			<property name="eclipselink.logging.logger" value="org.eclipse.persistence.logging.slf4j.Slf4jSessionLogger"/>
+			<property name="eclipselink.logging.level" value="FINE" />
+			<property name="eclipselink.logging.level.sql" value="FINE" />
+			<property name="eclipselink.logging.parameters" value="true" />
+			<property name="eclipselink.logging.thread" value="true" />
+		</properties>
+	</persistence-unit>
+</persistence>

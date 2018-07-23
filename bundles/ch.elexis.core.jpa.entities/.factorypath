@@ -1,0 +1,5 @@
+<factorypath>
+    <factorypathentry kind="WKSPJAR" id="/ch.elexis.core.jpa.entities/build/eclipselink-2.7.2.v20180622.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="WKSPJAR" id="/ch.elexis.core.jpa.entities/build/javax.persistence_2.2.0.v201708071007.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="WKSPJAR" id="/ch.elexis.core.jpa.entities/build/org.eclipse.persistence.jpa.modelgen_2.7.2.v20180622-f627448.jar" enabled="true" runInBatchMode="false"/>
+</factorypath>

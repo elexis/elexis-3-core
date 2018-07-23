@@ -31,8 +31,9 @@ public enum Visibility implements INumericEnum, ILocalizedEnum {
 	}
 
 	public static Visibility byNumericSafe(String visibilityIn) {
+		int numeric = Integer.parseInt(visibilityIn);
 		for (Visibility visibility : Visibility.values()) {
-			if (Integer.toString(visibility.numericValue()).equalsIgnoreCase(visibilityIn)) {
+			if (visibility.numericValue() == numeric) {
 				return visibility;
 			}
 		}

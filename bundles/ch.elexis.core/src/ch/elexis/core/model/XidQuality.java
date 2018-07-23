@@ -36,4 +36,13 @@ public enum XidQuality {
 	public Integer getValue(){
 		return value;
 	}
+
+	public static XidQuality ofValue(int value){
+		for (XidQuality quality : values()) {
+			if (quality.getValue() == value) {
+				return quality;
+			}
+		}
+		return null;
+	}
 }

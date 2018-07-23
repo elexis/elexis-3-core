@@ -236,8 +236,6 @@ public class TransientLabResult {
 		}
 
 		labImportUtil.updateLabResult(labResult, this);
-		
-		ModelServiceHolder.get().save(labResult);
 	}
 	
 	public IPatient getPatient(){

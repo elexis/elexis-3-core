@@ -131,6 +131,7 @@ public class LabOrder extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.en
 	
 	@Override
 	public String toString(){
-		return getEntity().getLabel();
+		return getEntity().getMandator() + " -> [" + getEntity().getItem() + "] ["
+			+ getEntity().getResult() + "]";
 	}
 }

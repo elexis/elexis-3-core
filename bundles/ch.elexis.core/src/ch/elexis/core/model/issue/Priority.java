@@ -29,8 +29,9 @@ public enum Priority implements INumericEnum, ILocalizedEnum {
 	}
 
 	public static Priority byNumericSafe(String priority) {
+		int numeric = Integer.parseInt(priority);
 		for (Priority prio : Priority.values()) {
-			if (Integer.toString(prio.numericValue()).equalsIgnoreCase(priority)) {
+			if (prio.numericValue() == numeric) {
 				return prio;
 			}
 		}

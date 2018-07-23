@@ -83,7 +83,7 @@ public class ElexisPoolingDataSource extends PoolingDataSource
 
 			GenericObjectPool<Connection> connectionPool = new GenericObjectPool<>(null);
 			connectionPool.setMaxActive(32);
-			connectionPool.setMinIdle(2);
+			connectionPool.setMinIdle(8);
 			connectionPool.setMaxWait(10000);
 			connectionPool.setTestOnBorrow(true);
 
