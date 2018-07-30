@@ -48,9 +48,9 @@ import org.eclipse.swt.widgets.Text;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.interfaces.IStockEntry;
 import ch.elexis.core.importer.div.importers.ExcelWrapper;
-import ch.elexis.core.model.IStockEntry;
-import ch.elexis.core.model.article.IArticle;
+import ch.elexis.core.model.IArticle;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.stock.service.ArticleServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;

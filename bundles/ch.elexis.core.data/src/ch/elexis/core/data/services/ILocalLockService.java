@@ -52,6 +52,9 @@ public interface ILocalLockService extends ILockService {
 	public LockResponse acquireLockBlocking(IPersistentObject po, int msTimeout,
 		IProgressMonitor monitor);
 	
+	public LockResponse acquireLockBlocking(Identifiable identifiable, int msTimeout,
+		IProgressMonitor monitor);
+	
 	public Status getStatus();
 
 	public void shutdown();

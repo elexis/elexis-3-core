@@ -10,8 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.model.Identifiable;
 
 public class AcquireLockBlockingUi {
 	private static Logger logger = LoggerFactory.getLogger(AcquireLockBlockingUi.class);
@@ -33,12 +34,37 @@ public class AcquireLockBlockingUi {
 		});
 	}
 	
+	public static void aquireAndRun(Identifiable identifiable, ILockHandler handler){
+		Display display = Display.getDefault();
+		display.syncExec(new Runnable() {
+			
+			@Override
+			public void run(){
+				ProgressMonitorDialog progress =
+					new ProgressMonitorDialog(display.getActiveShell());
+				try {
+					progress.run(true, true, new AcquireLockRunnable(identifiable, handler));
+				} catch (InvocationTargetException | InterruptedException e) {
+					logger.warn("Exception during acquire lock.", e);
+				}
+			}
+		});
+	}
+	
 	private static class AcquireLockRunnable implements IRunnableWithProgress {
 		private IPersistentObject lockPo;
+		private Identifiable lockIdentifiable;
+		
 		private ILockHandler lockhander;
+		private LockResponse result;
 		
 		public AcquireLockRunnable(IPersistentObject lockPo, ILockHandler lockhander){
 			this.lockPo = lockPo;
+			this.lockhander = lockhander;
+		}
+		
+		public AcquireLockRunnable(Identifiable lockIdentifiable, ILockHandler lockhander){
+			this.lockIdentifiable = lockIdentifiable;
 			this.lockhander = lockhander;
 		}
 		
@@ -46,26 +72,33 @@ public class AcquireLockBlockingUi {
 		public void run(IProgressMonitor monitor)
 			throws InvocationTargetException, InterruptedException{
 
-			LockResponse result = CoreHub.getLocalLockService().acquireLockBlocking(lockPo, 30, monitor);
-			Display display = Display.getDefault();
-			if(result.isOk()) {
-				display.syncExec(new Runnable() {
-					@Override
-					public void run(){
-						lockhander.lockAcquired();
-					}
-				});
-				monitor.beginTask("Releasing lock ...", IProgressMonitor.UNKNOWN);
-				CoreHub.getLocalLockService().releaseLock(lockPo);
-				monitor.done();
-			} else {
-				display.syncExec(new Runnable() {
-					@Override
-					public void run(){
-						lockhander.lockFailed();
-						LockResponseHelper.showInfo(result, lockPo, logger);
-					}
-				});
+			if (lockPo != null) {
+				result = CoreHub.getLocalLockService().acquireLockBlocking(lockPo, 30, monitor);
+			} else if (lockIdentifiable != null) {
+				result = CoreHub.getLocalLockService().acquireLockBlocking(lockIdentifiable, 30,
+					monitor);
+			}
+			if (result != null) {
+				Display display = Display.getDefault();
+				if (result.isOk()) {
+					display.syncExec(new Runnable() {
+						@Override
+						public void run(){
+							lockhander.lockAcquired();
+						}
+					});
+					monitor.beginTask("Releasing lock ...", IProgressMonitor.UNKNOWN);
+					CoreHub.getLocalLockService().releaseLock(lockPo);
+					monitor.done();
+				} else {
+					display.syncExec(new Runnable() {
+						@Override
+						public void run(){
+							lockhander.lockFailed();
+							LockResponseHelper.showInfo(result, lockPo, logger);
+						}
+					});
+				}
 			}
 		}
 	}

@@ -200,6 +200,50 @@ public class LocalLockService implements ILocalLockService {
 	}
 	
 	@Override
+	public LockResponse acquireLockBlocking(Identifiable identifiable, int secTimeout,
+		IProgressMonitor monitor){
+		if (identifiable == null) {
+			return LockResponse.DENIED(null);
+		}
+		if (monitor != null) {
+			monitor.beginTask("Acquiring Lock for [" + identifiable.getLabel() + "]",
+				(secTimeout * 10) + 1);
+		}
+		logger.debug("Acquiring lock blocking on [" + identifiable + "]");
+		Optional<String> storeToString = ModelServiceHolder.get().storeToString(identifiable);
+		
+		if (storeToString.isPresent()) {
+			LockResponse response = acquireLock(storeToString.get());
+			int sleptMilli = 0;
+			while (!response.isOk()) {
+				if (response.getStatus() == LockResponse.Status.DENIED_PERMANENT) {
+					return response;
+				}
+				
+				try {
+					Thread.sleep(100);
+					sleptMilli += 100;
+					response = acquireLock(storeToString.get());
+					if (sleptMilli > (secTimeout * 1000)) {
+						return response;
+					}
+					// update monitor
+					if (monitor != null) {
+						monitor.worked(1);
+						if (monitor.isCanceled()) {
+							return LockResponse.DENIED(response.getLockInfo());
+						}
+					}
+				} catch (InterruptedException e) {
+					// ignore and keep trying
+				}
+			}
+			return response;
+		}
+		throw new IllegalStateException("No storeToString for [" + identifiable + "]");
+	}
+	
+	@Override
 	public LockResponse acquireLock(IPersistentObject po){
 		if (po == null) {
 			return LockResponse.DENIED(null);
