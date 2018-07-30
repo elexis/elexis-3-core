@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.interfaces.IOrder;
 import ch.elexis.core.data.interfaces.IOrderEntry;
 import ch.elexis.core.jdt.Nullable;
 
@@ -113,5 +114,14 @@ public class BestellungEntry extends PersistentObject implements IOrderEntry {
 			set(FLD_PROVIDER, provider.getId());
 		}
 		
+	}
+	
+	@Override
+	public IOrder getOrder(){
+		String orderId = get(FLD_BESTELLUNG);
+		if (StringUtils.isNotBlank(orderId)) {
+			return Bestellung.load(orderId);
+		}
+		return null;
 	}
 }

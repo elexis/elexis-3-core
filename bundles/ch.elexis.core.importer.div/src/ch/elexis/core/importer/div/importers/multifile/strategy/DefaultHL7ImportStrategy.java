@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import ch.elexis.core.importer.div.importers.HL7Parser;
+import ch.elexis.core.importer.div.importers.ILabContactResolver;
 import ch.elexis.core.importer.div.importers.IPersistenceHandler;
 import ch.elexis.core.importer.div.importers.multifile.IMultiFileParser;
 import ch.elexis.core.model.ILabOrder;
@@ -28,6 +29,8 @@ public class DefaultHL7ImportStrategy implements IFileImportStrategy {
 	
 	private boolean moveAfterImport;
 	
+	private ILabContactResolver labContactResolver;
+	
 	public static final String CFG_IMPORT_ENCDATA = "hl7Parser/importencdata";
 	
 	@SuppressWarnings("unchecked")
@@ -39,12 +42,24 @@ public class DefaultHL7ImportStrategy implements IFileImportStrategy {
 		
 		if (testMode) {
 			// we need to enable patient creation when testing otherwise test will fail
-			result = (Result<Object>) hl7Parser.importFile(file.getAbsolutePath(), true);
+			if (labContactResolver != null) {
+				result = (Result<Object>) hl7Parser.importFile(file, null, null, labContactResolver,
+					true);
+			} else {
+				result = (Result<Object>) hl7Parser.importFile(file.getAbsolutePath(), true);
+			}
+			
 			if (moveAfterImport) {
 				FileImportStrategyUtil.moveAfterImport(result.isOK(), file);
 			}
 		} else {
-			result = (Result<Object>) hl7Parser.importFile(file.getAbsolutePath(), false);
+			if (labContactResolver != null) {
+				result = (Result<Object>) hl7Parser.importFile(file, null, null, labContactResolver,
+					false);
+			} else {
+				result = (Result<Object>) hl7Parser.importFile(file.getAbsolutePath(), false);
+			}
+			
 			if (moveAfterImport) {
 				FileImportStrategyUtil.moveAfterImport(result.isOK(), file);
 			}
@@ -81,6 +96,12 @@ public class DefaultHL7ImportStrategy implements IFileImportStrategy {
 	@Override
 	public IFileImportStrategy setMoveAfterImport(boolean value){
 		this.moveAfterImport = value;
+		return this;
+	}
+	
+	@Override
+	public IFileImportStrategy setLabContactResolver(ILabContactResolver resolver){
+		this.labContactResolver = resolver;
 		return this;
 	}
 }

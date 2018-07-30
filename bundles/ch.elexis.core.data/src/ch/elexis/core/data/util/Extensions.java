@@ -123,7 +123,7 @@ public class Extensions {
 				}
 			} catch (CoreException e) {
 				if (bMandatory) {
-					ExHandler.handle(e);
+					ExHandler.handle(el.getName() + ": " + points, e);
 				}
 			}
 		}

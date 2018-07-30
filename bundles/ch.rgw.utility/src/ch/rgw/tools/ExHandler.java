@@ -85,7 +85,20 @@ public class ExHandler {
 	 *            die Exception
 	 */
 	public static void handle(Throwable ex){ // synchronized(out)
+		handle(null, ex);
+	}
+	
+	/**
+	 * @param additionalInfo
+	 * @param ex
+	 * @since 3.6
+	 */
+	public static void handle(String additionalInfo, Throwable ex) {
 		out.flush();
+		if (additionalInfo != null) {
+			out.println("--------------Exception Info--------------");
+			out.println(additionalInfo);
+		}
 		out.println("--------------Exception--------------");
 		ex.printStackTrace(out);
 		out.println("-----------End Exception handler-----");

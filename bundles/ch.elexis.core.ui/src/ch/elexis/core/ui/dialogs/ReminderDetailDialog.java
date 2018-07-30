@@ -77,6 +77,7 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 	private ComboViewer cvPriority;
 	private Button btnHasDueDate;
 	private Composite dueComposite;
+	private TimeTool defaultDate = null;
 	
 	/**
 	 * Create the dialog.
@@ -92,6 +93,11 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 	public ReminderDetailDialog(Shell parentShell, Reminder reminder){
 		this(parentShell);
 		this.reminder = reminder;
+	}
+	
+	public ReminderDetailDialog(Shell parentShell, TimeTool defaultDate){
+		this(parentShell);
+		this.defaultDate = defaultDate;
 	}
 	
 	@Override
@@ -294,10 +300,11 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 		gl_dueComposite.marginHeight = 0;
 		dueComposite.setLayout(gl_dueComposite);
 		
+		dateDue = this.defaultDate != null ? this.defaultDate : new TimeTool();
 		btnHasDueDate = new Button(dueComposite, SWT.CHECK);
 		btnHasDueDate.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 		btnHasDueDate.setText(Messages.EditReminderDialog_dueOn);
-		btnHasDueDate.setSelection(false);
+		btnHasDueDate.setSelection(true);
 		btnHasDueDate.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
@@ -315,7 +322,8 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 		
 		dateDuePicker = new DatePickerCombo(dueComposite, SWT.BORDER);
 		dateDuePicker.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-		dateDuePicker.setEnabled(false);
+		dateDuePicker.setEnabled(true);
+		dateDuePicker.setDate(dateDue.getTime());
 		dateDuePicker.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
@@ -327,7 +335,7 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 		separator2.setLayoutData(new RowData(25, 20));
 		
 		cvPriority = new ComboViewer(compositeState, SWT.SINGLE);
-		cvPriority.getCombo().setLayoutData(new RowData(50, SWT.DEFAULT));
+		cvPriority.getCombo().setLayoutData(new RowData(130, SWT.DEFAULT));
 		cvPriority.setContentProvider(ArrayContentProvider.getInstance());
 		cvPriority.setLabelProvider(new LabelProvider() {
 			@Override
@@ -403,7 +411,7 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 			rvapc.setConfiguredVisibility(reminder.getVisibility(),
 				reminder.isPatientRelated() && patient != null);
 		} else {
-			rvapc.setConfiguredVisibility(Visibility.ALWAYS, patient != null);
+			rvapc.setConfiguredVisibility(null, patient != null);
 		}
 		updateModelToTarget();
 	}

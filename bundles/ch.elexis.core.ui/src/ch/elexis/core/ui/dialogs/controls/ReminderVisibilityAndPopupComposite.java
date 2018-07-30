@@ -18,11 +18,9 @@ import org.eclipse.swt.widgets.Label;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.issue.Visibility;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.views.Messages;
-import ch.elexis.data.Patient;
 
 public class ReminderVisibilityAndPopupComposite extends Composite {
 	
@@ -153,10 +151,15 @@ public class ReminderVisibilityAndPopupComposite extends Composite {
 		if (noPatientSelectedComposite.equals(stackLayout.topControl)) {
 			popupOnLogin.setSelection(Visibility.POPUP_ON_LOGIN == visibility);
 		} else {
-			visibility = (visibility == null) ? Visibility.ALWAYS : visibility;
-			Patient patient = ElexisEventDispatcher.getSelectedPatient();
-			boolean defaultPatientRelated = CoreHub.userCfg.get(Preferences.USR_REMINDER_DEFAULT_PATIENT_RELATED, true);
-			showOnlyOnSelectedPatient.setSelection(defaultPatientRelated && patient != null);
+			if (visibility == null) {
+				visibility = Visibility.ALWAYS;
+				boolean defaultPatientRelated = CoreHub.userCfg.get(Preferences.USR_REMINDER_DEFAULT_PATIENT_RELATED,
+						false);
+				if (withPatientRelation && defaultPatientRelated) {
+					visibility = Visibility.ON_PATIENT_SELECTION;
+				}
+			}
+			showOnlyOnSelectedPatient.setSelection(Visibility.ON_PATIENT_SELECTION == visibility);
 			showOnlyOnSelectedPatient.setToolTipText(Messages.ReminderView_defaultPatientRelatedTooltip);
 			showOnlyOnSelectedPatient.setToolTipText("Der Vorgabewert kann unter Einstellungen..Anwender..Pendenzen geändert werden");
 			comboPopup.setEnabled(true);

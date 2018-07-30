@@ -151,7 +151,6 @@ public class EditLabItem extends TitleAreaDialog {
 		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelUnit);
 		noRefValues = new Button(grp, SWT.CHECK);
 		noRefValues.setText(ch.elexis.core.l10n.Messages.LabResultEvaluator_LabItemNoRefValue);
-		noRefValues.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		noRefValues.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){

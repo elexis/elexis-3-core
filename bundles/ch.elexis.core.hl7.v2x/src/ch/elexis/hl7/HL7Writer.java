@@ -447,8 +447,13 @@ public abstract class HL7Writer {
 			email = kontakt.getEmail();
 			fax = kontakt.getFax();
 		}
-		xtn.getPhoneNumber().setValue(phone1);
-		xtn.getEmailAddress().setValue(email);
+		if (phone1 != null) {
+			phone1 = phone1.replaceAll("[^\\d.]", "");
+			xtn.getPhoneNumber().setValue(phone1);
+		}
+		if (email != null) {
+			xtn.getEmailAddress().setValue(email);
+		}
 		xtn.getXtn2_TelecommunicationUseCode().setValue(""); //$NON-NLS-1$
 		xtn.getXtn3_TelecommunicationEquipmentType().setValue(""); //$NON-NLS-1$
 		xtn.getXtn5_CountryCode().setValue(""); //$NON-NLS-1$

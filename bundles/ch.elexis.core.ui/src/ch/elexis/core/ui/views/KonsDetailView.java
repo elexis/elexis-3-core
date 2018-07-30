@@ -283,6 +283,9 @@ public class KonsDetailView extends ViewPart
 			
 			@Override
 			public void linkActivated(HyperlinkEvent e){
+				// CommonViewer of KontaktSelektor will set Mandant selection of ElexisEventDispatcher
+				// we want do reset to current mandant afterwards
+				Mandant currentMandant = ElexisEventDispatcher.getSelectedMandator();
 				KontaktSelektor ksl = new KontaktSelektor(getSite().getShell(), Mandant.class,
 					Messages.KonsDetailView_SelectMandatorCaption, // $NON-NLS-1$
 					Messages.KonsDetailView_SelectMandatorBody, new String[] {
@@ -292,6 +295,7 @@ public class KonsDetailView extends ViewPart
 					actKons.setMandant((Mandant) ksl.getSelection());
 					setKons(actKons);
 				}
+				ElexisEventDispatcher.fireSelectionEvent(currentMandant);
 			}
 			
 		});

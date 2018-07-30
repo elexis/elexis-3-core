@@ -574,4 +574,9 @@ public class Messages {
 	public static String VerrechnungsDisplay_fixMedication = ch.elexis.core.l10n.Messages.VerrechnungsDisplay_fixMedication;
 	public static String BriefAuswahlNotAllowedToRunStresstess = ch.elexis.core.l10n.Messages.BriefAuswahlNotAllowedToRunStresstess;
 	public static String ReminderView_txtSearch_message = ch.elexis.core.l10n.Messages.ReminderView_txtSearch_message;
+	public static String BestellView_Title = ch.elexis.core.l10n.Messages.BestellView_Title;
+	public static String BestellView_WizardAskNewOrder =
+		ch.elexis.core.l10n.Messages.BestellView_WizardAskNewOrder;
+	public static String BestellView_OrderIsClosed =
+		ch.elexis.core.l10n.Messages.BestellView_OrderIsClosed;
 }

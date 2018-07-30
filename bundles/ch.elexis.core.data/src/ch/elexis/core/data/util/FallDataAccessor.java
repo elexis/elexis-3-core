@@ -61,6 +61,7 @@ public class FallDataAccessor implements IDataAccess {
 		
 		if (descriptor.equalsIgnoreCase(KOSTENTRAEGER)
 			|| descriptor.equalsIgnoreCase(KOSTENTRAEGER_UMLAUT)) {
+			// WARN does not seem to be called anymore - see FallKostentraegerResolver
 			result = new Result<Object>(costBearer.getPostAnschrift(true));
 			
 		} else if (descriptor.equalsIgnoreCase(KOSTENTRAEGER_KUERZEL)

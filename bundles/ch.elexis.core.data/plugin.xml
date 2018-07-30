@@ -56,6 +56,16 @@
            class="ch.elexis.core.data.util.PatientDataAccessor"
            name="Patient">
      </DataAccess>
+     <TextPlaceHolder
+           name="Kostentraeger"
+           resolver="ch.elexis.core.data.text.resolver.FallKostentraegerResolver"
+           type="ch.elexis.data.Fall">
+     </TextPlaceHolder>
+     <TextPlaceHolder
+           name="Kostenträger"
+           resolver="ch.elexis.core.data.text.resolver.FallKostentraegerResolver"
+           type="ch.elexis.data.Fall">
+     </TextPlaceHolder>
   </extension>
   <extension
         point="org.eclipse.core.runtime.preferences">

@@ -8,6 +8,8 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.interfaces.IOrderEntry;
 import ch.elexis.core.data.service.StockService;
 import ch.elexis.core.data.services.IStockService.Availability;
 import ch.elexis.core.ui.UiDesk;
@@ -63,6 +65,10 @@ public class StockEntryLabelProvider extends LabelProvider
 		if (element instanceof StockEntry) {
 			StockEntry se = (StockEntry) element;
 			
+			IOrderEntry order = CoreHub.getOrderService().findOpenOrderEntryForStockEntry(se);
+			if (order != null) {
+				return UiDesk.getColor(UiDesk.COL_LIGHTBLUE);
+			}
 			Availability availability = StockService.determineAvailability(se);
 			if (availability != null) {
 				switch (availability) {

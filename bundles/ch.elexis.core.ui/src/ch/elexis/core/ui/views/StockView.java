@@ -63,6 +63,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.interfaces.IOrderEntry;
 import ch.elexis.core.data.interfaces.IStockEntry;
 import ch.elexis.core.data.service.StockService;
 import ch.elexis.core.data.services.IStockService.Availability;
@@ -576,11 +577,20 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		
 		@Override
 		public void run(){
-			OrderImportDialog dialog =
-				new OrderImportDialog(viewer.getControl().getShell(), stockEntry);
-			dialog.open();
-			viewer.refresh();
-			
+			stockEntry = null;
+			IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+			if (selection != null && !selection.isEmpty()
+				&& selection.getFirstElement() instanceof StockEntry) {
+				stockEntry = (StockEntry) selection.getFirstElement();
+				if (stockEntry.getArticle() != null) {
+					IOrderEntry order = CoreHub.getOrderService()
+						.findOpenOrderEntryForStockEntry(stockEntry);
+					OrderImportDialog dialog =
+						new OrderImportDialog(viewer.getControl().getShell(), order.getOrder());
+					dialog.open();
+					viewer.refresh();
+				}
+			}
 		}
 	}
 	

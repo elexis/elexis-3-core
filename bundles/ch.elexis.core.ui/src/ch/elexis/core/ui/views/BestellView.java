@@ -14,6 +14,7 @@
 package ch.elexis.core.ui.views;
 
 import java.text.MessageFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,6 +56,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.interfaces.IOrderEntry;
 import ch.elexis.core.data.interfaces.IStockEntry;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.UiDesk;
@@ -268,9 +270,20 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 		if (b != null && !form.isDisposed()) {
 			form.setText(b.getLabel());
 			tv.refresh();
-			checkInAction.setEnabled(true);
+			updateCheckIn();
 		} else {
 			checkInAction.setEnabled(false);
+			checkInAction.setToolTipText(Messages.BestellView_NoOrder);
+		}
+	}
+	
+	private void updateCheckIn(){
+		if (actBestellung.isDone()) {
+			checkInAction.setEnabled(false);
+			checkInAction.setToolTipText(Messages.BestellView_OrderIsClosed);
+		} else {
+			checkInAction.setEnabled(true);
+			checkInAction.setToolTipText(Messages.BestellView_CheckInCaption);
 		}
 	}
 	
@@ -351,10 +364,19 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 				if (actBestellung == null) {
 					setBestellung(
 						new Bestellung(Messages.BestellView_AutomaticDaily, CoreHub.actUser)); //$NON-NLS-1$
+				} else {
+					if (!actBestellung.getTime().toLocalDate().equals(LocalDate.now())) {
+						if (MessageDialog.openQuestion(getSite().getShell(),
+							Messages.BestellView_Title, Messages.BestellView_WizardAskNewOrder)) {
+							setBestellung(
+								new Bestellung(Messages.BestellView_Automatic, CoreHub.actUser));
+						}
+					}
 				}
 				
 				DailyOrderDialog doDlg = new DailyOrderDialog(UiDesk.getTopShell(), actBestellung);
 				doDlg.open();
+				updateCheckIn();
 				tv.refresh(true);
 			}
 		};
@@ -369,6 +391,14 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 			public void run(){
 				if (actBestellung == null) {
 					setBestellung(new Bestellung(Messages.BestellView_Automatic, CoreHub.actUser));
+				} else {
+					if (!actBestellung.getTime().toLocalDate().equals(LocalDate.now())) {
+						if (MessageDialog.openQuestion(getSite().getShell(),
+							Messages.BestellView_Title, Messages.BestellView_WizardAskNewOrder)) {
+							setBestellung(
+								new Bestellung(Messages.BestellView_Automatic, CoreHub.actUser));
+						}
+					}
 				}
 				
 				int trigger = CoreHub.globalCfg.get(
@@ -386,7 +416,13 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 				List<StockEntry> stockEntries = qbe.execute();
 				for (StockEntry se : stockEntries) {
 					if (se.getArticle() != null) {
-						CoreHub.getOrderService().addRefillForStockEntryToOrder(se, actBestellung);
+						IOrderEntry open =
+							CoreHub.getOrderService().findOpenOrderEntryForStockEntry(se);
+						// only add if not on an open order
+						if (open == null) {
+							CoreHub.getOrderService().addRefillForStockEntryToOrder(se,
+								actBestellung);
+						}
 					} else {
 						LoggerFactory.getLogger(getClass())
 							.warn("Could not resolve article " + se.get(StockEntry.FLD_ARTICLE_TYPE)
@@ -394,6 +430,7 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 								+ se.getId());
 					}
 				}
+				updateCheckIn();
 				tv.refresh(true);
 			}
 		};
@@ -566,6 +603,7 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 					OrderImportDialog dialog =
 						new OrderImportDialog(getSite().getShell(), actBestellung);
 					dialog.open();
+					updateCheckIn();
 				} else {
 					SWTHelper.alert(Messages.BestellView_NoOrder, //$NON-NLS-1$
 						Messages.BestellView_NoOrderLoaded); //$NON-NLS-1$

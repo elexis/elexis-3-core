@@ -378,7 +378,14 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			
 			@Override
 			public void run(){
-				ReminderDetailDialog erd = new ReminderDetailDialog(getViewSite().getShell(), null);
+				ReminderDetailDialog erd = null;
+				Object[] sel = cv.getSelection();
+				if (sel != null && sel.length == 1) {
+					Reminder reminder = (Reminder) sel[0];
+					erd = new ReminderDetailDialog(getViewSite().getShell(), reminder.getDateDue());
+				} else {
+					 erd = new ReminderDetailDialog(getViewSite().getShell());
+				}
 				int retVal = erd.open();
 				if (retVal == Dialog.OK) {
 					Reminder reminder = erd.getReminder();

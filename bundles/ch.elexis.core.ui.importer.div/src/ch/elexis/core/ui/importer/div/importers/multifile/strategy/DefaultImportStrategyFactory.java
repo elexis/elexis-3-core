@@ -7,6 +7,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.importer.div.importers.ILabContactResolver;
 import ch.elexis.core.importer.div.importers.multifile.strategy.BasicFileImportStrategyFactory;
 import ch.elexis.core.importer.div.importers.multifile.strategy.DefaultHL7ImportStrategy;
 import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategy;
@@ -27,6 +28,8 @@ public class DefaultImportStrategyFactory extends BasicFileImportStrategyFactory
 	
 	private boolean moveAfterImport;
 	
+	private ILabContactResolver labContactResolver;
+	
 	@Override
 	public Map<File, IFileImportStrategy> createImportStrategyMap(File hl7File){
 		Map<File, IFileImportStrategy> ret = super.createImportStrategyMap(hl7File);
@@ -44,7 +47,8 @@ public class DefaultImportStrategyFactory extends BasicFileImportStrategyFactory
 			}
 		}
 			
-		ret.values().forEach(strategy -> strategy.setMoveAfterImport(moveAfterImport));
+		ret.values().forEach(strategy -> strategy.setMoveAfterImport(moveAfterImport)
+			.setLabContactResolver(labContactResolver));
 		return ret;
 	}
 	
@@ -55,8 +59,21 @@ public class DefaultImportStrategyFactory extends BasicFileImportStrategyFactory
 	 * @param value
 	 * @return
 	 */
+	@Override
 	public IFileImportStrategyFactory setMoveAfterImport(boolean value){
 		this.moveAfterImport = value;
+		return this;
+	}
+	
+	/**
+	 * Add the {@link ILabContactResolver} that should be used on import.
+	 * 
+	 * @param resolver
+	 * @return
+	 */
+	@Override
+	public IFileImportStrategyFactory setLabContactResolver(ILabContactResolver resolver){
+		this.labContactResolver = resolver;
 		return this;
 	}
 }

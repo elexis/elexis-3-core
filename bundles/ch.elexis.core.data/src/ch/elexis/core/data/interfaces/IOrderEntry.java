@@ -4,4 +4,6 @@ public interface IOrderEntry {
 
 	IStock getStock();
 	
+	IOrder getOrder();
+	
 }
