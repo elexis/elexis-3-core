@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +64,7 @@ public class LabImportUtil implements ILabImportUtil {
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService modelService;
 	
-	@Reference(target = "(storeid=ch.elexis.data.store.omnivore)")
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL, target = "(storeid=ch.elexis.data.store.omnivore)")
 	private IDocumentStore documentStore;
 	
 	/**
@@ -504,6 +505,8 @@ public class LabImportUtil implements ILabImportUtil {
 			} catch (ElexisException e) {
 				logger.error("Error saving document", e);
 			}
+		} else {
+			logger.warn("No IDocumentStore available, document [" + title + "] not created");
 		}
 	}
 	
