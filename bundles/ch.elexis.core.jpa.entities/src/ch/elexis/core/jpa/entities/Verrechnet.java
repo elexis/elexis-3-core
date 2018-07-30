@@ -1,8 +1,6 @@
 package ch.elexis.core.jpa.entities;
 
 import java.math.BigInteger;
-import java.util.Hashtable;
-import java.util.Map;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -13,12 +11,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
-import ch.elexis.core.jpa.entities.converter.ElexisExtInfoMapConverter;
 import ch.elexis.core.jpa.entities.converter.IntegerStringConverter;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
@@ -82,8 +80,8 @@ public class Verrechnet implements EntityWithId, EntityWithDeleted {
 	private Kontakt user;
 
 	@Basic(fetch = FetchType.LAZY)
-	@Convert(converter = ElexisExtInfoMapConverter.class)
-	private Map<Object, Object> detail;
+	@Lob
+	private byte[] detail;
 
 	@Transient
 	public void setTP(double tp) {
@@ -158,19 +156,12 @@ public class Verrechnet implements EntityWithId, EntityWithDeleted {
 		return getZahl() * (getScale2() / 100f);
 	}
 
-	public Map<Object, Object> getDetail() {
-		if (detail == null) {
-			detail = new Hashtable<Object, Object>();
-		}
+	public byte[] getDetail(){
 		return detail;
 	}
 
-	public void setDetail(final String key, final String value) {
-		if (value == null) {
-			getDetail().remove(key);
-		} else {
-			getDetail().put(key, value);
-		}
+	public void setDetail(byte[] detail){
+		this.detail = detail;
 	}
 
 	public String getLeistungenText() {
@@ -267,11 +258,6 @@ public class Verrechnet implements EntityWithId, EntityWithDeleted {
 
 	public void setUser(Kontakt user) {
 		this.user = user;
-	}
-	
-	@Transient
-	public String getDetail(final String key){
-		return (String) getDetail().get(key);
 	}
 	
 	@Override

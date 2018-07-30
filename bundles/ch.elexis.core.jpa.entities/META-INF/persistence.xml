@@ -7,7 +7,6 @@
 		transaction-type="RESOURCE_LOCAL">
 		<class>ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe</class>
 		<class>ch.elexis.core.jpa.entities.converter.ElexisDBCompressedStringConverter</class>
-		<class>ch.elexis.core.jpa.entities.converter.ElexisExtInfoMapConverter</class>
 		<class>ch.elexis.core.jpa.entities.converter.FuzzyCountryToEnumConverter</class>
 		<class>ch.elexis.core.jpa.entities.converter.FuzzyGenderToEnumConverter</class>
 		<class>ch.elexis.core.jpa.entities.converter.IntegerStringConverter</class>
@@ -66,7 +65,7 @@
 		<class>ch.elexis.core.jpa.entities.Xid</class>
 		<class>ch.elexis.core.jpa.entities.ZusatzAdresse</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-		<shared-cache-mode>NONE</shared-cache-mode>
+		<shared-cache-mode>ALL</shared-cache-mode>
 		<properties>
 			<property name="eclipselink.weaving" value="static" />
 			<property name="eclipselink.logging.logger" value="org.eclipse.persistence.logging.slf4j.Slf4jSessionLogger"/>

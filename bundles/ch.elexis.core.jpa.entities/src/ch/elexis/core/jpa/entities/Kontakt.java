@@ -15,7 +15,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +37,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.ElexisDBCompressedStringConverter;
-import ch.elexis.core.jpa.entities.converter.ElexisExtInfoMapConverter;
 import ch.elexis.core.jpa.entities.converter.FuzzyCountryToEnumConverter;
 import ch.elexis.core.jpa.entities.converter.FuzzyGenderToEnumConverter;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
@@ -76,9 +74,8 @@ public class Kontakt implements EntityWithId, EntityWithDeleted, EntityWithExtIn
 	protected boolean deleted = false;
 	
 	@Basic(fetch = FetchType.LAZY)
-	@Convert(converter = ElexisExtInfoMapConverter.class)
-	@Column(columnDefinition = "BLOB")
-	protected Map<Object, Object> extInfo = new Hashtable<Object, Object>();
+	@Lob
+	protected byte[] extInfo;
 	
 	@Basic(fetch = FetchType.LAZY)
 	@Lob()
@@ -221,7 +218,7 @@ public class Kontakt implements EntityWithId, EntityWithDeleted, EntityWithExtIn
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")
 	protected List<Userconfig> userconfig = new ArrayList<>();
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "contact", orphanRemoval = true)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "contact", orphanRemoval = true)
 	@MapKey(name = "id")
 	protected Map<String, ZusatzAdresse> addresses = new HashMap<>();
 
@@ -555,12 +552,12 @@ public class Kontakt implements EntityWithId, EntityWithDeleted, EntityWithExtIn
 	}
 	
 	@Override
-	public Map<Object, Object> getExtInfo(){
+	public byte[] getExtInfo(){
 		return extInfo;
 	}
 	
 	@Override
-	public void setExtInfo(Map<Object, Object> extInfo){
+	public void setExtInfo(byte[] extInfo){
 		this.extInfo = extInfo;
 	}
 	

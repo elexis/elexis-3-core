@@ -2,8 +2,6 @@ package ch.elexis.core.jpa.entities;
 
 import java.math.BigInteger;
 import java.util.Collection;
-import java.util.Hashtable;
-import java.util.Map;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -15,11 +13,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
-import ch.elexis.core.jpa.entities.converter.ElexisExtInfoMapConverter;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
@@ -41,9 +39,8 @@ public class Role implements EntityWithId, EntityWithDeleted, EntityWithExtInfo 
 	protected boolean deleted = false;
 	
 	@Basic(fetch = FetchType.LAZY)
-	@Convert(converter = ElexisExtInfoMapConverter.class)
-	@Column(columnDefinition = "BLOB")
-	protected Map<Object, Object> extInfo = new Hashtable<Object, Object>();
+	@Lob
+	protected byte[] extInfo;
 	
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	@Column(name = "ISSYSTEMROLE")
@@ -75,12 +72,12 @@ public class Role implements EntityWithId, EntityWithDeleted, EntityWithExtInfo 
 	}
 
 	@Override
-	public Map<Object, Object> getExtInfo(){
+	public byte[] getExtInfo(){
 		return extInfo;
 	}
 	
 	@Override
-	public void setExtInfo(Map<Object, Object> extInfo){
+	public void setExtInfo(byte[] extInfo){
 		this.extInfo = extInfo;
 	}
 	

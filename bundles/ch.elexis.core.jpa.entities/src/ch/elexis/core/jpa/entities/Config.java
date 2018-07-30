@@ -9,10 +9,14 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.Cache;
+import org.eclipse.persistence.config.CacheIsolationType;
+
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
 @Entity
 @Table(name = "config")
+@Cache(isolation = CacheIsolationType.ISOLATED)
 @EntityListeners(EntityWithIdListener.class)
 public class Config implements EntityWithId {
 

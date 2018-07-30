@@ -2,9 +2,6 @@ package ch.elexis.core.jpa.entities;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -20,7 +17,6 @@ import javax.persistence.Transient;
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
-import ch.elexis.core.jpa.entities.util.EntitiesUtil;
 import ch.rgw.tools.TimeTool;
 
 @Entity
@@ -93,93 +89,93 @@ public class TarmedLeistung implements EntityWithId, EntityWithDeleted {
 	@JoinColumn(name = "id", insertable = false, updatable = false)
 	private TarmedExtension extension;
 
-	/**
-	 * Get the AL value of the {@link TarmedLeistung}.<br>
-	 * <b>IMPORTANT:</b> No scaling according to the Dignität of the {@link Mandant}
-	 * is performed. Use {@link TarmedLeistung#getAL(Mandant)} for AL value with
-	 * scaling included.
-	 * 
-	 * @return
-	 */
-	@Transient
-	public int getAL() {
-		if (extension != null) {
-			Object object = extension.getLimits().get(EXT_FLD_TP_AL);
-			if (object != null) {
-				try {
-					double val = Double.parseDouble((String) object);
-					return (int) Math.round(val * 100);
-				} catch (NumberFormatException nfe) {
-					/* ignore */
-				}
-			}
-		}
-		return 0;
-	}
+	//	/**
+	//	 * Get the AL value of the {@link TarmedLeistung}.<br>
+	//	 * <b>IMPORTANT:</b> No scaling according to the Dignität of the {@link Mandant}
+	//	 * is performed. Use {@link TarmedLeistung#getAL(Mandant)} for AL value with
+	//	 * scaling included.
+	//	 * 
+	//	 * @return
+	//	 */
+	//	@Transient
+	//	public int getAL() {
+	//		if (extension != null) {
+	//			Object object = extension.getLimits().get(EXT_FLD_TP_AL);
+	//			if (object != null) {
+	//				try {
+	//					double val = Double.parseDouble((String) object);
+	//					return (int) Math.round(val * 100);
+	//				} catch (NumberFormatException nfe) {
+	//					/* ignore */
+	//				}
+	//			}
+	//		}
+	//		return 0;
+	//	}
 	
-	/**
-	 * Get the AL scaling value to be used when billing this {@link TarmedLeistung} for the provided
-	 * {@link Mandant}.
-	 * 
-	 * @param mandant
-	 * @return
-	 */
-	@Transient
-	public double getALScaling(Kontakt mandant){
-		double scaling = 100;
-		if (mandant != null) {
-			MandantType type = getMandantType(mandant);
-			if (type == MandantType.PRACTITIONER) {
-				double alScaling = EntitiesUtil.checkZeroDouble(getExtension().getLimits().get(EXT_FLD_F_AL_R));
-				if (alScaling > 0.1) {
-					scaling *= alScaling;
-				}
-			}
-		}
-		return scaling;
-	}
-	
-	/**
-	 * Get the {@link MandantType} of the {@link Mandant}. If not found the default value is
-	 * {@link MandantType#SPECIALIST}.
-	 * 
-	 * @param mandant
-	 * @return
-	 */
-	@Transient
-	public static MandantType getMandantType(Kontakt mandant){
-		Object typeObj = mandant.getExtInfo(MANDANT_TYPE_EXTINFO_KEY);
-		if (typeObj instanceof String) {
-			return MandantType.valueOf((String) typeObj);
-		}
-		return MandantType.SPECIALIST;
-	}
+	//	/**
+	//	 * Get the AL scaling value to be used when billing this {@link TarmedLeistung} for the provided
+	//	 * {@link Mandant}.
+	//	 * 
+	//	 * @param mandant
+	//	 * @return
+	//	 */
+	//	@Transient
+	//	public double getALScaling(Kontakt mandant){
+	//		double scaling = 100;
+	//		if (mandant != null) {
+	//			MandantType type = getMandantType(mandant);
+	//			if (type == MandantType.PRACTITIONER) {
+	//				double alScaling = EntitiesUtil.checkZeroDouble(getExtension().getLimits().get(EXT_FLD_F_AL_R));
+	//				if (alScaling > 0.1) {
+	//					scaling *= alScaling;
+	//				}
+	//			}
+	//		}
+	//		return scaling;
+	//	}
+	//	
+	//	/**
+	//	 * Get the {@link MandantType} of the {@link Mandant}. If not found the default value is
+	//	 * {@link MandantType#SPECIALIST}.
+	//	 * 
+	//	 * @param mandant
+	//	 * @return
+	//	 */
+	//	@Transient
+	//	public static MandantType getMandantType(Kontakt mandant){
+	//		Object typeObj = mandant.getExtInfo(MANDANT_TYPE_EXTINFO_KEY);
+	//		if (typeObj instanceof String) {
+	//			return MandantType.valueOf((String) typeObj);
+	//		}
+	//		return MandantType.SPECIALIST;
+	//	}
 
-	@Transient
-	public int getTL() {
-		if (extension != null) {
-			Object object = extension.getLimits().get(EXT_FLD_TP_TL);
-			if (object != null) {
-				try {
-					double val = Double.parseDouble((String) object);
-					return (int) Math.round(val * 100);
-				} catch (NumberFormatException nfe) {
-					/* ignore */
-				}
-			}
-		}
-		return 0;
-	}
-
-	public boolean requiresSide() {
-		if (extension != null) {
-			Object object = extension.getLimits().get("SEITE");
-			if (object != null && Integer.parseInt((String) object) == 1) {
-				return true;
-			}
-		}
-		return false;
-	}
+	//	@Transient
+	//	public int getTL() {
+	//		if (extension != null) {
+	//			Object object = extension.getLimits().get(EXT_FLD_TP_TL);
+	//			if (object != null) {
+	//				try {
+	//					double val = Double.parseDouble((String) object);
+	//					return (int) Math.round(val * 100);
+	//				} catch (NumberFormatException nfe) {
+	//					/* ignore */
+	//				}
+	//			}
+	//		}
+	//		return 0;
+	//	}
+	//
+	//	public boolean requiresSide() {
+	//		if (extension != null) {
+	//			Object object = extension.getLimits().get("SEITE");
+	//			if (object != null && Integer.parseInt((String) object) == 1) {
+	//				return true;
+	//			}
+	//		}
+	//		return false;
+	//	}
 
 	public String getParent() {
 		return parent;
@@ -289,89 +285,89 @@ public class TarmedLeistung implements EntityWithId, EntityWithDeleted {
 		this.isChapter = isChapter;
 	}
 	
-	@Transient
-	public List<String> getExtStringListField(String extKey) {
-		List<String> ret = new ArrayList<>();
-		Map<String, String> map = getExtension().getLimits();
-		String values = map.get(extKey);
-		if (values != null && !values.isEmpty()) {
-			String[] parts = values.split(", ");
-			for (String string : parts) {
-				ret.add(string);
-			}
-		}
-		return ret;
-	}
+	//	@Transient
+	//	public List<String> getExtStringListField(String extKey) {
+	//		List<String> ret = new ArrayList<>();
+	//		Map<String, String> map = getExtension().getLimits();
+	//		String values = map.get(extKey);
+	//		if (values != null && !values.isEmpty()) {
+	//			String[] parts = values.split(", ");
+	//			for (String string : parts) {
+	//				ret.add(string);
+	//			}
+	//		}
+	//		return ret;
+	//	}
+	//	
+	//	@Transient
+	//	public String getServiceTyp(){
+	//		return getExtension().getLimits().get("LEISTUNG_TYP");
+	//	}
 	
-	@Transient
-	public String getServiceTyp(){
-		return getExtension().getLimits().get("LEISTUNG_TYP");
-	}
+	//	/**
+	//	 * Get the list of service groups this service is part of.
+	//	 * 
+	//	 * @return
+	//	 */
+	//	@Transient
+	//	public List<String> getServiceGroups(TimeTool date) {
+	//		List<String> ret = new ArrayList<>();
+	//		List<String> groups = getExtStringListField(TarmedLeistung.EXT_FLD_SERVICE_GROUPS);
+	//		if (!groups.isEmpty()) {
+	//			for (String string : groups) {
+	//				int dateStart = string.indexOf('[');
+	//				String datesString = string.substring(dateStart + 1, string.length() - 1);
+	//				String groupString = string.substring(0, dateStart);
+	//				if (isDateWithinDatesString(date, datesString)) {
+	//					ret.add(groupString);
+	//				}
+	//			}
+	//		}
+	//		return ret;
+	//	}
 	
-	/**
-	 * Get the list of service groups this service is part of.
-	 * 
-	 * @return
-	 */
-	@Transient
-	public List<String> getServiceGroups(TimeTool date) {
-		List<String> ret = new ArrayList<>();
-		List<String> groups = getExtStringListField(TarmedLeistung.EXT_FLD_SERVICE_GROUPS);
-		if (!groups.isEmpty()) {
-			for (String string : groups) {
-				int dateStart = string.indexOf('[');
-				String datesString = string.substring(dateStart + 1, string.length() - 1);
-				String groupString = string.substring(0, dateStart);
-				if (isDateWithinDatesString(date, datesString)) {
-					ret.add(groupString);
-				}
-			}
-		}
-		return ret;
-	}
-	
-	/**
-	 * Get the list of service blocks this service is part of.
-	 * 
-	 * @return
-	 */
-	@Transient
-	public List<String> getServiceBlocks(TimeTool date){
-		List<String> ret = new ArrayList<>();
-		List<String> blocks = getExtStringListField(TarmedLeistung.EXT_FLD_SERVICE_BLOCKS);
-		if (!blocks.isEmpty()) {
-			for (String string : blocks) {
-				int dateStart = string.indexOf('[');
-				String datesString = string.substring(dateStart + 1, string.length() - 1);
-				String blockString = string.substring(0, dateStart);
-				if (isDateWithinDatesString(date, datesString)) {
-					ret.add(blockString);
-				}
-			}
-		}
-		return ret;
-	}
-	
-	/**
-	 * Get the list of codes of the possible slave services allowed by tarmed.
-	 * 
-	 * @return
-	 */
-	public List<String> getHierarchy(TimeTool date){
-		List<String> ret = new ArrayList<>();
-		List<String> hierarchy = getExtStringListField(TarmedLeistung.EXT_FLD_HIERARCHY_SLAVES);
-		if (!hierarchy.isEmpty()) {
-			for (String string : hierarchy) {
-				int dateStart = string.indexOf('[');
-				String datesString = string.substring(dateStart + 1, string.length() - 1);
-				String codeString = string.substring(0, dateStart);
-				if (isDateWithinDatesString(date, datesString)) {
-					ret.add(codeString);
-				}
-			}
-		}
-		return ret;
-	}
+	//	/**
+	//	 * Get the list of service blocks this service is part of.
+	//	 * 
+	//	 * @return
+	//	 */
+	//	@Transient
+	//	public List<String> getServiceBlocks(TimeTool date){
+	//		List<String> ret = new ArrayList<>();
+	//		List<String> blocks = getExtStringListField(TarmedLeistung.EXT_FLD_SERVICE_BLOCKS);
+	//		if (!blocks.isEmpty()) {
+	//			for (String string : blocks) {
+	//				int dateStart = string.indexOf('[');
+	//				String datesString = string.substring(dateStart + 1, string.length() - 1);
+	//				String blockString = string.substring(0, dateStart);
+	//				if (isDateWithinDatesString(date, datesString)) {
+	//					ret.add(blockString);
+	//				}
+	//			}
+	//		}
+	//		return ret;
+	//	}
+	//	
+	//	/**
+	//	 * Get the list of codes of the possible slave services allowed by tarmed.
+	//	 * 
+	//	 * @return
+	//	 */
+	//	public List<String> getHierarchy(TimeTool date){
+	//		List<String> ret = new ArrayList<>();
+	//		List<String> hierarchy = getExtStringListField(TarmedLeistung.EXT_FLD_HIERARCHY_SLAVES);
+	//		if (!hierarchy.isEmpty()) {
+	//			for (String string : hierarchy) {
+	//				int dateStart = string.indexOf('[');
+	//				String datesString = string.substring(dateStart + 1, string.length() - 1);
+	//				String codeString = string.substring(0, dateStart);
+	//				if (isDateWithinDatesString(date, datesString)) {
+	//					ret.add(codeString);
+	//				}
+	//			}
+	//		}
+	//		return ret;
+	//	}
 	
 	@Transient
 	private boolean isDateWithinDatesString(TimeTool date, String datesString) {

@@ -3,8 +3,6 @@ package ch.elexis.core.jpa.entities;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Hashtable;
-import java.util.Map;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -22,7 +20,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
-import ch.elexis.core.jpa.entities.converter.ElexisExtInfoMapConverter;
 import ch.elexis.core.jpa.entities.converter.IntegerStringConverter;
 import ch.elexis.core.jpa.entities.converter.PathologicDescriptionConverter;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
@@ -49,11 +46,10 @@ public class LabResult implements EntityWithId, EntityWithDeleted, EntityWithExt
 	protected boolean deleted = false;
 	
 	@Basic(fetch = FetchType.LAZY)
-	@Convert(converter = ElexisExtInfoMapConverter.class)
-	@Column(columnDefinition = "BLOB")
-	protected Map<Object, Object> extInfo = new Hashtable<Object, Object>();
+	@Lob
+	protected byte[] extInfo;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PatientID")
 	private Kontakt patient;
 
@@ -63,7 +59,7 @@ public class LabResult implements EntityWithId, EntityWithDeleted, EntityWithExt
 	@Column(length = 6)
 	private String zeit;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ItemID")
 	private LabItem item;
 
@@ -229,12 +225,12 @@ public class LabResult implements EntityWithId, EntityWithDeleted, EntityWithExt
 	}
 
 	@Override
-	public Map<Object, Object> getExtInfo(){
+	public byte[] getExtInfo(){
 		return extInfo;
 	}
 	
 	@Override
-	public void setExtInfo(Map<Object, Object> extInfo){
+	public void setExtInfo(byte[] extInfo){
 		this.extInfo = extInfo;
 	}
 	

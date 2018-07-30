@@ -3,8 +3,6 @@ package ch.elexis.core.jpa.entities;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Basic;
@@ -23,7 +21,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
-import ch.elexis.core.jpa.entities.converter.ElexisExtInfoMapConverter;
 import ch.elexis.core.jpa.entities.converter.ReminderPriorityConverter;
 import ch.elexis.core.jpa.entities.converter.ReminderProcessStatusConverter;
 import ch.elexis.core.jpa.entities.converter.ReminderTypeConverter;
@@ -55,9 +52,8 @@ public class Reminder implements EntityWithId, EntityWithDeleted, EntityWithExtI
 	protected boolean deleted = false;
 	
 	@Basic(fetch = FetchType.LAZY)
-	@Convert(converter = ElexisExtInfoMapConverter.class)
-	@Column(columnDefinition = "BLOB")
-	protected Map<Object, Object> extInfo = new Hashtable<Object, Object>();
+	@Lob
+	protected byte[] extInfo;
 	
 	@OneToOne
 	@JoinColumn(name = "IdentID")
@@ -199,12 +195,12 @@ public class Reminder implements EntityWithId, EntityWithDeleted, EntityWithExtI
 	}
 	
 	@Override
-	public Map<Object, Object> getExtInfo(){
+	public byte[] getExtInfo(){
 		return extInfo;
 	}
 	
 	@Override
-	public void setExtInfo(Map<Object, Object> extInfo){
+	public void setExtInfo(byte[] extInfo){
 		this.extInfo = extInfo;
 	}
 	

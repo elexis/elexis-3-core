@@ -5,23 +5,30 @@ import java.math.BigInteger;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+
+import org.eclipse.persistence.annotations.Cache;
+import org.eclipse.persistence.config.CacheIsolationType;
 
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
 @Entity
 @Table(name = "userconfig")
 @EntityListeners(EntityWithIdListener.class)
+@Cache(isolation = CacheIsolationType.ISOLATED)
+@NamedQuery(name = "Userconfig.owner.param", query = "SELECT uc FROM Userconfig uc WHERE uc.owner = :owner AND uc.param = :param")
 public class Userconfig implements EntityWithId {
 
 	// Transparently updated by the EntityListener
 	protected BigInteger lastupdate;
 	
-	@ManyToOne()
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "UserID")
 	private Kontakt owner;
 	
