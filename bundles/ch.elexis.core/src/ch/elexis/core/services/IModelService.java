@@ -2,6 +2,7 @@ package ch.elexis.core.services;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -156,4 +157,12 @@ public interface IModelService {
 	 * @return
 	 */
 	public Stream<?> executeNativeQuery(String sql);
+	
+	/**
+	 * Helper Method for creating a map to execute a {@link INamedQuery}.
+	 * 
+	 * @param parameters
+	 * @return
+	 */
+	public Map<String, Object> getParameterMap(Object... parameters);
 }

@@ -1,9 +1,19 @@
 package ch.elexis.core.model.util;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Collections;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import javax.persistence.EntityManager;
 
@@ -12,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
@@ -32,12 +43,15 @@ import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.rgw.tools.MimeTool;
 
 @Component
 public class ModelUtil {
+	
+	private static Logger logger = LoggerFactory.getLogger(ModelUtil.class);
 	
 	private static IModelService modelService;
 	
@@ -213,19 +227,12 @@ public class ModelUtil {
 	 * @return
 	 */
 	public static boolean isConfig(String key, boolean defaultValue){
-		IQuery<IConfig> configQuery = modelService.getQuery(IConfig.class);
-		configQuery.and(ModelPackage.Literals.ICONFIG__KEY, COMPARATOR.EQUALS, key);
-		List<IConfig> configs = configQuery.execute();
-		if (configs.isEmpty()) {
-			return defaultValue;
-		} else {
-			IConfig config = configs.get(0);
-			if (configs.size() > 1) {
-				LoggerFactory.getLogger(ModelUtil.class)
-					.warn("Multiple config entries for [" + key + "] using first.");
-			}
-			String value = config.getValue();
+		Optional<IConfig> loaded = modelService.load(key, IConfig.class);
+		if (loaded.isPresent()) {
+			String value = loaded.get().getValue();
 			return value != null && (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("1"));
+		} else {
+			return defaultValue;
 		}
 	}
 	
@@ -240,10 +247,10 @@ public class ModelUtil {
 	 */
 	public static boolean isUserConfig(IContact owner, String key, boolean defaultValue){
 		if (owner != null) {
-			IQuery<IUserConfig> configQuery = modelService.getQuery(IUserConfig.class);
-			configQuery.and(ModelPackage.Literals.IUSER_CONFIG__OWNER, COMPARATOR.EQUALS, owner);
-			configQuery.and(ModelPackage.Literals.ICONFIG__KEY, COMPARATOR.EQUALS, key);
-			List<IUserConfig> configs = configQuery.execute();
+			INamedQuery<IUserConfig> configQuery =
+				modelService.getNamedQuery(IUserConfig.class, "owner", "param");
+			List<IUserConfig> configs = configQuery
+				.executeWithParameters(modelService.getParameterMap("owner", owner, "param", key));
 			if (configs.isEmpty()) {
 				return defaultValue;
 			} else {
@@ -433,5 +440,88 @@ public class ModelUtil {
 	 */
 	public static boolean verifyUsernameNotTaken(String username){
 		return !modelService.load(username, IUser.class).isPresent();
+	}
+	
+	/**
+	 * Convert a Hashtable into a compressed byte array.
+	 * 
+	 * @param hash
+	 *            the hashtable to store
+	 * @return
+	 */
+	private static byte[] flatten(final Hashtable<Object, Object> hash){
+		try {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream(hash.size() * 30);
+			ZipOutputStream zos = new ZipOutputStream(baos);
+			zos.putNextEntry(new ZipEntry("hash"));
+			ObjectOutputStream oos = new ObjectOutputStream(zos);
+			oos.writeObject(hash);
+			zos.close();
+			baos.close();
+			return baos.toByteArray();
+		} catch (Exception ex) {
+			logger.warn("Exception flattening HashTable, returning null: " + ex.getMessage());
+			return null;
+		}
+	}
+	
+	/**
+	 * Recreate a Hashtable from a byte array as created by flatten()
+	 * 
+	 * @param flat
+	 *            the byte array
+	 * @return the original Hashtable or null if no Hashtable could be created from the array
+	 */
+	@SuppressWarnings("unchecked")
+	private static Hashtable<Object, Object> fold(final byte[] flat){
+		if (flat.length == 0) {
+			return null;
+		}
+		try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(flat))) {
+			ZipEntry entry = zis.getNextEntry();
+			if (entry != null) {
+				try (ObjectInputStream ois = new ObjectInputStream(zis)) {
+					return (Hashtable<Object, Object>) ois.readObject();
+				}
+			} else {
+				return null;
+			}
+		} catch (IOException | ClassNotFoundException ex) {
+			logger.error("Exception folding byte array", ex);
+			return null;
+		}
+	}
+	
+	/**
+	 * Elexis persistence contains BLOBs of serialized {@link Hashtable<Object, Object>}. All types
+	 * of serializable data (mostly String) can be stored and loaded from these ExtInfos. This
+	 * method serializes a {@link Hashtable} in the Elexis way.
+	 * 
+	 * @param extInfo
+	 * @return
+	 */
+	public static byte[] extInfoToBytes(Map<Object, Object> extInfo){
+		if (extInfo != null && !extInfo.isEmpty()) {
+			Hashtable<Object, Object> ov = (Hashtable<Object, Object>) extInfo;
+			return flatten(ov);
+		}
+		return null;
+	}
+	
+	/**
+	 * This method loads {@link Hashtable} from the byte array in an Elexis way.
+	 * 
+	 * @param dataValue
+	 * @return
+	 */
+	public static Map<Object, Object> extInfoFromBytes(byte[] dataValue){
+		if (dataValue != null) {
+			Hashtable<Object, Object> ret = fold((byte[]) dataValue);
+			if (ret == null) {
+				return new Hashtable<Object, Object>();
+			}
+			return ret;
+		}
+		return Collections.emptyMap();
 	}
 }

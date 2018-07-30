@@ -198,4 +198,13 @@ public abstract class AbstractModelService implements IModelService {
 		}
 		return queryName.toString();
 	}
+	
+	@Override
+	public Map<String, Object> getParameterMap(Object... parameters){
+		HashMap<String, Object> ret = new HashMap<>();
+		for (int i = 0; i < parameters.length; i += 2) {
+			ret.put((String) parameters[i], parameters[i + 1]);
+		}
+		return ret;
+	}
 }

@@ -2,7 +2,9 @@ package ch.elexis.core.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
@@ -18,9 +20,10 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.types.PathologicDescription;
 
 public class LabResult extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.LabResult>
-		implements IdentifiableWithXid, ILabResult {
+		implements IdentifiableWithXid, IdentifiableWithExtInfo, ILabResult {
 	
 	private LabPathologicEvaluator labPathologicEvaluator;
+	private Map<Object, Object> extInfo;
 	
 	public LabResult(ch.elexis.core.jpa.entities.LabResult entity){
 		super(entity);
@@ -229,12 +232,30 @@ public class LabResult extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.e
 	
 	@Override
 	public Object getExtInfo(Object key){
-		return getEntity().getExtInfo(key);
+		byte[] bytes = getEntity().getExtInfo();
+		if (bytes != null) {
+			extInfo = ModelUtil.extInfoFromBytes(bytes);
+			return extInfo.get(key);
+		}
+		return null;
 	}
 	
 	@Override
 	public void setExtInfo(Object key, Object value){
-		getEntity().setExtInfoValue(key, value);
+		if(extInfo == null) {
+			byte[] bytes = getEntity().getExtInfo();
+			if (bytes != null) {
+				extInfo = ModelUtil.extInfoFromBytes(bytes);
+			} else {
+				extInfo = new Hashtable<>();
+			}
+		}
+		if (value == null) {
+			extInfo.remove(key);
+		} else {
+			extInfo.put(key, value);
+		}
+		getEntity().setExtInfo(ModelUtil.extInfoToBytes(extInfo));
 	}
 	
 	private synchronized LabPathologicEvaluator getLabPathologicEvaluator(){

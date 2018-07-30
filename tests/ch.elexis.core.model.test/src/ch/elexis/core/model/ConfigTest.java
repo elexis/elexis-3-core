@@ -70,6 +70,11 @@ public class ConfigTest {
 		assertEquals(config2, existing.get(0));
 		assertEquals(config2.getValue(), existing.get(0).getValue());
 		
+		// key id also the id, try load
+		Optional<IConfig> loaded = modelSerice.load("test key 2", IConfig.class);
+		assertTrue(loaded.isPresent());
+		assertEquals(config2, loaded.get());
+		
 		modelSerice.remove(config1);
 		modelSerice.remove(config2);
 	}

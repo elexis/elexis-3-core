@@ -67,6 +67,7 @@ public class LabResultTest {
 		result.setReferenceFemale("<25");
 		result.setReferenceMale("<30");
 		result.setResult("22.56");
+		result.setExtInfo("testInfo", "testInfo");
 		assertTrue(modelSerice.save(result));
 		
 		Optional<ILabResult> loadedResult = modelSerice.load(result.getId(), ILabResult.class);
@@ -77,6 +78,7 @@ public class LabResultTest {
 		assertEquals(result.getReferenceFemale(), loadedResult.get().getReferenceFemale());
 		assertEquals(result.getReferenceMale(), loadedResult.get().getReferenceMale());
 		assertEquals(result.getResult(), loadedResult.get().getResult());
+		assertEquals(result.getExtInfo("testInfo"), loadedResult.get().getExtInfo("testInfo"));
 		
 		modelSerice.remove(result);
 	}
