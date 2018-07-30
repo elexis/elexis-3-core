@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.IDocument;
-import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
 
 public class DocumentLocalEditHandler extends AbstractHandler implements IHandler {
@@ -93,7 +93,7 @@ public class DocumentLocalEditHandler extends AbstractHandler implements IHandle
 		});
 	}
 	
-	private void createEvent(Command command, IPersistentObject po){
+	private void createEvent(Command command, Identifiable po){
 		IStructuredSelection iStructuredSelection = null;
 		if (po != null) {
 			iStructuredSelection = new StructuredSelection(po);

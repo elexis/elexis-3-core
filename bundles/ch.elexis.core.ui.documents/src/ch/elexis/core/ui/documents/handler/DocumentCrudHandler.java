@@ -27,7 +27,7 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.IDocument;
-import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.ui.documents.Messages;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
 import ch.elexis.core.ui.documents.views.DocumentsMetaDataDialog;
@@ -131,7 +131,7 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 		if (SWTHelper.askYesNo(Messages.DocumentView_reallyDeleteCaption, MessageFormat
 			.format(Messages.DocumentView_reallyDeleteContents, document.getTitle()))) {
 			
-			Optional<IPersistentObject> documentPo =
+			Optional<Identifiable> documentPo =
 				DocumentStoreServiceHolder.getService().getPersistenceObject(document);
 			// we can only lock IPersistentObject based ...
 			if (documentPo.isPresent()) {
@@ -162,8 +162,7 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 				openMetaDataDialogNoLocking(shell, document, file, eventType);
 			
 			newDocument.ifPresent(doc -> {
-				// we can only lock IPersistentObject based ...
-				Optional<IPersistentObject> documentPo =
+				Optional<Identifiable> documentPo =
 					DocumentStoreServiceHolder.getService().getPersistenceObject(doc);
 				documentPo.ifPresent(po -> {
 					CoreHub.getLocalLockService().acquireLock(po);
@@ -171,9 +170,8 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 				});
 			});
 		} else {
-			Optional<IPersistentObject> documentPo =
+			Optional<Identifiable> documentPo =
 				DocumentStoreServiceHolder.getService().getPersistenceObject(document);
-			// we can only lock IPersistentObject based ...
 			if (documentPo.isPresent()) {
 				AcquireLockBlockingUi.aquireAndRun(documentPo.get(), new ILockHandler() {
 					@Override

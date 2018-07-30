@@ -74,7 +74,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.IDocument;
-import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.documents.Messages;
@@ -258,7 +258,7 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 		
 		private void loadElementsByCategory(IDocument iDocument, ICategory iCategory){
 			List<IDocument> iDocuments = DocumentStoreServiceHolder.getService()
-				.getDocumentsByCategory(iDocument.getPatientId(), iCategory);
+				.getDocumentsByCategory(iDocument.getPatient().getId(), iCategory);
 			if (!iDocuments.isEmpty()) {
 				documentsMap.put(iCategory, iDocuments);
 				viewer.refresh(true);
@@ -358,7 +358,7 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 			if (index == 5) {
 				if (obj instanceof IDocument
 					&& LocalDocumentServiceHolder.getService().isPresent()) {
-					Optional<IPersistentObject> opt = DocumentStoreServiceHolder.getService()
+					Optional<Identifiable> opt = DocumentStoreServiceHolder.getService()
 						.getPersistenceObject((IDocument) obj);
 					if (opt.isPresent()
 						&& LocalDocumentServiceHolder.getService().get().contains(opt.get())) {
