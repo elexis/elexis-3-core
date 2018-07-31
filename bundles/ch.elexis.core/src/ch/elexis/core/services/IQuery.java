@@ -32,14 +32,29 @@ public interface IQuery<T> {
 	 * be connected by AND to existing clauses.
 	 * 
 	 * @param feature
-	 * @param equals
-	 * @param patientId
+	 * @param comparator
+	 * @param value
 	 */
 	public default void and(EStructuralFeature feature, COMPARATOR comparator, Object value){
 		and(feature, comparator, value, false);
 	}
 	
 	public void and(EStructuralFeature feature, COMPARATOR comparator, Object value,
+		boolean ignoreCase);
+	
+	/**
+	 * Add a where clause based on the value of the specified entityAttributeName to the query. It
+	 * will be connected by AND to existing clauses.
+	 * 
+	 * @param entityAttributeName
+	 * @param comparator
+	 * @param value
+	 */
+	public default void and(String entityAttributeName, COMPARATOR comparator, Object value){
+		and(entityAttributeName, comparator, value, false);
+	}
+	
+	public void and(String entityAttributeName, COMPARATOR comparator, Object value,
 		boolean ignoreCase);
 	
 	/**
@@ -55,6 +70,21 @@ public interface IQuery<T> {
 	}
 	
 	public void or(EStructuralFeature feature, COMPARATOR comparator, Object value,
+		boolean ignoreCase);
+	
+	/**
+	 * Add a where clause based on the value of the specified entityAttributeName to the query. It
+	 * will be connected by OR to existing clauses.
+	 * 
+	 * @param entityAttributeName
+	 * @param comparator
+	 * @param value
+	 */
+	public default void or(String entityAttributeName, COMPARATOR comparator, Object value){
+		and(entityAttributeName, comparator, value, false);
+	}
+	
+	public void or(String entityAttributeName, COMPARATOR comparator, Object value,
 		boolean ignoreCase);
 	
 	/**
