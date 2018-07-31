@@ -18,6 +18,7 @@ import org.osgi.service.event.EventAdmin;
 
 import ch.elexis.core.common.ElexisEvent;
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.jpa.entities.EntityWithDeleted;
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.Identifiable;
@@ -33,13 +34,19 @@ public abstract class AbstractModelService implements IModelService {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> Optional<T> load(String id, Class<T> clazz){
+	public <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted){
 		EntityManager em = getEntityManager();
 		try {
 			Class<? extends EntityWithId> dbObjectClass =
 				adapterFactory.getEntityClass(clazz);
 			EntityWithId dbObject = em.find(dbObjectClass, id);
 			if (dbObject != null) {
+				// check for deleted
+				if (!includeDeleted && (dbObject instanceof EntityWithDeleted)) {
+					if (((EntityWithDeleted) dbObject).isDeleted()) {
+						return Optional.empty();
+					}
+				}
 				Optional<Identifiable> modelObject =
 					adapterFactory.getModelAdapter(dbObject, clazz, true);
 				if (modelObject.isPresent()

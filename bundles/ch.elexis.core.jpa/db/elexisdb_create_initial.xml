@@ -296,25 +296,6 @@
             <column name="DESCRIPTION" type="VARCHAR(2147483647)"/>
         </createTable>
     </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-17">
-        <createTable tableName="CH_ELEXIS_CORE_FINDINGS_OBSERVATION">
-            <column name="ID" type="VARCHAR(25)">
-                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_77"/>
-            </column>
-            <column name="LASTUPDATE" type="BIGINT"/>
-            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
-            <column name="TYPE" type="CHAR(8)"/>
-            <column defaultValue="0" name="REFERENCED" type="CHAR(1)"/>
-            <column name="PATIENTID" type="VARCHAR(80)"/>
-            <column name="ENCOUNTERID" type="VARCHAR(80)"/>
-            <column name="PERFORMERID" type="VARCHAR(80)"/>
-            <column name="ORIGINURI" type="VARCHAR(255)"/>
-            <column name="DECIMALPLACE" type="VARCHAR(8)"/>
-            <column name="FORMAT" type="VARCHAR(2147483647)"/>
-            <column name="SCRIPT" type="VARCHAR(2147483647)"/>
-            <column name="CONTENT" type="VARCHAR(2147483647)"/>
-        </createTable>
-    </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-18">
         <createTable tableName="CH_ELEXIS_EIGENDIAGNOSEN">
             <column name="ID" type="VARCHAR(25)">
@@ -1312,21 +1293,6 @@
     <changeSet author="thomas (generated)" id="1527175239251-95">
         <createIndex indexName="CHELPR_IDX2" tableName="CH_ELEXIS_PRIVATRECHNUNG">
             <column name="VALID_FROM"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-96">
-        <createIndex indexName="CH_ELEXIS_CORE_FINDINGS_OBSERVATION_IDX1" tableName="CH_ELEXIS_CORE_FINDINGS_OBSERVATION">
-            <column name="PATIENTID"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-97">
-        <createIndex indexName="CH_ELEXIS_CORE_FINDINGS_OBSERVATION_IDX2" tableName="CH_ELEXIS_CORE_FINDINGS_OBSERVATION">
-            <column name="ENCOUNTERID"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-98">
-        <createIndex indexName="CH_ELEXIS_CORE_FINDINGS_OBSERVATION_IDX3" tableName="CH_ELEXIS_CORE_FINDINGS_OBSERVATION">
-            <column name="ORIGINURI"/>
         </createIndex>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-99">

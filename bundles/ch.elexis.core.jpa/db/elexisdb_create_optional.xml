@@ -22,7 +22,7 @@
     <changeSet author="thomas (generated)" id="manual_idx1_AT_MEDEVIT_ELEXIS_LABMAP">
     	<preConditions onFail="MARK_RAN">
 			<not>
-				<indexExists tableName="LOINCMAP1" />
+				<indexExists indexName="LOINCMAP1" />
 			</not>
 		</preConditions>
         <createIndex indexName="LOINCMAP1" tableName="AT_MEDEVIT_ELEXIS_LABMAP">
@@ -30,13 +30,340 @@
         </createIndex>
     </changeSet>
     <changeSet author="thomas (generated)" id="manual_idx2_AT_MEDEVIT_ELEXIS_LABMAP">
-        	<preConditions onFail="MARK_RAN">
+        <preConditions onFail="MARK_RAN">
 			<not>
-				<indexExists tableName="LOINCMAP2" />
+				<indexExists indexName="LOINCMAP2" />
 			</not>
 		</preConditions>
         <createIndex indexName="LOINCMAP2" tableName="AT_MEDEVIT_ELEXIS_LABMAP">
             <column name="ITEMNAME"/>
         </createIndex>
     </changeSet>
+    
+    <changeSet author="thomas (generated)" id="manual_table_CH_ELEXIS_CORE_FINDINGS_OBSERVATION">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="CH_ELEXIS_CORE_FINDINGS_OBSERVATION" />
+			</not>
+		</preConditions>
+        <createTable tableName="CH_ELEXIS_CORE_FINDINGS_OBSERVATION">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_PK_CH_ELEXIS_CORE_FINDINGS_OBSERVATION"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="TYPE" type="VARCHAR(8)"/>
+            <column defaultValue="0" name="REFERENCED" type="CHAR(1)"/>
+            <column name="PATIENTID" type="VARCHAR(80)"/>
+            <column name="ENCOUNTERID" type="VARCHAR(80)"/>
+            <column name="PERFORMERID" type="VARCHAR(80)"/>
+            <column name="ORIGINURI" type="VARCHAR(255)"/>
+            <column name="DECIMALPLACE" type="VARCHAR(8)"/>
+            <column name="FORMAT" type="VARCHAR(2147483647)"/>
+            <column name="SCRIPT" type="VARCHAR(2147483647)"/>
+            <column name="CONTENT" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+        <changeSet author="thomas (generated)" id="manual_idx1_CH_ELEXIS_CORE_FINDINGS_OBSERVATION">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="CH_ELEXIS_CORE_FINDINGS_OBSERVATION_IDX1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="CH_ELEXIS_CORE_FINDINGS_OBSERVATION_IDX1" tableName="CH_ELEXIS_CORE_FINDINGS_OBSERVATION">
+            <column name="PATIENTID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="manual_idx2_CH_ELEXIS_CORE_FINDINGS_OBSERVATION">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="CH_ELEXIS_CORE_FINDINGS_OBSERVATION_IDX2" />
+			</not>
+		</preConditions>
+        <createIndex indexName="CH_ELEXIS_CORE_FINDINGS_OBSERVATION_IDX2" tableName="CH_ELEXIS_CORE_FINDINGS_OBSERVATION">
+            <column name="ENCOUNTERID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="manual_idx3_CH_ELEXIS_CORE_FINDINGS_OBSERVATION">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="CH_ELEXIS_CORE_FINDINGS_OBSERVATION_IDX3" />
+			</not>
+		</preConditions>
+        <createIndex indexName="CH_ELEXIS_CORE_FINDINGS_OBSERVATION_IDX3" tableName="CH_ELEXIS_CORE_FINDINGS_OBSERVATION">
+            <column name="ORIGINURI"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="thomas (generated)" id="manual_table_CH_ELEXIS_CORE_FINDINGS_ALLERGYINTOLERANCE">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="CH_ELEXIS_CORE_FINDINGS_ALLERGYINTOLERANCE" />
+			</not>
+		</preConditions>
+        <createTable tableName="CH_ELEXIS_CORE_FINDINGS_ALLERGYINTOLERANCE">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_PK_CH_ELEXIS_CORE_FINDINGS_ALLERGYINTOLERANCE"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+           
+            <column name="PATIENTID" type="VARCHAR(80)"/>
+            <column name="CONTENT" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+        <changeSet author="thomas (generated)" id="manual_idx1_CH_ELEXIS_CORE_FINDINGS_ALLERGYINTOLERANCE">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="CH_ELEXIS_CORE_FINDINGS_ALLERGYINTOLERANCE_IDX1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="CH_ELEXIS_CORE_FINDINGS_ALLERGYINTOLERANCE_IDX1" tableName="CH_ELEXIS_CORE_FINDINGS_ALLERGYINTOLERANCE">
+            <column name="PATIENTID"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="thomas (generated)" id="manual_table_CH_ELEXIS_CORE_FINDINGS_CLINICALIMPRESSION">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="CH_ELEXIS_CORE_FINDINGS_CLINICALIMPRESSION" />
+			</not>
+		</preConditions>
+        <createTable tableName="CH_ELEXIS_CORE_FINDINGS_CLINICALIMPRESSION">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_PK_CH_ELEXIS_CORE_FINDINGS_CLINICALIMPRESSION"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+           
+            <column name="PATIENTID" type="VARCHAR(80)"/>
+            <column name="ENCOUNTERID" type="VARCHAR(80)"/>            
+            <column name="CONTENT" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+        <changeSet author="thomas (generated)" id="manual_idx1_CH_ELEXIS_CORE_FINDINGS_CLINICALIMPRESSION">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="CH_ELEXIS_CORE_FINDINGS_CLINICALIMPRESSION_IDX1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="CH_ELEXIS_CORE_FINDINGS_CLINICALIMPRESSION_IDX1" tableName="CH_ELEXIS_CORE_FINDINGS_CLINICALIMPRESSION">
+            <column name="PATIENTID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="manual_idx2_CH_ELEXIS_CORE_FINDINGS_CLINICALIMPRESSION">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="CH_ELEXIS_CORE_FINDINGS_CLINICALIMPRESSION_IDX2" />
+			</not>
+		</preConditions>
+        <createIndex indexName="CH_ELEXIS_CORE_FINDINGS_CLINICALIMPRESSION_IDX2" tableName="CH_ELEXIS_CORE_FINDINGS_CLINICALIMPRESSION">
+            <column name="ENCOUNTERID"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="thomas (generated)" id="manual_table_CH_ELEXIS_CORE_FINDINGS_CONDITION">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="CH_ELEXIS_CORE_FINDINGS_CONDITION" />
+			</not>
+		</preConditions>
+        <createTable tableName="CH_ELEXIS_CORE_FINDINGS_CONDITION">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_PK_CH_ELEXIS_CORE_FINDINGS_CONDITION"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+           
+            <column name="PATIENTID" type="VARCHAR(80)"/>
+            <column name="CONTENT" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+        <changeSet author="thomas (generated)" id="manual_idx1_CH_ELEXIS_CORE_FINDINGS_CONDITION">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="CH_ELEXIS_CORE_FINDINGS_CONDITION_IDX1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="CH_ELEXIS_CORE_FINDINGS_CONDITION_IDX1" tableName="CH_ELEXIS_CORE_FINDINGS_CONDITION">
+            <column name="PATIENTID"/>
+        </createIndex>
+    </changeSet>
+    
+    <changeSet author="thomas (generated)" id="manual_table_CH_ELEXIS_CORE_FINDINGS_ENCOUNTER">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="CH_ELEXIS_CORE_FINDINGS_ENCOUNTER" />
+			</not>
+		</preConditions>
+        <createTable tableName="CH_ELEXIS_CORE_FINDINGS_ENCOUNTER">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_PK_CH_ELEXIS_CORE_FINDINGS_ENCOUNTER"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+           
+            <column name="PATIENTID" type="VARCHAR(80)"/>
+            <column name="MANDATORID" type="VARCHAR(80)"/>
+            <column name="CONSULTATIONID" type="VARCHAR(80)"/>
+            <column name="CONTENT" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="manual_idx1_CH_ELEXIS_CORE_FINDINGS_ENCOUNTER">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="CH_ELEXIS_CORE_FINDINGS_ENCOUNTER_IDX1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="CH_ELEXIS_CORE_FINDINGS_ENCOUNTER_IDX1" tableName="CH_ELEXIS_CORE_FINDINGS_ENCOUNTER">
+            <column name="PATIENTID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="manual_idx2_CH_ELEXIS_CORE_FINDINGS_ENCOUNTER">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="CH_ELEXIS_CORE_FINDINGS_ENCOUNTER_IDX2" />
+			</not>
+		</preConditions>
+        <createIndex indexName="CH_ELEXIS_CORE_FINDINGS_ENCOUNTER_IDX2" tableName="CH_ELEXIS_CORE_FINDINGS_ENCOUNTER">
+            <column name="CONSULTATIONID"/>
+        </createIndex>
+    </changeSet>
+    
+    <changeSet author="thomas (generated)" id="manual_table_CH_ELEXIS_CORE_FINDINGS_FAMILYMEMBERHISTORY">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="CH_ELEXIS_CORE_FINDINGS_FAMILYMEMBERHISTORY" />
+			</not>
+		</preConditions>
+        <createTable tableName="CH_ELEXIS_CORE_FINDINGS_FAMILYMEMBERHISTORY">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_PK_CH_ELEXIS_CORE_FINDINGS_FAMILYMEMBERHISTORY"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+           
+            <column name="PATIENTID" type="VARCHAR(80)"/>
+            <column name="CONTENT" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+        <changeSet author="thomas (generated)" id="manual_idx1_CH_ELEXIS_CORE_FINDINGS_FAMILYMEMBERHISTORY">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="CH_ELEXIS_CORE_FINDINGS_FAMILYMEMBERHISTORY_IDX1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="CH_ELEXIS_CORE_FINDINGS_FAMILYMEMBERHISTORY_IDX1" tableName="CH_ELEXIS_CORE_FINDINGS_FAMILYMEMBERHISTORY">
+            <column name="PATIENTID"/>
+        </createIndex>
+    </changeSet>
+    
+    <changeSet author="thomas (generated)" id="manual_table_CH_ELEXIS_CORE_FINDINGS_PROCEDUREREQUEST">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="CH_ELEXIS_CORE_FINDINGS_PROCEDUREREQUEST" />
+			</not>
+		</preConditions>
+        <createTable tableName="CH_ELEXIS_CORE_FINDINGS_PROCEDUREREQUEST">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_PK_CH_ELEXIS_CORE_FINDINGS_PROCEDUREREQUEST"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+           
+            <column name="PATIENTID" type="VARCHAR(80)"/>
+            <column name="ENCOUNTERID" type="VARCHAR(80)"/>            
+            <column name="CONTENT" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+        <changeSet author="thomas (generated)" id="manual_idx1_CH_ELEXIS_CORE_FINDINGS_PROCEDUREREQUEST">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="CH_ELEXIS_CORE_FINDINGS_PROCEDUREREQUEST_IDX1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="CH_ELEXIS_CORE_FINDINGS_PROCEDUREREQUEST_IDX1" tableName="CH_ELEXIS_CORE_FINDINGS_PROCEDUREREQUEST">
+            <column name="PATIENTID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="manual_idx2_CH_ELEXIS_CORE_FINDINGS_PROCEDUREREQUEST">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="CH_ELEXIS_CORE_FINDINGS_PROCEDUREREQUEST_IDX2" />
+			</not>
+		</preConditions>
+        <createIndex indexName="CH_ELEXIS_CORE_FINDINGS_PROCEDUREREQUEST_IDX2" tableName="CH_ELEXIS_CORE_FINDINGS_PROCEDUREREQUEST">
+            <column name="ENCOUNTERID"/>
+        </createIndex>
+    </changeSet>
+    
+    <changeSet author="thomas (generated)" id="manual_table_CH_ELEXIS_CORE_FINDINGS_OBSERVATIONLINK">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="CH_ELEXIS_CORE_FINDINGS_OBSERVATIONLINK" />
+			</not>
+		</preConditions>
+        <createTable tableName="CH_ELEXIS_CORE_FINDINGS_OBSERVATIONLINK">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_PK_CH_ELEXIS_CORE_FINDINGS_OBSERVATIONLINK"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+           
+            <column name="SOURCEID" type="VARCHAR(80)"/>
+            <column name="TARGETID" type="VARCHAR(80)"/>
+            <column name="TYPE" type="VARCHAR(8)"/>          
+            <column name="DESCRIPTION" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="manual_idx1_CH_ELEXIS_CORE_FINDINGS_OBSERVATIONLINK">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="CH_ELEXIS_CORE_FINDINGS_OBSERVATIONLINK_IDX1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="CH_ELEXIS_CORE_FINDINGS_OBSERVATIONLINK_IDX1" tableName="CH_ELEXIS_CORE_FINDINGS_OBSERVATIONLINK">
+            <column name="SOURCEID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="manual_idx2_CH_ELEXIS_CORE_FINDINGS_OBSERVATIONLINK">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="CH_ELEXIS_CORE_FINDINGS_OBSERVATIONLINK_IDX2" />
+			</not>
+		</preConditions>
+        <createIndex indexName="CH_ELEXIS_CORE_FINDINGS_OBSERVATIONLINK_IDX2" tableName="CH_ELEXIS_CORE_FINDINGS_OBSERVATIONLINK">
+            <column name="TARGETID"/>
+        </createIndex>
+    </changeSet>
+    
+    <changeSet author="thomas (generated)" id="manual_table_CH_ELEXIS_CORE_FINDINGS_LOCALCODING">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="CH_ELEXIS_CORE_FINDINGS_LOCALCODING" />
+			</not>
+		</preConditions>
+        <createTable tableName="CH_ELEXIS_CORE_FINDINGS_LOCALCODING">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_PK_CH_ELEXIS_CORE_FINDINGS_LOCALCODING"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+           
+            <column name="CODE" type="VARCHAR(25)"/>
+            <column name="DISPLAY" type="VARCHAR(2147483647)"/>
+            <column name="MAPPED" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+        <changeSet author="thomas (generated)" id="manual_idx1_CH_ELEXIS_CORE_FINDINGS_LOCALCODING">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="CH_ELEXIS_CORE_FINDINGS_LOCALCODING_IDX1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="CH_ELEXIS_CORE_FINDINGS_LOCALCODING_IDX1" tableName="CH_ELEXIS_CORE_FINDINGS_LOCALCODING">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    
 </databaseChangeLog>

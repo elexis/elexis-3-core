@@ -23,6 +23,7 @@
 		<class>ch.elexis.core.jpa.entities.converter.VersionedResourceConverter</class>
 		<class>ch.elexis.core.jpa.entities.converter.auto.LocalDateConverter</class>
 		<class>ch.elexis.core.jpa.entities.converter.auto.LocalDateTimeConverter</class>
+
 		<class>ch.elexis.core.jpa.entities.ArtikelstammItem</class>
 		<class>ch.elexis.core.jpa.entities.Artikel</class>
 		<class>ch.elexis.core.jpa.entities.Behandlung</class>
@@ -64,6 +65,17 @@
 		<class>ch.elexis.core.jpa.entities.VKPreis</class>
 		<class>ch.elexis.core.jpa.entities.Xid</class>
 		<class>ch.elexis.core.jpa.entities.ZusatzAdresse</class>
+<!-- ch.elexis.core.findings -->
+		<class>ch.elexis.core.jpa.entities.AllergyIntolerance</class>
+		<class>ch.elexis.core.jpa.entities.ClinicalImpression</class>
+		<class>ch.elexis.core.jpa.entities.Condition</class>
+		<class>ch.elexis.core.jpa.entities.Encounter</class>
+		<class>ch.elexis.core.jpa.entities.FamilyMemberHistory</class>
+		<class>ch.elexis.core.jpa.entities.LocalCoding</class>
+		<class>ch.elexis.core.jpa.entities.Observation</class>
+		<class>ch.elexis.core.jpa.entities.ObservationLink</class>
+		<class>ch.elexis.core.jpa.entities.ProcedureRequest</class>
+
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<shared-cache-mode>ALL</shared-cache-mode>
 		<properties>

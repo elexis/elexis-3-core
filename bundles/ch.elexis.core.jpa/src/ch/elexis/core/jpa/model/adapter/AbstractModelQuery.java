@@ -295,6 +295,26 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	}
 	
 	@Override
+	public void and(String entityAttributeName, COMPARATOR comparator, Object value,
+		boolean ignoreCase){
+		@SuppressWarnings("rawtypes")
+		Optional<SingularAttribute> attribute =
+			resolveAttribute(entityClazz.getName(), entityAttributeName);
+		value = resolveValue(value);
+		if (attribute.isPresent()) {
+			Optional<Predicate> predicate =
+				getPredicate(attribute.get(), comparator, value, ignoreCase);
+			predicate.ifPresent(p -> {
+				getCurrentPredicateGroup().and(p);
+			});
+		} else {
+			// feature could not be resolved, mapping?
+			throw new IllegalStateException("Could not resolve attribute [" + entityAttributeName
+				+ "] of entity [" + entityClazz + "]");
+		}
+	}
+	
+	@Override
 	public void or(EStructuralFeature feature, COMPARATOR comparator, Object value,
 		boolean ignoreCase){
 		String entityAttributeName = getAttributeName(feature);
@@ -312,6 +332,26 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 			// feature could not be resolved, mapping?
 			throw new IllegalStateException(
 				"Could not resolve attribute [" + feature + "] of entity [" + entityClazz + "]");
+		}
+	}
+	
+	@Override
+	public void or(String entityAttributeName, COMPARATOR comparator, Object value,
+		boolean ignoreCase){
+		@SuppressWarnings("rawtypes")
+		Optional<SingularAttribute> attribute =
+			resolveAttribute(entityClazz.getName(), entityAttributeName);
+		value = resolveValue(value);
+		if (attribute.isPresent()) {
+			Optional<Predicate> predicate =
+				getPredicate(attribute.get(), comparator, value, ignoreCase);
+			predicate.ifPresent(p -> {
+				getCurrentPredicateGroup().or(p);
+			});
+		} else {
+			// feature could not be resolved, mapping?
+			throw new IllegalStateException("Could not resolve attribute [" + entityAttributeName
+				+ "] of entity [" + entityClazz + "]");
 		}
 	}
 	
