@@ -24,4 +24,5 @@ Import-Package: ch.elexis.core.exceptions,
  org.slf4j
 Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/ch.elexis.core.findings.util.FindingsServiceHolder.xml,
- OSGI-INF/ch.elexis.core.findings.util.ScriptingServiceHolder.xml
+ OSGI-INF/ch.elexis.core.findings.util.ScriptingServiceHolder.xml,
+ OSGI-INF/ch.elexis.core.findings.util.ModelUtil.xml

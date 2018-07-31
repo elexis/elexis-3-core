@@ -8,4 +8,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: ch.elexis.core.findings,
  ch.elexis.core.findings.codes,
  ch.elexis.core.findings.migration
-Require-Bundle: ch.elexis.core.l10n;bundle-version="3.5.0"
+Require-Bundle: ch.elexis.core;bundle-version="3.7.0";visibility:=reexport,
+ ch.elexis.core.l10n;bundle-version="3.5.0"

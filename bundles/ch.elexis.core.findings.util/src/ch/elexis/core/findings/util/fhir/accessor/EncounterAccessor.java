@@ -17,7 +17,6 @@ import org.hl7.fhir.dstu3.model.Reference;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
-import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.IdentifierSystem;
 import ch.elexis.core.findings.util.ModelUtil;
 
@@ -65,7 +64,7 @@ public class EncounterAccessor extends AbstractFindingsAccessor {
 		fhirEncounter.setPeriod(period);
 	}
 	
-	public List<ICondition> getIndication(DomainResource resource, IFindingsService service){
+	public List<ICondition> getIndication(DomainResource resource){
 		List<ICondition> indication = new ArrayList<>();
 		org.hl7.fhir.dstu3.model.Encounter fhirEncounter =
 			(org.hl7.fhir.dstu3.model.Encounter) resource;
@@ -74,7 +73,7 @@ public class EncounterAccessor extends AbstractFindingsAccessor {
 			Reference reference = component.getCondition();
 			if (reference.getReference() != null) {
 				String idString = reference.getReferenceElement().getIdPart();
-				service.findById(idString, ICondition.class)
+				ModelUtil.loadFinding(idString, ICondition.class)
 					.ifPresent(condition -> indication.add((ICondition) condition));
 			}
 		}

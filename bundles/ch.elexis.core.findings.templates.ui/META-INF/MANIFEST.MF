@@ -17,7 +17,6 @@ Bundle-Vendor: medevit.at
 Bundle-ActivationPolicy: lazy
 Import-Package: ch.elexis.core.findings,
  ch.elexis.core.findings.codes,
- ch.elexis.core.findings.fhir.po.codes,
  ch.elexis.core.findings.ui.composites,
  ch.elexis.core.findings.ui.util,
  ch.elexis.core.findings.util.commands,

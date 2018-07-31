@@ -1,31 +1,82 @@
 package ch.elexis.core.findings.util;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
+import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Narrative;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.DataFormatException;
 import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.rest.client.IGenericClient;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
+import ch.elexis.core.findings.IAllergyIntolerance;
+import ch.elexis.core.findings.IClinicalImpression;
 import ch.elexis.core.findings.ICoding;
+import ch.elexis.core.findings.ICondition;
+import ch.elexis.core.findings.IEncounter;
+import ch.elexis.core.findings.IFamilyMemberHistory;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IObservationLink;
 import ch.elexis.core.findings.IObservationLink.ObservationLinkType;
+import ch.elexis.core.findings.IProcedureRequest;
 import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.util.model.CodingWrapper;
+import ch.elexis.core.model.Deleteable;
+import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.INamedQuery;
 
+@Component
 public class ModelUtil {
+	
+	private static IModelService findingsModelService;
+	
+	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.findings.model)")
+	public void setFindingsModelService(IModelService modelService){
+		ModelUtil.findingsModelService = modelService;
+	}
+	
+	public static <T> Optional<T> loadFinding(String id, Class<T> clazz){
+		if (id != null) {
+			return findingsModelService.load(id, clazz);
+		}
+		return Optional.empty();
+	}
+	
+	public static <T> INamedQuery<T> getFindingsNamedQuery(Class<T> clazz, String...properties) {
+		return findingsModelService.getNamedQuery(clazz, properties);
+	}
+	
+	public static <T> T createFinding(Class<T> clazz){
+		return findingsModelService.create(clazz);
+	}
+	
+	public static boolean saveFinding(Identifiable identifiable){
+		return findingsModelService.save(identifiable);
+	}
+	
+	public static void deleteFinding(Deleteable deleteable){
+		findingsModelService.delete(deleteable);
+	}
+	
+	public static Map<String, Object> getParamtersMap(Object... parameters){
+		return findingsModelService.getParameterMap(parameters);
+	}
 	
 	private static FhirContext context = FhirContext.forDstu3();
 	
@@ -219,5 +270,61 @@ public class ModelUtil {
 			}
 		}
 		return rootObservation;
+	}
+	
+	/**
+	 * Initialize the FHIR content of the {@link IFinding}.
+	 * 
+	 * @param created
+	 * @param type
+	 */
+	public static <T extends IFinding> void initFhir(T created, Class<T> type){
+		if (type.equals(IEncounter.class)) {
+			org.hl7.fhir.dstu3.model.Encounter fhirEncounter =
+				new org.hl7.fhir.dstu3.model.Encounter();
+			fhirEncounter
+				.setId(new IdType(fhirEncounter.getClass().getSimpleName(), created.getId()));
+			ModelUtil.saveResource(fhirEncounter, created);
+		} else if (type.equals(IObservation.class)) {
+			org.hl7.fhir.dstu3.model.Observation fhirObservation =
+				new org.hl7.fhir.dstu3.model.Observation();
+			fhirObservation
+				.setId(new IdType(fhirObservation.getClass().getSimpleName(), created.getId()));
+			ModelUtil.saveResource(fhirObservation, created);
+		} else if (type.equals(ICondition.class)) {
+			org.hl7.fhir.dstu3.model.Condition fhirCondition =
+				new org.hl7.fhir.dstu3.model.Condition();
+			fhirCondition
+				.setId(new IdType(fhirCondition.getClass().getSimpleName(), created.getId()));
+			fhirCondition.setAssertedDate(new Date());
+			ModelUtil.saveResource(fhirCondition, created);
+		} else if (type.equals(IProcedureRequest.class)) {
+			org.hl7.fhir.dstu3.model.ProcedureRequest fhirProcedureRequest =
+				new org.hl7.fhir.dstu3.model.ProcedureRequest();
+			fhirProcedureRequest.setId(
+				new IdType(fhirProcedureRequest.getClass().getSimpleName(), created.getId()));
+			ModelUtil.saveResource(fhirProcedureRequest, created);
+		} else if (type.equals(IFamilyMemberHistory.class)) {
+			org.hl7.fhir.dstu3.model.FamilyMemberHistory fhirFamilyMemberHistory =
+				new org.hl7.fhir.dstu3.model.FamilyMemberHistory();
+			fhirFamilyMemberHistory.setId(
+				new IdType(fhirFamilyMemberHistory.getClass().getSimpleName(), created.getId()));
+			ModelUtil.saveResource(fhirFamilyMemberHistory, created);
+		} else if (type.equals(IAllergyIntolerance.class)) {
+			org.hl7.fhir.dstu3.model.AllergyIntolerance fhirAllergyIntolerance =
+				new org.hl7.fhir.dstu3.model.AllergyIntolerance();
+			fhirAllergyIntolerance.setId(
+				new IdType(fhirAllergyIntolerance.getClass().getSimpleName(), created.getId()));
+			ModelUtil.saveResource(fhirAllergyIntolerance, created);
+		} else if (type.equals(IClinicalImpression.class)) {
+			org.hl7.fhir.dstu3.model.ClinicalImpression fhirClinicalImpression =
+				new org.hl7.fhir.dstu3.model.ClinicalImpression();
+			fhirClinicalImpression.setId(
+				new IdType(fhirClinicalImpression.getClass().getSimpleName(), created.getId()));
+			ModelUtil.saveResource(fhirClinicalImpression, created);
+		} else {
+			LoggerFactory.getLogger(ModelUtil.class)
+				.error("Could not initialize unknown type [" + type + "]");
+		}
 	}
 }

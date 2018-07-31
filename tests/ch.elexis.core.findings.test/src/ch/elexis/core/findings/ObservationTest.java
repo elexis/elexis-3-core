@@ -30,8 +30,10 @@ public class ObservationTest {
 	public void testObservationCreation() {
 		IObservation iObservation = FindingsServiceComponent.getService().create(IObservation.class);
 		assertNotNull(iObservation);
+		FindingsServiceComponent.getService().saveFinding(iObservation);
 		IObservation iSubObservation = FindingsServiceComponent.getService().create(IObservation.class);
 		assertNotNull(iSubObservation);
+		FindingsServiceComponent.getService().saveFinding(iSubObservation);
 		// add sub as target
 		iObservation.addTargetObservation(iSubObservation, ObservationLinkType.REF);
 		List<IObservation> targets = iObservation.getTargetObseravtions(ObservationLinkType.REF);

@@ -24,11 +24,7 @@ Import-Package: ch.elexis.core.findings.templates.model,
  ch.rgw.io,
  ch.rgw.tools,
  org.apache.commons.io
-Service-Component: OSGI-INF/ch.elexis.core.findings.fhir.po.service.FindingsService.xml,
- OSGI-INF/ch.elexis.core.findings.fhir.po.codes.LocalCodingContribution.xml,
- OSGI-INF/ch.elexis.core.findings.fhir.po.codes.CodingService.xml,
- OSGI-INF/ch.elexis.core.findings.fhir.po.migrator.MigratorService.xml
 Bundle-ClassPath: lib/httpcore-4.4.4.jar,
  lib/httpclient-4.5.1.jar,
  .
-Export-Package: ch.elexis.core.findings.fhir.po.codes
+Service-Component: OSGI-INF/ch.elexis.core.findings.fhir.po.migrator.MigratorService.xml

@@ -10,8 +10,23 @@
  ******************************************************************************/
 package ch.elexis.core.findings;
 
-public interface IObservationLink {
+import java.util.Optional;
+
+import ch.elexis.core.model.Deleteable;
+import ch.elexis.core.model.Identifiable;
+
+public interface IObservationLink extends Identifiable, Deleteable {
 	public enum ObservationLinkType {
 			REF
 	}
+	
+	public Optional<IObservation> getSource();
+	
+	public Optional<IObservation> getTarget();
+	
+	public void setTarget(IObservation observation);
+	
+	public void setSource(IObservation observation);
+	
+	public void setType(ObservationLinkType type);
 }

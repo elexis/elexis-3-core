@@ -18,7 +18,10 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
-public interface IFinding {
+import ch.elexis.core.model.Deleteable;
+import ch.elexis.core.model.Identifiable;
+
+public interface IFinding extends Identifiable, Deleteable {
 	
 	public enum RawContentFormat {
 		FHIR_JSON, FHIR_XML

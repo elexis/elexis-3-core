@@ -5,6 +5,7 @@ import java.util.List;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ILocalCoding;
 import ch.elexis.core.findings.IObservation.ObservationCode;
+import ch.elexis.core.model.IXid;
 
 public class TransientLocalCoding implements ILocalCoding {
 	
@@ -48,6 +49,46 @@ public class TransientLocalCoding implements ILocalCoding {
 	@Override
 	public void setMappedCodes(List<ICoding> mappedCodes) {
 		this.mappedCodes = mappedCodes;
+	}
+	
+	@Override
+	public String getId(){
+		return null;
+	}
+	
+	@Override
+	public String getLabel(){
+		return null;
+	}
+	
+	@Override
+	public boolean addXid(String domain, String id, boolean updateIfExists){
+		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public IXid getXid(String domain){
+		return null;
+	}
+	
+	@Override
+	public boolean isDeleted(){
+		return false;
+	}
+	
+	@Override
+	public void setDeleted(boolean value){
+		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public void setCode(String code){
+		this.code = code;
+	}
+	
+	@Override
+	public void setDisplay(String display){
+		this.display = display;
 	}
 	
 }

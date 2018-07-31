@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.2.0" name="ch.elexis.core.findings.fhir.po.migrator.MigratorService">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="ch.elexis.core.findings.fhir.po.migrator.MigratorService">
    <service>
       <provide interface="ch.elexis.core.findings.migration.IMigratorService"/>
    </service>
    <reference bind="setMigratorContribution" cardinality="0..n" interface="ch.elexis.core.findings.migration.IMigratorContribution" name="MigratorContribution" policy="dynamic" policy-option="greedy" unbind="unsetMigratorContribution"/>
+   <reference cardinality="1..1" field="findingsModelService" interface="ch.elexis.core.services.IModelService" name="findingsModelService" target="(service.model.name=ch.elexis.core.findings.model)"/>
+   <reference cardinality="1..1" field="findingsService" interface="ch.elexis.core.findings.IFindingsService" name="findingsService"/>
    <implementation class="ch.elexis.core.findings.fhir.po.migrator.MigratorService"/>
 </scr:component>

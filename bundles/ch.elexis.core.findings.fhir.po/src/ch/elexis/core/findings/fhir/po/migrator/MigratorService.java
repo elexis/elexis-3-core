@@ -20,21 +20,22 @@ import ch.elexis.core.findings.ICondition.ConditionCategory;
 import ch.elexis.core.findings.IEncounter;
 import ch.elexis.core.findings.IFamilyMemberHistory;
 import ch.elexis.core.findings.IFinding;
+import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IObservation.ObservationCategory;
 import ch.elexis.core.findings.IObservation.ObservationCode;
 import ch.elexis.core.findings.codes.CodingSystem;
-import ch.elexis.core.findings.fhir.po.model.Encounter;
-import ch.elexis.core.findings.fhir.po.service.FindingsService;
 import ch.elexis.core.findings.migration.IMigratorContribution;
 import ch.elexis.core.findings.migration.IMigratorService;
 import ch.elexis.core.findings.util.ModelUtil;
 import ch.elexis.core.findings.util.model.TransientCoding;
+import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
-import ch.elexis.data.Query;
 import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.VersionedResource;
 
@@ -56,11 +57,11 @@ public class MigratorService implements IMigratorService {
 		}
 	}
 	
-	private FindingsService findingsService;
+	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.findings.model)")
+	private IModelService findingsModelService;
 	
-	public MigratorService(){
-		findingsService = new FindingsService();
-	}
+	@Reference
+	private IFindingsService findingsService;
 	
 	@Override
 	public void migratePatientsFindings(String patientId, Class<? extends IFinding> filter,
@@ -300,10 +301,10 @@ public class MigratorService implements IMigratorService {
 	private void migrateEncounter(Konsultation cons){
 		String patientId = cons.getFall().getPatient().getId();
 		
-		Query<Encounter> query = new Query<>(Encounter.class);
-		query.add(Encounter.FLD_PATIENTID, Query.EQUALS, patientId);
-		query.add(Encounter.FLD_CONSULTATIONID, Query.EQUALS, cons.getId());
-		List<Encounter> encounters = query.execute();
+		IQuery<IEncounter> query = findingsModelService.getQuery(IEncounter.class);
+		query.and("patientid", COMPARATOR.EQUALS, patientId);
+		query.and("consultationid", COMPARATOR.EQUALS, cons.getId());
+		List<IEncounter> encounters = query.execute();
 		
 		if (encounters.isEmpty()) {
 			createEncounter(cons);
