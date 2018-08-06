@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.StringJoiner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -13,6 +15,8 @@ import java.util.stream.Stream;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import org.eclipse.persistence.config.HintValues;
+import org.eclipse.persistence.config.QueryHints;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
 
@@ -28,34 +32,35 @@ public abstract class AbstractModelService implements IModelService {
 	
 	protected AbstractModelAdapterFactory adapterFactory;
 	
-	protected abstract EntityManager getEntityManager();
+	protected abstract EntityManager getEntityManager(boolean managed);
+	
+	protected abstract void closeEntityManager(EntityManager entityManager);
 	
 	protected abstract EventAdmin getEventAdmin();
+	
+	protected ExecutorService executor = Executors.newCachedThreadPool();
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted){
-		EntityManager em = getEntityManager();
-		try {
-			Class<? extends EntityWithId> dbObjectClass =
-				adapterFactory.getEntityClass(clazz);
-			EntityWithId dbObject = em.find(dbObjectClass, id);
-			if (dbObject != null) {
-				// check for deleted
-				if (!includeDeleted && (dbObject instanceof EntityWithDeleted)) {
-					if (((EntityWithDeleted) dbObject).isDeleted()) {
-						return Optional.empty();
-					}
-				}
-				Optional<Identifiable> modelObject =
-					adapterFactory.getModelAdapter(dbObject, clazz, true);
-				if (modelObject.isPresent()
-					&& clazz.isAssignableFrom(modelObject.get().getClass())) {
-					return (Optional<T>) modelObject;
+		EntityManager em = getEntityManager(true);
+		Class<? extends EntityWithId> dbObjectClass = adapterFactory.getEntityClass(clazz);
+		HashMap<String, Object> queryHints = new HashMap<>();
+		queryHints.put(QueryHints.REFRESH, HintValues.TRUE);
+		EntityWithId dbObject = em.find(dbObjectClass, id, queryHints);
+		//		EntityWithId dbObject = em.find(dbObjectClass, id);
+		if (dbObject != null) {
+			// check for deleted
+			if (!includeDeleted && (dbObject instanceof EntityWithDeleted)) {
+				if (((EntityWithDeleted) dbObject).isDeleted()) {
+					return Optional.empty();
 				}
 			}
-		} finally {
-			em.close();
+			Optional<Identifiable> modelObject =
+				adapterFactory.getModelAdapter(dbObject, clazz, true);
+			if (modelObject.isPresent() && clazz.isAssignableFrom(modelObject.get().getClass())) {
+				return (Optional<T>) modelObject;
+			}
 		}
 		return Optional.empty();
 	}
@@ -64,18 +69,19 @@ public abstract class AbstractModelService implements IModelService {
 	public boolean save(Identifiable identifiable){
 		Optional<EntityWithId> dbObject = getDbObject(identifiable);
 		if (dbObject.isPresent()) {
-			EntityManager em = getEntityManager();
+			boolean newlyCreatedObject = (dbObject.get().getLastupdate() == null);
+			EntityManager em = getEntityManager(false);
 			try {
 				em.getTransaction().begin();
-				boolean newlyCreatedObject = (dbObject.get().getLastupdate() == null);
-				setDbObject(identifiable, em.merge(dbObject.get()));
+				EntityWithId merged = em.merge(dbObject.get());
+				setDbObject(identifiable, merged);
 				em.getTransaction().commit();
 				if (newlyCreatedObject) {
 					postElexisEvent(getCreateEvent(identifiable));
 				}
 				return true;
 			} finally {
-				em.close();
+				closeEntityManager(em);
 			}
 		}
 		return false;
@@ -86,7 +92,7 @@ public abstract class AbstractModelService implements IModelService {
 		Map<Identifiable, EntityWithId> dbObjects = identifiables.parallelStream()
 			.collect(Collectors.toMap(Function.identity(), i -> getDbObject(i).orElse(null)));
 		if (!dbObjects.isEmpty()) {
-			EntityManager em = getEntityManager();
+			EntityManager em = getEntityManager(false);
 			try {
 				List<ElexisEvent> createdEvents = new ArrayList<>();
 				em.getTransaction().begin();
@@ -95,6 +101,7 @@ public abstract class AbstractModelService implements IModelService {
 					if (dbObject != null) {
 						boolean newlyCreatedObject = (dbObject.getLastupdate() == null);
 						em.merge(dbObject);
+						setDbObject(identifiable, dbObject);
 						if (newlyCreatedObject) {
 							createdEvents.add(getCreateEvent(identifiable));
 						}
@@ -104,7 +111,7 @@ public abstract class AbstractModelService implements IModelService {
 				createdEvents.stream().forEach(e -> postElexisEvent(e));
 				return true;
 			} finally {
-				em.close();
+				closeEntityManager(em);
 			}
 		}
 		return false;
@@ -114,7 +121,7 @@ public abstract class AbstractModelService implements IModelService {
 	public boolean remove(Identifiable identifiable){
 		Optional<EntityWithId> dbObject = getDbObject(identifiable);
 		if (dbObject.isPresent()) {
-			EntityManager em = getEntityManager();
+			EntityManager em = getEntityManager(false);
 			try {
 				em.getTransaction().begin();
 				EntityWithId object = em.merge(dbObject.get());
@@ -122,7 +129,7 @@ public abstract class AbstractModelService implements IModelService {
 				em.getTransaction().commit();
 				return true;
 			} finally {
-				em.close();
+				closeEntityManager(em);
 			}
 		}
 		return false;
@@ -192,7 +199,7 @@ public abstract class AbstractModelService implements IModelService {
 	
 	@Override
 	public Stream<?> executeNativeQuery(String sql){
-		Query query = getEntityManager().createNativeQuery(sql);
+		Query query = getEntityManager(true).createNativeQuery(sql);
 		return query.getResultStream();
 	}
 	

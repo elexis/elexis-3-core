@@ -1,6 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-import java.math.BigInteger;
 import java.util.Collection;
 
 import javax.persistence.Basic;
@@ -27,7 +26,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 public class Role implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	// Transparently updated by the EntityListener
-	protected BigInteger lastupdate;
+	protected Long lastupdate;
 	
 	@Id
 	@GeneratedValue(generator = "system-uuid")
@@ -102,12 +101,12 @@ public class Role implements EntityWithId, EntityWithDeleted, EntityWithExtInfo 
 	}
 	
 	@Override
-	public BigInteger getLastupdate(){
+	public Long getLastupdate(){
 		return lastupdate;
 	}
 	
 	@Override
-	public void setLastupdate(BigInteger lastupdate){
+	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
 	}
 }

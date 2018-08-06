@@ -2913,6 +2913,52 @@ public interface ModelPackage extends EPackage {
 	int IROLE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IBlob <em>IBlob</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IBlob
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBlob()
+	 * @generated
+	 */
+	int IBLOB = 29;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBLOB__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Content</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBLOB__CONTENT = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBLOB__DATE = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>IBlob</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBLOB_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IContact <em>IContact</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4435,6 +4481,38 @@ public interface ModelPackage extends EPackage {
 	EClass getIRole();
 
 	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IBlob <em>IBlob</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IBlob</em>'.
+	 * @see ch.elexis.core.model.IBlob
+	 * @generated
+	 */
+	EClass getIBlob();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IBlob#getContent <em>Content</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Content</em>'.
+	 * @see ch.elexis.core.model.IBlob#getContent()
+	 * @see #getIBlob()
+	 * @generated
+	 */
+	EAttribute getIBlob_Content();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IBlob#getDate <em>Date</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Date</em>'.
+	 * @see ch.elexis.core.model.IBlob#getDate()
+	 * @see #getIBlob()
+	 * @generated
+	 */
+	EAttribute getIBlob_Date();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5641,6 +5719,32 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EClass IROLE = eINSTANCE.getIRole();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IBlob <em>IBlob</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IBlob
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBlob()
+		 * @generated
+		 */
+		EClass IBLOB = eINSTANCE.getIBlob();
+
+		/**
+		 * The meta object literal for the '<em><b>Content</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IBLOB__CONTENT = eINSTANCE.getIBlob_Content();
+
+		/**
+		 * The meta object literal for the '<em><b>Date</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IBLOB__DATE = eINSTANCE.getIBlob_Date();
 
 	}
 

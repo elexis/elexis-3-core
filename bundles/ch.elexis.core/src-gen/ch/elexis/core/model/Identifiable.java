@@ -10,7 +10,6 @@
  */
 package ch.elexis.core.model;
 
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Identifiable</b></em>'.
@@ -59,5 +58,4 @@ public interface Identifiable {
 	 * @generated
 	 */
 	IXid getXid(String domain);
-
 } // Identifiable

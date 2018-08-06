@@ -1,6 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-import java.math.BigInteger;
 import java.time.LocalDate;
 
 import javax.persistence.Column;
@@ -24,7 +23,7 @@ public class PhysioLeistung implements EntityWithId, EntityWithDeleted {
 	public static final String CODESYSTEM_NAME = "Physiotherapie";
 
 	// Transparently updated by the EntityListener
-	protected BigInteger lastupdate;
+	protected Long lastupdate;
 	
 	@Id
 	@GeneratedValue(generator = "system-uuid")
@@ -138,12 +137,12 @@ public class PhysioLeistung implements EntityWithId, EntityWithDeleted {
 	}
 	
 	@Override
-	public BigInteger getLastupdate(){
+	public Long getLastupdate(){
 		return lastupdate;
 	}
 	
 	@Override
-	public void setLastupdate(BigInteger lastupdate){
+	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
 	}
 }

@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -90,7 +89,7 @@ public class DocumentBrief extends AbstractIdDeleteModelAdapter<Brief>
 	
 	@Override
 	public void setLastchanged(Date value){
-		getEntity().setLastupdate(BigInteger.valueOf(value.getTime()));
+		getEntity().setLastupdate(value.getTime());
 	}
 	
 	@Override
@@ -228,7 +227,6 @@ public class DocumentBrief extends AbstractIdDeleteModelAdapter<Brief>
 		if (getEntity().getContent() != null) {
 			try {
 				getEntity().getContent().setInhalt(IOUtils.toByteArray(content));
-				ModelUtil.saveEntity(getEntity().getContent());
 			} catch (IOException e) {
 				LoggerFactory.getLogger(getClass()).error("Error setting document content", e);
 			} finally {

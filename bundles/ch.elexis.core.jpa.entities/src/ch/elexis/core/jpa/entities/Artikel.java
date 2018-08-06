@@ -1,6 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-import java.math.BigInteger;
 import java.time.LocalDate;
 
 import javax.persistence.Basic;
@@ -34,7 +33,7 @@ public class Artikel implements EntityWithId, EntityWithDeleted, EntityWithExtIn
 	public static final String TYP_MEDIKAMENT = "Medikament";
 
 	// Transparently updated by the EntityListener
-	protected BigInteger lastupdate;
+	protected Long lastupdate;
 	
 	@Id
 	@GeneratedValue(generator = "system-uuid")
@@ -256,12 +255,12 @@ public class Artikel implements EntityWithId, EntityWithDeleted, EntityWithExtIn
 	}
 	
 	@Override
-	public BigInteger getLastupdate(){
+	public Long getLastupdate(){
 		return lastupdate;
 	}
 	
 	@Override
-	public void setLastupdate(BigInteger lastupdate){
+	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
 	}
 }

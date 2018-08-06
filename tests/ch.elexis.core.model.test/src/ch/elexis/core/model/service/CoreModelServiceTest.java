@@ -5,7 +5,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
 import org.junit.Before;
@@ -15,7 +19,10 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class CoreModelServiceTest {
@@ -96,5 +103,128 @@ public class CoreModelServiceTest {
 		assertTrue(loadedPerson.isPresent());
 		assertFalse(person == loadedPerson.get());
 		assertEquals(person, loadedPerson.get());
+	}
+	
+	private String multiThreadPersonId;
+	
+	@Test
+	public void multiThreadSequential() throws InterruptedException{
+		ExecutorService service = Executors.newSingleThreadExecutor();
+		// create a person
+		service.execute(new Runnable() {
+			@Override
+			public void run(){
+				IPerson person = modelSerice.create(IPerson.class);
+				person.setLastName("test lastname");
+				person.setFirstName("test first name");
+				assertTrue(modelSerice.save(person));
+				multiThreadPersonId = person.getId();
+			}
+		});
+		// load the person
+		service.execute(new Runnable() {
+			@Override
+			public void run(){
+				Optional<IPerson> loadedPerson =
+					modelSerice.load(multiThreadPersonId, IPerson.class);
+				assertTrue(loadedPerson.isPresent());
+			}
+		});
+		// query the person
+		service.execute(new Runnable() {
+			@Override
+			public void run(){
+				IQuery<IPerson> query = modelSerice.getQuery(IPerson.class);
+				query.and(ModelPackage.Literals.IPERSON__LAST_NAME, COMPARATOR.LIKE, "%lastname");
+				List<IPerson> results = query.execute();
+				assertEquals(multiThreadPersonId, results.get(0).getId());
+			}
+		});
+		// wait for executor to terminate
+		service.shutdown();
+		service.awaitTermination(5, TimeUnit.SECONDS);
+		// remove the person
+		modelSerice.remove(modelSerice.load(multiThreadPersonId, IPerson.class).get());
+	}
+	
+	@Test
+	public void multiThreadConcurrent() throws InterruptedException{
+		ExecutorService service = Executors.newCachedThreadPool();
+		for (int i = 0; i < 1000; i++) {
+			service.execute(new CreatePerson(i));
+		}
+		// wait for executor to terminate
+		service.shutdown();
+		service.awaitTermination(5, TimeUnit.SECONDS);
+		service = Executors.newCachedThreadPool();
+		for (int i = 0; i < 1000; i++) {
+			service.execute(new QueryPerson(i));
+		}
+		// wait for executor to terminate
+		service.shutdown();
+		service.awaitTermination(5, TimeUnit.SECONDS);
+		service = Executors.newCachedThreadPool();
+		for (int i = 0; i < 1000; i++) {
+			service.execute(new RemovePerson(i));
+		}
+		// wait for executor to terminate
+		service.shutdown();
+		service.awaitTermination(5, TimeUnit.SECONDS);
+		
+		IQuery<IPerson> query = modelSerice.getQuery(IPerson.class);
+		query.and(ModelPackage.Literals.IPERSON__LAST_NAME, COMPARATOR.LIKE, "%lastname %");
+		List<IPerson> results = query.execute();
+		assertTrue(results.isEmpty());
+	}
+	
+	private class CreatePerson implements Runnable {
+		private int index;
+		
+		public CreatePerson(int index){
+			this.index = index;
+		}
+		
+		@Override
+		public void run(){
+			IPerson person = modelSerice.create(IPerson.class);
+			person.setLastName("test lastname " + index);
+			person.setFirstName("test first name " + index);
+			assertTrue(modelSerice.save(person));
+		}
+	}
+	
+	private class QueryPerson implements Runnable {
+		private int index;
+		
+		public QueryPerson(int index){
+			this.index = index;
+		}
+		
+		@Override
+		public void run(){
+			IQuery<IPerson> query = modelSerice.getQuery(IPerson.class);
+			query.and(ModelPackage.Literals.IPERSON__LAST_NAME, COMPARATOR.LIKE,
+				"%lastname " + index);
+			List<IPerson> results = query.execute();
+			assertEquals(1, results.size());
+		}
+	}
+	
+	private class RemovePerson implements Runnable {
+		private int index;
+		
+		public RemovePerson(int index){
+			this.index = index;
+		}
+		
+		@Override
+		public void run(){
+			IQuery<IPerson> query = modelSerice.getQuery(IPerson.class);
+			query.and(ModelPackage.Literals.IPERSON__LAST_NAME, COMPARATOR.LIKE,
+				"%lastname " + index);
+			List<IPerson> results = query.execute();
+			assertEquals(1, results.size());
+			modelSerice.remove(results.get(0));
+		}
 	}
 }

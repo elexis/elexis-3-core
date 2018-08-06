@@ -288,4 +288,16 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IRole" abstract="true" interface="true"
       eSuperTypes="#//Identifiable"/>
+  <eClassifiers xsi:type="ecore:EClass" name="IBlob" abstract="true" interface="true"
+      eSuperTypes="#//Identifiable #//Deleteable">
+    <eOperations name="getStringContent" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eOperations name="setStringContent">
+      <eParameters name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
+    <eOperations name="setId">
+      <eParameters name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="content" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EByteArray"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType types.ecore#//LocalDate"/>
+  </eClassifiers>
 </ecore:EPackage>

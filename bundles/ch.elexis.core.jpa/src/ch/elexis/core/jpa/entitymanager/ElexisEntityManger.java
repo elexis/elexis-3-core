@@ -1,13 +1,20 @@
 package ch.elexis.core.jpa.entitymanager;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.eclipse.persistence.config.PersistenceUnitProperties;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
@@ -22,13 +29,37 @@ import ch.elexis.core.services.IElexisEntityManager;
 @Component
 public class ElexisEntityManger implements IElexisEntityManager {
 	
-	private static Logger log = LoggerFactory.getLogger(ElexisEntityManger.class);
+	private static Logger logger = LoggerFactory.getLogger(ElexisEntityManger.class);
 	
 	private EntityManagerFactoryBuilder factoryBuilder;
 	
 	private EntityManagerFactory factory;
 	
 	private DataSource dataSource;
+	
+	private final ThreadLocal<EntityManager> threadLocal;
+	
+	private final Map<Thread, EntityManager> threadManagerMap;
+	
+	private ScheduledExecutorService entityManagerCollector;
+	
+	public ElexisEntityManger(){
+		threadLocal = new ThreadLocal<EntityManager>();
+		threadManagerMap = new ConcurrentHashMap<>();
+		entityManagerCollector = Executors.newSingleThreadScheduledExecutor();
+	}
+	
+	@Activate
+	public void activate(){
+		// collect EntityManagers of terminated threads
+		entityManagerCollector.scheduleAtFixedRate(new EntityManagerCollector(), 2, 2,
+			TimeUnit.SECONDS);
+	}
+	
+	@Deactivate
+	public void deactivate(){
+		entityManagerCollector.shutdown();
+	}
 	
 	@Reference(service = DataSource.class, cardinality = ReferenceCardinality.MANDATORY)
 	protected synchronized void bindDataSource(DataSource dataSource){
@@ -37,16 +68,12 @@ public class ElexisEntityManger implements IElexisEntityManager {
 	
 	@Reference(service = EntityManagerFactoryBuilder.class, cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC, target = "(osgi.unit.name=elexis)")
 	protected synchronized void bind(EntityManagerFactoryBuilder factoryBuilder){
-		log.debug("Binding " + factoryBuilder.getClass().getName());
+		logger.debug("Binding " + factoryBuilder.getClass().getName());
 		this.factoryBuilder = factoryBuilder;
 	}
 	
-	/**
-	 * Get an {@link EntityManager} instance for the Elexis persistence unit.
-	 * 
-	 * @return
-	 */
-	public synchronized EntityManager getEntityManager(){
+	@Override
+	public synchronized EntityManager getEntityManager(boolean managed){
 		// do lazy initialization on first access
 		if (factory == null) {
 			// try to initialize
@@ -68,9 +95,49 @@ public class ElexisEntityManger implements IElexisEntityManager {
 		}
 		
 		if (factory != null) {
-			return factory.createEntityManager();
+			if (managed) {
+				EntityManager em = threadLocal.get();
+				if (em == null) {
+					logger.debug(
+						"Creating new EntityManager for Thread [" + Thread.currentThread() + "]");
+					em = factory.createEntityManager();
+					threadLocal.set(em);
+					threadManagerMap.put(Thread.currentThread(), em);
+				}
+				return em;
+			} else {
+				return factory.createEntityManager();
+			}
 		} else {
 			throw new IllegalStateException("No EntityManagerFactory available");
+		}
+	}
+	
+	@Override
+	public synchronized void closeEntityManager(Object em){
+		if (threadLocal.get() == em) {
+			threadLocal.set(null);
+			threadManagerMap.remove(Thread.currentThread());
+		}
+		((EntityManager) em).close();
+	}
+	
+	private class EntityManagerCollector implements Runnable {
+		@Override
+		public void run(){
+			if (threadManagerMap != null && !threadManagerMap.isEmpty()) {
+				for (Thread thread : threadManagerMap.keySet().toArray(new Thread[0])) {
+					if (!thread.isAlive()) {
+						logger.debug("Closing EntityManager of non active thread ["
+							+ thread.getName() + "]");
+						EntityManager em = threadManagerMap.get(thread);
+						if (em != null) {
+							em.close();
+						}
+						threadManagerMap.remove(thread);
+					}
+				}
+			}
 		}
 	}
 }

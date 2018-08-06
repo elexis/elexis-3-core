@@ -1,7 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-import java.math.BigInteger;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -14,19 +12,18 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.eclipse.persistence.annotations.Cache;
-import org.eclipse.persistence.config.CacheIsolationType;
 
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
 @Entity
 @Table(name = "userconfig")
 @EntityListeners(EntityWithIdListener.class)
-@Cache(isolation = CacheIsolationType.ISOLATED)
+@Cache(expiry = 15000)
 @NamedQuery(name = "Userconfig.owner.param", query = "SELECT uc FROM Userconfig uc WHERE uc.owner = :owner AND uc.param = :param")
 public class Userconfig implements EntityWithId {
 
 	// Transparently updated by the EntityListener
-	protected BigInteger lastupdate;
+	protected Long lastupdate;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "UserID")
@@ -74,12 +71,12 @@ public class Userconfig implements EntityWithId {
 	}
 	
 	@Override
-	public BigInteger getLastupdate(){
+	public Long getLastupdate(){
 		return lastupdate;
 	}
 	
 	@Override
-	public void setLastupdate(BigInteger lastupdate){
+	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
 	}
 }

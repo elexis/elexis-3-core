@@ -28,7 +28,8 @@ public class KontaktEntityListener {
 	 */
 	private int findAndIncrementPatientNr(){
 		int ret = 0;
-		EntityManager em = getEntityManager();
+		EntityManager em = (EntityManager) ElexisEntityManagerServiceHolder.getEntityManager()
+			.getEntityManager(false);
 		try {
 			em.getTransaction().begin();
 			Config patNr = em.find(Config.class, "PatientNummer");
@@ -59,12 +60,7 @@ public class KontaktEntityListener {
 			em.getTransaction().commit();
 			return ret;
 		} finally {
-			em.close();
+			ElexisEntityManagerServiceHolder.getEntityManager().closeEntityManager(em);
 		}
-	}
-	
-	private EntityManager getEntityManager(){
-		return ElexisEntityManagerServiceHolder.getEntityManager();
-		
 	}
 }

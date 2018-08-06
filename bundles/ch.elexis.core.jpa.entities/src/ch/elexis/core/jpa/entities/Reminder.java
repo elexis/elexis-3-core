@@ -1,6 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -40,7 +39,7 @@ public class Reminder implements EntityWithId, EntityWithDeleted, EntityWithExtI
 	public static final String ALL_RESPONSIBLE = "ALL";
 
 	// Transparently updated by the EntityListener
-	protected BigInteger lastupdate;
+	protected Long lastupdate;
 	
 	@Id
 	@GeneratedValue(generator = "system-uuid")
@@ -225,12 +224,12 @@ public class Reminder implements EntityWithId, EntityWithDeleted, EntityWithExtI
 	}
 	
 	@Override
-	public BigInteger getLastupdate(){
+	public Long getLastupdate(){
 		return lastupdate;
 	}
 	
 	@Override
-	public void setLastupdate(BigInteger lastupdate){
+	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
 	}
 }

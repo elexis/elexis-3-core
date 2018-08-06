@@ -8,6 +8,7 @@ import ch.elexis.core.jpa.model.adapter.MappingEntry;
 import ch.elexis.core.model.Config;
 import ch.elexis.core.model.Contact;
 import ch.elexis.core.model.DocumentBrief;
+import ch.elexis.core.model.IBlob;
 import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IDocumentLetter;
@@ -56,6 +57,8 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 		
 		addMapping(new MappingEntry(IXid.class, ch.elexis.core.model.Xid.class,
 			ch.elexis.core.jpa.entities.Xid.class));
+		addMapping(new MappingEntry(IBlob.class, ch.elexis.core.model.Blob.class,
+			ch.elexis.core.jpa.entities.Heap.class));
 		
 		addMapping(new MappingEntry(IContact.class, Contact.class, Kontakt.class));
 		addMapping(new MappingEntry(IPatient.class, Patient.class, Kontakt.class)

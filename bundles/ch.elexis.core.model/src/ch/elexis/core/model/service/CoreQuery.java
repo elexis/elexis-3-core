@@ -9,12 +9,13 @@ import ch.elexis.core.services.IQuery;
 
 public class CoreQuery<T> extends AbstractModelQuery<T> implements IQuery<T> {
 	
-	public CoreQuery(Class<T> clazz, EntityManager entityManager){
-		this(clazz, entityManager, false);
+	public CoreQuery(Class<T> clazz, boolean refreshCache, EntityManager entityManager){
+		this(clazz, refreshCache, entityManager, false);
 	}
 	
-	public CoreQuery(Class<T> clazz, EntityManager entityManager, boolean includeDeleted){
-		super(clazz, entityManager, includeDeleted);
+	public CoreQuery(Class<T> clazz, boolean refreshCache, EntityManager entityManager,
+		boolean includeDeleted){
+		super(clazz, refreshCache, entityManager, includeDeleted);
 	}
 	
 	@Override

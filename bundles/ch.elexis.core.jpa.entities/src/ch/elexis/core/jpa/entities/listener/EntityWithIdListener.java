@@ -10,8 +10,6 @@
  ******************************************************************************/
 package ch.elexis.core.jpa.entities.listener;
 
-import java.math.BigInteger;
-
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
@@ -27,7 +25,7 @@ public class EntityWithIdListener {
 	 */
 	@PreUpdate
 	public void preUpdate(EntityWithId o){
-		o.setLastupdate(BigInteger.valueOf(System.currentTimeMillis()));
+		o.setLastupdate(System.currentTimeMillis());
 	}
 	
 	@PrePersist

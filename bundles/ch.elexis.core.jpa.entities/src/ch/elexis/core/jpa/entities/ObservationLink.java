@@ -1,49 +1,29 @@
 package ch.elexis.core.jpa.entities;
 
-import java.math.BigInteger;
-
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
 @Entity
 @Table(name = "CH_ELEXIS_CORE_FINDINGS_OBSERVATIONLINK")
 @EntityListeners(EntityWithIdListener.class)
-@NamedQuery(name = "ObservationLink.sourceid.type", query = "SELECT ol FROM ObservationLink ol WHERE ol.deleted = false AND ol.sourceid = :sourceid AND ol.type = :type")
-@NamedQuery(name = "ObservationLink.targetid.type", query = "SELECT ol FROM ObservationLink ol WHERE ol.deleted = false AND ol.targetid = :targetid AND ol.type = :type")
-@NamedQuery(name = "ObservationLink.targetid.sourceid.type", query = "SELECT ol FROM ObservationLink ol WHERE ol.deleted = false AND ol.targetid = :targetid AND ol.sourceid = :sourceid AND ol.type = :type")
-public class ObservationLink implements EntityWithId, EntityWithDeleted {
+public class ObservationLink implements EntityWithId {
 	
 	// Transparently updated by the EntityListener
-	protected BigInteger lastupdate;
+	protected Long lastupdate;
 	
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
-	
-	@Column
-	@Convert(converter = BooleanCharacterConverterSafe.class)
-	protected boolean deleted = false;
-	
-	@Override
-	public boolean isDeleted(){
-		return deleted;
-	}
-	
-	@Override
-	public void setDeleted(boolean deleted){
-		this.deleted = deleted;
-	}
 	
 	@Override
 	public String getId(){
@@ -56,20 +36,22 @@ public class ObservationLink implements EntityWithId, EntityWithDeleted {
 	}
 	
 	@Override
-	public BigInteger getLastupdate(){
+	public Long getLastupdate(){
 		return lastupdate;
 	}
 	
 	@Override
-	public void setLastupdate(BigInteger lastupdate){
+	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
 	}
 
-	@Column(length = 80)
-	private String sourceid;
+	@ManyToOne()
+	@JoinColumn(name = "sourceid")
+	private Observation source;
 
-	@Column(length = 80)
-	private String targetid;
+	@ManyToOne()
+	@JoinColumn(name = "targetid")
+	private Observation target;
 
 	@Column(length = 8)
 	private String type;
@@ -77,20 +59,20 @@ public class ObservationLink implements EntityWithId, EntityWithDeleted {
 	@Column(length = 255)
 	private String description;
 
-	public String getSourceid() {
-		return sourceid;
+	public Observation getSource(){
+		return source;
 	}
 
-	public void setSourceid(String sourceid) {
-		this.sourceid = sourceid;
+	public void setSource(Observation source){
+		this.source = source;
 	}
 
-	public String getTargetid() {
-		return targetid;
+	public Observation getTarget(){
+		return target;
 	}
 
-	public void setTargetid(String targetid) {
-		this.targetid = targetid;
+	public void setTarget(Observation target){
+		this.target = target;
 	}
 
 	public String getType() {
@@ -107,5 +89,15 @@ public class ObservationLink implements EntityWithId, EntityWithDeleted {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	@Override
+	public int hashCode(){
+		return EntityWithId.idHashCode(this);
+	}
+	
+	@Override
+	public boolean equals(Object obj){
+		return EntityWithId.idEquals(this, obj);
 	}
 }

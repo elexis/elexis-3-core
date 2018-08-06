@@ -18,6 +18,8 @@ import javax.persistence.metamodel.SingularAttribute;
 
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.persistence.config.HintValues;
+import org.eclipse.persistence.config.QueryHints;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jpa.entities.EntityWithDeleted;
@@ -49,12 +51,15 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	protected Class<? extends EntityWithId> entityClazz;
 	
 	protected boolean includeDeleted;
+	protected boolean refreshCache;
 	
-	public AbstractModelQuery(Class<T> clazz, EntityManager entityManager, boolean includeDeleted){
+	public AbstractModelQuery(Class<T> clazz, boolean refreshCache, EntityManager entityManager,
+		boolean includeDeleted){
 		this.clazz = clazz;
 		this.entityManager = entityManager;
 		this.criteriaBuilder = entityManager.getCriteriaBuilder();
 		this.includeDeleted = includeDeleted;
+		this.refreshCache = refreshCache;
 		this.predicateGroups = new Stack<>();
 		
 		initialize();
@@ -373,31 +378,31 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<T> execute(){
-		try {
-			// apply the predicate groups to the criteriaQuery
-			int groups = getPredicateGroupsSize();
-			if (groups > 0) {
-				if (groups == 2 && (EntityWithDeleted.class.isAssignableFrom(entityClazz)
-					&& !includeDeleted)) {
-					andJoinGroups();
-					groups = getPredicateGroupsSize();
-				}
-				
-				if (groups == 1) {
-					criteriaQuery = criteriaQuery.where(getCurrentPredicateGroup().getPredicate());
-				} else {
-					throw new IllegalStateException("Query has open groups [" + groups + "]");
-				}
+		// apply the predicate groups to the criteriaQuery
+		int groups = getPredicateGroupsSize();
+		if (groups > 0) {
+			if (groups == 2
+				&& (EntityWithDeleted.class.isAssignableFrom(entityClazz) && !includeDeleted)) {
+				andJoinGroups();
+				groups = getPredicateGroupsSize();
 			}
-			TypedQuery<?> query = (TypedQuery<?>) entityManager.createQuery(criteriaQuery);
-			List<T> ret = (List<T>) query
-				.getResultStream().parallel().map(e -> adapterFactory
-					.getModelAdapter((EntityWithId) e, clazz, true).orElse(null))
-				.filter(o -> o != null).collect(Collectors.toList());
-			return ret;
-		} finally {
-			entityManager.close();
+			
+			if (groups == 1) {
+				criteriaQuery = criteriaQuery.where(getCurrentPredicateGroup().getPredicate());
+			} else {
+				throw new IllegalStateException("Query has open groups [" + groups + "]");
+			}
 		}
+		TypedQuery<?> query = (TypedQuery<?>) entityManager.createQuery(criteriaQuery);
+		// update cache with results (https://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development/Querying/Query_Hints)
+		if (refreshCache) {
+			query.setHint(QueryHints.REFRESH, HintValues.TRUE);
+		}
+		
+		List<T> ret = (List<T>) query.getResultStream().parallel()
+			.map(e -> adapterFactory.getModelAdapter((EntityWithId) e, clazz, true).orElse(null))
+			.filter(o -> o != null).collect(Collectors.toList());
+		return ret;
 	}
 	
 	protected String getAttributeName(EStructuralFeature feature){

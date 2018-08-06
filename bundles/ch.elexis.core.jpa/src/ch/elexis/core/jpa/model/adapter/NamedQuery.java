@@ -7,26 +7,31 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import org.eclipse.persistence.config.HintValues;
+import org.eclipse.persistence.config.QueryHints;
+
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.services.INamedQuery;
 
 public class NamedQuery<T> implements INamedQuery<T> {
 	
-	private EntityManager entityManager;
 	private AbstractModelAdapterFactory adapterFactory;
 	private Class<T> interfaceClazz;
 	
 	private Class<? extends EntityWithId> entityClazz;
 	private TypedQuery<?> query;
 	
-	public NamedQuery(Class<T> clazz, AbstractModelAdapterFactory adapterFactory,
-		EntityManager entityManager, String queryName){
+	public NamedQuery(Class<T> clazz, boolean refreshCache,
+		AbstractModelAdapterFactory adapterFactory, EntityManager entityManager, String queryName){
 		this.adapterFactory = adapterFactory;
 		this.interfaceClazz = clazz;
 		this.entityClazz = adapterFactory.getEntityClass(interfaceClazz);
 		
 		this.query = entityManager.createNamedQuery(queryName, entityClazz);
-		this.entityManager = entityManager;
+		// update cache with results (https://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development/Querying/Query_Hints)
+		if (refreshCache) {
+			this.query.setHint(QueryHints.REFRESH, HintValues.TRUE);
+		}
 	}
 	
 	protected Object resolveValue(Object value){
@@ -40,18 +45,14 @@ public class NamedQuery<T> implements INamedQuery<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<T> executeWithParameters(Map<String, Object> paramters){
-		try {
-			paramters.forEach((k, v) -> {
-				v = resolveValue(v);
-				query.setParameter(k, v);
-			});
-			List<T> ret = (List<T>) query.getResultStream().parallel()
-				.map(e -> adapterFactory
-					.getModelAdapter((EntityWithId) e, interfaceClazz, true).orElse(null))
-				.filter(o -> o != null).collect(Collectors.toList());
-			return ret;
-		} finally {
-			entityManager.close();
-		}
+		paramters.forEach((k, v) -> {
+			v = resolveValue(v);
+			query.setParameter(k, v);
+		});
+		List<T> ret = (List<T>) query
+			.getResultStream().parallel().map(e -> adapterFactory
+				.getModelAdapter((EntityWithId) e, interfaceClazz, true).orElse(null))
+			.filter(o -> o != null).collect(Collectors.toList());
+		return ret;
 	}
 }

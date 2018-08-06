@@ -1,7 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-import java.math.BigInteger;
-
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -26,7 +24,7 @@ public class ArtikelstammItem implements EntityWithId, EntityWithDeleted, Entity
 	public static final String CODESYSTEM_NAME = "Artikelstamm";
 
 	// Transparently updated by the EntityListener
-	protected BigInteger lastupdate;
+	protected Long lastupdate;
 	
 	@Id
 	@GeneratedValue(generator = "system-uuid")
@@ -369,12 +367,12 @@ public class ArtikelstammItem implements EntityWithId, EntityWithDeleted, Entity
 	}
 	
 	@Override
-	public BigInteger getLastupdate(){
+	public Long getLastupdate(){
 		return lastupdate;
 	}
 	
 	@Override
-	public void setLastupdate(BigInteger lastupdate){
+	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
 	}
 }

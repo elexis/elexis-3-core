@@ -41,14 +41,6 @@ public class CoreQueryTest {
 		List<IContact> results = query.execute();
 		assertNotNull(results);
 		assertTrue(results.isEmpty());
-		// query is closed after execute, calling again must throw exception
-		boolean exception = false;
-		try  {
-			query.execute();
-		} catch (IllegalStateException e) {
-			exception = true;
-		}
-		assertTrue(exception);
 	}
 	
 	@Test

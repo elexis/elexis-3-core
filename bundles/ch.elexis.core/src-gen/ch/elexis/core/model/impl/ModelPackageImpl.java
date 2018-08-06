@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBillable;
+import ch.elexis.core.model.IBlob;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.IConfig;
@@ -261,6 +262,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass iRoleEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iBlobEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -1600,6 +1608,33 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getIBlob() {
+		return iBlobEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIBlob_Content() {
+		return (EAttribute)iBlobEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIBlob_Date() {
+		return (EAttribute)iBlobEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ModelFactory getModelFactory() {
 		return (ModelFactory)getEFactoryInstance();
 	}
@@ -1792,6 +1827,10 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		withExtInfoEClass = createEClass(WITH_EXT_INFO);
 
 		iRoleEClass = createEClass(IROLE);
+
+		iBlobEClass = createEClass(IBLOB);
+		createEAttribute(iBlobEClass, IBLOB__CONTENT);
+		createEAttribute(iBlobEClass, IBLOB__DATE);
 	}
 
 	/**
@@ -1868,6 +1907,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iPeriodEClass.getESuperTypes().add(this.getDeleteable());
 		iArticleEClass.getESuperTypes().add(this.getIdentifiable());
 		iRoleEClass.getESuperTypes().add(this.getIdentifiable());
+		iBlobEClass.getESuperTypes().add(this.getIdentifiable());
+		iBlobEClass.getESuperTypes().add(this.getDeleteable());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(identifiableEClass, Identifiable.class, "Identifiable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2106,6 +2147,18 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEParameter(op, ecorePackage.getEJavaObject(), "value", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iRoleEClass, IRole.class, "IRole", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(iBlobEClass, IBlob.class, "IBlob", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIBlob_Content(), ecorePackage.getEByteArray(), "content", null, 0, 1, IBlob.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIBlob_Date(), theTypesPackage.getLocalDate(), "date", null, 0, 1, IBlob.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		addEOperation(iBlobEClass, ecorePackage.getEString(), "getStringContent", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iBlobEClass, null, "setStringContent", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "value", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iBlobEClass, null, "setId", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "id", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

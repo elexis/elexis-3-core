@@ -1,7 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-import java.math.BigInteger;
-
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,7 +17,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 public class TarmedExtension implements EntityWithId {
 
 	// Transparently updated by the EntityListener
-	protected BigInteger lastupdate;
+	protected Long lastupdate;
 	
 	@Id
 	@Column(length = 14)
@@ -78,12 +76,12 @@ public class TarmedExtension implements EntityWithId {
 	}
 	
 	@Override
-	public BigInteger getLastupdate(){
+	public Long getLastupdate(){
 		return lastupdate;
 	}
 	
 	@Override
-	public void setLastupdate(BigInteger lastupdate){
+	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
 	}
 }

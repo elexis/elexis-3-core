@@ -1,7 +1,5 @@
 package ch.elexis.core.jpa.entities.entitymanager;
 
-import javax.persistence.EntityManager;
-
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -17,10 +15,10 @@ public class ElexisEntityManagerServiceHolder {
 		ElexisEntityManagerServiceHolder.entityManager = entityManager;
 	}
 	
-	public static EntityManager getEntityManager(){
+	public static IElexisEntityManager getEntityManager(){
 		if (entityManager == null) {
 			throw new IllegalStateException("No EntityManager available");
 		}
-		return (EntityManager) entityManager.getEntityManager();
+		return entityManager;
 	}
 }

@@ -1,6 +1,5 @@
 package ch.elexis.core.services;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -21,42 +20,10 @@ public interface IModelService {
 	
 	public final String SERVICEMODELNAME = "service.model.name";
 	
-	public final String DOUBLECOLON = "::";
-	
 	public final String EANNOTATION_ENTITY_ATTRIBUTE_MAPPING =
 		"http://elexis.info/jpa/entity/attribute/mapping";
 	
 	public final Object EANNOTATION_ENTITY_ATTRIBUTE_MAPPING_NAME = "attributeName";
-	
-	/**
-	 * Get a reference string that can be used to load the {@link Identifiable} using
-	 * {@link #loadFromString(String)}.
-	 * 
-	 * @param identifiable
-	 * @return
-	 */
-	public Optional<String> storeToString(Identifiable identifiable);
-	
-	/**
-	 * Load an {@link Identifiable} using a string created using
-	 * {@link #storeToString(Identifiable)}.
-	 * 
-	 * @param string
-	 * @return
-	 */
-	public Optional<Identifiable> loadFromString(String storeToString);
-	
-	/**
-	 * Split a storeToString into an array containing the type and the id. Expected separator string
-	 * is {@link #DOUBLECOLON}.
-	 * 
-	 * @param storeToString
-	 * @return a size 2 array with type [0] and id [1] or <code>null</code> in either [0] or [1]
-	 */
-	public default String[] splitIntoTypeAndId(String storeToString){
-		String[] split = storeToString.split(DOUBLECOLON);
-		return Arrays.copyOf(split, 2);
-	}
 	
 	/**
 	 * Create a new transient model instance of type clazz.
@@ -134,7 +101,22 @@ public interface IModelService {
 	 * @param includeDeleted
 	 * @return
 	 */
-	public <T> IQuery<T> getQuery(Class<T> clazz, boolean includeDeleted);
+	public default <T> IQuery<T> getQuery(Class<T> clazz, boolean includeDeleted){
+		return getQuery(clazz, false, includeDeleted);
+	}
+	
+	/**
+	 * Get a Query for objects of type clazz. If the clazz implements {@link Deleteable}
+	 * includeDeleted determines if deleted entities are included in the result. The Query is closed
+	 * after the {@link IQuery#execute()} method is called. With the refreshCache parameter updating
+	 * the cache with the results of the query can be triggered, it has performance implications.
+	 * 
+	 * @param clazz
+	 * @param refreshCache
+	 * @param includeDeleted
+	 * @return
+	 */
+	public <T> IQuery<T> getQuery(Class<T> clazz, boolean refreshCache, boolean includeDeleted);
 	
 	/**
 	 * Get a named query for the clazz with the provided properties. The named query has to be
@@ -145,7 +127,23 @@ public interface IModelService {
 	 * @param properties
 	 * @return
 	 */
-	public <T> INamedQuery<T> getNamedQuery(Class<T> clazz, String... properties);
+	public default <T> INamedQuery<T> getNamedQuery(Class<T> clazz, String... properties){
+		return getNamedQuery(clazz, false, properties);
+	}
+	
+	/**
+	 * Get a named query for the clazz with the provided properties. The named query has to be
+	 * defined on the entity mapped to the class. The name must match
+	 * <i>className.propert[0]property[1]...</i>. With the refreshCache parameter updating the cache
+	 * with the results of the query can be triggered, it has performance implications.
+	 * 
+	 * @param clazz
+	 * @param refreshCache
+	 * @param properties
+	 * @return
+	 */
+	public <T> INamedQuery<T> getNamedQuery(Class<T> clazz, boolean refreshCache,
+		String... properties);
 	
 	/**
 	 * Convenience method setting deleted property and save the {@link Deleteable}.

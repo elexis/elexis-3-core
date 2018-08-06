@@ -26,7 +26,9 @@ public class LabOrderEntityListener {
 	 */
 	private int findAndIncrementLabOrderId(){
 		int ret = 0;
-		EntityManager em = getEntityManager();
+		EntityManager em =
+			(EntityManager) ElexisEntityManagerServiceHolder.getEntityManager()
+				.getEntityManager(false);
 		try {
 			em.getTransaction().begin();
 			LabOrder version = em.find(LabOrder.class, "VERSION");
@@ -58,11 +60,7 @@ public class LabOrderEntityListener {
 			em.getTransaction().commit();
 			return ret;
 		} finally {
-			em.close();
+			ElexisEntityManagerServiceHolder.getEntityManager().closeEntityManager(em);
 		}
-	}
-	
-	private EntityManager getEntityManager(){
-		return ElexisEntityManagerServiceHolder.getEntityManager();
 	}
 }

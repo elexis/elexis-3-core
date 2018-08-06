@@ -15,8 +15,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import javax.persistence.EntityManager;
-
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
@@ -28,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.entities.Userconfig;
+import ch.elexis.core.jpa.model.adapter.AbstractModelService;
 import ch.elexis.core.model.Config;
 import ch.elexis.core.model.DocumentBrief;
 import ch.elexis.core.model.IConfig;
@@ -41,11 +40,11 @@ import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.service.CoreModelAdapterFactory;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.IContextService;
-import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.rgw.compress.CompEx;
 import ch.rgw.tools.MimeTool;
 
 @Component
@@ -60,36 +59,11 @@ public class ModelUtil {
 		ModelUtil.modelService = modelService;
 	}
 	
-	private static IElexisEntityManager entityManager;
-	
-	@Reference(cardinality = ReferenceCardinality.MANDATORY)
-	public void setEntityManger(IElexisEntityManager entityManager){
-		ModelUtil.entityManager = entityManager;
-	}
-	
 	private static IContextService contextService;
 	
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
 	public void setContextService(IContextService contextService){
 		ModelUtil.contextService = contextService;
-	}
-	
-	/**
-	 * Save an entity.
-	 * 
-	 * @param entity
-	 */
-	public static void saveEntity(EntityWithId entity){
-		if (entity != null) {
-			EntityManager em = (EntityManager) entityManager.getEntityManager();
-			try {
-				em.getTransaction().begin();
-				em.merge(entity);
-				em.getTransaction().commit();
-			} finally {
-				em.close();
-			}
-		}
 	}
 	
 	/**
@@ -248,7 +222,7 @@ public class ModelUtil {
 	public static boolean isUserConfig(IContact owner, String key, boolean defaultValue){
 		if (owner != null) {
 			INamedQuery<IUserConfig> configQuery =
-				modelService.getNamedQuery(IUserConfig.class, "owner", "param");
+				modelService.getNamedQuery(IUserConfig.class, true, "owner", "param");
 			List<IUserConfig> configs = configQuery
 				.executeWithParameters(modelService.getParameterMap("owner", owner, "param", key));
 			if (configs.isEmpty()) {
@@ -523,5 +497,29 @@ public class ModelUtil {
 			return ret;
 		}
 		return Collections.emptyMap();
+	}
+	
+	/**
+	 * Expand the compressed bytes using the Elexis {@link CompEx} tool.
+	 * 
+	 * @param comp
+	 * @return
+	 */
+	public static byte[] getExpanded(byte[] compacted){
+		return CompEx.expand(compacted);
+	}
+	
+	/**
+	 * Compress the String using the Elexis {@link CompEx} tool.
+	 * 
+	 * @param comp
+	 * @return
+	 */
+	public static byte[] getCompressed(String value){
+		return CompEx.Compress(value, CompEx.ZIP);
+	}
+	
+	public static AbstractModelService getModelService(){
+		return (AbstractModelService) modelService;
 	}
 }

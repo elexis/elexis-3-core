@@ -1,7 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-import java.math.BigInteger;
-
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -30,7 +28,7 @@ public class Verrechnet implements EntityWithId, EntityWithDeleted {
 	public static final String EXT_VERRRECHNET_AL = "AL"; //$NON-NLS-1$
 
 	// Transparently updated by the EntityListener
-	protected BigInteger lastupdate;
+	protected Long lastupdate;
 	
 	@Id
 	@GeneratedValue(generator = "system-uuid")
@@ -281,12 +279,12 @@ public class Verrechnet implements EntityWithId, EntityWithDeleted {
 	}
 	
 	@Override
-	public BigInteger getLastupdate(){
+	public Long getLastupdate(){
 		return lastupdate;
 	}
 	
 	@Override
-	public void setLastupdate(BigInteger lastupdate){
+	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
 	}
 }

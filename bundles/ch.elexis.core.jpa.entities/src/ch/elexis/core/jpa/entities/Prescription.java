@@ -1,6 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 import javax.persistence.Basic;
@@ -28,7 +27,7 @@ import ch.elexis.core.model.prescription.EntryType;
 public class Prescription implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	// Transparently updated by the EntityListener
-	protected BigInteger lastupdate;
+	protected Long lastupdate;
 	
 	@Id
 	@GeneratedValue(generator = "system-uuid")
@@ -205,12 +204,12 @@ public class Prescription implements EntityWithId, EntityWithDeleted, EntityWith
 	}
 	
 	@Override
-	public BigInteger getLastupdate(){
+	public Long getLastupdate(){
 		return lastupdate;
 	}
 	
 	@Override
-	public void setLastupdate(BigInteger lastupdate){
+	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
 	}
 }

@@ -1,6 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,7 +30,7 @@ public class TarmedGroup implements EntityWithId, EntityWithDeleted {
 	public static final Object SERVICES_SEPARATOR = "|";
 
 	// Transparently updated by the EntityListener
-	protected BigInteger lastupdate;
+	protected Long lastupdate;
 	
 	@Id
 	@GeneratedValue(generator = "system-uuid")
@@ -153,12 +152,12 @@ public class TarmedGroup implements EntityWithId, EntityWithDeleted {
 	}
 	
 	@Override
-	public BigInteger getLastupdate(){
+	public Long getLastupdate(){
 		return lastupdate;
 	}
 	
 	@Override
-	public void setLastupdate(BigInteger lastupdate){
+	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
 	}
 }

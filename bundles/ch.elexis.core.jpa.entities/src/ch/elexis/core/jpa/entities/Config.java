@@ -1,7 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-import java.math.BigInteger;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -10,18 +8,17 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import org.eclipse.persistence.annotations.Cache;
-import org.eclipse.persistence.config.CacheIsolationType;
 
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
 @Entity
 @Table(name = "config")
-@Cache(isolation = CacheIsolationType.ISOLATED)
 @EntityListeners(EntityWithIdListener.class)
+@Cache(expiry = 15000)
 public class Config implements EntityWithId {
 
 	// Transparently updated by the EntityListener
-	protected BigInteger lastupdate;
+	protected Long lastupdate;
 	
 	@Id
 	@Column(unique = true, nullable = false, length = 80)
@@ -57,12 +54,12 @@ public class Config implements EntityWithId {
 	}
 	
 	@Override
-	public BigInteger getLastupdate(){
+	public Long getLastupdate(){
 		return lastupdate;
 	}
 	
 	@Override
-	public void setLastupdate(BigInteger lastupdate){
+	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
 	}
 }

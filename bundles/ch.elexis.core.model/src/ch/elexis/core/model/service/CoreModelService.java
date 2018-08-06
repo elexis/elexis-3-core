@@ -23,16 +23,23 @@ import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IStoreToStringContribution;
 
 @Component(property = IModelService.SERVICEMODELNAME + "=ch.elexis.core.model")
-public class CoreModelService extends AbstractModelService implements IModelService {
+public class CoreModelService extends AbstractModelService
+		implements IModelService, IStoreToStringContribution {
 	
 	@Reference(cardinality = ReferenceCardinality.MANDATORY)
 	private IElexisEntityManager entityManager;
 	
 	@Override
-	protected EntityManager getEntityManager(){
-		return (EntityManager) entityManager.getEntityManager();
+	protected EntityManager getEntityManager(boolean managed){
+		return (EntityManager) entityManager.getEntityManager(managed);
+	}
+	
+	@Override
+	protected void closeEntityManager(EntityManager entityManager){
+		this.entityManager.closeEntityManager(entityManager);
 	}
 	
 	@Reference
@@ -54,11 +61,7 @@ public class CoreModelService extends AbstractModelService implements IModelServ
 		Optional<EntityWithId> dbObject = getDbObject(identifiable);
 		if (dbObject.isPresent()) {
 			classKey = ElexisTypeMap.getKeyForObject(dbObject.get());
-			if (classKey == null) {
-				LoggerFactory.getLogger(getClass()).warn(
-					"Could not resolve [{}] to storeToString name",
-					(identifiable != null) ? identifiable.getClass() : "null");
-			} else {
+			if (classKey != null) {
 				return Optional.of(classKey + StringConstants.DOUBLECOLON + identifiable.getId());
 			}
 		}
@@ -73,25 +76,20 @@ public class CoreModelService extends AbstractModelService implements IModelServ
 		}
 		
 		String[] split = splitIntoTypeAndId(storeToString);
-		
-		// map string to classname
-		String className = split[0];
-		String id = split[1];
-		Class<? extends EntityWithId> clazz = ElexisTypeMap.get(className);
-		if (clazz == null) {
-			LoggerFactory.getLogger(getClass()).warn("Could not resolve class [{}] from [{}]",
-				className, storeToString);
-			return Optional.empty();
+		if (split != null && split.length == 2) {
+			
+			// map string to classname
+			String className = split[0];
+			String id = split[1];
+			Class<? extends EntityWithId> clazz = ElexisTypeMap.get(className);
+			if (clazz != null) {
+				EntityManager em = (EntityManager) entityManager.getEntityManager();
+				EntityWithId dbObject = em.find(clazz, id);
+				return Optional
+					.ofNullable(adapterFactory.getModelAdapter(dbObject, null, false).orElse(null));
+			}
 		}
-		
-		EntityManager em = (EntityManager) entityManager.getEntityManager();
-		try {
-			EntityWithId dbObject = em.find(clazz, id);
-			return Optional
-				.ofNullable(adapterFactory.getModelAdapter(dbObject, null, false).orElse(null));
-		} finally {
-			em.close();
-		}
+		return Optional.empty();
 	}
 	
 	@Override
@@ -108,15 +106,15 @@ public class CoreModelService extends AbstractModelService implements IModelServ
 	}
 	
 	@Override
-	public <T> IQuery<T> getQuery(Class<T> clazz, boolean includeDeleted){
-		return new CoreQuery<>(clazz, (EntityManager) entityManager.getEntityManager(),
-			includeDeleted);
+	public <T> IQuery<T> getQuery(Class<T> clazz, boolean refreshCache, boolean includeDeleted){
+		return new CoreQuery<>(clazz, refreshCache,
+			(EntityManager) entityManager.getEntityManager(), includeDeleted);
 	}
 	
 	@Override
-	public <T> INamedQuery<T> getNamedQuery(Class<T> clazz, String... properties){
-		return new NamedQuery<>(clazz, adapterFactory,
-			(EntityManager) entityManager.getEntityManager(),
-			getNamedQueryName(clazz, properties));
+	public <T> INamedQuery<T> getNamedQuery(Class<T> clazz, boolean refreshCache,
+		String... properties){
+		return new NamedQuery<>(clazz, refreshCache, adapterFactory,
+			(EntityManager) entityManager.getEntityManager(), getNamedQueryName(clazz, properties));
 	}
 }

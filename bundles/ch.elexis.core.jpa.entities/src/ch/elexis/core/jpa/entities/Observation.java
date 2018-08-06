@@ -1,16 +1,21 @@
 package ch.elexis.core.jpa.entities;
 
-import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.eclipse.persistence.annotations.Cache;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
@@ -18,13 +23,14 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
 @Entity
 @Table(name = "CH_ELEXIS_CORE_FINDINGS_OBSERVATION")
+@Cache(expiry = 15000)
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "Observation.patientid", query = "SELECT ob FROM Observation ob WHERE ob.deleted = false AND ob.patientid = :patientid")
 @NamedQuery(name = "Observation.encounterid", query = "SELECT ob FROM Observation ob WHERE ob.deleted = false AND ob.encounterid = :encounterid")
 public class Observation implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
-	protected BigInteger lastupdate;
+	protected Long lastupdate;
 	
 	@Id
 	@GeneratedValue(generator = "system-uuid")
@@ -56,12 +62,12 @@ public class Observation implements EntityWithId, EntityWithDeleted {
 	}
 	
 	@Override
-	public BigInteger getLastupdate(){
+	public Long getLastupdate(){
 		return lastupdate;
 	}
 	
 	@Override
-	public void setLastupdate(BigInteger lastupdate){
+	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
 	}
 	
@@ -96,6 +102,12 @@ public class Observation implements EntityWithId, EntityWithDeleted {
 	@Lob
 	private String content;
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "target")
+	protected List<ObservationLink> targetLinks = new ArrayList<>();
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "source")
+	protected List<ObservationLink> sourceLinks = new ArrayList<>();
+	
 	public String getPatientId() {
 		return patientid;
 	}
@@ -174,5 +186,23 @@ public class Observation implements EntityWithId, EntityWithDeleted {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+	
+	public List<ObservationLink> getSourceLinks(){
+		return sourceLinks;
+	}
+	
+	public List<ObservationLink> getTargetLinks(){
+		return targetLinks;
+	}
+	
+	@Override
+	public int hashCode(){
+		return EntityWithId.idHashCode(this);
+	}
+	
+	@Override
+	public boolean equals(Object obj){
+		return EntityWithId.idEquals(this, obj);
 	}
 }
