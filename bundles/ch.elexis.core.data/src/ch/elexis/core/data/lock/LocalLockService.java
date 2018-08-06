@@ -29,7 +29,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.server.ElexisServerInstanceService;
 import ch.elexis.core.data.server.ElexisServerLockService;
-import ch.elexis.core.data.service.ModelServiceHolder;
+import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.data.services.ILocalLockService;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.lock.types.LockInfo;
@@ -136,7 +136,8 @@ public class LocalLockService implements ILocalLockService {
 			return LockResponse.DENIED(null);
 		}
 		logger.debug("Releasing lock on [" + identifiable + "]");
-		Optional<String> storeToString = ModelServiceHolder.get().storeToString(identifiable);
+		Optional<String> storeToString =
+			StoreToStringServiceHolder.get().storeToString(identifiable);
 		if (storeToString.isPresent()) {
 			return releaseLock(storeToString.get());
 		}
@@ -210,7 +211,8 @@ public class LocalLockService implements ILocalLockService {
 				(secTimeout * 10) + 1);
 		}
 		logger.debug("Acquiring lock blocking on [" + identifiable + "]");
-		Optional<String> storeToString = ModelServiceHolder.get().storeToString(identifiable);
+		Optional<String> storeToString =
+			StoreToStringServiceHolder.get().storeToString(identifiable);
 		
 		if (storeToString.isPresent()) {
 			LockResponse response = acquireLock(storeToString.get());
@@ -264,7 +266,8 @@ public class LocalLockService implements ILocalLockService {
 			return LockResponse.DENIED(null);
 		}
 		logger.debug("Acquiring lock on [" + identifiable + "]");
-		Optional<String> storeToString = ModelServiceHolder.get().storeToString(identifiable);
+		Optional<String> storeToString =
+			StoreToStringServiceHolder.get().storeToString(identifiable);
 		if (storeToString.isPresent()) {
 			LockResponse lr = acquireLock(storeToString.get());
 			

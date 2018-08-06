@@ -100,6 +100,18 @@ public final class ElexisEvent implements Comparable<ElexisEvent> {
 	}
 	
 	/**
+	 * Create an {@link ElexisEvent} carrying a generic object with normal priority.
+	 * 
+	 * @param genericObject
+	 * @param c
+	 * @param type
+	 * @since 3.7.0
+	 */
+	public ElexisEvent(final Object genericObject, Class<?> c, int type){
+		this(genericObject, c, type, PRIORITY_NORMAL);
+	}
+	
+	/**
 	 * Create an {@link ElexisEvent} carrying a generic object.
 	 * 
 	 * @param genericObject
