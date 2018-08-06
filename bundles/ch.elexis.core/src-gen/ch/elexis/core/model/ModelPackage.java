@@ -2875,6 +2875,88 @@ public interface ModelPackage extends EPackage {
 	int IARTICLE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 5;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.ITypedArticle <em>ITyped Article</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.ITypedArticle
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getITypedArticle()
+	 * @generated
+	 */
+	int ITYPED_ARTICLE = 27;
+
+	/**
+	 * The feature id for the '<em><b>Gtin</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITYPED_ARTICLE__GTIN = IARTICLE__GTIN;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITYPED_ARTICLE__NAME = IARTICLE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Selling Unit</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITYPED_ARTICLE__SELLING_UNIT = IARTICLE__SELLING_UNIT;
+
+	/**
+	 * The feature id for the '<em><b>Package Unit</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITYPED_ARTICLE__PACKAGE_UNIT = IARTICLE__PACKAGE_UNIT;
+
+	/**
+	 * The feature id for the '<em><b>Product</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITYPED_ARTICLE__PRODUCT = IARTICLE__PRODUCT;
+
+	/**
+	 * The feature id for the '<em><b>Typ</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITYPED_ARTICLE__TYP = IARTICLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Sub Typ</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITYPED_ARTICLE__SUB_TYP = IARTICLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>ITyped Article</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITYPED_ARTICLE_FEATURE_COUNT = IARTICLE_FEATURE_COUNT + 2;
+
+	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.WithExtInfo <em>With Ext Info</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2882,7 +2964,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getWithExtInfo()
 	 * @generated
 	 */
-	int WITH_EXT_INFO = 27;
+	int WITH_EXT_INFO = 28;
 
 	/**
 	 * The number of structural features of the '<em>With Ext Info</em>' class.
@@ -2901,7 +2983,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRole()
 	 * @generated
 	 */
-	int IROLE = 28;
+	int IROLE = 29;
 
 	/**
 	 * The number of structural features of the '<em>IRole</em>' class.
@@ -2920,7 +3002,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBlob()
 	 * @generated
 	 */
-	int IBLOB = 29;
+	int IBLOB = 30;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4461,6 +4543,38 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIArticle_Product();
 
 	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.ITypedArticle <em>ITyped Article</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>ITyped Article</em>'.
+	 * @see ch.elexis.core.model.ITypedArticle
+	 * @generated
+	 */
+	EClass getITypedArticle();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ITypedArticle#getTyp <em>Typ</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Typ</em>'.
+	 * @see ch.elexis.core.model.ITypedArticle#getTyp()
+	 * @see #getITypedArticle()
+	 * @generated
+	 */
+	EAttribute getITypedArticle_Typ();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ITypedArticle#getSubTyp <em>Sub Typ</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Sub Typ</em>'.
+	 * @see ch.elexis.core.model.ITypedArticle#getSubTyp()
+	 * @see #getITypedArticle()
+	 * @generated
+	 */
+	EAttribute getITypedArticle_SubTyp();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.WithExtInfo <em>With Ext Info</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5699,6 +5813,32 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IARTICLE__PRODUCT = eINSTANCE.getIArticle_Product();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.ITypedArticle <em>ITyped Article</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.ITypedArticle
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getITypedArticle()
+		 * @generated
+		 */
+		EClass ITYPED_ARTICLE = eINSTANCE.getITypedArticle();
+
+		/**
+		 * The meta object literal for the '<em><b>Typ</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ITYPED_ARTICLE__TYP = eINSTANCE.getITypedArticle_Typ();
+
+		/**
+		 * The meta object literal for the '<em><b>Sub Typ</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ITYPED_ARTICLE__SUB_TYP = eINSTANCE.getITypedArticle_SubTyp();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.WithExtInfo <em>With Ext Info</em>}' class.

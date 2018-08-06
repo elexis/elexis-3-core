@@ -280,6 +280,17 @@ public interface TypesPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '<em>Article Typ</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.types.ArticleTyp
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getArticleTyp()
+	 * @generated
+	 */
+	int ARTICLE_TYP = 18;
+
+
+	/**
 	 * Returns the meta object for class '{@link java.lang.Comparable <em>Comparable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -472,6 +483,17 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EDataType getLabOrderState();
+
+	/**
+	 * Returns the meta object for data type '{@link ch.elexis.core.types.ArticleTyp <em>Article Typ</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Article Typ</em>'.
+	 * @see ch.elexis.core.types.ArticleTyp
+	 * @model instanceClass="ch.elexis.core.types.ArticleTyp"
+	 * @generated
+	 */
+	EDataType getArticleTyp();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -674,6 +696,16 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType LAB_ORDER_STATE = eINSTANCE.getLabOrderState();
+
+		/**
+		 * The meta object literal for the '<em>Article Typ</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.types.ArticleTyp
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getArticleTyp()
+		 * @generated
+		 */
+		EDataType ARTICLE_TYP = eINSTANCE.getArticleTyp();
 
 	}
 

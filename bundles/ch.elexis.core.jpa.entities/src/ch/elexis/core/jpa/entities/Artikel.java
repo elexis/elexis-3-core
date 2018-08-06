@@ -11,26 +11,25 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
 
+import ch.elexis.core.jpa.entities.converter.ArticleTypConverter;
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
+import ch.elexis.core.types.ArticleTyp;
 
 @Entity
 @Table(name = "artikel")
 @EntityListeners(EntityWithIdListener.class)
+@NamedQuery(name = "Artikel.typ.code", query = "SELECT ar FROM Artikel ar WHERE ar.deleted = false AND ar.subId = :code AND ar.typ = :typ")
+@NamedQuery(name = "Artikel.typ.id", query = "SELECT ar FROM Artikel ar WHERE ar.deleted = false AND ar.id = :id AND ar.typ = :typ")
 public class Artikel implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	public static final String CODESYSTEM_NAME = "Artikel";
-
-	public static final String TYP_EIGENARTIKEL = "Eigenartikel";
-	public static final String TYP_MIGEL = "MiGeL";
-	public static final String TYP_MEDICAL = "Medical";
-	public static final String TYP_MEDIKAMENT = "Medikament";
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -74,7 +73,8 @@ public class Artikel implements EntityWithId, EntityWithDeleted, EntityWithExtIn
 	private String vkPreis;
 
 	@Column(length = 15)
-	private String Typ;
+	@Convert(converter = ArticleTypConverter.class)
+	private ArticleTyp Typ;
 
 	@Column(length = 10)
 	private String codeclass;
@@ -106,11 +106,6 @@ public class Artikel implements EntityWithId, EntityWithDeleted, EntityWithExtIn
 		}
 		return ret;
 	}
-
-	@Transient
-	public String getGTIN() {
-		return getEan();
-	};
 
 	public String getEan() {
 		return ean;
@@ -168,11 +163,11 @@ public class Artikel implements EntityWithId, EntityWithDeleted, EntityWithExtIn
 		this.vkPreis = vkPreis;
 	}
 
-	public String getTyp() {
+	public ArticleTyp getTyp(){
 		return Typ;
 	}
 
-	public void setTyp(String typ) {
+	public void setTyp(ArticleTyp typ){
 		Typ = typ;
 	}
 

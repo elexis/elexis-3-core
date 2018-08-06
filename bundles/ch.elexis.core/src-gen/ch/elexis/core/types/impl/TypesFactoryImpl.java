@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 import ch.elexis.core.types.AddressType;
+import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.types.ContactGender;
 import ch.elexis.core.types.Country;
 import ch.elexis.core.types.DocumentStatus;
@@ -123,6 +124,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createXidQualityFromString(eDataType, initialValue);
 			case TypesPackage.LAB_ORDER_STATE:
 				return createLabOrderStateFromString(eDataType, initialValue);
+			case TypesPackage.ARTICLE_TYP:
+				return createArticleTypFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -166,6 +169,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertXidQualityToString(eDataType, instanceValue);
 			case TypesPackage.LAB_ORDER_STATE:
 				return convertLabOrderStateToString(eDataType, instanceValue);
+			case TypesPackage.ARTICLE_TYP:
+				return convertArticleTypToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -446,6 +451,24 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	public String convertLabOrderStateToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ArticleTyp createArticleTypFromString(EDataType eDataType, String initialValue) {
+		return (ArticleTyp)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertArticleTypToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

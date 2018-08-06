@@ -23,6 +23,7 @@ import ch.elexis.core.jpa.entities.Termin;
 import ch.elexis.core.jpa.entities.User;
 import ch.elexis.core.jpa.entities.Verrechnet;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.types.ArticleTyp;
 
 /**
  * Map type names from new {@link AbstractDBObjectIdDeleted} subclasses to PersistentObject legacy
@@ -142,15 +143,15 @@ public class ElexisTypeMap {
 			return TYPE_KONTAKT;
 		} else if (obj instanceof Artikel) {
 			Artikel art = (Artikel) obj;
-			String typ = art.getTyp().trim();
+			ArticleTyp typ = art.getTyp();
 			switch (typ) {
-			case Artikel.TYP_EIGENARTIKEL:
+			case EIGENARTIKEL:
 				return TYPE_EIGENARTIKEL;
-			case Artikel.TYP_MEDIKAMENT:
+			case MEDIKAMENT:
 				return TYPE_MEDIKAMENT;
-			case Artikel.TYP_MEDICAL:
+			case MEDICAL:
 				return TYPE_MEDICAL;
-			case Artikel.TYP_MIGEL:
+			case MIGEL:
 				return TYPE_MIGEL;
 			default:
 				return TYPE_ARTIKEL;

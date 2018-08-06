@@ -202,6 +202,10 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIArticleAdapter();
 			}
 			@Override
+			public Adapter caseITypedArticle(ITypedArticle object) {
+				return createITypedArticleAdapter();
+			}
+			@Override
 			public Adapter caseWithExtInfo(WithExtInfo object) {
 				return createWithExtInfoAdapter();
 			}
@@ -612,6 +616,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIArticleAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.ITypedArticle <em>ITyped Article</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.ITypedArticle
+	 * @generated
+	 */
+	public Adapter createITypedArticleAdapter() {
 		return null;
 	}
 

@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 import ch.elexis.core.types.AddressType;
+import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.types.ContactGender;
 import ch.elexis.core.types.Country;
 import ch.elexis.core.types.DocumentStatus;
@@ -170,6 +171,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EDataType labOrderStateEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType articleTypEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -399,6 +407,15 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EDataType getArticleTyp() {
+		return articleTypEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public TypesFactory getTypesFactory() {
 		return (TypesFactory)getEFactoryInstance();
 	}
@@ -446,6 +463,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		localDateEDataType = createEDataType(LOCAL_DATE);
 		xidQualityEDataType = createEDataType(XID_QUALITY);
 		labOrderStateEDataType = createEDataType(LAB_ORDER_STATE);
+		articleTypEDataType = createEDataType(ARTICLE_TYP);
 	}
 
 	/**
@@ -541,6 +559,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEDataType(localDateEDataType, LocalDate.class, "LocalDate", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(xidQualityEDataType, XidQuality.class, "XidQuality", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(labOrderStateEDataType, LabOrderState.class, "LabOrderState", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(articleTypEDataType, ArticleTyp.class, "ArticleTyp", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

@@ -21,6 +21,7 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.ITypedArticle;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.IXid;
@@ -87,5 +88,8 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 			ch.elexis.core.jpa.entities.LabOrder.class));
 		addMapping(new MappingEntry(ILabMapping.class, ch.elexis.core.model.LabMapping.class,
 			ch.elexis.core.jpa.entities.LabMapping.class));
+		
+		addMapping(new MappingEntry(ITypedArticle.class, ch.elexis.core.model.TypedArticle.class,
+			ch.elexis.core.jpa.entities.Artikel.class));
 	}
 }

@@ -2,9 +2,7 @@ package ch.elexis.core.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
@@ -12,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
+import ch.elexis.core.model.mixin.ExtInfoHandler;
 import ch.elexis.core.model.mixin.IdentifiableWithXid;
 import ch.elexis.core.model.util.LabPathologicEvaluator;
 import ch.elexis.core.model.util.ModelUtil;
@@ -20,13 +19,15 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.types.PathologicDescription;
 
 public class LabResult extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.LabResult>
-		implements IdentifiableWithXid, IdentifiableWithExtInfo, ILabResult {
+		implements IdentifiableWithXid, ILabResult {
 	
 	private LabPathologicEvaluator labPathologicEvaluator;
-	private Map<Object, Object> extInfo;
+	private ExtInfoHandler extInfoHandler;
 	
+
 	public LabResult(ch.elexis.core.jpa.entities.LabResult entity){
 		super(entity);
+		extInfoHandler = new ExtInfoHandler(this);
 	}
 	
 	@Override
@@ -230,38 +231,20 @@ public class LabResult extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.e
 		}
 	}
 	
-	@Override
-	public Object getExtInfo(Object key){
-		byte[] bytes = getEntity().getExtInfo();
-		if (bytes != null) {
-			extInfo = ModelUtil.extInfoFromBytes(bytes);
-			return extInfo.get(key);
-		}
-		return null;
-	}
-	
-	@Override
-	public void setExtInfo(Object key, Object value){
-		if(extInfo == null) {
-			byte[] bytes = getEntity().getExtInfo();
-			if (bytes != null) {
-				extInfo = ModelUtil.extInfoFromBytes(bytes);
-			} else {
-				extInfo = new Hashtable<>();
-			}
-		}
-		if (value == null) {
-			extInfo.remove(key);
-		} else {
-			extInfo.put(key, value);
-		}
-		getEntity().setExtInfo(ModelUtil.extInfoToBytes(extInfo));
-	}
-	
 	private synchronized LabPathologicEvaluator getLabPathologicEvaluator(){
 		if (labPathologicEvaluator == null) {
 			labPathologicEvaluator = new LabPathologicEvaluator();
 		}
 		return labPathologicEvaluator;
+	}
+	
+	@Override
+	public Object getExtInfo(Object key){
+		return extInfoHandler.getExtInfo(key);
+	}
+	
+	@Override
+	public void setExtInfo(Object key, Object value){
+		extInfoHandler.setExtInfo(key, value);
 	}
 }

@@ -10,6 +10,8 @@
  */
 package ch.elexis.core.model;
 
+import ch.elexis.core.types.ArticleTyp;
+
 
 /**
  * <!-- begin-user-doc -->
@@ -31,7 +33,7 @@ package ch.elexis.core.model;
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface IArticle extends Identifiable {
+public interface IArticle extends Identifiable, IBillable {
 	/**
 	 * Returns the value of the '<em><b>Gtin</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -43,7 +45,7 @@ public interface IArticle extends Identifiable {
 	 * @return the value of the '<em>Gtin</em>' attribute.
 	 * @see #setGtin(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIArticle_Gtin()
-	 * @model
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='ean'"
 	 * @generated
 	 */
 	String getGtin();
@@ -145,21 +147,10 @@ public interface IArticle extends Identifiable {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Product</em>' attribute.
-	 * @see #setProduct(boolean)
 	 * @see ch.elexis.core.model.ModelPackage#getIArticle_Product()
-	 * @model
+	 * @model changeable="false"
 	 * @generated
 	 */
 	boolean isProduct();
-
-	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IArticle#isProduct <em>Product</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Product</em>' attribute.
-	 * @see #isProduct()
-	 * @generated
-	 */
-	void setProduct(boolean value);
 
 } // IArticle

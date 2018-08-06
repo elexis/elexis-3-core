@@ -300,7 +300,20 @@ public class ModelSwitch<T1> extends Switch<T1> {
 			case ModelPackage.IARTICLE: {
 				IArticle iArticle = (IArticle)theEObject;
 				T1 result = caseIArticle(iArticle);
+				if (result == null) result = caseIBillable(iArticle);
 				if (result == null) result = caseIdentifiable(iArticle);
+				if (result == null) result = caseICodeElement(iArticle);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.ITYPED_ARTICLE: {
+				ITypedArticle iTypedArticle = (ITypedArticle)theEObject;
+				T1 result = caseITypedArticle(iTypedArticle);
+				if (result == null) result = caseIArticle(iTypedArticle);
+				if (result == null) result = caseWithExtInfo(iTypedArticle);
+				if (result == null) result = caseIBillable(iTypedArticle);
+				if (result == null) result = caseIdentifiable(iTypedArticle);
+				if (result == null) result = caseICodeElement(iTypedArticle);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -731,6 +744,21 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIArticle(IArticle object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>ITyped Article</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>ITyped Article</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseITypedArticle(ITypedArticle object) {
 		return null;
 	}
 

@@ -1,18 +1,26 @@
 package ch.elexis.core.eigenartikel.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.interfaces.ICodeElement;
-import ch.elexis.core.data.services.ICodeElementServiceContribution;
 import ch.elexis.core.eigenartikel.Eigenartikel;
-import ch.elexis.data.Artikel;
-import ch.elexis.data.Query;
+import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.model.ITypedArticle;
+import ch.elexis.core.services.ICodeElementServiceContribution;
+import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.INamedQuery;
+import ch.elexis.core.types.ArticleTyp;
 
 @Component
 public class EigenartikelCodeElementService implements ICodeElementServiceContribution {
+	
+	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
+	private IModelService coreModelService;
 	
 	@Override
 	public String getSystem(){
@@ -21,15 +29,29 @@ public class EigenartikelCodeElementService implements ICodeElementServiceContri
 	
 	@Override
 	public Optional<ICodeElement> createFromCode(String code, HashMap<Object, Object> context){
-		Query<Eigenartikel> query = new Query<>(Eigenartikel.class);
-		String found = query.findSingle(Artikel.FLD_SUB_ID, Query.EQUALS, code);
-		if (found != null) {
-			return Optional.of(Eigenartikel.load(found));
+		INamedQuery<ITypedArticle> query =
+			coreModelService.getNamedQuery(ITypedArticle.class, "typ", "code");
+		
+		List<ITypedArticle> found = query.executeWithParameters(
+			coreModelService.getParameterMap("typ", ArticleTyp.EIGENARTIKEL, "code", code));
+		if (!found.isEmpty()) {
+			if (found.size() > 1) {
+				LoggerFactory.getLogger(getClass()).warn("Found more than one "
+					+ ArticleTyp.EIGENARTIKEL.getCodeSystemName() + " with code [" + code
+					+ "] using first");
+			}
+			return Optional.of(found.get(0));
 		} else {
-			query.clear();
-			found = query.findSingle(Eigenartikel.FLD_ID, Query.EQUALS, code);
-			if (found != null) {
-				return Optional.of((ICodeElement) Eigenartikel.load(found));
+			query = coreModelService.getNamedQuery(ITypedArticle.class, "typ", "id");
+			found = query.executeWithParameters(
+				coreModelService.getParameterMap("typ", ArticleTyp.EIGENARTIKEL, "id", code));
+			if (!found.isEmpty()) {
+				if (found.size() > 1) {
+					LoggerFactory.getLogger(getClass())
+						.warn("Found more than one " + ArticleTyp.EIGENARTIKEL.getCodeSystemName()
+							+ " with id [" + code + "] using first");
+				}
+				return Optional.of(found.get(0));
 			}
 		}
 		return Optional.empty();

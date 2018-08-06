@@ -44,6 +44,7 @@ import ch.elexis.core.model.IPeriod;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.ISticker;
+import ch.elexis.core.model.ITypedArticle;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.IXid;
@@ -248,6 +249,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass iArticleEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iTypedArticleEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1590,6 +1598,33 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getITypedArticle() {
+		return iTypedArticleEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getITypedArticle_Typ() {
+		return (EAttribute)iTypedArticleEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getITypedArticle_SubTyp() {
+		return (EAttribute)iTypedArticleEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getWithExtInfo() {
 		return withExtInfoEClass;
 	}
@@ -1824,6 +1859,10 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iArticleEClass, IARTICLE__PACKAGE_UNIT);
 		createEAttribute(iArticleEClass, IARTICLE__PRODUCT);
 
+		iTypedArticleEClass = createEClass(ITYPED_ARTICLE);
+		createEAttribute(iTypedArticleEClass, ITYPED_ARTICLE__TYP);
+		createEAttribute(iTypedArticleEClass, ITYPED_ARTICLE__SUB_TYP);
+
 		withExtInfoEClass = createEClass(WITH_EXT_INFO);
 
 		iRoleEClass = createEClass(IROLE);
@@ -1906,6 +1945,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iPeriodEClass.getESuperTypes().add(this.getIdentifiable());
 		iPeriodEClass.getESuperTypes().add(this.getDeleteable());
 		iArticleEClass.getESuperTypes().add(this.getIdentifiable());
+		iArticleEClass.getESuperTypes().add(this.getIBillable());
+		iTypedArticleEClass.getESuperTypes().add(this.getIArticle());
+		iTypedArticleEClass.getESuperTypes().add(this.getWithExtInfo());
 		iRoleEClass.getESuperTypes().add(this.getIdentifiable());
 		iBlobEClass.getESuperTypes().add(this.getIdentifiable());
 		iBlobEClass.getESuperTypes().add(this.getDeleteable());
@@ -2135,7 +2177,14 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIArticle_Name(), ecorePackage.getEString(), "name", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIArticle_SellingUnit(), ecorePackage.getEInt(), "sellingUnit", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIArticle_PackageUnit(), ecorePackage.getEInt(), "packageUnit", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIArticle_Product(), ecorePackage.getEBoolean(), "product", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIArticle_Product(), ecorePackage.getEBoolean(), "product", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(iTypedArticleEClass, ITypedArticle.class, "ITypedArticle", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getITypedArticle_Typ(), theTypesPackage.getArticleTyp(), "typ", null, 0, 1, ITypedArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getITypedArticle_SubTyp(), ecorePackage.getEString(), "subTyp", null, 0, 1, ITypedArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		op = addEOperation(iTypedArticleEClass, null, "setCode", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "code", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(withExtInfoEClass, WithExtInfo.class, "WithExtInfo", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -2217,6 +2266,18 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		   source, 
 		   new String[] {
 			 "attributeName", "param"
+		   });	
+		addAnnotation
+		  (getIArticle_Gtin(), 
+		   source, 
+		   new String[] {
+			 "attributeName", "ean"
+		   });	
+		addAnnotation
+		  (getITypedArticle_SubTyp(), 
+		   source, 
+		   new String[] {
+			 "attributeName", "codeclass"
 		   });
 	}
 
