@@ -2,11 +2,13 @@ package ch.elexis.core.findings.fhir.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.dstu3.model.DomainResource;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -18,11 +20,13 @@ import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IObservationLink;
 import ch.elexis.core.findings.IObservationLink.ObservationLinkType;
 import ch.elexis.core.findings.ObservationComponent;
+import ch.elexis.core.findings.fhir.model.service.FindingsModelService;
+import ch.elexis.core.findings.fhir.model.service.FindingsModelServiceHolder;
 import ch.elexis.core.findings.scripting.FindingsScriptingUtil;
 import ch.elexis.core.findings.util.ModelUtil;
 import ch.elexis.core.findings.util.fhir.accessor.ObservationAccessor;
+import ch.elexis.core.jpa.entities.ObservationLink;
 import ch.elexis.core.model.IXid;
-import ch.elexis.core.services.INamedQuery;
 
 public class Observation
 		extends AbstractFindingModelAdapter<ch.elexis.core.jpa.entities.Observation>
@@ -156,76 +160,108 @@ public class Observation
 	}
 	
 	@Override
-	public List<IObservation> getSourceObservations(ObservationLinkType type){
-		INamedQuery<IObservationLink> query =
-			ModelUtil.getFindingsNamedQuery(IObservationLink.class, "targetid", "type");
-		List<IObservationLink> links = query.executeWithParameters(
-			ModelUtil.getParamtersMap("targetid", getId(), "type", type.name()));
-		
-		List<IObservation> iObservations = new ArrayList<>();
-		for (IObservationLink link : links) {
-			link.getSource().ifPresent(o -> iObservations.add(o));
-		}
-		return iObservations;
-	}
-	
-	@Override
-	public void addSourceObservation(IObservation source, ObservationLinkType type){
-		if (source != null && source.getId() != null && getId() != null) {
-			IObservationLink observationLink = ModelUtil.createFinding(IObservationLink.class);
-			observationLink.setTarget(this);
-			observationLink.setSource(source);
-			observationLink.setType(type);
-			ModelUtil.saveFinding(observationLink);
-		}
-	}
-	
-	@Override
-	public void removeSourceObservation(IObservation source, ObservationLinkType type){
-		INamedQuery<IObservationLink> query =
-			ModelUtil.getFindingsNamedQuery(IObservationLink.class, "targetid", "sourceid", "type");
-		List<IObservationLink> links = query.executeWithParameters(
-			ModelUtil.getParamtersMap("targetid", getId(), "sourceid", source.getId(), "type",
-				type.name()));
-		for (IObservationLink link : links) {
-			ModelUtil.deleteFinding(link);
-		}
-	}
-	
-	@Override
 	public List<IObservation> getTargetObseravtions(ObservationLinkType type){
-		INamedQuery<IObservationLink> query =
-			ModelUtil.getFindingsNamedQuery(IObservationLink.class, "sourceid", "type");
-		List<IObservationLink> links = query.executeWithParameters(
-			ModelUtil.getParamtersMap("sourceid", getId(), "type", type.name()));
-		
-		List<IObservation> iObservations = new ArrayList<>();
-		for (IObservationLink link : links) {
-			link.getTarget().ifPresent(o -> iObservations.add(o));
-		}
-		return iObservations;
-		
+		List<ObservationLink> typeSourceLinks = getEntity().getSourceLinks();
+		typeSourceLinks = typeSourceLinks.stream().filter(ol -> ol.getType().equals(type.name()))
+			.collect(Collectors.toList());
+		return typeSourceLinks.stream()
+			.map(ol -> FindingsModelService.getAdapter(ol.getTarget(), IObservation.class))
+			.collect(Collectors.toList());
+	}
+	
+	@Override
+	public List<IObservation> getSourceObservations(ObservationLinkType type){
+		List<ObservationLink> typeTargetLinks = getEntity().getTargetLinks();
+		typeTargetLinks = typeTargetLinks.stream().filter(ol -> ol.getType().equals(type.name()))
+			.collect(Collectors.toList());
+		return typeTargetLinks.stream()
+			.map(ol -> FindingsModelService.getAdapter(ol.getSource(), IObservation.class))
+			.collect(Collectors.toList());
 	}
 	
 	@Override
 	public void addTargetObservation(IObservation target, ObservationLinkType type){
 		if (target != null && target.getId() != null && getId() != null) {
 			IObservationLink observationLink = ModelUtil.createFinding(IObservationLink.class);
+			ObservationLink observationLinkEntity =
+				FindingsModelService.getDBObject(observationLink, ObservationLink.class);
+			// add to link and observations
 			observationLink.setTarget(target);
+			FindingsModelService.getDBObject(target, ch.elexis.core.jpa.entities.Observation.class)
+				.getTargetLinks().add(observationLinkEntity);
 			observationLink.setSource(this);
+			getEntity().getSourceLinks().add(observationLinkEntity);
 			observationLink.setType(type);
-			ModelUtil.saveFinding(observationLink);
+			FindingsModelServiceHolder.get().save(Arrays.asList(observationLink, target, this));
+		}
+	}
+	
+	@Override
+	public void addSourceObservation(IObservation source, ObservationLinkType type){
+		if (source != null && source.getId() != null && getId() != null) {
+			IObservationLink observationLink = ModelUtil.createFinding(IObservationLink.class);
+			ObservationLink observationLinkEntity =
+				FindingsModelService.getDBObject(observationLink, ObservationLink.class);
+			// add to link and observations
+			observationLink.setSource(source);
+			FindingsModelService.getDBObject(source, ch.elexis.core.jpa.entities.Observation.class)
+				.getSourceLinks().add(observationLinkEntity);
+			observationLink.setTarget(this);
+			getEntity().getTargetLinks().add(observationLinkEntity);
+			observationLink.setType(type);
+			FindingsModelServiceHolder.get().save(Arrays.asList(observationLink, source, this));
 		}
 	}
 	
 	@Override
 	public void removeTargetObservation(IObservation target, ObservationLinkType type){
-		INamedQuery<IObservationLink> query =
-			ModelUtil.getFindingsNamedQuery(IObservationLink.class, "targetid", "sourceid", "type");
-		List<IObservationLink> links = query.executeWithParameters(ModelUtil
-			.getParamtersMap("sourceid", getId(), "targetid", target.getId(), "type", type.name()));
-		for (IObservationLink link : links) {
-			ModelUtil.deleteFinding(link);
+		if (target != null && target.getId() != null && getId() != null) {
+			List<ObservationLink> typeSourceLinks = getEntity().getSourceLinks();
+			typeSourceLinks = typeSourceLinks.stream().filter(ol -> ol.getType().equals(type.name()))
+				.collect(Collectors.toList());
+			ch.elexis.core.jpa.entities.Observation targetEntity = FindingsModelService
+				.getDBObject(target, ch.elexis.core.jpa.entities.Observation.class);
+			for (ObservationLink sourceLink : typeSourceLinks) {
+				if (sourceLink.getTarget().equals(targetEntity)) {
+					IObservationLink observationLink =
+						FindingsModelService.getAdapter(sourceLink, IObservationLink.class);
+					observationLink.setTarget(null);
+					targetEntity.getTargetLinks().remove(sourceLink);
+					observationLink.setSource(null);
+					getEntity().getSourceLinks().remove(sourceLink);
+					FindingsModelServiceHolder.get()
+						.save(Arrays.asList(observationLink, target, this));
+					FindingsModelServiceHolder.get().remove(observationLink);
+					// work is done
+					break;
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void removeSourceObservation(IObservation source, ObservationLinkType type){
+		if (source != null && source.getId() != null && getId() != null) {
+			List<ObservationLink> typeTargetLinks = getEntity().getTargetLinks();
+			typeTargetLinks = typeTargetLinks.stream()
+				.filter(ol -> ol.getType().equals(type.name())).collect(Collectors.toList());
+			ch.elexis.core.jpa.entities.Observation sourceEntity = FindingsModelService
+				.getDBObject(source, ch.elexis.core.jpa.entities.Observation.class);
+			for (ObservationLink targetLink : typeTargetLinks) {
+				if (targetLink.getSource().equals(sourceEntity)) {
+					IObservationLink observationLink =
+						FindingsModelService.getAdapter(targetLink, IObservationLink.class);
+					observationLink.setTarget(null);
+					sourceEntity.getSourceLinks().remove(targetLink);
+					observationLink.setSource(null);
+					getEntity().getTargetLinks().remove(targetLink);
+					FindingsModelServiceHolder.get()
+						.save(Arrays.asList(observationLink, source, this));
+					FindingsModelServiceHolder.get().remove(observationLink);
+					// work is done
+					break;
+				}
+			}
 		}
 	}
 	
@@ -348,7 +384,8 @@ public class Observation
 	
 	@Override
 	public void addFormat(String key, String value){
-		StringBuilder builder = new StringBuilder(getEntity().getFormat());
+		StringBuilder builder =
+			new StringBuilder(StringUtils.defaultString(getEntity().getFormat()));
 		String dbValue = getFormat(key);
 		String dbKeyValue = key + FORMAT_KEY_VALUE_SPLITTER + dbValue;
 		

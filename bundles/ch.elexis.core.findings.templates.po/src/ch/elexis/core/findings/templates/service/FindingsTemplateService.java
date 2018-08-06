@@ -50,7 +50,8 @@ import ch.elexis.core.findings.templates.model.InputDataNumeric;
 import ch.elexis.core.findings.templates.model.InputDataText;
 import ch.elexis.core.findings.templates.model.ModelFactory;
 import ch.elexis.core.findings.templates.model.Type;
-import ch.elexis.data.NamedBlob;
+import ch.elexis.core.model.IBlob;
+import ch.elexis.core.services.IModelService;
 import ch.elexis.data.Patient;
 
 @Component()
@@ -58,42 +59,40 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 	
 	private static final String FINDINGS_TEMPLATE_ID_PREFIX = "Findings_Template_";
 	
+	@Reference
 	private IFindingsService findingsService;
+	
+	@Reference
 	private ICodingService codingService;
 	
-	@Reference(unbind = "-")
-	public synchronized void setFindingsService(IFindingsService findingsServcie){
-		this.findingsService = findingsServcie;
-	}
-	
-	@Reference(unbind = "-")
-	public synchronized void setCodingService(ICodingService codingService){
-		this.codingService = codingService;
-	}
+	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
+	private IModelService coreModelService;
 	
 	public FindingsTemplates getFindingsTemplates(String templateId){
 		Assert.isNotNull(templateId);
 		templateId = templateId.replaceAll(" ", "_");
-		NamedBlob namedBlob = NamedBlob.load(FINDINGS_TEMPLATE_ID_PREFIX + templateId);
-		if (namedBlob.exists() && namedBlob.getString() != null
-			&& !namedBlob.getString().isEmpty()) {
-			try {
-				
-				Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-				Map<String, Object> m = reg.getExtensionToFactoryMap();
-				m.put("xmi", new XMIResourceFactoryImpl());
-				// Obtain a new resource set
-				ResourceSet resSet = new ResourceSetImpl();
-				
-				// Get the resource
-				Resource resource = resSet.createResource(URI.createURI("findingsTemplate.xml"));
-				resource.load(new URIConverter.ReadableInputStream(namedBlob.getString()), null);
-				return (FindingsTemplates) resource.getContents().get(0);
-			} catch (IOException e) {
-				LoggerFactory.getLogger(FindingsTemplateService.class)
-					.error("read findings templates error", e);
+		Optional<IBlob> blob =
+			coreModelService.load(FINDINGS_TEMPLATE_ID_PREFIX + templateId, IBlob.class);
+		if (blob.isPresent()) {
+			String stringContent = blob.get().getStringContent();
+			if (stringContent != null && !stringContent.isEmpty()) {
+				try {
+					Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
+					Map<String, Object> m = reg.getExtensionToFactoryMap();
+					m.put("xmi", new XMIResourceFactoryImpl());
+					// Obtain a new resource set
+					ResourceSet resSet = new ResourceSetImpl();
+					
+					// Get the resource
+					Resource resource =
+						resSet.createResource(URI.createURI("findingsTemplate.xml"));
+					resource.load(new URIConverter.ReadableInputStream(stringContent), null);
+					return (FindingsTemplates) resource.getContents().get(0);
+				} catch (IOException e) {
+					LoggerFactory.getLogger(FindingsTemplateService.class)
+						.error("read findings templates error", e);
+				}
 			}
-			
 		}
 		
 		ModelFactory factory = ModelFactory.eINSTANCE;
@@ -136,10 +135,14 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 	}
 	
 	private boolean saveXmiToNamedBlob(String xmi, String blobId){
-		if (xmi != null && blobId != null) {
-			NamedBlob namedBlob = NamedBlob.load(blobId);
-			namedBlob.putString(xmi);
-			return true;
+		if (xmi != null && blobId != null) { 
+			IBlob blob = coreModelService.load(blobId, IBlob.class).orElse(null);
+			if (blob == null) {
+				blob = coreModelService.create(IBlob.class);
+				blob.setId(blobId);
+			}
+			blob.setStringContent(xmi);
+			return coreModelService.save(blob);
 		} else {
 			//cannot save
 			LoggerFactory.getLogger(FindingsTemplateService.class)

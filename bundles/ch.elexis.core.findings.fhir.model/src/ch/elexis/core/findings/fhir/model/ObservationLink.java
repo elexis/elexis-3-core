@@ -4,12 +4,12 @@ import java.util.Optional;
 
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IObservationLink;
-import ch.elexis.core.findings.util.ModelUtil;
-import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
+import ch.elexis.core.findings.fhir.model.service.FindingsModelService;
+import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.model.IXid;
 
 public class ObservationLink
-		extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.ObservationLink>
+		extends AbstractIdModelAdapter<ch.elexis.core.jpa.entities.ObservationLink>
 		implements IObservationLink {
 	
 	public ObservationLink(ch.elexis.core.jpa.entities.ObservationLink entity){
@@ -18,29 +18,33 @@ public class ObservationLink
 	
 	@Override
 	public Optional<IObservation> getSource(){
-		return ModelUtil.loadFinding(getEntity().getSourceid(), IObservation.class);
+		return Optional.ofNullable(
+			FindingsModelService.getAdapter(getEntity().getSource(), IObservation.class));
 	}
 	
 	@Override
 	public Optional<IObservation> getTarget(){
-		return ModelUtil.loadFinding(getEntity().getTargetid(), IObservation.class);
+		return Optional.ofNullable(
+			FindingsModelService.getAdapter(getEntity().getTarget(), IObservation.class));
 	}
 	
 	@Override
 	public void setTarget(IObservation observation){
 		if (observation != null) {
-			getEntity().setTargetid(observation.getId());
+			getEntity().setTarget(FindingsModelService.getDBObject(observation,
+				ch.elexis.core.jpa.entities.Observation.class));
 		} else {
-			getEntity().setTargetid(null);
+			getEntity().setTarget(null);
 		}
 	}
 	
 	@Override
 	public void setSource(IObservation observation){
 		if (observation != null) {
-			getEntity().setSourceid(observation.getId());
+			getEntity().setSource(FindingsModelService.getDBObject(observation,
+				ch.elexis.core.jpa.entities.Observation.class));
 		} else {
-			getEntity().setSourceid(null);
+			getEntity().setSource(null);
 		}
 	}
 	

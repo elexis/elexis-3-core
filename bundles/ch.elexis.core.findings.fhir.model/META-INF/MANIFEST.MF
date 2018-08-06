@@ -12,9 +12,11 @@ Require-Bundle: ch.elexis.core.findings;bundle-version="1.0.0",
  ch.elexis.core.findings.util;bundle-version="1.0.0",
  hapi-fhir-osgi-core;bundle-version="2.4.0"
 Bundle-ActivationPolicy: lazy
-Import-Package: org.osgi.service.event,
+Import-Package: org.apache.commons.lang3;version="3.1.0",
+ org.osgi.service.event,
  org.slf4j;version="1.7.2"
 Service-Component: OSGI-INF/ch.elexis.core.findings.fhir.model.service.FindingsModelService.xml,
  OSGI-INF/ch.elexis.core.findings.fhir.model.service.FindingsService.xml,
  OSGI-INF/ch.elexis.core.findings.fhir.model.service.LocalCodingContribution.xml,
- OSGI-INF/ch.elexis.core.findings.fhir.model.service.CodingService.xml
+ OSGI-INF/ch.elexis.core.findings.fhir.model.service.CodingService.xml,
+ OSGI-INF/ch.elexis.core.findings.fhir.model.service.FindingsModelServiceHolder.xml

@@ -31,8 +31,6 @@ import ch.elexis.core.findings.ui.composites.ICompositeSaveable;
 import ch.elexis.core.findings.ui.util.FindingsUiUtil;
 import ch.elexis.core.findings.util.ModelUtil;
 import ch.elexis.core.findings.util.commands.UpdateFindingTextCommand;
-import ch.elexis.core.data.interfaces.IPersistentObject;
-import ch.elexis.data.PersistentObject;
 
 public class FindingsEditDialog extends TitleAreaDialog {
 	
@@ -71,7 +69,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 	
 	private ICompositeSaveable createDynamicContent(IFinding iFinding, ICompositeSaveable current,
 		int depth) throws ElexisException{
-		if (!CoreHub.getLocalLockService().acquireLock((IPersistentObject) iFinding).isOk()) {
+		if (!CoreHub.getLocalLockService().acquireLock(iFinding).isOk()) {
 			throw new ElexisException("Die Editierung ist nicht möglich, kein Lock erhalten.");
 		}
 		lockedFindings.add(iFinding);
@@ -80,7 +78,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 			List<IObservation> refChildrens = item.getTargetObseravtions(ObservationLinkType.REF);
 			StringBuilder sb = new StringBuilder();
 			refChildrens.stream().forEach(o -> sb.append(o.getCoding().get(0).getDisplay())
-				.append(((PersistentObject) o).isDeleted()).append(","));
+				.append((o).isDeleted()).append(","));
 			System.out.println("children -> " + sb.toString());
 			// use reverse order for references to create ui components
 			Collections.reverse(refChildrens);
@@ -198,7 +196,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 	
 	public void releaseAllLocks(){
 		for (IFinding iFinding : lockedFindings) {
-			CoreHub.getLocalLockService().releaseLock((IPersistentObject) iFinding);
+			CoreHub.getLocalLockService().releaseLock(iFinding);
 		}
 	}
 	

@@ -14,7 +14,6 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.ui.util.FindingsUiUtil;
-import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.ILockHandler;
@@ -30,7 +29,7 @@ public class FindingDeleteHandler extends AbstractHandler implements IHandler {
 			if (item instanceof IFinding) {
 				IFinding iFinding = (IFinding) item;
 				
-				AcquireLockBlockingUi.aquireAndRun((IPersistentObject) iFinding,
+				AcquireLockBlockingUi.aquireAndRun(iFinding,
 					new ILockHandler() {
 						@Override
 						public void lockFailed(){
@@ -48,7 +47,7 @@ public class FindingDeleteHandler extends AbstractHandler implements IHandler {
 							}
 							
 							ElexisEventDispatcher.getInstance()
-								.fire(new ElexisEvent((IPersistentObject) iFinding, IFinding.class,
+								.fire(new ElexisEvent(iFinding, IFinding.class,
 									ElexisEvent.EVENT_DELETE));
 						}
 					});

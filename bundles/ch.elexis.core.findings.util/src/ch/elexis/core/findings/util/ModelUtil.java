@@ -240,8 +240,8 @@ public class ModelUtil {
 	}
 	
 	/**
-	 * Get all the chilren of the {@link IObservation} reachable via target {@link IObservationLink}
-	 * links.
+	 * Get all the children of the {@link IObservation} reachable via target
+	 * {@link IObservationLink} links.
 	 * 
 	 * @param iObservation
 	 * @param list

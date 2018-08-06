@@ -16,7 +16,7 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.ui.dialogs.FindingsEditDialog;
-import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 
@@ -35,7 +35,7 @@ public class FindingEditHandler extends AbstractHandler implements IHandler {
 			if (item instanceof IFinding) {
 				
 				IFinding iFinding = (IFinding) item;
-				AcquireLockBlockingUi.aquireAndRun((IPersistentObject) iFinding,
+				AcquireLockBlockingUi.aquireAndRun(iFinding,
 					new ILockHandler() {
 						@Override
 						public void lockFailed(){
@@ -50,9 +50,10 @@ public class FindingEditHandler extends AbstractHandler implements IHandler {
 							
 							findingsEditDialog.releaseAllLocks();
 							if (dialogRet == MessageDialog.OK) {
+								FindingsServiceComponent.getService().saveFinding(iFinding);
 								ElexisEventDispatcher.getInstance()
-									.fire(new ElexisEvent((IPersistentObject) iFinding,
-									IFinding.class, ElexisEvent.EVENT_RELOAD));
+									.fire(new ElexisEvent(iFinding,
+										IFinding.class, ElexisEvent.EVENT_RELOAD));
 								ret = Boolean.TRUE;
 							}
 						}

@@ -12,10 +12,9 @@ package ch.elexis.core.findings;
 
 import java.util.Optional;
 
-import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.Identifiable;
 
-public interface IObservationLink extends Identifiable, Deleteable {
+public interface IObservationLink extends Identifiable {
 	public enum ObservationLinkType {
 			REF
 	}

@@ -24,6 +24,11 @@ public class UpdateFindingTextCommand implements IFindingCommand {
 	
 	@Override
 	public void execute() throws ElexisException{
+		// make sure we update the text of the iFinding instance
+		if (iFinding instanceof IObservation
+			&& ((IObservation) iFinding).getObservationType() != ObservationType.REF) {
+			FindingsTextUtil.getObservationText(((IObservation) iFinding), true);
+		}
 		IFinding rootFinding = getRootFinding();
 		if (rootFinding instanceof IObservation) {
 			ObservationType observationType = ((IObservation) rootFinding).getObservationType();

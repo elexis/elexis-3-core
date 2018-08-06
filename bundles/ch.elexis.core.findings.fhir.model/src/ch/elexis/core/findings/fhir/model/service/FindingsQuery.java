@@ -9,12 +9,13 @@ import ch.elexis.core.services.IQuery;
 
 public class FindingsQuery<T> extends AbstractModelQuery<T> implements IQuery<T> {
 	
-	public FindingsQuery(Class<T> clazz, EntityManager entityManager){
-		this(clazz, entityManager, false);
+	public FindingsQuery(Class<T> clazz, boolean refreshCache, EntityManager entityManager){
+		this(clazz, refreshCache, entityManager, false);
 	}
 	
-	public FindingsQuery(Class<T> clazz, EntityManager entityManager, boolean includeDeleted){
-		super(clazz, entityManager, includeDeleted);
+	public FindingsQuery(Class<T> clazz, boolean refreshCache, EntityManager entityManager,
+		boolean includeDeleted){
+		super(clazz, refreshCache, entityManager, includeDeleted);
 	}
 	
 	@Override

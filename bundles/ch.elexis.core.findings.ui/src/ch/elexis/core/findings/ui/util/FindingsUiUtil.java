@@ -42,7 +42,6 @@ import ch.elexis.core.findings.ui.services.CodingServiceComponent;
 import ch.elexis.core.findings.util.commands.FindingDeleteCommand;
 import ch.elexis.core.findings.util.commands.ILockingProvider;
 import ch.elexis.core.lock.types.LockResponse;
-import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.ui.actions.CommentAction;
 import ch.elexis.core.ui.util.SWTHelper;
 
@@ -277,19 +276,19 @@ public class FindingsUiUtil {
 	 */
 	public static void deleteFinding(IFinding iFinding) throws ElexisException{
 		try {
-			if (CoreHub.getLocalLockService().acquireLock((IPersistentObject) iFinding).isOk()) {
+			if (CoreHub.getLocalLockService().acquireLock(iFinding).isOk()) {
 				new FindingDeleteCommand(iFinding, new ILockingProvider() {
 					
 					@Override
 					public LockResponse releaseLock(Object object){
 						return CoreHub.getLocalLockService()
-							.releaseLock((IPersistentObject) object);
+							.releaseLock((IFinding) object);
 					}
 					
 					@Override
 					public LockResponse acquireLock(Object object){
 						return CoreHub.getLocalLockService()
-							.acquireLock((IPersistentObject) object);
+							.acquireLock((IFinding) object);
 					}
 				}).execute();
 			}
@@ -297,7 +296,7 @@ public class FindingsUiUtil {
 			MessageDialog.openInformation(Display.getDefault().getActiveShell(), "Löschen",
 				"Befund wurde nicht gelöscht. Der Befund ist auf einer anderen Station geöffnet.");
 		} finally {
-			CoreHub.getLocalLockService().releaseLock((IPersistentObject) iFinding);
+			CoreHub.getLocalLockService().releaseLock(iFinding);
 		}
 	}
 	
