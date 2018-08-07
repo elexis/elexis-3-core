@@ -217,7 +217,7 @@ public class Kontakt implements EntityWithId, EntityWithDeleted, EntityWithExtIn
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")
 	protected List<Userconfig> userconfig = new ArrayList<>();
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "contact", orphanRemoval = true)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "contact", cascade = CascadeType.ALL)
 	@MapKey(name = "id")
 	protected Map<String, ZusatzAdresse> addresses = new HashMap<>();
 

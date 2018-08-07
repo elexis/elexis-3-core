@@ -16,7 +16,10 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+
+import org.eclipse.persistence.annotations.Cache;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.XidQualityConverter;
@@ -33,6 +36,9 @@ import ch.elexis.core.model.XidQuality;
 @Entity
 @Table(name = "xid")
 @EntityListeners(EntityWithIdListener.class)
+@Cache(expiry = 15000)
+@NamedQuery(name = "Xid.domain.domainid", query = "SELECT xi FROM Xid xi WHERE xi.domain = :domain AND xi.domainId = :domainid")
+@NamedQuery(name = "Xid.domain.objectid", query = "SELECT xi FROM Xid xi WHERE xi.domain = :domain AND xi.object = :objectid")
 public class Xid implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener

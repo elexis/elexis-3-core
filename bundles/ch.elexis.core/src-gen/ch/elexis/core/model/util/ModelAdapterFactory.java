@@ -10,32 +10,43 @@
  */
 package ch.elexis.core.model.util;
 
-import ch.elexis.core.model.*;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EObject;
 
 import ch.elexis.core.model.Deleteable;
+import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBillable;
+import ch.elexis.core.model.IBlob;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
-import ch.elexis.core.model.IDiagnose;
+import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.model.IDocument;
+import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IHistory;
 import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.model.ILabMapping;
 import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
+import ch.elexis.core.model.ILaboratory;
+import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPeriod;
 import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.ISticker;
+import ch.elexis.core.model.ITypedArticle;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.model.WithExtInfo;
 
 /**
  * <!-- begin-user-doc -->
@@ -174,8 +185,8 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIHistoryAdapter();
 			}
 			@Override
-			public Adapter caseIDiagnose(IDiagnose object) {
-				return createIDiagnoseAdapter();
+			public Adapter caseIDiagnosis(IDiagnosis object) {
+				return createIDiagnosisAdapter();
 			}
 			@Override
 			public Adapter caseIBillable(IBillable object) {
@@ -480,16 +491,16 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IDiagnose <em>IDiagnose</em>}'.
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IDiagnosis <em>IDiagnosis</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see ch.elexis.core.model.IDiagnose
+	 * @see ch.elexis.core.model.IDiagnosis
 	 * @generated
 	 */
-	public Adapter createIDiagnoseAdapter() {
+	public Adapter createIDiagnosisAdapter() {
 		return null;
 	}
 

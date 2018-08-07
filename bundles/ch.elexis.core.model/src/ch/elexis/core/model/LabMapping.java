@@ -2,7 +2,7 @@ package ch.elexis.core.model;
 
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
-import ch.elexis.core.model.mixin.IdentifiableWithXid;
+import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 import ch.elexis.core.model.util.ModelUtil;
 
 public class LabMapping extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.LabMapping>

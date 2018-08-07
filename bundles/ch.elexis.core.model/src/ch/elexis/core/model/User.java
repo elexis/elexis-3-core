@@ -4,7 +4,7 @@ import java.util.List;
 
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
-import ch.elexis.core.model.mixin.IdentifiableWithXid;
+import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 import ch.elexis.core.model.util.ModelUtil;
 
 public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.User>

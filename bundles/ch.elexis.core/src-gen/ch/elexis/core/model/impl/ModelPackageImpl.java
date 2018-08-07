@@ -28,7 +28,7 @@ import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
-import ch.elexis.core.model.IDiagnose;
+import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IHistory;
@@ -185,7 +185,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass iDiagnoseEClass = null;
+	private EClass iDiagnosisEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1436,8 +1436,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getIDiagnose() {
-		return iDiagnoseEClass;
+	public EClass getIDiagnosis() {
+		return iDiagnosisEClass;
 	}
 
 	/**
@@ -1835,7 +1835,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iHistoryEClass, IHISTORY__STATUS);
 		createEAttribute(iHistoryEClass, IHISTORY__DESCRIPTION);
 
-		iDiagnoseEClass = createEClass(IDIAGNOSE);
+		iDiagnosisEClass = createEClass(IDIAGNOSIS);
 
 		iBillableEClass = createEClass(IBILLABLE);
 
@@ -1934,8 +1934,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iStickerEClass.getEGenericSuperTypes().add(g1);
 		g1 = createEGenericType(this.getIdentifiable());
 		iStickerEClass.getEGenericSuperTypes().add(g1);
-		iDiagnoseEClass.getESuperTypes().add(this.getICodeElement());
-		iDiagnoseEClass.getESuperTypes().add(this.getIdentifiable());
+		iDiagnosisEClass.getESuperTypes().add(this.getICodeElement());
+		iDiagnosisEClass.getESuperTypes().add(this.getIdentifiable());
 		iBillableEClass.getESuperTypes().add(this.getICodeElement());
 		iBillableEClass.getESuperTypes().add(this.getIdentifiable());
 		iCoverageEClass.getESuperTypes().add(this.getDeleteable());
@@ -2155,7 +2155,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIHistory_Status(), theTypesPackage.getDocumentStatus(), "status", null, 0, 1, IHistory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIHistory_Description(), ecorePackage.getEString(), "description", null, 0, 1, IHistory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(iDiagnoseEClass, IDiagnose.class, "IDiagnose", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(iDiagnosisEClass, IDiagnosis.class, "IDiagnosis", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(iBillableEClass, IBillable.class, "IBillable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

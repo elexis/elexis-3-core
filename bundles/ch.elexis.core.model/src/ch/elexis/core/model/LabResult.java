@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
-import ch.elexis.core.model.mixin.ExtInfoHandler;
-import ch.elexis.core.model.mixin.IdentifiableWithXid;
+import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
+import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 import ch.elexis.core.model.util.LabPathologicEvaluator;
 import ch.elexis.core.model.util.ModelUtil;
 import ch.elexis.core.services.IQuery;
@@ -23,7 +23,6 @@ public class LabResult extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.e
 	
 	private LabPathologicEvaluator labPathologicEvaluator;
 	private ExtInfoHandler extInfoHandler;
-	
 
 	public LabResult(ch.elexis.core.jpa.entities.LabResult entity){
 		super(entity);

@@ -9,6 +9,11 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.8.0",
  ch.rgw.utility;bundle-version="3.0.0",
  ch.elexis.core;bundle-version="3.0.0",
  ch.elexis.core.data;bundle-version="3.0.0",
- ch.elexis.core.l10n;bundle-version="3.5.0"
+ ch.elexis.core.l10n;bundle-version="3.5.0",
+ ch.elexis.core.jpa;bundle-version="1.0.0",
+ ch.elexis.core.jpa.entities;bundle-version="1.0.0"
 Export-Package: ch.elexis.core.eigendiagnosen,
  ch.elexis.data
+Bundle-ActivationPolicy: lazy
+Import-Package: org.osgi.service.event
+Service-Component: OSGI-INF/ch.elexis.core.eigendiagnosen.model.service.DiagnosisModelService.xml

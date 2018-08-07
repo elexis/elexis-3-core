@@ -89,10 +89,10 @@ public class XidTest {
 			assertNotNull(contact);
 			if (iXid.getDomainId().endsWith("1")) {
 				assertEquals(contact1, contact);
-				assertEquals(contact1.getXid("http://www.test.info"), iXid);
+				assertEquals(contact1.getXid("http://www.test.info").getId(), iXid.getId());
 			} else if (iXid.getDomainId().endsWith("2")) {
 				assertEquals(contact2, contact);
-				assertEquals(contact2.getXid("http://www.test.info"), iXid);
+				assertEquals(contact2.getXid("http://www.test.info").getId(), iXid.getId());
 			}
 		}
 		

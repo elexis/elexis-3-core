@@ -12,6 +12,8 @@ Import-Package: ch.elexis.core.common,
  ch.elexis.core.jpa.model.adapter,
  ch.elexis.core.model,
  ch.elexis.core.services,
+ ch.rgw.compress,
+ ch.rgw.tools,
  org.eclipse.emf.common,
  org.eclipse.emf.common.util,
  org.eclipse.emf.ecore,
@@ -26,5 +28,8 @@ Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/liquibase-3.6.1.jar,
  lib/snakeyaml-1.18.jar,
  .
-Export-Package: ch.elexis.core.jpa.model.adapter
-Service-Component: OSGI-INF/ch.elexis.core.jpa.entitymanager.ElexisEntityManger.xml
+Export-Package: ch.elexis.core.jpa.model.adapter,
+ ch.elexis.core.jpa.model.adapter.mixin,
+ ch.elexis.core.jpa.model.util
+Service-Component: OSGI-INF/ch.elexis.core.jpa.entitymanager.ElexisEntityManger.xml,
+ OSGI-INF/ch.elexis.core.jpa.model.util.JpaModelUtil.xml

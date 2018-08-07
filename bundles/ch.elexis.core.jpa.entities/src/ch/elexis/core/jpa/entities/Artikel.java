@@ -74,7 +74,7 @@ public class Artikel implements EntityWithId, EntityWithDeleted, EntityWithExtIn
 
 	@Column(length = 15)
 	@Convert(converter = ArticleTypConverter.class)
-	private ArticleTyp Typ;
+	private ArticleTyp typ;
 
 	@Column(length = 10)
 	private String codeclass;
@@ -164,11 +164,11 @@ public class Artikel implements EntityWithId, EntityWithDeleted, EntityWithExtIn
 	}
 
 	public ArticleTyp getTyp(){
-		return Typ;
+		return typ;
 	}
 
 	public void setTyp(ArticleTyp typ){
-		Typ = typ;
+		this.typ = typ;
 	}
 
 	public String getCodeclass() {

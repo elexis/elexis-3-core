@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
-import ch.elexis.core.model.mixin.IdentifiableWithXid;
+import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 import ch.elexis.core.model.util.ModelUtil;
 
 public class LabOrder extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.LabOrder>

@@ -200,7 +200,7 @@ public class CoreQueryTest {
 	private void clearContacts(){
 		IQuery<IContact> query = modelSerice.getQuery(IContact.class, true);
 		List<IContact> results = query.execute();
-		results.parallelStream().forEach(c -> modelSerice.remove(c));
+		results.stream().forEach(c -> modelSerice.remove(c));
 	}
 	
 	private IContact createContact(String desc1, String desc2){

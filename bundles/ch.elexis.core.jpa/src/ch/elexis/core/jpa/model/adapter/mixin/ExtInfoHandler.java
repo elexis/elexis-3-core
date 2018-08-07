@@ -1,11 +1,11 @@
-package ch.elexis.core.model.mixin;
+package ch.elexis.core.jpa.model.adapter.mixin;
 
 import java.util.Hashtable;
 import java.util.Map;
 
 import ch.elexis.core.jpa.entities.EntityWithExtInfo;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
-import ch.elexis.core.model.util.ModelUtil;
+import ch.elexis.core.jpa.model.util.JpaModelUtil;
 
 public class ExtInfoHandler {
 	
@@ -20,7 +20,7 @@ public class ExtInfoHandler {
 		if (extInfo == null) {
 			byte[] bytes = withExtInfo.getEntity().getExtInfo();
 			if (bytes != null) {
-				extInfo = ModelUtil.extInfoFromBytes(bytes);
+				extInfo = JpaModelUtil.extInfoFromBytes(bytes);
 			}
 		}
 		return extInfo != null ? extInfo.get(key) : null;
@@ -30,7 +30,7 @@ public class ExtInfoHandler {
 		if (extInfo == null) {
 			byte[] bytes = withExtInfo.getEntity().getExtInfo();
 			if (bytes != null) {
-				extInfo = ModelUtil.extInfoFromBytes(bytes);
+				extInfo = JpaModelUtil.extInfoFromBytes(bytes);
 			} else {
 				extInfo = new Hashtable<>();
 			}
@@ -40,6 +40,6 @@ public class ExtInfoHandler {
 		} else {
 			extInfo.put(key, value);
 		}
-		withExtInfo.getEntity().setExtInfo(ModelUtil.extInfoToBytes(extInfo));
+		withExtInfo.getEntity().setExtInfo(JpaModelUtil.extInfoToBytes(extInfo));
 	}
 }

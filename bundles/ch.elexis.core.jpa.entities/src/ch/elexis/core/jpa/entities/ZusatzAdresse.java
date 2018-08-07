@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import ch.elexis.core.jpa.entities.converter.AddressTypeConverter;
@@ -35,6 +36,7 @@ public class ZusatzAdresse implements EntityWithId, EntityWithDeleted {
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
 	
+	@ManyToOne()
 	@JoinColumn(name = "Kontakt_ID")
 	public Kontakt contact;
 

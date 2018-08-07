@@ -1,11 +1,15 @@
-package ch.elexis.core.model;
+package ch.elexis.core.jpa.model.adapter.mixin.internal;
 
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
-import ch.elexis.core.model.util.ModelUtil;
+import ch.elexis.core.model.IXid;
+import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.model.XidQuality;
 
 public class Xid extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Xid>
 		implements IdentifiableWithXid, IXid {
+	
+	private Object object;
 	
 	public Xid(ch.elexis.core.jpa.entities.Xid entity){
 		super(entity);
@@ -43,11 +47,12 @@ public class Xid extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entitie
 	
 	@Override
 	public <T> T getObject(Class<T> clazz){
-		return ModelUtil.load(getObjectId(), clazz);
+		return (T) object;
 	}
 	
 	@Override
 	public void setObject(Object object){
+		this.object = object;
 		if (object instanceof Identifiable) {
 			setObjectId(((Identifiable) object).getId());
 		} else {

@@ -2,10 +2,10 @@ package ch.elexis.core.model;
 
 import ch.elexis.core.jpa.entities.Artikel;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
+import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
+import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 import ch.elexis.core.model.article.Constants;
 import ch.elexis.core.model.eigenartikel.EigenartikelTyp;
-import ch.elexis.core.model.mixin.ExtInfoHandler;
-import ch.elexis.core.model.mixin.IdentifiableWithXid;
 import ch.elexis.core.types.ArticleTyp;
 
 public class TypedArticle extends AbstractIdModelAdapter<ch.elexis.core.jpa.entities.Artikel>

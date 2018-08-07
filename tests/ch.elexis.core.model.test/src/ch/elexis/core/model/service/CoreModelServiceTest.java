@@ -32,6 +32,7 @@ public class CoreModelServiceTest {
 	@Before
 	public void before() {
 		modelSerice = OsgiServiceUtil.getService(IModelService.class).get();
+		clearContacts();
 	}
 	
 	@After
@@ -40,6 +41,12 @@ public class CoreModelServiceTest {
 		modelSerice = null;
 	}
 
+	private void clearContacts(){
+		IQuery<IContact> query = modelSerice.getQuery(IContact.class, true);
+		List<IContact> results = query.execute();
+		results.stream().forEach(c -> modelSerice.remove(c));
+	}
+	
 	@Test
 	public void createContact(){
 		IContact contact = modelSerice.create(IContact.class);

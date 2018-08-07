@@ -1,19 +1,9 @@
 package ch.elexis.core.model.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.Collections;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -34,7 +24,6 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserConfig;
-import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.service.CoreModelAdapterFactory;
@@ -44,9 +33,14 @@ import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.rgw.compress.CompEx;
 import ch.rgw.tools.MimeTool;
 
+/**
+ * Utility class with core model specific methods
+ * 
+ * @author thomas
+ *
+ */
 @Component
 public class ModelUtil {
 	
@@ -120,12 +114,11 @@ public class ModelUtil {
 				if (ret.exists() && ret.isFile()) {
 					return Optional.of(ret);
 				} else {
-					LoggerFactory.getLogger(ModelUtil.class).warn("File [" + ret.getAbsolutePath()
-						+ "] not valid e=" + ret.exists() + " f=" + ret.isFile());
+					logger.warn("File [" + ret.getAbsolutePath() + "] not valid e=" + ret.exists()
+						+ " f=" + ret.isFile());
 				}
 			} else {
-				LoggerFactory.getLogger(ModelUtil.class)
-					.warn("No patient for [" + documentBrief.getId() + "]");
+				logger.warn("No patient for [" + documentBrief.getId() + "]");
 			}
 		}
 		return Optional.empty();
@@ -154,14 +147,13 @@ public class ModelUtil {
 					try {
 						ret.createNewFile();
 					} catch (IOException e) {
-						LoggerFactory.getLogger(ModelUtil.class).error("Error creating file", e);
+						logger.error("Error creating file", e);
 						return Optional.empty();
 					}
 				}
 				return Optional.of(ret);
 			} else {
-				LoggerFactory.getLogger(ModelUtil.class)
-					.warn("No patient for [" + documentBrief.getId() + "]");
+				logger.warn("No patient for [" + documentBrief.getId() + "]");
 			}
 		}
 		return Optional.empty();
@@ -181,13 +173,12 @@ public class ModelUtil {
 				return true;
 			} else {
 				if (log) {
-					LoggerFactory.getLogger(ModelUtil.class)
-						.warn("Configured path [" + path + "] not valid e=" + dir.exists() + " d="
-							+ dir.isDirectory() + " w=" + dir.canWrite());
+					logger.warn("Configured path [" + path + "] not valid e=" + dir.exists() + " d="
+						+ dir.isDirectory() + " w=" + dir.canWrite());
 				}
 			}
 		} else if (log) {
-			LoggerFactory.getLogger(ModelUtil.class).warn("No path configured");
+			logger.warn("No path configured");
 		}
 		return false;
 	}
@@ -230,16 +221,14 @@ public class ModelUtil {
 			} else {
 				IConfig config = configs.get(0);
 				if (configs.size() > 1) {
-					LoggerFactory.getLogger(ModelUtil.class)
-						.warn("Multiple user config entries for [" + key + "] using first.");
+					logger.warn("Multiple user config entries for [" + key + "] using first.");
 				}
 				String value = config.getValue();
 				return value != null
 					&& (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("1"));
 			}
 		}
-		LoggerFactory.getLogger(ModelUtil.class)
-			.warn("No user contact for query of key [" + key + "] returning default");
+		logger.warn("No user contact for query of key [" + key + "] returning default");
 		return defaultValue;
 	}
 	
@@ -261,8 +250,7 @@ public class ModelUtil {
 		} else {
 			IConfig config = configs.get(0);
 			if (configs.size() > 1) {
-				LoggerFactory.getLogger(ModelUtil.class)
-					.warn("Multiple config entries for [" + key + "] using first.");
+				logger.warn("Multiple config entries for [" + key + "] using first.");
 			}
 			return config.getValue();
 		}
@@ -285,8 +273,7 @@ public class ModelUtil {
 				}
 			}
 		} else {
-			LoggerFactory.getLogger(ModelUtil.class)
-				.warn("No IContextService available.");
+			logger.warn("No IContextService available.");
 		}
 		return Optional.empty();
 	}
@@ -299,81 +286,6 @@ public class ModelUtil {
 	 */
 	public static <T> IQuery<T> getQuery(Class<T> interfaceClazz){
 		return modelService.getQuery(interfaceClazz);
-	}
-	
-	/**
-	 * Add an {@link IXid} to the {@link Identifiable}.
-	 * 
-	 * @param identifiable
-	 * @param domain
-	 * @param id
-	 * @param updateIfExists
-	 * @return
-	 */
-	public static boolean addXid(Identifiable identifiable, String domain, String id,
-		boolean updateIfExists){
-		Optional<IXid> existing = getXid(domain, id);
-		if (existing.isPresent()) {
-			if (updateIfExists) {
-				IXid xid = existing.get();
-				xid.setDomain(domain);
-				xid.setDomainId(id);
-				xid.setObject(identifiable);
-				return true;
-			}
-		} else {
-			IXid xid = modelService.create(IXid.class);
-			xid.setDomain(domain);
-			xid.setDomainId(id);
-			xid.setObject(identifiable);
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Get an {@link IXid} with matching domain and id.
-	 * 
-	 * @param domain
-	 * @param id
-	 * @return
-	 */
-	public static Optional<IXid> getXid(String domain, String id){
-		IQuery<IXid> query = modelService.getQuery(IXid.class);
-		query.and(ModelPackage.Literals.IXID__DOMAIN, COMPARATOR.EQUALS, domain);
-		query.and(ModelPackage.Literals.IXID__DOMAIN_ID, COMPARATOR.EQUALS, id);
-		List<IXid> xids = query.execute();
-		if (xids.size() > 0) {
-			if (xids.size() > 1) {
-				LoggerFactory.getLogger(ModelUtil.class).error(
-					"XID [" + domain + "] [" + id + "] on multiple objects, returning first.");
-			}
-			return Optional.of(xids.get(0));
-		}
-		return Optional.empty();
-	}
-	
-	/**
-	 * Get an {@link IXid} with matching {@link Identifiable} and domain.
-	 * 
-	 * @param identifiable
-	 * @param domain
-	 * @return
-	 */
-	public static Optional<IXid> getXid(Identifiable identifiable, String domain){
-		IQuery<IXid> query = modelService.getQuery(IXid.class);
-		query.and(ModelPackage.Literals.IXID__DOMAIN, COMPARATOR.EQUALS, domain);
-		query.and(ModelPackage.Literals.IXID__OBJECT_ID, COMPARATOR.EQUALS, identifiable.getId());
-		List<IXid> xids = query.execute();
-		if (xids.size() > 0) {
-			if (xids.size() > 1) {
-				LoggerFactory.getLogger(ModelUtil.class).error(
-					"XID [" + domain + "] [" + identifiable
-						+ "] on multiple objects, returning first.");
-			}
-			return Optional.of(xids.get(0));
-		}
-		return Optional.empty();
 	}
 	
 	/**
@@ -414,109 +326,6 @@ public class ModelUtil {
 	 */
 	public static boolean verifyUsernameNotTaken(String username){
 		return !modelService.load(username, IUser.class).isPresent();
-	}
-	
-	/**
-	 * Convert a Hashtable into a compressed byte array.
-	 * 
-	 * @param hash
-	 *            the hashtable to store
-	 * @return
-	 */
-	private static byte[] flatten(final Hashtable<Object, Object> hash){
-		try {
-			ByteArrayOutputStream baos = new ByteArrayOutputStream(hash.size() * 30);
-			ZipOutputStream zos = new ZipOutputStream(baos);
-			zos.putNextEntry(new ZipEntry("hash"));
-			ObjectOutputStream oos = new ObjectOutputStream(zos);
-			oos.writeObject(hash);
-			zos.close();
-			baos.close();
-			return baos.toByteArray();
-		} catch (Exception ex) {
-			logger.warn("Exception flattening HashTable, returning null: " + ex.getMessage());
-			return null;
-		}
-	}
-	
-	/**
-	 * Recreate a Hashtable from a byte array as created by flatten()
-	 * 
-	 * @param flat
-	 *            the byte array
-	 * @return the original Hashtable or null if no Hashtable could be created from the array
-	 */
-	@SuppressWarnings("unchecked")
-	private static Hashtable<Object, Object> fold(final byte[] flat){
-		if (flat.length == 0) {
-			return null;
-		}
-		try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(flat))) {
-			ZipEntry entry = zis.getNextEntry();
-			if (entry != null) {
-				try (ObjectInputStream ois = new ObjectInputStream(zis)) {
-					return (Hashtable<Object, Object>) ois.readObject();
-				}
-			} else {
-				return null;
-			}
-		} catch (IOException | ClassNotFoundException ex) {
-			logger.error("Exception folding byte array", ex);
-			return null;
-		}
-	}
-	
-	/**
-	 * Elexis persistence contains BLOBs of serialized {@link Hashtable<Object, Object>}. All types
-	 * of serializable data (mostly String) can be stored and loaded from these ExtInfos. This
-	 * method serializes a {@link Hashtable} in the Elexis way.
-	 * 
-	 * @param extInfo
-	 * @return
-	 */
-	public static byte[] extInfoToBytes(Map<Object, Object> extInfo){
-		if (extInfo != null && !extInfo.isEmpty()) {
-			Hashtable<Object, Object> ov = (Hashtable<Object, Object>) extInfo;
-			return flatten(ov);
-		}
-		return null;
-	}
-	
-	/**
-	 * This method loads {@link Hashtable} from the byte array in an Elexis way.
-	 * 
-	 * @param dataValue
-	 * @return
-	 */
-	public static Map<Object, Object> extInfoFromBytes(byte[] dataValue){
-		if (dataValue != null) {
-			Hashtable<Object, Object> ret = fold((byte[]) dataValue);
-			if (ret == null) {
-				return new Hashtable<Object, Object>();
-			}
-			return ret;
-		}
-		return Collections.emptyMap();
-	}
-	
-	/**
-	 * Expand the compressed bytes using the Elexis {@link CompEx} tool.
-	 * 
-	 * @param comp
-	 * @return
-	 */
-	public static byte[] getExpanded(byte[] compacted){
-		return CompEx.expand(compacted);
-	}
-	
-	/**
-	 * Compress the String using the Elexis {@link CompEx} tool.
-	 * 
-	 * @param comp
-	 * @return
-	 */
-	public static byte[] getCompressed(String value){
-		return CompEx.Compress(value, CompEx.ZIP);
 	}
 	
 	public static AbstractModelService getModelService(){

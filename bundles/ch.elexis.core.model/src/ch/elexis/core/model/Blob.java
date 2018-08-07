@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jpa.entities.Heap;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
-import ch.elexis.core.model.mixin.IdentifiableWithXid;
-import ch.elexis.core.model.util.ModelUtil;
+import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
+import ch.elexis.core.jpa.model.util.JpaModelUtil;
 
 public class Blob extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Heap>
 		implements IdentifiableWithXid, Deleteable, IBlob {
@@ -32,7 +32,7 @@ public class Blob extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		if ((comp == null) || (comp.length == 0)) {
 			return "";
 		}
-		byte[] exp = ModelUtil.getExpanded(comp);
+		byte[] exp = JpaModelUtil.getExpanded(comp);
 		try {
 			return new String(exp, "utf-8");
 		} catch (Exception ex) {
@@ -44,7 +44,7 @@ public class Blob extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	
 	@Override
 	public void setStringContent(String value){
-		byte[] comp = ModelUtil.getCompressed(value);
+		byte[] comp = JpaModelUtil.getCompressed(value);
 		setContent(comp);
 	}
 	

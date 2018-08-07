@@ -10,28 +10,42 @@
  */
 package ch.elexis.core.model.util;
 
-import ch.elexis.core.model.*;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.util.Switch;
 
 import ch.elexis.core.model.Deleteable;
+import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBillable;
+import ch.elexis.core.model.IBlob;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
-import ch.elexis.core.model.IDiagnose;
+import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.model.IDocument;
+import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IHistory;
+import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.model.ILabMapping;
+import ch.elexis.core.model.ILabOrder;
+import ch.elexis.core.model.ILabResult;
+import ch.elexis.core.model.ILaboratory;
+import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPeriod;
 import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.ISticker;
+import ch.elexis.core.model.ITypedArticle;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.model.WithExtInfo;
 
 /**
  * <!-- begin-user-doc -->
@@ -250,11 +264,11 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ModelPackage.IDIAGNOSE: {
-				IDiagnose iDiagnose = (IDiagnose)theEObject;
-				T1 result = caseIDiagnose(iDiagnose);
-				if (result == null) result = caseICodeElement(iDiagnose);
-				if (result == null) result = caseIdentifiable(iDiagnose);
+			case ModelPackage.IDIAGNOSIS: {
+				IDiagnosis iDiagnosis = (IDiagnosis)theEObject;
+				T1 result = caseIDiagnosis(iDiagnosis);
+				if (result == null) result = caseICodeElement(iDiagnosis);
+				if (result == null) result = caseIdentifiable(iDiagnosis);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -598,17 +612,17 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>IDiagnose</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>IDiagnosis</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>IDiagnose</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>IDiagnosis</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T1 caseIDiagnose(IDiagnose object) {
+	public T1 caseIDiagnosis(IDiagnosis object) {
 		return null;
 	}
 

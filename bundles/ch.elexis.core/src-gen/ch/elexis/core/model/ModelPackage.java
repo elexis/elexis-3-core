@@ -786,16 +786,6 @@ public interface ModelPackage extends EPackage {
 	int IHISTORY = 19;
 
 	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.IDiagnose <em>IDiagnose</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.IDiagnose
-	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDiagnose()
-	 * @generated
-	 */
-	int IDIAGNOSE = 20;
-
-	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IBillable <em>IBillable</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2676,13 +2666,23 @@ public interface ModelPackage extends EPackage {
 	int IHISTORY_FEATURE_COUNT = 3;
 
 	/**
-	 * The number of structural features of the '<em>IDiagnose</em>' class.
+	 * The meta object id for the '{@link ch.elexis.core.model.IDiagnosis <em>IDiagnosis</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IDiagnosis
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDiagnosis()
+	 * @generated
+	 */
+	int IDIAGNOSIS = 20;
+
+	/**
+	 * The number of structural features of the '<em>IDiagnosis</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IDIAGNOSE_FEATURE_COUNT = ICODE_ELEMENT_FEATURE_COUNT + 0;
+	int IDIAGNOSIS_FEATURE_COUNT = ICODE_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>IBillable</em>' class.
@@ -4355,14 +4355,14 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIHistory_Description();
 
 	/**
-	 * Returns the meta object for class '{@link ch.elexis.core.model.IDiagnose <em>IDiagnose</em>}'.
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IDiagnosis <em>IDiagnosis</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>IDiagnose</em>'.
-	 * @see ch.elexis.core.model.IDiagnose
+	 * @return the meta object for class '<em>IDiagnosis</em>'.
+	 * @see ch.elexis.core.model.IDiagnosis
 	 * @generated
 	 */
-	EClass getIDiagnose();
+	EClass getIDiagnosis();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IBillable <em>IBillable</em>}'.
@@ -5651,14 +5651,14 @@ public interface ModelPackage extends EPackage {
 		EAttribute IHISTORY__DESCRIPTION = eINSTANCE.getIHistory_Description();
 
 		/**
-		 * The meta object literal for the '{@link ch.elexis.core.model.IDiagnose <em>IDiagnose</em>}' class.
+		 * The meta object literal for the '{@link ch.elexis.core.model.IDiagnosis <em>IDiagnosis</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see ch.elexis.core.model.IDiagnose
-		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDiagnose()
+		 * @see ch.elexis.core.model.IDiagnosis
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDiagnosis()
 		 * @generated
 		 */
-		EClass IDIAGNOSE = eINSTANCE.getIDiagnose();
+		EClass IDIAGNOSIS = eINSTANCE.getIDiagnosis();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IBillable <em>IBillable</em>}' class.

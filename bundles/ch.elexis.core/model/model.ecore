@@ -245,7 +245,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="ecore:EEnum types.ecore#//DocumentStatus"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="IDiagnose" abstract="true" interface="true"
+  <eClassifiers xsi:type="ecore:EClass" name="IDiagnosis" abstract="true" interface="true"
       eSuperTypes="#//ICodeElement #//Identifiable"/>
   <eClassifiers xsi:type="ecore:EClass" name="IBillable" abstract="true" interface="true"
       eSuperTypes="#//ICodeElement #//Identifiable"/>

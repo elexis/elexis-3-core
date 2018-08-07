@@ -2,7 +2,7 @@ package ch.elexis.core.model;
 
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
-import ch.elexis.core.model.mixin.IdentifiableWithXid;
+import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 import ch.elexis.core.types.Country;
 
 public class Contact extends AbstractIdDeleteModelAdapter<Kontakt>
