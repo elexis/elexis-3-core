@@ -234,8 +234,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="ICodeElement" abstract="true" interface="true">
     <eOperations name="getCodeSystemName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eOperations name="getCodeSystemCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eOperations name="getCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eOperations name="getText" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ICategory" abstract="true" interface="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -246,7 +246,15 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IDiagnosis" abstract="true" interface="true"
-      eSuperTypes="#//ICodeElement #//Identifiable"/>
+      eSuperTypes="#//ICodeElement #//Identifiable">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IDiagnosisTree" abstract="true" interface="true"
+      eSuperTypes="#//IDiagnosis">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//IDiagnosisTree"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="children" upperBound="-1"
+        eType="#//IDiagnosisTree"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IBillable" abstract="true" interface="true"
       eSuperTypes="#//ICodeElement #//Identifiable"/>
   <eClassifiers xsi:type="ecore:EClass" name="ICoverage" abstract="true" interface="true"

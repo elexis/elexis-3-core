@@ -3,6 +3,7 @@ package ch.elexis.core.jpa.model.adapter;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
@@ -12,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
@@ -42,6 +44,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	protected CriteriaBuilder criteriaBuilder;
 	
 	protected Stack<PredicateGroup> predicateGroups;
+	protected List<Order> orderByList;
 	
 	protected CriteriaQuery<?> criteriaQuery;
 	protected Root<? extends EntityWithId> rootQuery;
@@ -61,6 +64,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		this.includeDeleted = includeDeleted;
 		this.refreshCache = refreshCache;
 		this.predicateGroups = new Stack<>();
+		this.orderByList = new ArrayList<>();
 		
 		initialize();
 	}
@@ -361,6 +365,50 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	}
 	
 	@Override
+	public void orderBy(EStructuralFeature feature, ORDER direction){
+		String entityAttributeName = getAttributeName(feature);
+		@SuppressWarnings("rawtypes")
+		Optional<SingularAttribute> attribute =
+			resolveAttribute(entityClazz.getName(), entityAttributeName);
+		if (attribute.isPresent()) {
+			orderBy(attribute.get(), direction);
+		} else {
+			// feature could not be resolved, mapping?
+			throw new IllegalStateException("Could not resolve attribute [" + entityAttributeName
+				+ "] of entity [" + entityClazz + "]");
+		}
+	}
+	
+	@SuppressWarnings({
+		"unchecked", "rawtypes"
+	})
+	private void orderBy(SingularAttribute attribute, ORDER direction){
+		Order orderBy = null;
+		if (direction == ORDER.ASC) {
+			orderBy = criteriaBuilder.asc(rootQuery.get(attribute));
+		} else if (direction == ORDER.DESC) {
+			orderBy = criteriaBuilder.desc(rootQuery.get(attribute));
+		}
+		if (orderBy != null) {
+			orderByList.add(orderBy);
+		}
+	}
+	
+	@Override
+	public void orderBy(String entityAttributeName, ORDER direction){
+		@SuppressWarnings("rawtypes")
+		Optional<SingularAttribute> attribute =
+			resolveAttribute(entityClazz.getName(), entityAttributeName);
+		if (attribute.isPresent()) {
+			orderBy(attribute.get(), direction);
+		} else {
+			// feature could not be resolved, mapping?
+			throw new IllegalStateException("Could not resolve attribute [" + entityAttributeName
+				+ "] of entity [" + entityClazz + "]");
+		}
+	}
+	
+	@Override
 	public void startGroup(){
 		createPredicateGroup();
 	}
@@ -392,6 +440,8 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 			} else {
 				throw new IllegalStateException("Query has open groups [" + groups + "]");
 			}
+			
+			criteriaQuery.orderBy(orderByList);
 		}
 		TypedQuery<?> query = (TypedQuery<?>) entityManager.createQuery(criteriaQuery);
 		// update cache with results (https://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development/Querying/Query_Hints)

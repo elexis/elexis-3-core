@@ -130,13 +130,13 @@ public class Mandanten extends PreferencePage implements IWorkbenchPreferencePag
 				new InputData(Messages.Mandanten_biller, PersistentObject.FLD_EXTINFO,
 					new IContentProvider() {
 						
-						public void displayContent(PersistentObject po, InputData ltf){
+						public void displayContent(Object po, InputData ltf){
 							Mandant m = (Mandant) po;
 							Kontakt r = m.getRechnungssteller();
 							ltf.setText(r.getLabel());
 						}
 						
-						public void reloadContent(PersistentObject po, InputData ltf){
+						public void reloadContent(Object po, InputData ltf){
 							Kontakt rsi = (Kontakt) po;
 							KontaktSelektor ksl =
 								new KontaktSelektor(getShell(), Kontakt.class,

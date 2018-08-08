@@ -1,11 +1,17 @@
-package ch.elexis.core.ui.services;
+package ch.elexis.core.ui.services.internal;
 
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.workbench.UIEvents;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -22,8 +28,8 @@ import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.User;
 
-@Component
-public class ContextService implements IContextService {
+@Component(property = EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE)
+public class ContextService implements IContextService, EventHandler {
 	
 	private Context root;
 	
@@ -31,16 +37,32 @@ public class ContextService implements IContextService {
 	
 	private EventDispatcherListener eventDispatcherListener;
 	
+	private IEclipseContext applicationContext;
+	
 	@Activate
 	public void activate(){
 		root = new Context();
 		eventDispatcherListener = new EventDispatcherListener();
-		ElexisEventDispatcher.getInstance().addListeners(eventDispatcherListener);
+		ElexisEventDispatcher elexisEventDispatcher = ElexisEventDispatcher.getInstance();
+		elexisEventDispatcher.addListeners(eventDispatcherListener);
+		((Context) root).setElexisEventDispatcher(elexisEventDispatcher);
 	}
 	
 	@Deactivate
 	public void deactivate(){
 		ElexisEventDispatcher.getInstance().removeListeners(eventDispatcherListener);
+	}
+	
+	@Override
+	public void handleEvent(Event event){
+		Object property = event.getProperty("org.eclipse.e4.data");
+		if (property instanceof MApplication) {
+			MApplication application = (MApplication) property;
+			applicationContext = application.getContext();
+			if (getRootContext() != null) {
+				((Context) getRootContext()).setEclipseContext(applicationContext);
+			}
+		}
 	}
 	
 	@Override

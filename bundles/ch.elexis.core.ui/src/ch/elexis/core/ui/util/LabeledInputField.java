@@ -12,10 +12,12 @@
  *******************************************************************************/
 package ch.elexis.core.ui.util;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Map;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -44,6 +46,7 @@ import com.tiff.common.ui.datepicker.DatePickerCombo;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.interfaces.INumericEnum;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.data.PersistentObject;
@@ -561,7 +564,7 @@ public class LabeledInputField extends Composite {
 	public static class AutoForm extends Tableau implements IUnlockable {
 		InputData[] def;
 		Control[] cFields;
-		PersistentObject act;
+		Object act;
 		DecimalFormat df = new DecimalFormat(Messages.LabeledInputField_7); //$NON-NLS-1$
 		LabeledInputField ltf;
 		
@@ -691,7 +694,7 @@ public class LabeledInputField extends Composite {
 			}
 			if (inp.sHashname == null) {
 				try {
-					act.set(inp.sFeldname, val);
+					set(act, inp.sFeldname, val);
 				} catch (PersistenceException pe) {
 					logger.error("Could not persist [" + val + "] for field [" + inp.sAnzeige
 						+ "]\nCause: " + pe.getCause().getMessage(), pe);
@@ -700,16 +703,52 @@ public class LabeledInputField extends Composite {
 						.equals(ch.elexis.core.ui.util.LabeledInputField.InputData.Typ.STRING)) {
 						// clear cache to always get the actual the DB value
 						PersistentObject.clearCache();
-						inp.mine.setText(act.get(inp.sFeldname));
+						inp.mine.setText((String) get(act, inp.sFeldname));
 					}
 				}
 			} else {
 				if (val != null && val.length() > 0) {
-					Map ext = act.getMap(inp.sFeldname);
+					Map ext = getMap(act, inp.sFeldname);
 					ext.put(inp.sHashname, val);
-					act.setMap(inp.sFeldname, ext);
+					setMap(act, inp.sFeldname, ext);
 				}
 			}
+		}
+		
+		private void set(Object object, String field, Object value){
+			if (object instanceof PersistentObject) {
+				((PersistentObject) object).set(field, (String) value);
+			} else {
+				try {
+					BeanUtils.setProperty(object, field, value);
+				} catch (IllegalAccessException | InvocationTargetException e) {
+					LoggerFactory.getLogger(getClass())
+						.error("Error setting property [" + field + "] of [" + object + "]", e);
+				}
+			}
+		}
+		
+		private Object get(Object object, String field){
+			if (object instanceof PersistentObject) {
+				return ((PersistentObject) object).get(field);
+			} else {
+				try {
+					return BeanUtils.getProperty(object, field);
+				} catch (IllegalAccessException | InvocationTargetException
+						| NoSuchMethodException e) {
+					LoggerFactory.getLogger(getClass())
+						.error("Error getting property [" + field + "] of [" + object + "]", e);
+				}
+			}
+			return null;
+		}
+		
+		private Map getMap(Object object, String field){
+			return null;
+		}
+		
+		private void setMap(Object object, String field, Map value){
+			
 		}
 		
 		/**
@@ -787,6 +826,75 @@ public class LabeledInputField extends Composite {
 			}
 		}
 		
+		public void reload(Identifiable o){
+			act = o;
+			if (o == null) {
+				for (int i = 0; i < def.length; i++) {
+					def[i].setText(StringTool.leer);
+				}
+				return;
+			}
+			act = o;
+			String val = StringTool.leer;
+			for (int i = 0; i < def.length; i++) {
+				if (def[i].tFeldTyp == InputData.Typ.HYPERLINK) {
+					((IContentProvider) def[i].ext).displayContent(o, def[i]);
+					continue;
+				} else {
+					if (def[i].sHashname == null) {
+						val = (String) get(o, def[i].sFeldname);
+					} else {
+						Map ext = getMap(o, def[i].sFeldname);
+						val = (String) ext.get(def[i].sHashname);
+						
+						// needed to make artikelstamm dialog work properly (without **ERROR:...)
+						if (val == null) {
+							val = (String) get(o, def[i].sHashname);
+							
+							// in case no value exists for this field keep it empty
+							if (val.startsWith(PersistentObject.MAPPING_ERROR_MARKER)) {
+								val = null;
+							}
+						}
+					}
+				}
+				switch (def[i].tFeldTyp) {
+				case STRING:
+				case INT:
+				case LIST:
+				case COMBO:
+				case EXECSTRING:
+				case DATE:
+					if (StringTool.isNothing(val)) {
+						val = StringTool.leer;
+					}
+					def[i].setText(val);
+					break;
+				case CURRENCY:
+					Money money = new Money(PersistentObject.checkZero(val));
+					def[i].setText(money.getAmountAsString());
+					// double betr=PersistentObject.checkZeroDouble(val);
+					
+					// def[i].setText(Double.toString(betr/100.0));
+					break;
+				case CHECKBOX:
+					val = StringTool.unNull(val);
+					((Button) (def[i].mine.getControl()))
+						.setSelection(val.equalsIgnoreCase(StringConstants.ONE));
+					break;
+				case CHECKBOXTRISTATE:
+					val = StringTool.unNull(val);
+					((TristateCheckbox) (def[i].mine.getControl())).setTristateDbValue(val);
+					break;
+				case COMBO_VIEWER:
+					StructuredSelection selection =
+						def[i].selectionResolver.resolveStructuredSelection(val);
+					((StructuredViewer) (def[i].mine.getViewer())).setSelection(selection);
+					break;
+				}
+			}
+		}
+		
 		@Override
 		public void setUnlocked(boolean unlocked){
 			for (InputData id : def) {
@@ -797,10 +905,10 @@ public class LabeledInputField extends Composite {
 	
 	public interface IContentProvider {
 		/** fetch the Content from the defining PersistentObject and display it in ltf */
-		public void displayContent(PersistentObject po, InputData ltf);
+		public void displayContent(Object po, InputData ltf);
 		
 		/** Let the user modify the content and load in in po and ltf */
-		public void reloadContent(PersistentObject po, InputData ltf);
+		public void reloadContent(Object po, InputData ltf);
 	}
 	
 	public interface IExecLinkProvider {

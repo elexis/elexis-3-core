@@ -81,8 +81,7 @@ public interface IModelService {
 	
 	/**
 	 * Get a Query for objects of type clazz. If the clazz implements {@link Deleteable} no deleted
-	 * entities are included in the result. The Query is closed after the {@link IQuery#execute()}
-	 * method is called.
+	 * entities are included in the result.
 	 * 
 	 * @param clazz
 	 * @param context
@@ -94,8 +93,7 @@ public interface IModelService {
 	
 	/**
 	 * Get a Query for objects of type clazz. If the clazz implements {@link Deleteable}
-	 * includeDeleted determines if deleted entities are included in the result. The Query is closed
-	 * after the {@link IQuery#execute()} method is called.
+	 * includeDeleted determines if deleted entities are included in the result.
 	 * 
 	 * @param clazz
 	 * @param includeDeleted
@@ -107,9 +105,9 @@ public interface IModelService {
 	
 	/**
 	 * Get a Query for objects of type clazz. If the clazz implements {@link Deleteable}
-	 * includeDeleted determines if deleted entities are included in the result. The Query is closed
-	 * after the {@link IQuery#execute()} method is called. With the refreshCache parameter updating
-	 * the cache with the results of the query can be triggered, it has performance implications.
+	 * includeDeleted determines if deleted entities are included in the result. With the
+	 * refreshCache parameter updating the cache with the results of the query can be triggered, it
+	 * has performance implications.
 	 * 
 	 * @param clazz
 	 * @param refreshCache

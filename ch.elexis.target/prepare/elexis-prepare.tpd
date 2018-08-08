@@ -84,6 +84,7 @@ location "http://download.eclipse.org/tools/orbit/downloads/drops/R2018020616315
 	org.apache.commons.lang3
 	org.apache.commons.pool
 	org.apache.commons.httpclient
+	org.apache.commons.beanutils
 }
 
 location "http://download.elexis.info/mirror.4.elexis/snapshot" {

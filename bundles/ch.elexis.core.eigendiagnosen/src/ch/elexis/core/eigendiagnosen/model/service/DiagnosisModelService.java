@@ -16,7 +16,6 @@ import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
-import ch.elexis.core.jpa.model.adapter.AbstractModelAdapterFactory;
 import ch.elexis.core.jpa.model.adapter.AbstractModelService;
 import ch.elexis.core.jpa.model.adapter.NamedQuery;
 import ch.elexis.core.model.Identifiable;
@@ -50,8 +49,6 @@ public class DiagnosisModelService extends AbstractModelService
 	protected EventAdmin getEventAdmin(){
 		return eventAdmin;
 	}
-	
-	private AbstractModelAdapterFactory adapterFactory;
 	
 	@Activate
 	public void activate(){

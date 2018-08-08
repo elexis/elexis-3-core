@@ -753,7 +753,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPeriod()
 	 * @generated
 	 */
-	int IPERIOD = 25;
+	int IPERIOD = 26;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IDocument <em>IDocument</em>}' class.
@@ -793,7 +793,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBillable()
 	 * @generated
 	 */
-	int IBILLABLE = 21;
+	int IBILLABLE = 22;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ICoverage <em>ICoverage</em>}' class.
@@ -803,7 +803,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getICoverage()
 	 * @generated
 	 */
-	int ICOVERAGE = 22;
+	int ICOVERAGE = 23;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IOrganization <em>IOrganization</em>}' class.
@@ -1563,7 +1563,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIConfig()
 	 * @generated
 	 */
-	int ICONFIG = 23;
+	int ICONFIG = 24;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IUserConfig <em>IUser Config</em>}' class.
@@ -1573,7 +1573,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIUserConfig()
 	 * @generated
 	 */
-	int IUSER_CONFIG = 24;
+	int IUSER_CONFIG = 25;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IMandator <em>IMandator</em>}' class.
@@ -2603,13 +2603,31 @@ public interface ModelPackage extends EPackage {
 	int ISTICKER_FEATURE_COUNT = TypesPackage.COMPARABLE_FEATURE_COUNT + 5;
 
 	/**
+	 * The feature id for the '<em><b>Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICODE_ELEMENT__CODE = 0;
+
+	/**
+	 * The feature id for the '<em><b>Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICODE_ELEMENT__TEXT = 1;
+
+	/**
 	 * The number of structural features of the '<em>ICode Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ICODE_ELEMENT_FEATURE_COUNT = 0;
+	int ICODE_ELEMENT_FEATURE_COUNT = 2;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2676,13 +2694,122 @@ public interface ModelPackage extends EPackage {
 	int IDIAGNOSIS = 20;
 
 	/**
+	 * The feature id for the '<em><b>Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDIAGNOSIS__CODE = ICODE_ELEMENT__CODE;
+
+	/**
+	 * The feature id for the '<em><b>Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDIAGNOSIS__TEXT = ICODE_ELEMENT__TEXT;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDIAGNOSIS__DESCRIPTION = ICODE_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
 	 * The number of structural features of the '<em>IDiagnosis</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IDIAGNOSIS_FEATURE_COUNT = ICODE_ELEMENT_FEATURE_COUNT + 0;
+	int IDIAGNOSIS_FEATURE_COUNT = ICODE_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IDiagnosisTree <em>IDiagnosis Tree</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IDiagnosisTree
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDiagnosisTree()
+	 * @generated
+	 */
+	int IDIAGNOSIS_TREE = 21;
+
+	/**
+	 * The feature id for the '<em><b>Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDIAGNOSIS_TREE__CODE = IDIAGNOSIS__CODE;
+
+	/**
+	 * The feature id for the '<em><b>Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDIAGNOSIS_TREE__TEXT = IDIAGNOSIS__TEXT;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDIAGNOSIS_TREE__DESCRIPTION = IDIAGNOSIS__DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>Parent</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDIAGNOSIS_TREE__PARENT = IDIAGNOSIS_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Children</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDIAGNOSIS_TREE__CHILDREN = IDIAGNOSIS_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>IDiagnosis Tree</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDIAGNOSIS_TREE_FEATURE_COUNT = IDIAGNOSIS_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBILLABLE__CODE = ICODE_ELEMENT__CODE;
+
+	/**
+	 * The feature id for the '<em><b>Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBILLABLE__TEXT = ICODE_ELEMENT__TEXT;
 
 	/**
 	 * The number of structural features of the '<em>IBillable</em>' class.
@@ -2818,7 +2945,25 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIArticle()
 	 * @generated
 	 */
-	int IARTICLE = 26;
+	int IARTICLE = 27;
+
+	/**
+	 * The feature id for the '<em><b>Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IARTICLE__CODE = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IARTICLE__TEXT = IDENTIFIABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Gtin</b></em>' attribute.
@@ -2827,7 +2972,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IARTICLE__GTIN = IDENTIFIABLE_FEATURE_COUNT + 0;
+	int IARTICLE__GTIN = IDENTIFIABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2836,7 +2981,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IARTICLE__NAME = IDENTIFIABLE_FEATURE_COUNT + 1;
+	int IARTICLE__NAME = IDENTIFIABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Selling Unit</b></em>' attribute.
@@ -2845,7 +2990,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IARTICLE__SELLING_UNIT = IDENTIFIABLE_FEATURE_COUNT + 2;
+	int IARTICLE__SELLING_UNIT = IDENTIFIABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Package Unit</b></em>' attribute.
@@ -2854,7 +2999,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IARTICLE__PACKAGE_UNIT = IDENTIFIABLE_FEATURE_COUNT + 3;
+	int IARTICLE__PACKAGE_UNIT = IDENTIFIABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Product</b></em>' attribute.
@@ -2863,7 +3008,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IARTICLE__PRODUCT = IDENTIFIABLE_FEATURE_COUNT + 4;
+	int IARTICLE__PRODUCT = IDENTIFIABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The number of structural features of the '<em>IArticle</em>' class.
@@ -2872,7 +3017,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IARTICLE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 5;
+	int IARTICLE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ITypedArticle <em>ITyped Article</em>}' class.
@@ -2882,7 +3027,25 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getITypedArticle()
 	 * @generated
 	 */
-	int ITYPED_ARTICLE = 27;
+	int ITYPED_ARTICLE = 28;
+
+	/**
+	 * The feature id for the '<em><b>Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITYPED_ARTICLE__CODE = IARTICLE__CODE;
+
+	/**
+	 * The feature id for the '<em><b>Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITYPED_ARTICLE__TEXT = IARTICLE__TEXT;
 
 	/**
 	 * The feature id for the '<em><b>Gtin</b></em>' attribute.
@@ -2964,7 +3127,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getWithExtInfo()
 	 * @generated
 	 */
-	int WITH_EXT_INFO = 28;
+	int WITH_EXT_INFO = 29;
 
 	/**
 	 * The number of structural features of the '<em>With Ext Info</em>' class.
@@ -2983,7 +3146,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRole()
 	 * @generated
 	 */
-	int IROLE = 29;
+	int IROLE = 30;
 
 	/**
 	 * The number of structural features of the '<em>IRole</em>' class.
@@ -3002,7 +3165,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBlob()
 	 * @generated
 	 */
-	int IBLOB = 30;
+	int IBLOB = 31;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -3344,6 +3507,28 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getICodeElement();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ICodeElement#getCode <em>Code</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Code</em>'.
+	 * @see ch.elexis.core.model.ICodeElement#getCode()
+	 * @see #getICodeElement()
+	 * @generated
+	 */
+	EAttribute getICodeElement_Code();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ICodeElement#getText <em>Text</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Text</em>'.
+	 * @see ch.elexis.core.model.ICodeElement#getText()
+	 * @see #getICodeElement()
+	 * @generated
+	 */
+	EAttribute getICodeElement_Text();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.ISticker <em>ISticker</em>}'.
@@ -4365,6 +4550,49 @@ public interface ModelPackage extends EPackage {
 	EClass getIDiagnosis();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IDiagnosis#getDescription <em>Description</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Description</em>'.
+	 * @see ch.elexis.core.model.IDiagnosis#getDescription()
+	 * @see #getIDiagnosis()
+	 * @generated
+	 */
+	EAttribute getIDiagnosis_Description();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IDiagnosisTree <em>IDiagnosis Tree</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IDiagnosis Tree</em>'.
+	 * @see ch.elexis.core.model.IDiagnosisTree
+	 * @generated
+	 */
+	EClass getIDiagnosisTree();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IDiagnosisTree#getParent <em>Parent</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Parent</em>'.
+	 * @see ch.elexis.core.model.IDiagnosisTree#getParent()
+	 * @see #getIDiagnosisTree()
+	 * @generated
+	 */
+	EReference getIDiagnosisTree_Parent();
+
+	/**
+	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IDiagnosisTree#getChildren <em>Children</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Children</em>'.
+	 * @see ch.elexis.core.model.IDiagnosisTree#getChildren()
+	 * @see #getIDiagnosisTree()
+	 * @generated
+	 */
+	EReference getIDiagnosisTree_Children();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IBillable <em>IBillable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4877,6 +5105,22 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EClass ICODE_ELEMENT = eINSTANCE.getICodeElement();
+
+		/**
+		 * The meta object literal for the '<em><b>Code</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ICODE_ELEMENT__CODE = eINSTANCE.getICodeElement_Code();
+
+		/**
+		 * The meta object literal for the '<em><b>Text</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ICODE_ELEMENT__TEXT = eINSTANCE.getICodeElement_Text();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.ISticker <em>ISticker</em>}' class.
@@ -5659,6 +5903,40 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EClass IDIAGNOSIS = eINSTANCE.getIDiagnosis();
+
+		/**
+		 * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IDIAGNOSIS__DESCRIPTION = eINSTANCE.getIDiagnosis_Description();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IDiagnosisTree <em>IDiagnosis Tree</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IDiagnosisTree
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDiagnosisTree()
+		 * @generated
+		 */
+		EClass IDIAGNOSIS_TREE = eINSTANCE.getIDiagnosisTree();
+
+		/**
+		 * The meta object literal for the '<em><b>Parent</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IDIAGNOSIS_TREE__PARENT = eINSTANCE.getIDiagnosisTree_Parent();
+
+		/**
+		 * The meta object literal for the '<em><b>Children</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IDIAGNOSIS_TREE__CHILDREN = eINSTANCE.getIDiagnosisTree_Children();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IBillable <em>IBillable</em>}' class.

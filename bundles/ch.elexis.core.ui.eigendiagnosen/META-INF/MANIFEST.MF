@@ -17,4 +17,8 @@ Require-Bundle: ch.elexis.core;bundle-version="3.0.0",
  ch.elexis.core.l10n;bundle-version="3.5.0"
 Created-By: Buildr
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Service-Component: OSGI-INF/ch.elexis.core.ui.eigendiagnosen.ModelServiceHolder.xml
+Bundle-ActivationPolicy: lazy
+Import-Package: org.apache.commons.lang3;version="3.1.0",
+ org.eclipse.e4.core.di.annotations
 

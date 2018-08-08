@@ -57,6 +57,11 @@ public class TypedArticle extends AbstractIdModelAdapter<ch.elexis.core.jpa.enti
 	}
 	
 	@Override
+	public void setText(String value){
+		getEntity().setName(value);
+	}
+	
+	@Override
 	public String getGtin(){
 		return getEntity().getEan();
 	}

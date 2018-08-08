@@ -1,8 +1,11 @@
-package ch.elexis.core.ui.services;
+package ch.elexis.core.ui.services.internal;
 
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.eclipse.e4.core.contexts.IEclipseContext;
+
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
@@ -14,6 +17,10 @@ public class Context implements IContext {
 	private ConcurrentHashMap<String, Object> context;
 	
 	private Context parent;
+	
+	private IEclipseContext eclipseContext;
+	
+	private ElexisEventDispatcher elexisEventDispatcher;
 	
 	public Context(){
 		this(null, "root");
@@ -36,6 +43,9 @@ public class Context implements IContext {
 	@Override
 	public void setActiveUser(IUser user){
 		context.put(ACTIVE_USER, user);
+		if (eclipseContext != null) {
+			eclipseContext.set(ACTIVE_USER, user);
+		}
 	}
 	
 	@Override
@@ -50,6 +60,9 @@ public class Context implements IContext {
 	@Override
 	public void setActiveUserContact(IContact userContact){
 		context.put(ACTIVE_USERCONTACT, userContact);
+		if (eclipseContext != null) {
+			eclipseContext.set(ACTIVE_USERCONTACT, userContact);
+		}
 	}
 	
 	@Override
@@ -64,6 +77,9 @@ public class Context implements IContext {
 	@Override
 	public void setActivePatient(IPatient patient){
 		context.put(ACTIVE_PATIENT, patient);
+		if (eclipseContext != null) {
+			eclipseContext.set(ACTIVE_PATIENT, patient);
+		}
 	}
 	
 	@Override
@@ -78,6 +94,9 @@ public class Context implements IContext {
 	@Override
 	public void setActiveMandator(IMandator mandator){
 		context.put(ACTIVE_MANDATOR, mandator);
+		if (eclipseContext != null) {
+			eclipseContext.set(ACTIVE_MANDATOR, mandator);
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -93,11 +112,17 @@ public class Context implements IContext {
 	@Override
 	public void setTyped(Object object){
 		context.put(object.getClass().getName(), object);
+		if (eclipseContext != null) {
+			eclipseContext.set(object.getClass().getName(), object);
+		}
 	}
 	
 	@Override
 	public void removeTyped(Class<?> clazz){
 		context.remove(clazz.getName());
+		if (eclipseContext != null) {
+			eclipseContext.remove(clazz.getName());
+		}
 	}
 	
 	@Override
@@ -112,9 +137,20 @@ public class Context implements IContext {
 	@Override
 	public void setNamed(String name, Object object){
 		context.put(name, object);
+		if (eclipseContext != null) {
+			eclipseContext.set(name, object);
+		}
 	}
 	
 	public void setParent(Context parent){
 		this.parent = parent;
+	}
+	
+	public void setEclipseContext(IEclipseContext applicationContext){
+		this.eclipseContext = applicationContext;
+	}
+	
+	public void setElexisEventDispatcher(ElexisEventDispatcher elexisEventDispatcher){
+		this.elexisEventDispatcher = elexisEventDispatcher;
 	}
 }

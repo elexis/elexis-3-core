@@ -3,7 +3,7 @@ package ch.elexis.core.eigendiagnosen.model.service;
 import ch.elexis.core.jpa.entities.Eigendiagnose;
 import ch.elexis.core.jpa.model.adapter.AbstractModelAdapterFactory;
 import ch.elexis.core.jpa.model.adapter.MappingEntry;
-import ch.elexis.core.model.IDiagnosis;
+import ch.elexis.core.model.IDiagnosisTree;
 
 public class DiagnosisModelAdapterFactory extends AbstractModelAdapterFactory {
 	
@@ -22,7 +22,7 @@ public class DiagnosisModelAdapterFactory extends AbstractModelAdapterFactory {
 	
 	@Override
 	protected void initializeMappings(){
-		addMapping(new MappingEntry(IDiagnosis.class,
+		addMapping(new MappingEntry(IDiagnosisTree.class,
 			ch.elexis.core.eigendiagnosen.model.CustomDiagnosis.class,
 			Eigendiagnose.class));
 	}

@@ -29,6 +29,7 @@ import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IDiagnosis;
+import ch.elexis.core.model.IDiagnosisTree;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IHistory;
@@ -186,6 +187,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass iDiagnosisEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iDiagnosisTreeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -592,6 +600,24 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 */
 	public EClass getICodeElement() {
 		return iCodeElementEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getICodeElement_Code() {
+		return (EAttribute)iCodeElementEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getICodeElement_Text() {
+		return (EAttribute)iCodeElementEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -1445,6 +1471,42 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getIDiagnosis_Description() {
+		return (EAttribute)iDiagnosisEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getIDiagnosisTree() {
+		return iDiagnosisTreeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIDiagnosisTree_Parent() {
+		return (EReference)iDiagnosisTreeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIDiagnosisTree_Children() {
+		return (EReference)iDiagnosisTreeEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getIBillable() {
 		return iBillableEClass;
 	}
@@ -1826,6 +1888,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iStickerEClass, ISTICKER__VALUE);
 
 		iCodeElementEClass = createEClass(ICODE_ELEMENT);
+		createEAttribute(iCodeElementEClass, ICODE_ELEMENT__CODE);
+		createEAttribute(iCodeElementEClass, ICODE_ELEMENT__TEXT);
 
 		iCategoryEClass = createEClass(ICATEGORY);
 		createEAttribute(iCategoryEClass, ICATEGORY__NAME);
@@ -1836,6 +1900,11 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iHistoryEClass, IHISTORY__DESCRIPTION);
 
 		iDiagnosisEClass = createEClass(IDIAGNOSIS);
+		createEAttribute(iDiagnosisEClass, IDIAGNOSIS__DESCRIPTION);
+
+		iDiagnosisTreeEClass = createEClass(IDIAGNOSIS_TREE);
+		createEReference(iDiagnosisTreeEClass, IDIAGNOSIS_TREE__PARENT);
+		createEReference(iDiagnosisTreeEClass, IDIAGNOSIS_TREE__CHILDREN);
 
 		iBillableEClass = createEClass(IBILLABLE);
 
@@ -1936,6 +2005,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iStickerEClass.getEGenericSuperTypes().add(g1);
 		iDiagnosisEClass.getESuperTypes().add(this.getICodeElement());
 		iDiagnosisEClass.getESuperTypes().add(this.getIdentifiable());
+		iDiagnosisTreeEClass.getESuperTypes().add(this.getIDiagnosis());
 		iBillableEClass.getESuperTypes().add(this.getICodeElement());
 		iBillableEClass.getESuperTypes().add(this.getIdentifiable());
 		iCoverageEClass.getESuperTypes().add(this.getDeleteable());
@@ -2138,14 +2208,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEOperation(iStickerEClass, ecorePackage.getEString(), "getClassesForSticker", 0, -1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iCodeElementEClass, ICodeElement.class, "ICodeElement", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getICodeElement_Code(), ecorePackage.getEString(), "code", null, 0, 1, ICodeElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getICodeElement_Text(), ecorePackage.getEString(), "text", null, 0, 1, ICodeElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		addEOperation(iCodeElementEClass, ecorePackage.getEString(), "getCodeSystemName", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		addEOperation(iCodeElementEClass, ecorePackage.getEString(), "getCodeSystemCode", 0, 1, IS_UNIQUE, IS_ORDERED);
-
-		addEOperation(iCodeElementEClass, ecorePackage.getEString(), "getCode", 0, 1, IS_UNIQUE, IS_ORDERED);
-
-		addEOperation(iCodeElementEClass, ecorePackage.getEString(), "getText", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iCategoryEClass, ICategory.class, "ICategory", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getICategory_Name(), ecorePackage.getEString(), "name", null, 0, 1, ICategory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2156,6 +2224,11 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIHistory_Description(), ecorePackage.getEString(), "description", null, 0, 1, IHistory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iDiagnosisEClass, IDiagnosis.class, "IDiagnosis", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIDiagnosis_Description(), ecorePackage.getEString(), "description", null, 0, 1, IDiagnosis.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(iDiagnosisTreeEClass, IDiagnosisTree.class, "IDiagnosisTree", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getIDiagnosisTree_Parent(), this.getIDiagnosisTree(), null, "parent", null, 0, 1, IDiagnosisTree.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIDiagnosisTree_Children(), this.getIDiagnosisTree(), null, "children", null, 0, -1, IDiagnosisTree.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iBillableEClass, IBillable.class, "IBillable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

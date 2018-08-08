@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.data.PersistentObject;
 
 /**
@@ -33,6 +34,8 @@ public class DefaultLabelProvider extends LabelProvider implements ITableLabelPr
 		if (element instanceof PersistentObject) {
 			PersistentObject po = (PersistentObject) element;
 			return po.getLabel();
+		} else if (element instanceof Identifiable) {
+			return ((Identifiable) element).getLabel();
 		}
 		return element.toString();
 	}
@@ -42,6 +45,8 @@ public class DefaultLabelProvider extends LabelProvider implements ITableLabelPr
 		if (element instanceof PersistentObject) {
 			PersistentObject po = (PersistentObject) element;
 			return po.getLabel();
+		} else if (element instanceof Identifiable) {
+			return ((Identifiable) element).getLabel();
 		}
 		return element.toString();
 	}

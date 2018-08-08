@@ -30,6 +30,7 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ICommonViewerContentProvi
  * 
  * @author Gerry
  * 
+ * @deprecated
  */
 public class TreeContentProvider implements ITreeContentProvider, BackgroundJobListener,
 		ICommonViewerContentProvider {

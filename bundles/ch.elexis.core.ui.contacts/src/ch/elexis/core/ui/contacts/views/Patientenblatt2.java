@@ -68,8 +68,8 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
-import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.MaritalStatus;
 import ch.elexis.core.model.PatientConstants;
 import ch.elexis.core.ui.Hub;
@@ -108,7 +108,6 @@ import ch.elexis.data.Kontakt;
 import ch.elexis.data.Labor;
 import ch.elexis.data.Organisation;
 import ch.elexis.data.Patient;
-import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Person;
 import ch.elexis.data.Xid;
 import ch.elexis.data.Xid.XIDDomain;
@@ -289,11 +288,11 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		fields.add(new InputData(Messages.Patientenblatt2_balance, Patient.FLD_BALANCE,
 			new LabeledInputField.IContentProvider() { // $NON-NLS-1$
 				
-				public void displayContent(PersistentObject po, InputData ltf){
+				public void displayContent(Object po, InputData ltf){
 					ltf.setText(actPatient.getKontostand().getAmountAsString());
 				}
 				
-				public void reloadContent(PersistentObject po, InputData ltf){
+				public void reloadContent(Object po, InputData ltf){
 					if (new AddBuchungDialog(getShell(), actPatient).open() == Dialog.OK) {
 						ltf.setText(actPatient.getKontostand().getAmountAsString());
 					}
@@ -303,7 +302,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		fields.add(new InputData(Messages.Patientenblatt2_regularPhysician,
 			PatientConstants.FLD_EXTINFO_STAMMARZT, new LabeledInputField.IContentProvider() { // $NON-NLS-1$
 				
-				public void displayContent(PersistentObject po, InputData ltf){
+				public void displayContent(Object po, InputData ltf){
 					Patient p = (Patient) po;
 					String result = "";
 					if (p.getStammarzt() != null && p.getStammarzt().exists()) {
@@ -312,7 +311,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					ltf.setText(result);
 				}
 				
-				public void reloadContent(PersistentObject po, InputData ltf){
+				public void reloadContent(Object po, InputData ltf){
 					if(bLocked) {
 						return;
 					}
@@ -336,12 +335,12 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		
 		fields.add(new InputData(Messages.Patientenblatt2_ahvNumber, XidConstants.DOMAIN_AHV,
 			new LabeledInputField.IContentProvider() {
-				public void displayContent(PersistentObject po, InputData ltf){
+				public void displayContent(Object po, InputData ltf){
 					Patient p = (Patient) po;
 					ltf.setText(p.getXid(XidConstants.DOMAIN_AHV));
 				}
 				
-				public void reloadContent(final PersistentObject po, final InputData ltf){
+				public void reloadContent(final Object po, final InputData ltf){
 					if(bLocked) {
 						return;
 					}
@@ -368,7 +367,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		fields.add(new InputData(Messages.Patientenblatt2_legalGuardian,
 			PatientConstants.FLD_EXTINFO_LEGAL_GUARDIAN, new LabeledInputField.IContentProvider() {
 				@Override
-				public void displayContent(PersistentObject po, InputData ltf){
+				public void displayContent(Object po, InputData ltf){
 					Patient p = (Patient) po;
 					String guardianLabel = "";
 					Kontakt legalGuardian = p.getLegalGuardian();
@@ -380,7 +379,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				}
 				
 				@Override
-				public void reloadContent(PersistentObject po, InputData ltf){
+				public void reloadContent(Object po, InputData ltf){
 					if(bLocked) {
 						return;
 					}

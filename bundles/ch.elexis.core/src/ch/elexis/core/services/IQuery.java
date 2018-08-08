@@ -9,6 +9,10 @@ public interface IQuery<T> {
 			LIKE, EQUALS, LESS, LESS_OR_EQUAL, GREATER, NOT_LIKE, NOT_EQUALS, GREATER_OR_EQUAL
 	}
 	
+	public static enum ORDER {
+			ASC, DESC
+	}
+	
 	/**
 	 * Start a new group of where clauses that are joined with
 	 * {@link #and(EStructuralFeature, COMPARATOR, Object)} or
@@ -93,4 +97,18 @@ public interface IQuery<T> {
 	 * @return
 	 */
 	public List<T> execute();
+	
+	/**
+	 * Add an order by to the query.
+	 * 
+	 * @param fieldOrderBy
+	 */
+	public void orderBy(String fieldOrderBy, ORDER order);
+	
+	/**
+	 * Add an order by to the query.
+	 * 
+	 * @param fieldOrderBy
+	 */
+	public void orderBy(EStructuralFeature feature, ORDER order);
 }

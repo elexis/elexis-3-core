@@ -55,7 +55,6 @@ import ch.elexis.data.Kontakt;
 import ch.elexis.data.Labor;
 import ch.elexis.data.Organisation;
 import ch.elexis.data.Patient;
-import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Person;
 import ch.elexis.data.Xid;
 import ch.elexis.data.Xid.XIDDomain;
@@ -110,15 +109,16 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 		new InputData(Messages.KontaktBlatt_title, Person.TITLE, Typ.STRING, null), new InputData(
 			Messages.KontaktBlatt_extid, "UUID", new LabeledInputField.IContentProvider() { //$NON-NLS-1$ //$NON-NLS-2$
 				
-				public void displayContent(PersistentObject po, InputData ltf){
+				public void displayContent(Object po, InputData ltf){
 					StringBuilder sb = new StringBuilder();
-					IXid xid = po.getXid();
+					Kontakt k = (Kontakt) po;
+					IXid xid = k.getXid();
 					String dom = Xid.getSimpleNameForXIDDomain(xid.getDomain());
 					sb.append(dom).append(": ").append(xid.getDomainId()); //$NON-NLS-1$
 					ltf.setText(sb.toString());
 				}
 				
-				public void reloadContent(PersistentObject po, InputData ltf){
+				public void reloadContent(Object po, InputData ltf){
 					ArrayList<String> extFlds = new ArrayList<String>();
 					Kontakt k = (Kontakt) po;
 					for (String dom : Xid.getXIDDomains()) {

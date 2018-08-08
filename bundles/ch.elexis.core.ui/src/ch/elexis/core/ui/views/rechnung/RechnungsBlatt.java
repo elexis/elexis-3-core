@@ -116,7 +116,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	private static LabeledInputField.IContentProvider openAmountContentProvider =
 		new LabeledInputField.IContentProvider() {
 			
-			public void displayContent(PersistentObject po, InputData ltf){
+			public void displayContent(Object po, InputData ltf){
 				Rechnung invoice = (Rechnung) po;
 				Money openAmount = invoice.getOffenerBetrag();
 				ltf.setText(openAmount.getAmountAsString());
@@ -127,7 +127,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 				}
 			}
 			
-			public void reloadContent(PersistentObject po, InputData ltf){
+			public void reloadContent(Object po, InputData ltf){
 				Rechnung invoice = (Rechnung) po;
 				if (InvoiceState.CANCELLED.numericValue() == invoice.getStatus()) {
 					Money openAmount = invoice.getOffenerBetrag();
@@ -162,17 +162,17 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		new InputData(Messages.RechnungsBlatt_billState, Rechnung.BILL_STATE,
 			new LabeledInputField.IContentProvider() {
 				
-				public void displayContent(PersistentObject po, InputData ltf){
+				public void displayContent(Object po, InputData ltf){
 					Rechnung r = (Rechnung) po;
 					ltf.setText(RnStatus.getStatusText(r.getStatus()));
 					
 				}
 				
-				public void reloadContent(PersistentObject po, InputData ltf){
+				public void reloadContent(Object po, InputData ltf){
 					if (new RnDialogs.StatusAendernDialog(
 						Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(),
 						(Rechnung) po).open() == Dialog.OK) {
-						ElexisEventDispatcher.update(po);
+						ElexisEventDispatcher.update((PersistentObject) po);
 					}
 				}
 				

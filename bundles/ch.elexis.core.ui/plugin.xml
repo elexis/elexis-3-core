@@ -922,5 +922,10 @@
              beforefragment="false"
              class="ch.elexis.core.ui.processor.ElexisProcessor">
        </processor>
+       <processor
+             apply="always"
+             beforefragment="false"
+             class="ch.elexis.core.ui.services.internal.ContextService">
+       </processor>
 	   </extension>
 </plugin>

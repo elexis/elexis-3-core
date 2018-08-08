@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -37,6 +38,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.services.ContextServiceHolder;
 import ch.elexis.core.ui.util.PersistentObjectDragSource;
 import ch.elexis.core.ui.util.PersistentObjectDragSource.ISelectionRenderer;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -67,6 +69,8 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 	private Composite parent;
 	private ISelectionChangedListener selChangeListener;
 	
+	private String namedSelection;
+	
 	public enum Message {
 		update, empty, notempty, update_keeplabels
 	}
@@ -85,9 +89,17 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 	}
 	
 	/**
-	 * Sets the view name. Mainly used for GUI-Jubula tests.
-	 * The view name is used to uniquely identify the toolbar items by
-	 * setting the TEST_COMP_NAME accordingly
+	 * Set the name that is used to update the selection in the current root {@link IContext}.
+	 * 
+	 * @param name
+	 */
+	public void setNamedSelection(String name){
+		this.namedSelection = name;
+	}
+	
+	/**
+	 * Sets the view name. Mainly used for GUI-Jubula tests. The view name is used to uniquely
+	 * identify the toolbar items by setting the TEST_COMP_NAME accordingly
 	 *
 	 * @param s
 	 */
@@ -317,6 +329,13 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 			}
 			if (sel[0] instanceof PersistentObject) {
 				ElexisEventDispatcher.fireSelectionEvent((PersistentObject) sel[0]);
+			} else {
+				if (StringUtils.isNotBlank(namedSelection)) {
+					ContextServiceHolder.getService().getRootContext().setNamed(namedSelection,
+						sel[0]);
+				} else {
+					ContextServiceHolder.getService().getRootContext().setTyped(sel[0]);
+				}
 			}
 		}
 		if (selChangeListener != null)

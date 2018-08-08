@@ -355,7 +355,7 @@
             <column name="MAPPED" type="VARCHAR(2147483647)"/>
         </createTable>
     </changeSet>
-        <changeSet author="thomas (generated)" id="manual_idx1_CH_ELEXIS_CORE_FINDINGS_LOCALCODING">
+    <changeSet author="thomas (generated)" id="manual_idx1_CH_ELEXIS_CORE_FINDINGS_LOCALCODING">
         <preConditions onFail="MARK_RAN">
 			<not>
 				<indexExists indexName="CH_ELEXIS_CORE_FINDINGS_LOCALCODING_IDX1" />
@@ -366,4 +366,35 @@
         </createIndex>
     </changeSet>
     
+    <changeSet author="thomas (generated)" id="manual_table_CH_ELEXIS_EIGENDIAGNOSEN">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="CH_ELEXIS_EIGENDIAGNOSEN" />
+			</not>
+		</preConditions>
+        <createTable tableName="CH_ELEXIS_EIGENDIAGNOSEN">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_PK_CH_ELEXIS_EIGENDIAGNOSEN"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+           
+            <column name="PARENT" type="VARCHAR(20)"/>
+            <column name="CODE" type="VARCHAR(20)"/>
+            <column name="TITLE" type="VARCHAR(80)"/>
+            <column name="COMMENT" type="VARCHAR(2147483647)"/>
+            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="manual_idx1_CH_ELEXIS_EIGENDIAGNOSEN">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="CH_ELEXIS_EIGENDIAGNOSEN_IDX1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="CH_ELEXIS_EIGENDIAGNOSEN_IDX1" tableName="CH_ELEXIS_EIGENDIAGNOSEN">
+            <column name="PARENT"/>
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>

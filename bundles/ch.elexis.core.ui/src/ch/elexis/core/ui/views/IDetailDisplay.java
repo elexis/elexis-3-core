@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.views;
 
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IViewSite;
 
@@ -24,12 +25,13 @@ import ch.elexis.data.PersistentObject;
  */
 public interface IDetailDisplay {
 	/**
-	 * Das Display erzeugen.
+	 * Detail {@link Composite} following the master detail pattern. Selection is provided via
+	 * element class or context name.
 	 * 
 	 * @param parent
-	 *            Hat schon ein FillLayout.
+	 *            already has a {@link FillLayout}
 	 * @param site
-	 *            Heimat-Viewsite dieses DetailDisplay
+	 *            {@link IViewSite} the display is part of
 	 */
 	public Composite createDisplay(Composite parent, IViewSite site);
 	

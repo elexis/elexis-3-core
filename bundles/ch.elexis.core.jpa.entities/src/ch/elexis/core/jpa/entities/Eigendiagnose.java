@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
@@ -18,6 +19,8 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "CH_ELEXIS_EIGENDIAGNOSEN")
 @EntityListeners(EntityWithIdListener.class)
+@NamedQuery(name = "Eigendiagnose.code", query = "SELECT ei FROM Eigendiagnose ei WHERE ei.deleted = false AND ei.code = :code")
+@NamedQuery(name = "Eigendiagnose.parent", query = "SELECT ei FROM Eigendiagnose ei WHERE ei.deleted = false AND ei.parent = :parent")
 public class Eigendiagnose implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	// Transparently updated by the EntityListener

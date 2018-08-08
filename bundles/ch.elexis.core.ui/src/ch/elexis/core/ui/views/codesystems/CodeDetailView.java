@@ -49,6 +49,7 @@ import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.DelegatingSelectionProvider;
 import ch.elexis.core.ui.util.ImporterPage;
 import ch.elexis.core.ui.util.ViewMenus;
@@ -189,24 +190,27 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 			}
 			
 			try {
-				IDetailDisplay d =
+				IDetailDisplay detailDisplay =
 					(IDetailDisplay) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
-				CodeSelectorFactory cs =
+				CodeSelectorFactory codeSelector =
 					(CodeSelectorFactory) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
 				String a = ce.getAttribute(ExtensionPointConstantsUi.VERRECHNUNGSCODE_IMPC);
 				ImporterPage ip = null;
 				if (a != null) {
 					ip = (ImporterPage) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_IMPC);
 					if (ip != null) {
-						importers.put(d.getTitle(), ip);
+						importers.put(detailDisplay.getTitle(), ip);
 					}
 				}
 				
-				MasterDetailsPage page = new MasterDetailsPage(ctab, cs, d);
+				MasterDetailsPage page = new MasterDetailsPage(ctab, codeSelector, detailDisplay);
 				CTabItem ct = new CTabItem(ctab, SWT.NONE);
-				ct.setText(d.getTitle());
+				ct.setText(detailDisplay.getTitle());
 				ct.setControl(page);
-				ct.setData(d);
+				ct.setData(detailDisplay);
+				
+				CoreUiUtil.injectServices(codeSelector);
+				CoreUiUtil.injectServices(detailDisplay);
 			} catch (Exception ex) {
 				ElexisStatus status =
 					new ElexisStatus(ElexisStatus.WARNING, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
@@ -250,24 +254,26 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 				if ("Artikel".equals(ce.getName())) { //$NON-NLS-1$
 					continue;
 				}
-				IDetailDisplay d =
+				IDetailDisplay detailDisplay =
 					(IDetailDisplay) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
-				CodeSelectorFactory cs =
+				CodeSelectorFactory codeSelector =
 					(CodeSelectorFactory) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
 				String a = ce.getAttribute(ExtensionPointConstantsUi.VERRECHNUNGSCODE_IMPC);
 				ImporterPage ip = null;
 				if (a != null) {
 					ip = (ImporterPage) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_IMPC);
 					if (ip != null) {
-						importers.put(d.getTitle(), ip);
+						importers.put(detailDisplay.getTitle(), ip);
 					}
 				}
-				MasterDetailsPage page = new MasterDetailsPage(ctab, cs, d);
+				MasterDetailsPage page = new MasterDetailsPage(ctab, codeSelector, detailDisplay);
 				CTabItem ct = new CTabItem(ctab, SWT.NONE);
-				ct.setText(d.getTitle());
+				ct.setText(detailDisplay.getTitle());
 				ct.setControl(page);
-				ct.setData(d);
+				ct.setData(detailDisplay);
 				
+				CoreUiUtil.injectServices(codeSelector);
+				CoreUiUtil.injectServices(detailDisplay);
 			} catch (Exception ex) {
 				ElexisStatus status =
 					new ElexisStatus(ElexisStatus.WARNING, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,

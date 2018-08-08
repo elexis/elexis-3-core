@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="ch.elexis.core.ui.eigendiagnosen.ModelServiceHolder">
+   <reference bind="setModelServcie" interface="ch.elexis.core.services.IModelService" name="ModelServcie" target="(service.model.name=ch.elexis.core.eigendiagnosen.model)"/>
+   <implementation class="ch.elexis.core.ui.eigendiagnosen.ModelServiceHolder"/>
+</scr:component>

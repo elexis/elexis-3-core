@@ -10,6 +10,7 @@
  */
 package ch.elexis.core.model.util;
 
+import ch.elexis.core.model.*;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
@@ -187,6 +188,10 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseIDiagnosis(IDiagnosis object) {
 				return createIDiagnosisAdapter();
+			}
+			@Override
+			public Adapter caseIDiagnosisTree(IDiagnosisTree object) {
+				return createIDiagnosisTreeAdapter();
 			}
 			@Override
 			public Adapter caseIBillable(IBillable object) {
@@ -501,6 +506,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIDiagnosisAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IDiagnosisTree <em>IDiagnosis Tree</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IDiagnosisTree
+	 * @generated
+	 */
+	public Adapter createIDiagnosisTreeAdapter() {
 		return null;
 	}
 
