@@ -21,6 +21,7 @@ public class DBModel {
 	public static final String VERSION190 = "1.9.0";
 	public static final String VERSION300 = "3.0.0";
 	public static final String VERSION310 = "3.1.0";
+	public static final String VERSION360 = "3.6.0";
 	
 	public static String[] tablesInV186 = {
 		"ARTIKEL", "ARTIKEL_DETAILS", "AUF", "BBS", "BEHANDLUNGEN", "BEHDL_DG_JOINT", "BRIEFE",

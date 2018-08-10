@@ -113,6 +113,14 @@ public abstract class TableDescriptor {
 		return getFieldTypes(DBModel.VERSION190);
 	}
 	
+	protected String[] returnFieldsIn360() {
+		return getFields(DBModel.VERSION190);
+	}
+
+	protected String[] returnFieldTypesIn360() {
+		return getFieldTypes(DBModel.VERSION190);
+	}
+
 	/**
 	 * Die definierten Feldnamen einer Tabelle in einer spezifischen Version
 	 * 
@@ -184,6 +192,12 @@ public abstract class TableDescriptor {
 				return returnFieldsIn310();
 			}
 			return getFields(DBModel.VERSION300);
+		}
+		if (version.equalsIgnoreCase(DBModel.VERSION360)) {
+			if (returnFieldsIn360() != null) {
+				return returnFieldsIn360();
+			}
+			return getFields(DBModel.VERSION360);
 		}
 		
 		throw new IllegalStateException("The correct entry was not returned for " + version);
@@ -300,6 +314,11 @@ public abstract class TableDescriptor {
 		if (version.equalsIgnoreCase(DBModel.VERSION310)) {
 			if (returnFieldsIn310() != null)
 				return returnFieldTypesIn310();
+			return getFieldTypes(DBModel.VERSION300);
+		}
+		if (version.equalsIgnoreCase(DBModel.VERSION360)) {
+			if (returnFieldsIn360() != null)
+				return returnFieldTypesIn360();
 			return getFieldTypes(DBModel.VERSION300);
 		}
 		
