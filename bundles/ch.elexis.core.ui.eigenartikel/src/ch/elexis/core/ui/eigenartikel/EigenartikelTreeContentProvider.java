@@ -2,15 +2,18 @@
 package ch.elexis.core.ui.eigenartikel;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 
-import ch.elexis.core.eigenartikel.Eigenartikel;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.model.ITypedArticle;
+import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.IQuery.ORDER;
+import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ICommonViewerContentProvider;
-import ch.elexis.data.Query;
 
 public class EigenartikelTreeContentProvider
 		implements ITreeContentProvider, ICommonViewerContentProvider {
@@ -46,27 +49,18 @@ public class EigenartikelTreeContentProvider
 	
 	@Override
 	public Object[] getElements(Object inputElement){
-		Query<Eigenartikel> qre = new Query<>(Eigenartikel.class, Eigenartikel.FLD_TYP,
-			Eigenartikel.TYPNAME, Eigenartikel.TABLENAME, new String[] {
-				Eigenartikel.FLD_NAME, Eigenartikel.FLD_EXTID, Eigenartikel.FLD_EXTINFO
-			});
+		IQuery<ITypedArticle> query = CoreModelServiceHolder.get().getQuery(ITypedArticle.class);
+		query.and(ModelPackage.Literals.ITYPED_ARTICLE__TYP, COMPARATOR.EQUALS,
+			ArticleTyp.EIGENARTIKEL);
 		if (filter != null) {
-			qre.add(Eigenartikel.FLD_NAME, Query.LIKE, "%" + filter + "%", true);
+			query.and(ModelPackage.Literals.IARTICLE__NAME, COMPARATOR.LIKE, "%" + filter + "%",
+				true);
 		}
 		if (!showProducts) {
-			qre.add(Eigenartikel.FLD_EXTID, Query.NOT_EQUAL, null);
+			query.and(ModelPackage.Literals.IARTICLE__PRODUCT, COMPARATOR.NOT_EQUALS, null);
 		}
-		qre.orderBy(false, Eigenartikel.FLD_NAME, Eigenartikel.FLD_EXTID);
-		List<Eigenartikel> execute = qre.execute();
-		List<Eigenartikel> collect;
-		if (showProducts) {
-			collect =
-				execute.stream().filter(p -> !p.isValidPackage()).collect(Collectors.toList());
-		} else {
-			collect = execute;
-		}
-		
-		return collect.toArray();
+		query.orderBy(ModelPackage.Literals.IARTICLE__NAME, ORDER.DESC);
+		return query.execute().toArray();
 	}
 	
 	@Override
@@ -74,8 +68,8 @@ public class EigenartikelTreeContentProvider
 		if (!showProducts) {
 			return null;
 		}
-		if (parentElement != null && parentElement instanceof Eigenartikel) {
-			Eigenartikel ea = (Eigenartikel) parentElement;
+		if (parentElement != null && parentElement instanceof ITypedArticle) {
+			ITypedArticle ea = (ITypedArticle) parentElement;
 			if (ea.isProduct()) {
 				return ea.getPackages().toArray();
 			}
@@ -93,7 +87,7 @@ public class EigenartikelTreeContentProvider
 		if (!showProducts) {
 			return false;
 		}
-		Eigenartikel ea = (Eigenartikel) element;
+		ITypedArticle ea = (ITypedArticle) element;
 		return ea.isProduct() && ea.getPackages().size() > 0;
 	}
 	

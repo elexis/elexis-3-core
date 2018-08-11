@@ -107,4 +107,14 @@ public class Encounter implements EntityWithId, EntityWithDeleted {
 	public void setContent(String content) {
 		this.content = content;
 	}
+	
+	@Override
+	public int hashCode(){
+		return EntityWithId.idHashCode(this);
+	}
+	
+	@Override
+	public boolean equals(Object obj){
+		return EntityWithId.idEquals(this, obj);
+	}
 }

@@ -2,6 +2,11 @@ package ch.elexis.core.ui.eigenartikel;
 
 import java.text.MessageFormat;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -12,30 +17,28 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IViewSite;
 
-import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListener;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.services.ILocalLockService.Status;
-import ch.elexis.core.eigenartikel.Eigenartikel;
 import ch.elexis.core.eigenartikel.acl.ACLContributor;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.model.ITypedArticle;
+import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.ui.actions.RestrictedAction;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.LockRequestingRestrictedAction;
 import ch.elexis.core.ui.locks.LockResponseHelper;
+import ch.elexis.core.ui.services.ContextServiceHolder;
 import ch.elexis.core.ui.views.IDetailDisplay;
-import ch.elexis.data.PersistentObject;
 
 public class EigenartikelDetailDisplay implements IDetailDisplay {
 	private IViewSite site;
 	
 	private EigenartikelProductComposite epc;
 	private EigenartikelComposite ec;
-	private Eigenartikel selectedObject;
-	private Eigenartikel currentLock;
+	private ITypedArticle selectedObject;
+	private ITypedArticle currentLock;
 	private StackLayout layout;
 	private Composite container;
 	private Composite compProduct;
@@ -51,9 +54,14 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 		
 		@Override
 		public void doRun(){
-			Eigenartikel ea = new Eigenartikel("New Product", StringConstants.EMPTY);
-			ElexisEventDispatcher.reload(Eigenartikel.class);
-			ElexisEventDispatcher.fireSelectionEvent(ea);
+			ITypedArticle ea = CoreModelServiceHolder.get().create(ITypedArticle.class);
+			ea.setTyp(ArticleTyp.EIGENARTIKEL);
+			ea.setName("Neues Produkt");
+			CoreModelServiceHolder.get().save(ea);
+			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD,
+				ITypedArticle.class);
+			ContextServiceHolder.get().getRootContext()
+				.setNamed("ch.elexis.core.ui.eigenartikel.selection", ea);
 		}
 	};
 	
@@ -79,7 +87,8 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 				if (selectedObject != null) {
 					if (CoreHub.getLocalLockService().isLocked(selectedObject)) {
 						CoreHub.getLocalLockService().releaseLock(selectedObject);
-						ElexisEventDispatcher.reload(Eigenartikel.class);
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD,
+							ITypedArticle.class);
 						currentLock = null;
 					} else {
 						LockResponse lr = CoreHub.getLocalLockService().acquireLock(selectedObject);
@@ -95,7 +104,7 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 		};
 	
 	private RestrictedAction deleteAction =
-		new LockRequestingRestrictedAction<Eigenartikel>(ACLContributor.EIGENARTIKEL_MODIFY,
+		new LockRequestingRestrictedAction<ITypedArticle>(ACLContributor.EIGENARTIKEL_MODIFY,
 			ch.elexis.core.ui.views.artikel.Messages.ArtikelContextMenu_deleteAction) {
 			{
 				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
@@ -104,46 +113,55 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 			}
 			
 			@Override
-			public Eigenartikel getTargetedObject(){
-				return (Eigenartikel) ElexisEventDispatcher.getSelected(Eigenartikel.class);
+			public ITypedArticle getTargetedObject(){
+				java.util.Optional<?> selected = ContextServiceHolder.get().getRootContext()
+					.getNamed("ch.elexis.core.ui.eigenartikel.selection");
+				return (ITypedArticle) selected.orElse(null);
 			}
 			
 			@Override
-			public void doRun(Eigenartikel act){
+			public void doRun(ITypedArticle act){
 				if (MessageDialog.openConfirm(site.getShell(),
 					ch.elexis.core.ui.views.artikel.Messages.ArtikelContextMenu_deleteActionConfirmCaption,
 					MessageFormat.format(
 						ch.elexis.core.ui.views.artikel.Messages.ArtikelContextMenu_deleteConfirmBody,
 						act.getName()))) {
-					act.delete();
+					CoreModelServiceHolder.get().delete(act);
 					
 					if (epc != null) {
 						epc.setProductEigenartikel(null);
 					}
 				}
-				ElexisEventDispatcher.reload(Eigenartikel.class);
+				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD,
+					ITypedArticle.class);
 			}
 		};
 	
-	private ElexisEventListener eeli_egartikel = new ElexisUiEventListenerImpl(Eigenartikel.class) {
-		public void runInUi(ElexisEvent ev){
-			Eigenartikel egArtikel = (Eigenartikel) ev.getObject();
-			switch (ev.getType()) {
-			case ElexisEvent.EVENT_LOCK_AQUIRED:
-			case ElexisEvent.EVENT_LOCK_RELEASED:
-				if (egArtikel != null && selectedObject != null
-					&& egArtikel.getId().equals(selectedObject.getId())
-					&& ev.getType() == ElexisEvent.EVENT_LOCK_AQUIRED) {
-					epc.setUnlocked(true);
-				} else {
-					epc.setUnlocked(false);
-				}
-				break;
-			default:
-				break;
-			}
+	@Inject
+	@Optional
+	public void lockAquired(
+		@UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) ITypedArticle typedArticle){
+		if (epc != null && !epc.isDisposed()
+			&& typedArticle.getId().equals(selectedObject.getId())) {
+			epc.setUnlocked(true);
 		}
-	};
+	}
+	
+	@Inject
+	@Optional
+	public void lockReleased(
+		@UIEventTopic(ElexisEventTopics.EVENT_LOCK_RELEASED) ITypedArticle typedArticle){
+		if (epc != null && !epc.isDisposed()
+			&& typedArticle.getId().equals(selectedObject.getId())) {
+			epc.setUnlocked(false);
+		}
+	}
+	
+	@Inject
+	public void selection(
+		@Optional @Named("ch.elexis.core.ui.eigenartikel.selection") ITypedArticle typedArticle){
+		display(typedArticle);
+	}
 	
 	/**
 	 * @wbp.parser.entryPoint
@@ -175,16 +193,12 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 		epc.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		epc.setUnlocked(CoreHub.getLocalLockService().getStatus() == Status.STANDALONE);
 		
-		if (CoreHub.getLocalLockService().getStatus() != Status.STANDALONE) {
-			ElexisEventDispatcher.getInstance().addListeners(eeli_egartikel);
-		}
-		
 		compArticle = new Composite(container, SWT.None);		
 		compArticle.setLayout(new GridLayout(1, false));
 		
 		ec = new EigenartikelComposite(compArticle, SWT.None, false, null);
 		ec.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		ec.setUnlocked(false);
+		ec.setUnlocked(CoreHub.getLocalLockService().getStatus() == Status.STANDALONE);
 		
 		layout.topControl = compProduct;
 		container.layout();
@@ -193,8 +207,8 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 	}
 	
 	@Override
-	public Class<? extends PersistentObject> getElementClass(){
-		return Eigenartikel.class;
+	public Class<?> getElementClass(){
+		return ITypedArticle.class;
 	}
 	
 	@Override
@@ -203,14 +217,14 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 		createAction.reflectRight();
 		deleteAction.reflectRight();
 		
-		if (obj instanceof Eigenartikel) {
-			selectedObject = (Eigenartikel) obj;
+		if (obj instanceof ITypedArticle) {
+			selectedObject = (ITypedArticle) obj;
 			if (currentLock != null) {
 				CoreHub.getLocalLockService().releaseLock(currentLock);
 				toggleLockAction.setChecked(false);
 				currentLock = null;
 			}
-			Eigenartikel ea = (Eigenartikel) obj;
+			ITypedArticle ea = (ITypedArticle) obj;
 			toggleLockAction.setEnabled(ea.isProduct());
 			
 			if(ea.isProduct()) {
@@ -235,14 +249,5 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 	@Override
 	public String getTitle(){
 		return Messages.EigenartikelDisplay_displayTitle;
-	}
-	
-	@Override
-	protected void finalize() throws Throwable{
-		if (CoreHub.getLocalLockService().getStatus() != Status.STANDALONE) {
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_egartikel);
-		}
-		
-		super.finalize();
 	}
 }

@@ -33,7 +33,9 @@ import ch.elexis.core.types.PathologicDescription;
 import ch.elexis.core.types.RelationshipType;
 import ch.elexis.core.types.TypesFactory;
 import ch.elexis.core.types.TypesPackage;
+import ch.elexis.core.types.VatInfo;
 import ch.rgw.tools.Money;
+import ch.rgw.tools.Result;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.Comparable;
@@ -66,6 +68,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EClass mapEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass resultEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -178,6 +187,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EDataType articleTypEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType vatInfoEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -416,6 +432,24 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EDataType getVatInfo() {
+		return vatInfoEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getResult() {
+		return resultEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public TypesFactory getTypesFactory() {
 		return (TypesFactory)getEFactoryInstance();
 	}
@@ -445,6 +479,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		mapEClass = createEClass(MAP);
 
+		resultEClass = createEClass(RESULT);
+
 		// Create enums
 		contactGenderEEnum = createEEnum(CONTACT_GENDER);
 		relationshipTypeEEnum = createEEnum(RELATIONSHIP_TYPE);
@@ -464,6 +500,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		xidQualityEDataType = createEDataType(XID_QUALITY);
 		labOrderStateEDataType = createEDataType(LAB_ORDER_STATE);
 		articleTypEDataType = createEDataType(ARTICLE_TYP);
+		vatInfoEDataType = createEDataType(VAT_INFO);
 	}
 
 	/**
@@ -494,6 +531,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		addETypeParameter(listEClass, "E");
 		addETypeParameter(mapEClass, "K");
 		addETypeParameter(mapEClass, "V");
+		addETypeParameter(resultEClass, "T");
 
 		// Set bounds for type parameters
 
@@ -505,6 +543,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEClass(listEClass, List.class, "List", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(mapEClass, Map.class, "Map", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(resultEClass, Result.class, "Result", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Initialize enums and add enum literals
 		initEEnum(contactGenderEEnum, ContactGender.class, "ContactGender");
@@ -560,6 +600,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEDataType(xidQualityEDataType, XidQuality.class, "XidQuality", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(labOrderStateEDataType, LabOrderState.class, "LabOrderState", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(articleTypEDataType, ArticleTyp.class, "ArticleTyp", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(vatInfoEDataType, VatInfo.class, "VatInfo", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

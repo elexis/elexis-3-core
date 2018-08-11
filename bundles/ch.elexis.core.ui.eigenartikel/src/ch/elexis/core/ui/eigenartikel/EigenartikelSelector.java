@@ -26,22 +26,22 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.eigenartikel.Eigenartikel;
+import ch.elexis.core.eigenartikel.EigenartikelUtil;
 import ch.elexis.core.eigenartikel.acl.ACLContributor;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.model.ITypedArticle;
+import ch.elexis.core.model.eigenartikel.Constants;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.ICodeSelectorTarget;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.actions.ToggleVerrechenbarFavoriteAction;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.locks.LockResponseHelper;
 import ch.elexis.core.ui.selectors.FieldDescriptor;
+import ch.elexis.core.ui.services.ContextServiceHolder;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.CommonViewer.DoubleClickListener;
-import ch.elexis.core.ui.util.viewers.DefaultControlFieldProvider;
 import ch.elexis.core.ui.util.viewers.SelectorPanelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
@@ -51,9 +51,7 @@ import ch.elexis.data.PersistentObject;
 
 public class EigenartikelSelector extends CodeSelectorFactory {
 
-	private CommonViewer cv;
-	
-	private UpdateEventListener updateEventListener;
+	private CommonViewer commonViewer;
 	
 	private ToggleVerrechenbarFavoriteAction tvfa = new ToggleVerrechenbarFavoriteAction();
 	private ISelectionChangedListener selChangeListener = new ISelectionChangedListener() {
@@ -64,32 +62,35 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 			tvfa.updateSelection(ss.isEmpty() ? null : ss.getFirstElement());
 			
 			if (!ss.isEmpty()) {
-				Eigenartikel ea = (Eigenartikel) ss.getFirstElement();
-				ElexisEventDispatcher.fireSelectionEvent(ea);
+				ITypedArticle ea = (ITypedArticle) ss.getFirstElement();
+				ContextServiceHolder.get().getRootContext()
+					.setNamed("ch.elexis.core.ui.eigenartikel.selection", ea);
 			} else {
-				ElexisEventDispatcher.clearSelection(Eigenartikel.class);
+				ContextServiceHolder.get().getRootContext()
+					.setNamed("ch.elexis.core.ui.eigenartikel.selection", null);
 			}
 		}
 	};
 	
 	@Override
-	public ViewerConfigurer createViewerConfigurer(CommonViewer cv){
-		this.cv = cv;
+	public ViewerConfigurer createViewerConfigurer(CommonViewer commonViewer){
+		this.commonViewer = commonViewer;
 		
 		MenuManager menu = new MenuManager();
 		menu.add(tvfa);
 		menu.add(rearrangePackagesAction);
 		
-		cv.setContextMenu(menu);
-		cv.setSelectionChangedListener(selChangeListener);
+		commonViewer.setNamedSelection("ch.elexis.core.ui.eigenartikel.selection");
+		commonViewer.setContextMenu(menu);
+		commonViewer.setSelectionChangedListener(selChangeListener);
 		
-		EigenartikelTreeContentProvider eal = new EigenartikelTreeContentProvider(cv);
+		EigenartikelTreeContentProvider eal = new EigenartikelTreeContentProvider(commonViewer);
 		
 		ShowEigenartikelProductsAction seaoa = new ShowEigenartikelProductsAction(eal, this);
 		rearrangePackagesAction.setEnabled(CoreHub.userCfg.get(ShowEigenartikelProductsAction.FILTER_CFG, false));
 		
 		FieldDescriptor<?>[] lbName = new FieldDescriptor<?>[] {
-			new FieldDescriptor<Eigenartikel>(EigenartikelTreeContentProvider.FILTER_KEY)
+			new FieldDescriptor<ITypedArticle>(EigenartikelTreeContentProvider.FILTER_KEY)
 		};
 		
 		SelectorPanelProvider slp = new SelectorPanelProvider(lbName, true);
@@ -101,26 +102,17 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 		
 		EigenartikelTreeLabelProvider alp = new EigenartikelTreeLabelProvider();
 		
-		updateEventListener = new UpdateEventListener(cv, getElementClass(),
-			ElexisEvent.EVENT_RELOAD | ElexisEvent.EVENT_UPDATE | ElexisEvent.EVENT_SELECTED);
-		ElexisEventDispatcher.getInstance().addListeners(updateEventListener);
-		
 		return new ViewerConfigurer(eal, alp, slp, dbp, swp);
 	}
 	
 	@Override
-	public Class<? extends PersistentObject> getElementClass(){
-		return Eigenartikel.class;
-	}
-	
-	@Override
-	public void dispose(){
-		ElexisEventDispatcher.getInstance().removeListeners(updateEventListener);
+	public Class<?> getElementClass(){
+		return ITypedArticle.class;
 	}
 	
 	@Override
 	public String getCodeSystemName(){
-		return Eigenartikel.TYPNAME;
+		return Constants.TYPE_NAME;
 	}
 	
 	@Override
@@ -130,11 +122,13 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 				ICodeSelectorTarget target =
 					CodeSelectorHandler.getInstance().getCodeSelectorTarget();
 				if (target != null) {
-					if (obj instanceof Eigenartikel) {
-						Eigenartikel article = (Eigenartikel) obj;
+					if (obj instanceof ITypedArticle) {
+						ITypedArticle article = (ITypedArticle) obj;
 						// translate to first package if product selected
 						if (article.isProduct()) {
-							List<Eigenartikel> packages = article.getPackages();
+							@SuppressWarnings("unchecked")
+							List<ITypedArticle> packages =
+								(List<ITypedArticle>) (List<?>) article.getPackages();
 							if (!packages.isEmpty()) {
 								article = packages.get(0);
 							}
@@ -144,30 +138,6 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 				}
 			}
 		};
-	}
-	
-	private class UpdateEventListener extends ElexisUiEventListenerImpl {
-		
-		CommonViewer viewer;
-		
-		UpdateEventListener(CommonViewer viewer, final Class<?> clazz, int mode){
-			super(clazz, mode);
-			this.viewer = viewer;
-		}
-		
-		@Override
-		public void runInUi(ElexisEvent ev){
-			if (!viewer.getViewerWidget().getControl().isDisposed()) {
-				if (ElexisEvent.EVENT_RELOAD == ev.getType()) {
-					viewer.getViewerWidget().refresh(true);
-				} else if (ElexisEvent.EVENT_UPDATE == ev.getType() && ev.getObject() != null) {
-					viewer.getViewerWidget().refresh(ev.getObject(), true);
-				}
-			}
-			if (ElexisEvent.EVENT_SELECTED == ev.getType()) {
-				viewer.setSelection(ev.getObject(), false);
-			}
-		}
 	}
 	
 	private RestrictedAction rearrangePackagesAction =
@@ -185,9 +155,10 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 					return;
 				}
 				
-				cv.getViewerWidget().addDropSupport(DND.DROP_MOVE | DND.DROP_COPY, new Transfer[] {
+				commonViewer.getViewerWidget().addDropSupport(DND.DROP_MOVE | DND.DROP_COPY,
+					new Transfer[] {
 					TextTransfer.getInstance()
-				}, new ViewerDropAdapter(cv.getViewerWidget()) {
+				}, new ViewerDropAdapter(commonViewer.getViewerWidget()) {
 					
 					@Override
 					public void dragEnter(final DropTargetEvent event){
@@ -196,22 +167,24 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 					
 					@Override
 					public void drop(final DropTargetEvent event){
-						Eigenartikel target = (Eigenartikel) determineTarget(event);
+						ITypedArticle target = (ITypedArticle) determineTarget(event);
 						String drp = (String) event.data;
 						String[] dl = drp.split(","); //$NON-NLS-1$
 						for (String obj : dl) {
 							PersistentObject dropped = CoreHub.poFactory.createFromString(obj);
-							if (dropped instanceof Eigenartikel) {
-								Eigenartikel ea = (Eigenartikel) dropped;
+							if (dropped instanceof ITypedArticle) {
+								ITypedArticle ea = (ITypedArticle) dropped;
 								if (ea.isProduct()) {
 									continue;
 								}
 								LockResponse lr = CoreHub.getLocalLockService().acquireLock(target);
 								if (lr.isOk()) {
-									Eigenartikel.copyProductAttributesToArticleSetAsChild(target,
+									EigenartikelUtil
+										.copyProductAttributesToArticleSetAsChild(target,
 										ea);
 									CoreHub.getLocalLockService().releaseLock(target);
-									ElexisEventDispatcher.reload(Eigenartikel.class);
+									ContextServiceHolder.get().postEvent(
+										ElexisEventTopics.EVENT_RELOAD, ITypedArticle.class);
 								} else {
 									LockResponseHelper.showInfo(lr, target, log);
 								}
@@ -227,8 +200,8 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 					@Override
 					public boolean validateDrop(Object target, int operation,
 						TransferData transferType){
-						Eigenartikel ea = (Eigenartikel) getSelectedObject();
-						Eigenartikel eaTarget = (Eigenartikel) target;
+						ITypedArticle ea = (ITypedArticle) getSelectedObject();
+						ITypedArticle eaTarget = (ITypedArticle) target;
 						return (eaTarget != null && eaTarget.isProduct() && ea != null
 							&& !ea.isProduct());
 					}
@@ -240,5 +213,11 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 
 	public void allowArticleRearrangement(boolean checked){
 		rearrangePackagesAction.setEnabled(checked);
+	}
+	
+	@Override
+	public void dispose(){
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -17,10 +17,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.swt.SWT;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.model.IDiagnosisTree;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
@@ -35,17 +40,20 @@ import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
 
 public class EigendiagnoseSelector extends CodeSelectorFactory {
 	
+	private CommonViewer commonViewer;
+	
 	@Override
 	public ViewerConfigurer createViewerConfigurer(CommonViewer cv){
+		commonViewer = cv;
 		ViewerConfigurer vc =
-			new ViewerConfigurer(new EigendiagnoseContentProvider(cv),
-				new DefaultLabelProvider(), new DefaultControlFieldProvider(cv,
+			new ViewerConfigurer(new EigendiagnoseContentProvider(commonViewer),
+				new DefaultLabelProvider(), new DefaultControlFieldProvider(commonViewer,
 					new String[] {
 						"code=" + Messages.EigendiagnoseSelector_Shortcut_Label,
 						"title=" + Messages.EigendiagnoseSelector_Text_Label
 					}), new ViewerConfigurer.DefaultButtonProvider(), new SimpleWidgetProvider(
 					SimpleWidgetProvider.TYPE_TREE, SWT.NONE, null));
-		cv.setNamedSelection("ch.elexis.core.ui.eigendiagnosen.selection");
+		commonViewer.setNamedSelection("ch.elexis.core.ui.eigendiagnosen.selection");
 		return vc;
 		
 	}
@@ -63,6 +71,24 @@ public class EigendiagnoseSelector extends CodeSelectorFactory {
 	@Override
 	public Class getElementClass(){
 		return IDiagnosisTree.class;
+	}
+	
+	@Inject
+	@Optional
+	public void reload(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz){
+		if (IDiagnosisTree.class.equals(clazz)) {
+			if (commonViewer != null && !commonViewer.isDisposed()) {
+				commonViewer.getViewerWidget().refresh();
+			}
+		}
+	}
+	
+	@Inject
+	@Optional
+	public void update(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IDiagnosisTree object){
+		if (commonViewer != null) {
+			commonViewer.getViewerWidget().update(object, null);
+		}
 	}
 	
 	private class EigendiagnoseContentProvider extends AbstractCommonViewerContentProvider

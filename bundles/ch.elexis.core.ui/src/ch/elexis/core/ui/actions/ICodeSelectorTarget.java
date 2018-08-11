@@ -12,8 +12,6 @@
 
 package ch.elexis.core.ui.actions;
 
-import ch.elexis.data.PersistentObject;
-
 /**
  * An ICodeSelectorTarget can receive objects from CodeSelector lists when they are selected.
  * GlobalEvents allows to register exactly one ICodeSelectorTarget at a time. This one receives the
@@ -41,7 +39,7 @@ public interface ICodeSelectorTarget {
 	 * @param obj
 	 *            the selected object
 	 */
-	public void codeSelected(PersistentObject obj);
+	public void codeSelected(Object obj);
 	
 	/**
 	 * Callback to tell the ICodeSelectorTarget that it has been registered or unregistered. The

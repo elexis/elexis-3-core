@@ -103,7 +103,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 	
 	public abstract ViewerConfigurer createViewerConfigurer(CommonViewer cv);
 	
-	public abstract Class<? extends PersistentObject> getElementClass();
+	public abstract Class<?> getElementClass();
 	
 	public abstract void dispose();
 	

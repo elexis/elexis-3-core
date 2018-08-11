@@ -13,7 +13,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import ch.elexis.core.jpa.entities.constants.QueryConstants;
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
@@ -22,13 +21,10 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Table(name = "STOCK_ENTRY")
 @EntityListeners(EntityWithIdListener.class)
 @NamedQueries({
-	@NamedQuery(name = QueryConstants.QUERY_STOCK_ENTRY_findCummulatedStockSumOfArticle, query = "SELECT SUM(se.currentStock) FROM StockEntry se WHERE se.articleId = :"
-		+ QueryConstants.PARAM_ARTICLE_ID + " AND se.articleType = :"
-		+ QueryConstants.PARAM_ARTICLE_TYPE + " AND se.deleted = false"),
-	@NamedQuery(name = QueryConstants.QUERY_STOCK_ENTRY_findCummulatedAvailabilityOfArticle, query = "SELECT MAX(CASE WHEN se.currentStock <= 0 THEN 0 WHEN "
-				+ "(ABS(se.minimumStock)-se.currentStock) >= 0 THEN 1 ELSE 2 END) "
-		+ "FROM StockEntry se  WHERE se.articleId = :" + QueryConstants.PARAM_ARTICLE_ID
-		+ " AND se.articleType = :" + QueryConstants.PARAM_ARTICLE_TYPE + " AND se.deleted = false")
+	@NamedQuery(name = "StockEntry.articleId.articleType", query = "SELECT se FROM StockEntry se WHERE se.articleId = :articleId AND se.articleType = :articleType AND se.deleted = false"),
+	@NamedQuery(name = "StockEntry_SumCurrentStock.articleId.articleType", query = "SELECT SUM(se.currentStock) FROM StockEntry se WHERE se.articleId = :articleId AND se.articleType = :articleType AND se.deleted = false"),
+	@NamedQuery(name = "StockEntry_AvailableCurrentStock.articleId.articleType", query = "SELECT MAX(CASE WHEN CURRENT <= 0 THEN 0 WHEN (ABS(MIN)-CURRENT) >=0 THEN 1 ELSE 2 END) FROM StockEntry se  WHERE se.articleId = :articleId AND se.articleType = :articleType AND se.deleted = false"),
+	@NamedQuery(name = "StockEntry_AvailableCurrentBelowStock.articleId.articleType", query = "SELECT MAX(CASE WHEN CURRENT <= 0 THEN 0 WHEN (ABS(MIN)-CURRENT) >0 THEN 1 ELSE 2 END) FROM StockEntry se  WHERE se.articleId = :articleId AND se.articleType = :articleType AND se.deleted = false")
 })
 public class StockEntry implements EntityWithId, EntityWithDeleted {
 	
@@ -207,5 +203,15 @@ public class StockEntry implements EntityWithId, EntityWithDeleted {
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
+	}
+	
+	@Override
+	public int hashCode(){
+		return EntityWithId.idHashCode(this);
+	}
+	
+	@Override
+	public boolean equals(Object obj){
+		return EntityWithId.idEquals(this, obj);
 	}
 }

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.service.ModelServiceHolder;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
@@ -117,7 +117,7 @@ public class TransientLabResult {
 					new PathologicDescription(Description.PATHO_IMPORT_NO_INFO, rawAbnormalFlags));
 			}
 		}
-		ModelServiceHolder.get().save(labResult);
+		CoreModelServiceHolder.get().save(labResult);
 	}
 	
 	public ILabResult persist(ILabOrder labOrder, String orderId,
@@ -161,7 +161,7 @@ public class TransientLabResult {
 				}
 			}
 		}
-		ModelServiceHolder.get().save(labResult);
+		CoreModelServiceHolder.get().save(labResult);
 		return labResult;
 	}
 	

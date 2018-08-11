@@ -3,23 +3,18 @@ package ch.elexis.core.ui.eigenartikel;
 import org.eclipse.jface.viewers.LabelProvider;
 
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.services.IStockService.Availability;
-import ch.elexis.core.eigenartikel.Eigenartikel;
+import ch.elexis.core.model.ITypedArticle;
+import ch.elexis.core.services.IStockService.Availability;
 
 public class EigenartikelTreeLabelProvider extends LabelProvider {
 	
 	@Override
 	public String getText(Object element){
-		Eigenartikel ea = (Eigenartikel) element;
+		ITypedArticle ea = (ITypedArticle) element;
 		String name = ea.getName();
 		if (!ea.isProduct()) {
 			String label = "";
-			String packageSizeString = ea.getPackageSizeString();
-			if (packageSizeString != null && packageSizeString.length() > 0) {
-				label += packageSizeString + " ";
-			} else {
-				label += ea.getPackungsGroesse() + " " + ea.getMeasurementUnit();
-			}
+			label += ea.getPackageSize() + " " + ea.getPackageUnit();
 			Availability availability =
 				CoreHub.getStockService().getCumulatedAvailabilityForArticle(ea);
 			if (availability != null) {

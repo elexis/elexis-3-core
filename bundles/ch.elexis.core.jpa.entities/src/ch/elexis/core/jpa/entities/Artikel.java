@@ -10,7 +10,9 @@ import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
@@ -79,9 +81,10 @@ public class Artikel implements EntityWithId, EntityWithDeleted, EntityWithExtIn
 	@Column(length = 10)
 	private String codeclass;
 
-	@Column(length = 25)
-	private String extId;
-
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "extId")
+	private Artikel product;
+	
 	@Column(length = 8)
 	private String lastImport;
 
@@ -179,12 +182,12 @@ public class Artikel implements EntityWithId, EntityWithDeleted, EntityWithExtIn
 		this.codeclass = codeclass;
 	}
 
-	public String getExtId() {
-		return extId;
+	public Artikel getProduct(){
+		return product;
 	}
 
-	public void setExtId(String extId) {
-		this.extId = extId;
+	public void setProduct(Artikel product){
+		this.product = product;
 	}
 
 	public String getLastImport() {
@@ -257,5 +260,15 @@ public class Artikel implements EntityWithId, EntityWithDeleted, EntityWithExtIn
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
+	}
+	
+	@Override
+	public int hashCode(){
+		return EntityWithId.idHashCode(this);
+	}
+	
+	@Override
+	public boolean equals(Object obj){
+		return EntityWithId.idEquals(this, obj);
 	}
 }

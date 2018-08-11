@@ -12,6 +12,7 @@ package ch.elexis.core.types.util;
 
 import ch.elexis.core.types.TypesPackage;
 
+import ch.rgw.tools.Result;
 import java.util.List;
 import java.util.Map;
 
@@ -91,6 +92,10 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 				return createMapAdapter();
 			}
 			@Override
+			public <T> Adapter caseResult(Result<T> object) {
+				return createResultAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -149,6 +154,20 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createMapAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.rgw.tools.Result <em>Result</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.rgw.tools.Result
+	 * @generated
+	 */
+	public Adapter createResultAdapter() {
 		return null;
 	}
 

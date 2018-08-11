@@ -89,4 +89,14 @@ public class LocalCoding implements EntityWithId, EntityWithDeleted {
 	public void setMapped(String mapped) {
 		this.mapped = mapped;
 	}
+	
+	@Override
+	public int hashCode(){
+		return EntityWithId.idHashCode(this);
+	}
+	
+	@Override
+	public boolean equals(Object obj){
+		return EntityWithId.idEquals(this, obj);
+	}
 }

@@ -2,6 +2,8 @@ package ch.elexis.core.services;
 
 import java.util.Optional;
 
+import ch.elexis.core.common.ElexisEventTopics;
+
 public interface IContextService {
 	
 	/**
@@ -35,4 +37,12 @@ public interface IContextService {
 	 * @return
 	 */
 	public void releaseContext(String name);
+	
+	/**
+	 * Post an Event using a topic (see {@link ElexisEventTopics}), and an optional object.
+	 * 
+	 * @param eventTopic
+	 * @param object
+	 */
+	public void postEvent(String eventTopic, Object object);
 }

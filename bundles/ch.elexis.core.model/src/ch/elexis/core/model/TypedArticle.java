@@ -1,14 +1,21 @@
 package ch.elexis.core.model;
 
+import java.util.List;
+
 import ch.elexis.core.jpa.entities.Artikel;
+import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
 import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 import ch.elexis.core.model.article.Constants;
 import ch.elexis.core.model.eigenartikel.EigenartikelTyp;
+import ch.elexis.core.model.util.ModelUtil;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.types.ArticleTyp;
+import ch.elexis.core.types.VatInfo;
 
-public class TypedArticle extends AbstractIdModelAdapter<ch.elexis.core.jpa.entities.Artikel>
+public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Artikel>
 		implements IdentifiableWithXid, ITypedArticle {
 	
 	private ExtInfoHandler extInfoHandler;
@@ -82,7 +89,7 @@ public class TypedArticle extends AbstractIdModelAdapter<ch.elexis.core.jpa.enti
 	}
 	
 	@Override
-	public int getSellingUnit(){
+	public int getSellingSize(){
 		String unit = (String) getExtInfo(Constants.FLD_EXT_SELL_UNIT);
 		if (unit != null) {
 			try {
@@ -95,20 +102,21 @@ public class TypedArticle extends AbstractIdModelAdapter<ch.elexis.core.jpa.enti
 	}
 	
 	@Override
-	public void setSellingUnit(int value){
+	public void setSellingSize(int value){
 		setExtInfo(Constants.FLD_EXT_SELL_UNIT, Integer.toString(value));
 	}
 	
+
 	@Override
-	public int getPackageUnit(){
-		String unit = (String) getExtInfo(Constants.FLD_EXT_PACKAGE_UNIT_INT);
-		if (unit == null && getTyp() == ArticleTyp.EIGENARTIKEL) {
-			unit = (String) getExtInfo(
+	public int getPackageSize(){
+		String size = (String) getExtInfo(Constants.FLD_EXT_PACKAGE_UNIT_INT);
+		if (size == null && getTyp() == ArticleTyp.EIGENARTIKEL) {
+			size = (String) getExtInfo(
 				ch.elexis.core.model.eigenartikel.Constants.FLD_EXT_PACKAGE_SIZE_STRING);
 		}
-		if (unit != null) {
+		if (size != null) {
 			try {
-				return Integer.parseInt(unit);
+				return Integer.parseInt(size);
 			} catch (NumberFormatException e) {
 				// ignore and return 1
 			}
@@ -117,19 +125,37 @@ public class TypedArticle extends AbstractIdModelAdapter<ch.elexis.core.jpa.enti
 	}
 	
 	@Override
-	public void setPackageUnit(int value){
+	public void setPackageSize(int value){
 		setExtInfo(Constants.FLD_EXT_PACKAGE_UNIT_INT, Integer.toString(value));
 	}
 	
 	@Override
+	public String getPackageUnit(){
+		if (isTyp(ArticleTyp.EIGENARTIKEL)) {
+			return (String) getExtInfo(
+				ch.elexis.core.model.eigenartikel.Constants.FLD_EXT_MEASUREMENT_UNIT);
+		}
+		return "";
+	}
+	
+	@Override
+	public void setPackageUnit(String value){
+		if (isTyp(ArticleTyp.EIGENARTIKEL)) {
+			setExtInfo(ch.elexis.core.model.eigenartikel.Constants.FLD_EXT_MEASUREMENT_UNIT, value);
+		}
+	}
+	
+	@Override
 	public boolean isProduct(){
-		String extId = getEntity().getExtId();
-		return (extId == null || extId.length() == 0);
+		if (isTyp(ArticleTyp.EIGENARTIKEL)) {
+			return getEntity().getProduct() == null;
+		}
+		return false;
 	}
 	
 	@Override
 	public ArticleTyp getTyp(){
-		return getEntity().getTyp();
+		return getEntity().getTyp() != null ? getEntity().getTyp() : ArticleTyp.ARTIKEL;
 	}
 	
 	@Override
@@ -156,4 +182,74 @@ public class TypedArticle extends AbstractIdModelAdapter<ch.elexis.core.jpa.enti
 	public void setExtInfo(Object key, Object value){
 		extInfoHandler.setExtInfo(key, value);
 	}
+	
+	@Override
+	public VatInfo getVatInfo(){
+		if (isTyp(ArticleTyp.EIGENARTIKEL)) {
+			EigenartikelTyp subTyp = EigenartikelTyp.byCharSafe(getSubTyp());
+			switch (subTyp) {
+			case PHARMA:
+			case MAGISTERY:
+				return VatInfo.VAT_CH_ISMEDICAMENT;
+			case NONPHARMA:
+			case COMPLEMENTARY:
+				return VatInfo.VAT_CH_NOTMEDICAMENT;
+			default:
+				break;
+			}
+			return VatInfo.VAT_NONE;
+		}
+		return VatInfo.VAT_NONE;
+	}
+	
+	private boolean isTyp(ArticleTyp typ){
+		return getTyp() == typ;
+	}
+	
+	@Override
+	public IArticle getProduct(){
+		return ModelUtil.getAdapter(getEntity().getProduct(), ITypedArticle.class);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void setProduct(IArticle value){
+		if(value != null) {
+			getEntity().setProduct(((AbstractIdModelAdapter<Artikel>) value).getEntity());
+		} else {
+			getEntity().setProduct(null);
+		}
+	}
+	
+	@Override
+	public String getAtcCode(){
+		return getEntity().getAtcCode();
+	}
+	
+	@Override
+	public void setAtcCode(String value){
+		getEntity().setAtcCode(value);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<IArticle> getPackages(){
+		IQuery<ITypedArticle> query = ModelUtil.getQuery(ITypedArticle.class);
+		query.and(ModelPackage.Literals.ITYPED_ARTICLE__TYP, COMPARATOR.EQUALS, getTyp());
+		query.and(ModelPackage.Literals.IARTICLE__PRODUCT, COMPARATOR.EQUALS, this);
+		return (List<IArticle>) (List<?>) query.execute();
+	}
+	
+	@Override
+	public IBillableOptifier getOptifier(){
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public IBillableVerifier getVerifier(){
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 }

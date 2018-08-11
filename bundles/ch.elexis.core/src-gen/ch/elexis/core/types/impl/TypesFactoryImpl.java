@@ -32,7 +32,9 @@ import ch.elexis.core.types.PathologicDescription;
 import ch.elexis.core.types.RelationshipType;
 import ch.elexis.core.types.TypesFactory;
 import ch.elexis.core.types.TypesPackage;
+import ch.elexis.core.types.VatInfo;
 import ch.rgw.tools.Money;
+import ch.rgw.tools.Result;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.LocalDate;
@@ -126,6 +128,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createLabOrderStateFromString(eDataType, initialValue);
 			case TypesPackage.ARTICLE_TYP:
 				return createArticleTypFromString(eDataType, initialValue);
+			case TypesPackage.VAT_INFO:
+				return createVatInfoFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -171,6 +175,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertLabOrderStateToString(eDataType, instanceValue);
 			case TypesPackage.ARTICLE_TYP:
 				return convertArticleTypToString(eDataType, instanceValue);
+			case TypesPackage.VAT_INFO:
+				return convertVatInfoToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -469,6 +475,24 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	public String convertArticleTypToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public VatInfo createVatInfoFromString(EDataType eDataType, String initialValue) {
+		return (VatInfo)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertVatInfoToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

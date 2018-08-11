@@ -8,9 +8,9 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.eigenartikel.Eigenartikel;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.ITypedArticle;
+import ch.elexis.core.model.eigenartikel.Constants;
 import ch.elexis.core.services.ICodeElementServiceContribution;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.INamedQuery;
@@ -24,7 +24,7 @@ public class EigenartikelCodeElementService implements ICodeElementServiceContri
 	
 	@Override
 	public String getSystem(){
-		return Eigenartikel.TYPNAME;
+		return Constants.TYPE_NAME;
 	}
 	
 	@Override

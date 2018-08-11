@@ -37,7 +37,9 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IStock;
 import ch.elexis.core.data.interfaces.IStockEntry;
 import ch.elexis.core.data.service.StockService;
+import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.model.IArticle;
 import ch.elexis.core.ui.editors.KontaktSelektorDialogCellEditor;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Kontakt;
@@ -46,7 +48,7 @@ import ch.elexis.data.StockEntry;
 
 public class StockDetailComposite extends Composite {
 	
-	private WritableValue wvArtikel = new WritableValue(null, Artikel.class);
+	private WritableValue wvArtikel = new WritableValue(null, IArticle.class);
 	
 	private Logger log = LoggerFactory.getLogger(StockDetailComposite.class);
 	
@@ -112,7 +114,7 @@ public class StockDetailComposite extends Composite {
 			
 			public String getText(Object element){
 				Stock stock = (Stock) element;
-				Artikel art = (Artikel) wvArtikel.getValue();
+				IArticle art = (IArticle) wvArtikel.getValue();
 				if (stock == null || art == null) {
 					return null;
 				}
@@ -140,7 +142,7 @@ public class StockDetailComposite extends Composite {
 			
 			public String getText(Object element){
 				Stock stock = (Stock) element;
-				Artikel art = (Artikel) wvArtikel.getValue();
+				IArticle art = (IArticle) wvArtikel.getValue();
 				if (stock == null || art == null) {
 					return null;
 				}
@@ -167,7 +169,7 @@ public class StockDetailComposite extends Composite {
 			
 			public String getText(Object element){
 				Stock stock = (Stock) element;
-				Artikel art = (Artikel) wvArtikel.getValue();
+				IArticle art = (IArticle) wvArtikel.getValue();
 				if (stock == null || art == null) {
 					return null;
 				}
@@ -194,7 +196,7 @@ public class StockDetailComposite extends Composite {
 			
 			public String getText(Object element){
 				Stock stock = (Stock) element;
-				Artikel art = (Artikel) wvArtikel.getValue();
+				IArticle art = (IArticle) wvArtikel.getValue();
 				if (stock == null || art == null) {
 					return null;
 				}
@@ -215,7 +217,7 @@ public class StockDetailComposite extends Composite {
 			@Override
 			protected void setValue(Object element, Object value){
 				Stock stock = (Stock) element;
-				Artikel art = (Artikel) wvArtikel.getValue();
+				IArticle art = (IArticle) wvArtikel.getValue();
 				if (stock == null || art == null) {
 					return;
 				}
@@ -230,7 +232,7 @@ public class StockDetailComposite extends Composite {
 			@Override
 			protected Object getValue(Object element){
 				Stock stock = (Stock) element;
-				Artikel art = (Artikel) wvArtikel.getValue();
+				IArticle art = (IArticle) wvArtikel.getValue();
 				if (stock == null || art == null) {
 					return null;
 				}
@@ -251,7 +253,7 @@ public class StockDetailComposite extends Composite {
 			@Override
 			protected boolean canEdit(Object element){
 				Stock stock = (Stock) element;
-				Artikel art = (Artikel) wvArtikel.getValue();
+				IArticle art = (IArticle) wvArtikel.getValue();
 				if (stock == null || art == null) {
 					return false;
 				}
@@ -265,7 +267,7 @@ public class StockDetailComposite extends Composite {
 			
 			public String getText(Object element){
 				Stock stock = (Stock) element;
-				Artikel art = (Artikel) wvArtikel.getValue();
+				IArticle art = (IArticle) wvArtikel.getValue();
 				if (stock == null || art == null) {
 					return null;
 				}
@@ -289,12 +291,14 @@ public class StockDetailComposite extends Composite {
 			@Override
 			public void checkStateChanged(CheckStateChangedEvent event){
 				IStock stock = (Stock) event.getElement();
-				Artikel art = (Artikel) wvArtikel.getValue();
+				IArticle art = (IArticle) wvArtikel.getValue();
 				if (stock != null && art != null && stock.getDriverUuid().length() == 0) {
 					if (event.getChecked()) {
-						stockService.storeArticleInStock(stock, art.storeToString());
+						stockService.storeArticleInStock(stock,
+							StoreToStringServiceHolder.getStoreToString(art));
 					} else {
-						stockService.unstoreArticleFromStock(stock, art.storeToString());
+						stockService.unstoreArticleFromStock(stock,
+							StoreToStringServiceHolder.getStoreToString(art));
 					}
 				}
 				refreshData();
@@ -359,7 +363,7 @@ public class StockDetailComposite extends Composite {
 		// Disable the check that prevents subclassing of SWT components
 	}
 	
-	public void setArticle(Artikel article){
+	public void setArticle(IArticle article){
 		wvArtikel.setValue(article);
 		refreshData();
 	}

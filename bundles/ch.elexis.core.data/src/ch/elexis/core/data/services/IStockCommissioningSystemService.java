@@ -6,8 +6,8 @@ import java.util.UUID;
 
 import org.eclipse.core.runtime.IStatus;
 
-import ch.elexis.core.data.interfaces.IStock;
-import ch.elexis.core.data.interfaces.IStockEntry;
+import ch.elexis.core.model.IStock;
+import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.stock.ICommissioningSystemDriver;
 
 public interface IStockCommissioningSystemService {

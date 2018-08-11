@@ -15,8 +15,6 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IViewSite;
 
-import ch.elexis.data.PersistentObject;
-
 /**
  * Detailansicht eines PersistentObject
  * 
@@ -35,7 +33,7 @@ public interface IDetailDisplay {
 	 */
 	public Composite createDisplay(Composite parent, IViewSite site);
 	
-	public Class<? extends PersistentObject> getElementClass();
+	public Class<?> getElementClass();
 	
 	public void display(Object obj);
 	

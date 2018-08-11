@@ -66,4 +66,9 @@
   <eClassifiers xsi:type="ecore:EDataType" name="XidQuality" instanceClassName="ch.elexis.core.model.XidQuality"/>
   <eClassifiers xsi:type="ecore:EDataType" name="LabOrderState" instanceClassName="ch.elexis.core.model.LabOrderState"/>
   <eClassifiers xsi:type="ecore:EDataType" name="ArticleTyp" instanceClassName="ch.elexis.core.types.ArticleTyp"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="VatInfo" instanceClassName="ch.elexis.core.types.VatInfo"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Result" instanceClassName="ch.rgw.tools.Result"
+      abstract="true" interface="true">
+    <eTypeParameters name="T"/>
+  </eClassifiers>
 </ecore:EPackage>

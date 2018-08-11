@@ -1,7 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-import java.util.Objects;
-
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -65,33 +63,6 @@ public class Diagnosis implements EntityWithId, EntityWithDeleted {
 	}
 
 	@Override
-	public int hashCode() {
-		return Objects.hash(code, diagnosisClass);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Diagnosis other = (Diagnosis) obj;
-		if (code == null) {
-			if (other.code != null)
-				return false;
-		} else if (!code.equals(other.code))
-			return false;
-		if (diagnosisClass == null) {
-			if (other.diagnosisClass != null)
-				return false;
-		} else if (!diagnosisClass.equals(other.diagnosisClass))
-			return false;
-		return true;
-	}
-	
-	@Override
 	public boolean isDeleted(){
 		return deleted;
 	}
@@ -119,5 +90,15 @@ public class Diagnosis implements EntityWithId, EntityWithDeleted {
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
+	}
+	
+	@Override
+	public int hashCode(){
+		return EntityWithId.idHashCode(this);
+	}
+	
+	@Override
+	public boolean equals(Object obj){
+		return EntityWithId.idEquals(this, obj);
 	}
 }

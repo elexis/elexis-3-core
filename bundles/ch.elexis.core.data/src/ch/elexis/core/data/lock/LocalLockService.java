@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -26,7 +25,6 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.server.ElexisServerInstanceService;
 import ch.elexis.core.data.server.ElexisServerLockService;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
@@ -122,26 +120,12 @@ public class LocalLockService implements ILocalLockService {
 	}
 	
 	@Override
-	public LockResponse releaseLock(IPersistentObject po){
-		if (po == null) {
+	public LockResponse releaseLock(Object object){
+		if (object == null) {
 			return LockResponse.DENIED(null);
 		}
-		logger.debug("Releasing lock on [" + po + "]");
-		return releaseLock(po.storeToString());
-	}
-	
-	@Override
-	public LockResponse releaseLock(Identifiable identifiable){
-		if (identifiable == null) {
-			return LockResponse.DENIED(null);
-		}
-		logger.debug("Releasing lock on [" + identifiable + "]");
-		Optional<String> storeToString =
-			StoreToStringServiceHolder.get().storeToString(identifiable);
-		if (storeToString.isPresent()) {
-			return releaseLock(storeToString.get());
-		}
-		throw new IllegalStateException("No storeToString for [" + identifiable + "]");
+		logger.debug("Releasing lock on [" + object + "]");
+		return releaseLock(StoreToStringServiceHolder.getStoreToString(object));
 	}
 	
 	@Override
@@ -160,17 +144,26 @@ public class LocalLockService implements ILocalLockService {
 		return acquireOrReleaseLocks(lockRequest);
 	}
 	
+	private String getId(Object object){
+		if (object instanceof PersistentObject) {
+			return ((PersistentObject) object).getId();
+		} else if (object instanceof Identifiable) {
+			return ((Identifiable) object).getId();
+		}
+		throw new IllegalStateException("No id for [" + object + "]");
+	}
+	
 	@Override
-	public LockResponse acquireLockBlocking(IPersistentObject po, int secTimeout,
+	public LockResponse acquireLockBlocking(Object object, int secTimeout,
 		IProgressMonitor monitor){
-		if (po == null) {
+		if (object == null) {
 			return LockResponse.DENIED(null);
 		}
 		if (monitor != null) {
-			monitor.beginTask("Acquiring Lock for [" + po.getLabel() + "]", (secTimeout * 10) + 1);
+			monitor.beginTask("Acquiring Lock ...", (secTimeout * 10) + 1);
 		}
-		logger.debug("Acquiring lock blocking on [" + po + "]");
-		String storeToString = po.storeToString();
+		logger.debug("Acquiring lock blocking on [" + object + "]");
+		final String storeToString = StoreToStringServiceHolder.getStoreToString(object);
 		
 		LockResponse response = acquireLock(storeToString);
 		int sleptMilli = 0;
@@ -201,83 +194,18 @@ public class LocalLockService implements ILocalLockService {
 	}
 	
 	@Override
-	public LockResponse acquireLockBlocking(Identifiable identifiable, int secTimeout,
-		IProgressMonitor monitor){
-		if (identifiable == null) {
+	public LockResponse acquireLock(Object object){
+		if (object == null) {
 			return LockResponse.DENIED(null);
 		}
-		if (monitor != null) {
-			monitor.beginTask("Acquiring Lock for [" + identifiable.getLabel() + "]",
-				(secTimeout * 10) + 1);
-		}
-		logger.debug("Acquiring lock blocking on [" + identifiable + "]");
-		Optional<String> storeToString =
-			StoreToStringServiceHolder.get().storeToString(identifiable);
-		
-		if (storeToString.isPresent()) {
-			LockResponse response = acquireLock(storeToString.get());
-			int sleptMilli = 0;
-			while (!response.isOk()) {
-				if (response.getStatus() == LockResponse.Status.DENIED_PERMANENT) {
-					return response;
-				}
-				
-				try {
-					Thread.sleep(100);
-					sleptMilli += 100;
-					response = acquireLock(storeToString.get());
-					if (sleptMilli > (secTimeout * 1000)) {
-						return response;
-					}
-					// update monitor
-					if (monitor != null) {
-						monitor.worked(1);
-						if (monitor.isCanceled()) {
-							return LockResponse.DENIED(response.getLockInfo());
-						}
-					}
-				} catch (InterruptedException e) {
-					// ignore and keep trying
-				}
-			}
-			return response;
-		}
-		throw new IllegalStateException("No storeToString for [" + identifiable + "]");
-	}
-	
-	@Override
-	public LockResponse acquireLock(IPersistentObject po){
-		if (po == null) {
-			return LockResponse.DENIED(null);
-		}
-		logger.debug("Acquiring lock on [" + po + "]");
-		LockResponse lr = acquireLock(po.storeToString());
+		logger.debug("Acquiring lock on [" + object + "]");
+		LockResponse lr = acquireLock(StoreToStringServiceHolder.getStoreToString(object));
 		
 		if (lr.getStatus() == LockResponse.Status.ERROR) {
 			logger.warn("LockResponse ERROR");
 		}
 		
 		return lr;
-	}
-	
-	@Override
-	public LockResponse acquireLock(Identifiable identifiable){
-		if (identifiable == null) {
-			return LockResponse.DENIED(null);
-		}
-		logger.debug("Acquiring lock on [" + identifiable + "]");
-		Optional<String> storeToString =
-			StoreToStringServiceHolder.get().storeToString(identifiable);
-		if (storeToString.isPresent()) {
-			LockResponse lr = acquireLock(storeToString.get());
-			
-			if (lr.getStatus() == LockResponse.Status.ERROR) {
-				logger.warn("LockResponse ERROR");
-			}
-			
-			return lr;
-		}
-		throw new IllegalStateException("No storeToString for [" + identifiable + "]");
 	}
 	
 	private LockResponse acquireLock(String storeToString){
@@ -412,8 +340,8 @@ public class LocalLockService implements ILocalLockService {
 	}
 	
 	@Override
-	public boolean isLockedLocal(IPersistentObject po){
-		if (po == null) {
+	public boolean isLockedLocal(Object object){
+		if (object == null) {
 			return false;
 		}
 		
@@ -421,21 +349,23 @@ public class LocalLockService implements ILocalLockService {
 			return true;
 		}
 		// check local locks first
-		if (locks.containsKey(po.getId())) {
+		if (locks.containsKey(getId(object))) {
 			return true;
 		}
 		return false;
 	}
 	
 	@Override
-	public boolean isLocked(IPersistentObject po){
-		if (po == null) {
+	public boolean isLocked(Object object){
+		if (object == null) {
 			return false;
 		}
-		logger.debug("Checking lock on [" + po + "]");
+		logger.debug("Checking lock on [" + object + "]");
 		
 		User user = (User) ElexisEventDispatcher.getSelected(User.class);
-		LockInfo lockInfo = new LockInfo(po.storeToString(), user.getId(), systemUuid.toString());
+		LockInfo lockInfo =
+			new LockInfo(StoreToStringServiceHolder.getStoreToString(object), user.getId(),
+				systemUuid.toString());
 		LockRequest lockRequest = new LockRequest(LockRequest.Type.INFO, lockInfo);
 		
 		return isLocked(lockRequest);

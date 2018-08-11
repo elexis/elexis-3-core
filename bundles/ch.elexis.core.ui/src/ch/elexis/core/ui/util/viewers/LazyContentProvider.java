@@ -36,6 +36,7 @@ import ch.elexis.data.Query;
  * listener und startet diesen auch, wenn Daten benötigt werden.
  * 
  * @author Gerry
+ * @deprecated
  */
 public class LazyContentProvider implements ICommonViewerContentProvider, ILazyContentProvider,
 		BackgroundJobListener, AbstractDataLoaderJob.FilterProvider {

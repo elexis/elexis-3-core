@@ -1,4 +1,4 @@
-package ch.elexis.core.ui.services;
+package ch.elexis.core.data.service;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -15,7 +15,7 @@ public class ContextServiceHolder {
 		ContextServiceHolder.contextService = contextService;
 	}
 	
-	public static IContextService getService(){
+	public static IContextService get(){
 		return contextService;
 	}
 }

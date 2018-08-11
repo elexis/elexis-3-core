@@ -1,5 +1,7 @@
 package ch.elexis.core.ui.services.internal;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -9,14 +11,17 @@ import org.eclipse.e4.ui.workbench.UIEvents;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
-import ch.elexis.core.data.service.ModelServiceHolder;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
@@ -35,22 +40,33 @@ public class ContextService implements IContextService, EventHandler {
 	
 	private ConcurrentHashMap<String, Context> contexts;
 	
-	private EventDispatcherListener eventDispatcherListener;
+	private SelectionEventDispatcherListener eventDispatcherListener;
+	
+	private ReloadEventDispatcherListener reloadEventDispatcherListener;
+	
+	private LockingEventDispatcherListener lockingEventDispatcherListener;
 	
 	private IEclipseContext applicationContext;
+	
+	@Reference
+	private EventAdmin eventAdmin;
 	
 	@Activate
 	public void activate(){
 		root = new Context();
-		eventDispatcherListener = new EventDispatcherListener();
+		eventDispatcherListener = new SelectionEventDispatcherListener();
+		reloadEventDispatcherListener = new ReloadEventDispatcherListener();
+		lockingEventDispatcherListener = new LockingEventDispatcherListener();
 		ElexisEventDispatcher elexisEventDispatcher = ElexisEventDispatcher.getInstance();
-		elexisEventDispatcher.addListeners(eventDispatcherListener);
+		elexisEventDispatcher.addListeners(eventDispatcherListener, reloadEventDispatcherListener,
+			lockingEventDispatcherListener);
 		((Context) root).setElexisEventDispatcher(elexisEventDispatcher);
 	}
 	
 	@Deactivate
 	public void deactivate(){
-		ElexisEventDispatcher.getInstance().removeListeners(eventDispatcherListener);
+		ElexisEventDispatcher.getInstance().removeListeners(eventDispatcherListener,
+			reloadEventDispatcherListener, lockingEventDispatcherListener);
 	}
 	
 	@Override
@@ -91,9 +107,65 @@ public class ContextService implements IContextService, EventHandler {
 		}
 	}
 	
-	private class EventDispatcherListener extends ElexisEventListenerImpl {
+	@Override
+	public void postEvent(String topic, Object object){
+		if (eventAdmin != null) {
+			Map<String, Object> properites = new HashMap<>();
+			properites.put("org.eclipse.e4.data", object);
+			Event event = new Event(topic, properites);
+			eventAdmin.postEvent(event);
+		} else {
+			throw new IllegalStateException("No EventAdmin available");
+		}
+	}
+	
+	private class LockingEventDispatcherListener extends ElexisEventListenerImpl {
+		public LockingEventDispatcherListener(){
+			super(null, null, ElexisEvent.EVENT_LOCK_AQUIRED | ElexisEvent.EVENT_LOCK_RELEASED, 0);
+		}
 		
-		public EventDispatcherListener(){
+		@Override
+		public void catchElexisEvent(ElexisEvent ev){
+			Object object = ev.getGenericObject();
+			if (object == null) {
+				object = ev.getObject();
+				if (object == null) {
+					object = ev.getObjectClass();
+				}
+			}
+			if (ev.getType() == ElexisEvent.EVENT_LOCK_AQUIRED) {
+				postEvent(ElexisEventTopics.EVENT_LOCK_AQUIRED, object);
+			} else if (ev.getType() == ElexisEvent.EVENT_LOCK_RELEASED) {
+				postEvent(ElexisEventTopics.EVENT_LOCK_RELEASED, object);
+			}
+		}
+	}
+	
+	private class ReloadEventDispatcherListener extends ElexisEventListenerImpl {
+		public ReloadEventDispatcherListener(){
+			super(null, null, ElexisEvent.EVENT_RELOAD | ElexisEvent.EVENT_UPDATE, 0);
+		}
+		
+		@Override
+		public void catchElexisEvent(ElexisEvent ev){
+			Object object = ev.getGenericObject();
+			if (object == null) {
+				object = ev.getObject();
+				if (object == null) {
+					object = ev.getObjectClass();
+				}
+			}
+			if (ev.getType() == ElexisEvent.EVENT_RELOAD) {
+				postEvent(ElexisEventTopics.EVENT_RELOAD, object);
+			} else if (ev.getType() == ElexisEvent.EVENT_UPDATE) {
+				postEvent(ElexisEventTopics.EVENT_UPDATE, object);
+			}
+		}
+	}
+	
+	private class SelectionEventDispatcherListener extends ElexisEventListenerImpl {
+		
+		public SelectionEventDispatcherListener(){
 			super(null, null, ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_DESELECTED, 0);
 		}
 		
@@ -123,19 +195,19 @@ public class ContextService implements IContextService, EventHandler {
 		private void addObjectToRoot(Object object){
 			if (object instanceof User) {
 				Optional<IUser> iUser =
-					ModelServiceHolder.get().load(((User) object).getId(), IUser.class);
+					CoreModelServiceHolder.get().load(((User) object).getId(), IUser.class);
 				iUser.ifPresent(u -> root.setActiveUser(u));
 			} else if (object instanceof Anwender) {
 				Optional<IContact> iUserContact =
-					ModelServiceHolder.get().load(((Anwender) object).getId(), IContact.class);
+					CoreModelServiceHolder.get().load(((Anwender) object).getId(), IContact.class);
 				iUserContact.ifPresent(c -> root.setActiveUserContact(c));
 			} else if (object instanceof Mandant) {
 				Optional<IMandator> iMandator =
-					ModelServiceHolder.get().load(((Mandant) object).getId(), IMandator.class);
+					CoreModelServiceHolder.get().load(((Mandant) object).getId(), IMandator.class);
 				iMandator.ifPresent(m -> root.setActiveMandator(m));
 			} else if (object instanceof Patient) {
 				Optional<IPatient> iPatient =
-					ModelServiceHolder.get().load(((Patient) object).getId(), IPatient.class);
+					CoreModelServiceHolder.get().load(((Patient) object).getId(), IPatient.class);
 				iPatient.ifPresent(p -> root.setActivePatient(p));
 			} else if (object != null) {
 				root.setTyped(object);

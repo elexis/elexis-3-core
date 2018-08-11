@@ -10,10 +10,10 @@ import org.eclipse.core.runtime.Status;
 import ch.elexis.core.common.ElexisEvent;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.interfaces.IStock;
-import ch.elexis.core.data.interfaces.IStockEntry;
 import ch.elexis.core.data.service.internal.StockCommissioningSystemDriverFactories;
 import ch.elexis.core.data.services.IStockCommissioningSystemService;
+import ch.elexis.core.model.IStock;
+import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.stock.ICommissioningSystemDriver;
 import ch.elexis.data.StockEntry;
 

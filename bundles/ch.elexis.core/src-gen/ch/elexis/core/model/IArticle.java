@@ -11,6 +11,7 @@
 package ch.elexis.core.model;
 
 import ch.elexis.core.types.ArticleTyp;
+import java.util.List;
 
 
 /**
@@ -23,17 +24,19 @@ import ch.elexis.core.types.ArticleTyp;
  * </p>
  * <ul>
  *   <li>{@link ch.elexis.core.model.IArticle#getGtin <em>Gtin</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IArticle#getAtcCode <em>Atc Code</em>}</li>
  *   <li>{@link ch.elexis.core.model.IArticle#getName <em>Name</em>}</li>
- *   <li>{@link ch.elexis.core.model.IArticle#getSellingUnit <em>Selling Unit</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IArticle#getSellingSize <em>Selling Size</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IArticle#getPackageSize <em>Package Size</em>}</li>
  *   <li>{@link ch.elexis.core.model.IArticle#getPackageUnit <em>Package Unit</em>}</li>
- *   <li>{@link ch.elexis.core.model.IArticle#isProduct <em>Product</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IArticle#getProduct <em>Product</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIArticle()
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface IArticle extends Identifiable, IBillable {
+public interface IArticle extends Identifiable, IBillable, Deleteable {
 	/**
 	 * Returns the value of the '<em><b>Gtin</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -59,6 +62,32 @@ public interface IArticle extends Identifiable, IBillable {
 	 * @generated
 	 */
 	void setGtin(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Atc Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Atc Code</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Atc Code</em>' attribute.
+	 * @see #setAtcCode(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIArticle_AtcCode()
+	 * @model
+	 * @generated
+	 */
+	String getAtcCode();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IArticle#getAtcCode <em>Atc Code</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Atc Code</em>' attribute.
+	 * @see #getAtcCode()
+	 * @generated
+	 */
+	void setAtcCode(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
@@ -87,30 +116,56 @@ public interface IArticle extends Identifiable, IBillable {
 	void setName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Selling Unit</b></em>' attribute.
+	 * Returns the value of the '<em><b>Selling Size</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Selling Unit</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Selling Size</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Selling Unit</em>' attribute.
-	 * @see #setSellingUnit(int)
-	 * @see ch.elexis.core.model.ModelPackage#getIArticle_SellingUnit()
+	 * @return the value of the '<em>Selling Size</em>' attribute.
+	 * @see #setSellingSize(int)
+	 * @see ch.elexis.core.model.ModelPackage#getIArticle_SellingSize()
 	 * @model
 	 * @generated
 	 */
-	int getSellingUnit();
+	int getSellingSize();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IArticle#getSellingUnit <em>Selling Unit</em>}' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IArticle#getSellingSize <em>Selling Size</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Selling Unit</em>' attribute.
-	 * @see #getSellingUnit()
+	 * @param value the new value of the '<em>Selling Size</em>' attribute.
+	 * @see #getSellingSize()
 	 * @generated
 	 */
-	void setSellingUnit(int value);
+	void setSellingSize(int value);
+
+	/**
+	 * Returns the value of the '<em><b>Package Size</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Package Size</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Package Size</em>' attribute.
+	 * @see #setPackageSize(int)
+	 * @see ch.elexis.core.model.ModelPackage#getIArticle_PackageSize()
+	 * @model
+	 * @generated
+	 */
+	int getPackageSize();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IArticle#getPackageSize <em>Package Size</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Package Size</em>' attribute.
+	 * @see #getPackageSize()
+	 * @generated
+	 */
+	void setPackageSize(int value);
 
 	/**
 	 * Returns the value of the '<em><b>Package Unit</b></em>' attribute.
@@ -121,12 +176,12 @@ public interface IArticle extends Identifiable, IBillable {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Package Unit</em>' attribute.
-	 * @see #setPackageUnit(int)
+	 * @see #setPackageUnit(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIArticle_PackageUnit()
 	 * @model
 	 * @generated
 	 */
-	int getPackageUnit();
+	String getPackageUnit();
 
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.IArticle#getPackageUnit <em>Package Unit</em>}' attribute.
@@ -136,21 +191,52 @@ public interface IArticle extends Identifiable, IBillable {
 	 * @see #getPackageUnit()
 	 * @generated
 	 */
-	void setPackageUnit(int value);
+	void setPackageUnit(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Product</b></em>' attribute.
+	 * Returns the value of the '<em><b>Product</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Product</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Product</em>' reference.
+	 * @see #setProduct(IArticle)
+	 * @see ch.elexis.core.model.ModelPackage#getIArticle_Product()
+	 * @model
+	 * @generated
+	 */
+	IArticle getProduct();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IArticle#getProduct <em>Product</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Product</em>' reference.
+	 * @see #getProduct()
+	 * @generated
+	 */
+	void setProduct(IArticle value);
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Product</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Product</em>' attribute.
-	 * @see ch.elexis.core.model.ModelPackage#getIArticle_Product()
-	 * @model changeable="false"
+	 * @model kind="operation"
 	 * @generated
 	 */
 	boolean isProduct();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" type="ch.elexis.core.types.List&lt;ch.elexis.core.model.IArticle&gt;" many="false"
+	 * @generated
+	 */
+	List<IArticle> getPackages();
 
 } // IArticle

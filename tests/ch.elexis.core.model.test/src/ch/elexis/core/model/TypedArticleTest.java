@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,6 +58,51 @@ public class TypedArticleTest {
 		assertEquals(article.getSellingUnit(), loaded.get().getSellingUnit());
 		
 		modelSerice.remove(article);
+	}
+	
+	@Test
+	public void product(){
+		ITypedArticle product = modelSerice.create(ITypedArticle.class);
+		product.setName("test product");
+		product.setTyp(ArticleTyp.ARTIKEL);
+		
+		ITypedArticle article = modelSerice.create(ITypedArticle.class);
+		article.setName("test article 1");
+		article.setCode("123456789");
+		article.setTyp(ArticleTyp.ARTIKEL);
+		article.setGtin("0000001111111");
+		article.setPackageUnit(12);
+		article.setSellingUnit(12);
+		article.setProduct(product);
+		
+		ITypedArticle article1 = modelSerice.create(ITypedArticle.class);
+		article1.setName("test article 2");
+		article1.setCode("987654321");
+		article1.setTyp(ArticleTyp.ARTIKEL);
+		article1.setGtin("1111112222222");
+		article1.setPackageUnit(24);
+		article1.setSellingUnit(24);
+		article1.setProduct(product);
+		
+		modelSerice.save(Arrays.asList(product, article, article1));
+		
+		Optional<ITypedArticle> loaded = modelSerice.load(product.getId(), ITypedArticle.class);
+		assertFalse(loaded.get().getPackages().isEmpty());
+		assertTrue(loaded.get().getPackages().contains(article));
+		assertTrue(loaded.get().getPackages().contains(article1));
+		assertEquals(loaded.get(), article.getProduct());
+		assertEquals(loaded.get(), article1.getProduct());
+		
+		// must clear product references before removing product
+		product.getPackages().forEach(p -> p.setProduct(null));
+		modelSerice.save(Arrays.asList(article, article1));
+		modelSerice.remove(product);
+		loaded = modelSerice.load(article.getId(), ITypedArticle.class);
+		assertTrue(loaded.isPresent());
+		assertTrue(loaded.get().getProduct() == null);
+		
+		modelSerice.remove(article);
+		modelSerice.remove(article1);
 	}
 	
 	@Test

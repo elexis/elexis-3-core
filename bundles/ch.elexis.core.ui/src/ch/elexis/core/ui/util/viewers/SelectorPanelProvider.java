@@ -46,11 +46,11 @@ import ch.rgw.tools.Tree;
 public class SelectorPanelProvider implements ControlFieldProvider {
 	private LinkedList<ControlFieldListener> listeners = new LinkedList<ControlFieldListener>();
 	private SelectorPanel panel;
-	private FieldDescriptor<? extends PersistentObject>[] fields;
+	private FieldDescriptor<?>[] fields;
 	private boolean bExclusive = false;
 	private IAction[] actions = null;;
 	
-	public SelectorPanelProvider(FieldDescriptor<? extends PersistentObject>[] fields,
+	public SelectorPanelProvider(FieldDescriptor<?>[] fields,
 		boolean bExlusive){
 		this.fields = fields;
 		this.bExclusive = bExlusive;
@@ -76,7 +76,7 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 		} else {
 			panel = new SelectorPanel(parent, actions);
 		}
-		for (FieldDescriptor<? extends PersistentObject> field : fields) {
+		for (FieldDescriptor<?> field : fields) {
 			ActiveControl ac = null;
 			switch (field.getFieldType()) {
 			case HYPERLINK:
@@ -162,7 +162,7 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 	
 	public boolean isEmpty(){
 		HashMap<String, String> vals = panel.getValues();
-		for (FieldDescriptor<? extends PersistentObject> fd : fields) {
+		for (FieldDescriptor<?> fd : fields) {
 			if (vals.get(fd.getLabel()).length() > 0) {
 				return false;
 			}
@@ -186,7 +186,7 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 	
 	public void setQuery(final Query<? extends PersistentObject> q){
 		HashMap<String, String> vals = panel.getValues();
-		for (FieldDescriptor<? extends PersistentObject> field : fields) {
+		for (FieldDescriptor<?> field : fields) {
 			String name = field.getFieldname();
 			String value = vals.get(name);
 			if (!StringTool.isNothing(value)) {

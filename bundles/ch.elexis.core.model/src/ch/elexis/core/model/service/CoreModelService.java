@@ -112,9 +112,18 @@ public class CoreModelService extends AbstractModelService
 	}
 	
 	@Override
-	public <T> INamedQuery<T> getNamedQuery(Class<T> clazz, boolean refreshCache,
-		String... properties){
-		return new NamedQuery<>(clazz, refreshCache, adapterFactory,
-			(EntityManager) entityManager.getEntityManager(), getNamedQueryName(clazz, properties));
+	public <R, T> INamedQuery<R> getNamedQuery(Class<R> returnValueclazz,
+		Class<T> definitionClazz, boolean refreshCache, String... properties){
+		return new NamedQuery<>(returnValueclazz, definitionClazz, refreshCache, adapterFactory,
+			(EntityManager) entityManager.getEntityManager(),
+			getNamedQueryName(definitionClazz, properties));
 	}
+	
+	@Override
+	public <R, T> INamedQuery<R> getNamedQueryByName(Class<R> returnValueclazz,
+		Class<T> definitionClazz, boolean refreshCache, String queryName){
+		return new NamedQuery<>(returnValueclazz, definitionClazz, refreshCache, adapterFactory,
+			(EntityManager) entityManager.getEntityManager(), queryName);
+	}
+	
 }

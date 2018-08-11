@@ -123,4 +123,14 @@ public class Eigendiagnose implements EntityWithId, EntityWithDeleted, EntityWit
 	public void setComment(String comment){
 		this.comment = comment;
 	}
+	
+	@Override
+	public int hashCode(){
+		return EntityWithId.idHashCode(this);
+	}
+	
+	@Override
+	public boolean equals(Object obj){
+		return EntityWithId.idEquals(this, obj);
+	}
 }

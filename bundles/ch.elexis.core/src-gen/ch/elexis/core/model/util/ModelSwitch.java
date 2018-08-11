@@ -325,6 +325,7 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				IArticle iArticle = (IArticle)theEObject;
 				T1 result = caseIArticle(iArticle);
 				if (result == null) result = caseIBillable(iArticle);
+				if (result == null) result = caseDeleteable(iArticle);
 				if (result == null) result = caseIdentifiable(iArticle);
 				if (result == null) result = caseICodeElement(iArticle);
 				if (result == null) result = defaultCase(theEObject);
@@ -336,6 +337,7 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseIArticle(iTypedArticle);
 				if (result == null) result = caseWithExtInfo(iTypedArticle);
 				if (result == null) result = caseIBillable(iTypedArticle);
+				if (result == null) result = caseDeleteable(iTypedArticle);
 				if (result == null) result = caseIdentifiable(iTypedArticle);
 				if (result == null) result = caseICodeElement(iTypedArticle);
 				if (result == null) result = defaultCase(theEObject);
@@ -359,6 +361,34 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				T1 result = caseIBlob(iBlob);
 				if (result == null) result = caseIdentifiable(iBlob);
 				if (result == null) result = caseDeleteable(iBlob);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IBILLABLE_VERIFIER: {
+				IBillableVerifier iBillableVerifier = (IBillableVerifier)theEObject;
+				T1 result = caseIBillableVerifier(iBillableVerifier);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IBILLABLE_OPTIFIER: {
+				IBillableOptifier iBillableOptifier = (IBillableOptifier)theEObject;
+				T1 result = caseIBillableOptifier(iBillableOptifier);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IENCOUNTER: {
+				IEncounter iEncounter = (IEncounter)theEObject;
+				T1 result = caseIEncounter(iEncounter);
+				if (result == null) result = caseIdentifiable(iEncounter);
+				if (result == null) result = caseDeleteable(iEncounter);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IBILLED: {
+				IBilled iBilled = (IBilled)theEObject;
+				T1 result = caseIBilled(iBilled);
+				if (result == null) result = caseIdentifiable(iBilled);
+				if (result == null) result = caseDeleteable(iBilled);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -843,6 +873,66 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIBlob(IBlob object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IBillable Verifier</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IBillable Verifier</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIBillableVerifier(IBillableVerifier object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IBillable Optifier</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IBillable Optifier</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIBillableOptifier(IBillableOptifier object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IEncounter</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IEncounter</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIEncounter(IEncounter object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IBilled</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IBilled</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIBilled(IBilled object) {
 		return null;
 	}
 

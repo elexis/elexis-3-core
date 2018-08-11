@@ -128,7 +128,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getContactGender()
 	 * @generated
 	 */
-	int CONTACT_GENDER = 3;
+	int CONTACT_GENDER = 4;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.types.RelationshipType <em>Relationship Type</em>}' enum.
@@ -138,7 +138,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getRelationshipType()
 	 * @generated
 	 */
-	int RELATIONSHIP_TYPE = 4;
+	int RELATIONSHIP_TYPE = 5;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.types.AddressType <em>Address Type</em>}' enum.
@@ -148,7 +148,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getAddressType()
 	 * @generated
 	 */
-	int ADDRESS_TYPE = 5;
+	int ADDRESS_TYPE = 6;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.types.DocumentStatus <em>Document Status</em>}' enum.
@@ -158,7 +158,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getDocumentStatus()
 	 * @generated
 	 */
-	int DOCUMENT_STATUS = 6;
+	int DOCUMENT_STATUS = 7;
 
 	/**
 	 * The meta object id for the '<em>Money</em>' data type.
@@ -168,7 +168,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getMoney()
 	 * @generated
 	 */
-	int MONEY = 7;
+	int MONEY = 8;
 
 	/**
 	 * The meta object id for the '<em>Gender</em>' data type.
@@ -178,7 +178,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getGender()
 	 * @generated
 	 */
-	int GENDER = 8;
+	int GENDER = 9;
 
 
 	/**
@@ -189,7 +189,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLabItemTyp()
 	 * @generated
 	 */
-	int LAB_ITEM_TYP = 9;
+	int LAB_ITEM_TYP = 10;
 
 
 	/**
@@ -200,7 +200,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getCountry()
 	 * @generated
 	 */
-	int COUNTRY = 10;
+	int COUNTRY = 11;
 
 
 	/**
@@ -211,7 +211,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getPathologicDescription()
 	 * @generated
 	 */
-	int PATHOLOGIC_DESCRIPTION = 11;
+	int PATHOLOGIC_DESCRIPTION = 12;
 
 
 	/**
@@ -222,7 +222,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLocalDateTime()
 	 * @generated
 	 */
-	int LOCAL_DATE_TIME = 12;
+	int LOCAL_DATE_TIME = 13;
 
 
 	/**
@@ -233,7 +233,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getInputStream()
 	 * @generated
 	 */
-	int INPUT_STREAM = 13;
+	int INPUT_STREAM = 14;
 
 	/**
 	 * The meta object id for the '<em>Output Stream</em>' data type.
@@ -243,7 +243,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getOutputStream()
 	 * @generated
 	 */
-	int OUTPUT_STREAM = 14;
+	int OUTPUT_STREAM = 15;
 
 
 	/**
@@ -254,7 +254,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLocalDate()
 	 * @generated
 	 */
-	int LOCAL_DATE = 15;
+	int LOCAL_DATE = 16;
 
 
 	/**
@@ -265,7 +265,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getXidQuality()
 	 * @generated
 	 */
-	int XID_QUALITY = 16;
+	int XID_QUALITY = 17;
 
 
 	/**
@@ -276,7 +276,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLabOrderState()
 	 * @generated
 	 */
-	int LAB_ORDER_STATE = 17;
+	int LAB_ORDER_STATE = 18;
 
 
 	/**
@@ -287,7 +287,39 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getArticleTyp()
 	 * @generated
 	 */
-	int ARTICLE_TYP = 18;
+	int ARTICLE_TYP = 19;
+
+
+	/**
+	 * The meta object id for the '<em>Vat Info</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.types.VatInfo
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getVatInfo()
+	 * @generated
+	 */
+	int VAT_INFO = 20;
+
+
+	/**
+	 * The meta object id for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.rgw.tools.Result
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getResult()
+	 * @generated
+	 */
+	int RESULT = 3;
+
+
+	/**
+	 * The number of structural features of the '<em>Result</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RESULT_FEATURE_COUNT = 0;
 
 
 	/**
@@ -494,6 +526,28 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EDataType getArticleTyp();
+
+	/**
+	 * Returns the meta object for data type '{@link ch.elexis.core.types.VatInfo <em>Vat Info</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Vat Info</em>'.
+	 * @see ch.elexis.core.types.VatInfo
+	 * @model instanceClass="ch.elexis.core.types.VatInfo"
+	 * @generated
+	 */
+	EDataType getVatInfo();
+
+	/**
+	 * Returns the meta object for class '{@link ch.rgw.tools.Result <em>Result</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Result</em>'.
+	 * @see ch.rgw.tools.Result
+	 * @model instanceClass="ch.rgw.tools.Result" typeParameters="T"
+	 * @generated
+	 */
+	EClass getResult();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -706,6 +760,26 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType ARTICLE_TYP = eINSTANCE.getArticleTyp();
+
+		/**
+		 * The meta object literal for the '<em>Vat Info</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.types.VatInfo
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getVatInfo()
+		 * @generated
+		 */
+		EDataType VAT_INFO = eINSTANCE.getVatInfo();
+
+		/**
+		 * The meta object literal for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.rgw.tools.Result
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getResult()
+		 * @generated
+		 */
+		EClass RESULT = eINSTANCE.getResult();
 
 	}
 

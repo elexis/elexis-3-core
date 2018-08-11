@@ -2,12 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="ch.elexis.core.data.PersistentReference">
-      <Factory
-            Class="ch.elexis.core.findings.fhir.po.factory.PersistentObjectFactory">
-      </Factory>
-   </extension>
-   <extension
          point="ch.elexis.core.data.DataAccess">
       <DataAccess
             class="ch.elexis.core.findings.fhir.po.dataaccess.FindingsDataAccessor"

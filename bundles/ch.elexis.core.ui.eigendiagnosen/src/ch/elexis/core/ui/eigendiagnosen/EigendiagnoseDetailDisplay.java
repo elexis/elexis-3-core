@@ -49,6 +49,7 @@ public class EigendiagnoseDetailDisplay implements IDetailDisplay {
 		form.getBody().setLayout(twl);
 		
 		tblPls = new LabeledInputField.AutoForm(form.getBody(), data);
+		tblPls.setModelService(ModelServiceHolder.get());
 		
 		TableWrapData twd = new TableWrapData(TableWrapData.FILL_GRAB);
 		twd.grabHorizontal = true;
@@ -72,12 +73,12 @@ public class EigendiagnoseDetailDisplay implements IDetailDisplay {
 		}
 	}
 	
-	public Class getElementClass(){
+	public Class<?> getElementClass(){
 		return IDiagnosisTree.class;
 	}
 	
 	@Inject
-	public void updateSelection(
+	public void selection(
 		@Optional @Named("ch.elexis.core.ui.eigendiagnosen.selection") IDiagnosisTree diagnose){
 		display(diagnose);
 	}

@@ -234,6 +234,22 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIBlobAdapter();
 			}
 			@Override
+			public Adapter caseIBillableVerifier(IBillableVerifier object) {
+				return createIBillableVerifierAdapter();
+			}
+			@Override
+			public Adapter caseIBillableOptifier(IBillableOptifier object) {
+				return createIBillableOptifierAdapter();
+			}
+			@Override
+			public Adapter caseIEncounter(IEncounter object) {
+				return createIEncounterAdapter();
+			}
+			@Override
+			public Adapter caseIBilled(IBilled object) {
+				return createIBilledAdapter();
+			}
+			@Override
 			public <T> Adapter caseComparable(Comparable<T> object) {
 				return createComparableAdapter();
 			}
@@ -702,6 +718,62 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIBlobAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IBillableVerifier <em>IBillable Verifier</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IBillableVerifier
+	 * @generated
+	 */
+	public Adapter createIBillableVerifierAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IBillableOptifier <em>IBillable Optifier</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IBillableOptifier
+	 * @generated
+	 */
+	public Adapter createIBillableOptifierAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IEncounter <em>IEncounter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IEncounter
+	 * @generated
+	 */
+	public Adapter createIEncounterAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IBilled <em>IBilled</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IBilled
+	 * @generated
+	 */
+	public Adapter createIBilledAdapter() {
 		return null;
 	}
 

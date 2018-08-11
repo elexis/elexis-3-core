@@ -18,6 +18,7 @@ import java.text.ParseException;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -43,12 +44,15 @@ import org.slf4j.LoggerFactory;
 
 import com.tiff.common.ui.datepicker.DatePickerCombo;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.interfaces.INumericEnum;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.IModelService;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.locks.IUnlockable;
+import ch.elexis.core.ui.services.ContextServiceHolder;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
@@ -324,6 +328,9 @@ public class LabeledInputField extends Composite {
 	}
 	
 	public static class Tableau extends Composite {
+		
+		protected IModelService modelService;
+		
 		public Tableau(Composite parent, int minColumns, int maxColumns){
 			super(parent, SWT.BORDER);
 			ColumnLayout cl = new ColumnLayout();
@@ -347,6 +354,15 @@ public class LabeledInputField extends Composite {
 		
 		public LabeledInputField addComponent(String l, int limit){
 			return new LabeledInputField(this, l, limit);
+		}
+		
+		/**
+		 * Set a {@link IModelService} that can handle the displayed objects.
+		 * 
+		 * @param modelService
+		 */
+		public void setModelService(IModelService modelService){
+			this.modelService = modelService;
 		}
 	}
 	
@@ -713,6 +729,10 @@ public class LabeledInputField extends Composite {
 					setMap(act, inp.sFeldname, ext);
 				}
 			}
+			if (act instanceof Identifiable && modelService != null) {
+				modelService.save((Identifiable) act);
+				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, act);
+			}
 		}
 		
 		private void set(Object object, String field, Object value){
@@ -744,11 +764,35 @@ public class LabeledInputField extends Composite {
 		}
 		
 		private Map getMap(Object object, String field){
+			if (object instanceof PersistentObject) {
+				return ((PersistentObject) object).getMap(field);
+			} else {
+				try {
+					Object value = PropertyUtils.getProperty(object, field);
+					if (value instanceof Map) {
+						return (Map) value;
+					}
+				} catch (IllegalAccessException | InvocationTargetException
+						| NoSuchMethodException e) {
+					LoggerFactory.getLogger(getClass())
+						.error("Error getting map property [" + field + "] of [" + object + "]", e);
+				}
+			}
 			return null;
 		}
 		
 		private void setMap(Object object, String field, Map value){
-			
+			if (object instanceof PersistentObject) {
+				((PersistentObject) object).setMap(field, value);
+			} else {
+				try {
+					PropertyUtils.setProperty(object, field, value);
+				} catch (IllegalAccessException | InvocationTargetException
+						| NoSuchMethodException e) {
+					LoggerFactory.getLogger(getClass())
+						.error("Error setting map property [" + field + "] of [" + object + "]", e);
+				}
+			}
 		}
 		
 		/**

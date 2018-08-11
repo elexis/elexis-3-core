@@ -13,9 +13,7 @@ package ch.elexis.core.ui.selectors;
 
 import org.eclipse.swt.widgets.Listener;
 
-import ch.elexis.data.PersistentObject;
-
-public class FieldDescriptor<T extends PersistentObject> {
+public class FieldDescriptor<T> {
 	
 	public enum Typ {
 		STRING, INT, CURRENCY, LIST, HYPERLINK, DATE, COMBO, BOOLEAN

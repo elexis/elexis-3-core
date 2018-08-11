@@ -4,9 +4,8 @@ import ch.elexis.admin.ACE;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.ui.actions.RestrictedAction;
-import ch.elexis.data.PersistentObject;
 
-public abstract class LockRequestingRestrictedAction<T extends PersistentObject>
+public abstract class LockRequestingRestrictedAction<T>
 		extends RestrictedAction {
 	
 	private T object;

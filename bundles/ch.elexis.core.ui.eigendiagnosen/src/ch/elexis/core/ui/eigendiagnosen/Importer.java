@@ -21,10 +21,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Composite;
 
 import au.com.bytecode.opencsv.CSVReader;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.util.ResultAdapter;
 import ch.elexis.core.importer.div.importers.ExcelWrapper;
 import ch.elexis.core.model.IDiagnosisTree;
 import ch.elexis.core.services.INamedQuery;
+import ch.elexis.core.ui.services.ContextServiceHolder;
 import ch.elexis.core.ui.util.ImporterPage;
 import ch.elexis.core.ui.util.Log;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -75,7 +77,8 @@ public class Importer extends ImporterPage {
 				"ch.elexis.base.codeextension.eigendiagnosen", Messages.Eigendiagnosen_UnsupportedFileFormat); //$NON-NLS-1$
 		}
 		if (res.isOK()) {
-			
+			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD,
+				IDiagnosisTree.class);
 		}
 		return ResultAdapter.getResultAsStatus(res);
 	}

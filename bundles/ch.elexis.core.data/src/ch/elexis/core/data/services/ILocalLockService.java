@@ -4,10 +4,8 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockResponse;
-import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.server.ILockService;
 
 /**
@@ -22,17 +20,13 @@ public interface ILocalLockService extends ILockService {
 			LOCAL, REMOTE, STANDALONE
 	}
 	
-	public LockResponse acquireLock(IPersistentObject po);
+	public LockResponse acquireLock(Object object);
 	
-	public LockResponse acquireLock(Identifiable identifiable);
-	
-	public LockResponse releaseLock(IPersistentObject po);
-	
-	public LockResponse releaseLock(Identifiable identifiable);
+	public LockResponse releaseLock(Object object);
 	
 	public LockResponse releaseLock(LockInfo lockInfo);
 	
-	public boolean isLocked(IPersistentObject po);
+	public boolean isLocked(Object object);
 	
 	/**
 	 * Use this only for performance optimization, it is not guaranteed that the server has the same
@@ -41,7 +35,7 @@ public interface ILocalLockService extends ILockService {
 	 * @param po
 	 * @return
 	 */
-	public boolean isLockedLocal(IPersistentObject po);
+	public boolean isLockedLocal(Object po);
 	
 	public LockResponse releaseAllLocks();
 	
@@ -49,10 +43,7 @@ public interface ILocalLockService extends ILockService {
 	
 	public String getSystemUuid();
 	
-	public LockResponse acquireLockBlocking(IPersistentObject po, int msTimeout,
-		IProgressMonitor monitor);
-	
-	public LockResponse acquireLockBlocking(Identifiable identifiable, int msTimeout,
+	public LockResponse acquireLockBlocking(Object po, int msTimeout,
 		IProgressMonitor monitor);
 	
 	public Status getStatus();

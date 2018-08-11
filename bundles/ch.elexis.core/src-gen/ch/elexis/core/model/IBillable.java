@@ -10,6 +10,8 @@
  */
 package ch.elexis.core.model;
 
+import ch.elexis.core.types.VatInfo;
+
 
 /**
  * <!-- begin-user-doc -->
@@ -22,4 +24,28 @@ package ch.elexis.core.model;
  * @generated
  */
 public interface IBillable extends ICodeElement, Identifiable {
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" dataType="ch.elexis.core.types.VatInfo"
+	 * @generated
+	 */
+	VatInfo getVatInfo();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	IBillableOptifier getOptifier();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	IBillableVerifier getVerifier();
 } // IBillable

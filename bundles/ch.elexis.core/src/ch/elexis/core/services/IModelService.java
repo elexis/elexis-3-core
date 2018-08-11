@@ -125,7 +125,7 @@ public interface IModelService {
 	 * @param properties
 	 * @return
 	 */
-	public default <T> INamedQuery<T> getNamedQuery(Class<T> clazz, String... properties){
+	public default <R, T> INamedQuery<R> getNamedQuery(Class<T> clazz, String... properties){
 		return getNamedQuery(clazz, false, properties);
 	}
 	
@@ -140,8 +140,45 @@ public interface IModelService {
 	 * @param properties
 	 * @return
 	 */
-	public <T> INamedQuery<T> getNamedQuery(Class<T> clazz, boolean refreshCache,
-		String... properties);
+	@SuppressWarnings("unchecked")
+	public default <R, T> INamedQuery<R> getNamedQuery(Class<T> clazz, boolean refreshCache,
+		String... properties){
+		return getNamedQuery((Class<R>) clazz, clazz, refreshCache, properties);
+	}
+	
+	/**
+	 * 
+	 * @param returnValueclazz
+	 * @param clazz
+	 * @param refreshCache
+	 * @param properties
+	 * @return
+	 */
+	public <R, T> INamedQuery<R> getNamedQuery(Class<R> returnValueclazz, Class<T> clazz,
+		boolean refreshCache, String... properties);
+	
+	/**
+	 * 
+	 * @param returnValueclazz
+	 * @param definitionClazz
+	 * @param queryName
+	 * @return
+	 */
+	public default <R, T> INamedQuery<R> getNamedQueryByName(Class<R> returnValueclazz,
+		Class<T> definitionClazz, String queryName){
+		return getNamedQueryByName(returnValueclazz, definitionClazz, false, queryName);
+	}
+	
+	/**
+	 * 
+	 * @param returnValueclazz
+	 * @param definitionClazz
+	 * @param refreshCache
+	 * @param queryName
+	 * @return
+	 */
+	public <R, T> INamedQuery<R> getNamedQueryByName(Class<R> returnValueclazz,
+		Class<T> definitionClazz, boolean refreshCache, String queryName);
 	
 	/**
 	 * Convenience method setting deleted property and save the {@link Deleteable}.

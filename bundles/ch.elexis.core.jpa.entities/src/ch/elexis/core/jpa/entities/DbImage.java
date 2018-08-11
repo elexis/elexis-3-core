@@ -106,4 +106,14 @@ public class DbImage implements EntityWithId, EntityWithDeleted {
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
 	}
+	
+	@Override
+	public int hashCode(){
+		return EntityWithId.idHashCode(this);
+	}
+	
+	@Override
+	public boolean equals(Object obj){
+		return EntityWithId.idEquals(this, obj);
+	}
 }

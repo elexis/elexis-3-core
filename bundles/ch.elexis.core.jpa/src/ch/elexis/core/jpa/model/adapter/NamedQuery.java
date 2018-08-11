@@ -13,18 +13,20 @@ import org.eclipse.persistence.config.QueryHints;
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.services.INamedQuery;
 
-public class NamedQuery<T> implements INamedQuery<T> {
+public class NamedQuery<R, T> implements INamedQuery<R> {
 	
 	private AbstractModelAdapterFactory adapterFactory;
 	private Class<T> interfaceClazz;
+	private Class<R> returnValueClazz;
 	
 	private Class<? extends EntityWithId> entityClazz;
 	private TypedQuery<?> query;
 	
-	public NamedQuery(Class<T> clazz, boolean refreshCache,
+	public NamedQuery(Class<R> returnValueClazz, Class<T> interfaceClazz, boolean refreshCache,
 		AbstractModelAdapterFactory adapterFactory, EntityManager entityManager, String queryName){
 		this.adapterFactory = adapterFactory;
-		this.interfaceClazz = clazz;
+		this.interfaceClazz = interfaceClazz;
+		this.returnValueClazz = returnValueClazz;
 		this.entityClazz = adapterFactory.getEntityClass(interfaceClazz);
 		
 		this.query = entityManager.createNamedQuery(queryName, entityClazz);
@@ -44,15 +46,19 @@ public class NamedQuery<T> implements INamedQuery<T> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<T> executeWithParameters(Map<String, Object> paramters){
+	public List<R> executeWithParameters(Map<String, Object> paramters){
 		paramters.forEach((k, v) -> {
 			v = resolveValue(v);
 			query.setParameter(k, v);
 		});
-		List<T> ret = (List<T>) query
-			.getResultStream().parallel().map(e -> adapterFactory
-				.getModelAdapter((EntityWithId) e, interfaceClazz, true).orElse(null))
-			.filter(o -> o != null).collect(Collectors.toList());
-		return ret;
+		if (returnValueClazz.equals(interfaceClazz)) {
+			List<R> ret = (List<R>) query
+				.getResultStream().parallel().map(e -> adapterFactory
+					.getModelAdapter((EntityWithId) e, interfaceClazz, true).orElse(null))
+				.filter(o -> o != null).collect(Collectors.toList());
+			return ret;
+		} else {
+			return (List<R>) query.getResultList();
+		}
 	}
 }

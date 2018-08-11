@@ -22,6 +22,9 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBillable;
+import ch.elexis.core.model.IBillableOptifier;
+import ch.elexis.core.model.IBillableVerifier;
+import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IBlob;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.ICodeElement;
@@ -32,6 +35,7 @@ import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.model.IDiagnosisTree;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IHistory;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabMapping;
@@ -285,6 +289,34 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass iBlobEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iBillableVerifierEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iBillableOptifierEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iEncounterEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iBilledEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -1624,7 +1656,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIArticle_Name() {
+	public EAttribute getIArticle_AtcCode() {
 		return (EAttribute)iArticleEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -1633,7 +1665,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIArticle_SellingUnit() {
+	public EAttribute getIArticle_Name() {
 		return (EAttribute)iArticleEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -1642,7 +1674,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIArticle_PackageUnit() {
+	public EAttribute getIArticle_SellingSize() {
 		return (EAttribute)iArticleEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -1651,8 +1683,26 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIArticle_Product() {
+	public EAttribute getIArticle_PackageSize() {
 		return (EAttribute)iArticleEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIArticle_PackageUnit() {
+		return (EAttribute)iArticleEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIArticle_Product() {
+		return (EReference)iArticleEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -1725,6 +1775,78 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 */
 	public EAttribute getIBlob_Date() {
 		return (EAttribute)iBlobEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getIBillableVerifier() {
+		return iBillableVerifierEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getIBillableOptifier() {
+		return iBillableOptifierEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getIEncounter() {
+		return iEncounterEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIEncounter_TimeStamp() {
+		return (EAttribute)iEncounterEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIEncounter_Patient() {
+		return (EReference)iEncounterEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIEncounter_Coverage() {
+		return (EReference)iEncounterEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIEncounter_Mandator() {
+		return (EReference)iEncounterEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getIBilled() {
+		return iBilledEClass;
 	}
 
 	/**
@@ -1923,10 +2045,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		iArticleEClass = createEClass(IARTICLE);
 		createEAttribute(iArticleEClass, IARTICLE__GTIN);
+		createEAttribute(iArticleEClass, IARTICLE__ATC_CODE);
 		createEAttribute(iArticleEClass, IARTICLE__NAME);
-		createEAttribute(iArticleEClass, IARTICLE__SELLING_UNIT);
+		createEAttribute(iArticleEClass, IARTICLE__SELLING_SIZE);
+		createEAttribute(iArticleEClass, IARTICLE__PACKAGE_SIZE);
 		createEAttribute(iArticleEClass, IARTICLE__PACKAGE_UNIT);
-		createEAttribute(iArticleEClass, IARTICLE__PRODUCT);
+		createEReference(iArticleEClass, IARTICLE__PRODUCT);
 
 		iTypedArticleEClass = createEClass(ITYPED_ARTICLE);
 		createEAttribute(iTypedArticleEClass, ITYPED_ARTICLE__TYP);
@@ -1939,6 +2063,18 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iBlobEClass = createEClass(IBLOB);
 		createEAttribute(iBlobEClass, IBLOB__CONTENT);
 		createEAttribute(iBlobEClass, IBLOB__DATE);
+
+		iBillableVerifierEClass = createEClass(IBILLABLE_VERIFIER);
+
+		iBillableOptifierEClass = createEClass(IBILLABLE_OPTIFIER);
+
+		iEncounterEClass = createEClass(IENCOUNTER);
+		createEAttribute(iEncounterEClass, IENCOUNTER__TIME_STAMP);
+		createEReference(iEncounterEClass, IENCOUNTER__PATIENT);
+		createEReference(iEncounterEClass, IENCOUNTER__COVERAGE);
+		createEReference(iEncounterEClass, IENCOUNTER__MANDATOR);
+
+		iBilledEClass = createEClass(IBILLED);
 	}
 
 	/**
@@ -2016,11 +2152,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iPeriodEClass.getESuperTypes().add(this.getDeleteable());
 		iArticleEClass.getESuperTypes().add(this.getIdentifiable());
 		iArticleEClass.getESuperTypes().add(this.getIBillable());
+		iArticleEClass.getESuperTypes().add(this.getDeleteable());
 		iTypedArticleEClass.getESuperTypes().add(this.getIArticle());
 		iTypedArticleEClass.getESuperTypes().add(this.getWithExtInfo());
 		iRoleEClass.getESuperTypes().add(this.getIdentifiable());
 		iBlobEClass.getESuperTypes().add(this.getIdentifiable());
 		iBlobEClass.getESuperTypes().add(this.getDeleteable());
+		iEncounterEClass.getESuperTypes().add(this.getIdentifiable());
+		iEncounterEClass.getESuperTypes().add(this.getDeleteable());
+		iBilledEClass.getESuperTypes().add(this.getIdentifiable());
+		iBilledEClass.getESuperTypes().add(this.getDeleteable());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(identifiableEClass, Identifiable.class, "Identifiable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2232,6 +2373,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		initEClass(iBillableEClass, IBillable.class, "IBillable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
+		addEOperation(iBillableEClass, theTypesPackage.getVatInfo(), "getVatInfo", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		addEOperation(iBillableEClass, this.getIBillableOptifier(), "getOptifier", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		addEOperation(iBillableEClass, this.getIBillableVerifier(), "getVerifier", 0, 1, IS_UNIQUE, IS_ORDERED);
+
 		initEClass(iCoverageEClass, ICoverage.class, "ICoverage", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(iConfigEClass, IConfig.class, "IConfig", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2247,10 +2394,20 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		initEClass(iArticleEClass, IArticle.class, "IArticle", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIArticle_Gtin(), ecorePackage.getEString(), "gtin", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIArticle_AtcCode(), ecorePackage.getEString(), "atcCode", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIArticle_Name(), ecorePackage.getEString(), "name", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIArticle_SellingUnit(), ecorePackage.getEInt(), "sellingUnit", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIArticle_PackageUnit(), ecorePackage.getEInt(), "packageUnit", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIArticle_Product(), ecorePackage.getEBoolean(), "product", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIArticle_SellingSize(), ecorePackage.getEInt(), "sellingSize", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIArticle_PackageSize(), ecorePackage.getEInt(), "packageSize", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIArticle_PackageUnit(), ecorePackage.getEString(), "packageUnit", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIArticle_Product(), this.getIArticle(), null, "product", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		addEOperation(iArticleEClass, ecorePackage.getEBoolean(), "isProduct", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iArticleEClass, null, "getPackages", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(theTypesPackage.getList());
+		g2 = createEGenericType(this.getIArticle());
+		g1.getETypeArguments().add(g2);
+		initEOperation(op, g1);
 
 		initEClass(iTypedArticleEClass, ITypedArticle.class, "ITypedArticle", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getITypedArticle_Typ(), theTypesPackage.getArticleTyp(), "typ", null, 0, 1, ITypedArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2281,6 +2438,42 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		op = addEOperation(iBlobEClass, null, "setId", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "id", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		initEClass(iBillableVerifierEClass, IBillableVerifier.class, "IBillableVerifier", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		op = addEOperation(iBillableVerifierEClass, null, "verifyAdd", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIBillable(), "billable", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIEncounter(), "encounter", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(theTypesPackage.getResult());
+		g2 = createEGenericType(this.getIBillable());
+		g1.getETypeArguments().add(g2);
+		initEOperation(op, g1);
+
+		initEClass(iBillableOptifierEClass, IBillableOptifier.class, "IBillableOptifier", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		op = addEOperation(iBillableOptifierEClass, null, "add", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIBillable(), "billable", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIEncounter(), "encounter", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(theTypesPackage.getResult());
+		g2 = createEGenericType(this.getIBillable());
+		g1.getETypeArguments().add(g2);
+		initEOperation(op, g1);
+
+		op = addEOperation(iBillableOptifierEClass, null, "remove", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIBilled(), "billed", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIEncounter(), "encounter", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(theTypesPackage.getResult());
+		g2 = createEGenericType(this.getIBilled());
+		g1.getETypeArguments().add(g2);
+		initEOperation(op, g1);
+
+		initEClass(iEncounterEClass, IEncounter.class, "IEncounter", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIEncounter_TimeStamp(), theTypesPackage.getLocalDateTime(), "timeStamp", null, 0, 1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIEncounter_Patient(), this.getIPatient(), null, "patient", null, 0, 1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIEncounter_Coverage(), this.getICoverage(), null, "coverage", null, 0, 1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIEncounter_Mandator(), this.getIMandator(), null, "mandator", null, 0, 1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(iBilledEClass, IBilled.class, "IBilled", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

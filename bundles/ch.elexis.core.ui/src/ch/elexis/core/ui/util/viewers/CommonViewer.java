@@ -331,10 +331,10 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 				ElexisEventDispatcher.fireSelectionEvent((PersistentObject) sel[0]);
 			} else {
 				if (StringUtils.isNotBlank(namedSelection)) {
-					ContextServiceHolder.getService().getRootContext().setNamed(namedSelection,
+					ContextServiceHolder.get().getRootContext().setNamed(namedSelection,
 						sel[0]);
 				} else {
-					ContextServiceHolder.getService().getRootContext().setTyped(sel[0]);
+					ContextServiceHolder.get().getRootContext().setTyped(sel[0]);
 				}
 			}
 		}
@@ -422,5 +422,9 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 	
 	public MenuManager getMgr(){
 		return mgr;
+	}
+	
+	public boolean isDisposed(){
+		return viewer == null || viewer.getControl().isDisposed();
 	}
 }
