@@ -41,11 +41,11 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder>, 
 	public static final String VERSION120 = "1.2.0"; //$NON-NLS-1$
 	public static final String VERSION130 = "1.3.0"; //$NON-NLS-1$
 	private static final String UPD110 = "ALTER TABLE " + TABLENAME //$NON-NLS-1$
-		+ " ADD groupname VARCHAR(255);"; //$NON-NLS-1$
+		+ " ADD IF NOT EXISTS groupname VARCHAR(255);"; //$NON-NLS-1$
 	private static final String UPD120 = "ALTER TABLE " + TABLENAME //$NON-NLS-1$
-		+ " ADD observationtime VARCHAR(24);"; //$NON-NLS-1$
+		+ " ADD IF NOT EXISTS observationtime VARCHAR(24);"; //$NON-NLS-1$
 	private static final String UPD130 =
-		"CREATE INDEX laborder4 ON " + TABLENAME + " (" + FLD_ORDERID + ");";//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		"CREATE INDEX IF NOT EXISTS laborder4 ON " + TABLENAME + " (" + FLD_ORDERID + ");";//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		
 	// do not change order, as we save the ordinal to the db, only adding new state is allowed
 	public enum State {
