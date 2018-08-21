@@ -271,23 +271,12 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			}
 		}
 		
-		if (invoiceStateDateFrom != null) {
-			if (invoiceStateDateTo != null) {
-				queryBuilder.build(SQL_CONDITION_INVOICE_STATEDATE_UNTIL,
-					invoiceStateDateFrom.toString(TimeTool.DATE_COMPACT),
-					invoiceStateDateTo.toString(TimeTool.DATE_COMPACT));
-			} else {
-				queryBuilder.build(SQL_CONDITION_INVOICE_STATEDATE_SINCE,
-					invoiceStateDateFrom.toString(TimeTool.DATE_COMPACT));
-			}
-		}
+		appendInvoiceStateDateConditionalIfNotNull(queryBuilder);
 		
 		Integer invoiceStateNo = invoiceListHeaderComposite.getSelectedInvoiceStateNo();
 		if (invoiceStateNo != null) {
 			if (InvoiceState.OWING.numericValue() == invoiceStateNo) {
-				queryBuilder.build(SQL_CONDITION_INVOICE_STATEDATE_UNTIL,
-					invoiceStateDateFrom.toString(TimeTool.DATE_COMPACT),
-					invoiceStateDateTo.toString(TimeTool.DATE_COMPACT));
+				appendInvoiceStateDateConditionalIfNotNull(queryBuilder);
 				
 				String conditional = Arrays.asList(InvoiceState.owingStates()).stream()
 					.map(is -> Integer.toString(is.numericValue())).reduce((u, t) -> u + " ," + t)
@@ -381,6 +370,19 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		return queryBuilder;
 	}
 	
+	private void appendInvoiceStateDateConditionalIfNotNull(QueryBuilder queryBuilder) {
+		if (invoiceStateDateFrom != null) {
+			if (invoiceStateDateTo != null) {
+				queryBuilder.build(SQL_CONDITION_INVOICE_STATEDATE_UNTIL,
+					invoiceStateDateFrom.toString(TimeTool.DATE_COMPACT),
+					invoiceStateDateTo.toString(TimeTool.DATE_COMPACT));
+			} else {
+				queryBuilder.build(SQL_CONDITION_INVOICE_STATEDATE_SINCE,
+					invoiceStateDateFrom.toString(TimeTool.DATE_COMPACT));
+			}
+		}
+	}
+
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput){}
 	
