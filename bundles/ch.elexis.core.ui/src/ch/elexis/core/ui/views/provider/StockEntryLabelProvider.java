@@ -14,6 +14,7 @@ import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.services.IStockService.Availability;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.data.UiMandant;
+import ch.elexis.core.ui.icons.Images;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.StockEntry;
@@ -22,6 +23,13 @@ public class StockEntryLabelProvider extends LabelProvider
 		implements ITableLabelProvider, ITableColorProvider {
 	
 	public Image getColumnImage(Object element, int columnIndex){
+		if (element instanceof StockEntry && columnIndex == 0) {
+			StockEntry se = (StockEntry) element;
+			IOrderEntry order = CoreHub.getOrderService().findOpenOrderEntryForStockEntry(se);
+			if (order != null) {
+				return Images.IMG_BAGGAGE_CART_BOX.getImage();
+			}
+		}
 		return null;
 	}
 	
@@ -65,10 +73,6 @@ public class StockEntryLabelProvider extends LabelProvider
 		if (element instanceof StockEntry) {
 			StockEntry se = (StockEntry) element;
 			
-			IOrderEntry order = CoreHub.getOrderService().findOpenOrderEntryForStockEntry(se);
-			if (order != null) {
-				return UiDesk.getColor(UiDesk.COL_LIGHTBLUE);
-			}
 			Availability availability = StockService.determineAvailability(se);
 			if (availability != null) {
 				switch (availability) {

@@ -22,7 +22,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -70,8 +70,9 @@ public class StockManagementPreferencePage extends PreferencePage
 	private Label lblResponsibleText;
 	
 	private Button btnChkStoreInvalidNumbers;
+	private Button btnIgnoreOrderedArticlesOnNextOrder;
 	
-	private WritableValue stockDetail = new WritableValue(null, Stock.class);
+	private WritableValue<Stock> stockDetail = new WritableValue<Stock>(null, Stock.class);
 	private TableViewer tableViewer;
 	private Text txtMachineConfig;
 	private Label lblMachineuuid;
@@ -113,7 +114,7 @@ public class StockManagementPreferencePage extends PreferencePage
 		
 		tableViewer = new TableViewer(composite, SWT.BORDER | SWT.FULL_SELECTION);
 		tableViewer.setContentProvider(ArrayContentProvider.getInstance());
-		tableViewer.setSorter(new ViewerSorter() {
+		tableViewer.setComparator(new ViewerComparator() {
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2){
 				Stock s1 = (Stock) e1;
@@ -400,21 +401,27 @@ public class StockManagementPreferencePage extends PreferencePage
 				Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES_DEFAULT);
 		btnMachineOutlayPartialPackages.setSelection(outlayPartialPackages);
 		
+		btnIgnoreOrderedArticlesOnNextOrder = new Button(container, SWT.CHECK);
+		btnIgnoreOrderedArticlesOnNextOrder
+			.setText(Messages.LagerverwaltungPrefs_ignoreOrderedArticleOnNextOrder);
+		btnIgnoreOrderedArticlesOnNextOrder.setSelection(getPreferenceStore()
+			.getBoolean(Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER));
+		
 		btnChkStoreInvalidNumbers = new Button(container, SWT.CHECK);
 		btnChkStoreInvalidNumbers.setText(Messages.LagerverwaltungPrefs_checkForInvalid);
-		
+		btnChkStoreInvalidNumbers.setSelection(
+			getPreferenceStore().getBoolean(Preferences.INVENTORY_CHECK_ILLEGAL_VALUES));
 		
 		Group group1 = new Group(container, SWT.SHADOW_IN);
-	    group1.setText(Messages.LagerverwaltungPrefs_orderCriteria);
-	    group1.setLayout(new RowLayout(SWT.VERTICAL));
+		group1.setText(Messages.LagerverwaltungPrefs_orderCriteria);
+		group1.setLayout(new RowLayout(SWT.VERTICAL));
 		btnStoreBelow = new Button(group1, SWT.RADIO);
 		btnStoreBelow.setText(Messages.LagerverwaltungPrefs_orderWhenBelowMi);
 		btnStoreAtMin = new Button(group1, SWT.RADIO);
 		btnStoreAtMin.setText(Messages.LagerverwaltungPrefs_orderWhenAtMin);
 		
-		int valInventoryOrderTrigger =
-				CoreHub.globalCfg.get(Preferences.INVENTORY_ORDER_TRIGGER,
-				Preferences.INVENTORY_ORDER_TRIGGER_DEFAULT);
+		int valInventoryOrderTrigger = CoreHub.globalCfg.get(Preferences.INVENTORY_ORDER_TRIGGER,
+			Preferences.INVENTORY_ORDER_TRIGGER_DEFAULT);
 		boolean isInventoryOrderEqualValue =
 			Preferences.INVENTORY_ORDER_TRIGGER_EQUAL == valInventoryOrderTrigger;
 		btnStoreAtMin.setSelection(isInventoryOrderEqualValue);
@@ -508,6 +515,9 @@ public class StockManagementPreferencePage extends PreferencePage
 		setPreferenceStore(new SettingsPreferenceStore(CoreHub.globalCfg));
 		getPreferenceStore().setDefault(Preferences.INVENTORY_CHECK_ILLEGAL_VALUES,
 			Preferences.INVENTORY_CHECK_ILLEGAL_VALUES_DEFAULT);
+		getPreferenceStore().setDefault(
+			Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER,
+			Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER_DEFAULT);
 	}
 	
 	@Override
@@ -523,6 +533,9 @@ public class StockManagementPreferencePage extends PreferencePage
 	public boolean performOk(){
 		getPreferenceStore().setValue(Preferences.INVENTORY_CHECK_ILLEGAL_VALUES,
 			btnChkStoreInvalidNumbers.getSelection());
+		getPreferenceStore().setValue(
+			Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER,
+			btnIgnoreOrderedArticlesOnNextOrder.getSelection());
 		getPreferenceStore().setValue(Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
 			btnMachineOutlayPartialPackages.getSelection());
 		getPreferenceStore().setValue(Preferences.INVENTORY_ORDER_TRIGGER,

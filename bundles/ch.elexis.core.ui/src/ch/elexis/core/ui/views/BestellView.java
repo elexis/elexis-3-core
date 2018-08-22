@@ -34,7 +34,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.DND;
@@ -54,6 +54,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
@@ -172,16 +173,15 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 			
 		});
 		tv.setLabelProvider(new BestellungLabelProvider());
-		tv.setSorter(new ViewerSorter() {
+		tv.setComparator(new ViewerComparator() {
 			@Override
-			public int compare(final Viewer viewer, final Object e1, final Object e2){
+			public int compare(Viewer viewer, Object e1, Object e2){
 				BestellungEntry be1 = (BestellungEntry) e1;
 				BestellungEntry be2 = (BestellungEntry) e2;
 				String s1 = be1.getArticle().getName();
 				String s2 = be2.getArticle().getName();
 				return s1.compareTo(s2);
 			}
-			
 		});
 		Transfer[] types = new Transfer[] {
 			TextTransfer.getInstance()
@@ -216,7 +216,7 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 						stockEntriesToOrder.add((StockEntry) dropped);
 					} else if (dropped instanceof Artikel) {
 						Artikel art = (Artikel) dropped;
-						if(art.isProduct()) {
+						if (art.isProduct()) {
 							// TODO user message?
 							return;
 						}
@@ -407,6 +407,10 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 				boolean isInventoryBelow =
 					trigger == ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER_BELOW;
 				
+				boolean excludeAlreadyOrderedItems = CoreHub.globalCfg.get(
+					Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER,
+					Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER_DEFAULT);
+				
 				Query<StockEntry> qbe = new Query<StockEntry>(StockEntry.class, null, null,
 					StockEntry.TABLENAME, new String[] {
 						StockEntry.FLD_CURRENT, StockEntry.FLD_MAX
@@ -416,13 +420,16 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 				List<StockEntry> stockEntries = qbe.execute();
 				for (StockEntry se : stockEntries) {
 					if (se.getArticle() != null) {
-						IOrderEntry open =
-							CoreHub.getOrderService().findOpenOrderEntryForStockEntry(se);
-						// only add if not on an open order
-						if (open == null) {
-							CoreHub.getOrderService().addRefillForStockEntryToOrder(se,
-								actBestellung);
-						}
+						if (excludeAlreadyOrderedItems) {
+							IOrderEntry open =
+								CoreHub.getOrderService().findOpenOrderEntryForStockEntry(se);
+							// only add if not on an open order
+							if (open != null) {
+								continue;
+							}
+						} 
+						CoreHub.getOrderService().addRefillForStockEntryToOrder(se,
+							actBestellung);
 					} else {
 						LoggerFactory.getLogger(getClass())
 							.warn("Could not resolve article " + se.get(StockEntry.FLD_ARTICLE_TYPE)
