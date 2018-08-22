@@ -28,7 +28,7 @@ public class OrderService implements IOrderService {
 		}
 		return null;
 	}
-
+	
 	@Override
 	public IOrderEntry addRefillForStockEntryToOrder(IStockEntry ise, IOrder order){
 		int current = ise.getCurrentStock();
@@ -38,7 +38,11 @@ public class OrderService implements IOrderService {
 		}
 		int toOrder = max - current;
 		
-		return order.addEntry(ise.getArticle(), ise.getStock(), ise.getProvider(), toOrder);
+		if (toOrder > 0) {
+			return order.addEntry(ise.getArticle(), ise.getStock(), ise.getProvider(), toOrder);
+		}
+		
+		return null;
 	}
 	
 }
