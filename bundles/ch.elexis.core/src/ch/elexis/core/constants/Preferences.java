@@ -139,7 +139,8 @@ public class Preferences {
 	public static final String USR_REMINDER_PAT_LABEL_CHOOSEN = "reminder/patientlabel/choosen";
 	public static final String USR_REMINDER_PAT_LABEL_AVAILABLE = "reminder/patientlabel/available";
 	public static final String USR_REMINDER_AUTO_SELECT_PATIENT = "reminder/autoSelectPatient"; //$NON-NLS-1$
-	public static final String USR_REMINDER_DEFAULT_PATIENT_RELATED = "reminder/defaultPatientRelated"; //$NON-NLS-1$
+	public static final String USR_REMINDER_DEFAULT_PATIENT_RELATED =
+		"reminder/defaultPatientRelated"; //$NON-NLS-1$
 	public static final String USR_MFU_LIST_SIZE = "mfulist/size"; //$NON-NLS-1$
 	public static final String USR_PLAF = "anwender/plaf"; //$NON-NLS-1$
 	public static final String USR_DEFAULTFONT = "anwender/stdfont"; //$NON-NLS-1$
@@ -183,6 +184,9 @@ public class Preferences {
 	public static final int INVENTORY_ORDER_TRIGGER_EQUAL = 1;
 	public static final int INVENTORY_ORDER_TRIGGER_BELOW = 0;
 	public static final int INVENTORY_ORDER_TRIGGER_DEFAULT = INVENTORY_ORDER_TRIGGER_BELOW;
+	public static final String INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER =
+		"inventory/order_exclude_already_ordered_items"; //$NON-NLS-1$
+	public static final boolean INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER_DEFAULT = false;
 	
 	// Labor
 	public static final String DAYS_TO_KEEP_UNSEEN_LAB_RESULTS = "3"; //$NON-NLS-1$

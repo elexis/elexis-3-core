@@ -131,6 +131,7 @@ public class Messages {
 	public static String LaborPrefs_type = ch.elexis.core.l10n.Messages.LaborPrefs_type;
 	public static String LaborPrefs_unit = ch.elexis.core.l10n.Messages.LaborPrefs_unit;
 	public static String LaborPrefs_unkown = ch.elexis.core.l10n.Messages.LaborPrefs_unkown;
+	public static String LagerverwaltungPrefs_ignoreOrderedArticleOnNextOrder = ch.elexis.core.l10n.Messages.LagerverwaltungPrefs_ignoreOrderedArticleOnNextOrder;
 	public static String LagerverwaltungPrefs_checkForInvalid = ch.elexis.core.l10n.Messages.LagerverwaltungPrefs_checkForInvalid;
 	public static String LagerverwaltungPrefs_orderCriteria = ch.elexis.core.l10n.Messages.LagerverwaltungPrefs_orderCriteria;
 	public static String LagerverwaltungPrefs_orderWhenAtMin = ch.elexis.core.l10n.Messages.LagerverwaltungPrefs_orderWhenAtMin;
