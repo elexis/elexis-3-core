@@ -21,10 +21,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.io.Files;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IOutputter;
-import ch.elexis.core.data.interfaces.events.MessageEvent;
-import ch.elexis.core.data.interfaces.events.MessageEvent.MessageType;
 import ch.elexis.core.data.util.BriefExternUtil;
 import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.text.XRefExtensionConstants;
@@ -423,9 +420,6 @@ public class Brief extends PersistentObject {
 				Files.write(contents, file, Charset.defaultCharset());
 			} catch (IOException e) {
 				LoggerFactory.getLogger(getClass()).error("Could not access file", e);
-				// try to show to user
-				ElexisEventDispatcher.getInstance().fireMessageEvent(new MessageEvent(
-					MessageType.ERROR, "Error writing file", e.getLocalizedMessage()));
 			}
 		}
 		
@@ -435,9 +429,6 @@ public class Brief extends PersistentObject {
 				Files.write(contents, file);
 			} catch (IOException e) {
 				LoggerFactory.getLogger(getClass()).error("Could not access file", e);
-				// try to show to user
-				ElexisEventDispatcher.getInstance().fireMessageEvent(new MessageEvent(
-					MessageType.ERROR, "Error writing file", e.getLocalizedMessage()));
 			}
 		}
 		
