@@ -35,10 +35,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IViewSite;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.services.ContextServiceHolder;
 import ch.elexis.core.ui.util.PersistentObjectDragSource;
 import ch.elexis.core.ui.util.PersistentObjectDragSource.ISelectionRenderer;
 import ch.elexis.core.ui.util.SWTHelper;

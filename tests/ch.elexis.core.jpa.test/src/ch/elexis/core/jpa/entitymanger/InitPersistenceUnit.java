@@ -22,7 +22,7 @@ public class InitPersistenceUnit {
 		Optional<IElexisEntityManager> elexisEntityManager =
 			OsgiServiceUtil.getService(IElexisEntityManager.class);
 		assertTrue(elexisEntityManager.isPresent());
-		EntityManager em = (EntityManager) elexisEntityManager.get().getEntityManager();
+		EntityManager em = (EntityManager) elexisEntityManager.get().getEntityManager(false);
 		assertNotNull(em);
 		em.close();
 		OsgiServiceUtil.ungetService(elexisEntityManager.get());
@@ -32,7 +32,7 @@ public class InitPersistenceUnit {
 	public void createKontakt(){
 		Optional<IElexisEntityManager> elexisEntityManager =
 			OsgiServiceUtil.getService(IElexisEntityManager.class);
-		EntityManager em = (EntityManager) elexisEntityManager.get().getEntityManager();
+		EntityManager em = (EntityManager) elexisEntityManager.get().getEntityManager(false);
 		em.getTransaction().begin();
 		assertNotNull(em);
 		Kontakt kontakt = new Kontakt();
@@ -43,7 +43,7 @@ public class InitPersistenceUnit {
 		String id = kontakt.getId();
 		// close and load in new EntityManger
 		em.close();
-		em = (EntityManager) elexisEntityManager.get().getEntityManager();
+		em = (EntityManager) elexisEntityManager.get().getEntityManager(false);
 		Kontakt loaded = em.find(Kontakt.class, id);
 		assertNotNull(loaded);
 		assertEquals(kontakt.getId(), loaded.getId());

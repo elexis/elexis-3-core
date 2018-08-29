@@ -30,6 +30,9 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IArticle#getPackageSize <em>Package Size</em>}</li>
  *   <li>{@link ch.elexis.core.model.IArticle#getPackageUnit <em>Package Unit</em>}</li>
  *   <li>{@link ch.elexis.core.model.IArticle#getProduct <em>Product</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IArticle#getPurchasePrice <em>Purchase Price</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IArticle#getSellingPrice <em>Selling Price</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IArticle#isObligation <em>Obligation</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIArticle()
@@ -218,6 +221,84 @@ public interface IArticle extends Identifiable, IBillable, Deleteable {
 	 * @generated
 	 */
 	void setProduct(IArticle value);
+
+	/**
+	 * Returns the value of the '<em><b>Purchase Price</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Purchase Price</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Purchase Price</em>' attribute.
+	 * @see #setPurchasePrice(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIArticle_PurchasePrice()
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='ekPreis'"
+	 * @generated
+	 */
+	String getPurchasePrice();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IArticle#getPurchasePrice <em>Purchase Price</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Purchase Price</em>' attribute.
+	 * @see #getPurchasePrice()
+	 * @generated
+	 */
+	void setPurchasePrice(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Selling Price</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Selling Price</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Selling Price</em>' attribute.
+	 * @see #setSellingPrice(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIArticle_SellingPrice()
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='vkPreis'"
+	 * @generated
+	 */
+	String getSellingPrice();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IArticle#getSellingPrice <em>Selling Price</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Selling Price</em>' attribute.
+	 * @see #getSellingPrice()
+	 * @generated
+	 */
+	void setSellingPrice(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Obligation</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Obligation</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Obligation</em>' attribute.
+	 * @see #setObligation(boolean)
+	 * @see ch.elexis.core.model.ModelPackage#getIArticle_Obligation()
+	 * @model
+	 * @generated
+	 */
+	boolean isObligation();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IArticle#isObligation <em>Obligation</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Obligation</em>' attribute.
+	 * @see #isObligation()
+	 * @generated
+	 */
+	void setObligation(boolean value);
 
 	/**
 	 * <!-- begin-user-doc -->

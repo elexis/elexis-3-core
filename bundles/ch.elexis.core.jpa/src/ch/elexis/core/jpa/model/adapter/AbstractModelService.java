@@ -27,6 +27,7 @@ import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.INamedQuery;
 
 public abstract class AbstractModelService implements IModelService {
 	
@@ -211,6 +212,20 @@ public abstract class AbstractModelService implements IModelService {
 			queryName.add(string);
 		}
 		return queryName.toString();
+	}
+	
+	@Override
+	public <R, T> INamedQuery<R> getNamedQuery(Class<R> returnValueclazz, Class<T> definitionClazz,
+		boolean refreshCache, String... properties){
+		return new NamedQuery<>(returnValueclazz, definitionClazz, refreshCache, adapterFactory,
+			(EntityManager) getEntityManager(true), getNamedQueryName(definitionClazz, properties));
+	}
+	
+	@Override
+	public <R, T> INamedQuery<R> getNamedQueryByName(Class<R> returnValueclazz,
+		Class<T> definitionClazz, boolean refreshCache, String queryName){
+		return new NamedQuery<>(returnValueclazz, definitionClazz, refreshCache, adapterFactory,
+			(EntityManager) getEntityManager(true), queryName);
 	}
 	
 	@Override

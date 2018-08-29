@@ -25,6 +25,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.data.service.CodeElementServiceHolder;
+import ch.elexis.core.data.service.PoCodeElementServiceHolder;
 import ch.elexis.core.data.services.ICodeElementService;
 import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.jdt.Nullable;
@@ -216,7 +217,7 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	 * @return a possibly empty list of ICodeElements
 	 */
 	public List<ICodeElement> getElements(){
-		ICodeElementService service = CodeElementServiceHolder.getService();
+		ICodeElementService service = PoCodeElementServiceHolder.get();
 		List<ICodeElement> ret = new ArrayList<>();
 		if (service != null) {
 			String codeelements = get(FLD_CODEELEMENTS);
@@ -238,7 +239,7 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	 * @return a possibly empty list of ICodeElements
 	 */
 	public List<ICodeElement> getElementReferences(){
-		ICodeElementService service = CodeElementServiceHolder.getService();
+		ICodeElementService service = PoCodeElementServiceHolder.get();
 		List<ICodeElement> ret = new ArrayList<>();
 		if (service != null) {
 			String codeelements = get(FLD_CODEELEMENTS);
@@ -325,7 +326,7 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	}
 	
 	private void storeElements(List<ICodeElement> elements){
-		ICodeElementService service = CodeElementServiceHolder.getService();
+		ICodeElementService service = PoCodeElementServiceHolder.get();
 		if (service != null) {
 			StringBuilder sb = new StringBuilder();
 			for (ICodeElement element : elements) {

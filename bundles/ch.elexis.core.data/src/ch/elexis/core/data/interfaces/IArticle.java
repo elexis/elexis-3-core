@@ -24,4 +24,8 @@ public interface IArticle {
 	public String getGTIN();
 	
 	public String getLabel();
+	
+	public String getId();
+	
+	public String getCodeSystemName();
 }

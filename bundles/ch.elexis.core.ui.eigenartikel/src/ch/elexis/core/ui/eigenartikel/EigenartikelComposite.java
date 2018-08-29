@@ -1,11 +1,15 @@
 package ch.elexis.core.ui.eigenartikel;
 
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.swt.SWT;
@@ -21,13 +25,15 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.ITypedArticle;
+import ch.elexis.core.ui.databinding.SavingUpdateValueStrategy;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.views.controls.StockDetailComposite;
-import ch.elexis.data.PersistentObject;
 
 public class EigenartikelComposite extends Composite implements IUnlockable {
 	
@@ -51,8 +57,6 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 	private Label lblVerkaufseinheit;
 	private StockDetailComposite stockDetailComposite;
 	
-	private final ITypedArticle eigenartikel;
-	
 	/**
 	 * Create the composite.
 	 * 
@@ -66,7 +70,6 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 	public EigenartikelComposite(Composite parent, int style, boolean includeDeleteOption,
 		ITypedArticle eigenartikel){
 		super(parent, style);
-		this.eigenartikel = eigenartikel;
 		this.includeDeleteOption = includeDeleteOption;
 		this.drugPackageEigenartikel.setValue(eigenartikel);
 		
@@ -96,8 +99,8 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 			btnDeleteDrugPackage.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e){
-					if (eigenartikel != null) {
-						CoreModelServiceHolder.get().delete(eigenartikel);
+					if (drugPackageEigenartikel.getValue() != null) {
+						CoreModelServiceHolder.get().delete(drugPackageEigenartikel.getValue());
 						Composite p = getParent();
 						dispose();
 						
@@ -187,7 +190,7 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		stockGroup.setLayoutData(gd_stockGroup);
 		
 		stockDetailComposite = new StockDetailComposite(stockGroup, SWT.NONE);
-		stockDetailComposite.setArticle(eigenartikel);
+		stockDetailComposite.setArticle(drugPackageEigenartikel.getValue());
 		
 		initDataBindings();
 	}
@@ -224,7 +227,8 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 			.value(ITypedArticle.class, "gtin", String.class)
 			.observeDetail(drugPackageEigenartikel);
 		bindingContext.bindValue(observeTextTxtGtinObserveWidget,
-			drugPackageEigenartikelEANObserveDetailValue, null, null);
+			drugPackageEigenartikelEANObserveDetailValue,
+			new SavingUpdateValueStrategy(CoreModelServiceHolder.get()), null);
 		//
 		ISWTObservableValue observeTextTxtPackageSizeIntObserveWidget =
 			WidgetProperties.text(SWT.Modify).observe(txtPackageSizeInt);
@@ -232,7 +236,8 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 			PojoProperties.value(ITypedArticle.class, "packageSize", Integer.class)
 				.observeDetail(drugPackageEigenartikel);
 		bindingContext.bindValue(observeTextTxtPackageSizeIntObserveWidget,
-			drugPackageEigenartikelPackungsGroesseObserveDetailValue, null, null);
+			drugPackageEigenartikelPackungsGroesseObserveDetailValue,
+			new SavingUpdateValueStrategy(CoreModelServiceHolder.get()), null);
 		observeTextTxtPackageSizeIntObserveWidget
 			.addValueChangeListener(new IValueChangeListener() {
 				@Override
@@ -240,59 +245,77 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 					if (drugPackageEigenartikel.getValue() != null) {
 						if (event.diff.getOldValue() != null
 							&& !event.diff.getOldValue().toString().isEmpty()) {
-							ElexisEventDispatcher
-								.update((PersistentObject) drugPackageEigenartikel.getValue());
+							ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
+								drugPackageEigenartikel.getValue());
 						}
 					}
 				}
 			});
 		
 		//		//
-		//		ISWTObservableValue observeTextTxtExfPriceObserveWidget =
-		//			WidgetProperties.text(SWT.Modify).observe(txtExfPrice);
-		//		IObservableValue<String> drugPackageEigenartikelEKPreisObserveDetailValue =
-		//			PojoProperties.value(Eigenartikel.class, "exfPrice", String.class)
-		//				.observeDetail(drugPackageEigenartikel);
-		//		bindingContext.bindValue(observeTextTxtExfPriceObserveWidget,
-		//			drugPackageEigenartikelEKPreisObserveDetailValue, null, null);
+		ISWTObservableValue observeTextTxtExfPriceObserveWidget =
+			WidgetProperties.text(SWT.Modify).observe(txtExfPrice);
+		IObservableValue<String> drugPackageEigenartikelEKPreisObserveDetailValue =
+			PojoProperties.value(ITypedArticle.class, "purchasePrice", String.class)
+				.observeDetail(drugPackageEigenartikel);
+		bindingContext.bindValue(observeTextTxtExfPriceObserveWidget,
+			drugPackageEigenartikelEKPreisObserveDetailValue,
+			new SavingUpdateValueStrategy(CoreModelServiceHolder.get()), null);
 		//		//
-		//		ISWTObservableValue observeTextTxtpubPriceObserveWidget =
-		//			WidgetProperties.text(SWT.Modify).observe(txtpubPrice);
-		//		IObservableValue<String> drugPackageEigenartikelVKPreisObserveDetailValue =
-		//			PojoProperties.value(Eigenartikel.class, "pubPrice", String.class)
-		//				.observeDetail(drugPackageEigenartikel);
-		//		bindingContext.bindValue(observeTextTxtpubPriceObserveWidget,
-		//			drugPackageEigenartikelVKPreisObserveDetailValue, null, null);
+		ISWTObservableValue observeTextTxtpubPriceObserveWidget =
+			WidgetProperties.text(SWT.Modify).observe(txtpubPrice);
+		IObservableValue<String> drugPackageEigenartikelVKPreisObserveDetailValue =
+			PojoProperties.value(ITypedArticle.class, "sellingPrice", String.class)
+				.observeDetail(drugPackageEigenartikel);
+		bindingContext.bindValue(observeTextTxtpubPriceObserveWidget,
+			drugPackageEigenartikelVKPreisObserveDetailValue,
+			new SavingUpdateValueStrategy(CoreModelServiceHolder.get()), null);
 		//		//
-		//		ISWTObservableValue observeTextTxtMeasurementUnitObserveWidget =
-		//			WidgetProperties.text(SWT.Modify).observe(txtMeasurementUnit);
-		//		IObservableValue<String> drugPackageEigenartikelMeasurementUnitObserveDetailValue =
-		//			PojoProperties.value(Eigenartikel.class, "measurementUnit", String.class)
-		//				.observeDetail(drugPackageEigenartikel);
-		//		bindingContext.bindValue(observeTextTxtMeasurementUnitObserveWidget,
-		//			drugPackageEigenartikelMeasurementUnitObserveDetailValue, null, null);
-		//		observeTextTxtMeasurementUnitObserveWidget
-		//			.addValueChangeListener(new IValueChangeListener() {
-		//				@Override
-		//				public void handleValueChange(ValueChangeEvent event){
-		//					if (drugPackageEigenartikel.getValue() != null) {
-		//						if (event.diff.getOldValue() != null
-		//							&& !event.diff.getOldValue().toString().isEmpty()) {
-		//							ElexisEventDispatcher
-		//								.update((PersistentObject) drugPackageEigenartikel.getValue());
-		//						}
-		//					}
-		//				}
-		//			});
+		ISWTObservableValue observeTextTxtMeasurementUnitObserveWidget =
+			WidgetProperties.text(SWT.Modify).observe(txtMeasurementUnit);
+		IObservableValue<String> drugPackageEigenartikelMeasurementUnitObserveDetailValue =
+			PojoProperties.value(ITypedArticle.class, "packageUnit", String.class)
+				.observeDetail(drugPackageEigenartikel);
+		bindingContext.bindValue(observeTextTxtMeasurementUnitObserveWidget,
+			drugPackageEigenartikelMeasurementUnitObserveDetailValue,
+			new SavingUpdateValueStrategy(CoreModelServiceHolder.get()), null);
+		observeTextTxtMeasurementUnitObserveWidget
+			.addValueChangeListener(new IValueChangeListener() {
+				@Override
+				public void handleValueChange(ValueChangeEvent event){
+					if (drugPackageEigenartikel.getValue() != null) {
+						if (event.diff.getOldValue() != null
+							&& !event.diff.getOldValue().toString().isEmpty()) {
+							ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
+								drugPackageEigenartikel.getValue());
+						}
+					}
+				}
+			});
 		//		
 		//		//
-		//		ISWTObservableValue observeTextTxtPharmacodeObserveWidget =
-		//			WidgetProperties.text(SWT.Modify).observe(txtPharmacode);
-		//		IObservableValue<String> drugPackageEigenartikelPharmaCodeObserveDetailValue =
-		//			PojoProperties.value(Eigenartikel.class, "pharmaCode", String.class)
-		//				.observeDetail(drugPackageEigenartikel);
-		//		bindingContext.bindValue(observeTextTxtPharmacodeObserveWidget,
-		//			drugPackageEigenartikelPharmaCodeObserveDetailValue, null, null);
+		UpdateValueStrategy noIdCodeUpdateValuStrategy = new UpdateValueStrategy();
+		noIdCodeUpdateValuStrategy.setBeforeSetValidator(new IValidator() {
+			@Override
+			public IStatus validate(Object value){
+				if (value instanceof String && drugPackageEigenartikel.getValue() != null) {
+					if (drugPackageEigenartikel.getValue().getId().equals(value)) {
+						return Status.CANCEL_STATUS;
+					}
+				}
+				return Status.OK_STATUS;
+			}
+		});
+		
+		ISWTObservableValue observeTextTxtPharmacodeObserveWidget =
+			WidgetProperties.text(SWT.Modify).observe(txtPharmacode);
+		IObservableValue<String> drugPackageEigenartikelPharmaCodeObserveDetailValue =
+			PojoProperties.value(ICodeElement.class, "code", String.class)
+				.observeDetail(drugPackageEigenartikel);
+		bindingContext.bindValue(observeTextTxtPharmacodeObserveWidget,
+			drugPackageEigenartikelPharmaCodeObserveDetailValue,
+			new SavingUpdateValueStrategy(CoreModelServiceHolder.get()),
+			noIdCodeUpdateValuStrategy);
 		//		//
 		//		ISWTObservableValue observeTextTxtSellUnitObserveWidget =
 		//			WidgetProperties.text(SWT.Modify).observe(txtSellUnit);
@@ -310,15 +333,14 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		//		bindingContext.bindValue(observeTooltipTextTxtPackageSizeStringObserveWidget,
 		//			drugPackageEigenartikelPackageSizeStringObserveDetailValue, null, null);
 		//		//
-		//		ISWTObservableValue observeSelectionBtnHiCostAbsorptionObserveWidget =
-		//			WidgetProperties.selection().observe(btnHiCostAbsorption);
-		//		IObservableValue<Boolean> drugPackageEigenartikelHealthInsuranceCostAbsorptionObserveDetailValue =
-		//			PojoProperties
-		//				.value(ch.elexis.core.eigenartikel.Eigenartikel.class,
-		//					"healthInsuranceCostAbsorption", Boolean.class)
-		//				.observeDetail(drugPackageEigenartikel);
-		//		bindingContext.bindValue(observeSelectionBtnHiCostAbsorptionObserveWidget,
-		//			drugPackageEigenartikelHealthInsuranceCostAbsorptionObserveDetailValue, null, null);
+		ISWTObservableValue observeSelectionBtnHiCostAbsorptionObserveWidget =
+			WidgetProperties.selection().observe(btnHiCostAbsorption);
+		IObservableValue<Boolean> drugPackageEigenartikelHealthInsuranceCostAbsorptionObserveDetailValue =
+			PojoProperties.value(ITypedArticle.class, "obligation", Boolean.class)
+				.observeDetail(drugPackageEigenartikel);
+		bindingContext.bindValue(observeSelectionBtnHiCostAbsorptionObserveWidget,
+			drugPackageEigenartikelHealthInsuranceCostAbsorptionObserveDetailValue,
+			new SavingUpdateValueStrategy(CoreModelServiceHolder.get()), null);
 		return bindingContext;
 	}
 }

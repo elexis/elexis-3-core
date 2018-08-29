@@ -1,5 +1,7 @@
 package ch.elexis.core.data.interfaces;
 
+import ch.elexis.data.Mandant;
+
 public interface IStock {
 	
 	public String getId();
@@ -15,4 +17,8 @@ public interface IStock {
 		return (driverUuid != null && driverUuid.length() > 0);
 	}
 
+	public Integer getPriority();
+	
+	public Mandant getOwner();
+	
 }

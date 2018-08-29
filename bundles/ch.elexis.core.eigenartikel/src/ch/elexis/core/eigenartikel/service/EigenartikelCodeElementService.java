@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.ITypedArticle;
 import ch.elexis.core.model.eigenartikel.Constants;
+import ch.elexis.core.services.ICodeElementService.CodeElementTyp;
 import ch.elexis.core.services.ICodeElementServiceContribution;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.INamedQuery;
@@ -57,4 +58,17 @@ public class EigenartikelCodeElementService implements ICodeElementServiceContri
 		return Optional.empty();
 	}
 	
+	@Override
+	public CodeElementTyp getTyp(){
+		return CodeElementTyp.ARTICLE;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ICodeElement> getElements(HashMap<Object, Object> context){
+		INamedQuery<ITypedArticle> query =
+			coreModelService.getNamedQuery(ITypedArticle.class, "typ");
+		return (List<ICodeElement>) (List<?>) query.executeWithParameters(
+			coreModelService.getParameterMap("typ", ArticleTyp.EIGENARTIKEL));
+	}
 }

@@ -24,9 +24,10 @@ import org.eclipse.core.runtime.Status;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.interfaces.IVerrechnetAdjuster;
-import ch.elexis.core.data.service.StockService;
+import ch.elexis.core.data.services.IStockService;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.verrechnet.Constants;
 import ch.rgw.tools.ExHandler;
@@ -71,7 +72,7 @@ public class Verrechnet extends PersistentObject {
 	// keep a list of all ch.elexis.VerrechnetAdjuster extensions
 	private static ArrayList<IVerrechnetAdjuster> adjusters = new ArrayList<IVerrechnetAdjuster>();
 	
-	private StockService stockService = CoreHub.getStockService();
+	private IStockService stockService = CoreHub.getStockService();
 	
 	static {
 		addMapping(TABLENAME, KONSULTATION + "=Behandlung", LEISTG_TXT, LEISTG_CODE, CLASS, COUNT,
@@ -112,7 +113,9 @@ public class Verrechnet extends PersistentObject {
 		create(null, fields, values);
 		
 		if (iv instanceof Artikel) {
-			stockService.performSingleDisposal((Artikel) iv, 1);
+			Mandant mandant = ElexisEventDispatcher.getSelectedMandator();
+			stockService.performSingleDisposal((Artikel) iv, 1,
+				mandant != null ? mandant.getId() : null);
 		}
 		// call the adjusters
 		for (IVerrechnetAdjuster adjuster : adjusters) {
@@ -374,9 +377,11 @@ public class Verrechnet extends PersistentObject {
 		setZahl(neuAnzahl);
 		IVerrechenbar vv = getVerrechenbar();
 		if (vv instanceof Artikel) {
+			Mandant mandant = ElexisEventDispatcher.getSelectedMandator();
 			Artikel art = (Artikel) vv;
-			stockService.performSingleReturn(art, vorher);
-			stockService.performSingleDisposal(art, neuAnzahl);
+			stockService.performSingleReturn(art, vorher, mandant != null ? mandant.getId() : null);
+			stockService.performSingleDisposal(art, neuAnzahl,
+				mandant != null ? mandant.getId() : null);
 		}
 	}
 	

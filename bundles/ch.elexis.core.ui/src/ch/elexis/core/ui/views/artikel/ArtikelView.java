@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -44,6 +45,7 @@ import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.ImporterPage;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
@@ -173,7 +175,8 @@ public class ArtikelView extends ViewPart implements IActivationListener, ISavea
 	
 	private void addPagesFor(String point){
 		List<IConfigurationElement> list = Extensions.getExtensions(point);
-		IDetailDisplay d;
+		IDetailDisplay detailDisplay = null;
+		CodeSelectorFactory codeSelector = null;
 		boolean headerDone = false;
 		for (int i = 0; i < list.size(); i++) {
 			IConfigurationElement ce = list.get(i);
@@ -182,35 +185,45 @@ public class ArtikelView extends ViewPart implements IActivationListener, ISavea
 					continue;
 				// The first page initializes the screen
 				if (!headerDone) {
-					d = (IDetailDisplay) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
+					detailDisplay = (IDetailDisplay) ce
+						.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
 					String a = ce.getAttribute(ExtensionPointConstantsUi.VERRECHNUNGSCODE_IMPC);
 					ImporterPage ip = null;
 					if (a != null) {
 						ip = (ImporterPage) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_IMPC);
 						if (ip != null) {
-							importers.put(d.getTitle(), ip);
+							importers.put(detailDisplay.getTitle(), ip);
 						}
 					}
-					CodeSelectorFactory csf =
+					codeSelector =
 						(CodeSelectorFactory) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
-					MasterDetailsPage page = new MasterDetailsPage(ctab, csf, d);
+					MasterDetailsPage page =
+						new MasterDetailsPage(ctab, codeSelector, detailDisplay);
 					CTabItem ct = new CTabItem(ctab, SWT.None);
-					ct.setText(d.getTitle());
+					ct.setText(detailDisplay.getTitle());
 					ct.setControl(page);
-					ct.setData(d);
+					ct.setData(detailDisplay);
 					page.sash.setWeights(new int[] {
 						30, 70
 					});
 					headerDone = true;
+					
+					if (codeSelector != null) {
+						CoreUiUtil.injectServices(codeSelector);
+					}
+					if (detailDisplay != null) {
+						CoreUiUtil.injectServices(detailDisplay);
+					}
 					continue;
 				}
-				d = (IDetailDisplay) ce.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
+				detailDisplay = (IDetailDisplay) ce
+					.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CDD);
 				CTabItem ct = new CTabItem(ctab, SWT.NONE);
-				ct.setText(d.getTitle());
+				ct.setText(detailDisplay.getTitle());
 				ct.setData(KEY_CE, ce);
-				ct.setData(KEY_DETAIL, d);
-				
+				ct.setData(KEY_DETAIL, detailDisplay);
 			} catch (Exception ex) {
+				LoggerFactory.getLogger(getClass()).error("Error creating pages", ex);
 				MessageBox mb = new MessageBox(getViewSite().getShell(), SWT.ICON_ERROR | SWT.OK);
 				mb.setText(Messages.ArtikelView_errorCaption);
 				mb.setMessage(Messages.ArtikelView_errorText + ce.getName() + ":\n" //$NON-NLS-1$
@@ -254,6 +267,7 @@ public class ArtikelView extends ViewPart implements IActivationListener, ISavea
 						detailDisplay.display(ev.getObject());
 					}
 				};
+				ElexisEventDispatcher.getInstance().addListeners(eeli_div);
 			}
 			setLayout(new FillLayout());
 			sash = new SashForm(this, SWT.NONE);
@@ -264,11 +278,12 @@ public class ArtikelView extends ViewPart implements IActivationListener, ISavea
 			/* Composite page= */detail.createDisplay(sash, getViewSite());
 			cv.getConfigurer().getContentProvider().startListening();
 			detailDisplay = detail;
-			ElexisEventDispatcher.getInstance().addListeners(eeli_div);
 		}
 		
 		public void dispose(){
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_div);
+			if (eeli_div != null) {
+				ElexisEventDispatcher.getInstance().removeListeners(eeli_div);
+			}
 		}
 		
 	}

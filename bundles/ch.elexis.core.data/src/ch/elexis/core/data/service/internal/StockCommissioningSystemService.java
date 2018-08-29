@@ -1,4 +1,4 @@
-package ch.elexis.core.data.service;
+package ch.elexis.core.data.service.internal;
 
 import java.util.List;
 import java.util.Map;
@@ -6,25 +6,23 @@ import java.util.UUID;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.osgi.service.component.annotations.Component;
 
 import ch.elexis.core.common.ElexisEvent;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.interfaces.IStock;
-import ch.elexis.core.data.interfaces.IStockEntry;
-import ch.elexis.core.data.service.internal.StockCommissioningSystemDriverFactories;
-import ch.elexis.core.data.services.IStockCommissioningSystemService;
+import ch.elexis.core.model.IStock;
+import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.stock.ICommissioningSystemDriver;
+import ch.elexis.core.services.IStockCommissioningSystemService;
 import ch.elexis.data.StockEntry;
 
 /**
  * A service for performing article outlays via a stock management system. This implementation
  * currently one sends the respective events to the Elexis server, which handles the connection to
  * the stock management system.
- * 
- * @deprecated use model based ch.elexis.core.data.services.internal.StockCommissioningSystemService
- *             OSGi service implementation instead
  */
+@Component
 public class StockCommissioningSystemService implements IStockCommissioningSystemService {
 	
 	@Override

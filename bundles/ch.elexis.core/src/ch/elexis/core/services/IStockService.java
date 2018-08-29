@@ -118,11 +118,21 @@ public interface IStockService {
 	 * @return
 	 */
 	public IStatus performSingleDisposal(IArticle article, int count, String mandatorId);
+	
+	/**
+	 * Perform a single disposal of an article. Use this method if only the store to string of the
+	 * article is available.
+	 * 
+	 * @param articleStoreToString
+	 * @param count
+	 * @param mandatorId
+	 * @return
+	 */
+	public IStatus performSingleDisposal(String articleStoreToString, int count, String mandatorId);
 
 	/**
-	 * Perform a single return of an article. The article will be returned to
-	 * stock, where selection of the stock entry follows
-	 * {@link #findPreferredStockEntryForArticle(String, String)}
+	 * Perform a single return of an article. The article will be returned to stock, where selection
+	 * of the stock entry follows {@link #findPreferredStockEntryForArticle(String, String)}
 	 * 
 	 * @param article
 	 * @param count
@@ -131,6 +141,17 @@ public interface IStockService {
 	 */
 	public IStatus performSingleReturn(IArticle article, int count, String mandatorId);
 
+	/**
+	 * Perform a single return of an article. Use this method if only the store to string of the
+	 * article is available.
+	 * 
+	 * @param articleStoreToString
+	 * @param count
+	 * @param mandatorId
+	 * @return
+	 */
+	public IStatus performSingleReturn(String articleStoreToString, int count, String mandatorId);
+	
 	/**
 	 * Determine the availability "level".
 	 * 
@@ -169,4 +190,6 @@ public interface IStockService {
 		
 		return determineAvailability(current, min, false);
 	}
+	
+	public List<IStock> getAllStocks(boolean includeCommissioningSystems);
 }

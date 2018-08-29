@@ -111,9 +111,11 @@ public class Context implements IContext {
 	
 	@Override
 	public void setTyped(Object object){
-		context.put(object.getClass().getName(), object);
-		if (eclipseContext != null) {
-			eclipseContext.set(object.getClass().getName(), object);
+		if (object != null) {
+			context.put(object.getClass().getName(), object);
+			if (eclipseContext != null) {
+				eclipseContext.set(object.getClass().getName(), object);
+			}
 		}
 	}
 	
@@ -136,7 +138,11 @@ public class Context implements IContext {
 	
 	@Override
 	public void setNamed(String name, Object object){
-		context.put(name, object);
+		if (object == null) {
+			context.remove(name);
+		} else {
+			context.put(name, object);
+		}
 		if (eclipseContext != null) {
 			eclipseContext.set(name, object);
 		}

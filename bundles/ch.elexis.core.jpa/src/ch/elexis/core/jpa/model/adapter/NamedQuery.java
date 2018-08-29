@@ -58,7 +58,9 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 				.filter(o -> o != null).collect(Collectors.toList());
 			return ret;
 		} else {
-			return (List<R>) query.getResultList();
+			// query result list can contain null values, we do not want to see them
+			return (List<R>) query.getResultList().parallelStream().filter(r -> r != null)
+				.collect(Collectors.toList());
 		}
 	}
 }

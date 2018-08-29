@@ -26,7 +26,7 @@ public class Test_OrderService extends AbstractPersistentObjectTest {
 	private static Artikel artikel_A;
 	private static StockEntry stockEntry;
 	
-	private static StockService stockService = CoreHub.getStockService();
+	private static StockService stockService = (StockService) CoreHub.getStockService();
 	
 	@BeforeClass
 	public static void init(){

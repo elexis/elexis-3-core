@@ -252,4 +252,40 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 		return null;
 	}
 	
+	@Override
+	public String getPurchasePrice(){
+		return getEntity().getEkPreis();
+	}
+	
+	@Override
+	public void setPurchasePrice(String value){
+		getEntity().setEkPreis(value);
+	}
+	
+	@Override
+	public String getSellingPrice(){
+		return getEntity().getVkPreis();
+	}
+	
+	@Override
+	public void setSellingPrice(String value){
+		getEntity().setVkPreis(value);
+	}
+	
+	@Override
+	public boolean isObligation(){
+		if (isTyp(ArticleTyp.EIGENARTIKEL)) {
+			return Boolean.valueOf((String) getExtInfo(
+				ch.elexis.core.model.eigenartikel.Constants.FLD_EXT_HI_COST_ABSORPTION));
+		}
+		return false;
+	}
+	
+	@Override
+	public void setObligation(boolean value){
+		if (isTyp(ArticleTyp.EIGENARTIKEL)) {
+			setExtInfo(ch.elexis.core.model.eigenartikel.Constants.FLD_EXT_HI_COST_ABSORPTION,
+				Boolean.toString(value));
+		}
+	}
 }

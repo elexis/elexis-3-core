@@ -33,6 +33,7 @@ import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.IStoreToStringService;
 import ch.rgw.tools.MimeTool;
 
 /**
@@ -58,6 +59,13 @@ public class ModelUtil {
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
 	public void setContextService(IContextService contextService){
 		ModelUtil.contextService = contextService;
+	}
+	
+	private static IStoreToStringService storeToStringService;
+	
+	@Reference
+	public void setStoreToStringService(IStoreToStringService storeToStringService){
+		ModelUtil.storeToStringService = storeToStringService;
 	}
 	
 	/**
@@ -330,5 +338,13 @@ public class ModelUtil {
 	
 	public static AbstractModelService getModelService(){
 		return (AbstractModelService) modelService;
+	}
+	
+	public static Optional<Identifiable> getFromStoreToString(String storeToString){
+		return storeToStringService.loadFromString(storeToString);
+	}
+	
+	public static Optional<String> getStoreToString(Identifiable identifiable){
+		return storeToStringService.storeToString(identifiable);
 	}
 }

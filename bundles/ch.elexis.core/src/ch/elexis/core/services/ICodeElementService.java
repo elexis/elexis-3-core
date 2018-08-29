@@ -1,6 +1,7 @@
 package ch.elexis.core.services;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 import ch.elexis.core.model.ICodeElement;
@@ -12,6 +13,10 @@ import ch.elexis.core.model.ICodeElement;
  *
  */
 public interface ICodeElementService {
+	
+	public enum CodeElementTyp {
+			SERVICE, DIAGNOSE, ARTICLE
+	}
 	
 	public enum ContextKeys {
 			CONSULTATION, COVERAGE, MANDATOR, LAW, DATE
@@ -80,4 +85,12 @@ public interface ICodeElementService {
 	 */
 	public Optional<ICodeElement> createFromString(String system, String code,
 		HashMap<Object, Object> context);
+	
+	/**
+	 * Get all available {@link ICodeElementServiceContribution}s available.
+	 * 
+	 * @param typ
+	 * @return
+	 */
+	public List<ICodeElementServiceContribution> getContributionsByTyp(CodeElementTyp typ);
 }

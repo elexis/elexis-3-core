@@ -28,7 +28,7 @@ public class Test_StockService extends AbstractPersistentObjectTest {
 	private static Artikel artikel_B;
 	private static Artikel artikel_C;
 	
-	private static StockService stockService = CoreHub.getStockService();
+	private static StockService stockService = (StockService) CoreHub.getStockService();
 	
 	@Before
 	public void before(){		

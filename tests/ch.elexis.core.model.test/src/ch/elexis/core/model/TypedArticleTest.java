@@ -43,8 +43,8 @@ public class TypedArticleTest {
 		article.setCode("123456789");
 		article.setTyp(ArticleTyp.EIGENARTIKEL);
 		article.setGtin("0000001111111");
-		article.setPackageUnit(12);
-		article.setSellingUnit(12);
+		article.setPackageSize(12);
+		article.setSellingSize(12);
 		modelSerice.save(article);
 		
 		Optional<ITypedArticle> loaded = modelSerice.load(article.getId(), ITypedArticle.class);
@@ -54,8 +54,8 @@ public class TypedArticleTest {
 		assertEquals(article.getCode(), loaded.get().getCode());
 		assertEquals(article.getTyp(), loaded.get().getTyp());
 		assertEquals(article.getGtin(), loaded.get().getGtin());
-		assertEquals(article.getPackageUnit(), loaded.get().getPackageUnit());
-		assertEquals(article.getSellingUnit(), loaded.get().getSellingUnit());
+		assertEquals(article.getPackageSize(), loaded.get().getPackageSize());
+		assertEquals(article.getSellingSize(), loaded.get().getSellingSize());
 		
 		modelSerice.remove(article);
 	}
@@ -71,8 +71,8 @@ public class TypedArticleTest {
 		article.setCode("123456789");
 		article.setTyp(ArticleTyp.ARTIKEL);
 		article.setGtin("0000001111111");
-		article.setPackageUnit(12);
-		article.setSellingUnit(12);
+		article.setPackageSize(12);
+		article.setSellingSize(12);
 		article.setProduct(product);
 		
 		ITypedArticle article1 = modelSerice.create(ITypedArticle.class);
@@ -80,8 +80,8 @@ public class TypedArticleTest {
 		article1.setCode("987654321");
 		article1.setTyp(ArticleTyp.ARTIKEL);
 		article1.setGtin("1111112222222");
-		article1.setPackageUnit(24);
-		article1.setSellingUnit(24);
+		article1.setPackageSize(24);
+		article1.setSellingSize(24);
 		article1.setProduct(product);
 		
 		modelSerice.save(Arrays.asList(product, article, article1));
@@ -112,8 +112,8 @@ public class TypedArticleTest {
 		article.setCode("123456789");
 		article.setTyp(ArticleTyp.EIGENARTIKEL);
 		article.setGtin("0000001111111");
-		article.setPackageUnit(12);
-		article.setSellingUnit(12);
+		article.setPackageSize(12);
+		article.setSellingSize(12);
 		modelSerice.save(article);
 		
 		ITypedArticle article1 = modelSerice.create(ITypedArticle.class);
@@ -121,8 +121,8 @@ public class TypedArticleTest {
 		article1.setCode("987654321");
 		article1.setTyp(ArticleTyp.EIGENARTIKEL);
 		article1.setGtin("1111112222222");
-		article1.setPackageUnit(24);
-		article1.setSellingUnit(24);
+		article1.setPackageSize(24);
+		article1.setSellingSize(24);
 		modelSerice.save(article1);
 		
 		IQuery<ITypedArticle> query = modelSerice.getQuery(ITypedArticle.class);

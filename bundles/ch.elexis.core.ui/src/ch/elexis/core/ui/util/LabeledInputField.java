@@ -46,13 +46,13 @@ import com.tiff.common.ui.datepicker.DatePickerCombo;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.interfaces.INumericEnum;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.locks.IUnlockable;
-import ch.elexis.core.ui.services.ContextServiceHolder;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;

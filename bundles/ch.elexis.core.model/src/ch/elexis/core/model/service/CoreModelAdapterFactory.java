@@ -21,6 +21,8 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.IStock;
+import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.ITypedArticle;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserConfig;
@@ -91,5 +93,11 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 		
 		addMapping(new MappingEntry(ITypedArticle.class, ch.elexis.core.model.TypedArticle.class,
 			ch.elexis.core.jpa.entities.Artikel.class));
+		
+		addMapping(new MappingEntry(IStock.class, ch.elexis.core.model.Stock.class,
+			ch.elexis.core.jpa.entities.Stock.class));
+		addMapping(new MappingEntry(IStockEntry.class, ch.elexis.core.model.StockEntry.class,
+			ch.elexis.core.jpa.entities.StockEntry.class));
+		
 	}
 }

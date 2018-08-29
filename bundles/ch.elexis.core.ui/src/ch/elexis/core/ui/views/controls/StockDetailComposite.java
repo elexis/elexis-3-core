@@ -34,30 +34,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.interfaces.IStock;
-import ch.elexis.core.data.interfaces.IStockEntry;
-import ch.elexis.core.data.service.StockService;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.data.service.StockServiceHolder;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IStock;
+import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.ui.editors.KontaktSelektorDialogCellEditor;
-import ch.elexis.data.Artikel;
-import ch.elexis.data.Kontakt;
-import ch.elexis.data.Stock;
-import ch.elexis.data.StockEntry;
+import ch.elexis.data.PersistentObject;
 
 public class StockDetailComposite extends Composite {
 	
-	private WritableValue wvArtikel = new WritableValue(null, IArticle.class);
+	private WritableValue<IArticle> wvArtikel = new WritableValue<>(null, IArticle.class);
 	
 	private Logger log = LoggerFactory.getLogger(StockDetailComposite.class);
 	
 	private Table table;
 	
-	private Map<Stock, IStockEntry> stockEntries = new HashMap<Stock, IStockEntry>();
+	private Map<IStock, IStockEntry> stockEntries = new HashMap<IStock, IStockEntry>();
 	private CheckboxTableViewer checkboxTableViewer;
-	
-	private StockService stockService = CoreHub.getStockService();
 	
 	/**
 	 * Create the composite.
@@ -89,7 +86,7 @@ public class StockDetailComposite extends Composite {
 			}
 			
 			public String getText(Object element){
-				Stock stock = (Stock) element;
+				IStock stock = (IStock) element;
 				if (stock == null) {
 					return null;
 				}
@@ -113,7 +110,7 @@ public class StockDetailComposite extends Composite {
 			}
 			
 			public String getText(Object element){
-				Stock stock = (Stock) element;
+				IStock stock = (IStock) element;
 				IArticle art = (IArticle) wvArtikel.getValue();
 				if (stock == null || art == null) {
 					return null;
@@ -141,7 +138,7 @@ public class StockDetailComposite extends Composite {
 			}
 			
 			public String getText(Object element){
-				Stock stock = (Stock) element;
+				IStock stock = (IStock) element;
 				IArticle art = (IArticle) wvArtikel.getValue();
 				if (stock == null || art == null) {
 					return null;
@@ -168,7 +165,7 @@ public class StockDetailComposite extends Composite {
 			}
 			
 			public String getText(Object element){
-				Stock stock = (Stock) element;
+				IStock stock = (IStock) element;
 				IArticle art = (IArticle) wvArtikel.getValue();
 				if (stock == null || art == null) {
 					return null;
@@ -195,7 +192,7 @@ public class StockDetailComposite extends Composite {
 			}
 			
 			public String getText(Object element){
-				Stock stock = (Stock) element;
+				IStock stock = (IStock) element;
 				IArticle art = (IArticle) wvArtikel.getValue();
 				if (stock == null || art == null) {
 					return null;
@@ -216,7 +213,7 @@ public class StockDetailComposite extends Composite {
 		tvcProvider.setEditingSupport(new EditingSupport(checkboxTableViewer) {
 			@Override
 			protected void setValue(Object element, Object value){
-				Stock stock = (Stock) element;
+				IStock stock = (IStock) element;
 				IArticle art = (IArticle) wvArtikel.getValue();
 				if (stock == null || art == null) {
 					return;
@@ -225,13 +222,17 @@ public class StockDetailComposite extends Composite {
 				if (se == null) {
 					return;
 				}
-				se.setProvider((Kontakt) value);
+				if (value instanceof PersistentObject) {
+					value = CoreModelServiceHolder.get().load(((PersistentObject) value).getId(),
+						IContact.class).orElse(null);
+				}
+				se.setProvider((IContact) value);
 				getViewer().refresh();
 			}
 			
 			@Override
 			protected Object getValue(Object element){
-				Stock stock = (Stock) element;
+				IStock stock = (IStock) element;
 				IArticle art = (IArticle) wvArtikel.getValue();
 				if (stock == null || art == null) {
 					return null;
@@ -240,7 +241,7 @@ public class StockDetailComposite extends Composite {
 				if (se == null) {
 					return null;
 				}
-				return (Kontakt) se.getProvider();
+				return se.getProvider();
 			}
 			
 			@Override
@@ -252,7 +253,7 @@ public class StockDetailComposite extends Composite {
 			
 			@Override
 			protected boolean canEdit(Object element){
-				Stock stock = (Stock) element;
+				IStock stock = (IStock) element;
 				IArticle art = (IArticle) wvArtikel.getValue();
 				if (stock == null || art == null) {
 					return false;
@@ -266,7 +267,7 @@ public class StockDetailComposite extends Composite {
 			}
 			
 			public String getText(Object element){
-				Stock stock = (Stock) element;
+				IStock stock = (IStock) element;
 				IArticle art = (IArticle) wvArtikel.getValue();
 				if (stock == null || art == null) {
 					return null;
@@ -275,7 +276,7 @@ public class StockDetailComposite extends Composite {
 				if (se == null) {
 					return null;
 				}
-				Kontakt provider = (Kontakt) se.getProvider();
+				IContact provider = se.getProvider();
 				if (provider == null) {
 					return null;
 				}
@@ -290,15 +291,18 @@ public class StockDetailComposite extends Composite {
 			
 			@Override
 			public void checkStateChanged(CheckStateChangedEvent event){
-				IStock stock = (Stock) event.getElement();
-				IArticle art = (IArticle) wvArtikel.getValue();
-				if (stock != null && art != null && stock.getDriverUuid().length() == 0) {
-					if (event.getChecked()) {
-						stockService.storeArticleInStock(stock,
-							StoreToStringServiceHolder.getStoreToString(art));
-					} else {
-						stockService.unstoreArticleFromStock(stock,
-							StoreToStringServiceHolder.getStoreToString(art));
+				if (wvArtikel.getValue() instanceof IArticle) {
+					IStock stock = (IStock) event.getElement();
+					IArticle art = (IArticle) wvArtikel.getValue();
+					if (stock != null && art != null
+						&& !stock.isCommissioningSystem()) {
+						if (event.getChecked()) {
+							StockServiceHolder.get().storeArticleInStock(stock,
+								StoreToStringServiceHolder.getStoreToString(art));
+						} else {
+							StockServiceHolder.get().unstoreArticleFromStock(stock,
+								StoreToStringServiceHolder.getStoreToString(art));
+						}
 					}
 				}
 				refreshData();
@@ -314,17 +318,16 @@ public class StockDetailComposite extends Composite {
 			
 			@Override
 			public boolean isChecked(Object element){
-				Stock stock = (Stock) element;
-				Artikel art = (Artikel) wvArtikel.getValue();
-				if (stock == null || art == null) {
+				IStock stock = (IStock) element;
+				if (stock == null || wvArtikel.getValue() == null) {
 					return false;
 				}
 				return (stockEntries.get(stock) != null);
 			}
 		});
 		
-		List<Stock> stocks = stockService.getAllStocks(true);
-		for (Stock stock : stocks) {
+		List<IStock> stocks = StockServiceHolder.get().getAllStocks(true);
+		for (IStock stock : stocks) {
 			stockEntries.put(stock, null);
 		}
 		
@@ -345,14 +348,20 @@ public class StockDetailComposite extends Composite {
 	}
 	
 	private void refreshData(){
-		Artikel article = (Artikel) wvArtikel.getValue();
-		boolean enabled = (article != null && !article.isProduct());
+		boolean enabled = false;
+		String articleString = wvArtikel.getValue() != null
+				? StoreToStringServiceHolder.getStoreToString(wvArtikel.getValue())
+				: null;
+		if (wvArtikel.getValue() instanceof IArticle) {
+			enabled = (!((IArticle) wvArtikel.getValue()).isProduct());
+		}
+		
 		table.setEnabled(enabled);
 		stockEntries.replaceAll((k, v) -> null);
-		if (article != null) {
+		if (articleString != null) {
 			stockEntries.keySet().forEach(k -> {
 				stockEntries.put(k,
-					stockService.findStockEntryForArticleInStock(k, article.storeToString()));
+					StockServiceHolder.get().findStockEntryForArticleInStock(k, articleString));
 			});
 		}
 		checkboxTableViewer.refresh(true);
@@ -391,13 +400,13 @@ public class StockDetailComposite extends Composite {
 		
 		@Override
 		protected boolean canEdit(Object element){
-			Stock stock = (Stock) element;
-			Artikel art = (Artikel) wvArtikel.getValue();
-			if (stock == null || art == null || (stockEntries.get(stock) == null)) {
+			IStock stock = (IStock) element;
+			if (stock == null || wvArtikel.getValue() == null
+				|| (stockEntries.get(stock) == null)) {
 				return false;
 			}
 			
-			if ((CURR == editorFor || FRAC == editorFor) && stock.getDriverUuid().length() > 0) {
+			if ((CURR == editorFor || FRAC == editorFor) && stock.isCommissioningSystem()) {
 				// the current stock and fraction count of a stock commissioning system
 				// must not be directly changed
 				return false;
@@ -408,9 +417,8 @@ public class StockDetailComposite extends Composite {
 		
 		@Override
 		protected Object getValue(Object element){
-			Stock stock = (Stock) element;
-			Artikel art = (Artikel) wvArtikel.getValue();
-			if (stock == null || art == null) {
+			IStock stock = (IStock) element;
+			if (stock == null || wvArtikel.getValue() == null) {
 				return "";
 			}
 			IStockEntry se = stockEntries.get(stock);
@@ -439,12 +447,11 @@ public class StockDetailComposite extends Composite {
 		
 		@Override
 		protected void setValue(Object element, Object value){
-			Stock stock = (Stock) element;
-			Artikel art = (Artikel) wvArtikel.getValue();
-			if (stock == null || art == null) {
+			IStock stock = (IStock) element;
+			if (stock == null || wvArtikel.getValue() == null) {
 				return;
 			}
-			StockEntry se = (StockEntry) stockEntries.get(stock);
+			IStockEntry se = (IStockEntry) stockEntries.get(stock);
 			if (se == null) {
 				return;
 			}

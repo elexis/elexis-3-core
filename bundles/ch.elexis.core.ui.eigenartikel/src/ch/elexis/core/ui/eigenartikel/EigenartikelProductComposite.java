@@ -32,8 +32,7 @@ import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.eigenartikel.EigenartikelUtil;
 import ch.elexis.core.model.ITypedArticle;
@@ -41,9 +40,7 @@ import ch.elexis.core.model.eigenartikel.EigenartikelTyp;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
-import ch.elexis.core.ui.services.ContextServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.PersistentObject;
 
 public class EigenartikelProductComposite extends Composite implements IUnlockable {
 	
@@ -249,8 +246,8 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 				if (productEigenartikel.getValue() != null) {
 					if (event.diff.getOldValue() != null
 						&& !event.diff.getOldValue().toString().isEmpty()) {
-						ElexisEventDispatcher
-							.update((PersistentObject) productEigenartikel.getValue());
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
+							productEigenartikel.getValue());
 					}
 				}
 			}
@@ -290,7 +287,6 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 	private void createEigenartikelComposite(ITypedArticle articleNew){
 		EigenartikelComposite ec =
 			new EigenartikelComposite(compositeArticleItems, SWT.NONE, articleNew);
-		ec.setUnlocked(CoreHub.getLocalLockService()
-			.isLocked((IPersistentObject) productEigenartikel.getValue()));
+		ec.setUnlocked(CoreHub.getLocalLockService().isLocked(productEigenartikel.getValue()));
 	}
 }

@@ -11,11 +11,11 @@
 package ch.elexis.core.ui.dialogs;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -23,7 +23,6 @@ import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -31,62 +30,28 @@ import org.eclipse.ui.dialogs.FilteredItemsSelectionDialog;
 import org.eclipse.ui.internal.WorkbenchMessages;
 
 import ch.elexis.core.data.interfaces.IDiagnose;
-import ch.elexis.core.data.util.Extensions;
-import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
-import ch.elexis.core.ui.util.viewers.CommonViewer;
-import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
-import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
-import ch.elexis.data.PersistentObject;
-import ch.elexis.data.PersistentObjectFactory;
-import ch.elexis.data.Query;
-import ch.rgw.tools.ExHandler;
+import ch.elexis.core.data.service.CodeElementServiceHolder;
+import ch.elexis.core.model.IDiagnosis;
+import ch.elexis.core.model.IXid;
+import ch.elexis.core.services.ICodeElementService.CodeElementTyp;
+import ch.elexis.core.services.ICodeElementServiceContribution;
 
 public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 	
-	private ArrayList<IDiagnose> diagnoses = new ArrayList<IDiagnose>();
+	private List<IDiagnosis> diagnoses = new ArrayList<IDiagnosis>();
 	
 	public DiagnoseSelektor(Shell shell){
 		super(shell);
 		setTitle(Messages.DiagnoseSelektorDialog_Title);
 		
-		// create a list of all diagnoses
-		java.util.List<IConfigurationElement> list =
-			Extensions.getExtensions(ExtensionPointConstantsUi.DIAGNOSECODE);
-		
 		diagnoses.add(new NoDiagnose());
 		
-		if (list != null) {
-			for (IConfigurationElement ic : list) {
-				try {
-					PersistentObjectFactory po =
-						(PersistentObjectFactory) ic.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_ELF);
-					CodeSelectorFactory codeSelectorFactory =
-						(CodeSelectorFactory) ic.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
-					// get all available diagnoses available (TI can not be Queried as it is
-					// not in the database)
-					if (!(codeSelectorFactory.getCodeSystemName().equalsIgnoreCase("TI-Code"))) { //$NON-NLS-1$
-						if (IDiagnose.class.isAssignableFrom(codeSelectorFactory.getElementClass())) {
-							Query<IDiagnose> qd =
-								new Query<IDiagnose>(codeSelectorFactory.getElementClass());
-							diagnoses.addAll(qd.execute());
-						}
-					} else {
-						// get TI Code via content provider
-						CommonViewer cv = new CommonViewer();
-						ViewerConfigurer vc =
-							codeSelectorFactory.createViewerConfigurer(new CommonViewer());
-						cv.create(vc, shell, SWT.NONE, this);
-						
-						ITreeContentProvider tcp = (ITreeContentProvider) vc.getContentProvider();
-						Object[] roots = tcp.getElements(null);
-						addDiagnoses(tcp, roots);
-						
-						cv.dispose();
-					}
-				} catch (CoreException ex) {
-					ExHandler.handle(ex);
-				}
-			}
+		List<ICodeElementServiceContribution> diagnoseContributions =
+			CodeElementServiceHolder.get().getContributionsByTyp(CodeElementTyp.DIAGNOSE);
+		
+		for (ICodeElementServiceContribution iCodeElementServiceContribution : diagnoseContributions) {
+			diagnoses.addAll((Collection<? extends IDiagnosis>) iCodeElementServiceContribution
+				.getElements(CodeElementServiceHolder.createContext()));
 		}
 		
 		setListLabelProvider(new LabelProvider() {
@@ -128,7 +93,7 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 			if (tcp.hasChildren(object)) {
 				addDiagnoses(tcp, tcp.getChildren(object));
 			} else {
-				diagnoses.add((IDiagnose) object);
+				diagnoses.add((IDiagnosis) object);
 			}
 		}
 	}
@@ -180,7 +145,7 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 	protected void fillContentProvider(AbstractContentProvider contentProvider,
 		ItemsFilter itemsFilter, IProgressMonitor progressMonitor) throws CoreException{
 		
-		for (IDiagnose diagnose : diagnoses) {
+		for (IDiagnosis diagnose : diagnoses) {
 			if (progressMonitor.isCanceled()) {
 				return;
 			}
@@ -194,7 +159,7 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 		return diag.getLabel();
 	}
 	
-	private class NoDiagnose extends PersistentObject implements IDiagnose {
+	private class NoDiagnose implements IDiagnosis {
 		
 		@Override
 		public String getCodeSystemName(){
@@ -227,15 +192,39 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 		}
 		
 		@Override
-		protected String getTableName(){
-			return "";
+		public void setCode(String value){
+			// TODO Auto-generated method stub
+			
 		}
 		
 		@Override
-		public List<Object> getActions(Object kontext){
+		public void setText(String value){
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public boolean addXid(String domain, String id, boolean updateIfExists){
+			// TODO Auto-generated method stub
+			return false;
+		}
+		
+		@Override
+		public IXid getXid(String domain){
 			// TODO Auto-generated method stub
 			return null;
 		}
 		
+		@Override
+		public String getDescription(){
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
+		public void setDescription(String value){
+			// TODO Auto-generated method stub
+			
+		}
 	}
 }

@@ -19,6 +19,7 @@ import org.eclipse.ui.IViewSite;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.services.ILocalLockService.Status;
 import ch.elexis.core.eigenartikel.acl.ACLContributor;
@@ -29,7 +30,6 @@ import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.LockRequestingRestrictedAction;
 import ch.elexis.core.ui.locks.LockResponseHelper;
-import ch.elexis.core.ui.services.ContextServiceHolder;
 import ch.elexis.core.ui.views.IDetailDisplay;
 
 public class EigenartikelDetailDisplay implements IDetailDisplay {

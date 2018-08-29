@@ -346,7 +346,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 	/**
 	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-	 * 
+	 *
 	 * <p>This method is used to initialize {@link ModelPackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
 	 * <!-- begin-user-doc -->
@@ -360,7 +360,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		if (isInited) return (ModelPackage)EPackage.Registry.INSTANCE.getEPackage(ModelPackage.eNS_URI);
 
 		// Obtain or create and register package
-		ModelPackageImpl theModelPackage = (ModelPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof ModelPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new ModelPackageImpl());
+		Object registeredModelPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
+		ModelPackageImpl theModelPackage = registeredModelPackage instanceof ModelPackageImpl ? (ModelPackageImpl)registeredModelPackage : new ModelPackageImpl();
 
 		isInited = true;
 
@@ -376,7 +377,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		// Mark meta-data to indicate it can't be changed
 		theModelPackage.freeze();
 
-  
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(ModelPackage.eNS_URI, theModelPackage);
 		return theModelPackage;
@@ -1710,6 +1710,33 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getIArticle_PurchasePrice() {
+		return (EAttribute)iArticleEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIArticle_SellingPrice() {
+		return (EAttribute)iArticleEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIArticle_Obligation() {
+		return (EAttribute)iArticleEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getITypedArticle() {
 		return iTypedArticleEClass;
 	}
@@ -2051,6 +2078,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iArticleEClass, IARTICLE__PACKAGE_SIZE);
 		createEAttribute(iArticleEClass, IARTICLE__PACKAGE_UNIT);
 		createEReference(iArticleEClass, IARTICLE__PRODUCT);
+		createEAttribute(iArticleEClass, IARTICLE__PURCHASE_PRICE);
+		createEAttribute(iArticleEClass, IARTICLE__SELLING_PRICE);
+		createEAttribute(iArticleEClass, IARTICLE__OBLIGATION);
 
 		iTypedArticleEClass = createEClass(ITYPED_ARTICLE);
 		createEAttribute(iTypedArticleEClass, ITYPED_ARTICLE__TYP);
@@ -2400,6 +2430,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIArticle_PackageSize(), ecorePackage.getEInt(), "packageSize", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIArticle_PackageUnit(), ecorePackage.getEString(), "packageUnit", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIArticle_Product(), this.getIArticle(), null, "product", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIArticle_PurchasePrice(), ecorePackage.getEString(), "purchasePrice", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIArticle_SellingPrice(), ecorePackage.getEString(), "sellingPrice", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIArticle_Obligation(), ecorePackage.getEBoolean(), "obligation", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		addEOperation(iArticleEClass, ecorePackage.getEBoolean(), "isProduct", 0, 1, IS_UNIQUE, IS_ORDERED);
 
@@ -2490,60 +2523,72 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	protected void createMappingAnnotations() {
-		String source = "http://elexis.info/jpa/entity/attribute/mapping";	
+		String source = "http://elexis.info/jpa/entity/attribute/mapping";
 		addAnnotation
-		  (getIXid_ObjectId(), 
-		   source, 
+		  (getIXid_ObjectId(),
+		   source,
 		   new String[] {
-			 "attributeName", "object"
-		   });	
+			   "attributeName", "object"
+		   });
 		addAnnotation
-		  (getIPerson_DateOfBirth(), 
-		   source, 
+		  (getIPerson_DateOfBirth(),
+		   source,
 		   new String[] {
-			 "attributeName", "dob"
-		   });	
+			   "attributeName", "dob"
+		   });
 		addAnnotation
-		  (getIPerson_FirstName(), 
-		   source, 
+		  (getIPerson_FirstName(),
+		   source,
 		   new String[] {
-			 "attributeName", "description2"
-		   });	
+			   "attributeName", "description2"
+		   });
 		addAnnotation
-		  (getIPerson_LastName(), 
-		   source, 
+		  (getIPerson_LastName(),
+		   source,
 		   new String[] {
-			 "attributeName", "description1"
-		   });	
+			   "attributeName", "description1"
+		   });
 		addAnnotation
-		  (getILabMapping_Item(), 
-		   source, 
+		  (getILabMapping_Item(),
+		   source,
 		   new String[] {
-			 "attributeName", "labitem"
-		   });	
+			   "attributeName", "labitem"
+		   });
 		addAnnotation
-		  (getIDocument_Category(), 
-		   source, 
+		  (getIDocument_Category(),
+		   source,
 		   new String[] {
-			 "Brief#attributeName", "typ"
-		   });	
+			   "Brief#attributeName", "typ"
+		   });
 		addAnnotation
-		  (getIConfig_Key(), 
-		   source, 
+		  (getIConfig_Key(),
+		   source,
 		   new String[] {
-			 "attributeName", "param"
-		   });	
+			   "attributeName", "param"
+		   });
 		addAnnotation
-		  (getIArticle_Gtin(), 
-		   source, 
+		  (getIArticle_Gtin(),
+		   source,
 		   new String[] {
-			 "attributeName", "ean"
-		   });	
+			   "attributeName", "ean"
+		   });
 		addAnnotation
-		  (getITypedArticle_SubTyp(), 
-		   source, 
+		  (getIArticle_PurchasePrice(),
+		   source,
 		   new String[] {
-			 "attributeName", "codeclass"
+			   "attributeName", "ekPreis"
+		   });
+		addAnnotation
+		  (getIArticle_SellingPrice(),
+		   source,
+		   new String[] {
+			   "attributeName", "vkPreis"
+		   });
+		addAnnotation
+		  (getITypedArticle_SubTyp(),
+		   source,
+		   new String[] {
+			   "attributeName", "codeclass"
 		   });
 	}
 

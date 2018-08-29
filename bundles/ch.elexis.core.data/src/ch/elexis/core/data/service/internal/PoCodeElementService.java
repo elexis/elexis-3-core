@@ -1,9 +1,7 @@
 package ch.elexis.core.data.service.internal;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -12,12 +10,17 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.model.ICodeElement;
-import ch.elexis.core.services.ICodeElementService;
-import ch.elexis.core.services.ICodeElementServiceContribution;
+import ch.elexis.core.data.interfaces.ICodeElement;
+import ch.elexis.core.data.services.ICodeElementService;
+import ch.elexis.core.data.services.ICodeElementServiceContribution;
 
+/**
+ * 
+ * @deprecated use implementation of {@link ch.elexis.core.services.ICodeElementService} instead.
+ *
+ */
 @Component
-public class CodeElementService implements ICodeElementService {
+public class PoCodeElementService implements ICodeElementService {
 	
 	private HashMap<String, ICodeElementServiceContribution> contributions = new HashMap<>();
 	
@@ -48,11 +51,5 @@ public class CodeElementService implements ICodeElementService {
 					+ "]");
 		}
 		return Optional.empty();
-	}
-	
-	@Override
-	public List<ICodeElementServiceContribution> getContributionsByTyp(CodeElementTyp typ){
-		return contributions.values().stream().filter(contribution -> contribution.getTyp() == typ)
-			.collect(Collectors.toList());
 	}
 }

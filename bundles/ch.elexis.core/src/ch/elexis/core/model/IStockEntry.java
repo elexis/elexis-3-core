@@ -1,6 +1,6 @@
 package ch.elexis.core.model;
 
-public interface IStockEntry {
+public interface IStockEntry extends Identifiable {
 	
 	public IArticle getArticle();
 	
@@ -20,9 +20,13 @@ public interface IStockEntry {
 
 	public void setFractionUnits(int rest);
 
-	public Object getProvider();
+	public IContact getProvider();
 	
-	public void setProvider(Object provider);
+	public void setProvider(IContact provider);
 	
 	public IStock getStock();
+	
+	public void setStock(IStock stock);
+	
+	public void setArticle(IArticle loadArticle);
 }

@@ -10,18 +10,19 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ListDialog;
 
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.service.StockServiceHolder;
+import ch.elexis.core.model.IStock;
 import ch.elexis.core.ui.data.UiMandant;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Stock;
 
 public class StockSelectorDialog extends ListDialog {
 	
-	private Stock onlyOneStock = null;
+	private IStock onlyOneStock = null;
 	
 	public StockSelectorDialog(Shell parent, boolean includeCommissioningSystems){
 		super(parent);
-		List<Stock> allStocks = CoreHub.getStockService().getAllStocks(includeCommissioningSystems);
+		List<IStock> allStocks = StockServiceHolder.get().getAllStocks(includeCommissioningSystems);
 		if (allStocks.size() == 1) {
 			onlyOneStock = allStocks.get(0);
 		}

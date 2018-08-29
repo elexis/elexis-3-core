@@ -17,11 +17,9 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractModelService;
-import ch.elexis.core.jpa.model.adapter.NamedQuery;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.services.IModelService;
-import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IStoreToStringContribution;
 
@@ -110,20 +108,4 @@ public class CoreModelService extends AbstractModelService
 		return new CoreQuery<>(clazz, refreshCache,
 			(EntityManager) entityManager.getEntityManager(), includeDeleted);
 	}
-	
-	@Override
-	public <R, T> INamedQuery<R> getNamedQuery(Class<R> returnValueclazz,
-		Class<T> definitionClazz, boolean refreshCache, String... properties){
-		return new NamedQuery<>(returnValueclazz, definitionClazz, refreshCache, adapterFactory,
-			(EntityManager) entityManager.getEntityManager(),
-			getNamedQueryName(definitionClazz, properties));
-	}
-	
-	@Override
-	public <R, T> INamedQuery<R> getNamedQueryByName(Class<R> returnValueclazz,
-		Class<T> definitionClazz, boolean refreshCache, String queryName){
-		return new NamedQuery<>(returnValueclazz, definitionClazz, refreshCache, adapterFactory,
-			(EntityManager) entityManager.getEntityManager(), queryName);
-	}
-	
 }

@@ -26,18 +26,19 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.interfaces.IArticle;
 import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IOptifier;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
-import ch.elexis.core.data.service.CodeElementServiceHolder;
+import ch.elexis.core.data.service.PoCodeElementServiceHolder;
+import ch.elexis.core.data.services.ICodeElementService;
+import ch.elexis.core.data.services.ICodeElementService.ContextKeys;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.model.prescription.EntryType;
-import ch.elexis.core.data.services.ICodeElementService;
-import ch.elexis.core.data.services.ICodeElementService.ContextKeys;
 import ch.elexis.core.text.model.Samdas;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
@@ -130,7 +131,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			Fall alt = getFall();
 			set(FLD_CASE_ID, f.getId());
 			if (alt != null) {
-				ICodeElementService codeElementService = CodeElementServiceHolder.getService();
+				ICodeElementService codeElementService = PoCodeElementServiceHolder.get();
 				HashMap<Object, Object> context = getCodeElementServiceContext();
 				List<Verrechnet> vv = getLeistungen();
 				for (Verrechnet verrechnet : vv) {
@@ -773,8 +774,10 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			Result<Verrechnet> result = v.getOptifier().remove(ls, this);
 			if (result.isOK()) {
 				if (v instanceof Artikel) {
-					Artikel art = (Artikel) v;
-					CoreHub.getStockService().performSingleReturn(art, z);
+					IArticle art = (IArticle) v;
+					Mandant mandator = ElexisEventDispatcher.getSelectedMandator();
+					CoreHub.getStockService().performSingleReturn(art, z,
+						mandator != null ? mandator.getId() : null);
 					
 					Object prescId = ls.getDetail(Verrechnet.FLD_EXT_PRESC_ID);
 					if (prescId instanceof String) {

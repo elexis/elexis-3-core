@@ -19,6 +19,7 @@ import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.service.CodeElementServiceHolder;
+import ch.elexis.core.data.service.PoCodeElementServiceHolder;
 import ch.elexis.core.data.services.ICodeElementService;
 import ch.elexis.core.ui.exchange.XChangeContainer;
 import ch.elexis.core.ui.exchange.XChangeExporter;
@@ -56,7 +57,7 @@ public class ServiceElement extends XChangeElement {
 		setAttribute(ATTR_CONTRACT_CODE, ic.getCode());
 		setAttribute(ATTR_CONTRACT_NAME, ic.getCodeSystemName());
 		// optional fields for IVerrechenbar
-		ICodeElementService service = CodeElementServiceHolder.getService();
+		ICodeElementService service = PoCodeElementServiceHolder.get();
 		if (service != null) {
 			Optional<ICodeElement> element =
 				service.createFromString(ic.getCodeSystemName(), ic.getCode(),

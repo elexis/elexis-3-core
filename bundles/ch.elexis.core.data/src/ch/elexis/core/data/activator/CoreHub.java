@@ -50,6 +50,7 @@ import ch.elexis.core.data.service.StockService;
 import ch.elexis.core.data.services.ILocalLockService;
 import ch.elexis.core.data.services.IOrderService;
 import ch.elexis.core.data.services.IStockCommissioningSystemService;
+import ch.elexis.core.data.services.IStockService;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
@@ -492,7 +493,7 @@ public class CoreHub implements BundleActivator {
 		return localLockService;
 	}
 	
-	public static StockService getStockService(){
+	public static IStockService getStockService(){
 		return stockService;
 	}
 	

@@ -1,8 +1,6 @@
 package ch.elexis.core.model;
 
-public interface IStock {
-	
-	public String getId();
+public interface IStock extends Identifiable {
 
 	public String getCode();
 
@@ -15,4 +13,7 @@ public interface IStock {
 		return (driverUuid != null && driverUuid.length() > 0);
 	}
 
+	public int getPriority();
+	
+	public IMandator getOwner();
 }

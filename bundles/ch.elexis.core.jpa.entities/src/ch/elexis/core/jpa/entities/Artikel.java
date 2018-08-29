@@ -29,6 +29,7 @@ import ch.elexis.core.types.ArticleTyp;
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "Artikel.typ.code", query = "SELECT ar FROM Artikel ar WHERE ar.deleted = false AND ar.subId = :code AND ar.typ = :typ")
 @NamedQuery(name = "Artikel.typ.id", query = "SELECT ar FROM Artikel ar WHERE ar.deleted = false AND ar.id = :id AND ar.typ = :typ")
+@NamedQuery(name = "Artikel.typ", query = "SELECT ar FROM Artikel ar WHERE ar.deleted = false AND ar.typ = :typ")
 public class Artikel implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	public static final String CODESYSTEM_NAME = "Artikel";

@@ -13,6 +13,10 @@ package ch.elexis.core.ui.eigenartikel;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -28,6 +32,7 @@ import org.eclipse.swt.dnd.TransferData;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.eigenartikel.EigenartikelUtil;
 import ch.elexis.core.eigenartikel.acl.ACLContributor;
 import ch.elexis.core.lock.types.LockResponse;
@@ -39,7 +44,6 @@ import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.actions.ToggleVerrechenbarFavoriteAction;
 import ch.elexis.core.ui.locks.LockResponseHelper;
 import ch.elexis.core.ui.selectors.FieldDescriptor;
-import ch.elexis.core.ui.services.ContextServiceHolder;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.CommonViewer.DoubleClickListener;
 import ch.elexis.core.ui.util.viewers.SelectorPanelProvider;
@@ -138,6 +142,24 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 				}
 			}
 		};
+	}
+	
+	@Inject
+	@Optional
+	public void reload(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz){
+		if (ITypedArticle.class.equals(clazz)) {
+			if (commonViewer != null && !commonViewer.isDisposed()) {
+				commonViewer.getViewerWidget().refresh();
+			}
+		}
+	}
+	
+	@Inject
+	@Optional
+	public void update(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) ITypedArticle object){
+		if (commonViewer != null && object != null) {
+			commonViewer.getViewerWidget().update(object, null);
+		}
 	}
 	
 	private RestrictedAction rearrangePackagesAction =

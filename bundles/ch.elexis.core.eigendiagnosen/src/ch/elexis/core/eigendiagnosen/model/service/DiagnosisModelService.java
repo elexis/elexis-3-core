@@ -17,11 +17,9 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractModelService;
-import ch.elexis.core.jpa.model.adapter.NamedQuery;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.services.IModelService;
-import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IStoreToStringContribution;
 
@@ -109,12 +107,5 @@ public class DiagnosisModelService extends AbstractModelService
 				ElexisTypeMap.getKeyForObject(dbObject));
 		}
 		return ee;
-	}
-	
-	@Override
-	public <T> INamedQuery<T> getNamedQuery(Class<T> clazz, boolean refreshCache,
-		String... properties){
-		return new NamedQuery<>(clazz, refreshCache, adapterFactory,
-			(EntityManager) entityManager.getEntityManager(), getNamedQueryName(clazz, properties));
 	}
 }

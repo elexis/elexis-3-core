@@ -3038,13 +3038,40 @@ public interface ModelPackage extends EPackage {
 	int IARTICLE__PRODUCT = IDENTIFIABLE_FEATURE_COUNT + 9;
 
 	/**
+	 * The feature id for the '<em><b>Purchase Price</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IARTICLE__PURCHASE_PRICE = IDENTIFIABLE_FEATURE_COUNT + 10;
+
+	/**
+	 * The feature id for the '<em><b>Selling Price</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IARTICLE__SELLING_PRICE = IDENTIFIABLE_FEATURE_COUNT + 11;
+
+	/**
+	 * The feature id for the '<em><b>Obligation</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IARTICLE__OBLIGATION = IDENTIFIABLE_FEATURE_COUNT + 12;
+
+	/**
 	 * The number of structural features of the '<em>IArticle</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IARTICLE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 10;
+	int IARTICLE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 13;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ITypedArticle <em>ITyped Article</em>}' class.
@@ -3145,6 +3172,33 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int ITYPED_ARTICLE__PRODUCT = IARTICLE__PRODUCT;
+
+	/**
+	 * The feature id for the '<em><b>Purchase Price</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITYPED_ARTICLE__PURCHASE_PRICE = IARTICLE__PURCHASE_PRICE;
+
+	/**
+	 * The feature id for the '<em><b>Selling Price</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITYPED_ARTICLE__SELLING_PRICE = IARTICLE__SELLING_PRICE;
+
+	/**
+	 * The feature id for the '<em><b>Obligation</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITYPED_ARTICLE__OBLIGATION = IARTICLE__OBLIGATION;
 
 	/**
 	 * The feature id for the '<em><b>Typ</b></em>' attribute.
@@ -4977,6 +5031,39 @@ public interface ModelPackage extends EPackage {
 	EReference getIArticle_Product();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IArticle#getPurchasePrice <em>Purchase Price</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Purchase Price</em>'.
+	 * @see ch.elexis.core.model.IArticle#getPurchasePrice()
+	 * @see #getIArticle()
+	 * @generated
+	 */
+	EAttribute getIArticle_PurchasePrice();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IArticle#getSellingPrice <em>Selling Price</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Selling Price</em>'.
+	 * @see ch.elexis.core.model.IArticle#getSellingPrice()
+	 * @see #getIArticle()
+	 * @generated
+	 */
+	EAttribute getIArticle_SellingPrice();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IArticle#isObligation <em>Obligation</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Obligation</em>'.
+	 * @see ch.elexis.core.model.IArticle#isObligation()
+	 * @see #getIArticle()
+	 * @generated
+	 */
+	EAttribute getIArticle_Obligation();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.ITypedArticle <em>ITyped Article</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6397,6 +6484,30 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference IARTICLE__PRODUCT = eINSTANCE.getIArticle_Product();
+
+		/**
+		 * The meta object literal for the '<em><b>Purchase Price</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IARTICLE__PURCHASE_PRICE = eINSTANCE.getIArticle_PurchasePrice();
+
+		/**
+		 * The meta object literal for the '<em><b>Selling Price</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IARTICLE__SELLING_PRICE = eINSTANCE.getIArticle_SellingPrice();
+
+		/**
+		 * The meta object literal for the '<em><b>Obligation</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IARTICLE__OBLIGATION = eINSTANCE.getIArticle_Obligation();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.ITypedArticle <em>ITyped Article</em>}' class.

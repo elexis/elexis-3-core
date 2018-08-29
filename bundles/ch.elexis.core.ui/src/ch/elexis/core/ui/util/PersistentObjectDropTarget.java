@@ -125,6 +125,11 @@ public class PersistentObjectDropTarget implements DropTargetListener, ICodeSele
 		rc.dropped(obj, null);
 	}
 	
+	@Override
+	public void codeSelected(Object obj){
+		throw new UnsupportedOperationException();
+	}
+	
 	public String getName(){
 		return name;
 	}

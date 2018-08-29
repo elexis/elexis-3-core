@@ -125,7 +125,7 @@ public interface IModelService {
 	 * @param properties
 	 * @return
 	 */
-	public default <R, T> INamedQuery<R> getNamedQuery(Class<T> clazz, String... properties){
+	public default <R, T> INamedQuery<R> getNamedQuery(Class<R> clazz, String... properties){
 		return getNamedQuery(clazz, false, properties);
 	}
 	
@@ -140,10 +140,9 @@ public interface IModelService {
 	 * @param properties
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public default <R, T> INamedQuery<R> getNamedQuery(Class<T> clazz, boolean refreshCache,
+	public default <R, T> INamedQuery<R> getNamedQuery(Class<R> clazz, boolean refreshCache,
 		String... properties){
-		return getNamedQuery((Class<R>) clazz, clazz, refreshCache, properties);
+		return getNamedQuery(clazz, clazz, refreshCache, properties);
 	}
 	
 	/**

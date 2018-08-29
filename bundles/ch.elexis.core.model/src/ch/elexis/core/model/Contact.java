@@ -1,5 +1,7 @@
 package ch.elexis.core.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
@@ -220,5 +222,15 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt>
 	@Override
 	public void setComment(String value){
 		getEntity().setComment(value);
+	}
+	
+	@Override
+	public String getLabel(){
+		StringBuilder sb = new StringBuilder();
+		sb.append(getDescription1());
+		if (!StringUtils.isBlank(getDescription3())) {
+			sb.append("(").append(getDescription3()).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		return sb.toString();
 	}
 }

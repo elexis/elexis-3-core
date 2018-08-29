@@ -6,13 +6,18 @@ import java.util.Optional;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import ch.elexis.core.services.ICodeElementService;
-import ch.elexis.core.services.ICodeElementService.ContextKeys;
+import ch.elexis.core.data.services.ICodeElementService;
+import ch.elexis.core.data.services.ICodeElementService.ContextKeys;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 
+/**
+ * 
+ * @deprecated use implementation of {@link ch.elexis.core.services.ICodeElementService} instead.
+ * 
+ */
 @Component(service = {})
-public class CodeElementServiceHolder {
+public class PoCodeElementServiceHolder {
 	
 	private static HashMap<Object, Object> emptyMap = new HashMap<>();
 	
@@ -20,7 +25,7 @@ public class CodeElementServiceHolder {
 	
 	@Reference(unbind = "-")
 	public void setCodeElementService(ICodeElementService elementService){
-		CodeElementServiceHolder.elementService = elementService;
+		PoCodeElementServiceHolder.elementService = elementService;
 	}
 	
 	public static ICodeElementService get(){

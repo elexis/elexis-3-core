@@ -8,7 +8,11 @@ import ch.elexis.core.data.interfaces.IArticle;
 import ch.elexis.core.data.interfaces.IStock;
 import ch.elexis.core.data.interfaces.IStockEntry;
 
-
+/**
+ * 
+ * @deprecated for use with PersistentObject only, use {@link ch.elexis.core.services.IStockService}
+ *             instead
+ */
 public interface IStockService {
 
 	public enum Availability {
@@ -170,4 +174,6 @@ public interface IStockService {
 		
 		return determineAvailability(current, min, false);
 	}
+	
+	public List<IStockEntry> getAllStockEntries();
 }
