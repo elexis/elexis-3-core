@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
@@ -275,19 +276,20 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		
 		Integer invoiceStateNo = invoiceListHeaderComposite.getSelectedInvoiceStateNo();
 		if (invoiceStateNo != null) {
-			if (InvoiceState.OWING.numericValue() == invoiceStateNo) {
+			if (InvoiceState.OWING.numericValue() == invoiceStateNo
+				|| InvoiceState.TO_PRINT.numericValue() == invoiceStateNo) {
+				InvoiceState[] invoiceStates = (InvoiceState.OWING.numericValue() == invoiceStateNo)
+						? InvoiceState.owingStates()
+						: InvoiceState.toPrintStates();
+				
 				appendInvoiceStateDateConditionalIfNotNull(queryBuilder);
 				
-				String conditional = Arrays.asList(InvoiceState.owingStates()).stream()
-					.map(is -> Integer.toString(is.numericValue())).reduce((u, t) -> u + " ," + t)
-					.get();
-				queryBuilder.build(SQL_CONDITION_INVOICE_STATE_IN, conditional);
-				
-			} else if (InvoiceState.TO_PRINT.numericValue() == invoiceStateNo) {
-				String conditional = Arrays.asList(InvoiceState.toPrintStates()).stream()
-					.map(is -> Integer.toString(is.numericValue())).reduce((u, t) -> u + " ," + t)
-					.get();
-				queryBuilder.build(SQL_CONDITION_INVOICE_STATE_IN, conditional);
+				List<String> conditional = Arrays.asList(invoiceStates).stream()
+					.map(is -> Integer.toString(is.numericValue())).collect(Collectors.toList());
+				String qmreplace =
+					conditional.stream().map(s -> "?").collect(Collectors.joining(","));
+				String replaceFirst = SQL_CONDITION_INVOICE_STATE_IN.replaceFirst("\\?", qmreplace);
+				queryBuilder.build(replaceFirst, conditional);
 			} else {
 				queryBuilder.build(SQL_CONDITION_INVOICE_STATE_IN,
 					Integer.toString(invoiceStateNo));
@@ -751,6 +753,11 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 									ps.setInt(i++, (Integer) s);
 								} else if (s instanceof Double) {
 									ps.setDouble(i++, (Double) s);
+								} else if (s instanceof List) {
+									List<?> _s = (List<?>) s;
+									for (Object object : _s) {
+										ps.setString(i++, object.toString());
+									}
 								}
 							} catch (SQLException e) {
 								/** ignore **/
