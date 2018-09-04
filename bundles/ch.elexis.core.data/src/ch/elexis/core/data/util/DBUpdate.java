@@ -417,7 +417,7 @@ public class DBUpdate {
 			ALTER_TABLE+Reminder.TABLENAME+ADD+Reminder.FLD_SUBJECT+" VARCHAR(160);",
 			
 			// 3.2.3
-			"ALTER TABLE KONTO ADD account CHAR(255);",
+			"ALTER TABLE KONTO ADD account VARCHAR(255);",
 			
 			// 3.2.4
 			FILE_LOCATED,

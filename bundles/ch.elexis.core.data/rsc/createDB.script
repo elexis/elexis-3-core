@@ -198,7 +198,8 @@ CREATE TABLE KONTO(
 	ZahlungsID		VARCHAR(25),              # foreign key from ZAHLUNG
 	Betrag			CHAR(8),
 	Datum			CHAR(8),
-	Bemerkung		VARCHAR(80)
+	Bemerkung		VARCHAR(80),
+	account			VARCHAR(255)
 );
 
 CREATE INDEX konto1 on KONTO (Datum);
