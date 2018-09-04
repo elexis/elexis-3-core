@@ -432,16 +432,15 @@ public class LaborOrdersComposite extends Composite {
 							@Override
 							public void lockFailed(){
 								// do nothing
-								
 							}
 							
 							@Override
 							public void lockAcquired(){
 								result.delete();
+								((LaborOrderViewerItem) object).deleteOrder();
 							}
 						});
 					}
-					((LaborOrderViewerItem) object).deleteOrder();
 				}
 			}
 		}

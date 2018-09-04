@@ -36,7 +36,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.DND;
@@ -56,6 +56,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.OrderServiceHolder;
@@ -181,16 +182,15 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 			
 		});
 		tv.setLabelProvider(new BestellungLabelProvider());
-		tv.setSorter(new ViewerSorter() {
+		tv.setComparator(new ViewerComparator() {
 			@Override
-			public int compare(final Viewer viewer, final Object e1, final Object e2){
+			public int compare(Viewer viewer, Object e1, Object e2){
 				IOrderEntry be1 = (IOrderEntry) e1;
 				IOrderEntry be2 = (IOrderEntry) e2;
 				String s1 = be1.getArticle().getName();
 				String s2 = be2.getArticle().getName();
 				return s1.compareTo(s2);
 			}
-			
 		});
 		Transfer[] types = new Transfer[] {
 			TextTransfer.getInstance()
@@ -430,24 +430,31 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 				boolean isInventoryBelow =
 					trigger == ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER_BELOW;
 				
-				IQuery<IStockEntry> query = CoreModelServiceHolder.get().getQuery(IStockEntry.class);
+				boolean excludeAlreadyOrderedItems = ConfigUtil.isGlobalConfig(
+					Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER,
+					Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER_DEFAULT);
+				
+				IQuery<IStockEntry> query =
+					CoreModelServiceHolder.get().getQuery(IStockEntry.class);
 				query.andFeatureCompare(ModelPackage.Literals.ISTOCK_ENTRY__CURRENT_STOCK,
 					isInventoryBelow ? COMPARATOR.LESS : COMPARATOR.LESS_OR_EQUAL,
 					ModelPackage.Literals.ISTOCK_ENTRY__MINIMUM_STOCK);
 				List<IStockEntry> stockEntries = query.execute();
 				for (IStockEntry stockEntry : stockEntries) {
 					if (stockEntry.getArticle() != null) {
-						IOrderEntry open =
-							OrderServiceHolder.get().findOpenOrderEntryForStockEntry(stockEntry);
-						// only add if not on an open order
-						if (open == null) {
-							OrderServiceHolder.get().addRefillForStockEntryToOrder(stockEntry,
-								actOrder);
+						if (excludeAlreadyOrderedItems) {
+							IOrderEntry open = OrderServiceHolder.get()
+								.findOpenOrderEntryForStockEntry(stockEntry);
+							// only add if not on an open order
+							if (open == null) {
+								continue;
+							}
 						}
+						OrderServiceHolder.get().addRefillForStockEntryToOrder(stockEntry,
+							actOrder);
 					} else {
-						LoggerFactory.getLogger(getClass())
-							.warn("Could not resolve article " + stockEntry.getLabel()
-								+ " of stock entry " + stockEntry.getId());
+						LoggerFactory.getLogger(getClass()).warn("Could not resolve article "
+							+ stockEntry.getLabel() + " of stock entry " + stockEntry.getId());
 					}
 				}
 				updateCheckIn();

@@ -124,7 +124,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		Messages.LagerView_maxBestand, Messages.LagerView_dealer
 	};
 	int[] colwidth = {
-		40, 75, 90, 250, 35, 35, 35, 150
+		50, 75, 90, 250, 35, 35, 35, 150
 	};
 	
 	private void refreshConsiderFilter(){
@@ -195,11 +195,11 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		
 		for (int i = 0; i < columns.length; i++) {
 			TableViewerColumn tvc = new TableViewerColumn(viewer, SWT.NONE);
-			tvc.setLabelProvider(new ColumnStockEntryLabelProvider(i, labelProvider));
 			TableColumn tc = tvc.getColumn();
 			tc.setText(columns[i]);
 			tc.setWidth(colwidth[i]);
 			tc.setData(i);
+			tvc.setLabelProvider(new ColumnStockEntryLabelProvider(i, labelProvider));
 			
 			ReflectiveEditingSupport poes = null;
 			if (i == 4) {

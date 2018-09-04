@@ -43,8 +43,10 @@ public class PoOrderService implements IOrderService {
 			max = ise.getMinimumStock();
 		}
 		int toOrder = max - current;
-		
-		return order.addEntry(ise.getArticle(), ise.getStock(), ise.getProvider(), toOrder);
+		if (toOrder > 0) {
+			return order.addEntry(ise.getArticle(), ise.getStock(), ise.getProvider(), toOrder);
+		}
+		return null;
 	}
 	
 }
