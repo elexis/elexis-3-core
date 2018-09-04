@@ -1,5 +1,7 @@
 package ch.elexis.core.types;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Describes how the pathologic flag was determined. Description is how and reference can hold a
  * reference value that was used.
@@ -61,7 +63,7 @@ public class PathologicDescription {
 	
 	public PathologicDescription(Description description, String reference){
 		this.description = description;
-		this.reference = (reference != null) ? reference : "";
+		this.reference = (reference != null) ? StringUtils.abbreviate(reference, 90) : "";
 	}
 	
 	private PathologicDescription(){
