@@ -8,8 +8,8 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.ICodeElement;
-import ch.elexis.core.model.ITypedArticle;
 import ch.elexis.core.model.eigenartikel.Constants;
 import ch.elexis.core.services.ICodeElementService.CodeElementTyp;
 import ch.elexis.core.services.ICodeElementServiceContribution;
@@ -30,10 +30,9 @@ public class EigenartikelCodeElementService implements ICodeElementServiceContri
 	
 	@Override
 	public Optional<ICodeElement> createFromCode(String code, HashMap<Object, Object> context){
-		INamedQuery<ITypedArticle> query =
-			coreModelService.getNamedQuery(ITypedArticle.class, "typ", "code");
+		INamedQuery<IArticle> query = coreModelService.getNamedQuery(IArticle.class, "typ", "code");
 		
-		List<ITypedArticle> found = query.executeWithParameters(
+		List<IArticle> found = query.executeWithParameters(
 			coreModelService.getParameterMap("typ", ArticleTyp.EIGENARTIKEL, "code", code));
 		if (!found.isEmpty()) {
 			if (found.size() > 1) {
@@ -43,7 +42,7 @@ public class EigenartikelCodeElementService implements ICodeElementServiceContri
 			}
 			return Optional.of(found.get(0));
 		} else {
-			query = coreModelService.getNamedQuery(ITypedArticle.class, "typ", "id");
+			query = coreModelService.getNamedQuery(IArticle.class, "typ", "id");
 			found = query.executeWithParameters(
 				coreModelService.getParameterMap("typ", ArticleTyp.EIGENARTIKEL, "id", code));
 			if (!found.isEmpty()) {
@@ -66,8 +65,7 @@ public class EigenartikelCodeElementService implements ICodeElementServiceContri
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ICodeElement> getElements(HashMap<Object, Object> context){
-		INamedQuery<ITypedArticle> query =
-			coreModelService.getNamedQuery(ITypedArticle.class, "typ");
+		INamedQuery<IArticle> query = coreModelService.getNamedQuery(IArticle.class, "typ");
 		return (List<ICodeElement>) (List<?>) query.executeWithParameters(
 			coreModelService.getParameterMap("typ", ArticleTyp.EIGENARTIKEL));
 	}

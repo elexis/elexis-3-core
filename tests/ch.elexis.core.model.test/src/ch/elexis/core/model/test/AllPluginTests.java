@@ -11,6 +11,8 @@ import ch.elexis.core.model.LabMappingTest;
 import ch.elexis.core.model.LabOrderTest;
 import ch.elexis.core.model.LabResultTest;
 import ch.elexis.core.model.LaboratoryTest;
+import ch.elexis.core.model.OrderEntryTest;
+import ch.elexis.core.model.StockEntryTest;
 import ch.elexis.core.model.TypedArticleTest;
 import ch.elexis.core.model.UserConfigTest;
 import ch.elexis.core.model.XidTest;
@@ -21,7 +23,10 @@ import ch.elexis.core.model.service.CoreQueryTest;
 @SuiteClasses({
 	CoreModelServiceTest.class, CoreQueryTest.class, ConfigTest.class, UserConfigTest.class,
 	LabItemTest.class, DocumentBriefTest.class, LabResultTest.class, LabOrderTest.class,
-	LaboratoryTest.class, XidTest.class, LabMappingTest.class, TypedArticleTest.class
+	LaboratoryTest.class, XidTest.class, LabMappingTest.class, TypedArticleTest.class,
+	StockEntryTest.class, OrderEntryTest.class
+	
+		//	LaborPerformanceTest.class
 })
 public class AllPluginTests {
 	

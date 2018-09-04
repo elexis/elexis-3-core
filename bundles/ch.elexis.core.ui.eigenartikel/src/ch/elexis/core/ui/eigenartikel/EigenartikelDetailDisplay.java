@@ -24,7 +24,7 @@ import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.services.ILocalLockService.Status;
 import ch.elexis.core.eigenartikel.acl.ACLContributor;
 import ch.elexis.core.lock.types.LockResponse;
-import ch.elexis.core.model.ITypedArticle;
+import ch.elexis.core.model.IArticle;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.icons.Images;
@@ -37,8 +37,8 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 	
 	private EigenartikelProductComposite epc;
 	private EigenartikelComposite ec;
-	private ITypedArticle selectedObject;
-	private ITypedArticle currentLock;
+	private IArticle selectedObject;
+	private IArticle currentLock;
 	private StackLayout layout;
 	private Composite container;
 	private Composite compProduct;
@@ -54,14 +54,13 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 		
 		@Override
 		public void doRun(){
-			ITypedArticle ea = CoreModelServiceHolder.get().create(ITypedArticle.class);
+			IArticle ea = CoreModelServiceHolder.get().create(IArticle.class);
 			ea.setTyp(ArticleTyp.EIGENARTIKEL);
 			ea.setName("Neues Produkt");
 			CoreModelServiceHolder.get().save(ea);
 			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD,
-				ITypedArticle.class);
-			ContextServiceHolder.get().getRootContext()
-				.setNamed("ch.elexis.core.ui.eigenartikel.selection", ea);
+				IArticle.class);
+			selection(ea);
 		}
 	};
 	
@@ -88,7 +87,7 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 					if (CoreHub.getLocalLockService().isLocked(selectedObject)) {
 						CoreHub.getLocalLockService().releaseLock(selectedObject);
 						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD,
-							ITypedArticle.class);
+							IArticle.class);
 						currentLock = null;
 					} else {
 						LockResponse lr = CoreHub.getLocalLockService().acquireLock(selectedObject);
@@ -104,7 +103,7 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 		};
 	
 	private RestrictedAction deleteAction =
-		new LockRequestingRestrictedAction<ITypedArticle>(ACLContributor.EIGENARTIKEL_MODIFY,
+		new LockRequestingRestrictedAction<IArticle>(ACLContributor.EIGENARTIKEL_MODIFY,
 			ch.elexis.core.ui.views.artikel.Messages.ArtikelContextMenu_deleteAction) {
 			{
 				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
@@ -113,14 +112,14 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 			}
 			
 			@Override
-			public ITypedArticle getTargetedObject(){
+			public IArticle getTargetedObject(){
 				java.util.Optional<?> selected = ContextServiceHolder.get().getRootContext()
 					.getNamed("ch.elexis.core.ui.eigenartikel.selection");
-				return (ITypedArticle) selected.orElse(null);
+				return (IArticle) selected.orElse(null);
 			}
 			
 			@Override
-			public void doRun(ITypedArticle act){
+			public void doRun(IArticle act){
 				if (MessageDialog.openConfirm(site.getShell(),
 					ch.elexis.core.ui.views.artikel.Messages.ArtikelContextMenu_deleteActionConfirmCaption,
 					MessageFormat.format(
@@ -133,14 +132,14 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 					}
 				}
 				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD,
-					ITypedArticle.class);
+					IArticle.class);
 			}
 		};
 	
 	@Inject
 	@Optional
 	public void lockAquired(
-		@UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) ITypedArticle typedArticle){
+		@UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) IArticle typedArticle){
 		if (epc != null && !epc.isDisposed()
 			&& typedArticle.getId().equals(selectedObject.getId())) {
 			epc.setUnlocked(true);
@@ -150,7 +149,7 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 	@Inject
 	@Optional
 	public void lockReleased(
-		@UIEventTopic(ElexisEventTopics.EVENT_LOCK_RELEASED) ITypedArticle typedArticle){
+		@UIEventTopic(ElexisEventTopics.EVENT_LOCK_RELEASED) IArticle typedArticle){
 		if (epc != null && !epc.isDisposed()
 			&& typedArticle.getId().equals(selectedObject.getId())) {
 			epc.setUnlocked(false);
@@ -159,7 +158,7 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 	
 	@Inject
 	public void selection(
-		@Optional @Named("ch.elexis.core.ui.eigenartikel.selection") ITypedArticle typedArticle){
+		@Optional @Named("ch.elexis.core.ui.eigenartikel.selection") IArticle typedArticle){
 		display(typedArticle);
 	}
 	
@@ -208,7 +207,7 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 	
 	@Override
 	public Class<?> getElementClass(){
-		return ITypedArticle.class;
+		return IArticle.class;
 	}
 	
 	@Override
@@ -217,22 +216,22 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 		createAction.reflectRight();
 		deleteAction.reflectRight();
 		
-		if (obj instanceof ITypedArticle) {
-			selectedObject = (ITypedArticle) obj;
+		if (obj instanceof IArticle) {
+			selectedObject = (IArticle) obj;
 			if (currentLock != null) {
 				CoreHub.getLocalLockService().releaseLock(currentLock);
 				toggleLockAction.setChecked(false);
 				currentLock = null;
 			}
-			ITypedArticle ea = (ITypedArticle) obj;
-			toggleLockAction.setEnabled(ea.isProduct());
+			IArticle article = (IArticle) obj;
+			toggleLockAction.setEnabled(article.isProduct());
 			
-			if(ea.isProduct()) {
+			if(article.isProduct()) {
 				layout.topControl = compProduct;
-				epc.setProductEigenartikel(ea);
+				epc.setProductEigenartikel(article);
 			} else {
 				layout.topControl = compArticle;
-				ec.setEigenartikel(ea);
+				ec.setEigenartikel(article);
 			}
 			
 		} else {

@@ -32,8 +32,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.dialogs.SelectionDialog;
 
-import ch.elexis.data.Bestellung;
-import ch.elexis.data.Query;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.model.IOrder;
+import ch.elexis.core.services.IQuery;
 import ch.rgw.tools.TimeTool;
 
 public class SelectBestellungDialog extends SelectionDialog {
@@ -87,8 +88,8 @@ public class SelectBestellungDialog extends SelectionDialog {
 		table.setFont(container.getFont());
 		table.setHeaderVisible(true);
 		
-		Query<Bestellung> qbe = new Query<Bestellung>(Bestellung.class);
-		fTableViewer.setInput(qbe.execute());
+		IQuery<IOrder> query = CoreModelServiceHolder.get().getQuery(IOrder.class);
+		fTableViewer.setInput(query.execute());
 		
 		return parent;
 	}
@@ -100,8 +101,8 @@ public class SelectBestellungDialog extends SelectionDialog {
 			
 			@Override
 			public int compare(Viewer viewer, Object b1, Object b2){
-				setTimeTool((Bestellung) b1, t1);
-				setTimeTool((Bestellung) b2, t2);
+				setTimeTool((IOrder) b1, t1);
+				setTimeTool((IOrder) b2, t2);
 				if (t1.after(t2))
 					return -1;
 				if (t2.after(t1))
@@ -109,9 +110,9 @@ public class SelectBestellungDialog extends SelectionDialog {
 				return 0;
 			}
 			
-			private void setTimeTool(Bestellung bestellung, TimeTool timeTool){
+			private void setTimeTool(IOrder order, TimeTool timeTool){
 				try {
-					String[] i = bestellung.getId().split(":"); //$NON-NLS-1$
+					String[] i = order.getId().split(":"); //$NON-NLS-1$
 					timeTool.set(i[1]);
 				} catch (Exception e) {
 					timeTool.set("1.1.1970");
@@ -128,8 +129,8 @@ public class SelectBestellungDialog extends SelectionDialog {
 			
 			@Override
 			public String getText(Object element){
-				Bestellung bestellung = (Bestellung) element;
-				if (bestellung.isDone()) {
+				IOrder order = (IOrder) element;
+				if (order.isDone()) {
 					return "*";
 				} else {
 					return "";
@@ -145,8 +146,8 @@ public class SelectBestellungDialog extends SelectionDialog {
 			
 			@Override
 			public String getText(Object element){
-				Bestellung bestellung = (Bestellung) element;
-				String[] i = bestellung.getId().split(":"); //$NON-NLS-1$
+				IOrder order = (IOrder) element;
+				String[] i = order.getId().split(":"); //$NON-NLS-1$
 				
 				if (i.length > 1) {
 					date.set(i[1]);
@@ -163,8 +164,8 @@ public class SelectBestellungDialog extends SelectionDialog {
 		title.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
-				Bestellung bestellung = (Bestellung) element;
-				String[] i = bestellung.getId().split(":"); //$NON-NLS-1$
+				IOrder order = (IOrder) element;
+				String[] i = order.getId().split(":"); //$NON-NLS-1$
 				
 				if (i.length > 0)
 					return i[0];

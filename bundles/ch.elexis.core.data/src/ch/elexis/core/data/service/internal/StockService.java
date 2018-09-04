@@ -24,6 +24,7 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
@@ -38,13 +39,13 @@ public class StockService implements IStockService {
 	private static Logger log = LoggerFactory.getLogger(StockService.class);
 	
 	@Override
-	public Integer getCumulatedStockForArticle(IArticle article){
-		INamedQuery<Integer> query = CoreModelServiceHolder.get().getNamedQueryByName(Integer.class,
+	public Long getCumulatedStockForArticle(IArticle article){
+		INamedQuery<Long> query = CoreModelServiceHolder.get().getNamedQueryByName(Long.class,
 			IStockEntry.class, "StockEntry_SumCurrentStock.articleId.articleType");
 		Optional<String> storeToString = StoreToStringServiceHolder.get().storeToString(article);
 		if (storeToString.isPresent()) {
 			String[] parts = storeToString.get().split(IStoreToStringContribution.DOUBLECOLON);
-			List<Integer> results =
+			List<Long> results =
 				query.executeWithParameters(CoreModelServiceHolder.get().getParameterMap(
 					"articleId", parts[1], "articleType", parts[0]));
 			if (!results.isEmpty()) {
@@ -190,19 +191,19 @@ public class StockService implements IStockService {
 	
 	@Override
 	public Availability getCumulatedAvailabilityForArticle(IArticle article){
-		INamedQuery<Integer> query = null;
+		INamedQuery<Long> query = null;
 		if (isTriggerStockAvailabilityOnBelow()) {
-			query = CoreModelServiceHolder.get().getNamedQueryByName(Integer.class,
+			query = CoreModelServiceHolder.get().getNamedQueryByName(Long.class,
 				IStockEntry.class, "StockEntry_AvailableCurrentBelowStock.articleId.articleType");
 		} else {
-			query = CoreModelServiceHolder.get().getNamedQueryByName(Integer.class,
+			query = CoreModelServiceHolder.get().getNamedQueryByName(Long.class,
 				IStockEntry.class, "StockEntry_AvailableCurrentStock.articleId.articleType");
 		}
-		List<Integer> results = query.executeWithParameters(CoreModelServiceHolder.get()
+		List<Long> results = query.executeWithParameters(CoreModelServiceHolder.get()
 			.getParameterMap("articleId", article.getId(), "articleType",
 				article.getCodeSystemName()));
 		if (!results.isEmpty()) {
-			Integer value = results.get(0);
+			Long value = results.get(0);
 			if (value > 1) {
 				return Availability.IN_STOCK;
 			} else if (value == 1) {
@@ -211,11 +212,6 @@ public class StockService implements IStockService {
 			return Availability.OUT_OF_STOCK;
 		}
 		return null;
-	}
-	
-	public static Availability determineAvailability(IStockEntry se){
-		return IStockService.determineAvailability(se.getCurrentStock(), se.getMinimumStock(),
-			isTriggerStockAvailabilityOnBelow());
 	}
 	
 	public List<IStockEntry> getAllStockEntries(){
@@ -265,9 +261,24 @@ public class StockService implements IStockService {
 		return query.execute();
 	}
 	
+	@Override
+	public IStock getDefaultStock(){
+		IQuery<IStock> query = CoreModelServiceHolder.get().getQuery(IStock.class, true, false);
+		query.and(ModelPackage.Literals.ISTOCK__CODE, COMPARATOR.EQUALS, "STD");
+		List<IStock> existing = query.execute();
+		if(!existing.isEmpty()) {
+			return existing.get(0);
+		} else {
+			IStock stock = CoreModelServiceHolder.get().create(IStock.class);
+			stock.setCode("STD");
+			CoreModelServiceHolder.get().save(stock);
+			return stock;
+		}
+	}
+	
 	public Availability getArticleAvailabilityForStock(IStock stock, String article){
 		IStockEntry se = findStockEntryForArticleInStock(stock, article);
-		return IStockService.determineAvailability(se.getCurrentStock(), se.getMinimumStock(),
+		return determineAvailability(se.getCurrentStock(), se.getMinimumStock(),
 			isTriggerStockAvailabilityOnBelow());
 	}
 	
@@ -313,9 +324,9 @@ public class StockService implements IStockService {
 		IStockEntry stockEntry = findStockEntryForArticleInStock(stock, article);
 		if (stockEntry != null) {
 			LockResponse lr = CoreHub.getLocalLockService()
-				.acquireLockBlocking((StockEntry) stockEntry, 1, new NullProgressMonitor());
+				.acquireLockBlocking(stockEntry, 1, new NullProgressMonitor());
 			if (lr.isOk()) {
-				((StockEntry) stockEntry).delete();
+				CoreModelServiceHolder.get().delete(stockEntry);
 				CoreHub.getLocalLockService().releaseLock(((StockEntry) stockEntry));
 			} else {
 				log.warn("Could not unstore article [{}]", article);

@@ -8,13 +8,14 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.interfaces.IOrderEntry;
-import ch.elexis.core.data.service.StockService;
-import ch.elexis.core.data.services.IStockService.Availability;
+import ch.elexis.core.data.service.OrderServiceHolder;
+import ch.elexis.core.data.service.StockServiceHolder;
+import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IOrderEntry;
+import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.services.IStockService.Availability;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.data.UiMandant;
-import ch.elexis.data.Artikel;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.StockEntry;
 
@@ -26,16 +27,22 @@ public class StockEntryLabelProvider extends LabelProvider
 	}
 	
 	public String getColumnText(Object element, int columnIndex){
-		if (element instanceof StockEntry) {
-			StockEntry se = (StockEntry) element;
-			Artikel article = se.getArticle();
+		if (element instanceof IStockEntry) {
+			IStockEntry se = (IStockEntry) element;
+			IArticle article = se.getArticle();
 			switch (columnIndex) {
 			case 0:
 				return se.getStock().getCode();
 			case 1:
-				return (article != null) ? article.getPharmaCode() : "";
+				if (article != null) {
+					String code = article.getCode();
+					if (code != null && !code.equals(article.getId())) {
+						return code;
+					}
+				}
+				return "";
 			case 2:
-				return (article != null) ? article.getEAN() : "";
+				return (article != null) ? article.getGtin() : "";
 			case 3:
 				return (article != null) ? article.getLabel() : "";
 			case 4:
@@ -62,14 +69,14 @@ public class StockEntryLabelProvider extends LabelProvider
 	 * Lagerartikel are shown in blue, articles that should be ordered are shown in red
 	 */
 	public Color getForeground(Object element, int columnIndex){
-		if (element instanceof StockEntry) {
-			StockEntry se = (StockEntry) element;
+		if (element instanceof IStockEntry) {
+			IStockEntry se = (IStockEntry) element;
 			
-			IOrderEntry order = CoreHub.getOrderService().findOpenOrderEntryForStockEntry(se);
+			IOrderEntry order = OrderServiceHolder.get().findOpenOrderEntryForStockEntry(se);
 			if (order != null) {
 				return UiDesk.getColor(UiDesk.COL_LIGHTBLUE);
 			}
-			Availability availability = StockService.determineAvailability(se);
+			Availability availability = StockServiceHolder.get().determineAvailability(se);
 			if (availability != null) {
 				switch (availability) {
 				case CRITICAL_STOCK:

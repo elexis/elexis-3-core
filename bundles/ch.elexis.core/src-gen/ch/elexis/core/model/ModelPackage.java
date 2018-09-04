@@ -3065,149 +3065,13 @@ public interface ModelPackage extends EPackage {
 	int IARTICLE__OBLIGATION = IDENTIFIABLE_FEATURE_COUNT + 12;
 
 	/**
-	 * The number of structural features of the '<em>IArticle</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IARTICLE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 13;
-
-	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.ITypedArticle <em>ITyped Article</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.ITypedArticle
-	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getITypedArticle()
-	 * @generated
-	 */
-	int ITYPED_ARTICLE = 28;
-
-	/**
-	 * The feature id for the '<em><b>Code</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITYPED_ARTICLE__CODE = IARTICLE__CODE;
-
-	/**
-	 * The feature id for the '<em><b>Text</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITYPED_ARTICLE__TEXT = IARTICLE__TEXT;
-
-	/**
-	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITYPED_ARTICLE__DELETED = IARTICLE__DELETED;
-
-	/**
-	 * The feature id for the '<em><b>Gtin</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITYPED_ARTICLE__GTIN = IARTICLE__GTIN;
-
-	/**
-	 * The feature id for the '<em><b>Atc Code</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITYPED_ARTICLE__ATC_CODE = IARTICLE__ATC_CODE;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITYPED_ARTICLE__NAME = IARTICLE__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Selling Size</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITYPED_ARTICLE__SELLING_SIZE = IARTICLE__SELLING_SIZE;
-
-	/**
-	 * The feature id for the '<em><b>Package Size</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITYPED_ARTICLE__PACKAGE_SIZE = IARTICLE__PACKAGE_SIZE;
-
-	/**
-	 * The feature id for the '<em><b>Package Unit</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITYPED_ARTICLE__PACKAGE_UNIT = IARTICLE__PACKAGE_UNIT;
-
-	/**
-	 * The feature id for the '<em><b>Product</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITYPED_ARTICLE__PRODUCT = IARTICLE__PRODUCT;
-
-	/**
-	 * The feature id for the '<em><b>Purchase Price</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITYPED_ARTICLE__PURCHASE_PRICE = IARTICLE__PURCHASE_PRICE;
-
-	/**
-	 * The feature id for the '<em><b>Selling Price</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITYPED_ARTICLE__SELLING_PRICE = IARTICLE__SELLING_PRICE;
-
-	/**
-	 * The feature id for the '<em><b>Obligation</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITYPED_ARTICLE__OBLIGATION = IARTICLE__OBLIGATION;
-
-	/**
 	 * The feature id for the '<em><b>Typ</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ITYPED_ARTICLE__TYP = IARTICLE_FEATURE_COUNT + 0;
+	int IARTICLE__TYP = IDENTIFIABLE_FEATURE_COUNT + 13;
 
 	/**
 	 * The feature id for the '<em><b>Sub Typ</b></em>' attribute.
@@ -3216,16 +3080,16 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITYPED_ARTICLE__SUB_TYP = IARTICLE_FEATURE_COUNT + 1;
+	int IARTICLE__SUB_TYP = IDENTIFIABLE_FEATURE_COUNT + 14;
 
 	/**
-	 * The number of structural features of the '<em>ITyped Article</em>' class.
+	 * The number of structural features of the '<em>IArticle</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ITYPED_ARTICLE_FEATURE_COUNT = IARTICLE_FEATURE_COUNT + 2;
+	int IARTICLE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 15;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.WithExtInfo <em>With Ext Info</em>}' class.
@@ -3235,7 +3099,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getWithExtInfo()
 	 * @generated
 	 */
-	int WITH_EXT_INFO = 29;
+	int WITH_EXT_INFO = 28;
 
 	/**
 	 * The number of structural features of the '<em>With Ext Info</em>' class.
@@ -3254,7 +3118,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRole()
 	 * @generated
 	 */
-	int IROLE = 30;
+	int IROLE = 29;
 
 	/**
 	 * The number of structural features of the '<em>IRole</em>' class.
@@ -3273,7 +3137,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBlob()
 	 * @generated
 	 */
-	int IBLOB = 31;
+	int IBLOB = 30;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -3319,7 +3183,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBillableVerifier()
 	 * @generated
 	 */
-	int IBILLABLE_VERIFIER = 32;
+	int IBILLABLE_VERIFIER = 31;
 
 	/**
 	 * The number of structural features of the '<em>IBillable Verifier</em>' class.
@@ -3338,7 +3202,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBillableOptifier()
 	 * @generated
 	 */
-	int IBILLABLE_OPTIFIER = 33;
+	int IBILLABLE_OPTIFIER = 32;
 
 	/**
 	 * The number of structural features of the '<em>IBillable Optifier</em>' class.
@@ -3357,7 +3221,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIEncounter()
 	 * @generated
 	 */
-	int IENCOUNTER = 34;
+	int IENCOUNTER = 33;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -3405,13 +3269,31 @@ public interface ModelPackage extends EPackage {
 	int IENCOUNTER__MANDATOR = IDENTIFIABLE_FEATURE_COUNT + 4;
 
 	/**
+	 * The feature id for the '<em><b>Billed</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IENCOUNTER__BILLED = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IENCOUNTER__DATE = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
 	 * The number of structural features of the '<em>IEncounter</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IENCOUNTER_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 5;
+	int IENCOUNTER_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IBilled <em>IBilled</em>}' class.
@@ -3421,7 +3303,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBilled()
 	 * @generated
 	 */
-	int IBILLED = 35;
+	int IBILLED = 34;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -3433,13 +3315,332 @@ public interface ModelPackage extends EPackage {
 	int IBILLED__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Billable</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBILLED__BILLABLE = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Amount</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBILLED__AMOUNT = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
 	 * The number of structural features of the '<em>IBilled</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IBILLED_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 1;
+	int IBILLED_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IStock <em>IStock</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IStock
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIStock()
+	 * @generated
+	 */
+	int ISTOCK = 35;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTOCK__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTOCK__CODE = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Driver Uuid</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTOCK__DRIVER_UUID = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Driver Config</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTOCK__DRIVER_CONFIG = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Priority</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTOCK__PRIORITY = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Owner</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTOCK__OWNER = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The number of structural features of the '<em>IStock</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTOCK_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IStockEntry <em>IStock Entry</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IStockEntry
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIStockEntry()
+	 * @generated
+	 */
+	int ISTOCK_ENTRY = 36;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTOCK_ENTRY__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Minimum Stock</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTOCK_ENTRY__MINIMUM_STOCK = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Current Stock</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTOCK_ENTRY__CURRENT_STOCK = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Maximum Stock</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTOCK_ENTRY__MAXIMUM_STOCK = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Fraction Units</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTOCK_ENTRY__FRACTION_UNITS = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Stock</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTOCK_ENTRY__STOCK = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Article</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTOCK_ENTRY__ARTICLE = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The feature id for the '<em><b>Provider</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTOCK_ENTRY__PROVIDER = IDENTIFIABLE_FEATURE_COUNT + 7;
+
+	/**
+	 * The number of structural features of the '<em>IStock Entry</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTOCK_ENTRY_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 8;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IOrderEntry <em>IOrder Entry</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IOrderEntry
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIOrderEntry()
+	 * @generated
+	 */
+	int IORDER_ENTRY = 37;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORDER_ENTRY__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Order</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORDER_ENTRY__ORDER = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Stock</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORDER_ENTRY__STOCK = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Amount</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORDER_ENTRY__AMOUNT = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Article</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORDER_ENTRY__ARTICLE = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Provider</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORDER_ENTRY__PROVIDER = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>State</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORDER_ENTRY__STATE = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The number of structural features of the '<em>IOrder Entry</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORDER_ENTRY_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 7;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IOrder <em>IOrder</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IOrder
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIOrder()
+	 * @generated
+	 */
+	int IORDER = 38;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORDER__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Entries</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORDER__ENTRIES = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Timestamp</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORDER__TIMESTAMP = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORDER__NAME = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The number of structural features of the '<em>IOrder</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORDER_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IContact <em>IContact</em>}'.
@@ -5064,36 +5265,26 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIArticle_Obligation();
 
 	/**
-	 * Returns the meta object for class '{@link ch.elexis.core.model.ITypedArticle <em>ITyped Article</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>ITyped Article</em>'.
-	 * @see ch.elexis.core.model.ITypedArticle
-	 * @generated
-	 */
-	EClass getITypedArticle();
-
-	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ITypedArticle#getTyp <em>Typ</em>}'.
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IArticle#getTyp <em>Typ</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Typ</em>'.
-	 * @see ch.elexis.core.model.ITypedArticle#getTyp()
-	 * @see #getITypedArticle()
+	 * @see ch.elexis.core.model.IArticle#getTyp()
+	 * @see #getIArticle()
 	 * @generated
 	 */
-	EAttribute getITypedArticle_Typ();
+	EAttribute getIArticle_Typ();
 
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ITypedArticle#getSubTyp <em>Sub Typ</em>}'.
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IArticle#getSubTyp <em>Sub Typ</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Sub Typ</em>'.
-	 * @see ch.elexis.core.model.ITypedArticle#getSubTyp()
-	 * @see #getITypedArticle()
+	 * @see ch.elexis.core.model.IArticle#getSubTyp()
+	 * @see #getIArticle()
 	 * @generated
 	 */
-	EAttribute getITypedArticle_SubTyp();
+	EAttribute getIArticle_SubTyp();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.WithExtInfo <em>With Ext Info</em>}'.
@@ -5222,6 +5413,28 @@ public interface ModelPackage extends EPackage {
 	EReference getIEncounter_Mandator();
 
 	/**
+	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IEncounter#getBilled <em>Billed</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Billed</em>'.
+	 * @see ch.elexis.core.model.IEncounter#getBilled()
+	 * @see #getIEncounter()
+	 * @generated
+	 */
+	EReference getIEncounter_Billed();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IEncounter#getDate <em>Date</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Date</em>'.
+	 * @see ch.elexis.core.model.IEncounter#getDate()
+	 * @see #getIEncounter()
+	 * @generated
+	 */
+	EAttribute getIEncounter_Date();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IBilled <em>IBilled</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5230,6 +5443,299 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getIBilled();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IBilled#getBillable <em>Billable</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Billable</em>'.
+	 * @see ch.elexis.core.model.IBilled#getBillable()
+	 * @see #getIBilled()
+	 * @generated
+	 */
+	EReference getIBilled_Billable();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IBilled#getAmount <em>Amount</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Amount</em>'.
+	 * @see ch.elexis.core.model.IBilled#getAmount()
+	 * @see #getIBilled()
+	 * @generated
+	 */
+	EAttribute getIBilled_Amount();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IStock <em>IStock</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IStock</em>'.
+	 * @see ch.elexis.core.model.IStock
+	 * @generated
+	 */
+	EClass getIStock();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IStock#getCode <em>Code</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Code</em>'.
+	 * @see ch.elexis.core.model.IStock#getCode()
+	 * @see #getIStock()
+	 * @generated
+	 */
+	EAttribute getIStock_Code();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IStock#getDriverUuid <em>Driver Uuid</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Driver Uuid</em>'.
+	 * @see ch.elexis.core.model.IStock#getDriverUuid()
+	 * @see #getIStock()
+	 * @generated
+	 */
+	EAttribute getIStock_DriverUuid();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IStock#getDriverConfig <em>Driver Config</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Driver Config</em>'.
+	 * @see ch.elexis.core.model.IStock#getDriverConfig()
+	 * @see #getIStock()
+	 * @generated
+	 */
+	EAttribute getIStock_DriverConfig();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IStock#getPriority <em>Priority</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Priority</em>'.
+	 * @see ch.elexis.core.model.IStock#getPriority()
+	 * @see #getIStock()
+	 * @generated
+	 */
+	EAttribute getIStock_Priority();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IStock#getOwner <em>Owner</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Owner</em>'.
+	 * @see ch.elexis.core.model.IStock#getOwner()
+	 * @see #getIStock()
+	 * @generated
+	 */
+	EReference getIStock_Owner();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IStockEntry <em>IStock Entry</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IStock Entry</em>'.
+	 * @see ch.elexis.core.model.IStockEntry
+	 * @generated
+	 */
+	EClass getIStockEntry();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IStockEntry#getMinimumStock <em>Minimum Stock</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Minimum Stock</em>'.
+	 * @see ch.elexis.core.model.IStockEntry#getMinimumStock()
+	 * @see #getIStockEntry()
+	 * @generated
+	 */
+	EAttribute getIStockEntry_MinimumStock();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IStockEntry#getCurrentStock <em>Current Stock</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Current Stock</em>'.
+	 * @see ch.elexis.core.model.IStockEntry#getCurrentStock()
+	 * @see #getIStockEntry()
+	 * @generated
+	 */
+	EAttribute getIStockEntry_CurrentStock();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IStockEntry#getMaximumStock <em>Maximum Stock</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Maximum Stock</em>'.
+	 * @see ch.elexis.core.model.IStockEntry#getMaximumStock()
+	 * @see #getIStockEntry()
+	 * @generated
+	 */
+	EAttribute getIStockEntry_MaximumStock();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IStockEntry#getFractionUnits <em>Fraction Units</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Fraction Units</em>'.
+	 * @see ch.elexis.core.model.IStockEntry#getFractionUnits()
+	 * @see #getIStockEntry()
+	 * @generated
+	 */
+	EAttribute getIStockEntry_FractionUnits();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IStockEntry#getStock <em>Stock</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Stock</em>'.
+	 * @see ch.elexis.core.model.IStockEntry#getStock()
+	 * @see #getIStockEntry()
+	 * @generated
+	 */
+	EReference getIStockEntry_Stock();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IStockEntry#getArticle <em>Article</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Article</em>'.
+	 * @see ch.elexis.core.model.IStockEntry#getArticle()
+	 * @see #getIStockEntry()
+	 * @generated
+	 */
+	EReference getIStockEntry_Article();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IStockEntry#getProvider <em>Provider</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Provider</em>'.
+	 * @see ch.elexis.core.model.IStockEntry#getProvider()
+	 * @see #getIStockEntry()
+	 * @generated
+	 */
+	EReference getIStockEntry_Provider();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IOrderEntry <em>IOrder Entry</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IOrder Entry</em>'.
+	 * @see ch.elexis.core.model.IOrderEntry
+	 * @generated
+	 */
+	EClass getIOrderEntry();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IOrderEntry#getOrder <em>Order</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Order</em>'.
+	 * @see ch.elexis.core.model.IOrderEntry#getOrder()
+	 * @see #getIOrderEntry()
+	 * @generated
+	 */
+	EReference getIOrderEntry_Order();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IOrderEntry#getStock <em>Stock</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Stock</em>'.
+	 * @see ch.elexis.core.model.IOrderEntry#getStock()
+	 * @see #getIOrderEntry()
+	 * @generated
+	 */
+	EReference getIOrderEntry_Stock();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IOrderEntry#getAmount <em>Amount</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Amount</em>'.
+	 * @see ch.elexis.core.model.IOrderEntry#getAmount()
+	 * @see #getIOrderEntry()
+	 * @generated
+	 */
+	EAttribute getIOrderEntry_Amount();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IOrderEntry#getArticle <em>Article</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Article</em>'.
+	 * @see ch.elexis.core.model.IOrderEntry#getArticle()
+	 * @see #getIOrderEntry()
+	 * @generated
+	 */
+	EReference getIOrderEntry_Article();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IOrderEntry#getProvider <em>Provider</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Provider</em>'.
+	 * @see ch.elexis.core.model.IOrderEntry#getProvider()
+	 * @see #getIOrderEntry()
+	 * @generated
+	 */
+	EReference getIOrderEntry_Provider();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IOrderEntry#getState <em>State</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>State</em>'.
+	 * @see ch.elexis.core.model.IOrderEntry#getState()
+	 * @see #getIOrderEntry()
+	 * @generated
+	 */
+	EAttribute getIOrderEntry_State();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IOrder <em>IOrder</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IOrder</em>'.
+	 * @see ch.elexis.core.model.IOrder
+	 * @generated
+	 */
+	EClass getIOrder();
+
+	/**
+	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IOrder#getEntries <em>Entries</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Entries</em>'.
+	 * @see ch.elexis.core.model.IOrder#getEntries()
+	 * @see #getIOrder()
+	 * @generated
+	 */
+	EReference getIOrder_Entries();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IOrder#getTimestamp <em>Timestamp</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Timestamp</em>'.
+	 * @see ch.elexis.core.model.IOrder#getTimestamp()
+	 * @see #getIOrder()
+	 * @generated
+	 */
+	EAttribute getIOrder_Timestamp();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IOrder#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see ch.elexis.core.model.IOrder#getName()
+	 * @see #getIOrder()
+	 * @generated
+	 */
+	EAttribute getIOrder_Name();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -6510,22 +7016,12 @@ public interface ModelPackage extends EPackage {
 		EAttribute IARTICLE__OBLIGATION = eINSTANCE.getIArticle_Obligation();
 
 		/**
-		 * The meta object literal for the '{@link ch.elexis.core.model.ITypedArticle <em>ITyped Article</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see ch.elexis.core.model.ITypedArticle
-		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getITypedArticle()
-		 * @generated
-		 */
-		EClass ITYPED_ARTICLE = eINSTANCE.getITypedArticle();
-
-		/**
 		 * The meta object literal for the '<em><b>Typ</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ITYPED_ARTICLE__TYP = eINSTANCE.getITypedArticle_Typ();
+		EAttribute IARTICLE__TYP = eINSTANCE.getIArticle_Typ();
 
 		/**
 		 * The meta object literal for the '<em><b>Sub Typ</b></em>' attribute feature.
@@ -6533,7 +7029,7 @@ public interface ModelPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ITYPED_ARTICLE__SUB_TYP = eINSTANCE.getITypedArticle_SubTyp();
+		EAttribute IARTICLE__SUB_TYP = eINSTANCE.getIArticle_SubTyp();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.WithExtInfo <em>With Ext Info</em>}' class.
@@ -6644,6 +7140,22 @@ public interface ModelPackage extends EPackage {
 		EReference IENCOUNTER__MANDATOR = eINSTANCE.getIEncounter_Mandator();
 
 		/**
+		 * The meta object literal for the '<em><b>Billed</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IENCOUNTER__BILLED = eINSTANCE.getIEncounter_Billed();
+
+		/**
+		 * The meta object literal for the '<em><b>Date</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IENCOUNTER__DATE = eINSTANCE.getIEncounter_Date();
+
+		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IBilled <em>IBilled</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -6652,6 +7164,230 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EClass IBILLED = eINSTANCE.getIBilled();
+
+		/**
+		 * The meta object literal for the '<em><b>Billable</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IBILLED__BILLABLE = eINSTANCE.getIBilled_Billable();
+
+		/**
+		 * The meta object literal for the '<em><b>Amount</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IBILLED__AMOUNT = eINSTANCE.getIBilled_Amount();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IStock <em>IStock</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IStock
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIStock()
+		 * @generated
+		 */
+		EClass ISTOCK = eINSTANCE.getIStock();
+
+		/**
+		 * The meta object literal for the '<em><b>Code</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ISTOCK__CODE = eINSTANCE.getIStock_Code();
+
+		/**
+		 * The meta object literal for the '<em><b>Driver Uuid</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ISTOCK__DRIVER_UUID = eINSTANCE.getIStock_DriverUuid();
+
+		/**
+		 * The meta object literal for the '<em><b>Driver Config</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ISTOCK__DRIVER_CONFIG = eINSTANCE.getIStock_DriverConfig();
+
+		/**
+		 * The meta object literal for the '<em><b>Priority</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ISTOCK__PRIORITY = eINSTANCE.getIStock_Priority();
+
+		/**
+		 * The meta object literal for the '<em><b>Owner</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ISTOCK__OWNER = eINSTANCE.getIStock_Owner();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IStockEntry <em>IStock Entry</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IStockEntry
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIStockEntry()
+		 * @generated
+		 */
+		EClass ISTOCK_ENTRY = eINSTANCE.getIStockEntry();
+
+		/**
+		 * The meta object literal for the '<em><b>Minimum Stock</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ISTOCK_ENTRY__MINIMUM_STOCK = eINSTANCE.getIStockEntry_MinimumStock();
+
+		/**
+		 * The meta object literal for the '<em><b>Current Stock</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ISTOCK_ENTRY__CURRENT_STOCK = eINSTANCE.getIStockEntry_CurrentStock();
+
+		/**
+		 * The meta object literal for the '<em><b>Maximum Stock</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ISTOCK_ENTRY__MAXIMUM_STOCK = eINSTANCE.getIStockEntry_MaximumStock();
+
+		/**
+		 * The meta object literal for the '<em><b>Fraction Units</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ISTOCK_ENTRY__FRACTION_UNITS = eINSTANCE.getIStockEntry_FractionUnits();
+
+		/**
+		 * The meta object literal for the '<em><b>Stock</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ISTOCK_ENTRY__STOCK = eINSTANCE.getIStockEntry_Stock();
+
+		/**
+		 * The meta object literal for the '<em><b>Article</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ISTOCK_ENTRY__ARTICLE = eINSTANCE.getIStockEntry_Article();
+
+		/**
+		 * The meta object literal for the '<em><b>Provider</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ISTOCK_ENTRY__PROVIDER = eINSTANCE.getIStockEntry_Provider();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IOrderEntry <em>IOrder Entry</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IOrderEntry
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIOrderEntry()
+		 * @generated
+		 */
+		EClass IORDER_ENTRY = eINSTANCE.getIOrderEntry();
+
+		/**
+		 * The meta object literal for the '<em><b>Order</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IORDER_ENTRY__ORDER = eINSTANCE.getIOrderEntry_Order();
+
+		/**
+		 * The meta object literal for the '<em><b>Stock</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IORDER_ENTRY__STOCK = eINSTANCE.getIOrderEntry_Stock();
+
+		/**
+		 * The meta object literal for the '<em><b>Amount</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IORDER_ENTRY__AMOUNT = eINSTANCE.getIOrderEntry_Amount();
+
+		/**
+		 * The meta object literal for the '<em><b>Article</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IORDER_ENTRY__ARTICLE = eINSTANCE.getIOrderEntry_Article();
+
+		/**
+		 * The meta object literal for the '<em><b>Provider</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IORDER_ENTRY__PROVIDER = eINSTANCE.getIOrderEntry_Provider();
+
+		/**
+		 * The meta object literal for the '<em><b>State</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IORDER_ENTRY__STATE = eINSTANCE.getIOrderEntry_State();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IOrder <em>IOrder</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IOrder
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIOrder()
+		 * @generated
+		 */
+		EClass IORDER = eINSTANCE.getIOrder();
+
+		/**
+		 * The meta object literal for the '<em><b>Entries</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IORDER__ENTRIES = eINSTANCE.getIOrder_Entries();
+
+		/**
+		 * The meta object literal for the '<em><b>Timestamp</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IORDER__TIMESTAMP = eINSTANCE.getIOrder_Timestamp();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IORDER__NAME = eINSTANCE.getIOrder_Name();
 
 	}
 

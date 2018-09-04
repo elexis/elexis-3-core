@@ -219,14 +219,12 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IArticle/purchasePrice"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IArticle/sellingPrice"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IArticle/obligation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IArticle/typ"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IArticle/subTyp"/>
       <genOperations ecoreOperation="model.ecore#//IArticle/isProduct"/>
       <genOperations ecoreOperation="model.ecore#//IArticle/getPackages"/>
-    </genClasses>
-    <genClasses image="false" ecoreClass="model.ecore#//ITypedArticle">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITypedArticle/typ"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITypedArticle/subTyp"/>
-      <genOperations ecoreOperation="model.ecore#//ITypedArticle/setCode">
-        <genParameters ecoreParameter="model.ecore#//ITypedArticle/setCode/code"/>
+      <genOperations ecoreOperation="model.ecore#//IArticle/setCode">
+        <genParameters ecoreParameter="model.ecore#//IArticle/setCode/code"/>
       </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//WithExtInfo">
@@ -271,7 +269,55 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IEncounter/patient"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IEncounter/coverage"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IEncounter/mandator"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IEncounter/billed"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IEncounter/date"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="model.ecore#//IBilled"/>
+    <genClasses image="false" ecoreClass="model.ecore#//IBilled">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IBilled/billable"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBilled/amount"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IStock">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IStock/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IStock/driverUuid"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IStock/driverConfig"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IStock/priority"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IStock/owner"/>
+      <genOperations ecoreOperation="model.ecore#//IStock/isCommissioningSystem"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IStockEntry">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IStockEntry/minimumStock"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IStockEntry/currentStock"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IStockEntry/maximumStock"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IStockEntry/fractionUnits"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IStockEntry/stock"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IStockEntry/article"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IStockEntry/provider"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IOrderEntry">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IOrderEntry/order"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IOrderEntry/stock"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IOrderEntry/amount"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IOrderEntry/article"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IOrderEntry/provider"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IOrderEntry/state"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IOrder">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IOrder/entries"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IOrder/timestamp"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IOrder/name"/>
+      <genOperations ecoreOperation="model.ecore#//IOrder/addEntry">
+        <genParameters ecoreParameter="model.ecore#//IOrder/addEntry/article"/>
+        <genParameters ecoreParameter="model.ecore#//IOrder/addEntry/stock"/>
+        <genParameters ecoreParameter="model.ecore#//IOrder/addEntry/provider"/>
+        <genParameters ecoreParameter="model.ecore#//IOrder/addEntry/amount"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IOrder/removeEntry">
+        <genParameters ecoreParameter="model.ecore#//IOrder/removeEntry/entry"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IOrder/addEntry.1">
+        <genParameters ecoreParameter="model.ecore#//IOrder/addEntry.1/entry"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IOrder/isDone"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

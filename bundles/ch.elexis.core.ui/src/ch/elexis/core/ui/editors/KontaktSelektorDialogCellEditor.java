@@ -9,6 +9,12 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.data.Kontakt;
 
+/**
+ * 
+ * 
+ * @deprecated use {@link IContact} based {@link ContactSelektorDialogCellEditor} instead.
+ *
+ */
 public class KontaktSelektorDialogCellEditor extends DialogCellEditor {
 	
 	private String title;

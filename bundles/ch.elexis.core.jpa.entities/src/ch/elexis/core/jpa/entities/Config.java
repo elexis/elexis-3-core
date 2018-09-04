@@ -8,12 +8,17 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import org.eclipse.persistence.annotations.Cache;
+import org.eclipse.persistence.annotations.OptimisticLocking;
+import org.eclipse.persistence.annotations.OptimisticLockingType;
 
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
 @Entity
 @Table(name = "config")
 @EntityListeners(EntityWithIdListener.class)
+@OptimisticLocking(type = OptimisticLockingType.SELECTED_COLUMNS, selectedColumns = {
+	@Column(name = "LASTUPDATE")
+})
 @Cache(expiry = 15000)
 public class Config implements EntityWithId {
 

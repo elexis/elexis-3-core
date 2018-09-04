@@ -6,7 +6,7 @@ import java.util.HashMap;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 
 import ch.elexis.core.data.service.CoreModelServiceHolder;
-import ch.elexis.core.model.ITypedArticle;
+import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
@@ -49,8 +49,8 @@ public class EigenartikelTreeContentProvider
 	
 	@Override
 	public Object[] getElements(Object inputElement){
-		IQuery<ITypedArticle> query = CoreModelServiceHolder.get().getQuery(ITypedArticle.class);
-		query.and(ModelPackage.Literals.ITYPED_ARTICLE__TYP, COMPARATOR.EQUALS,
+		IQuery<IArticle> query = CoreModelServiceHolder.get().getQuery(IArticle.class);
+		query.and(ModelPackage.Literals.IARTICLE__TYP, COMPARATOR.EQUALS,
 			ArticleTyp.EIGENARTIKEL);
 		if (filter != null) {
 			query.and(ModelPackage.Literals.IARTICLE__NAME, COMPARATOR.LIKE, "%" + filter + "%",
@@ -68,8 +68,8 @@ public class EigenartikelTreeContentProvider
 		if (!showProducts) {
 			return null;
 		}
-		if (parentElement != null && parentElement instanceof ITypedArticle) {
-			ITypedArticle ea = (ITypedArticle) parentElement;
+		if (parentElement != null && parentElement instanceof IArticle) {
+			IArticle ea = (IArticle) parentElement;
 			if (ea.isProduct()) {
 				return ea.getPackages().toArray();
 			}
@@ -87,7 +87,7 @@ public class EigenartikelTreeContentProvider
 		if (!showProducts) {
 			return false;
 		}
-		ITypedArticle ea = (ITypedArticle) element;
+		IArticle ea = (IArticle) element;
 		return ea.isProduct() && ea.getPackages().size() > 0;
 	}
 	

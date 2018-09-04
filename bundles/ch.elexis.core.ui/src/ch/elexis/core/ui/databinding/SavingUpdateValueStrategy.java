@@ -10,9 +10,11 @@ import ch.elexis.core.services.IModelService;
 public class SavingUpdateValueStrategy extends UpdateValueStrategy {
 	private boolean autoSave;
 	private IModelService modelService;
+	private IObservableValue<?> observable;
 	
-	public SavingUpdateValueStrategy(IModelService modelService){
+	public SavingUpdateValueStrategy(IModelService modelService, IObservableValue<?> observable){
 		this.modelService = modelService;
+		this.observable = observable;
 		this.autoSave = true;
 	}
 	
@@ -25,8 +27,8 @@ public class SavingUpdateValueStrategy extends UpdateValueStrategy {
 	protected IStatus doSet(IObservableValue observableValue, Object value){
 		IStatus ret = super.doSet(observableValue, value);
 		if (autoSave) {
-			if (observableValue.getValue() instanceof Identifiable) {
-				modelService.save((Identifiable) observableValue.getValue());
+			if (observable.getValue() instanceof Identifiable) {
+				modelService.save((Identifiable) observable.getValue());
 			}
 		}
 		return ret;

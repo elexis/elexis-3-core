@@ -9,7 +9,7 @@ import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 import ch.elexis.core.model.util.ModelUtil;
 import ch.elexis.core.services.IStoreToStringContribution;
 
-public class StockEntry extends AbstractIdModelAdapter<ch.elexis.core.jpa.entities.StockEntry>
+public class StockEntry extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.StockEntry>
 		implements IdentifiableWithXid, IStockEntry {
 	
 	public StockEntry(ch.elexis.core.jpa.entities.StockEntry entity){
@@ -107,11 +107,21 @@ public class StockEntry extends AbstractIdModelAdapter<ch.elexis.core.jpa.entiti
 	@Override
 	public void setStock(IStock stock){
 		if (stock instanceof AbstractIdModelAdapter) {
-			getEntity().setStock(
-				(ch.elexis.core.jpa.entities.Stock) ((AbstractIdModelAdapter<?>) stock)
+			getEntity()
+				.setStock((ch.elexis.core.jpa.entities.Stock) ((AbstractIdModelAdapter<?>) stock)
 					.getEntity());
 		} else if (stock == null) {
 			getEntity().setStock(null);
+		}
+	}
+	
+	@Override
+	public String getLabel(){
+		IArticle article = getArticle();
+		if (article != null) {
+			return article.getName();
+		} else {
+			return getEntity().getArticleType() + "[" + getEntity().getArticleId() + "]";
 		}
 	}
 }

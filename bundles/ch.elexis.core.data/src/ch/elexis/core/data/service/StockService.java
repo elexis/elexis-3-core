@@ -1,7 +1,9 @@
 package ch.elexis.core.data.service;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -12,20 +14,20 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IArticle;
 import ch.elexis.core.data.interfaces.IStock;
 import ch.elexis.core.data.interfaces.IStockEntry;
 import ch.elexis.core.data.services.IStockService;
-import ch.elexis.core.data.util.ConfigUtil;
 import ch.elexis.core.lock.types.LockResponse;
-import ch.elexis.core.model.IMandator;
-import ch.elexis.core.services.INamedQuery;
 import ch.elexis.data.Artikel;
+import ch.elexis.data.DBConnection;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 import ch.elexis.data.Stock;
 import ch.elexis.data.StockEntry;
+import ch.rgw.tools.ExHandler;
 
 
 /**
@@ -38,25 +40,46 @@ public class StockService implements IStockService {
 	
 	private static Logger log = LoggerFactory.getLogger(StockService.class);
 	
+	private static final String PS_SUM_CURRENT =
+		"SELECT SUM(CURRENT) FROM STOCK_ENTRY WHERE ARTICLE_ID = ? AND ARTICLE_TYPE = ? AND DELETED = '0'";
+	
+	private static final String PS_AVAIL_CURRENT =
+		"SELECT MAX(CASE WHEN CURRENT <= 0 THEN 0 WHEN (ABS(MIN)-CURRENT) >=0 THEN 1 ELSE 2 END) FROM STOCK_ENTRY WHERE ARTICLE_ID = ? AND ARTICLE_TYPE = ? AND DELETED = '0'";
+	private static final String PS_AVAIL_CURRENT_BELOW =
+		"SELECT MAX(CASE WHEN CURRENT <= 0 THEN 0 WHEN (ABS(MIN)-CURRENT) >0 THEN 1 ELSE 2 END) FROM STOCK_ENTRY WHERE ARTICLE_ID = ? AND ARTICLE_TYPE = ? AND DELETED = '0'";
+	
 	@Override
 	public Integer getCumulatedStockForArticle(IArticle article){
-		INamedQuery<Integer> query = CoreModelServiceHolder.get().getNamedQueryByName(Integer.class,
-			IStockEntry.class, "StockEntry_SumCurrentStock.articleId.articleType");
-		// TODO check if system name matches old article type (class name)
-		List<Integer> results =
-			query.executeWithParameters(CoreModelServiceHolder.get().getParameterMap("articleId",
-				article.getId(), "articleType", article.getCodeSystemName()));
-		if (!results.isEmpty()) {
-			return results.get(0);
+		Artikel art = (Artikel) article;
+		DBConnection dbConnection = PersistentObject.getDefaultConnection();
+		PreparedStatement ps = dbConnection.getPreparedStatement(PS_SUM_CURRENT);
+		try {
+			ps.setString(1, art.getId());
+			ps.setString(2, art.getClass().getName());
+			ResultSet res = ps.executeQuery();
+			Integer ret = null;
+			if (res.next()) {
+				Object object = res.getObject(1);
+				if (object != null) {
+					ret = res.getInt(1);
+				}
+			}
+			res.close();
+			return ret;
+		} catch (Exception ex) {
+			ExHandler.handle(ex);
+			return null;
+		} finally {
+			try {
+				ps.close();
+			} catch (SQLException e) {}
+			dbConnection.releasePreparedStatement(ps);
 		}
-		return null;
 	}
 	
 	public void performSingleDisposal(IArticle article, int count){
-		Optional<IMandator> mandator =
-			ContextServiceHolder.get().getRootContext().getActiveMandator();
-		performSingleDisposal(article, count,
-			(mandator.isPresent()) ? mandator.get().getId() : null);
+		Mandant mandator = ElexisEventDispatcher.getSelectedMandator();
+		performSingleDisposal(article, count, (mandator != null) ? mandator.getId() : null);
 	}
 	
 	@Override
@@ -65,8 +88,8 @@ public class StockService implements IStockService {
 			return new Status(Status.ERROR, CoreHub.PLUGIN_ID, "Article is null");
 		}
 		
-		IStockEntry se = findPreferredStockEntryForArticle(
-			StoreToStringServiceHolder.getStoreToString(article), mandatorId);
+		IStockEntry se =
+			findPreferredStockEntryForArticle(((Artikel) article).storeToString(), mandatorId);
 		if (se == null) {
 			return new Status(Status.WARNING, CoreHub.PLUGIN_ID,
 				"No stock entry for article found");
@@ -78,7 +101,7 @@ public class StockService implements IStockService {
 				(sellingUnit > 0 && sellingUnit < article.getPackageUnit());
 			if (isPartialUnitOutput) {
 				boolean performPartialOutlay =
-					ConfigUtil.isGlobalConfig(Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
+					CoreHub.globalCfg.get(Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
 						Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES_DEFAULT);
 					if (!performPartialOutlay) {
 						return Status.OK_STATUS;
@@ -88,7 +111,7 @@ public class StockService implements IStockService {
 			return CoreHub.getStockCommissioningSystemService().performArticleOutlay(se, count,
 				null);
 		} else {
-			LockResponse lr = CoreHub.getLocalLockService().acquireLockBlocking(se, 1,
+			LockResponse lr = CoreHub.getLocalLockService().acquireLockBlocking((StockEntry) se, 1,
 				new NullProgressMonitor());
 			if (lr.isOk()) {
 				int fractionUnits = se.getFractionUnits();
@@ -119,7 +142,7 @@ public class StockService implements IStockService {
 					se.setFractionUnits(rest);
 				}
 				
-				CoreHub.getLocalLockService().releaseLock(se);
+				CoreHub.getLocalLockService().releaseLock((StockEntry) se);
 				return Status.OK_STATUS;
 			}
 		}
@@ -128,9 +151,8 @@ public class StockService implements IStockService {
 	}
 	
 	public void performSingleReturn(IArticle article, int count){
-		Optional<IMandator> mandator =
-			ContextServiceHolder.get().getRootContext().getActiveMandator();
-		performSingleReturn(article, count, (mandator.isPresent()) ? mandator.get().getId() : null);
+		Mandant mandator = ElexisEventDispatcher.getSelectedMandator();
+		performSingleReturn(article, count, (mandator != null) ? mandator.getId() : null);
 	}
 	
 	@Override
@@ -140,8 +162,7 @@ public class StockService implements IStockService {
 		}
 		
 		IStockEntry se =
-			findPreferredStockEntryForArticle(StoreToStringServiceHolder.getStoreToString(article),
-				null);
+			findPreferredStockEntryForArticle(((Artikel) article).storeToString(), null);
 		if (se == null) {
 			return new Status(Status.WARNING, CoreHub.PLUGIN_ID,
 				"No stock entry for article found");
@@ -152,7 +173,7 @@ public class StockService implements IStockService {
 			return Status.OK_STATUS;
 		}
 		
-		LockResponse lr = CoreHub.getLocalLockService().acquireLockBlocking(se, 1,
+		LockResponse lr = CoreHub.getLocalLockService().acquireLockBlocking((StockEntry) se, 1,
 			new NullProgressMonitor());
 		if (lr.isOk()) {
 			int fractionUnits = se.getFractionUnits();
@@ -181,7 +202,7 @@ public class StockService implements IStockService {
 				}
 				se.setFractionUnits(rest);
 			}
-			CoreHub.getLocalLockService().releaseLock(se);
+			CoreHub.getLocalLockService().releaseLock((StockEntry) se);
 			return Status.OK_STATUS;
 		}
 		return new Status(Status.WARNING, CoreHub.PLUGIN_ID, "Could not acquire lock");
@@ -189,43 +210,60 @@ public class StockService implements IStockService {
 	
 	private static boolean isTriggerStockAvailabilityOnBelow(){
 		int trigger =
-			ConfigUtil.getGlobalConfig(ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER,
+			CoreHub.globalCfg.get(ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER,
 				ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER_DEFAULT);
 		return trigger == ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER_BELOW;
 	}
 	
 	@Override
 	public Availability getCumulatedAvailabilityForArticle(IArticle article){
-		INamedQuery<Integer> query = null;
-		if (isTriggerStockAvailabilityOnBelow()) {
-			query = CoreModelServiceHolder.get().getNamedQueryByName(Integer.class,
-				IStockEntry.class, "StockEntry_AvailableCurrentBelowStock.articleId.articleType");
-		} else {
-			query = CoreModelServiceHolder.get().getNamedQueryByName(Integer.class,
-				IStockEntry.class, "StockEntry_AvailableCurrentStock.articleId.articleType");
-		}
-		List<Integer> results = query.executeWithParameters(CoreModelServiceHolder.get()
-			.getParameterMap("articleId", article.getId(), "articleType",
-				article.getCodeSystemName()));
-		if (!results.isEmpty()) {
-			Integer value = results.get(0);
-			if (value > 1) {
-				return Availability.IN_STOCK;
-			} else if (value == 1) {
-				return Availability.CRITICAL_STOCK;
+		Artikel art = (Artikel) article;
+		
+		DBConnection dbConnection = PersistentObject.getDefaultConnection();
+		
+		PreparedStatement ps = dbConnection.getPreparedStatement(
+			isTriggerStockAvailabilityOnBelow() ? PS_AVAIL_CURRENT_BELOW : PS_AVAIL_CURRENT);
+		try {
+			ps.setString(1, art.getId());
+			ps.setString(2, art.getClass().getName());
+			ResultSet res = ps.executeQuery();
+			if (res.next()) {
+				Object object = res.getObject(1);
+				if (object != null) {
+					int value = res.getInt(1);
+					if (value > 1) {
+						return Availability.IN_STOCK;
+					} else if (value == 1) {
+						return Availability.CRITICAL_STOCK;
+					}
+					return Availability.OUT_OF_STOCK;
+				}
 			}
-			return Availability.OUT_OF_STOCK;
+			res.close();
+			return null;
+		} catch (Exception ex) {
+			ExHandler.handle(ex);
+			return null;
+		} finally {
+			try {
+				ps.close();
+			} catch (SQLException e) {}
+			dbConnection.releasePreparedStatement(ps);
 		}
-		return null;
 	}
 	
 	public static Availability determineAvailability(IStockEntry se){
-		return IStockService.determineAvailability(se.getCurrentStock(), se.getMinimumStock(),
+		String[] values = ((StockEntry) se).get(false, StockEntry.FLD_MIN, StockEntry.FLD_CURRENT);
+		int min = Integer.valueOf(values[0]);
+		int current = Integer.valueOf(values[1]);
+		
+		return IStockService.determineAvailability(current, min,
 			isTriggerStockAvailabilityOnBelow());
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<IStockEntry> getAllStockEntries(){
-		return CoreModelServiceHolder.get().getQuery(IStockEntry.class).execute();
+		return (List<IStockEntry>) (List<?>) new Query<StockEntry>(StockEntry.class).execute();
 	}
 	
 	@Override
@@ -234,7 +272,7 @@ public class StockService implements IStockService {
 		int val = Integer.MAX_VALUE;
 		IStockEntry ret = null;
 		for (IStockEntry iStockEntry : entries) {
-			IStock stock = iStockEntry.getStock();
+			Stock stock = (Stock) iStockEntry.getStock();
 			Integer priority = stock.getPriority();
 			if (priority < val) {
 				val = priority;
@@ -294,7 +332,7 @@ public class StockService implements IStockService {
 	
 	@Override
 	public IStockEntry storeArticleInStock(IStock stock, String article){
-		IStockEntry stockEntry = findStockEntryForArticleInStock(stock, article);
+		IStockEntry stockEntry = findStockEntryForArticleInStock((Stock) stock, article);
 		if (stockEntry != null) {
 			return stockEntry;
 		}
@@ -310,7 +348,7 @@ public class StockService implements IStockService {
 	
 	@Override
 	public void unstoreArticleFromStock(IStock stock, String article){
-		IStockEntry stockEntry = findStockEntryForArticleInStock(stock, article);
+		IStockEntry stockEntry = findStockEntryForArticleInStock((Stock) stock, article);
 		if (stockEntry != null) {
 			LockResponse lr = CoreHub.getLocalLockService()
 				.acquireLockBlocking((StockEntry) stockEntry, 1, new NullProgressMonitor());

@@ -7,6 +7,11 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import javax.persistence.RollbackException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -77,5 +82,32 @@ public class ConfigTest {
 		
 		modelSerice.remove(config1);
 		modelSerice.remove(config2);
+	}
+	
+	@Test
+	public void optimisticLock() throws InterruptedException{
+		IConfig config1 = modelSerice.create(IConfig.class);
+		config1.setKey("test key 1");
+		config1.setValue("test value 1");
+		assertTrue(modelSerice.save(config1));
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		executor.execute(new Runnable() {
+			@Override
+			public void run(){
+				int affected = modelSerice
+					.executeNativeUpdate("UPDATE config SET wert = 'test key', lastupdate = "
+						+ 1 + " WHERE param = 'test key 1'");
+				assertEquals(1, affected);
+			}
+		});
+		executor.awaitTermination(1000, TimeUnit.MILLISECONDS);
+		config1.setValue("test key 1");
+		RollbackException rbe = null;
+		try {
+			modelSerice.save(config1);
+		} catch (RollbackException e) {
+			rbe = e;
+		}
+		assertNotNull(rbe);
 	}
 }

@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.dialogs;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -25,27 +26,31 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
-import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.interfaces.IStockEntry;
-import ch.elexis.core.data.interfaces.IVerrechenbar;
+import ch.elexis.core.data.service.ContextServiceHolder;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.data.service.StockServiceHolder;
+import ch.elexis.core.data.service.StoreToStringServiceHolder;
+import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IBillable;
+import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IOrder;
+import ch.elexis.core.model.IOrderEntry;
+import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.Artikel;
-import ch.elexis.data.Bestellung;
-import ch.elexis.data.BestellungEntry;
-import ch.elexis.data.Konsultation;
-import ch.elexis.data.Mandant;
-import ch.elexis.data.Query;
-import ch.elexis.data.StockEntry;
-import ch.elexis.data.Verrechnet;
+
 
 public class DailyOrderDialog extends TitleAreaDialog {
 	
 	private DateTime dtDate;
 	private TableViewer tableViewer;
-	private Bestellung currOrder;
+	private IOrder currOrder;
 
-	public DailyOrderDialog(Shell parentShell, Bestellung currOrder){
+	public DailyOrderDialog(Shell parentShell, IOrder currOrder){
 		super(parentShell);
 		this.currOrder = currOrder;
 	}
@@ -114,26 +119,27 @@ public class DailyOrderDialog extends TitleAreaDialog {
 		String date = dtDate.getYear() + String.format("%02d", dtDate.getMonth() + 1)
 			+ String.format("%02d", dtDate.getDay());
 		
-		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
-		qbe.add(Konsultation.FLD_DATE, Query.EQUALS, date);
-		List<Konsultation> cons = qbe.execute();
+		IQuery<IEncounter> query = CoreModelServiceHolder.get().getQuery(IEncounter.class);
+		query.and(ModelPackage.Literals.IENCOUNTER__DATE, COMPARATOR.EQUALS, date);
+		List<IEncounter> dayEncounters = query.execute();
 		
-		for (Konsultation c : cons) {
-			List<Verrechnet> leistungen = c.getLeistungen();
-			for (Verrechnet v : leistungen) {
-				IVerrechenbar vv = v.getVerrechenbar();
-				if (vv instanceof Artikel) {
-					Artikel art = (Artikel) vv;
-					Mandant mandator = ElexisEventDispatcher.getSelectedMandator();
+		for (IEncounter encounter : dayEncounters) {
+			List<IBilled> encounterBilled = encounter.getBilled();
+			for (IBilled billed : encounterBilled) {
+				IBillable billable = billed.getBillable();
+				if (billable instanceof IArticle) {
+					IArticle art = (IArticle) billable;
+					Optional<IMandator> mandator =
+						ContextServiceHolder.get().getRootContext().getActiveMandator();
 					IStockEntry stockEntry =
-						CoreHub.getStockService().findPreferredStockEntryForArticle(art.storeToString(),
-							(mandator != null) ? mandator.getId() : null);
+						StockServiceHolder.get().findPreferredStockEntryForArticle(
+							StoreToStringServiceHolder.getStoreToString(art),
+							mandator.isPresent() ? mandator.get().getId() : null);
 					if (stockEntry != null) {
-						StockEntry se = (StockEntry) stockEntry;
-						currOrder.addBestellungEntry(se.getArticle(), se.getStock(),
-							se.getProvider(), v.getZahl());
+						currOrder.addEntry(stockEntry.getArticle(), stockEntry.getStock(),
+							stockEntry.getProvider(), billed.getAmount());
 					} else {
-						currOrder.addBestellungEntry(art, null, null, v.getZahl());
+						currOrder.addEntry(art, null, null, billed.getAmount());
 					}
 				}
 			}
@@ -147,10 +153,10 @@ public class DailyOrderDialog extends TitleAreaDialog {
 		}
 		
 		public String getColumnText(final Object element, final int columnIndex){
-			BestellungEntry be = (BestellungEntry) element;
+			IOrderEntry be = (IOrderEntry) element;
 			switch (columnIndex) {
 			case 0:
-				return Integer.toString(be.getCount());
+				return Integer.toString(be.getAmount());
 			case 1:
 				return be.getArticle().getLabel();
 			default:
@@ -166,14 +172,14 @@ public class DailyOrderDialog extends TitleAreaDialog {
 		
 		@Override
 		public Object[] getElements(Object inputElement){
-			return currOrder.getEntries().toArray(new BestellungEntry[0]);
+			return currOrder.getEntries().toArray(new IOrderEntry[0]);
 		}
 		
 		@Override
 		public void dispose(){}
 	}
 	
-	public Bestellung getOrder(){
+	public IOrder getOrder(){
 		return currOrder;
 	}
 }

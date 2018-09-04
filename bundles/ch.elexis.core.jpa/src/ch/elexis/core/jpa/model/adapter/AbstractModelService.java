@@ -204,6 +204,19 @@ public abstract class AbstractModelService implements IModelService {
 		return query.getResultStream();
 	}
 	
+	@Override
+	public int executeNativeUpdate(String sql){
+		EntityManager em = getEntityManager(false);
+		try {
+			em.getTransaction().begin();
+			int affected = em.createNativeQuery(sql).executeUpdate();
+			em.getTransaction().commit();
+			return affected;
+		} finally {
+			closeEntityManager(em);
+		}
+	}
+	
 	protected String getNamedQueryName(Class<?> clazz, String... properties){
 		Class<? extends EntityWithId> entityClazz = adapterFactory.getEntityClass(clazz);
 		StringJoiner queryName = new StringJoiner(".");

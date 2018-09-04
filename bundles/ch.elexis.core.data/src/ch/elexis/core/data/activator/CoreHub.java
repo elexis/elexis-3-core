@@ -44,7 +44,7 @@ import ch.elexis.core.data.interfaces.scripting.Interpreter;
 import ch.elexis.core.data.lock.LocalLockService;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
 import ch.elexis.core.data.server.ElexisServerEventService;
-import ch.elexis.core.data.service.OrderService;
+import ch.elexis.core.data.service.PoOrderService;
 import ch.elexis.core.data.service.StockCommissioningSystemService;
 import ch.elexis.core.data.service.StockService;
 import ch.elexis.core.data.services.ILocalLockService;
@@ -143,7 +143,7 @@ public class CoreHub implements BundleActivator {
 	private static final StockService stockService = new StockService();
 	
 	/** Order Service **/
-	private static final IOrderService orderService = new OrderService();
+	private static final IOrderService orderService = new PoOrderService();
 	
 	/** Event Service to transport Events to the Elexis Server */
 	private static ElexisServerEventService elexisServerEventService;

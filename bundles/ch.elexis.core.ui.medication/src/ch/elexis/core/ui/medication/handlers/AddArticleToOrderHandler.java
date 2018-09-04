@@ -15,6 +15,8 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.model.IArticle;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.views.BestellView;
 import ch.elexis.data.Artikel;
@@ -28,7 +30,7 @@ public class AddArticleToOrderHandler extends AbstractHandler {
 		IWorkbenchPage activePage =
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			
-		List<Artikel> articlesToOrder = getArticlesToOrder(
+		List<IArticle> articlesToOrder = getArticlesToOrder(
 			HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection());
 		if (articlesToOrder.isEmpty()) {
 			log.debug("Skip handler execution as no articles are selected to add to an order!");
@@ -58,8 +60,8 @@ public class AddArticleToOrderHandler extends AbstractHandler {
 	 * @return a list of selected articles or an {@code EMPTY} list
 	 */
 	@SuppressWarnings("unchecked")
-	private List<Artikel> getArticlesToOrder(ISelection selection){
-		List<Artikel> articlesToOrder = new ArrayList<Artikel>();
+	private List<IArticle> getArticlesToOrder(ISelection selection){
+		List<IArticle> articlesToOrder = new ArrayList<>();
 		
 		if (selection == null || selection.isEmpty()) {
 			return articlesToOrder;
@@ -73,7 +75,8 @@ public class AddArticleToOrderHandler extends AbstractHandler {
 			if (p != null) {
 				Artikel arti = p.getArtikel();
 				if (arti != null) {
-					articlesToOrder.add(arti);
+					CoreModelServiceHolder.get().load(arti.getId(), IArticle.class)
+						.ifPresent(a -> articlesToOrder.add(a));
 				}
 			}
 		}

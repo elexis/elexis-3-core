@@ -46,7 +46,7 @@ public interface IStockService {
 	 * @return <code>null</code> if not stocked, else the accumulated and summed
 	 *         number of packages over all stocks (including mandator owned)
 	 */
-	public Integer getCumulatedStockForArticle(IArticle article);
+	public Long getCumulatedStockForArticle(IArticle article);
 
 	/**
 	 * The accumulated (over all stocks) availability of an article.
@@ -163,7 +163,7 @@ public interface IStockService {
 	 *            checks if the current stock is below
 	 * @return
 	 */
-	public static Availability determineAvailability(int current, int min,
+	public default Availability determineAvailability(int current, int min,
 		boolean triggerOnIsBelow){
 		
 		if (current <= 0) {
@@ -186,10 +186,18 @@ public interface IStockService {
 	 *            the minimum amount of packages to be on stock
 	 * @return
 	 */
-	public static Availability determineAvailability(int current, int min){
-		
+	public default Availability determineAvailability(int current, int min){
 		return determineAvailability(current, min, false);
 	}
 	
+	public default Availability determineAvailability(IStockEntry stockEntry){
+		return determineAvailability(stockEntry.getCurrentStock(), stockEntry.getMinimumStock(),
+			true);
+	}
+	
 	public List<IStock> getAllStocks(boolean includeCommissioningSystems);
+	
+	public List<IStockEntry> getAllStockEntries();
+	
+	public IStock getDefaultStock();
 }

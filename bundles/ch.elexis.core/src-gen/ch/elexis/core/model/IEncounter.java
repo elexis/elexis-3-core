@@ -10,7 +10,9 @@
  */
 package ch.elexis.core.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <!-- begin-user-doc -->
@@ -25,6 +27,8 @@ import java.time.LocalDateTime;
  *   <li>{@link ch.elexis.core.model.IEncounter#getPatient <em>Patient</em>}</li>
  *   <li>{@link ch.elexis.core.model.IEncounter#getCoverage <em>Coverage</em>}</li>
  *   <li>{@link ch.elexis.core.model.IEncounter#getMandator <em>Mandator</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IEncounter#getBilled <em>Billed</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IEncounter#getDate <em>Date</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIEncounter()
@@ -135,5 +139,47 @@ public interface IEncounter extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	void setMandator(IMandator value);
+
+	/**
+	 * Returns the value of the '<em><b>Billed</b></em>' reference list.
+	 * The list contents are of type {@link ch.elexis.core.model.IBilled}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Billed</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Billed</em>' reference list.
+	 * @see ch.elexis.core.model.ModelPackage#getIEncounter_Billed()
+	 * @model
+	 * @generated
+	 */
+	List<IBilled> getBilled();
+
+	/**
+	 * Returns the value of the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Date</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Date</em>' attribute.
+	 * @see #setDate(LocalDate)
+	 * @see ch.elexis.core.model.ModelPackage#getIEncounter_Date()
+	 * @model dataType="ch.elexis.core.types.LocalDate"
+	 * @generated
+	 */
+	LocalDate getDate();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IEncounter#getDate <em>Date</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Date</em>' attribute.
+	 * @see #getDate()
+	 * @generated
+	 */
+	void setDate(LocalDate value);
 
 } // IEncounter

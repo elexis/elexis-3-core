@@ -103,6 +103,9 @@ public class ElexisEntityManger implements IElexisEntityManager {
 					em = factory.createEntityManager();
 					threadLocal.set(em);
 					threadManagerMap.put(Thread.currentThread(), em);
+				} else {
+					// clear and use L2 cache
+					em.clear();
 				}
 				return em;
 			} else {

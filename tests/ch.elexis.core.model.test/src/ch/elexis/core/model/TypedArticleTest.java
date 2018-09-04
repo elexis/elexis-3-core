@@ -35,9 +35,9 @@ public class TypedArticleTest {
 	
 	@Test
 	public void create(){
-		ITypedArticle article = modelSerice.create(ITypedArticle.class);
+		IArticle article = modelSerice.create(IArticle.class);
 		assertNotNull(article);
-		assertTrue(article instanceof ITypedArticle);
+		assertTrue(article instanceof IArticle);
 		
 		article.setName("test article");
 		article.setCode("123456789");
@@ -47,7 +47,7 @@ public class TypedArticleTest {
 		article.setSellingSize(12);
 		modelSerice.save(article);
 		
-		Optional<ITypedArticle> loaded = modelSerice.load(article.getId(), ITypedArticle.class);
+		Optional<IArticle> loaded = modelSerice.load(article.getId(), IArticle.class);
 		assertTrue(loaded.isPresent());
 		assertFalse(article == loaded.get());
 		assertEquals(article, loaded.get());
@@ -62,11 +62,11 @@ public class TypedArticleTest {
 	
 	@Test
 	public void product(){
-		ITypedArticle product = modelSerice.create(ITypedArticle.class);
+		IArticle product = modelSerice.create(IArticle.class);
 		product.setName("test product");
 		product.setTyp(ArticleTyp.ARTIKEL);
 		
-		ITypedArticle article = modelSerice.create(ITypedArticle.class);
+		IArticle article = modelSerice.create(IArticle.class);
 		article.setName("test article 1");
 		article.setCode("123456789");
 		article.setTyp(ArticleTyp.ARTIKEL);
@@ -75,7 +75,7 @@ public class TypedArticleTest {
 		article.setSellingSize(12);
 		article.setProduct(product);
 		
-		ITypedArticle article1 = modelSerice.create(ITypedArticle.class);
+		IArticle article1 = modelSerice.create(IArticle.class);
 		article1.setName("test article 2");
 		article1.setCode("987654321");
 		article1.setTyp(ArticleTyp.ARTIKEL);
@@ -86,7 +86,7 @@ public class TypedArticleTest {
 		
 		modelSerice.save(Arrays.asList(product, article, article1));
 		
-		Optional<ITypedArticle> loaded = modelSerice.load(product.getId(), ITypedArticle.class);
+		Optional<IArticle> loaded = modelSerice.load(product.getId(), IArticle.class);
 		assertFalse(loaded.get().getPackages().isEmpty());
 		assertTrue(loaded.get().getPackages().contains(article));
 		assertTrue(loaded.get().getPackages().contains(article1));
@@ -97,7 +97,7 @@ public class TypedArticleTest {
 		product.getPackages().forEach(p -> p.setProduct(null));
 		modelSerice.save(Arrays.asList(article, article1));
 		modelSerice.remove(product);
-		loaded = modelSerice.load(article.getId(), ITypedArticle.class);
+		loaded = modelSerice.load(article.getId(), IArticle.class);
 		assertTrue(loaded.isPresent());
 		assertTrue(loaded.get().getProduct() == null);
 		
@@ -107,7 +107,7 @@ public class TypedArticleTest {
 	
 	@Test
 	public void query(){
-		ITypedArticle article = modelSerice.create(ITypedArticle.class);
+		IArticle article = modelSerice.create(IArticle.class);
 		article.setName("test article");
 		article.setCode("123456789");
 		article.setTyp(ArticleTyp.EIGENARTIKEL);
@@ -116,7 +116,7 @@ public class TypedArticleTest {
 		article.setSellingSize(12);
 		modelSerice.save(article);
 		
-		ITypedArticle article1 = modelSerice.create(ITypedArticle.class);
+		IArticle article1 = modelSerice.create(IArticle.class);
 		article1.setName("test article 1");
 		article1.setCode("987654321");
 		article1.setTyp(ArticleTyp.EIGENARTIKEL);
@@ -125,15 +125,15 @@ public class TypedArticleTest {
 		article1.setSellingSize(24);
 		modelSerice.save(article1);
 		
-		IQuery<ITypedArticle> query = modelSerice.getQuery(ITypedArticle.class);
+		IQuery<IArticle> query = modelSerice.getQuery(IArticle.class);
 		query.and(ModelPackage.Literals.IARTICLE__GTIN, COMPARATOR.EQUALS, "0000001111111");
-		List<ITypedArticle> existing = query.execute();
+		List<IArticle> existing = query.execute();
 		assertNotNull(existing);
 		assertFalse(existing.isEmpty());
 		assertEquals(article, existing.get(0));
 		
-		query = modelSerice.getQuery(ITypedArticle.class);
-		query.and(ModelPackage.Literals.ITYPED_ARTICLE__TYP, COMPARATOR.EQUALS,
+		query = modelSerice.getQuery(IArticle.class);
+		query.and(ModelPackage.Literals.IARTICLE__TYP, COMPARATOR.EQUALS,
 			ArticleTyp.EIGENARTIKEL);
 		existing = query.execute();
 		assertNotNull(existing);

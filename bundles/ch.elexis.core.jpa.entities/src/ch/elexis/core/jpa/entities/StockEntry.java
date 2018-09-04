@@ -13,6 +13,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.Cache;
+
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
@@ -20,6 +22,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "STOCK_ENTRY")
 @EntityListeners(EntityWithIdListener.class)
+@Cache(expiry = 15000)
 @NamedQueries({
 	@NamedQuery(name = "StockEntry.articleId.articleType", query = "SELECT se FROM StockEntry se WHERE se.articleId = :articleId AND se.articleType = :articleType AND se.deleted = false"),
 	@NamedQuery(name = "StockEntry_SumCurrentStock.articleId.articleType", query = "SELECT SUM(se.currentStock) FROM StockEntry se WHERE se.articleId = :articleId AND se.articleType = :articleType AND se.deleted = false"),

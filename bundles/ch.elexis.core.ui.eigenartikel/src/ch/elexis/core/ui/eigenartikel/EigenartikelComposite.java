@@ -28,8 +28,8 @@ import org.eclipse.swt.widgets.Text;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.ICodeElement;
-import ch.elexis.core.model.ITypedArticle;
 import ch.elexis.core.ui.databinding.SavingUpdateValueStrategy;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
@@ -37,8 +37,8 @@ import ch.elexis.core.ui.views.controls.StockDetailComposite;
 
 public class EigenartikelComposite extends Composite implements IUnlockable {
 	
-	private WritableValue<ITypedArticle> drugPackageEigenartikel =
-		new WritableValue<>(null, ITypedArticle.class);
+	private WritableValue<IArticle> drugPackageEigenartikel =
+		new WritableValue<>(null, IArticle.class);
 	
 	private final boolean includeDeleteOption;
 	
@@ -63,12 +63,12 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 	 * @param parent
 	 * @param style
 	 */
-	public EigenartikelComposite(Composite parent, int style, ITypedArticle eigenartikel){
+	public EigenartikelComposite(Composite parent, int style, IArticle eigenartikel){
 		this(parent, style, true, eigenartikel);
 	}
 	
 	public EigenartikelComposite(Composite parent, int style, boolean includeDeleteOption,
-		ITypedArticle eigenartikel){
+		IArticle eigenartikel){
 		super(parent, style);
 		this.includeDeleteOption = includeDeleteOption;
 		this.drugPackageEigenartikel.setValue(eigenartikel);
@@ -77,8 +77,15 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		createArticlePart();
 	}
 	
-	public void setEigenartikel(ITypedArticle eigenartikel){
-		this.drugPackageEigenartikel.setValue(eigenartikel);
+	public void setEigenartikel(IArticle eigenartikel){
+		IArticle current = this.drugPackageEigenartikel.getValue();
+		if (current != null) {
+			if (current.equals(eigenartikel)) {
+				this.drugPackageEigenartikel.setValue(eigenartikel);
+			}
+		} else {
+			this.drugPackageEigenartikel.setValue(eigenartikel);
+		}
 	}
 	
 	private void createArticlePart(){
@@ -224,20 +231,21 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		ISWTObservableValue observeTextTxtGtinObserveWidget =
 			WidgetProperties.text(SWT.Modify).observe(txtGtin);
 		IObservableValue<String> drugPackageEigenartikelEANObserveDetailValue = PojoProperties
-			.value(ITypedArticle.class, "gtin", String.class)
-			.observeDetail(drugPackageEigenartikel);
+			.value(IArticle.class, "gtin", String.class).observeDetail(drugPackageEigenartikel);
 		bindingContext.bindValue(observeTextTxtGtinObserveWidget,
 			drugPackageEigenartikelEANObserveDetailValue,
-			new SavingUpdateValueStrategy(CoreModelServiceHolder.get()), null);
+			new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), drugPackageEigenartikel),
+			null);
 		//
 		ISWTObservableValue observeTextTxtPackageSizeIntObserveWidget =
 			WidgetProperties.text(SWT.Modify).observe(txtPackageSizeInt);
 		IObservableValue<Integer> drugPackageEigenartikelPackungsGroesseObserveDetailValue =
-			PojoProperties.value(ITypedArticle.class, "packageSize", Integer.class)
+			PojoProperties.value(IArticle.class, "packageSize", Integer.class)
 				.observeDetail(drugPackageEigenartikel);
 		bindingContext.bindValue(observeTextTxtPackageSizeIntObserveWidget,
 			drugPackageEigenartikelPackungsGroesseObserveDetailValue,
-			new SavingUpdateValueStrategy(CoreModelServiceHolder.get()), null);
+			new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), drugPackageEigenartikel),
+			null);
 		observeTextTxtPackageSizeIntObserveWidget
 			.addValueChangeListener(new IValueChangeListener() {
 				@Override
@@ -256,29 +264,32 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		ISWTObservableValue observeTextTxtExfPriceObserveWidget =
 			WidgetProperties.text(SWT.Modify).observe(txtExfPrice);
 		IObservableValue<String> drugPackageEigenartikelEKPreisObserveDetailValue =
-			PojoProperties.value(ITypedArticle.class, "purchasePrice", String.class)
+			PojoProperties.value(IArticle.class, "purchasePrice", String.class)
 				.observeDetail(drugPackageEigenartikel);
 		bindingContext.bindValue(observeTextTxtExfPriceObserveWidget,
 			drugPackageEigenartikelEKPreisObserveDetailValue,
-			new SavingUpdateValueStrategy(CoreModelServiceHolder.get()), null);
+			new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), drugPackageEigenartikel),
+			null);
 		//		//
 		ISWTObservableValue observeTextTxtpubPriceObserveWidget =
 			WidgetProperties.text(SWT.Modify).observe(txtpubPrice);
 		IObservableValue<String> drugPackageEigenartikelVKPreisObserveDetailValue =
-			PojoProperties.value(ITypedArticle.class, "sellingPrice", String.class)
+			PojoProperties.value(IArticle.class, "sellingPrice", String.class)
 				.observeDetail(drugPackageEigenartikel);
 		bindingContext.bindValue(observeTextTxtpubPriceObserveWidget,
 			drugPackageEigenartikelVKPreisObserveDetailValue,
-			new SavingUpdateValueStrategy(CoreModelServiceHolder.get()), null);
+			new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), drugPackageEigenartikel),
+			null);
 		//		//
 		ISWTObservableValue observeTextTxtMeasurementUnitObserveWidget =
 			WidgetProperties.text(SWT.Modify).observe(txtMeasurementUnit);
 		IObservableValue<String> drugPackageEigenartikelMeasurementUnitObserveDetailValue =
-			PojoProperties.value(ITypedArticle.class, "packageUnit", String.class)
+			PojoProperties.value(IArticle.class, "packageUnit", String.class)
 				.observeDetail(drugPackageEigenartikel);
 		bindingContext.bindValue(observeTextTxtMeasurementUnitObserveWidget,
 			drugPackageEigenartikelMeasurementUnitObserveDetailValue,
-			new SavingUpdateValueStrategy(CoreModelServiceHolder.get()), null);
+			new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), drugPackageEigenartikel),
+			null);
 		observeTextTxtMeasurementUnitObserveWidget
 			.addValueChangeListener(new IValueChangeListener() {
 				@Override
@@ -314,7 +325,7 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 				.observeDetail(drugPackageEigenartikel);
 		bindingContext.bindValue(observeTextTxtPharmacodeObserveWidget,
 			drugPackageEigenartikelPharmaCodeObserveDetailValue,
-			new SavingUpdateValueStrategy(CoreModelServiceHolder.get()),
+			new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), drugPackageEigenartikel),
 			noIdCodeUpdateValuStrategy);
 		//		//
 		//		ISWTObservableValue observeTextTxtSellUnitObserveWidget =
@@ -336,11 +347,12 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		ISWTObservableValue observeSelectionBtnHiCostAbsorptionObserveWidget =
 			WidgetProperties.selection().observe(btnHiCostAbsorption);
 		IObservableValue<Boolean> drugPackageEigenartikelHealthInsuranceCostAbsorptionObserveDetailValue =
-			PojoProperties.value(ITypedArticle.class, "obligation", Boolean.class)
+			PojoProperties.value(IArticle.class, "obligation", Boolean.class)
 				.observeDetail(drugPackageEigenartikel);
 		bindingContext.bindValue(observeSelectionBtnHiCostAbsorptionObserveWidget,
 			drugPackageEigenartikelHealthInsuranceCostAbsorptionObserveDetailValue,
-			new SavingUpdateValueStrategy(CoreModelServiceHolder.get()), null);
+			new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), drugPackageEigenartikel),
+			null);
 		return bindingContext;
 	}
 }

@@ -13,6 +13,7 @@ public abstract class AbstractCommonViewerContentProvider implements ICommonView
 	protected Map<String, String> fieldFilterValues;
 	protected String fieldOrderBy;
 	protected ORDER fieldOrder = ORDER.DESC;
+	protected String[] orderFields;
 	
 	public AbstractCommonViewerContentProvider(CommonViewer commonViewer){
 		this.commonViewer = commonViewer;
@@ -38,6 +39,10 @@ public abstract class AbstractCommonViewerContentProvider implements ICommonView
 		}
 		fieldOrderBy = field;
 		commonViewer.notify(CommonViewer.Message.update);
+	}
+	
+	public void setOrderFields(String... name){
+		orderFields = name;
 	}
 	
 	@Override

@@ -17,19 +17,16 @@ package ch.elexis.core.eigenartikel;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.interfaces.IOptifier;
-import ch.elexis.core.data.interfaces.IVerrechenbar;
-import ch.elexis.core.data.interfaces.IVerrechenbar.DefaultOptifier;
+import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
-import ch.elexis.core.model.ITypedArticle;
+import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
-import ch.elexis.core.model.eigenartikel.EigenartikelTyp;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.types.ArticleTyp;
-import ch.elexis.data.Konsultation;
-import ch.rgw.tools.Result;
 
 public class EigenartikelUtil {
 	
@@ -44,27 +41,27 @@ public class EigenartikelUtil {
 	 *            Eigenartikel is provided it is added as a package
 	 */
 	@SuppressWarnings("unchecked")
-	public static void copyProductAttributesToArticleSetAsChild(ITypedArticle product,
-		ITypedArticle eaPackage){
+	public static void copyProductAttributesToArticleSetAsChild(IArticle product,
+		IArticle eaPackage){
 		
-		List<ITypedArticle> eaPackages = new ArrayList<ITypedArticle>();
+		List<IArticle> eaPackages = new ArrayList<IArticle>();
 		if (eaPackage != null) {
 			eaPackages.add(eaPackage);
 		} else {
-			IQuery<ITypedArticle> query =
-				CoreModelServiceHolder.get().getQuery(ITypedArticle.class);
-			query.and(ModelPackage.Literals.ITYPED_ARTICLE__TYP, COMPARATOR.EQUALS,
+			IQuery<IArticle> query = CoreModelServiceHolder.get().getQuery(IArticle.class);
+			query.and(ModelPackage.Literals.IARTICLE__TYP, COMPARATOR.EQUALS,
 				ArticleTyp.EIGENARTIKEL);
 			query.and(ModelPackage.Literals.IARTICLE__PRODUCT, COMPARATOR.EQUALS, product);
 			eaPackages.addAll(query.execute());
 		}
 		
-		for (ITypedArticle ea : eaPackages) {
+		for (IArticle ea : eaPackages) {
 			ea.setProduct(product);
 			ea.setSubTyp(product.getSubTyp());
 			ea.setAtcCode(product.getAtcCode());
 			ea.setTyp(product.getTyp());
 			ea.setName(product.getName());
+			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, ea);
 		}
 		CoreModelServiceHolder.get().save((List<Identifiable>) (List<?>) eaPackages);
 	}

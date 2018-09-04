@@ -10,6 +10,7 @@
  */
 package ch.elexis.core.model;
 
+import ch.elexis.core.types.ArticleSubTyp;
 import ch.elexis.core.types.ArticleTyp;
 import java.util.List;
 
@@ -33,13 +34,15 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IArticle#getPurchasePrice <em>Purchase Price</em>}</li>
  *   <li>{@link ch.elexis.core.model.IArticle#getSellingPrice <em>Selling Price</em>}</li>
  *   <li>{@link ch.elexis.core.model.IArticle#isObligation <em>Obligation</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IArticle#getTyp <em>Typ</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IArticle#getSubTyp <em>Sub Typ</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIArticle()
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface IArticle extends Identifiable, IBillable, Deleteable {
+public interface IArticle extends Identifiable, IBillable, Deleteable, WithExtInfo {
 	/**
 	 * Returns the value of the '<em><b>Gtin</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -301,6 +304,59 @@ public interface IArticle extends Identifiable, IBillable, Deleteable {
 	void setObligation(boolean value);
 
 	/**
+	 * Returns the value of the '<em><b>Typ</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Typ</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Typ</em>' attribute.
+	 * @see #setTyp(ArticleTyp)
+	 * @see ch.elexis.core.model.ModelPackage#getIArticle_Typ()
+	 * @model dataType="ch.elexis.core.types.ArticleTyp"
+	 * @generated
+	 */
+	ArticleTyp getTyp();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IArticle#getTyp <em>Typ</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Typ</em>' attribute.
+	 * @see #getTyp()
+	 * @generated
+	 */
+	void setTyp(ArticleTyp value);
+
+	/**
+	 * Returns the value of the '<em><b>Sub Typ</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Sub Typ</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Sub Typ</em>' attribute.
+	 * @see #setSubTyp(ArticleSubTyp)
+	 * @see ch.elexis.core.model.ModelPackage#getIArticle_SubTyp()
+	 * @model dataType="ch.elexis.core.types.ArticleSubTyp"
+	 *        annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='codeclass'"
+	 * @generated
+	 */
+	ArticleSubTyp getSubTyp();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IArticle#getSubTyp <em>Sub Typ</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Sub Typ</em>' attribute.
+	 * @see #getSubTyp()
+	 * @generated
+	 */
+	void setSubTyp(ArticleSubTyp value);
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Product</em>' attribute isn't clear,
@@ -319,5 +375,13 @@ public interface IArticle extends Identifiable, IBillable, Deleteable {
 	 * @generated
 	 */
 	List<IArticle> getPackages();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	void setCode(String code);
 
 } // IArticle

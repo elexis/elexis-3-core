@@ -4,7 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
@@ -33,6 +37,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.StockServiceHolder;
@@ -42,8 +47,8 @@ import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
-import ch.elexis.core.ui.editors.KontaktSelektorDialogCellEditor;
-import ch.elexis.data.PersistentObject;
+import ch.elexis.core.ui.editors.ContactSelectionDialogCellEditor;
+import ch.elexis.core.ui.util.CoreUiUtil;
 
 public class StockDetailComposite extends Composite {
 	
@@ -222,11 +227,8 @@ public class StockDetailComposite extends Composite {
 				if (se == null) {
 					return;
 				}
-				if (value instanceof PersistentObject) {
-					value = CoreModelServiceHolder.get().load(((PersistentObject) value).getId(),
-						IContact.class).orElse(null);
-				}
 				se.setProvider((IContact) value);
+				CoreModelServiceHolder.get().save(se);
 				getViewer().refresh();
 			}
 			
@@ -246,7 +248,7 @@ public class StockDetailComposite extends Composite {
 			
 			@Override
 			protected CellEditor getCellEditor(Object element){
-				return new KontaktSelektorDialogCellEditor(
+				return new ContactSelectionDialogCellEditor(
 					((CheckboxTableViewer) getViewer()).getTable(), "Lieferant auswählen",
 					"Bitte selektieren Sie den Lieferant");
 			}
@@ -343,8 +345,25 @@ public class StockDetailComposite extends Composite {
                    return cell.getColumnIndex() > 0 && cell.getColumnIndex() < 5;
             }
 		};
-		TableViewerEditor.create(ret, focusCellManager, editorActivationStrategy, TableViewerEditor.TABBING_HORIZONTAL);		
+		TableViewerEditor.create(ret, focusCellManager, editorActivationStrategy,
+			TableViewerEditor.TABBING_HORIZONTAL);
+		
+		CoreUiUtil.injectServices(this);
+	}
 	
+	@Inject
+	@Optional
+	public void udpate(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IStockEntry entry){
+		if (entry != null) {
+			if (checkboxTableViewer != null && stockEntries != null
+				&& !checkboxTableViewer.getControl().isDisposed()) {
+				for (IStock key : stockEntries.keySet()) {
+					if (stockEntries.get(key) != null && stockEntries.get(key).equals(entry)) {
+						refreshData();
+					}
+				}
+			}
+		}
 	}
 	
 	private void refreshData(){
@@ -451,12 +470,12 @@ public class StockDetailComposite extends Composite {
 			if (stock == null || wvArtikel.getValue() == null) {
 				return;
 			}
-			IStockEntry se = (IStockEntry) stockEntries.get(stock);
-			if (se == null) {
+			IStockEntry stockEntry = (IStockEntry) stockEntries.get(stock);
+			if (stockEntry == null) {
 				return;
 			}
 			
-			LockResponse lr = CoreHub.getLocalLockService().acquireLock(se);
+			LockResponse lr = CoreHub.getLocalLockService().acquireLock(stockEntry);
 			if (!lr.isOk()) {
 				return;
 			}
@@ -468,23 +487,23 @@ public class StockDetailComposite extends Composite {
 			
 			switch (editorFor) {
 			case MIN:
-				se.setMinimumStock(val);
+				stockEntry.setMinimumStock(val);
 				break;
 			case MAX:
-				se.setMaximumStock(val);
+				stockEntry.setMaximumStock(val);
 				break;
 			case CURR:
-				se.setCurrentStock(val);
+				stockEntry.setCurrentStock(val);
 				break;
 			case FRAC:
-				se.setFractionUnits(val);
+				stockEntry.setFractionUnits(val);
 				break;
 			default:
 			}
-			
-			lr = CoreHub.getLocalLockService().releaseLock(se);
+			CoreModelServiceHolder.get().save(stockEntry);
+			lr = CoreHub.getLocalLockService().releaseLock(stockEntry);
 			if (!lr.isOk()) {
-				log.warn("Error releasing lock for [{}]: {}", se.getId(), lr.getStatus());
+				log.warn("Error releasing lock for [{}]: {}", stockEntry.getId(), lr.getStatus());
 			}
 			getViewer().refresh();
 		}

@@ -8,15 +8,15 @@ import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
 import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 import ch.elexis.core.model.article.Constants;
-import ch.elexis.core.model.eigenartikel.EigenartikelTyp;
 import ch.elexis.core.model.util.ModelUtil;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.types.ArticleSubTyp;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.types.VatInfo;
 
 public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Artikel>
-		implements IdentifiableWithXid, ITypedArticle {
+		implements IdentifiableWithXid, IArticle {
 	
 	private ExtInfoHandler extInfoHandler;
 	
@@ -34,14 +34,14 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	public String getCodeSystemCode(){
 		ArticleTyp typ = getTyp();
 		if (typ == ArticleTyp.EIGENARTIKEL) {
-			EigenartikelTyp subTyp = EigenartikelTyp.byCharSafe(getSubTyp());
-			if (subTyp == EigenartikelTyp.COMPLEMENTARY) {
+			ArticleSubTyp subTyp = getSubTyp();
+			if (subTyp == ArticleSubTyp.COMPLEMENTARY) {
 				return "590";
-			} else if (subTyp == EigenartikelTyp.ADDITIVE) {
+			} else if (subTyp == ArticleSubTyp.ADDITIVE) {
 				return "406";
 			}
 		}
-		return ITypedArticle.super.getCodeSystemCode();
+		return IArticle.super.getCodeSystemCode();
 	}
 	
 	@Override
@@ -164,13 +164,13 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	}
 	
 	@Override
-	public String getSubTyp(){
-		return getEntity().getCodeclass();
+	public ArticleSubTyp getSubTyp(){
+		return ArticleSubTyp.byCharSafe(getEntity().getCodeclass());
 	}
 	
 	@Override
-	public void setSubTyp(String value){
-		getEntity().setCodeclass(value);
+	public void setSubTyp(ArticleSubTyp value){
+		getEntity().setCodeclass(Character.toString(value.getTypeChar()));
 	}
 	
 	@Override
@@ -186,7 +186,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	@Override
 	public VatInfo getVatInfo(){
 		if (isTyp(ArticleTyp.EIGENARTIKEL)) {
-			EigenartikelTyp subTyp = EigenartikelTyp.byCharSafe(getSubTyp());
+			ArticleSubTyp subTyp = getSubTyp();
 			switch (subTyp) {
 			case PHARMA:
 			case MAGISTERY:
@@ -208,7 +208,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	
 	@Override
 	public IArticle getProduct(){
-		return ModelUtil.getAdapter(getEntity().getProduct(), ITypedArticle.class);
+		return ModelUtil.getAdapter(getEntity().getProduct(), IArticle.class);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -234,8 +234,8 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<IArticle> getPackages(){
-		IQuery<ITypedArticle> query = ModelUtil.getQuery(ITypedArticle.class);
-		query.and(ModelPackage.Literals.ITYPED_ARTICLE__TYP, COMPARATOR.EQUALS, getTyp());
+		IQuery<IArticle> query = ModelUtil.getQuery(IArticle.class);
+		query.and(ModelPackage.Literals.IARTICLE__TYP, COMPARATOR.EQUALS, getTyp());
 		query.and(ModelPackage.Literals.IARTICLE__PRODUCT, COMPARATOR.EQUALS, this);
 		return (List<IArticle>) (List<?>) query.execute();
 	}
@@ -287,5 +287,10 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 			setExtInfo(ch.elexis.core.model.eigenartikel.Constants.FLD_EXT_HI_COST_ABSORPTION,
 				Boolean.toString(value));
 		}
+	}
+	
+	@Override
+	public String getLabel(){
+		return getName();
 	}
 }

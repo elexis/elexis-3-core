@@ -19,6 +19,9 @@ import org.eclipse.emf.ecore.EObject;
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBillable;
+import ch.elexis.core.model.IBillableOptifier;
+import ch.elexis.core.model.IBillableVerifier;
+import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IBlob;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.ICodeElement;
@@ -26,8 +29,10 @@ import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IDiagnosis;
+import ch.elexis.core.model.IDiagnosisTree;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IHistory;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabMapping;
@@ -35,13 +40,16 @@ import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IOrder;
+import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPeriod;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.ISticker;
-import ch.elexis.core.model.ITypedArticle;
+import ch.elexis.core.model.IStock;
+import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.IXid;
@@ -218,10 +226,6 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIArticleAdapter();
 			}
 			@Override
-			public Adapter caseITypedArticle(ITypedArticle object) {
-				return createITypedArticleAdapter();
-			}
-			@Override
 			public Adapter caseWithExtInfo(WithExtInfo object) {
 				return createWithExtInfoAdapter();
 			}
@@ -248,6 +252,22 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseIBilled(IBilled object) {
 				return createIBilledAdapter();
+			}
+			@Override
+			public Adapter caseIStock(IStock object) {
+				return createIStockAdapter();
+			}
+			@Override
+			public Adapter caseIStockEntry(IStockEntry object) {
+				return createIStockEntryAdapter();
+			}
+			@Override
+			public Adapter caseIOrderEntry(IOrderEntry object) {
+				return createIOrderEntryAdapter();
+			}
+			@Override
+			public Adapter caseIOrder(IOrder object) {
+				return createIOrderAdapter();
 			}
 			@Override
 			public <T> Adapter caseComparable(Comparable<T> object) {
@@ -666,20 +686,6 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.ITypedArticle <em>ITyped Article</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see ch.elexis.core.model.ITypedArticle
-	 * @generated
-	 */
-	public Adapter createITypedArticleAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.WithExtInfo <em>With Ext Info</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -774,6 +780,62 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIBilledAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IStock <em>IStock</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IStock
+	 * @generated
+	 */
+	public Adapter createIStockAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IStockEntry <em>IStock Entry</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IStockEntry
+	 * @generated
+	 */
+	public Adapter createIStockEntryAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IOrderEntry <em>IOrder Entry</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IOrderEntry
+	 * @generated
+	 */
+	public Adapter createIOrderEntryAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IOrder <em>IOrder</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IOrder
+	 * @generated
+	 */
+	public Adapter createIOrderAdapter() {
 		return null;
 	}
 

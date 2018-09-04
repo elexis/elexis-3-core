@@ -28,6 +28,8 @@
 		<class>ch.elexis.core.jpa.entities.ArtikelstammItem</class>
 		<class>ch.elexis.core.jpa.entities.Artikel</class>
 		<class>ch.elexis.core.jpa.entities.Behandlung</class>
+		<class>ch.elexis.core.jpa.entities.Bestellung</class>
+		<class>ch.elexis.core.jpa.entities.BestellungEntry</class>
 		<class>ch.elexis.core.jpa.entities.Brief</class>
 		<class>ch.elexis.core.jpa.entities.Config</class>
 		<class>ch.elexis.core.jpa.entities.Diagnosis</class>

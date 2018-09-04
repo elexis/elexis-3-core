@@ -18,10 +18,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -45,7 +49,6 @@ import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.GridData;
@@ -62,13 +65,23 @@ import org.eclipse.ui.statushandlers.StatusManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.interfaces.IOrderEntry;
-import ch.elexis.core.data.interfaces.IStockEntry;
-import ch.elexis.core.data.service.StockService;
-import ch.elexis.core.data.services.IStockService.Availability;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.data.service.OrderServiceHolder;
+import ch.elexis.core.data.service.StockCommissioningServiceHolder;
+import ch.elexis.core.data.service.StockServiceHolder;
+import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IOrderEntry;
+import ch.elexis.core.model.IStock;
+import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.services.IStockService.Availability;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -76,22 +89,19 @@ import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.dialogs.OrderImportDialog;
 import ch.elexis.core.ui.dialogs.StockSelectorDialog;
 import ch.elexis.core.ui.editors.KontaktSelektorDialogCellEditor;
-import ch.elexis.core.ui.editors.PersistentObjectEditingSupport;
+import ch.elexis.core.ui.editors.NumericCellEditorValidator;
+import ch.elexis.core.ui.editors.ReflectiveEditingSupport;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.util.PersistentObjectDragSource;
-import ch.elexis.core.ui.util.PersistentObjectDropTarget;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
+import ch.elexis.core.ui.util.dnd.IdentifiableDragSource;
+import ch.elexis.core.ui.util.dnd.IdentifiableDropTarget;
 import ch.elexis.core.ui.views.provider.StockEntryLabelProvider;
 import ch.elexis.core.ui.views.provider.StockEntryLabelProvider.ColumnStockEntryLabelProvider;
-import ch.elexis.data.Artikel;
-import ch.elexis.data.Kontakt;
-import ch.elexis.data.PersistentObject;
-import ch.elexis.data.Query;
-import ch.elexis.data.Stock;
-import ch.elexis.data.StockEntry;
 import ch.elexis.scripting.CSVWriter;
 import ch.rgw.tools.ExHandler;
+import ch.rgw.tools.Money;
 
 public class StockView extends ViewPart implements ISaveablePart2, IActivationListener {
 	public StockView(){}
@@ -191,29 +201,32 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 			tc.setWidth(colwidth[i]);
 			tc.setData(i);
 			
-			PersistentObjectEditingSupport poes = null;
+			ReflectiveEditingSupport poes = null;
 			if (i == 4) {
-				poes = new PersistentObjectEditingSupport(viewer, StockEntry.FLD_MIN, Integer.class,
-					true);
+				poes = new ReflectiveEditingSupport(viewer,
+					ModelPackage.Literals.ISTOCK_ENTRY__MINIMUM_STOCK.getName(),
+					new NumericCellEditorValidator(), true);
 			} else if (i == 5) {
-				poes = new PersistentObjectEditingSupport(viewer, StockEntry.FLD_CURRENT,
-					Integer.class, true) {
+				poes = new ReflectiveEditingSupport(viewer,
+					ModelPackage.Literals.ISTOCK_ENTRY__CURRENT_STOCK.getName(),
+					new NumericCellEditorValidator(), true) {
 					protected boolean canEdit(Object element){
 						boolean canEdit = super.canEdit(element);
 						if (canEdit) {
-							StockEntry se = (StockEntry) element;
+							IStockEntry se = (IStockEntry) element;
 							return !se.getStock().isCommissioningSystem();
 						}
 						return true;
 					};
 				};
 			} else if (i == 6) {
-				poes = new PersistentObjectEditingSupport(viewer, StockEntry.FLD_MAX, Integer.class,
-					true);
+				poes = new ReflectiveEditingSupport(viewer,
+					ModelPackage.Literals.ISTOCK_ENTRY__MAXIMUM_STOCK.getName(),
+					new NumericCellEditorValidator(), true);
 			}
 			
 			if (poes != null) {
-				tvc.setEditingSupport(poes);
+				tvc.setEditingSupport(poes.setModelService(CoreModelServiceHolder.get()));
 			}
 			
 			if (i == 7) {
@@ -221,7 +234,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 					
 					@Override
 					protected void setValue(Object element, Object value){
-						StockEntry se = (StockEntry) element;
+						IStockEntry se = (IStockEntry) element;
 						if (se == null) {
 							return;
 						}
@@ -231,7 +244,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 							return;
 						}
 						
-						se.setProvider((Kontakt) value);
+						se.setProvider((IContact) value);
 						
 						lr = CoreHub.getLocalLockService().releaseLock((se));
 						if (!lr.isOk()) {
@@ -247,7 +260,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 						if (se == null) {
 							return null;
 						}
-						return (Kontakt) se.getProvider();
+						return se.getProvider();
 					}
 					
 					@Override
@@ -259,7 +272,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 					
 					@Override
 					protected boolean canEdit(Object element){
-						StockEntry stockEntry = (StockEntry) element;
+						IStockEntry stockEntry = (IStockEntry) element;
 						return (stockEntry != null && stockEntry.getArticle() != null);
 					}
 				};
@@ -295,41 +308,45 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 			}
 		});
 		
-		new PersistentObjectDropTarget(viewer.getControl(),
-			new PersistentObjectDropTarget.IReceiver() {
-				
-				@Override
-				public void dropped(PersistentObject o, DropTargetEvent e){
-					if (o instanceof Artikel) {
-						Artikel art = (Artikel) o;
-						StockSelectorDialog ssd =
-							new StockSelectorDialog(UiDesk.getTopShell(), false);
-						int open = ssd.open();
-						if (open == Dialog.OK) {
-							if (ssd.getResult().length > 0) {
-								Stock stock = (Stock) ssd.getResult()[0];
-								if (stock != null) {
-									CoreHub.getStockService().storeArticleInStock(stock,
-										art.storeToString());
-									viewer.refresh();
+		new IdentifiableDropTarget(viewer.getControl(), new IdentifiableDropTarget.IReceiver() {
+			
+			@Override
+			public void dropped(List<Identifiable> identifiables){
+				for (Identifiable identifiable : identifiables) {
+					if (identifiable instanceof IArticle) {
+						if (!((IArticle) identifiable).isProduct()) {
+							StockSelectorDialog ssd =
+								new StockSelectorDialog(UiDesk.getTopShell(), false);
+							int open = ssd.open();
+							if (open == Dialog.OK) {
+								if (ssd.getResult().length > 0) {
+									IStock stock = (IStock) ssd.getResult()[0];
+									if (stock != null) {
+										StockServiceHolder.get().storeArticleInStock(stock,
+											StoreToStringServiceHolder
+												.getStoreToString((IArticle) identifiable));
+										viewer.refresh();
+									}
 								}
 							}
 						}
 					}
 				}
-				
-				@Override
-				public boolean accept(PersistentObject o){
-					if (o instanceof Artikel) {
-						Artikel art = (Artikel) o;
-						return !art.isProduct();
+			}
+			
+			@Override
+			public boolean accept(List<Identifiable> identifiables){
+				for (Identifiable identifiable : identifiables) {
+					if (!(identifiable instanceof IArticle)) {
+						return false;
 					}
-					return false;
 				}
-			});
+				return true;
+			}
+		});
 		
 		// add drag support
-		new PersistentObjectDragSource(viewer);
+		new IdentifiableDragSource(viewer);
 		
 		Menu menu = contextMenu.createContextMenu(viewer.getControl());
 		viewer.getControl().setMenu(menu);
@@ -340,6 +357,17 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		viewMenus.createMenu(exportAction);
 		
 		GlobalEventDispatcher.addActivationListener(this, this);
+		CoreUiUtil.injectServices(this);
+	}
+	
+	@Inject
+	@Optional
+	public void udpate(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IStockEntry entry){
+		if (entry != null) {
+			if (viewer != null && !viewer.getControl().isDisposed()) {
+				viewer.update(entry, null);
+			}
+		}
 	}
 	
 	private void makeActions(){
@@ -381,43 +409,42 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 								"Aktuell Packung an Lager", "Aktuell an Lager (Anbruch)",
 								" Stück pro Packung", "Stück pro Abgabe", "Einkaufspreis",
 								"Verkaufspreis",
-								"Typ nach Liste (SL, SL-Betäubung, P, N, LPPV, Migl)", "Lieferant"
+								"Typ (P, N, ...)", "Lieferant"
 							};
 							csv.writeNext(header);
 							
-							for (Object o : new Query<StockEntry>(StockEntry.class).execute()) {
-								if (o instanceof StockEntry) {
-									String[] line = new String[header.length];
-									StockEntry stockEntry = (StockEntry) o;
-									Artikel artikel = stockEntry.getArticle();
-									if (artikel != null) {
-										line[0] = artikel.getLabel();
-										line[1] = artikel.getPharmaCode();
-										line[2] = artikel.getEAN();
-										line[3] = String.valueOf(stockEntry.getMaximumStock());
-										line[4] = String.valueOf(stockEntry.getMinimumStock());
-										line[5] = String.valueOf(stockEntry.getCurrentStock());
-										line[6] = String.valueOf(stockEntry.getFractionUnits());
-										line[7] = String.valueOf(artikel.getPackungsGroesse());
-										line[8] = String.valueOf(artikel.getAbgabeEinheit());
-										line[9] = artikel.getEKPreis().getAmountAsString();
-										line[10] = artikel.getVKPreis().getAmountAsString();
-										line[11] = artikel.get(Artikel.FLD_TYP);
-										Kontakt provider = stockEntry.getProvider();
-										if (provider != null) {
-											line[12] = provider.getLabel();
-										}
-										csv.writeNext(line);
-										success++;
-									} else {
-										errorUnkownArticle++;
-										log.warn("cannot export: id [" + stockEntry.getId()
-											+ "] artikelId ["
-											+ stockEntry.get(StockEntry.FLD_ARTICLE_ID)
-											+ "] artikelType ["
-											+ stockEntry.get(StockEntry.FLD_ARTICLE_TYPE) + "] ");
+							List<IStockEntry> entries =
+								CoreModelServiceHolder.get().getQuery(IStockEntry.class).execute();
+							for (IStockEntry iStockEntry : entries) {
+								String[] line = new String[header.length];
+								IArticle article = iStockEntry.getArticle();
+								if (article != null) {
+									line[0] = article.getLabel();
+									line[1] = article.getCode();
+									line[2] = article.getGtin();
+									line[3] = String.valueOf(iStockEntry.getMaximumStock());
+									line[4] = String.valueOf(iStockEntry.getMinimumStock());
+									line[5] = String.valueOf(iStockEntry.getCurrentStock());
+									line[6] = String.valueOf(iStockEntry.getFractionUnits());
+									line[7] = String.valueOf(article.getPackageSize());
+									line[8] = String.valueOf(article.getSellingSize());
+									line[9] =
+										new Money(article.getPurchasePrice()).getAmountAsString();
+									line[10] =
+										new Money(article.getSellingPrice()).getAmountAsString();
+									line[11] =
+										Character.toString(article.getSubTyp().getTypeChar());
+									IContact provider = iStockEntry.getProvider();
+									if (provider != null) {
+										line[12] = provider.getLabel();
 									}
-									
+									csv.writeNext(line);
+									success++;
+								} else {
+									errorUnkownArticle++;
+									log.warn(
+										"cannot export: id [" + iStockEntry.getId() + "] "
+											+ iStockEntry.getLabel());
 								}
 							}
 							csv.close();
@@ -484,8 +511,8 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		}
 		
 		public void run(){
-			StockEntry stockEntry = fetchSelection();
-			IStatus status = CoreHub.getStockCommissioningSystemService()
+			IStockEntry stockEntry = fetchSelection();
+			IStatus status = StockCommissioningServiceHolder.get()
 				.synchronizeInventory(stockEntry.getStock(), null, null);
 			if (!status.isOK()) {
 				ElexisStatus elStatus = new ElexisStatus(status);
@@ -493,11 +520,11 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 			}
 		}
 		
-		private StockEntry fetchSelection(){
+		private IStockEntry fetchSelection(){
 			IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 			if (selection != null && !selection.isEmpty()
-				&& selection.getFirstElement() instanceof StockEntry) {
-				return (StockEntry) selection.getFirstElement();
+				&& selection.getFirstElement() instanceof IStockEntry) {
+				return (IStockEntry) selection.getFirstElement();
 			}
 			return null;
 		};
@@ -511,9 +538,9 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		}
 		
 		public boolean isVisible(){
-			StockEntry stockEntry = fetchSelection();
+			IStockEntry stockEntry = fetchSelection();
 			if (stockEntry != null) {
-				Stock stock = stockEntry.getStock();
+				IStock stock = stockEntry.getStock();
 				if (stock != null) {
 					String driverUuid = stock.getDriverUuid();
 					return (driverUuid != null && driverUuid.length() > 8);
@@ -528,20 +555,20 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		}
 		
 		public void run(){
-			StockEntry stockEntry = fetchSelection();
-			IStatus status = CoreHub.getStockCommissioningSystemService()
-				.performArticleOutlay(stockEntry, 1, null);
+			IStockEntry stockEntry = fetchSelection();
+			IStatus status =
+				StockCommissioningServiceHolder.get().performArticleOutlay(stockEntry, 1, null);
 			if (!status.isOK()) {
 				ElexisStatus elStatus = new ElexisStatus(status);
 				StatusManager.getManager().handle(elStatus, StatusManager.SHOW);
 			}
 		}
 		
-		private StockEntry fetchSelection(){
+		private IStockEntry fetchSelection(){
 			IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 			if (selection != null && !selection.isEmpty()
-				&& selection.getFirstElement() instanceof StockEntry) {
-				return (StockEntry) selection.getFirstElement();
+				&& selection.getFirstElement() instanceof IStockEntry) {
+				return (IStockEntry) selection.getFirstElement();
 			}
 			return null;
 		};
@@ -549,7 +576,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 	
 	public class CheckInOrderedAction extends Action {
 		private Viewer viewer;
-		private StockEntry stockEntry;
+		private IStockEntry stockEntry;
 		
 		public CheckInOrderedAction(Viewer viewer){
 			this.viewer = viewer;
@@ -560,10 +587,10 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 			stockEntry = null;
 			IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 			if (selection != null && !selection.isEmpty()
-				&& selection.getFirstElement() instanceof StockEntry) {
-				stockEntry = (StockEntry) selection.getFirstElement();
+				&& selection.getFirstElement() instanceof IStockEntry) {
+				stockEntry = (IStockEntry) selection.getFirstElement();
 				if (stockEntry.getArticle() != null) {
-					return (CoreHub.getOrderService()
+					return (OrderServiceHolder.get()
 						.findOpenOrderEntryForStockEntry(stockEntry) != null);
 				}
 			}
@@ -580,13 +607,14 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 			stockEntry = null;
 			IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 			if (selection != null && !selection.isEmpty()
-				&& selection.getFirstElement() instanceof StockEntry) {
-				stockEntry = (StockEntry) selection.getFirstElement();
+				&& selection.getFirstElement() instanceof IStockEntry) {
+				stockEntry = (IStockEntry) selection.getFirstElement();
 				if (stockEntry.getArticle() != null) {
-					IOrderEntry order = CoreHub.getOrderService()
-						.findOpenOrderEntryForStockEntry(stockEntry);
+					IOrderEntry orderEntry =
+						OrderServiceHolder.get().findOpenOrderEntryForStockEntry(stockEntry);
 					OrderImportDialog dialog =
-						new OrderImportDialog(viewer.getControl().getShell(), order.getOrder());
+						new OrderImportDialog(viewer.getControl().getShell(),
+							orderEntry.getOrder());
 					dialog.open();
 					viewer.refresh();
 				}
@@ -596,7 +624,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 	
 	public class DeleteStockEntryAction extends Action {
 		private Viewer viewer;
-		private StockEntry stockEntry;
+		private IStockEntry stockEntry;
 		
 		public DeleteStockEntryAction(Viewer viewer){
 			this.viewer = viewer;
@@ -607,10 +635,10 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 			stockEntry = null;
 			IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 			if (selection != null && !selection.isEmpty()
-				&& selection.getFirstElement() instanceof StockEntry) {
-				stockEntry = (StockEntry) selection.getFirstElement();
+				&& selection.getFirstElement() instanceof IStockEntry) {
+				stockEntry = (IStockEntry) selection.getFirstElement();
 				if (stockEntry != null) {
-					Stock stock = stockEntry.getStock();
+					IStock stock = stockEntry.getStock();
 					return stock != null && !stock.isCommissioningSystem();
 				}
 			}
@@ -630,11 +658,11 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		@Override
 		public void run(){
 			if (stockEntry != null) {
-				Artikel article = stockEntry.getArticle();
+				IArticle article = stockEntry.getArticle();
 				if (article != null && MessageDialog.openConfirm(viewer.getControl().getShell(),
 					Messages.LagerView_deleteActionConfirmCaption, MessageFormat
 						.format(Messages.LagerView_deleteConfirmBody, article.getName()))) {
-					stockEntry.delete();
+					CoreModelServiceHolder.get().delete(stockEntry);
 					viewer.refresh();
 				}
 			}
@@ -647,7 +675,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		private static boolean filterOrderOnly = false;
 		private String filter;
 		
-		private List<StockEntry> loaded;
+		private List<ch.elexis.core.model.IStockEntry> loaded;
 		
 		public StockEntryLoader(Viewer viewer, String filter){
 			super("Stock loading ...");
@@ -667,10 +695,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		@Override
 		protected IStatus run(IProgressMonitor monitor){
 			monitor.beginTask("Stock loading ...", IProgressMonitor.UNKNOWN);
-			loaded = new Query<StockEntry>(StockEntry.class, null, null, StockEntry.TABLENAME,
-					new String[] {
-						StockEntry.FLD_ARTICLE_ID
-					}).execute();
+			loaded = StockServiceHolder.get().getAllStockEntries();
 			if (filterOrderOnly) {
 				loaded = loaded.parallelStream().filter(se -> selectOrderOnly(se))
 					.collect(Collectors.toList());
@@ -701,8 +726,8 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 			return Status.OK_STATUS;
 		}
 		
-		private boolean selectOrderOnly(StockEntry se){
-			Availability availability = StockService.determineAvailability(se);
+		private boolean selectOrderOnly(IStockEntry se){
+			Availability availability = StockServiceHolder.get().determineAvailability(se);
 			if (availability != null) {
 				switch (availability) {
 				case CRITICAL_STOCK:
@@ -715,7 +740,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 			return false;
 		}
 		
-		private boolean selectFilter(StockEntry se, String filter){
+		private boolean selectFilter(IStockEntry se, String filter){
 			if (se.getArticle() != null && se.getArticle().getLabel() != null) {
 				return se.getArticle().getLabel().toLowerCase().contains(filter.toLowerCase());
 			}
@@ -754,11 +779,11 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 	public void activation(boolean mode){}
 	
 	public void visible(boolean mode){
-		List<StockEntry> allEntries = new Query<StockEntry>(StockEntry.class).execute();
+		List<IStockEntry> allEntries =
+			CoreModelServiceHolder.get().getQuery(IStockEntry.class).execute();
 		if (viewer != null && !viewer.getControl().isDisposed()) {
-			viewer
-				.setInput(Collections.singletonList(
-					new String("Es sind " + allEntries.size() + " Lagereinträge vorhanden")));
+			viewer.setInput(Collections.singletonList(
+				new String("Es sind " + allEntries.size() + " Lagereinträge vorhanden")));
 		}
 	}
 }

@@ -1,9 +1,9 @@
 package ch.elexis.core.ui.editors;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.ICellEditorListener;
@@ -15,47 +15,31 @@ import org.eclipse.swt.widgets.Display;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.lock.types.LockResponse;
-import ch.elexis.data.PersistentObject;
+import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.IModelService;
 
-public class PersistentObjectEditingSupport extends EditingSupport {
+public class ReflectiveEditingSupport extends EditingSupport {
 	
 	private TextCellEditor editor;
 	private final String field;
 	
-	private Logger log = LoggerFactory.getLogger(PersistentObjectEditingSupport.class);
+	private Logger log = LoggerFactory.getLogger(ReflectiveEditingSupport.class);
+	private IModelService modelService;
 	
-	public PersistentObjectEditingSupport(TableViewer columnViewer, String field){
+	public ReflectiveEditingSupport(TableViewer columnViewer, String field){
+		this(columnViewer, field, null, false);
+	}
+	
+	public ReflectiveEditingSupport(TableViewer columnViewer, String field,
+		ICellEditorValidator validator, boolean markValidationFailed){
 		super(columnViewer);
 		this.field = field;
 		this.editor = new TextCellEditor(columnViewer.getTable());
-	}
-	
-	public PersistentObjectEditingSupport(TableViewer columnViewer, String field, Class<? extends Serializable> fieldTypeClazz)
-	{
-		this(columnViewer, field, fieldTypeClazz, false);
-	}
-	
-	public PersistentObjectEditingSupport(TableViewer columnViewer, String field, Class<? extends Serializable> fieldTypeClazz, boolean markValidationFailed){
-		this(columnViewer, field);
-		if (fieldTypeClazz != null)
+		if (validator != null)
 		{
-			editor.setValidator(new ICellEditorValidator() {
-				
-				@Override
-				public String isValid(Object value) {
-					try 
-					{
-						String val = (String) value;
-						fieldTypeClazz.getDeclaredMethod("valueOf", String.class).invoke(null, val);
-						return null;
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | ClassCastException e) {
-						return "dummy";
-					}
-				}
-			});
+			editor.setValidator(validator);
 			
 			if (markValidationFailed)
 			{
@@ -87,6 +71,10 @@ public class PersistentObjectEditingSupport extends EditingSupport {
 		}
 	}
 	
+	public ReflectiveEditingSupport setModelService(IModelService modelService){
+		this.modelService = modelService;
+		return this;
+	}
 	
 	@Override
 	protected CellEditor getCellEditor(Object element){
@@ -95,35 +83,41 @@ public class PersistentObjectEditingSupport extends EditingSupport {
 	
 	@Override
 	protected boolean canEdit(Object element){
-		return (!Objects.isNull(element));
+		return (!Objects.isNull(element) && !(element instanceof String));
 	}
 	
 	@Override
 	protected Object getValue(Object element){
-		PersistentObject po = (PersistentObject) element;
-		if (po == null) {
-			return StringConstants.EMPTY;
+		try {
+			return BeanUtils.getProperty(element, field);
+		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+			LoggerFactory.getLogger(getClass())
+				.error("Error getting property [" + field + "] of [" + element + "]", e);
 		}
-		return po.get(field);
+		return null;
 	}
 	
 	@Override
 	protected void setValue(Object element, Object value){
-		PersistentObject po = (PersistentObject) element;
-		if (po == null) {
-			return;
+		if (canEdit(element)) {
+			LockResponse lr = CoreHub.getLocalLockService().acquireLock(element);
+			if (!lr.isOk()) {
+				return;
+			}
+			try {
+				BeanUtils.setProperty(element, field, value);
+				if (modelService != null && element instanceof Identifiable) {
+					modelService.save((Identifiable) element);
+				}
+			} catch (IllegalAccessException | InvocationTargetException e) {
+				LoggerFactory.getLogger(getClass())
+					.error("Error setting property [" + field + "] of [" + element + "]", e);
+			}
+			lr = CoreHub.getLocalLockService().releaseLock(element);
+			if (!lr.isOk()) {
+				log.warn("Error releasing lock for [{}]: {}", element, lr.getStatus());
+			}
+			getViewer().refresh(true);
 		}
-		LockResponse lr = CoreHub.getLocalLockService().acquireLock(po);
-		if (!lr.isOk()) {
-			return;
-		}
-		
-		po.set(field, (String) value);
-		lr = CoreHub.getLocalLockService().releaseLock(po);
-		if (!lr.isOk()) {
-			log.warn("Error releasing lock for [{}]: {}", po.getId(), lr.getStatus());
-		}
-		getViewer().refresh(true);
 	}
-	
 }

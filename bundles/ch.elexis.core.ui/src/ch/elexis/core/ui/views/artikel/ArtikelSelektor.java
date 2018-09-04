@@ -28,8 +28,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.service.StockServiceHolder;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.commands.EditEigenartikelUi;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
@@ -39,7 +40,6 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
 import ch.elexis.core.ui.views.provider.StockEntryLabelProvider;
 import ch.elexis.data.PersistentObject;
-import ch.elexis.data.StockEntry;
 import ch.rgw.tools.ExHandler;
 
 public class ArtikelSelektor extends ViewPart implements ISaveablePart2 {
@@ -81,7 +81,7 @@ public class ArtikelSelektor extends ViewPart implements ISaveablePart2 {
 		tv.setContentProvider(new IStructuredContentProvider() {
 			
 			public Object[] getElements(final Object inputElement){
-				return CoreHub.getStockService().getAllStockEntries().toArray();
+				return StockServiceHolder.get().getAllStockEntries().toArray();
 			}
 			
 			public void dispose(){}
@@ -93,19 +93,17 @@ public class ArtikelSelektor extends ViewPart implements ISaveablePart2 {
 		tv.setLabelProvider(new StockEntryLabelProvider() {
 			@Override
 			public String getColumnText(Object element, int columnIndex){
-				StockEntry se = (StockEntry) element;
+				IStockEntry se = (IStockEntry) element;
 				if (se.getArticle() != null) {
 					String ret = se.getArticle().getName();
-					Integer amount =
-						CoreHub.getStockService().getCumulatedStockForArticle(se.getArticle());
+					Long amount =
+						StockServiceHolder.get().getCumulatedStockForArticle(se.getArticle());
 					if (amount != null) {
-						ret += " (" + Integer.toString(amount) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+						ret += " (" + Long.toString(amount) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					return ret;
 				} else {
-					String[] vals =
-						se.get(false, StockEntry.FLD_ARTICLE_TYPE, StockEntry.FLD_ARTICLE_ID);
-					return vals[0] + "[" + vals[1] + "]";
+					return se.getLabel();
 				}
 			}
 		});

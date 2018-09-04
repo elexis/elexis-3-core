@@ -71,4 +71,6 @@
       abstract="true" interface="true">
     <eTypeParameters name="T"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="OrderEntryState" instanceClassName="ch.elexis.core.model.OrderEntryState"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="ArticleSubTyp" instanceClassName="ch.elexis.core.types.ArticleSubTyp"/>
 </ecore:EPackage>

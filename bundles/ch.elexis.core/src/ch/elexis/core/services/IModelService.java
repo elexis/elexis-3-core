@@ -204,6 +204,14 @@ public interface IModelService {
 	public Stream<?> executeNativeQuery(String sql);
 	
 	/**
+	 * Execute the native update and return the number of affected rows.
+	 * 
+	 * @param sql
+	 * @return
+	 */
+	public int executeNativeUpdate(String sql);
+	
+	/**
 	 * Helper Method for creating a map to execute a {@link INamedQuery}.
 	 * 
 	 * @param parameters

@@ -13,6 +13,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.Cache;
+
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.LabOrderStateConverter;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
@@ -25,6 +27,7 @@ import ch.elexis.core.model.LabOrderState;
 @EntityListeners({
 	LabOrderEntityListener.class, EntityWithIdListener.class
 })
+@Cache(expiry = 15000)
 @NamedQuery(name = "LabOrder.orderid", query = "SELECT lo FROM LabOrder lo WHERE  lo.deleted = false AND lo.orderid = :orderid")
 @NamedQuery(name = "LabOrder.item.patient.state", query = "SELECT lo FROM LabOrder lo WHERE  lo.deleted = false AND lo.item = :item AND lo.patient = :patient AND lo.state = :state")
 public class LabOrder implements EntityWithId, EntityWithDeleted {

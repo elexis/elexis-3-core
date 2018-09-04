@@ -18,6 +18,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.eclipse.persistence.annotations.Cache;
+
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.IntegerStringConverter;
 import ch.elexis.core.jpa.entities.converter.PathologicDescriptionConverter;
@@ -29,6 +31,7 @@ import ch.elexis.core.types.PathologicDescription.Description;
 @Entity
 @Table(name = "laborwerte")
 @EntityListeners(EntityWithIdListener.class)
+@Cache(expiry = 15000)
 @NamedQuery(name = "LabResult.patient.item", query = "SELECT lr FROM LabResult lr WHERE lr.deleted = false AND lr.patient = :patient AND lr.item = :item")
 public class LabResult implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 

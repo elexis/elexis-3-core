@@ -11,6 +11,7 @@
 package ch.elexis.core.types.impl;
 
 import ch.elexis.core.model.LabOrderState;
+import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.model.XidQuality;
 import java.time.LocalDateTime;
 
@@ -22,6 +23,7 @@ import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 import ch.elexis.core.types.AddressType;
+import ch.elexis.core.types.ArticleSubTyp;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.types.ContactGender;
 import ch.elexis.core.types.Country;
@@ -130,6 +132,10 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createArticleTypFromString(eDataType, initialValue);
 			case TypesPackage.VAT_INFO:
 				return createVatInfoFromString(eDataType, initialValue);
+			case TypesPackage.ORDER_ENTRY_STATE:
+				return createOrderEntryStateFromString(eDataType, initialValue);
+			case TypesPackage.ARTICLE_SUB_TYP:
+				return createArticleSubTypFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -177,6 +183,10 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertArticleTypToString(eDataType, instanceValue);
 			case TypesPackage.VAT_INFO:
 				return convertVatInfoToString(eDataType, instanceValue);
+			case TypesPackage.ORDER_ENTRY_STATE:
+				return convertOrderEntryStateToString(eDataType, instanceValue);
+			case TypesPackage.ARTICLE_SUB_TYP:
+				return convertArticleSubTypToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -493,6 +503,42 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	public String convertVatInfoToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public OrderEntryState createOrderEntryStateFromString(EDataType eDataType, String initialValue) {
+		return (OrderEntryState)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertOrderEntryStateToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ArticleSubTyp createArticleSubTypFromString(EDataType eDataType, String initialValue) {
+		return (ArticleSubTyp)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertArticleSubTypToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

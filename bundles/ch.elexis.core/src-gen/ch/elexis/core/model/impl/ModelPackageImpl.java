@@ -43,13 +43,16 @@ import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IOrder;
+import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPeriod;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.ISticker;
-import ch.elexis.core.model.ITypedArticle;
+import ch.elexis.core.model.IStock;
+import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.IXid;
@@ -267,13 +270,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass iTypedArticleEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EClass withExtInfoEClass = null;
 
 	/**
@@ -317,6 +313,34 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass iBilledEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iStockEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iStockEntryEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iOrderEntryEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iOrderEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -1737,8 +1761,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getITypedArticle() {
-		return iTypedArticleEClass;
+	public EAttribute getIArticle_Typ() {
+		return (EAttribute)iArticleEClass.getEStructuralFeatures().get(10);
 	}
 
 	/**
@@ -1746,17 +1770,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getITypedArticle_Typ() {
-		return (EAttribute)iTypedArticleEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getITypedArticle_SubTyp() {
-		return (EAttribute)iTypedArticleEClass.getEStructuralFeatures().get(1);
+	public EAttribute getIArticle_SubTyp() {
+		return (EAttribute)iArticleEClass.getEStructuralFeatures().get(11);
 	}
 
 	/**
@@ -1872,8 +1887,269 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getIEncounter_Billed() {
+		return (EReference)iEncounterEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIEncounter_Date() {
+		return (EAttribute)iEncounterEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getIBilled() {
 		return iBilledEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIBilled_Billable() {
+		return (EReference)iBilledEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIBilled_Amount() {
+		return (EAttribute)iBilledEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getIStock() {
+		return iStockEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIStock_Code() {
+		return (EAttribute)iStockEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIStock_DriverUuid() {
+		return (EAttribute)iStockEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIStock_DriverConfig() {
+		return (EAttribute)iStockEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIStock_Priority() {
+		return (EAttribute)iStockEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIStock_Owner() {
+		return (EReference)iStockEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getIStockEntry() {
+		return iStockEntryEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIStockEntry_MinimumStock() {
+		return (EAttribute)iStockEntryEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIStockEntry_CurrentStock() {
+		return (EAttribute)iStockEntryEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIStockEntry_MaximumStock() {
+		return (EAttribute)iStockEntryEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIStockEntry_FractionUnits() {
+		return (EAttribute)iStockEntryEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIStockEntry_Stock() {
+		return (EReference)iStockEntryEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIStockEntry_Article() {
+		return (EReference)iStockEntryEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIStockEntry_Provider() {
+		return (EReference)iStockEntryEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getIOrderEntry() {
+		return iOrderEntryEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIOrderEntry_Order() {
+		return (EReference)iOrderEntryEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIOrderEntry_Stock() {
+		return (EReference)iOrderEntryEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIOrderEntry_Amount() {
+		return (EAttribute)iOrderEntryEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIOrderEntry_Article() {
+		return (EReference)iOrderEntryEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIOrderEntry_Provider() {
+		return (EReference)iOrderEntryEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIOrderEntry_State() {
+		return (EAttribute)iOrderEntryEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getIOrder() {
+		return iOrderEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIOrder_Entries() {
+		return (EReference)iOrderEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIOrder_Timestamp() {
+		return (EAttribute)iOrderEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIOrder_Name() {
+		return (EAttribute)iOrderEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -2081,10 +2357,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iArticleEClass, IARTICLE__PURCHASE_PRICE);
 		createEAttribute(iArticleEClass, IARTICLE__SELLING_PRICE);
 		createEAttribute(iArticleEClass, IARTICLE__OBLIGATION);
-
-		iTypedArticleEClass = createEClass(ITYPED_ARTICLE);
-		createEAttribute(iTypedArticleEClass, ITYPED_ARTICLE__TYP);
-		createEAttribute(iTypedArticleEClass, ITYPED_ARTICLE__SUB_TYP);
+		createEAttribute(iArticleEClass, IARTICLE__TYP);
+		createEAttribute(iArticleEClass, IARTICLE__SUB_TYP);
 
 		withExtInfoEClass = createEClass(WITH_EXT_INFO);
 
@@ -2103,8 +2377,41 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEReference(iEncounterEClass, IENCOUNTER__PATIENT);
 		createEReference(iEncounterEClass, IENCOUNTER__COVERAGE);
 		createEReference(iEncounterEClass, IENCOUNTER__MANDATOR);
+		createEReference(iEncounterEClass, IENCOUNTER__BILLED);
+		createEAttribute(iEncounterEClass, IENCOUNTER__DATE);
 
 		iBilledEClass = createEClass(IBILLED);
+		createEReference(iBilledEClass, IBILLED__BILLABLE);
+		createEAttribute(iBilledEClass, IBILLED__AMOUNT);
+
+		iStockEClass = createEClass(ISTOCK);
+		createEAttribute(iStockEClass, ISTOCK__CODE);
+		createEAttribute(iStockEClass, ISTOCK__DRIVER_UUID);
+		createEAttribute(iStockEClass, ISTOCK__DRIVER_CONFIG);
+		createEAttribute(iStockEClass, ISTOCK__PRIORITY);
+		createEReference(iStockEClass, ISTOCK__OWNER);
+
+		iStockEntryEClass = createEClass(ISTOCK_ENTRY);
+		createEAttribute(iStockEntryEClass, ISTOCK_ENTRY__MINIMUM_STOCK);
+		createEAttribute(iStockEntryEClass, ISTOCK_ENTRY__CURRENT_STOCK);
+		createEAttribute(iStockEntryEClass, ISTOCK_ENTRY__MAXIMUM_STOCK);
+		createEAttribute(iStockEntryEClass, ISTOCK_ENTRY__FRACTION_UNITS);
+		createEReference(iStockEntryEClass, ISTOCK_ENTRY__STOCK);
+		createEReference(iStockEntryEClass, ISTOCK_ENTRY__ARTICLE);
+		createEReference(iStockEntryEClass, ISTOCK_ENTRY__PROVIDER);
+
+		iOrderEntryEClass = createEClass(IORDER_ENTRY);
+		createEReference(iOrderEntryEClass, IORDER_ENTRY__ORDER);
+		createEReference(iOrderEntryEClass, IORDER_ENTRY__STOCK);
+		createEAttribute(iOrderEntryEClass, IORDER_ENTRY__AMOUNT);
+		createEReference(iOrderEntryEClass, IORDER_ENTRY__ARTICLE);
+		createEReference(iOrderEntryEClass, IORDER_ENTRY__PROVIDER);
+		createEAttribute(iOrderEntryEClass, IORDER_ENTRY__STATE);
+
+		iOrderEClass = createEClass(IORDER);
+		createEReference(iOrderEClass, IORDER__ENTRIES);
+		createEAttribute(iOrderEClass, IORDER__TIMESTAMP);
+		createEAttribute(iOrderEClass, IORDER__NAME);
 	}
 
 	/**
@@ -2183,8 +2490,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iArticleEClass.getESuperTypes().add(this.getIdentifiable());
 		iArticleEClass.getESuperTypes().add(this.getIBillable());
 		iArticleEClass.getESuperTypes().add(this.getDeleteable());
-		iTypedArticleEClass.getESuperTypes().add(this.getIArticle());
-		iTypedArticleEClass.getESuperTypes().add(this.getWithExtInfo());
+		iArticleEClass.getESuperTypes().add(this.getWithExtInfo());
 		iRoleEClass.getESuperTypes().add(this.getIdentifiable());
 		iBlobEClass.getESuperTypes().add(this.getIdentifiable());
 		iBlobEClass.getESuperTypes().add(this.getDeleteable());
@@ -2192,6 +2498,14 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iEncounterEClass.getESuperTypes().add(this.getDeleteable());
 		iBilledEClass.getESuperTypes().add(this.getIdentifiable());
 		iBilledEClass.getESuperTypes().add(this.getDeleteable());
+		iStockEClass.getESuperTypes().add(this.getIdentifiable());
+		iStockEClass.getESuperTypes().add(this.getDeleteable());
+		iStockEntryEClass.getESuperTypes().add(this.getIdentifiable());
+		iStockEntryEClass.getESuperTypes().add(this.getDeleteable());
+		iOrderEntryEClass.getESuperTypes().add(this.getIdentifiable());
+		iOrderEntryEClass.getESuperTypes().add(this.getDeleteable());
+		iOrderEClass.getESuperTypes().add(this.getIdentifiable());
+		iOrderEClass.getESuperTypes().add(this.getDeleteable());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(identifiableEClass, Identifiable.class, "Identifiable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2433,6 +2747,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIArticle_PurchasePrice(), ecorePackage.getEString(), "purchasePrice", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIArticle_SellingPrice(), ecorePackage.getEString(), "sellingPrice", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIArticle_Obligation(), ecorePackage.getEBoolean(), "obligation", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIArticle_Typ(), theTypesPackage.getArticleTyp(), "typ", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIArticle_SubTyp(), theTypesPackage.getArticleSubTyp(), "subTyp", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		addEOperation(iArticleEClass, ecorePackage.getEBoolean(), "isProduct", 0, 1, IS_UNIQUE, IS_ORDERED);
 
@@ -2442,11 +2758,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		g1.getETypeArguments().add(g2);
 		initEOperation(op, g1);
 
-		initEClass(iTypedArticleEClass, ITypedArticle.class, "ITypedArticle", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getITypedArticle_Typ(), theTypesPackage.getArticleTyp(), "typ", null, 0, 1, ITypedArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getITypedArticle_SubTyp(), ecorePackage.getEString(), "subTyp", null, 0, 1, ITypedArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		op = addEOperation(iTypedArticleEClass, null, "setCode", 0, 1, IS_UNIQUE, IS_ORDERED);
+		op = addEOperation(iArticleEClass, null, "setCode", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "code", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(withExtInfoEClass, WithExtInfo.class, "WithExtInfo", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2505,8 +2817,57 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEReference(getIEncounter_Patient(), this.getIPatient(), null, "patient", null, 0, 1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIEncounter_Coverage(), this.getICoverage(), null, "coverage", null, 0, 1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIEncounter_Mandator(), this.getIMandator(), null, "mandator", null, 0, 1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIEncounter_Billed(), this.getIBilled(), null, "billed", null, 0, -1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIEncounter_Date(), theTypesPackage.getLocalDate(), "date", null, 0, 1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iBilledEClass, IBilled.class, "IBilled", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getIBilled_Billable(), this.getIBillable(), null, "billable", null, 0, 1, IBilled.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIBilled_Amount(), ecorePackage.getEInt(), "amount", null, 0, 1, IBilled.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(iStockEClass, IStock.class, "IStock", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIStock_Code(), ecorePackage.getEString(), "code", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIStock_DriverUuid(), ecorePackage.getEString(), "driverUuid", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIStock_DriverConfig(), ecorePackage.getEString(), "driverConfig", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIStock_Priority(), ecorePackage.getEInt(), "priority", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIStock_Owner(), this.getIMandator(), null, "owner", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		addEOperation(iStockEClass, ecorePackage.getEBoolean(), "isCommissioningSystem", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		initEClass(iStockEntryEClass, IStockEntry.class, "IStockEntry", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIStockEntry_MinimumStock(), ecorePackage.getEInt(), "minimumStock", null, 0, 1, IStockEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIStockEntry_CurrentStock(), ecorePackage.getEInt(), "currentStock", null, 0, 1, IStockEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIStockEntry_MaximumStock(), ecorePackage.getEInt(), "maximumStock", null, 0, 1, IStockEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIStockEntry_FractionUnits(), ecorePackage.getEInt(), "fractionUnits", null, 0, 1, IStockEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIStockEntry_Stock(), this.getIStock(), null, "stock", null, 0, 1, IStockEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIStockEntry_Article(), this.getIArticle(), null, "article", null, 0, 1, IStockEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIStockEntry_Provider(), this.getIContact(), null, "provider", null, 0, 1, IStockEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(iOrderEntryEClass, IOrderEntry.class, "IOrderEntry", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getIOrderEntry_Order(), this.getIOrder(), null, "order", null, 0, 1, IOrderEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIOrderEntry_Stock(), this.getIStock(), null, "stock", null, 0, 1, IOrderEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIOrderEntry_Amount(), ecorePackage.getEInt(), "amount", null, 0, 1, IOrderEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIOrderEntry_Article(), this.getIArticle(), null, "article", null, 0, 1, IOrderEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIOrderEntry_Provider(), this.getIContact(), null, "provider", null, 0, 1, IOrderEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIOrderEntry_State(), theTypesPackage.getOrderEntryState(), "state", null, 0, 1, IOrderEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(iOrderEClass, IOrder.class, "IOrder", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getIOrder_Entries(), this.getIOrderEntry(), null, "entries", null, 0, -1, IOrder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIOrder_Timestamp(), theTypesPackage.getLocalDateTime(), "timestamp", null, 0, 1, IOrder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIOrder_Name(), ecorePackage.getEString(), "name", null, 0, 1, IOrder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		op = addEOperation(iOrderEClass, this.getIOrderEntry(), "addEntry", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIArticle(), "article", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIStock(), "stock", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIContact(), "provider", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEInt(), "amount", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iOrderEClass, null, "removeEntry", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIOrderEntry(), "entry", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iOrderEClass, null, "addEntry", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIOrderEntry(), "entry", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		addEOperation(iOrderEClass, ecorePackage.getEBoolean(), "isDone", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);
@@ -2585,7 +2946,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 			   "attributeName", "vkPreis"
 		   });
 		addAnnotation
-		  (getITypedArticle_SubTyp(),
+		  (getIArticle_SubTyp(),
 		   source,
 		   new String[] {
 			   "attributeName", "codeclass"

@@ -302,6 +302,26 @@ public interface TypesPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '<em>Order Entry State</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.OrderEntryState
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getOrderEntryState()
+	 * @generated
+	 */
+	int ORDER_ENTRY_STATE = 21;
+
+	/**
+	 * The meta object id for the '<em>Article Sub Typ</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.types.ArticleSubTyp
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getArticleSubTyp()
+	 * @generated
+	 */
+	int ARTICLE_SUB_TYP = 22;
+
+	/**
 	 * The meta object id for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -539,6 +559,28 @@ public interface TypesPackage extends EPackage {
 	EDataType getVatInfo();
 
 	/**
+	 * Returns the meta object for data type '{@link ch.elexis.core.model.OrderEntryState <em>Order Entry State</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Order Entry State</em>'.
+	 * @see ch.elexis.core.model.OrderEntryState
+	 * @model instanceClass="ch.elexis.core.model.OrderEntryState"
+	 * @generated
+	 */
+	EDataType getOrderEntryState();
+
+	/**
+	 * Returns the meta object for data type '{@link ch.elexis.core.types.ArticleSubTyp <em>Article Sub Typ</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Article Sub Typ</em>'.
+	 * @see ch.elexis.core.types.ArticleSubTyp
+	 * @model instanceClass="ch.elexis.core.types.ArticleSubTyp"
+	 * @generated
+	 */
+	EDataType getArticleSubTyp();
+
+	/**
 	 * Returns the meta object for class '{@link ch.rgw.tools.Result <em>Result</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -770,6 +812,26 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType VAT_INFO = eINSTANCE.getVatInfo();
+
+		/**
+		 * The meta object literal for the '<em>Order Entry State</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.OrderEntryState
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getOrderEntryState()
+		 * @generated
+		 */
+		EDataType ORDER_ENTRY_STATE = eINSTANCE.getOrderEntryState();
+
+		/**
+		 * The meta object literal for the '<em>Article Sub Typ</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.types.ArticleSubTyp
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getArticleSubTyp()
+		 * @generated
+		 */
+		EDataType ARTICLE_SUB_TYP = eINSTANCE.getArticleSubTyp();
 
 		/**
 		 * The meta object literal for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.

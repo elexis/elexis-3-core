@@ -1,17 +1,17 @@
-package ch.elexis.core.model.eigenartikel;
+package ch.elexis.core.types;
 
 import java.util.ResourceBundle;
 
 import ch.elexis.core.interfaces.ILocalizedEnum;
 
-public enum EigenartikelTyp implements ILocalizedEnum {
+public enum ArticleSubTyp implements ILocalizedEnum {
 	
 		UNKNOWN('U'), PHARMA('P'), NONPHARMA('N'), MAGISTERY('M'), COMPLEMENTARY('C'),
 		ADDITIVE('A');
 	
 	final char type;
 	
-	private EigenartikelTyp(char state){
+	private ArticleSubTyp(char state){
 		this.type = state;
 	}
 	
@@ -19,7 +19,7 @@ public enum EigenartikelTyp implements ILocalizedEnum {
 	public String getLocaleText(){
 		try {
 			return ResourceBundle.getBundle(ch.elexis.core.l10n.Messages.BUNDLE_NAME)
-					.getString(EigenartikelTyp.class.getSimpleName() + "_" + this.name());
+					.getString(ArticleSubTyp.class.getSimpleName() + "_" + this.name());
 		} catch (Exception e) {
 			return this.name();
 		}
@@ -29,15 +29,15 @@ public enum EigenartikelTyp implements ILocalizedEnum {
 		return type;
 	}
 	
-	public static EigenartikelTyp byCharSafe(String statusIn){
+	public static ArticleSubTyp byCharSafe(String statusIn){
 		if (statusIn != null && statusIn.length() > 0) {
-			for (EigenartikelTyp eaTyp : EigenartikelTyp.values()) {
+			for (ArticleSubTyp eaTyp : ArticleSubTyp.values()) {
 				if (eaTyp.type == statusIn.toUpperCase().charAt(0)) {
 					return eaTyp;
 				}
 			}
 		}
-		return EigenartikelTyp.UNKNOWN;
+		return ArticleSubTyp.UNKNOWN;
 	}
 	
 }

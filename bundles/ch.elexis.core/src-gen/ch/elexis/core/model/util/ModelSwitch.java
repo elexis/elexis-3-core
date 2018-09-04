@@ -18,6 +18,9 @@ import org.eclipse.emf.ecore.util.Switch;
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBillable;
+import ch.elexis.core.model.IBillableOptifier;
+import ch.elexis.core.model.IBillableVerifier;
+import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IBlob;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.ICodeElement;
@@ -25,8 +28,10 @@ import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IDiagnosis;
+import ch.elexis.core.model.IDiagnosisTree;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IHistory;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabMapping;
@@ -34,13 +39,16 @@ import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IOrder;
+import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPeriod;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.ISticker;
-import ch.elexis.core.model.ITypedArticle;
+import ch.elexis.core.model.IStock;
+import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.IXid;
@@ -326,20 +334,9 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				T1 result = caseIArticle(iArticle);
 				if (result == null) result = caseIBillable(iArticle);
 				if (result == null) result = caseDeleteable(iArticle);
+				if (result == null) result = caseWithExtInfo(iArticle);
 				if (result == null) result = caseIdentifiable(iArticle);
 				if (result == null) result = caseICodeElement(iArticle);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ModelPackage.ITYPED_ARTICLE: {
-				ITypedArticle iTypedArticle = (ITypedArticle)theEObject;
-				T1 result = caseITypedArticle(iTypedArticle);
-				if (result == null) result = caseIArticle(iTypedArticle);
-				if (result == null) result = caseWithExtInfo(iTypedArticle);
-				if (result == null) result = caseIBillable(iTypedArticle);
-				if (result == null) result = caseDeleteable(iTypedArticle);
-				if (result == null) result = caseIdentifiable(iTypedArticle);
-				if (result == null) result = caseICodeElement(iTypedArticle);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -389,6 +386,38 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				T1 result = caseIBilled(iBilled);
 				if (result == null) result = caseIdentifiable(iBilled);
 				if (result == null) result = caseDeleteable(iBilled);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.ISTOCK: {
+				IStock iStock = (IStock)theEObject;
+				T1 result = caseIStock(iStock);
+				if (result == null) result = caseIdentifiable(iStock);
+				if (result == null) result = caseDeleteable(iStock);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.ISTOCK_ENTRY: {
+				IStockEntry iStockEntry = (IStockEntry)theEObject;
+				T1 result = caseIStockEntry(iStockEntry);
+				if (result == null) result = caseIdentifiable(iStockEntry);
+				if (result == null) result = caseDeleteable(iStockEntry);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IORDER_ENTRY: {
+				IOrderEntry iOrderEntry = (IOrderEntry)theEObject;
+				T1 result = caseIOrderEntry(iOrderEntry);
+				if (result == null) result = caseIdentifiable(iOrderEntry);
+				if (result == null) result = caseDeleteable(iOrderEntry);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IORDER: {
+				IOrder iOrder = (IOrder)theEObject;
+				T1 result = caseIOrder(iOrder);
+				if (result == null) result = caseIdentifiable(iOrder);
+				if (result == null) result = caseDeleteable(iOrder);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -817,21 +846,6 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>ITyped Article</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>ITyped Article</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseITypedArticle(ITypedArticle object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>With Ext Info</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -933,6 +947,66 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIBilled(IBilled object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IStock</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IStock</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIStock(IStock object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IStock Entry</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IStock Entry</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIStockEntry(IStockEntry object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IOrder Entry</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IOrder Entry</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIOrderEntry(IOrderEntry object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IOrder</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IOrder</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIOrder(IOrder object) {
 		return null;
 	}
 

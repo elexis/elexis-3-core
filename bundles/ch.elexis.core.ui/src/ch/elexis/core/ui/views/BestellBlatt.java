@@ -14,18 +14,20 @@ package ch.elexis.core.ui.views;
 
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_ORDER;
 
+import java.text.ParseException;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.text.ITextPlugin;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.BestellungEntry;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Kontakt;
 import ch.rgw.tools.Money;
@@ -45,8 +47,8 @@ public class BestellBlatt extends ViewPart implements ICallback {
 		text.getPlugin().createContainer(parent, this);
 	}
 	
-	public void createOrder(final Kontakt adressat, final List<BestellungEntry> bestellungEntries){
-		String[][] tbl = new String[bestellungEntries.size() + 2][];
+	public void createOrder(final IContact receiver, final List<IOrderEntry> toOrder){
+		String[][] tbl = new String[toOrder.size() + 2][];
 		int i = 1;
 		Money sum = new Money();
 		tbl[0] = new String[] {
@@ -54,13 +56,19 @@ public class BestellBlatt extends ViewPart implements ICallback {
 			Messages.BestellBlatt_Name, Messages.BestellBlatt_UnitPrice,
 			Messages.BestellBlatt_LinePrice
 		};
-		for (BestellungEntry be : bestellungEntries) {
+		for (IOrderEntry orderEntry : toOrder) {
 			String[] row = new String[5];
-			row[0] = Integer.toString(be.getCount());
-			row[1] = be.getArticle().getPharmaCode();
-			row[2] = be.getArticle().getName();
-			row[3] = be.getArticle().getEKPreis().getAmountAsString();
-			Money amount = be.getArticle().getEKPreis().multiply(be.getCount());
+			row[0] = Integer.toString(orderEntry.getAmount());
+			row[1] = orderEntry.getArticle().getCode();
+			row[2] = orderEntry.getArticle().getName();
+			Money purchasePrice;
+			try {
+				purchasePrice = new Money(orderEntry.getArticle().getPurchasePrice());
+			} catch (ParseException e) {
+				purchasePrice = new Money();
+			}
+			row[3] = purchasePrice.getAmountAsString();
+			Money amount = purchasePrice.multiply(orderEntry.getAmount());
 			row[4] = amount.getAmountAsString();
 			sum.addMoney(amount);
 			tbl[i++] = row;
@@ -70,7 +78,8 @@ public class BestellBlatt extends ViewPart implements ICallback {
 			sum.getAmountAsString()
 				//$NON-NLS-1$
 		};
-		actBest = text.createFromTemplateName(null, TT_ORDER, Brief.BESTELLUNG, adressat, null);
+		actBest = text.createFromTemplateName(null, TT_ORDER, Brief.BESTELLUNG,
+			Kontakt.load(receiver.getId()), null);
 		if (actBest == null) {
 			SWTHelper.showError(ERRMSG_CAPTION, ERRMSG_BODY + "'" + TT_ORDER + "'"); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {

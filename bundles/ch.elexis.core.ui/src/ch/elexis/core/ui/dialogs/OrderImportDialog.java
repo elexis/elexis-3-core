@@ -12,7 +12,9 @@
 package ch.elexis.core.ui.dialogs;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -53,23 +55,27 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.interfaces.IArticle;
-import ch.elexis.core.data.interfaces.IOrder;
-import ch.elexis.core.data.interfaces.IStock;
-import ch.elexis.core.data.interfaces.IStockEntry;
+import ch.elexis.core.data.service.ContextServiceHolder;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.data.service.StockServiceHolder;
+import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IOrder;
+import ch.elexis.core.model.IOrderEntry;
+import ch.elexis.core.model.IStock;
+import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.model.IXid;
+import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.ui.actions.ScannerEvents;
 import ch.elexis.core.ui.text.ElexisText;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.Artikel;
-import ch.elexis.data.Bestellung;
 import ch.elexis.data.BestellungEntry;
-import ch.elexis.data.Kontakt;
-import ch.elexis.data.Stock;
-import ch.elexis.data.StockEntry;
 
 /*
  * @author Daniel Lutz
@@ -84,7 +90,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 	 * Order to act on
 	 */
 	private List<OrderElement> orderElements;
-	private Bestellung bestellung;
+	private IOrder order;
 	
 	private Spinner diffSpinner;
 	private ElexisText eanText;
@@ -96,36 +102,39 @@ public class OrderImportDialog extends TitleAreaDialog {
 	
 	public OrderImportDialog(Shell parentShell, IOrder order){
 		super(parentShell);
-		bestellung = (Bestellung) order;
+		this.order = order;
 		setShellStyle(getShellStyle() | SWT.SHELL_TRIM);
 		
 		orderElements = new ArrayList<OrderElement>();
-		List<BestellungEntry> items = bestellung.getEntries();
-		for (BestellungEntry item : items) {
+		List<IOrderEntry> items = order.getEntries();
+		for (IOrderEntry entry : items) {
 			// only show entries which are not done
-			if (item.getState() != BestellungEntry.STATE_DONE) {
-				Stock stock = item.getStock();
+			if (entry.getState() != OrderEntryState.DONE) {
+				IStock stock = entry.getStock();
 				if (stock != null) {
-					IStockEntry stockEntry = CoreHub.getStockService()
-						.findStockEntryForArticleInStock(stock, item.getArticle().storeToString());
+					IStockEntry stockEntry = StockServiceHolder.get()
+						.findStockEntryForArticleInStock(stock,
+							StoreToStringServiceHolder.getStoreToString(entry.getArticle()));
 					if (stockEntry != null) {
 						OrderElement orderElement =
-							new OrderElement(item, stockEntry, item.getCount());
+							new OrderElement(entry, stockEntry, entry.getAmount());
 						orderElements.add(orderElement);
 					}
 				} else {
 					// check if a stock entry was created since the order was created
-					IStockEntry stockEntry = CoreHub.getStockService()
-						.findPreferredStockEntryForArticle(item.getArticle().storeToString(),
+					IStockEntry stockEntry =
+						StockServiceHolder.get().findPreferredStockEntryForArticle(
+							StoreToStringServiceHolder.getStoreToString(entry.getArticle()),
 							ElexisEventDispatcher.getSelectedMandator().getId());
 					if (stockEntry != null) {
 						OrderElement orderElement =
-							new OrderElement(item, stockEntry, item.getCount());
+							new OrderElement(entry, stockEntry, entry.getAmount());
 						orderElements.add(orderElement);
 					} else {
-						IStockEntry transienStockEntry = new TransientStockEntry(item.getArticle());
+						IStockEntry transienStockEntry =
+							new TransientStockEntry(entry.getArticle());
 						OrderElement orderElement =
-							new OrderElement(item, transienStockEntry, item.getCount());
+							new OrderElement(entry, transienStockEntry, entry.getAmount());
 						orderElements.add(orderElement);
 					}
 				}
@@ -214,8 +223,8 @@ public class OrderImportDialog extends TitleAreaDialog {
 		viewer.setInput(this);
 		viewer.setComparator(new ViewerComparator() {
 			public int compare(Viewer viewer, Object e1, Object e2){
-				Artikel a1 = ((OrderElement) e1).getArticle();
-				Artikel a2 = ((OrderElement) e2).getArticle();
+				IArticle a1 = ((OrderElement) e1).getArticle();
+				IArticle a2 = ((OrderElement) e2).getArticle();
 				
 				if (a1 != null && a2 != null) {
 					return a1.getName().compareTo(a2.getName());
@@ -379,8 +388,8 @@ public class OrderImportDialog extends TitleAreaDialog {
 	@Override
 	public void create(){
 		super.create();
-		if (bestellung != null) {
-			setTitle("Bestellung " + bestellung.getLabel() + " im Lager einbuchen");
+		if (order != null) {
+			setTitle("Bestellung " + order.getLabel() + " im Lager einbuchen");
 		} else {
 			setTitle("Bestellung im Lager einbuchen");
 		}
@@ -433,7 +442,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 		}
 		
 		for (OrderElement orderElement : orderElements) {
-			if (orderElement.getArticle().getEAN().equals(ean)) {
+			if (orderElement.getArticle().getGtin().equals(ean)) {
 				return orderElement;
 			}
 		}
@@ -459,7 +468,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 						stockEntry = ((TransientStockEntry) stockEntry).create(orderElement);
 					}
 					LockResponse lockResponse = CoreHub.getLocalLockService()
-						.acquireLockBlocking((StockEntry) stockEntry, 1, new NullProgressMonitor());
+						.acquireLockBlocking(stockEntry, 1, new NullProgressMonitor());
 					if (lockResponse.isOk()) {
 						int diff = orderElement.getAmount();
 						int oldAmount = stockEntry.getCurrentStock();
@@ -473,7 +482,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 						if (diff > 0) {
 							// always close partial on second import ... TODO add a partial field for counting
 							if (orderElement
-								.getOrderState() == BestellungEntry.STATE_PARTIAL_DELIVER) {
+								.getOrderState() == OrderEntryState.PARTIAL_DELIVER) {
 								orderElement.setOrderState(BestellungEntry.STATE_DONE);
 							} else if (diff >= orderElement.getOrderAmount()) {
 								orderElement.setOrderState(BestellungEntry.STATE_DONE);
@@ -481,8 +490,11 @@ public class OrderImportDialog extends TitleAreaDialog {
 								orderElement.setOrderState(BestellungEntry.STATE_PARTIAL_DELIVER);
 							}
 						}
-
+						CoreModelServiceHolder.get()
+							.save(Arrays.asList(stockEntry, orderElement.getOrderEntry()));
 						CoreHub.getLocalLockService().releaseLock(lockResponse.getLockInfo());
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
+							stockEntry);
 					} else {
 						throw new IllegalStateException(
 							"Could not acquire lock for stockEntry [" + stockEntry.getArticle().getLabel() + "]");
@@ -597,7 +609,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 			
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
-				text = orderElement.getArticle().getPharmaCode();
+				text = orderElement.getArticle().getCode();
 			}
 			
 			return text;
@@ -610,7 +622,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 			
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
-				text = orderElement.getArticle().getEAN();
+				text = orderElement.getArticle().getGtin();
 			}
 			
 			return text;
@@ -632,17 +644,18 @@ public class OrderImportDialog extends TitleAreaDialog {
 	
 	private class TransientStockEntry implements IStockEntry {
 		
-		private Artikel article;
+		private IArticle article;
 		
 		private IStockEntry created = null;
 		
-		public TransientStockEntry(Artikel article){
+		public TransientStockEntry(IArticle article){
 			this.article = article;
 		}
 		
 		public IStockEntry create(OrderElement orderElement){
-			Stock stock = Stock.load(Stock.DEFAULT_STOCK_ID);
-			created = CoreHub.getStockService().storeArticleInStock(stock, article.storeToString());
+			IStock stock = StockServiceHolder.get().getDefaultStock();
+			created = StockServiceHolder.get().storeArticleInStock(stock,
+				StoreToStringServiceHolder.getStoreToString(article));
 			created.setMinimumStock(0);
 			created.setMaximumStock(0);
 			return created;
@@ -698,36 +711,72 @@ public class OrderImportDialog extends TitleAreaDialog {
 		}
 		
 		@Override
-		public Object getProvider(){
+		public IContact getProvider(){
 			String providerId =
 				CoreHub.globalCfg.get(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
 			if (providerId != null) {
-				Kontakt defProvider = Kontakt.load(providerId);
-				if (defProvider.exists()) {
-					return defProvider;
-				}
+				Optional<IContact> defProvider =
+					CoreModelServiceHolder.get().load(providerId, IContact.class);
+				return defProvider.orElse(null);
 			}
 			return null;
 		}
 		
 		@Override
-		public void setProvider(Object provider){
+		public void setProvider(IContact provider){
 		}
 		
 		@Override
 		public IStock getStock(){
-			return Stock.load(Stock.DEFAULT_STOCK_ID);
+			return StockServiceHolder.get().getDefaultStock();
+		}
+		
+		@Override
+		public String getId(){
+			return null;
+		}
+		
+		@Override
+		public String getLabel(){
+			return article.getLabel();
+		}
+		
+		@Override
+		public boolean addXid(String domain, String id, boolean updateIfExists){
+			return false;
+		}
+		
+		@Override
+		public IXid getXid(String domain){
+			return null;
+		}
+		
+		@Override
+		public boolean isDeleted(){
+			return false;
+		}
+		
+		@Override
+		public void setDeleted(boolean value){
+		}
+		
+		@Override
+		public void setStock(IStock value){
+		}
+		
+		@Override
+		public void setArticle(IArticle value){
 		}
 	}
 	
 	private class OrderElement {
 		private boolean verified = false;
 		
-		private final BestellungEntry orderEntry;
+		private final IOrderEntry orderEntry;
 		private final IStockEntry stockEntry;
 		private int amount;
 		
-		OrderElement(BestellungEntry orderEntry, IStockEntry stockEntry, int amount){
+		OrderElement(IOrderEntry orderEntry, IStockEntry stockEntry, int amount){
 			this.orderEntry = orderEntry;
 			this.stockEntry = stockEntry;
 			this.amount = amount;
@@ -738,14 +787,14 @@ public class OrderImportDialog extends TitleAreaDialog {
 		}
 		
 		int getOrderAmount(){
-			return orderEntry.getCount();
+			return orderEntry.getAmount();
 		}
 		
 		void setOrderState(int state){
-			orderEntry.setState(state);
+			orderEntry.setState(OrderEntryState.ofValue(state));
 		}
 		
-		int getOrderState(){
+		OrderEntryState getOrderState(){
 			return orderEntry.getState();
 		}
 		
@@ -759,8 +808,8 @@ public class OrderImportDialog extends TitleAreaDialog {
 			this.amount = amount;
 		}
 		
-		public Artikel getArticle(){
-			return (Artikel) stockEntry.getArticle();
+		public IArticle getArticle(){
+			return (IArticle) stockEntry.getArticle();
 		}
 		
 		String getAmountAsString(){
@@ -777,6 +826,10 @@ public class OrderImportDialog extends TitleAreaDialog {
 		
 		void setVerified(boolean verified){
 			this.verified = verified;
+		}
+		
+		IOrderEntry getOrderEntry(){
+			return orderEntry;
 		}
 	}
 }

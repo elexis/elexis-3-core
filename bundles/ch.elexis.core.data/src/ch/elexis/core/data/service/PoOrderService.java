@@ -11,7 +11,13 @@ import ch.elexis.data.BestellungEntry;
 import ch.elexis.data.Query;
 import ch.elexis.data.StockEntry;
 
-public class OrderService implements IOrderService {
+/**
+ * 
+ * @deprecated use OSGi component implementation of {@link ch.elexis.core.services.IOrderService}
+ *             instead.
+ *
+ */
+public class PoOrderService implements IOrderService {
 	
 	public IOrderEntry findOpenOrderEntryForStockEntry(IStockEntry ise){
 		StockEntry se = (StockEntry) ise;

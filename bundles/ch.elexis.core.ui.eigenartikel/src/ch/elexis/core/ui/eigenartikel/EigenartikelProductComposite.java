@@ -3,7 +3,6 @@ package ch.elexis.core.ui.eigenartikel;
 import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
@@ -35,17 +34,18 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.eigenartikel.EigenartikelUtil;
-import ch.elexis.core.model.ITypedArticle;
-import ch.elexis.core.model.eigenartikel.EigenartikelTyp;
+import ch.elexis.core.model.IArticle;
+import ch.elexis.core.services.IModelService;
+import ch.elexis.core.types.ArticleSubTyp;
 import ch.elexis.core.types.ArticleTyp;
+import ch.elexis.core.ui.databinding.SavingUpdateValueStrategy;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.util.SWTHelper;
 
 public class EigenartikelProductComposite extends Composite implements IUnlockable {
 	
-	private WritableValue<ITypedArticle> productEigenartikel =
-		new WritableValue<>(null, ITypedArticle.class);
+	private WritableValue<IArticle> productEigenartikel = new WritableValue<>(null, IArticle.class);
 	
 	private Text txtProductName;
 	private Text txtAtcCode;
@@ -88,10 +88,10 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 		comboViewerProductType.setLabelProvider(new LabelProvider() {
 			@Override
 			public String getText(Object element){
-				return ((EigenartikelTyp) element).getLocaleText();
+				return ((ArticleSubTyp) element).getLocaleText();
 			}
 		});
-		comboViewerProductType.setInput(EigenartikelTyp.values());
+		comboViewerProductType.setInput(ArticleSubTyp.values());
 		
 		lblAtcCode = new Label(this, SWT.NONE);
 		lblAtcCode.setAlignment(SWT.RIGHT);
@@ -149,20 +149,20 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 		btnAddDrugPackage.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				ITypedArticle product = getProductArtikel();
+				IArticle product = getProductArtikel();
 				if (product != null) {
-					ITypedArticle articleNew =
-						CoreModelServiceHolder.get().create(ITypedArticle.class);
+					IArticle articleNew = CoreModelServiceHolder.get().create(IArticle.class);
 					articleNew.setTyp(ArticleTyp.EIGENARTIKEL);
 					articleNew.setName(product.getName());
 					EigenartikelUtil.copyProductAttributesToArticleSetAsChild(product, articleNew);
+					CoreModelServiceHolder.get().save(articleNew);
 					createEigenartikelComposite(articleNew);
 					scrolledComposite.setVisible(true);
 					scrolledComposite
 						.setMinSize(compositeArticleItems.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 					scrolledComposite.layout(true, true);
 					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD,
-						ITypedArticle.class);
+						IArticle.class);
 				}
 			}
 		});
@@ -190,11 +190,11 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 		}
 	}
 	
-	public ITypedArticle getProductArtikel(){
-		return (ITypedArticle) productEigenartikel.getValue();
+	public IArticle getProductArtikel(){
+		return (IArticle) productEigenartikel.getValue();
 	}
 	
-	public void setProductEigenartikel(ITypedArticle productEigenartikel){
+	public void setProductEigenartikel(IArticle productEigenartikel){
 		this.productEigenartikel.setValue(productEigenartikel);
 		
 		for (Control c : compositeArticleItems.getChildren()) {
@@ -204,9 +204,8 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 			btnAddDrugPackage.setVisible(true);
 			scrolledComposite.setVisible(true);
 			@SuppressWarnings("unchecked")
-			List<ITypedArticle> packages =
-				(List<ITypedArticle>) (List<?>) productEigenartikel.getPackages();
-			for (ITypedArticle eigenartikel : packages) {
+			List<IArticle> packages = (List<IArticle>) (List<?>) productEigenartikel.getPackages();
+			for (IArticle eigenartikel : packages) {
 				createEigenartikelComposite(eigenartikel);
 			}
 		} else {
@@ -221,25 +220,14 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 	public void initDataBindings(){
 		DataBindingContext bindingContext = new DataBindingContext();
 		
-		UpdateValueStrategy strategyUpdateProductChilds = new UpdateValueStrategy() {
-			@Override
-			protected IStatus doSet(IObservableValue observableValue, Object value){
-				IStatus status = super.doSet(observableValue, value);
-				EigenartikelUtil.copyProductAttributesToArticleSetAsChild(getProductArtikel(),
-					null);
-				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
-					getProductArtikel());
-				return status;
-			}
-		};
-		
 		//
 		ISWTObservableValue observeTextTxtProductNameObserveWidget =
 			WidgetProperties.text(SWT.Modify).observeDelayed(300, txtProductName);
 		IObservableValue<String> productEigenartikelNameObserveDetailValue = PojoProperties
-			.value(ITypedArticle.class, "name", String.class).observeDetail(productEigenartikel);
+			.value(IArticle.class, "name", String.class).observeDetail(productEigenartikel);
 		bindingContext.bindValue(observeTextTxtProductNameObserveWidget,
-			productEigenartikelNameObserveDetailValue, strategyUpdateProductChilds, null);
+			productEigenartikelNameObserveDetailValue,
+			new SavingUpdateProductChilds(CoreModelServiceHolder.get(), productEigenartikel), null);
 		observeTextTxtProductNameObserveWidget.addValueChangeListener(new IValueChangeListener() {
 			@Override
 			public void handleValueChange(ValueChangeEvent event){
@@ -256,37 +244,44 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 		//
 		IViewerObservableValue observeSingleSelectionComboViewerProductType =
 			ViewerProperties.singleSelection().observe(comboViewerProductType);
-		IObservableValue<ITypedArticle> productEigenartikelTypObserveDetailValue =
-			PojoProperties.value(ITypedArticle.class, "subTyp", String.class)
+		IObservableValue<IArticle> productEigenartikelTypObserveDetailValue =
+			PojoProperties.value(IArticle.class, "subTyp", ArticleSubTyp.class)
 				.observeDetail(productEigenartikel);
 		bindingContext.bindValue(observeSingleSelectionComboViewerProductType,
-			productEigenartikelTypObserveDetailValue, new UpdateValueStrategy() {
-				// target to model	
-				@Override
-				public Object convert(Object value){
-					return Character.toString(((EigenartikelTyp) value).getTypeChar());
-				}
-			}, new UpdateValueStrategy() {
-				// model to target
-				@Override
-				public Object convert(Object value){
-					return EigenartikelTyp.byCharSafe((String) value);
-				}
-			});
+			productEigenartikelTypObserveDetailValue,
+			new SavingUpdateProductChilds(CoreModelServiceHolder.get(), productEigenartikel), null);
 		
 		//
 		ISWTObservableValue observeTextTxtAtcCodeObserveWidget =
 			WidgetProperties.text(SWT.Modify).observeDelayed(300, txtAtcCode);
 		IObservableValue<String> productEigenartikelATC_codeObserveDetailValue = PojoProperties
-			.value(ITypedArticle.class, "atcCode", String.class)
-			.observeDetail(productEigenartikel);
+			.value(IArticle.class, "atcCode", String.class).observeDetail(productEigenartikel);
 		bindingContext.bindValue(observeTextTxtAtcCodeObserveWidget,
-			productEigenartikelATC_codeObserveDetailValue, strategyUpdateProductChilds, null);
+			productEigenartikelATC_codeObserveDetailValue,
+			new SavingUpdateProductChilds(CoreModelServiceHolder.get(), productEigenartikel), null);
 	}
 	
-	private void createEigenartikelComposite(ITypedArticle articleNew){
+	private void createEigenartikelComposite(IArticle articleNew){
 		EigenartikelComposite ec =
 			new EigenartikelComposite(compositeArticleItems, SWT.NONE, articleNew);
 		ec.setUnlocked(CoreHub.getLocalLockService().isLocked(productEigenartikel.getValue()));
+	}
+	
+	private class SavingUpdateProductChilds extends SavingUpdateValueStrategy {
+		
+		public SavingUpdateProductChilds(IModelService modelService,
+			IObservableValue<?> observable){
+			super(modelService, observable);
+		}
+		
+		@Override
+		protected IStatus doSet(IObservableValue observableValue, Object value){
+			IStatus status = super.doSet(observableValue, value);
+			EigenartikelUtil.copyProductAttributesToArticleSetAsChild(getProductArtikel(), null);
+			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
+				getProductArtikel());
+			return status;
+			
+		}
 	}
 }

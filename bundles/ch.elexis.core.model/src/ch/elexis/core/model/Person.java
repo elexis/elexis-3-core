@@ -48,7 +48,10 @@ public class Person extends Contact implements IPerson {
 	
 	@Override
 	public LocalDateTime getDateOfBirth(){
-		return getEntity().getDob().atStartOfDay();
+		if(getEntity().getDob() != null) {
+			return getEntity().getDob().atStartOfDay();
+		}
+		return null;
 	}
 	
 	@Override

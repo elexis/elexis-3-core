@@ -47,6 +47,17 @@ public interface IQuery<T> {
 		boolean ignoreCase);
 	
 	/**
+	 * Add a where clause based in the two provided {@link EStructuralFeature} to the query. It will
+	 * be connected by AND to existing clauses.
+	 * 
+	 * @param feature
+	 * @param object
+	 * @param otherFeature
+	 */
+	public void andFeatureCompare(EStructuralFeature feature, COMPARATOR comparator,
+		EStructuralFeature otherFeature);
+	
+	/**
 	 * Add a where clause based on the value of the specified entityAttributeName to the query. It
 	 * will be connected by AND to existing clauses.
 	 * 

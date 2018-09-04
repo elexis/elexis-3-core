@@ -8,6 +8,7 @@ import ch.elexis.core.jpa.model.adapter.MappingEntry;
 import ch.elexis.core.model.Config;
 import ch.elexis.core.model.Contact;
 import ch.elexis.core.model.DocumentBrief;
+import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBlob;
 import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
@@ -18,12 +19,13 @@ import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IOrder;
+import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
-import ch.elexis.core.model.ITypedArticle;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.IXid;
@@ -91,7 +93,7 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 		addMapping(new MappingEntry(ILabMapping.class, ch.elexis.core.model.LabMapping.class,
 			ch.elexis.core.jpa.entities.LabMapping.class));
 		
-		addMapping(new MappingEntry(ITypedArticle.class, ch.elexis.core.model.TypedArticle.class,
+		addMapping(new MappingEntry(IArticle.class, ch.elexis.core.model.TypedArticle.class,
 			ch.elexis.core.jpa.entities.Artikel.class));
 		
 		addMapping(new MappingEntry(IStock.class, ch.elexis.core.model.Stock.class,
@@ -99,5 +101,9 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 		addMapping(new MappingEntry(IStockEntry.class, ch.elexis.core.model.StockEntry.class,
 			ch.elexis.core.jpa.entities.StockEntry.class));
 		
+		addMapping(new MappingEntry(IOrder.class, ch.elexis.core.model.Order.class,
+			ch.elexis.core.jpa.entities.Bestellung.class));
+		addMapping(new MappingEntry(IOrderEntry.class, ch.elexis.core.model.OrderEntry.class,
+			ch.elexis.core.jpa.entities.BestellungEntry.class));
 	}
 }

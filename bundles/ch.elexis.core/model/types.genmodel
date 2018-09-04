@@ -52,6 +52,15 @@
     <genDataTypes ecoreDataType="types.ecore#//Country"/>
     <genDataTypes ecoreDataType="types.ecore#//PathologicDescription"/>
     <genDataTypes ecoreDataType="types.ecore#//LocalDateTime"/>
+    <genDataTypes ecoreDataType="types.ecore#//InputStream"/>
+    <genDataTypes ecoreDataType="types.ecore#//OutputStream"/>
+    <genDataTypes ecoreDataType="types.ecore#//LocalDate"/>
+    <genDataTypes ecoreDataType="types.ecore#//XidQuality"/>
+    <genDataTypes ecoreDataType="types.ecore#//LabOrderState"/>
+    <genDataTypes ecoreDataType="types.ecore#//ArticleTyp"/>
+    <genDataTypes ecoreDataType="types.ecore#//VatInfo"/>
+    <genDataTypes ecoreDataType="types.ecore#//OrderEntryState"/>
+    <genDataTypes ecoreDataType="types.ecore#//ArticleSubTyp"/>
     <genClasses image="false" ecoreClass="types.ecore#//Comparable">
       <genTypeParameters ecoreTypeParameter="types.ecore#//Comparable/T"/>
     </genClasses>
@@ -61,6 +70,9 @@
     <genClasses image="false" ecoreClass="types.ecore#//Map">
       <genTypeParameters ecoreTypeParameter="types.ecore#//Map/K"/>
       <genTypeParameters ecoreTypeParameter="types.ecore#//Map/V"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="types.ecore#//Result">
+      <genTypeParameters ecoreTypeParameter="types.ecore#//Result/T"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

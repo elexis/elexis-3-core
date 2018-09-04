@@ -153,9 +153,19 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		Object value, boolean ignoreCase){
 		switch (comparator) {
 		case EQUALS:
-			return Optional.of(criteriaBuilder.equal(rootQuery.get(attribute), value));
+			if (value instanceof SingularAttribute) {
+				return Optional.of(criteriaBuilder.equal(rootQuery.get(attribute),
+					rootQuery.get((SingularAttribute) value)));
+			} else {
+				return Optional.of(criteriaBuilder.equal(rootQuery.get(attribute), value));
+			}
 		case NOT_EQUALS:
-			return Optional.of(criteriaBuilder.notEqual(rootQuery.get(attribute), value));
+			if (value instanceof SingularAttribute) {
+				return Optional.of(criteriaBuilder.notEqual(rootQuery.get(attribute),
+					rootQuery.get((SingularAttribute) value)));
+			} else {
+				return Optional.of(criteriaBuilder.notEqual(rootQuery.get(attribute), value));
+			}
 		case LIKE:
 			if (value instanceof String) {
 				if (ignoreCase) {
@@ -195,6 +205,9 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 			} else if (value instanceof LocalDate) {
 				return Optional
 					.of(criteriaBuilder.greaterThan(rootQuery.get(attribute), (LocalDate) value));
+			} else if (value instanceof SingularAttribute) {
+				criteriaBuilder.greaterThan(rootQuery.get(attribute),
+					rootQuery.get((SingularAttribute) value));
 			} else {
 				throw new IllegalStateException("[" + value + "] is not a known type");
 			}
@@ -211,6 +224,9 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 			} else if (value instanceof LocalDate) {
 				return Optional.of(criteriaBuilder.greaterThanOrEqualTo(rootQuery.get(attribute),
 					(LocalDate) value));
+			} else if (value instanceof SingularAttribute) {
+				criteriaBuilder.greaterThanOrEqualTo(rootQuery.get(attribute),
+					rootQuery.get((SingularAttribute) value));
 			} else {
 				throw new IllegalStateException("[" + value + "] is not a known type");
 			}
@@ -227,6 +243,9 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 			} else if (value instanceof LocalDate) {
 				return Optional
 					.of(criteriaBuilder.lessThan(rootQuery.get(attribute), (LocalDate) value));
+			} else if (value instanceof SingularAttribute) {
+				criteriaBuilder.lessThan(rootQuery.get(attribute),
+					rootQuery.get((SingularAttribute) value));
 			} else {
 				throw new IllegalStateException("[" + value + "] is not a known type");
 			}
@@ -238,12 +257,14 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 				return Optional.of(
 					criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute), (Integer) value));
 			} else if (value instanceof LocalDateTime) {
-				return Optional.of(
-					criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute),
-						(LocalDateTime) value));
+				return Optional.of(criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute),
+					(LocalDateTime) value));
 			} else if (value instanceof LocalDate) {
 				return Optional.of(
 					criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute), (LocalDate) value));
+			} else if (value instanceof SingularAttribute) {
+				criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute),
+					rootQuery.get((SingularAttribute) value));
 			} else {
 				throw new IllegalStateException("[" + value + "] is not a known type");
 			}
@@ -320,6 +341,29 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 			// feature could not be resolved, mapping?
 			throw new IllegalStateException("Could not resolve attribute [" + entityAttributeName
 				+ "] of entity [" + entityClazz + "]");
+		}
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@Override
+	public void andFeatureCompare(EStructuralFeature feature, COMPARATOR comparator,
+		EStructuralFeature otherFeature){
+		String entityAttributeName = getAttributeName(feature);
+		String entityOtherAttributeName = getAttributeName(otherFeature);
+		Optional<SingularAttribute> attribute =
+			resolveAttribute(entityClazz.getName(), entityAttributeName);
+		Optional<SingularAttribute> otherAttribute =
+			resolveAttribute(entityClazz.getName(), entityOtherAttributeName);
+		if (attribute.isPresent() && otherAttribute.isPresent()) {
+			Optional<Predicate> predicate =
+				getPredicate(attribute.get(), comparator, otherAttribute.get(), false);
+			predicate.ifPresent(p -> {
+				getCurrentPredicateGroup().and(p);
+			});
+		} else {
+			// feature could not be resolved, mapping?
+			throw new IllegalStateException("Could not resolve attribute [" + entityAttributeName
+				+ "] or [" + entityOtherAttributeName + "] of entity [" + entityClazz + "]");
 		}
 	}
 	

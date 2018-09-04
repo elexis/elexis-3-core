@@ -12,6 +12,10 @@
 
 package ch.elexis.core.ui.actions;
 
+import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+
 public class CodeSelectorHandler {
 	private static CodeSelectorHandler theInstance;
 	private ICodeSelectorTarget codeSelectorTarget;
@@ -59,4 +63,27 @@ public class CodeSelectorHandler {
 		return codeSelectorTarget;
 	}
 	
+	public static abstract class CodeSelectorAdapter implements ICodeSelectorTarget {
+		
+		private StructuredViewer viewer;
+		private Color normalColor;
+		private Color highlightColor;
+		
+		public CodeSelectorAdapter(StructuredViewer viewer){
+			this.viewer = viewer;
+			this.normalColor = viewer.getControl().getBackground();
+			this.highlightColor = viewer.getControl().getDisplay().getSystemColor(SWT.COLOR_RED);
+		}
+		
+		@Override
+		public void registered(boolean registered){
+			if (!viewer.getControl().isDisposed()) {
+				if (registered) {
+					viewer.getControl().setBackground(highlightColor);
+				} else {
+					viewer.getControl().setBackground(normalColor);
+				}
+			}
+		}
+	}
 }

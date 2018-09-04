@@ -36,7 +36,7 @@ import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.eigenartikel.EigenartikelUtil;
 import ch.elexis.core.eigenartikel.acl.ACLContributor;
 import ch.elexis.core.lock.types.LockResponse;
-import ch.elexis.core.model.ITypedArticle;
+import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.eigenartikel.Constants;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.ICodeSelectorTarget;
@@ -66,7 +66,7 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 			tvfa.updateSelection(ss.isEmpty() ? null : ss.getFirstElement());
 			
 			if (!ss.isEmpty()) {
-				ITypedArticle ea = (ITypedArticle) ss.getFirstElement();
+				IArticle ea = (IArticle) ss.getFirstElement();
 				ContextServiceHolder.get().getRootContext()
 					.setNamed("ch.elexis.core.ui.eigenartikel.selection", ea);
 			} else {
@@ -94,7 +94,7 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 		rearrangePackagesAction.setEnabled(CoreHub.userCfg.get(ShowEigenartikelProductsAction.FILTER_CFG, false));
 		
 		FieldDescriptor<?>[] lbName = new FieldDescriptor<?>[] {
-			new FieldDescriptor<ITypedArticle>(EigenartikelTreeContentProvider.FILTER_KEY)
+			new FieldDescriptor<IArticle>(EigenartikelTreeContentProvider.FILTER_KEY)
 		};
 		
 		SelectorPanelProvider slp = new SelectorPanelProvider(lbName, true);
@@ -111,7 +111,7 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 	
 	@Override
 	public Class<?> getElementClass(){
-		return ITypedArticle.class;
+		return IArticle.class;
 	}
 	
 	@Override
@@ -126,13 +126,13 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 				ICodeSelectorTarget target =
 					CodeSelectorHandler.getInstance().getCodeSelectorTarget();
 				if (target != null) {
-					if (obj instanceof ITypedArticle) {
-						ITypedArticle article = (ITypedArticle) obj;
+					if (obj instanceof IArticle) {
+						IArticle article = (IArticle) obj;
 						// translate to first package if product selected
 						if (article.isProduct()) {
 							@SuppressWarnings("unchecked")
-							List<ITypedArticle> packages =
-								(List<ITypedArticle>) (List<?>) article.getPackages();
+							List<IArticle> packages =
+								(List<IArticle>) (List<?>) article.getPackages();
 							if (!packages.isEmpty()) {
 								article = packages.get(0);
 							}
@@ -147,7 +147,7 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 	@Inject
 	@Optional
 	public void reload(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz){
-		if (ITypedArticle.class.equals(clazz)) {
+		if (IArticle.class.equals(clazz)) {
 			if (commonViewer != null && !commonViewer.isDisposed()) {
 				commonViewer.getViewerWidget().refresh();
 			}
@@ -156,7 +156,7 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 	
 	@Inject
 	@Optional
-	public void update(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) ITypedArticle object){
+	public void update(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IArticle object){
 		if (commonViewer != null && object != null) {
 			commonViewer.getViewerWidget().update(object, null);
 		}
@@ -189,13 +189,13 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 					
 					@Override
 					public void drop(final DropTargetEvent event){
-						ITypedArticle target = (ITypedArticle) determineTarget(event);
+						IArticle target = (IArticle) determineTarget(event);
 						String drp = (String) event.data;
 						String[] dl = drp.split(","); //$NON-NLS-1$
 						for (String obj : dl) {
 							PersistentObject dropped = CoreHub.poFactory.createFromString(obj);
-							if (dropped instanceof ITypedArticle) {
-								ITypedArticle ea = (ITypedArticle) dropped;
+							if (dropped instanceof IArticle) {
+								IArticle ea = (IArticle) dropped;
 								if (ea.isProduct()) {
 									continue;
 								}
@@ -206,7 +206,7 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 										ea);
 									CoreHub.getLocalLockService().releaseLock(target);
 									ContextServiceHolder.get().postEvent(
-										ElexisEventTopics.EVENT_RELOAD, ITypedArticle.class);
+										ElexisEventTopics.EVENT_RELOAD, IArticle.class);
 								} else {
 									LockResponseHelper.showInfo(lr, target, log);
 								}
@@ -222,8 +222,8 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 					@Override
 					public boolean validateDrop(Object target, int operation,
 						TransferData transferType){
-						ITypedArticle ea = (ITypedArticle) getSelectedObject();
-						ITypedArticle eaTarget = (ITypedArticle) target;
+						IArticle ea = (IArticle) getSelectedObject();
+						IArticle eaTarget = (IArticle) target;
 						return (eaTarget != null && eaTarget.isProduct() && ea != null
 							&& !ea.isProduct());
 					}
