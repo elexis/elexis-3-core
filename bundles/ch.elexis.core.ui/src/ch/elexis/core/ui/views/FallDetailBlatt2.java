@@ -634,15 +634,33 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		btnCopyForPatient.setSelection(f.getCopyForPatient());
 		
 		// *** set Garant
-		tGarant.setText(f.getGarant().getLabel());
+		tGarant.setBackground(null);
+		tGarant.setToolTipText(null);
+		Kontakt garant = f.getGarant();
+		String garantLabel = garant.getLabel();
+		if(garant.isDeleted()) {
+			tGarant.setBackground(UiDesk.getColor(UiDesk.COL_RED));
+			garantLabel = "*** " + garantLabel;
+			tGarant.setToolTipText(Messages.Object_is_marked_deleted);
+		}
+		tGarant.setText(garantLabel);
 		
 		// *** set cost bearer (if enabled for billing system)
 		boolean costBearerDisabled = BillingSystem.isCostBearerDisabled(billingSystem);
 		tCostBearer.setVisible(!costBearerDisabled);
 		hlCostBearer.setVisible(!costBearerDisabled);
-		if(!costBearerDisabled) {
+		
+		tCostBearer.setBackground(null);
+		tCostBearer.setToolTipText(null);
+		if (!costBearerDisabled) {
 			Kontakt costBearer = f.getCostBearer();
-			tCostBearer.setText((costBearer!=null) ? costBearer.getLabel() : f.getPatient().getLabel());
+			String label = (costBearer != null) ? costBearer.getLabel() : f.getPatient().getLabel();
+			if (costBearer != null && costBearer.isDeleted()) {
+				tCostBearer.setBackground(UiDesk.getColor(UiDesk.COL_RED));
+				label = "*** " + label;
+				tCostBearer.setToolTipText(Messages.Object_is_marked_deleted);
+			}
+			tCostBearer.setText(label);
 		} else {
 			tCostBearer.setText(StringConstants.EMPTY);
 		}
