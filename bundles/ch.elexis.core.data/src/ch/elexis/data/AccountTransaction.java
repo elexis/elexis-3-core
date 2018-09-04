@@ -236,6 +236,7 @@ public class AccountTransaction extends PersistentObject {
 		String accountNumeric = get(FLD_ACCOUNT);
 		if (accountNumeric != null && !accountNumeric.isEmpty()) {
 			try {
+				accountNumeric = accountNumeric.trim(); // care for postgres adding spaces
 				return Account.getAccounts().get(Integer.parseInt(accountNumeric));
 			} catch (NumberFormatException e) {}
 		}
