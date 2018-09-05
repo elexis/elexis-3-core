@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import org.eclipse.persistence.config.CacheUsage;
 import org.eclipse.persistence.config.HintValues;
 import org.eclipse.persistence.config.QueryHints;
 
@@ -32,6 +33,7 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 		this.query = entityManager.createNamedQuery(queryName, entityClazz);
 		// update cache with results (https://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development/Querying/Query_Hints)
 		if (refreshCache) {
+			this.query.setHint(QueryHints.CACHE_USAGE, CacheUsage.DoNotCheckCache);
 			this.query.setHint(QueryHints.REFRESH, HintValues.TRUE);
 		}
 	}
