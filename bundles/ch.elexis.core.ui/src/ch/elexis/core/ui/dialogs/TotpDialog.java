@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseAdapter;
@@ -47,6 +48,7 @@ public class TotpDialog extends TitleAreaDialog {
 	private Image image;
 	private Text text;
 	private Label lblVerificationResult;
+	private StyledText txtTotpCode;
 	private User user;
 	private Label lblImage;
 	
@@ -131,9 +133,23 @@ public class TotpDialog extends TitleAreaDialog {
 		container.setLayout(new GridLayout(2, true));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		lblImage = new Label(container, SWT.NONE);
-		lblImage.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
+		Composite compositeCode = new Composite(container, SWT.NONE);
+		compositeCode.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, true, true, 1, 1));
+		GridLayout gl_compositeCode = new GridLayout(1, false);
+		gl_compositeCode.marginHeight = 0;
+		gl_compositeCode.marginWidth = 0;
+		compositeCode.setLayout(gl_compositeCode);
+		
+		lblImage = new Label(compositeCode, SWT.NONE);
+		lblImage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
 		lblImage.setImage(image);
+		
+		txtTotpCode = new StyledText(compositeCode, SWT.NONE);
+		txtTotpCode.setBackground(getShell().getBackground());
+		txtTotpCode.setEditable(false);
+		txtTotpCode.setCaret(null);
+		txtTotpCode.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, false, false, 1, 1));
+		txtTotpCode.setText(user.getTotp());
 		
 		Composite composite = new Composite(container, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
@@ -175,6 +191,7 @@ public class TotpDialog extends TitleAreaDialog {
 				user.resetTotp();
 				createOtpQRCodeImage();
 				lblImage.setImage(image);
+				txtTotpCode.setText(user.getTotp());
 			}
 		});
 		
