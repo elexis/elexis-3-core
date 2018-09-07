@@ -51,6 +51,8 @@ location "http://download.elexis.info/elexis/master/p2/target/" {
 	org.apache.commons.pool
 	org.apache.commons.httpclient
 
+	info.elexis.server.hapi.fhir
+
 	javax.ws.rs [1.1.1,1.1.2)
 	org.slf4j.api [1.7.2,1.7.3)
 	org.slf4j.ext [1.7.2,1.7.3)
@@ -59,7 +61,6 @@ location "http://download.elexis.info/elexis/master/p2/target/" {
 	org.slf4j.log4j [1.7.2,1.7.3)
 	org.slf4j.nop [1.7.2,1.7.3)
 
-	hapi-fhir-osgi-core
 	org.springframework.spring-web
 	woodstox-core-asl
 	javax.xml.stream.stax-api
