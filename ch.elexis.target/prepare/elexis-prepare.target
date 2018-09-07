@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="Oxygen.3 for Elexis" sequenceNumber="1536316269">
+<target name="Oxygen.3 for Elexis" sequenceNumber="1536322145">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.18.0.v20171217-2215"/>
@@ -73,7 +73,7 @@
       <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180206163158/repository/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="info.elexis.server.hapi.fhir" version="3.4.0.201809070912"/>
+      <unit id="info.elexis.server.hapi.fhir" version="3.4.0.201809071121"/>
       <repository location="http://download.elexis.info/elexis-server/master/p2/elexis-server"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
