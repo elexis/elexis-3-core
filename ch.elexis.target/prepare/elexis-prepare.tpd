@@ -85,7 +85,6 @@ location "http://download.elexis.info/mirror.4.elexis/snapshot" {
 }
 
 location "http://download.elexis.info/elexis-server/elexis-server-dependencies" {
-	hapi-fhir-osgi-core
 	org.springframework.spring-web
 	woodstox-core-asl
 	javax.xml.stream.stax-api
