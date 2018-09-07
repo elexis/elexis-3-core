@@ -6,26 +6,19 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: medevit.at
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: ch.elexis.core.findings;bundle-version="1.0.0",
- org.springframework.spring-web
+ org.springframework.spring-web,
+ info.elexis.server.hapi.fhir;bundle-version="3.4.0"
 Export-Package: ch.elexis.core.findings.scripting,
  ch.elexis.core.findings.util,
  ch.elexis.core.findings.util.commands,
  ch.elexis.core.findings.util.fhir.accessor,
  ch.elexis.core.findings.util.model
-Import-Package: ca.uhn.fhir.context,
- ca.uhn.fhir.model.primitive,
- ca.uhn.fhir.parser,
- ca.uhn.fhir.rest.client.api,
- ch.elexis.core.exceptions,
+Import-Package: ch.elexis.core.exceptions,
  ch.elexis.core.lock.types,
  ch.elexis.core.services,
  com.google.gson,
  com.google.gson.internal,
  org.apache.commons.lang3.math;version="3.1.0",
- org.hl7.fhir.dstu3.model,
- org.hl7.fhir.dstu3.model.codesystems,
- org.hl7.fhir.exceptions,
- org.hl7.fhir.instance.model.api,
  org.osgi.framework;version="1.7.0",
  org.osgi.service.component.annotations;version="1.2.0",
  org.slf4j
