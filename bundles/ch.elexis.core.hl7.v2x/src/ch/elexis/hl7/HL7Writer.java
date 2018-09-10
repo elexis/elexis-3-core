@@ -417,10 +417,15 @@ public abstract class HL7Writer {
 			email = kontakt.getEmail();
 			fax = kontakt.getFax();
 		}
-		xtn.getXtn1_TelephoneNumber().setValue(phone1);
-		xtn.getXtn2_TelecommunicationUseCode().setValue(""); //$NON-NLS-1$
-		xtn.getXtn3_TelecommunicationEquipmentType().setValue(""); //$NON-NLS-1$
-		xtn.getXtn4_CommunicationAddress().setValue(email);
+		if (phone1 != null && !phone1.isEmpty()) {
+			xtn.getXtn2_TelecommunicationUseCode().setValue("PRN"); //$NON-NLS-1$
+			xtn.getXtn3_TelecommunicationEquipmentType().setValue("PH"); //$NON-NLS-1$
+			xtn.getXtn4_CommunicationAddress().setValue(phone1);
+		} else if (email != null && !email.isEmpty()) {
+			xtn.getXtn2_TelecommunicationUseCode().setValue("PRN"); //$NON-NLS-1$
+			xtn.getXtn3_TelecommunicationEquipmentType().setValue("Internet"); //$NON-NLS-1$
+			xtn.getXtn4_CommunicationAddress().setValue(email);
+		}
 		xtn.getXtn5_CountryCode().setValue(""); //$NON-NLS-1$
 		xtn.getXtn6_AreaCityCode().setValue(""); //$NON-NLS-1$
 		xtn.getXtn7_LocalNumber().setValue(""); //$NON-NLS-1$
