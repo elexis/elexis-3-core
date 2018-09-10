@@ -539,9 +539,6 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		}
 		
 		public String getReceiverLabel(){
-			if (garantId != null && garantId.equals(patientId)) {
-				garantLabel = getPatientName();
-			}
 			return garantLabel;
 		}
 		
@@ -576,6 +573,9 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			private StructuredViewer viewer;
 			private InvoiceEntry invoiceEntry;
 			
+			private Rechnung rechnung;
+			private Fall fall;
+			
 			public ResolveLazyFieldsRunnable(StructuredViewer viewer, InvoiceEntry invoiceEntry){
 				this.viewer = viewer;
 				this.invoiceEntry = invoiceEntry;
@@ -583,48 +583,50 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			
 			@Override
 			public void run(){
-				resolvePayerType();
-				resolveLaw();
-				resolveGarantLabel();
-				invoiceEntry.resolved = true;
-				invoiceEntry.resolving = false;
-				if (viewer != null) {
-					updateViewer();
+				Rechnung r = Rechnung.load(invoiceId);
+				if (r.exists()) {
+					rechnung = r;
+				}
+				if (rechnung != null) {
+					Fall f = rechnung.getFall();
+					if (f.exists()) {
+						fall = f;
+						resolvePayerType();
+						resolveLaw();
+						resolveGarantLabel();
+						invoiceEntry.resolved = true;
+						invoiceEntry.resolving = false;
+						if (viewer != null) {
+							updateViewer();
+						}
+					}
 				}
 			}
 			
 			private void resolveGarantLabel(){
 				if (garantLabel == null) {
-					Kontakt garant = Kontakt.load(garantId);
-					if (garant.exists()) {
-						garantLabel = garant.getLabel();
+					garantLabel = "?";
+					Kontakt recipient = fall.getInvoiceRecipient();
+					if (recipient != null) {
+						garantLabel = recipient.getLabel();
 					}
 				}
 			}
 			
 			private void resolveLaw(){
-				Rechnung r = Rechnung.load(invoiceId);
-				if (r.exists()) {
-					Fall fall = r.getFall();
-					if (fall.exists()) {
-						billingSystem = fall.getAbrechnungsSystem();
-					}
+				if (fall != null) {
+					billingSystem = fall.getAbrechnungsSystem();
 				}
 			}
 			
 			private void resolvePayerType(){
 				payerType = "TG";
-				
-				Rechnung r = Rechnung.load(invoiceId);
-				if (r.exists()) {
-					Fall fall = r.getFall();
-					if (fall.exists()) {
-						Kontakt costBearer = fall.getCostBearer();
-						if (costBearer != null) {
-							if (garantId != null && garantId.equals(costBearer.getId())) {
-								payerType = "TP";
-								return;
-							}
+				if (fall != null) {
+					Kontakt costBearer = fall.getCostBearer();
+					if (costBearer != null) {
+						if (garantId != null && garantId.equals(costBearer.getId())) {
+							payerType = "TP";
+							return;
 						}
 					}
 				}

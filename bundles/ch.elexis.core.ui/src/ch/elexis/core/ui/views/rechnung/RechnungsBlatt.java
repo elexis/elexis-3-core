@@ -74,6 +74,7 @@ import ch.elexis.core.ui.views.contribution.ViewContributionHelper;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
+import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
@@ -627,8 +628,10 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		lbOutputs.removeAll();
 		
 		if (actRn != null) {
+			Kontakt adressat = actRn.getFall().getInvoiceRecipient();
 			rnAdressat
-				.setText(Messages.RechnungsBlatt_adressee + actRn.getFall().getGarant().getLabel());
+				.setText(Messages.RechnungsBlatt_adressee
+					+ ((adressat != null) ? adressat.getLabel() : ""));
 			form.setText(actRn.getLabel());
 			List<String> trace = actRn.getTrace(Rechnung.STATUS_CHANGED);
 			for (String s : trace) {
