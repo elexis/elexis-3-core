@@ -310,6 +310,37 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 		set(FLD_GARANT_ID, garant.getId());
 	}
 	
+	/**
+	 * Get the recipient for the invoice of this {@link Fall}. Recipient depends on
+	 * {@link Fall#getTiersType()}, {@link Patient#getLegalGuardian()} and {@link Fall#getGarant()}.
+	 * 
+	 * @return< code>null</code> if not recipient could be determined
+	 * @since 3.6
+	 */
+	public @Nullable Kontakt getInvoiceRecipient(){
+		Kontakt ret = null;
+		Tiers paymentMode = getTiersType();
+		if (paymentMode == Tiers.PAYANT) {
+			ret = getCostBearer();
+		} else if (paymentMode == Tiers.GARANT) {
+			Kontakt invoiceReceiver = getGarant();
+			Patient patient = getPatient();
+			if (invoiceReceiver.equals(patient)) {
+				Kontakt legalGuardian = patient.getLegalGuardian();
+				if (legalGuardian != null) {
+					ret = legalGuardian;
+				} else {
+					ret = patient;
+				}
+			} else {
+				ret = invoiceReceiver;
+			}
+		} else {
+			ret = getGarant();
+		}
+		return ret;
+	}
+	
 	public Rechnungssteller getRechnungssteller(){
 		Rechnungssteller ret = Rechnungssteller.load(getInfoString(FLD_RECHNUNGSSTELLER_ID));
 		if (!ret.isValid()) {
