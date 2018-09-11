@@ -51,6 +51,7 @@ public class Brief extends PersistentObject {
 	public static final String FLD_PATIENT_ID = "PatientID";
 	public static final String FLD_SUBJECT = "Betreff";
 	public static final String FLD_NOTE = "note";
+	public static final String FLD_GELOESCHT = "geloescht";
 	public static final String TABLENAME = "BRIEFE";
 	public static final String TEMPLATE = BriefConstants.TEMPLATE;
 	public static final String AUZ = BriefConstants.AUZ;
@@ -72,7 +73,7 @@ public class Brief extends PersistentObject {
 	static {
 		addMapping(TABLENAME, FLD_SUBJECT, FLD_PATIENT_ID, DATE_COMPOUND, FLD_SENDER_ID,
 			FLD_DESTINATION_ID, FLD_KONSULTATION_ID, FLD_TYPE, "modifiziert=S:D:modifiziert",
-			"geloescht", FLD_MIME_TYPE, "gedruckt=S:D:gedruckt", "Path", FLD_NOTE);
+			FLD_GELOESCHT, FLD_MIME_TYPE, "gedruckt=S:D:gedruckt", "Path", FLD_NOTE);
 	}
 	
 	protected Brief(){/* leer */
@@ -107,7 +108,7 @@ public class Brief extends PersistentObject {
 			String dat = Datum.toString(TimeTool.TIMESTAMP);
 			set(new String[] {
 				FLD_SUBJECT, FLD_PATIENT_ID, FLD_DATE, FLD_SENDER_ID, FLD_DATE_MODIFIED,
-				FLD_DESTINATION_ID, FLD_KONSULTATION_ID, FLD_TYPE, "geloescht"
+				FLD_DESTINATION_ID, FLD_KONSULTATION_ID, FLD_TYPE, FLD_GELOESCHT
 			}, new String[] {
 				Betreff, pat, dat, Absender == null ? StringTool.leer : Absender.getId(), dat, dst,
 				bhdl, typ, StringConstants.ZERO
@@ -276,13 +277,13 @@ public class Brief extends PersistentObject {
 			} else {
 				// lookup in heap even if extern configured
 				HeapContent heap = HeapContent.load(getId());
-				if (heap.exists()) {
+				if (heap.isAvailable()) {
 					ret = heap;
 				}
 			}
 		} else {
 			HeapContent heap = HeapContent.load(getId());
-			if (heap.exists()) {
+			if (heap.isAvailable()) {
 				ret = heap;
 			}
 		}
