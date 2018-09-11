@@ -20,7 +20,6 @@ import javax.persistence.metamodel.SingularAttribute;
 
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.persistence.config.CacheUsage;
 import org.eclipse.persistence.config.HintValues;
 import org.eclipse.persistence.config.QueryHints;
 import org.slf4j.LoggerFactory;
@@ -491,7 +490,6 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		TypedQuery<?> query = (TypedQuery<?>) entityManager.createQuery(criteriaQuery);
 		// update cache with results (https://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development/Querying/Query_Hints)
 		if (refreshCache) {
-			query.setHint(QueryHints.CACHE_USAGE, CacheUsage.DoNotCheckCache);
 			query.setHint(QueryHints.REFRESH, HintValues.TRUE);
 		}
 		
