@@ -374,6 +374,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 							String konsId = results.getString(1);
 							if (!knownIds.contains(konsId)) {
 								proposal.add(Konsultation.load(konsId));
+								knownIds.add(konsId);
 							}
 						}
 						progress.worked(1);
