@@ -6,7 +6,6 @@ import java.util.Vector;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.DataTypeException;
-import ca.uhn.hl7v2.model.v26.datatype.XTN;
 import ca.uhn.hl7v2.model.v26.segment.ORC;
 import ca.uhn.hl7v2.validation.impl.WithdrawnDatatypeRule;
 import ch.elexis.hl7.data.HL7Kontakt;
@@ -474,11 +473,16 @@ public abstract class HL7Writer {
 	 * @param kontakt
 	 * @throws DataTypeException
 	 */
-	protected void addPhone2ToXTN(XTN xtn, final HL7Kontakt kontakt) throws DataTypeException{
+	protected void addPhone2ToXTN(ca.uhn.hl7v2.model.v26.datatype.XTN xtn, final HL7Kontakt kontakt)
+		throws DataTypeException{
 		String phone2 = ""; //$NON-NLS-1$
 		if (kontakt != null) {
 			phone2 = kontakt.getPhone2();
 		}
-		xtn.getXtn1_TelephoneNumber().setValue(phone2);
+		if (phone2 != null && !phone2.isEmpty()) {
+			xtn.getXtn2_TelecommunicationUseCode().setValue("WPN"); //$NON-NLS-1$
+			xtn.getXtn3_TelecommunicationEquipmentType().setValue("PH"); //$NON-NLS-1$
+			xtn.getXtn4_CommunicationAddress().setValue(phone2);
+		}
 	}
 }
