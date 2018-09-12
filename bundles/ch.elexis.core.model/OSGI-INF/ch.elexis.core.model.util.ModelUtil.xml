@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="ch.elexis.core.model.util.ModelUtil">
-   <reference bind="setContextService" cardinality="0..1" interface="ch.elexis.core.services.IContextService" name="ContextService"/>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.2.0" name="ch.elexis.core.model.util.ModelUtil">
+   <reference bind="setContextService" cardinality="0..1" interface="ch.elexis.core.services.IContextService" name="ContextService" policy-option="greedy"/>
    <reference bind="setModelService" interface="ch.elexis.core.services.IModelService" name="ModelService" target="(service.model.name=ch.elexis.core.model)"/>
    <reference bind="setStoreToStringService" interface="ch.elexis.core.services.IStoreToStringService" name="StoreToStringService"/>
    <implementation class="ch.elexis.core.model.util.ModelUtil"/>

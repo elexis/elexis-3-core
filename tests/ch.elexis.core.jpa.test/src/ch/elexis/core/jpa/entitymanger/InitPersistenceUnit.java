@@ -24,7 +24,7 @@ public class InitPersistenceUnit {
 		assertTrue(elexisEntityManager.isPresent());
 		EntityManager em = (EntityManager) elexisEntityManager.get().getEntityManager(false);
 		assertNotNull(em);
-		em.close();
+		elexisEntityManager.get().closeEntityManager(em);
 		OsgiServiceUtil.ungetService(elexisEntityManager.get());
 	}
 	
@@ -42,14 +42,14 @@ public class InitPersistenceUnit {
 		assertNotNull(kontakt.getId());
 		String id = kontakt.getId();
 		// close and load in new EntityManger
-		em.close();
+		elexisEntityManager.get().closeEntityManager(em);
 		em = (EntityManager) elexisEntityManager.get().getEntityManager(false);
 		Kontakt loaded = em.find(Kontakt.class, id);
 		assertNotNull(loaded);
 		assertEquals(kontakt.getId(), loaded.getId());
 		em.remove(loaded);
 		assertFalse(em.contains(loaded));
-		em.close();
+		elexisEntityManager.get().closeEntityManager(em);
 		OsgiServiceUtil.ungetService(elexisEntityManager.get());
 	}
 }

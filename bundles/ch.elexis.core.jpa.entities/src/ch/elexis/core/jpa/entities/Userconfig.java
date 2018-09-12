@@ -12,12 +12,17 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.eclipse.persistence.annotations.Cache;
+import org.eclipse.persistence.annotations.OptimisticLocking;
+import org.eclipse.persistence.annotations.OptimisticLockingType;
 
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
 @Entity
 @Table(name = "userconfig")
 @EntityListeners(EntityWithIdListener.class)
+@OptimisticLocking(type = OptimisticLockingType.SELECTED_COLUMNS, selectedColumns = {
+	@Column(name = "LASTUPDATE")
+})
 @Cache(expiry = 15000)
 @NamedQuery(name = "Userconfig.owner.param", query = "SELECT uc FROM Userconfig uc WHERE uc.owner = :owner AND uc.param = :param")
 public class Userconfig implements EntityWithId {

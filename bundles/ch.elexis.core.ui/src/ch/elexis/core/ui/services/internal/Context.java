@@ -53,6 +53,12 @@ public class Context implements IContext {
 		Optional<IContact> ret = Optional.ofNullable((IContact) context.get(ACTIVE_USERCONTACT));
 		if (!ret.isPresent() && parent != null) {
 			ret = parent.getActiveUserContact();
+		} else if (!ret.isPresent() && getActiveUser().isPresent()) {
+			IContact contact = getActiveUser().get().getAssignedContact();
+			if (contact != null) {
+				setActiveUserContact(contact);
+				ret = Optional.of(contact);
+			}
 		}
 		return ret;
 	}

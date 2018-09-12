@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import org.eclipse.persistence.config.EntityManagerProperties;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -88,6 +89,9 @@ public class ElexisEntityManger implements IElexisEntityManager {
 				props.put(PersistenceUnitProperties.DDL_GENERATION, PersistenceUnitProperties.NONE);
 				props.put("gemini.jpa.providerConnectedDataSource", dataSource);
 				props.put("javax.persistence.nonJtaDataSource", dataSource);
+				// we keep EntityManager instances possibly for the whole application lifecycle
+				// so enable GC to clear entities from EntityManager cache
+				props.put(EntityManagerProperties.PERSISTENCE_CONTEXT_REFERENCE_MODE, "WEAK");
 				this.factory = factoryBuilder.createEntityManagerFactory(props);
 			} else {
 				throw new IllegalStateException("No EntityManagerFactoryBuilder available");
@@ -97,14 +101,11 @@ public class ElexisEntityManger implements IElexisEntityManager {
 		if (factory != null) {
 			if (managed) {
 				EntityManager em = threadLocal.get();
-				if (em == null) {
-					logger.debug(
-						"Creating new EntityManager for Thread [" + Thread.currentThread() + "]");
-					em = factory.createEntityManager();
-					threadLocal.set(em);
-					threadManagerMap.put(Thread.currentThread(), em);
+				if (em == null || !em.isOpen()) {
+					em = createManagedEntityManager();
 				} else {
-					// clear and use L2 cache
+					// save happens in separate EntityManager
+					// clear L1 cache, use L2 cache
 					em.clear();
 				}
 				return em;
@@ -114,6 +115,14 @@ public class ElexisEntityManger implements IElexisEntityManager {
 		} else {
 			throw new IllegalStateException("No EntityManagerFactory available");
 		}
+	}
+	
+	private EntityManager createManagedEntityManager(){
+		logger.debug("Creating new EntityManager for Thread [" + Thread.currentThread() + "]");
+		EntityManager em = factory.createEntityManager();
+		threadLocal.set(em);
+		threadManagerMap.put(Thread.currentThread(), em);
+		return em;
 	}
 	
 	@Override

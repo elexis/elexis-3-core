@@ -19,6 +19,8 @@ import org.junit.Test;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.service.ContextServiceHolder;
+import ch.elexis.core.data.util.ConfigUtil;
 import ch.elexis.core.importer.div.importers.HL7Parser;
 import ch.elexis.core.model.LabResultConstants;
 import ch.elexis.core.types.LabItemTyp;
@@ -162,6 +164,10 @@ public class TestPathologicDescription {
 		// set the use local config to false
 		CoreHub.userCfg.set(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, false);
 		CoreHub.userCfg.flush();
+		// test if parser will read correct value
+		assertFalse(ConfigUtil.isUserConfig(
+			ContextServiceHolder.get().getRootContext().getActiveUserContact().get(),
+			Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true));
 		
 		parseOneHL7file(new File(workDir.toString(), "Analytica/01TEST5005.hl7"), false, true);
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
