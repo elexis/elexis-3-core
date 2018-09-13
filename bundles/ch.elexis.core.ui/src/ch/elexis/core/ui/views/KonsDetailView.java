@@ -348,9 +348,9 @@ public class KonsDetailView extends ViewPart
 		dd.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		vd = new VerrechnungsDisplay(getSite().getPage(), botright, SWT.NONE);
 		vd.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		getSite().registerContextMenu(ID + ".VerrechnungsDisplay", vd.contextMenuManager,
-			vd.viewer);
-		getSite().setSelectionProvider(vd.viewer);
+		getSite().registerContextMenu(ID + ".VerrechnungsDisplay", vd.getMenuManager(),
+			vd.getViewer());
+		getSite().setSelectionProvider(vd.getViewer());
 		diagAndChargeSash.setWeights(diagAndChargeSashWeights == null ? new int[] {
 			40, 60
 		} : diagAndChargeSashWeights);
@@ -511,8 +511,8 @@ public class KonsDetailView extends ViewPart
 			boolean hlMandantEnabled =
 				kons.isEditable(false) && CoreHub.acl.request(AccessControlDefaults.KONS_REASSIGN);
 			hlMandant.setEnabled(hlMandantEnabled);
-			dd.setDiagnosen(kons);
-			vd.setLeistungen(kons);
+			dd.setEncounter(kons);
+			vd.setEncounter(kons);
 			vd.setEnabled(true);
 			dd.setEnabled(true);
 			if (kons.isEditable(false)) {
@@ -695,7 +695,7 @@ public class KonsDetailView extends ViewPart
 	}
 	
 	public void adaptMenus(){
-		vd.tVerr.getMenu().setEnabled(CoreHub.acl.request(AccessControlDefaults.LSTG_VERRECHNEN));
+		vd.adaptMenus();
 	}
 	
 	/*
