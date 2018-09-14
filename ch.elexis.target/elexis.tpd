@@ -50,7 +50,12 @@ location "http://download.elexis.info/elexis/master/p2/target/" {
 	org.apache.commons.lang3
 	org.apache.commons.pool
 	org.apache.commons.httpclient
-
+	org.apache.poi
+	org.apache.poi.ooxml
+	org.apache.poi.ooxml.schemas
+	org.apache.xmlbeans
+	org.dom4j
+	
 	info.elexis.server.hapi.fhir
 
 	javax.ws.rs [1.1.1,1.1.2)
@@ -219,7 +224,6 @@ location "http://download.elexis.info/elexis/master/p2/target/" {
 	org.apache.avalon.framework.avalon-framework-impl 4.3.1
 	org.apache.avalon.framework.avalon-framework-impl.source 4.3.1
 	org.apache.ibatis.sqlmap 2.3.0
-	org.apache.poi 3.0.2.FINAL
 	org.apache.servicemix.bundles.zxing 3.0.1.1
 	org.apache.servicemix.bundles.zxing.source 3.0.1.1
 	org.apache.xmlgraphics.commons 1.2.0

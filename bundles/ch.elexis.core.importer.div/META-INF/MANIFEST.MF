@@ -9,10 +9,12 @@ Require-Bundle: ch.elexis.core;bundle-version="3.1.0",
  ch.rgw.utility,
  org.eclipse.osgi;bundle-version="3.9.1",
  ch.elexis.core.hl7.v2x;bundle-version="3.2.0",
- org.apache.poi;bundle-version="3.0.2",
  ch.elexis.core.l10n;bundle-version="3.5.0",
  org.apache.commons.lang3;bundle-version="3.1.0",
- ch.elexis.core.data
+ ch.elexis.core.data,
+ org.apache.poi;bundle-version="3.9.0",
+ org.apache.poi.ooxml;bundle-version="3.9.0",
+ org.apache.poi.ooxml.schemas;bundle-version="3.9.0"
 Export-Package: ch.elexis.core.importer.div.importers,
  ch.elexis.core.importer.div.importers.multifile,
  ch.elexis.core.importer.div.importers.multifile.strategy

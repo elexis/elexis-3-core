@@ -18,11 +18,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import ch.rgw.tools.TimeTool;
 
@@ -36,9 +36,8 @@ import ch.rgw.tools.TimeTool;
  * 
  */
 public class ExcelWrapper {
-	POIFSFileSystem fs;
-	HSSFSheet sheet;
 	private Class<?>[] types;
+	private Sheet sheet;
 	
 	/**
 	 * Load a specific page of the given Excel Spreadsheet
@@ -53,8 +52,7 @@ public class ExcelWrapper {
 	@Deprecated
 	public boolean load(final String file, final int page){
 		try {
-			fs = new POIFSFileSystem(new FileInputStream(file));
-			HSSFWorkbook wb = new HSSFWorkbook(fs);
+			Workbook wb = WorkbookFactory.create(new FileInputStream(file));
 			sheet = wb.getSheetAt(page);
 			return true;
 		} catch (Exception ex) {
@@ -73,8 +71,7 @@ public class ExcelWrapper {
 	 */
 	public boolean load(final InputStream inputStream, final int page){
 		try {
-			fs = new POIFSFileSystem(inputStream);
-			HSSFWorkbook wb = new HSSFWorkbook(fs);
+			Workbook wb = WorkbookFactory.create(inputStream);
 			sheet = wb.getSheetAt(page);
 			return true;
 		} catch (Exception ex) {
@@ -101,7 +98,7 @@ public class ExcelWrapper {
 	 * @return a List of Strings with the row values or null if no such row exists.
 	 */
 	public List<String> getRow(final int rowNr){
-		HSSFRow row = sheet.getRow(rowNr);
+		Row row = sheet.getRow(rowNr);
 		if (row == null) {
 			return null;
 		}
@@ -115,16 +112,16 @@ public class ExcelWrapper {
 			last = row.getLastCellNum();
 		}
 		for (short i = first; i < last; i++) {
-			HSSFCell cell = row.getCell(i);
+			Cell cell = row.getCell(i);
 			if (cell != null) {
 				switch (cell.getCellType()) {
-				case HSSFCell.CELL_TYPE_BLANK:
+				case Cell.CELL_TYPE_BLANK:
 					ret.add(""); //$NON-NLS-1$
 					break;
-				case HSSFCell.CELL_TYPE_BOOLEAN:
+				case Cell.CELL_TYPE_BOOLEAN:
 					ret.add(Boolean.toString(cell.getBooleanCellValue()));
 					break;
-				case HSSFCell.CELL_TYPE_NUMERIC:
+				case Cell.CELL_TYPE_NUMERIC:
 					if (types != null) {
 						if (types[i].equals(Integer.class)) {
 							ret.add(Long.toString(Math.round(cell.getNumericCellValue())));
@@ -147,10 +144,10 @@ public class ExcelWrapper {
 						}
 						break;
 					} // else fall thru
-				case HSSFCell.CELL_TYPE_FORMULA:
+				case Cell.CELL_TYPE_FORMULA:
 					ret.add(Double.toString(cell.getNumericCellValue()));
 					break;
-				case HSSFCell.CELL_TYPE_STRING:
+				case Cell.CELL_TYPE_STRING:
 					ret.add(cell.toString());
 					break;
 				default:

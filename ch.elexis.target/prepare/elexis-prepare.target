@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
-<!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="Oxygen.3 for Elexis" sequenceNumber="1536322145">
+<!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
+<target name="Oxygen.3 for Elexis" sequenceNumber="1536912442">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.18.0.v20171217-2215"/>
@@ -70,10 +70,15 @@
       <unit id="org.apache.commons.lang3" version="3.1.0.v201403281430"/>
       <unit id="org.apache.commons.pool" version="1.6.0.v201204271246"/>
       <unit id="org.apache.commons.httpclient" version="3.1.0.v201012070820"/>
+      <unit id="org.apache.poi" version="3.9.0.v201405241750"/>
+      <unit id="org.apache.poi.ooxml" version="3.9.0.v201405241905"/>
+      <unit id="org.apache.poi.ooxml.schemas" version="3.9.0.v201405241750"/>
+      <unit id="org.apache.xmlbeans" version="2.3.0.v201605172150"/>
+      <unit id="org.dom4j" version="1.6.1.v201312101416"/>
       <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180206163158/repository/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="info.elexis.server.hapi.fhir" version="3.4.0.201809071121"/>
+      <unit id="info.elexis.server.hapi.fhir" version="3.4.0.201809131455"/>
       <repository location="http://download.elexis.info/elexis-server/master/p2/elexis-server"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
@@ -247,7 +252,6 @@
       <unit id="org.apache.avalon.framework.avalon-framework-impl" version="4.3.1"/>
       <unit id="org.apache.avalon.framework.avalon-framework-impl.source" version="4.3.1"/>
       <unit id="org.apache.ibatis.sqlmap" version="2.3.0"/>
-      <unit id="org.apache.poi" version="3.0.2.FINAL"/>
       <unit id="org.apache.servicemix.bundles.zxing" version="3.0.1.1"/>
       <unit id="org.apache.servicemix.bundles.zxing.source" version="3.0.1.1"/>
       <unit id="org.apache.xmlgraphics.commons" version="1.2.0"/>
