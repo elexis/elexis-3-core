@@ -4,14 +4,18 @@ import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
+import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
 import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 import ch.elexis.core.types.Country;
 
 public class Contact extends AbstractIdDeleteModelAdapter<Kontakt>
 		implements IdentifiableWithXid, IContact {
 	
+	private ExtInfoHandler extInfoHandler;
+	
 	public Contact(Kontakt entity){
 		super(entity);
+		extInfoHandler = new ExtInfoHandler(this);
 	}
 	
 	@Override
@@ -236,5 +240,15 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt>
 			.append(StringUtils.defaultString(getZip())).append(" ")
 			.append(StringUtils.defaultString(getCity()));
 		return sb.toString();
+	}
+
+	@Override
+	public Object getExtInfo(Object key) {
+		return extInfoHandler.getExtInfo(key);
+	}
+
+	@Override
+	public void setExtInfo(Object key, Object value) {
+		extInfoHandler.setExtInfo(key, value);
 	}
 }

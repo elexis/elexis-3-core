@@ -67,8 +67,12 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 		
 		addMapping(new MappingEntry(IContact.class, Contact.class, Kontakt.class));
 		addMapping(new MappingEntry(IPatient.class, Patient.class, Kontakt.class)
-			.adapterPreCondition(adapter -> ((Kontakt) adapter.getEntity()).isPatient())
-			.adapterInitializer(adapter -> ((Patient) adapter).setPatient(true)));
+			.adapterPreCondition(adapter -> ((Kontakt) adapter.getEntity()).isPatient()
+				&& ((Kontakt) adapter.getEntity()).isPerson())
+			.adapterInitializer(adapter -> {
+				((Patient) adapter).setPatient(true);
+				((Patient) adapter).setPerson(true);
+			}));
 		addMapping(new MappingEntry(IPerson.class, Person.class, Kontakt.class)
 			.adapterPreCondition(adapter -> ((Kontakt) adapter.getEntity()).isPerson())
 			.adapterInitializer(adapter -> ((Person) adapter).setPerson(true)));

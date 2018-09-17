@@ -96,6 +96,8 @@ public class CoreModelServiceTest {
 		assertTrue(loadedPatient.isPresent());
 		assertFalse(patient == loadedPatient.get());
 		assertEquals(patient, loadedPatient.get());
+		assertTrue(patient.isPerson());
+		assertTrue(patient.isPatient());
 	}
 	
 	@Test

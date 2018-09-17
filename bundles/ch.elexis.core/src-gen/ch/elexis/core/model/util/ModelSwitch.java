@@ -138,6 +138,7 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				T1 result = caseIContact(iContact);
 				if (result == null) result = caseIdentifiable(iContact);
 				if (result == null) result = caseDeleteable(iContact);
+				if (result == null) result = caseWithExtInfo(iContact);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -147,6 +148,7 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseIContact(iPerson);
 				if (result == null) result = caseIdentifiable(iPerson);
 				if (result == null) result = caseDeleteable(iPerson);
+				if (result == null) result = caseWithExtInfo(iPerson);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -156,6 +158,7 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseIContact(iOrganization);
 				if (result == null) result = caseIdentifiable(iOrganization);
 				if (result == null) result = caseDeleteable(iOrganization);
+				if (result == null) result = caseWithExtInfo(iOrganization);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -166,6 +169,7 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseIContact(iLaboratory);
 				if (result == null) result = caseIdentifiable(iLaboratory);
 				if (result == null) result = caseDeleteable(iLaboratory);
+				if (result == null) result = caseWithExtInfo(iLaboratory);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -176,6 +180,7 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseIContact(iPatient);
 				if (result == null) result = caseIdentifiable(iPatient);
 				if (result == null) result = caseDeleteable(iPatient);
+				if (result == null) result = caseWithExtInfo(iPatient);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -185,6 +190,7 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseIContact(iMandator);
 				if (result == null) result = caseIdentifiable(iMandator);
 				if (result == null) result = caseDeleteable(iMandator);
+				if (result == null) result = caseWithExtInfo(iMandator);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}

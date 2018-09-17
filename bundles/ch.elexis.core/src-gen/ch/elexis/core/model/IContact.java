@@ -48,7 +48,7 @@ import ch.elexis.core.types.Country;
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface IContact extends Identifiable, Deleteable {
+public interface IContact extends Identifiable, Deleteable, WithExtInfo {
 	/**
 	 * Returns the value of the '<em><b>Mandator</b></em>' attribute.
 	 * <!-- begin-user-doc -->

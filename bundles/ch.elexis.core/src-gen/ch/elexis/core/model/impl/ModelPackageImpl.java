@@ -2449,6 +2449,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iXidEClass.getESuperTypes().add(this.getIdentifiable());
 		iContactEClass.getESuperTypes().add(this.getIdentifiable());
 		iContactEClass.getESuperTypes().add(this.getDeleteable());
+		iContactEClass.getESuperTypes().add(this.getWithExtInfo());
 		iPersonEClass.getESuperTypes().add(this.getIContact());
 		iOrganizationEClass.getESuperTypes().add(this.getIContact());
 		iLaboratoryEClass.getESuperTypes().add(this.getIOrganization());
