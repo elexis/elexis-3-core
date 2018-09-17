@@ -2830,13 +2830,58 @@ public interface ModelPackage extends EPackage {
 	int ICOVERAGE__DELETED = DELETEABLE__DELETED;
 
 	/**
+	 * The feature id for the '<em><b>Patient</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICOVERAGE__PATIENT = DELETEABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICOVERAGE__DESCRIPTION = DELETEABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Reason</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICOVERAGE__REASON = DELETEABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Date From</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICOVERAGE__DATE_FROM = DELETEABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Billing System</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICOVERAGE__BILLING_SYSTEM = DELETEABLE_FEATURE_COUNT + 4;
+
+	/**
 	 * The number of structural features of the '<em>ICoverage</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ICOVERAGE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 0;
+	int ICOVERAGE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' attribute.
@@ -5052,6 +5097,61 @@ public interface ModelPackage extends EPackage {
 	EClass getICoverage();
 
 	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.ICoverage#getPatient <em>Patient</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Patient</em>'.
+	 * @see ch.elexis.core.model.ICoverage#getPatient()
+	 * @see #getICoverage()
+	 * @generated
+	 */
+	EReference getICoverage_Patient();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ICoverage#getDescription <em>Description</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Description</em>'.
+	 * @see ch.elexis.core.model.ICoverage#getDescription()
+	 * @see #getICoverage()
+	 * @generated
+	 */
+	EAttribute getICoverage_Description();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ICoverage#getReason <em>Reason</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Reason</em>'.
+	 * @see ch.elexis.core.model.ICoverage#getReason()
+	 * @see #getICoverage()
+	 * @generated
+	 */
+	EAttribute getICoverage_Reason();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ICoverage#getDateFrom <em>Date From</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Date From</em>'.
+	 * @see ch.elexis.core.model.ICoverage#getDateFrom()
+	 * @see #getICoverage()
+	 * @generated
+	 */
+	EAttribute getICoverage_DateFrom();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ICoverage#getBillingSystem <em>Billing System</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Billing System</em>'.
+	 * @see ch.elexis.core.model.ICoverage#getBillingSystem()
+	 * @see #getICoverage()
+	 * @generated
+	 */
+	EAttribute getICoverage_BillingSystem();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IOrganization <em>IOrganization</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6840,6 +6940,46 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EClass ICOVERAGE = eINSTANCE.getICoverage();
+
+		/**
+		 * The meta object literal for the '<em><b>Patient</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ICOVERAGE__PATIENT = eINSTANCE.getICoverage_Patient();
+
+		/**
+		 * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ICOVERAGE__DESCRIPTION = eINSTANCE.getICoverage_Description();
+
+		/**
+		 * The meta object literal for the '<em><b>Reason</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ICOVERAGE__REASON = eINSTANCE.getICoverage_Reason();
+
+		/**
+		 * The meta object literal for the '<em><b>Date From</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ICOVERAGE__DATE_FROM = eINSTANCE.getICoverage_DateFrom();
+
+		/**
+		 * The meta object literal for the '<em><b>Billing System</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ICOVERAGE__BILLING_SYSTEM = eINSTANCE.getICoverage_BillingSystem();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IOrganization <em>IOrganization</em>}' class.

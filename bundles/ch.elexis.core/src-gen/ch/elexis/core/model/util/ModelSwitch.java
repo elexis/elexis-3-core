@@ -309,6 +309,7 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				T1 result = caseICoverage(iCoverage);
 				if (result == null) result = caseDeleteable(iCoverage);
 				if (result == null) result = caseIdentifiable(iCoverage);
+				if (result == null) result = caseWithExtInfo(iCoverage);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}

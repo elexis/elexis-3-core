@@ -1,6 +1,8 @@
 package ch.elexis.core.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.types.Gender;
@@ -48,7 +50,7 @@ public class Person extends Contact implements IPerson {
 	
 	@Override
 	public LocalDateTime getDateOfBirth(){
-		if(getEntity().getDob() != null) {
+		if (getEntity().getDob() != null) {
 			return getEntity().getDob().atStartOfDay();
 		}
 		return null;
@@ -72,5 +74,16 @@ public class Person extends Contact implements IPerson {
 	@Override
 	public void setLastName(String value){
 		getEntity().setDescription1(value);
+	}
+	
+	@Override
+	public int getAgeInYears(){
+		LocalDateTime dateOfBirth = getDateOfBirth();
+		if (dateOfBirth != null) {
+			LocalDate now = LocalDate.now();
+			long years = ChronoUnit.YEARS.between(dateOfBirth.toLocalDate(), now);
+			return (int) years;
+		}
+		return -1;
 	}
 }

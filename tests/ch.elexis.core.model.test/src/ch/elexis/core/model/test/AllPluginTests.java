@@ -5,6 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import ch.elexis.core.model.ConfigTest;
+import ch.elexis.core.model.ContactTest;
 import ch.elexis.core.model.DocumentBriefTest;
 import ch.elexis.core.model.LabItemTest;
 import ch.elexis.core.model.LabMappingTest;
@@ -21,7 +22,7 @@ import ch.elexis.core.model.service.CoreQueryTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-	CoreModelServiceTest.class, CoreQueryTest.class, ConfigTest.class, UserConfigTest.class,
+	CoreModelServiceTest.class, CoreQueryTest.class, ConfigTest.class, ContactTest.class, UserConfigTest.class,
 	LabItemTest.class, DocumentBriefTest.class, LabResultTest.class, LabOrderTest.class,
 	LaboratoryTest.class, XidTest.class, LabMappingTest.class, TypedArticleTest.class,
 	StockEntryTest.class, OrderEntryTest.class

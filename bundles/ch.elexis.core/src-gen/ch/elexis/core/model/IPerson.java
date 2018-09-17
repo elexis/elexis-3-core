@@ -10,10 +10,9 @@
  */
 package ch.elexis.core.model;
 
-import ch.elexis.core.types.Gender;
-
-import ch.rgw.tools.TimeTool;
 import java.time.LocalDateTime;
+
+import ch.elexis.core.types.Gender;
 
 /**
  * <!-- begin-user-doc -->
@@ -189,5 +188,13 @@ public interface IPerson extends IContact {
 	 * @generated
 	 */
 	void setLastName(String value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	int getAgeInYears();
 
 } // IPerson
