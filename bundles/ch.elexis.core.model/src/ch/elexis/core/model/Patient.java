@@ -1,6 +1,12 @@
 package ch.elexis.core.model;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import ch.elexis.core.jpa.entities.Fall;
 import ch.elexis.core.jpa.entities.Kontakt;
+import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
+import ch.elexis.core.model.util.ModelUtil;
 
 public class Patient extends Person implements IPatient {
 	
@@ -72,4 +78,20 @@ public class Patient extends Person implements IPatient {
 	public String getPatientLabel(){
 		return getLabel();
 	}
+	
+	@Override
+	public List<ICoverage> getCoverages(){
+		return getEntity().getFaelle().parallelStream().filter(f -> !f.isDeleted())
+			.map(f -> ModelUtil.getAdapter(f, ICoverage.class)).collect(Collectors.toList());
+	}
+
+
+	@Override
+	public ICoverage addCoverage(ICoverage coverage){
+		@SuppressWarnings("unchecked")
+		Fall fall = ((AbstractIdModelAdapter<Fall>) coverage).getEntity();
+		getEntity().getFaelle().add(fall);
+		return coverage;
+	}
+
 }

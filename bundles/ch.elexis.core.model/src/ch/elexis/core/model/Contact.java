@@ -1,11 +1,18 @@
 package ch.elexis.core.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.entities.Kontakt;
+import ch.elexis.core.jpa.entities.ZusatzAdresse;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
+import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
 import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
+import ch.elexis.core.model.util.ModelUtil;
 import ch.elexis.core.types.Country;
 
 public class Contact extends AbstractIdDeleteModelAdapter<Kontakt>
@@ -241,14 +248,31 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt>
 			.append(StringUtils.defaultString(getCity()));
 		return sb.toString();
 	}
-
+	
 	@Override
-	public Object getExtInfo(Object key) {
+	public Object getExtInfo(Object key){
 		return extInfoHandler.getExtInfo(key);
 	}
-
+	
 	@Override
-	public void setExtInfo(Object key, Object value) {
+	public void setExtInfo(Object key, Object value){
 		extInfoHandler.setExtInfo(key, value);
+	}
+	
+	@Override
+	public List<IAddress> getAddress(){
+		ArrayList<ZusatzAdresse> addresses =
+			new ArrayList<ZusatzAdresse>(getEntity().getAddresses().values());
+		return addresses.parallelStream().filter(f -> !f.isDeleted())
+			.map(f -> ModelUtil.getAdapter(f, IAddress.class)).collect(Collectors.toList());
+	}
+	
+	@Override
+	public IAddress addAddress(IAddress address){
+		address.setContact(this);
+		@SuppressWarnings("unchecked")
+		ZusatzAdresse addresse = ((AbstractIdModelAdapter<ZusatzAdresse>) address).getEntity();
+		getEntity().getAddresses().put(address.getId(), addresse);
+		return address;
 	}
 }

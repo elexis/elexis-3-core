@@ -365,6 +365,7 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				T1 result = caseIBlob(iBlob);
 				if (result == null) result = caseIdentifiable(iBlob);
 				if (result == null) result = caseDeleteable(iBlob);
+				if (result == null) result = caseWithAssignableId(iBlob);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -425,6 +426,29 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				T1 result = caseIOrder(iOrder);
 				if (result == null) result = caseIdentifiable(iOrder);
 				if (result == null) result = caseDeleteable(iOrder);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IADDRESS: {
+				IAddress iAddress = (IAddress)theEObject;
+				T1 result = caseIAddress(iAddress);
+				if (result == null) result = caseIdentifiable(iAddress);
+				if (result == null) result = caseDeleteable(iAddress);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IIMAGE: {
+				IImage iImage = (IImage)theEObject;
+				T1 result = caseIImage(iImage);
+				if (result == null) result = caseIdentifiable(iImage);
+				if (result == null) result = caseDeleteable(iImage);
+				if (result == null) result = caseWithAssignableId(iImage);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.WITH_ASSIGNABLE_ID: {
+				WithAssignableId withAssignableId = (WithAssignableId)theEObject;
+				T1 result = caseWithAssignableId(withAssignableId);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1014,6 +1038,51 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIOrder(IOrder object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IAddress</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IAddress</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIAddress(IAddress object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IImage</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IImage</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIImage(IImage object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>With Assignable Id</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>With Assignable Id</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseWithAssignableId(WithAssignableId object) {
 		return null;
 	}
 

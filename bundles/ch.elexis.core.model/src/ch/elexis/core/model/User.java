@@ -26,15 +26,13 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	}
 	
 	@Override
-	public String getPassword(){
-		// TODO Auto-generated method stub
-		return null;
+	public String getHashedPassword(){
+		return getEntity().getHashedPassword();
 	}
 	
 	@Override
-	public void setPassword(String value){
-		// TODO Auto-generated method stub
-		
+	public void setHashedPassword(String value){
+		getEntity().setHashedPassword(value);
 	}
 	
 	@Override
@@ -55,5 +53,15 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	public List<IRole> getRoles(){
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public String getSalt(){
+		return getEntity().getSalt();
+	}
+
+	@Override
+	public void setSalt(String value){
+		getEntity().setSalt(value);
 	}
 }

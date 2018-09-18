@@ -11,6 +11,7 @@
 package ch.elexis.core.model;
 
 import ch.elexis.core.types.Country;
+import java.util.List;
 
 /**
  * <!-- begin-user-doc -->
@@ -42,6 +43,7 @@ import ch.elexis.core.types.Country;
  *   <li>{@link ch.elexis.core.model.IContact#getWebsite <em>Website</em>}</li>
  *   <li>{@link ch.elexis.core.model.IContact#getMobile <em>Mobile</em>}</li>
  *   <li>{@link ch.elexis.core.model.IContact#getComment <em>Comment</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IContact#getAddress <em>Address</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIContact()
@@ -594,5 +596,29 @@ public interface IContact extends Identifiable, Deleteable, WithExtInfo {
 	 * @generated
 	 */
 	void setComment(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Address</b></em>' reference list.
+	 * The list contents are of type {@link ch.elexis.core.model.IAddress}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Address</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Address</em>' reference list.
+	 * @see ch.elexis.core.model.ModelPackage#getIContact_Address()
+	 * @model
+	 * @generated
+	 */
+	List<IAddress> getAddress();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	IAddress addAddress(IAddress address);
 
 } // IContact

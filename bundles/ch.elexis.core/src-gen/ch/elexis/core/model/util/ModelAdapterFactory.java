@@ -270,6 +270,18 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIOrderAdapter();
 			}
 			@Override
+			public Adapter caseIAddress(IAddress object) {
+				return createIAddressAdapter();
+			}
+			@Override
+			public Adapter caseIImage(IImage object) {
+				return createIImageAdapter();
+			}
+			@Override
+			public Adapter caseWithAssignableId(WithAssignableId object) {
+				return createWithAssignableIdAdapter();
+			}
+			@Override
 			public <T> Adapter caseComparable(Comparable<T> object) {
 				return createComparableAdapter();
 			}
@@ -836,6 +848,48 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIOrderAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IAddress <em>IAddress</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IAddress
+	 * @generated
+	 */
+	public Adapter createIAddressAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IImage <em>IImage</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IImage
+	 * @generated
+	 */
+	public Adapter createIImageAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.WithAssignableId <em>With Assignable Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.WithAssignableId
+	 * @generated
+	 */
+	public Adapter createWithAssignableIdAdapter() {
 		return null;
 	}
 

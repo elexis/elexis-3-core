@@ -30,7 +30,7 @@ import java.time.LocalDate;
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface IBlob extends Identifiable, Deleteable {
+public interface IBlob extends Identifiable, Deleteable, WithAssignableId {
 	/**
 	 * Returns the value of the '<em><b>Content</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -98,13 +98,5 @@ public interface IBlob extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	void setStringContent(String value);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model
-	 * @generated
-	 */
-	void setId(String id);
 
 } // IBlob

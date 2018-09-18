@@ -499,6 +499,19 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		return ret;
 	}
 	
+	@Override
+	public Optional<T> executeSingleResult(){
+		List<T> result = execute();
+		if (!result.isEmpty()) {
+			if (result.size() > 1) {
+				LoggerFactory.getLogger(getClass())
+					.warn("Multiple results in list where single result expected", new Throwable());
+			}
+			return Optional.of(result.get(0));
+		}
+		return Optional.empty();
+	}
+	
 	protected String getAttributeName(EStructuralFeature feature){
 		String ret = feature.getName();
 		EAnnotation mappingAnnotation =

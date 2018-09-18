@@ -211,7 +211,7 @@ public class Kontakt implements EntityWithId, EntityWithDeleted, EntityWithExtIn
 	 * All related {@link Fall} entities; modifications ignored
 	 */
 	@OneToMany(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PatientID", updatable = false, insertable = false, nullable = false)
+	@JoinColumn(name = "PatientID")
 	protected List<Fall> faelle = new ArrayList<>();
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")

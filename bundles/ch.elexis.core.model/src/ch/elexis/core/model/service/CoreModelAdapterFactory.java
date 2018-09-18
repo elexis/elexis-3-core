@@ -1,18 +1,26 @@
 package ch.elexis.core.model.service;
 
 import ch.elexis.core.jpa.entities.Brief;
+import ch.elexis.core.jpa.entities.DbImage;
+import ch.elexis.core.jpa.entities.Fall;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.entities.Userconfig;
+import ch.elexis.core.jpa.entities.ZusatzAdresse;
 import ch.elexis.core.jpa.model.adapter.AbstractModelAdapterFactory;
 import ch.elexis.core.jpa.model.adapter.MappingEntry;
+import ch.elexis.core.model.Address;
 import ch.elexis.core.model.Config;
 import ch.elexis.core.model.Contact;
+import ch.elexis.core.model.Coverage;
 import ch.elexis.core.model.DocumentBrief;
+import ch.elexis.core.model.IAddress;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBlob;
 import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabMapping;
 import ch.elexis.core.model.ILabOrder;
@@ -29,6 +37,7 @@ import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.IXid;
+import ch.elexis.core.model.Image;
 import ch.elexis.core.model.Laboratory;
 import ch.elexis.core.model.Mandator;
 import ch.elexis.core.model.Organization;
@@ -86,6 +95,10 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 			.adapterPreCondition(adapter -> ((Kontakt) adapter.getEntity()).isMandator())
 			.adapterInitializer(adapter -> ((Mandator) adapter).setMandator(true)));
 		
+		addMapping(new MappingEntry(ICoverage.class, Coverage.class, Fall.class));
+		
+		addMapping(new MappingEntry(IAddress.class, Address.class, ZusatzAdresse.class));
+		
 		addMapping(new MappingEntry(IDocumentLetter.class, DocumentBrief.class, Brief.class));
 		
 		addMapping(new MappingEntry(ILabItem.class, ch.elexis.core.model.LabItem.class,
@@ -109,5 +122,7 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 			ch.elexis.core.jpa.entities.Bestellung.class));
 		addMapping(new MappingEntry(IOrderEntry.class, ch.elexis.core.model.OrderEntry.class,
 			ch.elexis.core.jpa.entities.BestellungEntry.class));
+		
+		addMapping(new MappingEntry(IImage.class, Image.class, DbImage.class));
 	}
 }

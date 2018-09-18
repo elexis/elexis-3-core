@@ -436,13 +436,22 @@ public interface ModelPackage extends EPackage {
 	int ICONTACT__COMMENT = IDENTIFIABLE_FEATURE_COUNT + 21;
 
 	/**
+	 * The feature id for the '<em><b>Address</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICONTACT__ADDRESS = IDENTIFIABLE_FEATURE_COUNT + 22;
+
+	/**
 	 * The number of structural features of the '<em>IContact</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 22;
+	int ICONTACT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 23;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -641,6 +650,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IPERSON__COMMENT = ICONTACT__COMMENT;
+
+	/**
+	 * The feature id for the '<em><b>Address</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPERSON__ADDRESS = ICONTACT__ADDRESS;
 
 	/**
 	 * The feature id for the '<em><b>Date Of Birth</b></em>' attribute.
@@ -1014,6 +1032,15 @@ public interface ModelPackage extends EPackage {
 	int IORGANIZATION__COMMENT = ICONTACT__COMMENT;
 
 	/**
+	 * The feature id for the '<em><b>Address</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__ADDRESS = ICONTACT__ADDRESS;
+
+	/**
 	 * The number of structural features of the '<em>IOrganization</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1231,6 +1258,15 @@ public interface ModelPackage extends EPackage {
 	int ILABORATORY__COMMENT = IORGANIZATION__COMMENT;
 
 	/**
+	 * The feature id for the '<em><b>Address</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__ADDRESS = IORGANIZATION__ADDRESS;
+
+	/**
 	 * The number of structural features of the '<em>ILaboratory</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1438,6 +1474,15 @@ public interface ModelPackage extends EPackage {
 	int IPATIENT__COMMENT = IPERSON__COMMENT;
 
 	/**
+	 * The feature id for the '<em><b>Address</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPATIENT__ADDRESS = IPERSON__ADDRESS;
+
+	/**
 	 * The feature id for the '<em><b>Date Of Birth</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1537,13 +1582,22 @@ public interface ModelPackage extends EPackage {
 	int IPATIENT__ALLERGIES = IPERSON_FEATURE_COUNT + 4;
 
 	/**
+	 * The feature id for the '<em><b>Coverages</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPATIENT__COVERAGES = IPERSON_FEATURE_COUNT + 5;
+
+	/**
 	 * The number of structural features of the '<em>IPatient</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IPATIENT_FEATURE_COUNT = IPERSON_FEATURE_COUNT + 5;
+	int IPATIENT_FEATURE_COUNT = IPERSON_FEATURE_COUNT + 6;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IDocumentLetter <em>IDocument Letter</em>}' class.
@@ -1784,6 +1838,15 @@ public interface ModelPackage extends EPackage {
 	int IMANDATOR__COMMENT = ICONTACT__COMMENT;
 
 	/**
+	 * The feature id for the '<em><b>Address</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMANDATOR__ADDRESS = ICONTACT__ADDRESS;
+
+	/**
 	 * The number of structural features of the '<em>IMandator</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1811,13 +1874,22 @@ public interface ModelPackage extends EPackage {
 	int IUSER__USERNAME = DELETEABLE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Password</b></em>' attribute.
+	 * The feature id for the '<em><b>Hashed Password</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IUSER__PASSWORD = DELETEABLE_FEATURE_COUNT + 1;
+	int IUSER__HASHED_PASSWORD = DELETEABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Salt</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IUSER__SALT = DELETEABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Assigned Contact</b></em>' reference.
@@ -1826,7 +1898,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IUSER__ASSIGNED_CONTACT = DELETEABLE_FEATURE_COUNT + 2;
+	int IUSER__ASSIGNED_CONTACT = DELETEABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Roles</b></em>' reference list.
@@ -1835,7 +1907,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IUSER__ROLES = DELETEABLE_FEATURE_COUNT + 3;
+	int IUSER__ROLES = DELETEABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>IUser</em>' class.
@@ -1844,7 +1916,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IUSER_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 4;
+	int IUSER_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -3688,6 +3760,189 @@ public interface ModelPackage extends EPackage {
 	int IORDER_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 4;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IAddress <em>IAddress</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IAddress
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAddress()
+	 * @generated
+	 */
+	int IADDRESS = 39;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IADDRESS__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Street1</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IADDRESS__STREET1 = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Street2</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IADDRESS__STREET2 = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Zip</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IADDRESS__ZIP = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>City</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IADDRESS__CITY = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Country</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IADDRESS__COUNTRY = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Written Address</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IADDRESS__WRITTEN_ADDRESS = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IADDRESS__TYPE = IDENTIFIABLE_FEATURE_COUNT + 7;
+
+	/**
+	 * The feature id for the '<em><b>Contact</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IADDRESS__CONTACT = IDENTIFIABLE_FEATURE_COUNT + 8;
+
+	/**
+	 * The number of structural features of the '<em>IAddress</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IADDRESS_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 9;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IImage <em>IImage</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IImage
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIImage()
+	 * @generated
+	 */
+	int IIMAGE = 40;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IIMAGE__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IIMAGE__DATE = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Prefix</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IIMAGE__PREFIX = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Title</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IIMAGE__TITLE = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Image</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IIMAGE__IMAGE = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The number of structural features of the '<em>IImage</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IIMAGE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.WithAssignableId <em>With Assignable Id</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.WithAssignableId
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getWithAssignableId()
+	 * @generated
+	 */
+	int WITH_ASSIGNABLE_ID = 41;
+
+	/**
+	 * The number of structural features of the '<em>With Assignable Id</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WITH_ASSIGNABLE_ID_FEATURE_COUNT = 0;
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IContact <em>IContact</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3927,6 +4182,17 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getIContact_Comment();
+
+	/**
+	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IContact#getAddress <em>Address</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Address</em>'.
+	 * @see ch.elexis.core.model.IContact#getAddress()
+	 * @see #getIContact()
+	 * @generated
+	 */
+	EReference getIContact_Address();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IXid <em>IXid</em>}'.
@@ -4210,6 +4476,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIPatient_Allergies();
 
 	/**
+	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IPatient#getCoverages <em>Coverages</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Coverages</em>'.
+	 * @see ch.elexis.core.model.IPatient#getCoverages()
+	 * @see #getIPatient()
+	 * @generated
+	 */
+	EReference getIPatient_Coverages();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IUser <em>IUser</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4231,15 +4508,26 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIUser_Username();
 
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IUser#getPassword <em>Password</em>}'.
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IUser#getHashedPassword <em>Hashed Password</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Password</em>'.
-	 * @see ch.elexis.core.model.IUser#getPassword()
+	 * @return the meta object for the attribute '<em>Hashed Password</em>'.
+	 * @see ch.elexis.core.model.IUser#getHashedPassword()
 	 * @see #getIUser()
 	 * @generated
 	 */
-	EAttribute getIUser_Password();
+	EAttribute getIUser_HashedPassword();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IUser#getSalt <em>Salt</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Salt</em>'.
+	 * @see ch.elexis.core.model.IUser#getSalt()
+	 * @see #getIUser()
+	 * @generated
+	 */
+	EAttribute getIUser_Salt();
 
 	/**
 	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IUser#getAssignedContact <em>Assigned Contact</em>}'.
@@ -5838,6 +6126,168 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIOrder_Name();
 
 	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IAddress <em>IAddress</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IAddress</em>'.
+	 * @see ch.elexis.core.model.IAddress
+	 * @generated
+	 */
+	EClass getIAddress();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAddress#getStreet1 <em>Street1</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Street1</em>'.
+	 * @see ch.elexis.core.model.IAddress#getStreet1()
+	 * @see #getIAddress()
+	 * @generated
+	 */
+	EAttribute getIAddress_Street1();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAddress#getStreet2 <em>Street2</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Street2</em>'.
+	 * @see ch.elexis.core.model.IAddress#getStreet2()
+	 * @see #getIAddress()
+	 * @generated
+	 */
+	EAttribute getIAddress_Street2();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAddress#getZip <em>Zip</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Zip</em>'.
+	 * @see ch.elexis.core.model.IAddress#getZip()
+	 * @see #getIAddress()
+	 * @generated
+	 */
+	EAttribute getIAddress_Zip();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAddress#getCity <em>City</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>City</em>'.
+	 * @see ch.elexis.core.model.IAddress#getCity()
+	 * @see #getIAddress()
+	 * @generated
+	 */
+	EAttribute getIAddress_City();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAddress#getCountry <em>Country</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Country</em>'.
+	 * @see ch.elexis.core.model.IAddress#getCountry()
+	 * @see #getIAddress()
+	 * @generated
+	 */
+	EAttribute getIAddress_Country();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAddress#getWrittenAddress <em>Written Address</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Written Address</em>'.
+	 * @see ch.elexis.core.model.IAddress#getWrittenAddress()
+	 * @see #getIAddress()
+	 * @generated
+	 */
+	EAttribute getIAddress_WrittenAddress();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAddress#getType <em>Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Type</em>'.
+	 * @see ch.elexis.core.model.IAddress#getType()
+	 * @see #getIAddress()
+	 * @generated
+	 */
+	EAttribute getIAddress_Type();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IAddress#getContact <em>Contact</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Contact</em>'.
+	 * @see ch.elexis.core.model.IAddress#getContact()
+	 * @see #getIAddress()
+	 * @generated
+	 */
+	EReference getIAddress_Contact();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IImage <em>IImage</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IImage</em>'.
+	 * @see ch.elexis.core.model.IImage
+	 * @generated
+	 */
+	EClass getIImage();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IImage#getDate <em>Date</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Date</em>'.
+	 * @see ch.elexis.core.model.IImage#getDate()
+	 * @see #getIImage()
+	 * @generated
+	 */
+	EAttribute getIImage_Date();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IImage#getPrefix <em>Prefix</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Prefix</em>'.
+	 * @see ch.elexis.core.model.IImage#getPrefix()
+	 * @see #getIImage()
+	 * @generated
+	 */
+	EAttribute getIImage_Prefix();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IImage#getTitle <em>Title</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Title</em>'.
+	 * @see ch.elexis.core.model.IImage#getTitle()
+	 * @see #getIImage()
+	 * @generated
+	 */
+	EAttribute getIImage_Title();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IImage#getImage <em>Image</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Image</em>'.
+	 * @see ch.elexis.core.model.IImage#getImage()
+	 * @see #getIImage()
+	 * @generated
+	 */
+	EAttribute getIImage_Image();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.WithAssignableId <em>With Assignable Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>With Assignable Id</em>'.
+	 * @see ch.elexis.core.model.WithAssignableId
+	 * @generated
+	 */
+	EClass getWithAssignableId();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6036,6 +6486,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ICONTACT__COMMENT = eINSTANCE.getIContact_Comment();
+
+		/**
+		 * The meta object literal for the '<em><b>Address</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ICONTACT__ADDRESS = eINSTANCE.getIContact_Address();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IXid <em>IXid</em>}' class.
@@ -6256,6 +6714,14 @@ public interface ModelPackage extends EPackage {
 		EAttribute IPATIENT__ALLERGIES = eINSTANCE.getIPatient_Allergies();
 
 		/**
+		 * The meta object literal for the '<em><b>Coverages</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IPATIENT__COVERAGES = eINSTANCE.getIPatient_Coverages();
+
+		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IUser <em>IUser</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -6274,12 +6740,20 @@ public interface ModelPackage extends EPackage {
 		EAttribute IUSER__USERNAME = eINSTANCE.getIUser_Username();
 
 		/**
-		 * The meta object literal for the '<em><b>Password</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Hashed Password</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute IUSER__PASSWORD = eINSTANCE.getIUser_Password();
+		EAttribute IUSER__HASHED_PASSWORD = eINSTANCE.getIUser_HashedPassword();
+
+		/**
+		 * The meta object literal for the '<em><b>Salt</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IUSER__SALT = eINSTANCE.getIUser_Salt();
 
 		/**
 		 * The meta object literal for the '<em><b>Assigned Contact</b></em>' reference feature.
@@ -7528,6 +8002,132 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IORDER__NAME = eINSTANCE.getIOrder_Name();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IAddress <em>IAddress</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IAddress
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAddress()
+		 * @generated
+		 */
+		EClass IADDRESS = eINSTANCE.getIAddress();
+
+		/**
+		 * The meta object literal for the '<em><b>Street1</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IADDRESS__STREET1 = eINSTANCE.getIAddress_Street1();
+
+		/**
+		 * The meta object literal for the '<em><b>Street2</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IADDRESS__STREET2 = eINSTANCE.getIAddress_Street2();
+
+		/**
+		 * The meta object literal for the '<em><b>Zip</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IADDRESS__ZIP = eINSTANCE.getIAddress_Zip();
+
+		/**
+		 * The meta object literal for the '<em><b>City</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IADDRESS__CITY = eINSTANCE.getIAddress_City();
+
+		/**
+		 * The meta object literal for the '<em><b>Country</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IADDRESS__COUNTRY = eINSTANCE.getIAddress_Country();
+
+		/**
+		 * The meta object literal for the '<em><b>Written Address</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IADDRESS__WRITTEN_ADDRESS = eINSTANCE.getIAddress_WrittenAddress();
+
+		/**
+		 * The meta object literal for the '<em><b>Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IADDRESS__TYPE = eINSTANCE.getIAddress_Type();
+
+		/**
+		 * The meta object literal for the '<em><b>Contact</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IADDRESS__CONTACT = eINSTANCE.getIAddress_Contact();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IImage <em>IImage</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IImage
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIImage()
+		 * @generated
+		 */
+		EClass IIMAGE = eINSTANCE.getIImage();
+
+		/**
+		 * The meta object literal for the '<em><b>Date</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IIMAGE__DATE = eINSTANCE.getIImage_Date();
+
+		/**
+		 * The meta object literal for the '<em><b>Prefix</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IIMAGE__PREFIX = eINSTANCE.getIImage_Prefix();
+
+		/**
+		 * The meta object literal for the '<em><b>Title</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IIMAGE__TITLE = eINSTANCE.getIImage_Title();
+
+		/**
+		 * The meta object literal for the '<em><b>Image</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IIMAGE__IMAGE = eINSTANCE.getIImage_Image();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.WithAssignableId <em>With Assignable Id</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.WithAssignableId
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getWithAssignableId()
+		 * @generated
+		 */
+		EClass WITH_ASSIGNABLE_ID = eINSTANCE.getWithAssignableId();
 
 	}
 

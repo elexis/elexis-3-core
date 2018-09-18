@@ -23,7 +23,8 @@ import java.util.List;
  * </p>
  * <ul>
  *   <li>{@link ch.elexis.core.model.IUser#getUsername <em>Username</em>}</li>
- *   <li>{@link ch.elexis.core.model.IUser#getPassword <em>Password</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IUser#getHashedPassword <em>Hashed Password</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IUser#getSalt <em>Salt</em>}</li>
  *   <li>{@link ch.elexis.core.model.IUser#getAssignedContact <em>Assigned Contact</em>}</li>
  *   <li>{@link ch.elexis.core.model.IUser#getRoles <em>Roles</em>}</li>
  * </ul>
@@ -60,30 +61,56 @@ public interface IUser extends Deleteable, Identifiable {
 	void setUsername(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Password</b></em>' attribute.
+	 * Returns the value of the '<em><b>Hashed Password</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Password</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Hashed Password</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Password</em>' attribute.
-	 * @see #setPassword(String)
-	 * @see ch.elexis.core.model.ModelPackage#getIUser_Password()
+	 * @return the value of the '<em>Hashed Password</em>' attribute.
+	 * @see #setHashedPassword(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIUser_HashedPassword()
 	 * @model
 	 * @generated
 	 */
-	String getPassword();
+	String getHashedPassword();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IUser#getPassword <em>Password</em>}' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IUser#getHashedPassword <em>Hashed Password</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Password</em>' attribute.
-	 * @see #getPassword()
+	 * @param value the new value of the '<em>Hashed Password</em>' attribute.
+	 * @see #getHashedPassword()
 	 * @generated
 	 */
-	void setPassword(String value);
+	void setHashedPassword(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Salt</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Salt</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Salt</em>' attribute.
+	 * @see #setSalt(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIUser_Salt()
+	 * @model
+	 * @generated
+	 */
+	String getSalt();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IUser#getSalt <em>Salt</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Salt</em>' attribute.
+	 * @see #getSalt()
+	 * @generated
+	 */
+	void setSalt(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Assigned Contact</b></em>' reference.

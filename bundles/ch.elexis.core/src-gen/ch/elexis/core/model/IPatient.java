@@ -10,6 +10,8 @@
  */
 package ch.elexis.core.model;
 
+import java.util.List;
+
 
 /**
  * <!-- begin-user-doc -->
@@ -25,6 +27,7 @@ package ch.elexis.core.model;
  *   <li>{@link ch.elexis.core.model.IPatient#getFamilyAnamnese <em>Family Anamnese</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPatient#getPersonalAnamnese <em>Personal Anamnese</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPatient#getAllergies <em>Allergies</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IPatient#getCoverages <em>Coverages</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIPatient()
@@ -163,6 +166,22 @@ public interface IPatient extends IPerson {
 	void setAllergies(String value);
 
 	/**
+	 * Returns the value of the '<em><b>Coverages</b></em>' reference list.
+	 * The list contents are of type {@link ch.elexis.core.model.ICoverage}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Coverages</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Coverages</em>' reference list.
+	 * @see ch.elexis.core.model.ModelPackage#getIPatient_Coverages()
+	 * @model changeable="false"
+	 * @generated
+	 */
+	List<ICoverage> getCoverages();
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Patient Nr</em>' attribute isn't clear,
@@ -181,6 +200,14 @@ public interface IPatient extends IPerson {
 	 * @generated
 	 */
 	void setPatientNr(String patientNr);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model coverageRequired="true"
+	 * @generated
+	 */
+	ICoverage addCoverage(ICoverage coverage);
 
 	/**
 	 * <!-- begin-user-doc -->

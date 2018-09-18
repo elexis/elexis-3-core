@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.ETypeParameter;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 import ch.elexis.core.model.Deleteable;
+import ch.elexis.core.model.IAddress;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBillableOptifier;
@@ -37,6 +38,7 @@ import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IHistory;
+import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabMapping;
 import ch.elexis.core.model.ILabOrder;
@@ -59,6 +61,7 @@ import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelFactory;
 import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.model.WithAssignableId;
 import ch.elexis.core.model.WithExtInfo;
 import ch.elexis.core.types.TypesPackage;
 
@@ -343,6 +346,27 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	private EClass iOrderEClass = null;
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iAddressEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iImageEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass withAssignableIdEClass = null;
+
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
@@ -609,6 +633,15 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getIContact_Address() {
+		return (EReference)iContactEClass.getEStructuralFeatures().get(21);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getIXid() {
 		return iXidEClass;
 	}
@@ -843,6 +876,15 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getIPatient_Coverages() {
+		return (EReference)iPatientEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getIUser() {
 		return iUserEClass;
 	}
@@ -861,7 +903,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIUser_Password() {
+	public EAttribute getIUser_HashedPassword() {
 		return (EAttribute)iUserEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -870,8 +912,17 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getIUser_Salt() {
+		return (EAttribute)iUserEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getIUser_AssignedContact() {
-		return (EReference)iUserEClass.getEStructuralFeatures().get(2);
+		return (EReference)iUserEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -880,7 +931,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	public EReference getIUser_Roles() {
-		return (EReference)iUserEClass.getEStructuralFeatures().get(3);
+		return (EReference)iUserEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -2202,6 +2253,141 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getIAddress() {
+		return iAddressEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIAddress_Street1() {
+		return (EAttribute)iAddressEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIAddress_Street2() {
+		return (EAttribute)iAddressEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIAddress_Zip() {
+		return (EAttribute)iAddressEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIAddress_City() {
+		return (EAttribute)iAddressEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIAddress_Country() {
+		return (EAttribute)iAddressEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIAddress_WrittenAddress() {
+		return (EAttribute)iAddressEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIAddress_Type() {
+		return (EAttribute)iAddressEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIAddress_Contact() {
+		return (EReference)iAddressEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getIImage() {
+		return iImageEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIImage_Date() {
+		return (EAttribute)iImageEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIImage_Prefix() {
+		return (EAttribute)iImageEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIImage_Title() {
+		return (EAttribute)iImageEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIImage_Image() {
+		return (EAttribute)iImageEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getWithAssignableId() {
+		return withAssignableIdEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ModelFactory getModelFactory() {
 		return (ModelFactory)getEFactoryInstance();
 	}
@@ -2258,6 +2444,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iContactEClass, ICONTACT__WEBSITE);
 		createEAttribute(iContactEClass, ICONTACT__MOBILE);
 		createEAttribute(iContactEClass, ICONTACT__COMMENT);
+		createEReference(iContactEClass, ICONTACT__ADDRESS);
 
 		iPersonEClass = createEClass(IPERSON);
 		createEAttribute(iPersonEClass, IPERSON__DATE_OF_BIRTH);
@@ -2277,12 +2464,14 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iPatientEClass, IPATIENT__FAMILY_ANAMNESE);
 		createEAttribute(iPatientEClass, IPATIENT__PERSONAL_ANAMNESE);
 		createEAttribute(iPatientEClass, IPATIENT__ALLERGIES);
+		createEReference(iPatientEClass, IPATIENT__COVERAGES);
 
 		iMandatorEClass = createEClass(IMANDATOR);
 
 		iUserEClass = createEClass(IUSER);
 		createEAttribute(iUserEClass, IUSER__USERNAME);
-		createEAttribute(iUserEClass, IUSER__PASSWORD);
+		createEAttribute(iUserEClass, IUSER__HASHED_PASSWORD);
+		createEAttribute(iUserEClass, IUSER__SALT);
 		createEReference(iUserEClass, IUSER__ASSIGNED_CONTACT);
 		createEReference(iUserEClass, IUSER__ROLES);
 
@@ -2462,6 +2651,24 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEReference(iOrderEClass, IORDER__ENTRIES);
 		createEAttribute(iOrderEClass, IORDER__TIMESTAMP);
 		createEAttribute(iOrderEClass, IORDER__NAME);
+
+		iAddressEClass = createEClass(IADDRESS);
+		createEAttribute(iAddressEClass, IADDRESS__STREET1);
+		createEAttribute(iAddressEClass, IADDRESS__STREET2);
+		createEAttribute(iAddressEClass, IADDRESS__ZIP);
+		createEAttribute(iAddressEClass, IADDRESS__CITY);
+		createEAttribute(iAddressEClass, IADDRESS__COUNTRY);
+		createEAttribute(iAddressEClass, IADDRESS__WRITTEN_ADDRESS);
+		createEAttribute(iAddressEClass, IADDRESS__TYPE);
+		createEReference(iAddressEClass, IADDRESS__CONTACT);
+
+		iImageEClass = createEClass(IIMAGE);
+		createEAttribute(iImageEClass, IIMAGE__DATE);
+		createEAttribute(iImageEClass, IIMAGE__PREFIX);
+		createEAttribute(iImageEClass, IIMAGE__TITLE);
+		createEAttribute(iImageEClass, IIMAGE__IMAGE);
+
+		withAssignableIdEClass = createEClass(WITH_ASSIGNABLE_ID);
 	}
 
 	/**
@@ -2546,6 +2753,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iRoleEClass.getESuperTypes().add(this.getIdentifiable());
 		iBlobEClass.getESuperTypes().add(this.getIdentifiable());
 		iBlobEClass.getESuperTypes().add(this.getDeleteable());
+		iBlobEClass.getESuperTypes().add(this.getWithAssignableId());
 		iEncounterEClass.getESuperTypes().add(this.getIdentifiable());
 		iEncounterEClass.getESuperTypes().add(this.getDeleteable());
 		iBilledEClass.getESuperTypes().add(this.getIdentifiable());
@@ -2558,6 +2766,11 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iOrderEntryEClass.getESuperTypes().add(this.getDeleteable());
 		iOrderEClass.getESuperTypes().add(this.getIdentifiable());
 		iOrderEClass.getESuperTypes().add(this.getDeleteable());
+		iAddressEClass.getESuperTypes().add(this.getIdentifiable());
+		iAddressEClass.getESuperTypes().add(this.getDeleteable());
+		iImageEClass.getESuperTypes().add(this.getIdentifiable());
+		iImageEClass.getESuperTypes().add(this.getDeleteable());
+		iImageEClass.getESuperTypes().add(this.getWithAssignableId());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(identifiableEClass, Identifiable.class, "Identifiable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2617,6 +2830,10 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIContact_Website(), ecorePackage.getEString(), "website", null, 0, 1, IContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIContact_Mobile(), ecorePackage.getEString(), "mobile", null, 0, 1, IContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIContact_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, IContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIContact_Address(), this.getIAddress(), null, "address", null, 0, -1, IContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		op = addEOperation(iContactEClass, this.getIAddress(), "addAddress", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIAddress(), "address", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iPersonEClass, IPerson.class, "IPerson", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIPerson_DateOfBirth(), theTypesPackage.getLocalDateTime(), "dateOfBirth", null, 0, 1, IPerson.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2638,6 +2855,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIPatient_FamilyAnamnese(), ecorePackage.getEString(), "familyAnamnese", null, 0, 1, IPatient.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIPatient_PersonalAnamnese(), ecorePackage.getEString(), "personalAnamnese", null, 0, 1, IPatient.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIPatient_Allergies(), ecorePackage.getEString(), "allergies", null, 0, 1, IPatient.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIPatient_Coverages(), this.getICoverage(), null, "coverages", null, 0, -1, IPatient.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		addEOperation(iPatientEClass, ecorePackage.getEString(), "getPatientLabel", 0, 1, IS_UNIQUE, IS_ORDERED);
 
@@ -2646,11 +2864,15 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		op = addEOperation(iPatientEClass, null, "setPatientNr", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "patientNr", 0, 1, IS_UNIQUE, IS_ORDERED);
 
+		op = addEOperation(iPatientEClass, this.getICoverage(), "addCoverage", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getICoverage(), "coverage", 1, 1, IS_UNIQUE, IS_ORDERED);
+
 		initEClass(iMandatorEClass, IMandator.class, "IMandator", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(iUserEClass, IUser.class, "IUser", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIUser_Username(), ecorePackage.getEString(), "username", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIUser_Password(), ecorePackage.getEString(), "password", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIUser_HashedPassword(), ecorePackage.getEString(), "hashedPassword", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIUser_Salt(), ecorePackage.getEString(), "salt", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIUser_AssignedContact(), this.getIContact(), null, "assignedContact", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIUser_Roles(), this.getIRole(), null, "roles", null, 0, -1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -2840,9 +3062,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		op = addEOperation(iBlobEClass, null, "setStringContent", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "value", 0, 1, IS_UNIQUE, IS_ORDERED);
 
-		op = addEOperation(iBlobEClass, null, "setId", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, ecorePackage.getEString(), "id", 0, 1, IS_UNIQUE, IS_ORDERED);
-
 		initEClass(iBillableVerifierEClass, IBillableVerifier.class, "IBillableVerifier", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		op = addEOperation(iBillableVerifierEClass, null, "verifyAdd", 0, 1, IS_UNIQUE, IS_ORDERED);
@@ -2928,6 +3147,27 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		addEOperation(iOrderEClass, ecorePackage.getEBoolean(), "isDone", 0, 1, IS_UNIQUE, IS_ORDERED);
 
+		initEClass(iAddressEClass, IAddress.class, "IAddress", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIAddress_Street1(), ecorePackage.getEString(), "street1", null, 0, 1, IAddress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIAddress_Street2(), ecorePackage.getEString(), "street2", null, 0, 1, IAddress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIAddress_Zip(), ecorePackage.getEString(), "zip", null, 0, 1, IAddress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIAddress_City(), ecorePackage.getEString(), "city", null, 0, 1, IAddress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIAddress_Country(), theTypesPackage.getCountry(), "country", null, 0, 1, IAddress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIAddress_WrittenAddress(), ecorePackage.getEString(), "writtenAddress", null, 0, 1, IAddress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIAddress_Type(), theTypesPackage.getAddressType(), "type", null, 1, 1, IAddress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIAddress_Contact(), this.getIContact(), null, "contact", null, 1, 1, IAddress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(iImageEClass, IImage.class, "IImage", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIImage_Date(), theTypesPackage.getLocalDate(), "date", null, 0, 1, IImage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIImage_Prefix(), ecorePackage.getEString(), "prefix", null, 0, 1, IImage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIImage_Title(), ecorePackage.getEString(), "title", null, 0, 1, IImage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIImage_Image(), ecorePackage.getEByteArray(), "image", null, 0, 1, IImage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(withAssignableIdEClass, WithAssignableId.class, "WithAssignableId", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		op = addEOperation(withAssignableIdEClass, null, "setId", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "id", 0, 1, IS_UNIQUE, IS_ORDERED);
+
 		// Create resource
 		createResource(eNS_URI);
 
@@ -2979,6 +3219,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		   source,
 		   new String[] {
 			   "Brief#attributeName", "typ"
+		   });
+		addAnnotation
+		  (getICoverage_Patient(),
+		   source,
+		   new String[] {
+			   "attributeName", "patientKontakt"
 		   });
 		addAnnotation
 		  (getIConfig_Key(),

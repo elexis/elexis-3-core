@@ -1,6 +1,7 @@
 package ch.elexis.core.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 
@@ -108,6 +109,14 @@ public interface IQuery<T> {
 	 * @return
 	 */
 	public List<T> execute();
+	
+	/**
+	 * Execute the query and return a single result. If more than one result
+	 * is available, a warning is logged, and the first result is returned.
+	 * 
+	 * @return
+	 */
+	public Optional<T> executeSingleResult();
 	
 	/**
 	 * Add an order by to the query.

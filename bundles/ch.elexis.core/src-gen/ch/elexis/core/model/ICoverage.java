@@ -47,6 +47,7 @@ public interface ICoverage extends Deleteable, Identifiable, WithExtInfo {
 	 * @see #setPatient(IPatient)
 	 * @see ch.elexis.core.model.ModelPackage#getICoverage_Patient()
 	 * @model required="true"
+	 *        annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='patientKontakt'"
 	 * @generated
 	 */
 	IPatient getPatient();

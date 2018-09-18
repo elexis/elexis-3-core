@@ -101,8 +101,8 @@ public abstract class AbstractModelService implements IModelService {
 					EntityWithId dbObject = dbObjects.get(identifiable);
 					if (dbObject != null) {
 						boolean newlyCreatedObject = (dbObject.getLastupdate() == null);
-						em.merge(dbObject);
-						setDbObject(identifiable, dbObject);
+						EntityWithId merged = em.merge(dbObject);
+						setDbObject(identifiable, merged);
 						if (newlyCreatedObject) {
 							createdEvents.add(getCreateEvent(identifiable));
 						}

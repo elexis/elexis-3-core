@@ -49,6 +49,9 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IContact" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable #//WithExtInfo">
+    <eOperations name="addAddress" eType="#//IAddress">
+      <eParameters name="address" eType="#//IAddress"/>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="mandator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="user" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="patient" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
@@ -70,6 +73,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="website" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="mobile" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="address" upperBound="-1"
+        eType="#//IAddress"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IPerson" abstract="true" interface="true"
       eSuperTypes="#//IContact">
@@ -104,18 +109,24 @@
     <eOperations name="setPatientNr">
       <eParameters name="patientNr" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eOperations>
+    <eOperations name="addCoverage" eType="#//ICoverage">
+      <eParameters name="coverage" lowerBound="1" eType="#//ICoverage"/>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="diagnosen" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="risk" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="familyAnamnese" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="personalAnamnese" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="allergies" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="coverages" upperBound="-1"
+        eType="#//ICoverage" changeable="false"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IMandator" abstract="true" interface="true"
       eSuperTypes="#//IContact"/>
   <eClassifiers xsi:type="ecore:EClass" name="IUser" abstract="true" interface="true"
       eSuperTypes="#//Deleteable #//Identifiable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="username" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="password" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="hashedPassword" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="salt" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="assignedContact" eType="#//IContact"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="roles" upperBound="-1"
         eType="#//IRole"/>
@@ -265,7 +276,11 @@
   <eClassifiers xsi:type="ecore:EClass" name="ICoverage" abstract="true" interface="true"
       eSuperTypes="#//Deleteable #//Identifiable #//WithExtInfo">
     <eStructuralFeatures xsi:type="ecore:EReference" name="patient" lowerBound="1"
-        eType="#//IPatient"/>
+        eType="#//IPatient">
+      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
+        <details key="attributeName" value="patientKontakt"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="reason" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateFrom" lowerBound="1"
@@ -343,13 +358,10 @@
   <eClassifiers xsi:type="ecore:EClass" name="IRole" abstract="true" interface="true"
       eSuperTypes="#//Identifiable"/>
   <eClassifiers xsi:type="ecore:EClass" name="IBlob" abstract="true" interface="true"
-      eSuperTypes="#//Identifiable #//Deleteable">
+      eSuperTypes="#//Identifiable #//Deleteable #//WithAssignableId">
     <eOperations name="getStringContent" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eOperations name="setStringContent">
       <eParameters name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eOperations>
-    <eOperations name="setId">
-      <eParameters name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="content" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EByteArray"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType types.ecore#//LocalDate"/>
@@ -441,5 +453,29 @@
         eType="#//IOrderEntry"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="timestamp" eType="ecore:EDataType types.ecore#//LocalDateTime"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IAddress" abstract="true" interface="true"
+      eSuperTypes="#//Identifiable #//Deleteable">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="street1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="street2" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="zip" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="city" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="country" eType="ecore:EDataType types.ecore#//Country"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="writtenAddress" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="ecore:EEnum types.ecore#//AddressType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contact" lowerBound="1"
+        eType="#//IContact"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IImage" abstract="true" interface="true"
+      eSuperTypes="#//Identifiable #//Deleteable #//WithAssignableId">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType types.ecore#//LocalDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="prefix" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="image" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EByteArray"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="WithAssignableId" abstract="true" interface="true">
+    <eOperations name="setId">
+      <eParameters name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
   </eClassifiers>
 </ecore:EPackage>
