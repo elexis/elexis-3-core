@@ -161,7 +161,8 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		gList.setLayoutData(SWTHelper.getFillGridData(2, true, 1, true));
 		gList.setLayout(new FillLayout());
 		tk.adapt(gList);
-		viewer = new TableViewer(gList, SWT.NONE);
+		viewer =
+			new TableViewer(gList, SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
 		viewer.setData("TEST_COMP_NAME", "blkd_Leistung_Lst"); //$NON-NLS-1$
 		tk.adapt(viewer.getControl(), true, true);
 		
