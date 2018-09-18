@@ -18,9 +18,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.services.ILocalLockService;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.services.ILocalLockService;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
@@ -99,7 +99,7 @@ public class PatientDetailView2 extends ViewPart implements ISaveablePart2, IAct
 	public void activation(boolean mode){
 		if (!mode) {
 			// save does not happen via locking in standalone mode
-			if (CoreHub.getLocalLockService().getStatus() == ILocalLockService.Status.STANDALONE) {
+			if (LocalLockServiceHolder.get().getStatus() == ILocalLockService.Status.STANDALONE) {
 				pb.save();
 			}
 		} else {

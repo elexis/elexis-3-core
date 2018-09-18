@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Display;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.ui.dbcheck.contributions.dialogs.SelectBillingStrategyDialog;
 import ch.elexis.core.ui.dbcheck.external.ExternalMaintenance;
@@ -115,7 +116,7 @@ public class BillAllOpenCons extends ExternalMaintenance {
 				}
 				
 				private void createBill(Fall fall){
-					LockResponse lr = CoreHub.getLocalLockService().acquireLockBlocking(fall, 60,
+					LockResponse lr = LocalLockServiceHolder.get().acquireLockBlocking(fall, 60,
 						new NullProgressMonitor());
 					if (lr.isOk()) {
 						HashMap<Rechnungssteller, List<Konsultation>> consByRechnungssteller =
@@ -125,7 +126,7 @@ public class BillAllOpenCons extends ExternalMaintenance {
 							Rechnung.build(consByRechnungssteller.get(key));
 						}
 						fall.setEndDatum(new TimeTool().toString(TimeTool.DATE_GER));
-						CoreHub.getLocalLockService().releaseLock((fall));
+						LocalLockServiceHolder.get().releaseLock((fall));
 						if (!isBilled(fall)) {
 							addFallProblem("Billing failed", fall);
 						}

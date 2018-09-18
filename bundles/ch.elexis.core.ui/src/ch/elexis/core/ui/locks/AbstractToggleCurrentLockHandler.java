@@ -5,23 +5,20 @@ import java.util.Map;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
-import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockResponse;
-import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.util.SWTHelper;
 
 public abstract class AbstractToggleCurrentLockHandler extends AbstractHandler
 		implements IElementUpdater {
@@ -70,10 +67,10 @@ public abstract class AbstractToggleCurrentLockHandler extends AbstractHandler
 			return null;
 		}
 		
-		if (CoreHub.getLocalLockService().isLockedLocal(po)) {
-			CoreHub.getLocalLockService().releaseLock(po);
+		if (LocalLockServiceHolder.get().isLockedLocal(po)) {
+			LocalLockServiceHolder.get().releaseLock(po);
 		} else {
-			LockResponse lr = CoreHub.getLocalLockService().acquireLock(po);
+			LockResponse lr = LocalLockServiceHolder.get().acquireLock(po);
 			if (!lr.isOk()) {
 				LockResponseHelper.showInfo(lr, po, null);
 			}
@@ -93,7 +90,7 @@ public abstract class AbstractToggleCurrentLockHandler extends AbstractHandler
 			return;
 		}
 		
-		if (CoreHub.getLocalLockService().isLockedLocal(po)) {
+		if (LocalLockServiceHolder.get().isLockedLocal(po)) {
 			element.setIcon(Images.IMG_LOCK_OPEN.getImageDescriptor());
 			element.setChecked(true);
 		} else {

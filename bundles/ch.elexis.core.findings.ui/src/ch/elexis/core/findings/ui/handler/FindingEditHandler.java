@@ -50,6 +50,19 @@ public class FindingEditHandler extends AbstractHandler implements IHandler {
 							
 							findingsEditDialog.releaseAllLocks();
 							if (dialogRet == MessageDialog.OK) {
+								//								if (iFinding instanceof IObservation) {
+								//									// do recursive save for observation children
+								//									IObservation observation = (IObservation) iFinding;
+								//									if (observation.getObservationType() == ObservationType.REF) {
+								//										List<IObservation> obsChildren = new ArrayList<>();
+								//										ModelUtil.getObservationChildren(observation, obsChildren,
+								//											100);
+								//										for (IObservation iObservation : obsChildren) {
+								//											FindingsServiceComponent.getService()
+								//												.saveFinding(iObservation);
+								//										}
+								//									}
+								//								}
 								FindingsServiceComponent.getService().saveFinding(iFinding);
 								ElexisEventDispatcher.getInstance()
 									.fire(new ElexisEvent(iFinding,

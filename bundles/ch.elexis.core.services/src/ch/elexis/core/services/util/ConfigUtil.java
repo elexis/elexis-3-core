@@ -1,15 +1,15 @@
-package ch.elexis.core.data.util;
+package ch.elexis.core.services.util;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.services.INamedQuery;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 
 public class ConfigUtil {
 	

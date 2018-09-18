@@ -2,7 +2,7 @@ package ch.elexis.core.ui.locks;
 
 import org.eclipse.jface.action.Action;
 
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.data.PersistentObject;
 
 /**
@@ -29,12 +29,12 @@ public abstract class LockedAction<T extends PersistentObject> extends Action {
 			return false;
 		}
 		
-		return CoreHub.getLocalLockService().isLockedLocal(object);
+		return LocalLockServiceHolder.get().isLockedLocal(object);
 	}
 	
 	@Override
 	public void run() {
-		if (CoreHub.getLocalLockService().isLockedLocal(object)) {
+		if (LocalLockServiceHolder.get().isLockedLocal(object)) {
 			if (object != null) {
 				doRun((T) object);
 			}

@@ -75,7 +75,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
@@ -83,6 +82,7 @@ import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.BillingUtil;
 import ch.elexis.core.data.util.BillingUtil.BillCallback;
 import ch.elexis.core.data.util.Extensions;
@@ -163,18 +163,18 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 				if (actualInvoice != null) {
 					releaseAndRefreshLock(actualInvoice,
 						ToggleCurrentInvoiceLockHandler.COMMAND_ID);
-					if(CoreHub.getLocalLockService().isLocked(actualInvoice.getFall())) {
-						CoreHub.getLocalLockService().releaseLock(actualInvoice.getFall());
+					if(LocalLockServiceHolder.get().isLocked(actualInvoice.getFall())) {
+						LocalLockServiceHolder.get().releaseLock(actualInvoice.getFall());
 					}
 				}
 				reload((Rechnung) ev.getObject());
-				setUnlocked(CoreHub.getLocalLockService().isLocked(actualInvoice));
+				setUnlocked(LocalLockServiceHolder.get().isLocked(actualInvoice));
 				break;
 			case ElexisEvent.EVENT_LOCK_AQUIRED:
 			case ElexisEvent.EVENT_LOCK_RELEASED:
 				if (actualInvoice != null && actualInvoice.equals((Rechnung) ev.getObject())) {
 					if (ev.getType() == ElexisEvent.EVENT_LOCK_AQUIRED) {
-						if (CoreHub.getLocalLockService().acquireLock(actualInvoice.getFall())
+						if (LocalLockServiceHolder.get().acquireLock(actualInvoice.getFall())
 							.isOk()) {
 							setUnlocked(true);
 						} else {
@@ -259,7 +259,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 	public void dispose(){
 		if (actualInvoice != null && isUnlocked()) {
 			releaseAndRefreshLock(actualInvoice, ToggleCurrentInvoiceLockHandler.COMMAND_ID);
-			CoreHub.getLocalLockService().releaseLock(actualInvoice.getFall());
+			LocalLockServiceHolder.get().releaseLock(actualInvoice.getFall());
 		}
 		ElexisEventDispatcher.getInstance().removeListeners(eeli_rn, eeli_user);
 		super.dispose();
@@ -1487,8 +1487,8 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 	}
 	
 	private void releaseAndRefreshLock(IPersistentObject object, String commandId){
-		if (object != null && CoreHub.getLocalLockService().isLocked(object)) {
-			CoreHub.getLocalLockService().releaseLock(object);
+		if (object != null && LocalLockServiceHolder.get().isLocked(object)) {
+			LocalLockServiceHolder.get().releaseLock(object);
 		}
 		ICommandService commandService =
 			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);

@@ -11,11 +11,11 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.services.ILocalLockService;
-import ch.elexis.core.data.services.ILocalLockService.Status;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.services.ILocalLockService;
+import ch.elexis.core.services.ILocalLockService.Status;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
@@ -63,7 +63,7 @@ public class LockStatusDialogHandler extends AbstractHandler implements IElement
 		if (localIcon == null || remoteIcon == null || standaloneIcon == null) {
 			prepareIcons();
 		}
-		ILocalLockService.Status status = CoreHub.getLocalLockService().getStatus();
+		ILocalLockService.Status status = LocalLockServiceHolder.get().getStatus();
 		
 		if (status == Status.STANDALONE) {
 			element.setIcon(standaloneIcon);

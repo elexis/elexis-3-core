@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Text;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
@@ -235,14 +236,14 @@ public class MediDetailDialog extends TitleAreaDialog {
 						// creates a history entry for a prescription, stops the old one with current date
 						Prescription oldPrescription = prescription;
 						Prescription newPrescription = new Prescription(oldPrescription);
-						if (CoreHub.getLocalLockService().acquireLock(newPrescription).isOk()) {
+						if (LocalLockServiceHolder.get().acquireLock(newPrescription).isOk()) {
 							newPrescription.setDosis(dosis);
 							newPrescription.setBemerkung(intakeOrder);
 							newPrescription.setDisposalComment(disposalComment);
 							oldPrescription.stop(null);
 							oldPrescription
 								.setStopReason("Geändert durch " + CoreHub.actUser.getLabel());
-							CoreHub.getLocalLockService().releaseLock(newPrescription);
+							LocalLockServiceHolder.get().releaseLock(newPrescription);
 							ElexisEventDispatcher.getInstance().fire(new ElexisEvent(
 								newPrescription, Prescription.class, ElexisEvent.EVENT_UPDATE));
 						}

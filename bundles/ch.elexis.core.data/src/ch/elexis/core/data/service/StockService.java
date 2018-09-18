@@ -111,7 +111,7 @@ public class StockService implements IStockService {
 			return CoreHub.getStockCommissioningSystemService().performArticleOutlay(se, count,
 				null);
 		} else {
-			LockResponse lr = CoreHub.getLocalLockService().acquireLockBlocking((StockEntry) se, 1,
+			LockResponse lr = LocalLockServiceHolder.get().acquireLockBlocking((StockEntry) se, 1,
 				new NullProgressMonitor());
 			if (lr.isOk()) {
 				int fractionUnits = se.getFractionUnits();
@@ -142,7 +142,7 @@ public class StockService implements IStockService {
 					se.setFractionUnits(rest);
 				}
 				
-				CoreHub.getLocalLockService().releaseLock((StockEntry) se);
+				LocalLockServiceHolder.get().releaseLock((StockEntry) se);
 				return Status.OK_STATUS;
 			}
 		}
@@ -173,7 +173,7 @@ public class StockService implements IStockService {
 			return Status.OK_STATUS;
 		}
 		
-		LockResponse lr = CoreHub.getLocalLockService().acquireLockBlocking((StockEntry) se, 1,
+		LockResponse lr = LocalLockServiceHolder.get().acquireLockBlocking((StockEntry) se, 1,
 			new NullProgressMonitor());
 		if (lr.isOk()) {
 			int fractionUnits = se.getFractionUnits();
@@ -202,7 +202,7 @@ public class StockService implements IStockService {
 				}
 				se.setFractionUnits(rest);
 			}
-			CoreHub.getLocalLockService().releaseLock((StockEntry) se);
+			LocalLockServiceHolder.get().releaseLock((StockEntry) se);
 			return Status.OK_STATUS;
 		}
 		return new Status(Status.WARNING, CoreHub.PLUGIN_ID, "Could not acquire lock");
@@ -341,8 +341,8 @@ public class StockService implements IStockService {
 			return null;
 		}
 		StockEntry se = new StockEntry((Stock) stock, loadArticle);
-		CoreHub.getLocalLockService().acquireLock(se);
-		CoreHub.getLocalLockService().releaseLock(se);
+		LocalLockServiceHolder.get().acquireLock(se);
+		LocalLockServiceHolder.get().releaseLock(se);
 		return se;
 	}
 	
@@ -350,11 +350,11 @@ public class StockService implements IStockService {
 	public void unstoreArticleFromStock(IStock stock, String article){
 		IStockEntry stockEntry = findStockEntryForArticleInStock((Stock) stock, article);
 		if (stockEntry != null) {
-			LockResponse lr = CoreHub.getLocalLockService()
+			LockResponse lr = LocalLockServiceHolder.get()
 				.acquireLockBlocking((StockEntry) stockEntry, 1, new NullProgressMonitor());
 			if (lr.isOk()) {
 				((StockEntry) stockEntry).delete();
-				CoreHub.getLocalLockService().releaseLock(((StockEntry) stockEntry));
+				LocalLockServiceHolder.get().releaseLock(((StockEntry) stockEntry));
 			} else {
 				log.warn("Could not unstore article [{}]", article);
 			}

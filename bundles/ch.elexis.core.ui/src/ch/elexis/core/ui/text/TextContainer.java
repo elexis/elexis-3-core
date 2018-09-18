@@ -64,12 +64,13 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.text.ITextResolver;
 import ch.elexis.core.data.interfaces.text.ReplaceCallback;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.ScriptUtil;
 import ch.elexis.core.exceptions.ElexisException;
-import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.text.XRefExtensionConstants;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.ui.UiDesk;
@@ -825,10 +826,10 @@ public class TextContainer {
 	
 	private void addBriefToKons(final Brief brief, final Konsultation kons){
 		if (kons != null) {
-			if (CoreHub.getLocalLockService().acquireLock(kons).isOk()) {
+			if (LocalLockServiceHolder.get().acquireLock(kons).isOk()) {
 				String label = "[ " + brief.getLabel() + " ]"; //$NON-NLS-1$ //$NON-NLS-2$
 				kons.addXRef(XRefExtensionConstants.providerID, brief.getId(), -1, label);
-				CoreHub.getLocalLockService().releaseLock(kons);
+				LocalLockServiceHolder.get().releaseLock(kons);
 			}
 		}
 	}

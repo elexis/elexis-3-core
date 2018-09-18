@@ -5,6 +5,7 @@ import java.util.List;
 
 import ch.elexis.admin.ACE;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.ui.actions.RestrictedAction;
@@ -36,7 +37,7 @@ public abstract class AllOrNoneLockRequestingRestrictedAction<T extends Persiste
 		List<LockInfo> acquiredLocks = new ArrayList<>();
 		
 		for (T object : objects) {
-			LockResponse lr = CoreHub.getLocalLockService().acquireLock(object);
+			LockResponse lr = LocalLockServiceHolder.get().acquireLock(object);
 			if (lr.isOk()) {
 				acquiredLocks.add(lr.getLockInfo());
 			} else {
@@ -53,7 +54,7 @@ public abstract class AllOrNoneLockRequestingRestrictedAction<T extends Persiste
 	
 	private void releaseAllAcquiredLocks(List<LockInfo> acquiredLocks){
 		for (LockInfo lockInfo : acquiredLocks) {
-			LockResponse lockResponse = CoreHub.getLocalLockService().releaseLock(lockInfo);
+			LockResponse lockResponse = LocalLockServiceHolder.get().releaseLock(lockInfo);
 			if (!lockResponse.isOk()) {
 				log.warn("Could not release lock for [{}] with lock response [{}]",
 					lockInfo.getElementType() + "::" + lockInfo.getElementId(),

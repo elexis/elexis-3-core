@@ -49,6 +49,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IStockEntry;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.importer.div.importers.ExcelWrapper;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.ui.icons.Images;
@@ -297,7 +298,7 @@ public class ImportArticleDialog extends TitleAreaDialog {
 							
 							if (stockEntry instanceof StockEntry) {
 								StockEntry poStockEntry = (StockEntry) stockEntry;
-								if (CoreHub.getLocalLockService().acquireLock(poStockEntry)
+								if (LocalLockServiceHolder.get().acquireLock(poStockEntry)
 									.isOk()) {
 									// do import
 									stockEntry.setCurrentStock(
@@ -315,7 +316,7 @@ public class ImportArticleDialog extends TitleAreaDialog {
 									importCount++;
 									addToReport("OK "+result+" '" + stock.getLabel() + "'", articleName,
 										gtin);
-									CoreHub.getLocalLockService().releaseLock(poStockEntry);
+									LocalLockServiceHolder.get().releaseLock(poStockEntry);
 								}
 								else {
 									addToReport("NO LOCK",

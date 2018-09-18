@@ -25,6 +25,7 @@ import org.eclipse.ui.commands.ICommandService;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.findings.IClinicalImpression;
 import ch.elexis.core.findings.ICoding;
@@ -276,18 +277,18 @@ public class FindingsUiUtil {
 	 */
 	public static void deleteFinding(IFinding iFinding) throws ElexisException{
 		try {
-			if (CoreHub.getLocalLockService().acquireLock(iFinding).isOk()) {
+			if (LocalLockServiceHolder.get().acquireLock(iFinding).isOk()) {
 				new FindingDeleteCommand(iFinding, new ILockingProvider() {
 					
 					@Override
 					public LockResponse releaseLock(Object object){
-						return CoreHub.getLocalLockService()
+						return LocalLockServiceHolder.get()
 							.releaseLock((IFinding) object);
 					}
 					
 					@Override
 					public LockResponse acquireLock(Object object){
-						return CoreHub.getLocalLockService()
+						return LocalLockServiceHolder.get()
 							.acquireLock((IFinding) object);
 					}
 				}).execute();
@@ -296,7 +297,7 @@ public class FindingsUiUtil {
 			MessageDialog.openInformation(Display.getDefault().getActiveShell(), "Löschen",
 				"Befund wurde nicht gelöscht. Der Befund ist auf einer anderen Station geöffnet.");
 		} finally {
-			CoreHub.getLocalLockService().releaseLock(iFinding);
+			LocalLockServiceHolder.get().releaseLock(iFinding);
 		}
 	}
 	

@@ -57,9 +57,10 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.data.interfaces.IPersistentObject;
-import ch.elexis.core.data.services.ILocalLockService.Status;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.services.ILocalLockService.Status;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.RestrictedAction;
@@ -197,7 +198,7 @@ public class UserManagementPreferencePage extends PreferencePage
 		};
 		popManager.add(deleteUserAction);
 		
-		if (!(Status.STANDALONE == CoreHub.getLocalLockService().getStatus())) {
+		if (!(Status.STANDALONE == LocalLockServiceHolder.get().getStatus())) {
 			lockUserAction = new RestrictedAction(AccessControlDefaults.USER_CREATE,
 				Messages.Leistungscodes_editItem) {
 				
@@ -205,7 +206,7 @@ public class UserManagementPreferencePage extends PreferencePage
 				public void doRun(){
 					StructuredSelection ss = (StructuredSelection) tableViewerUsers.getSelection();
 					User u = (User) ss.getFirstElement();
-					LockResponse acquireLock = CoreHub.getLocalLockService().acquireLock(u);
+					LockResponse acquireLock = LocalLockServiceHolder.get().acquireLock(u);
 					if (acquireLock.isOk()) {
 						setUnlocked(true);
 					}
@@ -253,21 +254,21 @@ public class UserManagementPreferencePage extends PreferencePage
 			}
 		});
 		
-		if (!(Status.STANDALONE == CoreHub.getLocalLockService().getStatus())) {
+		if (!(Status.STANDALONE == LocalLockServiceHolder.get().getStatus())) {
 			Button btnLock = new Button(compositeButtons, SWT.FLAT | SWT.TOGGLE);
 			btnLock.setSelection(
-				CoreHub.getLocalLockService().isLocked((IPersistentObject) wvUser.getValue()));
+				LocalLockServiceHolder.get().isLocked((IPersistentObject) wvUser.getValue()));
 			btnLock.setImage(Images.IMG_LOCK_OPEN.getImage());
 			btnLock.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e){
 					IPersistentObject user = (IPersistentObject) wvUser.getValue();
-					if (CoreHub.getLocalLockService().isLocked(user)) {
-						CoreHub.getLocalLockService().releaseLock(user);
+					if (LocalLockServiceHolder.get().isLocked(user)) {
+						LocalLockServiceHolder.get().releaseLock(user);
 					} else {
 						lockUserAction.doRun();
 					}
-					boolean locked = CoreHub.getLocalLockService()
+					boolean locked = LocalLockServiceHolder.get()
 						.isLocked((IPersistentObject) wvUser.getValue());
 					btnLock.setSelection(locked);
 					setUnlocked(locked);
@@ -305,7 +306,7 @@ public class UserManagementPreferencePage extends PreferencePage
 			
 			StructuredSelection ss = (StructuredSelection) e.getSelection();
 			wvUser.setValue(ss == null ? null : (User) ss.getFirstElement());
-			setUnlocked(Status.STANDALONE == CoreHub.getLocalLockService().getStatus());
+			setUnlocked(Status.STANDALONE == LocalLockServiceHolder.get().getStatus());
 			
 			compositeEdit.layout(true, true);
 		});
@@ -579,7 +580,7 @@ public class UserManagementPreferencePage extends PreferencePage
 		
 		updateUserList();
 		
-		setUnlocked(Status.STANDALONE == CoreHub.getLocalLockService().getStatus());
+		setUnlocked(Status.STANDALONE == LocalLockServiceHolder.get().getStatus());
 		
 		sash.setWeights(new int[] {
 			1, 5
@@ -729,8 +730,8 @@ public class UserManagementPreferencePage extends PreferencePage
 	
 	private void releaseLockIfRequired(){
 		User user = (User) wvUser.getValue();
-		if (user != null && CoreHub.getLocalLockService().isLocked(user)) {
-			CoreHub.getLocalLockService().releaseLock(user);
+		if (user != null && LocalLockServiceHolder.get().isLocked(user)) {
+			LocalLockServiceHolder.get().releaseLock(user);
 		}
 	}
 	

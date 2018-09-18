@@ -17,9 +17,10 @@ import org.eclipse.swt.widgets.Table;
 
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.services.ILocalLockService.Status;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.services.ILocalLockService.Status;
 import ch.elexis.data.PersistentObject;
 
 public class LockStatusDialog extends TitleAreaDialog {
@@ -63,14 +64,14 @@ public class LockStatusDialog extends TitleAreaDialog {
 				return li.getElementType() + ": " + po.getLabel();
 			}
 		});
-		checkboxTableViewer.setInput(CoreHub.getLocalLockService().getCopyOfAllHeldLocks());
+		checkboxTableViewer.setInput(LocalLockServiceHolder.get().getCopyOfAllHeldLocks());
 		
 		Label lblSystemUuid = new Label(container, SWT.NONE);
 		lblSystemUuid.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		lblSystemUuid.setText("System UUID: " + CoreHub.getLocalLockService().getSystemUuid());
+		lblSystemUuid.setText("System UUID: " + LocalLockServiceHolder.get().getSystemUuid());
 		
 		Label lblLockStatus = new Label(container, SWT.NONE);
-		Status status = CoreHub.getLocalLockService().getStatus();
+		Status status = LocalLockServiceHolder.get().getStatus();
 		StringBuilder statusString = new StringBuilder();
 		statusString.append("Lock-Service: " + status.name());
 		if (status != Status.STANDALONE) {
@@ -89,7 +90,7 @@ public class LockStatusDialog extends TitleAreaDialog {
 		boolean error = false;
 		for (Object object : checkedElements) {
 			LockInfo lockInfo = (LockInfo) object;
-			LockResponse lockResponse = CoreHub.getLocalLockService().releaseLock(lockInfo);
+			LockResponse lockResponse = LocalLockServiceHolder.get().releaseLock(lockInfo);
 			if (!lockResponse.isOk()) {
 				setErrorMessage("Error releasing lock "+lockInfo.getElementStoreToString());
 				error = true;

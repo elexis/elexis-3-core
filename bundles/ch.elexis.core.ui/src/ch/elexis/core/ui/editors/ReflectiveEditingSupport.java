@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Display;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IModelService;
@@ -100,7 +100,7 @@ public class ReflectiveEditingSupport extends EditingSupport {
 	@Override
 	protected void setValue(Object element, Object value){
 		if (canEdit(element)) {
-			LockResponse lr = CoreHub.getLocalLockService().acquireLock(element);
+			LockResponse lr = LocalLockServiceHolder.get().acquireLock(element);
 			if (!lr.isOk()) {
 				return;
 			}
@@ -113,7 +113,7 @@ public class ReflectiveEditingSupport extends EditingSupport {
 				LoggerFactory.getLogger(getClass())
 					.error("Error setting property [" + field + "] of [" + element + "]", e);
 			}
-			lr = CoreHub.getLocalLockService().releaseLock(element);
+			lr = LocalLockServiceHolder.get().releaseLock(element);
 			if (!lr.isOk()) {
 				log.warn("Error releasing lock for [{}]: {}", element, lr.getStatus());
 			}

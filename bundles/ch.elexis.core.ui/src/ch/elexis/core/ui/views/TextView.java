@@ -35,6 +35,7 @@ import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -106,7 +107,7 @@ public class TextView extends ViewPart implements IActivationListener {
 	@Override
 	public void dispose(){
 		if (actBrief != null) {
-			CoreHub.getLocalLockService().releaseLock(actBrief);
+			LocalLockServiceHolder.get().releaseLock(actBrief);
 		}
 		GlobalEventDispatcher.removeActivationListener(this, this);
 		actBrief = null;
@@ -115,14 +116,14 @@ public class TextView extends ViewPart implements IActivationListener {
 	
 	public boolean openDocument(Brief doc){
 		if (actBrief != null) {
-			CoreHub.getLocalLockService().releaseLock(actBrief);
+			LocalLockServiceHolder.get().releaseLock(actBrief);
 			actBrief.save(txt.getPlugin().storeToByteArray(), txt.getPlugin().getMimeType());
 		}
 		if (doc == null) {
 			return false;
 		} else {
 			// test lock and set read only before opening the Brief
-			LockResponse result = CoreHub.getLocalLockService().acquireLock(doc);
+			LockResponse result = LocalLockServiceHolder.get().acquireLock(doc);
 			if (result.isOk()) {
 				txt.getPlugin().setParameter(null);
 			} else {
@@ -137,7 +138,7 @@ public class TextView extends ViewPart implements IActivationListener {
 			return true;
 		} else {
 			actBrief = null;
-			CoreHub.getLocalLockService().releaseLock(doc);
+			LocalLockServiceHolder.get().releaseLock(doc);
 			if (CoreHub.localCfg.get(Preferences.P_TEXT_SUPPORT_LEGACY, false) == true) {
 				setName();
 				String ext = MimeTool.getExtension(doc.getMimeType());

@@ -145,6 +145,7 @@ public class FindingsTextUtil {
 		}
 		if (shouldSet) {
 			observation.setText(stringBuilder.toString());
+			FindingsServiceHolder.getiFindingsService().saveFinding(observation);
 		}
 		return stringBuilder.toString();
 	}

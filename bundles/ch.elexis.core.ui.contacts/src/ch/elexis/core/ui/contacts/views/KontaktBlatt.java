@@ -37,6 +37,7 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.interfaces.IXid;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
@@ -150,8 +151,8 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 				Kontakt deselectedKontakt = actKontakt;
 				setKontakt(kontakt);
 				if (deselectedKontakt != null) {
-					if (CoreHub.getLocalLockService().isLockedLocal(deselectedKontakt)) {
-						CoreHub.getLocalLockService().releaseLock(deselectedKontakt);
+					if (LocalLockServiceHolder.get().isLockedLocal(deselectedKontakt)) {
+						LocalLockServiceHolder.get().releaseLock(deselectedKontakt);
 					}
 					ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
 						.getService(ICommandService.class);
@@ -346,7 +347,7 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 			lbAnschrift.setText(actKontakt.getPostAnschrift(false));
 		}
 		form.reflow(true);
-		setUnlocked(CoreHub.getLocalLockService().isLockedLocal(kontakt));
+		setUnlocked(LocalLockServiceHolder.get().isLockedLocal(kontakt));
 	}
 	
 	public void visible(boolean mode){

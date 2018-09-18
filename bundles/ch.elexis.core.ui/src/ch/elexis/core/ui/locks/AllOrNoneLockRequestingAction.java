@@ -7,7 +7,7 @@ import org.eclipse.jface.action.Action;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.data.PersistentObject;
@@ -40,7 +40,7 @@ public abstract class AllOrNoneLockRequestingAction<T extends PersistentObject> 
 		List<LockInfo> acquiredLocks = new ArrayList<>();
 		
 		for (T object : objects) {
-			LockResponse lr = CoreHub.getLocalLockService().acquireLock(object);
+			LockResponse lr = LocalLockServiceHolder.get().acquireLock(object);
 			if (lr.isOk()) {
 				acquiredLocks.add(lr.getLockInfo());
 			} else {
@@ -57,7 +57,7 @@ public abstract class AllOrNoneLockRequestingAction<T extends PersistentObject> 
 	
 	private void releaseAllAcquiredLocks(List<LockInfo> acquiredLocks){
 		for (LockInfo lockInfo : acquiredLocks) {
-			LockResponse lockResponse = CoreHub.getLocalLockService().releaseLock(lockInfo);
+			LockResponse lockResponse = LocalLockServiceHolder.get().releaseLock(lockInfo);
 			if (!lockResponse.isOk()) {
 				log.warn("Could not release lock for [{}] with lock response [{}]",
 					lockInfo.getElementType() + "::" + lockInfo.getElementId(),

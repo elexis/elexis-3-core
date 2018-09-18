@@ -17,8 +17,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.ui.views.FallDetailBlatt2;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Patient;
@@ -52,9 +52,9 @@ public class FallEditDialog extends TitleAreaDialog {
 	
 	@Override
 	protected void okPressed(){
-		if (CoreHub.getLocalLockService().acquireLock(fall).isOk()) {
+		if (LocalLockServiceHolder.get().acquireLock(fall).isOk()) {
 			fdb.save();
-			CoreHub.getLocalLockService().releaseLock(fall);
+			LocalLockServiceHolder.get().releaseLock(fall);
 		}
 		ElexisEventDispatcher.reload(Fall.class);
 		super.okPressed();

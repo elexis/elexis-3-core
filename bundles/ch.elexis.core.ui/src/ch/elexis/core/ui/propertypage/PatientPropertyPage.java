@@ -28,7 +28,7 @@ import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.statushandlers.StatusManager;
 
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Person;
@@ -159,7 +159,7 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		textEmail.setText(pat.get(Patient.FLD_E_MAIL));
 		textBemerkungen.setText(pat.getBemerkung());
 		
-		setUnlocked(CoreHub.getLocalLockService().isLocked(pat));
+		setUnlocked(LocalLockServiceHolder.get().isLocked(pat));
 		
 		return comp;
 	}

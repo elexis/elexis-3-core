@@ -17,7 +17,7 @@ import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_AUF_CERT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
@@ -41,7 +41,7 @@ public class AUFZeugnis extends ViewPart implements ICallback, IActivationListen
 	@Override
 	public void dispose(){
 		if (actBrief != null) {
-			CoreHub.getLocalLockService().releaseLock(actBrief);
+			LocalLockServiceHolder.get().releaseLock(actBrief);
 		}
 		GlobalEventDispatcher.removeActivationListener(this, this);
 		super.dispose();
@@ -75,7 +75,7 @@ public class AUFZeugnis extends ViewPart implements ICallback, IActivationListen
 	
 	private void updateTextLock(){
 		// test lock and set read only before opening the Brief
-		LockResponse result = CoreHub.getLocalLockService().acquireLock(actBrief);
+		LockResponse result = LocalLockServiceHolder.get().acquireLock(actBrief);
 		if (result.isOk()) {
 			text.getPlugin().setParameter(null);
 		} else {

@@ -7,10 +7,6 @@ import java.util.Optional;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,13 +24,13 @@ import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.service.CoreModelAdapterFactory;
+import ch.elexis.core.model.service.holder.ContextServiceHolder;
+import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
+import ch.elexis.core.model.service.holder.StoreToStringServiceHolder;
 import ch.elexis.core.services.IContext;
-import ch.elexis.core.services.IContextService;
-import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.IStoreToStringService;
 import ch.rgw.tools.MimeTool;
 
 /**
@@ -43,31 +39,9 @@ import ch.rgw.tools.MimeTool;
  * @author thomas
  *
  */
-@Component
 public class ModelUtil {
 	
 	private static Logger logger = LoggerFactory.getLogger(ModelUtil.class);
-	
-	private static IModelService modelService;
-	
-	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	public void setModelService(IModelService modelService){
-		ModelUtil.modelService = modelService;
-	}
-	
-	private static IContextService contextService;
-	
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL, policyOption = ReferencePolicyOption.GREEDY)
-	public void setContextService(IContextService contextService){
-		ModelUtil.contextService = contextService;
-	}
-	
-	private static IStoreToStringService storeToStringService;
-	
-	@Reference
-	public void setStoreToStringService(IStoreToStringService storeToStringService){
-		ModelUtil.storeToStringService = storeToStringService;
-	}
 	
 	/**
 	 * Get the file extension part of the input String.
@@ -201,7 +175,7 @@ public class ModelUtil {
 	 * @return
 	 */
 	public static boolean isConfig(String key, boolean defaultValue){
-		Optional<IConfig> loaded = modelService.load(key, IConfig.class);
+		Optional<IConfig> loaded = CoreModelServiceHolder.get().load(key, IConfig.class);
 		if (loaded.isPresent()) {
 			String value = loaded.get().getValue();
 			return value != null && (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("1"));
@@ -222,9 +196,11 @@ public class ModelUtil {
 	public static boolean isUserConfig(IContact owner, String key, boolean defaultValue){
 		if (owner != null) {
 			INamedQuery<IUserConfig> configQuery =
-				modelService.getNamedQuery(IUserConfig.class, true, "owner", "param");
+				CoreModelServiceHolder.get().getNamedQuery(IUserConfig.class, true, "owner",
+					"param");
 			List<IUserConfig> configs = configQuery
-				.executeWithParameters(modelService.getParameterMap("owner", owner, "param", key));
+				.executeWithParameters(
+					CoreModelServiceHolder.get().getParameterMap("owner", owner, "param", key));
 			if (configs.isEmpty()) {
 				return defaultValue;
 			} else {
@@ -250,7 +226,7 @@ public class ModelUtil {
 	 * @return
 	 */
 	public static String getConfig(String key, String defaultValue){
-		IQuery<IConfig> configQuery = modelService.getQuery(IConfig.class);
+		IQuery<IConfig> configQuery = CoreModelServiceHolder.get().getQuery(IConfig.class);
 		configQuery.and(ModelPackage.Literals.ICONFIG__KEY, COMPARATOR.EQUALS,
 			Preferences.P_TEXT_EXTERN_FILE);
 		List<IConfig> configs = configQuery.execute();
@@ -271,12 +247,14 @@ public class ModelUtil {
 	 * @return
 	 */
 	public static Optional<IContact> getActiveUserContact(){
-		if (contextService != null) {
-			Optional<IContact> ret = contextService.getRootContext().getActiveUserContact();
+		if (ContextServiceHolder.isPresent()) {
+			Optional<IContact> ret =
+				ContextServiceHolder.get().getRootContext().getActiveUserContact();
 			if (ret.isPresent()) {
 				return ret;
 			} else {
-				Optional<IUser> user = contextService.getRootContext().getActiveUser();
+				Optional<IUser> user =
+					ContextServiceHolder.get().getRootContext().getActiveUser();
 				if (user.isPresent()) {
 					return Optional.ofNullable(user.get().getAssignedContact());
 				}
@@ -294,7 +272,7 @@ public class ModelUtil {
 	 * @return
 	 */
 	public static <T> IQuery<T> getQuery(Class<T> interfaceClazz){
-		return modelService.getQuery(interfaceClazz);
+		return CoreModelServiceHolder.get().getQuery(interfaceClazz);
 	}
 	
 	/**
@@ -305,7 +283,7 @@ public class ModelUtil {
 	 * @return
 	 */
 	public static <T> T load(String objectId, Class<T> clazz){
-		Optional<T> ret = modelService.load(objectId, clazz);
+		Optional<T> ret = CoreModelServiceHolder.get().load(objectId, clazz);
 		return ret.orElse(null);
 	}
 	
@@ -334,18 +312,18 @@ public class ModelUtil {
 	 * @return <code>true</code> if the given username may be used
 	 */
 	public static boolean verifyUsernameNotTaken(String username){
-		return !modelService.load(username, IUser.class).isPresent();
+		return !CoreModelServiceHolder.get().load(username, IUser.class).isPresent();
 	}
 	
 	public static AbstractModelService getModelService(){
-		return (AbstractModelService) modelService;
+		return (AbstractModelService) CoreModelServiceHolder.get();
 	}
 	
 	public static Optional<Identifiable> getFromStoreToString(String storeToString){
-		return storeToStringService.loadFromString(storeToString);
+		return StoreToStringServiceHolder.get().loadFromString(storeToString);
 	}
 	
 	public static Optional<String> getStoreToString(Identifiable identifiable){
-		return storeToStringService.storeToString(identifiable);
+		return StoreToStringServiceHolder.get().storeToString(identifiable);
 	}
 }

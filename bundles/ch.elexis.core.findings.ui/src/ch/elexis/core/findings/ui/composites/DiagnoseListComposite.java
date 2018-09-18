@@ -36,8 +36,9 @@ import org.eclipse.swt.widgets.ToolBar;
 
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
@@ -45,7 +46,6 @@ import ch.elexis.core.findings.ICondition.ConditionStatus;
 import ch.elexis.core.findings.ui.dialogs.ConditionEditDialog;
 import ch.elexis.core.findings.ui.services.CodingServiceComponent;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
-import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.AcquireLockUi;
@@ -310,7 +310,7 @@ public class DiagnoseListComposite extends Composite {
 					dialog.getCondition().ifPresent(c -> {
 						c.setPatientId(selectedPatient.getId());
 						// touch after creation
-						CoreHub.getLocalLockService().acquireLock((IPersistentObject) c);
+						LocalLockServiceHolder.get().acquireLock((IPersistentObject) c);
 						dataList.add(c);
 						natTableWrapper.getNatTable().refresh();
 					});

@@ -35,6 +35,7 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
@@ -400,7 +401,7 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 					return;
 				}
 			}
-			if (CoreHub.getLocalLockService().acquireLock(newKontakt).isOk()) {
+			if (LocalLockServiceHolder.get().acquireLock(newKontakt).isOk()) {
 				newKontakt.set(new String[] {
 					"Strasse", "Plz", "Ort", "Telefon1", "Fax", "E-Mail" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
 				}, new String[] {
@@ -408,7 +409,7 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 				});
 				
 				ElexisEventDispatcher.fireSelectionEvent(newKontakt);
-				CoreHub.getLocalLockService().releaseLock(newKontakt);
+				LocalLockServiceHolder.get().releaseLock(newKontakt);
 			}
 		} catch (TimeFormatException e) {
 			ExHandler.handle(e);

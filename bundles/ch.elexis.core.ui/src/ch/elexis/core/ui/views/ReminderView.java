@@ -62,6 +62,7 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.issue.Priority;
 import ch.elexis.core.model.issue.ProcessStatus;
@@ -389,8 +390,8 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				int retVal = erd.open();
 				if (retVal == Dialog.OK) {
 					Reminder reminder = erd.getReminder();
-					CoreHub.getLocalLockService().acquireLock(reminder);
-					CoreHub.getLocalLockService().releaseLock(reminder);
+					LocalLockServiceHolder.get().acquireLock(reminder);
+					LocalLockServiceHolder.get().releaseLock(reminder);
 				}
 				cv.notify(CommonViewer.Message.update_keeplabels);
 			}
@@ -407,10 +408,10 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				if (selections != null && selections.length == 1
 					&& selections[0] instanceof Reminder) {
 					Reminder r = (Reminder) selections[0];
-					LockResponse lockResponse = CoreHub.getLocalLockService().acquireLock(r);
+					LockResponse lockResponse = LocalLockServiceHolder.get().acquireLock(r);
 					if (lockResponse.isOk()) {
 						r.delete();
-						CoreHub.getLocalLockService().releaseLock(r);
+						LocalLockServiceHolder.get().releaseLock(r);
 					} else {
 						LockResponseHelper.showInfo(lockResponse, r, null);
 					}

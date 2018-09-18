@@ -24,9 +24,9 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 
 import ch.elexis.admin.AccessControlDefaults;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.ui.actions.Messages;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
@@ -106,8 +106,8 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 				}
 				
 				if (kons != null && kons.exists()) {
-					CoreHub.getLocalLockService().acquireLock(kons);
-					CoreHub.getLocalLockService().releaseLock(kons);
+					LocalLockServiceHolder.get().acquireLock(kons);
+					LocalLockServiceHolder.get().releaseLock(kons);
 				}
 			}
 		});

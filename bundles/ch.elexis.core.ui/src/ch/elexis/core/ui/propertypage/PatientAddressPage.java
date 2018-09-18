@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.data.Patient;
 
@@ -89,7 +89,7 @@ public class PatientAddressPage extends PropertyPage implements IWorkbenchProper
 			}
 		}
 		
-		setUnlocked(CoreHub.getLocalLockService().isLocked(pat));
+		setUnlocked(LocalLockServiceHolder.get().isLocked(pat));
 		
 		return comp;
 	}

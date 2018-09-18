@@ -30,9 +30,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.common.ElexisEventTopics;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.eigenartikel.EigenartikelUtil;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.services.IModelService;
@@ -264,7 +264,7 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 	private void createEigenartikelComposite(IArticle articleNew){
 		EigenartikelComposite ec =
 			new EigenartikelComposite(compositeArticleItems, SWT.NONE, articleNew);
-		ec.setUnlocked(CoreHub.getLocalLockService().isLocked(productEigenartikel.getValue()));
+		ec.setUnlocked(LocalLockServiceHolder.get().isLocked(productEigenartikel.getValue()));
 	}
 	
 	private class SavingUpdateProductChilds extends SavingUpdateValueStrategy {

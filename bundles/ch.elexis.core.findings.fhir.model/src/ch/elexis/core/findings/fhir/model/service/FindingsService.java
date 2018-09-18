@@ -20,7 +20,6 @@ import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IProcedureRequest;
 import ch.elexis.core.findings.util.ModelUtil;
-import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.INamedQuery;
 
@@ -121,18 +120,9 @@ public class FindingsService implements IFindingsService {
 		return Collections.emptyList();
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void saveFinding(IFinding finding){
-		if(finding instanceof IObservation) {
-			List<IObservation>observations = new ArrayList<>();
-			observations.add((IObservation) finding);
-			observations =
-				ModelUtil.getObservationChildren((IObservation) finding, observations, 100);
-			findingsModelService.save((List<Identifiable>) (List<?>) observations);
-		} else {
-			findingsModelService.save(finding);
-		}
+		findingsModelService.save(finding);
 	}
 	
 	@Override

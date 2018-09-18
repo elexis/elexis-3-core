@@ -9,17 +9,17 @@ import org.eclipse.swt.widgets.Display;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IPersistentObject;
-import ch.elexis.core.data.services.ILocalLockService;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.ILocalLockService;
 
 public class AcquireLockBlockingUi {
 	private static Logger logger = LoggerFactory.getLogger(AcquireLockBlockingUi.class);
 	
 	public static void aquireAndRun(IPersistentObject lockPo, ILockHandler handler){
-		if (CoreHub.getLocalLockService().getStatus() == ILocalLockService.Status.STANDALONE) {
+		if (LocalLockServiceHolder.get().getStatus() == ILocalLockService.Status.STANDALONE) {
 			handler.lockAcquired();
 			return;
 		}
@@ -79,9 +79,9 @@ public class AcquireLockBlockingUi {
 			throws InvocationTargetException, InterruptedException{
 
 			if (lockPo != null) {
-				result = CoreHub.getLocalLockService().acquireLockBlocking(lockPo, 30, monitor);
+				result = LocalLockServiceHolder.get().acquireLockBlocking(lockPo, 30, monitor);
 			} else if (lockIdentifiable != null) {
-				result = CoreHub.getLocalLockService().acquireLockBlocking(lockIdentifiable, 30,
+				result = LocalLockServiceHolder.get().acquireLockBlocking(lockIdentifiable, 30,
 					monitor);
 			}
 			if (result != null) {
@@ -94,7 +94,7 @@ public class AcquireLockBlockingUi {
 						}
 					});
 					monitor.beginTask("Releasing lock ...", IProgressMonitor.UNKNOWN);
-					CoreHub.getLocalLockService().releaseLock(lockPo);
+					LocalLockServiceHolder.get().releaseLock(lockPo);
 					monitor.done();
 				} else {
 					display.syncExec(new Runnable() {

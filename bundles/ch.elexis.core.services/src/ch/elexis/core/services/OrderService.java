@@ -1,20 +1,17 @@
-package ch.elexis.core.data.service.internal;
+package ch.elexis.core.services;
 
 import java.util.List;
 
 import org.osgi.service.component.annotations.Component;
 
-import ch.elexis.core.data.service.CoreModelServiceHolder;
-import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.OrderEntryState;
-import ch.elexis.core.services.IOrderService;
-import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.IStoreToStringContribution;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 
 @Component
 public class OrderService implements IOrderService {

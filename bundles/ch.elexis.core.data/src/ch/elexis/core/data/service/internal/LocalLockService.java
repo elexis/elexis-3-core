@@ -1,4 +1,4 @@
-package ch.elexis.core.data.lock;
+package ch.elexis.core.data.service.internal;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -13,6 +13,7 @@ import java.util.TimerTask;
 import java.util.UUID;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +29,6 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.server.ElexisServerInstanceService;
 import ch.elexis.core.data.server.ElexisServerLockService;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
-import ch.elexis.core.data.services.ILocalLockService;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockRequest;
@@ -37,6 +37,7 @@ import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.server.IInstanceService;
 import ch.elexis.core.server.ILockService;
+import ch.elexis.core.services.ILocalLockService;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.User;
 
@@ -48,6 +49,7 @@ import ch.elexis.data.User;
  * @author marco
  * 
  */
+@Component
 public class LocalLockService implements ILocalLockService {
 	
 	private ILockService ils;

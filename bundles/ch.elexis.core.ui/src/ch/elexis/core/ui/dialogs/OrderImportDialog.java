@@ -61,6 +61,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.service.StockServiceHolder;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
@@ -467,7 +468,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 						// create a non transient stock entry for the article
 						stockEntry = ((TransientStockEntry) stockEntry).create(orderElement);
 					}
-					LockResponse lockResponse = CoreHub.getLocalLockService()
+					LockResponse lockResponse = LocalLockServiceHolder.get()
 						.acquireLockBlocking(stockEntry, 1, new NullProgressMonitor());
 					if (lockResponse.isOk()) {
 						int diff = orderElement.getAmount();
@@ -492,7 +493,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 						}
 						CoreModelServiceHolder.get()
 							.save(Arrays.asList(stockEntry, orderElement.getOrderEntry()));
-						CoreHub.getLocalLockService().releaseLock(lockResponse.getLockInfo());
+						LocalLockServiceHolder.get().releaseLock(lockResponse.getLockInfo());
 						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
 							stockEntry);
 					} else {

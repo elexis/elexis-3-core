@@ -29,6 +29,7 @@ import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
@@ -513,7 +514,7 @@ public class BillingUtil {
 			
 			log.debug("release all locks: " + locks.size());
 			for (IPersistentObject po : locks) {
-				CoreHub.getLocalLockService().releaseLock(po);
+				LocalLockServiceHolder.get().releaseLock(po);
 			}
 		}
 
@@ -917,11 +918,11 @@ public class BillingUtil {
 		private boolean acquireLock(List<IPersistentObject> currentLocks,
 			IPersistentObject persistentObjectToLock, boolean forceReleaseLock){
 			if (!currentLocks.contains(persistentObjectToLock)) {
-				if (CoreHub.getLocalLockService().acquireLock(persistentObjectToLock).isOk()) {
+				if (LocalLockServiceHolder.get().acquireLock(persistentObjectToLock).isOk()) {
 					if (!forceReleaseLock) {
 						currentLocks.add(persistentObjectToLock);
 					} else {
-						CoreHub.getLocalLockService().releaseLock(persistentObjectToLock);
+						LocalLockServiceHolder.get().releaseLock(persistentObjectToLock);
 					}
 					return true;
 				}

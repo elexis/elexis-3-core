@@ -16,8 +16,8 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.XidConstants;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.importer.div.importers.IContactResolver;
 import ch.elexis.core.importer.div.importers.ILabImportUtil;
@@ -236,14 +236,14 @@ public class LabImportUtil implements ILabImportUtil {
 						orderId = createdOrder.getOrderId();
 					}
 				}
-				CoreHub.getLocalLockService().acquireLock(labResult);
-				CoreHub.getLocalLockService().releaseLock(labResult);
+				LocalLockServiceHolder.get().acquireLock(labResult);
+				LocalLockServiceHolder.get().releaseLock(labResult);
 			} else {
 				for (ILabResult labResult : existing) {
 					if (overWriteAll) {
-						CoreHub.getLocalLockService().acquireLock(labResult);
+						LocalLockServiceHolder.get().acquireLock(labResult);
 						transientLabResult.overwriteExisting(labResult);
-						CoreHub.getLocalLockService().releaseLock(labResult);
+						LocalLockServiceHolder.get().releaseLock(labResult);
 						continue;
 					}
 					// dont bother user if result has the same value
@@ -256,15 +256,15 @@ public class LabImportUtil implements ILabImportUtil {
 						transientLabResult.getPatient(), labResult, transientLabResult);
 					
 					if (retVal == ImportHandler.OverwriteState.OVERWRITE) {
-						CoreHub.getLocalLockService().acquireLock((LabResult) labResult);
+						LocalLockServiceHolder.get().acquireLock((LabResult) labResult);
 						transientLabResult.overwriteExisting(labResult);
-						CoreHub.getLocalLockService().releaseLock((LabResult) labResult);
+						LocalLockServiceHolder.get().releaseLock((LabResult) labResult);
 						continue;
 					} else if (retVal == ImportHandler.OverwriteState.OVERWRITEALL) {
 						overWriteAll = true;
-						CoreHub.getLocalLockService().acquireLock(labResult);
+						LocalLockServiceHolder.get().acquireLock(labResult);
 						transientLabResult.overwriteExisting(labResult);
-						CoreHub.getLocalLockService().releaseLock(labResult);
+						LocalLockServiceHolder.get().releaseLock(labResult);
 						continue;
 					} else {
 						logger.info("Will not overwrite labResult [" + labResult.getId()

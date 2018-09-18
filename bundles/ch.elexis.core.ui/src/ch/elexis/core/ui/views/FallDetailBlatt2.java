@@ -58,6 +58,7 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IFall;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
@@ -857,7 +858,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		}
 		
 		if (lockUpdate) {
-			setUnlocked(CoreHub.getLocalLockService().isLockedLocal(actFall));
+			setUnlocked(LocalLockServiceHolder.get().isLockedLocal(actFall));
 		}
 	}
 	

@@ -1,4 +1,4 @@
-package ch.elexis.core.data.services;
+package ch.elexis.core.services;
 
 import java.util.List;
 

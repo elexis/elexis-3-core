@@ -22,7 +22,6 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.exceptions.ElexisException;
@@ -30,6 +29,7 @@ import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.ui.documents.Messages;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
+import ch.elexis.core.ui.documents.service.LocalLockServiceHolder;
 import ch.elexis.core.ui.documents.views.DocumentsMetaDataDialog;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.ILockHandler;
@@ -165,8 +165,8 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 				Optional<Identifiable> documentPo =
 					DocumentStoreServiceHolder.getService().getPersistenceObject(doc);
 				documentPo.ifPresent(po -> {
-					CoreHub.getLocalLockService().acquireLock(po);
-					CoreHub.getLocalLockService().releaseLock(po);
+					LocalLockServiceHolder.get().acquireLock(po);
+					LocalLockServiceHolder.get().releaseLock(po);
 				});
 			});
 		} else {

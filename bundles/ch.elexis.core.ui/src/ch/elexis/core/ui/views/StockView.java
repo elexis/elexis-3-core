@@ -66,8 +66,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.service.OrderServiceHolder;
 import ch.elexis.core.data.service.StockCommissioningServiceHolder;
 import ch.elexis.core.data.service.StockServiceHolder;
@@ -239,14 +239,14 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 							return;
 						}
 						
-						LockResponse lr = CoreHub.getLocalLockService().acquireLock(se);
+						LockResponse lr = LocalLockServiceHolder.get().acquireLock(se);
 						if (!lr.isOk()) {
 							return;
 						}
 						
 						se.setProvider((IContact) value);
 						
-						lr = CoreHub.getLocalLockService().releaseLock((se));
+						lr = LocalLockServiceHolder.get().releaseLock((se));
 						if (!lr.isOk()) {
 							log.warn("Error releasing lock for [{}]: {}", se.getId(),
 								lr.getStatus());

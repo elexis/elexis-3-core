@@ -134,15 +134,16 @@ public class ObservationTest {
 		assertEquals(2, targets.size());
 		
 		iObservation.setObservationType(ObservationType.REF);
+		FindingsServiceComponent.getService().saveFinding(iObservation);
 		iSubObservation.setObservationType(ObservationType.TEXT);
 		iSubObservation.setStringValue("Test string value");
+		FindingsServiceComponent.getService().saveFinding(iSubObservation);
 		iOtherSubObservation.setObservationType(ObservationType.NUMERIC);
 		iOtherSubObservation.setNumericValue(BigDecimal.valueOf(2.3), "test");
-		FindingsServiceComponent.getService().saveFinding(iObservation);
+		FindingsServiceComponent.getService().saveFinding(iOtherSubObservation);
 		
 		Optional<IObservation> loaded = FindingsServiceComponent.getService()
-			.findById(iObservation.getId(),
-			IObservation.class);
+			.findById(iObservation.getId(), IObservation.class);
 		targets = loaded.get().getTargetObseravtions(ObservationLinkType.REF);
 		for (IObservation subObservation : targets) {
 			if (subObservation.getObservationType() == ObservationType.TEXT) {

@@ -30,6 +30,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.model.InvoiceState;
 import ch.rgw.io.Settings;
 import ch.rgw.tools.JdbcLink;
@@ -181,7 +182,7 @@ public class Rechnung extends PersistentObject {
 		
 		Rechnung ret = new Rechnung();
 		ret.create(null);
-		CoreHub.getLocalLockService().acquireLock(ret);
+		LocalLockServiceHolder.get().acquireLock(ret);
 		TimeTool startDate = new TimeTool("31.12.2999");
 		TimeTool endDate = new TimeTool("01.01.2000");
 		TimeTool actDate = new TimeTool();
@@ -299,7 +300,7 @@ public class Rechnung extends PersistentObject {
 		ret.set(BILL_NUMBER, nr);
 		if (!result.isOK()) {
 			ret.delete();
-			CoreHub.getLocalLockService().releaseLock(ret);
+			LocalLockServiceHolder.get().releaseLock(ret);
 			return result;
 		}
 		
@@ -322,7 +323,7 @@ public class Rechnung extends PersistentObject {
 			}
 		}
 		
-		CoreHub.getLocalLockService().releaseLock(ret);
+		LocalLockServiceHolder.get().releaseLock(ret);
 		return result.add(Result.SEVERITY.OK, 0, "OK", ret, false);
 	}
 	

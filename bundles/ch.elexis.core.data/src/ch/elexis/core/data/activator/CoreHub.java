@@ -41,13 +41,12 @@ import ch.elexis.core.data.events.PatientEventListener;
 import ch.elexis.core.data.interfaces.ShutdownJob;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.interfaces.scripting.Interpreter;
-import ch.elexis.core.data.lock.LocalLockService;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
 import ch.elexis.core.data.server.ElexisServerEventService;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.service.PoOrderService;
 import ch.elexis.core.data.service.StockCommissioningSystemService;
 import ch.elexis.core.data.service.StockService;
-import ch.elexis.core.data.services.ILocalLockService;
 import ch.elexis.core.data.services.IOrderService;
 import ch.elexis.core.data.services.IStockCommissioningSystemService;
 import ch.elexis.core.data.services.IStockService;
@@ -135,9 +134,6 @@ public class CoreHub implements BundleActivator {
 	
 	/** Die zentrale Zugriffskontrolle */
 	public static final AbstractAccessControl acl = new RoleBasedAccessControl();
-	
-	/** Lock Service **/
-	private static ILocalLockService localLockService;
 	
 	/** Stock Service **/
 	private static final StockService stockService = new StockService();
@@ -236,7 +232,6 @@ public class CoreHub implements BundleActivator {
 		log.debug("Starting " + CoreHub.class.getName());
 		plugin = this;
 		
-		localLockService = new LocalLockService();
 		elexisServerEventService = new ElexisServerEventService();
 		
 		startUpBundle();
@@ -286,8 +281,8 @@ public class CoreHub implements BundleActivator {
 	public void stop(BundleContext context) throws Exception{
 		log.debug("Stopping " + CoreHub.class.getName());
 		
-		getLocalLockService().releaseAllLocks();
-		getLocalLockService().shutdown();
+		LocalLockServiceHolder.get().releaseAllLocks();
+		LocalLockServiceHolder.get().shutdown();
 		
 		CoreHub.logoffAnwender();
 		
@@ -477,7 +472,7 @@ public class CoreHub implements BundleActivator {
 			CoreHub.userCfg.flush();
 		}
 		
-		getLocalLockService().releaseAllLocks();
+		LocalLockServiceHolder.get().releaseAllLocks();
 		
 		CoreHub.setMandant(null);
 		CoreHub.heart.suspend();
@@ -487,10 +482,6 @@ public class CoreHub implements BundleActivator {
 		ElexisEventDispatcher.getInstance()
 			.fire(new ElexisEvent(null, User.class, ElexisEvent.EVENT_DESELECTED));
 		CoreHub.userCfg = CoreHub.localCfg;
-	}
-	
-	public static ILocalLockService getLocalLockService(){
-		return localLockService;
 	}
 	
 	public static IStockService getStockService(){

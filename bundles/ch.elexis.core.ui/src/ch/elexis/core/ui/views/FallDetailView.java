@@ -21,11 +21,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.locks.ToggleCurrentCaseLockHandler;
@@ -78,8 +78,8 @@ public class FallDetailView extends ViewPart implements ISaveablePart2 {
 	};
 	
 	private void releaseAndRefreshLock(IPersistentObject object, String commandId){
-		if (object != null && CoreHub.getLocalLockService().isLockedLocal(object)) {
-			CoreHub.getLocalLockService().releaseLock(object);
+		if (object != null && LocalLockServiceHolder.get().isLockedLocal(object)) {
+			LocalLockServiceHolder.get().releaseLock(object);
 		}
 		ICommandService commandService =
 			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);

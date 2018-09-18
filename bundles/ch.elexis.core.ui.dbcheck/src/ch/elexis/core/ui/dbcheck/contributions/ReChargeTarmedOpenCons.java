@@ -17,6 +17,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.services.ICodeElementService;
 import ch.elexis.core.data.services.ICodeElementService.ContextKeys;
 import ch.elexis.core.lock.types.LockResponse;
@@ -110,7 +111,7 @@ public class ReChargeTarmedOpenCons extends ExternalMaintenance {
 	
 	private void removeVerrechnet(Konsultation konsultation, Verrechnet tarmedVerr){
 		// acquire lock before removing
-		LockResponse result = CoreHub.getLocalLockService().acquireLockBlocking(tarmedVerr, 10,
+		LockResponse result = LocalLockServiceHolder.get().acquireLockBlocking(tarmedVerr, 10,
 			new NullProgressMonitor());
 		if (result.isOk()) {
 			Result<Verrechnet> removeRes = konsultation.removeLeistung(tarmedVerr);
@@ -119,7 +120,7 @@ public class ReChargeTarmedOpenCons extends ExternalMaintenance {
 					+ removeRes.toString() + "]", konsultation);
 			}
 			LockResponse releaseLock =
-				CoreHub.getLocalLockService().releaseLock(result.getLockInfo());
+				LocalLockServiceHolder.get().releaseLock(result.getLockInfo());
 			if (!releaseLock.isOk()) {
 				addProblem("Could not release lock for Verrechnet [" + tarmedVerr.getLabel() + "]"
 					+ "[" + removeRes.toString() + "]", konsultation);

@@ -55,6 +55,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.laboratory.commands.CreateImportMappingUi;
 import ch.elexis.core.ui.laboratory.commands.CreateLabItemUi;
@@ -410,9 +411,9 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 		qbe.add(LabResult.ITEM_ID, "=", li.getId()); //$NON-NLS-1$ //$NON-NLS-2$
 		List<LabResult> list = qbe.execute();
 		for (LabResult po : list) {
-			if (CoreHub.getLocalLockService().acquireLock(po).isOk()) {
+			if (LocalLockServiceHolder.get().acquireLock(po).isOk()) {
 				po.delete();
-				CoreHub.getLocalLockService().releaseLock(po);
+				LocalLockServiceHolder.get().releaseLock(po);
 			} else {
 				ret = false;
 			}

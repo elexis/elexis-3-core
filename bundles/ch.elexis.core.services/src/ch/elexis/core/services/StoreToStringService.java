@@ -1,4 +1,4 @@
-package ch.elexis.core.model.service;
+package ch.elexis.core.services;
 
 import java.util.ArrayList;
 import java.util.HashMap;

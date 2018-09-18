@@ -33,8 +33,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IFall;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Fall;
@@ -108,12 +108,12 @@ public class FallSelectionDialog extends TitleAreaDialog {
 					if (neuerFallDialog.open() == MessageDialog.OK) {
 						Fall neuerFall = neuerFallDialog.getFall();
 						if (neuerFall != null && neuerFall.exists()) {
-							if (CoreHub.getLocalLockService().acquireLock(neuerFallDialog.getFall())
+							if (LocalLockServiceHolder.get().acquireLock(neuerFallDialog.getFall())
 								.isOk()) {
 								refresh(btnCheck.getSelection());
 								
 								tableViewer.setSelection(new StructuredSelection(neuerFall));
-								CoreHub.getLocalLockService()
+								LocalLockServiceHolder.get()
 									.releaseLock(neuerFallDialog.getFall());
 							} else {
 								MessageDialog.openWarning(getShell(), "Lock nicht erhalten",
@@ -150,12 +150,12 @@ public class FallSelectionDialog extends TitleAreaDialog {
 					IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 					Object firstElement = selection.getFirstElement();
 					if (firstElement instanceof Fall) {
-						if (CoreHub.getLocalLockService().acquireLock((Fall) firstElement).isOk()) {
+						if (LocalLockServiceHolder.get().acquireLock((Fall) firstElement).isOk()) {
 							FallEditDialog fallEditDialog =
 								new FallEditDialog(getShell(), (Fall) firstElement);
 							fallEditDialog.open();
 							if (fallEditDialog.getFall() != null) {
-								CoreHub.getLocalLockService().releaseLock(fallEditDialog.getFall());
+								LocalLockServiceHolder.get().releaseLock(fallEditDialog.getFall());
 							}
 						} else {
 							MessageDialog.openWarning(getShell(), "Lock nicht erhalten",

@@ -4,8 +4,8 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.ui.cons.KonsExtension;
 import ch.elexis.core.findings.ui.util.FindingsUiUtil;
@@ -40,11 +40,11 @@ public class AddFindingAction extends Action implements IAction {
 				(Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
 			if (kons != null) {
 				IObservation observation = (IObservation) created;
-				if (CoreHub.getLocalLockService().acquireLock(kons).isOk()) {
+				if (LocalLockServiceHolder.get().acquireLock(kons).isOk()) {
 					kons.addXRef(KonsExtension.EXTENSION_ID,
 						((PersistentObject) observation).getId(), -1,
 						konsExtension.getXRefText(observation));
-					CoreHub.getLocalLockService().releaseLock(kons);
+					LocalLockServiceHolder.get().releaseLock(kons);
 				}
 			}
 		}

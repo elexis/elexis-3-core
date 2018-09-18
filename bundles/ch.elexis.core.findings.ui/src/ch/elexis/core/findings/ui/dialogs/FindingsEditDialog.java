@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IObservation;
@@ -69,7 +69,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 	
 	private ICompositeSaveable createDynamicContent(IFinding iFinding, ICompositeSaveable current,
 		int depth) throws ElexisException{
-		if (!CoreHub.getLocalLockService().acquireLock(iFinding).isOk()) {
+		if (!LocalLockServiceHolder.get().acquireLock(iFinding).isOk()) {
 			throw new ElexisException("Die Editierung ist nicht möglich, kein Lock erhalten.");
 		}
 		lockedFindings.add(iFinding);
@@ -196,7 +196,7 @@ public class FindingsEditDialog extends TitleAreaDialog {
 	
 	public void releaseAllLocks(){
 		for (IFinding iFinding : lockedFindings) {
-			CoreHub.getLocalLockService().releaseLock(iFinding);
+			LocalLockServiceHolder.get().releaseLock(iFinding);
 		}
 	}
 	

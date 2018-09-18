@@ -18,13 +18,13 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IViewSite;
 
 import ch.elexis.core.common.ElexisEventTopics;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
-import ch.elexis.core.data.services.ILocalLockService.Status;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.eigenartikel.acl.ACLContributor;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.services.ILocalLockService.Status;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.icons.Images;
@@ -84,13 +84,13 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 			@Override
 			public void doRun(){
 				if (selectedObject != null) {
-					if (CoreHub.getLocalLockService().isLocked(selectedObject)) {
-						CoreHub.getLocalLockService().releaseLock(selectedObject);
+					if (LocalLockServiceHolder.get().isLocked(selectedObject)) {
+						LocalLockServiceHolder.get().releaseLock(selectedObject);
 						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD,
 							IArticle.class);
 						currentLock = null;
 					} else {
-						LockResponse lr = CoreHub.getLocalLockService().acquireLock(selectedObject);
+						LockResponse lr = LocalLockServiceHolder.get().acquireLock(selectedObject);
 						if (lr.isOk()) {
 							currentLock = selectedObject;
 						} else {
@@ -98,7 +98,7 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 						}
 					}
 				}
-				setChecked(CoreHub.getLocalLockService().isLocked(currentLock));
+				setChecked(LocalLockServiceHolder.get().isLocked(currentLock));
 			}
 		};
 	
@@ -181,7 +181,7 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		final ToolBarManager manager = new ToolBarManager(toolBar);
 		manager.add(createAction);
-		if (CoreHub.getLocalLockService().getStatus() != Status.STANDALONE) {
+		if (LocalLockServiceHolder.get().getStatus() != Status.STANDALONE) {
 			manager.add(toggleLockAction);
 		}
 		manager.add(deleteAction);
@@ -190,14 +190,14 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 		
 		epc = new EigenartikelProductComposite(compProduct, SWT.None);
 		epc.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		epc.setUnlocked(CoreHub.getLocalLockService().getStatus() == Status.STANDALONE);
+		epc.setUnlocked(LocalLockServiceHolder.get().getStatus() == Status.STANDALONE);
 		
 		compArticle = new Composite(container, SWT.None);		
 		compArticle.setLayout(new GridLayout(1, false));
 		
 		ec = new EigenartikelComposite(compArticle, SWT.None, false, null);
 		ec.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		ec.setUnlocked(CoreHub.getLocalLockService().getStatus() == Status.STANDALONE);
+		ec.setUnlocked(LocalLockServiceHolder.get().getStatus() == Status.STANDALONE);
 		
 		layout.topControl = compProduct;
 		container.layout();
@@ -219,7 +219,7 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 		if (obj instanceof IArticle) {
 			selectedObject = (IArticle) obj;
 			if (currentLock != null) {
-				CoreHub.getLocalLockService().releaseLock(currentLock);
+				LocalLockServiceHolder.get().releaseLock(currentLock);
 				toggleLockAction.setChecked(false);
 				currentLock = null;
 			}

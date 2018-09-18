@@ -26,8 +26,9 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
-import ch.elexis.core.data.lock.LocalLockService;
 import ch.elexis.core.data.server.ElexisServerEventService;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.data.service.internal.LocalLockService;
 import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.model.RoleConstants;
 import ch.rgw.io.SqlSettings;
@@ -224,7 +225,7 @@ public class Anwender extends Person {
 	 * @since 3.1 queries {@link User}
 	 */
 	public static boolean login(final String username, final String password) {
-		((LocalLockService) CoreHub.getLocalLockService()).reconfigure();
+		((LocalLockService) LocalLockServiceHolder.get()).reconfigure();
 		((ElexisServerEventService) CoreHub.getElexisServerEventService()).reconfigure();
 
 		CoreHub.logoffAnwender();

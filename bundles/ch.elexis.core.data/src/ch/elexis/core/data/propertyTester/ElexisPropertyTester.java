@@ -3,8 +3,8 @@ package ch.elexis.core.data.propertyTester;
 
 import org.eclipse.core.expressions.PropertyTester;
 
-import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.services.ILocalLockService.Status;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.services.ILocalLockService.Status;
 
 
 public class ElexisPropertyTester extends PropertyTester {
@@ -15,7 +15,7 @@ public class ElexisPropertyTester extends PropertyTester {
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue){
 		if (PROP_STANDALONE.equals(property))
 		{
-			return Status.STANDALONE.equals(CoreHub.getLocalLockService().getStatus());
+			return Status.STANDALONE.equals(LocalLockServiceHolder.get().getStatus());
 		}
 		return false;
 	}

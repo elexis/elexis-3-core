@@ -33,6 +33,7 @@ import org.eclipse.swt.dnd.TransferData;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.ContextServiceHolder;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.eigenartikel.EigenartikelUtil;
 import ch.elexis.core.eigenartikel.acl.ACLContributor;
 import ch.elexis.core.lock.types.LockResponse;
@@ -199,12 +200,12 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 								if (ea.isProduct()) {
 									continue;
 								}
-								LockResponse lr = CoreHub.getLocalLockService().acquireLock(target);
+								LockResponse lr = LocalLockServiceHolder.get().acquireLock(target);
 								if (lr.isOk()) {
 									EigenartikelUtil
 										.copyProductAttributesToArticleSetAsChild(target,
 										ea);
-									CoreHub.getLocalLockService().releaseLock(target);
+									LocalLockServiceHolder.get().releaseLock(target);
 									ContextServiceHolder.get().postEvent(
 										ElexisEventTopics.EVENT_RELOAD, IArticle.class);
 								} else {

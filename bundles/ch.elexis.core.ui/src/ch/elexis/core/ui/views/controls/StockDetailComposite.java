@@ -38,8 +38,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.service.StockServiceHolder;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
@@ -475,7 +475,7 @@ public class StockDetailComposite extends Composite {
 				return;
 			}
 			
-			LockResponse lr = CoreHub.getLocalLockService().acquireLock(stockEntry);
+			LockResponse lr = LocalLockServiceHolder.get().acquireLock(stockEntry);
 			if (!lr.isOk()) {
 				return;
 			}
@@ -501,7 +501,7 @@ public class StockDetailComposite extends Composite {
 			default:
 			}
 			CoreModelServiceHolder.get().save(stockEntry);
-			lr = CoreHub.getLocalLockService().releaseLock(stockEntry);
+			lr = LocalLockServiceHolder.get().releaseLock(stockEntry);
 			if (!lr.isOk()) {
 				log.warn("Error releasing lock for [{}]: {}", stockEntry.getId(), lr.getStatus());
 			}

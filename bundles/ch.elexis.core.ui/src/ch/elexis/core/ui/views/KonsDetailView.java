@@ -64,6 +64,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.ISticker;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
@@ -220,8 +221,8 @@ public class KonsDetailView extends ViewPart
 		};
 	
 	private void releaseAndRefreshLock(IPersistentObject object, String commandId){
-		if (object != null && CoreHub.getLocalLockService().isLockedLocal(object)) {
-			CoreHub.getLocalLockService().releaseLock(object);
+		if (object != null && LocalLockServiceHolder.get().isLockedLocal(object)) {
+			LocalLockServiceHolder.get().releaseLock(object);
 		}
 		ICommandService commandService =
 			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
@@ -549,7 +550,7 @@ public class KonsDetailView extends ViewPart
 		if (actKons == null) {
 			setUnlocked(false);
 		} else {
-			setUnlocked(CoreHub.getLocalLockService().isLockedLocal(actKons));
+			setUnlocked(LocalLockServiceHolder.get().isLockedLocal(actKons));
 		}
 	}
 	

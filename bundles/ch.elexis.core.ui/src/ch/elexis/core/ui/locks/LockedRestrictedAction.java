@@ -2,6 +2,7 @@ package ch.elexis.core.ui.locks;
 
 import ch.elexis.admin.ACE;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.data.PersistentObject;
 
@@ -29,11 +30,11 @@ abstract public class LockedRestrictedAction<T extends PersistentObject> extends
 			return;
 		}
 
-		setEnabled(CoreHub.getLocalLockService().isLocked(object));
+		setEnabled(LocalLockServiceHolder.get().isLocked(object));
 	}
 
 	public void doRun() {
-		if (CoreHub.getLocalLockService().isLocked(object) && CoreHub.acl.request(necessaryRight)) {
+		if (LocalLockServiceHolder.get().isLocked(object) && CoreHub.acl.request(necessaryRight)) {
 			if (object != null) {
 				doRun((T) object);
 			}

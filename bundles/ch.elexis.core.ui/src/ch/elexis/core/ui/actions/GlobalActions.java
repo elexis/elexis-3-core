@@ -28,12 +28,10 @@ import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_PATIENT_LABEL_OR
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_XRAY;
 
 import java.awt.Desktop;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.commands.IHandler;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
@@ -50,7 +48,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.printing.PrintDialog;
 import org.eclipse.swt.printing.Printer;
 import org.eclipse.swt.printing.PrinterData;
-import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -74,9 +71,10 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.BillingUtil;
 import ch.elexis.core.data.util.ResultAdapter;
-import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
@@ -689,8 +687,8 @@ public class GlobalActions {
 				Konsultation.neueKons(null);
 				IPersistentObject kons = ElexisEventDispatcher.getSelected(Konsultation.class);
 				if (kons != null && kons.exists()) {
-					CoreHub.getLocalLockService().acquireLock(kons);
-					CoreHub.getLocalLockService().releaseLock(kons);
+					LocalLockServiceHolder.get().acquireLock(kons);
+					LocalLockServiceHolder.get().releaseLock(kons);
 				}
 			}
 		};

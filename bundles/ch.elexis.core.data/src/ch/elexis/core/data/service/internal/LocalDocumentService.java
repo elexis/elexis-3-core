@@ -27,8 +27,9 @@ import org.osgi.service.component.annotations.Component;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.services.IConflictHandler;
 import ch.elexis.core.services.IConflictHandler.Result;
 import ch.elexis.core.services.ILocalDocumentService;
@@ -50,7 +51,7 @@ public class LocalDocumentService implements ILocalDocumentService {
 		boolean readOnly = false;
 		if (documentSource instanceof IPersistentObject) {
 			LockResponse result =
-				CoreHub.getLocalLockService().acquireLock((IPersistentObject) documentSource);
+				LocalLockServiceHolder.get().acquireLock((IPersistentObject) documentSource);
 			if (result.isOk()) {
 				managedLocks.put(documentSource, result);
 			} else {
@@ -111,7 +112,7 @@ public class LocalDocumentService implements ILocalDocumentService {
 	private void removeManaged(Object documentSource){
 		LockResponse lock = managedLocks.get(documentSource);
 		if (lock != null) {
-			CoreHub.getLocalLockService().releaseLock((IPersistentObject) documentSource);
+			LocalLockServiceHolder.get().releaseLock((IPersistentObject) documentSource);
 			managedLocks.remove(documentSource);
 		}
 		managedFiles.remove(documentSource);

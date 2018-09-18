@@ -6,7 +6,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.LabResultConstants;
 import ch.elexis.core.ui.dbcheck.external.ExternalMaintenance;
@@ -33,7 +33,7 @@ public class LabResetPathologic extends ExternalMaintenance {
 					+ allCount + " Werte insgesamt.";
 			}
 			
-			LockResponse result = CoreHub.getLocalLockService().acquireLockBlocking(labResult, 50,
+			LockResponse result = LocalLockServiceHolder.get().acquireLockBlocking(labResult, 50,
 				new NullProgressMonitor());
 			if (result.isOk()) {
 				boolean wasPathologic = labResult.isFlag(LabResultConstants.PATHOLOGIC);
@@ -45,7 +45,7 @@ public class LabResetPathologic extends ExternalMaintenance {
 					changedCount++;
 				}
 				LockResponse releaseLock =
-					CoreHub.getLocalLockService().releaseLock(result.getLockInfo());
+					LocalLockServiceHolder.get().releaseLock(result.getLockInfo());
 				if (!releaseLock.isOk()) {
 					addProblem("Could not release lock for LabResult [" + labResult.getLabel() + "]"
 						+ "[" + labResult.getId() + "]", labResult);

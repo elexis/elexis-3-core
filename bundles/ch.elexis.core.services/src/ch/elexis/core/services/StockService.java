@@ -1,4 +1,4 @@
-package ch.elexis.core.data.service.internal;
+package ch.elexis.core.services;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,12 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.service.ContextServiceHolder;
-import ch.elexis.core.data.service.CoreModelServiceHolder;
-import ch.elexis.core.data.service.StockCommissioningServiceHolder;
-import ch.elexis.core.data.service.StoreToStringServiceHolder;
-import ch.elexis.core.data.util.ConfigUtil;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IMandator;
@@ -25,13 +19,14 @@ import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
-import ch.elexis.core.services.INamedQuery;
-import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
-import ch.elexis.core.services.IStockService;
-import ch.elexis.core.services.IStoreToStringContribution;
-import ch.elexis.data.StockEntry;
+import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.LocalLockServiceHolder;
+import ch.elexis.core.services.holder.StockCommissioningServiceHolder;
+import ch.elexis.core.services.holder.StoreToStringServiceHolder;
+import ch.elexis.core.services.util.ConfigUtil;
 
 @Component
 public class StockService implements IStockService {
@@ -65,13 +60,13 @@ public class StockService implements IStockService {
 	@Override
 	public IStatus performSingleDisposal(IArticle article, int count, String mandatorId){
 		if (article == null) {
-			return new Status(Status.ERROR, CoreHub.PLUGIN_ID, "Article is null");
+			return new Status(Status.ERROR, "ch.elexis.core.services", "Article is null");
 		}
 		
 		IStockEntry se = findPreferredStockEntryForArticle(
 			StoreToStringServiceHolder.getStoreToString(article), mandatorId);
 		if (se == null) {
-			return new Status(Status.WARNING, CoreHub.PLUGIN_ID,
+			return new Status(Status.WARNING, "ch.elexis.core.services",
 				"No stock entry for article found");
 		}
 		
@@ -89,7 +84,7 @@ public class StockService implements IStockService {
 			}
 			return StockCommissioningServiceHolder.get().performArticleOutlay(se, count, null);
 		} else {
-			LockResponse lr = CoreHub.getLocalLockService().acquireLockBlocking(se, 1,
+			LockResponse lr = LocalLockServiceHolder.get().acquireLockBlocking(se, 1,
 				new NullProgressMonitor());
 			if (lr.isOk()) {
 				int fractionUnits = se.getFractionUnits();
@@ -120,25 +115,25 @@ public class StockService implements IStockService {
 					se.setFractionUnits(rest);
 				}
 				
-				CoreHub.getLocalLockService().releaseLock(se);
+				LocalLockServiceHolder.get().releaseLock(se);
 				return Status.OK_STATUS;
 			}
 		}
 		
-		return new Status(Status.WARNING, CoreHub.PLUGIN_ID, "Could not acquire lock");
+		return new Status(Status.WARNING, "ch.elexis.core.services", "Could not acquire lock");
 	}
 	
 	@Override
 	public IStatus performSingleReturn(IArticle article, int count, String mandatorId){
 		if (article == null) {
-			return new Status(Status.ERROR, CoreHub.PLUGIN_ID, "Article is null");
+			return new Status(Status.ERROR, "ch.elexis.core.services", "Article is null");
 		}
 		
 		IStockEntry se =
 			findPreferredStockEntryForArticle(StoreToStringServiceHolder.getStoreToString(article),
 				null);
 		if (se == null) {
-			return new Status(Status.WARNING, CoreHub.PLUGIN_ID,
+			return new Status(Status.WARNING, "ch.elexis.core.services",
 				"No stock entry for article found");
 		}
 		
@@ -147,7 +142,7 @@ public class StockService implements IStockService {
 			return Status.OK_STATUS;
 		}
 		
-		LockResponse lr = CoreHub.getLocalLockService().acquireLockBlocking(se, 1,
+		LockResponse lr = LocalLockServiceHolder.get().acquireLockBlocking(se, 1,
 			new NullProgressMonitor());
 		if (lr.isOk()) {
 			int fractionUnits = se.getFractionUnits();
@@ -176,10 +171,10 @@ public class StockService implements IStockService {
 				}
 				se.setFractionUnits(rest);
 			}
-			CoreHub.getLocalLockService().releaseLock(se);
+			LocalLockServiceHolder.get().releaseLock(se);
 			return Status.OK_STATUS;
 		}
-		return new Status(Status.WARNING, CoreHub.PLUGIN_ID, "Could not acquire lock");
+		return new Status(Status.WARNING, "ch.elexis.core.services", "Could not acquire lock");
 	}
 	
 	private static boolean isTriggerStockAvailabilityOnBelow(){
@@ -314,8 +309,8 @@ public class StockService implements IStockService {
 		entry.setStock(stock);
 		entry.setArticle(loadArticle);
 		CoreModelServiceHolder.get().save((Identifiable) entry);
-		CoreHub.getLocalLockService().acquireLock(entry);
-		CoreHub.getLocalLockService().releaseLock(entry);
+		LocalLockServiceHolder.get().acquireLock(entry);
+		LocalLockServiceHolder.get().releaseLock(entry);
 		return entry;
 	}
 	
@@ -323,11 +318,11 @@ public class StockService implements IStockService {
 	public void unstoreArticleFromStock(IStock stock, String article){
 		IStockEntry stockEntry = findStockEntryForArticleInStock(stock, article);
 		if (stockEntry != null) {
-			LockResponse lr = CoreHub.getLocalLockService()
+			LockResponse lr = LocalLockServiceHolder.get()
 				.acquireLockBlocking(stockEntry, 1, new NullProgressMonitor());
 			if (lr.isOk()) {
 				CoreModelServiceHolder.get().delete(stockEntry);
-				CoreHub.getLocalLockService().releaseLock(((StockEntry) stockEntry));
+				LocalLockServiceHolder.get().releaseLock((stockEntry));
 			} else {
 				log.warn("Could not unstore article [{}]", article);
 			}
@@ -357,7 +352,7 @@ public class StockService implements IStockService {
 		if (article.isPresent()) {
 			return performSingleDisposal((IArticle) article.get(), count, mandatorId);
 		}
-		return new Status(Status.WARNING, CoreHub.PLUGIN_ID,
+		return new Status(Status.WARNING, "ch.elexis.core.services",
 			"No article found [" + articleStoreToString + "]");
 	}
 	
@@ -368,7 +363,7 @@ public class StockService implements IStockService {
 		if (article.isPresent()) {
 			return performSingleReturn((IArticle) article.get(), count, mandatorId);
 		}
-		return new Status(Status.WARNING, CoreHub.PLUGIN_ID,
+		return new Status(Status.WARNING, "ch.elexis.core.services",
 			"No article found [" + articleStoreToString + "]");
 	}
 }
