@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.util.Messages;
+import ch.elexis.core.ui.util.PersistentObjectDragSource.ISelectionRenderer;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 import ch.rgw.tools.IFilter;
@@ -46,10 +47,11 @@ public class ViewerConfigurer {
 	
 	private ICommonViewerContentProvider contentProvider;
 	private LabelProvider labelProvider;
-	ControlFieldProvider controlFieldProvider;
+	protected ControlFieldProvider controlFieldProvider;
 	private ButtonProvider buttonProvider;
 	private WidgetProvider widgetProvider;
 	private IDoubleClickListener doubleClickListener;
+	protected ISelectionRenderer iSelectionRenderer;
 	
 	/**
 	 * This constructor extends the default constructor
@@ -339,5 +341,9 @@ public class ViewerConfigurer {
 	
 	public IDoubleClickListener getDoubleClickListener(){
 		return doubleClickListener;
+	}
+	
+	public void addDragSourceSelectionRenderer(ISelectionRenderer iSelectionRenderer){
+		this.iSelectionRenderer = iSelectionRenderer;
 	}
 }

@@ -175,25 +175,27 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 		/*
 		 * viewer.addDragSupport(DND.DROP_COPY,new Transfer[] {TextTransfer.getInstance()},
 		 */
-		new PersistentObjectDragSource(viewer.getControl(), new ISelectionRenderer() {
-			
-			public List<PersistentObject> getSelection(){
-				Object[] sel = CommonViewer.this.getSelection();
-				ArrayList<PersistentObject> ret = new ArrayList<PersistentObject>(sel.length);
-				for (Object o : sel) {
-					if (o instanceof PersistentObject) {
-						ret.add((PersistentObject) o);
-					} else if (o instanceof Tree<?>) {
-						Object b = ((Tree<?>) o).contents;
-						if (b instanceof PersistentObject) {
-							ret.add((PersistentObject) b);
+		if (c.iSelectionRenderer != null) {
+			new PersistentObjectDragSource(viewer.getControl(), c.iSelectionRenderer);
+		} else {
+			new PersistentObjectDragSource(viewer.getControl(), new ISelectionRenderer() {
+				public List<PersistentObject> getSelection(){
+					Object[] sel = CommonViewer.this.getSelection();
+					ArrayList<PersistentObject> ret = new ArrayList<PersistentObject>(sel.length);
+					for (Object o : sel) {
+						if (o instanceof PersistentObject) {
+							ret.add((PersistentObject) o);
+						} else if (o instanceof Tree<?>) {
+							Object b = ((Tree<?>) o).contents;
+							if (b instanceof PersistentObject) {
+								ret.add((PersistentObject) b);
+							}
 						}
 					}
+					return ret;
 				}
-				return ret;
-			}
-			
-		});
+			});
+		}
 		if (mgr != null) {
 			viewer.getControl().setMenu(mgr.createContextMenu(viewer.getControl()));
 		}
@@ -386,14 +388,21 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 			Iterator<DoubleClickListener> it = dlListeners.iterator();
 			while (it.hasNext()) {
 				DoubleClickListener dl = it.next();
-				IStructuredSelection sel = (IStructuredSelection) event.getSelection();
-				if ((sel != null) && (!sel.isEmpty())) {
-					Object element = sel.getFirstElement();
-					if (element instanceof Tree<?>) {
-						element = ((Tree<?>) element).contents;
+				if (vc.iSelectionRenderer != null) {
+					List<PersistentObject> selected = vc.iSelectionRenderer.getSelection();
+					if (!selected.isEmpty()) {
+						dl.doubleClicked(selected.get(0), this);
 					}
-					if (element instanceof PersistentObject) {
-						dl.doubleClicked((PersistentObject) element, this);
+				} else {
+					IStructuredSelection sel = (IStructuredSelection) event.getSelection();
+					if ((sel != null) && (!sel.isEmpty())) {
+						Object element = sel.getFirstElement();
+						if (element instanceof Tree<?>) {
+							element = ((Tree<?>) element).contents;
+						}
+						if (element instanceof PersistentObject) {
+							dl.doubleClicked((PersistentObject) element, this);
+						}
 					}
 				}
 			}

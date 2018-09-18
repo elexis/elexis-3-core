@@ -14,7 +14,9 @@ package ch.elexis.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 
@@ -274,8 +276,7 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 			// use copy to iterate 
 			for (ICodeElement reference : references.toArray(new ICodeElement[references.size()])) {
 				for (ICodeElement element : elements) {
-					if (element.getCodeSystemName().equals(reference.getCodeSystemName())
-						&& element.getCode().equals(reference.getCode())) {
+					if (isMatchingCodeElement(element, reference)) {
 						references.remove(reference);
 					}
 				}
@@ -289,19 +290,25 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	private int getIndexOf(List<ICodeElement> elements, ICodeElement element){
 		if (element != null && elements != null) {
 			for (int i = 0; i < elements.size(); i++) {
-				String eCodeSystemName = element.getCodeSystemName();
-				String esCodeSystemName = elements.get(i).getCodeSystemName();
-				String eCode = element.getCode();
-				String esCode = elements.get(i).getCode();
-				if (eCodeSystemName != null && esCodeSystemName != null && eCode != null
-					&& esCode != null) {
-					if (eCodeSystemName.equals(esCodeSystemName) && eCode.equals(esCode)) {
-						return i;
-					}
+				if (isMatchingCodeElement(element, elements.get(i))) {
+					return i;
 				}
 			}
 		}
 		return -1;
+	}
+	
+	private boolean isMatchingCodeElement(ICodeElement left, ICodeElement right){
+		String lCodeSystemName = left.getCodeSystemName();
+		String rCodeSystemName = right.getCodeSystemName();
+		String lCode = left.getCode();
+		String rCode = right.getCode();
+		if (lCodeSystemName != null && rCodeSystemName != null && lCode != null && rCode != null) {
+			if (lCodeSystemName.equals(rCodeSystemName) && lCode.equals(rCode)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
@@ -359,25 +366,81 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	 * 
 	 * @param v
 	 *            the element to move
-	 * @param offset
-	 *            offset to move. negative values move up, positive down
+	 * @param direction
+	 *            direction to move. direction true is up, false is down
 	 */
-	public void moveElement(ICodeElement element, int offset){
+	public void moveElement(ICodeElement element, boolean direction){
 		if (element != null) {
+			groupElements();
+			
 			List<ICodeElement> elements = getElementReferences();
+			long count = getNumberOf(element);
 			int index = getIndexOf(elements, element);
-			if (index != -1) {
-				int npos = index + offset;
-				if (npos < 0) {
-					npos = 0;
-				} else if (npos >= elements.size()) {
-					npos = elements.size() - 1;
+			if(direction) {
+				int offset = -1;
+				if (index + offset >= 0) {
+						ICodeElement pervElement = elements.get((int) (index + offset));
+						long nextElementCount = getNumberOf(pervElement);
+						if (nextElementCount > 1) {
+							offset = ((int) nextElementCount) * -1;
+						}
+					Collections.rotate(elements.subList(index + offset, (int) ((index + count))),
+						offset);
+					storeElements(elements);
 				}
-				ICodeElement el = elements.remove(index);
-				elements.add(npos, el);
-				storeElements(elements);
+			} else {
+				int offset = 1;
+				if (index + count + offset <= elements.size()) {
+					if (offset == 1) {
+						ICodeElement nextElement =
+							elements.get((int) (index + (count - 1) + offset));
+						long nextElementCount = getNumberOf(nextElement);
+						if (nextElementCount > 1) {
+							offset = (int) nextElementCount;
+						}
+					}
+					Collections.rotate(elements.subList(index, (int) (index + count + offset)),
+						offset);
+					storeElements(elements);
+				}
 			}
 		}
+	}
+	
+	private long getNumberOf(ICodeElement element){
+		List<ICodeElement> elements = getElementReferences();
+		return elements.stream().filter(e -> isMatchingCodeElement(e, element)).count();
+	}
+	
+	/**
+	 * Group the elements of this {@link Leistungsblock} by combination of
+	 * {@link ICodeElement#getCodeSystemName()} and {@link ICodeElement#getCode()}.
+	 * 
+	 * First occurrence of such a combination results in index of the grouped elements in the
+	 * resulting elements order.
+	 */
+	private void groupElements(){
+		List<List<ICodeElement>> order = new ArrayList<>();
+		Map<String, List<ICodeElement>> group = new HashMap<>();
+		List<ICodeElement> elements;
+		elements = getElementReferences();
+		for (ICodeElement iCodeElement : elements) {
+			String key = iCodeElement.getCodeSystemName() + iCodeElement.getCode();
+			List<ICodeElement> list = group.get(key);
+			if (list == null) {
+				list = new ArrayList<>();
+				list.add(iCodeElement);
+				group.put(key, list);
+				order.add(list);
+			} else {
+				list.add(iCodeElement);
+			}
+		}
+		List<ICodeElement> sortedGrouped = new ArrayList<>();
+		for (List<ICodeElement> groupedList : order) {
+			sortedGrouped.addAll(groupedList);
+		}
+		storeElements(sortedGrouped);
 	}
 	
 	public String toString(List<ICodeElement> lst){

@@ -21,12 +21,19 @@ import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
-import org.eclipse.jface.viewers.IColorProvider;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IInputValidator;
+import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.TableViewerFocusCellManager;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
@@ -42,6 +49,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PlatformUI;
@@ -80,13 +88,14 @@ public class BlockDetailDisplay implements IDetailDisplay {
 	private Text tName;
 	private Text tMacro;
 	private Combo cbMandant;
-	private TableViewer lLst;
+	private TableViewer viewer;
 	private Button bNew, bEigen, bDiag;
 	private List<Mandant> lMandanten;
 	private DataBindingContext dbc = new DataBindingContext();
 	private WritableValue master = new WritableValue(null, Leistungsblock.class);
 	
-	private Action removeLeistung, moveUpAction, moveDownAction, editAction;
+	private Action removeLeistung, moveUpAction, moveDownAction, editAction, countAction;
+	private TableViewerFocusCellManager focusCellManager;
 	
 	public Composite createDisplay(final Composite parent, final IViewSite site){
 		tk = UiDesk.getToolkit();
@@ -152,36 +161,21 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		gList.setLayoutData(SWTHelper.getFillGridData(2, true, 1, true));
 		gList.setLayout(new FillLayout());
 		tk.adapt(gList);
-		lLst = new TableViewer(gList, SWT.NONE);
-		lLst.setData("TEST_COMP_NAME", "blkd_Leistung_Lst"); //$NON-NLS-1$
-		tk.adapt(lLst.getControl(), true, true);
+		viewer = new TableViewer(gList, SWT.NONE);
+		viewer.setData("TEST_COMP_NAME", "blkd_Leistung_Lst"); //$NON-NLS-1$
+		tk.adapt(viewer.getControl(), true, true);
 		
-		lLst.setContentProvider(new IStructuredContentProvider() {
-			public void dispose(){}
-			
-			public void inputChanged(final Viewer viewer, final Object oldInput,
-				final Object newInput){}
-			
-			public Object[] getElements(final Object inputElement){
-				Leistungsblock lb =
-					(Leistungsblock) ElexisEventDispatcher.getSelected(Leistungsblock.class);
-				if (lb == null) {
-					return new Object[0];
-				}
-				List<ICodeElement> lst = lb.getElementReferences();
-				if (lst == null) {
-					return new Object[0];
-				}
-				return lst.toArray();
-			}
-			
-		});
-		lLst.setLabelProvider(new ColorizedLabelProvider());
+		viewer.setContentProvider(ArrayContentProvider.getInstance());
+		viewer.getTable().setHeaderVisible(true);
+		viewer.getTable().setLinesVisible(true);
+		createColumns();
+		updateViewerInput((Leistungsblock) ElexisEventDispatcher.getSelected(Leistungsblock.class));
+		
 		final TextTransfer textTransfer = TextTransfer.getInstance();
 		Transfer[] types = new Transfer[] {
 			textTransfer
 		};
-		lLst.addDropSupport(DND.DROP_COPY, types, new DropTargetListener() {
+		viewer.addDropSupport(DND.DROP_COPY, types, new DropTargetListener() {
 			public void dragEnter(final DropTargetEvent event){
 				PersistentObject dropped = PersistentObjectDragSource.getDraggedObject();
 				if (dropped instanceof Artikel) {
@@ -210,7 +204,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 								.getSelected(Leistungsblock.class);
 						if (lb != null) {
 							lb.addElement((ICodeElement) dropped);
-							lLst.refresh();
+							updateViewerInput(lb);
 							ElexisEventDispatcher.reload(Leistungsblock.class);
 						}
 					}
@@ -223,6 +217,20 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			}
 			
 		});
+		// connect double click on column to actions
+		focusCellManager =
+			new TableViewerFocusCellManager(viewer, new FocusCellOwnerDrawHighlighter(viewer));
+		viewer.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
+			public void doubleClick(DoubleClickEvent event){
+				ViewerCell focusCell = focusCellManager.getFocusCell();
+				int columnIndex = focusCell.getColumnIndex();
+				if (columnIndex == 0) {
+					countAction.run();
+				}
+			}
+		});
+		
 		bNew = tk.createButton(body, Messages.BlockDetailDisplay_addPredefinedServices, SWT.PUSH); //$NON-NLS-1$
 		bNew.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		bNew.setData("TEST_COMP_NAME", "blkd_addPredefinedServices_btn"); //$NON-NLS-1$
@@ -259,7 +267,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				} catch (Exception ex) {
 					throw new RuntimeException(CreateEigenleistungUi.COMMANDID, ex);
 				}
-				lLst.refresh();
+				viewer.refresh();
 			}
 		});
 		
@@ -284,24 +292,24 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		
 		makeActions();
 		ViewMenus menus = new ViewMenus(site);
-		menus.createControlContextMenu(lLst.getControl(), new ViewMenus.IMenuPopulator() {
+		menus.createControlContextMenu(viewer.getControl(), new ViewMenus.IMenuPopulator() {
 			public IAction[] fillMenu(){
-				ICodeElement element =
-					(ICodeElement) ((IStructuredSelection) lLst.getSelection()).getFirstElement();
-				if (element instanceof Eigenleistung) {
+				BlockElementViewerItem element =
+					(BlockElementViewerItem) ((IStructuredSelection) viewer.getSelection())
+						.getFirstElement();
+				if (element.isCodeElementInstanceOf(Eigenleistung.class)) {
 					return new IAction[] {
-						moveUpAction, moveDownAction, null, removeLeistung, editAction
+						moveUpAction, moveDownAction, null, countAction, removeLeistung, editAction
 					};
 				} else {
 					return new IAction[] {
-						moveUpAction, moveDownAction, null, removeLeistung
+						moveUpAction, moveDownAction, null, countAction, removeLeistung
 					};
 				}
 				
 			}
 		});
 		// menus.createViewerContextMenu(lLst,moveUpAction,moveDownAction,null,removeLeistung,editAction);
-		lLst.setInput(site);
 		return body;
 	}
 	
@@ -310,14 +318,14 @@ public class BlockDetailDisplay implements IDetailDisplay {
 	}
 	
 	public void display(final Object obj){
-		Leistungsblock lb = (Leistungsblock) obj;
-		master.setValue(lb);
+		Leistungsblock block = (Leistungsblock) obj;
+		master.setValue(block);
 		
 		if (obj == null) {
 			bNew.setEnabled(false);
 			cbMandant.select(0);
 		} else {
-			String mId = lb.get(Leistungsblock.FLD_MANDANT_ID);
+			String mId = block.get(Leistungsblock.FLD_MANDANT_ID);
 			int sel = 0;
 			if (!StringTool.isNothing(mId)) {
 				String[] items = cbMandant.getItems();
@@ -326,95 +334,184 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			cbMandant.select(sel);
 			bNew.setEnabled(true);
 		}
-		lLst.refresh(true);
+		updateViewerInput(block);
+	}
+	
+	private void updateViewerInput(Leistungsblock block){
+		viewer.setInput(BlockElementViewerItem.of(block, true));
 	}
 	
 	public String getTitle(){
 		return Messages.BlockDetailDisplay_blocks; //$NON-NLS-1$
 	}
 	
-	private void makeActions(){
-		removeLeistung = new Action(Messages.BlockDetailDisplay_remove) { //$NON-NLS-1$
-				@Override
-				public void run(){
-					Leistungsblock lb =
-						(Leistungsblock) ElexisEventDispatcher.getSelected(Leistungsblock.class);
-					if (lb != null) {
-						IStructuredSelection sel = (IStructuredSelection) lLst.getSelection();
-						Object o = sel.getFirstElement();
-						if (o != null) {
-							lb.removeElement((ICodeElement) o);
-							lLst.refresh();
-						}
+	private void createColumns(){
+		String[] titles = {
+			"Anz.", "Code", "Bezeichnung"
+		};
+		int[] bounds = {
+			45, 125, 600
+		};
+		
+		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0, SWT.NONE);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element){
+				if (element instanceof BlockElementViewerItem) {
+					BlockElementViewerItem item = (BlockElementViewerItem) element;
+					return Integer.toString(item.getCount());
+				}
+				return "";
+			}
+		});
+		
+		col = createTableViewerColumn(titles[1], bounds[1], 1, SWT.NONE);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element){
+				if (element instanceof BlockElementViewerItem) {
+					BlockElementViewerItem item = (BlockElementViewerItem) element;
+					return item.getCode();
+				}
+				return "";
+			}
+		});
+		
+		col = createTableViewerColumn(titles[2], bounds[2], 2, SWT.NONE);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element){
+				if (element instanceof BlockElementViewerItem) {
+					BlockElementViewerItem item = (BlockElementViewerItem) element;
+					return item.getText();
+				}
+				return "";
+			}
+			
+			@Override
+			public Color getBackground(final Object element){
+				if (element instanceof BlockElementViewerItem) {
+					BlockElementViewerItem item = (BlockElementViewerItem) element;
+					String codeSystemName = item.getCodeSystemName();
+					if (codeSystemName != null) {
+						String rgbColor = CoreHub.globalCfg
+							.get(Preferences.LEISTUNGSCODES_COLOR + codeSystemName, "ffffff");
+						return UiDesk.getColorFromRGB(rgbColor);
 					}
 				}
-			};
-		moveUpAction = new Action(Messages.BlockDetailDisplay_moveUp) { //$NON-NLS-1$
-				@Override
-				public void run(){
-					moveElement(-1);
-				}
-			};
-		moveDownAction = new Action(Messages.BlockDetailDisplay_moveDown) { //$NON-NLS-1$
-				@Override
-				public void run(){
-					moveElement(1);
-				}
-			};
-		editAction = new Action(Messages.BlockDetailDisplay_changeAction) { //$NON-NLS-1$
-				{
-					setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
-					setToolTipText(Messages.BlockDetailDisplay_changeActionTooltip); //$NON-NLS-1$
-				}
-				
-				@Override
-				public void run(){
-					IStructuredSelection sel = (IStructuredSelection) lLst.getSelection();
-					PersistentObject parameter = (PersistentObject) sel.getFirstElement();
-					EditEigenleistungUi.executeWithParams(parameter);
-				}
-			};
-	}
-	
-	private class ColorizedLabelProvider extends LabelProvider implements IColorProvider {
-		
-		@Override
-		public String getText(final Object element){
-			ICodeElement v = (ICodeElement) element;
-			return v.getCode() + StringConstants.SPACE + v.getText();
-		}
-		
-		@Override
-		public Color getForeground(Object element){
-			return null;
-		}
-		
-		@Override
-		public Color getBackground(Object element){
-			ICodeElement v = (ICodeElement) element;
-			String codeSystemName = v.getCodeSystemName();
-			if (codeSystemName != null) {
-				String rgbColor =
-					CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_COLOR + codeSystemName,
-						"ffffff");
-				return UiDesk.getColorFromRGB(rgbColor);
+				return null;
 			}
-			return null;
-		}
-		
+		});
 	}
 	
-	private void moveElement(final int off){
+	private TableViewerColumn createTableViewerColumn(String title, int bound, int colNumber,
+		int style){
+		final TableViewerColumn viewerColumn = new TableViewerColumn(viewer, style);
+		final TableColumn column = viewerColumn.getColumn();
+		column.setText(title);
+		column.setWidth(bound);
+		column.setResizable(true);
+		column.setMoveable(false);
+		return viewerColumn;
+	}
+	
+	private void makeActions(){
+		removeLeistung = new Action(Messages.BlockDetailDisplay_remove) { //$NON-NLS-1$
+			@Override
+			public void run(){
+				Leistungsblock lb =
+					(Leistungsblock) ElexisEventDispatcher.getSelected(Leistungsblock.class);
+				if (lb != null) {
+					IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
+					BlockElementViewerItem selectedElement =
+						(BlockElementViewerItem) sel.getFirstElement();
+					if (selectedElement != null) {
+						selectedElement.remove();
+						updateViewerInput(lb);
+						ElexisEventDispatcher.update(lb);
+					}
+				}
+			}
+		};
+		moveUpAction = new Action(Messages.BlockDetailDisplay_moveUp) { //$NON-NLS-1$
+			@Override
+			public void run(){
+				moveElement(true);
+			}
+		};
+		moveDownAction = new Action(Messages.BlockDetailDisplay_moveDown) { //$NON-NLS-1$
+			@Override
+			public void run(){
+				moveElement(false);
+			}
+		};
+		editAction = new Action(Messages.BlockDetailDisplay_changeAction) { //$NON-NLS-1$
+			{
+				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
+				setToolTipText(Messages.BlockDetailDisplay_changeActionTooltip); //$NON-NLS-1$
+			}
+			
+			@Override
+			public void run(){
+				Leistungsblock lb =
+					(Leistungsblock) ElexisEventDispatcher.getSelected(Leistungsblock.class);
+				IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
+				BlockElementViewerItem selectedElement =
+					(BlockElementViewerItem) sel.getFirstElement();
+				if (selectedElement.getFirstElement() instanceof PersistentObject) {
+					EditEigenleistungUi
+						.executeWithParams((PersistentObject) selectedElement.getFirstElement());
+					ElexisEventDispatcher.update(lb);
+				}
+			}
+		};
+		countAction = new Action("Anzahl") {
+			@Override
+			public void run(){
+				Leistungsblock lb =
+					(Leistungsblock) ElexisEventDispatcher.getSelected(Leistungsblock.class);
+				IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
+				BlockElementViewerItem selectedElement =
+					(BlockElementViewerItem) sel.getFirstElement();
+				InputDialog dlg = new InputDialog(UiDesk.getTopShell(), "Anzahl ändern", //$NON-NLS-1$
+					"Ganzzahlige neue Anzahl", //$NON-NLS-1$
+					Integer.toString(selectedElement.getCount()), new IInputValidator() {
+						@Override
+						public String isValid(String string){
+							if (string != null && !string.isEmpty()) {
+								try {
+									Integer.parseInt(string);
+								} catch (NumberFormatException e) {
+									return "Kein ganzzahliger Wert";
+								}
+							}
+							return null;
+						}
+					});
+				if (dlg.open() == Dialog.OK) {
+					try {
+						String val = dlg.getValue();
+						selectedElement.setCount(Integer.parseInt(val));
+						updateViewerInput(lb);
+						ElexisEventDispatcher.update(lb);
+					} catch (NumberFormatException ne) {
+						// ignore
+					}
+				}
+			}
+		};
+	}
+	
+	private void moveElement(final boolean up){
 		Leistungsblock lb =
 			(Leistungsblock) ElexisEventDispatcher.getSelected(Leistungsblock.class);
 		if (lb != null) {
-			IStructuredSelection sel = (IStructuredSelection) lLst.getSelection();
-			Object o = sel.getFirstElement();
-			if (o != null) {
-				lb.moveElement((ICodeElement) o, off);
-				lLst.refresh();
+			IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
+			BlockElementViewerItem selectedElement = (BlockElementViewerItem) sel.getFirstElement();
+			if (selectedElement != null) {
+				lb.moveElement(selectedElement.getFirstElement(), up);
+				updateViewerInput(lb);
 			}
 		}
-		
 	}
 }
