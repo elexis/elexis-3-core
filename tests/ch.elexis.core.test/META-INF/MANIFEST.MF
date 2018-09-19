@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Base Plugin for Elexis (Business) Tests
+Bundle-SymbolicName: ch.elexis.core.test
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: elexis.ch
+Automatic-Module-Name: ch.elexis.core.test
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: ch.elexis.core;bundle-version="3.7.0"
+Import-Package: ch.rgw.tools,
+ org.junit;version="4.12.0",
+ org.slf4j;version="1.7.2"
+Export-Package: ch.elexis.core.test.initializer

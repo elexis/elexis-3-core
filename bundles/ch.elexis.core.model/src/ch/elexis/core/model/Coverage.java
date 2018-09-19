@@ -84,5 +84,30 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 	public void setBillingSystem(String value){
 		getEntity().setGesetz(value);
 	}
+
+	@Override
+	public IContact getCostBearer(){
+		return ModelUtil.getAdapter(getEntity().getKostentrKontakt(), IContact.class);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void setCostBearer(IContact value){
+		if (value != null) {
+			getEntity().setKostentrKontakt(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
+		} else {
+			getEntity().setKostentrKontakt(null);
+		}
+	}
+
+	@Override
+	public String getInsuranceNumber(){
+		return getEntity().getVersNummer();
+	}
+
+	@Override
+	public void setInsuranceNumber(String value){
+		getEntity().setVersNummer(value);
+	}
 	
 }

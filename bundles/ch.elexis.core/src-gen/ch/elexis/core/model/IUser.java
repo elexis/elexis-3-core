@@ -27,6 +27,7 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IUser#getSalt <em>Salt</em>}</li>
  *   <li>{@link ch.elexis.core.model.IUser#getAssignedContact <em>Assigned Contact</em>}</li>
  *   <li>{@link ch.elexis.core.model.IUser#getRoles <em>Roles</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IUser#isActive <em>Active</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIUser()
@@ -153,5 +154,31 @@ public interface IUser extends Deleteable, Identifiable {
 	 * @generated
 	 */
 	List<IRole> getRoles();
+
+	/**
+	 * Returns the value of the '<em><b>Active</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Active</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Active</em>' attribute.
+	 * @see #setActive(boolean)
+	 * @see ch.elexis.core.model.ModelPackage#getIUser_Active()
+	 * @model required="true"
+	 * @generated
+	 */
+	boolean isActive();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IUser#isActive <em>Active</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Active</em>' attribute.
+	 * @see #isActive()
+	 * @generated
+	 */
+	void setActive(boolean value);
 
 } // IUser

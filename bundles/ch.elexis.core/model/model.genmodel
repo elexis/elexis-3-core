@@ -97,6 +97,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IUser/salt"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IUser/assignedContact"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IUser/roles"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IUser/active"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//ILabItem">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabItem/typ"/>
@@ -212,6 +213,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/reason"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/dateFrom"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/billingSystem"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ICoverage/costBearer"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/insuranceNumber"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IConfig">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IConfig/key"/>
@@ -284,6 +287,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IEncounter/mandator"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IEncounter/billed"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IEncounter/date"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IEncounter/versionedEntry"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IBilled">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IBilled/billable"/>

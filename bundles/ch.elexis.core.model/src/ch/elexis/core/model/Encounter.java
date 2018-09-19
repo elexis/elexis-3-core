@@ -11,6 +11,7 @@ import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 import ch.elexis.core.model.util.ModelUtil;
+import ch.rgw.tools.VersionedResource;
 
 public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 		implements IdentifiableWithXid, IEncounter {
@@ -81,14 +82,22 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 
 	@Override
 	public LocalDate getDate(){
-		// TODO Auto-generated method stub
-		return null;
+		return getEntity().getDatum();
 	}
 
 	@Override
 	public void setDate(LocalDate value){
-		// TODO Auto-generated method stub
-		
+		getEntity().setDatum(value);
+	}
+
+	@Override
+	public VersionedResource getVersionedEntry(){
+		return getEntity().getEintrag();
+	}
+
+	@Override
+	public void setVersionedEntry(VersionedResource value){
+		getEntity().setEintrag(value);
 	}
 	
 }

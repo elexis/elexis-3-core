@@ -9,10 +9,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import ch.elexis.core.model.builder.ICoverageBuilder;
-import ch.elexis.core.services.IQuery;
-import ch.elexis.core.services.IQuery.COMPARATOR;
-
 public class PatientTest extends AbstractTest {
 	
 	@Before

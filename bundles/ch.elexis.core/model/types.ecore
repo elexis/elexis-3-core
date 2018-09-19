@@ -73,4 +73,5 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="OrderEntryState" instanceClassName="ch.elexis.core.model.OrderEntryState"/>
   <eClassifiers xsi:type="ecore:EDataType" name="ArticleSubTyp" instanceClassName="ch.elexis.core.types.ArticleSubTyp"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="VersionedResource" instanceClassName="ch.rgw.tools.VersionedResource"/>
 </ecore:EPackage>

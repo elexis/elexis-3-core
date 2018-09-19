@@ -27,6 +27,8 @@ import java.time.LocalDate;
  *   <li>{@link ch.elexis.core.model.ICoverage#getReason <em>Reason</em>}</li>
  *   <li>{@link ch.elexis.core.model.ICoverage#getDateFrom <em>Date From</em>}</li>
  *   <li>{@link ch.elexis.core.model.ICoverage#getBillingSystem <em>Billing System</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ICoverage#getCostBearer <em>Cost Bearer</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ICoverage#getInsuranceNumber <em>Insurance Number</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getICoverage()
@@ -165,4 +167,56 @@ public interface ICoverage extends Deleteable, Identifiable, WithExtInfo {
 	 * @generated
 	 */
 	void setBillingSystem(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Cost Bearer</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Cost Bearer</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Cost Bearer</em>' reference.
+	 * @see #setCostBearer(IContact)
+	 * @see ch.elexis.core.model.ModelPackage#getICoverage_CostBearer()
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='kostentrkontakt'"
+	 * @generated
+	 */
+	IContact getCostBearer();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.ICoverage#getCostBearer <em>Cost Bearer</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Cost Bearer</em>' reference.
+	 * @see #getCostBearer()
+	 * @generated
+	 */
+	void setCostBearer(IContact value);
+
+	/**
+	 * Returns the value of the '<em><b>Insurance Number</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Insurance Number</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Insurance Number</em>' attribute.
+	 * @see #setInsuranceNumber(String)
+	 * @see ch.elexis.core.model.ModelPackage#getICoverage_InsuranceNumber()
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='versnummer'"
+	 * @generated
+	 */
+	String getInsuranceNumber();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.ICoverage#getInsuranceNumber <em>Insurance Number</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Insurance Number</em>' attribute.
+	 * @see #getInsuranceNumber()
+	 * @generated
+	 */
+	void setInsuranceNumber(String value);
 } // ICoverage

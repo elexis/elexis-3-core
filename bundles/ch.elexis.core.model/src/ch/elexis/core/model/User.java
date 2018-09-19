@@ -64,4 +64,14 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	public void setSalt(String value){
 		getEntity().setSalt(value);
 	}
+
+	@Override
+	public boolean isActive(){
+		return getEntity().isActive();
+	}
+
+	@Override
+	public void setActive(boolean value){
+		getEntity().setActive(value);
+	}
 }

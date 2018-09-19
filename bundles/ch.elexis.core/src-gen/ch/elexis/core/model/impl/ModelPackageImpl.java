@@ -939,6 +939,15 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getIUser_Active() {
+		return (EAttribute)iUserEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getIdentifiable() {
 		return identifiableEClass;
 	}
@@ -1677,6 +1686,24 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getICoverage_CostBearer() {
+		return (EReference)iCoverageEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getICoverage_InsuranceNumber() {
+		return (EAttribute)iCoverageEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getIOrganization() {
 		return iOrganizationEClass;
 	}
@@ -1994,6 +2021,15 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 */
 	public EAttribute getIEncounter_Date() {
 		return (EAttribute)iEncounterEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIEncounter_VersionedEntry() {
+		return (EAttribute)iEncounterEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -2474,6 +2510,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iUserEClass, IUSER__SALT);
 		createEReference(iUserEClass, IUSER__ASSIGNED_CONTACT);
 		createEReference(iUserEClass, IUSER__ROLES);
+		createEAttribute(iUserEClass, IUSER__ACTIVE);
 
 		iLabItemEClass = createEClass(ILAB_ITEM);
 		createEAttribute(iLabItemEClass, ILAB_ITEM__TYP);
@@ -2573,6 +2610,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iCoverageEClass, ICOVERAGE__REASON);
 		createEAttribute(iCoverageEClass, ICOVERAGE__DATE_FROM);
 		createEAttribute(iCoverageEClass, ICOVERAGE__BILLING_SYSTEM);
+		createEReference(iCoverageEClass, ICOVERAGE__COST_BEARER);
+		createEAttribute(iCoverageEClass, ICOVERAGE__INSURANCE_NUMBER);
 
 		iConfigEClass = createEClass(ICONFIG);
 		createEAttribute(iConfigEClass, ICONFIG__KEY);
@@ -2618,6 +2657,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEReference(iEncounterEClass, IENCOUNTER__MANDATOR);
 		createEReference(iEncounterEClass, IENCOUNTER__BILLED);
 		createEAttribute(iEncounterEClass, IENCOUNTER__DATE);
+		createEAttribute(iEncounterEClass, IENCOUNTER__VERSIONED_ENTRY);
 
 		iBilledEClass = createEClass(IBILLED);
 		createEReference(iBilledEClass, IBILLED__BILLABLE);
@@ -2875,6 +2915,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIUser_Salt(), ecorePackage.getEString(), "salt", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIUser_AssignedContact(), this.getIContact(), null, "assignedContact", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIUser_Roles(), this.getIRole(), null, "roles", null, 0, -1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIUser_Active(), ecorePackage.getEBoolean(), "active", null, 1, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iLabItemEClass, ILabItem.class, "ILabItem", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getILabItem_Typ(), theTypesPackage.getLabItemTyp(), "typ", null, 0, 1, ILabItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3005,6 +3046,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getICoverage_Reason(), ecorePackage.getEString(), "reason", null, 0, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getICoverage_DateFrom(), theTypesPackage.getLocalDate(), "dateFrom", null, 1, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getICoverage_BillingSystem(), ecorePackage.getEString(), "billingSystem", null, 1, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getICoverage_CostBearer(), this.getIContact(), null, "costBearer", null, 0, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getICoverage_InsuranceNumber(), ecorePackage.getEString(), "insuranceNumber", null, 0, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iConfigEClass, IConfig.class, "IConfig", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIConfig_Key(), ecorePackage.getEString(), "key", null, 0, 1, IConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3097,6 +3140,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEReference(getIEncounter_Mandator(), this.getIMandator(), null, "mandator", null, 0, 1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIEncounter_Billed(), this.getIBilled(), null, "billed", null, 0, -1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIEncounter_Date(), theTypesPackage.getLocalDate(), "date", null, 0, 1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIEncounter_VersionedEntry(), theTypesPackage.getVersionedResource(), "versionedEntry", null, 0, 1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iBilledEClass, IBilled.class, "IBilled", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getIBilled_Billable(), this.getIBillable(), null, "billable", null, 0, 1, IBilled.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3227,6 +3271,18 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 			   "attributeName", "patientKontakt"
 		   });
 		addAnnotation
+		  (getICoverage_CostBearer(),
+		   source,
+		   new String[] {
+			   "attributeName", "kostentrkontakt"
+		   });
+		addAnnotation
+		  (getICoverage_InsuranceNumber(),
+		   source,
+		   new String[] {
+			   "attributeName", "versnummer"
+		   });
+		addAnnotation
 		  (getIConfig_Key(),
 		   source,
 		   new String[] {
@@ -3261,6 +3317,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		   source,
 		   new String[] {
 			   "attributeName", "fall"
+		   });
+		addAnnotation
+		  (getIEncounter_VersionedEntry(),
+		   source,
+		   new String[] {
+			   "attributeName", "eintrag"
 		   });
 	}
 

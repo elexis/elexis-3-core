@@ -49,7 +49,7 @@ public class JpaModelUtil {
 	}
 	
 	/**
-	 * Add an {@link IXid} to the {@link Identifiable}.
+	 * Add an {@link IXid} to the {@link Identifiable}. Performs save operation.
 	 * 
 	 * @param identifiable
 	 * @param domain

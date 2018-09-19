@@ -322,6 +322,16 @@ public interface TypesPackage extends EPackage {
 	int ARTICLE_SUB_TYP = 22;
 
 	/**
+	 * The meta object id for the '<em>Versioned Resource</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.rgw.tools.VersionedResource
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getVersionedResource()
+	 * @generated
+	 */
+	int VERSIONED_RESOURCE = 23;
+
+	/**
 	 * The meta object id for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -581,6 +591,17 @@ public interface TypesPackage extends EPackage {
 	EDataType getArticleSubTyp();
 
 	/**
+	 * Returns the meta object for data type '{@link ch.rgw.tools.VersionedResource <em>Versioned Resource</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Versioned Resource</em>'.
+	 * @see ch.rgw.tools.VersionedResource
+	 * @model instanceClass="ch.rgw.tools.VersionedResource"
+	 * @generated
+	 */
+	EDataType getVersionedResource();
+
+	/**
 	 * Returns the meta object for class '{@link ch.rgw.tools.Result <em>Result</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -832,6 +853,16 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType ARTICLE_SUB_TYP = eINSTANCE.getArticleSubTyp();
+
+		/**
+		 * The meta object literal for the '<em>Versioned Resource</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.rgw.tools.VersionedResource
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getVersionedResource()
+		 * @generated
+		 */
+		EDataType VERSIONED_RESOURCE = eINSTANCE.getVersionedResource();
 
 		/**
 		 * The meta object literal for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.

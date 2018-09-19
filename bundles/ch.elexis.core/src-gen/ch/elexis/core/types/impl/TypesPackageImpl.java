@@ -38,6 +38,7 @@ import ch.elexis.core.types.TypesPackage;
 import ch.elexis.core.types.VatInfo;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
+import ch.rgw.tools.VersionedResource;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.Comparable;
@@ -210,6 +211,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EDataType articleSubTypEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType versionedResourceEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -475,6 +483,15 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EDataType getVersionedResource() {
+		return versionedResourceEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getResult() {
 		return resultEClass;
 	}
@@ -537,6 +554,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		vatInfoEDataType = createEDataType(VAT_INFO);
 		orderEntryStateEDataType = createEDataType(ORDER_ENTRY_STATE);
 		articleSubTypEDataType = createEDataType(ARTICLE_SUB_TYP);
+		versionedResourceEDataType = createEDataType(VERSIONED_RESOURCE);
 	}
 
 	/**
@@ -639,6 +657,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEDataType(vatInfoEDataType, VatInfo.class, "VatInfo", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(orderEntryStateEDataType, OrderEntryState.class, "OrderEntryState", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(articleSubTypEDataType, ArticleSubTyp.class, "ArticleSubTyp", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(versionedResourceEDataType, VersionedResource.class, "VersionedResource", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

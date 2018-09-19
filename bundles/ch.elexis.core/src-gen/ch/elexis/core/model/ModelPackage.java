@@ -1910,13 +1910,22 @@ public interface ModelPackage extends EPackage {
 	int IUSER__ROLES = DELETEABLE_FEATURE_COUNT + 4;
 
 	/**
+	 * The feature id for the '<em><b>Active</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IUSER__ACTIVE = DELETEABLE_FEATURE_COUNT + 5;
+
+	/**
 	 * The number of structural features of the '<em>IUser</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IUSER_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 5;
+	int IUSER_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -2947,13 +2956,31 @@ public interface ModelPackage extends EPackage {
 	int ICOVERAGE__BILLING_SYSTEM = DELETEABLE_FEATURE_COUNT + 4;
 
 	/**
+	 * The feature id for the '<em><b>Cost Bearer</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICOVERAGE__COST_BEARER = DELETEABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Insurance Number</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICOVERAGE__INSURANCE_NUMBER = DELETEABLE_FEATURE_COUNT + 6;
+
+	/**
 	 * The number of structural features of the '<em>ICoverage</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ICOVERAGE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 5;
+	int ICOVERAGE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' attribute.
@@ -3404,13 +3431,22 @@ public interface ModelPackage extends EPackage {
 	int IENCOUNTER__DATE = IDENTIFIABLE_FEATURE_COUNT + 6;
 
 	/**
+	 * The feature id for the '<em><b>Versioned Entry</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IENCOUNTER__VERSIONED_ENTRY = IDENTIFIABLE_FEATURE_COUNT + 7;
+
+	/**
 	 * The number of structural features of the '<em>IEncounter</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IENCOUNTER_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 7;
+	int IENCOUNTER_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IBilled <em>IBilled</em>}' class.
@@ -4552,6 +4588,17 @@ public interface ModelPackage extends EPackage {
 	EReference getIUser_Roles();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IUser#isActive <em>Active</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Active</em>'.
+	 * @see ch.elexis.core.model.IUser#isActive()
+	 * @see #getIUser()
+	 * @generated
+	 */
+	EAttribute getIUser_Active();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5440,6 +5487,28 @@ public interface ModelPackage extends EPackage {
 	EAttribute getICoverage_BillingSystem();
 
 	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.ICoverage#getCostBearer <em>Cost Bearer</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Cost Bearer</em>'.
+	 * @see ch.elexis.core.model.ICoverage#getCostBearer()
+	 * @see #getICoverage()
+	 * @generated
+	 */
+	EReference getICoverage_CostBearer();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ICoverage#getInsuranceNumber <em>Insurance Number</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Insurance Number</em>'.
+	 * @see ch.elexis.core.model.ICoverage#getInsuranceNumber()
+	 * @see #getICoverage()
+	 * @generated
+	 */
+	EAttribute getICoverage_InsuranceNumber();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IOrganization <em>IOrganization</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5821,6 +5890,17 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getIEncounter_Date();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IEncounter#getVersionedEntry <em>Versioned Entry</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Versioned Entry</em>'.
+	 * @see ch.elexis.core.model.IEncounter#getVersionedEntry()
+	 * @see #getIEncounter()
+	 * @generated
+	 */
+	EAttribute getIEncounter_VersionedEntry();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IBilled <em>IBilled</em>}'.
@@ -6772,6 +6852,14 @@ public interface ModelPackage extends EPackage {
 		EReference IUSER__ROLES = eINSTANCE.getIUser_Roles();
 
 		/**
+		 * The meta object literal for the '<em><b>Active</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IUSER__ACTIVE = eINSTANCE.getIUser_Active();
+
+		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -7456,6 +7544,22 @@ public interface ModelPackage extends EPackage {
 		EAttribute ICOVERAGE__BILLING_SYSTEM = eINSTANCE.getICoverage_BillingSystem();
 
 		/**
+		 * The meta object literal for the '<em><b>Cost Bearer</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ICOVERAGE__COST_BEARER = eINSTANCE.getICoverage_CostBearer();
+
+		/**
+		 * The meta object literal for the '<em><b>Insurance Number</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ICOVERAGE__INSURANCE_NUMBER = eINSTANCE.getICoverage_InsuranceNumber();
+
+		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IOrganization <em>IOrganization</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -7768,6 +7872,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IENCOUNTER__DATE = eINSTANCE.getIEncounter_Date();
+
+		/**
+		 * The meta object literal for the '<em><b>Versioned Entry</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IENCOUNTER__VERSIONED_ENTRY = eINSTANCE.getIEncounter_VersionedEntry();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IBilled <em>IBilled</em>}' class.

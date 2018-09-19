@@ -130,6 +130,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="assignedContact" eType="#//IContact"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="roles" upperBound="-1"
         eType="#//IRole"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="active" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ILabItem" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable">
@@ -287,6 +289,16 @@
         eType="ecore:EDataType types.ecore#//LocalDate"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="billingSystem" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="costBearer" eType="#//IContact">
+      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
+        <details key="attributeName" value="kostentrkontakt"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="insuranceNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
+        <details key="attributeName" value="versnummer"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IConfig" abstract="true" interface="true"
       eSuperTypes="#//Identifiable">
@@ -404,6 +416,11 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="billed" upperBound="-1"
         eType="#//IBilled"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType types.ecore#//LocalDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="versionedEntry" eType="ecore:EDataType types.ecore#//VersionedResource">
+      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
+        <details key="attributeName" value="eintrag"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IBilled" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable">

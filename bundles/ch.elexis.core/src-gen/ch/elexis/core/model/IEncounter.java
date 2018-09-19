@@ -10,6 +10,7 @@
  */
 package ch.elexis.core.model;
 
+import ch.rgw.tools.VersionedResource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IEncounter#getMandator <em>Mandator</em>}</li>
  *   <li>{@link ch.elexis.core.model.IEncounter#getBilled <em>Billed</em>}</li>
  *   <li>{@link ch.elexis.core.model.IEncounter#getDate <em>Date</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IEncounter#getVersionedEntry <em>Versioned Entry</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIEncounter()
@@ -181,5 +183,32 @@ public interface IEncounter extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	void setDate(LocalDate value);
+
+	/**
+	 * Returns the value of the '<em><b>Versioned Entry</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Versioned Entry</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Versioned Entry</em>' attribute.
+	 * @see #setVersionedEntry(VersionedResource)
+	 * @see ch.elexis.core.model.ModelPackage#getIEncounter_VersionedEntry()
+	 * @model dataType="ch.elexis.core.types.VersionedResource"
+	 *        annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='eintrag'"
+	 * @generated
+	 */
+	VersionedResource getVersionedEntry();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IEncounter#getVersionedEntry <em>Versioned Entry</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Versioned Entry</em>' attribute.
+	 * @see #getVersionedEntry()
+	 * @generated
+	 */
+	void setVersionedEntry(VersionedResource value);
 
 } // IEncounter
