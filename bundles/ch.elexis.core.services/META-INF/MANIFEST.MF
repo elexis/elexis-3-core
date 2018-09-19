@@ -17,7 +17,8 @@ Service-Component: OSGI-INF/ch.elexis.core.services.StoreToStringService.xml,
  OSGI-INF/ch.elexis.core.services.holder.LocalLockServiceHolder.xml,
  OSGI-INF/ch.elexis.core.services.CodeElementService.xml,
  OSGI-INF/ch.elexis.core.services.OrderService.xml,
- OSGI-INF/ch.elexis.core.services.holder.StockCommissioningServiceHolder.xml
+ OSGI-INF/ch.elexis.core.services.holder.StockCommissioningServiceHolder.xml,
+ OSGI-INF/ch.elexis.core.services.ConfigService.xml
 Require-Bundle: ch.elexis.core,
  org.eclipse.core.runtime,
  org.eclipse.osgi.services;bundle-version="3.6.0"

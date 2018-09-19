@@ -29,6 +29,7 @@ import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.model.builder.IUserBuilder;
+import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.types.Gender;
@@ -87,19 +88,26 @@ public class TestDatabaseInitializer {
 	}
 	
 	public synchronized void initializeDb() throws IOException, SQLException{
-		initializeDb(false);
+		initializeDb(null);
 	}
 	
-	public void initializeDb(boolean sqlOnly) throws IOException, SQLException{
+	/**
+	 * 
+	 * @param configService
+	 *            if not <code>null</code> - initializes the system configuration
+	 * @throws IOException
+	 * @throws SQLException
+	 */
+	public void initializeDb(IConfigService configService) throws IOException, SQLException{
 		if (!isDbInitialized) {
 			// initialize
 			executeScript("test_initUser", "/rsc/dbScripts/User.sql");
 			executeScript("test_initRoles", "/rsc/dbScripts/Role.sql");
-			executeScript("test_initArtikelstammItem", "/rsc/dbScripts/ArtikelstammItem.sql");
 			executeScript("test_initSampleContacts", "/rsc/dbScripts/sampleContacts.sql");
 			executeScript("test_initBillingVKPreise", "/rsc/dbScripts/BillingVKPreise.sql");
-			if (!sqlOnly) {
-				//				ConfigInitializer.initializeConfiguration();
+			executeScript("test_initArtikelstammItem", "/rsc/dbScripts/ArtikelstammItem.sql");
+			if (configService != null) {
+				new ConfigInitializer().initializeConfiguration(configService);
 			}
 			isDbInitialized = true;
 		} else {

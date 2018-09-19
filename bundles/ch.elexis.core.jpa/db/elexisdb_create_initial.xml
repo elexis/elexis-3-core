@@ -92,9 +92,6 @@
             <column name="VERKAUFSEINHEIT" type="VARCHAR(4)"/>
             <column name="PRODNO" type="VARCHAR(10)"/>
             <column name="EXTINFO" type="VARBINARY(2147483647)"/>
-            <column name="MAXBESTAND" type="CHAR(4)"/>
-            <column name="MINBESTAND" type="CHAR(4)"/>
-            <column name="ISTBESTAND" type="CHAR(4)"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-4">
@@ -1223,11 +1220,6 @@
     <changeSet author="thomas (generated)" id="1527175239251-81">
         <createIndex indexName="AIJ1" tableName="KONTAKT_ADRESS_JOINT">
             <column name="MYID"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-82">
-        <createIndex indexName="APIKEY_UNIQUE" tableName="USER_" unique="true">
-            <column name="APIKEY"/>
         </createIndex>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-83">

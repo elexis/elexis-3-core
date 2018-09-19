@@ -1,7 +1,7 @@
 package ch.elexis.core.test.initializer;
 
 import ch.elexis.core.constants.Preferences;
-import info.elexis.server.core.connector.elexis.services.ConfigService;
+import ch.elexis.core.services.IConfigService;
 
 public class ConfigInitializer {
 
@@ -16,48 +16,48 @@ public class ConfigInitializer {
 	public static final String CONST_TARMED_DRUCKER = "Tarmed-Drucker";
 	public static final String UVG_REQUIREMENTS = "Kostenträger\\:K;Unfallnummer\\:T;Unfalldatum\\:D";
 
-	public static void initializeConfiguration() {
-		initializeFallConfiguration();
+	public void initializeConfiguration(IConfigService configService) {
+		initializeFallConfiguration(configService);
 	}
 
-	public static void initializeFallConfiguration() {
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/name", KVG_NAME);
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/gesetz", "KVG");
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/leistungscodes", CONST_TARMED_LEISTUNG);
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/standardausgabe", CONST_TARMED_DRUCKER);
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/bedingungen", KVG_REQUIREMENTS);
+	public  void initializeFallConfiguration(IConfigService configService) {
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/name", KVG_NAME);
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/gesetz", "KVG");
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/leistungscodes", CONST_TARMED_LEISTUNG);
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/standardausgabe", CONST_TARMED_DRUCKER);
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/bedingungen", KVG_REQUIREMENTS);
 
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/name", UVG_NAME);
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/leistungscodes", CONST_TARMED_LEISTUNG);
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/standardausgabe", CONST_TARMED_DRUCKER);
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/bedingungen", UVG_REQUIREMENTS);
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/gesetz", "UVG");
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/name", UVG_NAME);
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/leistungscodes", CONST_TARMED_LEISTUNG);
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/standardausgabe", CONST_TARMED_DRUCKER);
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/bedingungen", UVG_REQUIREMENTS);
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/gesetz", "UVG");
 
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/name", IV_NAME);
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/leistungscodes", CONST_TARMED_LEISTUNG);
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/standardausgabe", CONST_TARMED_DRUCKER);
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/bedingungen",
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/name", IV_NAME);
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/leistungscodes", CONST_TARMED_LEISTUNG);
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/standardausgabe", CONST_TARMED_DRUCKER);
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/bedingungen",
 				"Kostenträger:K;Fallnummer:T");
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/gesetz", "IVG");
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/gesetz", "IVG");
 
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/name", MV_NAME);
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/leistungscodes", CONST_TARMED_LEISTUNG);
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/standardausgabe", CONST_TARMED_DRUCKER);
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/bedingungen", "Kostenträger:K");
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/gesetz", "MVG");
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/name", MV_NAME);
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/leistungscodes", CONST_TARMED_LEISTUNG);
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/standardausgabe", CONST_TARMED_DRUCKER);
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/bedingungen", "Kostenträger:K");
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/gesetz", "MVG");
 
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/name", PRIVATE_NAME);
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/leistungscodes",
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/name", PRIVATE_NAME);
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/leistungscodes",
 				CONST_TARMED_LEISTUNG);
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/standardausgabe",
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/standardausgabe",
 				CONST_TARMED_DRUCKER);
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/gesetz", "VVG");
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/gesetz", "VVG");
 
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/name", VVG_NAME);
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/leistungscodes", CONST_TARMED_LEISTUNG);
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/standardausgabe", CONST_TARMED_DRUCKER);
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/bedingungen", KVG_REQUIREMENTS);
-		ConfigService.INSTANCE.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/gesetz", "VVG");
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/name", VVG_NAME);
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/leistungscodes", CONST_TARMED_LEISTUNG);
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/standardausgabe", CONST_TARMED_DRUCKER);
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/bedingungen", KVG_REQUIREMENTS);
+		configService.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/gesetz", "VVG");
 	}
 
 }
