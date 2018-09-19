@@ -1140,8 +1140,9 @@
             <column defaultValue="1" name="IS_ACTIVE" type="CHAR(1)"/>
             <column defaultValue="0" name="IS_ADMINISTRATOR" type="CHAR(1)"/>
             <column name="KEYSTORE" type="VARCHAR(2147483647)"/>
+            <column name="TOTP" type="CHAR(16)"/>
+            <column name="ALLOW_EXTERNAL" type="CHAR(1)"/>
             <column name="EXTINFO" type="VARBINARY(2147483647)"/>
-            <column name="APIKEY" type="VARCHAR(64)"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-75">

@@ -1,6 +1,8 @@
 package ch.elexis.core.test.initializer;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Month;
@@ -91,17 +93,13 @@ public class TestDatabaseInitializer {
 	public void initializeDb(boolean sqlOnly) throws IOException, SQLException{
 		if (!isDbInitialized) {
 			// initialize
-			
-			entityManager.executeSQLScript("test_initUser", "/rsc/dbScripts/User.sql");
-			entityManager.executeSQLScript("test_initRoles", "/rsc/dbScripts/Role.sql");
-			entityManager.executeSQLScript("test_initArtikelstammItem",
-				"/rsc/dbScripts/ArtikelstammItem.sql");
-			entityManager.executeSQLScript("test_initSampleContacts",
-				"/rsc/dbScripts/sampleContacts.sql");
-			entityManager.executeSQLScript("test_initBillingVKPreise",
-				"/rsc/dbScripts/BillingVKPreise.sql");
+			executeScript("test_initUser", "/rsc/dbScripts/User.sql");
+			executeScript("test_initRoles", "/rsc/dbScripts/Role.sql");
+			executeScript("test_initArtikelstammItem", "/rsc/dbScripts/ArtikelstammItem.sql");
+			executeScript("test_initSampleContacts", "/rsc/dbScripts/sampleContacts.sql");
+			executeScript("test_initBillingVKPreise", "/rsc/dbScripts/BillingVKPreise.sql");
 			if (!sqlOnly) {
-//				ConfigInitializer.initializeConfiguration();
+				//				ConfigInitializer.initializeConfiguration();
 			}
 			isDbInitialized = true;
 		} else {
@@ -109,34 +107,62 @@ public class TestDatabaseInitializer {
 		}
 	}
 	
+	private boolean executeScript(String liquibase_id, String scriptLocation) throws IOException{
+		boolean result = entityManager.executeSQLScript(liquibase_id, loadFile(scriptLocation));
+		if (!result) {
+			throw new IOException("Error executing script in [" + scriptLocation + "]");
+		}
+		return true;
+	}
+	
+	private String loadFile(String string) throws IOException{
+		BufferedReader reader = null;
+		StringBuffer sb = new StringBuffer();
+		String line;
+		try {
+			reader = new BufferedReader(
+				new InputStreamReader(TestDatabaseInitializer.class.getResourceAsStream(string)));
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					// ignore
+				}
+			}
+		}
+		return sb.toString();
+	}
+	
 	public synchronized void initializeAgendaTable() throws IOException, SQLException{
 		initializeDb();
 		if (!isAgendaInitialized) {
-			isAgendaInitialized =
-				entityManager.executeSQLScript("test_initAgenda", "/rsc/dbScripts/Agenda.sql");
+			isAgendaInitialized = executeScript("test_initAgenda", "/rsc/dbScripts/Agenda.sql");
 		}
 	}
 	
 	public synchronized void initializeLaborTarif2009Tables() throws IOException, SQLException{
 		initializeDb();
 		if (!isLaborTarif2009Initialized) {
-			isLaborTarif2009Initialized = entityManager.executeSQLScript("test_initLaborTarif2009",
-				"/rsc/dbScripts/LaborTarif2009.sql");
+			isLaborTarif2009Initialized =
+				executeScript("test_initLaborTarif2009", "/rsc/dbScripts/LaborTarif2009.sql");
 		}
 	}
 	
 	public synchronized void initializeTarmedTables() throws IOException, SQLException{
 		initializeDb();
 		if (!isTarmedInitialized) {
+			isTarmedInitialized = executeScript("test_initTarmed", "/rsc/dbScripts/Tarmed.sql");
 			isTarmedInitialized =
-				entityManager.executeSQLScript("test_initTarmed", "/rsc/dbScripts/Tarmed.sql");
-			isTarmedInitialized = entityManager.executeSQLScript("test_initTarmedKumulation",
-				"/rsc/dbScripts/TarmedKumulation.sql");
-			isTarmedInitialized = entityManager.executeSQLScript("test_initTarmedExtension",
-				"/rsc/dbScripts/TarmedExtension.sql");
-			isTarmedInitialized = entityManager.executeSQLScript("test_initTarmedGroup",
-				"/rsc/dbScripts/TarmedGroup.sql");
-			isTarmedInitialized = entityManager.executeSQLScript("test_initTarmedDefinitionen",
+				executeScript("test_initTarmedKumulation", "/rsc/dbScripts/TarmedKumulation.sql");
+			isTarmedInitialized =
+				executeScript("test_initTarmedExtension", "/rsc/dbScripts/TarmedExtension.sql");
+			isTarmedInitialized =
+				executeScript("test_initTarmedGroup", "/rsc/dbScripts/TarmedGroup.sql");
+			isTarmedInitialized = executeScript("test_initTarmedDefinitionen",
 				"/rsc/dbScripts/TarmedDefinitionen.sql");
 		}
 	}
@@ -145,16 +171,16 @@ public class TestDatabaseInitializer {
 		throws IOException, SQLException{
 		initializeDb();
 		if (!isPhysioLeistungInitialized) {
-			isPhysioLeistungInitialized = entityManager.executeSQLScript(
-				"test_initArzttarifePhysio", "/rsc/dbScripts/ArzttarifePhysio.sql");
+			isPhysioLeistungInitialized =
+				executeScript("test_initArzttarifePhysio", "/rsc/dbScripts/ArzttarifePhysio.sql");
 		}
 	}
 	
 	public synchronized void initializeLeistungsblockTables() throws IOException, SQLException{
 		initializeDb();
 		if (!isLeistungsblockInitialized) {
-			isLeistungsblockInitialized = entityManager.executeSQLScript("test_initLeistungsblock",
-				"/rsc/dbScripts/Leistungsblock.sql");
+			isLeistungsblockInitialized =
+				executeScript("test_initLeistungsblock", "/rsc/dbScripts/Leistungsblock.sql");
 		}
 	}
 	
@@ -167,16 +193,15 @@ public class TestDatabaseInitializer {
 	public synchronized void initializeLaborItemsOrdersResults() throws IOException, SQLException{
 		initializeDb();
 		if (!isLaborItemsOrdersResultsInitialized) {
-			isLaborItemsOrdersResultsInitialized = entityManager.executeSQLScript(
-				"test_LaborItemsWerteResults", "/rsc/dbScripts/LaborItemsWerteResults.sql");
+			isLaborItemsOrdersResultsInitialized = executeScript("test_LaborItemsWerteResults",
+				"/rsc/dbScripts/LaborItemsWerteResults.sql");
 		}
 	}
 	
 	public synchronized void initializeReminders() throws IOException, SQLException{
 		initializeDb();
 		if (!isRemindersInitialized) {
-			isRemindersInitialized =
-				entityManager.executeSQLScript("test_Reminder", "/rsc/dbScripts/Reminder.sql");
+			isRemindersInitialized = executeScript("test_Reminder", "/rsc/dbScripts/Reminder.sql");
 		}
 	}
 	
@@ -346,34 +371,34 @@ public class TestDatabaseInitializer {
 		return mandant;
 	}
 	
-//	/**
-//	 * Initialize an test Prescription.
-//	 * 
-//	 * <li>Article: see {@link TestDatabaseInitializer#initializeArtikelstamm()}</li>
-//	 * <li>Patient: see {@link TestDatabaseInitializer#initializePatient()}</li>
-//	 * <li>Dosage: 1-1-1-1</li>
-//	 * 
-//	 * @throws SQLException
-//	 * @throws IOException
-//	 * 
-//	 */
-//	public synchronized void initializePrescription() throws IOException, SQLException{
-//		if (!isDbInitialized) {
-//			initializeDb();
-//		}
-//		if (!isPatientInitialized) {
-//			initializePatient();
-//		}
-//		if (!isArtikelstammInitialized) {
-//			initializeArtikelstamm();
-//		}
-//		if (!isPrescriptionInitialized) {
-//			prescription = new PrescriptionService.Builder(artikelstammitem, patient, "1-1-1-1")
-//				.buildAndSave();
-//			
-//			isPrescriptionInitialized = true;
-//		}
-//	}
+	//	/**
+	//	 * Initialize an test Prescription.
+	//	 * 
+	//	 * <li>Article: see {@link TestDatabaseInitializer#initializeArtikelstamm()}</li>
+	//	 * <li>Patient: see {@link TestDatabaseInitializer#initializePatient()}</li>
+	//	 * <li>Dosage: 1-1-1-1</li>
+	//	 * 
+	//	 * @throws SQLException
+	//	 * @throws IOException
+	//	 * 
+	//	 */
+	//	public synchronized void initializePrescription() throws IOException, SQLException{
+	//		if (!isDbInitialized) {
+	//			initializeDb();
+	//		}
+	//		if (!isPatientInitialized) {
+	//			initializePatient();
+	//		}
+	//		if (!isArtikelstammInitialized) {
+	//			initializeArtikelstamm();
+	//		}
+	//		if (!isPrescriptionInitialized) {
+	//			prescription = new PrescriptionService.Builder(artikelstammitem, patient, "1-1-1-1")
+	//				.buildAndSave();
+	//			
+	//			isPrescriptionInitialized = true;
+	//		}
+	//	}
 	
 	/**
 	 * Initialize a test Fall.
@@ -535,27 +560,27 @@ public class TestDatabaseInitializer {
 		return labResults;
 	}
 	
-//	/**
-//	 * Initialize an test ArtikelstammItem.
-//	 * 
-//	 * <li>GTIN: 7680336700282</li>
-//	 * <li>Pharm: 58985</li>
-//	 * <li>Desc: ASPIRIN C Brausetabl 10 Stk</li>
-//	 * 
-//	 * @throws SQLException
-//	 * @throws IOException
-//	 * 
-//	 */
-//	public synchronized void initializeArtikelstamm() throws IOException, SQLException{
-//		if (!isDbInitialized) {
-//			initializeDb();
-//		}
-//		if (!isArtikelstammInitialized) {
-//			artikelstammitem = new ArtikelstammItemService.Builder(0, "7680336700282",
-//				BigInteger.valueOf(58985l), "ASPIRIN C Brausetabl 10 Stk").buildAndSave();
-//			
-//			isArtikelstammInitialized = true;
-//		}
-//	}
+	//	/**
+	//	 * Initialize an test ArtikelstammItem.
+	//	 * 
+	//	 * <li>GTIN: 7680336700282</li>
+	//	 * <li>Pharm: 58985</li>
+	//	 * <li>Desc: ASPIRIN C Brausetabl 10 Stk</li>
+	//	 * 
+	//	 * @throws SQLException
+	//	 * @throws IOException
+	//	 * 
+	//	 */
+	//	public synchronized void initializeArtikelstamm() throws IOException, SQLException{
+	//		if (!isDbInitialized) {
+	//			initializeDb();
+	//		}
+	//		if (!isArtikelstammInitialized) {
+	//			artikelstammitem = new ArtikelstammItemService.Builder(0, "7680336700282",
+	//				BigInteger.valueOf(58985l), "ASPIRIN C Brausetabl 10 Stk").buildAndSave();
+	//			
+	//			isArtikelstammInitialized = true;
+	//		}
+	//	}
 	
 }

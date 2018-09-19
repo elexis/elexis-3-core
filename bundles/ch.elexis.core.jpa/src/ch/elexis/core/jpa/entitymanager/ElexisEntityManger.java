@@ -162,7 +162,7 @@ public class ElexisEntityManger implements IElexisEntityManager {
 			return executor.execute(changeId, sqlScript);
 		}
 		logger.warn(
-			"Could not execute script [" + changeId + "], not startet with " + CoreUtil.TEST_MODE);
+			"Did not execute script [" + changeId + "] as system not started in mode " + CoreUtil.TEST_MODE);
 		return false;
 	}
 }
