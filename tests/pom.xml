@@ -19,6 +19,7 @@
     </properties>
 
     <modules>
+      <module>ch.elexis.core.jpa.test</module>
       <module>ch.elexis.core.data.tests</module>
       <module>ch.elexis.core.findings.test</module>
       <module>ch.elexis.core.findings.util.test</module>
