@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Core JPA Test
 Bundle-SymbolicName: ch.elexis.core.jpa.test
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 3.7.0.qualifier
 Bundle-Vendor: medevit.at
 Fragment-Host: ch.elexis.core.jpa;bundle-version="1.0.0"
 Automatic-Module-Name: ch.elexis.core.jpa.test
