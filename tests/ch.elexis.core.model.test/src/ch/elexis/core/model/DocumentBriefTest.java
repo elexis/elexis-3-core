@@ -17,77 +17,72 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
-public class DocumentBriefTest {
-	private IModelService modelSerice;
+public class DocumentBriefTest extends AbstractTest {
 	
 	private IContact contact1;
 	private IPatient patient1;
 	
 	@Before
 	public void before(){
-		modelSerice = OsgiServiceUtil.getService(IModelService.class).get();
-		
-		contact1 = modelSerice.create(IContact.class);
+		super.before();
+		contact1 = modelService.create(IContact.class);
 		contact1.setDescription1("test contact 1");
-		modelSerice.save(contact1);
-		patient1 = modelSerice.create(IPatient.class);
+		modelService.save(contact1);
+		patient1 = modelService.create(IPatient.class);
 		patient1.setDescription1("test patient 2");
-		modelSerice.save(patient1);
+		modelService.save(patient1);
 	}
 	
 	@After
 	public void after(){
-		modelSerice.remove(contact1);
-		modelSerice.remove(patient1);
-		
-		OsgiServiceUtil.ungetService(modelSerice);
-		modelSerice = null;
+		modelService.remove(contact1);
+		modelService.remove(patient1);
+		super.after();
 	}
 	
 	@Test
 	public void create() throws IOException{
-		IDocumentLetter letter = modelSerice.create(IDocumentLetter.class);
+		IDocumentLetter letter = modelService.create(IDocumentLetter.class);
 		assertNotNull(letter);
 		assertTrue(letter instanceof IDocumentLetter);
 		
 		letter.setDescription("test letter 1");
 		letter.setAuthor(contact1);
 		letter.setContent(new ByteArrayInputStream("test content".getBytes()));
-		assertTrue(modelSerice.save(letter));
+		assertTrue(modelService.save(letter));
 		
 		Optional<IDocumentLetter> loadedLetter =
-			modelSerice.load(letter.getId(), IDocumentLetter.class);
+			modelService.load(letter.getId(), IDocumentLetter.class);
 		assertTrue(loadedLetter.isPresent());
 		assertFalse(letter == loadedLetter.get());
 		assertEquals(letter, loadedLetter.get());
 		assertEquals(letter.getDescription(), loadedLetter.get().getDescription());
-		try (ByteArrayOutputStream contentByteArray = new ByteArrayOutputStream(); InputStream contentStream = letter.getContent()) {
+		try (ByteArrayOutputStream contentByteArray = new ByteArrayOutputStream();
+				InputStream contentStream = letter.getContent()) {
 			IOUtils.copy(contentStream, contentByteArray);
 			assertEquals("test content", new String(contentByteArray.toByteArray()));
 		}
-		modelSerice.remove(letter);
+		modelService.remove(letter);
 	}
 	
 	@Test
 	public void query() throws IOException{
-		IDocumentLetter letter1 = modelSerice.create(IDocumentLetter.class);
+		IDocumentLetter letter1 = modelService.create(IDocumentLetter.class);
 		letter1.setDescription("test letter 1");
 		letter1.setAuthor(contact1);
 		letter1.setContent(new ByteArrayInputStream("test content 1".getBytes()));
-		assertTrue(modelSerice.save(letter1));
-		IDocumentLetter letter2 = modelSerice.create(IDocumentLetter.class);
+		assertTrue(modelService.save(letter1));
+		IDocumentLetter letter2 = modelService.create(IDocumentLetter.class);
 		letter2.setDescription("test letter 2");
 		letter2.setAuthor(contact1);
 		letter2.setPatient(patient1);
 		letter2.setContent(new ByteArrayInputStream("test content 2".getBytes()));
-		assertTrue(modelSerice.save(letter2));
+		assertTrue(modelService.save(letter2));
 		
-		IQuery<IDocumentLetter> query = modelSerice.getQuery(IDocumentLetter.class);
+		IQuery<IDocumentLetter> query = modelService.getQuery(IDocumentLetter.class);
 		query.and(ModelPackage.Literals.IDOCUMENT__PATIENT, COMPARATOR.EQUALS, patient1);
 		List<IDocumentLetter> existing = query.execute();
 		assertNotNull(existing);
@@ -97,7 +92,7 @@ public class DocumentBriefTest {
 		assertEquals(letter2.getDescription(), existing.get(0).getDescription());
 		IOUtils.contentEquals(letter2.getContent(), existing.get(0).getContent());
 		
-		modelSerice.remove(letter1);
-		modelSerice.remove(letter2);
+		modelService.remove(letter1);
+		modelService.remove(letter2);
 	}
 }

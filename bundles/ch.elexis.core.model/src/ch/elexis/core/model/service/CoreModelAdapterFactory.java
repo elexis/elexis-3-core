@@ -1,5 +1,6 @@
 package ch.elexis.core.model.service;
 
+import ch.elexis.core.jpa.entities.Behandlung;
 import ch.elexis.core.jpa.entities.Brief;
 import ch.elexis.core.jpa.entities.DbImage;
 import ch.elexis.core.jpa.entities.Fall;
@@ -13,6 +14,7 @@ import ch.elexis.core.model.Config;
 import ch.elexis.core.model.Contact;
 import ch.elexis.core.model.Coverage;
 import ch.elexis.core.model.DocumentBrief;
+import ch.elexis.core.model.Encounter;
 import ch.elexis.core.model.IAddress;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBlob;
@@ -20,6 +22,7 @@ import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabMapping;
@@ -96,6 +99,8 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 			.adapterInitializer(adapter -> ((Mandator) adapter).setMandator(true)));
 		
 		addMapping(new MappingEntry(ICoverage.class, Coverage.class, Fall.class));
+		
+		addMapping(new MappingEntry(IEncounter.class, Encounter.class, Behandlung.class));
 		
 		addMapping(new MappingEntry(IAddress.class, Address.class, ZusatzAdresse.class));
 		

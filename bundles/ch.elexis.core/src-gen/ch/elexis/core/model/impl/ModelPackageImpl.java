@@ -3256,6 +3256,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		   new String[] {
 			   "attributeName", "codeclass"
 		   });
+		addAnnotation
+		  (getIEncounter_Coverage(),
+		   source,
+		   new String[] {
+			   "attributeName", "fall"
+		   });
 	}
 
 } //ModelPackageImpl

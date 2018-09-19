@@ -13,21 +13,17 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ch.elexis.core.model.builder.IContactBuilder;
-import ch.elexis.core.services.IModelService;
 import ch.elexis.core.types.AddressType;
 import ch.elexis.core.types.Country;
 import ch.elexis.core.types.Gender;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
-public class ContactTest {
+public class ContactTest extends AbstractTest {
 	
-	private IModelService modelService;
 	private IPerson person;
 	
 	@Before
 	public void before(){
-		modelService = OsgiServiceUtil.getService(IModelService.class).get();
-		
+		super.before();
 		LocalDate dob = LocalDate.of(2016, 9, 1);
 		person = new IContactBuilder.PersonBuilder(modelService, "", "", dob, Gender.MALE)
 			.buildAndSave();
@@ -36,6 +32,7 @@ public class ContactTest {
 	@After
 	public void after(){
 		modelService.delete(person);
+		super.after();
 	}
 	
 	@Test

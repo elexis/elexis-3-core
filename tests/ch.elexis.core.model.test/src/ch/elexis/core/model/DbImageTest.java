@@ -7,16 +7,7 @@ import java.time.LocalDate;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
-import ch.elexis.core.services.IModelService;
-import ch.elexis.core.utils.OsgiServiceUtil;
-
-public class DbImageTest {
-	
-	private IModelService modelService;
-	
-	public DbImageTest(){
-		modelService = OsgiServiceUtil.getService(IModelService.class).get();
-	}
+public class DbImageTest extends AbstractTest {
 	
 	@Test
 	public void createDeleteDbImage() throws IOException{
@@ -26,7 +17,7 @@ public class DbImageTest {
 		try (InputStream is = getClass().getClassLoader().getResourceAsStream("./elexis.png")) {
 			byte[] byteArray = IOUtils.toByteArray(is);
 			image.setImage(byteArray);
-
+			
 		}
 		modelService.save(image);
 		modelService.delete(image);

@@ -13,60 +13,44 @@ import java.util.concurrent.TimeUnit;
 
 import javax.persistence.RollbackException;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
-import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
-public class ConfigTest {
-	private IModelService modelSerice;
-	
-	@Before
-	public void before(){
-		modelSerice = OsgiServiceUtil.getService(IModelService.class).get();
-	}
-	
-	@After
-	public void after(){
-		OsgiServiceUtil.ungetService(modelSerice);
-		modelSerice = null;
-	}
-	
+public class ConfigTest  extends AbstractTest {
+
 	@Test
 	public void create(){
-		IConfig config = modelSerice.create(IConfig.class);
+		IConfig config = modelService.create(IConfig.class);
 		assertNotNull(config);
 		assertTrue(config instanceof IConfig);
 		
 		config.setKey("test key1");
 		config.setValue("test value 1");
-		assertTrue(modelSerice.save(config));
+		assertTrue(modelService.save(config));
 		
-		Optional<IConfig> loadedConfig = modelSerice.load(config.getId(), IConfig.class);
+		Optional<IConfig> loadedConfig = modelService.load(config.getId(), IConfig.class);
 		assertTrue(loadedConfig.isPresent());
 		assertFalse(config == loadedConfig.get());
 		assertEquals(config, loadedConfig.get());
 		assertEquals(config.getValue(), loadedConfig.get().getValue());
 		
-		modelSerice.remove(config);
+		modelService.remove(config);
 	}
 	
 	@Test
 	public void query(){
-		IConfig config1 = modelSerice.create(IConfig.class);
+		IConfig config1 = modelService.create(IConfig.class);
 		config1.setKey("test key 1");
 		config1.setValue("test value 1");
-		assertTrue(modelSerice.save(config1));
-		IConfig config2 = modelSerice.create(IConfig.class);
+		assertTrue(modelService.save(config1));
+		IConfig config2 = modelService.create(IConfig.class);
 		config2.setKey("test key 2");
 		config2.setValue("test value 2");
-		assertTrue(modelSerice.save(config2));
+		assertTrue(modelService.save(config2));
 		
-		IQuery<IConfig> query = modelSerice.getQuery(IConfig.class);
+		IQuery<IConfig> query = modelService.getQuery(IConfig.class);
 		query.and(ModelPackage.Literals.ICONFIG__KEY, COMPARATOR.EQUALS, "test key 2");
 		List<IConfig> existing = query.execute();
 		assertNotNull(existing);
@@ -76,25 +60,25 @@ public class ConfigTest {
 		assertEquals(config2.getValue(), existing.get(0).getValue());
 		
 		// key id also the id, try load
-		Optional<IConfig> loaded = modelSerice.load("test key 2", IConfig.class);
+		Optional<IConfig> loaded = modelService.load("test key 2", IConfig.class);
 		assertTrue(loaded.isPresent());
 		assertEquals(config2, loaded.get());
 		
-		modelSerice.remove(config1);
-		modelSerice.remove(config2);
+		modelService.remove(config1);
+		modelService.remove(config2);
 	}
 	
 	@Test
 	public void optimisticLock() throws InterruptedException{
-		IConfig config1 = modelSerice.create(IConfig.class);
+		IConfig config1 = modelService.create(IConfig.class);
 		config1.setKey("test key 1");
 		config1.setValue("test value 1");
-		assertTrue(modelSerice.save(config1));
+		assertTrue(modelService.save(config1));
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 		executor.execute(new Runnable() {
 			@Override
 			public void run(){
-				int affected = modelSerice
+				int affected = modelService
 					.executeNativeUpdate("UPDATE config SET wert = 'test key', lastupdate = "
 						+ 1 + " WHERE param = 'test key 1'");
 				assertEquals(1, affected);
@@ -104,7 +88,7 @@ public class ConfigTest {
 		config1.setValue("test key 1");
 		RollbackException rbe = null;
 		try {
-			modelSerice.save(config1);
+			modelService.save(config1);
 		} catch (RollbackException e) {
 			rbe = e;
 		}
