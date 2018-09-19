@@ -30,4 +30,14 @@ public interface IElexisEntityManager {
 	 * @param entityManager
 	 */
 	public void closeEntityManager(Object entityManager);
+	
+	/**
+	 * Execute a SQL script against the current persistence unit database. <b>This method can only
+	 * be used in test mode.</b>
+	 * 
+	 * @param changeId
+	 * @param sqlScript
+	 * @return true if script execution was successful
+	 */
+	public boolean executeSQLScript(String changeId, String sqlScript);
 }

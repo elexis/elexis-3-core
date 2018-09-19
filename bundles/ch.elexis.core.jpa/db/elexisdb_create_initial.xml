@@ -665,6 +665,7 @@
             <column name="GEBURTSDATUM" type="CHAR(8)"/>
             <column name="GESCHLECHT" type="CHAR(1)"/>
             <column name="TITEL" type="VARCHAR(255)"/>
+            <column name="TITELSUFFIX" type="VARCHAR(255)"/>
             <column name="BEZEICHNUNG1" type="VARCHAR(255)"/>
             <column name="BEZEICHNUNG2" type="VARCHAR(255)"/>
             <column name="BEZEICHNUNG3" type="VARCHAR(255)"/>
@@ -688,7 +689,6 @@
             <column name="RISIKEN" type="VARCHAR(2147483647)"/>
             <column name="ALLERGIEN" type="VARCHAR(2147483647)"/>
             <column name="EXTINFO" type="VARBINARY(2147483647)"/>
-            <column name="TITELSUFFIX" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-46">

@@ -56,7 +56,7 @@
 		level="INFO" />
 	<logger name="ca.uhn.hl7v2.parser" level="INFO" />
 	<logger name="ch.elexis.data" level="ERROR" />
-	<logger name="ch.elexis.core" level="ERROR" />
+	<logger name="ch.elexis.core" level="INFO" />
 
 
 	<root level="${root.level:-DEBUG}">

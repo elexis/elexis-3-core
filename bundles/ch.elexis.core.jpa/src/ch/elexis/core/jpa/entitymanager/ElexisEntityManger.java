@@ -24,8 +24,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jpa.liquibase.LiquibaseDBInitializer;
+import ch.elexis.core.jpa.liquibase.LiquibaseDBScriptExecutor;
 import ch.elexis.core.jpa.liquibase.LiquibaseDBUpdater;
 import ch.elexis.core.services.IElexisEntityManager;
+import ch.elexis.core.utils.CoreUtil;
 
 @Component
 public class ElexisEntityManger implements IElexisEntityManager {
@@ -151,5 +153,16 @@ public class ElexisEntityManger implements IElexisEntityManager {
 				}
 			}
 		}
+	}
+	
+	@Override
+	public boolean executeSQLScript(String changeId, String sqlScript){
+		if (CoreUtil.isTestMode()) {
+			LiquibaseDBScriptExecutor executor = new LiquibaseDBScriptExecutor(dataSource);
+			return executor.execute(changeId, sqlScript);
+		}
+		logger.warn(
+			"Could not execute script [" + changeId + "], not startet with " + CoreUtil.TEST_MODE);
+		return false;
 	}
 }
