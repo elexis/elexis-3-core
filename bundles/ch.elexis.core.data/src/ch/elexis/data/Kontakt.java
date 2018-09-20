@@ -21,6 +21,7 @@ import java.util.Map;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.constants.XidConstants;
+import ch.elexis.core.model.ICodeElement;
 import ch.elexis.util.MFUList;
 import ch.rgw.tools.StringTool;
 
@@ -544,11 +545,21 @@ public class Kontakt extends PersistentObject {
 	 * @param lst
 	 *            Das Objekt, das gezählt werden soll.
 	 */
-	@SuppressWarnings("unchecked")
 	public void statForItem(PersistentObject lst){
-		Map exi = getMap(FLD_EXTINFO);
 		String typ = lst.getClass().getName();
 		String ident = lst.storeToString();
+		statForItem(typ, ident);
+	}
+	
+	public void statForItem(ICodeElement lst){
+		String ident = lst.getClass().getName() + StringConstants.DOUBLECOLON + lst.getId();
+		statForItem(lst.getClass().getName(), ident);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void statForItem(String typ, String storeToString){
+		@SuppressWarnings("rawtypes")
+		Map exi = getMap(FLD_EXTINFO);
 		// Die Rangliste für diesen Objekttyp auslesen bzw. neu anlegen.
 		ArrayList<statL> l = (ArrayList<statL>) exi.get(typ);
 		if (l == null) {
@@ -561,14 +572,14 @@ public class Kontakt extends PersistentObject {
 		// Sehen, ob das übergebene Objekt schon in der Liste enthalten ist
 		boolean found = false;
 		for (statL c : l) {
-			if (c.v.equals(ident)) {
+			if (c.v.equals(storeToString)) {
 				c.c++; // Gefunden, dann Zähler erhöhen
 				found = true;
 				break;
 			}
 		}
 		if (found == false) {
-			l.add(new statL(ident)); // Nicht gefunden, dann neu eintragen
+			l.add(new statL(storeToString)); // Nicht gefunden, dann neu eintragen
 		}
 		Collections.sort(l); // Liste sortieren
 		exi.put(typ, l);
