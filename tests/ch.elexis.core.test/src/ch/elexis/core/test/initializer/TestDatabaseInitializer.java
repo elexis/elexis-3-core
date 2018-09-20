@@ -100,6 +100,7 @@ public class TestDatabaseInitializer {
 	 */
 	public void initializeDb(IConfigService configService) throws IOException, SQLException{
 		if (!isDbInitialized) {
+			entityManager.getEntityManager(); // lazy initialize the database
 			// initialize
 			executeScript("test_initUser", "/rsc/dbScripts/User.sql");
 			executeScript("test_initRoles", "/rsc/dbScripts/Role.sql");

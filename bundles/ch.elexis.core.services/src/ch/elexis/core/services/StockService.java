@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,12 +27,14 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.LocalLockServiceHolder;
 import ch.elexis.core.services.holder.StockCommissioningServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
-import ch.elexis.core.services.util.ConfigUtil;
 
 @Component
 public class StockService implements IStockService {
 	
 	private static Logger log = LoggerFactory.getLogger(StockService.class);
+	
+	@Reference
+	private IConfigService configService;
 	
 	@Override
 	public Long getCumulatedStockForArticle(IArticle article){
@@ -76,7 +79,7 @@ public class StockService implements IStockService {
 				(sellingUnit > 0 && sellingUnit < article.getPackageSize());
 			if (isPartialUnitOutput) {
 				boolean performPartialOutlay =
-					ConfigUtil.isGlobalConfig(Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
+					configService.get(Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
 						Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES_DEFAULT);
 					if (!performPartialOutlay) {
 						return Status.OK_STATUS;
@@ -177,9 +180,9 @@ public class StockService implements IStockService {
 		return new Status(Status.WARNING, "ch.elexis.core.services", "Could not acquire lock");
 	}
 	
-	private static boolean isTriggerStockAvailabilityOnBelow(){
+	private boolean isTriggerStockAvailabilityOnBelow(){
 		int trigger =
-			ConfigUtil.getGlobalConfig(ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER,
+			configService.get(ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER,
 				ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER_DEFAULT);
 		return trigger == ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER_BELOW;
 	}
