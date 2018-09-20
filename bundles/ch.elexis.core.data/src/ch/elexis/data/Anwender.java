@@ -296,19 +296,19 @@ public class Anwender extends Person {
 	}
 	
 	private void setInitialMandator(){
-		String mandantLabel = (String) getExtInfoStoredObjectByKey(FLD_EXTINFO_MANDATORS);
-		String MandantID = null;
-		if (mandantLabel!=null && mandantLabel.length()>0) {
-			mandantLabel = mandantLabel.split(",")[0];
-			for (Mandant m : CoreHub.getMandantenList()) {
-				if (m.getLabel().equals(mandantLabel)) {
-					MandantID = m.getId();
+		Mandant initialMandator = null;
+		List<Mandant> workingFor = getExecutiveDoctorsWorkingFor();
+		if (workingFor != null && !workingFor.isEmpty()) {
+			initialMandator = workingFor.get(0);
+			for (Mandant mandant : workingFor) {
+				if (mandant.equals(this)) {
+					initialMandator = mandant;
 					break;
 				}
 			}
 		}
-		if (MandantID != null) {
-			CoreHub.setMandant(Mandant.load(MandantID));
+		if (initialMandator != null) {
+			CoreHub.setMandant(initialMandator);
 		} else {
 			Mandant m = Mandant.load(CoreHub.actUser.getId());
 			if ((m != null) && m.isValid()) {

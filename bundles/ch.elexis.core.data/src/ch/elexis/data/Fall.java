@@ -274,9 +274,9 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	public @Nullable Kontakt getCostBearer(){
 		String costBearerId = get(FLD_KOSTENTRAEGER);
 		if (costBearerId.length() > 0) {
-			Kontakt load = Kontakt.load(costBearerId);
-			if (load.exists()) {
-				return load;
+			Kontakt costBearer = Kontakt.load(costBearerId);
+			if (costBearer.isAvailable()) {
+				return costBearer;
 			}
 		}
 		return null;
@@ -308,6 +308,37 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	
 	public void setGarant(final Kontakt garant){
 		set(FLD_GARANT_ID, garant.getId());
+	}
+	
+	/**
+	 * Get the recipient for the invoice of this {@link Fall}. Recipient depends on
+	 * {@link Fall#getTiersType()}, {@link Patient#getLegalGuardian()} and {@link Fall#getGarant()}.
+	 * 
+	 * @return< code>null</code> if not recipient could be determined
+	 * @since 3.6
+	 */
+	public @Nullable Kontakt getInvoiceRecipient(){
+		Kontakt ret = null;
+		Tiers paymentMode = getTiersType();
+		if (paymentMode == Tiers.PAYANT) {
+			ret = getCostBearer();
+		} else if (paymentMode == Tiers.GARANT) {
+			Kontakt invoiceReceiver = getGarant();
+			Patient patient = getPatient();
+			if (invoiceReceiver.equals(patient)) {
+				Kontakt legalGuardian = patient.getLegalGuardian();
+				if (legalGuardian != null) {
+					ret = legalGuardian;
+				} else {
+					ret = patient;
+				}
+			} else {
+				ret = invoiceReceiver;
+			}
+		} else {
+			ret = getGarant();
+		}
+		return ret;
 	}
 	
 	public Rechnungssteller getRechnungssteller(){

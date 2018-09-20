@@ -444,8 +444,13 @@ public class BillingSystem {
 				log.info("Moving Fall [{}] ExtInfo key [{}] value [{}] to db table", fall.getId(),
 					fieldName, contactId);
 				Kontakt costBearer = Kontakt.load(contactId);
-				fall.setCostBearer(costBearer);
-				fall.setExtInfoStoredObjectByKey(fieldName, null);
+				if (costBearer.isAvailable()) {
+					fall.setCostBearer(costBearer);
+					fall.setExtInfoStoredObjectByKey(fieldName, null);
+				} else {
+					log.warn("Fall [{}] could not load cost bearer [{}], skipping", fall.getId(),
+						contactId);
+				}
 			}
 		}
 	}

@@ -1115,7 +1115,7 @@ public class TextContainer {
 				qbe.endGroup();
 				qbe.and();
 			}
-			qbe.add("geloescht", Query.NOT_EQUAL, StringConstants.ONE); //$NON-NLS-1$
+			qbe.add(Brief.FLD_GELOESCHT, Query.NOT_EQUAL, StringConstants.ONE);
 			qbe.add(Brief.FLD_SUBJECT, Query.EQUALS, title);
 			List<Brief> l = qbe.execute();
 			if (l.size() > 0) {

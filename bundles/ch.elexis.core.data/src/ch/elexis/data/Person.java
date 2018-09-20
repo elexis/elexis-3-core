@@ -234,7 +234,9 @@ public class Person extends Kontakt {
 	 * @param ice
 	 */
 	public void countItem(ICodeElement ice){
-		statForItem((PersistentObject) ice);
+		if (ice instanceof PersistentObject) {
+			statForItem((PersistentObject) ice);
+		}
 	}
 	
 	@SuppressWarnings("serial")

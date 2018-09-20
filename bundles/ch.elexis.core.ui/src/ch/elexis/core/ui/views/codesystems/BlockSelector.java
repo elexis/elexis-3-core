@@ -12,8 +12,11 @@
 
 package ch.elexis.core.ui.views.codesystems;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.action.Action;
@@ -25,6 +28,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -33,7 +37,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -44,14 +47,13 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
-import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.ui.actions.ToggleVerrechenbarFavoriteAction;
 import ch.elexis.core.ui.commands.ExportiereBloeckeCommand;
 import ch.elexis.core.ui.dialogs.base.InputDialog;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.selectors.FieldDescriptor;
+import ch.elexis.core.ui.util.PersistentObjectDragSource;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
-import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.util.viewers.SelectorPanelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
@@ -59,8 +61,6 @@ import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
-import ch.elexis.data.VerrechenbarFavorites;
-import ch.elexis.data.VerrechenbarFavorites.Favorite;
 
 public class BlockSelector extends CodeSelectorFactory {
 	protected static final String BLOCK_ONLY_FILTER_ENABLED = "blockselector/blockonlyfilter";
@@ -77,7 +77,13 @@ public class BlockSelector extends CodeSelectorFactory {
 		public void selectionChanged(SelectionChangedEvent event){
 			TreeViewer tv = (TreeViewer) event.getSource();
 			StructuredSelection ss = (StructuredSelection) tv.getSelection();
-			tvfa.updateSelection(ss.isEmpty() ? null : ss.getFirstElement());
+			Object selectedPo = null;
+			Object firstElement = ss.isEmpty() ? null : ss.getFirstElement();
+			if (firstElement instanceof BlockTreeViewerItem) {
+				selectedPo = ((BlockTreeViewerItem) firstElement).getBlock();
+			}
+			tvfa.updateSelection(selectedPo);
+			ElexisEventDispatcher.fireSelectionEvent((PersistentObject) selectedPo);
 		}
 	};
 	
@@ -123,18 +129,33 @@ public class BlockSelector extends CodeSelectorFactory {
 		slp = new SelectorPanelProvider(lbName, true);
 		slp.addActions(createAction, exportAction, searchBlocksOnly);
 		ViewerConfigurer vc =
-			new ViewerConfigurer(new BlockContentProvider(this, cv), new DefaultLabelProvider() {
-				@Override
-				public Image getImage(Object element){
-					if(element instanceof Leistungsblock) {
-						Favorite fav = VerrechenbarFavorites.isFavorite((IPersistentObject) element);
-						if(fav!=null) return Images.IMG_STAR.getImage();
-					}
-					return null;
-				}
-			}, slp,
+			new ViewerConfigurer(new BlockContentProvider(this, cv),
+				new BlockTreeViewerItem.ColorizedLabelProvider(), slp,
 				new ViewerConfigurer.DefaultButtonProvider(), new SimpleWidgetProvider(
 					SimpleWidgetProvider.TYPE_TREE, SWT.NONE, null));
+		vc.addDragSourceSelectionRenderer(new PersistentObjectDragSource.ISelectionRenderer() {
+			
+			@Override
+			public List<PersistentObject> getSelection(){
+				IStructuredSelection selection = cv.getViewerWidget().getStructuredSelection();
+				if (!selection.isEmpty()) {
+					List<PersistentObject> ret = new ArrayList<>();
+					for (Object selected : selection.toList()) {
+						if(selected instanceof BlockTreeViewerItem) {
+							ret.add(((BlockTreeViewerItem) selected).getBlock());
+						} else if (selected instanceof BlockElementViewerItem) {
+							if (((BlockElementViewerItem) selected)
+								.getFirstElement() instanceof PersistentObject) {
+								ret.add((PersistentObject) ((BlockElementViewerItem) selected)
+									.getFirstElement());
+							}
+						}
+					}
+					return ret;
+				}
+				return Collections.emptyList();
+			}
+		});
 		return vc;
 	}
 	
@@ -240,14 +261,26 @@ public class BlockSelector extends CodeSelectorFactory {
 		private CommonViewer cv;
 		
 		private String queryFilter;
+		private HashMap<Leistungsblock, BlockTreeViewerItem> blockItemMap;
 		
-		private final ElexisEventListenerImpl eeli_lb = new ElexisEventListenerImpl(
-			Leistungsblock.class) {
-			
-			public void catchElexisEvent(ElexisEvent ev){
-				cv.notify(CommonViewer.Message.update);
-			}
-		};
+		private final ElexisEventListenerImpl eeli_lb =
+			new ElexisEventListenerImpl(Leistungsblock.class, ElexisEvent.EVENT_UPDATE) {
+				
+				public void catchElexisEvent(ElexisEvent ev){
+					if (blockItemMap != null && ev.getObject() instanceof Leistungsblock) {
+						Display.getDefault().asyncExec(new Runnable() {
+							@Override
+							public void run(){
+								if (cv != null && cv.getViewerWidget() != null
+									&& !cv.getViewerWidget().getControl().isDisposed()) {
+									BlockTreeViewerItem item = blockItemMap.get(ev.getObject());
+									cv.getViewerWidget().refresh(item, true);
+								}
+							}
+						});
+					}
+				}
+			};
 		
 		BlockContentProvider(BlockSelector selector, CommonViewer cv){
 			this.cv = cv;
@@ -280,7 +313,13 @@ public class BlockSelector extends CodeSelectorFactory {
 				}
 			}
 			qbe.orderBy(false, Leistungsblock.FLD_NAME);
-			return qbe.execute().toArray();
+			blockItemMap = new HashMap<>();
+			List<BlockTreeViewerItem> list = qbe.execute().stream().map(b -> {
+				BlockTreeViewerItem item = BlockTreeViewerItem.of(b);
+				blockItemMap.put(b, item);
+				return item;
+			}).collect(Collectors.toList());
+			return list.toArray();
 		}
 		
 		public void dispose(){
@@ -330,10 +369,10 @@ public class BlockSelector extends CodeSelectorFactory {
 			// nothing to do
 		}
 		
-		public Object[] getChildren(Object parentElement){
-			if (parentElement instanceof Leistungsblock) {
-				Leistungsblock lb = (Leistungsblock) parentElement;
-				return lb.getElements().toArray();
+		public Object[] getChildren(Object element){
+			if (element instanceof BlockTreeViewerItem) {
+				BlockTreeViewerItem item = (BlockTreeViewerItem) element;
+				return item.getChildren().toArray();
 			}
 			return Collections.emptyList().toArray();
 		}
@@ -343,8 +382,9 @@ public class BlockSelector extends CodeSelectorFactory {
 		}
 		
 		public boolean hasChildren(Object element){
-			if (element instanceof Leistungsblock) {
-				return !(((Leistungsblock) element).isEmpty());
+			if (element instanceof BlockTreeViewerItem) {
+				BlockTreeViewerItem item = (BlockTreeViewerItem) element;
+				return item.hasChildren();
 			}
 			return false;
 		}
@@ -354,7 +394,6 @@ public class BlockSelector extends CodeSelectorFactory {
 			// TODO Auto-generated method stub
 			
 		}
-		
 	};
 	
 	@Override

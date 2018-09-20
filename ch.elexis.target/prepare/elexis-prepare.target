@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
-<!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
-<target name="Oxygen.3 for Elexis" sequenceNumber="1533713734">
+<!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
+<target name="Oxygen.3 for Elexis" sequenceNumber="1537431335">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.18.0.v20171217-2215"/>
@@ -41,13 +41,13 @@
       <repository location="http://download.eclipse.org/releases/oxygen"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="javax.persistence" version="2.2.0.v201708071007"/>
-      <unit id="org.eclipse.persistence.asm" version="6.1.1.v201804051226"/>
+      <unit id="javax.persistence" version="2.2.1.v201807122140"/>
+      <unit id="org.eclipse.persistence.asm" version="6.2.0.v201808041549"/>
       <unit id="org.eclipse.persistence.antlr" version="3.5.2.v201711011707"/>
-      <unit id="org.eclipse.persistence.core" version="2.7.2.v20180622-f627448"/>
-      <unit id="org.eclipse.persistence.jpa.jpql" version="2.7.2.v20180622-f627448"/>
-      <unit id="org.eclipse.persistence.jpa" version="2.7.2.v20180622-f627448"/>
-      <unit id="org.eclipse.persistence.extension" version="2.7.2.v20180622-f627448"/>
+      <unit id="org.eclipse.persistence.core" version="2.7.3.v20180807-4be1041"/>
+      <unit id="org.eclipse.persistence.jpa.jpql" version="2.7.3.v20180807-4be1041"/>
+      <unit id="org.eclipse.persistence.jpa" version="2.7.3.v20180807-4be1041"/>
+      <unit id="org.eclipse.persistence.extension" version="2.7.3.v20180807-4be1041"/>
       <repository location="http://download.eclipse.org/rt/eclipselink/updates/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
@@ -86,7 +86,16 @@
       <unit id="org.apache.commons.pool" version="1.6.0.v201204271246"/>
       <unit id="org.apache.commons.httpclient" version="3.1.0.v201012070820"/>
       <unit id="org.apache.commons.beanutils" version="1.8.0.v201205091237"/>
+      <unit id="org.apache.poi" version="3.9.0.v201405241750"/>
+      <unit id="org.apache.poi.ooxml" version="3.9.0.v201405241905"/>
+      <unit id="org.apache.poi.ooxml.schemas" version="3.9.0.v201405241750"/>
+      <unit id="org.apache.xmlbeans" version="2.3.0.v201605172150"/>
+      <unit id="org.dom4j" version="1.6.1.v201312101416"/>
       <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180206163158/repository/"/>
+    </location>
+    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="info.elexis.server.hapi.fhir" version="3.4.0.201809170851"/>
+      <repository location="http://download.elexis.info/elexis-server/master/p2/elexis-server"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="javax.ws.rs" version="1.1.1.v20130318-1750"/>
@@ -99,7 +108,6 @@
       <repository location="http://download.elexis.info/mirror.4.elexis/snapshot"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="hapi-fhir-osgi-core" version="2.4.0"/>
       <unit id="org.springframework.spring-web" version="4.3.8.RELEASE"/>
       <unit id="woodstox-core-asl" version="4.4.1"/>
       <unit id="javax.xml.stream.stax-api" version="1.0.0.2"/>
@@ -260,7 +268,6 @@
       <unit id="org.apache.avalon.framework.avalon-framework-impl" version="4.3.1"/>
       <unit id="org.apache.avalon.framework.avalon-framework-impl.source" version="4.3.1"/>
       <unit id="org.apache.ibatis.sqlmap" version="2.3.0"/>
-      <unit id="org.apache.poi" version="3.0.2.FINAL"/>
       <unit id="org.apache.servicemix.bundles.zxing" version="3.0.1.1"/>
       <unit id="org.apache.servicemix.bundles.zxing.source" version="3.0.1.1"/>
       <unit id="org.apache.xmlgraphics.commons" version="1.2.0"/>

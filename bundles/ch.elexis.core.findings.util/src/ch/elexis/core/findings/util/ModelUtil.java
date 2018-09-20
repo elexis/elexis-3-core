@@ -20,8 +20,6 @@ import org.slf4j.LoggerFactory;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.DataFormatException;
 import ca.uhn.fhir.parser.IParser;
-import ca.uhn.fhir.rest.client.IGenericClient;
-import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 import ch.elexis.core.findings.IAllergyIntolerance;
 import ch.elexis.core.findings.IClinicalImpression;
 import ch.elexis.core.findings.ICoding;
@@ -86,17 +84,6 @@ public class ModelUtil {
 	
 	public static IBaseResource getAsResource(String jsonResource) {
 		return getJsonParser().parseResource(jsonResource);
-	}
-
-	public static IGenericClient getGenericClient(String theServerBase) {
-		// Create a logging interceptor
-		LoggingInterceptor loggingInterceptor = new LoggingInterceptor();
-		loggingInterceptor.setLogRequestSummary(true);
-		loggingInterceptor.setLogRequestBody(true);
-
-		IGenericClient client = context.newRestfulGenericClient(theServerBase);
-		client.registerInterceptor(loggingInterceptor);
-		return client;
 	}
 
 	public static Optional<IBaseResource> loadResource(IFinding finding) throws DataFormatException{

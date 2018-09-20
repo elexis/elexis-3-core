@@ -324,6 +324,7 @@ public class Messages {
 	public static String MediVerlaufView_medicament = ch.elexis.core.l10n.Messages.MediVerlaufView_medicament;
 	public static String MediVerlaufView_reading = ch.elexis.core.l10n.Messages.MediVerlaufView_reading;
 	public static String MediVerlaufView_sorting = ch.elexis.core.l10n.Messages.MediVerlaufView_sorting;
+	public static String Object_is_marked_deleted = ch.elexis.core.l10n.Messages.Object_is_marked_deleted;
 	public static String PatHeuteView_accAmount = ch.elexis.core.l10n.Messages.PatHeuteView_accAmount;
 	public static String PatHeuteView_accTime = ch.elexis.core.l10n.Messages.PatHeuteView_accTime;
 	public static String PatHeuteView_add = ch.elexis.core.l10n.Messages.PatHeuteView_add;

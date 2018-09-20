@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
@@ -275,19 +276,20 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		
 		Integer invoiceStateNo = invoiceListHeaderComposite.getSelectedInvoiceStateNo();
 		if (invoiceStateNo != null) {
-			if (InvoiceState.OWING.numericValue() == invoiceStateNo) {
+			if (InvoiceState.OWING.numericValue() == invoiceStateNo
+				|| InvoiceState.TO_PRINT.numericValue() == invoiceStateNo) {
+				InvoiceState[] invoiceStates = (InvoiceState.OWING.numericValue() == invoiceStateNo)
+						? InvoiceState.owingStates()
+						: InvoiceState.toPrintStates();
+				
 				appendInvoiceStateDateConditionalIfNotNull(queryBuilder);
 				
-				String conditional = Arrays.asList(InvoiceState.owingStates()).stream()
-					.map(is -> Integer.toString(is.numericValue())).reduce((u, t) -> u + " ," + t)
-					.get();
-				queryBuilder.build(SQL_CONDITION_INVOICE_STATE_IN, conditional);
-				
-			} else if (InvoiceState.TO_PRINT.numericValue() == invoiceStateNo) {
-				String conditional = Arrays.asList(InvoiceState.toPrintStates()).stream()
-					.map(is -> Integer.toString(is.numericValue())).reduce((u, t) -> u + " ," + t)
-					.get();
-				queryBuilder.build(SQL_CONDITION_INVOICE_STATE_IN, conditional);
+				List<String> conditional = Arrays.asList(invoiceStates).stream()
+					.map(is -> Integer.toString(is.numericValue())).collect(Collectors.toList());
+				String qmreplace =
+					conditional.stream().map(s -> "?").collect(Collectors.joining(","));
+				String replaceFirst = SQL_CONDITION_INVOICE_STATE_IN.replaceFirst("\\?", qmreplace);
+				queryBuilder.build(replaceFirst, conditional);
 			} else {
 				queryBuilder.build(SQL_CONDITION_INVOICE_STATE_IN,
 					Integer.toString(invoiceStateNo));
@@ -539,9 +541,6 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		}
 		
 		public String getReceiverLabel(){
-			if (garantId != null && garantId.equals(patientId)) {
-				garantLabel = getPatientName();
-			}
 			return garantLabel;
 		}
 		
@@ -576,6 +575,9 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			private StructuredViewer viewer;
 			private InvoiceEntry invoiceEntry;
 			
+			private Rechnung rechnung;
+			private Fall fall;
+			
 			public ResolveLazyFieldsRunnable(StructuredViewer viewer, InvoiceEntry invoiceEntry){
 				this.viewer = viewer;
 				this.invoiceEntry = invoiceEntry;
@@ -583,48 +585,50 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			
 			@Override
 			public void run(){
-				resolvePayerType();
-				resolveLaw();
-				resolveGarantLabel();
-				invoiceEntry.resolved = true;
-				invoiceEntry.resolving = false;
-				if (viewer != null) {
-					updateViewer();
+				Rechnung r = Rechnung.load(invoiceId);
+				if (r.exists()) {
+					rechnung = r;
+				}
+				if (rechnung != null) {
+					Fall f = rechnung.getFall();
+					if (f.exists()) {
+						fall = f;
+						resolvePayerType();
+						resolveLaw();
+						resolveGarantLabel();
+						invoiceEntry.resolved = true;
+						invoiceEntry.resolving = false;
+						if (viewer != null) {
+							updateViewer();
+						}
+					}
 				}
 			}
 			
 			private void resolveGarantLabel(){
 				if (garantLabel == null) {
-					Kontakt garant = Kontakt.load(garantId);
-					if (garant.exists()) {
-						garantLabel = garant.getLabel();
+					garantLabel = "?";
+					Kontakt recipient = fall.getInvoiceRecipient();
+					if (recipient != null) {
+						garantLabel = recipient.getLabel();
 					}
 				}
 			}
 			
 			private void resolveLaw(){
-				Rechnung r = Rechnung.load(invoiceId);
-				if (r.exists()) {
-					Fall fall = r.getFall();
-					if (fall.exists()) {
-						billingSystem = fall.getAbrechnungsSystem();
-					}
+				if (fall != null) {
+					billingSystem = fall.getAbrechnungsSystem();
 				}
 			}
 			
 			private void resolvePayerType(){
 				payerType = "TG";
-				
-				Rechnung r = Rechnung.load(invoiceId);
-				if (r.exists()) {
-					Fall fall = r.getFall();
-					if (fall.exists()) {
-						Kontakt costBearer = fall.getCostBearer();
-						if (costBearer != null) {
-							if (garantId != null && garantId.equals(costBearer.getId())) {
-								payerType = "TP";
-								return;
-							}
+				if (fall != null) {
+					Kontakt costBearer = fall.getCostBearer();
+					if (costBearer != null) {
+						if (garantId != null && garantId.equals(costBearer.getId())) {
+							payerType = "TP";
+							return;
 						}
 					}
 				}
@@ -749,6 +753,11 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 									ps.setInt(i++, (Integer) s);
 								} else if (s instanceof Double) {
 									ps.setDouble(i++, (Double) s);
+								} else if (s instanceof List) {
+									List<?> _s = (List<?>) s;
+									for (Object object : _s) {
+										ps.setString(i++, object.toString());
+									}
 								}
 							} catch (SQLException e) {
 								/** ignore **/

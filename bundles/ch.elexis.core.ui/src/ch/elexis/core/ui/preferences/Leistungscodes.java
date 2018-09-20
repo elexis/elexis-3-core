@@ -731,7 +731,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			new Label(upperPartComp, SWT.NONE).setText(Messages.Leistungscodes_nameLabel);
 			tName = new Text(upperPartComp, SWT.BORDER);
 			tName.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			tName.setTextLimit(20);
+			tName.setTextLimit(40);
 			tName.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(final FocusEvent e){

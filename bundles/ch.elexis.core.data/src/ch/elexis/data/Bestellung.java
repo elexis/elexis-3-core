@@ -32,17 +32,12 @@ public class Bestellung extends PersistentObject implements IOrder {
 	public static final String FLD_DATE = "DATUM";
 	public static final String FLD_JOINT_BESTELLUNGEN_ENTRIES = "BESTELLUNGEN_ENTRIES";
 	
-	/** Deprecated - will be removed in 3.3 (https://redmine.medelexis.ch/issues/5204) **/
-	@Deprecated
-	public static final String FLD_ITEMS = "Liste";
-	/**/
-	
 	public enum ListenTyp {
 			PHARMACODE, NAME, VOLL
 	};
 	
 	static {
-		addMapping(TABLENAME, FLD_ITEMS + "=S:C:Contents", //$NON-NLS-1$
+		addMapping(TABLENAME,
 			FLD_JOINT_BESTELLUNGEN_ENTRIES + "=LIST:BESTELLUNG:" + BestellungEntry.TABLENAME);
 	}
 	

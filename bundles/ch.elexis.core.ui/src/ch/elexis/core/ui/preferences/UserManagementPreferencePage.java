@@ -149,10 +149,10 @@ public class UserManagementPreferencePage extends PreferencePage
 							if (newText.length() < 3) {
 								return "Mindestens 3 Zeichen";
 							}
-							boolean allLetters =
-								newText.chars().allMatch(x -> Character.isLetter(x));
-							if (!allLetters) {
-								return "Nur Buchstaben erlaubt";
+							boolean allLettersOrDigits =
+								newText.chars().allMatch(x -> Character.isLetterOrDigit(x));
+							if (!allLettersOrDigits) {
+								return "Nur Buchstaben und Zahlen erlaubt";
 							}
 							boolean isFree = User.verifyUsernameNotTaken(newText);
 							if (!isFree) {

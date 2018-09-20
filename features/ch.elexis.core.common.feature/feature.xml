@@ -221,13 +221,6 @@
          unpack="false"/>
 
    <plugin
-         id="hapi-fhir-osgi-core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.thymeleaf"
          download-size="0"
          install-size="0"
@@ -345,4 +338,10 @@
          install-size="0"
          version="0.0.0"/>
 
+   <plugin
+         id="info.elexis.server.hapi.fhir"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 </feature>
