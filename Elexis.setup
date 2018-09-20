@@ -157,7 +157,7 @@
     <requirement
         name="org.eclipse.mylyn.github.feature.feature.group"/>
     <requirement
-        name="fr.obeo.releng.targetplatform-feature.feature.group"/>
+        name="org.eclipse.cbi.targetplatform-feature.feature.group"/>
     <requirement
         name="com.essiembre.eclipse.rbe.feature.group"/>
     <requirement
@@ -174,7 +174,7 @@
     <repository
         url="http://repo1.maven.org/maven2/.m2e/connectors/m2eclipse-tycho/0.9.0/N/LATEST/"/>
     <repository
-        url="http://mbarbero.github.io/fr.obeo.releng.targetplatform/p2/latest/"/>
+        url="http://download.eclipse.org/cbi/tpd/3.0.0-SNAPSHOT/"/>
     <repository
         url="https://raw.githubusercontent.com/essiembre/eclipse-rbe/master/eclipse-rbe-update-site/"/>
     <repository
