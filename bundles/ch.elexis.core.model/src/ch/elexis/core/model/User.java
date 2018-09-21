@@ -74,4 +74,15 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	public void setActive(boolean value){
 		getEntity().setActive(value);
 	}
+
+	@Override
+	public boolean isAllowExternal(){
+		return getEntity().isAllowExternal();
+	}
+
+	@Override
+	public void setAllowExternal(boolean value){
+		getEntity().setAllowExternal(value);
+		
+	}
 }

@@ -98,6 +98,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IUser/assignedContact"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IUser/roles"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IUser/active"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IUser/allowExternal"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//ILabItem">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabItem/typ"/>

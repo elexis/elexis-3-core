@@ -28,6 +28,7 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IUser#getAssignedContact <em>Assigned Contact</em>}</li>
  *   <li>{@link ch.elexis.core.model.IUser#getRoles <em>Roles</em>}</li>
  *   <li>{@link ch.elexis.core.model.IUser#isActive <em>Active</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IUser#isAllowExternal <em>Allow External</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIUser()
@@ -180,5 +181,31 @@ public interface IUser extends Deleteable, Identifiable {
 	 * @generated
 	 */
 	void setActive(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Allow External</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Allow External</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Allow External</em>' attribute.
+	 * @see #setAllowExternal(boolean)
+	 * @see ch.elexis.core.model.ModelPackage#getIUser_AllowExternal()
+	 * @model
+	 * @generated
+	 */
+	boolean isAllowExternal();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IUser#isAllowExternal <em>Allow External</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Allow External</em>' attribute.
+	 * @see #isAllowExternal()
+	 * @generated
+	 */
+	void setAllowExternal(boolean value);
 
 } // IUser

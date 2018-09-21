@@ -956,6 +956,15 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getIUser_AllowExternal() {
+		return (EAttribute)iUserEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getIdentifiable() {
 		return identifiableEClass;
 	}
@@ -2573,6 +2582,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEReference(iUserEClass, IUSER__ASSIGNED_CONTACT);
 		createEReference(iUserEClass, IUSER__ROLES);
 		createEAttribute(iUserEClass, IUSER__ACTIVE);
+		createEAttribute(iUserEClass, IUSER__ALLOW_EXTERNAL);
 
 		iLabItemEClass = createEClass(ILAB_ITEM);
 		createEAttribute(iLabItemEClass, ILAB_ITEM__TYP);
@@ -2987,6 +2997,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEReference(getIUser_AssignedContact(), this.getIContact(), null, "assignedContact", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIUser_Roles(), this.getIRole(), null, "roles", null, 0, -1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIUser_Active(), ecorePackage.getEBoolean(), "active", null, 1, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIUser_AllowExternal(), ecorePackage.getEBoolean(), "allowExternal", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iLabItemEClass, ILabItem.class, "ILabItem", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getILabItem_Typ(), theTypesPackage.getLabItemTyp(), "typ", null, 0, 1, ILabItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

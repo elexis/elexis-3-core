@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="ch.elexis.core.services.UserService">
+   <service>
+      <provide interface="ch.elexis.core.services.IUserService"/>
+   </service>
+   <reference cardinality="1..1" field="modelService" interface="ch.elexis.core.services.IModelService" name="modelService"/>
+   <implementation class="ch.elexis.core.services.UserService"/>
+</scr:component>

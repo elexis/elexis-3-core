@@ -1919,13 +1919,22 @@ public interface ModelPackage extends EPackage {
 	int IUSER__ACTIVE = DELETEABLE_FEATURE_COUNT + 5;
 
 	/**
+	 * The feature id for the '<em><b>Allow External</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IUSER__ALLOW_EXTERNAL = DELETEABLE_FEATURE_COUNT + 6;
+
+	/**
 	 * The number of structural features of the '<em>IUser</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IUSER_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 6;
+	int IUSER_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4663,6 +4672,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIUser_Active();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IUser#isAllowExternal <em>Allow External</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Allow External</em>'.
+	 * @see ch.elexis.core.model.IUser#isAllowExternal()
+	 * @see #getIUser()
+	 * @generated
+	 */
+	EAttribute getIUser_AllowExternal();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6987,6 +7007,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IUSER__ACTIVE = eINSTANCE.getIUser_Active();
+
+		/**
+		 * The meta object literal for the '<em><b>Allow External</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IUSER__ALLOW_EXTERNAL = eINSTANCE.getIUser_AllowExternal();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}' class.
