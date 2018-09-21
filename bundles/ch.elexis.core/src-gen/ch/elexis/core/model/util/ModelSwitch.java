@@ -313,6 +313,13 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ModelPackage.IBILLING_SYSTEM_FACTOR: {
+				IBillingSystemFactor iBillingSystemFactor = (IBillingSystemFactor)theEObject;
+				T1 result = caseIBillingSystemFactor(iBillingSystemFactor);
+				if (result == null) result = caseIdentifiable(iBillingSystemFactor);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ModelPackage.ICONFIG: {
 				IConfig iConfig = (IConfig)theEObject;
 				T1 result = caseIConfig(iConfig);
@@ -768,6 +775,21 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseICoverage(ICoverage object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IBilling System Factor</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IBilling System Factor</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIBillingSystemFactor(IBillingSystemFactor object) {
 		return null;
 	}
 

@@ -34,14 +34,10 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 
 	@Override
 	public IPatient getPatient(){
-		// TODO Auto-generated method stub
+		if (getEntity().getFall() != null) {
+			return ModelUtil.getAdapter(getEntity().getFall().getPatient(), IPatient.class);
+		}
 		return null;
-	}
-
-	@Override
-	public void setPatient(IPatient value){
-		// TODO why?
-		return;
 	}
 
 	@Override

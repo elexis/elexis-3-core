@@ -300,6 +300,25 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IBillingSystemFactor" abstract="true"
+      interface="true" eSuperTypes="#//Identifiable">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="system" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
+        <details key="attributeName" value="typ"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="factor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="validFrom" eType="ecore:EDataType types.ecore#//LocalDate">
+      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
+        <details key="attributeName" value="datum_von"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="validTo" eType="ecore:EDataType types.ecore#//LocalDate">
+      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
+        <details key="attributeName" value="datum_bis"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IConfig" abstract="true" interface="true"
       eSuperTypes="#//Identifiable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
@@ -406,7 +425,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="IEncounter" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="timeStamp" eType="ecore:EDataType types.ecore#//LocalDateTime"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="patient" eType="#//IPatient"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="patient" eType="#//IPatient"
+        changeable="false"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="coverage" eType="#//ICoverage">
       <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
         <details key="attributeName" value="fall"/>

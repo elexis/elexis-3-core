@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
 @Entity
@@ -22,7 +23,7 @@ public class VKPreis implements EntityWithId {
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@Column(length = 25)
-	private String id;
+	private String id = ElexisIdGenerator.generateId();
 
 	@Column(length = 80)
 	private String typ;

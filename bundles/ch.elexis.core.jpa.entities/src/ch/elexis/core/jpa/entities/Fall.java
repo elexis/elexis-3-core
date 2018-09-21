@@ -17,7 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
@@ -144,11 +143,11 @@ public class Fall implements EntityWithId, EntityWithDeleted, EntityWithExtInfo 
 		this.kostentrKontakt = kostentrKontakt;
 	}
 
-	public Kontakt getPatientKontakt() {
+	public Kontakt getPatient(){
 		return patientKontakt;
 	}
 
-	public void setPatientKontakt(Kontakt patientKontakt) {
+	public void setPatient(Kontakt patientKontakt){
 		this.patientKontakt = patientKontakt;
 	}
 
@@ -206,11 +205,6 @@ public class Fall implements EntityWithId, EntityWithDeleted, EntityWithExtInfo 
 
 	public void setConsultations(List<Behandlung> consultations) {
 		this.consultations = consultations;
-	}
-	
-	@Transient
-	public Kontakt getPatient() {
-		return getPatientKontakt();
 	}
 
 	@Override

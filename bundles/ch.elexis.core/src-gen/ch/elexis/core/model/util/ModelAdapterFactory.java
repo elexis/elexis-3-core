@@ -210,6 +210,10 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createICoverageAdapter();
 			}
 			@Override
+			public Adapter caseIBillingSystemFactor(IBillingSystemFactor object) {
+				return createIBillingSystemFactorAdapter();
+			}
+			@Override
 			public Adapter caseIConfig(IConfig object) {
 				return createIConfigAdapter();
 			}
@@ -596,6 +600,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createICoverageAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IBillingSystemFactor <em>IBilling System Factor</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IBillingSystemFactor
+	 * @generated
+	 */
+	public Adapter createIBillingSystemFactorAdapter() {
 		return null;
 	}
 

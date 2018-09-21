@@ -6,10 +6,12 @@ import ch.elexis.core.jpa.entities.DbImage;
 import ch.elexis.core.jpa.entities.Fall;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.entities.Userconfig;
+import ch.elexis.core.jpa.entities.VKPreis;
 import ch.elexis.core.jpa.entities.ZusatzAdresse;
 import ch.elexis.core.jpa.model.adapter.AbstractModelAdapterFactory;
 import ch.elexis.core.jpa.model.adapter.MappingEntry;
 import ch.elexis.core.model.Address;
+import ch.elexis.core.model.BillingSystemFactor;
 import ch.elexis.core.model.Config;
 import ch.elexis.core.model.Contact;
 import ch.elexis.core.model.Coverage;
@@ -17,6 +19,7 @@ import ch.elexis.core.model.DocumentBrief;
 import ch.elexis.core.model.Encounter;
 import ch.elexis.core.model.IAddress;
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IBillingSystemFactor;
 import ch.elexis.core.model.IBlob;
 import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
@@ -99,6 +102,9 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 			.adapterInitializer(adapter -> ((Mandator) adapter).setMandator(true)));
 		
 		addMapping(new MappingEntry(ICoverage.class, Coverage.class, Fall.class));
+		
+		addMapping(
+			new MappingEntry(IBillingSystemFactor.class, BillingSystemFactor.class, VKPreis.class));
 		
 		addMapping(new MappingEntry(IEncounter.class, Encounter.class, Behandlung.class));
 		

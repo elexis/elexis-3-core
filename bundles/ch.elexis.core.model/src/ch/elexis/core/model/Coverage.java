@@ -39,9 +39,9 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 	@Override
 	public void setPatient(IPatient value){
 		if (value != null) {
-			getEntity().setPatientKontakt(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
+			getEntity().setPatient(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
 		} else {
-			getEntity().setPatientKontakt(null);
+			getEntity().setPatient(null);
 		}
 	}
 	

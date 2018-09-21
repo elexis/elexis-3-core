@@ -771,7 +771,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPeriod()
 	 * @generated
 	 */
-	int IPERIOD = 26;
+	int IPERIOD = 27;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IDocument <em>IDocument</em>}' class.
@@ -1617,7 +1617,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIConfig()
 	 * @generated
 	 */
-	int ICONFIG = 24;
+	int ICONFIG = 25;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IUserConfig <em>IUser Config</em>}' class.
@@ -1627,7 +1627,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIUserConfig()
 	 * @generated
 	 */
-	int IUSER_CONFIG = 25;
+	int IUSER_CONFIG = 26;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IMandator <em>IMandator</em>}' class.
@@ -2983,6 +2983,61 @@ public interface ModelPackage extends EPackage {
 	int ICOVERAGE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 7;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IBillingSystemFactor <em>IBilling System Factor</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IBillingSystemFactor
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBillingSystemFactor()
+	 * @generated
+	 */
+	int IBILLING_SYSTEM_FACTOR = 24;
+
+	/**
+	 * The feature id for the '<em><b>System</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBILLING_SYSTEM_FACTOR__SYSTEM = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Factor</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBILLING_SYSTEM_FACTOR__FACTOR = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Valid From</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBILLING_SYSTEM_FACTOR__VALID_FROM = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Valid To</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBILLING_SYSTEM_FACTOR__VALID_TO = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The number of structural features of the '<em>IBilling System Factor</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBILLING_SYSTEM_FACTOR_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
 	 * The feature id for the '<em><b>Key</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3089,7 +3144,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIArticle()
 	 * @generated
 	 */
-	int IARTICLE = 27;
+	int IARTICLE = 28;
 
 	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
@@ -3243,7 +3298,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getWithExtInfo()
 	 * @generated
 	 */
-	int WITH_EXT_INFO = 28;
+	int WITH_EXT_INFO = 29;
 
 	/**
 	 * The number of structural features of the '<em>With Ext Info</em>' class.
@@ -3262,7 +3317,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRole()
 	 * @generated
 	 */
-	int IROLE = 29;
+	int IROLE = 30;
 
 	/**
 	 * The number of structural features of the '<em>IRole</em>' class.
@@ -3281,7 +3336,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBlob()
 	 * @generated
 	 */
-	int IBLOB = 30;
+	int IBLOB = 31;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -3327,7 +3382,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBillableVerifier()
 	 * @generated
 	 */
-	int IBILLABLE_VERIFIER = 31;
+	int IBILLABLE_VERIFIER = 32;
 
 	/**
 	 * The number of structural features of the '<em>IBillable Verifier</em>' class.
@@ -3346,7 +3401,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBillableOptifier()
 	 * @generated
 	 */
-	int IBILLABLE_OPTIFIER = 32;
+	int IBILLABLE_OPTIFIER = 33;
 
 	/**
 	 * The number of structural features of the '<em>IBillable Optifier</em>' class.
@@ -3365,7 +3420,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIEncounter()
 	 * @generated
 	 */
-	int IENCOUNTER = 33;
+	int IENCOUNTER = 34;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -3456,7 +3511,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBilled()
 	 * @generated
 	 */
-	int IBILLED = 34;
+	int IBILLED = 35;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -3502,7 +3557,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIStock()
 	 * @generated
 	 */
-	int ISTOCK = 35;
+	int ISTOCK = 36;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -3575,7 +3630,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIStockEntry()
 	 * @generated
 	 */
-	int ISTOCK_ENTRY = 36;
+	int ISTOCK_ENTRY = 37;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -3666,7 +3721,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIOrderEntry()
 	 * @generated
 	 */
-	int IORDER_ENTRY = 37;
+	int IORDER_ENTRY = 38;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -3748,7 +3803,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIOrder()
 	 * @generated
 	 */
-	int IORDER = 38;
+	int IORDER = 39;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -3803,7 +3858,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAddress()
 	 * @generated
 	 */
-	int IADDRESS = 39;
+	int IADDRESS = 40;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -3903,7 +3958,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIImage()
 	 * @generated
 	 */
-	int IIMAGE = 40;
+	int IIMAGE = 41;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -3967,7 +4022,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getWithAssignableId()
 	 * @generated
 	 */
-	int WITH_ASSIGNABLE_ID = 41;
+	int WITH_ASSIGNABLE_ID = 42;
 
 	/**
 	 * The number of structural features of the '<em>With Assignable Id</em>' class.
@@ -5507,6 +5562,60 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getICoverage_InsuranceNumber();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IBillingSystemFactor <em>IBilling System Factor</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IBilling System Factor</em>'.
+	 * @see ch.elexis.core.model.IBillingSystemFactor
+	 * @generated
+	 */
+	EClass getIBillingSystemFactor();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IBillingSystemFactor#getSystem <em>System</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>System</em>'.
+	 * @see ch.elexis.core.model.IBillingSystemFactor#getSystem()
+	 * @see #getIBillingSystemFactor()
+	 * @generated
+	 */
+	EAttribute getIBillingSystemFactor_System();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IBillingSystemFactor#getFactor <em>Factor</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Factor</em>'.
+	 * @see ch.elexis.core.model.IBillingSystemFactor#getFactor()
+	 * @see #getIBillingSystemFactor()
+	 * @generated
+	 */
+	EAttribute getIBillingSystemFactor_Factor();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IBillingSystemFactor#getValidFrom <em>Valid From</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Valid From</em>'.
+	 * @see ch.elexis.core.model.IBillingSystemFactor#getValidFrom()
+	 * @see #getIBillingSystemFactor()
+	 * @generated
+	 */
+	EAttribute getIBillingSystemFactor_ValidFrom();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IBillingSystemFactor#getValidTo <em>Valid To</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Valid To</em>'.
+	 * @see ch.elexis.core.model.IBillingSystemFactor#getValidTo()
+	 * @see #getIBillingSystemFactor()
+	 * @generated
+	 */
+	EAttribute getIBillingSystemFactor_ValidTo();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IOrganization <em>IOrganization</em>}'.
@@ -7558,6 +7667,48 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ICOVERAGE__INSURANCE_NUMBER = eINSTANCE.getICoverage_InsuranceNumber();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IBillingSystemFactor <em>IBilling System Factor</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IBillingSystemFactor
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBillingSystemFactor()
+		 * @generated
+		 */
+		EClass IBILLING_SYSTEM_FACTOR = eINSTANCE.getIBillingSystemFactor();
+
+		/**
+		 * The meta object literal for the '<em><b>System</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IBILLING_SYSTEM_FACTOR__SYSTEM = eINSTANCE.getIBillingSystemFactor_System();
+
+		/**
+		 * The meta object literal for the '<em><b>Factor</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IBILLING_SYSTEM_FACTOR__FACTOR = eINSTANCE.getIBillingSystemFactor_Factor();
+
+		/**
+		 * The meta object literal for the '<em><b>Valid From</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IBILLING_SYSTEM_FACTOR__VALID_FROM = eINSTANCE.getIBillingSystemFactor_ValidFrom();
+
+		/**
+		 * The meta object literal for the '<em><b>Valid To</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IBILLING_SYSTEM_FACTOR__VALID_TO = eINSTANCE.getIBillingSystemFactor_ValidTo();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IOrganization <em>IOrganization</em>}' class.

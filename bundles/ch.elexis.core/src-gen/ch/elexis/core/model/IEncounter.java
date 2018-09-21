@@ -73,22 +73,11 @@ public interface IEncounter extends Identifiable, Deleteable {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Patient</em>' reference.
-	 * @see #setPatient(IPatient)
 	 * @see ch.elexis.core.model.ModelPackage#getIEncounter_Patient()
-	 * @model
+	 * @model changeable="false"
 	 * @generated
 	 */
 	IPatient getPatient();
-
-	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IEncounter#getPatient <em>Patient</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Patient</em>' reference.
-	 * @see #getPatient()
-	 * @generated
-	 */
-	void setPatient(IPatient value);
 
 	/**
 	 * Returns the value of the '<em><b>Coverage</b></em>' reference.
