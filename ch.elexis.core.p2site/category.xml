@@ -20,5 +20,6 @@
    </feature>
    <bundle id="ch.elexis.core.data.tests" version="3.7.0.qualifier"/>
    <bundle id="ch.elexis.core.ui.usage" version="3.7.0.qualifier"/>
+   <bundle id="ch.elexis.core.test" version="1.0.0.qualifier"/>
    <category-def name="elexis_3_core" label="Elexis 3 Kern"/>
 </site>
