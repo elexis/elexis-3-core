@@ -1973,6 +1973,15 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getIRole_SystemRole() {
+		return (EAttribute)iRoleEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getIBlob() {
 		return iBlobEClass;
 	}
@@ -2700,6 +2709,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		withExtInfoEClass = createEClass(WITH_EXT_INFO);
 
 		iRoleEClass = createEClass(IROLE);
+		createEAttribute(iRoleEClass, IROLE__SYSTEM_ROLE);
 
 		iBlobEClass = createEClass(IBLOB);
 		createEAttribute(iBlobEClass, IBLOB__CONTENT);
@@ -2851,6 +2861,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iArticleEClass.getESuperTypes().add(this.getDeleteable());
 		iArticleEClass.getESuperTypes().add(this.getWithExtInfo());
 		iRoleEClass.getESuperTypes().add(this.getIdentifiable());
+		iRoleEClass.getESuperTypes().add(this.getWithAssignableId());
 		iBlobEClass.getESuperTypes().add(this.getIdentifiable());
 		iBlobEClass.getESuperTypes().add(this.getDeleteable());
 		iBlobEClass.getESuperTypes().add(this.getWithAssignableId());
@@ -3161,6 +3172,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEParameter(op, ecorePackage.getEJavaObject(), "value", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iRoleEClass, IRole.class, "IRole", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIRole_SystemRole(), ecorePackage.getEBoolean(), "systemRole", null, 0, 1, IRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iBlobEClass, IBlob.class, "IBlob", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIBlob_Content(), ecorePackage.getEByteArray(), "content", null, 0, 1, IBlob.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

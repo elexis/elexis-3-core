@@ -3320,13 +3320,22 @@ public interface ModelPackage extends EPackage {
 	int IROLE = 30;
 
 	/**
+	 * The feature id for the '<em><b>System Role</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IROLE__SYSTEM_ROLE = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
 	 * The number of structural features of the '<em>IRole</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IROLE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 0;
+	int IROLE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IBlob <em>IBlob</em>}' class.
@@ -5873,6 +5882,17 @@ public interface ModelPackage extends EPackage {
 	EClass getIRole();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IRole#isSystemRole <em>System Role</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>System Role</em>'.
+	 * @see ch.elexis.core.model.IRole#isSystemRole()
+	 * @see #getIRole()
+	 * @generated
+	 */
+	EAttribute getIRole_SystemRole();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IBlob <em>IBlob</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7919,6 +7939,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EClass IROLE = eINSTANCE.getIRole();
+
+		/**
+		 * The meta object literal for the '<em><b>System Role</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IROLE__SYSTEM_ROLE = eINSTANCE.getIRole_SystemRole();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IBlob <em>IBlob</em>}' class.

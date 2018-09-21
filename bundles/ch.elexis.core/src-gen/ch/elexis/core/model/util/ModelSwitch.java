@@ -364,6 +364,7 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				IRole iRole = (IRole)theEObject;
 				T1 result = caseIRole(iRole);
 				if (result == null) result = caseIdentifiable(iRole);
+				if (result == null) result = caseWithAssignableId(iRole);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}

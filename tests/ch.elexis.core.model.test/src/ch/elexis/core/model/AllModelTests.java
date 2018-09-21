@@ -9,8 +9,8 @@ import org.junit.runners.Suite.SuiteClasses;
 	ConfigTest.class, ContactTest.class, CoverageTest.class, DbImageTest.class,
 	DocumentBriefTest.class, EncounterTest.class, LabItemTest.class, LabMappingTest.class,
 	LaboratoryTest.class, LabOrderTest.class, LabResultTest.class, OrderEntryTest.class,
-	PatientTest.class, StockEntryTest.class, TypedArticleTest.class, UserConfigTest.class,
-	XidTest.class, BillingSystemFactorTest.class
+	PatientTest.class, RoleTest.class, StockEntryTest.class, TypedArticleTest.class,
+	UserConfigTest.class, XidTest.class, BillingSystemFactorTest.class
 })
 public class AllModelTests {
 	

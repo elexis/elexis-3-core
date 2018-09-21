@@ -261,7 +261,9 @@
         <genParameters ecoreParameter="model.ecore#//WithExtInfo/setExtInfo/value"/>
       </genOperations>
     </genClasses>
-    <genClasses image="false" ecoreClass="model.ecore#//IRole"/>
+    <genClasses image="false" ecoreClass="model.ecore#//IRole">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IRole/systemRole"/>
+    </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IBlob">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBlob/content"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBlob/date"/>

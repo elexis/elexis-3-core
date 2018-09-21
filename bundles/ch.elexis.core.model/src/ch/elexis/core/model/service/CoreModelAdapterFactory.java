@@ -38,6 +38,7 @@ import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.IUser;
@@ -49,6 +50,7 @@ import ch.elexis.core.model.Mandator;
 import ch.elexis.core.model.Organization;
 import ch.elexis.core.model.Patient;
 import ch.elexis.core.model.Person;
+import ch.elexis.core.model.Role;
 import ch.elexis.core.model.UserConfig;
 
 public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
@@ -111,6 +113,8 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 		addMapping(new MappingEntry(IAddress.class, Address.class, ZusatzAdresse.class));
 		
 		addMapping(new MappingEntry(IDocumentLetter.class, DocumentBrief.class, Brief.class));
+		
+		addMapping(new MappingEntry(IRole.class, Role.class, ch.elexis.core.jpa.entities.Role.class));
 		
 		addMapping(new MappingEntry(ILabItem.class, ch.elexis.core.model.LabItem.class,
 			ch.elexis.core.jpa.entities.LabItem.class));
