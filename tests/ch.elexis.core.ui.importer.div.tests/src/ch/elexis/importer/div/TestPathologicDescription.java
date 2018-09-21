@@ -19,10 +19,10 @@ import org.junit.Test;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.service.ConfigServiceHolder;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.importer.div.importers.HL7Parser;
 import ch.elexis.core.model.LabResultConstants;
-import ch.elexis.core.services.util.ConfigUtil;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.PathologicDescription;
 import ch.elexis.core.types.PathologicDescription.Description;
@@ -165,7 +165,7 @@ public class TestPathologicDescription {
 		CoreHub.userCfg.set(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, false);
 		CoreHub.userCfg.flush();
 		// test if parser will read correct value
-		assertFalse(ConfigUtil.isUserConfig(
+		assertFalse(ConfigServiceHolder.get().get(
 			ContextServiceHolder.get().getRootContext().getActiveUserContact().get(),
 			Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true));
 		

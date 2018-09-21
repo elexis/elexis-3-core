@@ -58,6 +58,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.data.service.ConfigServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.OrderServiceHolder;
 import ch.elexis.core.data.service.StockServiceHolder;
@@ -74,7 +75,6 @@ import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.util.ConfigUtil;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
@@ -424,13 +424,13 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 					}
 				}
 				
-				int trigger = ConfigUtil.getGlobalConfig(
+				int trigger = ConfigServiceHolder.get().get(
 					ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER,
 					ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER_DEFAULT);
 				boolean isInventoryBelow =
 					trigger == ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER_BELOW;
 				
-				boolean excludeAlreadyOrderedItems = ConfigUtil.isGlobalConfig(
+				boolean excludeAlreadyOrderedItems = ConfigServiceHolder.get().get(
 					Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER,
 					Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER_DEFAULT);
 				
