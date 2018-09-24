@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.IConfig;
@@ -18,7 +17,7 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
 @Component
 public class ConfigService implements IConfigService {
 	
-	@Reference(cardinality = ReferenceCardinality.MANDATORY)
+	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService modelService;
 	
 	public static final String LIST_SEPARATOR = ",";
@@ -55,7 +54,7 @@ public class ConfigService implements IConfigService {
 	public int get(String key, int defaultValue){
 		return Integer.parseInt(get(key, Integer.toString(defaultValue)));
 	}
-
+	
 	@Override
 	public List<String> getAsList(String key, List<String> defaultValue){
 		String val = get(key, null);
@@ -132,7 +131,7 @@ public class ConfigService implements IConfigService {
 	public int get(IContact contact, String key, int defaultValue){
 		return Integer.parseInt(get(contact, key, Integer.toString(defaultValue)));
 	}
-
+	
 	@Override
 	public List<String> getAsList(IContact contact, String key, List<String> defaultValue){
 		String val = get(contact, key, null);

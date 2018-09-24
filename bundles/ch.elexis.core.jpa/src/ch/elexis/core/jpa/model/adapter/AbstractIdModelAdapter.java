@@ -50,6 +50,11 @@ public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements 
 		return getEntity().toString();
 	}
 	
+	@Override
+	public Long getLastupdate(){
+		return getEntity().getLastupdate();
+	}
+	
 	protected Date toDate(LocalDateTime localDateTime){
 		ZonedDateTime atZone = localDateTime.atZone(ZoneId.systemDefault());
 		return Date.from(atZone.toInstant());

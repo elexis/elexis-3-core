@@ -45,6 +45,7 @@ public class Xid extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entitie
 		getEntity().setObject(value);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getObject(Class<T> clazz){
 		return (T) object;

@@ -4052,6 +4052,115 @@ public interface ModelPackage extends EPackage {
 	int WITH_ASSIGNABLE_ID_FEATURE_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IAppointment
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAppointment()
+	 * @generated
+	 */
+	int IAPPOINTMENT = 43;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Reason</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT__REASON = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>State</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT__STATE = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT__TYPE = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Start</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT__START = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>End</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT__END = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Duration Minutes</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT__DURATION_MINUTES = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The feature id for the '<em><b>Schedule</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT__SCHEDULE = IDENTIFIABLE_FEATURE_COUNT + 7;
+
+	/**
+	 * The feature id for the '<em><b>Created By</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT__CREATED_BY = IDENTIFIABLE_FEATURE_COUNT + 8;
+
+	/**
+	 * The feature id for the '<em><b>Subject Or Patient</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT__SUBJECT_OR_PATIENT = IDENTIFIABLE_FEATURE_COUNT + 9;
+
+	/**
+	 * The number of structural features of the '<em>IAppointment</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 10;
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IContact <em>IContact</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6517,6 +6626,115 @@ public interface ModelPackage extends EPackage {
 	EClass getWithAssignableId();
 
 	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IAppointment</em>'.
+	 * @see ch.elexis.core.model.IAppointment
+	 * @generated
+	 */
+	EClass getIAppointment();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#getReason <em>Reason</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Reason</em>'.
+	 * @see ch.elexis.core.model.IAppointment#getReason()
+	 * @see #getIAppointment()
+	 * @generated
+	 */
+	EAttribute getIAppointment_Reason();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#getState <em>State</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>State</em>'.
+	 * @see ch.elexis.core.model.IAppointment#getState()
+	 * @see #getIAppointment()
+	 * @generated
+	 */
+	EAttribute getIAppointment_State();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#getType <em>Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Type</em>'.
+	 * @see ch.elexis.core.model.IAppointment#getType()
+	 * @see #getIAppointment()
+	 * @generated
+	 */
+	EAttribute getIAppointment_Type();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#getStart <em>Start</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Start</em>'.
+	 * @see ch.elexis.core.model.IAppointment#getStart()
+	 * @see #getIAppointment()
+	 * @generated
+	 */
+	EAttribute getIAppointment_Start();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#getEnd <em>End</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>End</em>'.
+	 * @see ch.elexis.core.model.IAppointment#getEnd()
+	 * @see #getIAppointment()
+	 * @generated
+	 */
+	EAttribute getIAppointment_End();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#getDurationMinutes <em>Duration Minutes</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Duration Minutes</em>'.
+	 * @see ch.elexis.core.model.IAppointment#getDurationMinutes()
+	 * @see #getIAppointment()
+	 * @generated
+	 */
+	EAttribute getIAppointment_DurationMinutes();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#getSchedule <em>Schedule</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Schedule</em>'.
+	 * @see ch.elexis.core.model.IAppointment#getSchedule()
+	 * @see #getIAppointment()
+	 * @generated
+	 */
+	EAttribute getIAppointment_Schedule();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IAppointment#getCreatedBy <em>Created By</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Created By</em>'.
+	 * @see ch.elexis.core.model.IAppointment#getCreatedBy()
+	 * @see #getIAppointment()
+	 * @generated
+	 */
+	EReference getIAppointment_CreatedBy();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#getSubjectOrPatient <em>Subject Or Patient</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Subject Or Patient</em>'.
+	 * @see ch.elexis.core.model.IAppointment#getSubjectOrPatient()
+	 * @see #getIAppointment()
+	 * @generated
+	 */
+	EAttribute getIAppointment_SubjectOrPatient();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8447,6 +8665,88 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EClass WITH_ASSIGNABLE_ID = eINSTANCE.getWithAssignableId();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IAppointment
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAppointment()
+		 * @generated
+		 */
+		EClass IAPPOINTMENT = eINSTANCE.getIAppointment();
+
+		/**
+		 * The meta object literal for the '<em><b>Reason</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT__REASON = eINSTANCE.getIAppointment_Reason();
+
+		/**
+		 * The meta object literal for the '<em><b>State</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT__STATE = eINSTANCE.getIAppointment_State();
+
+		/**
+		 * The meta object literal for the '<em><b>Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT__TYPE = eINSTANCE.getIAppointment_Type();
+
+		/**
+		 * The meta object literal for the '<em><b>Start</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT__START = eINSTANCE.getIAppointment_Start();
+
+		/**
+		 * The meta object literal for the '<em><b>End</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT__END = eINSTANCE.getIAppointment_End();
+
+		/**
+		 * The meta object literal for the '<em><b>Duration Minutes</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT__DURATION_MINUTES = eINSTANCE.getIAppointment_DurationMinutes();
+
+		/**
+		 * The meta object literal for the '<em><b>Schedule</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT__SCHEDULE = eINSTANCE.getIAppointment_Schedule();
+
+		/**
+		 * The meta object literal for the '<em><b>Created By</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IAPPOINTMENT__CREATED_BY = eINSTANCE.getIAppointment_CreatedBy();
+
+		/**
+		 * The meta object literal for the '<em><b>Subject Or Patient</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT__SUBJECT_OR_PATIENT = eINSTANCE.getIAppointment_SubjectOrPatient();
 
 	}
 

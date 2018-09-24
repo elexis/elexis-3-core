@@ -5,12 +5,14 @@ import ch.elexis.core.jpa.entities.Brief;
 import ch.elexis.core.jpa.entities.DbImage;
 import ch.elexis.core.jpa.entities.Fall;
 import ch.elexis.core.jpa.entities.Kontakt;
+import ch.elexis.core.jpa.entities.Termin;
 import ch.elexis.core.jpa.entities.Userconfig;
 import ch.elexis.core.jpa.entities.VKPreis;
 import ch.elexis.core.jpa.entities.ZusatzAdresse;
 import ch.elexis.core.jpa.model.adapter.AbstractModelAdapterFactory;
 import ch.elexis.core.jpa.model.adapter.MappingEntry;
 import ch.elexis.core.model.Address;
+import ch.elexis.core.model.Appointment;
 import ch.elexis.core.model.BillingSystemFactor;
 import ch.elexis.core.model.Config;
 import ch.elexis.core.model.Contact;
@@ -18,6 +20,7 @@ import ch.elexis.core.model.Coverage;
 import ch.elexis.core.model.DocumentBrief;
 import ch.elexis.core.model.Encounter;
 import ch.elexis.core.model.IAddress;
+import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBillingSystemFactor;
 import ch.elexis.core.model.IBlob;
@@ -70,6 +73,8 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 	
 	@Override
 	protected void initializeMappings(){
+		addMapping(new MappingEntry(IAppointment.class, Appointment.class, Termin.class));
+		
 		addMapping(new MappingEntry(IConfig.class, Config.class,
 			ch.elexis.core.jpa.entities.Config.class));
 		addMapping(new MappingEntry(IUserConfig.class, UserConfig.class, Userconfig.class));

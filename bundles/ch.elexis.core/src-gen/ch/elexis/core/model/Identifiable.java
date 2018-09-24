@@ -58,4 +58,12 @@ public interface Identifiable {
 	 * @generated
 	 */
 	IXid getXid(String domain);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	Long getLastupdate();
 } // Identifiable

@@ -1,33 +1,3 @@
-CREATE TABLE `AGNTERMINE`
-(
-  `ID` varchar(127) NOT NULL,
-  `lastupdate` bigint(20) DEFAULT NULL,
-  `PatID` varchar(80) DEFAULT NULL,
-  `Bereich` varchar(25) DEFAULT NULL,
-  `Tag` char(8) DEFAULT NULL,
-  `Beginn` char(4) DEFAULT NULL,
-  `Dauer` char(4) DEFAULT NULL,
-  `Grund` longtext,
-  `StatusHistory` longtext,
-  `TerminTyp` varchar(50) DEFAULT NULL,
-  `TerminStatus` varchar(50) DEFAULT NULL,
-  `ErstelltVon` varchar(25) DEFAULT NULL,
-  `Angelegt` varchar(10) DEFAULT NULL,
-  `lastedit` varchar(10) DEFAULT NULL,
-  `PalmID` int(11) DEFAULT '0',
-  `flags` varchar(10) DEFAULT NULL,
-  `deleted` char(2) DEFAULT '0',
-  `Extension` longtext,
-  `linkgroup` varchar(50) DEFAULT NULL,
-  `priority` char(1) DEFAULT NULL,
-  `caseType` char(1) DEFAULT NULL,
-  `insuranceType` char(1) DEFAULT NULL,
-  `treatmentReason` char(1) DEFAULT NULL
-);
-
-CREATE INDEX it on AGNTERMINE (Tag,Beginn,Bereich);
-CREATE INDEX pattern on AGNTERMINE (PatID);
-CREATE INDEX agnbereich on AGNTERMINE (Bereich);
 INSERT INTO AGNTERMINE (ID, PatId) VALUES (1, '');
 
 INSERT INTO `config` VALUES (NULL, 'agenda/bereiche', 'Praxis,Claudia Einstein,Michael Wildhauser,Arzt 1,Kiril Checkov, Julian Marti,Thomas Schellenberg');

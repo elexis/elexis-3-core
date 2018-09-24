@@ -14,7 +14,7 @@ import ch.rgw.tools.PasswordEncryptionService;
 @Component
 public class UserService implements IUserService {
 	
-	@Reference
+	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService modelService;
 	
 	@Override
