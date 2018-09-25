@@ -147,6 +147,12 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ILabItem" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable">
+    <eOperations name="addMapping" eType="#//ILabMapping">
+      <eParameters name="mapping" lowerBound="1" eType="#//ILabMapping"/>
+    </eOperations>
+    <eOperations name="removeMapping" lowerBound="1">
+      <eParameters name="mapping" eType="#//ILabMapping"/>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="typ" eType="ecore:EDataType types.ecore#//LabItemTyp"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="referenceMale" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="referenceFemale" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -160,6 +166,9 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="formula" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="loincCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="billingCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="export" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mappings" upperBound="-1"
+        eType="#//ILabMapping" changeable="false"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ILabResult" abstract="true" interface="true"
       eSuperTypes="#//Deleteable #//Identifiable #//WithExtInfo">
@@ -320,6 +329,8 @@
         <details key="attributeName" value="datumbis"/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="encounters" upperBound="-1"
+        eType="#//IEncounter" changeable="false"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IBillingSystemFactor" abstract="true"
       interface="true" eSuperTypes="#//Identifiable">

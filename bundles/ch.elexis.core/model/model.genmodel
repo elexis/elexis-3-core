@@ -121,6 +121,14 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabItem/formula"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabItem/loincCode"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabItem/billingCode"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabItem/export"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference model.ecore#//ILabItem/mappings"/>
+      <genOperations ecoreOperation="model.ecore#//ILabItem/addMapping">
+        <genParameters ecoreParameter="model.ecore#//ILabItem/addMapping/mapping"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//ILabItem/removeMapping">
+        <genParameters ecoreParameter="model.ecore#//ILabItem/removeMapping/mapping"/>
+      </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//ILabResult">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabResult/result"/>
@@ -224,6 +232,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ICoverage/costBearer"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/insuranceNumber"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/dateTo"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference model.ecore#//ICoverage/encounters"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IBillingSystemFactor">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBillingSystemFactor/system"/>

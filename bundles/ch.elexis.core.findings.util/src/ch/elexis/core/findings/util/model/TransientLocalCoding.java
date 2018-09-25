@@ -91,4 +91,9 @@ public class TransientLocalCoding implements ILocalCoding {
 		this.display = display;
 	}
 	
+	@Override
+	public Long getLastupdate(){
+		return null;
+	}
+	
 }

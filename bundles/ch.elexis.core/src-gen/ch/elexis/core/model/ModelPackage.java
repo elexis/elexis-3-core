@@ -2063,13 +2063,31 @@ public interface ModelPackage extends EPackage {
 	int ILAB_ITEM__BILLING_CODE = IDENTIFIABLE_FEATURE_COUNT + 13;
 
 	/**
+	 * The feature id for the '<em><b>Export</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_ITEM__EXPORT = IDENTIFIABLE_FEATURE_COUNT + 14;
+
+	/**
+	 * The feature id for the '<em><b>Mappings</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_ITEM__MAPPINGS = IDENTIFIABLE_FEATURE_COUNT + 15;
+
+	/**
 	 * The number of structural features of the '<em>ILab Item</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_ITEM_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 14;
+	int ILAB_ITEM_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 16;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -2992,13 +3010,22 @@ public interface ModelPackage extends EPackage {
 	int ICOVERAGE__DATE_TO = DELETEABLE_FEATURE_COUNT + 7;
 
 	/**
+	 * The feature id for the '<em><b>Encounters</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICOVERAGE__ENCOUNTERS = DELETEABLE_FEATURE_COUNT + 8;
+
+	/**
 	 * The number of structural features of the '<em>ICoverage</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ICOVERAGE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 8;
+	int ICOVERAGE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 9;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IBillingSystemFactor <em>IBilling System Factor</em>}' class.
@@ -4985,6 +5012,28 @@ public interface ModelPackage extends EPackage {
 	EAttribute getILabItem_BillingCode();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ILabItem#getExport <em>Export</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Export</em>'.
+	 * @see ch.elexis.core.model.ILabItem#getExport()
+	 * @see #getILabItem()
+	 * @generated
+	 */
+	EAttribute getILabItem_Export();
+
+	/**
+	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.ILabItem#getMappings <em>Mappings</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Mappings</em>'.
+	 * @see ch.elexis.core.model.ILabItem#getMappings()
+	 * @see #getILabItem()
+	 * @generated
+	 */
+	EReference getILabItem_Mappings();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.ILabResult <em>ILab Result</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5720,6 +5769,17 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getICoverage_DateTo();
+
+	/**
+	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.ICoverage#getEncounters <em>Encounters</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Encounters</em>'.
+	 * @see ch.elexis.core.model.ICoverage#getEncounters()
+	 * @see #getICoverage()
+	 * @generated
+	 */
+	EReference getICoverage_Encounters();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IBillingSystemFactor <em>IBilling System Factor</em>}'.
@@ -7397,6 +7457,22 @@ public interface ModelPackage extends EPackage {
 		EAttribute ILAB_ITEM__BILLING_CODE = eINSTANCE.getILabItem_BillingCode();
 
 		/**
+		 * The meta object literal for the '<em><b>Export</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ILAB_ITEM__EXPORT = eINSTANCE.getILabItem_Export();
+
+		/**
+		 * The meta object literal for the '<em><b>Mappings</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ILAB_ITEM__MAPPINGS = eINSTANCE.getILabItem_Mappings();
+
+		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.ILabResult <em>ILab Result</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -7961,6 +8037,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ICOVERAGE__DATE_TO = eINSTANCE.getICoverage_DateTo();
+
+		/**
+		 * The meta object literal for the '<em><b>Encounters</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ICOVERAGE__ENCOUNTERS = eINSTANCE.getICoverage_Encounters();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IBillingSystemFactor <em>IBilling System Factor</em>}' class.

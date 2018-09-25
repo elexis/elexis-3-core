@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.model.ILabMapping;
 import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IMandator;
@@ -28,11 +30,14 @@ import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.model.builder.IEncounterBuilder;
+import ch.elexis.core.model.builder.ILabItemBuilder;
+import ch.elexis.core.model.builder.ILabResultBuilder;
 import ch.elexis.core.model.builder.IUserBuilder;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.types.Gender;
+import ch.elexis.core.types.LabItemTyp;
 import ch.rgw.tools.VersionedResource;
 
 public class TestDatabaseInitializer {
@@ -380,34 +385,34 @@ public class TestDatabaseInitializer {
 		return mandant;
 	}
 	
-	//	/**
-	//	 * Initialize an test Prescription.
-	//	 * 
-	//	 * <li>Article: see {@link TestDatabaseInitializer#initializeArtikelstamm()}</li>
-	//	 * <li>Patient: see {@link TestDatabaseInitializer#initializePatient()}</li>
-	//	 * <li>Dosage: 1-1-1-1</li>
-	//	 * 
-	//	 * @throws SQLException
-	//	 * @throws IOException
-	//	 * 
-	//	 */
-	//	public synchronized void initializePrescription() throws IOException, SQLException{
-	//		if (!isDbInitialized) {
-	//			initializeDb();
-	//		}
-	//		if (!isPatientInitialized) {
-	//			initializePatient();
-	//		}
-	//		if (!isArtikelstammInitialized) {
-	//			initializeArtikelstamm();
-	//		}
-	//		if (!isPrescriptionInitialized) {
-	//			prescription = new PrescriptionService.Builder(artikelstammitem, patient, "1-1-1-1")
-	//				.buildAndSave();
-	//			
-	//			isPrescriptionInitialized = true;
-	//		}
-	//	}
+//		/**
+//		 * Initialize an test Prescription.
+//		 * 
+//		 * <li>Article: see {@link TestDatabaseInitializer#initializeArtikelstamm()}</li>
+//		 * <li>Patient: see {@link TestDatabaseInitializer#initializePatient()}</li>
+//		 * <li>Dosage: 1-1-1-1</li>
+//		 * 
+//		 * @throws SQLException
+//		 * @throws IOException
+//		 * 
+//		 */
+//		public synchronized void initializePrescription() throws IOException, SQLException{
+//			if (!isDbInitialized) {
+//				initializeDb();
+//			}
+//			if (!isPatientInitialized) {
+//				initializePatient();
+//			}
+//			if (!isArtikelstammInitialized) {
+//				initializeArtikelstamm();
+//			}
+//			if (!isPrescriptionInitialized) {
+//				prescription = new PrescriptionService.Builder(artikelstammitem, patient, "1-1-1-1")
+//					.buildAndSave();
+//				
+//				isPrescriptionInitialized = true;
+//			}
+//		}
 	
 	/**
 	 * Initialize a test Fall.
@@ -480,78 +485,85 @@ public class TestDatabaseInitializer {
 		return behandlung;
 	}
 	
-	//	/**
-	//	 * Initialize a test ILabResults.
-	//	 * 
-	//	 * @throws SQLException
-	//	 * @throws IOException
-	//	 * 
-	//	 */
-	//	public synchronized void initializeILabResult() throws IOException, SQLException {
-	//		if (!isPatientInitialized) {
-	//			initializePatient();
-	//		}
-	//		if (!isILabResultInitialized) {
-	//			laboratory = new KontaktService.OrganizationBuilder("Labor Test").laboratory().build();
-	//			laboratory.setDescription2("Test");
-	//			PersistenceService.save(laboratory);
-	//
-	//			laboratory2 = new KontaktService.OrganizationBuilder("Labor Test2").laboratory().build();
-	//			laboratory2.setDescription2("Test2");
-	//			PersistenceService.save(laboratory2);
-	//			XidService.setDomainId(laboratory2, XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY, "ZURANA",
-	//					XidQuality.ASSIGNMENT_REGIONAL);
-	//
-	//			labItem = (ILabItem) new ILabItemService.Builder("TEST NUMERIC", "Test Laboratory", laboratory, ">1", "3-3.5",
-	//					"unit", ILabItemTyp.NUMERIC, "group", 1).build();
-	//			labItem.setExport("vitolabkey:1,2");
-	//			ILabItemService.save(labItem);
-	//
-	//			ILabItemService.addLabMapping(labItem, laboratory2, "TEST_NUMERIC_EXT");
-	//
-	//			ILabItem textILabItem = (ILabItem) new ILabItemService.Builder("TEST TEXT", "Test Laboratory", laboratory, null,
-	//					null, "unit", ILabItemTyp.TEXT, "group", 2).build();
-	//			ILabItemService.save(labItem);
-	//
-	//			ILabResult labResult = new ILabResultService.Builder(labItem, patient).build();
-	//
-	//			labResult.setObservationtime(LocalDateTime.of(2016, Month.DECEMBER, 14, 17, 44, 25));
-	//			labResult.setUnit("u");
-	//			labResult.setRefMale("<1");
-	//			labResult.setRefFemale("1-1.5");
-	//			labResult.setOrigin(laboratory);
-	//			labResult.setResult("2");
-	//			labResult.setComment("no comment");
-	//			ILabResultService.save(labResult);
-	//			labResults.add(labResult);
-	//
-	//			labResult = new ILabResultService.Builder(labItem, patient).build();
-	//			labResult.setObservationtime(LocalDateTime.of(2016, Month.DECEMBER, 15, 10, 10, 30));
-	//			labResult.setOrigin(laboratory);
-	//			labResult.setResult("2");
-	//			labResult.setComment("no comment");
-	//			ILabResultService.save(labResult);
-	//			labResults.add(labResult);
-	//
-	//			labResult = new ILabResultService.Builder(labItem, patient).build();
-	//			labResult.setObservationtime(LocalDateTime.of(2017, Month.FEBRUARY, 28, 12, 59, 23));
-	//			labResult.setOrigin(laboratory);
-	//			labResult.setResult("124/79");
-	//			labResult.setUnit("Bloodpressure");
-	//			ILabResultService.save(labResult);
-	//			labResults.add(labResult);
-	//
-	//			labResult = new ILabResultService.Builder(textILabItem, patient).build();
-	//			labResult.setObservationtime(LocalDateTime.of(2017, Month.FEBRUARY, 28, 10, 02, 23));
-	//			labResult.setOrigin(laboratory);
-	//			labResult.setResult("(Text)");
-	//			labResult.setComment("The Text Result ...");
-	//			ILabResultService.save(labResult);
-	//			labResults.add(labResult);
-	//
-	//			isILabResultInitialized = true;
-	//		}
-	//	}
+	/**
+	 * Initialize a test ILabResults.
+	 * 
+	 * @throws SQLException
+	 * @throws IOException
+	 * 
+	 */
+	public synchronized void initializeLabResult() throws IOException, SQLException{
+		if (!isPatientInitialized) {
+			initializePatient();
+		}
+		if (!isILabResultInitialized) {
+			laboratory = new IContactBuilder.LaboratoryBuilder(modelService, "Labor Test").build();
+			laboratory.setDescription2("Test");
+			modelService.save(laboratory);
+			
+			laboratory2 =
+				new IContactBuilder.LaboratoryBuilder(modelService, "Labor Test2").build();
+			laboratory2.setDescription2("Test2");
+			laboratory2.addXid(XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY, "ZURANA", true);
+			modelService.save(laboratory2);
+			
+			labItem = (ILabItem) new ILabItemBuilder(modelService, "TEST NUMERIC",
+				"Test Laboratory", ">1", "3-3.5", "unit", LabItemTyp.NUMERIC, "group", 1)
+					.origin(laboratory, "TEST NUMERIC").build();
+			labItem.setExport("vitolabkey:1,2");
+			modelService.save(labItem);
+			
+			ILabMapping mapping = modelService.create(ILabMapping.class);
+			mapping.setOrigin(laboratory2);
+			mapping.setItemName("TEST_NUMERIC_EXT");
+			modelService.save(mapping);
+			labItem.addMapping(mapping);
+			modelService.save(labItem);
+			
+			ILabItem textILabItem = (ILabItem) new ILabItemBuilder(modelService, "TEST TEXT",
+				"Test Laboratory", null, null, "unit", LabItemTyp.TEXT, "group", 2)
+					.origin(laboratory, "Test Laboratory").build();
+			modelService.save(labItem);
+			
+			ILabResult labResult = new ILabResultBuilder(modelService, labItem, patient).build();
+			
+			labResult.setObservationTime(LocalDateTime.of(2016, Month.DECEMBER, 14, 17, 44, 25));
+			labResult.setUnit("u");
+			labResult.setReferenceMale("<1");
+			labResult.setReferenceFemale("1-1.5");
+			labResult.setOrigin(laboratory);
+			labResult.setResult("2");
+			labResult.setComment("no comment");
+			modelService.save(labResult);
+			labResults.add(labResult);
+			
+			labResult = new ILabResultBuilder(modelService, labItem, patient).build();
+			labResult.setObservationTime(LocalDateTime.of(2016, Month.DECEMBER, 15, 10, 10, 30));
+			labResult.setOrigin(laboratory);
+			labResult.setResult("2");
+			labResult.setComment("no comment");
+			modelService.save(labResult);
+			labResults.add(labResult);
+			
+			labResult = new ILabResultBuilder(modelService, labItem, patient).build();
+			labResult.setObservationTime(LocalDateTime.of(2017, Month.FEBRUARY, 28, 12, 59, 23));
+			labResult.setOrigin(laboratory);
+			labResult.setResult("124/79");
+			labResult.setUnit("Bloodpressure");
+			modelService.save(labResult);
+			labResults.add(labResult);
+			
+			labResult = new ILabResultBuilder(modelService, textILabItem, patient).build();
+			labResult.setObservationTime(LocalDateTime.of(2017, Month.FEBRUARY, 28, 10, 02, 23));
+			labResult.setOrigin(laboratory);
+			labResult.setResult("(Text)");
+			labResult.setComment("The Text Result ...");
+			modelService.save(labResult);
+			labResults.add(labResult);
+			
+			isILabResultInitialized = true;
+		}
+	}
 	
 	public ILabItem getILabItem(){
 		return labItem;
@@ -565,7 +577,7 @@ public class TestDatabaseInitializer {
 		return laboratory2;
 	}
 	
-	public static List<ILabResult> getILabResults(){
+	public static List<ILabResult> getLabResults(){
 		return labResults;
 	}
 	

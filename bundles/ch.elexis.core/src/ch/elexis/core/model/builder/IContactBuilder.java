@@ -2,6 +2,7 @@ package ch.elexis.core.model.builder;
 
 import java.time.LocalDate;
 
+import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
@@ -47,12 +48,15 @@ public class IContactBuilder {
 			super(modelService);
 			object = modelService.create(IOrganization.class);
 			object.setDescription1(name);
-			object.setOrganization(true);
 		}
-
-		public OrganizationBuilder laboratory() {
-			object.setLaboratory(true);
-			return this;
+	}
+	
+	public static class LaboratoryBuilder extends AbstractBuilder<ILaboratory> {
+		public LaboratoryBuilder(IModelService modelService, String name){
+			super(modelService);
+			object = modelService.create(ILaboratory.class);
+			object.setDescription1(name);
 		}
+		
 	}
 }

@@ -1,5 +1,8 @@
 package ch.elexis.core.jpa.entities;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -9,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -89,6 +93,10 @@ public class LabItem implements EntityWithId, EntityWithDeleted {
 
 	@Column(length = 255)
 	private String formula;
+	
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "labitemid")
+	protected Collection<LabMapping> mappings = new HashSet<>();
 
 	/**
 	 * @return the variable name of this LabItem as used in LabItems of type
@@ -265,5 +273,13 @@ public class LabItem implements EntityWithId, EntityWithDeleted {
 	@Override
 	public boolean equals(Object obj){
 		return EntityWithId.idEquals(this, obj);
+	}
+	
+	public Collection<LabMapping> getMappings(){
+		return mappings;
+	}
+	
+	public void setMappings(Collection<LabMapping> mappings){
+		this.mappings = mappings;
 	}
 }

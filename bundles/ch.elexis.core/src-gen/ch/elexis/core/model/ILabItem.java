@@ -11,6 +11,7 @@
 package ch.elexis.core.model;
 
 import ch.elexis.core.types.LabItemTyp;
+import java.util.List;
 
 /**
  * <!-- begin-user-doc -->
@@ -34,6 +35,8 @@ import ch.elexis.core.types.LabItemTyp;
  *   <li>{@link ch.elexis.core.model.ILabItem#getFormula <em>Formula</em>}</li>
  *   <li>{@link ch.elexis.core.model.ILabItem#getLoincCode <em>Loinc Code</em>}</li>
  *   <li>{@link ch.elexis.core.model.ILabItem#getBillingCode <em>Billing Code</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabItem#getExport <em>Export</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabItem#getMappings <em>Mappings</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getILabItem()
@@ -378,5 +381,63 @@ public interface ILabItem extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	void setBillingCode(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Export</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Export</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Export</em>' attribute.
+	 * @see #setExport(String)
+	 * @see ch.elexis.core.model.ModelPackage#getILabItem_Export()
+	 * @model
+	 * @generated
+	 */
+	String getExport();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.ILabItem#getExport <em>Export</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Export</em>' attribute.
+	 * @see #getExport()
+	 * @generated
+	 */
+	void setExport(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Mappings</b></em>' reference list.
+	 * The list contents are of type {@link ch.elexis.core.model.ILabMapping}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Mappings</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Mappings</em>' reference list.
+	 * @see ch.elexis.core.model.ModelPackage#getILabItem_Mappings()
+	 * @model changeable="false"
+	 * @generated
+	 */
+	List<ILabMapping> getMappings();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model mappingRequired="true"
+	 * @generated
+	 */
+	ILabMapping addMapping(ILabMapping mapping);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	void removeMapping(ILabMapping mapping);
 
 } // ILabItem

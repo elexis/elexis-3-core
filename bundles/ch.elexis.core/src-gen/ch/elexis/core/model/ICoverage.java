@@ -11,6 +11,7 @@
 package ch.elexis.core.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 /**
@@ -30,6 +31,7 @@ import java.time.LocalDate;
  *   <li>{@link ch.elexis.core.model.ICoverage#getCostBearer <em>Cost Bearer</em>}</li>
  *   <li>{@link ch.elexis.core.model.ICoverage#getInsuranceNumber <em>Insurance Number</em>}</li>
  *   <li>{@link ch.elexis.core.model.ICoverage#getDateTo <em>Date To</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ICoverage#getEncounters <em>Encounters</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getICoverage()
@@ -248,4 +250,20 @@ public interface ICoverage extends Deleteable, Identifiable, WithExtInfo {
 	 * @generated
 	 */
 	void setDateTo(LocalDate value);
+
+	/**
+	 * Returns the value of the '<em><b>Encounters</b></em>' reference list.
+	 * The list contents are of type {@link ch.elexis.core.model.IEncounter}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Encounters</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Encounters</em>' reference list.
+	 * @see ch.elexis.core.model.ModelPackage#getICoverage_Encounters()
+	 * @model changeable="false"
+	 * @generated
+	 */
+	List<IEncounter> getEncounters();
 } // ICoverage

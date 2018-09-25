@@ -1,6 +1,8 @@
 package ch.elexis.core.model;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import ch.elexis.core.jpa.entities.Fall;
 import ch.elexis.core.jpa.entities.Kontakt;
@@ -120,4 +122,9 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 		getEntity().setVersNummer(value);
 	}
 	
+	@Override
+	public List<IEncounter> getEncounters(){
+		return getEntity().getConsultations().parallelStream().filter(f -> !f.isDeleted())
+			.map(f -> ModelUtil.getAdapter(f, IEncounter.class)).collect(Collectors.toList());
+	}
 }

@@ -19,7 +19,7 @@ import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class LabMappingTest {
-	private IModelService modelSerice;
+	private IModelService modelService;
 	
 	private ILabItem item1;
 	private ILabItem item2;
@@ -29,53 +29,53 @@ public class LabMappingTest {
 	
 	@Before
 	public void before(){
-		modelSerice = OsgiServiceUtil.getService(IModelService.class).get();
+		modelService = OsgiServiceUtil.getService(IModelService.class).get();
 		
-		item1 = modelSerice.create(ILabItem.class);
+		item1 = modelService.create(ILabItem.class);
 		item1.setCode("testItem1");
 		item1.setName("test item name 1");
 		item1.setTyp(LabItemTyp.NUMERIC);
-		assertTrue(modelSerice.save(item1));
+		assertTrue(modelService.save(item1));
 		
-		item2 = modelSerice.create(ILabItem.class);
+		item2 = modelService.create(ILabItem.class);
 		item2.setCode("testItem2");
 		item2.setName("test item name 2");
 		item2.setTyp(LabItemTyp.TEXT);
-		assertTrue(modelSerice.save(item2));
+		assertTrue(modelService.save(item2));
 		
-		origin1 = modelSerice.create(IContact.class);
+		origin1 = modelService.create(IContact.class);
 		origin1.setDescription1("test origin 1");
-		assertTrue(modelSerice.save(origin1));
+		assertTrue(modelService.save(origin1));
 		
-		origin2 = modelSerice.create(IContact.class);
+		origin2 = modelService.create(IContact.class);
 		origin2.setDescription1("test origin 2");
-		assertTrue(modelSerice.save(origin2));
+		assertTrue(modelService.save(origin2));
 	}
 	
 	@After
 	public void after(){
-		modelSerice.remove(item1);
-		modelSerice.remove(item2);
+		modelService.remove(item1);
+		modelService.remove(item2);
 		
-		modelSerice.remove(origin1);
-		modelSerice.remove(origin2);
+		modelService.remove(origin1);
+		modelService.remove(origin2);
 		
-		OsgiServiceUtil.ungetService(modelSerice);
-		modelSerice = null;
+		OsgiServiceUtil.ungetService(modelService);
+		modelService = null;
 	}
 	
 	@Test
 	public void create(){
-		ILabMapping mapping = modelSerice.create(ILabMapping.class);
+		ILabMapping mapping = modelService.create(ILabMapping.class);
 		assertNotNull(mapping);
 		assertTrue(mapping instanceof ILabMapping);
 		
 		mapping.setItemName("TestItemMap1");
 		mapping.setItem(item1);
 		mapping.setOrigin(origin1);
-		assertTrue(modelSerice.save(mapping));
+		assertTrue(modelService.save(mapping));
 		
-		Optional<ILabMapping> loadedMapping = modelSerice.load(mapping.getId(), ILabMapping.class);
+		Optional<ILabMapping> loadedMapping = modelService.load(mapping.getId(), ILabMapping.class);
 		assertTrue(loadedMapping.isPresent());
 		assertFalse(mapping == loadedMapping.get());
 		assertEquals(mapping, loadedMapping.get());
@@ -83,24 +83,24 @@ public class LabMappingTest {
 		assertEquals(mapping.getItem(), loadedMapping.get().getItem());
 		assertEquals(mapping.getOrigin(), loadedMapping.get().getOrigin());
 		
-		modelSerice.remove(mapping);
+		modelService.remove(mapping);
 	}
 	
 	@Test
 	public void query(){
-		ILabMapping mapping1 = modelSerice.create(ILabMapping.class);
+		ILabMapping mapping1 = modelService.create(ILabMapping.class);
 		mapping1.setItemName("TestItemMap1");
 		mapping1.setItem(item1);
 		mapping1.setOrigin(origin1);
-		modelSerice.save(mapping1);
+		modelService.save(mapping1);
 		
-		ILabMapping mapping2 = modelSerice.create(ILabMapping.class);
+		ILabMapping mapping2 = modelService.create(ILabMapping.class);
 		mapping2.setItemName("TestItemMap2");
 		mapping2.setItem(item2);
 		mapping2.setOrigin(origin2);
-		modelSerice.save(mapping2);
+		modelService.save(mapping2);
 		
-		IQuery<ILabMapping> query = modelSerice.getQuery(ILabMapping.class);
+		IQuery<ILabMapping> query = modelService.getQuery(ILabMapping.class);
 		query.and(ModelPackage.Literals.ILAB_MAPPING__ITEM_NAME, COMPARATOR.EQUALS, "TestItemMap2");
 		query.and(ModelPackage.Literals.ILAB_MAPPING__ORIGIN, COMPARATOR.EQUALS, origin2);
 		List<ILabMapping> existing = query.execute();
@@ -109,7 +109,7 @@ public class LabMappingTest {
 		assertEquals(1, existing.size());
 		assertEquals(mapping2, existing.get(0));
 		
-		query = modelSerice.getQuery(ILabMapping.class);
+		query = modelService.getQuery(ILabMapping.class);
 		query.and(ModelPackage.Literals.ILAB_MAPPING__ITEM, COMPARATOR.EQUALS, item1);
 		query.and(ModelPackage.Literals.ILAB_MAPPING__ORIGIN, COMPARATOR.EQUALS, origin1);
 		existing = query.execute();
@@ -118,7 +118,7 @@ public class LabMappingTest {
 		assertEquals(1, existing.size());
 		assertEquals(mapping1, existing.get(0));
 		
-		modelSerice.remove(mapping1);
-		modelSerice.remove(mapping2);
+		modelService.remove(mapping1);
+		modelService.remove(mapping2);
 	}
 }
