@@ -125,7 +125,7 @@ public interface IUser extends Deleteable, Identifiable {
 	 * @return the value of the '<em>Assigned Contact</em>' reference.
 	 * @see #setAssignedContact(IContact)
 	 * @see ch.elexis.core.model.ModelPackage#getIUser_AssignedContact()
-	 * @model
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='kontakt'"
 	 * @generated
 	 */
 	IContact getAssignedContact();
@@ -207,5 +207,21 @@ public interface IUser extends Deleteable, Identifiable {
 	 * @generated
 	 */
 	void setAllowExternal(boolean value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model roleRequired="true"
+	 * @generated
+	 */
+	IRole addRole(IRole role);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model roleRequired="true"
+	 * @generated
+	 */
+	void removeRole(IRole role);
 
 } // IUser

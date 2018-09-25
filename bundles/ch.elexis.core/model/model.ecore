@@ -125,10 +125,20 @@
       eSuperTypes="#//IContact"/>
   <eClassifiers xsi:type="ecore:EClass" name="IUser" abstract="true" interface="true"
       eSuperTypes="#//Deleteable #//Identifiable">
+    <eOperations name="addRole" eType="#//IRole">
+      <eParameters name="role" lowerBound="1" eType="#//IRole"/>
+    </eOperations>
+    <eOperations name="removeRole">
+      <eParameters name="role" lowerBound="1" eType="#//IRole"/>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="username" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="hashedPassword" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="salt" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="assignedContact" eType="#//IContact"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="assignedContact" eType="#//IContact">
+      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
+        <details key="attributeName" value="kontakt"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="roles" upperBound="-1"
         eType="#//IRole"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="active" lowerBound="1"

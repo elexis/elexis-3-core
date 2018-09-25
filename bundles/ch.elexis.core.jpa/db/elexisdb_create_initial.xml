@@ -12,6 +12,7 @@
             <column name="BEGINN" type="CHAR(4)"/>
             <column name="DAUER" type="CHAR(4)"/>
             <column name="GRUND" type="VARCHAR(2147483647)"/>
+            <column name="STATUSHISTORY" type="VARCHAR(2147483647)"/>
             <column name="TERMINTYP" type="VARCHAR(50)"/>
             <column name="TERMINSTATUS" type="VARCHAR(50)"/>
             <column name="ERSTELLTVON" type="VARCHAR(25)"/>
@@ -22,7 +23,6 @@
             <column defaultValue="0" name="DELETED" type="CHAR(2)"/>
             <column name="EXTENSION" type="VARCHAR(2147483647)"/>
             <column name="LINKGROUP" type="VARCHAR(50)"/>
-            <column name="STATUSHISTORY" type="VARCHAR(2147483647)"/>
             <column name="PRIORITY" type="CHAR(1)"/>
             <column name="CASETYPE" type="CHAR(1)"/>
             <column name="INSURANCETYPE" type="CHAR(1)"/>

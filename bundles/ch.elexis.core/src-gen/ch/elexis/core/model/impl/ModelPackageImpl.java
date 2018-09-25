@@ -3112,6 +3112,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIUser_Active(), ecorePackage.getEBoolean(), "active", null, 1, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIUser_AllowExternal(), ecorePackage.getEBoolean(), "allowExternal", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		op = addEOperation(iUserEClass, this.getIRole(), "addRole", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIRole(), "role", 1, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iUserEClass, null, "removeRole", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIRole(), "role", 1, 1, IS_UNIQUE, IS_ORDERED);
+
 		initEClass(iLabItemEClass, ILabItem.class, "ILabItem", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getILabItem_Typ(), theTypesPackage.getLabItemTyp(), "typ", null, 0, 1, ILabItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getILabItem_ReferenceMale(), ecorePackage.getEString(), "referenceMale", null, 0, 1, ILabItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3464,6 +3470,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		   source,
 		   new String[] {
 			   "attributeName", "description1"
+		   });
+		addAnnotation
+		  (getIUser_AssignedContact(),
+		   source,
+		   new String[] {
+			   "attributeName", "kontakt"
 		   });
 		addAnnotation
 		  (getILabMapping_Item(),

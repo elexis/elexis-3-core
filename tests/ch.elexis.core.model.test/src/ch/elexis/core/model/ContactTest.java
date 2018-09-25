@@ -12,26 +12,20 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.types.AddressType;
 import ch.elexis.core.types.Country;
-import ch.elexis.core.types.Gender;
 
 public class ContactTest extends AbstractTest {
-	
-	private IPerson person;
-	
+		
 	@Before
 	public void before(){
 		super.before();
-		LocalDate dob = LocalDate.of(2016, 9, 1);
-		person = new IContactBuilder.PersonBuilder(modelService, "", "", dob, Gender.MALE)
-			.buildAndSave();
+		createPerson();
 	}
 	
 	@After
 	public void after(){
-		modelService.delete(person);
+		removePerson();
 		super.after();
 	}
 	

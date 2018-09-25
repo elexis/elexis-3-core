@@ -366,7 +366,7 @@ public class TestDatabaseInitializer {
 			IUser user = new IUserBuilder(modelService, "tst", mandantPerson).buildAndSave();
 			Optional<IRole> doctorRole = modelService.load("doctor", IRole.class);
 			if (doctorRole.isPresent()) {
-				user.getRoles().add(doctorRole.get());
+				user.addRole(doctorRole.get());
 			}
 			modelService.save(user);
 			

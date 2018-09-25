@@ -21,7 +21,7 @@ public class IUserBuilder extends AbstractBuilder<IUser> {
 		object.setHashedPassword("invalid");
 		
 		Optional<IRole> role = modelService.load(RoleConstants.SYSTEMROLE_LITERAL_USER, IRole.class);
-		object.getRoles().add(role.get());
+		object.addRole(role.get());
 	}
 	
 }
