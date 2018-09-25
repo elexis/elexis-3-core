@@ -223,6 +223,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/billingSystem"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ICoverage/costBearer"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/insuranceNumber"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/dateTo"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IBillingSystemFactor">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBillingSystemFactor/system"/>

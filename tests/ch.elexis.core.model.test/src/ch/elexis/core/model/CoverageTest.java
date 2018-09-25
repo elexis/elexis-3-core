@@ -3,6 +3,8 @@ package ch.elexis.core.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
@@ -18,7 +20,6 @@ public class CoverageTest extends AbstractTest {
 		createCoverage();
 	}
 	
-
 	@Override
 	public void after(){
 		removeCoverage();
@@ -34,6 +35,8 @@ public class CoverageTest extends AbstractTest {
 		assertEquals("testCoverage", coverage.getDescription());
 		assertEquals("testReason", coverage.getReason());
 		assertEquals("testBillingSystem", coverage.getBillingSystem());
+		assertNotNull(coverage.getDateFrom());
+		assertNull(coverage.getDateTo());
 		
 		IQuery<ICoverage> query = modelService.getQuery(ICoverage.class);
 		query.and(ModelPackage.Literals.ICOVERAGE__PATIENT, COMPARATOR.EQUALS, patient);

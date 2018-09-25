@@ -29,6 +29,7 @@ import java.time.LocalDate;
  *   <li>{@link ch.elexis.core.model.ICoverage#getBillingSystem <em>Billing System</em>}</li>
  *   <li>{@link ch.elexis.core.model.ICoverage#getCostBearer <em>Cost Bearer</em>}</li>
  *   <li>{@link ch.elexis.core.model.ICoverage#getInsuranceNumber <em>Insurance Number</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ICoverage#getDateTo <em>Date To</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getICoverage()
@@ -128,6 +129,7 @@ public interface ICoverage extends Deleteable, Identifiable, WithExtInfo {
 	 * @see #setDateFrom(LocalDate)
 	 * @see ch.elexis.core.model.ModelPackage#getICoverage_DateFrom()
 	 * @model dataType="ch.elexis.core.types.LocalDate" required="true"
+	 *        annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='datumvon'"
 	 * @generated
 	 */
 	LocalDate getDateFrom();
@@ -219,4 +221,31 @@ public interface ICoverage extends Deleteable, Identifiable, WithExtInfo {
 	 * @generated
 	 */
 	void setInsuranceNumber(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Date To</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Date To</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Date To</em>' attribute.
+	 * @see #setDateTo(LocalDate)
+	 * @see ch.elexis.core.model.ModelPackage#getICoverage_DateTo()
+	 * @model dataType="ch.elexis.core.types.LocalDate"
+	 *        annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='datumbis'"
+	 * @generated
+	 */
+	LocalDate getDateTo();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.ICoverage#getDateTo <em>Date To</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Date To</em>' attribute.
+	 * @see #getDateTo()
+	 * @generated
+	 */
+	void setDateTo(LocalDate value);
 } // ICoverage

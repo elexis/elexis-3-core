@@ -1729,6 +1729,15 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getICoverage_DateTo() {
+		return (EAttribute)iCoverageEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getIBillingSystemFactor() {
 		return iBillingSystemFactorEClass;
 	}
@@ -2782,6 +2791,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iCoverageEClass, ICOVERAGE__BILLING_SYSTEM);
 		createEReference(iCoverageEClass, ICOVERAGE__COST_BEARER);
 		createEAttribute(iCoverageEClass, ICOVERAGE__INSURANCE_NUMBER);
+		createEAttribute(iCoverageEClass, ICOVERAGE__DATE_TO);
 
 		iBillingSystemFactorEClass = createEClass(IBILLING_SYSTEM_FACTOR);
 		createEAttribute(iBillingSystemFactorEClass, IBILLING_SYSTEM_FACTOR__SYSTEM);
@@ -3249,6 +3259,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getICoverage_BillingSystem(), ecorePackage.getEString(), "billingSystem", null, 1, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getICoverage_CostBearer(), this.getIContact(), null, "costBearer", null, 0, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getICoverage_InsuranceNumber(), ecorePackage.getEString(), "insuranceNumber", null, 0, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getICoverage_DateTo(), theTypesPackage.getLocalDate(), "dateTo", null, 0, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iBillingSystemFactorEClass, IBillingSystemFactor.class, "IBillingSystemFactor", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIBillingSystemFactor_System(), ecorePackage.getEString(), "system", null, 0, 1, IBillingSystemFactor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3496,6 +3507,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 			   "attributeName", "patientKontakt"
 		   });
 		addAnnotation
+		  (getICoverage_DateFrom(),
+		   source,
+		   new String[] {
+			   "attributeName", "datumvon"
+		   });
+		addAnnotation
 		  (getICoverage_CostBearer(),
 		   source,
 		   new String[] {
@@ -3506,6 +3523,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		   source,
 		   new String[] {
 			   "attributeName", "versnummer"
+		   });
+		addAnnotation
+		  (getICoverage_DateTo(),
+		   source,
+		   new String[] {
+			   "attributeName", "datumbis"
 		   });
 		addAnnotation
 		  (getIBillingSystemFactor_System(),

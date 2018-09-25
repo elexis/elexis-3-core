@@ -72,6 +72,16 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 	
 	@Override
 	public void setDateFrom(LocalDate value){
+		getEntity().setDatumVon(value);
+	}
+	
+	@Override
+	public LocalDate getDateTo(){
+		return getEntity().getDatumBis();
+	}
+	
+	@Override
+	public void setDateTo(LocalDate value){
 		getEntity().setDatumBis(value);
 	}
 	

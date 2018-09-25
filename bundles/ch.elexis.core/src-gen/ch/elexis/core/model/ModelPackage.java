@@ -2983,13 +2983,22 @@ public interface ModelPackage extends EPackage {
 	int ICOVERAGE__INSURANCE_NUMBER = DELETEABLE_FEATURE_COUNT + 6;
 
 	/**
+	 * The feature id for the '<em><b>Date To</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICOVERAGE__DATE_TO = DELETEABLE_FEATURE_COUNT + 7;
+
+	/**
 	 * The number of structural features of the '<em>ICoverage</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ICOVERAGE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 7;
+	int ICOVERAGE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IBillingSystemFactor <em>IBilling System Factor</em>}' class.
@@ -5702,6 +5711,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getICoverage_InsuranceNumber();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ICoverage#getDateTo <em>Date To</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Date To</em>'.
+	 * @see ch.elexis.core.model.ICoverage#getDateTo()
+	 * @see #getICoverage()
+	 * @generated
+	 */
+	EAttribute getICoverage_DateTo();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IBillingSystemFactor <em>IBilling System Factor</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7933,6 +7953,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ICOVERAGE__INSURANCE_NUMBER = eINSTANCE.getICoverage_InsuranceNumber();
+
+		/**
+		 * The meta object literal for the '<em><b>Date To</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ICOVERAGE__DATE_TO = eINSTANCE.getICoverage_DateTo();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IBillingSystemFactor <em>IBilling System Factor</em>}' class.

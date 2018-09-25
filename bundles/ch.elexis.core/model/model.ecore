@@ -298,7 +298,11 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="reason" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateFrom" lowerBound="1"
-        eType="ecore:EDataType types.ecore#//LocalDate"/>
+        eType="ecore:EDataType types.ecore#//LocalDate">
+      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
+        <details key="attributeName" value="datumvon"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="billingSystem" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="costBearer" eType="#//IContact">
@@ -309,6 +313,11 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="insuranceNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
         <details key="attributeName" value="versnummer"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateTo" eType="ecore:EDataType types.ecore#//LocalDate">
+      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
+        <details key="attributeName" value="datumbis"/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
