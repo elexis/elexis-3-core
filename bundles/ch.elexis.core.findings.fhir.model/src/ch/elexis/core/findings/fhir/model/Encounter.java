@@ -1,7 +1,7 @@
 package ch.elexis.core.findings.fhir.model;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -125,7 +125,7 @@ public class Encounter
 		if (resource.isPresent()) {
 			return accessor.getType((DomainResource) resource.get());
 		}
-		return Collections.emptyList();
+		return new ArrayList<>();
 	}
 	
 	@Override
@@ -134,7 +134,7 @@ public class Encounter
 		if (resource.isPresent()) {
 			return accessor.getIndication((DomainResource) resource.get());
 		}
-		return Collections.emptyList();
+		return new ArrayList<>();
 	}
 	
 	@Override
