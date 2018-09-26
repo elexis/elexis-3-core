@@ -641,7 +641,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		if(garant.isDeleted()) {
 			tGarant.setBackground(UiDesk.getColor(UiDesk.COL_RED));
 			garantLabel = "*** " + garantLabel;
-			tGarant.setToolTipText(Messages.Object_is_marked_deleted);
+			tGarant.setToolTipText(Messages.Contact_is_marked_deleted);
 		}
 		tGarant.setText(garantLabel);
 		
@@ -658,7 +658,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			if (costBearer != null && costBearer.isDeleted()) {
 				tCostBearer.setBackground(UiDesk.getColor(UiDesk.COL_RED));
 				label = "*** " + label;
-				tCostBearer.setToolTipText(Messages.Object_is_marked_deleted);
+				tCostBearer.setToolTipText(Messages.Contact_is_marked_deleted);
 			}
 			tCostBearer.setText(label);
 		} else {

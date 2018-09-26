@@ -1117,6 +1117,7 @@ public class Messages extends NLS {
 	public static String MediVerlaufView_reading;
 	public static String MediVerlaufView_sorting;
 	public static String Object_is_marked_deleted;
+	public static String Contact_is_marked_deleted;
 	public static String PatHeuteView_accAmount;
 	public static String PatHeuteView_accTime;
 	public static String PatHeuteView_add;
