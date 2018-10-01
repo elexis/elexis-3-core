@@ -96,8 +96,10 @@ public class HL7Parser {
 		final TimeTool transmissionTime = new TimeTool();
 		String orderId = "";
 		
+		ILabContactResolver labResolver = labContactResolver != null ? labContactResolver : this.labContactResolver;
+
 		// assure resolvers are initialized
-		if (labContactResolver == null) {
+		if (labResolver == null) {
 			throw new IllegalArgumentException("labContactResolver must not be null");
 		}
 		if (labItemResolver == null) {
@@ -105,7 +107,7 @@ public class HL7Parser {
 		}
 		
 		try {
-			IContact labor = labContactResolver.getLabContact(myLab, hl7Reader.getSender());
+			IContact labor = labResolver.getLabContact(myLab, hl7Reader.getSender());
 			// stop here if lab does not exist
 			if (labor == null) {
 				logger.info("Exiting parsing process as labor is null");
