@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.AbstractPrimitive;
 import ca.uhn.hl7v2.model.Message;
-import ca.uhn.hl7v2.model.v24.group.ORU_R01_PATIENT;
 import ca.uhn.hl7v2.model.v24.datatype.CE;
+import ca.uhn.hl7v2.model.v24.datatype.CX;
 import ca.uhn.hl7v2.model.v24.datatype.FN;
 import ca.uhn.hl7v2.model.v24.datatype.FT;
 import ca.uhn.hl7v2.model.v24.datatype.NM;
@@ -23,6 +23,7 @@ import ca.uhn.hl7v2.model.v24.datatype.XAD;
 import ca.uhn.hl7v2.model.v24.datatype.XCN;
 import ca.uhn.hl7v2.model.v24.group.ORU_R01_OBSERVATION;
 import ca.uhn.hl7v2.model.v24.group.ORU_R01_ORDER_OBSERVATION;
+import ca.uhn.hl7v2.model.v24.group.ORU_R01_PATIENT;
 import ca.uhn.hl7v2.model.v24.group.ORU_R01_PATIENT_RESULT;
 import ca.uhn.hl7v2.model.v24.message.ORU_R01;
 import ca.uhn.hl7v2.model.v24.segment.MSH;
@@ -160,6 +161,12 @@ public class HL7ReaderV24 extends HL7Reader {
 			PID pid = oru.getPATIENT_RESULT().getPATIENT().getPID();
 			
 			String patid = pid.getPatientID().getCx1_ID().getValue();
+			if (StringTool.isNothing(patid)) {
+				CX[] pidList = pid.getPatientIdentifierList();
+				if (pidList != null && pidList.length > 0) {
+					patid = pidList[0].getCx1_ID().getValue();
+				}
+			}
 			String patid_alternative = pid.getPid4_AlternatePatientIDPID(0).getCx1_ID().getValue();
 			if (StringTool.isNothing(patid)) {
 				patid = pid.getPatientID().getCx1_ID().getValue();
