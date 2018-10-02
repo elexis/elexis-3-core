@@ -305,7 +305,7 @@ public class EditLabItem extends TitleAreaDialog {
 		}
 		
 		String refValMale = iRef.getText();
-		String refValFemale = iRef.getText();
+		String refValFemale = iRfF.getText();
 		if (noRefValues.getSelection()) {
 			refValMale = LabItem.REFVAL_INCONCLUSIVE;
 			refValFemale = LabItem.REFVAL_INCONCLUSIVE;
