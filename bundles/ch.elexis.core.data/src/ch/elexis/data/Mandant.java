@@ -12,6 +12,8 @@
 
 package ch.elexis.data;
 
+import java.util.Objects;
+
 import ch.elexis.core.constants.StringConstants;
 import ch.rgw.tools.JdbcLink;
 
@@ -25,6 +27,13 @@ import ch.rgw.tools.JdbcLink;
 public class Mandant extends Anwender {
 	
 	public static final String BILLER = "Rechnungssteller";
+	
+	/**
+	 * The {@link #Mandant()} is marked as being inactive, that is, no billings can be done on it
+	 * 
+	 * @since 3.7
+	 */
+	public static final String FLD_EXT_IS_INACTIVE = "isInactive";
 	
 	static {
 		addMapping(Kontakt.TABLENAME, FLD_EXTINFO, FLD_IS_MANDATOR, "Label=Bezeichnung3");
@@ -44,6 +53,26 @@ public class Mandant extends Anwender {
 	
 	public void setRechnungssteller(Kontakt rs){
 		setInfoElement(BILLER, rs.getId());
+	}
+	
+	/**
+	 * 
+	 * @return see {@link #FLD_EXT_IS_INACTIVE}
+	 * @since 3.7
+	 */
+	public boolean isInactive(){
+		Object value = getExtInfoStoredObjectByKey(FLD_EXT_IS_INACTIVE);
+		return Objects.equals(Boolean.TRUE, value);
+	}
+	
+	/**
+	 * 
+	 * @param value
+	 *            see {@link #FLD_EXT_IS_INACTIVE}
+	 * @since 3.7
+	 */
+	public void setInactive(boolean value){
+		setExtInfoStoredObjectByKey(FLD_EXT_IS_INACTIVE, Boolean.valueOf(value));
 	}
 	
 	protected Mandant(String id){
@@ -89,5 +118,5 @@ public class Mandant extends Anwender {
 	protected String getTableName(){
 		return Kontakt.TABLENAME;
 	}
-
+	
 }

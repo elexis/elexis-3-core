@@ -101,6 +101,7 @@ public class UserManagementPreferencePage extends PreferencePage
 	private CheckboxTableViewer checkboxTableViewerRoles;
 	private Link linkChangePassword;
 	private Button btnUserIsAdmin;
+	private Button btnMandatorIsInactive;
 	private Color lblRespPhysColorDefColor;
 	private Link linkRechnungssteller;
 	private RestrictedAction addUserAction, deleteUserAction, lockUserAction;
@@ -470,19 +471,25 @@ public class UserManagementPreferencePage extends PreferencePage
 		linkRechnungssteller = new Link(compositeIsRespPhys, SWT.NONE);
 		linkRechnungssteller.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		linkRechnungssteller.setText("nicht gesetzt " + CHANGE_LINK);
+		linkRechnungssteller.setToolTipText("Set the invoice contact for this mandator");
 		linkRechnungssteller.addSelectionListener(new SelectionAdapter() {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e){
 				User user = (User) wvUser.getValue();
-				if (user == null)
+				if (user == null) {
 					return;
+				}
 				Anwender ac = user.getAssignedContact();
-				if (ac == null || !ac.isExecutiveDoctor())
+				if (ac == null || !ac.isExecutiveDoctor()) {
+					MessageDialog.openWarning(UiDesk.getTopShell(), "Fehler",
+						"Der selektierte Kontakt ist kein Mandant.");
 					return;
+				}
+
 				KontaktSelektor ks =
-					new KontaktSelektor(UiDesk.getTopShell(), Person.class, "Kontakt auswählen",
-						"Bitte selektieren Sie den zugeordneten Kontakt", new String[] {});
+					new KontaktSelektor(UiDesk.getTopShell(), Kontakt.class, "Rechnungs-Kontakt auswählen",
+						"Bitte selektieren Sie den dem Mandant zugeordneten Rechnungs-Kontakt", new String[] {});
 				int ret = ks.open();
 				if (ret == Window.OK) {
 					Kontakt kontakt = (Kontakt) ks.getSelection();
@@ -496,9 +503,62 @@ public class UserManagementPreferencePage extends PreferencePage
 			}
 		});
 		
-		btnIsExecutiveDoctor = new Button(grpAccounting, SWT.CHECK);
-		btnIsExecutiveDoctor.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
+		Composite compositeMandator = new Composite(grpAccounting, SWT.NONE);
+		GridLayout gl_compositeMandator = new GridLayout(2, true);
+		gl_compositeMandator.verticalSpacing = 0;
+		gl_compositeMandator.horizontalSpacing = 0;
+		gl_compositeMandator.marginHeight = 0;
+		gl_compositeMandator.marginWidth = 0;
+		compositeMandator.setLayout(gl_compositeMandator);
+		compositeMandator.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		
+		btnIsExecutiveDoctor = new Button(compositeMandator, SWT.CHECK);
+		btnIsExecutiveDoctor.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		btnIsExecutiveDoctor.setText("ist verantwortlicher Arzt");
+		btnIsExecutiveDoctor.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e){
+				if (btnIsExecutiveDoctor.getSelection()) {
+					User user = (User) wvUser.getValue();
+					if (user == null) {
+						return;
+					}
+					Anwender ac = user.getAssignedContact();
+					if (ac == null) {
+						return;
+					}
+					if (!ac.isExecutiveDoctor()) {
+						boolean changeIt = MessageDialog.openQuestion(UiDesk.getTopShell(),
+							"Kontakt ist kein Mandant",
+							"Der selektierte Kontakt ist kein Mandant. Wollen Sie diesen Kontakt in einen Mandanten ändern?");
+						if (changeIt) {
+							ac.setExecutiveDoctor(true);
+						} else {
+							btnIsExecutiveDoctor.setSelection(false);
+						}
+					}
+				}
+				
+			};
+		});
+		
+		btnMandatorIsInactive = new Button(compositeMandator, SWT.CHECK);
+		btnMandatorIsInactive.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		btnMandatorIsInactive.setText("ehemalig (Verrechn. sperren)");
+		btnMandatorIsInactive.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				User user = (User) wvUser.getValue();
+				if (user == null) {
+					return;
+				}
+				Mandant mandant = Mandant.load(user.getAssignedContactId());
+				if (!mandant.exists() || !mandant.isValid()) {
+					return;
+				}
+				
+				mandant.setInactive(btnMandatorIsInactive.getSelection());
+			}
+		});
 		
 		Composite compositeAccounting = new Composite(grpAccounting, SWT.NONE);
 		compositeAccounting.setLayout(new GridLayout(2, true));
@@ -629,6 +689,13 @@ public class UserManagementPreferencePage extends PreferencePage
 			
 			btnAllowExternalAccess
 				.setSelection(user.get(User.FLD_ALLOW_EXTERNAL).equals(StringConstants.ONE));
+			
+			if (anw != null) {
+				Mandant mandator = Mandant.load(anw.getId());
+				if (mandator.exists() && mandator.isValid()) {
+					btnMandatorIsInactive.setSelection(mandator.isInactive());
+				}
+			}
 			
 			linkRechnungssteller.setText("- " + CHANGE_LINK);
 			lblRespPhysColor.setBackground(lblRespPhysColorDefColor);

@@ -35,6 +35,7 @@ import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.IDiagnose;
 import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.ICodeElementService;
 import ch.elexis.core.services.ICodeElementService.ContextKeys;
@@ -458,11 +459,13 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 *            if true, show error messages
 	 * @return true if the Konsultation can be altered in repsect to the given checks, else
 	 *         otherwise.
+	 * @since 3.7 considers a Mandant to being inactive
 	 */
 	private boolean isEditable(boolean checkMandant, boolean checkBill, boolean showError){
 		Mandant m = getMandant();
 		checkMandant = !CoreHub.acl.request(AccessControlDefaults.LSTG_CHARGE_FOR_ALL);
 		boolean mandantOK = true;
+		boolean mandatorIsActive = false;
 		boolean billOK = true;
 		Mandant mandator = ElexisEventDispatcher.getSelectedMandator();
 		boolean bMandantLoggedIn = (mandator != null);
@@ -478,8 +481,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 				if (rn == null || (!rn.exists())) {
 					billOK = true;
 				} else {
-					int stat = rn.getStatus();
-					if (stat == RnStatus.STORNIERT) {
+					InvoiceState state = rn.getInvoiceState();
+					if (state == InvoiceState.CANCELLED) {
 						billOK = true;
 					} else {
 						billOK = false;
@@ -488,25 +491,34 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			}
 		}
 		
-		boolean ok = billOK && mandantOK && bMandantLoggedIn;
+		if(mandator != null) {
+			mandatorIsActive = !mandator.isInactive();
+		}
+
+		
+		boolean ok = billOK && mandantOK && bMandantLoggedIn && mandatorIsActive;
 		if (ok) {
 			return true;
 		}
 		
 		// something is not ok
 		if (showError) {
-			String msg = "";
-			if (!bMandantLoggedIn) {
-				msg = "Es ist kein Mandant eingeloggt";
-			} else {
-				if (!billOK) {
-					msg = "Für diese Behandlung wurde bereits eine Rechnung erstellt.";
-				} else {
-					msg = "Diese Behandlung ist nicht von Ihnen";
-				}
+			StringBuilder sb = new StringBuilder();
+			
+			if(!bMandantLoggedIn) {
+				sb.append("Es ist kein Mandant eingeloggt.");
+			}
+			if(!billOK) {
+				sb.append("Für diese Behandlung wurde bereits eine Rechnung erstellt.");
+			}
+			if(!mandantOK) {
+				sb.append("Diese Behandlung ist nicht von Ihnen");
+			}
+			if(!mandatorIsActive) {
+				sb.append("Der gewählte Mandant is inaktiv.");
 			}
 			
-			MessageEvent.fireError("Konsultation kann nicht geändert werden", msg);
+			MessageEvent.fireError("Konsultation kann nicht geändert werden", sb.toString());
 		}
 		
 		return false;
