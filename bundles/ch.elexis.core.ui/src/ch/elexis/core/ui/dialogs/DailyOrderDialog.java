@@ -137,9 +137,9 @@ public class DailyOrderDialog extends TitleAreaDialog {
 							mandator.isPresent() ? mandator.get().getId() : null);
 					if (stockEntry != null) {
 						currOrder.addEntry(stockEntry.getArticle(), stockEntry.getStock(),
-							stockEntry.getProvider(), billed.getAmount());
+							stockEntry.getProvider(), (int) Math.round(billed.getAmount()));
 					} else {
-						currOrder.addEntry(art, null, null, billed.getAmount());
+						currOrder.addEntry(art, null, null, (int) Math.round(billed.getAmount()));
 					}
 				}
 			}

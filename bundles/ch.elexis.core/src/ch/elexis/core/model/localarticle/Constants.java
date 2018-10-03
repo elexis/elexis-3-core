@@ -1,4 +1,4 @@
-package ch.elexis.core.model.eigenartikel;
+package ch.elexis.core.model.localarticle;
 
 public class Constants extends ch.elexis.core.model.article.Constants {
 	

@@ -768,6 +768,12 @@ public class OrderImportDialog extends TitleAreaDialog {
 		@Override
 		public void setArticle(IArticle value){
 		}
+		
+		@Override
+		public Long getLastupdate(){
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 	
 	private class OrderElement {

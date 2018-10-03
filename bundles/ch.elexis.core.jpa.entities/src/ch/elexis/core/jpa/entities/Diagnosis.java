@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
@@ -15,6 +16,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "DIAGNOSEN")
 @EntityListeners(EntityWithIdListener.class)
+@NamedQuery(name = "Diagnosis.code.diagnosisClass", query = "SELECT di FROM Diagnosis di WHERE di.deleted = false AND di.code = :code AND di.diagnosisClass = :diagnosisClass")
 public class Diagnosis implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener

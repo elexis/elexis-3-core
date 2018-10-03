@@ -89,4 +89,5 @@ Import-Package: javax.annotation;version="1.2.0",
 Service-Component: OSGI-INF/ch.elexis.core.ui.services.LocalDocumentServiceHolder.xml,
  OSGI-INF/ch.elexis.core.ui.compatibility.UiStartupHandler.xml,
  OSGI-INF/ch.elexis.core.ui.services.internal.ContextService.xml,
- OSGI-INF/ch.elexis.core.ui.util.CoreUiUtil.xml
+ OSGI-INF/ch.elexis.core.ui.util.CoreUiUtil.xml,
+ OSGI-INF/ch.elexis.core.ui.services.BillingServiceHolder.xml

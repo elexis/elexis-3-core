@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2013 MEDEVIT <office@medevit.at>.
+ * Copyright (c) 2018 MEDEVIT <office@medevit.at>.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,51 +11,13 @@
 package ch.elexis.core.model.util;
 
 import ch.elexis.core.model.*;
+
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-import org.eclipse.emf.ecore.EObject;
 
-import ch.elexis.core.model.Deleteable;
-import ch.elexis.core.model.IArticle;
-import ch.elexis.core.model.IBillable;
-import ch.elexis.core.model.IBillableOptifier;
-import ch.elexis.core.model.IBillableVerifier;
-import ch.elexis.core.model.IBilled;
-import ch.elexis.core.model.IBlob;
-import ch.elexis.core.model.ICategory;
-import ch.elexis.core.model.ICodeElement;
-import ch.elexis.core.model.IConfig;
-import ch.elexis.core.model.IContact;
-import ch.elexis.core.model.ICoverage;
-import ch.elexis.core.model.IDiagnosis;
-import ch.elexis.core.model.IDiagnosisTree;
-import ch.elexis.core.model.IDocument;
-import ch.elexis.core.model.IDocumentLetter;
-import ch.elexis.core.model.IEncounter;
-import ch.elexis.core.model.IHistory;
-import ch.elexis.core.model.ILabItem;
-import ch.elexis.core.model.ILabMapping;
-import ch.elexis.core.model.ILabOrder;
-import ch.elexis.core.model.ILabResult;
-import ch.elexis.core.model.ILaboratory;
-import ch.elexis.core.model.IMandator;
-import ch.elexis.core.model.IOrder;
-import ch.elexis.core.model.IOrderEntry;
-import ch.elexis.core.model.IOrganization;
-import ch.elexis.core.model.IPatient;
-import ch.elexis.core.model.IPeriod;
-import ch.elexis.core.model.IPerson;
-import ch.elexis.core.model.IRole;
-import ch.elexis.core.model.ISticker;
-import ch.elexis.core.model.IStock;
-import ch.elexis.core.model.IStockEntry;
-import ch.elexis.core.model.IUser;
-import ch.elexis.core.model.IUserConfig;
-import ch.elexis.core.model.IXid;
-import ch.elexis.core.model.Identifiable;
-import ch.elexis.core.model.ModelPackage;
-import ch.elexis.core.model.WithExtInfo;
+import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
+
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -174,6 +136,14 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIDocumentAdapter();
 			}
 			@Override
+			public Adapter caseIHistory(IHistory object) {
+				return createIHistoryAdapter();
+			}
+			@Override
+			public Adapter caseICategory(ICategory object) {
+				return createICategoryAdapter();
+			}
+			@Override
 			public Adapter caseIDocumentLetter(IDocumentLetter object) {
 				return createIDocumentLetterAdapter();
 			}
@@ -186,24 +156,44 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createICodeElementAdapter();
 			}
 			@Override
-			public Adapter caseICategory(ICategory object) {
-				return createICategoryAdapter();
+			public Adapter caseICodeElementBlock(ICodeElementBlock object) {
+				return createICodeElementBlockAdapter();
 			}
 			@Override
-			public Adapter caseIHistory(IHistory object) {
-				return createIHistoryAdapter();
+			public Adapter caseIBillable(IBillable object) {
+				return createIBillableAdapter();
+			}
+			@Override
+			public Adapter caseIBillableVerifier(IBillableVerifier object) {
+				return createIBillableVerifierAdapter();
+			}
+			@Override
+			public Adapter caseIBillableOptifier(IBillableOptifier object) {
+				return createIBillableOptifierAdapter();
+			}
+			@Override
+			public Adapter caseIService(IService object) {
+				return createIServiceAdapter();
+			}
+			@Override
+			public Adapter caseILocalService(ILocalService object) {
+				return createILocalServiceAdapter();
+			}
+			@Override
+			public Adapter caseIArticle(IArticle object) {
+				return createIArticleAdapter();
 			}
 			@Override
 			public Adapter caseIDiagnosis(IDiagnosis object) {
 				return createIDiagnosisAdapter();
 			}
 			@Override
-			public Adapter caseIDiagnosisTree(IDiagnosisTree object) {
-				return createIDiagnosisTreeAdapter();
+			public Adapter caseIDiagnosisReference(IDiagnosisReference object) {
+				return createIDiagnosisReferenceAdapter();
 			}
 			@Override
-			public Adapter caseIBillable(IBillable object) {
-				return createIBillableAdapter();
+			public Adapter caseIDiagnosisTree(IDiagnosisTree object) {
+				return createIDiagnosisTreeAdapter();
 			}
 			@Override
 			public Adapter caseICoverage(ICoverage object) {
@@ -226,10 +216,6 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIPeriodAdapter();
 			}
 			@Override
-			public Adapter caseIArticle(IArticle object) {
-				return createIArticleAdapter();
-			}
-			@Override
 			public Adapter caseWithExtInfo(WithExtInfo object) {
 				return createWithExtInfoAdapter();
 			}
@@ -240,14 +226,6 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseIBlob(IBlob object) {
 				return createIBlobAdapter();
-			}
-			@Override
-			public Adapter caseIBillableVerifier(IBillableVerifier object) {
-				return createIBillableVerifierAdapter();
-			}
-			@Override
-			public Adapter caseIBillableOptifier(IBillableOptifier object) {
-				return createIBillableOptifierAdapter();
 			}
 			@Override
 			public Adapter caseIEncounter(IEncounter object) {
@@ -278,16 +256,16 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIAddressAdapter();
 			}
 			@Override
+			public Adapter caseIAppointment(IAppointment object) {
+				return createIAppointmentAdapter();
+			}
+			@Override
 			public Adapter caseIImage(IImage object) {
 				return createIImageAdapter();
 			}
 			@Override
 			public Adapter caseWithAssignableId(WithAssignableId object) {
 				return createWithAssignableIdAdapter();
-			}
-			@Override
-			public Adapter caseIAppointment(IAppointment object) {
-				return createIAppointmentAdapter();
 			}
 			@Override
 			public <T> Adapter caseComparable(Comparable<T> object) {
@@ -314,104 +292,6 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 
 
 	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IContact <em>IContact</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see ch.elexis.core.model.IContact
-	 * @generated
-	 */
-	public Adapter createIContactAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IXid <em>IXid</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see ch.elexis.core.model.IXid
-	 * @generated
-	 */
-	public Adapter createIXidAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.ICodeElement <em>ICode Element</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see ch.elexis.core.model.ICodeElement
-	 * @generated
-	 */
-	public Adapter createICodeElementAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.ISticker <em>ISticker</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see ch.elexis.core.model.ISticker
-	 * @generated
-	 */
-	public Adapter createIStickerAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see ch.elexis.core.model.IPerson
-	 * @generated
-	 */
-	public Adapter createIPersonAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IPatient <em>IPatient</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see ch.elexis.core.model.IPatient
-	 * @generated
-	 */
-	public Adapter createIPatientAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IUser <em>IUser</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see ch.elexis.core.model.IUser
-	 * @generated
-	 */
-	public Adapter createIUserAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -436,6 +316,118 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createDeleteableAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IXid <em>IXid</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IXid
+	 * @generated
+	 */
+	public Adapter createIXidAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IContact <em>IContact</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IContact
+	 * @generated
+	 */
+	public Adapter createIContactAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IPerson
+	 * @generated
+	 */
+	public Adapter createIPersonAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IOrganization <em>IOrganization</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IOrganization
+	 * @generated
+	 */
+	public Adapter createIOrganizationAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.ILaboratory <em>ILaboratory</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.ILaboratory
+	 * @generated
+	 */
+	public Adapter createILaboratoryAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IPatient <em>IPatient</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IPatient
+	 * @generated
+	 */
+	public Adapter createIPatientAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IMandator <em>IMandator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IMandator
+	 * @generated
+	 */
+	public Adapter createIMandatorAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IUser <em>IUser</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IUser
+	 * @generated
+	 */
+	public Adapter createIUserAdapter() {
 		return null;
 	}
 
@@ -496,20 +488,6 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IPeriod <em>IPeriod</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see ch.elexis.core.model.IPeriod
-	 * @generated
-	 */
-	public Adapter createIPeriodAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IDocument <em>IDocument</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -520,20 +498,6 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIDocumentAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.ICategory <em>ICategory</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see ch.elexis.core.model.ICategory
-	 * @generated
-	 */
-	public Adapter createICategoryAdapter() {
 		return null;
 	}
 
@@ -552,30 +516,72 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IDiagnosis <em>IDiagnosis</em>}'.
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.ICategory <em>ICategory</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see ch.elexis.core.model.IDiagnosis
+	 * @see ch.elexis.core.model.ICategory
 	 * @generated
 	 */
-	public Adapter createIDiagnosisAdapter() {
+	public Adapter createICategoryAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IDiagnosisTree <em>IDiagnosis Tree</em>}'.
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IDocumentLetter <em>IDocument Letter</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see ch.elexis.core.model.IDiagnosisTree
+	 * @see ch.elexis.core.model.IDocumentLetter
 	 * @generated
 	 */
-	public Adapter createIDiagnosisTreeAdapter() {
+	public Adapter createIDocumentLetterAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.ISticker <em>ISticker</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.ISticker
+	 * @generated
+	 */
+	public Adapter createIStickerAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.ICodeElement <em>ICode Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.ICodeElement
+	 * @generated
+	 */
+	public Adapter createICodeElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.ICodeElementBlock <em>ICode Element Block</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.ICodeElementBlock
+	 * @generated
+	 */
+	public Adapter createICodeElementBlockAdapter() {
 		return null;
 	}
 
@@ -590,6 +596,118 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIBillableAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IBillableVerifier <em>IBillable Verifier</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IBillableVerifier
+	 * @generated
+	 */
+	public Adapter createIBillableVerifierAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IBillableOptifier <em>IBillable Optifier</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IBillableOptifier
+	 * @generated
+	 */
+	public Adapter createIBillableOptifierAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IService <em>IService</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IService
+	 * @generated
+	 */
+	public Adapter createIServiceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.ILocalService <em>ILocal Service</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.ILocalService
+	 * @generated
+	 */
+	public Adapter createILocalServiceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IArticle <em>IArticle</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IArticle
+	 * @generated
+	 */
+	public Adapter createIArticleAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IDiagnosis <em>IDiagnosis</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IDiagnosis
+	 * @generated
+	 */
+	public Adapter createIDiagnosisAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IDiagnosisReference <em>IDiagnosis Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IDiagnosisReference
+	 * @generated
+	 */
+	public Adapter createIDiagnosisReferenceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IDiagnosisTree <em>IDiagnosis Tree</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IDiagnosisTree
+	 * @generated
+	 */
+	public Adapter createIDiagnosisTreeAdapter() {
 		return null;
 	}
 
@@ -622,48 +740,6 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IOrganization <em>IOrganization</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see ch.elexis.core.model.IOrganization
-	 * @generated
-	 */
-	public Adapter createIOrganizationAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.ILaboratory <em>ILaboratory</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see ch.elexis.core.model.ILaboratory
-	 * @generated
-	 */
-	public Adapter createILaboratoryAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IDocumentLetter <em>IDocument Letter</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see ch.elexis.core.model.IDocumentLetter
-	 * @generated
-	 */
-	public Adapter createIDocumentLetterAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IConfig <em>IConfig</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -692,30 +768,16 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IMandator <em>IMandator</em>}'.
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IPeriod <em>IPeriod</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see ch.elexis.core.model.IMandator
+	 * @see ch.elexis.core.model.IPeriod
 	 * @generated
 	 */
-	public Adapter createIMandatorAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IArticle <em>IArticle</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see ch.elexis.core.model.IArticle
-	 * @generated
-	 */
-	public Adapter createIArticleAdapter() {
+	public Adapter createIPeriodAdapter() {
 		return null;
 	}
 
@@ -758,34 +820,6 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIBlobAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IBillableVerifier <em>IBillable Verifier</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see ch.elexis.core.model.IBillableVerifier
-	 * @generated
-	 */
-	public Adapter createIBillableVerifierAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IBillableOptifier <em>IBillable Optifier</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see ch.elexis.core.model.IBillableOptifier
-	 * @generated
-	 */
-	public Adapter createIBillableOptifierAdapter() {
 		return null;
 	}
 

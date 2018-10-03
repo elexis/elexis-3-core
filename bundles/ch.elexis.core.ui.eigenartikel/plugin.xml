@@ -6,8 +6,10 @@
       <Artikel
             CodeDetailDisplay="ch.elexis.core.ui.eigenartikel.EigenartikelDetailDisplay"
             CodeSelectorFactory="ch.elexis.core.ui.eigenartikel.EigenartikelSelector"
-            ElementFactory="ch.elexis.core.eigenartikel.EigenartikelPersistentObjectFactory"
-            name="Eigenartikel">
+            elexisClassName="ch.elexis.core.eigenartikel.Eigenartikel"
+            name="Eigenartikel"
+            statistics="ch.elexis.core.eigenartikel.Eigenartikel"
+            system="Eigenartikel">
       </Artikel>
    </extension>
 

@@ -12,6 +12,8 @@
 
 package ch.elexis.core.ui.views.artikel;
 
+import java.util.Optional;
+
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -37,10 +39,9 @@ import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
-import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
+import ch.elexis.core.ui.views.codesystems.CodeSystemDescription;
 import ch.elexis.core.ui.views.provider.StockEntryLabelProvider;
 import ch.elexis.data.PersistentObject;
-import ch.rgw.tools.ExHandler;
 
 public class ArtikelSelektor extends ViewPart implements ISaveablePart2 {
 	public ArtikelSelektor(){}
@@ -59,14 +60,11 @@ public class ArtikelSelektor extends ViewPart implements ISaveablePart2 {
 		ctab.addSelectionListener(new TabSelectionListener());
 		for (IConfigurationElement ice : list) {
 			if ("Artikel".equals(ice.getName())) { //$NON-NLS-1$
-				try {
-					CodeSelectorFactory cs = (CodeSelectorFactory) ice
-						.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
+				Optional<CodeSystemDescription> description = CodeSystemDescription.of(ice);
+				if (description.isPresent()) {
 					CTabItem ci = new CTabItem(ctab, SWT.NONE);
-					ci.setText(cs.getCodeSystemName());
-					ci.setData("csf", cs); //$NON-NLS-1$
-				} catch (Exception ex) {
-					ExHandler.handle(ex);
+					ci.setText(description.get().getCodeSystemName());
+					ci.setData(description); //$NON-NLS-1$					
 				}
 			}
 		}
@@ -182,8 +180,9 @@ public class ArtikelSelektor extends ViewPart implements ISaveablePart2 {
 			if (top != null) {
 				if (top.getControl() == null) {
 					CommonViewer cv = new CommonViewer();
-					CodeSelectorFactory cs = (CodeSelectorFactory) top.getData("csf"); //$NON-NLS-1$
-					ViewerConfigurer vc = cs.createViewerConfigurer(cv);
+					CodeSystemDescription description = (CodeSystemDescription) top.getData(); //$NON-NLS-1$
+					ViewerConfigurer vc =
+						description.getCodeSelectorFactory().createViewerConfigurer(cv);
 					Composite c = new Composite(ctab, SWT.NONE);
 					c.setLayout(new GridLayout());
 					cv.create(vc, c, SWT.V_SCROLL, getViewSite());

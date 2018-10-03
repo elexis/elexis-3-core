@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2013 MEDEVIT <office@medevit.at>.
+ * Copyright (c) 2018 MEDEVIT <office@medevit.at>.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,50 +11,11 @@
 package ch.elexis.core.model.util;
 
 import ch.elexis.core.model.*;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.util.Switch;
 
-import ch.elexis.core.model.Deleteable;
-import ch.elexis.core.model.IArticle;
-import ch.elexis.core.model.IBillable;
-import ch.elexis.core.model.IBillableOptifier;
-import ch.elexis.core.model.IBillableVerifier;
-import ch.elexis.core.model.IBilled;
-import ch.elexis.core.model.IBlob;
-import ch.elexis.core.model.ICategory;
-import ch.elexis.core.model.ICodeElement;
-import ch.elexis.core.model.IConfig;
-import ch.elexis.core.model.IContact;
-import ch.elexis.core.model.ICoverage;
-import ch.elexis.core.model.IDiagnosis;
-import ch.elexis.core.model.IDiagnosisTree;
-import ch.elexis.core.model.IDocument;
-import ch.elexis.core.model.IDocumentLetter;
-import ch.elexis.core.model.IEncounter;
-import ch.elexis.core.model.IHistory;
-import ch.elexis.core.model.ILabItem;
-import ch.elexis.core.model.ILabMapping;
-import ch.elexis.core.model.ILabOrder;
-import ch.elexis.core.model.ILabResult;
-import ch.elexis.core.model.ILaboratory;
-import ch.elexis.core.model.IMandator;
-import ch.elexis.core.model.IOrder;
-import ch.elexis.core.model.IOrderEntry;
-import ch.elexis.core.model.IOrganization;
-import ch.elexis.core.model.IPatient;
-import ch.elexis.core.model.IPeriod;
-import ch.elexis.core.model.IPerson;
-import ch.elexis.core.model.IRole;
-import ch.elexis.core.model.ISticker;
-import ch.elexis.core.model.IStock;
-import ch.elexis.core.model.IStockEntry;
-import ch.elexis.core.model.IUser;
-import ch.elexis.core.model.IUserConfig;
-import ch.elexis.core.model.IXid;
-import ch.elexis.core.model.Identifiable;
-import ch.elexis.core.model.ModelPackage;
-import ch.elexis.core.model.WithExtInfo;
+import org.eclipse.emf.ecore.util.Switch;
 
 /**
  * <!-- begin-user-doc -->
@@ -243,6 +204,18 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ModelPackage.IHISTORY: {
+				IHistory iHistory = (IHistory)theEObject;
+				T1 result = caseIHistory(iHistory);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.ICATEGORY: {
+				ICategory iCategory = (ICategory)theEObject;
+				T1 result = caseICategory(iCategory);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ModelPackage.IDOCUMENT_LETTER: {
 				IDocumentLetter iDocumentLetter = (IDocumentLetter)theEObject;
 				T1 result = caseIDocumentLetter(iDocumentLetter);
@@ -267,15 +240,61 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ModelPackage.ICATEGORY: {
-				ICategory iCategory = (ICategory)theEObject;
-				T1 result = caseICategory(iCategory);
+			case ModelPackage.ICODE_ELEMENT_BLOCK: {
+				ICodeElementBlock iCodeElementBlock = (ICodeElementBlock)theEObject;
+				T1 result = caseICodeElementBlock(iCodeElementBlock);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ModelPackage.IHISTORY: {
-				IHistory iHistory = (IHistory)theEObject;
-				T1 result = caseIHistory(iHistory);
+			case ModelPackage.IBILLABLE: {
+				IBillable iBillable = (IBillable)theEObject;
+				T1 result = caseIBillable(iBillable);
+				if (result == null) result = caseICodeElement(iBillable);
+				if (result == null) result = caseIdentifiable(iBillable);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IBILLABLE_VERIFIER: {
+				IBillableVerifier iBillableVerifier = (IBillableVerifier)theEObject;
+				T1 result = caseIBillableVerifier(iBillableVerifier);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IBILLABLE_OPTIFIER: {
+				IBillableOptifier iBillableOptifier = (IBillableOptifier)theEObject;
+				T1 result = caseIBillableOptifier(iBillableOptifier);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.ISERVICE: {
+				IService iService = (IService)theEObject;
+				T1 result = caseIService(iService);
+				if (result == null) result = caseIBillable(iService);
+				if (result == null) result = caseDeleteable(iService);
+				if (result == null) result = caseICodeElement(iService);
+				if (result == null) result = caseIdentifiable(iService);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.ILOCAL_SERVICE: {
+				ILocalService iLocalService = (ILocalService)theEObject;
+				T1 result = caseILocalService(iLocalService);
+				if (result == null) result = caseIService(iLocalService);
+				if (result == null) result = caseIBillable(iLocalService);
+				if (result == null) result = caseDeleteable(iLocalService);
+				if (result == null) result = caseICodeElement(iLocalService);
+				if (result == null) result = caseIdentifiable(iLocalService);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IARTICLE: {
+				IArticle iArticle = (IArticle)theEObject;
+				T1 result = caseIArticle(iArticle);
+				if (result == null) result = caseIBillable(iArticle);
+				if (result == null) result = caseDeleteable(iArticle);
+				if (result == null) result = caseWithExtInfo(iArticle);
+				if (result == null) result = caseIdentifiable(iArticle);
+				if (result == null) result = caseICodeElement(iArticle);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -287,20 +306,21 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ModelPackage.IDIAGNOSIS_REFERENCE: {
+				IDiagnosisReference iDiagnosisReference = (IDiagnosisReference)theEObject;
+				T1 result = caseIDiagnosisReference(iDiagnosisReference);
+				if (result == null) result = caseIDiagnosis(iDiagnosisReference);
+				if (result == null) result = caseICodeElement(iDiagnosisReference);
+				if (result == null) result = caseIdentifiable(iDiagnosisReference);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ModelPackage.IDIAGNOSIS_TREE: {
 				IDiagnosisTree iDiagnosisTree = (IDiagnosisTree)theEObject;
 				T1 result = caseIDiagnosisTree(iDiagnosisTree);
 				if (result == null) result = caseIDiagnosis(iDiagnosisTree);
 				if (result == null) result = caseICodeElement(iDiagnosisTree);
 				if (result == null) result = caseIdentifiable(iDiagnosisTree);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ModelPackage.IBILLABLE: {
-				IBillable iBillable = (IBillable)theEObject;
-				T1 result = caseIBillable(iBillable);
-				if (result == null) result = caseICodeElement(iBillable);
-				if (result == null) result = caseIdentifiable(iBillable);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -343,17 +363,6 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ModelPackage.IARTICLE: {
-				IArticle iArticle = (IArticle)theEObject;
-				T1 result = caseIArticle(iArticle);
-				if (result == null) result = caseIBillable(iArticle);
-				if (result == null) result = caseDeleteable(iArticle);
-				if (result == null) result = caseWithExtInfo(iArticle);
-				if (result == null) result = caseIdentifiable(iArticle);
-				if (result == null) result = caseICodeElement(iArticle);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case ModelPackage.WITH_EXT_INFO: {
 				WithExtInfo withExtInfo = (WithExtInfo)theEObject;
 				T1 result = caseWithExtInfo(withExtInfo);
@@ -377,18 +386,6 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ModelPackage.IBILLABLE_VERIFIER: {
-				IBillableVerifier iBillableVerifier = (IBillableVerifier)theEObject;
-				T1 result = caseIBillableVerifier(iBillableVerifier);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ModelPackage.IBILLABLE_OPTIFIER: {
-				IBillableOptifier iBillableOptifier = (IBillableOptifier)theEObject;
-				T1 result = caseIBillableOptifier(iBillableOptifier);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case ModelPackage.IENCOUNTER: {
 				IEncounter iEncounter = (IEncounter)theEObject;
 				T1 result = caseIEncounter(iEncounter);
@@ -402,6 +399,7 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				T1 result = caseIBilled(iBilled);
 				if (result == null) result = caseIdentifiable(iBilled);
 				if (result == null) result = caseDeleteable(iBilled);
+				if (result == null) result = caseWithExtInfo(iBilled);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -445,6 +443,14 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ModelPackage.IAPPOINTMENT: {
+				IAppointment iAppointment = (IAppointment)theEObject;
+				T1 result = caseIAppointment(iAppointment);
+				if (result == null) result = caseIdentifiable(iAppointment);
+				if (result == null) result = caseDeleteable(iAppointment);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ModelPackage.IIMAGE: {
 				IImage iImage = (IImage)theEObject;
 				T1 result = caseIImage(iImage);
@@ -460,121 +466,8 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ModelPackage.IAPPOINTMENT: {
-				IAppointment iAppointment = (IAppointment)theEObject;
-				T1 result = caseIAppointment(iAppointment);
-				if (result == null) result = caseIdentifiable(iAppointment);
-				if (result == null) result = caseDeleteable(iAppointment);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			default: return defaultCase(theEObject);
 		}
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>IContact</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>IContact</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseIContact(IContact object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>IXid</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>IXid</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseIXid(IXid object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>ICode Element</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>ICode Element</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseICodeElement(ICodeElement object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>ISticker</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>ISticker</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseISticker(ISticker object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>IPerson</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>IPerson</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseIPerson(IPerson object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>IPatient</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>IPatient</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseIPatient(IPatient object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>IUser</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>IUser</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseIUser(IUser object) {
-		return null;
 	}
 
 	/**
@@ -604,6 +497,126 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseDeleteable(Deleteable object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IXid</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IXid</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIXid(IXid object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IContact</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IContact</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIContact(IContact object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IPerson</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IPerson</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIPerson(IPerson object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IOrganization</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IOrganization</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIOrganization(IOrganization object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>ILaboratory</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>ILaboratory</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseILaboratory(ILaboratory object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IPatient</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IPatient</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIPatient(IPatient object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IMandator</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IMandator</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIMandator(IMandator object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IUser</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IUser</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIUser(IUser object) {
 		return null;
 	}
 
@@ -668,21 +681,6 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>IPeriod</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>IPeriod</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseIPeriod(IPeriod object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>IDocument</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -694,21 +692,6 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIDocument(IDocument object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>ICategory</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>ICategory</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseICategory(ICategory object) {
 		return null;
 	}
 
@@ -728,32 +711,77 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>IDiagnosis</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>ICategory</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>IDiagnosis</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>ICategory</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T1 caseIDiagnosis(IDiagnosis object) {
+	public T1 caseICategory(ICategory object) {
 		return null;
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>IDiagnosis Tree</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>IDocument Letter</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>IDiagnosis Tree</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>IDocument Letter</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T1 caseIDiagnosisTree(IDiagnosisTree object) {
+	public T1 caseIDocumentLetter(IDocumentLetter object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>ISticker</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>ISticker</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseISticker(ISticker object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>ICode Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>ICode Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseICodeElement(ICodeElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>ICode Element Block</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>ICode Element Block</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseICodeElementBlock(ICodeElementBlock object) {
 		return null;
 	}
 
@@ -769,6 +797,126 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIBillable(IBillable object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IBillable Verifier</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IBillable Verifier</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIBillableVerifier(IBillableVerifier object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IBillable Optifier</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IBillable Optifier</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIBillableOptifier(IBillableOptifier object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IService</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IService</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIService(IService object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>ILocal Service</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>ILocal Service</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseILocalService(ILocalService object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IArticle</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IArticle</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIArticle(IArticle object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IDiagnosis</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IDiagnosis</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIDiagnosis(IDiagnosis object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IDiagnosis Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IDiagnosis Reference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIDiagnosisReference(IDiagnosisReference object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IDiagnosis Tree</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IDiagnosis Tree</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIDiagnosisTree(IDiagnosisTree object) {
 		return null;
 	}
 
@@ -803,51 +951,6 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>IOrganization</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>IOrganization</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseIOrganization(IOrganization object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>ILaboratory</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>ILaboratory</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseILaboratory(ILaboratory object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>IDocument Letter</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>IDocument Letter</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseIDocumentLetter(IDocumentLetter object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>IConfig</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -878,32 +981,17 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>IMandator</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>IPeriod</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>IMandator</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>IPeriod</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T1 caseIMandator(IMandator object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>IArticle</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>IArticle</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseIArticle(IArticle object) {
+	public T1 caseIPeriod(IPeriod object) {
 		return null;
 	}
 
@@ -949,36 +1037,6 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIBlob(IBlob object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>IBillable Verifier</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>IBillable Verifier</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseIBillableVerifier(IBillableVerifier object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>IBillable Optifier</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>IBillable Optifier</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseIBillableOptifier(IBillableOptifier object) {
 		return null;
 	}
 

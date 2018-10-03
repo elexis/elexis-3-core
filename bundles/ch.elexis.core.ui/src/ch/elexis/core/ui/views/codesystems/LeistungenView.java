@@ -32,7 +32,6 @@ import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.GlobalActions;
@@ -77,19 +76,19 @@ public class LeistungenView extends ViewPart implements IActivationListener, ISa
 					return;
 				
 				if (selected != null) {
-					CodeSelectorFactory codeSelectorFactory =
-						(CodeSelectorFactory) selected.getData("csf");
+					CodeSystemDescription description = (CodeSystemDescription) selected.getData();
 					cPage page = (cPage) selected.getControl();
 					if (page == null) {
 						//SWTHelper.alert(CAPTION_ERROR, "cPage=null"); //$NON-NLS-1$
 						page =
-							new cPage(ctab, (ICodeElement) selected.getData(), codeSelectorFactory);
+							new cPage(ctab, description);
 						selected.setControl(page);
 						// parent.redraw();
 					}
 					page.cv.getConfigurer().getControlFieldProvider().clearValues();
-					if (codeSelectorFactory != null && codeSelectorFactory.hasContextMenu()) {
-						codeSelectorFactory.activateContextMenu(getSite(),
+					if (description.getCodeSelectorFactory() != null
+						&& description.getCodeSelectorFactory().hasContextMenu()) {
+						description.getCodeSelectorFactory().activateContextMenu(getSite(),
 							delegatingSelectionProvider, ID);
 					}
 				}
@@ -143,10 +142,8 @@ public class LeistungenView extends ViewPart implements IActivationListener, ISa
 		if (selected != null) {
 			cPage page = (cPage) selected.getControl();
 			if (page == null) {
-				//SWTHelper.alert(CAPTION_ERROR, "cPage=null"); //$NON-NLS-1$
 				page =
-					new cPage(ctab, (ICodeElement) selected.getData(),
-						(CodeSelectorFactory) selected.getData("csf"));
+					new cPage(ctab, (CodeSystemDescription) selected.getData());
 				selected.setControl(page);
 				// parent.redraw();
 			}

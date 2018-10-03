@@ -3,30 +3,37 @@ package ch.elexis.core.model.service;
 import ch.elexis.core.jpa.entities.Behandlung;
 import ch.elexis.core.jpa.entities.Brief;
 import ch.elexis.core.jpa.entities.DbImage;
+import ch.elexis.core.jpa.entities.Diagnosis;
+import ch.elexis.core.jpa.entities.Eigenleistung;
 import ch.elexis.core.jpa.entities.Fall;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.entities.Termin;
 import ch.elexis.core.jpa.entities.Userconfig;
 import ch.elexis.core.jpa.entities.VKPreis;
+import ch.elexis.core.jpa.entities.Verrechnet;
 import ch.elexis.core.jpa.entities.ZusatzAdresse;
 import ch.elexis.core.jpa.model.adapter.AbstractModelAdapterFactory;
 import ch.elexis.core.jpa.model.adapter.MappingEntry;
 import ch.elexis.core.model.Address;
 import ch.elexis.core.model.Appointment;
+import ch.elexis.core.model.Billed;
 import ch.elexis.core.model.BillingSystemFactor;
 import ch.elexis.core.model.Config;
 import ch.elexis.core.model.Contact;
 import ch.elexis.core.model.Coverage;
-import ch.elexis.core.model.DocumentBrief;
+import ch.elexis.core.model.DiagnosisReference;
+import ch.elexis.core.model.DocumentLetter;
 import ch.elexis.core.model.Encounter;
 import ch.elexis.core.model.IAddress;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IBillingSystemFactor;
 import ch.elexis.core.model.IBlob;
 import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IDiagnosisReference;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IImage;
@@ -35,6 +42,7 @@ import ch.elexis.core.model.ILabMapping;
 import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.ILaboratory;
+import ch.elexis.core.model.ILocalService;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
@@ -49,6 +57,7 @@ import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Image;
 import ch.elexis.core.model.Laboratory;
+import ch.elexis.core.model.LocalService;
 import ch.elexis.core.model.Mandator;
 import ch.elexis.core.model.Organization;
 import ch.elexis.core.model.Patient;
@@ -109,15 +118,21 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 			.adapterInitializer(adapter -> ((Mandator) adapter).setMandator(true)));
 		
 		addMapping(new MappingEntry(ICoverage.class, Coverage.class, Fall.class));
+		addMapping(new MappingEntry(IEncounter.class, Encounter.class, Behandlung.class));
 		
 		addMapping(
 			new MappingEntry(IBillingSystemFactor.class, BillingSystemFactor.class, VKPreis.class));
+		addMapping(new MappingEntry(IBilled.class, Billed.class, Verrechnet.class));
+		addMapping(new MappingEntry(IArticle.class, ch.elexis.core.model.TypedArticle.class,
+			ch.elexis.core.jpa.entities.Artikel.class));
+		addMapping(new MappingEntry(ILocalService.class, LocalService.class, Eigenleistung.class));
 		
-		addMapping(new MappingEntry(IEncounter.class, Encounter.class, Behandlung.class));
+		addMapping(
+			new MappingEntry(IDiagnosisReference.class, DiagnosisReference.class, Diagnosis.class));
 		
 		addMapping(new MappingEntry(IAddress.class, Address.class, ZusatzAdresse.class));
 		
-		addMapping(new MappingEntry(IDocumentLetter.class, DocumentBrief.class, Brief.class));
+		addMapping(new MappingEntry(IDocumentLetter.class, DocumentLetter.class, Brief.class));
 		
 		addMapping(new MappingEntry(IRole.class, Role.class, ch.elexis.core.jpa.entities.Role.class));
 		
@@ -129,9 +144,6 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 			ch.elexis.core.jpa.entities.LabOrder.class));
 		addMapping(new MappingEntry(ILabMapping.class, ch.elexis.core.model.LabMapping.class,
 			ch.elexis.core.jpa.entities.LabMapping.class));
-		
-		addMapping(new MappingEntry(IArticle.class, ch.elexis.core.model.TypedArticle.class,
-			ch.elexis.core.jpa.entities.Artikel.class));
 		
 		addMapping(new MappingEntry(IStock.class, ch.elexis.core.model.Stock.class,
 			ch.elexis.core.jpa.entities.Stock.class));

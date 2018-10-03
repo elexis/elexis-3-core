@@ -22,7 +22,7 @@ import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 import ch.elexis.core.model.util.ModelUtil;
 import ch.elexis.core.types.DocumentStatus;
 
-public class DocumentBrief extends AbstractIdDeleteModelAdapter<Brief>
+public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 		implements IdentifiableWithXid, IDocumentLetter {
 	
 	private ICategory category;
@@ -31,7 +31,7 @@ public class DocumentBrief extends AbstractIdDeleteModelAdapter<Brief>
 	private List<IHistory> history;
 	private String keywords;
 	
-	public DocumentBrief(Brief entity){
+	public DocumentLetter(Brief entity){
 		super(entity);
 	}
 	

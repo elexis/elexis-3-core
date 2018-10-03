@@ -2,6 +2,8 @@ package ch.elexis.core.model;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.jpa.entities.Artikel;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
@@ -14,6 +16,7 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.types.ArticleSubTyp;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.types.VatInfo;
+import ch.rgw.tools.Money;
 
 public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Artikel>
 		implements IdentifiableWithXid, IArticle {
@@ -112,7 +115,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 		String size = (String) getExtInfo(Constants.FLD_EXT_PACKAGE_UNIT_INT);
 		if (size == null && getTyp() == ArticleTyp.EIGENARTIKEL) {
 			size = (String) getExtInfo(
-				ch.elexis.core.model.eigenartikel.Constants.FLD_EXT_PACKAGE_SIZE_STRING);
+				ch.elexis.core.model.localarticle.Constants.FLD_EXT_PACKAGE_SIZE_STRING);
 		}
 		if (size != null) {
 			try {
@@ -133,7 +136,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	public String getPackageUnit(){
 		if (isTyp(ArticleTyp.EIGENARTIKEL)) {
 			return (String) getExtInfo(
-				ch.elexis.core.model.eigenartikel.Constants.FLD_EXT_MEASUREMENT_UNIT);
+				ch.elexis.core.model.localarticle.Constants.FLD_EXT_MEASUREMENT_UNIT);
 		}
 		return "";
 	}
@@ -141,7 +144,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	@Override
 	public void setPackageUnit(String value){
 		if (isTyp(ArticleTyp.EIGENARTIKEL)) {
-			setExtInfo(ch.elexis.core.model.eigenartikel.Constants.FLD_EXT_MEASUREMENT_UNIT, value);
+			setExtInfo(ch.elexis.core.model.localarticle.Constants.FLD_EXT_MEASUREMENT_UNIT, value);
 		}
 	}
 	
@@ -253,30 +256,38 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	}
 	
 	@Override
-	public String getPurchasePrice(){
-		return getEntity().getEkPreis();
+	public Money getPurchasePrice(){
+		String priceString = getEntity().getEkPreis();
+		if (StringUtils.isNumeric(priceString)) {
+			return ModelUtil.getMoneyForCentString(priceString).orElse(null);
+		}
+		return null;
 	}
 	
 	@Override
-	public void setPurchasePrice(String value){
-		getEntity().setEkPreis(value);
+	public void setPurchasePrice(Money value){
+		getEntity().setEkPreis(value.getCentsAsString());
 	}
 	
 	@Override
-	public String getSellingPrice(){
-		return getEntity().getVkPreis();
+	public Money getSellingPrice(){
+		String priceString = getEntity().getVkPreis();
+		if (StringUtils.isNumeric(priceString)) {
+			return ModelUtil.getMoneyForCentString(priceString).orElse(null);
+		}
+		return null;
 	}
 	
 	@Override
-	public void setSellingPrice(String value){
-		getEntity().setVkPreis(value);
+	public void setSellingPrice(Money value){
+		getEntity().setVkPreis(value.getCentsAsString());
 	}
 	
 	@Override
 	public boolean isObligation(){
 		if (isTyp(ArticleTyp.EIGENARTIKEL)) {
 			return Boolean.valueOf((String) getExtInfo(
-				ch.elexis.core.model.eigenartikel.Constants.FLD_EXT_HI_COST_ABSORPTION));
+				ch.elexis.core.model.localarticle.Constants.FLD_EXT_HI_COST_ABSORPTION));
 		}
 		return false;
 	}
@@ -284,7 +295,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	@Override
 	public void setObligation(boolean value){
 		if (isTyp(ArticleTyp.EIGENARTIKEL)) {
-			setExtInfo(ch.elexis.core.model.eigenartikel.Constants.FLD_EXT_HI_COST_ABSORPTION,
+			setExtInfo(ch.elexis.core.model.localarticle.Constants.FLD_EXT_HI_COST_ABSORPTION,
 				Boolean.toString(value));
 		}
 	}

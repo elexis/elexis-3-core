@@ -13,8 +13,6 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.ICodeElement;
-import ch.elexis.core.services.ICodeElementService;
-import ch.elexis.core.services.ICodeElementServiceContribution;
 
 @Component
 public class CodeElementService implements ICodeElementService {
@@ -54,5 +52,11 @@ public class CodeElementService implements ICodeElementService {
 	public List<ICodeElementServiceContribution> getContributionsByTyp(CodeElementTyp typ){
 		return contributions.values().stream().filter(contribution -> contribution.getTyp() == typ)
 			.collect(Collectors.toList());
+	}
+	
+	@Override
+	public Optional<ICodeElementServiceContribution> getContribution(CodeElementTyp typ,
+		String codeSystemName){
+		return Optional.ofNullable(contributions.get(codeSystemName));
 	}
 }

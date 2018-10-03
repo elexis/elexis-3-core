@@ -12,6 +12,7 @@ package ch.elexis.core.model;
 
 import ch.elexis.core.types.ArticleSubTyp;
 import ch.elexis.core.types.ArticleTyp;
+import ch.rgw.tools.Money;
 import java.util.List;
 
 
@@ -234,12 +235,13 @@ public interface IArticle extends Identifiable, IBillable, Deleteable, WithExtIn
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Purchase Price</em>' attribute.
-	 * @see #setPurchasePrice(String)
+	 * @see #setPurchasePrice(Money)
 	 * @see ch.elexis.core.model.ModelPackage#getIArticle_PurchasePrice()
-	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='ekPreis'"
+	 * @model dataType="ch.elexis.core.types.Money"
+	 *        annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='ekPreis'"
 	 * @generated
 	 */
-	String getPurchasePrice();
+	Money getPurchasePrice();
 
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.IArticle#getPurchasePrice <em>Purchase Price</em>}' attribute.
@@ -249,7 +251,7 @@ public interface IArticle extends Identifiable, IBillable, Deleteable, WithExtIn
 	 * @see #getPurchasePrice()
 	 * @generated
 	 */
-	void setPurchasePrice(String value);
+	void setPurchasePrice(Money value);
 
 	/**
 	 * Returns the value of the '<em><b>Selling Price</b></em>' attribute.
@@ -260,12 +262,13 @@ public interface IArticle extends Identifiable, IBillable, Deleteable, WithExtIn
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Selling Price</em>' attribute.
-	 * @see #setSellingPrice(String)
+	 * @see #setSellingPrice(Money)
 	 * @see ch.elexis.core.model.ModelPackage#getIArticle_SellingPrice()
-	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='vkPreis'"
+	 * @model dataType="ch.elexis.core.types.Money"
+	 *        annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='vkPreis'"
 	 * @generated
 	 */
-	String getSellingPrice();
+	Money getSellingPrice();
 
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.IArticle#getSellingPrice <em>Selling Price</em>}' attribute.
@@ -275,7 +278,7 @@ public interface IArticle extends Identifiable, IBillable, Deleteable, WithExtIn
 	 * @see #getSellingPrice()
 	 * @generated
 	 */
-	void setSellingPrice(String value);
+	void setSellingPrice(Money value);
 
 	/**
 	 * Returns the value of the '<em><b>Obligation</b></em>' attribute.

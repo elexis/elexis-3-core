@@ -10,7 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.model.eigenartikel.Constants;
+import ch.elexis.core.model.localarticle.Constants;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.Money;
 

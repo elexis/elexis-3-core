@@ -10,6 +10,8 @@
  */
 package ch.elexis.core.model;
 
+import ch.rgw.tools.Money;
+
 
 /**
  * <!-- begin-user-doc -->
@@ -21,14 +23,23 @@ package ch.elexis.core.model;
  * </p>
  * <ul>
  *   <li>{@link ch.elexis.core.model.IBilled#getBillable <em>Billable</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IBilled#getEncounter <em>Encounter</em>}</li>
  *   <li>{@link ch.elexis.core.model.IBilled#getAmount <em>Amount</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IBilled#getPrice <em>Price</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IBilled#getNetPrice <em>Net Price</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IBilled#getText <em>Text</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IBilled#getPoints <em>Points</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IBilled#getFactor <em>Factor</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IBilled#getPrimaryScale <em>Primary Scale</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IBilled#getSecondaryScale <em>Secondary Scale</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IBilled#getCode <em>Code</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIBilled()
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface IBilled extends Identifiable, Deleteable {
+public interface IBilled extends Identifiable, Deleteable, WithExtInfo {
 
 	/**
 	 * Returns the value of the '<em><b>Billable</b></em>' reference.
@@ -57,6 +68,32 @@ public interface IBilled extends Identifiable, Deleteable {
 	void setBillable(IBillable value);
 
 	/**
+	 * Returns the value of the '<em><b>Encounter</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Encounter</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Encounter</em>' reference.
+	 * @see #setEncounter(IEncounter)
+	 * @see ch.elexis.core.model.ModelPackage#getIBilled_Encounter()
+	 * @model
+	 * @generated
+	 */
+	IEncounter getEncounter();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IBilled#getEncounter <em>Encounter</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Encounter</em>' reference.
+	 * @see #getEncounter()
+	 * @generated
+	 */
+	void setEncounter(IEncounter value);
+
+	/**
 	 * Returns the value of the '<em><b>Amount</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -65,12 +102,12 @@ public interface IBilled extends Identifiable, Deleteable {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Amount</em>' attribute.
-	 * @see #setAmount(int)
+	 * @see #setAmount(double)
 	 * @see ch.elexis.core.model.ModelPackage#getIBilled_Amount()
 	 * @model
 	 * @generated
 	 */
-	int getAmount();
+	double getAmount();
 
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.IBilled#getAmount <em>Amount</em>}' attribute.
@@ -80,5 +117,202 @@ public interface IBilled extends Identifiable, Deleteable {
 	 * @see #getAmount()
 	 * @generated
 	 */
-	void setAmount(int value);
+	void setAmount(double value);
+
+	/**
+	 * Returns the value of the '<em><b>Price</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Price</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Price</em>' attribute.
+	 * @see #setPrice(Money)
+	 * @see ch.elexis.core.model.ModelPackage#getIBilled_Price()
+	 * @model dataType="ch.elexis.core.types.Money"
+	 * @generated
+	 */
+	Money getPrice();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IBilled#getPrice <em>Price</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Price</em>' attribute.
+	 * @see #getPrice()
+	 * @generated
+	 */
+	void setPrice(Money value);
+
+	/**
+	 * Returns the value of the '<em><b>Net Price</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Net Price</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Net Price</em>' attribute.
+	 * @see #setNetPrice(Money)
+	 * @see ch.elexis.core.model.ModelPackage#getIBilled_NetPrice()
+	 * @model dataType="ch.elexis.core.types.Money"
+	 * @generated
+	 */
+	Money getNetPrice();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IBilled#getNetPrice <em>Net Price</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Net Price</em>' attribute.
+	 * @see #getNetPrice()
+	 * @generated
+	 */
+	void setNetPrice(Money value);
+
+	/**
+	 * Returns the value of the '<em><b>Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Text</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Text</em>' attribute.
+	 * @see #setText(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIBilled_Text()
+	 * @model
+	 * @generated
+	 */
+	String getText();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IBilled#getText <em>Text</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Text</em>' attribute.
+	 * @see #getText()
+	 * @generated
+	 */
+	void setText(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Points</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Points</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Points</em>' attribute.
+	 * @see #setPoints(int)
+	 * @see ch.elexis.core.model.ModelPackage#getIBilled_Points()
+	 * @model
+	 * @generated
+	 */
+	int getPoints();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IBilled#getPoints <em>Points</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Points</em>' attribute.
+	 * @see #getPoints()
+	 * @generated
+	 */
+	void setPoints(int value);
+
+	/**
+	 * Returns the value of the '<em><b>Factor</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Factor</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Factor</em>' attribute.
+	 * @see #setFactor(double)
+	 * @see ch.elexis.core.model.ModelPackage#getIBilled_Factor()
+	 * @model
+	 * @generated
+	 */
+	double getFactor();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IBilled#getFactor <em>Factor</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Factor</em>' attribute.
+	 * @see #getFactor()
+	 * @generated
+	 */
+	void setFactor(double value);
+
+	/**
+	 * Returns the value of the '<em><b>Primary Scale</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Primary Scale</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Primary Scale</em>' attribute.
+	 * @see #setPrimaryScale(int)
+	 * @see ch.elexis.core.model.ModelPackage#getIBilled_PrimaryScale()
+	 * @model
+	 * @generated
+	 */
+	int getPrimaryScale();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IBilled#getPrimaryScale <em>Primary Scale</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Primary Scale</em>' attribute.
+	 * @see #getPrimaryScale()
+	 * @generated
+	 */
+	void setPrimaryScale(int value);
+
+	/**
+	 * Returns the value of the '<em><b>Secondary Scale</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Secondary Scale</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Secondary Scale</em>' attribute.
+	 * @see #setSecondaryScale(int)
+	 * @see ch.elexis.core.model.ModelPackage#getIBilled_SecondaryScale()
+	 * @model
+	 * @generated
+	 */
+	int getSecondaryScale();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IBilled#getSecondaryScale <em>Secondary Scale</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Secondary Scale</em>' attribute.
+	 * @see #getSecondaryScale()
+	 * @generated
+	 */
+	void setSecondaryScale(int value);
+
+	/**
+	 * Returns the value of the '<em><b>Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Code</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Code</em>' attribute.
+	 * @see ch.elexis.core.model.ModelPackage#getIBilled_Code()
+	 * @model changeable="false"
+	 * @generated
+	 */
+	String getCode();
 } // IBilled

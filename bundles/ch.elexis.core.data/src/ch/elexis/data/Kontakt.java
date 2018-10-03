@@ -591,12 +591,12 @@ public class Kontakt extends PersistentObject {
 	
 	public static class statL implements Comparable<statL>, Serializable {
 		private static final long serialVersionUID = 10455663346456L;
-		String v;
-		int c;
+		public String v;
+		public int c;
 		
 		public statL(){}
 		
-		statL(String vv){
+		public statL(String vv){
 			v = vv;
 			c = 1;
 		}

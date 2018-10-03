@@ -9,13 +9,13 @@ Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.5.0",
- org.eclipse.emf.ecore;visibility:=reexport,
- ch.elexis.core;visibility:=reexport,
  ch.rgw.utility;bundle-version="3.0.0",
  org.jdom,
  ch.elexis.core.l10n,
  org.eclipse.equinox.ds;bundle-version="1.5.0",
- org.eclipse.equinox.event;bundle-version="1.4.0"
+ org.eclipse.equinox.event;bundle-version="1.4.0",
+ org.eclipse.emf.ecore;visibility:=reexport,
+ ch.elexis.core;visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Export-Package: ch.elexis.core.common,
  ch.elexis.core.constants,
@@ -26,11 +26,13 @@ Export-Package: ch.elexis.core.common,
  ch.elexis.core.model,
  ch.elexis.core.model.agenda,
  ch.elexis.core.model.article,
+ ch.elexis.core.model.billable,
  ch.elexis.core.model.builder,
  ch.elexis.core.model.ch,
- ch.elexis.core.model.eigenartikel,
  ch.elexis.core.model.impl,
  ch.elexis.core.model.issue,
+ ch.elexis.core.model.localarticle,
+ ch.elexis.core.model.localservice,
  ch.elexis.core.model.prescription,
  ch.elexis.core.model.stock,
  ch.elexis.core.model.util,

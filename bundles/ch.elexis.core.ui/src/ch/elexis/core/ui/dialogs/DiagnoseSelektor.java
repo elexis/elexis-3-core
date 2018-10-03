@@ -226,5 +226,11 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 			// TODO Auto-generated method stub
 			
 		}
+		
+		@Override
+		public Long getLastupdate(){
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 }

@@ -25,4 +25,5 @@ Service-Component: OSGI-INF/ch.elexis.core.services.holder.CoreModelServiceHolde
  OSGI-INF/ch.elexis.core.services.StockService.xml,
  OSGI-INF/ch.elexis.core.services.holder.LocalLockServiceHolder.xml,
  OSGI-INF/ch.elexis.core.services.UserService.xml,
- OSGI-INF/ch.elexis.core.services.CodeElementService.xml
+ OSGI-INF/ch.elexis.core.services.CodeElementService.xml,
+ OSGI-INF/ch.elexis.core.services.BillingService.xml

@@ -182,6 +182,14 @@
         <genParameters ecoreParameter="model.ecore#//IDocument/setContent/content"/>
       </genOperations>
     </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IHistory">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IHistory/date"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IHistory/status"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IHistory/description"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//ICategory">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICategory/name"/>
+    </genClasses>
     <genClasses ecoreClass="model.ecore#//IDocumentLetter"/>
     <genClasses image="false" ecoreClass="model.ecore#//ISticker">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ISticker/background"/>
@@ -203,54 +211,34 @@
       <genOperations ecoreOperation="model.ecore#//ICodeElement/getCodeSystemName"/>
       <genOperations ecoreOperation="model.ecore#//ICodeElement/getCodeSystemCode"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="model.ecore#//ICategory">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICategory/name"/>
-    </genClasses>
-    <genClasses image="false" ecoreClass="model.ecore#//IHistory">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IHistory/date"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IHistory/status"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IHistory/description"/>
-    </genClasses>
-    <genClasses image="false" ecoreClass="model.ecore#//IDiagnosis">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IDiagnosis/description"/>
-    </genClasses>
-    <genClasses image="false" ecoreClass="model.ecore#//IDiagnosisTree">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IDiagnosisTree/parent"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IDiagnosisTree/children"/>
+    <genClasses image="false" ecoreClass="model.ecore#//ICodeElementBlock">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ICodeElementBlock/elements"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ICodeElementBlock/elementReferences"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IBillable">
       <genOperations ecoreOperation="model.ecore#//IBillable/getVatInfo"/>
       <genOperations ecoreOperation="model.ecore#//IBillable/getOptifier"/>
       <genOperations ecoreOperation="model.ecore#//IBillable/getVerifier"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="model.ecore#//ICoverage">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ICoverage/patient"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/description"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/reason"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/dateFrom"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/billingSystem"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ICoverage/costBearer"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/insuranceNumber"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/dateTo"/>
-      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference model.ecore#//ICoverage/encounters"/>
+    <genClasses image="false" ecoreClass="model.ecore#//IBillableVerifier">
+      <genOperations ecoreOperation="model.ecore#//IBillableVerifier/verifyAdd">
+        <genParameters ecoreParameter="model.ecore#//IBillableVerifier/verifyAdd/billable"/>
+        <genParameters ecoreParameter="model.ecore#//IBillableVerifier/verifyAdd/encounter"/>
+      </genOperations>
     </genClasses>
-    <genClasses image="false" ecoreClass="model.ecore#//IBillingSystemFactor">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBillingSystemFactor/system"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBillingSystemFactor/factor"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBillingSystemFactor/validFrom"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBillingSystemFactor/validTo"/>
+    <genClasses image="false" ecoreClass="model.ecore#//IBillableOptifier">
+      <genOperations ecoreOperation="model.ecore#//IBillableOptifier/add">
+        <genParameters ecoreParameter="model.ecore#//IBillableOptifier/add/billable"/>
+        <genParameters ecoreParameter="model.ecore#//IBillableOptifier/add/encounter"/>
+        <genParameters ecoreParameter="model.ecore#//IBillableOptifier/add/amount"/>
+      </genOperations>
     </genClasses>
-    <genClasses image="false" ecoreClass="model.ecore#//IConfig">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IConfig/key"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IConfig/value"/>
+    <genClasses image="false" ecoreClass="model.ecore#//IService">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IService/price"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IService/netPrice"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IService/minutes"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="model.ecore#//IUserConfig">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IUserConfig/owner"/>
-    </genClasses>
-    <genClasses image="false" ecoreClass="model.ecore#//IPeriod">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPeriod/startTime"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPeriod/endTime"/>
-    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//ILocalService"/>
     <genClasses image="false" ecoreClass="model.ecore#//IArticle">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IArticle/gtin"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IArticle/atcCode"/>
@@ -269,6 +257,45 @@
       <genOperations ecoreOperation="model.ecore#//IArticle/setCode">
         <genParameters ecoreParameter="model.ecore#//IArticle/setCode/code"/>
       </genOperations>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IDiagnosis">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IDiagnosis/description"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IDiagnosisReference">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IDiagnosisReference/referredClass"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IDiagnosisTree">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IDiagnosisTree/parent"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IDiagnosisTree/children"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//ICoverage">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ICoverage/patient"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/reason"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/dateFrom"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/billingSystem"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ICoverage/costBearer"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/insuranceNumber"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/dateTo"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference model.ecore#//ICoverage/encounters"/>
+      <genOperations ecoreOperation="model.ecore#//ICoverage/isOpen"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IBillingSystemFactor">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBillingSystemFactor/system"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBillingSystemFactor/factor"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBillingSystemFactor/validFrom"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBillingSystemFactor/validTo"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IConfig">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IConfig/key"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IConfig/value"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IUserConfig">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IUserConfig/owner"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IPeriod">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPeriod/startTime"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPeriod/endTime"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//WithExtInfo">
       <genOperations ecoreOperation="model.ecore#//WithExtInfo/getExtInfo">
@@ -290,34 +317,37 @@
         <genParameters ecoreParameter="model.ecore#//IBlob/setStringContent/value"/>
       </genOperations>
     </genClasses>
-    <genClasses image="false" ecoreClass="model.ecore#//IBillableVerifier">
-      <genOperations ecoreOperation="model.ecore#//IBillableVerifier/verifyAdd">
-        <genParameters ecoreParameter="model.ecore#//IBillableVerifier/verifyAdd/billable"/>
-        <genParameters ecoreParameter="model.ecore#//IBillableVerifier/verifyAdd/encounter"/>
-      </genOperations>
-    </genClasses>
-    <genClasses image="false" ecoreClass="model.ecore#//IBillableOptifier">
-      <genOperations ecoreOperation="model.ecore#//IBillableOptifier/add">
-        <genParameters ecoreParameter="model.ecore#//IBillableOptifier/add/billable"/>
-        <genParameters ecoreParameter="model.ecore#//IBillableOptifier/add/encounter"/>
-      </genOperations>
-      <genOperations ecoreOperation="model.ecore#//IBillableOptifier/remove">
-        <genParameters ecoreParameter="model.ecore#//IBillableOptifier/remove/billed"/>
-        <genParameters ecoreParameter="model.ecore#//IBillableOptifier/remove/encounter"/>
-      </genOperations>
-    </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IEncounter">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IEncounter/timeStamp"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IEncounter/date"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IEncounter/patient"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IEncounter/coverage"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IEncounter/mandator"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IEncounter/billed"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IEncounter/date"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IEncounter/diagnoses"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IEncounter/coverage"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IEncounter/versionedEntry"/>
+      <genOperations ecoreOperation="model.ecore#//IEncounter/addDiagnosis">
+        <genParameters ecoreParameter="model.ecore#//IEncounter/addDiagnosis/diagnosis"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IEncounter/removeDiagnosis">
+        <genParameters ecoreParameter="model.ecore#//IEncounter/removeDiagnosis/diagnosis"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IEncounter/removeBilled">
+        <genParameters ecoreParameter="model.ecore#//IEncounter/removeBilled/billed"/>
+      </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IBilled">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IBilled/billable"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IBilled/encounter"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBilled/amount"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBilled/price"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBilled/netPrice"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBilled/text"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBilled/points"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBilled/factor"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBilled/primaryScale"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBilled/secondaryScale"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBilled/code"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IStock">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IStock/code"/>
@@ -372,17 +402,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAddress/type"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IAddress/contact"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="model.ecore#//IImage">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IImage/date"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IImage/prefix"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IImage/title"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IImage/image"/>
-    </genClasses>
-    <genClasses image="false" ecoreClass="model.ecore#//WithAssignableId">
-      <genOperations ecoreOperation="model.ecore#//WithAssignableId/setId">
-        <genParameters ecoreParameter="model.ecore#//WithAssignableId/setId/id"/>
-      </genOperations>
-    </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IAppointment">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/reason"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/state"/>
@@ -393,6 +412,17 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/schedule"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IAppointment/createdBy"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/subjectOrPatient"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IImage">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IImage/date"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IImage/prefix"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IImage/title"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IImage/image"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//WithAssignableId">
+      <genOperations ecoreOperation="model.ecore#//WithAssignableId/setId">
+        <genParameters ecoreParameter="model.ecore#//WithAssignableId/setId/id"/>
+      </genOperations>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

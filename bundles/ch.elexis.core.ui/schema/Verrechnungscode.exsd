@@ -57,7 +57,7 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="ElementFactory" type="string" use="required">
+         <attribute name="ElementFactory" type="string">
             <annotation>
                <documentation>
                   
@@ -107,6 +107,20 @@
                </appinfo>
             </annotation>
          </attribute>
+         <attribute name="system" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="elexisClassName" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 
@@ -124,7 +138,7 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="ElementFactory" type="string" use="required">
+         <attribute name="ElementFactory" type="string">
             <annotation>
                <documentation>
                   
@@ -194,6 +208,20 @@
                </appinfo>
             </annotation>
          </attribute>
+         <attribute name="system" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="elexisClassName" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 
@@ -217,6 +245,15 @@
 
    <annotation>
       <appinfo>
+         <meta.section type="apiInfo"/>
+      </appinfo>
+      <documentation>
+         [Geben Sie hier die API-Informationen ein.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
          <meta.section type="implementation"/>
       </appinfo>
       <documentation>
@@ -230,15 +267,6 @@
       </appinfo>
       <documentation>
          (c) 2006 by G. Weirich
-      </documentation>
-   </annotation>
-
-   <annotation>
-      <appinfo>
-         <meta.section type="apiInfo"/>
-      </appinfo>
-      <documentation>
-         [Geben Sie hier die API-Informationen ein.]
       </documentation>
    </annotation>
 

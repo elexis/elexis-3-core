@@ -64,8 +64,10 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.ISticker;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -513,7 +515,8 @@ public class KonsDetailView extends ViewPart
 				kons.isEditable(false) && CoreHub.acl.request(AccessControlDefaults.KONS_REASSIGN);
 			hlMandant.setEnabled(hlMandantEnabled);
 			dd.setEncounter(kons);
-			vd.setEncounter(kons);
+			vd.setEncounter(
+				CoreModelServiceHolder.get().load(kons.getId(), IEncounter.class).orElse(null));
 			vd.setEnabled(true);
 			dd.setEnabled(true);
 			if (kons.isEditable(false)) {

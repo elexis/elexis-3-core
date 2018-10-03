@@ -25,11 +25,12 @@ import java.util.List;
  * </p>
  * <ul>
  *   <li>{@link ch.elexis.core.model.IEncounter#getTimeStamp <em>Time Stamp</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IEncounter#getDate <em>Date</em>}</li>
  *   <li>{@link ch.elexis.core.model.IEncounter#getPatient <em>Patient</em>}</li>
- *   <li>{@link ch.elexis.core.model.IEncounter#getCoverage <em>Coverage</em>}</li>
  *   <li>{@link ch.elexis.core.model.IEncounter#getMandator <em>Mandator</em>}</li>
  *   <li>{@link ch.elexis.core.model.IEncounter#getBilled <em>Billed</em>}</li>
- *   <li>{@link ch.elexis.core.model.IEncounter#getDate <em>Date</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IEncounter#getDiagnoses <em>Diagnoses</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IEncounter#getCoverage <em>Coverage</em>}</li>
  *   <li>{@link ch.elexis.core.model.IEncounter#getVersionedEntry <em>Versioned Entry</em>}</li>
  * </ul>
  *
@@ -148,6 +149,22 @@ public interface IEncounter extends Identifiable, Deleteable {
 	List<IBilled> getBilled();
 
 	/**
+	 * Returns the value of the '<em><b>Diagnoses</b></em>' reference list.
+	 * The list contents are of type {@link ch.elexis.core.model.IDiagnosisReference}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Diagnoses</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Diagnoses</em>' reference list.
+	 * @see ch.elexis.core.model.ModelPackage#getIEncounter_Diagnoses()
+	 * @model
+	 * @generated
+	 */
+	List<IDiagnosisReference> getDiagnoses();
+
+	/**
 	 * Returns the value of the '<em><b>Date</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -199,5 +216,29 @@ public interface IEncounter extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	void setVersionedEntry(VersionedResource value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model diagnosisRequired="true"
+	 * @generated
+	 */
+	void addDiagnosis(IDiagnosis diagnosis);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model diagnosisRequired="true"
+	 * @generated
+	 */
+	void removeDiagnosis(IDiagnosis diagnosis);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model billedRequired="true"
+	 * @generated
+	 */
+	void removeBilled(IBilled billed);
 
 } // IEncounter

@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.ICodeElement;
-import ch.elexis.core.model.eigenartikel.Constants;
+import ch.elexis.core.model.localarticle.Constants;
 import ch.elexis.core.services.ICodeElementService.CodeElementTyp;
 import ch.elexis.core.services.ICodeElementServiceContribution;
 import ch.elexis.core.services.IModelService;

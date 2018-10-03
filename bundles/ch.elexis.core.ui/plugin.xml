@@ -781,17 +781,20 @@
       <extension
             point="ch.elexis.core.ui.Verrechnungscode">
              <Leistung
-            CodeDetailDisplay="ch.elexis.core.ui.eigenleistung.EigenleistungDetailDisplay"
-            CodeSelectorFactory="ch.elexis.core.ui.eigenleistung.EigenleistungCodeSelectorFactory"
-            ElementFactory="ch.elexis.data.PersistentObjectFactory"
-            name="Eigenleistung">
+                   CodeDetailDisplay="ch.elexis.core.ui.eigenleistung.EigenleistungDetailDisplay"
+                   CodeSelectorFactory="ch.elexis.core.ui.eigenleistung.EigenleistungCodeSelectorFactory"
+                   elexisClassName="ch.elexis.data.Eigenleistung"
+                   name="Eigenleistung"
+                   statistics="ch.elexis.data.Eigenleistung"
+                   system="Eigenleistung">
       </Leistung>
              <Leistung
                    CodeDetailDisplay="ch.elexis.core.ui.views.codesystems.BlockDetailDisplay"
                    CodeSelectorFactory="ch.elexis.core.ui.views.codesystems.BlockSelector"
                    ElementFactory="ch.elexis.data.PersistentObjectFactory"
                    ImporterClass="ch.elexis.core.ui.views.codesystems.BlockImporter"
-                   name="Block">
+                   name="Block"
+                   system="Block">
              </Leistung>
       </extension>
       <extension

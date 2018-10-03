@@ -27,6 +27,9 @@ import org.eclipse.swt.widgets.Control;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.data.PersistentObject;
 
+/**
+ * @deprecated use {@link GenericObjectDropSource} instead
+ */
 public class PersistentObjectDragSource implements DragSourceListener {
 	
 	ISelectionRenderer renderer;

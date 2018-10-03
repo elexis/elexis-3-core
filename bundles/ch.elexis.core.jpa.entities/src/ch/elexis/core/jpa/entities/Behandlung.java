@@ -1,7 +1,8 @@
 package ch.elexis.core.jpa.entities;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -55,15 +56,13 @@ public class Behandlung implements EntityWithId, EntityWithDeleted {
 	@Column(length = 8)
 	private LocalDate datum;
 
-	@OneToMany
+	@OneToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "behdl_dg_joint", joinColumns = @JoinColumn(name = "BehandlungsID"), inverseJoinColumns = @JoinColumn(name = "DiagnoseID"))
-	private Set<Diagnosis> diagnoses;
-
-	/**
-	 * Seems to be always null
-	 */
-	@Column(length = 25, name = "leistungen")
-	private String leistungenId;
+	private List<Diagnosis> diagnoses = new ArrayList<>();
+	
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "behandlung")
+	private List<Verrechnet> billed = new ArrayList<>();
 
 	@Basic(fetch = FetchType.LAZY)
 	@Convert(converter = VersionedResourceConverter.class)
@@ -104,20 +103,12 @@ public class Behandlung implements EntityWithId, EntityWithDeleted {
 		this.datum = datum;
 	}
 
-	public Set<Diagnosis> getDiagnoses() {
+	public List<Diagnosis> getDiagnoses(){
 		return diagnoses;
 	}
-
-	public void setDiagnoses(Set<Diagnosis> diagnoses) {
-		this.diagnoses = diagnoses;
-	}
-
-	public String getLeistungenId() {
-		return leistungenId;
-	}
-
-	public void setLeistungenId(String leistungenId) {
-		this.leistungenId = leistungenId;
+	
+	public List<Verrechnet> getBilled(){
+		return billed;
 	}
 
 	public VersionedResource getEintrag() {

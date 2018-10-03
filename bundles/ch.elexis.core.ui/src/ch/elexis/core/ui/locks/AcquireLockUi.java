@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.model.Identifiable;
 
 public class AcquireLockUi {
 	private static Logger logger = LoggerFactory.getLogger(AcquireLockUi.class);
@@ -30,6 +31,30 @@ public class AcquireLockUi {
 				public void run(){
 					lockhandler.lockFailed();
 					LockResponseHelper.showInfo(result, lockPo, logger);
+				}
+			});
+		}
+	}
+	
+	public static void aquireAndRun(Identifiable identifiable, ILockHandler lockhandler){
+		Display display = Display.getDefault();
+		LockResponse result = LocalLockServiceHolder.get().acquireLock(identifiable);
+		if (result.isOk()) {
+			
+			display.syncExec(new Runnable() {
+				@Override
+				public void run(){
+					lockhandler.lockAcquired();
+				}
+			});
+			LocalLockServiceHolder.get().releaseLock(identifiable);
+		} else {
+			
+			display.syncExec(new Runnable() {
+				@Override
+				public void run(){
+					lockhandler.lockFailed();
+					LockResponseHelper.showInfo(result, identifiable, logger);
 				}
 			});
 		}

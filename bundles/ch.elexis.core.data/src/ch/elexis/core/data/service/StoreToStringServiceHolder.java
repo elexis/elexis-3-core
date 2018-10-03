@@ -1,8 +1,11 @@
 package ch.elexis.core.data.service;
 
+import java.util.Optional;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IStoreToStringService;
 import ch.elexis.data.PersistentObject;
@@ -24,6 +27,13 @@ public class StoreToStringServiceHolder {
 		return storeToStringService;
 	}
 	
+	/**
+	 * Get the elexis store to string for the object. Can handle {@link Identifiable} and
+	 * {@link PersistentObject} objects.
+	 * 
+	 * @param object
+	 * @return
+	 */
 	public static String getStoreToString(Object object){
 		if (object instanceof PersistentObject) {
 			return ((PersistentObject) object).storeToString();
@@ -33,5 +43,22 @@ public class StoreToStringServiceHolder {
 					() -> new IllegalStateException("No storeToString for [" + object + "]"));
 		}
 		throw new IllegalStateException("No storeToString for [" + object + "]");
+	}
+	
+	/**
+	 * Load the object identified by the elexis storeToString. Can handle {@link Identifiable} and
+	 * {@link PersistentObject} objects.
+	 * 
+	 * @param storeToString
+	 * @return
+	 */
+	public static Object getLoadFromString(String storeToString){
+		Optional<Identifiable> loaded =
+			StoreToStringServiceHolder.get().loadFromString(storeToString);
+		if (!loaded.isPresent()) {
+			return CoreHub.poFactory.createFromString(storeToString);
+		} else {
+			return loaded.get();
+		}
 	}
 }

@@ -237,6 +237,14 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="patient" eType="#//IPatient"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="author" eType="#//IContact"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IHistory" abstract="true" interface="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="ecore:EEnum types.ecore#//DocumentStatus"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ICategory" abstract="true" interface="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IDocumentLetter" abstract="true" interface="true"
       eSuperTypes="#//IDocument"/>
   <eClassifiers xsi:type="ecore:EClass" name="ISticker" abstract="true" interface="true">
@@ -272,23 +280,11 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ICategory" abstract="true" interface="true">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="IHistory" abstract="true" interface="true">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="ecore:EEnum types.ecore#//DocumentStatus"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="IDiagnosis" abstract="true" interface="true"
-      eSuperTypes="#//ICodeElement #//Identifiable">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="IDiagnosisTree" abstract="true" interface="true"
-      eSuperTypes="#//IDiagnosis">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//IDiagnosisTree"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="children" upperBound="-1"
-        eType="#//IDiagnosisTree"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ICodeElementBlock" abstract="true" interface="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="elements" upperBound="-1"
+        eType="#//ICodeElement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="elementReferences" upperBound="-1"
+        eType="#//ICodeElement"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IBillable" abstract="true" interface="true"
       eSuperTypes="#//ICodeElement #//Identifiable">
@@ -296,8 +292,90 @@
     <eOperations name="getOptifier" eType="#//IBillableOptifier"/>
     <eOperations name="getVerifier" eType="#//IBillableVerifier"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IBillableVerifier" abstract="true" interface="true">
+    <eOperations name="verifyAdd">
+      <eGenericType eClassifier="ecore:EClass types.ecore#//Result">
+        <eTypeArguments eClassifier="#//IBillable"/>
+      </eGenericType>
+      <eParameters name="billable" eType="#//IBillable"/>
+      <eParameters name="encounter" eType="#//IEncounter"/>
+    </eOperations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IBillableOptifier" abstract="true" interface="true">
+    <eOperations name="add">
+      <eGenericType eClassifier="ecore:EClass types.ecore#//Result">
+        <eTypeArguments eClassifier="#//IBillable"/>
+      </eGenericType>
+      <eParameters name="billable" eType="#//IBillable"/>
+      <eParameters name="encounter" eType="#//IEncounter"/>
+      <eParameters name="amount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    </eOperations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IService" abstract="true" interface="true"
+      eSuperTypes="#//IBillable #//Identifiable #//Deleteable">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="price" eType="ecore:EDataType types.ecore#//Money"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="netPrice" eType="ecore:EDataType types.ecore#//Money"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="minutes" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ILocalService" abstract="true" interface="true"
+      eSuperTypes="#//IService"/>
+  <eClassifiers xsi:type="ecore:EClass" name="IArticle" abstract="true" interface="true"
+      eSuperTypes="#//Identifiable #//IBillable #//Deleteable #//WithExtInfo">
+    <eOperations name="isProduct" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eOperations name="getPackages">
+      <eGenericType eClassifier="ecore:EClass types.ecore#//List">
+        <eTypeArguments eClassifier="#//IArticle"/>
+      </eGenericType>
+    </eOperations>
+    <eOperations name="setCode">
+      <eParameters name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="gtin" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
+        <details key="attributeName" value="ean"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="atcCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sellingSize" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="packageSize" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="packageUnit" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="product" eType="#//IArticle"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="purchasePrice" eType="ecore:EDataType types.ecore#//Money">
+      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
+        <details key="attributeName" value="ekPreis"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sellingPrice" eType="ecore:EDataType types.ecore#//Money">
+      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
+        <details key="attributeName" value="vkPreis"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="obligation" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="typ" eType="ecore:EDataType types.ecore#//ArticleTyp"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="subTyp" eType="ecore:EDataType types.ecore#//ArticleSubTyp">
+      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
+        <details key="attributeName" value="codeclass"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IDiagnosis" abstract="true" interface="true"
+      eSuperTypes="#//ICodeElement #//Identifiable">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IDiagnosisReference" abstract="true"
+      interface="true" eSuperTypes="#//IDiagnosis">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="referredClass" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IDiagnosisTree" abstract="true" interface="true"
+      eSuperTypes="#//IDiagnosis">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//IDiagnosisTree"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="children" upperBound="-1"
+        eType="#//IDiagnosisTree"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ICoverage" abstract="true" interface="true"
       eSuperTypes="#//Deleteable #//Identifiable #//WithExtInfo">
+    <eOperations name="isOpen" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="patient" lowerBound="1"
         eType="#//IPatient">
       <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
@@ -369,46 +447,6 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="startTime" eType="ecore:EDataType types.ecore#//LocalDateTime"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="endTime" eType="ecore:EDataType types.ecore#//LocalDateTime"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="IArticle" abstract="true" interface="true"
-      eSuperTypes="#//Identifiable #//IBillable #//Deleteable #//WithExtInfo">
-    <eOperations name="isProduct" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eOperations name="getPackages">
-      <eGenericType eClassifier="ecore:EClass types.ecore#//List">
-        <eTypeArguments eClassifier="#//IArticle"/>
-      </eGenericType>
-    </eOperations>
-    <eOperations name="setCode">
-      <eParameters name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eOperations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="gtin" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
-        <details key="attributeName" value="ean"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="atcCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sellingSize" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="packageSize" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="packageUnit" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="product" eType="#//IArticle"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="purchasePrice" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
-        <details key="attributeName" value="ekPreis"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sellingPrice" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
-        <details key="attributeName" value="vkPreis"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="obligation" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="typ" eType="ecore:EDataType types.ecore#//ArticleTyp"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="subTyp" eType="ecore:EDataType types.ecore#//ArticleSubTyp">
-      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
-        <details key="attributeName" value="codeclass"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="WithExtInfo" abstract="true" interface="true">
     <eOperations name="getExtInfo" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject">
       <eParameters name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
@@ -431,45 +469,31 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="content" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EByteArray"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType types.ecore#//LocalDate"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="IBillableVerifier" abstract="true" interface="true">
-    <eOperations name="verifyAdd">
-      <eGenericType eClassifier="ecore:EClass types.ecore#//Result">
-        <eTypeArguments eClassifier="#//IBillable"/>
-      </eGenericType>
-      <eParameters name="billable" eType="#//IBillable"/>
-      <eParameters name="encounter" eType="#//IEncounter"/>
-    </eOperations>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="IBillableOptifier" abstract="true" interface="true">
-    <eOperations name="add">
-      <eGenericType eClassifier="ecore:EClass types.ecore#//Result">
-        <eTypeArguments eClassifier="#//IBillable"/>
-      </eGenericType>
-      <eParameters name="billable" eType="#//IBillable"/>
-      <eParameters name="encounter" eType="#//IEncounter"/>
-    </eOperations>
-    <eOperations name="remove">
-      <eGenericType eClassifier="ecore:EClass types.ecore#//Result">
-        <eTypeArguments eClassifier="#//IBilled"/>
-      </eGenericType>
-      <eParameters name="billed" eType="#//IBilled"/>
-      <eParameters name="encounter" eType="#//IEncounter"/>
-    </eOperations>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IEncounter" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable">
+    <eOperations name="addDiagnosis">
+      <eParameters name="diagnosis" lowerBound="1" eType="#//IDiagnosis"/>
+    </eOperations>
+    <eOperations name="removeDiagnosis">
+      <eParameters name="diagnosis" lowerBound="1" eType="#//IDiagnosis"/>
+    </eOperations>
+    <eOperations name="removeBilled">
+      <eParameters name="billed" lowerBound="1" eType="#//IBilled"/>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="timeStamp" eType="ecore:EDataType types.ecore#//LocalDateTime"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType types.ecore#//LocalDate"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="patient" eType="#//IPatient"
         changeable="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mandator" eType="#//IMandator"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="billed" upperBound="-1"
+        eType="#//IBilled"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="diagnoses" upperBound="-1"
+        eType="#//IDiagnosisReference"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="coverage" eType="#//ICoverage">
       <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
         <details key="attributeName" value="fall"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="mandator" eType="#//IMandator"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="billed" upperBound="-1"
-        eType="#//IBilled"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType types.ecore#//LocalDate"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="versionedEntry" eType="ecore:EDataType types.ecore#//VersionedResource">
       <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
         <details key="attributeName" value="eintrag"/>
@@ -477,9 +501,19 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IBilled" abstract="true" interface="true"
-      eSuperTypes="#//Identifiable #//Deleteable">
+      eSuperTypes="#//Identifiable #//Deleteable #//WithExtInfo">
     <eStructuralFeatures xsi:type="ecore:EReference" name="billable" eType="#//IBillable"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="amount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="encounter" eType="#//IEncounter"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="amount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="price" eType="ecore:EDataType types.ecore#//Money"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="netPrice" eType="ecore:EDataType types.ecore#//Money"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="points" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="factor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="primaryScale" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="secondaryScale" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        changeable="false"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IStock" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable">
@@ -541,18 +575,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="contact" lowerBound="1"
         eType="#//IContact"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="IImage" abstract="true" interface="true"
-      eSuperTypes="#//Identifiable #//Deleteable #//WithAssignableId">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType types.ecore#//LocalDate"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="prefix" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="image" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EByteArray"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="WithAssignableId" abstract="true" interface="true">
-    <eOperations name="setId">
-      <eParameters name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eOperations>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IAppointment" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="reason" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
@@ -589,5 +611,17 @@
         <details key="attributeName" value="patid"/>
       </eAnnotations>
     </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IImage" abstract="true" interface="true"
+      eSuperTypes="#//Identifiable #//Deleteable #//WithAssignableId">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType types.ecore#//LocalDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="prefix" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="image" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EByteArray"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="WithAssignableId" abstract="true" interface="true">
+    <eOperations name="setId">
+      <eParameters name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
   </eClassifiers>
 </ecore:EPackage>

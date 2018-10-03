@@ -1,5 +1,7 @@
 package ch.elexis.core.model.builder;
 
+import java.time.LocalDate;
+
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
@@ -16,4 +18,8 @@ public class IEncounterBuilder extends AbstractBuilder<IEncounter> {
 		object.setMandator(mandator);
 	}
 	
+	public IEncounterBuilder date(LocalDate date){
+		object.setDate(date);
+		return this;
+	}
 }

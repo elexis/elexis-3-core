@@ -19,7 +19,7 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
-public class TypedArticleTest {
+public class ArticleTest {
 	private IModelService modelSerice;
 	
 	@Before

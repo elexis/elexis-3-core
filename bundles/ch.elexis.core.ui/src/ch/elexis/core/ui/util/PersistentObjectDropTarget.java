@@ -29,6 +29,7 @@ import ch.elexis.data.PersistentObject;
  * Universal {@link DropTarget} for {@link PersistentObject}
  * 
  * @author gerry
+ * @deprecated use {@link GenericObjectDropTarget} instead
  * 
  */
 public class PersistentObjectDropTarget implements DropTargetListener, ICodeSelectorTarget {

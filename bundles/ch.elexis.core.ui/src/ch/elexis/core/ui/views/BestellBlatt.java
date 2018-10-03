@@ -14,7 +14,6 @@ package ch.elexis.core.ui.views;
 
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_ORDER;
 
-import java.text.ParseException;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
@@ -61,12 +60,7 @@ public class BestellBlatt extends ViewPart implements ICallback {
 			row[0] = Integer.toString(orderEntry.getAmount());
 			row[1] = orderEntry.getArticle().getCode();
 			row[2] = orderEntry.getArticle().getName();
-			Money purchasePrice;
-			try {
-				purchasePrice = new Money(orderEntry.getArticle().getPurchasePrice());
-			} catch (ParseException e) {
-				purchasePrice = new Money();
-			}
+			Money purchasePrice = new Money(orderEntry.getArticle().getPurchasePrice());
 			row[3] = purchasePrice.getAmountAsString();
 			Money amount = purchasePrice.multiply(orderEntry.getAmount());
 			row[4] = amount.getAmountAsString();

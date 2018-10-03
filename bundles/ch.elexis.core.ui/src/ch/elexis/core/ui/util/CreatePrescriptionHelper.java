@@ -15,7 +15,7 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
-import ch.elexis.core.model.eigenartikel.Constants;
+import ch.elexis.core.model.localarticle.Constants;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.dialogs.PrescriptionSignatureTitleAreaDialog;
 import ch.elexis.core.ui.locks.AcquireLockUi;

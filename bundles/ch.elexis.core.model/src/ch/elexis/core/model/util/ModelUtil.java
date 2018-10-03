@@ -15,9 +15,11 @@ import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.entities.Userconfig;
 import ch.elexis.core.jpa.model.adapter.AbstractModelService;
 import ch.elexis.core.model.Config;
-import ch.elexis.core.model.DocumentBrief;
+import ch.elexis.core.model.DocumentLetter;
 import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IDiagnosis;
+import ch.elexis.core.model.IDiagnosisReference;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserConfig;
@@ -31,7 +33,9 @@ import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.IStoreToStringContribution;
 import ch.rgw.tools.MimeTool;
+import ch.rgw.tools.Money;
 
 /**
  * Utility class with core model specific methods
@@ -83,7 +87,7 @@ public class ModelUtil {
 	 * @param documentBrief
 	 * @return
 	 */
-	public static Optional<File> getExternFile(DocumentBrief documentBrief){
+	public static Optional<File> getExternFile(DocumentLetter documentBrief){
 		String path = getConfig(Preferences.P_TEXT_EXTERN_FILE_PATH, null);
 		if (pathExistsAndCanWrite(path, true)) {
 			File dir = new File(path);
@@ -114,7 +118,7 @@ public class ModelUtil {
 	 * @param documentBrief
 	 * @return
 	 */
-	public static Optional<File> createExternFile(DocumentBrief documentBrief){
+	public static Optional<File> createExternFile(DocumentLetter documentBrief){
 		String path = getConfig(Preferences.P_TEXT_EXTERN_FILE_PATH, null);
 		if (pathExistsAndCanWrite(path, true)) {
 			File dir = new File(path);
@@ -325,5 +329,42 @@ public class ModelUtil {
 	
 	public static Optional<String> getStoreToString(Identifiable identifiable){
 		return StoreToStringServiceHolder.get().storeToString(identifiable);
+	}
+	
+	/**
+	 * If string is parse able as {@link Integer}, the value is interpreted as cents.
+	 * 
+	 * @param string
+	 * @return
+	 */
+	public static Optional<Money> getMoneyForCentString(String string){
+		try {
+			int amount = Integer.parseInt(string);
+			return Optional.of(new Money(amount));
+		} catch (NumberFormatException e) {
+			// ignore
+		}
+		return Optional.empty();
+	}
+	
+	public static IDiagnosis getOrCreateDiagnosisReference(IDiagnosis diagnosis){
+		Optional<String> storeToString = StoreToStringServiceHolder.get().storeToString(diagnosis);
+		if (storeToString.isPresent()) {
+			String[] parts = storeToString.get().split(IStoreToStringContribution.DOUBLECOLON);
+			INamedQuery<IDiagnosisReference> query = CoreModelServiceHolder.get()
+				.getNamedQuery(IDiagnosisReference.class, "code", "diagnosisClass");
+			List<IDiagnosisReference> existing = query.executeWithParameters(CoreModelServiceHolder
+				.get().getParameterMap("code", diagnosis.getCode(), "diagnosisClass", parts[0]));
+			if (!existing.isEmpty()) {
+				return existing.get(0);
+			} else {
+				IDiagnosisReference reference =
+					CoreModelServiceHolder.get().create(IDiagnosisReference.class);
+				reference.setCode(diagnosis.getCode());
+				reference.setReferredClass(parts[0]);
+				reference.setText(diagnosis.getText());
+			}
+		}
+		return null;
 	}
 }

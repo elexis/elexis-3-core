@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
@@ -15,6 +16,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "EIGENLEISTUNGEN")
 @EntityListeners(EntityWithIdListener.class)
+@NamedQuery(name = "Eigenleistung.code", query = "SELECT ei FROM Eigenleistung ei WHERE ei.deleted = false AND ei.code = :code")
 public class Eigenleistung implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener

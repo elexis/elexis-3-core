@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.ICodeElement;
@@ -33,7 +34,6 @@ import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.PersistentObjectFactory;
 import ch.elexis.data.dto.CodeElementDTO;
-import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 
 public class ServiceBlockElement extends XChangeElement {
@@ -53,6 +53,7 @@ public class ServiceBlockElement extends XChangeElement {
 			try {
 				PersistentObjectFactory po = (PersistentObjectFactory) ic
 					.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_ELF);
+				
 				CodeSelectorFactory cs = (CodeSelectorFactory) ic
 					.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
 				if (cs == null) {
@@ -65,12 +66,11 @@ public class ServiceBlockElement extends XChangeElement {
 					codeElements.add(ics);
 					factories.put(ics, cs);
 				}
-				
 			} catch (CoreException ex) {
-				ExHandler.handle(ex);
+				LoggerFactory.getLogger(ServiceBlockElement.class)
+					.warn("Could not create PersistentObject code element factory", ex);
 			}
 		}
-		
 	}
 	
 	public ServiceBlockElement asExporter(XChangeExporter p, Leistungsblock lb){

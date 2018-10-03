@@ -22,7 +22,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "LEISTUNGEN")
 @EntityListeners(EntityWithIdListener.class)
-public class Verrechnet implements EntityWithId, EntityWithDeleted {
+public class Verrechnet implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 	
 	public static final String EXT_VERRRECHNET_TL = "TL"; //$NON-NLS-1$
 	public static final String EXT_VERRRECHNET_AL = "AL"; //$NON-NLS-1$
@@ -80,41 +80,6 @@ public class Verrechnet implements EntityWithId, EntityWithDeleted {
 	@Basic(fetch = FetchType.LAZY)
 	@Lob
 	private byte[] detail;
-
-	@Transient
-	public void setTP(double tp) {
-		setVk_tp((int) Math.round(tp));
-	}
-
-	/**
-	 * Derives the settings for {@link #zahl}, {@link #scale} and {@link #scale2}
-	 * for the provided value
-	 * 
-	 * @param countValue
-	 */
-	@Transient
-	public void setDerivedCountValue(float countValue) {
-		if (countValue % 1 == 0) {
-			// integer -> full package
-			setZahl((int) countValue);
-			setScale(100);
-			setScale2(100);
-		} else {
-			// float -> fractional package
-			setZahl(1);
-			setScale(100);
-			int scale2 = Math.round(countValue * 100);
-			setScale2(scale2);
-		}
-	}
-	
-	@Transient
-	public float getDerivedCountValue() {
-		if (scale2 == 100) {
-			return getZahl();
-		}
-		return scale2 / 100f;
-	}
 
 	@Transient
 	public double getPrimaryScaleFactor() {
@@ -296,5 +261,15 @@ public class Verrechnet implements EntityWithId, EntityWithDeleted {
 	@Override
 	public boolean equals(Object obj){
 		return EntityWithId.idEquals(this, obj);
+	}
+	
+	@Override
+	public byte[] getExtInfo(){
+		return detail;
+	}
+	
+	@Override
+	public void setExtInfo(byte[] extInfo){
+		this.detail = extInfo;
 	}
 }

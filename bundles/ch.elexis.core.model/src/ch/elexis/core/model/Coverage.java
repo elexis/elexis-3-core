@@ -127,4 +127,9 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 		return getEntity().getConsultations().parallelStream().filter(f -> !f.isDeleted())
 			.map(f -> ModelUtil.getAdapter(f, IEncounter.class)).collect(Collectors.toList());
 	}
+	
+	@Override
+	public boolean isOpen(){
+		return getDateTo() != null;
+	}
 }

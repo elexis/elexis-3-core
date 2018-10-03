@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -51,9 +50,9 @@ public class DiagnosenView extends ViewPart implements IActivationListener, ISav
 				if (selected != null) {
 					cPage page = (cPage) selected.getControl();
 					if (page == null) {
+						
 						page =
-							new cPage(ctab, (ICodeElement) selected.getData(),
-								(CodeSelectorFactory) selected.getData("csf"));
+							new cPage(ctab, (CodeSystemDescription) selected.getData());
 						selected.setControl(page);
 						// parent.redraw();
 					}
@@ -87,8 +86,7 @@ public class DiagnosenView extends ViewPart implements IActivationListener, ISav
 			if (page == null) {
 				//SWTHelper.alert(CAPTION_ERROR, "cPage=null"); //$NON-NLS-1$
 				page =
-					new cPage(ctab, (ICodeElement) selected.getData(),
-						(CodeSelectorFactory) selected.getData("csf"));
+					new cPage(ctab, (CodeSystemDescription) selected.getData());
 				selected.setControl(page);
 				// parent.redraw();
 			}

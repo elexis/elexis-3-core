@@ -26,12 +26,14 @@ import ch.elexis.core.types.VatInfo;
 public interface IBillable extends ICodeElement, Identifiable {
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model kind="operation" dataType="ch.elexis.core.types.VatInfo"
-	 * @generated
+	 * @generated not
 	 */
-	VatInfo getVatInfo();
+	default VatInfo getVatInfo(){
+		return VatInfo.VAT_DEFAULT;
+	}
 
 	/**
 	 * <!-- begin-user-doc -->

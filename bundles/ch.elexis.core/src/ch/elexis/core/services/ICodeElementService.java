@@ -93,4 +93,15 @@ public interface ICodeElementService {
 	 * @return
 	 */
 	public List<ICodeElementServiceContribution> getContributionsByTyp(CodeElementTyp typ);
+	
+	/**
+	 * Get the {@link ICodeElementServiceContribution} with matching {@link CodeElementTyp} and code
+	 * system name.
+	 * 
+	 * @param typ
+	 * @param codeSystemName
+	 * @return
+	 */
+	public Optional<ICodeElementServiceContribution> getContribution(CodeElementTyp typ,
+		String codeSystemName);
 }

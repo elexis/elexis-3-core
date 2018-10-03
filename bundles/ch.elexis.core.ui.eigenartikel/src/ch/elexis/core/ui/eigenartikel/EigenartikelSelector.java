@@ -38,7 +38,7 @@ import ch.elexis.core.eigenartikel.EigenartikelUtil;
 import ch.elexis.core.eigenartikel.acl.ACLContributor;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IArticle;
-import ch.elexis.core.model.eigenartikel.Constants;
+import ch.elexis.core.model.localarticle.Constants;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.ICodeSelectorTarget;
 import ch.elexis.core.ui.actions.RestrictedAction;
