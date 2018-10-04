@@ -1,10 +1,6 @@
 package ch.elexis.core.model.billable;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
-
-import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBillableOptifier;
@@ -37,24 +33,12 @@ public abstract class AbstractOptifier implements IBillableOptifier {
 			}
 		}
 		if (!added) {
-			IBilled billed = new IBilledBuilder(modelService, billable, encounter).buildAndSave();
-			addBilledToEncounter(encounter, billed);
+			IBilled billed = new IBilledBuilder(modelService, billable, encounter).build();
 			billed.setAmount(amount);
 			setPrice(billed);
 			modelService.save(billed);
 		}
 		return new Result<IBillable>(billable);
-	}
-	
-	protected void addBilledToEncounter(IEncounter encounter, IBilled billed){
-		try {
-			Method method = encounter.getClass().getDeclaredMethod("addBilled", IBilled.class);
-			method.invoke(encounter, billed);
-		} catch (NoSuchMethodException | SecurityException | IllegalAccessException
-				| IllegalArgumentException | InvocationTargetException e) {
-			LoggerFactory.getLogger(getClass())
-				.error("Could not call addBilled method of [" + encounter + "]", e);
-		}
 	}
 	
 	protected abstract void setPrice(IBilled billed);

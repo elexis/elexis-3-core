@@ -15,7 +15,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "AT_MEDEVIT_MEDELEXIS_VAT_CH")
 @EntityListeners(EntityWithIdListener.class)
-public class ObjVatInfo implements EntityWithId, EntityWithDeleted {
+public class ObjVatInfo extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -79,15 +79,5 @@ public class ObjVatInfo implements EntityWithId, EntityWithDeleted {
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

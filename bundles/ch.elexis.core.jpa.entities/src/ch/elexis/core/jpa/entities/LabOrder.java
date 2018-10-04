@@ -30,7 +30,7 @@ import ch.elexis.core.model.LabOrderState;
 @Cache(expiry = 15000)
 @NamedQuery(name = "LabOrder.orderid", query = "SELECT lo FROM LabOrder lo WHERE  lo.deleted = false AND lo.orderid = :orderid")
 @NamedQuery(name = "LabOrder.item.patient.state", query = "SELECT lo FROM LabOrder lo WHERE  lo.deleted = false AND lo.item = :item AND lo.patient = :patient AND lo.state = :state")
-public class LabOrder implements EntityWithId, EntityWithDeleted {
+public class LabOrder extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -188,15 +188,5 @@ public class LabOrder implements EntityWithId, EntityWithDeleted {
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

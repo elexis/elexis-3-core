@@ -18,7 +18,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "DBIMAGE")
 @EntityListeners(EntityWithIdListener.class)
-public class DbImage implements EntityWithId, EntityWithDeleted {
+public class DbImage extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -105,15 +105,5 @@ public class DbImage implements EntityWithId, EntityWithDeleted {
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

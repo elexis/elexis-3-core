@@ -22,7 +22,8 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "LEISTUNGEN")
 @EntityListeners(EntityWithIdListener.class)
-public class Verrechnet implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
+public class Verrechnet extends AbstractEntityWithId
+		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 	
 	public static final String EXT_VERRRECHNET_TL = "TL"; //$NON-NLS-1$
 	public static final String EXT_VERRRECHNET_AL = "AL"; //$NON-NLS-1$
@@ -251,16 +252,6 @@ public class Verrechnet implements EntityWithId, EntityWithDeleted, EntityWithEx
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 	
 	@Override

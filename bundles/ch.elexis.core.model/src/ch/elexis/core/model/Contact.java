@@ -12,6 +12,7 @@ import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
 import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
+import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.util.ModelUtil;
 import ch.elexis.core.types.Country;
 
@@ -261,10 +262,11 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt>
 	
 	@Override
 	public List<IAddress> getAddress(){
+		CoreModelServiceHolder.get().refresh(this);
 		ArrayList<ZusatzAdresse> addresses =
 			new ArrayList<ZusatzAdresse>(getEntity().getAddresses().values());
 		return addresses.parallelStream().filter(f -> !f.isDeleted())
-			.map(f -> ModelUtil.getAdapter(f, IAddress.class)).collect(Collectors.toList());
+			.map(f -> ModelUtil.getAdapter(f, IAddress.class, true)).collect(Collectors.toList());
 	}
 	
 	@Override

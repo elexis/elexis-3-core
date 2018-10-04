@@ -18,7 +18,8 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "CH_ELEXIS_ARZTTARIFE_CH_PHYSIO")
 @EntityListeners(EntityWithIdListener.class)
-public class PhysioLeistung implements EntityWithId, EntityWithDeleted {
+public class PhysioLeistung extends AbstractEntityWithId
+		implements EntityWithId, EntityWithDeleted {
 	
 	public static final String CODESYSTEM_NAME = "Physiotherapie";
 
@@ -144,15 +145,5 @@ public class PhysioLeistung implements EntityWithId, EntityWithDeleted {
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

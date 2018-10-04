@@ -19,7 +19,8 @@ import ch.rgw.tools.StringTool;
 @Entity
 @Table(name = "CH_MEDELEXIS_LABORTARIF2009")
 @EntityListeners(EntityWithIdListener.class)
-public class Labor2009Tarif implements EntityWithId, EntityWithDeleted {
+public class Labor2009Tarif extends AbstractEntityWithId
+		implements EntityWithId, EntityWithDeleted {
 
 	public static final String CODESYSTEM_NAME = "EAL 2009";
 
@@ -174,15 +175,5 @@ public class Labor2009Tarif implements EntityWithId, EntityWithDeleted {
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

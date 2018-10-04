@@ -218,4 +218,12 @@ public interface IModelService {
 	 * @return
 	 */
 	public Map<String, Object> getParameterMap(Object... parameters);
+	
+	/**
+	 * Refresh the entity of the {@link Identifiable} with data from the L2 cache or if not loaded
+	 * the database.
+	 * 
+	 * @param Identifiable
+	 */
+	public void refresh(Identifiable identifiable);
 }

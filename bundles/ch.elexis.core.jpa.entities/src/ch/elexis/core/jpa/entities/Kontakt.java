@@ -58,7 +58,8 @@ import ch.elexis.core.types.Gender;
 	KontaktEntityListener.class, EntityWithIdListener.class
 })
 @NamedQuery(name = "Kontakt.code", query = "SELECT k FROM Kontakt k WHERE k.code = :code")
-public class Kontakt implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
+public class Kontakt extends AbstractEntityWithId
+		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -588,15 +589,5 @@ public class Kontakt implements EntityWithId, EntityWithDeleted, EntityWithExtIn
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

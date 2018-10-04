@@ -19,7 +19,8 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Table(name = "CH_ELEXIS_CORE_FINDINGS_FAMILYMEMBERHISTORY")
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "FamilyMemberHistory.patientid", query = "SELECT fm FROM FamilyMemberHistory fm WHERE fm.deleted = false AND fm.patientid = :patientid")
-public class FamilyMemberHistory implements EntityWithId, EntityWithDeleted {
+public class FamilyMemberHistory extends AbstractEntityWithId
+		implements EntityWithId, EntityWithDeleted {
 	
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -83,15 +84,5 @@ public class FamilyMemberHistory implements EntityWithId, EntityWithDeleted {
 
 	public void setContent(String content) {
 		this.content = content;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

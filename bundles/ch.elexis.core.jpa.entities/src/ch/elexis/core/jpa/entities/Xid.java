@@ -39,7 +39,7 @@ import ch.elexis.core.model.XidQuality;
 @Cache(expiry = 15000)
 @NamedQuery(name = "Xid.domain.domainid", query = "SELECT xi FROM Xid xi WHERE xi.domain = :domain AND xi.domainId = :domainid")
 @NamedQuery(name = "Xid.domain.objectid", query = "SELECT xi FROM Xid xi WHERE xi.domain = :domain AND xi.object = :objectid")
-public class Xid implements EntityWithId, EntityWithDeleted {
+public class Xid extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -140,15 +140,5 @@ public class Xid implements EntityWithId, EntityWithDeleted {
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

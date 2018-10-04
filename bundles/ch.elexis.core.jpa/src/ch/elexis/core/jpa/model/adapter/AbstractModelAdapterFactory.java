@@ -12,6 +12,7 @@ import java.util.function.Predicate;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jpa.entities.EntityWithId;
+import ch.elexis.core.jpa.model.adapter.event.EntityChangeEventListenerHolder;
 import ch.elexis.core.model.Identifiable;
 
 public abstract class AbstractModelAdapterFactory {
@@ -133,19 +134,25 @@ public abstract class AbstractModelAdapterFactory {
 	 */
 	public Optional<Identifiable> getModelAdapter(EntityWithId entity,
 		Class<?> interfaceClass, boolean testPrecondition){
+		return getModelAdapter(entity, interfaceClass, testPrecondition, false);
+	}
+	
+	public Optional<Identifiable> getModelAdapter(EntityWithId entity, Class<?> interfaceClass,
+		boolean testPrecondition, boolean registerEntityChangeEvent){
 		MappingEntry mapping = getMappingEntity(entity.getClass(), interfaceClass);
 		if (mapping != null) {
 			Identifiable adapter = getAdapterInstance(mapping.getAdapterClass(), entity);
 			if (testPrecondition) {
-				if (mapping.testAdapterPrecondition((AbstractIdModelAdapter<?>) adapter)) {
-					return Optional.of(adapter);
-				} else {
+				if (!mapping.testAdapterPrecondition((AbstractIdModelAdapter<?>) adapter)) {
 					LoggerFactory.getLogger(getClass()).error("Adapter precondition failed for ["
 						+ adapter + "] with id [" + adapter.getId() + "]");
+					return Optional.empty();
 				}
-			} else {
-				return Optional.of(adapter);
 			}
+			if(registerEntityChangeEvent) {
+				EntityChangeEventListenerHolder.get().add((AbstractIdModelAdapter<?>) adapter);
+			}
+			return Optional.of(adapter);
 		}
 		return Optional.empty();
 	}

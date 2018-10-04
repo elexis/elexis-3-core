@@ -20,7 +20,8 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "artikelstamm_ch")
 @EntityListeners(EntityWithIdListener.class)
-public class ArtikelstammItem implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
+public class ArtikelstammItem extends AbstractEntityWithId
+		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 	public static final String CODESYSTEM_NAME = "Artikelstamm";
 
 	// Transparently updated by the EntityListener
@@ -374,15 +375,5 @@ public class ArtikelstammItem implements EntityWithId, EntityWithDeleted, Entity
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

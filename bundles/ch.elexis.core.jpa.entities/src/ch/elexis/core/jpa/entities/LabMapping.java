@@ -22,7 +22,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @EntityListeners(EntityWithIdListener.class)
 @Cache(expiry = 15000)
 @NamedQuery(name = "LabMapping.origin.itemname", query = "SELECT lm FROM LabMapping lm WHERE lm.deleted = false AND lm.origin = :origin AND lm.itemname = :itemname")
-public class LabMapping implements EntityWithId, EntityWithDeleted {
+public class LabMapping extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -111,15 +111,5 @@ public class LabMapping implements EntityWithId, EntityWithDeleted {
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

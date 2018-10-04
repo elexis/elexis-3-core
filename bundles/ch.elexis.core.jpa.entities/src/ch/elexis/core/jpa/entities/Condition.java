@@ -18,7 +18,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Table(name = "CH_ELEXIS_CORE_FINDINGS_CONDITION")
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "Condition.patientid", query = "SELECT co FROM Condition co WHERE co.deleted = false AND co.patientid = :patientid")
-public class Condition implements EntityWithId, EntityWithDeleted {
+public class Condition extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 	
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -82,15 +82,5 @@ public class Condition implements EntityWithId, EntityWithDeleted {
 
 	public void setContent(String content) {
 		this.content = content;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

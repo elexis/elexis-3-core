@@ -18,7 +18,8 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Table(name = "CH_ELEXIS_CORE_FINDINGS_ALLERGYINTOLERANCE")
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "AllergyIntolerance.patientid", query = "SELECT al FROM AllergyIntolerance al WHERE al.deleted = false AND al.patientid = :patientid")
-public class AllergyIntolerance implements EntityWithId, EntityWithDeleted {
+public class AllergyIntolerance extends AbstractEntityWithId
+		implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -82,15 +83,5 @@ public class AllergyIntolerance implements EntityWithId, EntityWithDeleted {
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

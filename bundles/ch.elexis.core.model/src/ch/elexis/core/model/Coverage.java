@@ -10,6 +10,7 @@ import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
 import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
+import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.util.ModelUtil;
 
 public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
@@ -124,12 +125,13 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 	
 	@Override
 	public List<IEncounter> getEncounters(){
+		CoreModelServiceHolder.get().refresh(this);
 		return getEntity().getConsultations().parallelStream().filter(f -> !f.isDeleted())
-			.map(f -> ModelUtil.getAdapter(f, IEncounter.class)).collect(Collectors.toList());
+			.map(f -> ModelUtil.getAdapter(f, IEncounter.class, true)).collect(Collectors.toList());
 	}
 	
 	@Override
 	public boolean isOpen(){
-		return getDateTo() != null;
+		return getDateTo() == null;
 	}
 }

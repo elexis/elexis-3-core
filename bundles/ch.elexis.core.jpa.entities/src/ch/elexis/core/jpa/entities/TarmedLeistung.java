@@ -21,7 +21,8 @@ import ch.rgw.tools.TimeTool;
 @Entity
 @Table(name = "TARMED")
 @EntityListeners(EntityWithIdListener.class)
-public class TarmedLeistung implements EntityWithId, EntityWithDeleted {
+public class TarmedLeistung extends AbstractEntityWithId
+		implements EntityWithId, EntityWithDeleted {
 
 	public static final String CODESYSTEM_NAME = "Tarmed";
 
@@ -409,15 +410,5 @@ public class TarmedLeistung implements EntityWithId, EntityWithDeleted {
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

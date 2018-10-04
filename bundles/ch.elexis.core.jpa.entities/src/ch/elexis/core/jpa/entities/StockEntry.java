@@ -29,7 +29,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 	@NamedQuery(name = "StockEntry_AvailableCurrentStock.articleId.articleType", query = "SELECT MAX(CASE WHEN se.currentStock <= 0 THEN 0 WHEN (ABS(se.minimumStock)-se.currentStock) >=0 THEN 1 ELSE 2 END) FROM StockEntry se WHERE se.articleId = :articleId AND se.articleType = :articleType AND se.deleted = false"),
 	@NamedQuery(name = "StockEntry_AvailableCurrentBelowStock.articleId.articleType", query = "SELECT MAX(CASE WHEN se.currentStock <= 0 THEN 0 WHEN (ABS(se.minimumStock)-se.currentStock) >0 THEN 1 ELSE 2 END) FROM StockEntry se WHERE se.articleId = :articleId AND se.articleType = :articleType AND se.deleted = false")
 })
-public class StockEntry implements EntityWithId, EntityWithDeleted {
+public class StockEntry extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 	
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -189,15 +189,5 @@ public class StockEntry implements EntityWithId, EntityWithDeleted {
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

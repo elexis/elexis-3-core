@@ -11,11 +11,9 @@ import ch.elexis.core.jpa.entities.Behandlung;
 import ch.elexis.core.jpa.entities.Diagnosis;
 import ch.elexis.core.jpa.entities.Fall;
 import ch.elexis.core.jpa.entities.Kontakt;
-import ch.elexis.core.jpa.entities.Verrechnet;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
-import ch.elexis.core.model.billable.AbstractOptifier;
 import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.util.ModelUtil;
 import ch.rgw.tools.VersionedResource;
@@ -79,29 +77,14 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 
 	@Override
 	public List<IBilled> getBilled(){
+		CoreModelServiceHolder.get().refresh(this);
 		return getEntity().getBilled().parallelStream().filter(b -> !b.isDeleted())
-			.map(b -> ModelUtil.getAdapter(b, IBilled.class)).collect(Collectors.toList());
-	}
-	
-	/**
-	 * Add the entity of the {@link IBilled} to the list of entities of this {@link IEncounter}.
-	 * This method is not part of {@link IEncounter} as only access should be via reflection from
-	 * {@link AbstractOptifier}
-	 * 
-	 * @param billed
-	 */
-	public void addBilled(IBilled billed){
-		@SuppressWarnings("unchecked")
-		Verrechnet verr = ((AbstractIdModelAdapter<Verrechnet>) billed).getEntity();
-		getEntity().getBilled().add(verr);
+			.map(b -> ModelUtil.getAdapter(b, IBilled.class, true)).collect(Collectors.toList());
 	}
 	
 	@Override
 	public void removeBilled(IBilled billed){
 		CoreModelServiceHolder.get().delete(billed);
-		@SuppressWarnings("unchecked")
-		Verrechnet verr = ((AbstractIdModelAdapter<Verrechnet>) billed).getEntity();
-		getEntity().getBilled().remove(verr);
 	}
 	
 	@Override
@@ -127,7 +110,7 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 	@Override
 	public List<IDiagnosisReference> getDiagnoses(){
 		return getEntity().getDiagnoses().parallelStream().filter(d -> !d.isDeleted())
-			.map(d -> ModelUtil.getAdapter(d, IDiagnosisReference.class))
+			.map(d -> ModelUtil.getAdapter(d, IDiagnosisReference.class, true))
 			.collect(Collectors.toList());
 	}
 	

@@ -33,7 +33,8 @@ import ch.elexis.core.types.PathologicDescription.Description;
 @EntityListeners(EntityWithIdListener.class)
 @Cache(expiry = 15000)
 @NamedQuery(name = "LabResult.patient.item", query = "SELECT lr FROM LabResult lr WHERE lr.deleted = false AND lr.patient = :patient AND lr.item = :item")
-public class LabResult implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
+public class LabResult extends AbstractEntityWithId
+		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -264,15 +265,5 @@ public class LabResult implements EntityWithId, EntityWithDeleted, EntityWithExt
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

@@ -20,7 +20,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 	@Column(name = "LASTUPDATE")
 })
 @Cache(expiry = 15000)
-public class Config implements EntityWithId {
+public class Config extends AbstractEntityWithId implements EntityWithId {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -66,15 +66,5 @@ public class Config implements EntityWithId {
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

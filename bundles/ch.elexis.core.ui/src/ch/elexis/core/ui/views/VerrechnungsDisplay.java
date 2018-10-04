@@ -16,11 +16,6 @@ import java.text.ParseException;
 import java.util.Collections;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
-import org.eclipse.e4.core.di.annotations.Optional;
-import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -130,16 +125,6 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private static final String REMOVE = Messages.VerrechnungsDisplay_removeElements;
 	private static final String CHTEXT = Messages.VerrechnungsDisplay_changeText;
 	private static final String REMOVEALL = Messages.VerrechnungsDisplay_removeAll;
-	
-	@Inject
-	public void selection(
-		@Optional @Named(IServiceConstants.ACTIVE_SELECTION) IEncounter encounter){
-		if (encounter != null) {
-			viewer.setInput(encounter.getBilled());
-		} else {
-			viewer.setInput(Collections.emptyList());
-		}
-	}
 	
 	public VerrechnungsDisplay(final IWorkbenchPage p, Composite parent, int style){
 		super(parent, style);
@@ -380,7 +365,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			int sumMinutes = 0;
 			Money sum = new Money(0);
 			for (IBilled billed : actEncounter.getBilled()) {
-				Money preis = billed.getNetPrice().multiply(billed.getAmount());
+				Money preis = billed.getPrice().multiply(billed.getAmount());
 				sum.addMoney(preis);
 				IBillable billable = billed.getBillable();
 				if (billable instanceof IService) {
@@ -851,7 +836,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				String val = dlg.getValue();
 				if (!StringTool.isNothing(val)) {
 					double changeAnzahl;
-					String text = billed.getBillable().getText();
+					IBillable billable = billed.getBillable();
+					String text = billable.getText();
 					if (val.indexOf(StringConstants.SLASH) > 0) {
 						String[] frac = val.split(StringConstants.SLASH);
 						changeAnzahl =
@@ -865,7 +851,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						changeAnzahl = Integer.parseInt(dlg.getValue());
 					}
 					double diff = changeAnzahl - billed.getAmount();
-					Result<IBillable> result = BillingServiceHolder.get().bill(billed.getBillable(), actEncounter, diff);
+					Result<IBillable> result =
+						BillingServiceHolder.get().bill(billable, actEncounter, diff);
 					if(!result.isOK()) {
 						ResultDialog.show(result);
 						return;

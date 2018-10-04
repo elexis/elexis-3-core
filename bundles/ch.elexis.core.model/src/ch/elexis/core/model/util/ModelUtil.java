@@ -299,11 +299,17 @@ public class ModelUtil {
 	 * @param clazz
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> T getAdapter(EntityWithId entity, Class<T> clazz){
+		return getAdapter(entity, clazz, false);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> T getAdapter(EntityWithId entity, Class<T> clazz,
+		boolean registerEntityChangeEvent){
 		if (entity != null) {
 			Optional<Identifiable> adapter =
-				CoreModelAdapterFactory.getInstance().getModelAdapter(entity, clazz, true);
+				CoreModelAdapterFactory.getInstance().getModelAdapter(entity, clazz, true,
+					registerEntityChangeEvent);
 			return (T) adapter.orElse(null);
 		}
 		return null;

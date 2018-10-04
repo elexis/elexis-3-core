@@ -20,7 +20,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Table(name = "BESTELLUNGEN")
 @Cache(expiry = 15000)
 @EntityListeners(EntityWithIdListener.class)
-public class Bestellung implements EntityWithId, EntityWithDeleted {
+public class Bestellung extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 	
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -73,15 +73,5 @@ public class Bestellung implements EntityWithId, EntityWithDeleted {
 	
 	public void setDate(LocalDate date){
 		this.date = date;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

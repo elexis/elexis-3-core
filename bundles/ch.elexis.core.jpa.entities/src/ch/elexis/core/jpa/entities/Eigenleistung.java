@@ -17,7 +17,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Table(name = "EIGENLEISTUNGEN")
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "Eigenleistung.code", query = "SELECT ei FROM Eigenleistung ei WHERE ei.deleted = false AND ei.code = :code")
-public class Eigenleistung implements EntityWithId, EntityWithDeleted {
+public class Eigenleistung extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -114,15 +114,5 @@ public class Eigenleistung implements EntityWithId, EntityWithDeleted {
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

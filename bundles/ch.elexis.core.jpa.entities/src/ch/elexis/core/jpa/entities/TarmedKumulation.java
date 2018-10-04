@@ -19,7 +19,8 @@ import ch.rgw.tools.TimeTool;
 @Entity
 @Table(name = "TARMED_KUMULATION")
 @EntityListeners(EntityWithIdListener.class)
-public class TarmedKumulation implements EntityWithId, EntityWithDeleted {
+public class TarmedKumulation extends AbstractEntityWithId
+		implements EntityWithId, EntityWithDeleted {
 
 	public static final String TYP_EXCLUSION = "E";
 	public static final String TYP_INCLUSION = "I";
@@ -193,15 +194,5 @@ public class TarmedKumulation implements EntityWithId, EntityWithDeleted {
 			return true;
 		}
 		return false;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

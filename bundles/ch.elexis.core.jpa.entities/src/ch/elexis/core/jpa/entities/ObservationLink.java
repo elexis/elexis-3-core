@@ -15,7 +15,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "CH_ELEXIS_CORE_FINDINGS_OBSERVATIONLINK")
 @EntityListeners(EntityWithIdListener.class)
-public class ObservationLink implements EntityWithId {
+public class ObservationLink extends AbstractEntityWithId implements EntityWithId {
 	
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -89,15 +89,5 @@ public class ObservationLink implements EntityWithId {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

@@ -23,7 +23,8 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "ROLE")
 @EntityListeners(EntityWithIdListener.class)
-public class Role implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
+public class Role extends AbstractEntityWithId
+		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -108,15 +109,5 @@ public class Role implements EntityWithId, EntityWithDeleted, EntityWithExtInfo 
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

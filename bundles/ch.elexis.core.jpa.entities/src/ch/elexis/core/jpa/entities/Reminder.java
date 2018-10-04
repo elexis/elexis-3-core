@@ -34,7 +34,8 @@ import ch.elexis.core.model.issue.Visibility;
 @Entity
 @Table(name = "reminders")
 @EntityListeners(EntityWithIdListener.class)
-public class Reminder implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
+public class Reminder extends AbstractEntityWithId
+		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 	
 	public static final String ALL_RESPONSIBLE = "ALL";
 
@@ -231,15 +232,5 @@ public class Reminder implements EntityWithId, EntityWithDeleted, EntityWithExtI
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

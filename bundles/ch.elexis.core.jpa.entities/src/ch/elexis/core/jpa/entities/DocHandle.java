@@ -29,7 +29,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 	@NamedQuery(name = QueryConstants.QUERY_DOCHANDLE_determineLength, query = "SELECT LENGTH(dh.doc) FROM DocHandle dh WHERE dh.id = :"
 		+ QueryConstants.PARAM_ID)
 })
-public class DocHandle implements EntityWithId, EntityWithDeleted {
+public class DocHandle extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	public static final String CATEGORY_CATEGORY = "text/category";
 
@@ -174,15 +174,5 @@ public class DocHandle implements EntityWithId, EntityWithDeleted {
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

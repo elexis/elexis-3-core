@@ -24,7 +24,8 @@ import ch.elexis.core.model.prescription.EntryType;
 @Entity
 @Table(name = "patient_artikel_joint")
 @EntityListeners(EntityWithIdListener.class)
-public class Prescription implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
+public class Prescription extends AbstractEntityWithId
+		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -211,15 +212,5 @@ public class Prescription implements EntityWithId, EntityWithDeleted, EntityWith
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

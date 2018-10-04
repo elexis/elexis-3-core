@@ -21,7 +21,8 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @NamedQueries({
 		@NamedQuery(name = KontaktAdressJoint.QUERY_findAllIDisMyKontakt, query = "SELECT e FROM KontaktAdressJoint e WHERE e.myKontakt = :id"),
 		@NamedQuery(name = KontaktAdressJoint.QUERY_findAllIDisOtherKontakt, query = "SELECT e FROM KontaktAdressJoint e WHERE e.otherKontakt = :id") })
-public class KontaktAdressJoint implements EntityWithId, EntityWithDeleted {
+public class KontaktAdressJoint extends AbstractEntityWithId
+		implements EntityWithId, EntityWithDeleted {
 
 	public static final String QUERY_findAllIDisMyKontakt = "QUERY_findAllIDisMyKontakt";
 	public static final String QUERY_findAllIDisOtherKontakt = "QUERY_findAllIDisOtherKontakt";
@@ -121,15 +122,5 @@ public class KontaktAdressJoint implements EntityWithId, EntityWithDeleted {
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

@@ -25,7 +25,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 })
 @Cache(expiry = 15000)
 @NamedQuery(name = "Userconfig.owner.param", query = "SELECT uc FROM Userconfig uc WHERE uc.owner = :owner AND uc.param = :param")
-public class Userconfig implements EntityWithId {
+public class Userconfig extends AbstractEntityWithId implements EntityWithId {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -83,15 +83,5 @@ public class Userconfig implements EntityWithId {
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

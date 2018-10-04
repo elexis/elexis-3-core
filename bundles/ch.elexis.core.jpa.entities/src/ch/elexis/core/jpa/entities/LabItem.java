@@ -33,7 +33,7 @@ import ch.rgw.tools.StringTool;
 @Cache(expiry = 15000)
 @NamedQuery(name = "LabItem.code.name", query = "SELECT li FROM LabItem li WHERE li.deleted = false AND li.code = :code AND li.name = :name")
 @NamedQuery(name = "LabItem.code.name.typ", query = "SELECT li FROM LabItem li WHERE li.deleted = false AND li.code = :code AND li.name = :name AND li.typ = :typ")
-public class LabItem implements EntityWithId, EntityWithDeleted {
+public class LabItem extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -263,16 +263,6 @@ public class LabItem implements EntityWithId, EntityWithDeleted {
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 	
 	public Collection<LabMapping> getMappings(){

@@ -14,7 +14,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "TARMED_EXTENSION")
 @EntityListeners(EntityWithIdListener.class)
-public class TarmedExtension implements EntityWithId {
+public class TarmedExtension extends AbstractEntityWithId implements EntityWithId {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -83,15 +83,5 @@ public class TarmedExtension implements EntityWithId {
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

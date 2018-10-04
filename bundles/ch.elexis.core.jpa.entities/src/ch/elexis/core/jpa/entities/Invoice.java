@@ -24,7 +24,8 @@ import ch.elexis.core.model.InvoiceState;
 @Entity
 @Table(name = "RECHNUNGEN")
 @EntityListeners(EntityWithIdListener.class)
-public class Invoice implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
+public class Invoice extends AbstractEntityWithId
+		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -182,15 +183,5 @@ public class Invoice implements EntityWithId, EntityWithDeleted, EntityWithExtIn
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

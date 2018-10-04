@@ -27,7 +27,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "Observation.patientid", query = "SELECT ob FROM Observation ob WHERE ob.deleted = false AND ob.patientid = :patientid")
 @NamedQuery(name = "Observation.encounterid", query = "SELECT ob FROM Observation ob WHERE ob.deleted = false AND ob.encounterid = :encounterid")
-public class Observation implements EntityWithId, EntityWithDeleted {
+public class Observation extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -194,15 +194,5 @@ public class Observation implements EntityWithId, EntityWithDeleted {
 	
 	public List<ObservationLink> getTargetLinks(){
 		return targetLinks;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

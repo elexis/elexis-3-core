@@ -127,4 +127,35 @@ public class EncounterTest extends AbstractTest {
 		modelService.remove(service);
 		modelService.remove(encounter);
 	}
+	
+	@Test
+	public void modifyBilled(){
+		ILocalService service = modelService.create(ILocalService.class);
+		service.setCode("12.34");
+		service.setNetPrice(new Money(1));
+		service.setPrice(new Money(2));
+		service.setText("test");
+		modelService.save(service);
+		
+		IEncounter encounter =
+			new IEncounterBuilder(modelService, coverage, mandator).buildAndSave();
+		modelService.save(encounter);
+		
+		// add billed
+		Result<IBillable> result = service.getOptifier().add(service, encounter, 1.5);
+		assertTrue(result.isOK());
+		IBilled billed = encounter.getBilled().get(0);
+		assertEquals(1.5, billed.getAmount(), 0.01);
+		// change property and save -> results in new entity which leads to problem (reason for caching lists in Adapters)
+		billed.setText("changed text");
+		modelService.save(billed);
+		// add amount
+		result = service.getOptifier().add(service, encounter, 1.5);
+		assertEquals(3, billed.getAmount(), 0.01);
+		billed = encounter.getBilled().get(0);
+		assertEquals(3, billed.getAmount(), 0.01);
+		
+		modelService.remove(service);
+		modelService.remove(encounter);
+	}
 }

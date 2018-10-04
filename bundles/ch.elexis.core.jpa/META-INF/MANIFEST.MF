@@ -35,4 +35,6 @@ Export-Package: ch.elexis.core.jpa.model.adapter,
  ch.elexis.core.jpa.model.adapter.mixin,
  ch.elexis.core.jpa.model.util
 Service-Component: OSGI-INF/ch.elexis.core.jpa.entitymanager.ElexisEntityManger.xml,
- OSGI-INF/ch.elexis.core.jpa.model.util.JpaModelUtil.xml
+ OSGI-INF/ch.elexis.core.jpa.model.util.JpaModelUtil.xml,
+ OSGI-INF/ch.elexis.core.jpa.model.adapter.event.EntityChangeEventListener.xml,
+ OSGI-INF/ch.elexis.core.jpa.model.adapter.event.EntityChangeEventListenerHolder.xml

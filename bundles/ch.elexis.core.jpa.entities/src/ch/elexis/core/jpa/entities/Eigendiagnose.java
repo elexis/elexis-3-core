@@ -21,7 +21,8 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "Eigendiagnose.code", query = "SELECT ei FROM Eigendiagnose ei WHERE ei.deleted = false AND ei.code = :code")
 @NamedQuery(name = "Eigendiagnose.parent", query = "SELECT ei FROM Eigendiagnose ei WHERE ei.deleted = false AND ei.parent = :parent")
-public class Eigendiagnose implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
+public class Eigendiagnose extends AbstractEntityWithId
+		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -122,15 +123,5 @@ public class Eigendiagnose implements EntityWithId, EntityWithDeleted, EntityWit
 	
 	public void setComment(String comment){
 		this.comment = comment;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

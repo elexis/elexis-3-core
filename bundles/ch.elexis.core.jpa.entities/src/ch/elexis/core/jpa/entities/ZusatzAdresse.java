@@ -22,7 +22,7 @@ import ch.elexis.core.types.Country;
 @Entity
 @Table(name = "ZUSATZADRESSE")
 @EntityListeners(EntityWithIdListener.class)
-public class ZusatzAdresse implements EntityWithId, EntityWithDeleted {
+public class ZusatzAdresse extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -156,15 +156,5 @@ public class ZusatzAdresse implements EntityWithId, EntityWithDeleted {
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

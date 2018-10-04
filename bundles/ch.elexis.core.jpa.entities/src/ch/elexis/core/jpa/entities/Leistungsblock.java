@@ -18,7 +18,8 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "leistungsblock")
 @EntityListeners(EntityWithIdListener.class)
-public class Leistungsblock implements EntityWithId, EntityWithDeleted {
+public class Leistungsblock extends AbstractEntityWithId
+		implements EntityWithId, EntityWithDeleted {
 
 	public static final String CODESYSTEM_NAME = "Block";
 
@@ -120,15 +121,5 @@ public class Leistungsblock implements EntityWithId, EntityWithDeleted {
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

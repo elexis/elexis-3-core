@@ -25,7 +25,7 @@ import ch.rgw.tools.TimeTool;
 @Entity
 @Table(name = "TARMED_GROUP")
 @EntityListeners(EntityWithIdListener.class)
-public class TarmedGroup implements EntityWithId, EntityWithDeleted {
+public class TarmedGroup extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 	
 	public static final Object SERVICES_SEPARATOR = "|";
 
@@ -159,15 +159,5 @@ public class TarmedGroup implements EntityWithId, EntityWithDeleted {
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

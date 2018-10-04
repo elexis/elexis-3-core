@@ -49,7 +49,6 @@ public abstract class AbstractModelService implements IModelService {
 		HashMap<String, Object> queryHints = new HashMap<>();
 		queryHints.put(QueryHints.REFRESH, HintValues.TRUE);
 		EntityWithId dbObject = em.find(dbObjectClass, id, queryHints);
-		//		EntityWithId dbObject = em.find(dbObjectClass, id);
 		if (dbObject != null) {
 			// check for deleted
 			if (!includeDeleted && (dbObject instanceof EntityWithDeleted)) {
@@ -64,6 +63,19 @@ public abstract class AbstractModelService implements IModelService {
 			}
 		}
 		return Optional.empty();
+	}
+	
+	@Override
+	public void refresh(Identifiable identifiable){
+		EntityManager em = getEntityManager(true);
+		EntityWithId dbObject = getDbObject(identifiable).orElse(null);
+		HashMap<String, Object> queryHints = new HashMap<>();
+		// TODO check why references are not refreshed from L2 cache without this flag
+		queryHints.put(QueryHints.REFRESH, HintValues.TRUE);
+		EntityWithId reloadedDbObject = em.find(dbObject.getClass(), dbObject.getId(), queryHints);
+		if (reloadedDbObject != null) {
+			setDbObject(identifiable, reloadedDbObject);
+		}
 	}
 	
 	@Override
@@ -162,16 +174,28 @@ public abstract class AbstractModelService implements IModelService {
 		}
 	}
 	
-	protected Optional<EntityWithId> getDbObject(Identifiable identifiable){
-		if (identifiable instanceof AbstractIdModelAdapter<?>) {
-			return Optional.ofNullable(((AbstractIdModelAdapter<?>) identifiable).getEntity());
+	protected Optional<EntityWithId> getDbObject(Object adapter){
+		if (adapter instanceof AbstractIdModelAdapter<?>) {
+			return Optional.ofNullable(((AbstractIdModelAdapter<?>) adapter).getEntity());
 		}
 		return Optional.empty();
 	}
 	
-	protected void setDbObject(Identifiable identifiable, EntityWithId entity){
-		if (identifiable instanceof AbstractIdModelAdapter<?>) {
-			((AbstractIdModelAdapter<?>) identifiable).setEntity(entity);
+	protected void setDbObject(Object adapter, EntityWithId merged){
+		if (adapter instanceof AbstractIdModelAdapter<?>) {
+			((AbstractIdModelAdapter<?>) adapter).setEntity(merged);
+		}
+		sendEntityChangeEvent(merged);
+	}
+	
+	private void sendEntityChangeEvent(EntityWithId merged){
+		if (getEventAdmin() != null) {
+			Map<String, Object> properites = new HashMap<>();
+			properites.put(EntityWithId.class.getName(), merged);
+			Event event = new Event(ElexisEventTopics.PERSISTENCE_EVENT_ENTITYCHANGED, properites);
+			getEventAdmin().sendEvent(event);
+		} else {
+			throw new IllegalStateException("No EventAdmin available");
 		}
 	}
 	

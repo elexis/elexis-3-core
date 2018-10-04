@@ -13,7 +13,7 @@ import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 
 @Entity
 @Table(name = "CH_ELEXIS_CORE_FINDINGS_LOCALCODING")
-public class LocalCoding implements EntityWithId, EntityWithDeleted {
+public class LocalCoding extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -88,15 +88,5 @@ public class LocalCoding implements EntityWithId, EntityWithDeleted {
 
 	public void setMapped(String mapped) {
 		this.mapped = mapped;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }

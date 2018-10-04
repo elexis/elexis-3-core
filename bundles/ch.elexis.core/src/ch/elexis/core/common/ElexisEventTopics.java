@@ -19,6 +19,12 @@ public class ElexisEventTopics {
 	public static final String PERSISTENCE_EVENT_CREATE = PERSISTENCE_EVENT + "create";
 	
 	/**
+	 * A JPA Entity was changed / saved
+	 */
+	public static final String PERSISTENCE_EVENT_ENTITYCHANGED =
+		PERSISTENCE_EVENT + "entity/changed";
+	
+	/**
 	 * Basic event topics
 	 */
 	public static final String EVENT_CREATE = BASE + "create";

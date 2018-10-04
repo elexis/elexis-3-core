@@ -19,7 +19,8 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "ProcedureRequest.patientid", query = "SELECT pr FROM ProcedureRequest pr WHERE pr.deleted = false AND pr.patientid = :patientid")
 @NamedQuery(name = "ProcedureRequest.encounterid", query = "SELECT pr FROM ProcedureRequest pr WHERE pr.deleted = false AND pr.encounterid = :encounterid")
-public class ProcedureRequest implements EntityWithId, EntityWithDeleted {
+public class ProcedureRequest extends AbstractEntityWithId
+		implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;

@@ -19,7 +19,8 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "ClinicalImpression.patientid", query = "SELECT cl FROM ClinicalImpression cl WHERE cl.deleted = false AND cl.patientid = :patientid")
 @NamedQuery(name = "ClinicalImpression.encounterid", query = "SELECT cl FROM ClinicalImpression cl WHERE cl.deleted = false AND cl.encounterid = :encounterid")
-public class ClinicalImpression implements EntityWithId, EntityWithDeleted {
+public class ClinicalImpression extends AbstractEntityWithId
+		implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -94,15 +95,5 @@ public class ClinicalImpression implements EntityWithId, EntityWithDeleted {
 
 	public void setContent(String content) {
 		this.content = content;
-	}
-	
-	@Override
-	public int hashCode(){
-		return EntityWithId.idHashCode(this);
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		return EntityWithId.idEquals(this, obj);
 	}
 }
