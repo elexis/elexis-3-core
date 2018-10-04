@@ -268,6 +268,10 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createWithAssignableIdAdapter();
 			}
 			@Override
+			public Adapter caseIPrescription(IPrescription object) {
+				return createIPrescriptionAdapter();
+			}
+			@Override
 			public <T> Adapter caseComparable(Comparable<T> object) {
 				return createComparableAdapter();
 			}
@@ -946,6 +950,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createWithAssignableIdAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IPrescription <em>IPrescription</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IPrescription
+	 * @generated
+	 */
+	public Adapter createIPrescriptionAdapter() {
 		return null;
 	}
 

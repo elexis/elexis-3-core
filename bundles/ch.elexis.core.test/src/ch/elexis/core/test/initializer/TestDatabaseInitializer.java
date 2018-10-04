@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.XidConstants;
+import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.ILabItem;
@@ -25,6 +26,7 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.builder.IContactBuilder;
@@ -32,10 +34,12 @@ import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.model.builder.ILabItemBuilder;
 import ch.elexis.core.model.builder.ILabResultBuilder;
+import ch.elexis.core.model.builder.IPrescriptionBuilder;
 import ch.elexis.core.model.builder.IUserBuilder;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
 import ch.rgw.tools.VersionedResource;
@@ -58,6 +62,9 @@ public class TestDatabaseInitializer {
 	private ILaboratory laboratory;
 	private ILaboratory laboratory2;
 	
+	private static boolean isArticleInitialized;
+	private static IArticle article;
+	
 	private static boolean isFallInitialized = false;
 	private static ICoverage fall;
 	
@@ -68,8 +75,9 @@ public class TestDatabaseInitializer {
 	private static List<ILabResult> labResults = new ArrayList<>();
 	private static ILabItem labItem;
 	
-	//	private static boolean isPrescriptionInitialized = false;
-	//	private static IPrescription prescription;
+	private static boolean isPrescriptionInitialized = false;
+	private static IPrescription prescription;
+	
 	//
 	//	private static boolean isArtikelstammInitialized = false;
 	//	private static ArtikelstammItem artikelstammitem;
@@ -385,34 +393,43 @@ public class TestDatabaseInitializer {
 		return mandant;
 	}
 	
-//		/**
-//		 * Initialize an test Prescription.
-//		 * 
-//		 * <li>Article: see {@link TestDatabaseInitializer#initializeArtikelstamm()}</li>
-//		 * <li>Patient: see {@link TestDatabaseInitializer#initializePatient()}</li>
-//		 * <li>Dosage: 1-1-1-1</li>
-//		 * 
-//		 * @throws SQLException
-//		 * @throws IOException
-//		 * 
-//		 */
-//		public synchronized void initializePrescription() throws IOException, SQLException{
-//			if (!isDbInitialized) {
-//				initializeDb();
-//			}
-//			if (!isPatientInitialized) {
-//				initializePatient();
-//			}
-//			if (!isArtikelstammInitialized) {
-//				initializeArtikelstamm();
-//			}
-//			if (!isPrescriptionInitialized) {
-//				prescription = new PrescriptionService.Builder(artikelstammitem, patient, "1-1-1-1")
-//					.buildAndSave();
-//				
-//				isPrescriptionInitialized = true;
-//			}
-//		}
+	/**
+	 * Initialize an test Prescription.
+	 * 
+	 * <li>Article: see {@link TestDatabaseInitializer#initializeArtikelstamm()}</li>
+	 * <li>Patient: see {@link TestDatabaseInitializer#initializePatient()}</li>
+	 * <li>Dosage: 1-1-1-1</li>
+	 * 
+	 * @throws SQLException
+	 * @throws IOException
+	 * 
+	 */
+	public synchronized void initializePrescription() throws IOException, SQLException{
+		if (!isDbInitialized) {
+			initializeDb();
+		}
+		if (!isPatientInitialized) {
+			initializePatient();
+		}
+		
+		if (!isArticleInitialized) {
+			article = modelService.create(IArticle.class);
+			article.setName("test article");
+			article.setCode("123456789");
+			article.setTyp(ArticleTyp.EIGENARTIKEL);
+			article.setGtin("0000001111111");
+			article.setPackageSize(12);
+			article.setSellingSize(12);
+			modelService.save(article);
+		}
+		
+		if (!isPrescriptionInitialized) {
+			prescription =
+				new IPrescriptionBuilder(modelService, article, patient, "1-1-1-1").buildAndSave();
+			
+			isPrescriptionInitialized = true;
+		}
+	}
 	
 	/**
 	 * Initialize a test Fall.

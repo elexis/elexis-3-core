@@ -47,6 +47,7 @@ import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPeriod;
 import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IService;
 import ch.elexis.core.model.ISticker;
@@ -408,6 +409,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass withAssignableIdEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iPrescriptionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -2753,6 +2761,96 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getIPrescription() {
+		return iPrescriptionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIPrescription_Patient() {
+		return (EReference)iPrescriptionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIPrescription_Article() {
+		return (EReference)iPrescriptionEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIPrescription_DateFrom() {
+		return (EAttribute)iPrescriptionEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIPrescription_DateTo() {
+		return (EAttribute)iPrescriptionEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIPrescription_DosageInstruction() {
+		return (EAttribute)iPrescriptionEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIPrescription_Remark() {
+		return (EAttribute)iPrescriptionEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIPrescription_StopReason() {
+		return (EAttribute)iPrescriptionEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIPrescription_EntryType() {
+		return (EAttribute)iPrescriptionEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIPrescription_DisposalComment() {
+		return (EAttribute)iPrescriptionEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getIAppointment() {
 		return iAppointmentEClass;
 	}
@@ -3175,6 +3273,17 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iImageEClass, IIMAGE__IMAGE);
 
 		withAssignableIdEClass = createEClass(WITH_ASSIGNABLE_ID);
+
+		iPrescriptionEClass = createEClass(IPRESCRIPTION);
+		createEReference(iPrescriptionEClass, IPRESCRIPTION__PATIENT);
+		createEReference(iPrescriptionEClass, IPRESCRIPTION__ARTICLE);
+		createEAttribute(iPrescriptionEClass, IPRESCRIPTION__DATE_FROM);
+		createEAttribute(iPrescriptionEClass, IPRESCRIPTION__DATE_TO);
+		createEAttribute(iPrescriptionEClass, IPRESCRIPTION__DOSAGE_INSTRUCTION);
+		createEAttribute(iPrescriptionEClass, IPRESCRIPTION__REMARK);
+		createEAttribute(iPrescriptionEClass, IPRESCRIPTION__STOP_REASON);
+		createEAttribute(iPrescriptionEClass, IPRESCRIPTION__ENTRY_TYPE);
+		createEAttribute(iPrescriptionEClass, IPRESCRIPTION__DISPOSAL_COMMENT);
 	}
 
 	/**
@@ -3287,6 +3396,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iImageEClass.getESuperTypes().add(this.getIdentifiable());
 		iImageEClass.getESuperTypes().add(this.getDeleteable());
 		iImageEClass.getESuperTypes().add(this.getWithAssignableId());
+		iPrescriptionEClass.getESuperTypes().add(this.getIdentifiable());
+		iPrescriptionEClass.getESuperTypes().add(this.getDeleteable());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(identifiableEClass, Identifiable.class, "Identifiable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -3752,6 +3863,17 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		op = addEOperation(withAssignableIdEClass, null, "setId", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "id", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		initEClass(iPrescriptionEClass, IPrescription.class, "IPrescription", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getIPrescription_Patient(), this.getIPatient(), null, "patient", null, 1, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIPrescription_Article(), this.getIArticle(), null, "article", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIPrescription_DateFrom(), theTypesPackage.getLocalDateTime(), "dateFrom", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIPrescription_DateTo(), theTypesPackage.getLocalDateTime(), "dateTo", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIPrescription_DosageInstruction(), ecorePackage.getEString(), "dosageInstruction", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIPrescription_Remark(), ecorePackage.getEString(), "remark", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIPrescription_StopReason(), ecorePackage.getEString(), "stopReason", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIPrescription_EntryType(), theTypesPackage.getEntryType(), "entryType", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIPrescription_DisposalComment(), ecorePackage.getEString(), "disposalComment", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

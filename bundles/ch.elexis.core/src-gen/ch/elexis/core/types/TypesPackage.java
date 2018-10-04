@@ -332,6 +332,16 @@ public interface TypesPackage extends EPackage {
 	int VERSIONED_RESOURCE = 23;
 
 	/**
+	 * The meta object id for the '<em>Entry Type</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.prescription.EntryType
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getEntryType()
+	 * @generated
+	 */
+	int ENTRY_TYPE = 24;
+
+	/**
 	 * The meta object id for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -602,6 +612,17 @@ public interface TypesPackage extends EPackage {
 	EDataType getVersionedResource();
 
 	/**
+	 * Returns the meta object for data type '{@link ch.elexis.core.model.prescription.EntryType <em>Entry Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Entry Type</em>'.
+	 * @see ch.elexis.core.model.prescription.EntryType
+	 * @model instanceClass="ch.elexis.core.model.prescription.EntryType"
+	 * @generated
+	 */
+	EDataType getEntryType();
+
+	/**
 	 * Returns the meta object for class '{@link ch.rgw.tools.Result <em>Result</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -863,6 +884,16 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType VERSIONED_RESOURCE = eINSTANCE.getVersionedResource();
+
+		/**
+		 * The meta object literal for the '<em>Entry Type</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.prescription.EntryType
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getEntryType()
+		 * @generated
+		 */
+		EDataType ENTRY_TYPE = eINSTANCE.getEntryType();
 
 		/**
 		 * The meta object literal for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.

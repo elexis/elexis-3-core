@@ -424,5 +424,16 @@
         <genParameters ecoreParameter="model.ecore#//WithAssignableId/setId/id"/>
       </genOperations>
     </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IPrescription">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IPrescription/patient"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IPrescription/article"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPrescription/dateFrom"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPrescription/dateTo"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPrescription/dosageInstruction"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPrescription/remark"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPrescription/stopReason"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPrescription/entryType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPrescription/disposalComment"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

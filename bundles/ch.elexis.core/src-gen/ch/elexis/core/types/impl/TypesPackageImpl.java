@@ -13,6 +13,7 @@ package ch.elexis.core.types.impl;
 import ch.elexis.core.model.LabOrderState;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.model.XidQuality;
+import ch.elexis.core.model.prescription.EntryType;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -218,6 +219,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EDataType versionedResourceEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType entryTypeEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -492,6 +500,15 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EDataType getEntryType() {
+		return entryTypeEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getResult() {
 		return resultEClass;
 	}
@@ -555,6 +572,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		orderEntryStateEDataType = createEDataType(ORDER_ENTRY_STATE);
 		articleSubTypEDataType = createEDataType(ARTICLE_SUB_TYP);
 		versionedResourceEDataType = createEDataType(VERSIONED_RESOURCE);
+		entryTypeEDataType = createEDataType(ENTRY_TYPE);
 	}
 
 	/**
@@ -658,6 +676,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEDataType(orderEntryStateEDataType, OrderEntryState.class, "OrderEntryState", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(articleSubTypEDataType, ArticleSubTyp.class, "ArticleSubTyp", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(versionedResourceEDataType, VersionedResource.class, "VersionedResource", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(entryTypeEDataType, EntryType.class, "EntryType", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

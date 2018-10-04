@@ -4525,6 +4525,116 @@ public interface ModelPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IPrescription <em>IPrescription</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IPrescription
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPrescription()
+	 * @generated
+	 */
+	int IPRESCRIPTION = 48;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Patient</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__PATIENT = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Article</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__ARTICLE = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Date From</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__DATE_FROM = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Date To</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__DATE_TO = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Dosage Instruction</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__DOSAGE_INSTRUCTION = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Remark</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__REMARK = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The feature id for the '<em><b>Stop Reason</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__STOP_REASON = IDENTIFIABLE_FEATURE_COUNT + 7;
+
+	/**
+	 * The feature id for the '<em><b>Entry Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__ENTRY_TYPE = IDENTIFIABLE_FEATURE_COUNT + 8;
+
+	/**
+	 * The feature id for the '<em><b>Disposal Comment</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__DISPOSAL_COMMENT = IDENTIFIABLE_FEATURE_COUNT + 9;
+
+	/**
+	 * The number of structural features of the '<em>IPrescription</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 10;
+
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7250,6 +7360,115 @@ public interface ModelPackage extends EPackage {
 	EClass getWithAssignableId();
 
 	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IPrescription <em>IPrescription</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IPrescription</em>'.
+	 * @see ch.elexis.core.model.IPrescription
+	 * @generated
+	 */
+	EClass getIPrescription();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IPrescription#getPatient <em>Patient</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Patient</em>'.
+	 * @see ch.elexis.core.model.IPrescription#getPatient()
+	 * @see #getIPrescription()
+	 * @generated
+	 */
+	EReference getIPrescription_Patient();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IPrescription#getArticle <em>Article</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Article</em>'.
+	 * @see ch.elexis.core.model.IPrescription#getArticle()
+	 * @see #getIPrescription()
+	 * @generated
+	 */
+	EReference getIPrescription_Article();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPrescription#getDateFrom <em>Date From</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Date From</em>'.
+	 * @see ch.elexis.core.model.IPrescription#getDateFrom()
+	 * @see #getIPrescription()
+	 * @generated
+	 */
+	EAttribute getIPrescription_DateFrom();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPrescription#getDateTo <em>Date To</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Date To</em>'.
+	 * @see ch.elexis.core.model.IPrescription#getDateTo()
+	 * @see #getIPrescription()
+	 * @generated
+	 */
+	EAttribute getIPrescription_DateTo();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPrescription#getDosageInstruction <em>Dosage Instruction</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Dosage Instruction</em>'.
+	 * @see ch.elexis.core.model.IPrescription#getDosageInstruction()
+	 * @see #getIPrescription()
+	 * @generated
+	 */
+	EAttribute getIPrescription_DosageInstruction();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPrescription#getRemark <em>Remark</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Remark</em>'.
+	 * @see ch.elexis.core.model.IPrescription#getRemark()
+	 * @see #getIPrescription()
+	 * @generated
+	 */
+	EAttribute getIPrescription_Remark();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPrescription#getStopReason <em>Stop Reason</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Stop Reason</em>'.
+	 * @see ch.elexis.core.model.IPrescription#getStopReason()
+	 * @see #getIPrescription()
+	 * @generated
+	 */
+	EAttribute getIPrescription_StopReason();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPrescription#getEntryType <em>Entry Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Entry Type</em>'.
+	 * @see ch.elexis.core.model.IPrescription#getEntryType()
+	 * @see #getIPrescription()
+	 * @generated
+	 */
+	EAttribute getIPrescription_EntryType();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPrescription#getDisposalComment <em>Disposal Comment</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Disposal Comment</em>'.
+	 * @see ch.elexis.core.model.IPrescription#getDisposalComment()
+	 * @see #getIPrescription()
+	 * @generated
+	 */
+	EAttribute getIPrescription_DisposalComment();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9489,6 +9708,88 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EClass WITH_ASSIGNABLE_ID = eINSTANCE.getWithAssignableId();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IPrescription <em>IPrescription</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IPrescription
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPrescription()
+		 * @generated
+		 */
+		EClass IPRESCRIPTION = eINSTANCE.getIPrescription();
+
+		/**
+		 * The meta object literal for the '<em><b>Patient</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IPRESCRIPTION__PATIENT = eINSTANCE.getIPrescription_Patient();
+
+		/**
+		 * The meta object literal for the '<em><b>Article</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IPRESCRIPTION__ARTICLE = eINSTANCE.getIPrescription_Article();
+
+		/**
+		 * The meta object literal for the '<em><b>Date From</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IPRESCRIPTION__DATE_FROM = eINSTANCE.getIPrescription_DateFrom();
+
+		/**
+		 * The meta object literal for the '<em><b>Date To</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IPRESCRIPTION__DATE_TO = eINSTANCE.getIPrescription_DateTo();
+
+		/**
+		 * The meta object literal for the '<em><b>Dosage Instruction</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IPRESCRIPTION__DOSAGE_INSTRUCTION = eINSTANCE.getIPrescription_DosageInstruction();
+
+		/**
+		 * The meta object literal for the '<em><b>Remark</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IPRESCRIPTION__REMARK = eINSTANCE.getIPrescription_Remark();
+
+		/**
+		 * The meta object literal for the '<em><b>Stop Reason</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IPRESCRIPTION__STOP_REASON = eINSTANCE.getIPrescription_StopReason();
+
+		/**
+		 * The meta object literal for the '<em><b>Entry Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IPRESCRIPTION__ENTRY_TYPE = eINSTANCE.getIPrescription_EntryType();
+
+		/**
+		 * The meta object literal for the '<em><b>Disposal Comment</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IPRESCRIPTION__DISPOSAL_COMMENT = eINSTANCE.getIPrescription_DisposalComment();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.

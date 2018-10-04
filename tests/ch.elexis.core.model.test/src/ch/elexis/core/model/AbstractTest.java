@@ -5,9 +5,11 @@ import java.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
 
+import ch.elexis.core.model.builder.IArticleBuilder;
 import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
@@ -18,6 +20,7 @@ public abstract class AbstractTest {
 	IPerson person;
 	IPatient patient;
 	ICoverage coverage;
+	IArticle localArticle;
 	
 	@Before
 	public void before(){
@@ -47,6 +50,16 @@ public abstract class AbstractTest {
 			"testBillingSystem").buildAndSave();
 	}
 	
+	public void createLocalArticle(){
+		localArticle =
+			new IArticleBuilder(modelService, "test article", "123456789", ArticleTyp.EIGENARTIKEL)
+				.build();
+		localArticle.setGtin("0000001111111");
+		localArticle.setPackageSize(12);
+		localArticle.setSellingSize(12);
+		modelService.save(localArticle);
+	}
+	
 	public void removePerson(){
 		modelService.remove(person);
 	}
@@ -57,5 +70,9 @@ public abstract class AbstractTest {
 	
 	public void removeCoverage(){
 		modelService.remove(coverage);
+	}
+	
+	public void removeLocalArticle(){
+		modelService.remove(localArticle);
 	}
 }

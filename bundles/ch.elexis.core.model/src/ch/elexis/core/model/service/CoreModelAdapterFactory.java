@@ -49,6 +49,7 @@ import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
@@ -62,6 +63,7 @@ import ch.elexis.core.model.Mandator;
 import ch.elexis.core.model.Organization;
 import ch.elexis.core.model.Patient;
 import ch.elexis.core.model.Person;
+import ch.elexis.core.model.Prescription;
 import ch.elexis.core.model.Role;
 import ch.elexis.core.model.UserConfig;
 
@@ -133,6 +135,8 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 		addMapping(new MappingEntry(IAddress.class, Address.class, ZusatzAdresse.class));
 		
 		addMapping(new MappingEntry(IDocumentLetter.class, DocumentLetter.class, Brief.class));
+		
+		addMapping(new MappingEntry(IPrescription.class, Prescription.class, ch.elexis.core.jpa.entities.Prescription.class));
 		
 		addMapping(new MappingEntry(IRole.class, Role.class, ch.elexis.core.jpa.entities.Role.class));
 		
