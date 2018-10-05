@@ -224,6 +224,7 @@
       <genOperations ecoreOperation="model.ecore#//IBillableVerifier/verifyAdd">
         <genParameters ecoreParameter="model.ecore#//IBillableVerifier/verifyAdd/billable"/>
         <genParameters ecoreParameter="model.ecore#//IBillableVerifier/verifyAdd/encounter"/>
+        <genParameters ecoreParameter="model.ecore#//IBillableVerifier/verifyAdd/amount"/>
       </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IBillableOptifier">

@@ -108,7 +108,7 @@ public class EncounterTest extends AbstractTest {
 			new IEncounterBuilder(modelService, coverage, mandator).buildAndSave();
 		modelService.save(encounter);
 		
-		Result<IBillable> result = service.getOptifier().add(service, encounter, 1.5);
+		Result<IBilled> result = service.getOptifier().add(service, encounter, 1.5);
 		assertTrue(result.isOK());
 		
 		assertFalse(encounter.getBilled().isEmpty());
@@ -142,7 +142,7 @@ public class EncounterTest extends AbstractTest {
 		modelService.save(encounter);
 		
 		// add billed
-		Result<IBillable> result = service.getOptifier().add(service, encounter, 1.5);
+		Result<IBilled> result = service.getOptifier().add(service, encounter, 1.5);
 		assertTrue(result.isOK());
 		IBilled billed = encounter.getBilled().get(0);
 		assertEquals(1.5, billed.getAmount(), 0.01);

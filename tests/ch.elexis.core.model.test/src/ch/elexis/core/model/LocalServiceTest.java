@@ -99,7 +99,7 @@ public class LocalServiceTest extends AbstractTest {
 		modelService.save(service);
 		
 		IEncounter encounter = new IEncounterBuilder(modelService, coverage, mandator).buildAndSave();
-		Result<IBillable> result = service.getOptifier().add(service, encounter, 1.5);
+		Result<IBilled> result = service.getOptifier().add(service, encounter, 1.5);
 		assertTrue(result.isOK());
 		assertFalse(encounter.getBilled().isEmpty());
 		IBilled billed = encounter.getBilled().get(0);

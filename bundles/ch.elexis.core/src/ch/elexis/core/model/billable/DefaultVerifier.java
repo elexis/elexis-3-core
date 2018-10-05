@@ -2,6 +2,7 @@ package ch.elexis.core.model.billable;
 
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBillableVerifier;
+import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IEncounter;
 import ch.rgw.tools.Result;
 
@@ -12,9 +13,9 @@ import ch.rgw.tools.Result;
  *
  */
 public class DefaultVerifier implements IBillableVerifier {
-	
+
 	@Override
-	public Result<IBillable> verifyAdd(IBillable billable, IEncounter encounter){
-		return new Result<IBillable>(billable);
+	public Result<IBilled> verifyAdd(IBillable billable, IEncounter encounter, double amount){
+		return Result.OK();
 	}
 }

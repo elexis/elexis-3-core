@@ -1104,6 +1104,20 @@
             <column name="LAW" type="VARCHAR(3)"/>
         </createTable>
     </changeSet>
+    <changeSet author="Marco" id="1538728723000-1">
+    	<createTable tableName="TARMED_GROUP">
+    		<column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_9F"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="GROUPNAME" type="VARCHAR(32)"/>
+            <column name="SERVICES" type="VARCHAR(2147483647)"/>
+            <column name="LAW" type="VARCHAR(3)"/>
+            <column name="VALIDFROM" type="CHAR(8)"/>
+            <column name="VALIDTO" type="CHAR(8)"/>
+    	</createTable>
+    </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-72">
         <createTable tableName="TRACES">
             <column name="LOGTIME" type="BIGINT"/>

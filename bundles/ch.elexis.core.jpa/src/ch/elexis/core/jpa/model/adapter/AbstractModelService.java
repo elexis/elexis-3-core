@@ -19,6 +19,7 @@ import org.eclipse.persistence.config.HintValues;
 import org.eclipse.persistence.config.QueryHints;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEvent;
 import ch.elexis.core.common.ElexisEventTopics;
@@ -97,6 +98,7 @@ public abstract class AbstractModelService implements IModelService {
 				closeEntityManager(em);
 			}
 		}
+		LoggerFactory.getLogger(getClass()).error("Could not save [{}]", identifiable);
 		return false;
 	}
 	
@@ -127,6 +129,7 @@ public abstract class AbstractModelService implements IModelService {
 				closeEntityManager(em);
 			}
 		}
+		LoggerFactory.getLogger(getClass()).error("Could not save list [{}]", identifiables);
 		return false;
 	}
 	
@@ -145,6 +148,7 @@ public abstract class AbstractModelService implements IModelService {
 				closeEntityManager(em);
 			}
 		}
+		LoggerFactory.getLogger(getClass()).error("Could not remove [{}]", identifiable);
 		return false;
 	}
 	

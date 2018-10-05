@@ -295,16 +295,17 @@
   <eClassifiers xsi:type="ecore:EClass" name="IBillableVerifier" abstract="true" interface="true">
     <eOperations name="verifyAdd">
       <eGenericType eClassifier="ecore:EClass types.ecore#//Result">
-        <eTypeArguments eClassifier="#//IBillable"/>
+        <eTypeArguments eClassifier="#//IBilled"/>
       </eGenericType>
       <eParameters name="billable" eType="#//IBillable"/>
       <eParameters name="encounter" eType="#//IEncounter"/>
+      <eParameters name="amount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
     </eOperations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IBillableOptifier" abstract="true" interface="true">
     <eOperations name="add">
       <eGenericType eClassifier="ecore:EClass types.ecore#//Result">
-        <eTypeArguments eClassifier="#//IBillable"/>
+        <eTypeArguments eClassifier="#//IBilled"/>
       </eGenericType>
       <eParameters name="billable" eType="#//IBillable"/>
       <eParameters name="encounter" eType="#//IEncounter"/>

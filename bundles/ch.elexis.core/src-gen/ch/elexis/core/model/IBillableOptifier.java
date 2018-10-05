@@ -26,9 +26,9 @@ public interface IBillableOptifier {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @model type="ch.elexis.core.types.Result&lt;ch.elexis.core.model.IBillable&gt;"
+	 * @model type="ch.elexis.core.types.Result&lt;ch.elexis.core.model.IBilled&gt;"
 	 * @generated
 	 */
-	Result<IBillable> add(IBillable billable, IEncounter encounter, double amount);
+	Result<IBilled> add(IBillable billable, IEncounter encounter, double amount);
 
 } // IBillableOptifier

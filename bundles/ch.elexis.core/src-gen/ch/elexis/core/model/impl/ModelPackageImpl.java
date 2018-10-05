@@ -3646,8 +3646,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		op = addEOperation(iBillableVerifierEClass, null, "verifyAdd", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIBillable(), "billable", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIEncounter(), "encounter", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEDouble(), "amount", 0, 1, IS_UNIQUE, IS_ORDERED);
 		g1 = createEGenericType(theTypesPackage.getResult());
-		g2 = createEGenericType(this.getIBillable());
+		g2 = createEGenericType(this.getIBilled());
 		g1.getETypeArguments().add(g2);
 		initEOperation(op, g1);
 
@@ -3658,7 +3659,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEParameter(op, this.getIEncounter(), "encounter", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEDouble(), "amount", 0, 1, IS_UNIQUE, IS_ORDERED);
 		g1 = createEGenericType(theTypesPackage.getResult());
-		g2 = createEGenericType(this.getIBillable());
+		g2 = createEGenericType(this.getIBilled());
 		g1.getETypeArguments().add(g2);
 		initEOperation(op, g1);
 

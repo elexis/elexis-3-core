@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ch.elexis.core.model.builder.IPrescriptionBuilder;
-import ch.elexis.core.services.IQuery;
+import ch.elexis.core.model.prescription.EntryType;
 
 public class PrescriptionTest extends AbstractTest {
 	
@@ -36,6 +36,7 @@ public class PrescriptionTest extends AbstractTest {
 		assertEquals(localArticle, prescription.getArticle());
 		assertEquals("1-0-0-1", prescription.getDosageInstruction());
 		assertNotNull(prescription.getDateFrom());
+		assertEquals(EntryType.FIXED_MEDICATION, prescription.getEntryType());
 		
 		List<IPrescription> prescriptions = modelService.getQuery(IPrescription.class).execute();
 		assertEquals(prescription, prescriptions.get(0));

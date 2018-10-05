@@ -19,8 +19,9 @@ public abstract class AbstractOptifier implements IBillableOptifier {
 	}
 	
 	@Override
-	public Result<IBillable> add(IBillable billable, IEncounter encounter, double amount){
+	public Result<IBilled> add(IBillable billable, IEncounter encounter, double amount){
 		boolean added = false;
+		IBilled billed = null;
 		// lookup existing billed, add if found
 		List<IBilled> existingBilled = encounter.getBilled();
 		for (IBilled iBilled : existingBilled) {
@@ -28,17 +29,18 @@ public abstract class AbstractOptifier implements IBillableOptifier {
 			if (existing.equals(billable)) {
 				iBilled.setAmount(iBilled.getAmount() + amount);
 				modelService.save(iBilled);
+				billed = iBilled;
 				added = true;
 				break;
 			}
 		}
 		if (!added) {
-			IBilled billed = new IBilledBuilder(modelService, billable, encounter).build();
+			billed = new IBilledBuilder(modelService, billable, encounter).build();
 			billed.setAmount(amount);
 			setPrice(billed);
 			modelService.save(billed);
 		}
-		return new Result<IBillable>(billable);
+		return new Result<IBilled>(billed);
 	}
 	
 	protected abstract void setPrice(IBilled billed);

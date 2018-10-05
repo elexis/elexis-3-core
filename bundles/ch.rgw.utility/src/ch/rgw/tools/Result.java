@@ -32,7 +32,7 @@ public class Result<T> {
 	static final Logger log = Logger.getLogger("Result");
 	
 	public enum SEVERITY {
-		OK, WARNING, ERROR, FATAL
+			OK, WARNING, ERROR, FATAL
 	};
 	
 	List<msg> list = new ArrayList<msg>();
@@ -73,10 +73,11 @@ public class Result<T> {
 	 * @return
 	 */
 	public T get(){
-		if(list.size()==0) return null;
+		if (list.size() == 0)
+			return null;
 		
 		msg result = list.get(0);
-		if(list.size()>1) {
+		if (list.size() > 1) {
 			for (msg m : list) {
 				if (m.severity.ordinal() > list.get(0).severity.ordinal()) {
 					result = m;
@@ -94,7 +95,6 @@ public class Result<T> {
 	 */
 	public Result(T result){
 		add(SEVERITY.OK, 0, "Ok", result, false); //$NON-NLS-1$
-		// return new Result<Object>(Log.NOTHING,0,"Ok",result,false);
 	}
 	
 	/**
@@ -175,6 +175,16 @@ public class Result<T> {
 			sb.append(m.text).append("\n"); //$NON-NLS-1$
 		}
 		return sb.toString();
+	}
+	
+	/**
+	 * Convenience method.
+	 * 
+	 * @return an {@link #isOK()} == true result, no element contained (i.e. {@link #get()} returns
+	 *         <code>null</code>)
+	 */
+	public static final <T> Result<T> OK(){
+		return (Result<T>) new Result<T>(null);
 	}
 	
 }

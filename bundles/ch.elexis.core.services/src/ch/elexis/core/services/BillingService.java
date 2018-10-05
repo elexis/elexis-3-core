@@ -3,6 +3,7 @@ package ch.elexis.core.services;
 import org.osgi.service.component.annotations.Component;
 
 import ch.elexis.core.model.IBillable;
+import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
@@ -77,11 +78,11 @@ public class BillingService implements IBillingService {
 	}
 	
 	@Override
-	public Result<IBillable> bill(IBillable billable, IEncounter encounter, double amount){
-		Result<IBillable> verificationResult =
-			billable.getVerifier().verifyAdd(billable, encounter);
+	public Result<IBilled> bill(IBillable billable, IEncounter encounter, double amount){
+		Result<IBilled> verificationResult =
+			billable.getVerifier().verifyAdd(billable, encounter, amount);
 		if (verificationResult.isOK()) {
-			Result<IBillable> optifierResult =
+			Result<IBilled> optifierResult =
 				billable.getOptifier().add(billable, encounter, amount);
 			return optifierResult;
 		} else {
