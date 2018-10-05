@@ -136,5 +136,26 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 	public void setSubjectOrPatient(String value){
 		getEntity().setPatId(value);
 	}
+
+	@Override
+	public int getPriority(){
+		return getEntity().getPriority();
+	}
+
+	@Override
+	public void setPriority(int value){
+		getEntity().setPriority(value);
+	}
+
+	@Override
+	public int getTreatmentReason(){
+		return getEntity().getTreatmentReason();
+	}
+
+	@Override
+	public void setTreatmentReason(int value){
+		getEntity().setTreatmentReason(value);	
+	}
+
 	
 }

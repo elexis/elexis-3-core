@@ -30,6 +30,8 @@ import java.time.LocalDateTime;
  *   <li>{@link ch.elexis.core.model.IAppointment#getSchedule <em>Schedule</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getCreatedBy <em>Created By</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getSubjectOrPatient <em>Subject Or Patient</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IAppointment#getPriority <em>Priority</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IAppointment#getTreatmentReason <em>Treatment Reason</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIAppointment()
@@ -260,5 +262,57 @@ public interface IAppointment extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	void setSubjectOrPatient(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Priority</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Priority</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Priority</em>' attribute.
+	 * @see #setPriority(int)
+	 * @see ch.elexis.core.model.ModelPackage#getIAppointment_Priority()
+	 * @model
+	 * @generated
+	 */
+	int getPriority();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IAppointment#getPriority <em>Priority</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Priority</em>' attribute.
+	 * @see #getPriority()
+	 * @generated
+	 */
+	void setPriority(int value);
+
+	/**
+	 * Returns the value of the '<em><b>Treatment Reason</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Treatment Reason</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Treatment Reason</em>' attribute.
+	 * @see #setTreatmentReason(int)
+	 * @see ch.elexis.core.model.ModelPackage#getIAppointment_TreatmentReason()
+	 * @model
+	 * @generated
+	 */
+	int getTreatmentReason();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IAppointment#getTreatmentReason <em>Treatment Reason</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Treatment Reason</em>' attribute.
+	 * @see #getTreatmentReason()
+	 * @generated
+	 */
+	void setTreatmentReason(int value);
 
 } // IAppointment

@@ -4452,13 +4452,31 @@ public interface ModelPackage extends EPackage {
 	int IAPPOINTMENT__SUBJECT_OR_PATIENT = IDENTIFIABLE_FEATURE_COUNT + 9;
 
 	/**
+	 * The feature id for the '<em><b>Priority</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT__PRIORITY = IDENTIFIABLE_FEATURE_COUNT + 10;
+
+	/**
+	 * The feature id for the '<em><b>Treatment Reason</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT__TREATMENT_REASON = IDENTIFIABLE_FEATURE_COUNT + 11;
+
+	/**
 	 * The number of structural features of the '<em>IAppointment</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 10;
+	int IAPPOINTMENT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 12;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -7578,6 +7596,28 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIAppointment_SubjectOrPatient();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#getPriority <em>Priority</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Priority</em>'.
+	 * @see ch.elexis.core.model.IAppointment#getPriority()
+	 * @see #getIAppointment()
+	 * @generated
+	 */
+	EAttribute getIAppointment_Priority();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#getTreatmentReason <em>Treatment Reason</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Treatment Reason</em>'.
+	 * @see ch.elexis.core.model.IAppointment#getTreatmentReason()
+	 * @see #getIAppointment()
+	 * @generated
+	 */
+	EAttribute getIAppointment_TreatmentReason();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9872,6 +9912,22 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IAPPOINTMENT__SUBJECT_OR_PATIENT = eINSTANCE.getIAppointment_SubjectOrPatient();
+
+		/**
+		 * The meta object literal for the '<em><b>Priority</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT__PRIORITY = eINSTANCE.getIAppointment_Priority();
+
+		/**
+		 * The meta object literal for the '<em><b>Treatment Reason</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT__TREATMENT_REASON = eINSTANCE.getIAppointment_TreatmentReason();
 
 	}
 

@@ -413,6 +413,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/schedule"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IAppointment/createdBy"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/subjectOrPatient"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/priority"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/treatmentReason"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IImage">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IImage/date"/>

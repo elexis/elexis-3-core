@@ -2941,6 +2941,24 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getIAppointment_Priority() {
+		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIAppointment_TreatmentReason() {
+		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ModelFactory getModelFactory() {
 		return (ModelFactory)getEFactoryInstance();
 	}
@@ -3265,6 +3283,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iAppointmentEClass, IAPPOINTMENT__SCHEDULE);
 		createEReference(iAppointmentEClass, IAPPOINTMENT__CREATED_BY);
 		createEAttribute(iAppointmentEClass, IAPPOINTMENT__SUBJECT_OR_PATIENT);
+		createEAttribute(iAppointmentEClass, IAPPOINTMENT__PRIORITY);
+		createEAttribute(iAppointmentEClass, IAPPOINTMENT__TREATMENT_REASON);
 
 		iImageEClass = createEClass(IIMAGE);
 		createEAttribute(iImageEClass, IIMAGE__DATE);
@@ -3853,6 +3873,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIAppointment_Schedule(), ecorePackage.getEString(), "schedule", null, 0, 1, IAppointment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIAppointment_CreatedBy(), this.getIUser(), null, "createdBy", null, 0, 1, IAppointment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIAppointment_SubjectOrPatient(), ecorePackage.getEString(), "subjectOrPatient", null, 0, 1, IAppointment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIAppointment_Priority(), ecorePackage.getEInt(), "priority", null, 0, 1, IAppointment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIAppointment_TreatmentReason(), ecorePackage.getEInt(), "treatmentReason", null, 0, 1, IAppointment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iImageEClass, IImage.class, "IImage", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIImage_Date(), theTypesPackage.getLocalDate(), "date", null, 0, 1, IImage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
