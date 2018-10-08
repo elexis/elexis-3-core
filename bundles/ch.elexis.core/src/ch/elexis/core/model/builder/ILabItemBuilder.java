@@ -1,9 +1,6 @@
 package ch.elexis.core.model.builder;
 
-import java.util.Arrays;
-
 import ch.elexis.core.model.IContact;
-import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabMapping;
 import ch.elexis.core.services.IModelService;
@@ -28,7 +25,7 @@ public class ILabItemBuilder extends AbstractBuilder<ILabItem> {
 		object.setVisible(true);
 	}
 	
-	public ILabItemBuilder origin(IContact origin, String itemName) {
+	public ILabItemBuilder origin(IContact origin, String itemName){
 		mapping = modelService.create(ILabMapping.class);
 		mapping.setItem(object);
 		mapping.setOrigin(origin);
@@ -38,7 +35,10 @@ public class ILabItemBuilder extends AbstractBuilder<ILabItem> {
 	
 	@Override
 	public ILabItem buildAndSave(){
-		modelService.save(Arrays.asList(object, mapping));
+		modelService.save(object);
+		if (mapping != null) {
+			modelService.save(mapping);
+		}
 		return object;
 	}
 }

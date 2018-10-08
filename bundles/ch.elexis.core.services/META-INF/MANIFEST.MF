@@ -11,7 +11,8 @@ Require-Bundle: ch.elexis.core,
  ch.rgw.utility;bundle-version="3.7.0",
  org.eclipse.core.runtime,
  org.eclipse.osgi.services;bundle-version="3.6.0"
-Import-Package: org.apache.commons.codec;version="1.9.0",
+Import-Package: bsh,
+ org.apache.commons.codec;version="1.9.0",
  org.slf4j
 Service-Component: OSGI-INF/ch.elexis.core.services.holder.CoreModelServiceHolder.xml,
  OSGI-INF/ch.elexis.core.services.OrderService.xml,
@@ -26,4 +27,5 @@ Service-Component: OSGI-INF/ch.elexis.core.services.holder.CoreModelServiceHolde
  OSGI-INF/ch.elexis.core.services.holder.LocalLockServiceHolder.xml,
  OSGI-INF/ch.elexis.core.services.UserService.xml,
  OSGI-INF/ch.elexis.core.services.CodeElementService.xml,
- OSGI-INF/ch.elexis.core.services.BillingService.xml
+ OSGI-INF/ch.elexis.core.services.BillingService.xml,
+ OSGI-INF/ch.elexis.core.services.LabService.xml

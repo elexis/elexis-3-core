@@ -154,6 +154,11 @@
     <eOperations name="removeMapping" lowerBound="1">
       <eParameters name="mapping" eType="#//ILabMapping"/>
     </eOperations>
+    <eOperations name="getVariableName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="the variable name of this LabItem as used in LabItems of type formula for cross-reference"/>
+      </eAnnotations>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="typ" eType="ecore:EDataType types.ecore#//LabItemTyp"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="referenceMale" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="referenceFemale" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

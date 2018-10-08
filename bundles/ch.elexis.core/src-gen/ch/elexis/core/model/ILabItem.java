@@ -440,4 +440,15 @@ public interface ILabItem extends Identifiable, Deleteable {
 	 */
 	void removeMapping(ILabMapping mapping);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * the variable name of this LabItem as used in LabItems of type formula for cross-reference
+	 * <!-- end-model-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	String getVariableName();
+
 } // ILabItem

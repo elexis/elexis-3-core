@@ -136,6 +136,7 @@ public class Result<T> {
 		list.addAll(msgs);
 	}
 	
+	
 	public Result(SEVERITY severity, int code, String text, T result, boolean bLog){
 		add(severity, code, text, result, bLog);
 	}
@@ -186,5 +187,14 @@ public class Result<T> {
 	public static final <T> Result<T> OK(){
 		return (Result<T>) new Result<T>(null);
 	}
+
+	public static final Result<String> OK(String text){
+		return new Result<String>(SEVERITY.OK, 0, text, text, false);
+	}
+	
+	public static final Result<String> ERROR(String text){
+		return new Result<String>(SEVERITY.ERROR, 0, text, text, false);
+	}
+	
 	
 }

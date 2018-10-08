@@ -130,6 +130,7 @@
       <genOperations ecoreOperation="model.ecore#//ILabItem/removeMapping">
         <genParameters ecoreParameter="model.ecore#//ILabItem/removeMapping/mapping"/>
       </genOperations>
+      <genOperations ecoreOperation="model.ecore#//ILabItem/getVariableName"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//ILabResult">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabResult/result"/>

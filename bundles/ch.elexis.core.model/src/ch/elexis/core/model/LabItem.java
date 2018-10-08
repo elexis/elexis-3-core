@@ -202,4 +202,17 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 		}
 		
 	}
+
+	@Override
+	public String getVariableName(){
+		String group = getGroup();
+		if (group != null && group.contains(" ")) {
+			String[] group_tokens = group.split(" ", 2);
+			String prio = getPriority();
+			String num = (prio != null) ? prio.trim() : "9999";
+			return group_tokens[0] + "_" + num;
+		}
+
+		return "ERROR";
+	}
 }
