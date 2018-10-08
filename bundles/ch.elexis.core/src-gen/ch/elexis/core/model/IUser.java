@@ -29,6 +29,7 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IUser#getRoles <em>Roles</em>}</li>
  *   <li>{@link ch.elexis.core.model.IUser#isActive <em>Active</em>}</li>
  *   <li>{@link ch.elexis.core.model.IUser#isAllowExternal <em>Allow External</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IUser#isAdministrator <em>Administrator</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIUser()
@@ -207,6 +208,32 @@ public interface IUser extends Deleteable, Identifiable {
 	 * @generated
 	 */
 	void setAllowExternal(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Administrator</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Administrator</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Administrator</em>' attribute.
+	 * @see #setAdministrator(boolean)
+	 * @see ch.elexis.core.model.ModelPackage#getIUser_Administrator()
+	 * @model
+	 * @generated
+	 */
+	boolean isAdministrator();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IUser#isAdministrator <em>Administrator</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Administrator</em>' attribute.
+	 * @see #isAdministrator()
+	 * @generated
+	 */
+	void setAdministrator(boolean value);
 
 	/**
 	 * <!-- begin-user-doc -->

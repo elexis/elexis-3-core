@@ -100,6 +100,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IUser/roles"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IUser/active"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IUser/allowExternal"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IUser/administrator"/>
       <genOperations ecoreOperation="model.ecore#//IUser/addRole">
         <genParameters ecoreParameter="model.ecore#//IUser/addRole/role"/>
       </genOperations>

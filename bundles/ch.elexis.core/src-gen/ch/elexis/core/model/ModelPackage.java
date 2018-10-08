@@ -1777,13 +1777,22 @@ public interface ModelPackage extends EPackage {
 	int IUSER__ALLOW_EXTERNAL = DELETEABLE_FEATURE_COUNT + 6;
 
 	/**
+	 * The feature id for the '<em><b>Administrator</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IUSER__ADMINISTRATOR = DELETEABLE_FEATURE_COUNT + 7;
+
+	/**
 	 * The number of structural features of the '<em>IUser</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IUSER_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 7;
+	int IUSER_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ILabItem <em>ILab Item</em>}' class.
@@ -5259,6 +5268,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIUser_AllowExternal();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IUser#isAdministrator <em>Administrator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Administrator</em>'.
+	 * @see ch.elexis.core.model.IUser#isAdministrator()
+	 * @see #getIUser()
+	 * @generated
+	 */
+	EAttribute getIUser_Administrator();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.ILabItem <em>ILab Item</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8106,6 +8126,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IUSER__ALLOW_EXTERNAL = eINSTANCE.getIUser_AllowExternal();
+
+		/**
+		 * The meta object literal for the '<em><b>Administrator</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IUSER__ADMINISTRATOR = eINSTANCE.getIUser_Administrator();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.ILabItem <em>ILab Item</em>}' class.

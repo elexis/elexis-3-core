@@ -997,6 +997,15 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getIUser_Administrator() {
+		return (EAttribute)iUserEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getILabItem() {
 		return iLabItemEClass;
 	}
@@ -3047,6 +3056,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEReference(iUserEClass, IUSER__ROLES);
 		createEAttribute(iUserEClass, IUSER__ACTIVE);
 		createEAttribute(iUserEClass, IUSER__ALLOW_EXTERNAL);
+		createEAttribute(iUserEClass, IUSER__ADMINISTRATOR);
 
 		iLabItemEClass = createEClass(ILAB_ITEM);
 		createEAttribute(iLabItemEClass, ILAB_ITEM__TYP);
@@ -3526,6 +3536,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEReference(getIUser_Roles(), this.getIRole(), null, "roles", null, 0, -1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIUser_Active(), ecorePackage.getEBoolean(), "active", null, 1, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIUser_AllowExternal(), ecorePackage.getEBoolean(), "allowExternal", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIUser_Administrator(), ecorePackage.getEBoolean(), "administrator", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		op = addEOperation(iUserEClass, this.getIRole(), "addRole", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIRole(), "role", 1, 1, IS_UNIQUE, IS_ORDERED);
