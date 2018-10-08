@@ -481,7 +481,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						addPersistentObject((PersistentObject) object);
 					} else if (object instanceof IBillable) {
 						IBillable billable = (IBillable) object;
-						Result<IBillable> billResult =
+						Result<IBilled> billResult =
 								BillingServiceHolder.get().bill(billable, actEncounter, 1.0);
 						if (!billResult.isOK()) {
 							ResultDialog.show(billResult);
@@ -851,7 +851,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						changeAnzahl = Integer.parseInt(dlg.getValue());
 					}
 					double diff = changeAnzahl - billed.getAmount();
-					Result<IBillable> result =
+					Result<IBilled> result =
 						BillingServiceHolder.get().bill(billable, actEncounter, diff);
 					if(!result.isOK()) {
 						ResultDialog.show(result);
