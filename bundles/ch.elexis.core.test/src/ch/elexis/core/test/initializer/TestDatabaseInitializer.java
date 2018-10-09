@@ -2,6 +2,7 @@ package ch.elexis.core.test.initializer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -137,23 +138,16 @@ public class TestDatabaseInitializer {
 		return true;
 	}
 	
-	private String loadFile(String string) throws IOException{
-		BufferedReader reader = null;
+	private String loadFile(String resourceName) throws IOException{
 		StringBuffer sb = new StringBuffer();
 		String line;
-		try {
-			reader = new BufferedReader(
-				new InputStreamReader(TestDatabaseInitializer.class.getResourceAsStream(string)));
+		InputStream inputStream = getClass().getResourceAsStream(resourceName);
+		if (inputStream == null) {
+			throw new IOException("Could not load resource [" + resourceName + "]");
+		}
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
 			while ((line = reader.readLine()) != null) {
 				sb.append(line + "\n");
-			}
-		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					// ignore
-				}
 			}
 		}
 		return sb.toString();
