@@ -5,10 +5,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.ICodeElementService;
@@ -62,16 +64,21 @@ public class CodeElementServiceHolder {
 	@SuppressWarnings("unchecked")
 	public static List<Object> getStatistics(String key, IContact contact){
 		ArrayList<statL> list = (ArrayList<statL>) contact.getExtInfo(key);
-		ArrayList<Object> ret = new ArrayList<>();
 		if (list != null) {
-			for (statL sl : list) {
-				Object loaded = StoreToStringServiceHolder.getLoadFromString(sl.v);
-				if (loaded != null) {
-					ret.add(loaded);
-				}
-			}
+			return list.stream()
+				.map(sl -> StoreToStringServiceHolder.getLoadFromString(sl.v))
+				.filter(o -> o != null && !isDeleted(o)).collect(Collectors.toList());
 		}
-		return ret;
+		return Collections.emptyList();
+	}
+	
+	private static boolean isDeleted(Object object){
+		if (object instanceof Deleteable && ((Deleteable) object).isDeleted()) {
+			return true;
+		} else if (object instanceof PersistentObject && !((PersistentObject) object).exists()) {
+			return true;
+		}
+		return false;
 	}
 	
 	/**

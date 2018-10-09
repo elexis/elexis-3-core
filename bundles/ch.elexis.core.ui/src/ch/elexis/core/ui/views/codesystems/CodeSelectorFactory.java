@@ -331,8 +331,17 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 			super(ctab, SWT.NONE);
 		}
 		
+		cPage(final CTabItem ctab, final CodeSystemDescription description){
+			super(ctab.getParent(), SWT.NONE);
+			initContent(description);
+		}
+		
 		cPage(final CTabFolder ctab, final CodeSystemDescription description){
 			super(ctab, SWT.NONE);
+			initContent(description);
+		}
+		
+		private void initContent(CodeSystemDescription description){
 			this.description = description;
 			setLayout(new FillLayout());
 			SashForm sash = new SashForm(this, SWT.VERTICAL | SWT.SMOOTH);

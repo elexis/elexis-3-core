@@ -24,9 +24,11 @@ public class LocalService
 		optifier = new AbstractOptifier(CoreModelServiceHolder.get()) {
 			@Override
 			protected void setPrice(IBilled billed){
+				billed.setPrimaryScale(100);
+				billed.setSecondaryScale(100);
 				billed.setFactor(1.0);
 				billed.setNetPrice(getNetPrice());
-				billed.setPrice(getPrice());
+				billed.setPoints(getPrice().getCents());
 			}
 		};
 		verifier = new DefaultVerifier();

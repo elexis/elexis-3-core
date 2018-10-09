@@ -184,12 +184,23 @@ public class LeistungenView extends ViewPart implements IActivationListener, ISa
 			CodeSelectorHandler.getInstance().removeCodeSelectorTarget();
 		} else {
 			if (selected != null) {
+				if (selected.getControl() == null) {
+					initCTabItemControl(selected);
+				}
 				cPage page = (cPage) selected.getControl();
 				page.refresh();
 			}
 			
 		}
 		
+	}
+	
+	private void initCTabItemControl(CTabItem tabItem){
+		CodeSystemDescription systemDescription = (CodeSystemDescription) tabItem.getData();
+		if (systemDescription != null) {
+			cPage page = new cPage(tabItem, systemDescription);
+			selected.setControl(page);
+		}
 	}
 	
 	public void visible(boolean mode){}

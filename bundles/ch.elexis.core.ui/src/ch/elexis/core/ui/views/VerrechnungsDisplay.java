@@ -315,7 +315,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			public String getText(Object element){
 				if (element instanceof IBilled) {
 					IBilled billed = (IBilled) element;
-					Money price = billed.getPrice().multiply(billed.getAmount());
+					Money price = billed.getTotal();
 					return price.getAmountAsString();
 				}
 				return "";
@@ -374,7 +374,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			int sumMinutes = 0;
 			Money sum = new Money(0);
 			for (IBilled billed : actEncounter.getBilled()) {
-				Money preis = billed.getPrice().multiply(billed.getAmount());
+				Money preis = billed.getTotal();
 				sum.addMoney(preis);
 				IBillable billable = billed.getBillable();
 				if (billable instanceof IService) {
@@ -494,6 +494,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 								BillingServiceHolder.get().bill(billable, actEncounter, 1.0);
 						if (!billResult.isOK()) {
 							ResultDialog.show(billResult);
+						} else {
+							viewer.setInput(actEncounter.getBilled());
 						}
 					} else if (object instanceof IDiagnosis) {
 						actEncounter.addDiagnosis((IDiagnosis) object);
@@ -725,43 +727,46 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				for (Object selected : selection.toList()) {
 					if (selected instanceof IBilled) {
 						IBilled billed = (IBilled) selected;
-						AcquireLockUi.aquireAndRun(billed, new LockDeniedNoActionLockHandler() {
-
-							@Override
-							public void lockAcquired(){
-								Money oldPrice = billed.getPrice();
-								String p = oldPrice.getAmountAsString();
-								InputDialog dlg = new InputDialog(UiDesk.getTopShell(),
-									Messages.VerrechnungsDisplay_changePriceForService, //$NON-NLS-1$
-									Messages.VerrechnungsDisplay_enterNewPrice, p, //$NON-NLS-1$
-									null);
-								if (dlg.open() == Dialog.OK) {
-									try {
-										String val = dlg.getValue().trim();
-										Money newPrice = new Money(oldPrice);
-										if (val.endsWith("%") && val.length() > 1) { //$NON-NLS-1$
-											val = val.substring(0, val.length() - 1);
-											double percent = Double.parseDouble(val);
-											double factor = 1.0 + (percent / 100.0);
-											billed.setSecondaryScale((int) factor);
-										} else {
-											newPrice = new Money(val);
-											billed.setPrice(newPrice);
-											billed.setSecondaryScale(1);
-											// mark as changed price
-											billed.setExtInfo(Verrechnet.FLD_EXT_CHANGEDPRICE,
-												"true");
+						if (billed.isNonIntegerAmount()) {
+							MessageDialog.openInformation(UiDesk.getTopShell(), "Info",
+								"Der Preis kann nur geändert werden wenn die Anzahl ganzzahlig ist.");
+						} else {
+							AcquireLockUi.aquireAndRun(billed, new LockDeniedNoActionLockHandler() {
+								
+								@Override
+								public void lockAcquired(){
+									Money oldPrice = billed.getPrice();
+									String p = oldPrice.getAmountAsString();
+									InputDialog dlg = new InputDialog(UiDesk.getTopShell(),
+										Messages.VerrechnungsDisplay_changePriceForService, //$NON-NLS-1$
+										Messages.VerrechnungsDisplay_enterNewPrice, p, //$NON-NLS-1$
+										null);
+									if (dlg.open() == Dialog.OK) {
+										try {
+											String val = dlg.getValue().trim();
+											Money newPrice = null;
+											if (val.endsWith("%") && val.length() > 1) { //$NON-NLS-1$
+												val = val.substring(0, val.length() - 1);
+												double percent = Double.parseDouble(val);
+												double factor = 1.0 + (percent / 100.0);
+												newPrice = billed.getPrice().multiply(factor);
+											} else {
+												newPrice = new Money(val);
+											}
+											if (newPrice != null) {
+												billed.setPrice(newPrice);
+												CoreModelServiceHolder.get().save(billed);
+												viewer.update(billed, null);
+											}
+										} catch (ParseException ex) {
+											SWTHelper.showError(
+												Messages.VerrechnungsDisplay_badAmountCaption, //$NON-NLS-1$
+												Messages.VerrechnungsDisplay_badAmountBody); //$NON-NLS-1$
 										}
-										CoreModelServiceHolder.get().save(billed);
-										viewer.update(billed, null);
-									} catch (ParseException ex) {
-										SWTHelper.showError(
-											Messages.VerrechnungsDisplay_badAmountCaption, //$NON-NLS-1$
-											Messages.VerrechnungsDisplay_badAmountBody); //$NON-NLS-1$
 									}
 								}
-							}
-						});
+							});
+						}
 					}
 				}
 				updateBilledLabel();
@@ -855,9 +860,14 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 							+ Messages.VerrechnungsDisplay_Orininalpackungen;
 					} else if (val.indexOf('.') > 0) {
 						changeAnzahl =  Double.parseDouble(val);
-						text = billed.getText() + " (" + Double.toString(changeAnzahl) + ")";
 					} else {
 						changeAnzahl = Integer.parseInt(dlg.getValue());
+					}
+					
+					if (!(changeAnzahl % 1 == 0) && billed.isChangedPrice()) {
+						MessageDialog.openInformation(UiDesk.getTopShell(), "Info",
+							"Wenn der Preis bereits geändert wurde, darf die Anzahl nur ganzzahlig sein.");
+						return;
 					}
 					double diff = changeAnzahl - billed.getAmount();
 					Result<IBilled> result =

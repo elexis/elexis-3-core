@@ -83,8 +83,10 @@ public class CoreModelService extends AbstractModelService
 			if (clazz != null) {
 				EntityManager em = (EntityManager) entityManager.getEntityManager();
 				EntityWithId dbObject = em.find(clazz, id);
-				return Optional
-					.ofNullable(adapterFactory.getModelAdapter(dbObject, null, false).orElse(null));
+				if (dbObject != null) {
+					return Optional.ofNullable(
+						adapterFactory.getModelAdapter(dbObject, null, false).orElse(null));
+				}
 			}
 		}
 		return Optional.empty();

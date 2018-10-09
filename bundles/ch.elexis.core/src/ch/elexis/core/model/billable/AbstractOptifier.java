@@ -26,7 +26,7 @@ public abstract class AbstractOptifier implements IBillableOptifier {
 		List<IBilled> existingBilled = encounter.getBilled();
 		for (IBilled iBilled : existingBilled) {
 			IBillable existing = iBilled.getBillable();
-			if (existing.equals(billable)) {
+			if (existing != null && existing.equals(billable)) {
 				iBilled.setAmount(iBilled.getAmount() + amount);
 				modelService.save(iBilled);
 				billed = iBilled;

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -12,9 +13,10 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+
 import ch.elexis.core.model.Identifiable;
-import ch.elexis.core.services.IStoreToStringContribution;
-import ch.elexis.core.services.IStoreToStringService;
 
 @Component
 public class StoreToStringService implements IStoreToStringService {
@@ -33,6 +35,9 @@ public class StoreToStringService implements IStoreToStringService {
 	}
 	
 	private Map<Class<?>, IStoreToStringContribution> classToContributionMap = new HashMap<>();
+	
+	private Cache<String, Identifiable> loadFromStringCache =
+		CacheBuilder.newBuilder().expireAfterAccess(15, TimeUnit.SECONDS).maximumSize(100).build();
 	
 	@Override
 	public Optional<String> storeToString(Identifiable identifiable){
@@ -53,10 +58,15 @@ public class StoreToStringService implements IStoreToStringService {
 	
 	@Override
 	public Optional<Identifiable> loadFromString(String storeToString){
+		Identifiable cached = loadFromStringCache.getIfPresent(storeToString);
+		if (cached != null) {
+			return Optional.of(cached);
+		}
 		for (IStoreToStringContribution iStoreToStringContribution : contributions) {
 			Optional<Identifiable> identifiable =
 				iStoreToStringContribution.loadFromString(storeToString);
 			if (identifiable.isPresent()) {
+				loadFromStringCache.put(storeToString, identifiable.get());
 				return identifiable;
 			}
 		}

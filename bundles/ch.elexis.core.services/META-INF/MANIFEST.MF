@@ -12,6 +12,7 @@ Require-Bundle: ch.elexis.core,
  org.eclipse.core.runtime,
  org.eclipse.osgi.services;bundle-version="3.6.0"
 Import-Package: bsh,
+ com.google.common.cache;version="15.0.0",
  org.apache.commons.codec;version="1.9.0",
  org.slf4j
 Service-Component: OSGI-INF/ch.elexis.core.services.holder.CoreModelServiceHolder.xml,

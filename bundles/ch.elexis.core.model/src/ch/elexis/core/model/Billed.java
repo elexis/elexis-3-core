@@ -97,17 +97,17 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 	
 	@Override
 	public Money getPrice(){
-		return new Money(getPoints() * getFactor());
+		return new Money(getPoints()).multiply(getFactor());
 	}
 	
 	@Override
 	public void setPrice(Money value){
 		if (isNonIntegerAmount()) {
-			setExtInfo(Constants.FLD_EXT_CHANGEDPRICE, true);
+			throw new IllegalStateException("Can not set price if non integer amount was set");
+		} else {
+			setExtInfo(Constants.FLD_EXT_CHANGEDPRICE, "true");
 			setPoints(value.getCents());
 			setSecondaryScale(100);
-		} else {
-			throw new IllegalStateException("Can not set price if non integer amount was set");
 		}
 	}
 	
@@ -197,7 +197,7 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 	
 	@Override
 	public Money getTotal(){
-		return getPrice().multiply(getPrimaryScale()).multiply(getSecondaryScale())
+		return getPrice().multiply(getPrimaryScale() / 100).multiply(getSecondaryScale() / 100)
 			.multiply(getAmount());
 	}
 	
@@ -206,6 +206,8 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 		Object changedPrice = getExtInfo(Constants.FLD_EXT_CHANGEDPRICE);
 		if (changedPrice instanceof String) {
 			return ((String) changedPrice).equalsIgnoreCase("true");
+		} else if (changedPrice instanceof Boolean) {
+			return (Boolean) changedPrice;
 		}
 		return false;
 	}
