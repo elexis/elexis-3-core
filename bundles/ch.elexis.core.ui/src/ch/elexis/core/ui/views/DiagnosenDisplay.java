@@ -21,9 +21,11 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -89,6 +91,7 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 	private Konsultation actEncounter;
 	private ToolBar toolBar;
 	private TableViewerFocusCellManager focusCellManager;
+	private TableColumnLayout tableLayout;
 	
 	public void setEnabled(boolean enabled) {
 		toolBar.setEnabled(enabled);
@@ -140,11 +143,13 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 		toolBar = toolBarManager.createControl(this);
 		toolBar.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 2, 1));
 		
-		viewer = new TableViewer(this,
+		tableLayout = new TableColumnLayout();
+		Composite tableComposite = new Composite(this, SWT.NONE);
+		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		tableComposite.setLayout(tableLayout);
+		viewer = new TableViewer(tableComposite,
 			SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
 		table = viewer.getTable();
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-		// dummy table viewer needed for SelectionsProvider for Menu
 		viewer.setContentProvider(ArrayContentProvider.getInstance());
 		
 		table.setHeaderVisible(true);
@@ -221,11 +226,11 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 		String[] titles = {
 			"Code", "Bezeichnung", ""
 		};
-		int[] bounds = {
-			45, 250, 45
+		int[] weights = {
+			15, 70, 15
 		};
 		
-		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0, SWT.NONE);
+		TableViewerColumn col = createTableViewerColumn(titles[0], weights[0], 0, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
@@ -239,7 +244,7 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 			}
 		});
 		
-		col = createTableViewerColumn(titles[1], bounds[1], 1, SWT.NONE);
+		col = createTableViewerColumn(titles[1], weights[1], 1, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
@@ -251,7 +256,7 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 			}
 		});
 		
-		col = createTableViewerColumn(titles[2], bounds[2], 2, SWT.NONE);
+		col = createTableViewerColumn(titles[2], weights[2], 2, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
@@ -265,14 +270,14 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 		});
 	}
 	
-	private TableViewerColumn createTableViewerColumn(String title, int bound, int colNumber,
+	private TableViewerColumn createTableViewerColumn(String title, int weight, int colNumber,
 		int style){
 		final TableViewerColumn viewerColumn = new TableViewerColumn(viewer, style);
 		final TableColumn column = viewerColumn.getColumn();
 		column.setText(title);
-		column.setWidth(bound);
 		column.setResizable(true);
 		column.setMoveable(false);
+		tableLayout.setColumnData(column, new ColumnWeightData(weight));
 		return viewerColumn;
 	}
 	

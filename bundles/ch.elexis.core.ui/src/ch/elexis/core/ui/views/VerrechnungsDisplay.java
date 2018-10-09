@@ -27,9 +27,11 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -126,6 +128,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 		}
 	};
+	private TableColumnLayout tableLayout;
 	
 	public VerrechnungsDisplay(final IWorkbenchPage p, Composite parent, int style){
 		super(parent, style);
@@ -164,10 +167,13 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		toolBar.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
 		
 		makeActions();
-		viewer = new TableViewer(this,
+		tableLayout = new TableColumnLayout();
+		Composite tableComposite = new Composite(this, SWT.NONE);
+		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		tableComposite.setLayout(tableLayout);
+		viewer = new TableViewer(tableComposite,
 			SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
 		table = viewer.getTable();
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		table.setMenu(createVerrMenu());
 		// dummy table viewer needed for SelectionsProvider for Menu
 		viewer.setContentProvider(ArrayContentProvider.getInstance());
@@ -239,11 +245,11 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		String[] titles = {
 			"Anz.", "Code", "Bezeichnung", "Preis", ""
 		};
-		int[] bounds = {
-			45, 125, 400, 75, 45
+		int[] weights = {
+			8, 20, 50, 15, 7
 		};
 		
-		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0, SWT.NONE);
+		TableViewerColumn col = createTableViewerColumn(titles[0], weights[0], 0, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
@@ -271,7 +277,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 		});
 		
-		col = createTableViewerColumn(titles[1], bounds[1], 1, SWT.NONE);
+		col = createTableViewerColumn(titles[1], weights[1], 1, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
@@ -283,7 +289,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 		});
 		
-		col = createTableViewerColumn(titles[2], bounds[2], 2, SWT.NONE);
+		col = createTableViewerColumn(titles[2], weights[2], 2, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
@@ -304,7 +310,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 		});
 		
-		col = createTableViewerColumn(titles[3], bounds[3], 3, SWT.RIGHT);
+		col = createTableViewerColumn(titles[3], weights[3], 3, SWT.RIGHT);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
@@ -317,7 +323,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 		});
 		
-		col = createTableViewerColumn(titles[4], bounds[4], 4, SWT.NONE);
+		col = createTableViewerColumn(titles[4], weights[4], 4, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
@@ -331,14 +337,14 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		});
 	}
 	
-	private TableViewerColumn createTableViewerColumn(String title, int bound, int colNumber,
+	private TableViewerColumn createTableViewerColumn(String title, int weight, int colNumber,
 		int style){
 		final TableViewerColumn viewerColumn = new TableViewerColumn(viewer, style);
 		final TableColumn column = viewerColumn.getColumn();
 		column.setText(title);
-		column.setWidth(bound);
 		column.setResizable(true);
 		column.setMoveable(false);
+		tableLayout.setColumnData(column, new ColumnWeightData(weight));
 		return viewerColumn;
 	}
 	
