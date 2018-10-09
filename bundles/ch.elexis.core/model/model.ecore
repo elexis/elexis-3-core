@@ -509,6 +509,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IBilled" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable #//WithExtInfo">
+    <eOperations name="isChangedPrice" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eOperations name="isNonIntegerAmount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="billable" eType="#//IBillable"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="encounter" eType="#//IEncounter"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="amount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
@@ -520,6 +522,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="primaryScale" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="secondaryScale" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        changeable="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="total" eType="ecore:EDataType types.ecore#//Money"
         changeable="false"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IStock" abstract="true" interface="true"

@@ -12,6 +12,7 @@ import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
 import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 import ch.elexis.core.model.service.holder.StoreToStringServiceHolder;
 import ch.elexis.core.model.util.ModelUtil;
+import ch.elexis.core.model.verrechnet.Constants;
 import ch.elexis.core.services.IStoreToStringContribution;
 import ch.rgw.tools.Money;
 
@@ -72,39 +73,42 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 		if (getSecondaryScale() == 100) {
 			return getEntity().getZahl();
 		}
-		return getSecondaryScale() / 100f;
+		return getSecondaryScale() / 100;
 	}
 	
-	/**
-	 * Derives the settings for {@link #zahl}, {@link #scale} and {@link #scale2} for the provided
-	 * value
-	 * 
-	 * @param countValue
-	 */
 	@Override
 	public void setAmount(double value){
 		if (value % 1 == 0) {
-			// integer -> full package
+			// integer
 			getEntity().setZahl((int) value);
-			setPrimaryScale(100);
 			setSecondaryScale(100);
 		} else {
-			// float -> fractional package
-			getEntity().setZahl(1);
-			setPrimaryScale(100);
-			int scale2 = (int) Math.round(value * 100);
-			setSecondaryScale(scale2);
+			if (!isChangedPrice()) {
+				// double
+				getEntity().setZahl(1);
+				int scale2 = (int) Math.round(value * 100);
+				setSecondaryScale(scale2);
+			} else {
+				throw new IllegalStateException(
+					"Can not set non integer amount if price was changed");
+			}
 		}
 	}
 	
 	@Override
 	public Money getPrice(){
-		return new Money(getEntity().getVk_preis());
+		return new Money(getPoints() * getFactor());
 	}
 	
 	@Override
 	public void setPrice(Money value){
-		getEntity().setVk_preis(value.getCents());
+		if (isNonIntegerAmount()) {
+			setExtInfo(Constants.FLD_EXT_CHANGEDPRICE, true);
+			setPoints(value.getCents());
+			setSecondaryScale(100);
+		} else {
+			throw new IllegalStateException("Can not set price if non integer amount was set");
+		}
 	}
 	
 	@Override
@@ -148,7 +152,7 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 				// ignore
 			}
 		}
-		return 0.0;
+		return 1.0;
 	}
 	
 	@Override
@@ -189,5 +193,29 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 	@Override
 	public String getCode(){
 		return getEntity().getLeistungenCode();
+	}
+	
+	@Override
+	public Money getTotal(){
+		return getPrice().multiply(getPrimaryScale()).multiply(getSecondaryScale())
+			.multiply(getAmount());
+	}
+	
+	@Override
+	public boolean isChangedPrice(){
+		Object changedPrice = getExtInfo(Constants.FLD_EXT_CHANGEDPRICE);
+		if (changedPrice instanceof String) {
+			return ((String) changedPrice).equalsIgnoreCase("true");
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean isNonIntegerAmount(){
+		if (isChangedPrice()) {
+			return false;
+		} else {
+			return getSecondaryScale() != 100;
+		}
 	}
 }

@@ -351,6 +351,9 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBilled/primaryScale"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBilled/secondaryScale"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBilled/code"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBilled/total"/>
+      <genOperations ecoreOperation="model.ecore#//IBilled/isChangedPrice"/>
+      <genOperations ecoreOperation="model.ecore#//IBilled/isNonIntegerAmount"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IStock">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IStock/code"/>

@@ -2410,6 +2410,15 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getIBilled_Total() {
+		return (EAttribute)iBilledEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getIStock() {
 		return iStockEClass;
 	}
@@ -3243,6 +3252,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iBilledEClass, IBILLED__PRIMARY_SCALE);
 		createEAttribute(iBilledEClass, IBILLED__SECONDARY_SCALE);
 		createEAttribute(iBilledEClass, IBILLED__CODE);
+		createEAttribute(iBilledEClass, IBILLED__TOTAL);
 
 		iStockEClass = createEClass(ISTOCK);
 		createEAttribute(iStockEClass, ISTOCK__CODE);
@@ -3820,6 +3830,11 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIBilled_PrimaryScale(), ecorePackage.getEInt(), "primaryScale", null, 0, 1, IBilled.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIBilled_SecondaryScale(), ecorePackage.getEInt(), "secondaryScale", null, 0, 1, IBilled.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIBilled_Code(), ecorePackage.getEString(), "code", null, 0, 1, IBilled.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIBilled_Total(), theTypesPackage.getMoney(), "total", null, 0, 1, IBilled.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		addEOperation(iBilledEClass, ecorePackage.getEBoolean(), "isChangedPrice", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		addEOperation(iBilledEClass, ecorePackage.getEBoolean(), "isNonIntegerAmount", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iStockEClass, IStock.class, "IStock", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIStock_Code(), ecorePackage.getEString(), "code", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

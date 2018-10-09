@@ -3931,13 +3931,22 @@ public interface ModelPackage extends EPackage {
 	int IBILLED__CODE = IDENTIFIABLE_FEATURE_COUNT + 11;
 
 	/**
+	 * The feature id for the '<em><b>Total</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBILLED__TOTAL = IDENTIFIABLE_FEATURE_COUNT + 12;
+
+	/**
 	 * The number of structural features of the '<em>IBilled</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IBILLED_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 12;
+	int IBILLED_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 13;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IStock <em>IStock</em>}' class.
@@ -6965,6 +6974,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIBilled_Code();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IBilled#getTotal <em>Total</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Total</em>'.
+	 * @see ch.elexis.core.model.IBilled#getTotal()
+	 * @see #getIBilled()
+	 * @generated
+	 */
+	EAttribute getIBilled_Total();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IStock <em>IStock</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9442,6 +9462,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IBILLED__CODE = eINSTANCE.getIBilled_Code();
+
+		/**
+		 * The meta object literal for the '<em><b>Total</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IBILLED__TOTAL = eINSTANCE.getIBilled_Total();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IStock <em>IStock</em>}' class.
