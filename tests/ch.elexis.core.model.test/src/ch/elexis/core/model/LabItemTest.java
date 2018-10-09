@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import org.junit.Test;
 
+import ch.elexis.core.model.builder.ILabItemBuilder;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.types.LabItemTyp;
@@ -39,6 +40,23 @@ public class LabItemTest extends AbstractTest {
 		assertEquals(item.getTyp(), loadedItem.get().getTyp());
 		
 		modelService.remove(item);
+	}
+	
+	@Test
+	public void builder(){
+		ILabItem labItem = new ILabItemBuilder(modelService, "TST", "Test", "5-10", "5-12",
+			"nmol/l", LabItemTyp.NUMERIC, "T", 1).buildAndSave();
+		assertEquals("TST", labItem.getCode());
+		assertEquals("Test", labItem.getName());
+		assertEquals("5-10", labItem.getReferenceMale());
+		assertEquals("5-12", labItem.getReferenceFemale());
+		assertEquals("nmol/l", labItem.getUnit());
+		assertEquals(LabItemTyp.NUMERIC, labItem.getTyp());
+		assertEquals("T", labItem.getGroup());
+		assertTrue(labItem.isVisible());
+		assertFalse(labItem.isDeleted());
+		
+		modelService.remove(labItem);
 	}
 	
 	@Test
