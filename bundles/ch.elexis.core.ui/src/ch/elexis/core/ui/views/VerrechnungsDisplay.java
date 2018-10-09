@@ -350,15 +350,18 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	
 	private Color getBackgroundColor(Verrechnet billed){
 		IVerrechenbar billable = billed.getVerrechenbar();
-		Color color = UiDesk.getColorFromRGB(defaultRGB);
-		String codeName = billable.getCodeSystemName();
-		
-		if (codeName != null) {
-			String rgbColor =
-				CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_COLOR + codeName, defaultRGB);
-			color = UiDesk.getColorFromRGB(rgbColor);
+		if (billable != null) {
+			Color color = UiDesk.getColorFromRGB(defaultRGB);
+			String codeName = billable.getCodeSystemName();
+			
+			if (codeName != null) {
+				String rgbColor =
+					CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_COLOR + codeName, defaultRGB);
+				color = UiDesk.getColorFromRGB(rgbColor);
+			}
+			return color;
 		}
-		return color;
+		return null;
 	}
 	
 	public void clear(){
