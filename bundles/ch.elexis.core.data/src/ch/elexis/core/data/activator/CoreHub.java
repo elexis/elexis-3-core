@@ -18,6 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.eclipse.equinox.internal.app.CommandLineArgs;
 import org.osgi.framework.Bundle;
@@ -415,10 +416,13 @@ public class CoreHub implements BundleActivator {
 	
 	/**
 	 * get a list of all mandators known to this system
+	 * 
+	 * @since 3.7 does exclude mandators that are marked set as inactive
 	 */
 	public static List<Mandant> getMandantenList(){
 		Query<Mandant> qbe = new Query<>(Mandant.class);
-		return qbe.execute();
+		return qbe.execute().parallelStream().filter(m -> !m.isInactive())
+			.collect(Collectors.toList());
 	}
 	
 	/**
