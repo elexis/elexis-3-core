@@ -1,4 +1,4 @@
-package ch.elexis.core.model.util;
+package ch.elexis.core.model.util.internal;
 
 import java.util.ArrayList;
 import java.util.List;

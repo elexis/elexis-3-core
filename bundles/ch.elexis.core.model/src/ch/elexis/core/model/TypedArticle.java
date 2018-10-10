@@ -109,7 +109,6 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 		setExtInfo(Constants.FLD_EXT_SELL_UNIT, Integer.toString(value));
 	}
 	
-
 	@Override
 	public int getPackageSize(){
 		String size = (String) getExtInfo(Constants.FLD_EXT_PACKAGE_UNIT_INT);
@@ -211,13 +210,14 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	
 	@Override
 	public IArticle getProduct(){
-		return ModelUtil.getAdapter(getEntity().getProduct(), IArticle.class);
+		return ch.elexis.core.model.util.internal.ModelUtil.getAdapter(getEntity().getProduct(),
+			IArticle.class);
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setProduct(IArticle value){
-		if(value != null) {
+		if (value != null) {
 			getEntity().setProduct(((AbstractIdModelAdapter<Artikel>) value).getEntity());
 		} else {
 			getEntity().setProduct(null);
@@ -237,7 +237,8 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<IArticle> getPackages(){
-		IQuery<IArticle> query = ModelUtil.getQuery(IArticle.class);
+		IQuery<IArticle> query =
+			ch.elexis.core.model.util.internal.ModelUtil.getQuery(IArticle.class);
 		query.and(ModelPackage.Literals.IARTICLE__TYP, COMPARATOR.EQUALS, getTyp());
 		query.and(ModelPackage.Literals.IARTICLE__PRODUCT, COMPARATOR.EQUALS, this);
 		return (List<IArticle>) (List<?>) query.execute();
@@ -266,7 +267,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	
 	@Override
 	public void setPurchasePrice(Money value){
-		getEntity().setEkPreis(value.getCentsAsString());
+		getEntity().setEkPreis((value != null) ? value.getCentsAsString() : null);
 	}
 	
 	@Override
@@ -280,7 +281,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	
 	@Override
 	public void setSellingPrice(Money value){
-		getEntity().setVkPreis(value.getCentsAsString());
+		getEntity().setVkPreis((value != null) ? value.getCentsAsString() : null);
 	}
 	
 	@Override

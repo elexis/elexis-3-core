@@ -6,7 +6,7 @@ import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
-import ch.elexis.core.model.util.ModelUtil;
+import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.services.IStoreToStringContribution;
 
 public class StockEntry extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.StockEntry>

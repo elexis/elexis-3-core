@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import ch.elexis.core.jpa.entities.Fall;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
-import ch.elexis.core.model.util.ModelUtil;
+import ch.elexis.core.model.util.internal.ModelUtil;
 
 public class Patient extends Person implements IPatient {
 	

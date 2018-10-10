@@ -15,7 +15,7 @@ import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
-import ch.elexis.core.model.util.ModelUtil;
+import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.rgw.tools.VersionedResource;
 
 public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>

@@ -1,4 +1,4 @@
-package ch.elexis.core.model.util;
+package ch.elexis.core.model.util.internal;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +35,6 @@ import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IStoreToStringContribution;
 import ch.rgw.tools.MimeTool;
-import ch.rgw.tools.Money;
 
 /**
  * Utility class with core model specific methods
@@ -335,22 +334,6 @@ public class ModelUtil {
 	
 	public static Optional<String> getStoreToString(Identifiable identifiable){
 		return StoreToStringServiceHolder.get().storeToString(identifiable);
-	}
-	
-	/**
-	 * If string is parse able as {@link Integer}, the value is interpreted as cents.
-	 * 
-	 * @param string
-	 * @return
-	 */
-	public static Optional<Money> getMoneyForCentString(String string){
-		try {
-			int amount = Integer.parseInt(string);
-			return Optional.of(new Money(amount));
-		} catch (NumberFormatException e) {
-			// ignore
-		}
-		return Optional.empty();
 	}
 	
 	public static IDiagnosis getOrCreateDiagnosisReference(IDiagnosis diagnosis){

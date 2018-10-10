@@ -9,7 +9,7 @@ import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.entities.Role;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
-import ch.elexis.core.model.util.ModelUtil;
+import ch.elexis.core.model.util.internal.ModelUtil;
 
 public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.User>
 		implements IdentifiableWithXid, IUser {

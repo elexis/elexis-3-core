@@ -11,7 +11,7 @@ import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
 import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 import ch.elexis.core.model.service.holder.StoreToStringServiceHolder;
-import ch.elexis.core.model.util.ModelUtil;
+import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.model.verrechnet.Constants;
 import ch.elexis.core.services.IStoreToStringContribution;
 import ch.rgw.tools.Money;

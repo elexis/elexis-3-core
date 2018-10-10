@@ -2,7 +2,7 @@ package ch.elexis.core.model;
 
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
-import ch.elexis.core.model.util.ModelUtil;
+import ch.elexis.core.model.util.internal.ModelUtil;
 
 public class Xid extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Xid>
 		implements IdentifiableWithXid, IXid {

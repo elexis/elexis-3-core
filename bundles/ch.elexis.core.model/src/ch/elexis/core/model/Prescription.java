@@ -10,7 +10,7 @@ import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
 import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 import ch.elexis.core.model.prescription.Constants;
 import ch.elexis.core.model.prescription.EntryType;
-import ch.elexis.core.model.util.ModelUtil;
+import ch.elexis.core.model.util.internal.ModelUtil;
 
 public class Prescription
 		extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Prescription>
