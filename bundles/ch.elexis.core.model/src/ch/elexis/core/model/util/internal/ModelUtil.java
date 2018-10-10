@@ -198,12 +198,10 @@ public class ModelUtil {
 	 */
 	public static boolean isUserConfig(IContact owner, String key, boolean defaultValue){
 		if (owner != null) {
-			INamedQuery<IUserConfig> configQuery =
-				CoreModelServiceHolder.get().getNamedQuery(IUserConfig.class, true, "owner",
-					"param");
-			List<IUserConfig> configs = configQuery
-				.executeWithParameters(
-					CoreModelServiceHolder.get().getParameterMap("owner", owner, "param", key));
+			INamedQuery<IUserConfig> configQuery = CoreModelServiceHolder.get()
+				.getNamedQuery(IUserConfig.class, true, "ownerid", "param");
+			List<IUserConfig> configs = configQuery.executeWithParameters(CoreModelServiceHolder
+				.get().getParameterMap("ownerid", owner.getId(), "param", key));
 			if (configs.isEmpty()) {
 				return defaultValue;
 			} else {

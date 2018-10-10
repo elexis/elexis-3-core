@@ -77,9 +77,9 @@ public class ConfigService implements IConfigService {
 		Optional<IUserConfig> loaded = Optional.empty();
 		if (contact != null) {
 			INamedQuery<IUserConfig> configQuery = CoreModelServiceHolder.get()
-				.getNamedQuery(IUserConfig.class, true, "ownerId", "param");
+				.getNamedQuery(IUserConfig.class, true, "ownerid", "param");
 			List<IUserConfig> configs = configQuery.executeWithParameters(CoreModelServiceHolder
-				.get().getParameterMap("ownerId", contact.getId(), "param", key));
+				.get().getParameterMap("ownerid", contact.getId(), "param", key));
 			if (!configs.isEmpty()) {
 				if (configs.size() > 1) {
 					LoggerFactory.getLogger(ConfigService.class)
@@ -116,9 +116,9 @@ public class ConfigService implements IConfigService {
 	public String get(IContact contact, String key, String defaultValue){
 		if (contact != null) {
 			INamedQuery<IUserConfig> configQuery = CoreModelServiceHolder.get()
-				.getNamedQuery(IUserConfig.class, true, "ownerId", "param");
+				.getNamedQuery(IUserConfig.class, true, "ownerid", "param");
 			List<IUserConfig> configs = configQuery.executeWithParameters(CoreModelServiceHolder
-				.get().getParameterMap("ownerId", contact.getId(), "param", key));
+				.get().getParameterMap("ownerid", contact.getId(), "param", key));
 			if (!configs.isEmpty()) {
 				if (configs.size() > 1) {
 					LoggerFactory.getLogger(ConfigService.class)
