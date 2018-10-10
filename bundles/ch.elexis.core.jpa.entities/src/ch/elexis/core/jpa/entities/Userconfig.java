@@ -23,7 +23,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 })
 @IdClass(UserconfigId.class)
 @Cache(expiry = 15000)
-@NamedQuery(name = "Userconfig.ownerId.param", query = "SELECT uc FROM Userconfig uc WHERE uc.ownerId = :ownerId AND uc.param = :param")
+@NamedQuery(name = "Userconfig.ownerid.param", query = "SELECT uc FROM Userconfig uc WHERE uc.ownerId = :ownerid AND uc.param = :param")
 public class Userconfig extends AbstractEntityWithId implements EntityWithId {
 
 	// Transparently updated by the EntityListener

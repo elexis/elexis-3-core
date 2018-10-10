@@ -36,8 +36,8 @@ public abstract class AbstractOptifier implements IBillableOptifier {
 		}
 		if (!added) {
 			billed = new IBilledBuilder(modelService, billable, encounter).build();
-			billed.setAmount(amount);
 			setPrice(billed);
+			billed.setAmount(amount);
 			modelService.save(billed);
 		}
 		return new Result<IBilled>(billed);
