@@ -3,11 +3,9 @@ package ch.elexis.core.jpa.entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
+import javax.persistence.IdClass;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
@@ -23,16 +21,17 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @OptimisticLocking(type = OptimisticLockingType.SELECTED_COLUMNS, selectedColumns = {
 	@Column(name = "LASTUPDATE")
 })
+@IdClass(UserconfigId.class)
 @Cache(expiry = 15000)
-@NamedQuery(name = "Userconfig.owner.param", query = "SELECT uc FROM Userconfig uc WHERE uc.owner = :owner AND uc.param = :param")
+@NamedQuery(name = "Userconfig.ownerId.param", query = "SELECT uc FROM Userconfig uc WHERE uc.ownerId = :ownerId AND uc.param = :param")
 public class Userconfig extends AbstractEntityWithId implements EntityWithId {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "UserID")
-	private Kontakt owner;
+	@Id
+	@Column(name = "UserID")
+	private String ownerId;
 	
 	@Id
 	@Column(unique = true, nullable = false, length = 80)
@@ -41,12 +40,12 @@ public class Userconfig extends AbstractEntityWithId implements EntityWithId {
 	@Lob
 	private String value;
 
-	public Kontakt getOwner() {
-		return owner;
+	public String getOwnerId() {
+		return ownerId;
 	}
 
-	public void setOwner(Kontakt owner) {
-		this.owner = owner;
+	public void setOwnerId(String ownerId) {
+		this.ownerId = ownerId;
 	}
 
 	public String getParam() {
@@ -67,7 +66,7 @@ public class Userconfig extends AbstractEntityWithId implements EntityWithId {
 	
 	@Override
 	public String getId(){
-		return getParam();
+		return getOwnerId() + "_" + getParam();
 	}
 	
 	@Override

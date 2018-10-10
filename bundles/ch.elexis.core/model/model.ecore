@@ -447,7 +447,11 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IUserConfig" abstract="true" interface="true"
       eSuperTypes="#//IConfig">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="owner" eType="#//IContact"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="owner" eType="#//IContact">
+      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
+        <details key="attributeName" value="ownerId"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IPeriod" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable">

@@ -14,7 +14,7 @@ import ch.elexis.core.utils.OsgiServiceUtil;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-	LabServiceTest.class
+	ConfigServiceTest.class, LabServiceTest.class
 })
 public class AllServiceTests {
 	

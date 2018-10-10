@@ -4063,6 +4063,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 			   "attributeName", "param"
 		   });
 		addAnnotation
+		  (getIUserConfig_Owner(),
+		   source,
+		   new String[] {
+			   "attributeName", "ownerId"
+		   });
+		addAnnotation
 		  (getIEncounter_Coverage(),
 		   source,
 		   new String[] {

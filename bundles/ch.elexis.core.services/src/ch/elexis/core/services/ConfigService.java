@@ -24,11 +24,18 @@ public class ConfigService implements IConfigService {
 	
 	@Override
 	public boolean set(String key, String value){
-		IConfig entry =
-			modelService.load(key, IConfig.class).orElse(modelService.create(IConfig.class));
-		entry.setKey(key);
-		entry.setValue(value);
-		return modelService.save(entry);
+		Optional<IConfig> entry = modelService.load(key, IConfig.class);
+		if (value != null) {
+			IConfig _entry = entry.orElse(modelService.create(IConfig.class));
+			_entry.setKey(key);
+			_entry.setValue(value);
+			return modelService.save(_entry);
+		} else {
+			if (entry.isPresent()) {
+				return modelService.remove(entry.get());
+			}
+		}
+		return false;
 	}
 	
 	@Override
@@ -70,9 +77,9 @@ public class ConfigService implements IConfigService {
 		Optional<IUserConfig> loaded = Optional.empty();
 		if (contact != null) {
 			INamedQuery<IUserConfig> configQuery = CoreModelServiceHolder.get()
-				.getNamedQuery(IUserConfig.class, true, "owner", "param");
-			List<IUserConfig> configs = configQuery.executeWithParameters(
-				CoreModelServiceHolder.get().getParameterMap("owner", contact, "param", key));
+				.getNamedQuery(IUserConfig.class, true, "ownerId", "param");
+			List<IUserConfig> configs = configQuery.executeWithParameters(CoreModelServiceHolder
+				.get().getParameterMap("ownerId", contact.getId(), "param", key));
 			if (!configs.isEmpty()) {
 				if (configs.size() > 1) {
 					LoggerFactory.getLogger(ConfigService.class)
@@ -80,14 +87,20 @@ public class ConfigService implements IConfigService {
 				}
 				loaded = Optional.of(configs.get(0));
 			}
-			IUserConfig config = loaded.orElseGet(() -> {
-				IUserConfig ret = CoreModelServiceHolder.get().create(IUserConfig.class);
-				ret.setOwner(contact);
-				ret.setKey(key);
-				return ret;
-			});
-			config.setValue(value);
-			CoreModelServiceHolder.get().save(config);
+			if (value != null) {
+				IUserConfig config = loaded.orElseGet(() -> {
+					IUserConfig ret = CoreModelServiceHolder.get().create(IUserConfig.class);
+					ret.setOwner(contact);
+					ret.setKey(key);
+					return ret;
+				});
+				config.setValue(value);
+				return CoreModelServiceHolder.get().save(config);
+			} else {
+				if (loaded.isPresent()) {
+					return CoreModelServiceHolder.get().remove(loaded.get());
+				}
+			}
 		}
 		return false;
 	}
@@ -103,9 +116,9 @@ public class ConfigService implements IConfigService {
 	public String get(IContact contact, String key, String defaultValue){
 		if (contact != null) {
 			INamedQuery<IUserConfig> configQuery = CoreModelServiceHolder.get()
-				.getNamedQuery(IUserConfig.class, true, "owner", "param");
-			List<IUserConfig> configs = configQuery.executeWithParameters(
-				CoreModelServiceHolder.get().getParameterMap("owner", contact, "param", key));
+				.getNamedQuery(IUserConfig.class, true, "ownerId", "param");
+			List<IUserConfig> configs = configQuery.executeWithParameters(CoreModelServiceHolder
+				.get().getParameterMap("ownerId", contact.getId(), "param", key));
 			if (!configs.isEmpty()) {
 				if (configs.size() > 1) {
 					LoggerFactory.getLogger(ConfigService.class)

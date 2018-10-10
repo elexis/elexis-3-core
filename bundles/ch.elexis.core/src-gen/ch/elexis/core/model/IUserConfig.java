@@ -39,7 +39,7 @@ public interface IUserConfig extends IConfig {
 	 * @return the value of the '<em>Owner</em>' reference.
 	 * @see #setOwner(IContact)
 	 * @see ch.elexis.core.model.ModelPackage#getIUserConfig_Owner()
-	 * @model
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='ownerId'"
 	 * @generated
 	 */
 	IContact getOwner();

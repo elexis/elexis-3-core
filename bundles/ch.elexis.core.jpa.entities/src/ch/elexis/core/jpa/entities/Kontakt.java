@@ -215,9 +215,6 @@ public class Kontakt extends AbstractEntityWithId
 	@JoinColumn(name = "PatientID")
 	protected List<Fall> faelle = new ArrayList<>();
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")
-	protected List<Userconfig> userconfig = new ArrayList<>();
-
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "contact", cascade = CascadeType.ALL)
 	@MapKey(name = "id")
 	protected Map<String, ZusatzAdresse> addresses = new HashMap<>();
@@ -413,14 +410,6 @@ public class Kontakt extends AbstractEntityWithId
 
 	public void setRelatedByContacts(Collection<KontaktAdressJoint> relatedByContacts) {
 		this.relatedByContacts = relatedByContacts;
-	}
-
-	public List<Userconfig> getUserconfig() {
-		return userconfig;
-	}
-
-	public void setUserconfig(List<Userconfig> userconfig) {
-		this.userconfig = userconfig;
 	}
 
 	public String getPhone2() {
