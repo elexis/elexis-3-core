@@ -73,7 +73,7 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 		if (getSecondaryScale() == 100) {
 			return getEntity().getZahl();
 		}
-		return getSecondaryScale() / 100;
+		return getSecondaryScale() / 100d;
 	}
 	
 	@Override
@@ -197,8 +197,8 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 	
 	@Override
 	public Money getTotal(){
-		return getPrice().multiply(getPrimaryScale() / 100).multiply(getSecondaryScale() / 100)
-			.multiply(getAmount());
+		return getPrice().multiply(getPrimaryScale() / 100d).multiply(getSecondaryScale() / 100d)
+			.multiply(getEntity().getZahl());
 	}
 	
 	@Override
