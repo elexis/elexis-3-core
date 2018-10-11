@@ -29,7 +29,7 @@ public class EigenleistungCodeElementService implements ICodeElementServiceContr
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Optional<ICodeElement> createFromCode(String code, HashMap<Object, Object> context){
+	public Optional<ICodeElement> loadFromCode(String code, HashMap<Object, Object> context){
 		INamedQuery<ICustomService> query =
 			coreModelService.getNamedQuery(ICustomService.class, "code");
 		List<ICustomService> found =

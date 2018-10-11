@@ -29,7 +29,7 @@ public class EigenartikelCodeElementService implements ICodeElementServiceContri
 	}
 	
 	@Override
-	public Optional<ICodeElement> createFromCode(String code, HashMap<Object, Object> context){
+	public Optional<ICodeElement> loadFromCode(String code, HashMap<Object, Object> context){
 		INamedQuery<IArticle> query = coreModelService.getNamedQuery(IArticle.class, "typ", "code");
 		
 		List<IArticle> found = query.executeWithParameters(
