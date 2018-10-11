@@ -16,7 +16,7 @@ public class CustomService
 		extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Eigenleistung>
 		implements IdentifiableWithXid, ICustomService {
 	
-	private static IBillableOptifier optifier;
+	private static IBillableOptifier<CustomService> optifier;
 	private static IBillableVerifier verifier;
 	
 	private static Money noMoney = new Money();
@@ -60,17 +60,15 @@ public class CustomService
 	}
 	
 	@Override
-	public synchronized IBillableOptifier getOptifier(){
+	public synchronized IBillableOptifier<CustomService> getOptifier(){
 		if (optifier == null) {
-			optifier = new AbstractOptifier(CoreModelServiceHolder.get()) {
+			optifier = new AbstractOptifier<CustomService>(CoreModelServiceHolder.get()) {
+				
 				@Override
-				protected void setPrice(IBillable billable, IBilled billed){
-					CustomService customService = (CustomService) billable;
-					billed.setPrimaryScale(100);
-					billed.setSecondaryScale(100);
+				protected void setPrice(CustomService billable, IBilled billed){
 					billed.setFactor(1.0);
-					billed.setNetPrice(customService.getNetPrice());
-					billed.setPoints(customService.getPrice().getCents());
+					billed.setNetPrice(billable.getNetPrice());
+					billed.setPoints(billable.getPrice().getCents());
 				}
 			};
 		}

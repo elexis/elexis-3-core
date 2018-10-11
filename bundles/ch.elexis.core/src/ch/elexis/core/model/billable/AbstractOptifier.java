@@ -10,7 +10,7 @@ import ch.elexis.core.model.builder.IBilledBuilder;
 import ch.elexis.core.services.IModelService;
 import ch.rgw.tools.Result;
 
-public abstract class AbstractOptifier implements IBillableOptifier {
+public abstract class AbstractOptifier<T extends IBillable> implements IBillableOptifier<T> {
 	
 	private IModelService modelService;
 	
@@ -19,7 +19,7 @@ public abstract class AbstractOptifier implements IBillableOptifier {
 	}
 	
 	@Override
-	public Result<IBilled> add(IBillable billable, IEncounter encounter, double amount){
+	public Result<IBilled> add(T billable, IEncounter encounter, double amount){
 		boolean added = false;
 		IBilled billed = null;
 		// lookup existing billed, add if found
@@ -43,5 +43,5 @@ public abstract class AbstractOptifier implements IBillableOptifier {
 		return new Result<IBilled>(billed);
 	}
 	
-	protected abstract void setPrice(IBillable billable, IBilled billed);
+	protected abstract void setPrice(T billable, IBilled billed);
 }

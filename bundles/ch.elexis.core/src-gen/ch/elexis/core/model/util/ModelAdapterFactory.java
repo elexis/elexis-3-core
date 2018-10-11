@@ -168,7 +168,7 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIBillableVerifierAdapter();
 			}
 			@Override
-			public Adapter caseIBillableOptifier(IBillableOptifier object) {
+			public <T extends IBillable> Adapter caseIBillableOptifier(IBillableOptifier<T> object) {
 				return createIBillableOptifierAdapter();
 			}
 			@Override

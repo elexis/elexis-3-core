@@ -230,6 +230,7 @@
       </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IBillableOptifier">
+      <genTypeParameters ecoreTypeParameter="model.ecore#//IBillableOptifier/T"/>
       <genOperations ecoreOperation="model.ecore#//IBillableOptifier/add">
         <genParameters ecoreParameter="model.ecore#//IBillableOptifier/add/billable"/>
         <genParameters ecoreParameter="model.ecore#//IBillableOptifier/add/encounter"/>

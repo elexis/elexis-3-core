@@ -3392,8 +3392,11 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		TypesPackage theTypesPackage = (TypesPackage)EPackage.Registry.INSTANCE.getEPackage(TypesPackage.eNS_URI);
 
 		// Create type parameters
+		ETypeParameter iBillableOptifierEClass_T = addETypeParameter(iBillableOptifierEClass, "T");
 
 		// Set bounds for type parameters
+		EGenericType g1 = createEGenericType(this.getIBillable());
+		iBillableOptifierEClass_T.getEBounds().add(g1);
 
 		// Add supertypes to classes
 		iXidEClass.getESuperTypes().add(this.getDeleteable());
@@ -3420,7 +3423,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iDocumentEClass.getESuperTypes().add(this.getIdentifiable());
 		iDocumentEClass.getESuperTypes().add(this.getDeleteable());
 		iDocumentLetterEClass.getESuperTypes().add(this.getIDocument());
-		EGenericType g1 = createEGenericType(theTypesPackage.getComparable());
+		g1 = createEGenericType(theTypesPackage.getComparable());
 		EGenericType g2 = createEGenericType(this.getISticker());
 		g1.getETypeArguments().add(g2);
 		iStickerEClass.getEGenericSuperTypes().add(g1);
@@ -3739,7 +3742,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEClass(iBillableOptifierEClass, IBillableOptifier.class, "IBillableOptifier", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		op = addEOperation(iBillableOptifierEClass, null, "add", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getIBillable(), "billable", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(iBillableOptifierEClass_T);
+		addEParameter(op, g1, "billable", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIEncounter(), "encounter", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEDouble(), "amount", 0, 1, IS_UNIQUE, IS_ORDERED);
 		g1 = createEGenericType(theTypesPackage.getResult());

@@ -22,13 +22,13 @@ import ch.rgw.tools.Result;
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface IBillableOptifier {
+public interface IBillableOptifier<T extends IBillable> {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model type="ch.elexis.core.types.Result&lt;ch.elexis.core.model.IBilled&gt;"
 	 * @generated
 	 */
-	Result<IBilled> add(IBillable billable, IEncounter encounter, double amount);
+	Result<IBilled> add(T billable, IEncounter encounter, double amount);
 
 } // IBillableOptifier

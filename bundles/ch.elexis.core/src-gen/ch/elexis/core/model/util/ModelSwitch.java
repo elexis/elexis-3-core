@@ -261,7 +261,7 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				return result;
 			}
 			case ModelPackage.IBILLABLE_OPTIFIER: {
-				IBillableOptifier iBillableOptifier = (IBillableOptifier)theEObject;
+				IBillableOptifier<?> iBillableOptifier = (IBillableOptifier<?>)theEObject;
 				T1 result = caseIBillableOptifier(iBillableOptifier);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -853,7 +853,7 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T1 caseIBillableOptifier(IBillableOptifier object) {
+	public <T extends IBillable> T1 caseIBillableOptifier(IBillableOptifier<T> object) {
 		return null;
 	}
 
