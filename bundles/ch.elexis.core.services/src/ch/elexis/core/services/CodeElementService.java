@@ -35,11 +35,11 @@ public class CodeElementService implements ICodeElementService {
 	}
 	
 	@Override
-	public Optional<ICodeElement> createFromString(String system, String code,
+	public Optional<ICodeElement> loadFromString(String system, String code,
 		HashMap<Object, Object> context){
 		ICodeElementServiceContribution contribution = contributions.get(system);
 		if (contribution != null) {
-			return contribution.createFromCode(code, context);
+			return contribution.loadFromCode(code, context);
 		} else {
 			LoggerFactory.getLogger(getClass())
 				.warn("No ICodeElementServiceContribution for system [" + system + "] code [" + code

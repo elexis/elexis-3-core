@@ -33,7 +33,7 @@ public interface ICodeElementServiceContribution {
 	 * @param context
 	 * @return
 	 */
-	public Optional<ICodeElement> createFromCode(String code, HashMap<Object, Object> context);
+	public Optional<ICodeElement> loadFromCode(String code, HashMap<Object, Object> context);
 	
 	/**
 	 * Get all {@link ICodeElement} instances (for the given context) of the

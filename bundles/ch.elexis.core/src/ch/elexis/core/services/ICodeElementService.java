@@ -24,7 +24,7 @@ public interface ICodeElementService {
 	
 	/**
 	 * Create a String representation of the {@link ICodeElement}. A {@link ICodeElement} can the be
-	 * loaded using the {@link ICodeElementService#createFromString(String, HashMap)} method.
+	 * loaded using the {@link ICodeElementService#loadFromString(String, HashMap)} method.
 	 * 
 	 * @param element
 	 * @return
@@ -43,15 +43,15 @@ public interface ICodeElementService {
 	 * object.
 	 * 
 	 * @param storeToString
-	 * @param context
+	 * @param context may be <code>null</code>
 	 * @return
 	 */
-	public default Optional<ICodeElement> createFromString(String storeToString,
+	public default Optional<ICodeElement> loadFromString(String storeToString,
 		HashMap<Object, Object> context){
 		String[] parts = getStoreToStringParts(storeToString);
 		// only system and code are relevant for loading 
 		if (parts != null && parts.length > 1) {
-			return createFromString(parts[0], parts[1], context);
+			return loadFromString(parts[0], parts[1], context);
 		}
 		return Optional.empty();
 	}
@@ -80,10 +80,10 @@ public interface ICodeElementService {
 	 * object.
 	 * 
 	 * @param storeToString
-	 * @param context
+	 * @param context may be <code>null</code>
 	 * @return
 	 */
-	public Optional<ICodeElement> createFromString(String system, String code,
+	public Optional<ICodeElement> loadFromString(String system, String code,
 		HashMap<Object, Object> context);
 	
 	/**

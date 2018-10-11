@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -20,6 +21,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "artikelstamm_ch")
 @EntityListeners(EntityWithIdListener.class)
+@NamedQuery(name = "ArtikelstammItem.gtin", query = "SELECT ai FROM ArtikelstammItem ai WHERE ai.gtin = :gtin")
 public class ArtikelstammItem extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 	public static final String CODESYSTEM_NAME = "Artikelstamm";
