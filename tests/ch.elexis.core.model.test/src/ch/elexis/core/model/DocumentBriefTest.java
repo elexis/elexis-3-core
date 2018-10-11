@@ -19,6 +19,7 @@ import org.junit.Test;
 
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.test.AbstractTest;
 
 public class DocumentBriefTest extends AbstractTest {
 	
@@ -28,34 +29,34 @@ public class DocumentBriefTest extends AbstractTest {
 	@Before
 	public void before(){
 		super.before();
-		contact1 = modelService.create(IContact.class);
+		contact1 = coreModelService.create(IContact.class);
 		contact1.setDescription1("test contact 1");
-		modelService.save(contact1);
-		patient1 = modelService.create(IPatient.class);
+		coreModelService.save(contact1);
+		patient1 = coreModelService.create(IPatient.class);
 		patient1.setDescription1("test patient 2");
-		modelService.save(patient1);
+		coreModelService.save(patient1);
 	}
 	
 	@After
 	public void after(){
-		modelService.remove(contact1);
-		modelService.remove(patient1);
+		coreModelService.remove(contact1);
+		coreModelService.remove(patient1);
 		super.after();
 	}
 	
 	@Test
 	public void create() throws IOException{
-		IDocumentLetter letter = modelService.create(IDocumentLetter.class);
+		IDocumentLetter letter = coreModelService.create(IDocumentLetter.class);
 		assertNotNull(letter);
 		assertTrue(letter instanceof IDocumentLetter);
 		
 		letter.setDescription("test letter 1");
 		letter.setAuthor(contact1);
 		letter.setContent(new ByteArrayInputStream("test content".getBytes()));
-		assertTrue(modelService.save(letter));
+		assertTrue(coreModelService.save(letter));
 		
 		Optional<IDocumentLetter> loadedLetter =
-			modelService.load(letter.getId(), IDocumentLetter.class);
+			coreModelService.load(letter.getId(), IDocumentLetter.class);
 		assertTrue(loadedLetter.isPresent());
 		assertFalse(letter == loadedLetter.get());
 		assertEquals(letter, loadedLetter.get());
@@ -65,24 +66,24 @@ public class DocumentBriefTest extends AbstractTest {
 			IOUtils.copy(contentStream, contentByteArray);
 			assertEquals("test content", new String(contentByteArray.toByteArray()));
 		}
-		modelService.remove(letter);
+		coreModelService.remove(letter);
 	}
 	
 	@Test
 	public void query() throws IOException{
-		IDocumentLetter letter1 = modelService.create(IDocumentLetter.class);
+		IDocumentLetter letter1 = coreModelService.create(IDocumentLetter.class);
 		letter1.setDescription("test letter 1");
 		letter1.setAuthor(contact1);
 		letter1.setContent(new ByteArrayInputStream("test content 1".getBytes()));
-		assertTrue(modelService.save(letter1));
-		IDocumentLetter letter2 = modelService.create(IDocumentLetter.class);
+		assertTrue(coreModelService.save(letter1));
+		IDocumentLetter letter2 = coreModelService.create(IDocumentLetter.class);
 		letter2.setDescription("test letter 2");
 		letter2.setAuthor(contact1);
 		letter2.setPatient(patient1);
 		letter2.setContent(new ByteArrayInputStream("test content 2".getBytes()));
-		assertTrue(modelService.save(letter2));
+		assertTrue(coreModelService.save(letter2));
 		
-		IQuery<IDocumentLetter> query = modelService.getQuery(IDocumentLetter.class);
+		IQuery<IDocumentLetter> query = coreModelService.getQuery(IDocumentLetter.class);
 		query.and(ModelPackage.Literals.IDOCUMENT__PATIENT, COMPARATOR.EQUALS, patient1);
 		List<IDocumentLetter> existing = query.execute();
 		assertNotNull(existing);
@@ -92,7 +93,7 @@ public class DocumentBriefTest extends AbstractTest {
 		assertEquals(letter2.getDescription(), existing.get(0).getDescription());
 		IOUtils.contentEquals(letter2.getContent(), existing.get(0).getContent());
 		
-		modelService.remove(letter1);
-		modelService.remove(letter2);
+		coreModelService.remove(letter1);
+		coreModelService.remove(letter2);
 	}
 }

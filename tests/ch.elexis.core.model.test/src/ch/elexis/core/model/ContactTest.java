@@ -12,6 +12,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ch.elexis.core.test.AbstractTest;
 import ch.elexis.core.types.AddressType;
 import ch.elexis.core.types.Country;
 
@@ -38,7 +39,7 @@ public class ContactTest extends AbstractTest {
 		assertFalse(person.isOrganization());
 		assertFalse(person.isLaboratory());
 		
-		IPerson findById = modelService.load(person.getId(), IPerson.class).get();
+		IPerson findById = coreModelService.load(person.getId(), IPerson.class).get();
 		assertEquals(person.getId(), findById.getId());
 		assertEquals(LocalDate.of(2016, 9, 1), person.getDateOfBirth().toLocalDate());
 		int ageInYears = findById.getAgeInYears();
@@ -47,16 +48,16 @@ public class ContactTest extends AbstractTest {
 	
 	@Test
 	public void createRemoveAddress(){
-		IAddress nursingHome = modelService.create(IAddress.class);
+		IAddress nursingHome = coreModelService.create(IAddress.class);
 		nursingHome.setType(AddressType.NURSING_HOME);
 		nursingHome.setStreet2("Street2");
 		nursingHome.setZip("6840");
 		nursingHome.setCountry(Country.AT);
 		person.addAddress(nursingHome);
-		modelService.save(Arrays.asList(nursingHome, person));
+		coreModelService.save(Arrays.asList(nursingHome, person));
 		
 		assertTrue(person.getAddress().contains(nursingHome));
-		modelService.delete(nursingHome);
+		coreModelService.delete(nursingHome);
 		assertFalse(person.getAddress().contains(nursingHome));
 	}
 	

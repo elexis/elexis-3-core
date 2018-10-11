@@ -1,9 +1,6 @@
 package ch.elexis.core.test.initializer;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -40,6 +37,7 @@ import ch.elexis.core.model.builder.IUserBuilder;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.test.util.TestUtil;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
@@ -131,26 +129,12 @@ public class TestDatabaseInitializer {
 	}
 	
 	private boolean executeScript(String liquibase_id, String scriptLocation) throws IOException{
-		boolean result = entityManager.executeSQLScript(liquibase_id, loadFile(scriptLocation));
+		boolean result = entityManager.executeSQLScript(liquibase_id,
+			TestUtil.loadFile(getClass(), scriptLocation));
 		if (!result) {
 			throw new IOException("Error executing script in [" + scriptLocation + "]");
 		}
 		return true;
-	}
-	
-	private String loadFile(String resourceName) throws IOException{
-		StringBuffer sb = new StringBuffer();
-		String line;
-		InputStream inputStream = getClass().getResourceAsStream(resourceName);
-		if (inputStream == null) {
-			throw new IOException("Could not load resource [" + resourceName + "]");
-		}
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-			while ((line = reader.readLine()) != null) {
-				sb.append(line + "\n");
-			}
-		}
-		return sb.toString();
 	}
 	
 	public synchronized void initializeAgendaTable() throws IOException, SQLException{

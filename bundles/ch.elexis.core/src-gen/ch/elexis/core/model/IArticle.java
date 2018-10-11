@@ -48,8 +48,7 @@ public interface IArticle extends Identifiable, IBillable, Deleteable, WithExtIn
 	 * Returns the value of the '<em><b>Gtin</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Gtin</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * Global Trade Index Number
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Gtin</em>' attribute.
@@ -74,8 +73,7 @@ public interface IArticle extends Identifiable, IBillable, Deleteable, WithExtIn
 	 * Returns the value of the '<em><b>Atc Code</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Atc Code</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * Anatomical Therapeutic Chemical Classification System Code
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Atc Code</em>' attribute.

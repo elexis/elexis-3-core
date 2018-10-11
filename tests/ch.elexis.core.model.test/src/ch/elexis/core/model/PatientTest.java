@@ -9,6 +9,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ch.elexis.core.test.AbstractTest;
+
 public class PatientTest extends AbstractTest {
 	
 	@Before
@@ -26,7 +28,7 @@ public class PatientTest extends AbstractTest {
 	@Test
 	public void createDeletePatient(){
 		patient.setExtInfo(PatientConstants.FLD_EXTINFO_BIRTHNAME, "Birthname");
-		modelService.save(patient);
+		coreModelService.save(patient);
 		assertTrue(patient.isPatient());
 		assertTrue(patient.isPerson());
 		assertFalse(patient.isMandator());
@@ -36,10 +38,10 @@ public class PatientTest extends AbstractTest {
 		String id = patient.getId();
 		assertNotNull(id);
 		assertNotNull(patient.getCode());
-		IContact findById = modelService.load(id, IContact.class).get();
+		IContact findById = coreModelService.load(id, IContact.class).get();
 		assertNotNull(findById);
 		assertEquals("Birthname", findById.getExtInfo(PatientConstants.FLD_EXTINFO_BIRTHNAME));
-		modelService.delete(patient);
+		coreModelService.delete(patient);
 	}
 	
 }

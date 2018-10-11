@@ -13,12 +13,13 @@ import org.junit.Test;
 
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.test.AbstractTest;
 
 public class BillingSystemFactorTest extends AbstractTest {
 	
 	@Test
 	public void create(){
-		IBillingSystemFactor factor = modelService.create(IBillingSystemFactor.class);
+		IBillingSystemFactor factor = coreModelService.create(IBillingSystemFactor.class);
 		assertNotNull(factor);
 		assertTrue(factor instanceof IBillingSystemFactor);
 		
@@ -26,35 +27,35 @@ public class BillingSystemFactorTest extends AbstractTest {
 		factor.setFactor(0.98);
 		factor.setValidFrom(LocalDate.of(2000, 1, 1));
 		factor.setValidTo(LocalDate.of(9999, 12, 31));
-		assertTrue(modelService.save(factor));
+		assertTrue(coreModelService.save(factor));
 		
 		Optional<IBillingSystemFactor> loadedFactor =
-			modelService.load(factor.getId(), IBillingSystemFactor.class);
+			coreModelService.load(factor.getId(), IBillingSystemFactor.class);
 		assertTrue(loadedFactor.isPresent());
 		assertFalse(factor == loadedFactor.get());
 		assertEquals(factor, loadedFactor.get());
 		assertEquals(factor.getFactor(), loadedFactor.get().getFactor(), 0.001);
 		
-		modelService.remove(factor);
+		coreModelService.remove(factor);
 	}
 	
 	@Test
 	public void query(){
-		IBillingSystemFactor factor = modelService.create(IBillingSystemFactor.class);
+		IBillingSystemFactor factor = coreModelService.create(IBillingSystemFactor.class);
 		factor.setSystem("testsystem");
 		factor.setFactor(0.98);
 		factor.setValidFrom(LocalDate.of(2000, 1, 1));
 		factor.setValidTo(LocalDate.of(9999, 12, 31));
-		assertTrue(modelService.save(factor));
+		assertTrue(coreModelService.save(factor));
 		
-		IBillingSystemFactor factor1 = modelService.create(IBillingSystemFactor.class);
+		IBillingSystemFactor factor1 = coreModelService.create(IBillingSystemFactor.class);
 		factor1.setSystem("testsystem");
 		factor1.setFactor(0.90);
 		factor1.setValidFrom(LocalDate.of(1990, 1, 1));
 		factor1.setValidTo(LocalDate.of(1999, 12, 31));
-		assertTrue(modelService.save(factor1));
+		assertTrue(coreModelService.save(factor1));
 		
-		IQuery<IBillingSystemFactor> query = modelService.getQuery(IBillingSystemFactor.class);
+		IQuery<IBillingSystemFactor> query = coreModelService.getQuery(IBillingSystemFactor.class);
 		query.and(ModelPackage.Literals.IBILLING_SYSTEM_FACTOR__SYSTEM, COMPARATOR.EQUALS,
 			"testsystem");
 		List<IBillingSystemFactor> existing = query.execute();
@@ -62,7 +63,7 @@ public class BillingSystemFactorTest extends AbstractTest {
 		assertFalse(existing.isEmpty());
 		assertEquals(2, existing.size());
 		
-		query = modelService.getQuery(IBillingSystemFactor.class);
+		query = coreModelService.getQuery(IBillingSystemFactor.class);
 		query.and(ModelPackage.Literals.IBILLING_SYSTEM_FACTOR__SYSTEM, COMPARATOR.EQUALS,
 			"testsystem");
 		query.and(ModelPackage.Literals.IBILLING_SYSTEM_FACTOR__VALID_TO,
@@ -73,7 +74,7 @@ public class BillingSystemFactorTest extends AbstractTest {
 		assertEquals(1, existing.size());
 		assertEquals(factor.getFactor(), existing.get(0).getFactor(), 0.001);
 		
-		modelService.remove(factor);
-		modelService.remove(factor1);
+		coreModelService.remove(factor);
+		coreModelService.remove(factor1);
 	}
 }

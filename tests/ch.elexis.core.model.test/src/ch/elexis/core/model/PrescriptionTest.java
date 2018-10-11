@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import ch.elexis.core.model.builder.IPrescriptionBuilder;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.test.AbstractTest;
 
 public class PrescriptionTest extends AbstractTest {
 	
@@ -31,16 +32,16 @@ public class PrescriptionTest extends AbstractTest {
 	@Test
 	public void createFindDelete(){
 		IPrescription prescription =
-			new IPrescriptionBuilder(modelService, localArticle, patient, "1-0-0-1").buildAndSave();
+			new IPrescriptionBuilder(coreModelService, localArticle, patient, "1-0-0-1").buildAndSave();
 		assertEquals(patient, prescription.getPatient());
 		assertEquals(localArticle, prescription.getArticle());
 		assertEquals("1-0-0-1", prescription.getDosageInstruction());
 		assertNotNull(prescription.getDateFrom());
 		assertEquals(EntryType.FIXED_MEDICATION, prescription.getEntryType());
 		
-		List<IPrescription> prescriptions = modelService.getQuery(IPrescription.class).execute();
+		List<IPrescription> prescriptions = coreModelService.getQuery(IPrescription.class).execute();
 		assertEquals(prescription, prescriptions.get(0));
 		
-		modelService.remove(prescription);
+		coreModelService.remove(prescription);
 	}
 }

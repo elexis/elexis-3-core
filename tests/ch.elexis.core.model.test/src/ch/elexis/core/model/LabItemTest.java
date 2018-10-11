@@ -13,13 +13,14 @@ import org.junit.Test;
 import ch.elexis.core.model.builder.ILabItemBuilder;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.test.AbstractTest;
 import ch.elexis.core.types.LabItemTyp;
 
 public class LabItemTest extends AbstractTest {
 	
 	@Test
 	public void create(){
-		ILabItem item = modelService.create(ILabItem.class);
+		ILabItem item = coreModelService.create(ILabItem.class);
 		assertNotNull(item);
 		assertTrue(item instanceof ILabItem);
 		
@@ -28,9 +29,9 @@ public class LabItemTest extends AbstractTest {
 		item.setReferenceFemale("<25");
 		item.setReferenceMale("<30");
 		item.setTyp(LabItemTyp.NUMERIC);
-		assertTrue(modelService.save(item));
+		assertTrue(coreModelService.save(item));
 		
-		Optional<ILabItem> loadedItem = modelService.load(item.getId(), ILabItem.class);
+		Optional<ILabItem> loadedItem = coreModelService.load(item.getId(), ILabItem.class);
 		assertTrue(loadedItem.isPresent());
 		assertFalse(item == loadedItem.get());
 		assertEquals(item, loadedItem.get());
@@ -39,12 +40,12 @@ public class LabItemTest extends AbstractTest {
 		assertEquals(item.getReferenceMale(), loadedItem.get().getReferenceMale());
 		assertEquals(item.getTyp(), loadedItem.get().getTyp());
 		
-		modelService.remove(item);
+		coreModelService.remove(item);
 	}
 	
 	@Test
 	public void builder(){
-		ILabItem labItem = new ILabItemBuilder(modelService, "TST", "Test", "5-10", "5-12",
+		ILabItem labItem = new ILabItemBuilder(coreModelService, "TST", "Test", "5-10", "5-12",
 			"nmol/l", LabItemTyp.NUMERIC, "T", 1).buildAndSave();
 		assertEquals("TST", labItem.getCode());
 		assertEquals("Test", labItem.getName());
@@ -56,28 +57,28 @@ public class LabItemTest extends AbstractTest {
 		assertTrue(labItem.isVisible());
 		assertFalse(labItem.isDeleted());
 		
-		modelService.remove(labItem);
+		coreModelService.remove(labItem);
 	}
 	
 	@Test
 	public void query(){
-		ILabItem item1 = modelService.create(ILabItem.class);
+		ILabItem item1 = coreModelService.create(ILabItem.class);
 		item1.setCode("testItem1");
 		item1.setName("test item 1");
 		item1.setReferenceFemale("<25");
 		item1.setReferenceMale("<30");
 		item1.setTyp(LabItemTyp.NUMERIC);
-		assertTrue(modelService.save(item1));
+		assertTrue(coreModelService.save(item1));
 		
-		ILabItem item2 = modelService.create(ILabItem.class);
+		ILabItem item2 = coreModelService.create(ILabItem.class);
 		item2.setCode("testItem2");
 		item2.setName("test item 2");
 		item2.setReferenceFemale("<25");
 		item2.setReferenceMale("<30");
 		item2.setTyp(LabItemTyp.TEXT);
-		assertTrue(modelService.save(item2));
+		assertTrue(coreModelService.save(item2));
 		
-		IQuery<ILabItem> query = modelService.getQuery(ILabItem.class);
+		IQuery<ILabItem> query = coreModelService.getQuery(ILabItem.class);
 		query.and(ModelPackage.Literals.ILAB_ITEM__CODE, COMPARATOR.EQUALS, "testItem2");
 		List<ILabItem> existing = query.execute();
 		assertNotNull(existing);
@@ -88,7 +89,7 @@ public class LabItemTest extends AbstractTest {
 		assertEquals(item2.getCode(), existing.get(0).getCode());
 		assertEquals(LabItemTyp.TEXT, existing.get(0).getTyp());
 		
-		modelService.remove(item1);
-		modelService.remove(item2);
+		coreModelService.remove(item1);
+		coreModelService.remove(item2);
 	}
 }

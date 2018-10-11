@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.test.AbstractTest;
 import ch.elexis.core.types.ArticleTyp;
 
 public class ArticleTest extends AbstractTest {
@@ -36,7 +37,7 @@ public class ArticleTest extends AbstractTest {
 		assertNotNull(localArticle);
 		assertTrue(localArticle instanceof IArticle);
 		
-		Optional<IArticle> loaded = modelService.load(localArticle.getId(), IArticle.class);
+		Optional<IArticle> loaded = coreModelService.load(localArticle.getId(), IArticle.class);
 		assertTrue(loaded.isPresent());
 		assertEquals("123456789", loaded.get().getCode());
 		assertEquals(ArticleTyp.EIGENARTIKEL, loaded.get().getTyp());
@@ -47,11 +48,11 @@ public class ArticleTest extends AbstractTest {
 	
 	@Test
 	public void product(){
-		IArticle product = modelService.create(IArticle.class);
+		IArticle product = coreModelService.create(IArticle.class);
 		product.setName("test product");
 		product.setTyp(ArticleTyp.ARTIKEL);
 		
-		IArticle article = modelService.create(IArticle.class);
+		IArticle article = coreModelService.create(IArticle.class);
 		article.setName("test article 1");
 		article.setCode("123456789");
 		article.setTyp(ArticleTyp.ARTIKEL);
@@ -60,7 +61,7 @@ public class ArticleTest extends AbstractTest {
 		article.setSellingSize(12);
 		article.setProduct(product);
 		
-		IArticle article1 = modelService.create(IArticle.class);
+		IArticle article1 = coreModelService.create(IArticle.class);
 		article1.setName("test article 2");
 		article1.setCode("987654321");
 		article1.setTyp(ArticleTyp.ARTIKEL);
@@ -69,9 +70,9 @@ public class ArticleTest extends AbstractTest {
 		article1.setSellingSize(24);
 		article1.setProduct(product);
 		
-		modelService.save(Arrays.asList(product, article, article1));
+		coreModelService.save(Arrays.asList(product, article, article1));
 		
-		Optional<IArticle> loaded = modelService.load(product.getId(), IArticle.class);
+		Optional<IArticle> loaded = coreModelService.load(product.getId(), IArticle.class);
 		assertFalse(loaded.get().getPackages().isEmpty());
 		assertTrue(loaded.get().getPackages().contains(article));
 		assertTrue(loaded.get().getPackages().contains(article1));
@@ -80,46 +81,46 @@ public class ArticleTest extends AbstractTest {
 		
 		// must clear product references before removing product
 		product.getPackages().forEach(p -> p.setProduct(null));
-		modelService.save(Arrays.asList(article, article1));
-		modelService.remove(product);
-		loaded = modelService.load(article.getId(), IArticle.class);
+		coreModelService.save(Arrays.asList(article, article1));
+		coreModelService.remove(product);
+		loaded = coreModelService.load(article.getId(), IArticle.class);
 		assertTrue(loaded.isPresent());
 		assertTrue(loaded.get().getProduct() == null);
 		
-		modelService.remove(article);
-		modelService.remove(article1);
+		coreModelService.remove(article);
+		coreModelService.remove(article1);
 	}
 	
 	@Test
 	public void query(){
 		removeLocalArticle();
 		
-		IArticle article = modelService.create(IArticle.class);
+		IArticle article = coreModelService.create(IArticle.class);
 		article.setName("test article");
 		article.setCode("123456789");
 		article.setTyp(ArticleTyp.EIGENARTIKEL);
 		article.setGtin("0000001111111");
 		article.setPackageSize(12);
 		article.setSellingSize(12);
-		modelService.save(article);
+		coreModelService.save(article);
 		
-		IArticle article1 = modelService.create(IArticle.class);
+		IArticle article1 = coreModelService.create(IArticle.class);
 		article1.setName("test article 1");
 		article1.setCode("987654321");
 		article1.setTyp(ArticleTyp.EIGENARTIKEL);
 		article1.setGtin("1111112222222");
 		article1.setPackageSize(24);
 		article1.setSellingSize(24);
-		modelService.save(article1);
+		coreModelService.save(article1);
 		
-		IQuery<IArticle> query = modelService.getQuery(IArticle.class);
+		IQuery<IArticle> query = coreModelService.getQuery(IArticle.class);
 		query.and(ModelPackage.Literals.IARTICLE__GTIN, COMPARATOR.EQUALS, "0000001111111");
 		List<IArticle> existing = query.execute();
 		assertNotNull(existing);
 		assertFalse(existing.isEmpty());
 		assertEquals(article, existing.get(0));
 		
-		query = modelService.getQuery(IArticle.class);
+		query = coreModelService.getQuery(IArticle.class);
 		query.and(ModelPackage.Literals.IARTICLE__TYP, COMPARATOR.EQUALS,
 			ArticleTyp.EIGENARTIKEL);
 		existing = query.execute();
@@ -127,7 +128,7 @@ public class ArticleTest extends AbstractTest {
 		assertFalse(existing.isEmpty());
 		assertEquals(2, existing.size());
 		
-		modelService.remove(article);
-		modelService.remove(article1);
+		coreModelService.remove(article);
+		coreModelService.remove(article1);
 	}
 }

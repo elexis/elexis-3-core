@@ -3,14 +3,15 @@ package ch.elexis.core.types;
 import ch.elexis.core.model.IArticle;
 
 /**
- * Elexis has different types of {@link IArticle}. Maximum code system name is 15 char.
+ * Elexis has different types of {@link IArticle}. Maximum code system name is 15 char for articles
+ * managed within the Article database table.
  * 
  * @author thomas
  *
  */
 public enum ArticleTyp {
 		ARTIKEL("Artikel"), EIGENARTIKEL("Eigenartikel"), MIGEL("MiGeL"), MEDICAL("Medical"),
-		MEDIKAMENT("Medikament");
+		MEDIKAMENT("Medikament"), ARTIKELSTAMM("Artikelstamm");
 	
 	private String codeSystemName;
 	

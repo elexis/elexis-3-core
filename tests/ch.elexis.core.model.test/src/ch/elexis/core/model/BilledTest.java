@@ -8,13 +8,14 @@ import java.util.Optional;
 
 import org.junit.Test;
 
+import ch.elexis.core.test.AbstractTest;
 import ch.rgw.tools.Money;
 
 public class BilledTest extends AbstractTest {
 	
 	@Test
 	public void create(){
-		IBilled billed = modelService.create(IBilled.class);
+		IBilled billed = coreModelService.create(IBilled.class);
 		billed.setAmount(1);
 		// use components to set price, setPrice method is interpreted as manual price change
 		billed.setPoints(2);
@@ -28,28 +29,28 @@ public class BilledTest extends AbstractTest {
 		assertEquals(1.0, billed.getAmount(), 0.001);
 		assertEquals(0.02, billed.getTotal().doubleValue(), 0.001);
 		
-		assertTrue(modelService.save(billed));
+		assertTrue(coreModelService.save(billed));
 		
-		Optional<IBilled> loadedBilled = modelService.load(billed.getId(), IBilled.class);
+		Optional<IBilled> loadedBilled = coreModelService.load(billed.getId(), IBilled.class);
 		assertTrue(loadedBilled.isPresent());
 		assertFalse(billed == loadedBilled.get());
 		assertEquals(billed, loadedBilled.get());
 		assertEquals(billed.getAmount(), loadedBilled.get().getAmount(), 0.01);
 		assertEquals(billed.getPrice(), loadedBilled.get().getPrice());
 		
-		modelService.remove(billed);
+		coreModelService.remove(billed);
 	}
 	
 	@Test
 	public void changeNonIntegerAmount(){
-		IBilled billed = modelService.create(IBilled.class);
+		IBilled billed = coreModelService.create(IBilled.class);
 		// use components to set price, setPrice method is interpreted as manual price change
 		billed.setPoints(2);
 		billed.setFactor(1);
 		billed.setPrimaryScale(100);
 		billed.setSecondaryScale(100);
 		billed.setAmount(2.5);
-		assertTrue(modelService.save(billed));
+		assertTrue(coreModelService.save(billed));
 		
 		assertTrue(billed.isNonIntegerAmount());
 		assertFalse(billed.isChangedPrice());
@@ -64,12 +65,12 @@ public class BilledTest extends AbstractTest {
 			exception = e;
 		}
 		assertTrue(exception instanceof IllegalStateException);
-		modelService.remove(billed);
+		coreModelService.remove(billed);
 	}
 	
 	@Test
 	public void changePrice(){
-		IBilled billed = modelService.create(IBilled.class);
+		IBilled billed = coreModelService.create(IBilled.class);
 		// use components to set price, setPrice method is interpreted as manual price change
 		billed.setPoints(2);
 		billed.setFactor(1);
@@ -77,7 +78,7 @@ public class BilledTest extends AbstractTest {
 		billed.setSecondaryScale(100);
 		billed.setAmount(1);
 		billed.setPrice(new Money(2.5));
-		assertTrue(modelService.save(billed));
+		assertTrue(coreModelService.save(billed));
 		
 		assertFalse(billed.isNonIntegerAmount());
 		assertTrue(billed.isChangedPrice());
@@ -95,7 +96,7 @@ public class BilledTest extends AbstractTest {
 		assertTrue(exception instanceof IllegalStateException);
 		// integer amount change is still possible
 		billed.setAmount(3.0);
-		assertTrue(modelService.save(billed));
+		assertTrue(coreModelService.save(billed));
 		
 		assertFalse(billed.isNonIntegerAmount());
 		assertTrue(billed.isChangedPrice());
@@ -103,6 +104,6 @@ public class BilledTest extends AbstractTest {
 		assertEquals(3.0, billed.getAmount(), 0.001);
 		assertEquals(7.5, billed.getTotal().doubleValue(), 0.001);
 		
-		modelService.remove(billed);
+		coreModelService.remove(billed);
 	}
 }

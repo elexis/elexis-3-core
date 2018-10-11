@@ -11,4 +11,5 @@ Import-Package: ch.rgw.tools,
  org.junit;version="4.12.0",
  org.slf4j;version="1.7.2"
 Export-Package: ch.elexis.core.test,
- ch.elexis.core.test.initializer
+ ch.elexis.core.test.initializer,
+ ch.elexis.core.test.util

@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.test.AbstractTest;
 
 public class AppointmentTest extends AbstractTest {
 	
@@ -31,14 +32,14 @@ public class AppointmentTest extends AbstractTest {
 		LocalDateTime begin = LocalDateTime.of(2018, 9, 24, 13, 23);
 		LocalDateTime end = begin.plus(Duration.ofMinutes(15));
 		
-		IAppointment appointment = modelService.create(IAppointment.class);
+		IAppointment appointment = coreModelService.create(IAppointment.class);
 		appointment.setReason("reason");
 		appointment.setStart(begin);
 		appointment.setEnd(end);
 		appointment.setSubjectOrPatient(patient.getId());
-		modelService.save(appointment);
+		coreModelService.save(appointment);
 		
-		IQuery<IAppointment> query = modelService.getQuery(IAppointment.class);
+		IQuery<IAppointment> query = coreModelService.getQuery(IAppointment.class);
 		query.and(ModelPackage.Literals.IAPPOINTMENT__REASON, COMPARATOR.EQUALS, "reason");
 		IAppointment stored = query.executeSingleResult().get();
 		
@@ -46,6 +47,6 @@ public class AppointmentTest extends AbstractTest {
 		assertEquals(end, stored.getEnd());
 		assertEquals(patient.getId(), stored.getSubjectOrPatient());
 		
-		modelService.remove(appointment);
+		coreModelService.remove(appointment);
 	}
 }

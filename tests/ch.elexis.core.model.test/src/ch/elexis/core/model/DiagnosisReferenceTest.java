@@ -9,26 +9,28 @@ import java.util.Optional;
 
 import org.junit.Test;
 
+import ch.elexis.core.test.AbstractTest;
+
 public class DiagnosisReferenceTest extends AbstractTest {
 	
 	@Test
 	public void create(){
-		IDiagnosisReference diagnosis = modelService.create(IDiagnosisReference.class);
+		IDiagnosisReference diagnosis = coreModelService.create(IDiagnosisReference.class);
 		assertNotNull(diagnosis);
 		assertTrue(diagnosis instanceof IDiagnosisReference);
 		
 		diagnosis.setCode("test code");
 		diagnosis.setReferredClass("test.class.name");
-		assertTrue(modelService.save(diagnosis));
+		assertTrue(coreModelService.save(diagnosis));
 		
 		Optional<IDiagnosisReference> loadedConfig =
-			modelService.load(diagnosis.getId(), IDiagnosisReference.class);
+			coreModelService.load(diagnosis.getId(), IDiagnosisReference.class);
 		assertTrue(loadedConfig.isPresent());
 		assertFalse(diagnosis == loadedConfig.get());
 		assertEquals(diagnosis, loadedConfig.get());
 		assertEquals(diagnosis.getCode(), loadedConfig.get().getCode());
 		assertEquals(diagnosis.getReferredClass(), loadedConfig.get().getReferredClass());
 		
-		modelService.remove(diagnosis);
+		coreModelService.remove(diagnosis);
 	}
 }

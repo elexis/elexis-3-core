@@ -15,6 +15,7 @@ import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.test.AbstractTest;
 import ch.elexis.core.types.Gender;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
@@ -30,89 +31,89 @@ public class EncounterTest extends AbstractTest {
 		createPatient();
 		createCoverage();
 		
-		IPerson mandatorPerson = new IContactBuilder.PersonBuilder(modelService, "Money", "Man",
+		IPerson mandatorPerson = new IContactBuilder.PersonBuilder(coreModelService, "Money", "Man",
 			LocalDate.now(), Gender.MALE).build();
 		mandatorPerson.setMandator(true);
-		modelService.save(mandatorPerson);
+		coreModelService.save(mandatorPerson);
 		
-		mandator = modelService.load(mandatorPerson.getId(), IMandator.class).get();
+		mandator = coreModelService.load(mandatorPerson.getId(), IMandator.class).get();
 	}
 	
 	@Test
 	public void createFindDeleteEncounter(){
-		IEncounter encounter = new IEncounterBuilder(modelService, coverage, mandator).buildAndSave();
+		IEncounter encounter = new IEncounterBuilder(coreModelService, coverage, mandator).buildAndSave();
 		LocalDate date = LocalDate.of(2018, Month.SEPTEMBER, 21);
 		encounter.setDate(date);
 		VersionedResource vr = VersionedResource.load(null);
 		vr.update("Test consultation\nWith some test text.", "Administrator");
 		vr.update("Test consultation\n pdate done by user", "user");
 		encounter.setVersionedEntry(vr);
-		modelService.save(encounter);
+		coreModelService.save(encounter);
 		
-		IQuery<IEncounter> query = modelService.getQuery(IEncounter.class);
+		IQuery<IEncounter> query = coreModelService.getQuery(IEncounter.class);
 		query.and(ModelPackage.Literals.IENCOUNTER__COVERAGE, COMPARATOR.EQUALS, coverage);
 		assertEquals(encounter, query.executeSingleResult().get());
 		assertEquals(date, encounter.getDate());
 		assertTrue(encounter.getVersionedEntry().getHead(), encounter.getVersionedEntry().getHead().contains("done by user"));
 		
-		modelService.delete(encounter);
+		coreModelService.delete(encounter);
 	}
 	
 	@Test
 	public void addRemoveDiagnosis(){
 		IEncounter encounter =
-			new IEncounterBuilder(modelService, coverage, mandator).buildAndSave();
-		IDiagnosisReference diagnosis = modelService.create(IDiagnosisReference.class);
+			new IEncounterBuilder(coreModelService, coverage, mandator).buildAndSave();
+		IDiagnosisReference diagnosis = coreModelService.create(IDiagnosisReference.class);
 		diagnosis.setCode("test");
-		modelService.save(diagnosis);
-		IDiagnosisReference diagnosis1 = modelService.create(IDiagnosisReference.class);
+		coreModelService.save(diagnosis);
+		IDiagnosisReference diagnosis1 = coreModelService.create(IDiagnosisReference.class);
 		diagnosis.setCode("test1");
-		modelService.save(diagnosis1);
+		coreModelService.save(diagnosis1);
 		
 		encounter.addDiagnosis(diagnosis);
 		encounter.addDiagnosis(diagnosis1);
-		modelService.save(encounter);
+		coreModelService.save(encounter);
 		
-		Optional<IEncounter> loaded = modelService.load(encounter.getId(), IEncounter.class);
+		Optional<IEncounter> loaded = coreModelService.load(encounter.getId(), IEncounter.class);
 		assertEquals(loaded.get(), encounter);
 		assertEquals(encounter.getDiagnoses().size(), loaded.get().getDiagnoses().size());
 		
 		encounter.removeDiagnosis(diagnosis1);
-		modelService.save(encounter);
+		coreModelService.save(encounter);
 		
-		loaded = modelService.load(encounter.getId(), IEncounter.class);
+		loaded = coreModelService.load(encounter.getId(), IEncounter.class);
 		assertEquals(loaded.get(), encounter);
 		assertEquals(encounter.getDiagnoses().size(), loaded.get().getDiagnoses().size());
 		
 		encounter.removeDiagnosis(diagnosis);
-		modelService.save(encounter);
-		loaded = modelService.load(encounter.getId(), IEncounter.class);
+		coreModelService.save(encounter);
+		loaded = coreModelService.load(encounter.getId(), IEncounter.class);
 		assertEquals(loaded.get(), encounter);
 		assertTrue(loaded.get().getDiagnoses().isEmpty());
 		
-		modelService.remove(diagnosis);
-		modelService.remove(diagnosis1);
-		modelService.remove(encounter);
+		coreModelService.remove(diagnosis);
+		coreModelService.remove(diagnosis1);
+		coreModelService.remove(encounter);
 	}
 	
 	@Test
 	public void addRemoveBilled(){
-		ILocalService service = modelService.create(ILocalService.class);
+		ILocalService service = coreModelService.create(ILocalService.class);
 		service.setCode("12.34");
 		service.setNetPrice(new Money(1));
 		service.setPrice(new Money(2));
 		service.setText("test");
-		modelService.save(service);
+		coreModelService.save(service);
 		
 		IEncounter encounter =
-			new IEncounterBuilder(modelService, coverage, mandator).buildAndSave();
-		modelService.save(encounter);
+			new IEncounterBuilder(coreModelService, coverage, mandator).buildAndSave();
+		coreModelService.save(encounter);
 		
 		Result<IBilled> result = service.getOptifier().add(service, encounter, 1.5);
 		assertTrue(result.isOK());
 		
 		assertFalse(encounter.getBilled().isEmpty());
-		Optional<IEncounter> loaded = modelService.load(encounter.getId(), IEncounter.class);
+		Optional<IEncounter> loaded = coreModelService.load(encounter.getId(), IEncounter.class);
 		assertEquals(loaded.get(), encounter);
 		assertFalse(loaded.get().getBilled().isEmpty());
 		IBilled billed = loaded.get().getBilled().get(0);
@@ -124,22 +125,22 @@ public class EncounterTest extends AbstractTest {
 		assertFalse(encounter.getBilled().contains(billed));
 		assertTrue(billed.isDeleted());
 		
-		modelService.remove(service);
-		modelService.remove(encounter);
+		coreModelService.remove(service);
+		coreModelService.remove(encounter);
 	}
 	
 	@Test
 	public void modifyBilled(){
-		ILocalService service = modelService.create(ILocalService.class);
+		ILocalService service = coreModelService.create(ILocalService.class);
 		service.setCode("12.34");
 		service.setNetPrice(new Money(1));
 		service.setPrice(new Money(2));
 		service.setText("test");
-		modelService.save(service);
+		coreModelService.save(service);
 		
 		IEncounter encounter =
-			new IEncounterBuilder(modelService, coverage, mandator).buildAndSave();
-		modelService.save(encounter);
+			new IEncounterBuilder(coreModelService, coverage, mandator).buildAndSave();
+		coreModelService.save(encounter);
 		
 		// add billed
 		Result<IBilled> result = service.getOptifier().add(service, encounter, 1.5);
@@ -148,14 +149,14 @@ public class EncounterTest extends AbstractTest {
 		assertEquals(1.5, billed.getAmount(), 0.01);
 		// change property and save -> results in new entity which leads to problem (reason for caching lists in Adapters)
 		billed.setText("changed text");
-		modelService.save(billed);
+		coreModelService.save(billed);
 		// add amount
 		result = service.getOptifier().add(service, encounter, 1.5);
 		assertEquals(3, billed.getAmount(), 0.01);
 		billed = encounter.getBilled().get(0);
 		assertEquals(3, billed.getAmount(), 0.01);
 		
-		modelService.remove(service);
-		modelService.remove(encounter);
+		coreModelService.remove(service);
+		coreModelService.remove(encounter);
 	}
 }
