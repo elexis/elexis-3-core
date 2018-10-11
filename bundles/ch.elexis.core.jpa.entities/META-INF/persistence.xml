@@ -38,6 +38,7 @@
 		<class>ch.elexis.core.jpa.entities.Eigenleistung</class>
 		<class>ch.elexis.core.jpa.entities.Eigendiagnose</class>
 		<class>ch.elexis.core.jpa.entities.Fall</class>
+		<class>ch.elexis.core.jpa.entities.FreeTextDiagnosis</class>
 		<class>ch.elexis.core.jpa.entities.Heap</class>
 		<class>ch.elexis.core.jpa.entities.Invoice</class>
 		<class>ch.elexis.core.jpa.entities.Kontakt</class>

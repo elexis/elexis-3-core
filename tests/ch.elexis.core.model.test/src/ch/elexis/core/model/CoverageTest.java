@@ -23,8 +23,6 @@ public class CoverageTest extends AbstractTest {
 	
 	@Override
 	public void after(){
-		removeCoverage();
-		removePatient();
 		super.after();
 	}
 	

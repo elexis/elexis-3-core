@@ -334,7 +334,7 @@ public class ModelUtil {
 		return StoreToStringServiceHolder.get().storeToString(identifiable);
 	}
 	
-	public static IDiagnosis getOrCreateDiagnosisReference(IDiagnosis diagnosis){
+	public static IDiagnosisReference getOrCreateDiagnosisReference(IDiagnosis diagnosis){
 		Optional<String> storeToString = StoreToStringServiceHolder.get().storeToString(diagnosis);
 		if (storeToString.isPresent()) {
 			String[] parts = storeToString.get().split(IStoreToStringContribution.DOUBLECOLON);
@@ -350,6 +350,7 @@ public class ModelUtil {
 				reference.setCode(diagnosis.getCode());
 				reference.setReferredClass(parts[0]);
 				reference.setText(diagnosis.getText());
+				return reference;
 			}
 		}
 		return null;

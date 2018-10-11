@@ -41,9 +41,9 @@ public class LocalServiceTest extends AbstractTest {
 	
 	@Test
 	public void create(){
-		ILocalService service = coreModelService.create(ILocalService.class);
+		ICustomService service = coreModelService.create(ICustomService.class);
 		assertNotNull(service);
-		assertTrue(service instanceof ILocalService);
+		assertTrue(service instanceof ICustomService);
 		
 		service.setText("test service");
 		service.setCode("1234");
@@ -51,7 +51,7 @@ public class LocalServiceTest extends AbstractTest {
 		service.setPrice(new Money(1024));
 		coreModelService.save(service);
 		
-		Optional<ILocalService> loaded = coreModelService.load(service.getId(), ILocalService.class);
+		Optional<ICustomService> loaded = coreModelService.load(service.getId(), ICustomService.class);
 		assertTrue(loaded.isPresent());
 		assertFalse(service == loaded.get());
 		assertEquals(service, loaded.get());
@@ -65,23 +65,23 @@ public class LocalServiceTest extends AbstractTest {
 	
 	@Test
 	public void query(){
-		ILocalService service = coreModelService.create(ILocalService.class);
+		ICustomService service = coreModelService.create(ICustomService.class);
 		service.setText("test service");
 		service.setCode("1234");
 		service.setNetPrice(new Money(12));
 		service.setPrice(new Money(13));
 		coreModelService.save(service);
 		
-		ILocalService service1 = coreModelService.create(ILocalService.class);
+		ICustomService service1 = coreModelService.create(ICustomService.class);
 		service1.setText("test service 1");
 		service1.setCode("9876");
 		service1.setNetPrice(new Money(24));
 		service1.setPrice(new Money(25));
 		coreModelService.save(service1);
 		
-		IQuery<ILocalService> query = coreModelService.getQuery(ILocalService.class);
+		IQuery<ICustomService> query = coreModelService.getQuery(ICustomService.class);
 		query.and(ModelPackage.Literals.ICODE_ELEMENT__CODE, COMPARATOR.EQUALS, "1234");
-		List<ILocalService> existing = query.execute();
+		List<ICustomService> existing = query.execute();
 		assertNotNull(existing);
 		assertFalse(existing.isEmpty());
 		assertEquals(service, existing.get(0));
@@ -92,7 +92,7 @@ public class LocalServiceTest extends AbstractTest {
 	
 	@Test
 	public void optifier(){
-		ILocalService service = coreModelService.create(ILocalService.class);
+		ICustomService service = coreModelService.create(ICustomService.class);
 		service.setText("test service");
 		service.setCode("1234");
 		service.setNetPrice(new Money(12));

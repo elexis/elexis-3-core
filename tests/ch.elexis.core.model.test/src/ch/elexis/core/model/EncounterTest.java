@@ -98,7 +98,7 @@ public class EncounterTest extends AbstractTest {
 	
 	@Test
 	public void addRemoveBilled(){
-		ILocalService service = coreModelService.create(ILocalService.class);
+		ICustomService service = coreModelService.create(ICustomService.class);
 		service.setCode("12.34");
 		service.setNetPrice(new Money(1));
 		service.setPrice(new Money(2));
@@ -131,7 +131,7 @@ public class EncounterTest extends AbstractTest {
 	
 	@Test
 	public void modifyBilled(){
-		ILocalService service = coreModelService.create(ILocalService.class);
+		ICustomService service = coreModelService.create(ICustomService.class);
 		service.setCode("12.34");
 		service.setNetPrice(new Money(1));
 		service.setPrice(new Money(2));

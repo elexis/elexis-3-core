@@ -241,7 +241,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IService/netPrice"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IService/minutes"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="model.ecore#//ILocalService"/>
+    <genClasses image="false" ecoreClass="model.ecore#//ICustomService"/>
     <genClasses image="false" ecoreClass="model.ecore#//IArticle">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IArticle/gtin"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IArticle/atcCode"/>
@@ -264,6 +264,7 @@
     <genClasses image="false" ecoreClass="model.ecore#//IDiagnosis">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IDiagnosis/description"/>
     </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IFreeTextDiagnosis"/>
     <genClasses image="false" ecoreClass="model.ecore#//IDiagnosisReference">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IDiagnosisReference/referredClass"/>
     </genClasses>
@@ -271,6 +272,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IDiagnosisTree/parent"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IDiagnosisTree/children"/>
     </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//ICustomDiagnosis"/>
     <genClasses image="false" ecoreClass="model.ecore#//ICoverage">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ICoverage/patient"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/description"/>

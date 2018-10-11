@@ -24,8 +24,6 @@ public class PrescriptionTest extends AbstractTest {
 	
 	@After
 	public void after(){
-		removePatient();
-		removeLocalArticle();
 		super.after();
 	}
 	

@@ -33,13 +33,15 @@ public class EntityChangeEventListener implements EventHandler {
 		EntityWithId entity = (EntityWithId) event.getProperty(EntityWithId.class.getName());
 		List<WeakReference<AbstractIdModelAdapter<?>>> copyListeners = new ArrayList<>(listeners);
 		copyListeners.forEach(reference -> {
-			AbstractIdModelAdapter<?> adapter = reference.get();
-			if (adapter != null) {
-				if (adapter.getEntity().equals(entity)) {
-					adapter.setEntity(entity);
+			if (reference != null) {
+				AbstractIdModelAdapter<?> adapter = reference.get();
+				if (adapter != null) {
+					if (adapter.getEntity().equals(entity)) {
+						adapter.setEntity(entity);
+					}
+				} else {
+					listeners.remove(reference);
 				}
-			} else {
-				listeners.remove(reference);
 			}
 		});
 	}

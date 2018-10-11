@@ -87,13 +87,13 @@ import ch.elexis.core.ui.locks.LockedAction;
 import ch.elexis.core.ui.locks.LockedRestrictedAction;
 import ch.elexis.core.ui.locks.ToggleCurrentKonsultationLockHandler;
 import ch.elexis.core.ui.text.EnhancedTextField;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.FallComparator;
 import ch.elexis.core.ui.util.IKonsExtension;
 import ch.elexis.core.ui.util.IKonsMakro;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.data.Anwender;
-import ch.elexis.data.Artikel;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
@@ -131,8 +131,8 @@ public class KonsDetailView extends ViewPart
 	Patient actPat;
 	Color defaultBackground;
 	
-	private DiagnosenDisplay dd;
-	private VerrechnungsDisplay vd;
+	private DiagnosenDisplay diagnosesDisplay;
+	private VerrechnungsDisplay billedDisplay;
 	private Action versionBackAction;
 	private LockedAction<Konsultation> saveAction;
 	private RestrictedAction purgeAction;
@@ -347,13 +347,15 @@ public class KonsDetailView extends ViewPart
 		Composite botright = tk.createComposite(diagAndChargeSash);
 		botright.setLayout(new GridLayout(1, false));
 		
-		dd = new DiagnosenDisplay(getSite().getPage(), botleft, SWT.NONE);
-		dd.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		vd = new VerrechnungsDisplay(getSite().getPage(), botright, SWT.NONE);
-		vd.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		getSite().registerContextMenu(ID + ".VerrechnungsDisplay", vd.getMenuManager(),
-			vd.getViewer());
-		getSite().setSelectionProvider(vd.getViewer());
+		diagnosesDisplay = new DiagnosenDisplay(getSite().getPage(), botleft, SWT.NONE);
+		CoreUiUtil.injectServices(diagnosesDisplay);
+		diagnosesDisplay.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
+		billedDisplay = new VerrechnungsDisplay(getSite().getPage(), botright, SWT.NONE);
+		CoreUiUtil.injectServices(billedDisplay);
+		billedDisplay.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
+		getSite().registerContextMenu(ID + ".VerrechnungsDisplay", billedDisplay.getMenuManager(),
+			billedDisplay.getViewer());
+		getSite().setSelectionProvider(billedDisplay.getViewer());
 		diagAndChargeSash.setWeights(diagAndChargeSashWeights == null ? new int[] {
 			40, 60
 		} : diagAndChargeSashWeights);
@@ -514,11 +516,12 @@ public class KonsDetailView extends ViewPart
 			boolean hlMandantEnabled =
 				kons.isEditable(false) && CoreHub.acl.request(AccessControlDefaults.KONS_REASSIGN);
 			hlMandant.setEnabled(hlMandantEnabled);
-			dd.setEncounter(kons);
-			vd.setEncounter(
+			diagnosesDisplay.setEncounter(
 				CoreModelServiceHolder.get().load(kons.getId(), IEncounter.class).orElse(null));
-			vd.setEnabled(true);
-			dd.setEnabled(true);
+			billedDisplay.setEncounter(
+				CoreModelServiceHolder.get().load(kons.getId(), IEncounter.class).orElse(null));
+			billedDisplay.setEnabled(true);
+			diagnosesDisplay.setEnabled(true);
 			if (kons.isEditable(false)) {
 				text.setEnabled(true);
 				text.setToolTipText("");
@@ -540,12 +543,12 @@ public class KonsDetailView extends ViewPart
 			hlMandant.setText("--"); //$NON-NLS-1$
 			hlMandant.setEnabled(false);
 			hlMandant.setBackground(hlMandant.getParent().getBackground());
-			dd.clear();
-			vd.clear();
+			diagnosesDisplay.clear();
+			billedDisplay.clear();
 			text.setText(""); //$NON-NLS-1$
 			text.setEnabled(false);
-			vd.setEnabled(false);
-			dd.setEnabled(false);
+			billedDisplay.setEnabled(false);
+			diagnosesDisplay.setEnabled(false);
 		}
 		actKons = kons;
 		cDesc.layout();
@@ -699,7 +702,7 @@ public class KonsDetailView extends ViewPart
 	}
 	
 	public void adaptMenus(){
-		vd.adaptMenus();
+		billedDisplay.adaptMenus();
 	}
 	
 	/*
@@ -734,10 +737,6 @@ public class KonsDetailView extends ViewPart
 	@Override
 	public boolean isSaveOnCloseNeeded(){
 		return true;
-	}
-	
-	public void addToVerechnung(Artikel artikel){
-		vd.addPersistentObject(artikel);
 	}
 	
 	@Override

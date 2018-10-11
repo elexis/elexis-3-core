@@ -2,6 +2,7 @@ package ch.elexis.core.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -109,6 +110,7 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 	
 	@Override
 	public List<IDiagnosisReference> getDiagnoses(){
+		CoreModelServiceHolder.get().refresh(this);
 		return getEntity().getDiagnoses().parallelStream().filter(d -> !d.isDeleted())
 			.map(d -> ModelUtil.getAdapter(d, IDiagnosisReference.class, true))
 			.collect(Collectors.toList());
@@ -119,10 +121,12 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 		if (!(diagnosis instanceof IDiagnosisReference)) {
 			diagnosis = ModelUtil.getOrCreateDiagnosisReference(diagnosis);
 		}
+		// is needed here, because of the behdl_dg_joint mapping table
 		if (diagnosis != null) {
 			@SuppressWarnings("unchecked")
 			Diagnosis diag = ((AbstractIdModelAdapter<Diagnosis>) diagnosis).getEntity();
 			getEntity().getDiagnoses().add(diag);
+			ModelUtil.getModelService().save(Arrays.asList(diagnosis, this));
 		}
 	}
 	
@@ -134,5 +138,6 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 		@SuppressWarnings("unchecked")
 		Diagnosis diag = ((AbstractIdModelAdapter<Diagnosis>) diagnosis).getEntity();
 		getEntity().getDiagnoses().remove(diag);
+		ModelUtil.getModelService().save(Arrays.asList(diagnosis, this));
 	}
 }

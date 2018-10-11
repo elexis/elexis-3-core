@@ -24,6 +24,7 @@ import ch.elexis.core.model.Coverage;
 import ch.elexis.core.model.DiagnosisReference;
 import ch.elexis.core.model.DocumentLetter;
 import ch.elexis.core.model.Encounter;
+import ch.elexis.core.model.FreeTextDiagnosis;
 import ch.elexis.core.model.IAddress;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IArticle;
@@ -33,16 +34,17 @@ import ch.elexis.core.model.IBlob;
 import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.ICustomService;
 import ch.elexis.core.model.IDiagnosisReference;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IFreeTextDiagnosis;
 import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabMapping;
 import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.ILaboratory;
-import ch.elexis.core.model.ILocalService;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
@@ -58,7 +60,7 @@ import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Image;
 import ch.elexis.core.model.Laboratory;
-import ch.elexis.core.model.LocalService;
+import ch.elexis.core.model.CustomService;
 import ch.elexis.core.model.Mandator;
 import ch.elexis.core.model.Organization;
 import ch.elexis.core.model.Patient;
@@ -127,10 +129,12 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 		addMapping(new MappingEntry(IBilled.class, Billed.class, Verrechnet.class));
 		addMapping(new MappingEntry(IArticle.class, ch.elexis.core.model.TypedArticle.class,
 			ch.elexis.core.jpa.entities.Artikel.class));
-		addMapping(new MappingEntry(ILocalService.class, LocalService.class, Eigenleistung.class));
+		addMapping(new MappingEntry(ICustomService.class, CustomService.class, Eigenleistung.class));
 		
 		addMapping(
 			new MappingEntry(IDiagnosisReference.class, DiagnosisReference.class, Diagnosis.class));
+		addMapping(new MappingEntry(IFreeTextDiagnosis.class, FreeTextDiagnosis.class,
+			ch.elexis.core.jpa.entities.FreeTextDiagnosis.class));
 		
 		addMapping(new MappingEntry(IAddress.class, Address.class, ZusatzAdresse.class));
 		

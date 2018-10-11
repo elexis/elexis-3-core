@@ -16,6 +16,10 @@ import java.text.ParseException;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -61,22 +65,23 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
+import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.ICustomService;
 import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.model.IEncounter;
-import ch.elexis.core.model.ILocalService;
 import ch.elexis.core.model.IService;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.IBillingService;
@@ -85,7 +90,6 @@ import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.dialogs.ResultDialog;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.IUnlockable;
@@ -128,6 +132,23 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private static final String REMOVE = Messages.VerrechnungsDisplay_removeElements;
 	private static final String CHTEXT = Messages.VerrechnungsDisplay_changeText;
 	private static final String REMOVEALL = Messages.VerrechnungsDisplay_removeAll;
+	
+	@Inject
+	public void udpateEncounter(
+		@Optional @UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IEncounter encounter){
+		if (encounter != null && encounter.equals(actEncounter)) {
+			viewer.setInput(actEncounter.getDiagnoses());
+		}
+	}
+	
+	@Inject
+	public void udpateBilled(
+		@Optional @UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IBilled billed){
+		if (billed != null && viewer != null && viewer.getTable() != null
+			&& !viewer.getTable().isDisposed()) {
+			viewer.update(billed, null);
+		}
+	}
 	
 	public VerrechnungsDisplay(final IWorkbenchPage p, Composite parent, int style){
 		super(parent, style);
@@ -174,7 +195,6 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
 		table = viewer.getTable();
 		table.setMenu(createVerrMenu());
-		// dummy table viewer needed for SelectionsProvider for Menu
 		viewer.setContentProvider(ArrayContentProvider.getInstance());
 		
 		table.setHeaderVisible(true);
@@ -186,9 +206,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				IStructuredSelection selection = viewer.getStructuredSelection();
 				if (selection != null && !selection.isEmpty()
 					&& (selection.getFirstElement() instanceof IBilled)) {
-					ElexisEventDispatcher
-						.fireSelectionEvent(
-							Verrechnet.load(((IBilled) selection.getFirstElement()).getId()));
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
+						selection.getFirstElement());
 				}
 			}
 		});
@@ -226,18 +245,6 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		dropTarget =
 			new GenericObjectDropTarget(Messages.VerrechnungsDisplay_doBill, table,
 				new DropReceiver()); //$NON-NLS-1$
-		
-		// refresh the table if a update to a Verrechnet occurs
-		ElexisEventDispatcher.getInstance().addListeners(
-			new ElexisUiEventListenerImpl(Verrechnet.class, ElexisEvent.EVENT_UPDATE) {
-				@Override
-				public void runInUi(ElexisEvent ev){
-					PersistentObject object = ev.getObject();
-					if (object != null) {
-						viewer.update(object, null);
-					}
-				}
-			});
 	}
 	
 	private void createColumns(){
@@ -540,7 +547,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		String ret = billed.getCode();
 		IBillable billable = billed.getBillable();
 		if (billable != null) {
-			if (billable instanceof ILocalService || (billable instanceof IArticle
+			if (billable instanceof ICustomService || (billable instanceof IArticle
 				&& ((IArticle) billable).getTyp() == ArticleTyp.EIGENARTIKEL)) {
 				if (billable.getId().equals(ret)) {
 					ret = "";

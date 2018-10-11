@@ -324,7 +324,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="netPrice" eType="ecore:EDataType types.ecore#//Money"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="minutes" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ILocalService" abstract="true" interface="true"
+  <eClassifiers xsi:type="ecore:EClass" name="ICustomService" abstract="true" interface="true"
       eSuperTypes="#//IService"/>
   <eClassifiers xsi:type="ecore:EClass" name="IArticle" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//IBillable #//Deleteable #//WithExtInfo">
@@ -370,6 +370,8 @@
       eSuperTypes="#//ICodeElement #//Identifiable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IFreeTextDiagnosis" abstract="true"
+      interface="true" eSuperTypes="#//IDiagnosis"/>
   <eClassifiers xsi:type="ecore:EClass" name="IDiagnosisReference" abstract="true"
       interface="true" eSuperTypes="#//IDiagnosis">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="referredClass" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -380,6 +382,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="children" upperBound="-1"
         eType="#//IDiagnosisTree"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ICustomDiagnosis" abstract="true" interface="true"
+      eSuperTypes="#//IDiagnosisTree"/>
   <eClassifiers xsi:type="ecore:EClass" name="ICoverage" abstract="true" interface="true"
       eSuperTypes="#//Deleteable #//Identifiable #//WithExtInfo">
     <eOperations name="isOpen" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>

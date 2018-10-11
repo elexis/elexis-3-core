@@ -12,35 +12,30 @@ import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.util.ModelUtil;
 import ch.rgw.tools.Money;
 
-public class LocalService
+public class CustomService
 		extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Eigenleistung>
-		implements IdentifiableWithXid, ILocalService {
+		implements IdentifiableWithXid, ICustomService {
 	
-	private IBillableOptifier optifier;
-	private IBillableVerifier verifier;
+	private static IBillableOptifier optifier;
+	private static IBillableVerifier verifier;
 	
-	public LocalService(Eigenleistung entity){
+	private static Money noMoney = new Money();
+	
+	public CustomService(Eigenleistung entity){
 		super(entity);
-		optifier = new AbstractOptifier(CoreModelServiceHolder.get()) {
-			@Override
-			protected void setPrice(IBilled billed){
-				billed.setPrimaryScale(100);
-				billed.setSecondaryScale(100);
-				billed.setFactor(1.0);
-				billed.setNetPrice(getNetPrice());
-				billed.setPoints(getPrice().getCents());
-			}
-		};
-		verifier = new DefaultVerifier();
 	}
 	
 	@Override
 	public Money getPrice(){
 		String priceString = getEntity().getSalePrice();
-		if (StringUtils.isNumeric(priceString)) {
-			return ModelUtil.getMoneyForCentString(priceString).orElse(null);
+		if (priceString != null) {
+			if (StringUtils.isNumeric(priceString)) {
+				return ModelUtil.getMoneyForCentString(priceString).orElse(noMoney);
+			} else if (priceString.matches("[0-9\\.]+")) {
+				return ModelUtil.getMoneyForPriceString(priceString).orElse(noMoney);
+			}
 		}
-		return null;
+		return noMoney;
 	}
 	
 	@Override
@@ -52,9 +47,11 @@ public class LocalService
 	public Money getNetPrice(){
 		String priceString = getEntity().getBasePrice();
 		if (StringUtils.isNumeric(priceString)) {
-			return ModelUtil.getMoneyForCentString(priceString).orElse(null);
+			return ModelUtil.getMoneyForCentString(priceString).orElse(noMoney);
+		} else if (priceString.matches("[0-9\\.]+")) {
+			return ModelUtil.getMoneyForPriceString(priceString).orElse(noMoney);
 		}
-		return null;
+		return noMoney;
 	}
 	
 	@Override
@@ -63,12 +60,28 @@ public class LocalService
 	}
 	
 	@Override
-	public IBillableOptifier getOptifier(){
+	public synchronized IBillableOptifier getOptifier(){
+		if (optifier == null) {
+			optifier = new AbstractOptifier(CoreModelServiceHolder.get()) {
+				@Override
+				protected void setPrice(IBillable billable, IBilled billed){
+					CustomService customService = (CustomService) billable;
+					billed.setPrimaryScale(100);
+					billed.setSecondaryScale(100);
+					billed.setFactor(1.0);
+					billed.setNetPrice(customService.getNetPrice());
+					billed.setPoints(customService.getPrice().getCents());
+				}
+			};
+		}
 		return optifier;
 	}
 	
 	@Override
-	public IBillableVerifier getVerifier(){
+	public synchronized IBillableVerifier getVerifier(){
+		if (verifier == null) {
+			verifier = new DefaultVerifier();
+		}
 		return verifier;
 	}
 	

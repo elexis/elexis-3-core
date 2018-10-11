@@ -152,9 +152,9 @@ public class GenericObjectDropTarget implements DropTargetListener, ICodeSelecto
 	}
 	
 	public interface IReceiver {
-		public void dropped(List<Object> o, DropTargetEvent e);
+		public void dropped(List<Object> list, DropTargetEvent e);
 		
-		public boolean accept(List<Object> o);
+		public boolean accept(List<Object> list);
 	}
 	
 	@Override

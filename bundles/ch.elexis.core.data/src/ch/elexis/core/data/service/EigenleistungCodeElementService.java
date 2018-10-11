@@ -9,7 +9,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.ICodeElement;
-import ch.elexis.core.model.ILocalService;
+import ch.elexis.core.model.ICustomService;
 import ch.elexis.core.model.localservice.Constants;
 import ch.elexis.core.services.ICodeElementService.CodeElementTyp;
 import ch.elexis.core.services.ICodeElementServiceContribution;
@@ -30,9 +30,9 @@ public class EigenleistungCodeElementService implements ICodeElementServiceContr
 	@SuppressWarnings("unchecked")
 	@Override
 	public Optional<ICodeElement> createFromCode(String code, HashMap<Object, Object> context){
-		INamedQuery<ILocalService> query =
-			coreModelService.getNamedQuery(ILocalService.class, "code");
-		List<ILocalService> found =
+		INamedQuery<ICustomService> query =
+			coreModelService.getNamedQuery(ICustomService.class, "code");
+		List<ICustomService> found =
 			query.executeWithParameters(coreModelService.getParameterMap("code", code));
 		if (!found.isEmpty()) {
 			if (found.size() > 1) {
@@ -42,14 +42,14 @@ public class EigenleistungCodeElementService implements ICodeElementServiceContr
 			return Optional.of(found.get(0));
 		} else {
 			return (Optional<ICodeElement>) (Optional<?>) coreModelService.load(code,
-				ILocalService.class);
+				ICustomService.class);
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ICodeElement> getElements(HashMap<Object, Object> context){
-		return (List<ICodeElement>) (List<?>) coreModelService.getQuery(ILocalService.class)
+		return (List<ICodeElement>) (List<?>) coreModelService.getQuery(ICustomService.class)
 			.execute();
 	}
 	

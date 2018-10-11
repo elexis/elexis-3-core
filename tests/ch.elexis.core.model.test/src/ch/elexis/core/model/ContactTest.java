@@ -26,7 +26,6 @@ public class ContactTest extends AbstractTest {
 	
 	@After
 	public void after(){
-		removePerson();
 		super.after();
 	}
 	

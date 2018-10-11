@@ -2827,16 +2827,6 @@ public interface ModelPackage extends EPackage {
 	int ISERVICE = 24;
 
 	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.ILocalService <em>ILocal Service</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.ILocalService
-	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getILocalService()
-	 * @generated
-	 */
-	int ILOCAL_SERVICE = 25;
-
-	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IArticle <em>IArticle</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2955,13 +2945,23 @@ public interface ModelPackage extends EPackage {
 	int ISERVICE_FEATURE_COUNT = IBILLABLE_FEATURE_COUNT + 4;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.ICustomService <em>ICustom Service</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.ICustomService
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getICustomService()
+	 * @generated
+	 */
+	int ICUSTOM_SERVICE = 25;
+
+	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ILOCAL_SERVICE__CODE = ISERVICE__CODE;
+	int ICUSTOM_SERVICE__CODE = ISERVICE__CODE;
 
 	/**
 	 * The feature id for the '<em><b>Text</b></em>' attribute.
@@ -2970,7 +2970,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILOCAL_SERVICE__TEXT = ISERVICE__TEXT;
+	int ICUSTOM_SERVICE__TEXT = ISERVICE__TEXT;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -2979,7 +2979,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILOCAL_SERVICE__DELETED = ISERVICE__DELETED;
+	int ICUSTOM_SERVICE__DELETED = ISERVICE__DELETED;
 
 	/**
 	 * The feature id for the '<em><b>Price</b></em>' attribute.
@@ -2988,7 +2988,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILOCAL_SERVICE__PRICE = ISERVICE__PRICE;
+	int ICUSTOM_SERVICE__PRICE = ISERVICE__PRICE;
 
 	/**
 	 * The feature id for the '<em><b>Net Price</b></em>' attribute.
@@ -2997,7 +2997,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILOCAL_SERVICE__NET_PRICE = ISERVICE__NET_PRICE;
+	int ICUSTOM_SERVICE__NET_PRICE = ISERVICE__NET_PRICE;
 
 	/**
 	 * The feature id for the '<em><b>Minutes</b></em>' attribute.
@@ -3006,16 +3006,16 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ILOCAL_SERVICE__MINUTES = ISERVICE__MINUTES;
+	int ICUSTOM_SERVICE__MINUTES = ISERVICE__MINUTES;
 
 	/**
-	 * The number of structural features of the '<em>ILocal Service</em>' class.
+	 * The number of structural features of the '<em>ICustom Service</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ILOCAL_SERVICE_FEATURE_COUNT = ISERVICE_FEATURE_COUNT + 0;
+	int ICUSTOM_SERVICE_FEATURE_COUNT = ISERVICE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
@@ -3208,6 +3208,52 @@ public interface ModelPackage extends EPackage {
 	int IDIAGNOSIS_FEATURE_COUNT = ICODE_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IFreeTextDiagnosis <em>IFree Text Diagnosis</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IFreeTextDiagnosis
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIFreeTextDiagnosis()
+	 * @generated
+	 */
+	int IFREE_TEXT_DIAGNOSIS = 28;
+
+	/**
+	 * The feature id for the '<em><b>Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IFREE_TEXT_DIAGNOSIS__CODE = IDIAGNOSIS__CODE;
+
+	/**
+	 * The feature id for the '<em><b>Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IFREE_TEXT_DIAGNOSIS__TEXT = IDIAGNOSIS__TEXT;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IFREE_TEXT_DIAGNOSIS__DESCRIPTION = IDIAGNOSIS__DESCRIPTION;
+
+	/**
+	 * The number of structural features of the '<em>IFree Text Diagnosis</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IFREE_TEXT_DIAGNOSIS_FEATURE_COUNT = IDIAGNOSIS_FEATURE_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IDiagnosisReference <em>IDiagnosis Reference</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3215,7 +3261,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDiagnosisReference()
 	 * @generated
 	 */
-	int IDIAGNOSIS_REFERENCE = 28;
+	int IDIAGNOSIS_REFERENCE = 29;
 
 	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
@@ -3270,7 +3316,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDiagnosisTree()
 	 * @generated
 	 */
-	int IDIAGNOSIS_TREE = 29;
+	int IDIAGNOSIS_TREE = 30;
 
 	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
@@ -3327,6 +3373,70 @@ public interface ModelPackage extends EPackage {
 	int IDIAGNOSIS_TREE_FEATURE_COUNT = IDIAGNOSIS_FEATURE_COUNT + 2;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.ICustomDiagnosis <em>ICustom Diagnosis</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.ICustomDiagnosis
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getICustomDiagnosis()
+	 * @generated
+	 */
+	int ICUSTOM_DIAGNOSIS = 31;
+
+	/**
+	 * The feature id for the '<em><b>Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICUSTOM_DIAGNOSIS__CODE = IDIAGNOSIS_TREE__CODE;
+
+	/**
+	 * The feature id for the '<em><b>Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICUSTOM_DIAGNOSIS__TEXT = IDIAGNOSIS_TREE__TEXT;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICUSTOM_DIAGNOSIS__DESCRIPTION = IDIAGNOSIS_TREE__DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>Parent</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICUSTOM_DIAGNOSIS__PARENT = IDIAGNOSIS_TREE__PARENT;
+
+	/**
+	 * The feature id for the '<em><b>Children</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICUSTOM_DIAGNOSIS__CHILDREN = IDIAGNOSIS_TREE__CHILDREN;
+
+	/**
+	 * The number of structural features of the '<em>ICustom Diagnosis</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICUSTOM_DIAGNOSIS_FEATURE_COUNT = IDIAGNOSIS_TREE_FEATURE_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ICoverage <em>ICoverage</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3334,7 +3444,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getICoverage()
 	 * @generated
 	 */
-	int ICOVERAGE = 30;
+	int ICOVERAGE = 32;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -3443,7 +3553,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBillingSystemFactor()
 	 * @generated
 	 */
-	int IBILLING_SYSTEM_FACTOR = 31;
+	int IBILLING_SYSTEM_FACTOR = 33;
 
 	/**
 	 * The feature id for the '<em><b>System</b></em>' attribute.
@@ -3498,7 +3608,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIConfig()
 	 * @generated
 	 */
-	int ICONFIG = 32;
+	int ICONFIG = 34;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' attribute.
@@ -3535,7 +3645,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIUserConfig()
 	 * @generated
 	 */
-	int IUSER_CONFIG = 33;
+	int IUSER_CONFIG = 35;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' attribute.
@@ -3581,7 +3691,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPeriod()
 	 * @generated
 	 */
-	int IPERIOD = 34;
+	int IPERIOD = 36;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -3627,7 +3737,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getWithExtInfo()
 	 * @generated
 	 */
-	int WITH_EXT_INFO = 35;
+	int WITH_EXT_INFO = 37;
 
 	/**
 	 * The number of structural features of the '<em>With Ext Info</em>' class.
@@ -3646,7 +3756,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRole()
 	 * @generated
 	 */
-	int IROLE = 36;
+	int IROLE = 38;
 
 	/**
 	 * The feature id for the '<em><b>System Role</b></em>' attribute.
@@ -3674,7 +3784,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBlob()
 	 * @generated
 	 */
-	int IBLOB = 37;
+	int IBLOB = 39;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -3720,7 +3830,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIEncounter()
 	 * @generated
 	 */
-	int IENCOUNTER = 38;
+	int IENCOUNTER = 40;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -3820,7 +3930,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBilled()
 	 * @generated
 	 */
-	int IBILLED = 39;
+	int IBILLED = 41;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -3956,7 +4066,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIStock()
 	 * @generated
 	 */
-	int ISTOCK = 40;
+	int ISTOCK = 42;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4029,7 +4139,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIStockEntry()
 	 * @generated
 	 */
-	int ISTOCK_ENTRY = 41;
+	int ISTOCK_ENTRY = 43;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4120,7 +4230,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIOrderEntry()
 	 * @generated
 	 */
-	int IORDER_ENTRY = 42;
+	int IORDER_ENTRY = 44;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4202,7 +4312,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIOrder()
 	 * @generated
 	 */
-	int IORDER = 43;
+	int IORDER = 45;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4257,7 +4367,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAddress()
 	 * @generated
 	 */
-	int IADDRESS = 44;
+	int IADDRESS = 46;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4357,7 +4467,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIImage()
 	 * @generated
 	 */
-	int IIMAGE = 46;
+	int IIMAGE = 48;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.WithAssignableId <em>With Assignable Id</em>}' class.
@@ -4367,7 +4477,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getWithAssignableId()
 	 * @generated
 	 */
-	int WITH_ASSIGNABLE_ID = 47;
+	int WITH_ASSIGNABLE_ID = 49;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.
@@ -4377,7 +4487,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAppointment()
 	 * @generated
 	 */
-	int IAPPOINTMENT = 45;
+	int IAPPOINTMENT = 47;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4568,7 +4678,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPrescription()
 	 * @generated
 	 */
-	int IPRESCRIPTION = 48;
+	int IPRESCRIPTION = 50;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -6208,14 +6318,14 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIService_Minutes();
 
 	/**
-	 * Returns the meta object for class '{@link ch.elexis.core.model.ILocalService <em>ILocal Service</em>}'.
+	 * Returns the meta object for class '{@link ch.elexis.core.model.ICustomService <em>ICustom Service</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>ILocal Service</em>'.
-	 * @see ch.elexis.core.model.ILocalService
+	 * @return the meta object for class '<em>ICustom Service</em>'.
+	 * @see ch.elexis.core.model.ICustomService
 	 * @generated
 	 */
-	EClass getILocalService();
+	EClass getICustomService();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IArticle <em>IArticle</em>}'.
@@ -6381,6 +6491,16 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIDiagnosis_Description();
 
 	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IFreeTextDiagnosis <em>IFree Text Diagnosis</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IFree Text Diagnosis</em>'.
+	 * @see ch.elexis.core.model.IFreeTextDiagnosis
+	 * @generated
+	 */
+	EClass getIFreeTextDiagnosis();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IDiagnosisReference <em>IDiagnosis Reference</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6432,6 +6552,16 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getIDiagnosisTree_Children();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.ICustomDiagnosis <em>ICustom Diagnosis</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>ICustom Diagnosis</em>'.
+	 * @see ch.elexis.core.model.ICustomDiagnosis
+	 * @generated
+	 */
+	EClass getICustomDiagnosis();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.ICoverage <em>ICoverage</em>}'.
@@ -8866,14 +8996,14 @@ public interface ModelPackage extends EPackage {
 		EAttribute ISERVICE__MINUTES = eINSTANCE.getIService_Minutes();
 
 		/**
-		 * The meta object literal for the '{@link ch.elexis.core.model.ILocalService <em>ILocal Service</em>}' class.
+		 * The meta object literal for the '{@link ch.elexis.core.model.ICustomService <em>ICustom Service</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see ch.elexis.core.model.ILocalService
-		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getILocalService()
+		 * @see ch.elexis.core.model.ICustomService
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getICustomService()
 		 * @generated
 		 */
-		EClass ILOCAL_SERVICE = eINSTANCE.getILocalService();
+		EClass ICUSTOM_SERVICE = eINSTANCE.getICustomService();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IArticle <em>IArticle</em>}' class.
@@ -9000,6 +9130,16 @@ public interface ModelPackage extends EPackage {
 		EAttribute IDIAGNOSIS__DESCRIPTION = eINSTANCE.getIDiagnosis_Description();
 
 		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IFreeTextDiagnosis <em>IFree Text Diagnosis</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IFreeTextDiagnosis
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIFreeTextDiagnosis()
+		 * @generated
+		 */
+		EClass IFREE_TEXT_DIAGNOSIS = eINSTANCE.getIFreeTextDiagnosis();
+
+		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IDiagnosisReference <em>IDiagnosis Reference</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -9042,6 +9182,16 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference IDIAGNOSIS_TREE__CHILDREN = eINSTANCE.getIDiagnosisTree_Children();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.ICustomDiagnosis <em>ICustom Diagnosis</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.ICustomDiagnosis
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getICustomDiagnosis()
+		 * @generated
+		 */
+		EClass ICUSTOM_DIAGNOSIS = eINSTANCE.getICustomDiagnosis();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.ICoverage <em>ICoverage</em>}' class.

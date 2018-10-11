@@ -13,13 +13,13 @@ package ch.elexis.core.model;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>ILocal Service</b></em>'.
+ * A representation of the model object '<em><b>ICustom Service</b></em>'.
  * <!-- end-user-doc -->
  *
  *
- * @see ch.elexis.core.model.ModelPackage#getILocalService()
+ * @see ch.elexis.core.model.ModelPackage#getICustomService()
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface ILocalService extends IService {
-} // ILocalService
+public interface ICustomService extends IService {
+} // ICustomService

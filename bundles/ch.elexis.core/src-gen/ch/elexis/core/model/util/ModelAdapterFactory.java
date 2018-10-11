@@ -176,8 +176,8 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIServiceAdapter();
 			}
 			@Override
-			public Adapter caseILocalService(ILocalService object) {
-				return createILocalServiceAdapter();
+			public Adapter caseICustomService(ICustomService object) {
+				return createICustomServiceAdapter();
 			}
 			@Override
 			public Adapter caseIArticle(IArticle object) {
@@ -188,12 +188,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIDiagnosisAdapter();
 			}
 			@Override
+			public Adapter caseIFreeTextDiagnosis(IFreeTextDiagnosis object) {
+				return createIFreeTextDiagnosisAdapter();
+			}
+			@Override
 			public Adapter caseIDiagnosisReference(IDiagnosisReference object) {
 				return createIDiagnosisReferenceAdapter();
 			}
 			@Override
 			public Adapter caseIDiagnosisTree(IDiagnosisTree object) {
 				return createIDiagnosisTreeAdapter();
+			}
+			@Override
+			public Adapter caseICustomDiagnosis(ICustomDiagnosis object) {
+				return createICustomDiagnosisAdapter();
 			}
 			@Override
 			public Adapter caseICoverage(ICoverage object) {
@@ -646,16 +654,16 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.ILocalService <em>ILocal Service</em>}'.
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.ICustomService <em>ICustom Service</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see ch.elexis.core.model.ILocalService
+	 * @see ch.elexis.core.model.ICustomService
 	 * @generated
 	 */
-	public Adapter createILocalServiceAdapter() {
+	public Adapter createICustomServiceAdapter() {
 		return null;
 	}
 
@@ -688,6 +696,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IFreeTextDiagnosis <em>IFree Text Diagnosis</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IFreeTextDiagnosis
+	 * @generated
+	 */
+	public Adapter createIFreeTextDiagnosisAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IDiagnosisReference <em>IDiagnosis Reference</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -712,6 +734,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIDiagnosisTreeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.ICustomDiagnosis <em>ICustom Diagnosis</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.ICustomDiagnosis
+	 * @generated
+	 */
+	public Adapter createICustomDiagnosisAdapter() {
 		return null;
 	}
 

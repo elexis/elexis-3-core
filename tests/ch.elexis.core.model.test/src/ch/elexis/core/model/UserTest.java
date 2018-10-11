@@ -34,7 +34,6 @@ public class UserTest extends AbstractTest {
 	
 	@After
 	public void after(){
-		removePerson();
 		coreModelService.remove(userRole);
 		super.after();
 	}

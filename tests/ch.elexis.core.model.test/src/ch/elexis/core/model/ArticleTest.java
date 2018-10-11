@@ -28,7 +28,6 @@ public class ArticleTest extends AbstractTest {
 	
 	@After
 	public void after(){
-		removeLocalArticle();
 		super.after();
 	}
 	
@@ -93,16 +92,6 @@ public class ArticleTest extends AbstractTest {
 	
 	@Test
 	public void query(){
-		removeLocalArticle();
-		
-		IArticle article = coreModelService.create(IArticle.class);
-		article.setName("test article");
-		article.setCode("123456789");
-		article.setTyp(ArticleTyp.EIGENARTIKEL);
-		article.setGtin("0000001111111");
-		article.setPackageSize(12);
-		article.setSellingSize(12);
-		coreModelService.save(article);
 		
 		IArticle article1 = coreModelService.create(IArticle.class);
 		article1.setName("test article 1");
@@ -118,7 +107,7 @@ public class ArticleTest extends AbstractTest {
 		List<IArticle> existing = query.execute();
 		assertNotNull(existing);
 		assertFalse(existing.isEmpty());
-		assertEquals(article, existing.get(0));
+		assertEquals(localArticle, existing.get(0));
 		
 		query = coreModelService.getQuery(IArticle.class);
 		query.and(ModelPackage.Literals.IARTICLE__TYP, COMPARATOR.EQUALS,
@@ -128,7 +117,7 @@ public class ArticleTest extends AbstractTest {
 		assertFalse(existing.isEmpty());
 		assertEquals(2, existing.size());
 		
-		coreModelService.remove(article);
+		coreModelService.remove(localArticle);
 		coreModelService.remove(article1);
 	}
 }

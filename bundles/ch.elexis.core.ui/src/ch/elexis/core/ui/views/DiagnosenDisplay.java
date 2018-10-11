@@ -12,10 +12,14 @@
 
 package ch.elexis.core.ui.views;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -49,46 +53,39 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.statushandlers.StatusManager;
 
-import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListener;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.interfaces.IDiagnose;
-import ch.elexis.core.data.interfaces.IVerrechenbar;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.model.IDiagnosis;
+import ch.elexis.core.model.IDiagnosisReference;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IFreeTextDiagnosis;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.dialogs.FreeTextDiagnoseDialog;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
-import ch.elexis.core.ui.util.PersistentObjectDragSource;
-import ch.elexis.core.ui.util.PersistentObjectDragSource.ISelectionRenderer;
-import ch.elexis.core.ui.util.PersistentObjectDropTarget;
-import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.views.codesystems.DiagnosenView;
 import ch.elexis.data.FreeTextDiagnose;
 import ch.elexis.data.Konsultation;
-import ch.elexis.data.PersistentObject;
 
-public class DiagnosenDisplay extends Composite implements ISelectionRenderer, IUnlockable {
+public class DiagnosenDisplay extends Composite implements IUnlockable {
 	private Table table;
 	private TableViewer viewer;
 	
-	private final PersistentObjectDropTarget dropTarget;
+	private final GenericObjectDropTarget dropTarget;
 
-	private final ElexisEventListener eeli_update = new ElexisUiEventListenerImpl(
-		Konsultation.class, ElexisEvent.EVENT_UPDATE) {
-		@Override
-		public void runInUi(ElexisEvent ev){
-			PersistentObject obj = ev.getObject();
-			if (obj != null && obj.equals(actEncounter)) {
-				viewer.setInput(actEncounter.getDiagnosen());
-			}
+	@Inject
+	public void udpateEncounter(
+		@Optional @UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IEncounter encounter){
+		if (encounter != null && encounter.equals(actEncounter)) {
+			viewer.setInput(actEncounter.getDiagnoses());
 		}
-	};
+	}
 	
-	private Konsultation actEncounter;
+	private IEncounter actEncounter;
 	private ToolBar toolBar;
 	private TableViewerFocusCellManager focusCellManager;
 	private TableColumnLayout tableLayout;
@@ -134,9 +131,15 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 				FreeTextDiagnoseDialog ftDialog =
 					new FreeTextDiagnoseDialog(Display.getDefault().getActiveShell());
 				if (ftDialog.open() == Window.OK) {
-					FreeTextDiagnose diag = new FreeTextDiagnose(ftDialog.getText(), true);
-					actEncounter.addDiagnose(diag);
-					viewer.setInput(actEncounter.getDiagnosen());
+					String freeText = ftDialog.getText();
+					if (StringUtils.isNotBlank(freeText)) {
+						IFreeTextDiagnosis diagnosis =
+							CoreModelServiceHolder.get().create(IFreeTextDiagnosis.class);
+						diagnosis.setText(freeText);
+						CoreModelServiceHolder.get().save(diagnosis);
+						actEncounter.addDiagnosis(diagnosis);
+						viewer.setInput(actEncounter.getDiagnoses());
+					}
 				}
 			}
 		});
@@ -168,8 +171,8 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 				if (columnIndex == 2) {
 					IStructuredSelection selection = viewer.getStructuredSelection();
 					if (!selection.isEmpty()) {
-						if (selection.getFirstElement() instanceof IDiagnose) {
-							actEncounter.removeDiagnose((IDiagnose) selection.getFirstElement());
+						if (selection.getFirstElement() instanceof IDiagnosis) {
+							actEncounter.removeDiagnosis((IDiagnosis) selection.getFirstElement());
 						}
 						setEncounter(actEncounter);
 					}
@@ -177,13 +180,9 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 			}
 		});
 		
-		// new PersistentObjectDragSource()
 		dropTarget =
-			new PersistentObjectDropTarget(Messages.DiagnosenDisplay_DiagnoseTarget, table,
+			new GenericObjectDropTarget(Messages.DiagnosenDisplay_DiagnoseTarget, table,
 				new DropReceiver()); //$NON-NLS-1$
-		new PersistentObjectDragSource(table, this);
-
-		ElexisEventDispatcher.getInstance().addListeners(eeli_update);
 	}
 
 	public void clear(){
@@ -191,35 +190,42 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 		viewer.setInput(Collections.emptyList());
 	}
 
-	private final class DropReceiver implements PersistentObjectDropTarget.IReceiver {
+	private final class DropReceiver implements GenericObjectDropTarget.IReceiver {
 		@Override
-		public void dropped(final PersistentObject o, final DropTargetEvent ev){
-			if (actEncounter == null) {
-				SWTHelper.alert("Keine Konsultation ausgewählt",
-					"Bitte wählen Sie zuerst eine Konsultation aus");
-			} else {
-				if (o instanceof IDiagnose) {
-					actEncounter.addDiagnose((IDiagnose) o);
-					setEncounter(actEncounter);
+		public void dropped(List<Object> list, DropTargetEvent e){
+			if (accept(list)) {
+				for (Object object : list) {
+					if (object instanceof IDiagnose) {
+						Konsultation actKons = Konsultation.load(actEncounter.getId());
+						actKons.addDiagnose((IDiagnose) object);
+					} else if (object instanceof IDiagnosis) {
+						IDiagnosis diagnosis = (IDiagnosis) object;
+						actEncounter.addDiagnosis(diagnosis);
+					} else if (object instanceof IDiagnosis) {
+						actEncounter.addDiagnosis((IDiagnosis) object);
+					}
 				}
+				viewer.setInput(actEncounter.getDiagnoses());
 			}
 		}
 
 		@Override
-		public boolean accept(final PersistentObject o){
-			if (o instanceof IVerrechenbar) {
+		public boolean accept(List<Object> list){
+			if (actEncounter == null) {
 				return false;
 			}
-			if (o instanceof IDiagnose) {
-				return true;
+			for (Object object : list) {
+				if (!(object instanceof IDiagnose || object instanceof IDiagnosis)) {
+					return false;
+				}
 			}
-			return false;
+			return true;
 		}
 	}
 
-	public void setEncounter(Konsultation encounter){
+	public void setEncounter(IEncounter encounter){
 		actEncounter = encounter;
-		viewer.setInput(encounter.getDiagnosen());
+		viewer.setInput(encounter.getDiagnoses());
 	}
 	
 	private void createColumns(){
@@ -239,6 +245,15 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 					if (!(diagnosis instanceof FreeTextDiagnose)) {
 						return diagnosis.getCode();
 					}
+				} else if (element instanceof IDiagnosis) {
+					IDiagnosis diagnosis = (IDiagnosis) element;
+					if (diagnosis instanceof IDiagnosisReference) {
+						IDiagnosisReference diagnosisRef = (IDiagnosisReference) element;
+						if (diagnosisRef.getReferredClass().toLowerCase().contains("freetext")) {
+							return "";
+						}
+					}
+					return diagnosis.getCode();
 				}
 				return "";
 			}
@@ -250,6 +265,9 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 			public String getText(Object element){
 				if (element instanceof IDiagnose) {
 					IDiagnose diagnosis = (IDiagnose) element;
+					return diagnosis.getText();
+				} else if (element instanceof IDiagnosis) {
+					IDiagnosis diagnosis = (IDiagnosis) element;
 					return diagnosis.getText();
 				}
 				return "";
@@ -300,8 +318,8 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 						
 						public void run(){
 							for (Object object : selection.toList()) {
-								if (object instanceof IDiagnose) {
-									actEncounter.removeDiagnose((IDiagnose) object);
+								if (object instanceof IDiagnosis) {
+									actEncounter.removeDiagnosis((IDiagnosis) object);
 								}
 							}
 							setEncounter(actEncounter);
@@ -311,22 +329,6 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 			}
 		});
 		return contextMenuManager.createContextMenu(table);
-	}
-	
-	@Override
-	public List<PersistentObject> getSelection(){
-		List<PersistentObject> ret = new ArrayList<>();
-		IStructuredSelection selection = viewer.getStructuredSelection();
-		if (!selection.isEmpty()) {
-			for (Object object : selection.toList()) {
-				if (object instanceof IDiagnose) {
-					String clazz = object.getClass().getName();
-					ret.add(CoreHub.poFactory
-						.createFromString(clazz + "::" + ((IDiagnose) object).getCode())); //$NON-NLS-1$
-				}
-			}
-		}
-		return ret;
 	}
 
 	@Override

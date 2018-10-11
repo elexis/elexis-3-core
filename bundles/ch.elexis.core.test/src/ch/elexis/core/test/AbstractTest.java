@@ -22,14 +22,14 @@ import ch.elexis.core.utils.OsgiServiceUtil;
 
 public abstract class AbstractTest {
 	
-	public IModelService coreModelService;
+	protected IModelService coreModelService;
 	
-	public IPerson person;
-	public IMandator mandator;
-	public IPatient patient;
-	public ICoverage coverage;
-	public IEncounter encounter;
-	public IArticle localArticle;
+	protected IPerson person;
+	protected IMandator mandator;
+	protected IPatient patient;
+	protected ICoverage coverage;
+	protected IEncounter encounter;
+	protected IArticle localArticle;
 	
 	@Before
 	public void before(){
@@ -37,8 +37,31 @@ public abstract class AbstractTest {
 			"(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
 	}
 	
+	/**
+	 * Removes all model instance fields.
+	 * 
+	 */
 	@After
 	public void after(){
+		if (encounter != null) {
+			coreModelService.remove(encounter);
+		}
+		if (coverage != null) {
+			coreModelService.remove(coverage);
+		}
+		if (localArticle != null) {
+			coreModelService.remove(localArticle);
+		}
+		if (person != null) {
+			coreModelService.remove(person);
+		}
+		if (mandator != null) {
+			coreModelService.remove(mandator);
+		}
+		if (patient != null) {
+			coreModelService.remove(patient);
+		}
+		
 		OsgiServiceUtil.ungetService(coreModelService);
 		coreModelService = null;
 	}
@@ -86,21 +109,5 @@ public abstract class AbstractTest {
 		localArticle.setPackageSize(12);
 		localArticle.setSellingSize(12);
 		coreModelService.save(localArticle);
-	}
-	
-	public void removePerson(){
-		coreModelService.remove(person);
-	}
-	
-	public void removePatient(){
-		coreModelService.remove(patient);
-	}
-	
-	public void removeCoverage(){
-		coreModelService.remove(coverage);
-	}
-	
-	public void removeLocalArticle(){
-		coreModelService.remove(localArticle);
 	}
 }

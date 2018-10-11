@@ -26,12 +26,15 @@ import ch.elexis.core.model.ICodeElementBlock;
 import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.ICustomDiagnosis;
+import ch.elexis.core.model.ICustomService;
 import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.model.IDiagnosisReference;
 import ch.elexis.core.model.IDiagnosisTree;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IFreeTextDiagnosis;
 import ch.elexis.core.model.IHistory;
 import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.ILabItem;
@@ -39,7 +42,7 @@ import ch.elexis.core.model.ILabMapping;
 import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.ILaboratory;
-import ch.elexis.core.model.ILocalService;
+import ch.elexis.core.model.ICustomService;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
@@ -261,7 +264,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass iLocalServiceEClass = null;
+	private EClass iCustomServiceEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -282,6 +285,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass iFreeTextDiagnosisEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass iDiagnosisReferenceEClass = null;
 
 	/**
@@ -290,6 +300,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass iDiagnosisTreeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iCustomDiagnosisEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1771,8 +1788,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getILocalService() {
-		return iLocalServiceEClass;
+	public EClass getICustomService() {
+		return iCustomServiceEClass;
 	}
 
 	/**
@@ -1915,6 +1932,15 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getIFreeTextDiagnosis() {
+		return iFreeTextDiagnosisEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getIDiagnosisReference() {
 		return iDiagnosisReferenceEClass;
 	}
@@ -1953,6 +1979,15 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 */
 	public EReference getIDiagnosisTree_Children() {
 		return (EReference)iDiagnosisTreeEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getICustomDiagnosis() {
+		return iCustomDiagnosisEClass;
 	}
 
 	/**
@@ -3167,7 +3202,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iServiceEClass, ISERVICE__NET_PRICE);
 		createEAttribute(iServiceEClass, ISERVICE__MINUTES);
 
-		iLocalServiceEClass = createEClass(ILOCAL_SERVICE);
+		iCustomServiceEClass = createEClass(ICUSTOM_SERVICE);
 
 		iArticleEClass = createEClass(IARTICLE);
 		createEAttribute(iArticleEClass, IARTICLE__GTIN);
@@ -3186,12 +3221,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iDiagnosisEClass = createEClass(IDIAGNOSIS);
 		createEAttribute(iDiagnosisEClass, IDIAGNOSIS__DESCRIPTION);
 
+		iFreeTextDiagnosisEClass = createEClass(IFREE_TEXT_DIAGNOSIS);
+
 		iDiagnosisReferenceEClass = createEClass(IDIAGNOSIS_REFERENCE);
 		createEAttribute(iDiagnosisReferenceEClass, IDIAGNOSIS_REFERENCE__REFERRED_CLASS);
 
 		iDiagnosisTreeEClass = createEClass(IDIAGNOSIS_TREE);
 		createEReference(iDiagnosisTreeEClass, IDIAGNOSIS_TREE__PARENT);
 		createEReference(iDiagnosisTreeEClass, IDIAGNOSIS_TREE__CHILDREN);
+
+		iCustomDiagnosisEClass = createEClass(ICUSTOM_DIAGNOSIS);
 
 		iCoverageEClass = createEClass(ICOVERAGE);
 		createEReference(iCoverageEClass, ICOVERAGE__PATIENT);
@@ -3394,15 +3433,17 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iServiceEClass.getESuperTypes().add(this.getIBillable());
 		iServiceEClass.getESuperTypes().add(this.getIdentifiable());
 		iServiceEClass.getESuperTypes().add(this.getDeleteable());
-		iLocalServiceEClass.getESuperTypes().add(this.getIService());
+		iCustomServiceEClass.getESuperTypes().add(this.getIService());
 		iArticleEClass.getESuperTypes().add(this.getIdentifiable());
 		iArticleEClass.getESuperTypes().add(this.getIBillable());
 		iArticleEClass.getESuperTypes().add(this.getDeleteable());
 		iArticleEClass.getESuperTypes().add(this.getWithExtInfo());
 		iDiagnosisEClass.getESuperTypes().add(this.getICodeElement());
 		iDiagnosisEClass.getESuperTypes().add(this.getIdentifiable());
+		iFreeTextDiagnosisEClass.getESuperTypes().add(this.getIDiagnosis());
 		iDiagnosisReferenceEClass.getESuperTypes().add(this.getIDiagnosis());
 		iDiagnosisTreeEClass.getESuperTypes().add(this.getIDiagnosis());
+		iCustomDiagnosisEClass.getESuperTypes().add(this.getIDiagnosisTree());
 		iCoverageEClass.getESuperTypes().add(this.getDeleteable());
 		iCoverageEClass.getESuperTypes().add(this.getIdentifiable());
 		iCoverageEClass.getESuperTypes().add(this.getWithExtInfo());
@@ -3711,7 +3752,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIService_NetPrice(), theTypesPackage.getMoney(), "netPrice", null, 0, 1, IService.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIService_Minutes(), ecorePackage.getEInt(), "minutes", null, 0, 1, IService.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(iLocalServiceEClass, ILocalService.class, "ILocalService", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(iCustomServiceEClass, ICustomService.class, "ICustomService", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(iArticleEClass, IArticle.class, "IArticle", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIArticle_Gtin(), ecorePackage.getEString(), "gtin", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3741,12 +3782,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEClass(iDiagnosisEClass, IDiagnosis.class, "IDiagnosis", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIDiagnosis_Description(), ecorePackage.getEString(), "description", null, 0, 1, IDiagnosis.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEClass(iFreeTextDiagnosisEClass, IFreeTextDiagnosis.class, "IFreeTextDiagnosis", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
 		initEClass(iDiagnosisReferenceEClass, IDiagnosisReference.class, "IDiagnosisReference", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIDiagnosisReference_ReferredClass(), ecorePackage.getEString(), "referredClass", null, 0, 1, IDiagnosisReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iDiagnosisTreeEClass, IDiagnosisTree.class, "IDiagnosisTree", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getIDiagnosisTree_Parent(), this.getIDiagnosisTree(), null, "parent", null, 0, 1, IDiagnosisTree.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIDiagnosisTree_Children(), this.getIDiagnosisTree(), null, "children", null, 0, -1, IDiagnosisTree.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(iCustomDiagnosisEClass, ICustomDiagnosis.class, "ICustomDiagnosis", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(iCoverageEClass, ICoverage.class, "ICoverage", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getICoverage_Patient(), this.getIPatient(), null, "patient", null, 1, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

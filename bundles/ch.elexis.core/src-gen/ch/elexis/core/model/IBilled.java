@@ -111,8 +111,8 @@ public interface IBilled extends Identifiable, Deleteable, WithExtInfo {
 	double getAmount();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IBilled#getAmount <em>Amount</em>}'
-	 * attribute. <!-- begin-user-doc -->
+	 * Sets the value of the '{@link ch.elexis.core.model.IBilled#getAmount <em>Amount</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * Set the billed amount. Setting to a non integer value is only possible if the price was not
 	 * changed manually, and if set to a non integer it is not possible to manually change the
@@ -122,9 +122,7 @@ public interface IBilled extends Identifiable, Deleteable, WithExtInfo {
 	 * Throws an IllegalStateException if the price was changed manually.
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Amount</em>' attribute.
+	 * @param value the new value of the '<em>Amount</em>' attribute.
 	 * @see #getAmount()
 	 * @generated
 	 */
@@ -146,8 +144,8 @@ public interface IBilled extends Identifiable, Deleteable, WithExtInfo {
 	Money getPrice();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IBilled#getPrice <em>Price</em>}'
-	 * attribute. <!-- begin-user-doc -->
+	 * Sets the value of the '{@link ch.elexis.core.model.IBilled#getPrice <em>Price</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * Set the price of the billed without considering scaling or amount. After setting the price
 	 * using this method {@link IBilled#isChangedPrice()} will return true. Afterwards it is not
@@ -157,9 +155,7 @@ public interface IBilled extends Identifiable, Deleteable, WithExtInfo {
 	 * Throws an IllegalStateException if the amount is a non integer.
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Price</em>' attribute.
+	 * @param value the new value of the '<em>Price</em>' attribute.
 	 * @see #getPrice()
 	 * @generated
 	 */

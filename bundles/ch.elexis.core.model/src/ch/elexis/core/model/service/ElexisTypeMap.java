@@ -10,6 +10,7 @@ import ch.elexis.core.jpa.entities.DocHandle;
 import ch.elexis.core.jpa.entities.Eigenleistung;
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.entities.Fall;
+import ch.elexis.core.jpa.entities.FreeTextDiagnosis;
 import ch.elexis.core.jpa.entities.Invoice;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.entities.LabResult;
@@ -66,6 +67,7 @@ public class ElexisTypeMap {
 	public static final String TYPE_TESSINER_CODE = "ch.elexis.data.TICode";
 	public static final String TYPE_USER = "ch.elexis.data.User";
 	public static final String TYPE_VERRECHNET = "ch.elexis.data.Verrechnet"; 
+	public static final String TYPE_FREETEXTDIAGNOSE = "ch.elexis.data.FreeTextDiagnose";
 	
 	static {
 		stsToClassMap = new HashMap<String, Class<? extends EntityWithId>>();
@@ -106,6 +108,8 @@ public class ElexisTypeMap {
 		classToStsMap.put(User.class, TYPE_USER);
 		stsToClassMap.put(TYPE_VERRECHNET, Verrechnet.class);
 		classToStsMap.put(Verrechnet.class, TYPE_VERRECHNET);
+		stsToClassMap.put(TYPE_FREETEXTDIAGNOSE, FreeTextDiagnosis.class);
+		classToStsMap.put(FreeTextDiagnosis.class, TYPE_FREETEXTDIAGNOSE);
 
 		// uni-directional mappable
 		stsToClassMap.put(TYPE_MEDIKAMENT, Artikel.class);

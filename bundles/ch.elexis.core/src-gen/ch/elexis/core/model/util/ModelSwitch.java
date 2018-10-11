@@ -276,14 +276,14 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ModelPackage.ILOCAL_SERVICE: {
-				ILocalService iLocalService = (ILocalService)theEObject;
-				T1 result = caseILocalService(iLocalService);
-				if (result == null) result = caseIService(iLocalService);
-				if (result == null) result = caseIBillable(iLocalService);
-				if (result == null) result = caseDeleteable(iLocalService);
-				if (result == null) result = caseICodeElement(iLocalService);
-				if (result == null) result = caseIdentifiable(iLocalService);
+			case ModelPackage.ICUSTOM_SERVICE: {
+				ICustomService iCustomService = (ICustomService)theEObject;
+				T1 result = caseICustomService(iCustomService);
+				if (result == null) result = caseIService(iCustomService);
+				if (result == null) result = caseIBillable(iCustomService);
+				if (result == null) result = caseDeleteable(iCustomService);
+				if (result == null) result = caseICodeElement(iCustomService);
+				if (result == null) result = caseIdentifiable(iCustomService);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -306,6 +306,15 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ModelPackage.IFREE_TEXT_DIAGNOSIS: {
+				IFreeTextDiagnosis iFreeTextDiagnosis = (IFreeTextDiagnosis)theEObject;
+				T1 result = caseIFreeTextDiagnosis(iFreeTextDiagnosis);
+				if (result == null) result = caseIDiagnosis(iFreeTextDiagnosis);
+				if (result == null) result = caseICodeElement(iFreeTextDiagnosis);
+				if (result == null) result = caseIdentifiable(iFreeTextDiagnosis);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ModelPackage.IDIAGNOSIS_REFERENCE: {
 				IDiagnosisReference iDiagnosisReference = (IDiagnosisReference)theEObject;
 				T1 result = caseIDiagnosisReference(iDiagnosisReference);
@@ -321,6 +330,16 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseIDiagnosis(iDiagnosisTree);
 				if (result == null) result = caseICodeElement(iDiagnosisTree);
 				if (result == null) result = caseIdentifiable(iDiagnosisTree);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.ICUSTOM_DIAGNOSIS: {
+				ICustomDiagnosis iCustomDiagnosis = (ICustomDiagnosis)theEObject;
+				T1 result = caseICustomDiagnosis(iCustomDiagnosis);
+				if (result == null) result = caseIDiagnosisTree(iCustomDiagnosis);
+				if (result == null) result = caseIDiagnosis(iCustomDiagnosis);
+				if (result == null) result = caseICodeElement(iCustomDiagnosis);
+				if (result == null) result = caseIdentifiable(iCustomDiagnosis);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -854,17 +873,17 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>ILocal Service</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>ICustom Service</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>ILocal Service</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>ICustom Service</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T1 caseILocalService(ILocalService object) {
+	public T1 caseICustomService(ICustomService object) {
 		return null;
 	}
 
@@ -899,6 +918,21 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IFree Text Diagnosis</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IFree Text Diagnosis</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIFreeTextDiagnosis(IFreeTextDiagnosis object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>IDiagnosis Reference</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -925,6 +959,21 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIDiagnosisTree(IDiagnosisTree object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>ICustom Diagnosis</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>ICustom Diagnosis</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseICustomDiagnosis(ICustomDiagnosis object) {
 		return null;
 	}
 

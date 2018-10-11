@@ -14,7 +14,23 @@ public class ModelUtil {
 	 */
 	public static Optional<Money> getMoneyForCentString(String string){
 		try {
-			int amount = Integer.parseInt(string);
+			int cent = Integer.parseInt(string);
+			return Optional.of(new Money(cent));
+		} catch (NumberFormatException e) {
+			// ignore
+		}
+		return Optional.empty();
+	}
+	
+	/**
+	 * If string is parse able as {@link Double}, a Money representation of it is created.
+	 * 
+	 * @param string
+	 * @return
+	 */
+	public static Optional<Money> getMoneyForPriceString(String string){
+		try {
+			double amount = Double.parseDouble(string);
 			return Optional.of(new Money(amount));
 		} catch (NumberFormatException e) {
 			// ignore

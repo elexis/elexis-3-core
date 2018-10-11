@@ -21,7 +21,6 @@ public class PatientTest extends AbstractTest {
 	
 	@After
 	public void after(){
-		super.removePatient();
 		super.after();
 	}
 	

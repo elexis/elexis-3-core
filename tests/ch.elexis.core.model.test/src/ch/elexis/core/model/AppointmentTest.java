@@ -23,7 +23,6 @@ public class AppointmentTest extends AbstractTest {
 	
 	@After
 	public void after(){
-		super.removePatient();
 		super.after();
 	}
 	

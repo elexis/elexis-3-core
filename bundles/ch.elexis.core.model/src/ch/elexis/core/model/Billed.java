@@ -118,7 +118,11 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 	
 	@Override
 	public void setNetPrice(Money value){
-		getEntity().setEk_kosten(value.getCents());
+		if (value != null) {
+			getEntity().setEk_kosten(value.getCents());
+		} else {
+			getEntity().setEk_kosten(0);
+		}
 	}
 	
 	@Override
