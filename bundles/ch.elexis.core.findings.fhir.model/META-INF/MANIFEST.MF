@@ -16,8 +16,8 @@ Bundle-ActivationPolicy: lazy
 Import-Package: org.apache.commons.lang3;version="3.1.0",
  org.osgi.service.event,
  org.slf4j;version="1.7.2"
-Service-Component: OSGI-INF/ch.elexis.core.findings.fhir.model.service.FindingsModelService.xml,
- OSGI-INF/ch.elexis.core.findings.fhir.model.service.FindingsService.xml,
+Service-Component: OSGI-INF/ch.elexis.core.findings.fhir.model.service.FindingsModelServiceHolder.xml,
+ OSGI-INF/ch.elexis.core.findings.fhir.model.service.FindingsModelService.xml,
  OSGI-INF/ch.elexis.core.findings.fhir.model.service.LocalCodingContribution.xml,
- OSGI-INF/ch.elexis.core.findings.fhir.model.service.CodingService.xml,
- OSGI-INF/ch.elexis.core.findings.fhir.model.service.FindingsModelServiceHolder.xml
+ OSGI-INF/ch.elexis.core.findings.fhir.model.service.FindingsService.xml,
+ OSGI-INF/ch.elexis.core.findings.fhir.model.service.CodingService.xml

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" deactivate="deactivate" name="ch.elexis.core.jpa.datasource.internal.ElexisPoolingDataSource">
-   <property name="name" value="elexis.datasource"/>
-   <service>
-      <provide interface="javax.sql.DataSource"/>
-      <provide interface="ch.elexis.core.services.IElexisDataSource"/>
-   </service>
-   <implementation class="ch.elexis.core.jpa.datasource.internal.ElexisPoolingDataSource"/>
-</scr:component>

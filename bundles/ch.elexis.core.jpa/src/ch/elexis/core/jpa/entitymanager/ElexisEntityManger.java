@@ -66,6 +66,7 @@ public class ElexisEntityManger implements IElexisEntityManager {
 	
 	@Reference(service = DataSource.class, cardinality = ReferenceCardinality.MANDATORY)
 	protected synchronized void bindDataSource(DataSource dataSource){
+		logger.debug("Binding " + dataSource.getClass().getName());
 		this.dataSource = dataSource;
 	}
 	
@@ -157,12 +158,12 @@ public class ElexisEntityManger implements IElexisEntityManager {
 	
 	@Override
 	public boolean executeSQLScript(String changeId, String sqlScript){
-		if (CoreUtil.isTestMode()) {
+		if (CoreUtil.isTestMode() || Boolean.valueOf(System.getProperty("forceExecuteSqlScript"))) {
 			LiquibaseDBScriptExecutor executor = new LiquibaseDBScriptExecutor(dataSource);
 			return executor.execute(changeId, sqlScript);
 		}
-		logger.warn(
-			"Did not execute script [" + changeId + "] as system not started in mode " + CoreUtil.TEST_MODE);
+		logger.warn("Did not execute script [" + changeId + "] as system not started in mode "
+			+ CoreUtil.TEST_MODE);
 		return false;
 	}
 }

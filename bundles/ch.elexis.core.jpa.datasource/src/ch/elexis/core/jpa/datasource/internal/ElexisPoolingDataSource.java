@@ -13,32 +13,25 @@ import org.apache.commons.dbcp.PoolableConnectionFactory;
 import org.apache.commons.dbcp.PoolingDataSource;
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.GenericObjectPool;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.DBConnection;
-import ch.elexis.core.common.DBConnection.DBType;
-import ch.elexis.core.services.IElexisDataSource;
-import ch.elexis.core.utils.CoreUtil;
 
-@Component(property = "name=elexis.datasource")
-public class ElexisPoolingDataSource extends PoolingDataSource
-		implements DataSource, IElexisDataSource {
-
+public class ElexisPoolingDataSource extends PoolingDataSource implements DataSource {
+	
 	private static Logger log = LoggerFactory.getLogger(ElexisPoolingDataSource.class);
-
+	
+	private DBConnection dbConnection;
+	
 	private ObjectPool<Connection> connectionPool;
 	
-	public void setDBConnection(DBConnection dbConnection){
-		if (connectionPool != null) {
-			try {
-				connectionPool.close();
-			} catch (Exception e) {
-				log.error("db pool close error", e);
-			}
-		}
+	public ElexisPoolingDataSource(DBConnection dbConnection){
+		this.dbConnection = dbConnection;
+	}
+	
+	public void activate()
+		throws InstantiationException, IllegalAccessException, ClassNotFoundException{
 		connectionPool = createConnectionPool(dbConnection);
 		if (connectionPool != null) {
 			setPool(connectionPool);
@@ -55,7 +48,6 @@ public class ElexisPoolingDataSource extends PoolingDataSource
 		}
 	}
 	
-	@Deactivate
 	public void deactivate(){
 		if (connectionPool != null) {
 			try {
@@ -67,60 +59,41 @@ public class ElexisPoolingDataSource extends PoolingDataSource
 		}
 	}
 	
-	private ObjectPool<Connection> createConnectionPool(DBConnection dbConnection) {
+	private ObjectPool<Connection> createConnectionPool(DBConnection dbConnection)
+		throws InstantiationException, IllegalAccessException, ClassNotFoundException{
 		String driverName = dbConnection.rdbmsType.driverName;
 		String username = dbConnection.username;
 		String password = dbConnection.password;
 		String connection = dbConnection.connectionString;
-		try {
-			Driver driver = (Driver) Class.forName(driverName).newInstance();
-
-			Properties properties = new Properties();
-			properties.put("user", username);
-			properties.put("password", password);
-
-			ConnectionFactory connectionFactory = new DriverConnectionFactory(driver, connection, properties);
-
-			GenericObjectPool<Connection> connectionPool = new GenericObjectPool<>(null);
-			connectionPool.setMaxActive(32);
-			connectionPool.setMinIdle(8);
-			connectionPool.setMaxWait(10000);
-			connectionPool.setTestOnBorrow(true);
-
-			new PoolableConnectionFactory(connectionFactory, connectionPool, null, "SELECT 1;", false, true);
-			return connectionPool;
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-			log.error("db connection pool initialization error", e);
-			return null;
-		}
-	}
-
-	@Override
-	public Connection getConnection(String uname, String passwd) throws SQLException {
-		return getConnection();
-	}
-
-	/**
-	 * @return an h2 based test database connection
-	 */
-	private DBConnection getTestDatabaseConnection(){
-		DBConnection retVal = new DBConnection();
-		retVal.connectionString = "jdbc:h2:mem:elexisTest;DB_CLOSE_DELAY=-1";
-		String trace = System.getProperty("elexis.test.dbtrace");
-		if (trace != null && "true".equalsIgnoreCase(trace)) {
-			retVal.connectionString += ";TRACE_LEVEL_SYSTEM_OUT=2";
-		}
-		retVal.rdbmsType = DBType.H2;
-		retVal.username = "sa";
-		retVal.password = "";
-		return retVal;
+		
+		Driver driver = (Driver) Class.forName(driverName).newInstance();
+		
+		Properties properties = new Properties();
+		properties.put("user", username);
+		properties.put("password", password);
+		
+		ConnectionFactory connectionFactory =
+			new DriverConnectionFactory(driver, connection, properties);
+		
+		GenericObjectPool<Connection> connectionPool = new GenericObjectPool<>(null);
+		connectionPool.setMaxActive(32);
+		connectionPool.setMinIdle(8);
+		connectionPool.setMaxWait(10000);
+		connectionPool.setTestOnBorrow(true);
+		
+		new PoolableConnectionFactory(connectionFactory, connectionPool, null, "SELECT 1;", false,
+			true);
+		return connectionPool;
+		
 	}
 	
 	@Override
-	public Connection getConnection() throws SQLException {
-		if (CoreUtil.isTestMode() && connectionPool == null) {
-			setDBConnection(getTestDatabaseConnection());
-		}
+	public Connection getConnection(String uname, String passwd) throws SQLException{
+		return getConnection();
+	}
+	
+	@Override
+	public Connection getConnection() throws SQLException{
 		return super.getConnection();
 	}
 }

@@ -7,7 +7,6 @@ import javax.persistence.EntityManager;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.event.EventAdmin;
 import org.slf4j.LoggerFactory;
 
@@ -27,8 +26,11 @@ import ch.elexis.core.services.IStoreToStringContribution;
 public class CoreModelService extends AbstractModelService
 		implements IModelService, IStoreToStringContribution {
 	
-	@Reference(cardinality = ReferenceCardinality.MANDATORY)
+	@Reference
 	private IElexisEntityManager entityManager;
+	
+	@Reference
+	private EventAdmin eventAdmin;
 	
 	@Override
 	protected EntityManager getEntityManager(boolean managed){
@@ -39,9 +41,6 @@ public class CoreModelService extends AbstractModelService
 	protected void closeEntityManager(EntityManager entityManager){
 		this.entityManager.closeEntityManager(entityManager);
 	}
-	
-	@Reference
-	private EventAdmin eventAdmin;
 	
 	@Override
 	protected EventAdmin getEventAdmin(){

@@ -18,5 +18,6 @@ Require-Bundle: org.apache.commons.dbcp;bundle-version="1.4.0",
  org.h2;bundle-version="1.3.170",
  com.mysql.jdbc;bundle-version="5.1.21",
  org.postgresql;bundle-version="9.2.0"
-Service-Component: OSGI-INF/ch.elexis.core.jpa.datasource.internal.ElexisPoolingDataSource.xml
+Service-Component: OSGI-INF/ch.elexis.core.jpa.datasource.internal.ElexisDataSourceService.xml
 Bundle-ActivationPolicy: lazy
+Export-Package: ch.elexis.core.jpa.datasource.test

@@ -1813,4 +1813,10 @@ LEFT OUTER JOIN PUBLIC.RIGHT_ RI
 ORDER BY 1
 /* index sorted */</createView>
     </changeSet>
+	<changeSet author="marco" id="1539339922158-196">
+		<insert tableName="config">
+			<column name="param" value="dbversion" />
+			<column name="wert" value="liquibase" />
+		</insert>
+	</changeSet>
 </databaseChangeLog>
