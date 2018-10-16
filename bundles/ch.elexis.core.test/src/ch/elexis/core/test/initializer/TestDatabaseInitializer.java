@@ -77,9 +77,7 @@ public class TestDatabaseInitializer {
 	private static boolean isPrescriptionInitialized = false;
 	private static IPrescription prescription;
 	
-	//
-	//	private static boolean isArtikelstammInitialized = false;
-	//	private static ArtikelstammItem artikelstammitem;
+	private static boolean isArtikelstammTableInitialized = false;
 	
 	private static boolean isLaborItemsOrdersResultsInitialized = false;
 	
@@ -118,13 +116,19 @@ public class TestDatabaseInitializer {
 			executeScript("test_initRoles", "/rsc/dbScripts/Role.sql");
 			executeScript("test_initSampleContacts", "/rsc/dbScripts/sampleContacts.sql");
 			executeScript("test_initBillingVKPreise", "/rsc/dbScripts/BillingVKPreise.sql");
-			executeScript("test_initArtikelstammItem", "/rsc/dbScripts/ArtikelstammItem.sql");
 			if (configService != null) {
 				new ConfigInitializer().initializeConfiguration(configService);
 			}
 			isDbInitialized = true;
 		} else {
 			logger.error("No connection available!");
+		}
+	}
+	
+	public synchronized void initializeArtikelstammTable() throws IOException{
+		if (!isArtikelstammTableInitialized) {
+			isArtikelstammTableInitialized =
+				executeScript("test_initArtikelstammItem", "/rsc/dbScripts/ArtikelstammItem.sql");
 		}
 	}
 	
@@ -398,7 +402,8 @@ public class TestDatabaseInitializer {
 			article.setGtin("0000001111111");
 			article.setPackageSize(12);
 			article.setSellingSize(12);
-			modelService.save(article);
+			isArticleInitialized = modelService.save(article);
+			
 		}
 		
 		if (!isPrescriptionInitialized) {
@@ -576,27 +581,8 @@ public class TestDatabaseInitializer {
 		return labResults;
 	}
 	
-	//	/**
-	//	 * Initialize an test ArtikelstammItem.
-	//	 * 
-	//	 * <li>GTIN: 7680336700282</li>
-	//	 * <li>Pharm: 58985</li>
-	//	 * <li>Desc: ASPIRIN C Brausetabl 10 Stk</li>
-	//	 * 
-	//	 * @throws SQLException
-	//	 * @throws IOException
-	//	 * 
-	//	 */
-	//	public synchronized void initializeArtikelstamm() throws IOException, SQLException{
-	//		if (!isDbInitialized) {
-	//			initializeDb();
-	//		}
-	//		if (!isArtikelstammInitialized) {
-	//			artikelstammitem = new ArtikelstammItemService.Builder(0, "7680336700282",
-	//				BigInteger.valueOf(58985l), "ASPIRIN C Brausetabl 10 Stk").buildAndSave();
-	//			
-	//			isArtikelstammInitialized = true;
-	//		}
-	//	}
+	public IArticle getArticle(){
+		return article;
+	}
 	
 }
