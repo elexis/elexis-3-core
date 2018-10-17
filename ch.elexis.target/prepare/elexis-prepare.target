@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Oxygen.3 for Elexis" sequenceNumber="1537431335">
+<target name="Oxygen.3 for Elexis" sequenceNumber="1539724070">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.18.0.v20171217-2215"/>
@@ -142,6 +142,10 @@
       <unit id="ca.uhn.hapi.structures-v251.source" version="2.3.0"/>
       <unit id="ca.uhn.hapi.structures-v26" version="2.3.0"/>
       <unit id="ca.uhn.hapi.structures-v26.source" version="2.3.0"/>
+      <unit id="org.postgresql.jdbc42" version="42.2.5"/>
+      <unit id="org.postgresql.jdbc42.source" version="42.2.5"/>
+      <unit id="com.mysql.jdbc" version="5.1.47"/>
+      <unit id="com.mysql.jdbc.source" version="5.1.47"/>
       <repository location="http://download.elexis.info/elexis-server/elexis-server-dependencies"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
@@ -202,7 +206,6 @@
       <unit id="com.ibm.icu.4j" version="3.4.4"/>
       <unit id="com.lowagie.itext" version="2.0.8"/>
       <unit id="com.lowagie.itext.source" version="2.0.8"/>
-      <unit id="com.mysql.jdbc" version="5.1.21"/>
       <unit id="com.sun.jna" version="3.0.9"/>
       <unit id="com.sun.jna.source" version="3.0.9"/>
       <unit id="com.thoughtworks.xstream" version="1.2.2"/>
@@ -337,8 +340,6 @@
       <unit id="org.objenesis.source" version="1.2.0"/>
       <unit id="org.odftoolkit.odfdom-java" version="0.8.6"/>
       <unit id="org.odftoolkit.odfdom-java.source" version="0.8.6"/>
-      <unit id="org.postgresql" version="9.2.0.1002-jdbc4"/>
-      <unit id="org.postgresql.source" version="9.2.0.1002-jdbc4"/>
       <unit id="org.powermock.api-mockito" version="1.4.12"/>
       <unit id="org.powermock.api-mockito.source" version="1.4.12"/>
       <unit id="org.powermock.api-support" version="1.4.12"/>

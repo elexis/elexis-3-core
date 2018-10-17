@@ -31,6 +31,8 @@ public class ElexisEventTopics {
 	public static final String EVENT_UPDATE = BASE + "update";
 	public static final String EVENT_RELOAD = BASE + "reload";
 	
+	public static final String EVENT_USER_CHANGED = BASE + "user/changed";
+	
 	/**
 	 * Topics concerning locking object events
 	 */
@@ -38,6 +40,7 @@ public class ElexisEventTopics {
 	
 	public static final String EVENT_LOCK_AQUIRED = LOCKING_EVENT + "aquired";
 	public static final String EVENT_LOCK_RELEASED = LOCKING_EVENT + "released";
+	public static final String EVENT_LOCK_PRERELEASE = LOCKING_EVENT + "prerelease";
 	
 	/**
 	 * Topics concerning stock commissioning systems

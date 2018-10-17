@@ -7,7 +7,23 @@ import ch.rgw.tools.Result;
 
 public interface IBillingService {
 	
+	/**
+	 * Test if the {@link IEncounter} is editable in the context of billing.
+	 * 
+	 * @param encounter
+	 * @return
+	 */
 	public Result<IEncounter> isEditable(IEncounter encounter);
 	
+	/**
+	 * Try to bill the amount of {@link IBillable} using the {@link IEncounter}. Test the result to
+	 * see if billing was successful or there was a problem.
+	 * 
+	 * @param billable
+	 * @param encounter
+	 * @param amount
+	 * @return
+	 */
 	public Result<IBilled> bill(IBillable billable, IEncounter encounter, double amount);
+	
 }

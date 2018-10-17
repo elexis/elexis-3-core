@@ -75,11 +75,6 @@ public class Patient extends Person implements IPatient {
 	}
 	
 	@Override
-	public String getPatientLabel(){
-		return getLabel();
-	}
-	
-	@Override
 	public List<ICoverage> getCoverages(){
 		return getEntity().getFaelle().parallelStream().filter(f -> !f.isDeleted())
 			.map(f -> ModelUtil.getAdapter(f, ICoverage.class)).collect(Collectors.toList());

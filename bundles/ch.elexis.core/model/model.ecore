@@ -105,7 +105,6 @@
       eSuperTypes="#//IOrganization"/>
   <eClassifiers xsi:type="ecore:EClass" name="IPatient" abstract="true" interface="true"
       eSuperTypes="#//IPerson">
-    <eOperations name="getPatientLabel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eOperations name="getPatientNr" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eOperations name="setPatientNr">
       <eParameters name="patientNr" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -122,7 +121,9 @@
         eType="#//ICoverage" changeable="false"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IMandator" abstract="true" interface="true"
-      eSuperTypes="#//IContact"/>
+      eSuperTypes="#//IContact">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="biller" eType="#//IContact"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IUser" abstract="true" interface="true"
       eSuperTypes="#//Deleteable #//Identifiable">
     <eOperations name="addRole" eType="#//IRole">
@@ -519,6 +520,7 @@
         <details key="attributeName" value="eintrag"/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="invoice" eType="#//IInvoice"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IBilled" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable #//WithExtInfo">
@@ -538,6 +540,10 @@
         changeable="false"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="total" eType="ecore:EDataType types.ecore#//Money"
         changeable="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IInvoice" abstract="true" interface="true"
+      eSuperTypes="#//Identifiable #//Deleteable #//WithExtInfo">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="state" eType="ecore:EDataType types.ecore#//InvoiceState"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IStock" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable">

@@ -32,6 +32,7 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IEncounter#getDiagnoses <em>Diagnoses</em>}</li>
  *   <li>{@link ch.elexis.core.model.IEncounter#getCoverage <em>Coverage</em>}</li>
  *   <li>{@link ch.elexis.core.model.IEncounter#getVersionedEntry <em>Versioned Entry</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IEncounter#getInvoice <em>Invoice</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIEncounter()
@@ -216,6 +217,32 @@ public interface IEncounter extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	void setVersionedEntry(VersionedResource value);
+
+	/**
+	 * Returns the value of the '<em><b>Invoice</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Invoice</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Invoice</em>' reference.
+	 * @see #setInvoice(IInvoice)
+	 * @see ch.elexis.core.model.ModelPackage#getIEncounter_Invoice()
+	 * @model
+	 * @generated
+	 */
+	IInvoice getInvoice();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IEncounter#getInvoice <em>Invoice</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Invoice</em>' reference.
+	 * @see #getInvoice()
+	 * @generated
+	 */
+	void setInvoice(IInvoice value);
 
 	/**
 	 * <!-- begin-user-doc -->

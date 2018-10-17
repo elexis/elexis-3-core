@@ -140,4 +140,16 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 		getEntity().getDiagnoses().remove(diag);
 		ModelUtil.getModelService().save(Arrays.asList(diagnosis, this));
 	}
+	
+	@Override
+	public IInvoice getInvoice(){
+		getEntity().getInvoice();
+		return null;
+	}
+	
+	@Override
+	public void setInvoice(IInvoice value){
+		// TODO Auto-generated method stub
+		
+	}
 }

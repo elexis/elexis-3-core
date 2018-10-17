@@ -1686,13 +1686,22 @@ public interface ModelPackage extends EPackage {
 	int IMANDATOR__ADDRESS = ICONTACT__ADDRESS;
 
 	/**
+	 * The feature id for the '<em><b>Biller</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMANDATOR__BILLER = ICONTACT_FEATURE_COUNT + 0;
+
+	/**
 	 * The number of structural features of the '<em>IMandator</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMANDATOR_FEATURE_COUNT = ICONTACT_FEATURE_COUNT + 0;
+	int IMANDATOR_FEATURE_COUNT = ICONTACT_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IUser <em>IUser</em>}' class.
@@ -3914,13 +3923,22 @@ public interface ModelPackage extends EPackage {
 	int IENCOUNTER__VERSIONED_ENTRY = IDENTIFIABLE_FEATURE_COUNT + 8;
 
 	/**
+	 * The feature id for the '<em><b>Invoice</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IENCOUNTER__INVOICE = IDENTIFIABLE_FEATURE_COUNT + 9;
+
+	/**
 	 * The number of structural features of the '<em>IEncounter</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IENCOUNTER_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 9;
+	int IENCOUNTER_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 10;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IBilled <em>IBilled</em>}' class.
@@ -4059,6 +4077,43 @@ public interface ModelPackage extends EPackage {
 	int IBILLED_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 13;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IInvoice <em>IInvoice</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IInvoice
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIInvoice()
+	 * @generated
+	 */
+	int IINVOICE = 42;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>State</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE__STATE = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>IInvoice</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IStock <em>IStock</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4066,7 +4121,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIStock()
 	 * @generated
 	 */
-	int ISTOCK = 42;
+	int ISTOCK = 43;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4139,7 +4194,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIStockEntry()
 	 * @generated
 	 */
-	int ISTOCK_ENTRY = 43;
+	int ISTOCK_ENTRY = 44;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4230,7 +4285,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIOrderEntry()
 	 * @generated
 	 */
-	int IORDER_ENTRY = 44;
+	int IORDER_ENTRY = 45;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4312,7 +4367,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIOrder()
 	 * @generated
 	 */
-	int IORDER = 45;
+	int IORDER = 46;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4367,7 +4422,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAddress()
 	 * @generated
 	 */
-	int IADDRESS = 46;
+	int IADDRESS = 47;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4467,7 +4522,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIImage()
 	 * @generated
 	 */
-	int IIMAGE = 48;
+	int IIMAGE = 49;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.WithAssignableId <em>With Assignable Id</em>}' class.
@@ -4477,7 +4532,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getWithAssignableId()
 	 * @generated
 	 */
-	int WITH_ASSIGNABLE_ID = 49;
+	int WITH_ASSIGNABLE_ID = 50;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.
@@ -4487,7 +4542,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAppointment()
 	 * @generated
 	 */
-	int IAPPOINTMENT = 47;
+	int IAPPOINTMENT = 48;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4678,7 +4733,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPrescription()
 	 * @generated
 	 */
-	int IPRESCRIPTION = 50;
+	int IPRESCRIPTION = 51;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -5298,6 +5353,17 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getIMandator();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IMandator#getBiller <em>Biller</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Biller</em>'.
+	 * @see ch.elexis.core.model.IMandator#getBiller()
+	 * @see #getIMandator()
+	 * @generated
+	 */
+	EReference getIMandator_Biller();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IUser <em>IUser</em>}'.
@@ -6973,6 +7039,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIEncounter_VersionedEntry();
 
 	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IEncounter#getInvoice <em>Invoice</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Invoice</em>'.
+	 * @see ch.elexis.core.model.IEncounter#getInvoice()
+	 * @see #getIEncounter()
+	 * @generated
+	 */
+	EReference getIEncounter_Invoice();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IBilled <em>IBilled</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7113,6 +7190,27 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getIBilled_Total();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IInvoice <em>IInvoice</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IInvoice</em>'.
+	 * @see ch.elexis.core.model.IInvoice
+	 * @generated
+	 */
+	EClass getIInvoice();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IInvoice#getState <em>State</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>State</em>'.
+	 * @see ch.elexis.core.model.IInvoice#getState()
+	 * @see #getIInvoice()
+	 * @generated
+	 */
+	EAttribute getIInvoice_State();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IStock <em>IStock</em>}'.
@@ -8210,6 +8308,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EClass IMANDATOR = eINSTANCE.getIMandator();
+
+		/**
+		 * The meta object literal for the '<em><b>Biller</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IMANDATOR__BILLER = eINSTANCE.getIMandator_Biller();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IUser <em>IUser</em>}' class.
@@ -9516,6 +9622,14 @@ public interface ModelPackage extends EPackage {
 		EAttribute IENCOUNTER__VERSIONED_ENTRY = eINSTANCE.getIEncounter_VersionedEntry();
 
 		/**
+		 * The meta object literal for the '<em><b>Invoice</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IENCOUNTER__INVOICE = eINSTANCE.getIEncounter_Invoice();
+
+		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IBilled <em>IBilled</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -9620,6 +9734,24 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IBILLED__TOTAL = eINSTANCE.getIBilled_Total();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IInvoice <em>IInvoice</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IInvoice
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIInvoice()
+		 * @generated
+		 */
+		EClass IINVOICE = eINSTANCE.getIInvoice();
+
+		/**
+		 * The meta object literal for the '<em><b>State</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IINVOICE__STATE = eINSTANCE.getIInvoice_State();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IStock <em>IStock</em>}' class.

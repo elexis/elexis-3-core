@@ -4,9 +4,8 @@ import ch.elexis.admin.ACE;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.ui.actions.RestrictedAction;
-import ch.elexis.data.PersistentObject;
 
-abstract public class LockedRestrictedAction<T extends PersistentObject> extends RestrictedAction {
+abstract public class LockedRestrictedAction<T> extends RestrictedAction {
 
 	private T object;
 

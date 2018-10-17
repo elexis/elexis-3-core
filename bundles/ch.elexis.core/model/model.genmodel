@@ -82,7 +82,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPatient/personalAnamnese"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPatient/allergies"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IPatient/coverages"/>
-      <genOperations ecoreOperation="model.ecore#//IPatient/getPatientLabel"/>
       <genOperations ecoreOperation="model.ecore#//IPatient/getPatientNr"/>
       <genOperations ecoreOperation="model.ecore#//IPatient/setPatientNr">
         <genParameters ecoreParameter="model.ecore#//IPatient/setPatientNr/patientNr"/>
@@ -91,7 +90,9 @@
         <genParameters ecoreParameter="model.ecore#//IPatient/addCoverage/coverage"/>
       </genOperations>
     </genClasses>
-    <genClasses image="false" ecoreClass="model.ecore#//IMandator"/>
+    <genClasses image="false" ecoreClass="model.ecore#//IMandator">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IMandator/biller"/>
+    </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IUser">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IUser/username"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IUser/hashedPassword"/>
@@ -332,6 +333,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IEncounter/diagnoses"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IEncounter/coverage"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IEncounter/versionedEntry"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IEncounter/invoice"/>
       <genOperations ecoreOperation="model.ecore#//IEncounter/addDiagnosis">
         <genParameters ecoreParameter="model.ecore#//IEncounter/addDiagnosis/diagnosis"/>
       </genOperations>
@@ -357,6 +359,9 @@
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBilled/total"/>
       <genOperations ecoreOperation="model.ecore#//IBilled/isChangedPrice"/>
       <genOperations ecoreOperation="model.ecore#//IBilled/isNonIntegerAmount"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IInvoice">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IInvoice/state"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IStock">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IStock/code"/>

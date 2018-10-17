@@ -209,12 +209,4 @@ public interface IPatient extends IPerson {
 	 */
 	ICoverage addCoverage(ICoverage coverage);
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation"
-	 * @generated
-	 */
-	String getPatientLabel();
-
 } // IPatient

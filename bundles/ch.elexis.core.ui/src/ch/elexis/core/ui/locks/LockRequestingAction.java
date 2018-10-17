@@ -5,7 +5,6 @@ import org.eclipse.swt.SWT;
 
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
-import ch.elexis.data.PersistentObject;
 
 /**
  * The lock is acquired before calling doRun. If the lock can not be acquired doRun is not called,
@@ -15,7 +14,7 @@ import ch.elexis.data.PersistentObject;
  *
  * @param <T>
  */
-public abstract class LockRequestingAction<T extends PersistentObject> extends Action {
+public abstract class LockRequestingAction<T> extends Action {
 
 	private T object;
 

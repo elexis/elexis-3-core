@@ -3,7 +3,6 @@ package ch.elexis.core.ui.locks;
 import org.eclipse.jface.action.Action;
 
 import ch.elexis.core.data.service.LocalLockServiceHolder;
-import ch.elexis.data.PersistentObject;
 
 /**
  * Action will be active if lock LockService#isLocked on the targeted Object is true.
@@ -12,7 +11,7 @@ import ch.elexis.data.PersistentObject;
  *
  * @param <T>
  */
-public abstract class LockedAction<T extends PersistentObject> extends Action {
+public abstract class LockedAction<T> extends Action {
 
 	private T object;
 

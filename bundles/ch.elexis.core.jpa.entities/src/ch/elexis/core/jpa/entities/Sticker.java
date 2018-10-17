@@ -1,17 +1,11 @@
 package ch.elexis.core.jpa.entities;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Convert;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
@@ -52,14 +46,6 @@ public class Sticker extends AbstractEntityWithId implements EntityWithId, Entit
 
 	@Column(length = 255)
 	private String classes;
-
-	@ElementCollection
-	@CollectionTable(name = "ETIKETTEN_OBJCLASS_LINK", joinColumns = @JoinColumn(name = "sticker"))
-	private Set<StickerClassLink> stickerClassLinks = new HashSet<>();
-
-	@ElementCollection
-	@CollectionTable(name = "ETIKETTEN_OBJECT_LINK", joinColumns = @JoinColumn(name = "etikette"))
-	private Set<StickerObjectLink> stickerObjectLinks = new HashSet<>();
 
 	public String getImage() {
 		return image;
@@ -107,22 +93,6 @@ public class Sticker extends AbstractEntityWithId implements EntityWithId, Entit
 
 	public void setClasses(String classes) {
 		this.classes = classes;
-	}
-
-	public Set<StickerClassLink> getStickerClassLinks() {
-		return stickerClassLinks;
-	}
-
-	public Set<StickerObjectLink> getStickerObjectLinks() {
-		return stickerObjectLinks;
-	}
-
-	public void setStickerClassLinks(Set<StickerClassLink> stickerClassLinks) {
-		this.stickerClassLinks = stickerClassLinks;
-	}
-
-	public void setStickerObjectLinks(Set<StickerObjectLink> stickerObjectLinks) {
-		this.stickerObjectLinks = stickerObjectLinks;
 	}
 	
 	@Override

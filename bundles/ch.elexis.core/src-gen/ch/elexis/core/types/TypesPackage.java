@@ -342,6 +342,16 @@ public interface TypesPackage extends EPackage {
 	int ENTRY_TYPE = 24;
 
 	/**
+	 * The meta object id for the '<em>Invoice State</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.InvoiceState
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getInvoiceState()
+	 * @generated
+	 */
+	int INVOICE_STATE = 25;
+
+	/**
 	 * The meta object id for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -623,6 +633,17 @@ public interface TypesPackage extends EPackage {
 	EDataType getEntryType();
 
 	/**
+	 * Returns the meta object for data type '{@link ch.elexis.core.model.InvoiceState <em>Invoice State</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Invoice State</em>'.
+	 * @see ch.elexis.core.model.InvoiceState
+	 * @model instanceClass="ch.elexis.core.model.InvoiceState"
+	 * @generated
+	 */
+	EDataType getInvoiceState();
+
+	/**
 	 * Returns the meta object for class '{@link ch.rgw.tools.Result <em>Result</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -894,6 +915,16 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType ENTRY_TYPE = eINSTANCE.getEntryType();
+
+		/**
+		 * The meta object literal for the '<em>Invoice State</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.InvoiceState
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getInvoiceState()
+		 * @generated
+		 */
+		EDataType INVOICE_STATE = eINSTANCE.getInvoiceState();
 
 		/**
 		 * The meta object literal for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.

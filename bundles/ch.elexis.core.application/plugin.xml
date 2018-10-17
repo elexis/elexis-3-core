@@ -88,6 +88,7 @@
             class="ch.elexis.core.ui.views.KonsDetailView"
             icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/consult_view.png"
             id="ch.elexis.Konsdetail"
+            inject="true"
             name="%elexis.konsDetailView">
       </view>
       <view

@@ -58,6 +58,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.text.model.SSDRange;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.ui.UiDesk;
@@ -96,7 +97,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 	Samdas.Record record;
 	boolean dirty;
 	MenuManager menuMgr;
-	private Konsultation actKons;
+	private IEncounter actEncounter;
 	private static Pattern outline = Pattern.compile("^\\S+:", Pattern.MULTILINE); //$NON-NLS-1$
 	private static Pattern bold = Pattern.compile("\\*\\S+\\*"); //$NON-NLS-1$
 	private static Pattern italic = Pattern.compile("\\/\\S+\\/"); //$NON-NLS-1$
@@ -132,13 +133,13 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 	 *            kons to bill, can be null then billing macros are disabled
 	 */
 	
-	public void setKons(Konsultation k){
-		if (actKons != null && (actKons.equals(k))) {
+	public void setKons(IEncounter encounter){
+		if (actEncounter != null && (actEncounter.equals(encounter))) {
 			// updated triggered
 			text.setCaretOffset(lastCurserPosition);
 			
 		}
-		actKons = k;
+		actEncounter = encounter;
 	}
 	
 	public void connectGlobalActions(IViewSite site){
@@ -600,7 +601,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 						e.doit = false;
 						doFormat(getContentsAsXML());
 						text.setCaretOffset(start + replace.toString().length());
-						ElexisEventDispatcher.update(actKons);
+						ElexisEventDispatcher.update(Konsultation.load(actEncounter.getId()));
 					}
 					
 				}

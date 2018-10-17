@@ -1,11 +1,17 @@
 package ch.elexis.core.jpa.entities;
 
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-@Embeddable
+import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
+
+@Entity
+@Table(name = "ETIKETTEN_OBJCLASS_LINK")
+@EntityListeners(EntityWithIdListener.class)
 public class StickerClassLink {
 	
 	@Column(length = 80)

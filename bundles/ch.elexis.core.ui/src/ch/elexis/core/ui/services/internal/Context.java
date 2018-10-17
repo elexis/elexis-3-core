@@ -118,11 +118,30 @@ public class Context implements IContext {
 	@Override
 	public void setTyped(Object object){
 		if (object != null) {
-			context.put(object.getClass().getName(), object);
+			Optional<Class<?>> modelInterface = getModelInterface(object);
+			if (modelInterface.isPresent()) {
+				context.put(modelInterface.get().getName(), object);
+			} else {
+				context.put(object.getClass().getName(), object);
+			}
 			if (eclipseContext != null) {
-				eclipseContext.set(object.getClass().getName(), object);
+				if (modelInterface.isPresent()) {
+					eclipseContext.set(modelInterface.get().getName(), object);
+				} else {
+					eclipseContext.set(object.getClass().getName(), object);
+				}
 			}
 		}
+	}
+	
+	private Optional<Class<?>> getModelInterface(Object object){
+		Class<?>[] interfaces = object.getClass().getInterfaces();
+		for (Class<?> interfaze : interfaces) {
+			if (interfaze.getName().startsWith("ch.elexis.core.model")) {
+				return Optional.of(interfaze);
+			}
+		}
+		return Optional.empty();
 	}
 	
 	@Override

@@ -4,9 +4,15 @@ import java.util.Comparator;
 
 import org.apache.commons.lang3.ObjectUtils;
 
+import ch.elexis.core.model.ICoverage;
 import ch.elexis.data.Fall;
 import ch.rgw.tools.TimeTool;
 
+/**
+ * Comparator used to sort {@link Fall} objects for ui representation.
+ * 
+ * @deprecated Fall should be replaced with {@link ICoverage} model and {@link CoverageComparator}.
+ */
 public class FallComparator implements Comparator<Object>
 {
 	@Override

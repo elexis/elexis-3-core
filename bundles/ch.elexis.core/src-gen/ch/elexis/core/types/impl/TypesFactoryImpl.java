@@ -10,6 +10,7 @@
  */
 package ch.elexis.core.types.impl;
 
+import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.LabOrderState;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.model.XidQuality;
@@ -142,6 +143,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createVersionedResourceFromString(eDataType, initialValue);
 			case TypesPackage.ENTRY_TYPE:
 				return createEntryTypeFromString(eDataType, initialValue);
+			case TypesPackage.INVOICE_STATE:
+				return createInvoiceStateFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -197,6 +200,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertVersionedResourceToString(eDataType, instanceValue);
 			case TypesPackage.ENTRY_TYPE:
 				return convertEntryTypeToString(eDataType, instanceValue);
+			case TypesPackage.INVOICE_STATE:
+				return convertInvoiceStateToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -585,6 +590,24 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	public String convertEntryTypeToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public InvoiceState createInvoiceStateFromString(EDataType eDataType, String initialValue) {
+		return (InvoiceState)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertInvoiceStateToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

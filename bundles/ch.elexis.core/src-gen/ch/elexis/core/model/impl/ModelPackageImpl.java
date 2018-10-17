@@ -14,6 +14,7 @@ import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IAddress;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IBill;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBillableOptifier;
 import ch.elexis.core.model.IBillableVerifier;
@@ -37,6 +38,7 @@ import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IFreeTextDiagnosis;
 import ch.elexis.core.model.IHistory;
 import ch.elexis.core.model.IImage;
+import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabMapping;
 import ch.elexis.core.model.ILabOrder;
@@ -377,6 +379,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass iBilledEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iInvoiceEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -935,6 +944,15 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 */
 	public EClass getIMandator() {
 		return iMandatorEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIMandator_Biller() {
+		return (EReference)iMandatorEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -2337,6 +2355,15 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getIEncounter_Invoice() {
+		return (EReference)iEncounterEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getIBilled() {
 		return iBilledEClass;
 	}
@@ -2447,6 +2474,24 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 */
 	public EAttribute getIBilled_Total() {
 		return (EAttribute)iBilledEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getIInvoice() {
+		return iInvoiceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIInvoice_State() {
+		return (EAttribute)iInvoiceEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -3091,6 +3136,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEReference(iPatientEClass, IPATIENT__COVERAGES);
 
 		iMandatorEClass = createEClass(IMANDATOR);
+		createEReference(iMandatorEClass, IMANDATOR__BILLER);
 
 		iUserEClass = createEClass(IUSER);
 		createEAttribute(iUserEClass, IUSER__USERNAME);
@@ -3278,6 +3324,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEReference(iEncounterEClass, IENCOUNTER__DIAGNOSES);
 		createEReference(iEncounterEClass, IENCOUNTER__COVERAGE);
 		createEAttribute(iEncounterEClass, IENCOUNTER__VERSIONED_ENTRY);
+		createEReference(iEncounterEClass, IENCOUNTER__INVOICE);
 
 		iBilledEClass = createEClass(IBILLED);
 		createEReference(iBilledEClass, IBILLED__BILLABLE);
@@ -3292,6 +3339,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iBilledEClass, IBILLED__SECONDARY_SCALE);
 		createEAttribute(iBilledEClass, IBILLED__CODE);
 		createEAttribute(iBilledEClass, IBILLED__TOTAL);
+
+		iInvoiceEClass = createEClass(IINVOICE);
+		createEAttribute(iInvoiceEClass, IINVOICE__STATE);
 
 		iStockEClass = createEClass(ISTOCK);
 		createEAttribute(iStockEClass, ISTOCK__CODE);
@@ -3465,6 +3515,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iBilledEClass.getESuperTypes().add(this.getIdentifiable());
 		iBilledEClass.getESuperTypes().add(this.getDeleteable());
 		iBilledEClass.getESuperTypes().add(this.getWithExtInfo());
+		iInvoiceEClass.getESuperTypes().add(this.getIdentifiable());
+		iInvoiceEClass.getESuperTypes().add(this.getDeleteable());
+		iInvoiceEClass.getESuperTypes().add(this.getWithExtInfo());
 		iStockEClass.getESuperTypes().add(this.getIdentifiable());
 		iStockEClass.getESuperTypes().add(this.getDeleteable());
 		iStockEntryEClass.getESuperTypes().add(this.getIdentifiable());
@@ -3570,8 +3623,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIPatient_Allergies(), ecorePackage.getEString(), "allergies", null, 0, 1, IPatient.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIPatient_Coverages(), this.getICoverage(), null, "coverages", null, 0, -1, IPatient.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		addEOperation(iPatientEClass, ecorePackage.getEString(), "getPatientLabel", 0, 1, IS_UNIQUE, IS_ORDERED);
-
 		addEOperation(iPatientEClass, ecorePackage.getEString(), "getPatientNr", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		op = addEOperation(iPatientEClass, null, "setPatientNr", 0, 1, IS_UNIQUE, IS_ORDERED);
@@ -3581,6 +3632,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEParameter(op, this.getICoverage(), "coverage", 1, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iMandatorEClass, IMandator.class, "IMandator", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getIMandator_Biller(), this.getIContact(), null, "biller", null, 0, 1, IMandator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iUserEClass, IUser.class, "IUser", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIUser_Username(), ecorePackage.getEString(), "username", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3857,6 +3909,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEReference(getIEncounter_Diagnoses(), this.getIDiagnosisReference(), null, "diagnoses", null, 0, -1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIEncounter_Coverage(), this.getICoverage(), null, "coverage", null, 0, 1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIEncounter_VersionedEntry(), theTypesPackage.getVersionedResource(), "versionedEntry", null, 0, 1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIEncounter_Invoice(), this.getIInvoice(), null, "invoice", null, 0, 1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		op = addEOperation(iEncounterEClass, null, "addDiagnosis", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIDiagnosis(), "diagnosis", 1, 1, IS_UNIQUE, IS_ORDERED);
@@ -3884,6 +3937,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEOperation(iBilledEClass, ecorePackage.getEBoolean(), "isChangedPrice", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		addEOperation(iBilledEClass, ecorePackage.getEBoolean(), "isNonIntegerAmount", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		initEClass(iInvoiceEClass, IInvoice.class, "IInvoice", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIInvoice_State(), theTypesPackage.getInvoiceState(), "state", null, 0, 1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iStockEClass, IStock.class, "IStock", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIStock_Code(), ecorePackage.getEString(), "code", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
