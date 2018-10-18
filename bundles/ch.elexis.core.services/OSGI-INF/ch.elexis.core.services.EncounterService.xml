@@ -3,6 +3,7 @@
    <service>
       <provide interface="ch.elexis.core.services.IEncounterService"/>
    </service>
+   <reference cardinality="1..1" field="accessControlService" interface="ch.elexis.core.services.IAccessControlService" name="accessControlService"/>
    <reference cardinality="1..1" field="billingService" interface="ch.elexis.core.services.IBillingService" name="billingService"/>
    <implementation class="ch.elexis.core.services.EncounterService"/>
 </scr:component>

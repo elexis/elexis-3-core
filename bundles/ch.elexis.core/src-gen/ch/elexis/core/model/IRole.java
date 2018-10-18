@@ -10,6 +10,8 @@
  */
 package ch.elexis.core.model;
 
+import java.util.List;
+
 
 /**
  * <!-- begin-user-doc -->
@@ -21,6 +23,7 @@ package ch.elexis.core.model;
  * </p>
  * <ul>
  *   <li>{@link ch.elexis.core.model.IRole#isSystemRole <em>System Role</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IRole#getAssignedRights <em>Assigned Rights</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIRole()
@@ -54,4 +57,20 @@ public interface IRole extends Identifiable, WithAssignableId {
 	 * @generated
 	 */
 	void setSystemRole(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Assigned Rights</b></em>' reference list.
+	 * The list contents are of type {@link ch.elexis.core.model.IRight}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Assigned Rights</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Assigned Rights</em>' reference list.
+	 * @see ch.elexis.core.model.ModelPackage#getIRole_AssignedRights()
+	 * @model changeable="false"
+	 * @generated
+	 */
+	List<IRight> getAssignedRights();
 } // IRole

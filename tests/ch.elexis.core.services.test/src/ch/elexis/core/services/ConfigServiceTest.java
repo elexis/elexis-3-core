@@ -16,7 +16,7 @@ import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class ConfigServiceTest {
 	
-	private IModelService modelService = OsgiServiceUtil.getService(IModelService.class).get();
+	private IModelService modelService = AllServiceTests.getModelService();
 	private IConfigService configService = OsgiServiceUtil.getService(IConfigService.class).get();
 	
 	@Test

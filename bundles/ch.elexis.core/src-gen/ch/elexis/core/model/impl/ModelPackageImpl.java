@@ -14,7 +14,6 @@ import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IAddress;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IArticle;
-import ch.elexis.core.model.IBill;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBillableOptifier;
 import ch.elexis.core.model.IBillableVerifier;
@@ -44,7 +43,6 @@ import ch.elexis.core.model.ILabMapping;
 import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.ILaboratory;
-import ch.elexis.core.model.ICustomService;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
@@ -53,6 +51,7 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPeriod;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IPrescription;
+import ch.elexis.core.model.IRight;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IService;
 import ch.elexis.core.model.ISticker;
@@ -427,6 +426,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass iAppointmentEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass iImageEClass = null;
 
 	/**
@@ -448,7 +454,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass iAppointmentEClass = null;
+	private EClass iRightEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -2247,6 +2253,15 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getIRole_AssignedRights() {
+		return (EReference)iRoleEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getIBlob() {
 		return iBlobEClass;
 	}
@@ -2292,8 +2307,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getIEncounter_Patient() {
-		return (EReference)iEncounterEClass.getEStructuralFeatures().get(2);
+	public EAttribute getIEncounter_Date() {
+		return (EAttribute)iEncounterEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -2301,8 +2316,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getIEncounter_Coverage() {
-		return (EReference)iEncounterEClass.getEStructuralFeatures().get(6);
+	public EReference getIEncounter_Patient() {
+		return (EReference)iEncounterEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -2337,8 +2352,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIEncounter_Date() {
-		return (EAttribute)iEncounterEClass.getEStructuralFeatures().get(1);
+	public EReference getIEncounter_Coverage() {
+		return (EReference)iEncounterEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -2805,6 +2820,114 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getIAppointment() {
+		return iAppointmentEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIAppointment_Reason() {
+		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIAppointment_State() {
+		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIAppointment_Type() {
+		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIAppointment_Start() {
+		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIAppointment_End() {
+		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIAppointment_DurationMinutes() {
+		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIAppointment_Schedule() {
+		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIAppointment_CreatedBy() {
+		return (EReference)iAppointmentEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIAppointment_SubjectOrPatient() {
+		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIAppointment_Priority() {
+		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIAppointment_TreatmentReason() {
+		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getIImage() {
 		return iImageEClass;
 	}
@@ -2949,8 +3072,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getIAppointment() {
-		return iAppointmentEClass;
+	public EClass getIRight() {
+		return iRightEClass;
 	}
 
 	/**
@@ -2958,8 +3081,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIAppointment_Reason() {
-		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(0);
+	public EAttribute getIRight_Name() {
+		return (EAttribute)iRightEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -2967,8 +3090,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIAppointment_State() {
-		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(1);
+	public EAttribute getIRight_LocalizedName() {
+		return (EAttribute)iRightEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -2976,80 +3099,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIAppointment_Type() {
-		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getIAppointment_Start() {
-		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getIAppointment_End() {
-		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getIAppointment_DurationMinutes() {
-		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(5);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getIAppointment_Schedule() {
-		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(6);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getIAppointment_CreatedBy() {
-		return (EReference)iAppointmentEClass.getEStructuralFeatures().get(7);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getIAppointment_SubjectOrPatient() {
-		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(8);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getIAppointment_Priority() {
-		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(9);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getIAppointment_TreatmentReason() {
-		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(10);
+	public EReference getIRight_Parent() {
+		return (EReference)iRightEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -3310,6 +3361,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		iRoleEClass = createEClass(IROLE);
 		createEAttribute(iRoleEClass, IROLE__SYSTEM_ROLE);
+		createEReference(iRoleEClass, IROLE__ASSIGNED_RIGHTS);
 
 		iBlobEClass = createEClass(IBLOB);
 		createEAttribute(iBlobEClass, IBLOB__CONTENT);
@@ -3413,6 +3465,11 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iPrescriptionEClass, IPRESCRIPTION__STOP_REASON);
 		createEAttribute(iPrescriptionEClass, IPRESCRIPTION__ENTRY_TYPE);
 		createEAttribute(iPrescriptionEClass, IPRESCRIPTION__DISPOSAL_COMMENT);
+
+		iRightEClass = createEClass(IRIGHT);
+		createEAttribute(iRightEClass, IRIGHT__NAME);
+		createEAttribute(iRightEClass, IRIGHT__LOCALIZED_NAME);
+		createEReference(iRightEClass, IRIGHT__PARENT);
 	}
 
 	/**
@@ -3535,6 +3592,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iImageEClass.getESuperTypes().add(this.getWithAssignableId());
 		iPrescriptionEClass.getESuperTypes().add(this.getIdentifiable());
 		iPrescriptionEClass.getESuperTypes().add(this.getDeleteable());
+		iRightEClass.getESuperTypes().add(this.getIdentifiable());
+		iRightEClass.getESuperTypes().add(this.getDeleteable());
+		iRightEClass.getESuperTypes().add(this.getWithAssignableId());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(identifiableEClass, Identifiable.class, "Identifiable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -3890,6 +3950,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		initEClass(iRoleEClass, IRole.class, "IRole", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIRole_SystemRole(), ecorePackage.getEBoolean(), "systemRole", null, 0, 1, IRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIRole_AssignedRights(), this.getIRight(), null, "assignedRights", null, 0, -1, IRole.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iBlobEClass, IBlob.class, "IBlob", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIBlob_Content(), ecorePackage.getEByteArray(), "content", null, 0, 1, IBlob.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4030,6 +4091,11 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIPrescription_StopReason(), ecorePackage.getEString(), "stopReason", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIPrescription_EntryType(), theTypesPackage.getEntryType(), "entryType", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIPrescription_DisposalComment(), ecorePackage.getEString(), "disposalComment", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(iRightEClass, IRight.class, "IRight", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIRight_Name(), ecorePackage.getEString(), "name", null, 0, 1, IRight.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIRight_LocalizedName(), ecorePackage.getEString(), "localizedName", null, 0, 1, IRight.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIRight_Parent(), this.getIRight(), null, "parent", null, 0, 1, IRight.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

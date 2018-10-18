@@ -315,6 +315,7 @@
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IRole">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IRole/systemRole"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference model.ecore#//IRole/assignedRights"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IBlob">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBlob/content"/>
@@ -450,6 +451,11 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPrescription/stopReason"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPrescription/entryType"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPrescription/disposalComment"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IRight">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IRight/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IRight/localizedName"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IRight/parent"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

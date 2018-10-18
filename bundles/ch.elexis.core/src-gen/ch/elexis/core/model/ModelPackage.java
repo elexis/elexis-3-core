@@ -3777,13 +3777,22 @@ public interface ModelPackage extends EPackage {
 	int IROLE__SYSTEM_ROLE = IDENTIFIABLE_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Assigned Rights</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IROLE__ASSIGNED_RIGHTS = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>IRole</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IROLE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 1;
+	int IROLE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IBlob <em>IBlob</em>}' class.
@@ -4834,6 +4843,61 @@ public interface ModelPackage extends EPackage {
 	 */
 	int IPRESCRIPTION_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 10;
 
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IRight <em>IRight</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IRight
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRight()
+	 * @generated
+	 */
+	int IRIGHT = 52;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRIGHT__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRIGHT__NAME = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Localized Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRIGHT__LOCALIZED_NAME = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Parent</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRIGHT__PARENT = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The number of structural features of the '<em>IRight</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRIGHT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}'.
@@ -6909,6 +6973,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIRole_SystemRole();
 
 	/**
+	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IRole#getAssignedRights <em>Assigned Rights</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Assigned Rights</em>'.
+	 * @see ch.elexis.core.model.IRole#getAssignedRights()
+	 * @see #getIRole()
+	 * @generated
+	 */
+	EReference getIRole_AssignedRights();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IBlob <em>IBlob</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7753,6 +7828,49 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getIPrescription_DisposalComment();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IRight <em>IRight</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IRight</em>'.
+	 * @see ch.elexis.core.model.IRight
+	 * @generated
+	 */
+	EClass getIRight();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IRight#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see ch.elexis.core.model.IRight#getName()
+	 * @see #getIRight()
+	 * @generated
+	 */
+	EAttribute getIRight_Name();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IRight#getLocalizedName <em>Localized Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Localized Name</em>'.
+	 * @see ch.elexis.core.model.IRight#getLocalizedName()
+	 * @see #getIRight()
+	 * @generated
+	 */
+	EAttribute getIRight_LocalizedName();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IRight#getParent <em>Parent</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Parent</em>'.
+	 * @see ch.elexis.core.model.IRight#getParent()
+	 * @see #getIRight()
+	 * @generated
+	 */
+	EReference getIRight_Parent();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}'.
@@ -9522,6 +9640,14 @@ public interface ModelPackage extends EPackage {
 		EAttribute IROLE__SYSTEM_ROLE = eINSTANCE.getIRole_SystemRole();
 
 		/**
+		 * The meta object literal for the '<em><b>Assigned Rights</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IROLE__ASSIGNED_RIGHTS = eINSTANCE.getIRole_AssignedRights();
+
+		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IBlob <em>IBlob</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -10168,6 +10294,40 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IPRESCRIPTION__DISPOSAL_COMMENT = eINSTANCE.getIPrescription_DisposalComment();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IRight <em>IRight</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IRight
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRight()
+		 * @generated
+		 */
+		EClass IRIGHT = eINSTANCE.getIRight();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IRIGHT__NAME = eINSTANCE.getIRight_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Localized Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IRIGHT__LOCALIZED_NAME = eINSTANCE.getIRight_LocalizedName();
+
+		/**
+		 * The meta object literal for the '<em><b>Parent</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IRIGHT__PARENT = eINSTANCE.getIRight_Parent();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.

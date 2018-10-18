@@ -1,6 +1,7 @@
 package ch.elexis.core.services;
 
-import java.time.LocalDate;
+import java.io.IOException;
+import java.sql.SQLException;
 
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -8,28 +9,29 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import ch.elexis.core.model.IPatient;
-import ch.elexis.core.model.builder.IContactBuilder;
-import ch.elexis.core.types.Gender;
+import ch.elexis.core.test.initializer.TestDatabaseInitializer;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-	ConfigServiceTest.class, LabServiceTest.class
+	AccessControlServiceTest.class, ConfigServiceTest.class, LabServiceTest.class
 })
 public class AllServiceTests {
 	
 	private static IModelService modelService;
+	private static IElexisEntityManager entityManager;
 	
-	private static IPatient patient;
+	private static TestDatabaseInitializer tdb;
 	
 	@BeforeClass
-	public static void beforeClass(){
+	public static void beforeClass() throws IOException, SQLException{
 		
-		modelService = OsgiServiceUtil.getService(IModelService.class).get();
+		modelService = OsgiServiceUtil.getService(IModelService.class,
+			"(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
+		entityManager = OsgiServiceUtil.getService(IElexisEntityManager.class).get();
 		
-		LocalDate dob = LocalDate.of(2016, 9, 1);
-		patient = (IPatient) new IContactBuilder.PatientBuilder(modelService, "TestPatient",
-			"TestPatient", dob, Gender.MALE).buildAndSave();
+		tdb = new TestDatabaseInitializer(modelService, entityManager);
+		tdb.initializePatient();
 	}
 	
 	public static IModelService getModelService(){
@@ -37,6 +39,6 @@ public class AllServiceTests {
 	}
 	
 	public static IPatient getPatient(){
-		return patient;
+		return tdb.getPatient();
 	}
 }

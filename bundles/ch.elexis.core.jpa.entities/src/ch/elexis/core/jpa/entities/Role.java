@@ -25,7 +25,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @EntityListeners(EntityWithIdListener.class)
 public class Role extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
-
+	
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
 	
@@ -45,32 +45,27 @@ public class Role extends AbstractEntityWithId
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	@Column(name = "ISSYSTEMROLE")
 	protected boolean systemRole;
-
+	
 	@ManyToMany
-    @JoinTable(name="ROLE_RIGHT_JOINT",
-                joinColumns=
-                     @JoinColumn(name="ID"),
-                inverseJoinColumns=
-                     @JoinColumn(name="ROLE_ID")
-    )
+	@JoinTable(name = "ROLE_RIGHT_JOINT", joinColumns = @JoinColumn(name = "ROLE_ID"), inverseJoinColumns = @JoinColumn(name = "ID"))
 	protected Collection<Right> rights;
 	
-	public boolean isSystemRole() {
+	public boolean isSystemRole(){
 		return systemRole;
 	}
-
-	public void setSystemRole(boolean systemRole) {
+	
+	public void setSystemRole(boolean systemRole){
 		this.systemRole = systemRole;
 	}
 	
-	public Collection<Right> getRights() {
+	public Collection<Right> getRights(){
 		return rights;
 	}
 	
-	public void setRights(Collection<Right> rights) {
+	public void setRights(Collection<Right> rights){
 		this.rights = rights;
 	}
-
+	
 	@Override
 	public byte[] getExtInfo(){
 		return extInfo;

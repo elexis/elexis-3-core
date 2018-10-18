@@ -1,9 +1,9 @@
 package ch.elexis.core.services;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
-import ch.elexis.admin.AccessControlDefaults;
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.ac.AccessControlDefaults;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.ICoverage;
@@ -18,6 +18,9 @@ import ch.rgw.tools.Result.SEVERITY;
 @Component
 public class BillingService implements IBillingService {
 	
+	@Reference
+	private IAccessControlService accessControlService;
+	
 	@Override
 	public Result<IEncounter> isEditable(IEncounter encounter){
 		ICoverage coverage = encounter.getCoverage();
@@ -29,7 +32,7 @@ public class BillingService implements IBillingService {
 		}
 		
 		IMandator encounterMandator = encounter.getMandator();
-		boolean checkMandant = !CoreHub.acl.request(AccessControlDefaults.LSTG_CHARGE_FOR_ALL);
+		boolean checkMandant = !accessControlService.request(AccessControlDefaults.LSTG_CHARGE_FOR_ALL);
 		boolean mandatorOk = true;
 		boolean invoiceOk = true;
 		IMandator activeMandator =

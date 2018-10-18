@@ -30,4 +30,6 @@
             genModel="model/model.genmodel"/>
    </extension>
 
+   <extension-point id="ACLContribution" name="Definition of ACLs" schema="schema/ACLContribution.exsd"/>
+
 </plugin>

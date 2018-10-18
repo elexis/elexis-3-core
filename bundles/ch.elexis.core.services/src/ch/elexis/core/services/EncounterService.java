@@ -7,9 +7,8 @@ import java.util.List;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.AccessControlDefaults;
 import ch.elexis.core.common.ElexisEventTopics;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.ICoverage;
@@ -24,12 +23,16 @@ import ch.rgw.tools.Result;
 public class EncounterService implements IEncounterService {
 	
 	@Reference
+	private IAccessControlService accessControlService;
+	
+	@Reference
 	private IBillingService billingService;
 	
 	@Override
 	public boolean isEditable(IEncounter encounter){
 		boolean editable = false;
-		boolean hasRight = CoreHub.acl.request(AccessControlDefaults.ADMIN_KONS_EDIT_IF_BILLED);
+		boolean hasRight =
+			accessControlService.request(AccessControlDefaults.ADMIN_KONS_EDIT_IF_BILLED);
 		if (hasRight) {
 			// user has right to change encounter. in this case, the user
 			// may change the text even if the encounter has already been
@@ -111,7 +114,8 @@ public class EncounterService implements IEncounterService {
 		}
 		
 		IMandator encounterMandator = encounter.getMandator();
-		boolean checkMandant = !CoreHub.acl.request(AccessControlDefaults.LSTG_CHARGE_FOR_ALL);
+		boolean checkMandant =
+			!accessControlService.request(AccessControlDefaults.LSTG_CHARGE_FOR_ALL);
 		boolean mandatorOK = true;
 		IMandator activeMandator =
 			ContextServiceHolder.get().getRootContext().getActiveMandator().orElse(null);
