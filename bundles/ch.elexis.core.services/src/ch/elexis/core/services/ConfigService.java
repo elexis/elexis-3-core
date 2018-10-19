@@ -2,13 +2,16 @@ package ch.elexis.core.services;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IUserConfig;
@@ -21,6 +24,25 @@ public class ConfigService implements IConfigService {
 	private IModelService modelService;
 	
 	public static final String LIST_SEPARATOR = ",";
+	
+	@Activate
+	public void activate(){
+		validateConfiguredDatabaseLocale();
+	}
+	
+	/**
+	 * Every station has to run using the same locale to not mix any configuration strings (e.g.
+	 * access rights).
+	 */
+	private void validateConfiguredDatabaseLocale(){
+		Locale locale = Locale.getDefault();
+		String dbStoredLocale = get(Preferences.CFG_LOCALE, null);
+		if (dbStoredLocale == null || !locale.toString().equals(dbStoredLocale)) {
+			LoggerFactory.getLogger(getClass()).error(
+				"System locale [{}] does not match database locale [{}].", locale.toString(),
+				dbStoredLocale);
+		}
+	}
 	
 	@Override
 	public boolean set(String key, String value){
