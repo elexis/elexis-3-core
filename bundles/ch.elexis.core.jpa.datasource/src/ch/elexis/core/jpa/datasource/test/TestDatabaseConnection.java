@@ -1,5 +1,14 @@
 package ch.elexis.core.jpa.datasource.test;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Comparator;
+
+import org.apache.commons.io.FileUtils;
+
 import ch.elexis.core.common.DBConnection;
 
 /**
@@ -30,5 +39,22 @@ public class TestDatabaseConnection extends DBConnection {
 		rdbmsType = DBType.H2;
 		username = "sa";
 		password = "";
+		
+		if (asServer) {
+			Runtime.getRuntime().addShutdownHook(new Thread() {
+				public void run(){
+					try {
+						Path dbdir = Paths.get(System.getenv("HOME"), "/elexisTest");
+						System.out.println("Cleaning up test database in [" + dbdir + "]");
+						Files.walk(dbdir).sorted(Comparator.reverseOrder()).map(Path::toFile)
+							.forEach(File::delete);
+					} catch (IOException e) {
+						System.out.println("Error deleting database.");
+						e.printStackTrace();
+					}
+				}
+			});
+			
+		}
 	}
 }
