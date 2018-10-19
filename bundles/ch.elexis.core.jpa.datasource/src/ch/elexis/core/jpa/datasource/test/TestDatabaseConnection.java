@@ -7,8 +7,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
 
-import org.apache.commons.io.FileUtils;
-
 import ch.elexis.core.common.DBConnection;
 
 /**
