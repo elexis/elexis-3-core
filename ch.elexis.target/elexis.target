@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis" sequenceNumber="1537432887">
+<target name="Elexis" sequenceNumber="1539929525">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.equinox.executable.feature.group" version="3.7.2.v20171108-1834"/>
@@ -163,7 +163,7 @@
       <unit id="com.ibm.icu.4j" version="3.4.4"/>
       <unit id="com.lowagie.itext" version="2.0.8"/>
       <unit id="com.lowagie.itext.source" version="2.0.8"/>
-      <unit id="com.mysql.jdbc" version="5.1.21"/>
+      <unit id="com.mysql.jdbc" version="5.1.47"/>
       <unit id="com.sun.jna" version="3.0.9"/>
       <unit id="com.sun.jna.source" version="3.0.9"/>
       <unit id="com.thoughtworks.xstream" version="1.2.2"/>
@@ -298,8 +298,8 @@
       <unit id="org.objenesis.source" version="1.2.0"/>
       <unit id="org.odftoolkit.odfdom-java" version="0.8.6"/>
       <unit id="org.odftoolkit.odfdom-java.source" version="0.8.6"/>
-      <unit id="org.postgresql" version="9.2.0.1002-jdbc4"/>
-      <unit id="org.postgresql.source" version="9.2.0.1002-jdbc4"/>
+      <unit id="org.postgresql.jdbc42" version="42.2.5"/>
+      <unit id="org.postgresql.jdbc42.source" version="42.2.5"/>
       <unit id="org.powermock.api-mockito" version="1.4.12"/>
       <unit id="org.powermock.api-mockito.source" version="1.4.12"/>
       <unit id="org.powermock.api-support" version="1.4.12"/>

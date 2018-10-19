@@ -169,7 +169,7 @@ location "http://download.elexis.info/elexis/f11106/p2/target/" {
 	com.ibm.icu.4j 2.6.1
 	com.lowagie.itext 2.0.8
 	com.lowagie.itext.source 2.0.8
-	com.mysql.jdbc 5.1.21
+	com.mysql.jdbc
 	com.sun.jna 3.0.9
 	com.sun.jna.source 3.0.9
 	com.thoughtworks.xstream 1.2.2
@@ -304,8 +304,8 @@ location "http://download.elexis.info/elexis/f11106/p2/target/" {
 	org.objenesis.source 1.2.0
 	org.odftoolkit.odfdom-java 0.8.6
 	org.odftoolkit.odfdom-java.source 0.8.6
-	org.postgresql [9.2.0,9.3.0)
-	org.postgresql.source [9.2.0,9.3.0)
+	org.postgresql.jdbc42
+	org.postgresql.jdbc42.source
 	org.powermock.api-mockito 1.4.12
 	org.powermock.api-mockito.source 1.4.12
 	org.powermock.api-support 1.4.12
