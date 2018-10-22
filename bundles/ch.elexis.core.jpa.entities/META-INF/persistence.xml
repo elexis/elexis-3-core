@@ -52,6 +52,7 @@
 		<class>ch.elexis.core.jpa.entities.ObjVatInfo</class>
 		<class>ch.elexis.core.jpa.entities.Prescription</class>
 		<class>ch.elexis.core.jpa.entities.PhysioLeistung</class>
+		<class>ch.elexis.core.jpa.entities.ComplementaryLeistung</class>
 		<class>ch.elexis.core.jpa.entities.Reminder</class>
 		<class>ch.elexis.core.jpa.entities.Right</class>
 		<class>ch.elexis.core.jpa.entities.Role</class>

@@ -17,13 +17,13 @@ import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
 @Entity
-@Table(name = "CH_ELEXIS_ARZTTARIFE_CH_PHYSIO")
+@Table(name = "CH_ELEXIS_ARZTTARIFE_CH_COMPLEMENTARY")
 @EntityListeners(EntityWithIdListener.class)
-@NamedQuery(name = "PhysioLeistung.ziffer", query = "SELECT pl FROM PhysioLeistung pl WHERE pl.ziffer = :ziffer")
-public class PhysioLeistung extends AbstractEntityWithId
+@NamedQuery(name = "ComplementaryLeistung.code", query = "SELECT cl FROM ComplementaryLeistung cl WHERE cl.code = :code")
+public class ComplementaryLeistung extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted {
 	
-	public static final String CODESYSTEM_NAME = "Physiotherapie";
+	public static final String CODESYSTEM_NAME = "Komplementärmedizin";
 	
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -37,23 +37,43 @@ public class PhysioLeistung extends AbstractEntityWithId
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
 	
+	@Column(length = 255)
+	private String chapter;
+	
+	@Column(length = 16)
+	private String code;
+	
+	@Column(length = 255)
+	private String codeText;
+	
+	@Column
+	@Lob
+	private String description;
+	
+	@Column(length = 16)
+	private String fixedValue;
+	
 	@Column(length = 8)
 	private LocalDate validFrom;
 	
 	@Column(length = 8)
-	private LocalDate validUntil;
+	private LocalDate validTo;
 	
-	@Column(length = 8)
-	private String tp;
+	public String getFixedValue(){
+		return fixedValue;
+	}
 	
-	@Column(length = 6)
-	private String ziffer;
+	public void setFixedValue(String fixedValue){
+		this.fixedValue = fixedValue;
+	}
 	
-	@Column(length = 255)
-	private String titel;
+	public String getChapter(){
+		return chapter;
+	}
 	
-	@Lob
-	private String description;
+	public void setChapter(String chapter){
+		this.chapter = chapter;
+	}
 	
 	public LocalDate getValidFrom(){
 		return validFrom;
@@ -63,36 +83,28 @@ public class PhysioLeistung extends AbstractEntityWithId
 		this.validFrom = validFrom;
 	}
 	
-	public LocalDate getValidUntil(){
-		return validUntil;
+	public LocalDate getValidTo(){
+		return validTo;
 	}
 	
-	public void setValidUntil(LocalDate validUntil){
-		this.validUntil = validUntil;
+	public void setValidTo(LocalDate validTo){
+		this.validTo = validTo;
 	}
 	
-	public String getTp(){
-		return tp;
+	public String getCode(){
+		return code;
 	}
 	
-	public void setTp(String tp){
-		this.tp = tp;
+	public void setCode(String code){
+		this.code = code;
 	}
 	
-	public String getZiffer(){
-		return ziffer;
+	public String getCodeText(){
+		return codeText;
 	}
 	
-	public void setZiffer(String ziffer){
-		this.ziffer = ziffer;
-	}
-	
-	public String getTitel(){
-		return titel;
-	}
-	
-	public void setTitel(String titel){
-		this.titel = titel;
+	public void setCodeText(String codeText){
+		this.codeText = codeText;
 	}
 	
 	public String getDescription(){
@@ -101,22 +113,6 @@ public class PhysioLeistung extends AbstractEntityWithId
 	
 	public void setDescription(String description){
 		this.description = description;
-	}
-	
-	public String getCodeSystemName(){
-		return CODESYSTEM_NAME;
-	}
-	
-	public String getCode(){
-		return getZiffer();
-	}
-	
-	public String getText(){
-		return getTitel();
-	}
-	
-	public String getCodeSystemCode(){
-		return "311";
 	}
 	
 	@Override
@@ -148,4 +144,5 @@ public class PhysioLeistung extends AbstractEntityWithId
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
 	}
+	
 }
