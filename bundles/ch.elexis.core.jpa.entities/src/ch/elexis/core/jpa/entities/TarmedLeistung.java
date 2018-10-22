@@ -9,6 +9,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -21,17 +22,18 @@ import ch.rgw.tools.TimeTool;
 @Entity
 @Table(name = "TARMED")
 @EntityListeners(EntityWithIdListener.class)
+@NamedQuery(name = "TarmedLeistung.code", query = "SELECT tl FROM TarmedLeistung tl WHERE tl.code_ = :code")
 public class TarmedLeistung extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted {
-
+	
 	public static final String CODESYSTEM_NAME = "Tarmed";
-
+	
 	private static String MANDANT_TYPE_EXTINFO_KEY = "ch.elexis.data.tarmed.mandant.type";
 	
 	public enum MandantType {
-		SPECIALIST, PRACTITIONER
+			SPECIALIST, PRACTITIONER
 	}
-
+	
 	public static final String EXT_FLD_TP_TL = "TP_TL";
 	public static final String EXT_FLD_TP_AL = "TP_AL";
 	public static final String EXT_FLD_F_AL_R = "F_AL_R";
@@ -39,7 +41,7 @@ public class TarmedLeistung extends AbstractEntityWithId
 	public static final String EXT_FLD_SERVICE_GROUPS = "ServiceGroups";
 	public static final String EXT_FLD_SERVICE_BLOCKS = "ServiceBlocks";
 	public static final String EXT_FLD_SERVICE_AGE = "ServiceAge";
-
+	
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
 	
@@ -54,28 +56,28 @@ public class TarmedLeistung extends AbstractEntityWithId
 	
 	@Column(length = 32)
 	private String parent;
-
+	
 	@Column(length = 5)
 	private String digniQuanti;
-
+	
 	@Column(length = 4)
 	private String digniQuali;
-
+	
 	@Column(length = 4)
 	private String sparte;
-
+	
 	@Column(length = 4)
 	private LocalDate gueltigVon;
-
+	
 	@Column(length = 4)
 	private LocalDate gueltigBis;
-
+	
 	@Column(length = 25)
 	private String nickname;
-
+	
 	@Column(length = 255)
 	private String tx255;
-
+	
 	@Column(length = 25, name = "code")
 	private String code_;
 	
@@ -84,11 +86,11 @@ public class TarmedLeistung extends AbstractEntityWithId
 	
 	@Column(length = 1)
 	private boolean isChapter;
-
+	
 	@OneToOne
 	@JoinColumn(name = "id", insertable = false, updatable = false)
 	private TarmedExtension extension;
-
+	
 	//	/**
 	//	 * Get the AL value of the {@link TarmedLeistung}.<br>
 	//	 * <b>IMPORTANT:</b> No scaling according to the Dignität of the {@link Mandant}
@@ -150,7 +152,7 @@ public class TarmedLeistung extends AbstractEntityWithId
 	//		}
 	//		return MandantType.SPECIALIST;
 	//	}
-
+	
 	//	@Transient
 	//	public int getTL() {
 	//		if (extension != null) {
@@ -176,112 +178,112 @@ public class TarmedLeistung extends AbstractEntityWithId
 	//		}
 	//		return false;
 	//	}
-
-	public String getParent() {
+	
+	public String getParent(){
 		return parent;
 	}
-
-	public void setParent(String parent) {
+	
+	public void setParent(String parent){
 		this.parent = parent;
 	}
-
-	public String getDigniQuanti() {
+	
+	public String getDigniQuanti(){
 		return digniQuanti;
 	}
-
-	public void setDigniQuanti(String digniQuanti) {
+	
+	public void setDigniQuanti(String digniQuanti){
 		this.digniQuanti = digniQuanti;
 	}
-
-	public String getDigniQuali() {
+	
+	public String getDigniQuali(){
 		return digniQuali;
 	}
-
-	public void setDigniQuali(String digniQuali) {
+	
+	public void setDigniQuali(String digniQuali){
 		this.digniQuali = digniQuali;
 	}
-
-	public String getSparte() {
+	
+	public String getSparte(){
 		return sparte;
 	}
-
-	public void setSparte(String sparte) {
+	
+	public void setSparte(String sparte){
 		this.sparte = sparte;
 	}
-
-	public LocalDate getGueltigVon() {
+	
+	public LocalDate getGueltigVon(){
 		return gueltigVon;
 	}
-
-	public void setGueltigVon(LocalDate gueltigVon) {
+	
+	public void setGueltigVon(LocalDate gueltigVon){
 		this.gueltigVon = gueltigVon;
 	}
-
-	public LocalDate getGueltigBis() {
+	
+	public LocalDate getGueltigBis(){
 		return gueltigBis;
 	}
-
-	public void setGueltigBis(LocalDate gueltigBis) {
+	
+	public void setGueltigBis(LocalDate gueltigBis){
 		this.gueltigBis = gueltigBis;
 	}
-
-	public String getNickname() {
+	
+	public String getNickname(){
 		return nickname;
 	}
-
-	public void setNickname(String nickname) {
+	
+	public void setNickname(String nickname){
 		this.nickname = nickname;
 	}
-
-	public String getTx255() {
+	
+	public String getTx255(){
 		return tx255;
 	}
-
-	public void setTx255(String tx255) {
+	
+	public void setTx255(String tx255){
 		this.tx255 = tx255;
 	}
-
-	public void setCode_(String code_) {
+	
+	public void setCode_(String code_){
 		this.code_ = code_;
 	}
-
-	public String getCode_() {
+	
+	public String getCode_(){
 		return code_;
 	}
-
-	public TarmedExtension getExtension() {
+	
+	public TarmedExtension getExtension(){
 		return extension;
 	}
-
-	public void setExtension(TarmedExtension extension) {
+	
+	public void setExtension(TarmedExtension extension){
 		this.extension = extension;
 	}
-
-	public String getCode() {
+	
+	public String getCode(){
 		return (code_ != null) ? code_ : getId();
 	}
-
-	public String getCodeSystemName() {
+	
+	public String getCodeSystemName(){
 		return CODESYSTEM_NAME;
 	}
-
-	public String getText() {
+	
+	public String getText(){
 		return getTx255();
 	}
 	
-	public String getLaw() {
+	public String getLaw(){
 		return law;
 	}
 	
-	public void setLaw(String law) {
+	public void setLaw(String law){
 		this.law = law;
 	}
-
-	public boolean isChapter() {
+	
+	public boolean isChapter(){
 		return isChapter;
 	}
-
-	public void setChapter(boolean isChapter) {
+	
+	public void setChapter(boolean isChapter){
 		this.isChapter = isChapter;
 	}
 	
@@ -370,14 +372,14 @@ public class TarmedLeistung extends AbstractEntityWithId
 	//	}
 	
 	@Transient
-	private boolean isDateWithinDatesString(TimeTool date, String datesString) {
+	private boolean isDateWithinDatesString(TimeTool date, String datesString){
 		String[] parts = datesString.split("\\|");
 		if (parts.length == 2) {
 			LocalDate from = LocalDate.parse(parts[0]);
 			LocalDate to = LocalDate.parse(parts[1]);
 			LocalDate localDate = date.toLocalDate();
 			return (from.isBefore(localDate) || from.isEqual(localDate))
-					&& (to.isAfter(localDate) || to.isEqual(localDate));
+				&& (to.isAfter(localDate) || to.isEqual(localDate));
 		}
 		return false;
 	}

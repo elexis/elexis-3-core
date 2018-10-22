@@ -2,6 +2,7 @@ package ch.elexis.core.jpa.entities;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
@@ -9,12 +10,13 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
+import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
 @Entity
 @Table(name = "TARMED_EXTENSION")
 @EntityListeners(EntityWithIdListener.class)
-public class TarmedExtension extends AbstractEntityWithId implements EntityWithId {
+public class TarmedExtension extends AbstractEntityWithId implements EntityWithId,EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -23,6 +25,11 @@ public class TarmedExtension extends AbstractEntityWithId implements EntityWithI
 	@Column(length = 14)
 	private String code;
 
+	@Column
+	@Convert(converter = BooleanCharacterConverterSafe.class)
+	protected boolean deleted = false;
+	
+	
 	@Basic(fetch = FetchType.LAZY)
 	@Lob
 	private byte[] limits;
@@ -83,5 +90,15 @@ public class TarmedExtension extends AbstractEntityWithId implements EntityWithI
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
+	}
+	
+	@Override
+	public boolean isDeleted(){
+		return deleted;
+	}
+	
+	@Override
+	public void setDeleted(boolean deleted){
+		this.deleted = deleted;
 	}
 }
