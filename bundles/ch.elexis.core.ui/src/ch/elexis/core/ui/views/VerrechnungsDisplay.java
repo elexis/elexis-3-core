@@ -38,6 +38,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -212,6 +213,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			@Override
 			public void doubleClick(DoubleClickEvent event){
 				ViewerCell focusCell = focusCellManager.getFocusCell();
+				// make sure selection is correct
+				viewer.setSelection(new StructuredSelection(focusCell.getElement()));
 				int columnIndex = focusCell.getColumnIndex();
 				if (columnIndex == 0) {
 					chCountAction.run();
