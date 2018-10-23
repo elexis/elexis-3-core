@@ -1,6 +1,7 @@
 package ch.elexis.core.jpa.entities;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Basic;
@@ -86,9 +87,8 @@ public class Fall extends AbstractEntityWithId
 	@Column(length = 25)
 	private String versNummer;
 
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinColumn(name = "FallID", insertable = false)
-	protected List<Behandlung> consultations;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "fall")
+	protected List<Behandlung> consultations = new ArrayList<>();
 
 	public String getBetriebsNummer() {
 		return this.betriebsNummer;

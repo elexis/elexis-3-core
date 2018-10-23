@@ -34,6 +34,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.eclipse.persistence.annotations.Cache;
+
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.ElexisDBCompressedStringConverter;
 import ch.elexis.core.jpa.entities.converter.FuzzyCountryToEnumConverter;
@@ -53,6 +55,7 @@ import ch.elexis.core.types.Gender;
  */
 @Entity
 @Table(name = "KONTAKT")
+@Cache(expiry = 15000)
 @XmlRootElement(name = "contact")
 @EntityListeners({
 	KontaktEntityListener.class, EntityWithIdListener.class
@@ -211,8 +214,7 @@ public class Kontakt extends AbstractEntityWithId
 	/**
 	 * All related {@link Fall} entities; modifications ignored
 	 */
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PatientID")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "patientKontakt")
 	protected List<Fall> faelle = new ArrayList<>();
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "contact", cascade = CascadeType.ALL)

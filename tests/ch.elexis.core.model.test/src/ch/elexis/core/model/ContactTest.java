@@ -7,14 +7,17 @@ import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Optional;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.test.AbstractTest;
 import ch.elexis.core.types.AddressType;
 import ch.elexis.core.types.Country;
+import ch.elexis.core.types.Gender;
 
 public class ContactTest extends AbstractTest {
 		
@@ -60,4 +63,17 @@ public class ContactTest extends AbstractTest {
 		assertFalse(person.getAddress().contains(nursingHome));
 	}
 	
+	@Test
+	public void extInfo(){
+		IPerson testPerson = new IContactBuilder.PersonBuilder(coreModelService, "firstname",
+			"lastname",
+			LocalDate.of(2000, 1, 1), Gender.FEMALE).buildAndSave();
+		assertTrue(testPerson.getExtInfo("testKey") == null);
+		testPerson.setExtInfo("testKey", "testValue");
+		coreModelService.save(testPerson);
+		Optional<IPerson> loaded = coreModelService.load(testPerson.getId(), IPerson.class);
+		assertTrue(loaded.isPresent());
+		assertEquals("testValue", loaded.get().getExtInfo("testKey"));
+		coreModelService.remove(testPerson);
+	}
 }

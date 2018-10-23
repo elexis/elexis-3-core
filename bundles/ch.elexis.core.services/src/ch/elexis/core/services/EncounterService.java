@@ -1,6 +1,5 @@
 package ch.elexis.core.services;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -86,8 +85,7 @@ public class EncounterService implements IEncounterService {
 					//					}
 				}
 			}
-			CoreModelServiceHolder.get()
-				.save(Arrays.asList(encounter, coverage, encounterCovearage));
+			CoreModelServiceHolder.get().save(encounter);
 			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, encounter);
 		} else if (!editableResult.isOK()) {
 			return editableResult;

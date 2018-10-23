@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -40,8 +41,8 @@ public class Behandlung extends AbstractEntityWithId implements EntityWithId, En
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
 	
-	@OneToOne
-	@JoinColumn(name = "fallId")
+	@ManyToOne
+	@JoinColumn(name = "FallID")
 	private Fall fall;
 
 	@OneToOne

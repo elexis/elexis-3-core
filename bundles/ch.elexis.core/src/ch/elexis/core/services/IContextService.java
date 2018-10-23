@@ -3,6 +3,10 @@ package ch.elexis.core.services;
 import java.util.Optional;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IUser;
 
 public interface IContextService {
 	
@@ -12,6 +16,62 @@ public interface IContextService {
 	 * @return
 	 */
 	public IContext getRootContext();
+	
+	/**
+	 * Get the active {@link IUser} from the root context.
+	 * 
+	 * @return
+	 */
+	default public Optional<IUser> getActiveUser(){
+		return getRootContext().getActiveUser();
+	}
+	
+	/**
+	 * Get the active {@link IContact} of the {@link IUser} from the root context.
+	 * 
+	 * @return
+	 */
+	default public Optional<IContact> getActiveUserContact(){
+		return getRootContext().getActiveUserContact();
+	}
+	
+	/**
+	 * Get the active {@link IPatient} of the root context.
+	 * 
+	 * @return
+	 */
+	default public Optional<IPatient> getActivePatient(){
+		return getRootContext().getActivePatient();
+	}
+	
+	/**
+	 * Get the active {@link IMandator} of the root context.
+	 * 
+	 * @return
+	 */
+	default public Optional<IMandator> getActiveMandator(){
+		return getRootContext().getActiveMandator();
+	}
+	
+	/**
+	 * Get an {@link Object} identified by its type from the root context.
+	 * 
+	 * @param clazz
+	 * @return
+	 */
+	default public <T> Optional<T> getTyped(Class<T> clazz) {
+		return getRootContext().getTyped(clazz);
+	}
+	
+	/**
+	 * Get an {@link Object} identified by the name from the root context.
+	 * 
+	 * @param name
+	 * @return
+	 */
+	default public Optional<?> getNamed(String name){
+		return getRootContext().getNamed(name);
+	}
 	
 	/**
 	 * Get the {@link IContext} created with matching name.

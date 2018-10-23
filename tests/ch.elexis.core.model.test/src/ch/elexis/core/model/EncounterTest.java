@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ch.elexis.core.model.builder.IContactBuilder;
+import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
@@ -158,5 +159,32 @@ public class EncounterTest extends AbstractTest {
 		
 		coreModelService.remove(service);
 		coreModelService.remove(encounter);
+	}
+	
+	@Test
+	public void changeCoverage(){
+		IEncounter encounter =
+			new IEncounterBuilder(coreModelService, coverage, mandator).buildAndSave();
+		LocalDate date = LocalDate.of(2018, Month.SEPTEMBER, 21);
+		encounter.setDate(date);
+		coreModelService.save(encounter);
+
+		IEncounter encounter1 =
+			new IEncounterBuilder(coreModelService, coverage, mandator).buildAndSave();
+		LocalDate date1 = LocalDate.of(2018, Month.SEPTEMBER, 22);
+		encounter.setDate(date1);
+		coreModelService.save(encounter1);
+		
+		assertEquals(2, coverage.getEncounters().size());
+		
+		ICoverage coverage1 = new ICoverageBuilder(coreModelService, patient, "testCoverage1",
+			"testReason1", "testBillingSystem1").buildAndSave();
+		encounter1.setCoverage(coverage1);
+		coreModelService.save(encounter1);
+		
+		assertEquals(1, coverage1.getEncounters().size());
+		assertEquals(1, coverage.getEncounters().size());
+		
+		coreModelService.delete(encounter);
 	}
 }

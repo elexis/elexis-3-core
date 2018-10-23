@@ -4,6 +4,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Hashtable;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
@@ -75,7 +78,8 @@ public class CoreUtil {
 			if (!StringUtils.isEmpty((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_PASS))) {
 				ret.password = (String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_PASS);
 			}
-			if(!StringUtils.isEmpty((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_DRIVER))) {
+			if (!StringUtils
+				.isEmpty((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_DRIVER))) {
 				Optional<DBType> type = DBType
 					.valueOfDriver((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_DRIVER));
 				type.ifPresent(t -> ret.rdbmsType = t);
@@ -182,4 +186,49 @@ public class CoreUtil {
 		}
 	}
 	
+	private static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+	
+	/**
+	 * Get a formatted String version of the date.
+	 * 
+	 * @param date
+	 * @return
+	 */
+	public static String defaultDateFormat(LocalDate date){
+		if (date != null) {
+			return date.format(dateFormat);
+		}
+		return "?";
+	}
+	
+	private static DateTimeFormatter dateTimeFormat =
+		DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm");
+	
+	/**
+	 * Get a formatted String version of the datetime.
+	 * 
+	 * @param datetime
+	 * @return
+	 */
+	public static String defaultDateTimeFormat(LocalDateTime datetime){
+		if (datetime != null) {
+			return datetime.format(dateTimeFormat);
+		}
+		return "?";
+	}
+	
+	private static DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("hh:mm");
+	
+	/**
+	 * Get a formatted String version of the time part of the datetime.
+	 * 
+	 * @param date
+	 * @return
+	 */
+	public static String defaultTimeFormat(LocalDateTime datetime){
+		if (datetime != null) {
+			return datetime.format(timeFormat);
+		}
+		return "?";
+	}
 }

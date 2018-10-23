@@ -77,6 +77,8 @@ public class ContextService implements IContextService, EventHandler {
 	
 	private UserChangedEventDispatcherListener userChangedEventDispatcherListener;
 	
+	private MandatorChangedEventDispatcherListener mandatorChangedEventDispatcherListener;
+	
 	private IEclipseContext applicationContext;
 	
 	@Reference
@@ -89,9 +91,11 @@ public class ContextService implements IContextService, EventHandler {
 		reloadEventDispatcherListener = new ReloadEventDispatcherListener();
 		lockingEventDispatcherListener = new LockingEventDispatcherListener();
 		userChangedEventDispatcherListener = new UserChangedEventDispatcherListener();
+		mandatorChangedEventDispatcherListener = new MandatorChangedEventDispatcherListener();
 		ElexisEventDispatcher elexisEventDispatcher = ElexisEventDispatcher.getInstance();
 		elexisEventDispatcher.addListeners(eventDispatcherListener, reloadEventDispatcherListener,
-			lockingEventDispatcherListener, userChangedEventDispatcherListener);
+			lockingEventDispatcherListener, userChangedEventDispatcherListener,
+			mandatorChangedEventDispatcherListener);
 		((Context) root).setElexisEventDispatcher(elexisEventDispatcher);
 	}
 	
@@ -99,7 +103,7 @@ public class ContextService implements IContextService, EventHandler {
 	public void deactivate(){
 		ElexisEventDispatcher.getInstance().removeListeners(eventDispatcherListener,
 			reloadEventDispatcherListener, lockingEventDispatcherListener,
-			userChangedEventDispatcherListener);
+			userChangedEventDispatcherListener, mandatorChangedEventDispatcherListener);
 	}
 	
 	@Override
@@ -218,8 +222,36 @@ public class ContextService implements IContextService, EventHandler {
 					object = ev.getObjectClass();
 				}
 			}
+			if (object instanceof User) {
+				Optional<IUser> iUser =
+					CoreModelServiceHolder.get().load(((User) object).getId(), IUser.class);
+				iUser.ifPresent(u -> root.setActiveUser(u));
+			}
+			
 			postEvent(ElexisEventTopics.EVENT_USER_CHANGED,
 				getModelObjectForPersistentObject(object));
+		}
+	}
+	
+	private class MandatorChangedEventDispatcherListener extends ElexisEventListenerImpl {
+		public MandatorChangedEventDispatcherListener(){
+			super(null, null, ElexisEvent.EVENT_MANDATOR_CHANGED, 0);
+		}
+		
+		@Override
+		public void catchElexisEvent(ElexisEvent ev){
+			Object object = ev.getGenericObject();
+			if (object == null) {
+				object = ev.getObject();
+				if (object == null) {
+					object = ev.getObjectClass();
+				}
+			}
+			if (object instanceof Mandant) {
+				Optional<IMandator> iMandator =
+					CoreModelServiceHolder.get().load(((Mandant) object).getId(), IMandator.class);
+				iMandator.ifPresent(m -> root.setActiveMandator(m));
+			}
 		}
 	}
 	
@@ -273,8 +305,6 @@ public class ContextService implements IContextService, EventHandler {
 				root.setActiveUser(null);
 			} else if (object instanceof Anwender) {
 				root.setActiveUserContact(null);
-			} else if (object instanceof Mandant) {
-				root.setActiveMandator(null);
 			} else if (object instanceof Patient) {
 				root.setActivePatient(null);
 			} else if (object instanceof Class<?>) {
@@ -295,10 +325,6 @@ public class ContextService implements IContextService, EventHandler {
 				Optional<IContact> iUserContact =
 					CoreModelServiceHolder.get().load(((Anwender) object).getId(), IContact.class);
 				iUserContact.ifPresent(c -> root.setActiveUserContact(c));
-			} else if (object instanceof Mandant) {
-				Optional<IMandator> iMandator =
-					CoreModelServiceHolder.get().load(((Mandant) object).getId(), IMandator.class);
-				iMandator.ifPresent(m -> root.setActiveMandator(m));
 			} else if (object instanceof Patient) {
 				Optional<IPatient> iPatient =
 					CoreModelServiceHolder.get().load(((Patient) object).getId(), IPatient.class);

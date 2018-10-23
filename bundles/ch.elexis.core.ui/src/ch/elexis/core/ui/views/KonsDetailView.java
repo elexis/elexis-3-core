@@ -13,7 +13,6 @@ package ch.elexis.core.ui.views;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
@@ -101,7 +100,7 @@ import ch.elexis.core.ui.util.IKonsExtension;
 import ch.elexis.core.ui.util.IKonsMakro;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
-import ch.elexis.data.Fall;
+import ch.elexis.core.utils.CoreUtil;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
 import ch.rgw.tools.StringTool;
@@ -491,7 +490,9 @@ public class KonsDetailView extends ViewPart
 		//		GlobalEventDispatcher.addActivationListener(this, this);
 		text.connectGlobalActions(getViewSite());
 		adaptMenus();
+		// initialize with currently selected encounter
 		created = true;
+		ContextServiceHolder.get().getTyped(IEncounter.class).ifPresent(e -> selectedEncounter(e));
 	}
 	
 	@Override
@@ -596,6 +597,7 @@ public class KonsDetailView extends ViewPart
 	private synchronized void setKons(final IEncounter encounter){
 		if (actEncounter != null && text.isDirty()) {
 			actEncounter.getVersionedEntry().update(text.getContentsAsXML(), getVersionRemark());
+			CoreModelServiceHolder.get().save(actEncounter);
 		}
 		
 		if (encounter != null) {
@@ -607,8 +609,7 @@ public class KonsDetailView extends ViewPart
 			comboViewerFall.setSelection(new StructuredSelection(coverage));
 			comboViewerFall.getCombo().setEnabled(coverage.isOpen());
 			IMandator mandator = encounter.getMandator();
-			String encounterDate =
-				encounter.getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+			String encounterDate = CoreUtil.defaultDateFormat(encounter.getDate());
 			lBeh.setText(encounterDate + " (" //$NON-NLS-1$
 				+ new TimeTool(encounter.getDate()).getDurationToNowString() + ")"); //$NON-NLS-1$
 			StringBuilder sb = new StringBuilder();
@@ -618,10 +619,10 @@ public class KonsDetailView extends ViewPart
 			} else {
 				IContact biller = mandator.getBiller();
 				if (biller.getId().equals(mandator.getId())) {
-					sb.append("(").append(mandator.getLabel()).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
+					sb.append("(").append(mandator.getDescription3()).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
 				} else {
-					sb.append("(").append(mandator.getLabel()).append("/").append( //$NON-NLS-1$ //$NON-NLS-2$
-						biller.getLabel()).append(")"); //$NON-NLS-1$
+					sb.append("(").append(mandator.getDescription3()).append("/").append( //$NON-NLS-1$ //$NON-NLS-2$
+						biller.getDescription3()).append(")"); //$NON-NLS-1$
 				}
 				hlMandant
 					.setBackground(UiMandant.getColorForMandator(Mandant.load(mandator.getId())));
@@ -816,6 +817,7 @@ public class KonsDetailView extends ViewPart
 				actEncounter.getVersionedEntry().update(text.getContentsAsXML(),
 					getVersionRemark());
 				text.setDirty(false);
+				CoreModelServiceHolder.get().save(actEncounter);
 			}
 			setKons(actEncounter);
 		} else {
@@ -898,19 +900,18 @@ public class KonsDetailView extends ViewPart
 				ISelection selection = event.getSelection();
 				if (selection instanceof StructuredSelection) {
 					if (!selection.isEmpty()) {
-						Fall nFall = (Fall) ((StructuredSelection) selection).getFirstElement();
+						ICoverage changeToCoverage =
+							(ICoverage) ((StructuredSelection) selection).getFirstElement();
 						
-						Fall actFall = null;
-						String fallId = "";
+						ICoverage actCoverage = null;
 						String fallLabel = "Current Case NOT found!!";//$NON-NLS-1$
 						if (actEncounter != null) {
-							actFall = Fall.load(actEncounter.getCoverage().getId());
-							fallId = actFall.getId();
-							fallLabel = actFall.getLabel();
+							actCoverage = actEncounter.getCoverage();
+							fallLabel = actCoverage.getLabel();
 						}
 						
-						if (!nFall.getId().equals(fallId)) {
-							if (!nFall.isOpen()) {
+						if (!changeToCoverage.equals(actCoverage)) {
+							if (!changeToCoverage.isOpen()) {
 								SWTHelper.alert(Messages.KonsDetailView_CaseClosedCaption, // $NON-NLS-1$
 									Messages.KonsDetailView_CaseClosedBody); // $NON-NLS-1$
 							} else {
@@ -920,21 +921,18 @@ public class KonsDetailView extends ViewPart
 									MessageFormat.format(
 										Messages.KonsDetailView_ConfirmChangeConsToCase,
 										new Object[] {
-											fallLabel, nFall.getLabel()
+											fallLabel, changeToCoverage.getLabel()
 										}), MessageDialog.QUESTION, new String[] {
 											Messages.KonsDetailView_Yes, // $NON-NLS-1$
 											Messages.KonsDetailView_No
 									}, 0); // $NON-NLS-1$
 								if (msd.open() == Window.OK) {
-									ICoverage coverage = CoreModelServiceHolder.get()
-										.load(nFall.getId(), ICoverage.class).orElse(null);
-									if (coverage != null) {
-										EncounterServiceHolder.get()
-											.transferToCoverage(actEncounter, coverage, false);
-									}
+									EncounterServiceHolder.get().transferToCoverage(actEncounter,
+										changeToCoverage, false);
 								} else {
 									ignoreSelectionEventOnce();
-									comboViewerFall.setSelection(new StructuredSelection(actFall));
+									comboViewerFall
+										.setSelection(new StructuredSelection(actCoverage));
 								}
 							}
 						}

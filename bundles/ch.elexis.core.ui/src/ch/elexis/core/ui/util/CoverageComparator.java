@@ -27,12 +27,14 @@ public class CoverageComparator implements Comparator<Object>
 					// compare beginn date
 					LocalDate t1 = coverage1.getDateFrom();
 					LocalDate t2 = coverage2.getDateFrom();
-					comp = t1.isEqual(t2) ? 0 : (t1.isBefore(t2) ? 1 : -1);
-					if (comp == 0) {
-						comp = ObjectUtils.compare(coverage1.getDescription(),
-							coverage2.getDescription());
+					if (t1 != null && t2 != null) {
+						comp = t1.isEqual(t2) ? 0 : (t1.isBefore(t2) ? 1 : -1);
 						if (comp == 0) {
-							comp = ObjectUtils.compare(coverage1.getId(), coverage2.getId());
+							comp = ObjectUtils.compare(coverage1.getDescription(),
+								coverage2.getDescription());
+							if (comp == 0) {
+								comp = ObjectUtils.compare(coverage1.getId(), coverage2.getId());
+							}
 						}
 					}
 				}
