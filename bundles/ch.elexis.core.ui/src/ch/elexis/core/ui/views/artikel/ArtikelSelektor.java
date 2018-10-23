@@ -189,7 +189,7 @@ public class ArtikelSelektor extends ViewPart implements ISaveablePart2 {
 					top.setControl(c);
 					top.setData(cv);
 					
-					cv.addDoubleClickListener(new CommonViewer.DoubleClickListener() {
+					cv.addDoubleClickListener(new CommonViewer.PoDoubleClickListener() {
 						
 						public void doubleClicked(final PersistentObject obj,
 							final CommonViewer cv){

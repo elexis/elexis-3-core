@@ -77,7 +77,7 @@ import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
-import ch.elexis.core.ui.util.viewers.CommonViewer.DoubleClickListener;
+import ch.elexis.core.ui.util.viewers.CommonViewer.PoDoubleClickListener;
 import ch.elexis.core.ui.util.viewers.DefaultContentProvider;
 import ch.elexis.core.ui.util.viewers.DefaultControlFieldProvider;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
@@ -161,7 +161,7 @@ public class BriefAuswahl extends ViewPart implements
 			}
 			ct.setData(page.cv);
 			ct.setControl(page);
-			page.cv.addDoubleClickListener(new DoubleClickListener() {
+			page.cv.addDoubleClickListener(new PoDoubleClickListener() {
 				@Override
 				public void doubleClicked(PersistentObject obj, CommonViewer cv){
 					briefLadenAction.run();

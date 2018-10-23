@@ -91,7 +91,7 @@
                </appinfo>
             </annotation>
          </attribute>
-         <attribute name="ElementFactory" type="string" use="required">
+         <attribute name="ElementFactory" type="string">
             <annotation>
                <documentation>
                   
@@ -101,9 +101,22 @@
                </appinfo>
             </annotation>
          </attribute>
+         <attribute name="system" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="elexisClassName" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
-
 
    <annotation>
       <appinfo>
@@ -122,6 +135,7 @@
          Das mitgelieferte Plugin elexis-diagnosecodes-schweiz teigt die Verwendung
       </documentation>
    </annotation>
+
 
 
    <annotation>

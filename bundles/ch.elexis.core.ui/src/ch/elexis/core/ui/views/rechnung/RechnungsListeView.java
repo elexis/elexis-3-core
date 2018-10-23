@@ -36,7 +36,7 @@ import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
-import ch.elexis.core.ui.util.viewers.CommonViewer.DoubleClickListener;
+import ch.elexis.core.ui.util.viewers.CommonViewer.PoDoubleClickListener;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.views.FallDetailView;
@@ -141,7 +141,7 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 		// Nummer","Name","Vorname","Betrag");
 		cv.create(vc, comp, SWT.BORDER, getViewSite());
 		
-		cv.addDoubleClickListener(new DoubleClickListener() {
+		cv.addDoubleClickListener(new PoDoubleClickListener() {
 			@Override
 			public void doubleClicked(PersistentObject obj, CommonViewer cv){
 				if (obj instanceof Patient) {

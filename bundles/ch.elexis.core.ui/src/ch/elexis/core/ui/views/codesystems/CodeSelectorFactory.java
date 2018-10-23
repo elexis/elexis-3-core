@@ -24,7 +24,11 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -61,8 +65,9 @@ import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.util.DelegatingSelectionProvider;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
-import ch.elexis.core.ui.util.viewers.CommonViewer.DoubleClickListener;
+import ch.elexis.core.ui.util.viewers.CommonViewer.PoDoubleClickListener;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
+import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ContentType;
 import ch.elexis.core.ui.views.FavoritenCTabItem;
 import ch.elexis.core.ui.views.IDetailDisplay;
 import ch.elexis.data.Anwender;
@@ -387,6 +392,12 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 				cv.setContextMenu(menu);
 			}
 			vc = description.getCodeSelectorFactory().createViewerConfigurer(cv);
+			// add double click listener for generic CodeSelectorTarget, added before create of CommonViewer
+			if (vc.getContentType() == ContentType.GENERICOBJECT) {
+				vc.setDoubleClickListener(
+					description.getCodeSelectorFactory().getDoubleClickListener());
+			}
+			
 			Composite cvc = new Composite(gAll, SWT.NONE);
 			cvc.setLayout(new GridLayout());
 			cvc.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
@@ -395,9 +406,11 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 				.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			vc.getContentProvider().startListening();
 			
-			// add double click listener for CodeSelectorTarget
-			cv.addDoubleClickListener(
-				description.getCodeSelectorFactory().getDoubleClickListener());
+			// add double click listener for PersistentObject CodeSelectorTarget, added after create of CommonViewer
+			if (vc.getContentType() == ContentType.PERSISTENTOBJECT) {
+				cv.addDoubleClickListener(
+					description.getCodeSelectorFactory().getPoDoubleClickListener());
+			}
 			
 			try {
 				sash.setWeights(sashWeights);
@@ -483,7 +496,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 	}
 	
 	/**
-	 * Returns the {@link DoubleClickListener} used on the Viewer of this
+	 * Returns the {@link PoDoubleClickListener} used on the Viewer of this
 	 * {@link CodeSelectorFactory}. Default implementation passes the selected
 	 * {@link PersistentObject} directly to the code selector target (manage via
 	 * {@link CodeSelectorHandler}). If a {@link Leistungsblock} is selected it will pass its
@@ -493,8 +506,8 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 	 * 
 	 * @return
 	 */
-	protected DoubleClickListener getDoubleClickListener(){
-		return new DoubleClickListener() {
+	protected PoDoubleClickListener getPoDoubleClickListener(){
+		return new PoDoubleClickListener() {
 			public void doubleClicked(PersistentObject obj, CommonViewer cv){
 				ICodeSelectorTarget target =
 					CodeSelectorHandler.getInstance().getCodeSelectorTarget();
@@ -524,6 +537,39 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 						}
 					} else {
 						target.codeSelected(obj);
+					}
+				}
+			}
+		};
+	}
+	
+	/**
+	 * Returns the {@link IDoubleClickListener} used on the Viewer of this
+	 * {@link CodeSelectorFactory}. Default implementation passes the selected {@link Object}
+	 * directly to the code selector target (manage via {@link CodeSelectorHandler}). If a
+	 * {@link Leistungsblock} is selected it will pass its contained elements to the code selector
+	 * target. </br>
+	 * </br>
+	 * Should be overridden by subclasses for special behaviour.
+	 * 
+	 * @return
+	 */
+	public IDoubleClickListener getDoubleClickListener(){
+		return new IDoubleClickListener() {
+			
+			@Override
+			public void doubleClick(DoubleClickEvent event){
+				ISelection selection = event.getSelection();
+				if (selection instanceof IStructuredSelection) {
+					IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+					if (!structuredSelection.isEmpty()) {
+						ICodeSelectorTarget target =
+							CodeSelectorHandler.getInstance().getCodeSelectorTarget();
+						if (target != null) {
+							Object obj = structuredSelection.getFirstElement();
+							// TODO implement for block
+							target.codeSelected(obj);
+						}
 					}
 				}
 			}

@@ -39,9 +39,11 @@ import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.util.GenericObjectDragSource;
 import ch.elexis.core.ui.util.PersistentObjectDragSource;
 import ch.elexis.core.ui.util.PersistentObjectDragSource.ISelectionRenderer;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ContentType;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldProvider;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.Tree;
@@ -62,7 +64,7 @@ import ch.rgw.tools.Tree;
  */
 public class CommonViewer implements ISelectionChangedListener, IDoubleClickListener {
 	
-	protected ViewerConfigurer vc;
+	protected ViewerConfigurer viewerConfigurer;
 	protected StructuredViewer viewer;
 	protected Button bNew;
 	private IAction createObjectAction;
@@ -75,7 +77,7 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 		update, empty, notempty, update_keeplabels
 	}
 	
-	private HashSet<DoubleClickListener> dlListeners;
+	private HashSet<PoDoubleClickListener> dlListeners;
 	private MenuManager mgr;
 	private Composite composite;
 	private String viewName = null;
@@ -124,7 +126,7 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 	/**
 	 * Den Viewer erstellen
 	 * 
-	 * @param c
+	 * @param viewerConfigurer
 	 *            ViewerConfigurer, der die Funktionalität bereitstellt. Alle Felder des Configurers
 	 *            müssen vor Aufruf von create() gültig gesetzt sein.
 	 * @param parent
@@ -134,8 +136,9 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 	 * @param input
 	 *            Input Objekt für den Viewer
 	 */
-	public void create(ViewerConfigurer c, Composite parent, int style, Object input){
-		vc = c;
+	public void create(ViewerConfigurer viewerConfigurer, Composite parent, int style,
+		Object input){
+		this.viewerConfigurer = viewerConfigurer;
 		this.parent = parent;
 		Composite ret = new Composite(parent, style);
 		GridLayout layout = new GridLayout();
@@ -148,34 +151,34 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 					| GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
 			ret.setLayoutData(gd);
 		}
-		ControlFieldProvider cfp = vc.getControlFieldProvider();
+		ControlFieldProvider cfp = viewerConfigurer.getControlFieldProvider();
 		if (cfp != null) {
 			ret.setData("TEST_COMP_NAME", "cv_ret_" + viewName); // for Jubula
-			Composite ctlf = vc.getControlFieldProvider().createControl(ret);
+			Composite ctlf = viewerConfigurer.getControlFieldProvider().createControl(ret);
 			ctlf.setData("TEST_COMP_NAME", "cv_ctlf_" + viewName); // for Jubula
 			ctlf.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		}
-		viewer = vc.getWidgetProvider().createViewer(ret);
+		viewer = viewerConfigurer.getWidgetProvider().createViewer(ret);
 		GridData gdView =
 			new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL
 				| GridData.GRAB_VERTICAL | GridData.FILL_VERTICAL);
 		gdView.verticalAlignment = SWT.FILL;
 		viewer.setUseHashlookup(true);
 		viewer.getControl().setLayoutData(gdView);
-		viewer.setContentProvider(vc.getContentProvider());
-		viewer.setLabelProvider(vc.getLabelProvider());
+		viewer.setContentProvider(viewerConfigurer.getContentProvider());
+		viewer.setLabelProvider(viewerConfigurer.getLabelProvider());
 		viewer.addSelectionChangedListener(this);
-		if (vc.getDoubleClickListener() != null) {
-			viewer.addDoubleClickListener(vc.getDoubleClickListener());
+		if (viewerConfigurer.getDoubleClickListener() != null) {
+			viewer.addDoubleClickListener(viewerConfigurer.getDoubleClickListener());
 		}
-		bNew = vc.getButtonProvider().createButton(ret);
+		bNew = viewerConfigurer.getButtonProvider().createButton(ret);
 		if (bNew != null) {
 			if (viewName != null) {
 				bNew.setData("TEST_COMP_NAME",  "cv_bNew_"+ viewName + "_btn"); // for Jubula
 			}
 			GridData gdNew = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
 			bNew.setLayoutData(gdNew);
-			if (vc.getButtonProvider().isAlwaysEnabled() == false) {
+			if (viewerConfigurer.getButtonProvider().isAlwaysEnabled() == false) {
 				bNew.setEnabled(false);
 			}
 		}
@@ -187,31 +190,41 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 		/*
 		 * viewer.addDragSupport(DND.DROP_COPY,new Transfer[] {TextTransfer.getInstance()},
 		 */
-		if (c.iSelectionRenderer != null) {
-			new PersistentObjectDragSource(viewer.getControl(), c.iSelectionRenderer);
-		} else {
-			new PersistentObjectDragSource(viewer.getControl(), new ISelectionRenderer() {
-				public List<PersistentObject> getSelection(){
-					Object[] sel = CommonViewer.this.getSelection();
-					ArrayList<PersistentObject> ret = new ArrayList<PersistentObject>(sel.length);
-					for (Object o : sel) {
-						if (o instanceof PersistentObject) {
-							ret.add((PersistentObject) o);
-						} else if (o instanceof Tree<?>) {
-							Object b = ((Tree<?>) o).contents;
-							if (b instanceof PersistentObject) {
-								ret.add((PersistentObject) b);
+		if (viewerConfigurer.getContentType() == ContentType.PERSISTENTOBJECT) {
+			if (viewerConfigurer.poSelectionRenderer != null) {
+				new PersistentObjectDragSource(viewer.getControl(),
+					viewerConfigurer.poSelectionRenderer);
+			} else {
+				new PersistentObjectDragSource(viewer.getControl(), new ISelectionRenderer() {
+					public List<PersistentObject> getSelection(){
+						Object[] sel = CommonViewer.this.getSelection();
+						ArrayList<PersistentObject> ret =
+							new ArrayList<PersistentObject>(sel.length);
+						for (Object o : sel) {
+							if (o instanceof PersistentObject) {
+								ret.add((PersistentObject) o);
+							} else if (o instanceof Tree<?>) {
+								Object b = ((Tree<?>) o).contents;
+								if (b instanceof PersistentObject) {
+									ret.add((PersistentObject) b);
+								}
 							}
 						}
+						return ret;
 					}
-					return ret;
-				}
-			});
+				});
+			}
+		} else if (viewerConfigurer.getContentType() == ContentType.GENERICOBJECT) {
+			if (viewerConfigurer.goSelectionRenderer != null) {
+				new GenericObjectDragSource(viewer, viewerConfigurer.goSelectionRenderer);
+			} else {
+				new GenericObjectDragSource(viewer);
+			}
 		}
 		if (mgr != null) {
 			viewer.getControl().setMenu(mgr.createContextMenu(viewer.getControl()));
 		}
-		vc.getContentProvider().init();
+		viewerConfigurer.getContentProvider().init();
 		viewer.setInput(input);
 		viewer.getControl().pack();
 		composite = ret;
@@ -272,7 +285,7 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 	}
 	
 	public ViewerConfigurer getConfigurer(){
-		return vc;
+		return viewerConfigurer;
 	}
 	
 	/**
@@ -301,7 +314,7 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 					break;
 				case empty:
 					if (bNew != null) {
-						if (vc.getButtonProvider().isAlwaysEnabled() == false) {
+						if (viewerConfigurer.getButtonProvider().isAlwaysEnabled() == false) {
 							bNew.setEnabled(false);
 						}
 					}
@@ -345,14 +358,14 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 	}
 	
 	public void dispose(){
-		if (vc.getDoubleClickListener() != null)
-			viewer.removeDoubleClickListener(vc.getDoubleClickListener());
+		if (viewerConfigurer.getDoubleClickListener() != null)
+			viewer.removeDoubleClickListener(viewerConfigurer.getDoubleClickListener());
 		viewer.removeSelectionChangedListener(this);
 	}
 	
-	public void addDoubleClickListener(DoubleClickListener dl){
+	public void addDoubleClickListener(PoDoubleClickListener dl){
 		if (dlListeners == null) {
-			dlListeners = new HashSet<DoubleClickListener>();
+			dlListeners = new HashSet<PoDoubleClickListener>();
 			getViewerWidget().addDoubleClickListener(this);
 		}
 		dlListeners.add(dl);
@@ -369,7 +382,7 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 		this.selChangeListener = selChangeListener;
 	}
 	
-	public void removeDoubleClickListener(DoubleClickListener dl){
+	public void removeDoubleClickListener(PoDoubleClickListener dl){
 		if (dlListeners == null) {
 			return;
 		}
@@ -398,17 +411,18 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 		return bNew;
 	}
 	
-	public interface DoubleClickListener {
+	public interface PoDoubleClickListener {
 		public void doubleClicked(PersistentObject obj, CommonViewer cv);
 	}
 	
 	public void doubleClick(DoubleClickEvent event){
 		if (dlListeners != null) {
-			Iterator<DoubleClickListener> it = dlListeners.iterator();
+			Iterator<PoDoubleClickListener> it = dlListeners.iterator();
 			while (it.hasNext()) {
-				DoubleClickListener dl = it.next();
-				if (vc.iSelectionRenderer != null) {
-					List<PersistentObject> selected = vc.iSelectionRenderer.getSelection();
+				PoDoubleClickListener dl = it.next();
+				if (viewerConfigurer.poSelectionRenderer != null) {
+					List<PersistentObject> selected =
+						viewerConfigurer.poSelectionRenderer.getSelection();
 					if (!selected.isEmpty()) {
 						dl.doubleClicked(selected.get(0), this);
 					}

@@ -138,7 +138,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	public void udpateEncounter(
 		@Optional @UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IEncounter encounter){
 		if (encounter != null && encounter.equals(actEncounter)) {
-			viewer.setInput(actEncounter.getDiagnoses());
+			viewer.setInput(actEncounter.getBilled());
 		}
 	}
 	
@@ -446,11 +446,13 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						SWTHelper.alert(Messages.VerrechnungsDisplay_imvalidBilling,
 							result.toString()); //$NON-NLS-1$
 					}
-					viewer.setInput(actEncounter.getBilled());
 				}
 			} else if (o instanceof IDiagnose) {
 				Konsultation.load(actEncounter.getId()).addDiagnose((IDiagnose) o);
 			}
+			// refresh the modified billed object from the db
+			actEncounter.getBilled().forEach(b -> CoreModelServiceHolder.get().refresh(b));
+			viewer.setInput(actEncounter.getBilled());
 		}
 	}
 	
@@ -494,7 +496,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		
 		@Override
 		public void dropped(List<Object> list, DropTargetEvent e){
-			if (accept(list)) {
+			if (actEncounter != null && accept(list)) {
 				for (Object object : list) {
 					if (object instanceof PersistentObject) {
 						addPersistentObject((PersistentObject) object);

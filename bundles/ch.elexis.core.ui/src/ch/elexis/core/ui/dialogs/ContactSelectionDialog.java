@@ -53,7 +53,7 @@ import ch.elexis.core.ui.dialogs.provider.ContactSelectionLabelProvider;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.AbstractCommonViewerContentProvider;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
-import ch.elexis.core.ui.util.viewers.CommonViewer.DoubleClickListener;
+import ch.elexis.core.ui.util.viewers.CommonViewer.PoDoubleClickListener;
 import ch.elexis.core.ui.util.viewers.DefaultControlFieldProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
@@ -64,7 +64,7 @@ import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
-public class ContactSelectionDialog extends TitleAreaDialog implements DoubleClickListener {
+public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleClickListener {
 	
 	// Name, Vorname, gebdat, strasse, plz, ort, tel, zusatz, fax, email
 	public static final int HINTSIZE = 12;

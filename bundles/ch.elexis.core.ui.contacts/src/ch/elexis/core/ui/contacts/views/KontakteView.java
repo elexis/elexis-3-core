@@ -91,7 +91,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener, ISav
 		menu.createToolbar(printList);
 		vc.getContentProvider().startListening();
 		vc.getControlFieldProvider().addChangeListener(this);
-		cv.addDoubleClickListener(new CommonViewer.DoubleClickListener() {
+		cv.addDoubleClickListener(new CommonViewer.PoDoubleClickListener() {
 			public void doubleClicked(PersistentObject obj, CommonViewer cv) {
 				try {
 					KontaktDetailView kdv = (KontaktDetailView) getSite().getPage().showView(KontaktDetailView.ID);

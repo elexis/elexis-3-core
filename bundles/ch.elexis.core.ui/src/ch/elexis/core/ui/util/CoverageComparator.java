@@ -19,10 +19,15 @@ public class CoverageComparator implements Comparator<Object>
 			boolean is1Closed = !coverage1.isOpen();
 			boolean is2Closed = !coverage2.isOpen();
 			comp = ObjectUtils.compare(is1Closed, is2Closed);
-
+			
 			if (comp == 0) {
-				comp =
-					ObjectUtils.compare(coverage1.getBillingSystem(), coverage2.getBillingSystem());
+				String systemName1 =
+					coverage1.getBillingSystem() != null ? coverage1.getBillingSystem().getName()
+							: null;
+				String systemName2 =
+					coverage2.getBillingSystem() != null ? coverage2.getBillingSystem().getName()
+							: null;
+				comp = ObjectUtils.compare(systemName1, systemName2);
 				if (comp == 0) {
 					// compare beginn date
 					LocalDate t1 = coverage1.getDateFrom();

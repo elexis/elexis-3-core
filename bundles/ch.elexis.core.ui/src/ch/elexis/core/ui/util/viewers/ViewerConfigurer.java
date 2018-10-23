@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.ui.util.GenericObjectDragSource;
 import ch.elexis.core.ui.util.Messages;
 import ch.elexis.core.ui.util.PersistentObjectDragSource.ISelectionRenderer;
 import ch.elexis.data.PersistentObject;
@@ -45,44 +46,40 @@ import ch.rgw.tools.Tree;
  */
 public class ViewerConfigurer {
 	
+	public enum ContentType {
+			PERSISTENTOBJECT, GENERICOBJECT
+	}
+	
 	private ICommonViewerContentProvider contentProvider;
 	private LabelProvider labelProvider;
 	protected ControlFieldProvider controlFieldProvider;
 	private ButtonProvider buttonProvider;
 	private WidgetProvider widgetProvider;
 	private IDoubleClickListener doubleClickListener;
-	protected ISelectionRenderer iSelectionRenderer;
 	
+	protected ISelectionRenderer poSelectionRenderer;
+	protected GenericObjectDragSource.ISelectionRenderer goSelectionRenderer;
+	
+	// init default content type
+	private ContentType contentType = ContentType.PERSISTENTOBJECT;
+
 	/**
-	 * This constructor extends the default constructor
-	 * {@link ViewerConfigurer#ViewerConfigurer(ICommonViewerContentProvider, LabelProvider, ControlFieldProvider, ButtonProvider, WidgetProvider)}
-	 * by allowing to pass an additional {@link IDoubleClickListener} which will be informed on
-	 * double clicks in the viewer
+	 * Default constructor creating a viewer with a control field and button.
 	 * 
 	 * @param cnp
 	 * @param lp
 	 * @param cfp
 	 * @param bp
 	 * @param wp
-	 * @param iscl
 	 */
 	public ViewerConfigurer(ICommonViewerContentProvider cnp, LabelProvider lp,
-		ControlFieldProvider cfp, ButtonProvider bp, WidgetProvider wp, IDoubleClickListener idcl){
+		ControlFieldProvider cfp, ButtonProvider bp, WidgetProvider wp){
 		
 		contentProvider = cnp;
 		labelProvider = (lp == null) ? new DefaultLabelProvider() : lp;
 		controlFieldProvider = cfp;
 		buttonProvider = bp;
 		widgetProvider = wp;
-		doubleClickListener = idcl;
-	}
-	
-	/**
-	 * Standard Konstruktor. Erstellt einen Viewer mit Kontrollfeld und Button
-	 */
-	public ViewerConfigurer(ICommonViewerContentProvider cnp, LabelProvider lp,
-		ControlFieldProvider cfp, ButtonProvider bp, WidgetProvider wp){
-		this(cnp, lp, cfp, bp, wp, null);
 	}
 	
 	/**
@@ -94,6 +91,36 @@ public class ViewerConfigurer {
 	 */
 	public ViewerConfigurer(ICommonViewerContentProvider cnp, LabelProvider lp, WidgetProvider wp){
 		this(cnp, lp, null, new DefaultButtonProvider(), wp);
+	}
+	
+	/**
+	 * Set the content type for the {@link CommonViewer}. Currently
+	 * {@link ContentType#PERSISTENTOBJECT} is default, but should be changed to
+	 * {@link ContentType#GENERICOBJECT} after removing {@link PersistentObject} is finfished. It
+	 * changes the content handling of the {@link CommonViewer}.
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public ViewerConfigurer setContentType(ContentType type){
+		this.contentType = type;
+		return this;
+	}
+	
+	public ContentType getContentType(){
+		return contentType;
+	}
+	
+	/**
+	 * Set a {@link IDoubleClickListener} that will be added to the {@link CommonViewer} viewer
+	 * widget on {@link CommonViewer#create(ViewerConfigurer, Composite, int, Object)}.
+	 * 
+	 * @param listener
+	 * @return
+	 */
+	public ViewerConfigurer setDoubleClickListener(IDoubleClickListener listener){
+		this.doubleClickListener = listener;
+		return this;
 	}
 	
 	/**
@@ -344,6 +371,11 @@ public class ViewerConfigurer {
 	}
 	
 	public void addDragSourceSelectionRenderer(ISelectionRenderer iSelectionRenderer){
-		this.iSelectionRenderer = iSelectionRenderer;
+		this.poSelectionRenderer = iSelectionRenderer;
+	}
+	
+	public void addDragSourceSelectionRenderer(
+		GenericObjectDragSource.ISelectionRenderer iSelectionRenderer){
+		this.goSelectionRenderer = iSelectionRenderer;
 	}
 }

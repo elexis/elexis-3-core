@@ -88,7 +88,7 @@ import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
-import ch.elexis.core.ui.util.viewers.CommonViewer.DoubleClickListener;
+import ch.elexis.core.ui.util.viewers.CommonViewer.PoDoubleClickListener;
 import ch.elexis.core.ui.util.viewers.DefaultContentProvider;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
@@ -332,7 +332,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 		GlobalEventDispatcher.addActivationListener(this, this);
 		kload.schedule();
 		
-		cv.addDoubleClickListener(new DoubleClickListener() {
+		cv.addDoubleClickListener(new PoDoubleClickListener() {
 			@Override
 			public void doubleClicked(PersistentObject obj, CommonViewer cv){
 				Konsultation k = (Konsultation) obj;

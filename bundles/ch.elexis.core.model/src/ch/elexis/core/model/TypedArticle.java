@@ -10,6 +10,9 @@ import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
 import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 import ch.elexis.core.model.article.Constants;
+import ch.elexis.core.model.billable.AbstractOptifier;
+import ch.elexis.core.model.billable.DefaultVerifier;
+import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.util.ModelUtil;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
@@ -22,6 +25,10 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 		implements IdentifiableWithXid, IArticle {
 	
 	private ExtInfoHandler extInfoHandler;
+	
+	private static IBillableVerifier verifier;
+	
+	private static IBillableOptifier<TypedArticle> optifier;
 	
 	public TypedArticle(Artikel entity){
 		super(entity);
@@ -245,15 +252,27 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	}
 	
 	@Override
-	public IBillableOptifier getOptifier(){
-		// TODO Auto-generated method stub
-		return null;
+	public synchronized IBillableOptifier<TypedArticle> getOptifier(){
+		if (optifier == null) {
+			optifier = new AbstractOptifier<TypedArticle>(CoreModelServiceHolder.get()) {
+				
+				@Override
+				protected void setPrice(TypedArticle billable, IBilled billed){
+					billed.setFactor(1.0);
+					billed.setNetPrice(billable.getPurchasePrice());
+					billed.setPoints(billable.getSellingPrice().getCents());
+				}
+			};
+		}
+		return optifier;
 	}
 	
 	@Override
-	public IBillableVerifier getVerifier(){
-		// TODO Auto-generated method stub
-		return null;
+	public synchronized IBillableVerifier getVerifier(){
+		if (verifier == null) {
+			verifier = new DefaultVerifier();
+		}
+		return verifier;
 	}
 	
 	@Override

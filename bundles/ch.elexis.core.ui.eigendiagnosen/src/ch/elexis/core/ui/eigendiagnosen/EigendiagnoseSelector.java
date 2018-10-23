@@ -36,6 +36,7 @@ import ch.elexis.core.ui.util.viewers.DefaultControlFieldProvider;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
+import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ContentType;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
 
 public class EigendiagnoseSelector extends CodeSelectorFactory {
@@ -53,7 +54,9 @@ public class EigendiagnoseSelector extends CodeSelectorFactory {
 						"title=" + Messages.EigendiagnoseSelector_Text_Label
 					}), new ViewerConfigurer.DefaultButtonProvider(), new SimpleWidgetProvider(
 					SimpleWidgetProvider.TYPE_TREE, SWT.NONE, null));
+					
 		commonViewer.setNamedSelection("ch.elexis.core.ui.eigendiagnosen.selection");
+		vc.setContentType(ContentType.GENERICOBJECT);
 		return vc;
 		
 	}
@@ -103,6 +106,7 @@ public class EigendiagnoseSelector extends CodeSelectorFactory {
 			// CommonViewer inputElement can be ignored
 			List<IDiagnosisTree> roots = Collections.emptyList();
 			IQuery<IDiagnosisTree> query = ModelServiceHolder.get().getQuery(IDiagnosisTree.class);
+			query.and("id", COMPARATOR.NOT_EQUALS, "VERSION");
 			if (hasActiveFilter(fieldFilterValues)) {
 				query.startGroup();
 				for (String key : fieldFilterValues.keySet()) {

@@ -67,7 +67,7 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.CommonContentProviderAdapter;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
-import ch.elexis.core.ui.util.viewers.CommonViewer.DoubleClickListener;
+import ch.elexis.core.ui.util.viewers.CommonViewer.PoDoubleClickListener;
 import ch.elexis.core.ui.util.viewers.DefaultContentProvider;
 import ch.elexis.core.ui.util.viewers.DefaultControlFieldProvider;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
@@ -296,7 +296,7 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 		createContextMenu();
 		((DefaultContentProvider) fallCf.getContentProvider()).startListening();
 		
-		fallViewer.addDoubleClickListener(new DoubleClickListener() {
+		fallViewer.addDoubleClickListener(new PoDoubleClickListener() {
 			@Override
 			public void doubleClicked(PersistentObject obj, CommonViewer cv){
 				try {
@@ -307,7 +307,7 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 				}
 			}
 		});
-		behandlViewer.addDoubleClickListener(new DoubleClickListener() {
+		behandlViewer.addDoubleClickListener(new PoDoubleClickListener() {
 			@Override
 			public void doubleClicked(PersistentObject obj, CommonViewer cv){
 				try {

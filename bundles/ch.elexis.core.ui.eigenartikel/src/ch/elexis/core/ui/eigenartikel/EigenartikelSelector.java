@@ -46,10 +46,11 @@ import ch.elexis.core.ui.actions.ToggleVerrechenbarFavoriteAction;
 import ch.elexis.core.ui.locks.LockResponseHelper;
 import ch.elexis.core.ui.selectors.FieldDescriptor;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
-import ch.elexis.core.ui.util.viewers.CommonViewer.DoubleClickListener;
+import ch.elexis.core.ui.util.viewers.CommonViewer.PoDoubleClickListener;
 import ch.elexis.core.ui.util.viewers.SelectorPanelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
+import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ContentType;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.DefaultButtonProvider;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
 import ch.elexis.data.PersistentObject;
@@ -107,7 +108,8 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 		
 		EigenartikelTreeLabelProvider alp = new EigenartikelTreeLabelProvider();
 		
-		return new ViewerConfigurer(eal, alp, slp, dbp, swp);
+		return new ViewerConfigurer(eal, alp, slp, dbp, swp)
+			.setContentType(ContentType.GENERICOBJECT);
 	}
 	
 	@Override
@@ -121,8 +123,8 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 	}
 	
 	@Override
-	protected DoubleClickListener getDoubleClickListener(){
-		return new DoubleClickListener() {
+	protected PoDoubleClickListener getPoDoubleClickListener(){
+		return new PoDoubleClickListener() {
 			public void doubleClicked(PersistentObject obj, CommonViewer cv){
 				ICodeSelectorTarget target =
 					CodeSelectorHandler.getInstance().getCodeSelectorTarget();

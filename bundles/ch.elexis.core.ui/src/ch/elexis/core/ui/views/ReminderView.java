@@ -248,7 +248,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			showOthersRemindersAction.setEnabled(false);
 		}
 		cv.create(vc, content, SWT.NONE, getViewSite());
-		cv.addDoubleClickListener(new CommonViewer.DoubleClickListener() {
+		cv.addDoubleClickListener(new CommonViewer.PoDoubleClickListener() {
 			public void doubleClicked(final PersistentObject obj, final CommonViewer cv){
 				Reminder reminder = (Reminder) obj;
 				AcquireLockBlockingUi.aquireAndRun(reminder, new ILockHandler() {

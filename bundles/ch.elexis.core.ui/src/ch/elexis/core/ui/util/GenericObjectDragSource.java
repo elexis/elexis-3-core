@@ -47,6 +47,12 @@ public class GenericObjectDragSource implements DragSourceListener {
 		setup();
 	}
 	
+	public GenericObjectDragSource(StructuredViewer viewer, ISelectionRenderer iSelectionRenderer){
+		dragSource = viewer.getControl();
+		renderer = iSelectionRenderer;
+		setup();
+	}
+	
 	private void setup(){
 		DragSource mine = new DragSource(dragSource, DND.DROP_COPY);
 		mine.setTransfer(new Transfer[] {

@@ -83,7 +83,7 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.BasicTreeContentProvider;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
-import ch.elexis.core.ui.util.viewers.CommonViewer.DoubleClickListener;
+import ch.elexis.core.ui.util.viewers.CommonViewer.PoDoubleClickListener;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.views.FallDetailView;
@@ -180,7 +180,7 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 		cv.create(vc, cLeft, SWT.NONE, tAll);
 		cv.getViewerWidget().setComparator(new KonsZumVerrechnenViewViewerComparator());
 		
-		cv.addDoubleClickListener(new DoubleClickListener() {
+		cv.addDoubleClickListener(new PoDoubleClickListener() {
 			@Override
 			public void doubleClicked(PersistentObject obj, CommonViewer cv){
 				if (obj instanceof Patient) {
