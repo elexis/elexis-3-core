@@ -80,6 +80,10 @@
   <eClassifiers xsi:type="ecore:EClass" name="IPerson" abstract="true" interface="true"
       eSuperTypes="#//IContact">
     <eOperations name="getAgeInYears" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eOperations name="getAgeAtIn" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong">
+      <eParameters name="reference" eType="ecore:EDataType types.ecore#//LocalDateTime"/>
+      <eParameters name="chronoUnit" eType="ecore:EDataType types.ecore#//ChronoUnit"/>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateOfBirth" eType="ecore:EDataType types.ecore#//LocalDateTime">
       <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
         <details key="attributeName" value="dob"/>
@@ -407,8 +411,6 @@
         <details key="attributeName" value="datumvon"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="billingSystem" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="costBearer" eType="#//IContact">
       <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
         <details key="attributeName" value="kostentrkontakt"/>
@@ -426,6 +428,8 @@
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="encounters" upperBound="-1"
         eType="#//IEncounter" changeable="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="billingSystem" lowerBound="1"
+        eType="#//IBillingSystem"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IBillingSystemFactor" abstract="true"
       interface="true" eSuperTypes="#//Identifiable">
@@ -676,5 +680,9 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="localizedName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//IRight"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IBillingSystem" abstract="true" interface="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="law" eType="ecore:EDataType types.ecore#//BillingLaw"/>
   </eClassifiers>
 </ecore:EPackage>

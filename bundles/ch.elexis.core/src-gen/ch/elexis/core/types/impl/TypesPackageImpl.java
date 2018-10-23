@@ -14,8 +14,10 @@ import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.LabOrderState;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.model.XidQuality;
+import ch.elexis.core.model.ch.BillingLaw;
 import ch.elexis.core.model.prescription.EntryType;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 
@@ -234,6 +236,20 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EDataType invoiceStateEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType chronoUnitEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType billingLawEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -526,6 +542,24 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EDataType getChronoUnit() {
+		return chronoUnitEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EDataType getBillingLaw() {
+		return billingLawEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getResult() {
 		return resultEClass;
 	}
@@ -591,6 +625,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		versionedResourceEDataType = createEDataType(VERSIONED_RESOURCE);
 		entryTypeEDataType = createEDataType(ENTRY_TYPE);
 		invoiceStateEDataType = createEDataType(INVOICE_STATE);
+		chronoUnitEDataType = createEDataType(CHRONO_UNIT);
+		billingLawEDataType = createEDataType(BILLING_LAW);
 	}
 
 	/**
@@ -696,6 +732,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEDataType(versionedResourceEDataType, VersionedResource.class, "VersionedResource", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(entryTypeEDataType, EntryType.class, "EntryType", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(invoiceStateEDataType, InvoiceState.class, "InvoiceState", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(chronoUnitEDataType, ChronoUnit.class, "ChronoUnit", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(billingLawEDataType, BillingLaw.class, "BillingLaw", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

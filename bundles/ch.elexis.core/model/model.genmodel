@@ -72,6 +72,10 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPerson/firstName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPerson/lastName"/>
       <genOperations ecoreOperation="model.ecore#//IPerson/getAgeInYears"/>
+      <genOperations ecoreOperation="model.ecore#//IPerson/getAgeAtIn">
+        <genParameters ecoreParameter="model.ecore#//IPerson/getAgeAtIn/reference"/>
+        <genParameters ecoreParameter="model.ecore#//IPerson/getAgeAtIn/chronoUnit"/>
+      </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IOrganization"/>
     <genClasses image="false" ecoreClass="model.ecore#//ILaboratory"/>
@@ -280,11 +284,11 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/description"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/reason"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/dateFrom"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/billingSystem"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ICoverage/costBearer"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/insuranceNumber"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/dateTo"/>
       <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference model.ecore#//ICoverage/encounters"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference model.ecore#//ICoverage/billingSystem"/>
       <genOperations ecoreOperation="model.ecore#//ICoverage/isOpen"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IBillingSystemFactor">
@@ -456,6 +460,10 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IRight/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IRight/localizedName"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IRight/parent"/>
+    </genClasses>
+    <genClasses ecoreClass="model.ecore#//IBillingSystem">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBillingSystem/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBillingSystem/law"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

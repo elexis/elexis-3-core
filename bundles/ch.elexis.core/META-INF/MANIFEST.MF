@@ -49,6 +49,7 @@ Export-Package: ch.elexis.core.ac,
  ch.elexis.core.types.util,
  ch.elexis.core.utils
 Import-Package: ch.elexis.core.constants,
+ ch.elexis.core.model,
  javax.ws.rs;version="[2.0.0,2.1.0)",
  javax.ws.rs.core;version="[2.0.0,2.1.0)",
  org.apache.commons.lang;version="2.6.0",

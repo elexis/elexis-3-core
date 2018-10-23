@@ -9,26 +9,29 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
-import ch.rgw.tools.TimeTool;
 
 @Entity
 @Table(name = "TARMED")
 @EntityListeners(EntityWithIdListener.class)
-@NamedQuery(name = "TarmedLeistung.code", query = "SELECT tl FROM TarmedLeistung tl WHERE tl.code_ = :code")
+@NamedQueries({
+	@NamedQuery(name = "TarmedLeistung.code", query = "SELECT tl FROM TarmedLeistung tl WHERE tl.code_ = :code"),
+	@NamedQuery(name = "TarmedLeistungDistinctLaws", query = "SELECT DISTINCT tl.law FROM TarmedLeistung tl WHERE tl.id <> 'VERSION'")
+})
+
 public class TarmedLeistung extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted {
 	
 	public static final String CODESYSTEM_NAME = "Tarmed";
 	
-	private static String MANDANT_TYPE_EXTINFO_KEY = "ch.elexis.data.tarmed.mandant.type";
+	public static String MANDANT_TYPE_EXTINFO_KEY = "ch.elexis.data.tarmed.mandant.type";
 	
 	public enum MandantType {
 			SPECIALIST, PRACTITIONER
@@ -41,6 +44,12 @@ public class TarmedLeistung extends AbstractEntityWithId
 	public static final String EXT_FLD_SERVICE_GROUPS = "ServiceGroups";
 	public static final String EXT_FLD_SERVICE_BLOCKS = "ServiceBlocks";
 	public static final String EXT_FLD_SERVICE_AGE = "ServiceAge";
+	
+	public static final String SIDE = "Seite";
+	public static final String SIDE_L = "l";
+	public static final String SIDE_R = "r";
+	public static final String LEFT = "left";
+	public static final String RIGHT = "right";
 	
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -370,19 +379,6 @@ public class TarmedLeistung extends AbstractEntityWithId
 	//		}
 	//		return ret;
 	//	}
-	
-	@Transient
-	private boolean isDateWithinDatesString(TimeTool date, String datesString){
-		String[] parts = datesString.split("\\|");
-		if (parts.length == 2) {
-			LocalDate from = LocalDate.parse(parts[0]);
-			LocalDate to = LocalDate.parse(parts[1]);
-			LocalDate localDate = date.toLocalDate();
-			return (from.isBefore(localDate) || from.isEqual(localDate))
-				&& (to.isAfter(localDate) || to.isEqual(localDate));
-		}
-		return false;
-	}
 	
 	@Override
 	public boolean isDeleted(){

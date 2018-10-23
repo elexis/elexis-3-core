@@ -27,11 +27,11 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.ICoverage#getDescription <em>Description</em>}</li>
  *   <li>{@link ch.elexis.core.model.ICoverage#getReason <em>Reason</em>}</li>
  *   <li>{@link ch.elexis.core.model.ICoverage#getDateFrom <em>Date From</em>}</li>
- *   <li>{@link ch.elexis.core.model.ICoverage#getBillingSystem <em>Billing System</em>}</li>
  *   <li>{@link ch.elexis.core.model.ICoverage#getCostBearer <em>Cost Bearer</em>}</li>
  *   <li>{@link ch.elexis.core.model.ICoverage#getInsuranceNumber <em>Insurance Number</em>}</li>
  *   <li>{@link ch.elexis.core.model.ICoverage#getDateTo <em>Date To</em>}</li>
  *   <li>{@link ch.elexis.core.model.ICoverage#getEncounters <em>Encounters</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ICoverage#getBillingSystem <em>Billing System</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getICoverage()
@@ -147,30 +147,30 @@ public interface ICoverage extends Deleteable, Identifiable, WithExtInfo {
 	void setDateFrom(LocalDate value);
 
 	/**
-	 * Returns the value of the '<em><b>Billing System</b></em>' attribute.
+	 * Returns the value of the '<em><b>Billing System</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Billing System</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Billing System</em>' attribute.
-	 * @see #setBillingSystem(String)
+	 * @return the value of the '<em>Billing System</em>' reference.
+	 * @see #setBillingSystem(IBillingSystem)
 	 * @see ch.elexis.core.model.ModelPackage#getICoverage_BillingSystem()
 	 * @model required="true"
 	 * @generated
 	 */
-	String getBillingSystem();
+	IBillingSystem getBillingSystem();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.ICoverage#getBillingSystem <em>Billing System</em>}' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.ICoverage#getBillingSystem <em>Billing System</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Billing System</em>' attribute.
+	 * @param value the new value of the '<em>Billing System</em>' reference.
 	 * @see #getBillingSystem()
 	 * @generated
 	 */
-	void setBillingSystem(String value);
+	void setBillingSystem(IBillingSystem value);
 
 	/**
 	 * Returns the value of the '<em><b>Cost Bearer</b></em>' reference.

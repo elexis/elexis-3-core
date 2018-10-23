@@ -18,6 +18,7 @@ import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBillableOptifier;
 import ch.elexis.core.model.IBillableVerifier;
 import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.IBillingSystem;
 import ch.elexis.core.model.IBillingSystemFactor;
 import ch.elexis.core.model.IBlob;
 import ch.elexis.core.model.ICategory;
@@ -455,6 +456,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass iRightEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iBillingSystemEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -2064,8 +2072,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getICoverage_BillingSystem() {
-		return (EAttribute)iCoverageEClass.getEStructuralFeatures().get(4);
+	public EReference getICoverage_BillingSystem() {
+		return (EReference)iCoverageEClass.getEStructuralFeatures().get(8);
 	}
 
 	/**
@@ -2074,7 +2082,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	public EReference getICoverage_CostBearer() {
-		return (EReference)iCoverageEClass.getEStructuralFeatures().get(5);
+		return (EReference)iCoverageEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -2083,7 +2091,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	public EAttribute getICoverage_InsuranceNumber() {
-		return (EAttribute)iCoverageEClass.getEStructuralFeatures().get(6);
+		return (EAttribute)iCoverageEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -2092,7 +2100,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	public EAttribute getICoverage_DateTo() {
-		return (EAttribute)iCoverageEClass.getEStructuralFeatures().get(7);
+		return (EAttribute)iCoverageEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -2101,7 +2109,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	public EReference getICoverage_Encounters() {
-		return (EReference)iCoverageEClass.getEStructuralFeatures().get(8);
+		return (EReference)iCoverageEClass.getEStructuralFeatures().get(7);
 	}
 
 	/**
@@ -3108,6 +3116,33 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getIBillingSystem() {
+		return iBillingSystemEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIBillingSystem_Name() {
+		return (EAttribute)iBillingSystemEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIBillingSystem_Law() {
+		return (EAttribute)iBillingSystemEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ModelFactory getModelFactory() {
 		return (ModelFactory)getEFactoryInstance();
 	}
@@ -3334,11 +3369,11 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iCoverageEClass, ICOVERAGE__DESCRIPTION);
 		createEAttribute(iCoverageEClass, ICOVERAGE__REASON);
 		createEAttribute(iCoverageEClass, ICOVERAGE__DATE_FROM);
-		createEAttribute(iCoverageEClass, ICOVERAGE__BILLING_SYSTEM);
 		createEReference(iCoverageEClass, ICOVERAGE__COST_BEARER);
 		createEAttribute(iCoverageEClass, ICOVERAGE__INSURANCE_NUMBER);
 		createEAttribute(iCoverageEClass, ICOVERAGE__DATE_TO);
 		createEReference(iCoverageEClass, ICOVERAGE__ENCOUNTERS);
+		createEReference(iCoverageEClass, ICOVERAGE__BILLING_SYSTEM);
 
 		iBillingSystemFactorEClass = createEClass(IBILLING_SYSTEM_FACTOR);
 		createEAttribute(iBillingSystemFactorEClass, IBILLING_SYSTEM_FACTOR__SYSTEM);
@@ -3470,6 +3505,10 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iRightEClass, IRIGHT__NAME);
 		createEAttribute(iRightEClass, IRIGHT__LOCALIZED_NAME);
 		createEReference(iRightEClass, IRIGHT__PARENT);
+
+		iBillingSystemEClass = createEClass(IBILLING_SYSTEM);
+		createEAttribute(iBillingSystemEClass, IBILLING_SYSTEM__NAME);
+		createEAttribute(iBillingSystemEClass, IBILLING_SYSTEM__LAW);
 	}
 
 	/**
@@ -3670,6 +3709,10 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIPerson_LastName(), ecorePackage.getEString(), "lastName", null, 0, 1, IPerson.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		addEOperation(iPersonEClass, ecorePackage.getEInt(), "getAgeInYears", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iPersonEClass, ecorePackage.getELong(), "getAgeAtIn", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, theTypesPackage.getLocalDateTime(), "reference", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, theTypesPackage.getChronoUnit(), "chronoUnit", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iOrganizationEClass, IOrganization.class, "IOrganization", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -3914,11 +3957,11 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getICoverage_Description(), ecorePackage.getEString(), "description", null, 0, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getICoverage_Reason(), ecorePackage.getEString(), "reason", null, 0, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getICoverage_DateFrom(), theTypesPackage.getLocalDate(), "dateFrom", null, 1, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getICoverage_BillingSystem(), ecorePackage.getEString(), "billingSystem", null, 1, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getICoverage_CostBearer(), this.getIContact(), null, "costBearer", null, 0, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getICoverage_InsuranceNumber(), ecorePackage.getEString(), "insuranceNumber", null, 0, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getICoverage_DateTo(), theTypesPackage.getLocalDate(), "dateTo", null, 0, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getICoverage_Encounters(), this.getIEncounter(), null, "encounters", null, 0, -1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getICoverage_BillingSystem(), this.getIBillingSystem(), null, "billingSystem", null, 1, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		addEOperation(iCoverageEClass, ecorePackage.getEBoolean(), "isOpen", 0, 1, IS_UNIQUE, IS_ORDERED);
 
@@ -4096,6 +4139,10 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIRight_Name(), ecorePackage.getEString(), "name", null, 0, 1, IRight.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIRight_LocalizedName(), ecorePackage.getEString(), "localizedName", null, 0, 1, IRight.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIRight_Parent(), this.getIRight(), null, "parent", null, 0, 1, IRight.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(iBillingSystemEClass, IBillingSystem.class, "IBillingSystem", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIBillingSystem_Name(), ecorePackage.getEString(), "name", null, 0, 1, IBillingSystem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIBillingSystem_Law(), theTypesPackage.getBillingLaw(), "law", null, 0, 1, IBillingSystem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

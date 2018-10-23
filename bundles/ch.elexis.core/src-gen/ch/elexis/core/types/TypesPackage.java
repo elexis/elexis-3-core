@@ -352,6 +352,26 @@ public interface TypesPackage extends EPackage {
 	int INVOICE_STATE = 25;
 
 	/**
+	 * The meta object id for the '<em>Chrono Unit</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see java.time.temporal.ChronoUnit
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getChronoUnit()
+	 * @generated
+	 */
+	int CHRONO_UNIT = 26;
+
+	/**
+	 * The meta object id for the '<em>Billing Law</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.ch.BillingLaw
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getBillingLaw()
+	 * @generated
+	 */
+	int BILLING_LAW = 27;
+
+	/**
 	 * The meta object id for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -644,6 +664,28 @@ public interface TypesPackage extends EPackage {
 	EDataType getInvoiceState();
 
 	/**
+	 * Returns the meta object for data type '{@link java.time.temporal.ChronoUnit <em>Chrono Unit</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Chrono Unit</em>'.
+	 * @see java.time.temporal.ChronoUnit
+	 * @model instanceClass="java.time.temporal.ChronoUnit"
+	 * @generated
+	 */
+	EDataType getChronoUnit();
+
+	/**
+	 * Returns the meta object for data type '{@link ch.elexis.core.model.ch.BillingLaw <em>Billing Law</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Billing Law</em>'.
+	 * @see ch.elexis.core.model.ch.BillingLaw
+	 * @model instanceClass="ch.elexis.core.model.ch.BillingLaw"
+	 * @generated
+	 */
+	EDataType getBillingLaw();
+
+	/**
 	 * Returns the meta object for class '{@link ch.rgw.tools.Result <em>Result</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -925,6 +967,26 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType INVOICE_STATE = eINSTANCE.getInvoiceState();
+
+		/**
+		 * The meta object literal for the '<em>Chrono Unit</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see java.time.temporal.ChronoUnit
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getChronoUnit()
+		 * @generated
+		 */
+		EDataType CHRONO_UNIT = eINSTANCE.getChronoUnit();
+
+		/**
+		 * The meta object literal for the '<em>Billing Law</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.ch.BillingLaw
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getBillingLaw()
+		 * @generated
+		 */
+		EDataType BILLING_LAW = eINSTANCE.getBillingLaw();
 
 		/**
 		 * The meta object literal for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.

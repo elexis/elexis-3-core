@@ -14,9 +14,11 @@ import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.LabOrderState;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.model.XidQuality;
+import ch.elexis.core.model.ch.BillingLaw;
 import ch.elexis.core.model.prescription.EntryType;
 import java.time.LocalDateTime;
 
+import java.time.temporal.ChronoUnit;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -145,6 +147,10 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createEntryTypeFromString(eDataType, initialValue);
 			case TypesPackage.INVOICE_STATE:
 				return createInvoiceStateFromString(eDataType, initialValue);
+			case TypesPackage.CHRONO_UNIT:
+				return createChronoUnitFromString(eDataType, initialValue);
+			case TypesPackage.BILLING_LAW:
+				return createBillingLawFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -202,6 +208,10 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertEntryTypeToString(eDataType, instanceValue);
 			case TypesPackage.INVOICE_STATE:
 				return convertInvoiceStateToString(eDataType, instanceValue);
+			case TypesPackage.CHRONO_UNIT:
+				return convertChronoUnitToString(eDataType, instanceValue);
+			case TypesPackage.BILLING_LAW:
+				return convertBillingLawToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -608,6 +618,42 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	public String convertInvoiceStateToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ChronoUnit createChronoUnitFromString(EDataType eDataType, String initialValue) {
+		return (ChronoUnit)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertChronoUnitToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public BillingLaw createBillingLawFromString(EDataType eDataType, String initialValue) {
+		return (BillingLaw)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertBillingLawToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

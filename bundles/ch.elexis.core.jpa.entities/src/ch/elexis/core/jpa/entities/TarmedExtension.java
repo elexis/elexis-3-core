@@ -16,7 +16,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "TARMED_EXTENSION")
 @EntityListeners(EntityWithIdListener.class)
-public class TarmedExtension extends AbstractEntityWithId implements EntityWithId,EntityWithDeleted {
+public class TarmedExtension extends AbstractEntityWithId implements EntityWithId,EntityWithDeleted,EntityWithExtInfo {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -100,5 +100,16 @@ public class TarmedExtension extends AbstractEntityWithId implements EntityWithI
 	@Override
 	public void setDeleted(boolean deleted){
 		this.deleted = deleted;
+	}
+
+	@Override
+	public byte[] getExtInfo(){
+		return getLimits();
+	}
+
+	@Override
+	public void setExtInfo(byte[] extInfo){
+		setLimits(extInfo);
+		
 	}
 }

@@ -3501,22 +3501,13 @@ public interface ModelPackage extends EPackage {
 	int ICOVERAGE__DATE_FROM = DELETEABLE_FEATURE_COUNT + 3;
 
 	/**
-	 * The feature id for the '<em><b>Billing System</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ICOVERAGE__BILLING_SYSTEM = DELETEABLE_FEATURE_COUNT + 4;
-
-	/**
 	 * The feature id for the '<em><b>Cost Bearer</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ICOVERAGE__COST_BEARER = DELETEABLE_FEATURE_COUNT + 5;
+	int ICOVERAGE__COST_BEARER = DELETEABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Insurance Number</b></em>' attribute.
@@ -3525,7 +3516,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICOVERAGE__INSURANCE_NUMBER = DELETEABLE_FEATURE_COUNT + 6;
+	int ICOVERAGE__INSURANCE_NUMBER = DELETEABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Date To</b></em>' attribute.
@@ -3534,7 +3525,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICOVERAGE__DATE_TO = DELETEABLE_FEATURE_COUNT + 7;
+	int ICOVERAGE__DATE_TO = DELETEABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Encounters</b></em>' reference list.
@@ -3543,7 +3534,16 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICOVERAGE__ENCOUNTERS = DELETEABLE_FEATURE_COUNT + 8;
+	int ICOVERAGE__ENCOUNTERS = DELETEABLE_FEATURE_COUNT + 7;
+
+	/**
+	 * The feature id for the '<em><b>Billing System</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICOVERAGE__BILLING_SYSTEM = DELETEABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The number of structural features of the '<em>ICoverage</em>' class.
@@ -4898,6 +4898,43 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IRIGHT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IBillingSystem <em>IBilling System</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IBillingSystem
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBillingSystem()
+	 * @generated
+	 */
+	int IBILLING_SYSTEM = 53;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBILLING_SYSTEM__NAME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Law</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBILLING_SYSTEM__LAW = 1;
+
+	/**
+	 * The number of structural features of the '<em>IBilling System</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBILLING_SYSTEM_FEATURE_COUNT = 2;
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}'.
@@ -6748,15 +6785,15 @@ public interface ModelPackage extends EPackage {
 	EAttribute getICoverage_DateFrom();
 
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ICoverage#getBillingSystem <em>Billing System</em>}'.
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.ICoverage#getBillingSystem <em>Billing System</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Billing System</em>'.
+	 * @return the meta object for the reference '<em>Billing System</em>'.
 	 * @see ch.elexis.core.model.ICoverage#getBillingSystem()
 	 * @see #getICoverage()
 	 * @generated
 	 */
-	EAttribute getICoverage_BillingSystem();
+	EReference getICoverage_BillingSystem();
 
 	/**
 	 * Returns the meta object for the reference '{@link ch.elexis.core.model.ICoverage#getCostBearer <em>Cost Bearer</em>}'.
@@ -7871,6 +7908,38 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getIRight_Parent();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IBillingSystem <em>IBilling System</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IBilling System</em>'.
+	 * @see ch.elexis.core.model.IBillingSystem
+	 * @generated
+	 */
+	EClass getIBillingSystem();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IBillingSystem#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see ch.elexis.core.model.IBillingSystem#getName()
+	 * @see #getIBillingSystem()
+	 * @generated
+	 */
+	EAttribute getIBillingSystem_Name();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IBillingSystem#getLaw <em>Law</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Law</em>'.
+	 * @see ch.elexis.core.model.IBillingSystem#getLaw()
+	 * @see #getIBillingSystem()
+	 * @generated
+	 */
+	EAttribute getIBillingSystem_Law();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}'.
@@ -9460,12 +9529,12 @@ public interface ModelPackage extends EPackage {
 		EAttribute ICOVERAGE__DATE_FROM = eINSTANCE.getICoverage_DateFrom();
 
 		/**
-		 * The meta object literal for the '<em><b>Billing System</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Billing System</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ICOVERAGE__BILLING_SYSTEM = eINSTANCE.getICoverage_BillingSystem();
+		EReference ICOVERAGE__BILLING_SYSTEM = eINSTANCE.getICoverage_BillingSystem();
 
 		/**
 		 * The meta object literal for the '<em><b>Cost Bearer</b></em>' reference feature.
@@ -10328,6 +10397,32 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference IRIGHT__PARENT = eINSTANCE.getIRight_Parent();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IBillingSystem <em>IBilling System</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IBillingSystem
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBillingSystem()
+		 * @generated
+		 */
+		EClass IBILLING_SYSTEM = eINSTANCE.getIBillingSystem();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IBILLING_SYSTEM__NAME = eINSTANCE.getIBillingSystem_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Law</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IBILLING_SYSTEM__LAW = eINSTANCE.getIBillingSystem_Law();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.

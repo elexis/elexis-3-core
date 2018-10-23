@@ -86,4 +86,9 @@ public class Person extends Contact implements IPerson {
 		}
 		return -1;
 	}
+	
+	@Override
+	public long getAgeAtIn(LocalDateTime reference, ChronoUnit chronoUnit){
+		return chronoUnit.between(getDateOfBirth(), reference);
+	}
 }

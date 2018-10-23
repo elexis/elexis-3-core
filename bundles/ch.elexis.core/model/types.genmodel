@@ -64,6 +64,8 @@
     <genDataTypes ecoreDataType="types.ecore#//VersionedResource"/>
     <genDataTypes ecoreDataType="types.ecore#//EntryType"/>
     <genDataTypes ecoreDataType="types.ecore#//InvoiceState"/>
+    <genDataTypes ecoreDataType="types.ecore#//ChronoUnit"/>
+    <genDataTypes ecoreDataType="types.ecore#//BillingLaw"/>
     <genClasses image="false" ecoreClass="types.ecore#//Comparable">
       <genTypeParameters ecoreTypeParameter="types.ecore#//Comparable/T"/>
     </genClasses>

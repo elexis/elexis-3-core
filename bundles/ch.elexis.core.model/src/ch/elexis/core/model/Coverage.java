@@ -91,13 +91,13 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 	}
 	
 	@Override
-	public String getBillingSystem(){
-		return getEntity().getGesetz();
+	public IBillingSystem getBillingSystem(){
+		return new BillingSystem(getEntity().getGesetz());
 	}
 	
 	@Override
-	public void setBillingSystem(String value){
-		getEntity().setGesetz(value);
+	public void setBillingSystem(IBillingSystem value){
+		getEntity().setGesetz(value.getName());
 	}
 
 	@Override
@@ -143,7 +143,7 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 		if (!isOpen()) {
 			ret.append(Messages.Fall_CLOSED);
 		}
-		String ges = getBillingSystem();
+		String ges = getBillingSystem().getName();
 		ret.append(ges).append(": ").append(getReason()).append(" - "); //$NON-NLS-1$ //$NON-NLS-2$
 		ret.append(getDescription()).append("("); //$NON-NLS-1$
 		LocalDate dateTo = getDateTo();

@@ -16,6 +16,6 @@ public class IBilledBuilder extends AbstractBuilder<IBilled> {
 		object.setText(billable.getText());
 		object.setPrimaryScale(100);
 		object.setSecondaryScale(100);
-		object.setAmount(0);
+		object.setAmount(1);
 	}
 }

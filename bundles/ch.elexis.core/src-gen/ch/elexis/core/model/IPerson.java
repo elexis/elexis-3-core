@@ -12,6 +12,7 @@ package ch.elexis.core.model;
 
 import java.time.LocalDateTime;
 
+import java.time.temporal.ChronoUnit;
 import ch.elexis.core.types.Gender;
 
 /**
@@ -196,5 +197,13 @@ public interface IPerson extends IContact {
 	 * @generated
 	 */
 	int getAgeInYears();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model referenceDataType="ch.elexis.core.types.LocalDateTime" chronoUnitDataType="ch.elexis.core.types.ChronoUnit"
+	 * @generated
+	 */
+	long getAgeAtIn(LocalDateTime reference, ChronoUnit chronoUnit);
 
 } // IPerson

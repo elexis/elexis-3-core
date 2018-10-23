@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -19,13 +21,18 @@ import ch.rgw.tools.TimeTool;
 @Entity
 @Table(name = "TARMED_KUMULATION")
 @EntityListeners(EntityWithIdListener.class)
+@NamedQueries({
+	@NamedQuery(name = "TarmedKumulation.masterCode.typ", query = "SELECT tk FROM TarmedKumulation tk WHERE tk.masterCode = :masterCode AND tk.typ = :typ"),
+	@NamedQuery(name = "TarmedKumulation.masterCode.masterArt.typ", query = "SELECT tk FROM TarmedKumulation tk WHERE tk.masterCode = :masterCode AND tk.masterArt = :masterArt AND tk.typ = :typ")
+
+})
 public class TarmedKumulation extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted {
-
+	
 	public static final String TYP_EXCLUSION = "E";
 	public static final String TYP_INCLUSION = "I";
 	public static final String TYP_EXCLUSIVE = "X";
-
+	
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
 	
@@ -40,111 +47,111 @@ public class TarmedKumulation extends AbstractEntityWithId
 	
 	@Column(length = 25)
 	private String masterCode;
-
+	
 	@Column(length = 1)
 	private String masterArt;
-
+	
 	@Column(length = 25)
 	private String slaveCode;
-
+	
 	@Column(length = 1)
 	private String slaveArt;
-
+	
 	@Column(length = 1)
 	private String typ;
-
+	
 	@Column(length = 1)
 	private String view;
-
+	
 	@Column(length = 1)
 	private String validSide;
-
+	
 	@Column(length = 8)
 	private LocalDate validFrom;
-
+	
 	@Column(length = 8)
 	private LocalDate validTo;
 	
 	@Column(length = 3)
 	private String law;
-
-	public String getMasterCode() {
+	
+	public String getMasterCode(){
 		return masterCode;
 	}
-
-	public void setMasterCode(String masterCode) {
+	
+	public void setMasterCode(String masterCode){
 		this.masterCode = masterCode;
 	}
-
-	public String getMasterArt() {
+	
+	public String getMasterArt(){
 		return masterArt;
 	}
-
-	public void setMasterArt(String masterArt) {
+	
+	public void setMasterArt(String masterArt){
 		this.masterArt = masterArt;
 	}
-
-	public String getSlaveCode() {
+	
+	public String getSlaveCode(){
 		return slaveCode;
 	}
-
-	public void setSlaveCode(String slaveCode) {
+	
+	public void setSlaveCode(String slaveCode){
 		this.slaveCode = slaveCode;
 	}
-
-	public String getSlaveArt() {
+	
+	public String getSlaveArt(){
 		return slaveArt;
 	}
-
-	public void setSlaveArt(String slaveArt) {
+	
+	public void setSlaveArt(String slaveArt){
 		this.slaveArt = slaveArt;
 	}
-
-	public String getTyp() {
+	
+	public String getTyp(){
 		return typ;
 	}
-
-	public void setTyp(String typ) {
+	
+	public void setTyp(String typ){
 		this.typ = typ;
 	}
-
-	public String getView() {
+	
+	public String getView(){
 		return view;
 	}
-
-	public void setView(String view) {
+	
+	public void setView(String view){
 		this.view = view;
 	}
-
-	public String getValidSide() {
+	
+	public String getValidSide(){
 		return validSide;
 	}
-
-	public void setValidSide(String validSide) {
+	
+	public void setValidSide(String validSide){
 		this.validSide = validSide;
 	}
-
-	public LocalDate getValidFrom() {
+	
+	public LocalDate getValidFrom(){
 		return validFrom;
 	}
-
-	public void setValidFrom(LocalDate validFrom) {
+	
+	public void setValidFrom(LocalDate validFrom){
 		this.validFrom = validFrom;
 	}
-
-	public LocalDate getValidTo() {
+	
+	public LocalDate getValidTo(){
 		return validTo;
 	}
-
-	public void setValidTo(LocalDate validTo) {
+	
+	public void setValidTo(LocalDate validTo){
 		this.validTo = validTo;
 	}
-
-	public String getLaw() {
+	
+	public String getLaw(){
 		return law;
 	}
 	
-	public void setLaw(String law) {
+	public void setLaw(String law){
 		this.law = law;
 	}
 	

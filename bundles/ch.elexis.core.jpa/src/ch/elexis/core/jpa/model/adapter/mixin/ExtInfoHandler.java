@@ -1,5 +1,7 @@
 package ch.elexis.core.jpa.model.adapter.mixin;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -41,5 +43,13 @@ public class ExtInfoHandler {
 			extInfo.put(key, value);
 		}
 		withExtInfo.getEntity().setExtInfo(JpaModelUtil.extInfoToBytes(extInfo));
+	}
+	
+	/**
+	 * @return modifications to this map are not persisted. Use {@link #setExtInfo(Object, Object)}
+	 *         to handle persistent sets
+	 */
+	public Map<Object, Object> getMap(){
+		return (extInfo != null) ? new HashMap<>(extInfo) : Collections.emptyMap();
 	}
 }
