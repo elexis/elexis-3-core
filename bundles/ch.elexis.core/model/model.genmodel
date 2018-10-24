@@ -241,6 +241,11 @@
         <genParameters ecoreParameter="model.ecore#//IBillableOptifier/add/encounter"/>
         <genParameters ecoreParameter="model.ecore#//IBillableOptifier/add/amount"/>
       </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IBillableOptifier/putContext">
+        <genParameters ecoreParameter="model.ecore#//IBillableOptifier/putContext/key"/>
+        <genParameters ecoreParameter="model.ecore#//IBillableOptifier/putContext/value"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IBillableOptifier/clearContext"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IService">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IService/price"/>

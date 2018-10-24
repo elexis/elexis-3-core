@@ -44,4 +44,12 @@ public abstract class AbstractOptifier<T extends IBillable> implements IBillable
 	}
 	
 	protected abstract void setPrice(T billable, IBilled billed);
+	
+	@Override
+	public void putContext(String key, Object value){
+	}
+	
+	@Override
+	public void clearContext(){
+	}
 }

@@ -3906,6 +3906,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		g1.getETypeArguments().add(g2);
 		initEOperation(op, g1);
 
+		op = addEOperation(iBillableOptifierEClass, null, "putContext", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "key", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEObject(), "value", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		addEOperation(iBillableOptifierEClass, null, "clearContext", 0, 1, IS_UNIQUE, IS_ORDERED);
+
 		initEClass(iServiceEClass, IService.class, "IService", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIService_Price(), theTypesPackage.getMoney(), "price", null, 0, 1, IService.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIService_NetPrice(), theTypesPackage.getMoney(), "netPrice", null, 0, 1, IService.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

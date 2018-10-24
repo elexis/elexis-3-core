@@ -327,6 +327,11 @@
       <eParameters name="encounter" eType="#//IEncounter"/>
       <eParameters name="amount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
     </eOperations>
+    <eOperations name="putContext">
+      <eParameters name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eParameters name="value" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    </eOperations>
+    <eOperations name="clearContext"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IService" abstract="true" interface="true"
       eSuperTypes="#//IBillable #//Identifiable #//Deleteable">

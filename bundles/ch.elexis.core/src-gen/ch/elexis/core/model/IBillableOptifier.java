@@ -13,9 +13,8 @@ package ch.elexis.core.model;
 import ch.rgw.tools.Result;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>IBillable Optifier</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>IBillable
+ * Optifier</b></em>'. <!-- end-user-doc -->
  *
  *
  * @see ch.elexis.core.model.ModelPackage#getIBillableOptifier()
@@ -24,11 +23,37 @@ import ch.rgw.tools.Result;
  */
 public interface IBillableOptifier<T extends IBillable> {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model type="ch.elexis.core.types.Result&lt;ch.elexis.core.model.IBilled&gt;"
 	 * @generated
 	 */
 	Result<IBilled> add(T billable, IEncounter encounter, double amount);
-
+	
+	/**
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * Add an object to the context of the {@link IBillableOptifier} implementation. If a object for the
+	 * provided key already exists, the value is replaced.
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @model
+	 * @generated
+	 */
+	void putContext(String key, Object value);
+	
+	/**
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * Add an implementation specific context object. If a object for the provided key already
+	 * exists, the value is replaced.
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @model
+	 * @generated
+	 */
+	void clearContext();
+	
 } // IBillableOptifier
