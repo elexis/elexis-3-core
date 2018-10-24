@@ -1,11 +1,9 @@
 package ch.elexis.core.jpa.entities;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
@@ -29,8 +27,6 @@ public class TarmedExtension extends AbstractEntityWithId implements EntityWithI
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
 	
-	
-	@Basic(fetch = FetchType.LAZY)
 	@Lob
 	private byte[] limits;
 
@@ -110,6 +106,5 @@ public class TarmedExtension extends AbstractEntityWithId implements EntityWithI
 	@Override
 	public void setExtInfo(byte[] extInfo){
 		setLimits(extInfo);
-		
 	}
 }

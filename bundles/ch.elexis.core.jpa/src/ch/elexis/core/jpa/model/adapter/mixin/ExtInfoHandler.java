@@ -1,6 +1,5 @@
 package ch.elexis.core.jpa.model.adapter.mixin;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -18,17 +17,7 @@ public class ExtInfoHandler {
 		this.withExtInfo = withExtInfo;
 	}
 	
-	public Object getExtInfo(Object key){
-		if (extInfo == null) {
-			byte[] bytes = withExtInfo.getEntity().getExtInfo();
-			if (bytes != null) {
-				extInfo = JpaModelUtil.extInfoFromBytes(bytes);
-			}
-		}
-		return extInfo != null ? extInfo.get(key) : null;
-	}
-	
-	public void setExtInfo(Object key, Object value){
+	private void doLoadExtInfo(){
 		if (extInfo == null) {
 			byte[] bytes = withExtInfo.getEntity().getExtInfo();
 			if (bytes != null) {
@@ -37,6 +26,17 @@ public class ExtInfoHandler {
 				extInfo = new Hashtable<>();
 			}
 		}
+	}
+	
+	public Object getExtInfo(Object key){
+		doLoadExtInfo();
+		
+		return extInfo.get(key);
+	}
+	
+	public void setExtInfo(Object key, Object value){
+		doLoadExtInfo();
+		
 		if (value == null) {
 			extInfo.remove(key);
 		} else {
@@ -50,6 +50,8 @@ public class ExtInfoHandler {
 	 *         to handle persistent sets
 	 */
 	public Map<Object, Object> getMap(){
-		return (extInfo != null) ? new HashMap<>(extInfo) : Collections.emptyMap();
+		doLoadExtInfo();
+		
+		return new HashMap<>(extInfo);
 	}
 }
