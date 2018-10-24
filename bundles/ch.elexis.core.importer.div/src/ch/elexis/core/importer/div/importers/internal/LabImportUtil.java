@@ -16,8 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.XidConstants;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.service.LocalLockServiceHolder;
+
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.importer.div.importers.IContactResolver;
 import ch.elexis.core.importer.div.importers.ILabImportUtil;
@@ -25,6 +24,7 @@ import ch.elexis.core.importer.div.importers.ImportHandler;
 import ch.elexis.core.importer.div.importers.Messages;
 import ch.elexis.core.importer.div.importers.TransientLabResult;
 import ch.elexis.core.model.IDocument;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabMapping;
 import ch.elexis.core.model.ILabOrder;
@@ -34,18 +34,20 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.LabOrderState;
+import ch.elexis.core.model.LabResultConstants;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IDocumentStore;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.EncounterServiceHolder;
+import ch.elexis.core.services.holder.LocalLockServiceHolder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
-import ch.elexis.data.Konsultation;
-import ch.elexis.data.LabResult;
-import ch.elexis.data.Mandant;
-import ch.elexis.data.Patient;
+
 import ch.elexis.hl7.model.OrcMessage;
 import ch.rgw.tools.TimeTool;
 
@@ -256,9 +258,9 @@ public class LabImportUtil implements ILabImportUtil {
 						transientLabResult.getPatient(), labResult, transientLabResult);
 					
 					if (retVal == ImportHandler.OverwriteState.OVERWRITE) {
-						LocalLockServiceHolder.get().acquireLock((LabResult) labResult);
+						LocalLockServiceHolder.get().acquireLock(labResult);
 						transientLabResult.overwriteExisting(labResult);
-						LocalLockServiceHolder.get().releaseLock((LabResult) labResult);
+						LocalLockServiceHolder.get().releaseLock(labResult);
 						continue;
 					} else if (retVal == ImportHandler.OverwriteState.OVERWRITEALL) {
 						overWriteAll = true;
@@ -331,11 +333,13 @@ public class LabImportUtil implements ILabImportUtil {
 			// case 2 try to find mandant via last consultation for patient
 			IPatient iPatient = transientLabResult.getPatient();
 			if (iPatient != null) {
-				Patient patient = Patient.load(iPatient.getId());
-				if (patient.exists()) {
-					Konsultation konsultation = patient.getLastKonsultation();
-					if (konsultation != null && konsultation.exists()) {
-						Mandant mandant = konsultation.getMandant();
+				Optional<IPatient> patient =
+					CoreModelServiceHolder.get().load(iPatient.getId(), IPatient.class);
+				if (patient.isPresent()) {
+					Optional<IEncounter> konsultation =
+						EncounterServiceHolder.get().getLastEncounter(patient.get());
+					if (konsultation.isPresent()) {
+						IMandator mandant = konsultation.get().getMandator();
 						if (mandant != null && mandant.getId() != null) {
 							logger.debug("labimport - mandantor found [" + mandant.getId()
 								+ "] with last konsultation");
@@ -347,10 +351,11 @@ public class LabImportUtil implements ILabImportUtil {
 		}
 
 		// case 3 use the current mandant
-		Mandant mandant = ElexisEventDispatcher.getSelectedMandator();
-		if (mandant != null) {
-			logger.debug("labimport - use the active selected mandantor [" + mandant.getId() + "]");
-			return modelService.load(mandant.getId(), IMandator.class).get();
+		Optional<IMandator> mandant = ContextServiceHolder.get().getActiveMandator();
+		if (mandant.isPresent()) {
+			logger.debug(
+				"labimport - use the active selected mandantor [" + mandant.get().getId() + "]");
+			return modelService.load(mandant.get().getId(), IMandator.class).get();
 		}
 		throw new RuntimeException("No mandantor found!"); //should not happen!
 	}
@@ -385,7 +390,7 @@ public class LabImportUtil implements ILabImportUtil {
 				Iterator<ILabResult> it = ret.iterator();
 				while (it.hasNext()) {
 					ILabResult result = it.next();
-					String subId = (String) result.getExtInfo(LabResult.EXTINFO_HL7_SUBID);
+					String subId = (String) result.getExtInfo(LabResultConstants.EXTINFO_HL7_SUBID);
 					if (subId != null && !transientLabResult.getSubId().equals(subId)) {
 						it.remove();
 					}
@@ -550,7 +555,7 @@ public class LabImportUtil implements ILabImportUtil {
 		}
 		
 		if (subId != null) {
-			labResult.setExtInfo(LabResult.EXTINFO_HL7_SUBID, subId);
+			labResult.setExtInfo(LabResultConstants.EXTINFO_HL7_SUBID, subId);
 		}
 		
 		modelService.save(labResult);
@@ -599,7 +604,7 @@ public class LabImportUtil implements ILabImportUtil {
 	@Override
 	public void updateLabResult(ILabResult iLabResult, TransientLabResult transientLabResult){
 		if (iLabResult != null) {
-			iLabResult.setExtInfo(LabResult.EXTINFO_HL7_SUBID,
+			iLabResult.setExtInfo(LabResultConstants.EXTINFO_HL7_SUBID,
 				transientLabResult.getSubId());
 		}
 	}

@@ -33,4 +33,7 @@ Service-Component: OSGI-INF/ch.elexis.core.services.holder.CoreModelServiceHolde
  OSGI-INF/ch.elexis.core.services.LabService.xml,
  OSGI-INF/ch.elexis.core.services.EncounterService.xml,
  OSGI-INF/ch.elexis.core.services.holder.CodeElementServiceHolder.xml,
- OSGI-INF/ch.elexis.core.services.AccessControlService.xml
+ OSGI-INF/ch.elexis.core.services.AccessControlService.xml,
+ OSGI-INF/ch.elexis.core.services.holder.EncounterServiceHolder.xml,
+ OSGI-INF/ch.elexis.core.services.holder.ConfigServiceHolder.xml
+Export-Package: ch.elexis.core.services.holder

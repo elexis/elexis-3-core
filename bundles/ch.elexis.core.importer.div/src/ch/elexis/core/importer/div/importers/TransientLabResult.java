@@ -1,11 +1,10 @@
 package ch.elexis.core.importer.div.importers;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
@@ -13,6 +12,8 @@ import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.LabResultConstants;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.PathologicDescription;
@@ -152,8 +153,9 @@ public class TransientLabResult {
 			
 			// MPF Rule #11231
 			if (origin != null) {
-				List<String> mpfRuleContactIds = CoreHub.globalCfg.getAsList(
-					Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES);
+				List<String> mpfRuleContactIds = ConfigServiceHolder.get().getAsList(
+					Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES,
+					Collections.emptyList());
 				if (mpfRuleContactIds.contains(origin.getId())) {
 					labResult.setPathologicDescription(new PathologicDescription(
 						Description.PATHO_IMPORT, Messages.MPF_Rule_PathDescriptionText));

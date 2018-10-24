@@ -2,6 +2,7 @@ package ch.elexis.core.services;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -13,6 +14,7 @@ import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.holder.CodeElementServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -132,5 +134,10 @@ public class EncounterService implements IEncounterService {
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public Optional<IEncounter> getLastEncounter(IPatient patient){
+		throw new UnsupportedOperationException();
 	}
 }

@@ -29,6 +29,7 @@ import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.INamedQuery;
+import ch.elexis.core.services.INativeQuery;
 
 public abstract class AbstractModelService implements IModelService {
 	
@@ -253,6 +254,12 @@ public abstract class AbstractModelService implements IModelService {
 			queryName.add(string);
 		}
 		return queryName.toString();
+	}
+	
+	@Override
+	public INativeQuery getNativeQuery(String sql){
+		Query query = getEntityManager(true).createNativeQuery(sql);
+		return new NativeQuery(query);
 	}
 	
 	@Override

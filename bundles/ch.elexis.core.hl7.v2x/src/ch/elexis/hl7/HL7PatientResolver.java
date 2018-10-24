@@ -2,7 +2,7 @@ package ch.elexis.hl7;
 
 import java.util.List;
 
-import ch.elexis.core.data.interfaces.IPatient;
+import ch.elexis.core.model.IPatient;
 
 public abstract class HL7PatientResolver {
 	/**

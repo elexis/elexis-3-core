@@ -13,6 +13,8 @@ public class LabResultConstants {
 	public static final String SMALLER = "<";
 	public static final String BIGGER = ">";
 	
+	public static final String EXTINFO_HL7_SUBID = "Hl7SubId";
+	
 	public static Pattern refValuesPattern = Pattern.compile("\\((.*?)\\)"); //$NON-NLS-1$
 	
 	public static String[] VALID_ABS_VALUES = new String[] {

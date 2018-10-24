@@ -5,16 +5,17 @@ Bundle-SymbolicName: ch.elexis.core.importer.div
 Bundle-Version: 3.2.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: elexis.info
-Require-Bundle: ch.elexis.core;bundle-version="3.1.0",
- ch.rgw.utility,
+Require-Bundle: ch.rgw.utility,
+ ch.elexis.core;bundle-version="3.1.0",
+ ch.elexis.core.services;bundle-version="1.0.0",
  org.eclipse.osgi;bundle-version="3.9.1",
  ch.elexis.core.hl7.v2x;bundle-version="3.2.0",
  ch.elexis.core.l10n;bundle-version="3.5.0",
  org.apache.commons.lang3;bundle-version="3.1.0",
- ch.elexis.core.data,
  org.apache.poi;bundle-version="3.9.0",
  org.apache.poi.ooxml;bundle-version="3.9.0",
- org.apache.poi.ooxml.schemas;bundle-version="3.9.0"
+ org.apache.poi.ooxml.schemas;bundle-version="3.9.0",
+ com.healthmarketscience.jackcess;bundle-version="2.1.9";visibility:=reexport
 Export-Package: ch.elexis.core.importer.div.importers,
  ch.elexis.core.importer.div.importers.multifile,
  ch.elexis.core.importer.div.importers.multifile.strategy

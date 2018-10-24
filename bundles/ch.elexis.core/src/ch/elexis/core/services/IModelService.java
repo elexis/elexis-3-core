@@ -196,6 +196,13 @@ public interface IModelService {
 	public void postEvent(String topic, Object object);
 	
 	/**
+	 * Get a native query object
+	 * @param sql
+	 * @return
+	 */
+	public INativeQuery getNativeQuery(String sql);
+	
+	/**
 	 * Execute the native query and return the result list.
 	 * 
 	 * @param sql

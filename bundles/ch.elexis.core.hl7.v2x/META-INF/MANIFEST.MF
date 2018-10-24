@@ -19,7 +19,6 @@ Require-Bundle: org.apache.commons.codec,
  org.apache.commons.lang3;bundle-version="3.1.0",
  ch.elexis.core.l10n;bundle-version="3.5.0"
 Import-Package: ch.elexis.core.constants,
- ch.elexis.core.data.interfaces,
  ch.elexis.core.exceptions,
  ch.elexis.core.jdt,
  ch.elexis.core.model,

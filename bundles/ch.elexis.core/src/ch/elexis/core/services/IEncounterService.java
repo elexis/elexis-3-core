@@ -1,8 +1,11 @@
 package ch.elexis.core.services;
 
+import java.util.Optional;
+
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IPatient;
 import ch.rgw.tools.Result;
 
 public interface IEncounterService {
@@ -26,4 +29,12 @@ public interface IEncounterService {
 	 */
 	public Result<IEncounter> transferToCoverage(IEncounter encounter, ICoverage coverage,
 		boolean ignoreEditable);
+	
+	/**
+	 * Get the last {@link IEncounter} that was performed on patient.
+	 * 
+	 * @param patient
+	 * @return
+	 */
+	public Optional<IEncounter> getLastEncounter(IPatient patient);
 }
