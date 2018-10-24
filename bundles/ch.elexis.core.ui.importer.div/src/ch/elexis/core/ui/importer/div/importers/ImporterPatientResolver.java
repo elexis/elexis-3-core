@@ -81,11 +81,11 @@ public class ImporterPatientResolver extends HL7PatientResolver {
 		String birthDate){
 		IQuery<IPatient> patientQuery = CoreModelServiceHolder.get().getQuery(IPatient.class);
 		patientQuery.and(ModelPackage.Literals.IPERSON__LAST_NAME, COMPARATOR.EQUALS,
-			StringTool.normalizeCase(lastName));
+			lastName, true);
 		patientQuery.and(ModelPackage.Literals.IPERSON__FIRST_NAME, COMPARATOR.EQUALS,
-			StringTool.normalizeCase(firstName));
+			firstName, true);
 		patientQuery.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS,
-			new TimeTool(birthDate).toLocalDateTime());
+			new TimeTool(birthDate).toLocalDate());
 		return patientQuery.execute();
 	}
 }

@@ -284,4 +284,13 @@ public abstract class AbstractModelService implements IModelService {
 		}
 		return ret;
 	}
+	
+	@Override
+	public Map<Integer, Object> getIndexedParameterMap(Object... parameters){
+		HashMap<Integer, Object> ret = new HashMap<>();
+		for (int i = 0; i < parameters.length; i += 2) {
+			ret.put((Integer) parameters[i], parameters[i + 1]);
+		}
+		return ret;
+	}
 }

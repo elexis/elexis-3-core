@@ -60,7 +60,7 @@ import ch.elexis.core.types.Gender;
 @EntityListeners({
 	KontaktEntityListener.class, EntityWithIdListener.class
 })
-@NamedQuery(name = "Kontakt.code", query = "SELECT k FROM Kontakt k WHERE k.code = :code")
+@NamedQuery(name = "Kontakt.code", query = "SELECT k FROM Kontakt k WHERE k.deleted = false AND k.code = :code")
 public class Kontakt extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 

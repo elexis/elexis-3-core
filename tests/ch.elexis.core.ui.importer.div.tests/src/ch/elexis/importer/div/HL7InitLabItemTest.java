@@ -8,6 +8,7 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,16 +16,19 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import ch.elexis.core.data.beans.ContactBean;
-import ch.elexis.core.data.interfaces.IPatient;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.importer.div.importers.HL7Parser;
 import ch.elexis.core.importer.div.importers.OverwriteAllImportHandler;
+import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.model.builder.IContactBuilder;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.importer.div.importers.DefaultLabContactResolver;
 import ch.elexis.core.ui.importer.div.importers.ImporterPatientResolver;
 import ch.elexis.core.ui.importer.div.services.LabImportUtilHolder;
-import ch.elexis.data.LabItem;
-import ch.elexis.data.Patient;
-import ch.elexis.data.Query;
 import ch.rgw.tools.Result;
 
 public class HL7InitLabItemTest {
@@ -67,45 +71,44 @@ public class HL7InitLabItemTest {
 		} else {
 			fail();
 		}
-		Query<LabItem> itemQuery = new Query<>(LabItem.class);
-		itemQuery.add(LabItem.TITLE, Query.EQUALS, "Calcium");
-		List<LabItem> items = itemQuery.execute();
+		IQuery<ILabItem> labItemQuery = CoreModelServiceHolder.get().getQuery(ILabItem.class);
+		labItemQuery.and(ModelPackage.Literals.ILAB_ITEM__NAME, COMPARATOR.EQUALS, "Calcium");
+		List<ILabItem> items = labItemQuery.execute();
 		assertEquals(1, items.size());
-		LabItem item = items.get(0);
-		assertEquals("mmol/L", item.getEinheit());
+		ILabItem item = items.get(0);
+		assertEquals("mmol/L", item.getUnit());
 		assertEquals("2.20 - 2.65", item.getReferenceFemale());
 		// TODO REGRESSION CHECK test error patient is female ..
 		//		assertEquals("2.20 - 2.65", item.getReferenceMale());
 	}
 	
 	static private void removeExistingItems(){
-		Query<LabItem> qr = new Query<>(LabItem.class);
-		List<LabItem> qrr = qr.execute();
-		for (int j = 0; j < qrr.size(); j++) {
-			qrr.get(j).delete();
-		}
+		CoreModelServiceHolder.get().getQuery(ILabItem.class).execute()
+			.forEach(li -> CoreModelServiceHolder.get().delete(li));
 	}
 	
 	private class MaleFemalePatientResolver extends ImporterPatientResolver {
 		
-		private Patient female;
-		private Patient male;
+		private IPatient female;
+		private IPatient male;
 		
-		private Patient last;
+		private IPatient last;
 		
 		public MaleFemalePatientResolver(){
-			female = new Patient("Test", "Female", "01.01.1999", Patient.FEMALE);
-			male = new Patient("Test", "Male", "01.01.1999", Patient.MALE);
+			female = new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(), "Female",
+				"Test", LocalDate.of(1999, 1, 1), Gender.FEMALE).buildAndSave();
+			male = new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(), "Male", "Test",
+				LocalDate.of(1999, 1, 1), Gender.MALE).buildAndSave();
 		}
 		
 		@Override
 		public IPatient resolvePatient(String firstname, String lastname, String birthDate){
 			if (last == null || last == male) {
 				last = female;
-				return new ContactBean(female);
+				return female;
 			} else {
 				last = male;
-				return new ContactBean(male);
+				return male;
 			}
 		}
 		

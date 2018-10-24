@@ -66,7 +66,8 @@ public abstract class HL7Reader {
 	protected void checkConflict(String firstName, String lastName, String birthDate, String sex){
 		if (!patientResolver.matchPatient(pat, firstName, lastName, birthDate)) {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Messages.HL7_NameConflictWithID).append(":\n")
+			sb.append(Messages.HL7_NameConflictWithID).append("[" + pat.getPatientNr() + "]")
+				.append(":\n")
 				.append(Messages.HL7_Lab).append(lastName).append(StringTool.space)
 				.append(firstName).append("(").append(sex).append("),").append(birthDate)
 				.append("\n").append(Messages.HL7_Database).append(pat.getLabel());

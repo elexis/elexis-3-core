@@ -16,7 +16,7 @@ public class NativeQuery implements INativeQuery {
 	}
 	
 	@Override
-	public Stream<?> executeWithParameters(Map<String, Object> parameters){
+	public Stream<?> executeWithParameters(Map<Integer, Object> parameters){
 		parameters.forEach((k, v) -> {
 			query.setParameter(k, v);
 		});

@@ -23,17 +23,20 @@ public enum Gender {
         return value;
     }
 
-    public static Gender fromValue(String v) {
-        switch (v.toUpperCase()) {
-		case "M":
-			return Gender.MALE;
-		case "W":
-		case "F":
-			return Gender.FEMALE;
-		case "X":
-			return Gender.UNDEFINED;
-		default:
-			return Gender.UNKNOWN;
+	public static Gender fromValue(String string){
+		if (string != null) {
+			switch (string.toUpperCase()) {
+			case "M":
+				return Gender.MALE;
+			case "W":
+			case "F":
+				return Gender.FEMALE;
+			case "X":
+				return Gender.UNDEFINED;
+			default:
+				return Gender.UNKNOWN;
+			}
 		}
+		return Gender.UNKNOWN;
     }
 }
