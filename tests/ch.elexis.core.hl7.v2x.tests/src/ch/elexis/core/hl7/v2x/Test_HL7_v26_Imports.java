@@ -8,22 +8,24 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import ch.elexis.core.data.interfaces.IPatient;
-import ch.elexis.core.data.util.PlatformHelper;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.builder.IContactBuilder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.Gender;
-import ch.elexis.data.Patient;
+import ch.elexis.core.utils.PlatformHelper;
 import ch.elexis.hl7.HL7Reader;
 import ch.elexis.hl7.HL7ReaderFactory;
 import ch.elexis.hl7.model.IValueType;
 import ch.elexis.hl7.model.LabResultData;
 import ch.elexis.hl7.model.ObservationMessage;
-import ch.rgw.tools.TimeTool;
 
 public class Test_HL7_v26_Imports {
 	
@@ -31,7 +33,8 @@ public class Test_HL7_v26_Imports {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception{
-		Patient dummyPatient = new Patient("Grissemann", "Christoph", "17.05.1966", Patient.MALE);
+		IPatient dummyPatient = new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(),
+			"Christoph", "Grissemann", LocalDate.of(1966, 5, 17), Gender.MALE).buildAndSave();
 		resolver = new DummyPatientResolver(dummyPatient);
 	}
 	
@@ -67,8 +70,9 @@ public class Test_HL7_v26_Imports {
 			reader.readObservation(resolver, false);
 			
 			IPatient patient = reader.getPatient();
-			assertEquals("Grissemann", patient.getFamilyName());
-			assertTrue(patient.getDateOfBirth().isEqual(new TimeTool("17.05.1966")));
+			assertEquals("Grissemann", patient.getLastName());
+			assertTrue(patient.getDateOfBirth().atZone(ZoneId.systemDefault())
+				.isEqual(LocalDate.of(1966, 5, 17).atStartOfDay(ZoneId.systemDefault())));
 			assertEquals(Gender.MALE, patient.getGender());
 		}
 	}

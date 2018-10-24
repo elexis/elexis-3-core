@@ -6,14 +6,18 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import ch.elexis.core.data.util.PlatformHelper;
 import ch.elexis.core.exceptions.ElexisException;
-import ch.elexis.data.Patient;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.builder.IContactBuilder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.types.Gender;
+import ch.elexis.core.utils.PlatformHelper;
 import ch.elexis.hl7.HL7Reader;
 import ch.elexis.hl7.HL7ReaderFactory;
 import ch.elexis.hl7.model.IValueType;
@@ -30,7 +34,8 @@ public class Test_HL7_Imports {
 	
 	@BeforeClass
 	public static void beforeClass(){
-		Patient dummyPatient = new Patient("test", "test", "01.01.01", Patient.FEMALE);
+		IPatient dummyPatient = new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(),
+			"test", "test", LocalDate.of(2001, 1, 1), Gender.FEMALE).buildAndSave();
 		resolver = new DummyPatientResolver(dummyPatient);
 	}
 	
@@ -63,7 +68,8 @@ public class Test_HL7_Imports {
 				}
 			}
 			assertNotNull(hl7Readers.get(0).getPatient());
-			assertEquals(resolver.getPatient().getVorname(), hl7Readers.get(0).getPatient()
+			assertEquals(resolver.getPatient().getFirstName(),
+				hl7Readers.get(0).getPatient()
 				.getFirstName());
 		} else {
 			System.out.println("Skipping Datei " + name);

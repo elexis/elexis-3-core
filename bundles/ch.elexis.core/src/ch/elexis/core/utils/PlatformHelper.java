@@ -10,7 +10,7 @@
  *    
  *******************************************************************************/
 
-package ch.elexis.core.data.util;
+package ch.elexis.core.utils;
 
 import java.io.File;
 import java.net.URL;
@@ -18,12 +18,6 @@ import java.net.URL;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 
-/**
- * 
- * 
- * @deprecated moved to ch.elexis.core.utils
- *
- */
 public class PlatformHelper {
 	public static String getBasePath(String pluginID){
 		try {

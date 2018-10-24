@@ -5,11 +5,19 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ch.elexis.core.model.builder.IContactBuilder;
+import ch.elexis.core.services.INamedQuery;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.test.AbstractTest;
+import ch.elexis.core.types.Gender;
+import ch.rgw.tools.StringTool;
 
 public class PatientTest extends AbstractTest {
 	
@@ -43,4 +51,20 @@ public class PatientTest extends AbstractTest {
 		coreModelService.delete(patient);
 	}
 	
+	@Test
+	public void queryByPatientNumber(){
+		IPatient patient1 = new IContactBuilder.PatientBuilder(coreModelService, "testfirst",
+			"testlast", LocalDate.of(2018, 10, 24), Gender.FEMALE).build();
+		patient1.setPatientNr("123");
+		CoreModelServiceHolder.get().save(patient1);
+		
+		INamedQuery<IPatient> namedQuery =
+			CoreModelServiceHolder.get().getNamedQuery(IPatient.class, "code");
+		List<IPatient> loaded = namedQuery.executeWithParameters(
+			CoreModelServiceHolder.get().getParameterMap("code", StringTool.normalizeCase("123")));
+		assertEquals(1, loaded.size());
+		assertEquals(patient1, loaded.get(0));
+		
+		CoreModelServiceHolder.get().remove(patient1);
+	}
 }

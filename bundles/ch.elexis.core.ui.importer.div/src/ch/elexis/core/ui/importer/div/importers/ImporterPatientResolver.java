@@ -1,16 +1,20 @@
 package ch.elexis.core.ui.importer.div.importers;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-import ch.elexis.core.data.beans.ContactBean;
-import ch.elexis.core.data.interfaces.IPatient;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.model.builder.IContactBuilder;
+import ch.elexis.core.services.INamedQuery;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.exchange.KontaktMatcher;
 import ch.elexis.core.ui.exchange.KontaktMatcher.CreateMode;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Person;
-import ch.elexis.data.Query;
 import ch.elexis.hl7.HL7PatientResolver;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
@@ -45,7 +49,7 @@ public class ImporterPatientResolver extends HL7PatientResolver {
 				Messages.HL7_WhoIs + lastname + " " + firstname + " ," + birthStr + "?");
 		}
 		if (pat != null) {
-			return new ContactBean(pat);
+			return CoreModelServiceHolder.get().load(pat.getId(), IPatient.class).orElse(null);
 		}
 		return null;
 	}
@@ -53,29 +57,35 @@ public class ImporterPatientResolver extends HL7PatientResolver {
 	@Override
 	public boolean matchPatient(IPatient patient, String firstname, String lastname,
 		String birthDate){
-		return KontaktMatcher.isSame(patient, lastname, firstname, birthDate);
+		return KontaktMatcher.isSame(Person.load(patient.getId()), lastname, firstname, birthDate);
 	}
 	
 	@Override
 	public IPatient createPatient(String lastName, String firstName, String birthDate, String sex){
-		return new ContactBean(new Patient(lastName, firstName, birthDate, sex));
+		TimeTool birthDateTimeTool = new TimeTool(birthDate);
+		Gender gender = Gender.fromValue(sex);
+		return new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(), firstName, lastName,
+			birthDateTimeTool.toLocalDate(), gender).buildAndSave();
 	}
 	
 	@Override
 	public List<? extends IPatient> getPatientById(String patid){
-		Query<Patient> qbe = new Query<Patient>(Patient.class);
-		qbe.add(Patient.FLD_PATID, Query.EQUALS, StringTool.normalizeCase(patid));
-		return qbe.execute().stream().map(p -> new ContactBean(p)).collect(Collectors.toList());
+		INamedQuery<IPatient> namedQuery =
+			CoreModelServiceHolder.get().getNamedQuery(IPatient.class, "code");
+		return namedQuery.executeWithParameters(
+			CoreModelServiceHolder.get().getParameterMap("code", StringTool.normalizeCase(patid)));
 	}
 	
 	@Override
 	public List<? extends IPatient> findPatientByNameAndBirthdate(String lastName, String firstName,
 		String birthDate){
-		Query<Patient> qbe = new Query<Patient>(Patient.class);
-		qbe.add(Person.NAME, Query.EQUALS, StringTool.normalizeCase(lastName));
-		qbe.add(Person.FIRSTNAME, Query.EQUALS, StringTool.normalizeCase(firstName));
-		qbe.add(Person.BIRTHDATE, Query.EQUALS,
-			new TimeTool(birthDate).toString(TimeTool.DATE_COMPACT));
-		return qbe.execute().stream().map(p -> new ContactBean(p)).collect(Collectors.toList());
+		IQuery<IPatient> patientQuery = CoreModelServiceHolder.get().getQuery(IPatient.class);
+		patientQuery.and(ModelPackage.Literals.IPERSON__LAST_NAME, COMPARATOR.EQUALS,
+			StringTool.normalizeCase(lastName));
+		patientQuery.and(ModelPackage.Literals.IPERSON__FIRST_NAME, COMPARATOR.EQUALS,
+			StringTool.normalizeCase(firstName));
+		patientQuery.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS,
+			new TimeTool(birthDate).toLocalDateTime());
+		return patientQuery.execute();
 	}
 }
