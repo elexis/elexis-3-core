@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Oxygen.3 for Elexis" sequenceNumber="1539724070">
+<target name="Oxygen.3 for Elexis" sequenceNumber="1540454480">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.18.0.v20171217-2215"/>
+      <unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.18.0.v20181023-1826"/>
       <repository location="http://download.eclipse.org/e4/snapshots/org.eclipse.e4.tools/latest/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
@@ -82,7 +82,6 @@
       <unit id="org.apache.commons.cli" version="1.2.0.v201404270220"/>
       <unit id="org.apache.commons.exec" version="1.1.0.v201301240602"/>
       <unit id="org.apache.commons.lang" version="2.6.0.v201404270220"/>
-      <unit id="org.apache.commons.lang3" version="3.1.0.v201403281430"/>
       <unit id="org.apache.commons.pool" version="1.6.0.v201204271246"/>
       <unit id="org.apache.commons.httpclient" version="3.1.0.v201012070820"/>
       <unit id="org.apache.commons.beanutils" version="1.8.0.v201205091237"/>
@@ -146,6 +145,8 @@
       <unit id="org.postgresql.jdbc42.source" version="42.2.5"/>
       <unit id="com.mysql.jdbc" version="5.1.47"/>
       <unit id="com.mysql.jdbc.source" version="5.1.47"/>
+      <unit id="org.apache.commons.io" version="2.5.0"/>
+      <unit id="org.apache.commons.lang3" version="3.7.0"/>
       <repository location="http://download.elexis.info/elexis-server/elexis-server-dependencies"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
@@ -261,7 +262,6 @@
       <unit id="net.sf.opencsv" version="1.8.0"/>
       <unit id="net.sf.opencsv.source" version="1.8.0"/>
       <unit id="org.apache.commons.jexl" version="2.1.1"/>
-      <unit id="org.apache.commons.io" version="2.4.0"/>
       <unit id="ognl.source" version="2.7.3"/>
       <unit id="org.apache.ant" version="1.7.0"/>
       <unit id="org.apache.ant.launcher" version="1.7.0"/>
