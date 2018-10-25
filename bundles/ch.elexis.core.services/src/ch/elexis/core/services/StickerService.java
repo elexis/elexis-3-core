@@ -23,8 +23,8 @@ public class StickerService implements IStickerService {
 		return stickerQuery.executeWithParameters(stickerQuery.getIndexedParameterMap(1, id))
 			.parallel()
 			.filter(resultId -> resultId instanceof String).map(resultId -> CoreModelServiceHolder
-				.get().load((String) resultId, ISticker.class).get())
-			.collect(Collectors.toList());
+				.get().load((String) resultId, ISticker.class).orElse(null))
+			.filter(st -> st != null).collect(Collectors.toList());
 	}
 	
 	@Override

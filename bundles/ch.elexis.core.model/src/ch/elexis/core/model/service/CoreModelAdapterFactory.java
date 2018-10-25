@@ -21,6 +21,7 @@ import ch.elexis.core.model.BillingSystemFactor;
 import ch.elexis.core.model.Config;
 import ch.elexis.core.model.Contact;
 import ch.elexis.core.model.Coverage;
+import ch.elexis.core.model.CustomService;
 import ch.elexis.core.model.DiagnosisReference;
 import ch.elexis.core.model.DocumentLetter;
 import ch.elexis.core.model.Encounter;
@@ -54,6 +55,7 @@ import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IRight;
 import ch.elexis.core.model.IRole;
+import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.IUser;
@@ -61,7 +63,6 @@ import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Image;
 import ch.elexis.core.model.Laboratory;
-import ch.elexis.core.model.CustomService;
 import ch.elexis.core.model.Mandator;
 import ch.elexis.core.model.Organization;
 import ch.elexis.core.model.Patient;
@@ -96,6 +97,9 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 		
 		addMapping(new MappingEntry(IUser.class, ch.elexis.core.model.User.class,
 			ch.elexis.core.jpa.entities.User.class));
+		
+		addMapping(new MappingEntry(ISticker.class, ch.elexis.core.model.Sticker.class,
+			ch.elexis.core.jpa.entities.Sticker.class));
 		
 		addMapping(new MappingEntry(IXid.class, ch.elexis.core.model.Xid.class,
 			ch.elexis.core.jpa.entities.Xid.class));

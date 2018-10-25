@@ -33,7 +33,9 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
@@ -106,6 +108,9 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 	 */
 	public void syncRefresh() {
 		IQuery<IPatient> patientQuery = CoreModelServiceHolder.get().getQuery(IPatient.class);
+		// TODO implement as precondition?
+		patientQuery.and(ModelPackage.Literals.ICONTACT__PATIENT, COMPARATOR.EQUALS, true);
+		
 		viewer.getConfigurer().getControlFieldProvider().setQuery(patientQuery);
 		String[] actualOrder;
 		int idx = StringTool.getIndex(orderFields, firstOrder);
@@ -124,7 +129,7 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 		}
 		if (actualOrder != null && actualOrder.length > 0) {
 			for (String order : actualOrder) {
-				patientQuery.orderBy(order, ORDER.DESC);
+				patientQuery.orderBy(order, ORDER.ASC);
 			}
 		}
 		List<IPatient> lPats = patientQuery.execute();
@@ -220,7 +225,7 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 	
 	@Override
 	public void reorder(String field){
-		int idx = StringTool.getIndex(orderLabels, field);
+		int idx = StringTool.getIndex(orderFields, field);
 		if (idx > -1) {
 			firstOrder = orderFields[idx];
 			changed(null);

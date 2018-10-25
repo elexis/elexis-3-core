@@ -231,16 +231,17 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		ArrayList<String> fields = new ArrayList<String>();
 		initiated = !("".equals(CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWPATNR, "")));
 		if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWPATNR, false)) {
-			fields.add(Patient.FLD_PATID + Query.EQUALS + Messages.PatientenListeView_PatientNr); // $NON-NLS-1$
+			fields.add("code" + Query.EQUALS + Messages.PatientenListeView_PatientNr); // $NON-NLS-1$
 		}
 		if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWNAME, true)) {
-			fields.add(Patient.FLD_NAME + Query.EQUALS + Messages.PatientenListeView_PatientName); // $NON-NLS-1$
+			fields.add("description1" + Query.EQUALS + Messages.PatientenListeView_PatientName); // $NON-NLS-1$
 		}
 		if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWFIRSTNAME, true)) {
-			fields.add(Patient.FLD_FIRSTNAME + Query.EQUALS + Messages.PatientenListeView_PantientFirstName); // $NON-NLS-1$
+			fields
+				.add("description2" + Query.EQUALS + Messages.PatientenListeView_PantientFirstName); // $NON-NLS-1$
 		}
 		if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWDOB, true)) {
-			fields.add(Patient.BIRTHDATE + Query.EQUALS + Messages.PatientenListeView_PatientBirthdate); // $NON-NLS-1$
+			fields.add("dob" + Query.EQUALS + Messages.PatientenListeView_PatientBirthdate); // $NON-NLS-1$
 		}
 		currentUserFields = fields.toArray(new String[fields.size()]);
 	}
