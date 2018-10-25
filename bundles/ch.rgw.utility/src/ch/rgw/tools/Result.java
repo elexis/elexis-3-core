@@ -195,6 +195,10 @@ public class Result<T> {
 	public static final Result<String> ERROR(String text){
 		return new Result<String>(SEVERITY.ERROR, 0, text, text, false);
 	}
+
+	public void addMessage(SEVERITY severity, String message){
+		list.add(new msg(0, message, severity, null));
+	}
 	
 	
 }

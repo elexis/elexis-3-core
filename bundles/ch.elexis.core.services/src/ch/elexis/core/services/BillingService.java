@@ -5,6 +5,7 @@ import org.osgi.service.component.annotations.Reference;
 
 import ch.elexis.core.ac.AccessControlDefaults;
 import ch.elexis.core.model.IBillable;
+import ch.elexis.core.model.IBillableOptifier;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
@@ -32,7 +33,8 @@ public class BillingService implements IBillingService {
 		}
 		
 		IMandator encounterMandator = encounter.getMandator();
-		boolean checkMandant = !accessControlService.request(AccessControlDefaults.LSTG_CHARGE_FOR_ALL);
+		boolean checkMandant =
+			!accessControlService.request(AccessControlDefaults.LSTG_CHARGE_FOR_ALL);
 		boolean mandatorOk = true;
 		boolean invoiceOk = true;
 		IMandator activeMandator =
@@ -81,8 +83,29 @@ public class BillingService implements IBillingService {
 		Result<IBilled> verificationResult =
 			billable.getVerifier().verifyAdd(billable, encounter, amount);
 		if (verificationResult.isOK()) {
-			Result<IBilled> optifierResult =
-				billable.getOptifier().add(billable, encounter, amount);
+			IBillableOptifier optifier = billable.getOptifier();
+			Result<IBilled> optifierResult = optifier.add(billable, encounter, amount);
+			
+			// TODO refactor
+			if (!optifierResult.isOK() && optifierResult.getCode() == 11) {
+				String initialResult = optifierResult.toString();
+				// code 11 is tarmed exclusion due to side see TarmedOptifier#EXKLUSIONSIDE
+				// set a context variable to specify the side see TarmedLeistung#SIDE, TarmedLeistung#SIDE_L, TarmedLeistung#SIDE_R
+				optifier.putContext("Seite", "r");
+				optifierResult = optifier.add(billable, encounter, amount);
+				if (!optifierResult.isOK() && optifierResult.getCode() == 11) {
+					optifier.putContext("Seite", "l");
+					optifierResult = optifier.add(billable, encounter, amount);
+				}
+				if (optifierResult.isOK()) {
+					String message = "Achtung: " + initialResult + "\n Es wurde bei der Position "
+						+ billable.getCode() + " automatisch die Seite gewechselt."
+						+ " Bitte korrigieren Sie die Leistung falls dies nicht korrekt ist.";
+					optifierResult.addMessage(SEVERITY.OK, message);
+				}
+				optifier.clearContext();
+			}
+			
 			return optifierResult;
 		} else {
 			return verificationResult;
