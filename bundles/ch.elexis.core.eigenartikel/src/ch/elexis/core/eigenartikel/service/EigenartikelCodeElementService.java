@@ -33,7 +33,7 @@ public class EigenartikelCodeElementService implements ICodeElementServiceContri
 		INamedQuery<IArticle> query = coreModelService.getNamedQuery(IArticle.class, "typ", "code");
 		
 		List<IArticle> found = query.executeWithParameters(
-			coreModelService.getParameterMap("typ", ArticleTyp.EIGENARTIKEL, "code", code));
+			query.getParameterMap("typ", ArticleTyp.EIGENARTIKEL, "code", code));
 		if (!found.isEmpty()) {
 			if (found.size() > 1) {
 				LoggerFactory.getLogger(getClass()).warn("Found more than one "
@@ -44,7 +44,7 @@ public class EigenartikelCodeElementService implements ICodeElementServiceContri
 		} else {
 			query = coreModelService.getNamedQuery(IArticle.class, "typ", "id");
 			found = query.executeWithParameters(
-				coreModelService.getParameterMap("typ", ArticleTyp.EIGENARTIKEL, "id", code));
+				query.getParameterMap("typ", ArticleTyp.EIGENARTIKEL, "id", code));
 			if (!found.isEmpty()) {
 				if (found.size() > 1) {
 					LoggerFactory.getLogger(getClass())
@@ -67,6 +67,6 @@ public class EigenartikelCodeElementService implements ICodeElementServiceContri
 	public List<ICodeElement> getElements(HashMap<Object, Object> context){
 		INamedQuery<IArticle> query = coreModelService.getNamedQuery(IArticle.class, "typ");
 		return (List<ICodeElement>) (List<?>) query.executeWithParameters(
-			coreModelService.getParameterMap("typ", ArticleTyp.EIGENARTIKEL));
+			query.getParameterMap("typ", ArticleTyp.EIGENARTIKEL));
 	}
 }

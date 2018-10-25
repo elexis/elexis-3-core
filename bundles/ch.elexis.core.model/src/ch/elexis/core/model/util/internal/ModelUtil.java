@@ -200,8 +200,8 @@ public class ModelUtil {
 		if (owner != null) {
 			INamedQuery<IUserConfig> configQuery = CoreModelServiceHolder.get()
 				.getNamedQuery(IUserConfig.class, true, "ownerid", "param");
-			List<IUserConfig> configs = configQuery.executeWithParameters(CoreModelServiceHolder
-				.get().getParameterMap("ownerid", owner.getId(), "param", key));
+			List<IUserConfig> configs = configQuery.executeWithParameters(
+				configQuery.getParameterMap("ownerid", owner.getId(), "param", key));
 			if (configs.isEmpty()) {
 				return defaultValue;
 			} else {
@@ -340,8 +340,8 @@ public class ModelUtil {
 			String[] parts = storeToString.get().split(IStoreToStringContribution.DOUBLECOLON);
 			INamedQuery<IDiagnosisReference> query = CoreModelServiceHolder.get()
 				.getNamedQuery(IDiagnosisReference.class, "code", "diagnosisClass");
-			List<IDiagnosisReference> existing = query.executeWithParameters(CoreModelServiceHolder
-				.get().getParameterMap("code", diagnosis.getCode(), "diagnosisClass", parts[0]));
+			List<IDiagnosisReference> existing = query.executeWithParameters(
+				query.getParameterMap("code", diagnosis.getCode(), "diagnosisClass", parts[0]));
 			if (!existing.isEmpty()) {
 				return existing.get(0);
 			} else {

@@ -33,7 +33,7 @@ public class EigenleistungCodeElementService implements ICodeElementServiceContr
 		INamedQuery<ICustomService> query =
 			coreModelService.getNamedQuery(ICustomService.class, "code");
 		List<ICustomService> found =
-			query.executeWithParameters(coreModelService.getParameterMap("code", code));
+			query.executeWithParameters(query.getParameterMap("code", code));
 		if (!found.isEmpty()) {
 			if (found.size() > 1) {
 				LoggerFactory.getLogger(getClass()).warn(

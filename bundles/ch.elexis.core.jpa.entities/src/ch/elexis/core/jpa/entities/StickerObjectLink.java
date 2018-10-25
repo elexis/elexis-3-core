@@ -18,7 +18,7 @@ public class StickerObjectLink {
 	private String obj;
 	
 	@ManyToOne
-	@JoinColumn(name = "etikette", nullable = false, insertable = false)
+	@JoinColumn(name = "etikette")
 	private Sticker sticker;
 	
 	public String getObj(){

@@ -32,7 +32,8 @@ Export-Package: ch.elexis.core.ui.contacts.dialogs,
  ch.elexis.core.ui.contacts.perspectives,
  ch.elexis.core.ui.contacts.preferences,
  ch.elexis.core.ui.contacts.views
-Import-Package: ch.elexis.data,
+Import-Package: ch.elexis.core.services.holder,
+ ch.elexis.data,
  javax.inject;version="1.0.0",
  org.slf4j;version="1.7.2"
 Bundle-ClassPath: .

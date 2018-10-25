@@ -44,7 +44,8 @@ public class StockService implements IStockService {
 		if (storeToString.isPresent()) {
 			String[] parts = storeToString.get().split(IStoreToStringContribution.DOUBLECOLON);
 			List<Long> results =
-				query.executeWithParameters(CoreModelServiceHolder.get().getParameterMap(
+				query.executeWithParameters(
+					query.getParameterMap(
 					"articleId", parts[1], "articleType", parts[0]));
 			if (!results.isEmpty()) {
 				return results.get(0);
@@ -197,8 +198,8 @@ public class StockService implements IStockService {
 			query = CoreModelServiceHolder.get().getNamedQueryByName(Long.class,
 				IStockEntry.class, "StockEntry_AvailableCurrentStock.articleId.articleType");
 		}
-		List<Long> results = query.executeWithParameters(CoreModelServiceHolder.get()
-			.getParameterMap("articleId", article.getId(), "articleType",
+		List<Long> results = query.executeWithParameters(query.getParameterMap("articleId",
+			article.getId(), "articleType",
 				article.getCodeSystemName()));
 		if (!results.isEmpty()) {
 			Long value = results.get(0);
@@ -286,8 +287,8 @@ public class StockService implements IStockService {
 		INamedQuery<IStockEntry> query = CoreModelServiceHolder.get()
 			.getNamedQuery(IStockEntry.class,
 			"articleId", "articleType");
-		List<IStockEntry> entries = query.executeWithParameters(CoreModelServiceHolder.get()
-			.getParameterMap("articleId", vals[1], "articleType", vals[0]));
+		List<IStockEntry> entries = query.executeWithParameters(
+			query.getParameterMap("articleId", vals[1], "articleType", vals[0]));
 		if (entries != null && !entries.isEmpty()) {
 			for (IStockEntry iStockEntry : entries) {
 				if (iStockEntry.getStock().equals(iStock)) {
@@ -337,8 +338,8 @@ public class StockService implements IStockService {
 		String[] vals = storeToString.split(StringConstants.DOUBLECOLON);
 		INamedQuery<IStockEntry> query = CoreModelServiceHolder.get()
 			.getNamedQuery(IStockEntry.class, "articleId", "articleType");
-		return query.executeWithParameters(CoreModelServiceHolder.get().getParameterMap("articleId",
-			vals[1], "articleType", vals[0]));
+		return query.executeWithParameters(
+			query.getParameterMap("articleId", vals[1], "articleType", vals[0]));
 	}
 	
 	@Override

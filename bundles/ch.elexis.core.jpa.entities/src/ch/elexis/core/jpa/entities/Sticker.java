@@ -46,7 +46,7 @@ public class Sticker extends AbstractEntityWithId implements EntityWithId, Entit
 
 	@Column(length = 255)
 	private String classes;
-
+	
 	public String getImage() {
 		return image;
 	}

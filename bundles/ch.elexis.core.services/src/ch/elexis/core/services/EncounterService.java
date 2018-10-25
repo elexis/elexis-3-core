@@ -266,7 +266,7 @@ public class EncounterService implements IEncounterService {
 		INativeQuery nativeQuery =
 			CoreModelServiceHolder.get().getNativeQuery(ENCOUNTER_LAST_QUERY);
 		Iterator<?> result = nativeQuery.executeWithParameters(
-			CoreModelServiceHolder.get().getIndexedParameterMap(Integer.valueOf(1),
+			nativeQuery.getIndexedParameterMap(Integer.valueOf(1),
 				patient.getId()))
 			.iterator();
 		if (result.hasNext()) {

@@ -15,6 +15,8 @@ package ch.elexis.core.ui.util.viewers;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.data.Query;
 import ch.rgw.tools.StringTool;
 
@@ -66,6 +68,40 @@ public class PatientenListeControlFieldProvider extends DefaultControlFieldProvi
 		} else {
 			// no space, normal behaviour
 			super.setQuery(q);
+		}
+	}
+	
+	@Override
+	public void setQuery(IQuery<?> query){
+		// specially handle search string with space in the first field.
+		// if the first field contains a space, we consider the value as
+		// a combination of the first field and the second field.
+		
+		String field0 = null;
+		String field1 = null;
+		
+		if (lastFiltered.length >= 2 && lastFiltered[0].contains(" ")) {
+			Pattern pattern = Pattern.compile("^(\\S+) +(.*)$");
+			Matcher matcher = pattern.matcher(lastFiltered[0]);
+			if (matcher.matches()) {
+				field0 = matcher.group(1);
+				field1 = matcher.group(2);
+			}
+		}
+		
+		if (field0 != null && field1 != null) {
+			query.and(dbFields[0], COMPARATOR.LIKE, field0 + "%", true);
+			query.and(dbFields[1], COMPARATOR.LIKE, field0 + "%", true); //$NON-NLS-1$ //$NON-NLS-2$
+			
+			// remaining fields
+			for (int i = 2; i < fields.length; i++) {
+				if (!lastFiltered[i].equals(StringTool.leer)) {
+					query.and(dbFields[i], COMPARATOR.LIKE, lastFiltered[i] + "%", true);
+				}
+			}
+		} else {
+			// no space, normal behaviour
+			super.setQuery(query);
 		}
 	}
 }

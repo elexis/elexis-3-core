@@ -1,5 +1,6 @@
 package ch.elexis.core.services;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -20,4 +21,17 @@ public interface INativeQuery {
 	 */
 	public Stream<?> executeWithParameters(Map<Integer, Object> parameters);
 	
+	/**
+	 * Helper Method for creating a indexed map to execute a {@link INativeQuery}.
+	 * 
+	 * @param parameters
+	 * @return
+	 */
+	public default Map<Integer, Object> getIndexedParameterMap(Object... parameters){
+		HashMap<Integer, Object> ret = new HashMap<>();
+		for (int i = 0; i < parameters.length; i += 2) {
+			ret.put((Integer) parameters[i], parameters[i + 1]);
+		}
+		return ret;
+	}
 }

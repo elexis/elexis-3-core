@@ -24,8 +24,8 @@ import ch.elexis.core.model.ch.BillingLaw;
  * The following features are supported:
  * </p>
  * <ul>
- * <li>{@link ch.elexis.core.model.IBillingSystem#getName <em>Name</em>}</li>
- * <li>{@link ch.elexis.core.model.IBillingSystem#getLaw <em>Law</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IBillingSystem#getName <em>Name</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IBillingSystem#getLaw <em>Law</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIBillingSystem()
@@ -34,13 +34,13 @@ import ch.elexis.core.model.ch.BillingLaw;
  */
 public interface IBillingSystem {
 	/**
-	 * Returns the value of the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Name</em>' attribute isn't clear, there really should be more of a
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIBillingSystem_Name()
@@ -50,24 +50,22 @@ public interface IBillingSystem {
 	String getName();
 	
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IBillingSystem#getName <em>Name</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Name</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IBillingSystem#getName <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Name</em>' attribute.
 	 * @see #getName()
 	 * @generated
 	 */
 	void setName(String value);
 	
 	/**
-	 * Returns the value of the '<em><b>Law</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Law</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Law</em>' attribute isn't clear, there really should be more of a
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Law</em>' attribute.
 	 * @see #setLaw(BillingLaw)
 	 * @see ch.elexis.core.model.ModelPackage#getIBillingSystem_Law()
@@ -77,11 +75,9 @@ public interface IBillingSystem {
 	BillingLaw getLaw();
 	
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IBillingSystem#getLaw <em>Law</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Law</em>' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IBillingSystem#getLaw <em>Law</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Law</em>' attribute.
 	 * @see #getLaw()
 	 * @generated
 	 */

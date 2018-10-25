@@ -20,6 +20,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.Composite;
 
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.ui.selectors.ActiveControl;
 import ch.elexis.core.ui.selectors.ActiveControlListener;
 import ch.elexis.core.ui.selectors.ComboField;
@@ -191,6 +193,18 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 			String value = vals.get(name);
 			if (!StringTool.isNothing(value)) {
 				q.add(name, Query.LIKE, value + "%", true);
+			}
+		}
+	}
+	
+	@Override
+	public void setQuery(IQuery<?> query){
+		HashMap<String, String> vals = panel.getValues();
+		for (FieldDescriptor<?> field : fields) {
+			String name = field.getFieldname();
+			String value = vals.get(name);
+			if (!StringTool.isNothing(value)) {
+				query.and(name, COMPARATOR.LIKE, value + "%", true);
 			}
 		}
 	}

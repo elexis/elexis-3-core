@@ -61,7 +61,7 @@ public class PatientTest extends AbstractTest {
 		INamedQuery<IPatient> namedQuery =
 			CoreModelServiceHolder.get().getNamedQuery(IPatient.class, "code");
 		List<IPatient> loaded = namedQuery.executeWithParameters(
-			CoreModelServiceHolder.get().getParameterMap("code", StringTool.normalizeCase("123")));
+			namedQuery.getParameterMap("code", StringTool.normalizeCase("123")));
 		assertEquals(1, loaded.size());
 		assertEquals(patient1, loaded.get(0));
 		

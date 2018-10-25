@@ -33,6 +33,7 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.services.IQuery;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -284,7 +285,14 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 		return false;
 	}
 	
+	@Override
 	public void setQuery(final Query q){
+		
+	}
+	
+	@Override
+	public void setQuery(IQuery<?> query){
+		// TODO Auto-generated method stub
 		
 	}
 	

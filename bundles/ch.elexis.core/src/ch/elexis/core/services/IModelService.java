@@ -1,7 +1,6 @@
 package ch.elexis.core.services;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -217,22 +216,6 @@ public interface IModelService {
 	 * @return
 	 */
 	public int executeNativeUpdate(String sql);
-	
-	/**
-	 * Helper Method for creating a map to execute a {@link INamedQuery}.
-	 * 
-	 * @param parameters
-	 * @return
-	 */
-	public Map<String, Object> getParameterMap(Object... parameters);
-	
-	/**
-	 * Helper Method for creating a indexed map to execute a {@link INativeQuery}.
-	 * 
-	 * @param parameters
-	 * @return
-	 */
-	public Map<Integer, Object> getIndexedParameterMap(Object... parameters);
 	
 	/**
 	 * Refresh the entity of the {@link Identifiable} with data from the L2 cache or if not loaded

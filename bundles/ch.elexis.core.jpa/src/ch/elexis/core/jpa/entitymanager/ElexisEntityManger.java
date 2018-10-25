@@ -108,7 +108,7 @@ public class ElexisEntityManger implements IElexisEntityManager {
 					em = createManagedEntityManager();
 				} else {
 					// save happens in separate EntityManager
-					// clear L1 cache, use L2 cache
+					// clear L1 cache, use L2 cache -> detach current L1 cache objects
 					em.clear();
 				}
 				return em;

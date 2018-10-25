@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.services.internal;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,8 +31,11 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.IContextService;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
@@ -226,6 +230,25 @@ public class ContextService implements IContextService, EventHandler {
 				Optional<IUser> iUser =
 					CoreModelServiceHolder.get().load(((User) object).getId(), IUser.class);
 				iUser.ifPresent(u -> root.setActiveUser(u));
+			} else if (object instanceof Anwender) {
+				Optional<IMandator> iMandator =
+					CoreModelServiceHolder.get().load(((Anwender) object).getId(), IMandator.class);
+				if (iMandator.isPresent()) {
+					root.setActiveMandator(iMandator.get());
+					
+					IQuery<IUser> userQuery = CoreModelServiceHolder.get().getQuery(IUser.class);
+					userQuery.and(ModelPackage.Literals.IUSER__ASSIGNED_CONTACT, COMPARATOR.EQUALS,
+						iMandator.get());
+					List<IUser> foundUsers = userQuery.execute();
+					if(!foundUsers.isEmpty()) {
+						root.setActiveUser(foundUsers.get(0));
+						root.setActiveUserContact(iMandator.get());
+					}
+				} else {
+					root.setActiveMandator(null);
+					root.setActiveUser(null);
+					root.setActiveUserContact(null);
+				}
 			}
 			
 			postEvent(ElexisEventTopics.EVENT_USER_CHANGED,

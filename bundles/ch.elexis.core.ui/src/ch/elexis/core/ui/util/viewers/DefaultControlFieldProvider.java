@@ -33,6 +33,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.text.ElexisText;
@@ -383,7 +385,15 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 		if (ch) {
 			q.insertTrue();
 		}
-		
+	}
+	
+	@Override
+	public void setQuery(IQuery<?> query){
+		for (int i = 0; i < dbFields.length; i++) {
+			if (!lastFiltered[i].equals(StringTool.leer)) {
+				query.and(dbFields[i], COMPARATOR.LIKE, lastFiltered[i] + "%", true);
+			}
+		}
 	}
 	
 	@Override

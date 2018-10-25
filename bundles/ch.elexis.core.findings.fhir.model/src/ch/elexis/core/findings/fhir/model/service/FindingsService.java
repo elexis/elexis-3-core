@@ -45,16 +45,20 @@ public class FindingsService implements IFindingsService {
 					IClinicalImpression.class));
 			}
 			if (filter.isAssignableFrom(IObservation.class)) {
-				ret.addAll((Collection<? extends T>) queryByPatientId(patientId, IObservation.class));
+				ret.addAll(
+					(Collection<? extends T>) queryByPatientId(patientId, IObservation.class));
 			}
 			if (filter.isAssignableFrom(IProcedureRequest.class)) {
-				ret.addAll((Collection<? extends T>) queryByPatientId(patientId, IProcedureRequest.class));
+				ret.addAll(
+					(Collection<? extends T>) queryByPatientId(patientId, IProcedureRequest.class));
 			}
 			if (filter.isAssignableFrom(IFamilyMemberHistory.class)) {
-				ret.addAll((Collection<? extends T>) queryByPatientId(patientId, IFamilyMemberHistory.class));
+				ret.addAll((Collection<? extends T>) queryByPatientId(patientId,
+					IFamilyMemberHistory.class));
 			}
 			if (filter.isAssignableFrom(IAllergyIntolerance.class)) {
-				ret.addAll((Collection<? extends T>) queryByPatientId(patientId, IAllergyIntolerance.class));
+				ret.addAll((Collection<? extends T>) queryByPatientId(patientId,
+					IAllergyIntolerance.class));
 			}
 		}
 		return (List<T>) ret;
@@ -63,15 +67,16 @@ public class FindingsService implements IFindingsService {
 	private <T> List<T> queryByPatientId(String patientId, Class<T> clazz){
 		if (patientId != null) {
 			INamedQuery<T> query = findingsModelService.getNamedQuery(clazz, "patientid");
-			return query.executeWithParameters(
-				findingsModelService.getParameterMap("patientid", patientId));
+			return query.executeWithParameters(query.getParameterMap("patientid", patientId));
 		}
 		return Collections.emptyList();
 	}
 	
-	private Optional<IEncounter> getEncounter(String consultationId) {
-		INamedQuery<IEncounter> query = findingsModelService.getNamedQuery(IEncounter.class, "consultationid");
-		List<IEncounter> encounters = query.executeWithParameters(findingsModelService.getParameterMap("consultationid", consultationId));
+	private Optional<IEncounter> getEncounter(String consultationId){
+		INamedQuery<IEncounter> query =
+			findingsModelService.getNamedQuery(IEncounter.class, "consultationid");
+		List<IEncounter> encounters =
+			query.executeWithParameters(query.getParameterMap("consultationid", consultationId));
 		if (!encounters.isEmpty()) {
 			if (encounters.size() > 1) {
 				LoggerFactory.getLogger(getClass())
@@ -114,8 +119,8 @@ public class FindingsService implements IFindingsService {
 	private <T> List<T> queryByEncounterId(String consultationId, Class<T> clazz){
 		if (consultationId != null) {
 			INamedQuery<T> query = findingsModelService.getNamedQuery(clazz, "encounterid");
-			return query.executeWithParameters(
-				findingsModelService.getParameterMap("encounterid", consultationId));
+			return query
+				.executeWithParameters(query.getParameterMap("encounterid", consultationId));
 		}
 		return Collections.emptyList();
 	}

@@ -24,7 +24,6 @@ import ch.rgw.tools.Result;
 public interface IBillableOptifier<T extends IBillable> {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model type="ch.elexis.core.types.Result&lt;ch.elexis.core.model.IBilled&gt;"
 	 * @generated
 	 */
@@ -37,7 +36,6 @@ public interface IBillableOptifier<T extends IBillable> {
 	 * provided key already exists, the value is replaced.
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @model
 	 * @generated
 	 */
@@ -50,7 +48,6 @@ public interface IBillableOptifier<T extends IBillable> {
 	 * exists, the value is replaced.
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @model
 	 * @generated
 	 */

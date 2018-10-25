@@ -202,7 +202,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ISticker/background"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ISticker/foreground"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ISticker/visible"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ISticker/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ISticker/name"/>
       <genOperations ecoreOperation="model.ecore#//ISticker/getLabel"/>
       <genOperations ecoreOperation="model.ecore#//ISticker/setClassForSticker">
         <genParameters ecoreParameter="model.ecore#//ISticker/setClassForSticker/clazz"/>

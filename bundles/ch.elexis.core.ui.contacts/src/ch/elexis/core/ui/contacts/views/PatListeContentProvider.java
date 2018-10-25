@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -30,18 +31,20 @@ import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ICommonViewerContentProvider;
 import ch.elexis.core.ui.views.Messages;
-import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
 import ch.rgw.tools.StringTool;
 
 public class PatListeContentProvider implements ICommonViewerContentProvider, ILazyContentProvider {
 	CommonViewer viewer;
-	Query<Patient> qbe;
 	Object[] pats;
 	boolean bValid = false;
 	boolean bUpdating = false;
@@ -77,7 +80,6 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 	@Override
 	public void startListening(){
 		viewer.getConfigurer().getControlFieldProvider().addChangeListener(this);
-		qbe = new Query<Patient>(Patient.class);
 	}
 	
 	@Override
@@ -88,13 +90,13 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 	}
 	
 	public void setFilter(PatListFilterBox f){
-		qbe.addPostQueryFilter(f);
+		//		qbe.addPostQueryFilter(f);
 		pfilter = f;
 		bValid = false;
 	}
 	
 	public void removeFilter(PatListFilterBox f){
-		qbe.removePostQueryFilter(f);
+		//		qbe.removePostQueryFilter(f);
 		pfilter = null;
 		bValid = false;
 	}
@@ -103,8 +105,8 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 	 * @since 3.2
 	 */
 	public void syncRefresh() {
-		qbe.clear();
-		viewer.getConfigurer().getControlFieldProvider().setQuery(qbe);
+		IQuery<IPatient> patientQuery = CoreModelServiceHolder.get().getQuery(IPatient.class);
+		viewer.getConfigurer().getControlFieldProvider().setQuery(patientQuery);
 		String[] actualOrder;
 		int idx = StringTool.getIndex(orderFields, firstOrder);
 		if ((idx == -1) || (idx == 0)) {
@@ -120,13 +122,16 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 				}
 			} while (idx != begin);
 		}
-		qbe.orderBy(false, actualOrder);
-		List<Patient> lPats = qbe.execute();
-		if (lPats == null) {
-			pats = new Patient[0];
-		} else {
-			pats = lPats.toArray(new Patient[0]);
+		if (actualOrder != null && actualOrder.length > 0) {
+			for (String order : actualOrder) {
+				patientQuery.orderBy(order, ORDER.DESC);
+			}
 		}
+		List<IPatient> lPats = patientQuery.execute();
+		if (pfilter != null) {
+			lPats.stream().filter(pat -> applyFilter(pat)).collect(Collectors.toList());
+		}
+		pats = lPats.toArray(new Object[lPats.size()]);
 		UiDesk.getDisplay().syncExec(new Runnable() {
 			
 			@Override
@@ -143,6 +148,9 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 		});
 	}
 	
+	private boolean applyFilter(Object object) {
+		return pfilter.select(object);
+	}
 	
 	@Override
 	public Object[] getElements(Object inputElement){

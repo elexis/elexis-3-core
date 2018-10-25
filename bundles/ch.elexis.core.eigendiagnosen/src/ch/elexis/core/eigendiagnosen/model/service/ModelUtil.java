@@ -31,7 +31,7 @@ public class ModelUtil {
 		INamedQuery<IDiagnosisTree> query =
 				diagnosisModelService.getNamedQuery(IDiagnosisTree.class, "code");
 		List<IDiagnosisTree> found =
-			query.executeWithParameters(diagnosisModelService.getParameterMap("code", code));
+			query.executeWithParameters(query.getParameterMap("code", code));
 		if (!found.isEmpty()) {
 			return Optional.of(found.get(0));
 		}
@@ -42,6 +42,6 @@ public class ModelUtil {
 		INamedQuery<IDiagnosisTree> query =
 			diagnosisModelService.getNamedQuery(IDiagnosisTree.class, "parent");
 		return query
-			.executeWithParameters(diagnosisModelService.getParameterMap("parent", parentCode));
+			.executeWithParameters(query.getParameterMap("parent", parentCode));
 	}
 }

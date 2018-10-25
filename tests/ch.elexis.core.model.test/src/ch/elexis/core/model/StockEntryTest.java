@@ -119,7 +119,8 @@ public class StockEntryTest {
 		String storeToString = StoreToStringServiceHolder.getStoreToString(article);
 		String[] parts = storeToString.split(IStoreToStringContribution.DOUBLECOLON);
 		List<Long> results =
-			currentStock.executeWithParameters(CoreModelServiceHolder.get().getParameterMap(
+			currentStock.executeWithParameters(
+				currentStock.getParameterMap(
 				"articleId", parts[1], "articleType", parts[0]));
 		assertEquals((Long) results.get(0), (Long) 1L);
 		

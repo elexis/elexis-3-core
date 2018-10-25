@@ -16,7 +16,11 @@ package ch.elexis.core.ui.contacts.views;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.inject.Inject;
+
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
@@ -33,22 +37,24 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PropertyDialogAction;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
-import ch.elexis.core.data.interfaces.ISticker;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.ISticker;
+import ch.elexis.core.services.holder.StickerServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -56,8 +62,6 @@ import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.contacts.dialogs.PatientErfassenDialog;
-import ch.elexis.core.ui.data.UiSticker;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
@@ -68,14 +72,11 @@ import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldListener;
 import ch.elexis.core.ui.views.Messages;
-import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Person;
 import ch.elexis.data.Query;
-import ch.elexis.data.Reminder;
-import ch.elexis.data.Sticker;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -90,28 +91,41 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	private ViewerConfigurer vc;
 	private ViewMenus menus;
 	private RestrictedAction newPatAction;
-	private IAction filterAction, copySelectedPatInfosToClipboardAction,
+	//	private IAction filterAction;
+	private IAction copySelectedPatInfosToClipboardAction,
 			copySelectedAddressesToClipboardAction;
 	private boolean initiated = false;
 	private String[] currentUserFields;
-	PatListFilterBox plfb;
+	//	PatListFilterBox plfb;
 	PatListeContentProvider plcp;
 	DefaultControlFieldProvider dcfp;
 	Composite parent;
 
-	ElexisEventListener eeli_user = new ElexisUiEventListenerImpl(Anwender.class, ElexisEvent.EVENT_USER_CHANGED) {
+	private boolean created = false;
+	
+	//	ElexisEventListener eeli_user =
+	//		new ElexisUiEventListenerImpl(Anwender.class, ElexisEvent.EVENT_USER_CHANGED) {
+	//			
+	//			@Override
+	//			public void runInUi(ElexisEvent ev){
+	//				UserChanged();
+	//			}
+	//		};
 
-		@Override
-		public void runInUi(ElexisEvent ev) {
-			UserChanged();
+	@Inject
+	void changedMandator(
+		@Optional @UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IContact mandator){
+		if (created) {
+			Display.getDefault().asyncExec(() -> {
+				userChanged();
+			});
 		}
-	};
-
+	}
+	
 	@Override
 	public void dispose() {
 		plcp.stopListening();
 		GlobalEventDispatcher.removeActivationListener(this, this);
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_user);
 		super.dispose();
 	}
 
@@ -151,9 +165,9 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		collectUserFields();
 		plcp = new PatListeContentProvider(cv, currentUserFields, this);
 		makeActions();
-		plfb = new PatListFilterBox(parent);
-		plfb.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		((GridData) plfb.getLayoutData()).heightHint = 0;
+		//		plfb = new PatListFilterBox(parent);
+		//		plfb.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		//		((GridData) plfb.getLayoutData()).heightHint = 0;
 
 		dcfp = new DefaultControlFieldProvider(cv, currentUserFields);
 		updateFocusField();
@@ -169,7 +183,6 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		cv.getViewerWidget().getControl().setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
 
 		plcp.startListening();
-		ElexisEventDispatcher.getInstance().addListeners(eeli_user);
 		GlobalEventDispatcher.addActivationListener(this, this);
 
 		populateViewMenu();
@@ -204,6 +217,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		// }
 		// }
 		// });
+		created = true;
 	}
 
 	private void updateFocusField() {
@@ -234,7 +248,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	private void populateViewMenu(){
 		menus = new ViewMenus(getViewSite());
 		
-		menus.createToolbar(newPatAction, filterAction);
+		//		menus.createToolbar(newPatAction, filterAction);
 		
 		menus.createToolbar(copySelectedPatInfosToClipboardAction);
 		menus.createToolbar(copySelectedAddressesToClipboardAction);
@@ -244,7 +258,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		menus.createControlContextMenu(cv.getViewerWidget().getControl(), pmp);
 		menus.getContextMenu().addMenuListener(pmp);
 		
-		menus.createMenu(newPatAction, filterAction);
+		//		menus.createMenu(newPatAction, filterAction);
 		menus.createMenu(copySelectedPatInfosToClipboardAction);
 		menus.createMenu(copySelectedAddressesToClipboardAction);
 	}
@@ -262,23 +276,23 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 
 		@Override
 		public Image getColumnImage(final Object element, final int columnIndex) {
-			if (element instanceof Patient) {
-				Patient pat = (Patient) element;
+			if (element instanceof IPatient) {
+				IPatient pat = (IPatient) element;
 
-				if (Reminder.findRemindersDueFor(pat, CoreHub.actUser, false).size() > 0) {
-					return Images.IMG_AUSRUFEZ.getImage();
-				}
-				ISticker et = pat.getSticker();
+				//				if (Reminder.findRemindersDueFor(pat, CoreHub.actUser, false).size() > 0) {
+				//					return Images.IMG_AUSRUFEZ.getImage();
+				//				}
+				ISticker et = StickerServiceHolder.get().getSticker(pat).orElse(null);
 				Image im = null;
-				if (et != null && (im = new UiSticker((Sticker) et).getImage()) != null) {
-					return im;
-				} else {
-					if (pat.getGeschlecht().equals(Person.MALE)) {
+				//				if (et != null && (im = new UiSticker((Sticker) et).getImage()) != null) {
+				//					return im;
+				//				} else {
+					if (pat.getGender().equals(Person.MALE)) {
 						return Images.IMG_MANN.getImage();
 					} else {
 						return Images.IMG_FRAU.getImage();
 					}
-				}
+				//				}
 			} else {
 				return super.getColumnImage(element, columnIndex);
 			}
@@ -286,9 +300,9 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 
 		@Override
 		public Color getBackground(final Object element, final int columnIndex) {
-			if (element instanceof Patient) {
-				Patient pat = (Patient) element;
-				ISticker et = pat.getSticker();
+			if (element instanceof IPatient) {
+				IPatient pat = (IPatient) element;
+				ISticker et = StickerServiceHolder.get().getSticker(pat).orElse(null);
 				if (et != null) {
 					return UiDesk.getColorFromRGB(et.getBackground());
 				}
@@ -298,9 +312,9 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 
 		@Override
 		public Color getForeground(final Object element, final int columnIndex) {
-			if (element instanceof Patient) {
-				Patient pat = (Patient) element;
-				ISticker et = pat.getSticker();
+			if (element instanceof IPatient) {
+				IPatient pat = (IPatient) element;
+				ISticker et = StickerServiceHolder.get().getSticker(pat).orElse(null);
 				if (et != null) {
 					return UiDesk.getColorFromRGB(et.getForeground());
 				}
@@ -317,29 +331,29 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 
 	private void makeActions() {
 
-		filterAction = new Action(Messages.PatientenListeView_FilteList, Action.AS_CHECK_BOX) { // $NON-NLS-1$
-			{
-				setImageDescriptor(Images.IMG_FILTER.getImageDescriptor());
-				setToolTipText(Messages.PatientenListeView_FilterList); // $NON-NLS-1$
-			}
-
-			@Override
-			public void run() {
-				GridData gd = (GridData) plfb.getLayoutData();
-				if (filterAction.isChecked()) {
-					gd.heightHint = 80;
-					plfb.reset();
-					plcp.setFilter(plfb);
-
-				} else {
-					gd.heightHint = 0;
-					plcp.removeFilter(plfb);
-				}
-				parent.layout(true);
-
-			}
-
-		};
+		//		filterAction = new Action(Messages.PatientenListeView_FilteList, Action.AS_CHECK_BOX) { // $NON-NLS-1$
+		//			{
+		//				setImageDescriptor(Images.IMG_FILTER.getImageDescriptor());
+		//				setToolTipText(Messages.PatientenListeView_FilterList); // $NON-NLS-1$
+		//			}
+		//
+		//			@Override
+		//			public void run() {
+		//				GridData gd = (GridData) plfb.getLayoutData();
+		//				if (filterAction.isChecked()) {
+		//					gd.heightHint = 80;
+		//					plfb.reset();
+		//					plcp.setFilter(plfb);
+		//
+		//				} else {
+		//					gd.heightHint = 0;
+		//					plcp.removeFilter(plfb);
+		//				}
+		//				parent.layout(true);
+		//
+		//			}
+		//
+		//		};
 
 		newPatAction = new RestrictedAction(AccessControlDefaults.PATIENT_INSERT,
 				Messages.PatientenListeView_NewPatientAction) {
@@ -876,7 +890,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		}
 	}
 
-	public void UserChanged() {
+	public void userChanged() {
 		if (!initiated)
 			SWTHelper.reloadViewPart(UiResourceConstants.PatientenListeView_ID);
 		if (!cv.getViewerWidget().getControl().isDisposed()) {

@@ -216,13 +216,13 @@ public class CoreModelServiceTest {
 		INamedQuery<IUserConfig> configQuery =
 			modelService.getNamedQuery(IUserConfig.class, false, "ownerid", "param");
 		List<IUserConfig> configs = configQuery.executeWithParameters(
-			modelService.getParameterMap("ownerid", owner.getId(), "param", "test key 1"));
+			configQuery.getParameterMap("ownerid", owner.getId(), "param", "test key 1"));
 		assertEquals(1, configs.size());
 		assertEquals("test value 1", configs.get(0).getValue());
 		// test query with refresh -> updated value
 		configQuery = modelService.getNamedQuery(IUserConfig.class, true, "ownerid", "param");
 		configs = configQuery.executeWithParameters(
-			modelService.getParameterMap("ownerid", owner.getId(), "param", "test key 1"));
+			configQuery.getParameterMap("ownerid", owner.getId(), "param", "test key 1"));
 		assertEquals(1, configs.size());
 		assertEquals("test value", configs.get(0).getValue());
 		
@@ -243,7 +243,7 @@ public class CoreModelServiceTest {
 			configQuery =
 				modelService.getNamedQuery(IUserConfig.class, true, "ownerid", "param");
 			configs = configQuery.executeWithParameters(
-				modelService.getParameterMap("ownerid", owner.getId(), "param", "test key 1"));
+				configQuery.getParameterMap("ownerid", owner.getId(), "param", "test key 1"));
 			assertEquals(1, configs.size());
 			assertEquals("test value " + Integer.toString(i), configs.get(0).getValue());
 		}

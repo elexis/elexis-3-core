@@ -73,7 +73,7 @@ public class ImporterPatientResolver extends HL7PatientResolver {
 		INamedQuery<IPatient> namedQuery =
 			CoreModelServiceHolder.get().getNamedQuery(IPatient.class, "code");
 		return namedQuery.executeWithParameters(
-			CoreModelServiceHolder.get().getParameterMap("code", StringTool.normalizeCase(patid)));
+			namedQuery.getParameterMap("code", StringTool.normalizeCase(patid)));
 	}
 	
 	@Override

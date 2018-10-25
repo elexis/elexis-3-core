@@ -25,7 +25,7 @@ public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 		INamedQuery<IOrderEntry> query =
 			ModelUtil.getModelService().getNamedQuery(IOrderEntry.class, "bestellung");
 		return query.executeWithParameters(
-			ModelUtil.getModelService().getParameterMap("bestellung", this));
+			query.getParameterMap("bestellung", this));
 	}
 	
 	@Override

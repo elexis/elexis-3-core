@@ -35,6 +35,7 @@
             class="ch.elexis.core.ui.contacts.views.PatientenListeView"
             icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/group.png"
             id="ch.elexis.PatListView"
+            inject="true"
             name="%elexis.patListView">
       </view>
       <view

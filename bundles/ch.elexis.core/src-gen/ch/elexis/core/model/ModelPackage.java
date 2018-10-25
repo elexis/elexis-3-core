@@ -2704,13 +2704,13 @@ public interface ModelPackage extends EPackage {
 	int ISTICKER__VISIBLE = TypesPackage.COMPARABLE_FEATURE_COUNT + 3;
 
 	/**
-	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ISTICKER__VALUE = TypesPackage.COMPARABLE_FEATURE_COUNT + 4;
+	int ISTICKER__NAME = TypesPackage.COMPARABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>ISticker</em>' class.
@@ -6337,15 +6337,15 @@ public interface ModelPackage extends EPackage {
 	EAttribute getISticker_Visible();
 
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ISticker#getValue <em>Value</em>}'.
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ISticker#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Value</em>'.
-	 * @see ch.elexis.core.model.ISticker#getValue()
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see ch.elexis.core.model.ISticker#getName()
 	 * @see #getISticker()
 	 * @generated
 	 */
-	EAttribute getISticker_Value();
+	EAttribute getISticker_Name();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.ICodeElement <em>ICode Element</em>}'.
@@ -9165,12 +9165,12 @@ public interface ModelPackage extends EPackage {
 		EAttribute ISTICKER__VISIBLE = eINSTANCE.getISticker_Visible();
 
 		/**
-		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ISTICKER__VALUE = eINSTANCE.getISticker_Value();
+		EAttribute ISTICKER__NAME = eINSTANCE.getISticker_Name();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.ICodeElement <em>ICode Element</em>}' class.
