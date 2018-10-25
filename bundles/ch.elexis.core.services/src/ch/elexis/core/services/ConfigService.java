@@ -61,6 +61,11 @@ public class ConfigService implements IConfigService {
 	}
 	
 	@Override
+	public boolean set(String key, boolean value){
+		return set(key, (value) ? "1" : "0");
+	}
+	
+	@Override
 	public boolean setFromList(String key, List<String> values){
 		String flattenedValue =
 			values.stream().map(o -> o.toString()).reduce((u, t) -> u + LIST_SEPARATOR + t).get();
@@ -76,7 +81,7 @@ public class ConfigService implements IConfigService {
 	@Override
 	public boolean get(String key, boolean defaultValue){
 		Optional<IConfig> configEntry = modelService.load(key, IConfig.class);
-		return configEntry.map(v -> Boolean.parseBoolean(v.getValue())).orElse(defaultValue);
+		return configEntry.map(v -> v.getValue()).map(v -> "1".equals(v)).orElse(defaultValue);
 	}
 	
 	@Override
@@ -125,6 +130,11 @@ public class ConfigService implements IConfigService {
 			}
 		}
 		return false;
+	}
+	
+	@Override
+	public boolean set(IContact contact, String key, boolean value){
+		return set(contact, key, (value) ? "1" : "0");
 	}
 	
 	@Override

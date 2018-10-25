@@ -18,6 +18,17 @@ public interface IConfigService {
 	public boolean set(String key, String value);
 	
 	/**
+	 * Set a global configuration entry. Overwrites existing values. Performs save operation.
+	 * 
+	 * @param key
+	 *            identifying the configuration entry
+	 * @param value
+	 *            to set
+	 * @return <code>true</code> if the value was successfully set
+	 */
+	public boolean set(String key, boolean value);
+	
+	/**
 	 * Set a contact specific configuration entry. Overwrites existing value. Performs save
 	 * operation.
 	 * 
@@ -30,6 +41,20 @@ public interface IConfigService {
 	 * @return <code>true</code> if value was successfully set
 	 */
 	public boolean set(IContact contact, String key, String value);
+	
+	/**
+	 * Set a contact specific configuration entry. Overwrites existing value. Performs save
+	 * operation.
+	 * 
+	 * @param contact
+	 *            the contact this configuration entry is accounted to, not <code>null</code>
+	 * @param key
+	 *            identifying the configuration entry
+	 * @param value
+	 *            to set
+	 * @return <code>true</code> if value was successfully set
+	 */
+	public boolean set(IContact contact, String key, boolean value);
 	
 	/**
 	 * Set a global configuration entry. Overwrites existing value. Performs save operation. Cares
