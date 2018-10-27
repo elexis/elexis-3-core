@@ -308,8 +308,12 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					String result = "";
 					if (p.getStammarzt() != null && p.getStammarzt().exists()) {
 						result = p.getStammarzt().getLabel(true);
+						ltf.setTooltipText(p.getStammarzt().getLabel());
+					} else {
+						ltf.setTooltipText(null);
 					}
 					ltf.setText(result);
+					
 				}
 				
 				public void reloadContent(PersistentObject po, InputData ltf){
