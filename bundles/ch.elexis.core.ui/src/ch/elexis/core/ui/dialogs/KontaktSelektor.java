@@ -282,6 +282,7 @@ public class KontaktSelektor extends TitleAreaDialog implements DoubleClickListe
 					new String[] {
 						"Kuerzel=" + Messages.KontaktSelector_abbreviation, //$NON-NLS-1$
 						"Bezeichnung1=" + Messages.KontaktSelector_expression1, //$NON-NLS-1$
+						"Bezeichnung2=" + Messages.KontaktSelector_expression2, //$NON-NLS-1$
 						"Geburtsdatum=" + Messages.KontaktSelector_birthDate //$NON-NLS-1$
 					}), new ViewerConfigurer.ButtonProvider() {
 					
