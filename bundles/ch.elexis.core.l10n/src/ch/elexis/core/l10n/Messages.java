@@ -1101,6 +1101,7 @@ public class Messages extends NLS {
 	public static String LagerView_maxBestand;
 	public static String LagerView_minBestand;
 	public static String LagerView_name;
+	public static String LagerView_vkPreis;
 	public static String LagerView_gtin;
 	public static String LagerView_stock;
 	public static String LagerView_pharmacode;

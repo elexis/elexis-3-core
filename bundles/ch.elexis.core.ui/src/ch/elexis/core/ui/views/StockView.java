@@ -110,11 +110,11 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 	
 	String[] columns = {
 		Messages.LagerView_stock, Messages.LagerView_pharmacode, Messages.LagerView_gtin,
-		Messages.LagerView_name, Messages.LagerView_minBestand, Messages.LagerView_istBestand,
+		Messages.LagerView_name, Messages.LagerView_vkPreis, Messages.LagerView_minBestand, Messages.LagerView_istBestand,
 		Messages.LagerView_maxBestand, Messages.LagerView_dealer
 	};
 	int[] colwidth = {
-		50, 75, 90, 250, 35, 35, 35, 150
+		50, 75, 90, 250, 50, 35, 35, 35, 150
 	};
 	
 	private void refreshConsiderFilter(){
@@ -192,10 +192,10 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 			tvc.setLabelProvider(new ColumnStockEntryLabelProvider(i, labelProvider));
 			
 			PersistentObjectEditingSupport poes = null;
-			if (i == 4) {
+			if (i == 5) {
 				poes = new PersistentObjectEditingSupport(viewer, StockEntry.FLD_MIN, Integer.class,
 					true);
-			} else if (i == 5) {
+			} else if (i == 6) {
 				poes = new PersistentObjectEditingSupport(viewer, StockEntry.FLD_CURRENT,
 					Integer.class, true) {
 					protected boolean canEdit(Object element){
@@ -207,7 +207,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 						return true;
 					};
 				};
-			} else if (i == 6) {
+			} else if (i == 7) {
 				poes = new PersistentObjectEditingSupport(viewer, StockEntry.FLD_MAX, Integer.class,
 					true);
 			}
@@ -216,7 +216,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 				tvc.setEditingSupport(poes);
 			}
 			
-			if (i == 7) {
+			if (i == 8) {
 				EditingSupport providerEditingSupport = new EditingSupport(viewer) {
 					
 					@Override
