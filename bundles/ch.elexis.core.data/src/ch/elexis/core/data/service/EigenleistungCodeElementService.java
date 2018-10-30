@@ -1,7 +1,7 @@
 package ch.elexis.core.data.service;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.osgi.service.component.annotations.Component;
@@ -29,7 +29,7 @@ public class EigenleistungCodeElementService implements ICodeElementServiceContr
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Optional<ICodeElement> loadFromCode(String code, HashMap<Object, Object> context){
+	public Optional<ICodeElement> loadFromCode(String code, Map<Object, Object> context){
 		INamedQuery<ICustomService> query =
 			coreModelService.getNamedQuery(ICustomService.class, "code");
 		List<ICustomService> found =
@@ -48,7 +48,7 @@ public class EigenleistungCodeElementService implements ICodeElementServiceContr
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ICodeElement> getElements(HashMap<Object, Object> context){
+	public List<ICodeElement> getElements(Map<Object, Object> context){
 		return (List<ICodeElement>) (List<?>) coreModelService.getQuery(ICustomService.class)
 			.execute();
 	}

@@ -1,7 +1,7 @@
 package ch.elexis.core.eigenartikel.service;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.osgi.service.component.annotations.Component;
@@ -29,7 +29,7 @@ public class EigenartikelCodeElementService implements ICodeElementServiceContri
 	}
 	
 	@Override
-	public Optional<ICodeElement> loadFromCode(String code, HashMap<Object, Object> context){
+	public Optional<ICodeElement> loadFromCode(String code, Map<Object, Object> context){
 		INamedQuery<IArticle> query = coreModelService.getNamedQuery(IArticle.class, "typ", "code");
 		
 		List<IArticle> found = query.executeWithParameters(
@@ -64,7 +64,7 @@ public class EigenartikelCodeElementService implements ICodeElementServiceContri
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ICodeElement> getElements(HashMap<Object, Object> context){
+	public List<ICodeElement> getElements(Map<Object, Object> context){
 		INamedQuery<IArticle> query = coreModelService.getNamedQuery(IArticle.class, "typ");
 		return (List<ICodeElement>) (List<?>) query.executeWithParameters(
 			query.getParameterMap("typ", ArticleTyp.EIGENARTIKEL));

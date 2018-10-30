@@ -147,6 +147,7 @@ location "http://download.elexis.info/elexis-server/elexis-server-dependencies" 
 	
 	org.apache.commons.io
 	org.apache.commons.lang3
+	org.apache.commons.collections4
 }
 
 location "http://download.elexis.info/elexis.3.3rdparty.libraries/snapshot" {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Oxygen.3 for Elexis" sequenceNumber="1540454480">
+<target name="Oxygen.3 for Elexis" sequenceNumber="1540900282">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.18.0.v20181023-1826"/>
@@ -147,6 +147,7 @@
       <unit id="com.mysql.jdbc.source" version="5.1.47"/>
       <unit id="org.apache.commons.io" version="2.5.0"/>
       <unit id="org.apache.commons.lang3" version="3.7.0"/>
+      <unit id="org.apache.commons.collections4" version="4.1.0"/>
       <repository location="http://download.elexis.info/elexis-server/elexis-server-dependencies"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
