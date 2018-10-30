@@ -42,7 +42,11 @@ public class Context implements IContext {
 	
 	@Override
 	public void setActiveUser(IUser user){
-		context.put(ACTIVE_USER, user);
+		if (user == null) {
+			context.remove(ACTIVE_USER);
+		} else {
+			context.put(ACTIVE_USER, user);
+		}
 		if (eclipseContext != null) {
 			eclipseContext.set(ACTIVE_USER, user);
 		}
@@ -65,7 +69,11 @@ public class Context implements IContext {
 	
 	@Override
 	public void setActiveUserContact(IContact userContact){
-		context.put(ACTIVE_USERCONTACT, userContact);
+		if (userContact == null) {
+			context.remove(ACTIVE_USERCONTACT);
+		} else {
+			context.put(ACTIVE_USERCONTACT, userContact);
+		}
 		if (eclipseContext != null) {
 			eclipseContext.set(ACTIVE_USERCONTACT, userContact);
 		}
@@ -82,7 +90,11 @@ public class Context implements IContext {
 	
 	@Override
 	public void setActivePatient(IPatient patient){
-		context.put(ACTIVE_PATIENT, patient);
+		if (patient == null) {
+			context.remove(ACTIVE_PATIENT);
+		} else {
+			context.put(ACTIVE_PATIENT, patient);
+		}
 		if (eclipseContext != null) {
 			eclipseContext.set(ACTIVE_PATIENT, patient);
 		}
@@ -99,7 +111,11 @@ public class Context implements IContext {
 	
 	@Override
 	public void setActiveMandator(IMandator mandator){
-		context.put(ACTIVE_MANDATOR, mandator);
+		if (mandator == null) {
+			context.remove(ACTIVE_MANDATOR);
+		} else {
+			context.put(ACTIVE_MANDATOR, mandator);
+		}
 		if (eclipseContext != null) {
 			eclipseContext.set(ACTIVE_MANDATOR, mandator);
 		}

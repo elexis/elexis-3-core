@@ -17,12 +17,12 @@ import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
-import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
@@ -34,6 +34,7 @@ import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.IContextService;
+import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.data.Anwender;
@@ -69,6 +70,10 @@ import ch.elexis.data.User;
 @Component(property = EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE)
 public class ContextService implements IContextService, EventHandler {
 	
+	// do not use holder, if not direct dep. service is started too early
+	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
+	private IModelService coreModelService;
+	
 	private Context root;
 	
 	private ConcurrentHashMap<String, Context> contexts;
@@ -97,6 +102,7 @@ public class ContextService implements IContextService, EventHandler {
 		userChangedEventDispatcherListener = new UserChangedEventDispatcherListener();
 		mandatorChangedEventDispatcherListener = new MandatorChangedEventDispatcherListener();
 		ElexisEventDispatcher elexisEventDispatcher = ElexisEventDispatcher.getInstance();
+		LoggerFactory.getLogger(getClass()).info("Attaching to " + elexisEventDispatcher);
 		elexisEventDispatcher.addListeners(eventDispatcherListener, reloadEventDispatcherListener,
 			lockingEventDispatcherListener, userChangedEventDispatcherListener,
 			mandatorChangedEventDispatcherListener);
@@ -228,15 +234,15 @@ public class ContextService implements IContextService, EventHandler {
 			}
 			if (object instanceof User) {
 				Optional<IUser> iUser =
-					CoreModelServiceHolder.get().load(((User) object).getId(), IUser.class);
+					coreModelService.load(((User) object).getId(), IUser.class);
 				iUser.ifPresent(u -> root.setActiveUser(u));
 			} else if (object instanceof Anwender) {
 				Optional<IMandator> iMandator =
-					CoreModelServiceHolder.get().load(((Anwender) object).getId(), IMandator.class);
+					coreModelService.load(((Anwender) object).getId(), IMandator.class);
 				if (iMandator.isPresent()) {
 					root.setActiveMandator(iMandator.get());
 					
-					IQuery<IUser> userQuery = CoreModelServiceHolder.get().getQuery(IUser.class);
+					IQuery<IUser> userQuery = coreModelService.getQuery(IUser.class);
 					userQuery.and(ModelPackage.Literals.IUSER__ASSIGNED_CONTACT, COMPARATOR.EQUALS,
 						iMandator.get());
 					List<IUser> foundUsers = userQuery.execute();
@@ -272,7 +278,7 @@ public class ContextService implements IContextService, EventHandler {
 			}
 			if (object instanceof Mandant) {
 				Optional<IMandator> iMandator =
-					CoreModelServiceHolder.get().load(((Mandant) object).getId(), IMandator.class);
+					coreModelService.load(((Mandant) object).getId(), IMandator.class);
 				iMandator.ifPresent(m -> root.setActiveMandator(m));
 			}
 		}
@@ -342,15 +348,15 @@ public class ContextService implements IContextService, EventHandler {
 		private void addObjectToRoot(Object object){
 			if (object instanceof User) {
 				Optional<IUser> iUser =
-					CoreModelServiceHolder.get().load(((User) object).getId(), IUser.class);
+					coreModelService.load(((User) object).getId(), IUser.class);
 				iUser.ifPresent(u -> root.setActiveUser(u));
 			} else if (object instanceof Anwender) {
 				Optional<IContact> iUserContact =
-					CoreModelServiceHolder.get().load(((Anwender) object).getId(), IContact.class);
+					coreModelService.load(((Anwender) object).getId(), IContact.class);
 				iUserContact.ifPresent(c -> root.setActiveUserContact(c));
 			} else if (object instanceof Patient) {
 				Optional<IPatient> iPatient =
-					CoreModelServiceHolder.get().load(((Patient) object).getId(), IPatient.class);
+					coreModelService.load(((Patient) object).getId(), IPatient.class);
 				iPatient.ifPresent(p -> root.setActivePatient(p));
 			} else if (object != null) {
 				root.setTyped(getModelObjectForPersistentObject(object));
