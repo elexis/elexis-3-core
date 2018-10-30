@@ -2,6 +2,7 @@ package ch.elexis.core.services;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import ch.elexis.core.model.ICodeElement;
@@ -47,7 +48,7 @@ public interface ICodeElementService {
 	 * @return
 	 */
 	public default Optional<ICodeElement> loadFromString(String storeToString,
-		HashMap<Object, Object> context){
+		Map<Object, Object> context){
 		String[] parts = getStoreToStringParts(storeToString);
 		// only system and code are relevant for loading 
 		if (parts != null && parts.length > 1) {
@@ -84,7 +85,7 @@ public interface ICodeElementService {
 	 * @return
 	 */
 	public Optional<ICodeElement> loadFromString(String system, String code,
-		HashMap<Object, Object> context);
+		Map<Object, Object> context);
 	
 	/**
 	 * Get all available {@link ICodeElementServiceContribution}s available.

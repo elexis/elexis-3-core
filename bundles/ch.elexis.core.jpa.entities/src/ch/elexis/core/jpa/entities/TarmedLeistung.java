@@ -22,7 +22,6 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Table(name = "TARMED")
 @EntityListeners(EntityWithIdListener.class)
 @NamedQueries({
-	@NamedQuery(name = "TarmedLeistung.code", query = "SELECT tl FROM TarmedLeistung tl WHERE tl.code_ = :code"),
 	@NamedQuery(name = "TarmedLeistungDistinctLaws", query = "SELECT DISTINCT tl.law FROM TarmedLeistung tl WHERE tl.id <> 'VERSION'")
 })
 

@@ -1,7 +1,7 @@
 package ch.elexis.core.services;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import ch.elexis.core.model.ICodeElement;
@@ -33,7 +33,7 @@ public interface ICodeElementServiceContribution {
 	 * @param context
 	 * @return
 	 */
-	public Optional<ICodeElement> loadFromCode(String code, HashMap<Object, Object> context);
+	public Optional<ICodeElement> loadFromCode(String code, Map<Object, Object> context);
 	
 	/**
 	 * Get all {@link ICodeElement} instances (for the given context) of the
@@ -42,5 +42,5 @@ public interface ICodeElementServiceContribution {
 	 * @param context
 	 * @return
 	 */
-	public List<ICodeElement> getElements(HashMap<Object, Object> context);
+	public List<ICodeElement> getElements(Map<Object, Object> context);
 }

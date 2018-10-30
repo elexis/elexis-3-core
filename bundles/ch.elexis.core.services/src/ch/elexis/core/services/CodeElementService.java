@@ -2,6 +2,7 @@ package ch.elexis.core.services;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -36,7 +37,7 @@ public class CodeElementService implements ICodeElementService {
 	
 	@Override
 	public Optional<ICodeElement> loadFromString(String system, String code,
-		HashMap<Object, Object> context){
+		Map<Object, Object> context){
 		ICodeElementServiceContribution contribution = contributions.get(system);
 		if (contribution != null) {
 			return contribution.loadFromCode(code, context);
