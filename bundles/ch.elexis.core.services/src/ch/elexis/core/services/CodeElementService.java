@@ -1,5 +1,6 @@
 package ch.elexis.core.services;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,9 @@ public class CodeElementService implements ICodeElementService {
 		Map<Object, Object> context){
 		ICodeElementServiceContribution contribution = contributions.get(system);
 		if (contribution != null) {
+			if (context == null) {
+				context = Collections.emptyMap();
+			}
 			return contribution.loadFromCode(code, context);
 		} else {
 			LoggerFactory.getLogger(getClass())
