@@ -58,6 +58,7 @@ location "http://download.elexis.info/elexis/f11106/p2/target/" {
 	org.apache.commons.exec
 	org.apache.commons.lang
 	org.apache.commons.lang3
+	org.apache.commons.collections4
 	org.apache.commons.pool
 	org.apache.commons.httpclient
 	org.apache.commons.beanutils
@@ -225,7 +226,7 @@ location "http://download.elexis.info/elexis/f11106/p2/target/" {
 	net.sf.opencsv 1.8.0
 	net.sf.opencsv.source 1.8.0
 	org.apache.commons.jexl [2.1.1,2.2.0)
-	org.apache.commons.io [2.4.0,2.5.0)
+	org.apache.commons.io
 	ognl.source 2.7.3
 	org.apache.ant 1.7.0
 	org.apache.ant.launcher 1.7.0
