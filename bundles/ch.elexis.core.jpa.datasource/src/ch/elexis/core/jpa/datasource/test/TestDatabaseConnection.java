@@ -25,11 +25,17 @@ public class TestDatabaseConnection extends DBConnection {
 	 *            if <code>true</code> db instance can be contacted via socket
 	 */
 	public TestDatabaseConnection(boolean asServer){
-		if (asServer) {
-			connectionString = "jdbc:h2:~/elexisTest/elexisTest;AUTO_SERVER=TRUE";
+		String testConnectionString = System.getProperty("elexis.test.db.connectionString");
+		if (testConnectionString != null) {
+			connectionString = testConnectionString;
 		} else {
-			connectionString = "jdbc:h2:mem:elexisTest;DB_CLOSE_DELAY=-1";
+			if (asServer) {
+				connectionString = "jdbc:h2:~/elexisTest/elexisTest;AUTO_SERVER=TRUE";
+			} else {
+				connectionString = "jdbc:h2:mem:elexisTest;DB_CLOSE_DELAY=-1";
+			}
 		}
+		
 		String trace = System.getProperty("elexis.test.dbtrace");
 		if (trace != null && "true".equalsIgnoreCase(trace)) {
 			connectionString += ";TRACE_LEVEL_SYSTEM_OUT=2";
