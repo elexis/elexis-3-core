@@ -12,7 +12,10 @@
 
 package ch.elexis.core.ui.views;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -57,12 +60,19 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.browser.IWebBrowser;
+import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 import ch.elexis.admin.AccessControlDefaults;
@@ -90,6 +100,7 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Eigenleistung;
+import ch.elexis.data.Interaction;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.PersistentObject;
@@ -102,6 +113,7 @@ import ch.rgw.tools.StringTool;
 public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	
 	private Label billedLabel;
+	private Link interactionLink;
 	private Table table;
 	private TableViewer viewer;
 	private MenuManager contextMenuManager;
@@ -109,12 +121,12 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private String defaultRGB;
 	private IWorkbenchPage page;
 	private final PersistentObjectDropTarget dropTarget;
-	private IAction applyMedicationAction, chPriceAction, chCountAction,
-			chTextAction, removeAction,
+	private IAction applyMedicationAction, chPriceAction, chCountAction, chTextAction, removeAction,
 			removeAllAction;
 	private TableViewerFocusCellManager focusCellManager;
 	
-	private static final String INDICATED_MEDICATION = Messages.VerrechnungsDisplay_indicatedMedication;
+	private static final String INDICATED_MEDICATION =
+		Messages.VerrechnungsDisplay_indicatedMedication;
 	private static final String APPLY_MEDICATION = Messages.VerrechnungsDisplay_applyMedication;
 	private static final String CHPRICE = Messages.VerrechnungsDisplay_changePrice;
 	private static final String CHCOUNT = Messages.VerrechnungsDisplay_changeNumber;
@@ -122,16 +134,16 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private static final String CHTEXT = Messages.VerrechnungsDisplay_changeText;
 	private static final String REMOVEALL = Messages.VerrechnungsDisplay_removeAll;
 	
-	private final ElexisEventListener eeli_update = new ElexisUiEventListenerImpl(
-		Konsultation.class, ElexisEvent.EVENT_UPDATE) {
-		@Override
-		public void runInUi(ElexisEvent ev){
-			PersistentObject obj = ev.getObject();
-			if (obj != null && obj.equals(actEncounter)) {
-				viewer.setInput(actEncounter.getLeistungen());
+	private final ElexisEventListener eeli_update =
+		new ElexisUiEventListenerImpl(Konsultation.class, ElexisEvent.EVENT_UPDATE) {
+			@Override
+			public void runInUi(ElexisEvent ev){
+				PersistentObject obj = ev.getObject();
+				if (obj != null && obj.equals(actEncounter)) {
+					viewer.setInput(actEncounter.getLeistungen());
+				}
 			}
-		}
-	};
+		};
 	private TableColumnLayout tableLayout;
 	private ToolBarManager toolBarManager;
 	
@@ -150,6 +162,9 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		
 		billedLabel = new Label(this, SWT.NONE);
 		billedLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+		
+		interactionLink = new Link(this, SWT.NONE);
+		interactionLink.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
 		
 		toolBarManager = new ToolBarManager(SWT.RIGHT);
 		toolBarManager.add(new Action() {
@@ -224,7 +239,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		makeActions();
 		tableLayout = new TableColumnLayout();
 		Composite tableComposite = new Composite(this, SWT.NONE);
-		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
+
+		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1));
 		tableComposite.setLayout(tableLayout);
 		viewer = new TableViewer(tableComposite,
 			SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
@@ -280,9 +296,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 		});
 		
-		dropTarget =
-			new PersistentObjectDropTarget(Messages.VerrechnungsDisplay_doBill, table,
-				new DropReceiver()); //$NON-NLS-1$
+		dropTarget = new PersistentObjectDropTarget(Messages.VerrechnungsDisplay_doBill, table,
+			new DropReceiver()); //$NON-NLS-1$
 		
 		// refresh the table if a update to a Verrechnet occurs
 		ElexisEventDispatcher.getInstance().addListeners(
@@ -428,14 +443,91 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	}
 	
 	private void updateBilledLabel(){
+		interactionLink.setVisible(false);
+		ArrayList<String> gtins = new ArrayList<String>();
+		ArrayList<String> atcs = new ArrayList<String>();
+		String severity = " ";
+		Color color = UiDesk.getColor(UiDesk.COL_WHITE);
+		String epha = "Epha.ch";
+		interactionLink.setText("Keine Interaktionen bekannt");
+		String tooltip = "";
+		
 		if (actEncounter != null) {
 			Money sum = new Money(0);
 			for (Verrechnet billed : actEncounter.getLeistungen()) {
 				Money preis = billed.getNettoPreis().multiply(billed.getZahl());
 				sum.addMoney(preis);
+				IVerrechenbar verrechenbar = billed.getVerrechenbar();
+				if (verrechenbar != null && verrechenbar instanceof Artikel) {
+					Artikel art = (Artikel) verrechenbar;
+					// System.out.println(art.getLabel() + " GTIN " + art.getGTIN());
+					gtins.add(art.getGTIN());
+					atcs.add(art.getATC_code());
+				}
 			}
-			billedLabel.setText(Messages.PatHeuteView_accAmount + " " + sum.getAmountAsString()
-				+ " / " + Messages.PatHeuteView_accTime + " " + actEncounter.getMinutes());
+			StringBuilder destUrl = new StringBuilder("https://matrix.epha.ch/#/");
+			if (gtins.size() > 1) {
+				gtins.forEach(gtin -> destUrl.append(gtin + ","));
+				billedLabel.setText(Messages.PatHeuteView_accAmount + " " + sum.getAmountAsString()
+					+ " / " + Messages.PatHeuteView_accTime + " " + actEncounter.getMinutes());
+				interactionLink.setVisible(true);
+				interactionLink.setEnabled(true);
+				interactionLink.setToolTipText(tooltip);
+				interactionLink.setText("Epha.ch");
+				interactionLink.setTouchEnabled(true);
+				interactionLink.setForeground(UiDesk.getColorRegistry().get(UiDesk.COL_BLUE));
+				interactionLink.addListener(SWT.MouseUp, new Listener() {
+					@Override
+					public void handleEvent(Event event){
+						IWorkbenchBrowserSupport support =
+							PlatformUI.getWorkbench().getBrowserSupport();
+						IWebBrowser browser;
+						try {
+							browser = support.createBrowser("someId");
+							// zB. NOLVADEX, PAROXETIN, LOSARTAN, METOPROLOL with GTIN
+							// 7680390530474 7680569620074, 7680589810141, 7680659580097 gives
+							// https://matrix.epha.ch/#/7680390530474,7680569620074,7680589810141,7680659580097
+							// or regnr "https://matrix.epha.ch/#/58392,59131,39053,58643"
+							browser.openURL(new URL(destUrl.toString()));
+						} catch (PartInitException | MalformedURLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+			System.out.println("DestURL is " + destUrl);
+			if (atcs.size() > 1) {
+				for (int j = 0; j < atcs.size(); j++) {
+					String old = severity;
+					for (int k = j + 1; k < atcs.size(); k++) {
+						Interaction ia = Interaction.getByATC(atcs.get(j), atcs.get(k));
+						if (ia == null) {
+							// search also reverse
+							ia = Interaction.getByATC(atcs.get(k), atcs.get(j));
+						}
+						if (ia == null) {
+							continue;
+						}
+						String rating = ia.get(Interaction.FLD_SEVERITY);
+						System.out.println(String.format("%s %s res %d", rating, severity,
+							rating.compareTo(severity)));
+						
+						if (severity.compareTo(rating) < 0) {
+							severity = rating;
+							String info = ia.get(Interaction.FLD_INFO);
+							tooltip = String.format("%s\n%s\n%s\n%s",
+								"Klick, um zur Detailinfo auf epha.ch zu gehen",
+								Interaction.Ratings.get(severity), info,
+								destUrl);
+							interactionLink.setToolTipText(tooltip);
+						}
+					}
+				}
+			}
+			color = UiDesk.getColorFromRGB(Interaction.Colors.get(severity));
+			interactionLink.setBackground(color);
+			interactionLink.setText(epha + ": " + Interaction.Ratings.get(severity));
 		} else {
 			billedLabel.setText("");
 		}
@@ -538,7 +630,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	}
 	
 	/**
-	 * Filter codes of {@link Verrechnet} where ID is used as code. This is relevant for {@link Eigenleistung} and Eigenartikel.
+	 * Filter codes of {@link Verrechnet} where ID is used as code. This is relevant for
+	 * {@link Eigenleistung} and Eigenartikel.
 	 * 
 	 * @param lst
 	 * @return
@@ -739,7 +832,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					if (selected instanceof Verrechnet) {
 						Verrechnet billed = (Verrechnet) selected;
 						AcquireLockUi.aquireAndRun(billed, new LockDeniedNoActionLockHandler() {
-
+							
 							@Override
 							public void lockAcquired(){
 								Money oldPrice = billed.getBruttoPreis();
@@ -889,7 +982,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	}
 	
 	@Override
-	public void setUnlocked(boolean unlocked) {
+	public void setUnlocked(boolean unlocked){
 		setEnabled(unlocked);
 		redraw();
 	}
