@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-Name: %nlFragmentName
+Bundle-SymbolicName: org.eclipse.swt.nl1 ;singleton=true
+Bundle-Version: 3.106.3.qualifier
+Bundle-Vendor: %nlProviderName
+Fragment-Host: org.eclipse.swt;bundle-version="3.2.0"
+Bundle-Localization: nl_fragment
