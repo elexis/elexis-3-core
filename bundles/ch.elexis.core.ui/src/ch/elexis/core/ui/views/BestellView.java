@@ -308,6 +308,11 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 				best.add(bestellungEntry);
 			}
 		}
+		best.sort((BestellungEntry left, BestellungEntry right) -> {
+			String s1 = left.getArticle().getName();
+			String s2 = right.getArticle().getName();
+			return s1.compareTo(s2);
+		});
 		return best;
 	}
 	
