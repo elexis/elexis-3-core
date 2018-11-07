@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Oxygen.3 for Elexis" sequenceNumber="1536912442">
+<target name="Oxygen.3 for Elexis" sequenceNumber="1541592396">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.18.0.v20171217-2215"/>
+      <unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.18.0.v20181023-1826"/>
       <repository location="http://download.eclipse.org/e4/snapshots/org.eclipse.e4.tools/latest/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
@@ -78,7 +78,7 @@
       <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180206163158/repository/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="info.elexis.server.hapi.fhir" version="3.4.0.201809131455"/>
+      <unit id="info.elexis.server.hapi.fhir" version="3.4.0.201809170851"/>
       <repository location="http://download.elexis.info/elexis-server/master/p2/elexis-server"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
