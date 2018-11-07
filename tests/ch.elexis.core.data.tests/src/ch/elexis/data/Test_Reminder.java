@@ -171,4 +171,22 @@ public class Test_Reminder extends AbstractPersistentObjectTest {
 		assertEquals(2, findRemindersDueFor.size());
 	}
 	
+	@Test
+	public void testFindDifferentialChangedReminders() throws InterruptedException{
+		reminderA = new Reminder(null, new TimeTool().toString(TimeTool.DATE_GER),
+			Visibility.ALWAYS, "", "TestMessageA");
+		
+		long highestLastUpdate = PersistentObject.getHighestLastUpdate(Reminder.TABLENAME);
+		Thread.sleep(2);
+		reminderB = new Reminder(null, new TimeTool().toString(TimeTool.DATE_GER),
+			Visibility.ALWAYS, "", "TestMessageB");
+		Thread.sleep(2);
+		reminderC = new Reminder(null, null, Visibility.ALWAYS, "", "TestMessageC");
+		
+		List<Reminder> changed =
+			PersistentObject.getObjectsModifiedSince(highestLastUpdate, Reminder.class);
+		assertEquals(2, changed.size());
+		assertTrue(changed.get(0).getLastUpdate() > changed.get(1).getLastUpdate());
+	}
+	
 }

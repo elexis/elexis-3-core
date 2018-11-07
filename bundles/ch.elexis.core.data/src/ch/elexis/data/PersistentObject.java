@@ -470,12 +470,12 @@ public abstract class PersistentObject implements IPersistentObject {
 			
 			@Override
 			public void settingDeleted(String key){
-				Trace.addTraceEntry("W globalCfg key ["+key+"] => removed");
+				Trace.addTraceEntry("W globalCfg key [" + key + "] => removed");
 			}
 			
 			@Override
 			public void settingWritten(String key, String value){
-				Trace.addTraceEntry("W globalCfg key ["+key+"] => value ["+value+"]");
+				Trace.addTraceEntry("W globalCfg key [" + key + "] => value [" + value + "]");
 			}
 		});
 		
@@ -594,9 +594,8 @@ public abstract class PersistentObject implements IPersistentObject {
 			while (true) {
 				long timestamp = System.currentTimeMillis();
 				// Gibt es das angeforderte Lock schon?
-				String oldlock = stm
-					.queryString("SELECT wert FROM CONFIG WHERE param="
-						+ getConnection().wrapFlavored(lockname));
+				String oldlock = stm.queryString("SELECT wert FROM CONFIG WHERE param="
+					+ getConnection().wrapFlavored(lockname));
 				if (!StringTool.isNothing(oldlock)) {
 					// Ja, wie alt ist es?
 					String[] def = oldlock.split("#");
@@ -622,9 +621,8 @@ public abstract class PersistentObject implements IPersistentObject {
 				stm.exec(sb.toString());
 				// Prüfen, ob wir es wirklich haben, oder ob doch jemand anders
 				// schneller war.
-				String check = stm
-					.queryString("SELECT wert FROM CONFIG WHERE param="
-						+ getConnection().wrapFlavored(lockname));
+				String check = stm.queryString("SELECT wert FROM CONFIG WHERE param="
+					+ getConnection().wrapFlavored(lockname));
 				if (check.equals(lockstring)) {
 					break;
 				}
@@ -646,16 +644,15 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	public static synchronized boolean unlock(final String name, final String id){
 		String lockname = "lock" + name;
-		String lock = getConnection()
-			.queryString("SELECT wert from CONFIG WHERE param="
-				+ getConnection().wrapFlavored(lockname));
+		String lock = getConnection().queryString(
+			"SELECT wert from CONFIG WHERE param=" + getConnection().wrapFlavored(lockname));
 		if (StringTool.isNothing(lock)) {
 			return false;
 		}
 		String[] res = lock.split("#");
 		if (res[0].equals(id)) {
-			getConnection().exec("DELETE FROM CONFIG WHERE param="
-				+ getConnection().wrapFlavored(lockname));
+			getConnection()
+				.exec("DELETE FROM CONFIG WHERE param=" + getConnection().wrapFlavored(lockname));
 			return true;
 		}
 		return false;
@@ -1798,8 +1795,9 @@ public abstract class PersistentObject implements IPersistentObject {
 					
 					head.append("INSERT INTO ").append(m[3]).append("(ID,").append(m[2]).append(",")
 						.append(m[1]);
-					tail.append(") VALUES (").append(
-						getDBConnection().getJdbcLink().wrapFlavored(StringTool.unique("aij")))
+					tail.append(") VALUES (")
+						.append(
+							getDBConnection().getJdbcLink().wrapFlavored(StringTool.unique("aij")))
 						.append(",").append(getWrappedId()).append(",")
 						.append(getDBConnection().getJdbcLink().wrapFlavored(objectId));
 					if (extra != null) {
@@ -2018,6 +2016,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	
 	/**
 	 * Send an {@link ElexisEvent} concerning this object
+	 * 
 	 * @param eventType
 	 */
 	protected void sendElexisEvent(int eventType){
@@ -2660,6 +2659,43 @@ public abstract class PersistentObject implements IPersistentObject {
 		}
 	}
 	
+	/**
+	 * Retrieves all entities that have been modified since lastUpdate. Does not include the
+	 * lastUpdate itself. The results are order using lastupdate descending (newest first).
+	 * 
+	 * @param lastUpdate
+	 * @param clazz
+	 * @return
+	 * @since 3.7
+	 */
+	public static <T extends PersistentObject> List<T> getObjectsModifiedSince(long lastUpdate,
+		Class<T> clazz){
+		try {
+			T newInstance = clazz.newInstance();
+			DBConnection dbConnection = getDefaultConnection();
+			String sql = "SELECT ID FROM " + newInstance.getTableName() + " WHERE LASTUPDATE > '"
+				+ Long.toString(lastUpdate) + "' ORDER BY LASTUPDATE DESC";
+			PreparedStatement ps = dbConnection.getPreparedStatement(sql);
+			List<T> ret = new ArrayList<>();
+			try {
+				ResultSet res = ps.executeQuery();
+				while (res.next()) {
+					Method method = clazz.getMethod("load", String.class);
+					@SuppressWarnings("unchecked")
+					T result = (T) method.invoke(null, res.getString(1));
+					ret.add(result);
+				}
+			} finally {
+				ps.close();
+				dbConnection.releasePreparedStatement(ps);
+			}
+			return ret;
+		} catch (Exception e) {
+			ExHandler.handle(e);
+			return Collections.emptyList();
+		}
+	}
+	
 	@Override
 	public int hashCode(){
 		return getId().hashCode();
@@ -3224,4 +3260,5 @@ public abstract class PersistentObject implements IPersistentObject {
 			defaultConnection.releaseStatement(stm);
 		}
 	}
+
 }
