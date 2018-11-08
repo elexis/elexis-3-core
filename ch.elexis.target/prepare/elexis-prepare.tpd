@@ -1,5 +1,9 @@
 target "Oxygen.3 for Elexis" with source allEnvironments
 
+location "http://download.eclipse.org/technology/babel/update-site/R0.16.0/oxygen" {
+	org.eclipse.swt.nl_de
+}
+
 location "http://download.eclipse.org/e4/snapshots/org.eclipse.e4.tools/latest/" {
 	org.eclipse.e4.tools.spies.feature.feature.group
 }
