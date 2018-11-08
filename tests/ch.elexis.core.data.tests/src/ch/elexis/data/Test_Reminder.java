@@ -197,8 +197,9 @@ public class Test_Reminder extends AbstractPersistentObjectTest {
 		
 		assertEquals(1, changed.size());
 		assertEquals("TestMessageA", changed.get(0).getMessage());
+		// support deleted
 		
-		qre = new Query<>(Reminder.class, true, null);
+		qre = new Query<>(Reminder.class, Reminder.TABLENAME, true, null);
 		qre.add(Reminder.FLD_LASTUPDATE, Query.GREATER, Long.toString(highestLastUpdate));
 		changed = qre.execute();
 		

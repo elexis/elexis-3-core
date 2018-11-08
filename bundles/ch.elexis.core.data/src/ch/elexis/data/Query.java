@@ -121,13 +121,15 @@ public class Query<T> {
 	final String tableName, @Nullable
 	final String[] prefetch){
 		
-		this(cl, field, value, false, prefetch);
+		this(cl, tableName, field, value, false, prefetch);
 	}
 	
 	/**
 	 * Initialize a query with optional value prefetch (i.e. cache population)
 	 * 
 	 * @param cl
+	 * @param tableName
+	 *            the name of the database table the values are stored in
 	 * @param field
 	 *            an initial condition that {@link #EQUALS} to the parameter value, can be
 	 *            <code>null</code>
@@ -144,7 +146,7 @@ public class Query<T> {
 	 *             {@link #clearEntityCache}
 	 * @since 3.7
 	 */
-	public Query(final Class<? extends PersistentObject> cl, @Nullable
+	public Query(final Class<? extends PersistentObject> cl, String tableName, @Nullable
 	final String field, @Nullable
 	final String value, boolean clearCache, String[] prefetch){
 		try {
@@ -155,7 +157,6 @@ public class Query<T> {
 			});
 			
 			clearEntityCache = clearCache;
-			String tableName = cl.newInstance().getTableName();
 			
 			if (prefetch != null) {
 				// resolve the delivered field names to the real database columns
@@ -202,8 +203,8 @@ public class Query<T> {
 	 * @see #Query(Class, String, String, boolean, String[])
 	 * @since 3.7
 	 */
-	public Query(final Class<? extends PersistentObject> cl, boolean clearCache, String[] prefetch){
-		this(cl, null, null, clearCache, prefetch);
+	public Query(final Class<? extends PersistentObject> cl, String tableName, boolean clearCache, String[] prefetch){
+		this(cl, tableName, null, null, clearCache, prefetch);
 	}
 	
 	/**
