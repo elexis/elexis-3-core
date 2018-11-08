@@ -856,10 +856,11 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * 
 	 * @return a List that might be empty but is never null
 	 */
+	@SuppressWarnings("unchecked")
 	public List<IXid> getXids(){
-		Query<IXid> qbe = new Query<IXid>(Xid.class);
+		Query<Xid> qbe = new Query<Xid>(Xid.class);
 		qbe.add(Xid.FLD_OBJECT, Query.EQUALS, getId());
-		return qbe.execute();
+		return (List<IXid>)(List<?>) qbe.execute();
 	}
 	
 	/**
@@ -2514,7 +2515,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *            the field to get a key for
 	 * @return a unique key
 	 */
-	private String getKey(final String field){
+	public String getKey(final String field){
 		return getTableName() + "." + getId() + "#" + field;
 	}
 	
@@ -2656,43 +2657,6 @@ public abstract class PersistentObject implements IPersistentObject {
 				// ignore
 			}
 			dbConnection.releasePreparedStatement(ps);
-		}
-	}
-	
-	/**
-	 * Retrieves all entities that have been modified since lastUpdate. Does not include the
-	 * lastUpdate itself. The results are order using lastupdate descending (newest first).
-	 * 
-	 * @param lastUpdate
-	 * @param clazz
-	 * @return
-	 * @since 3.7
-	 */
-	public static <T extends PersistentObject> List<T> getObjectsModifiedSince(long lastUpdate,
-		Class<T> clazz){
-		try {
-			T newInstance = clazz.newInstance();
-			DBConnection dbConnection = getDefaultConnection();
-			String sql = "SELECT ID FROM " + newInstance.getTableName() + " WHERE LASTUPDATE > '"
-				+ Long.toString(lastUpdate) + "' ORDER BY LASTUPDATE DESC";
-			PreparedStatement ps = dbConnection.getPreparedStatement(sql);
-			List<T> ret = new ArrayList<>();
-			try {
-				ResultSet res = ps.executeQuery();
-				while (res.next()) {
-					Method method = clazz.getMethod("load", String.class);
-					@SuppressWarnings("unchecked")
-					T result = (T) method.invoke(null, res.getString(1));
-					ret.add(result);
-				}
-			} finally {
-				ps.close();
-				dbConnection.releasePreparedStatement(ps);
-			}
-			return ret;
-		} catch (Exception e) {
-			ExHandler.handle(e);
-			return Collections.emptyList();
 		}
 	}
 	
@@ -3259,6 +3223,15 @@ public abstract class PersistentObject implements IPersistentObject {
 		} finally {
 			defaultConnection.releaseStatement(stm);
 		}
+	}
+
+	/**
+	 * Clear all attributes that have been cached for this entity. Must be re-implemented by
+	 * a subclass to support. See e.g. Reminder
+	 */
+	public void clearCachedAttributes(){
+		throw new UnsupportedOperationException(
+			"Not implemented for class " + getClass().getName());
 	}
 
 }

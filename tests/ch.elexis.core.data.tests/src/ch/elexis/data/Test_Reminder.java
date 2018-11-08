@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -172,21 +174,36 @@ public class Test_Reminder extends AbstractPersistentObjectTest {
 	}
 	
 	@Test
-	public void testFindDifferentialChangedReminders() throws InterruptedException{
+	public void testFindDifferentialChangedReminders() throws InterruptedException, SQLException{
 		reminderA = new Reminder(null, new TimeTool().toString(TimeTool.DATE_GER),
 			Visibility.ALWAYS, "", "TestMessageA");
 		
 		long highestLastUpdate = PersistentObject.getHighestLastUpdate(Reminder.TABLENAME);
-		Thread.sleep(2);
-		reminderB = new Reminder(null, new TimeTool().toString(TimeTool.DATE_GER),
-			Visibility.ALWAYS, "", "TestMessageB");
-		Thread.sleep(2);
-		reminderC = new Reminder(null, null, Visibility.ALWAYS, "", "TestMessageC");
+		Thread.sleep(5);
 		
-		List<Reminder> changed =
-			PersistentObject.getObjectsModifiedSince(highestLastUpdate, Reminder.class);
-		assertEquals(2, changed.size());
-		assertTrue(changed.get(0).getLastUpdate() > changed.get(1).getLastUpdate());
+		// circumvent persistent object on updating element, 
+		// emulating behavior of a third elexis instance
+		String sql =
+			"UPDATE " + Reminder.TABLENAME + " SET LASTUPDATE='" + System.currentTimeMillis()
+				+ "', MESSAGE='TestMessageAUpdated' WHERE ID='" + reminderA.getId() + "'";
+		PreparedStatement ps = Reminder.getDefaultConnection().getPreparedStatement(sql);
+		int executeUpdate = ps.executeUpdate();
+		assertEquals(1, executeUpdate);
+		Reminder.getDefaultConnection().releasePreparedStatement(ps);
+		
+		Query<Reminder> qre = new Query<>(Reminder.class);
+		qre.add(Reminder.FLD_LASTUPDATE, Query.GREATER, Long.toString(highestLastUpdate));
+		List<Reminder> changed = qre.execute();
+		
+		assertEquals(1, changed.size());
+		assertEquals("TestMessageA", changed.get(0).getMessage());
+		
+		qre = new Query<>(Reminder.class, true, null);
+		qre.add(Reminder.FLD_LASTUPDATE, Query.GREATER, Long.toString(highestLastUpdate));
+		changed = qre.execute();
+		
+		assertEquals(1, changed.size());
+		assertEquals("TestMessageAUpdated", changed.get(0).getMessage());
 	}
 	
 }

@@ -17,10 +17,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
@@ -67,6 +73,8 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	public static final String FLD_PARAMS = "Params";
 	public static final String FLD_JOINT_RESPONSIBLES = "Responsibles";
 	
+	public static final Cache<String, Boolean> cachedAttributeKeys = CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.SECONDS).build();
+
 	/**
 	 * To be stored in {@link #FLD_RESPONSIBLE}, making this reminder a responsibility for every
 	 * user.
@@ -113,10 +121,30 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 			FLD_PRIORITY, FLD_ACTION_TYPE, FLD_SUBJECT);
 	}
 	
-	Reminder(){/* leer */}
+	Reminder(){/* empty */}
 	
 	private Reminder(final String id){
 		super(id);
+	}
+	
+	@Override
+	public void clearCachedAttributes(){
+		Iterator<Entry<String, Boolean>> iterator =
+			cachedAttributeKeys.asMap().entrySet().iterator();
+		while (iterator.hasNext()) {
+			Entry<String, Boolean> key = iterator.next();
+			if (key.getKey().contains(getId())) {
+				getDefaultConnection().getCache().remove(key.getKey());
+			}
+			iterator.remove();
+		}
+	}
+	
+	@Override
+	public String getKey(String field){
+		String key = super.getKey(field);
+		cachedAttributeKeys.put(key, true);
+		return key;
 	}
 	
 	/**
