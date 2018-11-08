@@ -48,7 +48,7 @@ import ch.rgw.tools.TimeTool;
  * @author Gerry Weirich
  */
 
-public class Query<T extends PersistentObject> {
+public class Query<T> {
 	private static Logger log = LoggerFactory.getLogger(Query.class);
 	
 	public static final String EQUALS = "=";
@@ -80,7 +80,7 @@ public class Query<T extends PersistentObject> {
 	 * @param cl
 	 *            the class to apply the query on
 	 */
-	public Query(@NonNull final Class<T> cl){
+	public Query(@NonNull final Class<? extends PersistentObject> cl){
 		this(cl, null, null);
 	}
 	
@@ -93,7 +93,7 @@ public class Query<T extends PersistentObject> {
 	 * @param value
 	 *            value that field should be equal with
 	 */
-	public Query(final Class<T> cl, @Nullable final String field,
+	public Query(final Class<? extends PersistentObject> cl, @Nullable final String field,
 		@Nullable final String value){
 		this(cl, field, value, null, (String[]) null);
 	}
@@ -115,7 +115,7 @@ public class Query<T extends PersistentObject> {
 	 *             for unsupported pre-fetch fields
 	 * @since 3.1
 	 */
-	public Query(final Class<T> cl, @Nullable
+	public Query(final Class<? extends PersistentObject> cl, @Nullable
 	final String field, @Nullable
 	final String value, @Nullable
 	final String tableName, @Nullable
@@ -144,7 +144,7 @@ public class Query<T extends PersistentObject> {
 	 *             {@link #clearEntityCache}
 	 * @since 3.7
 	 */
-	public Query(final Class<T> cl, @Nullable
+	public Query(final Class<? extends PersistentObject> cl, @Nullable
 	final String field, @Nullable
 	final String value, boolean clearCache, String[] prefetch){
 		try {
@@ -202,7 +202,7 @@ public class Query<T extends PersistentObject> {
 	 * @see #Query(Class, String, String, boolean, String[])
 	 * @since 3.7
 	 */
-	public Query(final Class<T> cl, boolean clearCache, String[] prefetch){
+	public Query(final Class<? extends PersistentObject> cl, boolean clearCache, String[] prefetch){
 		this(cl, null, null, clearCache, prefetch);
 	}
 	
