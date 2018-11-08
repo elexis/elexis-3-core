@@ -159,8 +159,9 @@ public class InvoiceActions {
 			}
 
 			@Override
-			public void doRun(PersistentObject actRn){
-				if (new RnDialogs.StornoDialog(UiDesk.getTopShell(), (Rechnung) actRn).open() == Dialog.OK) {
+			public void doRun(PersistentObject po){
+				Rechnung actRn = (Rechnung) po;
+				if (new RnDialogs.StornoDialog(UiDesk.getTopShell(), actRn).open() == Dialog.OK) {
 					ElexisEventDispatcher.update(actRn);
 				}
 			}
