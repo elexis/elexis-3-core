@@ -14,7 +14,7 @@ import ch.elexis.data.PersistentObject;
  * default operation is handled with {@link Strategy#SEQUENTIAL}
  *
  * @param <T>
- * @since 3.7
+ * @since 3.6
  */
 public abstract class MultiLockRequestingAction<T extends List<? extends PersistentObject>>
 		extends Action {
