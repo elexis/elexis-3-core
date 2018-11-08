@@ -756,7 +756,7 @@
       </command>
       <command
             id="ch.elexis.core.ui.command.openCompendium"
-            name="Open Compendium Website">
+            name="%open.compendium">
       </command>
    </extension>
       <extension
