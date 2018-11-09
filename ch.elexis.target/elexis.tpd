@@ -11,6 +11,7 @@ location "http://download.elexis.info/elexis/master/p2/target/" {
 	org.eclipse.ecf.filetransfer.ssl.feature.feature.group
 	org.eclipse.ecf.filetransfer.httpclient4.feature.feature.group
 	org.eclipse.ecf.filetransfer.httpclient4.ssl.feature.feature.group
+	org.eclipse.swt.nl_de
 
 	ch.qos.logback.classic
 	ch.qos.logback.core

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis" sequenceNumber="1536914658">
+<target name="Elexis" sequenceNumber="1541751187">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.equinox.executable.feature.group" version="3.7.2.v20171108-1834"/>
@@ -14,6 +14,7 @@
       <unit id="org.eclipse.ecf.filetransfer.ssl.feature.feature.group" version="1.1.0.v20170110-1317"/>
       <unit id="org.eclipse.ecf.filetransfer.httpclient4.feature.feature.group" version="3.13.7.v20170516-2248"/>
       <unit id="org.eclipse.ecf.filetransfer.httpclient4.ssl.feature.feature.group" version="1.1.0.v20170110-1317"/>
+      <unit id="org.eclipse.swt.nl_de" version="4.7.0.v20180815042455"/>
       <unit id="ch.qos.logback.classic" version="1.0.7.v20121108-1250"/>
       <unit id="ch.qos.logback.core" version="1.0.7.v20121108-1250"/>
       <unit id="ch.qos.logback.slf4j" version="1.0.7.v201505121915"/>
@@ -54,7 +55,7 @@
       <unit id="org.apache.poi.ooxml.schemas" version="3.9.0.v201405241750"/>
       <unit id="org.apache.xmlbeans" version="2.3.0.v201605172150"/>
       <unit id="org.dom4j" version="1.6.1.v201312101416"/>
-      <unit id="info.elexis.server.hapi.fhir" version="3.4.0.201809131455"/>
+      <unit id="info.elexis.server.hapi.fhir" version="3.4.0.201809170851"/>
       <unit id="javax.ws.rs" version="1.1.1.v20130318-1750"/>
       <unit id="org.slf4j.api" version="1.7.2.v20121108-1250"/>
       <unit id="org.slf4j.ext" version="1.7.2.v20121108-1250"/>
