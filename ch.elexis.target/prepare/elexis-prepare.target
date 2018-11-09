@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Oxygen.3 for Elexis" sequenceNumber="1541754074">
+<target name="Oxygen.3 for Elexis" sequenceNumber="1541778317">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.swt.nl_de" version="4.7.0.v20180815042455"/>
       <unit id="org.eclipse.swt.nl_fr" version="4.7.0.v20180815042455"/>
       <unit id="org.eclipse.swt.nl_it" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.ui.workbench.nl_de" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.ui.workbench.nl_fr" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.ui.workbench.nl_it" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.e4.ui.swt.gtk.nl_de" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.e4.ui.swt.gtk.nl_fr" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.e4.ui.swt.gtk.nl_it" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.e4.ui.workbench.renderers.swt.nl_de" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.e4.ui.workbench.renderers.swt.nl_fr" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.e4.ui.workbench.renderers.swt.nl_it" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.jface.nl_de" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.jface.nl_fr" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.jface.nl_it" version="4.7.0.v20180815042455"/>
       <repository location="http://download.eclipse.org/technology/babel/update-site/R0.16.0/oxygen"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
