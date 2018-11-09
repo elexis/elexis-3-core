@@ -54,30 +54,27 @@ public class FallDataAccessor implements IDataAccess {
 	@Override
 	public Result<Object> getObject(String descriptor, PersistentObject dependentObject,
 		String dates, String[] params){
-		Result<Object> result = null;
+		Result<Object> result = new Result<Object>(""); //$NON-NLS-1$
 		
 		Fall fall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
 		Kontakt costBearer = fall.getCostBearer();
 		
-		if (descriptor.equalsIgnoreCase(KOSTENTRAEGER)
-			|| descriptor.equalsIgnoreCase(KOSTENTRAEGER_UMLAUT)) {
-			// WARN does not seem to be called anymore - see FallKostentraegerResolver
-			result = new Result<Object>(costBearer.getPostAnschrift(true));
-			
-		} else if (descriptor.equalsIgnoreCase(KOSTENTRAEGER_KUERZEL)
-			|| descriptor.equalsIgnoreCase(KOSTENTRAEGER_KUERZEL_UMLAUT)) {
-			String label = costBearer.getLabel();
-			String fullName = label.substring(0, label.indexOf(","));
-			result = new Result<Object>(fullName);
-			
-		} else if (descriptor.equalsIgnoreCase(KOSTENTRAEGER_ORT)
-			|| descriptor.equalsIgnoreCase(KOSTENTRAEGER_ORT_UMLAUT)) {
-			result = new Result<Object>(costBearer.getAnschrift().getOrt());
-			
-		} else {
-			result = new Result<Object>(Result.SEVERITY.ERROR, IDataAccess.OBJECT_NOT_FOUND,
-				"Kein Kostenträger gefunden", //$NON-NLS-1$
-				null, false);
+		if (costBearer != null) {
+			if (descriptor.equalsIgnoreCase(KOSTENTRAEGER)
+				|| descriptor.equalsIgnoreCase(KOSTENTRAEGER_UMLAUT)) {
+				// WARN does not seem to be called anymore - see FallKostentraegerResolver
+				result = new Result<Object>(costBearer.getPostAnschrift(true));
+				
+			} else if (descriptor.equalsIgnoreCase(KOSTENTRAEGER_KUERZEL)
+				|| descriptor.equalsIgnoreCase(KOSTENTRAEGER_KUERZEL_UMLAUT)) {
+				String label = costBearer.getLabel();
+				String fullName = label.substring(0, label.indexOf(","));
+				result = new Result<Object>(fullName);
+				
+			} else if (descriptor.equalsIgnoreCase(KOSTENTRAEGER_ORT)
+				|| descriptor.equalsIgnoreCase(KOSTENTRAEGER_ORT_UMLAUT)) {
+				result = new Result<Object>(costBearer.getAnschrift().getOrt());
+			}
 		}
 		return result;
 	}
