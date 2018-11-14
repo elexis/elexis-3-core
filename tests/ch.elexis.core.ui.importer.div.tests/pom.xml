@@ -24,7 +24,6 @@
           <argLine>${elexis.ui.test.vmargs} -DdoNotFailOnMissingOmnivore</argLine>
           <useUIThread>true</useUIThread>
           <useUIHarness>true</useUIHarness>
-          <showEclipseLog>true</showEclipseLog>
           <bundleStartLevel>
 				<bundle>
 					<id>org.eclipse.equinox.event</id>

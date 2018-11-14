@@ -36,7 +36,6 @@
 				<configuration>
 					<useUIHarness>false</useUIHarness>
 					<testClass>ch.elexis.core.jpa.test.AllPluginTests</testClass>
-					<showEclipseLog>true</showEclipseLog>
 					<argLine>-Delexis.test.mode=true</argLine>
 					<dependencies>
 						<dependency>

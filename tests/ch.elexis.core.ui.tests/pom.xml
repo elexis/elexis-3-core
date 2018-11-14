@@ -29,7 +29,6 @@
           <argLine>${elexis.ui.test.vmargs}</argLine>
           <useUIThread>true</useUIThread>
           <useUIHarness>true</useUIHarness>
-          <showEclipseLog>${show.eclipse.log}</showEclipseLog>
           <dependencies>
             <dependency>
               <type>eclipse-feature</type>

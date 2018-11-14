@@ -63,7 +63,6 @@
         <configuration>
           <useUIHarness>false</useUIHarness>
           <testClass>ch.elexis.core.hl7.v2x.AllTests</testClass>
-          <showEclipseLog>true</showEclipseLog>
           <argLine>-Delexis.test.mode=true</argLine>
           <dependencies>
             <dependency>

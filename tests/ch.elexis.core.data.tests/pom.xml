@@ -26,6 +26,11 @@
 				<configuration>
 					<dependency-resolution>
 						<extraRequirements>
+              <requirement>
+                <type>eclipse-plugin</type>
+                <id>ch.elexis.core.logging.default_configuration</id>
+                <versionRange>0.0.0</versionRange>
+              </requirement>
 							<requirement>
 								<type>eclipse-plugin</type>
 								<id>ch.elexis.core.jpa.logging.slf4j</id>
@@ -42,7 +47,6 @@
 				<configuration>
 					<useUIHarness>false</useUIHarness>
 					<testClass>ch.elexis.AllTests</testClass>
-					<showEclipseLog>true</showEclipseLog>
 					<argLine>${elexis.ui.test.vmargs}
 						-Delexis.run.dbtests=${elexis.run.dbtests} -Delexis.test.mode=true</argLine>
 					<dependencies>
