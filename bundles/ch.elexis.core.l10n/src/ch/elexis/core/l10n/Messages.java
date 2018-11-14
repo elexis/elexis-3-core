@@ -2677,7 +2677,6 @@ public class Messages extends NLS {
 	public static String LabEvaluationRulesPreferencePage_btnCheckNonStringEqualRefValResValIsPathologicText_text;
 	public static String LabEvaluationRulesPreferencePage_lblWennKeineRegel_text;
 	public static String LabEvaluationRulesPreferencePage_lblResultatEndbestimmt_text;
-	public static String LabEvaluationRulesPreferencePage_lblLabNoPathFlagMeansNonPath_text;
 	public static String MPF_Rule_PathDescriptionText;
 	public static String BestellView_Title;
 	public static String BestellView_WizardAskNewOrder;
