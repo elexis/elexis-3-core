@@ -48,4 +48,10 @@ public class DummyPatientResolver extends HL7PatientResolver {
 	public IPatient resolvePatient(String firstname, String lastname, String birthDate){
 		return new ContactBean(patient);
 	}
+	
+	@Override
+	public IPatient resolvePatient(String firstname, String lastname, String birthDate,
+		String sender){
+		return resolvePatient(firstname, lastname, birthDate);
+	}
 }
