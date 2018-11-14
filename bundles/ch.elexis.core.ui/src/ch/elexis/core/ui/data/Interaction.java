@@ -15,6 +15,8 @@ import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
@@ -29,6 +31,7 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.events.ElexisStatusProgressMonitor;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.ui.Hub;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 import ch.rgw.tools.ExHandler;
@@ -261,8 +264,12 @@ public class Interaction extends PersistentObject {
 			FileUtils.copyURLToFile(new URL(MATRIX_CSV_URL), MATRIX_CSV_LOCAL);
 			logger.info("Finished downloading to {}", MATRIX_CSV_LOCAL);
 		} catch (IOException e) {
-			logger.warn("Unable to download {} to {}: {}", MATRIX_CSV_URL, MATRIX_CSV_LOCAL,
+			logger.error("Unable to download {} to {}: {}", MATRIX_CSV_URL, MATRIX_CSV_LOCAL,
 				e.getMessage());
+			String info = String.format("Unable to find %s", MATRIX_CSV_URL);
+			Status status = new Status(Status.ERROR, "ch.elexis.core.ui", Status.ERROR, info, null);
+			ErrorDialog.openError(Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(),
+				"Unable to download", null, status);
 		}
 	}
 	
@@ -328,6 +335,11 @@ public class Interaction extends PersistentObject {
 							monitor.beginTask(String.format(
 								Messages.VerrDetailDialog_DownloadInteractions, MATRIX_CSV_URL), 5); // average length of matrix_csv
 							downloadMatrix();
+							if (!MATRIX_CSV_LOCAL.exists()) {
+								logger.error("Unable to import interactions from missing {} ", //$NON-NLS-1$
+									MATRIX_CSV_LOCAL);
+								return;
+							}
 							logger.info("Start importing interactions from {} ", //$NON-NLS-1$
 								MATRIX_CSV_LOCAL);
 							CSVReader cr =
@@ -359,10 +371,15 @@ public class Interaction extends PersistentObject {
 								}
 							}
 						} catch (Exception ex) {
-							ExHandler.handle(ex);
-							logger.info(String.format(
+							String info = String.format(
 								"Import aborted after %d interactions with %d failures ", //$NON-NLS-1$
-								importerInteractionsCreated, notImported));
+								importerInteractionsCreated, notImported);
+							logger.error(info);
+							Status status = new Status(Status.ERROR, "ch.elexis.core.ui",
+								Status.ERROR, info, null);
+							ErrorDialog.openError(
+								Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(),
+								"Unable to import", null, status);
 							if (ipm != null) {
 								monitor.done();
 							}
