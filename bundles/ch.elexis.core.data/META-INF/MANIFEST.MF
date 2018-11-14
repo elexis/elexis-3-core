@@ -17,8 +17,7 @@ Require-Bundle: org.slf4j.api;bundle-version="1.7.2";visibility:=reexport,
  ch.rgw.utility;bundle-version="3.2.0",
  ch.elexis.core;bundle-version="3.2.0";visibility:=reexport,
  ch.elexis.core.l10n;bundle-version="3.5.0",
- org.jboss.aerogear.otp-java;bundle-version="1.0.0",
- net.sf.opencsv;bundle-version="1.8.0"
+ org.jboss.aerogear.otp-java;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: .,
  ch.elexis.admin,

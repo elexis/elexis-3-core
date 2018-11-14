@@ -343,6 +343,17 @@ public class Messages extends NLS {
 	public static String SelectDateDialog_description;
 	public static String SelectDateDialog_from;
 	public static String SelectDateDialog_to;
+	public static String VerrDetailDialog_NoInteractionKnown;
+	public static String VerrDetailDialog_InteractionEpha;
+	public static String VerrDetailDialog_InteractionBaseURL;
+	public static String VerrDetailDialog_InteractionTooltip;
+	public static String VerrDetailDialog_ImportInteractions;
+	public static String VerrDetailDialog_DownloadInteractions;
+	public static String Interaction_Class_A;
+	public static String Interaction_Class_B;
+	public static String Interaction_Class_C;
+	public static String Interaction_Class_D;
+	public static String Interaction_Class_X;
 	public static String VerrDetailDialog_NoPatientSelected;
 	public static String VerrDetailDialog_billingData;
 	public static String VerrDetailDialog_detailsOfOpenKons;

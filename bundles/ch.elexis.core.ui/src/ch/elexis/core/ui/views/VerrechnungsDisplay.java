@@ -71,9 +71,9 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.browser.IWebBrowser;
-import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.statushandlers.StatusManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
@@ -84,12 +84,14 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.IDiagnose;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
+import ch.elexis.core.ui.data.Interaction;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockUi;
@@ -100,7 +102,6 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Eigenleistung;
-import ch.elexis.data.Interaction;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.PersistentObject;
@@ -133,6 +134,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private static final String REMOVE = Messages.VerrechnungsDisplay_removeElements;
 	private static final String CHTEXT = Messages.VerrechnungsDisplay_changeText;
 	private static final String REMOVEALL = Messages.VerrechnungsDisplay_removeAll;
+	private static Logger logger = LoggerFactory.getLogger(VerrechnungsDisplay.class);
 	
 	private final ElexisEventListener eeli_update =
 		new ElexisUiEventListenerImpl(Konsultation.class, ElexisEvent.EVENT_UPDATE) {
@@ -446,11 +448,13 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		interactionLink.setVisible(false);
 		ArrayList<String> gtins = new ArrayList<String>();
 		ArrayList<String> atcs = new ArrayList<String>();
-		String severity = " ";
+		String severity = " "; //$NON-NLS-1$
 		Color color = UiDesk.getColor(UiDesk.COL_WHITE);
-		String epha = "Epha.ch";
-		interactionLink.setText("Keine Interaktionen bekannt");
-		String tooltip = "";
+		String epha = Messages.VerrDetailDialog_InteractionEpha;
+		// Reset tooltip text and color to nothing
+		interactionLink.setText(Messages.VerrDetailDialog_NoInteractionKnown);
+		interactionLink.setBackground(color);
+		String tooltip = ""; //$NON-NLS-1$
 		
 		if (actEncounter != null) {
 			Money sum = new Money(0);
@@ -460,35 +464,33 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				IVerrechenbar verrechenbar = billed.getVerrechenbar();
 				if (verrechenbar != null && verrechenbar instanceof Artikel) {
 					Artikel art = (Artikel) verrechenbar;
-					// System.out.println(art.getLabel() + " GTIN " + art.getGTIN());
 					gtins.add(art.getGTIN());
 					atcs.add(art.getATC_code());
 				}
 			}
-			StringBuilder destUrl = new StringBuilder("https://matrix.epha.ch/#/");
+			StringBuilder destUrl = new StringBuilder(Messages.VerrDetailDialog_InteractionBaseURL);
 			if (gtins.size() > 1) {
 				gtins.forEach(gtin -> destUrl.append(gtin + ","));
-				billedLabel.setText(Messages.PatHeuteView_accAmount + " " + sum.getAmountAsString()
-					+ " / " + Messages.PatHeuteView_accTime + " " + actEncounter.getMinutes());
+				billedLabel.setText(String.format("%s %s / %s %s", //$NON-NLS-1$
+					Messages.PatHeuteView_accAmount, sum.getAmountAsString(),
+					Messages.PatHeuteView_accTime, actEncounter.getMinutes()));
 				interactionLink.setVisible(true);
 				interactionLink.setEnabled(true);
 				interactionLink.setToolTipText(tooltip);
-				interactionLink.setText("Epha.ch");
+				interactionLink.setText(epha);
 				interactionLink.setTouchEnabled(true);
 				interactionLink.setForeground(UiDesk.getColorRegistry().get(UiDesk.COL_BLUE));
 				interactionLink.addListener(SWT.MouseUp, new Listener() {
 					@Override
 					public void handleEvent(Event event){
-						IWorkbenchBrowserSupport support =
-							PlatformUI.getWorkbench().getBrowserSupport();
-						IWebBrowser browser;
 						try {
-							browser = support.createBrowser("someId");
 							// zB. NOLVADEX, PAROXETIN, LOSARTAN, METOPROLOL with GTIN
 							// 7680390530474 7680569620074, 7680589810141, 7680659580097 gives
 							// https://matrix.epha.ch/#/7680390530474,7680569620074,7680589810141,7680659580097
 							// or regnr "https://matrix.epha.ch/#/58392,59131,39053,58643"
-							browser.openURL(new URL(destUrl.toString()));
+							logger.info("destURL for external browser is: {}", destUrl.toString()); //$NON-NLS-1$
+							PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser()
+								.openURL(new URL(destUrl.toString()));
 						} catch (PartInitException | MalformedURLException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -496,10 +498,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					}
 				});
 			}
-			System.out.println("DestURL is " + destUrl);
 			if (atcs.size() > 1) {
 				for (int j = 0; j < atcs.size(); j++) {
-					String old = severity;
 					for (int k = j + 1; k < atcs.size(); k++) {
 						Interaction ia = Interaction.getByATC(atcs.get(j), atcs.get(k));
 						if (ia == null) {
@@ -510,26 +510,27 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 							continue;
 						}
 						String rating = ia.get(Interaction.FLD_SEVERITY);
-						System.out.println(String.format("%s %s res %d", rating, severity,
-							rating.compareTo(severity)));
+						logger.trace("Add: {} {} res {}", rating, severity, //$NON-NLS-1$
+							rating.compareTo(severity));
 						
 						if (severity.compareTo(rating) < 0) {
 							severity = rating;
 							String info = ia.get(Interaction.FLD_INFO);
-							tooltip = String.format("%s\n%s\n%s\n%s",
-								"Klick, um zur Detailinfo auf epha.ch zu gehen",
-								Interaction.Ratings.get(severity), info,
-								destUrl);
+							tooltip = String.format("%s\n%s\n%s\n%s", //$NON-NLS-1$
+								Interaction.Ratings.get(severity), info, destUrl,
+								Messages.VerrDetailDialog_InteractionTooltip);
 							interactionLink.setToolTipText(tooltip);
 						}
 					}
 				}
 			}
-			color = UiDesk.getColorFromRGB(Interaction.Colors.get(severity));
-			interactionLink.setBackground(color);
-			interactionLink.setText(epha + ": " + Interaction.Ratings.get(severity));
+			if (!severity.contentEquals(" ")) {//$NON-NLS-1$
+				color = UiDesk.getColorFromRGB(Interaction.Colors.get(severity));
+				interactionLink.setText(epha + ": " + Interaction.Ratings.get(severity)); //$NON-NLS-1$
+				interactionLink.setBackground(color);
+			}
 		} else {
-			billedLabel.setText("");
+			billedLabel.setText(""); //$NON-NLS-1$
 		}
 		layout();
 	}
