@@ -7,9 +7,6 @@
   </parent>
   <artifactId>ch.elexis.core.data.tests</artifactId>
   <packaging>eclipse-test-plugin</packaging>
-  <properties>
-    <elexis.run.dbtests>false</elexis.run.dbtests>
-  </properties>
 
   <!-- comment out to enable headless tests and add additional dependencies if needed
     -->
@@ -20,7 +17,7 @@
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-surefire-plugin</artifactId>
         <configuration>
-          <argLine>${elexis.ui.test.vmargs} -Delexis.run.dbtests=${elexis.run.dbtests}</argLine>
+          <argLine>${elexis.ui.test.vmargs}</argLine>
           <testSuite>ch.elexis.core.data.tests</testSuite>
           <testClass>ch.elexis.AllTests</testClass>
           <showEclipseLog>false</showEclipseLog>
