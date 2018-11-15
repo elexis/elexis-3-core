@@ -125,7 +125,8 @@ public class JdbcLink {
 		String[] hostdetail = host.split(":");
 		String hostname = hostdetail[0];
 		String hostport = hostdetail.length > 1 ? hostdetail[1] : "3306";
-		String connect = "jdbc:mysql://" + hostname + ":" + hostport + "/" + database;
+		String connect = "jdbc:mysql://" + hostname + ":" + hostport + "/" + database
+			+ "?autoReconnect=true&useSSL=false";
 		return new JdbcLink(driver, connect, DBFLAVOR_MYSQL);
 	}
 	

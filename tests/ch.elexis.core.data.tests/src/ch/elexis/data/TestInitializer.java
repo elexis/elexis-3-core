@@ -36,7 +36,9 @@ public class TestInitializer {
 			return link;
 		}
 		try {
-			boolean connectionOk = link.connect("elexisTest", "elexisTest");
+			// PostgreSQL fails downcasing a username, even when all users are in lower case
+			String userName = dbflavor == FLAVOR_POSTGRES ? "elexistest" : "elexisTest";
+			boolean connectionOk = link.connect(userName, "elexisTest");
 			if (connectionOk) {
 				return link;
 			}
