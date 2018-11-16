@@ -72,6 +72,24 @@ public class MedicationViewHelper {
 			}
 		}
 	}
+
+	/**
+	 * 
+	 * @param pres alist of prescriptions
+	 * @return an ArrayList of unique GTIN of all prescribed articles
+	 */
+	public static ArrayList<Artikel> getAllGtins(List<Prescription> pres){
+		ArrayList<Artikel> gtins = new ArrayList<Artikel>();
+		for (Prescription pr : pres) {
+			Artikel art = pr.getArtikel();
+			if (art != null) {
+				if (!gtins.contains(art)) {
+					gtins.add(art);
+				}
+			}
+		}
+		return gtins;
+	}
 	
 	/**
 	 * Load the {@link Prescription} for the {@link Patient} referenced by patId. If the
