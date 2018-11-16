@@ -12,8 +12,6 @@
 
 package ch.elexis.core.ui.views;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,17 +58,12 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Link;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,7 +84,6 @@ import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
-import ch.elexis.core.ui.data.Interaction;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockUi;
@@ -100,6 +92,7 @@ import ch.elexis.core.ui.locks.LockDeniedNoActionLockHandler;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
+import ch.elexis.core.ui.views.controls.InteractionLink;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Eigenleistung;
 import ch.elexis.data.Konsultation;
@@ -114,7 +107,7 @@ import ch.rgw.tools.StringTool;
 public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	
 	private Label billedLabel;
-	private Link interactionLink;
+	private InteractionLink interactionLink;
 	private Table table;
 	private TableViewer viewer;
 	private MenuManager contextMenuManager;
@@ -134,7 +127,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private static final String REMOVE = Messages.VerrechnungsDisplay_removeElements;
 	private static final String CHTEXT = Messages.VerrechnungsDisplay_changeText;
 	private static final String REMOVEALL = Messages.VerrechnungsDisplay_removeAll;
-	private static Logger logger = LoggerFactory.getLogger(VerrechnungsDisplay.class);
+	static Logger logger = LoggerFactory.getLogger(VerrechnungsDisplay.class);
 	
 	private final ElexisEventListener eeli_update =
 		new ElexisUiEventListenerImpl(Konsultation.class, ElexisEvent.EVENT_UPDATE) {
@@ -164,10 +157,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		
 		billedLabel = new Label(this, SWT.NONE);
 		billedLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
-		
-		interactionLink = new Link(this, SWT.NONE);
+		interactionLink = new InteractionLink(this, SWT.NONE);
 		interactionLink.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
-		
 		toolBarManager = new ToolBarManager(SWT.RIGHT);
 		toolBarManager.add(new Action() {
 			@Override
@@ -445,17 +436,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	}
 	
 	private void updateBilledLabel(){
-		interactionLink.setVisible(false);
-		ArrayList<String> gtins = new ArrayList<String>();
-		ArrayList<String> atcs = new ArrayList<String>();
-		String severity = " "; //$NON-NLS-1$
-		Color color = UiDesk.getColor(UiDesk.COL_WHITE);
-		String epha = Messages.VerrDetailDialog_InteractionEpha;
-		// Reset tooltip text and color to nothing
-		interactionLink.setText(Messages.VerrDetailDialog_NoInteractionKnown);
-		interactionLink.setBackground(color);
-		String tooltip = ""; //$NON-NLS-1$
-		
+		ArrayList<Artikel> gtins = new ArrayList<Artikel>();
 		if (actEncounter != null) {
 			Money sum = new Money(0);
 			for (Verrechnet billed : actEncounter.getLeistungen()) {
@@ -464,71 +445,15 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				IVerrechenbar verrechenbar = billed.getVerrechenbar();
 				if (verrechenbar != null && verrechenbar instanceof Artikel) {
 					Artikel art = (Artikel) verrechenbar;
-					gtins.add(art.getGTIN());
-					atcs.add(art.getATC_code());
+					gtins.add(art);
 				}
 			}
-			StringBuilder destUrl = new StringBuilder(Messages.VerrDetailDialog_InteractionBaseURL);
 			if (gtins.size() > 1) {
-				gtins.forEach(gtin -> destUrl.append(gtin + ","));
 				billedLabel.setText(String.format("%s %s / %s %s", //$NON-NLS-1$
 					Messages.PatHeuteView_accAmount, sum.getAmountAsString(),
 					Messages.PatHeuteView_accTime, actEncounter.getMinutes()));
-				interactionLink.setVisible(true);
-				interactionLink.setEnabled(true);
-				interactionLink.setToolTipText(tooltip);
-				interactionLink.setText(epha);
-				interactionLink.setTouchEnabled(true);
-				interactionLink.setForeground(UiDesk.getColorRegistry().get(UiDesk.COL_BLUE));
-				interactionLink.addListener(SWT.MouseUp, new Listener() {
-					@Override
-					public void handleEvent(Event event){
-						try {
-							// zB. NOLVADEX, PAROXETIN, LOSARTAN, METOPROLOL with GTIN
-							// 7680390530474 7680569620074, 7680589810141, 7680659580097 gives
-							// https://matrix.epha.ch/#/7680390530474,7680569620074,7680589810141,7680659580097
-							// or regnr "https://matrix.epha.ch/#/58392,59131,39053,58643"
-							logger.info("destURL for external browser is: {}", destUrl.toString()); //$NON-NLS-1$
-							PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser()
-								.openURL(new URL(destUrl.toString()));
-						} catch (PartInitException | MalformedURLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				});
 			}
-			if (atcs.size() > 1) {
-				for (int j = 0; j < atcs.size(); j++) {
-					for (int k = j + 1; k < atcs.size(); k++) {
-						Interaction ia = Interaction.getByATC(atcs.get(j), atcs.get(k));
-						if (ia == null) {
-							// search also reverse
-							ia = Interaction.getByATC(atcs.get(k), atcs.get(j));
-						}
-						if (ia == null) {
-							continue;
-						}
-						String rating = ia.get(Interaction.FLD_SEVERITY);
-						logger.trace("Add: {} {} res {}", rating, severity, //$NON-NLS-1$
-							rating.compareTo(severity));
-						
-						if (severity.compareTo(rating) < 0) {
-							severity = rating;
-							String info = ia.get(Interaction.FLD_INFO);
-							tooltip = String.format("%s\n%s\n%s\n%s", //$NON-NLS-1$
-								Interaction.Ratings.get(severity), info, destUrl,
-								Messages.VerrDetailDialog_InteractionTooltip);
-							interactionLink.setToolTipText(tooltip);
-						}
-					}
-				}
-			}
-			if (!severity.contentEquals(" ")) {//$NON-NLS-1$
-				color = UiDesk.getColorFromRGB(Interaction.Colors.get(severity));
-				interactionLink.setText(epha + ": " + Interaction.Ratings.get(severity)); //$NON-NLS-1$
-				interactionLink.setBackground(color);
-			}
+			interactionLink.updateAtcs(gtins);
 		} else {
 			billedLabel.setText(""); //$NON-NLS-1$
 		}

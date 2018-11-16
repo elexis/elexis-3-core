@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.medication.views;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -65,6 +66,7 @@ import ch.elexis.core.ui.medication.views.MedicationTableViewerContentProvider.M
 import ch.elexis.core.ui.medication.views.provider.MedicationFilter;
 import ch.elexis.core.ui.util.CreatePrescriptionHelper;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
+import ch.elexis.core.ui.views.controls.InteractionLink;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
@@ -123,6 +125,7 @@ public class MedicationComposite extends Composite
 	private Text txtDisposalComment;
 	private Text txtStopComment;
 	private MedicationContentProviderComposite contentProviderComp;
+	private InteractionLink interactionLink;
 	
 	/**
 	 * Create the composite.
@@ -251,6 +254,8 @@ public class MedicationComposite extends Composite
 		lblDailyTherapyCost = new Label(compositeState, SWT.NONE);
 		lblDailyTherapyCost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		lblDailyTherapyCost.setText(Messages.FixMediDisplay_DailyCost);
+		interactionLink = new InteractionLink(this, SWT.NONE);
+		interactionLink.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		btnShowHistory = new Button(compositeState, SWT.TOGGLE | SWT.FLAT);
 		btnShowHistory.setToolTipText(Messages.MedicationComposite_btnShowHistory_toolTipText);
@@ -736,8 +741,11 @@ public class MedicationComposite extends Composite
 		if (medicationInput != null) {
 			String dailyCost = MedicationViewHelper.calculateDailyCostAsString(medicationInput);
 			lblDailyTherapyCost.setText(dailyCost);
+			interactionLink.updateAtcs(MedicationViewHelper.getAllGtins(medicationInput));
+		
 		} else {
 			lblDailyTherapyCost.setText("");
+			interactionLink.updateAtcs(new ArrayList<Artikel>());
 		}
 	}
 	
