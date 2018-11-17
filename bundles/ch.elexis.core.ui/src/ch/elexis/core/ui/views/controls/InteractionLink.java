@@ -53,7 +53,6 @@ public class InteractionLink {
 		interactionLink.setVisible(true);
 		interactionLink.setEnabled(true);
 		interactionLink.setToolTipText(tooltip);
-		interactionLink.setText(epha);
 		interactionLink.setTouchEnabled(true);
 		interactionLink.setForeground(UiDesk.getColorRegistry().get(UiDesk.COL_BLUE));
 		interactionLink.addListener(SWT.MouseUp, new Listener() {
