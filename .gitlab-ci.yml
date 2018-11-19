@@ -16,6 +16,10 @@ build:
   - master@elexis/elexis-3-core
   - /^\d*[.]\d*$/@elexis/elexis-3-core
   - /^[bf]\d*$/@elexis/elexis-3-core
+  artifacts:
+    reports:
+      junit: 
+        - **/target/surefire-reports/TEST-*.xml
 
 trigger_elexis-3-base_build:
     stage: trigger_other_builds
