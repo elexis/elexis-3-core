@@ -15,7 +15,7 @@ build:
   artifacts:
     reports:
       junit:
-        - /**/target/surefire-reports/TEST-*.xml
+        - tests/**/target/surefire-reports/TEST-*.xml
   only:
   - master@elexis/elexis-3-core
   - /^\d*[.]\d*$/@elexis/elexis-3-core
