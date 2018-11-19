@@ -19,6 +19,9 @@ location "http://download.eclipse.org/technology/babel/update-site/R0.16.0/oxyge
 	org.eclipse.ui.browser.nl_de
 	org.eclipse.ui.browser.nl_fr
 	org.eclipse.ui.browser.nl_it
+	org.eclipse.ui.views.nl_de
+	org.eclipse.ui.views.nl_fr
+	org.eclipse.ui.views.nl_it
 }
 
 location "http://download.eclipse.org/e4/snapshots/org.eclipse.e4.tools/latest/" {
