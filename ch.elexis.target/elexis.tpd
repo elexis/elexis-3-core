@@ -29,6 +29,9 @@ location "http://download.elexis.info/elexis/master/p2/target/" {
 	org.eclipse.ui.browser.nl_de
 	org.eclipse.ui.browser.nl_fr
 	org.eclipse.ui.browser.nl_it
+	org.eclipse.ui.views.nl_de
+	org.eclipse.ui.views.nl_fr
+	org.eclipse.ui.views.nl_it
 
 	ch.qos.logback.classic
 	ch.qos.logback.core
