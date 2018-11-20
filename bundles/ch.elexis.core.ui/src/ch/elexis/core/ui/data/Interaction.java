@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.data;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -17,9 +18,11 @@ import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IProgressService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,14 +30,10 @@ import com.google.common.collect.ImmutableMap;
 
 import au.com.bytecode.opencsv.CSVReader;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.interfaces.events.ElexisStatusProgressMonitor;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
-import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.VersionInfo;
 
@@ -301,16 +300,15 @@ public class Interaction extends PersistentObject {
 	 * @param csv
 	 */
 	private static void importMappingFromCsv(){
-		// Use year/day of year
+		// First check whether we already parsed or checked the CSV file today
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.D"); //$NON-NLS-1$
 		LocalDateTime now = LocalDateTime.now();
 		String today = dtf.format(now);
 		double curYearDay = Float.parseFloat(today);
-		
 		Interaction version = load(VERSIONID);
 		String lastParsed = version.get(FLD_ABUSE_ID_FOR_LAST_PARSED);
-		double last = lastParsed.length() == 0 ? 0.0 : Float.parseFloat(lastParsed);
-		if (!(lastParsed.length() == 0) && (curYearDay - last) < 1.0) {
+		double last = (lastParsed == null || lastParsed.length() == 0) ? 0.0 : Float.parseFloat(lastParsed);
+		if (!(lastParsed == null ||lastParsed.length() == 0) && (curYearDay - last) < 1.0) {
 			logger.info("Skip importMappingFromCsv as last '{}' equals today {}", //$NON-NLS-1$				
 				lastParsed, today);
 			return;
@@ -318,84 +316,112 @@ public class Interaction extends PersistentObject {
 			logger.info("Starting importMappingFromCsv as last '{}' smaller today {}", //$NON-NLS-1$				
 				lastParsed, today);
 		}
-		
-		getDefaultConnection().exec("DELETE FROM " + TABLENAME + " WHERE ID != 'VERSION';"); //$NON-NLS-1$ //$NON-NLS-2$
-		notImported = 0;
-		importerInteractionsCreated = 0;
-		if (MATRIX_CSV_LOCAL.exists() && getShaFromFile()) {
-			return;
-		}
-		IProgressService ipm = PlatformUI.getWorkbench().getProgressService();
-		try {
-			ipm.runInUI(PlatformUI.getWorkbench().getProgressService(),
-				new IRunnableWithProgress() {
-					public void run(final IProgressMonitor monitor)
-						throws InvocationTargetException, InterruptedException{
-						try {
+		Display.getDefault().asyncExec(new Runnable() {
+			@Override
+			public void run(){
+				Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+				ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(shell);
+				try {
+					progressDialog.run(true, true, new IRunnableWithProgress() {
+						public void run(IProgressMonitor monitor)
+							throws InvocationTargetException, InterruptedException{
 							monitor.beginTask(String.format(
 								Messages.VerrDetailDialog_DownloadInteractions, MATRIX_CSV_URL), 5); // average length of matrix_csv
+							// Delete all mappings and empty last_parsed/sha
+							getDefaultConnection()
+								.exec("DELETE FROM " + TABLENAME + " WHERE ID != 'VERSION';"); //$NON-NLS-1$ //$NON-NLS-2$
+							getDefaultConnection().exec("UPDATE " + TABLENAME + " SET " //$NON-NLS-1$
+								+ FLD_ABUSE_ID_FOR_LAST_PARSED + " = '" + "" + "', " //$NON-NLS-2$ $NON-NLS-3$ $NON-NLS-4$
+								+ FLD_ABUSE_ID_FOR_SHA + " = '" + "" + "' WHERE ID = 'VERSION';"); //$NON-NLS-1$ $NON-NLS-2$
+							notImported = 0;
+							importerInteractionsCreated = 0;
+							if (MATRIX_CSV_LOCAL.exists() && getShaFromFile()) {
+								monitor.done();
+								return;
+							}
 							downloadMatrix();
 							if (!MATRIX_CSV_LOCAL.exists()) {
 								logger.error("Unable to import interactions from missing {} ", //$NON-NLS-1$
 									MATRIX_CSV_LOCAL);
+								monitor.done();
 								return;
 							}
 							logger.info("Start importing interactions from {} ", //$NON-NLS-1$
 								MATRIX_CSV_LOCAL);
-							CSVReader cr =
-								new CSVReader(new FileReader(MATRIX_CSV_LOCAL), ',', '"');
+							CSVReader cr;
+							try {
+								cr = new CSVReader(new FileReader(MATRIX_CSV_LOCAL), ',', '"');
+							} catch (FileNotFoundException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 							String info =
 								String.format(Messages.VerrDetailDialog_ImportInteractions,
 									MATRIX_CSV_LOCAL.toString());
-							monitor.beginTask(info,
-								(int) (Files.size(MATRIX_CSV_LOCAL.toPath()) / 600)); // average length of matrix_csv
-							ElexisEvent progress = new ElexisEvent(ipm,
-								ElexisStatusProgressMonitor.class,
-								ElexisEvent.EVENT_OPERATION_PROGRESS, ElexisEvent.PRIORITY_HIGH);
-							ElexisEventDispatcher.getInstance().fire(progress);
-							cr = new CSVReader(new FileReader(MATRIX_CSV_LOCAL), ',', '"');
-							String[] line;
-							while ((line = cr.readNext()) != null) {
-								monitor.worked(1);
-								if (line.length == 9) {
-									if (line[0].equalsIgnoreCase("ATC1")) { //$NON-NLS-1$
-										// skip description line
-										continue;
+							try {
+								monitor.beginTask(info,
+									(int) (Files.size(MATRIX_CSV_LOCAL.toPath()) / 600));
+								/*ElexisEvent progress = new ElexisEvent(ipm, ElexisStatusProgressMonitor.class,
+									ElexisEvent.EVENT_OPERATION_PROGRESS, ElexisEvent.PRIORITY_HIGH);
+								ElexisEventDispatcher.getInstance().fire(progress);
+								*/
+								cr = new CSVReader(new FileReader(MATRIX_CSV_LOCAL), ',', '"');
+								String[] line;
+								while ((line = cr.readNext()) != null) {
+									monitor.worked(1);
+									if (line.length == 9) {
+										if (line[0].equalsIgnoreCase("ATC1")) { //$NON-NLS-1$
+											// skip description line
+											continue;
+										}
+										new Interaction(line[0], line[1], line[2], line[3], line[4],
+											line[5], line[6], line[7], line[8]);
+										importerInteractionsCreated++;
+									} else {
+										notImported++;
+										logger
+											.info(String.format("Skipping [%s] ", line.toString())); //$NON-NLS-1$
 									}
-									new Interaction(line[0], line[1], line[2], line[3], line[4],
-										line[5], line[6], line[7], line[8]);
-									importerInteractionsCreated++;
-								} else {
-									notImported++;
-									logger.info(String.format("Skipping [%s] ", line.toString())); //$NON-NLS-1$
+									// Check if the user pressed "cancel"
+									if (monitor.isCanceled()) {
+										monitor.done();
+										return;
+									}
 								}
-							}
-						} catch (Exception ex) {
-							String info = String.format(
-								"Import aborted after %d interactions with %d failures ", //$NON-NLS-1$
-								importerInteractionsCreated, notImported);
-							logger.error(info);
-							Status status = new Status(Status.ERROR, "ch.elexis.core.ui",
-								Status.ERROR, info, null);
-							ErrorDialog.openError(
-								Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(),
-								"Unable to import", null, status);
-							if (ipm != null) {
+								getShaFromFile();
+								getDefaultConnection().exec("UPDATE " + TABLENAME + " SET " //$NON-NLS-1$
+									+ FLD_ABUSE_ID_FOR_LAST_PARSED + " = '" + today + "', " //$NON-NLS-2$ $NON-NLS-3$ $NON-NLS-4$
+									+ FLD_ABUSE_ID_FOR_SHA + " = '" + hash_from_file + "' WHERE ID = 'VERSION';"); //$NON-NLS-1$ $NON-NLS-2$
+								logger.info("Imported {} interactions setting date {} sha {}", //$NON-NLS-1$
+									importerInteractionsCreated, today, hash_from_file); //$		}
+							} catch (IOException e) {
+								info = String.format(
+									"Import aborted after %d interactions with %d failures ", //$NON-NLS-1$
+									importerInteractionsCreated, notImported);
+								logger.error(info);
+								Status status = new Status(Status.ERROR, "ch.elexis.core.ui",
+									Status.ERROR, info, null);
+								ErrorDialog.openError(
+									Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(),
+									"Unable to import", null, status);
 								monitor.done();
+								return;
 							}
-							return;
 						}
-						monitor.done();
-					}
-				}, null);
-		} catch (Throwable ex) {
-			ExHandler.handle(ex);
-		}
-		getShaFromFile();
-		getDefaultConnection().exec(
-			"UPDATE " + TABLENAME + " SET " + FLD_ABUSE_ID_FOR_LAST_PARSED + " = '" + today + "', " //$NON-NLS-1$ $NON-NLS-2$ $NON-NLS-3$ $NON-NLS-4$
-				+ FLD_ABUSE_ID_FOR_SHA + " = '" + hash_from_file + "' WHERE ID = 'VERSION';"); //$NON-NLS-1$ $NON-NLS-2$
-		logger.info("Imported {} interactions setting date {} sha {}", importerInteractionsCreated, //$NON-NLS-1$
-			today, hash_from_file); //$
+					});
+				} catch (InvocationTargetException | InterruptedException e) {
+					String info =
+						String.format("Import aborted after %d interactions with %d failures ", //$NON-NLS-1$
+							importerInteractionsCreated, notImported);
+					logger.error(info);
+					Status status =
+						new Status(Status.ERROR, "ch.elexis.core i", Status.ERROR, info, null);
+					ErrorDialog.openError(
+						Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(),
+						"Unable to import", null, status);
+					return;
+				}
+			}
+		});
 	}
 }
