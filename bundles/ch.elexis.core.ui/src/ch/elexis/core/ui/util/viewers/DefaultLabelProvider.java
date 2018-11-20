@@ -22,7 +22,9 @@ import ch.elexis.data.PersistentObject;
  * Defaultimplementation des Labelproviders. Verwendet die getLabel() Methode von PersistentObject.
  * 
  * @author Gerry
+ * @Deprecated use {@link PersistentObjectLabelProvider#getInstance()}
  */
+@Deprecated
 public class DefaultLabelProvider extends LabelProvider implements ITableLabelProvider {
 	
 	public Image getColumnImage(Object element, int columnIndex){

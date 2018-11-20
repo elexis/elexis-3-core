@@ -13,11 +13,7 @@
 
 package ch.elexis.core.application.advisors;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IPerspectiveRegistry;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
@@ -27,14 +23,12 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
 import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.UiResourceConstants;
-import ch.elexis.data.Reminder;
 import ch.rgw.tools.ExHandler;
 
 /**
@@ -73,30 +67,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	public IAdaptable getDefaultPageInput(){
 		return super.getDefaultPageInput();
 	}
-	
-	@Override
-	public void postStartup(){
-		List<Reminder> reminderList = Reminder.findToShowOnStartup(CoreHub.actUser);
-		if (reminderList.size() > 0) {
-			final StringBuilder sb = new StringBuilder();
-			for (Reminder reminder : reminderList) {
-				sb.append(reminder.getKontakt().getLabel() + ", Id["
-					+ reminder.getKontakt().getPatCode() + "]:\n");
-				sb.append(reminder.getSubject() + "\n" + reminder.getMessage()).append("\n\n");	
-			}
-			
-			// must be called inside display thread
-			Display.getDefault().asyncExec(new Runnable() {
-				@Override
-				public void run(){
-					MessageDialog.openInformation(
-						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						Messages.ReminderView_importantRemindersOnLogin, sb.toString());
-				}
-			});
-		}
-	}
-	
+		
 	@Override
 	public String getInitialWindowPerspectiveId(){
 		String initPerspective = cod.getInitialPerspective();

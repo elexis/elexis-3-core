@@ -563,6 +563,7 @@ public class Messages extends NLS {
 	public static String EditAUFDialog_percent;
 	public static String EditAUFDialog_reason;
 	public static String EditAUFDialog_until;
+	public static String ReminderListSelectionDialog_SelectToClose;
 	public static String EditReminderDialog_actionwhenDue;
 	public static String EditReminderDialog_all;
 	public static String EditReminderDialog_assigTo;
