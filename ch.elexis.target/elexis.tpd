@@ -179,7 +179,7 @@ location "http://download.elexis.info/elexis/master/p2/target/" {
 	com.ibm.icu.4j 2.6.1
 	com.lowagie.itext 2.0.8
 	com.lowagie.itext.source 2.0.8
-	com.mysql.jdbc 5.1.21
+	com.mysql.cj
 	com.sun.jna 3.0.9
 	com.sun.jna.source 3.0.9
 	com.thoughtworks.xstream 1.2.2
