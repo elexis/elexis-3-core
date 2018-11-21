@@ -22,7 +22,7 @@ addons:
   postgresql: "9.6"
 
 services:
-#  - mysql
+  - mysql
 
 env:
   global:
@@ -33,15 +33,20 @@ env:
 before_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
-  - sleep 3 # give xvfb some time to start
   - java -version
   # mysql fails currently with fist error in ch.elexis.core.data.tests
   # testDatabaseUpdatedToRequiredVersion[mysql 5.1](ch.elexis.data.Test_DBInitialState)  Time elapsed: 0.001 sec  <<< ERROR!
   # ch.rgw.tools.JdbcLinkSyntaxException: Fehler bei: INSERT INTO traces VALUES(1542366761342, 'travis-job-76cef79e-5c90-44d8-a68f-ab...', 'ut_user_h2', 'W globalCfg key [ElexisVersion] => value [3.7.0.qualifier]') (SQLState: 42S02)
-#  - mysql --version
-#  - mysql -e 'SHOW VARIABLES LIKE "%version%";'
-#  - mysql -e 'CREATE DATABASE unittests;'
-#  - mysql -e "grant all on unittests.* to elexisTest@localhost identified by 'elexisTest';"
+  - mysql -e 'SHOW VARIABLES LIKE "%case%";'
+  - echo "[mysqld]" | sudo tee /etc/mysql/mysql.conf.d/lowercase.cnf
+  - echo "lower_case_table_names = 1" | sudo tee --append /etc/mysql/mysql.conf.d/lowercase.cnf
+  - cat  /etc/mysql/mysql.conf.d/lowercase.cnf
+  - sudo service mysql restart
+  - mysql --version
+  - mysql -e 'SHOW VARIABLES LIKE "%case%";'
+  - mysql -e 'SHOW VARIABLES LIKE "%version%";'
+  - mysql -e 'CREATE DATABASE unittests;'
+  - mysql -e "grant all on unittests.* to elexisTest@localhost identified by 'elexisTest';"
   - psql --version
   - psql -c "create user elexisTest with UNENCRYPTED password 'elexisTest';" -U postgres
   - psql -c "create database unittests;" -U postgres
