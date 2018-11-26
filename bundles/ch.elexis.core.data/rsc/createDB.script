@@ -113,6 +113,7 @@ CREATE TABLE BEHANDLUNGEN(
 	ID				VARCHAR(25) primary key,		# UUID
 	lastupdate      BIGINT,                         # timestamp
 	deleted			CHAR(1) default '0',			# indicates that this object is marked deleted
+	billable        CHAR(1) default '1',			# indicates that this object is billable
 	FallID			VARCHAR(25),					# foreign key from FAELLE -> case we belong to
 	MandantID		VARCHAR(25),					# foreign key from KONTAKT -> mandator
 	RechnungsID		VARCHAR(25),					# foreign key from RECHNUGNEN -> bill

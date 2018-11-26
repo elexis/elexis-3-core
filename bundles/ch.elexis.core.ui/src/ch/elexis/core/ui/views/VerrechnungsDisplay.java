@@ -19,6 +19,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -130,6 +131,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		}
 	};
 	private TableColumnLayout tableLayout;
+	private ToolBarManager toolBarManager;
 	
 	public VerrechnungsDisplay(final IWorkbenchPage p, Composite parent, int style){
 		super(parent, style);
@@ -140,7 +142,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		billedLabel = new Label(this, SWT.NONE);
 		billedLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
 		
-		ToolBarManager toolBarManager = new ToolBarManager(SWT.RIGHT);
+		toolBarManager = new ToolBarManager(SWT.RIGHT);
 		toolBarManager.add(new Action() {
 			@Override
 			public ImageDescriptor getImageDescriptor(){
@@ -162,6 +164,49 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 							ex, ElexisStatus.LOG_ERRORS);
 					StatusManager.getManager().handle(status, StatusManager.SHOW);
 				}
+			}
+			
+			@Override
+			public boolean isEnabled(){
+				return actEncounter != null && actEncounter.isBillable();
+			}
+		});
+		toolBarManager.add(new Action("", Action.AS_CHECK_BOX) {
+			
+			@Override
+			public ImageDescriptor getImageDescriptor(){
+				return Images.IMG_NOBILLING.getImageDescriptor();
+			}
+			
+			@Override
+			public String getText(){
+				return "keine Verrechnung";
+			}
+			
+			@Override
+			public void run(){
+				actEncounter.setBillable(!actEncounter.isBillable());
+				updateUi();
+			}
+			
+			@Override
+			public boolean isChecked(){
+				if (actEncounter != null) {
+					return !actEncounter.isBillable();
+				}
+				return false;
+			}
+			
+			@Override
+			public boolean isEnabled(){
+				return actEncounter != null && !isBilled(actEncounter);
+			}
+			
+			private boolean isBilled(Konsultation encounter){
+				if (encounter != null) {
+					return encounter.getRechnung() != null;
+				}
+				return false;
 			}
 		});
 		ToolBar toolBar = toolBarManager.createControl(this);
@@ -470,6 +515,17 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		actEncounter = encounter;
 		viewer.setInput(encounter.getLeistungen());
 		updateBilledLabel();
+		updateUi();
+	}
+	
+	private void updateUi(){
+		if (toolBarManager != null) {
+			for (IContributionItem contribution : toolBarManager.getItems()) {
+				contribution.update();
+			}
+			toolBarManager.update(true);
+		}
+		viewer.getTable().setEnabled(actEncounter != null && actEncounter.isBillable());
 	}
 	
 	/**

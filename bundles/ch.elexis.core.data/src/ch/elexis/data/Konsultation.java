@@ -65,6 +65,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	public static final String FLD_CASE_ID = "FallID";
 	public static final String FLD_MANDATOR_ID = "MandantID";
 	public static final String FLD_JOINT_DIAGNOSEN = "Diagnosen";
+	public static final String FLD_BILLABLE = "billable";
 	
 	private static final String TABLENAME = "BEHANDLUNGEN";
 	volatile int actEntry;
@@ -76,7 +77,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	static {
 		addMapping(TABLENAME, FLD_MANDATOR_ID, PersistentObject.DATE_COMPOUND, FLD_CASE_ID,
 			FLD_BILL_ID, "Eintrag=S:V:Eintrag",
-			FLD_JOINT_DIAGNOSEN + "=JOINT:BehandlungsID:DiagnoseID:BEHDL_DG_JOINT");
+			FLD_JOINT_DIAGNOSEN + "=JOINT:BehandlungsID:DiagnoseID:BEHDL_DG_JOINT", FLD_BILLABLE);
 	}
 	
 	protected Konsultation(String id){
@@ -1170,5 +1171,27 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			return clone;
 		}
 		return null;
+	}
+	
+	/**
+	 * Should this {@link Konsultation} be considered to be billed.
+	 * 
+	 * @return
+	 */
+	public boolean isBillable(){
+		return get(FLD_BILLABLE).equals("1");
+	}
+	
+	/**
+	 * Set value if this {@link Konsultation} should be considered for billing.
+	 * 
+	 * @param value
+	 */
+	public void setBillable(boolean value){
+		if (value) {
+			set(FLD_BILLABLE, "1");
+		} else {
+			set(FLD_BILLABLE, "0");
+		}
 	}
 }

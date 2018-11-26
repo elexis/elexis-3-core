@@ -64,6 +64,8 @@ import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
 
+import com.tiff.common.ui.datepicker.DatePickerCombo;
+
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -99,8 +101,6 @@ import ch.rgw.tools.LazyTree;
 import ch.rgw.tools.LazyTree.LazyTreeListener;
 import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.Tree;
-
-import com.tiff.common.ui.datepicker.DatePickerCombo;
 
 /**
  * Anzeige aller Behandlungen, für die noch keine Rechnung erstellt wurde. Die Behandlungen werden
@@ -336,7 +336,7 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 								monitor.subTask(Messages.KonsZumVerrechnenView_databaseRequest); //$NON-NLS-1$
 								String sql =
 									"SELECT distinct PATIENTID FROM FAELLE " + //$NON-NLS-1$
-										"JOIN BEHANDLUNGEN ON BEHANDLUNGEN.FALLID=FAELLE.ID WHERE BEHANDLUNGEN.deleted='0' AND BEHANDLUNGEN.RECHNUNGSID is null "; //$NON-NLS-1$
+								"JOIN BEHANDLUNGEN ON BEHANDLUNGEN.FALLID=FAELLE.ID WHERE BEHANDLUNGEN.deleted='0' AND BEHANDLUNGEN.billable='1' AND BEHANDLUNGEN.RECHNUNGSID is null "; //$NON-NLS-1$
 								if (CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_GLOBAL) == false) {
 									sql += "AND BEHANDLUNGEN.MANDANTID=" //$NON-NLS-1$
 										+ CoreHub.actMandant.getWrappedId();
@@ -370,7 +370,7 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 					if (cont instanceof Patient) {
 						sql =
 							"SELECT distinct FAELLE.ID FROM FAELLE join BEHANDLUNGEN ON BEHANDLUNGEN.FALLID=FAELLE.ID " + //$NON-NLS-1$
-								"WHERE BEHANDLUNGEN.RECHNUNGSID is null AND BEHANDLUNGEN.DELETED='0' AND FAELLE.PATIENTID=" //$NON-NLS-1$
+								"WHERE BEHANDLUNGEN.RECHNUNGSID is null AND BEHANDLUNGEN.DELETED='0' AND BEHANDLUNGEN.billable='1' AND FAELLE.PATIENTID="
 								+ cont.getWrappedId(); //$NON-NLS-1$
 						if (CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_GLOBAL) == false) {
 							sql +=
@@ -386,7 +386,8 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 						}
 					} else if (cont instanceof Fall) {
 						sql =
-							"SELECT ID FROM BEHANDLUNGEN WHERE RECHNUNGSID is null AND deleted='0' AND FALLID=" + cont.getWrappedId(); //$NON-NLS-1$
+							"SELECT ID FROM BEHANDLUNGEN WHERE RECHNUNGSID is null AND deleted='0' AND billable='1' AND FALLID=" //$NON-NLS-1$
+								+ cont.getWrappedId();
 						if (CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_GLOBAL) == false) {
 							sql += " AND MANDANTID=" + CoreHub.actMandant.getWrappedId(); //$NON-NLS-1$
 						}
