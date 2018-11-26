@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Oxygen.3 for Elexis" sequenceNumber="1542789160">
+<target name="Oxygen.3 for Elexis" sequenceNumber="1543224488">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.swt.nl_de" version="4.7.0.v20180815042455"/>
@@ -25,6 +25,9 @@
       <unit id="org.eclipse.ui.views.nl_de" version="4.7.0.v20180815042455"/>
       <unit id="org.eclipse.ui.views.nl_fr" version="4.7.0.v20180815042455"/>
       <unit id="org.eclipse.ui.views.nl_it" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.equinox.p2.ui.nl_de" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.equinox.p2.ui.nl_fr" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.equinox.p2.ui.nl_it" version="4.7.0.v20180815042455"/>
       <repository location="http://download.eclipse.org/technology/babel/update-site/R0.16.0/oxygen"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
@@ -102,7 +105,7 @@
       <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180206163158/repository/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="info.elexis.server.hapi.fhir" version="3.4.0.201811200851"/>
+      <unit id="info.elexis.server.hapi.fhir" version="3.4.0.201811211226"/>
       <repository location="http://download.elexis.info/elexis-server/master/p2/elexis-server"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
