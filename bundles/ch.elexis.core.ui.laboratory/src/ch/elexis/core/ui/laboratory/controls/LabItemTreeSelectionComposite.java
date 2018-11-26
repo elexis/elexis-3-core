@@ -195,7 +195,9 @@ public class LabItemTreeSelectionComposite extends Composite {
 	private Hashtable<String, Group> loadItems(){
 		Hashtable<String, Group> allGroups = new Hashtable<String, Group>();
 		
-		Query<LabItem> query = new Query<LabItem>(LabItem.class);
+		Query<LabItem> query = new Query<LabItem>(LabItem.class, "LABORITEMS", false, new String[] {
+			LabItem.GROUP, LabItem.SHORTNAME, LabItem.TITLE
+		});
 		List<LabItem> lItems = query.execute();
 		if (lItems == null) {
 			// error empty map
