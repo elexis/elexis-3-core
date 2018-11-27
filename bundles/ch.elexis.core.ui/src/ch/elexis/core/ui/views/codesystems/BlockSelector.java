@@ -40,7 +40,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.dialogs.SelectionDialog;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
@@ -49,6 +51,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.ui.actions.ToggleVerrechenbarFavoriteAction;
 import ch.elexis.core.ui.commands.ExportiereBloeckeCommand;
+import ch.elexis.core.ui.dialogs.BlockSelektor;
 import ch.elexis.core.ui.dialogs.base.InputDialog;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.selectors.FieldDescriptor;
@@ -395,6 +398,11 @@ public class BlockSelector extends CodeSelectorFactory {
 			
 		}
 	};
+	
+	@Override
+	public SelectionDialog getSelectionDialog(Shell parent, Object data){
+		return new BlockSelektor(parent, data);
+	}
 	
 	@Override
 	public String getCodeSystemName(){
