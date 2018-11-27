@@ -28,7 +28,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -47,9 +46,9 @@ public class DBConnection implements Serializable {
 	@XmlType
 	@XmlEnum(String.class)
 	public enum DBType {
-			@XmlEnumValue("MYSQL") MySQL("com.mysql.jdbc.Driver", "mySQl", "3306"),
-			@XmlEnumValue("PostgreSQL") PostgreSQL("org.postgresql.Driver", "PostgreSQL", "5432"),
-			@XmlEnumValue("H2") H2("org.h2.Driver", "H2", "");
+			MySQL("com.mysql.jdbc.Driver", "mySQl", "3306"),
+			PostgreSQL("org.postgresql.Driver", "PostgreSQL", "5432"),
+			H2("org.h2.Driver", "H2", "");
 			
 		public final String driverName;
 		public final String dbType;
@@ -71,6 +70,7 @@ public class DBConnection implements Serializable {
 		}
 	}
 	
+	@XmlAttribute
 	public DBType rdbmsType;
 	@XmlAttribute
 	public String hostName;
@@ -92,18 +92,20 @@ public class DBConnection implements Serializable {
 	 * 
 	 * @return
 	 */
-	public boolean allValuesSet(){
+	public boolean allValuesSet() {
 		boolean result = true;
-		
-		result = (rdbmsType != null);
-		
-		if (!DBType.H2.equals(rdbmsType)) {
-			result = (hostName != null);
+		if (rdbmsType == null) {
+			result = false;
 		}
-		
-		result = (databaseName != null);
-		result = (username != null);
-		
+		if (!DBType.H2.equals(rdbmsType) && StringUtils.isBlank(hostName)) {
+			result = false;
+		}
+		if (StringUtils.isBlank(databaseName)) {
+			result = false;
+		}
+		if (StringUtils.isBlank(username)) {
+			result = false;
+		}
 		return result;
 	}
 	
