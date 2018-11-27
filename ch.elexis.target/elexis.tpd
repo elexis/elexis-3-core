@@ -32,6 +32,9 @@ location "http://download.elexis.info/elexis/master/p2/target/" {
 	org.eclipse.ui.views.nl_de
 	org.eclipse.ui.views.nl_fr
 	org.eclipse.ui.views.nl_it
+	org.eclipse.equinox.p2.ui.nl_de
+	org.eclipse.equinox.p2.ui.nl_fr
+	org.eclipse.equinox.p2.ui.nl_it
 
 	ch.qos.logback.classic
 	ch.qos.logback.core
