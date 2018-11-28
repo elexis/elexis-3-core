@@ -25,6 +25,12 @@ public class TestDatabaseConnection extends DBConnection {
 	 *            if <code>true</code> db instance can be contacted via socket
 	 */
 	public TestDatabaseConnection(boolean asServer){
+		
+		rdbmsType = DBType.H2;
+		databaseName = "elexisTest";
+		username = "sa";
+		password = "";
+		
 		String testConnectionString = System.getProperty("elexis.test.db.connectionString");
 		if (testConnectionString != null) {
 			connectionString = testConnectionString;
@@ -40,10 +46,7 @@ public class TestDatabaseConnection extends DBConnection {
 		if (trace != null && "true".equalsIgnoreCase(trace)) {
 			connectionString += ";TRACE_LEVEL_SYSTEM_OUT=2";
 		}
-		rdbmsType = DBType.H2;
-		username = "sa";
-		password = "";
-		
+
 		if (asServer) {
 			Runtime.getRuntime().addShutdownHook(new Thread() {
 				public void run(){
