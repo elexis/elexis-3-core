@@ -213,7 +213,8 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	
 	/**
 	 * Get an instantiated list of {@link ICodeElement} instances referenced by this block,
-	 * non-resolvable elements are silently skipped.
+	 * non-resolvable elements are silently skipped. Use this method if the {@link Konsultation} is
+	 * selected in {@link ElexisEventDispatcher}.
 	 * 
 	 * @return a possibly empty list of ICodeElements
 	 */
@@ -227,6 +228,32 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 				for (String part : parts) {
 					Optional<ICodeElement> created =
 						service.createFromString(part, CodeElementServiceHolder.createContext());
+					created.ifPresent(c -> ret.add(c));
+				}
+			}
+		}
+		return ret;
+	}
+	
+	/**
+	 * Get an instantiated list of {@link ICodeElement} instances referenced by this block,
+	 * non-resolvable elements are silently skipped. The {@link Konsultation} parameter is used as
+	 * context for the {@link ICodeElementService}. Use this method if the {@link Konsultation} is
+	 * not the selected in {@link ElexisEventDispatcher}.
+	 * 
+	 * @param kons
+	 * @return a possibly empty list of ICodeElements
+	 */
+	public List<ICodeElement> getElements(Konsultation kons){
+		ICodeElementService service = CodeElementServiceHolder.getService();
+		List<ICodeElement> ret = new ArrayList<>();
+		if (service != null) {
+			String codeelements = get(FLD_CODEELEMENTS);
+			if (!codeelements.isEmpty()) {
+				String[] parts = codeelements.split("\\" + SEPARATOR);
+				for (String part : parts) {
+					Optional<ICodeElement> created = service.createFromString(part,
+						CodeElementServiceHolder.createContext(kons));
 					created.ifPresent(c -> ret.add(c));
 				}
 			}
