@@ -28,6 +28,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -46,9 +47,9 @@ public class DBConnection implements Serializable {
 	@XmlType
 	@XmlEnum(String.class)
 	public enum DBType {
-			MySQL("com.mysql.jdbc.Driver", "mySQl", "3306"),
-			PostgreSQL("org.postgresql.Driver", "PostgreSQL", "5432"),
-			H2("org.h2.Driver", "H2", "");
+		@XmlEnumValue("MYSQL") MySQL("com.mysql.jdbc.Driver", "mySQl", "3306"),
+		@XmlEnumValue("PostgreSQL") PostgreSQL("org.postgresql.Driver", "PostgreSQL", "5432"),
+		@XmlEnumValue("H2") H2("org.h2.Driver", "H2", "");
 			
 		public final String driverName;
 		public final String dbType;
