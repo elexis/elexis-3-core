@@ -70,7 +70,6 @@ public class DBConnection implements Serializable {
 		}
 	}
 	
-	@XmlAttribute
 	public DBType rdbmsType;
 	@XmlAttribute
 	public String hostName;

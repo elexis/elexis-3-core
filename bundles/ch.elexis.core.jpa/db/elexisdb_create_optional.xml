@@ -56,9 +56,9 @@
 			<column name="PERFORMERID" type="VARCHAR(80)" />
 			<column name="ORIGINURI" type="VARCHAR(255)" />
 			<column name="DECIMALPLACE" type="VARCHAR(8)" />
-			<column name="FORMAT" type="VARCHAR(2147483647)" />
-			<column name="SCRIPT" type="VARCHAR(2147483647)" />
-			<column name="CONTENT" type="VARCHAR(2147483647)" />
+			<column name="FORMAT" type="CLOB" />
+			<column name="SCRIPT" type="CLOB" />
+			<column name="CONTENT" type="CLOB" />
 		</createTable>
 	</changeSet>
 	<changeSet author="thomas"
@@ -122,7 +122,7 @@
 			<column defaultValue="0" name="DELETED" type="CHAR(1)" />
 
 			<column name="PATIENTID" type="VARCHAR(80)" />
-			<column name="CONTENT" type="VARCHAR(2147483647)" />
+			<column name="CONTENT" type="CLOB" />
 		</createTable>
 	</changeSet>
 	<changeSet author="thomas"
@@ -159,7 +159,7 @@
 
 			<column name="PATIENTID" type="VARCHAR(80)" />
 			<column name="ENCOUNTERID" type="VARCHAR(80)" />
-			<column name="CONTENT" type="VARCHAR(2147483647)" />
+			<column name="CONTENT" type="CLOB" />
 		</createTable>
 	</changeSet>
 	<changeSet author="thomas"
@@ -208,7 +208,7 @@
 			<column defaultValue="0" name="DELETED" type="CHAR(1)" />
 
 			<column name="PATIENTID" type="VARCHAR(80)" />
-			<column name="CONTENT" type="VARCHAR(2147483647)" />
+			<column name="CONTENT" type="CLOB" />
 		</createTable>
 	</changeSet>
 	<changeSet author="thomas"
@@ -245,7 +245,7 @@
 			<column name="PATIENTID" type="VARCHAR(80)" />
 			<column name="MANDATORID" type="VARCHAR(80)" />
 			<column name="CONSULTATIONID" type="VARCHAR(80)" />
-			<column name="CONTENT" type="VARCHAR(2147483647)" />
+			<column name="CONTENT" type="CLOB" />
 		</createTable>
 	</changeSet>
 	<changeSet author="thomas"
@@ -295,7 +295,7 @@
 			<column defaultValue="0" name="DELETED" type="CHAR(1)" />
 
 			<column name="PATIENTID" type="VARCHAR(80)" />
-			<column name="CONTENT" type="VARCHAR(2147483647)" />
+			<column name="CONTENT" type="CLOB" />
 		</createTable>
 	</changeSet>
 	<changeSet author="thomas"
@@ -332,7 +332,7 @@
 
 			<column name="PATIENTID" type="VARCHAR(80)" />
 			<column name="ENCOUNTERID" type="VARCHAR(80)" />
-			<column name="CONTENT" type="VARCHAR(2147483647)" />
+			<column name="CONTENT" type="CLOB" />
 		</createTable>
 	</changeSet>
 	<changeSet author="thomas"
@@ -434,8 +434,8 @@
 			<column defaultValue="0" name="DELETED" type="CHAR(1)" />
 
 			<column name="CODE" type="VARCHAR(25)" />
-			<column name="DISPLAY" type="VARCHAR(2147483647)" />
-			<column name="MAPPED" type="VARCHAR(2147483647)" />
+			<column name="DISPLAY" type="CLOB" />
+			<column name="MAPPED" type="CLOB" />
 		</createTable>
 	</changeSet>
 	<changeSet author="thomas"
@@ -471,8 +471,8 @@
 			<column name="PARENT" type="VARCHAR(20)" />
 			<column name="CODE" type="VARCHAR(20)" />
 			<column name="TITLE" type="VARCHAR(80)" />
-			<column name="COMMENT" type="VARCHAR(2147483647)" />
-			<column name="EXTINFO" type="VARBINARY(2147483647)" />
+			<column name="COMMENT" type="CLOB" />
+			<column name="EXTINFO" type="BLOB" />
 		</createTable>
 	</changeSet>
 	<changeSet author="thomas"

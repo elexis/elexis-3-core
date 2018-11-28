@@ -11,8 +11,8 @@
             <column name="TAG" type="CHAR(8)"/>
             <column name="BEGINN" type="CHAR(4)"/>
             <column name="DAUER" type="CHAR(4)"/>
-            <column name="GRUND" type="VARCHAR(2147483647)"/>
-            <column name="STATUSHISTORY" type="VARCHAR(2147483647)"/>
+            <column name="GRUND" type="CLOB"/>
+            <column name="STATUSHISTORY" type="CLOB"/>
             <column name="TERMINTYP" type="VARCHAR(50)"/>
             <column name="TERMINSTATUS" type="VARCHAR(50)"/>
             <column name="ERSTELLTVON" type="VARCHAR(25)"/>
@@ -21,7 +21,7 @@
             <column defaultValueNumeric="0" name="PALMID" type="INT"/>
             <column name="FLAGS" type="VARCHAR(10)"/>
             <column defaultValue="0" name="DELETED" type="CHAR(2)"/>
-            <column name="EXTENSION" type="VARCHAR(2147483647)"/>
+            <column name="EXTENSION" type="CLOB"/>
             <column name="LINKGROUP" type="VARCHAR(50)"/>
             <column name="PRIORITY" type="CHAR(1)"/>
             <column name="CASETYPE" type="CHAR(1)"/>
@@ -53,7 +53,7 @@
             <column name="LASTIMPORT" type="CHAR(8)"/>
             <column name="VALIDFROM" type="CHAR(8)"/>
             <column name="VALIDTO" type="CHAR(8)"/>
-            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+            <column name="EXTINFO" type="BLOB"/>
             <column name="ATC_CODE" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
@@ -81,7 +81,7 @@
             <column name="IKSCAT" type="CHAR(1)"/>
             <column name="LIMITATION" type="CHAR(1)"/>
             <column name="LIMITIATION_PTS" type="CHAR(4)"/>
-            <column name="LIMITATION_TXT" type="VARCHAR(2147483647)"/>
+            <column name="LIMITATION_TXT" type="CLOB"/>
             <column name="GENERIC_TYPE" type="CHAR(1)"/>
             <column name="HAS_GENERIC" type="CHAR(1)"/>
             <column name="LPPV" type="CHAR(1)"/>
@@ -91,14 +91,14 @@
             <column name="VACCINE" type="CHAR(1)"/>
             <column name="VERKAUFSEINHEIT" type="VARCHAR(4)"/>
             <column name="PRODNO" type="VARCHAR(10)"/>
-            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+            <column name="EXTINFO" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-4">
         <createTable tableName="ARTIKEL_DETAILS">
             <column name="ARTICLE_ID" type="VARCHAR(25)"/>
-            <column name="NOTES" type="VARCHAR(2147483647)"/>
-            <column name="IMAGE" type="VARBINARY(2147483647)"/>
+            <column name="NOTES" type="CLOB"/>
+            <column name="IMAGE" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-5">
@@ -109,7 +109,7 @@
             <column name="LASTUPDATE" type="BIGINT"/>
             <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
             <column name="CODE" type="VARCHAR(128)"/>
-            <column name="LONGNAME" type="VARCHAR(2147483647)"/>
+            <column name="LONGNAME" type="CLOB"/>
             <column name="SHORTNAME" type="VARCHAR(255)"/>
             <column name="CLASS" type="VARCHAR(128)"/>
             <column name="UNIT" type="VARCHAR(128)"/>
@@ -145,7 +145,7 @@
             <column name="DATE" type="CHAR(8)"/>
             <column name="TIME" type="CHAR(4)"/>
             <column name="AUTHORID" type="VARCHAR(25)"/>
-            <column name="MESSAGE" type="VARCHAR(2147483647)"/>
+            <column name="MESSAGE" type="CLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-8">
@@ -161,7 +161,7 @@
             <column name="DATUM" type="CHAR(8)"/>
             <column name="DIAGNOSEN" type="VARCHAR(25)"/>
             <column name="LEISTUNGEN" type="VARCHAR(25)"/>
-            <column name="EINTRAG" type="VARBINARY(2147483647)"/>
+            <column name="EINTRAG" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-9">
@@ -185,7 +185,7 @@
             <column defaultValueComputed="NULL" name="LASTUPDATE" type="BIGINT"/>
             <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
             <column name="DATUM" type="CHAR(8)"/>
-            <column name="CONTENTS" type="VARBINARY(2147483647)"/>
+            <column name="CONTENTS" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-11">
@@ -228,8 +228,8 @@
             <column name="PATIENTID" type="VARCHAR(25)"/>
             <column name="TYP" type="VARCHAR(30)"/>
             <column name="MIMETYPE" type="VARCHAR(80)"/>
-            <column name="PATH" type="VARCHAR(2147483647)"/>
-            <column name="NOTE" type="VARCHAR(2147483647)"/>
+            <column name="PATH" type="CLOB"/>
+            <column name="NOTE" type="CLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-13">
@@ -248,7 +248,7 @@
             <column name="SUBSYSTEM" type="VARCHAR(25)"/>
             <column name="VALID_FROM" type="CHAR(8)"/>
             <column name="VALID_UNTIL" type="CHAR(8)"/>
-            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+            <column name="EXTINFO" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-14">
@@ -258,7 +258,7 @@
             </column>
             <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
             <column name="KURZ" type="VARCHAR(80)"/>
-            <column name="MSG" type="VARCHAR(2147483647)"/>
+            <column name="MSG" type="CLOB"/>
             <column defaultValueNumeric="0" name="LASTUPDATE" type="BIGINT"/>
         </createTable>
     </changeSet>
@@ -272,7 +272,7 @@
             <column name="CHAPTER" type="VARCHAR(255)"/>
             <column name="CODE" type="VARCHAR(16)"/>
             <column name="CODETEXT" type="VARCHAR(255)"/>
-            <column name="DESCRIPTION" type="VARCHAR(2147483647)"/>
+            <column name="DESCRIPTION" type="CLOB"/>
             <column name="FIXEDVALUE" type="VARCHAR(16)"/>
             <column name="VALIDFROM" type="CHAR(8)"/>
             <column name="VALIDTO" type="CHAR(8)"/>
@@ -290,7 +290,7 @@
             <column name="TP" type="CHAR(8)"/>
             <column name="ZIFFER" type="VARCHAR(6)"/>
             <column name="TITEL" type="VARCHAR(255)"/>
-            <column name="DESCRIPTION" type="VARCHAR(2147483647)"/>
+            <column name="DESCRIPTION" type="CLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-18">
@@ -303,8 +303,8 @@
             <column name="PARENT" type="VARCHAR(20)"/>
             <column name="CODE" type="VARCHAR(20)"/>
             <column name="TITLE" type="VARCHAR(80)"/>
-            <column name="COMMENT" type="VARCHAR(2147483647)"/>
-            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+            <column name="COMMENT" type="CLOB"/>
+            <column name="EXTINFO" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-19">
@@ -317,13 +317,13 @@
             <column name="COMPONENT" type="CHAR(2)"/>
             <column name="SHORT" type="VARCHAR(80)"/>
             <column name="SYNONYMS" type="VARCHAR(250)"/>
-            <column name="ICD10" type="VARCHAR(2147483647)"/>
-            <column name="TXT" type="VARCHAR(2147483647)"/>
-            <column name="CRITERIA" type="VARCHAR(2147483647)"/>
-            <column name="INCLUSION" type="VARCHAR(2147483647)"/>
-            <column name="EXCLUSION" type="VARCHAR(2147483647)"/>
-            <column name="CONSIDER" type="VARCHAR(2147483647)"/>
-            <column name="NOTE" type="VARCHAR(2147483647)"/>
+            <column name="ICD10" type="CLOB"/>
+            <column name="TXT" type="CLOB"/>
+            <column name="CRITERIA" type="CLOB"/>
+            <column name="INCLUSION" type="CLOB"/>
+            <column name="EXCLUSION" type="CLOB"/>
+            <column name="CONSIDER" type="CLOB"/>
+            <column name="NOTE" type="CLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-20">
@@ -336,7 +336,7 @@
             <column name="RFE" type="CHAR(4)"/>
             <column name="DIAG" type="CHAR(4)"/>
             <column name="PROC" type="CHAR(4)"/>
-            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+            <column name="EXTINFO" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-21">
@@ -349,7 +349,7 @@
             <column name="STARTDATE" type="VARCHAR(20)"/>
             <column name="NUMBER" type="VARCHAR(10)"/>
             <column defaultValue="1" name="STATUS" type="CHAR(1)"/>
-            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+            <column name="EXTINFO" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-22">
@@ -376,7 +376,7 @@
             <column name="DELAY_4TO5" type="VARCHAR(10)"/>
             <column name="DELAY_REP" type="VARCHAR(10)"/>
             <column name="RECOMMENDEDAGE" type="VARCHAR(10)"/>
-            <column name="REMARKS" type="VARCHAR(2147483647)"/>
+            <column name="REMARKS" type="CLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-24">
@@ -389,7 +389,7 @@
             <column name="ORIGIN" type="VARCHAR(25)"/>
             <column name="DESTINATION" type="VARCHAR(25)"/>
             <column name="DATETIME" type="CHAR(14)"/>
-            <column name="MSG" type="VARCHAR(2147483647)"/>
+            <column name="MSG" type="CLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-25">
@@ -400,10 +400,10 @@
             <column name="PARENT" type="VARCHAR(25)"/>
             <column name="TITLE" type="VARCHAR(80)"/>
             <column name="DATE" type="CHAR(8)"/>
-            <column name="CONTENTS" type="VARBINARY(2147483647)"/>
+            <column name="CONTENTS" type="BLOB"/>
             <column name="KEYWORDS" type="VARCHAR(255)"/>
             <column name="MIMETYPE" type="VARCHAR(80)"/>
-            <column name="REFS" type="VARCHAR(2147483647)"/>
+            <column name="REFS" type="CLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-26">
@@ -420,7 +420,7 @@
             <column name="MIMETYPE" type="VARCHAR(255)"/>
             <column name="KEYWORDS" type="VARCHAR(255)"/>
             <column name="PATH" type="VARCHAR(255)"/>
-            <column name="DOC" type="VARBINARY(2147483647)"/>
+            <column name="DOC" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-27">
@@ -439,7 +439,7 @@
             <column name="SUBSYSTEM" type="VARCHAR(25)"/>
             <column name="VALID_FROM" type="CHAR(8)"/>
             <column name="VALID_UNTIL" type="CHAR(8)"/>
-            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+            <column name="EXTINFO" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-28">
@@ -453,7 +453,7 @@
             <column name="CODE" type="VARCHAR(12)"/>
             <column name="TP" type="VARCHAR(10)"/>
             <column name="NAME" type="VARCHAR(255)"/>
-            <column name="LIMITATIO" type="VARCHAR(2147483647)"/>
+            <column name="LIMITATIO" type="CLOB"/>
             <column name="FACHBEREICH" type="VARCHAR(10)"/>
             <column name="PRAXISTYP" type="VARCHAR(2)"/>
             <column name="GUELTIGVON" type="CHAR(8)"/>
@@ -466,7 +466,7 @@
             <column name="PARAM" type="VARCHAR(80)">
                 <constraints primaryKey="true" primaryKeyName="CONSTRAINT_76"/>
             </column>
-            <column name="WERT" type="VARCHAR(2147483647)"/>
+            <column name="WERT" type="CLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-30">
@@ -479,7 +479,7 @@
             <column name="DATUM" type="CHAR(8)"/>
             <column name="PREFIX" type="VARCHAR(80)"/>
             <column name="TITLE" type="VARCHAR(80)"/>
-            <column name="BILD" type="VARBINARY(2147483647)"/>
+            <column name="BILD" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-31">
@@ -528,7 +528,7 @@
             <column name="PATIENTID" type="VARCHAR(25)"/>
             <column name="NAME" type="VARCHAR(80)"/>
             <column name="DATUM" type="CHAR(8)"/>
-            <column name="BEFUNDE" type="VARBINARY(2147483647)"/>
+            <column name="BEFUNDE" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-35">
@@ -579,7 +579,7 @@
             <column name="GRUND" type="VARCHAR(80)"/>
             <column name="GESETZ" type="VARCHAR(20)"/>
             <column name="STATUS" type="VARCHAR(80)"/>
-            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+            <column name="EXTINFO" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-39">
@@ -589,7 +589,7 @@
             </column>
             <column name="LASTUPDATE" type="BIGINT"/>
             <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
-            <column name="INHALT" type="VARBINARY(2147483647)"/>
+            <column name="INHALT" type="BLOB"/>
             <column name="DATUM" type="CHAR(8)"/>
         </createTable>
     </changeSet>
@@ -601,7 +601,7 @@
             <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
             <column name="DATUM" type="CHAR(8)"/>
             <column name="LASTUPDATE" type="BIGINT"/>
-            <column name="CONTENTS" type="VARBINARY(2147483647)"/>
+            <column name="CONTENTS" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-41">
@@ -640,9 +640,9 @@
             <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
             <column name="PARENT" type="VARCHAR(25)"/>
             <column name="ICDCODE" type="VARCHAR(10)"/>
-            <column name="ENCODED" type="VARCHAR(2147483647)"/>
-            <column name="ICDTXT" type="VARCHAR(2147483647)"/>
-            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+            <column name="ENCODED" type="CLOB"/>
+            <column name="ICDTXT" type="CLOB"/>
+            <column name="EXTINFO" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-45">
@@ -677,15 +677,15 @@
             <column name="WEBSITE" type="VARCHAR(255)"/>
             <column name="GRUPPE" type="VARCHAR(10)"/>
             <column name="PATIENTNR" type="VARCHAR(40)"/>
-            <column name="ANSCHRIFT" type="VARCHAR(2147483647)"/>
-            <column name="BEMERKUNG" type="VARCHAR(2147483647)"/>
-            <column name="DIAGNOSEN" type="VARBINARY(2147483647)"/>
-            <column name="PERSANAMNESE" type="VARBINARY(2147483647)"/>
-            <column name="SYSANAMNESE" type="VARBINARY(2147483647)"/>
-            <column name="FAMANAMNESE" type="VARBINARY(2147483647)"/>
-            <column name="RISIKEN" type="VARCHAR(2147483647)"/>
-            <column name="ALLERGIEN" type="VARCHAR(2147483647)"/>
-            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+            <column name="ANSCHRIFT" type="CLOB"/>
+            <column name="BEMERKUNG" type="CLOB"/>
+            <column name="DIAGNOSEN" type="BLOB"/>
+            <column name="PERSANAMNESE" type="BLOB"/>
+            <column name="SYSANAMNESE" type="BLOB"/>
+            <column name="FAMANAMNESE" type="BLOB"/>
+            <column name="RISIKEN" type="CLOB"/>
+            <column name="ALLERGIEN" type="CLOB"/>
+            <column name="EXTINFO" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-46">
@@ -733,7 +733,7 @@
             <column name="LASTUPDATE" type="BIGINT"/>
             <column name="GROUPID" type="VARCHAR(25)"/>
             <column name="ITEMID" type="VARCHAR(25)"/>
-            <column name="COMMENT" type="VARCHAR(2147483647)"/>
+            <column name="COMMENT" type="CLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-50">
@@ -793,8 +793,8 @@
             <column name="RESULTAT" type="VARCHAR(255)"/>
             <column name="FLAGS" type="VARCHAR(10)"/>
             <column name="ORIGIN" type="VARCHAR(30)"/>
-            <column name="KOMMENTAR" type="VARCHAR(2147483647)"/>
-            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+            <column name="KOMMENTAR" type="CLOB"/>
+            <column name="EXTINFO" type="BLOB"/>
             <column name="UNIT" type="VARCHAR(255)"/>
             <column name="ANALYSETIME" type="VARCHAR(24)"/>
             <column name="OBSERVATIONTIME" type="VARCHAR(24)"/>
@@ -823,7 +823,7 @@
             <column name="VK_PREIS" type="CHAR(8)"/>
             <column defaultValue="100" name="SCALE" type="CHAR(4)"/>
             <column defaultValue="100" name="SCALE2" type="CHAR(4)"/>
-            <column name="DETAIL" type="VARBINARY(2147483647)"/>
+            <column name="DETAIL" type="BLOB"/>
             <column name="USERID" type="VARCHAR(25)"/>
         </createTable>
     </changeSet>
@@ -836,9 +836,9 @@
             <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
             <column name="MANDANTID" type="VARCHAR(25)"/>
             <column name="NAME" type="VARCHAR(30)"/>
-            <column name="LEISTUNGEN" type="VARBINARY(2147483647)"/>
+            <column name="LEISTUNGEN" type="BLOB"/>
             <column name="MACRO" type="VARCHAR(30)"/>
-            <column name="CODEELEMENTS" type="VARCHAR(2147483647)"/>
+            <column name="CODEELEMENTS" type="CLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-55">
@@ -853,7 +853,7 @@
             <column name="TYP" type="VARCHAR(20)"/>
             <column name="USERID" type="VARCHAR(25)"/>
             <column name="STATION" type="VARCHAR(255)"/>
-            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+            <column name="EXTINFO" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-56">
@@ -867,7 +867,7 @@
             <column name="OBJECTTYPE" type="VARCHAR(80)"/>
             <column name="DATUM" type="CHAR(8)"/>
             <column name="OUTPUTTER" type="VARCHAR(80)"/>
-            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+            <column name="EXTINFO" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-57">
@@ -886,7 +886,7 @@
             <column name="DOSIS" type="VARCHAR(255)"/>
             <column name="ANZAHL" type="CHAR(3)"/>
             <column name="BEMERKUNG" type="VARCHAR(255)"/>
-            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+            <column name="EXTINFO" type="BLOB"/>
             <column name="PRESCTYPE" type="CHAR(2)"/>
             <column name="SORTORDER" type="CHAR(3)"/>
             <column name="PRESCDATE" type="CHAR(8)"/>
@@ -909,7 +909,7 @@
             <column name="RNDATUMBIS" type="CHAR(8)"/>
             <column name="BETRAG" type="CHAR(8)"/>
             <column name="STATUSDATUM" type="CHAR(8)"/>
-            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+            <column name="EXTINFO" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-59">
@@ -925,12 +925,12 @@
             <column name="DATEDUE" type="CHAR(8)"/>
             <column name="STATUS" type="VARCHAR(1)"/>
             <column name="TYP" type="VARCHAR(1)"/>
-            <column name="PARAMS" type="VARCHAR(2147483647)"/>
-            <column name="MESSAGE" type="VARCHAR(2147483647)"/>
+            <column name="PARAMS" type="CLOB"/>
+            <column name="MESSAGE" type="CLOB"/>
             <column name="PRIORITY" type="CHAR(1)"/>
             <column name="ACTIONTYPE" type="CHAR(2)"/>
             <column name="SUBJECT" type="VARCHAR(160)"/>
-            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+            <column name="EXTINFO" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-60">
@@ -957,7 +957,7 @@
             <column name="MANDANTID" type="VARCHAR(25)"/>
             <column name="BRIEFID" type="VARCHAR(25)"/>
             <column name="DATUM" type="CHAR(8)"/>
-            <column name="RPTXT" type="VARCHAR(2147483647)"/>
+            <column name="RPTXT" type="CLOB"/>
             <column name="RPZUSATZ" type="VARCHAR(80)"/>
         </createTable>
     </changeSet>
@@ -981,7 +981,7 @@
             </column>
             <column defaultValueComputed="NULL" name="LASTUPDATE" type="BIGINT"/>
             <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
-            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+            <column name="EXTINFO" type="BLOB"/>
             <column defaultValue="0" name="ISSYSTEMROLE" type="CHAR(1)"/>
         </createTable>
     </changeSet>
@@ -1011,7 +1011,7 @@
             <column name="OWNER" type="VARCHAR(25)"/>
             <column name="RESPONSIBLE" type="VARCHAR(25)"/>
             <column name="DRIVER_UUID" type="VARCHAR(64)"/>
-            <column name="DRIVER_CONFIG" type="VARCHAR(2147483647)"/>
+            <column name="DRIVER_CONFIG" type="CLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-66">
@@ -1077,9 +1077,9 @@
     <changeSet author="thomas (generated)" id="1527175239251-70">
         <createTable tableName="TARMED_EXTENSION">
             <column name="CODE" type="VARCHAR(32)"/>
-            <column name="LIMITS" type="VARBINARY(2147483647)"/>
-            <column name="MED_INTERPRET" type="VARCHAR(2147483647)"/>
-            <column name="TECH_INTERPRET" type="VARCHAR(2147483647)"/>
+            <column name="LIMITS" type="BLOB"/>
+            <column name="MED_INTERPRET" type="CLOB"/>
+            <column name="TECH_INTERPRET" type="CLOB"/>
             <column name="ID" type="VARCHAR(25)"/>
             <column name="LASTUPDATE" type="BIGINT"/>
             <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
@@ -1112,7 +1112,7 @@
             <column name="LASTUPDATE" type="BIGINT"/>
             <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
             <column name="GROUPNAME" type="VARCHAR(32)"/>
-            <column name="SERVICES" type="VARCHAR(2147483647)"/>
+            <column name="SERVICES" type="CLOB"/>
             <column name="LAW" type="VARCHAR(3)"/>
             <column name="VALIDFROM" type="CHAR(8)"/>
             <column name="VALIDTO" type="CHAR(8)"/>
@@ -1123,7 +1123,7 @@
             <column name="LOGTIME" type="BIGINT"/>
             <column name="WORKSTATION" type="VARCHAR(40)"/>
             <column name="USERNAME" type="VARCHAR(30)"/>
-            <column name="ACTION" type="VARCHAR(2147483647)"/>
+            <column name="ACTION" type="CLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-73">
@@ -1135,7 +1135,7 @@
             <column name="PARAM" type="VARCHAR(80)">
                 <constraints primaryKey="true" primaryKeyName="CONSTRAINT_9"/>
             </column>
-            <column name="VALUE" type="VARCHAR(2147483647)"/>
+            <column name="VALUE" type="CLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-74">
@@ -1150,10 +1150,10 @@
             <column name="SALT" type="VARCHAR(64)"/>
             <column defaultValue="1" name="IS_ACTIVE" type="CHAR(1)"/>
             <column defaultValue="0" name="IS_ADMINISTRATOR" type="CHAR(1)"/>
-            <column name="KEYSTORE" type="VARCHAR(2147483647)"/>
+            <column name="KEYSTORE" type="CLOB"/>
             <column name="TOTP" type="CHAR(16)"/>
             <column name="ALLOW_EXTERNAL" type="CHAR(1)"/>
-            <column name="EXTINFO" type="VARBINARY(2147483647)"/>
+            <column name="EXTINFO" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-75">
@@ -1223,7 +1223,7 @@
             <column name="ORT" type="VARCHAR(255)"/>
             <column name="LAND" type="CHAR(3)"/>
             <column defaultValue="0" name="TYP" type="CHAR(4)"/>
-            <column name="ANSCHRIFT" type="VARCHAR(2147483647)"/>
+            <column name="ANSCHRIFT" type="CLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-80">
@@ -1780,38 +1780,28 @@
         <createView fullDefinition="false" remarks="" viewName="RIGHTS_PER_ROLE">SELECT
     R.ID AS ROLE_ID,
     RI.ID AS RIGHT_ID
-FROM PUBLIC.ROLE R
-    
-LEFT OUTER JOIN PUBLIC.ROLE_RIGHT_JOINT RRJ
-    /* PUBLIC.ROLE_RIGHT_JOINT.tableScan */
-    ON R.ID = RRJ.ROLE_ID
-LEFT OUTER JOIN PUBLIC.RIGHT_ RI
-    /* PUBLIC.PRIMARY_KEY_90: ID = RRJ.ID */
-    ON RRJ.ID = RI.ID
-ORDER BY 1
-/* index sorted */</createView>
+	FROM ROLE R
+    LEFT JOIN ROLE_RIGHT_JOINT RRJ
+   		ON R.ID = RRJ.ROLE_ID
+	LEFT JOIN RIGHT_ RI
+    	ON RRJ.ID = RI.ID
+	ORDER BY R.ID</createView>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-195">
         <createView fullDefinition="false" remarks="" viewName="RIGHTS_PER_USER">SELECT
     U.ID AS USER_ID,
     RI.ID AS RIGHT_ID,
     RI.NAME AS RIGHT_NAME
-FROM PUBLIC.USER_ U
-    
-LEFT OUTER JOIN PUBLIC.USER_ROLE_JOINT URJ
-    /* PUBLIC.USER_ROLE_JOINT.tableScan */
-    ON U.ID = URJ.USER_ID
-LEFT OUTER JOIN PUBLIC.ROLE R
-    /* PUBLIC.PRIMARY_KEY_26: ID = URJ.ID */
-    ON URJ.ID = R.ID
-LEFT OUTER JOIN PUBLIC.ROLE_RIGHT_JOINT RRJ
-    /* PUBLIC.ROLE_RIGHT_JOINT.tableScan */
-    ON R.ID = RRJ.ROLE_ID
-LEFT OUTER JOIN PUBLIC.RIGHT_ RI
-    /* PUBLIC.PRIMARY_KEY_90: ID = RRJ.ID */
-    ON RRJ.ID = RI.ID
-ORDER BY 1
-/* index sorted */</createView>
+	FROM USER_ U
+	LEFT JOIN USER_ROLE_JOINT URJ
+    	ON U.ID = URJ.USER_ID
+	LEFT JOIN ROLE R
+    	ON URJ.ID = R.ID
+	LEFT JOIN ROLE_RIGHT_JOINT RRJ
+    	ON R.ID = RRJ.ROLE_ID
+	LEFT JOIN RIGHT_ RI
+    	ON RRJ.ID = RI.ID
+	ORDER BY U.ID</createView>
     </changeSet>
 	<changeSet author="marco" id="1539339922158-196">
 		<insert tableName="config">
