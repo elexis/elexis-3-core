@@ -314,7 +314,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			cod.requestDatabaseConnectionConfiguration();
 			MessageEvent.fireInformation("Datenbankverbindung geändert",
 				"Bitte starten Sie Elexis erneut");
-			System.exit(-1);
+			System.exit(0);
 		}
 		
 		try {
