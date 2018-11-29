@@ -307,16 +307,29 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					Patient p = (Patient) po;
 					String result = "";
 					if (p.getStammarzt() != null && p.getStammarzt().exists()) {
-						result = p.getStammarzt().getLabel(true);
-						ltf.setTooltipText(p.getStammarzt().getLabel());
+						Kontakt stammarzt = p.getStammarzt();
+						if (stammarzt.istPerson()) {
+							String[] labels = stammarzt.get(true, Kontakt.FLD_NAME1,
+								Kontakt.FLD_NAME2, Person.TITLE);
+							result = labels[2] + StringConstants.SPACE + labels[0]
+								+ StringConstants.SPACE + labels[1];
+						} else {
+							result = stammarzt.getLabel(true);
+						}
+						
+						String telephoneLabel = stammarzt.getTelephoneLabel();
+						String label = stammarzt.getLabel()
+							+ ((telephoneLabel.length() > 0) ? " (" + telephoneLabel + ")" : "");
+						ltf.setTooltipText(label);
 					} else {
 						ltf.setTooltipText(null);
 					}
 					ltf.setText(result);
-					
 				}
 				
 				public void reloadContent(PersistentObject po, InputData ltf){
+					Patient patient = (Patient) po;
+					
 					if(bLocked) {
 						return;
 					}
@@ -327,13 +340,12 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					if (ks.open() == Dialog.OK) {
 						Object contactSel = ks.getSelection();
 						if (contactSel == null) {
-							((Patient) po).removeStammarzt();
-							ltf.setText("");
+							patient.removeStammarzt();
 						} else {
 							Kontakt k = (Kontakt) contactSel;
-							((Patient) po).setStammarzt(k);
-							ltf.setText(k.getLabel(true));
+							patient.setStammarzt(k);
 						}
+						displayContent(patient, ltf);
 					}
 				}
 			}));
