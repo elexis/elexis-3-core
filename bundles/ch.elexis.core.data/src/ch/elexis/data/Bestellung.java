@@ -74,6 +74,17 @@ public class Bestellung extends PersistentObject implements IOrder {
 		return addBestellungEntry(((Artikel) article), ((Stock) stock), ((Kontakt) provider), num);
 	}
 	
+	/**
+	 * Adds an order entry to this
+	 * 
+	 * @param article
+	 * @param stock
+	 * @param provider
+	 * @param num
+	 * @return
+	 * @since 3.7 num supports negative values, if the resulting sum reaches <= 0 the entry is
+	 *        deleted
+	 */
 	public BestellungEntry addBestellungEntry(Artikel article, Stock stock, Kontakt provider,
 		int num){
 		
@@ -92,8 +103,13 @@ public class Bestellung extends PersistentObject implements IOrder {
 		if (i != null) {
 			int count = i.getCount();
 			count = count += num;
-			i.setCount(count);
-		} else {
+			if (count <= 0) {
+				i.removeFromDatabase();
+			} else {
+				i.setCount(count);
+			}
+
+		} else if (num > 0) {
 			i = new BestellungEntry(this, article, stock, provider, num);
 		}
 		return i;
@@ -167,7 +183,7 @@ public class Bestellung extends PersistentObject implements IOrder {
 		return true;
 	}
 	
-	public TimeTool getTime() {
+	public TimeTool getTime(){
 		TimeTool ret = new TimeTool();
 		try {
 			String[] i = getId().split(":"); //$NON-NLS-1$

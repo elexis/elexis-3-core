@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.dialogs;
 
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -12,6 +13,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.nebula.widgets.cdatetime.CDT;
+import org.eclipse.nebula.widgets.cdatetime.CDateTime;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -20,7 +23,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -38,13 +40,15 @@ import ch.elexis.data.Mandant;
 import ch.elexis.data.Query;
 import ch.elexis.data.StockEntry;
 import ch.elexis.data.Verrechnet;
+import ch.rgw.tools.TimeTool;
 
 public class DailyOrderDialog extends TitleAreaDialog {
 	
-	private DateTime dtDate;
+	private CDateTime dtDate;
 	private TableViewer tableViewer;
 	private Bestellung currOrder;
-
+	private TimeTool selectedDate;
+	
 	public DailyOrderDialog(Shell parentShell, Bestellung currOrder){
 		super(parentShell);
 		this.currOrder = currOrder;
@@ -71,14 +75,18 @@ public class DailyOrderDialog extends TitleAreaDialog {
 		Composite dateComposite = new Composite(area, SWT.NONE);
 		dateComposite.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		dateComposite.setLayout(new GridLayout(1, false));
-		dtDate = new DateTime(area, SWT.DATE | SWT.DROP_DOWN);
+		dtDate = new CDateTime(area, CDT.DATE_MEDIUM | CDT.DROP_DOWN | SWT.BORDER);
+		dtDate.setSelection(new Date());
 		dtDate.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				loadArticlesUsedOnSelectedDay();
+				modifyArticlesUsedOn(selectedDate, false);
+				selectedDate = new TimeTool(dtDate.getSelection());
+				modifyArticlesUsedOn(selectedDate, true);
 				tableViewer.setInput(currOrder.getEntries());
 			}
 		});
+		selectedDate = new TimeTool(dtDate.getSelection());
 		
 		Composite tableComposite = new Composite(area, SWT.NONE);
 		tableComposite.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
@@ -104,18 +112,21 @@ public class DailyOrderDialog extends TitleAreaDialog {
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new OrderLabelProvider());
 		
-		loadArticlesUsedOnSelectedDay();
+		modifyArticlesUsedOn(selectedDate, true);
 		tableViewer.setInput(currOrder.getEntries());
 		
 		return area;
 	}
 	
-	private void loadArticlesUsedOnSelectedDay(){
-		String date = dtDate.getYear() + String.format("%02d", dtDate.getMonth() + 1)
-			+ String.format("%02d", dtDate.getDay());
-		
+	/**
+	 * 
+	 * @param priorDate
+	 * @param add
+	 * @since 3.7
+	 */
+	private void modifyArticlesUsedOn(TimeTool priorDate, boolean add) {
 		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
-		qbe.add(Konsultation.FLD_DATE, Query.EQUALS, date);
+		qbe.add(Konsultation.FLD_DATE, Query.EQUALS, priorDate.toDBString(false));
 		List<Konsultation> cons = qbe.execute();
 		
 		for (Konsultation c : cons) {
@@ -128,17 +139,24 @@ public class DailyOrderDialog extends TitleAreaDialog {
 					IStockEntry stockEntry =
 						CoreHub.getStockService().findPreferredStockEntryForArticle(art.storeToString(),
 							(mandator != null) ? mandator.getId() : null);
-					if (stockEntry != null) {
+					
+					int zahl = v.getZahl();
+					if(!add) {
+						zahl*=-1;
+					}
+					
+					if (stockEntry != null) {	
 						StockEntry se = (StockEntry) stockEntry;
 						currOrder.addBestellungEntry(se.getArticle(), se.getStock(),
-							se.getProvider(), v.getZahl());
+							se.getProvider(), zahl);
 					} else {
-						currOrder.addBestellungEntry(art, null, null, v.getZahl());
+						currOrder.addBestellungEntry(art, null, null,zahl);
 					}
 				}
 			}
 		}
 	}
+	
 	
 	class OrderLabelProvider extends LabelProvider implements ITableLabelProvider {
 		
@@ -175,5 +193,11 @@ public class DailyOrderDialog extends TitleAreaDialog {
 	
 	public Bestellung getOrder(){
 		return currOrder;
+	}
+	
+	@Override
+	protected void cancelPressed(){
+		modifyArticlesUsedOn(selectedDate, false);
+		super.cancelPressed();
 	}
 }
