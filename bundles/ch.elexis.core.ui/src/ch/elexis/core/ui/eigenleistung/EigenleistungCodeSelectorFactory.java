@@ -45,11 +45,12 @@ public class EigenleistungCodeSelectorFactory extends CodeSelectorFactory {
 		
 		makeActions();
 		
-		FieldDescriptor<?>[] lbName = new FieldDescriptor<?>[] {
-			new FieldDescriptor<Eigenleistung>(Eigenleistung.CODE)
+		FieldDescriptor<?>[] fieldDescriptors = new FieldDescriptor<?>[] {
+			new FieldDescriptor<Eigenleistung>(Eigenleistung.CODE),
+			new FieldDescriptor<Eigenleistung>(Eigenleistung.BEZEICHNUNG)
 		};
 		
-		slp = new SelectorPanelProvider(lbName, true);
+		slp = new SelectorPanelProvider(fieldDescriptors, true);
 		slp.addActions(createAction);
 		return new ViewerConfigurer(
 			// new LazyContentProvider(cv,dataloader,null),
