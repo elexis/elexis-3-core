@@ -29,6 +29,7 @@ import java.util.Map;
  * Klasse zur einfachen Datum- und Zeitberarbeitung
  * 
  * @author G. Weirich
+ * @since 3.2.3 support for {@link #TIME_COMPACT_FULL}
  */
 
 public class TimeTool extends GregorianCalendar {
@@ -38,7 +39,7 @@ public class TimeTool extends GregorianCalendar {
 	private static final long serialVersionUID = 0xc3efadd1L;
 	
 	public static String Version(){
-		return "3.2.2";
+		return "3.2.3";
 	}
 	
 	/** formally enumerated days **/
@@ -169,6 +170,8 @@ public class TimeTool extends GregorianCalendar {
 	public static final int DATETIME_XML = 14;
 	/** Constant indicating a date in german notation with two only to digits for year (dd.mm.yy) */
 	public static final int DATE_GER_SHORT = 15;
+	/** Constant indicating a compact time format (hhmmss) */
+	public static final int TIME_COMPACT_FULL = 16;
 	
 	private static final SimpleDateFormat full_ger = new SimpleDateFormat("dd.MM.yyyy, HH:mm:ss");
 	private static final SimpleDateFormat large_ger = new SimpleDateFormat("dd.MM.yyyy, HH:mm");
@@ -180,6 +183,7 @@ public class TimeTool extends GregorianCalendar {
 	private static final SimpleDateFormat date_ger_short = new SimpleDateFormat("dd.MM.yy");
 	// private static SimpleDateFormat full_compact=new SimpleDateFormat("ddMMyyyyHHmm");
 	private static SimpleDateFormat time_compact = new SimpleDateFormat("HHmm");
+	private static final SimpleDateFormat time_compact_full = new SimpleDateFormat("HHmmss");
 	private static final SimpleDateFormat date_compact = new SimpleDateFormat("yyyyMMdd");
 	private static final SimpleDateFormat timestamp = new SimpleDateFormat("yyyyMMddHHmmss");
 	private static final SimpleDateFormat datetime_xml =
@@ -214,6 +218,7 @@ public class TimeTool extends GregorianCalendar {
 		map.put(DATE_MYSQL, date_mysql);
 		map.put(FULL, pref_full);
 		map.put(TIME_COMPACT, time_compact);
+		map.put(TIME_COMPACT_FULL, time_compact_full);
 		map.put(DATE_COMPACT, date_compact);
 		map.put(DATETIME_XML, datetime_xml);
 		map.put(TIMESTAMP, timestamp);
