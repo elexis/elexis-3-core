@@ -25,8 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.lang.StringUtils;
-
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
@@ -67,7 +65,7 @@ import ch.rgw.tools.VersionedResource.ResourceItem;
  */
 public class Konsultation extends PersistentObject implements Comparable<Konsultation> {
 	
-	private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+	private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 	private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmmss");
 	
 	public static final String FLD_ENTRY = "Eintrag";
@@ -427,11 +425,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	public @Nullable LocalDateTime getDateTime(){
 		String[] values = get(true, DATE, FLD_TIME);
 		LocalDate date = LocalDate.parse(values[0], dateFormatter);
-		if (StringUtils.isNumeric(values[1])) {
-			LocalTime time = LocalTime.parse(values[1], timeFormatter);
-			return LocalDateTime.of(date, time);
-		}
-		return LocalDateTime.of(date, LocalTime.of(0, 0, 0));
+		LocalTime time = LocalTime.parse(values[1], timeFormatter);
+		return LocalDateTime.of(date, time);
 	}
 	
 	/**
@@ -445,7 +440,6 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 				DATE, FLD_TIME
 			}, dateFormatter.format(dateTime), timeFormatter.format(dateTime));
 		}
-
 	}
 	
 	/**
@@ -1046,10 +1040,10 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		return true;
 	}
 	
-	/** Interface Comparable, um die Behandlungen nach Datum sortieren zu können */
+	/** Interface Comparable, um die Behandlungen nach Datum und Zeit sortieren zu können */
 	public int compareTo(Konsultation b){
-		TimeTool me = new TimeTool(getDatum());
-		TimeTool other = new TimeTool(b.getDatum());
+		LocalDateTime me = getDateTime();
+		LocalDateTime other = b.getDateTime();
 		return me.compareTo(other);
 	}
 	
