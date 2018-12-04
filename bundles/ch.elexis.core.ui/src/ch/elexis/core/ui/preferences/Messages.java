@@ -49,6 +49,8 @@ public class Messages {
 	public static String DokumentKategorie_dokumentKategorien = ch.elexis.core.l10n.Messages.DokumentKategorie_dokumentKategorien;
 	public static String FontPreference_schriftarten = ch.elexis.core.l10n.Messages.FontPreference_schriftarten;
 	public static String FontPreference_standardschriftart = ch.elexis.core.l10n.Messages.FontPreference_standardschriftart;
+	public static String FontPreference_agendaschriftart =
+		ch.elexis.core.l10n.Messages.FontPreference_agendaschriftart;
 	public static String Gruppen_BitteGebenSieNameEin = ch.elexis.core.l10n.Messages.Gruppen_BitteGebenSieNameEin;
 	public static String Gruppen_Gruppen = ch.elexis.core.l10n.Messages.Gruppen_Gruppen;
 	public static String Gruppen_GruppenUndRechte = ch.elexis.core.l10n.Messages.Gruppen_GruppenUndRechte;

@@ -1963,6 +1963,7 @@ public class Messages extends NLS {
 	public static String FixMediDisplay_UsageList;
 	public static String FontPreference_schriftarten;
 	public static String FontPreference_standardschriftart;
+	public static String FontPreference_agendaschriftart;
 	public static String GenericImporterBlatt_ChangeIfNeeded;
 	public static String GenericImporterBlatt_FieldsElexis;
 	public static String GenericImporterBlatt_FieldsExcel;
