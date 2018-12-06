@@ -23,6 +23,7 @@ import ch.elexis.hl7.model.LabResultData.LabResultStatus;
 import ch.elexis.hl7.model.ObservationMessage;
 import ch.elexis.hl7.v2x.HL7ReaderV25;
 import ch.elexis.hl7.v2x.HL7ReaderV251;
+import ch.elexis.hl7.v2x.HL7ReaderV26;
 
 public class Test_SpecificImportFiles {
 	
@@ -93,4 +94,35 @@ public class Test_SpecificImportFiles {
 			assertEquals("SPERN", lrd.getCode());			
 	}
 	
+	@Test
+	public void test_V26_OUL_R24_Afias6() throws IOException, ElexisException{
+		File importFile = new File(PlatformHelper.getBasePath("ch.elexis.core.hl7.v2x.tests"),
+			"rsc/v26/afias6.hl7");
+		
+		List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(importFile);
+		assertNotNull(hl7Readers);
+		assertEquals(1, hl7Readers.size());
+		HL7Reader reader = hl7Readers.get(0);
+		assertEquals(HL7ReaderV26.class, reader.getClass());
+		
+		ObservationMessage observationMsg = reader.readObservation(resolver, false);
+		List<IValueType> observations = observationMsg.getObservations();
+		System.out.println("Observations [" + observations.size() + "]");
+		assertEquals(1, observations.size());
+		
+		// OBX|1|TX|CRP||68.93|mg/L|||||R
+		LabResultData lrd = (LabResultData) observations.get(0);
+		assertEquals("CRP", lrd.getName());
+		assertEquals("CRP", lrd.getCode());
+		assertEquals("68.93", lrd.getValue());
+		assertTrue(lrd.getRawAbnormalFlag() == null);
+		assertTrue(lrd.getRange() == null);
+		assertTrue(lrd.getFlag() == null);
+		assertFalse(lrd.isNumeric());
+		assertTrue(lrd.isPlainText());
+		assertEquals("mg/L", lrd.getUnit());
+		assertEquals("", lrd.getComment());
+		assertEquals("", lrd.getGroup());
+		assertEquals(LabResultStatus.UNDEFINED, lrd.getResultStatus());
+	}
 }

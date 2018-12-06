@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.AbstractPrimitive;
+import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.model.v26.datatype.CE;
-import ca.uhn.hl7v2.model.v26.group.ORU_R01_PATIENT;
 import ca.uhn.hl7v2.model.v26.datatype.CWE;
 import ca.uhn.hl7v2.model.v26.datatype.ED;
 import ca.uhn.hl7v2.model.v26.datatype.FN;
@@ -23,10 +23,14 @@ import ca.uhn.hl7v2.model.v26.datatype.ST;
 import ca.uhn.hl7v2.model.v26.datatype.TX;
 import ca.uhn.hl7v2.model.v26.datatype.XAD;
 import ca.uhn.hl7v2.model.v26.datatype.XCN;
-import ca.uhn.hl7v2.model.v26.group.ORU_R01_OBSERVATION;
 import ca.uhn.hl7v2.model.v26.group.ORU_R01_ORDER_OBSERVATION;
+import ca.uhn.hl7v2.model.v26.group.ORU_R01_PATIENT;
 import ca.uhn.hl7v2.model.v26.group.ORU_R01_PATIENT_RESULT;
+import ca.uhn.hl7v2.model.v26.group.OUL_R24_ORDER;
+import ca.uhn.hl7v2.model.v26.group.OUL_R24_PATIENT;
+import ca.uhn.hl7v2.model.v26.group.OUL_R24_SPECIMEN;
 import ca.uhn.hl7v2.model.v26.message.ORU_R01;
+import ca.uhn.hl7v2.model.v26.message.OUL_R24;
 import ca.uhn.hl7v2.model.v26.segment.MSH;
 import ca.uhn.hl7v2.model.v26.segment.NTE;
 import ca.uhn.hl7v2.model.v26.segment.OBR;
@@ -80,51 +84,98 @@ public class HL7ReaderV26 extends HL7Reader {
 	public ObservationMessage readObservation(HL7PatientResolver patientResolver,
 		boolean createIfNotFound) throws ElexisException{
 		observation = null;
-		ORU_R01 oru = (ORU_R01) message;
 		
 		try {
 			this.patientResolver = patientResolver;
-			setPatient(oru, createIfNotFound);
-			
-			int obsCount = oru.getPATIENT_RESULT().getORDER_OBSERVATIONReps();
-			for (int idx = 0; idx < obsCount; idx++) {
-				OBR obr = oru.getPATIENT_RESULT().getORDER_OBSERVATION(idx).getOBR();
-				String obrObservationDateTime = obr.getObr7_ObservationDateTime().getValue();
-				
-				setOrderComment(oru, idx, obrObservationDateTime);
-				
-				for (int i = 0; i < oru.getPATIENT_RESULT().getORDER_OBSERVATION(idx)
-					.getOBSERVATIONReps(); i++) {
-					ORU_R01_ORDER_OBSERVATION obs =
-						oru.getPATIENT_RESULT().getORDER_OBSERVATION(idx);
-					// get notes and comments
-					String commentNTE = getComments(obs, i);
-					
-					// groupe and sequence
-					String group = "";
-					String sequence = "";
-					for (int k = 0; k < 2; k++) {
-						CWE cwe = obr.getObr47_FillerSupplementalServiceInformation(k);
-						if (cwe != null) {
-							String code = "";
-							if (cwe.getCwe3_NameOfCodingSystem() != null)
-								code = cwe.getCwe3_NameOfCodingSystem().getValue();
-							
-							group = getGroup(code, cwe);
-							sequence = getSequence(code, cwe);
-							
-						}
-					}
-					
-					// result
-					readOBXResults(obs.getOBSERVATION(i), commentNTE, group, sequence,
-						obrObservationDateTime);
-				}
+			if (message.getName().contains("OUL_R24")) {
+				readObservationOulR24(createIfNotFound);
+			} else {
+				readObservationOruR01(createIfNotFound);
 			}
 		} catch (HL7Exception | ParseException e) {
 			throw new ElexisException(e.getMessage(), e);
 		}
 		return observation;
+	}
+	
+	private void readObservationOulR24(boolean createIfNotFound)
+		throws ParseException, DataTypeException{
+		OUL_R24 oul = (OUL_R24) message;
+		
+		setPatient(oul, createIfNotFound);
+		
+		int obrCount = oul.getORDERReps();
+		for (int idx = 0; idx < obrCount; idx++) {
+			OBR obr = oul.getORDER(idx).getOBR();
+			String obrObservationDateTime = obr.getObr7_ObservationDateTime().getValue();
+			
+			setOrderComment(oul, idx, obrObservationDateTime);
+			
+			for (int i = 0; i < oul.getORDER(idx).getSPECIMENReps(); i++) {
+				OUL_R24_SPECIMEN specimen = oul.getORDER(idx).getSPECIMEN(i);
+				
+				// groupe and sequence
+				String group = "";
+				String sequence = "";
+				for (int k = 0; k < 2; k++) {
+					CWE cwe = obr.getObr47_FillerSupplementalServiceInformation(k);
+					if (cwe != null) {
+						String code = "";
+						if (cwe.getCwe3_NameOfCodingSystem() != null)
+							code = cwe.getCwe3_NameOfCodingSystem().getValue();
+						
+						group = getGroup(code, cwe);
+						sequence = getSequence(code, cwe);
+					}
+				}
+				
+				for (int obxIdx = 0; obxIdx < specimen.getOBXReps(); obxIdx++) {
+					// result
+					readOBXResults(specimen.getOBX(obxIdx), "", group, sequence,
+						obrObservationDateTime);
+				}
+			}
+		}
+	}
+	
+	private void readObservationOruR01(boolean createIfNotFound)
+		throws HL7Exception, ParseException{
+		ORU_R01 oru = (ORU_R01) message;
+		
+		setPatient(oru, createIfNotFound);
+		
+		int obsCount = oru.getPATIENT_RESULT().getORDER_OBSERVATIONReps();
+		for (int idx = 0; idx < obsCount; idx++) {
+			OBR obr = oru.getPATIENT_RESULT().getORDER_OBSERVATION(idx).getOBR();
+			String obrObservationDateTime = obr.getObr7_ObservationDateTime().getValue();
+			
+			setOrderComment(oru, idx, obrObservationDateTime);
+			
+			for (int i = 0; i < oru.getPATIENT_RESULT().getORDER_OBSERVATION(idx)
+				.getOBSERVATIONReps(); i++) {
+				ORU_R01_ORDER_OBSERVATION obs = oru.getPATIENT_RESULT().getORDER_OBSERVATION(idx);
+				// get notes and comments
+				String commentNTE = getComments(obs, i);
+				
+				// groupe and sequence
+				String group = "";
+				String sequence = "";
+				for (int k = 0; k < 2; k++) {
+					CWE cwe = obr.getObr47_FillerSupplementalServiceInformation(k);
+					if (cwe != null) {
+						String code = "";
+						if (cwe.getCwe3_NameOfCodingSystem() != null)
+							code = cwe.getCwe3_NameOfCodingSystem().getValue();
+						
+						group = getGroup(code, cwe);
+						sequence = getSequence(code, cwe);
+					}
+				}
+				// result
+				readOBXResults(obs.getOBSERVATION(i).getOBX(), commentNTE, group, sequence,
+					obrObservationDateTime);
+			}
+		}
 	}
 	
 	private String getGroup(String code, CWE cwe){
@@ -143,6 +194,125 @@ public class HL7ReaderV26 extends HL7Reader {
 			}
 		}
 		return "";
+	}
+	
+	private void setPatient(OUL_R24 oul, boolean createIfNotFound)
+		throws ParseException, DataTypeException{
+		List<? extends IPatient> list = new ArrayList<IPatient>();
+		String lastName = ""; //$NON-NLS-1$
+		String firstName = ""; //$NON-NLS-1$
+		String birthDate = ""; //$NON-NLS-1$
+		String sex = Gender.FEMALE.value();
+		pat = null;
+		
+		if (pat == null) {
+			String sendingApplication =
+				oul.getMSH().getMsh3_SendingApplication().getHd1_NamespaceID().getValue();
+			String sendingFacility =
+				oul.getMSH().getMsh4_SendingFacility().getHd1_NamespaceID().getValue();
+			String dateTimeOfMessage = oul.getMSH().getMsh7_DateTimeOfMessage().getValue();
+			
+			PID pid = oul.getPATIENT().getPID();
+			
+			String patid = pid.getPatientID().getIDNumber().getValue();
+			String patid_alternative =
+				pid.getPid4_AlternatePatientIDPID(0).getCx1_IDNumber().getValue();
+			if (StringTool.isNothing(patid)) {
+				patid = pid.getPatientID().getCx1_IDNumber().getValue();
+				if (StringTool.isNothing(patid)) {
+					patid = pid.getPid2_PatientID().getIDNumber().getValue();
+					if (StringTool.isNothing(patid)) {
+						patid = pid.getAlternatePatientIDPID(0).getCx1_IDNumber().getValue();
+						if (StringTool.isNothing(patid)) {
+							patid = patid_alternative;
+							if (patid == null) {
+								patid = "";
+							}
+						}
+					}
+				}
+			}
+			
+			if (patid != null) {
+				list = patientResolver.getPatientById(patid);
+			}
+			
+			// String[] pidflds = patid.split("[\\^ ]+"); //$NON-NLS-1$
+			// String pid = "";
+			// if (pidflds.length > 0)
+			// pid = pidflds[pidflds.length - 1];
+			
+			// place order number
+			String orderNumber = oul.getORDER().getORC().getOrc2_PlacerOrderNumber()
+				.getEi1_EntityIdentifier().getValue();
+			
+			if (pid.getPid5_PatientName(0).getFamilyName().getFn1_Surname().getValue() != null)
+				lastName = pid.getPid5_PatientName(0).getFamilyName().getFn1_Surname().getValue();
+			if (pid.getPid5_PatientName(0).getGivenName().getValue() != null)
+				firstName = pid.getPid5_PatientName(0).getGivenName().getValue();
+			String patientName = firstName + " " + lastName;
+			String patientNotesAndComments =
+				readPatientNotesAndComments(oul.getPATIENT());
+			
+			observation =
+				new ObservationMessage(sendingApplication, sendingFacility, dateTimeOfMessage,
+					patid, patientName, patientNotesAndComments, patid_alternative, orderNumber);
+			
+			birthDate = pid.getDateTimeOfBirth().getValue();
+			sex = pid.getAdministrativeSex().getValue();
+			
+			if ((patid == null) || (list.size() != 1)) {
+				// We did not find the patient using the PatID, so we try the
+				// name and birthdate
+				list =
+					patientResolver.findPatientByNameAndBirthdate(lastName, firstName, birthDate);
+				
+				if ((list != null) && (list.size() == 1)) {
+					pat = list.get(0);
+				} else {
+					if (createIfNotFound) {
+						String phone = StringConstants.EMPTY;
+						
+						XAD adr = pid.getPatientAddress(0);
+						phone = pid.getPhoneNumberHome(0).getTelephoneNumber().getValue();
+						
+						pat = patientResolver.createPatient(lastName, firstName, birthDate, sex);
+						pat.setPatientNr(patid);
+						
+						if (adr != null) {
+							if (adr.getStreetAddress() != null) {
+								pat.setStreet(adr.getStreetAddress().getComponent(0).toString());
+							}
+							if (adr.getZipOrPostalCode() != null) {
+								pat.setZip(adr.getZipOrPostalCode().getValue());
+							}
+							if (adr.getCity() != null) {
+								pat.setCity(adr.getCity().getValue());
+							}
+							if (adr.getCountry() != null) {
+								try {
+									Country cc = Country.valueOf(adr.getCountry().getValue());
+									pat.setCountry(cc);
+								} catch (Exception e) {
+									// unknown country, just move on
+								}
+							}
+						}
+						
+						pat.setPhone1(phone);
+					} else {
+						resolvePatient(firstName, lastName, birthDate);
+					}
+				}
+			} else {
+				// if the patient with the given ID was found, we verify, if it
+				// is the correct name
+				pat = list.get(0);
+				if (lastName.length() != 0 && firstName.length() != 0) {
+					checkConflict(firstName, lastName, birthDate, sex);
+				}
+			}
+		}
 	}
 	
 	private void setPatient(ORU_R01 oru, final boolean createIfNotFound)
@@ -276,8 +446,28 @@ public class HL7ReaderV26 extends HL7Reader {
 		return sb.toString();
 	}
 	
+	private String readPatientNotesAndComments(OUL_R24_PATIENT patient){
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < patient.getNTEReps(); i++) {
+			FT comment = patient.getNTE(i).getComment(0);
+			sb.append(comment.toString());
+			if (patient.getNTEReps() > i) {
+				sb.append("\n");
+			}
+		}
+		return sb.toString();
+	}
+	
 	private void setOrderComment(ORU_R01 oru, int idx, String obsDate) throws ParseException{
 		String orderCommentNTE = getComments(oru.getPATIENT_RESULT().getORDER_OBSERVATION(idx), -1);
+		if (orderCommentNTE != null) {
+			observation.add(new TextData(HL7Constants.COMMENT_NAME, orderCommentNTE, obsDate,
+				HL7Constants.COMMENT_GROUP, null));
+		}
+	}
+	
+	private void setOrderComment(OUL_R24 oul, int idx, String obsDate) throws ParseException{
+		String orderCommentNTE = getComments(oul.getORDER(idx), -1);
 		if (orderCommentNTE != null) {
 			observation.add(new TextData(HL7Constants.COMMENT_NAME, orderCommentNTE, obsDate,
 				HL7Constants.COMMENT_GROUP, null));
@@ -311,9 +501,29 @@ public class HL7ReaderV26 extends HL7Reader {
 		return commentNTE;
 	}
 	
-	private void readOBXResults(ORU_R01_OBSERVATION obs, String commentNTE, String group,
+	private String getComments(OUL_R24_ORDER order, int i){
+		String commentNTE = null;
+		int size = order.getNTEReps();
+		
+		for (int n = 0; n < size; n++) {
+			NTE nte = order.getNTE(n);
+			AbstractPrimitive comment = nte.getNte3_Comment(0);
+			if (comment != null) {
+				if (commentNTE != null) {
+					commentNTE += "\n";
+				} else {
+					commentNTE = "";
+				}
+				if (comment.getValue() != null) {
+					commentNTE += comment.getValue();
+				}
+			}
+		}
+		return commentNTE;
+	}
+	
+	private void readOBXResults(OBX obx, String commentNTE, String group,
 		String sequence, String defaultDateTime) throws ParseException{
-		OBX obx = obs.getOBX();
 		String valueType = obx.getObx2_ValueType().getValue();
 		String name = "";
 		String itemCode = "";
