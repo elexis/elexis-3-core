@@ -1,8 +1,12 @@
 package ch.elexis.core.ui.dialogs;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -21,17 +25,21 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.dialogs.ListSelectionDialog;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.core.ui.util.viewers.PersistentObjectLabelProvider;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Bestellung;
 import ch.elexis.data.BestellungEntry;
@@ -48,6 +56,8 @@ public class DailyOrderDialog extends TitleAreaDialog {
 	private TableViewer tableViewer;
 	private Bestellung currOrder;
 	private TimeTool selectedDate;
+	
+	private List<Mandant> limitationList = new ArrayList<>();
 	
 	public DailyOrderDialog(Shell parentShell, Bestellung currOrder){
 		super(parentShell);
@@ -73,9 +83,9 @@ public class DailyOrderDialog extends TitleAreaDialog {
 		area.setLayout(new GridLayout(1, false));
 		
 		Composite dateComposite = new Composite(area, SWT.NONE);
-		dateComposite.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		dateComposite.setLayout(new GridLayout(1, false));
-		dtDate = new CDateTime(area, CDT.DATE_MEDIUM | CDT.DROP_DOWN | SWT.BORDER);
+		dateComposite.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		dateComposite.setLayout(new GridLayout(2, false));
+		dtDate = new CDateTime(dateComposite, CDT.DATE_MEDIUM | CDT.DROP_DOWN | SWT.BORDER);
 		dtDate.setSelection(new Date());
 		dtDate.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -87,6 +97,35 @@ public class DailyOrderDialog extends TitleAreaDialog {
 			}
 		});
 		selectedDate = new TimeTool(dtDate.getSelection());
+		
+		Button btnFilterMandators = new Button(dateComposite, SWT.CHECK);
+		btnFilterMandators.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		btnFilterMandators.setText("nur von folgenden Mandanten ...");
+		btnFilterMandators.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				limitationList.clear();
+				btnFilterMandators.setText("nur von folgenden Mandanten ...");
+				if (btnFilterMandators.getSelection()) {
+					ListSelectionDialog lsd = new ListSelectionDialog(UiDesk.getTopShell(),
+						new Query<>(Mandant.class).execute(), ArrayContentProvider.getInstance(),
+						PersistentObjectLabelProvider.getInstance(), "Mandanten auswaehlen");
+					int open = lsd.open();
+					if (open == Dialog.OK) {
+						modifyArticlesUsedOn(selectedDate, false); // clear old list
+						limitationList.addAll(Arrays.asList(lsd.getResult()).stream()
+							.map(m -> (Mandant) m).collect(Collectors.toList()));
+						String label = "nur von folgenden Mandanten: " + limitationList.stream()
+							.map(m -> m.getLabel()).reduce((u, t) -> u + ", " + t).orElse("keine");
+						btnFilterMandators.setText(label);
+						modifyArticlesUsedOn(selectedDate, true); // populate new list
+						tableViewer.setInput(currOrder.getEntries());
+					} else {
+						btnFilterMandators.setSelection(false);
+					}
+				} 
+			}
+		});
 		
 		Composite tableComposite = new Composite(area, SWT.NONE);
 		tableComposite.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
@@ -124,9 +163,18 @@ public class DailyOrderDialog extends TitleAreaDialog {
 	 * @param add
 	 * @since 3.7
 	 */
-	private void modifyArticlesUsedOn(TimeTool priorDate, boolean add) {
+	private void modifyArticlesUsedOn(TimeTool priorDate, boolean add){
 		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
 		qbe.add(Konsultation.FLD_DATE, Query.EQUALS, priorDate.toDBString(false));
+		if (!limitationList.isEmpty()) {
+			qbe.startGroup();
+			limitationList.stream().forEach(m -> {
+				qbe.add(Konsultation.FLD_MANDATOR_ID, Query.EQUALS, m.getId());
+				qbe.or();
+			});
+			qbe.endGroup();
+		}
+		System.out.println(qbe.getActualQuery());
 		List<Konsultation> cons = qbe.execute();
 		
 		for (Konsultation c : cons) {
@@ -137,26 +185,25 @@ public class DailyOrderDialog extends TitleAreaDialog {
 					Artikel art = (Artikel) vv;
 					Mandant mandator = ElexisEventDispatcher.getSelectedMandator();
 					IStockEntry stockEntry =
-						CoreHub.getStockService().findPreferredStockEntryForArticle(art.storeToString(),
-							(mandator != null) ? mandator.getId() : null);
+						CoreHub.getStockService().findPreferredStockEntryForArticle(
+							art.storeToString(), (mandator != null) ? mandator.getId() : null);
 					
 					int zahl = v.getZahl();
-					if(!add) {
-						zahl*=-1;
+					if (!add) {
+						zahl *= -1;
 					}
 					
-					if (stockEntry != null) {	
+					if (stockEntry != null) {
 						StockEntry se = (StockEntry) stockEntry;
 						currOrder.addBestellungEntry(se.getArticle(), se.getStock(),
 							se.getProvider(), zahl);
 					} else {
-						currOrder.addBestellungEntry(art, null, null,zahl);
+						currOrder.addBestellungEntry(art, null, null, zahl);
 					}
 				}
 			}
 		}
 	}
-	
 	
 	class OrderLabelProvider extends LabelProvider implements ITableLabelProvider {
 		
