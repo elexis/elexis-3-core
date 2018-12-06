@@ -174,7 +174,6 @@ public class DailyOrderDialog extends TitleAreaDialog {
 			});
 			qbe.endGroup();
 		}
-		System.out.println(qbe.getActualQuery());
 		List<Konsultation> cons = qbe.execute();
 		
 		for (Konsultation c : cons) {
