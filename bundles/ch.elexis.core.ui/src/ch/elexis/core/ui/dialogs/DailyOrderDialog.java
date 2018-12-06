@@ -109,14 +109,14 @@ public class DailyOrderDialog extends TitleAreaDialog {
 				if (btnFilterMandators.getSelection()) {
 					ListSelectionDialog lsd = new ListSelectionDialog(UiDesk.getTopShell(),
 						new Query<>(Mandant.class).execute(), ArrayContentProvider.getInstance(),
-						PersistentObjectLabelProvider.getInstance(), "Mandanten auswaehlen");
+						PersistentObjectLabelProvider.getInstance(), Messages.DailyOrderMandant);
 					int open = lsd.open();
 					if (open == Dialog.OK) {
 						modifyArticlesUsedOn(selectedDate, false); // clear old list
 						limitationList.addAll(Arrays.asList(lsd.getResult()).stream()
 							.map(m -> (Mandant) m).collect(Collectors.toList()));
-						String label = "nur von folgenden Mandanten: " + limitationList.stream()
-							.map(m -> m.getLabel()).reduce((u, t) -> u + ", " + t).orElse("keine");
+						String label = Messages.DailyOrderMandantOnlyFollowing + limitationList.stream()
+							.map(m -> m.getLabel()).reduce((u, t) -> u + ", " + t).orElse(Messages.DailyOrderMandantNone);
 						btnFilterMandators.setText(label);
 						modifyArticlesUsedOn(selectedDate, true); // populate new list
 						tableViewer.setInput(currOrder.getEntries());
