@@ -36,11 +36,11 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.interfaces.IRnOutputter;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Rechnung;
-import ch.elexis.data.RnStatus;
 
 public class RnOutputDialog extends TitleAreaDialog {
 	private final Collection<Rechnung> rnn;
@@ -121,15 +121,19 @@ public class RnOutputDialog extends TitleAreaDialog {
 	
 	@Override
 	protected void okPressed(){
+		boolean activated = CoreHub.userCfg.get(Preferences.USR_SHOWPATCHGREMINDER, false);
+		if (activated) {
+			CoreHub.userCfg.set(Preferences.USR_SHOWPATCHGREMINDER, false);
+		}
 		int idx = cbLo.getSelectionIndex();
 		if (idx != -1) {
-			IRnOutputter rop = lo.get(idx);
-			rop.saveComposite();
+			IRnOutputter rnOutputter = lo.get(idx);
+			rnOutputter.saveComposite();
 			Iterator<Rechnung> it = rnn.iterator();
 			boolean bFlag = false;
 			while (it.hasNext()) {
 				Rechnung r = it.next();
-				if (r.getStatus() == RnStatus.STORNIERT) {
+				if (r.getStatus() == InvoiceState.CANCELLED.numericValue()) {
 					it.remove();
 					bFlag = true;
 				}
@@ -138,9 +142,12 @@ public class RnOutputDialog extends TitleAreaDialog {
 				SWTHelper.alert("Stornierte Rechnungen in Liste",
 					"Stornierte Rechnungen werden nicht ausgegeben.");
 			}
-			/* Result<Rechnung> result= */rop.doOutput(
+			rnOutputter.doOutput(
 				bCopy.getSelection() ? IRnOutputter.TYPE.COPY : IRnOutputter.TYPE.ORIG, rnn,
 				new Properties());
+		}
+		if (activated) {
+			CoreHub.userCfg.set(Preferences.USR_SHOWPATCHGREMINDER, true);
 		}
 		super.okPressed();
 	}
