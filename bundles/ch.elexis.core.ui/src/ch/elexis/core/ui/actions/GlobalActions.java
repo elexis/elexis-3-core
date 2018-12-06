@@ -394,6 +394,7 @@ public class GlobalActions {
 				try {
 					cmd.executeWithChecks(new ExecutionEvent());
 				} catch (Exception e) {
+					ExHandler.handle(e);
 					logger.error("Failed to execute command ch.elexis.core.ui.commands.printAddressLabel", e);
 				}
 			}
@@ -415,6 +416,7 @@ public class GlobalActions {
 				try {
 					cmd.executeWithChecks(new ExecutionEvent());
 				} catch (Exception e) {
+					ExHandler.handle(e);
 					logger.error("Failed to execute command ch.elexis.core.ui.commands.printVersionedLabel", e);
 				}
 			}
@@ -436,6 +438,7 @@ public class GlobalActions {
 				try {
 					cmd.executeWithChecks(new ExecutionEvent());
 				} catch (Exception e) {
+					ExHandler.handle(e);
 					logger.error("Failed to execute command ch.elexis.core.ui.commands.printPatientLabel", e);
 				}
 			}
