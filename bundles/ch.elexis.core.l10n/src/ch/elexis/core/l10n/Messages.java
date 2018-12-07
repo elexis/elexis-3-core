@@ -2634,6 +2634,9 @@ public class Messages extends NLS {
 	public static String UserPreferences_SaveSettingsTo;
 	public static String UserPreferences_WorkspaceSettingsSaveTo;
 	public static String UserSettings2_AddidtionalFields;
+	public static String UserSettings2_SuppressInteractionCheck;
+	public static String SuppressInteractionActive;
+	public static String SuppressInteractionCheckTooltip;
 	public static String UserSettings2_AlwaysClosed;
 	public static String UserSettings2_AlwaysOpen;
 	public static String UserSettings2_Birthdate;

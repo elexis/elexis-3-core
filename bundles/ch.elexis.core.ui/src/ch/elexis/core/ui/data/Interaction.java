@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.ImmutableMap;
 
 import au.com.bytecode.opencsv.CSVReader;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.Hub;
@@ -136,7 +137,9 @@ public class Interaction extends PersistentObject {
 				version.set(FLD_NAME1, VERSION);
 			}
 		}
-		importMappingFromCsv();
+		if (!CoreHub.userCfg.get(Preferences.USR_SUPPRESS_INTERACTION_CHECK, false)) {
+			importMappingFromCsv();
+		}
 	}
 	
 	/**
