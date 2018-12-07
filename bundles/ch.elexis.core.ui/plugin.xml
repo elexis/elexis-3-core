@@ -752,7 +752,7 @@
       <command
             defaultHandler="ch.elexis.core.ui.locks.ToggleCurrentInvoiceLockHandler"
             id="ch.elexis.core.ui.command.ToggleCurrentInvoiceLockCommand"
-            name="Toggle current invoice lock">
+            name="%toggleInvoiceLock">
       </command>
       <command
             id="ch.elexis.core.ui.command.openCompendium"
