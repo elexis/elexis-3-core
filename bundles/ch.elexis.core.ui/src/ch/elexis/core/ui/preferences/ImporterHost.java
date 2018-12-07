@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import ch.elexis.core.l10n.Messages;
 public class ImporterHost extends PreferencePage implements IWorkbenchPreferencePage {
 	
 	public ImporterHost(){
@@ -33,9 +34,7 @@ public class ImporterHost extends PreferencePage implements IWorkbenchPreference
 		ret.setLayout(new FillLayout());
 		StyledText text = new StyledText(ret, SWT.NONE);
 		text.setWordWrap(true);
-		text.setText(Messages.ImporterHost_ExplanationLine1
-			+ Messages.ImporterHost_ExplanationLine2 + Messages.ImporterHost_ExplanationLine3
-			+ Messages.ImporterHost_ExplanationLine4);
+		text.setText(Messages.ImporterHost_Explanation);
 		return ret;
 	}
 	

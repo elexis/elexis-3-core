@@ -2061,10 +2061,7 @@ public class Messages extends NLS {
 	public static String ImportLabMapping_shellTitle;
 	public static String ImportLabMapping_title;
 	public static String ImportLabMapping_titleProblemDialog;
-	public static String ImporterHost_ExplanationLine1;
-	public static String ImporterHost_ExplanationLine2;
-	public static String ImporterHost_ExplanationLine3;
-	public static String ImporterHost_ExplanationLine4;
+	public static String ImporterHost_Explanation;
 	public static String ImporterPage_allFiles;
 	public static String ImporterPage_browse;
 	public static String ImporterPage_couldntConnect;
