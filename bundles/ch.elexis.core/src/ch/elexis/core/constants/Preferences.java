@@ -151,6 +151,7 @@ public class Preferences {
 	public static final String USR_PATLIST_SHOWFIRSTNAME = "anwender/patlist/zeigevorname"; //$NON-NLS-1$
 	public static final String USR_PATLIST_SHOWDOB = "anwender/patlist/zeigegebdat"; //$NON-NLS-1$
 	public static final String USR_PATLIST_FOCUSFIELD = "anwender/patlist/focusfield"; //$NON-NLS-1$
+	public static final String USR_SUPPRESS_INTERACTION_CHECK = "anwender/suppressintractioncheck"; //$NON-NLS-1$
 	public static final String USR_MANDATOR_COLORS_PREFIX = "mandanten/farben/";
 	public static final String USR_MESSAGES_SOUND_ON = "messages/playsound";
 	public static final String USR_MESSAGES_SOUND_PATH = "messages/soundpath";

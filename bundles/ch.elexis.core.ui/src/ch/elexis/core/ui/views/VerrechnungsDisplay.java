@@ -144,7 +144,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	
 	public VerrechnungsDisplay(final IWorkbenchPage p, Composite parent, int style){
 		super(parent, style);
-		setLayout(new GridLayout(3, false));
+		final int columns_for_each_drug = 4;
+		setLayout(new GridLayout(columns_for_each_drug, false));
 		this.page = p;
 		defaultRGB = UiDesk.createColor(new RGB(255, 255, 255));
 		
@@ -159,7 +160,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		billedLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
 		interactionLink = new InteractionLink(this, SWT.NONE);
 		interactionLink.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
-		toolBarManager = new ToolBarManager(SWT.RIGHT);
+		ToolBarManager toolBarManager = new ToolBarManager(SWT.RIGHT);
 		toolBarManager.add(new Action() {
 			@Override
 			public ImageDescriptor getImageDescriptor(){
@@ -227,13 +228,13 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 		});
 		ToolBar toolBar = toolBarManager.createControl(this);
-		toolBar.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+		toolBar.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		
 		makeActions();
 		tableLayout = new TableColumnLayout();
 		Composite tableComposite = new Composite(this, SWT.NONE);
 
-		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1));
+		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, columns_for_each_drug, 1));
 		tableComposite.setLayout(tableLayout);
 		viewer = new TableViewer(tableComposite,
 			SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);

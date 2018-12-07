@@ -16,6 +16,8 @@ import org.eclipse.ui.PlatformUI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.data.Interaction;
@@ -31,11 +33,26 @@ public class InteractionLink {
 	
 	public InteractionLink(Composite parent, int style){
 		interactionLink = new Link(parent, style);
-		// parent.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
-		updateAtcs(new ArrayList<Artikel>());
+		if (CoreHub.userCfg.get(Preferences.USR_SUPPRESS_INTERACTION_CHECK, false)) {
+			setSuppressed();
+		} else {
+			// parent.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+			updateAtcs(new ArrayList<Artikel>());			
+		}
 	}
 	
+	private void setSuppressed() {
+		interactionLink.setText(Messages.SuppressInteractionActive);
+		interactionLink.setToolTipText(Messages.SuppressInteractionCheckTooltip);
+		interactionLink.setForeground(UiDesk.getColorRegistry().get(UiDesk.COL_BLACK));
+
+	}
 	public String updateAtcs(ArrayList<Artikel> gtins){
+		if (CoreHub.userCfg.get(Preferences.USR_SUPPRESS_INTERACTION_CHECK, false)) {
+			setSuppressed();
+			return ""; //$NON-NLS-1$
+		}
+
 		String severity = " "; //$NON-NLS-1$
 		Color color = UiDesk.getColor(UiDesk.COL_WHITE);
 		String epha = Messages.VerrDetailDialog_InteractionEpha;
