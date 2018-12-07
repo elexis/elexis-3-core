@@ -2683,6 +2683,10 @@ public class Messages extends NLS {
 	public static String BestellView_Title;
 	public static String BestellView_WizardAskNewOrder;
 	public static String BestellView_OrderIsClosed;
+	public static String DailyOrderMandant;
+	public static String DailyOrderMandantOnlyFollowing;
+	public static String DailyOrderMandantNone;
+	
 	
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
