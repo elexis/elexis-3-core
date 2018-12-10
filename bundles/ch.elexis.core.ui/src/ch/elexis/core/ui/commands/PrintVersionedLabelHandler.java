@@ -17,12 +17,13 @@ import ch.elexis.data.Patient;
 public final class PrintVersionedLabelHandler extends AbstractHandler {
 
 	@Override
-	public Object execute(ExecutionEvent arg0) throws ExecutionException {
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Patient actPatient = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
 		if (actPatient == null) {
 			SWTHelper.showInfo("Kein Patient ausgewählt", "Bitte wählen Sie vor dem Drucken einen Patient!");
 			return null;
 		}
+		
 		EtiketteDruckenDialog dlg = new EtiketteDruckenDialog(
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), actPatient, TT_PATIENT_LABEL_ORDER);
 		dlg.setTitle(Messages.GlobalActions_PrintVersionedLabel);
