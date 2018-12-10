@@ -30,7 +30,8 @@ public class InteractionLink {
 	 */
 	private Link interactionLink = null;
 	static Logger logger = LoggerFactory.getLogger(InteractionLink.class);
-	
+	private String destUrl = "";
+
 	public InteractionLink(Composite parent, int style){
 		interactionLink = new Link(parent, style);
 		if (CoreHub.userCfg.get(Preferences.USR_SUPPRESS_INTERACTION_CHECK, false)) {
@@ -68,8 +69,13 @@ public class InteractionLink {
 				atcs.add(art.getATC_code());
 			}
 		});
-		String destUrl = buildUrl.toString().replaceAll(",+$",  "");
-
+		if (atcs.size() > 1) {
+			destUrl = buildUrl.toString().replaceAll(",+$", "");
+			logger.info("For {} ATCs {} set destUrl to {}", atcs.size(), atcs, destUrl);
+		} else {
+			destUrl = "";
+		}
+		
 		// Reset tooltip text and color to nothing
 		interactionLink.setText(Messages.VerrDetailDialog_NoInteractionKnown);
 		interactionLink.setBackground(color);
