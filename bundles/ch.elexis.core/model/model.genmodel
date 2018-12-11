@@ -60,6 +60,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/mobile"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/comment"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IContact/address"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/group"/>
       <genOperations ecoreOperation="model.ecore#//IContact/addAddress">
         <genParameters ecoreParameter="model.ecore#//IContact/addAddress/address"/>
       </genOperations>

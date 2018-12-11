@@ -394,13 +394,22 @@ public interface ModelPackage extends EPackage {
 	int ICONTACT__ADDRESS = IDENTIFIABLE_FEATURE_COUNT + 22;
 
 	/**
+	 * The feature id for the '<em><b>Group</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICONTACT__GROUP = IDENTIFIABLE_FEATURE_COUNT + 23;
+
+	/**
 	 * The number of structural features of the '<em>IContact</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 23;
+	int ICONTACT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 24;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}' class.
@@ -618,6 +627,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IPERSON__ADDRESS = ICONTACT__ADDRESS;
+
+	/**
+	 * The feature id for the '<em><b>Group</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPERSON__GROUP = ICONTACT__GROUP;
 
 	/**
 	 * The feature id for the '<em><b>Date Of Birth</b></em>' attribute.
@@ -900,6 +918,15 @@ public interface ModelPackage extends EPackage {
 	int IORGANIZATION__ADDRESS = ICONTACT__ADDRESS;
 
 	/**
+	 * The feature id for the '<em><b>Group</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__GROUP = ICONTACT__GROUP;
+
+	/**
 	 * The number of structural features of the '<em>IOrganization</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1126,6 +1153,15 @@ public interface ModelPackage extends EPackage {
 	int ILABORATORY__ADDRESS = IORGANIZATION__ADDRESS;
 
 	/**
+	 * The feature id for the '<em><b>Group</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__GROUP = IORGANIZATION__GROUP;
+
+	/**
 	 * The number of structural features of the '<em>ILaboratory</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1350,6 +1386,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IPATIENT__ADDRESS = IPERSON__ADDRESS;
+
+	/**
+	 * The feature id for the '<em><b>Group</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPATIENT__GROUP = IPERSON__GROUP;
 
 	/**
 	 * The feature id for the '<em><b>Date Of Birth</b></em>' attribute.
@@ -1684,6 +1729,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IMANDATOR__ADDRESS = ICONTACT__ADDRESS;
+
+	/**
+	 * The feature id for the '<em><b>Group</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMANDATOR__GROUP = ICONTACT__GROUP;
 
 	/**
 	 * The feature id for the '<em><b>Biller</b></em>' reference.
@@ -5274,6 +5328,17 @@ public interface ModelPackage extends EPackage {
 	EReference getIContact_Address();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getGroup <em>Group</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Group</em>'.
+	 * @see ch.elexis.core.model.IContact#getGroup()
+	 * @see #getIContact()
+	 * @generated
+	 */
+	EAttribute getIContact_Group();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8349,6 +8414,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference ICONTACT__ADDRESS = eINSTANCE.getIContact_Address();
+
+		/**
+		 * The meta object literal for the '<em><b>Group</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ICONTACT__GROUP = eINSTANCE.getIContact_Group();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}' class.

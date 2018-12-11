@@ -237,6 +237,16 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt>
 	}
 	
 	@Override
+	public String getGroup(){
+		return getEntity().getGruppe();
+	}
+	
+	@Override
+	public void setGroup(String value){
+		getEntity().setGruppe(value);
+	}
+	
+	@Override
 	public String getLabel(){
 		StringBuilder sb = new StringBuilder();
 		sb.append(getDescription1()).append(" ")

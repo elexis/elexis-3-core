@@ -44,6 +44,7 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IContact#getMobile <em>Mobile</em>}</li>
  *   <li>{@link ch.elexis.core.model.IContact#getComment <em>Comment</em>}</li>
  *   <li>{@link ch.elexis.core.model.IContact#getAddress <em>Address</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IContact#getGroup <em>Group</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIContact()
@@ -612,6 +613,32 @@ public interface IContact extends Identifiable, Deleteable, WithExtInfo {
 	 * @generated
 	 */
 	List<IAddress> getAddress();
+
+	/**
+	 * Returns the value of the '<em><b>Group</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Group</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Group</em>' attribute.
+	 * @see #setGroup(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIContact_Group()
+	 * @model
+	 * @generated
+	 */
+	String getGroup();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getGroup <em>Group</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Group</em>' attribute.
+	 * @see #getGroup()
+	 * @generated
+	 */
+	void setGroup(String value);
 
 	/**
 	 * <!-- begin-user-doc -->
