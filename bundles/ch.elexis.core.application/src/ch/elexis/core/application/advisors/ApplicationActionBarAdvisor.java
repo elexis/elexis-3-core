@@ -242,7 +242,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 			}
 			
 			setToolTipText((StringTool.isNothing(name) ? perspectiveDescriptor.getLabel() : name)
-				+ Messages.ApplicationActionBarAdvisor_10);
+				+ " " + Messages.ApplicationActionBarAdvisor_10);
 			
 			this.perspectiveDescriptor = perspectiveDescriptor;
 		}
