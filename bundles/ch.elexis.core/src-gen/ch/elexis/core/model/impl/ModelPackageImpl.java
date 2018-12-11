@@ -893,6 +893,24 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getIOrganization_InsuranceXmlName() {
+		return (EAttribute)iOrganizationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIOrganization_InsuranceLawCode() {
+		return (EAttribute)iOrganizationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getILaboratory() {
 		return iLaboratoryEClass;
 	}
@@ -3220,6 +3238,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iPersonEClass, IPERSON__LAST_NAME);
 
 		iOrganizationEClass = createEClass(IORGANIZATION);
+		createEAttribute(iOrganizationEClass, IORGANIZATION__INSURANCE_XML_NAME);
+		createEAttribute(iOrganizationEClass, IORGANIZATION__INSURANCE_LAW_CODE);
 
 		iLaboratoryEClass = createEClass(ILABORATORY);
 
@@ -3726,6 +3746,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEParameter(op, theTypesPackage.getChronoUnit(), "chronoUnit", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iOrganizationEClass, IOrganization.class, "IOrganization", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIOrganization_InsuranceXmlName(), ecorePackage.getEString(), "insuranceXmlName", null, 0, 1, IOrganization.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIOrganization_InsuranceLawCode(), ecorePackage.getEString(), "insuranceLawCode", null, 0, 1, IOrganization.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iLaboratoryEClass, ILaboratory.class, "ILaboratory", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

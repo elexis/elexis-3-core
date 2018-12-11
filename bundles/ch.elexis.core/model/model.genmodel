@@ -78,7 +78,10 @@
         <genParameters ecoreParameter="model.ecore#//IPerson/getAgeAtIn/chronoUnit"/>
       </genOperations>
     </genClasses>
-    <genClasses image="false" ecoreClass="model.ecore#//IOrganization"/>
+    <genClasses image="false" ecoreClass="model.ecore#//IOrganization">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IOrganization/insuranceXmlName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IOrganization/insuranceLawCode"/>
+    </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//ILaboratory"/>
     <genClasses image="false" ecoreClass="model.ecore#//IPatient">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPatient/diagnosen"/>

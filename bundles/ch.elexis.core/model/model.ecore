@@ -105,7 +105,10 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IOrganization" abstract="true" interface="true"
-      eSuperTypes="#//IContact"/>
+      eSuperTypes="#//IContact">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="insuranceXmlName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="insuranceLawCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ILaboratory" abstract="true" interface="true"
       eSuperTypes="#//IOrganization"/>
   <eClassifiers xsi:type="ecore:EClass" name="IPatient" abstract="true" interface="true"

@@ -927,13 +927,31 @@ public interface ModelPackage extends EPackage {
 	int IORGANIZATION__GROUP = ICONTACT__GROUP;
 
 	/**
+	 * The feature id for the '<em><b>Insurance Xml Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__INSURANCE_XML_NAME = ICONTACT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Insurance Law Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__INSURANCE_LAW_CODE = ICONTACT_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>IOrganization</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IORGANIZATION_FEATURE_COUNT = ICONTACT_FEATURE_COUNT + 0;
+	int IORGANIZATION_FEATURE_COUNT = ICONTACT_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ILaboratory <em>ILaboratory</em>}' class.
@@ -1160,6 +1178,24 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int ILABORATORY__GROUP = IORGANIZATION__GROUP;
+
+	/**
+	 * The feature id for the '<em><b>Insurance Xml Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__INSURANCE_XML_NAME = IORGANIZATION__INSURANCE_XML_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Insurance Law Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__INSURANCE_LAW_CODE = IORGANIZATION__INSURANCE_LAW_CODE;
 
 	/**
 	 * The number of structural features of the '<em>ILaboratory</em>' class.
@@ -5425,6 +5461,28 @@ public interface ModelPackage extends EPackage {
 	EClass getIOrganization();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IOrganization#getInsuranceXmlName <em>Insurance Xml Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Insurance Xml Name</em>'.
+	 * @see ch.elexis.core.model.IOrganization#getInsuranceXmlName()
+	 * @see #getIOrganization()
+	 * @generated
+	 */
+	EAttribute getIOrganization_InsuranceXmlName();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IOrganization#getInsuranceLawCode <em>Insurance Law Code</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Insurance Law Code</em>'.
+	 * @see ch.elexis.core.model.IOrganization#getInsuranceLawCode()
+	 * @see #getIOrganization()
+	 * @generated
+	 */
+	EAttribute getIOrganization_InsuranceLawCode();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.ILaboratory <em>ILaboratory</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8490,6 +8548,22 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EClass IORGANIZATION = eINSTANCE.getIOrganization();
+
+		/**
+		 * The meta object literal for the '<em><b>Insurance Xml Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IORGANIZATION__INSURANCE_XML_NAME = eINSTANCE.getIOrganization_InsuranceXmlName();
+
+		/**
+		 * The meta object literal for the '<em><b>Insurance Law Code</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IORGANIZATION__INSURANCE_LAW_CODE = eINSTANCE.getIOrganization_InsuranceLawCode();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.ILaboratory <em>ILaboratory</em>}' class.
