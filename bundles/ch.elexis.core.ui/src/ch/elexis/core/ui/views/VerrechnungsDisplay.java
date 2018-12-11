@@ -160,7 +160,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		billedLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
 		interactionLink = new InteractionLink(this, SWT.NONE);
 		interactionLink.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
-		ToolBarManager toolBarManager = new ToolBarManager(SWT.RIGHT);
+		toolBarManager = new ToolBarManager(SWT.RIGHT);
 		toolBarManager.add(new Action() {
 			@Override
 			public ImageDescriptor getImageDescriptor(){
