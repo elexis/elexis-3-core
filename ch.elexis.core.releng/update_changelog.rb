@@ -105,7 +105,7 @@ def get_release_tags
   end
   branch_names = @repo.branches.find_all{ |x| /origin\/\d+\.\d+$/.match(x.name)}.collect{|x| x.name}
   branch_names.each do |name|
-    tag_id = `git merge-base master #{name}`.chomp
+    tag_id = `git merge-base 3.7 #{name}`.chomp
     short_version = /[\d\.]+$/.match(name)[0]
     tag = @repo.rev_parse(tag_id)
     @all_taginfos <<  TAG_INFO.new(name, tag_name_to_numerical_value(short_version), tag, tag.oid, nil, tag.committer[:time].strftime(DATE_FORMAT))
