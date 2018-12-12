@@ -31,6 +31,7 @@ public class InteractionLink {
 	private Link interactionLink = null;
 	static Logger logger = LoggerFactory.getLogger(InteractionLink.class);
 	private String destUrl = "";
+	private static int lastUpTime;
 
 	public InteractionLink(Composite parent, int style){
 		interactionLink = new Link(parent, style);
@@ -110,14 +111,21 @@ public class InteractionLink {
 			}
 			interactionLink.setToolTipText(tooltip);
 			interactionLink.addListener(SWT.MouseUp, new Listener() {
+
 				@Override
 				public void handleEvent(Event event){
 					try {
+						// Suppress action if event already seen
+						if ( event.time == lastUpTime ) {
+							logger.info("{} Skipping: {}", event.toString(), destUrl); //$NON-NLS-1$
+							return;
+						}
+						lastUpTime = event.time;
 						// zB. NOLVADEX, PAROXETIN, LOSARTAN, METOPROLOL with GTIN
 						// 7680390530474 7680569620074, 7680589810141, 7680659580097 gives
 						// https://matrix.epha.ch/#/7680390530474,7680569620074,7680589810141,7680659580097
 						// or regnr "https://matrix.epha.ch/#/58392,59131,39053,58643"
-						logger.info("destURL for external browser is: {}", destUrl); //$NON-NLS-1$
+						logger.info("{} destURL for external browser is: {}", event.toString(), destUrl); //$NON-NLS-1$
 						PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser()
 							.openURL(new URL(destUrl));
 					} catch (PartInitException | MalformedURLException e) {
