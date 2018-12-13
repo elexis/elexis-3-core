@@ -36,32 +36,31 @@ import org.apache.commons.lang3.StringUtils;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = {
-	"rdbmsType", "hostName", "port", "databaseName", "connectionString", "username", "password",
-	"text"
-})
+@XmlType(propOrder = { "rdbmsType", "hostName", "port", "databaseName", "connectionString", "username", "password",
+		"text" })
 public class DBConnection implements Serializable {
-	
+
 	private static final long serialVersionUID = -7571011690246990109L;
-	
+
 	@XmlType
 	@XmlEnum(String.class)
 	public enum DBType {
-		@XmlEnumValue("MYSQL") MySQL("com.mysql.jdbc.Driver", "mySQl", "3306"),
-		@XmlEnumValue("PostgreSQL") PostgreSQL("org.postgresql.Driver", "PostgreSQL", "5432"),
-		@XmlEnumValue("H2") H2("org.h2.Driver", "H2", "");
-			
+		@XmlEnumValue("MYSQL")
+		MySQL("com.mysql.jdbc.Driver", "mySQl", "3306"), @XmlEnumValue("PostgreSQL")
+		PostgreSQL("org.postgresql.Driver", "PostgreSQL", "5432"), @XmlEnumValue("H2")
+		H2("org.h2.Driver", "H2", "");
+
 		public final String driverName;
 		public final String dbType;
 		public final String defaultPort;
-		
-		DBType(String driverName, String dbType, String defaultPort){
+
+		DBType(String driverName, String dbType, String defaultPort) {
 			this.driverName = driverName;
 			this.dbType = dbType;
 			this.defaultPort = defaultPort;
 		}
-		
-		public static Optional<DBType> valueOfDriver(String driver){
+
+		public static Optional<DBType> valueOfDriver(String driver) {
 			for (DBType dbType : values()) {
 				if (dbType.driverName.equals(driver)) {
 					return Optional.of(dbType);
@@ -70,7 +69,7 @@ public class DBConnection implements Serializable {
 			return Optional.empty();
 		}
 	}
-	
+
 	public DBType rdbmsType;
 	@XmlAttribute
 	public String hostName;
@@ -86,7 +85,7 @@ public class DBConnection implements Serializable {
 	public String password;
 	@XmlAttribute
 	public String text;
-	
+
 	/**
 	 * are all required values for the DBConnection set?
 	 * 
@@ -108,20 +107,20 @@ public class DBConnection implements Serializable {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Marshall this object into a storable xml
 	 * 
 	 * @param os
 	 * @throws JAXBException
 	 */
-	public void marshall(OutputStream os) throws JAXBException{
-		JAXBContext jaxbContext = JAXBContext.newInstance(DBConnection.class);
+	public void marshall(OutputStream os) throws JAXBException {
+		JAXBContext jaxbContext = JAXBContext.newInstance("ch.elexis.core.common", getClass().getClassLoader());
 		Marshaller m = jaxbContext.createMarshaller();
 		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		m.marshal(this, os);
 	}
-	
+
 	/**
 	 * Unmarshall a DBConnection object created by {@link #marshall()}
 	 * 
@@ -129,15 +128,15 @@ public class DBConnection implements Serializable {
 	 * @return
 	 * @throws JAXBException
 	 */
-	public static DBConnection unmarshall(InputStream is) throws JAXBException{
-		JAXBContext jaxbContext = JAXBContext.newInstance(DBConnection.class);
+	public static DBConnection unmarshall(InputStream is) throws JAXBException {
+		JAXBContext jaxbContext = JAXBContext.newInstance("ch.elexis.core.common", DBConnection.class.getClassLoader());
 		Unmarshaller um = jaxbContext.createUnmarshaller();
 		Object o = um.unmarshal(is);
 		return (DBConnection) o;
 	}
 
 	public String marshallIntoString() {
-		try(StringWriter sw = new StringWriter()) {
+		try (StringWriter sw = new StringWriter()) {
 			JAXBContext jaxbContext = JAXBContext.newInstance(DBConnection.class);
 			Marshaller m = jaxbContext.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
@@ -148,12 +147,13 @@ public class DBConnection implements Serializable {
 		}
 	}
 
-	public static DBConnection unmarshall(String value)  {
-		if(value==null) {
+	public static DBConnection unmarshall(String value) {
+		if (value == null) {
 			return null;
 		}
 		try {
-			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(value.getBytes(StandardCharsets.UTF_8));
+			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
+					value.getBytes(StandardCharsets.UTF_8));
 			return unmarshall(byteArrayInputStream);
 		} catch (JAXBException e) {
 			// TODO Auto-generated catch block
@@ -161,8 +161,8 @@ public class DBConnection implements Serializable {
 		}
 		return new DBConnection();
 	}
-	
-	public static Optional<String> getHostName(String url){
+
+	public static Optional<String> getHostName(String url) {
 		if (url.startsWith("jdbc:")) {
 			url = url.substring(5);
 		}
@@ -173,15 +173,15 @@ public class DBConnection implements Serializable {
 		}
 		return Optional.empty();
 	}
-	
-	public static Optional<String> getDatabaseName(String url){
+
+	public static Optional<String> getDatabaseName(String url) {
 		if (url.startsWith("jdbc:")) {
 			url = url.substring(5);
 		}
 		URI uri = URI.create(url);
 		String path = uri.getPath();
 		if (!StringUtils.isBlank(path)) {
-			if(path.startsWith("/")) {
+			if (path.startsWith("/")) {
 				path = path.substring(1);
 			}
 			if (path.contains("/")) {
