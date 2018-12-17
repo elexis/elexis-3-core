@@ -407,13 +407,19 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	/**
 	 * Das Behandlungsdatum setzen
 	 * 
+	 * @param date
+	 *            Das Datum in folgendem Format dd.MM.yyyy
 	 * @param force
 	 *            auch setzen, wenn Kons nicht änderbar
-	 * 
+	 *
+	 * @deprecated Use {@link #setDateTime(LocalDateTime, boolean)} instead.
 	 */
-	public void setDatum(String dat, boolean force){
-		LocalDateTime parse = LocalDateTime.parse(dat, dateFormatter);
-		setDateTime(parse, force);
+	@Deprecated
+	public void setDatum(String date, boolean force){
+		LocalDate localDate = LocalDate.parse(date, dateFormatter);
+		if(force || isEditable(true)) {
+			set(DATE, dateFormatter.format(localDate));
+		}
 	}
 	
 	/**
