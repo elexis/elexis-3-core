@@ -30,9 +30,9 @@ public class ImporterHost extends PreferencePage implements IWorkbenchPreference
 	
 	@Override
 	protected Control createContents(Composite parent){
-		Composite ret = new Composite(parent, SWT.NONE);
+		Composite ret = new Composite(parent, SWT.READ_ONLY);
 		ret.setLayout(new FillLayout());
-		StyledText text = new StyledText(ret, SWT.NONE);
+		StyledText text = new StyledText(ret, SWT.READ_ONLY);
 		text.setWordWrap(true);
 		text.setText(Messages.ImporterHost_Explanation);
 		return ret;
