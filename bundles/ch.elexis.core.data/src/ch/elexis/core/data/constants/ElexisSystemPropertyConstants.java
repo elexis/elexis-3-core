@@ -27,6 +27,9 @@ public class ElexisSystemPropertyConstants {
 	
 	// The Elexis run mode - from scratch
 	public static final String RUN_MODE_FROM_SCRATCH = "RunFromScratch";
+
+	// Allow skipping of the verification of the locale
+	public static final String SKIP_DB_LOCALE_CHECK = "db.skip.locale.check";
 	
 	/**
 	 * REST URL of the elexis server, e.g. http://localhost:8380/services"

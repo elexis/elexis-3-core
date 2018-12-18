@@ -502,26 +502,31 @@ public abstract class PersistentObject implements IPersistentObject {
 				log.error("User continues with Elexis / database version mismatch");
 			}
 		}
-		// verify locale
-		Locale locale = Locale.getDefault();
-		String dbStoredLocale = CoreHub.globalCfg.get(Preferences.CFG_LOCALE, null);
-		if (dbStoredLocale == null) {
-			CoreHub.globalCfg.set(Preferences.CFG_LOCALE, locale.toString());
-			CoreHub.globalCfg.flush();
+		if (System.getProperty(ElexisSystemPropertyConstants.SKIP_DB_LOCALE_CHECK) != null) {
+			log.info("Property {} set to {}. Skip check",
+				ElexisSystemPropertyConstants.SKIP_DB_LOCALE_CHECK,
+				System.getProperty(ElexisSystemPropertyConstants.SKIP_DB_LOCALE_CHECK));
 		} else {
-			if (!locale.toString().equals(dbStoredLocale)) {
-				String msg = String.format(
-					"Your locale [%1s] does not match the required database locale [%2s]. Ignore?",
-					locale.toString(), dbStoredLocale);
-				log.error(msg);
-				if (!cod.openQuestion("Difference in locale setting ", msg)) {
-					System.exit(2);
-				} else {
-					log.error("User continues with difference locale set");
+			// verify locale
+			Locale locale = Locale.getDefault();
+			String dbStoredLocale = CoreHub.globalCfg.get(Preferences.CFG_LOCALE, null);
+			if (dbStoredLocale == null) {
+				CoreHub.globalCfg.set(Preferences.CFG_LOCALE, locale.toString());
+				CoreHub.globalCfg.flush();
+			} else {
+				if (!locale.toString().equals(dbStoredLocale)) {
+					String msg = String.format(
+						"Your locale [%1s] does not match the required database locale [%2s]. Ignore?",
+						locale.toString(), dbStoredLocale);
+					log.error(msg);
+					if (!cod.openQuestion("Difference in locale setting ", msg)) {
+						System.exit(2);
+					} else {
+						log.error("User continues with difference locale set");
+					}
 				}
 			}
 		}
-		
 		return true;
 	}
 	
