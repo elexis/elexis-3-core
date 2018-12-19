@@ -127,7 +127,7 @@ public class JdbcLink {
 		String hostport = hostdetail.length > 1 ? hostdetail[1] : "3306";
 		String connect = "jdbc:mysql://" + hostname + ":" + hostport + "/" + database
 //			+ "?autoReconnect=true&useSSL=false";
-			+ "?useSSL=false&serverTimezone=\"+01:00\"";
+			+ "?useSSL=false&serverTimezone=Europe/Zurich";
 		return new JdbcLink(driver, connect, DBFLAVOR_MYSQL);
 	}
 	

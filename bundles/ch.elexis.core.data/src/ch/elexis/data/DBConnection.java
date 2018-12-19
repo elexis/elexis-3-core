@@ -314,9 +314,9 @@ public class DBConnection {
 	public void applyMySqlTimeZoneWorkaround() {
 		if (dbFlavor.equalsIgnoreCase("mysql") && !dbConnectString.contains("serverTimezone")) {
 			if (dbConnectString.contains("?")) {
-				dbConnectString += "&serverTimezone=\"+01:00\"";
+				dbConnectString += "&serverTimezone=Europe/Zurich";
 			} else {
-				dbConnectString += "?serverTimezone=\"+01:00\"";
+				dbConnectString += "?serverTimezone=Europe/Zurich";
 			}
 			logger.info("MySQL dbConnection string correction [{}]", dbConnectString);
 		}
