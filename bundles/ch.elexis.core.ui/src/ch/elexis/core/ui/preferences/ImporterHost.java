@@ -14,10 +14,10 @@ package ch.elexis.core.ui.preferences;
 
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -32,8 +32,7 @@ public class ImporterHost extends PreferencePage implements IWorkbenchPreference
 	protected Control createContents(Composite parent){
 		Composite ret = new Composite(parent, SWT.READ_ONLY);
 		ret.setLayout(new FillLayout());
-		StyledText text = new StyledText(ret, SWT.READ_ONLY);
-		text.setWordWrap(true);
+		Label text = new Label(ret, SWT.WRAP);
 		text.setText(Messages.ImporterHost_Explanation);
 		return ret;
 	}
