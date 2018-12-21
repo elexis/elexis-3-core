@@ -64,6 +64,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -227,6 +229,11 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				return false;
 			}
 		});
+		
+		// Populate toolbar contribution manager
+		IMenuService menuService = (IMenuService) PlatformUI.getWorkbench().getService(IMenuService.class);
+		menuService.populateContributionManager(toolBarManager, "toolbar:ch.elexis.VerrechnungsDisplay");
+		
 		ToolBar toolBar = toolBarManager.createControl(this);
 		toolBar.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		
