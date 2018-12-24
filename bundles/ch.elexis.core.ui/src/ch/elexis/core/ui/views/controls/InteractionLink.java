@@ -50,6 +50,7 @@ public class InteractionLink {
 
 	}
 	public String updateAtcs(ArrayList<Artikel> gtins){
+		interactionLink.setText("");
 		if (CoreHub.userCfg.get(Preferences.USR_SUPPRESS_INTERACTION_CHECK, false)) {
 			setSuppressed();
 			return ""; //$NON-NLS-1$

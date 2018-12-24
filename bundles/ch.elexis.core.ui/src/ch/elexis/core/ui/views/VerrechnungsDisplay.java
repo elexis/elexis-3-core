@@ -62,6 +62,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.statushandlers.StatusManager;
@@ -106,7 +107,7 @@ import ch.rgw.tools.StringTool;
 
 public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	
-	private Label billedLabel;
+	private Text billedLabel;
 	private InteractionLink interactionLink;
 	private Table table;
 	private TableViewer viewer;
@@ -156,7 +157,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		label.setFont(boldFont);
 		label.setText(Messages.VerrechnungsDisplay_billing);
 		
-		billedLabel = new Label(this, SWT.NONE);
+		billedLabel = new Text(this, SWT.WRAP);
 		billedLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
 		interactionLink = new InteractionLink(this, SWT.NONE);
 		interactionLink.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
@@ -449,12 +450,10 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					gtins.add(art);
 				}
 			}
-			if (gtins.size() > 1) {
-				billedLabel.setText(String.format("%s %s / %s %s", //$NON-NLS-1$
+			interactionLink.updateAtcs(gtins);
+			billedLabel.setText(String.format("%s %s / %s %s", //$NON-NLS-1$
 					Messages.PatHeuteView_accAmount, sum.getAmountAsString(),
 					Messages.PatHeuteView_accTime, actEncounter.getMinutes()));
-			}
-			interactionLink.updateAtcs(gtins);
 		} else {
 			billedLabel.setText(""); //$NON-NLS-1$
 		}
