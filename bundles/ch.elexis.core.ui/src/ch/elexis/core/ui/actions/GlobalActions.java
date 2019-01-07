@@ -32,6 +32,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.Category;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
@@ -61,6 +65,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.ViewPart;
@@ -139,12 +144,16 @@ public class GlobalActions {
 	public static Action printKontaktEtikette;
 	private static IWorkbenchHelpSystem help;
 	private static Logger logger;
+	private static ICommandService cmdService;
+	private static Category cmdCategory;
 	
 	public GlobalActions(final IWorkbenchWindow window){
 		if (Hub.mainActions != null) {
 			return;
 		}
 		logger = LoggerFactory.getLogger(this.getClass());
+		cmdService = (ICommandService) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getService(ICommandService.class);
+		cmdCategory = cmdService.getCategory("ch.elexis.core.ui.commands.kategorie");
 		mainWindow = window;
 		help = Hub.plugin.getWorkbench().getHelpSystem();
 		exitAction = ActionFactory.QUIT.create(window);
@@ -377,29 +386,16 @@ public class GlobalActions {
 			
 			@Override
 			public void run(){
-				Patient actPatient = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
-				if (actPatient == null) {
-					SWTHelper.showInfo("Kein Patient ausgewählt",
-						"Bitte wählen Sie vor dem Drucken einen Patient!");
-					return;
+				Command cmd = cmdService.getCommand("ch.elexis.core.ui.commands.printAddressLabel");
+				if (!cmd.isDefined()) {
+					  cmd.define(Messages.GlobalActions_PrintAddressLabel, Messages.GlobalActions_PrintAddressLabelToolTip, cmdCategory);
 				}
 				
-				EtiketteDruckenDialog dlg =
-					new EtiketteDruckenDialog(mainWindow.getShell(), actPatient, TT_ADDRESS_LABEL);
-				dlg.setTitle(Messages.GlobalActions_PrintAddressLabel);
-				dlg.setMessage(Messages.GlobalActions_PrintAddressLabelToolTip);
-				if (isDirectPrint()) {
-					dlg.setBlockOnOpen(false);
-					dlg.open();
-					if (dlg.doPrint()) {
-						dlg.close();
-					} else {
-						SWTHelper.alert("Fehler beim Drucken",
-							"Beim Drucken ist ein Fehler aufgetreten. Bitte überprüfen Sie die Einstellungen.");
-					}
-				} else {
-					dlg.setBlockOnOpen(true);
-					dlg.open();
+				try {
+					cmd.executeWithChecks(new ExecutionEvent());
+				} catch (Exception e) {
+					ExHandler.handle(e);
+					logger.error("Failed to execute command ch.elexis.core.ui.commands.printAddressLabel", e);
 				}
 			}
 		};
@@ -412,28 +408,16 @@ public class GlobalActions {
 			
 			@Override
 			public void run(){
-				Patient actPatient = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
-				if (actPatient == null) {
-					SWTHelper.showInfo("Kein Patient ausgewählt",
-						"Bitte wählen Sie vor dem Drucken einen Patient!");
-					return;
+				Command cmd = cmdService.getCommand("ch.elexis.core.ui.commands.printVersionedLabel");
+				if (!cmd.isDefined()) {
+					  cmd.define(Messages.GlobalActions_PrintVersionedLabel, Messages.GlobalActions_PrintVersionedLabelToolTip, cmdCategory);
 				}
-				EtiketteDruckenDialog dlg = new EtiketteDruckenDialog(mainWindow.getShell(),
-					actPatient, TT_PATIENT_LABEL_ORDER);
-				dlg.setTitle(Messages.GlobalActions_PrintVersionedLabel);
-				dlg.setMessage(Messages.GlobalActions_PrintVersionedLabelToolTip);
-				if (isDirectPrint()) {
-					dlg.setBlockOnOpen(false);
-					dlg.open();
-					if (dlg.doPrint()) {
-						dlg.close();
-					} else {
-						SWTHelper.alert("Fehler beim Drucken",
-							"Beim Drucken ist ein Fehler aufgetreten. Bitte überprüfen Sie die Einstellungen.");
-					}
-				} else {
-					dlg.setBlockOnOpen(true);
-					dlg.open();
+				
+				try {
+					cmd.executeWithChecks(new ExecutionEvent());
+				} catch (Exception e) {
+					ExHandler.handle(e);
+					logger.error("Failed to execute command ch.elexis.core.ui.commands.printVersionedLabel", e);
 				}
 			}
 		};
@@ -446,28 +430,16 @@ public class GlobalActions {
 			
 			@Override
 			public void run(){
-				Patient actPatient = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
-				if (actPatient == null) {
-					SWTHelper.showInfo("Kein Patient ausgewählt",
-						"Bitte wählen Sie vor dem Drucken einen Patient!");
-					return;
+				Command cmd = cmdService.getCommand("ch.elexis.core.ui.commands.printPatientLabel");
+				if (!cmd.isDefined()) {
+					  cmd.define(Messages.GlobalActions_PrintLabel, Messages.GlobalActions_PrintLabelToolTip, cmdCategory);
 				}
-				EtiketteDruckenDialog dlg =
-					new EtiketteDruckenDialog(mainWindow.getShell(), actPatient, TT_PATIENT_LABEL);
-				dlg.setTitle(Messages.GlobalActions_PrintLabel);
-				dlg.setMessage(Messages.GlobalActions_PrintLabelToolTip);
-				if (isDirectPrint()) {
-					dlg.setBlockOnOpen(false);
-					dlg.open();
-					if (dlg.doPrint()) {
-						dlg.close();
-					} else {
-						SWTHelper.alert("Fehler beim Drucken",
-							"Beim Drucken ist ein Fehler aufgetreten. Bitte überprüfen Sie die Einstellungen.");
-					}
-				} else {
-					dlg.setBlockOnOpen(true);
-					dlg.open();
+				
+				try {
+					cmd.executeWithChecks(new ExecutionEvent());
+				} catch (Exception e) {
+					ExHandler.handle(e);
+					logger.error("Failed to execute command ch.elexis.core.ui.commands.printPatientLabel", e);
 				}
 			}
 		};

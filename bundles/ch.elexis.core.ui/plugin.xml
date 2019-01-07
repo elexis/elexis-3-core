@@ -758,6 +758,21 @@
             id="ch.elexis.core.ui.command.openCompendium"
             name="%open.compendium">
       </command>
+      <command
+            id="ch.elexis.core.ui.commands.printPatientLabel"
+            categoryId="ch.elexis.core.ui.commands.kategorie"
+            defaultHandler="ch.elexis.core.ui.commands.PrintPatientLabelHandler">
+      </command>
+      <command
+            id="ch.elexis.core.ui.commands.printVersionedLabel"
+            categoryId="ch.elexis.core.ui.commands.kategorie"
+            defaultHandler="ch.elexis.core.ui.commands.PrintVersionedLabelHandler">
+      </command>
+      <command
+            id="ch.elexis.core.ui.commands.printAddressLabel"
+            categoryId="ch.elexis.core.ui.commands.kategorie"
+            defaultHandler="ch.elexis.core.ui.commands.PrintAddressLabelHandler">
+      </command>
    </extension>
       <extension
             point="ch.elexis.core.ui.KonsExtension">
