@@ -48,6 +48,10 @@ public class ReChargeTarmedOpenCons extends ExternalMaintenance {
 			pm.beginTask("Bitte warten, Tarmed Leistungen werden neu verrechnet",
 				consultations.size());
 			for (Konsultation konsultation : consultations) {
+				// only still open Konsultation
+				if (konsultation.getRechnung() != null)
+					continue;
+				
 				if (pm.isCanceled()) {
 					addProblem("Cancelled.", konsultation);
 					return getProblemsString();
