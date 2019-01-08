@@ -401,9 +401,10 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 		return !Objects.equals(creatorId, contactId);
 	}
 	
-	private static String PS_REMINDERS_RESPONSIBLE = "SELECT r.ID FROM " + TABLENAME
-		+ " r LEFT JOIN REMINDERS_RESPONSIBLE_LINK rrl ON (r.id = rrl.ReminderId) WHERE (rrl.ResponsibleID = ? OR r.Responsible = '"
-		+ ALL_RESPONSIBLE + "') AND r.deleted = '0'";
+	private static String PS_REMINDERS_RESPONSIBLE = "SELECT r.ID, r.SUBJECT, r.DateDue, r.IdentID, r.OriginID FROM "
+			+ TABLENAME
+			+ " r LEFT JOIN REMINDERS_RESPONSIBLE_LINK rrl ON (r.id = rrl.ReminderId) WHERE (rrl.ResponsibleID = ? OR r.Responsible = '"
+			+ ALL_RESPONSIBLE + "') AND r.deleted = '0'";
 	
 	public static List<Reminder> findAllUserIsResponsibleFor(Anwender anwender,
 		boolean showOnlyDueReminders){
@@ -427,6 +428,14 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 			ResultSet res = ps.executeQuery();
 			while (res.next()) {
 				Reminder reminder = Reminder.load(res.getString(1));
+				
+				// cache pre-fetch
+				reminder.putInCache("subject", res.getString(2));
+				String decode = reminder.decode(Reminder.FLD_DUE, res);
+				reminder.putInCache("Due", decode);
+				reminder.putInCache("IdentId", res.getString(4));
+				reminder.putInCache("OriginId", res.getString(5));
+				
 				reminder.setDBConnection(dbConnection);
 				ret.add(reminder);
 			}
@@ -496,9 +505,10 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 		return qbe.execute();
 	}
 	
-	private static String PS_REMINDERS_BASE = "SELECT r.ID FROM " + TABLENAME
-		+ " r LEFT JOIN REMINDERS_RESPONSIBLE_LINK rrl ON (r.id = rrl.ReminderId) WHERE (rrl.ResponsibleID = ? OR r.Responsible = '"
-		+ ALL_RESPONSIBLE + "') AND r.deleted = '0' AND r.Status != '3'";
+	private static String PS_REMINDERS_BASE = "SELECT r.ID, r.SUBJECT, r.DateDue, r.IdentID, r.OriginID FROM "
+			+ TABLENAME
+			+ " r LEFT JOIN REMINDERS_RESPONSIBLE_LINK rrl ON (r.id = rrl.ReminderId) WHERE (rrl.ResponsibleID = ? OR r.Responsible = '"
+			+ ALL_RESPONSIBLE + "') AND r.deleted = '0' AND r.Status != '3'";
 	
 	/**
 	 * Retrieve all reminders the given {@link Anwender} is responsible for. The select can be
@@ -541,6 +551,14 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 				ResultSet res = ps.executeQuery();
 				while (res.next()) {
 					Reminder reminder = Reminder.load(res.getString(1));
+
+					// cache pre-fetch
+					reminder.putInCache("subject", res.getString(2));
+					String decode = reminder.decode(Reminder.FLD_DUE, res);
+					reminder.putInCache("Due", decode);
+					reminder.putInCache("IdentId", res.getString(4));
+					reminder.putInCache("OriginID", res.getString(5));
+					
 					reminder.setDBConnection(dbConnection);
 					if (onlyPopup
 						&& (reminder.getVisibility() != Visibility.POPUP_ON_PATIENT_SELECTION)) {

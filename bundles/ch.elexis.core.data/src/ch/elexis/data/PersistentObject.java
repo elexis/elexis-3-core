@@ -2267,7 +2267,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @param rs
 	 * @return decoded string or null if decode was not possible
 	 */
-	private String decode(final String field, final ResultSet rs){
+	protected String decode(final String field, final ResultSet rs){
 		
 		try {
 			String mapped = map(field);
