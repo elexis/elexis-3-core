@@ -12,9 +12,11 @@ package ch.elexis.core.ui.commands;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -41,28 +43,34 @@ import ch.elexis.data.Konsultation;
 import ch.elexis.data.Rechnung;
 import ch.elexis.data.Rechnungssteller;
 import ch.rgw.tools.Result;
-import ch.rgw.tools.TimeTool;
 
 public class BillingProposalViewCreateBillsHandler extends AbstractHandler implements IHandler {
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException{
-		List<Konsultation> kons = getToBill(event);
-		final List<Konsultation> toBill =
-			BillingUtil.getKonsultationsFromSameYear(kons);
-		if (toBill.size() > 0 && toBill.size() != kons.size()) {
-			if (!MessageDialog.openQuestion(HandlerUtil.getActiveShell(event),
+		List<Konsultation> toBill = getToBill(event);
+		Map<Integer, List<Konsultation>> sortedByYears = BillingUtil.getSortedByYear(toBill);
+		if (!BillingUtil.canBillYears(new ArrayList<>(sortedByYears.keySet()))) {
+			StringJoiner sj = new StringJoiner(", ");
+			sortedByYears.keySet().forEach(i -> sj.add(Integer.toString(i)));
+			if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
 				"Rechnung Validierung",
-				"Eine Rechnung kann nur Leistungen innerhalb eines Jahres beinhalten.\n\nWollen Sie mit der Erstellung der Rechnung für das Jahr "
-					+ new TimeTool(toBill.get(0).getDatum()).get(TimeTool.YEAR)
-					+ " fortsetzen ?")) {
-				LoggerFactory.getLogger(BillingProposalViewCreateBillsHandler.class)
-					.warn("Invoice creation canceled by user");
-				return null;
+				"Die Leistungen sind aus Jahren die nicht kombinierbar sind.\n\nWollen Sie separate Rechnungen für die Jahre "
+					+ sj.toString() + " erstellen?")) {
+				// bill each year separately
+				for (Integer year : sortedByYears.keySet()) {
+					createBill(sortedByYears.get(year));
+				}
 			}
+		} else {
+			createBill(toBill);
 		}
-		
-		ProgressMonitorDialog dialog = new ProgressMonitorDialog(HandlerUtil.getActiveShell(event));
+		return null;
+	}
+	
+	private void createBill(List<Konsultation> toBill){
+		ProgressMonitorDialog dialog =
+			new ProgressMonitorDialog(Display.getDefault().getActiveShell());
 		try {
 			dialog.run(true, false, new IRunnableWithProgress() {
 				
@@ -104,7 +112,8 @@ public class BillingProposalViewCreateBillsHandler extends AbstractHandler imple
 					Display.getDefault().syncExec(new Runnable() {
 						@Override
 						public void run(){
-							MessageDialog.openInformation(HandlerUtil.getActiveShell(event), "Info",
+							MessageDialog.openInformation(Display.getDefault().getActiveShell(),
+								"Info",
 								MessageFormat.format(
 									"Es wurden {0} Rechnungen erfolgreich erstellt.\nBei {1} Rechnungen traten Fehler auf.\n{2}",
 									successful, errorneous, errorneousInfo.toString()));
@@ -113,16 +122,14 @@ public class BillingProposalViewCreateBillsHandler extends AbstractHandler imple
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
-			MessageDialog.openError(HandlerUtil.getActiveShell(event), "Fehler",
+			MessageDialog.openError(Display.getDefault().getActiveShell(), "Fehler",
 				"Fehler beim Ausführen der Rechnungserstelltung. Details siehe Log.");
 			LoggerFactory.getLogger(BillingProposalViewCreateBillsHandler.class)
 				.error("Error creating bills", e);
-			return null;
 		}
-		
-		return null;
 	}
 	
+
 	private List<Konsultation> getToBill(ExecutionEvent event){
 		String selectionParameter =
 			event.getParameter("ch.elexis.core.ui.BillingProposalViewCreateBills.selection");

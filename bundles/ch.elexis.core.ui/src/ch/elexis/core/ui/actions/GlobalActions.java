@@ -23,21 +23,18 @@ import static ch.elexis.admin.AccessControlDefaults.AC_PREFS;
 import static ch.elexis.admin.AccessControlDefaults.AC_SHOWVIEW;
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_ADDRESS_LABEL;
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_KG_COVER_SHEET;
-import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_PATIENT_LABEL;
-import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_PATIENT_LABEL_ORDER;
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_XRAY;
 
 import java.awt.Desktop;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.StringJoiner;
 
-import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.Category;
+import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
@@ -54,9 +51,9 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.printing.PrintDialog;
 import org.eclipse.swt.printing.Printer;
 import org.eclipse.swt.printing.PrinterData;
-import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
@@ -510,21 +507,35 @@ public class GlobalActions {
 							}
 						}
 					}
-					lBehdl = BillingUtil.getKonsultationsFromSameYear(lBehdl);
-					Result<Rechnung> res = Rechnung.build(lBehdl);
-					if (!res.isOK()) {
-						ErrorDialog.openError(mainWindow.getShell(), Messages.GlobalActions_Error,
-							Messages //$NON-NLS-1$
-									.GlobalActions_BillErrorMessage,
-							ResultAdapter //$NON-NLS-1$
-								.getResultAsStatus(res));
-						// Rechnung rn=(Rechnung)res.get();
-						// rn.storno(true);
-						// rn.delete();
-						
+					Map<Integer, List<Konsultation>> sortedByYears = BillingUtil.getSortedByYear(lBehdl);
+					if (!BillingUtil.canBillYears(new ArrayList<>(sortedByYears.keySet()))) {
+						StringJoiner sj = new StringJoiner(", ");
+						sortedByYears.keySet().forEach(i -> sj.add(Integer.toString(i)));
+						if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
+							"Rechnung Validierung",
+							"Die Leistungen sind aus Jahren die nicht kombinierbar sind.\n\nWollen Sie separate Rechnungen für die Jahre "
+								+ sj.toString() + " erstellen?")) {
+							// bill each year separately
+							for (Integer year : sortedByYears.keySet()) {
+								Result<Rechnung> res = Rechnung.build(sortedByYears.get(year));
+								if (!res.isOK()) {
+									ErrorDialog.openError(mainWindow.getShell(),
+										Messages.GlobalActions_Error,
+										Messages.GlobalActions_BillErrorMessage,
+										ResultAdapter.getResultAsStatus(res));
+								}
+							}
+						}
+					} else {
+						Result<Rechnung> res = Rechnung.build(lBehdl);
+						if (!res.isOK()) {
+							ErrorDialog.openError(mainWindow.getShell(),
+								Messages.GlobalActions_Error,
+								Messages.GlobalActions_BillErrorMessage,
+								ResultAdapter.getResultAsStatus(res));
+						}
 					}
 				}
-				// setFall(actFall,null);
 			}
 		};
 		moveBehandlungAction = new LockedAction<Konsultation>(Messages.GlobalActions_AssignCase) {
