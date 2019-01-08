@@ -84,8 +84,6 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 			Messages.UserSettings2_PatientFirstname, getFieldEditorParent()));
 		addField(new BooleanFieldEditor(Preferences.USR_PATLIST_SHOWDOB,
 			Messages.UserSettings2_Birthdate, getFieldEditorParent()));
-		addField(new BooleanFieldEditor(Preferences.USR_SUPPRESS_INTERACTION_CHECK,
-			ch.elexis.core.l10n.Messages.UserSettings2_SuppressInteractionCheck, getFieldEditorParent()));
 		addField(new ComboFieldEditor(Preferences.USR_PATLIST_FOCUSFIELD, "Fokusfeld",
 			patlistFocusFields, getFieldEditorParent()));
 		new Label(getFieldEditorParent(), SWT.SEPARATOR | SWT.HORIZONTAL).setLayoutData(SWTHelper
