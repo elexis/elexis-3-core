@@ -7,6 +7,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.medication.property.MedicationUiTester;
 import ch.elexis.core.ui.medication.views.MedicationView;
@@ -42,6 +43,8 @@ public class MedicationSettings extends FieldEditorPreferencePage
 			new BooleanFieldEditor(MedicationUiTester.MEDICATION_SETTINGS_SHOW_CUSTOM_SORT,
 				"Persönliche Sortierung anzeigen", getFieldEditorParent());
 		addField(sortingFieldEditor);
+		addField(new BooleanFieldEditor(Preferences.USR_SUPPRESS_INTERACTION_CHECK,
+				ch.elexis.core.l10n.Messages.UserSettings2_SuppressInteractionCheck, getFieldEditorParent()));
 	}
 	
 	@Override
