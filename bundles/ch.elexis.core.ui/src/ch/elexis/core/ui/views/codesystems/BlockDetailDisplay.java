@@ -33,7 +33,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TableViewerFocusCellManager;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
@@ -94,6 +96,8 @@ public class BlockDetailDisplay implements IDetailDisplay {
 	private DataBindingContext dbc = new DataBindingContext();
 	private WritableValue master = new WritableValue(null, Leistungsblock.class);
 	
+	private BlockComparator comparator;
+	
 	private Action removeLeistung, moveUpAction, moveDownAction, editAction, countAction;
 	private TableViewerFocusCellManager focusCellManager;
 	
@@ -118,8 +122,8 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			PojoProperties.value("name", String.class).observeDetail(master);
 		dbc.bindValue(txtNameObservableUi, txtNameObservable);
 		
-		tk.createLabel(body, Messages.BlockDetailDisplay_macro).setBackground(
-			parent.getBackground());
+		tk.createLabel(body, Messages.BlockDetailDisplay_macro)
+			.setBackground(parent.getBackground());
 		tMacro = tk.createText(body, StringConstants.EMPTY, SWT.BORDER);
 		tMacro.setData("TEST_COMP_NAME", "blkd_Makro_lst"); //$NON-NLS-1$
 		tMacro.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -169,6 +173,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		viewer.setContentProvider(ArrayContentProvider.getInstance());
 		viewer.getTable().setHeaderVisible(true);
 		viewer.getTable().setLinesVisible(true);
+		comparator = new BlockComparator();
 		createColumns();
 		updateViewerInput((Leistungsblock) ElexisEventDispatcher.getSelected(Leistungsblock.class));
 		
@@ -200,9 +205,8 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				for (String obj : dl) {
 					PersistentObject dropped = CoreHub.poFactory.createFromString(obj);
 					if (dropped instanceof ICodeElement) {
-						Leistungsblock lb =
-							(Leistungsblock) ElexisEventDispatcher
-								.getSelected(Leistungsblock.class);
+						Leistungsblock lb = (Leistungsblock) ElexisEventDispatcher
+							.getSelected(Leistungsblock.class);
 						if (lb != null) {
 							lb.addElement((ICodeElement) dropped);
 							updateViewerInput(lb);
@@ -260,9 +264,8 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			public void widgetSelected(final SelectionEvent e){
 				try {
 					// execute the command
-					IHandlerService handlerService =
-						(IHandlerService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-							.getService(IHandlerService.class);
+					IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow().getService(IHandlerService.class);
 					
 					handlerService.executeCommand(CreateEigenleistungUi.COMMANDID, null);
 				} catch (Exception ex) {
@@ -403,6 +406,27 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				return null;
 			}
 		});
+		TableColumn tableColumn = col.getColumn();
+		col.getColumn().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				if (viewer.getComparator() == null) {
+					viewer.setComparator(comparator);
+					comparator.setDirection(SWT.DOWN);
+				} else {
+					int direction = comparator.getDirection();
+					if (direction == SWT.DOWN) {
+						comparator.setDirection(SWT.UP);
+					} else {
+						comparator.setDirection(SWT.NONE);
+						viewer.setComparator(null);
+					}
+				}
+				viewer.getTable().setSortDirection(comparator.getDirection());
+				viewer.getTable().setSortColumn(tableColumn);
+				viewer.refresh();
+			}
+		});
 	}
 	
 	private TableViewerColumn createTableViewerColumn(String title, int bound, int colNumber,
@@ -513,6 +537,43 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				lb.moveElement(selectedElement.getFirstElement(), up);
 				updateViewerInput(lb);
 			}
+		}
+	}
+	
+	private class BlockComparator extends ViewerComparator {
+		
+		private int direction = 0;
+		
+		public void setDirection(int value){
+			if (value == SWT.DOWN) {
+				direction = 1;
+			} else if (value == SWT.UP) {
+				direction = -1;
+			} else {
+				direction = 0;
+			}
+		}
+		
+		public int getDirection(){
+			if (direction == 1) {
+				return SWT.DOWN;
+			} else if (direction == -1) {
+				return SWT.UP;
+			}
+			return SWT.NONE;
+		}
+		
+		@Override
+		public int compare(Viewer viewer, Object left, Object right){
+			if (left instanceof BlockElementViewerItem && right instanceof BlockElementViewerItem) {
+				if (direction != 0) {
+					return ((BlockElementViewerItem) left).getText()
+						.compareTo(((BlockElementViewerItem) right).getText()) * direction;
+				}
+				return ((BlockElementViewerItem) left).getText()
+					.compareTo(((BlockElementViewerItem) right).getText());
+			}
+			return super.compare(viewer, left, right);
 		}
 	}
 }

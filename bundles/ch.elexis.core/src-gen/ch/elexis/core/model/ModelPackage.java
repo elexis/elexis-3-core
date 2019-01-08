@@ -3968,13 +3968,22 @@ public interface ModelPackage extends EPackage {
 	int IENCOUNTER__DATE = IDENTIFIABLE_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Billable</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IENCOUNTER__BILLABLE = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
 	 * The feature id for the '<em><b>Patient</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IENCOUNTER__PATIENT = IDENTIFIABLE_FEATURE_COUNT + 3;
+	int IENCOUNTER__PATIENT = IDENTIFIABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Mandator</b></em>' reference.
@@ -3983,7 +3992,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IENCOUNTER__MANDATOR = IDENTIFIABLE_FEATURE_COUNT + 4;
+	int IENCOUNTER__MANDATOR = IDENTIFIABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Billed</b></em>' reference list.
@@ -3992,7 +4001,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IENCOUNTER__BILLED = IDENTIFIABLE_FEATURE_COUNT + 5;
+	int IENCOUNTER__BILLED = IDENTIFIABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Diagnoses</b></em>' reference list.
@@ -4001,7 +4010,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IENCOUNTER__DIAGNOSES = IDENTIFIABLE_FEATURE_COUNT + 6;
+	int IENCOUNTER__DIAGNOSES = IDENTIFIABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Coverage</b></em>' reference.
@@ -4010,7 +4019,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IENCOUNTER__COVERAGE = IDENTIFIABLE_FEATURE_COUNT + 7;
+	int IENCOUNTER__COVERAGE = IDENTIFIABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Versioned Entry</b></em>' attribute.
@@ -4019,7 +4028,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IENCOUNTER__VERSIONED_ENTRY = IDENTIFIABLE_FEATURE_COUNT + 8;
+	int IENCOUNTER__VERSIONED_ENTRY = IDENTIFIABLE_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Invoice</b></em>' reference.
@@ -4028,7 +4037,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IENCOUNTER__INVOICE = IDENTIFIABLE_FEATURE_COUNT + 9;
+	int IENCOUNTER__INVOICE = IDENTIFIABLE_FEATURE_COUNT + 10;
 
 	/**
 	 * The number of structural features of the '<em>IEncounter</em>' class.
@@ -4037,7 +4046,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IENCOUNTER_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 10;
+	int IENCOUNTER_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 11;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IBilled <em>IBilled</em>}' class.
@@ -7263,6 +7272,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIEncounter_Date();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IEncounter#isBillable <em>Billable</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Billable</em>'.
+	 * @see ch.elexis.core.model.IEncounter#isBillable()
+	 * @see #getIEncounter()
+	 * @generated
+	 */
+	EAttribute getIEncounter_Billable();
+
+	/**
 	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IEncounter#getVersionedEntry <em>Versioned Entry</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9954,6 +9974,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IENCOUNTER__DATE = eINSTANCE.getIEncounter_Date();
+
+		/**
+		 * The meta object literal for the '<em><b>Billable</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IENCOUNTER__BILLABLE = eINSTANCE.getIEncounter_Billable();
 
 		/**
 		 * The meta object literal for the '<em><b>Versioned Entry</b></em>' attribute feature.

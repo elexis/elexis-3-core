@@ -24,7 +24,8 @@ public class ImporterPatientResolver extends HL7PatientResolver {
 	private TimeTool convertTool = new TimeTool();
 	
 	@Override
-	public IPatient resolvePatient(String firstname, String lastname, String birthDate){
+	public IPatient resolvePatient(String firstname, String lastname, String birthDate,
+		String sender){
 		// resolve with full data
 		Patient pat = KontaktMatcher.findPatient(lastname, firstname, birthDate, "", "", "", "", "",
 			CreateMode.FAIL);
@@ -45,13 +46,25 @@ public class ImporterPatientResolver extends HL7PatientResolver {
 		if (pat == null) {
 			convertTool.set(birthDate);
 			String birthStr = convertTool.toString(TimeTool.DATE_GER);
-			pat = (Patient) KontaktSelektor.showInSync(Patient.class, Messages.HL7_SelectPatient,
-				Messages.HL7_WhoIs + lastname + " " + firstname + " ," + birthStr + "?");
+			if (sender != null) {
+				pat = (Patient) KontaktSelektor.showInSync(Patient.class,
+					Messages.HL7_SelectPatient, Messages.HL7_WhoIs + lastname + " " + firstname
+						+ " ," + birthStr + "?\n" + Messages.HL7_Lab + " " + sender);
+			} else {
+				pat =
+					(Patient) KontaktSelektor.showInSync(Patient.class, Messages.HL7_SelectPatient,
+						Messages.HL7_WhoIs + lastname + " " + firstname + " ," + birthStr + "?");
+			}
 		}
 		if (pat != null) {
 			return CoreModelServiceHolder.get().load(pat.getId(), IPatient.class).orElse(null);
 		}
 		return null;
+	}
+	
+	@Override
+	public IPatient resolvePatient(String firstname, String lastname, String birthDate){
+		return resolvePatient(firstname, lastname, birthDate, null);
 	}
 	
 	@Override

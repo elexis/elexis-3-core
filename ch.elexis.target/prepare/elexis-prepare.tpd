@@ -1,5 +1,34 @@
 target "Oxygen.3 for Elexis" with source allEnvironments
 
+// We a mirror http://download.eclipse.org/technology/babel/update-site/R0.16.0/oxygen as
+// it was really unreliable when building on the Jenkins
+location "https://ftp.fau.de/eclipse/technology/babel/update-site/R0.16.0/oxygen" {
+	org.eclipse.swt.nl_de
+	org.eclipse.swt.nl_fr
+	org.eclipse.swt.nl_it
+	org.eclipse.ui.workbench.nl_de
+	org.eclipse.ui.workbench.nl_fr
+	org.eclipse.ui.workbench.nl_it
+	org.eclipse.e4.ui.swt.gtk.nl_de
+	org.eclipse.e4.ui.swt.gtk.nl_fr
+	org.eclipse.e4.ui.swt.gtk.nl_it
+	org.eclipse.e4.ui.workbench.renderers.swt.nl_de
+	org.eclipse.e4.ui.workbench.renderers.swt.nl_fr
+	org.eclipse.e4.ui.workbench.renderers.swt.nl_it
+	org.eclipse.jface.nl_de
+	org.eclipse.jface.nl_fr
+	org.eclipse.jface.nl_it
+	org.eclipse.ui.browser.nl_de
+	org.eclipse.ui.browser.nl_fr
+	org.eclipse.ui.browser.nl_it
+	org.eclipse.ui.views.nl_de
+	org.eclipse.ui.views.nl_fr
+	org.eclipse.ui.views.nl_it
+	org.eclipse.equinox.p2.ui.nl_de
+	org.eclipse.equinox.p2.ui.nl_fr
+	org.eclipse.equinox.p2.ui.nl_it
+}
+
 location "http://download.eclipse.org/e4/snapshots/org.eclipse.e4.tools/latest/" {
 	org.eclipse.e4.tools.spies.feature.feature.group
 }
@@ -142,8 +171,7 @@ location "http://download.elexis.info/elexis-server/elexis-server-dependencies" 
 	ca.uhn.hapi.structures-v26.source
 	org.postgresql.jdbc42
 	org.postgresql.jdbc42.source
-	com.mysql.jdbc
-	com.mysql.jdbc.source
+	com.mysql.cj
 	
 	org.apache.commons.io
 	org.apache.commons.lang3

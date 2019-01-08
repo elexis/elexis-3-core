@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2013, G. Weirich and Elexis
+ * Copyright (c) 2009-2018, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- * 	  MEDEVIT <office@medevit.at> - major changes in 3.0
+ * 	  MEDEVIT <office@medevit.at> - several major changes
  *******************************************************************************/
 
 package ch.elexis.core.data.events;
@@ -15,12 +15,11 @@ package ch.elexis.core.data.events;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,9 +51,10 @@ import ch.elexis.data.PersistentObject;
  * 
  * @since 3.0.0 major changes, switch to {@link ElexisContext}
  * @since 3.4 switched listeners to {@link ListenerList}
+ * @since 3.7 move from Eclipse job to ScheduledExecutorService
  */
-public final class ElexisEventDispatcher extends Job {
-	private static Logger log = LoggerFactory.getLogger(ElexisEventDispatcher.class);
+public final class ElexisEventDispatcher implements Runnable {
+	private  Logger log = LoggerFactory.getLogger(ElexisEventDispatcher.class);
 	
 	private final ListenerList<ElexisEventListener> listeners;
 	private static ElexisEventDispatcher theInstance;
@@ -68,24 +68,24 @@ public final class ElexisEventDispatcher extends Job {
 	
 	private volatile IPerformanceStatisticHandler performanceStatisticHandler;
 	
+	private ScheduledExecutorService service;	
+	
 	public static synchronized ElexisEventDispatcher getInstance(){
 		if (theInstance == null) {
 			theInstance = new ElexisEventDispatcher();
-			theInstance.schedule();
 		}
 		return theInstance;
 	}
 	
 	private ElexisEventDispatcher(){
-		super(ElexisEventDispatcher.class.getName());
-		setSystem(true);
-		setUser(false);
-		setPriority(Job.SHORT);
 		listeners = new ListenerList<ElexisEventListener>();
 		eventQueue = new PriorityQueue<ElexisEvent>(50);
 		eventCopy = new ArrayList<ElexisEvent>(50);
 		
 		elexisUIContext = new ElexisContext();
+		
+		service = Executors.newSingleThreadScheduledExecutor();
+		service.scheduleAtFixedRate(this, 0, 25, TimeUnit.MILLISECONDS);
 	}
 	
 	/**
@@ -312,7 +312,7 @@ public final class ElexisEventDispatcher extends Job {
 	}
 	
 	@Override
-	protected IStatus run(IProgressMonitor monitor){
+	public void run(){
 		// copy all events so doDispatch is outside of synchronization,
 		// and event handling can run code in display thread without deadlock
 		synchronized (eventQueue) {
@@ -327,10 +327,9 @@ public final class ElexisEventDispatcher extends Job {
 		}
 		eventCopy.clear();
 		
-		if (!bStop) {
-			this.schedule(30);
+		if (bStop) {
+			service.shutdown();
 		}
-		return Status.OK_STATUS;
 	}
 	
 	private void doDispatch(final ElexisEvent ee){

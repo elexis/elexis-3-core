@@ -401,10 +401,11 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder>, 
 	 * @since 3.2
 	 */
 	public static List<ILabOrder> getLabOrdersByOrderId(String orderId){
-		Query<ILabOrder> qlo = new Query<ILabOrder>(LabOrder.class);
+		Query<LabOrder> qlo = new Query<LabOrder>(LabOrder.class);
 		qlo.add(FLD_ORDERID, Query.EQUALS, orderId);
 		qlo.add(FLD_ID, Query.NOT_EQUAL, VERSIONID);
-		List<ILabOrder> orders = qlo.execute();
+		@SuppressWarnings("unchecked")
+		List<ILabOrder> orders = (List<ILabOrder>)(List<?>) qlo.execute();
 		if (orders.isEmpty()) {
 			return null;
 		} else {

@@ -60,10 +60,6 @@ public class Messages {
 	public static String Gruppen_BitteGebenSieNameEin = ch.elexis.core.l10n.Messages.Gruppen_BitteGebenSieNameEin;
 	public static String Gruppen_Gruppen = ch.elexis.core.l10n.Messages.Gruppen_Gruppen;
 	public static String Gruppen_GruppenUndRechte = ch.elexis.core.l10n.Messages.Gruppen_GruppenUndRechte;
-	public static String ImporterHost_ExplanationLine1 = ch.elexis.core.l10n.Messages.ImporterHost_ExplanationLine1;
-	public static String ImporterHost_ExplanationLine2 = ch.elexis.core.l10n.Messages.ImporterHost_ExplanationLine2;
-	public static String ImporterHost_ExplanationLine3 = ch.elexis.core.l10n.Messages.ImporterHost_ExplanationLine3;
-	public static String ImporterHost_ExplanationLine4 = ch.elexis.core.l10n.Messages.ImporterHost_ExplanationLine4;
 	public static String LabGroupPrefs_ExplanationsLine1 = ch.elexis.core.l10n.Messages.LabGroupPrefs_ExplanationsLine1;
 	public static String LabGroupPrefs_ExplanationsLine2 = ch.elexis.core.l10n.Messages.LabGroupPrefs_ExplanationsLine2;
 	public static String LabGroupPrefs_ExplanationsLine3 = ch.elexis.core.l10n.Messages.LabGroupPrefs_ExplanationsLine3;

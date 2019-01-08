@@ -9,6 +9,8 @@ import org.eclipse.core.commands.State;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 
+import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.medication.handlers.ApplyCustomSortingHandler;
 import ch.elexis.data.Artikel;
@@ -71,6 +73,24 @@ public class MedicationViewHelper {
 				return TTCOST + " >" + Double.toString(rounded);
 			}
 		}
+	}
+
+	/**
+	 * 
+	 * @param pres alist of prescriptions
+	 * @return an ArrayList of unique GTIN of all prescribed articles
+	 */
+	public static List<IArticle> getAllGtins(List<IPrescription> pres){
+		ArrayList<IArticle> gtins = new ArrayList<>();
+		for (IPrescription pr : pres) {
+			IArticle art = pr.getArticle();
+			if (art != null) {
+				if (!gtins.contains(art)) {
+					gtins.add(art);
+				}
+			}
+		}
+		return gtins;
 	}
 	
 	/**

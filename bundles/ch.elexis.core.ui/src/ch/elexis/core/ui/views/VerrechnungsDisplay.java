@@ -13,6 +13,7 @@
 package ch.elexis.core.ui.views;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,6 +23,7 @@ import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -31,6 +33,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
+import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -52,6 +55,7 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
@@ -61,9 +65,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.statushandlers.StatusManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.common.ElexisEventTopics;
@@ -99,6 +108,7 @@ import ch.elexis.core.ui.services.BillingServiceHolder;
 import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
+import ch.elexis.core.ui.views.controls.InteractionLink;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Eigenleistung;
 import ch.elexis.data.Konsultation;
@@ -112,7 +122,8 @@ import ch.rgw.tools.StringTool;
 
 public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	
-	private Label billedLabel;
+	private Text billedLabel;
+	private InteractionLink interactionLink;
 	private Table table;
 	private TableViewer viewer;
 	private MenuManager contextMenuManager;
@@ -126,13 +137,15 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private TableViewerFocusCellManager focusCellManager;
 	private TableColumnLayout tableLayout;
 		
-	private static final String INDICATED_MEDICATION = Messages.VerrechnungsDisplay_indicatedMedication;
+	private static final String INDICATED_MEDICATION =
+		Messages.VerrechnungsDisplay_indicatedMedication;
 	private static final String APPLY_MEDICATION = Messages.VerrechnungsDisplay_applyMedication;
 	private static final String CHPRICE = Messages.VerrechnungsDisplay_changePrice;
 	private static final String CHCOUNT = Messages.VerrechnungsDisplay_changeNumber;
 	private static final String REMOVE = Messages.VerrechnungsDisplay_removeElements;
 	private static final String CHTEXT = Messages.VerrechnungsDisplay_changeText;
 	private static final String REMOVEALL = Messages.VerrechnungsDisplay_removeAll;
+	static Logger logger = LoggerFactory.getLogger(VerrechnungsDisplay.class);
 	
 	@Inject
 	public void udpateEncounter(
@@ -150,17 +163,27 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			viewer.update(billed, null);
 		}
 	}
+	private ToolBarManager toolBarManager;
 	
 	public VerrechnungsDisplay(final IWorkbenchPage p, Composite parent, int style){
 		super(parent, style);
-		setLayout(new GridLayout(2, false));
+		final int columns_for_each_drug = 4;
+		setLayout(new GridLayout(columns_for_each_drug, false));
 		this.page = p;
 		defaultRGB = UiDesk.createColor(new RGB(255, 255, 255));
 		
-		billedLabel = new Label(this, SWT.NONE);
-		billedLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+		Label label = new Label(this, SWT.NONE);
+		FontDescriptor boldDescriptor =
+			FontDescriptor.createFrom(label.getFont()).setStyle(SWT.BOLD);
+		Font boldFont = boldDescriptor.createFont(label.getDisplay());
+		label.setFont(boldFont);
+		label.setText(Messages.VerrechnungsDisplay_billing);
 		
-		ToolBarManager toolBarManager = new ToolBarManager(SWT.RIGHT);
+		billedLabel = new Text(this, SWT.WRAP);
+		billedLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+		interactionLink = new InteractionLink(this, SWT.NONE);
+		interactionLink.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+		toolBarManager = new ToolBarManager(SWT.RIGHT);
 		toolBarManager.add(new Action() {
 			@Override
 			public ImageDescriptor getImageDescriptor(){
@@ -183,14 +206,63 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					StatusManager.getManager().handle(status, StatusManager.SHOW);
 				}
 			}
+			
+			@Override
+			public boolean isEnabled(){
+				return actEncounter != null && actEncounter.isBillable();
+			}
 		});
+		toolBarManager.add(new Action("", Action.AS_CHECK_BOX) {
+			
+			@Override
+			public ImageDescriptor getImageDescriptor(){
+				return Images.IMG_NOBILLING.getImageDescriptor();
+			}
+			
+			@Override
+			public String getText(){
+				return "keine Verrechnung";
+			}
+			
+			@Override
+			public void run(){
+				actEncounter.setBillable(!actEncounter.isBillable());
+				updateUi();
+			}
+			
+			@Override
+			public boolean isChecked(){
+				if (actEncounter != null) {
+					return !actEncounter.isBillable();
+				}
+				return false;
+			}
+			
+			@Override
+			public boolean isEnabled(){
+				return actEncounter != null && !isBilled(actEncounter);
+			}
+			
+			private boolean isBilled(IEncounter encounter){
+				if (encounter != null) {
+					return encounter.getInvoice() != null;
+				}
+				return false;
+			}
+		});
+		
+		// Populate toolbar contribution manager
+		IMenuService menuService = (IMenuService) PlatformUI.getWorkbench().getService(IMenuService.class);
+		menuService.populateContributionManager(toolBarManager, "toolbar:ch.elexis.VerrechnungsDisplay");
+		
 		ToolBar toolBar = toolBarManager.createControl(this);
-		toolBar.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+		toolBar.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		
 		makeActions();
 		tableLayout = new TableColumnLayout();
 		Composite tableComposite = new Composite(this, SWT.NONE);
-		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+
+		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, columns_for_each_drug, 1));
 		tableComposite.setLayout(tableLayout);
 		viewer = new TableViewer(tableComposite,
 			SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
@@ -380,6 +452,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	}
 	
 	private void updateBilledLabel(){
+		ArrayList<IArticle> gtins = new ArrayList<IArticle>();
 		if (actEncounter != null) {
 			int sumMinutes = 0;
 			Money sum = new Money(0);
@@ -390,9 +463,15 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				if (billable instanceof IService) {
 					sumMinutes += ((IService) billable).getMinutes();
 				}
+				if (billable instanceof IArticle) {
+					IArticle art = (IArticle) billable;
+					gtins.add(art);
+				}				
 			}
-			billedLabel.setText(Messages.PatHeuteView_accAmount + " " + sum.getAmountAsString()
-				+ " / " + Messages.PatHeuteView_accTime + " " + sumMinutes);
+			interactionLink.updateAtcs(gtins);
+			billedLabel.setText(String.format("%s %s / %s %s", //$NON-NLS-1$
+					Messages.PatHeuteView_accAmount, sum.getAmountAsString(),
+					Messages.PatHeuteView_accTime, sumMinutes));
 		} else {
 			billedLabel.setText("");
 		}
@@ -536,10 +615,22 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		if (actEncounter != null) {
 			viewer.setInput(actEncounter.getBilled());
 			updateBilledLabel();
+			updateUi();
 		} else {
 			viewer.setInput(Collections.emptyList());
 			updateBilledLabel();
+			updateUi();
 		}
+	}
+	
+	private void updateUi(){
+		if (toolBarManager != null) {
+			for (IContributionItem contribution : toolBarManager.getItems()) {
+				contribution.update();
+			}
+			toolBarManager.update(true);
+		}
+		viewer.getTable().setEnabled(actEncounter != null && actEncounter.isBillable());
 	}
 	
 	/**

@@ -61,7 +61,8 @@ public class Query<T> {
 	private final static String SELECT_ID_FROM = "SELECT ID FROM ";
 	public static final String LIKE = "LIKE";
 	private String link = " WHERE ";
-
+	private final boolean clearEntityCache;
+	
 	private StringBuilder sql;
 	private PersistentObject template;
 	private Method load;
@@ -99,27 +100,63 @@ public class Query<T> {
 	
 	/**
 	 * Initialize a query with optional pre-fetch
+	 * 
 	 * @param cl
 	 * @param field
+	 *            an initial condition that {@link #EQUALS} to the parameter value, can be
+	 *            <code>null</code>
 	 * @param value
 	 * @param tableName
 	 *            the name of the database table the values are stored in
 	 * @param prefetch
-	 *            array of values to pre-fetch. These must map to columns in the database.
+	 *            array of values to pre-fetch, or <code>null</code>. If not <code>null</code>, must
+	 *            map to columns in the database.
 	 * @throws UnsupportedOperationException
 	 *             for unsupported pre-fetch fields
 	 * @since 3.1
 	 */
-	public Query(final Class<? extends PersistentObject> cl, @Nullable final String field,
-		@Nullable final String value, @Nullable final String tableName,
-		@Nullable final String[] prefetch){
+	public Query(final Class<? extends PersistentObject> cl, @Nullable
+	final String field, @Nullable
+	final String value, @Nullable
+	final String tableName, @Nullable
+	final String[] prefetch){
 		
+		this(cl, tableName, field, value, false, prefetch);
+	}
+	
+	/**
+	 * Initialize a query with optional value prefetch (i.e. cache population)
+	 * 
+	 * @param cl
+	 * @param tableName
+	 *            the name of the database table the values are stored in
+	 * @param field
+	 *            an initial condition that {@link #EQUALS} to the parameter value, can be
+	 *            <code>null</code>
+	 * @param value
+	 * @param clearCache
+	 *            clears all cached attributes for this element, only populating the cache with the
+	 *            current prefetches. ONLY use on objects supporting
+	 *            {@link PersistentObject#clearCachedAttributes()}
+	 * @param prefetch
+	 *            array of values to pre-fetch, or <code>null</code>. If not <code>null</code>, must
+	 *            map to columns in the database.
+	 * @throws UnsupportedOperationException
+	 *             for unsupported prefetch fields, or on objects not supporting
+	 *             {@link #clearEntityCache}
+	 * @since 3.7
+	 */
+	public Query(final Class<? extends PersistentObject> cl, String tableName, @Nullable
+	final String field, @Nullable
+	final String value, boolean clearCache, String[] prefetch){
 		try {
 			// load class first to make sure field mapping is initialized
 			template = CoreHub.poFactory.createTemplate(cl);
 			load = cl.getMethod("load", new Class[] {
 				String.class
 			});
+			
+			clearEntityCache = clearCache;
 			
 			if (prefetch != null) {
 				// resolve the delivered field names to the real database columns
@@ -133,8 +170,8 @@ public class Query<T> {
 					} else if (map.startsWith("S:")) {
 						mappedPrefetchValues.add(map.substring(4));
 					} else {
-						throw new UnsupportedOperationException("prefetch value not supported: "
-							+ prefetch[i] + " maps to " + map);
+						throw new UnsupportedOperationException(
+							"prefetch value not supported: " + prefetch[i] + " maps to " + map);
 					}
 				}
 				
@@ -158,6 +195,19 @@ public class Query<T> {
 	}
 	
 	/**
+	 * Convenience constructor
+	 * 
+	 * @param cl
+	 * @param clearCache
+	 * @param prefetch
+	 * @see #Query(Class, String, String, boolean, String[])
+	 * @since 3.7
+	 */
+	public Query(final Class<? extends PersistentObject> cl, String tableName, boolean clearCache, String[] prefetch){
+		this(cl, tableName, null, null, clearCache, prefetch);
+	}
+	
+	/**
 	 * This method allows to set a custom sql query string; E.g. The original Query does not support
 	 * the usage of INNER JOINS, to use them nevertheless we need to provide a direct method to set
 	 * query strings
@@ -178,6 +228,7 @@ public class Query<T> {
 			sql.append(string);
 			ordering = null;
 			fetchVals = ArrayUtils.EMPTY_STRING_ARRAY;
+			clearEntityCache = false;
 		} catch (Exception ex) {
 			ElexisStatus status =
 				new ElexisStatus(ElexisStatus.ERROR, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
@@ -632,8 +683,13 @@ public class Query<T> {
 					((PersistentObject) o).setDBConnection(connection);
 				}
 				
+				PersistentObject po = (PersistentObject) o;
+				
+				if(clearEntityCache) {
+					po.clearCachedAttributes();
+				}
+				
 				if (fetchVals.length > 1) {
-					PersistentObject po = (PersistentObject) o;
 					for (int i = 1; i < fetchVals.length; i++) {
 						Object prefetchVal = res.getObject(i + 1);
 						po.putInCache(fetchVals[i], prefetchVal);

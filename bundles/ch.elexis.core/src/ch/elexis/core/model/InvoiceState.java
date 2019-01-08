@@ -25,7 +25,7 @@ public enum InvoiceState implements INumericEnum, ILocalizedEnum {
 	PARTIAL_PAYMENT(15),
 	PAID(16),
 	EXCESSIVE_PAYMENT(17),
-	CANCELLED(18),
+	CANCELLED(18), // entspricht Rn.Status STORNIERT
 	FROM_TODAY(19),
 	NOT_FROM_TODAY(20),
 	NOT_FROM_YOU(21),

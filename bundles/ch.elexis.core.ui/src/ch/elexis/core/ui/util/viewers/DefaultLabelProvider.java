@@ -24,6 +24,7 @@ import ch.elexis.data.PersistentObject;
  * 
  * @author Gerry
  */
+
 public class DefaultLabelProvider extends LabelProvider implements ITableLabelProvider {
 	
 	public Image getColumnImage(Object element, int columnIndex){

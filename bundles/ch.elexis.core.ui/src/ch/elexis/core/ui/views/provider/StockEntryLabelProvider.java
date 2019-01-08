@@ -54,12 +54,16 @@ public class StockEntryLabelProvider extends LabelProvider
 			case 3:
 				return (article != null) ? article.getLabel() : "";
 			case 4:
-				return Integer.toString(se.getMinimumStock());
+				return (article != null && article.getSellingPrice() != null)
+						? article.getSellingPrice().toString()
+						: "";
 			case 5:
-				return Integer.toString(se.getCurrentStock());
+				return Integer.toString(se.getMinimumStock());
 			case 6:
-				return Integer.toString(se.getMaximumStock());
+				return Integer.toString(se.getCurrentStock());
 			case 7:
+				return Integer.toString(se.getMaximumStock());
+			case 8:
 				return (se.getProvider() != null) ? se.getProvider().getLabel()
 						: StringConstants.EMPTY;
 			default:

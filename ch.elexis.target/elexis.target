@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
+<<<<<<< HEAD
 <target name="Elexis" sequenceNumber="1540908383">
+=======
+<target name="Elexis" sequenceNumber="1543311310">
+>>>>>>> refs/remotes/origin/master
   <locations>
     <location includeMode="slicer" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.equinox.executable.feature.group" version="3.7.2.v20171108-1834"/>
@@ -14,6 +18,7 @@
       <unit id="org.eclipse.ecf.filetransfer.ssl.feature.feature.group" version="1.1.0.v20170110-1317"/>
       <unit id="org.eclipse.ecf.filetransfer.httpclient4.feature.feature.group" version="3.13.7.v20170516-2248"/>
       <unit id="org.eclipse.ecf.filetransfer.httpclient4.ssl.feature.feature.group" version="1.1.0.v20170110-1317"/>
+<<<<<<< HEAD
       <unit id="osgi.enterprise" version="4.2.0.v201108120515"/>
       <unit id="javax.persistence" version="2.2.1.v201807122140"/>
       <unit id="org.eclipse.persistence.asm" version="6.2.0.v201808041549"/>
@@ -23,6 +28,32 @@
       <unit id="org.eclipse.persistence.jpa" version="2.7.3.v20180807-4be1041"/>
       <unit id="org.eclipse.persistence.extension" version="2.7.3.v20180807-4be1041"/>
       <unit id="org.eclipse.gemini.jpa.feature.feature.group" version="1.2.0.201307051903"/>
+=======
+      <unit id="org.eclipse.swt.nl_de" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.swt.nl_fr" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.swt.nl_it" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.ui.workbench.nl_de" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.ui.workbench.nl_fr" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.ui.workbench.nl_it" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.e4.ui.swt.gtk.nl_de" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.e4.ui.swt.gtk.nl_fr" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.e4.ui.swt.gtk.nl_it" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.e4.ui.workbench.renderers.swt.nl_de" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.e4.ui.workbench.renderers.swt.nl_fr" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.e4.ui.workbench.renderers.swt.nl_it" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.jface.nl_de" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.jface.nl_fr" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.jface.nl_it" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.ui.browser.nl_de" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.ui.browser.nl_fr" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.ui.browser.nl_it" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.ui.views.nl_de" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.ui.views.nl_fr" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.ui.views.nl_it" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.equinox.p2.ui.nl_de" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.equinox.p2.ui.nl_fr" version="4.7.0.v20180815042455"/>
+      <unit id="org.eclipse.equinox.p2.ui.nl_it" version="4.7.0.v20180815042455"/>
+>>>>>>> refs/remotes/origin/master
       <unit id="ch.qos.logback.classic" version="1.0.7.v20121108-1250"/>
       <unit id="ch.qos.logback.core" version="1.0.7.v20121108-1250"/>
       <unit id="ch.qos.logback.slf4j" version="1.0.7.v201505121915"/>
@@ -65,7 +96,11 @@
       <unit id="org.apache.poi.ooxml.schemas" version="3.9.0.v201405241750"/>
       <unit id="org.apache.xmlbeans" version="2.3.0.v201605172150"/>
       <unit id="org.dom4j" version="1.6.1.v201312101416"/>
+<<<<<<< HEAD
       <unit id="info.elexis.server.hapi.fhir" version="3.4.0.201809170851"/>
+=======
+      <unit id="info.elexis.server.hapi.fhir" version="3.4.0.201811211226"/>
+>>>>>>> refs/remotes/origin/master
       <unit id="javax.ws.rs" version="1.1.1.v20130318-1750"/>
       <unit id="org.slf4j.api" version="1.7.2.v20121108-1250"/>
       <unit id="org.slf4j.ext" version="1.7.2.v20121108-1250"/>
@@ -164,7 +199,11 @@
       <unit id="com.ibm.icu.4j" version="3.4.4"/>
       <unit id="com.lowagie.itext" version="2.0.8"/>
       <unit id="com.lowagie.itext.source" version="2.0.8"/>
+<<<<<<< HEAD
       <unit id="com.mysql.jdbc" version="5.1.47"/>
+=======
+      <unit id="com.mysql.cj" version="8.0.13"/>
+>>>>>>> refs/remotes/origin/master
       <unit id="com.sun.jna" version="3.0.9"/>
       <unit id="com.sun.jna.source" version="3.0.9"/>
       <unit id="com.thoughtworks.xstream" version="1.2.2"/>

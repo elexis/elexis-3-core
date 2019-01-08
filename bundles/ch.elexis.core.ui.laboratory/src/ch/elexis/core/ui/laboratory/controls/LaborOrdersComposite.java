@@ -440,6 +440,8 @@ public class LaborOrdersComposite extends Composite {
 								((LaborOrderViewerItem) object).deleteOrder();
 							}
 						});
+					} else {
+						((LaborOrderViewerItem) object).deleteOrder();
 					}
 				}
 			}

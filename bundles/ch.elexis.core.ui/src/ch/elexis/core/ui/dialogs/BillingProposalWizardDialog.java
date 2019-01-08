@@ -217,7 +217,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 	private class QueryProposalRunnable implements IRunnableWithProgress {
 		
 		private static final String PS_GETOPENKONSOFFALL =
-			"SELECT ID FROM BEHANDLUNGEN WHERE deleted='0' AND RechnungsID is null AND FallID=?";
+			"SELECT ID FROM BEHANDLUNGEN WHERE deleted='0' AND billable='1' AND RechnungsID is null AND FallID=?";
 		
 		private boolean canceled = false;
 		private List<Konsultation> proposal = new ArrayList<>();
@@ -232,6 +232,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		public QueryProposalRunnable(){
 			query = new Query<>(Konsultation.class);
 			query.add(Konsultation.FLD_BILL_ID, Query.EQUALS, null);
+			query.add(Konsultation.FLD_BILLABLE, Query.EQUALS, "1");
 			if (timeSpanOnly.getSelection()) {
 				IStructuredSelection selection =
 					(IStructuredSelection) timeSpanSelection.getSelection();

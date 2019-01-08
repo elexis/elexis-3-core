@@ -273,6 +273,7 @@ public enum Images {
 		IMG_SORT_DATE,
 		IMG_SORT_DATE_DESCENDING,
 		IMG_CARDS,
+		IMG_NOBILLING,
 		IMG_BAGGAGE_CART_BOX;
 		
 	private Images(){}

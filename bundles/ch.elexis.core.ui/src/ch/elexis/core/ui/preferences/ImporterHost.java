@@ -14,13 +14,14 @@ package ch.elexis.core.ui.preferences;
 
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import ch.elexis.core.l10n.Messages;
 public class ImporterHost extends PreferencePage implements IWorkbenchPreferencePage {
 	
 	public ImporterHost(){
@@ -29,13 +30,10 @@ public class ImporterHost extends PreferencePage implements IWorkbenchPreference
 	
 	@Override
 	protected Control createContents(Composite parent){
-		Composite ret = new Composite(parent, SWT.NONE);
+		Composite ret = new Composite(parent, SWT.READ_ONLY);
 		ret.setLayout(new FillLayout());
-		StyledText text = new StyledText(ret, SWT.NONE);
-		text.setWordWrap(true);
-		text.setText(Messages.ImporterHost_ExplanationLine1
-			+ Messages.ImporterHost_ExplanationLine2 + Messages.ImporterHost_ExplanationLine3
-			+ Messages.ImporterHost_ExplanationLine4);
+		Label text = new Label(ret, SWT.WRAP);
+		text.setText(Messages.ImporterHost_Explanation);
 		return ret;
 	}
 	

@@ -33,6 +33,7 @@ import ch.elexis.core.data.interfaces.ShutdownJob;
 import ch.elexis.core.data.interfaces.scripting.Interpreter;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.events.UiPatientEventListener;
+import ch.elexis.core.ui.events.UiUserEventListener;
 import ch.elexis.core.ui.preferences.PreferenceInitializer;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Mandant;
@@ -69,6 +70,11 @@ public class Hub extends AbstractUIPlugin {
 	 */
 	private final UiPatientEventListener eeli_pat = new UiPatientEventListener();
 	
+	/**
+	 * The listener for user change events
+	 */
+	private final UiUserEventListener eeli_user = new UiUserEventListener();
+	
 	// Globale Variable
 	/**
 	 * Suche externe Config - poor mans dependency -> see
@@ -88,7 +94,7 @@ public class Hub extends AbstractUIPlugin {
 		log.debug("Starting " + this.getClass().getName());
 		plugin = this;
 		
-		ElexisEventDispatcher.getInstance().addListeners(eeli_pat);
+		ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_user);
 		
 		// add UI ClassLoader to default Script Interpreter
 		Interpreter.classLoaders.add(Hub.class.getClassLoader());
@@ -99,7 +105,7 @@ public class Hub extends AbstractUIPlugin {
 		plugin = null;
 		log.debug("Stopping " + this.getClass().getName());
 		
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat);
+		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat, eeli_user);
 			
 		super.stop(context);
 	}

@@ -271,8 +271,8 @@ public class Anwender extends Person {
 		}
 		
 		// set user in system
-		ElexisEventDispatcher.getInstance().fire(new ElexisEvent(user, User.class, ElexisEvent.EVENT_SELECTED));
 		CoreHub.actUser = anwender;
+		ElexisEventDispatcher.getInstance().fire(new ElexisEvent(user, User.class, ElexisEvent.EVENT_SELECTED));
 		ElexisEventDispatcher.getInstance()
 				.fire(new ElexisEvent(CoreHub.actUser, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
 

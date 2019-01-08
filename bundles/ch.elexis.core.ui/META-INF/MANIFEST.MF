@@ -30,7 +30,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.e4.core.services;bundle-version="2.0.100",
  org.eclipse.e4.ui.model.workbench;bundle-version="1.2.0",
  ch.elexis.core.l10n,
- com.google.zxing.core;bundle-version="3.3.2"
+ com.google.zxing.core;bundle-version="3.3.2",
+ com.google.guava,
+ net.sf.opencsv
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: ch.elexis.core.ui,

@@ -120,11 +120,11 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 	
 	String[] columns = {
 		Messages.LagerView_stock, Messages.LagerView_pharmacode, Messages.LagerView_gtin,
-		Messages.LagerView_name, Messages.LagerView_minBestand, Messages.LagerView_istBestand,
+		Messages.LagerView_name, Messages.LagerView_vkPreis, Messages.LagerView_minBestand, Messages.LagerView_istBestand,
 		Messages.LagerView_maxBestand, Messages.LagerView_dealer
 	};
 	int[] colwidth = {
-		50, 75, 90, 250, 35, 35, 35, 150
+		50, 75, 90, 250, 50, 35, 35, 35, 150
 	};
 	
 	private void refreshConsiderFilter(){
@@ -202,11 +202,11 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 			tvc.setLabelProvider(new ColumnStockEntryLabelProvider(i, labelProvider));
 			
 			ReflectiveEditingSupport poes = null;
-			if (i == 4) {
+			if (i == 5) {
 				poes = new ReflectiveEditingSupport(viewer,
 					ModelPackage.Literals.ISTOCK_ENTRY__MINIMUM_STOCK.getName(),
 					new NumericCellEditorValidator(), true);
-			} else if (i == 5) {
+			} else if (i == 6) {
 				poes = new ReflectiveEditingSupport(viewer,
 					ModelPackage.Literals.ISTOCK_ENTRY__CURRENT_STOCK.getName(),
 					new NumericCellEditorValidator(), true) {
@@ -219,7 +219,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 						return true;
 					};
 				};
-			} else if (i == 6) {
+			} else if (i == 7) {
 				poes = new ReflectiveEditingSupport(viewer,
 					ModelPackage.Literals.ISTOCK_ENTRY__MAXIMUM_STOCK.getName(),
 					new NumericCellEditorValidator(), true);
@@ -229,7 +229,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 				tvc.setEditingSupport(poes.setModelService(CoreModelServiceHolder.get()));
 			}
 			
-			if (i == 7) {
+			if (i == 8) {
 				EditingSupport providerEditingSupport = new EditingSupport(viewer) {
 					
 					@Override

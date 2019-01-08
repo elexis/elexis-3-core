@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -46,13 +45,14 @@ public class ReChargeTarmedOpenCons extends ExternalMaintenance {
 				CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_BILLING_STRICT, false);
 			CoreHub.userCfg.set(Preferences.LEISTUNGSCODES_BILLING_STRICT, false);
 			
-			TimeTool beginOfYear = new TimeTool();
-			beginOfYear.set(TimeTool.MONTH, 0);
-			beginOfYear.set(TimeTool.DAY_OF_MONTH, 1);
-			List<Konsultation> consultations = getKonsultation(beginOfYear);
+			List<Konsultation> consultations = getKonsultation(getBeginOfYear(), getEndOfYear());
 			pm.beginTask("Bitte warten, Tarmed Leistungen werden neu verrechnet",
 				consultations.size());
 			for (Konsultation konsultation : consultations) {
+				// only still open Konsultation
+				if (konsultation.getRechnung() != null)
+					continue;
+				
 				if (pm.isCanceled()) {
 					addProblem("Cancelled.", konsultation);
 					return getProblemsString();
@@ -92,8 +92,23 @@ public class ReChargeTarmedOpenCons extends ExternalMaintenance {
 			deInitCodeElementService();
 		}
 		
-		return "Tarmed Leistungen von [" + count + "] Konsultationen neu verrechnet"
+		return "Tarmed Leistungen von [" + count + "] Konsultationen des Jahres ["
+			+ getBeginOfYear().get(TimeTool.YEAR) + "] neu verrechnet"
 			+ getProblemsString();
+	}
+	
+	protected TimeTool getBeginOfYear(){
+		TimeTool beginOfYear = new TimeTool();
+		beginOfYear.set(TimeTool.MONTH, 0);
+		beginOfYear.set(TimeTool.DAY_OF_MONTH, 1);
+		return beginOfYear;
+	}
+	
+	protected TimeTool getEndOfYear(){
+		TimeTool endOfYear = getBeginOfYear();
+		endOfYear.set(TimeTool.MONTH, 11);
+		endOfYear.set(TimeTool.DAY_OF_MONTH, 31);
+		return endOfYear;
 	}
 	
 	private void addVerrechnet(Konsultation konsultation,
@@ -175,10 +190,13 @@ public class ReChargeTarmedOpenCons extends ExternalMaintenance {
 		return ret;
 	}
 	
-	public static List<Konsultation> getKonsultation(TimeTool from){
+	public static List<Konsultation> getKonsultation(TimeTool from, TimeTool to){
 		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
 		qbe.add(Konsultation.DATE, Query.GREATER_OR_EQUAL, from.toString(TimeTool.DATE_COMPACT));
-		return qbe.execute().stream().filter(c -> c.isEditable(false)).collect(Collectors.toList());
+		if (to != null) {
+			qbe.add(Konsultation.DATE, Query.LESS_OR_EQUAL, to.toString(TimeTool.DATE_COMPACT));
+		}
+		return qbe.execute();
 	}
 	
 	private String getProblemsString(){

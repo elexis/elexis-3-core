@@ -34,6 +34,10 @@ public class FontPreference extends FieldEditorPreferencePage implements IWorkbe
 	protected void createFieldEditors(){
 		addField(new FontFieldEditor(Preferences.USR_DEFAULTFONT,
 			Messages.FontPreference_standardschriftart, "Elexis", getFieldEditorParent())); //$NON-NLS-1$
+		
+		addField(new FontFieldEditor(Preferences.USR_AGENDAFONT,
+			Messages.FontPreference_agendaschriftart, "Agenda", getFieldEditorParent())); //$NON-NLS-1$
+		
 	}
 	
 	public void init(IWorkbench workbench){

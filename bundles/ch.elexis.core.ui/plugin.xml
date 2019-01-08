@@ -675,17 +675,17 @@
       <command
             defaultHandler="ch.elexis.core.ui.locks.ToggleCurrentPatientLockHandler"
             id="ch.elexis.core.ui.command.ToggleCurrentPatientLockCommand"
-            name="Toggle current patient lock">
+            name="%togglePatientLock">
       </command>
       <command
             defaultHandler="ch.elexis.core.ui.locks.ToggleCurrentKontaktLockHandler"
             id="ch.elexis.core.ui.command.ToggleCurrentKontaktLockCommand"
-            name="Toggle current contact lock">
+            name="%toggleContactLock">
       </command>
       <command
             defaultHandler="ch.elexis.core.ui.locks.ToggleCurrentKonsultationLockHandler"
             id="ch.elexis.core.ui.command.ToggleCurrentKonsultationLockCommand"
-            name="Toggle current consultation lock">
+            name="%toggleConsultationLock">
       </command>
       <command
             defaultHandler="ch.elexis.core.ui.locks.LockStatusDialogHandler"
@@ -695,7 +695,7 @@
       <command
             defaultHandler="ch.elexis.core.ui.locks.ToggleCurrentCaseLockHandler"
             id="ch.elexis.core.ui.command.ToggleCurrentCaseLockCommand"
-            name="Toggle current case lock">
+            name="%toggleCaseLock">
       </command>
       <command
             defaultHandler="ch.elexis.core.ui.commands.SendBriefAsMailHandler"
@@ -705,7 +705,7 @@
       <command
             defaultHandler="ch.elexis.core.ui.commands.SendHandler"
             id="ch.elexis.core.ui.brief.send"
-            name="Send Menu">
+            name="%SendMenu">
       </command>
       <command
             id="ch.elexis.core.ui.StartBillingProposal"
@@ -752,11 +752,26 @@
       <command
             defaultHandler="ch.elexis.core.ui.locks.ToggleCurrentInvoiceLockHandler"
             id="ch.elexis.core.ui.command.ToggleCurrentInvoiceLockCommand"
-            name="Toggle current invoice lock">
+            name="%toggleInvoiceLock">
       </command>
       <command
             id="ch.elexis.core.ui.command.openCompendium"
-            name="Open Compendium Website">
+            name="%open.compendium">
+      </command>
+      <command
+            id="ch.elexis.core.ui.commands.printPatientLabel"
+            categoryId="ch.elexis.core.ui.commands.kategorie"
+            defaultHandler="ch.elexis.core.ui.commands.PrintPatientLabelHandler">
+      </command>
+      <command
+            id="ch.elexis.core.ui.commands.printVersionedLabel"
+            categoryId="ch.elexis.core.ui.commands.kategorie"
+            defaultHandler="ch.elexis.core.ui.commands.PrintVersionedLabelHandler">
+      </command>
+      <command
+            id="ch.elexis.core.ui.commands.printAddressLabel"
+            categoryId="ch.elexis.core.ui.commands.kategorie"
+            defaultHandler="ch.elexis.core.ui.commands.PrintAddressLabelHandler">
       </command>
    </extension>
       <extension

@@ -11,6 +11,30 @@ location "http://download.elexis.info/elexis/f11106/p2/target/" {
 	org.eclipse.ecf.filetransfer.ssl.feature.feature.group
 	org.eclipse.ecf.filetransfer.httpclient4.feature.feature.group
 	org.eclipse.ecf.filetransfer.httpclient4.ssl.feature.feature.group
+	org.eclipse.swt.nl_de
+	org.eclipse.swt.nl_fr
+	org.eclipse.swt.nl_it
+	org.eclipse.ui.workbench.nl_de
+	org.eclipse.ui.workbench.nl_fr
+	org.eclipse.ui.workbench.nl_it
+	org.eclipse.e4.ui.swt.gtk.nl_de
+	org.eclipse.e4.ui.swt.gtk.nl_fr
+	org.eclipse.e4.ui.swt.gtk.nl_it
+	org.eclipse.e4.ui.workbench.renderers.swt.nl_de
+	org.eclipse.e4.ui.workbench.renderers.swt.nl_fr
+	org.eclipse.e4.ui.workbench.renderers.swt.nl_it
+	org.eclipse.jface.nl_de
+	org.eclipse.jface.nl_fr
+	org.eclipse.jface.nl_it
+	org.eclipse.ui.browser.nl_de
+	org.eclipse.ui.browser.nl_fr
+	org.eclipse.ui.browser.nl_it
+	org.eclipse.ui.views.nl_de
+	org.eclipse.ui.views.nl_fr
+	org.eclipse.ui.views.nl_it
+	org.eclipse.equinox.p2.ui.nl_de
+	org.eclipse.equinox.p2.ui.nl_fr
+	org.eclipse.equinox.p2.ui.nl_it
 
 	osgi.enterprise
 	javax.persistence
@@ -170,7 +194,11 @@ location "http://download.elexis.info/elexis/f11106/p2/target/" {
 	com.ibm.icu.4j 2.6.1
 	com.lowagie.itext 2.0.8
 	com.lowagie.itext.source 2.0.8
+<<<<<<< HEAD
 	com.mysql.jdbc
+=======
+	com.mysql.cj
+>>>>>>> refs/remotes/origin/master
 	com.sun.jna 3.0.9
 	com.sun.jna.source 3.0.9
 	com.thoughtworks.xstream 1.2.2

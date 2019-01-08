@@ -36,6 +36,11 @@ public class CodeElementServiceHolder {
 		return elementService;
 	}
 	
+	/**
+	 * Create a context map using the selection of {@link ElexisEventDispatcher}.
+	 * 
+	 * @return
+	 */
 	public static HashMap<Object, Object> createContext(){
 		HashMap<Object, Object> ret = new HashMap<>();
 		Optional<Konsultation> consultation =
@@ -46,6 +51,23 @@ public class CodeElementServiceHolder {
 		Optional<Fall> coverage = ContextServiceHolder.get().getRootContext().getTyped(Fall.class);
 		if (coverage.isPresent()) {
 			ret.put(ContextKeys.COVERAGE, coverage.get());
+		}
+		return ret;
+	}
+	
+	/**
+	 * Create a context map using the provided {@link Konsultation}.
+	 * 
+	 * @param consultation
+	 * @return
+	 */
+	public static HashMap<Object, Object> createContext(Konsultation consultation){
+		HashMap<Object, Object> ret = new HashMap<>();
+		if (consultation != null) {
+			ret.put(ContextKeys.CONSULTATION, consultation);
+		}
+		if (consultation != null) {
+			ret.put(ContextKeys.COVERAGE, consultation.getFall());
 		}
 		return ret;
 	}

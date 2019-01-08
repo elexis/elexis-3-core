@@ -26,6 +26,7 @@ import java.util.List;
  * <ul>
  *   <li>{@link ch.elexis.core.model.IEncounter#getTimeStamp <em>Time Stamp</em>}</li>
  *   <li>{@link ch.elexis.core.model.IEncounter#getDate <em>Date</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IEncounter#isBillable <em>Billable</em>}</li>
  *   <li>{@link ch.elexis.core.model.IEncounter#getPatient <em>Patient</em>}</li>
  *   <li>{@link ch.elexis.core.model.IEncounter#getMandator <em>Mandator</em>}</li>
  *   <li>{@link ch.elexis.core.model.IEncounter#getBilled <em>Billed</em>}</li>
@@ -190,6 +191,32 @@ public interface IEncounter extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	void setDate(LocalDate value);
+
+	/**
+	 * Returns the value of the '<em><b>Billable</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Billable</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Billable</em>' attribute.
+	 * @see #setBillable(boolean)
+	 * @see ch.elexis.core.model.ModelPackage#getIEncounter_Billable()
+	 * @model
+	 * @generated
+	 */
+	boolean isBillable();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IEncounter#isBillable <em>Billable</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Billable</em>' attribute.
+	 * @see #isBillable()
+	 * @generated
+	 */
+	void setBillable(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Versioned Entry</b></em>' attribute.

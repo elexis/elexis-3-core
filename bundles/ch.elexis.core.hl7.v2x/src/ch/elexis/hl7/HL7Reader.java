@@ -57,7 +57,19 @@ public abstract class HL7Reader {
 	};
 	
 	protected void resolvePatient(String firstName, String lastName, String birthDate){
-		pat = patientResolver.resolvePatient(firstName, lastName, birthDate);
+		String sender = null;
+		try {
+			sender = getSender();
+		} catch (ElexisException e) {
+			// ignore and resolve without sender
+		}
+		if (pat == null) {
+			if (sender != null && !sender.isEmpty()) {
+				pat = patientResolver.resolvePatient(firstName, lastName, birthDate, sender);
+			} else {
+				pat = patientResolver.resolvePatient(firstName, lastName, birthDate);
+			}
+		}
 		if (pat == null) {
 			logger.warn(Messages.HL7_PatientNotInDatabase);
 		}

@@ -341,6 +341,7 @@
     <genClasses image="false" ecoreClass="model.ecore#//IEncounter">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IEncounter/timeStamp"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IEncounter/date"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IEncounter/billable"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IEncounter/patient"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IEncounter/mandator"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IEncounter/billed"/>

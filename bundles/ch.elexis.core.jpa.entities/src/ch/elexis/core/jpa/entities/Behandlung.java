@@ -41,6 +41,10 @@ public class Behandlung extends AbstractEntityWithId implements EntityWithId, En
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
 	
+	@Column
+	@Convert(converter = BooleanCharacterConverterSafe.class)
+	private boolean billable = false;
+	
 	@ManyToOne
 	@JoinColumn(name = "FallID")
 	private Fall fall;
@@ -149,5 +153,13 @@ public class Behandlung extends AbstractEntityWithId implements EntityWithId, En
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
+	}
+	
+	public boolean getBillable(){
+		return billable;
+	}
+	
+	public void setBillable(boolean value){
+		this.billable = value;
 	}
 }

@@ -43,6 +43,8 @@ public interface IDocumentManager {
 	 */
 	public String addDocument(IOpaqueDocument doc) throws ElexisException;
 	
+	public String addDocument(IOpaqueDocument doc, boolean automaticBilling) throws ElexisException;
+	
 	/**
 	 * remove and delete a document
 	 * 

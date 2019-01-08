@@ -2351,8 +2351,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getIEncounter_Patient() {
-		return (EReference)iEncounterEClass.getEStructuralFeatures().get(2);
+	public EAttribute getIEncounter_Billable() {
+		return (EAttribute)iEncounterEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -2360,7 +2360,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getIEncounter_Mandator() {
+	public EReference getIEncounter_Patient() {
 		return (EReference)iEncounterEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -2369,7 +2369,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getIEncounter_Billed() {
+	public EReference getIEncounter_Mandator() {
 		return (EReference)iEncounterEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -2378,7 +2378,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getIEncounter_Diagnoses() {
+	public EReference getIEncounter_Billed() {
 		return (EReference)iEncounterEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -2387,7 +2387,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getIEncounter_Coverage() {
+	public EReference getIEncounter_Diagnoses() {
 		return (EReference)iEncounterEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -2396,8 +2396,17 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getIEncounter_Coverage() {
+		return (EReference)iEncounterEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EAttribute getIEncounter_VersionedEntry() {
-		return (EAttribute)iEncounterEClass.getEStructuralFeatures().get(7);
+		return (EAttribute)iEncounterEClass.getEStructuralFeatures().get(8);
 	}
 
 	/**
@@ -2406,7 +2415,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	public EReference getIEncounter_Invoice() {
-		return (EReference)iEncounterEClass.getEStructuralFeatures().get(8);
+		return (EReference)iEncounterEClass.getEStructuralFeatures().get(9);
 	}
 
 	/**
@@ -3435,6 +3444,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iEncounterEClass = createEClass(IENCOUNTER);
 		createEAttribute(iEncounterEClass, IENCOUNTER__TIME_STAMP);
 		createEAttribute(iEncounterEClass, IENCOUNTER__DATE);
+		createEAttribute(iEncounterEClass, IENCOUNTER__BILLABLE);
 		createEReference(iEncounterEClass, IENCOUNTER__PATIENT);
 		createEReference(iEncounterEClass, IENCOUNTER__MANDATOR);
 		createEReference(iEncounterEClass, IENCOUNTER__BILLED);
@@ -4046,6 +4056,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEClass(iEncounterEClass, IEncounter.class, "IEncounter", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIEncounter_TimeStamp(), theTypesPackage.getLocalDateTime(), "timeStamp", null, 0, 1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIEncounter_Date(), theTypesPackage.getLocalDate(), "date", null, 0, 1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIEncounter_Billable(), ecorePackage.getEBoolean(), "billable", null, 0, 1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIEncounter_Patient(), this.getIPatient(), null, "patient", null, 0, 1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIEncounter_Mandator(), this.getIMandator(), null, "mandator", null, 0, 1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIEncounter_Billed(), this.getIBilled(), null, "billed", null, 0, -1, IEncounter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

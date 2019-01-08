@@ -178,6 +178,7 @@ public class DBConnection {
 	 */
 	public boolean connect(){
 		if (jdbcLink == null && dbDriver != null && dbConnectString != null && dbFlavor != null) {
+			applyMySqlTimeZoneWorkaround();
 			jdbcLink = new JdbcLink(dbDriver, dbConnectString, dbFlavor);
 		} else if (jdbcLink == null && dbConnectString != null && dbFlavor == null
 			&& dbDriver == null) {
@@ -291,5 +292,21 @@ public class DBConnection {
 	
 	public Connection getConnection(){
 		return jdbcLink.getConnection();
+	}
+	
+	/**
+	 * @since 3.7 due to mysql jdbc update a timezone problem may exist, see e.g.
+	 *        https://github.com/elexis/elexis-3-core/issues/273 - we fix this by
+	 *        adding this parameter if not yet included
+	 */
+	public void applyMySqlTimeZoneWorkaround() {
+		if (dbFlavor.equalsIgnoreCase("mysql") && !dbConnectString.contains("serverTimezone")) {
+			if (dbConnectString.contains("?")) {
+				dbConnectString += "&serverTimezone=Europe/Zurich";
+			} else {
+				dbConnectString += "?serverTimezone=Europe/Zurich";
+			}
+			logger.info("MySQL dbConnection string correction [{}]", dbConnectString);
+		}
 	}
 }

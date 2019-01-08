@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ch.elexis.core</groupId>
 	<artifactId>elexis-3-core</artifactId>
-	<version>3.7.0-SNAPSHOT</version>
+	<version>3.8.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Elexis-Core</name>
 
@@ -185,11 +185,9 @@
 						<configuration>
 							<environments>
 								<environment>
-									<environment>
-										<os>macosx</os>
-										<ws>cocoa</ws>
-										<arch>x86_64</arch>
-									</environment>
+									<os>macosx</os>
+									<ws>cocoa</ws>
+									<arch>x86_64</arch>
 								</environment>
 							</environments>
 						</configuration>

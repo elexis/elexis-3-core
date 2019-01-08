@@ -343,6 +343,17 @@ public class Messages extends NLS {
 	public static String SelectDateDialog_description;
 	public static String SelectDateDialog_from;
 	public static String SelectDateDialog_to;
+	public static String VerrDetailDialog_NoInteractionKnown;
+	public static String VerrDetailDialog_InteractionEpha;
+	public static String VerrDetailDialog_InteractionBaseURL;
+	public static String VerrDetailDialog_InteractionTooltip;
+	public static String VerrDetailDialog_ImportInteractions;
+	public static String VerrDetailDialog_DownloadInteractions;
+	public static String Interaction_Class_A;
+	public static String Interaction_Class_B;
+	public static String Interaction_Class_C;
+	public static String Interaction_Class_D;
+	public static String Interaction_Class_X;
 	public static String VerrDetailDialog_NoPatientSelected;
 	public static String VerrDetailDialog_billingData;
 	public static String VerrDetailDialog_detailsOfOpenKons;
@@ -563,6 +574,7 @@ public class Messages extends NLS {
 	public static String EditAUFDialog_percent;
 	public static String EditAUFDialog_reason;
 	public static String EditAUFDialog_until;
+	public static String ReminderListSelectionDialog_SelectToClose;
 	public static String EditReminderDialog_actionwhenDue;
 	public static String EditReminderDialog_all;
 	public static String EditReminderDialog_assigTo;
@@ -697,6 +709,7 @@ public class Messages extends NLS {
 	public static String KontaktExtDialog_value;
 	public static String KontaktSelector_abbreviation;
 	public static String KontaktSelector_expression1;
+	public static String KontaktSelector_expression2;
 	public static String KontaktSelector_title;
 	public static String KontaktSelector_birthDate;
 	public static String KontaktSelector_clearField;
@@ -1100,6 +1113,7 @@ public class Messages extends NLS {
 	public static String LagerView_maxBestand;
 	public static String LagerView_minBestand;
 	public static String LagerView_name;
+	public static String LagerView_vkPreis;
 	public static String LagerView_gtin;
 	public static String LagerView_stock;
 	public static String LagerView_pharmacode;
@@ -1960,6 +1974,7 @@ public class Messages extends NLS {
 	public static String FixMediDisplay_UsageList;
 	public static String FontPreference_schriftarten;
 	public static String FontPreference_standardschriftart;
+	public static String FontPreference_agendaschriftart;
 	public static String GenericImporterBlatt_ChangeIfNeeded;
 	public static String GenericImporterBlatt_FieldsElexis;
 	public static String GenericImporterBlatt_FieldsExcel;
@@ -2046,10 +2061,7 @@ public class Messages extends NLS {
 	public static String ImportLabMapping_shellTitle;
 	public static String ImportLabMapping_title;
 	public static String ImportLabMapping_titleProblemDialog;
-	public static String ImporterHost_ExplanationLine1;
-	public static String ImporterHost_ExplanationLine2;
-	public static String ImporterHost_ExplanationLine3;
-	public static String ImporterHost_ExplanationLine4;
+	public static String ImporterHost_Explanation;
 	public static String ImporterPage_allFiles;
 	public static String ImporterPage_browse;
 	public static String ImporterPage_couldntConnect;
@@ -2619,6 +2631,9 @@ public class Messages extends NLS {
 	public static String UserPreferences_SaveSettingsTo;
 	public static String UserPreferences_WorkspaceSettingsSaveTo;
 	public static String UserSettings2_AddidtionalFields;
+	public static String UserSettings2_SuppressInteractionCheck;
+	public static String SuppressInteractionActive;
+	public static String SuppressInteractionCheckTooltip;
 	public static String UserSettings2_AlwaysClosed;
 	public static String UserSettings2_AlwaysOpen;
 	public static String UserSettings2_Birthdate;
@@ -2675,11 +2690,14 @@ public class Messages extends NLS {
 	public static String LabEvaluationRulesPreferencePage_btnCheckNonStringEqualRefValResValIsPathologicText_text;
 	public static String LabEvaluationRulesPreferencePage_lblWennKeineRegel_text;
 	public static String LabEvaluationRulesPreferencePage_lblResultatEndbestimmt_text;
-	public static String LabEvaluationRulesPreferencePage_lblLabNoPathFlagMeansNonPath_text;
 	public static String MPF_Rule_PathDescriptionText;
 	public static String BestellView_Title;
 	public static String BestellView_WizardAskNewOrder;
 	public static String BestellView_OrderIsClosed;
+	public static String DailyOrderMandant;
+	public static String DailyOrderMandantOnlyFollowing;
+	public static String DailyOrderMandantNone;
+	
 	
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

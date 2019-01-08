@@ -188,6 +188,12 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 	}
 	
 	@Override
+	protected void performApply(){
+		cfg.flush();
+		super.performApply();
+	}
+	
+	@Override
 	public boolean performOk(){
 		CoreHub.userCfg.set(Preferences.USR_SHOWPATCHGREMINDER,
 			showRemindersOnPatientSelectionEventBtn.getSelection());

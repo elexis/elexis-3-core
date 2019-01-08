@@ -36,6 +36,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.tiff.common.ui.datepicker.DatePickerCombo;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.issue.Priority;
@@ -179,6 +180,18 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 		});
 		lvResponsible.addSelectionChangedListener(sc -> {
 			responsibles = ((StructuredSelection) sc.getSelection()).toList();
+			
+			List<String> persist = new ArrayList<>();
+			for (Object responsible : responsibles) {
+				if(responsible instanceof Anwender) {
+					persist.add(((Anwender) responsible).getId());
+				} else {
+					persist.add(responsible.toString());
+				}
+			}
+			
+			CoreHub.userCfg.setAsList(Preferences.USR_REMINDER_SELECTED_RESPONSIBLES_DEFAULT, persist);
+			CoreHub.userCfg.flush();
 		});
 		List<Object> inputList = new ArrayList<Object>();
 		inputList.add(TX_ALL);
@@ -416,13 +429,31 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 		updateModelToTarget();
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void updateModelToTarget(){
-		if(reminder != null) {
+		if (reminder != null) {
 			List<Anwender> resp = reminder.getResponsibles();
 			if (resp == null) {
 				responsibles = Collections.singletonList(TX_ALL);
 			} else {
 				responsibles = resp;
+			}
+		} else {
+			List<String> defResponsibles =
+				CoreHub.userCfg.getAsList(Preferences.USR_REMINDER_SELECTED_RESPONSIBLES_DEFAULT);
+			if (defResponsibles.isEmpty()) {
+				responsibles = Collections.singletonList(TX_ALL);
+			} else {
+				@SuppressWarnings("rawtypes")
+				List defaultResponsibles = new ArrayList();
+				for (String value : defResponsibles) {
+					Object entry = value;
+					if(!TX_ALL.equals(value)) {
+						entry = Anwender.load(value.toString());
+					}
+					defaultResponsibles.add(entry);
+				}
+				responsibles = defaultResponsibles;
 			}
 		}
 

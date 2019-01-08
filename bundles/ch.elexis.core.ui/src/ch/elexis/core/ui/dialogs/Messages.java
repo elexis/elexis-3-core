@@ -196,6 +196,8 @@ public class Messages {
 	public static String KontaktExtDialog_value = ch.elexis.core.l10n.Messages.KontaktExtDialog_value;
 	public static String KontaktSelector_abbreviation = ch.elexis.core.l10n.Messages.KontaktSelector_abbreviation;
 	public static String KontaktSelector_expression1 = ch.elexis.core.l10n.Messages.KontaktSelector_expression1;
+	public static String KontaktSelector_expression2 =
+		ch.elexis.core.l10n.Messages.KontaktSelector_expression2;
 	public static String KontaktSelector_title = ch.elexis.core.l10n.Messages.KontaktSelector_title;
 	public static String KontaktSelector_birthDate = ch.elexis.core.l10n.Messages.KontaktSelector_birthDate;
 	public static String KontaktSelector_clearField = ch.elexis.core.l10n.Messages.KontaktSelector_clearField;
@@ -288,6 +290,7 @@ public class Messages {
 	public static String DailyOrderDialog_Message = ch.elexis.core.l10n.Messages.DailyOrderDialog_Message;
 	public static String DailyOrderDialog_Amount = ch.elexis.core.l10n.Messages.DailyOrderDialog_Amount;
 	public static String DailyOrderDialog_Article = ch.elexis.core.l10n.Messages.DailyOrderDialog_Article;
+	public static String DailyOrderMandant = ch.elexis.core.l10n.Messages.DailyOrderMandant;
 	public static String ReminderDetailDialog_grpPriority_text = ch.elexis.core.l10n.Messages.ReminderDetailDialog_grpPriority_text;
 	public static String ReminderDetailDialog_btnPriorityLow_text = ch.elexis.core.l10n.Messages.ReminderDetailDialog_btnPriorityLow_text;
 	public static String ReminderDetailDialog_btnPriorityMedium_text = ch.elexis.core.l10n.Messages.ReminderDetailDialog_btnPriorityMedium_text;
@@ -301,6 +304,9 @@ public class Messages {
 	public static String ReminderDetailDialog_btnOverdue_text = ch.elexis.core.l10n.Messages.ReminderDetailDialog_btnOverdue_text;
 	public static String ReminderDetailDialog_labelAction_text = ch.elexis.core.l10n.Messages.ReminderDetailDialog_labelAction_text;
 	public static String ReminderDetailDialog_txtDescription_message = ch.elexis.core.l10n.Messages.ReminderDetailDialog_txtDescription_message;
+	public static String DailyOrderMandantOnlyFollowing = ch.elexis.core.l10n.Messages.DailyOrderMandantOnlyFollowing;
+	public static String DailyOrderMandantNone = ch.elexis.core.l10n.Messages.DailyOrderMandantNone;
+	
 
 	
 }

@@ -152,4 +152,14 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public boolean isBillable(){
+		return getEntity().getBillable();
+	}
+	
+	@Override
+	public void setBillable(boolean value){
+		getEntity().setBillable(value);
+	}
 }

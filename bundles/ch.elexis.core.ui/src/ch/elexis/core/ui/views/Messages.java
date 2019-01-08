@@ -307,6 +307,7 @@ public class Messages {
 	public static String LagerView_maxBestand = ch.elexis.core.l10n.Messages.LagerView_maxBestand;
 	public static String LagerView_minBestand = ch.elexis.core.l10n.Messages.LagerView_minBestand;
 	public static String LagerView_name = ch.elexis.core.l10n.Messages.LagerView_name;
+	public static String LagerView_vkPreis = ch.elexis.core.l10n.Messages.LagerView_vkPreis;
 	public static String LagerView_gtin = ch.elexis.core.l10n.Messages.LagerView_gtin;
 	public static String LagerView_stock = ch.elexis.core.l10n.Messages.LagerView_stock;
 	public static String LagerView_pharmacode = ch.elexis.core.l10n.Messages.LagerView_pharmacode;

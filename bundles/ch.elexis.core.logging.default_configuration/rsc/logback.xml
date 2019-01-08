@@ -52,6 +52,7 @@
 	<logger name="liquibase.executor" level="WARN" />
 	<logger name="org.apache.commons.httpclient" level="WARN" />
 	<logger name="ca.uhn.fhir" level="INFO" />
+	<logger name="org.docx4j" level="WARN" />
 	<logger name="httpclient.wire" level="WARN" />
 	<logger name="Framework Event Dispatcher" level="WARN" />
 	<logger name="ch.qos.logback.classic.joran.action.LoggerAction"

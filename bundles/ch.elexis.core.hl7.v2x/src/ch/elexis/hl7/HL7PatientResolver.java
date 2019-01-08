@@ -5,6 +5,7 @@ import java.util.List;
 import ch.elexis.core.model.IPatient;
 
 public abstract class HL7PatientResolver {
+	
 	/**
 	 * Search for an existing {@link IPatient} with the provided properties. If no {@link IPatient}
 	 * is found, the User is presented with a UI to select the {@link IPatient}.
@@ -15,6 +16,20 @@ public abstract class HL7PatientResolver {
 	 * @return
 	 */
 	public abstract IPatient resolvePatient(String firstname, String lastname, String birthDate);
+	
+	/**
+	 * Search for an existing {@link IPatient} with the provided properties. Additional sender
+	 * parameter provides context resolving. If no {@link IPatient} is found, the User is presented
+	 * with a UI to select the {@link IPatient}.
+	 * 
+	 * @param firstname
+	 * @param lastname
+	 * @param birthDate
+	 * @param sender
+	 * @return
+	 */
+	public abstract IPatient resolvePatient(String firstname, String lastname, String birthDate,
+		String sender);
 	
 	/**
 	 * Search for an existing {@link IPatient} with the provided properties.

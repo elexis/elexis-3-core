@@ -60,6 +60,15 @@ public class Test_Konsultation extends AbstractPersistentObjectTest {
 	}
 	
 	@Test
+	public void testConsultationOrderingDateTime() throws InterruptedException {
+		Konsultation kons = new Konsultation(fall);
+		Thread.sleep(1050);
+		Konsultation kons2 = new Konsultation(fall);
+		assertTrue(kons2.getDateTime().isAfter(kons.getDateTime()));
+		assertEquals(1, kons2.compareTo(kons));
+	}
+	
+	@Test
 	public void testDiagnosisCreation(){
 		long currentTimeMillis = System.currentTimeMillis();
 		FreeTextDiagnose ftd = new FreeTextDiagnose("Text", true);

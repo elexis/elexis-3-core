@@ -19,6 +19,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.model.ICodeElement;
@@ -193,6 +195,27 @@ public class Kontakt extends PersistentObject {
 	/** Die Anschrift dieses Kontakts holen */
 	public Anschrift getAnschrift(){
 		return new Anschrift(this);
+	}
+	
+	/**
+	 * @return a label containing the telephone number, or an empty string
+	 * @since 3.6
+	 */
+	public String getTelephoneLabel(){
+		List<String> phoneData = new ArrayList<>();
+		String t1 = get(FLD_PHONE1);
+		if (StringUtils.isNotBlank(t1)) {
+			phoneData.add("T1: " + t1);
+		}
+		String t2 = get(FLD_PHONE2);
+		if (StringUtils.isNotBlank(t2)) {
+			phoneData.add("T2: " + t2);
+		}
+		String mobile = get(FLD_MOBILEPHONE);
+		if (StringUtils.isNotBlank(mobile)) {
+			phoneData.add("M: " + mobile);
+		}
+		return StringUtils.join(phoneData, ", ");
 	}
 	
 	/** Die Anschrift dieses Kontakts setzen */

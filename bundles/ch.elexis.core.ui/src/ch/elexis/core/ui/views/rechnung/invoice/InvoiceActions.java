@@ -20,7 +20,7 @@ import ch.elexis.core.ui.commands.MahnlaufCommand;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AllOrNoneLockRequestingAction;
 import ch.elexis.core.ui.locks.AllOrNoneLockRequestingRestrictedAction;
-import ch.elexis.core.ui.locks.LockRequestingAction;
+import ch.elexis.core.ui.locks.MultiLockRequestingAction;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.rechnung.Messages;
 import ch.elexis.core.ui.views.rechnung.RnDialogs;
@@ -30,6 +30,7 @@ import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListContentProvider.Invoi
 import ch.elexis.data.AccountTransaction;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Patient;
+import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Rechnung;
 import ch.elexis.data.RnStatus;
 import ch.rgw.tools.Money;
@@ -146,27 +147,25 @@ public class InvoiceActions {
 			}
 		};
 		
-		stornoAction = new LockRequestingAction<Rechnung>(Messages.RnActions_stornoAction) {
+		stornoAction = new MultiLockRequestingAction<List<Rechnung>>(Messages.RnActions_stornoAction) {
 			{
 				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
 				setToolTipText(Messages.RnActions_stornoActionTooltip);
 			}
-			
+
 			@Override
-			public Rechnung getTargetedObject(){
-				List<Rechnung> list = getInvoiceSelections(viewer);
-				if (!list.isEmpty()) {
-					return list.get(0);
-				}
-				return null;
+			public List<? extends PersistentObject> getTargetedObjects(){
+				return getInvoiceSelections(viewer);
 			}
-			
+
 			@Override
-			public void doRun(Rechnung actRn){
+			public void doRun(PersistentObject po){
+				Rechnung actRn = (Rechnung) po;
 				if (new RnDialogs.StornoDialog(UiDesk.getTopShell(), actRn).open() == Dialog.OK) {
 					ElexisEventDispatcher.update(actRn);
 				}
 			}
+			
 		};
 		
 		addAccountExcessAction = new Action(Messages.RnActions_addAccountGood) {

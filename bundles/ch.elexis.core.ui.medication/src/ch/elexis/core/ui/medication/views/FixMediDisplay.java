@@ -54,6 +54,7 @@ import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
+import ch.elexis.core.ui.views.controls.InteractionLink;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
@@ -75,6 +76,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 			addDefaultSignatureAction;
 	FixMediDisplay self;
 	Label lCost;
+	InteractionLink interactionLink;
 	PersistentObjectDropTarget target;
 	private MenuManager menuManager;
 	private IViewSite viewSite;
@@ -96,6 +98,9 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 		lCost = new Label(this, SWT.NONE);
 		lCost.setText(Messages.FixMediDisplay_DailyCost);
 		lCost.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		interactionLink = new InteractionLink(this, SWT.NONE);
+		interactionLink.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+
 		dlisten = new DauerMediListener(viewSite);
 		self = this;
 		addHyperlinks(HINZU, LISTE, REZEPT);
@@ -203,6 +208,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 				fix.stream().forEach(p -> add(p));
 				
 				lCost.setText(MedicationViewHelper.calculateDailyCostAsString(fix));
+				interactionLink.updateAtcs(MedicationViewHelper.getAllGtins(fix));
 			}
 			sortList();
 		}

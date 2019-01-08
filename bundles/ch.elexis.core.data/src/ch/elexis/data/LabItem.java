@@ -332,10 +332,10 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		if (!getTyp().equals(LabItemTyp.FORMULA)) {
 			return null;
 		}
-		Query<ILabResult> qbe = new Query<ILabResult>(LabResult.class);
+		Query<LabResult> qbe = new Query<LabResult>(LabResult.class);
 		qbe.add(LabResult.PATIENT_ID, Query.EQUALS, pat.getId());
 		qbe.add(LabResult.DATE, Query.EQUALS, date.toString(TimeTool.DATE_COMPACT));
-		List<ILabResult> results = qbe.execute();
+		List<ILabResult> results = (List<ILabResult>)(List<?>) qbe.execute();
 		return evaluate(pat, results);
 	}
 	

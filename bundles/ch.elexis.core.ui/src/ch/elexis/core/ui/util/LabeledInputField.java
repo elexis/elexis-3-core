@@ -565,6 +565,12 @@ public class LabeledInputField extends Composite {
 		public void setChoices(String... strings){
 			ext = strings;
 		}
+
+		public void setTooltipText(String label){
+			if (mine != null && mine.ctl != null) {
+				mine.ctl.setToolTipText(label);
+			}
+		}
 	}
 	
 	/**

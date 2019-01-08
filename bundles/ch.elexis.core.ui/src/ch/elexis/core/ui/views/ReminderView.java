@@ -617,6 +617,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			implements IColorProvider, IFontProvider {
 		
 		private Font boldFont;
+		private Color colorInProgress;
 		private Color colorDue;
 		private Color colorOverdue;
 		private Color colorOpen;
@@ -633,6 +634,8 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 					ProcessStatus processStatus = reminder.getProcessStatus();
 					if (ProcessStatus.OPEN == processStatus) {
 						return colorOpen;
+					} else if (ProcessStatus.IN_PROGRESS == processStatus) {
+						return colorInProgress;
 					}
 					return null;
 				}
@@ -642,6 +645,8 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		
 		public void updateUserConfiguration(){
 			Settings cfg = CoreHub.userCfg.getBranch(Preferences.USR_REMINDERCOLORS, true);
+			colorInProgress = UiDesk
+				.getColorFromRGB(cfg.get(ProcessStatus.IN_PROGRESS.getLocaleText(), "FFFFFF")); //$NON-NLS-1$;
 			colorDue = UiDesk.getColorFromRGB(cfg.get(ProcessStatus.DUE.getLocaleText(), "FFFFFF")); //$NON-NLS-1$;
 			colorOverdue =
 				UiDesk.getColorFromRGB(cfg.get(ProcessStatus.OVERDUE.getLocaleText(), "FF0000")); //$NON-NLS-1$
