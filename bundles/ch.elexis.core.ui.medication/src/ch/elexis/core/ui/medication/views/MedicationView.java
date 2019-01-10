@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.medication.views;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -14,6 +15,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.medication.PreferenceConstants;
@@ -28,6 +30,15 @@ public class MedicationView extends ViewPart implements IRefreshable {
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 	
 	public static final String PART_ID = "ch.elexis.core.ui.medication.views.MedicationView"; //$NON-NLS-1$
+	
+	@Inject
+	void activePatient(@Optional @Named(IContext.ACTIVE_PATIENT) IPatient patient){
+		Display.getDefault().asyncExec(() -> {
+			if (CoreUiUtil.isActiveControl(tpc)) {
+				updateUi(patient, false);
+			}
+		});
+	}
 	
 	@Inject
 	void udpatePatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IPatient patient){

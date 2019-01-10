@@ -54,7 +54,6 @@
       <feature id="ch.elexis.core.logging.feature" installMode="root"/>
       <feature id="ch.elexis.core.ui.feature" installMode="root"/>
       <feature id="ch.elexis.core.ui.p2.feature" installMode="root"/>
-      <feature id="ch.elexis.core.ui.medication.os.feature" installMode="root"/>
       <feature id="ch.elexis.core.persistence.feature" installMode="root"/>
    </features>
 

@@ -58,16 +58,18 @@ public class StoreToStringService implements IStoreToStringService {
 	
 	@Override
 	public Optional<Identifiable> loadFromString(String storeToString){
-		Identifiable cached = loadFromStringCache.getIfPresent(storeToString);
-		if (cached != null) {
-			return Optional.of(cached);
-		}
-		for (IStoreToStringContribution iStoreToStringContribution : contributions) {
-			Optional<Identifiable> identifiable =
-				iStoreToStringContribution.loadFromString(storeToString);
-			if (identifiable.isPresent()) {
-				loadFromStringCache.put(storeToString, identifiable.get());
-				return identifiable;
+		if (storeToString != null) {
+			Identifiable cached = loadFromStringCache.getIfPresent(storeToString);
+			if (cached != null) {
+				return Optional.of(cached);
+			}
+			for (IStoreToStringContribution iStoreToStringContribution : contributions) {
+				Optional<Identifiable> identifiable =
+					iStoreToStringContribution.loadFromString(storeToString);
+				if (identifiable.isPresent()) {
+					loadFromStringCache.put(storeToString, identifiable.get());
+					return identifiable;
+				}
 			}
 		}
 		return Optional.empty();

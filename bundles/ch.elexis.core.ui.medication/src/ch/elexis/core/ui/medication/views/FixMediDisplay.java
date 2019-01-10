@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -30,6 +31,7 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.services.IEvaluationService;
@@ -45,6 +47,7 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.builder.IPrescriptionBuilder;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
@@ -93,6 +96,15 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 	static final String KOPIEREN = Messages.FixMediDisplay_Copy; //$NON-NLS-1$
 	
 	@Inject
+	void activePatient(@Optional @Named(IContext.ACTIVE_PATIENT) IPatient patient){
+		Display.getDefault().asyncExec(() -> {
+			if (CoreUiUtil.isActiveControl(list)) {
+				reload();
+			}
+		});
+	}
+	
+	@Inject
 	void updatePrescription(
 		@Optional @UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IPrescription prescription){
 		if (CoreUiUtil.isActiveControl(list)) {
@@ -119,7 +131,6 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 	
 	public FixMediDisplay(Composite parent, IViewSite viewSite){
 		super(parent, SWT.NONE, null);
-		CoreUiUtil.injectServices(this);
 		this.viewSite = viewSite;
 		lCost = new Label(this, SWT.NONE);
 		lCost.setText(Messages.FixMediDisplay_DailyCost);
@@ -205,6 +216,8 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 				ContextServiceHolder.get().getRootContext().setTyped(getSelection());
 			}
 		});
+		
+		CoreUiUtil.injectServicesWithContext(this);
 	}
 	
 	public MenuManager getMenuManager(){

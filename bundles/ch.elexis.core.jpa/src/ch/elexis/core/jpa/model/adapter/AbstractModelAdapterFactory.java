@@ -139,20 +139,23 @@ public abstract class AbstractModelAdapterFactory {
 	
 	public Optional<Identifiable> getModelAdapter(EntityWithId entity, Class<?> interfaceClass,
 		boolean testPrecondition, boolean registerEntityChangeEvent){
-		MappingEntry mapping = getMappingEntity(entity.getClass(), interfaceClass);
-		if (mapping != null) {
-			Identifiable adapter = getAdapterInstance(mapping.getAdapterClass(), entity);
-			if (testPrecondition) {
-				if (!mapping.testAdapterPrecondition((AbstractIdModelAdapter<?>) adapter)) {
-					LoggerFactory.getLogger(getClass()).error("Adapter precondition failed for ["
-						+ adapter + "] with id [" + adapter.getId() + "]");
-					return Optional.empty();
+		if (entity != null) {
+			MappingEntry mapping = getMappingEntity(entity.getClass(), interfaceClass);
+			if (mapping != null) {
+				Identifiable adapter = getAdapterInstance(mapping.getAdapterClass(), entity);
+				if (testPrecondition) {
+					if (!mapping.testAdapterPrecondition((AbstractIdModelAdapter<?>) adapter)) {
+						LoggerFactory.getLogger(getClass())
+							.error("Adapter precondition failed for [" + adapter + "] with id ["
+								+ adapter.getId() + "]");
+						return Optional.empty();
+					}
 				}
+				if (registerEntityChangeEvent) {
+					EntityChangeEventListenerHolder.get().add((AbstractIdModelAdapter<?>) adapter);
+				}
+				return Optional.of(adapter);
 			}
-			if(registerEntityChangeEvent) {
-				EntityChangeEventListenerHolder.get().add((AbstractIdModelAdapter<?>) adapter);
-			}
-			return Optional.of(adapter);
 		}
 		return Optional.empty();
 	}

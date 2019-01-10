@@ -134,6 +134,7 @@ public class MedicationViewHelper {
 				}
 				result.add(p);
 			}
+			return result;
 		}
 		return Collections.emptyList();
 	}

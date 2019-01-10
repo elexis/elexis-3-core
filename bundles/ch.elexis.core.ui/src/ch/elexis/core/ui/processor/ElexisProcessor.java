@@ -41,7 +41,8 @@ public class ElexisProcessor {
 	}
 	
 	private String[] injectViewIds = {
-		"ch.elexis.Konsdetail", "ch.elexis.PatListView"
+		"ch.elexis.Konsdetail", "ch.elexis.PatListView",
+		"ch.elexis.core.ui.medication.views.MedicationView"
 	};
 	
 	private void updateInjectViews(){
