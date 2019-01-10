@@ -194,11 +194,7 @@ location "http://download.elexis.info/elexis/f11106/p2/target/" {
 	com.ibm.icu.4j 2.6.1
 	com.lowagie.itext 2.0.8
 	com.lowagie.itext.source 2.0.8
-<<<<<<< HEAD
-	com.mysql.jdbc
-=======
 	com.mysql.cj
->>>>>>> refs/remotes/origin/master
 	com.sun.jna 3.0.9
 	com.sun.jna.source 3.0.9
 	com.thoughtworks.xstream 1.2.2
