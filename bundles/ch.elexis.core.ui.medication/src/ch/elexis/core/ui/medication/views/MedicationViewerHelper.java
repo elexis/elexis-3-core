@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.medication.views;
 
 import java.text.MessageFormat;
+import java.time.format.DateTimeFormatter;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -17,12 +18,11 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.IRecipe;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.data.Rezept;
-import ch.elexis.data.Verrechnet;
 
 public class MedicationViewerHelper {
 	
@@ -72,7 +72,7 @@ public class MedicationViewerHelper {
 				MedicationTableViewerItem pres = (MedicationTableViewerItem) element;
 				String label = "";
 				
-				if (pres.isFixedMediation()) {
+				if (pres.isActiveMedication()) {
 					String date = pres.getBeginDate();
 					if (date != null && !date.isEmpty()) {
 						label = MessageFormat.format(Messages.MedicationComposite_startedAt, date);
@@ -85,18 +85,20 @@ public class MedicationViewerHelper {
 							Messages.MedicationComposite_stopDateAndReason, endDate, reason));
 					}
 				} else {
-					IPersistentObject po = pres.getLastDisposed();
-					if (po != null) {
-						if (po instanceof Rezept) {
-							Rezept rp = (Rezept) po;
+					IRecipe recipe = pres.getRecipe();
+					IBilled billed = pres.getBilled();
+					if (recipe != null || billed != null) {
+						if (recipe != null) {
 							label = MessageFormat
-								.format(Messages.MedicationComposite_lastReceivedAt, rp.getDate());
-						} else if (po instanceof Verrechnet) {
-							Verrechnet v = (Verrechnet) po;
-							if (v.getKons() != null) {
+								.format(Messages.MedicationComposite_lastReceivedAt,
+									DateTimeFormatter.ofPattern("dd.MM.yyyy")
+										.format(recipe.getDate()));
+						} else if (billed != null) {
+							if (billed.getEncounter() != null) {
 								label = MessageFormat.format(
 									Messages.MedicationComposite_lastReceivedAt,
-									v.getKons().getDatum());
+									DateTimeFormatter.ofPattern("dd.MM.yyyy")
+										.format(billed.getEncounter().getDate()));
 							}
 						}
 					} else {

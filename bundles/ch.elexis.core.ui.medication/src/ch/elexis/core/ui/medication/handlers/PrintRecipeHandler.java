@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.medication.handlers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,15 +17,17 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IPrescription;
+import ch.elexis.core.model.IRecipe;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.ui.ElexisConfigurationConstants;
 import ch.elexis.core.ui.medication.handlers.PrintTakingsListHandler.SorterAdapter;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.medication.views.MedicationView;
 import ch.elexis.core.ui.views.RezeptBlatt;
-import ch.elexis.data.Patient;
-import ch.elexis.data.Prescription;
 import ch.elexis.data.Rezept;
 
 public class PrintRecipeHandler extends AbstractHandler {
@@ -35,7 +38,7 @@ public class PrintRecipeHandler extends AbstractHandler {
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException{
-		Patient patient = ElexisEventDispatcher.getSelectedPatient();
+		IPatient patient = ContextServiceHolder.get().getActivePatient().orElse(null);
 		if (patient == null)
 			return null;
 		
@@ -46,23 +49,18 @@ public class PrintRecipeHandler extends AbstractHandler {
 			medicationType = "selection";
 		}
 		
-		List<Prescription> prescRecipes = getPrescriptions(patient, medicationType, event);
+		List<IPrescription> prescRecipes = getPrescriptions(patient, medicationType, event);
 		if (!prescRecipes.isEmpty()) {
 			prescRecipes = sortPrescriptions(prescRecipes, event);
 			
-			Rezept rp = new Rezept(patient);
-			for (Prescription p : prescRecipes) {
-				Prescription prescription = new Prescription(p);
-				prescription.setEndDate(null);
-				rp.addPrescription(prescription);
-			}
+			IRecipe recipe = MedicationServiceHolder.get().createRecipe(patient, prescRecipes);
 			
 			// PMDI - Dependency Injection through ElexisConfigurationConstants
 			RezeptBlatt rpb;
 			try {
 				rpb = (RezeptBlatt) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 					.getActivePage().showView(ElexisConfigurationConstants.rezeptausgabe);
-				rpb.createRezept(rp);
+				rpb.createRezept(Rezept.load(recipe.getId()));
 			} catch (PartInitException e) {
 				log.error("Error outputting recipe", e);
 			}
@@ -71,7 +69,7 @@ public class PrintRecipeHandler extends AbstractHandler {
 		return null;
 	}
 	
-	private List<Prescription> sortPrescriptions(List<Prescription> prescRecipes,
+	private List<IPrescription> sortPrescriptions(List<IPrescription> prescRecipes,
 		ExecutionEvent event){
 		SorterAdapter sorter = new SorterAdapter(event);
 		IWorkbenchPart part = HandlerUtil.getActivePart(event);
@@ -82,35 +80,35 @@ public class PrintRecipeHandler extends AbstractHandler {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private List<Prescription> getPrescriptions(Patient patient, String medicationType,
+	private List<IPrescription> getPrescriptions(IPatient patient, String medicationType,
 		ExecutionEvent event){
 		if ("selection".equals(medicationType)) {
 			ISelection selection =
 				HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 			if (selection != null && !selection.isEmpty()) {
-				List<Prescription> ret = new ArrayList<Prescription>();
+				List<IPrescription> ret = new ArrayList<IPrescription>();
 				IStructuredSelection strucSelection = (IStructuredSelection) selection;
 				if (strucSelection.getFirstElement() instanceof MedicationTableViewerItem) {
 					List<MedicationTableViewerItem> mtvItems =
 						(List<MedicationTableViewerItem>) strucSelection.toList();
 					for (MedicationTableViewerItem mtvItem : mtvItems) {
-						Prescription p = mtvItem.getPrescription();
+						IPrescription p = mtvItem.getPrescription();
 						if (p != null) {
 							ret.add(p);
 						}
 					}
-				} else if (strucSelection.getFirstElement() instanceof Prescription) {
+				} else if (strucSelection.getFirstElement() instanceof IPrescription) {
 					ret.addAll(strucSelection.toList());
 				}
 				return ret;
 			}
 		} else if ("all".equals(medicationType)) {
-			return patient.getMedication(EntryType.FIXED_MEDICATION, EntryType.RESERVE_MEDICATION,
-				EntryType.SYMPTOMATIC_MEDICATION);
+			return patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION,
+				EntryType.RESERVE_MEDICATION, EntryType.SYMPTOMATIC_MEDICATION));
 		} else if ("fix".equals(medicationType)) {
-			return patient.getMedication(EntryType.FIXED_MEDICATION);
+			return patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION));
 		} else if ("reserve".equals(medicationType)) {
-			return patient.getMedication(EntryType.RESERVE_MEDICATION);
+			return patient.getMedication(Arrays.asList(EntryType.RESERVE_MEDICATION));
 		}
 		return Collections.emptyList();
 	}

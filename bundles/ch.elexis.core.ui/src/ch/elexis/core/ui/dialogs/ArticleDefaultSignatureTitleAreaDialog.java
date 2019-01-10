@@ -10,22 +10,23 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
+import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IPrescription;
+import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.ui.views.controls.ArticleDefaultSignatureComposite;
-import ch.elexis.data.Artikel;
-import ch.elexis.data.Prescription;
 
 public class ArticleDefaultSignatureTitleAreaDialog extends TitleAreaDialog {
 	
-	private Artikel article;
+	private IArticle article;
 	private ArticleDefaultSignatureComposite adsc;
-	private Prescription prescription;
+	private IPrescription prescription;
 	
 	/**
 	 * Create the dialog.
 	 * 
 	 * @param parentShell
 	 */
-	public ArticleDefaultSignatureTitleAreaDialog(Shell parentShell, Artikel article){
+	public ArticleDefaultSignatureTitleAreaDialog(Shell parentShell, IArticle article){
 		super(parentShell);
 		this.article = article;
 	}
@@ -33,10 +34,10 @@ public class ArticleDefaultSignatureTitleAreaDialog extends TitleAreaDialog {
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public ArticleDefaultSignatureTitleAreaDialog(Shell parentShell, Prescription pr){
+	public ArticleDefaultSignatureTitleAreaDialog(Shell parentShell, IPrescription prescription){
 		super(parentShell);
-		this.prescription = pr;
-		this.article = pr.getArtikel();
+		this.prescription = prescription;
+		this.article = prescription.getArticle();
 	}
 
 	/**
@@ -59,7 +60,8 @@ public class ArticleDefaultSignatureTitleAreaDialog extends TitleAreaDialog {
 		
 		if(prescription!=null) {
 			// set initial values from prescription
-			List<Float> doseAsFloats = Prescription.getDoseAsFloats(prescription.getDosis());
+			List<Float> doseAsFloats =
+				MedicationServiceHolder.get().getDosageAsFloats(prescription);
 			 for (int i = 0; i < doseAsFloats.size(); i++) {
 				String val = trimTrailingZeros(Float.toString(doseAsFloats.get(i)));
 				switch (i) {
@@ -79,7 +81,7 @@ public class ArticleDefaultSignatureTitleAreaDialog extends TitleAreaDialog {
 					break;
 				}
 			}
-			adsc.setSignatureComment(prescription.getBemerkung());		
+			adsc.setSignatureComment(prescription.getDisposalComment());
 		}
 		
 		return area;
@@ -98,9 +100,8 @@ public class ArticleDefaultSignatureTitleAreaDialog extends TitleAreaDialog {
 	
 	@Override
 	protected void okPressed(){
-		adsc.createPersistent();
 		adsc.updateModelNonDatabinding();
-		adsc.safeToDefault();
+		adsc.save();
 		
 		super.okPressed();
 	}

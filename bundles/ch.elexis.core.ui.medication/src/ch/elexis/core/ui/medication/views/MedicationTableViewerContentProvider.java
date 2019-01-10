@@ -15,12 +15,12 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.data.Prescription;
 
 public class MedicationTableViewerContentProvider implements IStructuredContentProvider {
 	
-	private List<Prescription> input;
+	private List<IPrescription> input;
 	
 	private List<MedicationTableViewerItem> currentItems;
 	
@@ -47,7 +47,7 @@ public class MedicationTableViewerContentProvider implements IStructuredContentP
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
 		if (newInput instanceof List<?>) {
 			currentPageOffset = 0;
-			input = (List<Prescription>) newInput;
+			input = (List<IPrescription>) newInput;
 			createCurrentItems();
 		} else {
 			currentPageOffset = 0;

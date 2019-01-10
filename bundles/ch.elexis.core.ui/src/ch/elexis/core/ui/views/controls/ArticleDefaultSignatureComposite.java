@@ -2,6 +2,7 @@ package ch.elexis.core.ui.views.controls;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -30,18 +31,21 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IArticleDefaultSignature;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.ui.dialogs.ArticleDefaultSignatureTitleAreaDialog;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.CreatePrescriptionHelper;
-import ch.elexis.data.ArticleDefaultSignature;
 import ch.elexis.data.ArticleDefaultSignature.ArticleSignature;
-import ch.elexis.data.Artikel;
 import ch.rgw.tools.TimeTool;
 
 public class ArticleDefaultSignatureComposite extends Composite {
 	
-	private WritableValue signatureItem = new WritableValue(null, ArticleSignature.class);
+	private WritableValue<IArticleDefaultSignature> signatureItem =
+		new WritableValue<>(null, IArticleDefaultSignature.class);
 	private DataBindingContext databindingContext;
 	
 	private ToolBarManager toolbarManager;
@@ -65,7 +69,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 	private Button btnRadioOnAtcCode;
 	private Button btnRadioOnArticle;
 	
-	private Artikel article;
+	private IArticle article;
 	private StackLayout stackLayoutDosage;
 	private Composite compositeDayTimeDosage;
 	private Text txtFreeTextDosage;
@@ -380,24 +384,31 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		// Disable the check that prevents subclassing of SWT components
 	}
 	
-	public void setArticleToBind(Artikel article, boolean lookup){
+	public void setArticleToBind(IArticle article, boolean lookup){
 		if (!isDisposed()) {
-			ArticleSignature signature = getSignature();
-			if (signature != null && signature.isPersistent()) {
-				signature.toDefault();
+			IArticleDefaultSignature signature = getSignature();
+			if (signature != null) {
+				// only save if the signature was saved before !?!?!?!?!?
+				if (CoreModelServiceHolder.get()
+					.load(signature.getId(), IArticleDefaultSignature.class).isPresent()) {
+					CoreModelServiceHolder.get().save(signature);
+				}
 			}
 			// update with new article signature
 			this.article = article;
 			if (lookup) {
-				ArticleDefaultSignature defSignature =
-					ArticleDefaultSignature.getDefaultsignatureForArticle(article);
-				if (defSignature != null) {
-					signatureItem.setValue(ArticleSignature.fromDefault(defSignature));
+				Optional<IArticleDefaultSignature> defSignature =
+					MedicationServiceHolder.get().getDefaultSignature(article);
+				
+				if (!defSignature.isPresent()) {
+					signatureItem.setValue(
+						MedicationServiceHolder.get().getTransientDefaultSignature(article));
 				} else {
-					signatureItem.setValue(new ArticleSignature(article, null));
+					signatureItem.setValue(defSignature.get());
 				}
 			} else {
-				signatureItem.setValue(new ArticleSignature(article, null));
+				signatureItem
+					.setValue(MedicationServiceHolder.get().getTransientDefaultSignature(article));
 			}
 			updateTargetNonDatabinding();
 			// update the toolbar
@@ -407,23 +418,23 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		}
 	}
 	
-	public void setArticleToBind(Artikel article){
+	public void setArticleToBind(IArticle article){
 		setArticleToBind(article, true);
 	}
 	
-	public ArticleSignature getSignature(){
+	public IArticleDefaultSignature getSignature(){
 		Object value = signatureItem.getValue();
 		if (value instanceof ArticleSignature) {
-			return (ArticleSignature) value;
+			return (IArticleDefaultSignature) value;
 		}
 		return null;
 	}
 	
 	public void updateModelNonDatabinding(){
-		ArticleSignature signature = getSignature();
+		IArticleDefaultSignature signature = getSignature();
 		if (signature != null) {
 			if (btnRadioOnAtcCode.getSelection()) {
-				signature.setAtcCode(article.getATC_code());
+				signature.setAtcCode(article.getAtcCode());
 			} else if (btnRadioOnArticle.getSelection()) {
 				signature.setAtcCode(null);
 				signature.setArticle(article);
@@ -441,16 +452,12 @@ public class ArticleDefaultSignatureComposite extends Composite {
 			} else if (btnDispensation.getSelection()) {
 				signature.setDisposalType(EntryType.SELF_DISPENSED);
 			}
-			if (lblCalcEndDate != null) {
-				signature.setEndDate(lblCalcEndDate.getData() instanceof TimeTool
-						? (TimeTool) lblCalcEndDate.getData() : null);
-			}
 		}
 		updateMedicationTypeDetails();
 	}
 	
 	public void updateTargetNonDatabinding(){
-		ArticleSignature signature = getSignature();
+		IArticleDefaultSignature signature = getSignature();
 		
 		String freeText = signature.getFreeText();
 		if (freeText != null && !freeText.isEmpty()) {
@@ -504,8 +511,8 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		updateMedicationTypeDetails();
 	}
 	
-	public void safeToDefault(){
-		ArticleSignature signature = getSignature();
+	public void save(){
+		IArticleDefaultSignature signature = getSignature();
 		
 		// dont save if no medication type is selected
 		if (!btnFix.getSelection() && !btnReserve.getSelection() && !btnSymtomatic.getSelection()) {
@@ -513,14 +520,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		}
 		
 		if (signature != null) {
-			signature.toDefault();
-		}
-	}
-	
-	public void createPersistent(){
-		ArticleSignature signature = getSignature();
-		if (!signature.isPersistent()) {
-			signature.createPersistent();
+			CoreModelServiceHolder.get().save(signature);
 		}
 	}
 	
@@ -564,7 +564,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		txtSignatureComment.setText(signatureComment);
 	}
 	
-	public void setSignature(ArticleSignature signature){
+	public void setSignature(IArticleDefaultSignature signature){
 		signatureItem.setValue(signature);
 		updateTargetNonDatabinding();
 	}
@@ -573,7 +573,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		@Override
 		public void widgetSelected(SelectionEvent e){
 			updateModelNonDatabinding();
-			safeToDefault();
+			save();
 		}
 	}
 	
@@ -594,9 +594,9 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		
 		@Override
 		public boolean isEnabled(){
-			ArticleSignature signature = getSignature();
+			IArticleDefaultSignature signature = getSignature();
 			// not enabled if already signature on article
-			if (signature != null && signature.isPersistent() && !signature.isAtc()) {
+			if (signature != null && !signature.isAtc()) {
 				return false;
 			}
 			return true;
@@ -611,9 +611,9 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		
 		@Override
 		public void run(){
-			ArticleSignature signature = getSignature();
-			if (signature != null && signature.isPersistent()) {
-				signature.delete();
+			IArticleDefaultSignature signature = getSignature();
+			if (signature != null) {
+				CoreModelServiceHolder.get().delete(signature);
 			}
 			// update the content
 			setArticleToBind(article);
@@ -621,8 +621,8 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		
 		@Override
 		public boolean isEnabled(){
-			ArticleSignature signature = getSignature();
-			if (signature == null || !signature.isPersistent()) {
+			IArticleDefaultSignature signature = getSignature();
+			if (signature == null) {
 				return false;
 			}
 			return true;
@@ -653,7 +653,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		protected IStatus doSet(IObservableValue observableValue, Object value){
 			IStatus ret = super.doSet(observableValue, value);
 			if (autoSave) {
-				composite.safeToDefault();
+				composite.save();
 			}
 			return ret;
 		}

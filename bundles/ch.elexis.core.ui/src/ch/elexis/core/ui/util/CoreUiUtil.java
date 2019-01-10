@@ -4,6 +4,7 @@ import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.workbench.UIEvents;
+import org.eclipse.swt.widgets.Control;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventConstants;
@@ -29,5 +30,15 @@ public class CoreUiUtil implements EventHandler {
 	
 	public static void injectServices(Object object, IEclipseContext context){
 		ContextInjectionFactory.inject(object, context);
+	}
+	
+	/**
+	 * Test if the control is not disposed and visible.
+	 * 
+	 * @param control
+	 * @return
+	 */
+	public static boolean isActiveControl(Control control){
+		return control != null && !control.isDisposed() && control.isVisible();
 	}
 }

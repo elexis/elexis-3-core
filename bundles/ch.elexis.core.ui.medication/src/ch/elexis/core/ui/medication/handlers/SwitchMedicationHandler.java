@@ -14,14 +14,14 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.medication.views.MedicationView;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
-import ch.elexis.data.Artikel;
-import ch.elexis.data.Prescription;
 import ch.rgw.tools.StringTool;
 
 public class SwitchMedicationHandler extends AbstractHandler {
@@ -33,7 +33,7 @@ public class SwitchMedicationHandler extends AbstractHandler {
 	
 	private static MedicationView medicationView;
 	private LeistungenView leistungenView;
-	private Prescription originalPresc;
+	private IPrescription originalPresc;
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException{
@@ -45,7 +45,7 @@ public class SwitchMedicationHandler extends AbstractHandler {
 			
 			if (firstElement instanceof MedicationTableViewerItem) {
 				MedicationTableViewerItem mtvItem = (MedicationTableViewerItem) firstElement;
-				Prescription p = mtvItem.getPrescription();
+				IPrescription p = mtvItem.getPrescription();
 				if (p != null) {
 					originalPresc = p;
 					copyShortArticleNameToClipboard();
@@ -64,7 +64,7 @@ public class SwitchMedicationHandler extends AbstractHandler {
 	 * 
 	 */
 	private void copyShortArticleNameToClipboard(){
-		Artikel article = originalPresc.getArtikel();
+		IArticle article = originalPresc.getArticle();
 		if (article == null)
 			return;
 			

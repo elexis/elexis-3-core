@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.ac.ACE;
@@ -30,16 +29,13 @@ public class AccessControlService implements IAccessControlService {
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService modelService;
 	
-	@Reference(cardinality=ReferenceCardinality.OPTIONAL)
-	private IContextService contextService;
-	
 	private static Map<String, ACE> allDefinedACEs;
 	
 	private static AbstractAccessControl acl;
 	
 	@Activate
 	private void activate(){
-		acl = new RoleBasedAccessControl(modelService, contextService);
+		acl = new RoleBasedAccessControl(modelService);
 	}
 	
 	/**

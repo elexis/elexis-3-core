@@ -10,7 +10,9 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IContext;
+import ch.elexis.data.Patient;
 
 public class Context implements IContext {
 	
@@ -19,8 +21,6 @@ public class Context implements IContext {
 	private Context parent;
 	
 	private IEclipseContext eclipseContext;
-	
-	private ElexisEventDispatcher elexisEventDispatcher;
 	
 	public Context(){
 		this(null, "root");
@@ -187,6 +187,18 @@ public class Context implements IContext {
 		if (eclipseContext != null) {
 			eclipseContext.set(name, object);
 		}
+		updateElexisEventDispatcher(name, object);
+	}
+	
+	private void updateElexisEventDispatcher(String name, Object object){
+		// if the selection is not same in ElexisEventDispatcher fire a selection event
+		if (IContext.ACTIVE_PATIENT.equals(name) && object instanceof Identifiable) {
+			Patient poPatient = Patient.load(((Identifiable) object).getId());
+			Patient poSelected = ElexisEventDispatcher.getSelectedPatient();
+			if (poSelected == null || !poSelected.equals(poPatient)) {
+				ElexisEventDispatcher.fireSelectionEvent(poPatient);
+			}
+		}
 	}
 	
 	public void setParent(Context parent){
@@ -195,9 +207,5 @@ public class Context implements IContext {
 	
 	public void setEclipseContext(IEclipseContext applicationContext){
 		this.eclipseContext = applicationContext;
-	}
-	
-	public void setElexisEventDispatcher(ElexisEventDispatcher elexisEventDispatcher){
-		this.elexisEventDispatcher = elexisEventDispatcher;
 	}
 }

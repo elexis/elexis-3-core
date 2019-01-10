@@ -11,16 +11,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
+import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IArticleDefaultSignature;
 import ch.elexis.core.ui.views.controls.ArticleDefaultSignatureComposite;
-import ch.elexis.data.ArticleDefaultSignature.ArticleSignature;
-import ch.elexis.data.Artikel;
 
 public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
 	
-	private Artikel article;
+	private IArticle article;
 	private ArticleDefaultSignatureComposite adsc;
 	private Button btnAsDefault;
-	private ArticleSignature signature;
+	private IArticleDefaultSignature signature;
 	private boolean medicationTypeFix;
 	
 	/**
@@ -28,7 +28,7 @@ public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
 	 * 
 	 * @param parentShell
 	 */
-	public PrescriptionSignatureTitleAreaDialog(Shell parentShell, Artikel article){
+	public PrescriptionSignatureTitleAreaDialog(Shell parentShell, IArticle article){
 		super(parentShell);
 		this.article = article;
 	}
@@ -89,8 +89,7 @@ public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
 	protected void okPressed(){
 		adsc.updateModelNonDatabinding();
 		if (btnAsDefault.getSelection()) {
-			adsc.createPersistent();
-			adsc.safeToDefault();
+			adsc.save();
 		}
 		
 		super.okPressed();
@@ -103,13 +102,13 @@ public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
 	/**
 	 * Set a signature that will be displayed and edited on the dialog.
 	 * 
-	 * @param signature
+	 * @param s
 	 */
-	public void setSignature(ArticleSignature signature){
-		this.signature = signature;
+	public void setSignature(IArticleDefaultSignature s){
+		this.signature = s;
 	}
 	
-	public ArticleSignature getSignature(){
+	public IArticleDefaultSignature getSignature(){
 		return adsc.getSignature();
 	}
 }

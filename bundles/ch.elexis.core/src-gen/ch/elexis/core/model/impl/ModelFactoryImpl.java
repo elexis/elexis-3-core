@@ -74,6 +74,7 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ModelPackage getModelPackage() {
 		return (ModelPackage)getEPackage();
 	}

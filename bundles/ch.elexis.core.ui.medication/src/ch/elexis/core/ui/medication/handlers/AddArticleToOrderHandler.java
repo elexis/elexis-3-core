@@ -15,12 +15,10 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.views.BestellView;
-import ch.elexis.data.Artikel;
-import ch.elexis.data.Prescription;
 
 public class AddArticleToOrderHandler extends AbstractHandler {
 	private static final Logger log = LoggerFactory.getLogger(AddArticleToOrderHandler.class);
@@ -71,12 +69,11 @@ public class AddArticleToOrderHandler extends AbstractHandler {
 		IStructuredSelection structSelcection = (IStructuredSelection) selection;
 		List<MedicationTableViewerItem> mtvItems = structSelcection.toList();
 		for (MedicationTableViewerItem mtvItem : mtvItems) {
-			Prescription p = mtvItem.getPrescription();
+			IPrescription p = mtvItem.getPrescription();
 			if (p != null) {
-				Artikel arti = p.getArtikel();
+				IArticle arti = p.getArticle();
 				if (arti != null) {
-					CoreModelServiceHolder.get().load(arti.getId(), IArticle.class)
-						.ifPresent(a -> articlesToOrder.add(a));
+					articlesToOrder.add(arti);
 				}
 			}
 		}

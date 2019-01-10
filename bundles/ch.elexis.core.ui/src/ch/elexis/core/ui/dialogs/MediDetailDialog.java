@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.dialogs;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -32,7 +33,9 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.ILockHandler;
@@ -41,7 +44,7 @@ import ch.elexis.data.Artikel;
 import ch.elexis.data.Prescription;
 
 public class MediDetailDialog extends TitleAreaDialog {
-	Prescription prescription;
+	private IPrescription prescription;
 	private String dosis, intakeOrder, disposalComment;
 	private Composite stackCompositeDosage, compositeDayTimeDosage, compositeFreeTextDosage;
 	private StackLayout stackLayoutDosage;
@@ -57,7 +60,7 @@ public class MediDetailDialog extends TitleAreaDialog {
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public MediDetailDialog(Shell shell, Prescription prescription){
+	public MediDetailDialog(Shell shell, IPrescription prescription){
 		this(shell, prescription, false);
 	}
 	
@@ -65,13 +68,13 @@ public class MediDetailDialog extends TitleAreaDialog {
 	 * Creates optional also a history entry for a prescription if it changed
 	 * 
 	 * @param shell
-	 * @param prescription
+	 * @param pr
 	 * @param createPrescriptionHistoryEntry
 	 */
-	public MediDetailDialog(Shell shell, Prescription prescription,
+	public MediDetailDialog(Shell shell, IPrescription pr,
 		boolean createPrescriptionHistoryEntry){
 		super(shell);
-		this.prescription = prescription;
+		this.prescription = pr;
 		this.createPrescriptionHistoryEntry = createPrescriptionHistoryEntry;
 	}
 	
@@ -175,9 +178,10 @@ public class MediDetailDialog extends TitleAreaDialog {
 		stackLayoutDosage.topControl = compositeDayTimeDosage;
 		
 		if (prescription != null) {
-			initTextFields(prescription.getDosis(), prescription.getBemerkung(),
+			initTextFields(prescription.getDosageInstruction(), prescription.getRemark(),
 				prescription.getDisposalComment());
-			btnReserveMedication.setSelection(prescription.isReserveMedication());
+			btnReserveMedication
+				.setSelection(prescription.getEntryType() == EntryType.RESERVE_MEDICATION);
 		}
 		stackCompositeDosage.layout();
 		
@@ -212,7 +216,7 @@ public class MediDetailDialog extends TitleAreaDialog {
 	public void create(){
 		super.create();
 		if(prescription!=null) {
-			setTitle(prescription.getArtikel().getLabel());
+			setTitle(prescription.getArticle().getLabel());
 		} else if (article!=null) {
 			setTitle(article.getLabel());
 		}
@@ -234,13 +238,15 @@ public class MediDetailDialog extends TitleAreaDialog {
 				public void lockAcquired(){
 					if (createPrescriptionHistoryEntry) {
 						// creates a history entry for a prescription, stops the old one with current date
-						Prescription oldPrescription = prescription;
-						Prescription newPrescription = new Prescription(oldPrescription);
+						IPrescription oldPrescription = prescription;
+						IPrescription newPrescription =
+							MedicationServiceHolder.get().createPrescriptionCopy(oldPrescription);
 						if (LocalLockServiceHolder.get().acquireLock(newPrescription).isOk()) {
-							newPrescription.setDosis(dosis);
-							newPrescription.setBemerkung(intakeOrder);
+							newPrescription.setDosageInstruction(dosis);
+							newPrescription.setRemark(intakeOrder);
 							newPrescription.setDisposalComment(disposalComment);
-							oldPrescription.stop(null);
+							MedicationServiceHolder.get().stopPrescription(oldPrescription,
+								LocalDateTime.now());
 							oldPrescription
 								.setStopReason("Geändert durch " + CoreHub.actUser.getLabel());
 							LocalLockServiceHolder.get().releaseLock(newPrescription);
@@ -250,8 +256,8 @@ public class MediDetailDialog extends TitleAreaDialog {
 						
 					} else {
 						// no history entry for example recipe
-						prescription.setDosis(dosis);
-						prescription.setBemerkung(intakeOrder);
+						prescription.setDosageInstruction(dosis);
+						prescription.setRemark(intakeOrder);
 						prescription.setDisposalComment(disposalComment);
 						if (btnReserveMedication.getSelection()) {
 							prescription.setEntryType(EntryType.RESERVE_MEDICATION);

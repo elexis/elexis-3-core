@@ -7,12 +7,12 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.events.SelectionListener;
 
-import ch.elexis.data.Prescription;
+import ch.elexis.core.model.IPrescription;
 
 public class ListDisplaySelectionProvider implements ISelectionProvider {
-	private ListDisplay<Prescription> listDisplay;
+	private ListDisplay<IPrescription> listDisplay;
 	
-	public ListDisplaySelectionProvider(ListDisplay<Prescription> listDisplay){
+	public ListDisplaySelectionProvider(ListDisplay<IPrescription> listDisplay){
 		this.listDisplay = listDisplay;
 	}
 	
@@ -35,7 +35,7 @@ public class ListDisplaySelectionProvider implements ISelectionProvider {
 	@Override
 	public void setSelection(ISelection selection){
 		IStructuredSelection structSel = (IStructuredSelection) selection;
-		Prescription prescription = (Prescription) structSel.getFirstElement();
+		IPrescription prescription = (IPrescription) structSel.getFirstElement();
 		listDisplay.setSelection(prescription);
 	}
 	

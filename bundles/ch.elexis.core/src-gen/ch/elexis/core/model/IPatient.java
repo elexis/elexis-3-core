@@ -10,6 +10,7 @@
  */
 package ch.elexis.core.model;
 
+import ch.elexis.core.model.prescription.EntryType;
 import java.util.List;
 
 
@@ -208,5 +209,13 @@ public interface IPatient extends IPerson {
 	 * @generated
 	 */
 	ICoverage addCoverage(ICoverage coverage);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model type="ch.elexis.core.types.List&lt;ch.elexis.core.model.IPrescription&gt;" many="false" filterTypeDataType="ch.elexis.core.types.EntryType" filterTypeMany="true"
+	 * @generated
+	 */
+	List<IPrescription> getMedication(List<EntryType> filterType);
 
 } // IPatient

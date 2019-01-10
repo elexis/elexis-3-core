@@ -3,9 +3,9 @@ package ch.elexis.core.ui.medication.views;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Color;
 
+import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.data.Prescription;
 
 public class MedicationCellLabelProvider extends ColumnLabelProvider {
 	
@@ -18,7 +18,7 @@ public class MedicationCellLabelProvider extends ColumnLabelProvider {
 	@Override
 	public Color getBackground(Object element){
 		MedicationTableViewerItem pres = (MedicationTableViewerItem) element;
-		if (pres.isReserveMedication()) {
+		if (pres.getEntryType() == EntryType.RESERVE_MEDICATION) {
 			return reserveColor;
 		}
 		
@@ -27,11 +27,11 @@ public class MedicationCellLabelProvider extends ColumnLabelProvider {
 	
 	@Override
 	public Color getForeground(Object element){
-		Prescription prescription = ((MedicationTableViewerItem) element).getPrescription();
+		IPrescription prescription = ((MedicationTableViewerItem) element).getPrescription();
 		if (prescription != null) {
 			if (prescription.getEntryType() != EntryType.SELF_DISPENSED
 				&& prescription.getEntryType() != EntryType.RECIPE) {
-				if (prescription.getEndDate() != null && !prescription.getEndDate().isEmpty()) {
+				if (prescription.getDateTo() != null) {
 					return UiDesk.getColor(UiDesk.COL_RED);
 				}
 			}

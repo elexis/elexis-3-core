@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.medication.views;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -8,16 +9,21 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.State;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
+import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.IQuery.ORDER;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.ui.medication.handlers.ApplyCustomSortingHandler;
-import ch.elexis.data.Artikel;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Prescription;
-import ch.elexis.data.Query;
-import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
 
 public class MedicationViewHelper {
@@ -36,20 +42,20 @@ public class MedicationViewHelper {
 		}
 	}
 	
-	public static String calculateDailyCostAsString(List<Prescription> pres){
+	public static String calculateDailyCostAsString(List<IPrescription> prescriptions){
 		String TTCOST = Messages.FixMediDisplay_DailyCost;
 		
 		double cost = 0.0;
 		boolean canCalculate = true;
 		
-		for (Prescription pr : pres) {
-			float num = Prescription.calculateTagesDosis(pr.getDosis());
+		for (IPrescription prescription : prescriptions) {
+			float num = MedicationServiceHolder.get().getDailyDosageAsFloat(prescription);
 			try {
-				Artikel art = pr.getArtikel();
-				if (art != null) {
-					int ve = art.guessVE();
+				IArticle article = prescription.getArticle();
+				if (article != null) {
+					int ve = article.getPackageSize();
 					if (ve != 0) {
-						Money price = pr.getArtikel().getVKPreis();
+						Money price = article.getSellingPrice();
 						cost += num * price.getAmount() / ve;
 					} else {
 						canCalculate = false;
@@ -58,7 +64,8 @@ public class MedicationViewHelper {
 					canCalculate = false;
 				}
 			} catch (Exception ex) {
-				ExHandler.handle(ex);
+				LoggerFactory.getLogger(MedicationViewHelper.class)
+					.warn("Error calculating daily cost of prescription", ex);
 				canCalculate = false;
 			}
 		}
@@ -99,44 +106,42 @@ public class MedicationViewHelper {
 	 * returned.
 	 * 
 	 * @param loadFullHistory
-	 * @param patId
+	 * @param patient
 	 * @return
 	 */
-	public static List<Prescription> loadInputData(boolean loadFullHistory, String patId){
-		if (patId == null)
+	public static List<IPrescription> loadInputData(boolean loadFullHistory, IPatient patient){
+		if (patient == null)
 			return Collections.emptyList();
 			
 		if (loadFullHistory) {
-			return loadAllHistorical(patId);
+			return loadAllHistorical(patient);
 		}
-		return loadNonHistorical(patId);
+		return loadNonHistorical(patient);
 	}
 	
-	private static List<Prescription> loadNonHistorical(String patId){
-		List<Prescription> tmpPrescs = Patient.load(patId).getMedication(EntryType.FIXED_MEDICATION,
-			EntryType.RESERVE_MEDICATION, EntryType.SYMPTOMATIC_MEDICATION);
-		
-		List<Prescription> result = new ArrayList<Prescription>();
-		for (Prescription p : tmpPrescs) {
-			if (p.getArtikel() != null && p.getArtikel().getATC_code() != null) {
-				if (p.getArtikel().getATC_code().toUpperCase().startsWith("J07")) {
-					continue;
+	private static List<IPrescription> loadNonHistorical(IPatient patient){
+		if (patient != null) {
+			List<IPrescription> tmpPrescs =
+				patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION,
+					EntryType.RESERVE_MEDICATION, EntryType.SYMPTOMATIC_MEDICATION));
+			
+			List<IPrescription> result = new ArrayList<>();
+			for (IPrescription p : tmpPrescs) {
+				if (p.getArticle() != null && p.getArticle().getAtcCode() != null) {
+					if (p.getArticle().getAtcCode().toUpperCase().startsWith("J07")) {
+						continue;
+					}
 				}
+				result.add(p);
 			}
-			result.add(p);
 		}
-		return result;
+		return Collections.emptyList();
 	}
 	
-	private static List<Prescription> loadAllHistorical(String patId){
-		// prefetch the values needed for filter operations
-		Query<Prescription> qbe = new Query<Prescription>(Prescription.class, null, null,
-			Prescription.TABLENAME, new String[] {
-				Prescription.FLD_DATE_FROM, Prescription.FLD_DATE_UNTIL, Prescription.FLD_REZEPT_ID,
-				Prescription.FLD_PRESC_TYPE, Prescription.FLD_ARTICLE
-			});
-		qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, patId);
-		qbe.orderBy(true, Prescription.FLD_DATE_FROM);
-		return qbe.execute();
+	private static List<IPrescription> loadAllHistorical(IPatient patient){
+		IQuery<IPrescription> query = CoreModelServiceHolder.get().getQuery(IPrescription.class);
+		query.and(ModelPackage.Literals.IPRESCRIPTION__PATIENT, COMPARATOR.EQUALS, patient);
+		query.orderBy(ModelPackage.Literals.IPRESCRIPTION__DATE_FROM, ORDER.DESC);
+		return query.execute();
 	}
 }

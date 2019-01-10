@@ -15,6 +15,7 @@ Import-Package: bsh,
  ch.elexis.core.ac,
  com.google.common.cache;version="15.0.0",
  org.apache.commons.codec;version="1.9.0",
+ org.apache.commons.lang3;version="3.7.0",
  org.slf4j
 Service-Component: OSGI-INF/ch.elexis.core.services.holder.CoreModelServiceHolder.xml,
  OSGI-INF/ch.elexis.core.services.OrderService.xml,
@@ -37,5 +38,7 @@ Service-Component: OSGI-INF/ch.elexis.core.services.holder.CoreModelServiceHolde
  OSGI-INF/ch.elexis.core.services.holder.EncounterServiceHolder.xml,
  OSGI-INF/ch.elexis.core.services.holder.ConfigServiceHolder.xml,
  OSGI-INF/ch.elexis.core.services.StickerService.xml,
- OSGI-INF/ch.elexis.core.services.holder.StickerServiceHolder.xml
+ OSGI-INF/ch.elexis.core.services.holder.StickerServiceHolder.xml,
+ OSGI-INF/ch.elexis.core.services.holder.MedicationServiceHolder.xml,
+ OSGI-INF/ch.elexis.core.services.MedicationService.xml
 Export-Package: ch.elexis.core.services.holder

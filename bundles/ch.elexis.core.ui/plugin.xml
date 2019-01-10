@@ -761,17 +761,20 @@
       <command
             id="ch.elexis.core.ui.commands.printPatientLabel"
             categoryId="ch.elexis.core.ui.commands.kategorie"
-            defaultHandler="ch.elexis.core.ui.commands.PrintPatientLabelHandler">
+            defaultHandler="ch.elexis.core.ui.commands.PrintPatientLabelHandler"
+            name="">
       </command>
       <command
             id="ch.elexis.core.ui.commands.printVersionedLabel"
             categoryId="ch.elexis.core.ui.commands.kategorie"
-            defaultHandler="ch.elexis.core.ui.commands.PrintVersionedLabelHandler">
+            defaultHandler="ch.elexis.core.ui.commands.PrintVersionedLabelHandler"
+            name="">
       </command>
       <command
             id="ch.elexis.core.ui.commands.printAddressLabel"
             categoryId="ch.elexis.core.ui.commands.kategorie"
-            defaultHandler="ch.elexis.core.ui.commands.PrintAddressLabelHandler">
+            defaultHandler="ch.elexis.core.ui.commands.PrintAddressLabelHandler"
+            name="">
       </command>
    </extension>
       <extension

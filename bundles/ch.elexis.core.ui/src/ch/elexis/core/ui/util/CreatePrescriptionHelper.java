@@ -1,9 +1,8 @@
 package ch.elexis.core.ui.util;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.MessageFormat;
+import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Optional;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -11,25 +10,27 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.interfaces.IVerrechenbar;
+import ch.elexis.core.data.service.CodeElementServiceHolder;
+import ch.elexis.core.data.service.ContextServiceHolder;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.data.service.StoreToStringServiceHolder;
+import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IArticleDefaultSignature;
+import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IPrescription;
+import ch.elexis.core.model.builder.IPrescriptionBuilder;
 import ch.elexis.core.model.localarticle.Constants;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.ICodeElementService.CodeElementTyp;
+import ch.elexis.core.services.ICodeElementServiceContribution;
+import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.ui.dialogs.PrescriptionSignatureTitleAreaDialog;
-import ch.elexis.core.ui.locks.AcquireLockUi;
-import ch.elexis.core.ui.locks.ILockHandler;
-import ch.elexis.data.ArticleDefaultSignature;
-import ch.elexis.data.ArticleDefaultSignature.ArticleSignature;
-import ch.elexis.data.Artikel;
-import ch.elexis.data.Konsultation;
-import ch.elexis.data.Patient;
+import ch.elexis.core.ui.services.BillingServiceHolder;
 import ch.elexis.data.PersistentObject;
-import ch.elexis.data.PersistentObjectFactory;
-import ch.elexis.data.Prescription;
 import ch.rgw.tools.Result;
-import ch.rgw.tools.TimeTool;
 
 public class CreatePrescriptionHelper {
 	
@@ -42,12 +43,12 @@ public class CreatePrescriptionHelper {
 	public static final String MEDICATION_SETTINGS_DISPENSE_ARTIKELSTAMM_CONVERT =
 		"medication/settings/artikelstammConvert";
 	
-	private Artikel article;
+	private IArticle article;
 	private Shell parentShell;
 	
 	private boolean medicationTypeFix = false;
 	
-	public CreatePrescriptionHelper(Artikel article, Shell parentShell){
+	public CreatePrescriptionHelper(IArticle article, Shell parentShell){
 		this.article = article;
 		this.parentShell = parentShell;
 	}
@@ -57,14 +58,13 @@ public class CreatePrescriptionHelper {
 	}
 	
 	public void createPrescription(){
-		ArticleDefaultSignature defaultSignature =
-			ArticleDefaultSignature.getDefaultsignatureForArticle((Artikel) article);
+		Optional<IArticleDefaultSignature> defaultSignature =
+			MedicationServiceHolder.get().getDefaultSignature(article);
 		
-		Optional<ArticleSignature> signature;
-		if (defaultSignature != null) {
-			signature = Optional.of(ArticleSignature.fromDefault(defaultSignature));
+		Optional<IArticleDefaultSignature> signature = Optional.empty();
+		if (defaultSignature.isPresent()) {
 			if (CoreHub.userCfg.get(MEDICATION_SETTINGS_ALWAYS_SHOW_SIGNATURE_DIALOG, false)) {
-				signature = getSignatureWithDialog(signature);
+				signature = getSignatureWithDialog(defaultSignature);
 			}
 		} else {
 			signature = getSignatureWithDialog(Optional.empty());
@@ -72,10 +72,10 @@ public class CreatePrescriptionHelper {
 		signature.ifPresent(s -> createPrescriptionFromSignature(s));
 	}
 	
-	private Optional<ArticleSignature> getSignatureWithDialog(
-		Optional<ArticleSignature> preSelectedSignature){
+	private Optional<IArticleDefaultSignature> getSignatureWithDialog(
+		Optional<IArticleDefaultSignature> preSelectedSignature){
 		PrescriptionSignatureTitleAreaDialog dialog =
-			new PrescriptionSignatureTitleAreaDialog(parentShell, (Artikel) article);
+			new PrescriptionSignatureTitleAreaDialog(parentShell, article);
 		dialog.setMedicationTypeFix(medicationTypeFix);
 		preSelectedSignature.ifPresent(s -> dialog.setSignature(s));
 		if (dialog.open() != Dialog.OK) {
@@ -84,28 +84,19 @@ public class CreatePrescriptionHelper {
 		return Optional.of(dialog.getSignature());
 	}
 	
-	public void createPrescriptionFromSignature(ArticleSignature signature){
+	public void createPrescriptionFromSignature(IArticleDefaultSignature signature){
 		// create medication entry
-		Prescription prescription = new Prescription((Artikel) article,
-			(Patient) ElexisEventDispatcher.getSelected(Patient.class),
-			signature.getSignatureAsDosisString(), signature.getComment());
-		AcquireLockUi.aquireAndRun(prescription, new ILockHandler() {
-			@Override
-			public void lockFailed(){
-				prescription.remove();
-			}
-			
-			@Override
-			public void lockAcquired(){
-				prescription.setEntryType(signature.getMedicationType());
-				// a new symptomatic medication can have a stop date
-				if (EntryType.SYMPTOMATIC_MEDICATION.equals(signature.getMedicationType())
-					&& signature.getEndDate() != null) {
-					prescription.stop(signature.getEndDate());
-					prescription.setStopReason("Stop geplant");
-				}
-			}
-		});
+		IPrescription prescription = new IPrescriptionBuilder(CoreModelServiceHolder.get(), article,
+			ContextServiceHolder.get().getActivePatient().get(),
+			signature.getSignatureAsDosisString()).build();
+		prescription.setDisposalComment(signature.getComment());
+		prescription.setEntryType(signature.getMedicationType());
+		// a new symptomatic medication can have a stop date
+		if (EntryType.SYMPTOMATIC_MEDICATION.equals(signature.getMedicationType())
+			&& signature.getEndDate() != null) {
+			prescription.setDateTo(signature.getEndDate().atTime(23, 59, 59));
+			prescription.setStopReason("Stop geplant");
+		}
 		// create dispensation entry
 		if (signature.getDisposalType() != EntryType.RECIPE) {
 			EntryType disposalType = signature.getDisposalType();
@@ -113,21 +104,22 @@ public class CreatePrescriptionHelper {
 				selfDispense(prescription);
 			}
 		}
+		CoreModelServiceHolder.get().save(prescription);
 	}
 	
-	public void selfDispense(Prescription prescription){
+	public void selfDispense(IPrescription prescription){
 		// add article to consultation
-		Konsultation kons = (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
-		if (kons != null) {
-			boolean isToday = new TimeTool(kons.getDatum()).isSameDay(new TimeTool());
+		Optional<IEncounter> encounter = ContextServiceHolder.get().getTyped(IEncounter.class);
+		if (encounter.isPresent()) {
+			boolean isToday = encounter.get().getDate().equals(LocalDate.now());
 			if (isToday) {
-				Artikel dispensationArticle = prescription.getArtikel();
+				IArticle dispensationArticle = prescription.getArticle();
 				if (shouldUpdateToArtikelstamm() && isArtikelstammAvailable()
 					&& !isEigenartikel(dispensationArticle)
 					&& !isArtikelstamm(dispensationArticle)) {
-					Optional<Artikel> item = getArtikelstammItem(dispensationArticle);
+					Optional<IArticle> item = getArtikelstammItem(dispensationArticle);
 					if (item.isPresent()) {
-						prescription.set(Prescription.FLD_ARTICLE, item.get().storeToString());
+						prescription.setArticle(item.get());
 						MessageDialog.openInformation(parentShell,
 							Messages.CreatePrescriptionHelper_InfoDispensationArtikelstammTitel,
 							MessageFormat.format(
@@ -143,7 +135,8 @@ public class CreatePrescriptionHelper {
 						dispensationArticle = item.get();
 					}
 				}
-				Result<IVerrechenbar> result = kons.addLeistung(dispensationArticle);
+				Result<IBilled> result =
+					BillingServiceHolder.get().bill(dispensationArticle, encounter.get(), 1);
 				if (result.isOK()) {
 					// work is done
 					return;
@@ -159,12 +152,12 @@ public class CreatePrescriptionHelper {
 		return CoreHub.userCfg.get(MEDICATION_SETTINGS_DISPENSE_ARTIKELSTAMM_CONVERT, false);
 	}
 	
-	private boolean isEigenartikel(Artikel dispensationArticle){
+	private boolean isEigenartikel(IArticle dispensationArticle){
 		return dispensationArticle.getCodeSystemName().equals(Constants.TYPE_NAME);
 	}
 	
-	private boolean isArtikelstamm(Artikel dispensationArticle){
-		return dispensationArticle.storeToString()
+	private boolean isArtikelstamm(IArticle dispensationArticle){
+		return StoreToStringServiceHolder.getStoreToString(dispensationArticle)
 			.startsWith("ch.artikelstamm.elexis.common.ArtikelstammItem");
 	}
 	
@@ -172,75 +165,33 @@ public class CreatePrescriptionHelper {
 		return PersistentObject.tableExists("ARTIKELSTAMM_CH");
 	}
 	
-	private Optional<Artikel> getArtikelstammItem(Artikel dispensationArticle){
-		String gtin = dispensationArticle.getGTIN();
-		Optional<Artikel> ret = Optional.empty();
+	private Optional<IArticle> getArtikelstammItem(IArticle dispensationArticle){
+		String gtin = dispensationArticle.getGtin();
+		Optional<IArticle> ret = Optional.empty();
 		if (gtin != null && !gtin.isEmpty()) {
-			ret = loadArtikelWithGtin(gtin);
-			if (ret.isPresent()) {
-				return ret;
-			}
+			ret = loadArtikelWithCode(gtin);
 		}
-		String pharma = dispensationArticle.getPharmaCode();
-		if (pharma != null && !pharma.isEmpty()) {
-			ret = loadArtikelWithPharma(pharma);
-			if (ret.isPresent()) {
-				return ret;
+		if (!ret.isPresent()) {
+			String possiblePharma = dispensationArticle.getCode();
+			if (possiblePharma != null && !possiblePharma.isEmpty()) {
+				ret = loadArtikelWithCode(possiblePharma);
 			}
 		}
 		return ret;
 	}
 	
-	private Optional<Artikel> loadArtikelWithPharma(String pharma){
-		Optional<Artikel> ret = Optional.empty();
-		PreparedStatement pstm = PersistentObject.getDefaultConnection()
-			.getPreparedStatement("SELECT ID FROM ARTIKELSTAMM_CH WHERE PHAR=?");
-		try {
-			pstm.setString(1, pharma);
-			ret = loadArtikel(pstm.executeQuery());
-		} catch (SQLException e) {
-			LoggerFactory.getLogger(CreatePrescriptionHelper.class)
-				.error("Could not lookup artikelstamm with GTIN", e);
-		} finally {
-			PersistentObject.getDefaultConnection().releasePreparedStatement(pstm);
-		}
-		return ret;
-	}
-	
-	private Optional<Artikel> loadArtikelWithGtin(String gtin){
-		Optional<Artikel> ret = Optional.empty();
-		PreparedStatement pstm = PersistentObject.getDefaultConnection()
-			.getPreparedStatement("SELECT ID FROM ARTIKELSTAMM_CH WHERE GTIN=?");
-		try {
-			pstm.setString(1, gtin);
-			ret = loadArtikel(pstm.executeQuery());
-		} catch (SQLException e) {
-			LoggerFactory.getLogger(CreatePrescriptionHelper.class)
-				.error("Could not lookup artikelstamm with GTIN", e);
-		} finally {
-			PersistentObject.getDefaultConnection().releasePreparedStatement(pstm);
-		}
-		return ret;
-	}
-	
-	private Optional<Artikel> loadArtikel(ResultSet result) throws SQLException{
-		Optional<Artikel> ret = Optional.empty();
-		while (result.next()) {
-			ret = loadArtikelstamm(result.getString(1));
-			if (ret.isPresent()) {
-				break;
+	private Optional<IArticle> loadArtikelWithCode(String gtin){
+		Optional<ICodeElementServiceContribution> contribution =
+			CodeElementServiceHolder.get().getContribution(CodeElementTyp.ARTICLE, "Artikelstamm");
+		if (contribution.isPresent()) {
+			Optional<ICodeElement> loadedArticle =
+				contribution.get().loadFromCode(gtin, Collections.emptyMap());
+			if (loadedArticle.isPresent()) {
+				return Optional.of((IArticle) loadedArticle.get());
 			}
-		}
-		result.close();
-		return ret;
-	}
-	
-	private Optional<Artikel> loadArtikelstamm(String id){
-		PersistentObjectFactory factory = new PersistentObjectFactory();
-		PersistentObject item = factory.createFromString(
-			"ch.artikelstamm.elexis.common.ArtikelstammItem" + StringConstants.DOUBLECOLON + id);
-		if (item != null && item.exists()) {
-			return Optional.of((Artikel) item);
+		} else {
+			LoggerFactory.getLogger(getClass())
+				.warn("No Artikelstamm ICodeElementServiceContribution available");
 		}
 		return Optional.empty();
 	}

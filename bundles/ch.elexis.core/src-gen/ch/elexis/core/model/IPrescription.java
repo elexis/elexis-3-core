@@ -26,18 +26,23 @@ import java.time.LocalDateTime;
  *   <li>{@link ch.elexis.core.model.IPrescription#getArticle <em>Article</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPrescription#getDateFrom <em>Date From</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPrescription#getDateTo <em>Date To</em>}</li>
- *   <li>{@link ch.elexis.core.model.IPrescription#getDosageInstruction <em>Dosage Instruction</em>}</li>
- *   <li>{@link ch.elexis.core.model.IPrescription#getRemark <em>Remark</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPrescription#getStopReason <em>Stop Reason</em>}</li>
- *   <li>{@link ch.elexis.core.model.IPrescription#getEntryType <em>Entry Type</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IPrescription#getDosageInstruction <em>Dosage Instruction</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPrescription#getDisposalComment <em>Disposal Comment</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IPrescription#getRemark <em>Remark</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IPrescription#getEntryType <em>Entry Type</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IPrescription#isApplied <em>Applied</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IPrescription#getSortOrder <em>Sort Order</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IPrescription#getPrescriptor <em>Prescriptor</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IPrescription#getRecipe <em>Recipe</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IPrescription#getBilled <em>Billed</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIPrescription()
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface IPrescription extends Identifiable, Deleteable {
+public interface IPrescription extends Identifiable, Deleteable, WithExtInfo {
 	/**
 	 * Returns the value of the '<em><b>Patient</b></em>' reference.
 	 * <!-- begin-user-doc -->
@@ -128,6 +133,7 @@ public interface IPrescription extends Identifiable, Deleteable {
 	 * @see #setDateTo(LocalDateTime)
 	 * @see ch.elexis.core.model.ModelPackage#getIPrescription_DateTo()
 	 * @model dataType="ch.elexis.core.types.LocalDateTime"
+	 *        annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='dateUntil'"
 	 * @generated
 	 */
 	LocalDateTime getDateTo();
@@ -247,6 +253,58 @@ public interface IPrescription extends Identifiable, Deleteable {
 	void setEntryType(EntryType value);
 
 	/**
+	 * Returns the value of the '<em><b>Applied</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Applied</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Applied</em>' attribute.
+	 * @see #setApplied(boolean)
+	 * @see ch.elexis.core.model.ModelPackage#getIPrescription_Applied()
+	 * @model
+	 * @generated
+	 */
+	boolean isApplied();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IPrescription#isApplied <em>Applied</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Applied</em>' attribute.
+	 * @see #isApplied()
+	 * @generated
+	 */
+	void setApplied(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Sort Order</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Sort Order</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Sort Order</em>' attribute.
+	 * @see #setSortOrder(int)
+	 * @see ch.elexis.core.model.ModelPackage#getIPrescription_SortOrder()
+	 * @model
+	 * @generated
+	 */
+	int getSortOrder();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IPrescription#getSortOrder <em>Sort Order</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Sort Order</em>' attribute.
+	 * @see #getSortOrder()
+	 * @generated
+	 */
+	void setSortOrder(int value);
+
+	/**
 	 * Returns the value of the '<em><b>Disposal Comment</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -271,5 +329,83 @@ public interface IPrescription extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	void setDisposalComment(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Prescriptor</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Prescriptor</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Prescriptor</em>' reference.
+	 * @see #setPrescriptor(IContact)
+	 * @see ch.elexis.core.model.ModelPackage#getIPrescription_Prescriptor()
+	 * @model
+	 * @generated
+	 */
+	IContact getPrescriptor();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IPrescription#getPrescriptor <em>Prescriptor</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Prescriptor</em>' reference.
+	 * @see #getPrescriptor()
+	 * @generated
+	 */
+	void setPrescriptor(IContact value);
+
+	/**
+	 * Returns the value of the '<em><b>Recipe</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Recipe</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Recipe</em>' reference.
+	 * @see #setRecipe(IRecipe)
+	 * @see ch.elexis.core.model.ModelPackage#getIPrescription_Recipe()
+	 * @model
+	 * @generated
+	 */
+	IRecipe getRecipe();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IPrescription#getRecipe <em>Recipe</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Recipe</em>' reference.
+	 * @see #getRecipe()
+	 * @generated
+	 */
+	void setRecipe(IRecipe value);
+
+	/**
+	 * Returns the value of the '<em><b>Billed</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Billed</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Billed</em>' reference.
+	 * @see #setBilled(IBilled)
+	 * @see ch.elexis.core.model.ModelPackage#getIPrescription_Billed()
+	 * @model
+	 * @generated
+	 */
+	IBilled getBilled();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IPrescription#getBilled <em>Billed</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Billed</em>' reference.
+	 * @see #getBilled()
+	 * @generated
+	 */
+	void setBilled(IBilled value);
 
 } // IPrescription

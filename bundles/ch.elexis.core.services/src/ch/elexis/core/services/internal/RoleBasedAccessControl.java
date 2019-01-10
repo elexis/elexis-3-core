@@ -26,8 +26,8 @@ import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IRight;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
-import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 
 /**
  * @since 3.1
@@ -42,11 +42,9 @@ public class RoleBasedAccessControl extends AbstractAccessControl {
 		"SELECT COUNT(*) FROM RIGHTS_PER_ROLE WHERE ROLE_ID LIKE '%s' AND (";
 	
 	private IModelService modelService;
-	private IContextService contextService;
 	
-	public RoleBasedAccessControl(IModelService modelService, IContextService contextService){
+	public RoleBasedAccessControl(IModelService modelService){
 		this.modelService = modelService;
-		this.contextService = contextService;
 	}
 	
 	/**
@@ -119,7 +117,7 @@ public class RoleBasedAccessControl extends AbstractAccessControl {
 		}
 		
 		if (user == null) {
-			Optional<IUser> _user = contextService.getRootContext().getActiveUser();
+			Optional<IUser> _user = ContextServiceHolder.get().getRootContext().getActiveUser();
 			if (!_user.isPresent()) {
 				return false;
 			}

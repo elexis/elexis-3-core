@@ -1,12 +1,17 @@
 package ch.elexis.core.model;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import ch.elexis.core.jpa.entities.Fall;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
+import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.model.util.internal.ModelUtil;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 
 public class Patient extends Person implements IPatient {
 	
@@ -89,4 +94,24 @@ public class Patient extends Person implements IPatient {
 		return coverage;
 	}
 
+	@Override
+	public List<IPrescription> getMedication(List<EntryType> filterType){
+		IQuery<IPrescription> query = CoreModelServiceHolder.get().getQuery(IPrescription.class);
+		query.and(ModelPackage.Literals.IPRESCRIPTION__PATIENT, COMPARATOR.EQUALS, this);
+		query.startGroup();
+		query.or(ModelPackage.Literals.IPRESCRIPTION__DATE_TO, COMPARATOR.EQUALS, null);
+		query.or(ModelPackage.Literals.IPRESCRIPTION__DATE_TO, COMPARATOR.GREATER,
+			LocalDateTime.now());
+		query.andJoinGroups();
+		if (filterType != null && !filterType.isEmpty()) {
+			query.startGroup();
+			for (EntryType entryType : filterType) {
+				query.or(ModelPackage.Literals.IPRESCRIPTION__ENTRY_TYPE, COMPARATOR.EQUALS,
+					entryType);				
+			}
+			query.andJoinGroups();
+		}
+		return query.execute();
+	}
+	
 }

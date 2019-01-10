@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.medication.handlers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,8 +20,10 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.medication.views.MedicationView;
 import ch.elexis.core.ui.medication.views.ViewerSortOrder;
@@ -36,7 +39,7 @@ public class PrintTakingsListHandler extends AbstractHandler {
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException{
-		Patient patient = ElexisEventDispatcher.getSelectedPatient();
+		IPatient patient = ContextServiceHolder.get().getActivePatient().orElse(null);
 		if (patient == null)
 			return null;
 		
@@ -47,13 +50,13 @@ public class PrintTakingsListHandler extends AbstractHandler {
 			medicationType = "selection";
 		}
 		
-		List<Prescription> prescRecipes = getPrescriptions(patient, medicationType, event);
+		List<IPrescription> prescRecipes = getPrescriptions(patient, medicationType, event);
 		if (!prescRecipes.isEmpty()) {
 			prescRecipes = sortPrescriptions(prescRecipes, event);
 			try {
 				RezeptBlatt rpb = (RezeptBlatt) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 					.getActivePage().showView(RezeptBlatt.ID);
-				rpb.createEinnahmeliste(patient,
+				rpb.createEinnahmeliste(Patient.load(patient.getId()),
 					prescRecipes.toArray(new Prescription[prescRecipes.size()]));
 			} catch (PartInitException e) {
 				log.error("Error outputting recipe", e);
@@ -63,7 +66,7 @@ public class PrintTakingsListHandler extends AbstractHandler {
 		return null;
 	}
 	
-	private List<Prescription> sortPrescriptions(List<Prescription> prescRecipes,
+	private List<IPrescription> sortPrescriptions(List<IPrescription> prescRecipes,
 		ExecutionEvent event){
 		SorterAdapter sorter = new SorterAdapter(event);
 		IWorkbenchPart part = HandlerUtil.getActivePart(event);
@@ -74,35 +77,35 @@ public class PrintTakingsListHandler extends AbstractHandler {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private List<Prescription> getPrescriptions(Patient patient, String medicationType,
+	private List<IPrescription> getPrescriptions(IPatient patient, String medicationType,
 		ExecutionEvent event){
 		if ("selection".equals(medicationType)) {
 			ISelection selection =
 				HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 			if (selection != null && !selection.isEmpty()) {
-				List<Prescription> ret = new ArrayList<Prescription>();
+				List<IPrescription> ret = new ArrayList<IPrescription>();
 				IStructuredSelection strucSelection = (IStructuredSelection) selection;
 				if (strucSelection.getFirstElement() instanceof MedicationTableViewerItem) {
 					List<MedicationTableViewerItem> mtvItems =
 						(List<MedicationTableViewerItem>) strucSelection.toList();
 					for (MedicationTableViewerItem mtvItem : mtvItems) {
-						Prescription p = mtvItem.getPrescription();
+						IPrescription p = mtvItem.getPrescription();
 						if (p != null) {
 							ret.add(p);
 						}
 					}
-				} else if (strucSelection.getFirstElement() instanceof Prescription) {
+				} else if (strucSelection.getFirstElement() instanceof IPrescription) {
 					ret.addAll(strucSelection.toList());
 				}
 				return ret;
 			}
 		} else if ("all".equals(medicationType)) {
-			return patient.getMedication(EntryType.FIXED_MEDICATION, EntryType.RESERVE_MEDICATION,
-				EntryType.SYMPTOMATIC_MEDICATION);
+			return patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION,
+				EntryType.RESERVE_MEDICATION, EntryType.SYMPTOMATIC_MEDICATION));
 		} else if ("fix".equals(medicationType)) {
-			return patient.getMedication(EntryType.FIXED_MEDICATION);
+			return patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION));
 		} else if ("reserve".equals(medicationType)) {
-			return patient.getMedication(EntryType.RESERVE_MEDICATION);
+			return patient.getMedication(Arrays.asList(EntryType.RESERVE_MEDICATION));
 		}
 		return Collections.emptyList();
 	}
@@ -142,7 +145,7 @@ public class PrintTakingsListHandler extends AbstractHandler {
 			}
 		}
 		
-		public List<Prescription> getSorted(List<Prescription> list){
+		public List<IPrescription> getSorted(List<IPrescription> list){
 			MedicationTableViewerItem[] toSort =
 				MedicationTableViewerItem.createFromPrescriptionList(list, null)
 					.toArray(new MedicationTableViewerItem[list.size()]);
@@ -155,7 +158,7 @@ public class PrintTakingsListHandler extends AbstractHandler {
 			} else if (mode == CompareMode.MANUAL) {
 				manualComparator.sort(null, toSort);
 			}
-			ArrayList<Prescription> ret = new ArrayList<>();
+			ArrayList<IPrescription> ret = new ArrayList<>();
 			for (int i = 0; i < toSort.length; i++) {
 				ret.add(toSort[i].getPrescription());
 			}

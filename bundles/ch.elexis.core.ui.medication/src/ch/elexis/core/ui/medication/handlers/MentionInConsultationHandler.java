@@ -10,12 +10,12 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.text.model.Samdas.Record;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.data.Konsultation;
-import ch.elexis.data.Prescription;
 
 public class MentionInConsultationHandler extends AbstractHandler {
 	@SuppressWarnings("unchecked")
@@ -25,10 +25,10 @@ public class MentionInConsultationHandler extends AbstractHandler {
 			HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 		if (selection != null && !selection.isEmpty()) {
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
-			List<Prescription> prescriptions = new ArrayList<Prescription>();
+			List<IPrescription> prescriptions = new ArrayList<IPrescription>();
 			List<MedicationTableViewerItem> mtvItems = strucSelection.toList();
 			for (MedicationTableViewerItem mtvItem : mtvItems) {
-				Prescription p = mtvItem.getPrescription();
+				IPrescription p = mtvItem.getPrescription();
 				if (p != null) {
 					prescriptions.add(p);
 				}
@@ -37,14 +37,14 @@ public class MentionInConsultationHandler extends AbstractHandler {
 			Konsultation cons = Konsultation.getAktuelleKons();
 			if (cons != null) {
 				StringBuilder sb = new StringBuilder();
-				for (Prescription presc : prescriptions) {
+				for (IPrescription presc : prescriptions) {
 					String articleLabel = "";
-					if (presc.getArtikel() != null) {
-						articleLabel = presc.getArtikel().getLabel();
+					if (presc.getArticle() != null) {
+						articleLabel = presc.getArticle().getLabel();
 					}
 					sb.append("\n");
-					sb.append("Medikation: " + articleLabel + ", " + presc.getDosis() + " "
-						+ getType(presc.getEntryType()));
+					sb.append("Medikation: " + articleLabel + ", " + presc.getDosageInstruction()
+						+ " " + getType(presc.getEntryType()));
 				}
 				
 				Samdas samdas = new Samdas(cons.getEintrag().getHead());

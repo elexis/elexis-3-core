@@ -161,6 +161,8 @@
             <column name="DATUM" type="CHAR(8)"/>
             <column name="DIAGNOSEN" type="VARCHAR(25)"/>
             <column name="LEISTUNGEN" type="VARCHAR(25)"/>
+            <column name="BILLABLE" type="CHAR(1)" defaultValue="1"/>
+            <column name="ZEIT" type="CHAR(6)" defaultValue="000000"/>
             <column name="EINTRAG" type="BLOB"/>
         </createTable>
     </changeSet>

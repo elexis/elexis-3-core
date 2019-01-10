@@ -12,12 +12,13 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.medication.views.MedicationView;
 import ch.elexis.core.ui.medication.views.Messages;
-import ch.elexis.data.Prescription;
 
 public class DeleteHandler extends AbstractHandler {
 	
@@ -42,7 +43,7 @@ public class DeleteHandler extends AbstractHandler {
 				Iterator<MedicationTableViewerItem> selectionList = strucSelection.iterator();
 				while (selectionList.hasNext()) {
 					MedicationTableViewerItem item = selectionList.next();
-					Prescription prescription = item.getPrescription();
+					IPrescription prescription = item.getPrescription();
 					AcquireLockUi.aquireAndRun(prescription, new ILockHandler() {
 						
 						@Override
@@ -52,7 +53,7 @@ public class DeleteHandler extends AbstractHandler {
 						
 						@Override
 						public void lockAcquired(){
-							prescription.remove();
+							CoreModelServiceHolder.get().remove(prescription);
 						}
 					});
 				}

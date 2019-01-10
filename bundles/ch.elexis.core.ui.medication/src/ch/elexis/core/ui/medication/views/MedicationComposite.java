@@ -1,6 +1,10 @@
 package ch.elexis.core.ui.medication.views;
 
 import java.text.MessageFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -55,7 +59,14 @@ import org.eclipse.ui.commands.ICommandService;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IPrescription;
+import ch.elexis.core.model.IRecipe;
+import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.ICodeSelectorTarget;
 import ch.elexis.core.ui.icons.Images;
@@ -65,18 +76,14 @@ import ch.elexis.core.ui.medication.handlers.ApplyCustomSortingHandler;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerContentProvider.MedicationContentProviderComposite;
 import ch.elexis.core.ui.medication.views.provider.MedicationFilter;
 import ch.elexis.core.ui.util.CreatePrescriptionHelper;
-import ch.elexis.core.ui.util.PersistentObjectDropTarget;
+import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.views.controls.InteractionLink;
-import ch.elexis.data.Artikel;
-import ch.elexis.data.Patient;
-import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Prescription;
-import ch.elexis.data.Rezept;
-import ch.elexis.data.Verrechnet;
-import ch.rgw.tools.TimeTool;
 
 public class MedicationComposite extends Composite
 		implements ISelectionProvider, ISelectionChangedListener {
+	
+	private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 	
 	private Composite compositeSearchFilter;
 	private Text txtSearch;
@@ -105,9 +112,9 @@ public class MedicationComposite extends Composite
 	private Composite compositeStopMedicationTextDetails;
 	private Composite stackedMedicationDetailComposite;
 	
-	private WritableValue selectedMedication =
+	private WritableValue<MedicationTableViewerItem> selectedMedication =
 		new WritableValue(null, MedicationTableViewerItem.class);
-	private WritableValue lastDisposalPO = new WritableValue(null, PersistentObject.class);
+	private WritableValue<Identifiable> lastDisposal = new WritableValue(null, Identifiable.class);
 	
 	private DateTime timeStopped;
 	private DateTime dateStopped;
@@ -119,8 +126,8 @@ public class MedicationComposite extends Composite
 	private Color stopBGColor = UiDesk.getColorFromRGB("FF7256");
 	private Color defaultBGColor = UiDesk.getColorFromRGB("F0F0F0");
 	private ControlDecoration ctrlDecor;
-	private Patient pat;
-	private PersistentObjectDropTarget dropTarget;
+	private IPatient patient;
+	private GenericObjectDropTarget dropTarget;
 	private Text txtIntakeOrder;
 	private Text txtDisposalComment;
 	private Text txtStopComment;
@@ -146,7 +153,8 @@ public class MedicationComposite extends Composite
 		showSearchFilterComposite(false);
 		showMedicationDetailComposite(null);
 		
-		dropTarget = new PersistentObjectDropTarget("Medication", this,
+		dropTarget =
+			new GenericObjectDropTarget("Medication", this,
 			new DropMedicationReceiver(getShell()));
 	}
 	
@@ -243,8 +251,8 @@ public class MedicationComposite extends Composite
 		lblLastDisposalLink.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e){
-				PersistentObject po = (PersistentObject) lastDisposalPO.getValue();
-				if (po == null)
+				Identifiable identifiable = lastDisposal.getValue();
+				if (identifiable == null)
 					return;
 			}
 		});
@@ -284,7 +292,7 @@ public class MedicationComposite extends Composite
 				}
 				tablesComposite.layout();
 				
-				updateUi(pat, false);
+				updateUi(patient, false);
 			}
 		});
 	}
@@ -610,31 +618,36 @@ public class MedicationComposite extends Composite
 			
 			@Override
 			public void lockAcquired(){
-				Prescription oldPrescription = pres.getPrescription();
+				IPrescription oldPrescription = pres.getPrescription();
 				String endDate = pres.getEndDate();
 				if (!btnStopMedication.getSelection()) {
-					Prescription newPrescription = new Prescription(oldPrescription);
-					newPrescription.setDosis(getDosisStringFromSignatureTextArray());
-					newPrescription.setBemerkung(txtIntakeOrder.getText());
+					IPrescription newPrescription =
+						MedicationServiceHolder.get().createPrescriptionCopy(oldPrescription);
+					newPrescription.setDosageInstruction(getDosisStringFromSignatureTextArray());
+					newPrescription.setRemark(txtIntakeOrder.getText());
 					newPrescription.setDisposalComment(txtDisposalComment.getText());
 				}
 				// change always stops
 				if (btnStopMedication.getSelection()) {
-					TimeTool endTime = new TimeTool(pres.getEndTime());
-					oldPrescription.stop(endTime);
+					MedicationServiceHolder.get().stopPrescription(oldPrescription,
+						LocalDateTime.ofInstant(pres.getEndTime().toInstant(),
+							ZoneId.systemDefault()));
 				} else {
-					oldPrescription.stop(null);
+					MedicationServiceHolder.get().stopPrescription(oldPrescription,
+						LocalDateTime.now());
 				}
 				if (endDate != null && !endDate.isEmpty()) {
 					// create new stopped prescription
-					Prescription newStoppedPrescription = new Prescription(oldPrescription);
-					newStoppedPrescription.setBeginDate(oldPrescription.getBeginTime());
-					TimeTool ttEndDate = new TimeTool(pres.getEndTime());
-					newStoppedPrescription.stop(ttEndDate);
+					IPrescription newStoppedPrescription =
+						MedicationServiceHolder.get().createPrescriptionCopy(oldPrescription);
+					newStoppedPrescription.setDateFrom(oldPrescription.getDateFrom());
+					MedicationServiceHolder.get().stopPrescription(oldPrescription, LocalDateTime
+						.ofInstant(pres.getEndTime().toInstant(), ZoneId.systemDefault()));
 					newStoppedPrescription
 						.setStopReason("Änderung des Stop Datums von " + endDate);
 					// stop the old prescription with current time
-					oldPrescription.stop(null);
+					MedicationServiceHolder.get().stopPrescription(oldPrescription,
+						LocalDateTime.now());
 				}
 				else {
 					// apply stop reason if set
@@ -689,7 +702,7 @@ public class MedicationComposite extends Composite
 			dateStopped.setEnabled(false);
 			timeStopped.setEnabled(false);
 			
-			btnStopMedication.setEnabled(presc.isFixedMediation());
+			btnStopMedication.setEnabled(presc.isActiveMedication());
 			stackedMedicationDetailComposite.layout();
 			
 			//set default color
@@ -713,24 +726,25 @@ public class MedicationComposite extends Composite
 		// Disable the check that prevents subclassing of SWT components
 	}
 	
-	public void updateUi(Patient pat, boolean forceUpdate){
-		if ((this.pat == pat) && !forceUpdate) {
+	public void updateUi(IPatient patient, boolean forceUpdate){
+		if ((this.patient == patient) && !forceUpdate) {
 			return;
 		}
-		this.pat = pat;
+		this.patient = patient;
 		
 		clearSearchFilter();
-		lastDisposalPO.setValue(null);
+		lastDisposal.setValue(null);
 		
-		if (pat == null) {
+		if (patient == null) {
 			return;
 		}
 		
-		List<Prescription> medicationInput = MedicationViewHelper.loadInputData(false, pat.getId());
+		List<IPrescription> medicationInput =
+			MedicationViewHelper.loadInputData(false, patient);
 		medicationTableComposite.setInput(medicationInput);
 		
-		List<Prescription> medicationHistoryInput =
-			MedicationViewHelper.loadInputData(true, pat.getId());
+		List<IPrescription> medicationHistoryInput =
+			MedicationViewHelper.loadInputData(true, patient);
 		medicationHistoryTableComposite.setInput(medicationHistoryInput);
 		
 		contentProviderComp.refresh();
@@ -867,20 +881,21 @@ public class MedicationComposite extends Composite
 		selectedMedication.setValue(null);
 	}
 	
-	public void setLastDisposalPO(IPersistentObject po){
-		lastDisposalPO.setValue(po);
-		if (po != null) {
+	public void setLastDisposal(Identifiable identifiable){
+		lastDisposal.setValue(identifiable);
+		if (identifiable != null) {
 			String label = "";
-			if (po instanceof Rezept) {
-				Rezept rp = (Rezept) po;
-				label = MessageFormat.format(Messages.MedicationComposite_recipeFrom, rp.getDate());
-			} else if (po instanceof Verrechnet) {
-				Verrechnet v = (Verrechnet) po;
-				if (v.getKons() == null) {
+			if (identifiable instanceof IRecipe) {
+				IRecipe rp = (IRecipe) identifiable;
+				label = MessageFormat.format(Messages.MedicationComposite_recipeFrom,
+					dateFormatter.format(rp.getDate()));
+			} else if (identifiable instanceof IBilled) {
+				IBilled billed = (IBilled) identifiable;
+				if (billed.getEncounter() == null) {
 					label = Messages.MedicationComposite_consMissing;
 				} else {
 					label = MessageFormat.format(Messages.MedicationComposite_consFrom,
-						v.getKons().getDatum());
+						dateFormatter.format(billed.getEncounter().getDate()));
 				}
 			}
 			lblLastDisposalLink.setText(label);
@@ -919,7 +934,7 @@ public class MedicationComposite extends Composite
 	 * @see #fireSelectionChanged
 	 */
 	private ListenerList selectionChangedListeners = new ListenerList();
-	private Prescription dropChangePrescription;
+	private IPrescription dropChangePrescription;
 	
 	@Override
 	public void addSelectionChangedListener(ISelectionChangedListener listener){
@@ -966,7 +981,7 @@ public class MedicationComposite extends Composite
 		return dropTarget;
 	}
 	
-	public void setDropChangePrescription(Prescription changePrescription){
+	public void setDropChangePrescription(IPrescription changePrescription){
 		this.dropChangePrescription = changePrescription;
 	}
 	
@@ -974,7 +989,7 @@ public class MedicationComposite extends Composite
 	 * waits for dropps/double-clicks on a medication
 	 *
 	 */
-	private final class DropMedicationReceiver implements PersistentObjectDropTarget.IReceiver {
+	private final class DropMedicationReceiver implements GenericObjectDropTarget.IReceiver {
 		
 		private Shell parentShell;
 		
@@ -982,49 +997,51 @@ public class MedicationComposite extends Composite
 			this.parentShell = parentShell;
 		}
 		
-		public void dropped(PersistentObject article, DropTargetEvent ev){
-			if (isVaccination(article)) {
-				MessageDialog.openWarning(parentShell,
-					Messages.MedicationComposite_isVaccinationTitle,
-					Messages.MedicationComposite_isVaccinationText);
-				return;
-			}
-			if (dropChangePrescription == null) {
-				CreatePrescriptionHelper prescriptionHelper =
-					new CreatePrescriptionHelper((Artikel) article, parentShell);
-				prescriptionHelper.createPrescription();
-			} else {
-				Prescription changedPrescription = new Prescription(dropChangePrescription);
-				AcquireLockUi.aquireAndRun(changedPrescription, new ILockHandler() {
-					@Override
-					public void lockFailed(){
-						changedPrescription.remove();
+		private boolean isVaccination(IArticle article){
+			return article.getAtcCode().startsWith("J07");
+		}
+		
+		@Override
+		public void dropped(List<Object> list, DropTargetEvent e){
+			for (Object object : list) {
+				if (object instanceof IArticle) {
+					IArticle article = (IArticle) object;
+					if (isVaccination(article)) {
+						MessageDialog.openWarning(parentShell,
+							Messages.MedicationComposite_isVaccinationTitle,
+							Messages.MedicationComposite_isVaccinationText);
+						return;
 					}
-					
-					@Override
-					public void lockAcquired(){
-						changedPrescription.set(Prescription.FLD_ARTICLE, article.storeToString());
-						// stop prev medication
-						dropChangePrescription.stop(null);
+					if (dropChangePrescription == null) {
+						CreatePrescriptionHelper prescriptionHelper =
+							new CreatePrescriptionHelper(article, parentShell);
+						prescriptionHelper.createPrescription();
+					} else {
+						IPrescription changedPrescription = MedicationServiceHolder.get()
+							.createPrescriptionCopy(dropChangePrescription);
+						changedPrescription.setArticle(article);
+						MedicationServiceHolder.get().stopPrescription(dropChangePrescription,
+							LocalDateTime.now());
 						dropChangePrescription
-							.setStopReason("Ersetzt durch " + ((Artikel) article).getName());
+							.setStopReason("Ersetzt durch " + article.getName());
+						dropChangePrescription = null;
+						CoreModelServiceHolder.get()
+							.save(Arrays.asList(dropChangePrescription, changedPrescription));
 					}
-				});
-				
-				dropChangePrescription = null;
+					refresh();
+				}
 			}
-			refresh();
 		}
 		
-		private boolean isVaccination(PersistentObject article){
-			return (((Artikel) article).getATC_code().startsWith("J07"));
-		}
-		
-		public boolean accept(PersistentObject o){
-			if (!(o instanceof Artikel))
-				return false;
-			// we do not accept vaccination articles
-			return !isVaccination((Artikel) o);
+		@Override
+		public boolean accept(List<Object> list){
+			for (Object object : list) {
+				if (!(object instanceof IArticle))
+					return false;
+				// we do not accept vaccination articles
+				return !isVaccination((IArticle) object);
+			}
+			return true;
 		}
 	}
 }

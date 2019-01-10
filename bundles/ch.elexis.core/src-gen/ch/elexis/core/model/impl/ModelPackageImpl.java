@@ -14,6 +14,7 @@ import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IAddress;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IArticleDefaultSignature;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBillableOptifier;
 import ch.elexis.core.model.IBillableVerifier;
@@ -52,6 +53,7 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPeriod;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IPrescription;
+import ch.elexis.core.model.IRecipe;
 import ch.elexis.core.model.IRight;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IService;
@@ -280,6 +282,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass iArticleDefaultSignatureEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass iDiagnosisEClass = null;
 
 	/**
@@ -465,6 +474,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	private EClass iBillingSystemEClass = null;
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iRecipeEClass = null;
+
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
@@ -533,6 +549,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIdentifiable() {
 		return identifiableEClass;
 	}
@@ -542,6 +559,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDeleteable() {
 		return deleteableEClass;
 	}
@@ -551,6 +569,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDeleteable_Deleted() {
 		return (EAttribute)deleteableEClass.getEStructuralFeatures().get(0);
 	}
@@ -560,6 +579,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIXid() {
 		return iXidEClass;
 	}
@@ -569,6 +589,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIXid_Domain() {
 		return (EAttribute)iXidEClass.getEStructuralFeatures().get(0);
 	}
@@ -578,6 +599,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIXid_DomainId() {
 		return (EAttribute)iXidEClass.getEStructuralFeatures().get(1);
 	}
@@ -587,6 +609,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIXid_Quality() {
 		return (EAttribute)iXidEClass.getEStructuralFeatures().get(2);
 	}
@@ -596,6 +619,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIXid_ObjectId() {
 		return (EAttribute)iXidEClass.getEStructuralFeatures().get(3);
 	}
@@ -605,6 +629,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIContact() {
 		return iContactEClass;
 	}
@@ -614,6 +639,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIContact_Mandator() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(0);
 	}
@@ -623,6 +649,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIContact_User() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(1);
 	}
@@ -632,6 +659,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIContact_Patient() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(2);
 	}
@@ -641,6 +669,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIContact_Person() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(3);
 	}
@@ -650,6 +679,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIContact_Organization() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(4);
 	}
@@ -659,6 +689,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIContact_Laboratory() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(5);
 	}
@@ -668,6 +699,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIContact_Description1() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(6);
 	}
@@ -677,6 +709,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIContact_Description2() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(7);
 	}
@@ -686,6 +719,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIContact_Description3() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(8);
 	}
@@ -695,6 +729,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIContact_Code() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(9);
 	}
@@ -704,6 +739,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIContact_Country() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(10);
 	}
@@ -713,6 +749,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIContact_Zip() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(11);
 	}
@@ -722,6 +759,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIContact_City() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(12);
 	}
@@ -731,6 +769,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIContact_Street() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(13);
 	}
@@ -740,6 +779,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIContact_Phone1() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(14);
 	}
@@ -749,6 +789,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIContact_Phone2() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(15);
 	}
@@ -758,6 +799,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIContact_Fax() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(16);
 	}
@@ -767,6 +809,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIContact_Email() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(17);
 	}
@@ -776,6 +819,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIContact_Website() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(18);
 	}
@@ -785,6 +829,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIContact_Mobile() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(19);
 	}
@@ -794,6 +839,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIContact_Comment() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(20);
 	}
@@ -803,6 +849,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIContact_Address() {
 		return (EReference)iContactEClass.getEStructuralFeatures().get(21);
 	}
@@ -812,6 +859,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIContact_Group() {
 		return (EAttribute)iContactEClass.getEStructuralFeatures().get(22);
 	}
@@ -821,6 +869,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIPerson() {
 		return iPersonEClass;
 	}
@@ -830,6 +879,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIPerson_DateOfBirth() {
 		return (EAttribute)iPersonEClass.getEStructuralFeatures().get(0);
 	}
@@ -839,6 +889,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIPerson_Gender() {
 		return (EAttribute)iPersonEClass.getEStructuralFeatures().get(1);
 	}
@@ -848,6 +899,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIPerson_Titel() {
 		return (EAttribute)iPersonEClass.getEStructuralFeatures().get(2);
 	}
@@ -857,6 +909,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIPerson_TitelSuffix() {
 		return (EAttribute)iPersonEClass.getEStructuralFeatures().get(3);
 	}
@@ -866,6 +919,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIPerson_FirstName() {
 		return (EAttribute)iPersonEClass.getEStructuralFeatures().get(4);
 	}
@@ -875,6 +929,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIPerson_LastName() {
 		return (EAttribute)iPersonEClass.getEStructuralFeatures().get(5);
 	}
@@ -884,6 +939,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIOrganization() {
 		return iOrganizationEClass;
 	}
@@ -893,6 +949,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIOrganization_InsuranceXmlName() {
 		return (EAttribute)iOrganizationEClass.getEStructuralFeatures().get(0);
 	}
@@ -902,6 +959,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIOrganization_InsuranceLawCode() {
 		return (EAttribute)iOrganizationEClass.getEStructuralFeatures().get(1);
 	}
@@ -911,6 +969,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getILaboratory() {
 		return iLaboratoryEClass;
 	}
@@ -920,6 +979,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIPatient() {
 		return iPatientEClass;
 	}
@@ -929,6 +989,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIPatient_Diagnosen() {
 		return (EAttribute)iPatientEClass.getEStructuralFeatures().get(0);
 	}
@@ -938,6 +999,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIPatient_Risk() {
 		return (EAttribute)iPatientEClass.getEStructuralFeatures().get(1);
 	}
@@ -947,6 +1009,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIPatient_FamilyAnamnese() {
 		return (EAttribute)iPatientEClass.getEStructuralFeatures().get(2);
 	}
@@ -956,6 +1019,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIPatient_PersonalAnamnese() {
 		return (EAttribute)iPatientEClass.getEStructuralFeatures().get(3);
 	}
@@ -965,6 +1029,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIPatient_Allergies() {
 		return (EAttribute)iPatientEClass.getEStructuralFeatures().get(4);
 	}
@@ -974,6 +1039,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIPatient_Coverages() {
 		return (EReference)iPatientEClass.getEStructuralFeatures().get(5);
 	}
@@ -983,6 +1049,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIMandator() {
 		return iMandatorEClass;
 	}
@@ -992,6 +1059,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIMandator_Biller() {
 		return (EReference)iMandatorEClass.getEStructuralFeatures().get(0);
 	}
@@ -1001,6 +1069,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIUser() {
 		return iUserEClass;
 	}
@@ -1010,6 +1079,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIUser_Username() {
 		return (EAttribute)iUserEClass.getEStructuralFeatures().get(0);
 	}
@@ -1019,6 +1089,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIUser_HashedPassword() {
 		return (EAttribute)iUserEClass.getEStructuralFeatures().get(1);
 	}
@@ -1028,6 +1099,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIUser_Salt() {
 		return (EAttribute)iUserEClass.getEStructuralFeatures().get(2);
 	}
@@ -1037,6 +1109,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIUser_AssignedContact() {
 		return (EReference)iUserEClass.getEStructuralFeatures().get(3);
 	}
@@ -1046,6 +1119,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIUser_Roles() {
 		return (EReference)iUserEClass.getEStructuralFeatures().get(4);
 	}
@@ -1055,6 +1129,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIUser_Active() {
 		return (EAttribute)iUserEClass.getEStructuralFeatures().get(5);
 	}
@@ -1064,6 +1139,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIUser_AllowExternal() {
 		return (EAttribute)iUserEClass.getEStructuralFeatures().get(6);
 	}
@@ -1073,6 +1149,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIUser_Administrator() {
 		return (EAttribute)iUserEClass.getEStructuralFeatures().get(7);
 	}
@@ -1082,6 +1159,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getILabItem() {
 		return iLabItemEClass;
 	}
@@ -1091,6 +1169,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabItem_Typ() {
 		return (EAttribute)iLabItemEClass.getEStructuralFeatures().get(0);
 	}
@@ -1100,6 +1179,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabItem_ReferenceMale() {
 		return (EAttribute)iLabItemEClass.getEStructuralFeatures().get(1);
 	}
@@ -1109,6 +1189,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabItem_ReferenceFemale() {
 		return (EAttribute)iLabItemEClass.getEStructuralFeatures().get(2);
 	}
@@ -1118,6 +1199,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabItem_Unit() {
 		return (EAttribute)iLabItemEClass.getEStructuralFeatures().get(3);
 	}
@@ -1127,6 +1209,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabItem_Group() {
 		return (EAttribute)iLabItemEClass.getEStructuralFeatures().get(4);
 	}
@@ -1136,6 +1219,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabItem_Priority() {
 		return (EAttribute)iLabItemEClass.getEStructuralFeatures().get(5);
 	}
@@ -1145,6 +1229,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabItem_Code() {
 		return (EAttribute)iLabItemEClass.getEStructuralFeatures().get(6);
 	}
@@ -1154,6 +1239,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabItem_Name() {
 		return (EAttribute)iLabItemEClass.getEStructuralFeatures().get(7);
 	}
@@ -1163,6 +1249,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabItem_Digits() {
 		return (EAttribute)iLabItemEClass.getEStructuralFeatures().get(8);
 	}
@@ -1172,6 +1259,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabItem_Visible() {
 		return (EAttribute)iLabItemEClass.getEStructuralFeatures().get(9);
 	}
@@ -1181,6 +1269,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabItem_Formula() {
 		return (EAttribute)iLabItemEClass.getEStructuralFeatures().get(10);
 	}
@@ -1190,6 +1279,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabItem_LoincCode() {
 		return (EAttribute)iLabItemEClass.getEStructuralFeatures().get(11);
 	}
@@ -1199,6 +1289,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabItem_BillingCode() {
 		return (EAttribute)iLabItemEClass.getEStructuralFeatures().get(12);
 	}
@@ -1208,6 +1299,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabItem_Export() {
 		return (EAttribute)iLabItemEClass.getEStructuralFeatures().get(13);
 	}
@@ -1217,6 +1309,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getILabItem_Mappings() {
 		return (EReference)iLabItemEClass.getEStructuralFeatures().get(14);
 	}
@@ -1226,6 +1319,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getILabResult() {
 		return iLabResultEClass;
 	}
@@ -1235,6 +1329,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabResult_Result() {
 		return (EAttribute)iLabResultEClass.getEStructuralFeatures().get(0);
 	}
@@ -1244,6 +1339,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabResult_Comment() {
 		return (EAttribute)iLabResultEClass.getEStructuralFeatures().get(1);
 	}
@@ -1253,6 +1349,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabResult_ReferenceMale() {
 		return (EAttribute)iLabResultEClass.getEStructuralFeatures().get(2);
 	}
@@ -1262,6 +1359,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabResult_ReferenceFemale() {
 		return (EAttribute)iLabResultEClass.getEStructuralFeatures().get(3);
 	}
@@ -1271,6 +1369,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabResult_Unit() {
 		return (EAttribute)iLabResultEClass.getEStructuralFeatures().get(4);
 	}
@@ -1280,6 +1379,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabResult_Date() {
 		return (EAttribute)iLabResultEClass.getEStructuralFeatures().get(5);
 	}
@@ -1289,6 +1389,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabResult_ObservationTime() {
 		return (EAttribute)iLabResultEClass.getEStructuralFeatures().get(6);
 	}
@@ -1298,6 +1399,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabResult_AnalyseTime() {
 		return (EAttribute)iLabResultEClass.getEStructuralFeatures().get(7);
 	}
@@ -1307,6 +1409,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabResult_TransmissionTime() {
 		return (EAttribute)iLabResultEClass.getEStructuralFeatures().get(8);
 	}
@@ -1316,6 +1419,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabResult_Pathologic() {
 		return (EAttribute)iLabResultEClass.getEStructuralFeatures().get(9);
 	}
@@ -1325,6 +1429,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabResult_PathologicDescription() {
 		return (EAttribute)iLabResultEClass.getEStructuralFeatures().get(10);
 	}
@@ -1334,6 +1439,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getILabResult_Origin() {
 		return (EReference)iLabResultEClass.getEStructuralFeatures().get(11);
 	}
@@ -1343,6 +1449,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getILabResult_Item() {
 		return (EReference)iLabResultEClass.getEStructuralFeatures().get(12);
 	}
@@ -1352,6 +1459,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getILabResult_Patient() {
 		return (EReference)iLabResultEClass.getEStructuralFeatures().get(13);
 	}
@@ -1361,6 +1469,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getILabOrder() {
 		return iLabOrderEClass;
 	}
@@ -1370,6 +1479,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getILabOrder_Result() {
 		return (EReference)iLabOrderEClass.getEStructuralFeatures().get(0);
 	}
@@ -1379,6 +1489,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getILabOrder_Item() {
 		return (EReference)iLabOrderEClass.getEStructuralFeatures().get(1);
 	}
@@ -1388,6 +1499,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getILabOrder_Patient() {
 		return (EReference)iLabOrderEClass.getEStructuralFeatures().get(2);
 	}
@@ -1397,6 +1509,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabOrder_TimeStamp() {
 		return (EAttribute)iLabOrderEClass.getEStructuralFeatures().get(3);
 	}
@@ -1406,6 +1519,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabOrder_ObservationTime() {
 		return (EAttribute)iLabOrderEClass.getEStructuralFeatures().get(4);
 	}
@@ -1415,6 +1529,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getILabOrder_User() {
 		return (EReference)iLabOrderEClass.getEStructuralFeatures().get(5);
 	}
@@ -1424,6 +1539,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getILabOrder_Mandator() {
 		return (EReference)iLabOrderEClass.getEStructuralFeatures().get(6);
 	}
@@ -1433,6 +1549,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabOrder_OrderId() {
 		return (EAttribute)iLabOrderEClass.getEStructuralFeatures().get(7);
 	}
@@ -1442,6 +1559,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabOrder_State() {
 		return (EAttribute)iLabOrderEClass.getEStructuralFeatures().get(8);
 	}
@@ -1451,6 +1569,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getILabMapping() {
 		return iLabMappingEClass;
 	}
@@ -1460,6 +1579,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabMapping_ItemName() {
 		return (EAttribute)iLabMappingEClass.getEStructuralFeatures().get(0);
 	}
@@ -1469,6 +1589,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getILabMapping_Item() {
 		return (EReference)iLabMappingEClass.getEStructuralFeatures().get(1);
 	}
@@ -1478,6 +1599,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getILabMapping_Origin() {
 		return (EReference)iLabMappingEClass.getEStructuralFeatures().get(2);
 	}
@@ -1487,6 +1609,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getILabMapping_Charge() {
 		return (EAttribute)iLabMappingEClass.getEStructuralFeatures().get(3);
 	}
@@ -1496,6 +1619,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIDocument() {
 		return iDocumentEClass;
 	}
@@ -1505,6 +1629,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIDocument_Title() {
 		return (EAttribute)iDocumentEClass.getEStructuralFeatures().get(0);
 	}
@@ -1514,6 +1639,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIDocument_Description() {
 		return (EAttribute)iDocumentEClass.getEStructuralFeatures().get(1);
 	}
@@ -1523,6 +1649,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIDocument_Status() {
 		return (EAttribute)iDocumentEClass.getEStructuralFeatures().get(2);
 	}
@@ -1532,6 +1659,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIDocument_Created() {
 		return (EAttribute)iDocumentEClass.getEStructuralFeatures().get(3);
 	}
@@ -1541,6 +1669,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIDocument_Lastchanged() {
 		return (EAttribute)iDocumentEClass.getEStructuralFeatures().get(4);
 	}
@@ -1550,6 +1679,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIDocument_MimeType() {
 		return (EAttribute)iDocumentEClass.getEStructuralFeatures().get(5);
 	}
@@ -1559,6 +1689,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIDocument_Category() {
 		return (EReference)iDocumentEClass.getEStructuralFeatures().get(6);
 	}
@@ -1568,6 +1699,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIDocument_History() {
 		return (EReference)iDocumentEClass.getEStructuralFeatures().get(7);
 	}
@@ -1577,6 +1709,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIDocument_StoreId() {
 		return (EAttribute)iDocumentEClass.getEStructuralFeatures().get(8);
 	}
@@ -1586,6 +1719,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIDocument_Extension() {
 		return (EAttribute)iDocumentEClass.getEStructuralFeatures().get(9);
 	}
@@ -1595,6 +1729,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIDocument_Keywords() {
 		return (EAttribute)iDocumentEClass.getEStructuralFeatures().get(10);
 	}
@@ -1604,6 +1739,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIDocument_Patient() {
 		return (EReference)iDocumentEClass.getEStructuralFeatures().get(11);
 	}
@@ -1613,6 +1749,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIDocument_Author() {
 		return (EReference)iDocumentEClass.getEStructuralFeatures().get(12);
 	}
@@ -1622,6 +1759,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIHistory() {
 		return iHistoryEClass;
 	}
@@ -1631,6 +1769,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIHistory_Date() {
 		return (EAttribute)iHistoryEClass.getEStructuralFeatures().get(0);
 	}
@@ -1640,6 +1779,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIHistory_Status() {
 		return (EAttribute)iHistoryEClass.getEStructuralFeatures().get(1);
 	}
@@ -1649,6 +1789,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIHistory_Description() {
 		return (EAttribute)iHistoryEClass.getEStructuralFeatures().get(2);
 	}
@@ -1658,6 +1799,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getICategory() {
 		return iCategoryEClass;
 	}
@@ -1667,6 +1809,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getICategory_Name() {
 		return (EAttribute)iCategoryEClass.getEStructuralFeatures().get(0);
 	}
@@ -1676,6 +1819,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIDocumentLetter() {
 		return iDocumentLetterEClass;
 	}
@@ -1685,6 +1829,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getISticker() {
 		return iStickerEClass;
 	}
@@ -1694,6 +1839,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getISticker_Background() {
 		return (EAttribute)iStickerEClass.getEStructuralFeatures().get(0);
 	}
@@ -1703,6 +1849,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getISticker_Foreground() {
 		return (EAttribute)iStickerEClass.getEStructuralFeatures().get(1);
 	}
@@ -1712,6 +1859,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getISticker_Visible() {
 		return (EAttribute)iStickerEClass.getEStructuralFeatures().get(2);
 	}
@@ -1721,6 +1869,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getISticker_Name() {
 		return (EAttribute)iStickerEClass.getEStructuralFeatures().get(3);
 	}
@@ -1730,6 +1879,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getICodeElement() {
 		return iCodeElementEClass;
 	}
@@ -1739,6 +1889,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getICodeElement_Code() {
 		return (EAttribute)iCodeElementEClass.getEStructuralFeatures().get(0);
 	}
@@ -1748,6 +1899,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getICodeElement_Text() {
 		return (EAttribute)iCodeElementEClass.getEStructuralFeatures().get(1);
 	}
@@ -1757,6 +1909,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getICodeElementBlock() {
 		return iCodeElementBlockEClass;
 	}
@@ -1766,6 +1919,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getICodeElementBlock_Elements() {
 		return (EReference)iCodeElementBlockEClass.getEStructuralFeatures().get(0);
 	}
@@ -1775,6 +1929,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getICodeElementBlock_ElementReferences() {
 		return (EReference)iCodeElementBlockEClass.getEStructuralFeatures().get(1);
 	}
@@ -1784,6 +1939,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIBillable() {
 		return iBillableEClass;
 	}
@@ -1793,6 +1949,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIBillableVerifier() {
 		return iBillableVerifierEClass;
 	}
@@ -1802,6 +1959,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIBillableOptifier() {
 		return iBillableOptifierEClass;
 	}
@@ -1811,6 +1969,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIService() {
 		return iServiceEClass;
 	}
@@ -1820,6 +1979,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIService_Price() {
 		return (EAttribute)iServiceEClass.getEStructuralFeatures().get(0);
 	}
@@ -1829,6 +1989,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIService_NetPrice() {
 		return (EAttribute)iServiceEClass.getEStructuralFeatures().get(1);
 	}
@@ -1838,6 +1999,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIService_Minutes() {
 		return (EAttribute)iServiceEClass.getEStructuralFeatures().get(2);
 	}
@@ -1847,6 +2009,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getICustomService() {
 		return iCustomServiceEClass;
 	}
@@ -1856,6 +2019,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIArticle() {
 		return iArticleEClass;
 	}
@@ -1865,6 +2029,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIArticle_Gtin() {
 		return (EAttribute)iArticleEClass.getEStructuralFeatures().get(0);
 	}
@@ -1874,6 +2039,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIArticle_AtcCode() {
 		return (EAttribute)iArticleEClass.getEStructuralFeatures().get(1);
 	}
@@ -1883,6 +2049,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIArticle_Name() {
 		return (EAttribute)iArticleEClass.getEStructuralFeatures().get(2);
 	}
@@ -1892,6 +2059,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIArticle_SellingSize() {
 		return (EAttribute)iArticleEClass.getEStructuralFeatures().get(3);
 	}
@@ -1901,6 +2069,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIArticle_PackageSize() {
 		return (EAttribute)iArticleEClass.getEStructuralFeatures().get(4);
 	}
@@ -1910,6 +2079,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIArticle_PackageUnit() {
 		return (EAttribute)iArticleEClass.getEStructuralFeatures().get(5);
 	}
@@ -1919,6 +2089,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIArticle_Product() {
 		return (EReference)iArticleEClass.getEStructuralFeatures().get(6);
 	}
@@ -1928,6 +2099,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIArticle_PurchasePrice() {
 		return (EAttribute)iArticleEClass.getEStructuralFeatures().get(7);
 	}
@@ -1937,6 +2109,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIArticle_SellingPrice() {
 		return (EAttribute)iArticleEClass.getEStructuralFeatures().get(8);
 	}
@@ -1946,6 +2119,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIArticle_Obligation() {
 		return (EAttribute)iArticleEClass.getEStructuralFeatures().get(9);
 	}
@@ -1955,6 +2129,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIArticle_Typ() {
 		return (EAttribute)iArticleEClass.getEStructuralFeatures().get(10);
 	}
@@ -1964,6 +2139,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIArticle_SubTyp() {
 		return (EAttribute)iArticleEClass.getEStructuralFeatures().get(11);
 	}
@@ -1973,6 +2149,117 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	public EClass getIArticleDefaultSignature() {
+		return iArticleDefaultSignatureEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIArticleDefaultSignature_AtcCode() {
+		return (EAttribute)iArticleDefaultSignatureEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIArticleDefaultSignature_Morning() {
+		return (EAttribute)iArticleDefaultSignatureEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIArticleDefaultSignature_Noon() {
+		return (EAttribute)iArticleDefaultSignatureEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIArticleDefaultSignature_Evening() {
+		return (EAttribute)iArticleDefaultSignatureEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIArticleDefaultSignature_Night() {
+		return (EAttribute)iArticleDefaultSignatureEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIArticleDefaultSignature_Comment() {
+		return (EAttribute)iArticleDefaultSignatureEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIArticleDefaultSignature_FreeText() {
+		return (EAttribute)iArticleDefaultSignatureEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIArticleDefaultSignature_MedicationType() {
+		return (EAttribute)iArticleDefaultSignatureEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIArticleDefaultSignature_DisposalType() {
+		return (EAttribute)iArticleDefaultSignatureEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIArticleDefaultSignature_EndDate() {
+		return (EAttribute)iArticleDefaultSignatureEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getIDiagnosis() {
 		return iDiagnosisEClass;
 	}
@@ -1982,6 +2269,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIDiagnosis_Description() {
 		return (EAttribute)iDiagnosisEClass.getEStructuralFeatures().get(0);
 	}
@@ -1991,6 +2279,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIFreeTextDiagnosis() {
 		return iFreeTextDiagnosisEClass;
 	}
@@ -2000,6 +2289,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIDiagnosisReference() {
 		return iDiagnosisReferenceEClass;
 	}
@@ -2009,6 +2299,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIDiagnosisReference_ReferredClass() {
 		return (EAttribute)iDiagnosisReferenceEClass.getEStructuralFeatures().get(0);
 	}
@@ -2018,6 +2309,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIDiagnosisTree() {
 		return iDiagnosisTreeEClass;
 	}
@@ -2027,6 +2319,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIDiagnosisTree_Parent() {
 		return (EReference)iDiagnosisTreeEClass.getEStructuralFeatures().get(0);
 	}
@@ -2036,6 +2329,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIDiagnosisTree_Children() {
 		return (EReference)iDiagnosisTreeEClass.getEStructuralFeatures().get(1);
 	}
@@ -2045,6 +2339,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getICustomDiagnosis() {
 		return iCustomDiagnosisEClass;
 	}
@@ -2054,6 +2349,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getICoverage() {
 		return iCoverageEClass;
 	}
@@ -2063,6 +2359,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getICoverage_Patient() {
 		return (EReference)iCoverageEClass.getEStructuralFeatures().get(0);
 	}
@@ -2072,6 +2369,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getICoverage_Description() {
 		return (EAttribute)iCoverageEClass.getEStructuralFeatures().get(1);
 	}
@@ -2081,6 +2379,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getICoverage_Reason() {
 		return (EAttribute)iCoverageEClass.getEStructuralFeatures().get(2);
 	}
@@ -2090,6 +2389,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getICoverage_DateFrom() {
 		return (EAttribute)iCoverageEClass.getEStructuralFeatures().get(3);
 	}
@@ -2099,6 +2399,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getICoverage_BillingSystem() {
 		return (EReference)iCoverageEClass.getEStructuralFeatures().get(8);
 	}
@@ -2108,6 +2409,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getICoverage_CostBearer() {
 		return (EReference)iCoverageEClass.getEStructuralFeatures().get(4);
 	}
@@ -2117,6 +2419,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getICoverage_InsuranceNumber() {
 		return (EAttribute)iCoverageEClass.getEStructuralFeatures().get(5);
 	}
@@ -2126,6 +2429,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getICoverage_DateTo() {
 		return (EAttribute)iCoverageEClass.getEStructuralFeatures().get(6);
 	}
@@ -2135,6 +2439,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getICoverage_Encounters() {
 		return (EReference)iCoverageEClass.getEStructuralFeatures().get(7);
 	}
@@ -2144,6 +2449,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIBillingSystemFactor() {
 		return iBillingSystemFactorEClass;
 	}
@@ -2153,6 +2459,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIBillingSystemFactor_System() {
 		return (EAttribute)iBillingSystemFactorEClass.getEStructuralFeatures().get(0);
 	}
@@ -2162,6 +2469,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIBillingSystemFactor_Factor() {
 		return (EAttribute)iBillingSystemFactorEClass.getEStructuralFeatures().get(1);
 	}
@@ -2171,6 +2479,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIBillingSystemFactor_ValidFrom() {
 		return (EAttribute)iBillingSystemFactorEClass.getEStructuralFeatures().get(2);
 	}
@@ -2180,6 +2489,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIBillingSystemFactor_ValidTo() {
 		return (EAttribute)iBillingSystemFactorEClass.getEStructuralFeatures().get(3);
 	}
@@ -2189,6 +2499,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIConfig() {
 		return iConfigEClass;
 	}
@@ -2198,6 +2509,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIConfig_Key() {
 		return (EAttribute)iConfigEClass.getEStructuralFeatures().get(0);
 	}
@@ -2207,6 +2519,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIConfig_Value() {
 		return (EAttribute)iConfigEClass.getEStructuralFeatures().get(1);
 	}
@@ -2216,6 +2529,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIUserConfig() {
 		return iUserConfigEClass;
 	}
@@ -2225,6 +2539,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIUserConfig_Owner() {
 		return (EReference)iUserConfigEClass.getEStructuralFeatures().get(0);
 	}
@@ -2234,6 +2549,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIPeriod() {
 		return iPeriodEClass;
 	}
@@ -2243,6 +2559,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIPeriod_StartTime() {
 		return (EAttribute)iPeriodEClass.getEStructuralFeatures().get(0);
 	}
@@ -2252,6 +2569,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIPeriod_EndTime() {
 		return (EAttribute)iPeriodEClass.getEStructuralFeatures().get(1);
 	}
@@ -2261,6 +2579,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getWithExtInfo() {
 		return withExtInfoEClass;
 	}
@@ -2270,6 +2589,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIRole() {
 		return iRoleEClass;
 	}
@@ -2279,6 +2599,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIRole_SystemRole() {
 		return (EAttribute)iRoleEClass.getEStructuralFeatures().get(0);
 	}
@@ -2288,6 +2609,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIRole_AssignedRights() {
 		return (EReference)iRoleEClass.getEStructuralFeatures().get(1);
 	}
@@ -2297,6 +2619,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIBlob() {
 		return iBlobEClass;
 	}
@@ -2306,6 +2629,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIBlob_Content() {
 		return (EAttribute)iBlobEClass.getEStructuralFeatures().get(0);
 	}
@@ -2315,6 +2639,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIBlob_Date() {
 		return (EAttribute)iBlobEClass.getEStructuralFeatures().get(1);
 	}
@@ -2324,6 +2649,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIEncounter() {
 		return iEncounterEClass;
 	}
@@ -2333,6 +2659,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIEncounter_TimeStamp() {
 		return (EAttribute)iEncounterEClass.getEStructuralFeatures().get(0);
 	}
@@ -2342,6 +2669,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIEncounter_Date() {
 		return (EAttribute)iEncounterEClass.getEStructuralFeatures().get(1);
 	}
@@ -2351,6 +2679,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIEncounter_Billable() {
 		return (EAttribute)iEncounterEClass.getEStructuralFeatures().get(2);
 	}
@@ -2360,6 +2689,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIEncounter_Patient() {
 		return (EReference)iEncounterEClass.getEStructuralFeatures().get(3);
 	}
@@ -2369,6 +2699,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIEncounter_Mandator() {
 		return (EReference)iEncounterEClass.getEStructuralFeatures().get(4);
 	}
@@ -2378,6 +2709,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIEncounter_Billed() {
 		return (EReference)iEncounterEClass.getEStructuralFeatures().get(5);
 	}
@@ -2387,6 +2719,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIEncounter_Diagnoses() {
 		return (EReference)iEncounterEClass.getEStructuralFeatures().get(6);
 	}
@@ -2396,6 +2729,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIEncounter_Coverage() {
 		return (EReference)iEncounterEClass.getEStructuralFeatures().get(7);
 	}
@@ -2405,6 +2739,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIEncounter_VersionedEntry() {
 		return (EAttribute)iEncounterEClass.getEStructuralFeatures().get(8);
 	}
@@ -2414,6 +2749,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIEncounter_Invoice() {
 		return (EReference)iEncounterEClass.getEStructuralFeatures().get(9);
 	}
@@ -2423,6 +2759,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIBilled() {
 		return iBilledEClass;
 	}
@@ -2432,6 +2769,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIBilled_Billable() {
 		return (EReference)iBilledEClass.getEStructuralFeatures().get(0);
 	}
@@ -2441,6 +2779,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIBilled_Encounter() {
 		return (EReference)iBilledEClass.getEStructuralFeatures().get(1);
 	}
@@ -2450,6 +2789,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIBilled_Amount() {
 		return (EAttribute)iBilledEClass.getEStructuralFeatures().get(2);
 	}
@@ -2459,6 +2799,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIBilled_Price() {
 		return (EAttribute)iBilledEClass.getEStructuralFeatures().get(3);
 	}
@@ -2468,6 +2809,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIBilled_NetPrice() {
 		return (EAttribute)iBilledEClass.getEStructuralFeatures().get(4);
 	}
@@ -2477,6 +2819,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIBilled_Text() {
 		return (EAttribute)iBilledEClass.getEStructuralFeatures().get(5);
 	}
@@ -2486,6 +2829,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIBilled_Points() {
 		return (EAttribute)iBilledEClass.getEStructuralFeatures().get(6);
 	}
@@ -2495,6 +2839,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIBilled_Factor() {
 		return (EAttribute)iBilledEClass.getEStructuralFeatures().get(7);
 	}
@@ -2504,6 +2849,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIBilled_PrimaryScale() {
 		return (EAttribute)iBilledEClass.getEStructuralFeatures().get(8);
 	}
@@ -2513,6 +2859,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIBilled_SecondaryScale() {
 		return (EAttribute)iBilledEClass.getEStructuralFeatures().get(9);
 	}
@@ -2522,6 +2869,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIBilled_Code() {
 		return (EAttribute)iBilledEClass.getEStructuralFeatures().get(10);
 	}
@@ -2531,6 +2879,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIBilled_Total() {
 		return (EAttribute)iBilledEClass.getEStructuralFeatures().get(11);
 	}
@@ -2540,6 +2889,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIInvoice() {
 		return iInvoiceEClass;
 	}
@@ -2549,6 +2899,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIInvoice_State() {
 		return (EAttribute)iInvoiceEClass.getEStructuralFeatures().get(0);
 	}
@@ -2558,6 +2909,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIStock() {
 		return iStockEClass;
 	}
@@ -2567,6 +2919,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIStock_Code() {
 		return (EAttribute)iStockEClass.getEStructuralFeatures().get(0);
 	}
@@ -2576,6 +2929,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIStock_DriverUuid() {
 		return (EAttribute)iStockEClass.getEStructuralFeatures().get(1);
 	}
@@ -2585,6 +2939,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIStock_DriverConfig() {
 		return (EAttribute)iStockEClass.getEStructuralFeatures().get(2);
 	}
@@ -2594,6 +2949,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIStock_Priority() {
 		return (EAttribute)iStockEClass.getEStructuralFeatures().get(3);
 	}
@@ -2603,6 +2959,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIStock_Owner() {
 		return (EReference)iStockEClass.getEStructuralFeatures().get(4);
 	}
@@ -2612,6 +2969,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIStockEntry() {
 		return iStockEntryEClass;
 	}
@@ -2621,6 +2979,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIStockEntry_MinimumStock() {
 		return (EAttribute)iStockEntryEClass.getEStructuralFeatures().get(0);
 	}
@@ -2630,6 +2989,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIStockEntry_CurrentStock() {
 		return (EAttribute)iStockEntryEClass.getEStructuralFeatures().get(1);
 	}
@@ -2639,6 +2999,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIStockEntry_MaximumStock() {
 		return (EAttribute)iStockEntryEClass.getEStructuralFeatures().get(2);
 	}
@@ -2648,6 +3009,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIStockEntry_FractionUnits() {
 		return (EAttribute)iStockEntryEClass.getEStructuralFeatures().get(3);
 	}
@@ -2657,6 +3019,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIStockEntry_Stock() {
 		return (EReference)iStockEntryEClass.getEStructuralFeatures().get(4);
 	}
@@ -2666,6 +3029,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIStockEntry_Article() {
 		return (EReference)iStockEntryEClass.getEStructuralFeatures().get(5);
 	}
@@ -2675,6 +3039,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIStockEntry_Provider() {
 		return (EReference)iStockEntryEClass.getEStructuralFeatures().get(6);
 	}
@@ -2684,6 +3049,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIOrderEntry() {
 		return iOrderEntryEClass;
 	}
@@ -2693,6 +3059,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIOrderEntry_Order() {
 		return (EReference)iOrderEntryEClass.getEStructuralFeatures().get(0);
 	}
@@ -2702,6 +3069,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIOrderEntry_Stock() {
 		return (EReference)iOrderEntryEClass.getEStructuralFeatures().get(1);
 	}
@@ -2711,6 +3079,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIOrderEntry_Amount() {
 		return (EAttribute)iOrderEntryEClass.getEStructuralFeatures().get(2);
 	}
@@ -2720,6 +3089,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIOrderEntry_Article() {
 		return (EReference)iOrderEntryEClass.getEStructuralFeatures().get(3);
 	}
@@ -2729,6 +3099,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIOrderEntry_Provider() {
 		return (EReference)iOrderEntryEClass.getEStructuralFeatures().get(4);
 	}
@@ -2738,6 +3109,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIOrderEntry_State() {
 		return (EAttribute)iOrderEntryEClass.getEStructuralFeatures().get(5);
 	}
@@ -2747,6 +3119,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIOrder() {
 		return iOrderEClass;
 	}
@@ -2756,6 +3129,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIOrder_Entries() {
 		return (EReference)iOrderEClass.getEStructuralFeatures().get(0);
 	}
@@ -2765,6 +3139,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIOrder_Timestamp() {
 		return (EAttribute)iOrderEClass.getEStructuralFeatures().get(1);
 	}
@@ -2774,6 +3149,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIOrder_Name() {
 		return (EAttribute)iOrderEClass.getEStructuralFeatures().get(2);
 	}
@@ -2783,6 +3159,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIAddress() {
 		return iAddressEClass;
 	}
@@ -2792,6 +3169,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIAddress_Street1() {
 		return (EAttribute)iAddressEClass.getEStructuralFeatures().get(0);
 	}
@@ -2801,6 +3179,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIAddress_Street2() {
 		return (EAttribute)iAddressEClass.getEStructuralFeatures().get(1);
 	}
@@ -2810,6 +3189,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIAddress_Zip() {
 		return (EAttribute)iAddressEClass.getEStructuralFeatures().get(2);
 	}
@@ -2819,6 +3199,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIAddress_City() {
 		return (EAttribute)iAddressEClass.getEStructuralFeatures().get(3);
 	}
@@ -2828,6 +3209,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIAddress_Country() {
 		return (EAttribute)iAddressEClass.getEStructuralFeatures().get(4);
 	}
@@ -2837,6 +3219,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIAddress_WrittenAddress() {
 		return (EAttribute)iAddressEClass.getEStructuralFeatures().get(5);
 	}
@@ -2846,6 +3229,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIAddress_Type() {
 		return (EAttribute)iAddressEClass.getEStructuralFeatures().get(6);
 	}
@@ -2855,6 +3239,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIAddress_Contact() {
 		return (EReference)iAddressEClass.getEStructuralFeatures().get(7);
 	}
@@ -2864,6 +3249,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIAppointment() {
 		return iAppointmentEClass;
 	}
@@ -2873,6 +3259,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIAppointment_Reason() {
 		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(0);
 	}
@@ -2882,6 +3269,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIAppointment_State() {
 		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(1);
 	}
@@ -2891,6 +3279,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIAppointment_Type() {
 		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(2);
 	}
@@ -2900,6 +3289,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIAppointment_Start() {
 		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(3);
 	}
@@ -2909,6 +3299,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIAppointment_End() {
 		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(4);
 	}
@@ -2918,6 +3309,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIAppointment_DurationMinutes() {
 		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(5);
 	}
@@ -2927,6 +3319,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIAppointment_Schedule() {
 		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(6);
 	}
@@ -2936,6 +3329,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIAppointment_CreatedBy() {
 		return (EReference)iAppointmentEClass.getEStructuralFeatures().get(7);
 	}
@@ -2945,6 +3339,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIAppointment_SubjectOrPatient() {
 		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(8);
 	}
@@ -2954,6 +3349,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIAppointment_Priority() {
 		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(9);
 	}
@@ -2963,6 +3359,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIAppointment_TreatmentReason() {
 		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(10);
 	}
@@ -2972,6 +3369,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIImage() {
 		return iImageEClass;
 	}
@@ -2981,6 +3379,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIImage_Date() {
 		return (EAttribute)iImageEClass.getEStructuralFeatures().get(0);
 	}
@@ -2990,6 +3389,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIImage_Prefix() {
 		return (EAttribute)iImageEClass.getEStructuralFeatures().get(1);
 	}
@@ -2999,6 +3399,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIImage_Title() {
 		return (EAttribute)iImageEClass.getEStructuralFeatures().get(2);
 	}
@@ -3008,6 +3409,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIImage_Image() {
 		return (EAttribute)iImageEClass.getEStructuralFeatures().get(3);
 	}
@@ -3017,6 +3419,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getWithAssignableId() {
 		return withAssignableIdEClass;
 	}
@@ -3026,6 +3429,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIPrescription() {
 		return iPrescriptionEClass;
 	}
@@ -3035,6 +3439,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIPrescription_Patient() {
 		return (EReference)iPrescriptionEClass.getEStructuralFeatures().get(0);
 	}
@@ -3044,6 +3449,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIPrescription_Article() {
 		return (EReference)iPrescriptionEClass.getEStructuralFeatures().get(1);
 	}
@@ -3053,6 +3459,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIPrescription_DateFrom() {
 		return (EAttribute)iPrescriptionEClass.getEStructuralFeatures().get(2);
 	}
@@ -3062,6 +3469,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIPrescription_DateTo() {
 		return (EAttribute)iPrescriptionEClass.getEStructuralFeatures().get(3);
 	}
@@ -3071,16 +3479,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIPrescription_DosageInstruction() {
-		return (EAttribute)iPrescriptionEClass.getEStructuralFeatures().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getIPrescription_Remark() {
 		return (EAttribute)iPrescriptionEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -3089,16 +3489,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIPrescription_StopReason() {
-		return (EAttribute)iPrescriptionEClass.getEStructuralFeatures().get(6);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getIPrescription_EntryType() {
+	@Override
+	public EAttribute getIPrescription_Remark() {
 		return (EAttribute)iPrescriptionEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -3107,7 +3499,18 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIPrescription_DisposalComment() {
+	@Override
+	public EAttribute getIPrescription_StopReason() {
+		return (EAttribute)iPrescriptionEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIPrescription_EntryType() {
 		return (EAttribute)iPrescriptionEClass.getEStructuralFeatures().get(8);
 	}
 
@@ -3116,6 +3519,67 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	public EAttribute getIPrescription_Applied() {
+		return (EAttribute)iPrescriptionEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIPrescription_SortOrder() {
+		return (EAttribute)iPrescriptionEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIPrescription_DisposalComment() {
+		return (EAttribute)iPrescriptionEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIPrescription_Prescriptor() {
+		return (EReference)iPrescriptionEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIPrescription_Recipe() {
+		return (EReference)iPrescriptionEClass.getEStructuralFeatures().get(12);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIPrescription_Billed() {
+		return (EReference)iPrescriptionEClass.getEStructuralFeatures().get(13);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getIRight() {
 		return iRightEClass;
 	}
@@ -3125,6 +3589,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIRight_Name() {
 		return (EAttribute)iRightEClass.getEStructuralFeatures().get(0);
 	}
@@ -3134,6 +3599,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIRight_LocalizedName() {
 		return (EAttribute)iRightEClass.getEStructuralFeatures().get(1);
 	}
@@ -3143,6 +3609,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIRight_Parent() {
 		return (EReference)iRightEClass.getEStructuralFeatures().get(2);
 	}
@@ -3152,6 +3619,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIBillingSystem() {
 		return iBillingSystemEClass;
 	}
@@ -3161,6 +3629,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIBillingSystem_Name() {
 		return (EAttribute)iBillingSystemEClass.getEStructuralFeatures().get(0);
 	}
@@ -3170,6 +3639,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIBillingSystem_Law() {
 		return (EAttribute)iBillingSystemEClass.getEStructuralFeatures().get(1);
 	}
@@ -3179,6 +3649,67 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	public EClass getIRecipe() {
+		return iRecipeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIRecipe_Patient() {
+		return (EReference)iRecipeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIRecipe_Mandator() {
+		return (EReference)iRecipeEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIRecipe_Date() {
+		return (EAttribute)iRecipeEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIRecipe_Prescriptions() {
+		return (EReference)iRecipeEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIRecipe_Document() {
+		return (EReference)iRecipeEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public ModelFactory getModelFactory() {
 		return (ModelFactory)getEFactoryInstance();
 	}
@@ -3389,6 +3920,18 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iArticleEClass, IARTICLE__TYP);
 		createEAttribute(iArticleEClass, IARTICLE__SUB_TYP);
 
+		iArticleDefaultSignatureEClass = createEClass(IARTICLE_DEFAULT_SIGNATURE);
+		createEAttribute(iArticleDefaultSignatureEClass, IARTICLE_DEFAULT_SIGNATURE__ATC_CODE);
+		createEAttribute(iArticleDefaultSignatureEClass, IARTICLE_DEFAULT_SIGNATURE__MORNING);
+		createEAttribute(iArticleDefaultSignatureEClass, IARTICLE_DEFAULT_SIGNATURE__NOON);
+		createEAttribute(iArticleDefaultSignatureEClass, IARTICLE_DEFAULT_SIGNATURE__EVENING);
+		createEAttribute(iArticleDefaultSignatureEClass, IARTICLE_DEFAULT_SIGNATURE__NIGHT);
+		createEAttribute(iArticleDefaultSignatureEClass, IARTICLE_DEFAULT_SIGNATURE__COMMENT);
+		createEAttribute(iArticleDefaultSignatureEClass, IARTICLE_DEFAULT_SIGNATURE__FREE_TEXT);
+		createEAttribute(iArticleDefaultSignatureEClass, IARTICLE_DEFAULT_SIGNATURE__MEDICATION_TYPE);
+		createEAttribute(iArticleDefaultSignatureEClass, IARTICLE_DEFAULT_SIGNATURE__DISPOSAL_TYPE);
+		createEAttribute(iArticleDefaultSignatureEClass, IARTICLE_DEFAULT_SIGNATURE__END_DATE);
+
 		iDiagnosisEClass = createEClass(IDIAGNOSIS);
 		createEAttribute(iDiagnosisEClass, IDIAGNOSIS__DESCRIPTION);
 
@@ -3535,11 +4078,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEReference(iPrescriptionEClass, IPRESCRIPTION__ARTICLE);
 		createEAttribute(iPrescriptionEClass, IPRESCRIPTION__DATE_FROM);
 		createEAttribute(iPrescriptionEClass, IPRESCRIPTION__DATE_TO);
-		createEAttribute(iPrescriptionEClass, IPRESCRIPTION__DOSAGE_INSTRUCTION);
-		createEAttribute(iPrescriptionEClass, IPRESCRIPTION__REMARK);
 		createEAttribute(iPrescriptionEClass, IPRESCRIPTION__STOP_REASON);
-		createEAttribute(iPrescriptionEClass, IPRESCRIPTION__ENTRY_TYPE);
+		createEAttribute(iPrescriptionEClass, IPRESCRIPTION__DOSAGE_INSTRUCTION);
 		createEAttribute(iPrescriptionEClass, IPRESCRIPTION__DISPOSAL_COMMENT);
+		createEAttribute(iPrescriptionEClass, IPRESCRIPTION__REMARK);
+		createEAttribute(iPrescriptionEClass, IPRESCRIPTION__ENTRY_TYPE);
+		createEAttribute(iPrescriptionEClass, IPRESCRIPTION__APPLIED);
+		createEAttribute(iPrescriptionEClass, IPRESCRIPTION__SORT_ORDER);
+		createEReference(iPrescriptionEClass, IPRESCRIPTION__PRESCRIPTOR);
+		createEReference(iPrescriptionEClass, IPRESCRIPTION__RECIPE);
+		createEReference(iPrescriptionEClass, IPRESCRIPTION__BILLED);
 
 		iRightEClass = createEClass(IRIGHT);
 		createEAttribute(iRightEClass, IRIGHT__NAME);
@@ -3549,6 +4097,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iBillingSystemEClass = createEClass(IBILLING_SYSTEM);
 		createEAttribute(iBillingSystemEClass, IBILLING_SYSTEM__NAME);
 		createEAttribute(iBillingSystemEClass, IBILLING_SYSTEM__LAW);
+
+		iRecipeEClass = createEClass(IRECIPE);
+		createEReference(iRecipeEClass, IRECIPE__PATIENT);
+		createEReference(iRecipeEClass, IRECIPE__MANDATOR);
+		createEAttribute(iRecipeEClass, IRECIPE__DATE);
+		createEReference(iRecipeEClass, IRECIPE__PRESCRIPTIONS);
+		createEReference(iRecipeEClass, IRECIPE__DOCUMENT);
 	}
 
 	/**
@@ -3627,6 +4182,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iArticleEClass.getESuperTypes().add(this.getIBillable());
 		iArticleEClass.getESuperTypes().add(this.getDeleteable());
 		iArticleEClass.getESuperTypes().add(this.getWithExtInfo());
+		iArticleDefaultSignatureEClass.getESuperTypes().add(this.getDeleteable());
+		iArticleDefaultSignatureEClass.getESuperTypes().add(this.getIdentifiable());
+		iArticleDefaultSignatureEClass.getESuperTypes().add(this.getWithExtInfo());
 		iDiagnosisEClass.getESuperTypes().add(this.getICodeElement());
 		iDiagnosisEClass.getESuperTypes().add(this.getIdentifiable());
 		iFreeTextDiagnosisEClass.getESuperTypes().add(this.getIDiagnosis());
@@ -3671,9 +4229,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iImageEClass.getESuperTypes().add(this.getWithAssignableId());
 		iPrescriptionEClass.getESuperTypes().add(this.getIdentifiable());
 		iPrescriptionEClass.getESuperTypes().add(this.getDeleteable());
+		iPrescriptionEClass.getESuperTypes().add(this.getWithExtInfo());
 		iRightEClass.getESuperTypes().add(this.getIdentifiable());
 		iRightEClass.getESuperTypes().add(this.getDeleteable());
 		iRightEClass.getESuperTypes().add(this.getWithAssignableId());
+		iRecipeEClass.getESuperTypes().add(this.getIdentifiable());
+		iRecipeEClass.getESuperTypes().add(this.getDeleteable());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(identifiableEClass, Identifiable.class, "Identifiable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -3776,6 +4337,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		op = addEOperation(iPatientEClass, this.getICoverage(), "addCoverage", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getICoverage(), "coverage", 1, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iPatientEClass, null, "getMedication", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, theTypesPackage.getEntryType(), "filterType", 0, -1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(theTypesPackage.getList());
+		g2 = createEGenericType(this.getIPrescription());
+		g1.getETypeArguments().add(g2);
+		initEOperation(op, g1);
 
 		initEClass(iMandatorEClass, IMandator.class, "IMandator", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getIMandator_Biller(), this.getIContact(), null, "biller", null, 0, 1, IMandator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3987,6 +4555,25 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		op = addEOperation(iArticleEClass, null, "setCode", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "code", 0, 1, IS_UNIQUE, IS_ORDERED);
 
+		initEClass(iArticleDefaultSignatureEClass, IArticleDefaultSignature.class, "IArticleDefaultSignature", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIArticleDefaultSignature_AtcCode(), ecorePackage.getEString(), "atcCode", null, 0, 1, IArticleDefaultSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIArticleDefaultSignature_Morning(), ecorePackage.getEString(), "morning", null, 0, 1, IArticleDefaultSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIArticleDefaultSignature_Noon(), ecorePackage.getEString(), "noon", null, 0, 1, IArticleDefaultSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIArticleDefaultSignature_Evening(), ecorePackage.getEString(), "evening", null, 0, 1, IArticleDefaultSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIArticleDefaultSignature_Night(), ecorePackage.getEString(), "night", null, 0, 1, IArticleDefaultSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIArticleDefaultSignature_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, IArticleDefaultSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIArticleDefaultSignature_FreeText(), ecorePackage.getEString(), "freeText", null, 0, 1, IArticleDefaultSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIArticleDefaultSignature_MedicationType(), theTypesPackage.getEntryType(), "medicationType", null, 0, 1, IArticleDefaultSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIArticleDefaultSignature_DisposalType(), theTypesPackage.getEntryType(), "disposalType", null, 0, 1, IArticleDefaultSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIArticleDefaultSignature_EndDate(), theTypesPackage.getLocalDate(), "endDate", null, 0, 1, IArticleDefaultSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		op = addEOperation(iArticleDefaultSignatureEClass, null, "setArticle", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIArticle(), "article", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		addEOperation(iArticleDefaultSignatureEClass, ecorePackage.getEBoolean(), "isAtc", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		addEOperation(iArticleDefaultSignatureEClass, ecorePackage.getEString(), "getSignatureAsDosisString", 0, 1, IS_UNIQUE, IS_ORDERED);
+
 		initEClass(iDiagnosisEClass, IDiagnosis.class, "IDiagnosis", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIDiagnosis_Description(), ecorePackage.getEString(), "description", null, 0, 1, IDiagnosis.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -4179,11 +4766,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEReference(getIPrescription_Article(), this.getIArticle(), null, "article", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIPrescription_DateFrom(), theTypesPackage.getLocalDateTime(), "dateFrom", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIPrescription_DateTo(), theTypesPackage.getLocalDateTime(), "dateTo", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIPrescription_DosageInstruction(), ecorePackage.getEString(), "dosageInstruction", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIPrescription_Remark(), ecorePackage.getEString(), "remark", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIPrescription_StopReason(), ecorePackage.getEString(), "stopReason", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIPrescription_EntryType(), theTypesPackage.getEntryType(), "entryType", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIPrescription_DosageInstruction(), ecorePackage.getEString(), "dosageInstruction", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIPrescription_DisposalComment(), ecorePackage.getEString(), "disposalComment", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIPrescription_Remark(), ecorePackage.getEString(), "remark", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIPrescription_EntryType(), theTypesPackage.getEntryType(), "entryType", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIPrescription_Applied(), ecorePackage.getEBoolean(), "applied", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIPrescription_SortOrder(), ecorePackage.getEInt(), "sortOrder", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIPrescription_Prescriptor(), this.getIContact(), null, "prescriptor", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIPrescription_Recipe(), this.getIRecipe(), null, "recipe", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIPrescription_Billed(), this.getIBilled(), null, "billed", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iRightEClass, IRight.class, "IRight", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIRight_Name(), ecorePackage.getEString(), "name", null, 0, 1, IRight.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4193,6 +4785,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEClass(iBillingSystemEClass, IBillingSystem.class, "IBillingSystem", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIBillingSystem_Name(), ecorePackage.getEString(), "name", null, 0, 1, IBillingSystem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIBillingSystem_Law(), theTypesPackage.getBillingLaw(), "law", null, 0, 1, IBillingSystem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(iRecipeEClass, IRecipe.class, "IRecipe", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getIRecipe_Patient(), this.getIPatient(), null, "patient", null, 1, 1, IRecipe.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIRecipe_Mandator(), this.getIMandator(), null, "mandator", null, 0, 1, IRecipe.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIRecipe_Date(), theTypesPackage.getLocalDateTime(), "date", null, 0, 1, IRecipe.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIRecipe_Prescriptions(), this.getIPrescription(), null, "prescriptions", null, 0, -1, IRecipe.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIRecipe_Document(), this.getIDocumentLetter(), null, "document", null, 0, 1, IRecipe.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		op = addEOperation(iRecipeEClass, null, "removePrescription", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIPrescription(), "prescription", 1, 1, IS_UNIQUE, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);
@@ -4383,6 +4985,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		   source,
 		   new String[] {
 			   "attributeName", "patid"
+		   });
+		addAnnotation
+		  (getIPrescription_DateTo(),
+		   source,
+		   new String[] {
+			   "attributeName", "dateUntil"
 		   });
 	}
 

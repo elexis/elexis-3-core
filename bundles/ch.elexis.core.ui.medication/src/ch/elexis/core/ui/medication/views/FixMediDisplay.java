@@ -11,12 +11,16 @@
  *******************************************************************************/
 package ch.elexis.core.ui.medication.views;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
@@ -31,33 +35,36 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.services.IEvaluationService;
 
 import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListener;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IPrescription;
+import ch.elexis.core.model.builder.IPrescriptionBuilder;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.dialogs.ArticleDefaultSignatureTitleAreaDialog;
 import ch.elexis.core.ui.dialogs.MediDetailDialog;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.medication.handlers.PrintRecipeHandler;
 import ch.elexis.core.ui.medication.handlers.PrintTakingsListHandler;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.CreatePrescriptionHelper;
+import ch.elexis.core.ui.util.GenericObjectDragSource;
+import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.util.ListDisplay;
-import ch.elexis.core.ui.util.PersistentObjectDragSource;
-import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
 import ch.elexis.core.ui.views.controls.InteractionLink;
-import ch.elexis.data.Artikel;
-import ch.elexis.data.Patient;
-import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Prescription;
 import ch.rgw.tools.ExHandler;
 
@@ -69,7 +76,7 @@ import ch.rgw.tools.ExHandler;
  * @author gerry
  *
  */
-public class FixMediDisplay extends ListDisplay<Prescription> {
+public class FixMediDisplay extends ListDisplay<IPrescription> {
 	public static final String ID = "ch.elexis.FixMediDisplay";
 	private final LDListener dlisten;
 	private IAction stopMedicationAction, changeMedicationAction, removeMedicationAction,
@@ -77,7 +84,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 	FixMediDisplay self;
 	Label lCost;
 	InteractionLink interactionLink;
-	PersistentObjectDropTarget target;
+	GenericObjectDropTarget target;
 	private MenuManager menuManager;
 	private IViewSite viewSite;
 	static final String REZEPT = Messages.FixMediDisplay_Prescription; //$NON-NLS-1$
@@ -85,15 +92,34 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 	static final String HINZU = Messages.FixMediDisplay_AddItem; //$NON-NLS-1$
 	static final String KOPIEREN = Messages.FixMediDisplay_Copy; //$NON-NLS-1$
 	
-	private ElexisEventListener eeli_presc = new ElexisUiEventListenerImpl(Prescription.class,
-		ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_UPDATE) {
-		public void runInUi(ElexisEvent ev){
-			reload();
+	@Inject
+	void updatePrescription(
+		@Optional @UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IPrescription prescription){
+		if (CoreUiUtil.isActiveControl(list)) {
+			if (prescription != null) {
+				reload();
+			}
 		}
-	};
+	}
+	
+	@Inject
+	void createPrescription(
+		@Optional @UIEventTopic(ElexisEventTopics.EVENT_CREATE) IPrescription prescription){
+		updatePrescription(prescription);
+	}
+	
+	@Inject
+	void reloadPrescription(@Optional @UIEventTopic(ElexisEventTopics.EVENT_CREATE) Class<?> clazz){
+		if (clazz == IPrescription.class) {
+			if (CoreUiUtil.isActiveControl(list)) {
+				reload();
+			}
+		}
+	}
 	
 	public FixMediDisplay(Composite parent, IViewSite viewSite){
 		super(parent, SWT.NONE, null);
+		CoreUiUtil.injectServices(this);
 		this.viewSite = viewSite;
 		lCost = new Label(this, SWT.NONE);
 		lCost.setText(Messages.FixMediDisplay_DailyCost);
@@ -110,79 +136,75 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 			addDefaultSignatureAction, null, removeMedicationAction);
 		menuManager = menu.getContextMenu();
 		setDLDListener(dlisten);
-		target = new PersistentObjectDropTarget(Messages.FixMediDisplay_FixMedikation, this, //$NON-NLS-1$
-			new PersistentObjectDropTarget.IReceiver() {
-				
-				public boolean accept(PersistentObject o){
-					if (o instanceof Prescription) {
-						return true;
-					}
-					if (o instanceof Artikel) {
-						return true;
-					}
-					return false;
-				}
-				
-				public void dropped(PersistentObject o, DropTargetEvent e){
-					if (o instanceof Artikel) {
-						CreatePrescriptionHelper prescriptionHelper =
-							new CreatePrescriptionHelper((Artikel) o, getShell());
-						prescriptionHelper.setMedicationTypeFix(true);
-						prescriptionHelper.createPrescription();
-						
-						ElexisEventDispatcher.getInstance().fire(
-							new ElexisEvent(null, Prescription.class, ElexisEvent.EVENT_UPDATE));
-					} else if (o instanceof Prescription) {
-						List<Prescription> existing =
-							((Patient) ElexisEventDispatcher.getSelected(Patient.class))
-								.getMedication(EntryType.FIXED_MEDICATION,
-									EntryType.RESERVE_MEDICATION, EntryType.SYMPTOMATIC_MEDICATION);
-						Prescription pre = (Prescription) o;
-						for (Prescription pe : existing) {
-							if (pe.equals(pre)) {
-								return;
+		target = new GenericObjectDropTarget(Messages.FixMediDisplay_FixMedikation, this, new GenericObjectDropTarget.IReceiver() {
+			
+			@Override
+			public void dropped(List<Object> list, DropTargetEvent e){
+					for (Object object : list) {
+						if (object instanceof IArticle) {
+							CreatePrescriptionHelper prescriptionHelper =
+								new CreatePrescriptionHelper((IArticle) object, getShell());
+							prescriptionHelper.setMedicationTypeFix(true);
+							prescriptionHelper.createPrescription();
+							
+							ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD,
+								IPrescription.class);
+						} else if (object instanceof IPrescription) {
+							List<IPrescription> existing = Collections.emptyList();
+							java.util.Optional<IPatient> activePatient =
+								ContextServiceHolder.get().getActivePatient();
+							if (activePatient.isPresent()) {
+								existing = activePatient.get()
+									.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION,
+										EntryType.RESERVE_MEDICATION,
+										EntryType.SYMPTOMATIC_MEDICATION));
+								IPrescription pre = (IPrescription) object;
+								for (IPrescription pe : existing) {
+									if (pe.equals(pre)) {
+										return;
+									}
+								}
+								IPrescription prescription =
+									new IPrescriptionBuilder(CoreModelServiceHolder.get(),
+										pre.getArticle(), activePatient.get(),
+										pre.getDosageInstruction()).build();
+								prescription.setRemark(pre.getRemark());
+								CoreModelServiceHolder.get().save(prescription);
+								ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD,
+									IPrescription.class);
 							}
 						}
-						Prescription prescription =
-							new Prescription(pre.getArtikel(), ElexisEventDispatcher
-							.getSelectedPatient(), pre.getDosis(), pre.getBemerkung());
-						AcquireLockUi.aquireAndRun(prescription, new ILockHandler() {
-							@Override
-							public void lockFailed(){
-								prescription.remove();
-							}
-							
-							@Override
-							public void lockAcquired(){
-								// do nothing
-							}
-						});
-						// self.add(now);
-						ElexisEventDispatcher.getInstance().fire(
-							new ElexisEvent(null, Prescription.class, ElexisEvent.EVENT_UPDATE));
 					}
-				}
-			});
-		new PersistentObjectDragSource(list, new PersistentObjectDragSource.ISelectionRenderer() {
+			}
 			
-			public List<PersistentObject> getSelection(){
-				Prescription pr = FixMediDisplay.this.getSelection();
-				ArrayList<PersistentObject> ret = new ArrayList<PersistentObject>(1);
+			@Override
+			public boolean accept(List<Object> list){
+					for (Object object : list) {
+						if (!(object instanceof IPrescription) && !(object instanceof IArticle)) {
+							return false;
+						}
+					}
+					return true;
+			}
+			});
+		
+		new GenericObjectDragSource(list, new GenericObjectDragSource.ISelectionRenderer() {
+			@Override
+			public List<Object> getSelection(){
+				IPrescription pr = FixMediDisplay.this.getSelection();
 				if (pr != null) {
-					ret.add(pr);
+					return Collections.singletonList(pr);
 				}
-				return ret;
+				return Collections.emptyList();
 			}
 		});
 		
 		list.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				ElexisEventDispatcher.fireSelectionEvent(getSelection());
+				ContextServiceHolder.get().getRootContext().setTyped(getSelection());
 			}
 		});
-		
-		ElexisEventDispatcher.getInstance().addListeners(eeli_presc);
 	}
 	
 	public MenuManager getMenuManager(){
@@ -202,9 +224,10 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 	public void reload(){
 		if (!isDisposed()) {
 			clear();
-			Patient act = ElexisEventDispatcher.getSelectedPatient();
-			if (act != null) {
-				List<Prescription> fix = act.getMedication(EntryType.FIXED_MEDICATION);
+			java.util.Optional<IPatient> patient = ContextServiceHolder.get().getActivePatient();
+			if (patient.isPresent()) {
+				List<IPrescription> fix =
+					patient.get().getMedication(Arrays.asList(EntryType.FIXED_MEDICATION));
 				fix.stream().forEach(p -> add(p));
 				
 				lCost.setText(MedicationViewHelper.calculateDailyCostAsString(fix));
@@ -250,9 +273,10 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 		}
 		
 		public String getLabel(Object o){
-			if (o instanceof Prescription) {
-				Prescription presc = (Prescription) o;
-				return (presc.isReserveMedication()) ? presc.getLabel() + " Res."
+			if (o instanceof IPrescription) {
+				IPrescription presc = (IPrescription) o;
+				return (presc.getEntryType() == EntryType.RESERVE_MEDICATION)
+						? presc.getLabel() + " Res."
 						: presc.getLabel();
 			}
 			return o.toString();
@@ -270,7 +294,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 				}
 				
 				public void doRun(){
-					Prescription pr = getSelection();
+					IPrescription pr = getSelection();
 					if (pr != null) {
 						MediDetailDialog md = new MediDetailDialog(getShell(), pr, true);
 						md.setExecutedFrom(FixMediDisplay.class.getSimpleName());
@@ -290,7 +314,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 				}
 				
 				public void doRun(){
-					Prescription pr = getSelection();
+					IPrescription pr = getSelection();
 					if (pr != null) {
 						remove(pr);
 						AcquireLockUi.aquireAndRun(pr, new ILockHandler() {
@@ -301,14 +325,11 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 							
 							@Override
 							public void lockAcquired(){
-								if (pr.delete()) {
-									pr.setStopReason(
-										"Geändert durch " + CoreHub.actUser.getLabel());
-								}
+								pr.setStopReason("Geändert durch " + CoreHub.actUser.getLabel());
+								CoreModelServiceHolder.get().delete(pr);
 							}
 						});
-						ElexisEventDispatcher.getInstance().fire(
-							new ElexisEvent(pr, Prescription.class, ElexisEvent.EVENT_UPDATE));
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, pr);
 					}
 				}
 			};
@@ -321,7 +342,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 			
 			@Override
 			public void run(){
-				Prescription pr = getSelection();
+				IPrescription pr = getSelection();
 				if (pr != null) {
 					ArticleDefaultSignatureTitleAreaDialog adtad =
 						new ArticleDefaultSignatureTitleAreaDialog(UiDesk.getTopShell(), pr);
@@ -339,7 +360,7 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 				}
 				
 				public void doRun(){
-					Prescription pr = getSelection();
+					IPrescription pr = getSelection();
 					if (pr != null) {
 						if (MessageDialog.openQuestion(getShell(),
 							Messages.FixMediDisplay_DeleteUnrecoverable,
@@ -354,21 +375,15 @@ public class FixMediDisplay extends ListDisplay<Prescription> {
 								
 								@Override
 								public void lockAcquired(){
-									pr.remove(); // this does, in fact, remove the medication from the database
+									CoreModelServiceHolder.get().remove(pr);
 								}
 							});
-							ElexisEventDispatcher.getInstance().fire(
-								new ElexisEvent(pr, Prescription.class, ElexisEvent.EVENT_UPDATE));
+							ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
+								pr);
 						}
 					}
 				}
 			};
 		
-	}
-	
-	@Override
-	public void dispose(){
-		super.dispose();
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_presc);
 	}
 }

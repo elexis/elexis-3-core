@@ -25,9 +25,9 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.interfaces.IPersistentObject;
-import ch.elexis.data.Prescription;
+import ch.elexis.core.data.service.ContextServiceHolder;
+import ch.elexis.core.model.IPrescription;
+import ch.elexis.core.model.Identifiable;
 
 public class MedicationTableComposite extends Composite {
 	
@@ -36,7 +36,7 @@ public class MedicationTableComposite extends Composite {
 	private TableColumnLayout layout;
 	
 	private MedicationComposite medicationComposite;
-	private List<Prescription> pendingInput;
+	private List<IPrescription> pendingInput;
 	
 	public MedicationTableComposite(Composite parent, int style){
 		super(parent, style);
@@ -57,13 +57,17 @@ public class MedicationTableComposite extends Composite {
 				MedicationTableViewerItem presc = (MedicationTableViewerItem) is.getFirstElement();
 				
 				// set last disposition information
-				IPersistentObject po = (presc != null) ? presc.getLastDisposed() : null;
-				medicationComposite.setLastDisposalPO(po);
+				Identifiable identifiable = (presc != null) ? presc.getLastDisposed() : null;
+				medicationComposite.setLastDisposal(identifiable);
 				
 				// set writable databinding value
 				medicationComposite.setSelectedMedication(presc);
-				ElexisEventDispatcher
-					.fireSelectionEvent((presc != null) ? presc.getPrescription() : null);
+				if(presc != null) {
+					IPrescription selectedObj = presc.getPrescription();
+					ContextServiceHolder.get().getRootContext().setTyped(selectedObj);
+				} else {
+					ContextServiceHolder.get().getRootContext().removeTyped(IPrescription.class);
+				}
 			}
 		});
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
@@ -105,7 +109,7 @@ public class MedicationTableComposite extends Composite {
 		return viewer;
 	}
 	
-	public void setInput(List<Prescription> medicationInput){
+	public void setInput(List<IPrescription> medicationInput){
 		if (isVisible()) {
 			viewer.setInput(medicationInput);
 		} else {

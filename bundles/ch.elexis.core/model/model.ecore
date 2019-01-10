@@ -120,6 +120,12 @@
     <eOperations name="addCoverage" eType="#//ICoverage">
       <eParameters name="coverage" lowerBound="1" eType="#//ICoverage"/>
     </eOperations>
+    <eOperations name="getMedication">
+      <eGenericType eClassifier="ecore:EClass types.ecore#//List">
+        <eTypeArguments eClassifier="#//IPrescription"/>
+      </eGenericType>
+      <eParameters name="filterType" upperBound="-1" eType="ecore:EDataType types.ecore#//EntryType"/>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="diagnosen" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="risk" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="familyAnamnese" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -384,6 +390,24 @@
         <details key="attributeName" value="codeclass"/>
       </eAnnotations>
     </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IArticleDefaultSignature" abstract="true"
+      interface="true" eSuperTypes="#//Deleteable #//Identifiable #//WithExtInfo">
+    <eOperations name="setArticle">
+      <eParameters name="article" eType="#//IArticle"/>
+    </eOperations>
+    <eOperations name="isAtc" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eOperations name="getSignatureAsDosisString" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="atcCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="morning" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="noon" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="evening" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="night" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="freeText" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="medicationType" eType="ecore:EDataType types.ecore#//EntryType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="disposalType" eType="ecore:EDataType types.ecore#//EntryType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="endDate" eType="ecore:EDataType types.ecore#//LocalDate"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IDiagnosis" abstract="true" interface="true"
       eSuperTypes="#//ICodeElement #//Identifiable">
@@ -673,17 +697,26 @@
     </eOperations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IPrescription" abstract="true" interface="true"
-      eSuperTypes="#//Identifiable #//Deleteable">
+      eSuperTypes="#//Identifiable #//Deleteable #//WithExtInfo">
     <eStructuralFeatures xsi:type="ecore:EReference" name="patient" lowerBound="1"
         eType="#//IPatient"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="article" eType="#//IArticle"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateFrom" eType="ecore:EDataType types.ecore#//LocalDateTime"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateTo" eType="ecore:EDataType types.ecore#//LocalDateTime"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dosageInstruction" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="remark" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateTo" eType="ecore:EDataType types.ecore#//LocalDateTime">
+      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
+        <details key="attributeName" value="dateUntil"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="stopReason" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="entryType" eType="ecore:EDataType types.ecore#//EntryType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dosageInstruction" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="disposalComment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="remark" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="entryType" eType="ecore:EDataType types.ecore#//EntryType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="applied" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sortOrder" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="prescriptor" eType="#//IContact"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="recipe" eType="#//IRecipe"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="billed" eType="#//IBilled"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IRight" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable #//WithAssignableId">
@@ -694,5 +727,18 @@
   <eClassifiers xsi:type="ecore:EClass" name="IBillingSystem" abstract="true" interface="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="law" eType="ecore:EDataType types.ecore#//BillingLaw"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IRecipe" abstract="true" interface="true"
+      eSuperTypes="#//Identifiable #//Deleteable">
+    <eOperations name="removePrescription">
+      <eParameters name="prescription" lowerBound="1" eType="#//IPrescription"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="patient" lowerBound="1"
+        eType="#//IPatient"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mandator" eType="#//IMandator"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType types.ecore#//LocalDateTime"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="prescriptions" upperBound="-1"
+        eType="#//IPrescription"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="document" eType="#//IDocumentLetter"/>
   </eClassifiers>
 </ecore:EPackage>

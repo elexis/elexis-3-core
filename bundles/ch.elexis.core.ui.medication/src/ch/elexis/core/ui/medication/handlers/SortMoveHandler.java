@@ -48,7 +48,7 @@ public class SortMoveHandler extends AbstractHandler implements IHandler {
 						TableItem tableItem = asList.get(i);
 						MedicationTableViewerItem pres =
 							(MedicationTableViewerItem) tableItem.getData();
-						pres.setOrder(Integer.toString(i));
+						pres.setOrder(i);
 					}
 					
 					activeViewer.refresh();

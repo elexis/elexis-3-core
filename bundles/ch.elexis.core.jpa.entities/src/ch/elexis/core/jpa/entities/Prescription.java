@@ -14,9 +14,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
+import ch.elexis.core.jpa.entities.converter.IntegerStringConverter;
+import ch.elexis.core.jpa.entities.converter.PrescriptionEntryTypeConverter;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 import ch.elexis.core.model.prescription.EntryType;
@@ -62,46 +63,24 @@ public class Prescription extends AbstractEntityWithId
 	private String dosis;
 
 	@Column(length = 2, name = "prescType")
-	private String prescriptionType;
+	@Convert(converter = PrescriptionEntryTypeConverter.class)
+	private EntryType entryType;
 
 	@OneToOne
 	@JoinColumn(name = "patientID")
 	private Kontakt patient;
 
+	@OneToOne
+	@JoinColumn(name = "prescriptor")
+	private Kontakt prescriptor;
+	
 	@Column(length = 25)
 	private String rezeptID;
 
-	@Transient
-	public EntryType getEntryType() {
-		String prescTypeString = getPrescriptionType();
-		int typeNum = -1;
-		if (prescTypeString != null && !prescTypeString.isEmpty()) {
-			try {
-				typeNum = Integer.parseInt(prescTypeString);
-			} catch (NumberFormatException e) {
-				// ignore and return -1
-			}
-		}
-
-		if (typeNum != -1) {
-			return EntryType.byNumeric(typeNum);
-		}
-
-		String rezeptId = getRezeptID();
-		if (rezeptId != null && !rezeptId.isEmpty()) {
-			// this is necessary due to a past impl. where self dispensed was
-			// not set as entry type
-			if (rezeptId.equals("Direktabgabe")) {
-				setPrescriptionType(Integer.toString(EntryType.SELF_DISPENSED.numericValue()));
-				setRezeptID("");
-				return EntryType.SELF_DISPENSED;
-			}
-			return EntryType.RECIPE;
-		}
-
-		return EntryType.FIXED_MEDICATION;
-	}
-
+	@Column(length = 3)
+	@Convert(converter = IntegerStringConverter.class)
+	private int sortorder;
+	
 	public String getAnzahl() {
 		return anzahl;
 	}
@@ -142,12 +121,28 @@ public class Prescription extends AbstractEntityWithId
 		this.dateUntil = dateUntil;
 	}
 
-	public String getPrescriptionType() {
-		return prescriptionType;
+	public EntryType getEntryType(){
+		if(entryType == EntryType.UNKNOWN) {
+			String rezeptId = getRezeptID();
+			if (rezeptId != null && !rezeptId.isEmpty()) {
+				// this is necessary due to a past impl. where self dispensed was
+				// not set as entry type
+				if (rezeptId.equals("Direktabgabe")) {
+					setEntryType(EntryType.SELF_DISPENSED);
+					setRezeptID("");
+					return EntryType.SELF_DISPENSED;
+				}
+				setEntryType(EntryType.RECIPE);
+				return EntryType.RECIPE;
+			}
+			setEntryType(EntryType.FIXED_MEDICATION);
+			return EntryType.FIXED_MEDICATION;
+		}
+		return entryType;
 	}
 
-	public void setPrescriptionType(String prescriptionType) {
-		this.prescriptionType = prescriptionType;
+	public void setEntryType(EntryType entryType){
+		this.entryType = entryType;
 	}
 
 	public String getDosis() {
@@ -166,7 +161,15 @@ public class Prescription extends AbstractEntityWithId
 		this.patient = patient;
 	}
 
-	public String getRezeptID() {
+	public Kontakt getPrescriptor(){
+		return prescriptor;
+	}
+	
+	public void setPrescriptor(Kontakt patient){
+		this.prescriptor = patient;
+	}
+	
+	public String getRezeptID(){
 		return rezeptID;
 	}
 
@@ -174,6 +177,14 @@ public class Prescription extends AbstractEntityWithId
 		this.rezeptID = rezeptID;
 	}
 
+	public int getSortorder(){
+		return sortorder;
+	}
+	
+	public void setSortorder(int sortorder){
+		this.sortorder = sortorder;
+	}
+	
 	@Override
 	public byte[] getExtInfo(){
 		return extInfo;

@@ -12,7 +12,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	OrderEntryTest.class, PatientTest.class, RoleTest.class, StockEntryTest.class, UserTest.class,
 	ArticleTest.class, UserConfigTest.class, XidTest.class, BillingSystemFactorTest.class,
 	LocalServiceTest.class, DiagnosisReferenceTest.class, BilledTest.class, PrescriptionTest.class,
-	FreeTextDiagnosisTest.class
+	FreeTextDiagnosisTest.class, RecipeTest.class, DefaultSignatureTest.class
 })
 public class AllModelTests {
 	

@@ -11,10 +11,10 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.util.CreatePrescriptionHelper;
 import ch.elexis.data.Patient;
-import ch.elexis.data.Prescription;
 
 public class DispenseHandler extends AbstractHandler {
 	
@@ -26,7 +26,7 @@ public class DispenseHandler extends AbstractHandler {
 			return null;
 		}
 		
-		List<Prescription> prescRecipes = new ArrayList<Prescription>();
+		List<IPrescription> prescRecipes = new ArrayList<IPrescription>();
 		
 		ISelection selection =
 			HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
@@ -34,13 +34,13 @@ public class DispenseHandler extends AbstractHandler {
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
 			List<MedicationTableViewerItem> mtvItems = strucSelection.toList();
 			for (MedicationTableViewerItem mtvItem : mtvItems) {
-				Prescription p = mtvItem.getPrescription();
+				IPrescription p = mtvItem.getPrescription();
 				if (p != null) {
 					prescRecipes.add(p);
 				}
 			}
 		}
-		for (Prescription prescription : prescRecipes) {
+		for (IPrescription prescription : prescRecipes) {
 			CreatePrescriptionHelper prescriptionHelper =
 				new CreatePrescriptionHelper(null, HandlerUtil.getActiveShell(event));
 			prescriptionHelper.selfDispense(prescription);

@@ -52,27 +52,14 @@ public enum ViewerSortOrder {
 			MedicationTableViewerItem p1 = (MedicationTableViewerItem) e1;
 			MedicationTableViewerItem p2 = (MedicationTableViewerItem) e2;
 			
-			String sos1 = p1.getOrder();
-			String sos2 = p2.getOrder();
+			int sos1 = p1.getOrder();
+			int sos2 = p2.getOrder();
 			
-			if (sos1.length() == 0 && sos2.length() == 0)
+			if (sos1 == 0 && sos2 == 0)
 				return 0;
 				
-			int val1 = Integer.MAX_VALUE;
-			int val2 = Integer.MAX_VALUE;
-			
-			try {
-				val1 = Integer.parseInt(sos1);
-			} catch (NumberFormatException nfe) {
-				// ignore
-			}
-			
-			try {
-				val2 = Integer.parseInt(sos2);
-			} catch (NumberFormatException nfe) {
-				// ignore
-			}
-			
+			int val1 = sos1 == 0 ? Integer.MAX_VALUE : sos1;
+			int val2 = sos2 == 0 ? Integer.MAX_VALUE : sos2;
 			return Integer.compare(val1, val2);
 		}
 	}

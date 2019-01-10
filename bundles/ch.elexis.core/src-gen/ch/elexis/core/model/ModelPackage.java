@@ -3261,6 +3261,124 @@ public interface ModelPackage extends EPackage {
 	int IARTICLE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 15;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IArticleDefaultSignature <em>IArticle Default Signature</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IArticleDefaultSignature
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIArticleDefaultSignature()
+	 * @generated
+	 */
+	int IARTICLE_DEFAULT_SIGNATURE = 27;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IARTICLE_DEFAULT_SIGNATURE__DELETED = DELETEABLE__DELETED;
+
+	/**
+	 * The feature id for the '<em><b>Atc Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IARTICLE_DEFAULT_SIGNATURE__ATC_CODE = DELETEABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Morning</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IARTICLE_DEFAULT_SIGNATURE__MORNING = DELETEABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Noon</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IARTICLE_DEFAULT_SIGNATURE__NOON = DELETEABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Evening</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IARTICLE_DEFAULT_SIGNATURE__EVENING = DELETEABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Night</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IARTICLE_DEFAULT_SIGNATURE__NIGHT = DELETEABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Comment</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IARTICLE_DEFAULT_SIGNATURE__COMMENT = DELETEABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Free Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IARTICLE_DEFAULT_SIGNATURE__FREE_TEXT = DELETEABLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The feature id for the '<em><b>Medication Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IARTICLE_DEFAULT_SIGNATURE__MEDICATION_TYPE = DELETEABLE_FEATURE_COUNT + 7;
+
+	/**
+	 * The feature id for the '<em><b>Disposal Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IARTICLE_DEFAULT_SIGNATURE__DISPOSAL_TYPE = DELETEABLE_FEATURE_COUNT + 8;
+
+	/**
+	 * The feature id for the '<em><b>End Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IARTICLE_DEFAULT_SIGNATURE__END_DATE = DELETEABLE_FEATURE_COUNT + 9;
+
+	/**
+	 * The number of structural features of the '<em>IArticle Default Signature</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IARTICLE_DEFAULT_SIGNATURE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 10;
+
+	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IDiagnosis <em>IDiagnosis</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3268,7 +3386,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDiagnosis()
 	 * @generated
 	 */
-	int IDIAGNOSIS = 27;
+	int IDIAGNOSIS = 28;
 
 	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
@@ -3314,7 +3432,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIFreeTextDiagnosis()
 	 * @generated
 	 */
-	int IFREE_TEXT_DIAGNOSIS = 28;
+	int IFREE_TEXT_DIAGNOSIS = 29;
 
 	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
@@ -3360,7 +3478,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDiagnosisReference()
 	 * @generated
 	 */
-	int IDIAGNOSIS_REFERENCE = 29;
+	int IDIAGNOSIS_REFERENCE = 30;
 
 	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
@@ -3415,7 +3533,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDiagnosisTree()
 	 * @generated
 	 */
-	int IDIAGNOSIS_TREE = 30;
+	int IDIAGNOSIS_TREE = 31;
 
 	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
@@ -3479,7 +3597,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getICustomDiagnosis()
 	 * @generated
 	 */
-	int ICUSTOM_DIAGNOSIS = 31;
+	int ICUSTOM_DIAGNOSIS = 32;
 
 	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
@@ -3543,7 +3661,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getICoverage()
 	 * @generated
 	 */
-	int ICOVERAGE = 32;
+	int ICOVERAGE = 33;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -3652,7 +3770,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBillingSystemFactor()
 	 * @generated
 	 */
-	int IBILLING_SYSTEM_FACTOR = 33;
+	int IBILLING_SYSTEM_FACTOR = 34;
 
 	/**
 	 * The feature id for the '<em><b>System</b></em>' attribute.
@@ -3707,7 +3825,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIConfig()
 	 * @generated
 	 */
-	int ICONFIG = 34;
+	int ICONFIG = 35;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' attribute.
@@ -3744,7 +3862,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIUserConfig()
 	 * @generated
 	 */
-	int IUSER_CONFIG = 35;
+	int IUSER_CONFIG = 36;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' attribute.
@@ -3790,7 +3908,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPeriod()
 	 * @generated
 	 */
-	int IPERIOD = 36;
+	int IPERIOD = 37;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -3836,7 +3954,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getWithExtInfo()
 	 * @generated
 	 */
-	int WITH_EXT_INFO = 37;
+	int WITH_EXT_INFO = 38;
 
 	/**
 	 * The number of structural features of the '<em>With Ext Info</em>' class.
@@ -3855,7 +3973,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRole()
 	 * @generated
 	 */
-	int IROLE = 38;
+	int IROLE = 39;
 
 	/**
 	 * The feature id for the '<em><b>System Role</b></em>' attribute.
@@ -3892,7 +4010,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBlob()
 	 * @generated
 	 */
-	int IBLOB = 39;
+	int IBLOB = 40;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -3938,7 +4056,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIEncounter()
 	 * @generated
 	 */
-	int IENCOUNTER = 40;
+	int IENCOUNTER = 41;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4056,7 +4174,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBilled()
 	 * @generated
 	 */
-	int IBILLED = 41;
+	int IBILLED = 42;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4192,7 +4310,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIInvoice()
 	 * @generated
 	 */
-	int IINVOICE = 42;
+	int IINVOICE = 43;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4229,7 +4347,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIStock()
 	 * @generated
 	 */
-	int ISTOCK = 43;
+	int ISTOCK = 44;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4302,7 +4420,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIStockEntry()
 	 * @generated
 	 */
-	int ISTOCK_ENTRY = 44;
+	int ISTOCK_ENTRY = 45;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4393,7 +4511,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIOrderEntry()
 	 * @generated
 	 */
-	int IORDER_ENTRY = 45;
+	int IORDER_ENTRY = 46;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4475,7 +4593,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIOrder()
 	 * @generated
 	 */
-	int IORDER = 46;
+	int IORDER = 47;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4530,7 +4648,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAddress()
 	 * @generated
 	 */
-	int IADDRESS = 47;
+	int IADDRESS = 48;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4630,7 +4748,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIImage()
 	 * @generated
 	 */
-	int IIMAGE = 49;
+	int IIMAGE = 50;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.WithAssignableId <em>With Assignable Id</em>}' class.
@@ -4640,7 +4758,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getWithAssignableId()
 	 * @generated
 	 */
-	int WITH_ASSIGNABLE_ID = 50;
+	int WITH_ASSIGNABLE_ID = 51;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.
@@ -4650,7 +4768,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAppointment()
 	 * @generated
 	 */
-	int IAPPOINTMENT = 48;
+	int IAPPOINTMENT = 49;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4841,7 +4959,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPrescription()
 	 * @generated
 	 */
-	int IPRESCRIPTION = 51;
+	int IPRESCRIPTION = 52;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4889,40 +5007,22 @@ public interface ModelPackage extends EPackage {
 	int IPRESCRIPTION__DATE_TO = IDENTIFIABLE_FEATURE_COUNT + 4;
 
 	/**
-	 * The feature id for the '<em><b>Dosage Instruction</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IPRESCRIPTION__DOSAGE_INSTRUCTION = IDENTIFIABLE_FEATURE_COUNT + 5;
-
-	/**
-	 * The feature id for the '<em><b>Remark</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IPRESCRIPTION__REMARK = IDENTIFIABLE_FEATURE_COUNT + 6;
-
-	/**
 	 * The feature id for the '<em><b>Stop Reason</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IPRESCRIPTION__STOP_REASON = IDENTIFIABLE_FEATURE_COUNT + 7;
+	int IPRESCRIPTION__STOP_REASON = IDENTIFIABLE_FEATURE_COUNT + 5;
 
 	/**
-	 * The feature id for the '<em><b>Entry Type</b></em>' attribute.
+	 * The feature id for the '<em><b>Dosage Instruction</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IPRESCRIPTION__ENTRY_TYPE = IDENTIFIABLE_FEATURE_COUNT + 8;
+	int IPRESCRIPTION__DOSAGE_INSTRUCTION = IDENTIFIABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Disposal Comment</b></em>' attribute.
@@ -4931,7 +5031,70 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IPRESCRIPTION__DISPOSAL_COMMENT = IDENTIFIABLE_FEATURE_COUNT + 9;
+	int IPRESCRIPTION__DISPOSAL_COMMENT = IDENTIFIABLE_FEATURE_COUNT + 7;
+
+	/**
+	 * The feature id for the '<em><b>Remark</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__REMARK = IDENTIFIABLE_FEATURE_COUNT + 8;
+
+	/**
+	 * The feature id for the '<em><b>Entry Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__ENTRY_TYPE = IDENTIFIABLE_FEATURE_COUNT + 9;
+
+	/**
+	 * The feature id for the '<em><b>Applied</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__APPLIED = IDENTIFIABLE_FEATURE_COUNT + 10;
+
+	/**
+	 * The feature id for the '<em><b>Sort Order</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__SORT_ORDER = IDENTIFIABLE_FEATURE_COUNT + 11;
+
+	/**
+	 * The feature id for the '<em><b>Prescriptor</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__PRESCRIPTOR = IDENTIFIABLE_FEATURE_COUNT + 12;
+
+	/**
+	 * The feature id for the '<em><b>Recipe</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__RECIPE = IDENTIFIABLE_FEATURE_COUNT + 13;
+
+	/**
+	 * The feature id for the '<em><b>Billed</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__BILLED = IDENTIFIABLE_FEATURE_COUNT + 14;
 
 	/**
 	 * The number of structural features of the '<em>IPrescription</em>' class.
@@ -4940,7 +5103,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IPRESCRIPTION_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 10;
+	int IPRESCRIPTION_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 15;
 
 
 	/**
@@ -4951,7 +5114,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRight()
 	 * @generated
 	 */
-	int IRIGHT = 52;
+	int IRIGHT = 53;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -5006,7 +5169,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBillingSystem()
 	 * @generated
 	 */
-	int IBILLING_SYSTEM = 53;
+	int IBILLING_SYSTEM = 54;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5034,6 +5197,79 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IBILLING_SYSTEM_FEATURE_COUNT = 2;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IRecipe <em>IRecipe</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IRecipe
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRecipe()
+	 * @generated
+	 */
+	int IRECIPE = 55;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRECIPE__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Patient</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRECIPE__PATIENT = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Mandator</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRECIPE__MANDATOR = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRECIPE__DATE = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Prescriptions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRECIPE__PRESCRIPTIONS = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Document</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRECIPE__DOCUMENT = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The number of structural features of the '<em>IRecipe</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRECIPE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}'.
@@ -6769,6 +7005,126 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIArticle_SubTyp();
 
 	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IArticleDefaultSignature <em>IArticle Default Signature</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IArticle Default Signature</em>'.
+	 * @see ch.elexis.core.model.IArticleDefaultSignature
+	 * @generated
+	 */
+	EClass getIArticleDefaultSignature();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IArticleDefaultSignature#getAtcCode <em>Atc Code</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Atc Code</em>'.
+	 * @see ch.elexis.core.model.IArticleDefaultSignature#getAtcCode()
+	 * @see #getIArticleDefaultSignature()
+	 * @generated
+	 */
+	EAttribute getIArticleDefaultSignature_AtcCode();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IArticleDefaultSignature#getMorning <em>Morning</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Morning</em>'.
+	 * @see ch.elexis.core.model.IArticleDefaultSignature#getMorning()
+	 * @see #getIArticleDefaultSignature()
+	 * @generated
+	 */
+	EAttribute getIArticleDefaultSignature_Morning();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IArticleDefaultSignature#getNoon <em>Noon</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Noon</em>'.
+	 * @see ch.elexis.core.model.IArticleDefaultSignature#getNoon()
+	 * @see #getIArticleDefaultSignature()
+	 * @generated
+	 */
+	EAttribute getIArticleDefaultSignature_Noon();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IArticleDefaultSignature#getEvening <em>Evening</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Evening</em>'.
+	 * @see ch.elexis.core.model.IArticleDefaultSignature#getEvening()
+	 * @see #getIArticleDefaultSignature()
+	 * @generated
+	 */
+	EAttribute getIArticleDefaultSignature_Evening();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IArticleDefaultSignature#getNight <em>Night</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Night</em>'.
+	 * @see ch.elexis.core.model.IArticleDefaultSignature#getNight()
+	 * @see #getIArticleDefaultSignature()
+	 * @generated
+	 */
+	EAttribute getIArticleDefaultSignature_Night();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IArticleDefaultSignature#getComment <em>Comment</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Comment</em>'.
+	 * @see ch.elexis.core.model.IArticleDefaultSignature#getComment()
+	 * @see #getIArticleDefaultSignature()
+	 * @generated
+	 */
+	EAttribute getIArticleDefaultSignature_Comment();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IArticleDefaultSignature#getFreeText <em>Free Text</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Free Text</em>'.
+	 * @see ch.elexis.core.model.IArticleDefaultSignature#getFreeText()
+	 * @see #getIArticleDefaultSignature()
+	 * @generated
+	 */
+	EAttribute getIArticleDefaultSignature_FreeText();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IArticleDefaultSignature#getMedicationType <em>Medication Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Medication Type</em>'.
+	 * @see ch.elexis.core.model.IArticleDefaultSignature#getMedicationType()
+	 * @see #getIArticleDefaultSignature()
+	 * @generated
+	 */
+	EAttribute getIArticleDefaultSignature_MedicationType();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IArticleDefaultSignature#getDisposalType <em>Disposal Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Disposal Type</em>'.
+	 * @see ch.elexis.core.model.IArticleDefaultSignature#getDisposalType()
+	 * @see #getIArticleDefaultSignature()
+	 * @generated
+	 */
+	EAttribute getIArticleDefaultSignature_DisposalType();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IArticleDefaultSignature#getEndDate <em>End Date</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>End Date</em>'.
+	 * @see ch.elexis.core.model.IArticleDefaultSignature#getEndDate()
+	 * @see #getIArticleDefaultSignature()
+	 * @generated
+	 */
+	EAttribute getIArticleDefaultSignature_EndDate();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IDiagnosis <em>IDiagnosis</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7999,6 +8355,28 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIPrescription_EntryType();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPrescription#isApplied <em>Applied</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Applied</em>'.
+	 * @see ch.elexis.core.model.IPrescription#isApplied()
+	 * @see #getIPrescription()
+	 * @generated
+	 */
+	EAttribute getIPrescription_Applied();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPrescription#getSortOrder <em>Sort Order</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Sort Order</em>'.
+	 * @see ch.elexis.core.model.IPrescription#getSortOrder()
+	 * @see #getIPrescription()
+	 * @generated
+	 */
+	EAttribute getIPrescription_SortOrder();
+
+	/**
 	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPrescription#getDisposalComment <em>Disposal Comment</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8008,6 +8386,39 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getIPrescription_DisposalComment();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IPrescription#getPrescriptor <em>Prescriptor</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Prescriptor</em>'.
+	 * @see ch.elexis.core.model.IPrescription#getPrescriptor()
+	 * @see #getIPrescription()
+	 * @generated
+	 */
+	EReference getIPrescription_Prescriptor();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IPrescription#getRecipe <em>Recipe</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Recipe</em>'.
+	 * @see ch.elexis.core.model.IPrescription#getRecipe()
+	 * @see #getIPrescription()
+	 * @generated
+	 */
+	EReference getIPrescription_Recipe();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IPrescription#getBilled <em>Billed</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Billed</em>'.
+	 * @see ch.elexis.core.model.IPrescription#getBilled()
+	 * @see #getIPrescription()
+	 * @generated
+	 */
+	EReference getIPrescription_Billed();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IRight <em>IRight</em>}'.
@@ -8083,6 +8494,71 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getIBillingSystem_Law();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IRecipe <em>IRecipe</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IRecipe</em>'.
+	 * @see ch.elexis.core.model.IRecipe
+	 * @generated
+	 */
+	EClass getIRecipe();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IRecipe#getPatient <em>Patient</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Patient</em>'.
+	 * @see ch.elexis.core.model.IRecipe#getPatient()
+	 * @see #getIRecipe()
+	 * @generated
+	 */
+	EReference getIRecipe_Patient();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IRecipe#getMandator <em>Mandator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Mandator</em>'.
+	 * @see ch.elexis.core.model.IRecipe#getMandator()
+	 * @see #getIRecipe()
+	 * @generated
+	 */
+	EReference getIRecipe_Mandator();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IRecipe#getDate <em>Date</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Date</em>'.
+	 * @see ch.elexis.core.model.IRecipe#getDate()
+	 * @see #getIRecipe()
+	 * @generated
+	 */
+	EAttribute getIRecipe_Date();
+
+	/**
+	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IRecipe#getPrescriptions <em>Prescriptions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Prescriptions</em>'.
+	 * @see ch.elexis.core.model.IRecipe#getPrescriptions()
+	 * @see #getIRecipe()
+	 * @generated
+	 */
+	EReference getIRecipe_Prescriptions();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IRecipe#getDocument <em>Document</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Document</em>'.
+	 * @see ch.elexis.core.model.IRecipe#getDocument()
+	 * @see #getIRecipe()
+	 * @generated
+	 */
+	EReference getIRecipe_Document();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}'.
@@ -9572,6 +10048,96 @@ public interface ModelPackage extends EPackage {
 		EAttribute IARTICLE__SUB_TYP = eINSTANCE.getIArticle_SubTyp();
 
 		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IArticleDefaultSignature <em>IArticle Default Signature</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IArticleDefaultSignature
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIArticleDefaultSignature()
+		 * @generated
+		 */
+		EClass IARTICLE_DEFAULT_SIGNATURE = eINSTANCE.getIArticleDefaultSignature();
+
+		/**
+		 * The meta object literal for the '<em><b>Atc Code</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IARTICLE_DEFAULT_SIGNATURE__ATC_CODE = eINSTANCE.getIArticleDefaultSignature_AtcCode();
+
+		/**
+		 * The meta object literal for the '<em><b>Morning</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IARTICLE_DEFAULT_SIGNATURE__MORNING = eINSTANCE.getIArticleDefaultSignature_Morning();
+
+		/**
+		 * The meta object literal for the '<em><b>Noon</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IARTICLE_DEFAULT_SIGNATURE__NOON = eINSTANCE.getIArticleDefaultSignature_Noon();
+
+		/**
+		 * The meta object literal for the '<em><b>Evening</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IARTICLE_DEFAULT_SIGNATURE__EVENING = eINSTANCE.getIArticleDefaultSignature_Evening();
+
+		/**
+		 * The meta object literal for the '<em><b>Night</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IARTICLE_DEFAULT_SIGNATURE__NIGHT = eINSTANCE.getIArticleDefaultSignature_Night();
+
+		/**
+		 * The meta object literal for the '<em><b>Comment</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IARTICLE_DEFAULT_SIGNATURE__COMMENT = eINSTANCE.getIArticleDefaultSignature_Comment();
+
+		/**
+		 * The meta object literal for the '<em><b>Free Text</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IARTICLE_DEFAULT_SIGNATURE__FREE_TEXT = eINSTANCE.getIArticleDefaultSignature_FreeText();
+
+		/**
+		 * The meta object literal for the '<em><b>Medication Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IARTICLE_DEFAULT_SIGNATURE__MEDICATION_TYPE = eINSTANCE.getIArticleDefaultSignature_MedicationType();
+
+		/**
+		 * The meta object literal for the '<em><b>Disposal Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IARTICLE_DEFAULT_SIGNATURE__DISPOSAL_TYPE = eINSTANCE.getIArticleDefaultSignature_DisposalType();
+
+		/**
+		 * The meta object literal for the '<em><b>End Date</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IARTICLE_DEFAULT_SIGNATURE__END_DATE = eINSTANCE.getIArticleDefaultSignature_EndDate();
+
+		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IDiagnosis <em>IDiagnosis</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -10532,12 +11098,52 @@ public interface ModelPackage extends EPackage {
 		EAttribute IPRESCRIPTION__ENTRY_TYPE = eINSTANCE.getIPrescription_EntryType();
 
 		/**
+		 * The meta object literal for the '<em><b>Applied</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IPRESCRIPTION__APPLIED = eINSTANCE.getIPrescription_Applied();
+
+		/**
+		 * The meta object literal for the '<em><b>Sort Order</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IPRESCRIPTION__SORT_ORDER = eINSTANCE.getIPrescription_SortOrder();
+
+		/**
 		 * The meta object literal for the '<em><b>Disposal Comment</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EAttribute IPRESCRIPTION__DISPOSAL_COMMENT = eINSTANCE.getIPrescription_DisposalComment();
+
+		/**
+		 * The meta object literal for the '<em><b>Prescriptor</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IPRESCRIPTION__PRESCRIPTOR = eINSTANCE.getIPrescription_Prescriptor();
+
+		/**
+		 * The meta object literal for the '<em><b>Recipe</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IPRESCRIPTION__RECIPE = eINSTANCE.getIPrescription_Recipe();
+
+		/**
+		 * The meta object literal for the '<em><b>Billed</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IPRESCRIPTION__BILLED = eINSTANCE.getIPrescription_Billed();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IRight <em>IRight</em>}' class.
@@ -10598,6 +11204,56 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IBILLING_SYSTEM__LAW = eINSTANCE.getIBillingSystem_Law();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IRecipe <em>IRecipe</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IRecipe
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRecipe()
+		 * @generated
+		 */
+		EClass IRECIPE = eINSTANCE.getIRecipe();
+
+		/**
+		 * The meta object literal for the '<em><b>Patient</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IRECIPE__PATIENT = eINSTANCE.getIRecipe_Patient();
+
+		/**
+		 * The meta object literal for the '<em><b>Mandator</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IRECIPE__MANDATOR = eINSTANCE.getIRecipe_Mandator();
+
+		/**
+		 * The meta object literal for the '<em><b>Date</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IRECIPE__DATE = eINSTANCE.getIRecipe_Date();
+
+		/**
+		 * The meta object literal for the '<em><b>Prescriptions</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IRECIPE__PRESCRIPTIONS = eINSTANCE.getIRecipe_Prescriptions();
+
+		/**
+		 * The meta object literal for the '<em><b>Document</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IRECIPE__DOCUMENT = eINSTANCE.getIRecipe_Document();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.

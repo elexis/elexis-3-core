@@ -54,6 +54,7 @@ import ch.elexis.core.data.events.Heartbeat.HeartListener;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISticker;
+import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.holder.StickerServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
@@ -181,7 +182,10 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		// let user select patient by pressing ENTER in the control fields
 		cv.getConfigurer().getControlFieldProvider().addChangeListener(new ControlFieldSelectionListener());
 		cv.getViewerWidget().getControl().setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
-
+		
+		// common viewer automatically sets typed selection but not active patient
+		cv.setNamedSelection(IContext.ACTIVE_PATIENT);
+		
 		plcp.startListening();
 		GlobalEventDispatcher.addActivationListener(this, this);
 

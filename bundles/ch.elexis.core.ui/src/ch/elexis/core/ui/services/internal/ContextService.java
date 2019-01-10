@@ -29,6 +29,7 @@ import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
@@ -43,6 +44,7 @@ import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Prescription;
 import ch.elexis.data.User;
 
 /**
@@ -106,7 +108,6 @@ public class ContextService implements IContextService, EventHandler {
 		elexisEventDispatcher.addListeners(eventDispatcherListener, reloadEventDispatcherListener,
 			lockingEventDispatcherListener, userChangedEventDispatcherListener,
 			mandatorChangedEventDispatcherListener);
-		((Context) root).setElexisEventDispatcher(elexisEventDispatcher);
 	}
 	
 	@Deactivate
@@ -376,6 +377,8 @@ public class ContextService implements IContextService, EventHandler {
 				return Optional.of(IEncounter.class);
 			} else if (elexisClazz == Fall.class) {
 				return Optional.of(ICoverage.class);
+			} else if (elexisClazz == Prescription.class) {
+				return Optional.of(IPrescription.class);
 			}
 			return Optional.empty();
 		}

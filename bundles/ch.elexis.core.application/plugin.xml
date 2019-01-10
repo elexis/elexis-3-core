@@ -224,6 +224,7 @@
             class="ch.elexis.core.ui.medication.views.DauerMediView"
             icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/pill.png"
             id="ch.elexis.dauermedikationview"
+            inject="true"
             name="%elexis.fixMediView">
       </view>
       <view

@@ -7,6 +7,7 @@
             class="ch.elexis.core.ui.medication.views.MedicationView"
             icon="icon://IMG_PILL"
             id="ch.elexis.core.ui.medication.views.MedicationView"
+            inject="true"
             name="Medikationsliste"
             restorable="true">
       </view>

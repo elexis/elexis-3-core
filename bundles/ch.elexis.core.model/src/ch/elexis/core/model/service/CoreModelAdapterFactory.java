@@ -29,6 +29,7 @@ import ch.elexis.core.model.FreeTextDiagnosis;
 import ch.elexis.core.model.IAddress;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IArticleDefaultSignature;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IBillingSystemFactor;
 import ch.elexis.core.model.IBlob;
@@ -53,6 +54,7 @@ import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IPrescription;
+import ch.elexis.core.model.IRecipe;
 import ch.elexis.core.model.IRight;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.ISticker;
@@ -68,6 +70,7 @@ import ch.elexis.core.model.Organization;
 import ch.elexis.core.model.Patient;
 import ch.elexis.core.model.Person;
 import ch.elexis.core.model.Prescription;
+import ch.elexis.core.model.Recipe;
 import ch.elexis.core.model.Right;
 import ch.elexis.core.model.Role;
 import ch.elexis.core.model.UserConfig;
@@ -137,6 +140,10 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 			ch.elexis.core.jpa.entities.Artikel.class));
 		addMapping(new MappingEntry(ICustomService.class, CustomService.class, Eigenleistung.class));
 		
+		addMapping(new MappingEntry(IArticleDefaultSignature.class,
+			ch.elexis.core.model.ArticleDefaultSignature.class,
+			ch.elexis.core.jpa.entities.DefaultSignature.class));
+		
 		addMapping(
 			new MappingEntry(IDiagnosisReference.class, DiagnosisReference.class, Diagnosis.class));
 		addMapping(new MappingEntry(IFreeTextDiagnosis.class, FreeTextDiagnosis.class,
@@ -147,6 +154,8 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 		addMapping(new MappingEntry(IDocumentLetter.class, DocumentLetter.class, Brief.class));
 		
 		addMapping(new MappingEntry(IPrescription.class, Prescription.class, ch.elexis.core.jpa.entities.Prescription.class));
+		addMapping(new MappingEntry(IRecipe.class, Recipe.class,
+			ch.elexis.core.jpa.entities.Rezept.class));
 		
 		addMapping(new MappingEntry(IRole.class, Role.class, ch.elexis.core.jpa.entities.Role.class));
 		addMapping(new MappingEntry(IRight.class, Right.class, ch.elexis.core.jpa.entities.Right.class));

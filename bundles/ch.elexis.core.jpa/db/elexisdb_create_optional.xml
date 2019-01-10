@@ -509,4 +509,45 @@
 			<column name="TEXT" type="VARCHAR(255)" />
 		</createTable>
 	</changeSet>
+	
+	<changeSet author="thomas"
+		id="manual_table_DEFAULT_SIGNATURES">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists
+					tableName="DEFAULT_SIGNATURES" />
+			</not>
+		</preConditions>
+		<createTable
+			tableName="DEFAULT_SIGNATURES">
+			<column name="ID" type="VARCHAR(25)">
+				<constraints primaryKey="true"
+					primaryKeyName="CONSTRAINT_PK_DEFAULT_SIGNATURES" />
+			</column>
+			<column name="LASTUPDATE" type="BIGINT" />
+			<column defaultValue="0" name="DELETED" type="CHAR(1)" />
+
+			<column name="ATCCODE" type="CHAR(10)" />
+			<column name="ARTICLE" type="VARCHAR(255)" />
+			<column name="TYPE" type="VARCHAR(255)" />
+			<column name="MORNING" type="CHAR(10)" />
+			<column name="NOON" type="CHAR(10)" />
+			<column name="EVENING" type="CHAR(10)" />
+			<column name="NIGHT" type="CHAR(10)" />
+			<column name="COMMENT" type="CLOB" />
+			<column name="EXTINFO" type="BLOB" />
+		</createTable>
+	</changeSet>
+	<changeSet author="thomas"
+		id="manual_idx_IDXATCCODE">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="IDXATCCODE" />
+			</not>
+		</preConditions>
+		<createIndex indexName="IDXATCCODE"
+			tableName="DEFAULT_SIGNATURES">
+			<column name="ATCCODE" />
+		</createIndex>
+	</changeSet>
 </databaseChangeLog>

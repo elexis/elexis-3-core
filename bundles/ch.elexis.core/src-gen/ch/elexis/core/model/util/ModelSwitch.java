@@ -298,6 +298,15 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ModelPackage.IARTICLE_DEFAULT_SIGNATURE: {
+				IArticleDefaultSignature iArticleDefaultSignature = (IArticleDefaultSignature)theEObject;
+				T1 result = caseIArticleDefaultSignature(iArticleDefaultSignature);
+				if (result == null) result = caseDeleteable(iArticleDefaultSignature);
+				if (result == null) result = caseIdentifiable(iArticleDefaultSignature);
+				if (result == null) result = caseWithExtInfo(iArticleDefaultSignature);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ModelPackage.IDIAGNOSIS: {
 				IDiagnosis iDiagnosis = (IDiagnosis)theEObject;
 				T1 result = caseIDiagnosis(iDiagnosis);
@@ -499,6 +508,7 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				T1 result = caseIPrescription(iPrescription);
 				if (result == null) result = caseIdentifiable(iPrescription);
 				if (result == null) result = caseDeleteable(iPrescription);
+				if (result == null) result = caseWithExtInfo(iPrescription);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -514,6 +524,14 @@ public class ModelSwitch<T1> extends Switch<T1> {
 			case ModelPackage.IBILLING_SYSTEM: {
 				IBillingSystem iBillingSystem = (IBillingSystem)theEObject;
 				T1 result = caseIBillingSystem(iBillingSystem);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IRECIPE: {
+				IRecipe iRecipe = (IRecipe)theEObject;
+				T1 result = caseIRecipe(iRecipe);
+				if (result == null) result = caseIdentifiable(iRecipe);
+				if (result == null) result = caseDeleteable(iRecipe);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -927,6 +945,21 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IArticle Default Signature</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IArticle Default Signature</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIArticleDefaultSignature(IArticleDefaultSignature object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>IDiagnosis</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -1313,6 +1346,21 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIBillingSystem(IBillingSystem object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IRecipe</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IRecipe</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIRecipe(IRecipe object) {
 		return null;
 	}
 

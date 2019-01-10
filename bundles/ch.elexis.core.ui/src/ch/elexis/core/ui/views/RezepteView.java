@@ -50,9 +50,11 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
+import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.data.interfaces.IOutputter;
 import ch.elexis.core.data.util.Extensions;
-import ch.elexis.core.data.interfaces.ICodeElement;
+import ch.elexis.core.model.IPrescription;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.GlobalActions;
@@ -454,7 +456,8 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 					IStructuredSelection sel = (IStructuredSelection) lvRpLines.getSelection();
 					Prescription pr = (Prescription) sel.getFirstElement();
 					if (pr != null) {
-						new MediDetailDialog(getViewSite().getShell(), pr).open();
+						new MediDetailDialog(getViewSite().getShell(), CoreModelServiceHolder.get()
+							.load(pr.getId(), IPrescription.class).orElse(null)).open();
 						lvRpLines.refresh();
 					}
 				}

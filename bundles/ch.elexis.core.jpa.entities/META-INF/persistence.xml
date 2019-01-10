@@ -13,6 +13,7 @@
 		<class>ch.elexis.core.jpa.entities.converter.InvoiceStateConverter</class>
 		<class>ch.elexis.core.jpa.entities.converter.ArticleTypConverter</class>
 		<class>ch.elexis.core.jpa.entities.converter.PathologicDescriptionConverter</class>
+		<class>ch.elexis.core.jpa.entities.converter.PrescriptionEntryTypeConverter</class>
 		<class>ch.elexis.core.jpa.entities.converter.LabItemTypConverter</class>
 		<class>ch.elexis.core.jpa.entities.converter.LabOrderStateConverter</class>
 		<class>ch.elexis.core.jpa.entities.converter.XidQualityConverter</class>
@@ -32,6 +33,7 @@
 		<class>ch.elexis.core.jpa.entities.BestellungEntry</class>
 		<class>ch.elexis.core.jpa.entities.Brief</class>
 		<class>ch.elexis.core.jpa.entities.Config</class>
+		<class>ch.elexis.core.jpa.entities.DefaultSignature</class>
 		<class>ch.elexis.core.jpa.entities.Diagnosis</class>
 		<class>ch.elexis.core.jpa.entities.DbImage</class>
 		<class>ch.elexis.core.jpa.entities.DocHandle</class>
@@ -54,6 +56,7 @@
 		<class>ch.elexis.core.jpa.entities.PhysioLeistung</class>
 		<class>ch.elexis.core.jpa.entities.ComplementaryLeistung</class>
 		<class>ch.elexis.core.jpa.entities.Reminder</class>
+		<class>ch.elexis.core.jpa.entities.Rezept</class>		
 		<class>ch.elexis.core.jpa.entities.Right</class>
 		<class>ch.elexis.core.jpa.entities.Role</class>
 		<class>ch.elexis.core.jpa.entities.Sticker</class>
