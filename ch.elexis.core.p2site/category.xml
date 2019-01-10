@@ -6,9 +6,6 @@
    <feature url="features/ch.elexis.core.logging.feature_3.6.0.qualifier.jar" id="ch.elexis.core.logging.feature" version="3.8.0.qualifier">
       <category name="elexis_3_core"/>
    </feature>
-   <feature url="features/ch.elexis.core.ui.medication.os.feature_3.6.0.qualifier.jar" id="ch.elexis.core.ui.medication.os.feature" version="3.8.0.qualifier">
-      <category name="elexis_3_core"/>
-   </feature>
    <feature url="features/ch.elexis.core.ui.feature_3.6.0.qualifier.jar" id="ch.elexis.core.ui.feature" version="3.8.0.qualifier">
       <category name="elexis_3_core"/>
    </feature>
