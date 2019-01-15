@@ -70,6 +70,12 @@ public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements 
 	}
 
 	@Override
+	public String toString() {
+		return getClass().getName() + " [getEntity()=" + getEntity() + ", getId()=" + getId() + ", getLastupdate()="
+				+ getLastupdate() + "]";
+	}
+
+	@Override
 	public int hashCode(){
 		final int prime = 31;
 		int result = 1;
