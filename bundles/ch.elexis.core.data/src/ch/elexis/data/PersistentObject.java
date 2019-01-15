@@ -1016,7 +1016,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return true wenn es gelöscht ist
 	 */
 	public boolean isDeleted(){
-		return get("deleted").equals("1");
+		return get(FLD_DELETED).trim().equals(StringConstants.ONE);
 	}
 	
 	/**
