@@ -7,6 +7,7 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Multi-Release: true
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.5.0",
  org.eclipse.emf.ecore;visibility:=reexport,
  ch.rgw.utility;bundle-version="3.0.0",
