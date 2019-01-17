@@ -1,8 +1,8 @@
-target "Oxygen.3 for Elexis" with source allEnvironments
+target "Elexis" with source allEnvironments
 
-// We a mirror http://download.eclipse.org/technology/babel/update-site/R0.16.0/oxygen as
+// We a mirror http://download.eclipse.org/technology/babel/update-site/R0.16.0/photon as
 // it was really unreliable when building on the Jenkins
-location "https://ftp.fau.de/eclipse/technology/babel/update-site/R0.16.0/oxygen" {
+location "https://ftp.fau.de/eclipse/technology/babel/update-site/R0.16.0/photon" {
 	org.eclipse.swt.nl_de
 	org.eclipse.swt.nl_fr
 	org.eclipse.swt.nl_it
@@ -33,7 +33,7 @@ location "http://download.eclipse.org/e4/snapshots/org.eclipse.e4.tools/latest/"
 	org.eclipse.e4.tools.spies.feature.feature.group
 }
 
-location "http://download.eclipse.org/eclipse/updates/4.7/" {
+location "http://download.eclipse.org/eclipse/updates/4.9/" {
 	org.eclipse.equinox.executable.feature.group
 	org.eclipse.rcp.feature.group
 	org.eclipse.platform.feature.group
@@ -51,7 +51,7 @@ location "http://download.eclipse.org/eclipse/updates/4.7/" {
 	org.eclipse.e4.tools.emf.ui
 }
 
-location "http://download.eclipse.org/releases/oxygen" {
+location "http://download.eclipse.org/releases/2018-09/" {
 	ch.qos.logback.classic
 	ch.qos.logback.core
 	ch.qos.logback.slf4j
@@ -76,8 +76,9 @@ location "http://medevit.github.io/osgi-jax-rs-connector/5.3.100/" {
 	com.eclipsesource.jaxrs.jersey-all-nojavax
 }
 
-// Eclipse Orbit Recommended Tue, 6 Feb 2018 -- 16:31 (UTC) Oxygen.3
-location "http://download.eclipse.org/tools/orbit/downloads/drops/R20180206163158/repository/" {
+// Eclipse Orbit Recommended Wed, 5 Sep 2018 -- 20:19 (UTC)	2018-09
+// https://download.eclipse.org/tools/orbit/downloads/
+location "http://download.eclipse.org/tools/orbit/downloads/drops/R20180905201904/repository/" {
 	org.apache.httpcomponents.httpcore
 	org.apache.httpcomponents.httpclient
 	edu.emory.mathcs.backport [3.1.0,3.1.1)
@@ -87,21 +88,21 @@ location "http://download.eclipse.org/tools/orbit/downloads/drops/R2018020616315
 	javax.xml [1.3.4.v201005080400,1.3.4.v201005080400]
 	javax.mail.glassfish [1.4.0,1.5.0)
 	javax.activation [1.1.0,1.2.0)
-	com.google.guava [15.0.0,16.0.0)
-	org.apache.commons.dbcp
+	com.google.guava [21.0.0.v20170206-1425,21.0.0.v20170206-1425]
 	org.apache.commons.codec
 	org.apache.commons.collections
 	org.apache.commons.cli
 	org.apache.commons.exec
 	org.apache.commons.lang
 	org.apache.commons.lang3
-	org.apache.commons.pool
 	org.apache.commons.httpclient
 	org.apache.poi
 	org.apache.poi.ooxml
 	org.apache.poi.ooxml.schemas
 	org.apache.xmlbeans
 	org.dom4j
+	org.apache.commons.dbcp
+	org.apache.commons.pool
 }
 
 location "http://download.elexis.info/elexis-server/master/p2/elexis-server" {
@@ -119,6 +120,15 @@ location "http://download.elexis.info/mirror.4.elexis/snapshot" {
 }
 
 location "http://download.elexis.info/elexis-server/elexis-server-dependencies" {
+	// java 11
+	com.sun.activation.javax.activation [1.2.0,1.2.0]
+	javax.transaction-api [1.3.0,1.3.0]
+	javax.enterprise.cdi-api
+	javax.interceptor-api
+	com.sun.xml.bind.jaxb-osgi [2.4.0.b180830_0438,2.4.0.b180830_0438]
+	com.sun.xml.bind.jaxb-core
+	jaxb-api [2.4.0.b1808300359,2.4.0.b1808300359]
+	// 
 	org.springframework.spring-web
 	woodstox-core-asl
 	javax.xml.stream.stax-api
