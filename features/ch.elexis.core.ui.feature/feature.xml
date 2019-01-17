@@ -84,7 +84,6 @@
    <plugin
          id="ch.elexis.core.ui.importer.div.native32"
          os="win32"
-         ws="win32"
          arch="x86"
          download-size="0"
          install-size="0"
@@ -94,7 +93,6 @@
    <plugin
          id="ch.elexis.core.ui.importer.div.native64"
          os="win32"
-         ws="win32"
          arch="x86_64"
          download-size="0"
          install-size="0"

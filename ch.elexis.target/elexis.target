@@ -1,9 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde?>
-<!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis" sequenceNumber="1547726493">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde?><!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl --><target name="Elexis" sequenceNumber="1547727323">
   <locations>
-    <location includeMode="slicer" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+    <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.100.v20180827-1352"/>
       <unit id="org.eclipse.rcp.feature.group" version="4.9.0.v20180906-1121"/>
       <unit id="org.eclipse.platform.feature.group" version="4.9.0.v20180906-1121"/>
@@ -86,6 +83,12 @@
       <unit id="org.slf4j.jul" version="1.7.2.v20121108-1250"/>
       <unit id="org.slf4j.log4j" version="1.7.2.v20130115-1340"/>
       <unit id="org.slf4j.nop" version="1.7.2.v201212060727"/>
+      <unit id="com.sun.activation.javax.activation" version="1.2.0"/>
+      <unit id="javax.transaction-api" version="1.3.0"/>
+      <unit id="javax.enterprise.cdi-api" version="2.0.0.SP1"/>
+      <unit id="javax.interceptor-api" version="1.2.2"/>
+      <unit id="com.sun.xml.bind.jaxb-osgi" version="2.4.0.b180830_0438"/>
+      <unit id="jaxb-api" version="2.4.0.b1808300359"/>
       <unit id="org.springframework.spring-web" version="4.3.8.RELEASE"/>
       <unit id="woodstox-core-asl" version="4.4.1"/>
       <unit id="javax.xml.stream.stax-api" version="1.0.0.2"/>

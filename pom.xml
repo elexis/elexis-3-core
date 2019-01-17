@@ -20,7 +20,7 @@
       </repository>
     </repositories>
     <properties>
-		<tycho.version>1.0.0</tycho.version>
+		<tycho.version>1.3.0</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
         <git.target.branch>f11355</git.target.branch>
@@ -54,6 +54,7 @@
 
 	<modules>
 		<module>ch.elexis.target</module>
+		<module>org.osgi.framework.system.packages.extra</module>
 		<module>bundles</module>
 		<module>features</module>
 		<module>tests</module>

@@ -126,7 +126,6 @@ location "http://download.elexis.info/elexis-server/elexis-server-dependencies" 
 	javax.enterprise.cdi-api
 	javax.interceptor-api
 	com.sun.xml.bind.jaxb-osgi [2.4.0.b180830_0438,2.4.0.b180830_0438]
-	com.sun.xml.bind.jaxb-core
 	jaxb-api [2.4.0.b1808300359,2.4.0.b1808300359]
 	// 
 	org.springframework.spring-web
