@@ -1,5 +1,16 @@
 #!/usr/bin/env ruby
 
+require 'bundler/inline'
+puts "It may take some time for bundler/inline to install the dependencies"
+gemfile do
+  source 'https://rubygems.org'
+  gem 'optimist'
+  gem 'rugged'
+  gem 'oga'
+  gem "activesupport", :require => "active_support/all"
+  gem 'pry-byebug'
+end
+
 require 'pp'
 begin
 require 'pry'

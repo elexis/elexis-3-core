@@ -13,6 +13,19 @@
 # puts result.translations.first.translated_text
 # to connect to the database
 #
+
+puts "It may take some time for bundler/inline to install the dependencies"
+require 'bundler/inline'
+
+gemfile do
+  source 'https://rubygems.org'
+  gem 'optimist'
+  gem 'googleauth'
+  gem 'google-api-client'
+  gem 'google-cloud-translate'
+  gem 'pry-byebug'
+end
+
 require 'google/apis/translate_v2'
 require "rexml/document"
 include REXML  # so that we don't have to prefix everything with REXML::...
@@ -23,7 +36,7 @@ require 'pry-byebug'
 require 'csv'
 require 'net/http'
 require 'json'
-require 'trollop'
+require 'optimist'
 require 'logger'
 $stdout.sync = true
 
@@ -708,7 +721,7 @@ public class Messages extends NLS {
   end
 end
 
-parser = Trollop::Parser.new do
+parser = Optimist::Parser.new do
   version "#{File.basename(__FILE__, '.rb')} (c) 2017 by Niklaus Giger <niklaus.giger@member.fsf.org>"
   banner <<-EOS
 #{version}
@@ -723,8 +736,8 @@ EOS
   opt :to_messages_properties,   "Create messages*.properties for all languages from #{L10N_Cache::TRANSLATIONS_CSV_NAME}\n\n ", :default => false, :short => '-m'
 end
 
-Options = Trollop::with_standard_exception_handling parser do
-  raise Trollop::HelpNeeded if ARGV.empty? # show help screen
+Options = Optimist::with_standard_exception_handling parser do
+  raise Optimist::HelpNeeded if ARGV.empty? # show help screen
   parser.parse ARGV
 end
 
