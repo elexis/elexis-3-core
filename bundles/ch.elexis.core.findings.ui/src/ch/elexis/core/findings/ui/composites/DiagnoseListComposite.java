@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 MEDEVIT <office@medevit.at>.
+ * Copyright (c) 2016-2019 MEDEVIT <office@medevit.at>.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -71,13 +71,6 @@ public class DiagnoseListComposite extends Composite {
 	public DiagnoseListComposite(Composite parent, int style){
 		super(parent, style);
 		setLayout(new GridLayout(1, false));
-		
-		toolbarManager = new ToolBarManager();
-		toolbarManager.add(new AddConditionAction());
-		toolbarManager.add(new RemoveConditionAction());
-		ToolBar toolbar = toolbarManager.createControl(this);
-		toolbar.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false));
-		toolbar.setBackground(parent.getBackground());
 		
 		natTableWrapper = NatTableFactory.createSingleColumnTable(this,
 			new GlazedListsDataProvider<ICondition>(dataList, new IColumnAccessor<ICondition>() {
@@ -181,6 +174,13 @@ public class DiagnoseListComposite extends Composite {
 		mgr.setRemoveAllWhenShown(true);
 		mgr.addMenuListener(new ConditionsMenuListener());
 		natTableWrapper.getNatTable().setMenu(mgr.createContextMenu(natTableWrapper.getNatTable()));
+	
+		toolbarManager = new ToolBarManager();
+		toolbarManager.add(new AddConditionAction());
+		toolbarManager.add(new RemoveConditionAction());
+		ToolBar toolbar = toolbarManager.createControl(this);
+		toolbar.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false));
+		toolbar.setBackground(parent.getBackground());
 	}
 	
 	public void setInput(List<ICondition> conditions){
