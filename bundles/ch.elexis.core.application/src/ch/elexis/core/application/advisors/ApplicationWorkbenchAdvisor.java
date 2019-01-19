@@ -23,12 +23,14 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
 import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.UiResourceConstants;
+import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
 
 /**
@@ -87,6 +89,19 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 		log.error(Messages.ApplicationWorkbenchAdvisor_10 + exception.getMessage(), exception);
 		ExHandler.handle(exception);
 		super.eventLoopException(exception);
+	}
+	
+	@Override
+	public void preStartup(){
+		cod.performLogin(UiDesk.getDisplay().getActiveShell());
+		if ((CoreHub.actUser == null) || !CoreHub.actUser.isValid()) {
+			// no valid user, exit (don't consider this as an error)
+			log.warn("Exit because no valid user logged-in"); //$NON-NLS-1$
+			PersistentObject.disconnect();
+			System.exit(0);
+		}
+		
+		super.preStartup();
 	}
 	
 	@Override

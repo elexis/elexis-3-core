@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013-2014 MEDEVIT <office@medevit.at>.
+ * Copyright (c) 2013-2019 MEDEVIT <office@medevit.at>.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -103,17 +103,10 @@ public class Desk implements IApplication {
 				Messages.Warning_tooManyMessage + CoreHub.getWritableUserDir().getAbsolutePath());
 		}
 		
-		// care for log-in
-		WorkbenchPlugin.unsetSplashShell(UiDesk.getDisplay());
-		cod.performLogin(UiDesk.getDisplay().getActiveShell());
-		if ((CoreHub.actUser == null) || !CoreHub.actUser.isValid()) {
-			// no valid user, exit (don't consider this as an error)
-			log.warn("Exit because no valid user logged-in"); //$NON-NLS-1$
-			PersistentObject.disconnect();
-			System.exit(0);
-		}
 		// make sure identifiers are initialized
 		initIdentifiers();
+		
+		WorkbenchPlugin.unsetSplashShell(UiDesk.getDisplay());
 		
 		// start the workbench
 		try {
