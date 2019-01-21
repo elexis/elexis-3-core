@@ -29,6 +29,25 @@ public class ElexisSystemPropertyConstants {
 	public static final String RUN_MODE_FROM_SCRATCH = "RunFromScratch";
 	
 	/**
+	 * Allows bypassing the ErsterMandantDialog on startup. Intended for GUI tests,
+	 * and automated setup of an initial DB for a new practice
+	 * @since 3.8
+	 */
+	public static final String FIRST_MANDANT_NAME = "ch.elexis.firstMandantName"; //$NON-NLS-1$
+	/**
+	 * Allows bypassing the ErsterMandantDialog on startup. Intended for GUI tests,
+	 * and automated setup of an initial DB for a new practice
+	 * @since 3.8
+	 */
+	public static final String FIRST_MANDANT_EMAIL = "ch.elexis.firstMandantEmail"; //$NON-NLS-1$
+	/**
+	 * Allows bypassing the ErsterMandantDialog on startup. Intended for GUI tests,
+	 * and automated setup of an initial DB for a new practice
+	 * @since 3.8
+	 */
+	public static final String FIRST_MANDANT_PASSWORD = "ch.elexis.firstMandantPassword"; //$NON-NLS-1$
+
+	/**
 	 * REST URL of the elexis server, e.g. http://localhost:8380/services"
 	 */
 	public static final String ELEXIS_SERVER_REST_INTERFACE_URL = "elexisServerUrl";
