@@ -15,6 +15,7 @@
   </parent>
 
   <modules>
+    <module>jaxb-api-impl-import-java9</module>
     <module>ch.elexis.core.l10n</module>
     <module>ch.elexis.core.application</module>
     <module>ch.elexis.core.console.application</module>
