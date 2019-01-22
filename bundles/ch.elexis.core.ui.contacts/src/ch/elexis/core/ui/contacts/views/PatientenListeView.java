@@ -15,6 +15,7 @@ package ch.elexis.core.ui.contacts.views;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.StringJoiner;
 
 import javax.inject.Inject;
 
@@ -49,13 +50,15 @@ import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISticker;
+import ch.elexis.core.model.format.AddressFormatUtil;
 import ch.elexis.core.services.IContext;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.StickerServiceHolder;
+import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -64,6 +67,7 @@ import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.contacts.dialogs.PatientErfassenDialog;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
@@ -73,13 +77,8 @@ import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldListener;
 import ch.elexis.core.ui.views.Messages;
-import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
-import ch.elexis.data.PersistentObject;
-import ch.elexis.data.Person;
 import ch.elexis.data.Query;
-import ch.rgw.tools.StringTool;
-import ch.rgw.tools.TimeTool;
 
 /**
  * Display of Patients
@@ -287,17 +286,16 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 				//				if (Reminder.findRemindersDueFor(pat, CoreHub.actUser, false).size() > 0) {
 				//					return Images.IMG_AUSRUFEZ.getImage();
 				//				}
-				ISticker et = StickerServiceHolder.get().getSticker(pat).orElse(null);
-				Image im = null;
-				//				if (et != null && (im = new UiSticker((Sticker) et).getImage()) != null) {
-				//					return im;
-				//				} else {
-					if (pat.getGender().equals(Person.MALE)) {
+				ISticker sticker = StickerServiceHolder.get().getSticker(pat).orElse(null);
+				if (sticker != null && sticker.getImage() != null) {
+					return CoreUiUtil.getImageAsIcon(sticker.getImage());
+				} else {
+					if (pat.getGender().equals(Gender.MALE)) {
 						return Images.IMG_MANN.getImage();
 					} else {
 						return Images.IMG_FRAU.getImage();
 					}
-				//				}
+				}
 			} else {
 				return super.getColumnImage(element, columnIndex);
 			}
@@ -309,7 +307,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 				IPatient pat = (IPatient) element;
 				ISticker et = StickerServiceHolder.get().getSticker(pat).orElse(null);
 				if (et != null) {
-					return UiDesk.getColorFromRGB(et.getBackground());
+					return CoreUiUtil.getColorForString(et.getBackground());
 				}
 			}
 			return null;
@@ -321,7 +319,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 				IPatient pat = (IPatient) element;
 				ISticker et = StickerServiceHolder.get().getSticker(pat).orElse(null);
 				if (et != null) {
-					return UiDesk.getColorFromRGB(et.getForeground());
+					return CoreUiUtil.getColorForString(et.getForeground());
 				}
 			}
 
@@ -431,240 +429,32 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 			@Override
 			public void run() {
 
-				// Adopted from KontakteView.printList:
-				// Convert the selected addresses into a list
-
-				/*
-				 * ToDo: OK, vielleicht wäre es schöner, in Person.java
-				 * (+-Patient.java?) eine Funktion getPostAnschriftFaxEmail() zu
-				 * ergänzen...
-				 */
-				// TODO: PatientenListeView.java, Bitte in Person.java
-				// getPersonalia() durch
-				// abgewandelte Fassung komplementieren und den entsprechenden
-				// Code dorthin verlagern.
-				// TODO: Bitte Fehlermeldung Elexis-Konform gestalten, ggf.
-				// Automatik /
-				// assistierte Fehlerbehebung hinzufügen.
-
-				StringBuffer selectedPatInfosText = new StringBuffer();
-
+				StringJoiner sj = new StringJoiner(System.lineSeparator());
 				Object[] sel = cv.getSelection();
-
-				// If you enable the following line for debug output,
-				// you should also enable the selectedPatInfosText.setLength(0)
-				// line below,
-				// and enable output of selectedPatInfosText even for the case
-				// of an empty
-				// selection further below.
-				// selectedPatInfosText.append("jsdebug: Sorry, your selection
-				// is empty.");
-
 				if (sel != null && sel.length > 0) {
-					// selectedPatInfosText.setLength(0);
-					// selectedPatInfosText.append("jsdebug: Your selection
-					// includes "+sel.length+"
-					// element(s):"+System.getProperty("line.separator"));
-
-					// In PateintenListeView.java, only zero or one patients can
-					// be selected at
-					// a time.
-					// Consequently, the for-loop inherited from
-					// KontakteView.java is a bit of
-					// an overkill right here.
 					for (int i = 0; i < sel.length; i++) {
-
-						/*
-						 * Patient ist eine Person, das ist Kontakt mit
-						 * zusätzlichen Feldern (Kontakt.java, Person.java) In
-						 * KontakteView.java stand hier: Kontakt k = (Kontakt)
-						 * sel[i] In PatientenListeView.java verwende ich
-						 * dieselbe Variablenbezeichnung k, damit ich unten
-						 * nicht alle Feldeinbindungen aktualisieren muss - und
-						 * damit später Änderungen in KontakteView.java schnell
-						 * hierher übernommen werden können.
-						 */
-
-						Patient k = (Patient) sel[i];
-
-						/*
-						 * Synthesize the lines to output from the entries in
-						 * Patient (=includes fields from Kontakt) k. This time,
-						 * we build a completely self-made block of text,
-						 * instead of using getPostAnschrift() as above.
-						 */
-
-						// The following code is adopted from
-						// Kontakt.createStdAnschrift for a
-						// different purpose/layout:
-						// ggf. hier zu Person.getPersonalia() eine abgewandelte
-						// Fassung
-						// hinzufügen und von hier aus aufrufen.
-
-						// Highly similar (but still different) code is now
-						// added
-						// to KontakteView.java
-						// CopySelectedContactInfoToClipboard...
-						// 201202161313js
-
-						if (k.istPerson()) {
-							// TODO default salutation might be configurable (or
-							// a
-							// "Sex missing!" Info might appear) js
-							String salutation;
-							if (k.getGeschlecht().equals(Person.MALE)) {
-								salutation = Messages.KontakteView_SalutationM; // $NON-NLS-1$
-							} else // We do not use any default salutation for
-									// unknown sex to
-							// avoid errors!
-							if (k.getGeschlecht().equals(Person.FEMALE)) {
-								salutation = Messages.KontakteView_SalutationF; // $NON-NLS-1$
-							} else {
-								salutation = ""; //$NON-NLS-1$
-							}
-							selectedPatInfosText.append(salutation);
-							selectedPatInfosText.append(StringTool.space);
-
-							String titel = k.get(Person.TITLE); // $NON-NLS-1$
-							if (!StringTool.isNothing(titel)) {
-								selectedPatInfosText.append(titel).append(StringTool.space);
-							}
-							// A comma between Family Name and Given Name would
-							// be generally
-							// helpful to reliably tell them apart:
-							// selectedPatInfosText.append(k.getName()+","+StringTool.space+k.getVorname());
-							// But Jürg Hamacher prefers this in his letters
-							// without a comma in
-							// between:
-							// selectedPatInfosText.append(k.getName()+StringTool.space+k.getVorname());
-							// Now, I only use a spacer, if the first field is
-							// not empty!
-							// SelectedContactInfosText.append(p.getVorname()+StringTool.space+p.getName());
-							if (!StringTool.isNothing(k.getName())) {
-								selectedPatInfosText.append(k.getName() + StringTool.space);
-							}
-							if (!StringTool.isNothing(k.getVorname())) {
-								selectedPatInfosText.append(k.getVorname());
-							}
-
-							String thisPatientBIRTHDATE = k.get(Person.BIRTHDATE);
-							if (!StringTool.isNothing(thisPatientBIRTHDATE)) {
-								// This would add the term "geb." (born on the)
-								// before the date
-								// of birth:
-								// selectedPatInfosText.append(","+StringTool.space+"geb."+StringTool.space+new
-								// TimeTool(thisPatientBIRTHDATE).toString(TimeTool.DATE_GER));
-								// But Jürg Hamacher prefers the patient
-								// information in his
-								// letters without that term:
-								selectedPatInfosText.append("," + StringTool.space
-										+ new TimeTool(thisPatientBIRTHDATE).toString(TimeTool.DATE_GER));
-							}
-
-							String thisAddressFLD_STREET = k.get(Kontakt.FLD_STREET);
-							if (!StringTool.isNothing(thisAddressFLD_STREET)) {
-								selectedPatInfosText.append("," + StringTool.space + thisAddressFLD_STREET);
-							}
-
-							String thisAddressFLD_COUNTRY = k.get(Kontakt.FLD_COUNTRY);
-							if (!StringTool.isNothing(thisAddressFLD_COUNTRY)) {
-								selectedPatInfosText.append("," + StringTool.space + thisAddressFLD_COUNTRY + "-");
-							}
-
-							String thisAddressFLD_ZIP = k.get(Kontakt.FLD_ZIP);
-							if (!StringTool.isNothing(thisAddressFLD_ZIP)) {
-								if (StringTool.isNothing(thisAddressFLD_COUNTRY)) {
-									selectedPatInfosText.append("," + StringTool.space);
-								}
-								;
-								selectedPatInfosText.append(thisAddressFLD_ZIP);
-							}
-							;
-
-							String thisAddressFLD_PLACE = k.get(Kontakt.FLD_PLACE);
-							if (!StringTool.isNothing(thisAddressFLD_PLACE)) {
-								if (StringTool.isNothing(thisAddressFLD_COUNTRY)
-										&& StringTool.isNothing(thisAddressFLD_ZIP)) {
-									selectedPatInfosText.append(",");
-								}
-								;
-								selectedPatInfosText.append(StringTool.space + thisAddressFLD_PLACE);
-							}
-
-							String thisAddressFLD_PHONE1 = k.get(Kontakt.FLD_PHONE1);
-							if (!StringTool.isNothing(thisAddressFLD_PHONE1)) {
-								selectedPatInfosText
-										.append("," + StringTool.space + StringTool.space + thisAddressFLD_PHONE1);
-							}
-
-							String thisAddressFLD_PHONE2 = k.get(Kontakt.FLD_PHONE2);
-							if (!StringTool.isNothing(thisAddressFLD_PHONE2)) {
-								selectedPatInfosText
-										.append("," + StringTool.space + StringTool.space + thisAddressFLD_PHONE2);
-							}
-
-							String thisAddressFLD_MOBILEPHONE = k.get(Kontakt.FLD_MOBILEPHONE);
-							if (!StringTool.isNothing(thisAddressFLD_MOBILEPHONE)) {
-								// With a colon after the label:
-								// selectedPatInfosText.append(","+StringTool.space+k.FLD_MOBILEPHONE+":"+StringTool.space+thisAddressFLD_MOBILEPHONE);
-								// Without a colon after the label:
-								selectedPatInfosText.append("," + StringTool.space + Kontakt.FLD_MOBILEPHONE
-										+ StringTool.space + thisAddressFLD_MOBILEPHONE);
-							}
-
-							String thisAddressFLD_FAX = k.get(Kontakt.FLD_FAX);
-							if (!StringTool.isNothing(thisAddressFLD_FAX)) {
-								// With a colon after the label:
-								// selectedPatInfosText.append(","+StringTool.space+k.FLD_FAX+":"+StringTool.space+thisAddressFLD_FAX);
-								// Without a colon after the label:
-								selectedPatInfosText.append("," + StringTool.space + Kontakt.FLD_FAX + StringTool.space
-										+ thisAddressFLD_FAX);
-							}
-
-							String thisAddressFLD_E_MAIL = k.get(Kontakt.FLD_E_MAIL);
-							if (!StringTool.isNothing(thisAddressFLD_E_MAIL)) {
-								selectedPatInfosText.append("," + StringTool.space + thisAddressFLD_E_MAIL);
-							}
+						StringBuilder sb = new StringBuilder();
+						IPatient selectedPatient = (IPatient) sel[i];
+						if (selectedPatient.isPerson()) {
+							sb.append(AddressFormatUtil.getSingleLine(selectedPatient));
 						} else {
-							selectedPatInfosText.append(
+							sb.append(
 									"Fehler: Bei diesem Patienten ist das Flag \"Person\" nicht gesetzt! Bitte korrigieren!\n");
-							// TODO: Fehler: Bei diesem Patienten ist das Flag
-							// \"Person\" nicht gesetzt!\n");
-							// TODO: Bitte Fehlermeldung Elexis-Konform
-							// gestalten, ggf.
-							// Automatik / assistierte Fehlerbehebung
-							// hinzufügen.\n");
 						}
-
-						// Add another empty line (or rather: paragraph), if at
-						// least one more
-						// address will follow.
-						if (i < sel.length - 1) {
-							selectedPatInfosText.append(System.getProperty("line.separator"));
-
-						}
-					} // for each element in sel do
-
-					/*
-					 * The following code portions can be moved down behind the
-					 * next } if you want to produce debugging output or empty
-					 * the clipboard even when NO addresses have been selected.
-					 * (However, I may disable the toolbar icon / menu entry for
-					 * this action in that case later on.)
-					 */
-
-					// Adopted from BestellView.exportClipboardAction:
-					// Copy some generated object.toString() to the clipoard
+						sj.add(sb.toString());
+					}
 
 					Clipboard clipboard = new Clipboard(UiDesk.getDisplay());
 					TextTransfer textTransfer = TextTransfer.getInstance();
 					Transfer[] transfers = new Transfer[] { textTransfer };
-					Object[] data = new Object[] { selectedPatInfosText.toString() };
+					Object[] data = new Object[] {
+						sj.toString()
+					};
 					clipboard.setContents(data, transfers);
 					clipboard.dispose();
 
-				} // if sel not empty
-			}; // copyselectedPatInfosToClipboardAction.run()
+				}
+			};
 		};
 
 		/*
@@ -684,119 +474,28 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 			@Override
 			public void run() {
 
-				// Adopted from KontakteView.printList:
-				// Convert the selected addresses into a list
-
-				StringBuffer selectedAddressesText = new StringBuffer();
-
+				StringJoiner sj = new StringJoiner(System.lineSeparator());
 				Object[] sel = cv.getSelection();
-
-				// If you enable the following line for debug output,
-				// you should also enable the selectedAddressesText.setLength(0)
-				// line below,
-				// and enable output of selectedAddressesText even for the case
-				// of an empty
-				// selection further below.
-				// selectedAddressesText.append("jsdebug: Sorry, your selection
-				// is empty.");
-
 				if (sel != null && sel.length > 0) {
-					// selectedAddressesText.setLength(0);
-					// selectedAddressesText.append("jsdebug: Your selection
-					// includes "+sel.length+"
-					// element(s):"+System.getProperty("line.separator"));
-
-					// In PateintenListeView.java, only zero or one patients can
-					// be selected at
-					// a time.
-					// Consequently, the for-loop inherited from
-					// KontakteView.java is a bit of
-					// an overkill right here.
 					for (int i = 0; i < sel.length; i++) {
-
-						/*
-						 * Patient ist eine Person, das ist Kontakt mit
-						 * zusätzlichen Feldern (Kontakt.java, Person.java) In
-						 * KontakteView.java stand hier: Kontakt k = (Kontakt)
-						 * sel[i] In PatientenListeView.java verwende ich
-						 * dieselbe Variablenbezeichnung k, damit ich unten
-						 * nicht alle Feldeinbindungen aktualisieren muss - und
-						 * damit später Änderungen in KontakteView.java schnell
-						 * hierher übernommen werden können.
-						 */
-
-						Patient k = (Patient) sel[i];
-
-						/*
-						 * Synthesize the address lines to output from the
-						 * entries in Patient (=includes fields from Kontakt) k.
-						 * A different, completely self-made block of text, is
-						 * provided by a similar action defined further below.
-						 */
-
-						// selectedAddressesText.append("jsdebug: Item
-						// "+Integer.toString(i)+"
-						// "+k.toString()+System.getProperty("line.separator"));
-
-						// getPostAnschriftPhoneFaxEmail() already returns a
-						// line separator
-						// after the address
-						// The first parameter controls multiline or single line
-						// output
-						// The second parameter controls whether the phone
-						// numbers shall be
-						// included
-						selectedAddressesText.append(k.getPostAnschriftPhoneFaxEmail(true, true));
-
-						// Add another empty line (or rather: paragraph), if at
-						// least one more
-						// address will follow.
-						if (i < sel.length - 1) {
-							selectedAddressesText.append(System.getProperty("line.separator"));
-
-						}
-					} // for each element in sel do
-
-					/*
-					 * I would prefer to move the following code portions down
-					 * behind the "if sel not empty" block, so that (a)
-					 * debugging output can be produced and (b) the clipboard
-					 * will be emptied when NO addresses have been selected. I
-					 * did this to avoid the case where a user would assume they
-					 * had selected some address, copied data to the clipboard,
-					 * and pasted them - and, even when they erred about their
-					 * selection, which was indeed empty, they would not
-					 * immediately notice that because some (old, unchanged)
-					 * content would still come out of the clipboard.
-					 * 
-					 * But if I do so, and there actually is no address
-					 * selected, I get an error window: Unhandled Exception ...
-					 * not valid. So to avoid that message without any further
-					 * research (I need to get this work fast now), I move the
-					 * code back up and leave the clipboard unchanged for now,
-					 * if no addresses had been selected to process.
-					 * 
-					 * (However, I may disable the toolbar icon / menu entry for
-					 * this action in that case later on.)
-					 */
-
-					// System.out.print("jsdebug: selectedAddressesText:
-					// \n"+selectedAddressesText+"\n");
-
-					// Adopted from BestellView.exportClipboardAction:
-					// Copy some generated object.toString() to the clipoard
+						StringBuilder sb = new StringBuilder();
+						IPatient selectedPatient = (IPatient) sel[i];
+						sb.append(
+							AddressFormatUtil.getAddressPhoneFaxEmail(selectedPatient, true, true));
+						sj.add(sb.toString());
+					}
 
 					Clipboard clipboard = new Clipboard(UiDesk.getDisplay());
 					TextTransfer textTransfer = TextTransfer.getInstance();
 					Transfer[] transfers = new Transfer[] { textTransfer };
-					Object[] data = new Object[] { selectedAddressesText.toString() };
+					Object[] data = new Object[] {
+						sj.toString()
+					};
 					clipboard.setContents(data, transfers);
 					clipboard.dispose();
-
-				} // if sel not empty
-			}; // copySelectedAddressesToClipboardAction.run()
+				}
+			};
 		};
-
 	}
 
 	@Override
@@ -880,16 +579,9 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 			Object[] elements = cv.getConfigurer().getContentProvider().getElements(viewer.getInput());
 			if ((elements != null) && (elements.length > 0)) {
 				Object element = elements[0];
-				/*
-				 * just selecting the element in the viewer doesn't work if the
-				 * control fields are not empty (i. e. the size of items
-				 * changes): cv.setSelection(element, true); bug in TableViewer
-				 * with style VIRTUAL? work-arount: just globally select the
-				 * element without visual representation in the viewer
-				 */
-				if (element instanceof PersistentObject) {
-					// globally select this object
-					ElexisEventDispatcher.fireSelectionEvent((PersistentObject) element);
+				if (element instanceof IPatient) {
+					ContextServiceHolder.get().getRootContext()
+						.setActivePatient((IPatient) element);
 				}
 			}
 		}
