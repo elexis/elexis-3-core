@@ -1,5 +1,7 @@
 package ch.elexis.core.services;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,12 +18,11 @@ public class StickerService implements IStickerService {
 	private final String QUERY_STICKERS_FOR_OBJECT =
 		"SELECT etikette FROM ETIKETTEN_OBJECT_LINK WHERE obj=?1";
 	
-	@SuppressWarnings("unchecked")
 	private List<ISticker> getStickersForId(String id){
 		INativeQuery stickerQuery =
 			CoreModelServiceHolder.get().getNativeQuery(QUERY_STICKERS_FOR_OBJECT);
-		return stickerQuery.executeWithParameters(stickerQuery.getIndexedParameterMap(1, id))
-			.parallel()
+		return stickerQuery
+			.executeWithParameters(stickerQuery.getIndexedParameterMap(1, id)).parallel()
 			.filter(resultId -> resultId instanceof String).map(resultId -> CoreModelServiceHolder
 				.get().load((String) resultId, ISticker.class).orElse(null))
 			.filter(st -> st != null).collect(Collectors.toList());
@@ -35,6 +36,15 @@ public class StickerService implements IStickerService {
 	@Override
 	public Optional<ISticker> getSticker(Identifiable idnetifiable){
 		List<ISticker> stickers = getStickers(idnetifiable);
+		// sort by importance
+		Collections.sort(stickers, new Comparator<ISticker>() {
+			@Override
+			public int compare(ISticker left, ISticker right){
+				return Integer.valueOf(left.getImportance())
+					.compareTo(Integer.valueOf(right.getImportance()));
+			}
+			
+		});
 		return stickers.isEmpty() ? Optional.empty() : Optional.of(stickers.get(0));
 	}
 	

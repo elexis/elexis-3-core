@@ -45,7 +45,7 @@ public class Context implements IContext {
 		if (user == null) {
 			context.remove(ACTIVE_USER);
 		} else {
-			context.put(ACTIVE_USER, user);
+			setNamed(ACTIVE_USER, user);
 		}
 		if (eclipseContext != null) {
 			eclipseContext.set(ACTIVE_USER, user);
@@ -72,7 +72,7 @@ public class Context implements IContext {
 		if (userContact == null) {
 			context.remove(ACTIVE_USERCONTACT);
 		} else {
-			context.put(ACTIVE_USERCONTACT, userContact);
+			setNamed(ACTIVE_USERCONTACT, userContact);
 		}
 		if (eclipseContext != null) {
 			eclipseContext.set(ACTIVE_USERCONTACT, userContact);
@@ -93,7 +93,7 @@ public class Context implements IContext {
 		if (patient == null) {
 			context.remove(ACTIVE_PATIENT);
 		} else {
-			context.put(ACTIVE_PATIENT, patient);
+			setNamed(ACTIVE_PATIENT, patient);
 		}
 		if (eclipseContext != null) {
 			eclipseContext.set(ACTIVE_PATIENT, patient);
@@ -114,7 +114,7 @@ public class Context implements IContext {
 		if (mandator == null) {
 			context.remove(ACTIVE_MANDATOR);
 		} else {
-			context.put(ACTIVE_MANDATOR, mandator);
+			setNamed(ACTIVE_MANDATOR, mandator);
 		}
 		if (eclipseContext != null) {
 			eclipseContext.set(ACTIVE_MANDATOR, mandator);

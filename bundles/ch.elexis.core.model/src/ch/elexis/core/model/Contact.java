@@ -287,4 +287,16 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt>
 		getEntity().getAddresses().put(address.getId(), addresse);
 		return address;
 	}
+	
+	@Override
+	public String getPostalAddress(){
+		// TODO Auto-generated method stub
+		return getEntity().getAnschrift();
+	}
+	
+	@Override
+	public void setPostalAddress(String value){
+		// TODO Auto-generated method stub
+		
+	}
 }

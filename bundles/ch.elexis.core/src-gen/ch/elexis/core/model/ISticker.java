@@ -25,6 +25,8 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.ISticker#getForeground <em>Foreground</em>}</li>
  *   <li>{@link ch.elexis.core.model.ISticker#isVisible <em>Visible</em>}</li>
  *   <li>{@link ch.elexis.core.model.ISticker#getName <em>Name</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ISticker#getImportance <em>Importance</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ISticker#getImage <em>Image</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getISticker()
@@ -137,35 +139,63 @@ public interface ISticker extends Comparable<ISticker>, Deleteable, Identifiable
 	void setName(String value);
 
 	/**
+	 * Returns the value of the '<em><b>Importance</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Importance</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Importance</em>' attribute.
+	 * @see #setImportance(int)
+	 * @see ch.elexis.core.model.ModelPackage#getISticker_Importance()
+	 * @model
+	 * @generated
+	 */
+	int getImportance();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.ISticker#getImportance <em>Importance</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Importance</em>' attribute.
+	 * @see #getImportance()
+	 * @generated
+	 */
+	void setImportance(int value);
+
+	/**
+	 * Returns the value of the '<em><b>Image</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Image</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Image</em>' reference.
+	 * @see #setImage(IImage)
+	 * @see ch.elexis.core.model.ModelPackage#getISticker_Image()
+	 * @model
+	 * @generated
+	 */
+	IImage getImage();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.ISticker#getImage <em>Image</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Image</em>' reference.
+	 * @see #getImage()
+	 * @generated
+	 */
+	void setImage(IImage value);
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation"
 	 * @generated
 	 */
 	String getLabel();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model
-	 * @generated
-	 */
-	void setClassForSticker(Class<?> clazz);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model
-	 * @generated
-	 */
-	void removeClassForSticker(Class<?> clazz);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation"
-	 * @generated
-	 */
-	List<String> getClassesForSticker();
 
 } // ISticker

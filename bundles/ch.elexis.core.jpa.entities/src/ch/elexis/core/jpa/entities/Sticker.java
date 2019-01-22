@@ -6,9 +6,12 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
+import ch.elexis.core.jpa.entities.converter.IntegerStringConverter;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
@@ -29,11 +32,13 @@ public class Sticker extends AbstractEntityWithId implements EntityWithId, Entit
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
 	
-	@Column(length = 25, name = "Image")
-	private String image;
+	@ManyToOne
+	@JoinColumn(name = "image")
+	private DbImage image;
 
-	@Column(length = 25)
-	private String importance;
+	@Column(length = 7)
+	@Convert(converter = IntegerStringConverter.class)
+	private int importance;
 
 	@Column(length = 40, name = "Name")
 	private String name;
@@ -47,19 +52,19 @@ public class Sticker extends AbstractEntityWithId implements EntityWithId, Entit
 	@Column(length = 255)
 	private String classes;
 	
-	public String getImage() {
+	public DbImage getImage(){
 		return image;
 	}
 
-	public void setImage(String image) {
+	public void setImage(DbImage image){
 		this.image = image;
 	}
 
-	public String getImportance() {
+	public int getImportance(){
 		return importance;
 	}
 
-	public void setImportance(String importance) {
+	public void setImportance(int importance){
 		this.importance = importance;
 	}
 

@@ -1,21 +1,34 @@
 package ch.elexis.core.ui.util;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.workbench.UIEvents;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ch.elexis.core.model.IImage;
+import ch.elexis.core.ui.UiDesk;
 
 @Component(property = EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE)
 public class CoreUiUtil implements EventHandler {
+	
+	private static Logger logger = LoggerFactory.getLogger(CoreUiUtil.class);
 	
 	private static Object lock = new Object();
 	
@@ -75,5 +88,80 @@ public class CoreUiUtil implements EventHandler {
 				delayedInjection.add(object);
 			}
 		}
+	}
+	
+	/**
+	 * Load a {@link Color} for the RGB color string. The color string is expected in hex format.
+	 * 
+	 * @param colorString
+	 * @return
+	 */
+	public static Color getColorForString(String colorString){
+		colorString = StringUtils.leftPad(colorString, 6, '0');
+		if (!UiDesk.getColorRegistry().hasValueFor(colorString)) {
+			RGB rgb;
+			try {
+				rgb = new RGB(Integer.parseInt(colorString.substring(0, 2), 16),
+					Integer.parseInt(colorString.substring(2, 4), 16),
+					Integer.parseInt(colorString.substring(4, 6), 16));
+			} catch (NumberFormatException nex) {
+				logger.warn("Error parsing color string [" + colorString + "]", nex);
+				rgb = new RGB(100, 100, 100);
+			}
+			UiDesk.getColorRegistry().put(colorString, rgb);
+		}
+		return UiDesk.getColorRegistry().get(colorString);
+	}
+	
+	/**
+	 * Load the {@link Image} and scale it to 16x16px size.
+	 * 
+	 * @param image
+	 * @return
+	 */
+	public static Image getImageAsIcon(IImage image){
+		Image ret = UiDesk.getImageRegistry().get(image.getId() + "_16x16");
+		if (ret == null) {
+			Image origImage = getImage(image);
+			ret = getImageScaledTo(origImage, 16, 16, false);
+			if (ret != null) {
+				UiDesk.getImageRegistry().put(image.getId() + "_16x16", ret);
+			}
+		}
+		
+		return ret;
+	}
+	
+	/**
+	 * Get the {@link Image} from the {@link IImage}.
+	 * 
+	 * @param image
+	 * @return
+	 */
+	public static Image getImage(IImage image){
+		Image ret = UiDesk.getImageRegistry().get(image.getId());
+		if (ret == null) {
+			byte[] in = image.getImage();
+			ByteArrayInputStream bais = new ByteArrayInputStream(in);
+			try {
+				ImageData idata = new ImageData(bais);
+				ret = new Image(Display.getDefault(), idata);
+				if (ret != null) {
+					UiDesk.getImageRegistry().put(image.getId(), ret);
+				}
+			} catch (Exception ex) {
+				logger.error("Error loading image [" + image.getId() + "]", ex);
+			}
+		}
+		return ret;
+	}
+	
+	private static Image getImageScaledTo(Image orig, int width, int height, boolean bShrinkOnly){
+		ImageData idata = orig.getImageData();
+		if (idata.width != width || idata.height != height) {
+			idata = idata.scaledTo(width, height);
+		}
+		Image ret = new Image(Display.getDefault(), idata);
+		return ret;
 	}
 }

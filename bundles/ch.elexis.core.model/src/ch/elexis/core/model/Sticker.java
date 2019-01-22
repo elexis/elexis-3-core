@@ -1,9 +1,10 @@
 package ch.elexis.core.model;
 
-import java.util.List;
-
+import ch.elexis.core.jpa.entities.DbImage;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
+import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
+import ch.elexis.core.model.util.internal.ModelUtil;
 
 public class Sticker extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Sticker>
 		implements IdentifiableWithXid, ISticker {
@@ -34,31 +35,29 @@ public class Sticker extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public boolean isVisible(){
-		return true;
+		return getImportance() >= 0;
 	}
 	
 	@Override
 	public void setVisible(boolean value){
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public void setClassForSticker(Class<?> clazz){
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public void removeClassForSticker(Class<?> clazz){
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public List<String> getClassesForSticker(){
-		// TODO Auto-generated method stub
-		return null;
+		int importance = getImportance();
+		if (isVisible()) {
+			if (!value) {
+				if (importance == 0) {
+					setImportance(-1);
+				} else {
+					setImportance((importance * -1));
+				}
+			}
+		} else {
+			if (value) {
+				if (importance == -1) {
+					setImportance(0);
+				} else {
+					setImportance((importance * -1));
+				}
+			}
+		}
 	}
 	
 	@Override
@@ -76,4 +75,27 @@ public class Sticker extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 		getEntity().setName(value);
 	}
 	
+	@Override
+	public int getImportance(){
+		return getEntity().getImportance();
+	}
+	
+	@Override
+	public void setImportance(int value){
+		getEntity().setImportance(value);
+	}
+	
+	@Override
+	public IImage getImage(){
+		return ModelUtil.getAdapter(getEntity().getImage(), IImage.class);
+	}
+	
+	@Override
+	public void setImage(IImage value){
+		if (value != null) {
+			getEntity().setImage(((AbstractIdModelAdapter<DbImage>) value).getEntity());
+		} else {
+			getEntity().setImage(null);
+		}
+	}
 }

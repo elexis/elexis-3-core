@@ -403,13 +403,22 @@ public interface ModelPackage extends EPackage {
 	int ICONTACT__GROUP = IDENTIFIABLE_FEATURE_COUNT + 23;
 
 	/**
+	 * The feature id for the '<em><b>Postal Address</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICONTACT__POSTAL_ADDRESS = IDENTIFIABLE_FEATURE_COUNT + 24;
+
+	/**
 	 * The number of structural features of the '<em>IContact</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 24;
+	int ICONTACT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 25;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}' class.
@@ -636,6 +645,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IPERSON__GROUP = ICONTACT__GROUP;
+
+	/**
+	 * The feature id for the '<em><b>Postal Address</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPERSON__POSTAL_ADDRESS = ICONTACT__POSTAL_ADDRESS;
 
 	/**
 	 * The feature id for the '<em><b>Date Of Birth</b></em>' attribute.
@@ -927,6 +945,15 @@ public interface ModelPackage extends EPackage {
 	int IORGANIZATION__GROUP = ICONTACT__GROUP;
 
 	/**
+	 * The feature id for the '<em><b>Postal Address</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__POSTAL_ADDRESS = ICONTACT__POSTAL_ADDRESS;
+
+	/**
 	 * The feature id for the '<em><b>Insurance Xml Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1180,6 +1207,15 @@ public interface ModelPackage extends EPackage {
 	int ILABORATORY__GROUP = IORGANIZATION__GROUP;
 
 	/**
+	 * The feature id for the '<em><b>Postal Address</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__POSTAL_ADDRESS = IORGANIZATION__POSTAL_ADDRESS;
+
+	/**
 	 * The feature id for the '<em><b>Insurance Xml Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1431,6 +1467,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IPATIENT__GROUP = IPERSON__GROUP;
+
+	/**
+	 * The feature id for the '<em><b>Postal Address</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPATIENT__POSTAL_ADDRESS = IPERSON__POSTAL_ADDRESS;
 
 	/**
 	 * The feature id for the '<em><b>Date Of Birth</b></em>' attribute.
@@ -1774,6 +1819,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IMANDATOR__GROUP = ICONTACT__GROUP;
+
+	/**
+	 * The feature id for the '<em><b>Postal Address</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMANDATOR__POSTAL_ADDRESS = ICONTACT__POSTAL_ADDRESS;
 
 	/**
 	 * The feature id for the '<em><b>Biller</b></em>' reference.
@@ -2803,13 +2857,31 @@ public interface ModelPackage extends EPackage {
 	int ISTICKER__NAME = TypesPackage.COMPARABLE_FEATURE_COUNT + 4;
 
 	/**
+	 * The feature id for the '<em><b>Importance</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTICKER__IMPORTANCE = TypesPackage.COMPARABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Image</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTICKER__IMAGE = TypesPackage.COMPARABLE_FEATURE_COUNT + 6;
+
+	/**
 	 * The number of structural features of the '<em>ISticker</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ISTICKER_FEATURE_COUNT = TypesPackage.COMPARABLE_FEATURE_COUNT + 5;
+	int ISTICKER_FEATURE_COUNT = TypesPackage.COMPARABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ICodeElement <em>ICode Element</em>}' class.
@@ -5620,6 +5692,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIContact_Group();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IContact#getPostalAddress <em>Postal Address</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Postal Address</em>'.
+	 * @see ch.elexis.core.model.IContact#getPostalAddress()
+	 * @see #getIContact()
+	 * @generated
+	 */
+	EAttribute getIContact_PostalAddress();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6714,6 +6797,28 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getISticker_Name();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ISticker#getImportance <em>Importance</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Importance</em>'.
+	 * @see ch.elexis.core.model.ISticker#getImportance()
+	 * @see #getISticker()
+	 * @generated
+	 */
+	EAttribute getISticker_Importance();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.ISticker#getImage <em>Image</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Image</em>'.
+	 * @see ch.elexis.core.model.ISticker#getImage()
+	 * @see #getISticker()
+	 * @generated
+	 */
+	EReference getISticker_Image();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.ICodeElement <em>ICode Element</em>}'.
@@ -8978,6 +9083,14 @@ public interface ModelPackage extends EPackage {
 		EAttribute ICONTACT__GROUP = eINSTANCE.getIContact_Group();
 
 		/**
+		 * The meta object literal for the '<em><b>Postal Address</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ICONTACT__POSTAL_ADDRESS = eINSTANCE.getIContact_PostalAddress();
+
+		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -9814,6 +9927,22 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ISTICKER__NAME = eINSTANCE.getISticker_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Importance</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ISTICKER__IMPORTANCE = eINSTANCE.getISticker_Importance();
+
+		/**
+		 * The meta object literal for the '<em><b>Image</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ISTICKER__IMAGE = eINSTANCE.getISticker_Image();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.ICodeElement <em>ICode Element</em>}' class.

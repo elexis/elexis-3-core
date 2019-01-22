@@ -8,8 +8,20 @@ import ch.elexis.core.model.Identifiable;
 
 public interface IStickerService {
 	
+	/**
+	 * Get all stickers for the {@link Identifiable}.
+	 * 
+	 * @param identifiable
+	 * @return
+	 */
 	public List<ISticker> getStickers(Identifiable identifiable);
 	
+	/**
+	 * Get the sticker with the highest importance for the {@link Identifiable}.
+	 * 
+	 * @param identifiable
+	 * @return
+	 */
 	public Optional<ISticker> getSticker(Identifiable identifiable);
 	
 	public void addSticker(ISticker sticker, Identifiable identifiable);

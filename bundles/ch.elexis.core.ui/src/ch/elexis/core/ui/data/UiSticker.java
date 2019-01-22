@@ -27,6 +27,7 @@ import ch.elexis.data.Sticker;
  * adds the respective graphic dependent elements.
  * 
  * @since 3.0.0
+ * @deprecated directly use CoreUiUtil methods on ISticker and IImage model elements
  */
 public class UiSticker {
 	private Sticker sticker;

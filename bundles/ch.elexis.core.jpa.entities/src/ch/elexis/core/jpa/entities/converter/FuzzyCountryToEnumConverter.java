@@ -37,9 +37,12 @@ public class FuzzyCountryToEnumConverter implements AttributeConverter<Country, 
 	@Override
 	public Country convertToEntityAttribute(String dataValue){
 		try {
-			return Country.valueOf((String) dataValue);
+			if (dataValue != null) {
+				return Country.valueOf((String) dataValue);
+			}
 		} catch (IllegalArgumentException | NullPointerException e) {
-			return Country.NDF;
+			// ignore -> NDF
 		}
+		return Country.NDF;
 	}
 }

@@ -45,6 +45,7 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IContact#getComment <em>Comment</em>}</li>
  *   <li>{@link ch.elexis.core.model.IContact#getAddress <em>Address</em>}</li>
  *   <li>{@link ch.elexis.core.model.IContact#getGroup <em>Group</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IContact#getPostalAddress <em>Postal Address</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIContact()
@@ -639,6 +640,32 @@ public interface IContact extends Identifiable, Deleteable, WithExtInfo {
 	 * @generated
 	 */
 	void setGroup(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Postal Address</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Postal Address</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Postal Address</em>' attribute.
+	 * @see #setPostalAddress(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIContact_PostalAddress()
+	 * @model
+	 * @generated
+	 */
+	String getPostalAddress();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getPostalAddress <em>Postal Address</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Postal Address</em>' attribute.
+	 * @see #getPostalAddress()
+	 * @generated
+	 */
+	void setPostalAddress(String value);
 
 	/**
 	 * <!-- begin-user-doc -->

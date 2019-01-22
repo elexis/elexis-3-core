@@ -31,6 +31,7 @@ import ch.elexis.data.DBImage;
  * adds the respective graphic dependent elements.
  * 
  * @since 3.0.0
+ * @deprecated directly use CoreUiUtil methods on IImage model elements
  */
 public class UiDBImage {
 	private Logger log = LoggerFactory.getLogger(UiDBImage.class);
