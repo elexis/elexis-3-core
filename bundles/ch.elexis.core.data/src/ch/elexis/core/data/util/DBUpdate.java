@@ -442,8 +442,7 @@ public class DBUpdate {
 			// 3.6.1
 			FILE_LOCATED,
 			// 3.7.0
-			"ALTER TABLE BEHANDLUNGEN ADD billable CHAR(1) default '1';"+
-			"ALTER TABLE BEHANDLUNGEN ADD Zeit CHAR(6) default '000000';"
+			FILE_LOCATED
 			};
 	//@formatter:on
 	
