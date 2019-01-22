@@ -57,7 +57,7 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 		prefs.setDefault(Preferences.USR_PATLIST_SHOWNAME, true);
 		prefs.setDefault(Preferences.USR_PATLIST_SHOWFIRSTNAME, true);
 		prefs.setDefault(Preferences.USR_PATLIST_SHOWDOB, true);
-		prefs.setDefault(Preferences.USR_SUPPRESS_INTERACTION_CHECK, false);
+		prefs.setDefault(Preferences.USR_SUPPRESS_INTERACTION_CHECK, true);
 	}
 	
 	@Override
