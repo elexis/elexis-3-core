@@ -78,7 +78,7 @@ public class MedicationTableViewerItem {
 	
 	public static List<MedicationTableViewerItem> createFromPrescriptionList(
 		List<IPrescription> prescriptionList, StructuredViewer viewer){
-		List<MedicationTableViewerItem> collect = prescriptionList.parallelStream()
+		List<MedicationTableViewerItem> collect = prescriptionList.stream()
 			.map(p -> new MedicationTableViewerItem(p, viewer)).collect(Collectors.toList());
 		return collect;
 	}
