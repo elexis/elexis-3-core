@@ -52,16 +52,12 @@ public class KontaktExtDialog extends TitleAreaDialog {
 	public KontaktExtDialog(Shell shell, Kontakt k, String[] defvalues) {
 		super(shell);
 		this.actKontact = k;
-		logger.info("{} fields are: {}", defvalues.length, defvalues);
 		fieldDefinitions = defvalues;
 		Arrays.sort(fieldDefinitions, new Comparator<String>() {
 			public int compare(String o1, String o2) {
 				return o1.compareTo(o2);
 			}
 		});
-		for (int i = 0; i < fieldDefinitions.length; i++) {
-			logger.trace("field with id {}: {}", i, fieldDefinitions[i]);
-		}
 	}
 
 	@Override
@@ -103,7 +99,6 @@ public class KontaktExtDialog extends TitleAreaDialog {
 
 		public ExtInfoTable(Composite parent, String[] f) {
 			super(parent, SWT.NONE);
-			logger.info("{} fields are: {}", f.length, f);
 			fieldDefinitions = f;
 			Group params = new Group(parent, SWT.NONE);
 			params.setText(Messages.KontaktExtDialog_pleaseENterDetails);
@@ -132,6 +127,13 @@ public class KontaktExtDialog extends TitleAreaDialog {
 				if (value.length() == 0) {
 					value = (String) k.getInfoElement(fields[i]);
 				}
+				// The old implementation used fieldnames as visible label
+				// This is ugly (eg. TarmedKanton instead of Tarmed Kanton)
+				// and not l10n conform. Therefore we fetch the displayed labels
+				// and the corresponding tooltip as l10n messages
+				// Eg. for the key TarmedKanton we fetchh the messages
+				// KontaktExtInfo_TarmedKanton and
+				// KontaktExtInfo_TarmedKanton_tooltip 
 				String msg_key_label = "KontaktExtInfo_" + key; //$NON-NLS-1$
 				msg_key_label = msg_key_label.replaceAll("[^a-zA-Z0-9_]", "_");
 				String msg_key_tooltip = "KontaktExtInfo_" + key + "_tooltip"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -155,9 +157,7 @@ public class KontaktExtDialog extends TitleAreaDialog {
 				values[i].setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 				values[i].setText(value == null ? StringConstants.EMPTY : value);
 				values[i].setToolTipText(tooltip_text);
-				savedValues[i] = value;
-				logger.trace("init: addXid {} field {} key  {} value  {}\nlabel {} tooltip {}", i, fields[i],
-						xids.get(i), values[i].getText(), label_text, msg_key_tooltip);
+				savedValues[i] = values[i].getText();
 			}
 		}
 
@@ -169,8 +169,6 @@ public class KontaktExtDialog extends TitleAreaDialog {
 					k.setInfoElement(fields[i], value);
 					String xid = xids.get(fields[i]);
 					if (xid != null) {
-						logger.debug("okPressed: Updating field {}: {} key  {} value {} -> {}", i, fields[i], xid,
-								savedValues[i], value);
 						k.addXid(xid, value, true);
 					}
 				}
