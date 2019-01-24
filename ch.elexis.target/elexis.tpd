@@ -95,8 +95,8 @@ location "http://download.elexis.info/elexis/f11355/p2/target/" {
 	javax.transaction-api [1.3.0,1.3.0]
 	javax.enterprise.cdi-api
 	javax.interceptor-api
-	com.sun.xml.bind.jaxb-osgi [2.4.0.b180830_0438,2.4.0.b180830_0438]
-	jaxb-api [2.4.0.b1808300359,2.4.0.b1808300359]
+	com.sun.xml.bind.jaxb-osgi
+	jaxb-api
 	// 
 	org.springframework.spring-web
 	woodstox-core-asl
