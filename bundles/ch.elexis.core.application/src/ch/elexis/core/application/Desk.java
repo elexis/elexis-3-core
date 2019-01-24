@@ -17,7 +17,6 @@ import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,7 +105,17 @@ public class Desk implements IApplication {
 		// make sure identifiers are initialized
 		initIdentifiers();
 		
-		WorkbenchPlugin.unsetSplashShell(UiDesk.getDisplay());
+		// close splash
+		context.applicationRunning();
+		
+		// perform login
+		cod.performLogin(UiDesk.getDisplay().getActiveShell());
+		if ((CoreHub.actUser == null) || !CoreHub.actUser.isValid()) {
+			// no valid user, exit (don't consider this as an error)
+			log.warn("Exit because no valid user logged-in"); //$NON-NLS-1$
+			PersistentObject.disconnect();
+			System.exit(0);
+		}
 		
 		// start the workbench
 		try {
