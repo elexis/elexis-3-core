@@ -67,16 +67,19 @@ public class SqlWithUiRunner {
 				@Override
 				public void run(){
 					Shell parent = null;
+					boolean isDummyShell = false;
 					try {
 						parent = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 					} catch (IllegalStateException e) {
 						// the workbench has not been created yet ... create a dummy Shell on the
 						// display
 						parent = new Shell(Display.getDefault());
+						isDummyShell = true;
 					} catch (NullPointerException e) {
 						// the workbench has not been created yet ... create a dummy Shell on the
 						// display
 						parent = new Shell(Display.getDefault());
+						isDummyShell = true;
 					}
 					ProgressMonitorDialog dialog = new ProgressMonitorDialog(parent);
 					try {
@@ -98,6 +101,9 @@ public class SqlWithUiRunner {
 						e.printStackTrace();
 					} catch (InterruptedException e) {
 						e.printStackTrace();
+					}
+					if (isDummyShell) {
+						parent.close();
 					}
 				}
 			});
