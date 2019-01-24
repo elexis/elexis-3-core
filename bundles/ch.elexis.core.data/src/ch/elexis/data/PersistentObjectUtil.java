@@ -66,7 +66,8 @@ class PersistentObjectUtil {
 			// Therefore we apply the same tests here
 			if (firstMandantEmail.contains("@") && !firstMandantName.isEmpty() //$NON-NLS-1$
 					&& !firstMandantPassword.isEmpty()) {
-				return new Mandant(firstMandantName, firstMandantPassword, firstMandantEmail);
+				m = new Mandant(firstMandantName, firstMandantPassword, firstMandantEmail);
+				m.set(Person.NAME, firstMandantName); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			}
 		}
 		return m;
