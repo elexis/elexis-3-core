@@ -54,7 +54,6 @@
 
 	<modules>
 		<module>ch.elexis.target</module>
-		<module>org.osgi.framework.system.packages.extra</module>
 		<module>bundles</module>
 		<module>features</module>
 		<module>tests</module>
