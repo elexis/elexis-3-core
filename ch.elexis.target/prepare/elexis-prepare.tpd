@@ -127,8 +127,8 @@ location "http://download.elexis.info/elexis-server/elexis-server-dependencies" 
 	javax.interceptor-api
 	// jaxb
 	com.sun.activation.javax.activation [1.2.0,1.2.0]
-	com.sun.xml.bind.jaxb-osgi [2.4.0.b180830_0438,2.4.0.b180830_0438]
-	jaxb-api [2.4.0.b1808300359,2.4.0.b1808300359]
+	com.sun.xml.bind.jaxb-osgi
+	jaxb-api
 	// 
 	org.springframework.spring-web
 	woodstox-core-asl

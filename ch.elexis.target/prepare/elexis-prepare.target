@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde?><!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl --><target name="Elexis" sequenceNumber="1548064605">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde?><!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl --><target name="Elexis" sequenceNumber="1548322137">
   <locations>
     <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.swt.nl_de" version="4.8.0.v20180815020001"/>
@@ -120,7 +120,7 @@
       <unit id="javax.enterprise.cdi-api" version="2.0.0.SP1"/>
       <unit id="javax.interceptor-api" version="1.2.2"/>
       <unit id="com.sun.activation.javax.activation" version="1.2.0"/>
-      <unit id="com.sun.xml.bind.jaxb-osgi" version="2.4.0.b180830_0438"/>
+      <unit id="com.sun.xml.bind.jaxb-osgi" version="2.3.2"/>
       <unit id="jaxb-api" version="2.4.0.b1808300359"/>
       <unit id="org.springframework.spring-web" version="4.3.8.RELEASE"/>
       <unit id="woodstox-core-asl" version="4.4.1"/>
