@@ -25,7 +25,7 @@ public class PersonTest extends AbstractTest {
 	}
 
 	@Test
-	public void createDeletePatient() {
+	public void modifyPerson() {
 		person.setMaritalStatus(MaritalStatus.MARRIED);
 		coreModelService.save(person);
 		assertTrue(person.isPerson());
