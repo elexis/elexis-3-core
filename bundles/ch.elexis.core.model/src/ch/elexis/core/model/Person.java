@@ -91,4 +91,19 @@ public class Person extends Contact implements IPerson {
 	public long getAgeAtIn(LocalDateTime reference, ChronoUnit chronoUnit){
 		return chronoUnit.between(getDateOfBirth(), reference);
 	}
+	
+	@Override
+	public MaritalStatus getMaritalStatus() {
+		 Object extInfo = getExtInfo(PatientConstants.FLD_EXTINFO_MARITAL_STATUS);
+		 if(extInfo != null) {
+			 return MaritalStatus.byNumericSafe((String) extInfo);
+		 }
+		 return null;
+	}
+
+	@Override
+	public void setMaritalStatus(MaritalStatus maritalStatus) {
+		setExtInfo(PatientConstants.FLD_EXTINFO_MARITAL_STATUS, maritalStatus.numericValue());
+		
+	}
 }

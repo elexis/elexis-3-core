@@ -30,6 +30,7 @@ import ch.elexis.core.types.Gender;
  *   <li>{@link ch.elexis.core.model.IPerson#getTitelSuffix <em>Titel Suffix</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPerson#getFirstName <em>First Name</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPerson#getLastName <em>Last Name</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IPerson#getMaritalStatus <em>Marital Status</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIPerson()
@@ -189,6 +190,32 @@ public interface IPerson extends IContact {
 	 * @generated
 	 */
 	void setLastName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Marital Status</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Marital Status</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Marital Status</em>' attribute.
+	 * @see #setMaritalStatus(MaritalStatus)
+	 * @see ch.elexis.core.model.ModelPackage#getIPerson_MaritalStatus()
+	 * @model dataType="ch.elexis.core.types.MaritalStatus"
+	 * @generated
+	 */
+	MaritalStatus getMaritalStatus();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IPerson#getMaritalStatus <em>Marital Status</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Marital Status</em>' attribute.
+	 * @see #getMaritalStatus()
+	 * @generated
+	 */
+	void setMaritalStatus(MaritalStatus value);
 
 	/**
 	 * <!-- begin-user-doc -->

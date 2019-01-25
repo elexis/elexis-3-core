@@ -372,6 +372,16 @@ public interface TypesPackage extends EPackage {
 	int BILLING_LAW = 27;
 
 	/**
+	 * The meta object id for the '<em>Marital Status</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.MaritalStatus
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getMaritalStatus()
+	 * @generated
+	 */
+	int MARITAL_STATUS = 28;
+
+	/**
 	 * The meta object id for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -686,6 +696,17 @@ public interface TypesPackage extends EPackage {
 	EDataType getBillingLaw();
 
 	/**
+	 * Returns the meta object for data type '{@link ch.elexis.core.model.MaritalStatus <em>Marital Status</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Marital Status</em>'.
+	 * @see ch.elexis.core.model.MaritalStatus
+	 * @model instanceClass="ch.elexis.core.model.MaritalStatus"
+	 * @generated
+	 */
+	EDataType getMaritalStatus();
+
+	/**
 	 * Returns the meta object for class '{@link ch.rgw.tools.Result <em>Result</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -987,6 +1008,16 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType BILLING_LAW = eINSTANCE.getBillingLaw();
+
+		/**
+		 * The meta object literal for the '<em>Marital Status</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.MaritalStatus
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getMaritalStatus()
+		 * @generated
+		 */
+		EDataType MARITAL_STATUS = eINSTANCE.getMaritalStatus();
 
 		/**
 		 * The meta object literal for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.

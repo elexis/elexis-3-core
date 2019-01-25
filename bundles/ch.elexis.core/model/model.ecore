@@ -104,6 +104,7 @@
         <details key="attributeName" value="description1"/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maritalStatus" eType="ecore:EDataType types.ecore#//MaritalStatus"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IOrganization" abstract="true" interface="true"
       eSuperTypes="#//IContact">

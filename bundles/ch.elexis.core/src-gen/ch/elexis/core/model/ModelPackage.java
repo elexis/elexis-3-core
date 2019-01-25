@@ -710,13 +710,22 @@ public interface ModelPackage extends EPackage {
 	int IPERSON__LAST_NAME = ICONTACT_FEATURE_COUNT + 5;
 
 	/**
+	 * The feature id for the '<em><b>Marital Status</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPERSON__MARITAL_STATUS = ICONTACT_FEATURE_COUNT + 6;
+
+	/**
 	 * The number of structural features of the '<em>IPerson</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IPERSON_FEATURE_COUNT = ICONTACT_FEATURE_COUNT + 6;
+	int IPERSON_FEATURE_COUNT = ICONTACT_FEATURE_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IOrganization <em>IOrganization</em>}' class.
@@ -1530,6 +1539,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IPATIENT__LAST_NAME = IPERSON__LAST_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Marital Status</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPATIENT__MARITAL_STATUS = IPERSON__MARITAL_STATUS;
 
 	/**
 	 * The feature id for the '<em><b>Diagnosen</b></em>' attribute.
@@ -5779,6 +5797,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIPerson_LastName();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPerson#getMaritalStatus <em>Marital Status</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Marital Status</em>'.
+	 * @see ch.elexis.core.model.IPerson#getMaritalStatus()
+	 * @see #getIPerson()
+	 * @generated
+	 */
+	EAttribute getIPerson_MaritalStatus();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IOrganization <em>IOrganization</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9147,6 +9176,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IPERSON__LAST_NAME = eINSTANCE.getIPerson_LastName();
+
+		/**
+		 * The meta object literal for the '<em><b>Marital Status</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IPERSON__MARITAL_STATUS = eINSTANCE.getIPerson_MaritalStatus();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IOrganization <em>IOrganization</em>}' class.

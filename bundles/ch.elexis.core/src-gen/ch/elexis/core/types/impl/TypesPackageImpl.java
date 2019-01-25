@@ -12,6 +12,7 @@ package ch.elexis.core.types.impl;
 
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.LabOrderState;
+import ch.elexis.core.model.MaritalStatus;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.model.XidQuality;
 import ch.elexis.core.model.ch.BillingLaw;
@@ -252,6 +253,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	private EDataType billingLawEDataType = null;
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType maritalStatusEDataType = null;
+
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
@@ -317,6 +325,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getComparable() {
 		return comparableEClass;
 	}
@@ -326,6 +335,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getList() {
 		return listEClass;
 	}
@@ -335,6 +345,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getMap() {
 		return mapEClass;
 	}
@@ -344,6 +355,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getContactGender() {
 		return contactGenderEEnum;
 	}
@@ -353,6 +365,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getRelationshipType() {
 		return relationshipTypeEEnum;
 	}
@@ -362,6 +375,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getAddressType() {
 		return addressTypeEEnum;
 	}
@@ -371,6 +385,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getDocumentStatus() {
 		return documentStatusEEnum;
 	}
@@ -380,6 +395,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getMoney() {
 		return moneyEDataType;
 	}
@@ -389,6 +405,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getGender() {
 		return genderEDataType;
 	}
@@ -398,6 +415,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getLabItemTyp() {
 		return labItemTypEDataType;
 	}
@@ -407,6 +425,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getCountry() {
 		return countryEDataType;
 	}
@@ -416,6 +435,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getPathologicDescription() {
 		return pathologicDescriptionEDataType;
 	}
@@ -425,6 +445,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getLocalDateTime() {
 		return localDateTimeEDataType;
 	}
@@ -434,6 +455,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getInputStream() {
 		return inputStreamEDataType;
 	}
@@ -443,6 +465,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getOutputStream() {
 		return outputStreamEDataType;
 	}
@@ -452,6 +475,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getLocalDate() {
 		return localDateEDataType;
 	}
@@ -461,6 +485,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getXidQuality() {
 		return xidQualityEDataType;
 	}
@@ -470,6 +495,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getLabOrderState() {
 		return labOrderStateEDataType;
 	}
@@ -479,6 +505,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getArticleTyp() {
 		return articleTypEDataType;
 	}
@@ -488,6 +515,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getVatInfo() {
 		return vatInfoEDataType;
 	}
@@ -497,6 +525,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getOrderEntryState() {
 		return orderEntryStateEDataType;
 	}
@@ -506,6 +535,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getArticleSubTyp() {
 		return articleSubTypEDataType;
 	}
@@ -515,6 +545,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getVersionedResource() {
 		return versionedResourceEDataType;
 	}
@@ -524,6 +555,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getEntryType() {
 		return entryTypeEDataType;
 	}
@@ -533,6 +565,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getInvoiceState() {
 		return invoiceStateEDataType;
 	}
@@ -542,6 +575,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getChronoUnit() {
 		return chronoUnitEDataType;
 	}
@@ -551,6 +585,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getBillingLaw() {
 		return billingLawEDataType;
 	}
@@ -560,6 +595,17 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	public EDataType getMaritalStatus() {
+		return maritalStatusEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getResult() {
 		return resultEClass;
 	}
@@ -569,6 +615,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TypesFactory getTypesFactory() {
 		return (TypesFactory)getEFactoryInstance();
 	}
@@ -627,6 +674,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		invoiceStateEDataType = createEDataType(INVOICE_STATE);
 		chronoUnitEDataType = createEDataType(CHRONO_UNIT);
 		billingLawEDataType = createEDataType(BILLING_LAW);
+		maritalStatusEDataType = createEDataType(MARITAL_STATUS);
 	}
 
 	/**
@@ -734,6 +782,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEDataType(invoiceStateEDataType, InvoiceState.class, "InvoiceState", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(chronoUnitEDataType, ChronoUnit.class, "ChronoUnit", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(billingLawEDataType, BillingLaw.class, "BillingLaw", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(maritalStatusEDataType, MaritalStatus.class, "MaritalStatus", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

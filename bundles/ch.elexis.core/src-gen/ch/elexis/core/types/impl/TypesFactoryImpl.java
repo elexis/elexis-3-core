@@ -12,6 +12,7 @@ package ch.elexis.core.types.impl;
 
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.LabOrderState;
+import ch.elexis.core.model.MaritalStatus;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.model.XidQuality;
 import ch.elexis.core.model.ch.BillingLaw;
@@ -151,6 +152,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createChronoUnitFromString(eDataType, initialValue);
 			case TypesPackage.BILLING_LAW:
 				return createBillingLawFromString(eDataType, initialValue);
+			case TypesPackage.MARITAL_STATUS:
+				return createMaritalStatusFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -212,6 +215,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertChronoUnitToString(eDataType, instanceValue);
 			case TypesPackage.BILLING_LAW:
 				return convertBillingLawToString(eDataType, instanceValue);
+			case TypesPackage.MARITAL_STATUS:
+				return convertMaritalStatusToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -662,6 +667,25 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public MaritalStatus createMaritalStatusFromString(EDataType eDataType, String initialValue) {
+		return (MaritalStatus)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertMaritalStatusToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public TypesPackage getTypesPackage() {
 		return (TypesPackage)getEPackage();
 	}

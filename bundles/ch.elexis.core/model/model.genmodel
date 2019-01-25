@@ -73,6 +73,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPerson/titelSuffix"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPerson/firstName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPerson/lastName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPerson/maritalStatus"/>
       <genOperations ecoreOperation="model.ecore#//IPerson/getAgeInYears"/>
       <genOperations ecoreOperation="model.ecore#//IPerson/getAgeAtIn">
         <genParameters ecoreParameter="model.ecore#//IPerson/getAgeAtIn/reference"/>
