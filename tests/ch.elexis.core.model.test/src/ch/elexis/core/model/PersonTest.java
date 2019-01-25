@@ -28,19 +28,19 @@ public class PersonTest extends AbstractTest {
 	public void createDeletePatient() {
 		person.setMaritalStatus(MaritalStatus.MARRIED);
 		coreModelService.save(person);
-		assertTrue(patient.isPerson());
-		assertFalse(patient.isPatient());
-		assertFalse(patient.isMandator());
-		assertFalse(patient.isOrganization());
-		assertFalse(patient.isLaboratory());
+		assertTrue(person.isPerson());
+		assertFalse(person.isPatient());
+		assertFalse(person.isMandator());
+		assertFalse(person.isOrganization());
+		assertFalse(person.isLaboratory());
 
 		String id = person.getId();
 		assertNotNull(id);
-		assertNotNull(patient.getCode());
+		assertNotNull(person.getCode());
 		IPerson findById = coreModelService.load(id, IPerson.class).get();
 		assertNotNull(findById);
 		assertEquals(MaritalStatus.MARRIED, findById.getMaritalStatus());
-		coreModelService.delete(patient);
+		coreModelService.delete(person);
 	}
 
 }
