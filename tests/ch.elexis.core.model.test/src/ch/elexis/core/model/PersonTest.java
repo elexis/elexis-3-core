@@ -36,7 +36,6 @@ public class PersonTest extends AbstractTest {
 
 		String id = person.getId();
 		assertNotNull(id);
-		assertNotNull(person.getCode());
 		IPerson findById = coreModelService.load(id, IPerson.class).get();
 		assertNotNull(findById);
 		assertEquals(MaritalStatus.MARRIED, findById.getMaritalStatus());
