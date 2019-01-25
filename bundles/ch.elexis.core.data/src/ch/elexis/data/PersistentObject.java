@@ -424,34 +424,26 @@ public abstract class PersistentObject implements IPersistentObject {
 					executeDBInitScriptForClass(User.class, null);
 					executeDBInitScriptForClass(Role.class, null);
 					
-					CoreHub.globalCfg = new SqlSettings(connection.getJdbcLink(), "CONFIG");
-					CoreHub.globalCfg.undo();
-					CoreHub.globalCfg.set("created", new TimeTool().toString(TimeTool.FULL_GER));
+					PersistentObjectUtil.initializeGlobalCfg(connection);
 					Mandant.initializeAdministratorUser();
 					CoreHub.pin.initializeGrants();
 					CoreHub.pin.initializeGlobalPreferences();
-					if (connection.isRunningFromScratch()) {
-						Mandant m = new Mandant("007", "topsecret");
-						String clientEmail =
-							System.getProperty(ElexisSystemPropertyConstants.CLIENT_EMAIL);
-						if (clientEmail == null)
-							clientEmail = "james@bond.invalid";
-						m.set(new String[] {
-							Person.NAME, Person.FIRSTNAME, Person.TITLE, Person.SEX,
-							Person.FLD_E_MAIL, Person.FLD_PHONE1, Person.FLD_FAX,
-							Kontakt.FLD_STREET, Kontakt.FLD_ZIP, Kontakt.FLD_PLACE
-						}, "Bond", "James", "Dr. med.", Person.MALE, clientEmail, "0061 555 55 55",
-							"0061 555 55 56", "10, Baker Street", "9999", "Elexikon");
-					} else {
-						cod.requestInitialMandatorConfiguration();
-					}
+					Mandant bypassMandator = PersistentObjectUtil.autoCreateFirstMandant(connection.isRunningFromScratch());
 					
+					if (bypassMandator == null) {
+						cod.requestInitialMandatorConfiguration();
+						MessageEvent.fireInformation("Neue Datenbank", //$NON-NLS-1$
+							"Es wurde eine neue Datenbank angelegt."); //$NON-NLS-1$
+					} else {
+						// When running from Scratch or bypassing the first mandant we
+						// do not want to pop up any message dialog before
+						// Elexis finished the startup. A log entry is okay
+						log.info(
+								"Bypassed mandator initialization dialog, auto-created Mandator [{}] {}", //$NON-NLS-1$
+								bypassMandator.getId(), bypassMandator.getPersonalia());
+					}
 					CoreHub.globalCfg.flush();
 					CoreHub.localCfg.flush();
-					if (!connection.isRunningFromScratch()) {
-						MessageEvent.fireInformation("Neue Datenbank",
-							"Es wurde eine neue Datenbank angelegt.");
-					}
 				} else {
 					log.error("Kein create script für Datenbanktyp " + connection.getDBFlavor()
 						+ " gefunden.");
@@ -484,7 +476,17 @@ public abstract class PersistentObject implements IPersistentObject {
 		log.info("Gefundene Datenbankversion: " + vi.version());
 		if (vi.isOlder(CoreHub.DBVersion)) {
 			log.warn("Ältere Version der Datenbank gefunden ");
-			DBUpdate.doUpdate();
+			if (!DBUpdate.doUpdate()) {
+				String msg = String.format(
+						"Datenbank '%1s':\nUpdate auf '%2s' von '%3s' schlug fehlt.\nWollen Sie trotzdem fortsetzen?",
+						connection.getDBConnectString(), vi.version().toString(), CoreHub.DBVersion);
+				log.error(msg);
+				if (!cod.openQuestion("Datenbank update failed ", msg)) {
+					System.exit(8);
+				} else {
+					log.error("User continues with failed Elexis database update");
+				}
+			}
 		}
 		vi = new VersionInfo(CoreHub.globalCfg.get("ElexisVersion", "0.0.0"));
 		log.info("Verlangte Elexis-Version: " + vi.version());
@@ -1015,7 +1017,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return true wenn es gelöscht ist
 	 */
 	public boolean isDeleted(){
-		return get("deleted").equals("1");
+		return get(FLD_DELETED).trim().equals(StringConstants.ONE);
 	}
 	
 	/**
@@ -2266,7 +2268,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @param rs
 	 * @return decoded string or null if decode was not possible
 	 */
-	private String decode(final String field, final ResultSet rs){
+	protected String decode(final String field, final ResultSet rs){
 		
 		try {
 			String mapped = map(field);

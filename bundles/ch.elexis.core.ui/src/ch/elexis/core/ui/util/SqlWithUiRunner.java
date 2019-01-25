@@ -45,7 +45,12 @@ public class SqlWithUiRunner {
 	public SqlWithUiRunner(String[] sql, String pluginId){
 		sqlStrings = new ArrayList<String>();
 		for (int i = 0; i < sql.length; i++) {
-			sqlStrings.add(sql[i]);
+			String sqlString = sql[i];
+			sqlString = sqlString.replaceAll("\r", "");
+			String[] parts = sqlString.split("\n\n");
+			for (String part : parts) {
+				sqlStrings.add(part);
+			}
 		}
 		this.pluginId = pluginId;
 	}
@@ -62,16 +67,19 @@ public class SqlWithUiRunner {
 				@Override
 				public void run(){
 					Shell parent = null;
+					boolean isDummyShell = false;
 					try {
 						parent = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 					} catch (IllegalStateException e) {
 						// the workbench has not been created yet ... create a dummy Shell on the
 						// display
 						parent = new Shell(Display.getDefault());
+						isDummyShell = true;
 					} catch (NullPointerException e) {
 						// the workbench has not been created yet ... create a dummy Shell on the
 						// display
 						parent = new Shell(Display.getDefault());
+						isDummyShell = true;
 					}
 					ProgressMonitorDialog dialog = new ProgressMonitorDialog(parent);
 					try {
@@ -93,6 +101,9 @@ public class SqlWithUiRunner {
 						e.printStackTrace();
 					} catch (InterruptedException e) {
 						e.printStackTrace();
+					}
+					if (isDummyShell) {
+						parent.close();
 					}
 				}
 			});
@@ -119,7 +130,15 @@ public class SqlWithUiRunner {
 		private String sql;
 		private SqlStatus status;
 		
+		private boolean optional;
+		
 		protected UpdateDbSql(String sql){
+			if (sql.startsWith("OPTIONAL:")) {
+				optional = true;
+				sql = sql.substring("OPTIONAL:".length());
+			} else {
+				optional = false;
+			}
 			this.sql = sql;
 			status = SqlStatus.NONE;
 		}
@@ -140,15 +159,20 @@ public class SqlWithUiRunner {
 					try {
 						statement.exec(link.translateFlavor(sqlString));
 					} catch (JdbcLinkException e) {
-						setStatus(SqlStatus.FAIL);
-						log.log(e, "Error " + e.getMessage() + " during db update", Log.ERRORS);
-						try {
-							StatusManager.getManager()
-								.handle(new ElexisStatus(ElexisStatus.ERROR, pluginId,
-									ElexisStatus.CODE_NONE,
-									"Error " + e.getMessage() + " during db update", e));
-						} catch (AssertionFailedException appnotinit) {
-							
+						if (optional) {
+							log.log(e, "Warning " + e.getMessage() + " during db update",
+								Log.WARNINGS);
+						} else {
+							setStatus(SqlStatus.FAIL);
+							log.log(e, "Error " + e.getMessage() + " during db update", Log.ERRORS);
+							try {
+								StatusManager.getManager()
+									.handle(new ElexisStatus(ElexisStatus.ERROR, pluginId,
+										ElexisStatus.CODE_NONE,
+										"Error " + e.getMessage() + " during db update", e));
+							} catch (AssertionFailedException appnotinit) {
+								
+							}
 						}
 					}
 				}

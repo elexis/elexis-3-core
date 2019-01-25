@@ -395,6 +395,52 @@ public class BillingUtil {
 	}
 	
 	/**
+	 * Sort the consultations by year.
+	 * 
+	 * @param consultations
+	 * @return
+	 */
+	public static Map<Integer, List<Konsultation>> getSortedByYear(
+		List<Konsultation> consultations){
+		Map<Integer, List<Konsultation>> ret = new HashMap<>();
+		TimeTool konsDate = new TimeTool();
+		for (Konsultation consultation : consultations) {
+			konsDate.set(consultation.getDatum());
+			Integer year = new Integer(konsDate.get(TimeTool.YEAR));
+			List<Konsultation> list = ret.get(year);
+			if (list == null) {
+				list = new ArrayList<>();
+			}
+			list.add(consultation);
+			ret.put(year, list);
+		}
+		return ret;
+	}
+	
+	private static Integer[] splitBillYears = {
+		2018
+	};
+	
+	public static boolean canBillYears(List<Integer> years){
+		for (Integer splitYear : splitBillYears) {
+			boolean aboveSplitYear = false;
+			boolean belowSplitYear = false;
+			for (Integer year : years) {
+				if (year >= splitYear) {
+					aboveSplitYear = true;
+				} else {
+					belowSplitYear = true;
+				}
+				// only above or below is allowed
+				if (aboveSplitYear && belowSplitYear) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	/**
 	 * Copies the actual fall, merge the copied fall with changes, transfer cons, storno the old
 	 * invoice
 	 */

@@ -23,6 +23,7 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
 import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.ui.Hub;
@@ -43,7 +44,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	
 	protected static AbstractCoreOperationAdvisor cod =
 		CoreOperationExtensionPoint.getCoreOperationAdvisor();
-	
+
 	@Override
 	public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(
 		final IWorkbenchWindowConfigurer configurer){
@@ -80,6 +81,12 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 		}
 		
 		return initPerspective;
+	}
+	
+	@Override
+	public void preStartup(){
+		super.preStartup();
+		ElexisEventDispatcher.getInstance().start();
 	}
 	
 	@Override

@@ -94,6 +94,17 @@ public class Mandant extends Anwender {
 	public Mandant(String name, String pwd){
 		super(name, pwd, true);
 	}
+
+	/**
+	 * @since 3.8
+	 * @param name
+	 * @param pwd
+	 * @param email
+	 */
+	public Mandant(String name, String pwd, String email){
+		super(name, pwd, true);
+		set(new String[] {Person.FLD_E_MAIL}, email);
+	}
 	
 	protected String getConstraint(){
 		return new StringBuilder(FLD_IS_MANDATOR).append(Query.EQUALS)

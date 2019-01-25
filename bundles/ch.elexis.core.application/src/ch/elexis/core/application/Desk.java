@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013-2014 MEDEVIT <office@medevit.at>.
+ * Copyright (c) 2013-2019 MEDEVIT <office@medevit.at>.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,6 @@ import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -123,8 +122,13 @@ public class Desk implements IApplication {
 				Messages.Warning_tooManyMessage + CoreHub.getWritableUserDir().getAbsolutePath());
 		}
 		
-		// care for log-in
-		WorkbenchPlugin.unsetSplashShell(UiDesk.getDisplay());
+		// make sure identifiers are initialized
+		initIdentifiers();
+		
+		// close splash
+		context.applicationRunning();
+		
+		// perform login
 		cod.performLogin(UiDesk.getDisplay().getActiveShell());
 		if ((CoreHub.actUser == null) || !CoreHub.actUser.isValid()) {
 			// no valid user, exit (don't consider this as an error)
@@ -132,8 +136,6 @@ public class Desk implements IApplication {
 			PersistentObject.disconnect();
 			System.exit(0);
 		}
-		// make sure identifiers are initialized
-		initIdentifiers();
 		
 		// start the workbench
 		try {

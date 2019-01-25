@@ -52,6 +52,7 @@ import ch.elexis.data.PersistentObject;
  * @since 3.0.0 major changes, switch to {@link ElexisContext}
  * @since 3.4 switched listeners to {@link ListenerList}
  * @since 3.7 move from Eclipse job to ScheduledExecutorService
+ * @since 3.8 must explicitly {@link #start()} queue execution
  */
 public final class ElexisEventDispatcher implements Runnable {
 	private  Logger log = LoggerFactory.getLogger(ElexisEventDispatcher.class);
@@ -85,6 +86,14 @@ public final class ElexisEventDispatcher implements Runnable {
 		elexisUIContext = new ElexisContext();
 		
 		service = Executors.newSingleThreadScheduledExecutor();
+	}
+	
+	/**
+	 * Start the ElexisEventDispatch scheduler; that is, start delivering events
+	 * 
+	 * @since 3.8
+	 */
+	public void start(){
 		service.scheduleAtFixedRate(this, 0, 25, TimeUnit.MILLISECONDS);
 	}
 	

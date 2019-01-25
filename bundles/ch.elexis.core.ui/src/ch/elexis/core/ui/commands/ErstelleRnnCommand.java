@@ -14,6 +14,8 @@ package ch.elexis.core.ui.commands;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.StringJoiner;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.Command;
@@ -26,11 +28,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
@@ -42,7 +44,6 @@ import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Rechnung;
 import ch.rgw.tools.Result;
-import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.Tree;
 
 /**
@@ -79,37 +80,54 @@ public class ErstelleRnnCommand extends AbstractHandler {
 				}
 				Collection<Tree> lt = tFall.getChildren();
 				
-				List<Konsultation> lb = new ArrayList<Konsultation>(lt.size() + 1);
+				List<Konsultation> toBill = new ArrayList<Konsultation>(lt.size() + 1);
 				for (Tree t : lt) {
-					lb.add((Konsultation) t.contents);
+					toBill.add((Konsultation) t.contents);
 				}
 				
-				List<Konsultation> toBill = BillingUtil.getKonsultationsFromSameYear(lb);
-				if (toBill.size() > 0 && toBill.size() != lb.size()) {
-					if (!MessageDialog.openQuestion(HandlerUtil.getActiveShell(eev),
+				Map<Integer, List<Konsultation>> sortedByYears =
+					BillingUtil.getSortedByYear(toBill);
+				if (!BillingUtil.canBillYears(new ArrayList<>(sortedByYears.keySet()))) {
+					StringJoiner sj = new StringJoiner(", ");
+					sortedByYears.keySet().forEach(i -> sj.add(Integer.toString(i)));
+					if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
 						"Rechnung Validierung",
-						"Eine Rechnung kann nur Leistungen innerhalb eines Jahres beinhalten.\n\nWollen Sie mit der Erstellung der Rechnung für das Jahr "
-							+ new TimeTool(toBill.get(0).getDatum()).get(TimeTool.YEAR)
-							+ " fortsetzen ?")) {
-						LoggerFactory.getLogger(ErstelleRnnCommand.class)
-							.warn("Invoice creation canceled by user");
-						return null;
+						"Die Leistungen sind aus Jahren die nicht kombinierbar sind.\n\nWollen Sie separate Rechnungen für die Jahre "
+							+ sj.toString() + " erstellen?")) {
+						// bill each year separately
+						for (Integer year : sortedByYears.keySet()) {
+							res = Rechnung.build(sortedByYears.get(year));
+							if (monitor != null) {
+								monitor.worked(1);
+							}
+							if (!res.isOK()) {
+								ErrorDialog.openError(HandlerUtil.getActiveShell(eev),
+									Messages.KonsZumVerrechnenView_errorInInvoice,
+									
+									NLS.bind(Messages.KonsZumVerrechnenView_invoiceForCase,
+										new Object[] {
+											fall.getLabel(), fall.getPatient().getLabel()
+										}), ResultAdapter.getResultAsStatus(res));
+							} else {
+								tPat.remove(tFall);
+							}
+						}
 					}
-				}
-				
-				res = Rechnung.build(toBill);
-				if (monitor != null) {
-					monitor.worked(1);
-				}
-				if (!res.isOK()) {
-					ErrorDialog.openError(HandlerUtil.getActiveShell(eev),
-						Messages.KonsZumVerrechnenView_errorInInvoice,
-						
-						NLS.bind(Messages.KonsZumVerrechnenView_invoiceForCase, new Object[] {
-							fall.getLabel(), fall.getPatient().getLabel()
-						}), ResultAdapter.getResultAsStatus(res));
 				} else {
-					tPat.remove(tFall);
+					res = Rechnung.build(toBill);
+					if (monitor != null) {
+						monitor.worked(1);
+					}
+					if (!res.isOK()) {
+						ErrorDialog.openError(HandlerUtil.getActiveShell(eev),
+							Messages.KonsZumVerrechnenView_errorInInvoice,
+							
+							NLS.bind(Messages.KonsZumVerrechnenView_invoiceForCase, new Object[] {
+								fall.getLabel(), fall.getPatient().getLabel()
+							}), ResultAdapter.getResultAsStatus(res));
+					} else {
+						tPat.remove(tFall);
+					}
 				}
 			}
 			if (rejected != 0) {

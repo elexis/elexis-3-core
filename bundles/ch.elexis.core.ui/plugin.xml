@@ -709,15 +709,15 @@
       </command>
       <command
             id="ch.elexis.core.ui.StartBillingProposal"
-            name="Start billing proposal">
+            name="%StartBillingProposal">
       </command>
       <command
             id="ch.elexis.core.ui.RefreshBillingProposalView"
-            name="Refresh billing proposals">
+            name="%RefreshBillingProposal">
       </command>
       <command
             id="ch.elexis.core.ui.BillingProposalViewCreateBills"
-            name="Create bills from proposal">
+            name="%CreateBills">
          <commandParameter
                id="ch.elexis.core.ui.BillingProposalViewCreateBills.selection"
                name="selection"
@@ -759,22 +759,22 @@
             name="%open.compendium">
       </command>
       <command
-            id="ch.elexis.core.ui.commands.printPatientLabel"
             categoryId="ch.elexis.core.ui.commands.kategorie"
             defaultHandler="ch.elexis.core.ui.commands.PrintPatientLabelHandler"
-            name="">
+            id="ch.elexis.core.ui.commands.printPatientLabel"
+            name="%elexis.printPatientLabel">
       </command>
       <command
-            id="ch.elexis.core.ui.commands.printVersionedLabel"
             categoryId="ch.elexis.core.ui.commands.kategorie"
             defaultHandler="ch.elexis.core.ui.commands.PrintVersionedLabelHandler"
-            name="">
+            id="ch.elexis.core.ui.commands.printVersionedLabel"
+            name="%elexis.printVersionedLabel">
       </command>
       <command
-            id="ch.elexis.core.ui.commands.printAddressLabel"
             categoryId="ch.elexis.core.ui.commands.kategorie"
             defaultHandler="ch.elexis.core.ui.commands.PrintAddressLabelHandler"
-            name="">
+            id="ch.elexis.core.ui.commands.printAddressLabel"
+            name="%elexis.printAddresslabel">
       </command>
    </extension>
       <extension

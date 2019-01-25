@@ -13,14 +13,18 @@
 # to read the cump
 # > java -cp /opt/elexis-3.4/os/plugins/*h2*jar  org.h2.tools.RunScript -url "jdbc:h2:$HOME/elexis/demoDB/db;AUTO_SERVER=TRUE" -user sa  -script dump.sql
 #
-require 'trollop'
-begin
-  require 'pry'
-rescue LoadError
+puts "It may take some time for bundler/inline to install the dependencies"
+require 'bundler/inline'
+
+gemfile do
+  source 'https://rubygems.org'
+  gem 'optimist'
 end
+require 'optimist'
+
 $stdout.sync = true
 
-parser = Trollop::Parser.new do
+parser = Optimist::Parser.new do
   version "#{File.basename(__FILE__, '.rb')} (c) 2017 by Niklaus Giger <niklaus.giger@member.fsf.org>"
   banner <<-EOS
 #{version}
@@ -32,8 +36,8 @@ EOS
   opt :from_h2,   "Assume input is a h2 dump", :type => String, :default => nil, :short => '-h'
 end
 
-Options = Trollop::with_standard_exception_handling parser do
-  raise Trollop::HelpNeeded if ARGV.empty? # show help screen
+Options = Optimist::with_standard_exception_handling parser do
+  raise Optimist::HelpNeeded if ARGV.empty? # show help screen
   parser.parse ARGV
 end
 
