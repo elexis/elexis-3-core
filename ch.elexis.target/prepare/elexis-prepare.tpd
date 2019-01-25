@@ -63,8 +63,6 @@ location "http://download.eclipse.org/releases/2018-09/" {
 	org.eclipse.nebula.widgets.nattable.extension.glazedlists
 	ca.odell.glazedlists
 	org.jsoup
-
-	osgi.enterprise
 }
 
 location "http://download.eclipse.org/rt/eclipselink/updates/" {
@@ -119,6 +117,7 @@ location "http://download.eclipse.org/tools/orbit/downloads/drops/R2018090520190
 	org.dom4j
 	org.apache.commons.dbcp
 	org.apache.commons.pool
+	osgi.enterprise
 }
 
 location "http://download.elexis.info/elexis-server/master/p2/elexis-server" {
