@@ -18,6 +18,7 @@ import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.model.builder.IEncounterBuilder;
@@ -27,6 +28,7 @@ import ch.elexis.core.services.holder.CodeElementServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.text.model.Samdas;
 import ch.rgw.tools.Result;
 
 @Component
@@ -195,7 +197,7 @@ public class EncounterService implements IEncounterService {
 	}
 
 	@Override
-	public Optional<IEncounter> getLastEncounter(IPatient patient, boolean create){
+	public Optional<IEncounter> getLatestEncounter(IPatient patient, boolean create){
 		if (!ContextServiceHolder.get().getActiveMandator().isPresent()) {
 			return Optional.empty();
 		}
@@ -262,7 +264,7 @@ public class EncounterService implements IEncounterService {
 	// @formatter:on
 	
 	@Override
-	public Optional<IEncounter> getLastEncounter(IPatient patient){
+	public Optional<IEncounter> getLatestEncounter(IPatient patient){
 		INativeQuery nativeQuery =
 			CoreModelServiceHolder.get().getNativeQuery(ENCOUNTER_LAST_QUERY);
 		Iterator<?> result = nativeQuery.executeWithParameters(
@@ -274,5 +276,20 @@ public class EncounterService implements IEncounterService {
 			return CoreModelServiceHolder.get().load(next, IEncounter.class);
 		}
 		return Optional.empty();
+	}
+	
+	private String getVersionRemark(){
+		String remark = "edit";
+		java.util.Optional<IUser> activeUser =
+			ContextServiceHolder.get().getRootContext().getActiveUser();
+		if (activeUser.isPresent()) {
+			remark = activeUser.get().getLabel();
+		}
+		return remark;
+	}
+	
+	@Override
+	public void updateVersionedEntry(IEncounter encounter, Samdas samdas){
+		encounter.getVersionedEntry().update(samdas.toString(), getVersionRemark());
 	}
 }

@@ -337,7 +337,7 @@ public class LabImportUtil implements ILabImportUtil {
 					CoreModelServiceHolder.get().load(iPatient.getId(), IPatient.class);
 				if (patient.isPresent()) {
 					Optional<IEncounter> konsultation =
-						EncounterServiceHolder.get().getLastEncounter(patient.get());
+						EncounterServiceHolder.get().getLatestEncounter(patient.get());
 					if (konsultation.isPresent()) {
 						IMandator mandant = konsultation.get().getMandator();
 						if (mandant != null && mandant.getId() != null) {

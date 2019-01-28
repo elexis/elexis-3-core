@@ -39,9 +39,6 @@ import org.eclipse.ui.services.IEvaluationService;
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
@@ -49,6 +46,7 @@ import ch.elexis.core.model.builder.IPrescriptionBuilder;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.RestrictedAction;
@@ -68,7 +66,6 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
 import ch.elexis.core.ui.views.controls.InteractionLink;
-import ch.elexis.data.Prescription;
 import ch.rgw.tools.ExHandler;
 
 /**
@@ -312,8 +309,7 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 						MediDetailDialog md = new MediDetailDialog(getShell(), pr, true);
 						md.setExecutedFrom(FixMediDisplay.class.getSimpleName());
 						md.open();
-						ElexisEventDispatcher.getInstance().fire(
-							new ElexisEvent(pr, Prescription.class, ElexisEvent.EVENT_UPDATE));
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, pr);
 					}
 				}
 			};

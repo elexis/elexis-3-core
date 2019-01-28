@@ -2,6 +2,7 @@ package ch.elexis.core.ui.medication.handlers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -10,19 +11,19 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.util.CreatePrescriptionHelper;
-import ch.elexis.data.Patient;
 
 public class DispenseHandler extends AbstractHandler {
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException{
-		Patient patient = ElexisEventDispatcher.getSelectedPatient();
-		if (patient == null) {
+		Optional<IPatient> patient = ContextServiceHolder.get().getActivePatient();
+		if (!patient.isPresent()) {
 			return null;
 		}
 		

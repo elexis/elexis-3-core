@@ -4,8 +4,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 
+import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.prescription.EntryType;
-import ch.elexis.data.Prescription;
 import ch.rgw.tools.TimeTool;
 
 public enum ViewerSortOrder {
@@ -44,7 +44,7 @@ public enum ViewerSortOrder {
 	}
 	
 	/**
-	 * sort the medication order by manual ordering as stored in {@link Prescription#FLD_SORT_ORDER}
+	 * sort the medication order by manual ordering as stored in {@link IPrescription#FLD_SORT_ORDER}
 	 */
 	public static class ManualViewerComparator extends ViewerComparator {
 		@Override

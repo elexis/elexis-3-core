@@ -77,4 +77,11 @@ public interface IMedicationService {
 	 * @return
 	 */
 	public IRecipe createRecipe(IPatient patient, List<IPrescription> prescRecipes);
+	
+	/**
+	 * 
+	 * @return the signature split into a string array with 4 elements; will always return an array
+	 *         of 4 elements, where empty entries are of type String ""
+	 */
+	public String[] getSignatureAsStringArray(String signature);
 }

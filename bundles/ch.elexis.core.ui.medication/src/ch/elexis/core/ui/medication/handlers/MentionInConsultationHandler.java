@@ -2,6 +2,7 @@ package ch.elexis.core.ui.medication.handlers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -10,12 +11,15 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.text.model.Samdas.Record;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
-import ch.elexis.data.Konsultation;
 
 public class MentionInConsultationHandler extends AbstractHandler {
 	@SuppressWarnings("unchecked")
@@ -33,26 +37,30 @@ public class MentionInConsultationHandler extends AbstractHandler {
 					prescriptions.add(p);
 				}
 			}
-			
-			Konsultation cons = Konsultation.getAktuelleKons();
-			if (cons != null) {
-				StringBuilder sb = new StringBuilder();
-				for (IPrescription presc : prescriptions) {
-					String articleLabel = "";
-					if (presc.getArticle() != null) {
-						articleLabel = presc.getArticle().getLabel();
+			if (!prescriptions.isEmpty()) {
+				IPatient patient = prescriptions.get(0).getPatient();
+				Optional<IEncounter> encounter =
+					EncounterServiceHolder.get().getLatestEncounter(patient);
+				encounter.ifPresent(enc -> {
+					StringBuilder sb = new StringBuilder();
+					for (IPrescription presc : prescriptions) {
+						String articleLabel = "";
+						if (presc.getArticle() != null) {
+							articleLabel = presc.getArticle().getLabel();
+						}
+						sb.append("\n");
+						sb.append("Medikation: " + articleLabel + ", "
+							+ presc.getDosageInstruction() + " " + getType(presc.getEntryType()));
 					}
-					sb.append("\n");
-					sb.append("Medikation: " + articleLabel + ", " + presc.getDosageInstruction()
-						+ " " + getType(presc.getEntryType()));
-				}
-				
-				Samdas samdas = new Samdas(cons.getEintrag().getHead());
-				Record rec = samdas.getRecord();
-				String recText = rec.getText();
-				recText += sb.toString();
-				rec.setText(recText);
-				cons.updateEintrag(samdas.toString(), true);
+					
+					Samdas samdas = new Samdas(enc.getVersionedEntry().getHead());
+					Record rec = samdas.getRecord();
+					String recText = rec.getText();
+					recText += sb.toString();
+					rec.setText(recText);
+					EncounterServiceHolder.get().updateVersionedEntry(enc, samdas);
+					CoreModelServiceHolder.get().save(enc);
+				});
 			}
 		}
 		

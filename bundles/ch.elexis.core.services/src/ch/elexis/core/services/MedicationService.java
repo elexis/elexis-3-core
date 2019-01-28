@@ -19,6 +19,7 @@ import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.builder.IRecipeBuilder;
 import ch.elexis.core.model.prescription.Constants;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.model.prescription.Methods;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -257,5 +258,10 @@ public class MedicationService implements IMedicationService {
 			}
 		}
 		return 0;
+	}
+	
+	@Override
+	public String[] getSignatureAsStringArray(String signature){
+		return Methods.getSignatureAsStringArray(signature);
 	}
 }

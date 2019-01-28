@@ -2,6 +2,8 @@ package ch.elexis.core.model.prescription;
 
 import java.util.Arrays;
 
+import ch.elexis.core.services.IMedicationService;
+
 public class Methods {
 	/**
 	 * 
@@ -9,6 +11,7 @@ public class Methods {
 	 *         of 4 elements, where empty entries are of type String ""
 	 * @since 3.1.0
 	 * @since 3.2.0 relocated from Prescription
+	 * @deprecated use {@link IMedicationService} method instead.
 	 */
 	public static String[] getSignatureAsStringArray(String signature){
 		String[] daytimeSignature = new String[4];

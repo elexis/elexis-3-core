@@ -7,7 +7,9 @@ import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.text.model.Samdas;
 import ch.rgw.tools.Result;
+import ch.rgw.tools.VersionedResource;
 
 public interface IEncounterService {
 	
@@ -39,12 +41,21 @@ public interface IEncounterService {
 	 * @param create
 	 * @return
 	 */
-	public Optional<IEncounter> getLastEncounter(IPatient patient, boolean create);
+	public Optional<IEncounter> getLatestEncounter(IPatient patient, boolean create);
 	
 	/**
 	 * Finds the last non deleted {@link IEncounter} over all {@link IMandator}s.
 	 * 
 	 * @return
 	 */
-	public Optional<IEncounter> getLastEncounter(IPatient patient);
+	public Optional<IEncounter> getLatestEncounter(IPatient patient);
+	
+	/**
+	 * Update the encounter text with the content of {@link Samdas}. A new {@link VersionedResource}
+	 * is created as head.
+	 * 
+	 * @param enc
+	 * @param samdas
+	 */
+	public void updateVersionedEntry(IEncounter enc, Samdas samdas);
 }

@@ -12,6 +12,9 @@
 
 package ch.elexis.core.ui.dialogs;
 
+import java.util.Optional;
+
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -19,22 +22,40 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.ui.util.LabeledInputField;
 import ch.elexis.core.ui.util.LabeledInputField.AutoForm;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.artikel.Artikeldetail;
 import ch.elexis.data.Artikel;
-import ch.elexis.data.PersistentObject;
 
 public class ArtikelDetailDialog extends TitleAreaDialog {
-	protected Artikel art;
+	protected IArticle article;
 	
-	public ArtikelDetailDialog(Shell shell, PersistentObject o){
+	public ArtikelDetailDialog(Shell shell, IPersistentObject o){
 		super(shell);
-		art = (Artikel) o;
+		Optional<Identifiable> identifiable =
+			StoreToStringServiceHolder.get().loadFromString(o.storeToString());
+		if (identifiable.isPresent() && identifiable.get() instanceof IArticle) {
+			article = (IArticle) identifiable.get();
+		} else {
+			MessageDialog.openError(Display.getDefault().getActiveShell(), "Fehler",
+				"Der Artikel [" + o.getLabel() + "] konnte nicht geladen werden.");
+			throw new IllegalStateException(
+				"Could not load identifiable for article [" + o.getLabel() + "]");
+		}
+	}
+	
+	public ArtikelDetailDialog(Shell shell, IArticle article){
+		super(shell);
+		this.article = article;
 	}
 	
 	@Override
@@ -48,7 +69,7 @@ public class ArtikelDetailDialog extends TitleAreaDialog {
 		cnt.setLayout(new FillLayout());
 		AutoForm tblArtikel =
 			new LabeledInputField.AutoForm(cnt, Artikeldetail.getFieldDefs(parent.getShell()));
-		tblArtikel.reload(art);
+		tblArtikel.reload(article);
 		ret.setMinSize(cnt.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		return ret;
 	}
@@ -65,7 +86,7 @@ public class ArtikelDetailDialog extends TitleAreaDialog {
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 		super.create();
 		getShell().setText(Messages.ArtikelDetailDialog_articleDetail); //$NON-NLS-1$
-		setTitle(art.getLabel());
+		setTitle(article.getLabel());
 		setMessage(Messages.ArtikelDetailDialog_enterArticleDetails); //$NON-NLS-1$
 	}
 	

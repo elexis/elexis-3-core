@@ -22,8 +22,6 @@ import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.ui.medication.handlers.ApplyCustomSortingHandler;
-import ch.elexis.data.Patient;
-import ch.elexis.data.Prescription;
 import ch.rgw.tools.Money;
 
 public class MedicationViewHelper {
@@ -101,8 +99,8 @@ public class MedicationViewHelper {
 	}
 	
 	/**
-	 * Load the {@link Prescription} for the {@link Patient} referenced by patId. If the
-	 * loadFullHistory parameter is false, a list of current active {@link Prescription} is
+	 * Load the {@link IPrescription} for the {@link IPatient} referenced by patId. If the
+	 * loadFullHistory parameter is false, a list of current active {@link IPrescription} is
 	 * returned.
 	 * 
 	 * @param loadFullHistory

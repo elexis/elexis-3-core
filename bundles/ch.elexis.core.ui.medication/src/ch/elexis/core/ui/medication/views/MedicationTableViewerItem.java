@@ -13,7 +13,6 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Control;
 
-import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IContact;
@@ -21,11 +20,11 @@ import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IRecipe;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.data.Prescription;
 
 /**
- * Maps an element of type {@link Prescription} for presentation within the MedicationTableViewer.
+ * Maps an element of type {@link IPrescription} for presentation within the MedicationTableViewer.
  * Used for performance reasons.
  */
 public class MedicationTableViewerItem {

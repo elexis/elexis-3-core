@@ -13,9 +13,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 
 public class MedicationHistoryTableComposite extends Composite {
 	

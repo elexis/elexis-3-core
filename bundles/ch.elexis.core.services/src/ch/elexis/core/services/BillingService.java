@@ -1,7 +1,13 @@
 package ch.elexis.core.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 import ch.elexis.core.ac.AccessControlDefaults;
 import ch.elexis.core.model.IBillable;
@@ -21,6 +27,21 @@ public class BillingService implements IBillingService {
 	
 	@Reference
 	private IAccessControlService accessControlService;
+	
+	private List<IBilledAdjuster> adjusters = new ArrayList<>();
+	
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
+	public void setBilledAdjuster(IBilledAdjuster adjuster){
+		if (!adjusters.contains(adjuster)) {
+			adjusters.add(adjuster);
+		}
+	}
+	
+	public void unsetBilledAdjuster(IBilledAdjuster adjuster){
+		if (adjusters.contains(adjuster)) {
+			adjusters.remove(adjuster);
+		}
+	}
 	
 	@Override
 	public Result<IEncounter> isEditable(IEncounter encounter){
@@ -104,6 +125,10 @@ public class BillingService implements IBillingService {
 					optifierResult.addMessage(SEVERITY.OK, message);
 				}
 				optifier.clearContext();
+			}
+			
+			for (IBilledAdjuster iBilledAdjuster : adjusters) {
+				iBilledAdjuster.adjust(optifierResult.get());
 			}
 			
 			return optifierResult;

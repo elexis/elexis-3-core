@@ -25,9 +25,9 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 
 public class MedicationTableComposite extends Composite {
 	

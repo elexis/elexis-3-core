@@ -20,6 +20,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.prescription.EntryType;
@@ -56,8 +57,9 @@ public class PrintTakingsListHandler extends AbstractHandler {
 			try {
 				RezeptBlatt rpb = (RezeptBlatt) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 					.getActivePage().showView(RezeptBlatt.ID);
-				rpb.createEinnahmeliste(Patient.load(patient.getId()),
-					prescRecipes.toArray(new Prescription[prescRecipes.size()]));
+				rpb.createEinnahmeliste((Patient) NoPoUtil.loadAsPersistentObject(patient),
+					(Prescription[]) NoPoUtil.loadAsPersistentObject(
+						prescRecipes.toArray(new IPrescription[prescRecipes.size()])));
 			} catch (PartInitException e) {
 				log.error("Error outputting recipe", e);
 			}
@@ -112,7 +114,7 @@ public class PrintTakingsListHandler extends AbstractHandler {
 	
 	/**
 	 * Adpater class to use {@link ViewerSortOrder} sorter implementations to sort a list of
-	 * {@link Prescription}. Sorting is done using the current UI state of the
+	 * {@link IPrescription}. Sorting is done using the current UI state of the
 	 * {@link ViewerSortOrder} implementation.
 	 * 
 	 * @author thomas

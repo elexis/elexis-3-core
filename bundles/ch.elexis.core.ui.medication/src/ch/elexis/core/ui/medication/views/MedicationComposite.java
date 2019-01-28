@@ -56,15 +56,15 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IRecipe;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.ui.UiDesk;
@@ -78,7 +78,6 @@ import ch.elexis.core.ui.medication.views.provider.MedicationFilter;
 import ch.elexis.core.ui.util.CreatePrescriptionHelper;
 import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.views.controls.InteractionLink;
-import ch.elexis.data.Prescription;
 
 public class MedicationComposite extends Composite
 		implements ISelectionProvider, ISelectionChangedListener {
@@ -665,9 +664,8 @@ public class MedicationComposite extends Composite
 		if (btnStopMedication.isEnabled())
 			showMedicationDetailComposite(null);
 
-		ElexisEventDispatcher.getInstance()
-			.fire(new ElexisEvent(pres.getPrescription(), Prescription.class,
-				ElexisEvent.EVENT_UPDATE));
+		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
+			pres.getPrescription());
 	}
 	
 	/**
@@ -908,8 +906,8 @@ public class MedicationComposite extends Composite
 		selectedMedication.setValue(presc);
 		showMedicationDetailComposite(presc);
 		
-		signatureArray =
-			Prescription.getSignatureAsStringArray((presc != null) ? presc.getDosis() : null);
+		signatureArray = MedicationServiceHolder.get()
+			.getSignatureAsStringArray((presc != null) ? presc.getDosis() : null);
 		setValuesForTextSignature(signatureArray);
 	}
 	
