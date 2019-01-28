@@ -13,6 +13,7 @@ package ch.elexis.core.types.impl;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.LabOrderState;
 import ch.elexis.core.model.MaritalStatus;
+import ch.elexis.core.model.MimeType;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.model.XidQuality;
 import ch.elexis.core.model.ch.BillingLaw;
@@ -154,6 +155,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createBillingLawFromString(eDataType, initialValue);
 			case TypesPackage.MARITAL_STATUS:
 				return createMaritalStatusFromString(eDataType, initialValue);
+			case TypesPackage.MIME_TYPE:
+				return createMimeTypeFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -217,6 +220,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertBillingLawToString(eDataType, instanceValue);
 			case TypesPackage.MARITAL_STATUS:
 				return convertMaritalStatusToString(eDataType, instanceValue);
+			case TypesPackage.MIME_TYPE:
+				return convertMimeTypeToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -677,6 +682,24 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	public String convertMaritalStatusToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public MimeType createMimeTypeFromString(EDataType eDataType, String initialValue) {
+		return (MimeType)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertMimeTypeToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

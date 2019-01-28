@@ -382,6 +382,16 @@ public interface TypesPackage extends EPackage {
 	int MARITAL_STATUS = 28;
 
 	/**
+	 * The meta object id for the '<em>Mime Type</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.MimeType
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getMimeType()
+	 * @generated
+	 */
+	int MIME_TYPE = 29;
+
+	/**
 	 * The meta object id for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -707,6 +717,17 @@ public interface TypesPackage extends EPackage {
 	EDataType getMaritalStatus();
 
 	/**
+	 * Returns the meta object for data type '{@link ch.elexis.core.model.MimeType <em>Mime Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Mime Type</em>'.
+	 * @see ch.elexis.core.model.MimeType
+	 * @model instanceClass="ch.elexis.core.model.MimeType"
+	 * @generated
+	 */
+	EDataType getMimeType();
+
+	/**
 	 * Returns the meta object for class '{@link ch.rgw.tools.Result <em>Result</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1018,6 +1039,16 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType MARITAL_STATUS = eINSTANCE.getMaritalStatus();
+
+		/**
+		 * The meta object literal for the '<em>Mime Type</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.MimeType
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getMimeType()
+		 * @generated
+		 */
+		EDataType MIME_TYPE = eINSTANCE.getMimeType();
 
 		/**
 		 * The meta object literal for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.

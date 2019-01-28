@@ -46,6 +46,7 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IContact#getAddress <em>Address</em>}</li>
  *   <li>{@link ch.elexis.core.model.IContact#getGroup <em>Group</em>}</li>
  *   <li>{@link ch.elexis.core.model.IContact#getPostalAddress <em>Postal Address</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IContact#getImage <em>Image</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIContact()
@@ -666,6 +667,32 @@ public interface IContact extends Identifiable, Deleteable, WithExtInfo {
 	 * @generated
 	 */
 	void setPostalAddress(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Image</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Image</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Image</em>' reference.
+	 * @see #setImage(IImage)
+	 * @see ch.elexis.core.model.ModelPackage#getIContact_Image()
+	 * @model
+	 * @generated
+	 */
+	IImage getImage();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IContact#getImage <em>Image</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Image</em>' reference.
+	 * @see #getImage()
+	 * @generated
+	 */
+	void setImage(IImage value);
 
 	/**
 	 * <!-- begin-user-doc -->

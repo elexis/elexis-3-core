@@ -62,6 +62,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IContact/address"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/group"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/postalAddress"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IContact/image"/>
       <genOperations ecoreOperation="model.ecore#//IContact/addAddress">
         <genParameters ecoreParameter="model.ecore#//IContact/addAddress/address"/>
       </genOperations>
@@ -74,6 +75,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPerson/firstName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPerson/lastName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPerson/maritalStatus"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IPerson/legalGuardian"/>
       <genOperations ecoreOperation="model.ecore#//IPerson/getAgeInYears"/>
       <genOperations ecoreOperation="model.ecore#//IPerson/getAgeAtIn">
         <genParameters ecoreParameter="model.ecore#//IPerson/getAgeAtIn/reference"/>
@@ -466,6 +468,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IImage/prefix"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IImage/title"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IImage/image"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IImage/mimeType"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//WithAssignableId">
       <genOperations ecoreOperation="model.ecore#//WithAssignableId/setId">

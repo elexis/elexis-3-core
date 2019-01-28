@@ -10,19 +10,20 @@ import org.junit.Test;
 import ch.elexis.core.test.AbstractTest;
 
 public class DbImageTest extends AbstractTest {
-	
+
 	@Test
-	public void createDeleteDbImage() throws IOException{
+	public void createDeleteDbImage() throws IOException {
 		IImage image = coreModelService.create(IImage.class);
 		image.setDate(LocalDate.now());
-		image.setTitle("RandomImage." + MimeType.png.name());
+		image.setTitle("RandomImage");
+		image.setMimeType(MimeType.png);
 		try (InputStream is = getClass().getClassLoader().getResourceAsStream("./elexis.png")) {
 			byte[] byteArray = IOUtils.toByteArray(is);
 			image.setImage(byteArray);
-			
+
 		}
 		coreModelService.save(image);
 		coreModelService.delete(image);
 	}
-	
+
 }

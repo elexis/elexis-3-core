@@ -13,6 +13,7 @@ package ch.elexis.core.types.impl;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.LabOrderState;
 import ch.elexis.core.model.MaritalStatus;
+import ch.elexis.core.model.MimeType;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.model.XidQuality;
 import ch.elexis.core.model.ch.BillingLaw;
@@ -258,6 +259,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EDataType maritalStatusEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType mimeTypeEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -606,6 +614,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EDataType getMimeType() {
+		return mimeTypeEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getResult() {
 		return resultEClass;
 	}
@@ -675,6 +693,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		chronoUnitEDataType = createEDataType(CHRONO_UNIT);
 		billingLawEDataType = createEDataType(BILLING_LAW);
 		maritalStatusEDataType = createEDataType(MARITAL_STATUS);
+		mimeTypeEDataType = createEDataType(MIME_TYPE);
 	}
 
 	/**
@@ -783,6 +802,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEDataType(chronoUnitEDataType, ChronoUnit.class, "ChronoUnit", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(billingLawEDataType, BillingLaw.class, "BillingLaw", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(maritalStatusEDataType, MaritalStatus.class, "MaritalStatus", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(mimeTypeEDataType, MimeType.class, "MimeType", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

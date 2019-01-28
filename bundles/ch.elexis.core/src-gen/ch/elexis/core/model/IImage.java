@@ -25,6 +25,7 @@ import java.time.LocalDate;
  *   <li>{@link ch.elexis.core.model.IImage#getPrefix <em>Prefix</em>}</li>
  *   <li>{@link ch.elexis.core.model.IImage#getTitle <em>Title</em>}</li>
  *   <li>{@link ch.elexis.core.model.IImage#getImage <em>Image</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IImage#getMimeType <em>Mime Type</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIImage()
@@ -135,5 +136,31 @@ public interface IImage extends Identifiable, Deleteable, WithAssignableId {
 	 * @generated
 	 */
 	void setImage(byte[] value);
+
+	/**
+	 * Returns the value of the '<em><b>Mime Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Mime Type</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Mime Type</em>' attribute.
+	 * @see #setMimeType(MimeType)
+	 * @see ch.elexis.core.model.ModelPackage#getIImage_MimeType()
+	 * @model dataType="ch.elexis.core.types.MimeType"
+	 * @generated
+	 */
+	MimeType getMimeType();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IImage#getMimeType <em>Mime Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Mime Type</em>' attribute.
+	 * @see #getMimeType()
+	 * @generated
+	 */
+	void setMimeType(MimeType value);
 
 } // IImage

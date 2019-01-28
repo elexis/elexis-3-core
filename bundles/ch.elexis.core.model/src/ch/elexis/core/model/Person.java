@@ -3,8 +3,11 @@ package ch.elexis.core.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 import ch.elexis.core.jpa.entities.Kontakt;
+import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
+import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.Gender;
 
 public class Person extends Contact implements IPerson {
@@ -105,5 +108,26 @@ public class Person extends Contact implements IPerson {
 	public void setMaritalStatus(MaritalStatus maritalStatus) {
 		setExtInfo(PatientConstants.FLD_EXTINFO_MARITAL_STATUS,
 				(maritalStatus != null) ? Integer.toString(maritalStatus.numericValue()) : null);
+	}
+
+	@Override
+	public IPerson getLegalGuardian() {
+		Object legalGuardianId = getExtInfo(PatientConstants.FLD_EXTINFO_LEGAL_GUARDIAN);
+		if (legalGuardianId instanceof String) {
+			Optional<IPerson> owner =
+					CoreModelServiceHolder.get().load((String) legalGuardianId, IPerson.class);
+			return owner.orElse(null);
+		}
+		return null;
+	}
+
+	@Override
+	public void setLegalGuardian(IPerson value) {
+		if (value instanceof AbstractIdDeleteModelAdapter) {
+			setExtInfo(PatientConstants.FLD_EXTINFO_LEGAL_GUARDIAN, value.getId());
+		} else if (value == null) {
+			setExtInfo(PatientConstants.FLD_EXTINFO_LEGAL_GUARDIAN, null);
+		}
+		
 	}
 }

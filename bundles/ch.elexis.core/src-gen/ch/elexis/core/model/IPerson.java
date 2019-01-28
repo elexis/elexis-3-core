@@ -31,6 +31,7 @@ import ch.elexis.core.types.Gender;
  *   <li>{@link ch.elexis.core.model.IPerson#getFirstName <em>First Name</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPerson#getLastName <em>Last Name</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPerson#getMaritalStatus <em>Marital Status</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IPerson#getLegalGuardian <em>Legal Guardian</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIPerson()
@@ -216,6 +217,32 @@ public interface IPerson extends IContact {
 	 * @generated
 	 */
 	void setMaritalStatus(MaritalStatus value);
+
+	/**
+	 * Returns the value of the '<em><b>Legal Guardian</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Legal Guardian</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Legal Guardian</em>' reference.
+	 * @see #setLegalGuardian(IPerson)
+	 * @see ch.elexis.core.model.ModelPackage#getIPerson_LegalGuardian()
+	 * @model
+	 * @generated
+	 */
+	IPerson getLegalGuardian();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IPerson#getLegalGuardian <em>Legal Guardian</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Legal Guardian</em>' reference.
+	 * @see #getLegalGuardian()
+	 * @generated
+	 */
+	void setLegalGuardian(IPerson value);
 
 	/**
 	 * <!-- begin-user-doc -->

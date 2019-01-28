@@ -78,6 +78,7 @@
         eType="#//IAddress"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="group" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="postalAddress" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="image" eType="#//IImage"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IPerson" abstract="true" interface="true"
       eSuperTypes="#//IContact">
@@ -105,6 +106,7 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maritalStatus" eType="ecore:EDataType types.ecore#//MaritalStatus"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="legalGuardian" eType="#//IPerson"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IOrganization" abstract="true" interface="true"
       eSuperTypes="#//IContact">
@@ -679,6 +681,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="prefix" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="image" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EByteArray"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="mimeType" eType="ecore:EDataType types.ecore#//MimeType"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="WithAssignableId" abstract="true" interface="true">
     <eOperations name="setId">

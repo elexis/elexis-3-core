@@ -79,4 +79,5 @@
   <eClassifiers xsi:type="ecore:EDataType" name="ChronoUnit" instanceClassName="java.time.temporal.ChronoUnit"/>
   <eClassifiers xsi:type="ecore:EDataType" name="BillingLaw" instanceClassName="ch.elexis.core.model.ch.BillingLaw"/>
   <eClassifiers xsi:type="ecore:EDataType" name="MaritalStatus" instanceClassName="ch.elexis.core.model.MaritalStatus"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="MimeType" instanceClassName="ch.elexis.core.model.MimeType"/>
 </ecore:EPackage>

@@ -412,13 +412,22 @@ public interface ModelPackage extends EPackage {
 	int ICONTACT__POSTAL_ADDRESS = IDENTIFIABLE_FEATURE_COUNT + 24;
 
 	/**
+	 * The feature id for the '<em><b>Image</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICONTACT__IMAGE = IDENTIFIABLE_FEATURE_COUNT + 25;
+
+	/**
 	 * The number of structural features of the '<em>IContact</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 25;
+	int ICONTACT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 26;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}' class.
@@ -656,6 +665,15 @@ public interface ModelPackage extends EPackage {
 	int IPERSON__POSTAL_ADDRESS = ICONTACT__POSTAL_ADDRESS;
 
 	/**
+	 * The feature id for the '<em><b>Image</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPERSON__IMAGE = ICONTACT__IMAGE;
+
+	/**
 	 * The feature id for the '<em><b>Date Of Birth</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -719,13 +737,22 @@ public interface ModelPackage extends EPackage {
 	int IPERSON__MARITAL_STATUS = ICONTACT_FEATURE_COUNT + 6;
 
 	/**
+	 * The feature id for the '<em><b>Legal Guardian</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPERSON__LEGAL_GUARDIAN = ICONTACT_FEATURE_COUNT + 7;
+
+	/**
 	 * The number of structural features of the '<em>IPerson</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IPERSON_FEATURE_COUNT = ICONTACT_FEATURE_COUNT + 7;
+	int IPERSON_FEATURE_COUNT = ICONTACT_FEATURE_COUNT + 8;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IOrganization <em>IOrganization</em>}' class.
@@ -961,6 +988,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IORGANIZATION__POSTAL_ADDRESS = ICONTACT__POSTAL_ADDRESS;
+
+	/**
+	 * The feature id for the '<em><b>Image</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__IMAGE = ICONTACT__IMAGE;
 
 	/**
 	 * The feature id for the '<em><b>Insurance Xml Name</b></em>' attribute.
@@ -1225,6 +1261,15 @@ public interface ModelPackage extends EPackage {
 	int ILABORATORY__POSTAL_ADDRESS = IORGANIZATION__POSTAL_ADDRESS;
 
 	/**
+	 * The feature id for the '<em><b>Image</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__IMAGE = IORGANIZATION__IMAGE;
+
+	/**
 	 * The feature id for the '<em><b>Insurance Xml Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1487,6 +1532,15 @@ public interface ModelPackage extends EPackage {
 	int IPATIENT__POSTAL_ADDRESS = IPERSON__POSTAL_ADDRESS;
 
 	/**
+	 * The feature id for the '<em><b>Image</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPATIENT__IMAGE = IPERSON__IMAGE;
+
+	/**
 	 * The feature id for the '<em><b>Date Of Birth</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1548,6 +1602,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IPATIENT__MARITAL_STATUS = IPERSON__MARITAL_STATUS;
+
+	/**
+	 * The feature id for the '<em><b>Legal Guardian</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPATIENT__LEGAL_GUARDIAN = IPERSON__LEGAL_GUARDIAN;
 
 	/**
 	 * The feature id for the '<em><b>Diagnosen</b></em>' attribute.
@@ -1846,6 +1909,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IMANDATOR__POSTAL_ADDRESS = ICONTACT__POSTAL_ADDRESS;
+
+	/**
+	 * The feature id for the '<em><b>Image</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMANDATOR__IMAGE = ICONTACT__IMAGE;
 
 	/**
 	 * The feature id for the '<em><b>Biller</b></em>' reference.
@@ -5023,13 +5095,22 @@ public interface ModelPackage extends EPackage {
 	int IIMAGE__IMAGE = IDENTIFIABLE_FEATURE_COUNT + 4;
 
 	/**
+	 * The feature id for the '<em><b>Mime Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IIMAGE__MIME_TYPE = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
 	 * The number of structural features of the '<em>IImage</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IIMAGE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 5;
+	int IIMAGE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The number of structural features of the '<em>With Assignable Id</em>' class.
@@ -5721,6 +5802,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIContact_PostalAddress();
 
 	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IContact#getImage <em>Image</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Image</em>'.
+	 * @see ch.elexis.core.model.IContact#getImage()
+	 * @see #getIContact()
+	 * @generated
+	 */
+	EReference getIContact_Image();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5806,6 +5898,17 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getIPerson_MaritalStatus();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IPerson#getLegalGuardian <em>Legal Guardian</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Legal Guardian</em>'.
+	 * @see ch.elexis.core.model.IPerson#getLegalGuardian()
+	 * @see #getIPerson()
+	 * @generated
+	 */
+	EReference getIPerson_LegalGuardian();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IOrganization <em>IOrganization</em>}'.
@@ -8381,6 +8484,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIImage_Image();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IImage#getMimeType <em>Mime Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Mime Type</em>'.
+	 * @see ch.elexis.core.model.IImage#getMimeType()
+	 * @see #getIImage()
+	 * @generated
+	 */
+	EAttribute getIImage_MimeType();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.WithAssignableId <em>With Assignable Id</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9120,6 +9234,14 @@ public interface ModelPackage extends EPackage {
 		EAttribute ICONTACT__POSTAL_ADDRESS = eINSTANCE.getIContact_PostalAddress();
 
 		/**
+		 * The meta object literal for the '<em><b>Image</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ICONTACT__IMAGE = eINSTANCE.getIContact_Image();
+
+		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -9184,6 +9306,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IPERSON__MARITAL_STATUS = eINSTANCE.getIPerson_MaritalStatus();
+
+		/**
+		 * The meta object literal for the '<em><b>Legal Guardian</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IPERSON__LEGAL_GUARDIAN = eINSTANCE.getIPerson_LegalGuardian();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IOrganization <em>IOrganization</em>}' class.
@@ -11178,6 +11308,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IIMAGE__IMAGE = eINSTANCE.getIImage_Image();
+
+		/**
+		 * The meta object literal for the '<em><b>Mime Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IIMAGE__MIME_TYPE = eINSTANCE.getIImage_MimeType();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.WithAssignableId <em>With Assignable Id</em>}' class.

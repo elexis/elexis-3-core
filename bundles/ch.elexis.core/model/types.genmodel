@@ -67,6 +67,7 @@
     <genDataTypes ecoreDataType="types.ecore#//ChronoUnit"/>
     <genDataTypes ecoreDataType="types.ecore#//BillingLaw"/>
     <genDataTypes ecoreDataType="types.ecore#//MaritalStatus"/>
+    <genDataTypes ecoreDataType="types.ecore#//MimeType"/>
     <genClasses image="false" ecoreClass="types.ecore#//Comparable">
       <genTypeParameters ecoreTypeParameter="types.ecore#//Comparable/T"/>
     </genClasses>
