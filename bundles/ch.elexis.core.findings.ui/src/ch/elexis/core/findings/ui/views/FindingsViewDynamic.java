@@ -95,7 +95,6 @@ public class FindingsViewDynamic extends ViewPart implements IActivationListener
 	public void createPartControl(Composite parent){
 		Composite main = new Composite(parent, SWT.NONE);
 		main.setLayout(SWTHelper.createGridLayout(true, 1));
-		main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		codeSelectionComposite = new CodesSelectionComposite(main, SWT.NONE);
 		codeSelectionComposite
