@@ -115,7 +115,7 @@ public class DBConnection implements Serializable {
 	 * @throws JAXBException
 	 */
 	public void marshall(OutputStream os) throws JAXBException {
-		JAXBContext jaxbContext = JAXBContext.newInstance("ch.elexis.core.common", getClass().getClassLoader());
+		JAXBContext jaxbContext = JAXBContext.newInstance(DBConnection.class);
 		Marshaller m = jaxbContext.createMarshaller();
 		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		m.marshal(this, os);
@@ -129,7 +129,7 @@ public class DBConnection implements Serializable {
 	 * @throws JAXBException
 	 */
 	public static DBConnection unmarshall(InputStream is) throws JAXBException {
-		JAXBContext jaxbContext = JAXBContext.newInstance("ch.elexis.core.common", DBConnection.class.getClassLoader());
+		JAXBContext jaxbContext = JAXBContext.newInstance(DBConnection.class);
 		Unmarshaller um = jaxbContext.createUnmarshaller();
 		Object o = um.unmarshal(is);
 		return (DBConnection) o;
