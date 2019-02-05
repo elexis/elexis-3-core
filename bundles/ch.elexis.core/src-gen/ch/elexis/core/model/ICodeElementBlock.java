@@ -29,7 +29,7 @@ import java.util.List;
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface ICodeElementBlock {
+public interface ICodeElementBlock extends Identifiable, Deleteable, ICodeElement {
 	/**
 	 * Returns the value of the '<em><b>Elements</b></em>' reference list.
 	 * The list contents are of type {@link ch.elexis.core.model.ICodeElement}.
@@ -61,5 +61,13 @@ public interface ICodeElementBlock {
 	 * @generated
 	 */
 	List<ICodeElement> getElementReferences();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model type="ch.elexis.core.types.List&lt;ch.elexis.core.model.ICodeElement&gt;" many="false" elementsType="ch.elexis.core.types.List&lt;ch.elexis.core.model.ICodeElement&gt;" elementsMany="false"
+	 * @generated
+	 */
+	List<ICodeElement> getDiffToReferences(List<ICodeElement> elements);
 
 } // ICodeElementBlock

@@ -39,14 +39,14 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.util.viewers.CommonViewerContentProvider;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
-import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ICommonViewerContentProvider;
 import ch.elexis.core.ui.views.Messages;
 import ch.elexis.data.Query;
 import ch.rgw.tools.StringTool;
 
-public class PatListeContentProvider implements ICommonViewerContentProvider, ILazyContentProvider {
-	CommonViewer viewer;
+public class PatListeContentProvider extends CommonViewerContentProvider
+		implements ILazyContentProvider {
 	Object[] pats;
 	boolean bValid = false;
 	boolean bUpdating = false;
@@ -57,7 +57,7 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 	ViewPart site;
 	
 	public PatListeContentProvider(CommonViewer cv, String[] fieldsToOrder, ViewPart s){
-		viewer = cv;
+		super(cv);
 		site = s;
 		updateFields(fieldsToOrder);
 	}
@@ -79,18 +79,6 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 		firstOrder = orderFields[0];
 	}
 	
-	@Override
-	public void startListening(){
-		viewer.getConfigurer().getControlFieldProvider().addChangeListener(this);
-	}
-	
-	@Override
-	public void stopListening(){
-		if (viewer != null) {
-			viewer.getConfigurer().getControlFieldProvider().removeChangeListener(this);
-		}
-	}
-	
 	public void setFilter(PatListFilterBox f){
 		//		qbe.addPostQueryFilter(f);
 		pfilter = f;
@@ -103,15 +91,21 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 		bValid = false;
 	}
 	
+	@Override
+	protected IQuery<?> getBaseQuery(){
+		return CoreModelServiceHolder.get().getQuery(IPatient.class);
+	}
+	
 	/**
 	 * @since 3.2
 	 */
 	public void syncRefresh() {
-		IQuery<IPatient> patientQuery = CoreModelServiceHolder.get().getQuery(IPatient.class);
+		@SuppressWarnings("unchecked")
+		IQuery<IPatient> patientQuery = (IQuery<IPatient>) getBaseQuery();
 		// TODO implement as precondition?
 		patientQuery.and(ModelPackage.Literals.ICONTACT__PATIENT, COMPARATOR.EQUALS, true);
 		
-		viewer.getConfigurer().getControlFieldProvider().setQuery(patientQuery);
+		commonViewer.getConfigurer().getControlFieldProvider().setQuery(patientQuery);
 		String[] actualOrder;
 		int idx = StringTool.getIndex(orderFields, firstOrder);
 		if ((idx == -1) || (idx == 0)) {
@@ -141,7 +135,7 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 			
 			@Override
 			public void run(){
-				TableViewer tv = (TableViewer) viewer.getViewerWidget();
+				TableViewer tv = (TableViewer) commonViewer.getViewerWidget();
 				tv.setItemCount(pats.length);
 				bValid = true;
 				if (pfilter != null) {
@@ -166,7 +160,7 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 			pats = new String[] {
 				Messages.PatListeContentProvider_LoadingData
 			};
-			((TableViewer) viewer.getViewerWidget()).setItemCount(1);
+			((TableViewer) commonViewer.getViewerWidget()).setItemCount(1);
 		}
 		
 		if (!CoreHub.acl.request(AccessControlDefaults.PATIENT_DISPLAY)) {
@@ -174,7 +168,6 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 		}
 		
 		Job job = new Job(Messages.PatListeContentProvider_LoadingPatients) {
-			
 			@Override
 			protected IStatus run(IProgressMonitor monitor){
 				monitor.beginTask(Messages.PatListeContentProvider_LoadPatients,
@@ -184,11 +177,11 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 						return Status.CANCEL_STATUS;
 					}
 				}
+				// perform actual loading
 				syncRefresh();
 				monitor.done();
 				return Status.OK_STATUS;
 			}
-			
 		};
 		job.setPriority(Job.SHORT);
 		job.setUser(false);
@@ -204,24 +197,19 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 	}
 	
 	@Override
+	public void changed(HashMap<String, String> values){
+		bValid = false;
+		// trigger loading pats
+		getElements(null);
+	}
+	
+	@Override
 	public void dispose(){
 		stopListening();
 	}
 	
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput){}
-	
-	@Override
-	public void changed(HashMap<String, String> vals){
-		bValid = false;
-		getElements(viewer);
-		if (viewer.getConfigurer().getControlFieldProvider().isEmpty()) {
-			viewer.notify(CommonViewer.Message.empty);
-		} else {
-			viewer.notify(CommonViewer.Message.notempty);
-		}
-		// viewer.notify(CommonViewer.Message.update);
-	}
 	
 	@Override
 	public void reorder(String field){
@@ -242,10 +230,10 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 	@Override
 	public void updateElement(int index){
 		if (!bValid) {
-			getElements(viewer);
+			getElements(commonViewer);
 		}
 		
-		TableViewer tv = (TableViewer) viewer.getViewerWidget();
+		TableViewer tv = (TableViewer) commonViewer.getViewerWidget();
 		if (pats.length > index) {
 			tv.replace(pats[index], index);
 		} else {
@@ -277,7 +265,7 @@ public class PatListeContentProvider implements ICommonViewerContentProvider, IL
 		}
 		temp.add(newObject);
 		pats = temp.toArray();
-		((TableViewer) viewer.getViewerWidget()).setItemCount(pats.length);
+		((TableViewer) commonViewer.getViewerWidget()).setItemCount(pats.length);
 	}
 	
 	@Override

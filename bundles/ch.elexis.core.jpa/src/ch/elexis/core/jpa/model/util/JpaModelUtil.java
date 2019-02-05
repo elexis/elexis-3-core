@@ -240,4 +240,14 @@ public class JpaModelUtil {
 	public static byte[] getCompressed(String value){
 		return CompEx.Compress(value, CompEx.ZIP);
 	}
+	
+	/**
+	 * Compress the byte array using the Elexis {@link CompEx} tool.
+	 * 
+	 * @param comp
+	 * @return
+	 */
+	public static byte[] getCompressed(byte[] value){
+		return CompEx.Compress(value, CompEx.ZIP);
+	}
 }

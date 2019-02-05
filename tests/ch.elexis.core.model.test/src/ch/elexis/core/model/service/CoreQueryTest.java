@@ -6,7 +6,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.junit.After;
@@ -19,6 +21,7 @@ import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class CoreQueryTest {
@@ -210,6 +213,35 @@ public class CoreQueryTest {
 		assertEquals(Arrays.asList(new String[] {
 			"test1", "test2"
 		}), collect);
+	}
+	
+	@Test
+	public void queryOrderBy(){
+		createContact("test1", "test1");
+		createContact("test2", "test2");
+		createContact("test3", "test3");
+		createContact("test4", "test4");
+		
+		IQuery<IContact> query = modelService.getQuery(IContact.class);
+		query.orderBy(ModelPackage.Literals.ICONTACT__DESCRIPTION2, ORDER.ASC);
+		List<IContact> ordered = query.execute();
+		assertEquals("test1", ordered.get(0).getDescription1());
+		
+		query = modelService.getQuery(IContact.class);
+		query.orderBy(ModelPackage.Literals.ICONTACT__DESCRIPTION2, ORDER.DESC);
+		ordered = query.execute();
+		assertEquals("test4", ordered.get(0).getDescription1());
+		
+		query = modelService.getQuery(IContact.class);
+		Map<String, Object> caseContext = new HashMap<>();
+		caseContext.put("when|description2|equals|test3", Integer.valueOf(1));
+		caseContext.put("otherwise", Integer.valueOf(2));
+		query.orderBy(caseContext, ORDER.ASC);
+		query.orderBy(ModelPackage.Literals.ICONTACT__DESCRIPTION2, ORDER.DESC);
+		ordered = query.execute();
+		assertEquals("test3", ordered.get(0).getDescription1());
+		assertEquals("test4", ordered.get(1).getDescription1());
+		assertEquals("test2", ordered.get(2).getDescription1());
 	}
 	
 	private void clearContacts(){

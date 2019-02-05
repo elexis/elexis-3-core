@@ -7,7 +7,7 @@ import ch.elexis.core.interfaces.ILocalizedEnum;
 public enum ArticleSubTyp implements ILocalizedEnum {
 	
 		UNKNOWN('U'), PHARMA('P'), NONPHARMA('N'), MAGISTERY('M'), COMPLEMENTARY('C'),
-		ADDITIVE('A');
+		ADDITIVE('A'), PRODUCT('X');
 	
 	final char type;
 	
