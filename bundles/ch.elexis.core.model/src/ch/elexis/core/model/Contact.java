@@ -315,6 +315,8 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 			image.setId(getId());
 			image.setTitle("ContactImage");
 		}
+		image.setDate(value.getDate());
+		image.setPrefix("ch.elexis.data.Kontakt");
 		image.setImage(value.getImage());
 		image.setMimeType(value.getMimeType());
 		CoreModelServiceHolder.get().save(image);
