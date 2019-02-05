@@ -292,7 +292,18 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ICodeElementBlock" abstract="true" interface="true">
+  <eClassifiers xsi:type="ecore:EClass" name="ICodeElementBlock" abstract="true" interface="true"
+      eSuperTypes="#//Identifiable #//Deleteable #//ICodeElement">
+    <eOperations name="getDiffToReferences">
+      <eGenericType eClassifier="ecore:EClass types.ecore#//List">
+        <eTypeArguments eClassifier="#//ICodeElement"/>
+      </eGenericType>
+      <eParameters name="elements">
+        <eGenericType eClassifier="ecore:EClass types.ecore#//List">
+          <eTypeArguments eClassifier="#//ICodeElement"/>
+        </eGenericType>
+      </eParameters>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="elements" upperBound="-1"
         eType="#//ICodeElement"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="elementReferences" upperBound="-1"
@@ -733,4 +744,6 @@
         eType="#//IPrescription"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="document" eType="#//IDocumentLetter"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IBlobSecondary" abstract="true" interface="true"
+      eSuperTypes="#//IBlob"/>
 </ecore:EPackage>

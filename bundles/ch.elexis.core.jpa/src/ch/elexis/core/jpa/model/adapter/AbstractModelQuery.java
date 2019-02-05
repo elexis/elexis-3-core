@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Stack;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaBuilder.Case;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
@@ -449,6 +451,59 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 			// feature could not be resolved, mapping?
 			throw new IllegalStateException("Could not resolve attribute [" + entityAttributeName
 				+ "] of entity [" + entityClazz + "]");
+		}
+	}
+	
+	@SuppressWarnings({
+		"rawtypes", "unchecked"
+	})
+	private Case<Object> getCaseExpression(Map<String, Object> caseContext){
+		Case<Object> caseExpression = criteriaBuilder.selectCase();
+		for (String caseInfo : caseContext.keySet()) {
+			caseInfo = caseInfo.toLowerCase();
+			Object value = caseContext.get(caseInfo);
+			if (caseInfo.startsWith("when")) {
+				String[] parts = caseInfo.split("\\|");
+				if (parts.length == 4) {
+					Optional<SingularAttribute> attribute =
+						resolveAttribute(entityClazz.getName(), parts[1]);
+					if (attribute.isPresent()) {
+						if ("equals".equals(parts[2])) {
+							caseExpression.when(
+								criteriaBuilder.equal(rootQuery.get(attribute.get()), parts[3]),
+								value);
+						} else if ("like".equals(parts[2])) {
+							caseExpression.when(
+								criteriaBuilder.like(rootQuery.get(attribute.get()), parts[3]),
+								value);
+						}
+					} else {
+						throw new IllegalStateException(
+							"[" + parts[1] + "] is not a known attribute");
+					}
+				} else {
+					throw new IllegalStateException("[" + caseInfo + "] is not in a known format");
+				}
+			} else if (caseInfo.startsWith("otherwise")) {
+				caseExpression.otherwise(value);
+			}
+		}
+		return caseExpression;
+	}
+	
+	@Override
+	public void orderBy(Map<String, Object> caseContext, ORDER direction){
+		if(caseContext != null && !caseContext.isEmpty()) {
+			Case<Object> caseExpression = getCaseExpression(caseContext);
+			Order orderBy = null;
+			if (direction == ORDER.ASC) {
+				orderBy = criteriaBuilder.asc(caseExpression);
+			} else if (direction == ORDER.DESC) {
+				orderBy = criteriaBuilder.desc(caseExpression);
+			}
+			if (orderBy != null) {
+				orderByList.add(orderBy);
+			}
 		}
 	}
 	

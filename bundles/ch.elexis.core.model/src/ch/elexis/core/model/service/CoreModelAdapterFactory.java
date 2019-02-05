@@ -33,6 +33,7 @@ import ch.elexis.core.model.IArticleDefaultSignature;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IBillingSystemFactor;
 import ch.elexis.core.model.IBlob;
+import ch.elexis.core.model.IBlobSecondary;
 import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
@@ -108,6 +109,8 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 			ch.elexis.core.jpa.entities.Xid.class));
 		addMapping(new MappingEntry(IBlob.class, ch.elexis.core.model.Blob.class,
 			ch.elexis.core.jpa.entities.Heap.class));
+		addMapping(new MappingEntry(IBlobSecondary.class, ch.elexis.core.model.BlobSecondary.class,
+			ch.elexis.core.jpa.entities.Heap2.class));
 		
 		addMapping(new MappingEntry(IContact.class, Contact.class, Kontakt.class));
 		addMapping(new MappingEntry(IPatient.class, Patient.class, Kontakt.class)

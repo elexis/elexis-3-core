@@ -1,5 +1,6 @@
 package ch.elexis.core.jpa.model.adapter;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.stream.Stream;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.eclipse.persistence.config.HintValues;
 import org.eclipse.persistence.config.QueryHints;
 import org.osgi.service.event.Event;
@@ -77,6 +79,35 @@ public abstract class AbstractModelService implements IModelService {
 		EntityWithId reloadedDbObject = em.find(dbObject.getClass(), dbObject.getId(), queryHints);
 		if (reloadedDbObject != null) {
 			setDbObject(identifiable, reloadedDbObject);
+		}
+	}
+	
+	@Override
+	public Object getEntityProperty(String propertyName, Identifiable identifiable){
+		EntityWithId dbObject = getDbObject(identifiable).orElse(null);
+		if (dbObject != null) {
+			try {
+				return BeanUtils.getProperty(dbObject, propertyName);
+			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+				LoggerFactory.getLogger(getClass()).error(
+					"Could not get property [" + propertyName + "] of entity [" + dbObject + "]",
+					e);
+			}
+		}
+		return null;
+	}
+	
+	@Override
+	public void setEntityProperty(String propertyName, Object value, Identifiable identifiable){
+		EntityWithId dbObject = getDbObject(identifiable).orElse(null);
+		if (dbObject != null) {
+			try {
+				BeanUtils.setProperty(dbObject, propertyName, value);
+			} catch (IllegalAccessException | InvocationTargetException e) {
+				LoggerFactory.getLogger(getClass()).error(
+					"Could not set property [" + propertyName + "] of entity [" + dbObject + "]",
+					e);
+			}
 		}
 	}
 	

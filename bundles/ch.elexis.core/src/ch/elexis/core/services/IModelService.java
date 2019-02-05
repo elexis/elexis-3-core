@@ -224,4 +224,26 @@ public interface IModelService {
 	 * @param Identifiable
 	 */
 	public void refresh(Identifiable identifiable);
+	
+	/**
+	 * Get the value from a property of the entity of the {@link Identifiable}. </br>
+	 * <b>IMPORTANT</b> this method exists for compatibility with older Elexis code, therefore it
+	 * <b>should only be used in such cases</b>.
+	 * 
+	 * @param propertyName
+	 * @param identifiable
+	 * @return
+	 */
+	public Object getEntityProperty(String propertyName, Identifiable identifiable);
+	
+	/**
+	 * Set the value of a property of the entity of the {@link Identifiable}. </br>
+	 * <b>IMPORTANT</b> this method exists for compatibility with older Elexis code, therefore it
+	 * <b>should only be used in such cases</b>.
+	 * 
+	 * @param propertyName
+	 * @param identifiable
+	 * @return
+	 */
+	public void setEntityProperty(String propertyName, Object value, Identifiable identifiable);
 }

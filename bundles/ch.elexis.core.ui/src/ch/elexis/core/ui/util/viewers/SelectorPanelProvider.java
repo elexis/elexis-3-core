@@ -19,6 +19,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
@@ -50,12 +51,15 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 	private SelectorPanel panel;
 	private FieldDescriptor<?>[] fields;
 	private boolean bExclusive = false;
-	private IAction[] actions = null;;
+	private IAction[] actions = null;
+	
+	private int changeDelay;
 	
 	public SelectorPanelProvider(FieldDescriptor<?>[] fields,
 		boolean bExlusive){
 		this.fields = fields;
 		this.bExclusive = bExlusive;
+		this.changeDelay = -1;
 	}
 	
 	public void addActions(IAction... actions){
@@ -140,7 +144,26 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 		}
 	}
 	
+	private volatile Runnable delayedChanged;
+	
 	public void fireChangedEvent(){
+		if (changeDelay > 0) {
+			if (delayedChanged == null) {
+				delayedChanged = new Runnable() {
+					@Override
+					public void run(){
+						doFireChangedEvent();
+						delayedChanged = null;
+					}
+				};
+				Display.getDefault().timerExec(changeDelay, delayedChanged);
+			}
+		} else {
+			doFireChangedEvent();
+		}
+	}
+	
+	private void doFireChangedEvent(){
 		HashMap<String, String> hv = panel.getValues();
 		for (ControlFieldListener cl : listeners) {
 			cl.changed(hv);
@@ -258,4 +281,13 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 		
 	}
 	
+	/**
+	 * Set the delay of calling {@link SelectorPanelProvider#fireChangedEvent()}. Setting to 0 or -1
+	 * means no delay.
+	 * 
+	 * @param delay
+	 */
+	public void setChangeDelay(int delay){
+		this.changeDelay = delay;
+	}
 }

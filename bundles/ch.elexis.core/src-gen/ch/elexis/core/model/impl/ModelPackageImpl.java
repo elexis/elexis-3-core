@@ -22,6 +22,7 @@ import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IBillingSystem;
 import ch.elexis.core.model.IBillingSystemFactor;
 import ch.elexis.core.model.IBlob;
+import ch.elexis.core.model.IBlobSecondary;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.ICodeElementBlock;
@@ -479,6 +480,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass iRecipeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iBlobSecondaryEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -3780,6 +3788,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getIBlobSecondary() {
+		return iBlobSecondaryEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public ModelFactory getModelFactory() {
 		return (ModelFactory)getEFactoryInstance();
 	}
@@ -4181,6 +4199,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iRecipeEClass, IRECIPE__DATE);
 		createEReference(iRecipeEClass, IRECIPE__PRESCRIPTIONS);
 		createEReference(iRecipeEClass, IRECIPE__DOCUMENT);
+
+		iBlobSecondaryEClass = createEClass(IBLOB_SECONDARY);
 	}
 
 	/**
@@ -4249,6 +4269,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iStickerEClass.getEGenericSuperTypes().add(g1);
 		g1 = createEGenericType(this.getIdentifiable());
 		iStickerEClass.getEGenericSuperTypes().add(g1);
+		iCodeElementBlockEClass.getESuperTypes().add(this.getIdentifiable());
+		iCodeElementBlockEClass.getESuperTypes().add(this.getDeleteable());
+		iCodeElementBlockEClass.getESuperTypes().add(this.getICodeElement());
 		iBillableEClass.getESuperTypes().add(this.getICodeElement());
 		iBillableEClass.getESuperTypes().add(this.getIdentifiable());
 		iServiceEClass.getESuperTypes().add(this.getIBillable());
@@ -4312,6 +4335,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iRightEClass.getESuperTypes().add(this.getWithAssignableId());
 		iRecipeEClass.getESuperTypes().add(this.getIdentifiable());
 		iRecipeEClass.getESuperTypes().add(this.getDeleteable());
+		iBlobSecondaryEClass.getESuperTypes().add(this.getIBlob());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(identifiableEClass, Identifiable.class, "Identifiable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -4554,6 +4578,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEClass(iCodeElementBlockEClass, ICodeElementBlock.class, "ICodeElementBlock", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getICodeElementBlock_Elements(), this.getICodeElement(), null, "elements", null, 0, -1, ICodeElementBlock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getICodeElementBlock_ElementReferences(), this.getICodeElement(), null, "elementReferences", null, 0, -1, ICodeElementBlock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		op = addEOperation(iCodeElementBlockEClass, null, "getDiffToReferences", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(theTypesPackage.getList());
+		g2 = createEGenericType(this.getICodeElement());
+		g1.getETypeArguments().add(g2);
+		addEParameter(op, g1, "elements", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(theTypesPackage.getList());
+		g2 = createEGenericType(this.getICodeElement());
+		g1.getETypeArguments().add(g2);
+		initEOperation(op, g1);
 
 		initEClass(iBillableEClass, IBillable.class, "IBillable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -4865,6 +4899,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		op = addEOperation(iRecipeEClass, null, "removePrescription", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIPrescription(), "prescription", 1, 1, IS_UNIQUE, IS_ORDERED);
+
+		initEClass(iBlobSecondaryEClass, IBlobSecondary.class, "IBlobSecondary", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

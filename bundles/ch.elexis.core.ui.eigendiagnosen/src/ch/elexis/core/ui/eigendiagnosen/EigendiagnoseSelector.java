@@ -30,7 +30,7 @@ import ch.elexis.core.model.IDiagnosisTree;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.ui.util.viewers.AbstractCommonViewerContentProvider;
+import ch.elexis.core.ui.util.viewers.CommonViewerContentProvider;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.DefaultControlFieldProvider;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
@@ -94,7 +94,7 @@ public class EigendiagnoseSelector extends CodeSelectorFactory {
 		}
 	}
 	
-	private class EigendiagnoseContentProvider extends AbstractCommonViewerContentProvider
+	private class EigendiagnoseContentProvider extends CommonViewerContentProvider
 			implements ITreeContentProvider {
 		
 		public EigendiagnoseContentProvider(CommonViewer commonViewer){
@@ -102,10 +102,16 @@ public class EigendiagnoseSelector extends CodeSelectorFactory {
 		}
 		
 		@Override
+		protected IQuery<?> getBaseQuery(){
+			return ModelServiceHolder.get().getQuery(IDiagnosisTree.class);
+		}
+		
+		@Override
 		public Object[] getElements(Object inputElement){
 			// CommonViewer inputElement can be ignored
 			List<IDiagnosisTree> roots = Collections.emptyList();
-			IQuery<IDiagnosisTree> query = ModelServiceHolder.get().getQuery(IDiagnosisTree.class);
+			@SuppressWarnings("unchecked")
+			IQuery<IDiagnosisTree> query = (IQuery<IDiagnosisTree>) getBaseQuery();
 			query.and("id", COMPARATOR.NOT_EQUALS, "VERSION");
 			if (hasActiveFilter(fieldFilterValues)) {
 				query.startGroup();

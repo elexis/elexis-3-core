@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.ui.util.GenericObjectDragSource;
 import ch.elexis.core.ui.util.Messages;
 import ch.elexis.core.ui.util.PersistentObjectDragSource.ISelectionRenderer;
@@ -183,6 +184,12 @@ public class ViewerConfigurer {
 		 */
 		public void setQuery(Query<? extends PersistentObject> q);
 		
+		/**
+		 * Apply the dbfields of the {@link ControlFieldProvider} as {@link COMPARATOR#LIKE} where
+		 * clauses joined by AND to the query.
+		 * 
+		 * @param query
+		 */
 		public void setQuery(IQuery<?> query);
 		
 		/** Einen Filter erstellen, der den momentanen Bedingungen entspricht */

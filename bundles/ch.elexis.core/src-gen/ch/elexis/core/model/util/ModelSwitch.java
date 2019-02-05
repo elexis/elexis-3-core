@@ -243,6 +243,9 @@ public class ModelSwitch<T1> extends Switch<T1> {
 			case ModelPackage.ICODE_ELEMENT_BLOCK: {
 				ICodeElementBlock iCodeElementBlock = (ICodeElementBlock)theEObject;
 				T1 result = caseICodeElementBlock(iCodeElementBlock);
+				if (result == null) result = caseIdentifiable(iCodeElementBlock);
+				if (result == null) result = caseDeleteable(iCodeElementBlock);
+				if (result == null) result = caseICodeElement(iCodeElementBlock);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -532,6 +535,16 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				T1 result = caseIRecipe(iRecipe);
 				if (result == null) result = caseIdentifiable(iRecipe);
 				if (result == null) result = caseDeleteable(iRecipe);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IBLOB_SECONDARY: {
+				IBlobSecondary iBlobSecondary = (IBlobSecondary)theEObject;
+				T1 result = caseIBlobSecondary(iBlobSecondary);
+				if (result == null) result = caseIBlob(iBlobSecondary);
+				if (result == null) result = caseIdentifiable(iBlobSecondary);
+				if (result == null) result = caseDeleteable(iBlobSecondary);
+				if (result == null) result = caseWithAssignableId(iBlobSecondary);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1361,6 +1374,21 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIRecipe(IRecipe object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IBlob Secondary</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IBlob Secondary</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIBlobSecondary(IBlobSecondary object) {
 		return null;
 	}
 

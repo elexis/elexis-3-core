@@ -227,6 +227,9 @@
     <genClasses image="false" ecoreClass="model.ecore#//ICodeElementBlock">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ICodeElementBlock/elements"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ICodeElementBlock/elementReferences"/>
+      <genOperations ecoreOperation="model.ecore#//ICodeElementBlock/getDiffToReferences">
+        <genParameters ecoreParameter="model.ecore#//ICodeElementBlock/getDiffToReferences/elements"/>
+      </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IBillable">
       <genOperations ecoreOperation="model.ecore#//IBillable/getVatInfo"/>
@@ -510,5 +513,6 @@
         <genParameters ecoreParameter="model.ecore#//IRecipe/removePrescription/prescription"/>
       </genOperations>
     </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IBlobSecondary"/>
   </genPackages>
 </genmodel:GenModel>

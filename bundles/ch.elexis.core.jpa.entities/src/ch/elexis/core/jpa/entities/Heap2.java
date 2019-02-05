@@ -1,6 +1,6 @@
 package ch.elexis.core.jpa.entities;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -35,17 +35,17 @@ public class Heap2 extends AbstractEntityWithId implements EntityWithId, EntityW
 	protected boolean deleted = false;
 	
 	@Column(length = 8)
-	protected Date datum;
+	protected LocalDate datum;
 	
 	@Basic(fetch = FetchType.LAZY)
 	@Lob()
 	protected byte[] contents;
 
-	public Date getDatum() {
+	public LocalDate getDatum(){
 		return datum;
 	}
 
-	public void setDatum(Date datum) {
+	public void setDatum(LocalDate datum){
 		this.datum = datum;
 	}
 

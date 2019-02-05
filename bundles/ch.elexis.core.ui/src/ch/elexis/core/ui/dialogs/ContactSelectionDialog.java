@@ -51,7 +51,7 @@ import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.provider.ContactSelectionLabelProvider;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.core.ui.util.viewers.AbstractCommonViewerContentProvider;
+import ch.elexis.core.ui.util.viewers.CommonViewerContentProvider;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.CommonViewer.PoDoubleClickListener;
 import ch.elexis.core.ui.util.viewers.DefaultControlFieldProvider;
@@ -115,7 +115,7 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 		contentProvider.setOrderFields(orderFields);
 	}
 	
-	private class ContactContentProvider extends AbstractCommonViewerContentProvider
+	private class ContactContentProvider extends CommonViewerContentProvider
 			implements IStructuredContentProvider {
 		
 		public ContactContentProvider(CommonViewer commonViewer){
@@ -123,11 +123,16 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 		}
 		
 		@Override
+		protected IQuery<?> getBaseQuery(){
+			return CoreModelServiceHolder.get().getQuery(targetClass);
+		}
+		
+		@SuppressWarnings("unchecked")
+		@Override
 		public Object[] getElements(Object inputElement){
 			// CommonViewer inputElement can be ignored
 			List<? extends Identifiable> roots = Collections.emptyList();
-			IQuery<? extends Identifiable> query =
-				CoreModelServiceHolder.get().getQuery(targetClass);
+			IQuery<?> query = getBaseQuery();
 			if (hasActiveFilter(fieldFilterValues)) {
 				query.startGroup();
 				for (String key : fieldFilterValues.keySet()) {
@@ -144,7 +149,7 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 					query.orderBy(field, fieldOrder);
 				}
 			}
-			roots = query.execute();
+			roots = (List<? extends Identifiable>) query.execute();
 			return roots.toArray();
 		}
 		

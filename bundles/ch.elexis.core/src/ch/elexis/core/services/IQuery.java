@@ -1,6 +1,7 @@
 package ch.elexis.core.services;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -122,6 +123,7 @@ public interface IQuery<T> {
 	 * Add an order by to the query.
 	 * 
 	 * @param fieldOrderBy
+	 * @param order
 	 */
 	public void orderBy(String fieldOrderBy, ORDER order);
 	
@@ -129,6 +131,29 @@ public interface IQuery<T> {
 	 * Add an order by to the query.
 	 * 
 	 * @param fieldOrderBy
+	 * @param order
 	 */
 	public void orderBy(EStructuralFeature feature, ORDER order);
+	
+	/**
+	 * Add an order by results of CASE statement. The caseContext map containes a String case
+	 * description and an Object case value. The Syntax for the description is as follows.</br>
+	 * 
+	 * <b>when</b></br>
+	 * when|fieldname|predicate|value</br>
+	 * fieldname, must be a valid field name of the selected type.</br>
+	 * predicate, specify how the fieldname is compared to the value. Known values are equals and
+	 * like.</br>
+	 * value, the used to compare the field with. </br>
+	 * example: "when|description2|equals|test3"</br>
+	 * 
+	 * <b>otherwise</b></br>
+	 * Currently only otherwise without comparison is supported. </br>
+	 * example: "otherwise"</br>
+	 * 
+	 * 
+	 * @param fieldOrderBy
+	 * @param order
+	 */
+	public void orderBy(Map<String, Object> caseContext, ORDER order);
 }

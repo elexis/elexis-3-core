@@ -535,6 +535,7 @@ public class KonsDetailView extends ViewPart
 	 */
 	@Override
 	public void dispose(){
+		created = false;
 		//		GlobalEventDispatcher.removeActivationListener(this, this);
 		if (text != null) {
 			text.disconnectGlobalActions(getViewSite());

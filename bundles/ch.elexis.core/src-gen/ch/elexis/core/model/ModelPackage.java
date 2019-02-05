@@ -3021,13 +3021,40 @@ public interface ModelPackage extends EPackage {
 	int ICODE_ELEMENT_BLOCK = 20;
 
 	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICODE_ELEMENT_BLOCK__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICODE_ELEMENT_BLOCK__CODE = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICODE_ELEMENT_BLOCK__TEXT = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
 	 * The feature id for the '<em><b>Elements</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ICODE_ELEMENT_BLOCK__ELEMENTS = 0;
+	int ICODE_ELEMENT_BLOCK__ELEMENTS = IDENTIFIABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Element References</b></em>' reference list.
@@ -3036,7 +3063,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICODE_ELEMENT_BLOCK__ELEMENT_REFERENCES = 1;
+	int ICODE_ELEMENT_BLOCK__ELEMENT_REFERENCES = IDENTIFIABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>ICode Element Block</em>' class.
@@ -3045,7 +3072,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICODE_ELEMENT_BLOCK_FEATURE_COUNT = 2;
+	int ICODE_ELEMENT_BLOCK_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IBillable <em>IBillable</em>}' class.
@@ -5441,6 +5468,52 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IRECIPE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IBlobSecondary <em>IBlob Secondary</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IBlobSecondary
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBlobSecondary()
+	 * @generated
+	 */
+	int IBLOB_SECONDARY = 56;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBLOB_SECONDARY__DELETED = IBLOB__DELETED;
+
+	/**
+	 * The feature id for the '<em><b>Content</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBLOB_SECONDARY__CONTENT = IBLOB__CONTENT;
+
+	/**
+	 * The feature id for the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBLOB_SECONDARY__DATE = IBLOB__DATE;
+
+	/**
+	 * The number of structural features of the '<em>IBlob Secondary</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBLOB_SECONDARY_FEATURE_COUNT = IBLOB_FEATURE_COUNT + 0;
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}'.
@@ -8809,6 +8882,16 @@ public interface ModelPackage extends EPackage {
 	EReference getIRecipe_Document();
 
 	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IBlobSecondary <em>IBlob Secondary</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IBlob Secondary</em>'.
+	 * @see ch.elexis.core.model.IBlobSecondary
+	 * @generated
+	 */
+	EClass getIBlobSecondary();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -11558,6 +11641,16 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference IRECIPE__DOCUMENT = eINSTANCE.getIRecipe_Document();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IBlobSecondary <em>IBlob Secondary</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IBlobSecondary
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBlobSecondary()
+		 * @generated
+		 */
+		EClass IBLOB_SECONDARY = eINSTANCE.getIBlobSecondary();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.
