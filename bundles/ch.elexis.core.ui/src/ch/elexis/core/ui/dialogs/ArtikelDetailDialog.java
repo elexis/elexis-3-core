@@ -67,8 +67,14 @@ public class ArtikelDetailDialog extends TitleAreaDialog {
 		ret.setExpandVertical(true);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		cnt.setLayout(new FillLayout());
-		AutoForm tblArtikel =
-			new LabeledInputField.AutoForm(cnt, Artikeldetail.getFieldDefs(parent.getShell()));
+		AutoForm tblArtikel = null;
+		if (article instanceof Identifiable) {
+			tblArtikel = new LabeledInputField.AutoForm(cnt,
+				Artikeldetail.getModelFieldDefs(parent.getShell()));
+		} else {
+			tblArtikel =
+				new LabeledInputField.AutoForm(cnt, Artikeldetail.getFieldDefs(parent.getShell()));
+		}
 		tblArtikel.reload(article);
 		ret.setMinSize(cnt.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		return ret;

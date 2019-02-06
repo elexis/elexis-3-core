@@ -56,6 +56,24 @@ public class Artikeldetail extends ViewPart implements IActivationListener, ISav
 		return ret;
 	}
 	
+	static final public InputData[] getModelFieldDefs(final Shell shell){
+		InputData[] ret = new InputData[] {
+			new InputData(Messages.Artikeldetail_typ, "typ", Typ.STRING, null),
+			new InputData(Messages.Artikeldetail_EAN, "gtin", Typ.STRING, null),
+			new InputData(Messages.Artikeldetail_Pharmacode, "extInfo", Typ.STRING,
+				"Pharmacode"), //$NON-NLS-2$
+			new InputData(Messages.Artikeldetail_Einkaufspreis, "purchasePrice", Typ.CURRENCY,
+				null),
+			new InputData(Messages.Artikeldetail_Verkaufspreis, "sellingPrice", Typ.CURRENCY,
+				null),
+			new InputData(Messages.Artikeldetail_verpackungseinheit, "extInfo", Typ.INT,
+				"VerpackungsEinheit"), //$NON-NLS-2$
+			new InputData(Messages.Artikeldetail_stueckProAbgabe, "extInfo", Typ.INT,
+				"Verkaufseinheit")
+		};
+		return ret;
+	}
+	
 	FormToolkit tk = UiDesk.getToolkit();
 	ScrolledForm form;
 	LabeledInputField.AutoForm tblArtikel;

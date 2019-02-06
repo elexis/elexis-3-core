@@ -39,7 +39,6 @@ import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.ui.dialogs.ArticleDefaultSignatureTitleAreaDialog;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.CreatePrescriptionHelper;
-import ch.elexis.data.ArticleDefaultSignature.ArticleSignature;
 import ch.rgw.tools.TimeTool;
 
 public class ArticleDefaultSignatureComposite extends Composite {
@@ -310,7 +309,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 				SWT.Modify, SWT.FocusOut
 			}).observeDelayed(100, txtSignatureMorning);
 		IObservableValue itemSignatureMorningObserveDetailValue =
-			PojoProperties.value(ArticleSignature.class, "morning", String.class) //$NON-NLS-1$
+			PojoProperties.value(IArticleDefaultSignature.class, "morning", String.class) //$NON-NLS-1$
 				.observeDetail(signatureItem);
 		SavingTargetToModelStrategy targetToModelStrategy = new SavingTargetToModelStrategy(this);
 		targetToModelStrategies.add(targetToModelStrategy);
@@ -322,7 +321,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 				SWT.Modify, SWT.FocusOut
 			}).observeDelayed(100, txtSignatureNoon);
 		IObservableValue itemSignatureNoonObserveDetailValue =
-			PojoProperties.value(ArticleSignature.class, "noon", String.class) //$NON-NLS-1$
+			PojoProperties.value(IArticleDefaultSignature.class, "noon", String.class) //$NON-NLS-1$
 				.observeDetail(signatureItem);
 		targetToModelStrategy = new SavingTargetToModelStrategy(this);
 		targetToModelStrategies.add(targetToModelStrategy);
@@ -334,7 +333,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 					SWT.Modify, SWT.FocusOut
 				}).observeDelayed(100, txtSignatureEvening);
 			IObservableValue itemSignatureEveningObserveDetailValue =
-			PojoProperties.value(ArticleSignature.class, "evening", String.class) //$NON-NLS-1$
+			PojoProperties.value(IArticleDefaultSignature.class, "evening", String.class) //$NON-NLS-1$
 					.observeDetail(signatureItem);
 		targetToModelStrategy = new SavingTargetToModelStrategy(this);
 		targetToModelStrategies.add(targetToModelStrategy);
@@ -346,7 +345,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 				SWT.Modify, SWT.FocusOut
 			}).observeDelayed(100, txtSignatureNight);
 		IObservableValue itemSignatureNightObserveDetailValue =
-			PojoProperties.value(ArticleSignature.class, "night", String.class) //$NON-NLS-1$
+			PojoProperties.value(IArticleDefaultSignature.class, "night", String.class) //$NON-NLS-1$
 				.observeDetail(signatureItem);
 		targetToModelStrategy = new SavingTargetToModelStrategy(this);
 		targetToModelStrategies.add(targetToModelStrategy);
@@ -358,7 +357,8 @@ public class ArticleDefaultSignatureComposite extends Composite {
 				SWT.Modify, SWT.FocusOut
 			}).observeDelayed(100, txtFreeTextDosage);
 		IObservableValue itemSignatureFreeTextDosageObserveDetailValue = PojoProperties
-			.value(ArticleSignature.class, "freeText", String.class).observeDetail(signatureItem); //$NON-NLS-1$
+			.value(IArticleDefaultSignature.class, "freeText", String.class) //$NON-NLS-1$
+			.observeDetail(signatureItem);
 		targetToModelStrategy = new SavingTargetToModelStrategy(this);
 		targetToModelStrategies.add(targetToModelStrategy);
 		databindingContext.bindValue(observeTextFreeTextDosageObserveWidget,
@@ -369,7 +369,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 				SWT.Modify, SWT.FocusOut
 			}).observeDelayed(100, txtSignatureComment);
 		IObservableValue itemSignatureCommentObserveDetailValue =
-			PojoProperties.value(ArticleSignature.class, "comment", String.class) //$NON-NLS-1$
+			PojoProperties.value(IArticleDefaultSignature.class, "comment", String.class) //$NON-NLS-1$
 				.observeDetail(signatureItem);
 		targetToModelStrategy = new SavingTargetToModelStrategy(this);
 		targetToModelStrategies.add(targetToModelStrategy);
@@ -401,8 +401,9 @@ public class ArticleDefaultSignatureComposite extends Composite {
 					MedicationServiceHolder.get().getDefaultSignature(article);
 				
 				if (!defSignature.isPresent()) {
-					signatureItem.setValue(
-						MedicationServiceHolder.get().getTransientDefaultSignature(article));
+					IArticleDefaultSignature transientSignature =
+						MedicationServiceHolder.get().getTransientDefaultSignature(article);
+					signatureItem.setValue(transientSignature);
 				} else {
 					signatureItem.setValue(defSignature.get());
 				}
@@ -424,7 +425,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 	
 	public IArticleDefaultSignature getSignature(){
 		Object value = signatureItem.getValue();
-		if (value instanceof ArticleSignature) {
+		if (value instanceof IArticleDefaultSignature) {
 			return (IArticleDefaultSignature) value;
 		}
 		return null;
@@ -459,12 +460,6 @@ public class ArticleDefaultSignatureComposite extends Composite {
 	public void updateTargetNonDatabinding(){
 		IArticleDefaultSignature signature = getSignature();
 		
-		String freeText = signature.getFreeText();
-		if (freeText != null && !freeText.isEmpty()) {
-			stackLayoutDosage.topControl = compositeFreeTextDosage;
-		} else {
-			stackLayoutDosage.topControl = compositeDayTimeDosage;
-		}
 		stackCompositeDosage.layout();
 		
 		btnFix.setSelection(false);
@@ -478,6 +473,13 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		btnRadioOnAtcCode.setSelection(false);
 		
 		if (signature != null) {
+			String freeText = signature.getFreeText();
+			if (freeText != null && !freeText.isEmpty()) {
+				stackLayoutDosage.topControl = compositeFreeTextDosage;
+			} else {
+				stackLayoutDosage.topControl = compositeDayTimeDosage;
+			}
+			
 			EntryType modelMedicationType = signature.getMedicationType();
 			if (modelMedicationType == EntryType.FIXED_MEDICATION) {
 				btnFix.setSelection(true);

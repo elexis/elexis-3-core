@@ -50,6 +50,7 @@ import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.interfaces.INumericEnum;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.model.WithExtInfo;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.locks.IUnlockable;
@@ -730,9 +731,13 @@ public class LabeledInputField extends Composite {
 				}
 			} else {
 				if (val != null && val.length() > 0) {
-					Map ext = getMap(act, inp.sFeldname);
-					ext.put(inp.sHashname, val);
-					setMap(act, inp.sFeldname, ext);
+					if (act instanceof WithExtInfo) {
+						((WithExtInfo) act).setExtInfo(inp.sHashname, val);
+					} else {
+						Map ext = getMap(act, inp.sFeldname);
+						ext.put(inp.sHashname, val);
+						setMap(act, inp.sFeldname, ext);
+					}
 				}
 			}
 			if (act instanceof Identifiable && modelService != null) {
@@ -894,16 +899,19 @@ public class LabeledInputField extends Composite {
 					if (def[i].sHashname == null) {
 						val = (String) get(o, def[i].sFeldname);
 					} else {
-						Map ext = getMap(o, def[i].sFeldname);
-						val = (String) ext.get(def[i].sHashname);
-						
-						// needed to make artikelstamm dialog work properly (without **ERROR:...)
-						if (val == null) {
-							val = (String) get(o, def[i].sHashname);
-							
-							// in case no value exists for this field keep it empty
-							if (val.startsWith(PersistentObject.MAPPING_ERROR_MARKER)) {
-								val = null;
+						if (act instanceof WithExtInfo) {
+							val = (String) ((WithExtInfo) act).getExtInfo(def[i].sHashname);
+						} else {
+							Map ext = getMap(o, def[i].sFeldname);
+							val = (String) ext.get(def[i].sHashname);
+							// needed to make artikelstamm dialog work properly (without **ERROR:...)
+							if (val == null) {
+								val = (String) get(o, def[i].sHashname);
+								
+								// in case no value exists for this field keep it empty
+								if (val.startsWith(PersistentObject.MAPPING_ERROR_MARKER)) {
+									val = null;
+								}
 							}
 						}
 					}

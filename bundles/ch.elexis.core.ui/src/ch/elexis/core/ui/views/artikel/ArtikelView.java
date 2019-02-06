@@ -209,10 +209,10 @@ public class ArtikelView extends ViewPart implements IActivationListener, ISavea
 					headerDone = true;
 					
 					if (codeSelector != null) {
-						CoreUiUtil.injectServices(codeSelector);
+						CoreUiUtil.injectServicesWithContext(codeSelector);
 					}
 					if (detailDisplay != null) {
-						CoreUiUtil.injectServices(detailDisplay);
+						CoreUiUtil.injectServicesWithContext(detailDisplay);
 					}
 					continue;
 				}

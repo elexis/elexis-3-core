@@ -20,7 +20,7 @@ public class MedicationUiTester extends PropertyTester {
 			Optional<ch.elexis.core.model.IPrescription> prescription =
 				ContextServiceHolder.get().getTyped(ch.elexis.core.model.IPrescription.class);
 			if (prescription.isPresent()) {
-				return prescription.get().getArticle().getClass().getSimpleName()
+				return !prescription.get().getArticle().getClass().getSimpleName()
 					.contains("Artikelstamm");
 			}
 		}
