@@ -71,8 +71,10 @@ public class EditAUFDialog extends TitleAreaDialog {
 		Label lbZusatz = new Label(ret, SWT.NONE);
 		lbZusatz.setText(Messages.EditAUFDialog_additional); //$NON-NLS-1$
 		lbZusatz.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 2, 1));
-		tZusatz = new Text(ret, SWT.MULTI);
-		tZusatz.setLayoutData(SWTHelper.getFillGridData(2, true, 1, true));
+		tZusatz = new Text(ret, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		GridData tZusatzLayout = SWTHelper.getFillGridData(2, true, 1, true);
+		tZusatzLayout.heightHint = 150;
+		tZusatz.setLayoutData(tZusatzLayout);
 		if (auf != null) {
 			dpVon.setDate(auf.getBeginn().getTime());
 			dpBis.setDate(auf.getEnd().getTime());
