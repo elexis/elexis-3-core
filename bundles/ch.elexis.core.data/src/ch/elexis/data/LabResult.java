@@ -95,7 +95,8 @@ public class LabResult extends PersistentObject implements ILabResult {
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT LW.ID, LW." + OBSERVATIONTIME + ", LW." + DATE + ", LW." + TIME + ", ");
-		sb.append("LI." + LabItem.GROUP + ", LI." + LabItem.SHORTNAME + " ");
+		sb.append("LI." + LabItem.GROUP + ", LI." + LabItem.SHORTNAME + ", ");
+		sb.append("LW." + PATHODESC + ", LW." + ITEM_ID  + ", LW." + FLAGS + ", LW." + RESULT + " ");
 		sb.append("FROM " + TABLENAME + " AS LW LEFT JOIN ");
 		sb.append(LabItem.LABITEMS + " AS LI ON LW." + ITEM_ID + "=LI.ID ");
 		sb.append("WHERE LW." + PATIENT_ID + " LIKE ? AND LW.DELETED = '0'");
@@ -1015,8 +1016,12 @@ public class LabResult extends PersistentObject implements ILabResult {
 					resultList = new ArrayList<LabResult>();
 					itemMap.put(date, resultList);
 				}
-				
-				resultList.add(new LabResult(val_id));
+				LabResult labResult = new LabResult(val_id);
+				labResult.putInCache(PATHODESC, resi.getString(7));
+				labResult.putInCache(ITEM_ID, resi.getString(8));
+				labResult.putInCache(FLAGS, resi.getString(9));
+				labResult.putInCache(RESULT, resi.getString(10));
+				resultList.add(labResult);
 			}
 		} catch (SQLException e) {
 			log.error("Error in fetching labitem groups", e);
