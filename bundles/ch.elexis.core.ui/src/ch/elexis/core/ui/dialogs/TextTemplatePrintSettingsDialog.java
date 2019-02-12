@@ -18,15 +18,20 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import ch.elexis.core.ui.dialogs.base.InputDialog;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 
@@ -53,7 +58,7 @@ public class TextTemplatePrintSettingsDialog extends TitleAreaDialog {
 		setTitleImage(Images.IMG_PRINTER_BIG.getImage());
 		
 		Composite area = new Composite(parent, SWT.NONE);
-		area.setLayout(new GridLayout(2, false));
+		area.setLayout(new GridLayout(3, false));
 		area.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		
 		Label lblPrinter = new Label(area, SWT.NONE);
@@ -62,7 +67,7 @@ public class TextTemplatePrintSettingsDialog extends TitleAreaDialog {
 		
 		cvPrinters = new ComboViewer(area, SWT.READ_ONLY);
 		Combo comboPrinters = cvPrinters.getCombo();
-		comboPrinters.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboPrinters.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		cvPrinters.setContentProvider(ArrayContentProvider.getInstance());
 		cvPrinters.setLabelProvider(new LabelProvider() {
 			@Override
@@ -108,6 +113,23 @@ public class TextTemplatePrintSettingsDialog extends TitleAreaDialog {
 		});
 		cvTrays.setInput(mediaTrays);
 		
+		Button addTrayButton = new Button(area, SWT.PUSH);
+		addTrayButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		addTrayButton.setImage(Images.IMG_ADDITEM.getImage());
+		addTrayButton.setToolTipText("Zusätzlicher Schacht");
+		addTrayButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				InputDialog dlg = new InputDialog(getParentShell(), "Zusätzlicher Schacht",
+					"Bitten den Namen des zusätzlichen Schacht konfigurieren.", "", null, SWT.NONE);
+				if (dlg.open() == Window.OK) {
+					if (dlg.getValue() != null && !dlg.getValue().isEmpty()) {
+						addCustomMediaTray(dlg.getValue());
+					}
+				}
+			}
+		});
+		
 		initSelection();
 		return area;
 	}
@@ -130,13 +152,27 @@ public class TextTemplatePrintSettingsDialog extends TitleAreaDialog {
 			if (selTray == null) {
 				cvTrays.setSelection(new StructuredSelection(mediaTrays.get(0)));
 			} else {
+				boolean foundTray = false;
 				for (MediaTray mt : mediaTrays) {
 					if (mt.toString().equals(selTray)) {
 						cvTrays.setSelection(new StructuredSelection(mt));
+						foundTray = true;
+						break;
 					}
+				}
+				if (!foundTray) {
+					addCustomMediaTray(selTray);
 				}
 			}
 		}
+	}
+	
+	private void addCustomMediaTray(String name){
+		CustomMediaTray customTray = new CustomMediaTray(name);
+		mediaTrays.add(customTray);
+		cvTrays.setInput(mediaTrays);
+		cvTrays.refresh();
+		cvTrays.setSelection(new StructuredSelection(customTray));
 	}
 	
 	private List<MediaTray> loadAvailableTrays(PrintService printService){
@@ -180,4 +216,18 @@ public class TextTemplatePrintSettingsDialog extends TitleAreaDialog {
 		return selTray;
 	}
 	
+	private class CustomMediaTray extends MediaTray {
+		
+		private String name;
+		
+		protected CustomMediaTray(String name){
+			super(-1);
+			this.name = name;
+		}
+		
+		@Override
+		public String toString(){
+			return name;
+		}
+	}
 }
