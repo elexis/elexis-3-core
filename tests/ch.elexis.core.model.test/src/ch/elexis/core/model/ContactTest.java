@@ -22,6 +22,7 @@ import ch.elexis.core.test.AbstractTest;
 import ch.elexis.core.types.AddressType;
 import ch.elexis.core.types.Country;
 import ch.elexis.core.types.Gender;
+import ch.elexis.core.types.RelationshipType;
 
 public class ContactTest extends AbstractTest {
 
@@ -83,7 +84,30 @@ public class ContactTest extends AbstractTest {
 		IImage _image = findById.getImage();
 		assertTrue(Arrays.equals(image.getImage(), _image.getImage()));
 		assertEquals(MimeType.png, _image.getMimeType());
-		coreModelService.delete(image);		
+		coreModelService.delete(image);
+	}
+
+	@Test
+	public void createRemoveRelatedContact() {
+		IOrganization employer = new IContactBuilder.OrganizationBuilder(coreModelService, "MEDEVIT").buildAndSave();
+		IPerson findById = coreModelService.load(person.getId(), IPerson.class).get();
+
+		IRelatedContact relatedContact = coreModelService.create(IRelatedContact.class);
+		relatedContact.setOtherContact(employer);
+		relatedContact.setMyType(RelationshipType.BUSINESS_EMPLOYEE);
+		relatedContact.setOtherType(RelationshipType.BUSINESS_EMPLOYER);
+		relatedContact.setRelationshipDescription("blabla");
+		relatedContact = findById.addRelatedContact(relatedContact);
+		coreModelService.save(Arrays.asList(relatedContact, findById));
+
+		IRelatedContact iRelatedContact = findById.getRelatedContacts().get(0);
+		assertEquals(relatedContact.getId(), iRelatedContact.getId());
+		assertEquals(employer.getId(), iRelatedContact.getOtherContact().getId());
+		assertEquals(RelationshipType.BUSINESS_EMPLOYEE, iRelatedContact.getMyType());
+		assertEquals(RelationshipType.BUSINESS_EMPLOYER, iRelatedContact.getOtherType());
+		assertEquals("blabla", iRelatedContact.getRelationshipDescription());
+		coreModelService.delete(relatedContact);
+		assertFalse(findById.getRelatedContacts().contains(relatedContact));
 	}
 
 	@Test

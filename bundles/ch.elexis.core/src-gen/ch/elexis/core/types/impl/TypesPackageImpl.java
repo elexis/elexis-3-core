@@ -748,6 +748,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		initEEnum(relationshipTypeEEnum, RelationshipType.class, "RelationshipType");
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.AGENERIC);
+		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.AUNKNOWN);
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.BUSINESS_EMPLOYER);
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.BUSINESS_EMPLOYEE);
 		addEEnumLiteral(relationshipTypeEEnum, RelationshipType.FAMILY_PARENT);

@@ -53,6 +53,9 @@
     <eOperations name="addAddress" eType="#//IAddress">
       <eParameters name="address" eType="#//IAddress"/>
     </eOperations>
+    <eOperations name="addRelatedContact" eType="#//IRelatedContact">
+      <eParameters name="relatedContact" eType="#//IRelatedContact"/>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="mandator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="user" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="patient" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
@@ -79,6 +82,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="group" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="postalAddress" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="image" eType="#//IImage"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="relatedContacts" upperBound="-1"
+        eType="#//IRelatedContact"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IPerson" abstract="true" interface="true"
       eSuperTypes="#//IContact">
@@ -746,4 +751,14 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IBlobSecondary" abstract="true" interface="true"
       eSuperTypes="#//IBlob"/>
+  <eClassifiers xsi:type="ecore:EClass" name="IRelatedContact" abstract="true" interface="true"
+      eSuperTypes="#//Identifiable #//Deleteable">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="myContact" lowerBound="1"
+        eType="#//IContact"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="otherContact" eType="#//IContact"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="relationshipDescription"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="myType" eType="ecore:EEnum types.ecore#//RelationshipType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="otherType" eType="ecore:EEnum types.ecore#//RelationshipType"/>
+  </eClassifiers>
 </ecore:EPackage>

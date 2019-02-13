@@ -304,6 +304,10 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIBlobSecondaryAdapter();
 			}
 			@Override
+			public Adapter caseIRelatedContact(IRelatedContact object) {
+				return createIRelatedContactAdapter();
+			}
+			@Override
 			public <T> Adapter caseComparable(Comparable<T> object) {
 				return createComparableAdapter();
 			}
@@ -1108,6 +1112,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIBlobSecondaryAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IRelatedContact <em>IRelated Contact</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IRelatedContact
+	 * @generated
+	 */
+	public Adapter createIRelatedContactAdapter() {
 		return null;
 	}
 

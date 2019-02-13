@@ -37,6 +37,17 @@ public enum RelationshipType implements Enumerator {
 	AGENERIC(0, "A_GENERIC", "A_GENERIC"),
 
 	/**
+	 * The '<em><b>AUNKNOWN</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Fallback value in case the persisted value could not be mapped by this enumeration, depicts an erroneous state
+	 * <!-- end-model-doc -->
+	 * @see #AUNKNOWN_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	AUNKNOWN(9999, "A_UNKNOWN", "A_UNKNOWN"), /**
 	 * The '<em><b>BUSINESS EMPLOYER</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -164,6 +175,20 @@ public enum RelationshipType implements Enumerator {
 	 * @ordered
 	 */
 	public static final int AGENERIC_VALUE = 0;
+
+	/**
+	 * The '<em><b>AUNKNOWN</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Fallback value in case the persisted value could not be mapped by this enumeration, depicts an erroneous state
+	 * <!-- end-model-doc -->
+	 * @see #AUNKNOWN
+	 * @model name="A_UNKNOWN"
+	 * @generated
+	 * @ordered
+	 */
+	public static final int AUNKNOWN_VALUE = 9999;
 
 	/**
 	 * The '<em><b>BUSINESS EMPLOYER</b></em>' literal value.
@@ -354,6 +379,7 @@ public enum RelationshipType implements Enumerator {
 	private static final RelationshipType[] VALUES_ARRAY =
 		new RelationshipType[] {
 			AGENERIC,
+			AUNKNOWN,
 			BUSINESS_EMPLOYER,
 			BUSINESS_EMPLOYEE,
 			FAMILY_PARENT,
@@ -423,6 +449,7 @@ public enum RelationshipType implements Enumerator {
 	public static RelationshipType get(int value) {
 		switch (value) {
 			case AGENERIC_VALUE: return AGENERIC;
+			case AUNKNOWN_VALUE: return AUNKNOWN;
 			case BUSINESS_EMPLOYER_VALUE: return BUSINESS_EMPLOYER;
 			case BUSINESS_EMPLOYEE_VALUE: return BUSINESS_EMPLOYEE;
 			case FAMILY_PARENT_VALUE: return FAMILY_PARENT;
@@ -477,6 +504,7 @@ public enum RelationshipType implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getValue() {
 	  return value;
 	}
@@ -486,6 +514,7 @@ public enum RelationshipType implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 	  return name;
 	}
@@ -495,6 +524,7 @@ public enum RelationshipType implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLiteral() {
 	  return literal;
 	}

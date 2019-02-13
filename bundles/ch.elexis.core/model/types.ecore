@@ -22,6 +22,11 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="RelationshipType">
     <eLiterals name="A_GENERIC"/>
+    <eLiterals name="A_UNKNOWN" value="9999" literal="A_UNKNOWN">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Fallback value in case the persisted value could not be mapped by this enumeration, depicts an erroneous state"/>
+      </eAnnotations>
+    </eLiterals>
     <eLiterals name="BUSINESS_EMPLOYER" value="100"/>
     <eLiterals name="BUSINESS_EMPLOYEE" value="101"/>
     <eLiterals name="FAMILY_PARENT" value="200"/>

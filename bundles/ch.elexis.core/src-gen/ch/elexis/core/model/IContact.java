@@ -47,6 +47,7 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IContact#getGroup <em>Group</em>}</li>
  *   <li>{@link ch.elexis.core.model.IContact#getPostalAddress <em>Postal Address</em>}</li>
  *   <li>{@link ch.elexis.core.model.IContact#getImage <em>Image</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IContact#getRelatedContacts <em>Related Contacts</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIContact()
@@ -695,11 +696,35 @@ public interface IContact extends Identifiable, Deleteable, WithExtInfo {
 	void setImage(IImage value);
 
 	/**
+	 * Returns the value of the '<em><b>Related Contacts</b></em>' reference list.
+	 * The list contents are of type {@link ch.elexis.core.model.IRelatedContact}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Related Contacts</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Related Contacts</em>' reference list.
+	 * @see ch.elexis.core.model.ModelPackage#getIContact_RelatedContacts()
+	 * @model
+	 * @generated
+	 */
+	List<IRelatedContact> getRelatedContacts();
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model
 	 * @generated
 	 */
 	IAddress addAddress(IAddress address);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	IRelatedContact addRelatedContact(IRelatedContact relatedContact);
 
 } // IContact

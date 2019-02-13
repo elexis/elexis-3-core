@@ -55,6 +55,7 @@ import ch.elexis.core.model.IPeriod;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IRecipe;
+import ch.elexis.core.model.IRelatedContact;
 import ch.elexis.core.model.IRight;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IService;
@@ -489,6 +490,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	private EClass iBlobSecondaryEClass = null;
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iRelatedContactEClass = null;
+
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
@@ -890,6 +898,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	@Override
 	public EReference getIContact_Image() {
 		return (EReference)iContactEClass.getEStructuralFeatures().get(24);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIContact_RelatedContacts() {
+		return (EReference)iContactEClass.getEStructuralFeatures().get(25);
 	}
 
 	/**
@@ -3798,6 +3816,66 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getIRelatedContact() {
+		return iRelatedContactEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIRelatedContact_MyContact() {
+		return (EReference)iRelatedContactEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIRelatedContact_OtherContact() {
+		return (EReference)iRelatedContactEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIRelatedContact_RelationshipDescription() {
+		return (EAttribute)iRelatedContactEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIRelatedContact_MyType() {
+		return (EAttribute)iRelatedContactEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIRelatedContact_OtherType() {
+		return (EAttribute)iRelatedContactEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public ModelFactory getModelFactory() {
 		return (ModelFactory)getEFactoryInstance();
 	}
@@ -3858,6 +3936,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iContactEClass, ICONTACT__GROUP);
 		createEAttribute(iContactEClass, ICONTACT__POSTAL_ADDRESS);
 		createEReference(iContactEClass, ICONTACT__IMAGE);
+		createEReference(iContactEClass, ICONTACT__RELATED_CONTACTS);
 
 		iPersonEClass = createEClass(IPERSON);
 		createEAttribute(iPersonEClass, IPERSON__DATE_OF_BIRTH);
@@ -4201,6 +4280,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEReference(iRecipeEClass, IRECIPE__DOCUMENT);
 
 		iBlobSecondaryEClass = createEClass(IBLOB_SECONDARY);
+
+		iRelatedContactEClass = createEClass(IRELATED_CONTACT);
+		createEReference(iRelatedContactEClass, IRELATED_CONTACT__MY_CONTACT);
+		createEReference(iRelatedContactEClass, IRELATED_CONTACT__OTHER_CONTACT);
+		createEAttribute(iRelatedContactEClass, IRELATED_CONTACT__RELATIONSHIP_DESCRIPTION);
+		createEAttribute(iRelatedContactEClass, IRELATED_CONTACT__MY_TYPE);
+		createEAttribute(iRelatedContactEClass, IRELATED_CONTACT__OTHER_TYPE);
 	}
 
 	/**
@@ -4336,6 +4422,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iRecipeEClass.getESuperTypes().add(this.getIdentifiable());
 		iRecipeEClass.getESuperTypes().add(this.getDeleteable());
 		iBlobSecondaryEClass.getESuperTypes().add(this.getIBlob());
+		iRelatedContactEClass.getESuperTypes().add(this.getIdentifiable());
+		iRelatedContactEClass.getESuperTypes().add(this.getDeleteable());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(identifiableEClass, Identifiable.class, "Identifiable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -4401,9 +4489,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIContact_Group(), ecorePackage.getEString(), "group", null, 0, 1, IContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIContact_PostalAddress(), ecorePackage.getEString(), "postalAddress", null, 0, 1, IContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIContact_Image(), this.getIImage(), null, "image", null, 0, 1, IContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIContact_RelatedContacts(), this.getIRelatedContact(), null, "relatedContacts", null, 0, -1, IContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		op = addEOperation(iContactEClass, this.getIAddress(), "addAddress", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIAddress(), "address", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iContactEClass, this.getIRelatedContact(), "addRelatedContact", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIRelatedContact(), "relatedContact", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iPersonEClass, IPerson.class, "IPerson", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIPerson_DateOfBirth(), theTypesPackage.getLocalDateTime(), "dateOfBirth", null, 0, 1, IPerson.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4901,6 +4993,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEParameter(op, this.getIPrescription(), "prescription", 1, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iBlobSecondaryEClass, IBlobSecondary.class, "IBlobSecondary", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(iRelatedContactEClass, IRelatedContact.class, "IRelatedContact", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getIRelatedContact_MyContact(), this.getIContact(), null, "myContact", null, 1, 1, IRelatedContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIRelatedContact_OtherContact(), this.getIContact(), null, "otherContact", null, 0, 1, IRelatedContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIRelatedContact_RelationshipDescription(), ecorePackage.getEString(), "relationshipDescription", null, 0, 1, IRelatedContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIRelatedContact_MyType(), theTypesPackage.getRelationshipType(), "myType", null, 0, 1, IRelatedContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIRelatedContact_OtherType(), theTypesPackage.getRelationshipType(), "otherType", null, 0, 1, IRelatedContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

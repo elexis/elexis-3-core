@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.entities.Kontakt;
+import ch.elexis.core.jpa.entities.KontaktAdressJoint;
 import ch.elexis.core.jpa.entities.ZusatzAdresse;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
@@ -270,7 +271,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 	@Override
 	public List<IAddress> getAddress() {
 		CoreModelServiceHolder.get().refresh(this);
-		ArrayList<ZusatzAdresse> addresses = new ArrayList<ZusatzAdresse>(getEntity().getAddresses().values());
+		ArrayList<ZusatzAdresse> addresses = new ArrayList<>(getEntity().getAddresses().values());
 		return addresses.parallelStream().filter(f -> !f.isDeleted())
 				.map(f -> ModelUtil.getAdapter(f, IAddress.class, true)).collect(Collectors.toList());
 	}
@@ -293,7 +294,6 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 	@Override
 	public void setPostalAddress(String value) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -320,5 +320,22 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 		image.setImage(value.getImage());
 		image.setMimeType(value.getMimeType());
 		CoreModelServiceHolder.get().save(image);
+	}
+
+	@Override
+	public List<IRelatedContact> getRelatedContacts() {
+		CoreModelServiceHolder.get().refresh(this);
+		ArrayList<KontaktAdressJoint> relatedContacts = new ArrayList<>(getEntity().getRelatedContacts().values());
+		return relatedContacts.parallelStream().filter(f -> !f.isDeleted())
+				.map(f -> ModelUtil.getAdapter(f, IRelatedContact.class, true)).collect(Collectors.toList());
+	}
+
+	@Override
+	public IRelatedContact addRelatedContact(IRelatedContact relatedContact) {
+		relatedContact.setMyContact(this);
+		@SuppressWarnings("unchecked")
+		KontaktAdressJoint kaj = ((AbstractIdModelAdapter<KontaktAdressJoint>) relatedContact).getEntity();
+		getEntity().getRelatedContacts().put(kaj.getId(), kaj);
+		return relatedContact;
 	}
 }

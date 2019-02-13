@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2018 MEDEVIT &lt;office@medevit.at>.&#xD;&#xA;All rights reserved. This program and the accompanying materials&#xD;&#xA;are made available under the terms of the Eclipse Public License v1.0&#xD;&#xA;which accompanies this distribution, and is available at&#xD;&#xA;http://www.eclipse.org/legal/epl-v10.html&#xD;&#xA;&#xD;&#xA;Contributors:&#xD;&#xA;    MEDEVIT &lt;office@medevit.at> - initial API and implementation"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2019 MEDEVIT &lt;office@medevit.at>.&#xD;&#xA;All rights reserved. This program and the accompanying materials&#xD;&#xA;are made available under the terms of the Eclipse Public License v1.0&#xD;&#xA;which accompanies this distribution, and is available at&#xD;&#xA;http://www.eclipse.org/legal/epl-v10.html&#xD;&#xA;&#xD;&#xA;Contributors:&#xD;&#xA;    MEDEVIT &lt;office@medevit.at> - initial API and implementation"
     modelDirectory="/ch.elexis.core/src-gen" modelPluginID="ch.elexis.core" modelName="Model"
     rootExtendsInterface="" rootExtendsClass="" suppressEMFTypes="true" importerID="org.eclipse.emf.importer.ecore"
     complianceLevel="8.0" copyrightFields="false" language="" usedGenPackages="types.genmodel#//types"
@@ -63,8 +63,12 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/group"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IContact/postalAddress"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IContact/image"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IContact/relatedContacts"/>
       <genOperations ecoreOperation="model.ecore#//IContact/addAddress">
         <genParameters ecoreParameter="model.ecore#//IContact/addAddress/address"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IContact/addRelatedContact">
+        <genParameters ecoreParameter="model.ecore#//IContact/addRelatedContact/relatedContact"/>
       </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IPerson">
@@ -514,5 +518,12 @@
       </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IBlobSecondary"/>
+    <genClasses ecoreClass="model.ecore#//IRelatedContact">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IRelatedContact/myContact"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IRelatedContact/otherContact"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IRelatedContact/relationshipDescription"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IRelatedContact/myType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IRelatedContact/otherType"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

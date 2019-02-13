@@ -421,13 +421,22 @@ public interface ModelPackage extends EPackage {
 	int ICONTACT__IMAGE = IDENTIFIABLE_FEATURE_COUNT + 25;
 
 	/**
+	 * The feature id for the '<em><b>Related Contacts</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICONTACT__RELATED_CONTACTS = IDENTIFIABLE_FEATURE_COUNT + 26;
+
+	/**
 	 * The number of structural features of the '<em>IContact</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ICONTACT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 26;
+	int ICONTACT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 27;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}' class.
@@ -672,6 +681,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IPERSON__IMAGE = ICONTACT__IMAGE;
+
+	/**
+	 * The feature id for the '<em><b>Related Contacts</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPERSON__RELATED_CONTACTS = ICONTACT__RELATED_CONTACTS;
 
 	/**
 	 * The feature id for the '<em><b>Date Of Birth</b></em>' attribute.
@@ -999,6 +1017,15 @@ public interface ModelPackage extends EPackage {
 	int IORGANIZATION__IMAGE = ICONTACT__IMAGE;
 
 	/**
+	 * The feature id for the '<em><b>Related Contacts</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORGANIZATION__RELATED_CONTACTS = ICONTACT__RELATED_CONTACTS;
+
+	/**
 	 * The feature id for the '<em><b>Insurance Xml Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1270,6 +1297,15 @@ public interface ModelPackage extends EPackage {
 	int ILABORATORY__IMAGE = IORGANIZATION__IMAGE;
 
 	/**
+	 * The feature id for the '<em><b>Related Contacts</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILABORATORY__RELATED_CONTACTS = IORGANIZATION__RELATED_CONTACTS;
+
+	/**
 	 * The feature id for the '<em><b>Insurance Xml Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1539,6 +1575,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IPATIENT__IMAGE = IPERSON__IMAGE;
+
+	/**
+	 * The feature id for the '<em><b>Related Contacts</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPATIENT__RELATED_CONTACTS = IPERSON__RELATED_CONTACTS;
 
 	/**
 	 * The feature id for the '<em><b>Date Of Birth</b></em>' attribute.
@@ -1918,6 +1963,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IMANDATOR__IMAGE = ICONTACT__IMAGE;
+
+	/**
+	 * The feature id for the '<em><b>Related Contacts</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMANDATOR__RELATED_CONTACTS = ICONTACT__RELATED_CONTACTS;
 
 	/**
 	 * The feature id for the '<em><b>Biller</b></em>' reference.
@@ -5516,6 +5570,79 @@ public interface ModelPackage extends EPackage {
 	int IBLOB_SECONDARY_FEATURE_COUNT = IBLOB_FEATURE_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IRelatedContact <em>IRelated Contact</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IRelatedContact
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRelatedContact()
+	 * @generated
+	 */
+	int IRELATED_CONTACT = 57;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRELATED_CONTACT__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>My Contact</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRELATED_CONTACT__MY_CONTACT = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Other Contact</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRELATED_CONTACT__OTHER_CONTACT = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Relationship Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRELATED_CONTACT__RELATIONSHIP_DESCRIPTION = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>My Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRELATED_CONTACT__MY_TYPE = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Other Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRELATED_CONTACT__OTHER_TYPE = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The number of structural features of the '<em>IRelated Contact</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRELATED_CONTACT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5884,6 +6011,17 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getIContact_Image();
+
+	/**
+	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IContact#getRelatedContacts <em>Related Contacts</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Related Contacts</em>'.
+	 * @see ch.elexis.core.model.IContact#getRelatedContacts()
+	 * @see #getIContact()
+	 * @generated
+	 */
+	EReference getIContact_RelatedContacts();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}'.
@@ -8892,6 +9030,71 @@ public interface ModelPackage extends EPackage {
 	EClass getIBlobSecondary();
 
 	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IRelatedContact <em>IRelated Contact</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IRelated Contact</em>'.
+	 * @see ch.elexis.core.model.IRelatedContact
+	 * @generated
+	 */
+	EClass getIRelatedContact();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IRelatedContact#getMyContact <em>My Contact</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>My Contact</em>'.
+	 * @see ch.elexis.core.model.IRelatedContact#getMyContact()
+	 * @see #getIRelatedContact()
+	 * @generated
+	 */
+	EReference getIRelatedContact_MyContact();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IRelatedContact#getOtherContact <em>Other Contact</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Other Contact</em>'.
+	 * @see ch.elexis.core.model.IRelatedContact#getOtherContact()
+	 * @see #getIRelatedContact()
+	 * @generated
+	 */
+	EReference getIRelatedContact_OtherContact();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IRelatedContact#getRelationshipDescription <em>Relationship Description</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Relationship Description</em>'.
+	 * @see ch.elexis.core.model.IRelatedContact#getRelationshipDescription()
+	 * @see #getIRelatedContact()
+	 * @generated
+	 */
+	EAttribute getIRelatedContact_RelationshipDescription();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IRelatedContact#getMyType <em>My Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>My Type</em>'.
+	 * @see ch.elexis.core.model.IRelatedContact#getMyType()
+	 * @see #getIRelatedContact()
+	 * @generated
+	 */
+	EAttribute getIRelatedContact_MyType();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IRelatedContact#getOtherType <em>Other Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Other Type</em>'.
+	 * @see ch.elexis.core.model.IRelatedContact#getOtherType()
+	 * @see #getIRelatedContact()
+	 * @generated
+	 */
+	EAttribute getIRelatedContact_OtherType();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9323,6 +9526,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference ICONTACT__IMAGE = eINSTANCE.getIContact_Image();
+
+		/**
+		 * The meta object literal for the '<em><b>Related Contacts</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ICONTACT__RELATED_CONTACTS = eINSTANCE.getIContact_RelatedContacts();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IPerson <em>IPerson</em>}' class.
@@ -11651,6 +11862,56 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EClass IBLOB_SECONDARY = eINSTANCE.getIBlobSecondary();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IRelatedContact <em>IRelated Contact</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IRelatedContact
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRelatedContact()
+		 * @generated
+		 */
+		EClass IRELATED_CONTACT = eINSTANCE.getIRelatedContact();
+
+		/**
+		 * The meta object literal for the '<em><b>My Contact</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IRELATED_CONTACT__MY_CONTACT = eINSTANCE.getIRelatedContact_MyContact();
+
+		/**
+		 * The meta object literal for the '<em><b>Other Contact</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IRELATED_CONTACT__OTHER_CONTACT = eINSTANCE.getIRelatedContact_OtherContact();
+
+		/**
+		 * The meta object literal for the '<em><b>Relationship Description</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IRELATED_CONTACT__RELATIONSHIP_DESCRIPTION = eINSTANCE.getIRelatedContact_RelationshipDescription();
+
+		/**
+		 * The meta object literal for the '<em><b>My Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IRELATED_CONTACT__MY_TYPE = eINSTANCE.getIRelatedContact_MyType();
+
+		/**
+		 * The meta object literal for the '<em><b>Other Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IRELATED_CONTACT__OTHER_TYPE = eINSTANCE.getIRelatedContact_OtherType();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.

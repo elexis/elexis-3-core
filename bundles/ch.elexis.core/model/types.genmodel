@@ -14,6 +14,7 @@
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="types.ecore#//RelationshipType">
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/A_GENERIC"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/A_UNKNOWN"/>
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/BUSINESS_EMPLOYER"/>
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/BUSINESS_EMPLOYEE"/>
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//RelationshipType/FAMILY_PARENT"/>

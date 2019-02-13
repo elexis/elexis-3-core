@@ -7,6 +7,7 @@ import ch.elexis.core.jpa.entities.Diagnosis;
 import ch.elexis.core.jpa.entities.Eigenleistung;
 import ch.elexis.core.jpa.entities.Fall;
 import ch.elexis.core.jpa.entities.Kontakt;
+import ch.elexis.core.jpa.entities.KontaktAdressJoint;
 import ch.elexis.core.jpa.entities.Termin;
 import ch.elexis.core.jpa.entities.Userconfig;
 import ch.elexis.core.jpa.entities.VKPreis;
@@ -56,6 +57,7 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IRecipe;
+import ch.elexis.core.model.IRelatedContact;
 import ch.elexis.core.model.IRight;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.ISticker;
@@ -72,6 +74,7 @@ import ch.elexis.core.model.Patient;
 import ch.elexis.core.model.Person;
 import ch.elexis.core.model.Prescription;
 import ch.elexis.core.model.Recipe;
+import ch.elexis.core.model.RelatedContact;
 import ch.elexis.core.model.Right;
 import ch.elexis.core.model.Role;
 import ch.elexis.core.model.UserConfig;
@@ -153,6 +156,8 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 			ch.elexis.core.jpa.entities.FreeTextDiagnosis.class));
 		
 		addMapping(new MappingEntry(IAddress.class, Address.class, ZusatzAdresse.class));
+		
+		addMapping(new MappingEntry(IRelatedContact.class, RelatedContact.class, KontaktAdressJoint.class));
 		
 		addMapping(new MappingEntry(IDocumentLetter.class, DocumentLetter.class, Brief.class));
 		

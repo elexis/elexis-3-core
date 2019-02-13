@@ -131,7 +131,7 @@ public interface IModelService {
 	/**
 	 * Get a named query for the clazz with the provided properties. The named query has to be
 	 * defined on the entity mapped to the class. The name must match
-	 * <i>className.propert[0]property[1]...</i>. With the refreshCache parameter updating the cache
+	 * <i>className.property[0]property[1]...</i>. With the refreshCache parameter updating the cache
 	 * with the results of the query can be triggered, it has performance implications.
 	 * 
 	 * @param clazz
