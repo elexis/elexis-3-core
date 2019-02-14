@@ -26,9 +26,9 @@ public interface IBillableVerifier {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @model type="ch.elexis.core.types.Result&lt;ch.elexis.core.model.IBilled&gt;"
+	 * @model type="ch.elexis.core.types.Result&lt;ch.elexis.core.model.IBillable&gt;"
 	 * @generated
 	 */
-	Result<IBilled> verifyAdd(IBillable billable, IEncounter encounter, double amount);
+	Result<IBillable> verifyAdd(IBillable billable, IEncounter encounter, double amount);
 
 } // IBillableVerifier

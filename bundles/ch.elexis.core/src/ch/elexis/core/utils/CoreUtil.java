@@ -1,6 +1,7 @@
 package ch.elexis.core.utils;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
@@ -230,5 +231,33 @@ public class CoreUtil {
 			return datetime.format(timeFormat);
 		}
 		return "?";
+	}
+	
+	/**
+	 * return a directory suitable for plugin specific configuration data. If no such dir exists, it
+	 * will be created. If it could not be created, the application will refuse to start.
+	 * 
+	 * @return a directory that exists always and is always writable and readable for plugins of the
+	 *         currently running elexis instance. Caution: this directory is not necessarily shared
+	 *         among different OS-Users. In Windows it is normally %USERPROFILE%\elexis, in Linux
+	 *         ~./elexis
+	 */
+	public static File getWritableUserDir(){
+		String userhome = null;
+		
+		if (userhome == null) {
+			userhome = System.getProperty("user.home"); //$NON-NLS-1$
+		}
+		if (StringTool.isNothing(userhome)) {
+			userhome = System.getProperty("java.io.tempdir"); //$NON-NLS-1$
+		}
+		File userDir = new File(userhome, "elexis"); //$NON-NLS-1$
+		if (!userDir.exists()) {
+			if (!userDir.mkdirs()) {
+				logger.error("Panic exit, could not create userdir " + userDir.getAbsolutePath());
+				System.exit(-5);
+			}
+		}
+		return userDir;
 	}
 }

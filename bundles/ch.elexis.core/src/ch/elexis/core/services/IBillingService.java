@@ -25,5 +25,4 @@ public interface IBillingService {
 	 * @return a Result, that may contain a message even if its ok
 	 */
 	public Result<IBilled> bill(IBillable billable, IEncounter encounter, double amount);
-	
 }

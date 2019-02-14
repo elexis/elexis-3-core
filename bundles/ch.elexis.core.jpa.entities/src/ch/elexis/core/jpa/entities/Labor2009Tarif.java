@@ -12,6 +12,7 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
+import ch.elexis.core.jpa.entities.converter.DoubleStringConverter;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 import ch.rgw.tools.StringTool;
@@ -21,8 +22,6 @@ import ch.rgw.tools.StringTool;
 @EntityListeners(EntityWithIdListener.class)
 public class Labor2009Tarif extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted {
-
-	public static final String CODESYSTEM_NAME = "EAL 2009";
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -42,8 +41,8 @@ public class Labor2009Tarif extends AbstractEntityWithId
 	@Column(length = 12)
 	private String code;
 
-	@Column(length = 10)
-	private String tp;
+	@Convert(converter = DoubleStringConverter.class)
+	private double tp;
 
 	@Column(length = 255)
 	private String name;
@@ -79,11 +78,11 @@ public class Labor2009Tarif extends AbstractEntityWithId
 		this.code = code;
 	}
 
-	public String getTp() {
+	public double getTp(){
 		return tp;
 	}
 
-	public void setTp(String tp) {
+	public void setTp(double tp){
 		this.tp = tp;
 	}
 
@@ -136,7 +135,7 @@ public class Labor2009Tarif extends AbstractEntityWithId
 	}
 
 	public String getCodeSystemName() {
-		return CODESYSTEM_NAME;
+		return "EAL 2009";
 	}
 
 	public String getText() {

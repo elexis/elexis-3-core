@@ -18,6 +18,17 @@ public interface IConfigService {
 	public boolean set(String key, String value);
 	
 	/**
+	 * Set a local configuration entry. Overwrites existing values.
+	 * 
+	 * @param key
+	 *            identifying the configuration entry
+	 * @param value
+	 *            to set, <code>null</code> to delete the entry
+	 * @return <code>true</code> if the value was successfully set
+	 */
+	public boolean setLocal(String key, String value);
+	
+	/**
 	 * Set a global configuration entry. Overwrites existing values. Performs save operation.
 	 * 
 	 * @param key
@@ -27,6 +38,17 @@ public interface IConfigService {
 	 * @return <code>true</code> if the value was successfully set
 	 */
 	public boolean set(String key, boolean value);
+	
+	/**
+	 * Set a local configuration entry. Overwrites existing values.
+	 * 
+	 * @param key
+	 *            identifying the configuration entry
+	 * @param value
+	 *            to set
+	 * @return <code>true</code> if the value was successfully set
+	 */
+	public boolean setLocal(String key, boolean value);
 	
 	/**
 	 * Set a contact specific configuration entry. Overwrites existing value. Performs save
@@ -95,6 +117,18 @@ public interface IConfigService {
 	public String get(String key, String defaultValue);
 	
 	/**
+	 * Get a stored value for a given local configuration entry, or return the value provided as
+	 * default if not found.
+	 * 
+	 * @param key
+	 *            identifying the configuration entry
+	 * @param defaultValue
+	 *            to return if configuration entry does not exist
+	 * @return
+	 */
+	public String getLocal(String key, String defaultValue);
+	
+	/**
 	 * Convenience method wrapping {@link #get(String, String)}
 	 * 
 	 * @param key
@@ -105,6 +139,17 @@ public interface IConfigService {
 	 */
 	public boolean get(String key, boolean defaultValue);
 
+	/**
+	 * Convenience method wrapping {@link #getLocal(String, String)}
+	 * 
+	 * @param key
+	 *            identifying the configuration entry
+	 * @param defaultValue
+	 *            to return if configuration entry does not exist
+	 * @return
+	 */
+	public boolean getLocal(String key, boolean defaultValue);
+	
 	/**
 	 * Convenience method wrapping {@link #get(String, String)}
 	 * 

@@ -101,7 +101,7 @@ public class BillingService implements IBillingService {
 	
 	@Override
 	public Result<IBilled> bill(IBillable billable, IEncounter encounter, double amount){
-		Result<IBilled> verificationResult =
+		Result<IBillable> verificationResult =
 			billable.getVerifier().verifyAdd(billable, encounter, amount);
 		if (verificationResult.isOK()) {
 			IBillableOptifier optifier = billable.getOptifier();
@@ -133,7 +133,15 @@ public class BillingService implements IBillingService {
 			
 			return optifierResult;
 		} else {
-			return verificationResult;
+			return translateResult(verificationResult);
 		}
+	}
+	
+	private Result<IBilled> translateResult(Result<IBillable> verificationResult){
+		Result<IBilled> ret = new Result<IBilled>();
+		verificationResult.getMessages().forEach(msg -> {
+			ret.addMessage(msg.getSeverity(), msg.getText());
+		});
+		return ret;
 	}
 }

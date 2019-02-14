@@ -4696,7 +4696,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEParameter(op, this.getIEncounter(), "encounter", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEDouble(), "amount", 0, 1, IS_UNIQUE, IS_ORDERED);
 		g1 = createEGenericType(theTypesPackage.getResult());
-		g2 = createEGenericType(this.getIBilled());
+		g2 = createEGenericType(this.getIBillable());
 		g1.getETypeArguments().add(g2);
 		initEOperation(op, g1);
 

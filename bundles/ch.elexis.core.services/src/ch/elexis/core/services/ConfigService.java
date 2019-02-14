@@ -1,21 +1,30 @@
 package ch.elexis.core.services;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.eclipse.equinox.internal.app.CommandLineArgs;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.Desk;
+import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.utils.CoreUtil;
+import ch.rgw.io.Settings;
+import ch.rgw.io.SysSettings;
 
 @Component
 public class ConfigService implements IConfigService {
@@ -25,9 +34,38 @@ public class ConfigService implements IConfigService {
 	
 	public static final String LIST_SEPARATOR = ",";
 	
+	private Settings localConfig;
+	
 	@Activate
 	public void activate(){
 		validateConfiguredDatabaseLocale();
+		
+		SysSettings cfg = new SysSettings(SysSettings.USER_SETTINGS, Desk.class);
+		cfg.read_xml(CoreUtil.getWritableUserDir() + File.separator + getLocalConfigFileName());
+		localConfig = cfg;
+	}
+	
+	@Deactivate
+	public void deactivate(){
+		SysSettings localCfg = (SysSettings) localConfig;
+		localCfg
+			.write_xml(CoreUtil.getWritableUserDir() + File.separator + getLocalConfigFileName());
+	}
+	
+	private String getLocalConfigFileName(){
+		String[] args = CommandLineArgs.getApplicationArgs();
+		String config = "default"; //$NON-NLS-1$
+		for (String s : args) {
+			if (s.startsWith("--use-config=")) { //$NON-NLS-1$
+				String[] c = s.split("="); //$NON-NLS-1$
+				config = c[1];
+			}
+		}
+		if (ElexisSystemPropertyConstants.RUN_MODE_FROM_SCRATCH
+			.equals(System.getProperty(ElexisSystemPropertyConstants.RUN_MODE))) {
+			config = UUID.randomUUID().toString();
+		}
+		return "localCfg_" + config + ".xml";
 	}
 	
 	/**
@@ -185,6 +223,27 @@ public class ConfigService implements IConfigService {
 			return Arrays.asList(split).stream().collect(Collectors.toList());
 		}
 		return defaultValue;
+	}
+	
+	@Override
+	public boolean setLocal(String key, String value){
+		return localConfig.set(key, value);
+	}
+	
+	@Override
+	public boolean setLocal(String key, boolean value){
+		localConfig.set(key, value);
+		return true;
+	}
+	
+	@Override
+	public String getLocal(String key, String defaultValue){
+		return localConfig.get(key, defaultValue);
+	}
+	
+	@Override
+	public boolean getLocal(String key, boolean defaultValue){
+		return localConfig.get(key, defaultValue);
 	}
 	
 }

@@ -323,7 +323,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="IBillableVerifier" abstract="true" interface="true">
     <eOperations name="verifyAdd">
       <eGenericType eClassifier="ecore:EClass types.ecore#//Result">
-        <eTypeArguments eClassifier="#//IBilled"/>
+        <eTypeArguments eClassifier="#//IBillable"/>
       </eGenericType>
       <eParameters name="billable" eType="#//IBillable"/>
       <eParameters name="encounter" eType="#//IEncounter"/>
