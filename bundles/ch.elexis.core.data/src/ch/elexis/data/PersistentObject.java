@@ -1110,14 +1110,15 @@ public abstract class PersistentObject implements IPersistentObject {
 			log.error("Get with no ID on object of type [" + this.getClass().getName() + "]");
 		}
 		DBConnection dbConnection = getDBConnection();
-		String key = getKey(field);
+		String mapped = map(field);
+		String key = getKey(mapped);
 		Object ret = dbConnection.getCache().get(key, getCacheTime());
 		if (ret instanceof String) {
 			return (String) ret;
 		}
 		boolean decrypt = false;
 		StringBuffer sql = new StringBuffer();
-		String mapped = map(field);
+
 		String table = getTableName();
 		if (mapped.startsWith("EXT:")) {
 			int ix = mapped.indexOf(':', 5);
