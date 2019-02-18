@@ -8,13 +8,7 @@ import org.eclipse.core.runtime.IStatus;
 import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.jdt.Nullable;
 
-public abstract class AbstractReferenceDataImporter {
-	
-	/**
-	 * @return the class this reference data importer is responsible for
-	 */
-	public abstract @NonNull
-	Class<?> getReferenceDataTypeResponsibleFor();
+public abstract class AbstractReferenceDataImporter implements IReferenceDataImporter {
 	
 	/**
 	 * 

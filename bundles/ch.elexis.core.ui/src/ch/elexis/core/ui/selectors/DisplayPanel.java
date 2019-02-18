@@ -10,9 +10,11 @@
  ******************************************************************************/
 package ch.elexis.core.ui.selectors;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.Separator;
@@ -25,7 +27,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.forms.widgets.ColumnLayout;
+import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.LimitSizeStack;
@@ -44,9 +48,9 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 	private ToolBarManager tActions;
 	private ToolBar tb;
 	private IAction aClr;
-	private PersistentObject actObject;
+	private Object actObject;
 	
-	public DisplayPanel(Composite parent, FieldDescriptor<? extends PersistentObject>[] fields,
+	public DisplayPanel(Composite parent, FieldDescriptor<?>[] fields,
 		int minCols, int maxCols, IAction... actions){
 		super(parent, SWT.NONE);
 		bAutosave = false;
@@ -101,7 +105,7 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 		cl.maxNumColumns = maxCols > minCols ? maxCols : minCols + 2;
 		cFields.setLayout(cl);
 		
-		for (FieldDescriptor<? extends PersistentObject> field : fields) {
+		for (FieldDescriptor<?> field : fields) {
 			ActiveControl ac = null;
 			switch (field.getFieldType()) {
 			case HYPERLINK:
@@ -143,6 +147,28 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 		for (ActiveControl ac : ctls) {
 			String field = ac.getProperty(ActiveControl.PROP_FIELDNAME);
 			ac.setText(po.get(field));
+		}
+		layout();
+	}
+	
+	/**
+	 * Set the Object to display
+	 * 
+	 * @param po
+	 *            a PersistentObject that must have all fields defined, that are referenced by
+	 *            ActiveControls of this Panel
+	 */
+	public void setObject(Identifiable identifiable){
+		actObject = identifiable;
+		List<ActiveControl> ctls = getControls();
+		for (ActiveControl ac : ctls) {
+			String field = ac.getProperty(ActiveControl.PROP_FIELDNAME);
+			try {
+				ac.setText(BeanUtils.getProperty(actObject, field));
+			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+				LoggerFactory.getLogger(getClass())
+					.error("Error getting property [" + field + "] of [" + actObject + "]", e);
+			}
 		}
 		layout();
 	}
@@ -195,7 +221,16 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 			if (bAutosave) {
 				if (actObject != null && ac != null) {
 					String field = ac.getProperty(ActiveControl.PROP_FIELDNAME);
-					actObject.set(field, ac.getText());
+					if (actObject instanceof PersistentObject) {
+						((PersistentObject) actObject).set(field, ac.getText());
+					} else if (actObject instanceof Identifiable) {
+						try {
+							BeanUtils.setProperty(actObject, field, ac.getText());
+						} catch (IllegalAccessException | InvocationTargetException e) {
+							LoggerFactory.getLogger(getClass()).error(
+								"Error setting property [" + field + "] of [" + actObject + "]", e);
+						}
+					}
 				}
 			}
 			for (ActiveControlListener lis : listeners) {

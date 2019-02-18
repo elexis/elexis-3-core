@@ -9,6 +9,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
@@ -20,6 +21,7 @@ import ch.rgw.tools.StringTool;
 @Entity
 @Table(name = "CH_MEDELEXIS_LABORTARIF2009")
 @EntityListeners(EntityWithIdListener.class)
+@NamedQuery(name = "Labor2009Tarif.code", query = "SELECT lt FROM Labor2009Tarif lt WHERE lt.deleted = false AND lt.code = :code")
 public class Labor2009Tarif extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted {
 

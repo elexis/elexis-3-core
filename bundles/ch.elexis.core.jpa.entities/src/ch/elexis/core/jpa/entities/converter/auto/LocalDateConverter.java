@@ -28,7 +28,7 @@ public class LocalDateConverter implements AttributeConverter<LocalDate, String>
 
 	@Override
 	public LocalDate convertToEntityAttribute(String dateValue) {
-		if (dateValue == null || dateValue.length() == 0) {
+		if (dateValue == null || dateValue.isEmpty()) {
 			return null;
 		}
 

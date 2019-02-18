@@ -272,8 +272,8 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 				ct.setControl(page);
 				ct.setData(detailDisplay);
 				
-				CoreUiUtil.injectServices(codeSelector);
-				CoreUiUtil.injectServices(detailDisplay);
+				CoreUiUtil.injectServicesWithContext(codeSelector);
+				CoreUiUtil.injectServicesWithContext(detailDisplay);
 			} catch (Exception ex) {
 				ElexisStatus status =
 					new ElexisStatus(ElexisStatus.WARNING, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
