@@ -193,7 +193,7 @@ public class UserManagementPreferencePage extends PreferencePage
 			public void doRun(User user){
 				User currentUser = (User) ElexisEventDispatcher.getSelected(User.class);
 				if (currentUser.equals(user)) {
-					MessageDialog.openWarning(getShell(), "Warnung", "Eingeloggter Benutzer kann nicht entfernt werden!");
+					MessageDialog.openWarning(getShell(), "Warnung", "Dieser Benutzer ist gerade eingeloggt und kann daher nicht entfernt werden!");
 				} else {
 					user.delete();
 					updateUserList();
