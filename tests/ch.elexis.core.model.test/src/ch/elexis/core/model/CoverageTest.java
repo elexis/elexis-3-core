@@ -6,6 +6,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+
 import org.junit.Test;
 
 import ch.elexis.core.services.IQuery;
@@ -43,5 +46,13 @@ public class CoverageTest extends AbstractTest {
 		
 		coreModelService.delete(coverage);
 		assertFalse(patient.getCoverages().contains(coverage));
+	}
+	
+	@Test
+	public void coverageOpenClose() {
+		assertTrue(coverage.isOpen());
+		coverage.setDateTo(LocalDate.now().minus(1, ChronoUnit.DAYS));
+		coreModelService.save(coverage);
+		assertFalse(coverage.isOpen());
 	}
 }

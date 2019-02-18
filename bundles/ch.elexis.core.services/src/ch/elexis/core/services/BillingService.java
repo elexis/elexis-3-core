@@ -48,7 +48,7 @@ public class BillingService implements IBillingService {
 		ICoverage coverage = encounter.getCoverage();
 		if (coverage != null) {
 			if (!coverage.isOpen()) {
-				return new Result<IEncounter>(SEVERITY.WARNING, 0,
+				return new Result<>(SEVERITY.WARNING, 0,
 					"Diese Konsultation gehört zu einem abgeschlossenen Fall", encounter, false);
 			}
 		}
@@ -138,7 +138,7 @@ public class BillingService implements IBillingService {
 	}
 	
 	private Result<IBilled> translateResult(Result<IBillable> verificationResult){
-		Result<IBilled> ret = new Result<IBilled>();
+		Result<IBilled> ret = new Result<>();
 		verificationResult.getMessages().forEach(msg -> {
 			ret.addMessage(msg.getSeverity(), msg.getText());
 		});

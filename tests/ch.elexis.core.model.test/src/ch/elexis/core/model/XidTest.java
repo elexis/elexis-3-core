@@ -18,67 +18,67 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class XidTest {
-	private IModelService modelSerice;
-	
+	private IModelService modelService;
+
 	private IContact contact1;
 	private IContact contact2;
-	
+
 	@Before
-	public void before(){
-		modelSerice = OsgiServiceUtil.getService(IModelService.class).get();
-		
-		contact1 = modelSerice.create(IContact.class);
+	public void before() {
+		modelService = OsgiServiceUtil.getService(IModelService.class).get();
+
+		contact1 = modelService.create(IContact.class);
 		contact1.setDescription1("test contact 1");
-		modelSerice.save(contact1);
-		contact2 = modelSerice.create(IContact.class);
+		modelService.save(contact1);
+		contact2 = modelService.create(IContact.class);
 		contact2.setDescription1("test contact 2");
-		modelSerice.save(contact2);
+		modelService.save(contact2);
 	}
-	
+
 	@After
-	public void after(){
-		modelSerice.remove(contact1);
-		modelSerice.remove(contact2);
-		
-		OsgiServiceUtil.ungetService(modelSerice);
-		modelSerice = null;
+	public void after() {
+		modelService.remove(contact1);
+		modelService.remove(contact2);
+
+		OsgiServiceUtil.ungetService(modelService);
+		modelService = null;
 	}
-	
+
 	@Test
-	public void create(){
-		IXid xid = modelSerice.create(IXid.class);
+	public void create() {
+		IXid xid = modelService.create(IXid.class);
 		assertNotNull(xid);
 		assertTrue(xid instanceof IXid);
-		
+
 		xid.setDomain("http://www.test.info");
 		xid.setDomainId("testId");
 		xid.setObject(contact1);
-		assertTrue(modelSerice.save(xid));
-		
-		Optional<IXid> loadedXid = modelSerice.load(xid.getId(), IXid.class);
+		assertTrue(modelService.save(xid));
+
+		Optional<IXid> loadedXid = modelService.load(xid.getId(), IXid.class);
 		assertTrue(loadedXid.isPresent());
 		assertFalse(xid == loadedXid.get());
 		assertEquals(xid, loadedXid.get());
 		assertEquals(contact1, loadedXid.get().getObject(IContact.class));
-		
-		modelSerice.remove(xid);
+
+		modelService.remove(xid);
 	}
-	
+
 	@Test
-	public void query(){
-		IXid xid1 = modelSerice.create(IXid.class);
+	public void query() {
+		IXid xid1 = modelService.create(IXid.class);
 		xid1.setDomain("http://www.test.info");
 		xid1.setDomainId("testId1");
 		xid1.setObject(contact1);
-		assertTrue(modelSerice.save(xid1));
-		
-		IXid xid2 = modelSerice.create(IXid.class);
+		assertTrue(modelService.save(xid1));
+
+		IXid xid2 = modelService.create(IXid.class);
 		xid2.setDomain("http://www.test.info");
 		xid2.setDomainId("testId2");
 		xid2.setObject(contact2);
-		assertTrue(modelSerice.save(xid2));
-		
-		IQuery<IXid> query = modelSerice.getQuery(IXid.class);
+		assertTrue(modelService.save(xid2));
+
+		IQuery<IXid> query = modelService.getQuery(IXid.class);
 		query.and(ModelPackage.Literals.IXID__DOMAIN, COMPARATOR.EQUALS, "http://www.test.info");
 		List<IXid> existing = query.execute();
 		assertNotNull(existing);
@@ -95,8 +95,8 @@ public class XidTest {
 				assertEquals(contact2.getXid("http://www.test.info").getId(), iXid.getId());
 			}
 		}
-		
-		modelSerice.remove(xid1);
-		modelSerice.remove(xid2);
+
+		modelService.remove(xid1);
+		modelService.remove(xid2);
 	}
 }
