@@ -122,14 +122,14 @@ public class MedicationService implements IMedicationService {
 			if (n.matches(special_num_at_start)) {
 				float value = getNum(n.substring(0, 1)) / getNum(n.substring(2));
 				return value;
-			} else if (n.equalsIgnoreCase("½"))
+			} else if (n.equalsIgnoreCase("½")) {
 				return 0.5F;
-			else if (n.equalsIgnoreCase("¼"))
+			}else if (n.equalsIgnoreCase("¼")) {
 				return 0.25F;
-			else if (n.equalsIgnoreCase("1½"))
+			}else if (n.equalsIgnoreCase("1½")) {
 				return 1.5F;
 			
-			else if (n.indexOf('/') != -1) {
+			} else if (n.indexOf('/') != -1) {
 				if (n.length() == 1) {
 					return 0.0f;
 				}
