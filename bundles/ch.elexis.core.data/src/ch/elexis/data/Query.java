@@ -159,23 +159,14 @@ public class Query<T> {
 			clearEntityCache = clearCache;
 			
 			if (prefetch != null) {
-				// resolve the delivered field names to the real database columns
-				// consider the resp. datatypes stored
-				List<String> mappedPrefetchValues =
-					new ArrayList<String>(Arrays.asList(ID_FETCH_VAL));
+				// concat ID with prefetch values
+				List<String> listPrefachVals = new ArrayList<String>(Arrays.asList(ID_FETCH_VAL));
 				for (int i = 0; i < prefetch.length; i++) {
-					String map = PersistentObject.map(tableName, prefetch[i]);
-					if (!map.contains(":")) {
-						mappedPrefetchValues.add(map);
-					} else if (map.startsWith("S:")) {
-						mappedPrefetchValues.add(map.substring(4));
-					} else {
-						throw new UnsupportedOperationException(
-							"prefetch value not supported: " + prefetch[i] + " maps to " + map);
-					}
+					// need this because the query constructor should check for correct mapping
+					mappedValue(tableName, prefetch[i]);
+					listPrefachVals.add(prefetch[i]);
 				}
-				
-				fetchVals = mappedPrefetchValues.toArray(new String[] {});
+				fetchVals = listPrefachVals.toArray(new String[] {});
 			} else {
 				fetchVals = ID_FETCH_VAL;
 			}
@@ -192,6 +183,23 @@ public class Query<T> {
 					ElexisStatus.LOG_ERRORS);
 			throw new PersistenceException(status);
 		}
+	}
+	
+	/**
+	 * Resolve the delivered field names to the real database columns Consider the resp. datatypes stored
+	 * @param tableName
+	 * @param prefetch
+	 * @return
+	 */
+	private String mappedValue(String tableName, String prefetch){
+		String map = PersistentObject.map(tableName, prefetch);
+		if (map.startsWith("S:")) {
+			map = map.substring(4);
+		} else if (map.contains(":")){
+			throw new UnsupportedOperationException(
+				"prefetch value not supported: " + prefetch + " maps to " + map);
+		}
+		return map;
 	}
 	
 	/**
@@ -261,7 +269,7 @@ public class Query<T> {
 		
 		sql.append("SELECT ");
 		for (int i = 0; i < fetchVals.length; i++) {
-			sql.append(fetchVals[i]);
+			sql.append(mappedValue(table, fetchVals[i]));
 			if (i + 1 < fetchVals.length) {
 				sql.append(", ");
 			}
