@@ -10,6 +10,10 @@
  */
 package ch.elexis.core.model;
 
+import ch.rgw.tools.Money;
+import java.time.LocalDate;
+import java.util.List;
+
 
 /**
  * <!-- begin-user-doc -->
@@ -21,6 +25,17 @@ package ch.elexis.core.model;
  * </p>
  * <ul>
  *   <li>{@link ch.elexis.core.model.IInvoice#getState <em>State</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IInvoice#getNumber <em>Number</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IInvoice#getMandator <em>Mandator</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IInvoice#getCoverage <em>Coverage</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IInvoice#getEncounters <em>Encounters</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IInvoice#getBilled <em>Billed</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IInvoice#getDate <em>Date</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IInvoice#getDateFrom <em>Date From</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IInvoice#getDateTo <em>Date To</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IInvoice#getTotalAmount <em>Total Amount</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IInvoice#getOpenAmount <em>Open Amount</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IInvoice#getPayedAmount <em>Payed Amount</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIInvoice()
@@ -54,4 +69,253 @@ public interface IInvoice extends Identifiable, Deleteable, WithExtInfo {
 	 * @generated
 	 */
 	void setState(InvoiceState value);
+
+	/**
+	 * Returns the value of the '<em><b>Number</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Number</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Number</em>' attribute.
+	 * @see ch.elexis.core.model.ModelPackage#getIInvoice_Number()
+	 * @model changeable="false"
+	 * @generated
+	 */
+	String getNumber();
+
+	/**
+	 * Returns the value of the '<em><b>Mandator</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Mandator</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Mandator</em>' reference.
+	 * @see #setMandator(IMandator)
+	 * @see ch.elexis.core.model.ModelPackage#getIInvoice_Mandator()
+	 * @model
+	 * @generated
+	 */
+	IMandator getMandator();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IInvoice#getMandator <em>Mandator</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Mandator</em>' reference.
+	 * @see #getMandator()
+	 * @generated
+	 */
+	void setMandator(IMandator value);
+
+	/**
+	 * Returns the value of the '<em><b>Coverage</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Coverage</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Coverage</em>' reference.
+	 * @see #setCoverage(ICoverage)
+	 * @see ch.elexis.core.model.ModelPackage#getIInvoice_Coverage()
+	 * @model
+	 * @generated
+	 */
+	ICoverage getCoverage();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IInvoice#getCoverage <em>Coverage</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Coverage</em>' reference.
+	 * @see #getCoverage()
+	 * @generated
+	 */
+	void setCoverage(ICoverage value);
+
+	/**
+	 * Returns the value of the '<em><b>Encounters</b></em>' reference list.
+	 * The list contents are of type {@link ch.elexis.core.model.IEncounter}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Encounters</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Encounters</em>' reference list.
+	 * @see ch.elexis.core.model.ModelPackage#getIInvoice_Encounters()
+	 * @model
+	 * @generated
+	 */
+	List<IEncounter> getEncounters();
+
+	/**
+	 * Returns the value of the '<em><b>Billed</b></em>' reference list.
+	 * The list contents are of type {@link ch.elexis.core.model.IBilled}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Billed</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Billed</em>' reference list.
+	 * @see ch.elexis.core.model.ModelPackage#getIInvoice_Billed()
+	 * @model
+	 * @generated
+	 */
+	List<IBilled> getBilled();
+
+	/**
+	 * Returns the value of the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Date</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Date</em>' attribute.
+	 * @see #setDate(LocalDate)
+	 * @see ch.elexis.core.model.ModelPackage#getIInvoice_Date()
+	 * @model dataType="ch.elexis.core.types.LocalDate"
+	 * @generated
+	 */
+	LocalDate getDate();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IInvoice#getDate <em>Date</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Date</em>' attribute.
+	 * @see #getDate()
+	 * @generated
+	 */
+	void setDate(LocalDate value);
+
+	/**
+	 * Returns the value of the '<em><b>Date From</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Date From</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Date From</em>' attribute.
+	 * @see #setDateFrom(LocalDate)
+	 * @see ch.elexis.core.model.ModelPackage#getIInvoice_DateFrom()
+	 * @model dataType="ch.elexis.core.types.LocalDate"
+	 * @generated
+	 */
+	LocalDate getDateFrom();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IInvoice#getDateFrom <em>Date From</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Date From</em>' attribute.
+	 * @see #getDateFrom()
+	 * @generated
+	 */
+	void setDateFrom(LocalDate value);
+
+	/**
+	 * Returns the value of the '<em><b>Date To</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Date To</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Date To</em>' attribute.
+	 * @see #setDateTo(LocalDate)
+	 * @see ch.elexis.core.model.ModelPackage#getIInvoice_DateTo()
+	 * @model dataType="ch.elexis.core.types.LocalDate"
+	 * @generated
+	 */
+	LocalDate getDateTo();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IInvoice#getDateTo <em>Date To</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Date To</em>' attribute.
+	 * @see #getDateTo()
+	 * @generated
+	 */
+	void setDateTo(LocalDate value);
+
+	/**
+	 * Returns the value of the '<em><b>Total Amount</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Total Amount</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Total Amount</em>' attribute.
+	 * @see #setTotalAmount(Money)
+	 * @see ch.elexis.core.model.ModelPackage#getIInvoice_TotalAmount()
+	 * @model dataType="ch.elexis.core.types.Money"
+	 * @generated
+	 */
+	Money getTotalAmount();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IInvoice#getTotalAmount <em>Total Amount</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Total Amount</em>' attribute.
+	 * @see #getTotalAmount()
+	 * @generated
+	 */
+	void setTotalAmount(Money value);
+
+	/**
+	 * Returns the value of the '<em><b>Open Amount</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Open Amount</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Open Amount</em>' attribute.
+	 * @see ch.elexis.core.model.ModelPackage#getIInvoice_OpenAmount()
+	 * @model dataType="ch.elexis.core.types.Money" changeable="false"
+	 * @generated
+	 */
+	Money getOpenAmount();
+
+	/**
+	 * Returns the value of the '<em><b>Payed Amount</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Payed Amount</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Payed Amount</em>' attribute.
+	 * @see ch.elexis.core.model.ModelPackage#getIInvoice_PayedAmount()
+	 * @model dataType="ch.elexis.core.types.Money" changeable="false"
+	 * @generated
+	 */
+	Money getPayedAmount();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	void addTrace(String name, String value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model type="ch.elexis.core.types.List&lt;org.eclipse.emf.ecore.EString&gt;" many="false"
+	 * @generated
+	 */
+	List<String> getTrace(String name);
 } // IInvoice

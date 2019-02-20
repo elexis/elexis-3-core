@@ -30,6 +30,7 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.ICoverage#getCostBearer <em>Cost Bearer</em>}</li>
  *   <li>{@link ch.elexis.core.model.ICoverage#getInsuranceNumber <em>Insurance Number</em>}</li>
  *   <li>{@link ch.elexis.core.model.ICoverage#getDateTo <em>Date To</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ICoverage#getBillingProposalDate <em>Billing Proposal Date</em>}</li>
  *   <li>{@link ch.elexis.core.model.ICoverage#getEncounters <em>Encounters</em>}</li>
  *   <li>{@link ch.elexis.core.model.ICoverage#getBillingSystem <em>Billing System</em>}</li>
  * </ul>
@@ -250,6 +251,32 @@ public interface ICoverage extends Deleteable, Identifiable, WithExtInfo {
 	 * @generated
 	 */
 	void setDateTo(LocalDate value);
+
+	/**
+	 * Returns the value of the '<em><b>Billing Proposal Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Billing Proposal Date</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Billing Proposal Date</em>' attribute.
+	 * @see #setBillingProposalDate(LocalDate)
+	 * @see ch.elexis.core.model.ModelPackage#getICoverage_BillingProposalDate()
+	 * @model dataType="ch.elexis.core.types.LocalDate"
+	 * @generated
+	 */
+	LocalDate getBillingProposalDate();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.ICoverage#getBillingProposalDate <em>Billing Proposal Date</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Billing Proposal Date</em>' attribute.
+	 * @see #getBillingProposalDate()
+	 * @generated
+	 */
+	void setBillingProposalDate(LocalDate value);
 
 	/**
 	 * Returns the value of the '<em><b>Encounters</b></em>' reference list.

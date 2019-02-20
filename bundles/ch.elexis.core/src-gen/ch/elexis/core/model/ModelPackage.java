@@ -3979,13 +3979,22 @@ public interface ModelPackage extends EPackage {
 	int ICOVERAGE__DATE_TO = DELETEABLE_FEATURE_COUNT + 6;
 
 	/**
+	 * The feature id for the '<em><b>Billing Proposal Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICOVERAGE__BILLING_PROPOSAL_DATE = DELETEABLE_FEATURE_COUNT + 7;
+
+	/**
 	 * The feature id for the '<em><b>Encounters</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ICOVERAGE__ENCOUNTERS = DELETEABLE_FEATURE_COUNT + 7;
+	int ICOVERAGE__ENCOUNTERS = DELETEABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Billing System</b></em>' reference.
@@ -3994,7 +4003,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICOVERAGE__BILLING_SYSTEM = DELETEABLE_FEATURE_COUNT + 8;
+	int ICOVERAGE__BILLING_SYSTEM = DELETEABLE_FEATURE_COUNT + 9;
 
 	/**
 	 * The number of structural features of the '<em>ICoverage</em>' class.
@@ -4003,7 +4012,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ICOVERAGE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 9;
+	int ICOVERAGE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 10;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IBillingSystemFactor <em>IBilling System Factor</em>}' class.
@@ -4546,6 +4555,151 @@ public interface ModelPackage extends EPackage {
 	int IBILLED_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 13;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IInvoiceBilled <em>IInvoice Billed</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IInvoiceBilled
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIInvoiceBilled()
+	 * @generated
+	 */
+	int IINVOICE_BILLED = 43;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILLED__DELETED = IBILLED__DELETED;
+
+	/**
+	 * The feature id for the '<em><b>Billable</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILLED__BILLABLE = IBILLED__BILLABLE;
+
+	/**
+	 * The feature id for the '<em><b>Encounter</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILLED__ENCOUNTER = IBILLED__ENCOUNTER;
+
+	/**
+	 * The feature id for the '<em><b>Amount</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILLED__AMOUNT = IBILLED__AMOUNT;
+
+	/**
+	 * The feature id for the '<em><b>Price</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILLED__PRICE = IBILLED__PRICE;
+
+	/**
+	 * The feature id for the '<em><b>Net Price</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILLED__NET_PRICE = IBILLED__NET_PRICE;
+
+	/**
+	 * The feature id for the '<em><b>Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILLED__TEXT = IBILLED__TEXT;
+
+	/**
+	 * The feature id for the '<em><b>Points</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILLED__POINTS = IBILLED__POINTS;
+
+	/**
+	 * The feature id for the '<em><b>Factor</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILLED__FACTOR = IBILLED__FACTOR;
+
+	/**
+	 * The feature id for the '<em><b>Primary Scale</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILLED__PRIMARY_SCALE = IBILLED__PRIMARY_SCALE;
+
+	/**
+	 * The feature id for the '<em><b>Secondary Scale</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILLED__SECONDARY_SCALE = IBILLED__SECONDARY_SCALE;
+
+	/**
+	 * The feature id for the '<em><b>Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILLED__CODE = IBILLED__CODE;
+
+	/**
+	 * The feature id for the '<em><b>Total</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILLED__TOTAL = IBILLED__TOTAL;
+
+	/**
+	 * The feature id for the '<em><b>Invoice</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILLED__INVOICE = IBILLED_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>IInvoice Billed</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILLED_FEATURE_COUNT = IBILLED_FEATURE_COUNT + 1;
+
+	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IInvoice <em>IInvoice</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4553,7 +4707,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIInvoice()
 	 * @generated
 	 */
-	int IINVOICE = 43;
+	int IINVOICE = 44;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4574,13 +4728,112 @@ public interface ModelPackage extends EPackage {
 	int IINVOICE__STATE = IDENTIFIABLE_FEATURE_COUNT + 1;
 
 	/**
+	 * The feature id for the '<em><b>Number</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE__NUMBER = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Mandator</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE__MANDATOR = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Coverage</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE__COVERAGE = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Encounters</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE__ENCOUNTERS = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Billed</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE__BILLED = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The feature id for the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE__DATE = IDENTIFIABLE_FEATURE_COUNT + 7;
+
+	/**
+	 * The feature id for the '<em><b>Date From</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE__DATE_FROM = IDENTIFIABLE_FEATURE_COUNT + 8;
+
+	/**
+	 * The feature id for the '<em><b>Date To</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE__DATE_TO = IDENTIFIABLE_FEATURE_COUNT + 9;
+
+	/**
+	 * The feature id for the '<em><b>Total Amount</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE__TOTAL_AMOUNT = IDENTIFIABLE_FEATURE_COUNT + 10;
+
+	/**
+	 * The feature id for the '<em><b>Open Amount</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE__OPEN_AMOUNT = IDENTIFIABLE_FEATURE_COUNT + 11;
+
+	/**
+	 * The feature id for the '<em><b>Payed Amount</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE__PAYED_AMOUNT = IDENTIFIABLE_FEATURE_COUNT + 12;
+
+	/**
 	 * The number of structural features of the '<em>IInvoice</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IINVOICE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 2;
+	int IINVOICE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 13;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IStock <em>IStock</em>}' class.
@@ -4590,7 +4843,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIStock()
 	 * @generated
 	 */
-	int ISTOCK = 44;
+	int ISTOCK = 45;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4663,7 +4916,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIStockEntry()
 	 * @generated
 	 */
-	int ISTOCK_ENTRY = 45;
+	int ISTOCK_ENTRY = 46;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4754,7 +5007,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIOrderEntry()
 	 * @generated
 	 */
-	int IORDER_ENTRY = 46;
+	int IORDER_ENTRY = 47;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4836,7 +5089,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIOrder()
 	 * @generated
 	 */
-	int IORDER = 47;
+	int IORDER = 48;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4891,7 +5144,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAddress()
 	 * @generated
 	 */
-	int IADDRESS = 48;
+	int IADDRESS = 49;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4991,7 +5244,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIImage()
 	 * @generated
 	 */
-	int IIMAGE = 50;
+	int IIMAGE = 51;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.WithAssignableId <em>With Assignable Id</em>}' class.
@@ -5001,7 +5254,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getWithAssignableId()
 	 * @generated
 	 */
-	int WITH_ASSIGNABLE_ID = 51;
+	int WITH_ASSIGNABLE_ID = 52;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.
@@ -5011,7 +5264,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAppointment()
 	 * @generated
 	 */
-	int IAPPOINTMENT = 49;
+	int IAPPOINTMENT = 50;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -5211,7 +5464,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPrescription()
 	 * @generated
 	 */
-	int IPRESCRIPTION = 52;
+	int IPRESCRIPTION = 53;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -5366,7 +5619,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRight()
 	 * @generated
 	 */
-	int IRIGHT = 53;
+	int IRIGHT = 54;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -5421,7 +5674,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBillingSystem()
 	 * @generated
 	 */
-	int IBILLING_SYSTEM = 54;
+	int IBILLING_SYSTEM = 55;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5458,7 +5711,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRecipe()
 	 * @generated
 	 */
-	int IRECIPE = 55;
+	int IRECIPE = 56;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -5531,7 +5784,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBlobSecondary()
 	 * @generated
 	 */
-	int IBLOB_SECONDARY = 56;
+	int IBLOB_SECONDARY = 57;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -5577,7 +5830,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRelatedContact()
 	 * @generated
 	 */
-	int IRELATED_CONTACT = 57;
+	int IRELATED_CONTACT = 58;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -5641,6 +5894,161 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IRELATED_CONTACT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IPayment <em>IPayment</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IPayment
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPayment()
+	 * @generated
+	 */
+	int IPAYMENT = 59;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPAYMENT__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Invoice</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPAYMENT__INVOICE = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Amount</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPAYMENT__AMOUNT = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Remark</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPAYMENT__REMARK = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPAYMENT__DATE = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The number of structural features of the '<em>IPayment</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPAYMENT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IAccountTransaction <em>IAccount Transaction</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IAccountTransaction
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAccountTransaction()
+	 * @generated
+	 */
+	int IACCOUNT_TRANSACTION = 60;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT_TRANSACTION__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Invoice</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT_TRANSACTION__INVOICE = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Payment</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT_TRANSACTION__PAYMENT = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Patient</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT_TRANSACTION__PATIENT = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Amount</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT_TRANSACTION__AMOUNT = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Remark</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT_TRANSACTION__REMARK = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Account</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT_TRANSACTION__ACCOUNT = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The feature id for the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT_TRANSACTION__DATE = IDENTIFIABLE_FEATURE_COUNT + 7;
+
+	/**
+	 * The number of structural features of the '<em>IAccount Transaction</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT_TRANSACTION_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}'.
@@ -7765,6 +8173,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getICoverage_DateTo();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ICoverage#getBillingProposalDate <em>Billing Proposal Date</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Billing Proposal Date</em>'.
+	 * @see ch.elexis.core.model.ICoverage#getBillingProposalDate()
+	 * @see #getICoverage()
+	 * @generated
+	 */
+	EAttribute getICoverage_BillingProposalDate();
+
+	/**
 	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.ICoverage#getEncounters <em>Encounters</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8251,6 +8670,27 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIBilled_Total();
 
 	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IInvoiceBilled <em>IInvoice Billed</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IInvoice Billed</em>'.
+	 * @see ch.elexis.core.model.IInvoiceBilled
+	 * @generated
+	 */
+	EClass getIInvoiceBilled();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IInvoiceBilled#getInvoice <em>Invoice</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Invoice</em>'.
+	 * @see ch.elexis.core.model.IInvoiceBilled#getInvoice()
+	 * @see #getIInvoiceBilled()
+	 * @generated
+	 */
+	EReference getIInvoiceBilled_Invoice();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IInvoice <em>IInvoice</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8270,6 +8710,127 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getIInvoice_State();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IInvoice#getNumber <em>Number</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Number</em>'.
+	 * @see ch.elexis.core.model.IInvoice#getNumber()
+	 * @see #getIInvoice()
+	 * @generated
+	 */
+	EAttribute getIInvoice_Number();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IInvoice#getMandator <em>Mandator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Mandator</em>'.
+	 * @see ch.elexis.core.model.IInvoice#getMandator()
+	 * @see #getIInvoice()
+	 * @generated
+	 */
+	EReference getIInvoice_Mandator();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IInvoice#getCoverage <em>Coverage</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Coverage</em>'.
+	 * @see ch.elexis.core.model.IInvoice#getCoverage()
+	 * @see #getIInvoice()
+	 * @generated
+	 */
+	EReference getIInvoice_Coverage();
+
+	/**
+	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IInvoice#getEncounters <em>Encounters</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Encounters</em>'.
+	 * @see ch.elexis.core.model.IInvoice#getEncounters()
+	 * @see #getIInvoice()
+	 * @generated
+	 */
+	EReference getIInvoice_Encounters();
+
+	/**
+	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IInvoice#getBilled <em>Billed</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Billed</em>'.
+	 * @see ch.elexis.core.model.IInvoice#getBilled()
+	 * @see #getIInvoice()
+	 * @generated
+	 */
+	EReference getIInvoice_Billed();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IInvoice#getDate <em>Date</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Date</em>'.
+	 * @see ch.elexis.core.model.IInvoice#getDate()
+	 * @see #getIInvoice()
+	 * @generated
+	 */
+	EAttribute getIInvoice_Date();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IInvoice#getDateFrom <em>Date From</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Date From</em>'.
+	 * @see ch.elexis.core.model.IInvoice#getDateFrom()
+	 * @see #getIInvoice()
+	 * @generated
+	 */
+	EAttribute getIInvoice_DateFrom();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IInvoice#getDateTo <em>Date To</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Date To</em>'.
+	 * @see ch.elexis.core.model.IInvoice#getDateTo()
+	 * @see #getIInvoice()
+	 * @generated
+	 */
+	EAttribute getIInvoice_DateTo();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IInvoice#getTotalAmount <em>Total Amount</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Total Amount</em>'.
+	 * @see ch.elexis.core.model.IInvoice#getTotalAmount()
+	 * @see #getIInvoice()
+	 * @generated
+	 */
+	EAttribute getIInvoice_TotalAmount();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IInvoice#getOpenAmount <em>Open Amount</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Open Amount</em>'.
+	 * @see ch.elexis.core.model.IInvoice#getOpenAmount()
+	 * @see #getIInvoice()
+	 * @generated
+	 */
+	EAttribute getIInvoice_OpenAmount();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IInvoice#getPayedAmount <em>Payed Amount</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Payed Amount</em>'.
+	 * @see ch.elexis.core.model.IInvoice#getPayedAmount()
+	 * @see #getIInvoice()
+	 * @generated
+	 */
+	EAttribute getIInvoice_PayedAmount();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IStock <em>IStock</em>}'.
@@ -9093,6 +9654,147 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getIRelatedContact_OtherType();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IPayment <em>IPayment</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IPayment</em>'.
+	 * @see ch.elexis.core.model.IPayment
+	 * @generated
+	 */
+	EClass getIPayment();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IPayment#getInvoice <em>Invoice</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Invoice</em>'.
+	 * @see ch.elexis.core.model.IPayment#getInvoice()
+	 * @see #getIPayment()
+	 * @generated
+	 */
+	EReference getIPayment_Invoice();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPayment#getAmount <em>Amount</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Amount</em>'.
+	 * @see ch.elexis.core.model.IPayment#getAmount()
+	 * @see #getIPayment()
+	 * @generated
+	 */
+	EAttribute getIPayment_Amount();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPayment#getRemark <em>Remark</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Remark</em>'.
+	 * @see ch.elexis.core.model.IPayment#getRemark()
+	 * @see #getIPayment()
+	 * @generated
+	 */
+	EAttribute getIPayment_Remark();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPayment#getDate <em>Date</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Date</em>'.
+	 * @see ch.elexis.core.model.IPayment#getDate()
+	 * @see #getIPayment()
+	 * @generated
+	 */
+	EAttribute getIPayment_Date();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IAccountTransaction <em>IAccount Transaction</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IAccount Transaction</em>'.
+	 * @see ch.elexis.core.model.IAccountTransaction
+	 * @generated
+	 */
+	EClass getIAccountTransaction();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IAccountTransaction#getInvoice <em>Invoice</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Invoice</em>'.
+	 * @see ch.elexis.core.model.IAccountTransaction#getInvoice()
+	 * @see #getIAccountTransaction()
+	 * @generated
+	 */
+	EReference getIAccountTransaction_Invoice();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IAccountTransaction#getPayment <em>Payment</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Payment</em>'.
+	 * @see ch.elexis.core.model.IAccountTransaction#getPayment()
+	 * @see #getIAccountTransaction()
+	 * @generated
+	 */
+	EReference getIAccountTransaction_Payment();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IAccountTransaction#getPatient <em>Patient</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Patient</em>'.
+	 * @see ch.elexis.core.model.IAccountTransaction#getPatient()
+	 * @see #getIAccountTransaction()
+	 * @generated
+	 */
+	EReference getIAccountTransaction_Patient();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAccountTransaction#getAmount <em>Amount</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Amount</em>'.
+	 * @see ch.elexis.core.model.IAccountTransaction#getAmount()
+	 * @see #getIAccountTransaction()
+	 * @generated
+	 */
+	EAttribute getIAccountTransaction_Amount();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAccountTransaction#getRemark <em>Remark</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Remark</em>'.
+	 * @see ch.elexis.core.model.IAccountTransaction#getRemark()
+	 * @see #getIAccountTransaction()
+	 * @generated
+	 */
+	EAttribute getIAccountTransaction_Remark();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAccountTransaction#getAccount <em>Account</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Account</em>'.
+	 * @see ch.elexis.core.model.IAccountTransaction#getAccount()
+	 * @see #getIAccountTransaction()
+	 * @generated
+	 */
+	EAttribute getIAccountTransaction_Account();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAccountTransaction#getDate <em>Date</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Date</em>'.
+	 * @see ch.elexis.core.model.IAccountTransaction#getDate()
+	 * @see #getIAccountTransaction()
+	 * @generated
+	 */
+	EAttribute getIAccountTransaction_Date();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}'.
@@ -10884,6 +11586,14 @@ public interface ModelPackage extends EPackage {
 		EAttribute ICOVERAGE__DATE_TO = eINSTANCE.getICoverage_DateTo();
 
 		/**
+		 * The meta object literal for the '<em><b>Billing Proposal Date</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ICOVERAGE__BILLING_PROPOSAL_DATE = eINSTANCE.getICoverage_BillingProposalDate();
+
+		/**
 		 * The meta object literal for the '<em><b>Encounters</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -11262,6 +11972,24 @@ public interface ModelPackage extends EPackage {
 		EAttribute IBILLED__TOTAL = eINSTANCE.getIBilled_Total();
 
 		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IInvoiceBilled <em>IInvoice Billed</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IInvoiceBilled
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIInvoiceBilled()
+		 * @generated
+		 */
+		EClass IINVOICE_BILLED = eINSTANCE.getIInvoiceBilled();
+
+		/**
+		 * The meta object literal for the '<em><b>Invoice</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IINVOICE_BILLED__INVOICE = eINSTANCE.getIInvoiceBilled_Invoice();
+
+		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IInvoice <em>IInvoice</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -11278,6 +12006,94 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IINVOICE__STATE = eINSTANCE.getIInvoice_State();
+
+		/**
+		 * The meta object literal for the '<em><b>Number</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IINVOICE__NUMBER = eINSTANCE.getIInvoice_Number();
+
+		/**
+		 * The meta object literal for the '<em><b>Mandator</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IINVOICE__MANDATOR = eINSTANCE.getIInvoice_Mandator();
+
+		/**
+		 * The meta object literal for the '<em><b>Coverage</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IINVOICE__COVERAGE = eINSTANCE.getIInvoice_Coverage();
+
+		/**
+		 * The meta object literal for the '<em><b>Encounters</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IINVOICE__ENCOUNTERS = eINSTANCE.getIInvoice_Encounters();
+
+		/**
+		 * The meta object literal for the '<em><b>Billed</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IINVOICE__BILLED = eINSTANCE.getIInvoice_Billed();
+
+		/**
+		 * The meta object literal for the '<em><b>Date</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IINVOICE__DATE = eINSTANCE.getIInvoice_Date();
+
+		/**
+		 * The meta object literal for the '<em><b>Date From</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IINVOICE__DATE_FROM = eINSTANCE.getIInvoice_DateFrom();
+
+		/**
+		 * The meta object literal for the '<em><b>Date To</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IINVOICE__DATE_TO = eINSTANCE.getIInvoice_DateTo();
+
+		/**
+		 * The meta object literal for the '<em><b>Total Amount</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IINVOICE__TOTAL_AMOUNT = eINSTANCE.getIInvoice_TotalAmount();
+
+		/**
+		 * The meta object literal for the '<em><b>Open Amount</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IINVOICE__OPEN_AMOUNT = eINSTANCE.getIInvoice_OpenAmount();
+
+		/**
+		 * The meta object literal for the '<em><b>Payed Amount</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IINVOICE__PAYED_AMOUNT = eINSTANCE.getIInvoice_PayedAmount();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IStock <em>IStock</em>}' class.
@@ -11912,6 +12728,114 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IRELATED_CONTACT__OTHER_TYPE = eINSTANCE.getIRelatedContact_OtherType();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IPayment <em>IPayment</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IPayment
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPayment()
+		 * @generated
+		 */
+		EClass IPAYMENT = eINSTANCE.getIPayment();
+
+		/**
+		 * The meta object literal for the '<em><b>Invoice</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IPAYMENT__INVOICE = eINSTANCE.getIPayment_Invoice();
+
+		/**
+		 * The meta object literal for the '<em><b>Amount</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IPAYMENT__AMOUNT = eINSTANCE.getIPayment_Amount();
+
+		/**
+		 * The meta object literal for the '<em><b>Remark</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IPAYMENT__REMARK = eINSTANCE.getIPayment_Remark();
+
+		/**
+		 * The meta object literal for the '<em><b>Date</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IPAYMENT__DATE = eINSTANCE.getIPayment_Date();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IAccountTransaction <em>IAccount Transaction</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IAccountTransaction
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAccountTransaction()
+		 * @generated
+		 */
+		EClass IACCOUNT_TRANSACTION = eINSTANCE.getIAccountTransaction();
+
+		/**
+		 * The meta object literal for the '<em><b>Invoice</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IACCOUNT_TRANSACTION__INVOICE = eINSTANCE.getIAccountTransaction_Invoice();
+
+		/**
+		 * The meta object literal for the '<em><b>Payment</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IACCOUNT_TRANSACTION__PAYMENT = eINSTANCE.getIAccountTransaction_Payment();
+
+		/**
+		 * The meta object literal for the '<em><b>Patient</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IACCOUNT_TRANSACTION__PATIENT = eINSTANCE.getIAccountTransaction_Patient();
+
+		/**
+		 * The meta object literal for the '<em><b>Amount</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IACCOUNT_TRANSACTION__AMOUNT = eINSTANCE.getIAccountTransaction_Amount();
+
+		/**
+		 * The meta object literal for the '<em><b>Remark</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IACCOUNT_TRANSACTION__REMARK = eINSTANCE.getIAccountTransaction_Remark();
+
+		/**
+		 * The meta object literal for the '<em><b>Account</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IACCOUNT_TRANSACTION__ACCOUNT = eINSTANCE.getIAccountTransaction_Account();
+
+		/**
+		 * The meta object literal for the '<em><b>Date</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IACCOUNT_TRANSACTION__DATE = eINSTANCE.getIAccountTransaction_Date();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.

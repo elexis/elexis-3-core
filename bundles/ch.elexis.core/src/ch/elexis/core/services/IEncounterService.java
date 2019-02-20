@@ -8,6 +8,7 @@ import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.text.model.Samdas;
+import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.VersionedResource;
 
@@ -58,4 +59,12 @@ public interface IEncounterService {
 	 * @param samdas
 	 */
 	public void updateVersionedEntry(IEncounter enc, Samdas samdas);
+	
+	/**
+	 * Get the sales amount of the {@link IEncounter}.
+	 * 
+	 * @param encounter
+	 * @return
+	 */
+	public Money getSales(IEncounter encounter);
 }

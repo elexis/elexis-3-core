@@ -248,6 +248,10 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIBilledAdapter();
 			}
 			@Override
+			public Adapter caseIInvoiceBilled(IInvoiceBilled object) {
+				return createIInvoiceBilledAdapter();
+			}
+			@Override
 			public Adapter caseIInvoice(IInvoice object) {
 				return createIInvoiceAdapter();
 			}
@@ -306,6 +310,14 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseIRelatedContact(IRelatedContact object) {
 				return createIRelatedContactAdapter();
+			}
+			@Override
+			public Adapter caseIPayment(IPayment object) {
+				return createIPaymentAdapter();
+			}
+			@Override
+			public Adapter caseIAccountTransaction(IAccountTransaction object) {
+				return createIAccountTransactionAdapter();
 			}
 			@Override
 			public <T> Adapter caseComparable(Comparable<T> object) {
@@ -934,6 +946,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IInvoiceBilled <em>IInvoice Billed</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IInvoiceBilled
+	 * @generated
+	 */
+	public Adapter createIInvoiceBilledAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IInvoice <em>IInvoice</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -1126,6 +1152,34 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIRelatedContactAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IPayment <em>IPayment</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IPayment
+	 * @generated
+	 */
+	public Adapter createIPaymentAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IAccountTransaction <em>IAccount Transaction</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IAccountTransaction
+	 * @generated
+	 */
+	public Adapter createIAccountTransactionAdapter() {
 		return null;
 	}
 

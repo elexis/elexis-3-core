@@ -322,6 +322,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ICoverage/costBearer"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/insuranceNumber"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/dateTo"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/billingProposalDate"/>
       <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference model.ecore#//ICoverage/encounters"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EReference model.ecore#//ICoverage/billingSystem"/>
       <genOperations ecoreOperation="model.ecore#//ICoverage/isOpen"/>
@@ -401,8 +402,29 @@
       <genOperations ecoreOperation="model.ecore#//IBilled/isChangedPrice"/>
       <genOperations ecoreOperation="model.ecore#//IBilled/isNonIntegerAmount"/>
     </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IInvoiceBilled">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IInvoiceBilled/invoice"/>
+    </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IInvoice">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IInvoice/state"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IInvoice/number"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IInvoice/mandator"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IInvoice/coverage"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IInvoice/encounters"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IInvoice/billed"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IInvoice/date"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IInvoice/dateFrom"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IInvoice/dateTo"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IInvoice/totalAmount"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IInvoice/openAmount"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IInvoice/payedAmount"/>
+      <genOperations ecoreOperation="model.ecore#//IInvoice/addTrace">
+        <genParameters ecoreParameter="model.ecore#//IInvoice/addTrace/name"/>
+        <genParameters ecoreParameter="model.ecore#//IInvoice/addTrace/value"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IInvoice/getTrace">
+        <genParameters ecoreParameter="model.ecore#//IInvoice/getTrace/name"/>
+      </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IStock">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IStock/code"/>
@@ -524,6 +546,21 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IRelatedContact/relationshipDescription"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IRelatedContact/myType"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IRelatedContact/otherType"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IPayment">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IPayment/invoice"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPayment/amount"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPayment/remark"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPayment/date"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IAccountTransaction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IAccountTransaction/invoice"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IAccountTransaction/payment"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IAccountTransaction/patient"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAccountTransaction/amount"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAccountTransaction/remark"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAccountTransaction/account"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAccountTransaction/date"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

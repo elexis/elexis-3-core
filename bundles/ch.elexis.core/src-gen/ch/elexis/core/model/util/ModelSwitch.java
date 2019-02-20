@@ -434,6 +434,16 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ModelPackage.IINVOICE_BILLED: {
+				IInvoiceBilled iInvoiceBilled = (IInvoiceBilled)theEObject;
+				T1 result = caseIInvoiceBilled(iInvoiceBilled);
+				if (result == null) result = caseIBilled(iInvoiceBilled);
+				if (result == null) result = caseIdentifiable(iInvoiceBilled);
+				if (result == null) result = caseDeleteable(iInvoiceBilled);
+				if (result == null) result = caseWithExtInfo(iInvoiceBilled);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ModelPackage.IINVOICE: {
 				IInvoice iInvoice = (IInvoice)theEObject;
 				T1 result = caseIInvoice(iInvoice);
@@ -553,6 +563,22 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				T1 result = caseIRelatedContact(iRelatedContact);
 				if (result == null) result = caseIdentifiable(iRelatedContact);
 				if (result == null) result = caseDeleteable(iRelatedContact);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IPAYMENT: {
+				IPayment iPayment = (IPayment)theEObject;
+				T1 result = caseIPayment(iPayment);
+				if (result == null) result = caseIdentifiable(iPayment);
+				if (result == null) result = caseDeleteable(iPayment);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IACCOUNT_TRANSACTION: {
+				IAccountTransaction iAccountTransaction = (IAccountTransaction)theEObject;
+				T1 result = caseIAccountTransaction(iAccountTransaction);
+				if (result == null) result = caseIdentifiable(iAccountTransaction);
+				if (result == null) result = caseDeleteable(iAccountTransaction);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1206,6 +1232,21 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IInvoice Billed</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IInvoice Billed</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIInvoiceBilled(IInvoiceBilled object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>IInvoice</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -1412,6 +1453,36 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIRelatedContact(IRelatedContact object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IPayment</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IPayment</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIPayment(IPayment object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IAccount Transaction</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IAccount Transaction</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIAccountTransaction(IAccountTransaction object) {
 		return null;
 	}
 

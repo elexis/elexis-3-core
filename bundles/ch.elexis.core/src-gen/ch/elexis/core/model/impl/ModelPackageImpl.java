@@ -11,6 +11,7 @@
 package ch.elexis.core.model.impl;
 
 import ch.elexis.core.model.Deleteable;
+import ch.elexis.core.model.IAccountTransaction;
 import ch.elexis.core.model.IAddress;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IArticle;
@@ -41,6 +42,7 @@ import ch.elexis.core.model.IFreeTextDiagnosis;
 import ch.elexis.core.model.IHistory;
 import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.IInvoiceBilled;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabMapping;
 import ch.elexis.core.model.ILabOrder;
@@ -51,6 +53,7 @@ import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IPayment;
 import ch.elexis.core.model.IPeriod;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IPrescription;
@@ -396,6 +399,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass iInvoiceBilledEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass iInvoiceEClass = null;
 
 	/**
@@ -495,6 +505,20 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass iRelatedContactEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iPaymentEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iAccountTransactionEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -2487,7 +2511,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 */
 	@Override
 	public EReference getICoverage_BillingSystem() {
-		return (EReference)iCoverageEClass.getEStructuralFeatures().get(8);
+		return (EReference)iCoverageEClass.getEStructuralFeatures().get(9);
 	}
 
 	/**
@@ -2526,8 +2550,18 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getICoverage_BillingProposalDate() {
+		return (EAttribute)iCoverageEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EReference getICoverage_Encounters() {
-		return (EReference)iCoverageEClass.getEStructuralFeatures().get(7);
+		return (EReference)iCoverageEClass.getEStructuralFeatures().get(8);
 	}
 
 	/**
@@ -2976,6 +3010,26 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getIInvoiceBilled() {
+		return iInvoiceBilledEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIInvoiceBilled_Invoice() {
+		return (EReference)iInvoiceBilledEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getIInvoice() {
 		return iInvoiceEClass;
 	}
@@ -2988,6 +3042,116 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	@Override
 	public EAttribute getIInvoice_State() {
 		return (EAttribute)iInvoiceEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIInvoice_Number() {
+		return (EAttribute)iInvoiceEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIInvoice_Mandator() {
+		return (EReference)iInvoiceEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIInvoice_Coverage() {
+		return (EReference)iInvoiceEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIInvoice_Encounters() {
+		return (EReference)iInvoiceEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIInvoice_Billed() {
+		return (EReference)iInvoiceEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIInvoice_Date() {
+		return (EAttribute)iInvoiceEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIInvoice_DateFrom() {
+		return (EAttribute)iInvoiceEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIInvoice_DateTo() {
+		return (EAttribute)iInvoiceEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIInvoice_TotalAmount() {
+		return (EAttribute)iInvoiceEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIInvoice_OpenAmount() {
+		return (EAttribute)iInvoiceEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIInvoice_PayedAmount() {
+		return (EAttribute)iInvoiceEClass.getEStructuralFeatures().get(11);
 	}
 
 	/**
@@ -3876,6 +4040,136 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getIPayment() {
+		return iPaymentEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIPayment_Invoice() {
+		return (EReference)iPaymentEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIPayment_Amount() {
+		return (EAttribute)iPaymentEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIPayment_Remark() {
+		return (EAttribute)iPaymentEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIPayment_Date() {
+		return (EAttribute)iPaymentEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getIAccountTransaction() {
+		return iAccountTransactionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIAccountTransaction_Invoice() {
+		return (EReference)iAccountTransactionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIAccountTransaction_Payment() {
+		return (EReference)iAccountTransactionEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIAccountTransaction_Patient() {
+		return (EReference)iAccountTransactionEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIAccountTransaction_Amount() {
+		return (EAttribute)iAccountTransactionEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIAccountTransaction_Remark() {
+		return (EAttribute)iAccountTransactionEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIAccountTransaction_Account() {
+		return (EAttribute)iAccountTransactionEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIAccountTransaction_Date() {
+		return (EAttribute)iAccountTransactionEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public ModelFactory getModelFactory() {
 		return (ModelFactory)getEFactoryInstance();
 	}
@@ -4127,6 +4421,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEReference(iCoverageEClass, ICOVERAGE__COST_BEARER);
 		createEAttribute(iCoverageEClass, ICOVERAGE__INSURANCE_NUMBER);
 		createEAttribute(iCoverageEClass, ICOVERAGE__DATE_TO);
+		createEAttribute(iCoverageEClass, ICOVERAGE__BILLING_PROPOSAL_DATE);
 		createEReference(iCoverageEClass, ICOVERAGE__ENCOUNTERS);
 		createEReference(iCoverageEClass, ICOVERAGE__BILLING_SYSTEM);
 
@@ -4183,8 +4478,22 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iBilledEClass, IBILLED__CODE);
 		createEAttribute(iBilledEClass, IBILLED__TOTAL);
 
+		iInvoiceBilledEClass = createEClass(IINVOICE_BILLED);
+		createEReference(iInvoiceBilledEClass, IINVOICE_BILLED__INVOICE);
+
 		iInvoiceEClass = createEClass(IINVOICE);
 		createEAttribute(iInvoiceEClass, IINVOICE__STATE);
+		createEAttribute(iInvoiceEClass, IINVOICE__NUMBER);
+		createEReference(iInvoiceEClass, IINVOICE__MANDATOR);
+		createEReference(iInvoiceEClass, IINVOICE__COVERAGE);
+		createEReference(iInvoiceEClass, IINVOICE__ENCOUNTERS);
+		createEReference(iInvoiceEClass, IINVOICE__BILLED);
+		createEAttribute(iInvoiceEClass, IINVOICE__DATE);
+		createEAttribute(iInvoiceEClass, IINVOICE__DATE_FROM);
+		createEAttribute(iInvoiceEClass, IINVOICE__DATE_TO);
+		createEAttribute(iInvoiceEClass, IINVOICE__TOTAL_AMOUNT);
+		createEAttribute(iInvoiceEClass, IINVOICE__OPEN_AMOUNT);
+		createEAttribute(iInvoiceEClass, IINVOICE__PAYED_AMOUNT);
 
 		iStockEClass = createEClass(ISTOCK);
 		createEAttribute(iStockEClass, ISTOCK__CODE);
@@ -4287,6 +4596,21 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iRelatedContactEClass, IRELATED_CONTACT__RELATIONSHIP_DESCRIPTION);
 		createEAttribute(iRelatedContactEClass, IRELATED_CONTACT__MY_TYPE);
 		createEAttribute(iRelatedContactEClass, IRELATED_CONTACT__OTHER_TYPE);
+
+		iPaymentEClass = createEClass(IPAYMENT);
+		createEReference(iPaymentEClass, IPAYMENT__INVOICE);
+		createEAttribute(iPaymentEClass, IPAYMENT__AMOUNT);
+		createEAttribute(iPaymentEClass, IPAYMENT__REMARK);
+		createEAttribute(iPaymentEClass, IPAYMENT__DATE);
+
+		iAccountTransactionEClass = createEClass(IACCOUNT_TRANSACTION);
+		createEReference(iAccountTransactionEClass, IACCOUNT_TRANSACTION__INVOICE);
+		createEReference(iAccountTransactionEClass, IACCOUNT_TRANSACTION__PAYMENT);
+		createEReference(iAccountTransactionEClass, IACCOUNT_TRANSACTION__PATIENT);
+		createEAttribute(iAccountTransactionEClass, IACCOUNT_TRANSACTION__AMOUNT);
+		createEAttribute(iAccountTransactionEClass, IACCOUNT_TRANSACTION__REMARK);
+		createEAttribute(iAccountTransactionEClass, IACCOUNT_TRANSACTION__ACCOUNT);
+		createEAttribute(iAccountTransactionEClass, IACCOUNT_TRANSACTION__DATE);
 	}
 
 	/**
@@ -4395,6 +4719,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iBilledEClass.getESuperTypes().add(this.getIdentifiable());
 		iBilledEClass.getESuperTypes().add(this.getDeleteable());
 		iBilledEClass.getESuperTypes().add(this.getWithExtInfo());
+		iInvoiceBilledEClass.getESuperTypes().add(this.getIBilled());
 		iInvoiceEClass.getESuperTypes().add(this.getIdentifiable());
 		iInvoiceEClass.getESuperTypes().add(this.getDeleteable());
 		iInvoiceEClass.getESuperTypes().add(this.getWithExtInfo());
@@ -4424,6 +4749,10 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iBlobSecondaryEClass.getESuperTypes().add(this.getIBlob());
 		iRelatedContactEClass.getESuperTypes().add(this.getIdentifiable());
 		iRelatedContactEClass.getESuperTypes().add(this.getDeleteable());
+		iPaymentEClass.getESuperTypes().add(this.getIdentifiable());
+		iPaymentEClass.getESuperTypes().add(this.getDeleteable());
+		iAccountTransactionEClass.getESuperTypes().add(this.getIdentifiable());
+		iAccountTransactionEClass.getESuperTypes().add(this.getDeleteable());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(identifiableEClass, Identifiable.class, "Identifiable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -4791,6 +5120,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEReference(getICoverage_CostBearer(), this.getIContact(), null, "costBearer", null, 0, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getICoverage_InsuranceNumber(), ecorePackage.getEString(), "insuranceNumber", null, 0, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getICoverage_DateTo(), theTypesPackage.getLocalDate(), "dateTo", null, 0, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getICoverage_BillingProposalDate(), theTypesPackage.getLocalDate(), "billingProposalDate", null, 0, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getICoverage_Encounters(), this.getIEncounter(), null, "encounters", null, 0, -1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getICoverage_BillingSystem(), this.getIBillingSystem(), null, "billingSystem", null, 1, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -4874,8 +5204,33 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		addEOperation(iBilledEClass, ecorePackage.getEBoolean(), "isNonIntegerAmount", 0, 1, IS_UNIQUE, IS_ORDERED);
 
+		initEClass(iInvoiceBilledEClass, IInvoiceBilled.class, "IInvoiceBilled", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getIInvoiceBilled_Invoice(), this.getIInvoice(), null, "invoice", null, 0, 1, IInvoiceBilled.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		initEClass(iInvoiceEClass, IInvoice.class, "IInvoice", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIInvoice_State(), theTypesPackage.getInvoiceState(), "state", null, 0, 1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIInvoice_Number(), ecorePackage.getEString(), "number", null, 0, 1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIInvoice_Mandator(), this.getIMandator(), null, "mandator", null, 0, 1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIInvoice_Coverage(), this.getICoverage(), null, "coverage", null, 0, 1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIInvoice_Encounters(), this.getIEncounter(), null, "encounters", null, 0, -1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIInvoice_Billed(), this.getIBilled(), null, "billed", null, 0, -1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIInvoice_Date(), theTypesPackage.getLocalDate(), "date", null, 0, 1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIInvoice_DateFrom(), theTypesPackage.getLocalDate(), "dateFrom", null, 0, 1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIInvoice_DateTo(), theTypesPackage.getLocalDate(), "dateTo", null, 0, 1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIInvoice_TotalAmount(), theTypesPackage.getMoney(), "totalAmount", null, 0, 1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIInvoice_OpenAmount(), theTypesPackage.getMoney(), "openAmount", null, 0, 1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIInvoice_PayedAmount(), theTypesPackage.getMoney(), "payedAmount", null, 0, 1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		op = addEOperation(iInvoiceEClass, null, "addTrace", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "value", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iInvoiceEClass, null, "getTrace", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(theTypesPackage.getList());
+		g2 = createEGenericType(ecorePackage.getEString());
+		g1.getETypeArguments().add(g2);
+		initEOperation(op, g1);
 
 		initEClass(iStockEClass, IStock.class, "IStock", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIStock_Code(), ecorePackage.getEString(), "code", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -5000,6 +5355,21 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIRelatedContact_RelationshipDescription(), ecorePackage.getEString(), "relationshipDescription", null, 0, 1, IRelatedContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIRelatedContact_MyType(), theTypesPackage.getRelationshipType(), "myType", null, 0, 1, IRelatedContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIRelatedContact_OtherType(), theTypesPackage.getRelationshipType(), "otherType", null, 0, 1, IRelatedContact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(iPaymentEClass, IPayment.class, "IPayment", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getIPayment_Invoice(), this.getIInvoice(), null, "invoice", null, 0, 1, IPayment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIPayment_Amount(), theTypesPackage.getMoney(), "amount", null, 0, 1, IPayment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIPayment_Remark(), ecorePackage.getEString(), "remark", null, 0, 1, IPayment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIPayment_Date(), theTypesPackage.getLocalDate(), "date", null, 0, 1, IPayment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(iAccountTransactionEClass, IAccountTransaction.class, "IAccountTransaction", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getIAccountTransaction_Invoice(), this.getIInvoice(), null, "invoice", null, 0, 1, IAccountTransaction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIAccountTransaction_Payment(), this.getIPayment(), null, "payment", null, 0, 1, IAccountTransaction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIAccountTransaction_Patient(), this.getIPatient(), null, "patient", null, 0, 1, IAccountTransaction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIAccountTransaction_Amount(), theTypesPackage.getMoney(), "amount", null, 0, 1, IAccountTransaction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIAccountTransaction_Remark(), ecorePackage.getEString(), "remark", null, 0, 1, IAccountTransaction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIAccountTransaction_Account(), ecorePackage.getEString(), "account", null, 0, 1, IAccountTransaction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIAccountTransaction_Date(), theTypesPackage.getLocalDate(), "date", null, 0, 1, IAccountTransaction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);
