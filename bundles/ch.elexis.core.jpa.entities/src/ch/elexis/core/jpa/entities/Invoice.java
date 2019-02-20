@@ -1,6 +1,8 @@
 package ch.elexis.core.jpa.entities;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -12,6 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -19,11 +23,15 @@ import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.InvoiceStateConverter;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
+import ch.elexis.core.jpa.entities.listener.InvoiceEntityListener;
 import ch.elexis.core.model.InvoiceState;
 
 @Entity
 @Table(name = "RECHNUNGEN")
-@EntityListeners(EntityWithIdListener.class)
+@EntityListeners({
+	InvoiceEntityListener.class, EntityWithIdListener.class
+})
+@NamedQuery(name = "Invoice.number", query = "SELECT i FROM Invoice i WHERE i.deleted = false AND i.number = :number")
 public class Invoice extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
@@ -73,6 +81,14 @@ public class Invoice extends AbstractEntityWithId
 	@Column(length = 8, name = "Betrag")
 	protected String amount;
 
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "rechnungid")
+	private List<VerrechnetCopy> invoiceBilled = new ArrayList<>();
+	
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "rechnungid")
+	private List<Behandlung> encounters = new ArrayList<>();
+	
 	public String getNumber() {
 		return number;
 	}
@@ -183,5 +199,13 @@ public class Invoice extends AbstractEntityWithId
 	@Override
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
+	}
+	
+	public List<VerrechnetCopy> getInvoiceBilled(){
+		return invoiceBilled;
+	}
+	
+	public List<Behandlung> getEncounters(){
+		return encounters;
 	}
 }

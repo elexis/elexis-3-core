@@ -27,6 +27,7 @@
 		<class>ch.elexis.core.jpa.entities.converter.auto.LocalDateConverter</class>
 		<class>ch.elexis.core.jpa.entities.converter.auto.LocalDateTimeConverter</class>
 
+		<class>ch.elexis.core.jpa.entities.AccountTransaction</class>
 		<class>ch.elexis.core.jpa.entities.ArtikelstammItem</class>
 		<class>ch.elexis.core.jpa.entities.Artikel</class>
 		<class>ch.elexis.core.jpa.entities.Behandlung</class>
@@ -73,8 +74,10 @@
 		<class>ch.elexis.core.jpa.entities.User</class>
 		<class>ch.elexis.core.jpa.entities.Userconfig</class>
 		<class>ch.elexis.core.jpa.entities.Verrechnet</class>
+		<class>ch.elexis.core.jpa.entities.VerrechnetCopy</class>
 		<class>ch.elexis.core.jpa.entities.VKPreis</class>
 		<class>ch.elexis.core.jpa.entities.Xid</class>
+		<class>ch.elexis.core.jpa.entities.Zahlung</class>
 		<class>ch.elexis.core.jpa.entities.ZusatzAdresse</class>
 <!-- ch.elexis.core.findings -->
 		<class>ch.elexis.core.jpa.entities.AllergyIntolerance</class>
