@@ -202,7 +202,7 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 		} catch (PersonDataException pe) {
 			ExHandler.handle(pe);
 			SWTHelper.showError("Unplausible Angaben",
-				"Bitte überprüfen Sie die Eingaben nochmals.");
+				"Bitte überprüfen Sie die Eingabe nochmals: " + pe.getMessage());
 		}
 	}
 	
