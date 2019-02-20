@@ -40,5 +40,11 @@ Service-Component: OSGI-INF/ch.elexis.core.services.holder.CoreModelServiceHolde
  OSGI-INF/ch.elexis.core.services.StickerService.xml,
  OSGI-INF/ch.elexis.core.services.holder.StickerServiceHolder.xml,
  OSGI-INF/ch.elexis.core.services.holder.MedicationServiceHolder.xml,
- OSGI-INF/ch.elexis.core.services.MedicationService.xml
+ OSGI-INF/ch.elexis.core.services.MedicationService.xml,
+ OSGI-INF/ch.elexis.core.services.InvoiceService.xml,
+ OSGI-INF/ch.elexis.core.services.CoverageService.xml,
+ OSGI-INF/ch.elexis.core.services.holder.CoverageServiceHolder.xml,
+ OSGI-INF/ch.elexis.core.services.holder.InvoiceServiceHolder.xml,
+ OSGI-INF/ch.elexis.core.services.BillingSystemService.xml,
+ OSGI-INF/ch.elexis.core.services.holder.BillingSystemServiceHolder.xml
 Export-Package: ch.elexis.core.services.holder

@@ -29,6 +29,7 @@ import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.text.model.Samdas;
+import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 
 @Component
@@ -291,5 +292,14 @@ public class EncounterService implements IEncounterService {
 	@Override
 	public void updateVersionedEntry(IEncounter encounter, Samdas samdas){
 		encounter.getVersionedEntry().update(samdas.toString(), getVersionRemark());
+	}
+	
+	@Override
+	public Money getSales(IEncounter encounter){
+		Money ret = new Money();
+		for (IBilled billed : encounter.getBilled()) {
+			ret.addMoney(billed.getTotal());
+		}
+		return ret;
 	}
 }
