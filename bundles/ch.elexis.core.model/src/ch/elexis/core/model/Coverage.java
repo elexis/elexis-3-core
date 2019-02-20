@@ -152,4 +152,22 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 			.append(")"); //$NON-NLS-1$
 		return ret.toString();
 	}
+	
+	@Override
+	public LocalDate getBillingProposalDate(){
+		String proposalDateString = getEntity().getBetriebsNummer();
+		if (proposalDateString != null && !proposalDateString.isEmpty()) {
+			return ModelUtil.toLocalDate(proposalDateString);
+		}
+		return null;
+	}
+	
+	@Override
+	public void setBillingProposalDate(LocalDate value){
+		if (value != null) {
+			getEntity().setBetriebsNummer(ModelUtil.toString(value));
+		} else {
+			getEntity().setBetriebsNummer(null);
+		}
+	}
 }

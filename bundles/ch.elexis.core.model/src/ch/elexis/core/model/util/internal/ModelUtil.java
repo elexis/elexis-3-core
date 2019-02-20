@@ -2,6 +2,9 @@ package ch.elexis.core.model.util.internal;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -352,6 +355,29 @@ public class ModelUtil {
 				reference.setText(diagnosis.getText());
 				return reference;
 			}
+		}
+		return null;
+	}
+	
+	private static final DateTimeFormatter yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMdd");
+	
+	public static String toString(LocalDate date){
+		if (date == null) {
+			return null;
+		}
+		
+		return date.format(yyyyMMdd);
+	}
+	
+	public static LocalDate toLocalDate(String dateValue){
+		if (dateValue == null || dateValue.isEmpty()) {
+			return null;
+		}
+		
+		try {
+			return LocalDate.parse(dateValue, yyyyMMdd);
+		} catch (DateTimeParseException e) {
+			logger.warn("Error parsing [{}]", dateValue, e);
 		}
 		return null;
 	}

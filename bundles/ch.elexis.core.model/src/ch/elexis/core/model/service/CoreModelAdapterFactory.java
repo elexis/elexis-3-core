@@ -12,9 +12,12 @@ import ch.elexis.core.jpa.entities.Termin;
 import ch.elexis.core.jpa.entities.Userconfig;
 import ch.elexis.core.jpa.entities.VKPreis;
 import ch.elexis.core.jpa.entities.Verrechnet;
+import ch.elexis.core.jpa.entities.VerrechnetCopy;
+import ch.elexis.core.jpa.entities.Zahlung;
 import ch.elexis.core.jpa.entities.ZusatzAdresse;
 import ch.elexis.core.jpa.model.adapter.AbstractModelAdapterFactory;
 import ch.elexis.core.jpa.model.adapter.MappingEntry;
+import ch.elexis.core.model.AccountTransaction;
 import ch.elexis.core.model.Address;
 import ch.elexis.core.model.Appointment;
 import ch.elexis.core.model.Billed;
@@ -27,6 +30,7 @@ import ch.elexis.core.model.DiagnosisReference;
 import ch.elexis.core.model.DocumentLetter;
 import ch.elexis.core.model.Encounter;
 import ch.elexis.core.model.FreeTextDiagnosis;
+import ch.elexis.core.model.IAccountTransaction;
 import ch.elexis.core.model.IAddress;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IArticle;
@@ -44,6 +48,8 @@ import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IFreeTextDiagnosis;
 import ch.elexis.core.model.IImage;
+import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.IInvoiceBilled;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabMapping;
 import ch.elexis.core.model.ILabOrder;
@@ -54,6 +60,7 @@ import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IPayment;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IRecipe;
@@ -67,10 +74,13 @@ import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Image;
+import ch.elexis.core.model.Invoice;
+import ch.elexis.core.model.InvoiceBilled;
 import ch.elexis.core.model.Laboratory;
 import ch.elexis.core.model.Mandator;
 import ch.elexis.core.model.Organization;
 import ch.elexis.core.model.Patient;
+import ch.elexis.core.model.Payment;
 import ch.elexis.core.model.Person;
 import ch.elexis.core.model.Prescription;
 import ch.elexis.core.model.Recipe;
@@ -138,6 +148,16 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 		
 		addMapping(new MappingEntry(ICoverage.class, Coverage.class, Fall.class));
 		addMapping(new MappingEntry(IEncounter.class, Encounter.class, Behandlung.class));
+		
+		addMapping(new MappingEntry(IInvoice.class, Invoice.class,
+			ch.elexis.core.jpa.entities.Invoice.class));
+		addMapping(
+			new MappingEntry(IInvoiceBilled.class, InvoiceBilled.class, VerrechnetCopy.class));
+		
+		addMapping(new MappingEntry(IAccountTransaction.class, AccountTransaction.class,
+			ch.elexis.core.jpa.entities.AccountTransaction.class));
+		addMapping(
+			new MappingEntry(IPayment.class, Payment.class, Zahlung.class));
 		
 		addMapping(
 			new MappingEntry(IBillingSystemFactor.class, BillingSystemFactor.class, VKPreis.class));
