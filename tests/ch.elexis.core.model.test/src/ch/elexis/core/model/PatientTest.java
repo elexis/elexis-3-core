@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Optional;
 
 import org.junit.After;
 import org.junit.Before;
@@ -60,10 +60,10 @@ public class PatientTest extends AbstractTest {
 		
 		INamedQuery<IPatient> namedQuery =
 			CoreModelServiceHolder.get().getNamedQuery(IPatient.class, "code");
-		List<IPatient> loaded = namedQuery.executeWithParameters(
+		Optional<IPatient> loaded = namedQuery.executeWithParametersSingleResult(
 			namedQuery.getParameterMap("code", StringTool.normalizeCase("123")));
-		assertEquals(1, loaded.size());
-		assertEquals(patient1, loaded.get(0));
+		assertTrue(loaded.isPresent());
+		assertEquals(patient1, loaded.get());
 		
 		CoreModelServiceHolder.get().remove(patient1);
 	}

@@ -2,6 +2,7 @@ package ch.elexis.core.jpa.model.adapter;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -9,6 +10,7 @@ import javax.persistence.TypedQuery;
 
 import org.eclipse.persistence.config.HintValues;
 import org.eclipse.persistence.config.QueryHints;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.services.INamedQuery;
@@ -46,8 +48,8 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<R> executeWithParameters(Map<String, Object> paramters){
-		paramters.forEach((k, v) -> {
+	public List<R> executeWithParameters(Map<String, Object> parameters){
+		parameters.forEach((k, v) -> {
 			v = resolveValue(v);
 			query.setParameter(k, v);
 		});
@@ -62,5 +64,18 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 			return (List<R>) query.getResultList().parallelStream().filter(r -> r != null)
 				.collect(Collectors.toList());
 		}
+	}
+	
+	@Override
+	public Optional<R> executeWithParametersSingleResult(Map<String, Object> parameters) {
+		List<R> result = executeWithParameters(parameters);
+		if (!result.isEmpty()) {
+			if (result.size() > 1) {
+				LoggerFactory.getLogger(getClass()).warn("Multiple results in list where single result expected",
+						new Throwable());
+			}
+			return Optional.of(result.get(0));
+		}
+		return Optional.empty();
 	}
 }

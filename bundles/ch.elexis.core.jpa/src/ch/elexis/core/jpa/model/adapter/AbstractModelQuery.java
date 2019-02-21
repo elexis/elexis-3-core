@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Stack;
 import java.util.stream.Collectors;
@@ -359,9 +360,9 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		if (attribute.isPresent() && otherAttribute.isPresent()) {
 			Optional<Predicate> predicate =
 				getPredicate(attribute.get(), comparator, otherAttribute.get(), false);
-			predicate.ifPresent(p -> {
-				getCurrentPredicateGroup().and(p);
-			});
+			predicate.ifPresent(p -> 
+				getCurrentPredicateGroup().and(p)
+			);
 		} else {
 			// feature could not be resolved, mapping?
 			throw new IllegalStateException("Could not resolve attribute [" + entityAttributeName
@@ -378,8 +379,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 			resolveAttribute(entityClazz.getName(), entityAttributeName);
 		value = resolveValue(value);
 		if (attribute.isPresent()) {
-			Optional<Predicate> predicate =
-				getPredicate(attribute.get(), comparator, value, ignoreCase);
+			Optional<Predicate> predicate = getPredicate(attribute.get(), comparator, value, ignoreCase);
 			predicate.ifPresent(p -> {
 				getCurrentPredicateGroup().or(p);
 			});
@@ -400,9 +400,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		if (attribute.isPresent()) {
 			Optional<Predicate> predicate =
 				getPredicate(attribute.get(), comparator, value, ignoreCase);
-			predicate.ifPresent(p -> {
-				getCurrentPredicateGroup().or(p);
-			});
+			predicate.ifPresent(p -> getCurrentPredicateGroup().or(p));
 		} else {
 			// feature could not be resolved, mapping?
 			throw new IllegalStateException("Could not resolve attribute [" + entityAttributeName
@@ -542,7 +540,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 			
 			criteriaQuery.orderBy(orderByList);
 		}
-		TypedQuery<?> query = (TypedQuery<?>) entityManager.createQuery(criteriaQuery);
+		TypedQuery<?> query = entityManager.createQuery(criteriaQuery);
 		// update cache with results (https://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development/Querying/Query_Hints)
 		if (refreshCache) {
 			query.setHint(QueryHints.REFRESH, HintValues.TRUE);
@@ -550,7 +548,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		
 		List<T> ret = (List<T>) query.getResultStream().parallel()
 			.map(e -> adapterFactory.getModelAdapter((EntityWithId) e, clazz, true).orElse(null))
-			.filter(o -> o != null).collect(Collectors.toList());
+			.filter(Objects::nonNull).collect(Collectors.toList());
 		return ret;
 	}
 	

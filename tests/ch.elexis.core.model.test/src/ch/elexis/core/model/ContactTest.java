@@ -45,7 +45,10 @@ public class ContactTest extends AbstractTest {
 		assertFalse(person.isMandator());
 		assertFalse(person.isOrganization());
 		assertFalse(person.isLaboratory());
+	}
 
+	@Test
+	public void getAgeInYears() {
 		IPerson findById = coreModelService.load(person.getId(), IPerson.class).get();
 		assertEquals(person.getId(), findById.getId());
 		assertEquals(LocalDate.of(2016, 9, 1), person.getDateOfBirth().toLocalDate());
