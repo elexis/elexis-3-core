@@ -13,8 +13,8 @@ import ch.elexis.core.test.initializer.TestDatabaseInitializer;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 @RunWith(Suite.class)
-@SuiteClasses({ AccessControlServiceTest.class, ConfigServiceTest.class, LabServiceTest.class,
-		StoreToStringServiceTest.class, UserServiceTest.class })
+@SuiteClasses({ AccessControlServiceTest.class, IConfigServiceTest.class, ILabServiceTest.class,
+		IStoreToStringServiceTest.class, IUserServiceTest.class, IStickerServiceTest.class })
 public class AllServiceTests {
 
 	private static IModelService modelService;

@@ -116,6 +116,7 @@ public class TestDatabaseInitializer {
 			executeScript("test_initRoles", "/rsc/dbScripts/Role.sql");
 			executeScript("test_initSampleContacts", "/rsc/dbScripts/sampleContacts.sql");
 			executeScript("test_initBillingVKPreise", "/rsc/dbScripts/BillingVKPreise.sql");
+			executeScript("test_initStickers", "/rsc/dbScripts/Etiketten.sql");
 			if (configService != null) {
 				new ConfigInitializer().initializeConfiguration(configService);
 			}

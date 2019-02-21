@@ -62,7 +62,10 @@ public class Sticker extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public int compareTo(ISticker o){
-		return getLabel().compareTo(o.getLabel());
+		if (o != null) {
+			return o.getImportance() - getImportance();
+		}
+		return 1;
 	}
 	
 	@Override

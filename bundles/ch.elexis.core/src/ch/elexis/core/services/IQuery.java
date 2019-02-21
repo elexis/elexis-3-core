@@ -111,6 +111,14 @@ public interface IQuery<T> {
 	 */
 	public List<T> execute();
 	
+//	/**
+//	 * Set a limit on the number of results to be returned. This is equivalent to
+//	 * the SQL limit command.
+//	 * 
+//	 * @param limit non negative value
+//	 */
+//	public void setLimit(int limit);
+	
 	/**
 	 * Execute the query and return a single result. If more than one result
 	 * is available, a warning is logged, and the first result is returned.

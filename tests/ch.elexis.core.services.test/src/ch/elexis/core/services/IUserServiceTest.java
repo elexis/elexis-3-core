@@ -16,13 +16,13 @@ import ch.elexis.core.model.RoleConstants;
 import ch.elexis.core.test.TestEntities;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
-public class UserServiceTest {
+public class IUserServiceTest extends AbstractServiceTest {
 
 	private IUserService service = OsgiServiceUtil.getService(IUserService.class).get();
 
 	@Test
 	public void userLoadChangeVerifyPassword() {
-		Optional<IUser> load = AllServiceTests.getModelService().load(TestEntities.USER_USER_ID, IUser.class);
+		Optional<IUser> load = coreModelService.load(TestEntities.USER_USER_ID, IUser.class);
 		assertTrue(load.isPresent());
 		assertNotNull(load.get().getHashedPassword());
 		assertNotNull(load.get().getSalt());
@@ -34,8 +34,7 @@ public class UserServiceTest {
 		service.setPasswordForUser(load.get(), "password");
 		assertTrue(service.verifyPassword(load.get(), "password"));
 
-		Optional<IRole> userRole = AllServiceTests.getModelService().load(RoleConstants.SYSTEMROLE_LITERAL_USER,
-				IRole.class);
+		Optional<IRole> userRole = coreModelService.load(RoleConstants.SYSTEMROLE_LITERAL_USER, IRole.class);
 		assertTrue(load.get().getRoles().contains(userRole.get()));
 	}
 }

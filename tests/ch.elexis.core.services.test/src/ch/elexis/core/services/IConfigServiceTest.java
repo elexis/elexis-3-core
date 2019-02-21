@@ -17,16 +17,15 @@ import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
-public class ConfigServiceTest {
+public class IConfigServiceTest extends AbstractServiceTest {
 
-	private IModelService modelService = AllServiceTests.getModelService();
 	private IConfigService configService = OsgiServiceUtil.getService(IConfigService.class).get();
 
 	@Test
 	public void getSetUserconfig() {
-		IPerson person = new IContactBuilder.PersonBuilder(modelService, "TestPerson", "TestPerson", LocalDate.now(),
+		IPerson person = new IContactBuilder.PersonBuilder(coreModelService, "TestPerson", "TestPerson", LocalDate.now(),
 				Gender.FEMALE).mandator().buildAndSave();
-		IPerson person2 = new IContactBuilder.PersonBuilder(modelService, "TestPerson2", "TestPerson2", LocalDate.now(),
+		IPerson person2 = new IContactBuilder.PersonBuilder(coreModelService, "TestPerson2", "TestPerson2", LocalDate.now(),
 				Gender.FEMALE).mandator().buildAndSave();
 
 		assertTrue(configService.set(person, "key", "value"));

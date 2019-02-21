@@ -10,7 +10,7 @@ import org.junit.Test;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
-public class StoreToStringServiceTest {
+public class IStoreToStringServiceTest extends AbstractServiceTest {
 
 	private IStoreToStringService stsService = OsgiServiceUtil.getService(IStoreToStringService.class).get();
 
