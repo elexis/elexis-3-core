@@ -10,11 +10,10 @@
  */
 package ch.elexis.core.model;
 
-import ch.elexis.core.types.PathologicDescription;
-
-import ch.rgw.tools.TimeTool;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import ch.elexis.core.types.PathologicDescription;
 
 /**
  * <!-- begin-user-doc -->

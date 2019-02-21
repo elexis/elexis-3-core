@@ -10,8 +10,6 @@
  */
 package ch.elexis.core.model;
 
-import java.util.List;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>ISticker</b></em>'.

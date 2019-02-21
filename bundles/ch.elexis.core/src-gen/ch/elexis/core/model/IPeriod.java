@@ -10,7 +10,6 @@
  */
 package ch.elexis.core.model;
 
-import ch.rgw.tools.TimeTool;
 import java.time.LocalDateTime;
 
 /**
