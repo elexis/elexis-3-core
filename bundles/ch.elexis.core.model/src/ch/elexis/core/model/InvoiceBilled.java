@@ -161,7 +161,8 @@ public class InvoiceBilled extends AbstractIdDeleteModelAdapter<VerrechnetCopy>
 	
 	@Override
 	public Money getTotal(){
-		return getPrice().multiply(getPrimaryScale() / 100d).multiply(getSecondaryScale() / 100d)
+		return getPrice().multiply(getPrimaryScaleFactor() / 100d)
+			.multiply(getSecondaryScaleFactor() / 100d)
 			.multiply(getEntity().getZahl());
 	}
 	
@@ -199,5 +200,21 @@ public class InvoiceBilled extends AbstractIdDeleteModelAdapter<VerrechnetCopy>
 		} else if (value == null) {
 			getEntity().setInvoice(null);
 		}
+	}
+	
+	@Override
+	public double getPrimaryScaleFactor(){
+		if (getPrimaryScale() == 0) {
+			return 1.0;
+		}
+		return ((double) getPrimaryScale()) / 100.0;
+	}
+	
+	@Override
+	public double getSecondaryScaleFactor(){
+		if (getSecondaryScale() == 0) {
+			return 1.0;
+		}
+		return ((double) getSecondaryScale()) / 100.0;
 	}
 }

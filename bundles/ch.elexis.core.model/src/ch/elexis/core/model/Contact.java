@@ -13,6 +13,7 @@ import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
 import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
+import ch.elexis.core.model.format.PostalAddress;
 import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.types.Country;
@@ -287,13 +288,15 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public String getPostalAddress() {
-		// TODO Auto-generated method stub
+		if (getEntity().getAnschrift() == null) {
+			setPostalAddress(PostalAddress.of(this).getWrittenAddress(true, true));
+		}
 		return getEntity().getAnschrift();
 	}
 
 	@Override
 	public void setPostalAddress(String value) {
-		// TODO Auto-generated method stub
+		getEntity().setAnschrift(value);
 	}
 
 	@Override

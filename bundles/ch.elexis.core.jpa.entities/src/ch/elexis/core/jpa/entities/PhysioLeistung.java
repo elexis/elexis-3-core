@@ -23,6 +23,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 public class PhysioLeistung extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted {
 	
+	public static final String FIXEDPRICE = "\n[FIXPRICE]";
 	public static final String CODESYSTEM_NAME = "Physiotherapie";
 	
 	// Transparently updated by the EntityListener

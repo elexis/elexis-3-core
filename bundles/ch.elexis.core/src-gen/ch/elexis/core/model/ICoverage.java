@@ -33,6 +33,7 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.ICoverage#getBillingProposalDate <em>Billing Proposal Date</em>}</li>
  *   <li>{@link ch.elexis.core.model.ICoverage#getEncounters <em>Encounters</em>}</li>
  *   <li>{@link ch.elexis.core.model.ICoverage#getBillingSystem <em>Billing System</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ICoverage#getGuarantor <em>Guarantor</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getICoverage()
@@ -172,6 +173,32 @@ public interface ICoverage extends Deleteable, Identifiable, WithExtInfo {
 	 * @generated
 	 */
 	void setBillingSystem(IBillingSystem value);
+
+	/**
+	 * Returns the value of the '<em><b>Guarantor</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Guarantor</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Guarantor</em>' reference.
+	 * @see #setGuarantor(IContact)
+	 * @see ch.elexis.core.model.ModelPackage#getICoverage_Guarantor()
+	 * @model
+	 * @generated
+	 */
+	IContact getGuarantor();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.ICoverage#getGuarantor <em>Guarantor</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Guarantor</em>' reference.
+	 * @see #getGuarantor()
+	 * @generated
+	 */
+	void setGuarantor(IContact value);
 
 	/**
 	 * Returns the value of the '<em><b>Cost Bearer</b></em>' reference.

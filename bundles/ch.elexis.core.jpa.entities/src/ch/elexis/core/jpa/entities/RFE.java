@@ -1,16 +1,11 @@
 package ch.elexis.core.jpa.entities;
 
-import java.time.LocalDate;
-
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
@@ -18,10 +13,9 @@ import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
 @Entity
-@Table(name = "zahlungen")
+@Table(name = "ch_elexis_arzttarif_ch_rfe")
 @EntityListeners(EntityWithIdListener.class)
-@NamedQuery(name = "Zahlung.invoice", query = "SELECT za FROM Zahlung za WHERE za.deleted = false AND za.invoice = :invoice")
-public class Zahlung extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
+public class RFE extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 	
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -35,49 +29,26 @@ public class Zahlung extends AbstractEntityWithId implements EntityWithId, Entit
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
 	
-	@ManyToOne()
-	@JoinColumn(name = "rechnungsid")
-	private Invoice invoice;
+	@Column(length = 25)
+	private String konsID;
 	
-	@Column(length = 8, name = "betrag")
-	protected String amount;
+	@Column(length = 2)
+	private String type;
 	
-	@Column(name = "datum", length = 8)
-	protected LocalDate date;
-	
-	@Column(name = "bemerkung", length = 80)
-	private String remark;
-	
-	public Invoice getInvoice(){
-		return invoice;
+	public String getKonsID(){
+		return konsID;
 	}
 	
-	public void setInvoice(Invoice invoice){
-		this.invoice = invoice;
+	public void setKonsID(String id){
+		this.konsID = id;
 	}
 	
-	public String getAmount(){
-		return amount;
+	public String getType(){
+		return type;
 	}
 	
-	public void setAmount(String amount){
-		this.amount = amount;
-	}
-	
-	public LocalDate getDate(){
-		return date;
-	}
-	
-	public void setDate(LocalDate date){
-		this.date = date;
-	}
-	
-	public String getRemark(){
-		return remark;
-	}
-	
-	public void setRemark(String remark){
-		this.remark = remark;
+	public void setType(String type){
+		this.type = type;
 	}
 	
 	@Override
@@ -109,4 +80,5 @@ public class Zahlung extends AbstractEntityWithId implements EntityWithId, Entit
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
 	}
+	
 }

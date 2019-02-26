@@ -11,6 +11,7 @@
 package ch.elexis.core.types.impl;
 
 import ch.elexis.core.model.InvoiceState;
+import ch.elexis.core.model.InvoiceState.REJECTCODE;
 import ch.elexis.core.model.LabOrderState;
 import ch.elexis.core.model.MaritalStatus;
 import ch.elexis.core.model.MimeType;
@@ -157,6 +158,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createMaritalStatusFromString(eDataType, initialValue);
 			case TypesPackage.MIME_TYPE:
 				return createMimeTypeFromString(eDataType, initialValue);
+			case TypesPackage.INVOICE_REJECT_CODE:
+				return createInvoiceRejectCodeFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -222,6 +225,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertMaritalStatusToString(eDataType, instanceValue);
 			case TypesPackage.MIME_TYPE:
 				return convertMimeTypeToString(eDataType, instanceValue);
+			case TypesPackage.INVOICE_REJECT_CODE:
+				return convertInvoiceRejectCodeToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -700,6 +705,24 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	public String convertMimeTypeToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public REJECTCODE createInvoiceRejectCodeFromString(EDataType eDataType, String initialValue) {
+		return (REJECTCODE)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertInvoiceRejectCodeToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

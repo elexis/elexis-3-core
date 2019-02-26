@@ -10,6 +10,7 @@
  */
 package ch.elexis.core.model;
 
+import ch.elexis.core.model.InvoiceState.REJECTCODE;
 import ch.rgw.tools.Money;
 import java.time.LocalDate;
 import java.util.List;
@@ -36,6 +37,8 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IInvoice#getTotalAmount <em>Total Amount</em>}</li>
  *   <li>{@link ch.elexis.core.model.IInvoice#getOpenAmount <em>Open Amount</em>}</li>
  *   <li>{@link ch.elexis.core.model.IInvoice#getPayedAmount <em>Payed Amount</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IInvoice#getDemandAmount <em>Demand Amount</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IInvoice#getRemark <em>Remark</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIInvoice()
@@ -304,6 +307,47 @@ public interface IInvoice extends Identifiable, Deleteable, WithExtInfo {
 	Money getPayedAmount();
 
 	/**
+	 * Returns the value of the '<em><b>Demand Amount</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Demand Amount</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Demand Amount</em>' attribute.
+	 * @see ch.elexis.core.model.ModelPackage#getIInvoice_DemandAmount()
+	 * @model dataType="ch.elexis.core.types.Money" changeable="false"
+	 * @generated
+	 */
+	Money getDemandAmount();
+
+	/**
+	 * Returns the value of the '<em><b>Remark</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Remark</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Remark</em>' attribute.
+	 * @see #setRemark(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIInvoice_Remark()
+	 * @model
+	 * @generated
+	 */
+	String getRemark();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IInvoice#getRemark <em>Remark</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Remark</em>' attribute.
+	 * @see #getRemark()
+	 * @generated
+	 */
+	void setRemark(String value);
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model
@@ -318,4 +362,20 @@ public interface IInvoice extends Identifiable, Deleteable, WithExtInfo {
 	 * @generated
 	 */
 	List<String> getTrace(String name);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model valueDataType="ch.elexis.core.types.Money"
+	 * @generated
+	 */
+	boolean adjustAmount(Money value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model rejectCodeDataType="ch.elexis.core.types.InvoiceRejectCode"
+	 * @generated
+	 */
+	void reject(REJECTCODE rejectCode, String message);
 } // IInvoice

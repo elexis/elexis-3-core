@@ -1,5 +1,7 @@
 package ch.elexis.core.services;
 
+import java.util.List;
+
 import ch.elexis.core.model.IBillingSystem;
 
 public interface IBillingSystemService {
@@ -24,4 +26,8 @@ public interface IBillingSystemService {
 	 * @since 3.6 moved from {@link Fall}
 	 */
 	public String getDefaultPrintSystem(IBillingSystem system);
+	
+	public List<String> getBillingSystemConstants(IBillingSystem billingSystem);
+	
+	public String getBillingSystemConstant(IBillingSystem billingSystem, String name);
 }

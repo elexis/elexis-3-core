@@ -325,6 +325,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICoverage/billingProposalDate"/>
       <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference model.ecore#//ICoverage/encounters"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EReference model.ecore#//ICoverage/billingSystem"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ICoverage/guarantor"/>
       <genOperations ecoreOperation="model.ecore#//ICoverage/isOpen"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IBillingSystemFactor">
@@ -401,6 +402,8 @@
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBilled/total"/>
       <genOperations ecoreOperation="model.ecore#//IBilled/isChangedPrice"/>
       <genOperations ecoreOperation="model.ecore#//IBilled/isNonIntegerAmount"/>
+      <genOperations ecoreOperation="model.ecore#//IBilled/getPrimaryScaleFactor"/>
+      <genOperations ecoreOperation="model.ecore#//IBilled/getSecondaryScaleFactor"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IInvoiceBilled">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IInvoiceBilled/invoice"/>
@@ -418,12 +421,21 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IInvoice/totalAmount"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IInvoice/openAmount"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IInvoice/payedAmount"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IInvoice/demandAmount"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IInvoice/remark"/>
       <genOperations ecoreOperation="model.ecore#//IInvoice/addTrace">
         <genParameters ecoreParameter="model.ecore#//IInvoice/addTrace/name"/>
         <genParameters ecoreParameter="model.ecore#//IInvoice/addTrace/value"/>
       </genOperations>
       <genOperations ecoreOperation="model.ecore#//IInvoice/getTrace">
         <genParameters ecoreParameter="model.ecore#//IInvoice/getTrace/name"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IInvoice/adjustAmount">
+        <genParameters ecoreParameter="model.ecore#//IInvoice/adjustAmount/value"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IInvoice/reject">
+        <genParameters ecoreParameter="model.ecore#//IInvoice/reject/rejectCode"/>
+        <genParameters ecoreParameter="model.ecore#//IInvoice/reject/message"/>
       </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IStock">

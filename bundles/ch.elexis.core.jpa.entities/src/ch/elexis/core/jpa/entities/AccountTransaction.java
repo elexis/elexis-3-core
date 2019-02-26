@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -20,6 +21,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "konto")
 @EntityListeners(EntityWithIdListener.class)
+@NamedQuery(name = "AccountTransaction.invoice", query = "SELECT at FROM AccountTransaction at WHERE at.deleted = false AND at.invoice = :invoice")
 public class AccountTransaction extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted {
 	

@@ -16,6 +16,8 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @EntityListeners(EntityWithIdListener.class)
 public class TarmedExtension extends AbstractEntityWithId implements EntityWithId,EntityWithDeleted,EntityWithExtInfo {
 
+	public static final String EXT_FLD_F_AL_R = "F_AL_R";
+	
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
 	

@@ -2,8 +2,11 @@ package ch.elexis.core.services;
 
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 
+import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.services.holder.BillingSystemServiceHolder;
@@ -68,5 +71,74 @@ public class CoverageService implements ICoverageService {
 		//			}
 		//		}
 		return true;
+	}
+	
+	@Override
+	public String getRequiredString(ICoverage coverage, String name){
+		String value = (String) coverage.getExtInfo(name);
+		if (StringUtils.isBlank(value)) {
+			value = BillingSystemServiceHolder.get()
+				.getBillingSystemConstant(coverage.getBillingSystem(), name);
+		}
+		return value;
+	}
+	
+	@Override
+	public void setRequiredString(ICoverage coverage, String name, String value){
+		String requirements =
+			BillingSystemServiceHolder.get().getRequirements(coverage.getBillingSystem());
+		String[] req = requirements.split(";"); //$NON-NLS-1$
+		int idx = StringTool.getIndex(req, name + ":T"); //$NON-NLS-1$
+		if (idx != -1) {
+			coverage.setExtInfo(name, value);
+		}
+	}
+	
+	@Override
+	public IContact getRequiredContact(ICoverage coverage, String name){
+		String id = (String) coverage.getExtInfo(name);
+		if (id.equals(StringConstants.EMPTY)) {
+			return null;
+		}
+		return CoreModelServiceHolder.get().load(id, IContact.class).orElse(null);
+	}
+	
+	@Override
+	public void setRequiredContact(ICoverage coverage, String name, IContact value){
+		String requirements =
+			BillingSystemServiceHolder.get().getRequirements(coverage.getBillingSystem());
+		if (!StringTool.isNothing(requirements)) {
+			String[] req = requirements.split(";"); //$NON-NLS-1$
+			int idx = StringTool.getIndex(req, name + ":K"); //$NON-NLS-1$
+			if (idx != -1) {
+				if (req[idx].endsWith(":K")) { //$NON-NLS-1$
+					coverage.setExtInfo(name, value.getId());
+				}
+			}
+		}
+	}
+	
+	@Override
+	public Tiers getTiersType(ICoverage coverage){
+		IContact costBearer = coverage.getCostBearer();
+		IContact guarantor = coverage.getGuarantor();
+		if (costBearer != null && costBearer.isOrganization()) {
+			if (guarantor.equals(costBearer)) {
+				return Tiers.PAYANT;
+			}
+		}
+		return Tiers.GARANT;
+	}
+	
+	@Override
+	public boolean getCopyForPatient(ICoverage coverage){
+		return StringConstants.ONE
+			.equals(coverage.getExtInfo(FallConstants.FLD_EXT_COPY_FOR_PATIENT));
+	}
+	
+	@Override
+	public void setCopyForPatient(ICoverage coverage, boolean copy){
+		coverage.setExtInfo(FallConstants.FLD_EXT_COPY_FOR_PATIENT,
+			copy ? StringConstants.ONE : StringConstants.ZERO);
 	}
 }

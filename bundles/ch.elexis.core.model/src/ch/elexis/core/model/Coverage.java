@@ -116,6 +116,21 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 	}
 
 	@Override
+	public IContact getGuarantor(){
+		return ModelUtil.getAdapter(getEntity().getGarantKontakt(), IContact.class);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void setGuarantor(IContact value){
+		if (value != null) {
+			getEntity().setGarantKontakt(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
+		} else {
+			getEntity().setGarantKontakt(null);
+		}
+	}
+	
+	@Override
 	public String getInsuranceNumber(){
 		return getEntity().getVersNummer();
 	}

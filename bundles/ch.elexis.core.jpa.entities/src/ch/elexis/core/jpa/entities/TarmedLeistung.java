@@ -50,6 +50,8 @@ public class TarmedLeistung extends AbstractEntityWithId
 	public static final String LEFT = "left";
 	public static final String RIGHT = "right";
 	
+	public static final String PFLICHTLEISTUNG = "obligation";
+	
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
 	

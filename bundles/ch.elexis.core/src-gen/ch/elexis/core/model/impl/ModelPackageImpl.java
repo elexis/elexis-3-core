@@ -2520,6 +2520,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EReference getICoverage_Guarantor() {
+		return (EReference)iCoverageEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EReference getICoverage_CostBearer() {
 		return (EReference)iCoverageEClass.getEStructuralFeatures().get(4);
 	}
@@ -3152,6 +3162,26 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	@Override
 	public EAttribute getIInvoice_PayedAmount() {
 		return (EAttribute)iInvoiceEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIInvoice_DemandAmount() {
+		return (EAttribute)iInvoiceEClass.getEStructuralFeatures().get(12);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIInvoice_Remark() {
+		return (EAttribute)iInvoiceEClass.getEStructuralFeatures().get(13);
 	}
 
 	/**
@@ -4424,6 +4454,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iCoverageEClass, ICOVERAGE__BILLING_PROPOSAL_DATE);
 		createEReference(iCoverageEClass, ICOVERAGE__ENCOUNTERS);
 		createEReference(iCoverageEClass, ICOVERAGE__BILLING_SYSTEM);
+		createEReference(iCoverageEClass, ICOVERAGE__GUARANTOR);
 
 		iBillingSystemFactorEClass = createEClass(IBILLING_SYSTEM_FACTOR);
 		createEAttribute(iBillingSystemFactorEClass, IBILLING_SYSTEM_FACTOR__SYSTEM);
@@ -4494,6 +4525,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iInvoiceEClass, IINVOICE__TOTAL_AMOUNT);
 		createEAttribute(iInvoiceEClass, IINVOICE__OPEN_AMOUNT);
 		createEAttribute(iInvoiceEClass, IINVOICE__PAYED_AMOUNT);
+		createEAttribute(iInvoiceEClass, IINVOICE__DEMAND_AMOUNT);
+		createEAttribute(iInvoiceEClass, IINVOICE__REMARK);
 
 		iStockEClass = createEClass(ISTOCK);
 		createEAttribute(iStockEClass, ISTOCK__CODE);
@@ -5123,6 +5156,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getICoverage_BillingProposalDate(), theTypesPackage.getLocalDate(), "billingProposalDate", null, 0, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getICoverage_Encounters(), this.getIEncounter(), null, "encounters", null, 0, -1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getICoverage_BillingSystem(), this.getIBillingSystem(), null, "billingSystem", null, 1, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getICoverage_Guarantor(), this.getIContact(), null, "guarantor", null, 0, 1, ICoverage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		addEOperation(iCoverageEClass, ecorePackage.getEBoolean(), "isOpen", 0, 1, IS_UNIQUE, IS_ORDERED);
 
@@ -5204,6 +5238,10 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		addEOperation(iBilledEClass, ecorePackage.getEBoolean(), "isNonIntegerAmount", 0, 1, IS_UNIQUE, IS_ORDERED);
 
+		addEOperation(iBilledEClass, ecorePackage.getEDouble(), "getPrimaryScaleFactor", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		addEOperation(iBilledEClass, ecorePackage.getEDouble(), "getSecondaryScaleFactor", 0, 1, IS_UNIQUE, IS_ORDERED);
+
 		initEClass(iInvoiceBilledEClass, IInvoiceBilled.class, "IInvoiceBilled", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getIInvoiceBilled_Invoice(), this.getIInvoice(), null, "invoice", null, 0, 1, IInvoiceBilled.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -5220,6 +5258,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIInvoice_TotalAmount(), theTypesPackage.getMoney(), "totalAmount", null, 0, 1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIInvoice_OpenAmount(), theTypesPackage.getMoney(), "openAmount", null, 0, 1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIInvoice_PayedAmount(), theTypesPackage.getMoney(), "payedAmount", null, 0, 1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIInvoice_DemandAmount(), theTypesPackage.getMoney(), "demandAmount", null, 0, 1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIInvoice_Remark(), ecorePackage.getEString(), "remark", null, 0, 1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		op = addEOperation(iInvoiceEClass, null, "addTrace", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
@@ -5231,6 +5271,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		g2 = createEGenericType(ecorePackage.getEString());
 		g1.getETypeArguments().add(g2);
 		initEOperation(op, g1);
+
+		op = addEOperation(iInvoiceEClass, ecorePackage.getEBoolean(), "adjustAmount", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, theTypesPackage.getMoney(), "value", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iInvoiceEClass, null, "reject", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, theTypesPackage.getInvoiceRejectCode(), "rejectCode", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "message", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iStockEClass, IStock.class, "IStock", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIStock_Code(), ecorePackage.getEString(), "code", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

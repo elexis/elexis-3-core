@@ -4006,13 +4006,22 @@ public interface ModelPackage extends EPackage {
 	int ICOVERAGE__BILLING_SYSTEM = DELETEABLE_FEATURE_COUNT + 9;
 
 	/**
+	 * The feature id for the '<em><b>Guarantor</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICOVERAGE__GUARANTOR = DELETEABLE_FEATURE_COUNT + 10;
+
+	/**
 	 * The number of structural features of the '<em>ICoverage</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ICOVERAGE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 10;
+	int ICOVERAGE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 11;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IBillingSystemFactor <em>IBilling System Factor</em>}' class.
@@ -4827,13 +4836,31 @@ public interface ModelPackage extends EPackage {
 	int IINVOICE__PAYED_AMOUNT = IDENTIFIABLE_FEATURE_COUNT + 12;
 
 	/**
+	 * The feature id for the '<em><b>Demand Amount</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE__DEMAND_AMOUNT = IDENTIFIABLE_FEATURE_COUNT + 13;
+
+	/**
+	 * The feature id for the '<em><b>Remark</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE__REMARK = IDENTIFIABLE_FEATURE_COUNT + 14;
+
+	/**
 	 * The number of structural features of the '<em>IInvoice</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IINVOICE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 13;
+	int IINVOICE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 15;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IStock <em>IStock</em>}' class.
@@ -8140,6 +8167,17 @@ public interface ModelPackage extends EPackage {
 	EReference getICoverage_BillingSystem();
 
 	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.ICoverage#getGuarantor <em>Guarantor</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Guarantor</em>'.
+	 * @see ch.elexis.core.model.ICoverage#getGuarantor()
+	 * @see #getICoverage()
+	 * @generated
+	 */
+	EReference getICoverage_Guarantor();
+
+	/**
 	 * Returns the meta object for the reference '{@link ch.elexis.core.model.ICoverage#getCostBearer <em>Cost Bearer</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8831,6 +8869,28 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getIInvoice_PayedAmount();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IInvoice#getDemandAmount <em>Demand Amount</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Demand Amount</em>'.
+	 * @see ch.elexis.core.model.IInvoice#getDemandAmount()
+	 * @see #getIInvoice()
+	 * @generated
+	 */
+	EAttribute getIInvoice_DemandAmount();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IInvoice#getRemark <em>Remark</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Remark</em>'.
+	 * @see ch.elexis.core.model.IInvoice#getRemark()
+	 * @see #getIInvoice()
+	 * @generated
+	 */
+	EAttribute getIInvoice_Remark();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IStock <em>IStock</em>}'.
@@ -11562,6 +11622,14 @@ public interface ModelPackage extends EPackage {
 		EReference ICOVERAGE__BILLING_SYSTEM = eINSTANCE.getICoverage_BillingSystem();
 
 		/**
+		 * The meta object literal for the '<em><b>Guarantor</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ICOVERAGE__GUARANTOR = eINSTANCE.getICoverage_Guarantor();
+
+		/**
 		 * The meta object literal for the '<em><b>Cost Bearer</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -12094,6 +12162,22 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IINVOICE__PAYED_AMOUNT = eINSTANCE.getIInvoice_PayedAmount();
+
+		/**
+		 * The meta object literal for the '<em><b>Demand Amount</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IINVOICE__DEMAND_AMOUNT = eINSTANCE.getIInvoice_DemandAmount();
+
+		/**
+		 * The meta object literal for the '<em><b>Remark</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IINVOICE__REMARK = eINSTANCE.getIInvoice_Remark();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IStock <em>IStock</em>}' class.

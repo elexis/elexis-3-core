@@ -392,6 +392,16 @@ public interface TypesPackage extends EPackage {
 	int MIME_TYPE = 29;
 
 	/**
+	 * The meta object id for the '<em>Invoice Reject Code</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.InvoiceState.REJECTCODE
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getInvoiceRejectCode()
+	 * @generated
+	 */
+	int INVOICE_REJECT_CODE = 30;
+
+	/**
 	 * The meta object id for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -728,6 +738,17 @@ public interface TypesPackage extends EPackage {
 	EDataType getMimeType();
 
 	/**
+	 * Returns the meta object for data type '{@link ch.elexis.core.model.InvoiceState.REJECTCODE <em>Invoice Reject Code</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Invoice Reject Code</em>'.
+	 * @see ch.elexis.core.model.InvoiceState.REJECTCODE
+	 * @model instanceClass="ch.elexis.core.model.InvoiceState.REJECTCODE"
+	 * @generated
+	 */
+	EDataType getInvoiceRejectCode();
+
+	/**
 	 * Returns the meta object for class '{@link ch.rgw.tools.Result <em>Result</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1049,6 +1070,16 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType MIME_TYPE = eINSTANCE.getMimeType();
+
+		/**
+		 * The meta object literal for the '<em>Invoice Reject Code</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.InvoiceState.REJECTCODE
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getInvoiceRejectCode()
+		 * @generated
+		 */
+		EDataType INVOICE_REJECT_CODE = eINSTANCE.getInvoiceRejectCode();
 
 		/**
 		 * The meta object literal for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.

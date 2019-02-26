@@ -471,6 +471,7 @@
         eType="#//IEncounter" changeable="false"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="billingSystem" lowerBound="1"
         eType="#//IBillingSystem"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="guarantor" eType="#//IContact"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IBillingSystemFactor" abstract="true"
       interface="true" eSuperTypes="#//Identifiable">
@@ -574,6 +575,8 @@
       eSuperTypes="#//Identifiable #//Deleteable #//WithExtInfo">
     <eOperations name="isChangedPrice" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eOperations name="isNonIntegerAmount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eOperations name="getPrimaryScaleFactor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eOperations name="getSecondaryScaleFactor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="billable" eType="#//IBillable"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="encounter" eType="#//IEncounter"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="amount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
@@ -605,6 +608,13 @@
       </eGenericType>
       <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eOperations>
+    <eOperations name="adjustAmount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eParameters name="value" eType="ecore:EDataType types.ecore#//Money"/>
+    </eOperations>
+    <eOperations name="reject">
+      <eParameters name="rejectCode" eType="ecore:EDataType types.ecore#//InvoiceRejectCode"/>
+      <eParameters name="message" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="state" eType="ecore:EDataType types.ecore#//InvoiceState"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="number" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         changeable="false"/>
@@ -622,6 +632,9 @@
         changeable="false"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="payedAmount" eType="ecore:EDataType types.ecore#//Money"
         changeable="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="demandAmount" eType="ecore:EDataType types.ecore#//Money"
+        changeable="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="remark" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IStock" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable">

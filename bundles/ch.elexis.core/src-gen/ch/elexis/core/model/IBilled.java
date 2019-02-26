@@ -370,4 +370,20 @@ public interface IBilled extends Identifiable, Deleteable, WithExtInfo {
 	 * @generated
 	 */
 	boolean isNonIntegerAmount();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	double getPrimaryScaleFactor();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	double getSecondaryScaleFactor();
 } // IBilled

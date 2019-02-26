@@ -11,6 +11,7 @@
 package ch.elexis.core.types.impl;
 
 import ch.elexis.core.model.InvoiceState;
+import ch.elexis.core.model.InvoiceState.REJECTCODE;
 import ch.elexis.core.model.LabOrderState;
 import ch.elexis.core.model.MaritalStatus;
 import ch.elexis.core.model.MimeType;
@@ -266,6 +267,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EDataType mimeTypeEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType invoiceRejectCodeEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -624,6 +632,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EDataType getInvoiceRejectCode() {
+		return invoiceRejectCodeEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getResult() {
 		return resultEClass;
 	}
@@ -694,6 +712,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		billingLawEDataType = createEDataType(BILLING_LAW);
 		maritalStatusEDataType = createEDataType(MARITAL_STATUS);
 		mimeTypeEDataType = createEDataType(MIME_TYPE);
+		invoiceRejectCodeEDataType = createEDataType(INVOICE_REJECT_CODE);
 	}
 
 	/**
@@ -804,6 +823,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEDataType(billingLawEDataType, BillingLaw.class, "BillingLaw", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(maritalStatusEDataType, MaritalStatus.class, "MaritalStatus", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(mimeTypeEDataType, MimeType.class, "MimeType", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(invoiceRejectCodeEDataType, REJECTCODE.class, "InvoiceRejectCode", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

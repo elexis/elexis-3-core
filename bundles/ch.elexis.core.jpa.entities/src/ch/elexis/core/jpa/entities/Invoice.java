@@ -35,6 +35,8 @@ import ch.elexis.core.model.InvoiceState;
 public class Invoice extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
+	public static final String REMARK = "Bemerkung";
+	
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
 	

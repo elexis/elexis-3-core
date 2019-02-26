@@ -10,12 +10,16 @@ import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
 import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
+import ch.elexis.core.model.InvoiceState.REJECTCODE;
 import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.util.internal.ModelUtil;
+import ch.elexis.core.services.INamedQuery;
 import ch.rgw.tools.Money;
 
 public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Invoice>
 		implements IdentifiableWithXid, IInvoice {
+	
+	public static final String REJECTED = "Zurückgewiesen";
 	
 	private ExtInfoHandler extInfoHandler;
 	
@@ -154,14 +158,104 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public Money getOpenAmount(){
-		// TODO Auto-generated method stub
-		return null;
+		List<IPayment> payments = getPayments();
+		Money total = getTotalAmount();
+		for (IPayment payment : payments) {
+			Money paymentAmount = payment.getAmount();
+			total.subtractMoney(paymentAmount);
+		}
+		return new Money(total);
 	}
 	
 	@Override
 	public Money getPayedAmount(){
-		// TODO Auto-generated method stub
-		return null;
+		List<IPayment> payments = getPayments();
+		Money total = new Money();
+		for (IPayment payment : payments) {
+			Money paymentAmount = payment.getAmount();
+			if (!paymentAmount.isNegative()) {
+				total.addMoney(paymentAmount);
+			}
+		}
+		return total;
 	}
 	
+	private List<IPayment> getPayments(){
+		INamedQuery<IPayment> query =
+			CoreModelServiceHolder.get().getNamedQuery(IPayment.class, "invoice");
+		return query.executeWithParameters(query.getParameterMap("invoice", this));
+	}
+	
+	@Override
+	public String getRemark(){
+		return (String) getExtInfo(ch.elexis.core.jpa.entities.Invoice.REMARK);
+	}
+	
+	@Override
+	public void setRemark(String value){
+		setExtInfo(ch.elexis.core.jpa.entities.Invoice.REMARK, value);
+	}
+	
+	/**
+	 * Since different ouputters can use different rules for rounding, the sum of the bill that an
+	 * outputter created might be different from the sum, the Rechnung#build method calculated. So
+	 * an outputter should always use setBetrag to correct the final amount. If the difference
+	 * between the internal calculated amount and the outputter's result is more than 5 currency
+	 * units or more than 2% of the sum, this method will return false an will not set the new
+	 * value. Otherwise, the new value will be set, the account will be adjusted and the method
+	 * returns true
+	 * 
+	 * @param betrag
+	 *            new new sum
+	 * @return true on success
+	 */
+	@Override
+	public boolean adjustAmount(Money value){
+		int oldVal = getTotalAmount().getCents();
+		if (oldVal != 0) {
+			int newVal = value.getCents();
+			int diff = Math.abs(oldVal - newVal);
+			
+			if ((diff > 500) || ((diff * 50) > oldVal)) {
+				return false;
+			}
+			INamedQuery<IAccountTransaction> query =
+				CoreModelServiceHolder.get().getNamedQuery(IAccountTransaction.class, "invoice");
+			List<IAccountTransaction> openTransactions =
+				query.executeWithParameters(query.getParameterMap("invoice", this));
+			// filter open transactions
+			openTransactions =
+				openTransactions.stream().filter(transaction -> transaction.getPayment() == null)
+					.collect(Collectors.toList());
+			
+			if ((openTransactions != null) && (openTransactions.size() == 1)) {
+				IAccountTransaction openTransaction = openTransactions.get(0);
+				Money negBetrag = new Money(value);
+				negBetrag.negate();
+				openTransaction.setAmount(negBetrag);
+			}
+		}
+		setTotalAmount(value);
+		return true;
+	}
+	
+	@Override
+	public void reject(REJECTCODE rejectCode, String message){
+		setState(InvoiceState.DEFECTIVE);
+		addTrace(REJECTED, rejectCode.toString() + ", " + message);
+	}
+	
+	@Override
+	public Money getDemandAmount(){
+		Money ret = new Money(0);
+		for (IPayment payment : getPayments()) {
+			String comment = payment.getRemark();
+			if (comment.equals(ch.elexis.core.l10n.Messages.Rechnung_Mahngebuehr1)
+				|| comment.equals(ch.elexis.core.l10n.Messages.Rechnung_Mahngebuehr2)
+				|| comment.equals(ch.elexis.core.l10n.Messages.Rechnung_Mahngebuehr3)) {
+				ret.addMoney(payment.getAmount());
+			}
+		}
+		return ret.isNegative() ? ret.multiply(-1d) : ret;
+	}
 }
