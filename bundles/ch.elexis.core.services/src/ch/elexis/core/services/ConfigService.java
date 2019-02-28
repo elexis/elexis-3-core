@@ -113,13 +113,13 @@ public class ConfigService implements IConfigService {
 	@Override
 	public String get(String key, String defaultValue){
 		Optional<IConfig> configEntry = modelService.load(key, IConfig.class);
-		return configEntry.map(v -> v.getValue()).orElse(defaultValue);
+		return configEntry.map(IConfig::getValue).orElse(defaultValue);
 	}
 	
 	@Override
 	public boolean get(String key, boolean defaultValue){
 		Optional<IConfig> configEntry = modelService.load(key, IConfig.class);
-		return configEntry.map(v -> v.getValue()).map(v -> "1".equals(v)).orElse(defaultValue);
+		return configEntry.map(IConfig::getValue).map(v -> "1".equals(v) || "true".equals(v)).orElse(defaultValue);
 	}
 	
 	@Override

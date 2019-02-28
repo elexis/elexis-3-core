@@ -59,5 +59,17 @@ public class IConfigServiceTest extends AbstractServiceTest {
 		assertTrue(asSet.contains("TestValue2"));
 		assertTrue(asSet.contains("TestValue3"));
 	}
+	
+	@Test
+	public void getSetBoolean() {
+		configService.set("keyBoolA", "1");
+		configService.set("keyBoolB", "true");
+		configService.set("keyBoolC", "bla");
+		configService.set("keyBoolD", "0");
+		assertTrue(configService.get("keyBoolA", false));
+		assertTrue(configService.get("keyBoolB", false));
+		assertFalse(configService.get("keyBoolC", true));
+		assertFalse(configService.get("keyBoolD", true));
+	}
 
 }
