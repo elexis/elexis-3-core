@@ -136,9 +136,16 @@ public class ExcelWrapper {
 						} else if (types[i].equals(Double.class)) {
 							ret.add(Double.toString(cell.getNumericCellValue()));
 							break;
-						} else /* if(types[i].equals(String.class)) */{
+						} else if (types[i].equals(String.class)) {
 							double cv = cell.getNumericCellValue();
-							// String r=Double.toString(cv);
+							if( cv == (long) cv) {
+								ret.add(String.format("%d", (long) cv));
+							} else {
+								ret.add(String.format("%s", cv));
+							}
+							break;
+						} else {
+							double cv = cell.getNumericCellValue();
 							String r = NumberFormat.getNumberInstance().format(cv);
 							ret.add(r);
 						}
