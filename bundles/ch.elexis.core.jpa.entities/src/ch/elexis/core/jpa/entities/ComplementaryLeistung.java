@@ -13,6 +13,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
+import ch.elexis.core.jpa.entities.converter.IntegerStringConverter;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
@@ -51,7 +52,8 @@ public class ComplementaryLeistung extends AbstractEntityWithId
 	private String description;
 	
 	@Column(length = 16)
-	private String fixedValue;
+	@Convert(converter = IntegerStringConverter.class)
+	private int fixedValue;
 	
 	@Column(length = 8)
 	private LocalDate validFrom;
@@ -59,11 +61,11 @@ public class ComplementaryLeistung extends AbstractEntityWithId
 	@Column(length = 8)
 	private LocalDate validTo;
 	
-	public String getFixedValue(){
+	public int getFixedValue(){
 		return fixedValue;
 	}
 	
-	public void setFixedValue(String fixedValue){
+	public void setFixedValue(int fixedValue){
 		this.fixedValue = fixedValue;
 	}
 	

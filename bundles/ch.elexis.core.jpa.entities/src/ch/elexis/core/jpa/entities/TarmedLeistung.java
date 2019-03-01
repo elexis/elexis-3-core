@@ -44,14 +44,6 @@ public class TarmedLeistung extends AbstractEntityWithId
 	public static final String EXT_FLD_SERVICE_BLOCKS = "ServiceBlocks";
 	public static final String EXT_FLD_SERVICE_AGE = "ServiceAge";
 	
-	public static final String SIDE = "Seite";
-	public static final String SIDE_L = "l";
-	public static final String SIDE_R = "r";
-	public static final String LEFT = "left";
-	public static final String RIGHT = "right";
-	
-	public static final String PFLICHTLEISTUNG = "obligation";
-	
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
 	

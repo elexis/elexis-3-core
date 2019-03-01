@@ -231,8 +231,7 @@ public class ModelUtil {
 	 */
 	public static String getConfig(String key, String defaultValue){
 		IQuery<IConfig> configQuery = CoreModelServiceHolder.get().getQuery(IConfig.class);
-		configQuery.and(ModelPackage.Literals.ICONFIG__KEY, COMPARATOR.EQUALS,
-			Preferences.P_TEXT_EXTERN_FILE);
+		configQuery.and(ModelPackage.Literals.ICONFIG__KEY, COMPARATOR.EQUALS, key);
 		List<IConfig> configs = configQuery.execute();
 		if (configs.isEmpty()) {
 			return defaultValue;

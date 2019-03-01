@@ -6,7 +6,9 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
+import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.core.di.InjectionException;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.swt.graphics.Color;
@@ -15,6 +17,8 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventConstants;
@@ -33,6 +37,8 @@ public class CoreUiUtil implements EventHandler {
 	private static Object lock = new Object();
 	
 	private static IEclipseContext applicationContext;
+	
+	private static IEclipseContext serviceContext;
 	
 	private static List<Object> delayedInjection = new ArrayList<>();
 	
@@ -57,7 +63,23 @@ public class CoreUiUtil implements EventHandler {
 	}
 	
 	public static void injectServices(Object object){
-		ContextInjectionFactory.inject(object, applicationContext);
+		if (serviceContext == null) {
+			BundleContext bundleContext =
+				FrameworkUtil.getBundle(CoreUiUtil.class).getBundleContext();
+			CoreUiUtil.serviceContext = EclipseContextFactory.getServiceContext(bundleContext);
+		}
+		try {
+			ContextInjectionFactory.inject(object, serviceContext);
+		} catch (InjectionException e) {
+			logger.warn("Service injection failure ", e);
+		}
+		if (applicationContext != null) {
+			try {
+				ContextInjectionFactory.inject(object, applicationContext);
+			} catch (InjectionException e) {
+				logger.warn("Application context injection failure ", e);
+			}
+		}
 	}
 	
 	public static void injectServices(Object object, IEclipseContext context){
