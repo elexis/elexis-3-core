@@ -1,6 +1,8 @@
 package ch.elexis.core.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,8 +17,19 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
 
 public class Patient extends Person implements IPatient {
 	
+	private DateTimeFormatter localizedBirthDateFormatter;
+	
 	public Patient(Kontakt model){
 		super(model);
+		localizedBirthDateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+	}
+	
+	
+	@Override
+	public String getLabel() {
+		return ((getTitel() != null) ? getTitel() + " " : "") + getFirstName() + " " + getLastName() + " ("
+				+ getGenderCharLocalized() + "), " + getDateOfBirth().format(localizedBirthDateFormatter) + " ("
+				+ getAgeInYears() + ") - ["+getPatientNr()+"]";
 	}
 	
 	@Override
