@@ -36,7 +36,6 @@ public class Test_Query extends AbstractPersistentObjectTest {
 		// create a instance of an PersistentObject ex. Organisation to test the query
 		org1 = new Organisation(SECOND_NAME, SECOND_NAME + "_zusatz");
 		org2 = new Organisation(FIRST_NAME, FIRST_NAME + "_zusatz");
-		org2.set(Organisation.FLD_LAW_CODE, "law123");
 		org3 = new Organisation(THIRD_NAME, THIRD_NAME + "_zusatz");
 	}
 	
@@ -245,63 +244,6 @@ public class Test_Query extends AbstractPersistentObjectTest {
 		query2.add(Organisation.FLD_COUNTRY, Query.GREATER, MappingName);
 		List<Organisation> result2 = query2.execute();
 		assertEquals(0, result2.size());
-	}
-	
-	@Test
-	public void testQueryCachingWithPrefetchWithPO() {
-		PersistentObject.getDefaultConnection().getCache().clear();
-		Query<Organisation> query = new Query<Organisation>(Organisation.class, Organisation.TABLENAME, false, new String[] {Organisation.FLD_MEDIPORT_SUPPORT, Organisation.FLD_LAW_CODE});
-		query.clear();
-		query.add(Organisation.FLD_NAME1, Query.EQUALS, FIRST_NAME);
-		List<Organisation> result = query.execute();
-		assertEquals(1, result.size());
-		// FLD_LAW_CODE is mapped as TitelSuffix
-		Organisation organisation = result.get(0);
-
-		// check that the po field is in cache
-		assertEquals("law123", organisation.getDBConnection().getCache().get(organisation.getKey(Organisation.FLD_LAW_CODE)));
-		// check that the db field is not in cache because the fetch is done with the po field
-		assertTrue(organisation.getDBConnection().getCache().get(organisation.getKey("TitelSuffix")) == null);
-		// check db result with po field
-		assertEquals("law123", organisation.get(Organisation.FLD_LAW_CODE));
-		// check db result with db field
-		assertEquals("law123", organisation.get("TitelSuffix"));
-		// after first query with the db field - the db field is now in cache
-		assertEquals("law123", organisation.getDBConnection().getCache().get(organisation.getKey("TitelSuffix")));
-	}
-	
-	@Test
-	public void testQueryCachingWithPrefetchDb() {
-		PersistentObject.getDefaultConnection().getCache().clear();
-		Query<Organisation> query = new Query<Organisation>(Organisation.class, Organisation.TABLENAME, false, new String[] {"TitelSuffix"});
-		query.clear();
-		query.add(Organisation.FLD_NAME1, Query.EQUALS, FIRST_NAME);
-		List<Organisation> result = query.execute();
-		assertEquals(1, result.size());
-		// FLD_LAW_CODE is mapped as TitelSuffix
-		Organisation organisation = result.get(0);
-		
-		// check that the po field is not in cache because the fetch is done with the db field
-		assertTrue(organisation.getDBConnection().getCache().get(organisation.getKey(Organisation.FLD_LAW_CODE)) == null);
-		// check that the db field is in cache
-		assertEquals("law123", organisation.getDBConnection().getCache().get(organisation.getKey("TitelSuffix")));
-	
-		// check db result with po field
-		assertEquals("law123", organisation.get(Organisation.FLD_LAW_CODE));
-		// check db result with db field
-		assertEquals("law123", organisation.get("TitelSuffix"));
-		// after first query with the po field - the po field is now in cache
-		assertEquals("law123", organisation.getDBConnection().getCache().get(organisation.getKey(Organisation.FLD_LAW_CODE)));
-	}
-	
-	@Test
-	public void testQueryWithPrefetchInvalidMapping() {
-		try {
-			new Query<Organisation>(Organisation.class, Organisation.TABLENAME, false, new String[] {Organisation.FLD_MEDIPORT_SUPPORT, "notExistingField"});
-			fail("Expected Exception not thrown!");
-		} catch (PersistenceException pe) {
-			
-		}
 	}
 	
 	private class PersistentObjectImpl extends PersistentObject {
