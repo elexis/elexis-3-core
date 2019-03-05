@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
+import javax.persistence.Transient;
+
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
@@ -14,6 +16,18 @@ public class Person extends Contact implements IPerson {
 
 	public Person(Kontakt model) {
 		super(model);
+	}
+	
+	@Transient
+	public char getGenderCharLocalized() {
+		switch (getGender()) {
+		case MALE:
+			return 'm';
+		case FEMALE:
+			return 'w';
+		default:
+			return '?';
+		}
 	}
 
 	@Override
