@@ -13,89 +13,89 @@ import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.Gender;
 
 public class Person extends Contact implements IPerson {
-
-	public Person(Kontakt model) {
+	
+	public Person(Kontakt model){
 		super(model);
 	}
 	
 	@Transient
 	public char getGenderCharLocalized(){
 		if (getGender() != null) {
-			if(Gender.MALE == getGender()) {
+			if (Gender.MALE == getGender()) {
 				return 'm';
 			}
-			if(Gender.FEMALE == getGender()) {
+			if (Gender.FEMALE == getGender()) {
 				return 'w';
 			}
 		}
 		return '?';
 	}
-
+	
 	@Override
-	public Gender getGender() {
+	public Gender getGender(){
 		return getEntity().getGender();
 	}
-
+	
 	@Override
-	public void setGender(Gender value) {
+	public void setGender(Gender value){
 		getEntity().setGender(value);
 	}
-
+	
 	@Override
-	public String getTitel() {
+	public String getTitel(){
 		return getEntity().getTitel();
 	}
-
+	
 	@Override
-	public void setTitel(String value) {
+	public void setTitel(String value){
 		getEntity().setTitel(value);
 	}
-
+	
 	@Override
-	public String getTitelSuffix() {
+	public String getTitelSuffix(){
 		return getEntity().getTitelSuffix();
 	}
-
+	
 	@Override
-	public void setTitelSuffix(String value) {
+	public void setTitelSuffix(String value){
 		getEntity().setTitelSuffix(value);
 	}
-
+	
 	@Override
-	public String getFirstName() {
+	public String getFirstName(){
 		return getEntity().getDescription2();
 	}
-
+	
 	@Override
-	public LocalDateTime getDateOfBirth() {
+	public LocalDateTime getDateOfBirth(){
 		if (getEntity().getDob() != null) {
 			return getEntity().getDob().atStartOfDay();
 		}
 		return null;
 	}
-
+	
 	@Override
-	public void setDateOfBirth(LocalDateTime value) {
+	public void setDateOfBirth(LocalDateTime value){
 		getEntity().setDob(value.toLocalDate());
 	}
-
+	
 	@Override
-	public void setFirstName(String value) {
+	public void setFirstName(String value){
 		getEntity().setDescription2(value);
 	}
-
+	
 	@Override
-	public String getLastName() {
+	public String getLastName(){
 		return getEntity().getDescription1();
 	}
-
+	
 	@Override
-	public void setLastName(String value) {
+	public void setLastName(String value){
 		getEntity().setDescription1(value);
 	}
-
+	
 	@Override
-	public int getAgeInYears() {
+	public int getAgeInYears(){
 		LocalDateTime dateOfBirth = getDateOfBirth();
 		if (dateOfBirth != null) {
 			LocalDate now = LocalDate.now();
@@ -104,40 +104,40 @@ public class Person extends Contact implements IPerson {
 		}
 		return -1;
 	}
-
+	
 	@Override
-	public long getAgeAtIn(LocalDateTime reference, ChronoUnit chronoUnit) {
+	public long getAgeAtIn(LocalDateTime reference, ChronoUnit chronoUnit){
 		return chronoUnit.between(getDateOfBirth(), reference);
 	}
-
+	
 	@Override
-	public MaritalStatus getMaritalStatus() {
+	public MaritalStatus getMaritalStatus(){
 		Object extInfo = getExtInfo(PatientConstants.FLD_EXTINFO_MARITAL_STATUS);
 		if (extInfo != null) {
 			return MaritalStatus.byNumericSafe((String) extInfo);
 		}
 		return null;
 	}
-
+	
 	@Override
-	public void setMaritalStatus(MaritalStatus maritalStatus) {
+	public void setMaritalStatus(MaritalStatus maritalStatus){
 		setExtInfo(PatientConstants.FLD_EXTINFO_MARITAL_STATUS,
-				(maritalStatus != null) ? Integer.toString(maritalStatus.numericValue()) : null);
+			(maritalStatus != null) ? Integer.toString(maritalStatus.numericValue()) : null);
 	}
-
+	
 	@Override
-	public IPerson getLegalGuardian() {
+	public IPerson getLegalGuardian(){
 		Object legalGuardianId = getExtInfo(PatientConstants.FLD_EXTINFO_LEGAL_GUARDIAN);
 		if (legalGuardianId instanceof String) {
 			Optional<IPerson> owner =
-					CoreModelServiceHolder.get().load((String) legalGuardianId, IPerson.class);
+				CoreModelServiceHolder.get().load((String) legalGuardianId, IPerson.class);
 			return owner.orElse(null);
 		}
 		return null;
 	}
-
+	
 	@Override
-	public void setLegalGuardian(IPerson value) {
+	public void setLegalGuardian(IPerson value){
 		if (value instanceof AbstractIdDeleteModelAdapter) {
 			setExtInfo(PatientConstants.FLD_EXTINFO_LEGAL_GUARDIAN, value.getId());
 		} else if (value == null) {
