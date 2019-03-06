@@ -15,6 +15,7 @@ import ch.elexis.core.jpa.entities.Invoice;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.entities.LabResult;
 import ch.elexis.core.jpa.entities.Labor2009Tarif;
+import ch.elexis.core.jpa.entities.Leistungsblock;
 import ch.elexis.core.jpa.entities.PhysioLeistung;
 import ch.elexis.core.jpa.entities.Prescription;
 import ch.elexis.core.jpa.entities.Reminder;
@@ -68,6 +69,7 @@ public class ElexisTypeMap {
 	public static final String TYPE_USER = "ch.elexis.data.User";
 	public static final String TYPE_VERRECHNET = "ch.elexis.data.Verrechnet"; 
 	public static final String TYPE_FREETEXTDIAGNOSE = "ch.elexis.data.FreeTextDiagnose";
+	public static final String TYPE_LEISTUNGSBLOCK = "ch.elexis.data.Leistungsblock";
 	
 	static {
 		stsToClassMap = new HashMap<String, Class<? extends EntityWithId>>();
@@ -110,7 +112,9 @@ public class ElexisTypeMap {
 		classToStsMap.put(Verrechnet.class, TYPE_VERRECHNET);
 		stsToClassMap.put(TYPE_FREETEXTDIAGNOSE, FreeTextDiagnosis.class);
 		classToStsMap.put(FreeTextDiagnosis.class, TYPE_FREETEXTDIAGNOSE);
-
+		stsToClassMap.put(TYPE_LEISTUNGSBLOCK, Leistungsblock.class);
+		classToStsMap.put(Leistungsblock.class, TYPE_LEISTUNGSBLOCK);
+		
 		// uni-directional mappable
 		stsToClassMap.put(TYPE_MEDIKAMENT, Artikel.class);
 		stsToClassMap.put(TYPE_EIGENARTIKEL, Artikel.class);

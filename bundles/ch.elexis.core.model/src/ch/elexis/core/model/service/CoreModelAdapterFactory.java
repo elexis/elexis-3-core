@@ -8,6 +8,7 @@ import ch.elexis.core.jpa.entities.Eigenleistung;
 import ch.elexis.core.jpa.entities.Fall;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.entities.KontaktAdressJoint;
+import ch.elexis.core.jpa.entities.Leistungsblock;
 import ch.elexis.core.jpa.entities.Termin;
 import ch.elexis.core.jpa.entities.Userconfig;
 import ch.elexis.core.jpa.entities.VKPreis;
@@ -22,6 +23,7 @@ import ch.elexis.core.model.Address;
 import ch.elexis.core.model.Appointment;
 import ch.elexis.core.model.Billed;
 import ch.elexis.core.model.BillingSystemFactor;
+import ch.elexis.core.model.CodeElementBlock;
 import ch.elexis.core.model.Config;
 import ch.elexis.core.model.Contact;
 import ch.elexis.core.model.Coverage;
@@ -39,6 +41,7 @@ import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IBillingSystemFactor;
 import ch.elexis.core.model.IBlob;
 import ch.elexis.core.model.IBlobSecondary;
+import ch.elexis.core.model.ICodeElementBlock;
 import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
@@ -165,6 +168,8 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 		addMapping(new MappingEntry(IArticle.class, ch.elexis.core.model.TypedArticle.class,
 			ch.elexis.core.jpa.entities.Artikel.class));
 		addMapping(new MappingEntry(ICustomService.class, CustomService.class, Eigenleistung.class));
+		addMapping(new MappingEntry(ICodeElementBlock.class, CodeElementBlock.class,
+			Leistungsblock.class));
 		
 		addMapping(new MappingEntry(IArticleDefaultSignature.class,
 			ch.elexis.core.model.ArticleDefaultSignature.class,

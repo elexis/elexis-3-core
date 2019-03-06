@@ -231,8 +231,20 @@
     <genClasses image="false" ecoreClass="model.ecore#//ICodeElementBlock">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ICodeElementBlock/elements"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ICodeElementBlock/elementReferences"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ICodeElementBlock/mandator"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ICodeElementBlock/macro"/>
       <genOperations ecoreOperation="model.ecore#//ICodeElementBlock/getDiffToReferences">
         <genParameters ecoreParameter="model.ecore#//ICodeElementBlock/getDiffToReferences/elements"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//ICodeElementBlock/addElement">
+        <genParameters ecoreParameter="model.ecore#//ICodeElementBlock/addElement/element"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//ICodeElementBlock/removeElement">
+        <genParameters ecoreParameter="model.ecore#//ICodeElementBlock/removeElement/element"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//ICodeElementBlock/moveElement">
+        <genParameters ecoreParameter="model.ecore#//ICodeElementBlock/moveElement/element"/>
+        <genParameters ecoreParameter="model.ecore#//ICodeElementBlock/moveElement/up"/>
       </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IBillable">

@@ -18,7 +18,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -26,6 +30,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.IInputValidator;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -45,17 +50,25 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.dialogs.SelectionDialog;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListenerImpl;
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.ICodeElementBlock;
+import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.model.builder.ICodeElementBlockBuilder;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.IQuery.ORDER;
+import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.actions.ToggleVerrechenbarFavoriteAction;
 import ch.elexis.core.ui.commands.ExportiereBloeckeCommand;
 import ch.elexis.core.ui.dialogs.BlockSelektor;
 import ch.elexis.core.ui.dialogs.base.InputDialog;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.selectors.FieldDescriptor;
-import ch.elexis.core.ui.util.PersistentObjectDragSource;
+import ch.elexis.core.ui.util.CoreUiUtil;
+import ch.elexis.core.ui.util.GenericObjectDragSource;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.SelectorPanelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
@@ -63,7 +76,6 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.PersistentObject;
-import ch.elexis.data.Query;
 
 public class BlockSelector extends CodeSelectorFactory {
 	protected static final String BLOCK_ONLY_FILTER_ENABLED = "blockselector/blockonlyfilter";
@@ -80,13 +92,13 @@ public class BlockSelector extends CodeSelectorFactory {
 		public void selectionChanged(SelectionChangedEvent event){
 			TreeViewer tv = (TreeViewer) event.getSource();
 			StructuredSelection ss = (StructuredSelection) tv.getSelection();
-			Object selectedPo = null;
+			Object selected = null;
 			Object firstElement = ss.isEmpty() ? null : ss.getFirstElement();
 			if (firstElement instanceof BlockTreeViewerItem) {
-				selectedPo = ((BlockTreeViewerItem) firstElement).getBlock();
+				selected = ((BlockTreeViewerItem) firstElement).getBlock();
 			}
-			tvfa.updateSelection(selectedPo);
-			ElexisEventDispatcher.fireSelectionEvent((PersistentObject) selectedPo);
+			tvfa.updateSelection(NoPoUtil.loadAsPersistentObject((Identifiable) selected));
+			ContextServiceHolder.get().getRootContext().setTyped(selected);
 		}
 	};
 	
@@ -101,9 +113,12 @@ public class BlockSelector extends CodeSelectorFactory {
 		mgr.addMenuListener(new IMenuListener() {
 			
 			public void menuAboutToShow(IMenuManager manager){
-				manager.add(tvfa);
-				manager.add(deleteAction);
-				manager.add(copyAction);
+				Object selected = cv.getSelection()[0];
+				if (selected instanceof BlockTreeViewerItem) {
+					manager.add(tvfa);
+					manager.add(deleteAction);
+					manager.add(copyAction);
+				}
 				addPopupCommandContributions(manager, cv.getSelection());
 			}
 		});
@@ -111,7 +126,7 @@ public class BlockSelector extends CodeSelectorFactory {
 		cv.setContextMenu(mgr);
 		
 		FieldDescriptor<?>[] lbName = new FieldDescriptor<?>[] {
-			new FieldDescriptor<Leistungsblock>(Leistungsblock.FLD_NAME)
+			new FieldDescriptor<ICodeElementBlock>("name")
 		};
 		
 		// add keyListener to search field
@@ -136,13 +151,13 @@ public class BlockSelector extends CodeSelectorFactory {
 				new BlockTreeViewerItem.ColorizedLabelProvider(), slp,
 				new ViewerConfigurer.DefaultButtonProvider(), new SimpleWidgetProvider(
 					SimpleWidgetProvider.TYPE_TREE, SWT.NONE, null));
-		vc.addDragSourceSelectionRenderer(new PersistentObjectDragSource.ISelectionRenderer() {
+		vc.addDragSourceSelectionRenderer(new GenericObjectDragSource.ISelectionRenderer() {
 			
 			@Override
-			public List<PersistentObject> getSelection(){
+			public List<Object> getSelection(){
 				IStructuredSelection selection = cv.getViewerWidget().getStructuredSelection();
 				if (!selection.isEmpty()) {
-					List<PersistentObject> ret = new ArrayList<>();
+					List<Object> ret = new ArrayList<>();
 					for (Object selected : selection.toList()) {
 						if(selected instanceof BlockTreeViewerItem) {
 							ret.add(((BlockTreeViewerItem) selected).getBlock());
@@ -163,8 +178,8 @@ public class BlockSelector extends CodeSelectorFactory {
 	}
 	
 	@Override
-	public Class<? extends PersistentObject> getElementClass(){
-		return Leistungsblock.class;
+	public Class<?> getElementClass(){
+		return ICodeElementBlock.class;
 	}
 	
 	@Override
@@ -176,9 +191,10 @@ public class BlockSelector extends CodeSelectorFactory {
 		deleteAction = new Action("Block löschen") {
 			@Override
 			public void run(){
-				Object o = cv.getSelection()[0];
-				if (o instanceof Leistungsblock) {
-					((Leistungsblock) o).delete();
+				Object selected = cv.getSelection()[0];
+				if (selected instanceof BlockTreeViewerItem) {
+					ICodeElementBlock block = ((BlockTreeViewerItem) selected).getBlock();
+					CoreModelServiceHolder.get().delete(block);
 					cv.notify(CommonViewer.Message.update);
 				}
 			}
@@ -193,8 +209,19 @@ public class BlockSelector extends CodeSelectorFactory {
 			public void run(){
 				String[] v = cv.getConfigurer().getControlFieldProvider().getValues();
 				if (v != null && v.length > 0 && v[0] != null && v[0].length() > 0) {
-					new Leistungsblock(v[0], ElexisEventDispatcher.getSelectedMandator());
-					cv.notify(CommonViewer.Message.update_keeplabels);
+					IQuery<ICodeElementBlock> query =
+						CoreModelServiceHolder.get().getQuery(ICodeElementBlock.class);
+					query.and("name", COMPARATOR.EQUALS, v[0]);
+					if (!query.execute().isEmpty()) {
+						MessageDialog.openError(Display.getDefault().getActiveShell(), "Fehler",
+							"Ein Block mit dem Namen [" + v[0] + "] existiert bereits");
+					} else {
+						new ICodeElementBlockBuilder(CoreModelServiceHolder.get(), v[0])
+							.mandator(ContextServiceHolder.get().getActiveMandator().orElse(null))
+							.buildAndSave();
+						
+						cv.notify(CommonViewer.Message.update_keeplabels);
+					}
 				}
 			}
 		};
@@ -264,60 +291,50 @@ public class BlockSelector extends CodeSelectorFactory {
 		private CommonViewer cv;
 		
 		private String queryFilter;
-		private HashMap<Leistungsblock, BlockTreeViewerItem> blockItemMap;
+		private HashMap<ICodeElementBlock, BlockTreeViewerItem> blockItemMap;
 		
-		private final ElexisEventListenerImpl eeli_lb =
-			new ElexisEventListenerImpl(Leistungsblock.class, ElexisEvent.EVENT_UPDATE) {
-				
-				public void catchElexisEvent(ElexisEvent ev){
-					if (blockItemMap != null && ev.getObject() instanceof Leistungsblock) {
-						Display.getDefault().asyncExec(new Runnable() {
-							@Override
-							public void run(){
-								if (cv != null && cv.getViewerWidget() != null
-									&& !cv.getViewerWidget().getControl().isDisposed()) {
-									BlockTreeViewerItem item = blockItemMap.get(ev.getObject());
-									cv.getViewerWidget().refresh(item, true);
-								}
-							}
-						});
-					}
-				}
-			};
+		@Inject
+		public void udpateBlock(
+			@Optional @UIEventTopic(ElexisEventTopics.EVENT_UPDATE) ICodeElementBlock block){
+			if (block != null && cv != null && cv.getViewerWidget() != null
+				&& !cv.getViewerWidget().getControl().isDisposed()) {
+				BlockTreeViewerItem item = blockItemMap.get(block);
+				cv.getViewerWidget().refresh(item, true);
+			}
+		}
 		
 		BlockContentProvider(BlockSelector selector, CommonViewer cv){
 			this.cv = cv;
 			this.selector = selector;
+			
+			CoreUiUtil.injectServicesWithContext(this);
 		}
 		
 		public void startListening(){
 			cv.getConfigurer().getControlFieldProvider().addChangeListener(this);
-			ElexisEventDispatcher.getInstance().addListeners(eeli_lb);
-			
 		}
 		
 		public void stopListening(){
 			cv.getConfigurer().getControlFieldProvider().removeChangeListener(this);
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_lb);
 		}
 		
 		public Object[] getElements(Object inputElement){
-			Query<Leistungsblock> qbe = new Query<Leistungsblock>(Leistungsblock.class);
-			qbe.add(Leistungsblock.FLD_ID, Query.NOT_EQUAL, Leistungsblock.VERSION_ID);
+			IQuery<ICodeElementBlock> query =
+				CoreModelServiceHolder.get().getQuery(ICodeElementBlock.class);
+			query.and("id", COMPARATOR.NOT_EQUALS, "Version");
 			if ((queryFilter != null && queryFilter.length() > 2)) {
 				if (selector.searchBlocksOnly.isChecked()) {
-					qbe.add(Leistungsblock.FLD_NAME, Query.LIKE, "%" + queryFilter + "%");
+					query.and("name", COMPARATOR.LIKE, "%" + queryFilter + "%");
 				} else {
-					qbe.startGroup();
-					qbe.add(Leistungsblock.FLD_NAME, Query.LIKE, "%" + queryFilter + "%");
-					qbe.or();
-					qbe.add(Leistungsblock.FLD_CODEELEMENTS, Query.LIKE, "%" + queryFilter + "%");
-					qbe.endGroup();
+					query.startGroup();
+					query.and("name", COMPARATOR.LIKE, "%" + queryFilter + "%");
+					query.or("codeelements", COMPARATOR.LIKE, "%" + queryFilter + "%");
+					query.andJoinGroups();
 				}
 			}
-			qbe.orderBy(false, Leistungsblock.FLD_NAME);
+			query.orderBy("name", ORDER.ASC);
 			blockItemMap = new HashMap<>();
-			List<BlockTreeViewerItem> list = qbe.execute().stream().map(b -> {
+			List<BlockTreeViewerItem> list = query.execute().stream().map(b -> {
 				BlockTreeViewerItem item = BlockTreeViewerItem.of(b);
 				blockItemMap.put(b, item);
 				return item;

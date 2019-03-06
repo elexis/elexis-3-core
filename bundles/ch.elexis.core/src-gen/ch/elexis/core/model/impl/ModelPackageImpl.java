@@ -2050,6 +2050,26 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EReference getICodeElementBlock_Mandator() {
+		return (EReference)iCodeElementBlockEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getICodeElementBlock_Macro() {
+		return (EAttribute)iCodeElementBlockEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getIBillable() {
 		return iBillableEClass;
 	}
@@ -4389,6 +4409,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iCodeElementBlockEClass = createEClass(ICODE_ELEMENT_BLOCK);
 		createEReference(iCodeElementBlockEClass, ICODE_ELEMENT_BLOCK__ELEMENTS);
 		createEReference(iCodeElementBlockEClass, ICODE_ELEMENT_BLOCK__ELEMENT_REFERENCES);
+		createEReference(iCodeElementBlockEClass, ICODE_ELEMENT_BLOCK__MANDATOR);
+		createEAttribute(iCodeElementBlockEClass, ICODE_ELEMENT_BLOCK__MACRO);
 
 		iBillableEClass = createEClass(IBILLABLE);
 
@@ -5032,6 +5054,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEClass(iCodeElementBlockEClass, ICodeElementBlock.class, "ICodeElementBlock", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getICodeElementBlock_Elements(), this.getICodeElement(), null, "elements", null, 0, -1, ICodeElementBlock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getICodeElementBlock_ElementReferences(), this.getICodeElement(), null, "elementReferences", null, 0, -1, ICodeElementBlock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getICodeElementBlock_Mandator(), this.getIMandator(), null, "mandator", null, 0, 1, ICodeElementBlock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getICodeElementBlock_Macro(), ecorePackage.getEString(), "macro", null, 0, 1, ICodeElementBlock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		op = addEOperation(iCodeElementBlockEClass, null, "getDiffToReferences", 0, 1, IS_UNIQUE, IS_ORDERED);
 		g1 = createEGenericType(theTypesPackage.getList());
@@ -5042,6 +5066,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		g2 = createEGenericType(this.getICodeElement());
 		g1.getETypeArguments().add(g2);
 		initEOperation(op, g1);
+
+		op = addEOperation(iCodeElementBlockEClass, null, "addElement", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getICodeElement(), "element", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iCodeElementBlockEClass, null, "removeElement", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getICodeElement(), "element", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iCodeElementBlockEClass, null, "moveElement", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getICodeElement(), "element", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEBoolean(), "up", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iBillableEClass, IBillable.class, "IBillable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

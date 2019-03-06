@@ -13,6 +13,9 @@
 package ch.elexis.core.ui.views.codesystems;
 
 import java.util.List;
+import java.util.Optional;
+
+import javax.inject.Inject;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoProperties;
@@ -60,27 +63,33 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.statushandlers.StatusManager;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.interfaces.ICodeElement;
+import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.model.ICodeElementBlock;
+import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.commands.CreateEigenleistungUi;
 import ch.elexis.core.ui.commands.EditEigenleistungUi;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.util.PersistentObjectDragSource;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.views.IDetailDisplay;
-import ch.elexis.data.Artikel;
 import ch.elexis.data.Eigenleistung;
-import ch.elexis.data.Leistungsblock;
-import ch.elexis.data.Mandant;
 import ch.elexis.data.PersistentObject;
-import ch.elexis.data.Query;
 import ch.rgw.tools.StringTool;
 
 public class BlockDetailDisplay implements IDetailDisplay {
@@ -92,14 +101,23 @@ public class BlockDetailDisplay implements IDetailDisplay {
 	private Combo cbMandant;
 	private TableViewer viewer;
 	private Button bNew, bEigen, bDiag;
-	private List<Mandant> lMandanten;
+	private List<IMandator> lMandanten;
 	private DataBindingContext dbc = new DataBindingContext();
-	private WritableValue master = new WritableValue(null, Leistungsblock.class);
+	private WritableValue<ICodeElementBlock> master =
+		new WritableValue(null, ICodeElementBlock.class);
 	
 	private BlockComparator comparator;
 	
 	private Action removeLeistung, moveUpAction, moveDownAction, editAction, countAction;
 	private TableViewerFocusCellManager focusCellManager;
+	
+	@Inject
+	public void selection(
+		@org.eclipse.e4.core.di.annotations.Optional ICodeElementBlock block){
+		if (block != null && !form.isDisposed()) {
+			display(block);
+		}
+	}
 	
 	public Composite createDisplay(final Composite parent, final IViewSite site){
 		tk = UiDesk.getToolkit();
@@ -119,7 +137,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		IObservableValue txtNameObservableUi =
 			WidgetProperties.text(SWT.Modify).observeDelayed(100, tName);
 		IObservableValue txtNameObservable =
-			PojoProperties.value("name", String.class).observeDetail(master);
+			PojoProperties.value("code", String.class).observeDetail(master);
 		dbc.bindValue(txtNameObservableUi, txtNameObservable);
 		
 		tk.createLabel(body, Messages.BlockDetailDisplay_macro)
@@ -138,25 +156,26 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		cbMandant.setData("TEST_COMP_NAME", "blkd_Mandant_cb"); //$NON-NLS-1$
 		cbMandant.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tk.adapt(cbMandant);
-		Query<Mandant> qm = new Query<Mandant>(Mandant.class);
-		lMandanten = qm.execute();
+		IQuery<IMandator> query = CoreModelServiceHolder.get().getQuery(IMandator.class);
+		query.and(ModelPackage.Literals.ICONTACT__MANDATOR, COMPARATOR.EQUALS, Boolean.TRUE);
+		lMandanten = query.execute();
 		cbMandant.add(Messages.BlockDetailDisplay_all);
-		for (PersistentObject m : lMandanten) {
+		for (IMandator m : lMandanten) {
 			cbMandant.add(m.getLabel());
 		}
 		cbMandant.addSelectionListener(new SelectionAdapter() {
-			
 			@Override
 			public void widgetSelected(final SelectionEvent e){
 				int idx = cbMandant.getSelectionIndex();
-				Leistungsblock lb =
-					(Leistungsblock) ElexisEventDispatcher.getSelected(Leistungsblock.class);
-				if (idx > 0) {
-					PersistentObject m = lMandanten.get(idx - 1);
-					lb.set(Leistungsblock.FLD_MANDANT_ID, m.getId());
-				} else {
-					lb.set(Leistungsblock.FLD_MANDANT_ID, StringConstants.EMPTY);
-				}
+				Optional<ICodeElementBlock> selected =
+					ContextServiceHolder.get().getTyped(ICodeElementBlock.class);
+				selected.ifPresent(block -> {
+					if (idx > 0) {
+						block.setMandator(lMandanten.get(idx - 1));
+					} else {
+						block.setMandator(null);
+					}
+				});
 			}
 			
 		});
@@ -175,7 +194,9 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		viewer.getTable().setLinesVisible(true);
 		comparator = new BlockComparator();
 		createColumns();
-		updateViewerInput((Leistungsblock) ElexisEventDispatcher.getSelected(Leistungsblock.class));
+		
+		updateViewerInput(
+			ContextServiceHolder.get().getTyped(ICodeElementBlock.class).orElse(null));
 		
 		final TextTransfer textTransfer = TextTransfer.getInstance();
 		Transfer[] types = new Transfer[] {
@@ -183,9 +204,8 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		};
 		viewer.addDropSupport(DND.DROP_COPY, types, new DropTargetListener() {
 			public void dragEnter(final DropTargetEvent event){
-				PersistentObject dropped = PersistentObjectDragSource.getDraggedObject();
-				if (dropped instanceof Artikel) {
-					if (((Artikel) dropped).isProduct()) {
+				if (event.data instanceof IArticle) {
+					if (((IArticle) event.data).isProduct()) {
 						event.detail = event.detail = DND.DROP_NONE;
 						return;
 					}
@@ -200,21 +220,24 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			public void dragOver(final DropTargetEvent event){}
 			
 			public void drop(final DropTargetEvent event){
+				Optional<ICodeElementBlock> block =
+					ContextServiceHolder.get().getTyped(ICodeElementBlock.class);
 				String drp = (String) event.data;
 				String[] dl = drp.split(","); //$NON-NLS-1$
 				for (String obj : dl) {
-					PersistentObject dropped = CoreHub.poFactory.createFromString(obj);
+					Object dropped = StoreToStringServiceHolder.getLoadFromString(obj);
 					if (dropped instanceof ICodeElement) {
-						Leistungsblock lb = (Leistungsblock) ElexisEventDispatcher
-							.getSelected(Leistungsblock.class);
-						if (lb != null) {
-							lb.addElement((ICodeElement) dropped);
-							updateViewerInput(lb);
-							ElexisEventDispatcher.reload(Leistungsblock.class);
-						}
+						block.ifPresent(b -> {
+							b.addElement((ICodeElement) dropped);
+						});
 					}
 				}
-				
+				block.ifPresent(b -> {
+					CoreModelServiceHolder.get().save(b);
+					updateViewerInput(b);
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD,
+						ICodeElementBlock.class);
+				});
 			}
 			
 			public void dropAccept(final DropTargetEvent event){
@@ -301,39 +324,42 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				BlockElementViewerItem element =
 					(BlockElementViewerItem) ((IStructuredSelection) viewer.getSelection())
 						.getFirstElement();
-				if (element.isCodeElementInstanceOf(Eigenleistung.class)) {
-					return new IAction[] {
-						moveUpAction, moveDownAction, null, countAction, removeLeistung, editAction
-					};
-				} else {
-					return new IAction[] {
-						moveUpAction, moveDownAction, null, countAction, removeLeistung
-					};
+				if (element != null) {
+					if (element.isCodeElementInstanceOf(Eigenleistung.class)) {
+						return new IAction[] {
+							moveUpAction, moveDownAction, null, countAction, removeLeistung,
+							editAction
+						};
+					} else {
+						return new IAction[] {
+							moveUpAction, moveDownAction, null, countAction, removeLeistung
+						};
+					}
 				}
-				
+				return new IAction[0];
 			}
 		});
 		// menus.createViewerContextMenu(lLst,moveUpAction,moveDownAction,null,removeLeistung,editAction);
 		return body;
 	}
 	
-	public Class<? extends PersistentObject> getElementClass(){
-		return Leistungsblock.class;
+	public Class<?> getElementClass(){
+		return ICodeElementBlock.class;
 	}
 	
 	public void display(final Object obj){
-		Leistungsblock block = (Leistungsblock) obj;
+		ICodeElementBlock block = (ICodeElementBlock) obj;
 		master.setValue(block);
 		
 		if (obj == null) {
 			bNew.setEnabled(false);
 			cbMandant.select(0);
 		} else {
-			String mId = block.get(Leistungsblock.FLD_MANDANT_ID);
+			IMandator mandator = block.getMandator();
 			int sel = 0;
-			if (!StringTool.isNothing(mId)) {
+			if (mandator != null) {
 				String[] items = cbMandant.getItems();
-				sel = StringTool.getIndex(items, Mandant.load(mId).getLabel());
+				sel = StringTool.getIndex(items, mandator.getLabel());
 			}
 			cbMandant.select(sel);
 			bNew.setEnabled(true);
@@ -341,7 +367,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		updateViewerInput(block);
 	}
 	
-	private void updateViewerInput(Leistungsblock block){
+	private void updateViewerInput(ICodeElementBlock block){
 		viewer.setInput(BlockElementViewerItem.of(block, true));
 	}
 	
@@ -444,18 +470,18 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		removeLeistung = new Action(Messages.BlockDetailDisplay_remove) { //$NON-NLS-1$
 			@Override
 			public void run(){
-				Leistungsblock lb =
-					(Leistungsblock) ElexisEventDispatcher.getSelected(Leistungsblock.class);
-				if (lb != null) {
+				Optional<ICodeElementBlock> block =
+					ContextServiceHolder.get().getTyped(ICodeElementBlock.class);
+				block.ifPresent(b -> {
 					IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
 					BlockElementViewerItem selectedElement =
 						(BlockElementViewerItem) sel.getFirstElement();
 					if (selectedElement != null) {
 						selectedElement.remove();
-						updateViewerInput(lb);
-						ElexisEventDispatcher.update(lb);
+						updateViewerInput(b);
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, b);
 					}
-				}
+				});
 			}
 		};
 		moveUpAction = new Action(Messages.BlockDetailDisplay_moveUp) { //$NON-NLS-1$
@@ -478,23 +504,28 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			
 			@Override
 			public void run(){
-				Leistungsblock lb =
-					(Leistungsblock) ElexisEventDispatcher.getSelected(Leistungsblock.class);
 				IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
 				BlockElementViewerItem selectedElement =
 					(BlockElementViewerItem) sel.getFirstElement();
-				if (selectedElement.getFirstElement() instanceof PersistentObject) {
-					EditEigenleistungUi
-						.executeWithParams((PersistentObject) selectedElement.getFirstElement());
-					ElexisEventDispatcher.update(lb);
+				PersistentObject poElement = null;
+				ICodeElement firstElement = selectedElement.getFirstElement();
+				if (firstElement instanceof Identifiable) {
+					poElement = NoPoUtil.loadAsPersistentObject((Identifiable) firstElement);
+				} else if (firstElement instanceof PersistentObject) {
+					poElement = (PersistentObject) firstElement;
+				}
+				if (poElement != null) {
+					EditEigenleistungUi.executeWithParams(poElement);
+					
+					ContextServiceHolder.get().getTyped(ICodeElementBlock.class).ifPresent(b -> {
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, b);
+					});
 				}
 			}
 		};
 		countAction = new Action("Anzahl") {
 			@Override
 			public void run(){
-				Leistungsblock lb =
-					(Leistungsblock) ElexisEventDispatcher.getSelected(Leistungsblock.class);
 				IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
 				BlockElementViewerItem selectedElement =
 					(BlockElementViewerItem) sel.getFirstElement();
@@ -517,8 +548,13 @@ public class BlockDetailDisplay implements IDetailDisplay {
 					try {
 						String val = dlg.getValue();
 						selectedElement.setCount(Integer.parseInt(val));
-						updateViewerInput(lb);
-						ElexisEventDispatcher.update(lb);
+						Optional<ICodeElementBlock> block =
+							ContextServiceHolder.get().getTyped(ICodeElementBlock.class);
+						block.ifPresent(b -> {
+							CoreModelServiceHolder.get().save(b);
+							updateViewerInput(b);
+							ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, b);
+						});
 					} catch (NumberFormatException ne) {
 						// ignore
 					}
@@ -528,16 +564,16 @@ public class BlockDetailDisplay implements IDetailDisplay {
 	}
 	
 	private void moveElement(final boolean up){
-		Leistungsblock lb =
-			(Leistungsblock) ElexisEventDispatcher.getSelected(Leistungsblock.class);
-		if (lb != null) {
+		Optional<ICodeElementBlock> block =
+			ContextServiceHolder.get().getTyped(ICodeElementBlock.class);
+		block.ifPresent(b -> {
 			IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
 			BlockElementViewerItem selectedElement = (BlockElementViewerItem) sel.getFirstElement();
 			if (selectedElement != null) {
-				lb.moveElement(selectedElement.getFirstElement(), up);
-				updateViewerInput(lb);
+				b.moveElement(selectedElement.getFirstElement(), up);
+				updateViewerInput(b);
 			}
-		}
+		});
 	}
 	
 	private class BlockComparator extends ViewerComparator {

@@ -7,22 +7,23 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.ICodeElementBlock;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.VerrechenbarFavorites;
 import ch.elexis.data.VerrechenbarFavorites.Favorite;
 
 public class BlockTreeViewerItem {
 	
-	public static BlockTreeViewerItem of(Leistungsblock block){
+	public static BlockTreeViewerItem of(ICodeElementBlock block){
 		BlockTreeViewerItem ret = new BlockTreeViewerItem(block);
 		return ret;
 	}
 	
-	private Leistungsblock block;
+	private ICodeElementBlock block;
 	private List<BlockElementViewerItem> currentChildren;
 	
-	public BlockTreeViewerItem(Leistungsblock block){
+	public BlockTreeViewerItem(ICodeElementBlock block){
 		this.block = block;
 	}
 	
@@ -30,7 +31,7 @@ public class BlockTreeViewerItem {
 		return block.getText();
 	}
 	
-	public Leistungsblock getBlock(){
+	public ICodeElementBlock getBlock(){
 		return block;
 	}
 	
@@ -68,7 +69,8 @@ public class BlockTreeViewerItem {
 		public Image getImage(Object element){
 			if (element instanceof BlockTreeViewerItem) {
 				BlockTreeViewerItem item = (BlockTreeViewerItem) element;
-				Favorite fav = VerrechenbarFavorites.isFavorite(item.getBlock());
+				Favorite fav = VerrechenbarFavorites
+					.isFavorite(NoPoUtil.loadAsPersistentObject(item.getBlock()));
 				if (fav != null)
 					return Images.IMG_STAR.getImage();
 			}

@@ -12,13 +12,13 @@ import org.eclipse.swt.graphics.Color;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.interfaces.ICodeElement;
+import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.model.ICodeElementBlock;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.data.Leistungsblock;
 
 public class BlockElementViewerItem {
 	
-	public static List<BlockElementViewerItem> of(Leistungsblock block, boolean useReferences){
+	public static List<BlockElementViewerItem> of(ICodeElementBlock block, boolean useReferences){
 		List<BlockElementViewerItem> order = new ArrayList<>();
 		Map<String, BlockElementViewerItem> items = new HashMap<>();
 		if (block != null) {
@@ -44,9 +44,9 @@ public class BlockElementViewerItem {
 	}
 	
 	private List<ICodeElement> elements;
-	private Leistungsblock block;
+	private ICodeElementBlock block;
 	
-	public BlockElementViewerItem(Leistungsblock block, ICodeElement iCodeElement){
+	public BlockElementViewerItem(ICodeElementBlock block, ICodeElement iCodeElement){
 		elements = new ArrayList<>();
 		elements.add(iCodeElement);
 		this.block = block;

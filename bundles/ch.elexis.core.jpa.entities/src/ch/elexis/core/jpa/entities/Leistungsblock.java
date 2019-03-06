@@ -11,7 +11,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
-import ch.elexis.core.jpa.entities.converter.ElexisDBCompressedStringConverter;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
@@ -42,8 +41,7 @@ public class Leistungsblock extends AbstractEntityWithId
 	@Column(length = 30)
 	private String name;
 
-	@Convert(converter = ElexisDBCompressedStringConverter.class)
-	@Column(name = "leistungen", columnDefinition = "BLOB")
+	@Column(name = "codeelements")
 	private String services;
 
 	@Column(length = 30)

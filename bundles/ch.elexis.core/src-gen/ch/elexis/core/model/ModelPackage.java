@@ -3120,13 +3120,31 @@ public interface ModelPackage extends EPackage {
 	int ICODE_ELEMENT_BLOCK__ELEMENT_REFERENCES = IDENTIFIABLE_FEATURE_COUNT + 4;
 
 	/**
+	 * The feature id for the '<em><b>Mandator</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICODE_ELEMENT_BLOCK__MANDATOR = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Macro</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ICODE_ELEMENT_BLOCK__MACRO = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
 	 * The number of structural features of the '<em>ICode Element Block</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ICODE_ELEMENT_BLOCK_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 5;
+	int ICODE_ELEMENT_BLOCK_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IBillable <em>IBillable</em>}' class.
@@ -7663,6 +7681,28 @@ public interface ModelPackage extends EPackage {
 	EReference getICodeElementBlock_ElementReferences();
 
 	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.ICodeElementBlock#getMandator <em>Mandator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Mandator</em>'.
+	 * @see ch.elexis.core.model.ICodeElementBlock#getMandator()
+	 * @see #getICodeElementBlock()
+	 * @generated
+	 */
+	EReference getICodeElementBlock_Mandator();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ICodeElementBlock#getMacro <em>Macro</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Macro</em>'.
+	 * @see ch.elexis.core.model.ICodeElementBlock#getMacro()
+	 * @see #getICodeElementBlock()
+	 * @generated
+	 */
+	EAttribute getICodeElementBlock_Macro();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IBillable <em>IBillable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -11218,6 +11258,22 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference ICODE_ELEMENT_BLOCK__ELEMENT_REFERENCES = eINSTANCE.getICodeElementBlock_ElementReferences();
+
+		/**
+		 * The meta object literal for the '<em><b>Mandator</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ICODE_ELEMENT_BLOCK__MANDATOR = eINSTANCE.getICodeElementBlock_Mandator();
+
+		/**
+		 * The meta object literal for the '<em><b>Macro</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ICODE_ELEMENT_BLOCK__MACRO = eINSTANCE.getICodeElementBlock_Macro();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IBillable <em>IBillable</em>}' class.

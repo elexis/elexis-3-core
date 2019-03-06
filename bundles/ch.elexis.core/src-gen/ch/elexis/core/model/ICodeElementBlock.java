@@ -23,6 +23,8 @@ import java.util.List;
  * <ul>
  *   <li>{@link ch.elexis.core.model.ICodeElementBlock#getElements <em>Elements</em>}</li>
  *   <li>{@link ch.elexis.core.model.ICodeElementBlock#getElementReferences <em>Element References</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ICodeElementBlock#getMandator <em>Mandator</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ICodeElementBlock#getMacro <em>Macro</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getICodeElementBlock()
@@ -63,11 +65,87 @@ public interface ICodeElementBlock extends Identifiable, Deleteable, ICodeElemen
 	List<ICodeElement> getElementReferences();
 
 	/**
+	 * Returns the value of the '<em><b>Mandator</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Mandator</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Mandator</em>' reference.
+	 * @see #setMandator(IMandator)
+	 * @see ch.elexis.core.model.ModelPackage#getICodeElementBlock_Mandator()
+	 * @model
+	 * @generated
+	 */
+	IMandator getMandator();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.ICodeElementBlock#getMandator <em>Mandator</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Mandator</em>' reference.
+	 * @see #getMandator()
+	 * @generated
+	 */
+	void setMandator(IMandator value);
+
+	/**
+	 * Returns the value of the '<em><b>Macro</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Macro</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Macro</em>' attribute.
+	 * @see #setMacro(String)
+	 * @see ch.elexis.core.model.ModelPackage#getICodeElementBlock_Macro()
+	 * @model
+	 * @generated
+	 */
+	String getMacro();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.ICodeElementBlock#getMacro <em>Macro</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Macro</em>' attribute.
+	 * @see #getMacro()
+	 * @generated
+	 */
+	void setMacro(String value);
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model type="ch.elexis.core.types.List&lt;ch.elexis.core.model.ICodeElement&gt;" many="false" elementsType="ch.elexis.core.types.List&lt;ch.elexis.core.model.ICodeElement&gt;" elementsMany="false"
 	 * @generated
 	 */
 	List<ICodeElement> getDiffToReferences(List<ICodeElement> elements);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	void addElement(ICodeElement element);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	void removeElement(ICodeElement element);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	void moveElement(ICodeElement element, boolean up);
 
 } // ICodeElementBlock
