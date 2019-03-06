@@ -56,10 +56,11 @@ public class LocalLock {
 					return false;
 				} else {
 					StringBuilder sb = new StringBuilder();
+					String user = (CoreHub.actUser != null) ? CoreHub.actUser.getLabel() : "system";
 					sb.append("INSERT INTO CONFIG (param,wert) VALUES (") //$NON-NLS-1$
 						.append(JdbcLink.wrap(lockString)).append(",") //$NON-NLS-1$
 						.append(JdbcLink.wrap(
-							"[" + CoreHub.actUser.getLabel() + "]@" + System.currentTimeMillis())) //$NON-NLS-1$//$NON-NLS-2$
+							"[" + user + "]@" + System.currentTimeMillis())) //$NON-NLS-1$//$NON-NLS-2$
 						.append(")"); //$NON-NLS-1$
 					statement.exec(sb.toString());
 					managedLocks.put(lockObject, this);
