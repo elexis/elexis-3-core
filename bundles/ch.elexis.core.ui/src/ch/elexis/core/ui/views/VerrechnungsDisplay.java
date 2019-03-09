@@ -80,7 +80,6 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.service.ContextServiceHolder;
@@ -89,6 +88,8 @@ import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.model.ICodeElementBlock;
 import ch.elexis.core.model.ICustomService;
 import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.model.IEncounter;
@@ -489,13 +490,14 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		if (actEncounter != null) {
 			if (o instanceof Leistungsblock) {
 				Leistungsblock block = (Leistungsblock) o;
-				List<ICodeElement> elements = block.getElements();
-				for (ICodeElement element : elements) {
+				List<ch.elexis.core.data.interfaces.ICodeElement> elements = block.getElements();
+				for (ch.elexis.core.data.interfaces.ICodeElement element : elements) {
 					if (element instanceof PersistentObject) {
 						addPersistentObject((PersistentObject) element);
 					}
 				}
-				List<ICodeElement> diff = block.getDiffToReferences(elements);
+				List<ch.elexis.core.data.interfaces.ICodeElement> diff =
+					block.getDiffToReferences(elements);
 				if (!diff.isEmpty()) {
 					StringBuilder sb = new StringBuilder();
 					diff.forEach(r -> {
@@ -566,10 +568,9 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				return true;
 			} else if (codeElement instanceof IDiagnosis) {
 				return true;
+			} else if (codeElement instanceof ICodeElementBlock) {
+				return true;
 			}
-			//			else if (codeElement instanceof IServiceBlock) {
-			//				return true;
-			//			}
 			return false;
 		}
 		
@@ -587,6 +588,33 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 							ResultDialog.show(billResult);
 						} else {
 							viewer.setInput(actEncounter.getBilled());
+						}
+					} else if (object instanceof ICodeElementBlock) {
+						ICodeElementBlock block = (ICodeElementBlock) object;
+						List<ICodeElement> elements = block.getElements();
+						for (ICodeElement element : elements) {
+							if (element instanceof IBillable) {
+								Result<IBilled> billResult = BillingServiceHolder.get()
+									.bill((IBillable) element, actEncounter, 1.0);
+								if (!billResult.isOK()) {
+									ResultDialog.show(billResult);
+								} else {
+									viewer.setInput(actEncounter.getBilled());
+								}
+							}
+						}
+						List<ICodeElement> diff = block.getDiffToReferences(elements);
+						if (!diff.isEmpty()) {
+							StringBuilder sb = new StringBuilder();
+							diff.forEach(r -> {
+								if (sb.length() > 0) {
+									sb.append("\n");
+								}
+								sb.append(r);
+							});
+							MessageDialog.openWarning(getShell(), "Warnung",
+								"Warnung folgende Leistungen konnten im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.\n"
+									+ sb.toString());
 						}
 					} else if (object instanceof IDiagnosis) {
 						actEncounter.addDiagnosis((IDiagnosis) object);

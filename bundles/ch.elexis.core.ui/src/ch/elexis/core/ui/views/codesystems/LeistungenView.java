@@ -178,7 +178,9 @@ public class LeistungenView extends ViewPart implements IActivationListener, ISa
 		if (mode == false) {
 			if (selected != null) {
 				cPage page = (cPage) selected.getControl();
-				page.cv.getConfigurer().getControlFieldProvider().clearValues();
+				if (page != null && !page.isDisposed()) {
+					page.cv.getConfigurer().getControlFieldProvider().clearValues();
+				}
 			}
 			// remove any ICodeSelectiorTarget, since it's no more needed
 			CodeSelectorHandler.getInstance().removeCodeSelectorTarget();

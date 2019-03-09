@@ -10,14 +10,15 @@ import java.util.stream.Collectors;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.model.Statistics;
 import ch.elexis.core.services.ICodeElementService;
 import ch.elexis.core.services.ICodeElementService.ContextKeys;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
-import ch.elexis.data.Kontakt.statL;
 import ch.elexis.data.PersistentObject;
 
 @Component(service = {})
@@ -85,10 +86,10 @@ public class CodeElementServiceHolder {
 	 */
 	@SuppressWarnings("unchecked")
 	public static List<Object> getStatistics(String key, IContact contact){
-		ArrayList<statL> list = (ArrayList<statL>) contact.getExtInfo(key);
+		ArrayList<Statistics> list = (ArrayList<Statistics>) contact.getExtInfo(key);
 		if (list != null) {
 			return list.stream()
-				.map(sl -> StoreToStringServiceHolder.getLoadFromString(sl.v))
+				.map(sl -> StoreToStringServiceHolder.getLoadFromString(sl.getStoreToString()))
 				.filter(o -> o != null && !isDeleted(o)).collect(Collectors.toList());
 		}
 		return Collections.emptyList();
@@ -111,7 +112,7 @@ public class CodeElementServiceHolder {
 	 */
 	@SuppressWarnings("unchecked")
 	public static void clearStatistics(String key, IContact contact){
-		ArrayList<statL> list = (ArrayList<statL>) contact.getExtInfo(key);
+		ArrayList<Statistics> list = (ArrayList<Statistics>) contact.getExtInfo(key);
 		if (list != null) {
 			list.clear();
 			contact.setExtInfo(key, list);
@@ -138,9 +139,9 @@ public class CodeElementServiceHolder {
 		
 		if (storeToString != null) {
 			// get or start new list of statL
-			ArrayList<statL> list = (ArrayList<statL>) contact.getExtInfo(key);
+			ArrayList<Statistics> list = (ArrayList<Statistics>) contact.getExtInfo(key);
 			if (list == null) {
-				list = new ArrayList<statL>();
+				list = new ArrayList<Statistics>();
 			}
 			// limit the size of the statistics
 			while (list.size() > 40) {
@@ -148,15 +149,15 @@ public class CodeElementServiceHolder {
 			}
 			// lookup store to string
 			boolean found = false;
-			for (statL c : list) {
-				if (c.v.equals(storeToString)) {
-					c.c++; // found add 1
+			for (Statistics statistic : list) {
+				if (statistic.getStoreToString().equals(storeToString)) {
+					statistic.increase();
 					found = true;
 					break;
 				}
 			}
 			if (found == false) {
-				list.add(new statL(storeToString)); // not found add new
+				list.add(new Statistics(storeToString)); // not found add new
 			}
 			Collections.sort(list);
 			contact.setExtInfo(key, list);

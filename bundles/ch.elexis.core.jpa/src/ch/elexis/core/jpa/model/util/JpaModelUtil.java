@@ -3,7 +3,6 @@ package ch.elexis.core.jpa.model.util;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Collections;
 import java.util.Hashtable;
@@ -25,6 +24,8 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.entities.Xid;
+import ch.elexis.core.jpa.model.util.compatibility.CompatibilityClassResolver;
+import ch.elexis.core.jpa.model.util.compatibility.CompatibilityObjectInputStream;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IElexisEntityManager;
@@ -176,8 +177,13 @@ public class JpaModelUtil {
 		try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(flat))) {
 			ZipEntry entry = zis.getNextEntry();
 			if (entry != null) {
-				try (ObjectInputStream ois = new ObjectInputStream(zis)) {
-					return (Hashtable<Object, Object>) ois.readObject();
+				try (CompatibilityObjectInputStream ois = new CompatibilityObjectInputStream(zis)) {
+					Hashtable<Object, Object> readObject =
+						(Hashtable<Object, Object>) ois.readObject();
+					if (ois.usedCompatibility()) {
+						CompatibilityClassResolver.replaceCompatibilityObjects(readObject);
+					}
+					return readObject;
 				}
 			} else {
 				return null;

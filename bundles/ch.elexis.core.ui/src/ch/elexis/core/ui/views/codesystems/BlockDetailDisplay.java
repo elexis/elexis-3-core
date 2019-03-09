@@ -62,6 +62,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.statushandlers.StatusManager;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
@@ -230,6 +231,9 @@ public class BlockDetailDisplay implements IDetailDisplay {
 						block.ifPresent(b -> {
 							b.addElement((ICodeElement) dropped);
 						});
+					} else {
+						LoggerFactory.getLogger(getClass())
+							.warn("Dropped unknown store to string [" + dl + "]");
 					}
 				}
 				block.ifPresent(b -> {
@@ -571,6 +575,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			BlockElementViewerItem selectedElement = (BlockElementViewerItem) sel.getFirstElement();
 			if (selectedElement != null) {
 				b.moveElement(selectedElement.getFirstElement(), up);
+				CoreModelServiceHolder.get().save(b);
 				updateViewerInput(b);
 			}
 		});

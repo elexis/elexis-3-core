@@ -98,7 +98,7 @@ public interface IQuery<T> {
 	 * @param value
 	 */
 	public default void or(String entityAttributeName, COMPARATOR comparator, Object value){
-		and(entityAttributeName, comparator, value, false);
+		or(entityAttributeName, comparator, value, false);
 	}
 	
 	public void or(String entityAttributeName, COMPARATOR comparator, Object value,

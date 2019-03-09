@@ -73,6 +73,7 @@ import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.SelectorPanelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
+import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ContentType;
 import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.PersistentObject;
@@ -126,7 +127,7 @@ public class BlockSelector extends CodeSelectorFactory {
 		cv.setContextMenu(mgr);
 		
 		FieldDescriptor<?>[] lbName = new FieldDescriptor<?>[] {
-			new FieldDescriptor<ICodeElementBlock>("name")
+			new FieldDescriptor<ICodeElementBlock>("Name")
 		};
 		
 		// add keyListener to search field
@@ -174,7 +175,7 @@ public class BlockSelector extends CodeSelectorFactory {
 				return Collections.emptyList();
 			}
 		});
-		return vc;
+		return vc.setContentType(ContentType.GENERICOBJECT);
 	}
 	
 	@Override
@@ -328,7 +329,7 @@ public class BlockSelector extends CodeSelectorFactory {
 				} else {
 					query.startGroup();
 					query.and("name", COMPARATOR.LIKE, "%" + queryFilter + "%");
-					query.or("codeelements", COMPARATOR.LIKE, "%" + queryFilter + "%");
+					query.or("services", COMPARATOR.LIKE, "%" + queryFilter + "%");
 					query.andJoinGroups();
 				}
 			}
