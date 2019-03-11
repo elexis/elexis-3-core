@@ -57,6 +57,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
@@ -191,10 +192,15 @@ public class UserManagementPreferencePage extends PreferencePage
 			
 			@Override
 			public void doRun(User user){
-				user.delete();
-				updateUserList();
-				wvUser.setValue(null);
-				wvAnwender.setValue(null);
+				User currentUser = (User) ElexisEventDispatcher.getSelected(User.class);
+				if (currentUser.equals(user)) {
+					MessageDialog.openWarning(getShell(), "Warnung", "Dieser Benutzer ist gerade eingeloggt und kann daher nicht entfernt werden!");
+				} else {
+					user.delete();
+					updateUserList();
+					wvUser.setValue(null);
+					wvAnwender.setValue(null);
+				}
 			}
 		};
 		popManager.add(deleteUserAction);
