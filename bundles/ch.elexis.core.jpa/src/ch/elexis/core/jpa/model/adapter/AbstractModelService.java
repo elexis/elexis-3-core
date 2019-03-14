@@ -69,6 +69,16 @@ public abstract class AbstractModelService implements IModelService {
 		return Optional.empty();
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> Optional<T> adapt(Object jpaEntity, Class<T> clazz){
+		if (jpaEntity instanceof EntityWithId) {
+			return (Optional<T>) adapterFactory.getModelAdapter((EntityWithId) jpaEntity, clazz,
+				false);
+		}
+		return Optional.empty();
+	}
+	
 	@Override
 	public void refresh(Identifiable identifiable){
 		EntityManager em = getEntityManager(true);

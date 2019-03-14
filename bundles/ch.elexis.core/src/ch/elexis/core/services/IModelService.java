@@ -44,6 +44,18 @@ public interface IModelService {
 	}
 	
 	/**
+	 * Adapt a jpa loaded entity to clazz. This can be used to "convert" already loaded JPA entities
+	 * to the model.
+	 * 
+	 * This method should only be called by other {@link IModelService} implementations.
+	 * 
+	 * @param jpaEntity
+	 * @param clazz
+	 * @return
+	 */
+	public <T> Optional<T> adapt(Object jpaEntity, Class<T> clazz);
+	
+	/**
 	 * Load a model object of type clazz by the id. If Deleted entries should be loaded can be
 	 * specified with the includeDeleted parameter.
 	 * 
@@ -131,8 +143,8 @@ public interface IModelService {
 	/**
 	 * Get a named query for the clazz with the provided properties. The named query has to be
 	 * defined on the entity mapped to the class. The name must match
-	 * <i>className.property[0]property[1]...</i>. With the refreshCache parameter updating the cache
-	 * with the results of the query can be triggered, it has performance implications.
+	 * <i>className.property[0]property[1]...</i>. With the refreshCache parameter updating the
+	 * cache with the results of the query can be triggered, it has performance implications.
 	 * 
 	 * @param clazz
 	 * @param refreshCache
@@ -196,6 +208,7 @@ public interface IModelService {
 	
 	/**
 	 * Get a native query object
+	 * 
 	 * @param sql
 	 * @return
 	 */
