@@ -509,17 +509,15 @@
 			<column name="TEXT" type="VARCHAR(255)" />
 		</createTable>
 	</changeSet>
-	
+
 	<changeSet author="thomas"
 		id="manual_table_DEFAULT_SIGNATURES">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<tableExists
-					tableName="DEFAULT_SIGNATURES" />
+				<tableExists tableName="DEFAULT_SIGNATURES" />
 			</not>
 		</preConditions>
-		<createTable
-			tableName="DEFAULT_SIGNATURES">
+		<createTable tableName="DEFAULT_SIGNATURES">
 			<column name="ID" type="VARCHAR(25)">
 				<constraints primaryKey="true"
 					primaryKeyName="CONSTRAINT_PK_DEFAULT_SIGNATURES" />
@@ -538,8 +536,7 @@
 			<column name="EXTINFO" type="BLOB" />
 		</createTable>
 	</changeSet>
-	<changeSet author="thomas"
-		id="manual_idx_IDXATCCODE">
+	<changeSet author="thomas" id="manual_idx_IDXATCCODE">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<indexExists indexName="IDXATCCODE" />
@@ -550,4 +547,27 @@
 			<column name="ATCCODE" />
 		</createIndex>
 	</changeSet>
+
+	<changeSet author="marco" id="manual_table_TASKDESCRIPTOR">
+		<createTable tableName="TASKDESCRIPTOR">
+			<column name="ID" type="VARCHAR(25)">
+				<constraints primaryKey="true"
+					primaryKeyName="CONSTRAINT_PK_DEFAULT_TASKDESCRIPTOR" />
+			</column>
+			<column name="LASTUPDATE" type="BIGINT" />
+			<column defaultValue="0" name="DELETED" type="CHAR(1)" />
+
+			<column defaultValue="0" name="ACTIVE" type="CHAR(1)" />
+			<column name="REFERENCEID" type="VARCHAR(64)" />
+			<column name="OWNER_ID" type="VARCHAR(25)" />
+			<column name="NOTIFICATIONTYPE" type="TINYINT" />
+			<column name="RUNNABLEID" type="VARCHAR(64)" />
+			<column name="RUNCONTEXT" type="CLOB" />
+			<column name="TRIGGERTYPE" type="TINYINT" />
+			<column name="TRIGGERPARAMETERS" type="CLOB" />
+			<column name="RUNNER" type="VARCHAR(64)" />
+			<column defaultValue="0" name="SINGLETON" type="CHAR(1)" />
+		</createTable>
+	</changeSet>
+
 </databaseChangeLog>

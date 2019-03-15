@@ -21,6 +21,8 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="owner" lowerBound="1" eType="ecore:EClass ../../ch.elexis.core/model/model.ecore#//IUser"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ownerNotification" lowerBound="1"
+        eType="#//OwnerTaskNotification" defaultValueLiteral="0"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="active" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -98,50 +100,10 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="TaskState">
-    <eLiterals name="DRAFT"/>
-    <eLiterals name="READY" value="10"/>
-    <eLiterals name="IN_PROGRESS" value="20"/>
-    <eLiterals name="CANCELLED" value="30"/>
-    <eLiterals name="ON_HOLD" value="40"/>
-    <eLiterals name="FAILED" value="90"/>
-    <eLiterals name="COMPLETED" value="50"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RunnableWithContext" abstract="true"
-      interface="true">
-    <eOperations name="run" eExceptions="#//TaskException">
-      <eGenericType eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EMap">
-        <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-        <eTypeArguments eClassifier="#//Serializable"/>
-      </eGenericType>
-      <eParameters name="context">
-        <eGenericType eClassifier="ecore:EClass ../../ch.elexis.core/model/types.ecore#//Map">
-          <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-          <eTypeArguments eClassifier="#//Serializable"/>
-        </eGenericType>
-      </eParameters>
-      <eParameters name="progressMonitor" eType="#//IProgressMonitor"/>
-      <eParameters name="logger" eType="#//Logger"/>
-    </eOperations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        changeable="false" iD="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Used to refer to a runnable. This value has to be unique across the system."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="TaskTriggerType">
-    <eLiterals name="MANUAL" literal="MANUAL"/>
-    <eLiterals name="FILESYSTEM_CHANGE" value="1"/>
-    <eLiterals name="CRON" value="2"/>
-    <eLiterals name="SYSTEM_EVENT" value="3"/>
-    <eLiterals name="OTHER_TASK" value="4"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EDataType" name="Serializable" instanceClassName="java.io.Serializable"/>
   <eClassifiers xsi:type="ecore:EClass" name="ITaskService" abstract="true" interface="true">
     <eOperations name="createTaskDescriptor" eType="#//ITaskDescriptor" eExceptions="#//TaskException">
       <eParameters name="owner" eType="ecore:EClass ../../ch.elexis.core/model/model.ecore#//IUser"/>
-      <eParameters name="runnable" eType="#//RunnableWithContext"/>
+      <eParameters name="runnable" eType="#//IIdentifiedRunnable"/>
     </eOperations>
     <eOperations name="trigger" eType="#//ITask" eExceptions="#//TaskException">
       <eParameters name="taskDescriptor" lowerBound="1" eType="#//ITaskDescriptor"/>
@@ -157,7 +119,7 @@
         </eGenericType>
       </eParameters>
     </eOperations>
-    <eOperations name="instantiateRunnableById" eType="#//RunnableWithContext" eExceptions="#//TaskException">
+    <eOperations name="instantiateRunnableById" eType="#//IIdentifiedRunnable" eExceptions="#//TaskException">
       <eParameters name="runnableId" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eOperations>
     <eOperations name="saveTaskDescriptor" eExceptions="#//TaskException">
@@ -171,13 +133,30 @@
       <eParameters name="active" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     </eOperations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EDataType" name="IProgressMonitor" instanceClassName="org.eclipse.core.runtime.IProgressMonitor"/>
-  <eClassifiers xsi:type="ecore:EClass" name="IRunnableWithContextFactory" abstract="true"
-      interface="true">
-    <eOperations name="createRunnableWithContext" eType="#//RunnableWithContext">
-      <eParameters name="runnableWithContextId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eOperations>
+  <eClassifiers xsi:type="ecore:EEnum" name="TaskTriggerType">
+    <eLiterals name="MANUAL" literal="MANUAL"/>
+    <eLiterals name="FILESYSTEM_CHANGE" value="1"/>
+    <eLiterals name="CRON" value="2"/>
+    <eLiterals name="SYSTEM_EVENT" value="3"/>
+    <eLiterals name="OTHER_TASK" value="4"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EDataType" name="TaskException" instanceClassName="ch.elexis.core.tasks.TaskException"/>
+  <eClassifiers xsi:type="ecore:EEnum" name="TaskState">
+    <eLiterals name="DRAFT"/>
+    <eLiterals name="READY" value="10"/>
+    <eLiterals name="IN_PROGRESS" value="20"/>
+    <eLiterals name="CANCELLED" value="30"/>
+    <eLiterals name="ON_HOLD" value="40"/>
+    <eLiterals name="FAILED" value="90"/>
+    <eLiterals name="COMPLETED" value="50"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="OwnerTaskNotification">
+    <eLiterals name="NEVER"/>
+    <eLiterals name="WHEN_FINISHED" value="1"/>
+    <eLiterals name="WHEN_FINISHED_FAILED" value="2"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="TaskException" instanceClassName="ch.elexis.core.model.tasks.TaskException"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="IIdentifiedRunnable" instanceClassName="ch.elexis.core.model.tasks.IIdentifiedRunnable"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="IProgressMonitor" instanceClassName="org.eclipse.core.runtime.IProgressMonitor"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Logger" instanceClassName="org.slf4j.Logger"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="Serializable" instanceClassName="java.io.Serializable"/>
 </ecore:EPackage>

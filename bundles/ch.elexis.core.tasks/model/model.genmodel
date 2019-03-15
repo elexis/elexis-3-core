@@ -8,6 +8,13 @@
   <foreignModel>model.ecore</foreignModel>
   <genPackages prefix="Model" basePackage="ch.elexis.core.tasks" disposableProviderFactory="true"
       ecorePackage="model.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="model.ecore#//TaskTriggerType">
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskTriggerType/MANUAL"/>
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskTriggerType/FILESYSTEM_CHANGE"/>
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskTriggerType/CRON"/>
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskTriggerType/SYSTEM_EVENT"/>
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskTriggerType/OTHER_TASK"/>
+    </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="model.ecore#//TaskState">
       <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/DRAFT"/>
       <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/READY"/>
@@ -17,21 +24,21 @@
       <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/FAILED"/>
       <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/COMPLETED"/>
     </genEnums>
-    <genEnums typeSafeEnumCompatible="false" ecoreEnum="model.ecore#//TaskTriggerType">
-      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskTriggerType/MANUAL"/>
-      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskTriggerType/FILESYSTEM_CHANGE"/>
-      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskTriggerType/CRON"/>
-      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskTriggerType/SYSTEM_EVENT"/>
-      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskTriggerType/OTHER_TASK"/>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="model.ecore#//OwnerTaskNotification">
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//OwnerTaskNotification/NEVER"/>
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//OwnerTaskNotification/WHEN_FINISHED"/>
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//OwnerTaskNotification/WHEN_FINISHED_FAILED"/>
     </genEnums>
-    <genDataTypes ecoreDataType="model.ecore#//Serializable"/>
-    <genDataTypes ecoreDataType="model.ecore#//IProgressMonitor"/>
     <genDataTypes ecoreDataType="model.ecore#//TaskException"/>
+    <genDataTypes ecoreDataType="model.ecore#//IIdentifiedRunnable"/>
+    <genDataTypes ecoreDataType="model.ecore#//IProgressMonitor"/>
     <genDataTypes ecoreDataType="model.ecore#//Logger"/>
+    <genDataTypes ecoreDataType="model.ecore#//Serializable"/>
     <genClasses image="false" ecoreClass="model.ecore#//ITaskDescriptor">
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITaskDescriptor/id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITaskDescriptor/referenceId"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ITaskDescriptor/owner"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITaskDescriptor/ownerNotification"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITaskDescriptor/active"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITaskDescriptor/runnableWithContextId"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITaskDescriptor/runContext"/>
@@ -58,14 +65,6 @@
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/runContext"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/finished"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="model.ecore#//RunnableWithContext">
-      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//RunnableWithContext/id"/>
-      <genOperations ecoreOperation="model.ecore#//RunnableWithContext/run">
-        <genParameters ecoreParameter="model.ecore#//RunnableWithContext/run/context"/>
-        <genParameters ecoreParameter="model.ecore#//RunnableWithContext/run/progressMonitor"/>
-        <genParameters ecoreParameter="model.ecore#//RunnableWithContext/run/logger"/>
-      </genOperations>
-    </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//ITaskService">
       <genOperations ecoreOperation="model.ecore#//ITaskService/createTaskDescriptor">
         <genParameters ecoreParameter="model.ecore#//ITaskService/createTaskDescriptor/owner"/>
@@ -86,11 +85,6 @@
       <genOperations ecoreOperation="model.ecore#//ITaskService/setActive">
         <genParameters ecoreParameter="model.ecore#//ITaskService/setActive/taskDescriptor"/>
         <genParameters ecoreParameter="model.ecore#//ITaskService/setActive/active"/>
-      </genOperations>
-    </genClasses>
-    <genClasses image="false" ecoreClass="model.ecore#//IRunnableWithContextFactory">
-      <genOperations ecoreOperation="model.ecore#//IRunnableWithContextFactory/createRunnableWithContext">
-        <genParameters ecoreParameter="model.ecore#//IRunnableWithContextFactory/createRunnableWithContext/runnableWithContextId"/>
       </genOperations>
     </genClasses>
   </genPackages>
