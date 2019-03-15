@@ -5755,6 +5755,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 			   "attributeName", "ownerId"
 		   });
 		addAnnotation
+		  (getIBlob_Date(),
+		   source,
+		   new String[] {
+			   "attributeName", "datum"
+		   });
+		addAnnotation
 		  (getIEncounter_Coverage(),
 		   source,
 		   new String[] {

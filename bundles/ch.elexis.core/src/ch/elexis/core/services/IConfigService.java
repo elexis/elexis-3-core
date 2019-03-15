@@ -1,8 +1,11 @@
 package ch.elexis.core.services;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.Identifiable;
 
 public interface IConfigService {
 	
@@ -222,4 +225,64 @@ public interface IConfigService {
 	 */
 	public List<String> getAsList(IContact contact, String key, List<String> defaultValue);
 	
+	/**
+	 * Get a new {@link ILocalLock} instance for the provided object. Currently {@link String} and
+	 * {@link Identifiable} can be locked.
+	 * 
+	 * @return
+	 */
+	public ILocalLock getLocalLock(Object object);
+	
+	/**
+	 * Test if this instance has a lock on the object. Does <b>not</b> query the DB, only a lookup
+	 * in a local {@link HashMap} is performed. If lookup in the DB is needed use
+	 * {@link LocalLock#tryLock()}.
+	 * 
+	 * @param object
+	 * @return
+	 */
+	public Optional<ILocalLock> getManagedLock(Object object);
+	
+	/**
+	 * This is a lock implementation based on entries in the config DB table. <b>This implementation
+	 * is not guaranteed to give only one lock for an object if two instances try to lock at the
+	 * same time.</b> If there is a elexis server based locking implementation available, that
+	 * implementation should be used instead.
+	 */
+	public interface ILocalLock {
+		
+		/**
+		 * Get the message from the DB. Currently username only.
+		 * 
+		 * @return the username or ? if there is no information
+		 */
+		public String getLockMessage();
+		
+		/**
+		 * Get the value of {@link System#currentTimeMillis()} when the Lock was created.
+		 * 
+		 * @return the value of -1 if there is no information
+		 */
+		public long getLockCurrentMillis();
+		
+		/**
+		 * Delete the lock from the DB. <b>Always</b> deletes the lock, even if another instance
+		 * created the lock. Can be used to remove pending locks.
+		 */
+		public void unlock();
+		
+		/**
+		 * Checks if the user has the lock
+		 * 
+		 * @return true if the user has the lock otherwise return false
+		 */
+		public boolean hasLock(String userName);
+		
+		/**
+		 * Try to write the lock to the DB if there is not already a lock on the object.
+		 * 
+		 * @return true if lock written, false if there is already a lock in the DB.
+		 */
+		public boolean tryLock();
+	}
 }

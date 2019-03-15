@@ -2,8 +2,10 @@ package ch.elexis.core.services;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -21,7 +23,10 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IUserConfig;
+import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.utils.CoreUtil;
 import ch.rgw.io.Settings;
 import ch.rgw.io.SysSettings;
@@ -36,6 +41,8 @@ public class ConfigService implements IConfigService {
 	
 	private Settings localConfig;
 	
+	private Map<Object, LocalLock> managedLocks;
+	
 	@Activate
 	public void activate(){
 		validateConfiguredDatabaseLocale();
@@ -43,6 +50,8 @@ public class ConfigService implements IConfigService {
 		SysSettings cfg = new SysSettings(SysSettings.USER_SETTINGS, Desk.class);
 		cfg.read_xml(CoreUtil.getWritableUserDir() + File.separator + getLocalConfigFileName());
 		localConfig = cfg;
+		
+		managedLocks = new HashMap<>();
 	}
 	
 	@Deactivate
@@ -246,4 +255,99 @@ public class ConfigService implements IConfigService {
 		return localConfig.get(key, defaultValue);
 	}
 	
+	@Override
+	public ILocalLock getLocalLock(Object object){
+		return new LocalLock(object);
+	}
+	
+	@Override
+	public Optional<ILocalLock> getManagedLock(Object object){
+		return Optional.ofNullable(managedLocks.get(object));
+	}
+	
+	private class LocalLock implements ILocalLock {
+		
+		private String lockString;
+		private Object lockObject;
+		
+		public LocalLock(Object object){
+			this.lockObject = object;
+			if (object instanceof String) {
+				lockString = "local_" + (String) object + "_lock";
+			} else if (object instanceof Identifiable) {
+				String storeToString =
+					StoreToStringServiceHolder.getStoreToString((Identifiable) object);
+				lockString = "local_" + storeToString + "_lock"; //$NON-NLS-1$ //$NON-NLS-2$
+			} else {
+				throw new IllegalStateException("Unknown object type [" + object + "]");
+			}
+		}
+		
+		@Override
+		public String getLockMessage(){
+			Optional<IConfig> configEntry = modelService.load(lockString, IConfig.class);
+			if (configEntry.isPresent() && configEntry.get().getValue() != null) {
+				String[] parts = configEntry.get().getValue().split("@");
+				if (parts.length > 0) {
+					return parts[0];
+				}
+			}
+			return "?"; //$NON-NLS-1$
+		}
+		
+		@Override
+		public long getLockCurrentMillis(){
+			Optional<IConfig> configEntry = modelService.load(lockString, IConfig.class);
+			if (configEntry.isPresent() && configEntry.get().getValue() != null) {
+				String[] parts = configEntry.get().getValue().split("@");
+				if (parts.length > 1) {
+					return Long.parseLong(parts[1]);
+				}
+			}
+			return -1; //$NON-NLS-1$
+		}
+		
+		@Override
+		public void unlock(){
+			synchronized (LocalLock.class) {
+				Optional<IConfig> configEntry = modelService.load(lockString, IConfig.class);
+				if (configEntry.isPresent()) {
+					modelService.remove(configEntry.get());
+				}
+			}
+		}
+		
+		@Override
+		public boolean hasLock(String userName){
+			synchronized (LocalLock.class) {
+				Optional<IConfig> configEntry = modelService.load(lockString, IConfig.class);
+				if (configEntry.isPresent()) {
+					return configEntry.get().getValue().startsWith("[" + userName + "]@");
+				}
+				return false;
+			}
+		}
+		
+		@Override
+		public boolean tryLock(){
+			synchronized (LocalLock.class) {
+				Optional<IConfig> configEntry = modelService.load(lockString, IConfig.class);
+				if(configEntry.isPresent()) {
+					return false;
+				} else {
+					String user = "system";
+					Optional<IContact> activeUserContact = ContextServiceHolder.get().getActiveUserContact();
+					if(activeUserContact.isPresent()) {
+						user = activeUserContact.get().getLabel();
+					}
+					IConfig _entry = modelService.create(IConfig.class);
+					_entry.setKey(lockString);
+					_entry.setValue("[" + user + "]@" + System.currentTimeMillis());
+					modelService.save(_entry);
+					managedLocks.put(lockObject, this);
+					return true;
+				}
+			}
+		}
+	}
 }

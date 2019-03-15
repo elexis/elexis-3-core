@@ -13,6 +13,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.slf4j.LoggerFactory;
+
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.IntegerStringConverter;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
@@ -24,8 +26,15 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @NamedQuery(name = "ArtikelstammItem.gtin", query = "SELECT ai FROM ArtikelstammItem ai WHERE ai.gtin = :gtin")
 public class ArtikelstammItem extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
+	
 	public static final String CODESYSTEM_NAME = "Artikelstamm";
-
+	
+	public static int IS_USER_DEFINED_PKG_SIZE = -999999;
+	
+	public static final String EXTINFO_VAL_VAT_OVERRIDEN = "VAT_OVERRIDE";
+	public static final String EXTINFO_VAL_PPUB_OVERRIDE_STORE = "PPUB_OVERRIDE_STORE";
+	public static final String EXTINFO_VAL_PKG_SIZE_OVERRIDE_STORE = "PKG_SIZE_OVERRIDE_STORE";
+	
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
 	
@@ -179,6 +188,13 @@ public class ArtikelstammItem extends AbstractEntityWithId
 	}
 
 	public void setDscr(String dscr) {
+		if (dscr.length() > 100) {
+			dscr = dscr.substring(0, 100);
+			LoggerFactory.getLogger(getClass()).warn(
+				"Delimiting dscr to 100 chars for [{}] info [{}]", dscr,
+				type + "/" + cummVersion + "/" + gtin);
+		}
+		
 		this.dscr = dscr;
 	}
 

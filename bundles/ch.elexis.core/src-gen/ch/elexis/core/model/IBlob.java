@@ -69,6 +69,7 @@ public interface IBlob extends Identifiable, Deleteable, WithAssignableId {
 	 * @see #setDate(LocalDate)
 	 * @see ch.elexis.core.model.ModelPackage#getIBlob_Date()
 	 * @model dataType="ch.elexis.core.types.LocalDate"
+	 *        annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='datum'"
 	 * @generated
 	 */
 	LocalDate getDate();

@@ -1811,4 +1811,13 @@
 			<column name="wert" value="liquibase" />
 		</insert>
 	</changeSet>
+	<changeSet author="thomas" id="ARTIKELSTAMM_CH_VERSION">
+    	<insert tableName="ARTIKELSTAMM_CH">
+       		<column name="ID" value="VERSION"/>
+       		<column name="GTIN" value="1.3.0"/>
+       		<column name="NARCOTIC_CAS" value="150319 00:00"/>
+       		<column name="PEXF" value="0"/>
+       		<column name="PPUB" value="0"/>
+    	</insert>
+    </changeSet>
 </databaseChangeLog>
