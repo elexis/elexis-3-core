@@ -586,5 +586,24 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAccountTransaction/account"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAccountTransaction/date"/>
     </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IMessage">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IMessage/sender"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IMessage/receiver"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IMessage/senderAcceptsAnswer"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IMessage/createDateTime"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IMessage/messageText"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IMessage/messageCode"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IMessage/messagePriority"/>
+      <genOperations ecoreOperation="model.ecore#//IMessage/setSender">
+        <genParameters ecoreParameter="model.ecore#//IMessage/setSender/user"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IMessage/addReceiver">
+        <genParameters ecoreParameter="model.ecore#//IMessage/addReceiver/addReceiver"/>
+      </genOperations>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IMessageParty">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IMessageParty/user"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IMessageParty/stationId"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

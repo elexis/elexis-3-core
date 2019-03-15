@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2019 MEDEVIT &lt;office@medevit.at>.&#xA;All rights reserved. This program and the accompanying materials&#xA;are made available under the terms of the Eclipse Public License v1.0&#xA;which accompanies this distribution, and is available at&#xA;http://www.eclipse.org/legal/epl-v10.html&#xA;&#xA;Contributors:&#xA;    MEDEVIT &lt;office@medevit.at> - initial API and implementation"
+    modelDirectory="/ch.elexis.core.tasks/src-gen" modelPluginID="ch.elexis.core.tasks"
+    modelName="Model" rootExtendsInterface="" rootExtendsClass="" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="8.0" copyrightFields="false" usedGenPackages="../../ch.elexis.core/model/model.genmodel#//model ../../ch.elexis.core/model/types.genmodel#//types"
+    operationReflection="true" runtimePlatform="RCP" importOrganizing="true">
+  <foreignModel>model.ecore</foreignModel>
+  <genPackages prefix="Model" basePackage="ch.elexis.core.tasks" disposableProviderFactory="true"
+      ecorePackage="model.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="model.ecore#//TaskState">
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/DRAFT"/>
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/READY"/>
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/IN_PROGRESS"/>
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/CANCELLED"/>
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/ON_HOLD"/>
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/FAILED"/>
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/COMPLETED"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="model.ecore#//TaskTriggerType">
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskTriggerType/MANUAL"/>
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskTriggerType/FILESYSTEM_CHANGE"/>
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskTriggerType/CRON"/>
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskTriggerType/SYSTEM_EVENT"/>
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskTriggerType/OTHER_TASK"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="model.ecore#//Serializable"/>
+    <genDataTypes ecoreDataType="model.ecore#//IProgressMonitor"/>
+    <genDataTypes ecoreDataType="model.ecore#//TaskException"/>
+    <genDataTypes ecoreDataType="model.ecore#//Logger"/>
+    <genClasses image="false" ecoreClass="model.ecore#//ITaskDescriptor">
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITaskDescriptor/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITaskDescriptor/referenceId"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ITaskDescriptor/owner"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITaskDescriptor/active"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITaskDescriptor/runnableWithContextId"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITaskDescriptor/runContext"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITaskDescriptor/triggerType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITaskDescriptor/triggerParameters"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITaskDescriptor/runner"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITaskDescriptor/singleton"/>
+      <genOperations ecoreOperation="model.ecore#//ITaskDescriptor/setTriggerParameter">
+        <genParameters ecoreParameter="model.ecore#//ITaskDescriptor/setTriggerParameter/key"/>
+        <genParameters ecoreParameter="model.ecore#//ITaskDescriptor/setTriggerParameter/value"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//ITaskDescriptor/setRunContextParameter">
+        <genParameters ecoreParameter="model.ecore#//ITaskDescriptor/setRunContextParameter/key"/>
+        <genParameters ecoreParameter="model.ecore#//ITaskDescriptor/setRunContextParameter/value"/>
+      </genOperations>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//ITask">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/id"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/state"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference model.ecore#//ITask/descriptor"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/triggerEvent"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/result"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/progressMonitor"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/runContext"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/finished"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//RunnableWithContext">
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//RunnableWithContext/id"/>
+      <genOperations ecoreOperation="model.ecore#//RunnableWithContext/run">
+        <genParameters ecoreParameter="model.ecore#//RunnableWithContext/run/context"/>
+        <genParameters ecoreParameter="model.ecore#//RunnableWithContext/run/progressMonitor"/>
+        <genParameters ecoreParameter="model.ecore#//RunnableWithContext/run/logger"/>
+      </genOperations>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//ITaskService">
+      <genOperations ecoreOperation="model.ecore#//ITaskService/createTaskDescriptor">
+        <genParameters ecoreParameter="model.ecore#//ITaskService/createTaskDescriptor/owner"/>
+        <genParameters ecoreParameter="model.ecore#//ITaskService/createTaskDescriptor/runnable"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//ITaskService/trigger">
+        <genParameters ecoreParameter="model.ecore#//ITaskService/trigger/taskDescriptor"/>
+        <genParameters ecoreParameter="model.ecore#//ITaskService/trigger/progressMonitor"/>
+        <genParameters ecoreParameter="model.ecore#//ITaskService/trigger/trigger"/>
+        <genParameters ecoreParameter="model.ecore#//ITaskService/trigger/runContext"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//ITaskService/instantiateRunnableById">
+        <genParameters ecoreParameter="model.ecore#//ITaskService/instantiateRunnableById/runnableId"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//ITaskService/saveTaskDescriptor">
+        <genParameters ecoreParameter="model.ecore#//ITaskService/saveTaskDescriptor/taskDescriptor"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//ITaskService/setActive">
+        <genParameters ecoreParameter="model.ecore#//ITaskService/setActive/taskDescriptor"/>
+        <genParameters ecoreParameter="model.ecore#//ITaskService/setActive/active"/>
+      </genOperations>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IRunnableWithContextFactory">
+      <genOperations ecoreOperation="model.ecore#//IRunnableWithContextFactory/createRunnableWithContext">
+        <genParameters ecoreParameter="model.ecore#//IRunnableWithContextFactory/createRunnableWithContext/runnableWithContextId"/>
+      </genOperations>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

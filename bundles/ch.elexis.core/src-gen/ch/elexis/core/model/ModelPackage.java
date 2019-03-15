@@ -6096,6 +6096,134 @@ public interface ModelPackage extends EPackage {
 	int IACCOUNT_TRANSACTION_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 8;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IMessage <em>IMessage</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IMessage
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIMessage()
+	 * @generated
+	 */
+	int IMESSAGE = 61;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMESSAGE__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Sender</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMESSAGE__SENDER = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Receiver</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMESSAGE__RECEIVER = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Sender Accepts Answer</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMESSAGE__SENDER_ACCEPTS_ANSWER = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Create Date Time</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMESSAGE__CREATE_DATE_TIME = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Message Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMESSAGE__MESSAGE_TEXT = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Message Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMESSAGE__MESSAGE_CODE = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The feature id for the '<em><b>Message Priority</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMESSAGE__MESSAGE_PRIORITY = IDENTIFIABLE_FEATURE_COUNT + 7;
+
+	/**
+	 * The number of structural features of the '<em>IMessage</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMESSAGE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 8;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IMessageParty <em>IMessage Party</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IMessageParty
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIMessageParty()
+	 * @generated
+	 */
+	int IMESSAGE_PARTY = 62;
+
+	/**
+	 * The feature id for the '<em><b>User</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMESSAGE_PARTY__USER = 0;
+
+	/**
+	 * The feature id for the '<em><b>Station Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMESSAGE_PARTY__STATION_ID = 1;
+
+	/**
+	 * The number of structural features of the '<em>IMessage Party</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMESSAGE_PARTY_FEATURE_COUNT = 2;
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9897,6 +10025,125 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIAccountTransaction_Date();
 
 	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IMessage <em>IMessage</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IMessage</em>'.
+	 * @see ch.elexis.core.model.IMessage
+	 * @generated
+	 */
+	EClass getIMessage();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IMessage#getSender <em>Sender</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Sender</em>'.
+	 * @see ch.elexis.core.model.IMessage#getSender()
+	 * @see #getIMessage()
+	 * @generated
+	 */
+	EReference getIMessage_Sender();
+
+	/**
+	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IMessage#getReceiver <em>Receiver</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Receiver</em>'.
+	 * @see ch.elexis.core.model.IMessage#getReceiver()
+	 * @see #getIMessage()
+	 * @generated
+	 */
+	EReference getIMessage_Receiver();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IMessage#isSenderAcceptsAnswer <em>Sender Accepts Answer</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Sender Accepts Answer</em>'.
+	 * @see ch.elexis.core.model.IMessage#isSenderAcceptsAnswer()
+	 * @see #getIMessage()
+	 * @generated
+	 */
+	EAttribute getIMessage_SenderAcceptsAnswer();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IMessage#getCreateDateTime <em>Create Date Time</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Create Date Time</em>'.
+	 * @see ch.elexis.core.model.IMessage#getCreateDateTime()
+	 * @see #getIMessage()
+	 * @generated
+	 */
+	EAttribute getIMessage_CreateDateTime();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IMessage#getMessageText <em>Message Text</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Message Text</em>'.
+	 * @see ch.elexis.core.model.IMessage#getMessageText()
+	 * @see #getIMessage()
+	 * @generated
+	 */
+	EAttribute getIMessage_MessageText();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IMessage#getMessageCode <em>Message Code</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Message Code</em>'.
+	 * @see ch.elexis.core.model.IMessage#getMessageCode()
+	 * @see #getIMessage()
+	 * @generated
+	 */
+	EAttribute getIMessage_MessageCode();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IMessage#getMessagePriority <em>Message Priority</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Message Priority</em>'.
+	 * @see ch.elexis.core.model.IMessage#getMessagePriority()
+	 * @see #getIMessage()
+	 * @generated
+	 */
+	EAttribute getIMessage_MessagePriority();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IMessageParty <em>IMessage Party</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IMessage Party</em>'.
+	 * @see ch.elexis.core.model.IMessageParty
+	 * @generated
+	 */
+	EClass getIMessageParty();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IMessageParty#getUser <em>User</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>User</em>'.
+	 * @see ch.elexis.core.model.IMessageParty#getUser()
+	 * @see #getIMessageParty()
+	 * @generated
+	 */
+	EReference getIMessageParty_User();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IMessageParty#getStationId <em>Station Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Station Id</em>'.
+	 * @see ch.elexis.core.model.IMessageParty#getStationId()
+	 * @see #getIMessageParty()
+	 * @generated
+	 */
+	EAttribute getIMessageParty_StationId();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12976,6 +13223,98 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IACCOUNT_TRANSACTION__DATE = eINSTANCE.getIAccountTransaction_Date();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IMessage <em>IMessage</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IMessage
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIMessage()
+		 * @generated
+		 */
+		EClass IMESSAGE = eINSTANCE.getIMessage();
+
+		/**
+		 * The meta object literal for the '<em><b>Sender</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IMESSAGE__SENDER = eINSTANCE.getIMessage_Sender();
+
+		/**
+		 * The meta object literal for the '<em><b>Receiver</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IMESSAGE__RECEIVER = eINSTANCE.getIMessage_Receiver();
+
+		/**
+		 * The meta object literal for the '<em><b>Sender Accepts Answer</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IMESSAGE__SENDER_ACCEPTS_ANSWER = eINSTANCE.getIMessage_SenderAcceptsAnswer();
+
+		/**
+		 * The meta object literal for the '<em><b>Create Date Time</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IMESSAGE__CREATE_DATE_TIME = eINSTANCE.getIMessage_CreateDateTime();
+
+		/**
+		 * The meta object literal for the '<em><b>Message Text</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IMESSAGE__MESSAGE_TEXT = eINSTANCE.getIMessage_MessageText();
+
+		/**
+		 * The meta object literal for the '<em><b>Message Code</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IMESSAGE__MESSAGE_CODE = eINSTANCE.getIMessage_MessageCode();
+
+		/**
+		 * The meta object literal for the '<em><b>Message Priority</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IMESSAGE__MESSAGE_PRIORITY = eINSTANCE.getIMessage_MessagePriority();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IMessageParty <em>IMessage Party</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IMessageParty
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIMessageParty()
+		 * @generated
+		 */
+		EClass IMESSAGE_PARTY = eINSTANCE.getIMessageParty();
+
+		/**
+		 * The meta object literal for the '<em><b>User</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IMESSAGE_PARTY__USER = eINSTANCE.getIMessageParty_User();
+
+		/**
+		 * The meta object literal for the '<em><b>Station Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IMESSAGE_PARTY__STATION_ID = eINSTANCE.getIMessageParty_StationId();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.

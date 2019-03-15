@@ -49,6 +49,8 @@ import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IMessage;
+import ch.elexis.core.model.IMessageParty;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IOrganization;
@@ -519,6 +521,20 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass iAccountTransactionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iMessageEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iMessagePartyEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -4220,6 +4236,116 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getIMessage() {
+		return iMessageEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIMessage_Sender() {
+		return (EReference)iMessageEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIMessage_Receiver() {
+		return (EReference)iMessageEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIMessage_SenderAcceptsAnswer() {
+		return (EAttribute)iMessageEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIMessage_CreateDateTime() {
+		return (EAttribute)iMessageEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIMessage_MessageText() {
+		return (EAttribute)iMessageEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIMessage_MessageCode() {
+		return (EAttribute)iMessageEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIMessage_MessagePriority() {
+		return (EAttribute)iMessageEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getIMessageParty() {
+		return iMessagePartyEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIMessageParty_User() {
+		return (EReference)iMessagePartyEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIMessageParty_StationId() {
+		return (EAttribute)iMessagePartyEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public ModelFactory getModelFactory() {
 		return (ModelFactory)getEFactoryInstance();
 	}
@@ -4666,6 +4792,19 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iAccountTransactionEClass, IACCOUNT_TRANSACTION__REMARK);
 		createEAttribute(iAccountTransactionEClass, IACCOUNT_TRANSACTION__ACCOUNT);
 		createEAttribute(iAccountTransactionEClass, IACCOUNT_TRANSACTION__DATE);
+
+		iMessageEClass = createEClass(IMESSAGE);
+		createEReference(iMessageEClass, IMESSAGE__SENDER);
+		createEReference(iMessageEClass, IMESSAGE__RECEIVER);
+		createEAttribute(iMessageEClass, IMESSAGE__SENDER_ACCEPTS_ANSWER);
+		createEAttribute(iMessageEClass, IMESSAGE__CREATE_DATE_TIME);
+		createEAttribute(iMessageEClass, IMESSAGE__MESSAGE_TEXT);
+		createEAttribute(iMessageEClass, IMESSAGE__MESSAGE_CODE);
+		createEAttribute(iMessageEClass, IMESSAGE__MESSAGE_PRIORITY);
+
+		iMessagePartyEClass = createEClass(IMESSAGE_PARTY);
+		createEReference(iMessagePartyEClass, IMESSAGE_PARTY__USER);
+		createEAttribute(iMessagePartyEClass, IMESSAGE_PARTY__STATION_ID);
 	}
 
 	/**
@@ -4808,6 +4947,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iPaymentEClass.getESuperTypes().add(this.getDeleteable());
 		iAccountTransactionEClass.getESuperTypes().add(this.getIdentifiable());
 		iAccountTransactionEClass.getESuperTypes().add(this.getDeleteable());
+		iMessageEClass.getESuperTypes().add(this.getIdentifiable());
+		iMessageEClass.getESuperTypes().add(this.getDeleteable());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(identifiableEClass, Identifiable.class, "Identifiable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -5451,6 +5592,25 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIAccountTransaction_Remark(), ecorePackage.getEString(), "remark", null, 0, 1, IAccountTransaction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIAccountTransaction_Account(), ecorePackage.getEString(), "account", null, 0, 1, IAccountTransaction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIAccountTransaction_Date(), theTypesPackage.getLocalDate(), "date", null, 0, 1, IAccountTransaction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(iMessageEClass, IMessage.class, "IMessage", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getIMessage_Sender(), this.getIMessageParty(), null, "sender", null, 1, 1, IMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIMessage_Receiver(), this.getIMessageParty(), null, "receiver", null, 1, -1, IMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIMessage_SenderAcceptsAnswer(), ecorePackage.getEBoolean(), "senderAcceptsAnswer", null, 0, 1, IMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIMessage_CreateDateTime(), theTypesPackage.getLocalDateTime(), "createDateTime", null, 0, 1, IMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIMessage_MessageText(), ecorePackage.getEString(), "messageText", null, 0, 1, IMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIMessage_MessageCode(), ecorePackage.getEString(), "messageCode", null, 0, 1, IMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIMessage_MessagePriority(), ecorePackage.getEInt(), "messagePriority", "0", 0, 1, IMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		op = addEOperation(iMessageEClass, null, "setSender", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIUser(), "user", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iMessageEClass, null, "addReceiver", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIUser(), "addReceiver", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		initEClass(iMessagePartyEClass, IMessageParty.class, "IMessageParty", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getIMessageParty_User(), this.getIUser(), null, "user", null, 0, 1, IMessageParty.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIMessageParty_StationId(), ecorePackage.getEString(), "stationId", null, 0, 1, IMessageParty.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

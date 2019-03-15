@@ -59,6 +59,7 @@ import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IMessage;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IOrganization;
@@ -81,6 +82,7 @@ import ch.elexis.core.model.Invoice;
 import ch.elexis.core.model.InvoiceBilled;
 import ch.elexis.core.model.Laboratory;
 import ch.elexis.core.model.Mandator;
+import ch.elexis.core.model.Message;
 import ch.elexis.core.model.Organization;
 import ch.elexis.core.model.Patient;
 import ch.elexis.core.model.Payment;
@@ -213,5 +215,8 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 			ch.elexis.core.jpa.entities.BestellungEntry.class));
 		
 		addMapping(new MappingEntry(IImage.class, Image.class, DbImage.class));
+		
+		addMapping(new MappingEntry(IMessage.class, Message.class,
+			ch.elexis.core.jpa.entities.Message.class));
 	}
 }

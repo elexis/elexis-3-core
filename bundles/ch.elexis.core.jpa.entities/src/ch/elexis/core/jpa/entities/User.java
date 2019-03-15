@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -27,6 +28,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Table(name = "USER_")
 @EntityListeners(EntityWithIdListener.class)
 @XmlRootElement(name = "user")
+@NamedQuery(name = "User.kontakt", query = "SELECT u FROM User u WHERE u.deleted = false AND u.kontakt = :kontakt")
 public class User extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 

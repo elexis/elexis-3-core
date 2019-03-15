@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="model" nsURI="http://ch.elexis.core/tasks/model" nsPrefix="ch.elexis.core.tasks">
+  <eClassifiers xsi:type="ecore:EClass" name="ITaskDescriptor" abstract="true" interface="true">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Describes an runnable to be started with a given runContext under the rigths of a user when triggerEvent occurs."/>
+    </eAnnotations>
+    <eOperations name="setTriggerParameter">
+      <eParameters name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eParameters name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
+    <eOperations name="setRunContextParameter">
+      <eParameters name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eParameters name="value" eType="#//Serializable"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        changeable="false" iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="referenceId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Used to reference this task in an other_task_state trigger event of a secondary task"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="owner" lowerBound="1" eType="ecore:EClass ../../ch.elexis.core/model/model.ecore#//IUser"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="active" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="if true run if triggerEvent happens"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="runnableWithContextId"
+        lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="runContext" transient="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The context parameters to pass to ITask on being instantiated to a Job"/>
+      </eAnnotations>
+      <eGenericType eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EMap">
+        <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        <eTypeArguments eClassifier="#//Serializable"/>
+      </eGenericType>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="triggerType" eType="#//TaskTriggerType"
+        defaultValueLiteral="MANUAL">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The event type that will, in combination with the triggerEventCondition, lead to execution"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="triggerParameters" transient="true">
+      <eGenericType eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EMap">
+        <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eGenericType>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="runner" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The station that will run this task. Valid values are empty, stationId or SERVER. Empty defines that any station may run this task."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="singleton" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="false">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Whether concurrent executions of an instantiation of this ITaskDescriptor are allowed"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ITask" abstract="true" interface="true">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A running instance of an ITaskDescriptor."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        changeable="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="state" lowerBound="1" eType="#//TaskState"
+        changeable="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="descriptor" lowerBound="1"
+        eType="#//ITaskDescriptor" changeable="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="triggerEvent" lowerBound="1"
+        eType="#//TaskTriggerType" changeable="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="result" changeable="false"
+        transient="true">
+      <eGenericType eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EMap">
+        <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        <eTypeArguments/>
+      </eGenericType>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="progressMonitor" eType="#//IProgressMonitor"
+        changeable="false" transient="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="runContext" changeable="false"
+        transient="true">
+      <eGenericType eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EMap">
+        <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        <eTypeArguments eClassifier="#//Serializable"/>
+      </eGenericType>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="finished" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" changeable="false"
+        defaultValueLiteral="false">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The task has finished its execution."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="TaskState">
+    <eLiterals name="DRAFT"/>
+    <eLiterals name="READY" value="10"/>
+    <eLiterals name="IN_PROGRESS" value="20"/>
+    <eLiterals name="CANCELLED" value="30"/>
+    <eLiterals name="ON_HOLD" value="40"/>
+    <eLiterals name="FAILED" value="90"/>
+    <eLiterals name="COMPLETED" value="50"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RunnableWithContext" abstract="true"
+      interface="true">
+    <eOperations name="run" eExceptions="#//TaskException">
+      <eGenericType eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EMap">
+        <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        <eTypeArguments eClassifier="#//Serializable"/>
+      </eGenericType>
+      <eParameters name="context">
+        <eGenericType eClassifier="ecore:EClass ../../ch.elexis.core/model/types.ecore#//Map">
+          <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          <eTypeArguments eClassifier="#//Serializable"/>
+        </eGenericType>
+      </eParameters>
+      <eParameters name="progressMonitor" eType="#//IProgressMonitor"/>
+      <eParameters name="logger" eType="#//Logger"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        changeable="false" iD="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Used to refer to a runnable. This value has to be unique across the system."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="TaskTriggerType">
+    <eLiterals name="MANUAL" literal="MANUAL"/>
+    <eLiterals name="FILESYSTEM_CHANGE" value="1"/>
+    <eLiterals name="CRON" value="2"/>
+    <eLiterals name="SYSTEM_EVENT" value="3"/>
+    <eLiterals name="OTHER_TASK" value="4"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="Serializable" instanceClassName="java.io.Serializable"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ITaskService" abstract="true" interface="true">
+    <eOperations name="createTaskDescriptor" eType="#//ITaskDescriptor" eExceptions="#//TaskException">
+      <eParameters name="owner" eType="ecore:EClass ../../ch.elexis.core/model/model.ecore#//IUser"/>
+      <eParameters name="runnable" eType="#//RunnableWithContext"/>
+    </eOperations>
+    <eOperations name="trigger" eType="#//ITask" eExceptions="#//TaskException">
+      <eParameters name="taskDescriptor" lowerBound="1" eType="#//ITaskDescriptor"/>
+      <eParameters name="progressMonitor" eType="#//IProgressMonitor"/>
+      <eParameters name="trigger" eType="#//TaskTriggerType"/>
+      <eParameters name="runContext">
+        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+          <details key="documentation" value="key value pairs to add to the task run context already populated out of ITaskDescriptor#runContext (e.g. the file system trigger adds the file triggering the event)"/>
+        </eAnnotations>
+        <eGenericType eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EMap">
+          <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eGenericType>
+      </eParameters>
+    </eOperations>
+    <eOperations name="instantiateRunnableById" eType="#//RunnableWithContext" eExceptions="#//TaskException">
+      <eParameters name="runnableId" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
+    <eOperations name="saveTaskDescriptor" eExceptions="#//TaskException">
+      <eParameters name="taskDescriptor" lowerBound="1" eType="#//ITaskDescriptor"/>
+    </eOperations>
+    <eOperations name="setActive" eExceptions="#//TaskException">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="activates / deactivates triggering the provided ITaskDescriptor"/>
+      </eAnnotations>
+      <eParameters name="taskDescriptor" eType="#//ITaskDescriptor"/>
+      <eParameters name="active" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eOperations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="IProgressMonitor" instanceClassName="org.eclipse.core.runtime.IProgressMonitor"/>
+  <eClassifiers xsi:type="ecore:EClass" name="IRunnableWithContextFactory" abstract="true"
+      interface="true">
+    <eOperations name="createRunnableWithContext" eType="#//RunnableWithContext">
+      <eParameters name="runnableWithContextId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="TaskException" instanceClassName="ch.elexis.core.tasks.TaskException"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="Logger" instanceClassName="org.slf4j.Logger"/>
+</ecore:EPackage>

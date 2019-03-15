@@ -834,4 +834,47 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="account" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType types.ecore#//LocalDate"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IMessage" abstract="true" interface="true"
+      eSuperTypes="#//Identifiable #//Deleteable">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A message sent between the involved message parties (see IMessageParty)"/>
+    </eAnnotations>
+    <eOperations name="setSender">
+      <eParameters name="user" eType="#//IUser"/>
+    </eOperations>
+    <eOperations name="addReceiver">
+      <eParameters name="addReceiver" eType="#//IUser"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sender" lowerBound="1"
+        eType="#//IMessageParty"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="receiver" lowerBound="1"
+        upperBound="-1" eType="#//IMessageParty"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="senderAcceptsAnswer" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="wether the sender of this message will accept or handle answer (e.g. a message sent by the system to an IUser will not necessarily be handled)"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="createDateTime" eType="ecore:EDataType types.ecore#//LocalDateTime"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="messageText" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="the message text to be read by the receiving user(s)"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="messageCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="a message code to allow for extended representation and/or action configuration (e.g. show a specific image, perform a specific task)"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="messagePriority" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="0"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IMessageParty" abstract="true" interface="true">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A user or station that either sends or receives a message. XOR user or stationId."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="user" eType="#//IUser"
+        changeable="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="stationId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        changeable="false"/>
+  </eClassifiers>
 </ecore:EPackage>

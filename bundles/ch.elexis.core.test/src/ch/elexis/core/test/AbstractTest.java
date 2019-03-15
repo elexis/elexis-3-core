@@ -11,10 +11,12 @@ import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.builder.IArticleBuilder;
 import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.model.builder.IEncounterBuilder;
+import ch.elexis.core.model.builder.IUserBuilder;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.types.Gender;
@@ -24,6 +26,7 @@ public abstract class AbstractTest {
 	
 	protected IModelService coreModelService;
 	
+	protected IUser user;
 	protected IPerson person;
 	protected IMandator mandator;
 	protected IPatient patient;
@@ -61,9 +64,19 @@ public abstract class AbstractTest {
 		if (patient != null) {
 			coreModelService.remove(patient);
 		}
+		if (user != null) {
+			coreModelService.remove(user);
+		}
 		
 		OsgiServiceUtil.ungetService(coreModelService);
 		coreModelService = null;
+	}
+	
+	public void createUser(){
+		if (person == null) {
+			createPerson();
+		}
+		user = new IUserBuilder(coreModelService, "b_a_barracus", person).buildAndSave();
 	}
 	
 	public void createPerson(){
