@@ -1,7 +1,5 @@
 package ch.elexis.core.model.builder;
 
-import java.util.Optional;
-
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
@@ -20,8 +18,8 @@ public class IUserBuilder extends AbstractBuilder<IUser> {
 		object.setSalt("invalid");
 		object.setHashedPassword("invalid");
 		
-		Optional<IRole> role = modelService.load(RoleConstants.SYSTEMROLE_LITERAL_USER, IRole.class);
-		object.addRole(role.get());
+		modelService.load(RoleConstants.SYSTEMROLE_LITERAL_USER, IRole.class)
+			.ifPresent(object::addRole);
 	}
 	
 }
