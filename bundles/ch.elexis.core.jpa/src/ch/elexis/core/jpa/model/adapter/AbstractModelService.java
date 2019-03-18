@@ -134,6 +134,7 @@ public abstract class AbstractModelService implements IModelService {
 				em.getTransaction().commit();
 				if (newlyCreatedObject) {
 					postElexisEvent(getCreateEvent(identifiable));
+					postEvent(ElexisEventTopics.EVENT_CREATE, identifiable);
 				}
 				return true;
 			} finally {
@@ -152,6 +153,7 @@ public abstract class AbstractModelService implements IModelService {
 			EntityManager em = getEntityManager(false);
 			try {
 				List<ElexisEvent> createdEvents = new ArrayList<>();
+				List<Identifiable> createdIdentifiables = new ArrayList<>();
 				em.getTransaction().begin();
 				for (Identifiable identifiable : dbObjects.keySet()) {
 					EntityWithId dbObject = dbObjects.get(identifiable);
@@ -161,11 +163,14 @@ public abstract class AbstractModelService implements IModelService {
 						setDbObject(identifiable, merged);
 						if (newlyCreatedObject) {
 							createdEvents.add(getCreateEvent(identifiable));
+							createdIdentifiables.add(identifiable);
 						}
 					}
 				}
 				em.getTransaction().commit();
 				createdEvents.stream().forEach(e -> postElexisEvent(e));
+				createdIdentifiables.stream()
+					.forEach(i -> postEvent(ElexisEventTopics.EVENT_CREATE, i));
 				return true;
 			} finally {
 				closeEntityManager(em);
@@ -185,6 +190,7 @@ public abstract class AbstractModelService implements IModelService {
 				EntityWithId object = em.merge(dbObject.get());
 				em.remove(object);
 				em.getTransaction().commit();
+				postEvent(ElexisEventTopics.EVENT_DELETE, identifiable);
 				return true;
 			} finally {
 				closeEntityManager(em);
@@ -249,6 +255,7 @@ public abstract class AbstractModelService implements IModelService {
 	public void delete(Deleteable deletable){
 		deletable.setDeleted(true);
 		save((Identifiable) deletable);
+		postEvent(ElexisEventTopics.EVENT_DELETE, deletable);
 	}
 	
 	@Override

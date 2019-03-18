@@ -28,6 +28,7 @@ public class ElexisEventTopics {
 	 * Basic event topics
 	 */
 	public static final String EVENT_CREATE = BASE + "create";
+	public static final String EVENT_DELETE = BASE + "delete";
 	public static final String EVENT_UPDATE = BASE + "update";
 	public static final String EVENT_RELOAD = BASE + "reload";
 	
