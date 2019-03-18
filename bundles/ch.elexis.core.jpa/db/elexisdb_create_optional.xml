@@ -548,6 +548,120 @@
 		</createIndex>
 	</changeSet>
 
+	<changeSet author="thomas"
+		id="manual_table_ARTIKELSTAMM_CH">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="ARTIKELSTAMM_CH" />
+			</not>
+		</preConditions>
+        <createTable tableName="ARTIKELSTAMM_CH">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_ARTIKELSTAMM_CH_ID"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="TYPE" type="CHAR(1)"/>
+            <column name="BB" type="CHAR(1)"/>
+            <column name="CUMM_VERSION" type="CHAR(4)"/>
+            <column name="GTIN" type="VARCHAR(14)"/>
+            <column name="PHAR" type="CHAR(7)"/>
+            <column name="DSCR" type="VARCHAR(100)"/>
+            <column name="ADDDSCR" type="VARCHAR(50)"/>
+            <column name="ATC" type="CHAR(10)"/>
+            <column name="COMP_GLN" type="CHAR(13)"/>
+            <column name="COMP_NAME" type="VARCHAR(255)"/>
+            <column name="PEXF" type="CHAR(10)"/>
+            <column name="PPUB" type="CHAR(10)"/>
+            <column name="PKG_SIZE" type="CHAR(6)"/>
+            <column name="SL_ENTRY" type="CHAR(1)"/>
+            <column name="IKSCAT" type="CHAR(1)"/>
+            <column name="LIMITATION" type="CHAR(1)"/>
+            <column name="LIMITIATION_PTS" type="CHAR(4)"/>
+            <column name="LIMITATION_TXT" type="CLOB"/>
+            <column name="GENERIC_TYPE" type="CHAR(1)"/>
+            <column name="HAS_GENERIC" type="CHAR(1)"/>
+            <column name="LPPV" type="CHAR(1)"/>
+            <column name="DEDUCTIBLE" type="CHAR(6)"/>
+            <column name="NARCOTIC" type="CHAR(1)"/>
+            <column name="NARCOTIC_CAS" type="VARCHAR(20)"/>
+            <column name="VACCINE" type="CHAR(1)"/>
+            <column name="VERKAUFSEINHEIT" type="VARCHAR(4)"/>
+            <column name="PRODNO" type="VARCHAR(10)"/>
+            <column name="EXTINFO" type="BLOB"/>
+        </createTable>
+        <insert tableName="ARTIKELSTAMM_CH">
+       		<column name="ID" value="VERSION"/>
+       		<column name="GTIN" value="1.3.0"/>
+       		<column name="NARCOTIC_CAS" value="150319 00:00"/>
+       		<column name="PEXF" value="0"/>
+       		<column name="PPUB" value="0"/>
+    	</insert>
+	</changeSet>
+    <changeSet author="thomas" id="manual_idx_IDXAIBB">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="IDXAIBB" />
+			</not>
+		</preConditions>
+        <createIndex indexName="IDXAIBB" tableName="ARTIKELSTAMM_CH">
+            <column name="BB"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas" id="IDXAIGTIN">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="IDXAIGTIN" />
+			</not>
+		</preConditions>
+        <createIndex indexName="IDXAIGTIN" tableName="ARTIKELSTAMM_CH">
+            <column name="GTIN"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas" id="IDXAIITEMTYPE">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="IDXAIITEMTYPE" />
+			</not>
+		</preConditions>
+        <createIndex indexName="IDXAIITEMTYPE" tableName="ARTIKELSTAMM_CH">
+            <column name="TYPE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas" id="IDXAIMONTH">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="IDXAIMONTH" />
+			</not>
+		</preConditions>
+        <createIndex indexName="IDXAIMONTH" tableName="ARTIKELSTAMM_CH">
+            <column name="CUMM_VERSION"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas" id="IDXAIPHAR">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="IDXAIPHAR" />
+			</not>
+		</preConditions>
+        <createIndex indexName="IDXAIPHAR" tableName="ARTIKELSTAMM_CH">
+            <column name="PHAR"/>
+        </createIndex>
+    </changeSet>	
+	
+	<changeSet author="thomas" id="manual_idx_IDXATCCODE">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="IDXATCCODE" />
+			</not>
+		</preConditions>
+		<createIndex indexName="IDXATCCODE"
+			tableName="DEFAULT_SIGNATURES">
+			<column name="ATCCODE" />
+		</createIndex>
+	</changeSet>
+
+
 	<changeSet author="marco" id="manual_table_TASKDESCRIPTOR">
 		<createTable tableName="TASKDESCRIPTOR">
 			<column name="ID" type="VARCHAR(25)">
