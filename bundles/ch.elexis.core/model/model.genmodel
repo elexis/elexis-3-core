@@ -507,14 +507,15 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/reason"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/state"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/type"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/start"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/end"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/durationMinutes"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/schedule"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IAppointment/createdBy"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/subjectOrPatient"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/priority"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/treatmentReason"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/linkgroup"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/extension"/>
+      <genOperations ecoreOperation="model.ecore#//IAppointment/getContact"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IImage">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IImage/date"/>

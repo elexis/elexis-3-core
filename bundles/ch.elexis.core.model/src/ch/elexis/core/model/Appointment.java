@@ -8,6 +8,7 @@ import java.time.temporal.ChronoUnit;
 import ch.elexis.core.jpa.entities.Termin;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 
 public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 		implements IdentifiableWithXid, IAppointment {
@@ -47,7 +48,7 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 	}
 	
 	@Override
-	public LocalDateTime getStart(){
+	public LocalDateTime getStartTime(){
 		LocalDate day = getEntity().getTag();
 		if (day != null) {
 			try {
@@ -59,7 +60,7 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 	}
 	
 	@Override
-	public void setStart(LocalDateTime value){
+	public void setStartTime(LocalDateTime value){
 		if (value != null) {
 			getEntity().setTag(value.toLocalDate());
 			int begin = (value.getHour() * 60) + value.getMinute();
@@ -71,8 +72,8 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 	}
 	
 	@Override
-	public LocalDateTime getEnd(){
-		LocalDateTime start = getStart();
+	public LocalDateTime getEndTime(){
+		LocalDateTime start = getStartTime();
 		if(start != null) {
 			Integer duration = getDurationMinutes();
 			if(duration != null) {
@@ -83,15 +84,15 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 	}
 	
 	@Override
-	public void setEnd(LocalDateTime value){
+	public void setEndTime(LocalDateTime value){
 		if (value != null) {
-			if (getStart() != null) {
-				long until = getStart().until(value, ChronoUnit.MINUTES);
+			if (getStartTime() != null) {
+				long until = getStartTime().until(value, ChronoUnit.MINUTES);
 				getEntity().setDauer(Long.toString(until));
 			} else if (getDurationMinutes() != null) {
-				setStart(value.minus(Duration.ofMinutes(getDurationMinutes())));
+				setStartTime(value.minus(Duration.ofMinutes(getDurationMinutes())));
 			} else {
-				setStart(value);
+				setStartTime(value);
 				getEntity().setDauer(Integer.toString(0));
 			}
 		} else {
@@ -157,5 +158,29 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 		getEntity().setTreatmentReason(value);	
 	}
 
+	@Override
+	public String getLinkgroup(){
+		return getEntity().getLinkgroup();
+	}
 	
+	@Override
+	public void setLinkgroup(String value){
+		getEntity().setLinkgroup(value);
+	}
+	
+	@Override
+	public String getExtension(){
+		return getEntity().getExtension();
+	}
+	
+	@Override
+	public void setExtension(String value){
+		getEntity().setExtension(value);
+	}
+	
+	@Override
+	public IContact getContact(){
+		return CoreModelServiceHolder.get().load(getSubjectOrPatient(), IContact.class)
+			.orElse(null);
+	}
 }

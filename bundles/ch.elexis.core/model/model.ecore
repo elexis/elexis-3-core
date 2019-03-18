@@ -713,7 +713,8 @@
         eType="#//IContact"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IAppointment" abstract="true" interface="true"
-      eSuperTypes="#//Identifiable #//Deleteable">
+      eSuperTypes="#//IPeriod">
+    <eOperations name="getContact" eType="#//IContact"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="reason" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
         <details key="attributeName" value="grund"/>
@@ -725,8 +726,6 @@
         <details key="attributeName" value="termintyp"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="start" eType="ecore:EDataType types.ecore#//LocalDateTime"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="end" eType="ecore:EDataType types.ecore#//LocalDateTime"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="durationMinutes" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"
         changeable="false">
       <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
@@ -750,6 +749,8 @@
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="priority" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="treatmentReason" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="linkgroup" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="extension" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IImage" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable #//WithAssignableId">

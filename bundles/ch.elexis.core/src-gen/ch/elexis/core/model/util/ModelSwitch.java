@@ -496,6 +496,7 @@ public class ModelSwitch<T1> extends Switch<T1> {
 			case ModelPackage.IAPPOINTMENT: {
 				IAppointment iAppointment = (IAppointment)theEObject;
 				T1 result = caseIAppointment(iAppointment);
+				if (result == null) result = caseIPeriod(iAppointment);
 				if (result == null) result = caseIdentifiable(iAppointment);
 				if (result == null) result = caseDeleteable(iAppointment);
 				if (result == null) result = defaultCase(theEObject);

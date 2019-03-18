@@ -24,21 +24,21 @@ import java.time.LocalDateTime;
  *   <li>{@link ch.elexis.core.model.IAppointment#getReason <em>Reason</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getState <em>State</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getType <em>Type</em>}</li>
- *   <li>{@link ch.elexis.core.model.IAppointment#getStart <em>Start</em>}</li>
- *   <li>{@link ch.elexis.core.model.IAppointment#getEnd <em>End</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getDurationMinutes <em>Duration Minutes</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getSchedule <em>Schedule</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getCreatedBy <em>Created By</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getSubjectOrPatient <em>Subject Or Patient</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getPriority <em>Priority</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getTreatmentReason <em>Treatment Reason</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IAppointment#getLinkgroup <em>Linkgroup</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IAppointment#getExtension <em>Extension</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIAppointment()
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface IAppointment extends Identifiable, Deleteable {
+public interface IAppointment extends IPeriod {
 	/**
 	 * Returns the value of the '<em><b>Reason</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -116,58 +116,6 @@ public interface IAppointment extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	void setType(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Start</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Start</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Start</em>' attribute.
-	 * @see #setStart(LocalDateTime)
-	 * @see ch.elexis.core.model.ModelPackage#getIAppointment_Start()
-	 * @model dataType="ch.elexis.core.types.LocalDateTime"
-	 * @generated
-	 */
-	LocalDateTime getStart();
-
-	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IAppointment#getStart <em>Start</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Start</em>' attribute.
-	 * @see #getStart()
-	 * @generated
-	 */
-	void setStart(LocalDateTime value);
-
-	/**
-	 * Returns the value of the '<em><b>End</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>End</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>End</em>' attribute.
-	 * @see #setEnd(LocalDateTime)
-	 * @see ch.elexis.core.model.ModelPackage#getIAppointment_End()
-	 * @model dataType="ch.elexis.core.types.LocalDateTime"
-	 * @generated
-	 */
-	LocalDateTime getEnd();
-
-	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IAppointment#getEnd <em>End</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>End</em>' attribute.
-	 * @see #getEnd()
-	 * @generated
-	 */
-	void setEnd(LocalDateTime value);
 
 	/**
 	 * Returns the value of the '<em><b>Duration Minutes</b></em>' attribute.
@@ -314,5 +262,65 @@ public interface IAppointment extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	void setTreatmentReason(int value);
+
+	/**
+	 * Returns the value of the '<em><b>Linkgroup</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Linkgroup</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Linkgroup</em>' attribute.
+	 * @see #setLinkgroup(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIAppointment_Linkgroup()
+	 * @model
+	 * @generated
+	 */
+	String getLinkgroup();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IAppointment#getLinkgroup <em>Linkgroup</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Linkgroup</em>' attribute.
+	 * @see #getLinkgroup()
+	 * @generated
+	 */
+	void setLinkgroup(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Extension</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Extension</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Extension</em>' attribute.
+	 * @see #setExtension(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIAppointment_Extension()
+	 * @model
+	 * @generated
+	 */
+	String getExtension();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IAppointment#getExtension <em>Extension</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Extension</em>' attribute.
+	 * @see #getExtension()
+	 * @generated
+	 */
+	void setExtension(String value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	IContact getContact();
 
 } // IAppointment

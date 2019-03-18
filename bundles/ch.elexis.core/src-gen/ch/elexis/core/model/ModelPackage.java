@@ -5318,7 +5318,25 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+	int IAPPOINTMENT__DELETED = IPERIOD__DELETED;
+
+	/**
+	 * The feature id for the '<em><b>Start Time</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT__START_TIME = IPERIOD__START_TIME;
+
+	/**
+	 * The feature id for the '<em><b>End Time</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT__END_TIME = IPERIOD__END_TIME;
 
 	/**
 	 * The feature id for the '<em><b>Reason</b></em>' attribute.
@@ -5327,7 +5345,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__REASON = IDENTIFIABLE_FEATURE_COUNT + 1;
+	int IAPPOINTMENT__REASON = IPERIOD_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>State</b></em>' attribute.
@@ -5336,7 +5354,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__STATE = IDENTIFIABLE_FEATURE_COUNT + 2;
+	int IAPPOINTMENT__STATE = IPERIOD_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Type</b></em>' attribute.
@@ -5345,25 +5363,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__TYPE = IDENTIFIABLE_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>Start</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IAPPOINTMENT__START = IDENTIFIABLE_FEATURE_COUNT + 4;
-
-	/**
-	 * The feature id for the '<em><b>End</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IAPPOINTMENT__END = IDENTIFIABLE_FEATURE_COUNT + 5;
+	int IAPPOINTMENT__TYPE = IPERIOD_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Duration Minutes</b></em>' attribute.
@@ -5372,7 +5372,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__DURATION_MINUTES = IDENTIFIABLE_FEATURE_COUNT + 6;
+	int IAPPOINTMENT__DURATION_MINUTES = IPERIOD_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Schedule</b></em>' attribute.
@@ -5381,7 +5381,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__SCHEDULE = IDENTIFIABLE_FEATURE_COUNT + 7;
+	int IAPPOINTMENT__SCHEDULE = IPERIOD_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Created By</b></em>' reference.
@@ -5390,7 +5390,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__CREATED_BY = IDENTIFIABLE_FEATURE_COUNT + 8;
+	int IAPPOINTMENT__CREATED_BY = IPERIOD_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Subject Or Patient</b></em>' attribute.
@@ -5399,7 +5399,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__SUBJECT_OR_PATIENT = IDENTIFIABLE_FEATURE_COUNT + 9;
+	int IAPPOINTMENT__SUBJECT_OR_PATIENT = IPERIOD_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Priority</b></em>' attribute.
@@ -5408,7 +5408,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__PRIORITY = IDENTIFIABLE_FEATURE_COUNT + 10;
+	int IAPPOINTMENT__PRIORITY = IPERIOD_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Treatment Reason</b></em>' attribute.
@@ -5417,7 +5417,25 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT__TREATMENT_REASON = IDENTIFIABLE_FEATURE_COUNT + 11;
+	int IAPPOINTMENT__TREATMENT_REASON = IPERIOD_FEATURE_COUNT + 8;
+
+	/**
+	 * The feature id for the '<em><b>Linkgroup</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT__LINKGROUP = IPERIOD_FEATURE_COUNT + 9;
+
+	/**
+	 * The feature id for the '<em><b>Extension</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT__EXTENSION = IPERIOD_FEATURE_COUNT + 10;
 
 	/**
 	 * The number of structural features of the '<em>IAppointment</em>' class.
@@ -5426,7 +5444,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 12;
+	int IAPPOINTMENT_FEATURE_COUNT = IPERIOD_FEATURE_COUNT + 11;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -10187,28 +10205,6 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIAppointment_Type();
 
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#getStart <em>Start</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Start</em>'.
-	 * @see ch.elexis.core.model.IAppointment#getStart()
-	 * @see #getIAppointment()
-	 * @generated
-	 */
-	EAttribute getIAppointment_Start();
-
-	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#getEnd <em>End</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>End</em>'.
-	 * @see ch.elexis.core.model.IAppointment#getEnd()
-	 * @see #getIAppointment()
-	 * @generated
-	 */
-	EAttribute getIAppointment_End();
-
-	/**
 	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#getDurationMinutes <em>Duration Minutes</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -10273,6 +10269,28 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getIAppointment_TreatmentReason();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#getLinkgroup <em>Linkgroup</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Linkgroup</em>'.
+	 * @see ch.elexis.core.model.IAppointment#getLinkgroup()
+	 * @see #getIAppointment()
+	 * @generated
+	 */
+	EAttribute getIAppointment_Linkgroup();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#getExtension <em>Extension</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Extension</em>'.
+	 * @see ch.elexis.core.model.IAppointment#getExtension()
+	 * @see #getIAppointment()
+	 * @generated
+	 */
+	EAttribute getIAppointment_Extension();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -13351,22 +13369,6 @@ public interface ModelPackage extends EPackage {
 		EAttribute IAPPOINTMENT__TYPE = eINSTANCE.getIAppointment_Type();
 
 		/**
-		 * The meta object literal for the '<em><b>Start</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute IAPPOINTMENT__START = eINSTANCE.getIAppointment_Start();
-
-		/**
-		 * The meta object literal for the '<em><b>End</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute IAPPOINTMENT__END = eINSTANCE.getIAppointment_End();
-
-		/**
 		 * The meta object literal for the '<em><b>Duration Minutes</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -13413,6 +13415,22 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IAPPOINTMENT__TREATMENT_REASON = eINSTANCE.getIAppointment_TreatmentReason();
+
+		/**
+		 * The meta object literal for the '<em><b>Linkgroup</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT__LINKGROUP = eINSTANCE.getIAppointment_Linkgroup();
+
+		/**
+		 * The meta object literal for the '<em><b>Extension</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT__EXTENSION = eINSTANCE.getIAppointment_Extension();
 
 	}
 

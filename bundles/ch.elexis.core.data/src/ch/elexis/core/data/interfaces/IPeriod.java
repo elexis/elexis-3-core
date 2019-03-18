@@ -10,7 +10,6 @@
  */
 package ch.elexis.core.data.interfaces;
 
-import ch.elexis.core.model.Identifiable;
 import ch.rgw.tools.TimeTool;
 
 /**
@@ -29,7 +28,7 @@ import ch.rgw.tools.TimeTool;
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface IPeriod extends Identifiable {
+public interface IPeriod {
 	/**
 	 * Returns the value of the '<em><b>Start Time</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
