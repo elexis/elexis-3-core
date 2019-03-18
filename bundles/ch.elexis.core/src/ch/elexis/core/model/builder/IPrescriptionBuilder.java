@@ -22,4 +22,14 @@ public class IPrescriptionBuilder extends AbstractBuilder<IPrescription> {
 		object.setEntryType(EntryType.FIXED_MEDICATION);
 	}
 	
+	public IPrescriptionBuilder entryType(EntryType entryType){
+		object.setEntryType(entryType);
+		return this;
+	}
+	
+	public IPrescriptionBuilder remark(String remark){
+		object.setRemark(remark);
+		return this;
+	}
+	
 }
