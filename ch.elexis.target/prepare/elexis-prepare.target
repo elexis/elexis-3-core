@@ -1,9 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde?>
-<!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis" sequenceNumber="1548954693">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde?><!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl --><target name="Elexis" sequenceNumber="1553153972">
   <locations>
-    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+    <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.swt.nl_de" version="4.8.0.v20180815020001"/>
       <unit id="org.eclipse.swt.nl_fr" version="4.8.0.v20180815020001"/>
       <unit id="org.eclipse.swt.nl_it" version="4.8.0.v20180815020001"/>
@@ -30,11 +27,11 @@
       <unit id="org.eclipse.equinox.p2.ui.nl_it" version="4.8.0.v20180815020001"/>
       <repository location="https://ftp.fau.de/eclipse/technology/babel/update-site/R0.16.0/photon"/>
     </location>
-    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.18.0.v20181023-1826"/>
+    <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+      <unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.18.0.v20190227-1016"/>
       <repository location="http://download.eclipse.org/e4/snapshots/org.eclipse.e4.tools/latest/"/>
     </location>
-    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+    <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.100.v20180827-1352"/>
       <unit id="org.eclipse.rcp.feature.group" version="4.9.0.v20180906-1121"/>
       <unit id="org.eclipse.platform.feature.group" version="4.9.0.v20180906-1121"/>
@@ -52,7 +49,7 @@
       <unit id="org.eclipse.e4.tools.emf.ui" version="4.6.100.v20180823-1503"/>
       <repository location="http://download.eclipse.org/eclipse/updates/4.9/"/>
     </location>
-    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+    <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
       <unit id="ch.qos.logback.classic" version="1.0.7.v20121108-1250"/>
       <unit id="ch.qos.logback.core" version="1.0.7.v20121108-1250"/>
       <unit id="ch.qos.logback.slf4j" version="1.0.7.v201505121915"/>
@@ -66,7 +63,7 @@
       <unit id="org.jsoup" version="1.7.2.v201411291515"/>
       <repository location="http://download.eclipse.org/releases/2018-09/"/>
     </location>
-    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+    <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
       <unit id="javax.persistence" version="2.2.1.v201807122140"/>
       <unit id="org.eclipse.persistence.asm" version="6.2.0.v201808041549"/>
       <unit id="org.eclipse.persistence.antlr" version="3.5.2.v201711011707"/>
@@ -76,22 +73,22 @@
       <unit id="org.eclipse.persistence.extension" version="2.7.3.v20180807-4be1041"/>
       <repository location="http://download.eclipse.org/rt/eclipselink/updates/"/>
     </location>
-    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+    <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.gemini.jpa.feature.feature.group" version="1.2.0.201307051903"/>
       <repository location="http://download.elexis.info/elexis-server/misc/gemini-jpa/"/>
     </location>
-    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+    <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.nebula.cwt.feature.feature.group" version="1.1.0.201812241324"/>
       <unit id="org.eclipse.nebula.widgets.cdatetime.feature.feature.group" version="1.3.0.201812241324"/>
       <unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="1.2.0.201812241324"/>
       <repository location="http://download.eclipse.org/nebula/releases/latest/"/>
     </location>
-    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+    <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
       <unit id="com.eclipsesource.jaxrs.consumer" version="5.3.1.201803161213"/>
       <unit id="com.eclipsesource.jaxrs.jersey-all-nojavax" version="2.24.1"/>
       <repository location="http://medevit.github.io/osgi-jax-rs-connector/5.3.100/"/>
     </location>
-    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+    <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
       <unit id="org.apache.httpcomponents.httpcore" version="4.4.9.v20180409-1525"/>
       <unit id="org.apache.httpcomponents.httpclient" version="4.5.5.v20180409-1525"/>
       <unit id="edu.emory.mathcs.backport" version="3.1.0.v201505121915"/>
@@ -119,11 +116,11 @@
       <unit id="osgi.enterprise" version="4.2.0.v201108120515"/>
       <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180905201904/repository/"/>
     </location>
-    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="info.elexis.server.hapi.fhir" version="3.4.0.201901311336"/>
+    <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+      <unit id="info.elexis.server.hapi.fhir" version="3.4.0.201903190554"/>
       <repository location="http://download.elexis.info/elexis-server/master/p2/elexis-server"/>
     </location>
-    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+    <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
       <unit id="javax.ws.rs" version="1.1.1.v20130318-1750"/>
       <unit id="org.slf4j.api" version="1.7.2.v20121108-1250"/>
       <unit id="org.slf4j.ext" version="1.7.2.v20121108-1250"/>
@@ -133,7 +130,7 @@
       <unit id="org.slf4j.nop" version="1.7.2.v201212060727"/>
       <repository location="http://download.elexis.info/mirror.4.elexis/snapshot"/>
     </location>
-    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+    <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
       <unit id="javax.transaction-api" version="1.3.0"/>
       <unit id="javax.enterprise.cdi-api" version="2.0.0.SP1"/>
       <unit id="javax.interceptor-api" version="1.2.2"/>
@@ -182,7 +179,7 @@
       <unit id="org.apache.commons.collections4" version="4.1.0"/>
       <repository location="http://download.elexis.info/elexis-server/elexis-server-dependencies"/>
     </location>
-    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+    <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
       <unit id="ag.ion.bion.workbench.office.editor.activation" version="2.0.14"/>
       <unit id="ag.ion.bion.workbench.office.editor.activation.nl1" version="2.0.14"/>
       <unit id="ag.ion.bion.workbench.office.editor.core" version="2.0.14"/>

@@ -33,8 +33,8 @@ public class AppointmentTest extends AbstractTest {
 		
 		IAppointment appointment = coreModelService.create(IAppointment.class);
 		appointment.setReason("reason");
-		appointment.setStart(begin);
-		appointment.setEnd(end);
+		appointment.setStartTime(begin);
+		appointment.setEndTime(end);
 		appointment.setSubjectOrPatient(patient.getId());
 		coreModelService.save(appointment);
 		
@@ -42,8 +42,8 @@ public class AppointmentTest extends AbstractTest {
 		query.and(ModelPackage.Literals.IAPPOINTMENT__REASON, COMPARATOR.EQUALS, "reason");
 		IAppointment stored = query.executeSingleResult().get();
 		
-		assertEquals(begin, stored.getStart());
-		assertEquals(end, stored.getEnd());
+		assertEquals(begin, stored.getStartTime());
+		assertEquals(end, stored.getEndTime());
 		assertEquals(patient.getId(), stored.getSubjectOrPatient());
 		
 		coreModelService.remove(appointment);
