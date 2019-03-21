@@ -238,9 +238,15 @@ public class ContextService implements IContextService, EventHandler {
 					coreModelService.load(((User) object).getId(), IUser.class);
 				iUser.ifPresent(u -> root.setActiveUser(u));
 			} else if (object instanceof Anwender) {
-				Optional<IMandator> iMandator =
-					coreModelService.load(((Anwender) object).getId(), IMandator.class);
-				if (iMandator.isPresent()) {
+				Optional<IContact> iMandatorContact =
+					coreModelService.load(((Anwender) object).getId(), IContact.class);
+				if (iMandatorContact.isPresent()) {
+					if (!iMandatorContact.get().isMandator()) {
+						iMandatorContact.get().setMandator(true);
+						coreModelService.save(iMandatorContact.get());
+					}
+					Optional<IMandator> iMandator =
+						coreModelService.load(iMandatorContact.get().getId(), IMandator.class);
 					root.setActiveMandator(iMandator.get());
 					
 					IQuery<IUser> userQuery = coreModelService.getQuery(IUser.class);

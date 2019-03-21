@@ -119,7 +119,7 @@ public interface IEncounter extends Identifiable, Deleteable {
 	 * @return the value of the '<em>Mandator</em>' reference.
 	 * @see #setMandator(IMandator)
 	 * @see ch.elexis.core.model.ModelPackage#getIEncounter_Mandator()
-	 * @model
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='mandant'"
 	 * @generated
 	 */
 	IMandator getMandator();
@@ -178,6 +178,7 @@ public interface IEncounter extends Identifiable, Deleteable {
 	 * @see #setDate(LocalDate)
 	 * @see ch.elexis.core.model.ModelPackage#getIEncounter_Date()
 	 * @model dataType="ch.elexis.core.types.LocalDate"
+	 *        annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='datum'"
 	 * @generated
 	 */
 	LocalDate getDate();

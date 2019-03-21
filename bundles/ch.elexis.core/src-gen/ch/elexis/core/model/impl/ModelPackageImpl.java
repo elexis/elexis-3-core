@@ -5762,6 +5762,18 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 			   "attributeName", "datum"
 		   });
 		addAnnotation
+		  (getIEncounter_Date(),
+		   source,
+		   new String[] {
+			   "attributeName", "datum"
+		   });
+		addAnnotation
+		  (getIEncounter_Mandator(),
+		   source,
+		   new String[] {
+			   "attributeName", "mandant"
+		   });
+		addAnnotation
 		  (getIEncounter_Coverage(),
 		   source,
 		   new String[] {
