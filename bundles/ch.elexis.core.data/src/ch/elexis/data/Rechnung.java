@@ -417,9 +417,9 @@ public class Rechnung extends PersistentObject {
 			} else {
 				setStatus(InvoiceState.DEPRECIATED.getState());
 			}
-		} else if (reopen){
-			// if bill is canceled all kons should be opened
-			kons = new ArrayList<>();
+		} else if (reopen && InvoiceState.CANCELLED.equals(invoiceState)){
+			// if bill is canceled ensure that all kons are opened
+			kons = removeBillFromKons();
 		}
 		return kons;
 	}
