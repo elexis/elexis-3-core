@@ -405,27 +405,34 @@ public class Rechnung extends PersistentObject {
 	 * @since 3.3
 	 */
 	public List<Konsultation> stornoBill(final boolean reopen){
-		Money betrag = getBetrag();
-		new Zahlung(this, betrag, "Storno", null);
-		if (reopen == true) {
-			List<Konsultation> kons = new ArrayList<>();
-			Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
-			qbe.add(Konsultation.FLD_BILL_ID, Query.EQUALS, getId());
-			for (Konsultation k : qbe.execute()) {
-				k.set(Konsultation.FLD_BILL_ID, null);
-				kons.add(k);
+		InvoiceState invoiceState = InvoiceState.fromState(getStatus());
+		List<Konsultation> kons = null;
+		if (!InvoiceState.CANCELLED.equals(invoiceState)
+			&& !InvoiceState.DEPRECIATED.equals(invoiceState)) {
+			Money betrag = getBetrag();
+			new Zahlung(this, betrag, "Storno", null);
+			if (reopen) {
+				kons = removeBillFromKons();
+				setStatus(InvoiceState.CANCELLED.getState());
+			} else {
+				setStatus(InvoiceState.DEPRECIATED.getState());
 			}
-			/*
-			 * getConnection().exec( "UPDATE BEHANDLUNGEN SET RECHNUNGSID=NULL WHERE RECHNUNGSID=" +
-			 * getWrappedId());
-			 */
-			setStatus(RnStatus.STORNIERT);
-			return kons;
-		} else {
-			
-			setStatus(RnStatus.ABGESCHRIEBEN);
-			return null;
+		} else if (reopen){
+			// if bill is canceled all kons should be opened
+			kons = new ArrayList<>();
 		}
+		return kons;
+	}
+
+	private List<Konsultation> removeBillFromKons(){
+		List<Konsultation> kons = new ArrayList<>();
+		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
+		qbe.add(Konsultation.FLD_BILL_ID, Query.EQUALS, getId());
+		for (Konsultation k : qbe.execute()) {
+			k.set(Konsultation.FLD_BILL_ID, null);
+			kons.add(k);
+		}
+		return kons;
 	}
 	
 	/** Datum der Rechnung holen */
