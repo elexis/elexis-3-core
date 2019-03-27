@@ -42,7 +42,7 @@ public class OsgiServiceUtil {
 		String filter){
 		Bundle bundle = FrameworkUtil.getBundle(clazz);
 		// fallback to our context ...
-		if (bundle.getBundleContext() == null) {
+		if (bundle == null || bundle.getBundleContext() == null) {
 			bundle = FrameworkUtil.getBundle(OsgiServiceUtil.class);
 		}
 		Collection<ServiceReference<T>> references = Collections.emptyList();

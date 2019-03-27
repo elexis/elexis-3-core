@@ -1019,6 +1019,10 @@
             <column name="LAW" type="VARCHAR(3)"/>
             <column defaultValue="0" name="ISCHAPTER" type="CHAR(1)"/>
         </createTable>
+        <insert tableName="TARMED">
+       		<column name="ID" value="Version"/>
+       		<column name="NICKNAME" value="1.3.0"/>
+    	</insert>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-68">
         <createTable tableName="TARMED_DATEN">

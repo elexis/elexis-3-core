@@ -196,7 +196,7 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 	
 	@Override
 	public String getCode(){
-		return getEntity().getLeistungenCode();
+		return getBillable().getCode();
 	}
 	
 	@Override

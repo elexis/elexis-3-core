@@ -11,9 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -56,10 +54,6 @@ public class TarmedGroup extends AbstractEntityWithId implements EntityWithId, E
 	
 	@Column
 	private LocalDate validTo;
-
-	@OneToOne
-	@JoinColumn(name = "id", insertable = false, updatable = false)
-	private TarmedExtension extension;
 	
 	public String getGroupName() {
 		return groupName;
@@ -99,14 +93,6 @@ public class TarmedGroup extends AbstractEntityWithId implements EntityWithId, E
 
 	public void setValidTo(LocalDate validTo) {
 		this.validTo = validTo;
-	}
-	
-	public TarmedExtension getExtension() {
-		return extension;
-	}
-	
-	public void setExtension(TarmedExtension extension) {
-		this.extension = extension;
 	}
 	
 	@Transient

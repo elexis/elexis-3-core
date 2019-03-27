@@ -64,10 +64,17 @@ public class ElexisEntityManger implements IElexisEntityManager {
 		entityManagerCollector.shutdown();
 	}
 	
-	@Reference(service = DataSource.class, cardinality = ReferenceCardinality.MANDATORY)
+	@Reference(service = DataSource.class, unbind = "unbindDataSource")
 	protected synchronized void bindDataSource(DataSource dataSource){
 		logger.debug("Binding " + dataSource.getClass().getName());
 		this.dataSource = dataSource;
+	}
+	
+	protected synchronized void unbindDataSource(DataSource dataSource){
+		logger.debug("Unbinding " + dataSource.getClass().getName());
+		this.factory.close();
+		this.factory = null;
+		this.dataSource = null;
 	}
 	
 	@Reference(service = EntityManagerFactoryBuilder.class, cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC, target = "(osgi.unit.name=elexis)")

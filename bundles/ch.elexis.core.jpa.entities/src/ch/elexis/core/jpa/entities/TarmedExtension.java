@@ -4,16 +4,20 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
+import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
 @Entity
 @Table(name = "TARMED_EXTENSION")
 @EntityListeners(EntityWithIdListener.class)
+@NamedQuery(name = "TarmedExtension.code", query = "SELECT te FROM TarmedExtension te WHERE te.deleted = false AND te.code = :code")
 public class TarmedExtension extends AbstractEntityWithId implements EntityWithId,EntityWithDeleted,EntityWithExtInfo {
 
 	public static final String EXT_FLD_F_AL_R = "F_AL_R";
@@ -22,12 +26,16 @@ public class TarmedExtension extends AbstractEntityWithId implements EntityWithI
 	protected Long lastupdate;
 	
 	@Id
-	@Column(length = 14)
-	private String code;
-
+	@GeneratedValue(generator = "system-uuid")
+	@Column(unique = true, nullable = false, length = 25)
+	private String id = ElexisIdGenerator.generateId();
+	
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
+	
+	@Column(length = 32)
+	private String code;
 	
 	@Lob
 	private byte[] limits;
@@ -72,12 +80,12 @@ public class TarmedExtension extends AbstractEntityWithId implements EntityWithI
 	
 	@Override
 	public String getId(){
-		return code;
+		return id;
 	}
 	
 	@Override
 	public void setId(String id){
-		this.code = id;
+		this.id = id;
 	}
 	
 	@Override

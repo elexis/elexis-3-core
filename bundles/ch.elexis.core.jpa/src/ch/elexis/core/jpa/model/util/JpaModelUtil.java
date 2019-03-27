@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -224,7 +223,7 @@ public class JpaModelUtil {
 			}
 			return ret;
 		}
-		return Collections.emptyMap();
+		return new Hashtable<Object, Object>();
 	}
 	
 	/**

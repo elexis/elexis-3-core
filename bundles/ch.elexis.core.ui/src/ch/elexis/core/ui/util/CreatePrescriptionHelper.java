@@ -26,9 +26,9 @@ import ch.elexis.core.model.localarticle.Constants;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.ICodeElementService.CodeElementTyp;
 import ch.elexis.core.services.ICodeElementServiceContribution;
+import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.ui.dialogs.PrescriptionSignatureTitleAreaDialog;
-import ch.elexis.core.ui.services.BillingServiceHolder;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.Result;
 

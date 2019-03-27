@@ -1,11 +1,24 @@
 package ch.elexis.core.services;
 
+import java.time.LocalDate;
+import java.util.Optional;
+
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.IBillingSystemFactor;
 import ch.elexis.core.model.IEncounter;
 import ch.rgw.tools.Result;
 
 public interface IBillingService {
+	
+	/**
+	 * Get a {@link IBillingSystemFactor} for the system at the provided date, empty if no such factor is defined.
+	 * 
+	 * @param system
+	 * @param date
+	 * @return
+	 */
+	public Optional<IBillingSystemFactor> getBillingSystemFactor(String system, LocalDate date);
 	
 	/**
 	 * Test if the {@link IEncounter} is editable in the context of billing.

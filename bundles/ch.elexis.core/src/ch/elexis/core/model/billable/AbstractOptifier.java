@@ -1,19 +1,13 @@
 package ch.elexis.core.model.billable;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBillableOptifier;
 import ch.elexis.core.model.IBilled;
-import ch.elexis.core.model.IBillingSystemFactor;
 import ch.elexis.core.model.IEncounter;
-import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.builder.IBilledBuilder;
 import ch.elexis.core.services.IModelService;
-import ch.elexis.core.services.IQuery;
-import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.rgw.tools.Result;
 
 public abstract class AbstractOptifier<T extends IBillable> implements IBillableOptifier<T> {
@@ -63,24 +57,6 @@ public abstract class AbstractOptifier<T extends IBillable> implements IBillable
 	 * @param billed
 	 */
 	protected abstract void setPrice(T billable, IBilled billed);
-	
-	/**
-	 * Get a valid {@link IBillingSystemFactor} object that is matching the system and valid on the
-	 * provided date.
-	 * 
-	 * @param system
-	 * @param date
-	 * @return
-	 */
-	public Optional<IBillingSystemFactor> getBillingSystemFactor(String system, LocalDate date){
-		IQuery<IBillingSystemFactor> query = coreModelService.getQuery(IBillingSystemFactor.class);
-		query.and(ModelPackage.Literals.IBILLING_SYSTEM_FACTOR__SYSTEM, COMPARATOR.EQUALS, system);
-		query.and(ModelPackage.Literals.IBILLING_SYSTEM_FACTOR__VALID_FROM,
-			COMPARATOR.LESS_OR_EQUAL, date);
-		query.and(ModelPackage.Literals.IBILLING_SYSTEM_FACTOR__VALID_TO,
-			COMPARATOR.GREATER_OR_EQUAL, date);
-		return query.executeSingleResult();
-	}
 	
 	@Override
 	public void putContext(String key, Object value){

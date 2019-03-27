@@ -1,4 +1,4 @@
-package ch.elexis.core.ui.services;
+package ch.elexis.core.services.holder;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;

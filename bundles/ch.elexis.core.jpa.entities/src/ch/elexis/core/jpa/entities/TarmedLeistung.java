@@ -8,10 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
@@ -87,11 +85,8 @@ public class TarmedLeistung extends AbstractEntityWithId
 	private String law;
 	
 	@Column(length = 1)
+	@Convert(converter = BooleanCharacterConverterSafe.class)
 	private boolean isChapter;
-	
-	@OneToOne
-	@JoinColumn(name = "id", insertable = false, updatable = false)
-	private TarmedExtension extension;
 	
 	//	/**
 	//	 * Get the AL value of the {@link TarmedLeistung}.<br>
@@ -251,14 +246,6 @@ public class TarmedLeistung extends AbstractEntityWithId
 	
 	public String getCode_(){
 		return code_;
-	}
-	
-	public TarmedExtension getExtension(){
-		return extension;
-	}
-	
-	public void setExtension(TarmedExtension extension){
-		this.extension = extension;
 	}
 	
 	public String getCode(){

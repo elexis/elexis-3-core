@@ -121,7 +121,7 @@ public class IBillingMatch {
 		List<IBilled> billed = encounter.getBilled();
 		
 		List<IBillingMatch> existingVerrechnet = billed.stream()
-			.map(v -> new IBillingMatch(v.getCode(), v.getAmount(), v.getPrimaryScale(),
+			.map(v -> new IBillingMatch(v.getBillable().getId(), v.getAmount(), v.getPrimaryScale(),
 				v.getSecondaryScale(), v.getPoints(), v.getPrice(), v.isDeleted()))
 			.collect(Collectors.toList());
 		

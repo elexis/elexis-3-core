@@ -1,7 +1,9 @@
 package ch.elexis.core.services;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -13,12 +15,16 @@ import ch.elexis.core.ac.AccessControlDefaults;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBillableOptifier;
 import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.IBillingSystemFactor;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.InvoiceState;
+import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
 
@@ -143,5 +149,17 @@ public class BillingService implements IBillingService {
 			ret.addMessage(msg.getSeverity(), msg.getText());
 		});
 		return ret;
+	}
+	
+	@Override
+	public Optional<IBillingSystemFactor> getBillingSystemFactor(String system, LocalDate date){
+		IQuery<IBillingSystemFactor> query =
+			CoreModelServiceHolder.get().getQuery(IBillingSystemFactor.class);
+		query.and(ModelPackage.Literals.IBILLING_SYSTEM_FACTOR__SYSTEM, COMPARATOR.EQUALS, system);
+		query.and(ModelPackage.Literals.IBILLING_SYSTEM_FACTOR__VALID_FROM,
+			COMPARATOR.LESS_OR_EQUAL, date);
+		query.and(ModelPackage.Literals.IBILLING_SYSTEM_FACTOR__VALID_TO,
+			COMPARATOR.GREATER_OR_EQUAL, date);
+		return query.executeSingleResult();
 	}
 }
