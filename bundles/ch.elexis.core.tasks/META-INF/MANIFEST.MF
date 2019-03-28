@@ -15,9 +15,8 @@ Export-Package: ch.elexis.core.tasks,
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  ch.elexis.core;visibility:=reexport,
- com.google.code.gson,
  ch.elexis.core.jpa.entities;bundle-version="1.0.0",
- org.apache.commons.io;bundle-version="2.5.0"
+ com.google.code.gson
 Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/ch.elexis.core.tasks.internal.service.TaskServiceImpl.xml,
  OSGI-INF/ch.elexis.core.tasks.internal.service.RunnableWithContextFactoryImpl.xml,

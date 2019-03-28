@@ -31,7 +31,6 @@ public class MessageTest extends AbstractTest {
 		message.setMessageText(
 			"That makes me angry, and when Dr. Evil gets angry Mr. Bigglesworth gets upset. And when Mr. Bigglesworth gets upset, people DIE!");
 		coreModelService.save(message);
-		coreModelService.save(message);
 		
 		coreModelService.remove(message);
 	}
