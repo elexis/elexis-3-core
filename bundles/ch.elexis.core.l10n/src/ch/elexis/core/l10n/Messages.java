@@ -247,6 +247,7 @@ public class Messages extends NLS {
 	public static String RnActions_stornoActionTooltip;
 	public static String RnActions_sum;
 	public static String RnActions_transferMoneyCaption;
+	public static String RnActions_stornoActionNotPossibleText;
 	public static String RnContentProvider_collectInvoices;
 	public static String RnContentProvider_databseRequest;
 	public static String RnContentProvider_errorRetriveingBillds;
