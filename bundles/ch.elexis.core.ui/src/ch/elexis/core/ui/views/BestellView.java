@@ -235,15 +235,8 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 				}
 				
 				for (StockEntry se : stockEntriesToOrder) {
-					int current = se.getCurrentStock();
-					int max = se.getMaximumStock();
-					if (max == 0) {
-						max = se.getMinimumStock();
-					}
-					int toOrder = max - current;
-					
 					actBestellung.addBestellungEntry(se.getArticle(), se.getStock(),
-						se.getProvider(), toOrder);
+						se.getProvider(), 1);
 				}
 				
 				tv.refresh();
