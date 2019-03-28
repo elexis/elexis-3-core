@@ -157,6 +157,7 @@ public class TaskServiceImpl implements ITaskService {
 			task.getRunContext().putAll(runContext);
 		}
 		try {
+			// TODO if taskdescriptor=singleton then per Runnable.class a SingleExecutor
 			executorService.execute((Runnable) task);
 			runningTasks.add(task);
 		} catch (RejectedExecutionException re) {

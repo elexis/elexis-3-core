@@ -1,12 +1,23 @@
 package ch.elexis.core.model.tasks;
 
 public class TaskException extends Exception {
-	
+	/**
+	 * The task service was rejecting the execution of this task
+	 */
 	public static final int EXECUTION_REJECTED = 1;
+	/**
+	 * The runnable's id is invalid
+	 */
 	public static final int RWC_INVALID_ID = 2;
+	/**
+	 * The task service could not instantiate the runnable
+	 */
 	public static final int RWC_NO_INSTANCE_FOUND = 3;
 	public static final int PERSISTENCE_ERROR = 4;
 	public static final int PARAMETERS_MISSING = 5;
+	/**
+	 * An error occured during execution of this task, please see the message for further details
+	 */
 	public static final int EXECUTION_ERROR = 6;
 	public static final int TRIGGER_REGISTER_ERROR = 7;
 	public static final int TRIGGER_NOT_AVAILABLE = 8;
@@ -15,9 +26,13 @@ public class TaskException extends Exception {
 	
 	private final int exceptionCode;
 	
-	public TaskException(int exceptionCode, Throwable re){
-		super(re);
+	public TaskException(int exceptionCode, String message, Throwable re){
+		super(message, re);
 		this.exceptionCode = exceptionCode;
+	}
+	
+	public TaskException(int exceptionCode, Throwable re){
+		this(exceptionCode, null, re);
 	}
 	
 	public int getExceptionCode(){

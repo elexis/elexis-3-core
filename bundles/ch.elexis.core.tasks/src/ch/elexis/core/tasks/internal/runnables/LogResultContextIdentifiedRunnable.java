@@ -25,5 +25,16 @@ public class LogResultContextIdentifiedRunnable implements IIdentifiedRunnable {
 		
 		return Collections.emptyMap();
 	}
+
+	@Override
+	public String getLocalizedDescription(){
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Map<String, Serializable> getDefaultRunContext(){
+		return Collections.emptyMap();
+	}
 	
 }
