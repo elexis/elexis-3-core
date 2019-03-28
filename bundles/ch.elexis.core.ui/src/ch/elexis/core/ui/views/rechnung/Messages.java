@@ -179,6 +179,7 @@ public class Messages {
 	public static String RnActions_stornoActionTooltip = ch.elexis.core.l10n.Messages.RnActions_stornoActionTooltip;
 	public static String RnActions_sum = ch.elexis.core.l10n.Messages.RnActions_sum;
 	public static String RnActions_transferMoneyCaption = ch.elexis.core.l10n.Messages.RnActions_transferMoneyCaption;
+	public static String RnActions_stornoActionNotPossibleText = ch.elexis.core.l10n.Messages.RnActions_stornoActionNotPossibleText;
 	public static String RnContentProvider_collectInvoices = ch.elexis.core.l10n.Messages.RnContentProvider_collectInvoices;
 	public static String RnContentProvider_databseRequest = ch.elexis.core.l10n.Messages.RnContentProvider_databseRequest;
 	public static String RnContentProvider_errorRetriveingBillds = ch.elexis.core.l10n.Messages.RnContentProvider_errorRetriveingBillds;
