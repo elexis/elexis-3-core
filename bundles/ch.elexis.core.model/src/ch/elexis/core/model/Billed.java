@@ -3,7 +3,9 @@ package ch.elexis.core.model;
 import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.entities.Behandlung;
+import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.entities.Verrechnet;
+import ch.elexis.core.jpa.entities.VerrechnetCopy;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
@@ -236,5 +238,43 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 			return 1.0;
 		}
 		return ((double) getSecondaryScale()) / 100.0;
+	}
+	
+	@Override
+	public IContact getBiller(){
+		return ModelUtil.getAdapter(getEntity().getUser(), IContact.class);
+	}
+	
+	@Override
+	public void setBiller(IContact value){
+		if (value instanceof AbstractIdDeleteModelAdapter) {
+			getEntity().setUser((Kontakt) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
+		} else if (value == null) {
+			getEntity().setUser(null);
+		}
+	}
+	
+	@Override
+	public void copy(IInvoiceBilled to){
+		if (to instanceof AbstractIdDeleteModelAdapter) {
+			// IInvoiceBilled do not support set operations, so copy properties of the entities
+			@SuppressWarnings("unchecked")
+			VerrechnetCopy toEntity =
+				((AbstractIdDeleteModelAdapter<VerrechnetCopy>) to).getEntity();
+			toEntity.setKlasse(getEntity().getKlasse());
+			toEntity.setLeistungenCode(getEntity().getLeistungenCode());
+			toEntity.setLeistungenText(getEntity().getLeistungenText());
+			toEntity.setZahl(getEntity().getZahl());
+			toEntity.setEk_kosten(getEntity().getEk_kosten());
+			toEntity.setVk_tp(getEntity().getVk_tp());
+			toEntity.setVk_scale(getEntity().getVk_scale());
+			toEntity.setVk_preis(getEntity().getVk_preis());
+			toEntity.setScale(getEntity().getScale());
+			toEntity.setScale2(getEntity().getScale2());
+			
+			toEntity.setBehandlung(getEntity().getBehandlung());
+			toEntity.setExtInfo(getEntity().getExtInfo());
+			toEntity.setUser(getEntity().getUser());
+		}
 	}
 }

@@ -661,7 +661,6 @@
 		</createIndex>
 	</changeSet>
 
-
 	<changeSet author="marco" id="manual_table_TASKDESCRIPTOR">
 		<createTable tableName="TASKDESCRIPTOR">
 			<column name="ID" type="VARCHAR(25)">
@@ -684,4 +683,258 @@
 		</createTable>
 	</changeSet>
 
+    <changeSet author="thomas (generated)" id="1527175239251-67">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="TARMED" />
+			</not>
+		</preConditions>
+        <createTable tableName="TARMED">
+            <column name="ID" type="VARCHAR(32)"/>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="PARENT" type="VARCHAR(32)"/>
+            <column name="DIGNIQUANTI" type="CHAR(5)"/>
+            <column name="DIGNIQUALI" type="CHAR(4)"/>
+            <column name="SPARTE" type="CHAR(4)"/>
+            <column name="GUELTIGVON" type="CHAR(8)"/>
+            <column name="GUELTIGBIS" type="CHAR(8)"/>
+            <column name="NICKNAME" type="VARCHAR(25)"/>
+            <column name="TX255" type="VARCHAR(255)"/>
+            <column name="CODE" type="VARCHAR(25)"/>
+            <column name="LAW" type="VARCHAR(3)"/>
+            <column defaultValue="0" name="ISCHAPTER" type="CHAR(1)"/>
+        </createTable>
+        <insert tableName="TARMED">
+       		<column name="ID" value="Version"/>
+       		<column name="NICKNAME" value="1.3.0"/>
+    	</insert>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-68">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="TARMED_DATEN" />
+			</not>
+		</preConditions>
+        <createTable tableName="TARMED_DATEN">
+            <column name="PARAMETER" type="VARCHAR(80)"/>
+            <column name="DATUMVON" type="CHAR(8)"/>
+            <column name="DATUMBIS" type="CHAR(8)"/>
+            <column name="WERT" type="VARCHAR(10)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-69">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="TARMED_DEFINITIONEN" />
+			</not>
+		</preConditions>
+        <createTable tableName="TARMED_DEFINITIONEN">
+            <column name="SPALTE" type="VARCHAR(20)"/>
+            <column name="KUERZEL" type="VARCHAR(5)"/>
+            <column name="TITEL" type="VARCHAR(255)"/>
+            <column name="ID" type="VARCHAR(25)"/>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="LAW" type="VARCHAR(3)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-70">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="TARMED_EXTENSION" />
+			</not>
+		</preConditions>
+        <createTable tableName="TARMED_EXTENSION">
+            <column name="CODE" type="VARCHAR(32)"/>
+            <column name="LIMITS" type="BLOB"/>
+            <column name="MED_INTERPRET" type="CLOB"/>
+            <column name="TECH_INTERPRET" type="CLOB"/>
+            <column name="ID" type="VARCHAR(25)"/>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-71">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="TARMED_KUMULATION" />
+			</not>
+		</preConditions>
+        <createTable tableName="TARMED_KUMULATION">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_2B"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="MASTERCODE" type="VARCHAR(25)"/>
+            <column name="MASTERART" type="CHAR(1)"/>
+            <column name="SLAVECODE" type="VARCHAR(25)"/>
+            <column name="SLAVEART" type="CHAR(1)"/>
+            <column name="TYP" type="CHAR(1)"/>
+            <column name="VIEW" type="CHAR(1)"/>
+            <column name="VALIDSIDE" type="CHAR(1)"/>
+            <column name="VALIDFROM" type="CHAR(10)"/>
+            <column name="VALIDTO" type="CHAR(10)"/>
+            <column name="LAW" type="VARCHAR(3)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Marco" id="1538728723000-1">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="TARMED_GROUP" />
+			</not>
+		</preConditions>
+    	<createTable tableName="TARMED_GROUP">
+    		<column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_9F"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="GROUPNAME" type="VARCHAR(32)"/>
+            <column name="SERVICES" type="CLOB"/>
+            <column name="LAW" type="VARCHAR(3)"/>
+            <column name="VALIDFROM" type="CHAR(8)"/>
+            <column name="VALIDTO" type="CHAR(8)"/>
+    	</createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-172">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="TARMED2" />
+			</not>
+		</preConditions>
+        <createIndex indexName="TARMED2" tableName="TARMED">
+            <column name="PARENT"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-173">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="TARMED3" />
+			</not>
+		</preConditions>
+        <createIndex indexName="TARMED3" tableName="TARMED_DEFINITIONEN">
+            <column name="SPALTE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-174">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="TARMED4" />
+			</not>
+		</preConditions>
+        <createIndex indexName="TARMED4" tableName="TARMED_EXTENSION">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-175">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="TARMED5" />
+			</not>
+		</preConditions>
+        <createIndex indexName="TARMED5" tableName="TARMED_DATEN">
+            <column name="PARAMETER"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-176">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="TARMEDDEFINITIONEN" />
+			</not>
+		</preConditions>
+        <createIndex indexName="TARMEDDEFINITIONEN" tableName="TARMED_DEFINITIONEN">
+            <column name="KUERZEL"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-177">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="TARMEDDEFINITIONEN_IDX1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="TARMEDDEFINITIONEN_IDX1" tableName="TARMED_DEFINITIONEN">
+            <column name="LAW"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-178">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="TARMEDKUMULATION" />
+			</not>
+		</preConditions>
+        <createIndex indexName="TARMEDKUMULATION" tableName="TARMED_KUMULATION">
+            <column name="MASTERCODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-179">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="TARMEDKUMULATION_IDX1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="TARMEDKUMULATION_IDX1" tableName="TARMED_KUMULATION">
+            <column name="LAW"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-180">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="TARMED_ID" />
+			</not>
+		</preConditions>
+        <createIndex indexName="TARMED_ID" tableName="TARMED">
+            <column name="ID"/>
+        </createIndex>
+    </changeSet>
+    
+    <changeSet author="thomas (generated)" id="manual_table_VERRECHNETCOPY">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="VERRECHNETCOPY" />
+			</not>
+		</preConditions>
+        <createTable tableName="VERRECHNETCOPY">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_VERRECHNETCOPY_ID"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="RECHNUNGID" type="VARCHAR(25)"/>
+            <column name="BEHANDLUNGID" type="VARCHAR(25)"/>
+            <column name="LEISTG_TXT" type="VARCHAR(255)"/>
+            <column name="LEISTG_CODE" type="VARCHAR(25)"/>
+            <column name="KLASSE" type="VARCHAR(80)"/>
+            <column name="ZAHL" type="CHAR(3)"/>
+            <column name="EK_KOSTEN" type="CHAR(8)"/>
+            <column name="VK_TP" type="VARCHAR(8)"/>
+            <column name="VK_SCALE" type="VARCHAR(8)"/>
+            <column name="VK_PREIS" type="CHAR(8)"/>
+            <column defaultValue="100" name="SCALE" type="CHAR(4)"/>
+            <column defaultValue="100" name="SCALE2" type="CHAR(4)"/>
+            <column name="DETAIL" type="BLOB"/>
+            <column name="USERID" type="VARCHAR(25)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="manual_idx_VERRECHNETCOPY1">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="VERRECHNETCOPY1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="VERRECHNETCOPY1" tableName="VERRECHNETCOPY">
+            <column name="RECHNUNGID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="manual_idx_VERRECHNETCOPY2">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="VERRECHNETCOPY2" />
+			</not>
+		</preConditions>
+        <createIndex indexName="VERRECHNETCOPY2" tableName="VERRECHNETCOPY">
+            <column name="BEHANDLUNGID"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>

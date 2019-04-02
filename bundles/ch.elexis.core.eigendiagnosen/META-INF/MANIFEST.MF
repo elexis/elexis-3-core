@@ -17,4 +17,5 @@ Export-Package: ch.elexis.core.eigendiagnosen
 Bundle-ActivationPolicy: lazy
 Import-Package: org.osgi.service.event
 Service-Component: OSGI-INF/ch.elexis.core.eigendiagnosen.model.service.DiagnosisModelService.xml,
- OSGI-INF/ch.elexis.core.eigendiagnosen.model.service.ModelUtil.xml
+ OSGI-INF/ch.elexis.core.eigendiagnosen.model.service.ModelUtil.xml,
+ OSGI-INF/ch.elexis.core.eigendiagnosen.model.service.CodeElementContribution.xml

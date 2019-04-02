@@ -206,7 +206,7 @@ public class CoreModelServiceTest {
 			public void run(){
 				int affected = modelService
 					.executeNativeUpdate("UPDATE userconfig SET value = 'test value', lastupdate = "
-						+ 1 + " WHERE param = 'test key 1'");
+						+ 1 + " WHERE param = 'test key 1'", false);
 				assertEquals(1, affected);
 			}
 		});
@@ -234,7 +234,7 @@ public class CoreModelServiceTest {
 			executor.execute(new Runnable() {
 				@Override
 				public void run(){
-					int affected = modelService.executeNativeUpdate(updateStatement);
+					int affected = modelService.executeNativeUpdate(updateStatement, false);
 					assertEquals(1, affected);
 				}
 			});

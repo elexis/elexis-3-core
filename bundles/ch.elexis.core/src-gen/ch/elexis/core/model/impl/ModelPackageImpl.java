@@ -3056,6 +3056,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EReference getIBilled_Biller() {
+		return (EReference)iBilledEClass.getEStructuralFeatures().get(12);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getIInvoiceBilled() {
 		return iInvoiceBilledEClass;
 	}
@@ -4656,6 +4666,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iBilledEClass, IBILLED__SECONDARY_SCALE);
 		createEAttribute(iBilledEClass, IBILLED__CODE);
 		createEAttribute(iBilledEClass, IBILLED__TOTAL);
+		createEReference(iBilledEClass, IBILLED__BILLER);
 
 		iInvoiceBilledEClass = createEClass(IINVOICE_BILLED);
 		createEReference(iInvoiceBilledEClass, IINVOICE_BILLED__INVOICE);
@@ -5407,6 +5418,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIBilled_SecondaryScale(), ecorePackage.getEInt(), "secondaryScale", null, 0, 1, IBilled.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIBilled_Code(), ecorePackage.getEString(), "code", null, 0, 1, IBilled.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIBilled_Total(), theTypesPackage.getMoney(), "total", null, 0, 1, IBilled.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIBilled_Biller(), this.getIContact(), null, "biller", null, 0, 1, IBilled.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		addEOperation(iBilledEClass, ecorePackage.getEBoolean(), "isChangedPrice", 0, 1, IS_UNIQUE, IS_ORDERED);
 
@@ -5415,6 +5427,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEOperation(iBilledEClass, ecorePackage.getEDouble(), "getPrimaryScaleFactor", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		addEOperation(iBilledEClass, ecorePackage.getEDouble(), "getSecondaryScaleFactor", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iBilledEClass, null, "copy", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIInvoiceBilled(), "to", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iInvoiceBilledEClass, IInvoiceBilled.class, "IInvoiceBilled", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getIInvoiceBilled_Invoice(), this.getIInvoice(), null, "invoice", null, 0, 1, IInvoiceBilled.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

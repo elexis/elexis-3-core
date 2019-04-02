@@ -412,10 +412,14 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBilled/secondaryScale"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBilled/code"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBilled/total"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IBilled/biller"/>
       <genOperations ecoreOperation="model.ecore#//IBilled/isChangedPrice"/>
       <genOperations ecoreOperation="model.ecore#//IBilled/isNonIntegerAmount"/>
       <genOperations ecoreOperation="model.ecore#//IBilled/getPrimaryScaleFactor"/>
       <genOperations ecoreOperation="model.ecore#//IBilled/getSecondaryScaleFactor"/>
+      <genOperations ecoreOperation="model.ecore#//IBilled/copy">
+        <genParameters ecoreParameter="model.ecore#//IBilled/copy/to"/>
+      </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IInvoiceBilled">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IInvoiceBilled/invoice"/>

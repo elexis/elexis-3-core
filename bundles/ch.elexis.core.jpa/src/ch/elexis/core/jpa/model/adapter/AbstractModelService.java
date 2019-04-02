@@ -282,7 +282,7 @@ public abstract class AbstractModelService implements IModelService {
 	}
 	
 	@Override
-	public int executeNativeUpdate(String sql){
+	public int executeNativeUpdate(String sql, boolean invalidateCache){
 		EntityManager em = getEntityManager(false);
 		try {
 			em.getTransaction().begin();
@@ -291,7 +291,9 @@ public abstract class AbstractModelService implements IModelService {
 			return affected;
 		} finally {
 			closeEntityManager(em);
-			clearCache();
+			if (invalidateCache) {
+				clearCache();
+			}
 		}
 	}
 	

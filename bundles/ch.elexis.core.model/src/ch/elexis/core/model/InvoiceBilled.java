@@ -2,6 +2,7 @@ package ch.elexis.core.model;
 
 import org.apache.commons.lang3.StringUtils;
 
+import ch.elexis.core.jpa.entities.Behandlung;
 import ch.elexis.core.jpa.entities.VerrechnetCopy;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
@@ -50,7 +51,11 @@ public class InvoiceBilled extends AbstractIdDeleteModelAdapter<VerrechnetCopy>
 	
 	@Override
 	public void setEncounter(IEncounter value){
-		throw new UnsupportedOperationException();
+		if (value instanceof AbstractIdModelAdapter) {
+			getEntity().setBehandlung(((AbstractIdModelAdapter<Behandlung>) value).getEntity());
+		} else if (value == null) {
+			getEntity().setBehandlung(null);
+		}
 	}
 	
 	@Override
@@ -216,5 +221,20 @@ public class InvoiceBilled extends AbstractIdDeleteModelAdapter<VerrechnetCopy>
 			return 1.0;
 		}
 		return ((double) getSecondaryScale()) / 100.0;
+	}
+	
+	@Override
+	public IContact getBiller(){
+		return ModelUtil.getAdapter(getEntity().getUser(), IContact.class);
+	}
+	
+	@Override
+	public void setBiller(IContact value){
+		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public void copy(IInvoiceBilled to){
+		throw new UnsupportedOperationException();
 	}
 }

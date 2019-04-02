@@ -117,6 +117,9 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 
 	@Override
 	public IContact getGuarantor(){
+		if (getEntity().getGarantKontakt() == null) {
+			return getPatient();
+		}
 		return ModelUtil.getAdapter(getEntity().getGarantKontakt(), IContact.class);
 	}
 	

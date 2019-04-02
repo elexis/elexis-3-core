@@ -88,7 +88,7 @@ public class Invoice extends AbstractEntityWithId
 	private List<VerrechnetCopy> invoiceBilled = new ArrayList<>();
 	
 	@OneToMany(fetch = FetchType.LAZY)
-	@JoinColumn(name = "rechnungid")
+	@JoinColumn(name = "rechnungsid")
 	private List<Behandlung> encounters = new ArrayList<>();
 	
 	public String getNumber() {

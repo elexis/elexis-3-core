@@ -535,13 +535,6 @@
       </handler>    
    </extension>
    <extension
-            point="ch.elexis.core.data.VerrechnungscodeAdjuster">
-      <adjuster
-            class="ch.elexis.core.ui.medication.billing.PrescriptionVerrechnetAdjuster"
-            id="ch.elexis.core.ui.medication.adjuster.prescription">
-      </adjuster>
-   </extension>
-   <extension
          point="org.eclipse.ui.preferencePages">
       <page
             category="ch.elexis.preferences.UserPreferences"

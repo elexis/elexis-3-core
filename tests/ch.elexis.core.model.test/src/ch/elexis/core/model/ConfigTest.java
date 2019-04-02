@@ -81,7 +81,7 @@ public class ConfigTest  extends AbstractTest {
 			public void run(){
 				int affected = coreModelService
 					.executeNativeUpdate("UPDATE config SET wert = 'test key', lastupdate = "
-						+ 1 + " WHERE param = 'test key 1'");
+						+ 1 + " WHERE param = 'test key 1'", false);
 				assertEquals(1, affected);
 			}
 		});

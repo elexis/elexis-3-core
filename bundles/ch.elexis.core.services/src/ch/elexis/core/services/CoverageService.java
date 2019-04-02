@@ -97,7 +97,7 @@ public class CoverageService implements ICoverageService {
 	@Override
 	public IContact getRequiredContact(ICoverage coverage, String name){
 		String id = (String) coverage.getExtInfo(name);
-		if (id.equals(StringConstants.EMPTY)) {
+		if (StringUtils.isBlank(id)) {
 			return null;
 		}
 		return CoreModelServiceHolder.get().load(id, IContact.class).orElse(null);

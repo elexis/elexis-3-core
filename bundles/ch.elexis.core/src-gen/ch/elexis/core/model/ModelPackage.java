@@ -4573,13 +4573,22 @@ public interface ModelPackage extends EPackage {
 	int IBILLED__TOTAL = IDENTIFIABLE_FEATURE_COUNT + 12;
 
 	/**
+	 * The feature id for the '<em><b>Biller</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBILLED__BILLER = IDENTIFIABLE_FEATURE_COUNT + 13;
+
+	/**
 	 * The number of structural features of the '<em>IBilled</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IBILLED_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 13;
+	int IBILLED_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 14;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IInvoiceBilled <em>IInvoice Billed</em>}' class.
@@ -4707,6 +4716,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IINVOICE_BILLED__TOTAL = IBILLED__TOTAL;
+
+	/**
+	 * The feature id for the '<em><b>Biller</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILLED__BILLER = IBILLED__BILLER;
 
 	/**
 	 * The feature id for the '<em><b>Invoice</b></em>' reference.
@@ -8894,6 +8912,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIBilled_Total();
 
 	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IBilled#getBiller <em>Biller</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Biller</em>'.
+	 * @see ch.elexis.core.model.IBilled#getBiller()
+	 * @see #getIBilled()
+	 * @generated
+	 */
+	EReference getIBilled_Biller();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IInvoiceBilled <em>IInvoice Billed</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12359,6 +12388,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IBILLED__TOTAL = eINSTANCE.getIBilled_Total();
+
+		/**
+		 * The meta object literal for the '<em><b>Biller</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IBILLED__BILLER = eINSTANCE.getIBilled_Biller();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IInvoiceBilled <em>IInvoice Billed</em>}' class.

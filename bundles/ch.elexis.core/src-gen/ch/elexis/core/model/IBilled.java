@@ -34,6 +34,7 @@ import ch.rgw.tools.Money;
  *   <li>{@link ch.elexis.core.model.IBilled#getSecondaryScale <em>Secondary Scale</em>}</li>
  *   <li>{@link ch.elexis.core.model.IBilled#getCode <em>Code</em>}</li>
  *   <li>{@link ch.elexis.core.model.IBilled#getTotal <em>Total</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IBilled#getBiller <em>Biller</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIBilled()
@@ -350,6 +351,32 @@ public interface IBilled extends Identifiable, Deleteable, WithExtInfo {
 	Money getTotal();
 
 	/**
+	 * Returns the value of the '<em><b>Biller</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Biller</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Biller</em>' reference.
+	 * @see #setBiller(IContact)
+	 * @see ch.elexis.core.model.ModelPackage#getIBilled_Biller()
+	 * @model
+	 * @generated
+	 */
+	IContact getBiller();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IBilled#getBiller <em>Biller</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Biller</em>' reference.
+	 * @see #getBiller()
+	 * @generated
+	 */
+	void setBiller(IContact value);
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * Test if the price was changed manually
@@ -386,4 +413,12 @@ public interface IBilled extends Identifiable, Deleteable, WithExtInfo {
 	 * @generated
 	 */
 	double getSecondaryScaleFactor();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	void copy(IInvoiceBilled to);
 } // IBilled

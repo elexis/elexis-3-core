@@ -229,7 +229,20 @@ public interface IModelService {
 	 * @param sql
 	 * @return
 	 */
-	public int executeNativeUpdate(String sql);
+	default public int executeNativeUpdate(String sql){
+		return executeNativeUpdate(sql, true);
+	}
+	
+	/**
+	 * Execute the native update and return the number of affected rows. Via the invalidateCache
+	 * parameter the clearing the cache of this {@link IModelService} can be skipped. <b>Performance
+	 * implications if cache is cleared</b>.
+	 * 
+	 * @param sql
+	 * @param invalidateCache
+	 * @return
+	 */
+	public int executeNativeUpdate(String sql, boolean invalidateCache);
 	
 	/**
 	 * Refresh the entity of the {@link Identifiable} with data from the L2 cache or if not loaded

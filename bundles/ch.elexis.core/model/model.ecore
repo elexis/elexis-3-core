@@ -601,6 +601,9 @@
     <eOperations name="isNonIntegerAmount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eOperations name="getPrimaryScaleFactor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
     <eOperations name="getSecondaryScaleFactor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eOperations name="copy">
+      <eParameters name="to" eType="#//IInvoiceBilled"/>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="billable" eType="#//IBillable"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="encounter" eType="#//IEncounter"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="amount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
@@ -615,6 +618,7 @@
         changeable="false"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="total" eType="ecore:EDataType types.ecore#//Money"
         changeable="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="biller" eType="#//IContact"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IInvoiceBilled" abstract="true" interface="true"
       eSuperTypes="#//IBilled">

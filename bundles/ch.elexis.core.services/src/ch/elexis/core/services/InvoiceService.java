@@ -190,8 +190,7 @@ public class InvoiceService implements IInvoiceService {
 			List<IBilled> encounterBilled = encounter.getBilled();
 			for (IBilled billed : encounterBilled) {
 				IInvoiceBilled invoiceBilled =
-					new IInvoiceBilledBuilder(CoreModelServiceHolder.get(), billed).build();
-				invoiceBilled.setInvoice(ret);
+					new IInvoiceBilledBuilder(CoreModelServiceHolder.get(), ret, billed).build();
 				newInvoiceBilled.add(invoiceBilled);
 			}
 		}

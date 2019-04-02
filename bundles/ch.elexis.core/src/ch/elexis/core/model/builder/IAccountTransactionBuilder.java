@@ -15,6 +15,7 @@ public class IAccountTransactionBuilder extends AbstractBuilder<IAccountTransact
 		IPatient patient, Money amount, LocalDate date, String remark){
 		super(modelService);
 		
+		object = modelService.create(IAccountTransaction.class);
 		object.setInvoice(invoice);
 		object.setPatient(patient);
 		object.setAmount(amount);
@@ -25,6 +26,7 @@ public class IAccountTransactionBuilder extends AbstractBuilder<IAccountTransact
 	public IAccountTransactionBuilder(IModelService modelService, IPayment payment){
 		super(modelService);
 		
+		object = modelService.create(IAccountTransaction.class);
 		object.setInvoice(payment.getInvoice());
 		object.setPatient(payment.getInvoice().getCoverage().getPatient());
 		object.setAmount(payment.getAmount());

@@ -53,8 +53,8 @@ public class Behandlung extends AbstractEntityWithId implements EntityWithId, En
 	@JoinColumn(name = "mandantId")
 	private Kontakt mandant;
 
-	@OneToOne
-	@JoinColumn(name = "RechnungsID")
+	@ManyToOne
+	@JoinColumn(name = "rechnungsid")
 	private Invoice invoice;
 
 	@Column(length = 8)
