@@ -109,4 +109,9 @@ public class CoreModelService extends AbstractModelService
 		return new CoreQuery<>(clazz, refreshCache,
 			(EntityManager) entityManager.getEntityManager(), includeDeleted);
 	}
+	
+	@Override
+	public void clearCache(){
+		entityManager.clearCache();
+	}
 }

@@ -138,4 +138,9 @@ public class FindingsModelService extends AbstractModelService
 	public static <T extends EntityWithId> T getDBObject(Object adapter, Class<T> clazz){
 		return ((AbstractIdModelAdapter<T>) adapter).getEntity();
 	}
+	
+	@Override
+	public void clearCache(){
+		entityManager.clearCache();
+	}
 }

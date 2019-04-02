@@ -108,4 +108,9 @@ public class DiagnosisModelService extends AbstractModelService
 		}
 		return ee;
 	}
+	
+	@Override
+	public void clearCache(){
+		entityManager.clearCache();
+	}
 }

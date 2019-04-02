@@ -144,6 +144,11 @@ public class ElexisEntityManger implements IElexisEntityManager {
 		((EntityManager) em).close();
 	}
 	
+	@Override
+	public void clearCache(){
+		factory.getCache().evictAll();
+	}
+	
 	private class EntityManagerCollector implements Runnable {
 		@Override
 		public void run(){

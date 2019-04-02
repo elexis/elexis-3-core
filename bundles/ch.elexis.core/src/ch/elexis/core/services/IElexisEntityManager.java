@@ -40,4 +40,10 @@ public interface IElexisEntityManager {
 	 * @return true if script execution was successful
 	 */
 	public boolean executeSQLScript(String changeId, String sqlScript);
+	
+	/**
+	 * Clear the whole cache.
+	 * 
+	 */
+	void clearCache();
 }

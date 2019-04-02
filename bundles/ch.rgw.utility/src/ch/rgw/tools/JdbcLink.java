@@ -606,6 +606,9 @@ public class JdbcLink {
 	 */
 	public synchronized void disconnect(){
 		try {
+			if (keepAliveTimer != null) {
+				keepAliveTimer.cancel();
+			}
 			if (preparedStatementConnection != null) {
 				preparedStatementConnection.close();
 			}

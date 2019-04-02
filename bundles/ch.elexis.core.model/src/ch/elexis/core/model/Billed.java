@@ -1,7 +1,5 @@
 package ch.elexis.core.model;
 
-import java.util.Optional;
-
 import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.entities.Behandlung;
@@ -40,14 +38,13 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 	
 	@Override
 	public void setBillable(IBillable value){
-		Optional<String> storeToString = StoreToStringServiceHolder.get().storeToString(value);
-		storeToString.ifPresent(s -> {
-			String[] split = s.split(IStoreToStringContribution.DOUBLECOLON);
-			if (split.length > 1) {
-				getEntity().setKlasse(split[0]);
-				getEntity().setLeistungenCode(split[1]);
-			}
-		});
+		String storeToString = StoreToStringServiceHolder.get().storeToString(value).orElseThrow(
+			() -> new IllegalStateException("Could not get store to string for [" + value + "]"));
+		String[] split = storeToString.split(IStoreToStringContribution.DOUBLECOLON);
+		if (split.length > 1) {
+			getEntity().setKlasse(split[0]);
+			getEntity().setLeistungenCode(split[1]);
+		}
 	}
 	
 	@Override

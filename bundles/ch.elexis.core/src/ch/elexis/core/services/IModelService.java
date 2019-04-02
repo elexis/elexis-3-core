@@ -223,7 +223,8 @@ public interface IModelService {
 	public Stream<?> executeNativeQuery(String sql);
 	
 	/**
-	 * Execute the native update and return the number of affected rows.
+	 * Execute the native update and return the number of affected rows. After the update is execute
+	 * the cache of this {@link IModelService} is invalidated. <b>Performance implications</b>.
 	 * 
 	 * @param sql
 	 * @return
@@ -259,4 +260,10 @@ public interface IModelService {
 	 * @return
 	 */
 	public void setEntityProperty(String propertyName, Object value, Identifiable identifiable);
+	
+	/**
+	 * Clear the whole cache.
+	 * 
+	 */
+	public void clearCache();
 }

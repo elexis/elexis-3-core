@@ -291,6 +291,7 @@ public abstract class AbstractModelService implements IModelService {
 			return affected;
 		} finally {
 			closeEntityManager(em);
+			clearCache();
 		}
 	}
 	
