@@ -13,6 +13,17 @@ public interface IContext {
 	String ACTIVE_USERCONTACT = "ch.elexis.core.services.icontext.active.usercontact";
 	String ACTIVE_PATIENT = "ch.elexis.core.services.icontext.active.patient";
 	String ACTIVE_MANDATOR = "ch.elexis.core.services.icontext.active.mandator";
+	String STATION_IDENTIFIER = "ch.elexis.core.services.icontext.stationidentifier";
+	
+	/**
+	 * Get a string identifying this station (do not use the $ sign within the id).<br>
+	 * If multiple instances are run on a station, the stationId has to append the instance number
+	 * with <code>$</code>.<br>
+	 * For example: first instance <code>stationId</code>, second instance <code>stationId$2</code>
+	 * 
+	 * @return
+	 */
+	public String getStationIdentifier();
 	
 	/**
 	 * Get the active {@link IUser} from the context.

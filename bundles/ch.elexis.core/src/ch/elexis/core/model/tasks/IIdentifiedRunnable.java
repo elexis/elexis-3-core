@@ -12,11 +12,18 @@ public interface IIdentifiedRunnable {
 		private RunContextParameter(){}
 		
 		/**
-		 * Run-Context parameter key: If the context should in any way transport a resource that
-		 * is representable as url. This can both mean a file resolvable url, or a http url. Usage
-		 * form is up to the implementation.
+		 * Run-Context parameter key: If the context should in any way transport a resource that is
+		 * representable as url. This can both mean a file resolvable url, or a http url. Usage form
+		 * is up to the implementation.
 		 */
 		public static final String STRING_URL = "url";
+		
+		/**
+		 * The reference id of a task descriptor, used to e.g. execute other tasks out of a running
+		 * task
+		 */
+		public static final String TASK_DESCRIPTOR_REFID = "taskDescriptorReferenceId";
+		
 		/**
 		 * Run-Context parameter value: Denotes that a value for the given key is missing (no
 		 * default applicable)and required for execution

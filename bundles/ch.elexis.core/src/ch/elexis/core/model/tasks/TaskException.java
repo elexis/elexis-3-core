@@ -31,11 +31,29 @@ public class TaskException extends Exception {
 		this.exceptionCode = exceptionCode;
 	}
 	
+	public TaskException(int exceptionCode, String message){
+		super(message);
+		this.exceptionCode = exceptionCode;
+	}
+	
 	public TaskException(int exceptionCode, Throwable re){
 		this(exceptionCode, null, re);
 	}
 	
+	public TaskException(int exceptionCode){
+		super();
+		this.exceptionCode = exceptionCode;
+	}
+	
 	public int getExceptionCode(){
 		return exceptionCode;
+	}
+	
+	public static final TaskException EXECUTION_ERROR(String message){
+		return new TaskException(EXECUTION_ERROR, message);
+	}
+	
+	public static final TaskException EXECUTION_ERROR(String message, Throwable throwable){
+		return new TaskException(EXECUTION_ERROR, message, throwable);
 	}
 }
