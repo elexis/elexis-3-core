@@ -10,6 +10,8 @@
  */
 package ch.elexis.core.tasks.model.util;
 
+import ch.elexis.core.model.Identifiable;
+
 import ch.elexis.core.tasks.model.*;
 
 import org.eclipse.emf.ecore.EObject;
@@ -77,6 +79,7 @@ public class ModelSwitch<T> extends Switch<T> {
 			case ModelPackage.ITASK_DESCRIPTOR: {
 				ITaskDescriptor iTaskDescriptor = (ITaskDescriptor)theEObject;
 				T result = caseITaskDescriptor(iTaskDescriptor);
+				if (result == null) result = caseIdentifiable(iTaskDescriptor);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -138,6 +141,21 @@ public class ModelSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseITaskService(ITaskService object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Identifiable</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Identifiable</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseIdentifiable(Identifiable object) {
 		return null;
 	}
 

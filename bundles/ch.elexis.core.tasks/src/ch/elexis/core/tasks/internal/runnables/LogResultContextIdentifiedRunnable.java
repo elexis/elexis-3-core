@@ -8,13 +8,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.slf4j.Logger;
 
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
-import ch.elexis.core.tasks.RunnableWithContextIdConstants;
+import ch.elexis.core.tasks.IdentifiedRunnableIdConstants;
 
 public class LogResultContextIdentifiedRunnable implements IIdentifiedRunnable {
 	
 	@Override
 	public String getId(){
-		return RunnableWithContextIdConstants.RUNNABLE_ID_LOGRESULTCONTEXT;
+		return IdentifiedRunnableIdConstants.LOGRESULTCONTEXT;
 	}
 	
 	@Override
@@ -25,13 +25,12 @@ public class LogResultContextIdentifiedRunnable implements IIdentifiedRunnable {
 		
 		return Collections.emptyMap();
 	}
-
+	
 	@Override
 	public String getLocalizedDescription(){
-		// TODO Auto-generated method stub
-		return null;
+		return "Logs (Level INFO) the provided run context values";
 	}
-
+	
 	@Override
 	public Map<String, Serializable> getDefaultRunContext(){
 		return Collections.emptyMap();

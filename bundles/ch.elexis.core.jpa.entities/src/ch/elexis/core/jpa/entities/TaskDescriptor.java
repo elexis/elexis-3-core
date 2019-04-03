@@ -59,7 +59,7 @@ public class TaskDescriptor extends AbstractEntityWithId
 	@Lob
 	protected String triggerParameters;
 	
-	@Column
+	@Column(length = 64)
 	protected String runner;
 	
 	@Column
@@ -176,5 +176,5 @@ public class TaskDescriptor extends AbstractEntityWithId
 	public void setNotificationType(int notificationType){
 		this.notificationType = notificationType;
 	}
-	
+
 }

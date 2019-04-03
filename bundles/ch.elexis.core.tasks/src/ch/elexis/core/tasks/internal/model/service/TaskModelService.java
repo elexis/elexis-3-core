@@ -53,5 +53,10 @@ public class TaskModelService extends AbstractModelService implements IModelServ
 	protected ElexisEvent getCreateEvent(Identifiable identifiable){
 		return null;
 	}
+
+	@Override
+	public void clearCache(){
+		this.entityManager.clearCache();
+	}
 	
 }

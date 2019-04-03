@@ -39,7 +39,7 @@ public class Task implements ITask, Runnable {
 		this.runContext = origin.getRunContext();
 		
 		logger = LoggerFactory.getLogger(
-			"Task [" + id + "] (" + origin.getRunnableWithContextId() + ") " + triggerType);
+			"Task [" + id + "] (" + origin.getIdentifiedRunnableId() + ") " + triggerType);
 		logger.info("state = {}, origin = {}, originReferenceId = {}", getState(), origin.getId(),
 			origin.getReferenceId());
 		if (logger.isDebugEnabled()) {
@@ -99,7 +99,7 @@ public class Task implements ITask, Runnable {
 	public void run(){
 		setState(TaskState.READY);
 		
-		String runnableWithContextId = origin.getRunnableWithContextId();
+		String runnableWithContextId = origin.getIdentifiedRunnableId();
 		
 		try {
 			IIdentifiedRunnable runnableWithContext =

@@ -10,6 +10,8 @@
  */
 package ch.elexis.core.tasks.model.util;
 
+import ch.elexis.core.model.Identifiable;
+
 import ch.elexis.core.tasks.model.*;
 
 import org.eclipse.emf.common.notify.Adapter;
@@ -88,6 +90,10 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createITaskServiceAdapter();
 			}
 			@Override
+			public Adapter caseIdentifiable(Identifiable object) {
+				return createIdentifiableAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -146,6 +152,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createITaskServiceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.Identifiable
+	 * @generated
+	 */
+	public Adapter createIdentifiableAdapter() {
 		return null;
 	}
 

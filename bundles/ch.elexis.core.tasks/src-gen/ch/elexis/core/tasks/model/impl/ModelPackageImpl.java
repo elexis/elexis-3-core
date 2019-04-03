@@ -256,7 +256,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getITaskDescriptor_RunnableWithContextId() {
+	public EAttribute getITaskDescriptor_IdentifiedRunnableId() {
 		return (EAttribute)iTaskDescriptorEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -308,26 +308,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	@Override
 	public EAttribute getITaskDescriptor_Singleton() {
 		return (EAttribute)iTaskDescriptorEClass.getEStructuralFeatures().get(10);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getITaskDescriptor__SetTriggerParameter__String_String() {
-		return iTaskDescriptorEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getITaskDescriptor__SetRunContextParameter__String_Serializable() {
-		return iTaskDescriptorEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -428,56 +408,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	@Override
 	public EClass getITaskService() {
 		return iTaskServiceEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getITaskService__CreateTaskDescriptor__IUser_IIdentifiedRunnable() {
-		return iTaskServiceEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getITaskService__Trigger__ITaskDescriptor_IProgressMonitor_TaskTriggerType_Map() {
-		return iTaskServiceEClass.getEOperations().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getITaskService__InstantiateRunnableById__String() {
-		return iTaskServiceEClass.getEOperations().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getITaskService__SaveTaskDescriptor__ITaskDescriptor() {
-		return iTaskServiceEClass.getEOperations().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getITaskService__SetActive__ITaskDescriptor_boolean() {
-		return iTaskServiceEClass.getEOperations().get(4);
 	}
 
 	/**
@@ -595,14 +525,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEReference(iTaskDescriptorEClass, ITASK_DESCRIPTOR__OWNER);
 		createEAttribute(iTaskDescriptorEClass, ITASK_DESCRIPTOR__OWNER_NOTIFICATION);
 		createEAttribute(iTaskDescriptorEClass, ITASK_DESCRIPTOR__ACTIVE);
-		createEAttribute(iTaskDescriptorEClass, ITASK_DESCRIPTOR__RUNNABLE_WITH_CONTEXT_ID);
+		createEAttribute(iTaskDescriptorEClass, ITASK_DESCRIPTOR__IDENTIFIED_RUNNABLE_ID);
 		createEAttribute(iTaskDescriptorEClass, ITASK_DESCRIPTOR__RUN_CONTEXT);
 		createEAttribute(iTaskDescriptorEClass, ITASK_DESCRIPTOR__TRIGGER_TYPE);
 		createEAttribute(iTaskDescriptorEClass, ITASK_DESCRIPTOR__TRIGGER_PARAMETERS);
 		createEAttribute(iTaskDescriptorEClass, ITASK_DESCRIPTOR__RUNNER);
 		createEAttribute(iTaskDescriptorEClass, ITASK_DESCRIPTOR__SINGLETON);
-		createEOperation(iTaskDescriptorEClass, ITASK_DESCRIPTOR___SET_TRIGGER_PARAMETER__STRING_STRING);
-		createEOperation(iTaskDescriptorEClass, ITASK_DESCRIPTOR___SET_RUN_CONTEXT_PARAMETER__STRING_SERIALIZABLE);
 
 		iTaskEClass = createEClass(ITASK);
 		createEAttribute(iTaskEClass, ITASK__ID);
@@ -615,11 +543,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iTaskEClass, ITASK__FINISHED);
 
 		iTaskServiceEClass = createEClass(ITASK_SERVICE);
-		createEOperation(iTaskServiceEClass, ITASK_SERVICE___CREATE_TASK_DESCRIPTOR__IUSER_IIDENTIFIEDRUNNABLE);
-		createEOperation(iTaskServiceEClass, ITASK_SERVICE___TRIGGER__ITASKDESCRIPTOR_IPROGRESSMONITOR_TASKTRIGGERTYPE_MAP);
-		createEOperation(iTaskServiceEClass, ITASK_SERVICE___INSTANTIATE_RUNNABLE_BY_ID__STRING);
-		createEOperation(iTaskServiceEClass, ITASK_SERVICE___SAVE_TASK_DESCRIPTOR__ITASKDESCRIPTOR);
-		createEOperation(iTaskServiceEClass, ITASK_SERVICE___SET_ACTIVE__ITASKDESCRIPTOR_BOOLEAN);
 
 		// Create enums
 		taskTriggerTypeEEnum = createEEnum(TASK_TRIGGER_TYPE);
@@ -659,21 +582,23 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		// Obtain other dependent packages
 		ch.elexis.core.model.ModelPackage theModelPackage_1 = (ch.elexis.core.model.ModelPackage)EPackage.Registry.INSTANCE.getEPackage(ch.elexis.core.model.ModelPackage.eNS_URI);
+		TypesPackage theTypesPackage = (TypesPackage)EPackage.Registry.INSTANCE.getEPackage(TypesPackage.eNS_URI);
 
 		// Create type parameters
 
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
+		iTaskDescriptorEClass.getESuperTypes().add(theModelPackage_1.getIdentifiable());
 
-		// Initialize classes, features, and operations; add parameters
+		// Initialize classes and features; add operations and parameters
 		initEClass(iTaskDescriptorEClass, ITaskDescriptor.class, "ITaskDescriptor", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getITaskDescriptor_Id(), ecorePackage.getEString(), "id", null, 1, 1, ITaskDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getITaskDescriptor_ReferenceId(), ecorePackage.getEString(), "referenceId", null, 0, 1, ITaskDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getITaskDescriptor_Owner(), theModelPackage_1.getIUser(), null, "owner", null, 1, 1, ITaskDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getITaskDescriptor_OwnerNotification(), this.getOwnerTaskNotification(), "ownerNotification", "0", 1, 1, ITaskDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getITaskDescriptor_Active(), ecorePackage.getEBoolean(), "active", "false", 1, 1, ITaskDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getITaskDescriptor_RunnableWithContextId(), ecorePackage.getEString(), "runnableWithContextId", null, 1, 1, ITaskDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getITaskDescriptor_IdentifiedRunnableId(), ecorePackage.getEString(), "identifiedRunnableId", null, 1, 1, ITaskDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		EGenericType g1 = createEGenericType(ecorePackage.getEMap());
 		EGenericType g2 = createEGenericType(ecorePackage.getEString());
 		g1.getETypeArguments().add(g2);
@@ -690,11 +615,11 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getITaskDescriptor_Runner(), ecorePackage.getEString(), "runner", null, 0, 1, ITaskDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getITaskDescriptor_Singleton(), ecorePackage.getEBoolean(), "singleton", "false", 0, 1, ITaskDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		EOperation op = initEOperation(getITaskDescriptor__SetTriggerParameter__String_String(), null, "setTriggerParameter", 0, 1, IS_UNIQUE, IS_ORDERED);
+		EOperation op = addEOperation(iTaskDescriptorEClass, null, "setTriggerParameter", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "key", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "value", 0, 1, IS_UNIQUE, IS_ORDERED);
 
-		op = initEOperation(getITaskDescriptor__SetRunContextParameter__String_Serializable(), null, "setRunContextParameter", 0, 1, IS_UNIQUE, IS_ORDERED);
+		op = addEOperation(iTaskDescriptorEClass, null, "setRunContextParameter", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "key", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getSerializable(), "value", 0, 1, IS_UNIQUE, IS_ORDERED);
 
@@ -720,12 +645,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		initEClass(iTaskServiceEClass, ITaskService.class, "ITaskService", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		op = initEOperation(getITaskService__CreateTaskDescriptor__IUser_IIdentifiedRunnable(), this.getITaskDescriptor(), "createTaskDescriptor", 0, 1, IS_UNIQUE, IS_ORDERED);
+		op = addEOperation(iTaskServiceEClass, this.getITaskDescriptor(), "createTaskDescriptor", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, theModelPackage_1.getIUser(), "owner", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIIdentifiedRunnable(), "runnable", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEException(op, this.getTaskException());
 
-		op = initEOperation(getITaskService__Trigger__ITaskDescriptor_IProgressMonitor_TaskTriggerType_Map(), this.getITask(), "trigger", 0, 1, IS_UNIQUE, IS_ORDERED);
+		op = addEOperation(iTaskServiceEClass, this.getITask(), "trigger", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getITaskDescriptor(), "taskDescriptor", 1, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIProgressMonitor(), "progressMonitor", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getTaskTriggerType(), "trigger", 0, 1, IS_UNIQUE, IS_ORDERED);
@@ -737,18 +662,45 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEParameter(op, g1, "runContext", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEException(op, this.getTaskException());
 
-		op = initEOperation(getITaskService__InstantiateRunnableById__String(), this.getIIdentifiedRunnable(), "instantiateRunnableById", 0, 1, IS_UNIQUE, IS_ORDERED);
+		op = addEOperation(iTaskServiceEClass, this.getIIdentifiedRunnable(), "instantiateRunnableById", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "runnableId", 1, 1, IS_UNIQUE, IS_ORDERED);
 		addEException(op, this.getTaskException());
 
-		op = initEOperation(getITaskService__SaveTaskDescriptor__ITaskDescriptor(), null, "saveTaskDescriptor", 0, 1, IS_UNIQUE, IS_ORDERED);
+		op = addEOperation(iTaskServiceEClass, null, "saveTaskDescriptor", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getITaskDescriptor(), "taskDescriptor", 1, 1, IS_UNIQUE, IS_ORDERED);
 		addEException(op, this.getTaskException());
 
-		op = initEOperation(getITaskService__SetActive__ITaskDescriptor_boolean(), null, "setActive", 0, 1, IS_UNIQUE, IS_ORDERED);
+		op = addEOperation(iTaskServiceEClass, null, "setActive", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getITaskDescriptor(), "taskDescriptor", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEBoolean(), "active", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEException(op, this.getTaskException());
+
+		op = addEOperation(iTaskServiceEClass, this.getITask(), "trigger", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "taskDescriptorReferenceId", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIProgressMonitor(), "progressMonitor", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getTaskTriggerType(), "trigger", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(ecorePackage.getEMap());
+		g2 = createEGenericType(ecorePackage.getEString());
+		g1.getETypeArguments().add(g2);
+		g2 = createEGenericType(ecorePackage.getEString());
+		g1.getETypeArguments().add(g2);
+		addEParameter(op, g1, "runContext", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEException(op, this.getTaskException());
+
+		op = addEOperation(iTaskServiceEClass, null, "listAvailableRunnables", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(ecorePackage.getEMap());
+		g2 = createEGenericType(ecorePackage.getEString());
+		g1.getETypeArguments().add(g2);
+		g2 = createEGenericType(ecorePackage.getEString());
+		g1.getETypeArguments().add(g2);
+		initEOperation(op, g1);
+
+		op = addEOperation(iTaskServiceEClass, null, "findTaskDescriptorByIdOrReferenceId", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "idOrReferenceId", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(theTypesPackage.getOptional());
+		g2 = createEGenericType(this.getITaskDescriptor());
+		g1.getETypeArguments().add(g2);
+		initEOperation(op, g1);
 
 		// Initialize enums and add enum literals
 		initEEnum(taskTriggerTypeEEnum, TaskTriggerType.class, "TaskTriggerType");

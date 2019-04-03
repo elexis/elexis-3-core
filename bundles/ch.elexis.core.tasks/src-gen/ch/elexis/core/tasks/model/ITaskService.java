@@ -17,6 +17,7 @@ import ch.elexis.core.model.tasks.TaskException;
 
 import java.util.Map;
 
+import java.util.Optional;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
@@ -42,6 +43,7 @@ public interface ITaskService {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
+	 * @param progressMonitor The progress monitor to report to. If null the task will initialise its own progress monitor.
 	 * @param runContext key value pairs to add to the task run context already populated out of ITaskDescriptor#runContext (e.g. the file system trigger adds the file triggering the event)
 	 * <!-- end-model-doc -->
 	 * @model exceptions="ch.elexis.core.tasks.model.TaskException" taskDescriptorRequired="true" progressMonitorDataType="ch.elexis.core.tasks.model.IProgressMonitor"
@@ -75,5 +77,37 @@ public interface ITaskService {
 	 * @generated
 	 */
 	void setActive(ITaskDescriptor taskDescriptor, boolean active) throws TaskException;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Trigger a task by its task descriptor reference id
+	 * @param progressMonitor The progress monitor to report to. If null the task will initialise its own progress monitor.
+	 * @param runContext key value pairs to add to the task run context already populated out of ITaskDescriptor#runContext (e.g. the file system trigger adds the file triggering the event)
+	 * <!-- end-model-doc -->
+	 * @model exceptions="ch.elexis.core.tasks.model.TaskException" progressMonitorDataType="ch.elexis.core.tasks.model.IProgressMonitor"
+	 * @generated
+	 */
+	ITask trigger(String taskDescriptorReferenceId, IProgressMonitor progressMonitor, TaskTriggerType trigger, Map<String, String> runContext) throws TaskException;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Get a map containing the system available runnables, with their id as key, and a localized description as value. Depending on the plugins installed, the available runnables change.
+	 * <!-- end-model-doc -->
+	 * @model
+	 * @generated
+	 */
+	Map<String, String> listAvailableRunnables();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model dataType="ch.elexis.core.types.Optional&lt;ch.elexis.core.tasks.model.ITaskDescriptor&gt;"
+	 * @generated
+	 */
+	Optional<ITaskDescriptor> findTaskDescriptorByIdOrReferenceId(String idOrReferenceId);
 
 } // ITaskService

@@ -11,6 +11,7 @@
 package ch.elexis.core.tasks.model;
 
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.Identifiable;
 
 import java.io.Serializable;
 
@@ -34,7 +35,7 @@ import java.util.Map;
  *   <li>{@link ch.elexis.core.tasks.model.ITaskDescriptor#getOwner <em>Owner</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITaskDescriptor#getOwnerNotification <em>Owner Notification</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITaskDescriptor#isActive <em>Active</em>}</li>
- *   <li>{@link ch.elexis.core.tasks.model.ITaskDescriptor#getRunnableWithContextId <em>Runnable With Context Id</em>}</li>
+ *   <li>{@link ch.elexis.core.tasks.model.ITaskDescriptor#getIdentifiedRunnableId <em>Identified Runnable Id</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITaskDescriptor#getRunContext <em>Run Context</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITaskDescriptor#getTriggerType <em>Trigger Type</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITaskDescriptor#getTriggerParameters <em>Trigger Parameters</em>}</li>
@@ -46,7 +47,7 @@ import java.util.Map;
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface ITaskDescriptor {
+public interface ITaskDescriptor extends Identifiable {
 	/**
 	 * Returns the value of the '<em><b>Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -170,30 +171,30 @@ public interface ITaskDescriptor {
 	void setActive(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Runnable With Context Id</b></em>' attribute.
+	 * Returns the value of the '<em><b>Identified Runnable Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Runnable With Context Id</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Identified Runnable Id</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Runnable With Context Id</em>' attribute.
-	 * @see #setRunnableWithContextId(String)
-	 * @see ch.elexis.core.tasks.model.ModelPackage#getITaskDescriptor_RunnableWithContextId()
+	 * @return the value of the '<em>Identified Runnable Id</em>' attribute.
+	 * @see #setIdentifiedRunnableId(String)
+	 * @see ch.elexis.core.tasks.model.ModelPackage#getITaskDescriptor_IdentifiedRunnableId()
 	 * @model required="true"
 	 * @generated
 	 */
-	String getRunnableWithContextId();
+	String getIdentifiedRunnableId();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.tasks.model.ITaskDescriptor#getRunnableWithContextId <em>Runnable With Context Id</em>}' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.tasks.model.ITaskDescriptor#getIdentifiedRunnableId <em>Identified Runnable Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Runnable With Context Id</em>' attribute.
-	 * @see #getRunnableWithContextId()
+	 * @param value the new value of the '<em>Identified Runnable Id</em>' attribute.
+	 * @see #getIdentifiedRunnableId()
 	 * @generated
 	 */
-	void setRunnableWithContextId(String value);
+	void setIdentifiedRunnableId(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Run Context</b></em>' attribute.

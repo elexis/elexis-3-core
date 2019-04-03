@@ -3,7 +3,10 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: ch.elexis.core.tasks;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ lib/quartz-2.3.0-SNAPSHOT.jar,
+ lib/quartz-jobs-2.3.0-SNAPSHOT.jar,
+ lib/c3p0-0.9.5.2.jar
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Automatic-Module-Name: ch.elexis.core.tasks
@@ -16,16 +19,21 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  ch.elexis.core;visibility:=reexport,
  ch.elexis.core.jpa.entities;bundle-version="1.0.0",
- com.google.code.gson
+ com.google.code.gson,
+ ch.elexis.core.jcifs,
+ org.apache.commons.beanutils
 Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/ch.elexis.core.tasks.internal.service.TaskServiceImpl.xml,
- OSGI-INF/ch.elexis.core.tasks.internal.service.RunnableWithContextFactoryImpl.xml,
  OSGI-INF/ch.elexis.core.tasks.internal.model.service.TaskModelService.xml,
- OSGI-INF/ch.elexis.core.tasks.internal.model.service.CoreModelServiceHolder.xml
+ OSGI-INF/ch.elexis.core.tasks.internal.model.service.CoreModelServiceHolder.xml,
+ OSGI-INF/ch.elexis.core.tasks.internal.console.ConsoleCommandProvider.xml,
+ OSGI-INF/ch.elexis.core.tasks.internal.service.IdentifiedRunnableFactoryImpl.xml,
+ OSGI-INF/ch.elexis.core.tasks.internal.service.TaskServiceHolder.xml
 Import-Package: ch.elexis.core.jpa.model.adapter,
  ch.elexis.core.jpa.model.adapter.mixin,
  javax.persistence;version="2.2.0",
  javax.persistence.criteria;version="2.2.0",
+ org.apache.commons.lang3;version="3.7.0",
  org.json,
  org.osgi.service.event;version="1.4.0",
  org.slf4j;version="1.7.2"

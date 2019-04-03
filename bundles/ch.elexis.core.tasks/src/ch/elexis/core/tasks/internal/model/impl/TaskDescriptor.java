@@ -27,6 +27,12 @@ public class TaskDescriptor
 	}
 	
 	@Override
+	public String toString(){
+		// TODO Auto-generated method stub
+		return getEntity().getId()+" ("+getEntity().getReferenceId()+")";
+	}
+	
+	@Override
 	public String getReferenceId(){
 		return getEntity().getReferenceId();
 	}
@@ -63,12 +69,13 @@ public class TaskDescriptor
 	}
 	
 	@Override
-	public String getRunnableWithContextId(){
+	public String getIdentifiedRunnableId(){
 		return getEntity().getRunnableId();
 	}
 	
+
 	@Override
-	public void setRunnableWithContextId(String value){
+	public void setIdentifiedRunnableId(String value){
 		getEntity().setRunnableId(value);
 	}
 	

@@ -14,7 +14,6 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
-import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
@@ -84,7 +83,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR__ID = 0;
+	int ITASK_DESCRIPTOR__ID = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Reference Id</b></em>' attribute.
@@ -93,7 +92,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR__REFERENCE_ID = 1;
+	int ITASK_DESCRIPTOR__REFERENCE_ID = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Owner</b></em>' reference.
@@ -102,7 +101,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR__OWNER = 2;
+	int ITASK_DESCRIPTOR__OWNER = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Owner Notification</b></em>' attribute.
@@ -111,7 +110,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR__OWNER_NOTIFICATION = 3;
+	int ITASK_DESCRIPTOR__OWNER_NOTIFICATION = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Active</b></em>' attribute.
@@ -120,16 +119,16 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR__ACTIVE = 4;
+	int ITASK_DESCRIPTOR__ACTIVE = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 4;
 
 	/**
-	 * The feature id for the '<em><b>Runnable With Context Id</b></em>' attribute.
+	 * The feature id for the '<em><b>Identified Runnable Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR__RUNNABLE_WITH_CONTEXT_ID = 5;
+	int ITASK_DESCRIPTOR__IDENTIFIED_RUNNABLE_ID = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Run Context</b></em>' attribute.
@@ -138,7 +137,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR__RUN_CONTEXT = 6;
+	int ITASK_DESCRIPTOR__RUN_CONTEXT = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Trigger Type</b></em>' attribute.
@@ -147,7 +146,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR__TRIGGER_TYPE = 7;
+	int ITASK_DESCRIPTOR__TRIGGER_TYPE = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Trigger Parameters</b></em>' attribute.
@@ -156,7 +155,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR__TRIGGER_PARAMETERS = 8;
+	int ITASK_DESCRIPTOR__TRIGGER_PARAMETERS = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Runner</b></em>' attribute.
@@ -165,7 +164,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR__RUNNER = 9;
+	int ITASK_DESCRIPTOR__RUNNER = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Singleton</b></em>' attribute.
@@ -174,7 +173,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR__SINGLETON = 10;
+	int ITASK_DESCRIPTOR__SINGLETON = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 10;
 
 	/**
 	 * The number of structural features of the '<em>ITask Descriptor</em>' class.
@@ -183,34 +182,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR_FEATURE_COUNT = 11;
-
-	/**
-	 * The operation id for the '<em>Set Trigger Parameter</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITASK_DESCRIPTOR___SET_TRIGGER_PARAMETER__STRING_STRING = 0;
-
-	/**
-	 * The operation id for the '<em>Set Run Context Parameter</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITASK_DESCRIPTOR___SET_RUN_CONTEXT_PARAMETER__STRING_SERIALIZABLE = 1;
-
-	/**
-	 * The number of operations of the '<em>ITask Descriptor</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITASK_DESCRIPTOR_OPERATION_COUNT = 2;
+	int ITASK_DESCRIPTOR_FEATURE_COUNT = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 11;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.tasks.model.ITask <em>ITask</em>}' class.
@@ -304,15 +276,6 @@ public interface ModelPackage extends EPackage {
 	int ITASK_FEATURE_COUNT = 8;
 
 	/**
-	 * The number of operations of the '<em>ITask</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITASK_OPERATION_COUNT = 0;
-
-	/**
 	 * The meta object id for the '{@link ch.elexis.core.tasks.model.ITaskService <em>ITask Service</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -330,60 +293,6 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int ITASK_SERVICE_FEATURE_COUNT = 0;
-
-	/**
-	 * The operation id for the '<em>Create Task Descriptor</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITASK_SERVICE___CREATE_TASK_DESCRIPTOR__IUSER_IIDENTIFIEDRUNNABLE = 0;
-
-	/**
-	 * The operation id for the '<em>Trigger</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITASK_SERVICE___TRIGGER__ITASKDESCRIPTOR_IPROGRESSMONITOR_TASKTRIGGERTYPE_MAP = 1;
-
-	/**
-	 * The operation id for the '<em>Instantiate Runnable By Id</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITASK_SERVICE___INSTANTIATE_RUNNABLE_BY_ID__STRING = 2;
-
-	/**
-	 * The operation id for the '<em>Save Task Descriptor</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITASK_SERVICE___SAVE_TASK_DESCRIPTOR__ITASKDESCRIPTOR = 3;
-
-	/**
-	 * The operation id for the '<em>Set Active</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITASK_SERVICE___SET_ACTIVE__ITASKDESCRIPTOR_BOOLEAN = 4;
-
-	/**
-	 * The number of operations of the '<em>ITask Service</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITASK_SERVICE_OPERATION_COUNT = 5;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.tasks.model.TaskTriggerType <em>Task Trigger Type</em>}' enum.
@@ -532,15 +441,15 @@ public interface ModelPackage extends EPackage {
 	EAttribute getITaskDescriptor_Active();
 
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.tasks.model.ITaskDescriptor#getRunnableWithContextId <em>Runnable With Context Id</em>}'.
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.tasks.model.ITaskDescriptor#getIdentifiedRunnableId <em>Identified Runnable Id</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Runnable With Context Id</em>'.
-	 * @see ch.elexis.core.tasks.model.ITaskDescriptor#getRunnableWithContextId()
+	 * @return the meta object for the attribute '<em>Identified Runnable Id</em>'.
+	 * @see ch.elexis.core.tasks.model.ITaskDescriptor#getIdentifiedRunnableId()
 	 * @see #getITaskDescriptor()
 	 * @generated
 	 */
-	EAttribute getITaskDescriptor_RunnableWithContextId();
+	EAttribute getITaskDescriptor_IdentifiedRunnableId();
 
 	/**
 	 * Returns the meta object for the attribute '{@link ch.elexis.core.tasks.model.ITaskDescriptor#getRunContext <em>Run Context</em>}'.
@@ -596,26 +505,6 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getITaskDescriptor_Singleton();
-
-	/**
-	 * Returns the meta object for the '{@link ch.elexis.core.tasks.model.ITaskDescriptor#setTriggerParameter(java.lang.String, java.lang.String) <em>Set Trigger Parameter</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Set Trigger Parameter</em>' operation.
-	 * @see ch.elexis.core.tasks.model.ITaskDescriptor#setTriggerParameter(java.lang.String, java.lang.String)
-	 * @generated
-	 */
-	EOperation getITaskDescriptor__SetTriggerParameter__String_String();
-
-	/**
-	 * Returns the meta object for the '{@link ch.elexis.core.tasks.model.ITaskDescriptor#setRunContextParameter(java.lang.String, java.io.Serializable) <em>Set Run Context Parameter</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Set Run Context Parameter</em>' operation.
-	 * @see ch.elexis.core.tasks.model.ITaskDescriptor#setRunContextParameter(java.lang.String, java.io.Serializable)
-	 * @generated
-	 */
-	EOperation getITaskDescriptor__SetRunContextParameter__String_Serializable();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.tasks.model.ITask <em>ITask</em>}'.
@@ -724,56 +613,6 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getITaskService();
-
-	/**
-	 * Returns the meta object for the '{@link ch.elexis.core.tasks.model.ITaskService#createTaskDescriptor(ch.elexis.core.model.IUser, ch.elexis.core.model.tasks.IIdentifiedRunnable) <em>Create Task Descriptor</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Create Task Descriptor</em>' operation.
-	 * @see ch.elexis.core.tasks.model.ITaskService#createTaskDescriptor(ch.elexis.core.model.IUser, ch.elexis.core.model.tasks.IIdentifiedRunnable)
-	 * @generated
-	 */
-	EOperation getITaskService__CreateTaskDescriptor__IUser_IIdentifiedRunnable();
-
-	/**
-	 * Returns the meta object for the '{@link ch.elexis.core.tasks.model.ITaskService#trigger(ch.elexis.core.tasks.model.ITaskDescriptor, org.eclipse.core.runtime.IProgressMonitor, ch.elexis.core.tasks.model.TaskTriggerType, java.util.Map) <em>Trigger</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Trigger</em>' operation.
-	 * @see ch.elexis.core.tasks.model.ITaskService#trigger(ch.elexis.core.tasks.model.ITaskDescriptor, org.eclipse.core.runtime.IProgressMonitor, ch.elexis.core.tasks.model.TaskTriggerType, java.util.Map)
-	 * @generated
-	 */
-	EOperation getITaskService__Trigger__ITaskDescriptor_IProgressMonitor_TaskTriggerType_Map();
-
-	/**
-	 * Returns the meta object for the '{@link ch.elexis.core.tasks.model.ITaskService#instantiateRunnableById(java.lang.String) <em>Instantiate Runnable By Id</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Instantiate Runnable By Id</em>' operation.
-	 * @see ch.elexis.core.tasks.model.ITaskService#instantiateRunnableById(java.lang.String)
-	 * @generated
-	 */
-	EOperation getITaskService__InstantiateRunnableById__String();
-
-	/**
-	 * Returns the meta object for the '{@link ch.elexis.core.tasks.model.ITaskService#saveTaskDescriptor(ch.elexis.core.tasks.model.ITaskDescriptor) <em>Save Task Descriptor</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Save Task Descriptor</em>' operation.
-	 * @see ch.elexis.core.tasks.model.ITaskService#saveTaskDescriptor(ch.elexis.core.tasks.model.ITaskDescriptor)
-	 * @generated
-	 */
-	EOperation getITaskService__SaveTaskDescriptor__ITaskDescriptor();
-
-	/**
-	 * Returns the meta object for the '{@link ch.elexis.core.tasks.model.ITaskService#setActive(ch.elexis.core.tasks.model.ITaskDescriptor, boolean) <em>Set Active</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Set Active</em>' operation.
-	 * @see ch.elexis.core.tasks.model.ITaskService#setActive(ch.elexis.core.tasks.model.ITaskDescriptor, boolean)
-	 * @generated
-	 */
-	EOperation getITaskService__SetActive__ITaskDescriptor_boolean();
 
 	/**
 	 * Returns the meta object for enum '{@link ch.elexis.core.tasks.model.TaskTriggerType <em>Task Trigger Type</em>}'.
@@ -934,12 +773,12 @@ public interface ModelPackage extends EPackage {
 		EAttribute ITASK_DESCRIPTOR__ACTIVE = eINSTANCE.getITaskDescriptor_Active();
 
 		/**
-		 * The meta object literal for the '<em><b>Runnable With Context Id</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Identified Runnable Id</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ITASK_DESCRIPTOR__RUNNABLE_WITH_CONTEXT_ID = eINSTANCE.getITaskDescriptor_RunnableWithContextId();
+		EAttribute ITASK_DESCRIPTOR__IDENTIFIED_RUNNABLE_ID = eINSTANCE.getITaskDescriptor_IdentifiedRunnableId();
 
 		/**
 		 * The meta object literal for the '<em><b>Run Context</b></em>' attribute feature.
@@ -980,22 +819,6 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ITASK_DESCRIPTOR__SINGLETON = eINSTANCE.getITaskDescriptor_Singleton();
-
-		/**
-		 * The meta object literal for the '<em><b>Set Trigger Parameter</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation ITASK_DESCRIPTOR___SET_TRIGGER_PARAMETER__STRING_STRING = eINSTANCE.getITaskDescriptor__SetTriggerParameter__String_String();
-
-		/**
-		 * The meta object literal for the '<em><b>Set Run Context Parameter</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation ITASK_DESCRIPTOR___SET_RUN_CONTEXT_PARAMETER__STRING_SERIALIZABLE = eINSTANCE.getITaskDescriptor__SetRunContextParameter__String_Serializable();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.tasks.model.ITask <em>ITask</em>}' class.
@@ -1080,46 +903,6 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EClass ITASK_SERVICE = eINSTANCE.getITaskService();
-
-		/**
-		 * The meta object literal for the '<em><b>Create Task Descriptor</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation ITASK_SERVICE___CREATE_TASK_DESCRIPTOR__IUSER_IIDENTIFIEDRUNNABLE = eINSTANCE.getITaskService__CreateTaskDescriptor__IUser_IIdentifiedRunnable();
-
-		/**
-		 * The meta object literal for the '<em><b>Trigger</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation ITASK_SERVICE___TRIGGER__ITASKDESCRIPTOR_IPROGRESSMONITOR_TASKTRIGGERTYPE_MAP = eINSTANCE.getITaskService__Trigger__ITaskDescriptor_IProgressMonitor_TaskTriggerType_Map();
-
-		/**
-		 * The meta object literal for the '<em><b>Instantiate Runnable By Id</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation ITASK_SERVICE___INSTANTIATE_RUNNABLE_BY_ID__STRING = eINSTANCE.getITaskService__InstantiateRunnableById__String();
-
-		/**
-		 * The meta object literal for the '<em><b>Save Task Descriptor</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation ITASK_SERVICE___SAVE_TASK_DESCRIPTOR__ITASKDESCRIPTOR = eINSTANCE.getITaskService__SaveTaskDescriptor__ITaskDescriptor();
-
-		/**
-		 * The meta object literal for the '<em><b>Set Active</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation ITASK_SERVICE___SET_ACTIVE__ITASKDESCRIPTOR_BOOLEAN = eINSTANCE.getITaskService__SetActive__ITaskDescriptor_boolean();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.tasks.model.TaskTriggerType <em>Task Trigger Type</em>}' enum.

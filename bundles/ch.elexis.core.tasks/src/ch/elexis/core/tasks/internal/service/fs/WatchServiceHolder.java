@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.tasks.TaskTriggerTypeParameterConstants;
 import ch.elexis.core.tasks.internal.service.TaskServiceImpl;
@@ -124,8 +125,7 @@ public class WatchServiceHolder {
 							
 							Map<String, String> runContext = new HashMap<>();
 							
-							runContext.put(
-								TaskTriggerTypeParameterConstants.FILESYSTEM_CHANGE_RUNPARAM_EVENTFILE_PATH,
+							runContext.put(IIdentifiedRunnable.RunContextParameter.STRING_URL,
 								fullPath);
 							
 							trigger(taskDescriptor, runContext);

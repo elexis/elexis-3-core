@@ -25,7 +25,7 @@ import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.model.builder.IUserBuilder;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.TaskException;
-import ch.elexis.core.tasks.RunnableWithContextIdConstants;
+import ch.elexis.core.tasks.IdentifiedRunnableIdConstants;
 import ch.elexis.core.tasks.TaskTriggerTypeParameterConstants;
 import ch.elexis.core.tasks.internal.model.service.CoreModelServiceHolder;
 import ch.elexis.core.tasks.model.ITask;
@@ -62,8 +62,8 @@ public class TaskServiceTest {
 	
 	@Before
 	public void before() throws TaskException{
-		rwcLogContext = taskService
-			.instantiateRunnableById(RunnableWithContextIdConstants.RUNNABLE_ID_LOGRESULTCONTEXT);
+		rwcLogContext =
+			taskService.instantiateRunnableById(IdentifiedRunnableIdConstants.LOGRESULTCONTEXT);
 	}
 	
 	private Callable<Boolean> taskDone(ITask task){
@@ -95,7 +95,6 @@ public class TaskServiceTest {
 		assertEquals(TaskState.COMPLETED, task.getState());
 	}
 	
-	@Test
 	public void triggerManual_Misthios() throws Exception{
 		IIdentifiedRunnable rwcMisthios = taskService.instantiateRunnableById("misthios");
 		taskDescriptor = taskService.createTaskDescriptor(owner, rwcMisthios);
@@ -124,8 +123,8 @@ public class TaskServiceTest {
 	 */
 	@Test
 	public void triggerFSChange() throws TaskException, IOException, InterruptedException{
-		IIdentifiedRunnable rwcDeleteFile = taskService
-			.instantiateRunnableById(RunnableWithContextIdConstants.RUNNABLE_ID_DELETEFILE);
+		IIdentifiedRunnable rwcDeleteFile =
+			taskService.instantiateRunnableById(IdentifiedRunnableIdConstants.DELETEFILE);
 		taskDescriptor = taskService.createTaskDescriptor(owner, rwcDeleteFile);
 		taskDescriptor.setRunContext(runContext);
 		taskDescriptor.setTriggerType(TaskTriggerType.FILESYSTEM_CHANGE);
@@ -144,6 +143,32 @@ public class TaskServiceTest {
 	}
 	
 	/**
+	 * Use-Case: In CCM -> check for patient reminders
+	 * 
+	 * @throws TaskException
+	 * @throws IOException 
+	 */
+	@Test
+	public void triggerCron() throws TaskException, IOException{
+		
+		IIdentifiedRunnable rwcDeleteFile =
+				taskService.instantiateRunnableById(IdentifiedRunnableIdConstants.DELETEFILE);
+		Path createFile = Files.createTempFile(tempDirectory, "test", "txt");
+		
+		taskDescriptor = taskService.createTaskDescriptor(owner, rwcDeleteFile);
+		taskDescriptor.setTriggerType(TaskTriggerType.CRON);
+		taskDescriptor.setRunContextParameter(IIdentifiedRunnable.RunContextParameter.STRING_URL, createFile.toString());
+		// job will run every 5 seconds
+		taskDescriptor.setTriggerParameter("cron", "0/5 * * * * ?");
+		taskService.setActive(taskDescriptor, true);
+		
+		Callable<Boolean> c = () -> {
+			return !createFile.toFile().exists();
+		};
+		Awaitility.await().atMost(10, TimeUnit.SECONDS).until(c);
+	}
+
+	/**
 	 * Use-Case: Search for reminders on this patient
 	 * 
 	 * @throws TaskException
@@ -159,21 +184,7 @@ public class TaskServiceTest {
 	}
 	
 	/**
-	 * Use-Case: In CCM -> check for patient reminders
-	 * 
-	 * @throws TaskException
-	 */
-	public void triggerTime() throws TaskException{
-		taskDescriptor = taskService.createTaskDescriptor(owner, rwcLogContext);
-		taskDescriptor.setTriggerType(TaskTriggerType.CRON);
-		taskDescriptor.setTriggerParameter("crontab", "* /5 * * * *");
-		taskService.setActive(taskDescriptor, true);
-		
-		throw new UnsupportedOperationException();
-	}
-	
-	/**
-	 * Use-Case: Job Workflow
+	 * Use-Case: Job Workflow, passive trigger by another task reaching a specific state
 	 * 
 	 * @throws TaskException
 	 */
