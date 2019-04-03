@@ -70,6 +70,9 @@
     <genDataTypes ecoreDataType="types.ecore#//MaritalStatus"/>
     <genDataTypes ecoreDataType="types.ecore#//MimeType"/>
     <genDataTypes ecoreDataType="types.ecore#//InvoiceRejectCode"/>
+    <genDataTypes ecoreDataType="types.ecore#//Optional">
+      <genTypeParameters ecoreTypeParameter="types.ecore#//Optional/T"/>
+    </genDataTypes>
     <genClasses image="false" ecoreClass="types.ecore#//Comparable">
       <genTypeParameters ecoreTypeParameter="types.ecore#//Comparable/T"/>
     </genClasses>

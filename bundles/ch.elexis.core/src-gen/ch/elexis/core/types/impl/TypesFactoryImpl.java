@@ -22,6 +22,7 @@ import ch.elexis.core.model.prescription.EntryType;
 import java.time.LocalDateTime;
 
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -160,6 +161,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createMimeTypeFromString(eDataType, initialValue);
 			case TypesPackage.INVOICE_REJECT_CODE:
 				return createInvoiceRejectCodeFromString(eDataType, initialValue);
+			case TypesPackage.OPTIONAL:
+				return createOptionalFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -227,6 +230,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertMimeTypeToString(eDataType, instanceValue);
 			case TypesPackage.INVOICE_REJECT_CODE:
 				return convertInvoiceRejectCodeToString(eDataType, instanceValue);
+			case TypesPackage.OPTIONAL:
+				return convertOptionalToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -724,6 +729,24 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 */
 	public String convertInvoiceRejectCodeToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Optional<?> createOptionalFromString(EDataType eDataType, String initialValue) {
+		return (Optional<?>)super.createFromString(initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertOptionalToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(instanceValue);
 	}
 
 	/**

@@ -402,6 +402,16 @@ public interface TypesPackage extends EPackage {
 	int INVOICE_REJECT_CODE = 30;
 
 	/**
+	 * The meta object id for the '<em>Optional</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see java.util.Optional
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getOptional()
+	 * @generated
+	 */
+	int OPTIONAL = 31;
+
+	/**
 	 * The meta object id for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -749,6 +759,17 @@ public interface TypesPackage extends EPackage {
 	EDataType getInvoiceRejectCode();
 
 	/**
+	 * Returns the meta object for data type '{@link java.util.Optional <em>Optional</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Optional</em>'.
+	 * @see java.util.Optional
+	 * @model instanceClass="java.util.Optional" typeParameters="T"
+	 * @generated
+	 */
+	EDataType getOptional();
+
+	/**
 	 * Returns the meta object for class '{@link ch.rgw.tools.Result <em>Result</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1080,6 +1101,16 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType INVOICE_REJECT_CODE = eINSTANCE.getInvoiceRejectCode();
+
+		/**
+		 * The meta object literal for the '<em>Optional</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see java.util.Optional
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getOptional()
+		 * @generated
+		 */
+		EDataType OPTIONAL = eINSTANCE.getOptional();
 
 		/**
 		 * The meta object literal for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.

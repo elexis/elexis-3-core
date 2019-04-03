@@ -86,4 +86,7 @@
   <eClassifiers xsi:type="ecore:EDataType" name="MaritalStatus" instanceClassName="ch.elexis.core.model.MaritalStatus"/>
   <eClassifiers xsi:type="ecore:EDataType" name="MimeType" instanceClassName="ch.elexis.core.model.MimeType"/>
   <eClassifiers xsi:type="ecore:EDataType" name="InvoiceRejectCode" instanceClassName="ch.elexis.core.model.InvoiceState.REJECTCODE"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="Optional" instanceClassName="java.util.Optional">
+    <eTypeParameters name="T"/>
+  </eClassifiers>
 </ecore:EPackage>

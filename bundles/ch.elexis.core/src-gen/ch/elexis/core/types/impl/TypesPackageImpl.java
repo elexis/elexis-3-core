@@ -24,6 +24,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 
+import java.util.Optional;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
@@ -274,6 +275,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EDataType invoiceRejectCodeEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType optionalEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -642,6 +650,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EDataType getOptional() {
+		return optionalEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getResult() {
 		return resultEClass;
 	}
@@ -713,6 +731,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		maritalStatusEDataType = createEDataType(MARITAL_STATUS);
 		mimeTypeEDataType = createEDataType(MIME_TYPE);
 		invoiceRejectCodeEDataType = createEDataType(INVOICE_REJECT_CODE);
+		optionalEDataType = createEDataType(OPTIONAL);
 	}
 
 	/**
@@ -744,6 +763,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		addETypeParameter(mapEClass, "K");
 		addETypeParameter(mapEClass, "V");
 		addETypeParameter(resultEClass, "T");
+		addETypeParameter(optionalEDataType, "T");
 
 		// Set bounds for type parameters
 
@@ -824,6 +844,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEDataType(maritalStatusEDataType, MaritalStatus.class, "MaritalStatus", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(mimeTypeEDataType, MimeType.class, "MimeType", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(invoiceRejectCodeEDataType, REJECTCODE.class, "InvoiceRejectCode", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(optionalEDataType, Optional.class, "Optional", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);
