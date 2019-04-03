@@ -54,6 +54,15 @@ public interface IContextService {
 	}
 	
 	/**
+	 * Get the station identifier. 
+	 * @return
+	 * @see IContext#getStationIdentifier()
+	 */
+	default public String getStationIdentifier() {
+		return getRootContext().getStationIdentifier();
+	}
+	
+	/**
 	 * Get an {@link Object} identified by its type from the root context.
 	 * 
 	 * @param clazz
