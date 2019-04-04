@@ -937,4 +937,32 @@
             <column name="BEHANDLUNGID"/>
         </createIndex>
     </changeSet>
+    
+    <changeSet author="thomas (generated)" id="manual_table_CH_ELEXIS_ARZTTARIF_CH_RFE">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="CH_ELEXIS_ARZTTARIF_CH_RFE" />
+			</not>
+		</preConditions>
+        <createTable tableName="CH_ELEXIS_ARZTTARIF_CH_RFE">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_CH_ELEXIS_ARZTTARIF_CH_RFE_ID"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="KONSID" type="VARCHAR(25)"/>
+            <column name="TYPE" type="CHAR(2)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="manual_idx_CH_ELEXIS_ARZTTARIF_CH_RFE">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="CH_ELEXIS_ARZTTARIF_CH_RFE_IDX" />
+			</not>
+		</preConditions>
+        <createIndex indexName="CH_ELEXIS_ARZTTARIF_CH_RFE_IDX" tableName="CH_ELEXIS_ARZTTARIF_CH_RFE">
+            <column name="KONSID"/>
+        </createIndex>
+    </changeSet>
+    
 </databaseChangeLog>

@@ -7,9 +7,9 @@
 		<artifactId>ch.elexis.core.tests</artifactId>
 		<version>3.8.0-SNAPSHOT</version>
   </parent>
-  <artifactId>ch.elexis.core.jpa.test</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <artifactId>ch.elexis.core.jpa.entities.test</artifactId>
   <packaging>eclipse-test-plugin</packaging>
+  <version>1.0.0-SNAPSHOT</version>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
@@ -63,7 +63,7 @@
         <artifactId>tycho-surefire-plugin</artifactId>
         <configuration>
           <useUIHarness>false</useUIHarness>
-          <testClass>ch.elexis.core.jpa.test.AllPluginTests</testClass>
+          <testClass>ch.elexis.core.jpa.entities.test.AllTest</testClass>
           <showEclipseLog>true</showEclipseLog>
           <argLine>-Delexis.test.mode=true</argLine>
           <dependencies>
@@ -149,17 +149,7 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.apache.commons.beanutils</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.apache.commons.codec</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.apache.commons.collections</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -170,11 +160,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.apache.commons.lang3</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.apache.commons.logging</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -355,19 +340,14 @@
               <autoStart>true</autoStart>
             </bundle>
             <bundle>
-              <id>ch.elexis.core.jpa.entities</id>
-              <level>3</level>
-              <autoStart>true</autoStart>
-            </bundle>
-            <bundle>
               <id>javax.persistence</id>
               <level>1</level>
               <autoStart>true</autoStart>
             </bundle>
             <bundle>
               <id>javax.xml</id>
-              <level>3</level>
-              <autoStart>true</autoStart>
+              <level>1</level>
+              <autoStart>false</autoStart>
             </bundle>
             <bundle>
               <id>org.apache.felix.scr</id>
@@ -390,11 +370,6 @@
               <autoStart>true</autoStart>
             </bundle>
             <bundle>
-              <id>org.eclipse.equinox.event</id>
-              <level>1</level>
-              <autoStart>true</autoStart>
-            </bundle>
-            <bundle>
               <id>org.eclipse.gemini.jpa</id>
               <level>3</level>
               <autoStart>true</autoStart>
@@ -406,8 +381,8 @@
             </bundle>
             <bundle>
               <id>osgi.enterprise</id>
-              <level>3</level>
-              <autoStart>true</autoStart>
+              <level>1</level>
+              <autoStart>false</autoStart>
             </bundle>
           </bundleStartLevel>
         </configuration>

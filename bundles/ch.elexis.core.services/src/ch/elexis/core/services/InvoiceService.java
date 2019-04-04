@@ -31,6 +31,7 @@ import ch.elexis.core.services.holder.CoverageServiceHolder;
 import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
+import ch.rgw.tools.Result.SEVERITY;
 
 @Component
 public class InvoiceService implements IInvoiceService {
@@ -185,7 +186,7 @@ public class InvoiceService implements IInvoiceService {
 		List<IInvoiceBilled> newInvoiceBilled = new ArrayList<>();
 		for (IEncounter encounter : encounters) {
 			encounter.setInvoice(ret);
-			
+			CoreModelServiceHolder.get().save(encounter);
 			// save all verrechnet of this rechnung
 			List<IBilled> encounterBilled = encounter.getBilled();
 			for (IBilled billed : encounterBilled) {
@@ -206,7 +207,7 @@ public class InvoiceService implements IInvoiceService {
 						"Rn " + ret.getNumber() + " erstellt.").buildAndSave();
 			}
 		}
-		return result;
+		return result.add(SEVERITY.OK, 0, "Ok", ret, false);
 	}
 	
 	private boolean isBillingCheckZero(){

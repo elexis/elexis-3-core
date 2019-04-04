@@ -208,4 +208,10 @@ public class Context implements IContext {
 	public void setEclipseContext(IEclipseContext applicationContext){
 		this.eclipseContext = applicationContext;
 	}
+	
+	@Override
+	public String getStationIdentifier(){
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

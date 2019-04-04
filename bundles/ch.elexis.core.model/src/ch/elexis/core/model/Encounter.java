@@ -147,10 +147,15 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 		return null;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void setInvoice(IInvoice value){
-		// TODO Auto-generated method stub
-		
+		if (value != null) {
+			getEntity().setInvoice(
+				((AbstractIdModelAdapter<ch.elexis.core.jpa.entities.Invoice>) value).getEntity());
+		} else {
+			getEntity().setInvoice(null);
+		}
 	}
 	
 	@Override
