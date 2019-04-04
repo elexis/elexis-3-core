@@ -29,6 +29,8 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -95,6 +97,14 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		
 		timeSpanOnly = new Button(content, SWT.CHECK);
 		timeSpanOnly.setText("Offene Konsultationen innerhalb des Zeitraums");
+		timeSpanOnly.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				if (timeSpanOnly.getSelection()) {
+					beforeTimeOnly.setSelection(false);
+				}
+			}
+		});
 		timeSpanSelection = new TimeSpanSelectionComposite(content, SWT.NONE);
 		timeSpanSelection.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
 		timeSpanSelection.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -115,6 +125,14 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		
 		beforeTimeOnly = new Button(content, SWT.CHECK);
 		beforeTimeOnly.setText("Offene Behandlungsserien vor Tagen oder Datum");
+		beforeTimeOnly.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				if (beforeTimeOnly.getSelection()) {
+					timeSpanOnly.setSelection(false);
+				}
+			}
+		});
 		beforeDaysOrDate = new DaysOrDateSelectionComposite(content, SWT.NONE);
 		beforeDaysOrDate.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
 		beforeDaysOrDate.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -332,16 +350,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 					canceled = true;
 					return;
 				}
-				
-				if (insurerOnlyFilter != null && !insurerOnlyFilter.select(konsultation)) {
-					progress.worked(1);
-					continue;
-				}
-				if (accountingOnlyFilter != null && !accountingOnlyFilter.select(konsultation)) {
-					progress.worked(1);
-					continue;
-				}
-				if (errorneousOnlyFilter != null && !errorneousOnlyFilter.select(konsultation)) {
+				if (!applyFilters(konsultation)) {
 					progress.worked(1);
 					continue;
 				}
@@ -358,8 +367,11 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 					List<Konsultation> series = getSeries(k.getFall());
 					series.forEach(sk -> {
 						if (!knownIds.contains(sk.getId())) {
-							proposal.add(sk);
+							// only look at sk once
 							knownIds.add(sk.getId());
+							if (applyFilters(sk)) {
+								proposal.add(sk);
+							}
 						}
 					});
 					progress.worked(1);
@@ -370,6 +382,26 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 				});
 			}
 			monitor.done();
+		}
+		
+		/**
+		 * Apply the filters to the {@link Konsultation} return false if any filter matches, true if
+		 * it passes all filters. Filters can have performance implications.
+		 * 
+		 * @param konsultation
+		 * @return
+		 */
+		private boolean applyFilters(Konsultation konsultation){
+			if (insurerOnlyFilter != null && !insurerOnlyFilter.select(konsultation)) {
+				return false;
+			}
+			if (accountingOnlyFilter != null && !accountingOnlyFilter.select(konsultation)) {
+				return false;
+			}
+			if (errorneousOnlyFilter != null && !errorneousOnlyFilter.select(konsultation)) {
+				return false;
+			}
+			return true;
 		}
 		
 		private List<Konsultation> getSeries(Fall fall){
