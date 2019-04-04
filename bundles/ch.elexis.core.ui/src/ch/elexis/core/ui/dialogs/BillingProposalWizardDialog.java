@@ -11,9 +11,6 @@
 package ch.elexis.core.ui.dialogs;
 
 import java.lang.reflect.InvocationTargetException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,7 +48,6 @@ import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
-import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 import ch.rgw.tools.IFilter;
 import ch.rgw.tools.TimeSpan;
@@ -216,9 +212,6 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 	
 	private class QueryProposalRunnable implements IRunnableWithProgress {
 		
-		private static final String PS_GETOPENKONSOFFALL =
-			"SELECT ID FROM BEHANDLUNGEN WHERE deleted='0' AND billable='1' AND RechnungsID is null AND FallID=?";
-		
 		private boolean canceled = false;
 		private List<Konsultation> proposal = new ArrayList<>();
 		
@@ -357,44 +350,32 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 			}
 			if(addSeries) {
 				progress.setTaskName("Behandlungsserien laden");
-				progress.setWorkRemaining(proposal.size());
-				PreparedStatement ps = null;
-				try {
-					ps = PersistentObject.getDefaultConnection()
-						.getPreparedStatement(PS_GETOPENKONSOFFALL);
-					HashSet<String> knownIds = new HashSet<>();
-					// add all proposed
-					knownIds.addAll(
-						proposal.parallelStream().map(k -> k.getId()).collect(Collectors.toList()));
-					// work on copy and add to proposal list
-					for (Konsultation kons : proposal.toArray(new Konsultation[proposal.size()])) {
-						ps.setString(1, kons.getFall().getId());
-						ResultSet results = ps.executeQuery();
-						
-						while ((results != null) && (results.next() == true)) {
-							String konsId = results.getString(1);
-							if (!knownIds.contains(konsId)) {
-								proposal.add(Konsultation.load(konsId));
-								knownIds.add(konsId);
-							}
+				HashSet<String> knownIds = new HashSet<>();
+				knownIds.addAll(
+					proposal.parallelStream().map(k -> k.getId()).collect(Collectors.toList()));
+				ArrayList<Konsultation> proposalCopy = new ArrayList<>(proposal);
+				proposalCopy.forEach(k -> {
+					List<Konsultation> series = getSeries(k.getFall());
+					series.forEach(sk -> {
+						if (!knownIds.contains(sk.getId())) {
+							proposal.add(sk);
+							knownIds.add(sk.getId());
 						}
-						progress.worked(1);
-						if (progress.isCanceled()) {
-							canceled = true;
-							return;
-						}
+					});
+					progress.worked(1);
+					if (progress.isCanceled()) {
+						canceled = true;
+						return;
 					}
-				} catch (SQLException e) {
-					LoggerFactory.getLogger(getClass()).error("Error loading series", e);
-					MessageDialog.openWarning(getShell(), "Fehler",
-						"Es ist ein Fehler beim Laden der Behandlungsserien aufgetreten.\nDer Vorschlag ist möglicherweise nicht vollständig.");
-				} finally {
-					if (ps != null) {
-						PersistentObject.getDefaultConnection().releasePreparedStatement(ps);
-					}
-				}
+				});
 			}
 			monitor.done();
+		}
+		
+		private List<Konsultation> getSeries(Fall fall){
+			return Arrays.asList(fall.getBehandlungen(false)).parallelStream()
+				.filter(k -> k.getRechnung() == null || !k.getRechnung().exists())
+				.collect(Collectors.toList());
 		}
 		
 		public boolean isCanceled(){
