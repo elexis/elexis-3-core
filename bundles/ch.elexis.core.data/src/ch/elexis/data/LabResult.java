@@ -746,11 +746,42 @@ public class LabResult extends PersistentObject implements ILabResult {
 		// return getResult();
 	}
 	
+	/**
+	 * @deprecated date is used use observationtime
+	 * @since 3.8
+	 * @param pat
+	 * @param date
+	 * @param item
+	 * @return
+	 */
 	public static LabResult getForDate(final Patient pat, final TimeTool date, final LabItem item){
 		Query<LabResult> qbe = new Query<LabResult>(LabResult.class);
 		qbe.add(ITEM_ID, Query.EQUALS, item.getId());
 		qbe.add(PATIENT_ID, Query.EQUALS, pat.getId());
 		qbe.add(DATE, Query.EQUALS, date.toString(TimeTool.DATE_COMPACT));
+		List<LabResult> res = qbe.execute();
+		if ((res != null) && (res.size() > 0)) {
+			return res.get(0);
+		}
+		return null;
+	}
+	
+	/**
+	 * Gets a {@link LabResult} for observationTime or if observationTime is null return the latest one.
+	 * @param pat
+	 * @param observationTime
+	 * @param item
+	 * @return
+	 */
+	public static LabResult getForObservationTime(final Patient pat, final TimeTool observationTime, final LabItem item){
+		Query<LabResult> qbe = new Query<LabResult>(LabResult.class);
+		qbe.add(ITEM_ID, Query.EQUALS, item.getId());
+		qbe.add(PATIENT_ID, Query.EQUALS, pat.getId());
+		if (observationTime != null) {
+			qbe.add(OBSERVATIONTIME, Query.EQUALS, observationTime.toString(TimeTool.DATE_COMPACT));
+		} else {
+			qbe.orderBy(true, OBSERVATIONTIME);
+		}
 		List<LabResult> res = qbe.execute();
 		if ((res != null) && (res.size() > 0)) {
 			return res.get(0);
