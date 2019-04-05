@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde?><!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl --><target name="Elexis" sequenceNumber="1553153972">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde?><!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl --><target name="Elexis" sequenceNumber="1554462443">
   <locations>
     <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.swt.nl_de" version="4.8.0.v20180815020001"/>
@@ -117,7 +117,7 @@
       <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180905201904/repository/"/>
     </location>
     <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-      <unit id="info.elexis.server.hapi.fhir" version="3.4.0.201903190554"/>
+      <unit id="info.elexis.server.hapi.fhir" version="3.4.0.201904021312"/>
       <repository location="http://download.elexis.info/elexis-server/master/p2/elexis-server"/>
     </location>
     <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
@@ -137,6 +137,7 @@
       <unit id="com.sun.activation.javax.activation" version="1.2.0"/>
       <unit id="com.sun.xml.bind.jaxb-osgi" version="2.3.2"/>
       <unit id="jaxb-api" version="2.4.0.b1808300359"/>
+      <unit id="bcprov" version="1.61.0"/>
       <unit id="org.springframework.spring-web" version="4.3.8.RELEASE"/>
       <unit id="woodstox-core-asl" version="4.4.1"/>
       <unit id="javax.xml.stream.stax-api" version="1.0.0.2"/>
@@ -207,8 +208,6 @@
       <unit id="batik.transcoder" version="1.6.0.1"/>
       <unit id="batik.util" version="1.6.0.1"/>
       <unit id="batik.xml" version="1.6.0.1"/>
-      <unit id="bcprov" version="1.46.0"/>
-      <unit id="bcprov.source" version="1.46.0"/>
       <unit id="bouncycastle.bcmail-jdk14" version="138.0.0"/>
       <unit id="bouncycastle.bcprov-jdk14" version="138.0.0"/>
       <unit id="bsf" version="2.4.0"/>
