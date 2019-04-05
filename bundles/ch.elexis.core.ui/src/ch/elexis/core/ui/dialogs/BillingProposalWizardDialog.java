@@ -398,12 +398,10 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 							totalForKonsSerie.addMoney(BillingUtil.getTotal(sk));
 						}
 					});
-					if (excludeKonsByMoney != null) {
-						if (totalForKonsSerie.equals(excludeKonsByMoney)
-							|| totalForKonsSerie.isMoreThan(excludeKonsByMoney)) {
-							proposal.removeAll(series);
-						}
+					if (excludeKonsByMoney != null && excludeKonsByMoney.isMoreThan(totalForKonsSerie)) {
+						proposal.removeAll(series);
 					}
+					
 					progress.worked(1);
 					if (progress.isCanceled()) {
 						canceled = true;
