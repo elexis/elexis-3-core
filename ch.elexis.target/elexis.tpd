@@ -172,8 +172,7 @@ location "http://download.elexis.info/elexis/f11106/p2/target/" {
 	batik.transcoder 1.6.0.1
 	batik.util 1.6.0.1
 	batik.xml 1.6.0.1
-	bcprov 1.46.0
-	bcprov.source 1.46.0
+	bcprov [1.61.0,1.61.0]
 	bouncycastle.bcmail-jdk14 138.0.0
 	bouncycastle.bcprov-jdk14 138.0.0
 	bsf 2.4.0
