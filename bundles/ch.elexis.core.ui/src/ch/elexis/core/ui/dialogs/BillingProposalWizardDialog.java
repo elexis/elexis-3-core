@@ -383,8 +383,16 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 				ArrayList<Konsultation> proposalCopy = new ArrayList<>(proposal);
 				proposalCopy.forEach(k -> {
 					List<Konsultation> series = getSeries(k.getFall());
-					Money totalForKonsSerie = new Money();
-					
+					// calculate money for kons series
+					if (excludeKonsByMoney != null) {
+						Money totalForKonsSerie = getSeriesTotal(series);
+						if (excludeKonsByMoney.isMoreThan(totalForKonsSerie)) {
+							// exclude whole series
+							knownIds.addAll(series.parallelStream().map(sk -> sk.getId())
+								.collect(Collectors.toList()));
+							proposal.remove(k);
+						}
+					}
 					series.forEach(sk -> {
 						if (!knownIds.contains(sk.getId())) {
 							// only look at sk once
@@ -393,15 +401,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 								proposal.add(sk);
 							}
 						}
-						// calculate money for kons series
-						if (excludeKonsByMoney != null) {
-							totalForKonsSerie.addMoney(BillingUtil.getTotal(sk));
-						}
 					});
-					if (excludeKonsByMoney != null && excludeKonsByMoney.isMoreThan(totalForKonsSerie)) {
-						proposal.removeAll(series);
-					}
-					
 					progress.worked(1);
 					if (progress.isCanceled()) {
 						canceled = true;
@@ -410,6 +410,12 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 				});
 			}
 			monitor.done();
+		}
+		
+		private Money getSeriesTotal(List<Konsultation> series){
+			Money ret = new Money();
+			series.forEach(sk -> ret.addMoney(BillingUtil.getTotal(sk)));
+			return ret;
 		}
 		
 		/**
