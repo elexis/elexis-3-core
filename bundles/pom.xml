@@ -18,12 +18,12 @@
     <module>org.osgi.framework.system.packages.extra</module>
     <module>jaxb-api-impl-import-java9</module>
     <module>ch.elexis.core.test</module>
-  	<module>ch.elexis.core.services</module>
-  	<module>ch.elexis.core.model</module>
-  	<module>ch.elexis.core.jpa</module>
-  	<module>ch.elexis.core.jpa.datasource</module>
-  	<module>ch.elexis.core.jpa.entities</module>
-  	<module>ch.elexis.core.jpa.logging.slf4j</module>
+    <module>ch.elexis.core.services</module>
+    <module>ch.elexis.core.model</module>
+    <module>ch.elexis.core.jpa</module>
+    <module>ch.elexis.core.jpa.datasource</module>
+    <module>ch.elexis.core.jpa.entities</module>
+    <module>ch.elexis.core.jpa.logging.slf4j</module>
     <module>ch.elexis.core.l10n</module>
     <module>ch.elexis.core.application</module>
     <module>ch.elexis.core.console.application</module>
@@ -42,6 +42,7 @@
     <module>ch.elexis.core.findings</module>
     <module>ch.elexis.core.hl7.v2x</module>
     <module>ch.elexis.core.importer.div</module>
+    <module>ch.elexis.core.jcifs</module>
     <module>ch.elexis.core.logging.default_configuration</module>
     <module>ch.elexis.core.logging.osgi</module>
     <module>ch.elexis.core.mail.ui</module>

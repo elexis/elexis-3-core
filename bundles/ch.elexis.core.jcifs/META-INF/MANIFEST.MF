@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Jcifs (SMB URL support)
+Bundle-SymbolicName: ch.elexis.core.jcifs
+Bundle-Version: 2.1.2.qualifier
+Automatic-Module-Name: ch.elexis.core.jcifs
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ClassPath: lib/jcifs-ng-2.1.2.jar,
+ .
+Import-Package: org.osgi.service.component;version="1.3.0",
+ org.osgi.service.url;version="1.0.0",
+ org.slf4j;version="1.7.2"
+Service-Component: OSGI-INF/*.xml
+Bundle-ActivationPolicy: lazy
+Export-Package: jcifs,
+ jcifs.smb
+Require-Bundle: bcprov;bundle-version="1.61.0"
+Bundle-Vendor: elexis.info

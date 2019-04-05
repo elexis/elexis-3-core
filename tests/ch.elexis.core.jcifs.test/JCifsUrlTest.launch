@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.pde.ui.JunitLaunchConfig">
+    <booleanAttribute key="append.args" value="true"/>
+    <stringAttribute key="application" value="org.eclipse.pde.junit.runtime.coretestapplication"/>
+    <booleanAttribute key="askclear" value="false"/>
+    <booleanAttribute key="automaticAdd" value="true"/>
+    <booleanAttribute key="automaticValidate" value="true"/>
+    <stringAttribute key="bootstrap" value=""/>
+    <stringAttribute key="checked" value="[NONE]"/>
+    <booleanAttribute key="clearConfig" value="true"/>
+    <booleanAttribute key="clearws" value="true"/>
+    <booleanAttribute key="clearwslog" value="false"/>
+    <stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/pde-junit"/>
+    <booleanAttribute key="default" value="false"/>
+    <stringAttribute key="deselected_workspace_plugins" value="at.descher.bug542905,at.descher.bug542905.test,at.medevit.elexis.tarmed.model,at.medevit.logback.mattermost,at.medevit.logback.pushnotification,ch.elexis.base.ch.arzttarife.model,ch.elexis.base.ch.arzttarife.model.test,ch.elexis.base.ch.labortarif.model,ch.elexis.core,ch.elexis.core.hl7.v2x,ch.elexis.core.importer.div,ch.elexis.core.importer.div.test,ch.elexis.core.jpa,ch.elexis.core.jpa.datasource,ch.elexis.core.jpa.entities,ch.elexis.core.model,ch.elexis.core.model.test,ch.elexis.core.samba,ch.elexis.core.services,ch.elexis.core.services.test,ch.elexis.core.tasks,ch.elexis.core.tasks.test,ch.elexis.core.test,es.misthios.test,info.eleixs.server.core.scheduler,info.elexis.server.core,info.elexis.server.core.common,info.elexis.server.core.connector.elexis,info.elexis.server.core.connector.elexis.test,info.elexis.server.core.jetty.homebundle,info.elexis.server.core.jetty.osgi.boot.fragment,info.elexis.server.core.p2,info.elexis.server.fhir.rest.core,info.elexis.server.fhir.rest.core.model.util,info.elexis.server.fhir.rest.core.test,info.elexis.server.findings.fhir.jpa.service,info.elexis.server.hapi.fhir,info.elexis.server.misthios,info.elexis.server.openid,info.elexis.server.setup.test,info.elexis.server.webapp,mb-importer-mediportinsurer,sample-misthios-bundle"/>
+    <booleanAttribute key="includeOptional" value="true"/>
+    <stringAttribute key="location" value="${workspace_loc}/../junit-workspace"/>
+    <setAttribute key="name.schedenig.eclipse.grepconsole.DisabledIds"/>
+    <setAttribute key="name.schedenig.eclipse.grepconsole.EnabledIds"/>
+    <setAttribute key="name.schedenig.eclipse.grepconsole.FilterDisabledIds"/>
+    <setAttribute key="name.schedenig.eclipse.grepconsole.FilterEnabledIds"/>
+    <setAttribute key="name.schedenig.eclipse.grepconsole.StatisticsDisabledIds"/>
+    <setAttribute key="name.schedenig.eclipse.grepconsole.StatisticsEnabledIds"/>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+        <listEntry value="/ch.elexis.core.jcifs.test"/>
+    </listAttribute>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+        <listEntry value="4"/>
+    </listAttribute>
+    <stringAttribute key="org.eclipse.jdt.junit.CONTAINER" value="=ch.elexis.core.jcifs.test"/>
+    <booleanAttribute key="org.eclipse.jdt.junit.KEEPRUNNING_ATTR" value="false"/>
+    <stringAttribute key="org.eclipse.jdt.junit.TESTNAME" value=""/>
+    <stringAttribute key="org.eclipse.jdt.junit.TEST_KIND" value="org.eclipse.jdt.junit.loader.junit4"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+    <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value=""/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="ch.elexis.core.jcifs.test"/>
+    <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-ea"/>
+    <stringAttribute key="pde.version" value="3.3"/>
+    <stringAttribute key="product" value="info.elexis.server.core.ElexisServer"/>
+    <booleanAttribute key="run_in_ui_thread" value="false"/>
+    <stringAttribute key="selected_target_plugins" value="bcprov@default:default,ch.qos.logback.classic@default:default,ch.qos.logback.core@default:default,ch.qos.logback.slf4j@default:false,javax.activation@default:default,javax.inject@default:default,javax.mail@default:default,javax.servlet*3.1.0.v201410161800@default:default,javax.transaction@default:false,javax.xml@default:default,org.apache.commons.io@default:default,org.apache.felix.gogo.runtime@default:default,org.apache.felix.scr@1:true,org.eclipse.core.contenttype@default:default,org.eclipse.core.jobs@default:default,org.eclipse.core.runtime@default:true,org.eclipse.equinox.app@default:default,org.eclipse.equinox.common@2:true,org.eclipse.equinox.ds@1:true,org.eclipse.equinox.preferences@default:default,org.eclipse.equinox.region@default:false,org.eclipse.equinox.registry@default:default,org.eclipse.equinox.supplement@default:default,org.eclipse.equinox.transforms.hook@default:false,org.eclipse.equinox.weaving.hook@default:false,org.eclipse.osgi.compatibility.state@default:false,org.eclipse.osgi.services@default:default,org.eclipse.osgi.util@default:default,org.eclipse.osgi@-1:true,org.hamcrest.core@default:default,org.junit@default:default,org.osgi.framework.system.packages.extra@default:false,org.slf4j.api@default:default"/>
+    <stringAttribute key="selected_workspace_plugins" value="ch.elexis.core.jcifs.test@default:false,ch.elexis.core.jcifs@default:default,ch.rgw.utility@default:default,info.elexis.server.core.logging@default:false"/>
+    <booleanAttribute key="show_selected_only" value="false"/>
+    <stringAttribute key="templateConfig" value="${target_home}/configuration/config.ini"/>
+    <booleanAttribute key="tracing" value="false"/>
+    <booleanAttribute key="useCustomFeatures" value="false"/>
+    <booleanAttribute key="useDefaultConfig" value="true"/>
+    <booleanAttribute key="useDefaultConfigArea" value="false"/>
+    <booleanAttribute key="useProduct" value="false"/>
+</launchConfiguration>
