@@ -16,15 +16,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
@@ -63,6 +61,11 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 		if (CoreHub.actUser != null) {
 			initialPerspectiveString =
 				CoreHub.localCfg.get(CoreHub.actUser + GlobalActions.DEFAULTPERSPECTIVECFG, null);
+			boolean fixLayoutChecked =
+				CoreHub.userCfg.get(Preferences.USR_FIX_LAYOUT, Preferences.USR_FIX_LAYOUT_DEFAULT);
+			GlobalActions.fixLayoutAction.setChecked(fixLayoutChecked);
+		} else {
+			GlobalActions.fixLayoutAction.setChecked(Preferences.USR_FIX_LAYOUT_DEFAULT);
 		}
 	}
 	
@@ -151,6 +154,7 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 			dlg.setTitle(Messages.LoginDialog_notLoggedIn);
 			dlg.setMessage(Messages.LoginDialog_enterUsernamePass);
 			dlg.open();
+			// TODO adaptForUser
 		}
 	}
 	
