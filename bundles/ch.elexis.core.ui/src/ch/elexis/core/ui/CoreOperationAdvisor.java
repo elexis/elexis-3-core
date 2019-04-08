@@ -63,9 +63,13 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 				CoreHub.localCfg.get(CoreHub.actUser + GlobalActions.DEFAULTPERSPECTIVECFG, null);
 			boolean fixLayoutChecked =
 				CoreHub.userCfg.get(Preferences.USR_FIX_LAYOUT, Preferences.USR_FIX_LAYOUT_DEFAULT);
-			GlobalActions.fixLayoutAction.setChecked(fixLayoutChecked);
+			if (GlobalActions.fixLayoutAction != null) {
+				GlobalActions.fixLayoutAction.setChecked(fixLayoutChecked);
+			}
 		} else {
-			GlobalActions.fixLayoutAction.setChecked(Preferences.USR_FIX_LAYOUT_DEFAULT);
+			if (GlobalActions.fixLayoutAction != null) {
+				GlobalActions.fixLayoutAction.setChecked(Preferences.USR_FIX_LAYOUT_DEFAULT);
+			}
 		}
 	}
 	
