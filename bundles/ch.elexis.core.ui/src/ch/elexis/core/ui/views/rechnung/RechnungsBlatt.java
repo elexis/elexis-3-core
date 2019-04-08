@@ -97,13 +97,14 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	ScrolledForm form;
 	FormToolkit tk = UiDesk.getToolkit();
 	// Button bBuchung,bPrint,bStorno,bGebuehr,bGutschrift;
-	Text tRejects, tBemerkungen;
+	Text tRejects, tBemerkungen, tInternalRemarks;
 	Label rnAdressat;
 	ListViewer konsultationenViewer;
 	ListViewer stornoViewer;
 	
 	private final ExpandableComposite ecBuchungen;
 	private final ExpandableComposite ecBemerkungen;
+	private final ExpandableComposite ecInternalRemarks;
 	private final ExpandableComposite ecStatus;
 	private final ExpandableComposite ecFehler;
 	private final ExpandableComposite ecAusgaben;
@@ -325,6 +326,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		});
 		buchungen.setInput(null);
 		// new Label(body,SWT.SEPARATOR|SWT.HORIZONTAL);
+		
 		ecBemerkungen =
 			WidgetFactory.createExpandableComposite(tk, form, Messages.RechnungsBlatt_remarks); //$NON-NLS-1$
 		ecBemerkungen.addExpansionListener(ecExpansionListener);
@@ -339,6 +341,20 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 			
 		});
 		ecBemerkungen.setClient(tBemerkungen);
+		
+		ecInternalRemarks = WidgetFactory.createExpandableComposite(tk, form, Messages.RechnungsBlatt_internalRemarks); //$NON-NLS-1$
+		ecInternalRemarks.addExpansionListener(ecExpansionListener);
+		tInternalRemarks = SWTHelper.createText(tk, ecInternalRemarks, 5, SWT.BORDER);
+		tInternalRemarks.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e){
+				if (actRn != null) {
+					actRn.setInternalRemarks(tInternalRemarks.getText());
+				}
+			}
+		});
+		ecInternalRemarks.setClient(tInternalRemarks);
+		
 		// tk.createLabel(body, "Statusänderungen");
 		ecStatus = WidgetFactory.createExpandableComposite(tk, form,
 			Messages.RechnungsBlatt_sateChangements); //$NON-NLS-1$
@@ -656,6 +672,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 				lbOutputs.add(o);
 			}
 			tBemerkungen.setText(actRn.getBemerkung());
+			tInternalRemarks.setText(actRn.getInternalRemarks());
 		} else {
 			rnAdressat.setText(StringConstants.EMPTY);
 			tRejects.setText(StringConstants.EMPTY);

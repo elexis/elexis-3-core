@@ -1402,7 +1402,8 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 	
 	private void setInvoiceCorrectionInfo(Rechnung actualInvoice){
 		if (actualInvoice != null && invoiceCorrectionDTO != null) {
-			actualInvoice.setExtInfo(Rechnung.INVOICE_CORRECTION,
+			
+			actualInvoice.setExtInfoStoredObjectByKey(Rechnung.INVOICE_CORRECTION,
 				StringUtils.isEmpty(invoiceCorrectionDTO.getNewInvoiceNumber()) ? ""
 						: invoiceCorrectionDTO.getNewInvoiceNumber());
 		}
