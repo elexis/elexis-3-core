@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde?><!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl --><target name="Elexis" sequenceNumber="1548329707">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde?><!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl --><target name="Elexis" sequenceNumber="1554710856">
   <locations>
     <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.swt.nl_de" version="4.8.0.v20180815020001"/>
@@ -28,7 +28,7 @@
       <repository location="https://ftp.fau.de/eclipse/technology/babel/update-site/R0.16.0/photon"/>
     </location>
     <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-      <unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.18.0.v20181023-1826"/>
+      <unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.18.0.v20190227-1016"/>
       <repository location="http://download.eclipse.org/e4/snapshots/org.eclipse.e4.tools/latest/"/>
     </location>
     <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
@@ -102,7 +102,7 @@
       <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180905201904/repository/"/>
     </location>
     <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-      <unit id="info.elexis.server.hapi.fhir" version="3.4.0.201901161332"/>
+      <unit id="info.elexis.server.hapi.fhir" version="3.4.0.201904021312"/>
       <repository location="http://download.elexis.info/elexis-server/master/p2/elexis-server"/>
     </location>
     <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
