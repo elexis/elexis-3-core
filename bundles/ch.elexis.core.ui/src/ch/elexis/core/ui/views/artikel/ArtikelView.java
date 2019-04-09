@@ -222,6 +222,9 @@ public class ArtikelView extends ViewPart implements IActivationListener, ISavea
 				ct.setText(detailDisplay.getTitle());
 				ct.setData(KEY_CE, ce);
 				ct.setData(KEY_DETAIL, detailDisplay);
+				if (detailDisplay != null) {
+					CoreUiUtil.injectServicesWithContext(detailDisplay);
+				}
 			} catch (Exception ex) {
 				LoggerFactory.getLogger(getClass()).error("Error creating pages", ex);
 				MessageBox mb = new MessageBox(getViewSite().getShell(), SWT.ICON_ERROR | SWT.OK);

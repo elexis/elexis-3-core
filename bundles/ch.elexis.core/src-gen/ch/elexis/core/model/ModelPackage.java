@@ -1658,13 +1658,22 @@ public interface ModelPackage extends EPackage {
 	int IPATIENT__LEGAL_GUARDIAN = IPERSON__LEGAL_GUARDIAN;
 
 	/**
+	 * The feature id for the '<em><b>Family Doctor</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPATIENT__FAMILY_DOCTOR = IPERSON_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Diagnosen</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IPATIENT__DIAGNOSEN = IPERSON_FEATURE_COUNT + 0;
+	int IPATIENT__DIAGNOSEN = IPERSON_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Risk</b></em>' attribute.
@@ -1673,7 +1682,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IPATIENT__RISK = IPERSON_FEATURE_COUNT + 1;
+	int IPATIENT__RISK = IPERSON_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Family Anamnese</b></em>' attribute.
@@ -1682,7 +1691,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IPATIENT__FAMILY_ANAMNESE = IPERSON_FEATURE_COUNT + 2;
+	int IPATIENT__FAMILY_ANAMNESE = IPERSON_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Personal Anamnese</b></em>' attribute.
@@ -1691,7 +1700,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IPATIENT__PERSONAL_ANAMNESE = IPERSON_FEATURE_COUNT + 3;
+	int IPATIENT__PERSONAL_ANAMNESE = IPERSON_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Allergies</b></em>' attribute.
@@ -1700,7 +1709,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IPATIENT__ALLERGIES = IPERSON_FEATURE_COUNT + 4;
+	int IPATIENT__ALLERGIES = IPERSON_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Coverages</b></em>' reference list.
@@ -1709,7 +1718,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IPATIENT__COVERAGES = IPERSON_FEATURE_COUNT + 5;
+	int IPATIENT__COVERAGES = IPERSON_FEATURE_COUNT + 6;
 
 	/**
 	 * The number of structural features of the '<em>IPatient</em>' class.
@@ -1718,7 +1727,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IPATIENT_FEATURE_COUNT = IPERSON_FEATURE_COUNT + 6;
+	int IPATIENT_FEATURE_COUNT = IPERSON_FEATURE_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IMandator <em>IMandator</em>}' class.
@@ -6791,6 +6800,17 @@ public interface ModelPackage extends EPackage {
 	EClass getIPatient();
 
 	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IPatient#getFamilyDoctor <em>Family Doctor</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Family Doctor</em>'.
+	 * @see ch.elexis.core.model.IPatient#getFamilyDoctor()
+	 * @see #getIPatient()
+	 * @generated
+	 */
+	EReference getIPatient_FamilyDoctor();
+
+	/**
 	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPatient#getDiagnosen <em>Diagnosen</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -10750,6 +10770,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EClass IPATIENT = eINSTANCE.getIPatient();
+
+		/**
+		 * The meta object literal for the '<em><b>Family Doctor</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IPATIENT__FAMILY_DOCTOR = eINSTANCE.getIPatient_FamilyDoctor();
 
 		/**
 		 * The meta object literal for the '<em><b>Diagnosen</b></em>' attribute feature.

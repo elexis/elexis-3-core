@@ -35,7 +35,7 @@ public class ReferenceDataImporterService implements IReferenceDataImporterServi
 		Map<String, Object> properties){
 		importersMap.remove((String) properties.get(IReferenceDataImporter.REFERENCEDATAID));
 		LoggerFactory.getLogger(getClass())
-			.warn("Removed IReferenceDataImporter [" + referenceDataImporter + "]");
+			.info("Removed IReferenceDataImporter [" + referenceDataImporter + "]");
 	}
 	
 	@Override

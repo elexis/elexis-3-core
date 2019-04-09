@@ -964,5 +964,45 @@
             <column name="KONSID"/>
         </createIndex>
     </changeSet>
+
+    <changeSet author="thomas (generated)" id="manual_table_ICD10">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="ICD10" />
+			</not>
+		</preConditions>
+        <createTable tableName="ICD10">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_ICD10_ID"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="PARENT" type="VARCHAR(25)"/>
+            <column name="ICDCODE" type="VARCHAR(10)"/>
+            <column name="ENCODED" type="CLOB"/>
+            <column name="ICDTXT" type="CLOB"/>
+			<column name="EXTINFO" type="BLOB" />
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="manual_idx_ICD1">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="ICD1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="ICD1" tableName="ICD10">
+            <column name="PARENT"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="manual_idx_ICD12">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="ICD2" />
+			</not>
+		</preConditions>
+        <createIndex indexName="ICD2" tableName="ICD10">
+            <column name="ICDCODE"/>
+        </createIndex>
+    </changeSet>
     
 </databaseChangeLog>

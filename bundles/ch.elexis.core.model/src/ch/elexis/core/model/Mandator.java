@@ -11,8 +11,8 @@ public class Mandator extends Contact implements IMandator {
 	
 	@Override
 	public IContact getBiller(){
-		Object billerId = getExtInfo(MandatorConstants.BILLER);
-		if (billerId instanceof String) {
+		String billerId = (String) getExtInfo(MandatorConstants.BILLER);
+		if (billerId != null) {
 			return CoreModelServiceHolder.get().load((String) billerId, IContact.class)
 				.orElse(null);
 		}

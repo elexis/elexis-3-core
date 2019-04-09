@@ -92,6 +92,7 @@
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//ILaboratory"/>
     <genClasses image="false" ecoreClass="model.ecore#//IPatient">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IPatient/familyDoctor"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPatient/diagnosen"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPatient/risk"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPatient/familyAnamnese"/>
@@ -398,6 +399,7 @@
       <genOperations ecoreOperation="model.ecore#//IEncounter/removeBilled">
         <genParameters ecoreParameter="model.ecore#//IEncounter/removeBilled/billed"/>
       </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IEncounter/getInvoiceState"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IBilled">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IBilled/billable"/>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="ch.elexis.core.importer.div.service.holder.LabImportUtilHolder">
+   <reference bind="setModelService" cardinality="1..1" interface="ch.elexis.core.importer.div.importers.ILabImportUtil" name="ModelService"/>
+   <implementation class="ch.elexis.core.importer.div.service.holder.LabImportUtilHolder"/>
+</scr:component>

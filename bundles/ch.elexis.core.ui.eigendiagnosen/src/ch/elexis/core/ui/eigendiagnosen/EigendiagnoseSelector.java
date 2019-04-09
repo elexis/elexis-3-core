@@ -30,8 +30,8 @@ import ch.elexis.core.model.IDiagnosisTree;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.ui.util.viewers.CommonViewerContentProvider;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
+import ch.elexis.core.ui.util.viewers.CommonViewerContentProvider;
 import ch.elexis.core.ui.util.viewers.DefaultControlFieldProvider;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
@@ -58,7 +58,6 @@ public class EigendiagnoseSelector extends CodeSelectorFactory {
 		commonViewer.setNamedSelection("ch.elexis.core.ui.eigendiagnosen.selection");
 		vc.setContentType(ContentType.GENERICOBJECT);
 		return vc;
-		
 	}
 	
 	@Override

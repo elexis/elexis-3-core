@@ -20,7 +20,7 @@ public interface ICodeElementService {
 	}
 	
 	public enum ContextKeys {
-			CONSULTATION, COVERAGE, MANDATOR, LAW, DATE
+			CONSULTATION, COVERAGE, MANDATOR, LAW, DATE, TREE_ROOTS
 	}
 	
 	/**

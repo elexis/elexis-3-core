@@ -143,6 +143,8 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 		if (isTyp(ArticleTyp.EIGENARTIKEL)) {
 			return (String) getExtInfo(
 				ch.elexis.core.model.localarticle.Constants.FLD_EXT_MEASUREMENT_UNIT);
+		} else if (isTyp(ArticleTyp.MIGEL)) {
+			return (String) getExtInfo("unit");
 		}
 		return "";
 	}
@@ -151,6 +153,8 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	public void setPackageUnit(String value){
 		if (isTyp(ArticleTyp.EIGENARTIKEL)) {
 			setExtInfo(ch.elexis.core.model.localarticle.Constants.FLD_EXT_MEASUREMENT_UNIT, value);
+		} else if (isTyp(ArticleTyp.MIGEL)) {
+			setExtInfo("unit", value);
 		}
 	}
 	

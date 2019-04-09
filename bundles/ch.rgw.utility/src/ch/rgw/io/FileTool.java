@@ -25,9 +25,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.MessageFormat;
+import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.jar.JarOutputStream;
@@ -35,7 +40,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
+
+import org.h2.util.IOUtils;
 
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Log;
@@ -853,6 +861,41 @@ public class FileTool {
 			log.log("Copy file: " + srcDir.getPath() + " to " + dstDir.getPath(), Log.DEBUGMSG);
 			copyFile(new File(srcDir.getPath()), new File(dstDir.getPath()),
 				FileTool.REPLACE_IF_EXISTS);
+		}
+	}
+	
+	public static void unzip(File zipFile, File unzipDir) throws IOException{
+		try (ZipFile file = new ZipFile(zipFile)) {
+			FileSystem fileSystem = FileSystems.getDefault();
+			// Get file entries
+			Enumeration<? extends ZipEntry> entries = file.entries();
+			// We will unzip files in this folder
+			String uncompressedDirectory = unzipDir.getAbsolutePath();
+			// Iterate over entries
+			while (entries.hasMoreElements()) {
+				ZipEntry entry = entries.nextElement();
+				// If directory then create a new directory in uncompressed folder
+				if (entry.isDirectory()) {
+					Files.createDirectories(
+						fileSystem.getPath(uncompressedDirectory + entry.getName()));
+				}
+				// Else create the file
+				else {
+					try (InputStream is = file.getInputStream(entry);
+							BufferedInputStream bis = new BufferedInputStream(is)) {
+						String uncompressedFileName =
+							uncompressedDirectory + File.separator + entry.getName();
+						Path uncompressedFilePath = fileSystem.getPath(uncompressedFileName);
+						// make sure directories exist
+						Files.createDirectories(uncompressedFilePath.getParent());
+						Files.createFile(uncompressedFilePath);
+						try (FileOutputStream fileOutput =
+							new FileOutputStream(uncompressedFileName)) {
+							IOUtils.copy(bis, fileOutput);
+						}
+					}
+				}
+			}
 		}
 	}
 }

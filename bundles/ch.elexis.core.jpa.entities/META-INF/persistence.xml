@@ -45,6 +45,7 @@
 		<class>ch.elexis.core.jpa.entities.FreeTextDiagnosis</class>
 		<class>ch.elexis.core.jpa.entities.Heap</class>
 		<class>ch.elexis.core.jpa.entities.Heap2</class>
+		<class>ch.elexis.core.jpa.entities.ICD10</class>
 		<class>ch.elexis.core.jpa.entities.Invoice</class>
 		<class>ch.elexis.core.jpa.entities.Kontakt</class>
 		<class>ch.elexis.core.jpa.entities.KontaktAdressJoint</class>

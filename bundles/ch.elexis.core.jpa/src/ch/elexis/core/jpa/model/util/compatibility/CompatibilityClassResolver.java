@@ -17,6 +17,14 @@ public class CompatibilityClassResolver {
 			return Thread.currentThread().getContextClassLoader()
 				.loadClass("ch.elexis.core.jpa.model.util.compatibility.Kontakt$statL");
 		}
+		if (desc.getName().equals("ch.elexis.util.MFUList")) {
+			return Thread.currentThread().getContextClassLoader()
+				.loadClass("ch.elexis.core.jpa.model.util.compatibility.MFUList");
+		}
+		if (desc.getName().equals("ch.elexis.util.MFUList$Entry")) {
+			return Thread.currentThread().getContextClassLoader()
+				.loadClass("ch.elexis.core.jpa.model.util.compatibility.MFUList$Entry");
+		}
 		return null;
 	}
 	

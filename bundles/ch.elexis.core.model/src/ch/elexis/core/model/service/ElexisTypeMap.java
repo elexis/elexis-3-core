@@ -174,6 +174,9 @@ public class ElexisTypeMap {
 	}
 
 	public static Class<? extends EntityWithId> get(String value){
+		if (value.equalsIgnoreCase("ch.elexis.eigenartikel.Eigenartikel")) {
+			value = TYPE_EIGENARTIKEL;
+		}
 		return stsToClassMap.get(value);
 	}
 }

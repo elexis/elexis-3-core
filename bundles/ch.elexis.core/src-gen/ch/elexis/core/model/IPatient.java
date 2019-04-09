@@ -23,6 +23,7 @@ import java.util.List;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link ch.elexis.core.model.IPatient#getFamilyDoctor <em>Family Doctor</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPatient#getDiagnosen <em>Diagnosen</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPatient#getRisk <em>Risk</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPatient#getFamilyAnamnese <em>Family Anamnese</em>}</li>
@@ -36,6 +37,32 @@ import java.util.List;
  * @generated
  */
 public interface IPatient extends IPerson {
+	/**
+	 * Returns the value of the '<em><b>Family Doctor</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Family Doctor</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Family Doctor</em>' reference.
+	 * @see #setFamilyDoctor(IContact)
+	 * @see ch.elexis.core.model.ModelPackage#getIPatient_FamilyDoctor()
+	 * @model
+	 * @generated
+	 */
+	IContact getFamilyDoctor();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IPatient#getFamilyDoctor <em>Family Doctor</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Family Doctor</em>' reference.
+	 * @see #getFamilyDoctor()
+	 * @generated
+	 */
+	void setFamilyDoctor(IContact value);
+
 	/**
 	 * Returns the value of the '<em><b>Diagnosen</b></em>' attribute.
 	 * <!-- begin-user-doc -->

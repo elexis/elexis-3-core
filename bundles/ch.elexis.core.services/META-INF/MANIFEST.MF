@@ -51,5 +51,6 @@ Service-Component: OSGI-INF/ch.elexis.core.services.holder.CoreModelServiceHolde
  OSGI-INF/ch.elexis.core.services.ReferenceDataImporterService.xml,
  OSGI-INF/ch.elexis.core.services.AppointmentService.xml,
  OSGI-INF/ch.elexis.core.services.holder.AppointmentServiceHolder.xml,
- OSGI-INF/ch.elexis.core.services.holder.BillingServiceHolder.xml
+ OSGI-INF/ch.elexis.core.services.holder.BillingServiceHolder.xml,
+ OSGI-INF/ch.elexis.core.services.internal.DefaultArticleStoreToStringContribution.xml
 Export-Package: ch.elexis.core.services.holder

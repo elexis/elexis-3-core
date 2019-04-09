@@ -15,6 +15,7 @@ import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
+import ch.elexis.core.model.service.holder.ContextServiceHolder;
 import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.rgw.tools.VersionedResource;
@@ -143,8 +144,7 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 	
 	@Override
 	public IInvoice getInvoice(){
-		getEntity().getInvoice();
-		return null;
+		return ModelUtil.getAdapter(getEntity().getInvoice(), IInvoice.class);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -166,5 +166,24 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 	@Override
 	public void setBillable(boolean value){
 		getEntity().setBillable(value);
+	}
+	
+	@Override
+	public InvoiceState getInvoiceState(){
+		IInvoice invoice = getInvoice();
+		if (invoice != null) {
+			return invoice.getState();
+		}
+		IMandator mandator = getMandator();
+		IMandator activeMandator = ContextServiceHolder.get().getActiveMandator().orElse(null);
+		if ((mandator != null && activeMandator != null) && (mandator.equals(activeMandator))) {
+			if (getDate().isEqual(LocalDate.now())) {
+				return InvoiceState.FROM_TODAY;
+			} else {
+				return InvoiceState.NOT_FROM_TODAY;
+			}
+		} else {
+			return InvoiceState.NOT_FROM_YOU;
+		}
 	}
 }

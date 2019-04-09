@@ -94,7 +94,7 @@ public class Patient extends Person implements IPatient {
 	
 	@Override
 	public List<ICoverage> getCoverages(){
-		return getEntity().getFaelle().parallelStream().filter(f -> !f.isDeleted())
+		return getEntity().getFaelle().stream().filter(f -> !f.isDeleted())
 			.map(f -> ModelUtil.getAdapter(f, ICoverage.class)).collect(Collectors.toList());
 	}
 
@@ -125,6 +125,25 @@ public class Patient extends Person implements IPatient {
 			query.andJoinGroups();
 		}
 		return query.execute();
+	}
+	
+	@Override
+	public IContact getFamilyDoctor(){
+		String doctorId = (String) getExtInfo(PatientConstants.FLD_EXTINFO_STAMMARZT);
+		if (doctorId != null) {
+			return ch.elexis.core.model.service.holder.CoreModelServiceHolder.get().load(doctorId,
+				IContact.class).orElse(null);
+		}
+		return null;
+	}
+	
+	@Override
+	public void setFamilyDoctor(IContact value){
+		if (value != null) {
+			setExtInfo(PatientConstants.FLD_EXTINFO_STAMMARZT, value.getId());
+		} else {
+			setExtInfo(PatientConstants.FLD_EXTINFO_STAMMARZT, null);
+		}
 	}
 	
 }

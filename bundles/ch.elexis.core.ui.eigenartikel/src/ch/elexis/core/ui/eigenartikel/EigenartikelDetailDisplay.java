@@ -159,7 +159,9 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 	@Inject
 	public void selection(
 		@Optional @Named("ch.elexis.core.ui.eigenartikel.selection") IArticle typedArticle){
-		display(typedArticle);
+		if (epc != null && !epc.isDisposed()) {
+			display(typedArticle);
+		}
 	}
 	
 	/**

@@ -135,6 +135,7 @@
       </eGenericType>
       <eParameters name="filterType" upperBound="-1" eType="ecore:EDataType types.ecore#//EntryType"/>
     </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="familyDoctor" eType="#//IContact"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="diagnosen" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="risk" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="familyAnamnese" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -565,6 +566,7 @@
     <eOperations name="removeBilled">
       <eParameters name="billed" lowerBound="1" eType="#//IBilled"/>
     </eOperations>
+    <eOperations name="getInvoiceState" eType="ecore:EDataType types.ecore#//InvoiceState"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="timeStamp" eType="ecore:EDataType types.ecore#//LocalDateTime"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType types.ecore#//LocalDate">
       <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">

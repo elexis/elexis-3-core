@@ -1096,8 +1096,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIPatient_Diagnosen() {
-		return (EAttribute)iPatientEClass.getEStructuralFeatures().get(0);
+	public EReference getIPatient_FamilyDoctor() {
+		return (EReference)iPatientEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -1106,7 +1106,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIPatient_Risk() {
+	public EAttribute getIPatient_Diagnosen() {
 		return (EAttribute)iPatientEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -1116,7 +1116,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIPatient_FamilyAnamnese() {
+	public EAttribute getIPatient_Risk() {
 		return (EAttribute)iPatientEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -1126,7 +1126,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIPatient_PersonalAnamnese() {
+	public EAttribute getIPatient_FamilyAnamnese() {
 		return (EAttribute)iPatientEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -1136,7 +1136,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIPatient_Allergies() {
+	public EAttribute getIPatient_PersonalAnamnese() {
 		return (EAttribute)iPatientEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -1146,8 +1146,18 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getIPatient_Allergies() {
+		return (EAttribute)iPatientEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EReference getIPatient_Coverages() {
-		return (EReference)iPatientEClass.getEStructuralFeatures().get(5);
+		return (EReference)iPatientEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -4435,6 +4445,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iLaboratoryEClass = createEClass(ILABORATORY);
 
 		iPatientEClass = createEClass(IPATIENT);
+		createEReference(iPatientEClass, IPATIENT__FAMILY_DOCTOR);
 		createEAttribute(iPatientEClass, IPATIENT__DIAGNOSEN);
 		createEAttribute(iPatientEClass, IPATIENT__RISK);
 		createEAttribute(iPatientEClass, IPATIENT__FAMILY_ANAMNESE);
@@ -5055,6 +5066,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEClass(iLaboratoryEClass, ILaboratory.class, "ILaboratory", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(iPatientEClass, IPatient.class, "IPatient", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getIPatient_FamilyDoctor(), this.getIContact(), null, "familyDoctor", null, 0, 1, IPatient.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIPatient_Diagnosen(), ecorePackage.getEString(), "diagnosen", null, 0, 1, IPatient.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIPatient_Risk(), ecorePackage.getEString(), "risk", null, 0, 1, IPatient.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIPatient_FamilyAnamnese(), ecorePackage.getEString(), "familyAnamnese", null, 0, 1, IPatient.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -5404,6 +5416,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		op = addEOperation(iEncounterEClass, null, "removeBilled", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIBilled(), "billed", 1, 1, IS_UNIQUE, IS_ORDERED);
+
+		addEOperation(iEncounterEClass, theTypesPackage.getInvoiceState(), "getInvoiceState", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iBilledEClass, IBilled.class, "IBilled", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getIBilled_Billable(), this.getIBillable(), null, "billable", null, 0, 1, IBilled.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -296,4 +296,12 @@ public interface IEncounter extends Identifiable, Deleteable {
 	 */
 	void removeBilled(IBilled billed);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" dataType="ch.elexis.core.types.InvoiceState"
+	 * @generated
+	 */
+	InvoiceState getInvoiceState();
+
 } // IEncounter

@@ -1,5 +1,7 @@
 package ch.elexis.core.model;
 
+import java.util.Optional;
+
 import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.entities.Behandlung;
@@ -28,14 +30,21 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 	
 	@Override
 	public IBillable getBillable(){
-		String billableClass = getEntity().getKlasse();
-		String billableId = getEntity().getLeistungenCode();
-		if (StringUtils.isNotBlank(billableClass) && StringUtils.isNotBlank(billableId)) {
-			return (IBillable) StoreToStringServiceHolder.get()
-				.loadFromString(billableClass + IStoreToStringContribution.DOUBLECOLON + billableId)
+		Optional<String> storeToString = getBillableStoreToString();
+		if (storeToString.isPresent()) {
+			return (IBillable) StoreToStringServiceHolder.get().loadFromString(storeToString.get())
 				.orElse(null);
 		}
 		return null;
+	}
+	
+	private Optional<String> getBillableStoreToString(){
+		String billableClass = getEntity().getKlasse();
+		String billableId = getEntity().getLeistungenCode();
+		if (StringUtils.isNotBlank(billableClass) && StringUtils.isNotBlank(billableId)) {
+			return Optional.of(billableClass + IStoreToStringContribution.DOUBLECOLON + billableId);
+		}
+		return Optional.empty();
 	}
 	
 	@Override
@@ -195,7 +204,8 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 	
 	@Override
 	public String getCode(){
-		return getBillable().getCode();
+		IBillable billable = getBillable();
+		return billable != null ? billable.getCode() : getBillableStoreToString().orElse("?");
 	}
 	
 	@Override
