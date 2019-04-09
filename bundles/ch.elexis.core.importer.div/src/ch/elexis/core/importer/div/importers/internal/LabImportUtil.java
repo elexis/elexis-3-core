@@ -221,7 +221,7 @@ public class LabImportUtil implements ILabImportUtil {
 	/**
 	 * Import a list of TransientLabResults. Create LabOrder objects for new results.
 	 */
-	public String importLabResults(List<TransientLabResult> results, ImportHandler uiHandler){
+	public String importLabResults(List<TransientLabResult> results, ImportHandler importHandler){
 		boolean overWriteAll = false;
 		IMandator mandator = findMandatorForLabResults(results);
 		boolean newResult = false;
@@ -254,7 +254,7 @@ public class LabImportUtil implements ILabImportUtil {
 						continue;
 					}
 					
-					ImportHandler.OverwriteState retVal = uiHandler.askOverwrite(
+					ImportHandler.OverwriteState retVal = importHandler.askOverwrite(
 						transientLabResult.getPatient(), labResult, transientLabResult);
 					
 					if (retVal == ImportHandler.OverwriteState.OVERWRITE) {

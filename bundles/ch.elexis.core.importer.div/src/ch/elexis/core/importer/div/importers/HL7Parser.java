@@ -118,7 +118,13 @@ public class HL7Parser {
 			ObservationMessage obsMessage =
 				hl7Reader.readObservation(patientResolver, createPatientIfNotFound);
 			
-			pat = labImportUtil.loadCoreModel(hl7Reader.getPatient().getId(), IPatient.class)
+			IPatient patient = hl7Reader.getPatient();
+			if(patient == null) {
+				return new Result<Object>(SEVERITY.ERROR, 2, Messages.HL7_PatientNotInDatabase,
+						obsMessage.getPatientId(), true);
+			}
+			
+			pat = labImportUtil.loadCoreModel(patient.getId(), IPatient.class)
 				.orElse(null);
 			if (pat == null) {
 				return new Result<Object>(SEVERITY.ERROR, 2, Messages.HL7_PatientNotInDatabase,
