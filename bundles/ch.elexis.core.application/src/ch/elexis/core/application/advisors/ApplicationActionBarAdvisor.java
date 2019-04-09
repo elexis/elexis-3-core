@@ -12,6 +12,7 @@
 
 package ch.elexis.core.application.advisors;
 
+import static ch.elexis.admin.AccessControlDefaults.AC_SHOWVIEW;
 import static ch.elexis.core.ui.actions.GlobalActions.perspectiveMenu;
 import static ch.elexis.core.ui.actions.GlobalActions.resetPerspectiveAction;
 
@@ -22,26 +23,32 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.ICoolBarManager;
+import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ContributionItemFactory;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 
+import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.actions.GlobalActions;
+import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
@@ -116,20 +123,62 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		
 	}
 	
+	private final IMenuListener reflectRightsListener = new IMenuListener() {
+		
+		@Override
+		public void menuAboutToShow(IMenuManager manager){
+			IContributionItem[] items = manager.getItems();
+			for (IContributionItem iContributionItem : items) {
+				if(iContributionItem instanceof ActionContributionItem) {
+					ActionContributionItem aci = (ActionContributionItem) iContributionItem;		
+					IAction action = aci.getAction();
+					if(action instanceof RestrictedAction) {
+						RestrictedAction ra = (RestrictedAction) aci.getAction();
+						ra.reflectRight();
+						continue;
+					}
+					String id = action.getActionDefinitionId();
+					if(id==null) {
+						continue;
+					}
+					switch (id) {
+					case IWorkbenchCommandConstants.FILE_EXIT:
+						action.setEnabled(CoreHub.acl.request(AccessControlDefaults.AC_EXIT));
+						break;
+					case IWorkbenchCommandConstants.WINDOW_NEW_WINDOW:
+						action.setEnabled(CoreHub.acl.request(AccessControlDefaults.AC_NEWWINDOW));
+						break;
+					case IWorkbenchCommandConstants.HELP_ABOUT:
+						action.setEnabled(CoreHub.acl.request(AccessControlDefaults.AC_ABOUT));
+						break;
+					case IWorkbenchCommandConstants.WINDOW_PREFERENCES:
+						action.setEnabled(CoreHub.acl.request(AccessControlDefaults.AC_PREFS));
+						break;
+					default:
+						break;
+					}
+				}
+			}
+		}
+	};
+	
 	protected void fillMenuBar(IMenuManager menuBar){
 		
 		fileMenu =
 			new MenuManager(Messages.ApplicationActionBarAdvisor_3,
 				IWorkbenchActionConstants.M_FILE);
+		fileMenu.addMenuListener(reflectRightsListener);
 		editMenu =
 			new MenuManager(Messages.ApplicationActionBarAdvisor_4,
 				IWorkbenchActionConstants.M_EDIT);
+		editMenu.addMenuListener(reflectRightsListener);
 		windowMenu =
 			new MenuManager(Messages.ApplicationActionBarAdvisor_5,
 				IWorkbenchActionConstants.M_WINDOW);
 		helpMenu =
 			new MenuManager(Messages.ApplicationActionBarAdvisor_6,
 				IWorkbenchActionConstants.M_HELP);
+		helpMenu.addMenuListener(reflectRightsListener);
 		menuBar.add(fileMenu);
 		menuBar.add(editMenu);
 		menuBar.add(windowMenu);
@@ -151,6 +200,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		editMenu.add(GlobalActions.copyAction);
 		editMenu.add(GlobalActions.cutAction);
 		editMenu.add(GlobalActions.pasteAction);
+
 		
 		GlobalActions.perspectiveMenu =
 			new MenuManager(Messages.ApplicationActionBarAdvisor_7, "openPerspective"); //$NON-NLS-1$
@@ -161,6 +211,18 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		GlobalActions.viewList = ContributionItemFactory.VIEWS_SHORTLIST.create(window);
 		GlobalActions.viewMenu.add(GlobalActions.viewList);
 		windowMenu.add(GlobalActions.viewMenu);
+		windowMenu.addMenuListener(new IMenuListener() {
+			
+			@Override
+			public void menuAboutToShow(IMenuManager manager){
+				IContributionItem[] items = manager.getItems();
+				for (IContributionItem iContributionItem : items) {
+					if( "viewsShortlist".equals(iContributionItem.getId())) {
+						iContributionItem.setVisible(CoreHub.acl.request(AC_SHOWVIEW));
+					}
+				}
+			}
+		});
 		
 		/* helpMenu.add(testAction); */
 		helpMenu.add(GlobalActions.helpAction);

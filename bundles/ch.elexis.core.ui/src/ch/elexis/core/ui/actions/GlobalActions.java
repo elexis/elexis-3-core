@@ -11,16 +11,11 @@
 
 package ch.elexis.core.ui.actions;
 
-import static ch.elexis.admin.AccessControlDefaults.AC_ABOUT;
 import static ch.elexis.admin.AccessControlDefaults.AC_CHANGEMANDANT;
 import static ch.elexis.admin.AccessControlDefaults.AC_CONNECT;
-import static ch.elexis.admin.AccessControlDefaults.AC_EXIT;
 import static ch.elexis.admin.AccessControlDefaults.AC_HELP;
 import static ch.elexis.admin.AccessControlDefaults.AC_IMORT;
 import static ch.elexis.admin.AccessControlDefaults.AC_LOGIN;
-import static ch.elexis.admin.AccessControlDefaults.AC_NEWWINDOW;
-import static ch.elexis.admin.AccessControlDefaults.AC_PREFS;
-import static ch.elexis.admin.AccessControlDefaults.AC_SHOWVIEW;
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_ADDRESS_LABEL;
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_KG_COVER_SHEET;
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_XRAY;
@@ -69,17 +64,17 @@ import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.admin.ACE;
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.data.interfaces.IPersistentObject;
-import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.BillingUtil;
 import ch.elexis.core.data.util.ResultAdapter;
+import ch.elexis.core.services.holder.LocalLockServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
@@ -185,7 +180,7 @@ public class GlobalActions {
 			}
 		};
 		
-		helpAction = new Action(Messages.GlobalActions_ac_handbook) { //$NON-NLS-1$
+		helpAction = new RestrictedAction(AC_HELP, Messages.GlobalActions_ac_handbook) { //$NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_BOOK.getImageDescriptor());
 				setToolTipText(Messages.GlobalActions_ac_openhandbook); //$NON-NLS-1$
@@ -193,7 +188,7 @@ public class GlobalActions {
 			}
 			
 			@Override
-			public void run(){
+			public void doRun(){
 				Desktop desktop = Desktop.getDesktop();
 				String url = CoreHub.globalCfg.get(UiPreferenceConstants.CFG_HANDBOOK,
 					UiPreferenceConstants.DEFAULT_HANDBOOK);
@@ -258,14 +253,14 @@ public class GlobalActions {
 			}
 			
 		};
-		loginAction = new Action(Messages.GlobalActions_Login) { //$NON-NLS-1$
+		loginAction = new RestrictedAction(AC_LOGIN, Messages.GlobalActions_Login) { //$NON-NLS-1$
 			{
 				setId("login"); //$NON-NLS-1$
 				setActionDefinitionId(Hub.COMMAND_PREFIX + "login"); //$NON-NLS-1$
 			}
 			
 			@Override
-			public void run(){
+			public void doRun(){
 				try {
 					IWorkbenchWindow win = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 					IWorkbenchWindow[] wins = PlatformUI.getWorkbench().getWorkbenchWindows();
@@ -285,21 +280,21 @@ public class GlobalActions {
 					if (dlg.open() == Dialog.CANCEL) {
 						exitAction.run();
 					}
-					adaptForUser();
+					CoreOperationExtensionPoint.getCoreOperationAdvisor().adaptForUser();
 				} catch (Exception ex) {
 					ExHandler.handle(ex);
 				}
 				System.out.println("login"); //$NON-NLS-1$
 			}
 		};
-		importAction = new Action(Messages.GlobalActions_Import) { //$NON-NLS-1$
+		importAction = new RestrictedAction(AC_IMORT, Messages.GlobalActions_Import) { //$NON-NLS-1$
 			{
 				setId("import"); //$NON-NLS-1$
 				setActionDefinitionId(Hub.COMMAND_PREFIX + "import"); //$NON-NLS-1$
 			}
 			
 			@Override
-			public void run(){
+			public void doRun(){
 				// cnv.open();
 				Importer imp =
 					new Importer(mainWindow.getShell(), ExtensionPointConstantsUi.FREMDDATENIMPORT);
@@ -311,28 +306,28 @@ public class GlobalActions {
 			}
 		};
 		
-		connectWizardAction = new Action(Messages.GlobalActions_Connection) { //$NON-NLS-1$
+		connectWizardAction = new RestrictedAction(AC_CONNECT, Messages.GlobalActions_Connection) { //$NON-NLS-1$
 			{
 				setId("connectWizard"); //$NON-NLS-1$
 				setActionDefinitionId(Hub.COMMAND_PREFIX + "connectWizard"); //$NON-NLS-1$
 			}
 			
 			@Override
-			public void run(){
+			public void doRun(){
 				WizardDialog wd = new WizardDialog(mainWindow.getShell(), new DBConnectWizard());
 				wd.open();
 			}
 			
 		};
 		
-		changeMandantAction = new Action(Messages.GlobalActions_Mandator) { //$NON-NLS-1$
+		changeMandantAction = new RestrictedAction(AC_CHANGEMANDANT, Messages.GlobalActions_Mandator) { //$NON-NLS-1$
 			{
 				setId("changeMandant"); //$NON-NLS-1$
 				// setActionDefinitionId(Hub.COMMAND_PREFIX+"changeMandant"); //$NON-NLS-1$
 			}
 			
 			@Override
-			public void run(){
+			public void doRun(){
 				ChangeMandantDialog cmd = new ChangeMandantDialog();
 				if (cmd.open() == org.eclipse.jface.dialogs.Dialog.OK) {
 					Mandant n = cmd.result;
@@ -876,50 +871,6 @@ public class GlobalActions {
 	 */
 	private boolean isDirectPrint(){
 		return !CoreHub.localCfg.get("Drucker/Etiketten/Choose", true);
-	}
-	
-	/**
-	 * Verfügbarkeit der einzelnen Menuepunkte an den angemeldeten Anwender anpassen
-	 * Menueeinstellungen wiederherstellen
-	 */
-	public void adaptForUser(){
-		setMenuForUser(AC_EXIT, exitAction);
-		// setMenuForUser(AC_UPDATE,updateAction); //$NON-NLS-1$
-		setMenuForUser(AC_NEWWINDOW, newWindowAction);
-		setMenuForUser(AC_LOGIN, loginAction);
-		setMenuForUser(AC_IMORT, importAction);
-		setMenuForUser(AC_ABOUT, aboutAction);
-		setMenuForUser(AC_HELP, helpAction);
-		setMenuForUser(AC_PREFS, prefsAction);
-		setMenuForUser(AC_CHANGEMANDANT, changeMandantAction);
-		// setMenuForUser("importTarmedAction",importTarmedAction);
-		setMenuForUser(AC_CONNECT, connectWizardAction);
-		if (CoreHub.acl.request(AC_SHOWVIEW) == true) {
-			viewList.setVisible(true);
-		} else {
-			viewList.setVisible(false);
-		}
-		
-		// restore menue settings
-		if (CoreHub.actUser != null) {
-			boolean fixLayoutChecked =
-				CoreHub.userCfg.get(Preferences.USR_FIX_LAYOUT, Preferences.USR_FIX_LAYOUT_DEFAULT);
-			fixLayoutAction.setChecked(fixLayoutChecked);
-			// System.err.println("fixLayoutAction: set to " +
-			// fixLayoutChecked);
-		} else {
-			fixLayoutAction.setChecked(Preferences.USR_FIX_LAYOUT_DEFAULT);
-			// System.err.println("fixLayoutAction: reset to false");
-		}
-	}
-	
-	private void setMenuForUser(final ACE ace, final IAction action){
-		if (CoreHub.acl.request(ace) == true) {
-			action.setEnabled(true);
-		} else {
-			action.setEnabled(false);
-		}
-		
 	}
 	
 	/**

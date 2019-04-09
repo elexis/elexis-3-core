@@ -22,8 +22,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.constants.ElexisSystemPropertyConstants;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
 import ch.elexis.core.data.util.IRunnableWithProgress;
 import ch.elexis.core.ui.actions.GlobalActions;
@@ -60,6 +61,15 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 		if (CoreHub.actUser != null) {
 			initialPerspectiveString =
 				CoreHub.localCfg.get(CoreHub.actUser + GlobalActions.DEFAULTPERSPECTIVECFG, null);
+			boolean fixLayoutChecked =
+				CoreHub.userCfg.get(Preferences.USR_FIX_LAYOUT, Preferences.USR_FIX_LAYOUT_DEFAULT);
+			if (GlobalActions.fixLayoutAction != null) {
+				GlobalActions.fixLayoutAction.setChecked(fixLayoutChecked);
+			}
+		} else {
+			if (GlobalActions.fixLayoutAction != null) {
+				GlobalActions.fixLayoutAction.setChecked(Preferences.USR_FIX_LAYOUT_DEFAULT);
+			}
 		}
 	}
 	
@@ -148,6 +158,7 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 			dlg.setTitle(Messages.LoginDialog_notLoggedIn);
 			dlg.setMessage(Messages.LoginDialog_enterUsernamePass);
 			dlg.open();
+			// TODO adaptForUser
 		}
 	}
 	

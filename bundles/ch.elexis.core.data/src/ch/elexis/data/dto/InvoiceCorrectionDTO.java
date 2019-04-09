@@ -58,7 +58,7 @@ public class InvoiceCorrectionDTO {
 		this.outputText = null;
 		this.receiver = fall.getPatient().getLabel();
 		this.betrag = rechnung.getBetrag().getAmountAsString();
-		this.newInvoiceNumber = rechnung.getExtInfo(Rechnung.INVOICE_CORRECTION);
+		this.newInvoiceNumber = (String) rechnung.getExtInfoStoredObjectByKey(Rechnung.INVOICE_CORRECTION);
 		this.openNewInvoice = false;
 		if (StringUtils.isNotEmpty(rechnung.getNr())) {
 			InvoiceState invoiceState = rechnung.getInvoiceState();

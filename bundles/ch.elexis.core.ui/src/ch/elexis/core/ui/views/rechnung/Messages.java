@@ -106,6 +106,7 @@ public class Messages {
 	public static String RechnungsBlatt_noBillSelected = ch.elexis.core.l10n.Messages.RechnungsBlatt_noBillSelected;
 	public static String RechnungsBlatt_outputs = ch.elexis.core.l10n.Messages.RechnungsBlatt_outputs;
 	public static String RechnungsBlatt_remarks = ch.elexis.core.l10n.Messages.RechnungsBlatt_remarks;
+	public static String RechnungsBlatt_internalRemarks = ch.elexis.core.l10n.Messages.RechnungsBlatt_internalRemarks;
 	public static String RechnungsBlatt_sateChangements = ch.elexis.core.l10n.Messages.RechnungsBlatt_sateChangements;
 	public static String RechnungsBlatt_treatmentsFrom = ch.elexis.core.l10n.Messages.RechnungsBlatt_treatmentsFrom;
 	public static String RechnungsBlatt_treatmentsUntil = ch.elexis.core.l10n.Messages.RechnungsBlatt_treatmentsUntil;
@@ -179,6 +180,7 @@ public class Messages {
 	public static String RnActions_stornoActionTooltip = ch.elexis.core.l10n.Messages.RnActions_stornoActionTooltip;
 	public static String RnActions_sum = ch.elexis.core.l10n.Messages.RnActions_sum;
 	public static String RnActions_transferMoneyCaption = ch.elexis.core.l10n.Messages.RnActions_transferMoneyCaption;
+	public static String RnActions_stornoActionNotPossibleText = ch.elexis.core.l10n.Messages.RnActions_stornoActionNotPossibleText;
 	public static String RnContentProvider_collectInvoices = ch.elexis.core.l10n.Messages.RnContentProvider_collectInvoices;
 	public static String RnContentProvider_databseRequest = ch.elexis.core.l10n.Messages.RnContentProvider_databseRequest;
 	public static String RnContentProvider_errorRetriveingBillds = ch.elexis.core.l10n.Messages.RnContentProvider_errorRetriveingBillds;

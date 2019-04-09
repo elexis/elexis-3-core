@@ -586,6 +586,20 @@ public class RnDialogs {
 			return konsultations;
 		}
 		
+		@Override
+		public int open() {
+			if (rn != null) {
+				InvoiceState invoiceState = rn.getInvoiceState();
+				if (InvoiceState.CANCELLED.equals(invoiceState)
+						|| InvoiceState.DEPRECIATED.equals(invoiceState)) {
+					SWTHelper.alert(Messages.RnActions_stornoAction,
+						Messages.RnActions_stornoActionNotPossibleText);
+					return TitleAreaDialog.CANCEL;
+				}
+			}
+			return super.open();
+		}
+		
 		/**
 		 * Opens a dialog and closes it with OK if no rnoutputters are registered. Otherwise the
 		 * dialog will stay opened.

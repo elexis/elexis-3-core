@@ -79,6 +79,9 @@
             <ExternalMaintenance
                   MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.CloseAllOpenOrders">
             </ExternalMaintenance>
+            <ExternalMaintenance
+                  MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.MoveInvoiceRemarksToInternalRemarks">
+            </ExternalMaintenance>
    </extension>
 
 </plugin>

@@ -41,7 +41,15 @@ import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
 public class Rechnung extends PersistentObject {
-	public static final String REMARK = "Bemerkung";
+	/**
+	 * Public remarks, printed on invoice
+	 */
+	public static final String FLD_EXT_REMARK = "Bemerkung";
+	/**
+	 * Not printed on invoices, only privately visible
+	 */
+	public static final String FLD_EXT_INTERNAL_REMARKS = "InternalRemarks";
+	
 	/**
 	 * The date the current state was set, if in the future, we have a temporary state
 	 */
@@ -406,27 +414,34 @@ public class Rechnung extends PersistentObject {
 	 * @since 3.3
 	 */
 	public List<Konsultation> stornoBill(final boolean reopen){
-		Money betrag = getBetrag();
-		new Zahlung(this, betrag, "Storno", null);
-		if (reopen == true) {
-			List<Konsultation> kons = new ArrayList<>();
-			Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
-			qbe.add(Konsultation.FLD_BILL_ID, Query.EQUALS, getId());
-			for (Konsultation k : qbe.execute()) {
-				k.set(Konsultation.FLD_BILL_ID, null);
-				kons.add(k);
+		InvoiceState invoiceState = InvoiceState.fromState(getStatus());
+		List<Konsultation> kons = null;
+		if (!InvoiceState.CANCELLED.equals(invoiceState)
+			&& !InvoiceState.DEPRECIATED.equals(invoiceState)) {
+			Money betrag = getBetrag();
+			new Zahlung(this, betrag, "Storno", null);
+			if (reopen) {
+				kons = removeBillFromKons();
+				setStatus(InvoiceState.CANCELLED.getState());
+			} else {
+				setStatus(InvoiceState.DEPRECIATED.getState());
 			}
-			/*
-			 * getConnection().exec( "UPDATE BEHANDLUNGEN SET RECHNUNGSID=NULL WHERE RECHNUNGSID=" +
-			 * getWrappedId());
-			 */
-			setStatus(RnStatus.STORNIERT);
-			return kons;
-		} else {
-			
-			setStatus(RnStatus.ABGESCHRIEBEN);
-			return null;
+		} else if (reopen && InvoiceState.CANCELLED.equals(invoiceState)){
+			// if bill is canceled ensure that all kons are opened
+			kons = removeBillFromKons();
 		}
+		return kons;
+	}
+
+	private List<Konsultation> removeBillFromKons(){
+		List<Konsultation> kons = new ArrayList<>();
+		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
+		qbe.add(Konsultation.FLD_BILL_ID, Query.EQUALS, getId());
+		for (Konsultation k : qbe.execute()) {
+			k.set(Konsultation.FLD_BILL_ID, null);
+			kons.add(k);
+		}
+		return kons;
 	}
 	
 	/** Datum der Rechnung holen */
@@ -590,7 +605,7 @@ public class Rechnung extends PersistentObject {
 	 */
 	public void setTemporaryState(final int temporaryState, TimeTool expiryDate){
 		addTrace(STATUS_CHANGED, Integer.toString(temporaryState));
-		setExtInfo("TEMPORARY_STATE", Integer.toString(temporaryState));
+		setExtInfoStoredObjectByKey("TEMPORARY_STATE", Integer.toString(temporaryState));
 		set(BILL_STATE_DATE, expiryDate.toString(TimeTool.DATE_GER));
 	}
 	
@@ -720,24 +735,29 @@ public class Rechnung extends PersistentObject {
 	}
 	
 	public String getBemerkung(){
-		return getExtInfo(REMARK);
+		return checkNull(getExtInfoStoredObjectByKey(FLD_EXT_REMARK));
 	}
 	
 	public void setBemerkung(final String bem){
-		setExtInfo(REMARK, bem);
+		setExtInfoStoredObjectByKey(FLD_EXT_REMARK, bem);
 	}
 	
-	public String getExtInfo(final String key){
-		Hashtable<String, String> ext = loadExtension();
-		String ret = ext.get(key);
-		return checkNull(ret);
+	/**
+	 * @return internal invoice remarks
+	 * @since 3.7
+	 */
+	public String getInternalRemarks() {
+		return checkNull(getExtInfoStoredObjectByKey(FLD_EXT_INTERNAL_REMARKS));
 	}
 	
-	public void setExtInfo(final String key, final String value){
-		Hashtable<String, String> ext = loadExtension();
-		ext.put(key, value);
-		flushExtension(ext);
+	/**
+	 * @param internalRemarks, not visible on invoice
+	 * @since 3.7
+	 */
+	public void setInternalRemarks(final String internalRemarks) {
+		setExtInfoStoredObjectByKey(FLD_EXT_INTERNAL_REMARKS, internalRemarks);
 	}
+
 	
 	/**
 	 * EIn Trace-Eintrag ist eine Notiz über den Verlauf. (Z.B. Statusänderungen, Zahlungen,
