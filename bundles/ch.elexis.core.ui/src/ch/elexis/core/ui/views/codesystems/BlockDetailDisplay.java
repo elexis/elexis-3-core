@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.jface.action.Action;
@@ -94,12 +95,16 @@ public class BlockDetailDisplay implements IDetailDisplay {
 	private Button bNew, bEigen, bDiag;
 	private List<Mandant> lMandanten;
 	private DataBindingContext dbc = new DataBindingContext();
-	private WritableValue master = new WritableValue(null, Leistungsblock.class);
+	private WritableValue<Leistungsblock> master = new WritableValue<>(null, Leistungsblock.class);
 	
 	private BlockComparator comparator;
 	
 	private Action removeLeistung, moveUpAction, moveDownAction, editAction, countAction;
 	private TableViewerFocusCellManager focusCellManager;
+	
+	private final IChangeListener changeListener = (event) -> {
+		ElexisEventDispatcher.update(master.getValue());
+	};
 	
 	public Composite createDisplay(final Composite parent, final IViewSite site){
 		tk = UiDesk.getToolkit();
@@ -116,10 +121,13 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		tName = tk.createText(body, StringConstants.EMPTY, SWT.BORDER);
 		tName.setData("TEST_COMP_NAME", "blkd_Name_lst"); //$NON-NLS-1$
 		tName.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		IObservableValue txtNameObservableUi =
+		@SuppressWarnings("unchecked")
+		IObservableValue<String> txtNameObservableUi =
 			WidgetProperties.text(SWT.Modify).observeDelayed(100, tName);
-		IObservableValue txtNameObservable =
+		@SuppressWarnings("unchecked")
+		IObservableValue<String> txtNameObservable =
 			PojoProperties.value("name", String.class).observeDetail(master);
+		txtNameObservable.addChangeListener(changeListener);
 		dbc.bindValue(txtNameObservableUi, txtNameObservable);
 		
 		tk.createLabel(body, Messages.BlockDetailDisplay_macro)
@@ -127,10 +135,13 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		tMacro = tk.createText(body, StringConstants.EMPTY, SWT.BORDER);
 		tMacro.setData("TEST_COMP_NAME", "blkd_Makro_lst"); //$NON-NLS-1$
 		tMacro.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		IObservableValue txtMacroObservableUi =
-			WidgetProperties.text(SWT.Modify).observeDelayed(100, tMacro);
-		IObservableValue txtMacroObservable =
+		@SuppressWarnings("unchecked")
+		IObservableValue<String> txtMacroObservableUi =
+			WidgetProperties.text(SWT.Modify).observeDelayed(200, tMacro);
+		@SuppressWarnings("unchecked")
+		IObservableValue<String> txtMacroObservable =
 			PojoProperties.value("macro", String.class).observeDetail(master);
+		txtMacroObservable.addChangeListener(changeListener);
 		dbc.bindValue(txtMacroObservableUi, txtMacroObservable);
 		
 		tk.createLabel(body, StringConstants.MANDATOR).setBackground(parent.getBackground());
