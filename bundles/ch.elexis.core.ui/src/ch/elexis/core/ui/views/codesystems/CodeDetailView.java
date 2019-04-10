@@ -292,6 +292,7 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 		private IDetailDisplay detail;
 		
 		private ElexisEventListenerImpl eeli_div;
+		private ElexisEventListenerImpl eeli_mod;
 		
 		public MasterDetailsPage(Composite parent, CodeSelectorFactory codeSelectorFactory,
 			IDetailDisplay displayDetail){
@@ -299,6 +300,7 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 			
 			this.detail = displayDetail;
 			this.master = codeSelectorFactory;
+			cv = new CommonViewer();
 			eeli_div = new ElexisUiEventListenerImpl(detail.getElementClass(),
 				ElexisEvent.EVENT_SELECTED) {
 				@Override
@@ -306,14 +308,20 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 					detail.display(ev.getObject());
 				}
 			};
+			eeli_mod = new ElexisUiEventListenerImpl(detail.getElementClass(),
+				ElexisEvent.EVENT_UPDATE) {
+				@Override
+				public void runInUi(ElexisEvent ev){
+					cv.notify(CommonViewer.Message.updateSingle, ev.getObject());
+				}
+			};
 			setLayout(new FillLayout());
 			sash = new SashForm(this, SWT.NONE);
-			cv = new CommonViewer();
 			cv.setViewName(master.getCodeSystemName());
 			cv.create(master.createViewerConfigurer(cv), sash, SWT.NONE, getViewSite());
 			detail.createDisplay(sash, getViewSite());
 			cv.getConfigurer().getContentProvider().startListening();
-			ElexisEventDispatcher.getInstance().addListeners(eeli_div);
+			ElexisEventDispatcher.getInstance().addListeners(eeli_div, eeli_mod);
 		}
 		
 		public CodeSelectorFactory getCodeSelectorFactory(){
@@ -321,7 +329,7 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 		}
 		
 		public void dispose(){
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_div);
+			ElexisEventDispatcher.getInstance().removeListeners(eeli_div, eeli_mod);
 		}
 	}
 	

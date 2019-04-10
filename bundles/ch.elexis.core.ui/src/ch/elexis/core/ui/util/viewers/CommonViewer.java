@@ -67,8 +67,12 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 	private Composite parent;
 	private ISelectionChangedListener selChangeListener;
 	
+	/**
+	 * 
+	 * @since 3.7 updateSingle to refresh a single object
+	 */
 	public enum Message {
-		update, empty, notempty, update_keeplabels
+		update, empty, notempty, update_keeplabels, updateSingle
 	}
 	
 	private HashSet<DoubleClickListener> dlListeners;
@@ -271,6 +275,18 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 	 *            leer. notempty: Die Auswahl ist nicht (mehr) leer.
 	 */
 	public void notify(final Message m){
+		notify(m, null);
+	}
+	
+	/**
+	 * 
+	 * @param m
+	 * @param object an optional object (only used for {@link Message#updateSingle}
+	 * @since 3.7
+	 * @see CommonViewer#notify(Message)
+	 */
+	public void notify(final Message m, Object object){
+	
 		if (viewer == null || viewer.getControl() == null || viewer.getControl().isDisposed()) {
 			return;
 		}
@@ -280,6 +296,11 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 				case update:
 					if (!viewer.getControl().isDisposed()) {
 						viewer.refresh(true);
+					}
+					break;
+				case updateSingle:
+					if(!viewer.getControl().isDisposed() && object != null) {
+						viewer.refresh(object, true);
 					}
 					break;
 				case update_keeplabels:
@@ -308,7 +329,6 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 				}
 			}
 		});
-		
 	}
 	
 	public void selectionChanged(SelectionChangedEvent event){
