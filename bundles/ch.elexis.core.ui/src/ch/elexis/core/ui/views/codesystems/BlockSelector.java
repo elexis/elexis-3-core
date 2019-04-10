@@ -176,9 +176,9 @@ public class BlockSelector extends CodeSelectorFactory {
 		deleteAction = new Action("Block löschen") {
 			@Override
 			public void run(){
-				Object o = cv.getSelection()[0];
-				if (o instanceof Leistungsblock) {
-					((Leistungsblock) o).delete();
+				BlockTreeViewerItem o = (BlockTreeViewerItem) cv.getSelection()[0];
+				if (o != null && o.getBlock() != null) {
+					o.getBlock().delete();
 					cv.notify(CommonViewer.Message.update);
 				}
 			}
@@ -222,9 +222,9 @@ public class BlockSelector extends CodeSelectorFactory {
 			
 			@Override
 			public void run(){
-				Object o = cv.getSelection()[0];
-				if (o instanceof Leistungsblock) {
-					Leistungsblock sourceBlock = (Leistungsblock) o;
+				BlockTreeViewerItem o = (BlockTreeViewerItem) cv.getSelection()[0];
+				if (o != null && o.getBlock() != null) {
+					Leistungsblock sourceBlock = o.getBlock();
 					InputDialog inputDlg = new InputDialog(Display.getDefault().getActiveShell(),
 						"Block kopieren", "Bitte den Namen der Kopie eingeben bzw. bestätigen",
 						sourceBlock.getName() + " Kopie", new IInputValidator() {
