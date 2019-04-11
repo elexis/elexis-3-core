@@ -1,4 +1,4 @@
-package ch.elexis.core.ui.importer.div.importers;
+package ch.elexis.core.importer.div.importers;
 
 import java.util.List;
 
@@ -9,7 +9,10 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.data.LabOrder;
 import ch.elexis.data.Patient;
 
-public class PersistenceHandler implements IPersistenceHandler {
+/**
+ * since 3.8 moved from ch.elexis.core.ui.importer.div.importers.PersistenceHandler
+ */
+public class DefaultPersistenceHandler implements IPersistenceHandler {
 	
 	@Override
 	public List<ILabOrder> getLabOrdersByOrderId(String resultObj){

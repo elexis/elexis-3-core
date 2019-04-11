@@ -17,7 +17,7 @@ import org.junit.Test;
 import ch.elexis.core.importer.div.importers.HL7Parser;
 import ch.elexis.core.importer.div.importers.IPersistenceHandler;
 import ch.elexis.core.importer.div.importers.multifile.MultiFileParser;
-import ch.elexis.core.ui.importer.div.importers.PersistenceHandler;
+import ch.elexis.core.importer.div.importers.DefaultPersistenceHandler;
 import ch.elexis.core.ui.importer.div.importers.TestHL7Parser;
 import ch.elexis.core.ui.importer.div.importers.multifile.strategy.DefaultImportStrategyFactory;
 import ch.rgw.tools.Result;
@@ -27,7 +27,7 @@ public class MultiFileParserTests {
 	private static final String MY_TESTLAB = "myTestLab";
 	private static Path workDir = null;
 	private static HL7Parser hl7Parser = new TestHL7Parser(MY_TESTLAB);
-	private static IPersistenceHandler persistenceHandler = new PersistenceHandler();
+	private static IPersistenceHandler persistenceHandler = new DefaultPersistenceHandler();
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception{
