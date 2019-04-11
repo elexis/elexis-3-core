@@ -54,7 +54,6 @@ import ch.elexis.core.ui.views.FavoritenCTabItem;
 import ch.elexis.core.ui.views.IDetailDisplay;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
 import ch.elexis.data.PersistentObject;
-import ch.rgw.tools.ExHandler;
 
 public class ArtikelView extends ViewPart implements IActivationListener, ISaveablePart2 {
 	private static final String KEY_CE = "ce"; //$NON-NLS-1$
@@ -110,7 +109,7 @@ public class ArtikelView extends ViewPart implements IActivationListener, ISavea
 							selected.setControl(page);
 							selected.setData(det);
 						} catch (Exception ex) {
-							ExHandler.handle(ex);
+							LoggerFactory.getLogger(getClass()).error("Error creating pages", ex);
 							return;
 						}
 					}

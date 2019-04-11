@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.statushandlers.StatusManager;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
@@ -212,6 +213,7 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 				CoreUiUtil.injectServices(codeSelector);
 				CoreUiUtil.injectServices(detailDisplay);
 			} catch (Exception ex) {
+				LoggerFactory.getLogger(getClass()).error("Error creating pages", ex);
 				ElexisStatus status =
 					new ElexisStatus(ElexisStatus.WARNING, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
 						"Fehler beim Initialisieren von " + ce.getName(), ex,
@@ -275,6 +277,7 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 				CoreUiUtil.injectServicesWithContext(codeSelector);
 				CoreUiUtil.injectServicesWithContext(detailDisplay);
 			} catch (Exception ex) {
+				LoggerFactory.getLogger(getClass()).error("Error creating pages", ex);
 				ElexisStatus status =
 					new ElexisStatus(ElexisStatus.WARNING, Hub.PLUGIN_ID, ElexisStatus.CODE_NONE,
 						"Fehler beim Initialisieren von " + ce.getName(), ex,
