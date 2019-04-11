@@ -45,4 +45,22 @@ public class CodeElementServiceHolder {
 		}
 		return ret;
 	}
+	
+	/**
+	 * Create a context using the provided encounter.
+	 * 
+	 * @param encounter
+	 * @return
+	 */
+	public static Map<Object, Object> createContext(IEncounter encounter){
+		HashMap<Object, Object> ret = new HashMap<>();
+		if (encounter != null) {
+			ret.put(ContextKeys.CONSULTATION, encounter);
+			ICoverage coverage = encounter.getCoverage();
+			if (coverage != null) {
+				ret.put(ContextKeys.COVERAGE, coverage);
+			}
+		}
+		return ret;
+	}
 }

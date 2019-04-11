@@ -247,6 +247,9 @@
         <genParameters ecoreParameter="model.ecore#//ICodeElementBlock/moveElement/element"/>
         <genParameters ecoreParameter="model.ecore#//ICodeElementBlock/moveElement/up"/>
       </genOperations>
+      <genOperations ecoreOperation="model.ecore#//ICodeElementBlock/getElements">
+        <genParameters ecoreParameter="model.ecore#//ICodeElementBlock/getElements/encounter"/>
+      </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IBillable">
       <genOperations ecoreOperation="model.ecore#//IBillable/getVatInfo"/>

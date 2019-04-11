@@ -54,7 +54,9 @@ public class MedicationViewHelper {
 					int ve = article.getPackageSize();
 					if (ve != 0) {
 						Money price = article.getSellingPrice();
-						cost += num * price.getAmount() / ve;
+						if (price != null) {
+							cost += num * price.getAmount() / ve;
+						}
 					} else {
 						canCalculate = false;
 					}

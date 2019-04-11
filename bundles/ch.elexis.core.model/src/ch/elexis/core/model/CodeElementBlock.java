@@ -53,6 +53,25 @@ public class CodeElementBlock extends AbstractIdDeleteModelAdapter<Leistungsbloc
 	}
 	
 	@Override
+	public List<ICodeElement> getElements(IEncounter encounter){
+		ICodeElementService service = CodeElementServiceHolder.get();
+		List<ICodeElement> ret = new ArrayList<>();
+		if (service != null) {
+			String codeelements = getEntity().getServices();
+			if (StringUtils.isNotBlank(codeelements)) {
+				String[] parts = codeelements.split("\\" + SEPARATOR);
+				for (String part : parts) {
+					Optional<ICodeElement> created =
+						service.loadFromString(part,
+							CodeElementServiceHolder.createContext(encounter));
+					created.ifPresent(c -> ret.add(c));
+				}
+			}
+		}
+		return ret;
+	}
+	
+	@Override
 	public List<ICodeElement> getElements(){
 		ICodeElementService service = CodeElementServiceHolder.get();
 		List<ICodeElement> ret = new ArrayList<>();

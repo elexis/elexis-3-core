@@ -28,6 +28,7 @@ import ch.elexis.core.services.holder.CodeElementServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.CoverageServiceHolder;
 import ch.elexis.core.text.model.Samdas;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
@@ -40,55 +41,6 @@ public class EncounterService implements IEncounterService {
 	
 	@Reference
 	private IBillingService billingService;
-	
-	/**
-	 * Get the default label for a new {@link ICoverage}. Performs a lookup for
-	 * {@link Preferences#USR_DEFCASELABEL} configuration.
-	 * 
-	 * @return
-	 */
-	public static String getDefaultCoverageLabel(){
-		Optional<IContact> userContact = ContextServiceHolder.get().getActiveUserContact();
-		if (userContact.isPresent()) {
-			return ConfigServiceHolder.get().get(userContact.get(), Preferences.USR_DEFCASELABEL,
-				Preferences.USR_DEFCASELABEL_DEFAULT);
-		}
-		return Preferences.USR_DEFCASELABEL_DEFAULT;
-	}
-	
-	/**
-	 * Get the default reason for a new {@link ICoverage}. Performs a lookup for
-	 * {@link Preferences#USR_DEFCASEREASON} configuration.
-	 * 
-	 * @return
-	 */
-	public static String getDefaultCoverageReason(){
-		Optional<IContact> userContact = ContextServiceHolder.get().getActiveUserContact();
-		if (userContact.isPresent()) {
-			return ConfigServiceHolder.get().get(userContact.get(), Preferences.USR_DEFCASEREASON,
-				Preferences.USR_DEFCASEREASON_DEFAULT);
-		}
-		return Preferences.USR_DEFCASEREASON_DEFAULT;
-	}
-	
-	/**
-	 * Get the default law for a new {@link ICoverage}. Performs a lookup for
-	 * {@link Preferences#USR_DEFLAW} configuration.
-	 * 
-	 * TODO implement BillingSystem
-	 * 
-	 * @return
-	 */
-	public static String getDefaultCoverageLaw(){
-		Optional<IContact> userContact = ContextServiceHolder.get().getActiveUserContact();
-		if (userContact.isPresent()) {
-			return ConfigServiceHolder.get().get(userContact.get(), Preferences.USR_DEFLAW,
-				"defaultBillingSystem");
-		}
-		return "defaultBillingSystem";
-		//		return CoreHub.userCfg.get(Preferences.USR_DEFLAW,
-		//			BillingSystem.getAbrechnungsSysteme()[0]);
-	}
 	
 	@Override
 	public boolean isEditable(IEncounter encounter){
@@ -240,7 +192,9 @@ public class EncounterService implements IEncounterService {
 	
 	public Optional<IEncounter> createCoverageAndEncounter(IPatient patient){
 		ICoverage coverage = new ICoverageBuilder(CoreModelServiceHolder.get(), patient,
-			getDefaultCoverageLabel(), getDefaultCoverageReason(), getDefaultCoverageLaw())
+			CoverageServiceHolder.get().getDefaultCoverageLabel(),
+			CoverageServiceHolder.get().getDefaultCoverageReason(),
+			CoverageServiceHolder.get().getDefaultCoverageLaw())
 				.buildAndSave();
 		Optional<IMandator> activeMandator = ContextServiceHolder.get().getActiveMandator();
 		if (activeMandator.isPresent()) {

@@ -290,8 +290,9 @@ public class DocumentStore {
 	}
 	
 	/**
-	 * Removes the category for a {@link IDocument} if no other references for that category exists
-	 * and creates a new {@link ICategory}
+	 * Removes the category for a {@link IDocument}. If no other references for that category
+	 * exists, the {@link ICategory} is removed. Always moves the {@link IDocument} to the specified
+	 * new category, and creates it if necessary.
 	 * 
 	 * @param iDocument
 	 * @param newCategory

@@ -5240,6 +5240,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEParameter(op, this.getICodeElement(), "element", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEBoolean(), "up", 0, 1, IS_UNIQUE, IS_ORDERED);
 
+		op = addEOperation(iCodeElementBlockEClass, null, "getElements", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIEncounter(), "encounter", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(theTypesPackage.getList());
+		g2 = createEGenericType(this.getICodeElement());
+		g1.getETypeArguments().add(g2);
+		initEOperation(op, g1);
+
 		initEClass(iBillableEClass, IBillable.class, "IBillable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		addEOperation(iBillableEClass, theTypesPackage.getVatInfo(), "getVatInfo", 0, 1, IS_UNIQUE, IS_ORDERED);

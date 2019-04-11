@@ -44,4 +44,10 @@ public interface ICoverageService {
 	public boolean getCopyForPatient(ICoverage coverage);
 	
 	public void setCopyForPatient(ICoverage coverage, boolean copy);
+	
+	public String getDefaultCoverageLabel();
+	
+	public String getDefaultCoverageReason();
+	
+	public String getDefaultCoverageLaw();
 }

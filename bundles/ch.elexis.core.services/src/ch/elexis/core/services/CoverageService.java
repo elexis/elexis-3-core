@@ -5,11 +5,14 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.services.holder.BillingSystemServiceHolder;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.rgw.tools.StringTool;
 
@@ -140,5 +143,54 @@ public class CoverageService implements ICoverageService {
 	public void setCopyForPatient(ICoverage coverage, boolean copy){
 		coverage.setExtInfo(FallConstants.FLD_EXT_COPY_FOR_PATIENT,
 			copy ? StringConstants.ONE : StringConstants.ZERO);
+	}
+	
+	/**
+	 * Get the default label for a new {@link ICoverage}. Performs a lookup for
+	 * {@link Preferences#USR_DEFCASELABEL} configuration.
+	 * 
+	 * @return
+	 */
+	public String getDefaultCoverageLabel(){
+		Optional<IContact> userContact = ContextServiceHolder.get().getActiveUserContact();
+		if (userContact.isPresent()) {
+			return ConfigServiceHolder.get().get(userContact.get(), Preferences.USR_DEFCASELABEL,
+				Preferences.USR_DEFCASELABEL_DEFAULT);
+		}
+		return Preferences.USR_DEFCASELABEL_DEFAULT;
+	}
+	
+	/**
+	 * Get the default reason for a new {@link ICoverage}. Performs a lookup for
+	 * {@link Preferences#USR_DEFCASEREASON} configuration.
+	 * 
+	 * @return
+	 */
+	public String getDefaultCoverageReason(){
+		Optional<IContact> userContact = ContextServiceHolder.get().getActiveUserContact();
+		if (userContact.isPresent()) {
+			return ConfigServiceHolder.get().get(userContact.get(), Preferences.USR_DEFCASEREASON,
+				Preferences.USR_DEFCASEREASON_DEFAULT);
+		}
+		return Preferences.USR_DEFCASEREASON_DEFAULT;
+	}
+	
+	/**
+	 * Get the default law for a new {@link ICoverage}. Performs a lookup for
+	 * {@link Preferences#USR_DEFLAW} configuration.
+	 * 
+	 * TODO implement BillingSystem
+	 * 
+	 * @return
+	 */
+	public String getDefaultCoverageLaw(){
+		Optional<IContact> userContact = ContextServiceHolder.get().getActiveUserContact();
+		if (userContact.isPresent()) {
+			return ConfigServiceHolder.get().get(userContact.get(), Preferences.USR_DEFLAW,
+				"defaultBillingSystem");
+		}
+		return "defaultBillingSystem";
+		//		return CoreHub.userCfg.get(Preferences.USR_DEFLAW,
+		//			BillingSystem.getAbrechnungsSysteme()[0]);
 	}
 }

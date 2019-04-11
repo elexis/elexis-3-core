@@ -371,23 +371,6 @@
             <column name="REFS" type="CLOB"/>
         </createTable>
     </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-26">
-        <createTable tableName="CH_ELEXIS_OMNIVORE_DATA">
-            <column name="ID" type="VARCHAR(25)">
-                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_A2"/>
-            </column>
-            <column name="LASTUPDATE" type="BIGINT"/>
-            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
-            <column name="PATID" type="VARCHAR(25)"/>
-            <column name="DATUM" type="CHAR(8)"/>
-            <column name="CATEGORY" type="VARCHAR(80)"/>
-            <column name="TITLE" type="VARCHAR(255)"/>
-            <column name="MIMETYPE" type="VARCHAR(255)"/>
-            <column name="KEYWORDS" type="VARCHAR(255)"/>
-            <column name="PATH" type="VARCHAR(255)"/>
-            <column name="DOC" type="BLOB"/>
-        </createTable>
-    </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-27">
         <createTable tableName="CH_ELEXIS_PRIVATRECHNUNG">
             <column name="ID" type="VARCHAR(25)">
@@ -1399,36 +1382,6 @@
         <createIndex indexName="LST2" tableName="LEISTUNGEN">
             <column name="KLASSE"/>
             <column name="LEISTG_CODE"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-146">
-        <createIndex indexName="OMN1" tableName="CH_ELEXIS_OMNIVORE_DATA">
-            <column name="PATID"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-147">
-        <createIndex indexName="OMN2" tableName="CH_ELEXIS_OMNIVORE_DATA">
-            <column name="KEYWORDS"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-148">
-        <createIndex indexName="OMN3" tableName="CH_ELEXIS_OMNIVORE_DATA">
-            <column name="CATEGORY"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-149">
-        <createIndex indexName="OMN4" tableName="CH_ELEXIS_OMNIVORE_DATA">
-            <column name="MIMETYPE"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-150">
-        <createIndex indexName="OMN5" tableName="CH_ELEXIS_OMNIVORE_DATA">
-            <column name="DELETED"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-151">
-        <createIndex indexName="OMN6" tableName="CH_ELEXIS_OMNIVORE_DATA">
-            <column name="TITLE"/>
         </createIndex>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-152">

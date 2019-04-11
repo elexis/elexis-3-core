@@ -148,4 +148,12 @@ public interface ICodeElementBlock extends Identifiable, Deleteable, ICodeElemen
 	 */
 	void moveElement(ICodeElement element, boolean up);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model type="ch.elexis.core.types.List&lt;ch.elexis.core.model.ICodeElement&gt;" many="false"
+	 * @generated
+	 */
+	List<ICodeElement> getElements(IEncounter encounter);
+
 } // ICodeElementBlock

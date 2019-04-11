@@ -1004,5 +1004,228 @@
             <column name="ICDCODE"/>
         </createIndex>
     </changeSet>
+
+    <changeSet author="thomas (generated)" id="manual_table_CH_ELEXIS_ICPC">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="CH_ELEXIS_ICPC" />
+			</not>
+		</preConditions>
+        <createTable tableName="CH_ELEXIS_ICPC">
+            <column name="ID" type="CHAR(3)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_CH_ELEXIS_ICPC_ID"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="COMPONENT" type="CHAR(2)"/>
+            <column name="SHORT" type="VARCHAR(80)"/>
+            <column name="SYNONYMS" type="VARCHAR(250)"/>
+            <column name="ICD10" type="CLOB"/>
+            <column name="TXT" type="CLOB"/>
+            <column name="CRITERIA" type="CLOB"/>
+            <column name="INCLUSION" type="CLOB"/>
+            <column name="EXCLUSION" type="CLOB"/>
+            <column name="CONSIDER" type="CLOB"/>
+            <column name="NOTE" type="CLOB"/>
+        </createTable>
+		<insert tableName="CH_ELEXIS_ICPC">
+			<column name="ID" value="ver" />
+			<column name="TXT" value="1.2.1" />
+		</insert>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="manual_idx_CH_ELEXIS_ICPC_IDX1">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="CH_ELEXIS_ICPC_IDX1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="CH_ELEXIS_ICPC_IDX1" tableName="CH_ELEXIS_ICPC">
+            <column name="COMPONENT"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="thomas (generated)" id="manual_table_CH_ELEXIS_ICPC_EPISODES">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="CH_ELEXIS_ICPC_EPISODES" />
+			</not>
+		</preConditions>
+        <createTable tableName="CH_ELEXIS_ICPC_EPISODES">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_CH_ELEXIS_ICPC_EPISODES_ID"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="PATIENTID" type="VARCHAR(25)"/>
+            <column name="TITLE" type="VARCHAR(256)"/>
+            <column name="STARTDATE" type="VARCHAR(20)"/>
+            <column name="NUMBER" type="VARCHAR(10)"/>
+            <column defaultValue="1" name="STATUS" type="CHAR(1)"/>
+			<column name="EXTINFO" type="BLOB" />
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="manual_idx_CH_ELEXIS_ICPC_EPISODES1">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="CH_ELEXIS_ICPC_EPISODES1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="CH_ELEXIS_ICPC_EPISODES1" tableName="CH_ELEXIS_ICPC_EPISODES">
+            <column name="PATIENTID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="manual_idx_CH_ELEXIS_ICPC_EPISODES2">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="CH_ELEXIS_ICPC_EPISODES2" />
+			</not>
+		</preConditions>
+        <createIndex indexName="CH_ELEXIS_ICPC_EPISODES2" tableName="CH_ELEXIS_ICPC_EPISODES">
+            <column name="TITLE"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="thomas (generated)" id="manual_table_CH_ELEXIS_ICPC_EPISODES_DIAGNOSES_LINK">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="CH_ELEXIS_ICPC_EPISODES_DIAGNOSES_LINK" />
+			</not>
+		</preConditions>
+        <createTable tableName="CH_ELEXIS_ICPC_EPISODES_DIAGNOSES_LINK">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_CH_ELEXIS_ICPC_EPISODES_DIAGNOSES_LINK_ID"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="EPISODE" type="VARCHAR(25)"/>
+            <column name="DIAGNOSIS" type="VARCHAR(80)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="thomas (generated)" id="manual_table_CH_ELEXIS_ICPC_ENCOUNTER">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="CH_ELEXIS_ICPC_ENCOUNTER" />
+			</not>
+		</preConditions>
+        <createTable tableName="CH_ELEXIS_ICPC_ENCOUNTER">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_CH_ELEXIS_ICPC_ENCOUNTER_ID"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="KONS" type="VARCHAR(25)"/>
+            <column name="EPISODE" type="VARCHAR(25)"/>
+            <column name="RFE" type="CHAR(4)"/>
+            <column name="DIAG" type="CHAR(4)"/>
+            <column name="PROC" type="CHAR(4)"/>
+			<column name="EXTINFO" type="BLOB" />
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="manual_idx_CH_ELEXIS_ICPC_ENCOUNTER1">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="CH_ELEXIS_ICPC_EPISODES1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="CH_ELEXIS_ICPC_ENCOUNTER1" tableName="CH_ELEXIS_ICPC_ENCOUNTER">
+            <column name="KONS"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="manual_idx_CH_ELEXIS_ICPC_ENCOUNTER2">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="CH_ELEXIS_ICPC_EPISODES2" />
+			</not>
+		</preConditions>
+        <createIndex indexName="CH_ELEXIS_ICPC_ENCOUNTER2" tableName="CH_ELEXIS_ICPC_ENCOUNTER">
+            <column name="EPISODE"/>
+        </createIndex>
+    </changeSet>
+    
+    
+    <changeSet author="thomas (generated)" id="1527175239251-26">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="CH_ELEXIS_OMNIVORE_DATA" />
+			</not>
+		</preConditions>
+        <createTable tableName="CH_ELEXIS_OMNIVORE_DATA">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_A2"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="PATID" type="VARCHAR(25)"/>
+            <column name="DATUM" type="CHAR(8)"/>
+            <column name="CREATIONDATE" type="CHAR(8)"/>
+            <column name="CATEGORY" type="VARCHAR(80)"/>
+            <column name="TITLE" type="VARCHAR(255)"/>
+            <column name="MIMETYPE" type="VARCHAR(255)"/>
+            <column name="KEYWORDS" type="VARCHAR(255)"/>
+            <column name="PATH" type="VARCHAR(255)"/>
+            <column name="DOC" type="BLOB"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-146">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="OMN1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="OMN1" tableName="CH_ELEXIS_OMNIVORE_DATA">
+            <column name="PATID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-147">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="OMN2" />
+			</not>
+		</preConditions>
+        <createIndex indexName="OMN2" tableName="CH_ELEXIS_OMNIVORE_DATA">
+            <column name="KEYWORDS"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-148">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="OMN3" />
+			</not>
+		</preConditions>
+        <createIndex indexName="OMN3" tableName="CH_ELEXIS_OMNIVORE_DATA">
+            <column name="CATEGORY"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-149">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="OMN4" />
+			</not>
+		</preConditions>
+        <createIndex indexName="OMN4" tableName="CH_ELEXIS_OMNIVORE_DATA">
+            <column name="MIMETYPE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-150">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="OMN5" />
+			</not>
+		</preConditions>
+        <createIndex indexName="OMN5" tableName="CH_ELEXIS_OMNIVORE_DATA">
+            <column name="DELETED"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-151">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="OMN6" />
+			</not>
+		</preConditions>
+        <createIndex indexName="OMN6" tableName="CH_ELEXIS_OMNIVORE_DATA">
+            <column name="TITLE"/>
+        </createIndex>
+    </changeSet>
     
 </databaseChangeLog>
