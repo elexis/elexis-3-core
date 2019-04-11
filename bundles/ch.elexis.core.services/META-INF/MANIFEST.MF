@@ -10,10 +10,13 @@ Bundle-ActivationPolicy: lazy
 Require-Bundle: ch.elexis.core,
  ch.rgw.utility;bundle-version="3.7.0",
  org.eclipse.core.runtime,
- org.eclipse.osgi.services;bundle-version="3.6.0"
+ org.eclipse.osgi.services;bundle-version="3.6.0",
+ org.apache.commons.io
 Import-Package: bsh,
  ch.elexis.core.ac,
  com.google.common.cache;version="15.0.0",
+ jcifs,
+ jcifs.smb,
  org.apache.commons.codec;version="1.9.0",
  org.apache.commons.lang3;version="3.7.0",
  org.slf4j
@@ -52,5 +55,6 @@ Service-Component: OSGI-INF/ch.elexis.core.services.holder.CoreModelServiceHolde
  OSGI-INF/ch.elexis.core.services.AppointmentService.xml,
  OSGI-INF/ch.elexis.core.services.holder.AppointmentServiceHolder.xml,
  OSGI-INF/ch.elexis.core.services.holder.BillingServiceHolder.xml,
- OSGI-INF/ch.elexis.core.services.internal.DefaultArticleStoreToStringContribution.xml
+ OSGI-INF/ch.elexis.core.services.internal.DefaultArticleStoreToStringContribution.xml,
+ OSGI-INF/ch.elexis.core.services.VirtualFilesystemService.xml
 Export-Package: ch.elexis.core.services.holder
