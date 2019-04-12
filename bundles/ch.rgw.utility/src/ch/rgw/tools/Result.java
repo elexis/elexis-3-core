@@ -133,7 +133,9 @@ public class Result<T> {
 	public Result(){}
 	
 	public Result(SEVERITY sev, List<msg> msgs){
-		list.addAll(msgs);
+		if(msgs != null) {
+			list.addAll(msgs);
+		}
 	}
 	
 	public Result(SEVERITY severity, int code, String text, T result, boolean bLog){
