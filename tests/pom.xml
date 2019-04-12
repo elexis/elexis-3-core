@@ -48,5 +48,10 @@
             <version>1.9.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+        	<groupId>ch.elexis.core.application.feature</groupId>
+        	<version>1.0.0-SNAPSHOT</version>
+        	<scope>test</scope>
+        </dependency>
     </dependencies>
 </project>
