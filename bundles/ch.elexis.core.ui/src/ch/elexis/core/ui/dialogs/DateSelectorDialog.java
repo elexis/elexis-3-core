@@ -13,17 +13,16 @@
 package ch.elexis.core.ui.dialogs;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.swt.SWT;
+import org.eclipse.nebula.widgets.cdatetime.CDT;
+import org.eclipse.nebula.widgets.cdatetime.CDateTime;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 import ch.rgw.tools.TimeTool;
 
-import com.tiff.common.ui.datepicker.DatePicker;
-
 public class DateSelectorDialog extends Dialog {
-	DatePicker dp;
+	CDateTime dp;
 	TimeTool preSelectedDate;
 	String shellTitle;
 	
@@ -43,14 +42,14 @@ public class DateSelectorDialog extends Dialog {
 	
 	@Override
 	protected Control createDialogArea(Composite parent){
-		dp = new DatePicker(parent, SWT.BORDER);
-		dp.setDate(preSelectedDate.getTime());
+		dp = new CDateTime(parent, CDT.DATE_MEDIUM | CDT.DROP_DOWN);
+		dp.setSelection(preSelectedDate.getTime());
 		getShell().setText(shellTitle);
 		return dp;
 	}
 	
 	public TimeTool getSelectedDate(){
-		return new TimeTool(dp.getDate().getTime());
+		return new TimeTool(dp.getSelection());
 	}
 	
 }
