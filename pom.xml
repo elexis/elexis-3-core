@@ -447,6 +447,7 @@ Without it Maven would put two versions of each class file into the jars
         <artifactId>target-platform-configuration</artifactId>
         <version>${tycho.version}</version>
         <configuration>
+          <pomDependencies>consider</pomDependencies>
           <executionEnvironment>JavaSE-1.8</executionEnvironment>
         </configuration>
       </plugin>
