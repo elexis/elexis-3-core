@@ -56,5 +56,6 @@ Service-Component: OSGI-INF/ch.elexis.core.services.holder.CoreModelServiceHolde
  OSGI-INF/ch.elexis.core.services.holder.AppointmentServiceHolder.xml,
  OSGI-INF/ch.elexis.core.services.holder.BillingServiceHolder.xml,
  OSGI-INF/ch.elexis.core.services.internal.DefaultArticleStoreToStringContribution.xml,
- OSGI-INF/ch.elexis.core.services.VirtualFilesystemService.xml
+ OSGI-INF/ch.elexis.core.services.VirtualFilesystemService.xml,
+ OSGI-INF/ch.elexis.core.services.holder.VirtualFilesystemServiceHolder.xml
 Export-Package: ch.elexis.core.services.holder

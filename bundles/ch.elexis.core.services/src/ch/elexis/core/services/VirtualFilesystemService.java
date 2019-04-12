@@ -2,7 +2,6 @@ package ch.elexis.core.services;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +19,11 @@ public class VirtualFilesystemService implements IVirtualFilesystemService {
 	}
 	
 	@Override
-	public IVirtualFilesystemHandle of(File file) throws MalformedURLException{
+	public IVirtualFilesystemHandle of(File file) throws IOException {
+		if (file == null) {
+			return null;
+		}
+
 		URL url = file.toURI().toURL();
 		return new VirtualFilesystemHandle(url);
 	}
