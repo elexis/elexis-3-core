@@ -35,24 +35,30 @@
       <module>ch.rgw.utility.tests</module>
     </modules>
 
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>1.9.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-        	<groupId>ch.elexis.core</groupId>
-        	<artifactId>ch.elexis.core.application.feature</artifactId>
-        	<version>3.8.0-SNAPSHOT</version>
-        	<scope>test</scope>
-        </dependency>
-    </dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>1.9.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.elexis.core</groupId>
+			<artifactId>ch.elexis.core.application.feature</artifactId>
+			<version>3.8.0-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.elexis.core</groupId>
+			<artifactId>ch.elexis.core.application.feature</artifactId>
+			<version>3.8.0-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>
