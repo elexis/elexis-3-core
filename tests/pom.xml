@@ -49,7 +49,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-        	<groupId>ch.elexis.core.application.feature</groupId>
+        	<groupId>ch.elexis.core</groupId>
+        	<artifactId>ch.elexis.core.application.feature</artifactId>
         	<version>1.0.0-SNAPSHOT</version>
         	<scope>test</scope>
         </dependency>
