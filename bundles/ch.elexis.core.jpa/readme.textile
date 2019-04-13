@@ -1,0 +1,44 @@
+h2. Persistence Model
+
+It represents the Implementation of the business model interfaces defined in this bundle. Implementation bundles are.
+
+* **ch.elexis.core.jpa** contains the actual database table definition, an logic to initialize and update it (based on liquibase). Also contains an **ch.elexis.core.jpa.entitymanager.IElexisEntityManager** implementation for managed (ThreadLocal) JPA EntityManager access.
+* **ch.elexis.core.jpa.entities** the elexis JPA persistence unit containing all known entities is defined in this bundle.  
+* **ch.elexis.core.jpa.datasource** provides the configured database connection (JDBC connection pool) for the JPA Implementation.
+
+The JPA persistence is based on the following interfaces and classes. 
+
+h3. Service Interfaces
+
+* **ch.elexis.core.services.IModelService**, service interface for accessing the data model. Implementations should provide the service property *service.model.name* for clients to access a specific service instance.
+* **ch.elexis.core.services.IStoreToStringService**, a central service for creating a String representation of a model object. The String representation can be used to load the object using this service.
+* **ch.elexis.core.services.IStoreToStringContribution**, model service implementations should also implement this interface, which allows the *IStoreToStringService* to query for a string representation, or load a object by the string representation.
+
+h3. Abstract Classes
+
+* **ch.elexis.core.jpa.model.adapter.AbstractModelService**, service implementation for load, query and save model objects. Helps with creation of *ch.elexis.core.services.IModelService* services. Implementations are made public as OSGi Services.
+* **ch.elexis.core.jpa.model.adapter.AbstractModelAdapterFactory**, model factory implementation used to create new model instances. Maps the public model to the model implementation and the JPA Entity definition. It is used within the model service implementation an should not be made public.
+* **ch.elexis.core.jpa.model.adapter.AbstractModelQuery**, JPA based query implementation for building complex queries on model objects. It is used within the model service implementation an should not be made public.
+
+**Best practice is to create a separate persistence model bundle that has no UI specific dependencies.**
+
+h3. Model and JPA Entity
+
+The persistence bundle contains the model service implementations, and has a public API for usage of the model. It is best practice that the public API is mostly interfaces defining the model. The actual implementation should be internal. All JPA entities need to be implemented and registered (META-INF/persistence.xml) in the *ch.elexis.core.jpa.entities* bundle.
+
+The model interfaces can be coded, or or generated via an EMF model. If the model is generated, the resulting interfaces shall be plain Java without dependencies on EObject.
+
+The benefits of using a EMF model to specify the public API are.
+* model property literals can be used on queries
+* model annotations can provide a mapping of property names
+
+If a EMF model is used to specify the model, the following settings of the genmodel should be adjusted.
+* **(Root Node) Model > Model Directory**, should be adjusted to the ending *src-gen* so the generated code is separated.
+* **(Root Node) Model > Operation Reflection**, should be adjusted to false.
+* **(Root Node) Class Defaults> Root Extends Class**, should be cleared, as we want to publish interfaces without EMF dependencies.
+* **(Root Node) Class Defaults> Root Extends Interface**, should be cleared, as we want to publish interfaces without EMF dependencies.
+* **(Package Node) All > Base Package**, should be adjusted so the generated packages will match the bundle name.
+
+The actual model implementation will typically extend the *ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter* or one of its sub classes. This makes the implementation an adapter class, which adapts the JPA Entity to the model interface.
+
+h2. Query

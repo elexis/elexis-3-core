@@ -1,7 +1,36 @@
-h1. ch.elexis.core
+h2. Business Model
 
-TODO
+The business model interfaces defined as EMF ecore model (model/model.ecore) of this bundle. Additionally service interfaces that provide additional functionality to those model objects are defined.
 
+The JPA based implementation of this model is provided in other bundles. See <a href="../ch.elexis.core.jpa/readme.textile">ch.elexis.core.jpa</a>.
 
+h3. Code Elements
 
+Elexis supports different code elements for billing or medical information.
+
+h4. Service Interfaces
+
+* **ch.elexis.core.services.ICodeElementService**, a central service for accessing different types of *ICodeElementServiceContribution* implementations. Additional methods for transforming *ICodeElement* instances from and to string are provided.
+* **ch.elexis.core.services.ICodeElementServiceContribution**, implementations provide methods to load a specific *ICodeElement* implementation (tarif, article, diagnosis, etc.) by code. The contribution is identified by the code system string and the *CodeElementTyp*.
+
+h3. Billing
+
+Code Elements for billing must implement the interface *ch.elexis.core.model.IBillable*.
+
+h4. Optifier
+
+The *ch.elexis.core.model.IBillableOptifier* implementation contains the logic how a *ch.elexis.core.model.IBilled* instance is created representing the billed amount of the *ch.elexis.core.model.IBillable*.
+
+The *ch.elexis.core.model.billable.AbstractOptifier* provides the method to add the *ch.elexis.core.model.IBillable* to the billed of an *ch.elexis.core.model.IEncounter*. If it was billed before that information will be updated. Sub classes need to implement the *setPrice* method to apply the price of the *ch.elexis.core.model.IBillable* to an *ch.elexis.core.model.IBilled* instance.
+
+h4. Verifier
+
+The *ch.elexis.core.model.IBillableVerifier* implementation is used to check if the *ch.elexis.core.model.IBillable* can be billed in the provided context.
+
+h2. Extension Points replaced with OSGi service Interface
+
+As OSGi declarative services became more comfortable to use, we decided to replace Equinox Extension Points where possible. 
+
+* *ch.elexis.VerrechnungscodeAdjuster*, replaced with **ch.elexis.core.services.IBilledAdjuster**
+* *ch.elexis.core.data.ReferenceDataImporter*, replaced with **ch.elexis.core.interfaces.IReferenceDataImporter**
 
