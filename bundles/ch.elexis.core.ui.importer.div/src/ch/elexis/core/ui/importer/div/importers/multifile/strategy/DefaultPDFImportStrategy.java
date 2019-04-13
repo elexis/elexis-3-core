@@ -114,9 +114,12 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		// add doc to document manager
 		try {
 			addDocument(titel, labName, dateTime, file, file.getName());
-		} catch (IOException | ElexisException e) {
+		} catch (IOException | ElexisException | IllegalStateException e) {
 			log.error(
 				"error saving pdf [" + file.getAbsolutePath() + "] in document manager (omnivore)");
+			return new Result<Object>(SEVERITY.ERROR, 2,
+					"Could not store document [" +file.getAbsolutePath()+"]: "+e.getMessage(),
+					context, true);
 		}
 		if (moveAfterImport) {
 			FileImportStrategyUtil.moveAfterImport(true, file);
