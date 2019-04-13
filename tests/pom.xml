@@ -60,5 +60,11 @@
 			<version>3.8.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>ch.elexis.core</groupId>
+			<artifactId>ch.elexis.core.persistence.feature</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>
