@@ -56,7 +56,7 @@
 		</dependency>
 		<dependency>
 			<groupId>ch.elexis.core</groupId>
-			<artifactId>ch.elexis.core.application.feature</artifactId>
+			<artifactId>ch.elexis.core.common.feature</artifactId>
 			<version>3.8.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
