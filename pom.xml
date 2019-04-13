@@ -24,7 +24,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
         <git.target.branch>master</git.target.branch>
-        <git.core.branch>${git.target.branch}</git.core.branch>
+        <git.core.branch>master</git.core.branch>
 	</properties>
 
 	<organization>
@@ -75,6 +75,7 @@
 						<artifactId>target-platform-configuration</artifactId>
 						<version>${tycho.version}</version>
 						<configuration>
+							<pomDependencies>consider</pomDependencies>
 							<environments>
 								<environment>
 									<os>win32</os>
@@ -102,6 +103,7 @@
 						<artifactId>target-platform-configuration</artifactId>
 						<version>${tycho.version}</version>
 						<configuration>
+							<pomDependencies>consider</pomDependencies>
 							<environments>
 								<environment>
 									<os>win32</os>
@@ -130,6 +132,7 @@
 						<version>${tycho.version}</version>
 						<configuration>
 							<executionEnvironment>JavaSE-1.8</executionEnvironment>
+							<pomDependencies>consider</pomDependencies>
 							<environments>
 								<environment>
 									<os>linux</os>
@@ -157,6 +160,7 @@
 						<artifactId>target-platform-configuration</artifactId>
 						<version>${tycho.version}</version>
 						<configuration>
+							<pomDependencies>consider</pomDependencies>
 							<environments>
 								<environment>
 									<os>linux</os>
@@ -183,6 +187,7 @@
 						<artifactId>target-platform-configuration</artifactId>
 						<version>${tycho.version}</version>
 						<configuration>
+							<pomDependencies>consider</pomDependencies>
 							<environments>
 								<environment>
 									<os>macosx</os>
@@ -209,6 +214,7 @@
 						<artifactId>target-platform-configuration</artifactId>
 						<version>${tycho.version}</version>
 						<configuration>
+							<pomDependencies>consider</pomDependencies>
 							<environments>
 								<environment>
 									<os>linux</os>
@@ -441,14 +447,6 @@ Without it Maven would put two versions of each class file into the jars
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>target-versions-plugin</artifactId>
         <version>${tycho.version}</version>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>target-platform-configuration</artifactId>
-        <version>${tycho.version}</version>
-        <configuration>
-          <executionEnvironment>JavaSE-1.8</executionEnvironment>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
