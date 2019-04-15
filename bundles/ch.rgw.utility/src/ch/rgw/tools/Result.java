@@ -88,13 +88,20 @@ public class Result<T> {
 	}
 	
 	/**
-	 * Einen OK - Status abholen
+	 * Generate an OK if result is an object, or ERROR if result is a
+	 * {@link Throwable}
 	 * 
 	 * @param result
 	 * @return
+	 * @since 3.8
 	 */
-	public Result(T result){
-		add(SEVERITY.OK, 0, "Ok", result, false); //$NON-NLS-1$
+	public Result(T result) {
+		if (result instanceof Throwable) {
+			Throwable _result = (Throwable) result;
+			add(SEVERITY.ERROR, 0, _result.getMessage(), null, false);
+		} else {
+			add(SEVERITY.OK, 0, "Ok", result, false); //$NON-NLS-1$
+		}
 	}
 	
 	/**
@@ -132,10 +139,14 @@ public class Result<T> {
 	
 	public Result(){}
 	
-	public Result(SEVERITY sev, List<msg> msgs){
-		list.addAll(msgs);
+	public Result(SEVERITY severity, List<msg> msgs){
+		if (severity.ordinal() > this.severity.ordinal()) {
+			this.severity = severity;
+		}
+		if(msgs != null) {
+			list.addAll(msgs);
+		}
 	}
-	
 	
 	public Result(SEVERITY severity, int code, String text, T result, boolean bLog){
 		add(severity, code, text, result, bLog);
