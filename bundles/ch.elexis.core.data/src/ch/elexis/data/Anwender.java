@@ -209,7 +209,8 @@ public class Anwender extends Person {
 		
 		CoreHub.actUser = admin;
 		ElexisEventDispatcher.getInstance().fire(
-			new ElexisEvent(admin, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
+			new ElexisEvent(admin, Anwender.class, ElexisEvent.EVENT_USER_CHANGED,
+				ElexisEvent.PRIORITY_SYNC));
 	}
 	
 	/**
@@ -274,7 +275,8 @@ public class Anwender extends Person {
 		CoreHub.actUser = anwender;
 		ElexisEventDispatcher.getInstance().fire(new ElexisEvent(user, User.class, ElexisEvent.EVENT_SELECTED));
 		ElexisEventDispatcher.getInstance()
-				.fire(new ElexisEvent(CoreHub.actUser, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
+			.fire(new ElexisEvent(CoreHub.actUser, Anwender.class, ElexisEvent.EVENT_USER_CHANGED,
+				ElexisEvent.PRIORITY_SYNC));
 
 		cod.adaptForUser();
 
