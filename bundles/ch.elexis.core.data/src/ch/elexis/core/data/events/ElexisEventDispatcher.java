@@ -172,6 +172,12 @@ public final class ElexisEventDispatcher implements Runnable {
 				continue;
 			}
 			
+			if(ee.getType() == ElexisEvent.EVENT_USER_CHANGED) {
+				elexisUIContext.setSelection(ee.getObjectClass(), ee.getObject());
+				doDispatch(ee);
+				return;
+			}
+			
 			int eventType = ee.getType();
 			if (eventType == ElexisEvent.EVENT_SELECTED
 				|| eventType == ElexisEvent.EVENT_DESELECTED) {
