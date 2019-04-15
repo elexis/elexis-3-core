@@ -36,7 +36,7 @@ public class Test_InvoiceBillState {
 		AtomicInteger countPatients = new AtomicInteger(0);
 		AtomicInteger countInvoices = new AtomicInteger(0);
 		InvoiceListSqlQuery.fetchNumberOfPatientsAndInvoices(countPatients, countInvoices);
-		assertEquals(3, countPatients.get());
-		assertEquals(4, countInvoices.get());
+		assertEquals(1, countPatients.get());
+		assertEquals(1, countInvoices.get());
 	}
 }

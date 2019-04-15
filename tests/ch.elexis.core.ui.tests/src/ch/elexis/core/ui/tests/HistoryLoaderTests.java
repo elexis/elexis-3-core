@@ -268,7 +268,7 @@ public class HistoryLoaderTests implements BackgroundJobListener {
 		List<Konsultation> consKum = generateTestConsultationAndCases(patKum, nrOfConsKum);
 		List<Konsultation> consGriss = generateTestConsultationAndCases(patGriss, nrConsGriss);
 		
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 50; i++) {
 			finishedLoaders = 0;
 			historyDisplayStop();
 			historyDisplayLoad(patSter);
@@ -483,7 +483,7 @@ public class HistoryLoaderTests implements BackgroundJobListener {
 	 * @return date of this format dd.MM.yyyy
 	 */
 	private static String formatCalendarToString(Calendar cal){
-		return cal.get(Calendar.DAY_OF_MONTH) + "." + cal.get(Calendar.MONTH) + "."
+		return  String.format("%02d", cal.get(Calendar.DAY_OF_MONTH)) + "." + String.format("%02d", cal.get(Calendar.MONTH)+1) + "."
 			+ cal.get(Calendar.YEAR);
 	}
 	
