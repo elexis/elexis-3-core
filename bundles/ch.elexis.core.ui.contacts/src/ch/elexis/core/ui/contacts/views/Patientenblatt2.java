@@ -69,6 +69,7 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.model.MaritalStatus;
 import ch.elexis.core.model.PatientConstants;
@@ -99,7 +100,6 @@ import ch.elexis.core.ui.util.ListDisplay;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.WidgetFactory;
-import ch.elexis.core.ui.views.Messages;
 import ch.elexis.core.ui.views.contribution.IViewContribution;
 import ch.elexis.core.ui.views.contribution.ViewContributionHelper;
 import ch.elexis.data.Anwender;
@@ -125,6 +125,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	private static final String KEY_PATIENTENBLATT = "Patientenblatt/"; //$NON-NLS-1$
 	private final FormToolkit tk;
 	private InputPanel ipp;
+
 	private IAction removeZAAction, showZAAction, showBKAction,
 			copySelectedContactInfosToClipboardAction,
 			copySelectedAddressesToClipboardAction, removeAdditionalAddressAction,
@@ -217,6 +218,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	private boolean bLocked = true;
 	private Composite cUserfields;
 	Hyperlink hHA;
+	private InputData comboGeschlecht;
 	
 	void recreateUserpanel(){
 		// cUserfields.setRedraw(false);
@@ -231,11 +233,37 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		fields.add(new InputData(Messages.Patientenblatt2_firstname, Patient.FLD_FIRSTNAME,
 			InputData.Typ.STRING, null)); // $NON-NLS-1$
 		fields.add(new InputData(Messages.Patientenblatt2_birthdate, Patient.BIRTHDATE,
-			InputData.Typ.DATE, null)); // $NON-NLS-1$
-		fields.add(new InputData(Messages.Patientenblatt2_sex, Patient.FLD_SEX, null, new String[] {
-			Person.FEMALE, Person.MALE
-		}, false));
-		
+			InputData.Typ.DATE, null)); // $NON-NLS-1$d
+		IStructuredSelectionResolver ssr = new IStructuredSelectionResolver() {
+			@Override
+			public StructuredSelection resolveStructuredSelection(String value) {
+				if (value.contentEquals(Patient.FEMALE)) {
+					return new StructuredSelection(Messages.Patient_female_short);
+				} else {
+					return new StructuredSelection(Messages.Patient_male_short);
+				}
+			}
+		};
+		comboGeschlecht = new InputData(Messages.Patientenblatt2_sex, Patient.FLD_SEX,
+				null, Typ.COMBO_VIEWER, ArrayContentProvider.getInstance(),
+				new LabelProvider() {
+			
+			@Override
+			public String getText(Object element){
+				String geschlecht = element.toString();
+				if (geschlecht.contentEquals(Patient.FEMALE)) {
+					return Messages.Patient_female_short;
+				} else {
+					return Messages.Patient_male_short;
+				}
+			}
+		}, ssr, new String[] { Patient.MALE, Patient.FEMALE});
+		String toolTip = String.format(Messages.Patient_male_female_tooltip,
+				Messages.Patient_male_short, Messages.Patient_female_short,
+				Messages.Patient_male_long, Messages.Patient_female_long);
+		fields.add(comboGeschlecht);
+		comboGeschlecht.setTooltipText(toolTip);
+
 		IStructuredSelectionResolver isr = new IStructuredSelectionResolver() {
 			@Override
 			public StructuredSelection resolveStructuredSelection(String value){
@@ -725,7 +753,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			if (ipp != null) {
 				ipp.save();
 			}
-			for (int i = 0; i < txExpandable.size(); i++) {
+		for (int i = 0; i < txExpandable.size(); i++) {
 				String field = dfExpandable.get(i);
 				String oldvalue = StringTool.unNull(actPatient.get(field));
 				String newvalue = txExpandable.get(i).getText();
