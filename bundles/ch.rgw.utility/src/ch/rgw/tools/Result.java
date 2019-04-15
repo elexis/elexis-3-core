@@ -32,7 +32,7 @@ public class Result<T> {
 	static final Logger log = Logger.getLogger("Result");
 	
 	public enum SEVERITY {
-		OK, WARNING, ERROR, FATAL
+			OK, WARNING, ERROR, FATAL
 	};
 	
 	List<msg> list = new ArrayList<msg>();
@@ -73,10 +73,11 @@ public class Result<T> {
 	 * @return
 	 */
 	public T get(){
-		if(list.size()==0) return null;
+		if (list.size() == 0)
+			return null;
 		
 		msg result = list.get(0);
-		if(list.size()>1) {
+		if (list.size() > 1) {
 			for (msg m : list) {
 				if (m.severity.ordinal() > list.get(0).severity.ordinal()) {
 					result = m;
@@ -87,14 +88,19 @@ public class Result<T> {
 	}
 	
 	/**
-	 * Einen OK - Status abholen
+	 * Generate an OK if result is an object, or ERROR if result is a {@link Throwable}
 	 * 
 	 * @param result
 	 * @return
+	 * @since 3.8
 	 */
 	public Result(T result){
-		add(SEVERITY.OK, 0, "Ok", result, false); //$NON-NLS-1$
-		// return new Result<Object>(Log.NOTHING,0,"Ok",result,false);
+		if (result instanceof Throwable) {
+			Throwable _result = (Throwable) result;
+			add(SEVERITY.ERROR, 0, _result.getMessage(), null, false);
+		} else {
+			add(SEVERITY.OK, 0, "Ok", result, false); //$NON-NLS-1$
+		}
 	}
 	
 	/**
@@ -132,8 +138,11 @@ public class Result<T> {
 	
 	public Result(){}
 	
-	public Result(SEVERITY sev, List<msg> msgs){
-		if(msgs != null) {
+	public Result(SEVERITY severity, List<msg> msgs){
+		if (severity.ordinal() > this.severity.ordinal()) {
+			this.severity = severity;
+		}
+		if (msgs != null) {
 			list.addAll(msgs);
 		}
 	}
@@ -177,6 +186,28 @@ public class Result<T> {
 			sb.append(m.text).append("\n"); //$NON-NLS-1$
 		}
 		return sb.toString();
+	}
+	
+	/**
+	 * Convenience method.
+	 * 
+	 * @return an {@link #isOK()} == true result, no element contained (i.e. {@link #get()} returns
+	 *         <code>null</code>)
+	 */
+	public static final <T> Result<T> OK(){
+		return (Result<T>) new Result<T>(null);
+	}
+	
+	public static final Result<String> OK(String text){
+		return new Result<String>(SEVERITY.OK, 0, text, text, false);
+	}
+	
+	public static final Result<String> ERROR(String text){
+		return new Result<String>(SEVERITY.ERROR, 0, text, text, false);
+	}
+	
+	public void addMessage(SEVERITY severity, String message){
+		list.add(new msg(0, message, severity, null));
 	}
 	
 }
