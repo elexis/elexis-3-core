@@ -2127,6 +2127,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			String mapped = map(fields[i]);
 			if (mapped.startsWith("S:")) {
 				sql.append(mapped.substring(4));
+				dbConnection.getCache().remove(getKey(fields[i])); // clear cache
 			} else {
 				sql.append(mapped);
 				dbConnection.getCache().put(getKey(fields[i]), values[i], getCacheTime());
