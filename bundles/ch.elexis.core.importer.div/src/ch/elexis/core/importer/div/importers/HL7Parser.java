@@ -388,10 +388,12 @@ public class HL7Parser {
 		return importFile(file, archiveDir, null, bCreatePatientIfNotExists);
 	}
 	
-	public Result<?> importFile(IVirtualFilesystemHandle hl7file, IVirtualFilesystemHandle archiveDir, ILabItemResolver labItemResolver,
-		ILabContactResolver labContactResolver, boolean bCreatePatientIfNotExists)
-		throws IOException{
-		this.labContactResolver = labContactResolver;
+	public Result<?> importFile(IVirtualFilesystemHandle hl7file, IVirtualFilesystemHandle archiveDir,
+			ILabItemResolver labItemResolver, ILabContactResolver labContactResolver, boolean bCreatePatientIfNotExists)
+			throws IOException {
+		if (labContactResolver != null) {
+			this.labContactResolver = labContactResolver;
+		}
 		return importFile(hl7file, archiveDir, labItemResolver, bCreatePatientIfNotExists);
 	}
 	
