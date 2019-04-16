@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.ui.dialogs.Messages;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockUi;
@@ -81,8 +81,12 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 		tVorname.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		new Label(ret, SWT.NONE).setText(Messages.PatientErfassenDialog_sex); //$NON-NLS-1$
 		cbSex = new Combo(ret, SWT.SINGLE);
+		String toolTip = String.format(Messages.Patient_male_female_tooltip,
+				Messages.Patient_male_short, Messages.Patient_female_short,
+				Messages.Patient_male_long, Messages.Patient_female_long);
+		cbSex.setToolTipText(toolTip);
 		cbSex.setItems(new String[] {
-			Messages.PatientErfassenDialog_male, Messages.PatientErfassenDialog_female
+			Messages.Patient_male_short, Messages.Patient_female_short
 		}); //$NON-NLS-1$ //$NON-NLS-2$
 		if (StringTool.isNothing(getField(Patient.FLD_SEX))) {
 			cbSex.select(0);
@@ -131,20 +135,15 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 		ret[0] = tName.getText();
 		ret[1] = tVorname.getText();
 		int idx = cbSex.getSelectionIndex();
-		if (idx == -1) {
-			char sex = cbSex.getText().charAt(0);
-			if (sex == 'w' || sex == 'W' || sex == 'f' || sex == 'F') {
-				idx = 1;
-			} else if (sex == 'm' || sex == 'M') {
-				idx = 0;
-			}
-		}
-		if (idx == -1) {
-			SWTHelper.showError("Bitte Geschlecht angeben",
-				"Die Angabe des Geschlechts ist erforderlich");
+		if (idx == 1 || cbSex.getText().contentEquals(Messages.Patient_female_short)) {
+			ret[2] = Patient.FEMALE; // German w for weiblich = female
+		} else if (idx == 0 || cbSex.getText().contentEquals(Messages.Patient_male_short)) {
+			ret[2] = Patient.MALE;
+		} else if (idx == -1) {
+			SWTHelper.showError(Messages.PatientErfassenDialog_Error_Sex,
+					Messages.PatientErfassenDialog_Sex_must_be_specified);
 			return;
 		}
-		ret[2] = cbSex.getItem(idx);
 		ret[3] = tGebDat.getText();
 		try {
 			TimeTool check = null;

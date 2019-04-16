@@ -29,16 +29,15 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.locks.IUnlockable;
+import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Person;
 
 public class PatientPropertyPage extends PropertyPage implements IWorkbenchPropertyPage, IUnlockable {
 	
 	public static final String ID = "at.medevit.elexis.properties.propertyPage.PatientPropertyPage";
-	
-	private static final String SEX_MALE = "männlich";
-	private static final String SEX_FEMALE = "weiblich";
 	
 	private Patient pat;
 	private Text textVorname;
@@ -66,30 +65,33 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		Label lblNachname = new Label(comp, SWT.NONE);
 		lblNachname.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		
-		lblNachname.setText("Nachname");
+		lblNachname.setText(Messages.KontaktBlatt_LastName);
 		
 		textVorname = new Text(comp, SWT.BORDER);
 		textVorname.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblVorname = new Label(comp, SWT.NONE);
 		lblVorname.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, false, false, 1, 1));
-		lblVorname.setText("Vorname");
+		lblVorname.setText(Messages.KontaktBlatt_FirstName);
 		
 		textNachname = new Text(comp, SWT.BORDER);
 		textNachname.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblGeschlecht = new Label(comp, SWT.NONE);
 		lblGeschlecht.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblGeschlecht.setText("Geschlecht");
+		lblGeschlecht.setText(Messages.KontaktBlatt_Sex);
 		
+		String toolTip = String.format(Messages.Patient_male_female_tooltip,
+			Messages.Patient_male_short, Messages.Patient_female_short, Messages.Patient_male_long,
+			Messages.Patient_female_long);
 		comboGeschlecht = new Combo(comp, SWT.NONE);
 		comboGeschlecht.setItems(new String[] {
-			SEX_MALE, SEX_FEMALE
+			Messages.Patient_male_short, Messages.Patient_female_short
 		});
 		comboGeschlecht.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblGeburtsdatum = new Label(comp, SWT.NONE);
-		lblGeburtsdatum.setText("Geburtsdatum");
+		lblGeburtsdatum.setText(Messages.KontaktDetailDialog_labelBirthdate);
 		geburtsdatum =
 			new CDateTime(comp, CDT.BORDER | CDT.DROP_DOWN | CDT.DATE_MEDIUM | CDT.TEXT_TRAIL);
 		geburtsdatum.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
@@ -98,28 +100,28 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		
 		Label lblTelefon1 = new Label(comp, SWT.NONE);
 		lblTelefon1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblTelefon1.setText("Telefon");
+		lblTelefon1.setText(Messages.KontaktBlatt_Phone1);
 		
 		textTelefon1 = new Text(comp, SWT.BORDER);
 		textTelefon1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblTelefon2 = new Label(comp, SWT.NONE);
 		lblTelefon2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblTelefon2.setText("Telefon");
+		lblTelefon2.setText(Messages.KontaktBlatt_Phone2);
 		
 		textTelefon2 = new Text(comp, SWT.BORDER);
 		textTelefon2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblHandy = new Label(comp, SWT.NONE);
 		lblHandy.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblHandy.setText("Handy");
+		lblHandy.setText(Messages.KontaktBlatt_Mobile);
 		
 		textHandy = new Text(comp, SWT.BORDER);
 		textHandy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblFax = new Label(comp, SWT.NONE);
 		lblFax.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblFax.setText("Fax");
+		lblFax.setText(Messages.KontaktBlatt_Fax);
 		
 		textFax = new Text(comp, SWT.BORDER);
 		textFax.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -128,7 +130,7 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		
 		Label lblEmail = new Label(comp, SWT.NONE);
 		lblEmail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblEmail.setText("E-Mail");
+		lblEmail.setText(Messages.KontaktBlatt_Mail);
 		
 		textEmail = new Text(comp, SWT.BORDER);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -138,7 +140,7 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		
 		Label lblBemerkungen = new Label(comp, SWT.NONE);
 		lblBemerkungen.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
-		lblBemerkungen.setText("Bemerkungen");
+		lblBemerkungen.setText(Messages.KontaktBlatt_remark);
 		
 		textBemerkungen = new Text(comp, SWT.BORDER | SWT.MULTI);
 		textBemerkungen.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -147,10 +149,10 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		textVorname.setText(pat.getName());
 		textNachname.setText(pat.getVorname());
 		geburtsdatum.setSelection(getGeburtsdatum());
-		if (pat.getGeschlecht().trim().equalsIgnoreCase("m")) {
-			comboGeschlecht.setText(SEX_MALE);
+		if (pat.getGeschlecht().trim().equalsIgnoreCase(Patient.MALE)) {
+			comboGeschlecht.setText(Messages.Patient_male_short);
 		} else {
-			comboGeschlecht.setText(SEX_FEMALE);
+			comboGeschlecht.setText(Messages.Patient_female_short);
 		}
 		textTelefon1.setText(pat.get(Patient.FLD_PHONE1));
 		textTelefon2.setText(pat.get(Patient.FLD_PHONE2));
@@ -188,15 +190,20 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		cal.setTime(bd);
 		
 		int geschlechtSelection = comboGeschlecht.getSelectionIndex();
-		String geschlecht;
-		if (geschlechtSelection != -1) {
-			if (comboGeschlecht.getItems()[geschlechtSelection].trim().equalsIgnoreCase(SEX_MALE)) {
-				geschlecht = "m";
-			} else {
-				geschlecht = "w";
-			}
-			pat.set(Patient.FLD_SEX, geschlecht);
+		String geschlecht = Patient.MALE;
+		
+		if (geschlechtSelection == 1
+			|| comboGeschlecht.getText().contentEquals(Messages.Patient_female_short)) {
+			geschlecht = Patient.FEMALE; // German w for weiblich = female
+		} else if (geschlechtSelection == 0
+			|| comboGeschlecht.getText().contentEquals(Messages.Patient_male_short)) {
+			geschlecht = Patient.MALE;
+		} else if (geschlechtSelection == -1) {
+			SWTHelper.showError(Messages.PatientErfassenDialog_Error_Sex,
+				Messages.PatientErfassenDialog_Sex_must_be_specified);
+			return;
 		}
+		pat.set(Patient.FLD_SEX, geschlecht);
 		
 		String bdS =
 			cal.get(Calendar.DAY_OF_MONTH) + "." + (cal.get(Calendar.MONTH) + 1) + "."

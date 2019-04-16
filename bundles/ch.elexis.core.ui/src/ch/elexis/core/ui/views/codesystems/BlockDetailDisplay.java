@@ -19,6 +19,7 @@ import javax.inject.Inject;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.jface.action.Action;
@@ -112,6 +113,10 @@ public class BlockDetailDisplay implements IDetailDisplay {
 	private Action removeLeistung, moveUpAction, moveDownAction, editAction, countAction;
 	private TableViewerFocusCellManager focusCellManager;
 	
+	private final IChangeListener changeListener = (event) -> {
+		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, master.getValue());
+	};
+	
 	@Inject
 	public void selection(
 		@org.eclipse.e4.core.di.annotations.Optional ICodeElementBlock block){
@@ -139,6 +144,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			WidgetProperties.text(SWT.Modify).observeDelayed(100, tName);
 		IObservableValue txtNameObservable =
 			PojoProperties.value("code", String.class).observeDetail(master);
+		txtNameObservable.addChangeListener(changeListener);
 		dbc.bindValue(txtNameObservableUi, txtNameObservable);
 		
 		tk.createLabel(body, Messages.BlockDetailDisplay_macro)
@@ -150,6 +156,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			WidgetProperties.text(SWT.Modify).observeDelayed(100, tMacro);
 		IObservableValue txtMacroObservable =
 			PojoProperties.value("macro", String.class).observeDetail(master);
+		txtMacroObservable.addChangeListener(changeListener);
 		dbc.bindValue(txtMacroObservableUi, txtMacroObservable);
 		
 		tk.createLabel(body, StringConstants.MANDATOR).setBackground(parent.getBackground());

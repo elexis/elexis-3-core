@@ -14,6 +14,7 @@ package ch.elexis.data;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.interfaces.ICodeElement;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.types.Gender;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
@@ -206,7 +207,11 @@ public class Person extends Kontakt {
 		if (StringTool.isNothing(vals[3])) {
 			ret.append(StringTool.space);
 		} else {
-			ret.append(StringTool.space + "(").append(vals[3]).append(")," + StringTool.space);
+			String shortVal = vals[3];
+			String localiced =
+				shortVal.contentEquals(Patient.FEMALE) ? Messages.Patient_female_short
+						: Messages.Patient_male_short;
+			ret.append(StringTool.space + "(").append(localiced).append(")," + StringTool.space);
 		}
 		if (!StringTool.isNothing(vals[2])) {
 			ret.append(new TimeTool(vals[2]).toString(TimeTool.DATE_GER));

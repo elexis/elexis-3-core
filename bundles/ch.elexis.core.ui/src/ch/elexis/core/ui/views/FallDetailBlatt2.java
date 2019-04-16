@@ -16,6 +16,7 @@ package ch.elexis.core.ui.views;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -24,6 +25,8 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.nebula.widgets.cdatetime.CDT;
+import org.eclipse.nebula.widgets.cdatetime.CDateTime;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -50,8 +53,6 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 import com.tiff.common.ui.datepicker.DatePickerCombo;
-import com.tiff.common.ui.datepicker.EnhancedDatePickerCombo;
-
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
@@ -100,7 +101,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		UserCasePreferences.sortBillingSystems(BillingSystem.getAbrechnungsSysteme());
 	private IFall actFall;
 	DayDateCombo ddc;
-	
+
 	String itemsErrorMessage = "parameters not supplied;please control parameters;in preferences"; //$NON-NLS-1$
 	
 	public static final String[] Reasons = {
@@ -109,7 +110,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	};
 	public static final String[] dgsys = null;
 	Combo cAbrechnung, cReason;
-	DatePickerCombo dpVon, dpBis;
+	CDateTime dpVon, dpBis;
 	Text tBezeichnung, tGarant, tCostBearer;
 	Hyperlink autoFill, hlGarant, hlCostBearer;
 	List<Control> lReqs = new ArrayList<Control>();
@@ -320,29 +321,33 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		});
 		cReason.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tk.createLabel(top, Messages.FallDetailBlatt2_StartDate); //$NON-NLS-1$
-		dpVon = new EnhancedDatePickerCombo(top, SWT.NONE,
-			new EnhancedDatePickerCombo.ExecuteIfValidInterface() {
+		dpVon = new CDateTime(top, CDT.DATE_MEDIUM | CDT.DROP_DOWN | SWT.BORDER | CDT.COMPACT);
+		if (getSelectedFall() == null ) {
+			dpVon.setSelection(new TimeTool().getTime());
+		} else {
+			dpVon.setSelection(new TimeTool(getSelectedFall().getBeginnDatum()).getTime());
+		}
+		dpVon.addSelectionListener(new SelectionAdapter() {
 				
 				@Override
-				public void doIt(){
+				public void widgetSelected(SelectionEvent e){
 					IFall fall = getSelectedFall();
-					fall.setBeginnDatum(
-						new TimeTool(dpVon.getDate().getTime()).toString(TimeTool.DATE_GER));
+					TimeTool selectedDate = new TimeTool(dpVon.getSelection());
+					fall.setBeginnDatum(selectedDate.dump());
 				}
 			});
 		
 		tk.createLabel(top, Messages.FallDetailBlatt2_EndDate); //$NON-NLS-1$
-		dpBis = new EnhancedDatePickerCombo(top, SWT.NONE,
-			new EnhancedDatePickerCombo.ExecuteIfValidInterface() {
-			
-			@Override
-			public void doIt(){
+		dpBis = new CDateTime(top, CDT.DATE_MEDIUM | CDT.DROP_DOWN | SWT.BORDER | CDT.COMPACT);
+		dpBis.setSelection(new Date());
+		dpBis.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e){
 					IFall fall = getSelectedFall();
-				fall.setEndDatum(
-					new TimeTool(dpBis.getDate().getTime()).toString(TimeTool.DATE_GER));
-			}
-		});
-		
+					TimeTool selectedDate = new TimeTool(dpBis.getSelection());
+					fall.setEndDatum(selectedDate.dump());
+				}
+			});
 		ddc = new DayDateCombo(top, Messages.FallDetailBlatt2_ProposeForBillingIn,
 			Messages.FallDetailBlatt2_DaysOrAfter, Messages.FallDetailBlatt2_ProposeForBillingNeg,
 			Messages.FallDetailBlatt2_DaysOrAfterNeg);
@@ -621,14 +626,14 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		// *** set startDate/EndDate
 		TimeTool tt = new TimeTool();
 		if (tt.set(f.getBeginnDatum()) == true) {
-			dpVon.setDate(tt.getTime());
+			dpVon.setSelection(tt.getTime());
 		} else {
-			dpVon.setDate(null);
+			dpVon.setSelection(null);
 		}
 		if (tt.set(f.getEndDatum()) == true) {
-			dpBis.setDate(tt.getTime());
+			dpBis.setSelection(tt.getTime());
 		} else {
-			dpBis.setDate(null);
+			dpBis.setSelection(null);
 		}
 		
 		// *** set copy for patient
@@ -944,6 +949,10 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			if (newValue != null && !newValue.isEmpty()
 				&& !newValue.equals(Messages.FallDetailBlatt2_29)) {
 				actFall.set(LABEL, newValue);
+			}
+			if (dpBis.getSelection() == null) {
+				// This must be called to enable the user to delete a given endDate
+				actFall.setEndDatum(null);
 			}
 			
 			// save reacts

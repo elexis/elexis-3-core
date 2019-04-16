@@ -28,7 +28,7 @@ public class BlockTreeViewerItem {
 	}
 	
 	public String getText(){
-		return block.getText();
+		return block.getLabel();
 	}
 	
 	public ICodeElementBlock getBlock(){

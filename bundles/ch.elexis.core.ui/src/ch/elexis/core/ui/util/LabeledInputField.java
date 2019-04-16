@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005-2014, G. Weirich and Elexis
+ * Copyright (c) 2005-2019, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *    G. Weirich - initial implementation
  * 	  M. Descher - added executable link type
  *    H. Marlovits - added CHECKBOX/CHECKBOXTRISTATE
+ *    N. Giger - Remove DATE (using Nebula CDateTime instead)
  *******************************************************************************/
 package ch.elexis.core.ui.util;
 
@@ -42,8 +43,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tiff.common.ui.datepicker.DatePickerCombo;
-
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.service.ContextServiceHolder;
@@ -58,7 +57,6 @@ import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
-import ch.rgw.tools.TimeTool;
 
 /**
  * Ein Ein/Ausgabeelement, das aus einem Kästchen mit darin einem Label und darunter einem Control
@@ -70,8 +68,15 @@ import ch.rgw.tools.TimeTool;
 public class LabeledInputField extends Composite {
 	final static Logger logger = LoggerFactory.getLogger(LabeledInputField.class);
 	
+	/**
+	 * 
+	 * In Elexis 3.8 we removed the DATE ENUM as it was only used in the Kassenbuch, where we
+	 * replaced it with Nebula CDateTime
+	 *
+	 */
 	static public enum Typ {
-		TEXT, CHECKBOX, CHECKBOXTRISTATE, LIST, LINK, DATE, MONEY, COMBO, EXECLINK, COMBO_VIEWER
+			TEXT, CHECKBOX, CHECKBOXTRISTATE, LIST, LINK, OBSOLETE_DATE, MONEY, COMBO, EXECLINK,
+			COMBO_VIEWER
 	};
 	
 	Label lbl;
@@ -148,10 +153,8 @@ public class LabeledInputField extends Composite {
 			ctl = new List(this, SWT.MULTI | SWT.BORDER);
 			ctl.setLayoutData(new GridData(GridData.FILL_BOTH/* |GridData.GRAB_VERTICAL */));
 			break;
-		case DATE:
-			ctl = new DatePickerCombo(this, SWT.NONE);
-			ctl.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			setText("");
+		case OBSOLETE_DATE:
+			logger.error("Please use nebula CDateTime instead!");
 			break;
 		case COMBO:
 			ctl = new Combo(this, SWT.SINGLE | SWT.BORDER);
@@ -225,9 +228,6 @@ public class LabeledInputField extends Composite {
 					combo.select(idx);
 				}
 			}
-		} else if (ctl instanceof DatePickerCombo) {
-			DatePickerCombo dp = (DatePickerCombo) ctl;
-			dp.setDate(new TimeTool(text).getTime());
 		} else if (ctl instanceof Button) {
 			((Button) ctl).setText(text);
 		}
@@ -265,8 +265,6 @@ public class LabeledInputField extends Composite {
 			}
 		} else if (ctl instanceof Combo) {
 			return ((Combo) ctl).getText();
-		} else if (ctl instanceof DatePickerCombo) {
-			return ((DatePickerCombo) ctl).getText();
 		} else if (ctl instanceof Button) {
 			return ((Button) ctl).getText();
 		}

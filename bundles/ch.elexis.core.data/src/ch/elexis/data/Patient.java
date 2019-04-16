@@ -160,7 +160,7 @@ public class Patient extends Person {
 	 * @param gebDat
 	 *            will be checked for unplausible values
 	 * @param s
-	 *            will be checked for undefined values
+	 *            sexe must be entered as (in German) m for male and w for female (weiblich)
 	 * @throws TimeFormatException
 	 */
 	public Patient(final String name, final String vorname, final TimeTool gebDat, final String s)
