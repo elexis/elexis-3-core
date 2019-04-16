@@ -42,6 +42,13 @@ public interface IVirtualFilesystemService {
 		public OutputStream openOutputStream() throws IOException;
 
 		/**
+		 * Read the content and return it as byte array
+		 * @return
+		 * @throws IOException
+		 */
+		public byte[] readAllBytes() throws IOException;
+		
+		/**
 		 * Copy the contents of this handle to a new handle, where the underlying
 		 * resource might not actually exist yet.
 		 * 

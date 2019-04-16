@@ -1,5 +1,6 @@
 package ch.elexis.core.services.internal;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileOutputStream;
@@ -50,6 +51,15 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 	@Override
 	public InputStream openInputStream() throws IOException {
 		return url.openStream();
+	}
+
+	@Override
+	public byte[] readAllBytes() throws IOException {
+		try (InputStream in = url.openStream();
+				ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+			IOUtils.copy(in, byteArrayOutputStream);
+			return byteArrayOutputStream.toByteArray();
+		}
 	}
 
 	@Override

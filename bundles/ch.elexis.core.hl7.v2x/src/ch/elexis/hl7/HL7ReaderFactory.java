@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +72,7 @@ public enum HL7ReaderFactory {
 		}
 		
 		List<HL7Reader> ret = new ArrayList<HL7Reader>();
-		try (InputStream inputStream = file.openInputStream()) {
+		try (InputStream inputStream = getFileInputStream(file)) {
 			// HAPI utility class will iterate over the messages which appear over an InputStream
 			Hl7InputStreamMessageStringIterator stringIterator =
 				new Hl7InputStreamMessageStringIterator(inputStream);
@@ -102,8 +101,8 @@ public enum HL7ReaderFactory {
 		}
 	}
 	
-	private InputStream getFileInputStream(File file) throws IOException{
-		byte[] bytes = Files.readAllBytes(file.toPath());
+	private InputStream getFileInputStream(IVirtualFilesystemHandle fileHandle) throws IOException{
+		byte[] bytes = fileHandle.readAllBytes();
 		CharsetDetector detector = new CharsetDetector();
 		detector.setText(bytes);
 		CharsetMatch match = detector.detect();
@@ -111,12 +110,12 @@ public enum HL7ReaderFactory {
 		if (match != null) {
 			if (match.getName().contains("IBM424")) {
 				logger.warn(
-					"Reading HL7 file " + file.getAbsolutePath() + " with unsupported encoding "
+					"Reading HL7 file " + fileHandle.getAbsolutePath() + " with unsupported encoding "
 						+ match.getName() + " - trying to use ISO-8859-1 instead");
 						
 				return new ByteArrayInputStream(new String(bytes, "ISO-8859-1").getBytes());
 			}
-			logger.info("Reading HL7 file " + file.getAbsolutePath() + " encoded " + match.getName()
+			logger.info("Reading HL7 file " + fileHandle.getAbsolutePath() + " encoded " + match.getName()
 				+ " language " + match.getLanguage());
 			return new ByteArrayInputStream(match.getString().getBytes());
 		}
