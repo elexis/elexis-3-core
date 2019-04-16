@@ -13,7 +13,6 @@
 package ch.elexis.core.importer.div.importers;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +27,8 @@ import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.LabResultConstants;
+import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
+import ch.elexis.core.services.holder.VirtualFilesystemServiceHolder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.hl7.HL7PatientResolver;
@@ -120,14 +121,14 @@ public class HL7Parser {
 			
 			IPatient patient = hl7Reader.getPatient();
 			if(patient == null) {
-				return new Result<Object>(SEVERITY.ERROR, 2, Messages.HL7_PatientNotInDatabase,
+				return new Result<>(SEVERITY.ERROR, 2, Messages.HL7_PatientNotInDatabase,
 						obsMessage.getPatientId(), true);
 			}
 			
 			pat = labImportUtil.loadCoreModel(patient.getId(), IPatient.class)
 				.orElse(null);
 			if (pat == null) {
-				return new Result<Object>(SEVERITY.ERROR, 2, Messages.HL7_PatientNotInDatabase,
+				return new Result<>(SEVERITY.ERROR, 2, Messages.HL7_PatientNotInDatabase,
 					obsMessage.getPatientId(), true);
 			}
 			
@@ -344,7 +345,7 @@ public class HL7Parser {
 			
 		} catch (ElexisException e) {
 			logger.error("Parsing HL7 failed", e);
-			return new Result<Object>(SEVERITY.ERROR, 2,
+			return new Result<>(SEVERITY.ERROR, 2,
 				Messages.HL7Parser_ExceptionWhileProcessingData, e.getMessage(), true);
 		}
 		return new Result<Object>(SEVERITY.OK, 0, "OK", orderId, false); //$NON-NLS-1$
@@ -360,16 +361,34 @@ public class HL7Parser {
 		}
 	}
 	
+	public Result<?> importFile(final File file, final File archiveDir, boolean bCreatePatientIfNotExists)
+			throws IOException {
+		return importFile(file, archiveDir, null, null, bCreatePatientIfNotExists);
+	}
+
+	public Result<?> importFile(final File file, final File archiveDir, ILabItemResolver labItemResolver,
+			boolean bCreatePatientIfNotExists) throws IOException {
+		return importFile(file, archiveDir, labItemResolver, null, bCreatePatientIfNotExists);
+	}
+	
+	public Result<?> importFile(File hl7file, File archiveDir, ILabItemResolver labItemResolver,
+			ILabContactResolver labContactResolver, boolean bCreatePatientIfNotExists) throws IOException {
+
+		IVirtualFilesystemHandle fileHandle = VirtualFilesystemServiceHolder.get().of(hl7file);
+		IVirtualFilesystemHandle archiveDirHandle = VirtualFilesystemServiceHolder.get().of(archiveDir);
+		return importFile(fileHandle, archiveDirHandle, labItemResolver, labContactResolver, bCreatePatientIfNotExists);
+	}
+
 	/**
 	 * @throws IOException
 	 * @see HL7Parser#importFile(File, File, ILabItemResolver, ILabContactResolver, boolean)
 	 */
-	public Result<?> importFile(final File file, final File archiveDir,
+	public Result<?> importFile(final IVirtualFilesystemHandle file, final IVirtualFilesystemHandle archiveDir,
 		boolean bCreatePatientIfNotExists) throws IOException{
 		return importFile(file, archiveDir, null, bCreatePatientIfNotExists);
 	}
 	
-	public Result<?> importFile(File hl7file, File archiveDir, ILabItemResolver labItemResolver,
+	public Result<?> importFile(IVirtualFilesystemHandle hl7file, IVirtualFilesystemHandle archiveDir, ILabItemResolver labItemResolver,
 		ILabContactResolver labContactResolver, boolean bCreatePatientIfNotExists)
 		throws IOException{
 		this.labContactResolver = labContactResolver;
@@ -391,7 +410,7 @@ public class HL7Parser {
 	 *            indicates whether a patient should be created if not existing
 	 * @return the result as type Result
 	 */
-	public Result<?> importFile(final File file, final File archiveDir,
+	public Result<?> importFile(final IVirtualFilesystemHandle file, final IVirtualFilesystemHandle archiveDir,
 		ILabItemResolver labItemResolver, boolean bCreatePatientIfNotExists) throws IOException{
 		List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(file);
 		
@@ -403,19 +422,19 @@ public class HL7Parser {
 			if (ret.isOK()) {
 				if (archiveDir != null) {
 					if (archiveDir.exists() && archiveDir.isDirectory()) {
-						if (file.exists() && file.isFile() && file.canRead()) {
-							File newFile = new File(archiveDir, file.getName());
+						if (file.exists() && !file.isDirectory() && file.canRead()) {
 							
+							IVirtualFilesystemHandle newFile = archiveDir.subFile(file.getName());
 							if (newFile.exists()) {
 								// on multiple move to archive dir:
 								// first time use own filename
 								// n+ times use filename_timestamp
 								String fnwts = file.getName() + "_"
 									+ new TimeTool().toString(TimeTool.TIMESTAMP);
-								newFile = new File(archiveDir, fnwts);
+								newFile = archiveDir.subFile(fnwts);
 							}
 							
-							if (!file.renameTo(newFile)) {
+							if (!file.moveTo(newFile)) {
 								throw new IOException(
 									Messages.HL7Parser_TheFile + file.getAbsolutePath()
 										+ Messages.HL7Parser_CouldNotMoveToArchive);
@@ -431,27 +450,34 @@ public class HL7Parser {
 			//			ElexisEventDispatcher.reload(LabItem.class);
 			return ret;
 		}
-		return new Result<Object>("OK"); //$NON-NLS-1$
+		return null;
+//		return new Result<>("OK"); //$NON-NLS-1$
 	}
 	
-	public void importFromDir(final File dir, final File archiveDir, Result<?> res,
+	public void importFromDir(final IVirtualFilesystemHandle dir, final IVirtualFilesystemHandle archiveDir, Result<?> res,
 		boolean bCreatePatientIfNotExists) throws IOException{
-		File[] files = dir.listFiles(new FileFilter() {
+		
+		IVirtualFilesystemHandle[] files = dir.listHandles(handle -> {
 			
-			public boolean accept(File pathname){
-				if (pathname.isDirectory()) {
-					if (!pathname.getName().equalsIgnoreCase(archiveDir.getName())) {
-						return true;
-					}
-				} else {
-					if (pathname.getName().toLowerCase().endsWith(".hl7")) { //$NON-NLS-1$
-						return true;
-					}
-				}
-				return false;
+			boolean isDirectory = false;
+			try {
+				isDirectory = handle.isDirectory();
+			} catch (IOException e) {
+				logger.warn("Error checking ["+handle+"], treating as file", e);
 			}
+			
+			if (isDirectory) {
+				if (!handle.getName().equalsIgnoreCase(archiveDir.getName())) {
+					return true;
+				}
+			} else {
+				if ("hl7".equalsIgnoreCase(handle.getExtension())) { //$NON-NLS-1$
+					return true;
+				}
+			}
+			return false;
 		});
-		for (File file : files) {
+		for (IVirtualFilesystemHandle file : files) {
 			if (file.isDirectory()) {
 				importFromDir(file, archiveDir, res, bCreatePatientIfNotExists);
 			} else {
@@ -475,7 +501,8 @@ public class HL7Parser {
 	 */
 	public Result<?> importFile(final String filepath, boolean bCreatePatientIfNotExists)
 		throws IOException{
-		return importFile(new File(filepath), null, bCreatePatientIfNotExists);
+		IVirtualFilesystemHandle fileHandle = VirtualFilesystemServiceHolder.get().of(filepath);
+		return importFile(fileHandle, null, bCreatePatientIfNotExists);
 	}
 	
 	public Result<?> importMessage(String message, boolean bCreatePatientIfNotExists)

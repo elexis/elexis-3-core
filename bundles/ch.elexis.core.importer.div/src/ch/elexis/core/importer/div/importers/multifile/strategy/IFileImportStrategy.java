@@ -1,6 +1,5 @@
 package ch.elexis.core.importer.div.importers.multifile.strategy;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
@@ -8,6 +7,7 @@ import ch.elexis.core.importer.div.importers.HL7Parser;
 import ch.elexis.core.importer.div.importers.ILabContactResolver;
 import ch.elexis.core.importer.div.importers.IPersistenceHandler;
 import ch.elexis.core.importer.div.importers.multifile.IMultiFileParser;
+import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.rgw.tools.Result;
 
 /**
@@ -21,14 +21,13 @@ public interface IFileImportStrategy {
 	/**
 	 * executes the import for this file
 	 * 
-	 * @param file
-	 *            {@link File}
+	 * @param fileHandle
 	 * @param context
 	 *            containing any needed information to perform the import. See
 	 *            {@link IMultiFileParser} constants.
 	 * @return {@link Result} indicating whether import succeeded or not
 	 */
-	public Result<Object> execute(File file, Map<String, Object> context, HL7Parser hl7Parser,
+	public Result<Object> execute(IVirtualFilesystemHandle fileHandle, Map<String, Object> context, HL7Parser hl7Parser,
 		IPersistenceHandler persistenceHandler) throws IOException;
 	
 	/**

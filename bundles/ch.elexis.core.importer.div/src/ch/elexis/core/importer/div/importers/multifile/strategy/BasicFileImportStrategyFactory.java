@@ -1,6 +1,6 @@
 package ch.elexis.core.importer.div.importers.multifile.strategy;
 
-import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +9,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.rgw.io.FileTool;
 
 public abstract class BasicFileImportStrategyFactory implements IFileImportStrategyFactory {
@@ -16,24 +17,26 @@ public abstract class BasicFileImportStrategyFactory implements IFileImportStrat
 	private static final Logger log = LoggerFactory.getLogger(BasicFileImportStrategyFactory.class);
 	
 	@Override
-	public Map<File, IFileImportStrategy> createImportStrategyMap(File hl7File){
-		Map<File, IFileImportStrategy> ret = new HashMap<>();
-		if (!validateHL7File(hl7File)) {
-			throw new IllegalStateException("File [" + hl7File + "] is not a processable HL7 File");
+	public Map<IVirtualFilesystemHandle, IFileImportStrategy> createImportStrategyMap(
+		IVirtualFilesystemHandle fileHandle){
+		Map<IVirtualFilesystemHandle, IFileImportStrategy> ret = new HashMap<>();
+		if (!validateHL7File(fileHandle)) {
+			throw new IllegalStateException(
+				"File [" + fileHandle + "] is not a processable HL7 File");
 		}
-		ret.put(hl7File, new DefaultHL7ImportStrategy());
+		ret.put(fileHandle, new DefaultHL7ImportStrategy());
 		
 		return ret;
 	}
 	
-	protected List<File> getMatchingFiles(File hl7File){
-		List<File> matchingFiles = new ArrayList<File>();
+	protected List<IVirtualFilesystemHandle> getMatchingFiles(IVirtualFilesystemHandle hl7File) throws IOException{
+		List<IVirtualFilesystemHandle> matchingFiles = new ArrayList<>();
 		
 		String origin = hl7File.getName();
 		String seekName = FileTool.getNakedFilename(origin);
 		
-		File directory = hl7File.getParentFile();
-		for (File f : directory.listFiles()) {
+		IVirtualFilesystemHandle directory = hl7File.getParent();
+		for (IVirtualFilesystemHandle f : directory.listHandles()) {
 			String name = f.getName();
 			if (name.startsWith(seekName) && !name.equals(origin)) {
 				matchingFiles.add(f);
@@ -44,15 +47,16 @@ public abstract class BasicFileImportStrategyFactory implements IFileImportStrat
 		return matchingFiles;
 	}
 	
-	protected boolean validateHL7File(File hl7File){
-		if (hl7File == null || !hl7File.exists()) {
+	protected boolean validateHL7File(IVirtualFilesystemHandle hl7File){
+		if (hl7File == null) {
 			return false;
 		}
 		
-		if (!(hl7File.getName().toLowerCase().endsWith("hl7"))) {
+		try {
+			return (hl7File.exists() && hl7File.getExtension().equalsIgnoreCase("hl7"));
+		} catch (IOException e) {
 			return false;
 		}
-		return true;
 	}
 	
 }

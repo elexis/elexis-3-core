@@ -14,7 +14,8 @@ import ch.elexis.core.importer.div.importers.IPersistenceHandler;
 import ch.elexis.core.importer.div.importers.Messages;
 import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategy;
 import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategyFactory;
-import ch.rgw.io.FileTool;
+import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
+import ch.elexis.core.services.holder.VirtualFilesystemServiceHolder;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
 
@@ -28,50 +29,96 @@ public class MultiFileParser implements IMultiFileParser {
 	
 	@Override
 	public Result<Object> importFromFile(File hl7File,
-		IFileImportStrategyFactory importStrategyFactory, HL7Parser hl7parser, IPersistenceHandler persistenceHandler){
-		Map<String, Object> context = new HashMap<>();
-		context.put(CTX_LABNAME, myLab);
-		
-		// try to resolving import strategies
-		Map<File, IFileImportStrategy> strategyMap = null;
+		IFileImportStrategyFactory importStrategyFactory, HL7Parser hl7parser,
+		IPersistenceHandler persistenceHandler){
 		try {
-			strategyMap = importStrategyFactory.createImportStrategyMap(hl7File);
-		} catch (IllegalStateException ise) {
-			// file was invalid
-			return new Result<Object>(SEVERITY.ERROR, 1, Messages.MultiFileParser_InvalidFile,
-				hl7File, true);
+			IVirtualFilesystemHandle fileHandle = VirtualFilesystemServiceHolder.get().of(hl7File);
+			return importFromHandle(fileHandle, importStrategyFactory, hl7parser,
+				persistenceHandler);
+		} catch (IOException e) {
+			return new Result<>(SEVERITY.ERROR, null);
 		}
-		
-		List<File> keys = sortStrategyList(hl7File, strategyMap);
-		Result<Object> results = new Result<>();
-		for (File file : keys) {
-			IFileImportStrategy importStrategy = strategyMap.get(file);
-			importStrategy.setTestMode(testMode);
-			try {
-				results.add(importStrategy.execute(file, context, hl7parser, persistenceHandler));
-			} catch (IOException e) {
-				LoggerFactory.getLogger(getClass()).error("Error executing import", e);
-			}
-		}
-		return results;
 	}
 	
 	@Override
 	public Result<Object> importFromDirectory(File directory,
-		IFileImportStrategyFactory importStrategyFactory, HL7Parser hl7parser, IPersistenceHandler persistenceHandler){
-		Result<Object> results = new Result<>();
-		for (File file : directory.listFiles()) {
-			String extension = FileTool.getExtension(file.getName()).toLowerCase();
-			if (extension.equals("hl7")) {
-				results.add(importFromFile(file, importStrategyFactory, hl7parser, persistenceHandler));
-			}
+		IFileImportStrategyFactory importStrategyFactory, HL7Parser hl7parser,
+		IPersistenceHandler persistenceHandler){
+		try {
+			IVirtualFilesystemHandle fileHandle =
+					VirtualFilesystemServiceHolder.get().of(directory);
+			return importFromHandle(fileHandle, importStrategyFactory, hl7parser,
+				persistenceHandler);
+		} catch (IOException e) {
+			return new Result<Object>(e);
 		}
-		return results;
 	}
 	
-	private List<File> sortStrategyList(File hl7File, Map<File, IFileImportStrategy> strategyMap){
+	@Override
+	public Result<Object> importFromHandle(IVirtualFilesystemHandle fileHandle,
+		IFileImportStrategyFactory importStrategyFactory, HL7Parser hl7parser,
+		IPersistenceHandler persistenceHandler){
+		
+		boolean isDirectory = false;
+		try {
+			isDirectory = fileHandle.isDirectory();
+		} catch (IOException e) {
+			return new Result<Object>(e);
+		}
+		
+		if (isDirectory) {
+			// directory import
+			Result<Object> results = new Result<>();
+			try {
+				IVirtualFilesystemHandle[] listHandles = fileHandle.listHandles();
+				for (IVirtualFilesystemHandle childHandle : listHandles) {
+					if("hl7".equalsIgnoreCase(childHandle.getExtension())) {
+						Result<Object> importFromHandle = importFromHandle(childHandle,
+								importStrategyFactory, hl7parser, persistenceHandler);
+							results.add(importFromHandle);
+					}
+				}
+				return results;
+			} catch (IOException e) {
+				return new Result<Object>(e);
+			}
+			
+		} else {
+			// file import
+			Map<String, Object> context = new HashMap<>();
+			context.put(CTX_LABNAME, myLab);
+			
+			// try to resolving import strategies
+			Map<IVirtualFilesystemHandle, IFileImportStrategy> strategyMap = null;
+			try {
+				strategyMap = importStrategyFactory.createImportStrategyMap(fileHandle);
+			} catch (IllegalStateException ise) {
+				// file was invalid
+				return new Result<>(SEVERITY.ERROR, 1, Messages.MultiFileParser_InvalidFile,
+					fileHandle, true);
+			}
+			
+			List<IVirtualFilesystemHandle> keys = sortStrategyList(fileHandle, strategyMap);
+			Result<Object> results = new Result<>();
+			for (IVirtualFilesystemHandle file : keys) {
+				IFileImportStrategy importStrategy = strategyMap.get(file);
+				importStrategy.setTestMode(testMode);
+				try {
+					results
+						.add(importStrategy.execute(file, context, hl7parser, persistenceHandler));
+				} catch (IOException e) {
+					LoggerFactory.getLogger(getClass()).error("Error executing import", e);
+					return new Result<Object>(e);
+				}
+			}
+			return results;
+		}
+	}
+	
+	private List<IVirtualFilesystemHandle> sortStrategyList(IVirtualFilesystemHandle hl7File,
+		Map<IVirtualFilesystemHandle, IFileImportStrategy> strategyMap){
 		// ensure hl7 file is imported first
-		ArrayList<File> keys = new ArrayList<File>(strategyMap.keySet());
+		ArrayList<IVirtualFilesystemHandle> keys = new ArrayList<>(strategyMap.keySet());
 		keys.remove(hl7File);
 		keys.add(0, hl7File);
 		

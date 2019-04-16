@@ -1,6 +1,5 @@
 package ch.elexis.core.importer.div.importers.multifile.strategy;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,6 +11,7 @@ import ch.elexis.core.importer.div.importers.IPersistenceHandler;
 import ch.elexis.core.importer.div.importers.multifile.IMultiFileParser;
 import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
+import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.TimeTool;
 
@@ -35,7 +35,7 @@ public class DefaultHL7ImportStrategy implements IFileImportStrategy {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Result<Object> execute(File file, Map<String, Object> context, HL7Parser hl7Parser, IPersistenceHandler persistenceHandler) throws IOException{
+	public Result<Object> execute(IVirtualFilesystemHandle file, Map<String, Object> context, HL7Parser hl7Parser, IPersistenceHandler persistenceHandler) throws IOException{
 		String myLab = (String) context.get(IMultiFileParser.CTX_LABNAME);
 
 		Result<Object> result = null;

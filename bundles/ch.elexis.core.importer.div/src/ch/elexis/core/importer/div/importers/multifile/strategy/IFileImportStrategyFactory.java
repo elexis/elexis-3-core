@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Map;
 
 import ch.elexis.core.importer.div.importers.ILabContactResolver;
+import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 
 /**
  * a factory containing information about all the available {@link IFileImportStrategy
@@ -20,12 +21,11 @@ public interface IFileImportStrategyFactory {
 	 * Add any connected files you'd like and their {@link IFileImportStrategy} using this method.
 	 * <br>
 	 * 
-	 * @param hl7File
-	 *            {@link File}
+	 * @param fileHandle
 	 * @return {@link Map} of all {@link File Files} and their appropriate
 	 *         {@link IFileImportStrategy}
 	 */
-	public Map<File, IFileImportStrategy> createImportStrategyMap(File hl7File);
+	public Map<IVirtualFilesystemHandle, IFileImportStrategy> createImportStrategyMap(IVirtualFilesystemHandle fileHandle);
 	
 	/**
 	 * Specify if imported files should be moved to archive and error directory inside the import

@@ -23,6 +23,8 @@ import ca.uhn.hl7v2.parser.PipeParser;
 import ca.uhn.hl7v2.util.Hl7InputStreamMessageStringIterator;
 import ca.uhn.hl7v2.validation.impl.NoValidation;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
+import ch.elexis.core.services.holder.VirtualFilesystemServiceHolder;
 import ch.elexis.hl7.v26.Messages;
 import ch.elexis.hl7.v2x.HL7ReaderV21;
 import ch.elexis.hl7.v2x.HL7ReaderV22;
@@ -42,16 +44,21 @@ public enum HL7ReaderFactory {
 	private static Logger logger = LoggerFactory.getLogger(HL7ReaderFactory.class);
 	
 	public List<HL7Reader> getReader(File file) throws IOException{
+		IVirtualFilesystemHandle fileHandle = VirtualFilesystemServiceHolder.get().of(file);
+		return getReader(fileHandle);
+	}
+	
+	public List<HL7Reader> getReader(IVirtualFilesystemHandle file) throws IOException{
 		checkClassLoader();
 		
-		messageList = new ArrayList<Message>();
+		messageList = new ArrayList<>();
 		return load(file);
 	}
 	
 	public @Nullable HL7Reader getReader(String message) throws IOException {
 		checkClassLoader();
 		
-		messageList = new ArrayList<Message>();
+		messageList = new ArrayList<>();
 		try {
 			return loadMessage(message);
 		} catch (HL7Exception e) {
@@ -59,14 +66,14 @@ public enum HL7ReaderFactory {
 		}
 	}
 	
-	private List<HL7Reader> load(File file) throws IOException{
+	private List<HL7Reader> load(IVirtualFilesystemHandle file) throws IOException{
 		if (!file.canRead()) {
 			throw new IOException(MessageFormat
 				.format(Messages.HL7Reader_CannotReadFile, file.getAbsolutePath()));
 		}
 		
 		List<HL7Reader> ret = new ArrayList<HL7Reader>();
-		try (InputStream inputStream = getFileInputStream(file)) {
+		try (InputStream inputStream = file.openInputStream()) {
 			// HAPI utility class will iterate over the messages which appear over an InputStream
 			Hl7InputStreamMessageStringIterator stringIterator =
 				new Hl7InputStreamMessageStringIterator(inputStream);

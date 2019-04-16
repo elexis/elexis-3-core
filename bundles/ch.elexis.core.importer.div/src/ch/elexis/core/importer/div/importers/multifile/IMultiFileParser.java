@@ -5,6 +5,7 @@ import java.io.File;
 import ch.elexis.core.importer.div.importers.HL7Parser;
 import ch.elexis.core.importer.div.importers.IPersistenceHandler;
 import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategyFactory;
+import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.rgw.tools.Result;
 
 public interface IMultiFileParser {
@@ -28,8 +29,9 @@ public interface IMultiFileParser {
 	 * @return a {@link Result} indicating whether import succeeded or not
 	 */
 	public Result<Object> importFromFile(File hl7File,
-		IFileImportStrategyFactory importStrategyFactory, HL7Parser hl7parser, IPersistenceHandler persistenceHandler);
-		
+		IFileImportStrategyFactory importStrategyFactory, HL7Parser hl7parser,
+		IPersistenceHandler persistenceHandler);
+	
 	/**
 	 * Imports all HL7Files from the given directory. <br>
 	 * Calls {@linkplain IMultiFileParser#importFromFile(File, IFileImportStrategyFactory)} for each
@@ -44,5 +46,20 @@ public interface IMultiFileParser {
 	 * @return a {@link Result} indicating whether import succeeded or not
 	 */
 	public Result<Object> importFromDirectory(File directory,
-		IFileImportStrategyFactory importStrategyFactory, HL7Parser hl7parser, IPersistenceHandler persistenceHandler);
+		IFileImportStrategyFactory importStrategyFactory, HL7Parser hl7parser,
+		IPersistenceHandler persistenceHandler);
+	
+
+	/**
+	 * 
+	 * @param urlString
+	 * @param vfsService
+	 * @param importStrategyFactory
+	 * @param hl7parser
+	 * @param persistenceHandler
+	 * @return
+	 */
+	public Result<Object> importFromHandle(IVirtualFilesystemHandle fileHandle,
+		IFileImportStrategyFactory importStrategyFactory, HL7Parser hl7parser,
+		IPersistenceHandler persistenceHandler);
 }

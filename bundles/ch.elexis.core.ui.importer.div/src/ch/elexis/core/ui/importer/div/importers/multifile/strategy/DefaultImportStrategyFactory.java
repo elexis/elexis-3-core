@@ -1,6 +1,6 @@
 package ch.elexis.core.ui.importer.div.importers.multifile.strategy;
 
-import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +12,7 @@ import ch.elexis.core.importer.div.importers.multifile.strategy.BasicFileImportS
 import ch.elexis.core.importer.div.importers.multifile.strategy.DefaultHL7ImportStrategy;
 import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategy;
 import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategyFactory;
+import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.rgw.io.FileTool;
 
 /**
@@ -31,14 +32,20 @@ public class DefaultImportStrategyFactory extends BasicFileImportStrategyFactory
 	private ILabContactResolver labContactResolver;
 	
 	@Override
-	public Map<File, IFileImportStrategy> createImportStrategyMap(File hl7File){
-		Map<File, IFileImportStrategy> ret = super.createImportStrategyMap(hl7File);
+	public Map<IVirtualFilesystemHandle, IFileImportStrategy> createImportStrategyMap(IVirtualFilesystemHandle hl7File){
+		Map<IVirtualFilesystemHandle, IFileImportStrategy> ret = super.createImportStrategyMap(hl7File);
 		
-		List<File> matchingFiles = getMatchingFiles(hl7File);
+		List<IVirtualFilesystemHandle> matchingFiles;
+		try {
+			matchingFiles = getMatchingFiles(hl7File);
+		} catch (IOException e) {
+			// masquerade, as this exception is already catched upstream
+			throw new IllegalStateException(e);
+		}
 		// matching files for this hl7 file, probably pdf
 		if (!matchingFiles.isEmpty()) {
 			DefaultPDFImportStrategy pdfImportStrategy = new DefaultPDFImportStrategy();
-			for (File mFile : matchingFiles) {
+			for (IVirtualFilesystemHandle mFile : matchingFiles) {
 				String type = FileTool.getExtension(mFile.getName()).toLowerCase();
 				if ("pdf".equals(type)) {
 					log.debug("... adding [" + mFile.getName() + "] with DefaultPDFImportStrategy");
