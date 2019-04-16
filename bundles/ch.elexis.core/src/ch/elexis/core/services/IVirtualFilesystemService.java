@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -27,6 +26,9 @@ public interface IVirtualFilesystemService {
 
 	public IVirtualFilesystemHandle of(File file) throws IOException;
 
+	/**
+	 * A handle for a file which may or may not exist.
+	 */
 	public interface IVirtualFilesystemHandle {
 
 		public InputStream openInputStream() throws IOException;
@@ -40,6 +42,8 @@ public interface IVirtualFilesystemService {
 		public OutputStream openOutputStream() throws IOException;
 
 		/**
+		 * Copy the contents of this handle to a new handle, where the underlying
+		 * resource might not actually exist yet.
 		 * 
 		 * @param destination
 		 * @throws IOException
@@ -48,20 +52,12 @@ public interface IVirtualFilesystemService {
 
 		/**
 		 * 
-		 * @return
+		 * @return the parent url of the given parent
 		 */
 		public IVirtualFilesystemHandle getParent() throws IOException;
 
 		/**
-		 * List the contents of a directory, returning absolute URL+ handles
-		 * 
-		 * @param source
-		 * @return
-		 * @throws IOException
-		 */
-		public List<String> list() throws IOException;
-
-		/**
+		 * Only if {@link #isDirectory()}:
 		 * 
 		 * @param ff
 		 * @return
@@ -69,6 +65,12 @@ public interface IVirtualFilesystemService {
 		 */
 		public IVirtualFilesystemHandle[] listHandles(IVirtualFilesystemhandleFilter ff) throws IOException;
 
+		/**
+		 * Only if {@link #isDirectory()}:
+		 * 
+		 * @return
+		 * @throws IOException
+		 */
 		public IVirtualFilesystemHandle[] listHandles() throws IOException;
 
 		/**
@@ -84,7 +86,7 @@ public interface IVirtualFilesystemService {
 		 * 
 		 * @return is the underlying resource of type directory
 		 */
-		public boolean isDirectory();
+		public boolean isDirectory() throws IOException;
 
 		/**
 		 * 
@@ -110,25 +112,36 @@ public interface IVirtualFilesystemService {
 		 */
 		public boolean exists() throws IOException;
 
+		/**
+		 * 
+		 * @return
+		 */
 		public String getName();
 
+		/**
+		 * 
+		 * @return
+		 */
 		public boolean canRead();
 
+		/**
+		 * 
+		 * @return
+		 */
 		public String getAbsolutePath();
 
 		/**
-		 * Rename the underlying resource
 		 * 
-		 * @param newFileName
+		 * @param handle
 		 * @return
+		 * @throws IOException
 		 */
-		public boolean renameTo(String newFileName);
-		
-		public boolean moveTo(IVirtualFilesystemHandle handle);
+		public boolean moveTo(IVirtualFilesystemHandle handle) throws IOException;
 
 		/**
-		 * Only executable for a directory; Create a possibly not yet existing
-		 * sub-directory handle.
+		 * Only if {@link #isDirectory()}: Create a possibly not yet existing
+		 * sub-directory handle. The actual directory addressed, must then be created
+		 * using {@link #mkdir()}
 		 * 
 		 * @param string
 		 * @return
@@ -136,7 +149,7 @@ public interface IVirtualFilesystemService {
 		public IVirtualFilesystemHandle subDir(String string) throws IOException;
 
 		/**
-		 * Only executable for a directory; create a sub file handle
+		 * Only if {@link #isDirectory()}: create a sub file handle
 		 * 
 		 * @param name
 		 * @return

@@ -11,8 +11,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 
 import org.apache.commons.io.FileUtils;
@@ -21,40 +20,20 @@ import org.apache.commons.io.IOUtils;
 
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemhandleFilter;
-import jcifs.CloseableIterator;
-import jcifs.SmbResource;
 import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
 import jcifs.smb.SmbFileFilter;
 
 public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 
-	private static final String ERROR_MESSAGE = "Can not handle type";
+	private static final String ERROR_MESSAGE_CAN_NOT_HANDLE = "Can not handle type";
 
 	private final URL url;
 
-	private final boolean isDirectory;
-
-	public VirtualFilesystemHandle(URL url) throws IOException {
+	public VirtualFilesystemHandle(URL url) {
 		this.url = url;
-
-		File file = FileUtils.toFile(url);
-		if (file != null) {
-			isDirectory = file.isDirectory();
-			return;
-		}
-
-		URLConnection connection = url.openConnection();
-		if (connection instanceof SmbFile) {
-			try (SmbFile smbFile = (SmbFile) connection) {
-				isDirectory = smbFile.isDirectory();
-				return;
-			}
-		}
-
-		isDirectory = (url.toString().endsWith("/"));
 	}
-	
+
 	@Override
 	public String toString() {
 		return url.toString();
@@ -66,7 +45,6 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 		} catch (MalformedURLException e) {
 			throw new IOException(e);
 		}
-		isDirectory = file.isDirectory();
 	}
 
 	@Override
@@ -76,7 +54,7 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 
 	@Override
 	public OutputStream openOutputStream() throws IOException {
-		if (!isDirectory) {
+		if (!isDirectory()) {
 			File file = FileUtils.toFile(url);
 			if (file != null) {
 				return new FileOutputStream(file);
@@ -121,41 +99,7 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 				}
 			}
 		}
-		throw new IOException(ERROR_MESSAGE);
-	}
-
-	@Override
-	public List<String> list() throws IOException {
-
-		List<String> result = new ArrayList<>();
-
-		File file = FileUtils.toFile(url);
-		if (file != null && file.isDirectory()) {
-			for (File child : file.listFiles()) {
-				if (child.isFile() && child.canRead()) {
-					result.add(child.getAbsolutePath());
-				}
-			}
-			return result;
-		}
-
-		URLConnection connection = url.openConnection();
-		if (connection instanceof SmbFile) {
-			try (SmbFile smbFile = (SmbFile) connection) {
-				if (smbFile.isDirectory()) {
-					CloseableIterator<SmbResource> children = smbFile.children();
-					while (children.hasNext()) {
-						SmbResource smbResource = children.next();
-						if (smbResource.isFile() && smbResource.canRead()) {
-							result.add(smbResource.getName());
-						}
-					}
-				}
-			}
-			return result;
-		}
-
-		return result;
+		throw new IOException(ERROR_MESSAGE_CAN_NOT_HANDLE);
 	}
 
 	@Override
@@ -166,34 +110,36 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 	@Override
 	public IVirtualFilesystemHandle[] listHandles(IVirtualFilesystemhandleFilter ff) throws IOException {
 
-		if (isDirectory()) {
-			Optional<File> file = toFile();
-			if (file.isPresent()) {
-				File[] listFiles = file.get().listFiles(new IVFSFileFilterAdapter(ff));
+		if (!isDirectory()) {
+			throw new IOException("not a directory");
+		}
+
+		Optional<File> file = toFile();
+		if (file.isPresent()) {
+			File[] listFiles = file.get().listFiles(new IVFSFileFilterAdapter(ff));
+			IVirtualFilesystemHandle[] retVal = new IVirtualFilesystemHandle[listFiles.length];
+			for (int i = 0; i < listFiles.length; i++) {
+				File _file = listFiles[i];
+				retVal[i] = new VirtualFilesystemHandle(_file);
+			}
+			return retVal;
+		}
+
+		URLConnection connection = url.openConnection();
+		if (connection instanceof SmbFile) {
+			try (SmbFile smbFile = (SmbFile) connection) {
+				SmbFile[] listFiles = smbFile.listFiles(new IVFSFileFilterAdapter(ff));
 				IVirtualFilesystemHandle[] retVal = new IVirtualFilesystemHandle[listFiles.length];
 				for (int i = 0; i < listFiles.length; i++) {
-					File _file = listFiles[i];
-					retVal[i] = new VirtualFilesystemHandle(_file);
+					SmbFile _file = listFiles[i];
+					retVal[i] = new VirtualFilesystemHandle(_file.getURL());
 				}
 				return retVal;
 			}
-
-			URLConnection connection = url.openConnection();
-			if (connection instanceof SmbFile) {
-				try (SmbFile smbFile = (SmbFile) connection) {
-					SmbFile[] listFiles = smbFile.listFiles(new IVFSFileFilterAdapter(ff));
-					IVirtualFilesystemHandle[] retVal = new IVirtualFilesystemHandle[listFiles.length];
-					for (int i = 0; i < listFiles.length; i++) {
-						SmbFile _file = listFiles[i];
-						retVal[i] = new VirtualFilesystemHandle(_file.getURL());
-					}
-					return retVal;
-				}
-			}
-
-			// TODO http?
 		}
-		return new IVirtualFilesystemHandle[] {};
+
+		// TODO http?
+		throw new IOException(ERROR_MESSAGE_CAN_NOT_HANDLE);
 	}
 
 	@Override
@@ -211,7 +157,7 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 				return;
 			}
 		}
-		throw new IOException(ERROR_MESSAGE);
+		throw new IOException(ERROR_MESSAGE_CAN_NOT_HANDLE);
 	}
 
 	@Override
@@ -220,8 +166,20 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 	}
 
 	@Override
-	public boolean isDirectory() {
-		return isDirectory;
+	public boolean isDirectory() throws IOException {
+		File file = FileUtils.toFile(url);
+		if (file != null) {
+			return file.isDirectory();
+		}
+		URLConnection connection = url.openConnection();
+		if (connection instanceof SmbFile) {
+			try (SmbFile smbFile = (SmbFile) connection) {
+				return smbFile.isDirectory();
+			} catch (SmbException e) {
+				throw new IOException(e);
+			}
+		}
+		throw new IOException(ERROR_MESSAGE_CAN_NOT_HANDLE);
 	}
 
 	@Override
@@ -269,7 +227,7 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 				return smbFile.exists();
 			}
 		}
-		throw new IOException(ERROR_MESSAGE);
+		throw new IOException(ERROR_MESSAGE_CAN_NOT_HANDLE);
 	}
 
 	@Override
@@ -297,7 +255,6 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 
 	@Override
 	public String getAbsolutePath() {
-		// TODO Auto-generated method stub
 		try {
 			return url.toURI().toURL().toString();
 		} catch (MalformedURLException | URISyntaxException e) {
@@ -308,45 +265,42 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 	}
 
 	@Override
-	public boolean renameTo(String newFileName) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public boolean moveTo(IVirtualFilesystemHandle target) {
+	public boolean moveTo(IVirtualFilesystemHandle target) throws IOException {
 
 		Optional<File> file = toFile();
 		if (file.isPresent()) {
 			Optional<File> _target = target.toFile();
 			if (_target.isPresent()) {
-				return file.get().renameTo(_target.get());
+				Files.move(file.get().toPath(), _target.get().toPath(), StandardCopyOption.REPLACE_EXISTING);
+				return true;
 			}
 		}
 
 		// TODO currently supports only file to file
-		
+
 		return false;
 	}
 
 	@Override
 	public IVirtualFilesystemHandle subDir(String subdir) throws IOException {
-		return subFile(subdir+"/");
+		return subFile(subdir + "/");
 	}
 
 	@Override
 	public IVirtualFilesystemHandle subFile(String subFile) throws IOException {
-		if (isDirectory()) {
-			try {
-				return new VirtualFilesystemHandle(url.toURI().resolve(subFile).toURL());
-			} catch (URISyntaxException | MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		} else {
-			return getParent().subDir(subFile);
+
+		if (!isDirectory()) {
+			throw new IOException("not a directory");
 		}
 
+		try {
+			return new VirtualFilesystemHandle(url.toURI().resolve(subFile).toURL());
+		} catch (URISyntaxException | MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		throw new IOException(ERROR_MESSAGE_CAN_NOT_HANDLE);
 	}
 
 	@Override
@@ -363,7 +317,7 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 				return this;
 			}
 		}
-		throw new IOException(ERROR_MESSAGE);
+		throw new IOException(ERROR_MESSAGE_CAN_NOT_HANDLE);
 	}
 
 	private class IVFSFileFilterAdapter implements FileFilter, SmbFileFilter {
@@ -399,15 +353,8 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 			}
 
 			VirtualFilesystemHandle pathnameVfsHandle;
-			try {
-				pathnameVfsHandle = new VirtualFilesystemHandle(file.getURL());
-				return ff.accept(pathnameVfsHandle);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			return false;
+			pathnameVfsHandle = new VirtualFilesystemHandle(file.getURL());
+			return ff.accept(pathnameVfsHandle);
 		}
 
 	}
