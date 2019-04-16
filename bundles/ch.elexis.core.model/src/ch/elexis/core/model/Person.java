@@ -5,10 +5,9 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
-import javax.persistence.Transient;
-
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
+import ch.elexis.core.model.format.PersonFormatUtil;
 import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.Gender;
 
@@ -16,19 +15,6 @@ public class Person extends Contact implements IPerson {
 	
 	public Person(Kontakt model){
 		super(model);
-	}
-	
-	@Transient
-	public char getGenderCharLocalized(){
-		if (getGender() != null) {
-			if (Gender.MALE == getGender()) {
-				return 'm';
-			}
-			if (Gender.FEMALE == getGender()) {
-				return 'w';
-			}
-		}
-		return '?';
 	}
 	
 	@Override
@@ -143,6 +129,10 @@ public class Person extends Contact implements IPerson {
 		} else if (value == null) {
 			setExtInfo(PatientConstants.FLD_EXTINFO_LEGAL_GUARDIAN, null);
 		}
-		
+	}
+	
+	@Override
+	public String getLabel(){
+		return PersonFormatUtil.getPersonalia(this);
 	}
 }
