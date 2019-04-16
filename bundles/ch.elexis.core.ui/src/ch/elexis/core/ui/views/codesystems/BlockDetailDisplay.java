@@ -114,6 +114,9 @@ public class BlockDetailDisplay implements IDetailDisplay {
 	private TableViewerFocusCellManager focusCellManager;
 	
 	private final IChangeListener changeListener = (event) -> {
+		if (master.getValue() instanceof ICodeElementBlock) {
+			CoreModelServiceHolder.get().save(master.getValue());
+		}
 		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, master.getValue());
 	};
 	

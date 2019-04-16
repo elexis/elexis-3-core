@@ -297,6 +297,15 @@ public class CodeElementBlock extends AbstractIdDeleteModelAdapter<Leistungsbloc
 		return false;
 	}
 	
+	@Override
+	public String getLabel(){
+		String name = getEntity().getName();
+		String macro = getEntity().getMacro();
+		if (macro == null || macro.length() == 0 || macro.equals(name))
+			return name;
+		return name + " [" + macro + "]";
+	}
+	
 	private class CodeElementReference implements ch.elexis.core.model.ICodeElement {
 		
 		private String codeSystemName;

@@ -102,15 +102,6 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	Composite parent;
 
 	private boolean created = false;
-	
-	//	ElexisEventListener eeli_user =
-	//		new ElexisUiEventListenerImpl(Anwender.class, ElexisEvent.EVENT_USER_CHANGED) {
-	//			
-	//			@Override
-	//			public void runInUi(ElexisEvent ev){
-	//				UserChanged();
-	//			}
-	//		};
 
 	@Inject
 	void changedMandator(
@@ -172,10 +163,8 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		dcfp = new DefaultControlFieldProvider(cv, currentUserFields);
 		updateFocusField();
 
-		vc = new ViewerConfigurer(
-				// new LazyContentProvider(cv,loader,
-				// AccessControlDefaults.PATIENT_DISPLAY),
-				plcp, new PatLabelProvider(), dcfp, new ViewerConfigurer.DefaultButtonProvider(), // cv,Patient.class),
+		vc = new ViewerConfigurer(plcp, new PatLabelProvider(), dcfp,
+			new ViewerConfigurer.DefaultButtonProvider(),
 				new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_LAZYLIST, SWT.SINGLE, cv));
 		cv.create(vc, parent, SWT.NONE, getViewSite());
 		// let user select patient by pressing ENTER in the control fields
@@ -252,7 +241,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	private void populateViewMenu(){
 		menus = new ViewMenus(getViewSite());
 		
-		//		menus.createToolbar(newPatAction, filterAction);
+		menus.createToolbar(newPatAction); // TODO filterAction ?
 		
 		menus.createToolbar(copySelectedPatInfosToClipboardAction);
 		menus.createToolbar(copySelectedAddressesToClipboardAction);
@@ -262,7 +251,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		menus.createControlContextMenu(cv.getViewerWidget().getControl(), pmp);
 		menus.getContextMenu().addMenuListener(pmp);
 		
-		//		menus.createMenu(newPatAction, filterAction);
+		menus.createMenu(newPatAction); // TODO filterAction ?
 		menus.createMenu(copySelectedPatInfosToClipboardAction);
 		menus.createMenu(copySelectedAddressesToClipboardAction);
 	}
