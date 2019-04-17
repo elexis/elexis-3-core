@@ -20,7 +20,7 @@
     </properties>
 
     <modules>
-      <!-- <module>ch.elexis.core.jpa.test</module> could not run this test in surefire, can run it with IDE -->
+      <module>ch.elexis.core.jpa.test</module>
       <module>ch.elexis.core.jcifs.test</module>
       <module>ch.elexis.core.jpa.entities.test</module>
       <module>ch.elexis.core.model.test</module>
