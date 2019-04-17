@@ -645,12 +645,12 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		public void updateUserConfiguration(){
 			Settings cfg = CoreHub.userCfg.getBranch(Preferences.USR_REMINDERCOLORS, true);
 			colorInProgress = UiDesk
-				.getColorFromRGB(cfg.get(ProcessStatus.IN_PROGRESS.getLocaleText(), "FFFFFF")); //$NON-NLS-1$;
-			colorDue = UiDesk.getColorFromRGB(cfg.get(ProcessStatus.DUE.getLocaleText(), "FFFFFF")); //$NON-NLS-1$;
+				.getColorFromRGB(cfg.get(ProcessStatus.IN_PROGRESS.name(), "FFFFFF")); //$NON-NLS-1$;
+			colorDue = UiDesk.getColorFromRGB(cfg.get(ProcessStatus.DUE.name(), "FFFFFF")); //$NON-NLS-1$;
 			colorOverdue =
-				UiDesk.getColorFromRGB(cfg.get(ProcessStatus.OVERDUE.getLocaleText(), "FF0000")); //$NON-NLS-1$
+				UiDesk.getColorFromRGB(cfg.get(ProcessStatus.OVERDUE.name(), "FF0000")); //$NON-NLS-1$
 			colorOpen =
-				UiDesk.getColorFromRGB(cfg.get(ProcessStatus.OPEN.getLocaleText(), "00FF00")); //$NON-NLS-1$
+				UiDesk.getColorFromRGB(cfg.get(ProcessStatus.OPEN.name(), "00FF00")); //$NON-NLS-1$
 		}
 		
 		public Color getForeground(final Object element){

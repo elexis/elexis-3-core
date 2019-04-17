@@ -53,10 +53,14 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 		super(Messages.ReminderPrefences_Reminders);
 		cfg = CoreHub.userCfg.getBranch(Preferences.USR_REMINDERCOLORS, true);
 		strings = new DecoratedString[4];
-		strings[0] = new DecoratedString(ProcessStatus.OPEN.getLocaleText());
-		strings[1] = new DecoratedString(ProcessStatus.IN_PROGRESS.getLocaleText());
-		strings[2] = new DecoratedString(ProcessStatus.DUE.getLocaleText());
-		strings[3] = new DecoratedString(ProcessStatus.OVERDUE.getLocaleText());
+		strings[0] =
+			new DecoratedString(ProcessStatus.OPEN.getLocaleText(), ProcessStatus.OPEN.name());
+		strings[1] = new DecoratedString(ProcessStatus.IN_PROGRESS.getLocaleText(),
+			ProcessStatus.IN_PROGRESS.name());
+		strings[2] =
+			new DecoratedString(ProcessStatus.DUE.getLocaleText(), ProcessStatus.DUE.name());
+		strings[3] = new DecoratedString(ProcessStatus.OVERDUE.getLocaleText(),
+			ProcessStatus.OVERDUE.name());
 		
 		choosenFields = CoreHub.userCfg.get(Preferences.USR_REMINDER_PAT_LABEL_CHOOSEN,
 			Reminder.LabelFields.LASTNAME.toString()).split(",");
