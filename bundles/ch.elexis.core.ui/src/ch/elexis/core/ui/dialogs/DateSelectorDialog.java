@@ -42,7 +42,7 @@ public class DateSelectorDialog extends Dialog {
 	
 	@Override
 	protected Control createDialogArea(Composite parent){
-		dp = new CDateTime(parent, CDT.DATE_MEDIUM | CDT.DROP_DOWN);
+		dp = new CDateTime(parent, CDT.DATE_SHORT | CDT.DROP_DOWN | CDT.TAB_FIELDS);
 		dp.setSelection(preSelectedDate.getTime());
 		getShell().setText(shellTitle);
 		return dp;
