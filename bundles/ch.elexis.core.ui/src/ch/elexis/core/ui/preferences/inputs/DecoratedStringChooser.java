@@ -53,7 +53,15 @@ public class DecoratedStringChooser extends Composite {
 		for (int i = 0; i < num; i++) {
 			Label lab = new Label(this, SWT.NONE);
 			lab.setText(strings[i].getText());
-			String coldesc = cfg.get(strings[i].getText(), "FFFFFF"); //$NON-NLS-1$
+			lab.setData(strings[i].getValue());
+			
+			String coldesc;
+			if(strings[i].getValue() != null) {
+				coldesc = cfg.get(strings[i].getValue(), "FFFFFF"); //$NON-NLS-1$
+			} else {
+				coldesc = cfg.get(strings[i].getText(), "FFFFFF"); //$NON-NLS-1$
+			}
+
 			Color background = UiDesk.getColorFromRGB(coldesc);
 			lab.setBackground(background);
 			GridData gd = new GridData(GridData.FILL_BOTH);
@@ -68,7 +76,11 @@ public class DecoratedStringChooser extends Composite {
 					if (selected != null) {
 						String symbolic = UiDesk.createColor(selected);
 						l.setBackground(UiDesk.getColorFromRGB(symbolic));
-						cfg.set(l.getText(), symbolic);
+						if(l.getData() != null) {
+							cfg.set((String) l.getData(), symbolic);
+						} else {
+							cfg.set(l.getText(), symbolic);
+						}
 					}
 				}
 				
