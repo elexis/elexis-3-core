@@ -18,12 +18,15 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * Klasse zur einfachen Datum- und Zeitberarbeitung
@@ -1020,6 +1023,19 @@ public class TimeTool extends GregorianCalendar {
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setTimeInMillis(getTimeInMillis());
 		return gc.toZonedDateTime().toLocalDateTime();
+	}
+	
+	/**
+	 * A helper function for the RCPTT GUI-tests
+	 * 
+	 * @since 3.8
+	 * @param days number of days compared to today may be positive (in the future) or negative (in the past)
+	 * @return a String in the format dd.MM.yyyy
+	 */
+	public static String daysFromNow(int days) {
+		TimeTool newTime = new TimeTool();
+		newTime.addDays(days);
+		return newTime.toString(TimeTool.DATE_GER);
 	}
 	
 	public String toDBString(final boolean full){
