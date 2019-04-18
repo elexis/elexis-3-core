@@ -18,7 +18,6 @@
    <bundle id="ch.elexis.core.data.tests" version="0.0.0"/>
    <bundle id="ch.elexis.core.ui.usage" version="0.0.0"/>
    <bundle id="ch.elexis.core.test" version="0.0.0"/>
-   <bundle id="ch.elexis.core.jpa.test" version="0.0.0"/>
    <bundle id="ch.elexis.core.model.test" version="0.0.0"/>
    <bundle id="ch.elexis.core.services.test" version="0.0.0"/>
    <category-def name="elexis_3_core" label="Elexis 3 Kern"/>
