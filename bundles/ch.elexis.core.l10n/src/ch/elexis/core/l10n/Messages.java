@@ -2328,6 +2328,7 @@ public class Messages extends NLS {
 	public static String Leistungscodes_ErrorNameMissing;
 	public static String Leistungscodes_ErrorNameNoSpecialChars;
 	public static String Leistungscodes_ErrorNoEmptyItemsAllowed;
+	public static String Leistungscodes_fields_tooltip;
 	public static String Leistungscodes_ListNumeric;
 	public static String Leistungscodes_SaveAsMultiplelinesText;
 	public static String Leistungscodes_SaveAsNumeric;

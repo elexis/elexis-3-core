@@ -74,6 +74,7 @@ import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.MultiplikatorList;
 import ch.elexis.core.model.ch.BillingLaw;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.dialogs.provider.ILocalizedEnumLabelProvider;
 import ch.elexis.core.ui.icons.Images;
@@ -865,6 +866,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					ldConstants.add(con);
 				}
 			}
+			ldConstants.setToolTipText(Messages.Leistungscodes_fields_tooltip);
 			ldConstants.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			
 			Action actionDel = new Action() {
@@ -911,6 +913,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			fdReq.setLabel(Messages.Leistungscodes_necessaryData);
 			fdReq.setData(tName.getText());
 			ldRequirements = fdReq.getListDisplay();
+			ldRequirements.setToolTipText(Messages.Leistungscodes_fields_tooltip);
 			
 			// *** label/editor field for optional fields
 			data = null;
@@ -919,6 +922,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			FieldDefsDisplay fdOpt = new FieldDefsDisplay(lowerPartComp, SWT.BORDER, data);
 			fdOpt.setLabel(Messages.Leistungscodes_optionalData);
 			ldOptional = fdOpt.getListDisplay();
+			fdOpt.setToolTipText(Messages.Leistungscodes_fields_tooltip);
 			
 			// *** label/editor field for unused fields
 			if (CoreHub.acl.request(AccessControlDefaults.CASE_DEFINE_SPECIALS) == true) {
@@ -936,6 +940,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					Images.IMG_MOVETOLOWERLIST.getImageDescriptor(), true);
 				fdUnused.setNoDuplicatesList(ldRequirements, ldOptional);
 				fdUnused.setNoDuplicatesCreateList(ldRequirements, ldOptional);
+				fdUnused.setToolTipText(Messages.Leistungscodes_fields_tooltip);
 			}
 			
 			// *** adding action items for required fields list
@@ -1234,6 +1239,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					listDisplay.add(item);
 				}
 			}
+			listDisplay.setToolTipText(Messages.Leistungscodes_fields_tooltip);
 			
 			// ****** create toolbar on the right side
 			Composite navigator = new Composite(this, SWT.NONE);
