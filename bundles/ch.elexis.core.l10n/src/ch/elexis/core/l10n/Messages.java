@@ -766,6 +766,8 @@ public class Messages extends NLS {
 	public static String MultiplikatorEditor_BeginDate;
 	public static String MultiplikatorEditor_NewMultipilcator;
 	public static String MultiplikatorEditor_PleaseEnterBeginDate;
+	public static String MultiplikatorEditor_ErrorTitle;
+	public static String MultiplikatorEditor_ErrorMessage;
 	public static String NeueBestellungDialog_Automatic;
 	public static String NeuerFallDialog_0;
 	public static String NeuerFallDialog_1;
