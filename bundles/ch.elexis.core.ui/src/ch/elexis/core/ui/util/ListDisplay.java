@@ -128,6 +128,15 @@ public class ListDisplay<T> extends Composite implements IUnlockable {
 		}
 		cLinks.redraw();
 	}
+	/**
+	 * @since 3.8
+	 * @param Set text to be added to all hyperlinks
+	 */
+	public void setToolTipText(String tooltip){
+		for (Control c : cLinks.getChildren()) {
+			c.setToolTipText(tooltip);
+		}
+	}
 	
 	/**
 	 * Ein Objekt der Liste hinzufügen
