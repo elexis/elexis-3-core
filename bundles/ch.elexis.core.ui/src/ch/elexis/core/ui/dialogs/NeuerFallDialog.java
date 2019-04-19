@@ -34,8 +34,8 @@ public class NeuerFallDialog extends TitleAreaDialog {
 		fall = f;
 		if (fall == null) {
 			pat = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
-			fall = pat.neuerFall(Messages.NeuerFallDialog_0, Messages.NeuerFallDialog_1,
-				Messages.NeuerFallDialog_2); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			fall = pat.neuerFall(Fall.getDefaultCaseLabel(), Fall.getDefaultCaseReason(),
+					Fall.getDefaultCaseLaw());
 		}
 		deleteOnCancel = true;
 	}
@@ -43,8 +43,8 @@ public class NeuerFallDialog extends TitleAreaDialog {
 	public NeuerFallDialog(Shell shell, Patient pat, boolean deleteOnCancel){
 		super(shell);
 		this.pat = pat;
-		this.fall = pat.neuerFall(Messages.NeuerFallDialog_0, Messages.NeuerFallDialog_1,
-			Messages.NeuerFallDialog_2); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		this.fall = pat.neuerFall(Fall.getDefaultCaseLabel(), Fall.getDefaultCaseReason(),
+				Fall.getDefaultCaseLaw());
 		this.deleteOnCancel = deleteOnCancel;
 	}
 	
