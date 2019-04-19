@@ -25,7 +25,7 @@ public class TestInitializer {
 	public static JdbcLink initTestDBConnection(String dbflavor){
 		JdbcLink link = null;
 		if (dbflavor == FLAVOR_H2_MEM) {
-			link = new JdbcLink("org.h2.Driver", "jdbc:h2:mem:test_mem", "h2");
+			link = new JdbcLink("org.h2.Driver", "jdbc:h2:~/elexisTest/elexisTest;AUTO_SERVER=TRUE", "h2");
 		} else if (dbflavor == FLAVOR_MYSQL) {
 			link = JdbcLink.createMySqlLink("localhost", "unittests");
 		} else if (dbflavor == FLAVOR_POSTGRES) {
@@ -38,7 +38,12 @@ public class TestInitializer {
 		try {
 			// PostgreSQL fails downcasing a username, even when all users are in lower case
 			String userName = dbflavor == FLAVOR_POSTGRES ? "elexistest" : "elexisTest";
-			boolean connectionOk = link.connect(userName, "elexisTest");
+			String password = "elexisTest";
+			if(dbflavor == FLAVOR_H2_MEM) {
+				userName ="sa";
+				password = "";
+			}
+			boolean connectionOk = link.connect(userName, password);
 			if (connectionOk) {
 				return link;
 			}

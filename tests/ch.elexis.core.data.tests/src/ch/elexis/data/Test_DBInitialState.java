@@ -16,6 +16,6 @@ public class Test_DBInitialState extends AbstractPersistentObjectTest {
 	@Test
 	public void testDatabaseUpdatedToRequiredVersion(){
 		String requiredDb = CoreHub.globalCfg.get("dbversion", "wr0ng");
-		assertEquals(CoreHub.DBVersion, requiredDb);
+		assertEquals("liquibase", requiredDb);
 	}
 }

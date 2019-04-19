@@ -119,7 +119,7 @@
           <useUIHarness>false</useUIHarness>
           <testClass>ch.elexis.AllTests</testClass>
           <showEclipseLog>true</showEclipseLog>
-          <argLine>-Delexis.test.mode=true</argLine>
+          <argLine>-Delexis.test.mode=true -Delexis.test.db.server=true</argLine>
           <dependencies>
             <dependency>
               <type>eclipse-plugin</type>
