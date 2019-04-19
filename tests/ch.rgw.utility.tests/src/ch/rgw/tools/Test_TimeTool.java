@@ -134,6 +134,13 @@ public class Test_TimeTool {
 		assertNotNull(timeTool.toString(), split[1]);
 		assertTrue(printFailure(timeTool, duration, split),
 			duration.startsWith(split[0]) && duration.endsWith(split[1]));
+		String in5Days = TimeTool.daysFromNow(5);
+		String before5Days = TimeTool.daysFromNow(-5);
+		String pattern = "\\d\\d\\.\\d\\d\\.\\d\\d\\d\\d";
+		assertTrue(before5Days.matches(pattern));
+		assertTrue(in5Days.matches(pattern));
+		String today = TimeTool.daysFromNow(0);
+		assertTrue(today.contentEquals(new TimeTool().toString(TimeTool.DATE_GER)));
 	}
 	
 	@Test

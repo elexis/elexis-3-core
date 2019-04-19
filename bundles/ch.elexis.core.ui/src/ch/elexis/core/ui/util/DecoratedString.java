@@ -22,11 +22,17 @@ import org.eclipse.swt.graphics.Image;
  */
 public class DecoratedString {
 	String text;
+	String value;
 	Color foreground, background;
 	Image icon;
 	
 	public DecoratedString(String t){
-		text = t;
+		this(t, (String) null);
+	}
+	
+	public DecoratedString(String text, String value) {
+		this.text = text;
+		this.value = value;
 	}
 	
 	public DecoratedString(String t, Color fore, Color back){
@@ -58,5 +64,14 @@ public class DecoratedString {
 	
 	public Color getBackground(){
 		return background;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 * @since 3.7 the actual value to use
+	 */
+	public String getValue(){
+		return value;
 	}
 }

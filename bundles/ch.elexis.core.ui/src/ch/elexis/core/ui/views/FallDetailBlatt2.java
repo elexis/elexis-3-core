@@ -321,7 +321,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		});
 		cReason.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tk.createLabel(top, Messages.FallDetailBlatt2_StartDate); //$NON-NLS-1$
-		dpVon = new CDateTime(top, CDT.DATE_MEDIUM | CDT.DROP_DOWN | SWT.BORDER | CDT.COMPACT);
+		dpVon = new CDateTime(top, CDT.DATE_SHORT | CDT.DROP_DOWN | SWT.BORDER | CDT.TAB_FIELDS);
 		if (getSelectedFall() == null ) {
 			dpVon.setSelection(new TimeTool().getTime());
 		} else {
@@ -338,7 +338,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			});
 		
 		tk.createLabel(top, Messages.FallDetailBlatt2_EndDate); //$NON-NLS-1$
-		dpBis = new CDateTime(top, CDT.DATE_MEDIUM | CDT.DROP_DOWN | SWT.BORDER | CDT.COMPACT);
+		dpBis = new CDateTime(top, CDT.DATE_SHORT | CDT.DROP_DOWN | SWT.BORDER | CDT.TAB_FIELDS);
 		dpBis.setSelection(new Date());
 		dpBis.addSelectionListener(new SelectionAdapter() {
 				@Override
