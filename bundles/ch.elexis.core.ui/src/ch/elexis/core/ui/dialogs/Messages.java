@@ -218,9 +218,6 @@ public class Messages {
 	public static String MultiplikatorEditor_NewMultipilcator = ch.elexis.core.l10n.Messages.MultiplikatorEditor_NewMultipilcator;
 	public static String MultiplikatorEditor_PleaseEnterBeginDate = ch.elexis.core.l10n.Messages.MultiplikatorEditor_PleaseEnterBeginDate;
 	public static String NeueBestellungDialog_Automatic = ch.elexis.core.l10n.Messages.NeueBestellungDialog_Automatic;
-	public static String NeuerFallDialog_0 = ch.elexis.core.l10n.Messages.NeuerFallDialog_0;
-	public static String NeuerFallDialog_1 = ch.elexis.core.l10n.Messages.NeuerFallDialog_1;
-	public static String NeuerFallDialog_2 = ch.elexis.core.l10n.Messages.NeuerFallDialog_2;
 	public static String NeuerFallDialog_createNewCase = ch.elexis.core.l10n.Messages.NeuerFallDialog_createNewCase;
 	public static String NeuerFallDialog_enterCaseData = ch.elexis.core.l10n.Messages.NeuerFallDialog_enterCaseData;
 	public static String NeuerFallDialog_newCase = ch.elexis.core.l10n.Messages.NeuerFallDialog_newCase;
