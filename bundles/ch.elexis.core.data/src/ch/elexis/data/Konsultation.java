@@ -37,12 +37,16 @@ import ch.elexis.core.data.interfaces.IOptifier;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.elexis.core.data.nopo.adapter.DiagnoseAdapter;
 import ch.elexis.core.data.service.PoCodeElementServiceHolder;
+import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.data.services.ICodeElementService;
 import ch.elexis.core.data.services.ICodeElementService.ContextKeys;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.model.IDiagnosis;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.text.model.Samdas;
@@ -666,10 +670,13 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 					sb.append(rs2.getString(2)).append("::");
 					sb.append(rs2.getString(1));
 					try {
-						PersistentObject dg = CoreHub.poFactory.createFromString(sb.toString());
-						if (dg != null) {
-							ret.add((IDiagnose) dg);
-						}
+						Optional<Identifiable> loaded =
+							StoreToStringServiceHolder.get().loadFromString(sb.toString());
+						loaded.ifPresent(ld -> {
+							if (ld instanceof IDiagnosis) {
+								ret.add(new DiagnoseAdapter((IDiagnosis) ld));
+							}
+						});
 					} catch (Exception ex) {
 						log.error("Fehlerhafter Diagnosecode " + sb.toString());
 					}
