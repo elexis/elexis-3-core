@@ -29,7 +29,10 @@ public class ElexisDataSourceService implements IElexisDataSource {
 	@Activate
 	public void activate(){
 		if (CoreUtil.isTestMode()) {
-			setDBConnection(new TestDatabaseConnection());
+			IStatus setDBConnection = setDBConnection(new TestDatabaseConnection());
+			if(!setDBConnection.isOK()) {
+				log.error("Error setting db connection", setDBConnection.getMessage());
+			}
 		}
 	}
 	

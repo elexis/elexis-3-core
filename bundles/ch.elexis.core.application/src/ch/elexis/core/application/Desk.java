@@ -13,6 +13,7 @@ package ch.elexis.core.application;
 import java.util.Map;
 import java.util.Optional;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -71,11 +72,15 @@ public class Desk implements IApplication {
 			}
 			Optional<DBConnection> connection = CoreUtil.getDBConnection(CoreHub.localCfg);
 			if (datasource.isPresent() && connection.isPresent()) {
-				datasource.get().setDBConnection(connection.get());
+				IStatus setDBConnection = datasource.get().setDBConnection(connection.get());
+				if(!setDBConnection.isOK()) {
+					log.error("Error setting db connection", setDBConnection.getMessage());
+				}
 			} else {
+				String connstring = (connection.isPresent()) ? connection.get().connectionString : "";
 				log.error(
 					"Can not connect to database, datasource or connection configuration missing. Datasource ["
-						+ datasource + "] Connection [" + connection + "]");
+						+ datasource + "] Connection [" + connstring + "]");
 			}
 		} catch (Throwable pe) {
 			// error in database connection, we have to exit
