@@ -64,11 +64,11 @@ public class Desk implements IApplication {
 		
 		// connect to the database
 		Optional<IElexisDataSource> datasource = ElexisDatasourceHolder.get();
+		Optional<DBConnection> connection = CoreUtil.getDBConnection(CoreHub.localCfg);
 		try {
 			if (PersistentObject.connect(CoreHub.localCfg) == false) {
 				log.error(PersistentObject.class.getName() + " initialization failed.");
 			}
-			Optional<DBConnection> connection = CoreUtil.getDBConnection(CoreHub.localCfg);
 			if (datasource.isPresent() && connection.isPresent()) {
 				IStatus setDBConnection = datasource.get().setDBConnection(connection.get());
 				if(!setDBConnection.isOK()) {
@@ -103,6 +103,12 @@ public class Desk implements IApplication {
 			}
 			
 			return IApplication.EXIT_OK;
+		}
+		
+		String poConnectString = PersistentObject.getConnection().getConnectString();
+		String noPoConnectString = connection.get().connectionString;
+		if(!poConnectString.equalsIgnoreCase(noPoConnectString)) {
+			log.error("Connection string differ po [{}] nopo [{}]", poConnectString, noPoConnectString);
 		}
 		
 		// check for initialization parameters
