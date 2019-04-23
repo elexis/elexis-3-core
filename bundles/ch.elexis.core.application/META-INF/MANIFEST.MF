@@ -25,3 +25,4 @@ Import-Package: org.eclipse.e4.ui.workbench.modeling,
  org.slf4j
 Export-Package: ch.elexis.core.application,
  ch.elexis.core.application.perspectives
+Service-Component: OSGI-INF/ch.elexis.core.application.ElexisDatasourceHolder.xml
