@@ -72,8 +72,10 @@ public class ElexisEntityManger implements IElexisEntityManager {
 	
 	protected synchronized void unbindDataSource(DataSource dataSource){
 		logger.debug("Unbinding " + dataSource.getClass().getName());
-		this.factory.close();
-		this.factory = null;
+		if (this.factory != null) {
+			this.factory.close();
+			this.factory = null;
+		}
 		this.dataSource = null;
 	}
 	
