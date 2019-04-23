@@ -55,6 +55,10 @@ public class ElexisDataSourceService implements IElexisDataSource {
 				.registerService(DataSource.class, currentDataSource, new Hashtable<>());
 			return Status.OK_STATUS;
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+			// Logging might not even been initialized yet
+			// so leave the stack trace to sysout
+			e.printStackTrace();
+			
 			return new Status(Status.ERROR, "ch.elexis.core.jpa.datasource", e.getMessage());
 		}
 	}
