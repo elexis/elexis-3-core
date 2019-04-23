@@ -35,7 +35,6 @@ import ch.elexis.core.data.util.LocalLock;
 import ch.elexis.core.services.IElexisDataSource;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.utils.CoreUtil;
-import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.io.FileTool;
 
@@ -63,8 +62,7 @@ public class Desk implements IApplication {
 		}
 		
 		// connect to the database
-		Optional<IElexisDataSource> datasource =
-			OsgiServiceUtil.getService(IElexisDataSource.class);
+		Optional<IElexisDataSource> datasource = ElexisDatasourceHolder.get();
 		try {
 			if (PersistentObject.connect(CoreHub.localCfg) == false) {
 				log.error(PersistentObject.class.getName() + " initialization failed.");
@@ -100,10 +98,6 @@ public class Desk implements IApplication {
 			}
 			
 			return IApplication.EXIT_OK;
-		} finally {
-			if (datasource.isPresent()) {
-				OsgiServiceUtil.ungetService(datasource.get());
-			}
 		}
 		
 		// check for initialization parameters
