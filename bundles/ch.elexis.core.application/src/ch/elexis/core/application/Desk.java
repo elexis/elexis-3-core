@@ -107,8 +107,10 @@ public class Desk implements IApplication {
 		
 		String poConnectString = PersistentObject.getConnection().getConnectString();
 		String noPoConnectString = connection.get().connectionString;
-		if(!poConnectString.equalsIgnoreCase(noPoConnectString)) {
+		if (!poConnectString.equalsIgnoreCase(noPoConnectString)) {
 			log.error("Connection string differ po [{}] nopo [{}]", poConnectString, noPoConnectString);
+			System.err
+					.println("Connection string differ po [" + poConnectString + "] nopo [" + noPoConnectString + "]");
 		}
 		
 		// check for initialization parameters
