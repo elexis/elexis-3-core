@@ -28,7 +28,7 @@ public class TestContext implements IContext {
 			"Mandatore", LocalDate.of(2000, 12, 1), Gender.FEMALE).mandator().buildAndSave();
 		mandator = coreModelService.load(_mandator.getId(), IMandator.class).get();
 		
-		user = new IUserBuilder(coreModelService, "user", _mandator).buildAndSave();
+		user = new IUserBuilder(coreModelService, "user_ctx", _mandator).buildAndSave();
 	}
 	
 	@Override
