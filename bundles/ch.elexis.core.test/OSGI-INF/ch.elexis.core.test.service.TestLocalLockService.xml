@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" name="ch.elexis.core.test.service.TestLocalLockService">
+   <service>
+      <provide interface="ch.elexis.core.services.ILocalLockService"/>
+   </service>
+   <implementation class="ch.elexis.core.test.service.TestLocalLockService"/>
+</scr:component>

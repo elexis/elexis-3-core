@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" name="ch.elexis.core.test.service.TestContextService">
+   <service>
+      <provide interface="ch.elexis.core.services.IContextService"/>
+   </service>
+   <reference bind="setModelService" interface="ch.elexis.core.services.IModelService" name="ModelService" target="(service.model.name=ch.elexis.core.model)"/>
+   <implementation class="ch.elexis.core.test.service.TestContextService"/>
+</scr:component>
