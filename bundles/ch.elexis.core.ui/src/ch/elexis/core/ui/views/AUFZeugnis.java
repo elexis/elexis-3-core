@@ -69,8 +69,9 @@ public class AUFZeugnis extends ViewPart implements ICallback, IActivationListen
 		if (text.getPlugin().isDirectOutput()) {
 			text.getPlugin().print(null, null, true);
 			getSite().getPage().hideView(this);
+		} else {
+			EditLocalDocumentUtil.startEditLocalDocument(this, actBrief);
 		}
-		EditLocalDocumentUtil.startEditLocalDocument(this, actBrief);
 	}
 	
 	private void updateTextLock(){
