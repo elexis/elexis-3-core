@@ -15,6 +15,7 @@ import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.TaskException;
 
+import java.util.List;
 import java.util.Map;
 
 import java.util.Optional;
@@ -109,5 +110,16 @@ public interface ITaskService {
 	 * @generated
 	 */
 	Optional<ITaskDescriptor> findTaskDescriptorByIdOrReferenceId(String idOrReferenceId);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Find the latest executions of the provided task descriptor, ordered by execution time, newest first. Includes currently running tasks.
+	 * <!-- end-model-doc -->
+	 * @model type="ch.elexis.core.types.List&lt;ch.elexis.core.tasks.model.ITask&gt;" many="false"
+	 * @generated
+	 */
+	List<ITask> findExecutions(ITaskDescriptor taskDescriptor);
 
 } // ITaskService

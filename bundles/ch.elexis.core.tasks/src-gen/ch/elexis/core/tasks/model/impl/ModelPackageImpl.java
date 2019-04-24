@@ -346,18 +346,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getITask_Descriptor() {
-		return (EReference)iTaskEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EAttribute getITask_TriggerEvent() {
-		return (EAttribute)iTaskEClass.getEStructuralFeatures().get(3);
+		return (EAttribute)iTaskEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -367,7 +357,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 */
 	@Override
 	public EAttribute getITask_Result() {
-		return (EAttribute)iTaskEClass.getEStructuralFeatures().get(4);
+		return (EAttribute)iTaskEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -377,7 +367,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 */
 	@Override
 	public EAttribute getITask_ProgressMonitor() {
-		return (EAttribute)iTaskEClass.getEStructuralFeatures().get(5);
+		return (EAttribute)iTaskEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -387,7 +377,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 */
 	@Override
 	public EAttribute getITask_RunContext() {
-		return (EAttribute)iTaskEClass.getEStructuralFeatures().get(6);
+		return (EAttribute)iTaskEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -397,6 +387,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 */
 	@Override
 	public EAttribute getITask_Finished() {
+		return (EAttribute)iTaskEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getITask_DescriptorId() {
 		return (EAttribute)iTaskEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -535,12 +535,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iTaskEClass = createEClass(ITASK);
 		createEAttribute(iTaskEClass, ITASK__ID);
 		createEAttribute(iTaskEClass, ITASK__STATE);
-		createEReference(iTaskEClass, ITASK__DESCRIPTOR);
 		createEAttribute(iTaskEClass, ITASK__TRIGGER_EVENT);
 		createEAttribute(iTaskEClass, ITASK__RESULT);
 		createEAttribute(iTaskEClass, ITASK__PROGRESS_MONITOR);
 		createEAttribute(iTaskEClass, ITASK__RUN_CONTEXT);
 		createEAttribute(iTaskEClass, ITASK__FINISHED);
+		createEAttribute(iTaskEClass, ITASK__DESCRIPTOR_ID);
 
 		iTaskServiceEClass = createEClass(ITASK_SERVICE);
 
@@ -590,6 +590,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		// Add supertypes to classes
 		iTaskDescriptorEClass.getESuperTypes().add(theModelPackage_1.getIdentifiable());
+		iTaskDescriptorEClass.getESuperTypes().add(theModelPackage_1.getDeleteable());
+		iTaskEClass.getESuperTypes().add(theModelPackage_1.getIdentifiable());
+		iTaskEClass.getESuperTypes().add(theModelPackage_1.getDeleteable());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(iTaskDescriptorEClass, ITaskDescriptor.class, "ITaskDescriptor", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -624,9 +627,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEParameter(op, this.getSerializable(), "value", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iTaskEClass, ITask.class, "ITask", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getITask_Id(), ecorePackage.getEString(), "id", null, 0, 1, ITask.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getITask_Id(), ecorePackage.getEString(), "id", null, 1, 1, ITask.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getITask_State(), this.getTaskState(), "state", null, 1, 1, ITask.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getITask_Descriptor(), this.getITaskDescriptor(), null, "descriptor", null, 1, 1, ITask.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getITask_TriggerEvent(), this.getTaskTriggerType(), "triggerEvent", null, 1, 1, ITask.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		g1 = createEGenericType(ecorePackage.getEMap());
 		g2 = createEGenericType(ecorePackage.getEString());
@@ -642,6 +644,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		g1.getETypeArguments().add(g2);
 		initEAttribute(getITask_RunContext(), g1, "runContext", null, 0, 1, ITask.class, IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getITask_Finished(), ecorePackage.getEBoolean(), "finished", "false", 1, 1, ITask.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getITask_DescriptorId(), ecorePackage.getEString(), "descriptorId", null, 1, 1, ITask.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iTaskServiceEClass, ITaskService.class, "ITaskService", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -699,6 +702,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEParameter(op, ecorePackage.getEString(), "idOrReferenceId", 0, 1, IS_UNIQUE, IS_ORDERED);
 		g1 = createEGenericType(theTypesPackage.getOptional());
 		g2 = createEGenericType(this.getITaskDescriptor());
+		g1.getETypeArguments().add(g2);
+		initEOperation(op, g1);
+
+		op = addEOperation(iTaskServiceEClass, null, "findExecutions", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getITaskDescriptor(), "taskDescriptor", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(theTypesPackage.getList());
+		g2 = createEGenericType(this.getITask());
 		g1.getETypeArguments().add(g2);
 		initEOperation(op, g1);
 

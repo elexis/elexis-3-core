@@ -10,6 +10,8 @@
  */
 package ch.elexis.core.tasks.model;
 
+import ch.elexis.core.model.Deleteable;
+import ch.elexis.core.model.Identifiable;
 import java.io.Serializable;
 
 import java.util.Map;
@@ -31,19 +33,19 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * <ul>
  *   <li>{@link ch.elexis.core.tasks.model.ITask#getId <em>Id</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITask#getState <em>State</em>}</li>
- *   <li>{@link ch.elexis.core.tasks.model.ITask#getDescriptor <em>Descriptor</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITask#getTriggerEvent <em>Trigger Event</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITask#getResult <em>Result</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITask#getProgressMonitor <em>Progress Monitor</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITask#getRunContext <em>Run Context</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITask#isFinished <em>Finished</em>}</li>
+ *   <li>{@link ch.elexis.core.tasks.model.ITask#getDescriptorId <em>Descriptor Id</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.tasks.model.ModelPackage#getITask()
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface ITask {
+public interface ITask extends Identifiable, Deleteable {
 	/**
 	 * Returns the value of the '<em><b>Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -54,7 +56,7 @@ public interface ITask {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Id</em>' attribute.
 	 * @see ch.elexis.core.tasks.model.ModelPackage#getITask_Id()
-	 * @model changeable="false"
+	 * @model id="true" required="true" changeable="false"
 	 * @generated
 	 */
 	String getId();
@@ -75,21 +77,6 @@ public interface ITask {
 	 * @generated
 	 */
 	TaskState getState();
-
-	/**
-	 * Returns the value of the '<em><b>Descriptor</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Descriptor</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Descriptor</em>' reference.
-	 * @see ch.elexis.core.tasks.model.ModelPackage#getITask_Descriptor()
-	 * @model required="true" changeable="false"
-	 * @generated
-	 */
-	ITaskDescriptor getDescriptor();
 
 	/**
 	 * Returns the value of the '<em><b>Trigger Event</b></em>' attribute.
@@ -167,5 +154,20 @@ public interface ITask {
 	 * @generated
 	 */
 	boolean isFinished();
+
+	/**
+	 * Returns the value of the '<em><b>Descriptor Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Descriptor Id</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Descriptor Id</em>' attribute.
+	 * @see ch.elexis.core.tasks.model.ModelPackage#getITask_DescriptorId()
+	 * @model required="true" changeable="false"
+	 * @generated
+	 */
+	String getDescriptorId();
 
 } // ITask

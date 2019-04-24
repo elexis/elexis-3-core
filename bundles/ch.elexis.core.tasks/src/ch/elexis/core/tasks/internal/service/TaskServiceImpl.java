@@ -1,12 +1,15 @@
 package ch.elexis.core.tasks.internal.service;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
@@ -30,6 +33,8 @@ import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.IQuery.ORDER;
+import ch.elexis.core.tasks.internal.model.impl.Task;
 import ch.elexis.core.tasks.internal.model.impl.TaskDescriptor;
 import ch.elexis.core.tasks.internal.service.fs.WatchServiceHolder;
 import ch.elexis.core.tasks.internal.service.quartz.QuartzExecutor;
@@ -152,10 +157,12 @@ public class TaskServiceImpl implements ITaskService {
 		} else if (TaskTriggerType.CRON == taskDescriptor.getTriggerType()) {
 			quartzExecutor.incur(this, taskDescriptor);
 		} else if (TaskTriggerType.MANUAL == taskDescriptor.getTriggerType()) {
-			//
+			// nothing to be done
+		} else if (TaskTriggerType.OTHER_TASK == taskDescriptor.getTriggerType()) {
+			// nothing to be done
 		} else {
 			throw new TaskException(TaskException.TRIGGER_NOT_AVAILABLE,
-				"Trigger type not yet implemented");
+				"Trigger type not yet implemented [" + taskDescriptor.getTriggerType() + "]");
 		}
 	}
 	
@@ -191,9 +198,9 @@ public class TaskServiceImpl implements ITaskService {
 		return taskDescriptor;
 	}
 	
-	void notify(ITask runningTask){
+	public void notify(ITask runningTask){
 		if (runningTask.isFinished()) {
-			// TODO persistence; user notification; tasks that are triggered by this task
+			// TODO user notification; tasks that are triggered by this task
 			runningTasks.remove(runningTask);
 		}
 		System.out.println("notify " + runningTask);
@@ -203,12 +210,11 @@ public class TaskServiceImpl implements ITaskService {
 	public ITask trigger(ITaskDescriptor taskDescriptor, IProgressMonitor progressMonitor,
 		TaskTriggerType triggerType, Map<String, String> runContext) throws TaskException{
 		
-		logger.info("[{}] triggered [{}]", triggerType, taskDescriptor.getId());
+		logger.info("[{}] triggered [{}/{}]", triggerType, taskDescriptor.getId(), taskDescriptor.getReferenceId());
+		logger.info("runContext [{}]", runContext);
 		
-		ITask task = new Task(this, taskDescriptor, triggerType, progressMonitor);
-		if (runContext != null) {
-			task.getRunContext().putAll(runContext);
-		}
+		ITask task = new Task(taskDescriptor, triggerType, progressMonitor, runContext);
+		
 		try {
 			if (taskDescriptor.isSingleton()) {
 				singletonExecutorService.execute((Runnable) task);
@@ -266,6 +272,11 @@ public class TaskServiceImpl implements ITaskService {
 	
 	@Override
 	public void setActive(ITaskDescriptor taskDescriptor, boolean active) throws TaskException{
+		
+		if (active) {
+			validateTaskDescriptor(taskDescriptor);
+		}
+		
 		taskDescriptor.setActive(active);
 		saveTaskDescriptor(taskDescriptor);
 		
@@ -274,6 +285,37 @@ public class TaskServiceImpl implements ITaskService {
 		} else {
 			release(taskDescriptor);
 		}
+	}
+	
+	/**
+	 * validate if the required parameters are set, else we must not allow activating it.
+	 * 
+	 * @param taskDescriptor
+	 */
+	private void validateTaskDescriptor(ITaskDescriptor taskDescriptor) throws TaskException{
+		
+		IIdentifiedRunnable runnable =
+				instantiateRunnableById(taskDescriptor.getIdentifiedRunnableId());
+		
+		if(TaskTriggerType.OTHER_TASK == taskDescriptor.getTriggerType()) {
+			// we will not check activation here, as the required parameters
+			// will be supplied by the other task invoking us
+			return;
+		}
+		
+		Set<Entry<String, Serializable>> entrySet = runnable.getDefaultRunContext().entrySet();
+		for (Entry<String, Serializable> entry : entrySet) {
+			if (IIdentifiedRunnable.RunContextParameter.VALUE_MISSING_REQUIRED
+				.equals(entry.getValue())) {
+				Serializable value = taskDescriptor.getRunContext().get(entry.getKey());
+				if (value == null || IIdentifiedRunnable.RunContextParameter.VALUE_MISSING_REQUIRED
+					.equals(value)) {
+					throw new TaskException(TaskException.EXECUTION_REJECTED,
+						"Missing required parameter [" + entry.getKey() + "]");
+				}
+			}
+		}
+		
 	}
 	
 	@Override
@@ -290,6 +332,15 @@ public class TaskServiceImpl implements ITaskService {
 		query.or(ModelPackage.Literals.ITASK_DESCRIPTOR__REFERENCE_ID, COMPARATOR.EQUALS,
 			idOrReferenceId);
 		return query.executeSingleResult();
+	}
+	
+	@Override
+	public List<ITask> findExecutions(ITaskDescriptor taskDescriptor){
+		IQuery<ITask> query = taskModelService.getQuery(ITask.class);
+		query.and(ModelPackage.Literals.ITASK__DESCRIPTOR_ID, COMPARATOR.EQUALS,
+			taskDescriptor.getId());
+		query.orderBy("lastupdate", ORDER.DESC);
+		return query.execute();
 	}
 	
 }

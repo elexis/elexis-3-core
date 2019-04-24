@@ -683,6 +683,23 @@
 		</createTable>
 	</changeSet>
 
+	<changeSet author="marco" id="manual_table_TASK">
+		<createTable tableName="TASK">
+			<column name="ID" type="VARCHAR(25)">
+				<constraints primaryKey="true"
+					primaryKeyName="CONSTRAINT_PK_DEFAULT_TASK" />
+			</column>
+			<column name="LASTUPDATE" type="BIGINT" />
+			<column defaultValue="0" name="DELETED" type="CHAR(1)" />
+			
+			<column name="DESCRIPTORID" type="VARCHAR(32)" />
+			<column name="STATE" type="TINYINT" />
+			<column name="TRIGGEREVENT" type="TINYINT" />
+			<column name="RESULT" type="CLOB" />
+			<column name="RUNCONTEXT" type="CLOB" />
+		</createTable>
+	</changeSet>
+
     <changeSet author="thomas (generated)" id="1527175239251-67">
     	<preConditions onFail="MARK_RAN">
 			<not>

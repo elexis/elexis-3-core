@@ -2,7 +2,7 @@
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="model" nsURI="http://ch.elexis.core/tasks/model" nsPrefix="ch.elexis.core.tasks">
   <eClassifiers xsi:type="ecore:EClass" name="ITaskDescriptor" abstract="true" interface="true"
-      eSuperTypes="../../ch.elexis.core/model/model.ecore#//Identifiable">
+      eSuperTypes="../../ch.elexis.core/model/model.ecore#//Identifiable ../../ch.elexis.core/model/model.ecore#//Deleteable">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Describes an runnable to be started with a given runContext under the rigths of a user when triggerEvent occurs."/>
     </eAnnotations>
@@ -68,16 +68,15 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ITask" abstract="true" interface="true">
+  <eClassifiers xsi:type="ecore:EClass" name="ITask" abstract="true" interface="true"
+      eSuperTypes="../../ch.elexis.core/model/model.ecore#//Identifiable ../../ch.elexis.core/model/model.ecore#//Deleteable">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A running instance of an ITaskDescriptor."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        changeable="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        changeable="false" iD="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="state" lowerBound="1" eType="#//TaskState"
         changeable="false"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="descriptor" lowerBound="1"
-        eType="#//ITaskDescriptor" changeable="false"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="triggerEvent" lowerBound="1"
         eType="#//TaskTriggerType" changeable="false"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="result" changeable="false"
@@ -103,6 +102,8 @@
         <details key="documentation" value="The task has finished its execution."/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="descriptorId" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" changeable="false"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ITaskService" abstract="true" interface="true">
     <eOperations name="createTaskDescriptor" eType="#//ITaskDescriptor" eExceptions="#//TaskException">
@@ -175,6 +176,15 @@
         <eTypeArguments eClassifier="#//ITaskDescriptor"/>
       </eGenericType>
       <eParameters name="idOrReferenceId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
+    <eOperations name="findExecutions">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Find the latest executions of the provided task descriptor, ordered by execution time, newest first. Includes currently running tasks."/>
+      </eAnnotations>
+      <eGenericType eClassifier="ecore:EClass ../../ch.elexis.core/model/types.ecore#//List">
+        <eTypeArguments eClassifier="#//ITask"/>
+      </eGenericType>
+      <eParameters name="taskDescriptor" eType="#//ITaskDescriptor"/>
     </eOperations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="TaskTriggerType">

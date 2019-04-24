@@ -77,13 +77,22 @@ public interface ModelPackage extends EPackage {
 	int ITASK_DESCRIPTOR = 0;
 
 	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITASK_DESCRIPTOR__DELETED = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR__ID = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 0;
+	int ITASK_DESCRIPTOR__ID = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Reference Id</b></em>' attribute.
@@ -92,7 +101,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR__REFERENCE_ID = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 1;
+	int ITASK_DESCRIPTOR__REFERENCE_ID = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Owner</b></em>' reference.
@@ -101,7 +110,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR__OWNER = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 2;
+	int ITASK_DESCRIPTOR__OWNER = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Owner Notification</b></em>' attribute.
@@ -110,7 +119,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR__OWNER_NOTIFICATION = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 3;
+	int ITASK_DESCRIPTOR__OWNER_NOTIFICATION = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Active</b></em>' attribute.
@@ -119,7 +128,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR__ACTIVE = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 4;
+	int ITASK_DESCRIPTOR__ACTIVE = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Identified Runnable Id</b></em>' attribute.
@@ -128,7 +137,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR__IDENTIFIED_RUNNABLE_ID = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 5;
+	int ITASK_DESCRIPTOR__IDENTIFIED_RUNNABLE_ID = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Run Context</b></em>' attribute.
@@ -137,7 +146,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR__RUN_CONTEXT = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 6;
+	int ITASK_DESCRIPTOR__RUN_CONTEXT = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Trigger Type</b></em>' attribute.
@@ -146,7 +155,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR__TRIGGER_TYPE = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 7;
+	int ITASK_DESCRIPTOR__TRIGGER_TYPE = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Trigger Parameters</b></em>' attribute.
@@ -155,7 +164,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR__TRIGGER_PARAMETERS = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 8;
+	int ITASK_DESCRIPTOR__TRIGGER_PARAMETERS = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Runner</b></em>' attribute.
@@ -164,7 +173,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR__RUNNER = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 9;
+	int ITASK_DESCRIPTOR__RUNNER = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 10;
 
 	/**
 	 * The feature id for the '<em><b>Singleton</b></em>' attribute.
@@ -173,7 +182,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR__SINGLETON = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 10;
+	int ITASK_DESCRIPTOR__SINGLETON = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 11;
 
 	/**
 	 * The number of structural features of the '<em>ITask Descriptor</em>' class.
@@ -182,7 +191,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_DESCRIPTOR_FEATURE_COUNT = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 11;
+	int ITASK_DESCRIPTOR_FEATURE_COUNT = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 12;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.tasks.model.ITask <em>ITask</em>}' class.
@@ -195,13 +204,22 @@ public interface ModelPackage extends EPackage {
 	int ITASK = 1;
 
 	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITASK__DELETED = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK__ID = 0;
+	int ITASK__ID = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>State</b></em>' attribute.
@@ -210,16 +228,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK__STATE = 1;
-
-	/**
-	 * The feature id for the '<em><b>Descriptor</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ITASK__DESCRIPTOR = 2;
+	int ITASK__STATE = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Trigger Event</b></em>' attribute.
@@ -228,7 +237,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK__TRIGGER_EVENT = 3;
+	int ITASK__TRIGGER_EVENT = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Result</b></em>' attribute.
@@ -237,7 +246,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK__RESULT = 4;
+	int ITASK__RESULT = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Progress Monitor</b></em>' attribute.
@@ -246,7 +255,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK__PROGRESS_MONITOR = 5;
+	int ITASK__PROGRESS_MONITOR = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Run Context</b></em>' attribute.
@@ -255,7 +264,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK__RUN_CONTEXT = 6;
+	int ITASK__RUN_CONTEXT = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Finished</b></em>' attribute.
@@ -264,7 +273,16 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK__FINISHED = 7;
+	int ITASK__FINISHED = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 7;
+
+	/**
+	 * The feature id for the '<em><b>Descriptor Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITASK__DESCRIPTOR_ID = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The number of structural features of the '<em>ITask</em>' class.
@@ -273,7 +291,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_FEATURE_COUNT = 8;
+	int ITASK_FEATURE_COUNT = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 9;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.tasks.model.ITaskService <em>ITask Service</em>}' class.
@@ -539,17 +557,6 @@ public interface ModelPackage extends EPackage {
 	EAttribute getITask_State();
 
 	/**
-	 * Returns the meta object for the reference '{@link ch.elexis.core.tasks.model.ITask#getDescriptor <em>Descriptor</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Descriptor</em>'.
-	 * @see ch.elexis.core.tasks.model.ITask#getDescriptor()
-	 * @see #getITask()
-	 * @generated
-	 */
-	EReference getITask_Descriptor();
-
-	/**
 	 * Returns the meta object for the attribute '{@link ch.elexis.core.tasks.model.ITask#getTriggerEvent <em>Trigger Event</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -603,6 +610,17 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getITask_Finished();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.tasks.model.ITask#getDescriptorId <em>Descriptor Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Descriptor Id</em>'.
+	 * @see ch.elexis.core.tasks.model.ITask#getDescriptorId()
+	 * @see #getITask()
+	 * @generated
+	 */
+	EAttribute getITask_DescriptorId();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.tasks.model.ITaskService <em>ITask Service</em>}'.
@@ -847,14 +865,6 @@ public interface ModelPackage extends EPackage {
 		EAttribute ITASK__STATE = eINSTANCE.getITask_State();
 
 		/**
-		 * The meta object literal for the '<em><b>Descriptor</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference ITASK__DESCRIPTOR = eINSTANCE.getITask_Descriptor();
-
-		/**
 		 * The meta object literal for the '<em><b>Trigger Event</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -893,6 +903,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ITASK__FINISHED = eINSTANCE.getITask_Finished();
+
+		/**
+		 * The meta object literal for the '<em><b>Descriptor Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ITASK__DESCRIPTOR_ID = eINSTANCE.getITask_DescriptorId();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.tasks.model.ITaskService <em>ITask Service</em>}' class.

@@ -10,6 +10,7 @@
  */
 package ch.elexis.core.tasks.model.util;
 
+import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.Identifiable;
 
 import ch.elexis.core.tasks.model.*;
@@ -94,6 +95,10 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIdentifiableAdapter();
 			}
 			@Override
+			public Adapter caseDeleteable(Deleteable object) {
+				return createDeleteableAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -166,6 +171,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIdentifiableAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.Deleteable <em>Deleteable</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.Deleteable
+	 * @generated
+	 */
+	public Adapter createDeleteableAdapter() {
 		return null;
 	}
 

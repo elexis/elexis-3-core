@@ -10,6 +10,7 @@
  */
 package ch.elexis.core.tasks.model;
 
+import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
 
@@ -47,7 +48,7 @@ import java.util.Map;
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface ITaskDescriptor extends Identifiable {
+public interface ITaskDescriptor extends Identifiable, Deleteable {
 	/**
 	 * Returns the value of the '<em><b>Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -338,6 +339,9 @@ public interface ITaskDescriptor extends Identifiable {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Convenience method to set a single value of the runContext. 
+	 * <!-- end-model-doc -->
 	 * @model valueDataType="ch.elexis.core.tasks.model.Serializable"
 	 * @generated
 	 */

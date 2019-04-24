@@ -58,12 +58,12 @@
     <genClasses image="false" ecoreClass="model.ecore#//ITask">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/id"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/state"/>
-      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference model.ecore#//ITask/descriptor"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/triggerEvent"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/result"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/progressMonitor"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/runContext"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/finished"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/descriptorId"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//ITaskService">
       <genOperations ecoreOperation="model.ecore#//ITaskService/createTaskDescriptor">
@@ -95,6 +95,9 @@
       <genOperations ecoreOperation="model.ecore#//ITaskService/listAvailableRunnables"/>
       <genOperations ecoreOperation="model.ecore#//ITaskService/findTaskDescriptorByIdOrReferenceId">
         <genParameters ecoreParameter="model.ecore#//ITaskService/findTaskDescriptorByIdOrReferenceId/idOrReferenceId"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//ITaskService/findExecutions">
+        <genParameters ecoreParameter="model.ecore#//ITaskService/findExecutions/taskDescriptor"/>
       </genOperations>
     </genClasses>
   </genPackages>

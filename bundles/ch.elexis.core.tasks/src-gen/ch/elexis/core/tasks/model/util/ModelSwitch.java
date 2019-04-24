@@ -10,6 +10,7 @@
  */
 package ch.elexis.core.tasks.model.util;
 
+import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.Identifiable;
 
 import ch.elexis.core.tasks.model.*;
@@ -80,12 +81,15 @@ public class ModelSwitch<T> extends Switch<T> {
 				ITaskDescriptor iTaskDescriptor = (ITaskDescriptor)theEObject;
 				T result = caseITaskDescriptor(iTaskDescriptor);
 				if (result == null) result = caseIdentifiable(iTaskDescriptor);
+				if (result == null) result = caseDeleteable(iTaskDescriptor);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case ModelPackage.ITASK: {
 				ITask iTask = (ITask)theEObject;
 				T result = caseITask(iTask);
+				if (result == null) result = caseIdentifiable(iTask);
+				if (result == null) result = caseDeleteable(iTask);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -156,6 +160,21 @@ public class ModelSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseIdentifiable(Identifiable object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Deleteable</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Deleteable</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseDeleteable(Deleteable object) {
 		return null;
 	}
 

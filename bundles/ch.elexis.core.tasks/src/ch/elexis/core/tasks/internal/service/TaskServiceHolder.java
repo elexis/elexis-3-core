@@ -5,7 +5,7 @@ import org.osgi.service.component.annotations.Reference;
 
 import ch.elexis.core.tasks.model.ITaskService;
 
-@Component
+@Component(immediate = true)
 public class TaskServiceHolder {
 	
 	private static ITaskService taskService;

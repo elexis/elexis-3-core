@@ -121,7 +121,7 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 	public IVirtualFilesystemHandle[] listHandles(IVirtualFilesystemhandleFilter ff) throws IOException {
 
 		if (!isDirectory()) {
-			throw new IOException("not a directory");
+			throw new IOException("not a directory ["+getAbsolutePath()+"]");
 		}
 
 		Optional<File> file = toFile();
@@ -177,8 +177,8 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 
 	@Override
 	public boolean isDirectory() throws IOException {
-		File file = FileUtils.toFile(url);
-		if (file != null) {
+		if (toFile().isPresent()) {
+			File file = toFile().get();
 			return file.isDirectory();
 		}
 		URLConnection connection = url.openConnection();
