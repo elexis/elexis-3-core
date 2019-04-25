@@ -14,7 +14,6 @@ package ch.rgw.tools;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Universelles Rückgabe-Objekt. Ein Result beinhaltet die Information, ob ein Fehler erfolgt ist,
@@ -29,7 +28,6 @@ import java.util.logging.Logger;
  * 
  */
 public class Result<T> {
-	static final Logger log = Logger.getLogger("Result");
 	
 	public enum SEVERITY {
 			OK, WARNING, ERROR, FATAL
@@ -88,14 +86,13 @@ public class Result<T> {
 	}
 	
 	/**
-	 * Generate an OK if result is an object, or ERROR if result is a
-	 * {@link Throwable}
+	 * Generate an OK if result is an object, or ERROR if result is a {@link Throwable}
 	 * 
 	 * @param result
 	 * @return
 	 * @since 3.8
 	 */
-	public Result(T result) {
+	public Result(T result){
 		if (result instanceof Throwable) {
 			Throwable _result = (Throwable) result;
 			add(SEVERITY.ERROR, 0, _result.getMessage(), null, false);
@@ -120,19 +117,21 @@ public class Result<T> {
 			this.severity = severity;
 			this.code = code;
 		}
-		if (log == true) {
-			
-		}
 		return this;
 	}
 	
 	/**
-	 * Ein Result zu einem Result hinzufügen
+	 * Add a result to the given result. If the added result has a higher severity than the existing
+	 * one, the overal severity is raised to match.
 	 * 
 	 * @param r
 	 * @return
 	 */
 	public Result<T> add(Result<T> r){
+		if (r.severity.ordinal() > this.severity.ordinal()) {
+			this.severity = r.severity;
+			this.code = r.code;
+		}
 		list.addAll(r.list);
 		return this;
 	}
@@ -143,7 +142,7 @@ public class Result<T> {
 		if (severity.ordinal() > this.severity.ordinal()) {
 			this.severity = severity;
 		}
-		if(msgs != null) {
+		if (msgs != null) {
 			list.addAll(msgs);
 		}
 	}
@@ -182,11 +181,8 @@ public class Result<T> {
 	 * Return the result as String, cr-separated list of entries
 	 */
 	public String toString(){
-		StringBuilder sb = new StringBuilder(200);
-		for (msg m : list) {
-			sb.append(m.text).append("\n"); //$NON-NLS-1$
-		}
-		return sb.toString();
+		return "Result " + severity + " "
+			+ list.stream().map(x -> x.text).reduce((x, y) -> x + "," + y).get();
 	}
 	
 	/**
@@ -198,7 +194,7 @@ public class Result<T> {
 	public static final <T> Result<T> OK(){
 		return (Result<T>) new Result<T>(null);
 	}
-
+	
 	public static final Result<String> OK(String text){
 		return new Result<String>(SEVERITY.OK, 0, text, text, false);
 	}
@@ -206,10 +202,9 @@ public class Result<T> {
 	public static final Result<String> ERROR(String text){
 		return new Result<String>(SEVERITY.ERROR, 0, text, text, false);
 	}
-
+	
 	public void addMessage(SEVERITY severity, String message){
 		list.add(new msg(0, message, severity, null));
 	}
-	
 	
 }
