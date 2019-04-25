@@ -1,4 +1,4 @@
-package ch.elexis.core.ui.importer.div.services;
+package ch.elexis.core.importer.div.service.holder;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -6,13 +6,13 @@ import org.osgi.service.component.annotations.Reference;
 import ch.elexis.core.services.IDocumentStore;
 
 @Component
-public class DocumentStoreServiceHolder {
+public class OmnivoreDocumentStoreServiceHolder {
 	
 	private static IDocumentStore documentStore;
 	
 	@Reference(target = "(storeid=ch.elexis.data.store.omnivore)")
 	public void setDocumentStore(IDocumentStore documentStore){
-		DocumentStoreServiceHolder.documentStore = documentStore;
+		OmnivoreDocumentStoreServiceHolder.documentStore = documentStore;
 	}
 	
 	public static IDocumentStore get(){

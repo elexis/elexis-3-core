@@ -1,4 +1,4 @@
-package ch.elexis.core.ui.importer.div.importers.multifile.strategy;
+package ch.elexis.core.importer.div.importers.multifile.strategy;
 
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -20,8 +20,9 @@ import ch.elexis.core.importer.div.importers.ImportHandler;
 import ch.elexis.core.importer.div.importers.OverwriteAllImportHandler;
 import ch.elexis.core.importer.div.importers.TransientLabResult;
 import ch.elexis.core.importer.div.importers.multifile.IMultiFileParser;
-import ch.elexis.core.importer.div.importers.multifile.strategy.FileImportStrategyUtil;
-import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategy;
+import ch.elexis.core.importer.div.service.holder.LabImportUtilHolder;
+import ch.elexis.core.importer.div.service.holder.OmnivoreDocumentStoreServiceHolder;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.ILabItem;
@@ -29,11 +30,6 @@ import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.types.LabItemTyp;
-import ch.elexis.core.ui.importer.div.importers.DefaultLabImportUiHandler;
-import ch.elexis.core.ui.importer.div.importers.Messages;
-import ch.elexis.core.ui.importer.div.services.DocumentStoreServiceHolder;
-import ch.elexis.core.ui.importer.div.services.LabImportUtilHolder;
-import ch.elexis.data.LabResult;
 import ch.rgw.io.FileTool;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
@@ -62,12 +58,26 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 
 	private boolean moveAfterImport;
 
+	private ImportHandler defaultImportHandler;
+
+	public DefaultPDFImportStrategy(ImportHandler defaultImportHandler) {
+		this.defaultImportHandler = defaultImportHandler;
+	}
+
 	@Override
 	public Result<Object> execute(IVirtualFilesystemHandle fileHandle, Map<String, Object> context, HL7Parser hl7parser,
 			IPersistenceHandler persistenceHandler) {
+		
+		ImportHandler importHandler;
+		if (testMode) {
+			importHandler = new OverwriteAllImportHandler();
+		} else {
+			importHandler = defaultImportHandler;
+		}
+		
 		try {
 			initValuesFromContext(context);
-			if (DocumentStoreServiceHolder.isAvailable()) {
+			if (OmnivoreDocumentStoreServiceHolder.isAvailable()) {
 				if (moveAfterImport) {
 					try {
 						FileImportStrategyUtil.moveAfterImport(false, fileHandle);
@@ -109,12 +119,6 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		TransientLabResult importResult = new TransientLabResult.Builder(patient, myLab, labItem, titel).date(dateTime)
 				.build(LabImportUtilHolder.get());
 
-		ImportHandler importHandler;
-		if (testMode) {
-			importHandler = new OverwriteAllImportHandler();
-		} else {
-			importHandler = new DefaultLabImportUiHandler();
-		}
 		String orderId = LabImportUtilHolder.get().importLabResults(Collections.singletonList(importResult),
 				importHandler);
 
@@ -193,17 +197,17 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 			final IVirtualFilesystemHandle fileHandle, String keywords) throws IOException, ElexisException {
 		ICategory iCategory = findOrCreateCategory(category);
 
-		List<IDocument> existing = DocumentStoreServiceHolder.get().getDocuments(patient.getId(), null, iCategory,
+		List<IDocument> existing = OmnivoreDocumentStoreServiceHolder.get().getDocuments(patient.getId(), null, iCategory,
 				null);
 		existing = existing.stream().filter(d -> documentMatches(d, title, dateTime)).collect(Collectors.toList());
 
 		if (existing.isEmpty()) {
-			IDocument document = DocumentStoreServiceHolder.get().createDocument(patient.getId(), title,
+			IDocument document = OmnivoreDocumentStoreServiceHolder.get().createDocument(patient.getId(), title,
 					iCategory.getName());
 			document.setCreated(dateTime.getTime());
 			document.setExtension(FileTool.getExtension(fileHandle.getName()));
 			document.setKeywords(keywords);
-			DocumentStoreServiceHolder.get().saveDocument(document, fileHandle.openInputStream());
+			OmnivoreDocumentStoreServiceHolder.get().saveDocument(document, fileHandle.openInputStream());
 			return true;
 		}
 		return false;
@@ -215,9 +219,9 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 
 	private ICategory findOrCreateCategory(String category) {
 		if (category == null) {
-			return DocumentStoreServiceHolder.get().getCategoryDefault();
+			return OmnivoreDocumentStoreServiceHolder.get().getCategoryDefault();
 		}
-		List<ICategory> categories = DocumentStoreServiceHolder.get().getCategories();
+		List<ICategory> categories = OmnivoreDocumentStoreServiceHolder.get().getCategories();
 		for (ICategory iCategory : categories) {
 			if (iCategory.getName().equals(category)) {
 				return iCategory;
@@ -225,7 +229,7 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		}
 		// does not exist -> create
 		log.info("Created category " + category + " for multi file import");
-		return DocumentStoreServiceHolder.get().createCategory(category);
+		return OmnivoreDocumentStoreServiceHolder.get().createCategory(category);
 	}
 
 	@Override

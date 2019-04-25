@@ -10,9 +10,11 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.importer.div.importers.ILabContactResolver;
 import ch.elexis.core.importer.div.importers.multifile.strategy.BasicFileImportStrategyFactory;
 import ch.elexis.core.importer.div.importers.multifile.strategy.DefaultHL7ImportStrategy;
+import ch.elexis.core.importer.div.importers.multifile.strategy.DefaultPDFImportStrategy;
 import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategy;
 import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategyFactory;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
+import ch.elexis.core.ui.importer.div.importers.DefaultLabImportUiHandler;
 import ch.rgw.io.FileTool;
 
 /**
@@ -44,7 +46,8 @@ public class DefaultImportStrategyFactory extends BasicFileImportStrategyFactory
 		}
 		// matching files for this hl7 file, probably pdf
 		if (!matchingFiles.isEmpty()) {
-			DefaultPDFImportStrategy pdfImportStrategy = new DefaultPDFImportStrategy();
+			DefaultLabImportUiHandler defaultLabImportUiHandler = new DefaultLabImportUiHandler();
+			DefaultPDFImportStrategy pdfImportStrategy = new DefaultPDFImportStrategy(defaultLabImportUiHandler);
 			for (IVirtualFilesystemHandle mFile : matchingFiles) {
 				String type = FileTool.getExtension(mFile.getName()).toLowerCase();
 				if ("pdf".equals(type)) {
