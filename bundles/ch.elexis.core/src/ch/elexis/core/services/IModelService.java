@@ -45,15 +45,28 @@ public interface IModelService {
 	
 	/**
 	 * Adapt a jpa loaded entity to clazz. This can be used to "convert" already loaded JPA entities
-	 * to the model.
-	 * 
-	 * This method should only be called by other {@link IModelService} implementations.
+	 * to the model. <br />
+	 * <br />
+	 * <b>This method should only be called by other {@link IModelService} implementations.</b>
 	 * 
 	 * @param jpaEntity
 	 * @param clazz
 	 * @return
 	 */
 	public <T> Optional<T> adapt(Object jpaEntity, Class<T> clazz);
+	
+	/**
+	 * Get the JPA entity class for a model class. An {@link IModelService} can do this for all
+	 * classes of its model, but not for classes of other {@link IModelService} instances. <br />
+	 * <br />
+	 * <b>This method should only be called by {@link IQuery} instances. For example when creating a
+	 * {@link ISubQuery} to get the entity class for the model class of the {@link ISubQuery}, as
+	 * the sub query can be on a separate entity.</b>
+	 * 
+	 * @param clazz
+	 * @return
+	 */
+	public Class<?> getEntityClass(Class<?> clazz);
 	
 	/**
 	 * Load a model object of type clazz by the id. If Deleted entries should be loaded can be
