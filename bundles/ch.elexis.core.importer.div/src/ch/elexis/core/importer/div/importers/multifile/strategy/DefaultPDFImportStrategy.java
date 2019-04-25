@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +41,6 @@ import ch.rgw.tools.TimeTool;
  * @author lucia
  * 
  */
-@Component
 public class DefaultPDFImportStrategy implements IFileImportStrategy {
 	private static final Logger log = LoggerFactory.getLogger(DefaultPDFImportStrategy.class);
 
