@@ -68,7 +68,7 @@ public class RunTaskForEveryFileInDirectoryRunnable implements IIdentifiedRunnab
 		taskDescriptorReferenceId =
 			(String) runContext.get(RunContextParameter.TASK_DESCRIPTOR_REFID);
 		
-		List<ITask> tasksTriggered = new ArrayList<>();
+		List<Serializable> tasksTriggered = new ArrayList<>();
 		
 		IVirtualFilesystemHandle of;
 		IVirtualFilesystemHandle[] listHandles;
@@ -80,7 +80,7 @@ public class RunTaskForEveryFileInDirectoryRunnable implements IIdentifiedRunnab
 		}
 		
 		for (IVirtualFilesystemHandle fileHandle : listHandles) {
-			tasksTriggered.add(runTaskForFile(fileHandle.getAbsolutePath()));
+			tasksTriggered.add(runTaskForFile(fileHandle.getAbsolutePath()).getId());
 		}
 		
 		return Collections.singletonMap(RESULT_KEY_LIST_ITASK_TASKS_TRIGGERED,

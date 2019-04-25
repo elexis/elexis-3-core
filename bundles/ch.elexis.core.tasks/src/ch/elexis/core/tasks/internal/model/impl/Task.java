@@ -31,8 +31,11 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	
 	private IProgressMonitor progressMonitor;
 	
+	private final Gson gson;
+	
 	public Task(ch.elexis.core.jpa.entities.Task entity){
 		super(entity);
+		gson = new Gson();
 	}
 	
 	/**
@@ -55,7 +58,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		getEntity().setTriggerEvent(triggerType.getValue());
 		getEntity().setDescriptorId(taskDescriptor.getId());
 		if (runContext != null) {
-			getEntity().setRunContext(new Gson().toJson(runContext));
+			getEntity().setRunContext(gson.toJson(runContext));
 		}
 		
 		logger = LoggerFactory.getLogger("Task [" + getId() + "] ("
@@ -79,7 +82,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	public Map<String, Serializable> getRunContext(){
 		String json = getEntity().getRunContext();
 		if (json != null) {
-			return new Gson().fromJson(json, Map.class);
+			return gson.fromJson(json, Map.class);
 		}
 		return new HashMap<>();
 	}
@@ -97,7 +100,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	}
 	
 	private void setResult(Map<String, Serializable> result){
-		String json = new Gson().toJson(result);
+		String json = gson.toJson(result);
 		getEntity().setResult(json);
 		CoreModelServiceHolder.get().save(this);
 	}
@@ -118,7 +121,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	public Map<String, ?> getResult(){
 		String json = getEntity().getResult();
 		if (json != null) {
-			return new Gson().fromJson(json, Map.class);
+			return gson.fromJson(json, Map.class);
 		}
 		return new HashMap<>();
 	}
@@ -148,6 +151,8 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 				effectiveRunContext.putAll(runnableWithContext.getDefaultRunContext());
 				effectiveRunContext.putAll(originTaskDescriptor.get().getRunContext());
 				effectiveRunContext.putAll(getRunContext());
+				
+				// TODO validate all required parameters are set, validate url
 				
 				setState(TaskState.IN_PROGRESS);
 				_result = runnableWithContext.run(effectiveRunContext, progressMonitor, logger);
