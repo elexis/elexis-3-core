@@ -1,34 +1,24 @@
 package ch.elexis.core.ui.importer.div.importers;
 
-import java.util.List;
-
 import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.importer.div.importers.AbstractHL7PatientResolver;
 import ch.elexis.core.model.IPatient;
-import ch.elexis.core.model.ModelPackage;
-import ch.elexis.core.model.builder.IContactBuilder;
-import ch.elexis.core.services.INamedQuery;
-import ch.elexis.core.services.IQuery;
-import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.exchange.KontaktMatcher;
 import ch.elexis.core.ui.exchange.KontaktMatcher.CreateMode;
 import ch.elexis.data.Patient;
-import ch.elexis.data.Person;
-import ch.elexis.hl7.HL7PatientResolver;
-import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
-public class ImporterPatientResolver extends HL7PatientResolver {
+public class ImporterPatientResolver extends AbstractHL7PatientResolver {
 	
 	private TimeTool convertTool = new TimeTool();
 	
 	@Override
 	public IPatient resolvePatient(String firstname, String lastname, String birthDate,
 		String sender){
+		
 		// resolve with full data
-		Patient pat = KontaktMatcher.findPatient(lastname, firstname, birthDate, "", "", "", "", "",
-			CreateMode.FAIL);
+		Patient pat = KontaktMatcher.findPatient(lastname, firstname, birthDate, "", "", "", "", "", CreateMode.FAIL);
 		// try to resolve with only the beginning of the name
 		if (pat == null) {
 			String shortLastname = lastname;
@@ -39,8 +29,8 @@ public class ImporterPatientResolver extends HL7PatientResolver {
 			if (firstname.length() > 3) {
 				shortFirstname = firstname.substring(0, 3);
 			}
-			pat = KontaktMatcher.findPatient(shortLastname, shortFirstname, birthDate, "", "", "",
-				"", "", CreateMode.FAIL);
+			pat = KontaktMatcher.findPatient(shortLastname, shortFirstname, birthDate, "", "", "", "", "",
+					CreateMode.FAIL);
 		}
 		// user decides
 		if (pat == null) {
@@ -62,43 +52,4 @@ public class ImporterPatientResolver extends HL7PatientResolver {
 		return null;
 	}
 	
-	@Override
-	public IPatient resolvePatient(String firstname, String lastname, String birthDate){
-		return resolvePatient(firstname, lastname, birthDate, null);
-	}
-	
-	@Override
-	public boolean matchPatient(IPatient patient, String firstname, String lastname,
-		String birthDate){
-		return KontaktMatcher.isSame(Person.load(patient.getId()), lastname, firstname, birthDate);
-	}
-	
-	@Override
-	public IPatient createPatient(String lastName, String firstName, String birthDate, String sex){
-		TimeTool birthDateTimeTool = new TimeTool(birthDate);
-		Gender gender = Gender.fromValue(sex);
-		return new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(), firstName, lastName,
-			birthDateTimeTool.toLocalDate(), gender).buildAndSave();
-	}
-	
-	@Override
-	public List<? extends IPatient> getPatientById(String patid){
-		INamedQuery<IPatient> namedQuery =
-			CoreModelServiceHolder.get().getNamedQuery(IPatient.class, "code");
-		return namedQuery.executeWithParameters(
-			namedQuery.getParameterMap("code", StringTool.normalizeCase(patid)));
-	}
-	
-	@Override
-	public List<? extends IPatient> findPatientByNameAndBirthdate(String lastName, String firstName,
-		String birthDate){
-		IQuery<IPatient> patientQuery = CoreModelServiceHolder.get().getQuery(IPatient.class);
-		patientQuery.and(ModelPackage.Literals.IPERSON__LAST_NAME, COMPARATOR.EQUALS,
-			lastName, true);
-		patientQuery.and(ModelPackage.Literals.IPERSON__FIRST_NAME, COMPARATOR.EQUALS,
-			firstName, true);
-		patientQuery.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS,
-			new TimeTool(birthDate).toLocalDate());
-		return patientQuery.execute();
-	}
 }
