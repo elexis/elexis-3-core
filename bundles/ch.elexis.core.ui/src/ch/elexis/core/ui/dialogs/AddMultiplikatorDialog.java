@@ -10,21 +10,25 @@
  ******************************************************************************/
 package ch.elexis.core.ui.dialogs;
 
+import java.time.format.DateTimeFormatter;
+
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.nebula.widgets.cdatetime.CDT;
+import org.eclipse.nebula.widgets.cdatetime.CDateTime;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.rgw.tools.TimeTool;
 
-import com.tiff.common.ui.datepicker.DatePickerCombo;
-
 public class AddMultiplikatorDialog extends TitleAreaDialog {
-	DatePickerCombo dpc;
+	CDateTime dpc;
 	Text multi;
 	TimeTool begindate;
 	String mult;
@@ -37,13 +41,18 @@ public class AddMultiplikatorDialog extends TitleAreaDialog {
 	protected Control createDialogArea(final Composite parent){
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new GridLayout(2, false));
-		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		dpc = new DatePickerCombo(ret, SWT.BORDER);
-		dpc.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		Label l1 = new Label(ret, SWT.NONE);
+		l1.setText(Messages.AccountView_date);
+		dpc = new CDateTime(ret, CDT.HORIZONTAL | CDT.DATE_SHORT | CDT.DROP_DOWN | SWT.BORDER | CDT.TAB_FIELDS);
+		String value = java.time.LocalDate.now().format(DateTimeFormatter.ofPattern("01.01.y"));
+		dpc.setSelection(new TimeTool(value).getTime());
+		dpc.setToolTipText(Messages.MultiplikatorEditor_PleaseEnterBeginDate);
+		Label label = new Label(ret, SWT.NONE);
+		label.setText(Messages.Leistungscodes_multiplierLabel);
 		multi = new Text(ret, SWT.BORDER);
 		multi.setTextLimit(6);
+		multi.setToolTipText(Messages.MultiplikatorEditor_NewMultipilcator);
 		multi.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		
 		return ret;
 	}
 	
@@ -57,9 +66,21 @@ public class AddMultiplikatorDialog extends TitleAreaDialog {
 	
 	@Override
 	protected void okPressed(){
-		begindate = new TimeTool(dpc.getDate().getTime());
+		begindate = new TimeTool(dpc.getSelection());
 		mult = multi.getText();
-		super.okPressed();
+		try {
+			if (mult.isEmpty() ||  Float.parseFloat(mult) <= 0.0) {
+				SWTHelper.showError(Messages.MultiplikatorEditor_ErrorTitle,
+						Messages.MultiplikatorEditor_ErrorMessage);
+				super.cancelPressed();
+			} else {
+				super.okPressed();
+			}
+		}  catch (Exception ex) {
+			SWTHelper.showError(Messages.MultiplikatorEditor_ErrorTitle,
+					Messages.MultiplikatorEditor_ErrorMessage);
+			super.cancelPressed();
+		}
 	}
 	
 	public TimeTool getBegindate(){

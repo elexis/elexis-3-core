@@ -6,7 +6,19 @@ import ch.elexis.core.interfaces.ILocalizedEnum;
 
 public enum BillingLaw implements ILocalizedEnum {
 		
-		KVG, UVG, IVG, MVG, VVG, NONE, OTHER;
+				// Pour plus de détails (auf Deutsch, français ou italien voir ci dessous)
+		KVG, 	// https://www.admin.ch/opc/de/classified-compilation/19940073/index.html
+				// Krankenversicherung
+		UVG,	// https://www.admin.ch/opc/de/classified-compilation/19810038/index.html
+				// Unfallversicherung
+		IVG,	// https://www.admin.ch/opc/de/classified-compilation/19590131/index.html
+				// Invalidenversicherung
+		MVG,	// https://www.admin.ch/opc/de/classified-compilation/19920155/index.html
+				// Militärversicherung 
+		VVG,	// https://www.admin.ch/opc/de/classified-compilation/19080008/index.html
+				// Versicherungsvertrag
+		NONE,
+		OTHER;
 	
 	@Override
 	public String getLocaleText(){
