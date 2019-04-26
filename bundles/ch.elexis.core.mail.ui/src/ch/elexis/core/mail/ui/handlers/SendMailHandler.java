@@ -37,7 +37,6 @@ public class SendMailHandler extends AbstractHandler implements IHandler {
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException{
-
 		SendMailDialog sendMailDialog = new SendMailDialog(HandlerUtil.getActiveShell(event));
 		String attachments = event.getParameter("ch.elexis.core.mail.ui.sendMail.attachments");
 		if (attachments != null) {

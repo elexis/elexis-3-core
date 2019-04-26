@@ -14,3 +14,4 @@ Require-Bundle: ch.elexis.core.data;bundle-version="3.2.0",
  ch.rgw.utility;bundle-version="3.8.0"
 Export-Package: ch.elexis.core.mail
 Automatic-Module-Name: ch.elexis.core.mail
+Import-Package: javax.activation;version="1.1.0"
