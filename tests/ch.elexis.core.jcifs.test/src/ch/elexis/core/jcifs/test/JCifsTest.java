@@ -8,7 +8,7 @@ import static org.junit.Assume.assumeTrue;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.InetAddress;
+import java.net.Inet4Address;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
@@ -64,7 +64,7 @@ public class JCifsTest {
 	public static void beforeClass(){
 		System.setProperty("java.net.preferIPv4Stack", "true");
 		try {
-			servicesAreReachable = InetAddress.getByName("gitlab.medelexis.ch").isReachable(300);
+			servicesAreReachable = Inet4Address.getByName("gitlab.medelexis.ch").isReachable(300);
 		} catch (IOException e) {
 			e.printStackTrace();
 			servicesAreReachable = false;
