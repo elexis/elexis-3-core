@@ -8,7 +8,7 @@ import static org.junit.Assume.assumeTrue;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
@@ -37,13 +37,13 @@ public class JCifsTest {
 	 * NOAUTH is expected to read, but not modify
 	 */
 	public static final String PREFIX_NOAUTH_SAMBA = "smb://gitlab.medelexis.ch/tests/";
-	//	public static final String PREFIX_NOAUTH_WIN2KSRV = "smb://fw.medelexis.ch/smb_for_unittests/";
+//	public static final String PREFIX_NOAUTH_WIN2KSRV = "smb://win2k12srv.medelexis.ch/smb_for_unittests/";
 	// bug see https://github.com/AgNO3/jcifs-ng/issues/105
 	
 	public static final String PREFIX_AUTH_SAMBA =
 		"smb://unittest:unittest@gitlab.medelexis.ch/tests/";
 	public static final String PREFIX_AUTH_WIN2KSRV =
-		"smb://unittest:Unit_Test_17@fw.medelexis.ch/smb_for_unittests/";
+		"smb://unittest:Unit_Test_17@win2k12srv.medelexis.ch/smb_for_unittests/";
 	
 	@Parameters(name = "{index}: {0}")
 	public static Iterable<String> data(){
@@ -62,9 +62,8 @@ public class JCifsTest {
 	
 	@BeforeClass
 	public static void beforeClass(){
-		System.setProperty("java.net.preferIPv4Stack", "true");
 		try {
-			servicesAreReachable = Inet4Address.getByName("gitlab.medelexis.ch").isReachable(300);
+			servicesAreReachable = InetAddress.getByName("gitlab.medelexis.ch").isReachable(300);
 		} catch (IOException e) {
 			e.printStackTrace();
 			servicesAreReachable = false;
