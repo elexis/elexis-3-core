@@ -1,19 +1,17 @@
 package ch.elexis.core.services;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import org.eclipse.emf.ecore.EStructuralFeature;
 
-public interface IQuery<T> {
-	public static enum COMPARATOR {
-			LIKE, EQUALS, LESS, LESS_OR_EQUAL, GREATER, NOT_LIKE, NOT_EQUALS, GREATER_OR_EQUAL
-	}
+import ch.elexis.core.services.IQuery.COMPARATOR;
+
+public interface ISubQuery<S> {
 	
-	public static enum ORDER {
-			ASC, DESC
-	}
+	/**
+	 * Get the implementation specific subquery object.
+	 * 
+	 * @return
+	 */
+	public Object getQuery();
 	
 	/**
 	 * Start a new group of where clauses that are joined with
@@ -105,89 +103,12 @@ public interface IQuery<T> {
 		boolean ignoreCase);
 	
 	/**
-	 * Execute the query and return a list with the resulting objects.
+	 * Compare the entity attribute of the parent query type to the attribute of the sub query type.
 	 * 
-	 * @return
+	 * @param parentEntityAttributeName
+	 * @param equals
+	 * @param entityAttributeName
 	 */
-	public List<T> execute();
-	
-//	/**
-//	 * Set a limit on the number of results to be returned. This is equivalent to
-//	 * the SQL limit command.
-//	 * 
-//	 * @param limit non negative value
-//	 */
-//	public void setLimit(int limit);
-	
-	/**
-	 * Execute the query and return a single result. If more than one result
-	 * is available, a warning is logged, and the first result is returned.
-	 * 
-	 * @return
-	 */
-	public Optional<T> executeSingleResult();
-	
-	/**
-	 * Add an order by to the query.
-	 * 
-	 * @param fieldOrderBy
-	 * @param order
-	 */
-	public void orderBy(String fieldOrderBy, ORDER order);
-	
-	/**
-	 * Add an order by to the query.
-	 * 
-	 * @param fieldOrderBy
-	 * @param order
-	 */
-	public void orderBy(EStructuralFeature feature, ORDER order);
-	
-	/**
-	 * Add an order by results of CASE statement. The caseContext map containes a String case
-	 * description and an Object case value. The Syntax for the description is as follows.</br>
-	 * 
-	 * <b>when</b></br>
-	 * when|fieldname|predicate|value</br>
-	 * fieldname, must be a valid field name of the selected type.</br>
-	 * predicate, specify how the fieldname is compared to the value. Known values are equals and
-	 * like.</br>
-	 * value, the used to compare the field with. </br>
-	 * example: "when|description2|equals|test3"</br>
-	 * 
-	 * <b>otherwise</b></br>
-	 * Currently only otherwise without comparison is supported. </br>
-	 * example: "otherwise"</br>
-	 * 
-	 * 
-	 * @param fieldOrderBy
-	 * @param order
-	 */
-	public void orderBy(Map<String, Object> caseContext, ORDER order);
-	
-	/**
-	 * Create a sub query from the current {@link IQuery}. A {@link IModelService} matching the
-	 * modelClazz must be provided.
-	 * 
-	 * @param modelClazz
-	 * @param modelService
-	 * @return
-	 */
-	public <S> ISubQuery<S> createSubQuery(Class<S> modelClazz, IModelService modelService);
-	
-	/**
-	 * Add an EXISTS to the where clause based on the provided {@link ISubQuery} to the query. It
-	 * will be connected by AND to existing clauses.
-	 * 
-	 * @param subQuery
-	 */
-	public void exists(ISubQuery<?> subQuery);
-	
-	/**
-	 * Add a NOT EXISTS to the where clause based on the provided {@link ISubQuery} to the query. It
-	 * will be connected by AND to existing clauses.
-	 * 
-	 * @param subQuery
-	 */
-	public void notExists(ISubQuery<?> subQuery);
+	public void andParentCompare(String parentEntityAttributeName, COMPARATOR equals,
+		String entityAttributeName);
 }

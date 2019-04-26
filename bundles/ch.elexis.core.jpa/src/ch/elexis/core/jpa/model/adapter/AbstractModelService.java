@@ -80,6 +80,11 @@ public abstract class AbstractModelService implements IModelService {
 	}
 	
 	@Override
+	public Class<?> getEntityClass(Class<?> clazz){
+		return adapterFactory.getEntityClass(clazz);
+	}
+	
+	@Override
 	public void refresh(Identifiable identifiable){
 		EntityManager em = getEntityManager(true);
 		EntityWithId dbObject = getDbObject(identifiable).orElse(null);

@@ -1,6 +1,7 @@
 package ch.elexis.core.model.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -16,12 +17,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
+import ch.elexis.core.services.ISubQuery;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class CoreQueryTest {
@@ -31,10 +35,13 @@ public class CoreQueryTest {
 	public void before(){
 		modelService = OsgiServiceUtil.getService(IModelService.class).get();
 		clearContacts();
+		clearCoverages();
 	}
 	
 	@After
 	public void after(){
+		clearContacts();
+		clearCoverages();
 		OsgiServiceUtil.ungetService(modelService);
 		modelService = null;
 	}
@@ -244,9 +251,39 @@ public class CoreQueryTest {
 		assertEquals("test2", ordered.get(2).getDescription1());
 	}
 	
+	@Test
+	public void subQueryTest(){
+		IPatient patient1 = createPatient("patient1", "patient1", LocalDate.of(1999, 1, 1));
+		IPatient patient2 = createPatient("patient2", "patient2", LocalDate.of(1999, 2, 2));
+		createPatient("patient3", "patient3", LocalDate.of(1999, 12, 12));
+		ICoverage coverage1 = createCoverage(patient1, "patient1");
+		ICoverage coverage2 = createCoverage(patient2, "patient2");
+		
+		IQuery<IPatient> query = modelService.getQuery(IPatient.class);
+		ISubQuery<ICoverage> subQuery = query.createSubQuery(ICoverage.class, modelService);
+		subQuery.andParentCompare("description1", COMPARATOR.EQUALS, "bezeichnung");
+		query.exists(subQuery);
+		List<IPatient> results = query.execute();
+		assertEquals(2, results.size());
+		assertTrue(results.contains(patient1));
+		assertTrue(results.contains(patient2));
+		
+		modelService.remove(coverage2);
+		results = query.execute();
+		assertEquals(1, results.size());
+		assertTrue(results.contains(patient1));
+		assertFalse(results.contains(patient2));
+	}
+	
 	private void clearContacts(){
 		IQuery<IContact> query = modelService.getQuery(IContact.class, true);
 		List<IContact> results = query.execute();
+		results.stream().forEach(c -> modelService.remove(c));
+	}
+	
+	private void clearCoverages(){
+		IQuery<ICoverage> query = modelService.getQuery(ICoverage.class, true);
+		List<ICoverage> results = query.execute();
 		results.stream().forEach(c -> modelService.remove(c));
 	}
 	
@@ -261,7 +298,7 @@ public class CoreQueryTest {
 		return contact;
 	}
 	
-	private void createPatient(String firstName, String lastName, LocalDate birthDate){
+	private IPatient createPatient(String firstName, String lastName, LocalDate birthDate){
 		IPatient patient = modelService.create(IPatient.class);
 		assertNotNull(patient);
 		assertTrue(patient instanceof IPatient);
@@ -271,5 +308,13 @@ public class CoreQueryTest {
 		patient.setFirstName(firstName);
 		patient.setDateOfBirth(birthDate.atStartOfDay());
 		assertTrue(modelService.save(patient));
+		
+		return patient;
+	}
+	
+	private ICoverage createCoverage(IPatient patient, String coverageLabel){
+		ICoverage coverage = new ICoverageBuilder(modelService, patient, coverageLabel,
+			"testReason", "testBillingSystem").buildAndSave();
+		return coverage;
 	}
 }

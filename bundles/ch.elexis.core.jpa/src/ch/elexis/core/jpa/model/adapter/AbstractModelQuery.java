@@ -1,14 +1,10 @@
 package ch.elexis.core.jpa.model.adapter;
 
-import java.lang.reflect.Field;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Stack;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -17,11 +13,10 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaBuilder.Case;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
-import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 import javax.persistence.metamodel.SingularAttribute;
 
-import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.persistence.config.HintValues;
 import org.eclipse.persistence.config.QueryHints;
@@ -29,8 +24,12 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jpa.entities.EntityWithDeleted;
 import ch.elexis.core.jpa.entities.EntityWithId;
+import ch.elexis.core.jpa.model.adapter.internal.PredicateGroupStack;
+import ch.elexis.core.jpa.model.adapter.internal.PredicateHandler;
+import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.ISubQuery;
 
 /**
  * Abstract super class for JPA based {@link IQuery} implementations.
@@ -46,7 +45,6 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	protected EntityManager entityManager;
 	protected CriteriaBuilder criteriaBuilder;
 	
-	protected Stack<PredicateGroup> predicateGroups;
 	protected List<Order> orderByList;
 	
 	protected CriteriaQuery<?> criteriaQuery;
@@ -59,6 +57,9 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	protected boolean includeDeleted;
 	protected boolean refreshCache;
 	
+	private PredicateGroupStack predicateGroups;
+	private PredicateHandler predicateHandler;
+
 	public AbstractModelQuery(Class<T> clazz, boolean refreshCache, EntityManager entityManager,
 		boolean includeDeleted){
 		this.clazz = clazz;
@@ -66,80 +67,17 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		this.criteriaBuilder = entityManager.getCriteriaBuilder();
 		this.includeDeleted = includeDeleted;
 		this.refreshCache = refreshCache;
-		this.predicateGroups = new Stack<>();
+		this.predicateGroups = new PredicateGroupStack(criteriaBuilder);
 		this.orderByList = new ArrayList<>();
 		
 		initialize();
-	}
-	
-	/**
-	 * Get the current (top) {@link PredicateGroup} from the stack, or create a new
-	 * {@link PredicateGroup} and put it on top of the stack.
-	 * 
-	 * @return
-	 */
-	protected PredicateGroup getCurrentPredicateGroup(){
-		PredicateGroup ret = null;
-		if (predicateGroups.isEmpty()) {
-			ret = createPredicateGroup();
-		} else {
-			return predicateGroups.peek();
+		// now entityClazz, rootQuery and adapterFactory can be used ...
+		this.predicateHandler =
+			new PredicateHandler(predicateGroups, entityClazz, criteriaBuilder, rootQuery);
+		
+		if (EntityWithDeleted.class.isAssignableFrom(entityClazz) && !includeDeleted) {
+			and(ModelPackage.Literals.DELETEABLE__DELETED, COMPARATOR.NOT_EQUALS, true);
 		}
-		return ret;
-	}
-	
-	/**
-	 * Create a new {@link PredicateGroup} on the stack.
-	 * 
-	 * @return
-	 */
-	protected PredicateGroup createPredicateGroup(){
-		PredicateGroup ret = new PredicateGroup(criteriaBuilder);
-		predicateGroups.push(ret);
-		return ret;
-	}
-	
-	/**
-	 * Join the 2 last created {@link PredicateGroup}s with and, and return the resulting
-	 * {@link PredicateGroup}. It is also the new top of the stack.
-	 * 
-	 * @return
-	 */
-	protected PredicateGroup andPredicateGroups(){
-		if (predicateGroups.size() > 1) {
-			PredicateGroup top = predicateGroups.pop();
-			PredicateGroup join = predicateGroups.pop();
-			return predicateGroups.push(new PredicateGroup(criteriaBuilder,
-				criteriaBuilder.and(join.getPredicate(), top.getPredicate())));
-		} else {
-			throw new IllegalStateException("At least 2 groups required for and operation");
-		}
-	}
-	
-	/**
-	 * Join the 2 last created {@link PredicateGroup}s with or, and return the resulting
-	 * {@link PredicateGroup}. It is also the new top of the stack.
-	 * 
-	 * @return
-	 */
-	protected PredicateGroup orPredicateGroups(){
-		if (predicateGroups.size() > 1) {
-			PredicateGroup top = predicateGroups.pop();
-			PredicateGroup join = predicateGroups.pop();
-			return predicateGroups.push(new PredicateGroup(criteriaBuilder,
-				criteriaBuilder.or(join.getPredicate(), top.getPredicate())));
-		} else {
-			throw new IllegalStateException("At least 2 groups required for or operation");
-		}
-	}
-	
-	/**
-	 * Get the current size of the {@link PredicateGroup} stack.
-	 * 
-	 * @return
-	 */
-	protected int getPredicateGroupsSize(){
-		return predicateGroups.size();
 	}
 	
 	/**
@@ -149,273 +87,43 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	 */
 	protected abstract void initialize();
 	
-	@SuppressWarnings({
-		"unchecked", "rawtypes"
-	})
-	protected Optional<Predicate> getPredicate(SingularAttribute attribute, COMPARATOR comparator,
-		Object value, boolean ignoreCase){
-		switch (comparator) {
-		case EQUALS:
-			if (value instanceof SingularAttribute) {
-				return Optional.of(criteriaBuilder.equal(rootQuery.get(attribute),
-					rootQuery.get((SingularAttribute) value)));
-			} else {
-				return Optional.of(criteriaBuilder.equal(rootQuery.get(attribute), value));
-			}
-		case NOT_EQUALS:
-			if (value instanceof SingularAttribute) {
-				return Optional.of(criteriaBuilder.notEqual(rootQuery.get(attribute),
-					rootQuery.get((SingularAttribute) value)));
-			} else {
-				return Optional.of(criteriaBuilder.notEqual(rootQuery.get(attribute), value));
-			}
-		case LIKE:
-			if (value instanceof String) {
-				if (ignoreCase) {
-					return Optional
-						.of(criteriaBuilder.like(criteriaBuilder.lower(rootQuery.get(attribute)),
-							((String) value).toLowerCase()));
-				} else {
-					return Optional
-						.of(criteriaBuilder.like(rootQuery.get(attribute), (String) value));
-				}
-			} else {
-				throw new IllegalStateException("[" + value + "] is not a known type");
-			}
-		case NOT_LIKE:
-			if (value instanceof String) {
-				if (ignoreCase) {
-					return Optional
-						.of(criteriaBuilder.notLike(criteriaBuilder.lower(rootQuery.get(attribute)),
-							((String) value).toLowerCase()));
-				} else {
-					return Optional
-						.of(criteriaBuilder.notLike(rootQuery.get(attribute), (String) value));
-				}
-			} else {
-				throw new IllegalStateException("[" + value + "] is not a known type");
-			}
-		case GREATER:
-			if (value instanceof String) {
-				return Optional
-					.of(criteriaBuilder.greaterThan(rootQuery.get(attribute), (String) value));
-			} else if (value instanceof Integer) {
-				return Optional
-					.of(criteriaBuilder.greaterThan(rootQuery.get(attribute), (Integer) value));
-			} else if (value instanceof LocalDateTime) {
-				return Optional.of(
-					criteriaBuilder.greaterThan(rootQuery.get(attribute), (LocalDateTime) value));
-			} else if (value instanceof LocalDate) {
-				return Optional
-					.of(criteriaBuilder.greaterThan(rootQuery.get(attribute), (LocalDate) value));
-			} else if (value instanceof SingularAttribute) {
-				criteriaBuilder.greaterThan(rootQuery.get(attribute),
-					rootQuery.get((SingularAttribute) value));
-			} else {
-				throw new IllegalStateException("[" + value + "] is not a known type");
-			}
-		case GREATER_OR_EQUAL:
-			if (value instanceof String) {
-				return Optional.of(
-					criteriaBuilder.greaterThanOrEqualTo(rootQuery.get(attribute), (String) value));
-			} else if (value instanceof Integer) {
-				return Optional.of(criteriaBuilder.greaterThanOrEqualTo(rootQuery.get(attribute),
-					(Integer) value));
-			} else if (value instanceof LocalDateTime) {
-				return Optional.of(criteriaBuilder.greaterThanOrEqualTo(rootQuery.get(attribute),
-					(LocalDateTime) value));
-			} else if (value instanceof LocalDate) {
-				return Optional.of(criteriaBuilder.greaterThanOrEqualTo(rootQuery.get(attribute),
-					(LocalDate) value));
-			} else if (value instanceof SingularAttribute) {
-				criteriaBuilder.greaterThanOrEqualTo(rootQuery.get(attribute),
-					rootQuery.get((SingularAttribute) value));
-			} else {
-				throw new IllegalStateException("[" + value + "] is not a known type");
-			}
-		case LESS:
-			if (value instanceof String) {
-				return Optional
-					.of(criteriaBuilder.lessThan(rootQuery.get(attribute), (String) value));
-			} else if (value instanceof Integer) {
-				return Optional
-					.of(criteriaBuilder.lessThan(rootQuery.get(attribute), (Integer) value));
-			} else if (value instanceof LocalDateTime) {
-				return Optional
-					.of(criteriaBuilder.lessThan(rootQuery.get(attribute), (LocalDateTime) value));
-			} else if (value instanceof LocalDate) {
-				return Optional
-					.of(criteriaBuilder.lessThan(rootQuery.get(attribute), (LocalDate) value));
-			} else if (value instanceof SingularAttribute) {
-				criteriaBuilder.lessThan(rootQuery.get(attribute),
-					rootQuery.get((SingularAttribute) value));
-			} else {
-				throw new IllegalStateException("[" + value + "] is not a known type");
-			}
-		case LESS_OR_EQUAL:
-			if (value instanceof String) {
-				return Optional.of(
-					criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute), (String) value));
-			} else if (value instanceof Integer) {
-				return Optional.of(
-					criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute), (Integer) value));
-			} else if (value instanceof LocalDateTime) {
-				return Optional.of(criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute),
-					(LocalDateTime) value));
-			} else if (value instanceof LocalDate) {
-				return Optional.of(
-					criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute), (LocalDate) value));
-			} else if (value instanceof SingularAttribute) {
-				criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute),
-					rootQuery.get((SingularAttribute) value));
-			} else {
-				throw new IllegalStateException("[" + value + "] is not a known type");
-			}
-		default:
-			break;
-		}
-		return Optional.empty();
-	}
-	
-	@SuppressWarnings("rawtypes")
-	protected Optional<SingularAttribute> resolveAttribute(String entityClazzName,
-		String featureName){
-		try {
-			Class<?> metaClazz = getClass().getClassLoader().loadClass(entityClazzName + "_");
-			Field[] fields = metaClazz.getFields();
-			for (Field field : fields) {
-				if (field.getName().equalsIgnoreCase(featureName)) {
-					Object value = field.get(null);
-					if (value instanceof SingularAttribute) {
-						return Optional.of((SingularAttribute) value);
-					}
-				}
-			}
-		} catch (ClassNotFoundException | IllegalArgumentException | IllegalAccessException e) {
-			LoggerFactory.getLogger(getClass())
-				.error("Could not find metamodel class for entity [" + entityClazzName + "]");
-		}
-		return Optional.empty();
-	}
-	
-	protected Object resolveValue(Object value){
-		Object ret = value;
-		if (value instanceof AbstractIdModelAdapter) {
-			ret = ((AbstractIdModelAdapter<?>) value).getEntity();
-		}
-		return ret;
-	}
-	
 	@Override
 	public void and(EStructuralFeature feature, COMPARATOR comparator, Object value,
 		boolean ignoreCase){
-		String entityAttributeName = getAttributeName(feature);
-		@SuppressWarnings("rawtypes")
-		Optional<SingularAttribute> attribute =
-			resolveAttribute(entityClazz.getName(), entityAttributeName);
-		value = resolveValue(value);
-		if (attribute.isPresent()) {
-			Optional<Predicate> predicate =
-				getPredicate(attribute.get(), comparator, value, ignoreCase);
-			predicate.ifPresent(p -> {
-				getCurrentPredicateGroup().and(p);
-			});
-		} else {
-			// feature could not be resolved, mapping?
-			throw new IllegalStateException(
-				"Could not resolve attribute [" + feature + "] of entity [" + entityClazz + "]");
-		}
+		predicateHandler.and(feature, comparator, value, ignoreCase);
 	}
 	
 	@Override
 	public void and(String entityAttributeName, COMPARATOR comparator, Object value,
 		boolean ignoreCase){
-		@SuppressWarnings("rawtypes")
-		Optional<SingularAttribute> attribute =
-			resolveAttribute(entityClazz.getName(), entityAttributeName);
-		value = resolveValue(value);
-		if (attribute.isPresent()) {
-			Optional<Predicate> predicate =
-				getPredicate(attribute.get(), comparator, value, ignoreCase);
-			predicate.ifPresent(p -> {
-				getCurrentPredicateGroup().and(p);
-			});
-		} else {
-			// feature could not be resolved, mapping?
-			throw new IllegalStateException("Could not resolve attribute [" + entityAttributeName
-				+ "] of entity [" + entityClazz + "]");
-		}
+		predicateHandler.and(entityAttributeName, comparator, value, ignoreCase);
 	}
 	
-	@SuppressWarnings("rawtypes")
 	@Override
 	public void andFeatureCompare(EStructuralFeature feature, COMPARATOR comparator,
 		EStructuralFeature otherFeature){
-		String entityAttributeName = getAttributeName(feature);
-		String entityOtherAttributeName = getAttributeName(otherFeature);
-		Optional<SingularAttribute> attribute =
-			resolveAttribute(entityClazz.getName(), entityAttributeName);
-		Optional<SingularAttribute> otherAttribute =
-			resolveAttribute(entityClazz.getName(), entityOtherAttributeName);
-		if (attribute.isPresent() && otherAttribute.isPresent()) {
-			Optional<Predicate> predicate =
-				getPredicate(attribute.get(), comparator, otherAttribute.get(), false);
-			predicate.ifPresent(p -> 
-				getCurrentPredicateGroup().and(p)
-			);
-		} else {
-			// feature could not be resolved, mapping?
-			throw new IllegalStateException("Could not resolve attribute [" + entityAttributeName
-				+ "] or [" + entityOtherAttributeName + "] of entity [" + entityClazz + "]");
-		}
+		predicateHandler.andFeatureCompare(feature, comparator, otherFeature);
 	}
 	
 	@Override
 	public void or(EStructuralFeature feature, COMPARATOR comparator, Object value,
 		boolean ignoreCase){
-		String entityAttributeName = getAttributeName(feature);
-		@SuppressWarnings("rawtypes")
-		Optional<SingularAttribute> attribute =
-			resolveAttribute(entityClazz.getName(), entityAttributeName);
-		value = resolveValue(value);
-		if (attribute.isPresent()) {
-			Optional<Predicate> predicate = getPredicate(attribute.get(), comparator, value, ignoreCase);
-			predicate.ifPresent(p -> {
-				getCurrentPredicateGroup().or(p);
-			});
-		} else {
-			// feature could not be resolved, mapping?
-			throw new IllegalStateException(
-				"Could not resolve attribute [" + feature + "] of entity [" + entityClazz + "]");
-		}
+		predicateHandler.or(feature, comparator, value, ignoreCase);
 	}
 	
 	@Override
 	public void or(String entityAttributeName, COMPARATOR comparator, Object value,
 		boolean ignoreCase){
-		@SuppressWarnings("rawtypes")
-		Optional<SingularAttribute> attribute =
-			resolveAttribute(entityClazz.getName(), entityAttributeName);
-		value = resolveValue(value);
-		if (attribute.isPresent()) {
-			Optional<Predicate> predicate =
-				getPredicate(attribute.get(), comparator, value, ignoreCase);
-			predicate.ifPresent(p -> getCurrentPredicateGroup().or(p));
-		} else {
-			// feature could not be resolved, mapping?
-			throw new IllegalStateException("Could not resolve attribute [" + entityAttributeName
-				+ "] of entity [" + entityClazz + "]");
-		}
+		predicateHandler.or(entityAttributeName, comparator, value, ignoreCase);
 	}
 	
-	@Override
-	public void orderBy(EStructuralFeature feature, ORDER direction){
-		String entityAttributeName = getAttributeName(feature);
+	public void orderBy(EStructuralFeature feature, ORDER order){
+		String entityAttributeName = predicateHandler.getAttributeName(feature, entityClazz);
 		@SuppressWarnings("rawtypes")
 		Optional<SingularAttribute> attribute =
-			resolveAttribute(entityClazz.getName(), entityAttributeName);
+			predicateHandler.resolveAttribute(entityClazz.getName(), entityAttributeName);
 		if (attribute.isPresent()) {
-			orderBy(attribute.get(), direction);
+			orderBy(attribute.get(), order);
 		} else {
 			// feature could not be resolved, mapping?
 			throw new IllegalStateException("Could not resolve attribute [" + entityAttributeName
@@ -438,16 +146,15 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		}
 	}
 	
-	@Override
-	public void orderBy(String entityAttributeName, ORDER direction){
+	public void orderBy(String fieldOrderBy, ORDER order){
 		@SuppressWarnings("rawtypes")
 		Optional<SingularAttribute> attribute =
-			resolveAttribute(entityClazz.getName(), entityAttributeName);
+			predicateHandler.resolveAttribute(entityClazz.getName(), fieldOrderBy);
 		if (attribute.isPresent()) {
-			orderBy(attribute.get(), direction);
+			orderBy(attribute.get(), order);
 		} else {
 			// feature could not be resolved, mapping?
-			throw new IllegalStateException("Could not resolve attribute [" + entityAttributeName
+			throw new IllegalStateException("Could not resolve attribute [" + fieldOrderBy
 				+ "] of entity [" + entityClazz + "]");
 		}
 	}
@@ -464,7 +171,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 				String[] parts = caseInfo.split("\\|");
 				if (parts.length == 4) {
 					Optional<SingularAttribute> attribute =
-						resolveAttribute(entityClazz.getName(), parts[1]);
+						predicateHandler.resolveAttribute(entityClazz.getName(), parts[1]);
 					if (attribute.isPresent()) {
 						if ("equals".equals(parts[2])) {
 							caseExpression.when(
@@ -489,14 +196,13 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		return caseExpression;
 	}
 	
-	@Override
-	public void orderBy(Map<String, Object> caseContext, ORDER direction){
-		if(caseContext != null && !caseContext.isEmpty()) {
+	public void orderBy(Map<String, Object> caseContext, ORDER order){
+		if (caseContext != null && !caseContext.isEmpty()) {
 			Case<Object> caseExpression = getCaseExpression(caseContext);
 			Order orderBy = null;
-			if (direction == ORDER.ASC) {
+			if (order == ORDER.ASC) {
 				orderBy = criteriaBuilder.asc(caseExpression);
-			} else if (direction == ORDER.DESC) {
+			} else if (order == ORDER.DESC) {
 				orderBy = criteriaBuilder.desc(caseExpression);
 			}
 			if (orderBy != null) {
@@ -505,35 +211,55 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <S> ISubQuery<S> createSubQuery(Class<S> clazz, IModelService modelService){
+		Class<? extends EntityWithId> subEntityClazz =
+			(Class<? extends EntityWithId>) modelService.getEntityClass(clazz);
+		Subquery<? extends EntityWithId> sq = criteriaQuery.subquery(subEntityClazz);
+		return new SubQuery<S>(sq, subEntityClazz);
+	}
+	
+	@Override
+	public void exists(ISubQuery<?> subQuery){
+		predicateHandler.exists((Subquery<?>) subQuery.getQuery());
+	}
+	
+	@Override
+	public void notExists(ISubQuery<?> subQuery){
+		predicateHandler.notExists((Subquery<?>) subQuery.getQuery());
+	}
+	
 	@Override
 	public void startGroup(){
-		createPredicateGroup();
+		predicateGroups.createPredicateGroup();
 	}
 	
 	@Override
 	public void andJoinGroups(){
-		andPredicateGroups();
+		predicateGroups.andPredicateGroups();
 	}
 	
 	@Override
 	public void orJoinGroups(){
-		orPredicateGroups();
+		predicateGroups.orPredicateGroups();
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<T> execute(){
 		// apply the predicate groups to the criteriaQuery
-		int groups = getPredicateGroupsSize();
+		int groups = predicateGroups.getPredicateGroupsSize();
 		if (groups > 0) {
 			if (groups == 2
 				&& (EntityWithDeleted.class.isAssignableFrom(entityClazz) && !includeDeleted)) {
 				andJoinGroups();
-				groups = getPredicateGroupsSize();
+				groups = predicateGroups.getPredicateGroupsSize();
 			}
 			
 			if (groups == 1) {
-				criteriaQuery = criteriaQuery.where(getCurrentPredicateGroup().getPredicate());
+				criteriaQuery =
+					criteriaQuery.where(predicateGroups.getCurrentPredicateGroup().getPredicate());
 			} else {
 				throw new IllegalStateException("Query has open groups [" + groups + "]");
 			}
@@ -565,20 +291,102 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		return Optional.empty();
 	}
 	
-	protected String getAttributeName(EStructuralFeature feature){
-		String ret = feature.getName();
-		EAnnotation mappingAnnotation =
-			feature.getEAnnotation(IModelService.EANNOTATION_ENTITY_ATTRIBUTE_MAPPING);
-		if (mappingAnnotation != null) {
-			// test class specific first
-			ret = mappingAnnotation.getDetails().get(entityClazz.getSimpleName() + "#"
-				+ IModelService.EANNOTATION_ENTITY_ATTRIBUTE_MAPPING_NAME);
-			if (ret == null) {
-				// fallback to direct mapping
-				ret = mappingAnnotation.getDetails()
-					.get(IModelService.EANNOTATION_ENTITY_ATTRIBUTE_MAPPING_NAME);
+	private class SubQuery<S> implements ISubQuery<S> {
+		
+		private Subquery<? extends EntityWithId> subQuery;
+		private Root<? extends EntityWithId> subRootQuery;
+		
+		private Class<? extends EntityWithId> entityClazz;
+		
+		private PredicateGroupStack predicateGroups;
+		private PredicateHandler predicateHandler;
+		
+		public SubQuery(Subquery<? extends EntityWithId> subQuery,
+			Class<? extends EntityWithId> entityClazz){
+			this.subQuery = subQuery;
+			this.entityClazz = entityClazz;
+			this.subRootQuery = subQuery.from(entityClazz);
+			this.predicateGroups = new PredicateGroupStack(criteriaBuilder);
+			this.predicateHandler =
+				new PredicateHandler(predicateGroups, entityClazz, criteriaBuilder, subRootQuery);
+			
+			if (EntityWithDeleted.class.isAssignableFrom(entityClazz) && !includeDeleted) {
+				and(ModelPackage.Literals.DELETEABLE__DELETED, COMPARATOR.NOT_EQUALS, true);
 			}
 		}
-		return ret;
+		
+		@Override
+		public Object getQuery(){
+			// apply the predicate groups to the subQuery
+			int groups = predicateGroups.getPredicateGroupsSize();
+			if (groups > 0) {
+				if (groups == 2
+					&& (EntityWithDeleted.class.isAssignableFrom(entityClazz) && !includeDeleted)) {
+					andJoinGroups();
+					groups = predicateGroups.getPredicateGroupsSize();
+				}
+				
+				if (groups == 1) {
+					subQuery =
+						subQuery.where(predicateGroups.getCurrentPredicateGroup().getPredicate());
+				} else {
+					throw new IllegalStateException("Query has open groups [" + groups + "]");
+				}
+			}
+			return subQuery;
+		}
+		
+		@Override
+		public void startGroup(){
+			predicateGroups.createPredicateGroup();
+		}
+		
+		@Override
+		public void andJoinGroups(){
+			predicateGroups.andPredicateGroups();
+		}
+		
+		@Override
+		public void orJoinGroups(){
+			predicateGroups.orPredicateGroups();
+		}
+		
+		@Override
+		public void and(EStructuralFeature feature, COMPARATOR comparator, Object value,
+			boolean ignoreCase){
+			predicateHandler.and(feature, comparator, value, ignoreCase);
+		}
+		
+		@Override
+		public void andFeatureCompare(EStructuralFeature feature, COMPARATOR comparator,
+			EStructuralFeature otherFeature){
+			predicateHandler.andFeatureCompare(feature, comparator, otherFeature);
+		}
+		
+		@Override
+		public void and(String entityAttributeName, COMPARATOR comparator, Object value,
+			boolean ignoreCase){
+			predicateHandler.and(entityAttributeName, comparator, value, ignoreCase);
+		}
+		
+		@Override
+		public void or(EStructuralFeature feature, COMPARATOR comparator, Object value,
+			boolean ignoreCase){
+			predicateHandler.or(feature, comparator, value, ignoreCase);
+		}
+		
+		@Override
+		public void or(String entityAttributeName, COMPARATOR comparator, Object value,
+			boolean ignoreCase){
+			predicateHandler.or(entityAttributeName, comparator, value, ignoreCase);
+		}
+		
+		@Override
+		public void andParentCompare(String parentEntityAttributeName, COMPARATOR comparator,
+			String entityAttributeName){
+			predicateHandler.andCompare(AbstractModelQuery.this.rootQuery,
+				AbstractModelQuery.this.entityClazz, parentEntityAttributeName, comparator,
+				entityAttributeName);
+		}
 	}
 }
