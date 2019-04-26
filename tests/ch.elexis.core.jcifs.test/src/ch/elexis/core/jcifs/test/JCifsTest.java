@@ -37,7 +37,7 @@ public class JCifsTest {
 	 * NOAUTH is expected to read, but not modify
 	 */
 	public static final String PREFIX_NOAUTH_SAMBA = "smb://gitlab.medelexis.ch/tests/";
-//	public static final String PREFIX_NOAUTH_WIN2KSRV = "smb://fw.medelexis.ch/smb_for_unittests/";
+	//	public static final String PREFIX_NOAUTH_WIN2KSRV = "smb://fw.medelexis.ch/smb_for_unittests/";
 	// bug see https://github.com/AgNO3/jcifs-ng/issues/105
 	
 	public static final String PREFIX_AUTH_SAMBA =
@@ -62,6 +62,7 @@ public class JCifsTest {
 	
 	@BeforeClass
 	public static void beforeClass(){
+		System.setProperty("java.net.preferIPv4Stack", "true");
 		try {
 			servicesAreReachable = InetAddress.getByName("gitlab.medelexis.ch").isReachable(300);
 		} catch (IOException e) {
