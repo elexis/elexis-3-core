@@ -16,41 +16,43 @@ import ch.elexis.core.types.Gender;
 
 public class TestContext implements IContext {
 	
-	private IModelService coreModelService;
-	
 	private IMandator mandator;
-	private IUser user;
+	
+	private IUser testUser;
+	
+	private IUser activeUser;
+	private IContact activeUserContact;
+	private IMandator activeMandator;
 	
 	public TestContext(IModelService coreModelService){
-		this.coreModelService = coreModelService;
-		
 		IPerson _mandator = new IContactBuilder.PersonBuilder(coreModelService, "Elisa",
 			"Mandatore", LocalDate.of(2000, 12, 1), Gender.FEMALE).mandator().buildAndSave();
 		mandator = coreModelService.load(_mandator.getId(), IMandator.class).get();
+		setActiveUserContact(mandator);
+		setActiveMandator(mandator);
 		
-		user = new IUserBuilder(coreModelService, "user_ctx", _mandator).buildAndSave();
+		testUser = new IUserBuilder(coreModelService, "user_ctx", _mandator).buildAndSave();
+		setActiveUser(testUser);
 	}
 	
 	@Override
 	public Optional<IUser> getActiveUser(){
-		return Optional.of(user);
+		return Optional.ofNullable(activeUser);
 	}
 	
 	@Override
 	public void setActiveUser(IUser user){
-		// TODO Auto-generated method stub
-		
+		activeUser = user;
 	}
 	
 	@Override
 	public Optional<IContact> getActiveUserContact(){
-		return Optional.empty();
+		return Optional.ofNullable(activeUserContact);
 	}
 	
 	@Override
 	public void setActiveUserContact(IContact user){
-		// TODO Auto-generated method stub
-		
+		activeUserContact = user;
 	}
 	
 	@Override
@@ -67,13 +69,12 @@ public class TestContext implements IContext {
 	
 	@Override
 	public Optional<IMandator> getActiveMandator(){
-		return Optional.of(mandator);
+		return Optional.ofNullable(activeMandator);
 	}
 	
 	@Override
 	public void setActiveMandator(IMandator mandator){
-		// TODO Auto-generated method stub
-		
+		activeMandator = mandator;
 	}
 	
 	@Override
