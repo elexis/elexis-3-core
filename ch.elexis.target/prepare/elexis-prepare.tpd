@@ -145,6 +145,7 @@ location "http://download.elexis.info/elexis-server/elexis-server-dependencies" 
 	com.sun.xml.bind.jaxb-osgi
 	jaxb-api
 	//
+	org.json
 	bcprov [1.61.0,2.0.0)
 	org.springframework.spring-web
 	woodstox-core-asl
