@@ -140,7 +140,7 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 		externPathDeco = new ControlDecoration(externPath, SWT.LEFT | SWT.TOP);
 		
 		allExtern = new Button(compExtern, SWT.PUSH);
-		allExtern.setText("Alle Brief extern speichern");
+		allExtern.setText("Alle Briefe extern speichern");
 		allExtern.setEnabled(check.getSelection());
 		allExtern.addSelectionListener(new SelectionAdapter() {
 			@Override
