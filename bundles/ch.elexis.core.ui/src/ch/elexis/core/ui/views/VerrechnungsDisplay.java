@@ -35,22 +35,18 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.TableViewerFocusCellManager;
-import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -118,7 +114,6 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private final PersistentObjectDropTarget dropTarget;
 	private IAction applyMedicationAction, chPriceAction, chCountAction, chTextAction, removeAction,
 			removeAllAction;
-	private TableViewerFocusCellManager focusCellManager;
 	
 	private static final String INDICATED_MEDICATION =
 		Messages.VerrechnungsDisplay_indicatedMedication;
@@ -272,21 +267,29 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 		});
 		// connect double click on column to actions
-		focusCellManager =
-			new TableViewerFocusCellManager(viewer, new FocusCellOwnerDrawHighlighter(viewer));
-		viewer.addDoubleClickListener(new IDoubleClickListener() {
+		table.addMouseListener(new MouseAdapter() {
 			@Override
-			public void doubleClick(DoubleClickEvent event){
-				ViewerCell focusCell = focusCellManager.getFocusCell();
-				// make sure selection is correct
-				viewer.setSelection(new StructuredSelection(focusCell.getElement()));
-				int columnIndex = focusCell.getColumnIndex();
-				if (columnIndex == 0) {
-					chCountAction.run();
-				} else if (columnIndex == 3) {
-					chPriceAction.run();
-				} else if (columnIndex == 4) {
-					removeAction.run();
+			public void mouseDoubleClick(MouseEvent e){
+				int clickedIndex = -1;
+				// calculate column of click
+				int width = 0;
+				TableColumn[] columns = table.getColumns();
+				for (int i = 0; i < columns.length; i++) {
+					TableColumn tc = columns[i];
+					if (width < e.x && e.x < width + tc.getWidth()) {
+						clickedIndex = i;
+						break;
+					}
+					width += tc.getWidth();
+				}
+				if(clickedIndex != -1) {
+					if (clickedIndex == 0) {
+						chCountAction.run();
+					} else if (clickedIndex == 3) {
+						chPriceAction.run();
+					} else if (clickedIndex == 4) {
+						removeAction.run();
+					}
 				}
 			}
 		});
