@@ -40,6 +40,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
@@ -197,7 +198,12 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 		// new PersistentObjectDragSource()
 		dropTarget =
 			new PersistentObjectDropTarget(Messages.DiagnosenDisplay_DiagnoseTarget, table,
-				new DropReceiver()); //$NON-NLS-1$
+				new DropReceiver()) {
+				@Override
+				protected Control getHighLightControl(){
+					return DiagnosenDisplay.this;
+				}
+			};
 		new PersistentObjectDragSource(table, this);
 
 		ElexisEventDispatcher.getInstance().addListeners(eeli_update);
