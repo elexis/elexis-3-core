@@ -20,6 +20,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Table;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.actions.ICodeSelectorTarget;
@@ -136,13 +137,24 @@ public class PersistentObjectDropTarget implements DropTargetListener, ICodeSele
 	}
 	
 	private void highlight(boolean bOn){
-		if (!mine.isDisposed()) {
+		Control highlightControl = getHighLightControl();
+		if (!highlightControl.isDisposed()) {
 			if (bOn) {
-				mine.setBackground(highlightColor);
+				highlightControl.setBackground(highlightColor);
 			} else {
-				mine.setBackground(normalColor);
+				highlightControl.setBackground(normalColor);
 			}
 		}
+	}
+	
+	/**
+	 * Override if mine is a {@link Table} that shows column background. On Win Platform setting
+	 * background of Table disables all column background.
+	 * 
+	 * @return
+	 */
+	protected Control getHighLightControl(){
+		return mine;
 	}
 	
 	public interface IReceiver {

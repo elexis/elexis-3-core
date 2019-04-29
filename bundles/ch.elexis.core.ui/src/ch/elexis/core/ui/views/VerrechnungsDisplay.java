@@ -54,6 +54,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
@@ -295,7 +296,12 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		});
 		
 		dropTarget = new PersistentObjectDropTarget(Messages.VerrechnungsDisplay_doBill, table,
-			new DropReceiver()); //$NON-NLS-1$
+			new DropReceiver()) {
+			@Override
+			protected Control getHighLightControl(){
+				return VerrechnungsDisplay.this;
+			}
+		}; //$NON-NLS-1$
 		
 		// refresh the table if a update to a Verrechnet occurs
 		ElexisEventDispatcher.getInstance().addListeners(
@@ -372,6 +378,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			
 			@Override
 			public Color getBackground(final Object element){
+				System.out.println("Getting bg of " + element);
 				if (element instanceof Verrechnet) {
 					Verrechnet billed = (Verrechnet) element;
 					return getBackgroundColor(billed);
