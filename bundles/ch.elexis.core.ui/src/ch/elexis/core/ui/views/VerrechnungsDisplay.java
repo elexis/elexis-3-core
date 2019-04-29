@@ -138,6 +138,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		};
 	private TableColumnLayout tableLayout;
 	private ToolBarManager toolBarManager;
+	private TableViewerColumn partDisposalColumn;
 	
 	public VerrechnungsDisplay(final IWorkbenchPage p, Composite parent, int style){
 		super(parent, style);
@@ -284,11 +285,11 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					width += tc.getWidth();
 				}
 				if(clickedIndex != -1) {
-					if (clickedIndex == 0) {
+					if (clickedIndex == 1) {
 						chCountAction.run();
-					} else if (clickedIndex == 3) {
-						chPriceAction.run();
 					} else if (clickedIndex == 4) {
+						chPriceAction.run();
+					} else if (clickedIndex == 5) {
 						removeAction.run();
 					}
 				}
@@ -319,13 +320,33 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	
 	private void createColumns(){
 		String[] titles = {
-			"Anz.", "Code", "Bezeichnung", "Preis", ""
+			"", "Anz.", "Code", "Bezeichnung", "Preis", ""
 		};
 		int[] weights = {
-			8, 20, 50, 15, 7
+			0, 8, 20, 50, 15, 7
 		};
 		
-		TableViewerColumn col = createTableViewerColumn(titles[0], weights[0], 0, SWT.NONE);
+		partDisposalColumn = createTableViewerColumn(titles[0], weights[0], 0, SWT.LEFT);
+		partDisposalColumn.setLabelProvider(new ColumnLabelProvider() {
+			
+			@Override
+			public String getText(Object element){
+				return "";
+			}
+			
+			@Override
+			public Image getImage(Object element){
+				if (element instanceof Verrechnet) {
+					Verrechnet billed = (Verrechnet) element;
+					if (isPartDisposal(billed)) {
+						return Images.IMG_BLOCKS_SMALL.getImage();
+					}
+				}
+				return super.getImage(element);
+			}
+		});
+		
+		TableViewerColumn col = createTableViewerColumn(titles[1], weights[1], 1, SWT.LEFT);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
@@ -335,25 +356,9 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				}
 				return "";
 			}
-			
-			@Override
-			public Image getImage(Object element){
-				if (element instanceof Verrechnet) {
-					Verrechnet billed = (Verrechnet) element;
-					IVerrechenbar billable = billed.getVerrechenbar();
-					if (billable instanceof Artikel) {
-						Artikel a = (Artikel) billable;
-						int abgabeEinheit = a.getAbgabeEinheit();
-						if (abgabeEinheit > 0 && abgabeEinheit < a.getPackungsGroesse()) {
-							return Images.IMG_BLOCKS_SMALL.getImage();
-						}
-					}
-				}
-				return super.getImage(element);
-			}
 		});
 		
-		col = createTableViewerColumn(titles[1], weights[1], 1, SWT.NONE);
+		col = createTableViewerColumn(titles[2], weights[2], 2, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
@@ -365,7 +370,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 		});
 		
-		col = createTableViewerColumn(titles[2], weights[2], 2, SWT.NONE);
+		col = createTableViewerColumn(titles[3], weights[3], 3, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
@@ -387,7 +392,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 		});
 		
-		col = createTableViewerColumn(titles[3], weights[3], 3, SWT.RIGHT);
+		col = createTableViewerColumn(titles[4], weights[4], 4, SWT.RIGHT);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
@@ -400,7 +405,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 		});
 		
-		col = createTableViewerColumn(titles[4], weights[4], 4, SWT.NONE);
+		col = createTableViewerColumn(titles[5], weights[5], 5, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
@@ -462,8 +467,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 			interactionLink.updateAtcs(gtins);
 			billedLabel.setText(String.format("%s %s / %s %s", //$NON-NLS-1$
-					Messages.PatHeuteView_accAmount, sum.getAmountAsString(),
-					Messages.PatHeuteView_accTime, actEncounter.getMinutes()));
+				Messages.VerrechnungsDisplay_Amount, sum.getAmountAsString(),
+				Messages.VerrechnungsDisplay_Time, actEncounter.getMinutes()));
 		} else {
 			billedLabel.setText(""); //$NON-NLS-1$
 		}
@@ -511,11 +516,39 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 							result.toString()); //$NON-NLS-1$
 					}
 					viewer.setInput(actKons.getLeistungen());
+					updatePartDisposalColumn(actKons.getLeistungen());
 				}
 			} else if (o instanceof IDiagnose) {
 				actKons.addDiagnose((IDiagnose) o);
 			}
 		}
+	}
+	
+	private void updatePartDisposalColumn(List<Verrechnet> list){
+		boolean hasDisposal = false;
+		for (Verrechnet billed : list) {
+			if (isPartDisposal(billed)) {
+				hasDisposal = true;
+				break;
+			}
+		}
+		if (hasDisposal) {
+			partDisposalColumn.getColumn().setWidth(18);
+		} else {
+			partDisposalColumn.getColumn().setWidth(0);
+		}
+	}
+	
+	private boolean isPartDisposal(Verrechnet billed){
+		IVerrechenbar billable = billed.getVerrechenbar();
+		if (billable instanceof Artikel) {
+			Artikel a = (Artikel) billable;
+			int abgabeEinheit = a.getAbgabeEinheit();
+			if (abgabeEinheit > 0 && abgabeEinheit < a.getPackungsGroesse()) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	private final class DropReceiver implements PersistentObjectDropTarget.IReceiver {
@@ -551,6 +584,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	public void setEncounter(Konsultation encounter){
 		actEncounter = encounter;
 		viewer.setInput(encounter.getLeistungen());
+		updatePartDisposalColumn(encounter.getLeistungen());
 		updateBilledLabel();
 		updateUi();
 	}
