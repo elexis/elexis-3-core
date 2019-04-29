@@ -33,6 +33,8 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Font;
@@ -108,6 +110,7 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 		Font boldFont = boldDescriptor.createFont(label.getDisplay());
 		label.setFont(boldFont);
 		label.setText(Messages.DiagnosenDisplay_Diagnoses);
+		label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 		
 		ToolBarManager toolBarManager = new ToolBarManager(SWT.RIGHT);
 		toolBarManager.add(new Action() {
@@ -206,6 +209,32 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 			};
 		new PersistentObjectDragSource(table, this);
 
+		addControlListener(new ControlAdapter() {
+			@Override
+			public void controlResized(ControlEvent e){
+				int width = DiagnosenDisplay.this.getBounds().width;
+				int labelWidth = label.getBounds().width;
+				int toolBarWidth = toolBar.getBounds().width;
+				if (width < labelWidth + toolBarWidth) {
+					if (label.getVisible()) {
+						GridData labeldata = (GridData) label.getLayoutData();
+						labeldata.exclude = true;
+						label.setVisible(false);
+						GridData toolData = (GridData) toolBar.getLayoutData();
+						toolData.grabExcessHorizontalSpace = true;
+					}
+				} else {
+					if (!label.getVisible()) {
+						GridData labeldata = (GridData) label.getLayoutData();
+						labeldata.exclude = false;
+						label.setVisible(true);
+						GridData toolData = (GridData) toolBar.getLayoutData();
+						toolData.grabExcessHorizontalSpace = false;
+					}
+				}
+			}
+		});
+		
 		ElexisEventDispatcher.getInstance().addListeners(eeli_update);
 	}
 
@@ -253,7 +282,7 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 			15, 70, 15
 		};
 		
-		TableViewerColumn col = createTableViewerColumn(titles[0], weights[0], 0, SWT.NONE);
+		TableViewerColumn col = createTableViewerColumn(titles[0], weights[0], 0, SWT.LEFT);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){

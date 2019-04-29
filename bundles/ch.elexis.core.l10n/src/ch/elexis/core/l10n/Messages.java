@@ -1507,6 +1507,8 @@ public class Messages extends NLS {
 	public static String TextView_showMenu;
 	public static String TextView_showMenuBar;
 	public static String TextView_showToolbar;
+	public static String VerrechnungsDisplay_Amount;
+	public static String VerrechnungsDisplay_Time;
 	public static String VerrechnungsDisplay_Orininalpackungen;
 	public static String VerrechnungsDisplay_PositionCanootBeRemoved;
 	public static String VerrechnungsDisplay_badAmountBody;
