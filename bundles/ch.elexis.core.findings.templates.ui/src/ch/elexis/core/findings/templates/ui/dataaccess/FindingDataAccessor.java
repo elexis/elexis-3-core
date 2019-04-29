@@ -55,48 +55,51 @@ public class FindingDataAccessor implements IDataAccess {
 	
 	@Override
 	public List<Element> getList(){
-		FindingsTemplates findingsTemplates =
-			FindingsServiceHolder.findingsTemplateService.getFindingsTemplates("Standard Vorlagen");
-		
-		List<String> parameters = new ArrayList<>();
-		EList<FindingsTemplate> findingsTemplates2 = findingsTemplates.getFindingsTemplates();
-		// sort
-		ECollections.sort(findingsTemplates2, new Comparator<FindingsTemplate>() {
+		if (FindingsServiceHolder.findingsTemplateService != null) {
+			FindingsTemplates findingsTemplates = FindingsServiceHolder.findingsTemplateService
+				.getFindingsTemplates("Standard Vorlagen");
 			
-			@Override
-			public int compare(FindingsTemplate o1, FindingsTemplate o2){
-				if (o1 == null || o2 == null) {
-					return o1 != null ? 1 : -1;
+			List<String> parameters = new ArrayList<>();
+			EList<FindingsTemplate> findingsTemplates2 = findingsTemplates.getFindingsTemplates();
+			// sort
+			ECollections.sort(findingsTemplates2, new Comparator<FindingsTemplate>() {
+				
+				@Override
+				public int compare(FindingsTemplate o1, FindingsTemplate o2){
+					if (o1 == null || o2 == null) {
+						return o1 != null ? 1 : -1;
+					}
+					return StringUtils.lowerCase(o1.getTitle())
+						.compareTo(StringUtils.lowerCase(o2.getTitle()));
 				}
-				return StringUtils.lowerCase(o1.getTitle())
-					.compareTo(StringUtils.lowerCase(o2.getTitle()));
-			}
-		});
-		
-		for (FindingsTemplate findingTemplate : findingsTemplates2) {
-			if (findingTemplate.getInputData() instanceof InputDataGroupComponent
-				|| findingTemplate.getInputData() instanceof InputDataGroup) {
-				parameters.add(findingTemplate.getTitle());
-			}
-		}
-		List<Element> ret = new ArrayList<Element>(parameters.size());
-		for (String n : parameters) {
-			// placeholder for first finding
-			String placeholder = PREFIX_FIRST + n + SUFFIX;
-			String readableName = n + " - " + "Erster";
-			ret.add(createElement(readableName, placeholder));
+			});
 			
-			// placeholder for last finding
-			placeholder = PREFIX_LAST + n + SUFFIX;
-			readableName = n + " - " + "Letzter";
-			ret.add(createElement(readableName, placeholder));
-			
-			// placeholder for all findings
-			placeholder = PREFIX_ALL + n + SUFFIX;
-			readableName = n + " - " + "Alle";
-			ret.add(createElement(readableName, placeholder));
+			for (FindingsTemplate findingTemplate : findingsTemplates2) {
+				if (findingTemplate.getInputData() instanceof InputDataGroupComponent
+					|| findingTemplate.getInputData() instanceof InputDataGroup) {
+					parameters.add(findingTemplate.getTitle());
+				}
+			}
+			List<Element> ret = new ArrayList<Element>(parameters.size());
+			for (String n : parameters) {
+				// placeholder for first finding
+				String placeholder = PREFIX_FIRST + n + SUFFIX;
+				String readableName = n + " - " + "Erster";
+				ret.add(createElement(readableName, placeholder));
+				
+				// placeholder for last finding
+				placeholder = PREFIX_LAST + n + SUFFIX;
+				readableName = n + " - " + "Letzter";
+				ret.add(createElement(readableName, placeholder));
+				
+				// placeholder for all findings
+				placeholder = PREFIX_ALL + n + SUFFIX;
+				readableName = n + " - " + "Alle";
+				ret.add(createElement(readableName, placeholder));
+				}
+			return ret;
 		}
-		return ret;
+		return Collections.emptyList();
 	}
 	
 	@Override
