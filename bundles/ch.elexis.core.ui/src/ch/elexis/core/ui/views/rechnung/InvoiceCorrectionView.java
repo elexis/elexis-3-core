@@ -85,6 +85,7 @@ import ch.elexis.core.data.util.BillingUtil;
 import ch.elexis.core.data.util.BillingUtil.BillCallback;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IDiagnose;
 import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.ui.UiDesk;
@@ -100,7 +101,6 @@ import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.WidgetFactory;
 import ch.elexis.core.ui.views.FallDetailBlatt2;
-import ch.elexis.core.ui.views.Messages;
 import ch.elexis.core.ui.views.codesystems.DiagnosenView;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
 import ch.elexis.core.ui.views.contribution.IViewContribution;
@@ -1095,7 +1095,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 			Table table = tableViewer.getTable();
 			table.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			
-			createTableViewerColumn("Behandlungsdiagnose", 1, 0);
+			createTableViewerColumn(Messages.DiagnosenDisplay_Diagnoses, 1, 0);
 			
 			table.setHeaderVisible(true);
 			table.setLinesVisible(true);
@@ -1125,7 +1125,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 			menuManager.add(new Action() {
 				@Override
 				public String getText(){
-					return "Diagnose hinzufügen";
+					return Messages.DiagnosenDisplay_AddDiagnosis;
 				}
 				
 				@Override
