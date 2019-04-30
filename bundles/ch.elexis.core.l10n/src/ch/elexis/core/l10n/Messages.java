@@ -958,6 +958,8 @@ public class Messages extends NLS {
 	public static String BriefAuswahlStressTestButtonText2;
 	public static String BriefAuswahlColumnDate;
 	public static String BriefAuswahlColumnTitle;
+	public static String DiagnosenDisplay_AddDiagnosis;
+	public static String DiagnosenDisplay_AddTextDiagnosis;
 	public static String DiagnosenDisplay_DiagnoseTarget;
 	public static String DiagnosenDisplay_Diagnoses;
 	public static String DiagnosenDisplay_ErrorStartingCodeSystem;
@@ -1463,7 +1465,13 @@ public class Messages extends NLS {
 	public static String TextView_showMenu;
 	public static String TextView_showMenuBar;
 	public static String TextView_showToolbar;
+	public static String VerrechnungsDisplay_AddItem;
 	public static String VerrechnungsDisplay_Amount;
+	public static String VerrechnungsDisplay_no_invoice;
+	public static String Display_Column_Number;
+	public static String Display_Column_Code;
+	public static String Display_Column_Designation;
+	public static String Display_Column_Price;
 	public static String VerrechnungsDisplay_Time;
 	public static String VerrechnungsDisplay_Orininalpackungen;
 	public static String VerrechnungsDisplay_PositionCanootBeRemoved;
