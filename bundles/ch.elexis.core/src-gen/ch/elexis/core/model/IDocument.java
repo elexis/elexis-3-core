@@ -336,7 +336,7 @@ public interface IDocument extends Identifiable, Deleteable {
 	 * @return the value of the '<em>Patient</em>' reference.
 	 * @see #setPatient(IPatient)
 	 * @see ch.elexis.core.model.ModelPackage#getIDocument_Patient()
-	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping DocHandle#attributeName='kontakt'"
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping DocHandle#attributeName='kontakt' Brief#attributeName='patient'"
 	 * @generated
 	 */
 	IPatient getPatient();

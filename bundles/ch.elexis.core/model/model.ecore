@@ -269,6 +269,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="patient" eType="#//IPatient">
       <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
         <details key="DocHandle#attributeName" value="kontakt"/>
+        <details key="Brief#attributeName" value="patient"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="author" eType="#//IContact"/>
