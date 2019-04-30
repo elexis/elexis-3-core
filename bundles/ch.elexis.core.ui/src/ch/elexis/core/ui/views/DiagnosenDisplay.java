@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -58,6 +59,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IDiagnose;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
@@ -73,6 +75,7 @@ import ch.elexis.core.ui.views.codesystems.DiagnosenView;
 import ch.elexis.data.FreeTextDiagnose;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.PersistentObject;
+import ch.rgw.tools.StringTool;
 
 public class DiagnosenDisplay extends Composite implements ISelectionRenderer, IUnlockable {
 	private Table table;
@@ -113,7 +116,7 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 		
 		ToolBarManager toolBarManager = new ToolBarManager(SWT.RIGHT);
-		toolBarManager.add(new Action() {
+		IAction newAction = new Action() {
 			@Override
 			public ImageDescriptor getImageDescriptor(){
 				return Images.IMG_NEW.getImageDescriptor();
@@ -132,8 +135,11 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 					StatusManager.getManager().handle(status, StatusManager.SHOW);
 				}
 			}
-		});
-		toolBarManager.add(new Action() {
+		};
+		newAction.setToolTipText(Messages.DiagnosenDisplay_AddDiagnosis);
+		toolBarManager.add(newAction);
+
+		IAction textAction = new Action() {
 			@Override
 			public ImageDescriptor getImageDescriptor(){
 				return Images.IMG_DOCUMENT_TEXT.getImageDescriptor();
@@ -149,7 +155,10 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 					viewer.setInput(actEncounter.getDiagnosen());
 				}
 			}
-		});
+		};
+		toolBarManager.add(textAction);
+		textAction.setToolTipText(Messages.DiagnosenDisplay_AddTextDiagnosis);
+
 		toolBar = toolBarManager.createControl(this);
 		toolBar.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		
@@ -276,7 +285,9 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 	
 	private void createColumns(){
 		String[] titles = {
-			"Code", "Bezeichnung", ""
+				Messages.Display_Column_Code,
+				Messages.Display_Column_Designation,
+				StringTool.leer
 		};
 		int[] weights = {
 			15, 70, 15
@@ -292,7 +303,7 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 						return diagnosis.getCode();
 					}
 				}
-				return "";
+				return StringTool.leer;
 			}
 		});
 		
@@ -304,7 +315,7 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 					IDiagnose diagnosis = (IDiagnose) element;
 					return diagnosis.getText();
 				}
-				return "";
+				return StringTool.leer;
 			}
 		});
 		
@@ -312,7 +323,7 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
-				return "";
+				return StringTool.leer;
 			}
 			
 			@Override

@@ -161,7 +161,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		interactionLink = new InteractionLink(this, SWT.NONE);
 		interactionLink.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
 		toolBarManager = new ToolBarManager(SWT.RIGHT);
-		toolBarManager.add(new Action() {
+		IAction newAction = new Action() {
+
 			@Override
 			public ImageDescriptor getImageDescriptor(){
 				return Images.IMG_NEW.getImageDescriptor();
@@ -188,7 +189,10 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			public boolean isEnabled(){
 				return actEncounter != null && actEncounter.isBillable();
 			}
-		});
+		};
+		newAction.setToolTipText(Messages.VerrechnungsDisplay_AddItem);
+		toolBarManager.add(newAction);
+
 		toolBarManager.add(new Action("", Action.AS_CHECK_BOX) {
 			
 			@Override
@@ -198,7 +202,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			
 			@Override
 			public String getText(){
-				return "keine Verrechnung";
+				return Messages.VerrechnungsDisplay_no_invoice;
 			}
 			
 			@Override
@@ -327,7 +331,12 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	
 	private void createColumns(){
 		String[] titles = {
-			"", "Anz.", "Code", "Bezeichnung", "Preis", ""
+				StringTool.leer,
+				Messages.Display_Column_Number,
+				Messages.Display_Column_Code,
+				Messages.Display_Column_Designation,
+				Messages.Display_Column_Price,
+				StringTool.leer
 		};
 		int[] weights = {
 			0, 8, 20, 50, 15, 7
