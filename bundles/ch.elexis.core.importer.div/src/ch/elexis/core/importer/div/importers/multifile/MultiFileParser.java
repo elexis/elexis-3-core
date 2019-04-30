@@ -63,7 +63,7 @@ public class MultiFileParser implements IMultiFileParser {
 		try {
 			isDirectory = fileHandle.isDirectory();
 		} catch (IOException e) {
-			return new Result<Object>(e);
+			return new Result<>(e);
 		}
 		
 		if (isDirectory) {
@@ -80,7 +80,7 @@ public class MultiFileParser implements IMultiFileParser {
 				}
 				return results;
 			} catch (IOException e) {
-				return new Result<Object>(e);
+				return new Result<>(e);
 			}
 			
 		} else {
@@ -108,7 +108,7 @@ public class MultiFileParser implements IMultiFileParser {
 						.add(importStrategy.execute(file, context, hl7parser, persistenceHandler));
 				} catch (IOException e) {
 					LoggerFactory.getLogger(getClass()).error("Error executing import", e);
-					return new Result<Object>(e);
+					return new Result<>(e);
 				}
 			}
 			return results;

@@ -216,7 +216,7 @@ public interface IDocument extends Identifiable, Deleteable {
 	 * @see #setCategory(ICategory)
 	 * @see ch.elexis.core.model.ModelPackage#getIDocument_Category()
 	 * @model required="true"
-	 *        annotation="http://elexis.info/jpa/entity/attribute/mapping Brief#attributeName='typ'"
+	 *        annotation="http://elexis.info/jpa/entity/attribute/mapping Brief#attributeName='typ' DocHandle#attributeName='category'"
 	 * @generated
 	 */
 	ICategory getCategory();
@@ -336,7 +336,7 @@ public interface IDocument extends Identifiable, Deleteable {
 	 * @return the value of the '<em>Patient</em>' reference.
 	 * @see #setPatient(IPatient)
 	 * @see ch.elexis.core.model.ModelPackage#getIDocument_Patient()
-	 * @model
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping DocHandle#attributeName='kontakt'"
 	 * @generated
 	 */
 	IPatient getPatient();

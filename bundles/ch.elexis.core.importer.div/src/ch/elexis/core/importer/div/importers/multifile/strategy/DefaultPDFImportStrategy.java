@@ -75,16 +75,16 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		
 		try {
 			initValuesFromContext(context);
-			if (OmnivoreDocumentStoreServiceHolder.isAvailable()) {
+			if (!OmnivoreDocumentStoreServiceHolder.isAvailable()) {
 				if (moveAfterImport) {
 					try {
 						FileImportStrategyUtil.moveAfterImport(false, fileHandle);
 					} catch (IOException e) {
-						return new Result<Object>(SEVERITY.ERROR, 2,
+						return new Result<>(SEVERITY.ERROR, 2,
 								"Could not move after import [" + fileHandle.getAbsolutePath() + "]", context, true);
 					}
 				}
-				return new Result<Object>(SEVERITY.ERROR, 2,
+				return new Result<>(SEVERITY.ERROR, 2,
 						MessageFormat.format(Messages.DefaultPDFImportStrategy_NoDocManager, fileHandle.getName(),
 								patient.getLabel()),
 						patient.getId(), true);
@@ -94,11 +94,11 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 				try {
 					FileImportStrategyUtil.moveAfterImport(false, fileHandle);
 				} catch (IOException e) {
-					return new Result<Object>(SEVERITY.ERROR, 2,
+					return new Result<>(SEVERITY.ERROR, 2,
 							"Could not move after import [" + fileHandle.getAbsolutePath() + "]", context, true);
 				}
 			}
-			return new Result<Object>(SEVERITY.ERROR, 2,
+			return new Result<>(SEVERITY.ERROR, 2,
 					Messages.DefaultPDFImportStrategy_InitContextFailed + "\n" + ise.getMessage(), context, true);
 		}
 
@@ -124,9 +124,10 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		try {
 			addDocument(titel, labName, dateTime, fileHandle, fileHandle.getName());
 		} catch (IOException | IllegalStateException | ElexisException e) {
-			log.error("error saving pdf [" + fileHandle.getAbsolutePath() + "] in document manager (omnivore)");
-			return new Result<Object>(SEVERITY.ERROR, 2,
-					"Could not store document [" + fileHandle.getAbsolutePath() + "]", context, true);
+			log.error("error saving pdf [{}] in document manager (omnivore)",
+				fileHandle.getAbsolutePath(), e);
+			return new Result<>(SEVERITY.ERROR, 2, "Could not store document ["
+				+ fileHandle.getAbsolutePath() + "]: " + e.getMessage(), context, true);
 		}
 		if (moveAfterImport) {
 			try {

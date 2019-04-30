@@ -210,8 +210,8 @@ public class TaskServiceImpl implements ITaskService {
 	public ITask trigger(ITaskDescriptor taskDescriptor, IProgressMonitor progressMonitor,
 		TaskTriggerType triggerType, Map<String, String> runContext) throws TaskException{
 		
-		logger.info("[{}] triggered [{}/{}]", triggerType, taskDescriptor.getId(), taskDescriptor.getReferenceId());
-		logger.info("runContext [{}]", runContext);
+		logger.info("[{}] trigger taskDesc [{}/{}] runContext [{}]", triggerType,
+			taskDescriptor.getId(), taskDescriptor.getReferenceId(), runContext);
 		
 		ITask task = new Task(taskDescriptor, triggerType, progressMonitor, runContext);
 		
@@ -295,9 +295,9 @@ public class TaskServiceImpl implements ITaskService {
 	private void validateTaskDescriptor(ITaskDescriptor taskDescriptor) throws TaskException{
 		
 		IIdentifiedRunnable runnable =
-				instantiateRunnableById(taskDescriptor.getIdentifiedRunnableId());
+			instantiateRunnableById(taskDescriptor.getIdentifiedRunnableId());
 		
-		if(TaskTriggerType.OTHER_TASK == taskDescriptor.getTriggerType()) {
+		if (TaskTriggerType.OTHER_TASK == taskDescriptor.getTriggerType()) {
 			// we will not check activation here, as the required parameters
 			// will be supplied by the other task invoking us
 			return;

@@ -5705,7 +5705,14 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		  (getIDocument_Category(),
 		   source,
 		   new String[] {
-			   "Brief#attributeName", "typ"
+			   "Brief#attributeName", "typ",
+			   "DocHandle#attributeName", "category"
+		   });
+		addAnnotation
+		  (getIDocument_Patient(),
+		   source,
+		   new String[] {
+			   "DocHandle#attributeName", "kontakt"
 		   });
 		addAnnotation
 		  (getIArticle_Gtin(),

@@ -1,6 +1,7 @@
 package ch.elexis.core.tasks.internal.model.impl;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -97,6 +98,8 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		getEntity().setState(state.getValue());
 		logger.info("state = {}", getState());
 		CoreModelServiceHolder.get().save(this);
+		TaskServiceImpl ts = (TaskServiceImpl) TaskServiceHolder.get();
+		ts.notify(this);
 	}
 	
 	private void setResult(Map<String, Serializable> result){
@@ -142,7 +145,6 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 			
 			// TODO persist executing station
 			
-			Map<String, Serializable> _result = null;
 			try {
 				IIdentifiedRunnable runnableWithContext =
 					TaskServiceHolder.get().instantiateRunnableById(runnableWithContextId);
@@ -155,26 +157,23 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 				// TODO validate all required parameters are set, validate url
 				
 				setState(TaskState.IN_PROGRESS);
-				_result = runnableWithContext.run(effectiveRunContext, progressMonitor, logger);
+				setResult(runnableWithContext.run(effectiveRunContext, progressMonitor, logger));
 				setState(TaskState.COMPLETED);
 			} catch (TaskException te) {
-				setState(TaskState.FAILED);
+				setResult(Collections.singletonMap("exceptionMessage", te.getMessage()));
 				logger.warn(te.getMessage(), te);
+				setState(TaskState.FAILED);
 			}
 			
 			if (progressMonitor != null) {
 				progressMonitor.done();
 			}
 			
-			setResult(_result);
-			
 		} else {
 			logger.warn("Could not resolve task descriptor [{}]", getEntity().getDescriptorId());
 			setState(TaskState.FAILED);
 		}
 		
-		TaskServiceImpl ts = (TaskServiceImpl) TaskServiceHolder.get();
-		ts.notify(this);
 	}
 	
 }

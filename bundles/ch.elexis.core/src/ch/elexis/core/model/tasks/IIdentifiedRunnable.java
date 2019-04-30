@@ -8,6 +8,9 @@ import org.slf4j.Logger;
 
 public interface IIdentifiedRunnable {
 	
+	/**
+	 * Standardized key values for run parameters {@link Map} passed to the {@link IIdentifiedRunnable}
+	 */
 	public final class RunContextParameter {
 		private RunContextParameter(){}
 		
@@ -29,6 +32,23 @@ public interface IIdentifiedRunnable {
 		 * default applicable)and required for execution
 		 */
 		public static final String VALUE_MISSING_REQUIRED = "missingRequired";
+	}
+	
+	/**
+	 * Standardized key values for return {@link Map} after {@link IIdentifiedRunnable} execution
+	 */
+	public final class ReturnParameter {
+		private ReturnParameter() {}
+		
+		/**
+		 * The class that is being delivered within {@link #RESULT_DATA}, if <code>null</code> assume {@link String}
+		 */
+		public static final String RESULT_CLASS = "resultClass";
+		
+		/**
+		 * The actual result data, can be casted to {@link #RESULT_CLASS}
+		 */
+		public static final String RESULT_DATA = "resultData";
 	}
 	
 	/**

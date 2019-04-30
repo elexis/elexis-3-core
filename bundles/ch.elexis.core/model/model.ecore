@@ -258,6 +258,7 @@
         eType="#//ICategory">
       <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
         <details key="Brief#attributeName" value="typ"/>
+        <details key="DocHandle#attributeName" value="category"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="history" upperBound="-1"
@@ -265,7 +266,11 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="storeId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="extension" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="keywords" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="patient" eType="#//IPatient"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="patient" eType="#//IPatient">
+      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
+        <details key="DocHandle#attributeName" value="kontakt"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="author" eType="#//IContact"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IHistory" abstract="true" interface="true">
