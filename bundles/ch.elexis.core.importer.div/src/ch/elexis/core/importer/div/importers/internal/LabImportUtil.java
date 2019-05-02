@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.XidConstants;
-
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.importer.div.importers.IContactResolver;
 import ch.elexis.core.importer.div.importers.ILabImportUtil;
@@ -47,7 +46,6 @@ import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.elexis.core.services.holder.LocalLockServiceHolder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
-
 import ch.elexis.hl7.model.OrcMessage;
 import ch.rgw.tools.TimeTool;
 
@@ -612,5 +610,23 @@ public class LabImportUtil implements ILabImportUtil {
 	@Override
 	public <T> Optional<T> loadCoreModel(String id, Class<T> clazz){
 		return modelService.load(id, clazz);
+	}
+	
+	@Override
+	public Optional<IPatient> getPatientByCode(String code){
+		if (code != null) {
+			INamedQuery<IPatient> namedQuery =
+				CoreModelServiceHolder.get().getNamedQuery(IPatient.class, "code");
+			List<IPatient> found = namedQuery.executeWithParameters(
+				namedQuery.getParameterMap("code", code));
+			if (!found.isEmpty()) {
+				if (found.size() > 1) {
+					logger.warn("Found " + found.size() + " patients with code [" + code
+						+ "] using first");
+				}
+				return Optional.of(found.get(0));
+			}
+		}
+		return Optional.empty();
 	}
 }

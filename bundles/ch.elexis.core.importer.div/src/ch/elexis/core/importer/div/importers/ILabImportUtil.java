@@ -130,4 +130,14 @@ public interface ILabImportUtil {
 	
 	public Optional<ILabItem> getLabItem(String shortname, String name, LabItemTyp document);
 	
+	/**
+	 * Get a {@link IPatient} using the code (patient number) attribute. If there are more than 1
+	 * patients with the same number, the first from the database will be used, and a warning is
+	 * logged.
+	 * 
+	 * @param code
+	 * @return
+	 */
+	public Optional<IPatient> getPatientByCode(String code);
+	
 }

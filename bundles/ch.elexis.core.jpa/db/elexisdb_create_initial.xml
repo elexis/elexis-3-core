@@ -775,20 +775,6 @@
             <column name="USERID" type="VARCHAR(25)"/>
         </createTable>
     </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-54">
-        <createTable tableName="LEISTUNGSBLOCK">
-            <column name="ID" type="VARCHAR(25)">
-                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_15"/>
-            </column>
-            <column name="LASTUPDATE" type="BIGINT"/>
-            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
-            <column name="MANDANTID" type="VARCHAR(25)"/>
-            <column name="NAME" type="VARCHAR(30)"/>
-            <column name="LEISTUNGEN" type="BLOB"/>
-            <column name="MACRO" type="VARCHAR(30)"/>
-            <column name="CODEELEMENTS" type="CLOB"/>
-        </createTable>
-    </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-55">
         <createTable tableName="LOGS">
             <column name="ID" type="VARCHAR(25)">
@@ -1136,21 +1122,6 @@
     <changeSet author="thomas (generated)" id="1527175239251-89">
         <createIndex indexName="BDG1" tableName="BEHDL_DG_JOINT">
             <column name="BEHANDLUNGSID"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-90">
-        <createIndex indexName="BLOCK1" tableName="LEISTUNGSBLOCK">
-            <column name="NAME"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-91">
-        <createIndex indexName="BLOCK2" tableName="LEISTUNGSBLOCK">
-            <column name="MANDANTID"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-92">
-        <createIndex indexName="BLOCK3" tableName="LEISTUNGSBLOCK">
-            <column name="MACRO"/>
         </createIndex>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-93">

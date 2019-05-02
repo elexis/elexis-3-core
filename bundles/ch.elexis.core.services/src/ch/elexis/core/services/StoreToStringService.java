@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -73,5 +75,20 @@ public class StoreToStringService implements IStoreToStringService {
 			}
 		}
 		return Optional.empty();
+	}
+	
+	@Override
+	public List<Identifiable> loadFromStringWithIdPart(String partialStoreToString){
+		List<Identifiable> ret = new ArrayList<>();
+		if (partialStoreToString != null) {
+			for (IStoreToStringContribution iStoreToStringContribution : contributions) {
+				List<Identifiable> loaded =
+					iStoreToStringContribution.loadFromStringWithIdPart(partialStoreToString);
+				if (!loaded.isEmpty()) {
+					ret.addAll(loaded);
+				}
+			}
+		}
+		return ret.parallelStream().filter(Objects::nonNull).collect(Collectors.toList());
 	}
 }

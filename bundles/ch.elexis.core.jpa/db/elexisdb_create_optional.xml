@@ -1245,4 +1245,57 @@
         </createIndex>
     </changeSet>
     
+    <changeSet author="thomas (generated)" id="1527175239251-54">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="LEISTUNGSBLOCK" />
+			</not>
+		</preConditions>
+        <createTable tableName="LEISTUNGSBLOCK">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_LEISTUNGSBLOCK_ID"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="MANDANTID" type="VARCHAR(25)"/>
+            <column name="NAME" type="VARCHAR(30)"/>
+            <column name="LEISTUNGEN" type="BLOB"/>
+            <column name="MACRO" type="VARCHAR(30)"/>
+            <column name="CODEELEMENTS" type="CLOB"/>
+        </createTable>
+        <insert tableName="LEISTUNGSBLOCK">
+       		<column name="ID" value="Version"/>
+       		<column name="NAME" value="1.0.0"/>
+    	</insert>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-90">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="BLOCK1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="BLOCK1" tableName="LEISTUNGSBLOCK">
+            <column name="NAME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-91">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="BLOCK2" />
+			</not>
+		</preConditions>
+        <createIndex indexName="BLOCK2" tableName="LEISTUNGSBLOCK">
+            <column name="MANDANTID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-92">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="BLOCK3" />
+			</not>
+		</preConditions>
+        <createIndex indexName="BLOCK3" tableName="LEISTUNGSBLOCK">
+            <column name="MACRO"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>
