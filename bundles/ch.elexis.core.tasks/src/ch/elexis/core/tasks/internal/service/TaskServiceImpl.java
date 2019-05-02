@@ -38,6 +38,7 @@ import ch.elexis.core.tasks.internal.model.impl.Task;
 import ch.elexis.core.tasks.internal.model.impl.TaskDescriptor;
 import ch.elexis.core.tasks.internal.service.fs.WatchServiceHolder;
 import ch.elexis.core.tasks.internal.service.quartz.QuartzExecutor;
+import ch.elexis.core.tasks.internal.service.sysevents.SysEventWatcher;
 import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.ITaskService;
@@ -51,13 +52,15 @@ public class TaskServiceImpl implements ITaskService {
 	
 	private IModelService taskModelService;
 	
-	private QuartzExecutor quartzExecutor;
-	
 	private ExecutorService parallelExecutorService;
 	private ExecutorService singletonExecutorService;
+	private QuartzExecutor quartzExecutor;
+	private WatchServiceHolder watchServiceHolder;
+	private SysEventWatcher sysEventWatcher;
+	
 	private List<ITask> runningTasks;
 	
-	private WatchServiceHolder watchServiceHolder;
+
 	//TODO EventService
 	//TODO OtherTaskService -> this
 	
@@ -102,6 +105,8 @@ public class TaskServiceImpl implements ITaskService {
 		} catch (SchedulerException e) {
 			logger.warn("Error starting quartz scheduler", e);
 		}
+		
+		sysEventWatcher = new SysEventWatcher();
 		
 		watchServiceHolder = new WatchServiceHolder(this);
 		if (watchServiceHolder.triggerIsAvailable()) {
@@ -160,6 +165,8 @@ public class TaskServiceImpl implements ITaskService {
 			// nothing to be done
 		} else if (TaskTriggerType.OTHER_TASK == taskDescriptor.getTriggerType()) {
 			// nothing to be done
+		} else if (TaskTriggerType.SYSTEM_EVENT == taskDescriptor.getTriggerType()) {
+			sysEventWatcher.incur(taskDescriptor);
 		} else {
 			throw new TaskException(TaskException.TRIGGER_NOT_AVAILABLE,
 				"Trigger type not yet implemented [" + taskDescriptor.getTriggerType() + "]");
@@ -177,6 +184,8 @@ public class TaskServiceImpl implements ITaskService {
 			watchServiceHolder.release(taskDescriptor);
 		} else if (TaskTriggerType.CRON == taskDescriptor.getTriggerType()) {
 			quartzExecutor.release(taskDescriptor);
+		} else if (TaskTriggerType.SYSTEM_EVENT == taskDescriptor.getTriggerType()) {
+			sysEventWatcher.release(taskDescriptor);
 		}
 	}
 	

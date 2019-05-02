@@ -15,7 +15,7 @@ import ch.elexis.core.model.tasks.IIdentifiedRunnableFactory;
 import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.tasks.internal.runnables.DeleteFileIdentifiedRunnable;
 import ch.elexis.core.tasks.internal.runnables.LogResultContextIdentifiedRunnable;
-import ch.elexis.core.tasks.internal.runnables.RunTaskForEveryFileInDirectoryRunnable;
+import ch.elexis.core.tasks.internal.runnables.TriggerTaskForEveryFileInDirectoryRunnable;
 
 @Component
 public class IdentifiedRunnableFactoryImpl implements IIdentifiedRunnableFactory {
@@ -32,7 +32,7 @@ public class IdentifiedRunnableFactoryImpl implements IIdentifiedRunnableFactory
 			case DELETEFILE:
 				return new DeleteFileIdentifiedRunnable();
 			case TRIGGER_TASK_FOR_EVERY_FILE:
-				return new RunTaskForEveryFileInDirectoryRunnable(virtualFilsystemService);
+				return new TriggerTaskForEveryFileInDirectoryRunnable(virtualFilsystemService);
 			default:
 				break;
 			}
