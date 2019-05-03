@@ -785,6 +785,7 @@ public class Patient extends Person {
 	 * @since 3.8
 	 */
 	public IPatient toIPatient() {
-		return CoreModelServiceHolder.get().load(getId(), IPatient.class).orElse(null);
+		return CoreModelServiceHolder.get().load(getId(), IPatient.class)
+				.orElseThrow(() -> new IllegalStateException("Could not convert patient [" + getId() + "]"));
 	}
 }
