@@ -35,7 +35,9 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
@@ -776,5 +778,13 @@ public class Patient extends Person {
 	public long getAgeAt(LocalDateTime dateTime, ChronoUnit chronoUnit){
 		LocalDateTime birthDateTime = new TimeTool(getGeburtsdatum()).toLocalDateTime();
 		return chronoUnit.between(birthDateTime, dateTime);
+	}
+	
+	/**
+	 * @return
+	 * @since 3.8
+	 */
+	public IPatient toIPatient() {
+		return CoreModelServiceHolder.get().load(getId(), IPatient.class).orElse(null);
 	}
 }
