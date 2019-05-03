@@ -17,7 +17,9 @@ import org.slf4j.LoggerFactory;
 import bsh.EvalError;
 import bsh.Interpreter;
 import ch.elexis.core.constants.TextContainerConstants;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.model.ILabMapping;
 import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.IPatient;
@@ -199,6 +201,14 @@ public class LabService implements ILabService {
 		
 		log.warn("Could not map attribute Patient@[" + value + "], returning empty string.");
 		return StringTool.leer;
+	}
+
+	@Override
+	public Optional<ILabMapping> getLabMappingByContactAndItem(IContact contact, ILabItem item) {
+		IQuery<ILabMapping> qbe = modelService.getQuery(ILabMapping.class);
+		qbe.and(ModelPackage.Literals.ILAB_MAPPING__ORIGIN, COMPARATOR.EQUALS, contact);
+		qbe.and(ModelPackage.Literals.ILAB_MAPPING__ITEM, COMPARATOR.EQUALS, item);
+		return qbe.executeSingleResult();
 	}
 	
 }

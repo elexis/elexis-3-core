@@ -15,6 +15,7 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.Desk;
@@ -22,6 +23,7 @@ import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.holder.ContextServiceHolder;
@@ -36,6 +38,9 @@ public class ConfigService implements IConfigService {
 	
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService modelService;
+	
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
+	private IContextService contextService;
 	
 	public static final String LIST_SEPARATOR = ",";
 	
@@ -239,6 +244,18 @@ public class ConfigService implements IConfigService {
 		return localConfig.set(key, value);
 	}
 	
+	public String getActiveMandator(String key, String defaultValue) {
+		if (contextService != null) {
+			Optional<IMandator> activeMandator = contextService.getActiveMandator();
+			if (activeMandator.isPresent()) {
+				return get(activeMandator.get(), key, defaultValue);
+			}
+		} else {
+			LoggerFactory.getLogger(getClass()).warn("IContextService not available, returning defaultValue");
+		}
+		return defaultValue;
+	}
+	
 	@Override
 	public boolean setLocal(String key, boolean value){
 		localConfig.set(key, value);
@@ -253,6 +270,12 @@ public class ConfigService implements IConfigService {
 	@Override
 	public boolean getLocal(String key, boolean defaultValue){
 		return localConfig.get(key, defaultValue);
+	}
+	
+	public boolean getActiveMandator(String key, boolean defaultValue) {
+		String defaultValueString = Boolean.toString(defaultValue);
+		String result = getActiveMandator(key, defaultValueString);
+		return (result.equals("1") || result.equalsIgnoreCase(Boolean.TRUE.toString()));
 	}
 	
 	@Override

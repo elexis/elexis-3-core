@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.Identifiable;
 
 public interface IConfigService {
@@ -132,6 +133,17 @@ public interface IConfigService {
 	public String getLocal(String key, String defaultValue);
 	
 	/**
+	 * Get a stored value for the current active {@link IMandator} configuration.
+	 * The current mandator is resolved via the {@link IContextService}
+	 * 
+	 * @param key
+	 * @param defaultValue to return if no active mandator found or entry does not
+	 *                     exist
+	 * @return
+	 */
+	public String getActiveMandator(String key, String defaultValue);
+	
+	/**
 	 * Convenience method wrapping {@link #get(String, String)}
 	 * 
 	 * @param key
@@ -152,6 +164,17 @@ public interface IConfigService {
 	 * @return
 	 */
 	public boolean getLocal(String key, boolean defaultValue);
+	
+	/**
+	 * Convenience method wrapping {@link #getActiveMandator(String, String)}
+	 * 
+	 * @param key
+	 *            identifying the configuration entry
+	 * @param defaultValue
+	 *            to return if configuration entry does not exist
+	 * @return
+	 */
+	public boolean getActiveMandator(String key, boolean defaultValue);
 	
 	/**
 	 * Convenience method wrapping {@link #get(String, String)}

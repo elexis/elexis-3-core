@@ -284,7 +284,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		if (!result.isEmpty()) {
 			if (result.size() > 1) {
 				LoggerFactory.getLogger(getClass())
-					.warn("Multiple results in list where single result expected", new Throwable());
+					.warn("Multiple results in list where single result expected, using first element", new Throwable());
 			}
 			return Optional.of(result.get(0));
 		}

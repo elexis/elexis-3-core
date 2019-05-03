@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.model.tasks.TaskException;
+import ch.elexis.core.model.tasks.IIdentifiedRunnable.RunContextParameter;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.ITaskService;
 import ch.elexis.core.tasks.model.TaskTriggerType;
@@ -86,8 +87,9 @@ public class SysEventWatcher implements EventHandler {
 			for (ITaskDescriptor taskDescriptor : set) {
 				try {
 					Map<String, String> runContext = new HashMap<>();
-					runContext.put(ElexisEventTopics.PROPKEY_ID,
+					runContext.put(RunContextParameter.IDENTIFIABLE_ID,
 						(String) event.getProperty(ElexisEventTopics.PROPKEY_ID));
+					
 					taskService.trigger(taskDescriptor, null, TaskTriggerType.SYSTEM_EVENT,
 						runContext);
 				} catch (TaskException e) {
