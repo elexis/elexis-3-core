@@ -781,8 +781,11 @@ public class Patient extends Person {
 	}
 	
 	/**
+	 * Convenience conversion method, loads object via model service
+	 * 
 	 * @return
 	 * @since 3.8
+	 * @throws IllegalStateException if entity could not be loaded
 	 */
 	public IPatient toIPatient() {
 		return CoreModelServiceHolder.get().load(getId(), IPatient.class)

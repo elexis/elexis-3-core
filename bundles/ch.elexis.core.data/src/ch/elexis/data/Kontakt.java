@@ -23,7 +23,9 @@ import org.apache.commons.lang.StringUtils;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.constants.XidConstants;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.model.IContact;
 import ch.elexis.util.MFUList;
 import ch.rgw.tools.StringTool;
 
@@ -698,5 +700,17 @@ public class Kontakt extends PersistentObject {
 	 */
 	public boolean istAnwender(){
 		return checkNull(get(FLD_IS_USER)).equals(StringConstants.ONE);
+	}
+	
+	/**
+	 * Convenience conversion method, loads object via model service
+	 * 
+	 * @return
+	 * @since 3.8
+	 * @throws IllegalStateException if entity could not be loaded
+	 */
+	public IContact toIContact() {
+		return CoreModelServiceHolder.get().load(getId(), IContact.class)
+				.orElseThrow(() -> new IllegalStateException("Could not convert contact [" + getId() + "]"));
 	}
 }
