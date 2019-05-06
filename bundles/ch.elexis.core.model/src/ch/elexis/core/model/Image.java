@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.entities.DbImage;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
-import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 
 public class Image extends AbstractIdDeleteModelAdapter<DbImage> implements IdentifiableWithXid, IImage {
 

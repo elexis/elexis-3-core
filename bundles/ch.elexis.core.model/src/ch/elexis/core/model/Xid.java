@@ -1,11 +1,13 @@
 package ch.elexis.core.model;
 
+import java.util.Optional;
+
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
-import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
-import ch.elexis.core.model.util.internal.ModelUtil;
+import ch.elexis.core.model.service.holder.StoreToStringServiceHolder;
+import ch.elexis.core.services.IStoreToStringContribution;
 
 public class Xid extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Xid>
-		implements IdentifiableWithXid, IXid {
+		implements Identifiable, IXid {
 	
 	public Xid(ch.elexis.core.jpa.entities.Xid entity){
 		super(entity);
@@ -31,28 +33,43 @@ public class Xid extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entitie
 		getEntity().setDomainId(value);
 	}
 	
-	@Override
-	public String getObjectId(){
-		return getEntity().getObject();
-	}
-	
-	@Override
-	public void setObjectId(String value){
-		getEntity().setObject(value);
-	}
-	
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getObject(Class<T> clazz){
-		return ModelUtil.load(getObjectId(), clazz);
+		// load using storeToString
+		String storeToString = getEntity().getType() + IStoreToStringContribution.DOUBLECOLON
+			+ getEntity().getObject();
+		Optional<Identifiable> loadedObject =
+			StoreToStringServiceHolder.get().loadFromString(storeToString);
+		if (loadedObject.isPresent() && clazz.isAssignableFrom(loadedObject.get().getClass())) {
+			return (T) loadedObject.get();
+		}
+		return null;
 	}
 	
 	@Override
 	public void setObject(Object object){
 		if (object instanceof Identifiable) {
-			setObjectId(((Identifiable) object).getId());
+			Identifiable identifiable = ((Identifiable) object);
+			Optional<String> type = getStoreToStringType(object);
+			if (type.isPresent()) {
+				getEntity().setObject(identifiable.getId());
+				getEntity().setType(type.get());
+			}
 		} else {
 			throw new IllegalStateException("Object must be an Identifiable");
 		}
+	}
+	
+	private Optional<String> getStoreToStringType(Object object){
+		String storeToString = StoreToStringServiceHolder.getStoreToString(object);
+		if (storeToString != null) {
+			String[] parts = storeToString.split(IStoreToStringContribution.DOUBLECOLON);
+			if (parts.length == 2) {
+				return Optional.of(parts[0]);
+			}
+		}
+		return Optional.empty();
 	}
 	
 	@Override
@@ -63,5 +80,15 @@ public class Xid extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entitie
 	@Override
 	public void setQuality(XidQuality value){
 		getEntity().setQuality(value);
+	}
+	
+	@Override
+	public boolean addXid(String domain, String id, boolean updateIfExists){
+		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public IXid getXid(String domain){
+		throw new UnsupportedOperationException();
 	}
 }

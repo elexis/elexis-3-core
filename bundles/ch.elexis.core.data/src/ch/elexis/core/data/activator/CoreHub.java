@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.Desk;
 import ch.elexis.admin.AbstractAccessControl;
 import ch.elexis.admin.RoleBasedAccessControl;
+import ch.elexis.core.constants.Elexis;
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
@@ -74,8 +75,8 @@ public class CoreHub implements BundleActivator {
 	/*
 	 * This version is needed to compare the DB
 	 */
-	public static String Version = "3.8.0.qualifier"; //$NON-NLS-1$
-	public static final String APPLICATION_NAME = "Elexis Core"; //$NON-NLS-1$
+	public static String Version = Elexis.Version;
+	public static final String APPLICATION_NAME = Elexis.APPLICATION_NAME; //$NON-NLS-1$
 	static final String neededJRE = "1.8.0"; //$NON-NLS-1$
 	public static final String DBVersion = "3.7.0"; //$NON-NLS-1$
 	

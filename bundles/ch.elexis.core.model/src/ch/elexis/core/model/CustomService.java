@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.entities.Eigenleistung;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
-import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 import ch.elexis.core.model.billable.AbstractOptifier;
 import ch.elexis.core.model.billable.DefaultVerifier;
 import ch.elexis.core.model.localservice.Constants;

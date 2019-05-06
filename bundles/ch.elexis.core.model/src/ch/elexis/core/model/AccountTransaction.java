@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
-import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.rgw.tools.Money;
 

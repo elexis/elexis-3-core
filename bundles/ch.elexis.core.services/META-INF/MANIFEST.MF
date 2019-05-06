@@ -57,5 +57,8 @@ Service-Component: OSGI-INF/ch.elexis.core.services.holder.CoreModelServiceHolde
  OSGI-INF/ch.elexis.core.services.holder.BillingServiceHolder.xml,
  OSGI-INF/ch.elexis.core.services.internal.DefaultArticleStoreToStringContribution.xml,
  OSGI-INF/ch.elexis.core.services.VirtualFilesystemService.xml,
- OSGI-INF/ch.elexis.core.services.holder.VirtualFilesystemServiceHolder.xml
+ OSGI-INF/ch.elexis.core.services.holder.VirtualFilesystemServiceHolder.xml,
+ OSGI-INF/ch.elexis.core.services.holder.LabServiceHolder.xml,
+ OSGI-INF/ch.elexis.core.services.XidService.xml,
+ OSGI-INF/ch.elexis.core.services.holder.XidServiceHolder.xml
 Export-Package: ch.elexis.core.services.holder

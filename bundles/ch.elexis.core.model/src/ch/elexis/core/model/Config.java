@@ -1,7 +1,6 @@
 package ch.elexis.core.model;
 
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
-import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 
 public class Config extends AbstractIdModelAdapter<ch.elexis.core.jpa.entities.Config>
 		implements IdentifiableWithXid, IConfig {

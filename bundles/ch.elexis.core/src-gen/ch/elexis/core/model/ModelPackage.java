@@ -159,22 +159,13 @@ public interface ModelPackage extends EPackage {
 	int IXID__QUALITY = DELETEABLE_FEATURE_COUNT + 2;
 
 	/**
-	 * The feature id for the '<em><b>Object Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IXID__OBJECT_ID = DELETEABLE_FEATURE_COUNT + 3;
-
-	/**
 	 * The number of structural features of the '<em>IXid</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IXID_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 4;
+	int IXID_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IContact <em>IContact</em>}' class.
@@ -6343,17 +6334,6 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIXid_Quality();
 
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IXid#getObjectId <em>Object Id</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Object Id</em>'.
-	 * @see ch.elexis.core.model.IXid#getObjectId()
-	 * @see #getIXid()
-	 * @generated
-	 */
-	EAttribute getIXid_ObjectId();
-
-	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IContact <em>IContact</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -10424,14 +10404,6 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IXID__QUALITY = eINSTANCE.getIXid_Quality();
-
-		/**
-		 * The meta object literal for the '<em><b>Object Id</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute IXID__OBJECT_ID = eINSTANCE.getIXid_ObjectId();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IContact <em>IContact</em>}' class.

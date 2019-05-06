@@ -5,7 +5,6 @@ import java.util.Optional;
 import ch.elexis.core.jpa.entities.Bestellung;
 import ch.elexis.core.jpa.entities.BestellungEntry;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
-import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.services.IStoreToStringContribution;
 

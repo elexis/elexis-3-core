@@ -118,6 +118,11 @@ public class ConfigService implements IConfigService {
 	}
 	
 	@Override
+	public boolean set(String key, int value){
+		return set(key, Integer.toString(value));
+	}
+	
+	@Override
 	public boolean setFromList(String key, List<String> values){
 		String flattenedValue =
 			values.stream().map(o -> o.toString()).reduce((u, t) -> u + LIST_SEPARATOR + t).get();
@@ -244,6 +249,7 @@ public class ConfigService implements IConfigService {
 		return localConfig.set(key, value);
 	}
 	
+	@Override
 	public String getActiveMandator(String key, String defaultValue) {
 		if (contextService != null) {
 			Optional<IMandator> activeMandator = contextService.getActiveMandator();

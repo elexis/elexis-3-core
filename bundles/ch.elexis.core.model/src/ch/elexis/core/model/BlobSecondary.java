@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jpa.entities.Heap2;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
-import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 import ch.elexis.core.jpa.model.util.JpaModelUtil;
 
 public class BlobSecondary extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Heap2>

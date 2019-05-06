@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 import ch.elexis.core.jpa.entities.VKPreis;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
-import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 
 public class BillingSystemFactor extends AbstractIdModelAdapter<VKPreis>
 		implements IdentifiableWithXid, IBillingSystemFactor {

@@ -17,5 +17,6 @@ Export-Package: ch.elexis.core.test,
  ch.elexis.core.test.initializer,
  ch.elexis.core.test.matchers,
  ch.elexis.core.test.util
-Service-Component: OSGI-INF/ch.elexis.core.test.service.TestLocalLockService.xml
+Service-Component: OSGI-INF/ch.elexis.core.test.service.TestLocalLockService.xml,
+ OSGI-INF/ch.elexis.core.test.service.TestContextService.xml
 Bundle-ActivationPolicy: lazy

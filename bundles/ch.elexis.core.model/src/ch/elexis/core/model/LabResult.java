@@ -11,7 +11,6 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
-import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 import ch.elexis.core.model.util.internal.LabPathologicEvaluator;
 import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.services.IQuery;

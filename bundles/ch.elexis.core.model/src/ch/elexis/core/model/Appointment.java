@@ -7,7 +7,6 @@ import java.time.temporal.ChronoUnit;
 
 import ch.elexis.core.jpa.entities.Termin;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
-import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 
 public class Appointment extends AbstractIdDeleteModelAdapter<Termin>

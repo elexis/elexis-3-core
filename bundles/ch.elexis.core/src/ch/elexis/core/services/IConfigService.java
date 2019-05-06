@@ -55,6 +55,17 @@ public interface IConfigService {
 	public boolean setLocal(String key, boolean value);
 	
 	/**
+	 * Set a global configuration entry. Overwrites existing values. Performs save operation.
+	 * 
+	 * @param key
+	 *            identifying the configuration entry
+	 * @param value
+	 *            to set
+	 * @return <code>true</code> if the value was successfully set
+	 */
+	public boolean set(String key, int value);
+	
+	/**
 	 * Set a contact specific configuration entry. Overwrites existing value. Performs save
 	 * operation.
 	 * 

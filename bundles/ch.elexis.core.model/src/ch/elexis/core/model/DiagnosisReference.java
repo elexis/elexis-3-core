@@ -6,7 +6,6 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
-import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 
 public class DiagnosisReference
 		extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Diagnosis>

@@ -28,7 +28,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IXid/domain"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IXid/domainId"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IXid/quality"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IXid/objectId"/>
       <genOperations ecoreOperation="model.ecore#//IXid/getObject">
         <genParameters ecoreParameter="model.ecore#//IXid/getObject/clazz"/>
         <genTypeParameters ecoreTypeParameter="model.ecore#//IXid/getObject/T"/>
