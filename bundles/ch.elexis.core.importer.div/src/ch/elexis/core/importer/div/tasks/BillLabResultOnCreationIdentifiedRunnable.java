@@ -306,7 +306,7 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 		// all properties are available
 		Optional<ILabMapping> mapping = LabServiceHolder.get().getLabMappingByContactAndItem(labResult.getOrigin(),
 				labResult.getItem());
-		if (mapping != null && mapping.get().isCharge()) {
+		if (mapping.isPresent() && mapping.get().isCharge()) {
 
 			String ealCode = labResult.getItem().getBillingCode();
 			logger.info(String.format("Adding EAL tarif [%s] from [%s]", ealCode, labResult.getOrigin().getLabel()));

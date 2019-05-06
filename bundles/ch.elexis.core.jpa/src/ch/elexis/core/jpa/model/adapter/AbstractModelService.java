@@ -215,22 +215,6 @@ public abstract class AbstractModelService implements IModelService {
 	 */
 	protected abstract ElexisEvent getCreateEvent(Identifiable identifiable);
 	
-	public void postElexisEvent(ElexisEvent elexisEvent){
-		if (elexisEvent == null || elexisEvent.getTopic() == null) {
-			return;
-		}
-		String topic = elexisEvent.getTopic();
-		if (!topic.startsWith(ElexisEventTopics.BASE)) {
-			topic = ElexisEventTopics.BASE + topic;
-		}
-		Event event = new Event(topic, elexisEvent.getProperties());
-		if (getEventAdmin() != null) {
-			getEventAdmin().sendEvent(event);
-		} else {
-			throw new IllegalStateException("No EventAdmin available");
-		}
-	}
-	
 	protected Optional<EntityWithId> getDbObject(Object adapter){
 		if (adapter instanceof AbstractIdModelAdapter<?>) {
 			return Optional.ofNullable(((AbstractIdModelAdapter<?>) adapter).getEntity());
@@ -266,15 +250,32 @@ public abstract class AbstractModelService implements IModelService {
 	@Override
 	public void postEvent(String topic, Object object){
 		if (getEventAdmin() != null) {
-			Map<String, Object> properites = new HashMap<>();
-			properites.put("org.eclipse.e4.data", object);
-			Event event = new Event(topic, properites);
+			Map<String, Object> properties = new HashMap<>();
+			properties.put(ElexisEventTopics.ECLIPSE_E4_DATA, object);
+			Event event = new Event(topic, properties);
 			getEventAdmin().postEvent(event);
 		} else {
 			throw new IllegalStateException("No EventAdmin available");
 		}
 	}
 	
+	// TODO @deprecated?!
+	public void postElexisEvent(ElexisEvent elexisEvent){
+		if (elexisEvent == null || elexisEvent.getTopic() == null) {
+			return;
+		}
+		String topic = elexisEvent.getTopic();
+		if (!topic.startsWith(ElexisEventTopics.BASE)) {
+			topic = ElexisEventTopics.BASE + topic;
+		}
+		Event event = new Event(topic, elexisEvent.getProperties());
+		if (getEventAdmin() != null) {
+			getEventAdmin().sendEvent(event);
+		} else {
+			throw new IllegalStateException("No EventAdmin available");
+		}
+	}
+
 	@Override
 	public <T> T create(Class<T> clazz){
 		return adapterFactory.createAdapter(clazz);

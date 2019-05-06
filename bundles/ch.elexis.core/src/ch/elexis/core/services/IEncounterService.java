@@ -18,7 +18,7 @@ public interface IEncounterService {
 	 * Test if the {@link IEncounter} is editable in the current context.
 	 * 
 	 * @param encounter
-	 * @return
+	 * @return if editable, <code>false</code> if encounter is <code>null</code>
 	 */
 	public boolean isEditable(IEncounter encounter);
 	

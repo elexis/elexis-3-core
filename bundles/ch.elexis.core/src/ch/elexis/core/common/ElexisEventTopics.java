@@ -2,6 +2,9 @@ package ch.elexis.core.common;
 
 public class ElexisEventTopics {
 
+	
+	public static final String ECLIPSE_E4_DATA = "org.eclipse.e4.data";
+	
 	/**
 	 * Events generated in the overall elexis context
 	 */

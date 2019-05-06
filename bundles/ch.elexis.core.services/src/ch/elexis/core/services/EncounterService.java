@@ -45,18 +45,19 @@ public class EncounterService implements IEncounterService {
 	@Override
 	public boolean isEditable(IEncounter encounter){
 		boolean editable = false;
-		boolean hasRight =
-			accessControlService.request(AccessControlDefaults.ADMIN_KONS_EDIT_IF_BILLED);
-		if (hasRight) {
-			// user has right to change encounter. in this case, the user
-			// may change the text even if the encounter has already been
-			// billed, so don't check if it is billed
-			editable = isEditableInternal(encounter);
-		} else {
-			// normal case, check all
-			editable = billingService.isEditable(encounter).isOK();
+		if(encounter != null) {
+			boolean hasRight =
+					accessControlService.request(AccessControlDefaults.ADMIN_KONS_EDIT_IF_BILLED);
+				if (hasRight) {
+					// user has right to change encounter. in this case, the user
+					// may change the text even if the encounter has already been
+					// billed, so don't check if it is billed
+					editable = isEditableInternal(encounter);
+				} else {
+					// normal case, check all
+					editable = billingService.isEditable(encounter).isOK();
+				}
 		}
-		
 		return editable;
 	}
 	

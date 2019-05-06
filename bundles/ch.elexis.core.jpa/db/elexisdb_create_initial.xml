@@ -390,24 +390,6 @@
             <column name="EXTINFO" type="BLOB"/>
         </createTable>
     </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-28">
-        <createTable tableName="CH_MEDELEXIS_LABORTARIF2009">
-            <column name="ID" type="VARCHAR(25)">
-                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_40"/>
-            </column>
-            <column name="LASTUPDATE" type="BIGINT"/>
-            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
-            <column name="CHAPTER" type="VARCHAR(255)"/>
-            <column name="CODE" type="VARCHAR(12)"/>
-            <column name="TP" type="VARCHAR(10)"/>
-            <column name="NAME" type="VARCHAR(255)"/>
-            <column name="LIMITATIO" type="CLOB"/>
-            <column name="FACHBEREICH" type="VARCHAR(10)"/>
-            <column name="PRAXISTYP" type="VARCHAR(2)"/>
-            <column name="GUELTIGVON" type="CHAR(8)"/>
-            <column name="GUELTIGBIS" type="CHAR(8)"/>
-        </createTable>
-    </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-29">
         <createTable tableName="CONFIG">
             <column name="LASTUPDATE" type="BIGINT"/>

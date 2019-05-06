@@ -2,8 +2,12 @@ package ch.elexis.core.test.service;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.eclipse.e4.core.contexts.IEclipseContext;
 
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
@@ -16,6 +20,11 @@ import ch.elexis.core.types.Gender;
 
 public class TestContext implements IContext {
 	
+	private ConcurrentHashMap<String, Object> context;
+	private IEclipseContext eclipseContext;
+	
+	private TestContext parent;
+	
 	private IMandator mandator;
 	
 	private IUser testUser;
@@ -23,8 +32,16 @@ public class TestContext implements IContext {
 	private IUser activeUser;
 	private IContact activeUserContact;
 	private IMandator activeMandator;
+	private IEncounter encounter;
+	
+	public TestContext(TestContext parent, String name){
+		context = new ConcurrentHashMap<>();
+		this.parent = parent;
+	}
+	
 	
 	public TestContext(IModelService coreModelService){
+		this(null, "root");
 		IPerson _mandator = new IContactBuilder.PersonBuilder(coreModelService, "Elisa",
 			"Mandatore", LocalDate.of(2000, 12, 1), Gender.FEMALE).mandator().buildAndSave();
 		mandator = coreModelService.load(_mandator.getId(), IMandator.class).get();
@@ -77,16 +94,44 @@ public class TestContext implements IContext {
 		activeMandator = mandator;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> Optional<T> getTyped(Class<T> clazz){
-		// TODO Auto-generated method stub
-		return null;
+		Optional<T> ret = Optional.ofNullable((T) context.get(clazz.getName()));
+		if (!ret.isPresent() && parent != null) {
+			ret = parent.getTyped(clazz);
+		}
+		return ret;
 	}
 	
 	@Override
 	public void setTyped(Object object){
-		// TODO Auto-generated method stub
+		if (object != null) {
+			Optional<Class<?>> modelInterface = getModelInterface(object);
+			if (modelInterface.isPresent()) {
+				context.put(modelInterface.get().getName(), object);
+			} else {
+				context.put(object.getClass().getName(), object);
+			}
+			if (eclipseContext != null) {
+				if (modelInterface.isPresent()) {
+					eclipseContext.set(modelInterface.get().getName(), object);
+				} else {
+					eclipseContext.set(object.getClass().getName(), object);
+				}
+			}
+		}
 		
+	}
+	
+	private Optional<Class<?>> getModelInterface(Object object){
+		Class<?>[] interfaces = object.getClass().getInterfaces();
+		for (Class<?> interfaze : interfaces) {
+			if (interfaze.getName().startsWith("ch.elexis.core.model")) {
+				return Optional.of(interfaze);
+			}
+		}
+		return Optional.empty();
 	}
 	
 	@Override
