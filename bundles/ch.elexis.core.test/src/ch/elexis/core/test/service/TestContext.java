@@ -4,8 +4,6 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.eclipse.e4.core.contexts.IEclipseContext;
-
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
@@ -21,7 +19,6 @@ import ch.elexis.core.types.Gender;
 public class TestContext implements IContext {
 	
 	private ConcurrentHashMap<String, Object> context;
-	private IEclipseContext eclipseContext;
 	
 	private TestContext parent;
 	
@@ -112,13 +109,6 @@ public class TestContext implements IContext {
 				context.put(modelInterface.get().getName(), object);
 			} else {
 				context.put(object.getClass().getName(), object);
-			}
-			if (eclipseContext != null) {
-				if (modelInterface.isPresent()) {
-					eclipseContext.set(modelInterface.get().getName(), object);
-				} else {
-					eclipseContext.set(object.getClass().getName(), object);
-				}
 			}
 		}
 		
