@@ -332,6 +332,11 @@
             </dependency>
           </dependencies>
           <bundleStartLevel>
+          	<bundle>
+              <id>ch.elexis.core.jpa.datasource</id>
+              <level>3</level>
+              <autoStart>true</autoStart>
+            </bundle>
             <bundle>
               <id>ch.elexis.core.jpa.entities</id>
               <level>3</level>
