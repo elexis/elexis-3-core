@@ -7,13 +7,15 @@ import ch.elexis.core.eigendiagnosen.model.service.ModelUtil;
 import ch.elexis.core.jpa.entities.Eigendiagnose;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
-import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 import ch.elexis.core.model.IDiagnosisTree;
+import ch.elexis.core.model.IXid;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.WithExtInfo;
+import ch.elexis.core.services.holder.XidServiceHolder;
 
 public class CustomDiagnosis extends
 		AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Eigendiagnose>
-		implements IDiagnosisTree, WithExtInfo, IdentifiableWithXid {
+		implements IDiagnosisTree, WithExtInfo, Identifiable {
 	
 	private ExtInfoHandler extInfoHandler;
 	
@@ -98,5 +100,15 @@ public class CustomDiagnosis extends
 	@Override
 	public List<IDiagnosisTree> getChildren(){
 		return ModelUtil.loadDiagnosisWithParent(getCode());
+	}
+
+	@Override
+	public boolean addXid(String domain, String id, boolean updateIfExists){
+		return XidServiceHolder.get().addXid(this, domain, id, updateIfExists);
+	}
+
+	@Override
+	public IXid getXid(String domain){
+		return XidServiceHolder.get().getXid(this, domain);
 	}
 }
