@@ -195,7 +195,7 @@ public class XidService implements IXidService {
 	@Override
 	public IXid getXid(Identifiable identifiable, String domain){
 		String typeString = null;
-		String storeToString = StoreToStringServiceHolder.getStoreToString(this);
+		String storeToString = StoreToStringServiceHolder.getStoreToString(identifiable);
 		if (storeToString != null) {
 			String[] parts = storeToString.split(IStoreToStringContribution.DOUBLECOLON);
 			if (parts.length == 2) {
@@ -207,7 +207,8 @@ public class XidService implements IXidService {
 				"domain", "objectid", "type");
 			List<IXid> xids =
 				query.executeWithParameters(
-					query.getParameterMap(domain, identifiable.getId(), typeString));
+					query.getParameterMap("domain", domain, "objectid", identifiable.getId(),
+						"type", typeString));
 			if (xids.size() > 0) {
 				if (xids.size() > 1) {
 					LoggerFactory.getLogger(getClass()).error("XID [" + domain + "] ["
