@@ -24,7 +24,7 @@ public class Message extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	@Override
 	public IMessageParty getSender(){
 		Kontakt origin = getEntity().getOrigin();
-		return findFirstUserForContact(origin).map(MessageParty::new).orElse(null);
+		return findFirstUserForContact(origin).map(e -> new MessageParty(e)).orElse(null);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -52,7 +52,7 @@ public class Message extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 		// TODO support for station
 		Kontakt destination = getEntity().getDestination();
 		Optional<MessageParty> messageParty =
-			findFirstUserForContact(destination).map(MessageParty::new);
+			findFirstUserForContact(destination).map(e -> new MessageParty(e));
 		return (messageParty.isPresent()) ? Collections.singletonList(messageParty.get())
 				: new ArrayList<>();
 	}
