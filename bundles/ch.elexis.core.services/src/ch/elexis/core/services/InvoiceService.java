@@ -256,4 +256,17 @@ public class InvoiceService implements IInvoiceService {
 		return null;
 	}
 	
+	@Override
+	public Optional<IInvoice> getInvoiceWithNumber(String number){
+		INamedQuery<IInvoice> query =
+			CoreModelServiceHolder.get().getNamedQuery(IInvoice.class, "number");
+		List<IInvoice> found = query.executeWithParameters(query.getParameterMap("number", number));
+		if (found.size() > 0) {
+			if(found.size() > 1) {
+				logger.warn("Found " + found.size() + " invoices with number " + number + " using first");
+			}
+			return Optional.of(found.get(0));
+		}
+		return Optional.empty();
+	}
 }

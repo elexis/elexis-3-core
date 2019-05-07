@@ -19,6 +19,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.Cache;
+
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.InvoiceStateConverter;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
@@ -31,6 +33,7 @@ import ch.elexis.core.model.InvoiceState;
 @EntityListeners({
 	InvoiceEntityListener.class, EntityWithIdListener.class
 })
+@Cache(expiry = 15000)
 @NamedQuery(name = "Invoice.number", query = "SELECT i FROM Invoice i WHERE i.deleted = false AND i.number = :number")
 public class Invoice extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {

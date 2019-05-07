@@ -37,9 +37,9 @@ import ch.elexis.core.model.XidQuality;
 @Table(name = "xid")
 @EntityListeners(EntityWithIdListener.class)
 @Cache(expiry = 15000)
-@NamedQuery(name = "Xid.domain.domainid", query = "SELECT xi FROM Xid xi WHERE xi.domain = :domain AND xi.domainId = :domainid")
-@NamedQuery(name = "Xid.domain.objectid", query = "SELECT xi FROM Xid xi WHERE xi.domain = :domain AND xi.object = :objectid")
-@NamedQuery(name = "Xid.domain.objectid.type", query = "SELECT xi FROM Xid xi WHERE xi.domain = :domain AND xi.object = :objectid AND xi.type = :type")
+@NamedQuery(name = "Xid.domain.domainid", query = "SELECT xi FROM Xid xi WHERE xi.deleted = false AND xi.domain = :domain AND xi.domainId = :domainid")
+@NamedQuery(name = "Xid.domain.objectid", query = "SELECT xi FROM Xid xi WHERE xi.deleted = false AND xi.domain = :domain AND xi.object = :objectid")
+@NamedQuery(name = "Xid.domain.objectid.type", query = "SELECT xi FROM Xid xi WHERE xi.deleted = false AND xi.domain = :domain AND xi.object = :objectid AND xi.type = :type")
 public class Xid extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener

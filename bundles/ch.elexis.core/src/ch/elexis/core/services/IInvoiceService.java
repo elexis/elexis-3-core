@@ -1,6 +1,7 @@
 package ch.elexis.core.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
@@ -25,4 +26,12 @@ public interface IInvoiceService {
 	 * @return
 	 */
 	public List<IEncounter> cancel(IInvoice invoice, boolean reopen);
+	
+	/**
+	 * Get the {@link IInvoice} with matching number.
+	 * 
+	 * @param number
+	 * @return
+	 */
+	public Optional<IInvoice> getInvoiceWithNumber(String number);
 }
