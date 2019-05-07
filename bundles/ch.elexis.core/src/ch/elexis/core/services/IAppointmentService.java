@@ -1,6 +1,10 @@
 package ch.elexis.core.services;
 
+import java.time.LocalDate;
+
 import ch.elexis.core.model.IAppointment;
+import ch.elexis.core.types.AppointmentState;
+import ch.elexis.core.types.AppointmentType;
 
 public interface IAppointmentService {
 	
@@ -22,4 +26,36 @@ public interface IAppointmentService {
 	 * @return
 	 */
 	public boolean delete(IAppointment appointment, boolean whole);
+	
+	public void updateBoundaries(String schedule, LocalDate date);
+	
+	/**
+	 * Get the configured type string for the specified {@link AppointmentType}.
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public String getType(AppointmentType type);
+	
+	/**
+	 * Get the configured state string for the specified {@link AppointmentState}.
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public String getState(AppointmentState state);
+	
+	/**
+	 * Add the type string to the list of configured types.
+	 * 
+	 * @param periodType
+	 */
+	public void addType(String type);
+	
+	/**
+	 * Add the state string to the list of configured states.
+	 * 
+	 * @param periodType
+	 */
+	public void addState(String state);
 }

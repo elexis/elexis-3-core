@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.After;
@@ -14,10 +15,13 @@ import org.junit.Test;
 
 import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.services.INamedQuery;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.test.AbstractTest;
 import ch.elexis.core.types.Gender;
 import ch.rgw.tools.StringTool;
+import ch.rgw.tools.TimeTool;
 
 public class PatientTest extends AbstractTest {
 	
@@ -64,6 +68,43 @@ public class PatientTest extends AbstractTest {
 			namedQuery.getParameterMap("code", StringTool.normalizeCase("123")));
 		assertTrue(loaded.isPresent());
 		assertEquals(patient1, loaded.get());
+		
+		CoreModelServiceHolder.get().remove(patient1);
+	}
+	
+	@Test
+	public void queryByName(){
+		IPatient patient1 = new IContactBuilder.PatientBuilder(coreModelService, "testfirst",
+			"testlast", LocalDate.of(2018, 10, 24), Gender.FEMALE).build();
+		patient1.setPatientNr("123");
+		CoreModelServiceHolder.get().save(patient1);
+		
+		IQuery<IPatient> query = CoreModelServiceHolder.get().getQuery(IPatient.class);
+		query.and(ModelPackage.Literals.IPERSON__FIRST_NAME, COMPARATOR.LIKE,
+			"testfirst", true);
+		List<IPatient> loaded = query.execute();
+		assertFalse(loaded.isEmpty());
+		
+		query = CoreModelServiceHolder.get().getQuery(IPatient.class);
+		query.and(ModelPackage.Literals.IPERSON__FIRST_NAME, COMPARATOR.LIKE, "testlast", true);
+		loaded = query.execute();
+		assertTrue(loaded.isEmpty());
+		
+		CoreModelServiceHolder.get().remove(patient1);
+	}
+	
+	@Test
+	public void queryByDateOfBirth(){
+		IPatient patient1 = new IContactBuilder.PatientBuilder(coreModelService, "testfirst",
+			"testlast", LocalDate.of(2018, 10, 24), Gender.FEMALE).build();
+		patient1.setPatientNr("123");
+		CoreModelServiceHolder.get().save(patient1);
+		
+		IQuery<IPatient> query = CoreModelServiceHolder.get().getQuery(IPatient.class);
+		query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS,
+			new TimeTool("24.10.2018").toLocalDate());
+		List<IPatient> loaded = query.execute();
+		assertFalse(loaded.isEmpty());
 		
 		CoreModelServiceHolder.get().remove(patient1);
 	}

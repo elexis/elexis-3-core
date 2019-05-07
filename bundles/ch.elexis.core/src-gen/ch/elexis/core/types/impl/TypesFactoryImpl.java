@@ -31,6 +31,8 @@ import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 import ch.elexis.core.types.AddressType;
+import ch.elexis.core.types.AppointmentState;
+import ch.elexis.core.types.AppointmentType;
 import ch.elexis.core.types.ArticleSubTyp;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.types.ContactGender;
@@ -115,6 +117,10 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createAddressTypeFromString(eDataType, initialValue);
 			case TypesPackage.DOCUMENT_STATUS:
 				return createDocumentStatusFromString(eDataType, initialValue);
+			case TypesPackage.APPOINTMENT_TYPE:
+				return createAppointmentTypeFromString(eDataType, initialValue);
+			case TypesPackage.APPOINTMENT_STATE:
+				return createAppointmentStateFromString(eDataType, initialValue);
 			case TypesPackage.MONEY:
 				return createMoneyFromString(eDataType, initialValue);
 			case TypesPackage.GENDER:
@@ -184,6 +190,10 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertAddressTypeToString(eDataType, instanceValue);
 			case TypesPackage.DOCUMENT_STATUS:
 				return convertDocumentStatusToString(eDataType, instanceValue);
+			case TypesPackage.APPOINTMENT_TYPE:
+				return convertAppointmentTypeToString(eDataType, instanceValue);
+			case TypesPackage.APPOINTMENT_STATE:
+				return convertAppointmentStateToString(eDataType, instanceValue);
 			case TypesPackage.MONEY:
 				return convertMoneyToString(eDataType, instanceValue);
 			case TypesPackage.GENDER:
@@ -314,6 +324,46 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	public String convertDocumentStatusToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public AppointmentType createAppointmentTypeFromString(EDataType eDataType, String initialValue) {
+		AppointmentType result = AppointmentType.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertAppointmentTypeToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public AppointmentState createAppointmentStateFromString(EDataType eDataType, String initialValue) {
+		AppointmentState result = AppointmentState.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertAppointmentStateToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

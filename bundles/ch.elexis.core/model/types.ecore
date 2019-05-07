@@ -89,4 +89,13 @@
   <eClassifiers xsi:type="ecore:EDataType" name="Optional" instanceClassName="java.util.Optional">
     <eTypeParameters name="T"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="AppointmentType">
+    <eLiterals name="DEFAULT" value="2"/>
+    <eLiterals name="FREE"/>
+    <eLiterals name="BOOKED" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="AppointmentState">
+    <eLiterals name="EMPTY"/>
+    <eLiterals name="DEFAULT" value="1"/>
+  </eClassifiers>
 </ecore:EPackage>

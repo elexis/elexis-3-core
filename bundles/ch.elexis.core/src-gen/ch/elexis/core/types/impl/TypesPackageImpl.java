@@ -32,6 +32,8 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 import ch.elexis.core.types.AddressType;
+import ch.elexis.core.types.AppointmentState;
+import ch.elexis.core.types.AppointmentType;
 import ch.elexis.core.types.ArticleSubTyp;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.types.ContactGender;
@@ -114,6 +116,20 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EEnum documentStatusEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum appointmentTypeEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum appointmentStateEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -420,6 +436,26 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EEnum getAppointmentType() {
+		return appointmentTypeEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EEnum getAppointmentState() {
+		return appointmentStateEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EDataType getMoney() {
 		return moneyEDataType;
 	}
@@ -706,6 +742,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		relationshipTypeEEnum = createEEnum(RELATIONSHIP_TYPE);
 		addressTypeEEnum = createEEnum(ADDRESS_TYPE);
 		documentStatusEEnum = createEEnum(DOCUMENT_STATUS);
+		appointmentTypeEEnum = createEEnum(APPOINTMENT_TYPE);
+		appointmentStateEEnum = createEEnum(APPOINTMENT_STATE);
 
 		// Create data types
 		moneyEDataType = createEDataType(MONEY);
@@ -819,6 +857,15 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		addEEnumLiteral(documentStatusEEnum, DocumentStatus.VALIDATED);
 		addEEnumLiteral(documentStatusEEnum, DocumentStatus.SENT);
 		addEEnumLiteral(documentStatusEEnum, DocumentStatus.RECIVED);
+
+		initEEnum(appointmentTypeEEnum, AppointmentType.class, "AppointmentType");
+		addEEnumLiteral(appointmentTypeEEnum, AppointmentType.DEFAULT);
+		addEEnumLiteral(appointmentTypeEEnum, AppointmentType.FREE);
+		addEEnumLiteral(appointmentTypeEEnum, AppointmentType.BOOKED);
+
+		initEEnum(appointmentStateEEnum, AppointmentState.class, "AppointmentState");
+		addEEnumLiteral(appointmentStateEEnum, AppointmentState.EMPTY);
+		addEEnumLiteral(appointmentStateEEnum, AppointmentState.DEFAULT);
 
 		// Initialize data types
 		initEDataType(moneyEDataType, Money.class, "Money", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);

@@ -47,6 +47,15 @@
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//DocumentStatus/SENT"/>
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//DocumentStatus/RECIVED"/>
     </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="types.ecore#//AppointmentType">
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//AppointmentType/DEFAULT"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//AppointmentType/FREE"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//AppointmentType/BOOKED"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="types.ecore#//AppointmentState">
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//AppointmentState/EMPTY"/>
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//AppointmentState/DEFAULT"/>
+    </genEnums>
     <genDataTypes ecoreDataType="types.ecore#//Money"/>
     <genDataTypes ecoreDataType="types.ecore#//Gender"/>
     <genDataTypes ecoreDataType="types.ecore#//LabItemTyp"/>

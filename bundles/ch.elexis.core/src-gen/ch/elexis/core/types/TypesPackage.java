@@ -161,6 +161,26 @@ public interface TypesPackage extends EPackage {
 	int DOCUMENT_STATUS = 7;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.types.AppointmentType <em>Appointment Type</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.types.AppointmentType
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getAppointmentType()
+	 * @generated
+	 */
+	int APPOINTMENT_TYPE = 8;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.types.AppointmentState <em>Appointment State</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.types.AppointmentState
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getAppointmentState()
+	 * @generated
+	 */
+	int APPOINTMENT_STATE = 9;
+
+	/**
 	 * The meta object id for the '<em>Money</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -168,7 +188,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getMoney()
 	 * @generated
 	 */
-	int MONEY = 8;
+	int MONEY = 10;
 
 	/**
 	 * The meta object id for the '<em>Gender</em>' data type.
@@ -178,7 +198,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getGender()
 	 * @generated
 	 */
-	int GENDER = 9;
+	int GENDER = 11;
 
 
 	/**
@@ -189,7 +209,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLabItemTyp()
 	 * @generated
 	 */
-	int LAB_ITEM_TYP = 10;
+	int LAB_ITEM_TYP = 12;
 
 
 	/**
@@ -200,7 +220,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getCountry()
 	 * @generated
 	 */
-	int COUNTRY = 11;
+	int COUNTRY = 13;
 
 
 	/**
@@ -211,7 +231,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getPathologicDescription()
 	 * @generated
 	 */
-	int PATHOLOGIC_DESCRIPTION = 12;
+	int PATHOLOGIC_DESCRIPTION = 14;
 
 
 	/**
@@ -222,7 +242,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLocalDateTime()
 	 * @generated
 	 */
-	int LOCAL_DATE_TIME = 13;
+	int LOCAL_DATE_TIME = 15;
 
 
 	/**
@@ -233,7 +253,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getInputStream()
 	 * @generated
 	 */
-	int INPUT_STREAM = 14;
+	int INPUT_STREAM = 16;
 
 	/**
 	 * The meta object id for the '<em>Output Stream</em>' data type.
@@ -243,7 +263,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getOutputStream()
 	 * @generated
 	 */
-	int OUTPUT_STREAM = 15;
+	int OUTPUT_STREAM = 17;
 
 
 	/**
@@ -254,7 +274,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLocalDate()
 	 * @generated
 	 */
-	int LOCAL_DATE = 16;
+	int LOCAL_DATE = 18;
 
 
 	/**
@@ -265,7 +285,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getXidQuality()
 	 * @generated
 	 */
-	int XID_QUALITY = 17;
+	int XID_QUALITY = 19;
 
 
 	/**
@@ -276,7 +296,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLabOrderState()
 	 * @generated
 	 */
-	int LAB_ORDER_STATE = 18;
+	int LAB_ORDER_STATE = 20;
 
 
 	/**
@@ -287,7 +307,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getArticleTyp()
 	 * @generated
 	 */
-	int ARTICLE_TYP = 19;
+	int ARTICLE_TYP = 21;
 
 
 	/**
@@ -298,7 +318,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getVatInfo()
 	 * @generated
 	 */
-	int VAT_INFO = 20;
+	int VAT_INFO = 22;
 
 
 	/**
@@ -309,7 +329,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getOrderEntryState()
 	 * @generated
 	 */
-	int ORDER_ENTRY_STATE = 21;
+	int ORDER_ENTRY_STATE = 23;
 
 	/**
 	 * The meta object id for the '<em>Article Sub Typ</em>' data type.
@@ -319,7 +339,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getArticleSubTyp()
 	 * @generated
 	 */
-	int ARTICLE_SUB_TYP = 22;
+	int ARTICLE_SUB_TYP = 24;
 
 	/**
 	 * The meta object id for the '<em>Versioned Resource</em>' data type.
@@ -329,7 +349,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getVersionedResource()
 	 * @generated
 	 */
-	int VERSIONED_RESOURCE = 23;
+	int VERSIONED_RESOURCE = 25;
 
 	/**
 	 * The meta object id for the '<em>Entry Type</em>' data type.
@@ -339,7 +359,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getEntryType()
 	 * @generated
 	 */
-	int ENTRY_TYPE = 24;
+	int ENTRY_TYPE = 26;
 
 	/**
 	 * The meta object id for the '<em>Invoice State</em>' data type.
@@ -349,7 +369,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getInvoiceState()
 	 * @generated
 	 */
-	int INVOICE_STATE = 25;
+	int INVOICE_STATE = 27;
 
 	/**
 	 * The meta object id for the '<em>Chrono Unit</em>' data type.
@@ -359,7 +379,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getChronoUnit()
 	 * @generated
 	 */
-	int CHRONO_UNIT = 26;
+	int CHRONO_UNIT = 28;
 
 	/**
 	 * The meta object id for the '<em>Billing Law</em>' data type.
@@ -369,7 +389,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getBillingLaw()
 	 * @generated
 	 */
-	int BILLING_LAW = 27;
+	int BILLING_LAW = 29;
 
 	/**
 	 * The meta object id for the '<em>Marital Status</em>' data type.
@@ -379,7 +399,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getMaritalStatus()
 	 * @generated
 	 */
-	int MARITAL_STATUS = 28;
+	int MARITAL_STATUS = 30;
 
 	/**
 	 * The meta object id for the '<em>Mime Type</em>' data type.
@@ -389,7 +409,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getMimeType()
 	 * @generated
 	 */
-	int MIME_TYPE = 29;
+	int MIME_TYPE = 31;
 
 	/**
 	 * The meta object id for the '<em>Invoice Reject Code</em>' data type.
@@ -399,7 +419,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getInvoiceRejectCode()
 	 * @generated
 	 */
-	int INVOICE_REJECT_CODE = 30;
+	int INVOICE_REJECT_CODE = 32;
 
 	/**
 	 * The meta object id for the '<em>Optional</em>' data type.
@@ -409,7 +429,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getOptional()
 	 * @generated
 	 */
-	int OPTIONAL = 31;
+	int OPTIONAL = 33;
 
 	/**
 	 * The meta object id for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.
@@ -504,6 +524,26 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EEnum getDocumentStatus();
+
+	/**
+	 * Returns the meta object for enum '{@link ch.elexis.core.types.AppointmentType <em>Appointment Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Appointment Type</em>'.
+	 * @see ch.elexis.core.types.AppointmentType
+	 * @generated
+	 */
+	EEnum getAppointmentType();
+
+	/**
+	 * Returns the meta object for enum '{@link ch.elexis.core.types.AppointmentState <em>Appointment State</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Appointment State</em>'.
+	 * @see ch.elexis.core.types.AppointmentState
+	 * @generated
+	 */
+	EEnum getAppointmentState();
 
 	/**
 	 * Returns the meta object for data type '{@link ch.rgw.tools.Money <em>Money</em>}'.
@@ -871,6 +911,26 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum DOCUMENT_STATUS = eINSTANCE.getDocumentStatus();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.types.AppointmentType <em>Appointment Type</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.types.AppointmentType
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getAppointmentType()
+		 * @generated
+		 */
+		EEnum APPOINTMENT_TYPE = eINSTANCE.getAppointmentType();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.types.AppointmentState <em>Appointment State</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.types.AppointmentState
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getAppointmentState()
+		 * @generated
+		 */
+		EEnum APPOINTMENT_STATE = eINSTANCE.getAppointmentState();
 
 		/**
 		 * The meta object literal for the '<em>Money</em>' data type.
