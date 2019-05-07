@@ -8,6 +8,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.test.initializer.TestDatabaseInitializer;
 import ch.elexis.core.utils.OsgiServiceUtil;
@@ -32,6 +34,8 @@ public class AllServiceTests {
 
 		tdb = new TestDatabaseInitializer(modelService, entityManager);
 		tdb.initializePatient();
+		tdb.initializeLabResult();
+		tdb.initializePrescription();
 	}
 
 	public static IModelService getModelService() {
@@ -40,5 +44,13 @@ public class AllServiceTests {
 
 	public static IPatient getPatient() {
 		return tdb.getPatient();
+	}
+	
+	public static ILaboratory getLaboratory() {
+		return tdb.getLaboratory();
+	}
+	
+	public static IArticle getEigenartikel() {
+		return tdb.getArticle();
 	}
 }

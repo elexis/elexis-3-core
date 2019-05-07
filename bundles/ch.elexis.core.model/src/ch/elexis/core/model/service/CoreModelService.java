@@ -83,12 +83,13 @@ public class CoreModelService extends AbstractModelService
 			String className = split[0];
 			String id = split[1];
 			Class<? extends EntityWithId> clazz = ElexisTypeMap.get(className);
+			Class<? extends Identifiable> interfaceClass = ElexisTypeMap.getInterfaceClass(className);
 			if (clazz != null) {
 				EntityManager em = (EntityManager) entityManager.getEntityManager();
 				EntityWithId dbObject = em.find(clazz, id);
 				if (dbObject != null) {
 					return Optional.ofNullable(
-						adapterFactory.getModelAdapter(dbObject, null, false).orElse(null));
+						adapterFactory.getModelAdapter(dbObject, interfaceClass, false).orElse(null));
 				}
 			}
 		}

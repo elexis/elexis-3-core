@@ -16,6 +16,7 @@ import ch.elexis.core.jpa.entities.Verrechnet;
 import ch.elexis.core.jpa.entities.VerrechnetCopy;
 import ch.elexis.core.jpa.entities.Zahlung;
 import ch.elexis.core.jpa.entities.ZusatzAdresse;
+import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractModelAdapterFactory;
 import ch.elexis.core.jpa.model.adapter.MappingEntry;
 import ch.elexis.core.model.AccountTransaction;
@@ -130,26 +131,24 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 		addMapping(new MappingEntry(IBlobSecondary.class, ch.elexis.core.model.BlobSecondary.class,
 			ch.elexis.core.jpa.entities.Heap2.class));
 		
-		addMapping(new MappingEntry(IContact.class, Contact.class, Kontakt.class));
+		addMapping(new MappingEntry(IContact.class, Contact.class, Kontakt.class)
+			.adapterInitializer(this::setContactDiscriminator));
 		addMapping(new MappingEntry(IPatient.class, Patient.class, Kontakt.class)
 			.adapterPreCondition(adapter -> ((Kontakt) adapter.getEntity()).isPatient()
 				&& ((Kontakt) adapter.getEntity()).isPerson())
-			.adapterInitializer(adapter -> {
-				((Patient) adapter).setPatient(true);
-				((Patient) adapter).setPerson(true);
-			}));
+			.adapterInitializer(this::setContactDiscriminator));
 		addMapping(new MappingEntry(IPerson.class, Person.class, Kontakt.class)
 			.adapterPreCondition(adapter -> ((Kontakt) adapter.getEntity()).isPerson())
-			.adapterInitializer(adapter -> ((Person) adapter).setPerson(true)));
+			.adapterInitializer(this::setContactDiscriminator));
 		addMapping(new MappingEntry(IOrganization.class, Organization.class, Kontakt.class)
 			.adapterPreCondition(adapter -> ((Kontakt) adapter.getEntity()).isOrganisation())
-			.adapterInitializer(adapter -> ((Organization) adapter).setOrganization(true)));
+			.adapterInitializer(this::setContactDiscriminator));
 		addMapping(new MappingEntry(ILaboratory.class, Laboratory.class, Kontakt.class)
 			.adapterPreCondition(adapter -> ((Kontakt) adapter.getEntity()).isLaboratory())
-			.adapterInitializer(adapter -> ((Laboratory) adapter).setLaboratory(true)));
+			.adapterInitializer(this::setContactDiscriminator));
 		addMapping(new MappingEntry(IMandator.class, Mandator.class, Kontakt.class)
 			.adapterPreCondition(adapter -> ((Kontakt) adapter.getEntity()).isMandator())
-			.adapterInitializer(adapter -> ((Mandator) adapter).setMandator(true)));
+			.adapterInitializer(this::setContactDiscriminator));
 		
 		addMapping(new MappingEntry(ICoverage.class, Coverage.class, Fall.class));
 		addMapping(new MappingEntry(IEncounter.class, Encounter.class, Behandlung.class));
@@ -161,15 +160,15 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 		
 		addMapping(new MappingEntry(IAccountTransaction.class, AccountTransaction.class,
 			ch.elexis.core.jpa.entities.AccountTransaction.class));
-		addMapping(
-			new MappingEntry(IPayment.class, Payment.class, Zahlung.class));
+		addMapping(new MappingEntry(IPayment.class, Payment.class, Zahlung.class));
 		
 		addMapping(
 			new MappingEntry(IBillingSystemFactor.class, BillingSystemFactor.class, VKPreis.class));
 		addMapping(new MappingEntry(IBilled.class, Billed.class, Verrechnet.class));
 		addMapping(new MappingEntry(IArticle.class, ch.elexis.core.model.TypedArticle.class,
 			ch.elexis.core.jpa.entities.Artikel.class));
-		addMapping(new MappingEntry(ICustomService.class, CustomService.class, Eigenleistung.class));
+		addMapping(
+			new MappingEntry(ICustomService.class, CustomService.class, Eigenleistung.class));
 		addMapping(new MappingEntry(ICodeElementBlock.class, CodeElementBlock.class,
 			Leistungsblock.class));
 		
@@ -184,16 +183,20 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 		
 		addMapping(new MappingEntry(IAddress.class, Address.class, ZusatzAdresse.class));
 		
-		addMapping(new MappingEntry(IRelatedContact.class, RelatedContact.class, KontaktAdressJoint.class));
+		addMapping(new MappingEntry(IRelatedContact.class, RelatedContact.class,
+			KontaktAdressJoint.class));
 		
 		addMapping(new MappingEntry(IDocumentLetter.class, DocumentLetter.class, Brief.class));
 		
-		addMapping(new MappingEntry(IPrescription.class, Prescription.class, ch.elexis.core.jpa.entities.Prescription.class));
+		addMapping(new MappingEntry(IPrescription.class, Prescription.class,
+			ch.elexis.core.jpa.entities.Prescription.class));
 		addMapping(new MappingEntry(IRecipe.class, Recipe.class,
 			ch.elexis.core.jpa.entities.Rezept.class));
 		
-		addMapping(new MappingEntry(IRole.class, Role.class, ch.elexis.core.jpa.entities.Role.class));
-		addMapping(new MappingEntry(IRight.class, Right.class, ch.elexis.core.jpa.entities.Right.class));
+		addMapping(
+			new MappingEntry(IRole.class, Role.class, ch.elexis.core.jpa.entities.Role.class));
+		addMapping(
+			new MappingEntry(IRight.class, Right.class, ch.elexis.core.jpa.entities.Right.class));
 		
 		addMapping(new MappingEntry(ILabItem.class, ch.elexis.core.model.LabItem.class,
 			ch.elexis.core.jpa.entities.LabItem.class));
@@ -218,5 +221,17 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 		
 		addMapping(new MappingEntry(IMessage.class, Message.class,
 			ch.elexis.core.jpa.entities.Message.class));
+	}
+	
+	private Object setContactDiscriminator(AbstractIdModelAdapter<?> adapter){
+		if (adapter instanceof IContact) {
+			IContact contact = (IContact) adapter;
+			contact.setPerson(adapter instanceof IPerson);
+			contact.setPatient(adapter instanceof IPatient);
+			contact.setOrganization(adapter instanceof IOrganization);
+			contact.setLaboratory(adapter instanceof ILaboratory);
+			contact.setMandator(adapter instanceof IMandator);
+		}
+		return null;
 	}
 }

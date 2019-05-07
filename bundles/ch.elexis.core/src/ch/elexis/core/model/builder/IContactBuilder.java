@@ -24,7 +24,6 @@ public class IContactBuilder {
 			object.setDescription2(firstName);
 			object.setDateOfBirth(dateOfBirth.atStartOfDay());
 			object.setGender(sex);
-			object.setPerson(true);
 		}
 
 		public PersonBuilder mandator() {
@@ -42,8 +41,6 @@ public class IContactBuilder {
 			object.setDescription2(firstName);
 			object.setDateOfBirth(dateOfBirth.atStartOfDay());
 			object.setGender(sex);
-			object.setPerson(true);
-			object.setPatient(true);
 		}
 	}
 

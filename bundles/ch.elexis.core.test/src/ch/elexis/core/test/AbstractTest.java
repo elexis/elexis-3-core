@@ -1,5 +1,8 @@
 package ch.elexis.core.test;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.time.LocalDate;
 
 import org.junit.After;
@@ -83,18 +86,33 @@ public abstract class AbstractTest {
 		LocalDate dob = LocalDate.of(2016, 9, 1);
 		person = new IContactBuilder.PersonBuilder(coreModelService, "TestPerson", "TestPerson",
 			dob, Gender.FEMALE).buildAndSave();
+		assertTrue(person.isPerson());
+		assertFalse(person.isPatient());
+		assertFalse(person.isOrganization());
+		assertFalse(person.isLaboratory());
+		assertFalse(person.isMandator());
 	}
 	
 	public void createMandator(){
 		LocalDate dob = LocalDate.of(1979, 7, 26);
 		person = new IContactBuilder.PersonBuilder(coreModelService, "TestMandator", "TestMandator",
 			dob, Gender.FEMALE).mandator().buildAndSave();
+		assertTrue(person.isPerson());
+		assertFalse(person.isPatient());
+		assertFalse(person.isOrganization());
+		assertFalse(person.isLaboratory());
+		assertTrue(person.isMandator());
 	}
 	
 	public void createPatient(){
 		LocalDate dob = LocalDate.of(2016, 9, 1);
 		patient = (IPatient) new IContactBuilder.PatientBuilder(coreModelService, "TestPatient",
 			"TestPatient", dob, Gender.MALE).buildAndSave();
+		assertTrue(patient.isPerson());
+		assertTrue(patient.isPatient());
+		assertFalse(patient.isOrganization());
+		assertFalse(patient.isLaboratory());
+		assertFalse(patient.isMandator());
 	}
 	
 	public void createCoverage(){

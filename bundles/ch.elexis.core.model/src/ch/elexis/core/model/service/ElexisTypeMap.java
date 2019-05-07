@@ -24,6 +24,10 @@ import ch.elexis.core.jpa.entities.TarmedLeistung;
 import ch.elexis.core.jpa.entities.Termin;
 import ch.elexis.core.jpa.entities.User;
 import ch.elexis.core.jpa.entities.Verrechnet;
+import ch.elexis.core.model.ILaboratory;
+import ch.elexis.core.model.IOrganization;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.types.ArticleTyp;
 
@@ -39,11 +43,12 @@ public class ElexisTypeMap {
 	
 	private static final HashMap<String, Class<? extends EntityWithId>> stsToClassMap;
 	private static final HashMap<Class<? extends EntityWithId>, String> classToStsMap;
-
+	
 	public static final String TYPE_ARTIKEL = "ch.elexis.data.Artikel";
 	public static final String TYPE_ARTIKELSTAMM = "ch.artikelstamm.elexis.common.ArtikelstammItem";
 	public static final String TYPE_BRIEF = "ch.elexis.data.Brief";
 	public static final String TYPE_DOCHANDLE = "ch.elexis.omnivore.data.DocHandle";
+	public static final String TYPE_EIGENARTIKEL_LEGACY = "ch.elexis.eigenartikel.Eigenartikel";
 	public static final String TYPE_EIGENARTIKEL = "ch.elexis.core.eigenartikel.Eigenartikel";
 	public static final String TYPE_EIGENLEISTUNG = "ch.elexis.data.Eigenleistung";
 	public static final String TYPE_MEDIKAMENT = "ch.elexis.artikel_ch.data.Medikament";
@@ -67,14 +72,14 @@ public class ElexisTypeMap {
 	public static final String TYPE_TERMIN = "ch.elexis.agenda.data.Termin";
 	public static final String TYPE_TESSINER_CODE = "ch.elexis.data.TICode";
 	public static final String TYPE_USER = "ch.elexis.data.User";
-	public static final String TYPE_VERRECHNET = "ch.elexis.data.Verrechnet"; 
+	public static final String TYPE_VERRECHNET = "ch.elexis.data.Verrechnet";
 	public static final String TYPE_FREETEXTDIAGNOSE = "ch.elexis.data.FreeTextDiagnose";
 	public static final String TYPE_LEISTUNGSBLOCK = "ch.elexis.data.Leistungsblock";
 	
 	static {
 		stsToClassMap = new HashMap<String, Class<? extends EntityWithId>>();
 		classToStsMap = new HashMap<Class<? extends EntityWithId>, String>();
-
+		
 		// bi-directional mappable
 		stsToClassMap.put(TYPE_ARTIKELSTAMM, ArtikelstammItem.class);
 		classToStsMap.put(ArtikelstammItem.class, TYPE_ARTIKELSTAMM);
@@ -118,15 +123,16 @@ public class ElexisTypeMap {
 		// uni-directional mappable
 		stsToClassMap.put(TYPE_MEDIKAMENT, Artikel.class);
 		stsToClassMap.put(TYPE_EIGENARTIKEL, Artikel.class);
+		stsToClassMap.put(TYPE_EIGENARTIKEL_LEGACY, Artikel.class);
 		stsToClassMap.put(TYPE_MEDICAL, Artikel.class);
 		stsToClassMap.put(TYPE_MIGEL, Artikel.class);
 		stsToClassMap.put(TYPE_KONTAKT, Kontakt.class);
 		stsToClassMap.put(TYPE_ORGANISATION, Kontakt.class);
-		stsToClassMap.put(TYPE_PATIENT, Kontakt.class);	
+		stsToClassMap.put(TYPE_PATIENT, Kontakt.class);
 		stsToClassMap.put(TYPE_PERSON, Kontakt.class);
 		stsToClassMap.put(TYPE_LABORATORY, Kontakt.class);
 	}
-
+	
 	/**
 	 * 
 	 * @param obj
@@ -143,7 +149,7 @@ public class ElexisTypeMap {
 				}
 				return TYPE_PERSON;
 			} else if (k.isOrganisation()) {
-				if(k.isLaboratory()) {
+				if (k.isLaboratory()) {
 					return TYPE_LABORATORY;
 				}
 				return TYPE_ORGANISATION;
@@ -166,17 +172,33 @@ public class ElexisTypeMap {
 			}
 		}
 		
-		if(obj != null) {
+		if (obj != null) {
 			return classToStsMap.get(obj.getClass());
 		}
-
+		
 		return null;
 	}
-
+	
 	public static Class<? extends EntityWithId> get(String value){
-		if (value.equalsIgnoreCase("ch.elexis.eigenartikel.Eigenartikel")) {
-			value = TYPE_EIGENARTIKEL;
-		}
 		return stsToClassMap.get(value);
+	}
+	
+	/**
+	 * If multiple model objects map to the same db entity we have to discriminate on how to
+	 * instantiate this object. E.g. both patient and laboratory are stored as {@link Kontakt}, but
+	 * are represented as {@link IPatient} and {@link ILaboratory} respectively.
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static Class<? extends Identifiable> getInterfaceClass(String value){
+		if (TYPE_LABORATORY.equals(value)) {
+			return ILaboratory.class;
+		} else if (TYPE_PATIENT.equals(value)) {
+			return IPatient.class;
+		} else if (TYPE_ORGANISATION.equals(value)) {
+			return IOrganization.class;
+		}
+		return null;
 	}
 }
