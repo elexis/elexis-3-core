@@ -14,8 +14,8 @@ import org.osgi.service.event.EventHandler;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
-import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable.RunContextParameter;
+import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.ITaskService;
 import ch.elexis.core.tasks.model.TaskTriggerType;

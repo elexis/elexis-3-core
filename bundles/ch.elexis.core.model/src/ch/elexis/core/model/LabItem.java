@@ -201,7 +201,7 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 		}
 		
 	}
-
+	
 	@Override
 	public String getVariableName(){
 		String group = getGroup();
@@ -211,7 +211,21 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 			String num = (prio != null) ? prio.trim() : "9999";
 			return group_tokens[0] + "_" + num;
 		}
-
+		
 		return "ERROR";
+	}
+	
+	@Override
+	public String getLabel(){
+		StringBuilder sb = new StringBuilder();
+		sb.append(getCode() + ", " + getName());
+		if (LabItemTyp.NUMERIC == getTyp()) {
+			sb.append(
+				" (" + getReferenceMale() + "/" + getReferenceFemale() + " " + getUnit() + ")");
+		} else {
+			sb.append(" (" + getReferenceFemale() + ")");
+		}
+		sb.append("[" + getGroup() + ", " + getPriority() + "]");
+		return sb.toString();
 	}
 }

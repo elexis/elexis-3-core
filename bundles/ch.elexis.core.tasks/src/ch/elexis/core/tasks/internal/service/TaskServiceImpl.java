@@ -60,7 +60,6 @@ public class TaskServiceImpl implements ITaskService {
 	
 	private List<ITask> runningTasks;
 	
-
 	//TODO EventService
 	//TODO OtherTaskService -> this
 	
@@ -307,6 +306,10 @@ public class TaskServiceImpl implements ITaskService {
 			instantiateRunnableById(taskDescriptor.getIdentifiedRunnableId());
 		
 		if (TaskTriggerType.OTHER_TASK == taskDescriptor.getTriggerType()) {
+			// we will not check activation here, as the required parameters
+			// will be supplied by the other task invoking us
+			return;
+		} else if (TaskTriggerType.SYSTEM_EVENT == taskDescriptor.getTriggerType()) {
 			// we will not check activation here, as the required parameters
 			// will be supplied by the other task invoking us
 			return;

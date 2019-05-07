@@ -61,6 +61,13 @@ public interface IIdentifiedRunnable {
 		 * The actual result data, can be casted to {@link #RESULT_CLASS}
 		 */
 		public static final String RESULT_DATA = "resultData";
+		
+		/**
+		 * The existence of this key does advise the task system to not persist
+		 * the tasks results. Use this e.g. to not "log" an empty run. (e.g. a directory
+		 * watcher that found nothing)
+		 */
+		public static final String MARKER_DO_NOT_PERSIST = "markerDoNotPersist";
 	}
 
 	/**

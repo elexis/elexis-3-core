@@ -16,6 +16,7 @@ import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
+import ch.elexis.core.model.tasks.IIdentifiedRunnable.ReturnParameter;
 import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.tasks.internal.model.service.CoreModelServiceHolder;
 import ch.elexis.core.tasks.internal.service.LogProgressMonitor;
@@ -135,6 +136,10 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		return (TaskState.COMPLETED == getState() || TaskState.FAILED == getState());
 	}
 	
+	private void removeTaskRecording(){
+		CoreModelServiceHolder.get().remove(this);
+	}
+
 	@Override
 	public void run(){
 		Optional<ITaskDescriptor> originTaskDescriptor = TaskServiceHolder.get()
@@ -168,6 +173,10 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 			
 			if (progressMonitor != null) {
 				progressMonitor.done();
+			}
+			
+			if(getResult().containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)) {
+				removeTaskRecording();
 			}
 			
 		} else {

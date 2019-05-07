@@ -245,4 +245,9 @@ public class LabResult extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.e
 	public void setExtInfo(Object key, Object value){
 		extInfoHandler.setExtInfo(key, value);
 	}
+	
+	@Override
+	public String getLabel(){
+		return getItem().getLabel() + ", " + getDate() + ": " + getResult();
+	}
 }
