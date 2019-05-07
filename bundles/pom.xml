@@ -18,6 +18,7 @@
     <module>org.osgi.framework.system.packages.extra</module>
     <module>jaxb-api-impl-import-java9</module>
     <module>ch.elexis.core.test</module>
+    <module>ch.elexis.core.test.context</module>
     <module>ch.elexis.core.services</module>
     <module>ch.elexis.core.model</module>
     <module>ch.elexis.core.jpa</module>
