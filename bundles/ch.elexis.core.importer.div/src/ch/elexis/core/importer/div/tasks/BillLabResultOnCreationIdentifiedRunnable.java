@@ -107,8 +107,8 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 	}
 
 	private Optional<IEncounter> getKonsultation(IPatient patient) {
-		IEncounter kons = getLatestKons(patient);
-
+		IEncounter kons = EncounterServiceHolder.get().getLatestEncounter(patient).orElse(null);
+		
 		boolean editable = EncounterServiceHolder.get().isEditable(kons);
 		if (kons == null || !editable || hasToBeToday(kons) || !isOnlyOneKonsToday(patient)) {
 
@@ -120,7 +120,7 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 			}
 
 		}
-		return Optional.empty();
+		return Optional.ofNullable(kons);
 	}
 
 	private List<IEncounter> getOpenKons(IPatient patient) {
@@ -178,17 +178,6 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 			return true;
 		}
 		return false;
-	}
-
-	private IEncounter getLatestKons(IPatient patient) {
-		// TODO IEncounterService
-		List<IEncounter> list = getOpenKons(patient);
-
-		if ((list == null) || list.isEmpty()) {
-			return null;
-		} else {
-			return list.get(0);
-		}
 	}
 
 	private boolean hasToBeToday(IEncounter kons) {
@@ -252,8 +241,7 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 
 	@Override
 	public String getLocalizedDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Bill an EAL 2009 service on a patients encounter on creation of a Labresult";
 	}
 
 	@Override
