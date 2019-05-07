@@ -193,7 +193,7 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 					width += tc.getWidth();
 				}
 				if (clickedIndex != -1) {
-					if (clickedIndex == 2) {
+					if (clickedIndex == 3) {
 						IStructuredSelection selection = viewer.getStructuredSelection();
 						if (!selection.isEmpty()) {
 							if (selection.getFirstElement() instanceof IDiagnose) {
@@ -280,20 +280,27 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 
 	public void setEncounter(Konsultation encounter){
 		actEncounter = encounter;
+		table.getColumn(0).setWidth(0);
 		viewer.setInput(encounter.getDiagnosen());
 	}
 	
 	private void createColumns(){
 		String[] titles = {
-				Messages.Display_Column_Code,
-				Messages.Display_Column_Designation,
-				StringTool.leer
+			"", Messages.Display_Column_Code, Messages.Display_Column_Designation, StringTool.leer
 		};
 		int[] weights = {
-			15, 70, 15
+			0, 15, 70, 15
 		};
 		
 		TableViewerColumn col = createTableViewerColumn(titles[0], weights[0], 0, SWT.LEFT);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element){
+				return StringTool.leer;
+			}
+		});
+		
+		col = createTableViewerColumn(titles[1], weights[1], 1, SWT.LEFT);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
@@ -307,7 +314,7 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 			}
 		});
 		
-		col = createTableViewerColumn(titles[1], weights[1], 1, SWT.NONE);
+		col = createTableViewerColumn(titles[2], weights[2], 2, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
@@ -319,7 +326,7 @@ public class DiagnosenDisplay extends Composite implements ISelectionRenderer, I
 			}
 		});
 		
-		col = createTableViewerColumn(titles[2], weights[2], 2, SWT.NONE);
+		col = createTableViewerColumn(titles[3], weights[3], 3, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
