@@ -13,7 +13,8 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
-import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
+import ch.elexis.core.model.IXid;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.tasks.internal.model.service.CoreModelServiceHolder;
@@ -26,7 +27,7 @@ import ch.elexis.core.tasks.model.TaskState;
 import ch.elexis.core.tasks.model.TaskTriggerType;
 
 public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Task>
-		implements IdentifiableWithXid, ITask, Runnable {
+		implements Identifiable, ITask, Runnable {
 	
 	private Logger logger;
 	
@@ -174,6 +175,16 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 			setState(TaskState.FAILED);
 		}
 		
+	}
+
+	@Override
+	public boolean addXid(String domain, String id, boolean updateIfExists){
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public IXid getXid(String domain){
+		throw new UnsupportedOperationException();
 	}
 	
 }

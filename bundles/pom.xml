@@ -50,6 +50,7 @@
     <module>ch.elexis.core.product</module>
     <module>ch.elexis.core.scheduler</module>
     <module>ch.elexis.core.scripting.beanshell</module>
+    <module>ch.elexis.core.tasks</module> 
     <module>ch.elexis.core.ui.contacts</module>
     <module>ch.elexis.core.ui.dbcheck</module>
     <module>ch.elexis.core.ui.documents</module>

@@ -8,8 +8,9 @@ import com.google.gson.Gson;
 
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
-import ch.elexis.core.jpa.model.adapter.mixin.IdentifiableWithXid;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.IXid;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.tasks.internal.model.service.CoreModelServiceHolder;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.OwnerTaskNotification;
@@ -17,7 +18,7 @@ import ch.elexis.core.tasks.model.TaskTriggerType;
 
 public class TaskDescriptor
 		extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.TaskDescriptor>
-		implements IdentifiableWithXid, ITaskDescriptor {
+		implements Identifiable, ITaskDescriptor {
 	
 	private Gson gson;
 	
@@ -165,6 +166,16 @@ public class TaskDescriptor
 	@Override
 	public void setOwnerNotification(OwnerTaskNotification value){
 		getEntity().setNotificationType(value.getValue());
+	}
+
+	@Override
+	public boolean addXid(String domain, String id, boolean updateIfExists){
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public IXid getXid(String domain){
+		throw new UnsupportedOperationException();
 	}
 	
 }
