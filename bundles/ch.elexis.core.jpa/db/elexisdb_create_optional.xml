@@ -1299,6 +1299,11 @@
         </createIndex>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-28">
+    	 <preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="CH_MEDELEXIS_LABORTARIF2009" />
+			</not>
+		</preConditions>
         <createTable tableName="CH_MEDELEXIS_LABORTARIF2009">
             <column name="ID" type="VARCHAR(25)">
                 <constraints primaryKey="true" primaryKeyName="CONSTRAINT_40"/>

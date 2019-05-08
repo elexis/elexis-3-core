@@ -263,6 +263,19 @@ public class ConfigService implements IConfigService {
 	}
 	
 	@Override
+	public String getActiveUserContact(String key, String defaultValue){
+		if (contextService != null) {
+			Optional<IContact> activeUser = contextService.getActiveUserContact();
+			if (activeUser.isPresent()) {
+				return get(activeUser.get(), key, defaultValue);
+			}
+		} else {
+			LoggerFactory.getLogger(getClass()).warn("IContextService not available, returning defaultValue");
+		}
+		return defaultValue;
+	}
+	
+	@Override
 	public boolean setLocal(String key, boolean value){
 		localConfig.set(key, value);
 		return true;

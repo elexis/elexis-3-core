@@ -153,7 +153,7 @@ public class Context implements IContext {
 	private Optional<Class<?>> getModelInterface(Object object){
 		Class<?>[] interfaces = object.getClass().getInterfaces();
 		for (Class<?> interfaze : interfaces) {
-			if (interfaze.getName().startsWith("ch.elexis.core.model")) {
+			if (interfaze.getName().startsWith("ch.elexis.core.model") && !interfaze.getName().contains("Identifiable")) {
 				return Optional.of(interfaze);
 			}
 		}

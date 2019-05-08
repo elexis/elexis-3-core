@@ -188,6 +188,15 @@ public interface IConfigService {
 	public boolean getActiveMandator(String key, boolean defaultValue);
 	
 	/**
+	 * 
+	 * @param key
+	 * @param defaultValue
+	 * @return
+	 */
+	public String getActiveUserContact(String key, String defaultValue);
+
+	
+	/**
 	 * Convenience method wrapping {@link #get(String, String)}
 	 * 
 	 * @param key
