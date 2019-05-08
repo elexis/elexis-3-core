@@ -36,7 +36,8 @@ public interface ICodeElementService {
 	
 	/**
 	 * Load a {@link ICodeElement} instance using its String representation, generated using the
-	 * {@link ICodeElementService#storeToString(ICodeElement)} method.<br/>
+	 * {@link ICodeElementService#storeToString(ICodeElement)} method (this is NOT equivalent to
+	 * the storeToString created by the {@link IStoreToStringService}).<br/>
 	 * <br/>
 	 * The returned {@link ICodeElement} will have the same SystemName and Code property, the rest
 	 * can differ from the {@link ICodeElement} used to generate the String. New imports of the
@@ -73,14 +74,16 @@ public interface ICodeElementService {
 	
 	/**
 	 * Load a {@link ICodeElement} instance using its String representation, generated using the
-	 * {@link ICodeElementService#storeToString(ICodeElement)} method.<br/>
+	 * {@link ICodeElementService#storeToString(ICodeElement)} method (this is NOT equivalent to
+	 * the storeToString created by the {@link IStoreToStringService}).<br/>
 	 * <br/>
 	 * The returned {@link ICodeElement} will have the same SystemName and Code property, the rest
 	 * can differ from the {@link ICodeElement} used to generate the String. New imports of the
 	 * {@link ICodeElement} dataset, or some value in the context can also change the returned
 	 * object.
 	 * 
-	 * @param storeToString
+	 * @param system the code system name, e.g. "Eigenartikel"
+	 * @param code the code to load from, dependent on the code system
 	 * @param context may be <code>null</code>
 	 * @return
 	 */
