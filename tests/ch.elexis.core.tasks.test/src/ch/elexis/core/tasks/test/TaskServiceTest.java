@@ -1,6 +1,7 @@
 package ch.elexis.core.tasks.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -9,6 +10,7 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
@@ -17,8 +19,11 @@ import org.awaitility.Awaitility;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.builder.IContactBuilder;
@@ -28,13 +33,13 @@ import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.tasks.IdentifiedRunnableIdConstants;
 import ch.elexis.core.tasks.TaskTriggerTypeParameterConstants;
 import ch.elexis.core.tasks.internal.model.service.CoreModelServiceHolder;
+import ch.elexis.core.tasks.internal.service.TaskServiceHolder;
 import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.ITaskService;
 import ch.elexis.core.tasks.model.TaskState;
 import ch.elexis.core.tasks.model.TaskTriggerType;
 import ch.elexis.core.types.Gender;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class TaskServiceTest {
 	
@@ -48,7 +53,7 @@ public class TaskServiceTest {
 	static Path tempDirectory;
 	
 	public TaskServiceTest(){
-		taskService = OsgiServiceUtil.getService(ITaskService.class).get();
+		taskService = TaskServiceHolder.get();
 		IPerson contact = new IContactBuilder.PersonBuilder(CoreModelServiceHolder.get(), "first",
 			"last", LocalDate.now(), Gender.MALE).buildAndSave();
 		owner = new IUserBuilder(CoreModelServiceHolder.get(), "testUser", contact).buildAndSave();
@@ -88,11 +93,18 @@ public class TaskServiceTest {
 		taskDescriptor.setRunContextParameter("testKey", "testValue");
 		taskService.setActive(taskDescriptor, true);
 		
+		List<ITask> findExecutions = taskService.findExecutions(taskDescriptor);
+		assertTrue(findExecutions.isEmpty());
+		
 		ITask task =
 			taskService.trigger(taskDescriptor, progressMonitor, TaskTriggerType.MANUAL, null);
 		
 		Awaitility.await().atMost(2, TimeUnit.SECONDS).until(taskDone(task));
 		assertEquals(TaskState.COMPLETED, task.getState());
+		
+		findExecutions = taskService.findExecutions(taskDescriptor);
+		assertTrue(findExecutions.size() == 1);
+		assertEquals(TaskState.COMPLETED, findExecutions.get(0).getState());
 	}
 	
 	public void triggerManual_Misthios() throws Exception{
@@ -122,6 +134,7 @@ public class TaskServiceTest {
 	 * @see https://www.reddit.com/r/java/comments/3vtv8i/beware_javaniofilewatchservice_is_subtly_broken/
 	 */
 	@Test
+	@Ignore
 	public void triggerFSChange() throws TaskException, IOException, InterruptedException{
 		IIdentifiedRunnable rwcDeleteFile =
 			taskService.instantiateRunnableById(IdentifiedRunnableIdConstants.DELETEFILE);
@@ -146,18 +159,20 @@ public class TaskServiceTest {
 	 * Use-Case: In CCM -> check for patient reminders
 	 * 
 	 * @throws TaskException
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@Test
+	@Ignore
 	public void triggerCron() throws TaskException, IOException{
 		
 		IIdentifiedRunnable rwcDeleteFile =
-				taskService.instantiateRunnableById(IdentifiedRunnableIdConstants.DELETEFILE);
+			taskService.instantiateRunnableById(IdentifiedRunnableIdConstants.DELETEFILE);
 		Path createFile = Files.createTempFile(tempDirectory, "test", "txt");
 		
 		taskDescriptor = taskService.createTaskDescriptor(owner, rwcDeleteFile);
 		taskDescriptor.setTriggerType(TaskTriggerType.CRON);
-		taskDescriptor.setRunContextParameter(IIdentifiedRunnable.RunContextParameter.STRING_URL, createFile.toString());
+		taskDescriptor.setRunContextParameter(IIdentifiedRunnable.RunContextParameter.STRING_URL,
+			createFile.toString());
 		// job will run every 5 seconds
 		taskDescriptor.setTriggerParameter("cron", "0/5 * * * * ?");
 		taskService.setActive(taskDescriptor, true);
@@ -167,7 +182,7 @@ public class TaskServiceTest {
 		};
 		Awaitility.await().atMost(10, TimeUnit.SECONDS).until(c);
 	}
-
+	
 	/**
 	 * Use-Case: Search for reminders on this patient
 	 * 
@@ -181,6 +196,37 @@ public class TaskServiceTest {
 		taskService.setActive(taskDescriptor, true);
 		
 		throw new UnsupportedOperationException();
+	}
+	
+	/**
+	 * Use-Case: Bill a labresult on an existing encounter when result was created
+	 * 
+	 * @see at.medevit.elexis.roche.labor.billing.AddLabToKons
+	 * 
+	 * @throws TaskException
+	 * @throws InterruptedException 
+	 */
+	@Test
+	public void triggerSysEvent_LabItemCreate() throws TaskException, InterruptedException{
+		taskDescriptor = taskService.createTaskDescriptor(owner, rwcLogContext);
+		taskDescriptor.setTriggerType(TaskTriggerType.SYSTEM_EVENT);
+		taskDescriptor.setTriggerParameter("topic", ElexisEventTopics.PERSISTENCE_EVENT_CREATE);
+		taskDescriptor.setTriggerParameter(ElexisEventTopics.PROPKEY_CLASS,
+			"ch.elexis.data.Patient");
+		taskDescriptor.setTriggerParameter("origin", "self");
+		taskService.setActive(taskDescriptor, true);
+		
+		assertEquals(0, taskService.findExecutions(taskDescriptor).size());
+		
+		Thread.sleep(1000);
+		
+		IPatient buildAndSave = new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(),
+			"Mister", "Rigoletti", LocalDate.now(), Gender.MALE).buildAndSave();
+	
+		Thread.sleep(1500);
+		
+		assertEquals(1, taskService.findExecutions(taskDescriptor).size());
+		
 	}
 	
 	/**

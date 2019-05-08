@@ -93,7 +93,7 @@ public interface IModelService {
 	 * @param objects
 	 * @return
 	 */
-	public boolean save(List<Identifiable> identifiables);
+	public boolean save(List<? extends Identifiable> identifiables);
 	
 	/**
 	 * Remove the {@link Identifiable} from the database.

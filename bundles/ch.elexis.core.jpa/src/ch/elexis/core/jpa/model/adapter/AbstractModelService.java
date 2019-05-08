@@ -151,7 +151,7 @@ public abstract class AbstractModelService implements IModelService {
 	}
 	
 	@Override
-	public boolean save(List<Identifiable> identifiables){
+	public boolean save(List<? extends Identifiable> identifiables){
 		Map<Identifiable, EntityWithId> dbObjects = identifiables.parallelStream()
 			.collect(Collectors.toMap(Function.identity(), i -> getDbObject(i).orElse(null)));
 		if (!dbObjects.isEmpty()) {

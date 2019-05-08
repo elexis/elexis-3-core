@@ -1,4 +1,4 @@
-package ch.elexis.core.tasks.internal.model.impl;
+package ch.elexis.core.tasks.internal.service;
 
 import java.io.Serializable;
 import java.util.HashMap;

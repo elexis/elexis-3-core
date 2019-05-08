@@ -508,9 +508,9 @@ public class TestDatabaseInitializer {
 			laboratory2.addXid(XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY, "ZURANA", true);
 			modelService.save(laboratory2);
 			
-			labItem = (ILabItem) new ILabItemBuilder(modelService, "TEST NUMERIC",
+			labItem = new ILabItemBuilder(modelService, "TEST NUMERIC",
 				"Test Laboratory", ">1", "3-3.5", "unit", LabItemTyp.NUMERIC, "group", 1)
-					.origin(laboratory, "TEST NUMERIC").build();
+					.origin(laboratory, "TEST NUMERIC", true).buildAndSave();
 			labItem.setExport("vitolabkey:1,2");
 			modelService.save(labItem);
 			
@@ -521,9 +521,9 @@ public class TestDatabaseInitializer {
 			labItem.addMapping(mapping);
 			modelService.save(labItem);
 			
-			ILabItem textILabItem = (ILabItem) new ILabItemBuilder(modelService, "TEST TEXT",
+			ILabItem textILabItem = new ILabItemBuilder(modelService, "TEST TEXT",
 				"Test Laboratory", null, null, "unit", LabItemTyp.TEXT, "group", 2)
-					.origin(laboratory, "Test Laboratory").build();
+					.origin(laboratory, "Test Laboratory", true).buildAndSave();
 			modelService.save(labItem);
 			
 			ILabResult labResult = new ILabResultBuilder(modelService, labItem, patient).build();

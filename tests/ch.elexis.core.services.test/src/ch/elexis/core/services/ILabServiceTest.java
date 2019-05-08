@@ -2,19 +2,27 @@ package ch.elexis.core.services;
 
 import static ch.elexis.core.services.AllServiceTests.getPatient;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import java.util.Optional;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.model.ILabMapping;
 import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
+import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.model.builder.ILabItemBuilder;
 import ch.elexis.core.model.builder.ILabResultBuilder;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.rgw.tools.Result;
@@ -25,6 +33,8 @@ public class ILabServiceTest extends AbstractServiceTest {
 	
 	private ILabService labService = OsgiServiceUtil.getService(ILabService.class).get();
 	
+	static ILaboratory laboratory;
+	
 	static ILabItem _04_500;
 	static ILabItem _04_501;
 	static ILabItem _04_520;
@@ -33,8 +43,14 @@ public class ILabServiceTest extends AbstractServiceTest {
 	@BeforeClass
 	public static void before(){
 		
+		laboratory =
+			new IContactBuilder.LaboratoryBuilder(CoreModelServiceHolder.get(), "myLab")
+				.buildAndSave();
+		laboratory.addXid(XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY, "ABXMicrosEmi", true);
+		
 		_04_500 = new ILabItemBuilder(coreModelService, "TCHO-P", "TCHO-P", "3.88-5.66",
-			"3.88-5.66", "mmol/l", LabItemTyp.NUMERIC, "04 Cholesterin", 500).buildAndSave();
+			"3.88-5.66", "mmol/l", LabItemTyp.NUMERIC, "04 Cholesterin", 500)
+				.origin(laboratory, "TCHO-P", true).buildAndSave();
 		_04_501 = new ILabItemBuilder(coreModelService, "HDLC-P", "HDLC-P", "0.93-1.55",
 			"1.16-1.78", "mmol/l", LabItemTyp.NUMERIC, "04 Cholesterin", 501).buildAndSave();
 		_04_520 = new ILabItemBuilder(coreModelService, "TG-P", "TG-P", "0.56-1.68", "0.56-1.68",
@@ -71,6 +87,16 @@ public class ILabServiceTest extends AbstractServiceTest {
 		assertTrue(result.isOK());
 		assertNotNull(result.get());
 		assertEquals("2.67", result.get());
+	}
+	
+	@Test
+	public void resolveLabMapping() {
+		assertFalse(labService.getLabMappingByContactAndItem(laboratory, _04_501).isPresent());
+		
+		Optional<ILabMapping> mapping = labService.getLabMappingByContactAndItem(laboratory, _04_500);
+		assertTrue(mapping.isPresent());
+		assertEquals("TCHO-P", mapping.get().getItemName());
+
 	}
 	
 }

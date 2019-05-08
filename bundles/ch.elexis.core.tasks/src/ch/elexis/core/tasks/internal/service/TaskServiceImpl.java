@@ -25,8 +25,13 @@ import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.model.IMessage;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.builder.IMessageBuilder;
+import ch.elexis.core.model.message.MessageCode;
+import ch.elexis.core.model.message.MessageParty;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
+import ch.elexis.core.model.tasks.IIdentifiedRunnable.ReturnParameter;
 import ch.elexis.core.model.tasks.IIdentifiedRunnableFactory;
 import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.services.IContextService;
@@ -34,8 +39,6 @@ import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
-import ch.elexis.core.tasks.internal.model.impl.Task;
-import ch.elexis.core.tasks.internal.model.impl.TaskDescriptor;
 import ch.elexis.core.tasks.internal.service.fs.WatchServiceHolder;
 import ch.elexis.core.tasks.internal.service.quartz.QuartzExecutor;
 import ch.elexis.core.tasks.internal.service.sysevents.SysEventWatcher;
@@ -43,6 +46,8 @@ import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.ITaskService;
 import ch.elexis.core.tasks.model.ModelPackage;
+import ch.elexis.core.tasks.model.OwnerTaskNotification;
+import ch.elexis.core.tasks.model.TaskState;
 import ch.elexis.core.tasks.model.TaskTriggerType;
 
 @Component(immediate = true)
@@ -51,6 +56,7 @@ public class TaskServiceImpl implements ITaskService {
 	private Logger logger;
 	
 	private IModelService taskModelService;
+	private IModelService coreModelService;
 	
 	private ExecutorService parallelExecutorService;
 	private ExecutorService singletonExecutorService;
@@ -60,7 +66,6 @@ public class TaskServiceImpl implements ITaskService {
 	
 	private List<ITask> runningTasks;
 	
-	//TODO EventService
 	//TODO OtherTaskService -> this
 	
 	//private List<ITaskDescriptor> incurredTasks;
@@ -71,6 +76,11 @@ public class TaskServiceImpl implements ITaskService {
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.tasks.model)")
 	private void setModelService(IModelService modelService){
 		taskModelService = modelService;
+	}
+	
+	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
+	private void setCoreModelService(IModelService modelService){
+		coreModelService = modelService;
 	}
 	
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, bind = "bindRunnableWithContextFactory", unbind = "unbindRunnableWithContextFactory")
@@ -206,12 +216,48 @@ public class TaskServiceImpl implements ITaskService {
 		return taskDescriptor;
 	}
 	
-	public void notify(ITask runningTask){
-		if (runningTask.isFinished()) {
-			// TODO user notification; tasks that are triggered by this task
-			runningTasks.remove(runningTask);
+	void notify(ITask task){
+		if (task.isFinished()) {
+			// TODO tasks that are triggered by this task
+			
+			runningTasks.remove(task);
+			
+			ITaskDescriptor taskDescriptor =
+				findTaskDescriptorByIdOrReferenceId(task.getDescriptorId()).orElse(null);
+			OwnerTaskNotification ownerNotification = taskDescriptor.getOwnerNotification();
+			
+			TaskState state = task.getState();
+			if (OwnerTaskNotification.WHEN_FINISHED == ownerNotification
+				|| (OwnerTaskNotification.WHEN_FINISHED_FAILED == ownerNotification
+					&& TaskState.FAILED == state)) {
+				sendMessageToOwner(task, taskDescriptor.getOwner(), state);
+			}
+			
 		}
-		System.out.println("notify " + runningTask);
+		
+		logger.debug("notify {}", task);
+	}
+	
+	private void sendMessageToOwner(ITask task, IUser owner, TaskState state){
+		IMessage message = new IMessageBuilder(coreModelService,
+			new MessageParty(contextService.getRootContext().getStationIdentifier()), owner)
+				.build();
+		message.addMessageCode(MessageCode.Key.SenderSubId, "ch.elexis.core.tasks.taskservice");
+		message.setSenderAcceptsAnswer(false);
+		
+		String resultText;
+		if (TaskState.FAILED == state) {
+			resultText =
+				(String) task.getRunContext().get(ReturnParameter.FAILED_TASK_EXCEPTION_MESSAGE);
+			message.addMessageCode(MessageCode.Key.Severity, MessageCode.Value.Severity_WARN);
+		} else {
+			resultText = (String) task.getRunContext().get(ReturnParameter.RESULT_DATA);
+			message.addMessageCode(MessageCode.Key.Severity, MessageCode.Value.Severity_INFO);
+		}
+		
+		message.setMessageText(task.getLabel()+"\n"+resultText);
+		
+		coreModelService.save(message);
 	}
 	
 	@Override

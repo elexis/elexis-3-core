@@ -2,8 +2,8 @@ package ch.elexis.core.tasks.internal.model.service;
 
 import ch.elexis.core.jpa.model.adapter.AbstractModelAdapterFactory;
 import ch.elexis.core.jpa.model.adapter.MappingEntry;
-import ch.elexis.core.tasks.internal.model.impl.Task;
-import ch.elexis.core.tasks.internal.model.impl.TaskDescriptor;
+import ch.elexis.core.tasks.internal.service.Task;
+import ch.elexis.core.tasks.internal.service.TaskDescriptor;
 import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 

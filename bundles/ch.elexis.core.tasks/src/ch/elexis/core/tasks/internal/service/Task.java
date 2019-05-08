@@ -1,4 +1,4 @@
-package ch.elexis.core.tasks.internal.model.impl;
+package ch.elexis.core.tasks.internal.service;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -19,9 +19,6 @@ import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable.ReturnParameter;
 import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.tasks.internal.model.service.CoreModelServiceHolder;
-import ch.elexis.core.tasks.internal.service.LogProgressMonitor;
-import ch.elexis.core.tasks.internal.service.TaskServiceHolder;
-import ch.elexis.core.tasks.internal.service.TaskServiceImpl;
 import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.TaskState;
@@ -98,7 +95,11 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	
 	private void setState(TaskState state){
 		getEntity().setState(state.getValue());
-		logger.info("state = {}", getState());
+		if(TaskState.FAILED == state) {
+			logger.warn("state = {}", getState());
+		} else {
+			logger.debug("state = {}", getState());
+		}
 		CoreModelServiceHolder.get().save(this);
 		TaskServiceImpl ts = (TaskServiceImpl) TaskServiceHolder.get();
 		ts.notify(this);
@@ -136,10 +137,11 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		return (TaskState.COMPLETED == getState() || TaskState.FAILED == getState());
 	}
 	
-	private void removeTaskRecording(){
+	private void removeTaskRecord(){
+		logger.debug("removing record");
 		CoreModelServiceHolder.get().remove(this);
 	}
-
+	
 	@Override
 	public void run(){
 		Optional<ITaskDescriptor> originTaskDescriptor = TaskServiceHolder.get()
@@ -166,7 +168,9 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 				setResult(runnableWithContext.run(effectiveRunContext, progressMonitor, logger));
 				setState(TaskState.COMPLETED);
 			} catch (TaskException te) {
-				setResult(Collections.singletonMap("exceptionMessage", te.getMessage()));
+				setResult(Collections.singletonMap(
+					IIdentifiedRunnable.ReturnParameter.FAILED_TASK_EXCEPTION_MESSAGE,
+					te.getMessage()));
 				logger.warn(te.getMessage(), te);
 				setState(TaskState.FAILED);
 			}
@@ -175,8 +179,8 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 				progressMonitor.done();
 			}
 			
-			if(getResult().containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)) {
-				removeTaskRecording();
+			if (getResult().containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)) {
+				removeTaskRecord();
 			}
 			
 		} else {
@@ -185,15 +189,20 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		}
 		
 	}
-
+	
 	@Override
 	public boolean addXid(String domain, String id, boolean updateIfExists){
 		throw new UnsupportedOperationException();
 	}
-
+	
 	@Override
 	public IXid getXid(String domain){
 		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public String getLabel(){
+		return "Task ["+getId()+"] (triggered by "+getTriggerEvent()+"): "+getState();
 	}
 	
 }

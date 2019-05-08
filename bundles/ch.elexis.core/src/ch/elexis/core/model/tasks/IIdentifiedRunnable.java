@@ -68,6 +68,12 @@ public interface IIdentifiedRunnable {
 		 * watcher that found nothing)
 		 */
 		public static final String MARKER_DO_NOT_PERSIST = "markerDoNotPersist";
+		
+		/**
+		 * If the task throws an exception (task fails), the message of the exception is returned
+		 * using this key.
+		 */
+		public static final String FAILED_TASK_EXCEPTION_MESSAGE = "exceptionMessage";
 	}
 
 	/**

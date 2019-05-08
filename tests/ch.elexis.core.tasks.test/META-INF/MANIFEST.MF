@@ -8,6 +8,8 @@ Automatic-Module-Name: ch.elexis.core.jobs.test
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.junit,
- ch.elexis.core.services;bundle-version="1.0.0"
+ ch.elexis.core.services;bundle-version="1.0.0",
+ ch.rgw.utility
 Bundle-ClassPath: lib/awaitility-3.1.6.jar,
  .
+Import-Package: ch.elexis.core.importer.div.tasks
