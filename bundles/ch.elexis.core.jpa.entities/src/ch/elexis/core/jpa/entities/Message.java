@@ -46,6 +46,10 @@ public class Message extends AbstractEntityWithId implements EntityWithId, Entit
 	@Lob
 	protected String msg;
 	
+	@Column
+	@Lob
+	protected String messageCodes;
+	
 	public Kontakt getOrigin(){
 		return origin;
 	}
@@ -81,6 +85,14 @@ public class Message extends AbstractEntityWithId implements EntityWithId, Entit
 	@Override
 	public boolean isDeleted(){
 		return deleted;
+	}
+	
+	public String getMessageCodes(){
+		return messageCodes;
+	}
+	
+	public void setMessageCodes(String messageCodes){
+		this.messageCodes = messageCodes;
 	}
 	
 	@Override

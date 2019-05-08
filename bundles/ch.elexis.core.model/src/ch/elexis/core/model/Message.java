@@ -3,22 +3,30 @@ package ch.elexis.core.model;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.persistence.Transient;
 
+import com.google.gson.Gson;
+
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
+import ch.elexis.core.model.message.MessageParty;
 import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.services.INamedQuery;
 
 public class Message extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Message>
 		implements Identifiable, IMessage {
 	
+	private final Gson gson;
+	
 	public Message(ch.elexis.core.jpa.entities.Message entity){
 		super(entity);
+		gson = new Gson();
 	}
 	
 	@Override
@@ -59,11 +67,11 @@ public class Message extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public void addReceiver(IUser user){
+	public void addReceiver(IMessageParty user){
 		List<IMessageParty> receiver = getReceiver();
-		receiver.add(new MessageParty(user));
+		receiver.add(user);
 		// TODO suppport multiple receivers
-		Kontakt contact = ((AbstractIdModelAdapter<Kontakt>) user.getAssignedContact()).getEntity();
+		Kontakt contact = ((AbstractIdModelAdapter<Kontakt>) user.getUser().getAssignedContact()).getEntity();
 		getEntity().setDestination(contact);
 	}
 	
@@ -98,15 +106,26 @@ public class Message extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 		getEntity().setMsg(value);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public String getMessageCode(){
-		// TODO support
-		return null;
+	public Map<String, String> getMessageCodes(){
+		String json = getEntity().getMessageCodes();
+		if (json != null) {
+			return gson.fromJson(json, Map.class);
+		}
+		return new HashMap<>();
 	}
 	
 	@Override
-	public void setMessageCode(String value){
-		// TODO support
+	public void setMessageCodes(Map<String, String> value){
+		String json = gson.toJson(value);
+		getEntity().setMessageCodes(json);
+	}
+	
+	@Override
+	public void addMessageCode(String key, String value){
+		// TODO Auto-generated method stub
+		
 	}
 	
 	@Override

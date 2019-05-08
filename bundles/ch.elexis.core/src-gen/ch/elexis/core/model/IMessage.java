@@ -13,6 +13,7 @@ package ch.elexis.core.model;
 import java.time.LocalDateTime;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <!-- begin-user-doc -->
@@ -32,7 +33,7 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IMessage#isSenderAcceptsAnswer <em>Sender Accepts Answer</em>}</li>
  *   <li>{@link ch.elexis.core.model.IMessage#getCreateDateTime <em>Create Date Time</em>}</li>
  *   <li>{@link ch.elexis.core.model.IMessage#getMessageText <em>Message Text</em>}</li>
- *   <li>{@link ch.elexis.core.model.IMessage#getMessageCode <em>Message Code</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IMessage#getMessageCodes <em>Message Codes</em>}</li>
  *   <li>{@link ch.elexis.core.model.IMessage#getMessagePriority <em>Message Priority</em>}</li>
  * </ul>
  *
@@ -160,29 +161,29 @@ public interface IMessage extends Identifiable, Deleteable {
 	void setMessageText(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Message Code</b></em>' attribute.
+	 * Returns the value of the '<em><b>Message Codes</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * a message code to allow for extended representation and/or action configuration (e.g. show a specific image, perform a specific task)
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Message Code</em>' attribute.
-	 * @see #setMessageCode(String)
-	 * @see ch.elexis.core.model.ModelPackage#getIMessage_MessageCode()
+	 * @return the value of the '<em>Message Codes</em>' attribute.
+	 * @see #setMessageCodes(Map)
+	 * @see ch.elexis.core.model.ModelPackage#getIMessage_MessageCodes()
 	 * @model
 	 * @generated
 	 */
-	String getMessageCode();
+	Map<String, String> getMessageCodes();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IMessage#getMessageCode <em>Message Code</em>}' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IMessage#getMessageCodes <em>Message Codes</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Message Code</em>' attribute.
-	 * @see #getMessageCode()
+	 * @param value the new value of the '<em>Message Codes</em>' attribute.
+	 * @see #getMessageCodes()
 	 * @generated
 	 */
-	void setMessageCode(String value);
+	void setMessageCodes(Map<String, String> value);
 
 	/**
 	 * Returns the value of the '<em><b>Message Priority</b></em>' attribute.
@@ -225,6 +226,14 @@ public interface IMessage extends Identifiable, Deleteable {
 	 * @model
 	 * @generated
 	 */
-	void addReceiver(IUser addReceiver);
+	void addReceiver(IMessageParty addReceiver);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	void addMessageCode(String key, String value);
 
 } // IMessage

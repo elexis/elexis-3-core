@@ -6196,13 +6196,13 @@ public interface ModelPackage extends EPackage {
 	int IMESSAGE__MESSAGE_TEXT = IDENTIFIABLE_FEATURE_COUNT + 5;
 
 	/**
-	 * The feature id for the '<em><b>Message Code</b></em>' attribute.
+	 * The feature id for the '<em><b>Message Codes</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMESSAGE__MESSAGE_CODE = IDENTIFIABLE_FEATURE_COUNT + 6;
+	int IMESSAGE__MESSAGE_CODES = IDENTIFIABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Message Priority</b></em>' attribute.
@@ -10137,15 +10137,15 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIMessage_MessageText();
 
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IMessage#getMessageCode <em>Message Code</em>}'.
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IMessage#getMessageCodes <em>Message Codes</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Message Code</em>'.
-	 * @see ch.elexis.core.model.IMessage#getMessageCode()
+	 * @return the meta object for the attribute '<em>Message Codes</em>'.
+	 * @see ch.elexis.core.model.IMessage#getMessageCodes()
 	 * @see #getIMessage()
 	 * @generated
 	 */
-	EAttribute getIMessage_MessageCode();
+	EAttribute getIMessage_MessageCodes();
 
 	/**
 	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IMessage#getMessagePriority <em>Message Priority</em>}'.
@@ -13330,12 +13330,12 @@ public interface ModelPackage extends EPackage {
 		EAttribute IMESSAGE__MESSAGE_TEXT = eINSTANCE.getIMessage_MessageText();
 
 		/**
-		 * The meta object literal for the '<em><b>Message Code</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Message Codes</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute IMESSAGE__MESSAGE_CODE = eINSTANCE.getIMessage_MessageCode();
+		EAttribute IMESSAGE__MESSAGE_CODES = eINSTANCE.getIMessage_MessageCodes();
 
 		/**
 		 * The meta object literal for the '<em><b>Message Priority</b></em>' attribute feature.

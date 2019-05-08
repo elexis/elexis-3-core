@@ -601,13 +601,17 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IMessage/senderAcceptsAnswer"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IMessage/createDateTime"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IMessage/messageText"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IMessage/messageCode"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IMessage/messageCodes"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IMessage/messagePriority"/>
       <genOperations ecoreOperation="model.ecore#//IMessage/setSender">
         <genParameters ecoreParameter="model.ecore#//IMessage/setSender/user"/>
       </genOperations>
       <genOperations ecoreOperation="model.ecore#//IMessage/addReceiver">
         <genParameters ecoreParameter="model.ecore#//IMessage/addReceiver/addReceiver"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IMessage/addMessageCode">
+        <genParameters ecoreParameter="model.ecore#//IMessage/addMessageCode/key"/>
+        <genParameters ecoreParameter="model.ecore#//IMessage/addMessageCode/value"/>
       </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IMessageParty">

@@ -4306,7 +4306,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIMessage_MessageCode() {
+	public EAttribute getIMessage_MessageCodes() {
 		return (EAttribute)iMessageEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -4810,7 +4810,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iMessageEClass, IMESSAGE__SENDER_ACCEPTS_ANSWER);
 		createEAttribute(iMessageEClass, IMESSAGE__CREATE_DATE_TIME);
 		createEAttribute(iMessageEClass, IMESSAGE__MESSAGE_TEXT);
-		createEAttribute(iMessageEClass, IMESSAGE__MESSAGE_CODE);
+		createEAttribute(iMessageEClass, IMESSAGE__MESSAGE_CODES);
 		createEAttribute(iMessageEClass, IMESSAGE__MESSAGE_PRIORITY);
 
 		iMessagePartyEClass = createEClass(IMESSAGE_PARTY);
@@ -5624,14 +5624,23 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIMessage_SenderAcceptsAnswer(), ecorePackage.getEBoolean(), "senderAcceptsAnswer", null, 0, 1, IMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIMessage_CreateDateTime(), theTypesPackage.getLocalDateTime(), "createDateTime", null, 0, 1, IMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIMessage_MessageText(), ecorePackage.getEString(), "messageText", null, 0, 1, IMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIMessage_MessageCode(), ecorePackage.getEString(), "messageCode", null, 0, 1, IMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		g1 = createEGenericType(ecorePackage.getEMap());
+		g2 = createEGenericType(ecorePackage.getEString());
+		g1.getETypeArguments().add(g2);
+		g2 = createEGenericType(ecorePackage.getEString());
+		g1.getETypeArguments().add(g2);
+		initEAttribute(getIMessage_MessageCodes(), g1, "messageCodes", null, 0, 1, IMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIMessage_MessagePriority(), ecorePackage.getEInt(), "messagePriority", "0", 0, 1, IMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		op = addEOperation(iMessageEClass, null, "setSender", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIUser(), "user", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		op = addEOperation(iMessageEClass, null, "addReceiver", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getIUser(), "addReceiver", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIMessageParty(), "addReceiver", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iMessageEClass, null, "addMessageCode", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "key", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "value", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iMessagePartyEClass, IMessageParty.class, "IMessageParty", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getIMessageParty_User(), this.getIUser(), null, "user", null, 0, 1, IMessageParty.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
