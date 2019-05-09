@@ -49,11 +49,14 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IStockEntry;
+import ch.elexis.core.data.service.CodeElementServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.importer.div.importers.ExcelWrapper;
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.services.ICodeElementService.CodeElementTyp;
+import ch.elexis.core.services.ICodeElementServiceContribution;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.stock.service.ArticleServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.PersistentObject;
@@ -135,9 +138,9 @@ public class ImportArticleDialog extends TitleAreaDialog {
 		reportLink.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, true, 3, 1));
 		// Event handling when users click on links.
 		reportLink.addSelectionListener(new SelectionAdapter() {
-		 
-		    @Override
-		    public void widgetSelected(SelectionEvent e) {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e){
 				FileDialog fd = new FileDialog(getShell(), SWT.SAVE);
 				fd.setFilterExtensions(new String[] {
 					"*.csv"
@@ -155,8 +158,8 @@ public class ImportArticleDialog extends TitleAreaDialog {
 							.error("report save error", e1);
 					}
 				}
-		    }
-		     
+			}
+			
 		});
 		
 		return ret;
@@ -182,60 +185,53 @@ public class ImportArticleDialog extends TitleAreaDialog {
 			reportLink.setVisible(true);
 		}
 	}
-
+	
 	private void doImport(){
 		
 		StringBuffer buf = new StringBuffer();
 		
 		// check for store availability
-		final List<String> storeIds = ArticleServiceHolder.getStoreIds();
-		if (storeIds.isEmpty()) {
-			buf.append(
-				"Es ist kein Artikelservice registriert. Vergewissern Sie sich, dass zumindest ein Artikel Plugin installiert ist.");
-		}
-		else {
-			// check for stock availability
-			StructuredSelection iSelection = (StructuredSelection) comboStockType.getSelection();
-			if (iSelection.isEmpty()) {
-				buf.append("Bitte wählen Sie ein Lager aus.");
-			} else {
-				final Stock stock = (Stock) iSelection.getFirstElement();
+		
+		// check for stock availability
+		StructuredSelection iSelection = (StructuredSelection) comboStockType.getSelection();
+		if (iSelection.isEmpty()) {
+			buf.append("Bitte wählen Sie ein Lager aus.");
+		} else {
+			final Stock stock = (Stock) iSelection.getFirstElement();
+			
+			// check src file
+			String path = tFilePath.getText();
+			if (path != null && !path.isEmpty() && path.toLowerCase().endsWith("xls")) {
 				
-				// check src file
-				String path = tFilePath.getText();
-				if (path != null && !path.isEmpty() && path.toLowerCase().endsWith("xls")) {
-					
-					try (FileInputStream is = new FileInputStream(tFilePath.getText())) {
-						ExcelWrapper xl = new ExcelWrapper();
-						if (xl.load(is, 0)) {
-							xl.setFieldTypes(new Class[] {
-								Integer.class, String.class, String.class, String.class,
-								String.class, String.class, Integer.class, String.class,
-								String.class, String.class
-							});
-							MessageDialog dialog = new MessageDialog(getShell(), "Datenimport",
-								null, "Wie sollen die Datenbestände importiert werden ?",
-								MessageDialog.QUESTION, 0, "Datenbestand 'exakt' importieren",
-								"Datenbestand 'aufaddieren'");
-							int ret = dialog.open();
-							if (ret >= 0) {
-								runImport(buf, storeIds, stock, xl, ret == 0);
-							}
-							return;
+				try (FileInputStream is = new FileInputStream(tFilePath.getText())) {
+					ExcelWrapper xl = new ExcelWrapper();
+					if (xl.load(is, 0)) {
+						xl.setFieldTypes(new Class[] {
+							Integer.class, String.class, String.class, String.class, String.class,
+							String.class, Integer.class, String.class, String.class, String.class
+						});
+						MessageDialog dialog = new MessageDialog(getShell(), "Datenimport", null,
+							"Wie sollen die Datenbestände importiert werden ?",
+							MessageDialog.QUESTION, 0, "Datenbestand 'exakt' importieren",
+							"Datenbestand 'aufaddieren'");
+						int ret = dialog.open();
+						if (ret >= 0) {
+							runImport(buf, stock, xl, ret == 0);
 						}
-					} catch (IOException e) {
-						MessageDialog.openError(getShell(), "Import error",
-							"Import fehlgeschlagen.\nDatei nicht importierbar: " + path);
-						LoggerFactory.getLogger(ImportArticleDialog.class)
-							.error("cannot import file at " + path, e);
+						return;
 					}
-				} else {
-					buf.append(
-						"Die Quelldatei ist ungültig. Bitte überprüfen Sie diese Datei.\n"
-						+ path);
+				} catch (IOException e) {
+					MessageDialog.openError(getShell(), "Import error",
+						"Import fehlgeschlagen.\nDatei nicht importierbar: " + path);
+					LoggerFactory.getLogger(ImportArticleDialog.class)
+						.error("cannot import file at " + path, e);
 				}
+			} else {
+				buf.append(
+					"Die Quelldatei ist ungültig. Bitte überprüfen Sie diese Datei.\n" + path);
 			}
 		}
+		
 		if (buf.length() > 0) {
 			MessageDialog.openInformation(getShell(), "Import Ergebnis", buf.toString());
 		} else {
@@ -243,9 +239,9 @@ public class ImportArticleDialog extends TitleAreaDialog {
 				"Import nicht möglich.\nÜberprüfen Sie das Log-File.");
 		}
 	}
-
-	private void runImport(StringBuffer buf, final List<String> storeIds, final Stock stock,
-		ExcelWrapper xl, boolean overrideStockEntries){
+	
+	private void runImport(StringBuffer buf, final Stock stock, ExcelWrapper xl,
+		boolean overrideStockEntries){
 		ProgressMonitorDialog progress = new ProgressMonitorDialog(getShell());
 		try {
 			progress.run(true, true, new IRunnableWithProgress() {
@@ -260,8 +256,7 @@ public class ImportArticleDialog extends TitleAreaDialog {
 					monitor.beginTask("Artikel in Lager Import", 100);
 					
 					for (int i = firstRow; i <= lastRow; i++) {
-						Optional<? extends IArticle> opArticle =
-							Optional.empty();
+						Optional<? extends IArticle> opArticle = Optional.empty();
 						List<String> row = xl.getRow(i);
 						String stockCount = row.get(0);
 						String articleName = row.get(1);
@@ -276,30 +271,25 @@ public class ImportArticleDialog extends TitleAreaDialog {
 						}
 						
 						// search for article
-						for (String storeId : storeIds) {
-							opArticle = ArticleServiceHolder.getService(storeId)
-								.get().findAnyByGTIN(gtin);
-						}
+						opArticle = findArticleByGtin(gtin);
 						
 						if (opArticle.isPresent()) {
 							// check if article is present in stock
-							IStockEntry stockEntry = CoreHub.getStockService()
-								.findStockEntryForArticleInStock(stock,
-									((Artikel) opArticle.get())
-										.storeToString());
+							IStockEntry stockEntry =
+								CoreHub.getStockService().findStockEntryForArticleInStock(stock,
+									((Artikel) opArticle.get()).storeToString());
 							
 							String result = "MODIFY";
-							if(stockEntry == null) {
+							if (stockEntry == null) {
 								PersistentObject article = (PersistentObject) opArticle.get();
-								stockEntry = CoreHub.getStockService()
-									.storeArticleInStock(stock, article.storeToString());
+								stockEntry = CoreHub.getStockService().storeArticleInStock(stock,
+									article.storeToString());
 								result = "ADDITION";
 							}
 							
 							if (stockEntry instanceof StockEntry) {
 								StockEntry poStockEntry = (StockEntry) stockEntry;
-								if (LocalLockServiceHolder.get().acquireLock(poStockEntry)
-									.isOk()) {
+								if (LocalLockServiceHolder.get().acquireLock(poStockEntry).isOk()) {
 									// do import
 									stockEntry.setCurrentStock(
 										overrideStockEntries ? StringTool.parseSafeInt(stockCount)
@@ -314,34 +304,26 @@ public class ImportArticleDialog extends TitleAreaDialog {
 											.setMaximumStock(StringTool.parseSafeInt(stockMax));
 									}
 									importCount++;
-									addToReport("OK "+result+" '" + stock.getLabel() + "'", articleName,
-										gtin);
+									addToReport("OK " + result + " '" + stock.getLabel() + "'",
+										articleName, gtin);
 									LocalLockServiceHolder.get().releaseLock(poStockEntry);
-								}
-								else {
-									addToReport("NO LOCK",
-										articleName,
-										gtin);
+								} else {
+									addToReport("NO LOCK", articleName, gtin);
 									unexpectedErrors++;
 								}
-							}
-							else
-							{
-								addToReport("Not in Stock '" + stock.getLabel() + "'",
-									articleName,
+							} else {
+								addToReport("Not in Stock '" + stock.getLabel() + "'", articleName,
 									gtin);
 								articleNotFoundInStock++;
 							}
 						} else {
 							articleNotFoundByGtin++;
-							addToReport("Not found by GTIN",
-								articleName, gtin);
+							addToReport("Not found by GTIN", articleName, gtin);
 						}
 						
 						monitor.worked(1);
 						if (monitor.isCanceled()) {
-							buf.append(
-								"Der Import wurde durch den Benutzer abgebrochen.");
+							buf.append("Der Import wurde durch den Benutzer abgebrochen.");
 							break;
 						}
 					}
@@ -375,7 +357,6 @@ public class ImportArticleDialog extends TitleAreaDialog {
 					}
 				}
 				
-
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
 			LoggerFactory.getLogger(ImportArticleDialog.class)
@@ -407,5 +388,23 @@ public class ImportArticleDialog extends TitleAreaDialog {
 		if (closeBtn != null) {
 			closeBtn.setText("Schließen");
 		}
+	}
+	
+	private Optional<IArticle> findArticleByGtin(String scanCode){
+		List<ICodeElementServiceContribution> articleContributions =
+			CodeElementServiceHolder.get().getContributionsByTyp(CodeElementTyp.ARTICLE);
+		for (ICodeElementServiceContribution contribution : articleContributions) {
+			Optional<ICodeElement> loadFromCode = contribution.loadFromCode(scanCode);
+			if (loadFromCode.isPresent()) {
+				if (loadFromCode.get() instanceof IArticle) {
+					return loadFromCode.map(IArticle.class::cast);
+				} else {
+					LoggerFactory.getLogger(getClass()).warn(
+						"Found article for gtin [{}] but is not castable to IArticle [{}]",
+						scanCode, loadFromCode.get().getClass().getName());
+				}
+			}
+		}
+		return Optional.empty();
 	}
 }

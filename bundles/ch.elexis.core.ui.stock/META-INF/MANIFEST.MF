@@ -10,8 +10,6 @@ Require-Bundle: org.eclipse.jface,
  ch.elexis.core.ui,
  ch.elexis.core.ui.icons,
  org.eclipse.ui
-Service-Component: OSGI-INF/ch.elexis.core.ui.stock.service.internal.ArticleServiceStore.xml,
- OSGI-INF/ch.elexis.core.ui.stock.service.ArticleServiceHolder.xml
 Bundle-ActivationPolicy: lazy
 Import-Package: ch.elexis.core.data.activator,
  ch.elexis.core.data.interfaces,
