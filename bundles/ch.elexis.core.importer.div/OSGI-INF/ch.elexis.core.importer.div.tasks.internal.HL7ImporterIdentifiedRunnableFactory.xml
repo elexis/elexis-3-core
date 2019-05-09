@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="ch.elexis.core.importer.div.tasks.internal.HL7ImporterIdentifiedRunnableFactory">
+   <service>
+      <provide interface="ch.elexis.core.model.tasks.IIdentifiedRunnableFactory"/>
+   </service>
+   <reference bind="setModelService" interface="ch.elexis.core.services.IModelService" name="ModelService" target="(service.model.name=ch.elexis.core.model)"/>
+   <reference cardinality="1..1" field="labimportUtil" interface="ch.elexis.core.importer.div.importers.ILabImportUtil" name="labimportUtil"/>
+   <reference cardinality="1..1" field="vfsService" interface="ch.elexis.core.services.IVirtualFilesystemService" name="vfsService"/>
+   <implementation class="ch.elexis.core.importer.div.tasks.internal.HL7ImporterIdentifiedRunnableFactory"/>
+</scr:component>

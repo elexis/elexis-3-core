@@ -14,6 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -209,7 +210,8 @@ public class TaskServiceImpl implements ITaskService {
 		ITaskDescriptor taskDescriptor = taskModelService.create(ITaskDescriptor.class);
 		taskDescriptor.setOwner(owner);
 		taskDescriptor.setIdentifiedRunnableId(identifiedRunnable.getId());
-		taskDescriptor.setRunner(contextService.getRootContext().getStationIdentifier());
+		String stationIdentifier = contextService.getRootContext().getStationIdentifier();
+		taskDescriptor.setRunner(StringUtils.abbreviate(stationIdentifier, 64));
 		
 		saveTaskDescriptor(taskDescriptor);
 		

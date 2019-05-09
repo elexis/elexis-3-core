@@ -21,6 +21,7 @@ public class IMessageBuilder extends AbstractBuilder<IMessage>{
 	public IMessageBuilder(IModelService modelService, IMessageParty sender, IMessageParty receiver){
 		super(modelService);
 		
+		object = modelService.create(IMessage.class);
 		object.setSender(sender);
 		object.addReceiver(receiver);
 		object.setDeleted(false);

@@ -25,13 +25,7 @@ Require-Bundle: org.eclipse.osgi.services;bundle-version="3.7.100",
  org.apache.commons.beanutils,
  ch.rgw.utility;bundle-version="3.8.0"
 Bundle-ActivationPolicy: lazy
-Service-Component: OSGI-INF/ch.elexis.core.tasks.internal.service.TaskServiceImpl.xml,
- OSGI-INF/ch.elexis.core.tasks.internal.model.service.TaskModelService.xml,
- OSGI-INF/ch.elexis.core.tasks.internal.model.service.CoreModelServiceHolder.xml,
- OSGI-INF/ch.elexis.core.tasks.internal.console.ConsoleCommandProvider.xml,
- OSGI-INF/ch.elexis.core.tasks.internal.service.IdentifiedRunnableFactoryImpl.xml,
- OSGI-INF/ch.elexis.core.tasks.internal.service.TaskServiceHolder.xml,
- OSGI-INF/ch.elexis.core.tasks.internal.service.sysevents.SysEventWatcher.xml
+Service-Component: OSGI-INF/*.xml
 Import-Package: ch.elexis.core.jpa.model.adapter,
  ch.elexis.core.jpa.model.adapter.mixin,
  javax.persistence;version="2.2.0",

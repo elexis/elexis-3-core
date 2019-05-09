@@ -697,6 +697,7 @@
 			<column name="TRIGGEREVENT" type="TINYINT" />
 			<column name="RESULT" type="CLOB" />
 			<column name="RUNCONTEXT" type="CLOB" />
+			<column name="RUNNER" type="VARCHAR(64)" />
 		</createTable>
 	</changeSet>
 
@@ -1326,6 +1327,12 @@
     	</insert>
     </changeSet>
 	<changeSet author="marco" id="1527175239251-24-01">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="CH_ELEXIS_MESSAGES"
+					columnName="messageCodes" />
+			</not>
+		</preConditions>
 		<addColumn tableName="CH_ELEXIS_MESSAGES">
 			<column name="messageCodes" type="LONGTEXT" />
 		</addColumn>

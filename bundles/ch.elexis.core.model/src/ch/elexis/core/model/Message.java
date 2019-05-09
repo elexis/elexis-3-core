@@ -38,11 +38,13 @@ public class Message extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setSender(IMessageParty value){
-		// TODO support for station
 		IUser user = value.getUser();
-		IContact assignedContact = user.getAssignedContact();
-		Kontakt entity = ((AbstractIdModelAdapter<Kontakt>) assignedContact).getEntity();
-		getEntity().setOrigin(entity);
+		if(user != null) {
+			IContact assignedContact = user.getAssignedContact();
+			Kontakt entity = ((AbstractIdModelAdapter<Kontakt>) assignedContact).getEntity();
+			getEntity().setOrigin(entity);
+		}
+		// TODO support for station, silently ignored by now
 	}
 	
 	/**

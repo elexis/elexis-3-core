@@ -9,7 +9,9 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.junit,
  ch.elexis.core.services;bundle-version="1.0.0",
- ch.rgw.utility
+ ch.rgw.utility,
+ ch.elexis.core.model;bundle-version="1.0.0"
 Bundle-ClassPath: lib/awaitility-3.1.6.jar,
  .
 Import-Package: ch.elexis.core.importer.div.tasks
+Service-Component: OSGI-INF/ch.elexis.core.importer.div.tasks.test.mock.MockOmnivoreDocumentStore.xml

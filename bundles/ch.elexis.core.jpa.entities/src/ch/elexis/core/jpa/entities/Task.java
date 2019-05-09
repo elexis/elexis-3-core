@@ -47,6 +47,9 @@ public class Task extends AbstractEntityWithId implements EntityWithId, EntityWi
 	@Lob
 	protected String result;
 	
+	@Column(length = 64)
+	protected String runner;
+	
 	public String getId(){
 		return id;
 	}
@@ -109,6 +112,14 @@ public class Task extends AbstractEntityWithId implements EntityWithId, EntityWi
 	
 	public void setResult(String result){
 		this.result = result;
+	}
+	
+	public String getRunner(){
+		return runner;
+	}
+	
+	public void setRunner(String runner){
+		this.runner = runner;
 	}
 	
 }
