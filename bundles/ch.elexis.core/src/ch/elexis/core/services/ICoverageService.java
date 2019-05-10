@@ -26,6 +26,13 @@ public interface ICoverageService {
 	 */
 	public String getRequiredString(ICoverage coverage, String name);
 	
+	/**
+	 * Set a required String value to a billing system's definition.
+	 * 
+	 * @param coverage
+	 * @param name
+	 * @param value
+	 */
 	public void setRequiredString(ICoverage coverage, String name, String value);
 	
 	/**

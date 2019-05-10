@@ -3,6 +3,7 @@ package ch.elexis.core.services;
 import java.util.List;
 import java.util.Optional;
 
+import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 
@@ -22,10 +23,31 @@ public interface IXidService {
 	 */
 	public IXidDomain getDomain(String name);
 	
+	/**
+	 * 
+	 * @param name
+	 * @return
+	 */
 	public List<IXidDomain> getDomains(String name);
 	
+	/**
+	 * 
+	 * @param domainName
+	 * @param simpleName
+	 * @param quality
+	 *            see {@link XidConstants} for values
+	 * @return
+	 */
 	public IXidDomain localRegisterXIDDomain(String domainName, String simpleName, int quality);
 	
+	/**
+	 * 
+	 * @param domainName
+	 * @param simpleName
+	 * @param qualitysee
+	 *            {@link XidConstants} for values
+	 * @return
+	 */
 	public IXidDomain localRegisterXIDDomainIfNotExists(String domainName, String simpleName,
 		int quality);
 	
