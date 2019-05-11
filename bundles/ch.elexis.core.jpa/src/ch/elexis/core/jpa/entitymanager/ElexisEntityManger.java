@@ -29,7 +29,7 @@ import ch.elexis.core.jpa.liquibase.LiquibaseDBUpdater;
 import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.utils.CoreUtil;
 
-@Component
+@Component(property = "id=default")
 public class ElexisEntityManger implements IElexisEntityManager {
 	
 	private static Logger logger = LoggerFactory.getLogger(ElexisEntityManger.class);
@@ -64,7 +64,7 @@ public class ElexisEntityManger implements IElexisEntityManager {
 		entityManagerCollector.shutdown();
 	}
 	
-	@Reference(service = DataSource.class, unbind = "unbindDataSource")
+	@Reference(service = DataSource.class, unbind = "unbindDataSource", target = "(id=default)")
 	protected synchronized void bindDataSource(DataSource dataSource){
 		logger.debug("Binding " + dataSource.getClass().getName());
 		this.dataSource = dataSource;

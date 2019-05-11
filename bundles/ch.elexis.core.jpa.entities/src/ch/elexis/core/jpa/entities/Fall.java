@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -26,6 +27,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "faelle")
 @EntityListeners(EntityWithIdListener.class)
+@NamedQuery(name = "Fall.patient", query = "SELECT f FROM Fall f WHERE f.deleted = false AND f.patientKontakt = :patient")
 public class Fall extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 

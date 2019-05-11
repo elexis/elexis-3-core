@@ -16,6 +16,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.Desk;
@@ -39,7 +40,7 @@ public class ConfigService implements IConfigService {
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService modelService;
 	
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL, policyOption = ReferencePolicyOption.GREEDY)
 	private IContextService contextService;
 	
 	public static final String LIST_SEPARATOR = ",";
@@ -260,6 +261,17 @@ public class ConfigService implements IConfigService {
 			LoggerFactory.getLogger(getClass()).warn("IContextService not available, returning defaultValue");
 		}
 		return defaultValue;
+	}
+	
+	@Override
+	public void setActiveMandator(String key, String value){
+		Optional<IMandator> activeMandator = contextService.getActiveMandator();
+		if (activeMandator.isPresent()) {
+			set(activeMandator.get(), key, value);
+		} else {
+			LoggerFactory.getLogger(getClass())
+				.warn("No active mandator available");
+		}
 	}
 	
 	@Override

@@ -33,4 +33,21 @@ public interface IStoreToStringService {
 	 * @return
 	 */
 	public List<Identifiable> loadFromStringWithIdPart(String partialStoreToString);
+	
+	/**
+	 * Get the entity class that is known under the type name.
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public Class<?> getEntityForType(String type);
+	
+	/**
+	 * Get the type name that is known for the entity instance.
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public String getTypeForEntity(Object entityInstance);
+	
 }

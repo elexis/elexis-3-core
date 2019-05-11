@@ -81,6 +81,15 @@ public interface IConfigService {
 	
 	/**
 	 * Set a contact specific configuration entry. Overwrites existing value. Performs save
+	 * operation. The current mandator is resolved via the {@link IContextService}
+	 * 
+	 * @param configMigrationdomainName
+	 * @param name
+	 */
+	public void setActiveMandator(String key, String value);
+	
+	/**
+	 * Set a contact specific configuration entry. Overwrites existing value. Performs save
 	 * operation.
 	 * 
 	 * @param contact

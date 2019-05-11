@@ -30,7 +30,7 @@ import ch.elexis.core.services.IStoreToStringContribution;
 public class CoreModelService extends AbstractModelService
 		implements IModelService, IStoreToStringContribution {
 	
-	@Reference
+	@Reference(target = "(id=default)")
 	private IElexisEntityManager entityManager;
 	
 	@Reference
@@ -148,5 +148,15 @@ public class CoreModelService extends AbstractModelService
 	@Override
 	public void clearCache(){
 		entityManager.clearCache();
+	}
+	
+	@Override
+	public Class<?> getEntityForType(String type){
+		return ElexisTypeMap.get(type);
+	}
+	
+	@Override
+	public String getTypeForEntity(Object entityInstance){
+		return ElexisTypeMap.getKeyForObject((EntityWithId) entityInstance);
 	}
 }

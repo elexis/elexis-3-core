@@ -115,4 +115,12 @@ public interface IXidService {
 	 * @return
 	 */
 	public IXid getXid(Identifiable identifiable, String domain);
+	
+	/**
+	 * Get all {@link IXid} instances for the provided {@link Identifiable}.
+	 * 
+	 * @param element
+	 * @return
+	 */
+	public List<IXid> getXids(Identifiable identifiable);
 }

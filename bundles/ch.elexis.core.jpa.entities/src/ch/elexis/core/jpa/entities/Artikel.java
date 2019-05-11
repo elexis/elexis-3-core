@@ -30,6 +30,7 @@ import ch.elexis.core.types.ArticleTyp;
 @NamedQuery(name = "Artikel.typ.code", query = "SELECT ar FROM Artikel ar WHERE ar.deleted = false AND ar.subId = :code AND ar.typ = :typ")
 @NamedQuery(name = "Artikel.typ.id", query = "SELECT ar FROM Artikel ar WHERE ar.deleted = false AND ar.id = :id AND ar.typ = :typ")
 @NamedQuery(name = "Artikel.typ", query = "SELECT ar FROM Artikel ar WHERE ar.deleted = false AND ar.typ = :typ")
+@NamedQuery(name = "Artikel.gtin", query = "SELECT ar FROM Artikel ar WHERE ar.deleted = false AND ar.ean = :gtin")
 public class Artikel extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 

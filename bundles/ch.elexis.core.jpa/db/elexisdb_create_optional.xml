@@ -1326,6 +1326,24 @@
        		<column name="CHAPTER" value="0"/>
     	</insert>
     </changeSet>
+    <changeSet author="thomas" id="1527175239251-24">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="CH_ELEXIS_MESSAGES" />
+			</not>
+		</preConditions>
+        <createTable tableName="CH_ELEXIS_MESSAGES">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_MESSAGES_ID"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="ORIGIN" type="VARCHAR(25)"/>
+            <column name="DESTINATION" type="VARCHAR(25)"/>
+            <column name="DATETIME" type="CHAR(14)"/>
+            <column name="MSG" type="CLOB"/>
+        </createTable>
+    </changeSet>
 	<changeSet author="marco" id="1527175239251-24-01">
 		<preConditions onFail="MARK_RAN">
 			<not>

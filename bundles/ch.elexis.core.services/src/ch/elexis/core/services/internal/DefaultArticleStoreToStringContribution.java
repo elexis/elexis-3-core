@@ -40,4 +40,16 @@ public class DefaultArticleStoreToStringContribution implements IStoreToStringCo
 		return Optional.empty();
 	}
 	
+	@Override
+	public Class<?> getEntityForType(String type){
+		// no mapping available for default articles
+		return null;
+	}
+	
+	@Override
+	public String getTypeForEntity(Object entityInstance){
+		// no mapping available for default articles
+		return null;
+	}
+	
 }

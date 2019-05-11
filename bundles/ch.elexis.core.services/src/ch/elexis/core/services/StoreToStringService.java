@@ -91,4 +91,30 @@ public class StoreToStringService implements IStoreToStringService {
 		}
 		return ret.parallelStream().filter(Objects::nonNull).collect(Collectors.toList());
 	}
+	
+	@Override
+	public Class<?> getEntityForType(String type){
+		if (type != null) {
+			for (IStoreToStringContribution iStoreToStringContribution : contributions) {
+				Class<?> loaded = iStoreToStringContribution.getEntityForType(type);
+				if (loaded != null) {
+					return loaded;
+				}
+			}
+		}
+		return null;
+	}
+	
+	@Override
+	public String getTypeForEntity(Object entityInstance){
+		if (entityInstance != null) {
+			for (IStoreToStringContribution iStoreToStringContribution : contributions) {
+				String loaded = iStoreToStringContribution.getTypeForEntity(entityInstance);
+				if (loaded != null) {
+					return loaded;
+				}
+			}
+		}
+		return null;
+	}
 }

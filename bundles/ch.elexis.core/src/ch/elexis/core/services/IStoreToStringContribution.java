@@ -51,4 +51,21 @@ public interface IStoreToStringContribution {
 	public default List<Identifiable> loadFromStringWithIdPart(String partialStoreToString){
 		return Collections.emptyList();
 	}
+	
+	/**
+	 * Get the entity class that is known under the type name.
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public Class<?> getEntityForType(String type);
+	
+	/**
+	 * Get the type name that is known for the entity instance.
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public String getTypeForEntity(Object entityInstance);
+	
 }

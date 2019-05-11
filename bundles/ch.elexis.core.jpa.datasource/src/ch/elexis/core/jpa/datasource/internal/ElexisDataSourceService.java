@@ -18,7 +18,7 @@ import ch.elexis.core.jpa.datasource.test.TestDatabaseConnection;
 import ch.elexis.core.services.IElexisDataSource;
 import ch.elexis.core.utils.CoreUtil;
 
-@Component(immediate = true)
+@Component(immediate = true, property = "id=default")
 public class ElexisDataSourceService implements IElexisDataSource {
 	
 	private static Logger log = LoggerFactory.getLogger(ElexisDataSourceService.class);
@@ -51,8 +51,10 @@ public class ElexisDataSourceService implements IElexisDataSource {
 			
 			currentDataSource = new ElexisPoolingDataSource(dbConnection);
 			currentDataSource.activate();
+			Hashtable<String, String> properties = new Hashtable<>();
+			properties.put("id", "default");
 			servReg = FrameworkUtil.getBundle(getClass()).getBundleContext()
-				.registerService(DataSource.class, currentDataSource, new Hashtable<>());
+				.registerService(DataSource.class, currentDataSource, properties);
 			return Status.OK_STATUS;
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			// Logging might not even been initialized yet

@@ -222,4 +222,24 @@ public class XidService implements IXidService {
 		}
 		return null;
 	}
+	
+	@Override
+	public List<IXid> getXids(Identifiable identifiable){
+		String typeString = null;
+		String storeToString = StoreToStringServiceHolder.getStoreToString(identifiable);
+		if (storeToString != null) {
+			String[] parts = storeToString.split(IStoreToStringContribution.DOUBLECOLON);
+			if (parts.length == 2) {
+				typeString = parts[0];
+			}
+		}
+		if (typeString != null) {
+			INamedQuery<IXid> query =
+				CoreModelServiceHolder.get().getNamedQuery(IXid.class, "objectid", "type");
+			return query.executeWithParameters(query.getParameterMap("domain", "objectid",
+				identifiable.getId(), "type", typeString));
+		} else {
+			throw new IllegalStateException("No store to string for object [" + this + "]");
+		}
+	}
 }

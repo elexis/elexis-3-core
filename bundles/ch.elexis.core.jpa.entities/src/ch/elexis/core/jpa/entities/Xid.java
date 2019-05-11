@@ -40,6 +40,7 @@ import ch.elexis.core.model.XidQuality;
 @NamedQuery(name = "Xid.domain.domainid", query = "SELECT xi FROM Xid xi WHERE xi.deleted = false AND xi.domain = :domain AND xi.domainId = :domainid")
 @NamedQuery(name = "Xid.domain.objectid", query = "SELECT xi FROM Xid xi WHERE xi.deleted = false AND xi.domain = :domain AND xi.object = :objectid")
 @NamedQuery(name = "Xid.domain.objectid.type", query = "SELECT xi FROM Xid xi WHERE xi.deleted = false AND xi.domain = :domain AND xi.object = :objectid AND xi.type = :type")
+@NamedQuery(name = "Xid.objectid.type", query = "SELECT xi FROM Xid xi WHERE xi.deleted = false AND xi.object = :objectid AND xi.type = :type")
 public class Xid extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
