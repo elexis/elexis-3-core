@@ -17,6 +17,7 @@
     <module>ch.elexis.core.persistence.feature</module>
     <module>ch.elexis.core.application.feature</module>
     <module>ch.elexis.core.common.feature</module>
+    <module>ch.elexis.core.tasks.feature</module>
     <module>ch.elexis.core.logging.feature</module>
     <module>ch.elexis.core.ui.feature</module>
     <module>ch.elexis.core.ui.p2.feature</module>
