@@ -9,7 +9,8 @@ Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Multi-Release: true
-Require-Bundle: org.eclipse.core.runtime;bundle-version="3.5.0",
+Require-Bundle: org.eclipse.osgi.services;bundle-version="3.7.100",
+ org.eclipse.core.runtime;bundle-version="3.5.0",
  ch.elexis.core.l10n,
  org.eclipse.equinox.ds;bundle-version="1.5.0",
  org.eclipse.equinox.event;bundle-version="1.4.0",
@@ -56,7 +57,6 @@ Export-Package: ch.elexis.core.ac,
 Import-Package: javax.ws.rs;version="[2.0.0,2.1.0)",
  javax.ws.rs.core;version="[2.0.0,2.1.0)",
  org.apache.commons.lang3;version="3.1.0",
- org.osgi.service.component;version="1.1.0";resolution:=optional,
  org.slf4j;version="1.6.6"
 Service-Component: OSGI-INF/ch.elexis.core.console.ConsoleCommandPovider.xml
 Bundle-Activator: ch.elexis.core.internal.Activator
