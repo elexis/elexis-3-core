@@ -94,6 +94,10 @@ public class TriggerTaskForEveryFileInDirectoryRunnable implements IIdentifiedRu
 			tasksTriggered.add(runTaskForFile(fileHandle.getAbsolutePath()).getId());
 		}
 		
+		if(tasksTriggered.isEmpty()) {
+			return Collections.singletonMap(ReturnParameter.MARKER_DO_NOT_PERSIST, true);
+		}
+		
 		return Collections.singletonMap(RESULT_KEY_LIST_ITASK_TASKS_TRIGGERED,
 			(Serializable) tasksTriggered);
 	}

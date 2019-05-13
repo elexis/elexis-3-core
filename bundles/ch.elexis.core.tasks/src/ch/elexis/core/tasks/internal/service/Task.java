@@ -170,11 +170,19 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 				effectiveRunContext.putAll(originTaskDescriptor.get().getRunContext());
 				effectiveRunContext.putAll(getRunContext());
 				
+				getEntity().setRunContext(gson.toJson(effectiveRunContext));
 				// TODO validate all required parameters are set, validate url
 				
 				setState(TaskState.IN_PROGRESS);
 				setResult(runnableWithContext.run(effectiveRunContext, progressMonitor, logger));
 				setState(TaskState.COMPLETED);
+				
+				if (effectiveRunContext.containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)
+					|| getResult().containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)) {
+					// only if completion was successful
+					removeTaskRecord();
+				}
+				
 			} catch (TaskException te) {
 				setResult(Collections.singletonMap(
 					IIdentifiedRunnable.ReturnParameter.FAILED_TASK_EXCEPTION_MESSAGE,
@@ -185,10 +193,6 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 			
 			if (progressMonitor != null) {
 				progressMonitor.done();
-			}
-			
-			if (getResult().containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)) {
-				removeTaskRecord();
 			}
 			
 		} else {

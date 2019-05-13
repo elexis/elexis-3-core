@@ -65,7 +65,9 @@ public interface IIdentifiedRunnable {
 		/**
 		 * The existence of this key does advise the task system to not persist
 		 * the tasks results. Use this e.g. to not "log" an empty run. (e.g. a directory
-		 * watcher that found nothing)
+		 * watcher that found nothing). When setting this to the run context, every
+		 * successful execution of the task will NOT be logged. A single task may
+		 * still use this as return value.
 		 */
 		public static final String MARKER_DO_NOT_PERSIST = "markerDoNotPersist";
 		

@@ -9,8 +9,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -27,15 +29,28 @@ import org.slf4j.LoggerFactory;
  * method. And every sub-method to sub-method (separated with a single underscore) is treated same.
  * 
  */
-public class AbstractConsoleCommandProvider implements CommandProvider {
+public abstract class AbstractConsoleCommandProvider implements CommandProvider {
 	
 	public final Logger logger = LoggerFactory.getLogger(getClass());
 	
-	private Map<String, Method> methods;
+	private static Map<String, Method> methods = new HashMap<>();
+	private static LinkedHashMap<String, String> commandsHelp = new LinkedHashMap<>();
 	private String[] arguments;
 	protected CommandInterpreter ci;
 	
 	private String[] subArguments;
+	
+	protected void register(Class<?> clazz){
+		logger.info("Registering {}", clazz.getName());
+		for (Method method : clazz.getMethods()) {
+			if (method.getName().startsWith("__")) {
+				methods.put(method.getName(), method);
+			}
+		}
+		initializeCommandsHelp(commandsHelp);
+	}
+	
+	protected abstract void initializeCommandsHelp(LinkedHashMap<String, String> commandsHelp);
 	
 	public String getArgument(int i){
 		if (arguments.length >= i + 1) {
@@ -46,10 +61,6 @@ public class AbstractConsoleCommandProvider implements CommandProvider {
 	
 	public void executeCommand(String root, CommandInterpreter ci){
 		this.ci = ci;
-		
-		if (methods == null) {
-			initializeClassMethods();
-		}
 		
 		arguments = collectArguments(root, ci);
 		if (arguments.length == 0) {
@@ -92,7 +103,7 @@ public class AbstractConsoleCommandProvider implements CommandProvider {
 				} else if (clazz.equals(String.class)) {
 					result = method.invoke(this, subArguments.length > 0 ? subArguments[0] : "");
 				} else {
-					ci.println("invalid parameter type "+clazz);
+					ci.println("invalid parameter type " + clazz);
 				}
 			} else {
 				result = method.invoke(this);
@@ -101,7 +112,7 @@ public class AbstractConsoleCommandProvider implements CommandProvider {
 				ci.println(result);
 			}
 		} catch (Exception e) {
-			if(e.getCause()!= null) {
+			if (e.getCause() != null) {
 				ci.println("Execution error on argument: " + e.getCause().getMessage());
 				logger.warn("Execution error on argument [{}]: ", arguments, e.getCause());
 			} else {
@@ -119,15 +130,6 @@ public class AbstractConsoleCommandProvider implements CommandProvider {
 			argumentQ.add(argument);
 		}
 		return argumentQ.toArray(new String[] {});
-	}
-	
-	private void initializeClassMethods(){
-		methods = new HashMap<>();
-		for (Method method : this.getClass().getMethods()) {
-			if (method.getName().startsWith("__")) {
-				methods.put(method.getName(), method);
-			}
-		}
 	}
 	
 	public String getRelativeFixedLengthSeparator(String value, int determinedLength,
@@ -162,10 +164,42 @@ public class AbstractConsoleCommandProvider implements CommandProvider {
 		ci.println(getHelp(sub));
 	}
 	
+	/** Private helper method for getHelp. Formats the help headers. */
+	private void addHeader(String header, StringBuilder help){
+		help.append("---"); //$NON-NLS-1$
+		help.append(header);
+		help.append("---"); //$NON-NLS-1$
+		help.append("\n");
+	}
+	
+	/** Private helper method for getHelp. Formats the command descriptions. */
+	private void addCommand(String command, String description, StringBuilder help){
+		help.append("\t");
+		help.append(command);
+		help.append(" - "); //$NON-NLS-1$
+		help.append(description);
+		help.append("\n");
+	}
+	
 	public String getHelp(String... sub){
+		StringBuilder sb = new StringBuilder();
+		if (sub == null) {
+			addHeader("Elexis Admin Commands", sb);
+			Iterator i = commandsHelp.entrySet().iterator();
+			while (i.hasNext()) {
+				Entry entry = (Entry) i.next();
+				String command = (String) entry.getKey();
+				String attributes = (String) entry.getValue();
+				addCommand(command, attributes, sb);
+			}
+			
+			return sb.toString();
+		}
+		if (StringUtils.isBlank(sub[0])) {
+			return "";
+		}
 		String[] methodSignatures = methods.keySet().toArray(new String[] {});
 		
-		StringBuilder sb = new StringBuilder();
 		sb.append(StringUtils.join(sub, " "));
 		sb.append(" ");
 		

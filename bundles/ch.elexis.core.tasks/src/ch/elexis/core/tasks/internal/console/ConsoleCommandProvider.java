@@ -1,6 +1,7 @@
 package ch.elexis.core.tasks.internal.console;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -10,6 +11,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.osgi.framework.console.CommandInterpreter;
 import org.eclipse.osgi.framework.console.CommandProvider;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -37,13 +39,23 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 	@Reference
 	private IContextService contextService;
 	
+	@Activate
+	public void activate() {
+		register(this.getClass());
+	}
+	
+	@Override
+	protected void initializeCommandsHelp(LinkedHashMap<String, String> commandsHelp){
+		commandsHelp.put("task", "task management");
+	}
+
 	public void _task(CommandInterpreter ci){
 		executeCommand("task", ci);
 	}
 	
 	public void __task_descriptor_list(){
 		List<ITaskDescriptor> taskDescriptors =
-			taskModelService.getQuery(ITaskDescriptor.class).execute();
+			taskModelService.getQuery(ITaskDescriptor.class, true, false).execute();
 		taskDescriptors.forEach(e -> ci.println(e));
 	}
 	
@@ -65,6 +77,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 		if (arguments.size() < 2) {
 			ci.println("usage: task descriptor set id | referenceId [property=value ...]");
 			ci.println("| properties: runContext<Map> | triggerType<EnumLiteral> ");
+			return "";
 		}
 		
 		String idOrReferenceId = arguments.get(0);

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde?><!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl --><target name="Elexis" sequenceNumber="1556538302">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde?><!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl --><target name="Elexis" sequenceNumber="1557400445">
   <locations>
     <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.swt.nl_de" version="4.8.0.v20190126080931"/>
@@ -117,7 +117,7 @@
       <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180905201904/repository/"/>
     </location>
     <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-      <unit id="info.elexis.server.hapi.fhir" version="3.4.0.201904291121"/>
+      <unit id="info.elexis.server.hapi.fhir" version="3.4.0.201905060908"/>
       <repository location="http://download.elexis.info/elexis-server/master/p2/elexis-server"/>
     </location>
     <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">

@@ -387,7 +387,8 @@ public class TaskServiceImpl implements ITaskService {
 	
 	@Override
 	public Optional<ITaskDescriptor> findTaskDescriptorByIdOrReferenceId(String idOrReferenceId){
-		IQuery<ITaskDescriptor> query = taskModelService.getQuery(ITaskDescriptor.class);
+		IQuery<ITaskDescriptor> query =
+			taskModelService.getQuery(ITaskDescriptor.class, true, false);
 		query.and(ModelPackage.Literals.ITASK_DESCRIPTOR__ID, COMPARATOR.EQUALS, idOrReferenceId);
 		query.or(ModelPackage.Literals.ITASK_DESCRIPTOR__REFERENCE_ID, COMPARATOR.EQUALS,
 			idOrReferenceId);
