@@ -236,7 +236,7 @@ public class XidService implements IXidService {
 		if (typeString != null) {
 			INamedQuery<IXid> query =
 				CoreModelServiceHolder.get().getNamedQuery(IXid.class, "objectid", "type");
-			return query.executeWithParameters(query.getParameterMap("domain", "objectid",
+			return query.executeWithParameters(query.getParameterMap("objectid",
 				identifiable.getId(), "type", typeString));
 		} else {
 			throw new IllegalStateException("No store to string for object [" + this + "]");
