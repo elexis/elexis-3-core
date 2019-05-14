@@ -19,8 +19,8 @@ import ch.elexis.core.tasks.model.TaskTriggerType;
 public class TaskDescriptor
 		extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.TaskDescriptor>
 		implements Identifiable, ITaskDescriptor {
-	
-	private Gson gson;
+
+	private transient Gson gson;
 	
 	public TaskDescriptor(ch.elexis.core.jpa.entities.TaskDescriptor entity){
 		super(entity);

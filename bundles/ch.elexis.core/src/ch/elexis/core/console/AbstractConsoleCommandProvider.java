@@ -40,17 +40,21 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 	
 	private String[] subArguments;
 	
+	private String outcomeMessage;
+	
 	protected void register(Class<?> clazz){
-		logger.info("Registering {}", clazz.getName());
 		for (Method method : clazz.getMethods()) {
+			
 			if (method.getName().startsWith("__")) {
 				methods.put(method.getName(), method);
+			} else if (method.getName().startsWith("_")) {
+				CmdAdvisor advisor = method.getDeclaredAnnotation(CmdAdvisor.class);
+				String description = (advisor != null) ? advisor.description() : "";
+				commandsHelp.put(method.getName().substring(1), description);
 			}
+			
 		}
-		initializeCommandsHelp(commandsHelp);
 	}
-	
-	protected abstract void initializeCommandsHelp(LinkedHashMap<String, String> commandsHelp);
 	
 	public String getArgument(int i){
 		if (arguments.length >= i + 1) {
@@ -91,6 +95,7 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 			+ getRelativeFixedLengthSeparator(joinedArguments, 100, "-"));
 		
 		try {
+			outcomeMessage = null;
 			Object result = null;
 			if (method.getParameterCount() > 0) {
 				Class<?> clazz = method.getParameterTypes()[0];
@@ -110,6 +115,9 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 			}
 			if (result instanceof String) {
 				ci.println(result);
+			}
+			if (outcomeMessage != null) {
+				ci.println(outcomeMessage);
 			}
 		} catch (Exception e) {
 			if (e.getCause() != null) {
@@ -143,12 +151,16 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 		return String.join("", Collections.nCopies(determinedLength - value.length(), separator));
 	}
 	
+	public void fail(String message){
+		outcomeMessage = "ERR " + message;
+	}
+	
 	public String ok(){
 		return "OK";
 	}
 	
-	public String ok(Object object){
-		return "OK [" + object + "]";
+	public void ok(Object object){
+		outcomeMessage = "OK " + object;
 	}
 	
 	public String missingArgument(String string){
@@ -184,16 +196,7 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 	public String getHelp(String... sub){
 		StringBuilder sb = new StringBuilder();
 		if (sub == null) {
-			addHeader("Elexis Admin Commands", sb);
-			Iterator i = commandsHelp.entrySet().iterator();
-			while (i.hasNext()) {
-				Entry entry = (Entry) i.next();
-				String command = (String) entry.getKey();
-				String attributes = (String) entry.getValue();
-				addCommand(command, attributes, sb);
-			}
-			
-			return sb.toString();
+			return printOverviewHelp();
 		}
 		if (StringUtils.isBlank(sub[0])) {
 			return "";
@@ -221,9 +224,35 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 			return "Sub/Command not found: " + StringUtils.join(sub, " ");
 		}
 		
-		sb.append("(" + relevant.stream().sorted(Comparator.naturalOrder())
-			.reduce((u, t) -> u + " | " + t).orElse("") + ")");
+		// flatten the set (prevents mulitple entries) to a list
+		List<String> helpList = new ArrayList<>(relevant);
+		Collections.sort(helpList, Comparator.naturalOrder());
 		
+		sb.append("(" + helpList.stream().reduce((u, t) -> u + " | " + t).orElse("") + ")\n");
+		for (String string : helpList) {
+			String methodKey = "__"+StringUtils.join(sub, "_")+"_"+string;
+			Method method = methods.get(methodKey);
+			if(method!=null) {
+				CmdAdvisor declaredAnnotation = method.getDeclaredAnnotation(CmdAdvisor.class);
+				addCommand(string, (declaredAnnotation!=null) ? declaredAnnotation.description(): "", sb);
+			} else {
+				sb.append("\t"+string+" - [see subcommand]\n");
+			}
+		}
+		
+		return sb.toString();
+	}
+	
+	private String printOverviewHelp(){
+		StringBuilder sb = new StringBuilder();
+		addHeader("Elexis Admin Commands", sb);
+		Iterator<Entry<String, String>> i = commandsHelp.entrySet().iterator();
+		while (i.hasNext()) {
+			Entry<String, String> entry = i.next();
+			String command = entry.getKey();
+			String attributes = entry.getValue();
+			addCommand(command, attributes, sb);
+		}
 		return sb.toString();
 	}
 	

@@ -3,6 +3,8 @@ package ch.elexis.core.services;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 
 import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
@@ -19,11 +21,11 @@ public class VirtualFilesystemService implements IVirtualFilesystemService {
 	}
 	
 	@Override
-	public IVirtualFilesystemHandle of(File file) throws IOException {
+	public IVirtualFilesystemHandle of(File file) throws IOException{
 		if (file == null) {
 			return null;
 		}
-
+		
 		URL url = file.toURI().toURL();
 		return new VirtualFilesystemHandle(url);
 	}
@@ -38,8 +40,10 @@ public class VirtualFilesystemService implements IVirtualFilesystemService {
 			return url;
 		} else {
 			File file = new File(urlString);
-			if (file.canRead()) {
+			try {
+				file.toPath();
 				return file.toURI().toURL();
+			} catch (InvalidPathException e) {
 			}
 			
 			if (StringUtils.startsWith(urlString, "\\\\")) {

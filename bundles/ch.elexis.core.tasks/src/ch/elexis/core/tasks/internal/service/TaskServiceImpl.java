@@ -146,7 +146,7 @@ public class TaskServiceImpl implements ITaskService {
 		query.and(ModelPackage.Literals.ITASK_DESCRIPTOR__RUNNER, COMPARATOR.EQUALS,
 			contextService.getStationIdentifier());
 		query.or(ModelPackage.Literals.ITASK_DESCRIPTOR__RUNNER, COMPARATOR.EQUALS, null);
-		query.orJoinGroups();
+		query.andJoinGroups();
 		List<ITaskDescriptor> execute = query.execute();
 		for (ITaskDescriptor iTaskDescriptor : execute) {
 			try {

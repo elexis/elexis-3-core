@@ -12,10 +12,17 @@ import ch.elexis.core.services.IModelService;
 
 public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements Identifiable {
 	
+	/**
+	 * Used in json serialization
+	 */
+	@SuppressWarnings("unused")
+	private final String entityType;
+	
 	private T entity;
 	
 	public AbstractIdModelAdapter(T entity){
 		this.entity = entity;
+		this.entityType = entity.getClass().getName();
 		// make sure model supports id and delete
 		if (!(entity instanceof EntityWithId)) {
 			throw new IllegalStateException(

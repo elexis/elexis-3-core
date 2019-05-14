@@ -681,6 +681,10 @@
 			<column name="RUNNER" type="VARCHAR(64)" />
 			<column defaultValue="0" name="SINGLETON" type="CHAR(1)" />
 		</createTable>
+		<createIndex indexName="REFERENCEID_UNIQUE"
+			tableName="TASKDESCRIPTOR" unique="true">
+			<column name="REFERENCEID" />
+		</createIndex>
 	</changeSet>
 
 	<changeSet author="marco" id="manual_table_TASK">

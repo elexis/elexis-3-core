@@ -6,5 +6,6 @@
    <reference cardinality="1..1" field="contextService" interface="ch.elexis.core.services.IContextService" name="contextService"/>
    <reference cardinality="1..1" field="taskModelService" interface="ch.elexis.core.services.IModelService" name="taskModelService" target="(service.model.name=ch.elexis.core.tasks.model)"/>
    <reference cardinality="1..1" field="taskService" interface="ch.elexis.core.tasks.model.ITaskService" name="taskService"/>
+   <reference cardinality="1..1" field="vfsService" interface="ch.elexis.core.services.IVirtualFilesystemService" name="vfsService"/>
    <implementation class="ch.elexis.core.tasks.internal.console.ConsoleCommandProvider"/>
 </scr:component>
