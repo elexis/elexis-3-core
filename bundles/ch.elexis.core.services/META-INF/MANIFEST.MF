@@ -11,10 +11,10 @@ Require-Bundle: ch.elexis.core,
  ch.rgw.utility;bundle-version="3.7.0",
  org.eclipse.core.runtime,
  org.eclipse.osgi.services;bundle-version="3.6.0",
- org.apache.commons.io
+ org.apache.commons.io,
+ ch.elexis.core.jpa.entities;bundle-version="1.0.0"
 Import-Package: bsh,
  ch.elexis.core.ac,
- ch.elexis.core.jpa.entities,
  com.google.common.cache;version="15.0.0",
  javax.persistence;version="2.2.0",
  jcifs,
