@@ -5,8 +5,15 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.osgi.service.component.annotations.Component;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
+import ch.elexis.core.jpa.entities.EntityWithId;
+import ch.elexis.core.jpa.entities.StickerObjectLink;
+import ch.elexis.core.jpa.entities.StickerObjectLinkId;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -14,18 +21,30 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
 @Component
 public class StickerService implements IStickerService {
 
-	private static final String QUERY_STICKERS_FOR_OBJECT = "SELECT etikette FROM ETIKETTEN_OBJECT_LINK WHERE obj=?1";
-
-	private static final String QUERY_STICKER_APPLICABLE = "SELECT COUNT FROM ETIKETTEN_OBJCLASS_LINK WHERE objclass=?1 AND sticker=?2";
+	@Reference(target = "(id=default)")
+	private IElexisEntityManager entityManager;
 	
-	private List<ISticker> getStickersForId(String id) {
-		INativeQuery stickerQuery = CoreModelServiceHolder.get().getNativeQuery(QUERY_STICKERS_FOR_OBJECT);
-		return stickerQuery.executeWithParameters(stickerQuery.getIndexedParameterMap(1, id)).parallel()
-				.filter(resultId -> resultId instanceof String)
-				.map(resultId -> CoreModelServiceHolder.get().load((String) resultId, ISticker.class).orElse(null))
-				.filter(Objects::nonNull).collect(Collectors.toList());
+	private List<StickerObjectLink> getStickerObjectLinksForId(String id){
+		EntityManager em = (EntityManager) entityManager.getEntityManager(true);
+		TypedQuery<StickerObjectLink> query =
+			em.createNamedQuery("StickerObjectLink.obj", StickerObjectLink.class);
+		query.setParameter("obj", id);
+		return query.getResultList();
 	}
-
+	
+	private StickerObjectLink getStickerObjectLink(String id, String etikette){
+		EntityManager em = (EntityManager) entityManager.getEntityManager(true);
+		return em.find(StickerObjectLink.class, new StickerObjectLinkId(id, etikette));
+	}
+	
+	private List<ISticker> getStickersForId(String id){
+		List<StickerObjectLink> stickerObjectLinks = getStickerObjectLinksForId(id);
+		return stickerObjectLinks
+			.parallelStream().map(sol -> CoreModelServiceHolder.get()
+				.load(sol.getEtikette(), ISticker.class).orElse(null))
+			.filter(Objects::nonNull).collect(Collectors.toList());
+	}
+	
 	@Override
 	public List<ISticker> getStickers(Identifiable identifiable) {
 		return getStickersForId(identifiable.getId());
@@ -39,14 +58,35 @@ public class StickerService implements IStickerService {
 
 	@Override
 	public void addSticker(ISticker sticker, Identifiable identifiable) {
-		// TODO Auto-generated method stub
-
+		EntityManager em = (EntityManager) entityManager.getEntityManager(false);
+		try {
+			StickerObjectLink link = new StickerObjectLink();
+			link.setEtikette(sticker.getId());
+			link.setObj(identifiable.getId());
+			
+			em.getTransaction().begin();
+			EntityWithId merged = em.merge(link);
+			em.getTransaction().commit();
+		} finally {
+			entityManager.closeEntityManager(em);
+		}
 	}
 
 	@Override
 	public void removeSticker(ISticker sticker, Identifiable identifiable) {
-		// TODO Auto-generated method stub
-
+		StickerObjectLink stickerObjectLink =
+			getStickerObjectLink(identifiable.getId(), sticker.getId());
+		if (stickerObjectLink != null) {
+			EntityManager em = (EntityManager) entityManager.getEntityManager(false);
+			try {
+				em.getTransaction().begin();
+				EntityWithId object = em.merge(stickerObjectLink);
+				em.remove(object);
+				em.getTransaction().commit();
+			} finally {
+				entityManager.closeEntityManager(em);
+			}
+		}
 	}
 
 	@Override

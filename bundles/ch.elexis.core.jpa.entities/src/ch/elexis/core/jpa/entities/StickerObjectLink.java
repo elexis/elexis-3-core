@@ -3,23 +3,33 @@ package ch.elexis.core.jpa.entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+
+import org.eclipse.persistence.annotations.Cache;
 
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
 @Entity
 @Table(name = "ETIKETTEN_OBJECT_LINK")
 @EntityListeners(EntityWithIdListener.class)
-public class StickerObjectLink {
+@IdClass(StickerObjectLinkId.class)
+@Cache(expiry = 15000)
+@NamedQuery(name = "StickerObjectLink.obj", query = "SELECT st FROM StickerObjectLink st WHERE st.obj = :obj")
+public class StickerObjectLink implements EntityWithId {
 	
-	@Column(length = 80, nullable = false)
+	// Transparently updated by the EntityListener
+	protected Long lastupdate;
+	
+	@Id
+	@Column(length = 25, nullable = false)
 	private String obj;
 	
-	@ManyToOne
-	@JoinColumn(name = "etikette")
-	private Sticker sticker;
+	@Id
+	@Column(length = 25, nullable = false)
+	private String etikette;
 	
 	public String getObj(){
 		return obj;
@@ -29,12 +39,12 @@ public class StickerObjectLink {
 		this.obj = obj;
 	}
 	
-	public Sticker getSticker(){
-		return sticker;
+	public String getEtikette(){
+		return etikette;
 	}
 	
-	public void setSticker(Sticker sticker){
-		this.sticker = sticker;
+	public void setEtikette(String stickerId){
+		this.etikette = stickerId;
 	}
 
 	@Override
@@ -42,7 +52,7 @@ public class StickerObjectLink {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((obj == null) ? 0 : obj.hashCode());
-		result = prime * result + ((sticker == null) ? 0 : sticker.hashCode());
+		result = prime * result + ((etikette == null) ? 0 : etikette.hashCode());
 		return result;
 	}
 
@@ -60,12 +70,32 @@ public class StickerObjectLink {
 				return false;
 		} else if (!this.obj.equals(other.obj))
 			return false;
-		if (sticker == null) {
-			if (other.sticker != null)
+		if (etikette == null) {
+			if (other.etikette != null)
 				return false;
-		} else if (!sticker.equals(other.sticker))
+		} else if (!etikette.equals(other.etikette))
 			return false;
 		return true;
-	}	
+	}
+	
+	@Override
+	public String getId(){
+		return getObj() + "_" + getEtikette();
+	}
+	
+	@Override
+	public void setId(String id){
+		setObj(id);
+	}
+	
+	@Override
+	public Long getLastupdate(){
+		return lastupdate;
+	}
+	
+	@Override
+	public void setLastupdate(Long lastupdate){
+		this.lastupdate = lastupdate;
+	}
 	
 }

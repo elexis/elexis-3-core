@@ -1359,4 +1359,50 @@
 			<column name="messageCodes" type="LONGTEXT" />
 		</addColumn>
 	</changeSet>
+
+	<changeSet author="thomas" id="etiketten_object_link_id_primarykey">
+	    <preConditions onFail="MARK_RAN">
+			<not>
+				<primaryKeyExists tableName="ETIKETTEN_OBJECT_LINK"
+					primaryKeyName="ETIKETTEN_OBJECT_LINK_PRIMARY_KEY" />
+			</not>
+		</preConditions>
+		<sql>
+<![CDATA[
+CREATE TEMPORARY TABLE TEMP_ETIKETTEN_OBJECT_LINK AS
+    SELECT obj, etikette
+    FROM ETIKETTEN_OBJECT_LINK 
+    GROUP BY obj, etikette HAVING count(*) < 2;
+INSERT INTO TEMP_ETIKETTEN_OBJECT_LINK 
+	SELECT obj, etikette from ETIKETTEN_OBJECT_LINK where obj IN (
+	SELECT obj 
+	FROM ETIKETTEN_OBJECT_LINK
+	GROUP BY obj, etikette
+	HAVING count(*) > 1
+	) GROUP BY obj, etikette;
+DELETE FROM ETIKETTEN_OBJECT_LINK;
+INSERT INTO ETIKETTEN_OBJECT_LINK (obj, etikette) select obj, etikette from TEMP_ETIKETTEN_OBJECT_LINK;
+]]>
+	    </sql>
+	    <addNotNullConstraint columnDataType="VARCHAR(25)"
+            columnName="OBJ"
+            tableName="ETIKETTEN_OBJECT_LINK"/>
+	    <addNotNullConstraint columnDataType="VARCHAR(25)"
+            columnName="ETIKETTE"
+            tableName="ETIKETTEN_OBJECT_LINK"/>
+   		<addPrimaryKey columnNames="OBJ,ETIKETTE"
+			constraintName="ETIKETTEN_OBJECT_LINK_PRIMARY_KEY"
+			tableName="ETIKETTEN_OBJECT_LINK" />
+	</changeSet>
+	<changeSet author="thomas" id="etiketten_object_link_lastupdate">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="ETIKETTEN_OBJECT_LINK"
+					columnName="LASTUPDATE" />
+			</not>
+		</preConditions>
+		<addColumn tableName="ETIKETTEN_OBJECT_LINK">
+			<column name="LASTUPDATE" type="BIGINT" />
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>

@@ -70,6 +70,7 @@
 		<class>ch.elexis.core.jpa.entities.Right</class>
 		<class>ch.elexis.core.jpa.entities.Role</class>
 		<class>ch.elexis.core.jpa.entities.Sticker</class>
+		<class>ch.elexis.core.jpa.entities.StickerObjectLink</class>
 		<class>ch.elexis.core.jpa.entities.Stock</class>
 		<class>ch.elexis.core.jpa.entities.StockEntry</class>
 		<class>ch.elexis.core.jpa.entities.TarmedDefinitionen</class>

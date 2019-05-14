@@ -1,6 +1,7 @@
 package ch.elexis.core.services;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -32,6 +33,38 @@ public class IStickerServiceTest extends AbstractServiceTest {
 		assertEquals("verstorben", sticker.get().getName());
 	}
 
+	@Test
+	public void addSticker(){
+		Optional<IPatient> patient =
+			coreModelService.load(TestEntities.PATIENT_MALE_ID, IPatient.class);
+		ISticker newSticker = coreModelService.create(ISticker.class);
+		newSticker.setName("test sticker");
+		coreModelService.save(newSticker);
+		
+		service.addSticker(newSticker, patient.get());
+		List<ISticker> patientStickers = service.getStickers(patient.get());
+		assertFalse(patientStickers.isEmpty());
+		assertTrue(patientStickers.contains(newSticker));
+		
+		service.removeSticker(newSticker, patient.get());
+	}
+	
+	@Test
+	public void removeSticker(){
+		Optional<IPatient> patient =
+			coreModelService.load(TestEntities.PATIENT_MALE_ID, IPatient.class);
+		ISticker newSticker = coreModelService.create(ISticker.class);
+		newSticker.setName("test sticker");
+		coreModelService.save(newSticker);
+		
+		service.addSticker(newSticker, patient.get());
+		List<ISticker> patientStickers = service.getStickers(patient.get());
+		assertTrue(patientStickers.contains(newSticker));
+		service.removeSticker(newSticker, patient.get());
+		patientStickers = service.getStickers(patient.get());
+		assertFalse(patientStickers.contains(newSticker));
+	}
+	
 	@Ignore(value="Not yet implemented the required mapping")
 	@Test
 	public void isStickerAddableToClass() {

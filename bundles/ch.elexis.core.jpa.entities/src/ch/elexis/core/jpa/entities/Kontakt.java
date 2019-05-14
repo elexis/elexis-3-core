@@ -111,7 +111,7 @@ public class Kontakt extends AbstractEntityWithId
 	@Column(length = 255, name = "bezeichnung3")
 	protected String description3;
 
-	@Basic(fetch = FetchType.LAZY)
+	//	@Basic(fetch = FetchType.LAZY)
 	@Convert(converter = ElexisDBCompressedStringConverter.class)
 	@Column(columnDefinition = "BLOB")
 	protected String diagnosen;
