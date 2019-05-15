@@ -93,7 +93,6 @@ public class ConditionComposite extends Composite {
 		codingItem.setControl(codingComposite);
 		
 		GridData folderGd = new GridData(GridData.FILL_BOTH);
-		folderGd.heightHint = 100;
 		textOrCodingFolder.setLayoutData(folderGd);
 
 		notesComposite = new NoteListComposite(this, SWT.NONE);
