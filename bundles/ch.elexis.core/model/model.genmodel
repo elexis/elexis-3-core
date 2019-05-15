@@ -523,6 +523,9 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/treatmentReason"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/linkgroup"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/extension"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/created"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/lastEdit"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/stateHistory"/>
       <genOperations ecoreOperation="model.ecore#//IAppointment/getContact"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IImage">

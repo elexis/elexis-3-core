@@ -73,6 +73,10 @@ public class Messages extends NLS {
 	public static String AccountView_goodFromBills;
 	public static String AccountView_remarks;
 	public static String AccountView_accountColumn;
+	public static String Appointment_Range_Free;
+	public static String Appointment_Range_Locked;
+	public static String Appointment_Normal_Appointment;
+	public static String Appointment_Planned_Appointment;
 	public static String BillSummary_NoPatientSelected;
 	public static String BillSummary_SummaryToClipboard;
 	public static String BillSummary_amount;
