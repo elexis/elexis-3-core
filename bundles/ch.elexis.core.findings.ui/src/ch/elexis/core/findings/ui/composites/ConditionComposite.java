@@ -92,7 +92,7 @@ public class ConditionComposite extends Composite {
 		codingComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		codingItem.setControl(codingComposite);
 		
-		GridData folderGd = new GridData(GridData.FILL_HORIZONTAL);
+		GridData folderGd = new GridData(GridData.FILL_BOTH);
 		folderGd.heightHint = 100;
 		textOrCodingFolder.setLayoutData(folderGd);
 
