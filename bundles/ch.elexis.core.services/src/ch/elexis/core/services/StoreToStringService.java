@@ -117,4 +117,17 @@ public class StoreToStringService implements IStoreToStringService {
 		}
 		return null;
 	}
+	
+	@Override
+	public String getTypeForModel(Class<?> interfaze){
+		if (interfaze != null) {
+			for (IStoreToStringContribution iStoreToStringContribution : contributions) {
+				String loaded = iStoreToStringContribution.getTypeForModel(interfaze);
+				if (loaded != null) {
+					return loaded;
+				}
+			}
+		}
+		return null;
+	}
 }

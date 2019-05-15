@@ -3,23 +3,33 @@ package ch.elexis.core.jpa.entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+
+import org.eclipse.persistence.annotations.Cache;
 
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
 @Entity
 @Table(name = "ETIKETTEN_OBJCLASS_LINK")
 @EntityListeners(EntityWithIdListener.class)
-public class StickerClassLink {
+@IdClass(StickerClassLinkId.class)
+@Cache(expiry = 15000)
+@NamedQuery(name = "StickerClassLink.sticker", query = "SELECT st FROM StickerClassLink st WHERE st.sticker = :sticker")
+public class StickerClassLink implements EntityWithId {
 	
-	@Column(length = 80)
+	// Transparently updated by the EntityListener
+	protected Long lastupdate;
+	
+	@Id
+	@Column(length = 80, nullable = false)
 	private String objclass;
 	
-	@ManyToOne
-	@JoinColumn(name = "sticker", nullable = false, insertable = false)
-	private Sticker sticker;
+	@Id
+	@Column(length = 25, nullable = false)
+	private String sticker;
 	
 	public String getObjclass(){
 		return objclass;
@@ -29,12 +39,12 @@ public class StickerClassLink {
 		this.objclass = objclass;
 	}
 	
-	public Sticker getSticker(){
+	public String getSticker(){
 		return sticker;
 	}
 	
-	public void setSticker(Sticker sticker){
-		this.sticker = sticker;
+	public void setSticker(String stickerId){
+		this.sticker = stickerId;
 	}
 
 	@Override
@@ -68,4 +78,23 @@ public class StickerClassLink {
 		return true;
 	}
 	
+	@Override
+	public String getId(){
+		return getObjclass() + "_" + getSticker();
+	}
+	
+	@Override
+	public void setId(String id){
+		setObjclass(id);
+	}
+	
+	@Override
+	public Long getLastupdate(){
+		return lastupdate;
+	}
+	
+	@Override
+	public void setLastupdate(Long lastupdate){
+		this.lastupdate = lastupdate;
+	}
 }

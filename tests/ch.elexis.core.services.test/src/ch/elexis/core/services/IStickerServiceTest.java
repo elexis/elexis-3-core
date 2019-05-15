@@ -10,6 +10,8 @@ import java.util.Optional;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.test.TestEntities;
@@ -115,32 +117,18 @@ public class IStickerServiceTest extends AbstractServiceTest {
 //		assertEquals(1, StickerService.findAll(Sticker.class, true).size());
 //	}
 //
-//	@Test
-//	public void testFindStickersApplicableToPatients() {
-//		Sticker sticker = new Sticker();
-//		sticker.setBackground("0");
-//		sticker.setForeground("0");
-//		sticker.setName("Sticker 2");
-//
-//		StickerClassLink stickerClassLink = new StickerClassLink();
-//		stickerClassLink.setObjclass(ElexisTypeMap.TYPE_PATIENT);
-//		stickerClassLink.setSticker(sticker);
-//		sticker.getStickerClassLinks().add(stickerClassLink);
-//
-//		sticker = StickerService.save(sticker);
-//
-//		List<Sticker> patientApplicableStickers = StickerService
-//				.findStickersApplicableToClass(ElexisTypeMap.TYPE_PATIENT);
-//		assertEquals(1, patientApplicableStickers.size());
-//
-//		boolean stickerApplicableToClass = StickerService.isStickerApplicableToClass(sticker,
-//				ElexisTypeMap.TYPE_PATIENT);
-//		assertTrue(stickerApplicableToClass);
-//		stickerApplicableToClass = StickerService.isStickerApplicableToClass(sticker, ElexisTypeMap.TYPE_EIGENARTIKEL);
-//		assertFalse(stickerApplicableToClass);
-//
-//		StickerService.remove(sticker);
-//	}
+	@Test
+	public void testFindStickersApplicableToPatients(){
+		ISticker newSticker = coreModelService.create(ISticker.class);
+		newSticker.setName("Sticker 2");
+		coreModelService.save(newSticker);
+		
+		service.setStickerAddableToClass(IPatient.class, newSticker);
+		
+		assertTrue(service.isStickerAddableToClass(IPatient.class, newSticker));
+		assertFalse(service.isStickerAddableToClass(IArticle.class, newSticker));
+		assertFalse(service.isStickerAddableToClass(IOrganization.class, newSticker));
+	}
 //
 //	@Test
 //	public void testApplyRemoveStickerToPatient() {

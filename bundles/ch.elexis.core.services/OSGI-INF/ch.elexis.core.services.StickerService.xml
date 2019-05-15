@@ -4,5 +4,6 @@
       <provide interface="ch.elexis.core.services.IStickerService"/>
    </service>
    <reference cardinality="1..1" field="entityManager" interface="ch.elexis.core.services.IElexisEntityManager" name="entityManager" target="(id=default)"/>
+   <reference cardinality="1..1" field="storeToStringServcie" interface="ch.elexis.core.services.IStoreToStringService" name="storeToStringServcie"/>
    <implementation class="ch.elexis.core.services.StickerService"/>
 </scr:component>

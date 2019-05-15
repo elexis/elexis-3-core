@@ -18,8 +18,13 @@ import ch.elexis.core.common.ElexisEvent;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.jpa.entities.EntityWithId;
+import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractModelService;
+import ch.elexis.core.model.ILaboratory;
+import ch.elexis.core.model.IOrganization;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.services.IModelService;
@@ -158,5 +163,36 @@ public class CoreModelService extends AbstractModelService
 	@Override
 	public String getTypeForEntity(Object entityInstance){
 		return ElexisTypeMap.getKeyForObject((EntityWithId) entityInstance);
+	}
+	
+	@Override
+	public String getTypeForModel(Class<?> interfaze){
+		Class<? extends EntityWithId> entityClass =
+			adapterFactory.getEntityClass(interfaze);
+		if (entityClass != null) {
+			try {
+				// modify instance to reflect different types of same entity
+				EntityWithId instance = entityClass.newInstance();
+				if (instance instanceof Kontakt) {
+					if (IPatient.class.isAssignableFrom(interfaze)) {
+						((Kontakt) instance).setPatient(true);
+					}
+					if (IPerson.class.isAssignableFrom(interfaze)) {
+						((Kontakt) instance).setPerson(true);
+					}
+					if (IOrganization.class.isAssignableFrom(interfaze)) {
+						((Kontakt) instance).setOrganisation(true);
+					}
+					if (ILaboratory.class.isAssignableFrom(interfaze)) {
+						((Kontakt) instance).setLaboratory(true);
+					}
+				}
+				return getTypeForEntity(instance);
+			} catch (InstantiationException | IllegalAccessException e) {
+				LoggerFactory.getLogger(getClass())
+					.error("Error getting type for model [" + interfaze + "]", e);
+			}
+		}
+		return null;
 	}
 }

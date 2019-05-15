@@ -52,4 +52,9 @@ public class DefaultArticleStoreToStringContribution implements IStoreToStringCo
 		return null;
 	}
 	
+	@Override
+	public String getTypeForModel(Class<?> interfaze){
+		// no mapping available for default articles
+		return null;
+	}
 }

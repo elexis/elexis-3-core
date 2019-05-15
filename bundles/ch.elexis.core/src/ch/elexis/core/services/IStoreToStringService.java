@@ -49,5 +49,12 @@ public interface IStoreToStringService {
 	 * @return
 	 */
 	public String getTypeForEntity(Object entityInstance);
-	
+
+	/**
+	 * Get the type name that is known for the entity instance.
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public String getTypeForModel(Class<?> interfaze);
 }

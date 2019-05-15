@@ -158,16 +158,20 @@ public class ElexisTypeMap {
 		} else if (obj instanceof Artikel) {
 			Artikel art = (Artikel) obj;
 			ArticleTyp typ = art.getTyp();
-			switch (typ) {
-			case EIGENARTIKEL:
-				return TYPE_EIGENARTIKEL;
-			case MEDIKAMENT:
-				return TYPE_MEDIKAMENT;
-			case MEDICAL:
-				return TYPE_MEDICAL;
-			case MIGEL:
-				return TYPE_MIGEL;
-			default:
+			if (typ != null) {
+				switch (typ) {
+				case EIGENARTIKEL:
+					return TYPE_EIGENARTIKEL;
+				case MEDIKAMENT:
+					return TYPE_MEDIKAMENT;
+				case MEDICAL:
+					return TYPE_MEDICAL;
+				case MIGEL:
+					return TYPE_MIGEL;
+				default:
+					return TYPE_ARTIKEL;
+				}
+			} else {
 				return TYPE_ARTIKEL;
 			}
 		}

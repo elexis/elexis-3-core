@@ -68,4 +68,11 @@ public interface IStoreToStringContribution {
 	 */
 	public String getTypeForEntity(Object entityInstance);
 	
+	/**
+	 * Get the type name that is known for the provided interface class.
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public String getTypeForModel(Class<?> interfaze);
 }

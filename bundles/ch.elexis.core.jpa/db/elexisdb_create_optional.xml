@@ -1360,6 +1360,17 @@
 		</addColumn>
 	</changeSet>
 
+	<changeSet author="thomas" id="etiketten_object_link_lastupdate">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="ETIKETTEN_OBJECT_LINK"
+					columnName="LASTUPDATE" />
+			</not>
+		</preConditions>
+		<addColumn tableName="ETIKETTEN_OBJECT_LINK">
+			<column name="LASTUPDATE" type="BIGINT" />
+		</addColumn>
+	</changeSet>
 	<changeSet author="thomas" id="etiketten_object_link_id_primarykey">
 	    <preConditions onFail="MARK_RAN">
 			<not>
@@ -1394,15 +1405,50 @@ INSERT INTO ETIKETTEN_OBJECT_LINK (obj, etikette) select obj, etikette from TEMP
 			constraintName="ETIKETTEN_OBJECT_LINK_PRIMARY_KEY"
 			tableName="ETIKETTEN_OBJECT_LINK" />
 	</changeSet>
-	<changeSet author="thomas" id="etiketten_object_link_lastupdate">
+	
+	<changeSet author="thomas" id="etiketten_objectclass_link_lastupdate">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<columnExists tableName="ETIKETTEN_OBJECT_LINK"
+				<columnExists tableName="ETIKETTEN_OBJCLASS_LINK"
 					columnName="LASTUPDATE" />
 			</not>
 		</preConditions>
-		<addColumn tableName="ETIKETTEN_OBJECT_LINK">
+		<addColumn tableName="ETIKETTEN_OBJCLASS_LINK">
 			<column name="LASTUPDATE" type="BIGINT" />
 		</addColumn>
+	</changeSet>
+	<changeSet author="thomas" id="etiketten_objectclass_link_id_primarykey">
+	    <preConditions onFail="MARK_RAN">
+			<not>
+				<primaryKeyExists tableName="ETIKETTEN_OBJCLASS_LINK"
+					primaryKeyName="ETIKETTEN_OBJCLASS_LINK_PRIMARY_KEY" />
+			</not>
+		</preConditions>
+		<sql>
+<![CDATA[
+CREATE TEMPORARY TABLE TEMP_ETIKETTEN_OBJCLASS_LINK AS
+    SELECT objclass, sticker
+    FROM ETIKETTEN_OBJCLASS_LINK 
+    GROUP BY objclass, sticker HAVING count(*) < 2;
+INSERT INTO TEMP_ETIKETTEN_OBJCLASS_LINK 
+	SELECT objclass, sticker from ETIKETTEN_OBJCLASS_LINK where objclass IN (
+	SELECT objclass 
+	FROM ETIKETTEN_OBJCLASS_LINK
+	GROUP BY objclass, sticker
+	HAVING count(*) > 1
+	) GROUP BY objclass, sticker;
+DELETE FROM ETIKETTEN_OBJCLASS_LINK;
+INSERT INTO ETIKETTEN_OBJCLASS_LINK (objclass, sticker) select objclass, sticker from TEMP_ETIKETTEN_OBJCLASS_LINK;
+]]>
+	    </sql>
+	    <addNotNullConstraint columnDataType="VARCHAR(80)"
+            columnName="OBJCLASS"
+            tableName="ETIKETTEN_OBJCLASS_LINK"/>
+	    <addNotNullConstraint columnDataType="VARCHAR(25)"
+            columnName="STICKER"
+            tableName="ETIKETTEN_OBJCLASS_LINK"/>
+   		<addPrimaryKey columnNames="OBJCLASS,STICKER"
+			constraintName="ETIKETTEN_OBJCLASS_LINK_PRIMARY_KEY"
+			tableName="ETIKETTEN_OBJCLASS_LINK" />
 	</changeSet>
 </databaseChangeLog>

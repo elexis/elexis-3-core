@@ -1,5 +1,6 @@
 package ch.elexis.core.services;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -12,6 +13,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import ch.elexis.core.jpa.entities.EntityWithId;
+import ch.elexis.core.jpa.entities.StickerClassLink;
 import ch.elexis.core.jpa.entities.StickerObjectLink;
 import ch.elexis.core.jpa.entities.StickerObjectLinkId;
 import ch.elexis.core.model.ISticker;
@@ -23,6 +25,9 @@ public class StickerService implements IStickerService {
 
 	@Reference(target = "(id=default)")
 	private IElexisEntityManager entityManager;
+	
+	@Reference
+	private IStoreToStringService storeToStringServcie;
 	
 	private List<StickerObjectLink> getStickerObjectLinksForId(String id){
 		EntityManager em = (EntityManager) entityManager.getEntityManager(true);
@@ -37,12 +42,21 @@ public class StickerService implements IStickerService {
 		return em.find(StickerObjectLink.class, new StickerObjectLinkId(id, etikette));
 	}
 	
+	/**
+	 * Get all {@link ISticker} linked to the provided object id. The returned list is sorted by
+	 * {@link ISticker#getImportance()}.
+	 * 
+	 * @param id
+	 * @return
+	 */
 	private List<ISticker> getStickersForId(String id){
 		List<StickerObjectLink> stickerObjectLinks = getStickerObjectLinksForId(id);
-		return stickerObjectLinks
-			.parallelStream().map(sol -> CoreModelServiceHolder.get()
+		List<ISticker> loadedStickers = stickerObjectLinks
+			.stream().map(sol -> CoreModelServiceHolder.get()
 				.load(sol.getEtikette(), ISticker.class).orElse(null))
 			.filter(Objects::nonNull).collect(Collectors.toList());
+		loadedStickers.sort(new StickerSorter());
+		return loadedStickers;
 	}
 	
 	@Override
@@ -53,7 +67,10 @@ public class StickerService implements IStickerService {
 	@Override
 	public Optional<ISticker> getSticker(Identifiable identifiable) {
 		List<ISticker> stickers = getStickers(identifiable);
-		return stickers.stream().sorted().findFirst();
+		if (stickers != null && !stickers.isEmpty()) {
+			return Optional.of(stickers.get(0));
+		}
+		return Optional.empty();
 	}
 
 	@Override
@@ -89,21 +106,66 @@ public class StickerService implements IStickerService {
 		}
 	}
 
+	private List<StickerClassLink> getStickerClassLinksForSticker(String id){
+		EntityManager em = (EntityManager) entityManager.getEntityManager(true);
+		TypedQuery<StickerClassLink> query =
+			em.createNamedQuery("StickerClassLink.sticker", StickerClassLink.class);
+		query.setParameter("sticker", id);
+		return query.getResultList();
+	}
+	
 	@Override
 	public boolean isStickerAddableToClass(Class<?> clazz, ISticker sticker) {
-//		INativeQuery stickerQuery = CoreModelServiceHolder.get().getNativeQuery(QUERY_STICKER_APPLICABLE);
-//		return stickerQuery.executeWithParameters(stickerQuery.getIndexedParameterMap(1, id)).parallel()
-//				.filter(resultId -> resultId instanceof String)
-//				.map(resultId -> CoreModelServiceHolder.get().load((String) resultId, ISticker.class).orElse(null))
-//				.filter(Objects::nonNull).collect(Collectors.toList());
-		// TODO Auto-generated method stub
+		String type = null;
+		if (EntityWithId.class.isAssignableFrom(clazz)) {
+			type = storeToStringServcie.getTypeForEntity(clazz);
+		} else if (Identifiable.class.isAssignableFrom(clazz)) {
+			type = storeToStringServcie.getTypeForModel(clazz);
+		}
+		if(type != null) {
+			List<StickerClassLink> classLinks = getStickerClassLinksForSticker(sticker.getId());
+			for (StickerClassLink stickerClassLink : classLinks) {
+				if (type.equals(stickerClassLink.getObjclass())) {
+					return true;
+				}
+			}			
+		} else {
+			throw new IllegalStateException("Could not get type for [" + clazz + "]");
+		}
 		return false;
 	}
 
 	@Override
 	public void setStickerAddableToClass(Class<?> clazz, ISticker sticker) {
-		// TODO Auto-generated method stub
-
+		String type = null;
+		if (EntityWithId.class.isAssignableFrom(clazz)) {
+			type = storeToStringServcie.getTypeForEntity(clazz);
+		} else if (Identifiable.class.isAssignableFrom(clazz)) {
+			type = storeToStringServcie.getTypeForModel(clazz);
+		}
+		if (type != null) {
+			EntityManager em = (EntityManager) entityManager.getEntityManager(false);
+			try {
+				StickerClassLink link = new StickerClassLink();
+				link.setObjclass(type);
+				link.setSticker(sticker.getId());
+				
+				em.getTransaction().begin();
+				EntityWithId merged = em.merge(link);
+				em.getTransaction().commit();
+			} finally {
+				entityManager.closeEntityManager(em);
+			}
+		} else {
+			throw new IllegalStateException("Could not get type for [" + clazz + "]");
+		}
 	}
 
+	private class StickerSorter implements Comparator<ISticker> {
+		@Override
+		public int compare(ISticker s1, ISticker s2){
+			return Integer.valueOf(s2.getImportance())
+				.compareTo(Integer.valueOf(s1.getImportance()));
+		}
+	}
 }
