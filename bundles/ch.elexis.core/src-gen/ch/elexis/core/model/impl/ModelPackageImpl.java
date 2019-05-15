@@ -5896,19 +5896,19 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		  (getIAppointment_Created(),
 		   source,
 		   new String[] {
-			   "attributeName", "bereich"
+			   "attributeName", "angelegt"
 		   });
 		addAnnotation
 		  (getIAppointment_LastEdit(),
 		   source,
 		   new String[] {
-			   "attributeName", "bereich"
+			   "attributeName", "lastedit"
 		   });
 		addAnnotation
 		  (getIAppointment_StateHistory(),
 		   source,
 		   new String[] {
-			   "attributeName", "bereich"
+			   "attributeName", "statusHistory"
 		   });
 		addAnnotation
 		  (getIPrescription_DateTo(),

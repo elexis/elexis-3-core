@@ -325,7 +325,7 @@ public interface IAppointment extends IPeriod {
 	 * @return the value of the '<em>Created</em>' attribute.
 	 * @see #setCreated(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIAppointment_Created()
-	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='bereich'"
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='angelegt'"
 	 * @generated
 	 */
 	String getCreated();
@@ -347,7 +347,7 @@ public interface IAppointment extends IPeriod {
 	 * @return the value of the '<em>Last Edit</em>' attribute.
 	 * @see #setLastEdit(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIAppointment_LastEdit()
-	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='bereich'"
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='lastedit'"
 	 * @generated
 	 */
 	String getLastEdit();
@@ -369,7 +369,7 @@ public interface IAppointment extends IPeriod {
 	 * @return the value of the '<em>State History</em>' attribute.
 	 * @see #setStateHistory(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIAppointment_StateHistory()
-	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='bereich'"
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='statusHistory'"
 	 * @generated
 	 */
 	String getStateHistory();

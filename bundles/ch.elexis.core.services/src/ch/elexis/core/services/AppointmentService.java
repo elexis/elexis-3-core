@@ -47,6 +47,7 @@ public class AppointmentService implements IAppointmentService {
 	
 	@Activate
 	public void activate(){
+		//@TODO server support ?
 		types = iConfigService.getAsList(AG_TERMINTYPEN, null);
 		states = iConfigService.getAsList(AG_TERMINSTATUS, null);
 		if (types == null || types.size() < 3) {
@@ -100,11 +101,14 @@ public class AppointmentService implements IAppointmentService {
 			String until = fld.replaceAll("-", "").substring(4); //$NON-NLS-1$ //$NON-NLS-2$
 			// Lege Termine für die Tagesgrenzen an
 			IAppointment iAppointment = CoreModelServiceHolder.get().create(IAppointment.class);
-			LocalDateTime localDateTime =
+			LocalDateTime startTime =
 				date.atStartOfDay().plusMinutes(TimeTool.getMinutesFromTimeString(from));
-			iAppointment.setStartTime(localDateTime);
+			LocalDateTime endTime =
+					date.atStartOfDay().plusMinutes(TimeTool.getMinutesFromTimeString(until));
+			iAppointment.setStartTime(startTime);
 			iAppointment.setType(typReserved);
 			iAppointment.setState(stateEmpty);
+			iAppointment.setEndTime(endTime);
 			String ts = Integer.toString(TimeTool.getTimeInSeconds() / 60);
 			iAppointment.setCreated(ts);
 			iAppointment.setLastEdit(ts);

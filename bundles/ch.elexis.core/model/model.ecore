@@ -774,17 +774,17 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="extension" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="created" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
-        <details key="attributeName" value="bereich"/>
+        <details key="attributeName" value="angelegt"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastEdit" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
-        <details key="attributeName" value="bereich"/>
+        <details key="attributeName" value="lastedit"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="stateHistory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
-        <details key="attributeName" value="bereich"/>
+        <details key="attributeName" value="statusHistory"/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
