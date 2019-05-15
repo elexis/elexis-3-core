@@ -32,6 +32,9 @@ import java.time.LocalDateTime;
  *   <li>{@link ch.elexis.core.model.IAppointment#getTreatmentReason <em>Treatment Reason</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getLinkgroup <em>Linkgroup</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getExtension <em>Extension</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IAppointment#getCreated <em>Created</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IAppointment#getLastEdit <em>Last Edit</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IAppointment#getStateHistory <em>State History</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIAppointment()
@@ -314,6 +317,72 @@ public interface IAppointment extends IPeriod {
 	 * @generated
 	 */
 	void setExtension(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Created</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Created</em>' attribute.
+	 * @see #setCreated(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIAppointment_Created()
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='angelegt'"
+	 * @generated
+	 */
+	String getCreated();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IAppointment#getCreated <em>Created</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Created</em>' attribute.
+	 * @see #getCreated()
+	 * @generated
+	 */
+	void setCreated(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Last Edit</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Last Edit</em>' attribute.
+	 * @see #setLastEdit(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIAppointment_LastEdit()
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='lastedit'"
+	 * @generated
+	 */
+	String getLastEdit();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IAppointment#getLastEdit <em>Last Edit</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Last Edit</em>' attribute.
+	 * @see #getLastEdit()
+	 * @generated
+	 */
+	void setLastEdit(String value);
+
+	/**
+	 * Returns the value of the '<em><b>State History</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>State History</em>' attribute.
+	 * @see #setStateHistory(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIAppointment_StateHistory()
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='statusHistory'"
+	 * @generated
+	 */
+	String getStateHistory();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IAppointment#getStateHistory <em>State History</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>State History</em>' attribute.
+	 * @see #getStateHistory()
+	 * @generated
+	 */
+	void setStateHistory(String value);
 
 	/**
 	 * <!-- begin-user-doc -->

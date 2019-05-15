@@ -27,6 +27,13 @@ public interface IAppointmentService {
 	 */
 	public boolean delete(IAppointment appointment, boolean whole);
 	
+	/**
+	 * Updates the boundaries and check whether the only entries are appointments if yes also check 
+	 * whether some boundaries are missing
+	 * 
+	 * @param schedule
+	 * @param date
+	 */
 	public void updateBoundaries(String schedule, LocalDate date);
 	
 	/**

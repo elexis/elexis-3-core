@@ -5456,13 +5456,40 @@ public interface ModelPackage extends EPackage {
 	int IAPPOINTMENT__EXTENSION = IPERIOD_FEATURE_COUNT + 10;
 
 	/**
+	 * The feature id for the '<em><b>Created</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT__CREATED = IPERIOD_FEATURE_COUNT + 11;
+
+	/**
+	 * The feature id for the '<em><b>Last Edit</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT__LAST_EDIT = IPERIOD_FEATURE_COUNT + 12;
+
+	/**
+	 * The feature id for the '<em><b>State History</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT__STATE_HISTORY = IPERIOD_FEATURE_COUNT + 13;
+
+	/**
 	 * The number of structural features of the '<em>IAppointment</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT_FEATURE_COUNT = IPERIOD_FEATURE_COUNT + 11;
+	int IAPPOINTMENT_FEATURE_COUNT = IPERIOD_FEATURE_COUNT + 14;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -10322,6 +10349,39 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIAppointment_Extension();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#getCreated <em>Created</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Created</em>'.
+	 * @see ch.elexis.core.model.IAppointment#getCreated()
+	 * @see #getIAppointment()
+	 * @generated
+	 */
+	EAttribute getIAppointment_Created();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#getLastEdit <em>Last Edit</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Last Edit</em>'.
+	 * @see ch.elexis.core.model.IAppointment#getLastEdit()
+	 * @see #getIAppointment()
+	 * @generated
+	 */
+	EAttribute getIAppointment_LastEdit();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#getStateHistory <em>State History</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>State History</em>'.
+	 * @see ch.elexis.core.model.IAppointment#getStateHistory()
+	 * @see #getIAppointment()
+	 * @generated
+	 */
+	EAttribute getIAppointment_StateHistory();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13468,6 +13528,30 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IAPPOINTMENT__EXTENSION = eINSTANCE.getIAppointment_Extension();
+
+		/**
+		 * The meta object literal for the '<em><b>Created</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT__CREATED = eINSTANCE.getIAppointment_Created();
+
+		/**
+		 * The meta object literal for the '<em><b>Last Edit</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT__LAST_EDIT = eINSTANCE.getIAppointment_LastEdit();
+
+		/**
+		 * The meta object literal for the '<em><b>State History</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT__STATE_HISTORY = eINSTANCE.getIAppointment_StateHistory();
 
 	}
 

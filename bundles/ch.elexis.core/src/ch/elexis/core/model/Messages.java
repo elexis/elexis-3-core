@@ -13,6 +13,10 @@ package ch.elexis.core.model;
 
 public final class Messages {
 	
+	public static String Appointment_Normal_Appointment = ch.elexis.core.l10n.Messages.Appointment_Normal_Appointment;
+	public static String Appointment_Planned_Appointment = ch.elexis.core.l10n.Messages.Appointment_Planned_Appointment;
+	public static String Appointment_Range_Free = ch.elexis.core.l10n.Messages.Appointment_Range_Free;
+	public static String Appointment_Range_Locked = ch.elexis.core.l10n.Messages.Appointment_Range_Locked;
 	public static String Fall_Accident = ch.elexis.core.l10n.Messages.Fall_Accident;
 	public static String Fall_Birthdefect = ch.elexis.core.l10n.Messages.Fall_Birthdefect;
 	public static String Fall_Disease = ch.elexis.core.l10n.Messages.Fall_Disease;
@@ -59,4 +63,5 @@ public final class Messages {
 	public static String InvoiceState_STOP_LEGAL_PROCEEDING = ch.elexis.core.l10n.Messages.InvoiceState_STOP_LEGAL_PROCEEDING;
 	public static String InvoiceState_DEPRECIATED = ch.elexis.core.l10n.Messages.InvoiceState_DEPRECIATED;
 	public static String InvoiceState_REJECTED = ch.elexis.core.l10n.Messages.InvoiceState_REJECTED;
+
 }

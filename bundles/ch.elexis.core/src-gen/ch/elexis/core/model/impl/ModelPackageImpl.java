@@ -3696,6 +3696,36 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getIAppointment_Created() {
+		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIAppointment_LastEdit() {
+		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(12);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIAppointment_StateHistory() {
+		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(13);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getIImage() {
 		return iImageEClass;
 	}
@@ -4738,6 +4768,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iAppointmentEClass, IAPPOINTMENT__TREATMENT_REASON);
 		createEAttribute(iAppointmentEClass, IAPPOINTMENT__LINKGROUP);
 		createEAttribute(iAppointmentEClass, IAPPOINTMENT__EXTENSION);
+		createEAttribute(iAppointmentEClass, IAPPOINTMENT__CREATED);
+		createEAttribute(iAppointmentEClass, IAPPOINTMENT__LAST_EDIT);
+		createEAttribute(iAppointmentEClass, IAPPOINTMENT__STATE_HISTORY);
 
 		iImageEClass = createEClass(IIMAGE);
 		createEAttribute(iImageEClass, IIMAGE__DATE);
@@ -5544,6 +5577,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIAppointment_TreatmentReason(), ecorePackage.getEInt(), "treatmentReason", null, 0, 1, IAppointment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIAppointment_Linkgroup(), ecorePackage.getEString(), "linkgroup", null, 0, 1, IAppointment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIAppointment_Extension(), ecorePackage.getEString(), "extension", null, 0, 1, IAppointment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIAppointment_Created(), ecorePackage.getEString(), "created", null, 0, 1, IAppointment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIAppointment_LastEdit(), ecorePackage.getEString(), "lastEdit", null, 0, 1, IAppointment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIAppointment_StateHistory(), ecorePackage.getEString(), "stateHistory", null, 0, 1, IAppointment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		addEOperation(iAppointmentEClass, this.getIContact(), "getContact", 0, 1, IS_UNIQUE, IS_ORDERED);
 
@@ -5855,6 +5891,24 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		   source,
 		   new String[] {
 			   "attributeName", "patid"
+		   });
+		addAnnotation
+		  (getIAppointment_Created(),
+		   source,
+		   new String[] {
+			   "attributeName", "angelegt"
+		   });
+		addAnnotation
+		  (getIAppointment_LastEdit(),
+		   source,
+		   new String[] {
+			   "attributeName", "lastedit"
+		   });
+		addAnnotation
+		  (getIAppointment_StateHistory(),
+		   source,
+		   new String[] {
+			   "attributeName", "statusHistory"
 		   });
 		addAnnotation
 		  (getIPrescription_DateTo(),

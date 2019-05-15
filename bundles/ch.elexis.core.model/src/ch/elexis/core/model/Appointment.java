@@ -182,4 +182,34 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 		return CoreModelServiceHolder.get().load(getSubjectOrPatient(), IContact.class)
 			.orElse(null);
 	}
+
+	@Override
+	public String getCreated(){
+		return getEntity().getAngelegt();
+	}
+
+	@Override
+	public void setCreated(String value){
+		getEntity().setAngelegt(value);
+	}
+
+	@Override
+	public String getLastEdit(){
+		return getEntity().getLastedit();
+	}
+
+	@Override
+	public void setLastEdit(String value){
+		getEntity().setLastedit(value);
+	}
+
+	@Override
+	public String getStateHistory(){
+		return getEntity().getStatusHistory();
+	}
+
+	@Override
+	public void setStateHistory(String value){
+		getEntity().setStatusHistory(value);
+	}
 }
