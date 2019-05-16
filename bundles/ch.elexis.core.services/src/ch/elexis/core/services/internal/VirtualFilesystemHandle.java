@@ -275,20 +275,19 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 	}
 
 	@Override
-	public boolean moveTo(IVirtualFilesystemHandle target) throws IOException {
-
+	public void moveTo(IVirtualFilesystemHandle target) throws IOException{
 		Optional<File> file = toFile();
 		if (file.isPresent()) {
 			Optional<File> _target = target.toFile();
 			if (_target.isPresent()) {
+				// from file to file
 				Files.move(file.get().toPath(), _target.get().toPath(), StandardCopyOption.REPLACE_EXISTING);
-				return true;
+				return;
 			}
 		}
-
-		// TODO currently supports only file to file
-
-		return false;
+		
+		copyTo(target);
+		delete();
 	}
 
 	@Override
@@ -323,7 +322,9 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 		URLConnection connection = url.openConnection();
 		if (connection instanceof SmbFile) {
 			try (SmbFile smbFile = (SmbFile) connection) {
-				smbFile.mkdir();
+				if(!smbFile.exists()) {
+					smbFile.mkdir();
+				}
 				return this;
 			}
 		}

@@ -1,6 +1,7 @@
 package ch.elexis.core.importer.div.importers.multifile.strategy;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -81,7 +82,7 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 						FileImportStrategyUtil.moveAfterImport(false, fileHandle);
 					} catch (IOException e) {
 						return new Result<>(SEVERITY.ERROR, 2,
-								"Could not move after import [" + fileHandle.getAbsolutePath() + "]", context, true);
+								"Could not move after import [" + fileHandle.getAbsolutePath() + "]: "+e.getMessage(), context, true);
 					}
 				}
 				return new Result<>(SEVERITY.ERROR, 2,
@@ -95,7 +96,7 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 					FileImportStrategyUtil.moveAfterImport(false, fileHandle);
 				} catch (IOException e) {
 					return new Result<>(SEVERITY.ERROR, 2,
-							"Could not move after import [" + fileHandle.getAbsolutePath() + "]", context, true);
+							"Could not move after import [" + fileHandle.getAbsolutePath() + "]: "+e.getMessage(), context, true);
 				}
 			}
 			return new Result<>(SEVERITY.ERROR, 2,
@@ -133,11 +134,12 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 			try {
 				FileImportStrategyUtil.moveAfterImport(true, fileHandle);
 			} catch (IOException e) {
-				return new Result<Object>(SEVERITY.ERROR, 2,
-						"Could not move after import [" + fileHandle.getAbsolutePath() + "]", context, true);
+				e.printStackTrace();
+				return new Result<>(SEVERITY.ERROR, 2,
+						"Could not move after import [" + fileHandle.getAbsolutePath() + "]: "+e.getMessage(), context, true);
 			}
 		}
-		return new Result<Object>(SEVERITY.OK, 0, "OK", orderId, false); //$NON-NLS-1$
+		return new Result<>(SEVERITY.OK, 0, "OK", orderId, false); //$NON-NLS-1$
 	}
 
 	private void initValuesFromContext(Map<String, Object> context) {
@@ -206,7 +208,9 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 			document.setCreated(dateTime.getTime());
 			document.setExtension(FileTool.getExtension(fileHandle.getName()));
 			document.setKeywords(keywords);
-			OmnivoreDocumentStoreServiceHolder.get().saveDocument(document, fileHandle.openInputStream());
+			try(InputStream is = fileHandle.openInputStream()) {
+				OmnivoreDocumentStoreServiceHolder.get().saveDocument(document, is);
+			}
 			return true;
 		}
 		return false;

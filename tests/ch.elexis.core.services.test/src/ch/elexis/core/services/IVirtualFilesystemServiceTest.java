@@ -6,8 +6,9 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import ch.elexis.core.services.vfs.VirtualFileHandle_FileDirectory_Test;
 import ch.elexis.core.services.vfs.VirtualFileHandle_FileFile_Test;
+import ch.elexis.core.services.vfs.VirtualFilesystemServiceTest;
 
 @RunWith(Suite.class)
-@SuiteClasses({ VirtualFileHandle_FileFile_Test.class, VirtualFileHandle_FileDirectory_Test.class })
+@SuiteClasses({ VirtualFilesystemServiceTest.class, VirtualFileHandle_FileFile_Test.class, VirtualFileHandle_FileDirectory_Test.class })
 public class IVirtualFilesystemServiceTest {
 }

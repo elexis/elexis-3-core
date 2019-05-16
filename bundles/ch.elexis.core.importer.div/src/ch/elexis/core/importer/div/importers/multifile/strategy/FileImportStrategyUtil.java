@@ -1,12 +1,8 @@
 package ch.elexis.core.importer.div.importers.multifile.strategy;
 
-import java.io.File;
 import java.io.IOException;
 
-import org.slf4j.LoggerFactory;
-
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
-import ch.elexis.core.services.holder.VirtualFilesystemServiceHolder;
 import ch.rgw.tools.TimeTool;
 
 public class FileImportStrategyUtil {
@@ -16,9 +12,10 @@ public class FileImportStrategyUtil {
 	 * 
 	 * @param ok
 	 * @param file
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	public static void moveAfterImport(boolean ok, IVirtualFilesystemHandle fileHandle) throws IOException{
+	public static void moveAfterImport(boolean ok, IVirtualFilesystemHandle fileHandle)
+		throws IOException{
 		IVirtualFilesystemHandle rootDir = fileHandle.getParent();
 		IVirtualFilesystemHandle subDir = null;
 		if (ok) {
@@ -33,23 +30,18 @@ public class FileImportStrategyUtil {
 	
 	private static void moveToDir(IVirtualFilesystemHandle file, IVirtualFilesystemHandle subDir)
 		throws IOException{
-		File _subDir = subDir.toFile().orElse(null);
 		
-		IVirtualFilesystemHandle newFile =
-				VirtualFilesystemServiceHolder.get().of(new File(_subDir, file.getName()));
+		IVirtualFilesystemHandle newFile = subDir.subFile(file.getName());
 		
 		if (newFile.exists()) {
-			// on multiple move to archive dir:
+			// on multiple move to archive dir: 
 			// first time use own filename
 			// n+ times use filename_timestamp
 			String fnwts = file.getName() + "_" + new TimeTool().toString(TimeTool.TIMESTAMP);
-			newFile = VirtualFilesystemServiceHolder.get().of(new File(_subDir, fnwts));
+			newFile = subDir.subFile(fnwts);
 		}
 		
-		if (!file.moveTo(newFile)) {
-			LoggerFactory.getLogger(FileImportStrategyUtil.class).error("Could not move file ["
-				+ file.getAbsolutePath() + "] to [" + newFile.getAbsolutePath() + "]");
-		}
+		file.moveTo(newFile);
 	}
 	
 	private static IVirtualFilesystemHandle getOrCreateSubdir(IVirtualFilesystemHandle dir,

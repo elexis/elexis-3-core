@@ -156,6 +156,11 @@ public class VirtualFileHandle_FileDirectory_Test extends AbstractVirtualFileHan
 		IVirtualFilesystemHandle subFile = testHandle.subFile("subfile");
 		assertFalse(subFile.exists());
 	}
+	
+	@Test(expected = IOException.class)
+	public void testSubFileWithStartingSlash() throws IOException {
+		testHandle.subFile("/bla/foo.txt");
+	}
 
 	public void testMkdir() throws IOException {
 		// TODO behavior?

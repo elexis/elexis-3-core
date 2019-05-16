@@ -131,7 +131,7 @@ public class VirtualFileHandle_FileFile_Test extends AbstractVirtualFileHandleTe
 	@Test
 	public void testMoveTo() throws IOException {
 		File moveToFile = new File(testDirectory, "moveToFile");
-		assertTrue(testHandle.moveTo(service.of(moveToFile)));
+		testHandle.moveTo(service.of(moveToFile));
 		byte[] readAllBytes = Files.readAllBytes(moveToFile.toPath());
 		assertArrayEquals("meaninglessTestText".getBytes(), readAllBytes);
 		assertFalse(testHandle.exists());

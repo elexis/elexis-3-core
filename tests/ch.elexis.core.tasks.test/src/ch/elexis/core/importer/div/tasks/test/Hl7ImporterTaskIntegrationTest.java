@@ -5,18 +5,16 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import org.awaitility.Awaitility;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ch.elexis.core.common.ElexisEventTopics;
@@ -29,6 +27,8 @@ import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable.ReturnParameter;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable.RunContextParameter;
 import ch.elexis.core.model.tasks.TaskException;
+import ch.elexis.core.services.IVirtualFilesystemService;
+import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.LabServiceHolder;
@@ -39,18 +39,65 @@ import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.OwnerTaskNotification;
 import ch.elexis.core.tasks.model.TaskState;
 import ch.elexis.core.tasks.model.TaskTriggerType;
+import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.elexis.core.utils.PlatformHelper;
 
 public class Hl7ImporterTaskIntegrationTest {
 	
-	static Path tempDirectory;
+	private IVirtualFilesystemService vfs =
+		OsgiServiceUtil.getService(IVirtualFilesystemService.class).get();
 	
-	@BeforeClass
-	public static void beforeClass() throws IOException{
-		tempDirectory = Files.createTempDirectory("hl7ImporterTest");
-		tempDirectory.toFile().deleteOnExit();
+	
+	static final String PREFIX_AUTH_WIN2KSRV =
+			"smb://unittest:Unit_Test_17@win2k12srv.medelexis.ch/smb_for_unittests/";
+	static final String SMB_TEST_DIRECTORY = PREFIX_AUTH_WIN2KSRV+"hl7ImportTest/";
+	
+	@Test
+	public void executionOnLocalFilesystem() throws Exception{
+
+		// SMB Share
+//		IVirtualFilesystemHandle tempDirectoryVfs = vfs.of(smbTempDirectory);
+		//
+		
+		// Local FS
+		Path tempDirectory = Files.createTempDirectory("hl7ImporterTest");
+		tempDirectory.toFile().deleteOnExit();		
+		IVirtualFilesystemHandle tempDirectoryVfs = vfs.of(tempDirectory.toFile());
+		//
+		
+		tempDirectoryVfs.mkdir();
+		
+		final IVirtualFilesystemHandle hl7 =
+			vfs.of(new File(PlatformHelper.getBasePath("ch.elexis.core.tasks.test"),
+				"rsc/5083_LabCube_ABXMicrosEmi_20160217143956_198647.hl7"));
+		final IVirtualFilesystemHandle pdf =
+			vfs.of(new File(PlatformHelper.getBasePath("ch.elexis.core.tasks.test"),
+				"rsc/5083_LabCube_ABXMicrosEmi_20160217143956_198647.pdf"));
+		final IVirtualFilesystemHandle hl7Target = tempDirectoryVfs.subFile(hl7.getName());
+		final IVirtualFilesystemHandle pdfTarget = tempDirectoryVfs.subFile(pdf.getName());
+		final IVirtualFilesystemHandle archiveDir = tempDirectoryVfs.subDir("archive").mkdir();
+		final IVirtualFilesystemHandle hl7Archived = archiveDir.subFile(hl7.getName());
+		final IVirtualFilesystemHandle pdfArchived = archiveDir.subFile(pdf.getName());
 		
 		Hl7ImporterTaskIntegrationTestUtil.prepareEnvironment();
+		
+		Callable<Void> pushFiles = () -> {
+			pdf.copyTo(pdfTarget);
+			hl7.copyTo(hl7Target);
+			return null;
+		};
+		
+		localFilesystemImport(tempDirectoryVfs.toString(), pushFiles);
+		
+		// import was successful, files was moved to archive
+		System.out.println(tempDirectoryVfs.getAbsolutePath());
+		assertTrue(hl7Archived.exists());
+		assertTrue(pdfArchived.exists());
+		hl7Archived.delete();
+		pdfArchived.delete();
+		archiveDir.delete();
+		tempDirectoryVfs.delete();
+//		new File(tempDirectory.toFile() + "/archive").delete();
 	}
 	
 	/**
@@ -58,30 +105,25 @@ public class Hl7ImporterTaskIntegrationTest {
 	 * watches a given directory for changes, and on every file found it starts a subsequent task -
 	 * the importer. A third task, bills created LabResults
 	 * 
-	 * @throws TaskException
-	 * @throws IOException
+	 * @param pushFiles
+	 * @param url
+	 * @throws Exception
 	 */
-	@Test
-	public void localFilesystemImport() throws TaskException, IOException{
+	
+	public void localFilesystemImport(String urlString, Callable<Void> pushFiles) throws Exception{
 		
 		IUser activeUser = ContextServiceHolder.get().getActiveUser().get();
 		assertNotNull(activeUser);
 		
 		ILaboratory laboratory = Hl7ImporterTaskIntegrationTestUtil.configureLabAndLabItemBilling();
 		
-		ITaskDescriptor watcherTaskDescriptor = initDirectoryWatcherTask(activeUser);
+		ITaskDescriptor watcherTaskDescriptor = initDirectoryWatcherTask(activeUser, urlString);
 		ITaskDescriptor hl7ImporterTaskDescriptor = initHl7ImporterTask(activeUser);
 		ITaskDescriptor billLabResultsTaskDescriptor = initBillLabResultTask(activeUser);
 		
+		pushFiles.call();
+		
 		// add a hl7 file with accompanying pdf to the directory
-		File src = new File(PlatformHelper.getBasePath("ch.elexis.core.tasks.test"),
-			"rsc/5083_LabCube_ABXMicrosEmi_20160217143956_198647.hl7");
-		File pdf = new File(PlatformHelper.getBasePath("ch.elexis.core.tasks.test"),
-			"rsc/5083_LabCube_ABXMicrosEmi_20160217143956_198647.pdf");
-		Files.copy(pdf.toPath(), new File(tempDirectory.toFile(), pdf.getName()).toPath(),
-			StandardCopyOption.REPLACE_EXISTING);
-		Files.copy(src.toPath(), new File(tempDirectory.toFile(), src.getName()).toPath(),
-			StandardCopyOption.REPLACE_EXISTING);
 		
 		Awaitility.await().atMost(10, TimeUnit.SECONDS)
 			.until(() -> TaskServiceHolder.get().findExecutions(watcherTaskDescriptor).size() > 0);
@@ -114,20 +156,9 @@ public class Hl7ImporterTaskIntegrationTest {
 		ITask billingTask =
 			TaskServiceHolder.get().findExecutions(billLabResultsTaskDescriptor).get(0);
 		assertEquals(TaskState.FAILED, billingTask.getState());
-		String result = (String) billingTask.getResult().get(ReturnParameter.FAILED_TASK_EXCEPTION_MESSAGE);
+		String result =
+			(String) billingTask.getResult().get(ReturnParameter.FAILED_TASK_EXCEPTION_MESSAGE);
 		assertTrue(result.contains("EAL tarif [1371.00] does not exist"));
-		
-		// import was successful, files was moved to archive
-		File archivedHl7 = new File(tempDirectory.toFile() + "/archive", src.getName());
-		File archivedPdf = new File(tempDirectory.toFile() + "/archive", pdf.getName());
-		assertTrue(archivedHl7.exists());
-		assertTrue(archivedPdf.exists());
-		archivedHl7.delete();
-		archivedPdf.delete();
-		new File(tempDirectory.toFile() + "/archive").delete();
-		
-		// TODO should file be locked during process by task?
-		System.out.println(tempDirectory.toAbsolutePath());
 		
 		// TODO test fail message
 		// TODO partial result?
@@ -166,13 +197,13 @@ public class Hl7ImporterTaskIntegrationTest {
 		return hl7ImporterTaskDescriptor;
 	}
 	
-	private ITaskDescriptor initDirectoryWatcherTask(IUser activeUser) throws TaskException{
+	private ITaskDescriptor initDirectoryWatcherTask(IUser activeUser, String url)
+		throws TaskException{
 		// create watcher taskdescriptor
 		IIdentifiedRunnable watcherRunnable = TaskServiceHolder.get()
 			.instantiateRunnableById(IdentifiedRunnableIdConstants.TRIGGER_TASK_FOR_EVERY_FILE);
 		assertNotNull(watcherRunnable);
 		Map<String, Serializable> watcherRunContext = watcherRunnable.getDefaultRunContext();
-		String url = tempDirectory.toString();
 		watcherRunContext.put(RunContextParameter.STRING_URL, url);
 		watcherRunContext.put(RunContextParameter.TASK_DESCRIPTOR_REFID, "hl7Importer_a");
 		watcherRunContext.put("fileExtensionFilter", "hl7");

@@ -436,11 +436,7 @@ public class HL7Parser {
 								newFile = archiveDir.subFile(fnwts);
 							}
 							
-							if (!file.moveTo(newFile)) {
-								throw new IOException(
-									Messages.HL7Parser_TheFile + file.getAbsolutePath()
-										+ Messages.HL7Parser_CouldNotMoveToArchive);
-							}
+							file.moveTo(newFile);
 						}
 					}
 				}
