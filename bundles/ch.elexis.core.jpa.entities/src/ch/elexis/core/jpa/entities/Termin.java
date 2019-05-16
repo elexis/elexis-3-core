@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.eclipse.persistence.annotations.Cache;
@@ -24,6 +25,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Table(name = "AGNTERMINE")
 @EntityListeners(EntityWithIdListener.class)
 @Cache(expiry = 15000)
+@NamedQuery(name = "Termin.dayfrom.dayto", query = "SELECT te FROM Termin te WHERE te.deleted = false AND te.tag >= :dayfrom AND te.tag <= :dayto")
 public class Termin extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
