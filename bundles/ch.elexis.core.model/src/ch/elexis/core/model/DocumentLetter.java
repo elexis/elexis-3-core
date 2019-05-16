@@ -121,7 +121,7 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 			history = new ArrayList<>();
 			if (getEntity().getRecipient() != null) {
 				history.add(new TransientHistory(getCreated(), DocumentStatus.SENT,
-					getEntity().getRecipient().getLabel()));
+					ModelUtil.getPersonalia(getEntity().getRecipient())));
 			}
 		}
 		return history;

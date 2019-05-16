@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.jpa.entities.EntityWithId;
+import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.entities.Userconfig;
 import ch.elexis.core.jpa.model.adapter.AbstractModelService;
 import ch.elexis.core.model.Config;
@@ -48,6 +49,10 @@ import ch.rgw.tools.MimeTool;
 public class ModelUtil {
 	
 	private static Logger logger = LoggerFactory.getLogger(ModelUtil.class);
+	
+	private static final DateTimeFormatter yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMdd");
+	private static DateTimeFormatter defaultDateFormatter =
+		DateTimeFormatter.ofPattern("dd.MM.yyyy");
 	
 	/**
 	 * Get the file extension part of the input String.
@@ -358,8 +363,6 @@ public class ModelUtil {
 		return null;
 	}
 	
-	private static final DateTimeFormatter yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMdd");
-	
 	public static String toString(LocalDate date){
 		if (date == null) {
 			return null;
@@ -379,5 +382,30 @@ public class ModelUtil {
 			logger.warn("Error parsing [{}]", dateValue, e);
 		}
 		return null;
+	}
+	
+	
+	public static String getPersonalia(Kontakt kontakt){
+		StringBuilder sb = new StringBuilder(64);
+		if (kontakt != null) {
+			if (StringUtils.isNoneEmpty(kontakt.getDescription1())) {
+				sb.append(kontakt.getDescription1());
+			}
+			if (StringUtils.isNotBlank(sb.toString())) {
+				sb.append(" ");
+			}
+			if (StringUtils.isNoneEmpty(kontakt.getDescription2())) {
+				sb.append(kontakt.getDescription2());
+			}
+			
+			if (kontakt.getDob() != null) {
+				sb.append(" ").append(defaultDateFormatter.format(kontakt.getDob()));
+			}
+			
+			if (StringUtils.isNoneEmpty(kontakt.getTitel())) {
+				sb.append(",").append(kontakt.getTitel());
+			}
+		}
+		return sb.toString();
 	}
 }
