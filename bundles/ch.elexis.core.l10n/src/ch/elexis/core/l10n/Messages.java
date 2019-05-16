@@ -1550,6 +1550,7 @@ public class Messages extends NLS {
 	public static String BriefAuswahlNotAllowedToRunStresstess;
 	public static String ReminderView_txtSearch_message;
 	public static String ReminderPref_defaultPatientRelated;
+	public static String ReminderPref_defaultReponsibleSelf;
 	public static String LimitedText_MaxLengthReached;
 	public static String CreatePrescriptionHelper_InfoDispensationArtikelstammTitel;
 	public static String CreatePrescriptionHelper_InfoDispensationArtikelstammUpate;
