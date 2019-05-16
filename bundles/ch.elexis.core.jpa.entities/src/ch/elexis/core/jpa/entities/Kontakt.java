@@ -242,14 +242,6 @@ public class Kontakt extends AbstractEntityWithId
 	@JoinColumn(name = "otherID", updatable = false, insertable = false, nullable = false)
 	protected Collection<KontaktAdressJoint> relatedByContacts;
 
-	// ---------------------------------------------
-	public Kontakt() {
-	}
-
-	public String getLabel() {
-		return getDescription1() + "," + getDescription2() + "," + getDescription3();
-	}
-
 	public String getAnschrift() {
 		return anschrift;
 	}
