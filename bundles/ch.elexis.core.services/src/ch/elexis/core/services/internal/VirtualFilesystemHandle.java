@@ -18,6 +18,7 @@ import java.util.Optional;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemhandleFilter;
@@ -298,6 +299,10 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 	@Override
 	public IVirtualFilesystemHandle subFile(String subFile) throws IOException {
 
+		if(StringUtils.isBlank(subFile) || subFile.startsWith("/")) {
+			throw new IllegalArgumentException();
+		}
+		
 		if (!isDirectory()) {
 			throw new IOException("not a directory");
 		}
