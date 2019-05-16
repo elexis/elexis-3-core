@@ -157,7 +157,7 @@ public class VirtualFileHandle_FileDirectory_Test extends AbstractVirtualFileHan
 		assertFalse(subFile.exists());
 	}
 	
-	@Test(expected = IOException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testSubFileWithStartingSlash() throws IOException {
 		testHandle.subFile("/bla/foo.txt");
 	}
