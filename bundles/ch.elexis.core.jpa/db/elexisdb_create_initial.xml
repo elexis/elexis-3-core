@@ -1,34 +1,5 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
-    <changeSet author="thomas (generated)" id="1527175239251-1">
-        <createTable tableName="AGNTERMINE">
-            <column name="ID" type="VARCHAR(127)">
-                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_A22"/>
-            </column>
-            <column name="LASTUPDATE" type="BIGINT"/>
-            <column name="PATID" type="VARCHAR(80)"/>
-            <column name="BEREICH" type="VARCHAR(25)"/>
-            <column name="TAG" type="CHAR(8)"/>
-            <column name="BEGINN" type="CHAR(4)"/>
-            <column name="DAUER" type="CHAR(4)"/>
-            <column name="GRUND" type="CLOB"/>
-            <column name="STATUSHISTORY" type="CLOB"/>
-            <column name="TERMINTYP" type="VARCHAR(50)"/>
-            <column name="TERMINSTATUS" type="VARCHAR(50)"/>
-            <column name="ERSTELLTVON" type="VARCHAR(25)"/>
-            <column name="ANGELEGT" type="VARCHAR(10)"/>
-            <column name="LASTEDIT" type="VARCHAR(10)"/>
-            <column defaultValueNumeric="0" name="PALMID" type="INT"/>
-            <column name="FLAGS" type="VARCHAR(10)"/>
-            <column defaultValue="0" name="DELETED" type="CHAR(2)"/>
-            <column name="EXTENSION" type="CLOB"/>
-            <column name="LINKGROUP" type="VARCHAR(50)"/>
-            <column name="PRIORITY" type="CHAR(1)"/>
-            <column name="CASETYPE" type="CHAR(1)"/>
-            <column name="INSURANCETYPE" type="CHAR(1)"/>
-            <column name="TREATMENTREASON" type="CHAR(1)"/>
-        </createTable>
-    </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-2">
         <createTable tableName="ARTIKEL">
             <column name="ID" type="VARCHAR(25)">
@@ -433,19 +404,6 @@
             <column name="DATUM_VON" type="CHAR(8)"/>
             <column name="DATUM_BIS" type="CHAR(8)"/>
             <column name="MULTIPLIKATOR" type="VARCHAR(8)"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-34">
-        <createTable tableName="ELEXISBEFUNDE">
-            <column name="ID" type="VARCHAR(25)">
-                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_BF"/>
-            </column>
-            <column name="LASTUPDATE" type="BIGINT"/>
-            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
-            <column name="PATIENTID" type="VARCHAR(25)"/>
-            <column name="NAME" type="VARCHAR(80)"/>
-            <column name="DATUM" type="CHAR(8)"/>
-            <column name="BEFUNDE" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-35">
@@ -1048,11 +1006,6 @@
             <column name="ANSCHRIFT" type="CLOB"/>
         </createTable>
     </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-80">
-        <createIndex indexName="AGNBEREICH" tableName="AGNTERMINE">
-            <column name="BEREICH"/>
-        </createIndex>
-    </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-81">
         <createIndex indexName="AIJ1" tableName="KONTAKT_ADRESS_JOINT">
             <column name="MYID"/>
@@ -1231,23 +1184,6 @@
             <column name="RECHNUNGSID"/>
         </createIndex>
     </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-128">
-        <createIndex indexName="IDX_ELBF1" tableName="ELEXISBEFUNDE">
-            <column name="DATUM"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-129">
-        <createIndex indexName="IDX_ELBF2" tableName="ELEXISBEFUNDE">
-            <column name="PATIENTID"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-130">
-        <createIndex indexName="IT" tableName="AGNTERMINE">
-            <column name="TAG"/>
-            <column name="BEGINN"/>
-            <column name="BEREICH"/>
-        </createIndex>
-    </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-131">
         <createIndex indexName="K0" tableName="KONTAKT">
             <column name="BEZEICHNUNG1"/>
@@ -1332,11 +1268,6 @@
     <changeSet author="thomas (generated)" id="1527175239251-153">
         <createIndex indexName="PAJ2" tableName="PATIENT_ARTIKEL_JOINT">
             <column name="REZEPTID"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-154">
-        <createIndex indexName="PATTERN" tableName="AGNTERMINE">
-            <column name="PATID"/>
         </createIndex>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-155">
