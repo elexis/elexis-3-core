@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -286,6 +287,17 @@ public class Patient extends Person {
 	 */
 	
 	public Konsultation getLetzteKons(final boolean create){
+		return getKonsulationByDate(create, null);
+	}
+	
+	/**
+	 * Returns a {@link Konsultation} for a given date or the latest if date is null
+	 * @param create
+	 * @param konsDate
+	 * @return
+	 */
+	public Konsultation getKonsulationByDate(boolean create, Date konsDate)
+	{
 		if (ElexisEventDispatcher.getSelectedMandator() == null) {
 			MessageEvent.fireError("Kein Mandant angemeldet", "Es ist kein Mandant angemeldet.");
 			return null;
@@ -300,8 +312,9 @@ public class Patient extends Person {
 			}
 		}
 		
-		// qbe.add("Datum", "=", new
-		// TimeTool().toString(TimeTool.DATE_COMPACT));
+		if (konsDate != null) {
+			qbe.add("Datum", "=", new TimeTool(konsDate).toString(TimeTool.DATE_COMPACT));
+		}
 		
 		Fall[] faelle = getFaelle();
 		if ((faelle == null) || (faelle.length == 0)) {
