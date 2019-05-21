@@ -62,6 +62,12 @@
 		<class>ch.elexis.core.jpa.entities.Leistungsblock</class>
 		<class>ch.elexis.core.jpa.entities.Message</class>
 		<class>ch.elexis.core.jpa.entities.ObjVatInfo</class>
+		<class>ch.elexis.core.jpa.entities.PercentileData</class>
+		<class>ch.elexis.core.jpa.entities.PercentileChecklistData</class>
+		<class>ch.elexis.core.jpa.entities.PercentileChecklistForm</class>
+		<class>ch.elexis.core.jpa.entities.PercentileChecklistQuestion</class>
+		<class>ch.elexis.core.jpa.entities.PercentileChecklistTitle</class>
+		<class>ch.elexis.core.jpa.entities.PercentilePatient</class>
 		<class>ch.elexis.core.jpa.entities.Prescription</class>
 		<class>ch.elexis.core.jpa.entities.PhysioLeistung</class>
 		<class>ch.elexis.core.jpa.entities.ComplementaryLeistung</class>

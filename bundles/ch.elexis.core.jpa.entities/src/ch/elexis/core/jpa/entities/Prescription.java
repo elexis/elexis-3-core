@@ -15,6 +15,8 @@ import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.Cache;
+
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.IntegerStringConverter;
 import ch.elexis.core.jpa.entities.converter.PrescriptionEntryTypeConverter;
@@ -25,6 +27,7 @@ import ch.elexis.core.model.prescription.EntryType;
 @Entity
 @Table(name = "patient_artikel_joint")
 @EntityListeners(EntityWithIdListener.class)
+@Cache(expiry = 15000)
 public class Prescription extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 

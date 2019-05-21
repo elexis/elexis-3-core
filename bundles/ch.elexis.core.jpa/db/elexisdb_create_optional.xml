@@ -1485,7 +1485,7 @@ INSERT INTO ETIKETTEN_OBJCLASS_LINK (objclass, sticker) select objclass, sticker
     	<preConditions onFail="MARK_RAN">
 			<not>
 				<indexExists tableName="ELEXISBEFUNDE"
-					indexName="PATIENTID" />
+					indexName="IDX_ELBF2" />
 			</not>
 		</preConditions>
         <createIndex indexName="IDX_ELBF2" tableName="ELEXISBEFUNDE">
@@ -1558,8 +1558,281 @@ INSERT INTO ETIKETTEN_OBJCLASS_LINK (objclass, sticker) select objclass, sticker
 					indexName="PATID" />
 			</not>
 		</preConditions>
-        <createIndex indexName="PATTERN" tableName="AGNTERMINE">
+        <createIndex indexName="PATID" tableName="AGNTERMINE">
             <column name="PATID"/>
         </createIndex>
     </changeSet>
+    
+    <changeSet author="thomas" id="manual_table_NET_MEDSHARE_PERCENTILE_DATA">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="NET_MEDSHARE_PERCENTILE_DATA" />
+			</not>
+		</preConditions>
+        <createTable tableName="NET_MEDSHARE_PERCENTILE_DATA">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_PK_NET_MEDSHARE_PERCENTILE_DATA"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="DATE" type="CHAR(8)"/>
+            <column name="PATIENT_ID" type="VARCHAR(25)"/>
+            <column name="LENGTH" type="VARCHAR(8)"/>
+            <column name="WEIGHT" type="VARCHAR(8)"/>
+            <column name="HEAD" type="VARCHAR(8)"/>
+            <column name="BMI" type="VARCHAR(8)"/>
+            <column name="GROWTHRATE" type="VARCHAR(8)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas" id="manual_index_NET_MEDSHARE_PERCENTILE_DATA_IDX_PATIENT">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="NET_MEDSHARE_PERCENTILE_DATA"
+					indexName="NET_MEDSHARE_PERCENTILE_DATA_IDX_PATIENT" />
+			</not>
+		</preConditions>
+        <createIndex indexName="NET_MEDSHARE_PERCENTILE_DATA_IDX_PATIENT" tableName="NET_MEDSHARE_PERCENTILE_DATA">
+            <column name="PATIENT_ID"/>
+        </createIndex>
+    </changeSet>
+    
+    <changeSet author="thomas" id="manual_table_NET_MEDSHARE_PERCENTILE_PATIENT">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="NET_MEDSHARE_PERCENTILE_PATIENT" />
+			</not>
+		</preConditions>
+        <createTable tableName="NET_MEDSHARE_PERCENTILE_PATIENT">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_PK_NET_MEDSHARE_PERCENTILE_PATIENT"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="PATIENT_ID" type="VARCHAR(25)"/>
+            <column name="AGE_CORRECTION" type="VARCHAR(8)"/>
+            <column name="LEN_FATHER" type="VARCHAR(8)"/>
+            <column name="LEN_MOTHER" type="VARCHAR(8)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas" id="manual_index_NET_MEDSHARE_PERCENTILE_PATIENT_IDX_PATIENT">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="NET_MEDSHARE_PERCENTILE_PATIENT"
+					indexName="NET_MEDSHARE_PERCENTILE_PATIENT_IDX_PATIENT" />
+			</not>
+		</preConditions>
+        <createIndex indexName="NET_MEDSHARE_PERCENTILE_PATIENT_IDX_PATIENT" tableName="NET_MEDSHARE_PERCENTILE_PATIENT">
+            <column name="PATIENT_ID"/>
+        </createIndex>
+    </changeSet>
+    
+    <changeSet author="thomas" id="manual_table_NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA" />
+			</not>
+		</preConditions>
+        <createTable tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_PK_NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="PATIENTID" type="VARCHAR(25)"/>
+            <column name="QUESTIONID" type="VARCHAR(25)"/>
+            <column name="FORMID" type="VARCHAR(25)"/>
+            <column name="KONSID" type="VARCHAR(25)"/>
+            <column name="SORTORDER" type="VARCHAR(11)"/>
+            <column name="KONSDATE" type="VARCHAR(8)"/>
+            <column name="ANSWER" type="VARCHAR(8)"/>
+            <column name="REMARK" type="CLOB"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas" id="manual_index_NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA_IDX_QUESTION">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA"
+					indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA_IDX_QUESTION" />
+			</not>
+		</preConditions>
+        <createIndex indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA_IDX_QUESTION" tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA">
+            <column name="QUESTIONID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas" id="manual_index_NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA_IDX1">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA"
+					indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA_IDX1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA_IDX1" tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA">
+            <column name="PATIENTID"/>
+            <column name="KONSDATE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas" id="manual_index_NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA_IDX2">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA"
+					indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA_IDX2" />
+			</not>
+		</preConditions>
+        <createIndex indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA_IDX2" tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA">
+            <column name="PATIENTID"/>
+            <column name="FORMID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas" id="manual_index_NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA_IDX3">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA"
+					indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA_IDX3" />
+			</not>
+		</preConditions>
+        <createIndex indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA_IDX3" tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA">
+            <column name="PATIENTID"/>
+            <column name="FORMID"/>
+            <column name="KONSDATE"/>
+            <column name="KONSID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas" id="manual_index_NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA_IDX4">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA"
+					indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA_IDX4" />
+			</not>
+		</preConditions>
+        <createIndex indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA_IDX4" tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA">
+            <column name="PATIENTID"/>
+            <column name="FORMID"/>
+            <column name="KONSDATE"/>
+            <column name="QUESTIONID"/>
+            <column name="DELETED"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas" id="manual_index_NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA_IDX5">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA"
+					indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA_IDX5" />
+			</not>
+		</preConditions>
+        <createIndex indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA_IDX5" tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_DATA">
+            <column name="FORMID"/>
+            <column name="KONSDATE"/>
+        </createIndex>
+    </changeSet>
+    
+    <changeSet author="thomas" id="manual_table_NET_MEDSHARE_PERCENTILE_CHECKLIST_FORM">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_FORM" />
+			</not>
+		</preConditions>
+        <createTable tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_FORM">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_PK_NET_MEDSHARE_PERCENTILE_CHECKLIST_FORM"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="FORMTITLE" type="VARCHAR(25)"/>
+            <column name="FROMAGE" type="VARCHAR(11)"/>
+            <column name="TOAGE" type="VARCHAR(11)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas" id="manual_index_NET_MEDSHARE_PERCENTILE_CHECKLIST_FORM_IDX_TITLE">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_FORM"
+					indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_FORM_IDX_TITLE" />
+			</not>
+		</preConditions>
+        <createIndex indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_FORM_IDX_TITLE" tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_FORM">
+            <column name="FORMTITLE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas" id="manual_index_NET_MEDSHARE_PERCENTILE_CHECKLIST_FORM_IDX_AGE">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_FORM"
+					indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_FORM_IDX_AGE" />
+			</not>
+		</preConditions>
+        <createIndex indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_FORM_IDX_AGE" tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_FORM">
+            <column name="FROMAGE"/>
+            <column name="TOAGE"/>
+        </createIndex>
+    </changeSet>
+    
+    <changeSet author="thomas" id="manual_table_NET_MEDSHARE_PERCENTILE_CHECKLIST_QUESTION">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_QUESTION" />
+			</not>
+		</preConditions>
+        <createTable tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_QUESTION">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_PK_NET_MEDSHARE_PERCENTILE_CHECKLIST_QUESTION"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="TITLEID" type="VARCHAR(25)"/>
+            <column name="SUBTITLEID" type="VARCHAR(25)"/>
+            <column name="QUESTION" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas" id="manual_index_NET_MEDSHARE_PERCENTILE_CHECKLIST_QUESTION_IDX_QUESTION">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_QUESTION"
+					indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_QUESTION_IDX_QUESTION" />
+			</not>
+		</preConditions>
+        <createIndex indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_QUESTION_IDX_QUESTION" tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_QUESTION">
+            <column name="QUESTION"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas" id="manual_index_NET_MEDSHARE_PERCENTILE_CHECKLIST_QUESTION_IDX1">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_QUESTION"
+					indexName="manual_index_NET_MEDSHARE_PERCENTILE_CHECKLIST_QUESTION_IDX1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="manual_index_NET_MEDSHARE_PERCENTILE_CHECKLIST_QUESTION_IDX1" tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_QUESTION">
+            <column name="TITLEID"/>
+            <column name="SUBTITLEID"/>
+            <column name="QUESTION"/>
+        </createIndex>
+    </changeSet>
+    
+    <changeSet author="thomas" id="manual_table_NET_MEDSHARE_PERCENTILE_CHECKLIST_TITLE">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_TITLE" />
+			</not>
+		</preConditions>
+        <createTable tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_TITLE">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_PK_NET_MEDSHARE_PERCENTILE_CHECKLIST_TITLE"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="TITLE" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas" id="manual_index_NET_MEDSHARE_PERCENTILE_CHECKLIST_TITLE_IDX_TITLE">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_TITLE"
+					indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_TITLE_IDX_TITLE" />
+			</not>
+		</preConditions>
+        <createIndex indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_QUESTION_IDX_TITLE" tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_TITLE">
+            <column name="TITLE"/>
+        </createIndex>
+    </changeSet>
+    
 </databaseChangeLog>
