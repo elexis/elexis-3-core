@@ -1,9 +1,5 @@
 target "Elexis" with source allEnvironments
 
-location "http://download.elexis.info/elexis-server/elexis-server-dependencies" {
-	com.google.code.gson
-}
-
 location "http://download.elexis.info/elexis/f11106/p2/target/" {
 	org.eclipse.equinox.executable.feature.group
 	org.eclipse.rcp.feature.group
