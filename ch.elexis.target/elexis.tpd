@@ -64,6 +64,7 @@ location "http://download.elexis.info/elexis/f11106/p2/target/" {
 
 	com.eclipsesource.jaxrs.consumer
 	com.eclipsesource.jaxrs.jersey-all-nojavax
+	com.google.gson
 	
 	org.apache.httpcomponents.httpcore
 	org.apache.httpcomponents.httpclient
@@ -118,7 +119,6 @@ location "http://download.elexis.info/elexis/f11106/p2/target/" {
 	com.phloc.commons
 	com.phloc.schematron
 	findbugsAnnotations
-	com.google.code.gson
 	org.thymeleaf
 	ognl
 	org.attoparser
