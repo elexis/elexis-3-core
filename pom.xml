@@ -10,7 +10,7 @@
     <repositories>
       <repository>
         <id>elexis.3.server</id>
-        <url>http://download.elexis.info/elexis-server/1.5/p2/elexis-server/</url>
+        <url>http://download.elexis.info/elexis-server/master/p2/elexis-server/</url>
         <layout>p2</layout>
       </repository>
       <repository>
