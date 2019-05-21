@@ -107,11 +107,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>com.mysql.jdbc</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>javax.activation</artifactId>
               <version>0.0.0</version>
             </dependency>
