@@ -12,5 +12,4 @@ Require-Bundle: ch.elexis.core.findings;bundle-version="1.0.0",
 Service-Component: OSGI-INF/ch.elexis.core.findings.FindingsServiceComponent.xml,
  OSGI-INF/ch.elexis.core.findings.codings.CodingServiceComponent.xml
 Bundle-ActivationPolicy: lazy
-Import-Package: info.elexis.server.core.connector.elexis.jpa.test;resolution:=optional,
- org.apache.commons.io;version="2.4.0"
+Import-Package: org.apache.commons.io;version="2.4.0"
