@@ -88,6 +88,7 @@ location "http://download.eclipse.org/nebula/releases/latest/" {
 location "http://medevit.github.io/osgi-jax-rs-connector/5.3.100/" {
 	com.eclipsesource.jaxrs.consumer
 	com.eclipsesource.jaxrs.jersey-all-nojavax
+	com.google.gson
 }
 
 // Eclipse Orbit Recommended Wed, 5 Sep 2018 -- 20:19 (UTC)	2018-09
@@ -155,7 +156,6 @@ location "http://download.elexis.info/elexis-server/elexis-server-dependencies" 
 	com.phloc.commons
 	com.phloc.schematron
 	findbugsAnnotations
-	com.google.code.gson
 	org.thymeleaf
 	ognl
 	org.attoparser
