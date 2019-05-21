@@ -322,13 +322,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.postgresql"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.sat4j.core"
          download-size="0"
          install-size="0"
@@ -762,13 +755,6 @@
 
    <plugin
          id="org.eclipse.nebula.widgets.nattable.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.google.code.gson"
          download-size="0"
          install-size="0"
          version="0.0.0"
