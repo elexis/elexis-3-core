@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -22,6 +23,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "VERRECHNETCOPY")
 @EntityListeners(EntityWithIdListener.class)
+@NamedQuery(name = "VerrechnetCopy.encounter", query = "SELECT ve FROM VerrechnetCopy ve WHERE ve.deleted = false AND ve.behandlung = :encounter")
 public class VerrechnetCopy extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 

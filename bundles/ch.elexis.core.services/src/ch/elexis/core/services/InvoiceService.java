@@ -3,6 +3,7 @@ package ch.elexis.core.services;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -268,5 +269,16 @@ public class InvoiceService implements IInvoiceService {
 			return Optional.of(found.get(0));
 		}
 		return Optional.empty();
+	}
+	
+	@Override
+	public List<IInvoice> getInvoices(IEncounter encounter){
+		INamedQuery<IInvoiceBilled> query =
+			CoreModelServiceHolder.get().getNamedQuery(IInvoiceBilled.class, "encounter");
+		List<IInvoiceBilled> invoicebilled =
+			query.executeWithParameters(query.getParameterMap("encounter", encounter));
+		HashSet<IInvoice> uniqueInvoices = new HashSet<IInvoice>();
+		invoicebilled.forEach(ib -> uniqueInvoices.add(ib.getInvoice()));
+		return new ArrayList<IInvoice>(uniqueInvoices);
 	}
 }

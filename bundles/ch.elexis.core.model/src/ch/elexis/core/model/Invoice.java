@@ -1,6 +1,7 @@
 package ch.elexis.core.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,6 +15,8 @@ import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.services.INamedQuery;
 import ch.rgw.tools.Money;
+import ch.rgw.tools.StringTool;
+import ch.rgw.tools.TimeTool;
 
 public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Invoice>
 		implements IdentifiableWithXid, IInvoice {
@@ -100,14 +103,22 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public void addTrace(String name, String value){
-		// TODO Auto-generated method stub
-		
+		List<String> trace = getTrace(name);
+		trace.add(new TimeTool().toString(TimeTool.FULL_GER) + ": " + value);
+		extInfoHandler.setExtInfo(name, StringTool.pack(trace));
 	}
 	
 	@Override
 	public List<String> getTrace(String name){
-		// TODO Auto-generated method stub
-		return null;
+		byte[] raw = (byte[]) extInfoHandler.getExtInfo(name);
+		List<String> trace = null;
+		if (raw != null) {
+			trace = StringTool.unpack(raw);
+		}
+		if (trace == null) {
+			trace = new ArrayList<String>();
+		}
+		return trace;
 	}
 	
 	@Override
@@ -179,7 +190,8 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 		return total;
 	}
 	
-	private List<IPayment> getPayments(){
+	@Override
+	public List<IPayment> getPayments(){
 		INamedQuery<IPayment> query =
 			CoreModelServiceHolder.get().getNamedQuery(IPayment.class, "invoice");
 		return query.executeWithParameters(query.getParameterMap("invoice", this));

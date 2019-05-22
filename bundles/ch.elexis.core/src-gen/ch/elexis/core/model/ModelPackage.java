@@ -4890,13 +4890,22 @@ public interface ModelPackage extends EPackage {
 	int IINVOICE__REMARK = IDENTIFIABLE_FEATURE_COUNT + 14;
 
 	/**
+	 * The feature id for the '<em><b>Payments</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE__PAYMENTS = IDENTIFIABLE_FEATURE_COUNT + 15;
+
+	/**
 	 * The number of structural features of the '<em>IInvoice</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IINVOICE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 15;
+	int IINVOICE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 16;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IStock <em>IStock</em>}' class.
@@ -9135,6 +9144,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIInvoice_Remark();
 
 	/**
+	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IInvoice#getPayments <em>Payments</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Payments</em>'.
+	 * @see ch.elexis.core.model.IInvoice#getPayments()
+	 * @see #getIInvoice()
+	 * @generated
+	 */
+	EReference getIInvoice_Payments();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IStock <em>IStock</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12596,6 +12616,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IINVOICE__REMARK = eINSTANCE.getIInvoice_Remark();
+
+		/**
+		 * The meta object literal for the '<em><b>Payments</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IINVOICE__PAYMENTS = eINSTANCE.getIInvoice_Payments();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IStock <em>IStock</em>}' class.

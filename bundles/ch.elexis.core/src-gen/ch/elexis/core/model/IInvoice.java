@@ -39,6 +39,7 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IInvoice#getPayedAmount <em>Payed Amount</em>}</li>
  *   <li>{@link ch.elexis.core.model.IInvoice#getDemandAmount <em>Demand Amount</em>}</li>
  *   <li>{@link ch.elexis.core.model.IInvoice#getRemark <em>Remark</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IInvoice#getPayments <em>Payments</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIInvoice()
@@ -346,6 +347,22 @@ public interface IInvoice extends Identifiable, Deleteable, WithExtInfo {
 	 * @generated
 	 */
 	void setRemark(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Payments</b></em>' reference list.
+	 * The list contents are of type {@link ch.elexis.core.model.IPayment}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Payments</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Payments</em>' reference list.
+	 * @see ch.elexis.core.model.ModelPackage#getIInvoice_Payments()
+	 * @model changeable="false"
+	 * @generated
+	 */
+	List<IPayment> getPayments();
 
 	/**
 	 * <!-- begin-user-doc -->
