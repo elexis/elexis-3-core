@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis" sequenceNumber="1558448025">
+<target name="Elexis" sequenceNumber="1558513681">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.100.v20180827-1352"/>
@@ -90,7 +90,7 @@
       <unit id="org.apache.poi.ooxml.schemas" version="3.9.0.v201405241750"/>
       <unit id="org.apache.xmlbeans" version="2.3.0.v201605172150"/>
       <unit id="org.dom4j" version="1.6.1.v20170815-1500"/>
-      <unit id="info.elexis.server.hapi.fhir" version="3.4.0.201905161424"/>
+      <unit id="info.elexis.server.hapi.fhir" version="3.4.0.201905220809"/>
       <unit id="javax.ws.rs" version="1.1.1.v20130318-1750"/>
       <unit id="org.slf4j.api" version="1.7.2.v20121108-1250"/>
       <unit id="org.slf4j.ext" version="1.7.2.v20121108-1250"/>
