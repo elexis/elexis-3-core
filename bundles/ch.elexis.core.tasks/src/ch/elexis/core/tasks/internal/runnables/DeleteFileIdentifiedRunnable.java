@@ -28,6 +28,8 @@ public class DeleteFileIdentifiedRunnable implements IIdentifiedRunnable {
 		
 		String eventFilePath = (String) context.get(RunContextParameter.STRING_URL);
 		
+		// TODO switch to VirtualFilesystemService
+		
 		Path path = Paths.get(eventFilePath);
 		try {
 			Files.delete(path);

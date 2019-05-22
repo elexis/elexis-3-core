@@ -10,7 +10,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
+import com.google.gson.annotations.JsonAdapter;
+
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
+import ch.elexis.core.jpa.entities.gson.AbstractEntityWithIdJsonAdapter;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
@@ -39,6 +42,7 @@ public class TaskDescriptor extends AbstractEntityWithId
 	@Column(length = 64)
 	protected String referenceId;
 	
+	@JsonAdapter(AbstractEntityWithIdJsonAdapter.class)
 	@JoinColumn
 	protected User owner;
 	

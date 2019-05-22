@@ -690,11 +690,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEParameter(op, g1, "runContext", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEException(op, this.getTaskException());
 
-		op = addEOperation(iTaskServiceEClass, null, "listAvailableRunnables", 0, 1, IS_UNIQUE, IS_ORDERED);
-		g1 = createEGenericType(ecorePackage.getEMap());
-		g2 = createEGenericType(ecorePackage.getEString());
-		g1.getETypeArguments().add(g2);
-		g2 = createEGenericType(ecorePackage.getEString());
+		op = addEOperation(iTaskServiceEClass, null, "getIdentifiedRunnables", 1, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(theTypesPackage.getList());
+		g2 = createEGenericType(this.getIIdentifiedRunnable());
 		g1.getETypeArguments().add(g2);
 		initEOperation(op, g1);
 

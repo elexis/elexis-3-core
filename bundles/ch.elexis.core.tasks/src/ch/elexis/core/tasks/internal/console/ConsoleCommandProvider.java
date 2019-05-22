@@ -3,7 +3,6 @@ package ch.elexis.core.tasks.internal.console;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.eclipse.osgi.framework.console.CommandInterpreter;
@@ -19,6 +18,7 @@ import ch.elexis.core.console.AbstractConsoleCommandProvider;
 import ch.elexis.core.console.CmdAdvisor;
 import ch.elexis.core.console.CmdParam;
 import ch.elexis.core.console.ConsoleProgressMonitor;
+import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
@@ -106,9 +106,9 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 	
 	@CmdAdvisor(description = "list all available identified runnables")
 	public void __task_runnable_list(){
-		Map<String, String> availableRunnables = taskService.listAvailableRunnables();
-		availableRunnables.entrySet().stream()
-			.forEach(e -> ci.println(e.getKey() + " " + e.getValue()));
+		List<IIdentifiedRunnable> availableRunnables = taskService.getIdentifiedRunnables();
+		availableRunnables.stream().forEach(e -> ci.println("\t(" + e.getClass().getName() + ") "
+			+ e.getId() + " - " + e.getLocalizedDescription()));
 	}
 	
 	public String __task_descriptor_activate(List<String> arguments) throws TaskException{

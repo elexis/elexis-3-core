@@ -92,7 +92,7 @@
         <genParameters ecoreParameter="model.ecore#//ITaskService/trigger.1/trigger"/>
         <genParameters ecoreParameter="model.ecore#//ITaskService/trigger.1/runContext"/>
       </genOperations>
-      <genOperations ecoreOperation="model.ecore#//ITaskService/listAvailableRunnables"/>
+      <genOperations ecoreOperation="model.ecore#//ITaskService/getIdentifiedRunnables"/>
       <genOperations ecoreOperation="model.ecore#//ITaskService/findTaskDescriptorByIdOrReferenceId">
         <genParameters ecoreParameter="model.ecore#//ITaskService/findTaskDescriptorByIdOrReferenceId/idOrReferenceId"/>
       </genOperations>

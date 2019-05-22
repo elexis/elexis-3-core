@@ -1,21 +1,14 @@
 package ch.elexis.core.model.tasks;
 
-import java.util.Map;
+import java.util.List;
 
 public interface IIdentifiedRunnableFactory {
 	
 	/**
-	 * 
-	 * @return a {@link Map} with the {@link IIdentifiedRunnable}s provided by this factory as key, and their
-	 *         localized description as value
+	 * @return the {@link IIdentifiedRunnable}s provided by this factory, use
+	 *         {@link IIdentifiedRunnable#getId()}. Instantiate new objects on every call, task service
+	 *         will care for caching if applicable.
 	 */
-	Map<String, String> getProvidedRunnables();
-	
-	/**
-	 * 
-	 * @param runnableWithContextId
-	 * @return
-	 */
-	IIdentifiedRunnable createRunnableWithContext(String runnableWithContextId);
+	List<IIdentifiedRunnable> getProvidedRunnables();
 	
 }

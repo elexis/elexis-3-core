@@ -1,6 +1,8 @@
 package ch.elexis.core.importer.div.tasks.internal;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
@@ -28,21 +30,12 @@ public class HL7ImporterIdentifiedRunnableFactory implements IIdentifiedRunnable
 	
 	@Reference
 	private IVirtualFilesystemService vfsService;
-	
-	@Override
-	public IIdentifiedRunnable createRunnableWithContext(String runnableWithContextId){
-		if (HL7ImporterIIdentifiedRunnable.RUNNABLE_ID.equalsIgnoreCase(runnableWithContextId)) {
-			return new HL7ImporterIIdentifiedRunnable(coreModelService, labimportUtil, vfsService);
-		} else if (BillLabResultOnCreationIdentifiedRunnable.RUNNABLE_ID.equals(runnableWithContextId)) {
-			return new BillLabResultOnCreationIdentifiedRunnable(coreModelService, null);
-		}
-		return null;
-	}
 
 	@Override
-	public Map<String, String> getProvidedRunnables(){
-		Map<String, String> ret = new HashMap<>();
-		ret.put(HL7ImporterIIdentifiedRunnable.RUNNABLE_ID, HL7ImporterIIdentifiedRunnable.DESCRIPTION);
+	public List<IIdentifiedRunnable> getProvidedRunnables(){
+		List<IIdentifiedRunnable> ret = new ArrayList<>();
+		ret.add(new HL7ImporterIIdentifiedRunnable(coreModelService, labimportUtil, vfsService));
+		ret.add(new BillLabResultOnCreationIdentifiedRunnable(coreModelService, null));
 		return ret;
 	}
 	

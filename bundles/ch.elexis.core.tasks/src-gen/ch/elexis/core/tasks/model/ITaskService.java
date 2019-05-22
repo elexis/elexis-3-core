@@ -98,10 +98,10 @@ public interface ITaskService {
 	 * <!-- begin-model-doc -->
 	 * Get a map containing the system available runnables, with their id as key, and a localized description as value. Depending on the plugins installed, the available runnables change.
 	 * <!-- end-model-doc -->
-	 * @model
+	 * @model kind="operation" type="ch.elexis.core.types.List&lt;ch.elexis.core.tasks.model.IIdentifiedRunnable&gt;" required="true" many="false"
 	 * @generated
 	 */
-	Map<String, String> listAvailableRunnables();
+	List<IIdentifiedRunnable> getIdentifiedRunnables();
 
 	/**
 	 * <!-- begin-user-doc -->

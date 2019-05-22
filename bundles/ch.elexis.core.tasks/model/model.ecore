@@ -162,13 +162,12 @@
         </eGenericType>
       </eParameters>
     </eOperations>
-    <eOperations name="listAvailableRunnables">
+    <eOperations name="getIdentifiedRunnables" lowerBound="1">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Get a map containing the system available runnables, with their id as key, and a localized description as value. Depending on the plugins installed, the available runnables change."/>
+        <details key="documentation" value="Get all available runnables. Do NOT use these for actual execution, but instead use #instantiateRunnableById to fetch a new one"/>
       </eAnnotations>
-      <eGenericType eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EMap">
-        <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-        <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eGenericType eClassifier="ecore:EClass ../../ch.elexis.core/model/types.ecore#//List">
+        <eTypeArguments eClassifier="#//IIdentifiedRunnable"/>
       </eGenericType>
     </eOperations>
     <eOperations name="findTaskDescriptorByIdOrReferenceId">

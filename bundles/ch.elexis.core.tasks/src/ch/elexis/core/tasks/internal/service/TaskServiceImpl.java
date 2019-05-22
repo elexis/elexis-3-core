@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -87,17 +86,43 @@ public class TaskServiceImpl implements ITaskService {
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, bind = "bindRunnableWithContextFactory", unbind = "unbindRunnableWithContextFactory")
 	private List<IIdentifiedRunnableFactory> runnableWithContextFactories;
 	
+	/**
+	 * do not execute these instances, they are used for documentation listing only
+	 */
+	private List<IIdentifiedRunnable> identifiedRunnables;
+	
+	private Map<String, IIdentifiedRunnableFactory> runnableIdToFactoryMap;
+	
 	protected void bindRunnableWithContextFactory(
 		IIdentifiedRunnableFactory runnableWithContextFactory){
 		if (runnableWithContextFactories == null) {
 			runnableWithContextFactories = new ArrayList<>();
 		}
 		runnableWithContextFactories.add(runnableWithContextFactory);
+		
+		if (identifiedRunnables == null) {
+			identifiedRunnables = new ArrayList<>();
+		}
+		if (runnableIdToFactoryMap == null) {
+			runnableIdToFactoryMap = new HashMap<>();
+		}
+		List<IIdentifiedRunnable> providedRunnables =
+			runnableWithContextFactory.getProvidedRunnables();
+		for (IIdentifiedRunnable iIdentifiedRunnable : providedRunnables) {
+			runnableIdToFactoryMap.put(iIdentifiedRunnable.getId(), runnableWithContextFactory);
+			identifiedRunnables.add(iIdentifiedRunnable);
+		}
 	}
 	
 	protected void unbindRunnableWithContextFactory(
 		IIdentifiedRunnableFactory runnableWithContextFactory){
 		runnableWithContextFactories.remove(runnableWithContextFactory);
+		List<IIdentifiedRunnable> providedRunnables =
+			runnableWithContextFactory.getProvidedRunnables();
+		for (IIdentifiedRunnable iIdentifiedRunnable : providedRunnables) {
+			runnableIdToFactoryMap.remove(iIdentifiedRunnable.getId());
+			identifiedRunnables.remove(iIdentifiedRunnable);
+		}
 	}
 	
 	@Activate
@@ -307,11 +332,16 @@ public class TaskServiceImpl implements ITaskService {
 			throw new TaskException(TaskException.RWC_INVALID_ID);
 		}
 		
-		Optional<IIdentifiedRunnable> result = runnableWithContextFactories.stream()
-			.map(rwcf -> rwcf.createRunnableWithContext(runnableId)).filter(Objects::nonNull)
-			.findFirst();
-		if (result.isPresent()) {
-			return result.get();
+		IIdentifiedRunnableFactory iIdentifiedRunnableFactory =
+			runnableIdToFactoryMap.get(runnableId);
+		if (iIdentifiedRunnableFactory != null) {
+			List<IIdentifiedRunnable> providedRunnables =
+				iIdentifiedRunnableFactory.getProvidedRunnables();
+			for (IIdentifiedRunnable iIdentifiedRunnable : providedRunnables) {
+				if (runnableId.equalsIgnoreCase(iIdentifiedRunnable.getId())) {
+					return iIdentifiedRunnable;
+				}
+			}
 		}
 		
 		throw new TaskException(TaskException.RWC_NO_INSTANCE_FOUND,
@@ -379,10 +409,8 @@ public class TaskServiceImpl implements ITaskService {
 	}
 	
 	@Override
-	public Map<String, String> listAvailableRunnables(){
-		Map<String, String> result = new HashMap<>();
-		runnableWithContextFactories.stream().forEach(c -> result.putAll(c.getProvidedRunnables()));
-		return result;
+	public List<IIdentifiedRunnable> getIdentifiedRunnables(){
+		return identifiedRunnables;
 	}
 	
 	@Override
