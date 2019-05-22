@@ -35,6 +35,10 @@ import ch.elexis.core.model.InvoiceState;
 })
 @Cache(expiry = 15000)
 @NamedQuery(name = "Invoice.number", query = "SELECT i FROM Invoice i WHERE i.deleted = false AND i.number = :number")
+@NamedQuery(name = "Invoice.from.to.paid.notempty", query = "SELECT i FROM Invoice i WHERE i.deleted = false "
+	+ "AND i.invoiceDate >= :from AND i.invoiceDate <= :to AND NOT (i.state = ch.elexis.core.model.InvoiceState.PAID AND i.amount = '0')")
+@NamedQuery(name = "Invoice.from.to.mandator.paid.notempty", query = "SELECT i FROM Invoice i WHERE i.deleted = false "
+	+ "AND i.mandator = :mandator AND i.invoiceDate >= :from AND i.invoiceDate <= :to AND NOT (i.state = ch.elexis.core.model.InvoiceState.PAID AND i.amount = '0')")
 public class Invoice extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
@@ -93,6 +97,10 @@ public class Invoice extends AbstractEntityWithId
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "rechnungsid")
 	private List<Behandlung> encounters = new ArrayList<>();
+	
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "rechnungsid")
+	private List<Zahlung> payments = new ArrayList<>();
 	
 	public String getNumber() {
 		return number;
@@ -212,5 +220,9 @@ public class Invoice extends AbstractEntityWithId
 	
 	public List<Behandlung> getEncounters(){
 		return encounters;
+	}
+	
+	public List<Zahlung> getPayments(){
+		return payments;
 	}
 }
