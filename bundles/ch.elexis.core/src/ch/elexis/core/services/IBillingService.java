@@ -21,6 +21,15 @@ public interface IBillingService {
 	public Optional<IBillingSystemFactor> getBillingSystemFactor(String system, LocalDate date);
 	
 	/**
+	 * 
+	 * @param from
+	 * @param to
+	 * @param factor
+	 * @param system
+	 */
+	public void setBillingSystemFactor(LocalDate from, LocalDate to, double factor, String system);
+	
+	/**
 	 * Test if the {@link IEncounter} is editable in the context of billing.
 	 * 
 	 * @param encounter

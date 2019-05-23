@@ -162,4 +162,31 @@ public class BillingService implements IBillingService {
 			COMPARATOR.GREATER_OR_EQUAL, date);
 		return query.executeSingleResult();
 	}
+	
+	@Override
+	public void setBillingSystemFactor(LocalDate from, LocalDate to, double factor, String system){
+		if (to == null) {
+			// 20380118, TimeTool.END_OF_UNIX_EPOCH
+			to = LocalDate.of(2038, 1, 18);
+		}
+		
+		IQuery<IBillingSystemFactor> query =
+			CoreModelServiceHolder.get().getQuery(IBillingSystemFactor.class);
+		query.and(ModelPackage.Literals.IBILLING_SYSTEM_FACTOR__SYSTEM, COMPARATOR.EQUALS, system);
+		List<IBillingSystemFactor> existingWithSystem = query.execute();
+		for (IBillingSystemFactor iBillingSystemFactor : existingWithSystem) {
+			if (iBillingSystemFactor.getValidTo() == null
+				|| iBillingSystemFactor.getValidTo().isAfter(from)) {
+				iBillingSystemFactor.setValidTo(from);
+				CoreModelServiceHolder.get().save(iBillingSystemFactor);
+			}
+		}
+		IBillingSystemFactor billingSystemFactor =
+			CoreModelServiceHolder.get().create(IBillingSystemFactor.class);
+		billingSystemFactor.setFactor(factor);
+		billingSystemFactor.setSystem(system);
+		billingSystemFactor.setValidFrom(from);
+		billingSystemFactor.setValidTo(to);
+		CoreModelServiceHolder.get().save(billingSystemFactor);
+	}
 }
