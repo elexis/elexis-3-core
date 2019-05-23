@@ -192,9 +192,9 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public List<IPayment> getPayments(){
-		INamedQuery<IPayment> query =
-			CoreModelServiceHolder.get().getNamedQuery(IPayment.class, "invoice");
-		return query.executeWithParameters(query.getParameterMap("invoice", this));
+		CoreModelServiceHolder.get().refresh(this);
+		return getEntity().getPayments().parallelStream().filter(p -> !p.isDeleted())
+			.map(p -> ModelUtil.getAdapter(p, IPayment.class, true)).collect(Collectors.toList());
 	}
 	
 	@Override

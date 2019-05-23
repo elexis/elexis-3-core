@@ -27,8 +27,8 @@ import java.time.LocalDate;
  *   <li>{@link ch.elexis.core.model.IAccountTransaction#getPatient <em>Patient</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAccountTransaction#getAmount <em>Amount</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAccountTransaction#getRemark <em>Remark</em>}</li>
- *   <li>{@link ch.elexis.core.model.IAccountTransaction#getAccount <em>Account</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAccountTransaction#getDate <em>Date</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IAccountTransaction#getAccount <em>Account</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIAccountTransaction()
@@ -167,30 +167,30 @@ public interface IAccountTransaction extends Identifiable, Deleteable {
 	void setRemark(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Account</b></em>' attribute.
+	 * Returns the value of the '<em><b>Account</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Account</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Account</em>' attribute.
-	 * @see #setAccount(String)
+	 * @return the value of the '<em>Account</em>' reference.
+	 * @see #setAccount(IAccount)
 	 * @see ch.elexis.core.model.ModelPackage#getIAccountTransaction_Account()
 	 * @model
 	 * @generated
 	 */
-	String getAccount();
+	IAccount getAccount();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IAccountTransaction#getAccount <em>Account</em>}' attribute.
+	 * Sets the value of the '{@link ch.elexis.core.model.IAccountTransaction#getAccount <em>Account</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Account</em>' attribute.
+	 * @param value the new value of the '<em>Account</em>' reference.
 	 * @see #getAccount()
 	 * @generated
 	 */
-	void setAccount(String value);
+	void setAccount(IAccount value);
 
 	/**
 	 * Returns the value of the '<em><b>Date</b></em>' attribute.

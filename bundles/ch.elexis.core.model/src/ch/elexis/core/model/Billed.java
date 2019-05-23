@@ -210,7 +210,7 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 	@Override
 	public Money getTotal(){
 		return getPrice().multiply(getPrimaryScaleFactor()).multiply(getSecondaryScaleFactor())
-			.multiply(getEntity().getZahl());
+			.multiply(getAmount());
 	}
 	
 	@Override

@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.model.util.internal.ModelUtil;
+import ch.elexis.core.services.holder.AccountServiceHolder;
 import ch.rgw.tools.Money;
 
 public class AccountTransaction
@@ -98,13 +99,21 @@ public class AccountTransaction
 	}
 	
 	@Override
-	public String getAccount(){
-		return getEntity().getAccount();
+	public IAccount getAccount(){
+		String accountNumeric = getEntity().getAccount();
+		if (accountNumeric != null && !accountNumeric.isEmpty()) {
+			try {
+				accountNumeric = accountNumeric.trim(); // care for postgres adding spaces
+				return AccountServiceHolder.get().getAccounts()
+					.get(Integer.parseInt(accountNumeric));
+			} catch (NumberFormatException e) {}
+		}
+		return AccountServiceHolder.get().getUnknown();
 	}
 	
 	@Override
-	public void setAccount(String value){
-		getEntity().setAccount(value);
+	public void setAccount(IAccount value){
+		getEntity().setAccount(Integer.toString(value.getNumeric()));
 	}
 	
 	@Override

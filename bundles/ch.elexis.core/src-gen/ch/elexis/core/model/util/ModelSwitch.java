@@ -583,6 +583,12 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ModelPackage.IACCOUNT: {
+				IAccount iAccount = (IAccount)theEObject;
+				T1 result = caseIAccount(iAccount);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ModelPackage.IMESSAGE: {
 				IMessage iMessage = (IMessage)theEObject;
 				T1 result = caseIMessage(iMessage);
@@ -1498,6 +1504,21 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIAccountTransaction(IAccountTransaction object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IAccount</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IAccount</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIAccount(IAccount object) {
 		return null;
 	}
 

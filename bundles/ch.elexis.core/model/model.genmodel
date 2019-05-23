@@ -596,8 +596,12 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IAccountTransaction/patient"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAccountTransaction/amount"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAccountTransaction/remark"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAccountTransaction/account"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAccountTransaction/date"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference model.ecore#//IAccountTransaction/account"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IAccount">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAccount/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAccount/numeric"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IMessage">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IMessage/sender"/>

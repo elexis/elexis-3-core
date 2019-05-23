@@ -24,4 +24,9 @@ public class Mandator extends Contact implements IMandator {
 	public void setBiller(IContact value){
 		setExtInfo(MandatorConstants.BILLER, value.getId());
 	}
+	
+	@Override
+	public String getLabel(){
+		return getDescription3();
+	}
 }

@@ -6141,22 +6141,22 @@ public interface ModelPackage extends EPackage {
 	int IACCOUNT_TRANSACTION__REMARK = IDENTIFIABLE_FEATURE_COUNT + 5;
 
 	/**
-	 * The feature id for the '<em><b>Account</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IACCOUNT_TRANSACTION__ACCOUNT = IDENTIFIABLE_FEATURE_COUNT + 6;
-
-	/**
 	 * The feature id for the '<em><b>Date</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IACCOUNT_TRANSACTION__DATE = IDENTIFIABLE_FEATURE_COUNT + 7;
+	int IACCOUNT_TRANSACTION__DATE = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The feature id for the '<em><b>Account</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT_TRANSACTION__ACCOUNT = IDENTIFIABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The number of structural features of the '<em>IAccount Transaction</em>' class.
@@ -6168,6 +6168,43 @@ public interface ModelPackage extends EPackage {
 	int IACCOUNT_TRANSACTION_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 8;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IAccount <em>IAccount</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IAccount
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAccount()
+	 * @generated
+	 */
+	int IACCOUNT = 61;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT__NAME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Numeric</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT__NUMERIC = 1;
+
+	/**
+	 * The number of structural features of the '<em>IAccount</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT_FEATURE_COUNT = 2;
+
+	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IMessage <em>IMessage</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6175,7 +6212,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIMessage()
 	 * @generated
 	 */
-	int IMESSAGE = 61;
+	int IMESSAGE = 62;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -6266,7 +6303,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIMessageParty()
 	 * @generated
 	 */
-	int IMESSAGE_PARTY = 62;
+	int IMESSAGE_PARTY = 63;
 
 	/**
 	 * The feature id for the '<em><b>User</b></em>' reference.
@@ -10097,15 +10134,47 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIAccountTransaction_Remark();
 
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAccountTransaction#getAccount <em>Account</em>}'.
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IAccountTransaction#getAccount <em>Account</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Account</em>'.
+	 * @return the meta object for the reference '<em>Account</em>'.
 	 * @see ch.elexis.core.model.IAccountTransaction#getAccount()
 	 * @see #getIAccountTransaction()
 	 * @generated
 	 */
-	EAttribute getIAccountTransaction_Account();
+	EReference getIAccountTransaction_Account();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IAccount <em>IAccount</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IAccount</em>'.
+	 * @see ch.elexis.core.model.IAccount
+	 * @generated
+	 */
+	EClass getIAccount();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAccount#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see ch.elexis.core.model.IAccount#getName()
+	 * @see #getIAccount()
+	 * @generated
+	 */
+	EAttribute getIAccount_Name();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAccount#getNumeric <em>Numeric</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Numeric</em>'.
+	 * @see ch.elexis.core.model.IAccount#getNumeric()
+	 * @see #getIAccount()
+	 * @generated
+	 */
+	EAttribute getIAccount_Numeric();
 
 	/**
 	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAccountTransaction#getDate <em>Date</em>}'.
@@ -13352,12 +13421,38 @@ public interface ModelPackage extends EPackage {
 		EAttribute IACCOUNT_TRANSACTION__REMARK = eINSTANCE.getIAccountTransaction_Remark();
 
 		/**
-		 * The meta object literal for the '<em><b>Account</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Account</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute IACCOUNT_TRANSACTION__ACCOUNT = eINSTANCE.getIAccountTransaction_Account();
+		EReference IACCOUNT_TRANSACTION__ACCOUNT = eINSTANCE.getIAccountTransaction_Account();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IAccount <em>IAccount</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IAccount
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAccount()
+		 * @generated
+		 */
+		EClass IACCOUNT = eINSTANCE.getIAccount();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IACCOUNT__NAME = eINSTANCE.getIAccount_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Numeric</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IACCOUNT__NUMERIC = eINSTANCE.getIAccount_Numeric();
 
 		/**
 		 * The meta object literal for the '<em><b>Date</b></em>' attribute feature.

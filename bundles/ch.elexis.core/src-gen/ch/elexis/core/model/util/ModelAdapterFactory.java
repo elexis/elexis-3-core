@@ -320,6 +320,10 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIAccountTransactionAdapter();
 			}
 			@Override
+			public Adapter caseIAccount(IAccount object) {
+				return createIAccountAdapter();
+			}
+			@Override
 			public Adapter caseIMessage(IMessage object) {
 				return createIMessageAdapter();
 			}
@@ -1188,6 +1192,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIAccountTransactionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IAccount <em>IAccount</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IAccount
+	 * @generated
+	 */
+	public Adapter createIAccountAdapter() {
 		return null;
 	}
 

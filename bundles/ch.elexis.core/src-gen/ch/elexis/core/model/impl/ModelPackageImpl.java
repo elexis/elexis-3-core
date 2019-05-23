@@ -11,6 +11,7 @@
 package ch.elexis.core.model.impl;
 
 import ch.elexis.core.model.Deleteable;
+import ch.elexis.core.model.IAccount;
 import ch.elexis.core.model.IAccountTransaction;
 import ch.elexis.core.model.IAddress;
 import ch.elexis.core.model.IAppointment;
@@ -521,6 +522,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass iAccountTransactionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iAccountEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -4266,8 +4274,38 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIAccountTransaction_Account() {
-		return (EAttribute)iAccountTransactionEClass.getEStructuralFeatures().get(5);
+	public EReference getIAccountTransaction_Account() {
+		return (EReference)iAccountTransactionEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getIAccount() {
+		return iAccountEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIAccount_Name() {
+		return (EAttribute)iAccountEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIAccount_Numeric() {
+		return (EAttribute)iAccountEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -4277,7 +4315,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 */
 	@Override
 	public EAttribute getIAccountTransaction_Date() {
-		return (EAttribute)iAccountTransactionEClass.getEStructuralFeatures().get(6);
+		return (EAttribute)iAccountTransactionEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -4845,8 +4883,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEReference(iAccountTransactionEClass, IACCOUNT_TRANSACTION__PATIENT);
 		createEAttribute(iAccountTransactionEClass, IACCOUNT_TRANSACTION__AMOUNT);
 		createEAttribute(iAccountTransactionEClass, IACCOUNT_TRANSACTION__REMARK);
-		createEAttribute(iAccountTransactionEClass, IACCOUNT_TRANSACTION__ACCOUNT);
 		createEAttribute(iAccountTransactionEClass, IACCOUNT_TRANSACTION__DATE);
+		createEReference(iAccountTransactionEClass, IACCOUNT_TRANSACTION__ACCOUNT);
+
+		iAccountEClass = createEClass(IACCOUNT);
+		createEAttribute(iAccountEClass, IACCOUNT__NAME);
+		createEAttribute(iAccountEClass, IACCOUNT__NUMERIC);
 
 		iMessageEClass = createEClass(IMESSAGE);
 		createEReference(iMessageEClass, IMESSAGE__SENDER);
@@ -5663,8 +5705,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEReference(getIAccountTransaction_Patient(), this.getIPatient(), null, "patient", null, 0, 1, IAccountTransaction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIAccountTransaction_Amount(), theTypesPackage.getMoney(), "amount", null, 0, 1, IAccountTransaction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIAccountTransaction_Remark(), ecorePackage.getEString(), "remark", null, 0, 1, IAccountTransaction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIAccountTransaction_Account(), ecorePackage.getEString(), "account", null, 0, 1, IAccountTransaction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIAccountTransaction_Date(), theTypesPackage.getLocalDate(), "date", null, 0, 1, IAccountTransaction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIAccountTransaction_Account(), this.getIAccount(), null, "account", null, 0, 1, IAccountTransaction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(iAccountEClass, IAccount.class, "IAccount", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIAccount_Name(), ecorePackage.getEString(), "name", null, 0, 1, IAccount.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIAccount_Numeric(), ecorePackage.getEInt(), "numeric", null, 0, 1, IAccount.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iMessageEClass, IMessage.class, "IMessage", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getIMessage_Sender(), this.getIMessageParty(), null, "sender", null, 1, 1, IMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
