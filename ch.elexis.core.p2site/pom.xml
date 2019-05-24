@@ -7,7 +7,52 @@
 	</parent>
 	<artifactId>ch.elexis.core.p2site</artifactId>
 	<packaging>eclipse-repository</packaging>
-	<build>
+  <profiles>
+    <profile>
+      <id>linux-x86_64</id>
+      <activation>
+        <os>
+          <name>Linux</name>
+          <arch>amd64</arch>
+        </os>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+           <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.8</version>
+            <executions>
+                <execution>
+                    <id>verify-elexis-startup</id>
+                    <phase>verify</phase>
+                    <configuration>
+                        <tasks>
+                             <exec executable="/bin/echo">
+                              <arg value="${project.basedir}/start_h2_first_linux_x86_64.sh" />
+                            </exec>
+                            <exec executable="/bin/ls">
+                              <arg value="-lrt" />
+                              <arg value="${project.basedir}/start_h2_first_linux_x86_64.sh" />
+                            </exec>
+                           <exec executable="/bin/pwd">
+                            </exec>
+                           <exec executable="/bin/bash">
+                              <arg value="${project.basedir}/start_h2_first_linux_x86_64.sh" />
+                            </exec>
+                        </tasks>
+                    </configuration>
+                    <goals>
+                        <goal>run</goal>
+                    </goals>
+                </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+  <build>
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.tycho </groupId>
