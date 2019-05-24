@@ -209,8 +209,9 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 	
 	@Override
 	public Money getTotal(){
+		// do not use getAmount here, as the changed amount is included via secondary scale
 		return getPrice().multiply(getPrimaryScaleFactor()).multiply(getSecondaryScaleFactor())
-			.multiply(getAmount());
+			.multiply(getEntity().getZahl());
 	}
 	
 	@Override
