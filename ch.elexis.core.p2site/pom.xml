@@ -9,12 +9,11 @@
 	<packaging>eclipse-repository</packaging>
   <profiles>
     <profile>
-      <id>linux-x86_64</id>
+      <id>verify-elexis-startup</id>
       <activation>
-        <os>
-          <name>Linux</name>
-          <arch>amd64</arch>
-        </os>
+        <property>
+           <name>!skipTests</name>
+        </property>
       </activation>
       <build>
         <plugins>
@@ -27,20 +26,12 @@
                     <id>verify-elexis-startup</id>
                     <phase>verify</phase>
                     <configuration>
-                        <tasks>
-                             <exec executable="/bin/echo">
-                              <arg value="${project.basedir}/start_h2_first_linux_x86_64.sh" />
-                            </exec>
-                            <exec executable="/bin/ls">
-                              <arg value="-lrt" />
-                              <arg value="${project.basedir}/start_h2_first_linux_x86_64.sh" />
-                            </exec>
-                           <exec executable="/bin/pwd">
-                            </exec>
-                           <exec executable="/bin/bash">
-                              <arg value="${project.basedir}/start_h2_first_linux_x86_64.sh" />
-                            </exec>
-                        </tasks>
+                    <target>
+                        <exec executable="/bin/bash" failonerror="true">
+                          <arg value="${project.basedir}/start_h2_first_linux_x86_64.sh" />
+                          <arg value="${project.build.directory}/products/ch.elexis.core.application.ElexisApp/${classifier}/Elexis3" />
+                        </exec>
+                      </target>
                     </configuration>
                     <goals>
                         <goal>run</goal>
