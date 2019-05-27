@@ -18,7 +18,6 @@ import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable.ReturnParameter;
-import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.tasks.internal.model.service.ContextServiceHolder;
 import ch.elexis.core.tasks.internal.model.service.CoreModelServiceHolder;
 import ch.elexis.core.tasks.model.ITask;
@@ -174,7 +173,9 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 				// TODO validate all required parameters are set, validate url
 				
 				setState(TaskState.IN_PROGRESS);
-				setResult(runnableWithContext.run(effectiveRunContext, progressMonitor, logger));
+				Map<String, Serializable> result =
+					runnableWithContext.run(effectiveRunContext, progressMonitor, logger);
+				setResult(result);
 				setState(TaskState.COMPLETED);
 				
 				if (effectiveRunContext.containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)
@@ -183,11 +184,11 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 					removeTaskRecord();
 				}
 				
-			} catch (TaskException te) {
+			} catch (Exception e) {
 				setResult(Collections.singletonMap(
 					IIdentifiedRunnable.ReturnParameter.FAILED_TASK_EXCEPTION_MESSAGE,
-					te.getMessage()));
-				logger.warn(te.getMessage(), te);
+					e.getMessage()));
+				logger.warn(e.getMessage(), e);
 				setState(TaskState.FAILED);
 			}
 			

@@ -111,6 +111,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 			+ e.getId() + " - " + e.getLocalizedDescription()));
 	}
 	
+	@CmdAdvisor(description = "de-/activate a task descriptor for execution")
 	public String __task_descriptor_activate(List<String> arguments) throws TaskException{
 		if (arguments.size() != 2) {
 			ci.println("usage: task descriptor set activate true | false");
