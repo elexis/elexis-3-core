@@ -47,6 +47,7 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 	private Label lblInfo;
 	private String prefixPrevLabel = "Label Vorschau";
 	private Button defaultPatientRelated;
+	private Button defaultResponsibleSelf;
 	
 	public ReminderPrefences(){
 		super(Messages.ReminderPrefences_Reminders);
@@ -102,6 +103,18 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 		defaultPatientRelated.setSelection(
 			CoreHub.userCfg.get(Preferences.USR_REMINDER_DEFAULT_PATIENT_RELATED, true));
 		defaultPatientRelated.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, nrElementsInTop, 1));
+		
+		defaultResponsibleSelf = new Button(ret, SWT.CHECK);
+		defaultResponsibleSelf.setText(ch.elexis.core.l10n.Messages.ReminderPref_defaultReponsibleSelf);
+		defaultResponsibleSelf.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e){
+				CoreHub.userCfg.get(Preferences.USR_REMINDER_DEFAULT_RESPONSIBLE_SELF, defaultResponsibleSelf.getSelection());
+			}
+		});
+		defaultResponsibleSelf.setSelection(
+			CoreHub.userCfg.get(Preferences.USR_REMINDER_DEFAULT_RESPONSIBLE_SELF, false));
+		defaultResponsibleSelf.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, nrElementsInTop, 1));
 		
 		new Label(ret, SWT.NONE);
 		new Label(ret, SWT.NONE);
@@ -203,6 +216,8 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 			showRemindersOnPatientSelectionEventBtn.getSelection());
 		CoreHub.userCfg.set(Preferences.USR_REMINDER_DEFAULT_PATIENT_RELATED,
 			defaultPatientRelated.getSelection());
+		CoreHub.userCfg.set(Preferences.USR_REMINDER_DEFAULT_RESPONSIBLE_SELF,
+			defaultResponsibleSelf.getSelection());
 		CoreHub.userCfg.set(Preferences.USR_REMINDER_PAT_LABEL_CHOOSEN,
 			getListAsString(lViewerChoosen.getList().getItems()));
 		CoreHub.userCfg.set(Preferences.USR_REMINDER_PAT_LABEL_AVAILABLE,

@@ -190,8 +190,13 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 				}
 			}
 			
-			CoreHub.userCfg.setAsList(Preferences.USR_REMINDER_SELECTED_RESPONSIBLES_DEFAULT, persist);
-			CoreHub.userCfg.flush();
+			boolean defaultResponsibleSelf =
+				CoreHub.userCfg.get(Preferences.USR_REMINDER_DEFAULT_RESPONSIBLE_SELF, false);
+			if (!defaultResponsibleSelf) {
+				CoreHub.userCfg.setAsList(Preferences.USR_REMINDER_SELECTED_RESPONSIBLES_DEFAULT,
+					persist);
+				CoreHub.userCfg.flush();
+			}
 		});
 		List<Object> inputList = new ArrayList<Object>();
 		inputList.add(TX_ALL);
@@ -439,24 +444,30 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 				responsibles = resp;
 			}
 		} else {
-			List<String> defResponsibles =
-				CoreHub.userCfg.getAsList(Preferences.USR_REMINDER_SELECTED_RESPONSIBLES_DEFAULT);
-			if (defResponsibles.isEmpty()) {
-				responsibles = Collections.singletonList(TX_ALL);
+			boolean defaultResponsibleSelf =
+				CoreHub.userCfg.get(Preferences.USR_REMINDER_DEFAULT_RESPONSIBLE_SELF, false);
+			if (defaultResponsibleSelf) {
+				responsibles = Collections.singletonList(CoreHub.actUser);
 			} else {
-				@SuppressWarnings("rawtypes")
-				List defaultResponsibles = new ArrayList();
-				for (String value : defResponsibles) {
-					Object entry = value;
-					if(!TX_ALL.equals(value)) {
-						entry = Anwender.load(value.toString());
+				List<String> defResponsibles = CoreHub.userCfg
+					.getAsList(Preferences.USR_REMINDER_SELECTED_RESPONSIBLES_DEFAULT);
+				if (defResponsibles.isEmpty()) {
+					responsibles = Collections.singletonList(TX_ALL);
+				} else {
+					@SuppressWarnings("rawtypes")
+					List defaultResponsibles = new ArrayList();
+					for (String value : defResponsibles) {
+						Object entry = value;
+						if (!TX_ALL.equals(value)) {
+							entry = Anwender.load(value.toString());
+						}
+						defaultResponsibles.add(entry);
 					}
-					defaultResponsibles.add(entry);
+					responsibles = defaultResponsibles;
 				}
-				responsibles = defaultResponsibles;
 			}
 		}
-
+		
 		lvResponsible.setSelection(new StructuredSelection(responsibles));
 		cvActionType.setSelection(new StructuredSelection(actionType));
 		cvPriority.setSelection(new StructuredSelection(priority));

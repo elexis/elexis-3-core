@@ -269,7 +269,7 @@ public class Rechnung extends PersistentObject {
 		}
 		if (f == null) {
 			result =
-				result.add(Result.SEVERITY.ERROR, 8, "Die Rechnung hat keinen gültigen Fall ("
+				result.add(Result.SEVERITY.ERROR, 8, "Die Rechnung hat keinen zugehörigen Fall ("
 					+ getRnDesc(ret) + ")", ret, true);
 			// garant=CoreHub.actMandant;
 		} else {

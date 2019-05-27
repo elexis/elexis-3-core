@@ -62,6 +62,7 @@ import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.preferences.UserCasePreferences;

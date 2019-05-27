@@ -24,6 +24,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Table;
 
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.ui.actions.ICodeSelectorTarget;
@@ -149,6 +150,16 @@ public class GenericObjectDropTarget implements DropTargetListener, ICodeSelecto
 				mine.setBackground(normalColor);
 			}
 		}
+	}
+	
+	/**
+	 * Override if mine is a {@link Table} that shows column background. On Win Platform setting
+	 * background of Table disables all column background.
+	 * 
+	 * @return
+	 */
+	protected Control getHighLightControl(){
+		return mine;
 	}
 	
 	public interface IReceiver {

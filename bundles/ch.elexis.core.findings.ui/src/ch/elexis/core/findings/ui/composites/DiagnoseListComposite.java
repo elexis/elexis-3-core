@@ -68,6 +68,7 @@ public class DiagnoseListComposite extends Composite {
 	
 	private EventList<ICondition> dataList = new BasicEventList<>();
 	
+	@SuppressWarnings("deprecation")
 	public DiagnoseListComposite(Composite parent, int style){
 		super(parent, style);
 		setLayout(new GridLayout(1, false));

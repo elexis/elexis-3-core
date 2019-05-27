@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -31,22 +32,22 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.TableViewerFocusCellManager;
-import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
@@ -60,6 +61,7 @@ import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.model.IDiagnosisReference;
 import ch.elexis.core.model.IEncounter;
@@ -73,6 +75,7 @@ import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.views.codesystems.DiagnosenView;
 import ch.elexis.data.FreeTextDiagnose;
 import ch.elexis.data.Konsultation;
+import ch.rgw.tools.StringTool;
 
 public class DiagnosenDisplay extends Composite implements IUnlockable {
 	private Table table;
@@ -90,7 +93,6 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 	
 	private IEncounter actEncounter;
 	private ToolBar toolBar;
-	private TableViewerFocusCellManager focusCellManager;
 	private TableColumnLayout tableLayout;
 	
 	public void setEnabled(boolean enabled) {
@@ -108,9 +110,10 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 		Font boldFont = boldDescriptor.createFont(label.getDisplay());
 		label.setFont(boldFont);
 		label.setText(Messages.DiagnosenDisplay_Diagnoses);
+		label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 		
 		ToolBarManager toolBarManager = new ToolBarManager(SWT.RIGHT);
-		toolBarManager.add(new Action() {
+		IAction newAction = new Action() {
 			@Override
 			public ImageDescriptor getImageDescriptor(){
 				return Images.IMG_NEW.getImageDescriptor();
@@ -129,8 +132,11 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 					StatusManager.getManager().handle(status, StatusManager.SHOW);
 				}
 			}
-		});
-		toolBarManager.add(new Action() {
+		};
+		newAction.setToolTipText(Messages.DiagnosenDisplay_AddDiagnosis);
+		toolBarManager.add(newAction);
+
+		IAction textAction = new Action() {
 			@Override
 			public ImageDescriptor getImageDescriptor(){
 				return Images.IMG_DOCUMENT_TEXT.getImageDescriptor();
@@ -152,7 +158,10 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 					}
 				}
 			}
-		});
+		};
+		toolBarManager.add(textAction);
+		textAction.setToolTipText(Messages.DiagnosenDisplay_AddTextDiagnosis);
+
 		toolBar = toolBarManager.createControl(this);
 		toolBar.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		
@@ -171,20 +180,30 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 		createColumns();
 		
 		// connect double click on column to actions
-		focusCellManager =
-			new TableViewerFocusCellManager(viewer, new FocusCellOwnerDrawHighlighter(viewer));
-		viewer.addDoubleClickListener(new IDoubleClickListener() {
-			@Override
-			public void doubleClick(DoubleClickEvent event){
-				ViewerCell focusCell = focusCellManager.getFocusCell();
-				int columnIndex = focusCell.getColumnIndex();
-				if (columnIndex == 2) {
-					IStructuredSelection selection = viewer.getStructuredSelection();
-					if (!selection.isEmpty()) {
-						if (selection.getFirstElement() instanceof IDiagnosis) {
-							actEncounter.removeDiagnosis((IDiagnosis) selection.getFirstElement());
+		table.addMouseListener(new MouseAdapter() {
+			public void mouseDoubleClick(MouseEvent e){
+				int clickedIndex = -1;
+				// calculate column of click
+				int width = 0;
+				TableColumn[] columns = table.getColumns();
+				for (int i = 0; i < columns.length; i++) {
+					TableColumn tc = columns[i];
+					if (width < e.x && e.x < width + tc.getWidth()) {
+						clickedIndex = i;
+						break;
+					}
+					width += tc.getWidth();
+				}
+				if (clickedIndex != -1) {
+					if (clickedIndex == 3) {
+						IStructuredSelection selection = viewer.getStructuredSelection();
+						if (!selection.isEmpty()) {
+							if (selection.getFirstElement() instanceof IDiagnosis) {
+								actEncounter
+									.removeDiagnosis((IDiagnosis) selection.getFirstElement());
+							}
+							setEncounter(actEncounter);
 						}
-						setEncounter(actEncounter);
 					}
 				}
 			}
@@ -192,7 +211,38 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 		
 		dropTarget =
 			new GenericObjectDropTarget(Messages.DiagnosenDisplay_DiagnoseTarget, table,
-				new DropReceiver()); //$NON-NLS-1$
+				new DropReceiver()) {
+				@Override
+				protected Control getHighLightControl(){
+					return DiagnosenDisplay.this;
+				}
+			};
+		
+		addControlListener(new ControlAdapter() {
+			@Override
+			public void controlResized(ControlEvent e){
+				int width = DiagnosenDisplay.this.getBounds().width;
+				int labelWidth = label.getBounds().width;
+				int toolBarWidth = toolBar.getBounds().width;
+				if (width < labelWidth + toolBarWidth) {
+					if (label.getVisible()) {
+						GridData labeldata = (GridData) label.getLayoutData();
+						labeldata.exclude = true;
+						label.setVisible(false);
+						GridData toolData = (GridData) toolBar.getLayoutData();
+						toolData.grabExcessHorizontalSpace = true;
+					}
+				} else {
+					if (!label.getVisible()) {
+						GridData labeldata = (GridData) label.getLayoutData();
+						labeldata.exclude = false;
+						label.setVisible(true);
+						GridData toolData = (GridData) toolBar.getLayoutData();
+						toolData.grabExcessHorizontalSpace = false;
+					}
+					}
+				}
+		});
 	}
 
 	public void clear(){
@@ -235,18 +285,27 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 
 	public void setEncounter(IEncounter encounter){
 		actEncounter = encounter;
+		table.getColumn(0).setWidth(0);
 		viewer.setInput(encounter.getDiagnoses());
 	}
 	
 	private void createColumns(){
 		String[] titles = {
-			"Code", "Bezeichnung", ""
+			"", Messages.Display_Column_Code, Messages.Display_Column_Designation, StringTool.leer
 		};
 		int[] weights = {
-			15, 70, 15
+			0, 15, 70, 15
 		};
 		
-		TableViewerColumn col = createTableViewerColumn(titles[0], weights[0], 0, SWT.NONE);
+		TableViewerColumn col = createTableViewerColumn(titles[0], weights[0], 0, SWT.LEFT);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element){
+				return StringTool.leer;
+			}
+		});
+		
+		col = createTableViewerColumn(titles[1], weights[1], 1, SWT.LEFT);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
@@ -265,11 +324,11 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 					}
 					return diagnosis.getCode();
 				}
-				return "";
+				return StringTool.leer;
 			}
 		});
 		
-		col = createTableViewerColumn(titles[1], weights[1], 1, SWT.NONE);
+		col = createTableViewerColumn(titles[2], weights[2], 2, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
@@ -280,15 +339,15 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 					IDiagnosis diagnosis = (IDiagnosis) element;
 					return diagnosis.getText();
 				}
-				return "";
+				return StringTool.leer;
 			}
 		});
 		
-		col = createTableViewerColumn(titles[2], weights[2], 2, SWT.NONE);
+		col = createTableViewerColumn(titles[3], weights[3], 3, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
-				return "";
+				return StringTool.leer;
 			}
 			
 			@Override

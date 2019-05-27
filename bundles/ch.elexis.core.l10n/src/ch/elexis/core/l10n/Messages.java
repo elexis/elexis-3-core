@@ -770,6 +770,8 @@ public class Messages extends NLS {
 	public static String MultiplikatorEditor_BeginDate;
 	public static String MultiplikatorEditor_NewMultipilcator;
 	public static String MultiplikatorEditor_PleaseEnterBeginDate;
+	public static String MultiplikatorEditor_ErrorTitle;
+	public static String MultiplikatorEditor_ErrorMessage;
 	public static String NeueBestellungDialog_Automatic;
 	public static String NeuerFallDialog_0;
 	public static String NeuerFallDialog_1;
@@ -1004,6 +1006,8 @@ public class Messages extends NLS {
 	public static String BriefAuswahlStressTestButtonText2;
 	public static String BriefAuswahlColumnDate;
 	public static String BriefAuswahlColumnTitle;
+	public static String DiagnosenDisplay_AddDiagnosis;
+	public static String DiagnosenDisplay_AddTextDiagnosis;
 	public static String DiagnosenDisplay_DiagnoseTarget;
 	public static String DiagnosenDisplay_Diagnoses;
 	public static String DiagnosenDisplay_ErrorStartingCodeSystem;
@@ -1509,6 +1513,14 @@ public class Messages extends NLS {
 	public static String TextView_showMenu;
 	public static String TextView_showMenuBar;
 	public static String TextView_showToolbar;
+	public static String VerrechnungsDisplay_AddItem;
+	public static String VerrechnungsDisplay_Amount;
+	public static String VerrechnungsDisplay_no_invoice;
+	public static String Display_Column_Number;
+	public static String Display_Column_Code;
+	public static String Display_Column_Designation;
+	public static String Display_Column_Price;
+	public static String VerrechnungsDisplay_Time;
 	public static String VerrechnungsDisplay_Orininalpackungen;
 	public static String VerrechnungsDisplay_PositionCanootBeRemoved;
 	public static String VerrechnungsDisplay_badAmountBody;
@@ -1542,6 +1554,7 @@ public class Messages extends NLS {
 	public static String BriefAuswahlNotAllowedToRunStresstess;
 	public static String ReminderView_txtSearch_message;
 	public static String ReminderPref_defaultPatientRelated;
+	public static String ReminderPref_defaultReponsibleSelf;
 	public static String LimitedText_MaxLengthReached;
 	public static String CreatePrescriptionHelper_InfoDispensationArtikelstammTitel;
 	public static String CreatePrescriptionHelper_InfoDispensationArtikelstammUpate;
@@ -2332,6 +2345,7 @@ public class Messages extends NLS {
 	public static String Leistungscodes_ErrorNameMissing;
 	public static String Leistungscodes_ErrorNameNoSpecialChars;
 	public static String Leistungscodes_ErrorNoEmptyItemsAllowed;
+	public static String Leistungscodes_fields_tooltip;
 	public static String Leistungscodes_ListNumeric;
 	public static String Leistungscodes_SaveAsMultiplelinesText;
 	public static String Leistungscodes_SaveAsNumeric;

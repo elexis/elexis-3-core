@@ -23,7 +23,6 @@ import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration
 import org.eclipse.nebula.widgets.nattable.data.IRowDataProvider;
 import org.eclipse.nebula.widgets.nattable.grid.GridRegion;
 import org.eclipse.nebula.widgets.nattable.layer.ILayerListener;
-import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
 import org.eclipse.nebula.widgets.nattable.layer.event.ILayerEvent;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.nebula.widgets.nattable.selection.command.ClearAllSelectionsCommand;
@@ -35,7 +34,6 @@ import org.eclipse.nebula.widgets.nattable.ui.matcher.MouseEventMatcher;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 
 /**
  * Class for managing a {@link NatTable} with a {@link IRowDataProvider} and a
@@ -179,12 +177,6 @@ public class NatTableWrapper implements ISelectionProvider {
 	}
 	
 	private int calculateHeight(){
-		int rows = dataProvider.getRowCount();
-		ILayerCell lastCell = natTable.getCellByPosition(0, rows - 1);
-		if(lastCell != null) {
-			Rectangle lastRowBounds = lastCell.getBounds();
-			return lastRowBounds.y + lastRowBounds.height;
-		}
-		return 0;
+		return natTable.getPreferredHeight() + 20;
 	}
 }
