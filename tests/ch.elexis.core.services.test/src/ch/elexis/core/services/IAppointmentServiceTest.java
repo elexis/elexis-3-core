@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ch.elexis.core.model.IAppointment;
@@ -24,6 +25,13 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 	
 	private IAppointmentService appointmentService = OsgiServiceUtil.getService(IAppointmentService.class).get();
 	private IAppointment savedAppointment;
+	
+	@BeforeClass
+	public static void beforeClass(){	
+		//cleanup
+		coreModelService.remove(coreModelService.getQuery(IAppointment.class).execute());
+		assertEquals(0,  coreModelService.getQuery(IAppointment.class).execute().size());
+	}
 	
 	@Before
 	public void before(){	
@@ -90,8 +98,6 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 
 	@After
 	public void after(){	
-		//cleanup
-		coreModelService.remove(coreModelService.getQuery(IAppointment.class).execute());
-		assertEquals(0,  coreModelService.getQuery(IAppointment.class).execute().size());
+		beforeClass();
 	}
 }
