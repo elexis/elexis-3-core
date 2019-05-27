@@ -16,6 +16,9 @@ public class LocalLockServiceHolder {
 	}
 	
 	public static ILocalLockService get(){
+		if (localLockService == null) {
+			throw new IllegalStateException("No ILocalLockService available");
+		}
 		return localLockService;
 	}
 }
