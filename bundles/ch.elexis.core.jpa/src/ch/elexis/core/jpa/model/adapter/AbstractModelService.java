@@ -282,6 +282,10 @@ public abstract class AbstractModelService implements IModelService {
 				identifiables.add((Identifiable) item);
 			});
 			save(identifiables);
+			
+			identifiables.forEach(item -> {
+				postEvent(ElexisEventTopics.EVENT_DELETE, item);
+			});
 		}
 	}
 	
