@@ -104,6 +104,14 @@ public interface IModelService {
 	public boolean remove(Identifiable identifiable);
 	
 	/**
+	 * Remove a list of {@link Identifiable} from the database in a single transaction.
+	 * 
+	 * 
+	 * @param identifiables
+	 */
+	public void remove(List<? extends Identifiable> identifiables);
+	
+	/**
 	 * Get a Query for objects of type clazz. If the clazz implements {@link Deleteable} no deleted
 	 * entities are included in the result.
 	 * 
@@ -209,6 +217,13 @@ public interface IModelService {
 	 * @param deletable
 	 */
 	public void delete(Deleteable deletable);
+	
+	/**
+	 * Convenience method setting deleted property of a List of deleteables and save the {@link Deleteable}.
+	 * 
+	 * @param deletables
+	 */
+	public void delete(List<? extends Deleteable> deletables);
 	
 	/**
 	 * Post an asynchronous event using the OSGi event admin. The event including the object is also

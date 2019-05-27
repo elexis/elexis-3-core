@@ -205,6 +205,32 @@ public abstract class AbstractModelService implements IModelService {
 		return false;
 	}
 	
+	@Override
+	public void remove(List<? extends Identifiable> identifiables){
+		
+		if (identifiables != null) {
+			List<Identifiable> listOfRemoved = new ArrayList<>();
+			EntityManager em = getEntityManager(false);
+			try {
+				em.getTransaction().begin();
+				for (Identifiable identifiable : identifiables) {
+					Optional<EntityWithId> dbObject = getDbObject(identifiable);
+					if (dbObject.isPresent()) {
+						em.remove(em.merge(dbObject.get()));
+						listOfRemoved.add(identifiable);
+					}
+				}
+				em.getTransaction().commit();
+				for (Identifiable removed : listOfRemoved) {
+					postEvent(ElexisEventTopics.EVENT_DELETE, removed);
+				}
+			} finally {
+				closeEntityManager(em);
+			}
+			
+		}
+	}
+	
 	/**
 	 * Get an {@link ElexisEvent} representation of {@link Identifiable} creation. Called by the
 	 * save methods, to send creation events. As the creation event currently uses storeToString,
@@ -245,6 +271,18 @@ public abstract class AbstractModelService implements IModelService {
 		deletable.setDeleted(true);
 		save((Identifiable) deletable);
 		postEvent(ElexisEventTopics.EVENT_DELETE, deletable);
+	}
+	
+	@Override
+	public void delete(List<? extends Deleteable> deletables){
+		if (deletables != null) {
+			List<Identifiable> identifiables = new ArrayList<>();
+			deletables.forEach(item -> {
+				item.setDeleted(true);
+				identifiables.add((Identifiable) item);
+			});
+			save(identifiables);
+		}
 	}
 	
 	@Override

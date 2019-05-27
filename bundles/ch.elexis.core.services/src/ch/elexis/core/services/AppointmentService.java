@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import org.osgi.service.component.annotations.Reference;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.Messages;
 import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.model.builder.IAppointmentBuilder;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -39,10 +41,24 @@ public class AppointmentService implements IAppointmentService {
 	@Reference
 	private IConfigService iConfigService;
 	
+	@Reference
+	private IModelService iModelService;
+	
 	@Override
 	public IAppointment clone(IAppointment appointment){
-		// TODO Auto-generated method stub
-		return null;
+		/**
+		 * DEPRECATED JPA		
+//		Termin ret =
+//				new Termin(get(FLD_BEREICH), get(FLD_TAG), getStartMinute(), getStartMinute()
+//					+ getDauer(), getType(), getStatus(), get(FLD_PRIORITY));
+//			Kontakt k = getKontakt();
+//			if (k != null) {
+//				ret.setKontakt(getKontakt());
+//			}
+//			return ret;
+ * **/
+		return new IAppointmentBuilder(iModelService, appointment.getSchedule(), appointment.getStartTime(),  appointment.getEndTime(),
+			appointment.getType(), appointment.getState(), appointment.getPriority(), appointment.getSubjectOrPatient()).buildAndSave();
 	}
 	
 	@Activate
@@ -59,10 +75,121 @@ public class AppointmentService implements IAppointmentService {
 		}
 	}
 	
+	private  List<IAppointment> getLinkedAppoinments(IAppointment orig){
+		if (StringTool.isNothing(orig.getLinkgroup())) {
+			return Collections.singletonList(orig);
+		}
+		
+		IQuery<IAppointment> query = iModelService.getQuery(IAppointment.class);
+		query.and(ModelPackage.Literals.IAPPOINTMENT__LINKGROUP, COMPARATOR.EQUALS,
+			orig.getLinkgroup());
+		return query.execute();
+	}
+	
 	@Override
 	public boolean delete(IAppointment appointment, boolean whole){
-		// TODO Auto-generated method stub
-		return false;
+		//@TODO checkLock is deprecated not needed ?
+		
+		// check if appointment isLinked
+		if (!StringTool.isNothing(appointment.getLinkgroup())) {
+			List<IAppointment> linked = getLinkedAppoinments(appointment);
+			if (whole) {
+				// delete whole series
+				iModelService.delete(linked.get(0));
+			} else {
+				if (appointment.getId().equals(appointment.getLinkgroup())) {
+					if (linked.size() > 1)
+					{
+						int index = 0;
+						IAppointment moveto = linked.get(index);
+						while (moveto.getId().equals(appointment.getLinkgroup())) {
+							moveto = linked.get(++index);
+						}
+						moveto.setSubjectOrPatient(appointment.getSubjectOrPatient());
+						moveto.setReason(appointment.getReason());
+						//TODO created by not working
+						//moveto.set(Termin.FLD_CREATOR, get(Termin.FLD_CREATOR));
+						moveto.setCreatedBy(appointment.getCreatedBy()); 
+						moveto.setExtension(appointment.getExtension());
+						iModelService.save(moveto);
+						
+						for (IAppointment termin : linked) {
+							termin.setLinkgroup(moveto.getId());
+						}
+						iModelService.save(linked);
+					}
+				}
+				// delete this
+				iModelService.delete(appointment);
+			}
+		} else {
+			iModelService.delete(appointment);
+		}
+		return true;
+		/**
+		 * DEPRECATED JPA		
+//		boolean confirmed = !askForConfirmation;
+//		if (checkLock()) {
+//			return false;
+//		}
+//		String linkgroup = get(FLD_LINKGROUP); //$NON-NLS-1$
+//		boolean isLinked = linkgroup != null && !linkgroup.isEmpty();
+//		
+//		if (isLinked && askForConfirmation) {
+//			MessageDialog msd =
+//				new MessageDialog(UiDesk.getTopShell(), Messages.Termin_deleteSeries, null,
+//					Messages.Termin_thisAppIsPartOfSerie, MessageDialog.QUESTION, new String[] {
+//						Messages.Termin_yes, Messages.Termin_no
+//					}, 1);
+//			int retval = msd.open();
+//			if (retval == SWT.DEFAULT)
+//			{
+//				return false;
+//			}
+//			confirmed = (retval == Dialog.OK);
+//		}
+//		if (isLinked) {
+//			List<Termin> linked = getLinked(this);
+//			if (confirmed) {
+//				// delete whole series
+//				for (Termin ae : (List<Termin>) linked) {
+//					ae.set(new String[] {
+//						FLD_LASTEDIT, FLD_DELETED
+//					}, new String[] {
+//						createTimeStamp(), StringConstants.ONE
+//					});
+//				}
+//			} else {
+//				if (getId().equals(linkgroup)) {
+//					// move root information
+//					if (linked.size() > 1) {
+//						int index = 0;
+//						Termin moveto = linked.get(index);
+//						while (moveto.getId().equals(linkgroup)) {
+//							moveto = linked.get(++index);
+//						}
+//						moveto.set(Termin.FLD_PATIENT, get(Termin.FLD_PATIENT));
+//						moveto.set(Termin.FLD_GRUND, get(Termin.FLD_GRUND));
+//						moveto.set(Termin.FLD_CREATOR, get(Termin.FLD_CREATOR));
+//						moveto.set(Termin.FLD_EXTENSION, get(Termin.FLD_EXTENSION));
+//						for (Termin termin : linked) {
+//							termin.set(Termin.FLD_LINKGROUP, moveto.getId());
+//						}
+//					}
+//				}
+//				// delete this
+//				set(new String[] {
+//					FLD_DELETED, FLD_LASTEDIT
+//				}, StringConstants.ONE, createTimeStamp());
+//			}
+//		} else {
+//			// delete this
+//			set(new String[] {
+//				FLD_DELETED, FLD_LASTEDIT
+//			}, StringConstants.ONE, createTimeStamp());
+//		}
+//		return true;
+**/
 	}
 	
 	@Override
@@ -119,25 +246,36 @@ public class AppointmentService implements IAppointmentService {
 	
 	@Override
 	public String getType(AppointmentType type){
-		// TODO Auto-generated method stub
+//		DEFAULT,
+//		FREE,
+//		BOOKED,
+//		
+		// Termin: 	return get(FLD_TERMINTYP);
+		//@TODO why this is needed ?
 		return null;
 	}
 	
 	@Override
 	public String getState(AppointmentState state){
-		// TODO Auto-generated method stub
+//		EMPTY,
+//		DEFAULT,
+		//Termin: 	return get(FLD_TERMINSTATUS);
+		//@TODO why this is needed ?
 		return null;
 	}
 	
 	@Override
 	public void addType(String type){
-		// TODO Auto-generated method stub
-		
+		String tt = StringTool.join(types, ",") + "," + type;
+		iConfigService.set(AG_TERMINTYPEN, tt);
+		types = iConfigService.getAsList(AG_TERMINTYPEN, null);
 	}
 	
 	@Override
 	public void addState(String state){
-		// TODO Auto-generated method stub
-		
+		//TODO cannot add new states in Termin.java
+		String tt = StringTool.join(states, ",") + "," + state;
+		iConfigService.set(AG_TERMINSTATUS, tt);
+		states = iConfigService.getAsList(AG_TERMINSTATUS, null);
 	}
 }
