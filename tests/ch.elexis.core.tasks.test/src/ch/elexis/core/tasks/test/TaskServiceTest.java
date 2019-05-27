@@ -105,6 +105,7 @@ public class TaskServiceTest {
 		findExecutions = taskService.findExecutions(taskDescriptor);
 		assertTrue(findExecutions.size() == 1);
 		assertEquals(TaskState.COMPLETED, findExecutions.get(0).getState());
+		assertTrue(findExecutions.get(0).getResult().containsKey("runnableExecDuration"));
 	}
 	
 	public void triggerManual_Misthios() throws Exception{

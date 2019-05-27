@@ -177,7 +177,8 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 				Map<String, Serializable> result =
 					runnableWithContext.run(effectiveRunContext, progressMonitor, logger);
 				long endTimeMillis = System.currentTimeMillis();
-				if (!result.containsKey("runnableExecDuration")) {
+				if (result == null || !result.containsKey("runnableExecDuration")) {
+					// returned map may be unmodifiable
 					result = new HashMap<>(result);
 					result.put("runnableExecDuration",
 						Long.toString(endTimeMillis - beginTimeMillis));
