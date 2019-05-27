@@ -11,9 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ch.elexis.core.model.IAppointment;
@@ -26,15 +24,12 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 	private IAppointmentService appointmentService = OsgiServiceUtil.getService(IAppointmentService.class).get();
 	private IAppointment savedAppointment;
 	
-	@BeforeClass
-	public static void beforeClass(){	
+	@Before
+	public void before(){	
 		//cleanup
 		coreModelService.remove(coreModelService.getQuery(IAppointment.class).execute());
 		assertEquals(0,  coreModelService.getQuery(IAppointment.class).execute().size());
-	}
-	
-	@Before
-	public void before(){	
+		
 		savedAppointment = new IAppointmentBuilder(coreModelService, "Notfall", LocalDateTime.of(2018, 01, 02, 9, 0),  LocalDateTime.of(2018, 01, 02, 9, 30),
 			"gesperrt", "geplant").buildAndSave();
 	}
@@ -51,6 +46,7 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 	@Test
 	public void testUpdateBoundaries(){
 		// check Bereich of Notfall and type is gesperrt - in that case no boundaries created
+		assertEquals(1,  coreModelService.getQuery(IAppointment.class).execute().size());
 		appointmentService.updateBoundaries("Notfall", LocalDate.of(2018, 01, 02));
 		assertEquals(1,  coreModelService.getQuery(IAppointment.class).execute().size());
 		
@@ -94,10 +90,5 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 		assertEquals(0,  coreModelService.getQuery(IAppointment.class).execute().size());
 		
 		//@todo delete with linkgroup
-	}
-
-	@After
-	public void after(){	
-		beforeClass();
 	}
 }
