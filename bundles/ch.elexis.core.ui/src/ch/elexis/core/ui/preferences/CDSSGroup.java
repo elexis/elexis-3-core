@@ -31,7 +31,7 @@ public class CDSSGroup extends PreferencePage implements IWorkbenchPreferencePag
 	protected Control createContents(Composite parent){
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new FillLayout());
-		StyledText text = new StyledText(ret, SWT.NONE);
+		StyledText text = new StyledText(ret, SWT.READ_ONLY);
 		text.setWordWrap(true);
 		text.setText(Messages.CDSSGroup_ExplanationCDSSLine1
 			+ Messages.CDSSGroup_ExplanationCDSSLine2 + Messages.CDSSGroup_ExplanationCDSSLine3);
