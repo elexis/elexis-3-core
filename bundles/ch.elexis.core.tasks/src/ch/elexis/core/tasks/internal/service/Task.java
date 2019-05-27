@@ -173,8 +173,16 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 				// TODO validate all required parameters are set, validate url
 				
 				setState(TaskState.IN_PROGRESS);
+				long beginTimeMillis = System.currentTimeMillis();
 				Map<String, Serializable> result =
 					runnableWithContext.run(effectiveRunContext, progressMonitor, logger);
+				long endTimeMillis = System.currentTimeMillis();
+				if (result == null || !result.containsKey("runnableExecDuration")) {
+					// returned map may be unmodifiable
+					result = new HashMap<>(result);
+					result.put("runnableExecDuration",
+						Long.toString(endTimeMillis - beginTimeMillis));
+				}
 				setResult(result);
 				setState(TaskState.COMPLETED);
 				
