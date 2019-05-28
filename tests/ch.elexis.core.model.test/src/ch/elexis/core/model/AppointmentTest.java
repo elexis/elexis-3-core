@@ -35,6 +35,9 @@ public class AppointmentTest extends AbstractTest {
 		appointment.setReason("reason");
 		appointment.setStartTime(begin);
 		appointment.setEndTime(end);
+		appointment.setState("geplant");
+		appointment.setType("gesperrt");
+		appointment.setSchedule("Notfall");
 		appointment.setSubjectOrPatient(patient.getId());
 		coreModelService.save(appointment);
 		
@@ -45,7 +48,10 @@ public class AppointmentTest extends AbstractTest {
 		assertEquals(begin, stored.getStartTime());
 		assertEquals(end, stored.getEndTime());
 		assertEquals(patient.getId(), stored.getSubjectOrPatient());
-		
+		assertEquals(15, stored.getDurationMinutes().intValue());
+		assertEquals("geplant", stored.getState());
+		assertEquals("gesperrt", stored.getType());
+		assertEquals("Notfall", stored.getSchedule());
 		coreModelService.remove(appointment);
 	}
 }

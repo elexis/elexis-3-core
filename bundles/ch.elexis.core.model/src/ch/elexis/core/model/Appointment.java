@@ -114,7 +114,7 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 	
 	@Override
 	public void setSchedule(String value){
-		getEntity().setBeginn(value);
+		getEntity().setBereich(value);
 	}
 	
 	@Override
