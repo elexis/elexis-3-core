@@ -1,6 +1,7 @@
 package ch.elexis.core.tasks.internal.service;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,7 +65,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		String stationIdentifier =
 			ContextServiceHolder.get().getRootContext().getStationIdentifier();
 		getEntity().setRunner(StringUtils.abbreviate(stationIdentifier, 64));
-		
+		getEntity().setCreatedAt(LocalDateTime.now());
 		
 		logger = LoggerFactory.getLogger(
 			"Task [" + getId() + "] (" + taskDescriptor.getIdentifiedRunnableId() + ") ");
@@ -151,6 +152,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	
 	@Override
 	public void run(){
+		getEntity().setRunAt(LocalDateTime.now());
 		Optional<ITaskDescriptor> originTaskDescriptor = TaskServiceHolder.get()
 			.findTaskDescriptorByIdOrReferenceId(getEntity().getDescriptorId());
 		if (originTaskDescriptor.isPresent()) {
@@ -224,6 +226,16 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	@Override
 	public String getLabel(){
 		return "Task [" + getId() + "] (triggered by " + getTriggerEvent() + "): " + getState();
+	}
+
+	@Override
+	public LocalDateTime getCreatedAt(){
+		return getEntity().getCreatedAt();
+	}
+
+	@Override
+	public LocalDateTime getRunAt(){
+		return getEntity().getRunAt();
 	}
 	
 }

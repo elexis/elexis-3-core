@@ -59,6 +59,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/id"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/state"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/triggerEvent"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/createdAt"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/runAt"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/result"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/progressMonitor"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/runContext"/>

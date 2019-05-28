@@ -1,5 +1,7 @@
 package ch.elexis.core.jpa.entities;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -49,6 +51,12 @@ public class Task extends AbstractEntityWithId implements EntityWithId, EntityWi
 	
 	@Column(length = 64)
 	protected String runner;
+	
+	@Column(length = 24)
+	protected LocalDateTime createdAt;
+	
+	@Column(length = 24)
+	protected LocalDateTime runAt;
 	
 	public String getId(){
 		return id;
@@ -122,4 +130,19 @@ public class Task extends AbstractEntityWithId implements EntityWithId, EntityWi
 		this.runner = runner;
 	}
 	
+	public LocalDateTime getCreatedAt(){
+		return createdAt;
+	}
+	
+	public void setCreatedAt(LocalDateTime createdAt){
+		this.createdAt = createdAt;
+	}
+	
+	public LocalDateTime getRunAt(){
+		return runAt;
+	}
+	
+	public void setRunAt(LocalDateTime runAt){
+		this.runAt = runAt;
+	}
 }

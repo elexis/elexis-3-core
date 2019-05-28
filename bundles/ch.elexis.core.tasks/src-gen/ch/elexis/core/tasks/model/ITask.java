@@ -14,6 +14,7 @@ import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.Identifiable;
 import java.io.Serializable;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -34,6 +35,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
  *   <li>{@link ch.elexis.core.tasks.model.ITask#getId <em>Id</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITask#getState <em>State</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITask#getTriggerEvent <em>Trigger Event</em>}</li>
+ *   <li>{@link ch.elexis.core.tasks.model.ITask#getCreatedAt <em>Created At</em>}</li>
+ *   <li>{@link ch.elexis.core.tasks.model.ITask#getRunAt <em>Run At</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITask#getResult <em>Result</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITask#getProgressMonitor <em>Progress Monitor</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITask#getRunContext <em>Run Context</em>}</li>
@@ -94,6 +97,34 @@ public interface ITask extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	TaskTriggerType getTriggerEvent();
+
+	/**
+	 * Returns the value of the '<em><b>Created At</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * the creation time
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Created At</em>' attribute.
+	 * @see ch.elexis.core.tasks.model.ModelPackage#getITask_CreatedAt()
+	 * @model dataType="ch.elexis.core.types.LocalDateTime" required="true" changeable="false"
+	 * @generated
+	 */
+	LocalDateTime getCreatedAt();
+
+	/**
+	 * Returns the value of the '<em><b>Run At</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * the time execution was started (i.e. the run method was called)
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Run At</em>' attribute.
+	 * @see ch.elexis.core.tasks.model.ModelPackage#getITask_RunAt()
+	 * @model dataType="ch.elexis.core.types.LocalDateTime" changeable="false"
+	 * @generated
+	 */
+	LocalDateTime getRunAt();
 
 	/**
 	 * Returns the value of the '<em><b>Result</b></em>' attribute.

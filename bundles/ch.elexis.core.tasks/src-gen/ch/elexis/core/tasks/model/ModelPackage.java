@@ -240,13 +240,31 @@ public interface ModelPackage extends EPackage {
 	int ITASK__TRIGGER_EVENT = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 3;
 
 	/**
+	 * The feature id for the '<em><b>Created At</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITASK__CREATED_AT = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Run At</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITASK__RUN_AT = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
 	 * The feature id for the '<em><b>Result</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK__RESULT = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 4;
+	int ITASK__RESULT = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Progress Monitor</b></em>' attribute.
@@ -255,7 +273,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK__PROGRESS_MONITOR = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 5;
+	int ITASK__PROGRESS_MONITOR = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Run Context</b></em>' attribute.
@@ -264,7 +282,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK__RUN_CONTEXT = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 6;
+	int ITASK__RUN_CONTEXT = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Finished</b></em>' attribute.
@@ -273,7 +291,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK__FINISHED = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 7;
+	int ITASK__FINISHED = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Descriptor Id</b></em>' attribute.
@@ -282,7 +300,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK__DESCRIPTOR_ID = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 8;
+	int ITASK__DESCRIPTOR_ID = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 10;
 
 	/**
 	 * The number of structural features of the '<em>ITask</em>' class.
@@ -291,7 +309,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK_FEATURE_COUNT = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 9;
+	int ITASK_FEATURE_COUNT = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 11;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.tasks.model.ITaskService <em>ITask Service</em>}' class.
@@ -566,6 +584,28 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getITask_TriggerEvent();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.tasks.model.ITask#getCreatedAt <em>Created At</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Created At</em>'.
+	 * @see ch.elexis.core.tasks.model.ITask#getCreatedAt()
+	 * @see #getITask()
+	 * @generated
+	 */
+	EAttribute getITask_CreatedAt();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.tasks.model.ITask#getRunAt <em>Run At</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Run At</em>'.
+	 * @see ch.elexis.core.tasks.model.ITask#getRunAt()
+	 * @see #getITask()
+	 * @generated
+	 */
+	EAttribute getITask_RunAt();
 
 	/**
 	 * Returns the meta object for the attribute '{@link ch.elexis.core.tasks.model.ITask#getResult <em>Result</em>}'.
@@ -871,6 +911,22 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ITASK__TRIGGER_EVENT = eINSTANCE.getITask_TriggerEvent();
+
+		/**
+		 * The meta object literal for the '<em><b>Created At</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ITASK__CREATED_AT = eINSTANCE.getITask_CreatedAt();
+
+		/**
+		 * The meta object literal for the '<em><b>Run At</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ITASK__RUN_AT = eINSTANCE.getITask_RunAt();
 
 		/**
 		 * The meta object literal for the '<em><b>Result</b></em>' attribute feature.

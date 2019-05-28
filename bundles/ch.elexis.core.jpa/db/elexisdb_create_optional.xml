@@ -696,6 +696,8 @@
 			<column name="LASTUPDATE" type="BIGINT" />
 			<column defaultValue="0" name="DELETED" type="CHAR(1)" />
 			
+			<column name="CREATEDAT" type="CHAR(24)" />
+			<column name="RUNAT" type="CHAR(24)"/>
 			<column name="DESCRIPTORID" type="VARCHAR(32)" />
 			<column name="STATE" type="TINYINT" />
 			<column name="TRIGGEREVENT" type="TINYINT" />

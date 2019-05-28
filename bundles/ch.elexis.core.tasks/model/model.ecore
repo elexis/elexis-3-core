@@ -79,6 +79,19 @@
         changeable="false"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="triggerEvent" lowerBound="1"
         eType="#//TaskTriggerType" changeable="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="createdAt" lowerBound="1"
+        eType="ecore:EDataType ../../ch.elexis.core/model/types.ecore#//LocalDateTime"
+        changeable="false">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="the creation time"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="runAt" eType="ecore:EDataType ../../ch.elexis.core/model/types.ecore#//LocalDateTime"
+        changeable="false">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="the time execution was started (i.e. the run method was called)"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="result" changeable="false"
         transient="true">
       <eGenericType eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EMap">
