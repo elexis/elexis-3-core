@@ -282,7 +282,12 @@ public class TaskServiceImpl implements ITaskService {
 			message.addMessageCode(MessageCode.Key.Severity, MessageCode.Value.Severity_INFO);
 		}
 		
-		message.setMessageText(task.getLabel()+"\n"+resultText);
+		StringBuilder sb = new StringBuilder();
+		sb.append(task.getLabel());
+		if (resultText != null) {
+			sb.append("\n" + resultText);
+		}
+		message.setMessageText(sb.toString());
 		
 		coreModelService.save(message);
 	}
