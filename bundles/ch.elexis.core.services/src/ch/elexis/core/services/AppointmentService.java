@@ -30,10 +30,12 @@ public class AppointmentService implements IAppointmentService {
 	public static final String AG_TERMINTYPEN = "agenda/TerminTypen"; //$NON-NLS-1$
 	public static final String AG_TERMINSTATUS = "agenda/TerminStatus"; //$NON-NLS-1$
 
-	private static final int TYPE_RESERVED = 1;
+	private static final int TYPE_FREE = 0; //frei
+	private static final int TYPE_RESERVED = 1; //reserviert
+	private static final int TYPE_DEFAULT = 2; //standard
 	
-	private static final int STATE_EMPTY = 0;
-	private static final int STATE_DEFAULT = 1;
+	private static final int STATE_EMPTY = 0; //leer
+	private static final int STATE_DEFAULT = 1; //standard
 	
 	private List<String> types = null;
 	private List<String> states = null;
@@ -41,7 +43,7 @@ public class AppointmentService implements IAppointmentService {
 	@Reference
 	private IConfigService iConfigService;
 	
-	@Reference
+	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService iModelService;
 	
 	@Override
@@ -200,9 +202,9 @@ public class AppointmentService implements IAppointmentService {
 		
 		List<IAppointment> resList = query.execute();
 
-		String typReserved = types.get(TYPE_RESERVED);
-		String stateEmpty = states.get(STATE_EMPTY);
-		String stateDefault= states.get(STATE_DEFAULT);
+		String typReserved = getType(AppointmentType.BOOKED);
+		String stateEmpty = getState(AppointmentState.EMPTY);
+		String stateDefault = getState(AppointmentState.DEFAULT);
 		
 		for (IAppointment termin : resList) {
 			if (termin.getType().equals(typReserved)) {
@@ -246,21 +248,35 @@ public class AppointmentService implements IAppointmentService {
 	
 	@Override
 	public String getType(AppointmentType type){
-//		DEFAULT,
-//		FREE,
-//		BOOKED,
-//		
-		// Termin: 	return get(FLD_TERMINTYP);
-		//@TODO why this is needed ?
+		if (type != null) {
+			switch (type) {
+			case BOOKED:
+				return types.get(TYPE_RESERVED);
+			case DEFAULT:
+				return types.get(TYPE_DEFAULT);
+			case FREE:
+				return types.get(TYPE_FREE);
+			default:
+				break;
+			
+			}
+		}
 		return null;
 	}
 	
 	@Override
 	public String getState(AppointmentState state){
-//		EMPTY,
-//		DEFAULT,
-		//Termin: 	return get(FLD_TERMINSTATUS);
-		//@TODO why this is needed ?
+		if (state != null) {
+			switch (state) {
+			case DEFAULT:
+				return states.get(STATE_DEFAULT);
+			case EMPTY:
+				return states.get(STATE_EMPTY);
+			default:
+				break;
+			
+			}
+		}
 		return null;
 	}
 	

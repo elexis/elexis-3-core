@@ -4,6 +4,6 @@
       <provide interface="ch.elexis.core.services.IAppointmentService"/>
    </service>
    <reference cardinality="1..1" field="iConfigService" interface="ch.elexis.core.services.IConfigService" name="iConfigService"/>
-   <reference cardinality="1..1" field="iModelService" interface="ch.elexis.core.services.IModelService" name="iModelService"/>
+   <reference cardinality="1..1" field="iModelService" interface="ch.elexis.core.services.IModelService" name="iModelService" target="(service.model.name=ch.elexis.core.model)"/>
    <implementation class="ch.elexis.core.services.AppointmentService"/>
 </scr:component>
