@@ -38,7 +38,7 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 		Optional<IAppointment> load = coreModelService.load(savedAppointment.getId(), IAppointment.class);
 		assertTrue(load.isPresent());
 		assertEquals(30, load.get().getDurationMinutes().intValue());
-		assertEquals("gesperrt", load.get().getType());
+		assertEquals(appointmentService.getType(AppointmentType.BOOKED), load.get().getType());
 		assertEquals(1,  coreModelService.getQuery(IAppointment.class).execute().size());
 	}
 	
