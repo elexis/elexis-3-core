@@ -513,9 +513,13 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 	 * Get a List of all LabItems from the database
 	 * 
 	 * @return List of {@link LabItem}
+	 * @since 3.7 use query with prefetch
 	 */
 	public static List<LabItem> getLabItems(){
-		Query<LabItem> qbe = new Query<LabItem>(LabItem.class);
+		Query<LabItem> qbe = new Query<>(LabItem.class, LABITEMS, false, new String[] {
+			LabItem.TITLE, LabItem.SHORTNAME, LabItem.LOINCCODE, LabItem.UNIT,
+			LabItem.REF_MALE, LabItem.REF_FEMALE_OR_TEXT, LabItem.GROUP, LabItem.PRIO
+		});
 		return qbe.execute();
 	}
 	
