@@ -13,12 +13,13 @@ import java.util.stream.Collectors;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.builder.IAppointmentBuilder;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.types.AppointmentState;
+import ch.elexis.core.types.AppointmentType;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class IAppointmentServiceTest extends AbstractServiceTest {
@@ -29,7 +30,7 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 	@Before
 	public void before(){	
 		savedAppointment = new IAppointmentBuilder(coreModelService, "Notfall", LocalDateTime.of(2018, 01, 02, 9, 0),  LocalDateTime.of(2018, 01, 02, 9, 30),
-			"gesperrt", "geplant").buildAndSave();
+			appointmentService.getType(AppointmentType.BOOKED), appointmentService.getState(AppointmentState.DEFAULT)).buildAndSave();
 	}
 	
 	@Test
@@ -37,7 +38,7 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 		Optional<IAppointment> load = coreModelService.load(savedAppointment.getId(), IAppointment.class);
 		assertTrue(load.isPresent());
 		assertEquals(30, load.get().getDurationMinutes().intValue());
-		assertEquals("gesperrt", load.get().getType());
+		assertEquals(appointmentService.getType(AppointmentType.BOOKED), load.get().getType());
 		assertEquals(1,  coreModelService.getQuery(IAppointment.class).execute().size());
 	}
 	
@@ -63,7 +64,6 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 	}
 	
 	@Test
-	@Ignore("not working on server why ?")
 	public void testUpdateNoBoundaries(){
 		// check Bereich of Notfall and type is gesperrt - in that case no boundaries created
 		assertEquals(1, coreModelService.getQuery(IAppointment.class).execute().size());
