@@ -7,7 +7,46 @@
 	</parent>
 	<artifactId>ch.elexis.core.p2site</artifactId>
 	<packaging>eclipse-repository</packaging>
-	<build>
+  <profiles>
+    <profile>
+      <id>verify-elexis-startup</id>
+      <activation>
+        <property>
+           <name>!skipTests</name>
+        </property>
+        <os>
+          <name>Linux</name>
+        </os>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+           <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.8</version>
+            <executions>
+                <execution>
+                    <id>verify-elexis-startup</id>
+                    <phase>verify</phase>
+                    <configuration>
+                    <target>
+                        <exec executable="/bin/bash" failonerror="true">
+                          <arg value="${project.basedir}/start_h2_first_linux_x86_64.sh" />
+                          <arg value="${project.build.directory}/products/ch.elexis.core.application.ElexisApp/${classifier}/Elexis3" />
+                        </exec>
+                      </target>
+                    </configuration>
+                    <goals>
+                        <goal>run</goal>
+                    </goals>
+                </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+  <build>
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.tycho </groupId>
