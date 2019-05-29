@@ -5,10 +5,19 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.test.AbstractTest;
 
 public class PersonTest extends AbstractTest {
@@ -40,6 +49,17 @@ public class PersonTest extends AbstractTest {
 		assertNotNull(findById);
 		assertEquals(MaritalStatus.MARRIED, findById.getMaritalStatus());
 		coreModelService.delete(person);
+	}
+
+	@Test
+	public void searchPersonByBirthDate() {
+		IQuery<IPerson> query = coreModelService.getQuery(IPerson.class);
+		Date theBirthDate = new GregorianCalendar(2016, 8, 1).getTime();
+		LocalDate localDate = Instant.ofEpochMilli(theBirthDate.getTime()).atZone(ZoneId.systemDefault())
+				.toLocalDate();
+		query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS, localDate);
+		List<IPerson> execute = query.execute();
+		assertEquals(1, execute.size());
 	}
 
 }

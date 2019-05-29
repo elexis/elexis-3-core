@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -256,5 +257,15 @@ public class EncounterService implements IEncounterService {
 			ret.addMoney(billed.getTotal());
 		}
 		return ret;
+	}
+
+	@Override
+	public List<IEncounter> getAllEncountersForPatient(IPatient patient){
+		IQuery<ICoverage> query = CoreModelServiceHolder.get().getQuery(ICoverage.class);
+		query.and(ModelPackage.Literals.ICOVERAGE__PATIENT, COMPARATOR.EQUALS, patient);
+		List<ICoverage> coverages = query.execute();
+		List<IEncounter> collect = coverages.stream().flatMap(cv -> cv.getEncounters().stream())
+			.sorted((c1, c2) -> c2.getDate().compareTo(c1.getDate())).collect(Collectors.toList());
+		return collect;
 	}
 }

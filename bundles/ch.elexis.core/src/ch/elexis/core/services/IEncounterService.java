@@ -1,5 +1,6 @@
 package ch.elexis.core.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import ch.elexis.core.model.IBilled;
@@ -52,6 +53,13 @@ public interface IEncounterService {
 	public Optional<IEncounter> getLatestEncounter(IPatient patient);
 	
 	/**
+	 * 
+	 * @param patient
+	 * @return all encounters of this patient, ordered newest first - or an empty list
+	 */
+	public List<IEncounter> getAllEncountersForPatient(IPatient patient);
+	
+	/**
 	 * Update the encounter text with the content of {@link Samdas}. A new {@link VersionedResource}
 	 * is created as head.
 	 * 
@@ -67,4 +75,6 @@ public interface IEncounterService {
 	 * @return
 	 */
 	public Money getSales(IEncounter encounter);
+	
+
 }

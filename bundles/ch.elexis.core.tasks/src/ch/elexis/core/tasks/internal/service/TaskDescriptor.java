@@ -29,8 +29,7 @@ public class TaskDescriptor
 	
 	@Override
 	public String toString(){
-		// TODO Auto-generated method stub
-		return getEntity().getId()+" ("+getEntity().getReferenceId()+")";
+		return getEntity().getId()+" ("+getEntity().getReferenceId()+") "+"isActive="+isActive();
 	}
 	
 	@Override
