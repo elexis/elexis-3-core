@@ -748,7 +748,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	
 	/**
 	 * @deprecated date is used use observationtime
-	 * @since 3.8
+	 * @since 3.7
 	 * @param pat
 	 * @param date
 	 * @param item
