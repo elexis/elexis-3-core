@@ -11,6 +11,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.beans.ContactBean;
 import ch.elexis.core.data.interfaces.text.IOpaqueDocument;
 import ch.elexis.core.data.services.GlobalServiceDescriptors;
@@ -149,10 +150,16 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 			sbFailed.append("; ");
 		}
 		
-		labName = (String) context.get(IMultiFileParser.CTX_LABNAME);
-		if (labName == null) {
-			sbFailed.append(Messages.DefaultPDFImportStrategy_LabName);
-			sbFailed.append("; ");
+		if (CoreHub.localCfg.get(HL7Parser.CFG_IMPORT_ENCDATA, false)) {
+			labName = CoreHub.localCfg.get(HL7Parser.CFG_IMPORT_ENCDATA_CATEGORY, null);
+		}
+	
+		if (labName == null || labName.isEmpty()) {
+			labName = (String) context.get(IMultiFileParser.CTX_LABNAME);
+			if (labName == null) {
+				sbFailed.append(Messages.DefaultPDFImportStrategy_LabName);
+				sbFailed.append("; ");
+			}
 		}
 		
 		dateTime = (TimeTool) context.get(IMultiFileParser.CTX_TIME);
