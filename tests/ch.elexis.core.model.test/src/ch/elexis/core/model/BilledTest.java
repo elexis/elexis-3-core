@@ -106,4 +106,44 @@ public class BilledTest extends AbstractTest {
 		
 		coreModelService.remove(billed);
 	}
+	
+	@Test
+	public void testShowTwoDifferentTotalImplementations(){
+		IBilled billed = coreModelService.create(IBilled.class);
+		billed.setAmount(2);
+		billed.setFactor(1);
+		billed.setPrimaryScale(3);
+		billed.setPrice(new Money(105));
+		assertTrue(coreModelService.save(billed));
+		
+		// test1: 1.05 x 0.03 x 1 x 2 = 0.063
+		Money moneyNewTotal = billed.getTotal();
+		Money moneyInvalidTotal = calculateTotalInvalidWay(billed);
+		assertEquals(6, moneyNewTotal.getCents());
+		assertEquals(6, moneyInvalidTotal.getCents()); //OK
+		
+		// test2: 1.10 x 0.03 x 1 x 2 = 0.066 
+		billed.setPrice(new Money(110));
+		 moneyNewTotal = billed.getTotal();
+		 moneyInvalidTotal = calculateTotalInvalidWay(billed);
+		assertEquals(7, moneyNewTotal.getCents());
+		assertEquals(6, moneyInvalidTotal.getCents()); //invalid
+			
+		// test3: 1.20 x 0.03 x 1 x 2 = 0.072
+		billed.setPrice(new Money(120));
+		moneyNewTotal = billed.getTotal();
+		moneyInvalidTotal = calculateTotalInvalidWay(billed);
+		assertEquals(7, moneyNewTotal.getCents());
+		assertEquals(8, moneyInvalidTotal.getCents()); //invalid
+	}
+
+	/**
+	 * If money multiply is used cascaded rounding issues can happened
+	 * @param billed
+	 * @return
+	 */
+	private Money calculateTotalInvalidWay(IBilled billed){
+		return billed.getPrice().multiply(billed.getPrimaryScaleFactor())
+			.multiply(billed.getSecondaryScaleFactor()).multiply(billed.getAmount());
+	}
 }

@@ -209,9 +209,12 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 	
 	@Override
 	public Money getTotal(){
-		// do not use getAmount here, as the changed amount is included via secondary scale
-		return getPrice().multiply(getPrimaryScaleFactor()).multiply(getSecondaryScaleFactor())
-			.multiply(getEntity().getZahl());
+		// do not use getAmount here, as the changed amount is included via secondary scale#
+		// get sales for the verrechnet including all scales and quantity
+		// replaced with toIntExact and round: new DecimalFormat("#").parse(new DecimalFormat("#").format(value)).doubleValue()
+		int cents = Math.toIntExact(Math.round(getPoints() * getFactor() * getPrimaryScaleFactor()
+			* getSecondaryScaleFactor() * getEntity().getZahl()));
+		return new Money(cents);
 	}
 	
 	@Override
