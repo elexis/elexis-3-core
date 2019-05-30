@@ -126,6 +126,10 @@ public class PatListeContentProvider extends CommonViewerContentProvider
 				patientQuery.orderBy(order, ORDER.ASC);
 			}
 		}
+		//fixes the memory issue if clicking around different ui filters
+		//patientQuery.ignoreCaching(); 
+		// can be used to improve the performance (implicit calls also ignore caching)
+		patientQuery.selections(new String[] {"id", "patient", "person", "gender", "description1", "description2", "description3", "dob"});
 		List<IPatient> lPats = patientQuery.execute();
 		if (pfilter != null) {
 			lPats.stream().filter(pat -> applyFilter(pat)).collect(Collectors.toList());

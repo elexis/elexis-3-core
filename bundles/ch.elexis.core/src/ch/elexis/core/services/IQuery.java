@@ -190,4 +190,18 @@ public interface IQuery<T> {
 	 * @param subQuery
 	 */
 	public void notExists(ISubQuery<?> subQuery);
+	
+	/**
+	 * The default behavior for querying selects all fields from the underlying database.
+	 * This function gives a possibility to select only specific fields.
+	 * In that way the hibernate cache will be ignored completely. 
+	 * 
+	 * @param fields
+	 */
+	public void selections(String [] fields);
+	
+	/**
+	 * Ignore the hibernate cache for a query
+	 */
+	public void ignoreCaching();
 }

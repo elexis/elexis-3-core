@@ -10,16 +10,19 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaBuilder.Case;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Selection;
 import javax.persistence.criteria.Subquery;
+import javax.persistence.criteria.CriteriaBuilder.Case;
 import javax.persistence.metamodel.SingularAttribute;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.persistence.config.HintValues;
 import org.eclipse.persistence.config.QueryHints;
+import org.eclipse.persistence.jpa.JpaQuery;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jpa.entities.EntityWithDeleted;
@@ -30,6 +33,8 @@ import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.ISubQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.IQuery.ORDER;
 
 /**
  * Abstract super class for JPA based {@link IQuery} implementations.
@@ -46,6 +51,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	protected CriteriaBuilder criteriaBuilder;
 	
 	protected List<Order> orderByList;
+	protected List<Selection<?>> selections;
 	
 	protected CriteriaQuery<?> criteriaQuery;
 	protected Root<? extends EntityWithId> rootQuery;
@@ -56,6 +62,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	
 	protected boolean includeDeleted;
 	protected boolean refreshCache;
+	protected boolean ignoreCaching;
 	
 	private PredicateGroupStack predicateGroups;
 	private PredicateHandler predicateHandler;
@@ -157,6 +164,21 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 			throw new IllegalStateException("Could not resolve attribute [" + fieldOrderBy
 				+ "] of entity [" + entityClazz + "]");
 		}
+	}
+	
+	@Override
+	public void selections(String[] fields){
+		selections = new ArrayList<>();
+		for (String field : fields) {
+			Path<Object> selection = rootQuery.get(field);
+			selections.add(selection);
+		}
+		criteriaQuery.multiselect(selections);
+	}
+	
+	@Override
+	public void ignoreCaching(){
+		ignoreCaching = true;
 	}
 	
 	@SuppressWarnings({
@@ -271,7 +293,16 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		if (refreshCache) {
 			query.setHint(QueryHints.REFRESH, HintValues.TRUE);
 		}
-		
+
+		if (ignoreCaching || selections != null) {
+			if (query instanceof JpaQuery<?>) {
+				JpaQuery<?> jpaQuery = (JpaQuery<?>) query;
+				if (jpaQuery.getDatabaseQuery().shouldMaintainCache()) {
+					jpaQuery.getDatabaseQuery().dontMaintainCache();
+				}
+			}
+		}
+
 		List<T> ret = (List<T>) query.getResultStream().parallel()
 			.map(e -> adapterFactory.getModelAdapter((EntityWithId) e, clazz, true).orElse(null))
 			.filter(Objects::nonNull).collect(Collectors.toList());
