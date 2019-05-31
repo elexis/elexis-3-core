@@ -125,10 +125,10 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	 * 
 	 * @return the selected patient or null if none was selected
 	 */
-	public Patient getSelectedPatient() {
+	public IPatient getSelectedPatient() {
 		Object[] sel = cv.getSelection();
 		if (sel != null) {
-			return (Patient) sel[0];
+			return (IPatient) sel[0];
 		}
 		return null;
 	}

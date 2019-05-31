@@ -38,4 +38,13 @@ public interface IStickerService {
 	public boolean isStickerAddableToClass(Class<?> clazz, ISticker sticker);
 
 	public void setStickerAddableToClass(Class<?> clazz, ISticker sticker);
+	
+	/**
+	 * Find all Stickers applicable for a given class
+	 * 
+	 * @param clazz
+	 * @return
+	 */
+	public List<ISticker> getStickersForClass(Class<?> clazz);
+	
 }
