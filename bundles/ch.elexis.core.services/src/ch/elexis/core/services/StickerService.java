@@ -168,7 +168,6 @@ public class StickerService implements IStickerService {
 	public List<ISticker> getStickersForClass(Class<?> clazz){
 		String type = getTypeForClass(clazz);
 		if (type != null) {
-			//class ch.elexis.core.model.Patient
 			EntityManager em = (EntityManager) entityManager.getEntityManager(true);
 			TypedQuery<StickerClassLink> query =
 				em.createNamedQuery("StickerClassLink.objclass", StickerClassLink.class);

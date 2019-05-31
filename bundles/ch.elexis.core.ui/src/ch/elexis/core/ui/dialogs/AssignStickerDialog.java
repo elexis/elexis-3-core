@@ -40,7 +40,6 @@ import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.StickerServiceHolder;
-import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.util.CoreUiUtil;
@@ -115,7 +114,7 @@ public class AssignStickerDialog extends TitleAreaDialog {
 			@Override
 			public Color getForeground(Object element){
 				ISticker s = (ISticker) element;
-				return UiDesk.getColorFromRGB(s.getForeground());
+				return CoreUiUtil.getColorForString(s.getForeground());
 			}
 		});
 		
@@ -140,7 +139,7 @@ public class AssignStickerDialog extends TitleAreaDialog {
 			@Override
 			public Color getForeground(Object element){
 				ISticker s = (ISticker) element;
-				return UiDesk.getColorFromRGB(s.getForeground());
+				return CoreUiUtil.getColorForString(s.getForeground());
 			}
 		});
 	}
