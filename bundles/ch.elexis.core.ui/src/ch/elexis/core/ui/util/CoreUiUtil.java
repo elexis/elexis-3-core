@@ -11,12 +11,17 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.InjectionException;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.workbench.UIEvents;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Component;
@@ -27,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.IImage;
+import ch.elexis.core.model.ISticker;
 import ch.elexis.core.ui.UiDesk;
 
 @Component(property = EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE)
@@ -186,4 +192,35 @@ public class CoreUiUtil implements EventHandler {
 		Image ret = new Image(Display.getDefault(), idata);
 		return ret;
 	}
+	
+	public static Composite createForm(Composite parent, ISticker iSticker){
+		Composite ret = new Composite(parent, SWT.NONE);
+		ret.setLayout(new GridLayout(2, false));
+		
+		Image img = null;
+		if (iSticker.getImage() != null) {
+			img = getImageAsIcon(iSticker.getImage());
+		}
+		GridData gd1 = null;
+		GridData gd2 = null;
+		
+		Composite cImg = new Composite(ret, SWT.NONE);
+		if (img != null) {
+			cImg.setBackgroundImage(img);
+			gd1 = new GridData(img.getBounds().width, img.getBounds().height);
+			gd2 = new GridData(SWT.DEFAULT, img.getBounds().height);
+		} else {
+			gd1 = new GridData(10, 10);
+			gd2 = new GridData(SWT.DEFAULT, SWT.DEFAULT);
+		}
+		cImg.setLayoutData(gd1);
+		Label lbl = new Label(ret, SWT.NONE);
+		lbl.setLayoutData(gd2);
+		lbl.setText(iSticker.getLabel());
+		lbl.setForeground(getColorForString(iSticker.getForeground()));
+		lbl.setBackground(getColorForString(iSticker.getBackground()));
+		return ret;
+	}
+	
+	
 }
