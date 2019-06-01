@@ -157,8 +157,8 @@ public class KonsDetailView extends ViewPart
 	
 	@Inject
 	void udpatePatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IPatient patient){
-		//TODO update kons sticker updates also patient why ?????
-		if (created) {
+		//TODO the event update is not type safe
+		if (patient != null && created) {
 			actPat = null; // make sure patient will be updated
 			setPatient(patient);
 		}
