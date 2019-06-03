@@ -34,27 +34,32 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.interfaces.ISticker;
-import ch.elexis.core.ui.data.UiSticker;
+import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.model.ISticker;
+import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.IStickerService;
+import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.StickerServiceHolder;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.ILockHandler;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.PersistentObject;
-import ch.elexis.data.Sticker;
 
 public class AssignStickerDialog extends TitleAreaDialog {
-	PersistentObject mine;
+	Identifiable mine;
 	TableViewer viewer;
 	StickerViewerComparator comparator;
-	List<Sticker> alleEtiketten;
+	List<ISticker> alleEtiketten;
 	List<ISticker> mineEtiketten;
 	
-	public AssignStickerDialog(Shell shell, PersistentObject obj){
+	private IStickerService stickerService = StickerServiceHolder.get();
+
+	
+	public AssignStickerDialog(Shell shell, Identifiable obj){
 		super(shell);
 		mine = obj;
-		mineEtiketten = mine.getStickers();
-		alleEtiketten = Sticker.getStickersForClass(mine.getClass());
+		mineEtiketten = stickerService.getStickers(obj);
+		alleEtiketten = stickerService.getStickersForClass(mine.getClass());
 	}
 	
 	@Override
@@ -96,22 +101,20 @@ public class AssignStickerDialog extends TitleAreaDialog {
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
-				Sticker s = (Sticker) element;
+				ISticker s = (ISticker) element;
 				return s.getLabel();
 			}
 			
 			@Override
 			public Color getBackground(Object element){
-				Sticker s = (Sticker) element;
-				UiSticker uiSticker = new UiSticker(s);
-				return uiSticker.getBackground();
+				ISticker s = (ISticker) element;
+				return CoreUiUtil.getColorForString(s.getBackground());
 			}
 			
 			@Override
 			public Color getForeground(Object element){
-				Sticker s = (Sticker) element;
-				UiSticker uiSticker = new UiSticker(s);
-				return uiSticker.getForeground();
+				ISticker s = (ISticker) element;
+				return CoreUiUtil.getColorForString(s.getForeground());
 			}
 		});
 		
@@ -123,22 +126,20 @@ public class AssignStickerDialog extends TitleAreaDialog {
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
-				Sticker s = (Sticker) element;
-				return s.getWert() + "";
+				ISticker s = (ISticker) element;
+				return s.getImportance() + "";
 			}
 			
 			@Override
 			public Color getBackground(Object element){
-				Sticker s = (Sticker) element;
-				UiSticker uiSticker = new UiSticker(s);
-				return uiSticker.getBackground();
+				ISticker s = (ISticker) element;
+				return CoreUiUtil.getColorForString(s.getBackground());
 			}
 			
 			@Override
 			public Color getForeground(Object element){
-				Sticker s = (Sticker) element;
-				UiSticker uiSticker = new UiSticker(s);
-				return uiSticker.getForeground();
+				ISticker s = (ISticker) element;
+				return CoreUiUtil.getColorForString(s.getForeground());
 			}
 		});
 	}
@@ -178,18 +179,19 @@ public class AssignStickerDialog extends TitleAreaDialog {
 			public void lockAcquired(){
 				TableItem[] tableItems = viewer.getTable().getItems();
 				for (TableItem it : tableItems) {
-					Sticker et = (Sticker) it.getData();
+					ISticker et = (ISticker) it.getData();
 					if (it.getChecked()) {
 						if (!mineEtiketten.contains(et)) {
-							mine.addSticker(et);
+							stickerService.addSticker(et, mine);
 						}
 					} else {
 						if (mineEtiketten.contains(et)) {
-							mine.removeSticker(et);
+							stickerService.removeSticker(et, mine);
 						}
 					}
 				}
-				ElexisEventDispatcher.update(mine);
+				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
+					mine);
 				closeDialog(true);
 			}
 		});
@@ -207,8 +209,8 @@ public class AssignStickerDialog extends TitleAreaDialog {
 	class StickerViewerComparator extends ViewerComparator {
 		private int propertyIndex;
 		private boolean direction = true;
-		private Sticker s1;
-		private Sticker s2;
+		private ISticker s1;
+		private ISticker s2;
 		
 		public StickerViewerComparator(){
 			this.propertyIndex = 0;
@@ -216,9 +218,9 @@ public class AssignStickerDialog extends TitleAreaDialog {
 		
 		@Override
 		public int compare(Viewer viewer, Object e1, Object e2){
-			if (e1 instanceof Sticker && e2 instanceof Sticker) {
-				s1 = (Sticker) e1;
-				s2 = (Sticker) e2;
+			if (e1 instanceof ISticker && e2 instanceof ISticker) {
+				s1 = (ISticker) e1;
+				s2 = (ISticker) e2;
 				int rc = 0;
 				
 				switch (propertyIndex) {
@@ -228,8 +230,8 @@ public class AssignStickerDialog extends TitleAreaDialog {
 					rc = label1.compareTo(label2);
 					break;
 				case 1:
-					Integer wert1 = s1.getWert();
-					Integer wert2 = s2.getWert();
+					Integer wert1 = s1.getImportance();
+					Integer wert2 = s2.getImportance();
 					rc = wert1.compareTo(wert2);
 					break;
 				default:

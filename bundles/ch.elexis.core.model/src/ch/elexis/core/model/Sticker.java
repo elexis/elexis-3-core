@@ -100,4 +100,9 @@ public class Sticker extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 			getEntity().setImage(null);
 		}
 	}
+	
+	@Override
+	public String getLabel(){
+		return getEntity().getName();
+	}
 }

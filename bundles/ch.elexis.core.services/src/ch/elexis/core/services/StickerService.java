@@ -1,9 +1,11 @@
 package ch.elexis.core.services;
 
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -28,6 +30,9 @@ public class StickerService implements IStickerService {
 	
 	@Reference
 	private IStoreToStringService storeToStringServcie;
+	
+	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
+	private IModelService iModelService;
 	
 	private List<StickerObjectLink> getStickerObjectLinksForId(String id){
 		EntityManager em = (EntityManager) entityManager.getEntityManager(true);
@@ -116,12 +121,7 @@ public class StickerService implements IStickerService {
 	
 	@Override
 	public boolean isStickerAddableToClass(Class<?> clazz, ISticker sticker) {
-		String type = null;
-		if (EntityWithId.class.isAssignableFrom(clazz)) {
-			type = storeToStringServcie.getTypeForEntity(clazz);
-		} else if (Identifiable.class.isAssignableFrom(clazz)) {
-			type = storeToStringServcie.getTypeForModel(clazz);
-		}
+		String type = getTypeForClass(clazz);
 		if(type != null) {
 			List<StickerClassLink> classLinks = getStickerClassLinksForSticker(sticker.getId());
 			for (StickerClassLink stickerClassLink : classLinks) {
@@ -137,12 +137,7 @@ public class StickerService implements IStickerService {
 
 	@Override
 	public void setStickerAddableToClass(Class<?> clazz, ISticker sticker) {
-		String type = null;
-		if (EntityWithId.class.isAssignableFrom(clazz)) {
-			type = storeToStringServcie.getTypeForEntity(clazz);
-		} else if (Identifiable.class.isAssignableFrom(clazz)) {
-			type = storeToStringServcie.getTypeForModel(clazz);
-		}
+		String type = getTypeForClass(clazz);
 		if (type != null) {
 			EntityManager em = (EntityManager) entityManager.getEntityManager(false);
 			try {
@@ -167,5 +162,36 @@ public class StickerService implements IStickerService {
 			return Integer.valueOf(s2.getImportance())
 				.compareTo(Integer.valueOf(s1.getImportance()));
 		}
+	}
+
+	@Override
+	public List<ISticker> getStickersForClass(Class<?> clazz){
+		String type = getTypeForClass(clazz);
+		if (type != null) {
+			EntityManager em = (EntityManager) entityManager.getEntityManager(true);
+			TypedQuery<StickerClassLink> query =
+				em.createNamedQuery("StickerClassLink.objclass", StickerClassLink.class);
+			query.setParameter("objclass", type);
+			
+			List<StickerClassLink> results = query.getResultList();
+			Set<String> stickerIds = new HashSet<>();
+			results.forEach(item -> stickerIds.add(item.getSticker()));
+			
+			INamedQuery<ISticker> queryAllStickers =
+				iModelService.getNamedQuery(ISticker.class, "ids");
+			return queryAllStickers
+				.executeWithParameters(queryAllStickers.getParameterMap("ids", stickerIds));
+		} else {
+			throw new IllegalStateException("Could not get type for [" + clazz + "]");
+		}
+	}
+
+	private String getTypeForClass(Class<?> clazz){
+		if (EntityWithId.class.isAssignableFrom(clazz)) {
+			return storeToStringServcie.getTypeForEntity(clazz);
+		} else if (Identifiable.class.isAssignableFrom(clazz)) {
+			return storeToStringServcie.getTypeForModel(clazz);
+		}
+		return null;
 	}
 }

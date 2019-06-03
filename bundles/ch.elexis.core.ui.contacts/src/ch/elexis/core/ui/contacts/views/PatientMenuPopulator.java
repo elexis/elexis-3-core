@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
@@ -75,7 +76,7 @@ public class PatientMenuPopulator implements IMenuPopulator, IMenuListener {
 
 			@Override
 			public void doRun() {
-				Patient p = mine.getSelectedPatient();
+				IPatient p = mine.getSelectedPatient();
 				AssignStickerDialog aed = new AssignStickerDialog(Hub.getActiveShell(), p);
 				aed.open();
 			}
@@ -136,7 +137,7 @@ public class PatientMenuPopulator implements IMenuPopulator, IMenuListener {
 			}
 
 			void createMenu() {
-				Patient p = mine.getSelectedPatient();
+				IPatient p = mine.getSelectedPatient();
 				if (p != null) {
 					List<IConfigurationElement> list = Extensions.getExtensions(ExtensionPointConstantsUi.TRANSPORTER); // $NON-NLS-1$
 					for (final IConfigurationElement ic : list) {
@@ -154,7 +155,7 @@ public class PatientMenuPopulator implements IMenuPopulator, IMenuListener {
 							it.addSelectionListener(new SelectionAdapter() {
 								@Override
 								public void widgetSelected(SelectionEvent e) {
-									Patient pat = mine.getSelectedPatient();
+									IPatient pat = mine.getSelectedPatient();
 									try {
 										IDataSender sender = (IDataSender) ic
 												.createExecutableExtension("ExporterClass"); //$NON-NLS-1$

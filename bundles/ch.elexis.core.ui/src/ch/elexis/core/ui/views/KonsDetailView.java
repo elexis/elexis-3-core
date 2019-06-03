@@ -76,15 +76,18 @@ import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.holder.BillingServiceHolder;
+import ch.elexis.core.services.holder.StickerServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.data.UiMandant;
+import ch.elexis.core.ui.dialogs.AssignStickerDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
@@ -154,7 +157,8 @@ public class KonsDetailView extends ViewPart
 	
 	@Inject
 	void udpatePatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IPatient patient){
-		if (created) {
+		//TODO the event update is not type safe
+		if (patient != null && created) {
 			actPat = null; // make sure patient will be updated
 			setPatient(patient);
 		}
@@ -559,16 +563,15 @@ public class KonsDetailView extends ViewPart
 		actPat = pat;
 		if (pat != null) {
 			form.setText(pat.getLabel() + StringTool.space + "(" + pat.getAgeInYears() + ")");
-			// TODO enable with new ISticker ...
-			//			List<ISticker> etis = pat.getStickers();
-			//			if (etis != null && etis.size() > 0) {
-			//				// Point size = form.getHead().getSize();
-			//				for (ISticker et : etis) {
-			//					if (et != null) {
-			//						new UiSticker((Sticker) et).createForm(cEtiketten);
-			//					}
-			//				}
-			//			}
+			List<ISticker> etis = StickerServiceHolder.get().getStickers(pat);
+			if (etis != null && etis.size() > 0) {
+				// Point size = form.getHead().getSize();
+				for (ISticker et : etis) {
+					if (et != null) {
+						CoreUiUtil.createForm(cEtiketten, et);
+					}
+				}
+			}
 			updateFallCombo();
 		}
 		form.layout();
@@ -803,10 +806,9 @@ public class KonsDetailView extends ViewPart
 			@Override
 			public void run(){
 				if (actEncounter != null) {
-					// TODO enable with new ISticker ... 
-					//					AssignStickerDialog asd =
-					//						new AssignStickerDialog(getViewSite().getShell(), actEncounter);
-					//					asd.open();
+					AssignStickerDialog asd =
+						new AssignStickerDialog(getViewSite().getShell(), actEncounter);
+					asd.open();
 				}
 			}
 		};

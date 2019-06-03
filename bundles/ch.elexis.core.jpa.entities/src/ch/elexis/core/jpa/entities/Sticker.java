@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
@@ -18,6 +19,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Entity
 @Table(name = "ETIKETTEN")
 @EntityListeners(EntityWithIdListener.class)
+@NamedQuery(name = "Sticker.ids", query = "SELECT st FROM Sticker st WHERE st.id in :ids and st.deleted != true")
 public class Sticker extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
