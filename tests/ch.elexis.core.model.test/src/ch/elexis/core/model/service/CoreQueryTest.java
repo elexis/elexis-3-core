@@ -149,19 +149,34 @@ public class CoreQueryTest {
 		modelService.save(iContact2);
 		modelService.save(iContact3);
 		
-		// get all contacts with lastname in (test2, xy)
+		// get all contacts with firstname in (test1, test3)
 		IQuery<IContact> query = modelService.getQuery(IContact.class);
-		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.IN, Arrays.asList("test2", "xy"));
+		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.IN,
+			Arrays.asList("test1", "test3"));
+		assertEquals(2, query.execute().size());
+		
+		// get all contacts with firstname in (test1, test3) - case sensitive
+		query = modelService.getQuery(IContact.class);
+		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.IN,
+			Arrays.asList("Test1", "Test3"));
+		assertEquals(0, query.execute().size());
+		
+		// get all contacts with lastname in (test2, xy)
+		query = modelService.getQuery(IContact.class);
+		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.IN,
+			Arrays.asList("test2", "xy"));
 		assertEquals(2, query.execute().size());
 		
 		// get all contacts with lastname in (test1, test2, test3)
 		query = modelService.getQuery(IContact.class);
-		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.IN, Arrays.asList("test1", "test2", "test3"));
+		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.IN,
+			Arrays.asList("test1", "test2", "test3"));
 		assertEquals(3, query.execute().size());
 		
 		// get all contacts with lastname in (test1, test2, test3) and firstname = (test2)
 		query = modelService.getQuery(IContact.class);
-		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.IN, Arrays.asList("test1", "test2", "test3"));
+		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.IN,
+			Arrays.asList("test1", "test2", "test3"));
 		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.EQUALS, "test2");
 		List<IContact> results = query.execute();
 		assertEquals(1, results.size());
@@ -169,12 +184,14 @@ public class CoreQueryTest {
 		
 		// get all contacts with country in (CH, AT)
 		query = modelService.getQuery(IContact.class);
-		query.and(ModelPackage.Literals.ICONTACT__COUNTRY, COMPARATOR.IN, Arrays.asList(Country.CH, Country.AT));
+		query.and(ModelPackage.Literals.ICONTACT__COUNTRY, COMPARATOR.IN,
+			Arrays.asList(Country.CH, Country.AT));
 		assertEquals(2, query.execute().size());
 		
 		// get all contact with country in (CH, AT, DE, US) and patient = true
 		query = modelService.getQuery(IContact.class);
-		query.and(ModelPackage.Literals.ICONTACT__COUNTRY, COMPARATOR.IN, Arrays.asList(Country.CH, Country.AT, Country.DE, Country.US));
+		query.and(ModelPackage.Literals.ICONTACT__COUNTRY, COMPARATOR.IN,
+			Arrays.asList(Country.CH, Country.AT, Country.DE, Country.US));
 		query.and(ModelPackage.Literals.ICONTACT__PATIENT, COMPARATOR.EQUALS, true);
 		results = query.execute();
 		assertEquals(1, results.size());
@@ -182,21 +199,22 @@ public class CoreQueryTest {
 		
 		// get all contact with country in (CH, AT, DE, US) or patient = true
 		query = modelService.getQuery(IContact.class);
-		query.and(ModelPackage.Literals.ICONTACT__COUNTRY, COMPARATOR.IN, Arrays.asList(Country.CH, Country.AT, Country.DE, Country.US));
+		query.and(ModelPackage.Literals.ICONTACT__COUNTRY, COMPARATOR.IN,
+			Arrays.asList(Country.CH, Country.AT, Country.DE, Country.US));
 		query.or(ModelPackage.Literals.ICONTACT__PATIENT, COMPARATOR.EQUALS, true);
 		results = query.execute();
 		assertEquals(3, results.size());
 		
 		// get all contact with country in (x,y,z)
 		query = modelService.getQuery(IContact.class);
-		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.IN, Arrays.asList("x,y,z"));
+		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.IN,
+			Arrays.asList("x", "y", "z"));
 		assertEquals(0, query.execute().size());
 		
 		// get all contact with country in ()
 		query = modelService.getQuery(IContact.class);
 		query.and(ModelPackage.Literals.ICONTACT__COUNTRY, COMPARATOR.IN, new ArrayList<>());
-		assertEquals(0, query.execute().size());
-		
+		assertEquals(0, query.execute().size());	
 	}
 	
 	@Test
