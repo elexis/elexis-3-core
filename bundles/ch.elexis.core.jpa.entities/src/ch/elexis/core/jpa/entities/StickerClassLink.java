@@ -7,7 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.eclipse.persistence.annotations.Cache;
 
@@ -23,7 +22,6 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 public class StickerClassLink implements EntityWithId {
 	
 	// Transparently updated by the EntityListener
-	@Transient
 	protected Long lastupdate;
 	
 	@Id

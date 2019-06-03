@@ -1,11 +1,9 @@
 package ch.elexis.core.services;
 
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -174,8 +172,8 @@ public class StickerService implements IStickerService {
 			query.setParameter("objclass", type);
 			
 			List<StickerClassLink> results = query.getResultList();
-			Set<String> stickerIds = new HashSet<>();
-			results.forEach(item -> stickerIds.add(item.getSticker()));
+			List<String> stickerIds = results.parallelStream()
+				.map(item -> item.getSticker()).collect(Collectors.toList());
 			
 			INamedQuery<ISticker> queryAllStickers =
 				iModelService.getNamedQuery(ISticker.class, "ids");
