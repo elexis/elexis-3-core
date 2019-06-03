@@ -275,6 +275,8 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		List<T> ret = (List<T>) query.getResultStream().parallel()
 			.map(e -> adapterFactory.getModelAdapter((EntityWithId) e, clazz, true).orElse(null))
 			.filter(Objects::nonNull).collect(Collectors.toList());
+		// detach and clear L1 cache
+		entityManager.clear();
 		return ret;
 	}
 	
