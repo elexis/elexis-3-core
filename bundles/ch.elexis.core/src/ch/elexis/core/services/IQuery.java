@@ -8,7 +8,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 
 public interface IQuery<T> {
 	public static enum COMPARATOR {
-			LIKE, EQUALS, LESS, LESS_OR_EQUAL, GREATER, NOT_LIKE, NOT_EQUALS, GREATER_OR_EQUAL
+			LIKE, EQUALS, LESS, LESS_OR_EQUAL, GREATER, NOT_LIKE, NOT_EQUALS, GREATER_OR_EQUAL, IN
 	}
 	
 	public static enum ORDER {
