@@ -83,9 +83,9 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 	
 	private final GenericObjectDropTarget dropTarget;
 
+	@Optional
 	@Inject
-	public void udpateEncounter(
-		@Optional @UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IEncounter encounter){
+	public void udpateEncounter(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IEncounter encounter){
 		if (encounter != null && encounter.equals(actEncounter)) {
 			viewer.setInput(actEncounter.getDiagnoses());
 		}

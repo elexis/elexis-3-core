@@ -351,8 +351,8 @@ public class StockDetailComposite extends Composite {
 		CoreUiUtil.injectServices(this);
 	}
 	
-	@Inject
 	@Optional
+	@Inject
 	public void udpate(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IStockEntry entry){
 		if (entry != null) {
 			if (checkboxTableViewer != null && stockEntries != null

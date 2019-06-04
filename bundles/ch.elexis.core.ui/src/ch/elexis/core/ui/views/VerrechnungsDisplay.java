@@ -145,17 +145,18 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private static final String REMOVEALL = Messages.VerrechnungsDisplay_removeAll;
 	static Logger logger = LoggerFactory.getLogger(VerrechnungsDisplay.class);
 	
+	@Optional
 	@Inject
-	public void udpateEncounter(
-		@Optional @UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IEncounter encounter){
+	public void udpateEncounter(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IEncounter encounter){
 		if (encounter != null && encounter.equals(actEncounter)) {
 			viewer.setInput(actEncounter.getBilled());
 		}
 	}
 	
+	@Optional
 	@Inject
 	public void udpateBilled(
-		@Optional @UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IBilled billed){
+		@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IBilled billed){
 		if (billed != null && viewer != null && viewer.getTable() != null
 			&& !viewer.getTable().isDisposed()) {
 			viewer.update(billed, null);

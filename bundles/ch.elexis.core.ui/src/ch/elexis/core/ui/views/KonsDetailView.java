@@ -155,8 +155,9 @@ public class KonsDetailView extends ViewPart
 	
 	private boolean created = false;
 	
+	@Optional
 	@Inject
-	void udpatePatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IPatient patient){
+	void udpatePatient(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IPatient patient){
 		//TODO the event update is not type safe
 		if (patient != null && created) {
 			actPat = null; // make sure patient will be updated
@@ -267,9 +268,9 @@ public class KonsDetailView extends ViewPart
 		}
 	}
 	
+	@Optional
 	@Inject
-	void udpateEncounter(
-		@Optional @UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IEncounter encounter){
+	void udpateEncounter(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IEncounter encounter){
 		if (created) {
 			if (encounter != null && encounter.equals(actEncounter)) {
 				setKons(encounter);
