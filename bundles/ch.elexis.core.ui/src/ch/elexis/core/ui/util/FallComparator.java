@@ -5,7 +5,6 @@ import java.util.Comparator;
 import org.apache.commons.lang3.ObjectUtils;
 
 import ch.elexis.core.model.ICoverage;
-import ch.rgw.tools.TimeTool;
 
 /**
  * Comparator used to sort {@link ICoverage} objects for ui representation.
@@ -25,12 +24,10 @@ public class FallComparator implements Comparator<Object>
 			comp = ObjectUtils.compare(isFall1Closed, isFall2Closed);
 
 			if (comp == 0) {
-				comp = ObjectUtils.compare(f1.getBillingSystem().getLaw().name(), f2.getBillingSystem().getLaw().name());
+				comp = ObjectUtils.compare(f1.getBillingSystem().getName(), f2.getBillingSystem().getName());
 				if (comp == 0) {
 					// compare beginn date
-					TimeTool t1 = new TimeTool(f1.getDateFrom());
-					TimeTool t2 = new TimeTool(f2.getDateFrom());
-					comp = t1.isEqual(t2) ? 0 : (t1.isBefore(t2) ? 1 : -1);
+					comp = f1.getDateFrom().compareTo(f2.getDateFrom());
 					if (comp == 0) {
 						comp = ObjectUtils.compare(f1.getDescription(), f2.getDescription());
 						if (comp == 0) {

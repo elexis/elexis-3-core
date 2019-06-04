@@ -13,7 +13,6 @@
 package ch.elexis.core.ui.actions;
 
 import java.util.LinkedList;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -27,8 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.model.Identifiable;
-import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.Tree;
 
@@ -179,17 +176,6 @@ public class GlobalEventDispatcher implements IPartListener2 {
 					if (t.contents instanceof PersistentObject) {
 						ElexisEventDispatcher.fireSelectionEvent((PersistentObject) t.contents);
 					}
-				} else if (obj[0] instanceof Identifiable) {
-					// convert po event to jpa named event
-					Optional<?> contextData = ContextServiceHolder.get().getRootContext()
-						.getNamed("ch.elexis.core.services.icontext.active."
-							+ obj[0].getClass().getSimpleName().toLowerCase());
-					if (!contextData.isPresent() || !contextData.get().equals(obj[0])) {
-						ContextServiceHolder.get().getRootContext()
-							.setNamed("ch.elexis.core.services.icontext.active."
-								+ obj[0].getClass().getSimpleName().toLowerCase(), obj[0]);
-					}
-			
 				}
 			}
 		}

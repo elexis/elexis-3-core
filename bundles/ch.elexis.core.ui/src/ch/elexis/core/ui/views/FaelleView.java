@@ -29,6 +29,9 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IFilter;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -40,13 +43,11 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.common.ElexisEventTopics;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.ObjectFilterRegistry;
 import ch.elexis.core.ui.actions.ObjectFilterRegistry.IObjectFilterProvider;
 import ch.elexis.core.ui.events.RefreshingPartListener;
@@ -165,7 +166,19 @@ public class FaelleView extends ViewPart implements IRefreshable {
 		tv.getControl().setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		tv.setContentProvider(new FaelleContentProvider());
 		tv.setLabelProvider(new FaelleLabelProvider());
-		tv.addSelectionChangedListener(GlobalEventDispatcher.getInstance().getDefaultListener());
+		tv.addSelectionChangedListener(new ISelectionChangedListener() {
+			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event){
+				ISelection selection = event.getSelection();
+				if (selection instanceof StructuredSelection) {
+					if (!selection.isEmpty()) {
+						ICoverage selectedCoverage = (ICoverage) ((StructuredSelection) selection).getFirstElement();
+						ContextServiceHolder.get().getRootContext().setActiveCoverage(selectedCoverage);
+					}
+				}
+			}
+		});
 		menus = new ViewMenus(getViewSite());
 		menus.createToolbar(neuerFallAction, konsFilterAction, filterClosedAction);
 		menus.createViewerContextMenu(tv, openFallaction, closeFallAction, null, delFallAction, reopenFallAction,
@@ -214,6 +227,7 @@ public class FaelleView extends ViewPart implements IRefreshable {
 			
 			@Override
 			public void run(){
+				//@TODO nopo for Konsultation
 				if (!isChecked()) {
 					ObjectFilterRegistry.getInstance().unregisterObjectFilter(Konsultation.class,
 						filter);
@@ -260,7 +274,8 @@ public class FaelleView extends ViewPart implements IRefreshable {
 		
 		void setFall(final ICoverage fall){
 			mine = fall;
-			ElexisEventDispatcher.reload(Konsultation.class);
+			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD,
+				IEncounter.class);
 		}
 		
 		public void activate(){

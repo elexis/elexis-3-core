@@ -236,14 +236,8 @@ public class Context implements IContext {
 
 	@Override
 	public void setActiveCoverage(ICoverage coverage){
-		if (coverage == null) {
-			context.remove(ACTIVE_COVERAGE);
-		} else {
+		if (coverage == null || !coverage.equals(getActiveCoverage().orElse(null))) {
 			setNamed(ACTIVE_COVERAGE, coverage);
 		}
-		if (eclipseContext != null) {
-			eclipseContext.set(ACTIVE_COVERAGE, coverage);
-		}
-		
 	}
 }
