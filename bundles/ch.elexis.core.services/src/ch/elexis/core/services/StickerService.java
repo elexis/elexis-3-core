@@ -175,10 +175,7 @@ public class StickerService implements IStickerService {
 			List<String> stickerIds = results.parallelStream()
 				.map(item -> item.getSticker()).collect(Collectors.toList());
 			
-			INamedQuery<ISticker> queryAllStickers =
-				iModelService.getNamedQuery(ISticker.class, "ids");
-			return queryAllStickers
-				.executeWithParameters(queryAllStickers.getParameterMap("ids", stickerIds));
+			return iModelService.findAllById(stickerIds, ISticker.class);
 		} else {
 			throw new IllegalStateException("Could not get type for [" + clazz + "]");
 		}

@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaBuilder.In;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
@@ -307,6 +309,16 @@ public class PredicateHandler {
 				criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute),
 					valueRoot != null ? valueRoot.get((SingularAttribute) value)
 							: rootQuery.get((SingularAttribute) value));
+			} else {
+				throw new IllegalStateException("[" + value + "] is not a known type");
+			}
+		case IN:
+			if (value instanceof Iterable<?>) {
+				Path expr = rootQuery.get(attribute);
+				Iterable<?> values = (Iterable<?>) value;
+				In<Object> in = criteriaBuilder.in(expr);
+				values.forEach(p -> in.value(p));
+				return Optional.of(in);
 			} else {
 				throw new IllegalStateException("[" + value + "] is not a known type");
 			}

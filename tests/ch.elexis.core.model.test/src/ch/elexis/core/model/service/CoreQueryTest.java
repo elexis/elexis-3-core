@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +27,7 @@ import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.ISubQuery;
+import ch.elexis.core.types.Country;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class CoreQueryTest {
@@ -111,6 +113,108 @@ public class CoreQueryTest {
 		results = query.execute();
 		assertNotNull(results);
 		assertEquals(3, results.size());
+	}
+	
+	@Test
+	public void findAll(){
+		createContact("test1", "test1");
+		createContact("test2", "test2");
+		
+		List<IContact> contacts = modelService.findAll(IContact.class);
+		assertEquals(2, contacts.size());
+	}
+	
+	@Test
+	public void findAllById(){
+		IContact iContact1 = createContact("test1", "test1");
+		IContact iContact2 = createContact("test2", "test2");
+		IContact iContact3 = createContact("test3", "test3");
+
+		assertEquals(1, modelService.findAllById(Arrays.asList(iContact1.getId()), IContact.class).size());
+		assertEquals(2, modelService.findAllById(Arrays.asList(iContact1.getId(), iContact2.getId()), IContact.class).size());
+		assertEquals(3, modelService.findAllById(Arrays.asList(iContact1.getId(), iContact2.getId(), iContact3.getId()), IContact.class).size());
+		assertEquals(0, modelService.findAllById(new ArrayList<>(), IContact.class).size());
+	}
+	
+	@Test
+	public void queryComplexWithIN(){
+		IContact iContact1 = createContact("test1", "test1");
+		IContact iContact2 = createContact("test2", "test2");
+		IContact iContact3 = createContact("test3", "test2");
+		iContact1.setCountry(Country.CH);
+		iContact1.setPatient(true);
+		iContact2.setCountry(Country.AT);
+		iContact3.setCountry(Country.DE);
+		modelService.save(iContact1);
+		modelService.save(iContact2);
+		modelService.save(iContact3);
+		
+		// get all contacts with firstname in (test1, test3)
+		IQuery<IContact> query = modelService.getQuery(IContact.class);
+		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.IN,
+			Arrays.asList("test1", "test3"));
+		assertEquals(2, query.execute().size());
+		
+		// get all contacts with firstname in (test1, test3) - case sensitive
+		query = modelService.getQuery(IContact.class);
+		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.IN,
+			Arrays.asList("Test1", "Test3"));
+		assertEquals(0, query.execute().size());
+		
+		// get all contacts with lastname in (test2, xy)
+		query = modelService.getQuery(IContact.class);
+		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.IN,
+			Arrays.asList("test2", "xy"));
+		assertEquals(2, query.execute().size());
+		
+		// get all contacts with lastname in (test1, test2, test3)
+		query = modelService.getQuery(IContact.class);
+		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.IN,
+			Arrays.asList("test1", "test2", "test3"));
+		assertEquals(3, query.execute().size());
+		
+		// get all contacts with lastname in (test1, test2, test3) and firstname = (test2)
+		query = modelService.getQuery(IContact.class);
+		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.IN,
+			Arrays.asList("test1", "test2", "test3"));
+		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.EQUALS, "test2");
+		List<IContact> results = query.execute();
+		assertEquals(1, results.size());
+		assertEquals(iContact2.getId(), results.get(0).getId());
+		
+		// get all contacts with country in (CH, AT)
+		query = modelService.getQuery(IContact.class);
+		query.and(ModelPackage.Literals.ICONTACT__COUNTRY, COMPARATOR.IN,
+			Arrays.asList(Country.CH, Country.AT));
+		assertEquals(2, query.execute().size());
+		
+		// get all contact with country in (CH, AT, DE, US) and patient = true
+		query = modelService.getQuery(IContact.class);
+		query.and(ModelPackage.Literals.ICONTACT__COUNTRY, COMPARATOR.IN,
+			Arrays.asList(Country.CH, Country.AT, Country.DE, Country.US));
+		query.and(ModelPackage.Literals.ICONTACT__PATIENT, COMPARATOR.EQUALS, true);
+		results = query.execute();
+		assertEquals(1, results.size());
+		assertEquals(iContact1.getId(), results.get(0).getId());
+		
+		// get all contact with country in (CH, AT, DE, US) or patient = true
+		query = modelService.getQuery(IContact.class);
+		query.and(ModelPackage.Literals.ICONTACT__COUNTRY, COMPARATOR.IN,
+			Arrays.asList(Country.CH, Country.AT, Country.DE, Country.US));
+		query.or(ModelPackage.Literals.ICONTACT__PATIENT, COMPARATOR.EQUALS, true);
+		results = query.execute();
+		assertEquals(3, results.size());
+		
+		// get all contact with country in (x,y,z)
+		query = modelService.getQuery(IContact.class);
+		query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.IN,
+			Arrays.asList("x", "y", "z"));
+		assertEquals(0, query.execute().size());
+		
+		// get all contact with country in ()
+		query = modelService.getQuery(IContact.class);
+		query.and(ModelPackage.Literals.ICONTACT__COUNTRY, COMPARATOR.IN, new ArrayList<>());
+		assertEquals(0, query.execute().size());	
 	}
 	
 	@Test

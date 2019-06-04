@@ -32,6 +32,8 @@ import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.INativeQuery;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 
 public abstract class AbstractModelService implements IModelService {
 	
@@ -67,6 +69,17 @@ public abstract class AbstractModelService implements IModelService {
 			}
 		}
 		return Optional.empty();
+	}
+	
+	public <T> List<T> findAll(Class<T> clazz){
+		IQuery<?> query = getQuery(clazz);
+		return (List<T>) query.execute();
+	}
+	
+	public <T> List<T> findAllById(Iterable<String> ids, Class<T> clazz){
+		IQuery<?> query = getQuery(clazz);
+		query.and("id", COMPARATOR.IN, ids);
+		return (List<T>) query.execute();
 	}
 	
 	@SuppressWarnings("unchecked")

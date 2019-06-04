@@ -44,6 +44,22 @@ public interface IModelService {
 	}
 	
 	/**
+	 * Load all model objects of type clazz. Deleted entries are not loaded.
+	 * 
+	 * @param clazz
+	 * @return
+	 */
+	public <T> List<T> findAll(Class<T> clazz);
+	
+	/**
+	 * Load all model objects of type clazz by a set of ids. Deleted entries are not loaded.
+	 * 
+	 * @param clazz
+	 * @return
+	 */
+	public <T> List<T> findAllById(Iterable<String> ids, Class<T> clazz);
+	
+	/**
 	 * Adapt a jpa loaded entity to clazz. This can be used to "convert" already loaded JPA entities
 	 * to the model. <br />
 	 * <br />
