@@ -29,7 +29,7 @@ public class TaskDescriptor
 	
 	@Override
 	public String toString(){
-		return getEntity().getId()+" ("+getEntity().getReferenceId()+") "+"isActive="+isActive();
+		return getEntity().getId()+" ("+getEntity().getReferenceId()+") ";
 	}
 	
 	@Override

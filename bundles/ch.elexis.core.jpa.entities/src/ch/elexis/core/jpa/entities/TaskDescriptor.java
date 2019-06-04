@@ -14,6 +14,7 @@ import com.google.gson.annotations.JsonAdapter;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.gson.AbstractEntityWithIdJsonAdapter;
+import ch.elexis.core.jpa.entities.gson.RawJsonMapStringAdapter;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
@@ -51,7 +52,8 @@ public class TaskDescriptor extends AbstractEntityWithId
 	
 	@Column(length = 64)
 	protected String runnableId;
-	
+
+	@JsonAdapter(RawJsonMapStringAdapter.class)
 	@Column
 	@Lob
 	protected String runContext;
@@ -59,6 +61,7 @@ public class TaskDescriptor extends AbstractEntityWithId
 	@Column
 	protected int triggerType = 0;
 	
+	@JsonAdapter(RawJsonMapStringAdapter.class)
 	@Column
 	@Lob
 	protected String triggerParameters;
