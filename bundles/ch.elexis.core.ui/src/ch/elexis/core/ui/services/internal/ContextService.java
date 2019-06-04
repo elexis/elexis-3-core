@@ -210,8 +210,14 @@ public class ContextService implements IContextService, EventHandler {
 				}
 			}
 			if (ev.getType() == ElexisEvent.EVENT_RELOAD) {
-				postEvent(ElexisEventTopics.EVENT_RELOAD,
-					getModelObjectForPersistentObject(object));
+				if (object instanceof Class<?>) {
+					postEvent(ElexisEventTopics.EVENT_RELOAD,
+						getCoreModelInterfaceForElexisClass((Class<?>) object).orElse(null));
+				} else {
+					postEvent(ElexisEventTopics.EVENT_RELOAD,
+						getModelObjectForPersistentObject(object));
+				}
+				
 			} else if (ev.getType() == ElexisEvent.EVENT_UPDATE) {
 				postEvent(ElexisEventTopics.EVENT_UPDATE,
 					getModelObjectForPersistentObject(object));
@@ -365,28 +371,32 @@ public class ContextService implements IContextService, EventHandler {
 				Optional<IPatient> iPatient =
 					coreModelService.load(((Patient) object).getId(), IPatient.class);
 				iPatient.ifPresent(p -> root.setActivePatient(p));
+			} else if (object instanceof Fall) {
+				Optional<ICoverage> iCoverage =
+					coreModelService.load(((Fall) object).getId(), ICoverage.class);
+				iCoverage.ifPresent(c -> root.setActiveCoverage(c));
 			} else if (object != null) {
 				root.setTyped(getModelObjectForPersistentObject(object));
 			}
 		}
-		
-		private Optional<Class<?>> getCoreModelInterfaceForElexisClass(Class<?> elexisClazz){
-			if (elexisClazz == User.class) {
-				return Optional.of(IUser.class);
-			} else if (elexisClazz == Anwender.class) {
-				return Optional.of(IContact.class);
-			} else if (elexisClazz == Mandant.class) {
-				return Optional.of(IMandator.class);
-			} else if (elexisClazz == Patient.class) {
-				return Optional.of(IPatient.class);
-			} else if (elexisClazz == Konsultation.class) {
-				return Optional.of(IEncounter.class);
-			} else if (elexisClazz == Fall.class) {
-				return Optional.of(ICoverage.class);
-			} else if (elexisClazz == Prescription.class) {
-				return Optional.of(IPrescription.class);
-			}
-			return Optional.empty();
+	}
+	
+	private Optional<Class<?>> getCoreModelInterfaceForElexisClass(Class<?> elexisClazz){
+		if (elexisClazz == User.class) {
+			return Optional.of(IUser.class);
+		} else if (elexisClazz == Anwender.class) {
+			return Optional.of(IContact.class);
+		} else if (elexisClazz == Mandant.class) {
+			return Optional.of(IMandator.class);
+		} else if (elexisClazz == Patient.class) {
+			return Optional.of(IPatient.class);
+		} else if (elexisClazz == Konsultation.class) {
+			return Optional.of(IEncounter.class);
+		} else if (elexisClazz == Fall.class) {
+			return Optional.of(ICoverage.class);
+		} else if (elexisClazz == Prescription.class) {
+			return Optional.of(IPrescription.class);
 		}
+		return Optional.empty();
 	}
 }

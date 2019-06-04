@@ -6,12 +6,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IContext;
+import ch.elexis.data.Fall;
 import ch.elexis.data.Patient;
 
 public class Context implements IContext {
@@ -199,6 +202,13 @@ public class Context implements IContext {
 				ElexisEventDispatcher.fireSelectionEvent(poPatient);
 			}
 		}
+		if (IContext.ACTIVE_COVERAGE.equals(name) && object instanceof Identifiable) {
+			Fall po = Fall.load(((Identifiable) object).getId());
+			IPersistentObject selected = ElexisEventDispatcher.getSelected(Fall.class);
+			if (selected == null || !selected.equals(po)) {
+				ElexisEventDispatcher.fireSelectionEvent(po);
+			}
+		}
 	}
 	
 	public void setParent(Context parent){
@@ -213,5 +223,27 @@ public class Context implements IContext {
 	public String getStationIdentifier(){
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Optional<ICoverage> getActiveCoverage(){
+		Optional<ICoverage> ret = Optional.ofNullable((ICoverage) context.get(ACTIVE_COVERAGE));
+		if (!ret.isPresent() && parent != null) {
+			ret = parent.getActiveCoverage();
+		}
+		return ret;
+	}
+
+	@Override
+	public void setActiveCoverage(ICoverage coverage){
+		if (coverage == null) {
+			context.remove(ACTIVE_COVERAGE);
+		} else {
+			setNamed(ACTIVE_COVERAGE, coverage);
+		}
+		if (eclipseContext != null) {
+			eclipseContext.set(ACTIVE_COVERAGE, coverage);
+		}
+		
 	}
 }
