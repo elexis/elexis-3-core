@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
-import ch.elexis.core.model.IInvoiceBilled;
 import ch.rgw.tools.Result;
 
 public interface IInvoiceService {

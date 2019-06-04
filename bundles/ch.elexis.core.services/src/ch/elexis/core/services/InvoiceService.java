@@ -42,7 +42,7 @@ public class InvoiceService implements IInvoiceService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Result<IInvoice> invoice(List<IEncounter> encounters){
-		Result<IInvoice> result = new Result<IInvoice>();
+		Result<IInvoice> result = new Result<>();
 		
 		if (encounters == null || encounters.isEmpty()) {
 			return result.add(Result.SEVERITY.WARNING, 1,
