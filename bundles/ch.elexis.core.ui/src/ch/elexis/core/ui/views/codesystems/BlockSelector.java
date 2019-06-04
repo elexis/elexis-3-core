@@ -294,9 +294,10 @@ public class BlockSelector extends CodeSelectorFactory {
 		private String queryFilter;
 		private HashMap<ICodeElementBlock, BlockTreeViewerItem> blockItemMap;
 		
+		@Optional
 		@Inject
 		public void udpateBlock(
-			@Optional @UIEventTopic(ElexisEventTopics.EVENT_UPDATE) ICodeElementBlock block){
+			@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) ICodeElementBlock block){
 			if (block != null && cv != null && cv.getViewerWidget() != null
 				&& !cv.getViewerWidget().getControl().isDisposed()) {
 				BlockTreeViewerItem item = blockItemMap.get(block);

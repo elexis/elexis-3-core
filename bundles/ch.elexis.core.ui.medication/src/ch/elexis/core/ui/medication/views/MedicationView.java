@@ -40,16 +40,18 @@ public class MedicationView extends ViewPart implements IRefreshable {
 		});
 	}
 	
+	@Optional
 	@Inject
-	void udpatePatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IPatient patient){
+	void udpatePatient(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IPatient patient){
 		if (CoreUiUtil.isActiveControl(tpc)) {
 			updateUi(patient, false);
 		}
 	}
 	
+	@Optional
 	@Inject
 	void updatePrescription(
-		@Optional @UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IPrescription prescription){
+		@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IPrescription prescription){
 		if (CoreUiUtil.isActiveControl(tpc)) {
 			if (prescription != null) {
 				if (!getMedicationComposite().isShowingHistory()) {

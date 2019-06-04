@@ -85,8 +85,8 @@ public class EigendiagnoseSelector extends CodeSelectorFactory {
 		}
 	}
 	
-	@Inject
 	@Optional
+	@Inject
 	public void update(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IDiagnosisTree object){
 		if (commonViewer != null && object != null) {
 			commonViewer.getViewerWidget().update(object, null);

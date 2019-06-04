@@ -360,8 +360,8 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		CoreUiUtil.injectServices(this);
 	}
 	
-	@Inject
 	@Optional
+	@Inject
 	public void udpate(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IStockEntry entry){
 		if (entry != null) {
 			if (viewer != null && !viewer.getControl().isDisposed()) {

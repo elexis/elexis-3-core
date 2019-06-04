@@ -157,8 +157,8 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 		}
 	}
 	
-	@Inject
 	@Optional
+	@Inject
 	public void update(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IArticle object){
 		if (commonViewer != null && object != null) {
 			commonViewer.getViewerWidget().update(object, null);

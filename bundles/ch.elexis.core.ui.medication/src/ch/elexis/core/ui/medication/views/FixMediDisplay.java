@@ -101,9 +101,10 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 		});
 	}
 	
+	@Optional
 	@Inject
 	void updatePrescription(
-		@Optional @UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IPrescription prescription){
+		@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IPrescription prescription){
 		if (CoreUiUtil.isActiveControl(list)) {
 			if (prescription != null) {
 				reload();
