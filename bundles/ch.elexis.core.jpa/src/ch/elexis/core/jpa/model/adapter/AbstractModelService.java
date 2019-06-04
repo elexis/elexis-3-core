@@ -71,13 +71,15 @@ public abstract class AbstractModelService implements IModelService {
 		return Optional.empty();
 	}
 	
+	@Override
 	public <T> List<T> findAll(Class<T> clazz){
-		IQuery<?> query = getQuery(clazz);
+		IQuery<T> query = getQuery(clazz);
 		return (List<T>) query.execute();
 	}
 	
+	@Override
 	public <T> List<T> findAllById(Iterable<String> ids, Class<T> clazz){
-		IQuery<?> query = getQuery(clazz);
+		IQuery<T> query = getQuery(clazz);
 		query.and("id", COMPARATOR.IN, ids);
 		return (List<T>) query.execute();
 	}
