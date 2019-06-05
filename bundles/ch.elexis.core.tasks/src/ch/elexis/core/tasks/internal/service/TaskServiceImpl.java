@@ -64,7 +64,7 @@ public class TaskServiceImpl implements ITaskService {
 	private WatchServiceHolder watchServiceHolder;
 	private SysEventWatcher sysEventWatcher;
 	
-	private List<ITask> runningTasks;
+	private List<ITask> triggeredTasks;
 	
 	//TODO OtherTaskService -> this
 	
@@ -130,7 +130,7 @@ public class TaskServiceImpl implements ITaskService {
 		logger = LoggerFactory.getLogger(getClass());
 		logger.debug("Activating");
 		
-		runningTasks = Collections.synchronizedList(new ArrayList<>());
+		triggeredTasks = Collections.synchronizedList(new ArrayList<>());
 		parallelExecutorService = Executors.newCachedThreadPool();
 		singletonExecutorService = Executors.newSingleThreadExecutor();
 		
@@ -247,7 +247,7 @@ public class TaskServiceImpl implements ITaskService {
 		if (task.isFinished()) {
 			// TODO tasks that are triggered by this task
 			
-			runningTasks.remove(task);
+			triggeredTasks.remove(task);
 			
 			ITaskDescriptor taskDescriptor =
 				findTaskDescriptorByIdOrReferenceId(task.getDescriptorId()).orElse(null);
@@ -303,11 +303,13 @@ public class TaskServiceImpl implements ITaskService {
 		
 		try {
 			if (taskDescriptor.isSingleton()) {
+				// TODO per runnable singletonExecutorService
+				// no need to share one singleton executor for all runnables
 				singletonExecutorService.execute((Runnable) task);
 			} else {
 				parallelExecutorService.execute((Runnable) task);
 			}
-			runningTasks.add(task);
+			triggeredTasks.add(task);
 		} catch (RejectedExecutionException re) {
 			// TODO triggering failed, where to show?
 			throw new TaskException(TaskException.EXECUTION_REJECTED, re);

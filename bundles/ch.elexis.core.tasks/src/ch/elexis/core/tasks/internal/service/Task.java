@@ -34,6 +34,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	private IProgressMonitor progressMonitor;
 	
 	private final Gson gson;
+	private String taskId;
 	
 	public Task(ch.elexis.core.jpa.entities.Task entity){
 		super(entity);
@@ -55,6 +56,8 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	public Task(ITaskDescriptor taskDescriptor, TaskTriggerType triggerType,
 		IProgressMonitor progressMonitor, Map<String, String> runContext){
 		this(new ch.elexis.core.jpa.entities.Task());
+		
+		taskId = ((taskDescriptor.isSingleton()) ? "Task-S-" : "Task-") + getId();
 		
 		getEntity().setState(TaskState.DRAFT.getValue());
 		getEntity().setTriggerEvent(triggerType.getValue());
@@ -152,6 +155,9 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	
 	@Override
 	public void run(){
+		
+		Thread.currentThread().setName(taskId);
+		
 		getEntity().setRunAt(LocalDateTime.now());
 		Optional<ITaskDescriptor> originTaskDescriptor = TaskServiceHolder.get()
 			.findTaskDescriptorByIdOrReferenceId(getEntity().getDescriptorId());
@@ -227,12 +233,12 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	public String getLabel(){
 		return "Task [" + getId() + "] (triggered by " + getTriggerEvent() + "): " + getState();
 	}
-
+	
 	@Override
 	public LocalDateTime getCreatedAt(){
 		return getEntity().getCreatedAt();
 	}
-
+	
 	@Override
 	public LocalDateTime getRunAt(){
 		return getEntity().getRunAt();
