@@ -275,16 +275,16 @@ public class TaskServiceImpl implements ITaskService {
 		String resultText;
 		if (TaskState.FAILED == state) {
 			resultText =
-				(String) task.getRunContext().get(ReturnParameter.FAILED_TASK_EXCEPTION_MESSAGE);
+				(String) task.getResult().get(ReturnParameter.FAILED_TASK_EXCEPTION_MESSAGE);
 			message.addMessageCode(MessageCode.Key.Severity, MessageCode.Value.Severity_WARN);
 		} else {
-			resultText = (String) task.getRunContext().get(ReturnParameter.RESULT_DATA);
+			resultText = (String) task.getResult().get(ReturnParameter.RESULT_DATA);
 			message.addMessageCode(MessageCode.Key.Severity, MessageCode.Value.Severity_INFO);
 		}
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append(task.getLabel());
-		if (resultText != null) {
+		if (StringUtils.isNotBlank(resultText)) {
 			sb.append("\n" + resultText);
 		}
 		message.setMessageText(sb.toString());
