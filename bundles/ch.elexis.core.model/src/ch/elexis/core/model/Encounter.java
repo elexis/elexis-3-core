@@ -2,6 +2,7 @@ package ch.elexis.core.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -184,5 +185,26 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 		} else {
 			return InvoiceState.NOT_FROM_YOU;
 		}
+	}
+	
+	@Override
+	public String getLabel(){
+		StringBuffer ret = new StringBuffer();
+		IMandator m = getMandator();
+		
+		ret.append(getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))).append(" (").append(getInvoiceStateText()).append(") - ")
+			.append((m == null) ? "?" : m.getLabel());
+		return ret.toString();
+	}
+	
+	private String getInvoiceStateText(){
+		String statusText = "";
+		
+		IInvoice rechnung = getInvoice();
+		if (rechnung != null) {
+			statusText += "RG " + rechnung.getNumber() + ": ";
+		}
+		statusText += getInvoiceState().getLocaleText();
+		return statusText;
 	}
 }

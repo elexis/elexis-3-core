@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.text.model.Samdas;
-import ch.elexis.data.Fall;
-import ch.elexis.data.Konsultation;
 
 /**
  * Ein Filter für Konsultationen
@@ -30,12 +30,12 @@ public class KonsFilter {
 	public static final int AND = 1;
 	public static final int OR = 2;
 	public static final int NOT = 4;
-	private Fall fall;
+	private ICoverage fall;
 	private boolean caseSensitive;
 	private boolean asRegEx;
 	private List<Constraint> lc = new LinkedList<Constraint>();
 	
-	public void setFall(Fall f){
+	public void setFall(ICoverage f){
 		fall = f;
 	}
 	
@@ -68,14 +68,14 @@ public class KonsFilter {
 	 *            die Konsultation, die getestet werden soll
 	 * @return true: Kons. geht durch (default)
 	 */
-	public boolean pass(Konsultation k){
+	public boolean pass(IEncounter k){
 		if (k == null) {
 			return false;
 		}
-		if (!k.exists()) {
+		if (k.isDeleted()) {
 			return false;
 		}
-		Fall kf = k.getFall();
+		ICoverage kf = k.getCoverage();
 		if ((fall != null) && (kf != null)) {
 			if (!fall.getId().equals(kf.getId())) {
 				return false;
@@ -86,7 +86,7 @@ public class KonsFilter {
 		}
 		boolean nVal = true;
 		boolean lastVal = false;
-		String tx = new Samdas(k.getEintrag().getHead()).getRecordText();
+		String tx = new Samdas(k.getVersionedEntry().getHead()).getRecordText();
 		for (Constraint c : lc) {
 			boolean matchVal = false;
 			if (asRegEx) {

@@ -12,7 +12,12 @@
 
 package ch.elexis.core.ui.views;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.layout.GridLayout;
@@ -20,73 +25,60 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListener;
+import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.IContext;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.KonsFilter;
 import ch.elexis.core.ui.dialogs.KonsFilterDialog;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
-import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
-import ch.elexis.data.Patient;
+
 
 public class KonsListe extends ViewPart implements IRefreshable, ISaveablePart2 {
 	public static final String ID = "ch.elexis.HistoryView"; //$NON-NLS-1$
 	HistoryDisplay liste;
-	Patient actPatient;
+	IPatient actPatient;
 	ViewMenus menus;
 	private Action filterAction;
 	private KonsFilter filter;
 	
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 	
-	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {	
-		public void runInUi(final ElexisEvent ev){
-			if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
-				if ((actPatient == null)
-					|| (!actPatient.getId().equals(((Patient) ev.getObject()).getId()))) {
-					actPatient = (Patient) ev.getObject();
-					restart(ev);
-				}
-			} else if (ev.getType() == ElexisEvent.EVENT_DESELECTED) {
-				liste.stop();
-				liste.load(null, true);
-				liste.start(filter);
-			}
+	@Optional
+	@Inject
+	void activePatient(@Named(IContext.ACTIVE_PATIENT) IPatient patient){
+		if ((actPatient == null)
+			|| (!actPatient.getId().equals(patient.getId()))) {
+			actPatient = patient;
+			restart(true);
 		}
-	};
+	}
 	
-	private ElexisEventListener eeli_fall = new ElexisUiEventListenerImpl(Fall.class) {
-		
-		public void runInUi(final ElexisEvent ev){
-			Fall fall = (Fall) ev.getObject();
-			if (fall != null) {
-				actPatient = ((Fall) ev.getObject()).getPatient();
-			} else {
-				actPatient = null;
-			}
-			restart(ev);
-		}
-	};
+	@Optional
+	@Inject
+	void activeCoverage(@Named(IContext.ACTIVE_COVERAGE) ICoverage iCoverage){
+		actPatient = iCoverage.getPatient();
+		restart(false);
+	}
 	
-	private ElexisEventListener eeli_kons = new ElexisEventListener() {
-		private final ElexisEvent eetempl = new ElexisEvent(null, Konsultation.class,
-			ElexisEvent.EVENT_UPDATE | ElexisEvent.EVENT_RELOAD | ElexisEvent.EVENT_CREATE
-				| ElexisEvent.EVENT_DELETE);
-		
-		public ElexisEvent getElexisEventFilter(){
-			return eetempl;
-		}
-		
-		public void catchElexisEvent(ElexisEvent ev){
-			restart(ev);
-		}
-	};
+	@Optional
+	@Inject
+	void changedCoverage(@UIEventTopic(ElexisEventTopics.BASE_MODEL + "*") ICoverage iCoverage){
+		actPatient = iCoverage.getPatient();
+		restart(false);
+	}
+	
+	@Optional
+	@Inject
+	void changedEncounter(@UIEventTopic(ElexisEventTopics.BASE_MODEL + "*") IEncounter iEncounter){
+		restart(false);
+	}
 	
 	@Override
 	public void createPartControl(final Composite parent){
@@ -96,14 +88,14 @@ public class KonsListe extends ViewPart implements IRefreshable, ISaveablePart2 
 		makeActions();
 		menus = new ViewMenus(getViewSite());
 		menus.createToolbar(GlobalActions.neueKonsAction, filterAction);
-		ElexisEventDispatcher.getInstance().addListeners(eeli_fall, eeli_pat, eeli_kons);
+	//	ElexisEventDispatcher.getInstance().addListeners(eeli_fall, eeli_pat, eeli_kons);
 		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 	
 	@Override
 	public void dispose(){
 		getSite().getPage().removePartListener(udpateOnVisible);
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_fall, eeli_kons, eeli_pat);
+	//	ElexisEventDispatcher.getInstance().removeListeners(eeli_fall, eeli_kons, eeli_pat);
 		liste.stop();
 		super.dispose();
 	}
@@ -116,12 +108,12 @@ public class KonsListe extends ViewPart implements IRefreshable, ISaveablePart2 
 	
 	@Override
 	public void refresh(){
-		eeli_pat.catchElexisEvent(ElexisEvent.createPatientEvent());		
+		//eeli_pat.catchElexisEvent(ElexisEvent.createPatientEvent());		
 	}
 	
-	private void restart(ElexisEvent ev){
+	private void restart(Boolean isPatientEvent){
 		liste.stop();
-		liste.load(actPatient, ev);
+		liste.load(actPatient, isPatientEvent == null || isPatientEvent.booleanValue());
 		liste.start(filter);
 	}
 	

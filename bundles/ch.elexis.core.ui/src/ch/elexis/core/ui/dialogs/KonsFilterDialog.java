@@ -24,12 +24,14 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.KonsFilter;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.Fall;
 import ch.elexis.data.Patient;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
@@ -42,16 +44,23 @@ import ch.rgw.tools.StringTool;
  */
 public class KonsFilterDialog extends TitleAreaDialog {
 	KonsFilter filter;
-	Patient pat;
+	IPatient pat;
 	Combo cbFaelle;
-	Fall[] faelle;
+	ICoverage[] faelle;
 	Text tBed;
 	Button bCase, bRegex;
 	
-	public KonsFilterDialog(Patient p, KonsFilter kf){
+	public KonsFilterDialog(IPatient p, KonsFilter kf){
 		super(UiDesk.getTopShell());
 		filter = kf;
 		pat = p;
+	}
+	
+	@Deprecated
+	public KonsFilterDialog(Patient p, KonsFilter kf){
+		super(UiDesk.getTopShell());
+		filter = kf;
+		pat = CoreModelServiceHolder.get().load(p.getId(), IPatient.class).orElse(null);
 	}
 	
 	@Override
@@ -62,9 +71,9 @@ public class KonsFilterDialog extends TitleAreaDialog {
 		new Label(ret, SWT.NONE).setText(Messages.KonsFilterDialog_onlyForCase); //$NON-NLS-1$
 		cbFaelle = new Combo(ret, SWT.SINGLE);
 		cbFaelle.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		faelle = pat.getFaelle();
+		faelle = pat.getCoverages().toArray(new ICoverage[0]);
 		cbFaelle.add(Messages.KonsFilterDialog_dontMind); //$NON-NLS-1$
-		for (Fall f : faelle) {
+		for (ICoverage f : faelle) {
 			cbFaelle.add(f.getLabel());
 		}
 		new Label(ret, SWT.SEPARATOR | SWT.HORIZONTAL);
@@ -95,7 +104,7 @@ public class KonsFilterDialog extends TitleAreaDialog {
 	protected void okPressed(){
 		filter = new KonsFilter();
 		if (cbFaelle.getSelectionIndex() > 0) {
-			Fall f = faelle[cbFaelle.getSelectionIndex() - 1];
+			ICoverage f = faelle[cbFaelle.getSelectionIndex() - 1];
 			filter.setFall(f);
 		}
 		filter.setCaseSensitive(bCase.getSelection());
