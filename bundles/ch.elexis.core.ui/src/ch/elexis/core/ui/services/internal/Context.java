@@ -45,14 +45,7 @@ public class Context implements IContext {
 	
 	@Override
 	public void setActiveUser(IUser user){
-		if (user == null) {
-			context.remove(ACTIVE_USER);
-		} else {
-			setNamed(ACTIVE_USER, user);
-		}
-		if (eclipseContext != null) {
-			eclipseContext.set(ACTIVE_USER, user);
-		}
+		setNamed(ACTIVE_USER, user);
 	}
 	
 	@Override
@@ -72,14 +65,7 @@ public class Context implements IContext {
 	
 	@Override
 	public void setActiveUserContact(IContact userContact){
-		if (userContact == null) {
-			context.remove(ACTIVE_USERCONTACT);
-		} else {
-			setNamed(ACTIVE_USERCONTACT, userContact);
-		}
-		if (eclipseContext != null) {
-			eclipseContext.set(ACTIVE_USERCONTACT, userContact);
-		}
+		setNamed(ACTIVE_USERCONTACT, userContact);
 	}
 	
 	@Override
@@ -93,14 +79,7 @@ public class Context implements IContext {
 	
 	@Override
 	public void setActivePatient(IPatient patient){
-		if (patient == null) {
-			context.remove(ACTIVE_PATIENT);
-		} else {
-			setNamed(ACTIVE_PATIENT, patient);
-		}
-		if (eclipseContext != null) {
-			eclipseContext.set(ACTIVE_PATIENT, patient);
-		}
+		setNamed(ACTIVE_PATIENT, patient);
 	}
 	
 	@Override
@@ -114,14 +93,7 @@ public class Context implements IContext {
 	
 	@Override
 	public void setActiveMandator(IMandator mandator){
-		if (mandator == null) {
-			context.remove(ACTIVE_MANDATOR);
-		} else {
-			setNamed(ACTIVE_MANDATOR, mandator);
-		}
-		if (eclipseContext != null) {
-			eclipseContext.set(ACTIVE_MANDATOR, mandator);
-		}
+		setNamed(ACTIVE_MANDATOR, mandator);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -184,7 +156,12 @@ public class Context implements IContext {
 	public void setNamed(String name, Object object){
 		if (object == null) {
 			context.remove(name);
-		} else {
+		}
+		else if (object.equals(context.get(name))) {
+			// object is already in the context do nothing otherwise loop happens
+			return;
+		}
+		else {
 			context.put(name, object);
 		}
 		if (eclipseContext != null) {
@@ -236,8 +213,6 @@ public class Context implements IContext {
 
 	@Override
 	public void setActiveCoverage(ICoverage coverage){
-		if (coverage == null || !coverage.equals(getActiveCoverage().orElse(null))) {
-			setNamed(ACTIVE_COVERAGE, coverage);
-		}
+		setNamed(ACTIVE_COVERAGE, coverage);
 	}
 }
