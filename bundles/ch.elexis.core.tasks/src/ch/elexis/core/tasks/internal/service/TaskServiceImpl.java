@@ -390,11 +390,14 @@ public class TaskServiceImpl implements ITaskService {
 		
 		if (TaskTriggerType.OTHER_TASK == taskDescriptor.getTriggerType()) {
 			// we will not check activation here, as the required parameters
-			// will be supplied by the other task invoking us
+			// will be supplied by the other task invoking us (we don't know about the
+			// supplied parameters)
 			return;
-		} else if (TaskTriggerType.SYSTEM_EVENT == taskDescriptor.getTriggerType()) {
-			// we will not check activation here, as the required parameters
-			// will be supplied by the other task invoking us
+		} 
+		
+		if (TaskTriggerType.SYSTEM_EVENT == taskDescriptor.getTriggerType()) {
+			// we will not check activation here, no formal required parameters
+			// system event will only pass what's available
 			return;
 		}
 		
@@ -405,7 +408,7 @@ public class TaskServiceImpl implements ITaskService {
 				Serializable value = taskDescriptor.getRunContext().get(entry.getKey());
 				if (value == null || IIdentifiedRunnable.RunContextParameter.VALUE_MISSING_REQUIRED
 					.equals(value)) {
-					throw new TaskException(TaskException.EXECUTION_REJECTED,
+					throw new TaskException(TaskException.PARAMETERS_MISSING,
 						"Missing required parameter [" + entry.getKey() + "]");
 				}
 			}

@@ -62,4 +62,11 @@ public class TaskException extends Exception {
 	public static final TaskException EXECUTION_ERROR(String message, Throwable throwable){
 		return new TaskException(EXECUTION_ERROR, message, throwable);
 	}
+	
+	@Override
+	public String toString(){
+		String s = getClass().getName();
+		String message = getLocalizedMessage();
+		return (message != null) ? (s + ": code " + exceptionCode + " - " + message) : s;
+	}
 }
