@@ -854,10 +854,16 @@ public class Messages extends NLS {
 	public static String LogbackConfigDefault;
 	public static String LogbackConfigXmlExists;
 	public static String LogbackConfigXmlMissing;
+	public static String Texterstellung_unkown_error;
 	public static String Texterstellung_Support_Legacy;
 	public static String Texterstellung_Rename_with_F2;
 	public static String Texterstellung_backupdir;
+	public static String Texterstellung_detail_error_saving_external;
+	public static String Texterstellung_dlg_msg_save_external;
+	public static String Texterstellung_dlg_title_save_external;
+	public static String Texterstellung_external_save;
 	public static String Texterstellung_texteditlocaldesc;
+	public static String Texterstellung_title_error_saving_external;
 	public static String UserManagementPreferencePage_MandatorColorSelectTitle;
 	public static String DecoratedStringChooser_howToChange;
 	public static String KontaktFieldEditor_PleaseSelect;
@@ -2585,6 +2591,11 @@ public class Messages extends NLS {
 	public static String TextTemplatePreferences_ExplanationLine3;
 	public static String TextTemplatePreferences_suffixForStation;
 	public static String Texterstellung_ExternalProgram;
+	public static String Texterstellung_path_does_not_exist;
+	public static String Texterstellung_path_is_not_directory;
+	public static String Texterstellung_path_not_set;
+	public static String Texterstellung_path_not_writable;
+	public static String Texterstellung_save_all_letters_externally;
 	public static String Texterstellung_TextProcessor;
 	public static String TherapieplanComposite_btnIsFixmedication_text;
 	public static String TherapieplanComposite_btnPRNMedication_toolTipText;

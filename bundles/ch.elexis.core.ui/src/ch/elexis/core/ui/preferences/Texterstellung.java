@@ -16,6 +16,7 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -42,6 +43,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.BriefExternUtil;
 import ch.elexis.core.data.util.Extensions;
@@ -116,7 +118,7 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 		compExtern.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		Button check = new Button(compExtern, SWT.CHECK);
 		check.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 2, 1));
-		check.setText("Brief extern speichern (gleicher UNC Pfad auf allen Stationen)");
+		check.setText(Messages.Texterstellung_external_save);
 		check.setSelection(CoreHub.globalCfg.get(Preferences.P_TEXT_EXTERN_FILE, false));
 		check.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -129,7 +131,7 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 		});
 		externPath = new Text(compExtern, SWT.BORDER);
 		externPath.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		externPath.setText(CoreHub.globalCfg.get(Preferences.P_TEXT_EXTERN_FILE_PATH, ""));
+		externPath.setText(CoreHub.globalCfg.get(Preferences.P_TEXT_EXTERN_FILE_PATH, StringUtils.EMPTY));
 		externPath.setEnabled(check.getSelection());
 		externPath.addModifyListener(new ModifyListener() {
 			@Override
@@ -140,13 +142,13 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 		externPathDeco = new ControlDecoration(externPath, SWT.LEFT | SWT.TOP);
 		
 		allExtern = new Button(compExtern, SWT.PUSH);
-		allExtern.setText("Alle Briefe extern speichern");
+		allExtern.setText(Messages.Texterstellung_save_all_letters_externally);
 		allExtern.setEnabled(check.getSelection());
 		allExtern.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent ev){
-				if (MessageDialog.openQuestion(getShell(), "Extern speichern",
-					"Wollen sie wirklich alle Briefe extern speichern, und aus der Datenbank entfernen?")) {
+				if (MessageDialog.openQuestion(getShell(), Messages.Texterstellung_dlg_title_save_external,
+					Messages.Texterstellung_dlg_msg_save_external)) {
 					ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(getShell());
 					try {
 						progressDialog.run(true, true, new IRunnableWithProgress() {
@@ -154,7 +156,7 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 								throws InvocationTargetException, InterruptedException{
 								Query<Brief> query = new Query<>(Brief.class);
 								List<Brief> allBrief = query.execute();
-								monitor.beginTask("Alle Briefe extern speichern", allBrief.size());
+								monitor.beginTask(Messages.Texterstellung_save_all_letters_externally, allBrief.size());
 								for (Brief brief : allBrief) {
 									BriefExternUtil.exportToExtern(brief);
 									monitor.worked(1);
@@ -162,10 +164,10 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 							}
 						});
 					} catch (InvocationTargetException | InterruptedException e) {
-						MessageDialog.openError(getShell(), "Extern speichern",
-							"Fehler beim Briefe extern speichern.");
+						MessageDialog.openError(getShell(), Messages.Texterstellung_title_error_saving_external,
+							Messages.Texterstellung_detail_error_saving_external);
 						LoggerFactory.getLogger(getClass())
-							.error("Error creating saving Brief extern", e);
+							.error("Error creating saving Brief extern", e); //$NON-NLS-1$
 					}
 				}
 			}
@@ -190,20 +192,20 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 	
 	private String getPathDiagnoseString(String path){
 		if (path == null) {
-			return "Kein Pfad gesetzt.";
+			return Messages.Texterstellung_path_not_set;
 		} else {
 			File dir = new File(path);
 			if (!dir.exists()) {
-				return "Pfad existiert nicht, bzw. ist nicht erreichbar.";
+				return Messages.Texterstellung_path_does_not_exist;
 			}
 			if (!dir.isDirectory()) {
-				return "Pfad ist keine Verzeichnis.";
+				return Messages.Texterstellung_path_is_not_directory;
 			}
 			if (!dir.canWrite()) {
-				return "Keine Schreibberechtigung auf Verzeichnis";
+				return Messages.Texterstellung_path_not_writable;
 			}
 		}
-		return "?";
+		return Messages.Texterstellung_unkown_error;
 	}
 	
 	@Override
