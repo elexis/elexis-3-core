@@ -117,6 +117,12 @@ public class FaelleView extends ViewPart implements IRefreshable {
 	
 	@Optional
 	@Inject
+	void updateCoverage(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) ICoverage iCoverage){
+		refreshTableViewer();
+	}
+	
+	@Optional
+	@Inject
 	void deleteCoverage(@UIEventTopic(ElexisEventTopics.EVENT_DELETE) ICoverage iCoverage){
 		refreshTableViewer();
 	}
