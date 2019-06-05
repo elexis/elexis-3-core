@@ -12,42 +12,52 @@
 
 package ch.elexis.core.ui.views;
 
+import static ch.elexis.core.ui.actions.GlobalActions.closeFallAction;
 import static ch.elexis.core.ui.actions.GlobalActions.delFallAction;
 import static ch.elexis.core.ui.actions.GlobalActions.makeBillAction;
 import static ch.elexis.core.ui.actions.GlobalActions.neuerFallAction;
 import static ch.elexis.core.ui.actions.GlobalActions.openFallaction;
 import static ch.elexis.core.ui.actions.GlobalActions.reopenFallAction;
-import static ch.elexis.core.ui.actions.GlobalActions.closeFallAction;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IFilter;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher;
+import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.IContext;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.actions.ObjectFilterRegistry;
 import ch.elexis.core.ui.actions.ObjectFilterRegistry.IObjectFilterProvider;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.views.provider.FaelleContentProvider;
 import ch.elexis.core.ui.views.provider.FaelleLabelProvider;
-import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
-import ch.elexis.data.Patient;
 import ch.rgw.tools.ExHandler;
 
 /**
@@ -61,47 +71,94 @@ public class FaelleView extends ViewPart implements IRefreshable {
 	private IAction filterClosedAction;
 	private final FallKonsFilter filter = new FallKonsFilter();
 	
-	private Patient actPatient;
+	private IPatient actPatient;
 	
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 	
-	private final ElexisUiEventListenerImpl eeli_pat =
-		new ElexisUiEventListenerImpl(Patient.class) {
-			public void runInUi(ElexisEvent ev){
-				if(isActiveControl(tv.getControl())) {
-					if(actPatient != ev.getObject()) {
-						actPatient = (Patient) ev.getObject();
-						tv.refresh();
-						Fall currentFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
-						if (currentFall != null) {
-							tv.setSelection(new StructuredSelection(currentFall));
-						}
-					}
-				}
-			}
-		};
 	
-	private final ElexisUiEventListenerImpl eeli_fall = new ElexisUiEventListenerImpl(Fall.class,
-		ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_RELOAD
-			| ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_UPDATE) {
-		
-		public void runInUi(final ElexisEvent ev){
-			if (isActiveControl(tv.getControl())) {
-				if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
-					tv.refresh(true);
-					Fall currentFall = (Fall) ev.getObject();
-					if (currentFall != null) {
-						tv.setSelection(new StructuredSelection(currentFall));
-					}
-					if (konsFilterAction.isChecked()) {
-						filter.setFall((Fall) ev.getObject());
-					}
-				} else {
-					tv.refresh(true);
+	@Optional
+	@Inject
+	void activePatient(@Named(IContext.ACTIVE_PATIENT) IPatient patient){
+		Display.getDefault().asyncExec(() -> {
+			handleEventPatient(patient);
+		});
+	}
+	
+	@Optional
+	@Inject
+	void lockedPatient(@UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) IPatient patient){
+		handleEventPatient(patient);
+	}
+	
+	@Optional
+	@Inject
+	void unlockedPatient(@UIEventTopic(ElexisEventTopics.EVENT_LOCK_RELEASED) IPatient patient){
+		handleEventPatient(patient);
+	}
+	
+	private void handleEventPatient(IPatient patient){
+		if (patient != null && CoreUiUtil.isActiveControl(tv.getControl())) {
+			if (actPatient != patient) {
+				actPatient = patient;
+				tv.refresh();
+				ICoverage currentFall = ContextServiceHolder.get().getRootContext().getActiveCoverage().orElse(null);
+				if (currentFall != null) {
+					tv.setSelection(new StructuredSelection(currentFall));
 				}
 			}
 		}
-	};
+	}
+	
+	@Optional
+	@Inject
+	void createCoverage(@UIEventTopic(ElexisEventTopics.EVENT_CREATE) ICoverage iCoverage){
+		refreshTableViewer();
+	}
+	
+	@Optional
+	@Inject
+	void updateCoverage(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) ICoverage iCoverage){
+		refreshTableViewer();
+	}
+	
+	@Optional
+	@Inject
+	void deleteCoverage(@UIEventTopic(ElexisEventTopics.EVENT_DELETE) ICoverage iCoverage){
+		refreshTableViewer();
+	}
+	
+	@Optional
+	@Inject
+	void reloadCoverage(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> iCoverage){
+		if (ICoverage.class.equals(iCoverage)) {
+			refreshTableViewer();
+		}
+	}
+
+	@Optional
+	@Inject
+	void activeCoverage(@Named(IContext.ACTIVE_COVERAGE) ICoverage iCoverage){
+		Display.getDefault().asyncExec(() -> {
+			if (CoreUiUtil.isActiveControl(tv.getControl())) {
+				tv.refresh(true);
+				ICoverage currentFall = iCoverage;
+				if (currentFall != null) {
+					tv.setSelection(new StructuredSelection(currentFall));
+				}
+				if (konsFilterAction.isChecked()) {
+					filter.setFall(iCoverage);
+				}
+			}
+		});
+		
+	}
+	
+	private void refreshTableViewer(){
+		if (CoreUiUtil.isActiveControl(tv.getControl())) {
+			tv.refresh(true);
+		}
+	}
+	
 	
 	public FaelleView(){
 		makeActions();
@@ -115,7 +172,19 @@ public class FaelleView extends ViewPart implements IRefreshable {
 		tv.getControl().setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		tv.setContentProvider(new FaelleContentProvider());
 		tv.setLabelProvider(new FaelleLabelProvider());
-		tv.addSelectionChangedListener(GlobalEventDispatcher.getInstance().getDefaultListener());
+		tv.addSelectionChangedListener(new ISelectionChangedListener() {
+			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event){
+				ISelection selection = event.getSelection();
+				if (selection instanceof StructuredSelection) {
+					if (!selection.isEmpty()) {
+						ICoverage selectedCoverage = (ICoverage) ((StructuredSelection) selection).getFirstElement();
+						ContextServiceHolder.get().getRootContext().setActiveCoverage(selectedCoverage);
+					}
+				}
+			}
+		});
 		menus = new ViewMenus(getViewSite());
 		menus.createToolbar(neuerFallAction, konsFilterAction, filterClosedAction);
 		menus.createViewerContextMenu(tv, openFallaction, closeFallAction, null, delFallAction, reopenFallAction,
@@ -132,14 +201,14 @@ public class FaelleView extends ViewPart implements IRefreshable {
 				}
 			}
 		});
-		ElexisEventDispatcher.getInstance().addListeners(eeli_fall, eeli_pat);
+	//	ElexisEventDispatcher.getInstance().addListeners(eeli_fall, eeli_pat);
 		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 	
 	@Override
 	public void dispose(){
 		getSite().getPage().removePartListener(udpateOnVisible);
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_fall, eeli_pat);
+	//	ElexisEventDispatcher.getInstance().removeListeners(eeli_fall, eeli_pat);
 		super.dispose();
 	}
 	
@@ -151,7 +220,7 @@ public class FaelleView extends ViewPart implements IRefreshable {
 	
 	@Override
 	public void refresh(){
-		eeli_pat.catchElexisEvent(ElexisEvent.createPatientEvent());
+	//TODO ?	eeli_pat.catchElexisEvent(ElexisEvent.createPatientEvent());
 	}
 	
 	private void makeActions(){
@@ -164,13 +233,14 @@ public class FaelleView extends ViewPart implements IRefreshable {
 			
 			@Override
 			public void run(){
+				//@TODO nopo for Konsultation
 				if (!isChecked()) {
 					ObjectFilterRegistry.getInstance().unregisterObjectFilter(Konsultation.class,
 						filter);
 				} else {
 					ObjectFilterRegistry.getInstance().registerObjectFilter(Konsultation.class,
 						filter);
-					filter.setFall((Fall) ElexisEventDispatcher.getSelected(Fall.class));
+					filter.setFall(ContextServiceHolder.get().getRootContext().getActiveCoverage().orElse(null));
 				}
 			}
 			
@@ -183,8 +253,8 @@ public class FaelleView extends ViewPart implements IRefreshable {
 				closedFilter = new ViewerFilter() {
 					@Override
 					public boolean select(Viewer viewer, Object parentElement, Object element){
-						if (element instanceof Fall) {
-							Fall fall = (Fall) element;
+						if (element instanceof ICoverage) {
+							ICoverage fall = (ICoverage) element;
 							return fall.isOpen();
 						}
 						return false;
@@ -205,12 +275,13 @@ public class FaelleView extends ViewPart implements IRefreshable {
 	
 	class FallKonsFilter implements IObjectFilterProvider, IFilter {
 		
-		Fall mine;
+		ICoverage mine;
 		boolean bDaempfung;
 		
-		void setFall(final Fall fall){
+		void setFall(final ICoverage fall){
 			mine = fall;
-			ElexisEventDispatcher.reload(Konsultation.class);
+			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD,
+				IEncounter.class);
 		}
 		
 		public void activate(){
@@ -241,9 +312,9 @@ public class FaelleView extends ViewPart implements IRefreshable {
 			if (mine == null) {
 				return true;
 			}
-			if (toTest instanceof Konsultation) {
-				Konsultation k = (Konsultation) toTest;
-				if (k.getFall().equals(mine)) {
+			if (toTest instanceof IEncounter) {
+				IEncounter k = (IEncounter) toTest;
+				if (k.getCoverage().equals(mine)) {
 					return true;
 				}
 			}

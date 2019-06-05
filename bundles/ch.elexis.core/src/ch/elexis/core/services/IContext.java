@@ -3,6 +3,7 @@ package ch.elexis.core.services;
 import java.util.Optional;
 
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
@@ -14,7 +15,8 @@ public interface IContext {
 	String ACTIVE_PATIENT = "ch.elexis.core.services.icontext.active.patient";
 	String ACTIVE_MANDATOR = "ch.elexis.core.services.icontext.active.mandator";
 	String STATION_IDENTIFIER = "ch.elexis.core.services.icontext.stationidentifier";
-	
+	String ACTIVE_COVERAGE = "ch.elexis.core.services.icontext.active.coverage";
+
 	/**
 	 * Get a string identifying this station (do not use the $ sign within the id).<br>
 	 * If multiple instances are run on a station, the stationId has to append the instance number
@@ -118,4 +120,18 @@ public interface IContext {
 	 * @param object
 	 */
 	public void setNamed(String name, Object object);
+	
+	/**
+	 * Get the active {@link ICoverage} of the context.
+	 * 
+	 * @return
+	 */
+	public Optional<ICoverage> getActiveCoverage();
+	
+	/**
+	 * Set the active {@link ICoverage} of the context.
+	 * 
+	 * @param patient
+	 */
+	public void setActiveCoverage(ICoverage coverage);
 }

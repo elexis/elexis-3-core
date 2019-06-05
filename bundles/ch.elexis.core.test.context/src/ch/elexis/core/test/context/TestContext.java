@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
@@ -166,6 +167,18 @@ public class TestContext implements IContext {
 	public String getStationIdentifier(){
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Optional<ICoverage> getActiveCoverage(){
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setActiveCoverage(ICoverage coverage){
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

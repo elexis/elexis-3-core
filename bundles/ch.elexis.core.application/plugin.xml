@@ -231,6 +231,7 @@
             class="ch.elexis.core.ui.views.FaelleView"
             icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/documents_stack.png"
             id="ch.elexis.schoebufaelle"
+            inject="true"
             name="%elexis.casesListView">
       </view>
       <view
