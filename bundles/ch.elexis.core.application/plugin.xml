@@ -191,6 +191,7 @@
             class="ch.elexis.core.ui.views.KonsListe"
             icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/book_open_view.png"
             id="ch.elexis.HistoryView"
+            inject="true"
             name="%elexis.historyView">
       </view>
       <view

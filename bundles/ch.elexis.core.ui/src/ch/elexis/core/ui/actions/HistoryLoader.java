@@ -24,11 +24,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.IFilter;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.service.ContextServiceHolder;
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.text.model.Samdas;
-import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
-import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.VersionedResource;
 
 /**
@@ -39,7 +39,7 @@ import ch.rgw.tools.VersionedResource;
  */
 public class HistoryLoader extends BackgroundJob {
 	StringBuilder sb;
-	List<Konsultation> lKons;
+	List<IEncounter> lKons;
 	KonsFilter filter;
 	IFilter globalFilter;
 	private final int currentPage;
@@ -53,20 +53,20 @@ public class HistoryLoader extends BackgroundJob {
 	/*
 	 * multine == true: show Konsultation text with newlines
 	 */
-	public HistoryLoader(final StringBuilder sb, final List<Konsultation> lKons){
+	public HistoryLoader(final StringBuilder sb, final List<IEncounter> lKons){
 		this(sb, lKons, false);
 	}
 	
-	public HistoryLoader(final StringBuilder sb, final List<Konsultation> lKons,
+	public HistoryLoader(final StringBuilder sb, final List<IEncounter> lKons,
 		final boolean multiline){
 		this(sb, lKons, multiline, 0, 0);
 	}
 	
-	public HistoryLoader(final StringBuilder sb, final List<Konsultation> lKons,
+	public HistoryLoader(final StringBuilder sb, final List<IEncounter> paramlKons,
 		final boolean multiline, final int currentPage, final int pageSize){
 		super(Messages.HistoryLoader_LoadKonsMessage); //$NON-NLS-1$
 		this.sb = sb;
-		this.lKons = new ArrayList<Konsultation>(lKons);
+		this.lKons = paramlKons;
 		this.multiline = multiline;
 		this.setPriority(Job.DECORATE);
 		this.setUser(false);
@@ -82,26 +82,19 @@ public class HistoryLoader extends BackgroundJob {
 				return Status.OK_STATUS;
 			}
 			
-			Collections.sort(lKons, new Comparator<Konsultation>() {
-				TimeTool t1 = new TimeTool();
-				TimeTool t2 = new TimeTool();
-				
-				public int compare(final Konsultation o1, final Konsultation o2){
+			Collections.sort(lKons, new Comparator<IEncounter>() {
+				public int compare(final IEncounter o1, final IEncounter o2){
 					if ((o1 == null) || (o2 == null)) {
 						return 0;
 					}
-					t1.set(o1.getDatum());
-					t2.set(o2.getDatum());
-					if (t1.isBefore(t2)) {
-						return 1;
+					
+					int sort = o2.getDate().compareTo(o1.getDate());
+					if (sort != 0) {
+						return sort;
 					}
-					if (t1.isAfter(t2)) {
-						return -1;
-					}
-					return Long.compare(o2.getLastUpdate(), o1.getLastUpdate());
+					return Long.compare(o2.getLastupdate(), o1.getLastupdate());
 				}
 			});
-			
 
 			if (currentPage > 0 && pageSize > 0)
 			{
@@ -118,16 +111,17 @@ public class HistoryLoader extends BackgroundJob {
 				if (fromIdx < 0) {
 					fromIdx = 0;
 				}
-				lKons = new ArrayList<Konsultation>(
+				lKons = new ArrayList<IEncounter>(
 					fromIdx < toIdx ? lKons.subList(fromIdx, toIdx) : lKons);
 			} else {
-				lKons = new ArrayList<Konsultation>(lKons);
+				lKons = new ArrayList<IEncounter>(lKons);
 			}
 			monitor.worked(50);
 			
-			Fall selectedFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
-			Iterator<Konsultation> it = lKons.iterator();
+			ICoverage selectedFall = ContextServiceHolder.get().getRootContext().getActiveCoverage().orElse(null);
+			Iterator<IEncounter> it = lKons.iterator();
 			sb.append("<form>"); //$NON-NLS-1$
+			//@TODO convert to jpa
 			globalFilter = ObjectFilterRegistry.getInstance().getFilterFor(Konsultation.class);
 			while (!monitor.isCanceled()) {
 				if (!it.hasNext()) {
@@ -137,7 +131,7 @@ public class HistoryLoader extends BackgroundJob {
 					monitor.done();
 					return Status.OK_STATUS;
 				}
-				Konsultation k = it.next();
+				IEncounter k = it.next();
 				if (filter != null) {
 					if (filter.pass(k) == false) {
 						continue;
@@ -148,7 +142,7 @@ public class HistoryLoader extends BackgroundJob {
 						continue;
 					}
 				}
-				VersionedResource vr = k.getEintrag();
+				VersionedResource vr = k.getVersionedEntry();
 				String s = vr.getHead();
 				if (s != null) {
 					if (s.startsWith("<")) { //$NON-NLS-1$
@@ -169,12 +163,12 @@ public class HistoryLoader extends BackgroundJob {
 				}
 				String label = maskHTML(k.getLabel());
 				// make kons text grey if kons Fall is not the selected Fall
-				if (selectedFall != null && !selectedFall.equals(k.getFall())) {
+				if (selectedFall != null && !selectedFall.equals(k.getCoverage())) {
 					sb.append("<p><a href=\"") //$NON-NLS-1$
 						.append(maskHTML(k.getId())).append("\">") //$NON-NLS-1$
 						.append(label).append("</a><br/>") //$NON-NLS-1$
 						.append("<span color=\"gruen\">") //$NON-NLS-1$
-						.append(maskHTML(k.getFall().getLabel()))
+						.append(maskHTML(k.getCoverage().getLabel()))
 						.append("</span><br/><span color=\"gruen\">") //$NON-NLS-1$
 						.append(s).append("</span></p>"); //$NON-NLS-1$
 				} else {
@@ -182,7 +176,7 @@ public class HistoryLoader extends BackgroundJob {
 					.append(maskHTML(k.getId())).append("\">") //$NON-NLS-1$
 					.append(label).append("</a><br/>") //$NON-NLS-1$
 					.append("<span color=\"gruen\">") //$NON-NLS-1$
-					.append(maskHTML(k.getFall().getLabel())).append("</span><br/>") //$NON-NLS-1$
+					.append(maskHTML(k.getCoverage().getLabel())).append("</span><br/>") //$NON-NLS-1$
 					.append(s).append("</p>"); //$NON-NLS-1$
 				}
 				monitor.worked(1);
@@ -206,7 +200,7 @@ public class HistoryLoader extends BackgroundJob {
 		return lKons.size();
 	}
 	
-	public List<Konsultation> getlKons(){
+	public List<IEncounter> getlKons(){
 		return lKons;
 	}
 	

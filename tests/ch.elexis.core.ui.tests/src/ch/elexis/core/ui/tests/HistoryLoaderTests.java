@@ -17,6 +17,8 @@ import java.util.concurrent.Future;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.ui.actions.BackgroundJob;
 import ch.elexis.core.ui.actions.BackgroundJob.BackgroundJobListener;
 import ch.elexis.core.ui.actions.HistoryLoader;
@@ -68,7 +70,7 @@ public class HistoryLoaderTests implements BackgroundJobListener {
 		lCons.add(cons3);
 		
 		// pass values to history loader and schedule
-		HistoryLoader loader = new HistoryLoader(new StringBuilder(), lCons);
+		HistoryLoader loader = new HistoryLoader(new StringBuilder(), convertToEncounters(lCons));
 		loader.schedule(0);
 		loader.join(); // wait for finish
 		assertEquals(3, loader.getSize());
@@ -97,11 +99,20 @@ public class HistoryLoaderTests implements BackgroundJobListener {
 		loader.cancel();
 	}
 	
+	private List<IEncounter> convertToEncounters(List<Konsultation> list){
+		List<IEncounter> encounters = new ArrayList<>();
+		for (Konsultation konsultation : list) {
+			encounters.add(CoreModelServiceHolder.get().load(konsultation.getId(), IEncounter.class)
+				.orElse(null));
+		}
+		return encounters;
+	}
+	
 	@Test
 	public void testExecuteWithRandomConsultations() throws InterruptedException{
 		int consListSize = 13;
 		ArrayList<Konsultation> consList = generateTestConsultationAndCases(patPaal, consListSize);
-		HistoryLoader loader = new HistoryLoader(new StringBuilder(), consList);
+		HistoryLoader loader = new HistoryLoader(new StringBuilder(), convertToEncounters(consList));
 		loader.schedule(0);
 		loader.join(); // wait for job to finish
 		
@@ -304,7 +315,7 @@ public class HistoryLoaderTests implements BackgroundJobListener {
 	
 	public void historyDisplayStart(KonsFilter f){
 		historyDisplayStop();
-		historyDisplayLoader = new HistoryLoader(new StringBuilder(), historyDisplaylKons, false);
+		historyDisplayLoader = new HistoryLoader(new StringBuilder(), convertToEncounters(historyDisplaylKons), false);
 		historyDisplayLoader.setFilter(f);
 		historyDisplayLoader.addListener(this);
 		historyDisplayLoader.schedule();
@@ -400,7 +411,7 @@ public class HistoryLoaderTests implements BackgroundJobListener {
 				lCons.add(cons);
 			}
 		}
-		HistoryLoader loader = new HistoryLoader(sb, lCons, false);
+		HistoryLoader loader = new HistoryLoader(sb, convertToEncounters(lCons), false);
 		loader.addListener(this);
 		loader.schedule();
 		return loader;

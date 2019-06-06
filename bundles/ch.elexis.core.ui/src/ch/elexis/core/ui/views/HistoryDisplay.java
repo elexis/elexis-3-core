@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.views;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
@@ -29,7 +30,10 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
-import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.data.service.ContextServiceHolder;
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.BackgroundJob;
 import ch.elexis.core.ui.actions.BackgroundJob.BackgroundJobListener;
@@ -37,9 +41,7 @@ import ch.elexis.core.ui.actions.HistoryLoader;
 import ch.elexis.core.ui.actions.KonsFilter;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.controls.PagingComposite;
-import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
-import ch.elexis.data.Patient;
 
 /**
  * Anzeige der vergangenen Konsultationen. Es sollen einerseits "sofort" die letzten 3 oder 4 Kons
@@ -52,7 +54,7 @@ import ch.elexis.data.Patient;
 public class HistoryDisplay extends Composite implements BackgroundJobListener,
 		ElexisEventListener {
 	FormText text;
-	ArrayList<Konsultation> lKons;
+	ArrayList<IEncounter> lKons;
 	private HistoryLoader loader;
 	
 	private final ScrolledComposite scrolledComposite;
@@ -62,7 +64,7 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 	private static final int PAGING_FETCHSIZE = 20;
 	
 	private PagingComposite pagingComposite;
-	private Patient actPatient;
+	private IPatient actPatient;
 	
 	public HistoryDisplay(Composite parent, final IViewSite site){
 		this(parent, site, false);
@@ -83,7 +85,7 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 		scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		this.multiline = multiline;
-		lKons = new ArrayList<Konsultation>(20);
+		lKons = new ArrayList<>(20);
 		
 		text = UiDesk.getToolkit().createFormText(scrolledComposite, false);
 		text.setWhitespaceNormalized(true);
@@ -97,6 +99,7 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 			@Override
 			public void linkActivated(HyperlinkEvent e){
 				String id = (String) e.getHref();
+				//@todo fire via contextservice ??
 				Konsultation k = Konsultation.load(id);
 				ElexisEventDispatcher.fireSelectionEvent(k);
 			}
@@ -131,13 +134,14 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 	
 	public void start(KonsFilter f){
 		stop();
+		
 		if (f == null) {
 			loader = new HistoryLoader(new StringBuilder(), lKons, multiline,
 				pagingComposite.getCurrentPage(), pagingComposite.getFetchSize());
 		} else {
 			// filter is set - no lazy loading
 			pagingComposite.reset();
-			loader = new HistoryLoader(new StringBuilder(), lKons, multiline);
+			loader = new HistoryLoader(new StringBuilder(), lKons, multiline, 0, 0);
 		}
 		loader.setFilter(f);
 		loader.addListener(this);
@@ -151,32 +155,32 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 		}
 	}
 	
-	public void load(Fall fall, boolean clear){
+	public void load(ICoverage fall, boolean clear){
 		if (clear) {
 			lKons.clear();
 		}
 		if (fall != null) {
-			Konsultation[] kons = fall.getBehandlungen(true);
-			for (Konsultation k : kons) {
+		 //@TODO sort reverse
+			for (IEncounter k : fall.getEncounters()) {
 				lKons.add(k);
 			}
 		}
 	}
 	
 	/**
-	 * Loads all {@link Konsultation} for a {@link Patient}. If the {@link ElexisEvent} is null or
-	 * the event is triggered by a {@link Patient}, all {@link Konsultation} will loaded instantly.
+	 * Loads all {@link IEncounter} for a {@link IPatient}. If the {@link ElexisEvent} is null or
+	 * the event is triggered by a {@link IPatient}, all {@link IEncounter} will loaded instantly.
 	 * 
 	 * @param pat
 	 * @param ev
 	 */
-	public void load(Patient pat, @Nullable ElexisEvent ev){
+	public void load(IPatient pat, boolean showLoadingScreen){
 		int page = 1;
 		// remember page if patient did not change
 		if (actPatient != null && actPatient.equals(pat)) {
 			page = pagingComposite.getCurrentPage();
 		}
-		if (ev == null || ev.getObject() instanceof Patient) {
+		if (showLoadingScreen) {
 			UiDesk.getDisplay().syncExec(new Runnable() {
 				public void run(){
 					if (!isDisposed()) {
@@ -194,8 +198,7 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 		// lazy loading konsultations		
 		if (pat != null) {
 			lKons.clear();
-			Fall[] faelle = pat.getFaelle();
-			for (Fall f : faelle) {
+			for (ICoverage f : pat.getCoverages()) {
 				load(f, false);
 			}
 			pagingComposite.setup(page, lKons.size(), PAGING_FETCHSIZE);
@@ -222,7 +225,7 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 								true);
 						}
 					} else {
-						text.setText(ElexisEventDispatcher.getSelectedPatient() != null ? ""
+						text.setText(ContextServiceHolder.get().getActivePatient().orElse(null) != null ? ""
 								: Messages.HistoryDisplay_NoPatientSelected,
 							false, false);
 					}
@@ -233,10 +236,10 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 			
 			public String getDateFromToText(){
 				if (loader.getlKons() != null && loader.getlKons().size() > 0) {
-					Konsultation firstKons = loader.getlKons().get(loader.getlKons().size() - 1);
-					Konsultation lastKons = loader.getlKons().get(0);
-					String fromDate = firstKons != null ? firstKons.getDatum() : "-";
-					String toDate = lastKons != null ? lastKons.getDatum() : "-";
+					IEncounter firstKons = loader.getlKons().get(loader.getlKons().size() - 1);
+					IEncounter lastKons = loader.getlKons().get(0);
+					String fromDate = firstKons != null ? firstKons.getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) : "-";
+					String toDate = lastKons != null ? lastKons.getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) : "-";
 					return "<p><span color=\"" + UiDesk.COL_DARKGREY + "\">von " + fromDate
 						+ " bis " + toDate
 						+ "</span></p>";
