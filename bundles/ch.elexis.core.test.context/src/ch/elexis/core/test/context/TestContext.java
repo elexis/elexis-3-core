@@ -3,6 +3,8 @@ package ch.elexis.core.test.context;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IContext;
 
 public class TestContext implements IContext {
@@ -33,7 +35,16 @@ public class TestContext implements IContext {
 	@Override
 	public void setTyped(Object object){
 		if (object != null) {
+			if (object instanceof IUser) {
+				// also set active user contact
+				IContact userContact = ((IUser) object).getAssignedContact();
+				setNamed(ACTIVE_USERCONTACT, userContact);
+			}
 			Optional<Class<?>> modelInterface = getModelInterface(object);
+			if (object.equals(context.get(modelInterface.get().getName()))) {
+				// object is already in the context do nothing otherwise loop happens
+				return;
+			}
 			if (modelInterface.isPresent()) {
 				context.put(modelInterface.get().getName(), object);
 			} else {
@@ -45,7 +56,8 @@ public class TestContext implements IContext {
 	private Optional<Class<?>> getModelInterface(Object object){
 		Class<?>[] interfaces = object.getClass().getInterfaces();
 		for (Class<?> interfaze : interfaces) {
-			if (interfaze.getName().startsWith("ch.elexis.core.model")) {
+			if (interfaze.getName().startsWith("ch.elexis.core.model")
+				&& !interfaze.getName().contains("Identifiable")) {
 				return Optional.of(interfaze);
 			}
 		}
@@ -71,6 +83,9 @@ public class TestContext implements IContext {
 	public void setNamed(String name, Object object){
 		if (object == null) {
 			context.remove(name);
+		} else if (object.equals(context.get(name))) {
+			// object is already in the context do nothing otherwise loop happens
+			return;
 		} else {
 			context.put(name, object);
 		}
