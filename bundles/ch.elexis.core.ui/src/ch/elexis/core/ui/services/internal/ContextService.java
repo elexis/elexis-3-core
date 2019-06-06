@@ -242,7 +242,7 @@ public class ContextService implements IContextService, EventHandler {
 			if (object instanceof User) {
 				Optional<IUser> iUser =
 					coreModelService.load(((User) object).getId(), IUser.class);
-				iUser.ifPresent(u -> root.setActiveUser(u));
+				iUser.ifPresent(u -> root.setTyped(u));
 			} else if (object instanceof Anwender) {
 				Optional<IContact> iMandatorContact =
 					coreModelService.load(((Anwender) object).getId(), IContact.class);
@@ -253,20 +253,18 @@ public class ContextService implements IContextService, EventHandler {
 					}
 					Optional<IMandator> iMandator =
 						coreModelService.load(iMandatorContact.get().getId(), IMandator.class);
-					root.setActiveMandator(iMandator.get());
+					root.setTyped(iMandator.get());
 					
 					IQuery<IUser> userQuery = coreModelService.getQuery(IUser.class);
 					userQuery.and(ModelPackage.Literals.IUSER__ASSIGNED_CONTACT, COMPARATOR.EQUALS,
 						iMandator.get());
 					List<IUser> foundUsers = userQuery.execute();
-					if(!foundUsers.isEmpty()) {
-						root.setActiveUser(foundUsers.get(0));
-						root.setActiveUserContact(iMandator.get());
+					if (!foundUsers.isEmpty()) {
+						root.setTyped(foundUsers.get(0));
 					}
 				} else {
-					root.setActiveMandator(null);
-					root.setActiveUser(null);
-					root.setActiveUserContact(null);
+					root.removeTyped(IMandator.class);
+					root.removeTyped(IUser.class);
 				}
 			}
 			
@@ -292,7 +290,7 @@ public class ContextService implements IContextService, EventHandler {
 			if (object instanceof Mandant) {
 				Optional<IMandator> iMandator =
 					coreModelService.load(((Mandant) object).getId(), IMandator.class);
-				iMandator.ifPresent(m -> root.setActiveMandator(m));
+				iMandator.ifPresent(m -> root.setTyped(m));
 			}
 		}
 	}
@@ -343,41 +341,18 @@ public class ContextService implements IContextService, EventHandler {
 		}
 		
 		private void removeObjectFromRoot(Object object){
-			if (object instanceof User) {
-				root.setActiveUser(null);
-			} else if (object instanceof Anwender) {
-				root.setActiveUserContact(null);
-			} else if (object instanceof Patient) {
-				root.setActivePatient(null);
-			} else if (object instanceof Class<?>) {
+			if (object instanceof Class<?>) {
 				root.removeTyped((Class<?>) object);
 				getCoreModelInterfaceForElexisClass((Class<?>) object)
 					.ifPresent(c -> root.removeTyped(c));
 			} else if (object != null) {
 				root.removeTyped(object.getClass());
+				
 			}
 		}
 		
 		private void addObjectToRoot(Object object){
-			if (object instanceof User) {
-				Optional<IUser> iUser =
-					coreModelService.load(((User) object).getId(), IUser.class);
-				iUser.ifPresent(u -> root.setActiveUser(u));
-			} else if (object instanceof Anwender) {
-				Optional<IContact> iUserContact =
-					coreModelService.load(((Anwender) object).getId(), IContact.class);
-				iUserContact.ifPresent(c -> root.setActiveUserContact(c));
-			} else if (object instanceof Patient) {
-				Optional<IPatient> iPatient =
-					coreModelService.load(((Patient) object).getId(), IPatient.class);
-				iPatient.ifPresent(p -> root.setActivePatient(p));
-			} else if (object instanceof Fall) {
-				Optional<ICoverage> iCoverage =
-					coreModelService.load(((Fall) object).getId(), ICoverage.class);
-				iCoverage.ifPresent(c -> root.setActiveCoverage(c));
-			} else if (object != null) {
-				root.setTyped(getModelObjectForPersistentObject(object));
-			}
+			root.setTyped(getModelObjectForPersistentObject(object));
 		}
 	}
 	

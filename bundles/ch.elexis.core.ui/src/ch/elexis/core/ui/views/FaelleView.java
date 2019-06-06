@@ -20,7 +20,6 @@ import static ch.elexis.core.ui.actions.GlobalActions.openFallaction;
 import static ch.elexis.core.ui.actions.GlobalActions.reopenFallAction;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -46,7 +45,6 @@ import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
-import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.actions.ObjectFilterRegistry;
 import ch.elexis.core.ui.actions.ObjectFilterRegistry.IObjectFilterProvider;
@@ -78,7 +76,7 @@ public class FaelleView extends ViewPart implements IRefreshable {
 	
 	@Optional
 	@Inject
-	void activePatient(@Named(IContext.ACTIVE_PATIENT) IPatient patient){
+	void activePatient(@Optional IPatient patient){
 		Display.getDefault().asyncExec(() -> {
 			handleEventPatient(patient);
 		});
@@ -101,7 +99,8 @@ public class FaelleView extends ViewPart implements IRefreshable {
 			if (actPatient != patient) {
 				actPatient = patient;
 				tv.refresh();
-				ICoverage currentFall = ContextServiceHolder.get().getRootContext().getActiveCoverage().orElse(null);
+				ICoverage currentFall = ContextServiceHolder.get().getRootContext()
+					.getTyped(ICoverage.class).orElse(null);
 				if (currentFall != null) {
 					tv.setSelection(new StructuredSelection(currentFall));
 				}
@@ -137,7 +136,7 @@ public class FaelleView extends ViewPart implements IRefreshable {
 
 	@Optional
 	@Inject
-	void activeCoverage(@Named(IContext.ACTIVE_COVERAGE) ICoverage iCoverage){
+	void activeCoverage(@Optional ICoverage iCoverage){
 		Display.getDefault().asyncExec(() -> {
 			if (CoreUiUtil.isActiveControl(tv.getControl())) {
 				tv.refresh(true);
@@ -180,7 +179,7 @@ public class FaelleView extends ViewPart implements IRefreshable {
 				if (selection instanceof StructuredSelection) {
 					if (!selection.isEmpty()) {
 						ICoverage selectedCoverage = (ICoverage) ((StructuredSelection) selection).getFirstElement();
-						ContextServiceHolder.get().getRootContext().setActiveCoverage(selectedCoverage);
+						ContextServiceHolder.get().setActiveCoverage(selectedCoverage);
 					}
 				}
 			}
@@ -240,7 +239,8 @@ public class FaelleView extends ViewPart implements IRefreshable {
 				} else {
 					ObjectFilterRegistry.getInstance().registerObjectFilter(Konsultation.class,
 						filter);
-					filter.setFall(ContextServiceHolder.get().getRootContext().getActiveCoverage().orElse(null));
+					filter.setFall(ContextServiceHolder.get().getRootContext()
+						.getTyped(ICoverage.class).orElse(null));
 				}
 			}
 			

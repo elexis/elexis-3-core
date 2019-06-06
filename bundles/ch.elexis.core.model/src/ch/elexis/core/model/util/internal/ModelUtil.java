@@ -256,13 +256,11 @@ public class ModelUtil {
 	 */
 	public static Optional<IContact> getActiveUserContact(){
 		if (ContextServiceHolder.isPresent()) {
-			Optional<IContact> ret =
-				ContextServiceHolder.get().getRootContext().getActiveUserContact();
+			Optional<IContact> ret = ContextServiceHolder.get().getActiveUserContact();
 			if (ret.isPresent()) {
 				return ret;
 			} else {
-				Optional<IUser> user =
-					ContextServiceHolder.get().getRootContext().getActiveUser();
+				Optional<IUser> user = ContextServiceHolder.get().getActiveUser();
 				if (user.isPresent()) {
 					return Optional.ofNullable(user.get().getAssignedContact());
 				}

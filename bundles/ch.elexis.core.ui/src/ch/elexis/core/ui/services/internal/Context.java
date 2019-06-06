@@ -9,12 +9,12 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
-import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
-import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IContext;
 import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
 
 public class Context implements IContext {
@@ -34,68 +34,6 @@ public class Context implements IContext {
 		this.parent = parent;
 	}
 	
-	@Override
-	public Optional<IUser> getActiveUser(){
-		Optional<IUser> ret = Optional.ofNullable((IUser) context.get(ACTIVE_USER));
-		if (!ret.isPresent() && parent != null) {
-			ret = parent.getActiveUser();
-		}
-		return ret;
-	}
-	
-	@Override
-	public void setActiveUser(IUser user){
-		setNamed(ACTIVE_USER, user);
-	}
-	
-	@Override
-	public Optional<IContact> getActiveUserContact(){
-		Optional<IContact> ret = Optional.ofNullable((IContact) context.get(ACTIVE_USERCONTACT));
-		if (!ret.isPresent() && parent != null) {
-			ret = parent.getActiveUserContact();
-		} else if (!ret.isPresent() && getActiveUser().isPresent()) {
-			IContact contact = getActiveUser().get().getAssignedContact();
-			if (contact != null) {
-				setActiveUserContact(contact);
-				ret = Optional.of(contact);
-			}
-		}
-		return ret;
-	}
-	
-	@Override
-	public void setActiveUserContact(IContact userContact){
-		setNamed(ACTIVE_USERCONTACT, userContact);
-	}
-	
-	@Override
-	public Optional<IPatient> getActivePatient(){
-		Optional<IPatient> ret = Optional.ofNullable((IPatient) context.get(ACTIVE_PATIENT));
-		if (!ret.isPresent() && parent != null) {
-			ret = parent.getActivePatient();
-		}
-		return ret;
-	}
-	
-	@Override
-	public void setActivePatient(IPatient patient){
-		setNamed(ACTIVE_PATIENT, patient);
-	}
-	
-	@Override
-	public Optional<IMandator> getActiveMandator(){
-		Optional<IMandator> ret = Optional.ofNullable((IMandator) context.get(ACTIVE_MANDATOR));
-		if (!ret.isPresent() && parent != null) {
-			ret = parent.getActiveMandator();
-		}
-		return ret;
-	}
-	
-	@Override
-	public void setActiveMandator(IMandator mandator){
-		setNamed(ACTIVE_MANDATOR, mandator);
-	}
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> Optional<T> getTyped(Class<T> clazz){
@@ -109,7 +47,16 @@ public class Context implements IContext {
 	@Override
 	public void setTyped(Object object){
 		if (object != null) {
+			if (object instanceof IUser) {
+				// also set active user contact
+				IContact userContact = ((IUser) object).getAssignedContact();
+				setNamed(ACTIVE_USERCONTACT, userContact);
+			}
 			Optional<Class<?>> modelInterface = getModelInterface(object);
+			if (object.equals(context.get(modelInterface.get().getName()))) {
+				// object is already in the context do nothing otherwise loop happens
+				return;
+			}
 			if (modelInterface.isPresent()) {
 				context.put(modelInterface.get().getName(), object);
 			} else {
@@ -122,6 +69,7 @@ public class Context implements IContext {
 					eclipseContext.set(object.getClass().getName(), object);
 				}
 			}
+			updateElexisEventDispatcher(object);
 		}
 	}
 	
@@ -156,32 +104,36 @@ public class Context implements IContext {
 	public void setNamed(String name, Object object){
 		if (object == null) {
 			context.remove(name);
-		}
-		else if (object.equals(context.get(name))) {
+		} else if (object.equals(context.get(name))) {
 			// object is already in the context do nothing otherwise loop happens
 			return;
-		}
-		else {
+		} else {
 			context.put(name, object);
 		}
 		if (eclipseContext != null) {
 			eclipseContext.set(name, object);
 		}
-		updateElexisEventDispatcher(name, object);
 	}
 	
-	private void updateElexisEventDispatcher(String name, Object object){
+	private void updateElexisEventDispatcher(Object object){
 		// if the selection is not same in ElexisEventDispatcher fire a selection event
-		if (IContext.ACTIVE_PATIENT.equals(name) && object instanceof Identifiable) {
-			Patient poPatient = Patient.load(((Identifiable) object).getId());
+		if (object instanceof IPatient) {
+			Patient poPatient = Patient.load(((IPatient) object).getId());
 			Patient poSelected = ElexisEventDispatcher.getSelectedPatient();
 			if (poSelected == null || !poSelected.equals(poPatient)) {
 				ElexisEventDispatcher.fireSelectionEvent(poPatient);
 			}
 		}
-		if (IContext.ACTIVE_COVERAGE.equals(name) && object instanceof Identifiable) {
-			Fall po = Fall.load(((Identifiable) object).getId());
+		if (object instanceof ICoverage) {
+			Fall po = Fall.load(((ICoverage) object).getId());
 			IPersistentObject selected = ElexisEventDispatcher.getSelected(Fall.class);
+			if (selected == null || !selected.equals(po)) {
+				ElexisEventDispatcher.fireSelectionEvent(po);
+			}
+		}
+		if (object instanceof IEncounter) {
+			Konsultation po = Konsultation.load(((IEncounter) object).getId());
+			IPersistentObject selected = ElexisEventDispatcher.getSelected(Konsultation.class);
 			if (selected == null || !selected.equals(po)) {
 				ElexisEventDispatcher.fireSelectionEvent(po);
 			}
@@ -200,19 +152,5 @@ public class Context implements IContext {
 	public String getStationIdentifier(){
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public Optional<ICoverage> getActiveCoverage(){
-		Optional<ICoverage> ret = Optional.ofNullable((ICoverage) context.get(ACTIVE_COVERAGE));
-		if (!ret.isPresent() && parent != null) {
-			ret = parent.getActiveCoverage();
-		}
-		return ret;
-	}
-
-	@Override
-	public void setActiveCoverage(ICoverage coverage){
-		setNamed(ACTIVE_COVERAGE, coverage);
 	}
 }

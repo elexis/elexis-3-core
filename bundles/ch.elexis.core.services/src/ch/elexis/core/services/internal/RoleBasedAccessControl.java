@@ -117,7 +117,7 @@ public class RoleBasedAccessControl extends AbstractAccessControl {
 		}
 		
 		if (user == null) {
-			Optional<IUser> _user = ContextServiceHolder.get().getRootContext().getActiveUser();
+			Optional<IUser> _user = ContextServiceHolder.get().getActiveUser();
 			if (!_user.isPresent()) {
 				return false;
 			}

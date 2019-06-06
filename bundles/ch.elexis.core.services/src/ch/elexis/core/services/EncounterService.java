@@ -133,7 +133,7 @@ public class EncounterService implements IEncounterService {
 			!accessControlService.request(AccessControlDefaults.LSTG_CHARGE_FOR_ALL);
 		boolean mandatorOK = true;
 		IMandator activeMandator =
-			ContextServiceHolder.get().getRootContext().getActiveMandator().orElse(null);
+			ContextServiceHolder.get().getActiveMandator().orElse(null);
 		boolean mandatorLoggedIn = (activeMandator != null);
 		
 		// if m is null, ignore checks (return true)
@@ -238,7 +238,7 @@ public class EncounterService implements IEncounterService {
 	private String getVersionRemark(){
 		String remark = "edit";
 		java.util.Optional<IUser> activeUser =
-			ContextServiceHolder.get().getRootContext().getActiveUser();
+			ContextServiceHolder.get().getActiveUser();
 		if (activeUser.isPresent()) {
 			remark = activeUser.get().getLabel();
 		}

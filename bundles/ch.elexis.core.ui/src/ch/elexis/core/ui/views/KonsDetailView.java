@@ -18,7 +18,6 @@ import java.util.Hashtable;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -78,7 +77,6 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IUser;
-import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.core.services.holder.StickerServiceHolder;
 import ch.elexis.core.ui.UiDesk;
@@ -174,7 +172,7 @@ public class KonsDetailView extends ViewPart
 	}
 	
 	@Inject
-	void activePatient(@Optional @Named(IContext.ACTIVE_PATIENT) IPatient patient){
+	void activePatient(@Optional IPatient patient){
 		if (created) {
 			Display.getDefault().asyncExec(() -> {
 				actPat = null; // make sure patient will be updated
@@ -579,7 +577,8 @@ public class KonsDetailView extends ViewPart
 	}
 	
 	private void updateFallCombo(){
-		IPatient pat = ContextServiceHolder.get().getRootContext().getActivePatient().orElse(null);
+		IPatient pat =
+			ContextServiceHolder.get().getRootContext().getTyped(IPatient.class).orElse(null);
 		if (pat != null && comboViewerFall != null) {
 			List<ICoverage> coverages = pat.getCoverages();
 			Collections.sort(coverages, new CoverageComparator());
@@ -684,7 +683,7 @@ public class KonsDetailView extends ViewPart
 	private String getVersionRemark(){
 		String remark = "edit";
 		java.util.Optional<IUser> activeUser =
-			ContextServiceHolder.get().getRootContext().getActiveUser();
+			ContextServiceHolder.get().getRootContext().getTyped(IUser.class);
 		if (activeUser.isPresent()) {
 			remark = activeUser.get().getLabel();
 		}

@@ -55,7 +55,6 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.format.AddressFormatUtil;
-import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.StickerServiceHolder;
 import ch.elexis.core.types.Gender;
@@ -170,9 +169,6 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		// let user select patient by pressing ENTER in the control fields
 		cv.getConfigurer().getControlFieldProvider().addChangeListener(new ControlFieldSelectionListener());
 		cv.getViewerWidget().getControl().setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
-		
-		// common viewer automatically sets typed selection but not active patient
-		cv.setNamedSelection(IContext.ACTIVE_PATIENT);
 		
 		plcp.startListening();
 		GlobalEventDispatcher.addActivationListener(this, this);
@@ -569,8 +565,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 			if ((elements != null) && (elements.length > 0)) {
 				Object element = elements[0];
 				if (element instanceof IPatient) {
-					ContextServiceHolder.get().getRootContext()
-						.setActivePatient((IPatient) element);
+					ContextServiceHolder.get().setActivePatient((IPatient) element);
 				}
 			}
 		}

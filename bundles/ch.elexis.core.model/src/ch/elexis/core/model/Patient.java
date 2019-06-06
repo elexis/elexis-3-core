@@ -89,11 +89,8 @@ public class Patient extends Person implements IPatient {
 	
 	@Override
 	public List<ICoverage> getCoverages(){
-		// refresh because if coverage gets same changes we need to refresh the patient and the encounter cache
-		CoreModelServiceHolder.get().refresh(this);
 		return getEntity().getFaelle().stream().filter(f -> !f.isDeleted())
-			.map(f -> ModelUtil.getAdapter(f, ICoverage.class))
-			.peek(f -> CoreModelServiceHolder.get().refresh(f)).collect(Collectors.toList());
+			.map(f -> ModelUtil.getAdapter(f, ICoverage.class)).collect(Collectors.toList());
 	}
 
 

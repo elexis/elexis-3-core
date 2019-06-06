@@ -166,7 +166,7 @@ public class TestPathologicDescription {
 		CoreHub.userCfg.flush();
 		// test if parser will read correct value
 		assertFalse(ConfigServiceHolder.get().get(
-			ContextServiceHolder.get().getRootContext().getActiveUserContact().get(),
+			ContextServiceHolder.get().getActiveUserContact().get(),
 			Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true));
 		
 		parseOneHL7file(new File(workDir.toString(), "Analytica/01TEST5005.hl7"), false, true);

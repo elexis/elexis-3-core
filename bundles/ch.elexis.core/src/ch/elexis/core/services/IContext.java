@@ -2,20 +2,11 @@ package ch.elexis.core.services;
 
 import java.util.Optional;
 
-import ch.elexis.core.model.IContact;
-import ch.elexis.core.model.ICoverage;
-import ch.elexis.core.model.IMandator;
-import ch.elexis.core.model.IPatient;
-import ch.elexis.core.model.IUser;
-
 public interface IContext {
 	
-	String ACTIVE_USER = "ch.elexis.core.services.icontext.active.user";
 	String ACTIVE_USERCONTACT = "ch.elexis.core.services.icontext.active.usercontact";
-	String ACTIVE_PATIENT = "ch.elexis.core.services.icontext.active.patient";
-	String ACTIVE_MANDATOR = "ch.elexis.core.services.icontext.active.mandator";
+	
 	String STATION_IDENTIFIER = "ch.elexis.core.services.icontext.stationidentifier";
-	String ACTIVE_COVERAGE = "ch.elexis.core.services.icontext.active.coverage";
 
 	/**
 	 * Get a string identifying this station (do not use the $ sign within the id).<br>
@@ -26,62 +17,6 @@ public interface IContext {
 	 * @return
 	 */
 	public String getStationIdentifier();
-	
-	/**
-	 * Get the active {@link IUser} from the context.
-	 * 
-	 * @return
-	 */
-	public Optional<IUser> getActiveUser();
-	
-	/**
-	 * Set the active {@link IUser} of the context.
-	 * 
-	 * @param user
-	 */
-	public void setActiveUser(IUser user);
-	
-	/**
-	 * Get the active {@link IContact} of the {@link IUser} from the context.
-	 * 
-	 * @return
-	 */
-	public Optional<IContact> getActiveUserContact();
-	
-	/**
-	 * Set the active {@link IContact} of the {@link IUser} of the context.
-	 * 
-	 * @param user
-	 */
-	public void setActiveUserContact(IContact user);
-	
-	/**
-	 * Get the active {@link IPatient} of the context.
-	 * 
-	 * @return
-	 */
-	public Optional<IPatient> getActivePatient();
-	
-	/**
-	 * Set the active {@link IPatient} of the context.
-	 * 
-	 * @param patient
-	 */
-	public void setActivePatient(IPatient patient);
-	
-	/**
-	 * Get the active {@link IMandator} of the context.
-	 * 
-	 * @return
-	 */
-	public Optional<IMandator> getActiveMandator();
-	
-	/**
-	 * Set the active {@link IMandator} of the context.
-	 * 
-	 * @param mandator
-	 */
-	public void setActiveMandator(IMandator mandator);
 	
 	/**
 	 * Get an {@link Object} identified by its type from the context.
@@ -120,18 +55,4 @@ public interface IContext {
 	 * @param object
 	 */
 	public void setNamed(String name, Object object);
-	
-	/**
-	 * Get the active {@link ICoverage} of the context.
-	 * 
-	 * @return
-	 */
-	public Optional<ICoverage> getActiveCoverage();
-	
-	/**
-	 * Set the active {@link ICoverage} of the context.
-	 * 
-	 * @param patient
-	 */
-	public void setActiveCoverage(ICoverage coverage);
 }

@@ -13,7 +13,6 @@
 package ch.elexis.core.ui.views;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -29,7 +28,6 @@ import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
-import ch.elexis.core.services.IContext;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.KonsFilter;
 import ch.elexis.core.ui.dialogs.KonsFilterDialog;
@@ -50,20 +48,20 @@ public class KonsListe extends ViewPart implements IRefreshable, ISaveablePart2 
 	
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 	
-	@Optional
 	@Inject
-	void activePatient(@Named(IContext.ACTIVE_PATIENT) IPatient patient){
+	void activePatient(@Optional IPatient patient){
 		if ((actPatient == null)
-			|| (!actPatient.getId().equals(patient.getId()))) {
+			|| (patient != null && !actPatient.getId().equals(patient.getId()))) {
 			actPatient = patient;
 			restart(true);
 		}
 	}
 	
-	@Optional
 	@Inject
-	void activeCoverage(@Named(IContext.ACTIVE_COVERAGE) ICoverage iCoverage){
-		actPatient = iCoverage.getPatient();
+	void activeCoverage(@Optional ICoverage iCoverage){
+		if (iCoverage != null) {
+			actPatient = iCoverage.getPatient();
+		}
 		restart(false);
 	}
 	
@@ -112,9 +110,11 @@ public class KonsListe extends ViewPart implements IRefreshable, ISaveablePart2 
 	}
 	
 	private void restart(Boolean isPatientEvent){
-		liste.stop();
-		liste.load(actPatient, isPatientEvent == null || isPatientEvent.booleanValue());
-		liste.start(filter);
+		if (liste != null) {
+			liste.stop();
+			liste.load(actPatient, isPatientEvent == null || isPatientEvent.booleanValue());
+			liste.start(filter);
+		}
 	}
 	
 	private void makeActions(){

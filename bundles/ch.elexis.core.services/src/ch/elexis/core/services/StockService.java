@@ -56,7 +56,7 @@ public class StockService implements IStockService {
 	
 	public void performSingleDisposal(IArticle article, int count){
 		Optional<IMandator> mandator =
-			ContextServiceHolder.get().getRootContext().getActiveMandator();
+			ContextServiceHolder.get().getActiveMandator();
 		performSingleDisposal(article, count,
 			(mandator.isPresent()) ? mandator.get().getId() : null);
 	}

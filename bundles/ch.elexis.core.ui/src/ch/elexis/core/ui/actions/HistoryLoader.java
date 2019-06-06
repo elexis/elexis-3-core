@@ -118,7 +118,7 @@ public class HistoryLoader extends BackgroundJob {
 			}
 			monitor.worked(50);
 			
-			ICoverage selectedFall = ContextServiceHolder.get().getRootContext().getActiveCoverage().orElse(null);
+			ICoverage selectedFall = ContextServiceHolder.get().getActiveCoverage().orElse(null);
 			Iterator<IEncounter> it = lKons.iterator();
 			sb.append("<form>"); //$NON-NLS-1$
 			//@TODO convert to jpa

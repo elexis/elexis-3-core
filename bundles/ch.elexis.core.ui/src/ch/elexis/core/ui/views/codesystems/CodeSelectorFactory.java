@@ -326,9 +326,8 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 						cv.getViewerWidget().getControl()
 							.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
 					}
-					userStatistics.setContact(
-						ContextServiceHolder.get().getRootContext().getActiveUserContact()
-							.orElse(null));
+					userStatistics
+						.setContact(ContextServiceHolder.get().getActiveUserContact().orElse(null));
 				}
 			};
 		
@@ -439,9 +438,9 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 		
 		public void refresh(){
 			patientStatistics.setContact(
-				ContextServiceHolder.get().getRootContext().getActivePatient().orElse(null));
+				ContextServiceHolder.get().getActivePatient().orElse(null));
 			userStatistics.setContact(
-				ContextServiceHolder.get().getRootContext().getActiveUserContact().orElse(null));
+				ContextServiceHolder.get().getActiveUserContact().orElse(null));
 		}
 	}
 	

@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -44,7 +43,6 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.builder.IPrescriptionBuilder;
 import ch.elexis.core.model.prescription.EntryType;
-import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
@@ -93,7 +91,7 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 	static final String KOPIEREN = Messages.FixMediDisplay_Copy; //$NON-NLS-1$
 	
 	@Inject
-	void activePatient(@Optional @Named(IContext.ACTIVE_PATIENT) IPatient patient){
+	void activePatient(@Optional IPatient patient){
 		Display.getDefault().asyncExec(() -> {
 			if (CoreUiUtil.isActiveControl(list)) {
 				reload();

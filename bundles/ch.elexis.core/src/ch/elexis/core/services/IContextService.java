@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
@@ -23,7 +24,7 @@ public interface IContextService {
 	 * @return
 	 */
 	default public Optional<IUser> getActiveUser(){
-		return getRootContext().getActiveUser();
+		return getRootContext().getTyped(IUser.class);
 	}
 	
 	/**
@@ -31,8 +32,9 @@ public interface IContextService {
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	default public Optional<IContact> getActiveUserContact(){
-		return getRootContext().getActiveUserContact();
+		return (Optional<IContact>) getRootContext().getNamed(IContext.ACTIVE_USERCONTACT);
 	}
 	
 	/**
@@ -41,7 +43,16 @@ public interface IContextService {
 	 * @return
 	 */
 	default public Optional<IPatient> getActivePatient(){
-		return getRootContext().getActivePatient();
+		return getRootContext().getTyped(IPatient.class);
+	}
+	
+	/**
+	 * Set the active {@link IPatient} of the root context.
+	 * 
+	 * @return
+	 */
+	default public void setActivePatient(IPatient object){
+		getRootContext().setTyped(object);
 	}
 	
 	/**
@@ -50,7 +61,25 @@ public interface IContextService {
 	 * @return
 	 */
 	default public Optional<IMandator> getActiveMandator(){
-		return getRootContext().getActiveMandator();
+		return getRootContext().getTyped(IMandator.class);
+	}
+	
+	/**
+	 * Get the active {@link ICoverage} of the root context.
+	 * 
+	 * @return
+	 */
+	default public Optional<ICoverage> getActiveCoverage(){
+		return getRootContext().getTyped(ICoverage.class);
+	}
+	
+	/**
+	 * Set the active {@link ICoverage} of the root context.
+	 * 
+	 * @return
+	 */
+	default public void setActiveCoverage(ICoverage object){
+		getRootContext().setTyped(object);
 	}
 	
 	/**

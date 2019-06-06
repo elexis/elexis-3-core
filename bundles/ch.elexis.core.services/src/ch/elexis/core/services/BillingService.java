@@ -65,7 +65,7 @@ public class BillingService implements IBillingService {
 		boolean mandatorOk = true;
 		boolean invoiceOk = true;
 		IMandator activeMandator =
-			ContextServiceHolder.get().getRootContext().getActiveMandator().orElse(null);
+			ContextServiceHolder.get().getActiveMandator().orElse(null);
 		boolean mandatorLoggedIn = (activeMandator != null);
 		
 		// if m is null, ignore checks (return true)

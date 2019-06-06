@@ -189,7 +189,7 @@ public class DailyOrderDialog extends TitleAreaDialog {
 				if (billable instanceof IArticle) {
 					IArticle art = (IArticle) billable;
 					Optional<IMandator> mandator =
-						ContextServiceHolder.get().getRootContext().getActiveMandator();
+						ContextServiceHolder.get().getActiveMandator();
 					IStockEntry stockEntry =
 						StockServiceHolder.get().findPreferredStockEntryForArticle(
 							StoreToStringServiceHolder.getStoreToString(art),

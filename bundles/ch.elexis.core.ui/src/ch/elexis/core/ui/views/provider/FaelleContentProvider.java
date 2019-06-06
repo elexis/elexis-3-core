@@ -23,7 +23,7 @@ public class FaelleContentProvider implements IStructuredContentProvider {
 	}
 	
 	public Object[] getElements(final Object inputElement){
-		IPatient act = ContextServiceHolder.get().getRootContext().getActivePatient().orElse(null);
+		IPatient act = ContextServiceHolder.get().getActivePatient().orElse(null);
 		if (act == null) {
 			return new Object[0];
 		} else {
