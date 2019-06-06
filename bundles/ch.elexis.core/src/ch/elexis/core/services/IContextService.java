@@ -28,6 +28,15 @@ public interface IContextService {
 	}
 	
 	/**
+	 * Set the active {@link IUser} of the root context.
+	 * 
+	 * @return
+	 */
+	default public void setActiveUser(IUser object){
+		getRootContext().setTyped(object);
+	}
+	
+	/**
 	 * Get the active {@link IContact} of the {@link IUser} from the root context.
 	 * 
 	 * @return
@@ -62,6 +71,15 @@ public interface IContextService {
 	 */
 	default public Optional<IMandator> getActiveMandator(){
 		return getRootContext().getTyped(IMandator.class);
+	}
+	
+	/**
+	 * Set the active {@link IMandator} of the root context.
+	 * 
+	 * @return
+	 */
+	default public void setActiveMandator(IMandator object){
+		getRootContext().setTyped(object);
 	}
 	
 	/**

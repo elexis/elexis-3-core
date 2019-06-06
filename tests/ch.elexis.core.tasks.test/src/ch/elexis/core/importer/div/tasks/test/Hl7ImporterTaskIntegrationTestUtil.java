@@ -34,11 +34,11 @@ public class Hl7ImporterTaskIntegrationTestUtil {
 			"Mandatore", LocalDate.of(2000, 12, 1), Gender.FEMALE).mandator().buildAndSave();
 		IMandator mandator =
 			CoreModelServiceHolder.get().load(_mandator.getId(), IMandator.class).get();
-		ContextServiceHolder.get().getRootContext().setActiveMandator(mandator);
+		ContextServiceHolder.get().setActiveMandator(mandator);
 		
 		IUser testUser =
 			new IUserBuilder(CoreModelServiceHolder.get(), "user_ctx", _mandator).buildAndSave();
-		ContextServiceHolder.get().getRootContext().setActiveUser(testUser);
+		ContextServiceHolder.get().setActiveUser(testUser);
 		
 		// the patient associated with the import file(s)
 		IPatient patient = new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(), "Hans",
