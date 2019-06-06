@@ -90,6 +90,8 @@ public class ContextService implements IContextService, EventHandler {
 	
 	private MandatorChangedEventDispatcherListener mandatorChangedEventDispatcherListener;
 	
+	private CreateDeleteEventDispatcherListener createDeleteChangedEventDispatcherListener;
+	
 	private IEclipseContext applicationContext;
 	
 	@Reference
@@ -103,18 +105,20 @@ public class ContextService implements IContextService, EventHandler {
 		lockingEventDispatcherListener = new LockingEventDispatcherListener();
 		userChangedEventDispatcherListener = new UserChangedEventDispatcherListener();
 		mandatorChangedEventDispatcherListener = new MandatorChangedEventDispatcherListener();
+		createDeleteChangedEventDispatcherListener = new CreateDeleteEventDispatcherListener();
 		ElexisEventDispatcher elexisEventDispatcher = ElexisEventDispatcher.getInstance();
 		LoggerFactory.getLogger(getClass()).info("Attaching to " + elexisEventDispatcher);
 		elexisEventDispatcher.addListeners(eventDispatcherListener, reloadEventDispatcherListener,
 			lockingEventDispatcherListener, userChangedEventDispatcherListener,
-			mandatorChangedEventDispatcherListener);
+			mandatorChangedEventDispatcherListener, createDeleteChangedEventDispatcherListener);
 	}
 	
 	@Deactivate
 	public void deactivate(){
 		ElexisEventDispatcher.getInstance().removeListeners(eventDispatcherListener,
 			reloadEventDispatcherListener, lockingEventDispatcherListener,
-			userChangedEventDispatcherListener, mandatorChangedEventDispatcherListener);
+			userChangedEventDispatcherListener, mandatorChangedEventDispatcherListener,
+			createDeleteChangedEventDispatcherListener);
 	}
 	
 	@Override
@@ -220,6 +224,30 @@ public class ContextService implements IContextService, EventHandler {
 				
 			} else if (ev.getType() == ElexisEvent.EVENT_UPDATE) {
 				postEvent(ElexisEventTopics.EVENT_UPDATE,
+					getModelObjectForPersistentObject(object));
+			}
+		}
+	}
+	
+	private class CreateDeleteEventDispatcherListener extends ElexisEventListenerImpl {
+		public CreateDeleteEventDispatcherListener(){
+			super(null, null, ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_DELETE, 0);
+		}
+		
+		@Override
+		public void catchElexisEvent(ElexisEvent ev){
+			Object object = ev.getGenericObject();
+			if (object == null) {
+				object = ev.getObject();
+				if (object == null) {
+					object = ev.getObjectClass();
+				}
+			}
+			if (ev.getType() == ElexisEvent.EVENT_CREATE) {
+				postEvent(ElexisEventTopics.PERSISTENCE_EVENT_COMPATIBILITY_CREATE,
+						getModelObjectForPersistentObject(object));
+			} else if (ev.getType() == ElexisEvent.EVENT_DELETE) {
+				postEvent(ElexisEventTopics.PERSISTENCE_EVENT_COMPATIBILITY_DELETE,
 					getModelObjectForPersistentObject(object));
 			}
 		}

@@ -1,5 +1,7 @@
 package ch.elexis.core.common;
 
+import ch.elexis.core.services.IContextService;
+
 public class ElexisEventTopics {
 
 	
@@ -34,6 +36,16 @@ public class ElexisEventTopics {
 	 */
 	public static final String PERSISTENCE_EVENT_CREATE = BASE_PO + "create";
 
+	/**
+	 * Compatibility events posted by the {@link IContextService} on matching events from the
+	 * ElexisEventDispatcher. Allows JPA code to refresh entities on PO changes.
+	 */
+	public static final String PERSISTENCE_EVENT_COMPATIBILITY = BASE_PO + "compatibility/";
+	public static final String PERSISTENCE_EVENT_COMPATIBILITY_CREATE =
+		PERSISTENCE_EVENT_COMPATIBILITY + "create";
+	public static final String PERSISTENCE_EVENT_COMPATIBILITY_DELETE =
+		PERSISTENCE_EVENT_COMPATIBILITY + "delete";
+	
 	/**
 	 * A JPA Entity was changed / saved
 	 */

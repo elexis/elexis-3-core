@@ -42,6 +42,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
@@ -73,8 +74,6 @@ public class FaelleView extends ViewPart implements IRefreshable {
 	
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 	
-	
-	@Optional
 	@Inject
 	void activePatient(@Optional IPatient patient){
 		Display.getDefault().asyncExec(() -> {
@@ -110,6 +109,15 @@ public class FaelleView extends ViewPart implements IRefreshable {
 	
 	@Optional
 	@Inject
+	void compatitbility(
+		@UIEventTopic(ElexisEventTopics.PERSISTENCE_EVENT_COMPATIBILITY + "*") ICoverage iCoverage){
+		if (actPatient != null) {
+			CoreModelServiceHolder.get().refresh(actPatient);
+		}
+	}
+	
+	@Optional
+	@Inject
 	void createCoverage(@UIEventTopic(ElexisEventTopics.EVENT_CREATE) ICoverage iCoverage){
 		refreshTableViewer();
 	}
@@ -134,7 +142,6 @@ public class FaelleView extends ViewPart implements IRefreshable {
 		}
 	}
 
-	@Optional
 	@Inject
 	void activeCoverage(@Optional ICoverage iCoverage){
 		Display.getDefault().asyncExec(() -> {
