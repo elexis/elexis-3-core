@@ -15,15 +15,10 @@ package ch.elexis.core.ui.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.Dialog;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.ICodeElement;
-import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.dialogs.AddElementToBlockDialog;
-import ch.elexis.data.Leistungsblock;
+import ch.elexis.core.ui.actions.AddVerrechenbarToLeistungsblockAction;
 import ch.elexis.data.VerrechenbarAdapter;
 
 /**
@@ -52,18 +47,6 @@ public abstract class UiVerrechenbarAdapter extends VerrechenbarAdapter {
 	}
 	
 	private void makeActions(final ICodeElement el){
-		addToBlockAction = new Action("Zu Leistungsblock...") {
-			@Override
-			public void run(){
-				AddElementToBlockDialog adb = new AddElementToBlockDialog(UiDesk.getTopShell());
-				if (adb.open() == Dialog.OK) {
-					ICodeElement ice =
-						(ICodeElement) ElexisEventDispatcher.getSelected(el.getClass());
-					Leistungsblock lb = adb.getResult();
-					lb.addElement(ice);
-					ElexisEventDispatcher.reload(Leistungsblock.class);
-				}
-			}
-		};
+		addToBlockAction = new AddVerrechenbarToLeistungsblockAction(el.getClass());
 	}
 }
