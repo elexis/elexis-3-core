@@ -2312,7 +2312,9 @@ public class Messages extends NLS {
 	public static String LaborView_NoPatientSelected;
 	public static String LaborView_Open;
 	public static String LaborView_Refresh;
+	public static String LaborView_collapse_all;
 	public static String LaborView_couldntwrite;
+	public static String LaborView_expand_all;
 	public static String LaborView_import;
 	public static String LaborView_importToolTip;
 	public static String LaborView_labImporterCaption;
