@@ -294,7 +294,19 @@ public interface IModelService {
 	 * 
 	 * @param Identifiable
 	 */
-	public void refresh(Identifiable identifiable);
+	default public void refresh(Identifiable identifiable){
+		refresh(identifiable, false);
+	}
+	
+	/**
+	 * Refresh the entity of the {@link Identifiable} with data from the L2 cache or if not loaded
+	 * the database. With the refreshCache parameter the data is always loaded from the database and
+	 * the L2 cache is refreshed.
+	 * 
+	 * @param Identifiable
+	 * @param refreshCache
+	 */
+	public void refresh(Identifiable identifiable, boolean refreshCache);
 	
 	/**
 	 * Get the value from a property of the entity of the {@link Identifiable}. </br>

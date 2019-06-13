@@ -56,9 +56,17 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 	@Override
 	public void setCoverage(ICoverage value){
 		if (value != null) {
-			getEntity().setFall(((AbstractIdModelAdapter<Fall>) value).getEntity());
-		} else {
-			getEntity().setFall(null);
+			// remove from existing
+			if (getCoverage() != null) {
+				Fall oldEntity = ((AbstractIdModelAdapter<Fall>) getCoverage()).getEntity();
+				oldEntity.getConsultations().remove(getEntity());
+				addChanged(getCoverage());
+			}
+			Fall valueEntity = ((AbstractIdModelAdapter<Fall>) value).getEntity();
+			// set both sides
+			getEntity().setFall(valueEntity);
+			valueEntity.getConsultations().add(getEntity());
+			addChanged(value);
 		}
 	}
 

@@ -2,7 +2,9 @@ package ch.elexis.core.jpa.model.adapter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -100,12 +102,13 @@ public abstract class AbstractModelService implements IModelService {
 	}
 	
 	@Override
-	public void refresh(Identifiable identifiable){
+	public void refresh(Identifiable identifiable, boolean refreshCache){
 		EntityManager em = getEntityManager(true);
 		EntityWithId dbObject = getDbObject(identifiable).orElse(null);
 		HashMap<String, Object> queryHints = new HashMap<>();
-		// TODO check why references are not refreshed from L2 cache without this flag
-		queryHints.put(QueryHints.REFRESH, HintValues.TRUE);
+		if (refreshCache) {
+			queryHints.put(QueryHints.REFRESH, HintValues.TRUE);
+		}
 		EntityWithId reloadedDbObject = em.find(dbObject.getClass(), dbObject.getId(), queryHints);
 		if (reloadedDbObject != null) {
 			setDbObject(identifiable, reloadedDbObject);
@@ -143,6 +146,9 @@ public abstract class AbstractModelService implements IModelService {
 	
 	@Override
 	public boolean save(Identifiable identifiable){
+		if (identifiable.getChanged() != null) {
+			return save(Collections.singletonList(identifiable));
+		}
 		Optional<EntityWithId> dbObject = getDbObject(identifiable);
 		if (dbObject.isPresent()) {
 			boolean newlyCreatedObject = (dbObject.get().getLastupdate() == null);
@@ -167,6 +173,7 @@ public abstract class AbstractModelService implements IModelService {
 	
 	@Override
 	public boolean save(List<? extends Identifiable> identifiables){
+		identifiables = addChanged(identifiables);
 		Map<Identifiable, EntityWithId> dbObjects = identifiables.parallelStream()
 			.collect(Collectors.toMap(Function.identity(), i -> getDbObject(i).orElse(null)));
 		if (!dbObjects.isEmpty()) {
@@ -198,6 +205,20 @@ public abstract class AbstractModelService implements IModelService {
 		}
 		LoggerFactory.getLogger(getClass()).error("Could not save list [{}]", identifiables);
 		return false;
+	}
+	
+	protected List<? extends Identifiable> addChanged(List<? extends Identifiable> identifiables){
+		HashSet<Identifiable> uniqIdentifiables = new HashSet<Identifiable>();
+		identifiables.forEach(
+			i -> {
+				if(i.getChanged() != null) {
+					uniqIdentifiables.addAll(i.getChanged());
+					i.clearChanged();
+				} else {
+					uniqIdentifiables.add(i);
+				}
+			});
+		return new ArrayList<Identifiable>(uniqIdentifiables);
 	}
 	
 	@Override

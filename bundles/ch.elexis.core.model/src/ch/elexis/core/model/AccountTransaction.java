@@ -28,10 +28,9 @@ public class AccountTransaction
 	@Override
 	public void setInvoice(IInvoice value){
 		if (value instanceof AbstractIdModelAdapter) {
+			// TODO modify patient if opposite reference is available
 			getEntity().setInvoice(
 				((AbstractIdModelAdapter<ch.elexis.core.jpa.entities.Invoice>) value).getEntity());
-		} else if (value == null) {
-			getEntity().setInvoice(null);
 		}
 	}
 	
@@ -66,10 +65,9 @@ public class AccountTransaction
 	@Override
 	public void setPatient(IPatient value){
 		if (value instanceof AbstractIdModelAdapter) {
+			// TODO modify patient if opposite reference is available
 			getEntity().setPatient(
 				((AbstractIdModelAdapter<ch.elexis.core.jpa.entities.Kontakt>) value).getEntity());
-		} else if (value == null) {
-			getEntity().setPatient(null);
 		}
 	}
 	

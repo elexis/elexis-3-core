@@ -20,6 +20,11 @@
         <genParameters ecoreParameter="model.ecore#//Identifiable/getXid/domain"/>
       </genOperations>
       <genOperations ecoreOperation="model.ecore#//Identifiable/getLastupdate"/>
+      <genOperations ecoreOperation="model.ecore#//Identifiable/getChanged"/>
+      <genOperations ecoreOperation="model.ecore#//Identifiable/addChanged">
+        <genParameters ecoreParameter="model.ecore#//Identifiable/addChanged/changed"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Identifiable/clearChanged"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//Deleteable">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//Deleteable/deleted"/>

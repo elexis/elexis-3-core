@@ -21,6 +21,15 @@
       <eParameters name="domain" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eOperations>
     <eOperations name="getLastupdate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
+    <eOperations name="getChanged">
+      <eGenericType eClassifier="ecore:EClass types.ecore#//List">
+        <eTypeArguments eClassifier="#//Identifiable"/>
+      </eGenericType>
+    </eOperations>
+    <eOperations name="addChanged">
+      <eParameters name="changed" eType="#//Identifiable"/>
+    </eOperations>
+    <eOperations name="clearChanged"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Deleteable" abstract="true" interface="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="deleted" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>

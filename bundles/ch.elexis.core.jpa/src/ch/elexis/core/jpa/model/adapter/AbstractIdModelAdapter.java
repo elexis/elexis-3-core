@@ -4,13 +4,17 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IModelService;
 
 public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements Identifiable {
+	
+	protected List<Identifiable> changedList;
 	
 	/**
 	 * Used in json serialization
@@ -60,6 +64,25 @@ public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements 
 	@Override
 	public Long getLastupdate(){
 		return getEntity().getLastupdate();
+	}
+	
+	@Override
+	public void addChanged(Identifiable changed){
+		if (changedList == null) {
+			changedList = new ArrayList<Identifiable>();
+			changedList.add(this);
+		}
+		changedList.add(changed);
+	}
+	
+	@Override
+	public List<Identifiable> getChanged(){
+		return changedList;
+	}
+	
+	@Override
+	public void clearChanged(){
+		changedList = null;
 	}
 	
 	protected Date toDate(LocalDateTime localDateTime){
