@@ -14,6 +14,9 @@ location "http://download.elexis.info/elexis/master/p2/target/" {
 	org.eclipse.swt.nl_de
 	org.eclipse.swt.nl_fr
 	org.eclipse.swt.nl_it
+	org.eclipse.ui.nl_de
+	org.eclipse.ui.nl_fr
+	org.eclipse.ui.nl_it
 	org.eclipse.ui.workbench.nl_de
 	org.eclipse.ui.workbench.nl_fr
 	org.eclipse.ui.workbench.nl_it
@@ -106,7 +109,7 @@ location "http://download.elexis.info/elexis/master/p2/target/" {
 	com.phloc.commons
 	com.phloc.schematron
 	findbugsAnnotations
-	com.google.code.gson
+	com.google.gson
 	org.thymeleaf
 	ognl
 	org.attoparser
