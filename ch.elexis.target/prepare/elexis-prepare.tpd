@@ -141,7 +141,7 @@ location "http://download.elexis.info/elexis-server/elexis-server-dependencies" 
 	com.phloc.commons
 	com.phloc.schematron
 	findbugsAnnotations
-	com.google.code.gson
+	com.google.gson
 	org.thymeleaf
 	ognl
 	org.attoparser
