@@ -1,9 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde?><!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl --><target name="Elexis" sequenceNumber="1554710856">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde?><!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl --><target name="Elexis" sequenceNumber="1560366118">
   <locations>
     <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.swt.nl_de" version="4.8.0.v20180815020001"/>
       <unit id="org.eclipse.swt.nl_fr" version="4.8.0.v20180815020001"/>
       <unit id="org.eclipse.swt.nl_it" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.ui.nl_de" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.ui.nl_fr" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.ui.nl_it" version="4.8.0.v20180815020001"/>
       <unit id="org.eclipse.ui.workbench.nl_de" version="4.8.0.v20180815020001"/>
       <unit id="org.eclipse.ui.workbench.nl_fr" version="4.8.0.v20180815020001"/>
       <unit id="org.eclipse.ui.workbench.nl_it" version="4.8.0.v20180815020001"/>
@@ -70,7 +73,7 @@
       <repository location="http://download.eclipse.org/nebula/releases/latest/"/>
     </location>
     <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-      <unit id="com.eclipsesource.jaxrs.consumer" version="5.3.1.201803161213"/>
+      <unit id="com.eclipsesource.jaxrs.consumer" version="5.3.1.201905211243"/>
       <unit id="com.eclipsesource.jaxrs.jersey-all-nojavax" version="2.24.1"/>
       <repository location="http://medevit.github.io/osgi-jax-rs-connector/5.3.100/"/>
     </location>
@@ -102,7 +105,7 @@
       <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180905201904/repository/"/>
     </location>
     <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-      <unit id="info.elexis.server.hapi.fhir" version="3.4.0.201904021312"/>
+      <unit id="info.elexis.server.hapi.fhir" version="3.4.0.201906061338"/>
       <repository location="http://download.elexis.info/elexis-server/master/p2/elexis-server"/>
     </location>
     <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">

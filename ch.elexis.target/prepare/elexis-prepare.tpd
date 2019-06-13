@@ -6,6 +6,9 @@ location "https://ftp.fau.de/eclipse/technology/babel/update-site/R0.16.0/photon
 	org.eclipse.swt.nl_de
 	org.eclipse.swt.nl_fr
 	org.eclipse.swt.nl_it
+	org.eclipse.ui.nl_de
+	org.eclipse.ui.nl_fr
+	org.eclipse.ui.nl_it
 	org.eclipse.ui.workbench.nl_de
 	org.eclipse.ui.workbench.nl_fr
 	org.eclipse.ui.workbench.nl_it
