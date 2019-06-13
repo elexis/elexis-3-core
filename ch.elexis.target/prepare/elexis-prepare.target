@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis" sequenceNumber="1560419300">
+<target name="Elexis" sequenceNumber="1560421926">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.swt.nl_de" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.swt.nl_fr" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.swt.nl_it" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.ui.nl_de" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.ui.nl_fr" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.ui.nl_it" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.ui.workbench.nl_de" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.ui.workbench.nl_fr" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.ui.workbench.nl_it" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.e4.ui.swt.gtk.nl_de" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.e4.ui.swt.gtk.nl_fr" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.e4.ui.swt.gtk.nl_it" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.e4.ui.workbench.renderers.swt.nl_de" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.e4.ui.workbench.renderers.swt.nl_fr" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.e4.ui.workbench.renderers.swt.nl_it" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.jface.nl_de" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.jface.nl_fr" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.jface.nl_it" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.ui.browser.nl_de" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.ui.browser.nl_fr" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.ui.browser.nl_it" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.ui.views.nl_de" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.ui.views.nl_fr" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.ui.views.nl_it" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.equinox.p2.ui.nl_de" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.equinox.p2.ui.nl_fr" version="4.10.0.v20190126060001"/>
-      <unit id="org.eclipse.equinox.p2.ui.nl_it" version="4.10.0.v20190126060001"/>
-      <repository location="https://download.eclipse.org/technology/babel/update-site/R0.16.1/2018-12"/>
+      <unit id="org.eclipse.swt.nl_de" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.swt.nl_fr" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.swt.nl_it" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.ui.nl_de" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.ui.nl_fr" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.ui.nl_it" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.ui.workbench.nl_de" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.ui.workbench.nl_fr" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.ui.workbench.nl_it" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.e4.ui.swt.gtk.nl_de" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.e4.ui.swt.gtk.nl_fr" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.e4.ui.swt.gtk.nl_it" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.e4.ui.workbench.renderers.swt.nl_de" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.e4.ui.workbench.renderers.swt.nl_fr" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.e4.ui.workbench.renderers.swt.nl_it" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.jface.nl_de" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.jface.nl_fr" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.jface.nl_it" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.ui.browser.nl_de" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.ui.browser.nl_fr" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.ui.browser.nl_it" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.ui.views.nl_de" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.ui.views.nl_fr" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.ui.views.nl_it" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.equinox.p2.ui.nl_de" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.equinox.p2.ui.nl_fr" version="4.8.0.v20180815020001"/>
+      <unit id="org.eclipse.equinox.p2.ui.nl_it" version="4.8.0.v20180815020001"/>
+      <repository location="https://download.eclipse.org/technology/babel/update-site/R0.16.0/photon"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.18.0.v20190227-1016"/>
