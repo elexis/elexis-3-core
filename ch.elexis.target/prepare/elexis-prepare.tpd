@@ -2,7 +2,7 @@ target "Elexis" with source allEnvironments
 
 // We a mirror http://download.eclipse.org/technology/babel/update-site/R0.16.0/photon as
 // it was really unreliable when building on the Jenkins
-location "https://ftp.fau.de/eclipse/technology/babel/update-site/R0.16.0/photon" {
+location "https://download.eclipse.org/technology/babel/update-site/R0.16.1/2018-12" {
 	org.eclipse.swt.nl_de
 	org.eclipse.swt.nl_fr
 	org.eclipse.swt.nl_it
