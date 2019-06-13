@@ -61,7 +61,7 @@ public class LabImportUtil implements ILabImportUtil {
 	
 	private static Logger logger = LoggerFactory.getLogger(LabImportUtil.class);
 	
-	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL, target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService modelService;
 	
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL, target = "(storeid=ch.elexis.data.store.omnivore)")
