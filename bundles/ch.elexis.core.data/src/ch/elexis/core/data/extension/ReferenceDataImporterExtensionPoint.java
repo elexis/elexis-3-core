@@ -19,8 +19,9 @@ import ch.elexis.core.jdt.Nullable;
  * to the appropriate importer. This update forwarding effects all importers included as
  * ExtensionPoint {@code ch.elexis.core.data.referenceDataImporter} and extending the
  * {@link AbstractReferenceDataImporter} class
- * 
+ * @deprecated NOPO
  */
+@Deprecated
 public class ReferenceDataImporterExtensionPoint {
 	private static Logger log = LoggerFactory.getLogger(ReferenceDataImporterExtensionPoint.class
 		.getName());
