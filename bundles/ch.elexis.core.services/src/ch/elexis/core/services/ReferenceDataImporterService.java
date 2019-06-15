@@ -40,6 +40,6 @@ public class ReferenceDataImporterService implements IReferenceDataImporterServi
 	
 	@Override
 	public Optional<IReferenceDataImporter> getImporter(String referenceDataId){
-		return Optional.of(importersMap.get(referenceDataId));
+		return Optional.ofNullable(importersMap.get(referenceDataId));
 	}
 }
