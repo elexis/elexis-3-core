@@ -912,6 +912,16 @@
             <column name="ID"/>
         </createIndex>
     </changeSet>
+    <changeSet author="thomas" id="TARMED_CODE_IDX">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="TARMED_CODE_IDX" />
+			</not>
+		</preConditions>
+        <createIndex indexName="TARMED_CODE_IDX" tableName="TARMED">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
     
     <changeSet author="thomas (generated)" id="manual_table_VERRECHNETCOPY">
         <preConditions onFail="MARK_RAN">

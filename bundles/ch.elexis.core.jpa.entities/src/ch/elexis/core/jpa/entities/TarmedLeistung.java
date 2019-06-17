@@ -20,7 +20,9 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Table(name = "TARMED")
 @EntityListeners(EntityWithIdListener.class)
 @NamedQueries({
-	@NamedQuery(name = "TarmedLeistungDistinctLaws", query = "SELECT DISTINCT tl.law FROM TarmedLeistung tl WHERE tl.id <> 'VERSION'")
+	@NamedQuery(name = "TarmedLeistungDistinctLaws", query = "SELECT DISTINCT tl.law FROM TarmedLeistung tl WHERE tl.id <> 'VERSION'"),
+	@NamedQuery(name = "TarmedLeistung.parent", query = "SELECT tl FROM TarmedLeistung tl WHERE tl.deleted = false AND tl.parent = :parent ORDER BY tl.code_ ASC"),
+	@NamedQuery(name = "TarmedLeistung.parent.chapter", query = "SELECT tl FROM TarmedLeistung tl WHERE tl.deleted = false AND tl.parent = :parent AND tl.isChapter = :chapter ORDER BY tl.code_ ASC")
 })
 
 public class TarmedLeistung extends AbstractEntityWithId
