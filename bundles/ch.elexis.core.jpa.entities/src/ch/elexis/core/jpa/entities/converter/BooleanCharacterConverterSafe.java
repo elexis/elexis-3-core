@@ -12,8 +12,7 @@ public class BooleanCharacterConverterSafe implements AttributeConverter<Boolean
 
 	@Override
 	public String convertToDatabaseColumn(Boolean objectValue){
-		return (Boolean.valueOf(objectValue.toString()) == true) ? StringConstants.ONE
-				: StringConstants.ZERO;
+		return (objectValue != null && objectValue) ? StringConstants.ONE : StringConstants.ZERO;
 	}
 	
 	@Override
