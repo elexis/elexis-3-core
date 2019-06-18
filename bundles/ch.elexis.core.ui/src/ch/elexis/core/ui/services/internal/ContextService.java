@@ -23,6 +23,7 @@ import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
@@ -90,7 +91,7 @@ public class ContextService implements IContextService, EventHandler {
 	
 	private MandatorChangedEventDispatcherListener mandatorChangedEventDispatcherListener;
 	
-	private CreateDeleteEventDispatcherListener createDeleteChangedEventDispatcherListener;
+	private CompatibilityEventDispatcherListener compatibilityEventDispatcherListener;
 	
 	private IEclipseContext applicationContext;
 	
@@ -105,12 +106,12 @@ public class ContextService implements IContextService, EventHandler {
 		lockingEventDispatcherListener = new LockingEventDispatcherListener();
 		userChangedEventDispatcherListener = new UserChangedEventDispatcherListener();
 		mandatorChangedEventDispatcherListener = new MandatorChangedEventDispatcherListener();
-		createDeleteChangedEventDispatcherListener = new CreateDeleteEventDispatcherListener();
+		compatibilityEventDispatcherListener = new CompatibilityEventDispatcherListener();
 		ElexisEventDispatcher elexisEventDispatcher = ElexisEventDispatcher.getInstance();
 		LoggerFactory.getLogger(getClass()).info("Attaching to " + elexisEventDispatcher);
 		elexisEventDispatcher.addListeners(eventDispatcherListener, reloadEventDispatcherListener,
 			lockingEventDispatcherListener, userChangedEventDispatcherListener,
-			mandatorChangedEventDispatcherListener, createDeleteChangedEventDispatcherListener);
+			mandatorChangedEventDispatcherListener, compatibilityEventDispatcherListener);
 	}
 	
 	@Deactivate
@@ -118,7 +119,7 @@ public class ContextService implements IContextService, EventHandler {
 		ElexisEventDispatcher.getInstance().removeListeners(eventDispatcherListener,
 			reloadEventDispatcherListener, lockingEventDispatcherListener,
 			userChangedEventDispatcherListener, mandatorChangedEventDispatcherListener,
-			createDeleteChangedEventDispatcherListener);
+			compatibilityEventDispatcherListener);
 	}
 	
 	@Override
@@ -223,15 +224,19 @@ public class ContextService implements IContextService, EventHandler {
 				}
 				
 			} else if (ev.getType() == ElexisEvent.EVENT_UPDATE) {
-				postEvent(ElexisEventTopics.EVENT_UPDATE,
-					getModelObjectForPersistentObject(object));
+				Object modelObject = getModelObjectForPersistentObject(object);
+				if(modelObject instanceof Identifiable) {
+					CoreModelServiceHolder.get().refresh((Identifiable)modelObject, true);
+				}
+				postEvent(ElexisEventTopics.EVENT_UPDATE, modelObject);
 			}
 		}
 	}
 	
-	private class CreateDeleteEventDispatcherListener extends ElexisEventListenerImpl {
-		public CreateDeleteEventDispatcherListener(){
-			super(null, null, ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_DELETE, 0);
+	private class CompatibilityEventDispatcherListener extends ElexisEventListenerImpl {
+		public CompatibilityEventDispatcherListener(){
+			super(null, null,
+				ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_RELOAD, 0);
 		}
 		
 		@Override
@@ -249,6 +254,14 @@ public class ContextService implements IContextService, EventHandler {
 			} else if (ev.getType() == ElexisEvent.EVENT_DELETE) {
 				postEvent(ElexisEventTopics.PERSISTENCE_EVENT_COMPATIBILITY_DELETE,
 					getModelObjectForPersistentObject(object));
+			} else if (ev.getType() == ElexisEvent.EVENT_RELOAD) {
+				if (object instanceof Class<?>) {
+					postEvent(ElexisEventTopics.PERSISTENCE_EVENT_COMPATIBILITY_RELOAD,
+						getCoreModelInterfaceForElexisClass((Class<?>) object).orElse(null));
+				} else {
+					postEvent(ElexisEventTopics.PERSISTENCE_EVENT_COMPATIBILITY_RELOAD,
+						getModelObjectForPersistentObject(object));
+				}
 			}
 		}
 	}

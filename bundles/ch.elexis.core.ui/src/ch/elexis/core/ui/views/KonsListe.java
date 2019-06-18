@@ -25,6 +25,7 @@ import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
@@ -47,6 +48,22 @@ public class KonsListe extends ViewPart implements IRefreshable, ISaveablePart2 
 	private KonsFilter filter;
 	
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
+	
+	@Optional
+	@Inject
+	void compatitbility(
+		@UIEventTopic(ElexisEventTopics.PERSISTENCE_EVENT_COMPATIBILITY + "*") Object object){
+		if (object instanceof IEncounter
+			|| (object instanceof Class && object.equals(IEncounter.class))) {
+			// refresh from database if modified by po
+			if (object instanceof IEncounter) {
+				IEncounter encounter = (IEncounter) object;
+				CoreModelServiceHolder.get().refresh(encounter, true);
+				CoreModelServiceHolder.get().refresh(encounter.getCoverage(), true);
+			}
+			restart(true);
+		}
+	}
 	
 	@Inject
 	void activePatient(@Optional IPatient patient){

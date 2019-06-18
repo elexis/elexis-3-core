@@ -110,9 +110,14 @@ public class FaelleView extends ViewPart implements IRefreshable {
 	@Optional
 	@Inject
 	void compatitbility(
-		@UIEventTopic(ElexisEventTopics.PERSISTENCE_EVENT_COMPATIBILITY + "*") ICoverage iCoverage){
-		if (actPatient != null) {
-			CoreModelServiceHolder.get().refresh(actPatient);
+		@UIEventTopic(ElexisEventTopics.PERSISTENCE_EVENT_COMPATIBILITY + "*") Object object){
+		if (object instanceof ICoverage
+			|| (object instanceof Class && object.equals(ICoverage.class))) {
+			// refresh from database if modified by po
+			if (actPatient != null) {
+				CoreModelServiceHolder.get().refresh(actPatient, true);
+			}
+			refreshTableViewer();
 		}
 	}
 	

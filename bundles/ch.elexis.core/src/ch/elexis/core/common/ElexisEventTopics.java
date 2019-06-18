@@ -45,7 +45,8 @@ public class ElexisEventTopics {
 		PERSISTENCE_EVENT_COMPATIBILITY + "create";
 	public static final String PERSISTENCE_EVENT_COMPATIBILITY_DELETE =
 		PERSISTENCE_EVENT_COMPATIBILITY + "delete";
-	
+	public static final String PERSISTENCE_EVENT_COMPATIBILITY_RELOAD =
+		PERSISTENCE_EVENT_COMPATIBILITY + "reload";
 	/**
 	 * A JPA Entity was changed / saved
 	 */
