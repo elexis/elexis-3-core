@@ -1,5 +1,6 @@
 package ch.elexis.core.services;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -57,7 +58,7 @@ public interface IModelService {
 	 * @param clazz
 	 * @return
 	 */
-	public <T> List<T> findAllById(Iterable<String> ids, Class<T> clazz);
+	public <T> List<T> findAllById(Collection<String> ids, Class<T> clazz);
 	
 	/**
 	 * Adapt a jpa loaded entity to clazz. This can be used to "convert" already loaded JPA entities

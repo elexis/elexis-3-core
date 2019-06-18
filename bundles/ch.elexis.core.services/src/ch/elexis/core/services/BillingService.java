@@ -133,8 +133,10 @@ public class BillingService implements IBillingService {
 				optifier.clearContext();
 			}
 			
-			for (IBilledAdjuster iBilledAdjuster : adjusters) {
-				iBilledAdjuster.adjust(optifierResult.get());
+			if (optifierResult.get() != null) {
+				for (IBilledAdjuster iBilledAdjuster : adjusters) {
+					iBilledAdjuster.adjust(optifierResult.get());
+				}
 			}
 			
 			return optifierResult;

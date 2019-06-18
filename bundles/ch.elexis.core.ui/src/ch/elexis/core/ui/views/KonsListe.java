@@ -85,8 +85,10 @@ public class KonsListe extends ViewPart implements IRefreshable, ISaveablePart2 
 	@Optional
 	@Inject
 	void changedCoverage(@UIEventTopic(ElexisEventTopics.BASE_MODEL + "*") ICoverage iCoverage){
-		actPatient = iCoverage.getPatient();
-		restart(false);
+		if (iCoverage != null) {
+			actPatient = iCoverage.getPatient();
+			restart(false);
+		}
 	}
 	
 	@Optional
