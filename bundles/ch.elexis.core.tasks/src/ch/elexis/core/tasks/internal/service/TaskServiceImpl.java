@@ -153,6 +153,7 @@ public class TaskServiceImpl implements ITaskService {
 	
 	@Deactivate
 	private void deactivateComponent(){
+		// TODO what about the running tasks in separate threads?
 		try {
 			quartzExecutor.shutdown();
 		} catch (SchedulerException e) {
@@ -241,6 +242,17 @@ public class TaskServiceImpl implements ITaskService {
 		saveTaskDescriptor(taskDescriptor);
 		
 		return taskDescriptor;
+	}
+	
+	@Override
+	public boolean removeTaskDescriptor(ITaskDescriptor taskDescriptor) throws TaskException {
+
+		if (taskDescriptor == null) {
+			throw new TaskException(TaskException.PARAMETERS_MISSING);
+		}
+
+		setActive(taskDescriptor, false);
+		return taskModelService.remove(taskDescriptor);
 	}
 	
 	void notify(ITask task){

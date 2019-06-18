@@ -677,6 +677,10 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEParameter(op, this.getIIdentifiedRunnable(), "runnable", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEException(op, this.getTaskException());
 
+		op = addEOperation(iTaskServiceEClass, ecorePackage.getEBoolean(), "removeTaskDescriptor", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getITaskDescriptor(), "taskDescriptor", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEException(op, this.getTaskException());
+
 		op = addEOperation(iTaskServiceEClass, this.getITask(), "trigger", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getITaskDescriptor(), "taskDescriptor", 1, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIProgressMonitor(), "progressMonitor", 0, 1, IS_UNIQUE, IS_ORDERED);

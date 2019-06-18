@@ -31,7 +31,6 @@ import ch.elexis.core.model.builder.IUserBuilder;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.tasks.IdentifiedRunnableIdConstants;
-import ch.elexis.core.tasks.TaskTriggerTypeParameterConstants;
 import ch.elexis.core.tasks.internal.model.service.CoreModelServiceHolder;
 import ch.elexis.core.tasks.internal.service.TaskServiceHolder;
 import ch.elexis.core.tasks.model.ITask;
@@ -42,92 +41,88 @@ import ch.elexis.core.tasks.model.TaskTriggerType;
 import ch.elexis.core.types.Gender;
 
 public class TaskServiceTest {
-	
+
 	ITaskService taskService;
 	IIdentifiedRunnable rwcLogContext;
 	IUser owner;
 	ITaskDescriptor taskDescriptor;
 	IProgressMonitor progressMonitor;
 	Map<String, Serializable> runContext = new HashMap<>();
-	
+
 	static Path tempDirectory;
-	
-	public TaskServiceTest(){
+
+	public TaskServiceTest() {
 		taskService = TaskServiceHolder.get();
-		IPerson contact = new IContactBuilder.PersonBuilder(CoreModelServiceHolder.get(), "first",
-			"last", LocalDate.now(), Gender.MALE).buildAndSave();
+		IPerson contact = new IContactBuilder.PersonBuilder(CoreModelServiceHolder.get(), "first", "last",
+				LocalDate.now(), Gender.MALE).buildAndSave();
 		owner = new IUserBuilder(CoreModelServiceHolder.get(), "testUser", contact).buildAndSave();
 	}
-	
+
 	@BeforeClass
-	public static void beforeClass() throws IOException{
+	public static void beforeClass() throws IOException {
 		tempDirectory = Files.createTempDirectory("taskServiceTest");
 		tempDirectory.toFile().deleteOnExit();
 	}
-	
+
 	@Before
-	public void before() throws TaskException{
-		rwcLogContext =
-			taskService.instantiateRunnableById(IdentifiedRunnableIdConstants.LOGRESULTCONTEXT);
+	public void before() throws TaskException {
+		rwcLogContext = taskService.instantiateRunnableById(IdentifiedRunnableIdConstants.LOGRESULTCONTEXT);
 	}
-	
-	private Callable<Boolean> taskDone(ITask task){
+
+	private Callable<Boolean> taskDone(ITask task) {
 		return new Callable<Boolean>() {
 			@Override
-			public Boolean call() throws Exception{
-				return (TaskState.FAILED == task.getState())
-					|| (TaskState.COMPLETED == task.getState());
+			public Boolean call() throws Exception {
+				return (TaskState.FAILED == task.getState()) || (TaskState.COMPLETED == task.getState());
 			}
 		};
 	}
-	
+
 	/**
 	 * Use-Case: manual execution, db check, repair, import
 	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void triggerManual_HelloWorld() throws Exception{
+	public void triggerManual_HelloWorld() throws Exception {
 		taskDescriptor = taskService.createTaskDescriptor(owner, rwcLogContext);
 		taskDescriptor.setReferenceId("manual_helloWorld");
 		taskDescriptor.setRunContextParameter("testKey", "testValue");
 		taskService.setActive(taskDescriptor, true);
-		
+
 		List<ITask> findExecutions = taskService.findExecutions(taskDescriptor);
 		assertTrue(findExecutions.isEmpty());
-		
-		ITask task =
-			taskService.trigger(taskDescriptor, progressMonitor, TaskTriggerType.MANUAL, null);
-		
+
+		ITask task = taskService.trigger(taskDescriptor, progressMonitor, TaskTriggerType.MANUAL, null);
+
 		Awaitility.await().atMost(2, TimeUnit.SECONDS).until(taskDone(task));
 		assertEquals(TaskState.COMPLETED, task.getState());
-		
+
 		findExecutions = taskService.findExecutions(taskDescriptor);
 		assertTrue(findExecutions.size() == 1);
 		assertEquals(TaskState.COMPLETED, findExecutions.get(0).getState());
 		assertTrue(findExecutions.get(0).getResult().containsKey("runnableExecDuration"));
 	}
-	
-	public void triggerManual_Misthios() throws Exception{
+
+	public void triggerManual_Misthios() throws Exception {
 		IIdentifiedRunnable rwcMisthios = taskService.instantiateRunnableById("misthios");
 		taskDescriptor = taskService.createTaskDescriptor(owner, rwcMisthios);
 		taskDescriptor.setReferenceId("manual_helloWorld_misthios");
 		Map<String, Serializable> context = new HashMap<>();
 		context.put("bundle_url",
-			"https://gitlab.medelexis.ch/mdescher/elexis-misthios/raw/master/sample-misthios-bundle/");
+				"https://gitlab.medelexis.ch/mdescher/elexis-misthios/raw/master/sample-misthios-bundle/");
 		taskDescriptor.setRunContext(context);
 		taskService.setActive(taskDescriptor, true);
-		
-		ITask task =
-			taskService.trigger(taskDescriptor, progressMonitor, TaskTriggerType.MANUAL, null);
-		
+
+		ITask task = taskService.trigger(taskDescriptor, progressMonitor, TaskTriggerType.MANUAL, null);
+
 		Awaitility.await().atMost(2, TimeUnit.SECONDS).until(taskDone(task));
 		assertEquals(TaskState.COMPLETED, task.getState());
 	}
-	
+
 	/**
-	 * Use-Case: HL7 Import on incoming HL7 file ATTENTION: On OS X picking up changes in the FS can
-	 * take up to 10 seconds
+	 * Use-Case: HL7 Import on incoming HL7 file ATTENTION: On OS X picking up
+	 * changes in the FS can take up to 10 seconds
 	 * 
 	 * @throws TaskException
 	 * @throws IOException
@@ -136,26 +131,25 @@ public class TaskServiceTest {
 	 */
 	@Test
 	@Ignore
-	public void triggerFSChange() throws TaskException, IOException, InterruptedException{
-		IIdentifiedRunnable rwcDeleteFile =
-			taskService.instantiateRunnableById(IdentifiedRunnableIdConstants.DELETEFILE);
+	public void triggerFSChange() throws TaskException, IOException, InterruptedException {
+		IIdentifiedRunnable rwcDeleteFile = taskService
+				.instantiateRunnableById(IdentifiedRunnableIdConstants.DELETEFILE);
 		taskDescriptor = taskService.createTaskDescriptor(owner, rwcDeleteFile);
 		taskDescriptor.setRunContext(runContext);
 		taskDescriptor.setTriggerType(TaskTriggerType.FILESYSTEM_CHANGE);
-		taskDescriptor.setTriggerParameter(
-			TaskTriggerTypeParameterConstants.FILESYSTEM_CHANGE_PARAM_DIRECTORY_PATH,
-			tempDirectory.toString());
+		taskDescriptor.setTriggerParameter(IIdentifiedRunnable.RunContextParameter.STRING_URL,
+				tempDirectory.toString());
 		taskService.setActive(taskDescriptor, true);
-		
+
 		Path createFile = Files.createTempFile(tempDirectory, "test", "txt");
 		System.out.println(LocalDateTime.now() + " created " + createFile.toString());
-		
+
 		Callable<Boolean> c = () -> {
 			return !createFile.toFile().exists();
 		};
 		Awaitility.await().atMost(15, TimeUnit.SECONDS).until(c);
 	}
-	
+
 	/**
 	 * Use-Case: In CCM -> check for patient reminders
 	 * 
@@ -164,85 +158,85 @@ public class TaskServiceTest {
 	 */
 	@Test
 	@Ignore
-	public void triggerCron() throws TaskException, IOException{
-		
-		IIdentifiedRunnable rwcDeleteFile =
-			taskService.instantiateRunnableById(IdentifiedRunnableIdConstants.DELETEFILE);
+	public void triggerCron() throws TaskException, IOException {
+
+		IIdentifiedRunnable rwcDeleteFile = taskService
+				.instantiateRunnableById(IdentifiedRunnableIdConstants.DELETEFILE);
 		Path createFile = Files.createTempFile(tempDirectory, "test", "txt");
-		
+
 		taskDescriptor = taskService.createTaskDescriptor(owner, rwcDeleteFile);
 		taskDescriptor.setTriggerType(TaskTriggerType.CRON);
 		taskDescriptor.setRunContextParameter(IIdentifiedRunnable.RunContextParameter.STRING_URL,
-			createFile.toString());
+				createFile.toString());
 		// job will run every 5 seconds
 		taskDescriptor.setTriggerParameter("cron", "0/5 * * * * ?");
 		taskService.setActive(taskDescriptor, true);
-		
+
 		Callable<Boolean> c = () -> {
 			return !createFile.toFile().exists();
 		};
 		Awaitility.await().atMost(10, TimeUnit.SECONDS).until(c);
 	}
-	
+
 	/**
 	 * Use-Case: Search for reminders on this patient
 	 * 
 	 * @throws TaskException
 	 */
-	public void triggerSysEvent_PatientChange() throws TaskException{
+	public void triggerSysEvent_PatientChange() throws TaskException {
 		taskDescriptor = taskService.createTaskDescriptor(owner, rwcLogContext);
 		taskDescriptor.setTriggerType(TaskTriggerType.SYSTEM_EVENT);
 		taskDescriptor.setTriggerParameter("eventClass", "ch.elexis.data.Patient");
 		taskDescriptor.setTriggerParameter("eventType", "EVENT_SELECTED");
 		taskService.setActive(taskDescriptor, true);
-		
+
 		throw new UnsupportedOperationException();
 	}
-	
+
 	/**
 	 * Use-Case: Bill a labresult on an existing encounter when result was created
 	 * 
 	 * @see at.medevit.elexis.roche.labor.billing.AddLabToKons
 	 * 
 	 * @throws TaskException
-	 * @throws InterruptedException 
+	 * @throws InterruptedException
 	 */
 	@Test
-	public void triggerSysEvent_LabItemCreate() throws TaskException, InterruptedException{
+	public void triggerSysEvent_LabItemCreate() throws TaskException, InterruptedException {
 		taskDescriptor = taskService.createTaskDescriptor(owner, rwcLogContext);
 		taskDescriptor.setTriggerType(TaskTriggerType.SYSTEM_EVENT);
 		taskDescriptor.setTriggerParameter("topic", ElexisEventTopics.PERSISTENCE_EVENT_CREATE);
-		taskDescriptor.setTriggerParameter(ElexisEventTopics.PROPKEY_CLASS,
-			"ch.elexis.data.Patient");
+		taskDescriptor.setTriggerParameter(ElexisEventTopics.PROPKEY_CLASS, "ch.elexis.data.Patient");
 		taskDescriptor.setTriggerParameter("origin", "self");
 		taskService.setActive(taskDescriptor, true);
-		
+
 		assertEquals(0, taskService.findExecutions(taskDescriptor).size());
-		
+
 		Thread.sleep(1000);
-		
-		IPatient buildAndSave = new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(),
-			"Mister", "Rigoletti", LocalDate.now(), Gender.MALE).buildAndSave();
-	
+
+		IPatient buildAndSave = new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(), "Mister", "Rigoletti",
+				LocalDate.now(), Gender.MALE).buildAndSave();
+
 		Thread.sleep(1500);
-		
+
 		assertEquals(1, taskService.findExecutions(taskDescriptor).size());
-		
+
 	}
-	
+
 	/**
-	 * Use-Case: Job Workflow, passive trigger by another task reaching a specific state
+	 * Use-Case: Job Workflow, passive trigger by another task reaching a specific
+	 * state
 	 * 
 	 * @throws TaskException
 	 */
-	public void triggerJobState() throws TaskException{
+	public void triggerJobState() throws TaskException {
 		taskDescriptor = taskService.createTaskDescriptor(owner, rwcLogContext);
 		taskDescriptor.setTriggerType(TaskTriggerType.OTHER_TASK);
 		taskDescriptor.setTriggerParameter("referenceId", "otherTaskReferenceId");
 		taskDescriptor.setTriggerParameter("taskState", "COMPLETED");
 		taskService.setActive(taskDescriptor, true);
-		
+
 		throw new UnsupportedOperationException();
 	}
-	
+
 }

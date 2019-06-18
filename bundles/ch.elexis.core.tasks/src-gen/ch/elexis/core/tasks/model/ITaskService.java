@@ -43,6 +43,14 @@ public interface ITaskService {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @model exceptions="ch.elexis.core.tasks.model.TaskException"
+	 * @generated
+	 */
+	boolean removeTaskDescriptor(ITaskDescriptor taskDescriptor) throws TaskException;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * @param progressMonitor The progress monitor to report to. If null the task will initialise its own progress monitor.
 	 * @param runContext key value pairs to add to the task run context already populated out of ITaskDescriptor#runContext (e.g. the file system trigger adds the file triggering the event)

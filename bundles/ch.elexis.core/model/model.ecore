@@ -920,7 +920,7 @@
         <details key="documentation" value="the message text to be read by the receiving user(s)"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="messageCodes">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="messageCodes" transient="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="a message code to allow for extended representation and/or action configuration (e.g. show a specific image, perform a specific task)"/>
       </eAnnotations>

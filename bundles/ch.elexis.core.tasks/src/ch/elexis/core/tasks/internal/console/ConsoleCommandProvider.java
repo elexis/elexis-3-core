@@ -104,6 +104,19 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 		}
 	}
 	
+	@CmdAdvisor(description = "deactivate and remove a task descriptor")
+	public void __task_descriptor_remove(
+			@CmdParam(description = "id or referenceId of the task descriptor") String idOrReferenceId)
+			throws TaskException {
+		Optional<ITaskDescriptor> taskDescriptor = taskService.findTaskDescriptorByIdOrReferenceId(idOrReferenceId);
+		if (taskDescriptor.isPresent()) {
+			boolean result = taskService.removeTaskDescriptor(taskDescriptor.get());
+			ok(result);
+		} else {
+			fail("Invalid or ambiguous id argument");
+		}
+	}
+	
 	@CmdAdvisor(description = "list all available identified runnables")
 	public void __task_runnable_list(){
 		List<IIdentifiedRunnable> availableRunnables = taskService.getIdentifiedRunnables();

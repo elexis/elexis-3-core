@@ -59,6 +59,7 @@ public class TriggerTaskForEveryFileInDirectoryRunnable implements IIdentifiedRu
 		runContext.put(RunContextParameter.TASK_DESCRIPTOR_REFID,
 			RunContextParameter.VALUE_MISSING_REQUIRED);
 		runContext.put(RCP_STRING_FILE_EXTENSION_FILTER, null);
+		
 		return runContext;
 	}
 	

@@ -170,7 +170,7 @@ public interface IMessage extends Identifiable, Deleteable {
 	 * @return the value of the '<em>Message Codes</em>' attribute.
 	 * @see #setMessageCodes(Map)
 	 * @see ch.elexis.core.model.ModelPackage#getIMessage_MessageCodes()
-	 * @model
+	 * @model transient="true"
 	 * @generated
 	 */
 	Map<String, String> getMessageCodes();

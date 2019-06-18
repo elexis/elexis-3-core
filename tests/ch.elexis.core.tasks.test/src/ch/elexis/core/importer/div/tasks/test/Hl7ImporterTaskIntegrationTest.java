@@ -162,6 +162,10 @@ public class Hl7ImporterTaskIntegrationTest {
 		
 		// TODO test fail message
 		// TODO partial result?
+		
+		TaskServiceHolder.get().removeTaskDescriptor(watcherTaskDescriptor);
+		TaskServiceHolder.get().removeTaskDescriptor(billLabResultsTaskDescriptor);
+		TaskServiceHolder.get().removeTaskDescriptor(hl7ImporterTaskDescriptor);
 	}
 	
 	private ITaskDescriptor initBillLabResultTask(IUser activeUser) throws TaskException{

@@ -123,6 +123,10 @@
       <eParameters name="owner" eType="ecore:EClass ../../ch.elexis.core/model/model.ecore#//IUser"/>
       <eParameters name="runnable" eType="#//IIdentifiedRunnable"/>
     </eOperations>
+    <eOperations name="removeTaskDescriptor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        eExceptions="#//TaskException">
+      <eParameters name="taskDescriptor" eType="#//ITaskDescriptor"/>
+    </eOperations>
     <eOperations name="trigger" eType="#//ITask" eExceptions="#//TaskException">
       <eParameters name="taskDescriptor" lowerBound="1" eType="#//ITaskDescriptor"/>
       <eParameters name="progressMonitor" eType="#//IProgressMonitor">
