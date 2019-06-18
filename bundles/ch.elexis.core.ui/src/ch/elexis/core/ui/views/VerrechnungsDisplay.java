@@ -58,6 +58,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
@@ -646,13 +647,15 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						List<ICodeElement> elements = block.getElements();
 						for (ICodeElement element : elements) {
 							if (element instanceof IBillable) {
-								Result<IBilled> billResult = BillingServiceHolder.get()
-									.bill((IBillable) element, actEncounter, 1.0);
-								if (!billResult.isOK()) {
-									ResultDialog.show(billResult);
-								} else {
-									viewer.setInput(actEncounter.getBilled());
-								}
+								Display.getDefault().asyncExec(() -> {
+									Result<IBilled> billResult = BillingServiceHolder.get()
+										.bill((IBillable) element, actEncounter, 1.0);
+									if (!billResult.isOK()) {
+										ResultDialog.show(billResult);
+									} else {
+										viewer.setInput(actEncounter.getBilled());
+									}
+								});
 							}
 						}
 						List<ICodeElement> diff = block.getDiffToReferences(elements);
