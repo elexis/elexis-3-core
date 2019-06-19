@@ -40,6 +40,7 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IInvoice#getDemandAmount <em>Demand Amount</em>}</li>
  *   <li>{@link ch.elexis.core.model.IInvoice#getRemark <em>Remark</em>}</li>
  *   <li>{@link ch.elexis.core.model.IInvoice#getPayments <em>Payments</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IInvoice#getStateDate <em>State Date</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIInvoice()
@@ -363,6 +364,28 @@ public interface IInvoice extends Identifiable, Deleteable, WithExtInfo {
 	 * @generated
 	 */
 	List<IPayment> getPayments();
+
+	/**
+	 * Returns the value of the '<em><b>State Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>State Date</em>' attribute.
+	 * @see #setStateDate(LocalDate)
+	 * @see ch.elexis.core.model.ModelPackage#getIInvoice_StateDate()
+	 * @model dataType="ch.elexis.core.types.LocalDate"
+	 * @generated
+	 */
+	LocalDate getStateDate();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IInvoice#getStateDate <em>State Date</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>State Date</em>' attribute.
+	 * @see #getStateDate()
+	 * @generated
+	 */
+	void setStateDate(LocalDate value);
 
 	/**
 	 * <!-- begin-user-doc -->

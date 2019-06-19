@@ -683,6 +683,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="remark" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="payments" upperBound="-1"
         eType="#//IPayment" changeable="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="stateDate" eType="ecore:EDataType types.ecore#//LocalDate"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IStock" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable">

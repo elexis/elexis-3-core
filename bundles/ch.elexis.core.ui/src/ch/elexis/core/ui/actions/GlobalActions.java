@@ -74,6 +74,12 @@ import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.util.BillingUtil;
 import ch.elexis.core.data.util.ResultAdapter;
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.IMandator;
+import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.InvoiceServiceHolder;
 import ch.elexis.core.services.holder.LocalLockServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
@@ -101,7 +107,6 @@ import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
-import ch.elexis.data.Rechnung;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.StringTool;
@@ -489,21 +494,21 @@ public class GlobalActions {
 		makeBillAction = new Action(Messages.GlobalActions_MakeBill) { //$NON-NLS-1$
 			@Override
 			public void run(){
-				Fall actFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
-				Mandant mnd = ElexisEventDispatcher.getSelectedMandator();
+				ICoverage actFall = ContextServiceHolder.get().getActiveCoverage().orElse(null);
+				IMandator mnd = ContextServiceHolder.get().getActiveMandator().orElse(null);
 				if (actFall != null && mnd != null) {
-					String rsId = mnd.getRechnungssteller().getId();
-					Konsultation[] bhdl = actFall.getBehandlungen(false);
-					List<Konsultation> lBehdl = new ArrayList<Konsultation>(bhdl.length);
-					for (Konsultation b : bhdl) {
-						Rechnung rn = b.getRechnung();
+					String rsId = mnd.getBiller().getId();
+					List<IEncounter> bhdl = actFall.getEncounters();
+					List<IEncounter> lBehdl = new ArrayList<>();
+					for (IEncounter b : bhdl) {
+						IInvoice rn = b.getInvoice();
 						if (rn == null) {
-							if (b.getMandant().getRechnungssteller().getId().equals(rsId)) {
+							if (b.getMandator().getBiller().getId().equals(rsId)) {
 								lBehdl.add(b);
 							}
 						}
 					}
-					Map<Integer, List<Konsultation>> sortedByYears = BillingUtil.getSortedByYear(lBehdl);
+					Map<Integer, List<IEncounter>> sortedByYears = BillingUtil.getSortedEncountersByYear(lBehdl);
 					if (!BillingUtil.canBillYears(new ArrayList<>(sortedByYears.keySet()))) {
 						StringJoiner sj = new StringJoiner(", ");
 						sortedByYears.keySet().forEach(i -> sj.add(Integer.toString(i)));
@@ -513,7 +518,7 @@ public class GlobalActions {
 								+ sj.toString() + " erstellen?")) {
 							// bill each year separately
 							for (Integer year : sortedByYears.keySet()) {
-								Result<Rechnung> res = Rechnung.build(sortedByYears.get(year));
+								Result<IInvoice> res = InvoiceServiceHolder.get().invoice(sortedByYears.get(year));
 								if (!res.isOK()) {
 									ErrorDialog.openError(mainWindow.getShell(),
 										Messages.GlobalActions_Error,
@@ -523,7 +528,7 @@ public class GlobalActions {
 							}
 						}
 					} else {
-						Result<Rechnung> res = Rechnung.build(lBehdl);
+						Result<IInvoice> res = InvoiceServiceHolder.get().invoice(lBehdl);
 						if (!res.isOK()) {
 							ErrorDialog.openError(mainWindow.getShell(),
 								Messages.GlobalActions_Error,

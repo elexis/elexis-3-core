@@ -178,6 +178,7 @@ public class InvoiceService implements IInvoiceService {
 		ret.setDateTo(endDate);
 		ret.setDate(LocalDate.now());
 		ret.setState(InvoiceState.OPEN);
+		ret.setStateDate(LocalDate.now());
 		ret.setTotalAmount(sum);
 		if (!result.isOK()) {
 			return result;

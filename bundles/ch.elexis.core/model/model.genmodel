@@ -449,6 +449,7 @@
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IInvoice/demandAmount"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IInvoice/remark"/>
       <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference model.ecore#//IInvoice/payments"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IInvoice/stateDate"/>
       <genOperations ecoreOperation="model.ecore#//IInvoice/addTrace">
         <genParameters ecoreParameter="model.ecore#//IInvoice/addTrace/name"/>
         <genParameters ecoreParameter="model.ecore#//IInvoice/addTrace/value"/>

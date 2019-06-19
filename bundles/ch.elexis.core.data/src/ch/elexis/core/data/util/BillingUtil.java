@@ -31,6 +31,7 @@ import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
@@ -397,9 +398,11 @@ public class BillingUtil {
 	/**
 	 * Sort the consultations by year.
 	 * 
+	 * @deprecated
 	 * @param consultations
 	 * @return
 	 */
+	@Deprecated
 	public static Map<Integer, List<Konsultation>> getSortedByYear(
 		List<Konsultation> consultations){
 		Map<Integer, List<Konsultation>> ret = new HashMap<>();
@@ -408,6 +411,28 @@ public class BillingUtil {
 			konsDate.set(consultation.getDatum());
 			Integer year = new Integer(konsDate.get(TimeTool.YEAR));
 			List<Konsultation> list = ret.get(year);
+			if (list == null) {
+				list = new ArrayList<>();
+			}
+			list.add(consultation);
+			ret.put(year, list);
+		}
+		return ret;
+	}
+	
+	/**
+	 * Sort the Encounters by year.
+	 * 
+	 * 
+	 * @param 
+	 * @return
+	 */
+	public static Map<Integer, List<IEncounter>> getSortedEncountersByYear(
+		List<IEncounter> consultations){
+		Map<Integer, List<IEncounter>> ret = new HashMap<>();
+		for (IEncounter consultation : consultations) {
+			Integer year = consultation.getDate().getYear();
+			List<IEncounter> list = ret.get(year);
 			if (list == null) {
 				list = new ArrayList<>();
 			}
