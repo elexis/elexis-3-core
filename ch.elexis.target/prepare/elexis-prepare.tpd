@@ -121,10 +121,6 @@ location "http://download.eclipse.org/tools/orbit/downloads/drops/R2018090520190
 	osgi.enterprise
 }
 
-location "http://download.elexis.info/elexis-server/master/p2/elexis-server" {
-	info.elexis.server.hapi.fhir
-}
-
 location "http://download.elexis.info/mirror.4.elexis/snapshot" {
 	javax.ws.rs [1.1.1,1.1.2)
 	org.slf4j.api [1.7.2,1.7.3)

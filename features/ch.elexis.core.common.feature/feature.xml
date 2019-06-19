@@ -318,13 +318,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="info.elexis.server.hapi.fhir"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="stax2-api"
          download-size="0"
          install-size="0"
@@ -382,6 +375,13 @@
 
    <plugin
          id="org.apache.commons.collections"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.elexis.core.hapi.fhir"
          download-size="0"
          install-size="0"
          version="0.0.0"

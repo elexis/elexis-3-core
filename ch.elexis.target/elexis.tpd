@@ -92,8 +92,6 @@ location "http://download.elexis.info/elexis/f11106/p2/target/" {
 	org.apache.poi.ooxml.schemas
 	org.apache.xmlbeans
 	org.dom4j
-	
-	info.elexis.server.hapi.fhir
 
 	javax.ws.rs [1.1.1,1.1.2)
 	org.slf4j.api [1.7.2,1.7.3)
