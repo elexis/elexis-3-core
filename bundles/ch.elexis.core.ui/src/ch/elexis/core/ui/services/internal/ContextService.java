@@ -17,6 +17,7 @@ import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
@@ -72,6 +73,8 @@ import ch.elexis.data.User;
  */
 @Component(property = EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE)
 public class ContextService implements IContextService, EventHandler {
+	
+	private static Logger logger = LoggerFactory.getLogger(ContextService.class);
 	
 	// do not use holder, if not direct dep. service is started too early
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
@@ -216,15 +219,21 @@ public class ContextService implements IContextService, EventHandler {
 			}
 			if (ev.getType() == ElexisEvent.EVENT_RELOAD) {
 				if (object instanceof Class<?>) {
-					postEvent(ElexisEventTopics.EVENT_RELOAD,
-						getCoreModelInterfaceForElexisClass((Class<?>) object).orElse(null));
+					Optional<Class<?>> modelClass = getCoreModelInterfaceForElexisClass((Class<?>) object);
+					if(modelClass.isPresent()) {
+						postEvent(ElexisEventTopics.EVENT_RELOAD,
+							modelClass.get());
+					} else {
+						logger.warn(
+							"Could not get model class for [" + object + "] ignored reload event");
+					}
 				} else {
 					postEvent(ElexisEventTopics.EVENT_RELOAD,
 						getModelObjectForPersistentObject(object));
 				}
-				
 			} else if (ev.getType() == ElexisEvent.EVENT_UPDATE) {
 				Object modelObject = getModelObjectForPersistentObject(object);
+				// refresh object due to change performed by PersistentObject 
 				if(modelObject instanceof Identifiable) {
 					CoreModelServiceHolder.get().refresh((Identifiable)modelObject, true);
 				}
