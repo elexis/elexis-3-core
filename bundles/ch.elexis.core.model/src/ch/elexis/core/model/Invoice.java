@@ -269,4 +269,14 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 		}
 		return ret.isNegative() ? ret.multiply(-1d) : ret;
 	}
+
+	@Override
+	public LocalDate getStateDate(){
+		return getEntity().getStatusDate();
+	}
+
+	@Override
+	public void setStateDate(LocalDate value){
+		getEntity().setStatusDate(value);
+	}
 }

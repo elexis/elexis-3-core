@@ -3254,6 +3254,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getIInvoice_StateDate() {
+		return (EAttribute)iInvoiceEClass.getEStructuralFeatures().get(15);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getIStock() {
 		return iStockEClass;
 	}
@@ -4765,6 +4775,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iInvoiceEClass, IINVOICE__DEMAND_AMOUNT);
 		createEAttribute(iInvoiceEClass, IINVOICE__REMARK);
 		createEReference(iInvoiceEClass, IINVOICE__PAYMENTS);
+		createEAttribute(iInvoiceEClass, IINVOICE__STATE_DATE);
 
 		iStockEClass = createEClass(ISTOCK);
 		createEAttribute(iStockEClass, ISTOCK__CODE);
@@ -5556,6 +5567,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIInvoice_DemandAmount(), theTypesPackage.getMoney(), "demandAmount", null, 0, 1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIInvoice_Remark(), ecorePackage.getEString(), "remark", null, 0, 1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIInvoice_Payments(), this.getIPayment(), null, "payments", null, 0, -1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIInvoice_StateDate(), theTypesPackage.getLocalDate(), "stateDate", null, 0, 1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		op = addEOperation(iInvoiceEClass, null, "addTrace", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
