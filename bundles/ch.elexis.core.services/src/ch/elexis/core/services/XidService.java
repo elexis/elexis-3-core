@@ -177,7 +177,7 @@ public class XidService implements IXidService {
 				IXid xid = existing;
 				xid.setDomain(domain);
 				xid.setDomainId(id);
-				xid.setObject(this);
+				xid.setObject(identifiable);
 				CoreModelServiceHolder.get().save(xid);
 				return true;
 			}

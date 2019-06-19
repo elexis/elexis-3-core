@@ -2,6 +2,7 @@ package ch.elexis.core.jpa.model.adapter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -80,10 +81,13 @@ public abstract class AbstractModelService implements IModelService {
 	}
 	
 	@Override
-	public <T> List<T> findAllById(Iterable<String> ids, Class<T> clazz){
+	public <T> List<T> findAllById(Collection<String> ids, Class<T> clazz){
 		IQuery<T> query = getQuery(clazz);
-		query.and("id", COMPARATOR.IN, ids);
-		return (List<T>) query.execute();
+		if (ids != null && !ids.isEmpty()) {
+			query.and("id", COMPARATOR.IN, ids);
+			return (List<T>) query.execute();
+		}
+		return Collections.emptyList();
 	}
 	
 	@SuppressWarnings("unchecked")
