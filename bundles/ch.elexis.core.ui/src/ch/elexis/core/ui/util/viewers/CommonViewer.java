@@ -28,15 +28,23 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.ScrollBar;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IViewSite;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.services.IContext;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.GenericObjectDragSource;
@@ -85,6 +93,10 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 	private MenuManager mgr;
 	private Composite composite;
 	private String viewName = null;
+	
+	private boolean scrolledToBottom;
+	private boolean showDisableLimit;
+	private Button disableLimitBtn;
 	
 	public Composite getParent(){
 		return parent;
@@ -172,6 +184,26 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 		viewer.setContentProvider(viewerConfigurer.getContentProvider());
 		viewer.setLabelProvider(viewerConfigurer.getLabelProvider());
 		viewer.addSelectionChangedListener(this);
+		if (viewer.getControl() instanceof Table) {
+			Table table = (Table) viewer.getControl();
+			ScrollBar verticalBar = table.getVerticalBar();
+			verticalBar.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e){
+					if (showDisableLimit && table.getItemCount() > 100) {
+						TableItem lastItem = table.getItem(table.getItemCount() - 1);
+						TableItem lastVisibleItem =
+							table.getItem(new Point(table.getSize().x - 1, table.getSize().y - 1));
+						scrolledToBottom = lastItem.equals(lastVisibleItem);
+						if (scrolledToBottom) {
+							showDisableLimitButton();
+						} else {
+							hideDisableLimitButton();
+						}
+					}
+				}
+			});
+		}
 		if (viewerConfigurer.getDoubleClickListener() != null) {
 			viewer.addDoubleClickListener(viewerConfigurer.getDoubleClickListener());
 		}
@@ -470,5 +502,55 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 	
 	public boolean isDisposed(){
 		return viewer == null || viewer.getControl().isDisposed();
+	}
+	
+	public void setLimitReached(boolean value, int limit){
+		showDisableLimit = value;
+		Display.getDefault().asyncExec(() -> {
+			if(value) {
+				addLimitButton(limit);
+				if (scrolledToBottom) {
+					showDisableLimitButton();
+				}
+			} else {
+				hideDisableLimitButton();
+			}
+		});
+	}
+	
+	private void addLimitButton(int limit){
+		if (disableLimitBtn == null) {
+			disableLimitBtn = new Button(composite, SWT.FLAT);
+			disableLimitBtn.setText("Mehr als " + limit + " laden ...");
+			disableLimitBtn.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e){
+					((CommonViewerContentProvider) viewer.getContentProvider())
+						.setIgnoreLimit(true);
+					CommonViewer.this.notify(CommonViewer.Message.update);
+					showDisableLimit = false;
+					hideDisableLimitButton();
+				}
+			});
+			disableLimitBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		}
+	}
+	
+	private void showDisableLimitButton(){
+		if (disableLimitBtn != null) {
+			((GridData) disableLimitBtn.getLayoutData()).exclude = false;
+			disableLimitBtn.setVisible(true);
+		}
+		composite.layout();
+		viewer.getControl().getParent().layout();
+	}
+	
+	private void hideDisableLimitButton(){
+		if (disableLimitBtn != null) {
+			((GridData) disableLimitBtn.getLayoutData()).exclude = true;
+			disableLimitBtn.setVisible(false);
+		}
+		composite.layout();
+		viewer.getControl().getParent().layout();
 	}
 }

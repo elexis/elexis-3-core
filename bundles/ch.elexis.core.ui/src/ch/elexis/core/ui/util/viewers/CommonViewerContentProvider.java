@@ -22,6 +22,8 @@ public abstract class CommonViewerContentProvider implements ICommonViewerConten
 	
 	protected List<QueryFilter> queryFilters = new ArrayList<>();
 	
+	protected boolean ignoreLimit;
+	
 	public CommonViewerContentProvider(CommonViewer commonViewer){
 		this.commonViewer = commonViewer;
 	}
@@ -188,5 +190,9 @@ public abstract class CommonViewerContentProvider implements ICommonViewerConten
 	
 	public interface QueryFilter {
 		public void apply(IQuery<?> query);
+	}
+	
+	protected void setIgnoreLimit(boolean value){
+		this.ignoreLimit = value;
 	}
 }

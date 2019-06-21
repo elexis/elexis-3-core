@@ -39,14 +39,16 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.util.viewers.CommonViewerContentProvider;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
+import ch.elexis.core.ui.util.viewers.CommonViewerContentProvider;
 import ch.elexis.core.ui.views.Messages;
 import ch.elexis.data.Query;
 import ch.rgw.tools.StringTool;
 
 public class PatListeContentProvider extends CommonViewerContentProvider
 		implements ILazyContentProvider {
+	private static final int QUERY_LIMIT = 500;
+	
 	Object[] pats;
 	boolean bValid = false;
 	boolean bUpdating = false;
@@ -93,7 +95,11 @@ public class PatListeContentProvider extends CommonViewerContentProvider
 	
 	@Override
 	protected IQuery<?> getBaseQuery(){
-		return CoreModelServiceHolder.get().getQuery(IPatient.class);
+		IQuery<IPatient> ret = CoreModelServiceHolder.get().getQuery(IPatient.class);
+		if (!ignoreLimit) {
+			ret.limit(QUERY_LIMIT);
+		}
+		return ret;
 	}
 	
 	/**
@@ -127,8 +133,11 @@ public class PatListeContentProvider extends CommonViewerContentProvider
 			}
 		}
 		List<IPatient> lPats = patientQuery.execute();
+		if (!ignoreLimit) {
+			commonViewer.setLimitReached(lPats.size() == QUERY_LIMIT, QUERY_LIMIT);
+		}
 		if (pfilter != null) {
-			lPats.stream().filter(pat -> applyFilter(pat)).collect(Collectors.toList());
+			lPats = lPats.stream().filter(pat -> applyFilter(pat)).collect(Collectors.toList());
 		}
 		pats = lPats.toArray(new Object[lPats.size()]);
 		UiDesk.getDisplay().syncExec(new Runnable() {
@@ -198,9 +207,20 @@ public class PatListeContentProvider extends CommonViewerContentProvider
 	
 	@Override
 	public void changed(HashMap<String, String> values){
+		super.setIgnoreLimit(false);
 		bValid = false;
 		// trigger loading pats
 		getElements(null);
+	}
+	
+	@Override
+	protected void setIgnoreLimit(boolean value){
+		super.setIgnoreLimit(value);
+		if (value) {
+			bValid = false;
+			// trigger loading pats
+			getElements(null);
+		}
 	}
 	
 	@Override
