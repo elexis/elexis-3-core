@@ -79,8 +79,9 @@ public class ArticleTest extends AbstractTest {
 		assertEquals(loaded.get(), article1.getProduct());
 		
 		// must clear product references before removing product
-		product.getPackages().forEach(p -> p.setProduct(null));
-		coreModelService.save(Arrays.asList(article, article1));
+		List<IArticle> packages = product.getPackages();
+		packages.forEach(p -> p.setProduct(null));
+		coreModelService.save(packages);
 		coreModelService.remove(product);
 		loaded = coreModelService.load(article.getId(), IArticle.class);
 		assertTrue(loaded.isPresent());
