@@ -71,7 +71,7 @@ public class NeuerFallDialog extends TitleAreaDialog {
 			fdb.save();
 			LocalLockServiceHolder.get().releaseLock(fall);
 		}
-		ElexisEventDispatcher.reload(Fall.class);
+		ElexisEventDispatcher.update(fall);
 		super.okPressed();
 	}
 	
