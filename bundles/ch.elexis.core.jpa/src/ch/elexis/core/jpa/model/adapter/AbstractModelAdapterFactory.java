@@ -134,7 +134,7 @@ public abstract class AbstractModelAdapterFactory {
 	 */
 	public Optional<Identifiable> getModelAdapter(EntityWithId entity,
 		Class<?> interfaceClass, boolean testPrecondition){
-		return getModelAdapter(entity, interfaceClass, testPrecondition, false);
+		return getModelAdapter(entity, interfaceClass, testPrecondition, true);
 	}
 	
 	public Optional<Identifiable> getModelAdapter(EntityWithId entity, Class<?> interfaceClass,
