@@ -95,7 +95,7 @@ public interface IModelService {
 	 * @return
 	 */
 	public default <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted){
-		return load(id, clazz, includeDeleted, false);
+		return load(id, clazz, includeDeleted, true);
 	}
 	
 	/**
