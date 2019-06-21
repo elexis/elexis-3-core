@@ -99,7 +99,7 @@ public class ConfigService implements IConfigService {
 	
 	@Override
 	public boolean set(String key, String value){
-		Optional<IConfig> entry = modelService.load(key, IConfig.class, false, true);
+		Optional<IConfig> entry = modelService.load(key, IConfig.class);
 		if (value != null) {
 			IConfig _entry = entry.orElse(modelService.create(IConfig.class));
 			_entry.setKey(key);
@@ -132,13 +132,13 @@ public class ConfigService implements IConfigService {
 	
 	@Override
 	public String get(String key, String defaultValue){
-		Optional<IConfig> configEntry = modelService.load(key, IConfig.class, false, true);
+		Optional<IConfig> configEntry = modelService.load(key, IConfig.class);
 		return configEntry.map(IConfig::getValue).orElse(defaultValue);
 	}
 	
 	@Override
 	public boolean get(String key, boolean defaultValue){
-		Optional<IConfig> configEntry = modelService.load(key, IConfig.class, false, true);
+		Optional<IConfig> configEntry = modelService.load(key, IConfig.class);
 		return configEntry.map(IConfig::getValue).map(v -> "1".equals(v) || "true".equals(v)).orElse(defaultValue);
 	}
 	
@@ -339,8 +339,7 @@ public class ConfigService implements IConfigService {
 		
 		@Override
 		public String getLockMessage(){
-			Optional<IConfig> configEntry =
-				modelService.load(lockString, IConfig.class, false, true);
+			Optional<IConfig> configEntry = modelService.load(lockString, IConfig.class);
 			if (configEntry.isPresent() && configEntry.get().getValue() != null) {
 				String[] parts = configEntry.get().getValue().split("@");
 				if (parts.length > 0) {
@@ -352,8 +351,7 @@ public class ConfigService implements IConfigService {
 		
 		@Override
 		public long getLockCurrentMillis(){
-			Optional<IConfig> configEntry =
-				modelService.load(lockString, IConfig.class, false, true);
+			Optional<IConfig> configEntry = modelService.load(lockString, IConfig.class);
 			if (configEntry.isPresent() && configEntry.get().getValue() != null) {
 				String[] parts = configEntry.get().getValue().split("@");
 				if (parts.length > 1) {
@@ -366,8 +364,7 @@ public class ConfigService implements IConfigService {
 		@Override
 		public void unlock(){
 			synchronized (LocalLock.class) {
-				Optional<IConfig> configEntry =
-					modelService.load(lockString, IConfig.class, false, true);
+				Optional<IConfig> configEntry = modelService.load(lockString, IConfig.class);
 				if (configEntry.isPresent()) {
 					modelService.remove(configEntry.get());
 				}
@@ -377,8 +374,7 @@ public class ConfigService implements IConfigService {
 		@Override
 		public boolean hasLock(String userName){
 			synchronized (LocalLock.class) {
-				Optional<IConfig> configEntry =
-					modelService.load(lockString, IConfig.class, false, true);
+				Optional<IConfig> configEntry = modelService.load(lockString, IConfig.class);
 				if (configEntry.isPresent()) {
 					return configEntry.get().getValue().startsWith("[" + userName + "]@");
 				}
@@ -389,8 +385,7 @@ public class ConfigService implements IConfigService {
 		@Override
 		public boolean tryLock(){
 			synchronized (LocalLock.class) {
-				Optional<IConfig> configEntry =
-					modelService.load(lockString, IConfig.class, false, true);
+				Optional<IConfig> configEntry = modelService.load(lockString, IConfig.class);
 				if(configEntry.isPresent()) {
 					return false;
 				} else {
