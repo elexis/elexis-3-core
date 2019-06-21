@@ -249,6 +249,26 @@ public class CoreModelServiceTest {
 		}
 	}
 	
+	@Test
+	public void updateRefreshPatient()
+	{
+		IPatient patient = modelService.create(IPatient.class);
+		patient.setFirstName("Max");
+		patient.setLastName("Mustermann");
+		modelService.save(patient);
+		
+		IPatient dbP1 = modelService.load(patient.getId(), IPatient.class).get();		
+		assertEquals(patient, dbP1);
+		patient.setLastName("Mustermann1");
+		assertEquals("Mustermann", dbP1.getLastName());
+		assertEquals("Mustermann1", patient.getLastName());
+		
+		modelService.save(patient);
+		//modelService.refresh(dbP1); if automatically registerEntityChangeEvent is used we dont need this
+		assertEquals("Mustermann1", dbP1.getLastName());
+		assertEquals("Mustermann1", patient.getLastName());
+	}
+	
 	private class CreatePerson implements Runnable {
 		private int index;
 		

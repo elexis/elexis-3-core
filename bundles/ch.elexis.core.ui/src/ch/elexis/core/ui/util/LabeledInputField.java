@@ -45,6 +45,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.interfaces.INumericEnum;
@@ -741,6 +742,9 @@ public class LabeledInputField extends Composite {
 			if (act instanceof Identifiable && modelService != null) {
 				modelService.save((Identifiable) act);
 				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, act);
+			}
+			else if (act instanceof PersistentObject) {
+				ElexisEventDispatcher.update((PersistentObject) act);
 			}
 		}
 		
