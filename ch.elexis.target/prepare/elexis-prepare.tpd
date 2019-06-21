@@ -65,7 +65,7 @@ location "http://download.eclipse.org/releases/2018-09/" {
 	org.jsoup
 }
 
-location "http://download.eclipse.org/rt/eclipselink/updates/" {
+location "http://download.eclipse.org/rt/eclipselink/updates/2.7.3.v20180807-4be1041/" {
 	javax.persistence
 	org.eclipse.persistence.asm
 	org.eclipse.persistence.antlr
