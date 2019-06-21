@@ -52,11 +52,14 @@ public abstract class AbstractModelService implements IModelService {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted){
+	public <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted,
+		boolean refreshCache){
 		EntityManager em = getEntityManager(true);
 		Class<? extends EntityWithId> dbObjectClass = adapterFactory.getEntityClass(clazz);
 		HashMap<String, Object> queryHints = new HashMap<>();
-		queryHints.put(QueryHints.REFRESH, HintValues.TRUE);
+		if (refreshCache) {
+			queryHints.put(QueryHints.REFRESH, HintValues.TRUE);
+		}
 		EntityWithId dbObject = em.find(dbObjectClass, id, queryHints);
 		if (dbObject != null) {
 			// check for deleted

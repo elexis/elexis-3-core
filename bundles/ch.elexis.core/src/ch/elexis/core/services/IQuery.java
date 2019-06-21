@@ -190,4 +190,11 @@ public interface IQuery<T> {
 	 * @param subQuery
 	 */
 	public void notExists(ISubQuery<?> subQuery);
+	
+	/**
+	 * Limit the maximum number of results to retrieve.
+	 * 
+	 * @param limit
+	 */
+	public void limit(int limit);
 }

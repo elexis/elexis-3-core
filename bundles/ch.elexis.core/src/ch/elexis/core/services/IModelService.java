@@ -94,7 +94,24 @@ public interface IModelService {
 	 * @param includeDeleted
 	 * @return
 	 */
-	public <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted);
+	public default <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted){
+		return load(id, clazz, includeDeleted, false);
+	}
+	
+	/**
+	 * Load a model object of type clazz by the id. If Deleted entries should be loaded can be
+	 * specified with the includeDeleted parameter. If the entity should be refreshed from the db
+	 * can be specified with the refreshCache parameter.
+	 * 
+	 * @param <T>
+	 * @param id
+	 * @param clazz
+	 * @param includeDeleted
+	 * @param refreshCache
+	 * @return
+	 */
+	public <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted,
+		boolean refreshCache);
 	
 	/**
 	 * Save the model object.

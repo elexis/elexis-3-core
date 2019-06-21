@@ -56,6 +56,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	
 	protected boolean includeDeleted;
 	protected boolean refreshCache;
+	protected int limit;
 	
 	private PredicateGroupStack predicateGroups;
 	private PredicateHandler predicateHandler;
@@ -157,6 +158,11 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 			throw new IllegalStateException("Could not resolve attribute [" + fieldOrderBy
 				+ "] of entity [" + entityClazz + "]");
 		}
+	}
+	
+	@Override
+	public void limit(int limit){
+		this.limit = limit;
 	}
 	
 	@SuppressWarnings({
@@ -270,6 +276,9 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		// update cache with results (https://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development/Querying/Query_Hints)
 		if (refreshCache) {
 			query.setHint(QueryHints.REFRESH, HintValues.TRUE);
+		}
+		if (limit > 0) {
+			query.setMaxResults(limit);
 		}
 		
 		List<T> ret = (List<T>) query.getResultStream().parallel()
