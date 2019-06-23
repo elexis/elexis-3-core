@@ -654,6 +654,8 @@ public class GlobalActions {
 			@Override
 			public void doRun(Fall element){
 				element.setEndDatum(StringConstants.EMPTY);
+				ElexisEventDispatcher.getInstance()
+				.fire(new ElexisEvent(element, Fall.class, ElexisEvent.EVENT_UPDATE));
 			}
 			
 			@Override
