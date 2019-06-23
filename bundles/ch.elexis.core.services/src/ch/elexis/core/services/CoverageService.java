@@ -61,10 +61,11 @@ public class CoverageService implements ICoverageService {
 			}
 		}
 		// check whether the outputter could output a bill
-		if (BillingSystemServiceHolder.get()
-			.getDefaultPrintSystem(coverage.getBillingSystem()) == null) {
-			return false;
-		}
+		// TODO check if this should be enabled, BillingSystem#getDefaultPrintSystem never returned null
+		//		if (BillingSystemServiceHolder.get()
+		//			.getDefaultPrintSystem(coverage.getBillingSystem()) == null) {
+		//			return false;
+		//		}
 		//		IRnOutputter outputter = getOutputter();
 		//		if (outputter == null) {
 		//			return false;

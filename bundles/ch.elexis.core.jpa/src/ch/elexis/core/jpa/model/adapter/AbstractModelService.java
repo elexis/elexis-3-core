@@ -112,13 +112,16 @@ public abstract class AbstractModelService implements IModelService {
 	public void refresh(Identifiable identifiable, boolean refreshCache){
 		EntityManager em = getEntityManager(true);
 		EntityWithId dbObject = getDbObject(identifiable).orElse(null);
-		HashMap<String, Object> queryHints = new HashMap<>();
-		if (refreshCache) {
-			queryHints.put(QueryHints.REFRESH, HintValues.TRUE);
-		}
-		EntityWithId reloadedDbObject = em.find(dbObject.getClass(), dbObject.getId(), queryHints);
-		if (reloadedDbObject != null) {
-			setDbObject(identifiable, reloadedDbObject);
+		if (dbObject != null) {
+			HashMap<String, Object> queryHints = new HashMap<>();
+			if (refreshCache) {
+				queryHints.put(QueryHints.REFRESH, HintValues.TRUE);
+			}
+			EntityWithId reloadedDbObject =
+				em.find(dbObject.getClass(), dbObject.getId(), queryHints);
+			if (reloadedDbObject != null) {
+				setDbObject(identifiable, reloadedDbObject);
+			}
 		}
 	}
 	

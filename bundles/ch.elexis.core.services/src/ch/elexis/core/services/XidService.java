@@ -24,7 +24,6 @@ import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
-import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 
 @Component
 public class XidService implements IXidService {
@@ -194,52 +193,28 @@ public class XidService implements IXidService {
 	
 	@Override
 	public IXid getXid(Identifiable identifiable, String domain){
-		String typeString = null;
-		String storeToString = StoreToStringServiceHolder.getStoreToString(identifiable);
-		if (storeToString != null) {
-			String[] parts = storeToString.split(IStoreToStringContribution.DOUBLECOLON);
-			if (parts.length == 2) {
-				typeString = parts[0];
+		// ignore type here, as Kontakt and subtypes lead to not finding the Xid
+		// objectid should be unique
+		INamedQuery<IXid> query =
+			CoreModelServiceHolder.get().getNamedQuery(IXid.class, "domain", "objectid");
+		List<IXid> xids = query.executeWithParameters(
+			query.getParameterMap("domain", domain, "objectid", identifiable.getId()));
+		if (xids.size() > 0) {
+			if (xids.size() > 1) {
+				LoggerFactory.getLogger(getClass()).error("XID [" + domain + "] ["
+					+ identifiable.getId() + "] on multiple objects, returning first.");
 			}
-		}
-		if (typeString != null) {
-			INamedQuery<IXid> query = CoreModelServiceHolder.get().getNamedQuery(IXid.class,
-				"domain", "objectid", "type");
-			List<IXid> xids =
-				query.executeWithParameters(
-					query.getParameterMap("domain", domain, "objectid", identifiable.getId(),
-						"type", typeString));
-			if (xids.size() > 0) {
-				if (xids.size() > 1) {
-					LoggerFactory.getLogger(getClass()).error("XID [" + domain + "] ["
-						+ identifiable.getId()
-						+ "] on multiple objects, returning first.");
-				}
-				return xids.get(0);
-			}
-		} else {
-			throw new IllegalStateException("No store to string for object [" + this + "]");
+			return xids.get(0);
 		}
 		return null;
 	}
 	
 	@Override
 	public List<IXid> getXids(Identifiable identifiable){
-		String typeString = null;
-		String storeToString = StoreToStringServiceHolder.getStoreToString(identifiable);
-		if (storeToString != null) {
-			String[] parts = storeToString.split(IStoreToStringContribution.DOUBLECOLON);
-			if (parts.length == 2) {
-				typeString = parts[0];
-			}
-		}
-		if (typeString != null) {
-			INamedQuery<IXid> query =
-				CoreModelServiceHolder.get().getNamedQuery(IXid.class, "objectid", "type");
-			return query.executeWithParameters(query.getParameterMap("objectid",
-				identifiable.getId(), "type", typeString));
-		} else {
-			throw new IllegalStateException("No store to string for object [" + this + "]");
-		}
+		// ignore type here, as Kontakt and subtypes lead to not finding the Xid
+		// objectid should be unique
+		INamedQuery<IXid> query =
+			CoreModelServiceHolder.get().getNamedQuery(IXid.class, "objectid");
+		return query.executeWithParameters(query.getParameterMap("objectid", identifiable.getId()));
 	}
 }
