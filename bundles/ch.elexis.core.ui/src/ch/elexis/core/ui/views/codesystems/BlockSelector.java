@@ -31,6 +31,8 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -61,6 +63,8 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.ui.actions.CodeSelectorHandler;
+import ch.elexis.core.ui.actions.ICodeSelectorTarget;
 import ch.elexis.core.ui.actions.ToggleVerrechenbarFavoriteAction;
 import ch.elexis.core.ui.commands.ExportiereBloeckeCommand;
 import ch.elexis.core.ui.dialogs.BlockSelektor;
@@ -158,19 +162,7 @@ public class BlockSelector extends CodeSelectorFactory {
 			public List<Object> getSelection(){
 				IStructuredSelection selection = cv.getViewerWidget().getStructuredSelection();
 				if (!selection.isEmpty()) {
-					List<Object> ret = new ArrayList<>();
-					for (Object selected : selection.toList()) {
-						if(selected instanceof BlockTreeViewerItem) {
-							ret.add(((BlockTreeViewerItem) selected).getBlock());
-						} else if (selected instanceof BlockElementViewerItem) {
-							if (((BlockElementViewerItem) selected)
-								.getFirstElement() instanceof PersistentObject) {
-								ret.add((PersistentObject) ((BlockElementViewerItem) selected)
-									.getFirstElement());
-							}
-						}
-					}
-					return ret;
+					return collectSelections(selection);
 				}
 				return Collections.emptyList();
 			}
@@ -436,5 +428,45 @@ public class BlockSelector extends CodeSelectorFactory {
 	@Override
 	public MenuManager getMenuManager(){
 		return mgr;
+	}
+	
+	@Override
+	public IDoubleClickListener getDoubleClickListener(){
+		return new BlockDoubleClickListener();
+	}
+	
+	private List<Object> collectSelections(IStructuredSelection selection){
+		List<Object> ret = new ArrayList<>();
+		for (Object selected : selection.toList()) {
+			if (selected instanceof BlockTreeViewerItem) {
+				ret.add(((BlockTreeViewerItem) selected).getBlock());
+			} else if (selected instanceof BlockElementViewerItem) {
+				if (((BlockElementViewerItem) selected)
+					.getFirstElement() instanceof PersistentObject) {
+					ret.add(
+						(PersistentObject) ((BlockElementViewerItem) selected).getFirstElement());
+				} else if (((BlockElementViewerItem) selected)
+					.getFirstElement() instanceof Identifiable) {
+					//compatibility for NOPO
+					ret.add((Identifiable) ((BlockElementViewerItem) selected).getFirstElement());
+				}
+			}
+		}
+		return ret;
+	}
+	
+	private class BlockDoubleClickListener implements IDoubleClickListener {
+		@Override
+		public void doubleClick(DoubleClickEvent event){
+			IStructuredSelection selection = cv.getViewerWidget().getStructuredSelection();
+			if (!selection.isEmpty()) {
+				List<Object> ret = collectSelections(selection);
+				ICodeSelectorTarget target =
+					CodeSelectorHandler.getInstance().getCodeSelectorTarget();
+				for (Object o : ret) {
+					target.codeSelected(o);
+				}
+			}
+		}
 	}
 }
