@@ -45,7 +45,7 @@ public class Behandlung extends AbstractEntityWithId implements EntityWithId, En
 	
 	@Column
 	@Convert(converter = BooleanCharacterConverterSafe.class)
-	private boolean billable = false;
+	private boolean billable = true;
 	
 	@ManyToOne
 	@JoinColumn(name = "FallID")
