@@ -53,6 +53,7 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 import com.tiff.common.ui.datepicker.DatePickerCombo;
+
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
@@ -60,9 +61,9 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.preferences.UserCasePreferences;
@@ -302,6 +303,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				IFall fall = getSelectedFall();
 				if (fall != null) {
 					fall.set(LABEL, newval);
+					fireSelectedFallUpdateEvent();
 				}
 				super.focusLost(e);
 			}
@@ -317,6 +319,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				IFall fall = getSelectedFall();
 				if (fall != null) {
 					fall.setGrund(Reasons[i]);
+					fireSelectedFallUpdateEvent();
 				}
 			}
 		});
@@ -335,6 +338,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					IFall fall = getSelectedFall();
 					TimeTool selectedDate = new TimeTool(dpVon.getSelection());
 					fall.setBeginnDatum(selectedDate.dump());
+					fireSelectedFallUpdateEvent();
 				}
 			});
 		
@@ -347,6 +351,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					IFall fall = getSelectedFall();
 					TimeTool selectedDate = new TimeTool(dpBis.getSelection());
 					fall.setEndDatum(selectedDate.dump());
+					fireSelectedFallUpdateEvent();
 				}
 			});
 		ddc = new DayDateCombo(top, Messages.FallDetailBlatt2_ProposeForBillingIn,
@@ -360,6 +365,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				IFall fall = getSelectedFall();
 				if (fall != null) {
 					fall.setBillingDate(nDate);
+					fireSelectedFallUpdateEvent();
 				}
 			}
 		});
@@ -381,6 +387,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			public void widgetSelected(SelectionEvent e){
 				boolean b = btnCopyForPatient.getSelection();
 				getSelectedFall().setCopyForPatient(b);
+				fireSelectedFallUpdateEvent();
 			};
 		});
 		
@@ -960,6 +967,13 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			for (Focusreact react : focusreacts) {
 				react.save();
 			}
+		}
+	}
+	
+	public void fireSelectedFallUpdateEvent(){
+		IFall fall = getSelectedFall();
+		if (fall instanceof PersistentObject) {
+			ElexisEventDispatcher.update((PersistentObject) fall);
 		}
 	}
 	

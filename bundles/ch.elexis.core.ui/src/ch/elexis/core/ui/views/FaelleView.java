@@ -115,7 +115,9 @@ public class FaelleView extends ViewPart implements IRefreshable {
 			|| (object instanceof Class && object.equals(ICoverage.class))) {
 			// refresh from database if modified by po
 			if (actPatient != null) {
-				CoreModelServiceHolder.get().refresh((ICoverage) object, true);
+				if (object instanceof ICoverage) {
+					CoreModelServiceHolder.get().refresh((ICoverage) object, true);
+				}
 				CoreModelServiceHolder.get().refresh(actPatient, true);
 			}
 			refreshTableViewer();
