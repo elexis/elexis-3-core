@@ -80,7 +80,6 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ContentType;
 import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.Mandant;
-import ch.elexis.data.PersistentObject;
 
 public class BlockSelector extends CodeSelectorFactory {
 	protected static final String BLOCK_ONLY_FILTER_ENABLED = "blockselector/blockonlyfilter";
@@ -442,10 +441,6 @@ public class BlockSelector extends CodeSelectorFactory {
 				ret.add(((BlockTreeViewerItem) selected).getBlock());
 			} else if (selected instanceof BlockElementViewerItem) {
 				if (((BlockElementViewerItem) selected)
-					.getFirstElement() instanceof PersistentObject) {
-					ret.add(
-						(PersistentObject) ((BlockElementViewerItem) selected).getFirstElement());
-				} else if (((BlockElementViewerItem) selected)
 					.getFirstElement() instanceof Identifiable) {
 					//compatibility for NOPO
 					ret.add((Identifiable) ((BlockElementViewerItem) selected).getFirstElement());
