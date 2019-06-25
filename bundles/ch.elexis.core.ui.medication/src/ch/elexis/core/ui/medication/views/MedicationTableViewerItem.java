@@ -88,7 +88,7 @@ public class MedicationTableViewerItem {
 	}
 	
 	public String getBeginDate(){
-		return dateFormatter.format(dateFrom);
+		return dateFrom != null ? dateFormatter.format(dateFrom) : "";
 	}
 	
 	public String getEndDate(){
