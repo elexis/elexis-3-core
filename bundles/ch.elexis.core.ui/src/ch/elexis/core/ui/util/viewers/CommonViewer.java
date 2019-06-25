@@ -30,7 +30,6 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -38,7 +37,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IViewSite;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -71,6 +69,9 @@ import ch.rgw.tools.Tree;
  * @author Gerry
  */
 public class CommonViewer implements ISelectionChangedListener, IDoubleClickListener {
+	
+	private static final boolean OS_IS_WIN =
+		System.getProperty("os.name").toLowerCase().indexOf("win") >= 0;
 	
 	protected ViewerConfigurer viewerConfigurer;
 	protected StructuredViewer viewer;
@@ -191,12 +192,10 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 				@Override
 				public void widgetSelected(SelectionEvent e){
 					if (showDisableLimit && table.getItemCount() > 100) {
-						TableItem lastItem = table.getItem(table.getItemCount() - 1);
-						TableItem lastVisibleItem =
-							table.getItem(new Point(table.getSize().x - 1, table.getSize().y - 1));
-						scrolledToBottom = lastItem.equals(lastVisibleItem);
+						scrolledToBottom = verticalBar.getSelection() + verticalBar.getThumb() == verticalBar
+								.getMaximum();
 						if (scrolledToBottom) {
-							showDisableLimitButton();
+							showDisableLimitButton(); //scrolled to end
 						} else {
 							hideDisableLimitButton();
 						}
