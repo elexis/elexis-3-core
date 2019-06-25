@@ -202,7 +202,7 @@ public class MedicationService implements IMedicationService {
 		ret.setEntryType(prescription.getEntryType());
 		ret.setRemark(prescription.getRemark());
 		
-		ret.setDateFrom(null);
+		ret.setDateFrom(LocalDateTime.now());
 		ret.setPrescriptor(ContextServiceHolder.get().getActiveUserContact().orElse(null));
 		return ret;
 	}
