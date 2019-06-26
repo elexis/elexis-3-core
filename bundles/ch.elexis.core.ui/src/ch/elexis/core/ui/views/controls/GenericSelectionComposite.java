@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -177,12 +178,20 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 		@Override
 		protected Control createDialogArea(Composite parent){
 			Composite ret = (Composite) super.createDialogArea(parent);
+			ScrolledComposite sc = new ScrolledComposite(ret, SWT.H_SCROLL | SWT.V_SCROLL);
 			
-			Label title = new Label(ret, SWT.NONE);
+			Composite child = new Composite(sc, SWT.NONE);
+			child.setLayout(new GridLayout());
+			
+			GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
+			data.heightHint = 400;
+			sc.setLayoutData(data);
+
+			Label title = new Label(child, SWT.NONE);
 			title.setText("Auswahl:");
 			// create the UI
 			for (Object object : input) {
-				Button button = new Button(ret, SWT.CHECK);
+				Button button = new Button(child, SWT.CHECK);
 				button.setText(getLabel(object));
 				button.addSelectionListener(new SelectionAdapter() {
 					@Override
@@ -196,6 +205,11 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 				});
 				buttonMap.put(object, button);
 			}
+			sc.setMinSize(child.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+			sc.setExpandHorizontal(true);
+			sc.setExpandVertical(true);
+		    sc.setContent(child);
+
 			updateSelectionUi();
 			
 			return ret;
