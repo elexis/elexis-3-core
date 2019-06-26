@@ -53,15 +53,16 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 import com.tiff.common.ui.datepicker.DatePickerCombo;
+
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IFall;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.preferences.UserCasePreferences;
@@ -660,13 +661,18 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		tCostBearer.setToolTipText(null);
 		if (!costBearerDisabled) {
 			Kontakt costBearer = f.getCostBearer();
-			String label = (costBearer != null) ? costBearer.getLabel() : f.getPatient().getLabel();
+			String label = (costBearer != null) ? costBearer.getLabel() : null;
 			if (costBearer != null && costBearer.isDeleted()) {
 				tCostBearer.setBackground(UiDesk.getColor(UiDesk.COL_RED));
 				label = "*** " + label;
 				tCostBearer.setToolTipText(Messages.Contact_is_marked_deleted);
 			}
-			tCostBearer.setText(label);
+			if (label != null) {
+				tCostBearer.setText(label);
+			} else {
+				tCostBearer.setText(StringConstants.EMPTY);
+				tCostBearer.setMessage(Messages.FallDetailBlatt2_SelectCostBearerBody);
+			}
 		} else {
 			tCostBearer.setText(StringConstants.EMPTY);
 		}
@@ -916,6 +922,9 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		tCostBearer.setForeground((enable && costBearerEnabled) ? UiDesk.getColor(UiDesk.COL_BLACK)
 				: UiDesk.getColor(UiDesk.COL_GREY60));
 		tCostBearer.setEditable(enable && costBearerEnabled);
+		if (!tCostBearer.getEditable()) {
+			tCostBearer.setMessage(StringConstants.EMPTY);
+		}
 		hlCostBearer.setEnabled(enable && costBearerEnabled);
 		
 		autoFill.setEnabled(enable);
