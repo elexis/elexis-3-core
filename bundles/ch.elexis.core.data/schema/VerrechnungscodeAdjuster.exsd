@@ -56,13 +56,23 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="class" type="string" use="required">
+         <attribute name="class" type="string">
             <annotation>
                <documentation>
-                  
+                  IVerrechnetAdjuster implementation can adjust after billing is performed.
                </documentation>
                <appinfo>
                   <meta.attribute kind="java" basedOn=":ch.elexis.core.data.interfaces.IVerrechnetAdjuster"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="class_pre" type="string">
+            <annotation>
+               <documentation>
+                  IVerrechenbarAdjuster implementation can adjust before billing is attempted.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":ch.elexis.core.data.interfaces.IVerrechenbarAdjuster"/>
                </appinfo>
             </annotation>
          </attribute>

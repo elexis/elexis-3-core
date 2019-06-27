@@ -25,16 +25,22 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IOptifier;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
+import ch.elexis.core.data.interfaces.IVerrechenbarAdjuster;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.service.CodeElementServiceHolder;
 import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.ICodeElement;
@@ -80,6 +86,10 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	private static final String TABLENAME = "BEHANDLUNGEN";
 	volatile int actEntry;
 	
+	// keep a list of all ch.elexis.VerrechenbarAdjuster extensions
+	private static ArrayList<IVerrechenbarAdjuster> adjusters =
+		new ArrayList<IVerrechenbarAdjuster>();
+	
 	protected String getTableName(){
 		return TABLENAME;
 	}
@@ -88,6 +98,21 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		addMapping(TABLENAME, FLD_MANDATOR_ID, PersistentObject.DATE_COMPOUND, FLD_CASE_ID,
 			FLD_BILL_ID, "Eintrag=S:V:Eintrag", FLD_TIME,
 			FLD_JOINT_DIAGNOSEN + "=JOINT:BehandlungsID:DiagnoseID:BEHDL_DG_JOINT", FLD_BILLABLE);
+		
+		List<IConfigurationElement> adjustersConfigurations =
+			Extensions.getExtensions(ExtensionPointConstantsData.VERRECHNUNGSCODE_ADJUSTER);
+		for (IConfigurationElement elem : adjustersConfigurations) {
+			Object o;
+			try {
+				o = elem.createExecutableExtension("class_pre");
+				if (o instanceof IVerrechenbarAdjuster) {
+					adjusters.add((IVerrechenbarAdjuster) o);
+				}
+			} catch (CoreException e) {
+				// just log the failed instantiation
+				ExHandler.handle(e);
+			}
+		}
 	}
 	
 	protected Konsultation(String id){
@@ -858,6 +883,10 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 */
 	public Result<IVerrechenbar> addLeistung(IVerrechenbar l){
 		if (isEditable(true)) {
+			// call adjusters before attempting to bill the IVerrechenbar
+			for (IVerrechenbarAdjuster iVerrechenbarAdjuster : adjusters) {
+				l = iVerrechenbarAdjuster.adjust(l, this);
+			}
 			// TODO: ch.elexis.data.Konsultation.java: Weitere Leistungestypen
 			// ausser Medikamente_BAG und arzttarif_ch=Tarmed,
 			// TODO: ch.elexis.data.Konsultation.java: beim/nach dem Hinzufügen
