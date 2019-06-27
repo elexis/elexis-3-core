@@ -10,8 +10,8 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
@@ -90,18 +90,18 @@ public class TaskServiceTest {
 		taskDescriptor.setRunContextParameter("testKey", "testValue");
 		taskService.setActive(taskDescriptor, true);
 
-		List<ITask> findExecutions = taskService.findExecutions(taskDescriptor);
-		assertTrue(findExecutions.isEmpty());
+		Optional<ITask> findExecutions = taskService.findLatestExecution(taskDescriptor);
+		assertTrue(findExecutions.isPresent());
 
 		ITask task = taskService.trigger(taskDescriptor, progressMonitor, TaskTriggerType.MANUAL, null);
 
 		Awaitility.await().atMost(2, TimeUnit.SECONDS).until(taskDone(task));
 		assertEquals(TaskState.COMPLETED, task.getState());
 
-		findExecutions = taskService.findExecutions(taskDescriptor);
-		assertTrue(findExecutions.size() == 1);
-		assertEquals(TaskState.COMPLETED, findExecutions.get(0).getState());
-		assertTrue(findExecutions.get(0).getResult().containsKey("runnableExecDuration"));
+		findExecutions = taskService.findLatestExecution(taskDescriptor);
+		assertTrue(findExecutions.isPresent());
+		assertEquals(TaskState.COMPLETED, findExecutions.get().getState());
+		assertTrue(findExecutions.get().getResult().containsKey("runnableExecDuration"));
 	}
 
 	public void triggerManual_Misthios() throws Exception {
@@ -210,7 +210,7 @@ public class TaskServiceTest {
 		taskDescriptor.setTriggerParameter("origin", "self");
 		taskService.setActive(taskDescriptor, true);
 
-		assertEquals(0, taskService.findExecutions(taskDescriptor).size());
+		assertEquals(0, taskService.findLatestExecution(taskDescriptor).isPresent());
 
 		Thread.sleep(1000);
 
@@ -219,7 +219,7 @@ public class TaskServiceTest {
 
 		Thread.sleep(1500);
 
-		assertEquals(1, taskService.findExecutions(taskDescriptor).size());
+		assertEquals(1, taskService.findLatestExecution(taskDescriptor).isPresent());
 
 	}
 

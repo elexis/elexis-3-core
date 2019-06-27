@@ -378,6 +378,10 @@ public class TaskServiceImpl implements ITaskService {
 	@Override
 	public void setActive(ITaskDescriptor taskDescriptor, boolean active) throws TaskException{
 		
+		if(taskDescriptor.isActive() == active) {
+			return;
+		}
+		
 		if (active) {
 			validateTaskDescriptor(taskDescriptor);
 		}
@@ -446,12 +450,12 @@ public class TaskServiceImpl implements ITaskService {
 	}
 	
 	@Override
-	public List<ITask> findExecutions(ITaskDescriptor taskDescriptor){
+	public Optional<ITask> findLatestExecution(ITaskDescriptor taskDescriptor) {
 		IQuery<ITask> query = taskModelService.getQuery(ITask.class);
-		query.and(ModelPackage.Literals.ITASK__DESCRIPTOR_ID, COMPARATOR.EQUALS,
-			taskDescriptor.getId());
+		query.and(ModelPackage.Literals.ITASK__DESCRIPTOR_ID, COMPARATOR.EQUALS, taskDescriptor.getId());
 		query.orderBy("lastupdate", ORDER.DESC);
-		return query.execute();
+		query.limit(1);
+		List<ITask> result = query.execute();
+		return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
 	}
-	
 }

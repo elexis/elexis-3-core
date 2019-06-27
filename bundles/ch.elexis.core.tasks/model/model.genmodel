@@ -101,8 +101,8 @@
       <genOperations ecoreOperation="model.ecore#//ITaskService/findTaskDescriptorByIdOrReferenceId">
         <genParameters ecoreParameter="model.ecore#//ITaskService/findTaskDescriptorByIdOrReferenceId/idOrReferenceId"/>
       </genOperations>
-      <genOperations ecoreOperation="model.ecore#//ITaskService/findExecutions">
-        <genParameters ecoreParameter="model.ecore#//ITaskService/findExecutions/taskDescriptor"/>
+      <genOperations ecoreOperation="model.ecore#//ITaskService/findLatestExecution">
+        <genParameters ecoreParameter="model.ecore#//ITaskService/findLatestExecution/taskDescriptor"/>
       </genOperations>
     </genClasses>
   </genPackages>

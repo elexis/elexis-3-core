@@ -123,11 +123,11 @@ public interface ITaskService {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Find the latest executions of the provided task descriptor, ordered by execution time, newest first. Includes currently running tasks.
+	 * Find the latest execution of the provided task descriptor, ordered by execution time, newest first. Includes currently running tasks.
 	 * <!-- end-model-doc -->
-	 * @model type="ch.elexis.core.types.List&lt;ch.elexis.core.tasks.model.ITask&gt;" many="false"
+	 * @model dataType="ch.elexis.core.types.Optional&lt;ch.elexis.core.tasks.model.ITask&gt;"
 	 * @generated
 	 */
-	List<ITask> findExecutions(ITaskDescriptor taskDescriptor);
+	Optional<ITask> findLatestExecution(ITaskDescriptor taskDescriptor);
 
 } // ITaskService
