@@ -168,7 +168,6 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 					}
 				}
 				reload((Rechnung) ev.getObject());
-				setUnlocked(CoreHub.getLocalLockService().isLocked(actualInvoice));
 				break;
 			case ElexisEvent.EVENT_LOCK_AQUIRED:
 			case ElexisEvent.EVENT_LOCK_RELEASED:
@@ -240,6 +239,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 						+ " konnte nicht vollständig geladen werden.\n\nDetails: "
 						+ builder.toString());
 			}
+			setUnlocked(CoreHub.getLocalLockService().isLocked(actualInvoice));
 		}
 	}
 	
