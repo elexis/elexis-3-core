@@ -19,6 +19,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.Mutable;
+
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.VersionedResourceConverter;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
@@ -70,6 +72,7 @@ public class Behandlung extends AbstractEntityWithId implements EntityWithId, En
 	@JoinColumn(name = "behandlung")
 	private List<Verrechnet> billed = new ArrayList<>();
 
+	@Mutable
 	@Convert(converter = VersionedResourceConverter.class)
 	private VersionedResource eintrag;
 
