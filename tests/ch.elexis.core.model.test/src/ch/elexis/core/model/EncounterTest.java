@@ -187,4 +187,27 @@ public class EncounterTest extends AbstractTest {
 		
 		coreModelService.delete(encounter);
 	}
+	
+	@Test
+	public void addAndUpdateVersionsEntry(){
+		IEncounter encounter =
+				new IEncounterBuilder(coreModelService, coverage, mandator).buildAndSave();
+		
+		VersionedResource vr = VersionedResource.load(null);
+		vr.update("TESTME", "Administrator");
+		encounter.setVersionedEntry(vr);
+		coreModelService.save(encounter);
+		assertEquals("TESTME", encounter.getVersionedEntry().getHead());
+		
+		encounter.getVersionedEntry().update("changed", "");
+		coreModelService.save(encounter);
+
+		assertEquals("changed", encounter.getVersionedEntry().getHead());
+		assertEquals("changed", coreModelService.load(encounter.getId(), IEncounter.class).get()
+			.getVersionedEntry().getHead());
+		assertEquals("changed",
+			coreModelService.load(encounter.getId(), IEncounter.class, true, true).get()
+				.getVersionedEntry().getHead());
+		
+	}
 }
