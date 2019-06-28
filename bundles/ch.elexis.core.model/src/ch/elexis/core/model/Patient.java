@@ -111,15 +111,14 @@ public class Patient extends Person implements IPatient {
 		query.or(ModelPackage.Literals.IPRESCRIPTION__DATE_TO, COMPARATOR.GREATER,
 			LocalDateTime.now());
 		query.andJoinGroups();
+		List<IPrescription> iPrescriptions = query.execute();
 		if (filterType != null && !filterType.isEmpty()) {
-			query.startGroup();
-			for (EntryType entryType : filterType) {
-				query.or(ModelPackage.Literals.IPRESCRIPTION__ENTRY_TYPE, COMPARATOR.EQUALS,
-					entryType);				
-			}
-			query.andJoinGroups();
+			// getEntryType is a special logic with rezeptId and direktvergabe cannot query it from DB directly
+			return iPrescriptions.parallelStream()
+					.filter(p -> filterType.contains(p.getEntryType()))
+					.collect(Collectors.toList());
 		}
-		return query.execute();
+		return iPrescriptions;
 	}
 	
 	@Override
