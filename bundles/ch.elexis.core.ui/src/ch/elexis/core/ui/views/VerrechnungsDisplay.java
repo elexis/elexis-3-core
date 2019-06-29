@@ -150,7 +150,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	@Inject
 	public void udpateEncounter(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IEncounter encounter){
 		if (encounter != null && encounter.equals(actEncounter)) {
-			viewer.setInput(actEncounter.getBilled());
+			setEncounter(actEncounter);
 		}
 	}
 	
@@ -474,8 +474,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	
 	public void clear(){
 		actEncounter = null;
-		viewer.setInput(Collections.emptyList());
-		updateBilledLabel();
+		setEncounter(actEncounter);
 	}
 	
 	private void updateBilledLabel(){
@@ -559,7 +558,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 			// refresh the modified billed object from the db
 			actEncounter.getBilled().forEach(b -> CoreModelServiceHolder.get().refresh(b));
-			viewer.setInput(actEncounter.getBilled());
+			setEncounter(actEncounter);
 		}
 	}
 	
@@ -640,7 +639,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						if (!billResult.isOK()) {
 							ResultDialog.show(billResult);
 						} else {
-							viewer.setInput(actEncounter.getBilled());
+							setEncounter(actEncounter);
 						}
 					} else if (object instanceof ICodeElementBlock) {
 						ICodeElementBlock block = (ICodeElementBlock) object;
@@ -653,7 +652,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 									if (!billResult.isOK()) {
 										ResultDialog.show(billResult);
 									} else {
-										viewer.setInput(actEncounter.getBilled());
+										setEncounter(actEncounter);
 									}
 								});
 							}
