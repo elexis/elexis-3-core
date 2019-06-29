@@ -210,7 +210,7 @@ public class TaskServiceTest {
 		taskDescriptor.setTriggerParameter("origin", "self");
 		taskService.setActive(taskDescriptor, true);
 
-		assertEquals(0, taskService.findLatestExecution(taskDescriptor).isPresent());
+		assertEquals(false, taskService.findLatestExecution(taskDescriptor).isPresent());
 
 		Thread.sleep(1000);
 
@@ -219,7 +219,7 @@ public class TaskServiceTest {
 
 		Thread.sleep(1500);
 
-		assertEquals(1, taskService.findLatestExecution(taskDescriptor).isPresent());
+		assertEquals(true, taskService.findLatestExecution(taskDescriptor).isPresent());
 
 	}
 

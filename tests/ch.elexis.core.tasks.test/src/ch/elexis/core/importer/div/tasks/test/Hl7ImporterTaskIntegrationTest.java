@@ -126,7 +126,8 @@ public class Hl7ImporterTaskIntegrationTest {
 		Awaitility.await().atMost(10, TimeUnit.SECONDS)
 				.until(() -> TaskServiceHolder.get().findLatestExecution(watcherTaskDescriptor).get().isFinished());
 
-		assertEquals(1, TaskServiceHolder.get().findLatestExecution(hl7ImporterTaskDescriptor).isPresent());
+		assertEquals(true,
+			TaskServiceHolder.get().findLatestExecution(hl7ImporterTaskDescriptor).isPresent());
 		Awaitility.await().atMost(10, TimeUnit.SECONDS)
 				.until(() -> TaskServiceHolder.get().findLatestExecution(hl7ImporterTaskDescriptor).get().isFinished());
 
@@ -144,7 +145,8 @@ public class Hl7ImporterTaskIntegrationTest {
 			assertTrue(mapping.isPresent());
 		}
 
-		assertEquals(1, TaskServiceHolder.get().findLatestExecution(billLabResultsTaskDescriptor).isPresent());
+		assertEquals(true,
+			TaskServiceHolder.get().findLatestExecution(billLabResultsTaskDescriptor).isPresent());
 		// It was tried to bill EAL 1371.00 - but this will not succeed as the required
 		// code is available in elexis-3-base only, the task was however executed and
 		// failed correctly
