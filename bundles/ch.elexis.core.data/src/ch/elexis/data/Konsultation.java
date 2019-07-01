@@ -883,44 +883,52 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 */
 	public Result<IVerrechenbar> addLeistung(IVerrechenbar l){
 		if (isEditable(true)) {
+			IVerrechenbar beforeAdjust = l;
 			// call adjusters before attempting to bill the IVerrechenbar
 			for (IVerrechenbarAdjuster iVerrechenbarAdjuster : adjusters) {
 				l = iVerrechenbarAdjuster.adjust(l, this);
 			}
-			// TODO: ch.elexis.data.Konsultation.java: Weitere Leistungestypen
-			// ausser Medikamente_BAG und arzttarif_ch=Tarmed,
-			// TODO: ch.elexis.data.Konsultation.java: beim/nach dem Hinzufügen
-			// auf <>0.00 prüfen, entweder verteilt in den Optifiern,
-			// TODO: oder an dieser Stelle zentral, dann ggf. auch die schon
-			// existierenden Prüfungen durch eine zentrale hier mitersetzen.
-			IOptifier optifier = l.getOptifier();
-			Result<IVerrechenbar> result = optifier.add(l, this);
-			if (!result.isOK() && result.getCode() == 11) {
-				String initialResult = result.toString();
-				// code 11 is tarmed exclusion due to side see TarmedOptifier#EXKLUSIONSIDE
-				// set a context variable to specify the side see TarmedLeistung#SIDE, TarmedLeistung#SIDE_L, TarmedLeistung#SIDE_R
-				optifier.putContext("Seite", "r");
-				result = optifier.add(l, this);
+			if (l != null) {
+				// TODO: ch.elexis.data.Konsultation.java: Weitere Leistungestypen
+				// ausser Medikamente_BAG und arzttarif_ch=Tarmed,
+				// TODO: ch.elexis.data.Konsultation.java: beim/nach dem Hinzufügen
+				// auf <>0.00 prüfen, entweder verteilt in den Optifiern,
+				// TODO: oder an dieser Stelle zentral, dann ggf. auch die schon
+				// existierenden Prüfungen durch eine zentrale hier mitersetzen.
+				IOptifier optifier = l.getOptifier();
+				Result<IVerrechenbar> result = optifier.add(l, this);
 				if (!result.isOK() && result.getCode() == 11) {
-					optifier.putContext("Seite", "l");
+					String initialResult = result.toString();
+					// code 11 is tarmed exclusion due to side see TarmedOptifier#EXKLUSIONSIDE
+					// set a context variable to specify the side see TarmedLeistung#SIDE, TarmedLeistung#SIDE_L, TarmedLeistung#SIDE_R
+					optifier.putContext("Seite", "r");
 					result = optifier.add(l, this);
+					if (!result.isOK() && result.getCode() == 11) {
+						optifier.putContext("Seite", "l");
+						result = optifier.add(l, this);
+					}
+					if (result.isOK()) {
+						MessageEvent.fireInformation("Info", "Achtung: " + initialResult
+							+ "\n\n Es wurde bei der Position " + l.getCode()
+							+ " automatisch die Seite gewechselt."
+							+ " Bitte korrigieren Sie die Leistung falls dies nicht korrekt ist.");
+					}
+					optifier.clearContext();
 				}
 				if (result.isOK()) {
-					MessageEvent.fireInformation("Info",
-						"Achtung: " + initialResult + "\n\n Es wurde bei der Position "
-							+ l.getCode() + " automatisch die Seite gewechselt."
-							+ " Bitte korrigieren Sie die Leistung falls dies nicht korrekt ist.");
+					ElexisEventDispatcher.update(this);
+					// Statistik nachführen
+					getFall().getPatient().countItem(l);
+					CoreHub.actUser.countItem(l);
+					CoreHub.actUser.statForString("LeistungenMFU", l.getCodeSystemName());
 				}
-				optifier.clearContext();
+				return result;
+			} else {
+				return new Result<IVerrechenbar>(Result.SEVERITY.WARNING, 1, "Folgende Leistung '"
+					+ beforeAdjust.getCode()
+					+ "' konnte im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.",
+					null, false);
 			}
-			if (result.isOK()) {
-				ElexisEventDispatcher.update(this);
-				// Statistik nachführen
-				getFall().getPatient().countItem(l);
-				CoreHub.actUser.countItem(l);
-				CoreHub.actUser.statForString("LeistungenMFU", l.getCodeSystemName());
-			}
-			return result;
 		}
 		return new Result<IVerrechenbar>(Result.SEVERITY.WARNING, 2,
 			"Behandlung geschlossen oder nicht von Ihnen", null, false);
