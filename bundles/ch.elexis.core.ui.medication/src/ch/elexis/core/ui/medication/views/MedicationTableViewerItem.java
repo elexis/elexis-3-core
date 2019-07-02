@@ -22,7 +22,6 @@ import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.icons.Images;
-import ch.rgw.tools.TimeTool;
 
 /**
  * Maps an element of type {@link IPrescription} for presentation within the MedicationTableViewer.
@@ -74,7 +73,7 @@ public class MedicationTableViewerItem {
 		if (dateUntil != null) {
 			endTime = Date.from(dateUntil.atZone(ZoneId.systemDefault()).toInstant());
 		} else {
-			endTime = new TimeTool().getTime();
+			endTime = new Date();
 		}
 	}
 	
