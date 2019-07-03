@@ -42,14 +42,9 @@ public class ElexisProcessor {
 
 	private void updateModelVersions(MApplication mApplication, EModelService eModelService){
 		try {
-			MTrimmedWindow mWindow = (MTrimmedWindow) eModelService.find("IDEWindow", mApplication);
-			if (mWindow == null) {
-				List<MWindow> windows = mApplication.getChildren();
-				if (!windows.isEmpty() && windows.get(0) instanceof MTrimmedWindow) {
-					mWindow = (MTrimmedWindow) windows.get(0);
-				}
-			}
-			if (mWindow != null) {
+			List<MWindow> windows = mApplication.getChildren();
+			if (!windows.isEmpty() && windows.get(0) instanceof MTrimmedWindow) {
+				MTrimmedWindow mWindow = (MTrimmedWindow) windows.get(0);
 				// remove old model elements like perspectives etc
 				for (String modelElementId : removeModelElements) {
 					MUIElement element = eModelService.find(modelElementId, mApplication);
@@ -66,7 +61,6 @@ public class ElexisProcessor {
 						}
 					}
 				}
-				
 			} else {
 				logger.warn("cannot find active window");
 			}
