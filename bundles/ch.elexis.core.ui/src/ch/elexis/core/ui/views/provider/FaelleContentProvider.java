@@ -5,9 +5,9 @@ import java.util.Arrays;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.util.FallComparator;
 import ch.elexis.core.ui.views.FaelleView;
 
