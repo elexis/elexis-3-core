@@ -12,7 +12,6 @@
 
 package ch.elexis.core.application.perspectives;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
@@ -26,13 +25,14 @@ import ch.elexis.core.ui.views.BBSView;
  * 
  */
 public class BBSPerspective implements IPerspectiveFactory {
-	public static final String ID = "ch.elexis.SchwarzesBrett"; //$NON-NLS-1$
+	public static final String ID = "ch.elexis.SchwarzesBrettV1.0"; //$NON-NLS-1$
 	
 	public void createInitialLayout(IPageLayout layout){
 		String editorArea = layout.getEditorArea();
 		layout.setEditorAreaVisible(false);
 		layout.setFixed(true);
-		layout.addView(BBSView.ID, SWT.RIGHT, 0.9f, editorArea);
+		layout.addView(BBSView.ID,  IPageLayout.RIGHT, 0.9f, editorArea);
+
 		
 	}
 	
