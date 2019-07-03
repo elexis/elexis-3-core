@@ -29,6 +29,7 @@ import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.types.LabItemTyp;
 import ch.rgw.io.FileTool;
 import ch.rgw.tools.Result;
@@ -157,10 +158,17 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 			sbFailed.append("; ");
 		}
 
-		labName = (String) context.get(IMultiFileParser.CTX_LABNAME);
-		if (labName == null) {
-			sbFailed.append(Messages.DefaultPDFImportStrategy_LabName);
-			sbFailed.append("; ");
+		if (ConfigServiceHolder.get().getLocal(HL7Parser.CFG_IMPORT_ENCDATA, false)) {
+			labName =
+				ConfigServiceHolder.get().getLocal(HL7Parser.CFG_IMPORT_ENCDATA_CATEGORY, null);
+		}
+		
+		if (labName == null || labName.isEmpty()) {
+			labName = (String) context.get(IMultiFileParser.CTX_LABNAME);
+			if (labName == null) {
+				sbFailed.append(Messages.DefaultPDFImportStrategy_LabName);
+				sbFailed.append("; ");
+			}
 		}
 
 		dateTime = (TimeTool) context.get(IMultiFileParser.CTX_TIME);

@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
@@ -62,6 +63,7 @@ import ch.elexis.core.ui.laboratory.commands.CreateLabItemUi;
 import ch.elexis.core.ui.laboratory.commands.CreateMappingFrom2_1_7;
 import ch.elexis.core.ui.laboratory.commands.CreateMergeLabItemUi;
 import ch.elexis.core.ui.laboratory.commands.EditLabItemUi;
+import ch.elexis.core.ui.laboratory.dialogs.LabItemViewerFilter;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.LabItem;
 import ch.elexis.data.LabMapping;
@@ -86,21 +88,40 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 		16, 6, 6, 6, 6, 16, 16, 16
 	};
 	
+	private LabItemViewerFilter viewerFilter;
+	
 	public LaborPrefs(){
 		super(Messages.LaborPrefs_labTitle);
-		
 	}
 	
-	protected Control createContents(Composite parn){
+	protected Control createContents(Composite parent){
 		noDefaultAndApplyButton();
 		
-		Composite tableComposite = new Composite(parn, SWT.NONE);
-		GridData gd = new GridData();
-		tableComposite.setLayoutData(gd);
+		LabListLabelProvider labListLabelProvider = new LabListLabelProvider();
+		viewerFilter = new LabItemViewerFilter(labListLabelProvider);
+		
+		Text filterTxt = new Text(parent, SWT.SEARCH | SWT.ICON_CANCEL | SWT.ICON_SEARCH);
+		filterTxt.setMessage("filter");
+		filterTxt.addModifyListener(e -> {
+			if (filterTxt.getText().length() > 1) {
+				viewerFilter.setSearchText(filterTxt.getText());
+				tableViewer.refresh();
+			} else {
+				viewerFilter.setSearchText(""); //$NON-NLS-1$
+				tableViewer.refresh();
+			}
+		});
+		filterTxt.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false));
+		
+		Composite tableComposite = new Composite(parent, SWT.NONE);
+		tableComposite.setLayoutData(new GridData());
 		TableColumnLayout tableColumnLayout = new TableColumnLayout();
 		tableComposite.setLayout(tableColumnLayout);
+
 		tableViewer = new TableViewer(tableComposite, SWT.BORDER | SWT.FULL_SELECTION);
 		table = tableViewer.getTable();
+		tableViewer.setLabelProvider(labListLabelProvider);
+		tableViewer.addFilter(viewerFilter);
 		
 		for (int i = 0; i < headers.length; i++) {
 			TableColumn tc = new TableColumn(table, SWT.LEFT);
@@ -130,7 +151,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput){}
 			
 		});
-		tableViewer.setLabelProvider(new LabListLabelProvider());
+	
 		tableViewer.addDoubleClickListener(new IDoubleClickListener() {
 			
 			public void doubleClick(DoubleClickEvent event){
@@ -439,4 +460,5 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 		// TODO Auto-generated method stub
 		return new Point(350, 350);
 	}
+
 }

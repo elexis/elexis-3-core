@@ -39,6 +39,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.FontMetrics;
@@ -51,6 +52,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
@@ -58,8 +60,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
+import org.eclipse.ui.internal.IWorkbenchHelpContextIds;
+import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,6 +149,64 @@ public class GlobalActions {
 	private static Logger logger;
 	private static ICommandService cmdService;
 	private static Category cmdCategory;
+	/**
+	 * Open the preferences dialog. This a copy of the same internal eclipse where we just want to have a large dialog action
+	 */
+	private class OpenPreferencesAction extends Action implements ActionFactory.IWorkbenchAction {
+
+		/**
+		 * The workbench window; or <code>null</code> if this action has been
+		 * <code>dispose</code>d.
+		 */
+		private IWorkbenchWindow workbenchWindow;
+
+		/**
+		 * Create a new <code>OpenPreferenceAction</code> This default constructor
+		 * allows the the action to be called from the welcome page.
+		 */
+		public OpenPreferencesAction() {
+			this(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+		}
+
+		/**
+		 * Create a new <code>OpenPreferenceAction</code> and initialize it from the
+		 * given resource bundle.
+		 * 
+		 * @param window
+		 */
+		public OpenPreferencesAction(IWorkbenchWindow window) {
+			super(WorkbenchMessages.OpenPreferences_text);
+			if (window == null) {
+				throw new IllegalArgumentException();
+			}
+			this.workbenchWindow = window;
+			// @issue action id not set
+			setToolTipText(WorkbenchMessages.OpenPreferences_toolTip);
+			window.getWorkbench().getHelpSystem().setHelp(this, IWorkbenchHelpContextIds.OPEN_PREFERENCES_ACTION);
+		}
+
+		@Override
+		public void run() {
+			if (workbenchWindow == null) {
+				// action has been dispose
+				return;
+			}
+			PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(null, null, null, null);
+			dialog.getShell().setSize(1240, 700); // This enlarges the preference page
+			dialog.open();
+		}
+
+		@Override
+		public String getActionDefinitionId() {
+			return IWorkbenchCommandConstants.WINDOW_PREFERENCES;
+		}
+		
+		@Override
+		public void dispose() {
+			workbenchWindow = null;
+		}
+	};
+	
 	
 	public GlobalActions(final IWorkbenchWindow window){
 		if (Hub.mainActions != null) {
@@ -166,12 +229,11 @@ public class GlobalActions {
 		pasteAction.setText(Messages.GlobalActions_Paste); //$NON-NLS-1$
 		aboutAction = ActionFactory.ABOUT.create(window);
 		aboutAction.setText(Messages.GlobalActions_MenuAbout); //$NON-NLS-1$
-		prefsAction = ActionFactory.PREFERENCES.create(window);
-		prefsAction.setText(Messages.GlobalActions_Preferences); //$NON-NLS-1$
+		prefsAction = new OpenPreferencesAction(window);
+		prefsAction.setText(Messages.GlobalActions_Preferences);
 		savePerspectiveAction = new Action(Messages.GlobalActions_SavePerspective) { //$NON-NLS-1$
 			{
 				setId("savePerspektive"); //$NON-NLS-1$
-				// setActionDefinitionId(Hub.COMMAND_PREFIX+"savePerspektive"); //$NON-NLS-1$
 				setToolTipText(Messages.GlobalActions_SavePerspectiveToolTip); //$NON-NLS-1$
 				setImageDescriptor(Images.IMG_DISK.getImageDescriptor()); //$NON-NLS-1$
 			}

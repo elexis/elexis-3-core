@@ -49,6 +49,7 @@ import ch.rgw.tools.TimeTool;
 public class HL7Parser {
 	private static final Logger logger = LoggerFactory.getLogger(HL7Parser.class);
 	public static final String CFG_IMPORT_ENCDATA = "hl7Parser/importencdata";
+	public static final String CFG_IMPORT_ENCDATA_CATEGORY = "hl7Parser/importencdataCategory";
 	
 	private HL7PatientResolver patientResolver;
 	

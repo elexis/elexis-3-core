@@ -35,8 +35,6 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.DND;
@@ -88,6 +86,8 @@ import ch.elexis.core.ui.exchange.IDataSender;
 import ch.elexis.core.ui.exchange.XChangeException;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.core.ui.util.TableViewerSorter;
+import ch.elexis.core.ui.util.TableViewerSorter.IColumnContentProvider;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.data.Bestellung;
 import ch.elexis.data.Kontakt;
@@ -106,6 +106,8 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 			sendAction, newAction;
 	private IAction exportClipboardAction, checkInAction;
 	
+	private BestellungLabelProvider blp;
+	
 	@Override
 	public void createPartControl(final Composite parent){
 		parent.setLayout(new FillLayout());
@@ -118,19 +120,21 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 		table.setLinesVisible(false);
 		tv = new TableViewer(table);
 		
-		TableViewerColumn tvc0 = new TableViewerColumn(tv, SWT.CENTER);
-		tvc0.getColumn().setText(Messages.BestellView_Number);
-		tvc0.getColumn().setWidth(40);
+		TableViewerColumn tvcNumber = new TableViewerColumn(tv, SWT.CENTER);
+		tvcNumber.getColumn().setText(Messages.BestellView_Number);
+		tvcNumber.getColumn().setWidth(40);
 		ReflectiveEditingSupport poes =
 			new ReflectiveEditingSupport(tv, ModelPackage.Literals.IORDER_ENTRY__AMOUNT.getName());
-		tvc0.setEditingSupport(poes);
-		TableViewerColumn tvc1 = new TableViewerColumn(tv, SWT.LEFT);
-		tvc1.getColumn().setText(Messages.BestellView_Article);
-		tvc1.getColumn().setWidth(280);
-		TableViewerColumn tvc2 = new TableViewerColumn(tv, SWT.LEFT);
-		tvc2.getColumn().setText(Messages.BestellView_Dealer);
-		tvc2.getColumn().setWidth(250);
-		tvc2.setEditingSupport(new EditingSupport(tv) {
+		tvcNumber.setEditingSupport(poes);
+		
+		TableViewerColumn tvcArticle = new TableViewerColumn(tv, SWT.LEFT);
+		tvcArticle.getColumn().setText(Messages.BestellView_Article);
+		tvcArticle.getColumn().setWidth(280);
+		
+		TableViewerColumn tvcDealer = new TableViewerColumn(tv, SWT.LEFT);
+		tvcDealer.getColumn().setText(Messages.BestellView_Dealer);
+		tvcDealer.getColumn().setWidth(250);
+		tvcDealer.setEditingSupport(new EditingSupport(tv) {
 			
 			@Override
 			protected void setValue(Object element, Object value){
@@ -167,31 +171,12 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 		tvc3.getColumn().setText("Lager"); //$NON-NLS-1$
 		tvc3.getColumn().setWidth(50);
 		
-		tv.setContentProvider(new IStructuredContentProvider() {
-			public Object[] getElements(final Object inputElement){
-				if (actOrder != null) {
-					return actOrder.getEntries().toArray();
-				}
-				return new Object[0];
-			}
-			
-			public void dispose(){}
-			
-			public void inputChanged(final Viewer viewer, final Object oldInput,
-				final Object newInput){}
-			
-		});
-		tv.setLabelProvider(new BestellungLabelProvider());
-		tv.setComparator(new ViewerComparator() {
-			@Override
-			public int compare(Viewer viewer, Object e1, Object e2){
-				IOrderEntry be1 = (IOrderEntry) e1;
-				IOrderEntry be2 = (IOrderEntry) e2;
-				String s1 = be1.getArticle().getName();
-				String s2 = be2.getArticle().getName();
-				return s1.compareTo(s2);
-			}
-		});
+		tv.setContentProvider(new BestellungContentProvider());
+		blp = new BestellungLabelProvider();
+		tv.setLabelProvider(blp);
+		
+		new TableViewerSorter(tv);
+		
 		Transfer[] types = new Transfer[] {
 			TextTransfer.getInstance()
 		};
@@ -326,7 +311,7 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 		return best;
 	}
 	
-	class BestellungLabelProvider extends LabelProvider implements ITableLabelProvider {
+	private class BestellungLabelProvider extends LabelProvider implements ITableLabelProvider {
 		
 		public Image getColumnImage(final Object element, final int columnIndex){
 			return null;
@@ -341,13 +326,33 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 				return entry.getArticle().getLabel();
 			case 2:
 				IContact k = entry.getProvider();
-				return (k != null) ? k.getLabel() : Messages.BestellView_Unknown; //$NON-NLS-1$
+				return (k != null) ? k.getLabel() : Messages.BestellView_Unknown;
 			case 3:
 				IStock s = entry.getStock();
 				return (s != null) ? s.getCode() : StringConstants.EMPTY;
 			default:
 				return "?"; //$NON-NLS-1$
 			}
+		}
+	}
+	
+	private class BestellungContentProvider
+			implements IStructuredContentProvider, IColumnContentProvider {
+		
+		@Override
+		public Comparable<?> getValue(Object element, int columnIndex){
+			if (columnIndex == 0) {
+				return ((IOrderEntry) element).getAmount();
+			}
+			return blp.getColumnText(element, columnIndex);
+		}
+		
+		@Override
+		public Object[] getElements(Object inputElement){
+			if (actOrder != null) {
+				return actOrder.getEntries().toArray();
+			}
+			return new Object[0];
 		}
 	}
 	

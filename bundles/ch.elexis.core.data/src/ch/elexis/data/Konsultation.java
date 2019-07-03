@@ -25,9 +25,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IArticle;
@@ -36,6 +40,7 @@ import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IOptifier;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
+import ch.elexis.core.data.interfaces.IVerrechenbarAdjuster;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.nopo.adapter.DiagnoseAdapter;
 import ch.elexis.core.data.service.PoCodeElementServiceHolder;
@@ -43,6 +48,7 @@ import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.data.services.ICodeElementService;
 import ch.elexis.core.data.services.ICodeElementService.ContextKeys;
 import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IDiagnosis;
@@ -85,6 +91,10 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	private static final String TABLENAME = "BEHANDLUNGEN";
 	volatile int actEntry;
 	
+	// keep a list of all ch.elexis.VerrechenbarAdjuster extensions
+	private static ArrayList<IVerrechenbarAdjuster> adjusters =
+		new ArrayList<IVerrechenbarAdjuster>();
+	
 	protected String getTableName(){
 		return TABLENAME;
 	}
@@ -93,6 +103,21 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		addMapping(TABLENAME, FLD_MANDATOR_ID, PersistentObject.DATE_COMPOUND, FLD_CASE_ID,
 			FLD_BILL_ID, "Eintrag=S:V:Eintrag", FLD_TIME,
 			FLD_JOINT_DIAGNOSEN + "=JOINT:BehandlungsID:DiagnoseID:BEHDL_DG_JOINT", FLD_BILLABLE);
+		
+		List<IConfigurationElement> adjustersConfigurations =
+			Extensions.getExtensions(ExtensionPointConstantsData.VERRECHNUNGSCODE_ADJUSTER);
+		for (IConfigurationElement elem : adjustersConfigurations) {
+			Object o;
+			try {
+				o = elem.createExecutableExtension("class_pre");
+				if (o instanceof IVerrechenbarAdjuster) {
+					adjusters.add((IVerrechenbarAdjuster) o);
+				}
+			} catch (CoreException e) {
+				// just log the failed instantiation
+				ExHandler.handle(e);
+			}
+		}
 	}
 	
 	protected Konsultation(String id){
@@ -868,40 +893,52 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 */
 	public Result<IVerrechenbar> addLeistung(IVerrechenbar l){
 		if (isEditable(true)) {
-			// TODO: ch.elexis.data.Konsultation.java: Weitere Leistungestypen
-			// ausser Medikamente_BAG und arzttarif_ch=Tarmed,
-			// TODO: ch.elexis.data.Konsultation.java: beim/nach dem Hinzufügen
-			// auf <>0.00 prüfen, entweder verteilt in den Optifiern,
-			// TODO: oder an dieser Stelle zentral, dann ggf. auch die schon
-			// existierenden Prüfungen durch eine zentrale hier mitersetzen.
-			IOptifier optifier = l.getOptifier();
-			Result<IVerrechenbar> result = optifier.add(l, this);
-			if (!result.isOK() && result.getCode() == 11) {
-				String initialResult = result.toString();
-				// code 11 is tarmed exclusion due to side see TarmedOptifier#EXKLUSIONSIDE
-				// set a context variable to specify the side see TarmedLeistung#SIDE, TarmedLeistung#SIDE_L, TarmedLeistung#SIDE_R
-				optifier.putContext("Seite", "r");
-				result = optifier.add(l, this);
+			IVerrechenbar beforeAdjust = l;
+			// call adjusters before attempting to bill the IVerrechenbar
+			for (IVerrechenbarAdjuster iVerrechenbarAdjuster : adjusters) {
+				l = iVerrechenbarAdjuster.adjust(l, this);
+			}
+			if (l != null) {
+				// TODO: ch.elexis.data.Konsultation.java: Weitere Leistungestypen
+				// ausser Medikamente_BAG und arzttarif_ch=Tarmed,
+				// TODO: ch.elexis.data.Konsultation.java: beim/nach dem Hinzufügen
+				// auf <>0.00 prüfen, entweder verteilt in den Optifiern,
+				// TODO: oder an dieser Stelle zentral, dann ggf. auch die schon
+				// existierenden Prüfungen durch eine zentrale hier mitersetzen.
+				IOptifier optifier = l.getOptifier();
+				Result<IVerrechenbar> result = optifier.add(l, this);
 				if (!result.isOK() && result.getCode() == 11) {
-					optifier.putContext("Seite", "l");
+					String initialResult = result.toString();
+					// code 11 is tarmed exclusion due to side see TarmedOptifier#EXKLUSIONSIDE
+					// set a context variable to specify the side see TarmedLeistung#SIDE, TarmedLeistung#SIDE_L, TarmedLeistung#SIDE_R
+					optifier.putContext("Seite", "r");
 					result = optifier.add(l, this);
+					if (!result.isOK() && result.getCode() == 11) {
+						optifier.putContext("Seite", "l");
+						result = optifier.add(l, this);
+					}
+					if (result.isOK()) {
+						MessageEvent.fireInformation("Info", "Achtung: " + initialResult
+							+ "\n\n Es wurde bei der Position " + l.getCode()
+							+ " automatisch die Seite gewechselt."
+							+ " Bitte korrigieren Sie die Leistung falls dies nicht korrekt ist.");
+					}
+					optifier.clearContext();
 				}
 				if (result.isOK()) {
-					MessageEvent.fireInformation("Info",
-						"Achtung: " + initialResult + "\n\n Es wurde bei der Position "
-							+ l.getCode() + " automatisch die Seite gewechselt."
-							+ " Bitte korrigieren Sie die Leistung falls dies nicht korrekt ist.");
+					ElexisEventDispatcher.update(this);
+					// Statistik nachführen
+					getFall().getPatient().countItem(l);
+					CoreHub.actUser.countItem(l);
+					CoreHub.actUser.statForString("LeistungenMFU", l.getCodeSystemName());
 				}
-				optifier.clearContext();
+				return result;
+			} else {
+				return new Result<IVerrechenbar>(Result.SEVERITY.WARNING, 1, "Folgende Leistung '"
+					+ beforeAdjust.getCode()
+					+ "' konnte im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.",
+					null, false);
 			}
-			if (result.isOK()) {
-				ElexisEventDispatcher.update(this);
-				// Statistik nachführen
-				getFall().getPatient().countItem(l);
-				CoreHub.actUser.countItem(l);
-				CoreHub.actUser.statForString("LeistungenMFU", l.getCodeSystemName());
-			}
-			return result;
 		}
 		return new Result<IVerrechenbar>(Result.SEVERITY.WARNING, 2,
 			"Behandlung geschlossen oder nicht von Ihnen", null, false);

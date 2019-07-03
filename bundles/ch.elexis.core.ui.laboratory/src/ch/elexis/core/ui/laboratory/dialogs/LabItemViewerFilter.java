@@ -1,13 +1,14 @@
 package ch.elexis.core.ui.laboratory.dialogs;
 
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
 public class LabItemViewerFilter extends ViewerFilter {
 	protected String searchString;
-	protected LabItemLabelProvider labelProvider;
+	protected ILabelProvider labelProvider;
 	
-	public LabItemViewerFilter(LabItemLabelProvider labelProvider){
+	public LabItemViewerFilter(ILabelProvider labelProvider){
 		this.labelProvider = labelProvider;
 	}
 	
@@ -22,7 +23,7 @@ public class LabItemViewerFilter extends ViewerFilter {
 			return true;
 		}
 		String label = labelProvider.getText(element);
-		if (label != null && label.matches(searchString)) {
+		if (label != null && label.toLowerCase().matches(searchString.toLowerCase())) {
 			return true;
 		}
 		return false;

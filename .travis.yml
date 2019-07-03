@@ -6,7 +6,8 @@ language: java
 
 install: mvn -V -DskipTests=true -Dmaven.javadoc.skip=true -B validate
 
-script: mvn -V --quiet clean verify -Dall-archs=true && find . -name "*.zip"
+script:
+  - mvn -V --quiet clean verify -Dall-archs=true
 
 notifications:
   email:

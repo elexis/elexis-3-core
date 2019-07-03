@@ -50,6 +50,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.Hub;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
@@ -373,7 +374,7 @@ public class LaborView extends ViewPart implements ISaveablePart2, IRefreshable 
 				ordersComposite.reload();
 			}
 		};
-		expandAllAction = new Action("Expand All") {
+		expandAllAction = new Action(Messages.LaborView_expand_all) {
 			@Override
 			public void run(){
 				if (tabFolder.getSelectionIndex() == 0) {
@@ -386,7 +387,7 @@ public class LaborView extends ViewPart implements ISaveablePart2, IRefreshable 
 				return Images.IMG_ARROWDOWN.getImageDescriptor();
 			}
 		};
-		collapseAllAction = new Action("Collapse All") {
+		collapseAllAction = new Action(Messages.LaborView_collapse_all) {
 			@Override
 			public void run(){
 				if (tabFolder.getSelectionIndex() == 0) {
