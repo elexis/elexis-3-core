@@ -27,6 +27,9 @@ location "https://download.eclipse.org/technology/babel/update-site/R0.16.1/phot
 	org.eclipse.equinox.p2.ui.nl_de
 	org.eclipse.equinox.p2.ui.nl_fr
 	org.eclipse.equinox.p2.ui.nl_it
+	org.eclipse.ui.nl_de
+	org.eclipse.ui.nl_fr
+	org.eclipse.ui.nl_it
 }
 
 location "http://download.eclipse.org/e4/snapshots/org.eclipse.e4.tools/latest/" {

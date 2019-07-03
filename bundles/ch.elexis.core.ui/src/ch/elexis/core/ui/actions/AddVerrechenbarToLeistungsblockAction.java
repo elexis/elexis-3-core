@@ -4,7 +4,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.data.UiVerrechenbarAdapter;
 import ch.elexis.core.ui.dialogs.AddElementToBlockDialog;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis" sequenceNumber="1561105209">
+<target name="Elexis" sequenceNumber="1562155887">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.swt.nl_de" version="4.8.0.v20190126080931"/>
@@ -28,6 +28,9 @@
       <unit id="org.eclipse.equinox.p2.ui.nl_de" version="4.8.0.v20190126080931"/>
       <unit id="org.eclipse.equinox.p2.ui.nl_fr" version="4.8.0.v20190126080931"/>
       <unit id="org.eclipse.equinox.p2.ui.nl_it" version="4.8.0.v20190126080931"/>
+      <unit id="org.eclipse.ui.nl_de" version="4.8.0.v20190126080931"/>
+      <unit id="org.eclipse.ui.nl_fr" version="4.8.0.v20190126080931"/>
+      <unit id="org.eclipse.ui.nl_it" version="4.8.0.v20190126080931"/>
       <repository location="https://download.eclipse.org/technology/babel/update-site/R0.16.1/photon/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
