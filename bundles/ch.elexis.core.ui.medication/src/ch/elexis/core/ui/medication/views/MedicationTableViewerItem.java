@@ -72,6 +72,8 @@ public class MedicationTableViewerItem {
 		
 		if (dateUntil != null) {
 			endTime = Date.from(dateUntil.atZone(ZoneId.systemDefault()).toInstant());
+		} else {
+			endTime = new Date();
 		}
 	}
 	
@@ -104,7 +106,7 @@ public class MedicationTableViewerItem {
 	}
 	
 	public String getDosis(){
-		return dosis;
+		return dosis != null ? dosis : "";
 	}
 	
 	public IPrescription getPrescription(){

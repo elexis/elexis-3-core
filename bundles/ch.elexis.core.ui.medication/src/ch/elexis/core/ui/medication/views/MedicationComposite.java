@@ -625,6 +625,7 @@ public class MedicationComposite extends Composite
 					newPrescription.setDosageInstruction(getDosisStringFromSignatureTextArray());
 					newPrescription.setRemark(txtIntakeOrder.getText());
 					newPrescription.setDisposalComment(txtDisposalComment.getText());
+					CoreModelServiceHolder.get().save(newPrescription);
 				}
 				// change always stops
 				if (btnStopMedication.getSelection()) {
@@ -647,6 +648,7 @@ public class MedicationComposite extends Composite
 					// stop the old prescription with current time
 					MedicationServiceHolder.get().stopPrescription(oldPrescription,
 						LocalDateTime.now());
+					CoreModelServiceHolder.get().save(newStoppedPrescription);
 				}
 				else {
 					// apply stop reason if set
@@ -657,6 +659,8 @@ public class MedicationComposite extends Composite
 						oldPrescription.setStopReason(txtStopComment.getText());
 					}
 				}
+				CoreModelServiceHolder.get().save(oldPrescription);
+			
 				
 			}
 		});
