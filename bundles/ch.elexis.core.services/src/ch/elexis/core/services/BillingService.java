@@ -34,18 +34,33 @@ public class BillingService implements IBillingService {
 	@Reference
 	private IAccessControlService accessControlService;
 	
-	private List<IBilledAdjuster> adjusters = new ArrayList<>();
+	private List<IBilledAdjuster> billedAdjusters = new ArrayList<>();
 	
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
 	public void setBilledAdjuster(IBilledAdjuster adjuster){
-		if (!adjusters.contains(adjuster)) {
-			adjusters.add(adjuster);
+		if (!billedAdjusters.contains(adjuster)) {
+			billedAdjusters.add(adjuster);
 		}
 	}
 	
 	public void unsetBilledAdjuster(IBilledAdjuster adjuster){
-		if (adjusters.contains(adjuster)) {
-			adjusters.remove(adjuster);
+		if (billedAdjusters.contains(adjuster)) {
+			billedAdjusters.remove(adjuster);
+		}
+	}
+	
+	private List<IBillableAdjuster> billableAdjusters = new ArrayList<>();
+	
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
+	public void setBillableAdjuster(IBillableAdjuster adjuster){
+		if (!billableAdjusters.contains(adjuster)) {
+			billableAdjusters.add(adjuster);
+		}
+	}
+	
+	public void unsetBillableAdjuster(IBillableAdjuster adjuster){
+		if (billableAdjusters.contains(adjuster)) {
+			billableAdjusters.remove(adjuster);
 		}
 	}
 	
@@ -107,41 +122,53 @@ public class BillingService implements IBillingService {
 	
 	@Override
 	public Result<IBilled> bill(IBillable billable, IEncounter encounter, double amount){
-		Result<IBillable> verificationResult =
-			billable.getVerifier().verifyAdd(billable, encounter, amount);
-		if (verificationResult.isOK()) {
-			IBillableOptifier optifier = billable.getOptifier();
-			Result<IBilled> optifierResult = optifier.add(billable, encounter, amount);
-			
-			// TODO refactor
-			if (!optifierResult.isOK() && optifierResult.getCode() == 11) {
-				String initialResult = optifierResult.toString();
-				// code 11 is tarmed exclusion due to side see TarmedOptifier#EXKLUSIONSIDE
-				// set a context variable to specify the side see TarmedLeistung#SIDE, TarmedLeistung#SIDE_L, TarmedLeistung#SIDE_R
-				optifier.putContext("Seite", "r");
-				optifierResult = optifier.add(billable, encounter, amount);
+		IBillable beforeAdjust = billable;
+		for (IBillableAdjuster iBillableAdjuster : billableAdjusters) {
+			billable = iBillableAdjuster.adjust(billable, encounter);
+		}
+		if (billable != null) {
+			Result<IBillable> verificationResult =
+				billable.getVerifier().verifyAdd(billable, encounter, amount);
+			if (verificationResult.isOK()) {
+				IBillableOptifier optifier = billable.getOptifier();
+				Result<IBilled> optifierResult = optifier.add(billable, encounter, amount);
+				
+				// TODO refactor
 				if (!optifierResult.isOK() && optifierResult.getCode() == 11) {
-					optifier.putContext("Seite", "l");
+					String initialResult = optifierResult.toString();
+					// code 11 is tarmed exclusion due to side see TarmedOptifier#EXKLUSIONSIDE
+					// set a context variable to specify the side see TarmedLeistung#SIDE, TarmedLeistung#SIDE_L, TarmedLeistung#SIDE_R
+					optifier.putContext("Seite", "r");
 					optifierResult = optifier.add(billable, encounter, amount);
+					if (!optifierResult.isOK() && optifierResult.getCode() == 11) {
+						optifier.putContext("Seite", "l");
+						optifierResult = optifier.add(billable, encounter, amount);
+					}
+					if (optifierResult.isOK()) {
+						String message = "Achtung: " + initialResult
+							+ "\n Es wurde bei der Position " + billable.getCode()
+							+ " automatisch die Seite gewechselt."
+							+ " Bitte korrigieren Sie die Leistung falls dies nicht korrekt ist.";
+						optifierResult.addMessage(SEVERITY.OK, message);
+					}
+					optifier.clearContext();
 				}
-				if (optifierResult.isOK()) {
-					String message = "Achtung: " + initialResult + "\n Es wurde bei der Position "
-						+ billable.getCode() + " automatisch die Seite gewechselt."
-						+ " Bitte korrigieren Sie die Leistung falls dies nicht korrekt ist.";
-					optifierResult.addMessage(SEVERITY.OK, message);
+				
+				if (optifierResult.get() != null) {
+					for (IBilledAdjuster iBilledAdjuster : billedAdjusters) {
+						iBilledAdjuster.adjust(optifierResult.get());
+					}
 				}
-				optifier.clearContext();
+				
+				return optifierResult;
+			} else {
+				return translateResult(verificationResult);
 			}
-			
-			if (optifierResult.get() != null) {
-				for (IBilledAdjuster iBilledAdjuster : adjusters) {
-					iBilledAdjuster.adjust(optifierResult.get());
-				}
-			}
-			
-			return optifierResult;
 		} else {
-			return translateResult(verificationResult);
+			return new Result<IBilled>(Result.SEVERITY.WARNING, 1, "Folgende Leistung '"
+				+ beforeAdjust.getCode()
+				+ "' konnte im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.",
+				null, false);
 		}
 	}
 	

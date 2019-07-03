@@ -3,6 +3,7 @@
    <service>
       <provide interface="ch.elexis.core.services.IBillingService"/>
    </service>
+   <reference bind="setBillableAdjuster" cardinality="0..n" interface="ch.elexis.core.services.IBillableAdjuster" name="BillableAdjuster" policy="dynamic" policy-option="greedy" unbind="unsetBillableAdjuster"/>
    <reference bind="setBilledAdjuster" cardinality="0..n" interface="ch.elexis.core.services.IBilledAdjuster" name="BilledAdjuster" policy="dynamic" policy-option="greedy" unbind="unsetBilledAdjuster"/>
    <reference cardinality="1..1" field="accessControlService" interface="ch.elexis.core.services.IAccessControlService" name="accessControlService"/>
    <implementation class="ch.elexis.core.services.BillingService"/>
