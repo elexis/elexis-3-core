@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis" sequenceNumber="1560930748">
+<target name="Elexis" sequenceNumber="1562156608">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.100.v20180827-1352"/>
@@ -38,6 +38,9 @@
       <unit id="org.eclipse.equinox.p2.ui.nl_de" version="4.8.0.v20190126080931"/>
       <unit id="org.eclipse.equinox.p2.ui.nl_fr" version="4.8.0.v20190126080931"/>
       <unit id="org.eclipse.equinox.p2.ui.nl_it" version="4.8.0.v20190126080931"/>
+      <unit id="org.eclipse.ui.nl_de" version="4.8.0.v20190126080931"/>
+      <unit id="org.eclipse.ui.nl_fr" version="4.8.0.v20190126080931"/>
+      <unit id="org.eclipse.ui.nl_it" version="4.8.0.v20190126080931"/>
       <unit id="osgi.enterprise" version="4.2.0.v201108120515"/>
       <unit id="javax.persistence" version="2.2.1.v201807122140"/>
       <unit id="org.eclipse.persistence.asm" version="6.2.0.v201808041549"/>
