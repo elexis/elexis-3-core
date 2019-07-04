@@ -776,6 +776,12 @@
             id="ch.elexis.core.ui.commands.printAddressLabel"
             name="%elexis.printAddresslabel">
       </command>
+      <command
+            categoryId="ch.elexis.core.ui.commands.kategorie"
+            defaultHandler="ch.elexis.core.ui.commands.PrintContactLabelHandler"
+            id="ch.elexis.core.ui.commands.printContactLabel"
+            name="%elexis.printContactLabel">
+      </command>
    </extension>
       <extension
             point="ch.elexis.core.ui.KonsExtension">

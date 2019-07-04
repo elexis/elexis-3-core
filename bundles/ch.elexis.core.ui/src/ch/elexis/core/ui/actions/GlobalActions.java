@@ -406,28 +406,16 @@ public class GlobalActions {
 			
 			@Override
 			public void run(){
-				Kontakt kontakt = (Kontakt) ElexisEventDispatcher.getSelected(Kontakt.class);
-				if (kontakt == null) {
-					SWTHelper.showInfo("Kein Kontakt ausgewählt",
-						"Bitte wählen Sie vor dem Drucken einen Kontakt!");
-					return;
+				Command cmd = cmdService.getCommand("ch.elexis.core.ui.commands.printContactLabel");
+				if (!cmd.isDefined()) {
+					  cmd.define(Messages.GlobalActions_PrintContactLabel, Messages.GlobalActions_PrintContactLabelToolTip, cmdCategory);
 				}
-				EtiketteDruckenDialog dlg =
-					new EtiketteDruckenDialog(mainWindow.getShell(), kontakt, TT_ADDRESS_LABEL);
-				dlg.setTitle(Messages.GlobalActions_PrintContactLabel);
-				dlg.setMessage(Messages.GlobalActions_PrintContactLabelToolTip);
-				if (isDirectPrint()) {
-					dlg.setBlockOnOpen(false);
-					dlg.open();
-					if (dlg.doPrint()) {
-						dlg.close();
-					} else {
-						SWTHelper.alert("Fehler beim Drucken",
-							"Beim Drucken ist ein Fehler aufgetreten. Bitte überprüfen Sie die Einstellungen.");
-					}
-				} else {
-					dlg.setBlockOnOpen(true);
-					dlg.open();
+				
+				try {
+					cmd.executeWithChecks(new ExecutionEvent());
+				} catch (Exception e) {
+					ExHandler.handle(e);
+					logger.error("Failed to execute command ch.elexis.core.ui.commands.printContactLabel", e);
 				}
 			}
 		};
