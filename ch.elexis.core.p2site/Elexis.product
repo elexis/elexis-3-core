@@ -58,6 +58,8 @@
    </features>
 
    <configurations>
+      <plugin id="ch.elexis.core.jpa.datasource" autoStart="true" startLevel="3" />
+      <plugin id="ch.elexis.core.jpa.entities" autoStart="true" startLevel="3" />
       <plugin id="ch.elexis.core.logging" autoStart="true" startLevel="2" />
       <plugin id="ch.elexis.core.ui.p2" autoStart="true" startLevel="4" />
       <plugin id="ch.qos.logback.classic" autoStart="true" startLevel="2" />
