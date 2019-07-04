@@ -48,6 +48,15 @@ public class CoreUtil {
 		return false;
 	}
 	
+	/**
+	 * Get a {@link DBConnection} form various sources. Sources are checked in following order.<br/>
+	 * <li>System Property - RunFromScratch</li>
+	 * <li>System Property - ch.elexis.dbSpec, etc.</li>
+	 * <li>Provided Settings</li> <br />
+	 * 
+	 * @param settings
+	 * @return
+	 */
 	public static Optional<DBConnection> getDBConnection(Settings settings){
 		if (ElexisSystemPropertyConstants.RUN_MODE_FROM_SCRATCH
 			.equals(System.getProperty(ElexisSystemPropertyConstants.RUN_MODE))) {
@@ -61,6 +70,31 @@ public class CoreUtil {
 			ret.username = "sa";
 			ret.password = "";
 			return Optional.of(ret);
+		}
+		
+		if(System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC) != null) {
+			DBConnection dbConnection = new DBConnection();
+			dbConnection.username =
+				System.getProperty(ElexisSystemPropertyConstants.CONN_DB_USERNAME) != null
+						? System.getProperty(ElexisSystemPropertyConstants.CONN_DB_USERNAME)
+						: "";
+			dbConnection.password =
+				System.getProperty(ElexisSystemPropertyConstants.CONN_DB_PASSWORD) != null
+						? System.getProperty(ElexisSystemPropertyConstants.CONN_DB_PASSWORD)
+						: "";
+			
+			if (System.getProperty(ElexisSystemPropertyConstants.CONN_DB_FLAVOR) != null) {
+				String flavorString =
+					System.getProperty(ElexisSystemPropertyConstants.CONN_DB_FLAVOR);
+				dbConnection.rdbmsType = DBType.valueOfIgnoreCase(flavorString)
+					.orElseThrow(() -> new IllegalStateException(
+						"Unknown ch.elexis.dbFlavor [" + flavorString + "]"));
+			}
+			dbConnection.connectionString =
+				System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC) != null
+						? System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC)
+						: "";
+			return Optional.of(dbConnection);
 		}
 		
 		Hashtable<Object, Object> hConn = getConnectionHashtable(settings);

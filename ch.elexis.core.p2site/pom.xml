@@ -7,7 +7,7 @@
 	</parent>
 	<artifactId>ch.elexis.core.p2site</artifactId>
 	<packaging>eclipse-repository</packaging>
-<!--   <profiles>
+	<profiles>
     <profile>
       <id>verify-elexis-startup</id>
       <activation>
@@ -45,7 +45,7 @@
         </plugins>
       </build>
     </profile>
-  </profiles> -->
+  </profiles>
   <build>
 		<plugins>
 			<plugin>

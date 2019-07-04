@@ -60,6 +60,15 @@ public class DBConnection implements Serializable {
 			this.defaultPort = defaultPort;
 		}
 
+		public static Optional<DBType> valueOfIgnoreCase(String value){
+			for (DBType dbType : values()) {
+				if (dbType.dbType.equalsIgnoreCase(value)) {
+					return Optional.of(dbType);
+				}
+			}
+			return Optional.empty();
+		}
+		
 		public static Optional<DBType> valueOfDriver(String driver) {
 			for (DBType dbType : values()) {
 				if (dbType.driverName.equals(driver)) {
