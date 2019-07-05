@@ -124,11 +124,11 @@ public class DBConnection {
 		logger.info(msg);
 		
 		if (dbFlavor.equalsIgnoreCase("mysql"))
-			dbDriver = "com.mysql.jdbc.Driver";
+			dbDriver = JdbcLink.MYSQL_DRIVER_CLASS_NAME;
 		else if (dbFlavor.equalsIgnoreCase("postgresql"))
-			dbDriver = "org.postgresql.Driver";
+			dbDriver = JdbcLink.POSTGRESQL_DRIVER_CLASS_NAME;
 		else if (dbFlavor.equalsIgnoreCase("h2"))
-			dbDriver = "org.h2.Driver";
+			dbDriver = JdbcLink.H2_DRIVER_CLASS_NAME;
 		else
 			dbDriver = "invalid";
 		if (!dbDriver.equalsIgnoreCase("invalid")) {

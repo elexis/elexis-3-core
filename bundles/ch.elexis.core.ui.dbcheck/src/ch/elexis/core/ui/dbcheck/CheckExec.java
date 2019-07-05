@@ -11,8 +11,8 @@ import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLinkSyntaxException;
 
 public abstract class CheckExec {
-	public static String MYSQL_DB = "com.mysql.jdbc.Driver";
-	public static String POSTG_DB = "org.postgresql.Driver";
+	public static String MYSQL_DB = JdbcLink.MYSQL_DRIVER_CLASS_NAME;
+	public static String POSTG_DB = JdbcLink.POSTGRESQL_DRIVER_CLASS_NAME;
 	
 	/** Holds connection to database. */
 	protected static Connection conn;
