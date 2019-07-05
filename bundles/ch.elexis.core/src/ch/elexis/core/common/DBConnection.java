@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.common;
 
+import ch.rgw.tools.JdbcLink;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,9 +47,9 @@ public class DBConnection implements Serializable {
 	@XmlEnum(String.class)
 	public enum DBType {
 		@XmlEnumValue("MYSQL")
-		MySQL("com.mysql.jdbc.Driver", "mySQl", "3306"), @XmlEnumValue("PostgreSQL")
-		PostgreSQL("org.postgresql.Driver", "PostgreSQL", "5432"), @XmlEnumValue("H2")
-		H2("org.h2.Driver", "H2", "");
+		MySQL(JdbcLink.MYSQL_DRIVER_CLASS_NAME, "mySQl", "3306"), @XmlEnumValue("PostgreSQL")
+		PostgreSQL(JdbcLink.POSTGRESQL_DRIVER_CLASS_NAME, "PostgreSQL", "5432"), @XmlEnumValue("H2")
+		H2(JdbcLink.H2_DRIVER_CLASS_NAME, "H2", "");
 
 		public final String driverName;
 		public final String dbType;

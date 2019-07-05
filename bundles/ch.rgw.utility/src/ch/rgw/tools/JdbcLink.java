@@ -46,6 +46,9 @@ public class JdbcLink {
 		return "3.2.1";
 	}
 	
+	public final static String MYSQL_DRIVER_CLASS_NAME = "com.mysql.cj.jdbc.Driver";
+	public final static String POSTGRESQL_DRIVER_CLASS_NAME = "org.postgresql.Driver";
+	public final static String H2_DRIVER_CLASS_NAME =  "org.h2.Driver";
 	public int lastErrorCode;
 	public String lastErrorString;
 	public int verMajor = 0;
@@ -55,7 +58,6 @@ public class JdbcLink {
 	private String sConn;
 	private String sUser;
 	private String sPwd;
-	
 	private PoolingDataSource dataSource;
 	private GenericObjectPool<Connection> connectionPool;
 	// prepared statements are not released properly up until now, so keep 1 connection open
@@ -121,13 +123,13 @@ public class JdbcLink {
 	 */
 	public static JdbcLink createMySqlLink(String host, String database){
 		log.log(Level.INFO, "Creating MySQL-Link");
-		String driver = "com.mysql.jdbc.Driver";
 		String[] hostdetail = host.split(":");
 		String hostname = hostdetail[0];
 		String hostport = hostdetail.length > 1 ? hostdetail[1] : "3306";
 		String connect = "jdbc:mysql://" + hostname + ":" + hostport + "/" + database
-			+ "?autoReconnect=true&useSSL=false";
-		return new JdbcLink(driver, connect, DBFLAVOR_MYSQL);
+			+ "?autoReconnect=true&useSSL=false"
+			+ "&serverTimezone=UTC";
+		return new JdbcLink(MYSQL_DRIVER_CLASS_NAME, connect, DBFLAVOR_MYSQL);
 	}
 	
 	/**
@@ -168,7 +170,6 @@ public class JdbcLink {
 	 */
 	public static JdbcLink createH2Link(String database){
 		log.log(Level.INFO, "Creating H2-Link");
-		String driver = "org.h2.Driver";
 		String prefix = "jdbc:h2:";
 		if (database.contains(".zip!")) {
 			prefix += "zip:";
@@ -180,7 +181,7 @@ public class JdbcLink {
 		} else {
 			connect = prefix + database + ";AUTO_SERVER=TRUE";
 		}
-		return new JdbcLink(driver, connect, DBFLAVOR_H2);
+		return new JdbcLink(H2_DRIVER_CLASS_NAME, connect, DBFLAVOR_H2);
 	}
 	
 	/**
@@ -205,13 +206,12 @@ public class JdbcLink {
 	 */
 	public static JdbcLink createPostgreSQLLink(String host, String database){
 		log.log(Level.INFO, "Creating PostgreSQL-Link");
-		String driver = "org.postgresql.Driver";
 		String[] hostdetail = host.split(":");
 		String hostname = hostdetail[0];
 		String hostport = hostdetail.length > 1 ? hostdetail[1] : "5432";
 		
 		String connect = "jdbc:postgresql://" + hostname + ":" + hostport + "/" + database;
-		return new JdbcLink(driver, connect, DBFLAVOR_POSTGRESQL);
+		return new JdbcLink(POSTGRESQL_DRIVER_CLASS_NAME, connect, DBFLAVOR_POSTGRESQL);
 	}
 	
 	public static JdbcLink createODBCLink(String dsn){

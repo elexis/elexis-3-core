@@ -109,9 +109,9 @@ public class Desk implements IApplication {
 		if (connection != null && connection.isPresent()) {
 			String noPoConnectString = connection.get().connectionString;
 			if (!poConnectString.equalsIgnoreCase(noPoConnectString)) {
-				log.error("Connection string differ po [{}] nopo [{}]", poConnectString, noPoConnectString);
-				System.err
-						.println("Connection string differ po [" + poConnectString + "] nopo [" + noPoConnectString + "]");
+				String msg = String.format("Connection string differ po [%s] nopo [%s]", poConnectString, noPoConnectString);
+				log.error(msg);
+				System.err.println(msg);
 			}
 		}
 		// check for initialization parameters

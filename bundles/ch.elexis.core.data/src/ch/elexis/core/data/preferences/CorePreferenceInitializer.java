@@ -31,18 +31,7 @@ public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 	public void initializeDefaultPreferences(){
 		
 		// Datenbank
-		/*
-		 * CoreHub.localCfg.set(PreferenceConstants.DB_NAME,"hsql"); //$NON-NLS-1$
-		 * CoreHub.localCfg.set(PreferenceConstants.DB_CLASS,"org.hsqldb.jdbcDriver"); //$NON-NLS-1$
-		 * String base=getDefaultDBPath();
-		 * 
-		 * CoreHub.localCfg.set(PreferenceConstants.DB_CONNECT,"jdbc:hsqldb:"+base+"/db");
-		 * //$NON-NLS-1$ //$NON-NLS-2$ CoreHub.localCfg.set(PreferenceConstants.DB_USERNAME,"sa");
-		 * //$NON-NLS-1$ CoreHub.localCfg.set(PreferenceConstants.DB_PWD,""); //$NON-NLS-1$
-		 * CoreHub.localCfg.set(PreferenceConstants.DB_TYP,"hsqldb"); //$NON-NLS-1$
-		 */
 		CoreHub.localCfg.set(Preferences.DB_NAME + SETTINGS_PREFERENCE_STORE_DEFAULT, "h2");
-		//CoreHub.localCfg.set(PreferenceConstants.DB_CLASS,"org.h2.Driver"); //$NON-NLS-1$
 		String base = getDefaultDBPath();
 		
 		CoreHub.localCfg.set(Preferences.DB_CONNECT + SETTINGS_PREFERENCE_STORE_DEFAULT,
