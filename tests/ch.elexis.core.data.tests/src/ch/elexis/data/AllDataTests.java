@@ -3,16 +3,23 @@ package ch.elexis.data;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import ch.elexis.admin.RoleBasedAccessControlTest;
+import ch.elexis.core.constants.ElexisSystemPropertyConstants;
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.data.service.internal.BriefDocumentStoreTest;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLinkException;
@@ -30,21 +37,37 @@ public class AllDataTests {
 	
 	private static Collection<JdbcLink[]> connections = new ArrayList<JdbcLink[]>();
 	
+	private static void rmDemoDb(String msg) {
+		try {
+			String demoDBLocation = System.getProperty(ElexisSystemPropertyConstants.DEMO_DB_LOCATION);
+			if (demoDBLocation == null) {
+				demoDBLocation = CoreHub.getWritableUserDir() + File.separator + "demoDB";
+			}
+			File demo = new File(demoDBLocation);
+			if (demo.exists() && demo.isDirectory()) {
+				System.out.println(msg);
+				Files.walk(demo.toPath()).sorted(Comparator.reverseOrder()).map(Path::toFile)
+				.forEach(File::delete);
+			}
+		} catch (IOException e) {
+			System.err.println("Error deleting demoDB. " + msg);
+		}
+	}
 	public static final boolean PERFORM_UPDATE_TESTS = false;
-	
+	@BeforeClass
+	public static void beforeClass(){
+		rmDemoDb("AllDataTests: Deleting demoDB in beforeClass");
+	}
+
 	static {
 		JdbcLink h2JdbcLink = TestInitializer.initTestDBConnection(TestInitializer.FLAVOR_H2_MEM);
-		JdbcLink h2DemoDbJdbcLink = TestInitializer.initDemoDbConnection();
 		JdbcLink mySQLJdbcLink = TestInitializer.initTestDBConnection(TestInitializer.FLAVOR_MYSQL);
 		JdbcLink pgJdbcLink = TestInitializer.initTestDBConnection(TestInitializer.FLAVOR_POSTGRES);
 		
 		assertNotNull(h2JdbcLink);
-		AllDataTests.connections.add(new JdbcLink[] {
-			h2JdbcLink
-		});
-		if (h2DemoDbJdbcLink != null) {
+		if (pgJdbcLink != null) {
 			AllDataTests.connections.add(new JdbcLink[] {
-				h2DemoDbJdbcLink
+				pgJdbcLink
 			});
 		}
 		if (mySQLJdbcLink != null) {
@@ -52,15 +75,15 @@ public class AllDataTests {
 				mySQLJdbcLink
 			});
 		}
-		if (pgJdbcLink != null) {
+		if (h2JdbcLink != null) {
 			AllDataTests.connections.add(new JdbcLink[] {
-				pgJdbcLink
+				h2JdbcLink
 			});
 		}
 	}
 	
 	@AfterClass
-	public static void afterClass(){
+	public static void AfterClass(){
 		for (Object[] objects : AllDataTests.connections) {
 			JdbcLink link = (JdbcLink) objects[0];
 			try {

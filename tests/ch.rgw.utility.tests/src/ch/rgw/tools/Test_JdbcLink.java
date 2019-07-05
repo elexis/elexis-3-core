@@ -27,7 +27,7 @@ public class Test_JdbcLink {
 	
 	@Test
 	public void testConnect(){
-		JdbcLink link = new JdbcLink("org.h2.Driver", "jdbc:h2:mem:test_mem ", "");
+		JdbcLink link = new JdbcLink(JdbcLink.H2_DRIVER_CLASS_NAME, "jdbc:h2:mem:test_mem ", "");
 		link.connect("", "");
 		link.disconnect();
 	}
@@ -45,7 +45,7 @@ public class Test_JdbcLink {
 	
 	@Test
 	public void testConnectDatabaseConnectFail(){
-		JdbcLink link = new JdbcLink("org.h2.Driver", "", "");
+		JdbcLink link = new JdbcLink(JdbcLink.H2_DRIVER_CLASS_NAME, "", "");
 		try {
 			link.connect("", "");
 			fail("Expected Exception not thrown!");
@@ -56,7 +56,7 @@ public class Test_JdbcLink {
 	
 	@Test
 	public void testGetStatement(){
-		JdbcLink link = new JdbcLink("org.h2.Driver", "jdbc:h2:mem:test_mem", "");
+		JdbcLink link = new JdbcLink(JdbcLink.H2_DRIVER_CLASS_NAME, "jdbc:h2:mem:test_mem", "");
 		link.connect("", "");
 		Stm stm = link.getStatement();
 		assertNotNull(stm);
@@ -65,7 +65,7 @@ public class Test_JdbcLink {
 	
 	@Test
 	public void testGetStatementConnectFail(){
-		JdbcLink link = new JdbcLink("org.h2.Driver", "", "");
+		JdbcLink link = new JdbcLink(JdbcLink.H2_DRIVER_CLASS_NAME, "", "");
 		try {
 			link.getStatement();
 			fail("Expected Exception not thrown!");
@@ -76,7 +76,7 @@ public class Test_JdbcLink {
 	
 	@Test
 	public void testPrepareStatement(){
-		JdbcLink link = new JdbcLink("org.h2.Driver", "jdbc:h2:mem:test_mem", "");
+		JdbcLink link = new JdbcLink(JdbcLink.H2_DRIVER_CLASS_NAME, "jdbc:h2:mem:test_mem", "");
 		link.connect("", "");
 		PreparedStatement stm = link.prepareStatement("");
 		assertNotNull(stm);
@@ -85,7 +85,7 @@ public class Test_JdbcLink {
 	
 	@Test
 	public void testPrepareStatementConnectFail(){
-		JdbcLink link = new JdbcLink("org.h2.Driver", "", "");
+		JdbcLink link = new JdbcLink(JdbcLink.H2_DRIVER_CLASS_NAME, "", "");
 		try {
 			link.prepareStatement("");
 			fail("Expected Exception not thrown!");
@@ -96,7 +96,7 @@ public class Test_JdbcLink {
 	
 	@Test
 	public void testExec(){
-		JdbcLink link = new JdbcLink("org.h2.Driver", "jdbc:h2:mem:test_mem", "");
+		JdbcLink link = new JdbcLink(JdbcLink.H2_DRIVER_CLASS_NAME, "jdbc:h2:mem:test_mem", "");
 		link.connect("", "");
 		int rows = link.exec("");
 		assertEquals(0, rows);
@@ -105,7 +105,7 @@ public class Test_JdbcLink {
 	
 	@Test
 	public void testExecConnectFail(){
-		JdbcLink link = new JdbcLink("org.h2.Driver", "jdbc:h2:mem:test_mem", "");
+		JdbcLink link = new JdbcLink(JdbcLink.H2_DRIVER_CLASS_NAME, "jdbc:h2:mem:test_mem", "");
 		link.connect("", "");
 		link.disconnect();
 		try {
@@ -118,7 +118,7 @@ public class Test_JdbcLink {
 	
 	@Test
 	public void testStmExecConnectFail(){
-		JdbcLink link = new JdbcLink("org.h2.Driver", "jdbc:h2:mem:test_mem", "");
+		JdbcLink link = new JdbcLink(JdbcLink.H2_DRIVER_CLASS_NAME, "jdbc:h2:mem:test_mem", "");
 		link.connect("", "");
 		Stm stm = link.getStatement();
 		assertNotNull(stm);
@@ -134,7 +134,7 @@ public class Test_JdbcLink {
 	
 	@Test
 	public void testStmQuery(){
-		JdbcLink link = new JdbcLink("org.h2.Driver", "jdbc:h2:mem:test_mem", "");
+		JdbcLink link = new JdbcLink(JdbcLink.H2_DRIVER_CLASS_NAME, "jdbc:h2:mem:test_mem", "");
 		link.connect("", "");
 		Stm stm = link.getStatement();
 		assertNotNull(stm);

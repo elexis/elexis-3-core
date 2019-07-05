@@ -6,6 +6,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.rgw.tools.JdbcLink;
@@ -25,7 +28,7 @@ public class TestInitializer {
 	public static JdbcLink initTestDBConnection(String dbflavor){
 		JdbcLink link = null;
 		if (dbflavor == FLAVOR_H2_MEM) {
-			link = new JdbcLink("org.h2.Driver", "jdbc:h2:~/elexisTest/elexisTest;AUTO_SERVER=TRUE", "h2");
+			link = new JdbcLink(JdbcLink.H2_DRIVER_CLASS_NAME, "jdbc:h2:~/elexisTest/elexisTest;AUTO_SERVER=TRUE", "h2");
 		} else if (dbflavor == FLAVOR_MYSQL) {
 			link = JdbcLink.createMySqlLink("localhost", "unittests");
 		} else if (dbflavor == FLAVOR_POSTGRES) {
