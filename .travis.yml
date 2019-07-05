@@ -6,8 +6,13 @@ language: java
 
 install: mvn -V -DskipTests=true -Dmaven.javadoc.skip=true -B validate
 
+after_install:
+  - mysql --user=elexisTest --host=localhost --password=elexisTest unittests -e 'show tables;'
+  - psql  --user=elexistest --host=localhost unittests  -c "\dt"
+
+
 script:
-  - mvn -V --quiet clean verify -Dall-archs=true
+  - mvn -V clean verify
 
 notifications:
   email:
@@ -43,14 +48,28 @@ before_install:
   - mysql -e 'SHOW VARIABLES LIKE "%case%";'
   - echo "[mysqld]" | sudo tee /etc/mysql/mysql.conf.d/lowercase.cnf
   - echo "lower_case_table_names = 1" | sudo tee --append /etc/mysql/mysql.conf.d/lowercase.cnf
-  - cat  /etc/mysql/mysql.conf.d/lowercase.cnf
+  - cat /etc/mysql/mysql.conf.d/lowercase.cnf
+  - sudo cat /etc/mysql/debian.cnf
   - sudo service mysql restart
   - mysql --version
   - mysql -e 'SHOW VARIABLES LIKE "%case%";'
   - mysql -e 'SHOW VARIABLES LIKE "%version%";'
   - mysql -e 'CREATE DATABASE unittests;'
-  - mysql -e "grant all on unittests.* to elexisTest@localhost identified by 'elexisTest';"
+  - mysql -e "grant all privileges on unittests.* to elexisTest@'%' identified by 'elexisTest';"
+  - mysql -e "flush privileges;"
+  - mysql -e "show databases;"
+  - mysql -e "show grants;"
+  - mysql -u elexisTest --password=elexisTest -h localhost -e 'SHOW grants;'
+  - mysql --user=elexisTest --host=127.0.0.1 --password=elexisTest unittests -e 'SHOW VARIABLES LIKE "%version%";' 
+  - mysql --user=elexisTest --host=localhost --password=elexisTest unittests -e 'SHOW VARIABLES LIKE "%version%";' 
+  - mysql --user=elexisTest --host=localhost --password=elexisTest unittests -e 'show tables;'
   - psql --version
+  - psql -U postgres -c "drop database if exists unittests;"
+  - psql -U postgres -c "drop user if exists elexis;"
+  - psql -U postgres -c "drop user if exists elexistest;"
+  - psql -c "create user elexis with UNENCRYPTED password 'elexisTest';" -U postgres
   - psql -c "create user elexisTest with UNENCRYPTED password 'elexisTest';" -U postgres
   - psql -c "create database unittests;" -U postgres
+  - psql -c "grant all privileges on database unittests to elexis;" -U postgres
   - psql -c "grant all privileges on database unittests to elexisTest;" -U postgres
+  - psql unittests --user=elexistest --host=localhost -c "\dt"
