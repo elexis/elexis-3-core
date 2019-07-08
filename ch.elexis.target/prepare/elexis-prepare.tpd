@@ -108,7 +108,7 @@ location "http://download.eclipse.org/tools/orbit/downloads/drops/R2018090520190
 	org.apache.commons.pool
 }
 
-location "http://download.elexis.info/elexis-server/master/p2/elexis-server" {
+location "http://download.elexis.info/elexis-server/1.7/p2/elexis-server" {
 	info.elexis.server.hapi.fhir
 }
 
