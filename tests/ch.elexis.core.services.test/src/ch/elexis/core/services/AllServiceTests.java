@@ -17,7 +17,7 @@ import ch.elexis.core.utils.OsgiServiceUtil;
 @RunWith(Suite.class)
 @SuiteClasses({ AccessControlServiceTest.class, IConfigServiceTest.class, ILabServiceTest.class,
 		IStoreToStringServiceTest.class, IUserServiceTest.class, IStickerServiceTest.class, IAppointmentServiceTest.class,
-		IVirtualFilesystemServiceTest.class})
+		IVirtualFilesystemServiceTest.class, IXidServiceTest.class})
 public class AllServiceTests {
 
 	private static IModelService modelService;
