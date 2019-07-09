@@ -135,7 +135,8 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 			@SuppressWarnings("unchecked")
 			Diagnosis diag = ((AbstractIdModelAdapter<Diagnosis>) diagnosis).getEntity();
 			getEntity().getDiagnoses().add(diag);
-			ModelUtil.getModelService().save(Arrays.asList(diagnosis, this));
+			ModelUtil.getModelService().save(diagnosis);
+			ModelUtil.getModelService().save(this);
 		}
 	}
 	
