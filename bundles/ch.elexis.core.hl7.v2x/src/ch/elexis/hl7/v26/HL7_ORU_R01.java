@@ -11,14 +11,14 @@ import ca.uhn.hl7v2.model.AbstractPrimitive;
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.model.Type;
-import ca.uhn.hl7v2.model.v26.datatype.FT;
-import ca.uhn.hl7v2.model.v26.group.ORU_R01_PATIENT;
 import ca.uhn.hl7v2.model.v26.datatype.CWE;
 import ca.uhn.hl7v2.model.v26.datatype.ED;
+import ca.uhn.hl7v2.model.v26.datatype.FT;
 import ca.uhn.hl7v2.model.v26.datatype.NM;
 import ca.uhn.hl7v2.model.v26.datatype.ST;
 import ca.uhn.hl7v2.model.v26.datatype.TX;
 import ca.uhn.hl7v2.model.v26.group.ORU_R01_ORDER_OBSERVATION;
+import ca.uhn.hl7v2.model.v26.group.ORU_R01_PATIENT;
 import ca.uhn.hl7v2.model.v26.message.ORU_R01;
 import ca.uhn.hl7v2.model.v26.segment.NTE;
 import ca.uhn.hl7v2.model.v26.segment.OBR;
@@ -259,6 +259,13 @@ public class HL7_ORU_R01 extends HL7Writer {
 							valueTX = ((TX) obx.getObx5_ObservationValue(0).getData()).getValue();
 						}
 						appendedTX += valueTX + "\n"; //$NON-NLS-1$
+					} else if (HL7Constants.OBX_VALUE_TYPE_FT.equals(valueType)) {
+						String valueFT = ""; //$NON-NLS-1$
+						Object value = obx.getObx5_ObservationValue(0).getData();
+						if (value instanceof FT) {
+							valueFT = ((FT) obx.getObx5_ObservationValue(0).getData()).getValue();
+						}
+						appendedTX += parseTextValue(valueFT) + "\n"; //$NON-NLS-1$
 					} else {
 						addError(MessageFormat.format("Value type {0} is not implemented!", //$NON-NLS-1$
 							valueType));
@@ -283,6 +290,18 @@ public class HL7_ORU_R01 extends HL7Writer {
 		}
 		
 		return observation;
+	}
+	
+	public String parseTextValue(String value){
+		String text = value;
+		text = text.replaceAll("\\\\.br\\\\", "\n");
+		text = text.replaceAll("\\\\.BR\\\\", "\n");
+		
+		// only return parsed value if it contains reasonable input
+		if (text != null && !text.isEmpty()) {
+			return text;
+		}
+		return value;
 	}
 	
 	private String readPatientNotesAndComments(ORU_R01_PATIENT patient){
