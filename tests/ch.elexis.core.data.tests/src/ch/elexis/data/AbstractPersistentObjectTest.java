@@ -1,19 +1,18 @@
 package ch.elexis.data;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
-
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.DBConnection;
-import ch.elexis.core.model.IConfig;
 import ch.elexis.core.services.IElexisDataSource;
 import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.services.IModelService;
@@ -30,6 +29,7 @@ public class AbstractPersistentObjectTest {
 	private static Collection<JdbcLink> connections = new ArrayList<JdbcLink>();
 	private static IModelService modelService;
 	private static IElexisEntityManager entityManager;
+	private static String savedConnection = "";
 	
 	@Parameters(name = "{0}")
 	public static Collection<JdbcLink> data() throws IOException{
@@ -59,38 +59,37 @@ public class AbstractPersistentObjectTest {
 		assert(dbConnection != null);
 		assertTrue(dbConnection.allValuesSet());
 		
-		// TODO: Howto correct initilize the NoPO (liquibase) and PO (jdbcLink) based database
-		//   Niklaus does not know howto initialize the config table using liquibase 
-		dbConnection.connectionString = link.getConnectString();
-		link.connect(dbConnection.username, dbConnection.password);
-		ch.elexis.data.DBConnection jdbcLinkPOconnection = new ch.elexis.data.DBConnection();
-		jdbcLinkPOconnection.setJdbcLink(link);
-		PersistentObjectUtil.initializeGlobalCfg(jdbcLinkPOconnection);
-		PersistentObject.connect(link);
-		IElexisDataSource elexisDataSource = OsgiServiceUtil.getService(IElexisDataSource.class).get();
-		entityManager = OsgiServiceUtil.getService(IElexisEntityManager.class).get();
-		elexisDataSource.setDBConnection(dbConnection);
-		modelService = OsgiServiceUtil
-				.getService(IModelService.class, "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
-		entityManager = OsgiServiceUtil.getService(IElexisEntityManager.class).get();
-		entityManager.getEntityManager(); // lazy initialize the database
-		entityManager.getEntityManager(false);
-		link.connect(dbConnection.username, dbConnection.password);
-		PersistentObject.connect(link);
-		User.initTables();
-		
-		if (testUserName == null) {
-			testUserName = "ut_user_" + link.DBFlavor;
+		// We initilize the NoPO (liquibase) and PO (jdbcLink) based database
+		// each time we get a new connectionString
+		assertEquals(dbConnection.connectionString, link.getConnectString());
+		if (!savedConnection.contentEquals(dbConnection.connectionString)) {
+			LoggerFactory.getLogger(this.getClass()).info("Do Connect for DataSource: " + dbConnection.connectionString);
+			System.out.println("Do Connect for DataSource: " + dbConnection.connectionString);
+			savedConnection = dbConnection.connectionString;
+
+			entityManager = OsgiServiceUtil.getService(IElexisEntityManager.class).get();
+			entityManager.getEntityManager();
+			modelService = OsgiServiceUtil
+					.getService(IModelService.class, "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
+			IElexisDataSource elexisDataSource = OsgiServiceUtil.getService(IElexisDataSource.class).get();
+			elexisDataSource.setDBConnection(dbConnection);
+			link.connect(dbConnection.username, dbConnection.password);
+			PersistentObject.connect(link);
+			User.initTables();
+			
+			if (testUserName == null) {
+				testUserName = "ut_user_" + link.DBFlavor;
+			}
+			
+			User existingUser = User.load(testUserName);
+			if (!existingUser.exists()) {
+				new Anwender(testUserName, PASSWORD);
+				new Mandant("ut_mandator_" + link.DBFlavor, PASSWORD);
+			}
+			
+			boolean succ = Anwender.login(testUserName, PASSWORD);
+			assertTrue(succ);
 		}
-		
-		User existingUser = User.load(testUserName);
-		if (!existingUser.exists()) {
-			new Anwender(testUserName, PASSWORD);
-			new Mandant("ut_mandator_" + link.DBFlavor, PASSWORD);
-		}
-		
-		boolean succ = Anwender.login(testUserName, PASSWORD);
-		assertTrue(succ);
 	}
 	
 	public JdbcLink getLink(){

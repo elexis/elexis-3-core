@@ -27,14 +27,11 @@ import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLinkException;
 
 @RunWith(Suite.class)
-@SuiteClasses({ Test_DBInitialState.class, Test_PersistentObject.class, Test_Prescription.class,
-		 Test_Patient.class, Test_LabItem.class, Test_DBImage.class, Test_Query.class,
-		 Test_Verrechnet.class, Test_Reminder.class, Test_StockService.class,
-		 Test_OrderService.class, Test_Konsultation.class,
-		 RoleBasedAccessControlTest.class, Test_VkPreise.class,
-		 Test_ZusatzAdresse.class, BriefDocumentStoreTest.class, Test_Rechnung.class,
-		 Test_User.class, Test_LabResult.class, Test_BezugsKontakt.class
-})
+@SuiteClasses({ Test_DBInitialState.class, Test_PersistentObject.class, Test_Prescription.class, Test_Patient.class,
+		Test_LabItem.class, Test_DBImage.class, Test_Query.class, Test_Verrechnet.class, Test_Reminder.class,
+		Test_StockService.class, Test_OrderService.class, Test_Konsultation.class, RoleBasedAccessControlTest.class,
+		Test_VkPreise.class, Test_ZusatzAdresse.class, BriefDocumentStoreTest.class, Test_Rechnung.class,
+		Test_User.class, Test_LabResult.class, Test_BezugsKontakt.class })
 public class AllDataTests {
 
 	private static Collection<DBConnection> connections = new ArrayList<DBConnection>();
@@ -82,7 +79,7 @@ public class AllDataTests {
 		case "mysql":
 			dbConnection.username = "elexisTest";
 			dbConnection.connectionString = "jdbc:" + flavor.dbType.toLowerCase() + "://" + dbConnection.hostName + "/"
-					+ dbConnection.databaseName;
+					+ dbConnection.databaseName + "?autoReconnect=true&useSSL=false&serverTimezone=UTC";
 			break;
 		case "postgresql":
 			dbConnection.username = "elexistest";
@@ -101,10 +98,10 @@ public class AllDataTests {
 		DBConnection h2Db = initDbConnection(DBType.H2);
 		DBConnection mysql2Db = initDbConnection(DBType.MySQL);
 		DBConnection pgDb = initDbConnection(DBType.PostgreSQL);
-		assertNotNull(h2Db);
 		if (pgDb != null) {
 			AllDataTests.connections.add(pgDb);
 		}
+		assertNotNull(h2Db);
 		if (h2Db != null) {
 			AllDataTests.connections.add(h2Db);
 		}
@@ -119,8 +116,10 @@ public class AllDataTests {
 			JdbcLink link = new JdbcLink(dbConn.rdbmsType.driverName, dbConn.connectionString, dbConn.rdbmsType.dbType);
 			assert (link.getConnectString().contentEquals(dbConn.connectionString));
 			try {
-				PersistentObject.connect(link);
+				// PersistentObject.connect(link);
 				PersistentObject.deleteAllTables();
+				PersistentObject.disconnect();
+				link.disconnect();
 				link.disconnect();
 			} catch (JdbcLinkException je) {
 				// just tell what happened and resume

@@ -226,6 +226,10 @@ public class DBConnection {
 	}
 	
 	public void disconnect(){
+		if (jdbcLink == null) {
+			logger.info("Verbindung zur Datenbank schon getrennt.");
+			return;
+		}
 		if (jdbcLink.DBFlavor.startsWith("hsqldb")) {
 			jdbcLink.exec("SHUTDOWN COMPACT");
 		}

@@ -120,6 +120,23 @@
           <testClass>ch.elexis.AllTests</testClass>
           <showEclipseLog>true</showEclipseLog>
           <argLine>-Delexis.test.mode=true -Delexis.test.db.server=true</argLine>
+          <bundleStartLevel>
+            <bundle>
+              <id>org.eclipse.gemini.jpa</id>
+              <level>3</level>
+              <autoStart>true</autoStart>
+            </bundle>
+            <bundle>
+              <id>ch.elexis.core.jpa.datasource</id>
+              <level>3</level>
+              <autoStart>true</autoStart>
+            </bundle>
+            <bundle>
+              <id>ch.elexis.core.jpa.entities</id>
+              <level>3</level>
+              <autoStart>true</autoStart>
+            </bundle>
+          </bundleStartLevel>
           <dependencies>
             <dependency>
               <type>eclipse-plugin</type>
