@@ -73,16 +73,30 @@ public class StatusUtil {
 	 * Log a status to the corresponding log-level; does nothing if
 	 * {@link Status#isOK()}
 	 * 
+	 * @param prependMessage              an optional message to prepend the status
+	 *                                    message
 	 * @param log
 	 * @param status
 	 * @param includeExceptionIfAvailable
+	 * @param logDebugIfOk log to level debug if the status is ok
 	 */
-	public static void logStatus(@NonNull Logger log, @NonNull IStatus status, boolean includeExceptionIfAvailable) {
-		if (status.isOK()) {
+	public static void logStatus(String prependMessage, @NonNull Logger log, @NonNull IStatus status,
+			boolean includeExceptionIfAvailable, boolean logDebugIfOk) {
+		if (status.isOK() && !logDebugIfOk) {
 			return;
 		}
 
-		String message = (status.isMultiStatus()) ? "[MULTISTATUS] " + status.getMessage() : status.getMessage();
+		StringBuilder sb = new StringBuilder();
+		if (status.isMultiStatus()) {
+			sb.append("[MULTISTATUS] ");
+		}
+		if (prependMessage != null) {
+			sb.append(prependMessage + " ");
+		}
+		sb.append("(c"+status.getCode()+"/s"+status.getSeverity()+") ");
+		sb.append(status.getMessage());
+		String message = sb.toString();
+
 		boolean includeException = (includeExceptionIfAvailable && status.getException() != null);
 
 		int severity = status.getSeverity();
@@ -109,23 +123,39 @@ public class StatusUtil {
 				log.info(message);
 			}
 			break;
+		case Status.OK:
+			log.debug(message);
+			break;
 		default:
 			break;
 		}
 
 		if (status.isMultiStatus()) {
-			Arrays.asList(status.getChildren()).stream().forEach(c -> logStatus(log, c, true));
+			Arrays.asList(status.getChildren()).stream().forEach(c -> logStatus(prependMessage, log, c, true, false));
 		}
 	}
 
 	/**
-	 * convenience method
+	 * convenience method, includes exception if available
 	 * 
 	 * @param log
 	 * @param status
+	 * @see #logStatus(String, Logger, IStatus, boolean)
 	 */
 	public static void logStatus(Logger log, IStatus status) {
-		logStatus(log, status, true);
+		logStatus(null, log, status, true, false);
+	}
+
+	/**
+	 * convenience method, includes exception if available
+	 * 
+	 * @param prependMessage
+	 * @param log
+	 * @param status
+	 * @see #logStatus(String, Logger, IStatus, boolean)
+	 */
+	public static void logStatus(String prependMessage, Logger log, IStatus status) {
+		logStatus(prependMessage, log, status, true, false);
 	}
 
 }
