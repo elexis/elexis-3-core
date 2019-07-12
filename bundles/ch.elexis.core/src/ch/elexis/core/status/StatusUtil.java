@@ -78,7 +78,7 @@ public class StatusUtil {
 	 * @param log
 	 * @param status
 	 * @param includeExceptionIfAvailable
-	 * @param logDebugIfOk log to level debug if the status is ok
+	 * @param logDebugIfOk                log to level debug if the status is ok
 	 */
 	public static void logStatus(String prependMessage, @NonNull Logger log, @NonNull IStatus status,
 			boolean includeExceptionIfAvailable, boolean logDebugIfOk) {
@@ -93,7 +93,7 @@ public class StatusUtil {
 		if (prependMessage != null) {
 			sb.append(prependMessage + " ");
 		}
-		sb.append("(c"+status.getCode()+"/s"+status.getSeverity()+") ");
+		sb.append("(c" + status.getCode() + "/s" + status.getSeverity() + ") ");
 		sb.append(status.getMessage());
 		String message = sb.toString();
 
@@ -140,7 +140,7 @@ public class StatusUtil {
 	 * 
 	 * @param log
 	 * @param status
-	 * @see #logStatus(String, Logger, IStatus, boolean)
+	 * @see #logStatus(String, Logger, IStatus, boolean, boolean)
 	 */
 	public static void logStatus(Logger log, IStatus status) {
 		logStatus(null, log, status, true, false);
@@ -152,10 +152,22 @@ public class StatusUtil {
 	 * @param prependMessage
 	 * @param log
 	 * @param status
-	 * @see #logStatus(String, Logger, IStatus, boolean)
+	 * @see #logStatus(String, Logger, IStatus, boolean, boolean)
 	 */
 	public static void logStatus(String prependMessage, Logger log, IStatus status) {
 		logStatus(prependMessage, log, status, true, false);
+	}
+
+	/**
+	 * convenience method, includes exception if available
+	 * 
+	 * @param log
+	 * @param status
+	 * @param includeExceptionIfAvailable
+	 * @see #logStatus(String, Logger, IStatus, boolean, boolean)
+	 */
+	public static void logStatus(Logger log, IStatus status, boolean includeExceptionIfAvailable) {
+		logStatus(null, log, status, includeExceptionIfAvailable, false);
 	}
 
 }
