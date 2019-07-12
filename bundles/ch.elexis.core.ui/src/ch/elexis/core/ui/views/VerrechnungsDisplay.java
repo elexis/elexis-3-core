@@ -81,7 +81,6 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.service.ContextServiceHolder;
-import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IArticle;
@@ -96,6 +95,7 @@ import ch.elexis.core.model.IService;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.IBillingService;
 import ch.elexis.core.services.holder.BillingServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
@@ -672,6 +672,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						}
 					} else if (object instanceof IDiagnosis) {
 						actEncounter.addDiagnosis((IDiagnosis) object);
+						CoreModelServiceHolder.get().save(actEncounter);
 					}
 				}
 			}

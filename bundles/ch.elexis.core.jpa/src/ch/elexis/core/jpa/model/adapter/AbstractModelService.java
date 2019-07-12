@@ -166,8 +166,13 @@ public abstract class AbstractModelService implements IModelService {
 			try {
 				em.getTransaction().begin();
 				EntityWithId merged = em.merge(dbObject.get());
-				setDbObject(identifiable, merged);
 				em.getTransaction().commit();
+				// update model adapters and post events
+				if (identifiable instanceof AbstractIdModelAdapter) {
+					// clear dirty state before setting merged entity
+					((AbstractIdModelAdapter<?>) identifiable).resetDirty();
+					setDbObject(identifiable, merged);
+				}
 				if (newlyCreatedObject) {
 					postElexisEvent(getCreateEvent(identifiable));
 					postEvent(ElexisEventTopics.EVENT_CREATE, identifiable);
@@ -189,15 +194,17 @@ public abstract class AbstractModelService implements IModelService {
 		if (!dbObjects.isEmpty()) {
 			EntityManager em = getEntityManager(false);
 			try {
+				// collect information for update of model adapters and events
 				List<ElexisEvent> createdEvents = new ArrayList<>();
 				List<Identifiable> createdIdentifiables = new ArrayList<>();
+				Map<Identifiable, EntityWithId> mergedEntities = new HashMap<>();
 				em.getTransaction().begin();
 				for (Identifiable identifiable : dbObjects.keySet()) {
 					EntityWithId dbObject = dbObjects.get(identifiable);
 					if (dbObject != null) {
 						boolean newlyCreatedObject = (dbObject.getLastupdate() == null);
 						EntityWithId merged = em.merge(dbObject);
-						setDbObject(identifiable, merged);
+						mergedEntities.put(identifiable, merged);
 						if (newlyCreatedObject) {
 							createdEvents.add(getCreateEvent(identifiable));
 							createdIdentifiables.add(identifiable);
@@ -205,6 +212,14 @@ public abstract class AbstractModelService implements IModelService {
 					}
 				}
 				em.getTransaction().commit();
+				// update model adapters and post events
+				identifiables.stream().forEach(i -> {
+					if (i instanceof AbstractIdModelAdapter) {
+						// clear dirty state before setting merged entity
+						((AbstractIdModelAdapter<?>) i).resetDirty();
+						setDbObject(i, mergedEntities.get(i));
+					}
+				});
 				createdEvents.stream().forEach(e -> postElexisEvent(e));
 				createdIdentifiables.stream()
 					.forEach(i -> postEvent(ElexisEventTopics.EVENT_CREATE, i));
@@ -294,17 +309,24 @@ public abstract class AbstractModelService implements IModelService {
 		return Optional.empty();
 	}
 	
-	protected void setDbObject(Object adapter, EntityWithId merged){
+	/**
+	 * Set the {@link EntityWithId} in all {@link AbstractIdModelAdapter} instances using
+	 * {@link ElexisEventTopics#PERSISTENCE_EVENT_ENTITYCHANGED} event.
+	 * 
+	 * @param adapter
+	 * @param merged
+	 */
+	protected void setDbObject(Object adapter, EntityWithId entity){
 		if (adapter instanceof AbstractIdModelAdapter<?>) {
-			((AbstractIdModelAdapter<?>) adapter).setEntity(merged);
+			// synchronous change event will set the entity, including entity of this model adapter
+			sendEntityChangeEvent(entity);
 		}
-		sendEntityChangeEvent(merged);
 	}
 	
-	private void sendEntityChangeEvent(EntityWithId merged){
+	private void sendEntityChangeEvent(EntityWithId entity){
 		if (getEventAdmin() != null) {
 			Map<String, Object> properites = new HashMap<>();
-			properites.put(EntityWithId.class.getName(), merged);
+			properites.put(EntityWithId.class.getName(), entity);
 			Event event = new Event(ElexisEventTopics.PERSISTENCE_EVENT_ENTITYCHANGED, properites);
 			getEventAdmin().sendEvent(event);
 		} else {

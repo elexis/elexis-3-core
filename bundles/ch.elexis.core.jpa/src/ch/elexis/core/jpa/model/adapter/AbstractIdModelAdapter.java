@@ -24,7 +24,10 @@ public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements 
 	
 	private T entity;
 	
+	private boolean dirty;
+	
 	public AbstractIdModelAdapter(T entity){
+		this.dirty = false;
 		this.entity = entity;
 		this.entityType = entity.getClass().getName();
 		// make sure model supports id and delete
@@ -35,20 +38,42 @@ public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements 
 		}
 	}
 	
+	/**
+	 * Get the entity object. Should only be used for reading from the entity, if the entity
+	 * properties are changed, always use {@link AbstractIdModelAdapter#getEntityMarkDirty()}.
+	 * 
+	 * @return
+	 */
 	public T getEntity(){
+		return entity;
+	}
+	
+	/**
+	 * Get the entity object and mark this model adapter as dirty. In dirty state
+	 * {@link AbstractIdModelAdapter#setEntity(EntityWithId)} will have no effect. Dirty state is
+	 * reset by {@link AbstractModelService#save(Identifiable)} and
+	 * {@link AbstractModelService#save(List)}.
+	 * 
+	 * @return
+	 */
+	public T getEntityMarkDirty(){
+		this.dirty = true;
 		return entity;
 	}
 	
 	/**
 	 * <b>IMPORTANT:</b> this method should only be used {@link IModelService} implementations to
 	 * update the entity on merge. This is needed if entity listeners update values of the entity on
-	 * persist, to update with the modified entity.
+	 * persist, to update with the modified entity. The method has no effect it this model adapter
+	 * is in dirty state.
 	 * 
 	 * @param entity
 	 */
 	@SuppressWarnings("unchecked")
 	public void setEntity(EntityWithId entity){
-		this.entity = (T) entity;
+		if (!dirty) {
+			this.entity = (T) entity;
+		}
 	}
 	
 	@Override
@@ -83,6 +108,14 @@ public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements 
 	@Override
 	public void clearChanged(){
 		changedList = null;
+	}
+	
+	public boolean isDirty(){
+		return dirty;
+	}
+	
+	public void resetDirty(){
+		dirty = false;
 	}
 	
 	protected Date toDate(LocalDateTime localDateTime){
