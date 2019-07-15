@@ -46,7 +46,8 @@ public class StatusUtil {
 
 	private static void print(PrintStream printStream, String indent, IStatus status) {
 		if (status.isMultiStatus()) {
-			printStream.print(indent + status.getMessage());
+			String severityString = getSeverityString(status.getSeverity());
+			printStream.print("[" + severityString + "] " + indent + status.getMessage());
 			String childIndent = indent + "  ";
 			for (IStatus c : status.getChildren()) {
 				print(printStream, childIndent, c);
@@ -56,6 +57,23 @@ public class StatusUtil {
 			printStream.println((os != null) ? os.getObject().toString() : null);
 		} else {
 			printStream.println(indent + status.getMessage());
+		}
+	}
+
+	private static String getSeverityString(int severity) {
+		switch (severity) {
+		case Status.OK:
+			return "OK";
+		case Status.WARNING:
+			return "WARNING";
+		case Status.ERROR:
+			return "ERROR";
+		case Status.INFO:
+			return "INFO";
+		case Status.CANCEL:
+			return "CANCEL";
+		default:
+			return "? " + severity + " ?";
 		}
 	}
 
