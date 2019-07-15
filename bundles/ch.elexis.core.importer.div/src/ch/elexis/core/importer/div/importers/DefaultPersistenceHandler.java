@@ -3,6 +3,7 @@ package ch.elexis.core.importer.div.importers;
 import java.util.List;
 import java.util.Optional;
 
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ModelPackage;
@@ -19,6 +20,7 @@ public class DefaultPersistenceHandler implements IPersistenceHandler {
 	public List<ILabOrder> getLabOrdersByOrderId(String orderId){
 		IQuery<ILabOrder> query = CoreModelServiceHolder.get().getQuery(ILabOrder.class);
 		query.and(ModelPackage.Literals.ILAB_ORDER__ORDER_ID, COMPARATOR.EQUALS, orderId);
+		query.and("ID", COMPARATOR.NOT_EQUALS, StringConstants.VERSION_LITERAL);
 		return query.execute();
 	}
 
