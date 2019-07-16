@@ -1106,7 +1106,8 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	public @Nullable String get(final String field){
 		if (getId() == null || getId().isEmpty()) {
-			log.error("Get with no ID on object of type [" + this.getClass().getName() + "]");
+			log.error("Get with no ID on object of type [{}] and field [{}]", this.getClass().getName(), field,
+					new Throwable());
 		}
 		DBConnection dbConnection = getDBConnection();
 		String key = getKey(field);
