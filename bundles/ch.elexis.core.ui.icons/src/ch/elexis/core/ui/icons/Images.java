@@ -154,6 +154,8 @@ public enum Images {
 		IMG_LOCK_CLOSED_GREY,
 		/** An opened lock */
 		IMG_LOCK_OPEN,
+		/** View lock */
+		IMG_LOCK_CO,
 		/** Clipboard symbol */
 		IMG_CLIPBOARD,
 		/** Arrow right */
