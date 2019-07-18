@@ -36,6 +36,9 @@ public class Test_User extends AbstractPersistentObjectTest {
 	
 	@Test
 	public void testCreateAndDeleteUser(){
+		// make sure no such user exists (error on mysql for unknown reason)
+		executeStatement("DELETE FROM USER_ WHERE id='anw'");
+		
 		new User(anwender, "anw", "password");
 		User user = User.load("anw");
 		assertTrue(user.exists());

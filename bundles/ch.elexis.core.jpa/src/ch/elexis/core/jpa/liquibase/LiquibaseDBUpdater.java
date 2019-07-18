@@ -40,6 +40,7 @@ public class LiquibaseDBUpdater {
 			Database targetDb = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(database);
 
 			Liquibase liquibase = new Liquibase(changelogXmlUrl, resourceAccessor, targetDb);
+			logger.info("Updating database [" + connection + "] with liquibase");
 			liquibase.update("");
 		} catch (LiquibaseException | SQLException e) {
 			// log and try to carry on

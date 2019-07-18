@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -15,6 +16,7 @@ import org.junit.runners.Suite.SuiteClasses;
 import ch.elexis.admin.RoleBasedAccessControlTest;
 import ch.elexis.data.service.internal.BriefDocumentStoreTest;
 import ch.rgw.tools.JdbcLink;
+import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.JdbcLinkException;
 
 @RunWith(Suite.class)
@@ -56,6 +58,28 @@ public class AllDataTests {
 			AllDataTests.connections.add(new JdbcLink[] {
 				pgJdbcLink
 			});
+		}
+	}
+	
+	@BeforeClass
+	public static void beforeClass(){
+		for (Object[] objects : AllDataTests.connections) {
+			JdbcLink link = (JdbcLink) objects[0];
+			Stm statement = null;
+			try {
+				statement = link.getStatement();
+				statement.exec("DELETE FROM databasechangeloglock WHERE 1=1");
+				statement.exec("DELETE FROM databasechangeloglock WHERE 1=1");
+			} catch (JdbcLinkException je) {
+				// just tell what happened and resume
+				// exception is allowed for tests which get rid of the connection on their own
+				// for example testConnect(), ...
+				je.printStackTrace();
+			} finally {
+				if (statement != null) {
+					link.releaseStatement(statement);
+				}
+			}
 		}
 	}
 	

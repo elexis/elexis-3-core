@@ -186,6 +186,9 @@ public class Test_Query extends AbstractPersistentObjectTest {
 	
 	@Test
 	public void testQueryNotNullExpression(){
+		// make sure no articles are present (error on mysql for unknown reason)
+		executeStatement("DELETE FROM ARTIKEL WHERE 1=1");
+		
 		Artikel art = new Artikel("TestARtikel", "Eigenartikel");
 		art.set(Artikel.FLD_SUB_ID, "notNull");
 		new Artikel("TestARtikel", "Eigenartikel");

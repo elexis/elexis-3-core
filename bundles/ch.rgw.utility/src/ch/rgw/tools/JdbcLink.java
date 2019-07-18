@@ -36,6 +36,7 @@ import org.apache.commons.dbcp.DriverConnectionFactory;
 import org.apache.commons.dbcp.PoolableConnectionFactory;
 import org.apache.commons.dbcp.PoolingDataSource;
 import org.apache.commons.pool.impl.GenericObjectPool;
+import org.slf4j.LoggerFactory;
 
 /**
  * Weiterer Abstraktionslayer zum einfacheren Zugriff auf eine jdbc-fähige Datenbank
@@ -125,9 +126,24 @@ public class JdbcLink {
 		String[] hostdetail = host.split(":");
 		String hostname = hostdetail[0];
 		String hostport = hostdetail.length > 1 ? hostdetail[1] : "3306";
+		
 		String connect = "jdbc:mysql://" + hostname + ":" + hostport + "/" + database
 			+ "?autoReconnect=true&useSSL=false";
+		if (getDriverMajorVersion(driver) > 7) {
+			connect = "jdbc:mysql://" + hostname + ":" + hostport + "/" + database
+				+ "?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Zurich";
+		}
 		return new JdbcLink(driver, connect, DBFLAVOR_MYSQL);
+	}
+	
+	private static int getDriverMajorVersion(String driverName){
+		try {
+			Driver driver = (Driver) Class.forName(driverName).newInstance();
+			return driver.getMajorVersion();
+		} catch (Exception e) {
+			LoggerFactory.getLogger(JdbcLink.class).error("Error getting driver version", e);
+		}
+		return 0;
 	}
 	
 	/**

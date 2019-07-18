@@ -213,6 +213,8 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 	
 	@Test
 	public void testCreateOrModifyTable(){
+		Stm statement = getLink().getStatement();
+		statement.exec("DROP TABLE IF EXISTS Dummy;");
 		/** Definition of the database table */
 		String version = "1.0.0";
 		String createTable = "CREATE TABLE Dummy" + "(" + "ID VARCHAR(25) primary key," // This
@@ -234,7 +236,6 @@ public class Test_PersistentObject extends AbstractPersistentObjectTest {
 		PersistentObject.createOrModifyTable(modifyTable);
 		// test the JdbcException thrown by the statement if FunFactor was still VARCHAR(6)
 		// will stop the test if one of the createOrModifyTable failed ...
-		Stm statement = getLink().getStatement();
 		statement.exec("INSERT INTO Dummy (ID, BoreFactor) VALUES ('TEST', '1234567890');");
 		getLink().releaseStatement(statement);
 	}

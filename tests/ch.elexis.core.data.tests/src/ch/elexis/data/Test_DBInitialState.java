@@ -1,6 +1,6 @@
 package ch.elexis.data;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -10,11 +10,13 @@ import ch.rgw.tools.JdbcLink;
 public class Test_DBInitialState extends AbstractPersistentObjectTest {
 	
 	public Test_DBInitialState(JdbcLink link){
-		super(link);
+		super(link, true);
 	}
 	
 	@Test
 	public void testDatabaseUpdatedToRequiredVersion(){
+		// undo means refresh from database 
+		CoreHub.globalCfg.undo();
 		String requiredDb = CoreHub.globalCfg.get("dbversion", "wr0ng");
 		assertEquals("liquibase", requiredDb);
 	}

@@ -47,6 +47,7 @@ public class LiquibaseDBInitializer {
 			// only execute if the db does not exist already
 			// else sync the changelog as the db already exists
 			if (isFirstStart(connection)) {
+				logger.info("Initialize database [" + connection + "] with liquibase");
 				liquibase.update("");
 			} else {
 				liquibase.changeLogSync("");

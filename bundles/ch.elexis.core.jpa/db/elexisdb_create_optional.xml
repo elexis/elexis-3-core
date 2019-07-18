@@ -662,6 +662,11 @@
 	</changeSet>
 
 	<changeSet author="marco" id="manual_table_TASKDESCRIPTOR">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="TASKDESCRIPTOR" />
+			</not>
+		</preConditions>
 		<createTable tableName="TASKDESCRIPTOR">
 			<column name="ID" type="VARCHAR(25)">
 				<constraints primaryKey="true"
@@ -688,6 +693,11 @@
 	</changeSet>
 
 	<changeSet author="marco" id="manual_table_TASK">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="TASK" />
+			</not>
+		</preConditions>
 		<createTable tableName="TASK">
 			<column name="ID" type="VARCHAR(25)">
 				<constraints primaryKey="true"
@@ -1385,10 +1395,16 @@
 	</changeSet>
 	<changeSet author="thomas" id="etiketten_object_link_id_primarykey">
 	    <preConditions onFail="MARK_RAN">
-			<not>
-				<primaryKeyExists tableName="ETIKETTEN_OBJECT_LINK"
-					primaryKeyName="ETIKETTEN_OBJECT_LINK_PRIMARY_KEY" />
-			</not>
+			<and>
+				<not>
+					<primaryKeyExists tableName="ETIKETTEN_OBJECT_LINK"
+						primaryKeyName="ETIKETTEN_OBJECT_LINK_PRIMARY_KEY" />
+				</not>
+				<not>
+					<primaryKeyExists tableName="ETIKETTEN_OBJECT_LINK"
+						primaryKeyName="PRIMARY" />
+				</not>
+			</and>
 		</preConditions>
 		<sql>
 <![CDATA[
@@ -1432,10 +1448,16 @@ DROP TABLE TEMP_ETIKETTEN_OBJECT_LINK;
 	</changeSet>
 	<changeSet author="thomas" id="etiketten_objectclass_link_id_primarykey">
 	    <preConditions onFail="MARK_RAN">
-			<not>
-				<primaryKeyExists tableName="ETIKETTEN_OBJCLASS_LINK"
-					primaryKeyName="ETIKETTEN_OBJCLASS_LINK_PRIMARY_KEY" />
-			</not>
+			<and>
+				<not>
+					<primaryKeyExists tableName="ETIKETTEN_OBJCLASS_LINK"
+						primaryKeyName="ETIKETTEN_OBJCLASS_LINK_PRIMARY_KEY" />
+				</not>
+				<not>
+					<primaryKeyExists tableName="ETIKETTEN_OBJCLASS_LINK"
+						primaryKeyName="PRIMARY" />
+				</not>
+			</and>
 		</preConditions>
 		<sql>
 <![CDATA[
@@ -1841,12 +1863,17 @@ DROP TABLE TEMP_ETIKETTEN_OBJCLASS_LINK;
     	<preConditions onFail="MARK_RAN">
 			<not>
 				<indexExists tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_TITLE"
-					indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_TITLE_IDX_TITLE" />
+					indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_QUESTION_IDX_TITLE" />
 			</not>
 		</preConditions>
         <createIndex indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_QUESTION_IDX_TITLE" tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_TITLE">
             <column name="TITLE"/>
         </createIndex>
     </changeSet>
-    
+    <changeSet author="thomas" id="update_config_dbversion">
+		<update tableName="config">
+			<column name="wert" value="liquibase" />
+			<where>param='dbversion'</where>
+		</update>
+	</changeSet>
 </databaseChangeLog>
