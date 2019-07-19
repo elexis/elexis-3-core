@@ -40,13 +40,9 @@ import ch.rgw.tools.VersionInfo;
 
 /**
  * Local cache for medical interactions defined by epha.ch.
- * https://download.epha.ch/data/matrix/matrix.csv
- * 
- * TODO: Daily update
- * 
- * TODO: Progress info while loading CSV
- * 
- * TODO: Download from URL to CoreHubHelper.getWritableUserDir aka $HOME/elexis
+ * was in https://download.epha.ch/data/matrix/matrix.csv
+ * in July 2019 epha dropped the file. Zeno Davatz will continue to maintain a copy under
+ * https://raw.githubusercontent.com/zdavatz/oddb2xml_files/master/interactions_de_utf8.csv
  * 
  * @author Niklaus Giger
  *
@@ -58,7 +54,7 @@ public class Interaction extends PersistentObject {
 	
 	public static final String VERSIONID = "VERSION"; //$NON-NLS-1$
 	
-	// Cache for https://download.epha.ch/data/matrix/matrix.csv
+	// Cache for https://raw.githubusercontent.com/zdavatz/oddb2xml_files/master/interactions_de_utf8.csv
 	//"ATC1","Name1","ATC2","Name2","Info","Mechanismus","Effekt","Massnahmen","Grad"
 	
 	public static final String FLD_ATC1 = "ATC1"; //$NON-NLS-1$
@@ -98,7 +94,7 @@ public class Interaction extends PersistentObject {
 	private static int notImported = 0;
 	private static String hash_from_file = "";
 	private static int importerInteractionsCreated = 0;
-	private static final String MATRIX_CSV_URL = "https://download.epha.ch/data/matrix/matrix.csv"; //$NON-NLS-1$
+	private static final String MATRIX_CSV_URL = "https://raw.githubusercontent.com/zdavatz/oddb2xml_files/master/interactions_de_utf8.csv"; //$NON-NLS-1$
 	private static final File MATRIX_CSV_LOCAL =
 		new File(CoreHub.getWritableUserDir(), "matrix.csv");//$NON-NLS-1$
 	
@@ -242,6 +238,8 @@ public class Interaction extends PersistentObject {
 	}
 	
 	public static Interaction getByATC(String atc1, String atc2){
+		atc1 = atc1.trim();
+		atc2 = atc2.trim();
 		Query<Interaction> qbe = new Query<Interaction>(Interaction.class);
 		qbe.add("ID", Query.NOT_EQUAL, VERSIONID); //$NON-NLS-1$
 		qbe.add(FLD_ATC1, Query.EQUALS, atc1);
