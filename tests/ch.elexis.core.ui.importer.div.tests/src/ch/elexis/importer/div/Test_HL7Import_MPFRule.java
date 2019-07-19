@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import org.junit.After;
 import org.junit.Before;
@@ -105,8 +106,18 @@ public class Test_HL7Import_MPFRule {
 				assertEquals(
 					(isMFPRuleActive) ? Description.PATHO_IMPORT : Description.PATHO_REF_ITEM,
 					pathologicDescription.getDescription());
-				assertEquals((isMFPRuleActive) ? "Lt. MPF Regel" : "> 60",
-					pathologicDescription.getReference());
+				Locale locale = Locale.getDefault();
+				if (locale.getLanguage().equals("de")) {
+					assertEquals((isMFPRuleActive) ? "Lt. MPF Regel" : "> 60",
+						pathologicDescription.getReference());
+				} else if (locale.getLanguage().equals("en")) {
+					// This is the case when running under CI via gitlab/travis
+					assertEquals((isMFPRuleActive) ? "acc. MPF rule" : "> 60",
+						pathologicDescription.getReference());
+				} else {
+					System.out.println(String.format("Skipping test for language %s produced %s",
+						locale.getLanguage(), pathologicDescription.getReference()));
+				}
 				assertEquals((isMFPRuleActive) ? 0 : 1, labResult.getFlags());
 				assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
 				assertFalse(labResult.isPathologicFlagIndetermined(null));

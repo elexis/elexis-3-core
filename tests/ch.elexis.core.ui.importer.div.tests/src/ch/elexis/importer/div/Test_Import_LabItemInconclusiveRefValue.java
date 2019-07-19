@@ -3,6 +3,8 @@ package ch.elexis.importer.div;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import java.util.Locale;
+
 import org.junit.Test;
 
 import ch.elexis.core.types.LabItemTyp;
@@ -28,7 +30,17 @@ public class Test_Import_LabItemInconclusiveRefValue {
 		assertEquals(Description.PATHO_REF_ITEM,
 			eyeColor.getPathologicDescription().getDescription());
 		assertFalse(eyeColor.isPathologicFlagIndetermined(null));
-		assertEquals("Keine Referenzwerte", eyeColor.getPathologicDescription().getReference());
+		Locale locale = Locale.getDefault();
+		if (locale.getLanguage().equals("de")) {
+			// Our most common case
+			assertEquals("Keine Referenzwerte", eyeColor.getPathologicDescription().getReference());
+		} else if (locale.getLanguage().equals("en")) {
+			// This is the case when running under CI via gitlab/travis
+			assertEquals("No reference values", eyeColor.getPathologicDescription().getReference());
+		} else {
+			System.out.println(String.format("Skipping test for language %s produced %s",
+				locale.getLanguage(), eyeColor.getPathologicDescription().getReference()));
+		}
 		assertEquals("blue", eyeColor.getResult());
 		
 	}

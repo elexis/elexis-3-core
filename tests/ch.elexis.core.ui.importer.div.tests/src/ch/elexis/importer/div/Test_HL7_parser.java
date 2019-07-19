@@ -34,7 +34,9 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
@@ -378,12 +380,22 @@ public class Test_HL7_parser {
 		assertTrue(labResult.getComment(), labResult.getComment().startsWith("Candida albicans"));
 		assertTrue(StringUtils.isEmpty(labResult.getRefMale()));
 		assertTrue(StringUtils.isEmpty(labResult.getRefFemale()));
-		assertEquals(1517049608000l, labResult.getAnalyseTime().getTimeAsLong()); // 20180127114008
-		assertEquals(1516812120000l, labResult.getObservationTime().getTimeAsLong()); // 20180124174200
-		
 		ILabItem item = labResult.getItem();
 		assertEquals("VAGINA-ABSTRICH - Kultur aerob", item.getName());
-		assertTrue(item.getGroup(), item.getGroup().startsWith("Z Automatisch"));
+		Locale locale = Locale.getDefault();
+		if (locale.getLanguage().equals("de")) {
+			assertTrue(item.getGroup(), item.getGroup().startsWith("Z Automatisch"));
+		} else if (locale.getLanguage().equals("en")) {
+			// This is the case when running under CI via gitlab/travis
+			assertTrue(item.getGroup(), item.getGroup().startsWith("Z automatic_"));
+		} else {
+			System.out.println(String.format("Skipping test for language %s produced %s",
+				locale.getLanguage(), item.getGroup()));
+		}
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		assertEquals("2018-01-27 11:40:08", format.format(labResult.getAnalyseTime().getTime())); // 20180127114008
+		assertEquals("2018-01-24 17:42:00",
+			format.format(labResult.getObservationTime().getTime())); // 20180127114008
 	}
 	
 	@Test
@@ -421,7 +433,16 @@ public class Test_HL7_parser {
 			LabItem item = (LabItem) labResult.getItem();
 			switch (item.getKuerzel()) {
 			case "NOTE":
-				assertEquals("Allgemeine Notiz", item.getName());
+				Locale locale = Locale.getDefault();
+				if (locale.getLanguage().equals("de")) {
+					assertEquals("Allgemeine Notiz", item.getName());
+				} else if (locale.getLanguage().equals("en")) {
+					// This is the case when running under CI via gitlab/travis
+					assertEquals("General note", item.getName());
+				} else {
+					System.out.println(String.format("Skipping test for language %s produced %s",
+						locale.getLanguage(), item.getName()));
+				}
 				assertEquals("AA", item.getGroup());
 				assertEquals("1", item.getPrio());
 				assertEquals("text", labResult.getResult());
