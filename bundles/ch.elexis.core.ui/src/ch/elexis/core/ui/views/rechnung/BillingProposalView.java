@@ -673,6 +673,9 @@ public class BillingProposalView extends ViewPart {
 			if (direction == DESCENDING) {
 				rc = -rc;
 			}
+			if (rc == 0) {
+				rc = right.getDate().compareTo(left.getDate());
+			}
 			return rc;
 		}
 	}
