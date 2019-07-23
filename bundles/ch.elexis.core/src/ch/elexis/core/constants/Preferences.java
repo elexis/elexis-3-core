@@ -227,4 +227,8 @@ public class Preferences {
 	public final static String LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS =
 		"billing/eigenleistung/usemultiplier/systems"; //$NON-NLS-1$
 	
+	// Medication
+	public static final String MEDICATION_SETTINGS_EMEDIPLAN_HEADER_COMMENT =
+			"medication/settings/emediplanHeaderComment";
+	
 }

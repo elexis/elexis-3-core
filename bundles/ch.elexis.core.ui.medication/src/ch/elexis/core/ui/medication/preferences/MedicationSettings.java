@@ -9,10 +9,12 @@ import org.eclipse.ui.PlatformUI;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.preferences.Messages;
 import ch.elexis.core.ui.medication.property.MedicationUiTester;
 import ch.elexis.core.ui.medication.views.MedicationView;
 import ch.elexis.core.ui.medication.views.ViewerSortOrder;
 import ch.elexis.core.ui.preferences.SettingsPreferenceStore;
+import ch.elexis.core.ui.preferences.inputs.MultilineFieldEditor;
 import ch.elexis.core.ui.util.CreatePrescriptionHelper;
 
 public class MedicationSettings extends FieldEditorPreferencePage
@@ -23,6 +25,7 @@ public class MedicationSettings extends FieldEditorPreferencePage
 	public MedicationSettings(){
 		super(GRID);
 		setPreferenceStore(new SettingsPreferenceStore(CoreHub.userCfg));
+		getPreferenceStore().setDefault(Preferences.MEDICATION_SETTINGS_EMEDIPLAN_HEADER_COMMENT, Messages.Medication_headerComment);
 	}
 	
 	@Override
@@ -45,6 +48,9 @@ public class MedicationSettings extends FieldEditorPreferencePage
 		addField(sortingFieldEditor);
 		addField(new BooleanFieldEditor(Preferences.USR_SUPPRESS_INTERACTION_CHECK,
 				ch.elexis.core.l10n.Messages.UserSettings2_SuppressInteractionCheck, getFieldEditorParent()));
+
+		addField(new MultilineFieldEditor(Preferences.MEDICATION_SETTINGS_EMEDIPLAN_HEADER_COMMENT, "Eine Bemerkung auf dem eMediplan anzeigen"
+			, getFieldEditorParent()));
 	}
 	
 	@Override
