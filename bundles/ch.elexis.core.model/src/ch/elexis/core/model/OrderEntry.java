@@ -27,10 +27,10 @@ public class OrderEntry
 	@Override
 	public void setOrder(IOrder value){
 		if (value instanceof AbstractIdDeleteModelAdapter) {
-			getEntity()
+			getEntityMarkDirty()
 				.setBestellung((Bestellung) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
 		} else if (value == null) {
-			getEntity().setBestellung(null);
+			getEntityMarkDirty().setBestellung(null);
 		}
 	}
 	
@@ -45,7 +45,7 @@ public class OrderEntry
 	
 	@Override
 	public void setStock(IStock value){
-		getEntity().setStockid(value != null ? value.getId() : null);
+		getEntityMarkDirty().setStockid(value != null ? value.getId() : null);
 	}
 	
 	@Override
@@ -55,7 +55,7 @@ public class OrderEntry
 	
 	@Override
 	public void setAmount(int value){
-		getEntity().setCount(value);
+		getEntityMarkDirty().setCount(value);
 	}
 	
 	@Override
@@ -74,8 +74,8 @@ public class OrderEntry
 			() -> new IllegalStateException("Could not get store to string for [" + article + "]"));
 		String[] split = storeToString.split(IStoreToStringContribution.DOUBLECOLON);
 		if (split != null && split.length == 2) {
-			getEntity().setArticleType(split[0]);
-			getEntity().setArticleId(split[1]);
+			getEntityMarkDirty().setArticleType(split[0]);
+			getEntityMarkDirty().setArticleId(split[1]);
 		} else {
 			throw new IllegalStateException("Could not set article [" + storeToString + "]");
 		}
@@ -92,7 +92,7 @@ public class OrderEntry
 	
 	@Override
 	public void setProvider(IContact value){
-		getEntity().setProviderId(value != null ? value.getId() : null);
+		getEntityMarkDirty().setProviderId(value != null ? value.getId() : null);
 	}
 	
 	@Override
@@ -102,6 +102,6 @@ public class OrderEntry
 	
 	@Override
 	public void setState(OrderEntryState value){
-		getEntity().setState(value.getValue());
+		getEntityMarkDirty().setState(value.getValue());
 	}
 }

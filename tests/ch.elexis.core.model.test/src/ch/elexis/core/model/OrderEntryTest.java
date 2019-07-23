@@ -89,7 +89,6 @@ public class OrderEntryTest {
 		entry.setArticle(article);
 		entry.setAmount(5);
 		modelSerice.save(entry);
-		order.addEntry(entry);
 		assertFalse(order.getEntries().isEmpty());
 		
 		Optional<IOrderEntry> loaded = modelSerice.load(entry.getId(), IOrderEntry.class);
@@ -101,7 +100,17 @@ public class OrderEntryTest {
 		assertEquals(entry.getOrder(), loaded.get().getOrder());
 		assertEquals(entry.getOrder().getTimestamp(), loaded.get().getOrder().getTimestamp());
 		
+		IOrderEntry entry2 = modelSerice.create(IOrderEntry.class);
+		entry2.setStock(stock);
+		entry2.setArticle(article1);
+		entry2.setAmount(1);
+		order.addEntry(entry2);
+		modelSerice.save(order);
+		assertEquals(2, order.getEntries().size());
+		
 		order.removeEntry(entry);
+		order.removeEntry(entry2);
+		assertEquals(0, order.getEntries().size());
 	}
 	
 	@Test
@@ -112,7 +121,6 @@ public class OrderEntryTest {
 		entry.setArticle(article);
 		entry.setAmount(5);
 		modelSerice.save(entry);
-		order.addEntry(entry);
 		
 		IOrderEntry entry1 = modelSerice.create(IOrderEntry.class);
 		entry1.setOrder(order);
@@ -120,7 +128,6 @@ public class OrderEntryTest {
 		entry1.setArticle(article1);
 		entry1.setAmount(2);
 		modelSerice.save(entry1);
-		order.addEntry(entry1);
 		
 		String storeToString = StoreToStringServiceHolder.getStoreToString(article);
 		String[] articleParts = storeToString.split(IStoreToStringContribution.DOUBLECOLON);

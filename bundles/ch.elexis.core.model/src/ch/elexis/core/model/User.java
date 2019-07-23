@@ -24,7 +24,7 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	
 	@Override
 	public void setUsername(String value){
-		getEntity().setId(value);
+		getEntityMarkDirty().setId(value);
 	}
 	
 	@Override
@@ -34,7 +34,7 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	
 	@Override
 	public void setHashedPassword(String value){
-		getEntity().setHashedPassword(value);
+		getEntityMarkDirty().setHashedPassword(value);
 	}
 	
 	@Override
@@ -45,9 +45,10 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	@Override
 	public void setAssignedContact(IContact value){
 		if (value instanceof AbstractIdDeleteModelAdapter) {
-			getEntity().setKontakt((Kontakt) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
+			getEntityMarkDirty()
+				.setKontakt((Kontakt) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
 		} else if (value == null) {
-			getEntity().setKontakt(null);
+			getEntityMarkDirty().setKontakt(null);
 		}
 	}
 	
@@ -62,7 +63,7 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		if (role instanceof AbstractIdDeleteModelAdapter) {
 			Set<Role> roles = new HashSet<Role>(getEntity().getRoles());
 			roles.add((Role) ((AbstractIdDeleteModelAdapter<?>) role).getEntity());
-			getEntity().setRoles(roles);
+			getEntityMarkDirty().setRoles(roles);
 		}
 		return role;
 	}
@@ -72,7 +73,7 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		if (role instanceof AbstractIdDeleteModelAdapter) {
 			Set<Role> roles = new HashSet<Role>(getEntity().getRoles());
 			roles.remove((Role) ((AbstractIdDeleteModelAdapter<?>) role).getEntity());
-			getEntity().setRoles(roles);
+			getEntityMarkDirty().setRoles(roles);
 		}
 	}
 	
@@ -83,7 +84,7 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	
 	@Override
 	public void setSalt(String value){
-		getEntity().setSalt(value);
+		getEntityMarkDirty().setSalt(value);
 	}
 	
 	@Override
@@ -93,7 +94,7 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	
 	@Override
 	public void setActive(boolean value){
-		getEntity().setActive(value);
+		getEntityMarkDirty().setActive(value);
 	}
 	
 	@Override
@@ -103,7 +104,7 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	
 	@Override
 	public void setAllowExternal(boolean value){
-		getEntity().setAllowExternal(value);
+		getEntityMarkDirty().setAllowExternal(value);
 		
 	}
 
@@ -114,6 +115,6 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 
 	@Override
 	public void setAdministrator(boolean value){
-		getEntity().setAdministrator(value);
+		getEntityMarkDirty().setAdministrator(value);
 	}
 }

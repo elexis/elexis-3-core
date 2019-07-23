@@ -43,9 +43,9 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 	@Override
 	public void setPatient(IPatient value){
 		if (value != null) {
-			getEntity().setPatient(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
+			getEntityMarkDirty().setPatient(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
 		} else {
-			getEntity().setPatient(null);
+			getEntityMarkDirty().setPatient(null);
 		}
 	}
 	
@@ -56,7 +56,7 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 	
 	@Override
 	public void setDescription(String value){
-		getEntity().setBezeichnung(value);
+		getEntityMarkDirty().setBezeichnung(value);
 	}
 	
 	@Override
@@ -66,7 +66,7 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 	
 	@Override
 	public void setReason(String value){
-		getEntity().setGrund(value);
+		getEntityMarkDirty().setGrund(value);
 	}
 	
 	@Override
@@ -76,7 +76,7 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 	
 	@Override
 	public void setDateFrom(LocalDate value){
-		getEntity().setDatumVon(value);
+		getEntityMarkDirty().setDatumVon(value);
 	}
 	
 	@Override
@@ -86,7 +86,7 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 	
 	@Override
 	public void setDateTo(LocalDate value){
-		getEntity().setDatumBis(value);
+		getEntityMarkDirty().setDatumBis(value);
 	}
 	
 	@Override
@@ -96,7 +96,7 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 	
 	@Override
 	public void setBillingSystem(IBillingSystem value){
-		getEntity().setGesetz(value.getName());
+		getEntityMarkDirty().setGesetz(value.getName());
 	}
 
 	@Override
@@ -108,9 +108,10 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 	@Override
 	public void setCostBearer(IContact value){
 		if (value != null) {
-			getEntity().setKostentrKontakt(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
+			getEntityMarkDirty()
+				.setKostentrKontakt(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
 		} else {
-			getEntity().setKostentrKontakt(null);
+			getEntityMarkDirty().setKostentrKontakt(null);
 		}
 	}
 
@@ -126,9 +127,10 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 	@Override
 	public void setGuarantor(IContact value){
 		if (value != null) {
-			getEntity().setGarantKontakt(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
+			getEntityMarkDirty()
+				.setGarantKontakt(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
 		} else {
-			getEntity().setGarantKontakt(null);
+			getEntityMarkDirty().setGarantKontakt(null);
 		}
 	}
 	
@@ -139,7 +141,7 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 
 	@Override
 	public void setInsuranceNumber(String value){
-		getEntity().setVersNummer(value);
+		getEntityMarkDirty().setVersNummer(value);
 	}
 	
 	@Override
@@ -182,9 +184,9 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 	@Override
 	public void setBillingProposalDate(LocalDate value){
 		if (value != null) {
-			getEntity().setBetriebsNummer(ModelUtil.toString(value));
+			getEntityMarkDirty().setBetriebsNummer(ModelUtil.toString(value));
 		} else {
-			getEntity().setBetriebsNummer(null);
+			getEntityMarkDirty().setBetriebsNummer(null);
 		}
 	}
 }

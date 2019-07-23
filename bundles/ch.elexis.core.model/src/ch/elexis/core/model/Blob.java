@@ -22,7 +22,7 @@ public class Blob extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	
 	@Override
 	public void setContent(byte[] value){
-		getEntity().setInhalt(value);
+		getEntityMarkDirty().setInhalt(value);
 	}
 	
 	@Override
@@ -54,11 +54,11 @@ public class Blob extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	
 	@Override
 	public void setDate(LocalDate value){
-		getEntity().setDatum(value);
+		getEntityMarkDirty().setDatum(value);
 	}
 	
 	@Override
 	public void setId(String id){
-		getEntity().setId(id);
+		getEntityMarkDirty().setId(id);
 	}
 }

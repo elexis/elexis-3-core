@@ -64,7 +64,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	
 	@Override
 	public void setCode(String code){
-		getEntity().setSubId(code);
+		getEntityMarkDirty().setSubId(code);
 	}
 	
 	@Override
@@ -74,7 +74,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	
 	@Override
 	public void setText(String value){
-		getEntity().setName(value);
+		getEntityMarkDirty().setName(value);
 	}
 	
 	@Override
@@ -84,7 +84,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	
 	@Override
 	public void setGtin(String value){
-		getEntity().setEan(value);
+		getEntityMarkDirty().setEan(value);
 	}
 	
 	@Override
@@ -94,7 +94,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	
 	@Override
 	public void setName(String value){
-		getEntity().setName(value);
+		getEntityMarkDirty().setName(value);
 	}
 	
 	@Override
@@ -172,7 +172,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	
 	@Override
 	public void setTyp(ArticleTyp value){
-		getEntity().setTyp(value);
+		getEntityMarkDirty().setTyp(value);
 	}
 	
 	@Override
@@ -182,7 +182,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	
 	@Override
 	public void setSubTyp(ArticleSubTyp value){
-		getEntity().setCodeclass(Character.toString(value.getTypeChar()));
+		getEntityMarkDirty().setCodeclass(Character.toString(value.getTypeChar()));
 	}
 	
 	@Override
@@ -228,9 +228,9 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	@Override
 	public void setProduct(IArticle value){
 		if (value != null) {
-			getEntity().setProduct(((AbstractIdModelAdapter<Artikel>) value).getEntity());
+			getEntityMarkDirty().setProduct(((AbstractIdModelAdapter<Artikel>) value).getEntity());
 		} else {
-			getEntity().setProduct(null);
+			getEntityMarkDirty().setProduct(null);
 		}
 	}
 	
@@ -241,7 +241,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	
 	@Override
 	public void setAtcCode(String value){
-		getEntity().setAtcCode(value);
+		getEntityMarkDirty().setAtcCode(value);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -289,7 +289,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	
 	@Override
 	public void setPurchasePrice(Money value){
-		getEntity().setEkPreis((value != null) ? value.getCentsAsString() : null);
+		getEntityMarkDirty().setEkPreis((value != null) ? value.getCentsAsString() : null);
 	}
 	
 	@Override
@@ -303,7 +303,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	
 	@Override
 	public void setSellingPrice(Money value){
-		getEntity().setVkPreis((value != null) ? value.getCentsAsString() : null);
+		getEntityMarkDirty().setVkPreis((value != null) ? value.getCentsAsString() : null);
 	}
 	
 	@Override

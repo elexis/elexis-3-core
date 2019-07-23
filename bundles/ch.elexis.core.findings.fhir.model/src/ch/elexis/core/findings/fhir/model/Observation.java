@@ -399,7 +399,7 @@ public class Observation
 			builder.replace(idx, idx + dbKeyValue.length(),
 				key + FORMAT_KEY_VALUE_SPLITTER + value);
 		}
-		getEntity().setFormat(builder.toString());
+		getEntityMarkDirty().setFormat(builder.toString());
 	}
 	
 	@Override

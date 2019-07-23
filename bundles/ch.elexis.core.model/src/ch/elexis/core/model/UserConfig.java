@@ -31,7 +31,7 @@ public class UserConfig extends AbstractIdModelAdapter<ch.elexis.core.jpa.entiti
 	
 	@Override
 	public void setKey(String value){
-		getEntity().setParam(value);
+		getEntityMarkDirty().setParam(value);
 	}
 	
 	@Override
@@ -41,7 +41,7 @@ public class UserConfig extends AbstractIdModelAdapter<ch.elexis.core.jpa.entiti
 	
 	@Override
 	public void setValue(String value){
-		getEntity().setValue(value);
+		getEntityMarkDirty().setValue(value);
 	}
 	
 	@Override
@@ -57,9 +57,9 @@ public class UserConfig extends AbstractIdModelAdapter<ch.elexis.core.jpa.entiti
 	@Override
 	public void setOwner(IContact value){
 		if (value instanceof AbstractIdDeleteModelAdapter) {
-			getEntity().setOwnerId(value.getId());
+			getEntityMarkDirty().setOwnerId(value.getId());
 		} else if (value == null) {
-			getEntity().setOwnerId(null);
+			getEntityMarkDirty().setOwnerId(null);
 		}
 	}
 }

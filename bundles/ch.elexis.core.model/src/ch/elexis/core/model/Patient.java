@@ -34,7 +34,7 @@ public class Patient extends Person implements IPatient {
 	
 	@Override
 	public void setDiagnosen(String value){
-		getEntity().setDiagnosen(value);
+		getEntityMarkDirty().setDiagnosen(value);
 	}
 	
 	@Override
@@ -44,7 +44,7 @@ public class Patient extends Person implements IPatient {
 	
 	@Override
 	public void setRisk(String value){
-		getEntity().setRisk(value);
+		getEntityMarkDirty().setRisk(value);
 	}
 	
 	@Override
@@ -54,7 +54,7 @@ public class Patient extends Person implements IPatient {
 	
 	@Override
 	public void setFamilyAnamnese(String value){
-		getEntity().setFamilyAnamnese(value);
+		getEntityMarkDirty().setFamilyAnamnese(value);
 	}
 	
 	@Override
@@ -64,7 +64,7 @@ public class Patient extends Person implements IPatient {
 	
 	@Override
 	public void setPersonalAnamnese(String value){
-		getEntity().setPersonalAnamnese(value);
+		getEntityMarkDirty().setPersonalAnamnese(value);
 	}
 	
 	@Override
@@ -74,7 +74,7 @@ public class Patient extends Person implements IPatient {
 	
 	@Override
 	public void setAllergies(String value){
-		getEntity().setAllergies(value);
+		getEntityMarkDirty().setAllergies(value);
 	}
 	
 	@Override
@@ -89,6 +89,7 @@ public class Patient extends Person implements IPatient {
 	
 	@Override
 	public List<ICoverage> getCoverages(){
+		CoreModelServiceHolder.get().refresh(this);
 		return getEntity().getFaelle().stream().filter(f -> !f.isDeleted())
 			.map(f -> ModelUtil.getAdapter(f, ICoverage.class)).collect(Collectors.toList());
 	}
@@ -98,7 +99,7 @@ public class Patient extends Person implements IPatient {
 	public ICoverage addCoverage(ICoverage coverage){
 		@SuppressWarnings("unchecked")
 		Fall fall = ((AbstractIdModelAdapter<Fall>) coverage).getEntity();
-		getEntity().getFaelle().add(fall);
+		getEntityMarkDirty().getFaelle().add(fall);
 		return coverage;
 	}
 

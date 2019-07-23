@@ -25,7 +25,7 @@ public class DiagnosisReference
 	
 	@Override
 	public void setCode(String value){
-		getEntity().setCode(value);
+		getEntityMarkDirty().setCode(value);
 	}
 	
 	@Override
@@ -35,7 +35,7 @@ public class DiagnosisReference
 	
 	@Override
 	public void setText(String value){
-		getEntity().setText(value);
+		getEntityMarkDirty().setText(value);
 	}
 	
 	@Override
@@ -54,7 +54,7 @@ public class DiagnosisReference
 	
 	@Override
 	public void setReferredClass(String value){
-		getEntity().setDiagnosisClass(value);
+		getEntityMarkDirty().setDiagnosisClass(value);
 	}
 	
 	@Override

@@ -2,7 +2,6 @@ package ch.elexis.core.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,7 +56,7 @@ public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 		IOrderEntry existing = findOrderEntry(entry.getStock(), entry.getArticle());
 		if (existing == null) {
 			entry.setOrder(this);
-			ModelUtil.getModelService().save(Arrays.asList(entry, this));
+			addChanged(entry);
 		}
 	}
 	
@@ -123,7 +122,7 @@ public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 		String id = (name != null ? name : "") + ":"
 			+ (timestamp != null ? timestamp.format(timestampFormatter) : "") + ":"
 			+ (activeUser.isPresent() ? activeUser.get().getId() : "");
-		getEntity().setId(id);
+		getEntityMarkDirty().setId(id);
 	}
 	
 	@Override

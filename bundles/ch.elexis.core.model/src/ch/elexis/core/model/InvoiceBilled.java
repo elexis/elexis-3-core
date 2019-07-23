@@ -51,9 +51,10 @@ public class InvoiceBilled extends AbstractIdDeleteModelAdapter<VerrechnetCopy>
 	@Override
 	public void setEncounter(IEncounter value){
 		if (value instanceof AbstractIdModelAdapter) {
-			getEntity().setBehandlung(((AbstractIdModelAdapter<Behandlung>) value).getEntity());
+			getEntityMarkDirty()
+				.setBehandlung(((AbstractIdModelAdapter<Behandlung>) value).getEntity());
 		} else if (value == null) {
-			getEntity().setBehandlung(null);
+			getEntityMarkDirty().setBehandlung(null);
 		}
 	}
 	
@@ -202,10 +203,10 @@ public class InvoiceBilled extends AbstractIdDeleteModelAdapter<VerrechnetCopy>
 	@Override
 	public void setInvoice(IInvoice value){
 		if (value instanceof AbstractIdModelAdapter) {
-			getEntity().setInvoice(
+			getEntityMarkDirty().setInvoice(
 				((AbstractIdModelAdapter<ch.elexis.core.jpa.entities.Invoice>) value).getEntity());
 		} else if (value == null) {
-			getEntity().setInvoice(null);
+			getEntityMarkDirty().setInvoice(null);
 		}
 	}
 	

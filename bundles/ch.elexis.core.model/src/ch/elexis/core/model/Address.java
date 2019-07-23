@@ -22,7 +22,7 @@ public class Address extends AbstractIdDeleteModelAdapter<ZusatzAdresse>
 	
 	@Override
 	public void setStreet1(String value){
-		getEntity().setStreet1(value);
+		getEntityMarkDirty().setStreet1(value);
 	}
 	
 	@Override
@@ -32,7 +32,7 @@ public class Address extends AbstractIdDeleteModelAdapter<ZusatzAdresse>
 	
 	@Override
 	public void setStreet2(String value){
-		getEntity().setStreet2(value);
+		getEntityMarkDirty().setStreet2(value);
 	}
 	
 	@Override
@@ -42,7 +42,7 @@ public class Address extends AbstractIdDeleteModelAdapter<ZusatzAdresse>
 	
 	@Override
 	public void setZip(String value){
-		getEntity().setZip(value);
+		getEntityMarkDirty().setZip(value);
 	}
 	
 	@Override
@@ -52,7 +52,7 @@ public class Address extends AbstractIdDeleteModelAdapter<ZusatzAdresse>
 	
 	@Override
 	public void setCity(String value){
-		getEntity().setCity(value);
+		getEntityMarkDirty().setCity(value);
 	}
 	
 	@Override
@@ -62,7 +62,7 @@ public class Address extends AbstractIdDeleteModelAdapter<ZusatzAdresse>
 	
 	@Override
 	public void setCountry(Country value){
-		getEntity().setCountry(value);
+		getEntityMarkDirty().setCountry(value);
 		
 	}
 	
@@ -73,7 +73,7 @@ public class Address extends AbstractIdDeleteModelAdapter<ZusatzAdresse>
 	
 	@Override
 	public void setWrittenAddress(String value){
-		getEntity().setWrittenAddress(value);
+		getEntityMarkDirty().setWrittenAddress(value);
 	}
 	
 	@Override
@@ -83,7 +83,7 @@ public class Address extends AbstractIdDeleteModelAdapter<ZusatzAdresse>
 	
 	@Override
 	public void setType(AddressType value){
-		getEntity().setAddressType(value);
+		getEntityMarkDirty().setAddressType(value);
 	}
 	
 	@Override
@@ -98,10 +98,11 @@ public class Address extends AbstractIdDeleteModelAdapter<ZusatzAdresse>
 	public void setContact(IContact value){
 		if (value != null) {
 			if (value instanceof AbstractIdModelAdapter) {
-				getEntity().setContact((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
+				getEntityMarkDirty()
+					.setContact((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
 			}
 		} else {
-			getEntity().setContact(null);
+			getEntityMarkDirty().setContact(null);
 		}
 	}
 	

@@ -52,8 +52,8 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 			() -> new IllegalStateException("Could not get store to string for [" + value + "]"));
 		String[] split = storeToString.split(IStoreToStringContribution.DOUBLECOLON);
 		if (split.length > 1) {
-			getEntity().setKlasse(split[0]);
-			getEntity().setLeistungenCode(split[1]);
+			getEntityMarkDirty().setKlasse(split[0]);
+			getEntityMarkDirty().setLeistungenCode(split[1]);
 		}
 	}
 	
@@ -72,13 +72,13 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 			// remove from existing
 			if (getEncounter() != null) {
 				Behandlung oldEntity =
-					((AbstractIdModelAdapter<Behandlung>) getEncounter()).getEntity();
+					((AbstractIdModelAdapter<Behandlung>) getEncounter()).getEntityMarkDirty();
 				oldEntity.getBilled().remove(getEntity());
 				addChanged(getEncounter());
 			}
 			Behandlung valueEntity = ((AbstractIdModelAdapter<Behandlung>) value).getEntity();
 			// set both sides
-			getEntity().setBehandlung(valueEntity);
+			getEntityMarkDirty().setBehandlung(valueEntity);
 			valueEntity.getBilled().add(getEntity());
 			addChanged(value);
 		}
@@ -96,12 +96,12 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 	public void setAmount(double value){
 		if (value % 1 == 0) {
 			// integer
-			getEntity().setZahl((int) value);
+			getEntityMarkDirty().setZahl((int) value);
 			setSecondaryScale(100);
 		} else {
 			if (!isChangedPrice()) {
 				// double
-				getEntity().setZahl(1);
+				getEntityMarkDirty().setZahl(1);
 				int scale2 = (int) Math.round(value * 100);
 				setSecondaryScale(scale2);
 			} else {
@@ -135,9 +135,9 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 	@Override
 	public void setNetPrice(Money value){
 		if (value != null) {
-			getEntity().setEk_kosten(value.getCents());
+			getEntityMarkDirty().setEk_kosten(value.getCents());
 		} else {
-			getEntity().setEk_kosten(0);
+			getEntityMarkDirty().setEk_kosten(0);
 		}
 	}
 	
@@ -148,7 +148,7 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 	
 	@Override
 	public void setText(String value){
-		getEntity().setLeistungenText(value);
+		getEntityMarkDirty().setLeistungenText(value);
 		
 	}
 	
@@ -159,7 +159,7 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 	
 	@Override
 	public void setPoints(int value){
-		getEntity().setVk_tp(value);
+		getEntityMarkDirty().setVk_tp(value);
 	}
 	
 	@Override
@@ -177,7 +177,7 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 	
 	@Override
 	public void setFactor(double value){
-		getEntity().setVk_scale(Double.toString(value));
+		getEntityMarkDirty().setVk_scale(Double.toString(value));
 	}
 	
 	@Override
@@ -187,7 +187,7 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 	
 	@Override
 	public void setPrimaryScale(int value){
-		getEntity().setScale(value);
+		getEntityMarkDirty().setScale(value);
 	}
 	
 	@Override
@@ -197,7 +197,7 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 	
 	@Override
 	public void setSecondaryScale(int value){
-		getEntity().setScale2(value);
+		getEntityMarkDirty().setScale2(value);
 	}
 	
 	@Override
@@ -270,9 +270,10 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 	@Override
 	public void setBiller(IContact value){
 		if (value instanceof AbstractIdDeleteModelAdapter) {
-			getEntity().setUser((Kontakt) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
+			getEntityMarkDirty()
+				.setUser((Kontakt) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
 		} else if (value == null) {
-			getEntity().setUser(null);
+			getEntityMarkDirty().setUser(null);
 		}
 	}
 	

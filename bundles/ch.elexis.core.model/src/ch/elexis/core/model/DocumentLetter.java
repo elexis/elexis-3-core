@@ -41,7 +41,7 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	
 	@Override
 	public void setTitle(String value){
-		getEntity().setSubject(value);
+		getEntityMarkDirty().setSubject(value);
 	}
 	
 	@Override
@@ -51,7 +51,7 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	
 	@Override
 	public void setDescription(String value){
-		getEntity().setNote(value);
+		getEntityMarkDirty().setNote(value);
 	}
 	
 	@Override
@@ -78,7 +78,7 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	
 	@Override
 	public void setCreated(Date value){
-		getEntity().setCreationDate(toLocalDate(value));
+		getEntityMarkDirty().setCreationDate(toLocalDate(value));
 	}
 	
 	@Override
@@ -88,7 +88,7 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	
 	@Override
 	public void setLastchanged(Date value){
-		getEntity().setLastupdate(value.getTime());
+		getEntityMarkDirty().setLastupdate(value.getTime());
 	}
 	
 	@Override
@@ -98,7 +98,7 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	
 	@Override
 	public void setMimeType(String value){
-		getEntity().setMimetype(value);
+		getEntityMarkDirty().setMimetype(value);
 	}
 	
 	@Override
@@ -112,7 +112,7 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	@Override
 	public void setCategory(ICategory value){
 		this.category = value;
-		getEntity().setTyp(value.getName());
+		getEntityMarkDirty().setTyp(value.getName());
 	}
 	
 	@Override
@@ -166,9 +166,10 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	@Override
 	public void setPatient(IPatient value){
 		if (value instanceof AbstractIdDeleteModelAdapter) {
-			getEntity().setPatient((Kontakt) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
+			getEntityMarkDirty()
+				.setPatient((Kontakt) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
 		} else if (value == null) {
-			getEntity().setPatient(null);
+			getEntityMarkDirty().setPatient(null);
 		}
 	}
 	
@@ -180,9 +181,10 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	@Override
 	public void setAuthor(IContact value){
 		if (value instanceof AbstractIdDeleteModelAdapter) {
-			getEntity().setSender((Kontakt) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
+			getEntityMarkDirty()
+				.setSender((Kontakt) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
 		} else if (value == null) {
-			getEntity().setSender(null);
+			getEntityMarkDirty().setSender(null);
 		}
 	}
 	

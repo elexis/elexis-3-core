@@ -42,7 +42,7 @@ public class Message extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 		if(user != null) {
 			IContact assignedContact = user.getAssignedContact();
 			Kontakt entity = ((AbstractIdModelAdapter<Kontakt>) assignedContact).getEntity();
-			getEntity().setOrigin(entity);
+			getEntityMarkDirty().setOrigin(entity);
 		}
 		// TODO support for station, silently ignored by now
 	}
@@ -74,7 +74,7 @@ public class Message extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 		receiver.add(user);
 		// TODO suppport multiple receivers
 		Kontakt contact = ((AbstractIdModelAdapter<Kontakt>) user.getUser().getAssignedContact()).getEntity();
-		getEntity().setDestination(contact);
+		getEntityMarkDirty().setDestination(contact);
 	}
 	
 	@Override
@@ -95,7 +95,7 @@ public class Message extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public void setCreateDateTime(LocalDateTime value){
-		getEntity().setDateTime(value);
+		getEntityMarkDirty().setDateTime(value);
 	}
 	
 	@Override
@@ -105,7 +105,7 @@ public class Message extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public void setMessageText(String value){
-		getEntity().setMsg(value);
+		getEntityMarkDirty().setMsg(value);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -121,7 +121,7 @@ public class Message extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	@Override
 	public void setMessageCodes(Map<String, String> value){
 		String json = gson.toJson(value);
-		getEntity().setMessageCodes(json);
+		getEntityMarkDirty().setMessageCodes(json);
 	}
 	
 	@Override

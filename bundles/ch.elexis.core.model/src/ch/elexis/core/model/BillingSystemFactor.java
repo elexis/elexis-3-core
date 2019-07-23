@@ -37,7 +37,7 @@ public class BillingSystemFactor extends AbstractIdModelAdapter<VKPreis>
 	
 	@Override
 	public void setFactor(double value){
-		getEntity().setMultiplikator(Double.toString(value));
+		getEntityMarkDirty().setMultiplikator(Double.toString(value));
 	}
 	
 	@Override
@@ -47,7 +47,7 @@ public class BillingSystemFactor extends AbstractIdModelAdapter<VKPreis>
 	
 	@Override
 	public void setValidFrom(LocalDate value){
-		getEntity().setDatum_von(value);
+		getEntityMarkDirty().setDatum_von(value);
 	}
 	
 	@Override
@@ -57,6 +57,6 @@ public class BillingSystemFactor extends AbstractIdModelAdapter<VKPreis>
 	
 	@Override
 	public void setValidTo(LocalDate value){
-		getEntity().setDatum_bis(value);
+		getEntityMarkDirty().setDatum_bis(value);
 	}
 }

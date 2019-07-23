@@ -19,7 +19,7 @@ public class Sticker extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public void setBackground(String value){
-		getEntity().setBackground(value);
+		getEntityMarkDirty().setBackground(value);
 	}
 	
 	@Override
@@ -29,7 +29,7 @@ public class Sticker extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public void setForeground(String value){
-		getEntity().setForeground(value);
+		getEntityMarkDirty().setForeground(value);
 	}
 	
 	@Override
@@ -74,7 +74,7 @@ public class Sticker extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public void setName(String value){
-		getEntity().setName(value);
+		getEntityMarkDirty().setName(value);
 	}
 	
 	@Override
@@ -84,7 +84,7 @@ public class Sticker extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public void setImportance(int value){
-		getEntity().setImportance(value);
+		getEntityMarkDirty().setImportance(value);
 	}
 	
 	@Override
@@ -95,9 +95,9 @@ public class Sticker extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	@Override
 	public void setImage(IImage value){
 		if (value != null) {
-			getEntity().setImage(((AbstractIdModelAdapter<DbImage>) value).getEntity());
+			getEntityMarkDirty().setImage(((AbstractIdModelAdapter<DbImage>) value).getEntity());
 		} else {
-			getEntity().setImage(null);
+			getEntityMarkDirty().setImage(null);
 		}
 	}
 	

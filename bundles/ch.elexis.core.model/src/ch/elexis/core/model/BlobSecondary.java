@@ -22,7 +22,7 @@ public class BlobSecondary extends AbstractIdDeleteModelAdapter<ch.elexis.core.j
 	
 	@Override
 	public void setContent(byte[] value){
-		getEntity().setContents(JpaModelUtil.getCompressed(value));
+		getEntityMarkDirty().setContents(JpaModelUtil.getCompressed(value));
 	}
 	
 	@Override
@@ -54,7 +54,7 @@ public class BlobSecondary extends AbstractIdDeleteModelAdapter<ch.elexis.core.j
 	
 	@Override
 	public void setDate(LocalDate value){
-		getEntity().setDatum(value);
+		getEntityMarkDirty().setDatum(value);
 	}
 	
 	@Override

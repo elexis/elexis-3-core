@@ -23,7 +23,7 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 	
 	@Override
 	public void setReason(String value){
-		getEntity().setGrund(value);
+		getEntityMarkDirty().setGrund(value);
 	}
 	
 	@Override
@@ -33,7 +33,7 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 	
 	@Override
 	public void setState(String value){
-		getEntity().setTerminStatus(value);
+		getEntityMarkDirty().setTerminStatus(value);
 	}
 	
 	@Override
@@ -43,7 +43,7 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 	
 	@Override
 	public void setType(String value){
-		getEntity().setTerminTyp(value);
+		getEntityMarkDirty().setTerminTyp(value);
 	}
 	
 	@Override
@@ -61,12 +61,12 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 	@Override
 	public void setStartTime(LocalDateTime value){
 		if (value != null) {
-			getEntity().setTag(value.toLocalDate());
+			getEntityMarkDirty().setTag(value.toLocalDate());
 			int begin = (value.getHour() * 60) + value.getMinute();
-			getEntity().setBeginn(Integer.toString(begin));
+			getEntityMarkDirty().setBeginn(Integer.toString(begin));
 		} else {
-			getEntity().setTag(null);
-			getEntity().setBeginn(null);
+			getEntityMarkDirty().setTag(null);
+			getEntityMarkDirty().setBeginn(null);
 		}
 	}
 	
@@ -87,12 +87,12 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 		if (value != null) {
 			if (getStartTime() != null) {
 				long until = getStartTime().until(value, ChronoUnit.MINUTES);
-				getEntity().setDauer(Long.toString(until));
+				getEntityMarkDirty().setDauer(Long.toString(until));
 			} else if (getDurationMinutes() != null) {
 				setStartTime(value.minus(Duration.ofMinutes(getDurationMinutes())));
 			} else {
 				setStartTime(value);
-				getEntity().setDauer(Integer.toString(0));
+				getEntityMarkDirty().setDauer(Integer.toString(0));
 			}
 		} else {
 			getEntity().setDauer(null);
@@ -114,7 +114,7 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 	
 	@Override
 	public void setSchedule(String value){
-		getEntity().setBereich(value);
+		getEntityMarkDirty().setBereich(value);
 	}
 	
 	@Override
@@ -134,7 +134,7 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 
 	@Override
 	public void setSubjectOrPatient(String value){
-		getEntity().setPatId(value);
+		getEntityMarkDirty().setPatId(value);
 	}
 
 	@Override
@@ -144,7 +144,7 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 
 	@Override
 	public void setPriority(int value){
-		getEntity().setPriority(value);
+		getEntityMarkDirty().setPriority(value);
 	}
 
 	@Override
@@ -154,7 +154,7 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 
 	@Override
 	public void setTreatmentReason(int value){
-		getEntity().setTreatmentReason(value);	
+		getEntityMarkDirty().setTreatmentReason(value);
 	}
 
 	@Override
@@ -164,7 +164,7 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 	
 	@Override
 	public void setLinkgroup(String value){
-		getEntity().setLinkgroup(value);
+		getEntityMarkDirty().setLinkgroup(value);
 	}
 	
 	@Override
@@ -174,7 +174,7 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 	
 	@Override
 	public void setExtension(String value){
-		getEntity().setExtension(value);
+		getEntityMarkDirty().setExtension(value);
 	}
 	
 	@Override
@@ -190,7 +190,7 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 
 	@Override
 	public void setCreated(String value){
-		getEntity().setAngelegt(value);
+		getEntityMarkDirty().setAngelegt(value);
 	}
 
 	@Override
@@ -200,7 +200,7 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 
 	@Override
 	public void setLastEdit(String value){
-		getEntity().setLastedit(value);
+		getEntityMarkDirty().setLastedit(value);
 	}
 
 	@Override
@@ -210,6 +210,6 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 
 	@Override
 	public void setStateHistory(String value){
-		getEntity().setStatusHistory(value);
+		getEntityMarkDirty().setStatusHistory(value);
 	}
 }

@@ -38,7 +38,7 @@ public class ArticleDefaultSignature
 
 	@Override
 	public void setAtcCode(String value){
-		getEntity().setAtccode(value);
+		getEntityMarkDirty().setAtccode(value);
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class ArticleDefaultSignature
 
 	@Override
 	public void setMorning(String value){
-		getEntity().setMorning(value);
+		getEntityMarkDirty().setMorning(value);
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class ArticleDefaultSignature
 
 	@Override
 	public void setNoon(String value){
-		getEntity().setNoon(value);
+		getEntityMarkDirty().setNoon(value);
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class ArticleDefaultSignature
 
 	@Override
 	public void setEvening(String value){
-		getEntity().setEvening(value);
+		getEntityMarkDirty().setEvening(value);
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class ArticleDefaultSignature
 
 	@Override
 	public void setNight(String value){
-		getEntity().setNight(value);
+		getEntityMarkDirty().setNight(value);
 	}
 
 	@Override
@@ -88,14 +88,14 @@ public class ArticleDefaultSignature
 
 	@Override
 	public void setComment(String value){
-		getEntity().setComment(value);
+		getEntityMarkDirty().setComment(value);
 	}
 	
 	@Override
 	public void setArticle(IArticle article){
 		String articleString = article.getGtin() + "$" + article.getCode() + "$"
 			+ StoreToStringServiceHolder.getStoreToString(article);
-		getEntity().setArticle(articleString);
+		getEntityMarkDirty().setArticle(articleString);
 	}
 	
 	@Override

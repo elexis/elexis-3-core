@@ -47,7 +47,7 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public void setState(InvoiceState value){
-		getEntity().setState(value);
+		getEntityMarkDirty().setState(value);
 	}
 	
 	@Override
@@ -64,9 +64,9 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	@Override
 	public void setMandator(IMandator value){
 		if (value != null) {
-			getEntity().setMandator(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
+			getEntityMarkDirty().setMandator(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
 		} else {
-			getEntity().setMandator(null);
+			getEntityMarkDirty().setMandator(null);
 		}
 	}
 	
@@ -79,9 +79,9 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	@Override
 	public void setCoverage(ICoverage value){
 		if (value != null) {
-			getEntity().setFall(((AbstractIdModelAdapter<Fall>) value).getEntity());
+			getEntityMarkDirty().setFall(((AbstractIdModelAdapter<Fall>) value).getEntity());
 		} else {
-			getEntity().setFall(null);
+			getEntityMarkDirty().setFall(null);
 		}
 	}
 	
@@ -128,7 +128,7 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public void setDate(LocalDate value){
-		getEntity().setInvoiceDate(value);
+		getEntityMarkDirty().setInvoiceDate(value);
 	}
 	
 	@Override
@@ -138,7 +138,7 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public void setDateFrom(LocalDate value){
-		getEntity().setInvoiceDateFrom(value);
+		getEntityMarkDirty().setInvoiceDateFrom(value);
 	}
 	
 	@Override
@@ -148,7 +148,7 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public void setDateTo(LocalDate value){
-		getEntity().setInvoiceDateTo(value);
+		getEntityMarkDirty().setInvoiceDateTo(value);
 	}
 	
 	@Override
@@ -160,9 +160,9 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	@Override
 	public void setTotalAmount(Money value){
 		if (value != null) {
-			getEntity().setAmount(value.getCentsAsString());
+			getEntityMarkDirty().setAmount(value.getCentsAsString());
 		} else {
-			getEntity().setAmount(null);
+			getEntityMarkDirty().setAmount(null);
 		}
 	}
 	
@@ -277,6 +277,6 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 
 	@Override
 	public void setStateDate(LocalDate value){
-		getEntity().setStatusDate(value);
+		getEntityMarkDirty().setStatusDate(value);
 	}
 }

@@ -27,10 +27,10 @@ public class Payment
 	@Override
 	public void setInvoice(IInvoice value){
 		if (value instanceof AbstractIdModelAdapter) {
-			getEntity().setInvoice(
+			getEntityMarkDirty().setInvoice(
 				((AbstractIdModelAdapter<ch.elexis.core.jpa.entities.Invoice>) value).getEntity());
 		} else if (value == null) {
-			getEntity().setInvoice(null);
+			getEntityMarkDirty().setInvoice(null);
 		}
 	}
 	
@@ -43,9 +43,9 @@ public class Payment
 	@Override
 	public void setAmount(Money value){
 		if (value != null) {
-			getEntity().setAmount(value.getCentsAsString());
+			getEntityMarkDirty().setAmount(value.getCentsAsString());
 		} else {
-			getEntity().setAmount(null);
+			getEntityMarkDirty().setAmount(null);
 		}
 	}
 	
@@ -56,7 +56,7 @@ public class Payment
 	
 	@Override
 	public void setRemark(String value){
-		getEntity().setRemark(value);
+		getEntityMarkDirty().setRemark(value);
 	}
 	
 	@Override
@@ -66,6 +66,6 @@ public class Payment
 	
 	@Override
 	public void setDate(LocalDate value){
-		getEntity().setDate(value);
+		getEntityMarkDirty().setDate(value);
 	}
 }

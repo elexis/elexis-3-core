@@ -42,7 +42,7 @@ public class ExtInfoHandler {
 		} else {
 			extInfo.put(key, value);
 		}
-		withExtInfo.getEntity().setExtInfo(JpaModelUtil.extInfoToBytes(extInfo));
+		withExtInfo.getEntityMarkDirty().setExtInfo(JpaModelUtil.extInfoToBytes(extInfo));
 	}
 	
 	/**

@@ -20,7 +20,7 @@ public class Xid extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entitie
 	
 	@Override
 	public void setDomain(String value){
-		getEntity().setDomain(value);
+		getEntityMarkDirty().setDomain(value);
 	}
 	
 	@Override
@@ -30,7 +30,7 @@ public class Xid extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entitie
 	
 	@Override
 	public void setDomainId(String value){
-		getEntity().setDomainId(value);
+		getEntityMarkDirty().setDomainId(value);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -53,8 +53,8 @@ public class Xid extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entitie
 			Identifiable identifiable = ((Identifiable) object);
 			Optional<String> type = getStoreToStringType(object);
 			if (type.isPresent()) {
-				getEntity().setObject(identifiable.getId());
-				getEntity().setType(type.get());
+				getEntityMarkDirty().setObject(identifiable.getId());
+				getEntityMarkDirty().setType(type.get());
 			}
 		} else {
 			throw new IllegalStateException("Object must be an Identifiable");
@@ -79,7 +79,7 @@ public class Xid extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entitie
 	
 	@Override
 	public void setQuality(XidQuality value){
-		getEntity().setQuality(value);
+		getEntityMarkDirty().setQuality(value);
 	}
 	
 	@Override

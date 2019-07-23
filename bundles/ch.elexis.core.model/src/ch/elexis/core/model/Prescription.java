@@ -32,9 +32,9 @@ public class Prescription
 	@Override
 	public void setPatient(IPatient value){
 		if (value != null) {
-			getEntity().setPatient(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
+			getEntityMarkDirty().setPatient(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
 		} else {
-			getEntity().setPatient(null);
+			getEntityMarkDirty().setPatient(null);
 		}
 	}
 	
@@ -47,9 +47,10 @@ public class Prescription
 	@Override
 	public void setPrescriptor(IContact value){
 		if (value != null) {
-			getEntity().setPrescriptor(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
+			getEntityMarkDirty()
+				.setPrescriptor(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
 		} else {
-			getEntity().setPrescriptor(null);
+			getEntityMarkDirty().setPrescriptor(null);
 		}
 	}
 	
@@ -63,9 +64,9 @@ public class Prescription
 	public void setArticle(IArticle article){
 		if (article != null) {
 			Optional<String> storeToString = ModelUtil.getStoreToString(article);
-			getEntity().setArtikel(storeToString.orElse(null));
+			getEntityMarkDirty().setArtikel(storeToString.orElse(null));
 		} else {
-			getEntity().setArtikel(null);
+			getEntityMarkDirty().setArtikel(null);
 		}
 	}
 	
@@ -76,7 +77,7 @@ public class Prescription
 	
 	@Override
 	public void setDateFrom(LocalDateTime date){
-		getEntity().setDateFrom(date);
+		getEntityMarkDirty().setDateFrom(date);
 	}
 	
 	@Override
@@ -86,7 +87,7 @@ public class Prescription
 	
 	@Override
 	public void setDateTo(LocalDateTime value){
-		getEntity().setDateUntil(value);
+		getEntityMarkDirty().setDateUntil(value);
 	}
 	
 	@Override
@@ -96,7 +97,7 @@ public class Prescription
 	
 	@Override
 	public void setDosageInstruction(String dosageInstruction){
-		getEntity().setDosis(dosageInstruction);
+		getEntityMarkDirty().setDosis(dosageInstruction);
 	}
 	
 	@Override
@@ -106,7 +107,7 @@ public class Prescription
 	
 	@Override
 	public void setRemark(String value){
-		getEntity().setBemerkung(value);
+		getEntityMarkDirty().setBemerkung(value);
 	}
 	
 	@Override
@@ -126,7 +127,7 @@ public class Prescription
 	
 	@Override
 	public void setEntryType(EntryType value){
-		getEntity().setEntryType(value);
+		getEntityMarkDirty().setEntryType(value);
 	}
 	
 	@Override
@@ -146,7 +147,7 @@ public class Prescription
 	
 	@Override
 	public void setSortOrder(int value){
-		getEntity().setSortorder(value);
+		getEntityMarkDirty().setSortorder(value);
 	}
 	
 	@Override
@@ -171,7 +172,7 @@ public class Prescription
 	
 	@Override
 	public void setRecipe(IRecipe value){
-		getEntity().setRezeptID(value.getId());
+		getEntityMarkDirty().setRezeptID(value.getId());
 	}
 	
 	@Override

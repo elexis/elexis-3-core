@@ -22,11 +22,11 @@ public class LabOrder extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.en
 	@Override
 	public void setResult(ILabResult value){
 		if (value instanceof AbstractIdModelAdapter) {
-			getEntity().setResult(
+			getEntityMarkDirty().setResult(
 				(ch.elexis.core.jpa.entities.LabResult) ((AbstractIdModelAdapter<?>) value)
 					.getEntity());
 		} else if (value == null) {
-			getEntity().setResult(null);
+			getEntityMarkDirty().setResult(null);
 		}
 	}
 	
@@ -38,11 +38,11 @@ public class LabOrder extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.en
 	@Override
 	public void setItem(ILabItem value){
 		if (value instanceof AbstractIdModelAdapter) {
-			getEntity().setItem(
+			getEntityMarkDirty().setItem(
 				(ch.elexis.core.jpa.entities.LabItem) ((AbstractIdModelAdapter<?>) value)
 					.getEntity());
 		} else if (value == null) {
-			getEntity().setItem(null);
+			getEntityMarkDirty().setItem(null);
 		}
 	}
 	
@@ -54,9 +54,10 @@ public class LabOrder extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.en
 	@Override
 	public void setPatient(IPatient value){
 		if (value instanceof AbstractIdModelAdapter) {
-			getEntity().setPatient((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
+			getEntityMarkDirty()
+				.setPatient((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
 		} else if (value == null) {
-			getEntity().setPatient(null);
+			getEntityMarkDirty().setPatient(null);
 		}
 	}
 	
@@ -67,7 +68,7 @@ public class LabOrder extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.en
 	
 	@Override
 	public void setTimeStamp(LocalDateTime value){
-		getEntity().setTime(value);
+		getEntityMarkDirty().setTime(value);
 	}
 	
 	@Override
@@ -77,7 +78,7 @@ public class LabOrder extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.en
 	
 	@Override
 	public void setObservationTime(LocalDateTime value){
-		getEntity().setObservationTime(value);
+		getEntityMarkDirty().setObservationTime(value);
 	}
 	
 	@Override
@@ -88,9 +89,9 @@ public class LabOrder extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.en
 	@Override
 	public void setUser(IContact value){
 		if (value instanceof AbstractIdModelAdapter<?>) {
-			getEntity().setUser((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
+			getEntityMarkDirty().setUser((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
 		} else if (value == null) {
-			getEntity().setUser(null);
+			getEntityMarkDirty().setUser(null);
 		}
 	}
 	
@@ -102,9 +103,10 @@ public class LabOrder extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.en
 	@Override
 	public void setMandator(IMandator value){
 		if (value instanceof AbstractIdModelAdapter<?>) {
-			getEntity().setMandator((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
+			getEntityMarkDirty()
+				.setMandator((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
 		} else if (value == null) {
-			getEntity().setMandator(null);
+			getEntityMarkDirty().setMandator(null);
 		}
 	}
 	
@@ -115,7 +117,7 @@ public class LabOrder extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.en
 	
 	@Override
 	public void setOrderId(String value){
-		getEntity().setOrderid(value);
+		getEntityMarkDirty().setOrderid(value);
 	}
 	
 	@Override
@@ -125,7 +127,7 @@ public class LabOrder extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.en
 	
 	@Override
 	public void setState(LabOrderState value){
-		getEntity().setState(value);
+		getEntityMarkDirty().setState(value);
 	}
 	
 	@Override

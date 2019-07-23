@@ -28,10 +28,11 @@ public class RelatedContact extends AbstractIdDeleteModelAdapter<KontaktAdressJo
 	public void setMyContact(IContact value) {
 		if (value != null) {
 			if (value instanceof AbstractIdModelAdapter) {
-				getEntity().setMyKontakt((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
+				getEntityMarkDirty()
+					.setMyKontakt((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
 			}
 		} else {
-			getEntity().setMyKontakt(null);
+			getEntityMarkDirty().setMyKontakt(null);
 		}
 	}
 
@@ -47,10 +48,11 @@ public class RelatedContact extends AbstractIdDeleteModelAdapter<KontaktAdressJo
 	public void setOtherContact(IContact value) {
 		if (value != null) {
 			if (value instanceof AbstractIdModelAdapter) {
-				getEntity().setOtherKontakt((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
+				getEntityMarkDirty()
+					.setOtherKontakt((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
 			}
 		} else {
-			getEntity().setOtherKontakt(null);
+			getEntityMarkDirty().setOtherKontakt(null);
 		}
 	}
 
@@ -61,7 +63,7 @@ public class RelatedContact extends AbstractIdDeleteModelAdapter<KontaktAdressJo
 
 	@Override
 	public void setRelationshipDescription(String value) {
-		getEntity().setBezug(value);
+		getEntityMarkDirty().setBezug(value);
 	}
 
 	@Override
@@ -80,7 +82,7 @@ public class RelatedContact extends AbstractIdDeleteModelAdapter<KontaktAdressJo
 
 	@Override
 	public void setMyType(RelationshipType value) {
-		getEntity().setMyRType((value != null) ? value.getValue() : null);
+		getEntityMarkDirty().setMyRType((value != null) ? value.getValue() : null);
 	}
 
 	@Override
@@ -99,7 +101,7 @@ public class RelatedContact extends AbstractIdDeleteModelAdapter<KontaktAdressJo
 
 	@Override
 	public void setOtherType(RelationshipType value) {
-		getEntity().setOtherRType((value != null) ? value.getValue() : null);
+		getEntityMarkDirty().setOtherRType((value != null) ? value.getValue() : null);
 	}
 
 }

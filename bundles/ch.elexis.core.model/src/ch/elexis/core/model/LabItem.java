@@ -25,7 +25,7 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public void setTyp(LabItemTyp value){
-		getEntity().setTyp(value);
+		getEntityMarkDirty().setTyp(value);
 	}
 	
 	@Override
@@ -35,7 +35,7 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public void setReferenceMale(String value){
-		getEntity().setReferenceMale(value);
+		getEntityMarkDirty().setReferenceMale(value);
 	}
 	
 	@Override
@@ -45,7 +45,7 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public void setReferenceFemale(String value){
-		getEntity().setReferenceFemale(value);
+		getEntityMarkDirty().setReferenceFemale(value);
 	}
 	
 	@Override
@@ -55,7 +55,7 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public void setGroup(String value){
-		getEntity().setGroup(value);
+		getEntityMarkDirty().setGroup(value);
 	}
 	
 	@Override
@@ -65,7 +65,7 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public void setPriority(String value){
-		getEntity().setPriority(value);
+		getEntityMarkDirty().setPriority(value);
 	}
 	
 	@Override
@@ -75,7 +75,7 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public void setCode(String value){
-		getEntity().setCode(value);
+		getEntityMarkDirty().setCode(value);
 	}
 	
 	@Override
@@ -85,7 +85,7 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public void setUnit(String value){
-		getEntity().setUnit(value);
+		getEntityMarkDirty().setUnit(value);
 	}
 	
 	@Override
@@ -95,7 +95,7 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public void setName(String value){
-		getEntity().setName(value);
+		getEntityMarkDirty().setName(value);
 	}
 	
 	@Override
@@ -105,7 +105,7 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public void setDigits(int value){
-		getEntity().setDigits(value);
+		getEntityMarkDirty().setDigits(value);
 	}
 	
 	@Override
@@ -115,7 +115,7 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public void setVisible(boolean value){
-		getEntity().setVisible(value);
+		getEntityMarkDirty().setVisible(value);
 	}
 	
 	@Override
@@ -136,7 +136,7 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public void setFormula(String value){
-		getEntity().setFormula(value);
+		getEntityMarkDirty().setFormula(value);
 	}
 	
 	@Override
@@ -146,7 +146,7 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public void setLoincCode(String value){
-		getEntity().setLoinccode(value);
+		getEntityMarkDirty().setLoinccode(value);
 	}
 	
 	@Override
@@ -156,7 +156,7 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public void setBillingCode(String value){
-		getEntity().setBillingCode(value);
+		getEntityMarkDirty().setBillingCode(value);
 	}
 	
 	@Override
@@ -166,7 +166,7 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	@Override
 	public void setExport(String value){
-		getEntity().setExport(value);
+		getEntityMarkDirty().setExport(value);
 	}
 	
 	@Override
@@ -184,7 +184,7 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 			mappings.add(
 				(ch.elexis.core.jpa.entities.LabMapping) ((AbstractIdDeleteModelAdapter<?>) mapping)
 					.getEntity());
-			getEntity().setMappings(mappings);
+			getEntityMarkDirty().setMappings(mappings);
 		}
 		return mapping;
 	}
@@ -197,7 +197,7 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 			mappings.remove(
 				(ch.elexis.core.jpa.entities.LabMapping) ((AbstractIdDeleteModelAdapter<?>) mapping)
 					.getEntity());
-			getEntity().setMappings(mappings);
+			getEntityMarkDirty().setMappings(mappings);
 		}
 		
 	}

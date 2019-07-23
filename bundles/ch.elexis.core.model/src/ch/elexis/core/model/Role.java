@@ -20,7 +20,7 @@ public class Role extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	
 	@Override
 	public void setId(String id){
-		getEntity().setId(id);
+		getEntityMarkDirty().setId(id);
 	}
 	
 	@Override
@@ -30,7 +30,7 @@ public class Role extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	
 	@Override
 	public void setSystemRole(boolean value){
-		getEntity().setSystemRole(value);
+		getEntityMarkDirty().setSystemRole(value);
 	}
 
 	@Override

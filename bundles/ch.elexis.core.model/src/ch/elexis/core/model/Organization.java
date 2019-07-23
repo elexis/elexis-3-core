@@ -15,7 +15,7 @@ public class Organization extends Contact implements IOrganization {
 
 	@Override
 	public void setInsuranceXmlName(String value){
-		getEntity().setAllergies(value);
+		getEntityMarkDirty().setAllergies(value);
 	}
 
 	@Override
@@ -25,6 +25,6 @@ public class Organization extends Contact implements IOrganization {
 
 	@Override
 	public void setInsuranceLawCode(String value){
-		getEntity().setTitelSuffix(value);
+		getEntityMarkDirty().setTitelSuffix(value);
 	}
 }

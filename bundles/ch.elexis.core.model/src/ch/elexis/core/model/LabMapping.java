@@ -18,7 +18,7 @@ public class LabMapping extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.
 	
 	@Override
 	public void setItemName(String value){
-		getEntity().setItemname(value);
+		getEntityMarkDirty().setItemname(value);
 	}
 	
 	@Override
@@ -29,11 +29,11 @@ public class LabMapping extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.
 	@Override
 	public void setItem(ILabItem value){
 		if (value instanceof AbstractIdModelAdapter) {
-			getEntity().setLabItem(
+			getEntityMarkDirty().setLabItem(
 				(ch.elexis.core.jpa.entities.LabItem) ((AbstractIdModelAdapter<?>) value)
 					.getEntity());
 		} else if (value == null) {
-			getEntity().setLabItem(null);
+			getEntityMarkDirty().setLabItem(null);
 		}
 	}
 	
@@ -45,11 +45,11 @@ public class LabMapping extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.
 	@Override
 	public void setOrigin(IContact value){
 		if (value instanceof AbstractIdModelAdapter) {
-			getEntity()
+			getEntityMarkDirty()
 				.setOrigin((ch.elexis.core.jpa.entities.Kontakt) ((AbstractIdModelAdapter<?>) value)
 					.getEntity());
 		} else if (value == null) {
-			getEntity().setOrigin(null);
+			getEntityMarkDirty().setOrigin(null);
 		}
 	}
 	
@@ -60,6 +60,6 @@ public class LabMapping extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.
 	
 	@Override
 	public void setCharge(boolean value){
-		getEntity().setCharge(value);
+		getEntityMarkDirty().setCharge(value);
 	}
 }

@@ -42,32 +42,33 @@ public class Stock extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 	
 	@Override
 	public void setCode(String value){
-		getEntity().setCode(value);
+		getEntityMarkDirty().setCode(value);
 	}
 	
 	@Override
 	public void setDriverUuid(String value){
-		getEntity().setDriverUuid(value);
+		getEntityMarkDirty().setDriverUuid(value);
 	}
 	
 	@Override
 	public void setDriverConfig(String value){
-		getEntity().setDriverConfig(value);
+		getEntityMarkDirty().setDriverConfig(value);
 	}
 	
 	@Override
 	public void setPriority(int value){
-		getEntity().setPriority(value);
+		getEntityMarkDirty().setPriority(value);
 	}
 	
 	@Override
 	public void setOwner(IMandator value){
 		if(value != null) {
 			if(value instanceof AbstractIdModelAdapter) {
-				getEntity().setOwner((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
+				getEntityMarkDirty()
+					.setOwner((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
 			}
 		} else {
-			getEntity().setOwner(null);
+			getEntityMarkDirty().setOwner(null);
 		}
 	}
 }

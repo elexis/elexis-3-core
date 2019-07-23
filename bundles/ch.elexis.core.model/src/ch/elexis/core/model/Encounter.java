@@ -35,7 +35,7 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 	@Override
 	public void setTimeStamp(LocalDateTime value){
 		// TODO looses information
-		getEntity().setDatum(value.toLocalDate());
+		getEntityMarkDirty().setDatum(value.toLocalDate());
 	}
 
 	@Override
@@ -57,13 +57,14 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 		if (value != null) {
 			// remove from existing
 			if (getCoverage() != null) {
-				Fall oldEntity = ((AbstractIdModelAdapter<Fall>) getCoverage()).getEntity();
+				Fall oldEntity =
+					((AbstractIdModelAdapter<Fall>) getCoverage()).getEntityMarkDirty();
 				oldEntity.getConsultations().remove(getEntity());
 				addChanged(getCoverage());
 			}
-			Fall valueEntity = ((AbstractIdModelAdapter<Fall>) value).getEntity();
+			Fall valueEntity = ((AbstractIdModelAdapter<Fall>) value).getEntityMarkDirty();
 			// set both sides
-			getEntity().setFall(valueEntity);
+			getEntityMarkDirty().setFall(valueEntity);
 			valueEntity.getConsultations().add(getEntity());
 			addChanged(value);
 		}
@@ -78,9 +79,9 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 	@Override
 	public void setMandator(IMandator value){
 		if (value != null) {
-			getEntity().setMandant(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
+			getEntityMarkDirty().setMandant(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
 		} else {
-			getEntity().setMandant(null);
+			getEntityMarkDirty().setMandant(null);
 		}
 	}
 
@@ -103,7 +104,7 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 
 	@Override
 	public void setDate(LocalDate value){
-		getEntity().setDatum(value);
+		getEntityMarkDirty().setDatum(value);
 	}
 
 	@Override
@@ -113,7 +114,7 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 
 	@Override
 	public void setVersionedEntry(VersionedResource value){
-		getEntity().setEintrag(value);
+		getEntityMarkDirty().setEintrag(value);
 	}
 	
 	@Override
@@ -157,10 +158,10 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 	@Override
 	public void setInvoice(IInvoice value){
 		if (value != null) {
-			getEntity().setInvoice(
+			getEntityMarkDirty().setInvoice(
 				((AbstractIdModelAdapter<ch.elexis.core.jpa.entities.Invoice>) value).getEntity());
 		} else {
-			getEntity().setInvoice(null);
+			getEntityMarkDirty().setInvoice(null);
 		}
 	}
 	
@@ -171,7 +172,7 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 	
 	@Override
 	public void setBillable(boolean value){
-		getEntity().setBillable(value);
+		getEntityMarkDirty().setBillable(value);
 	}
 	
 	@Override

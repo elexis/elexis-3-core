@@ -22,7 +22,7 @@ public class Image extends AbstractIdDeleteModelAdapter<DbImage> implements Iden
 
 	@Override
 	public void setDate(LocalDate value) {
-		getEntity().setDate(value);
+		getEntityMarkDirty().setDate(value);
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class Image extends AbstractIdDeleteModelAdapter<DbImage> implements Iden
 
 	@Override
 	public void setPrefix(String value) {
-		getEntity().setPrefix(value);
+		getEntityMarkDirty().setPrefix(value);
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class Image extends AbstractIdDeleteModelAdapter<DbImage> implements Iden
 
 	@Override
 	public void setTitle(String value) {
-		getEntity().setTitle(value);
+		getEntityMarkDirty().setTitle(value);
 	}
 
 	@Override
@@ -52,12 +52,12 @@ public class Image extends AbstractIdDeleteModelAdapter<DbImage> implements Iden
 
 	@Override
 	public void setImage(byte[] value) {
-		getEntity().setImage(value);
+		getEntityMarkDirty().setImage(value);
 	}
 
 	@Override
 	public void setId(String id) {
-		getEntity().setId(id);
+		getEntityMarkDirty().setId(id);
 	}
 
 	@Override

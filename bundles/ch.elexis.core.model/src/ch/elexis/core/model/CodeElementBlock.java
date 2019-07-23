@@ -38,7 +38,7 @@ public class CodeElementBlock extends AbstractIdDeleteModelAdapter<Leistungsbloc
 	
 	@Override
 	public void setCode(String value){
-		getEntity().setName(value);
+		getEntityMarkDirty().setName(value);
 	}
 	
 	@Override
@@ -48,7 +48,7 @@ public class CodeElementBlock extends AbstractIdDeleteModelAdapter<Leistungsbloc
 	
 	@Override
 	public void setText(String value){
-		getEntity().setName(value);
+		getEntityMarkDirty().setName(value);
 	}
 	
 	@Override
@@ -123,9 +123,10 @@ public class CodeElementBlock extends AbstractIdDeleteModelAdapter<Leistungsbloc
 	@Override
 	public void setMandator(IMandator value){
 		if (value instanceof AbstractIdModelAdapter) {
-			getEntity().setMandator((((AbstractIdModelAdapter<Kontakt>) value).getEntity()));
+			getEntityMarkDirty()
+				.setMandator((((AbstractIdModelAdapter<Kontakt>) value).getEntity()));
 		} else if (value == null) {
-			getEntity().setMandator(null);
+			getEntityMarkDirty().setMandator(null);
 		}
 	}
 	
@@ -136,7 +137,7 @@ public class CodeElementBlock extends AbstractIdDeleteModelAdapter<Leistungsbloc
 	
 	@Override
 	public void setMacro(String value){
-		getEntity().setMacro(value);
+		getEntityMarkDirty().setMacro(value);
 	}
 	
 	@Override
@@ -279,7 +280,7 @@ public class CodeElementBlock extends AbstractIdDeleteModelAdapter<Leistungsbloc
 				}
 				sb.append(service.storeToString(element));
 			}
-			getEntity().setServices(sb.toString());
+			getEntityMarkDirty().setServices(sb.toString());
 		}
 	}
 	

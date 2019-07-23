@@ -26,7 +26,7 @@ public class Config extends AbstractIdModelAdapter<ch.elexis.core.jpa.entities.C
 	
 	@Override
 	public void setKey(String value){
-		getEntity().setParam(value);
+		getEntityMarkDirty().setParam(value);
 	}
 	
 	@Override
@@ -36,6 +36,6 @@ public class Config extends AbstractIdModelAdapter<ch.elexis.core.jpa.entities.C
 	
 	@Override
 	public void setValue(String value){
-		getEntity().setWert(value);
+		getEntityMarkDirty().setWert(value);
 	}
 }

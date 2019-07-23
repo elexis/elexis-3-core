@@ -24,7 +24,7 @@ public class Person extends Contact implements IPerson {
 	
 	@Override
 	public void setGender(Gender value){
-		getEntity().setGender(value);
+		getEntityMarkDirty().setGender(value);
 	}
 	
 	@Override
@@ -34,7 +34,7 @@ public class Person extends Contact implements IPerson {
 	
 	@Override
 	public void setTitel(String value){
-		getEntity().setTitel(value);
+		getEntityMarkDirty().setTitel(value);
 	}
 	
 	@Override
@@ -44,7 +44,7 @@ public class Person extends Contact implements IPerson {
 	
 	@Override
 	public void setTitelSuffix(String value){
-		getEntity().setTitelSuffix(value);
+		getEntityMarkDirty().setTitelSuffix(value);
 	}
 	
 	@Override
@@ -62,12 +62,12 @@ public class Person extends Contact implements IPerson {
 	
 	@Override
 	public void setDateOfBirth(LocalDateTime value){
-		getEntity().setDob(value.toLocalDate());
+		getEntityMarkDirty().setDob(value.toLocalDate());
 	}
 	
 	@Override
 	public void setFirstName(String value){
-		getEntity().setDescription2(value);
+		getEntityMarkDirty().setDescription2(value);
 	}
 	
 	@Override
@@ -77,7 +77,7 @@ public class Person extends Contact implements IPerson {
 	
 	@Override
 	public void setLastName(String value){
-		getEntity().setDescription1(value);
+		getEntityMarkDirty().setDescription1(value);
 	}
 	
 	@Override

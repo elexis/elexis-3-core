@@ -29,7 +29,7 @@ public class AccountTransaction
 	public void setInvoice(IInvoice value){
 		if (value instanceof AbstractIdModelAdapter) {
 			// TODO modify patient if opposite reference is available
-			getEntity().setInvoice(
+			getEntityMarkDirty().setInvoice(
 				((AbstractIdModelAdapter<ch.elexis.core.jpa.entities.Invoice>) value).getEntity());
 		}
 	}
@@ -46,10 +46,10 @@ public class AccountTransaction
 	@Override
 	public void setPayment(IPayment value){
 		if (value instanceof AbstractIdModelAdapter) {
-			getEntity().setZahlung(
+			getEntityMarkDirty().setZahlung(
 				((AbstractIdModelAdapter<ch.elexis.core.jpa.entities.Zahlung>) value).getEntity());
 		} else if (value == null) {
-			getEntity().setZahlung(null);
+			getEntityMarkDirty().setZahlung(null);
 		}
 	}
 	
@@ -66,7 +66,7 @@ public class AccountTransaction
 	public void setPatient(IPatient value){
 		if (value instanceof AbstractIdModelAdapter) {
 			// TODO modify patient if opposite reference is available
-			getEntity().setPatient(
+			getEntityMarkDirty().setPatient(
 				((AbstractIdModelAdapter<ch.elexis.core.jpa.entities.Kontakt>) value).getEntity());
 		}
 	}
@@ -80,9 +80,9 @@ public class AccountTransaction
 	@Override
 	public void setAmount(Money value){
 		if (value != null) {
-			getEntity().setAmount(value.getCentsAsString());
+			getEntityMarkDirty().setAmount(value.getCentsAsString());
 		} else {
-			getEntity().setAmount(null);
+			getEntityMarkDirty().setAmount(null);
 		}
 	}
 	
@@ -93,7 +93,7 @@ public class AccountTransaction
 	
 	@Override
 	public void setRemark(String value){
-		getEntity().setRemark(value);
+		getEntityMarkDirty().setRemark(value);
 	}
 	
 	@Override
@@ -111,7 +111,7 @@ public class AccountTransaction
 	
 	@Override
 	public void setAccount(IAccount value){
-		getEntity().setAccount(Integer.toString(value.getNumeric()));
+		getEntityMarkDirty().setAccount(Integer.toString(value.getNumeric()));
 	}
 	
 	@Override
@@ -121,6 +121,6 @@ public class AccountTransaction
 	
 	@Override
 	public void setDate(LocalDate value){
-		getEntity().setDate(value);
+		getEntityMarkDirty().setDate(value);
 	}
 }

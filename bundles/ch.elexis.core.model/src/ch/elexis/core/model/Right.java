@@ -12,7 +12,7 @@ public class Right extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 	
 	@Override
 	public void setId(String id){
-		getEntity().setId(id);
+		getEntityMarkDirty().setId(id);
 	}
 	
 	@Override
@@ -22,7 +22,7 @@ public class Right extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 	
 	@Override
 	public void setName(String value){
-		getEntity().setName(value);
+		getEntityMarkDirty().setName(value);
 	}
 	
 	@Override
@@ -32,7 +32,7 @@ public class Right extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 	
 	@Override
 	public void setLocalizedName(String value){
-		getEntity().setI18nName(value);
+		getEntityMarkDirty().setI18nName(value);
 	}
 	
 	@Override
@@ -47,11 +47,11 @@ public class Right extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 	@Override
 	public void setParent(IRight value){
 		if (value instanceof AbstractIdDeleteModelAdapter) {
-			getEntity().setParent(
+			getEntityMarkDirty().setParent(
 				(ch.elexis.core.jpa.entities.Right) ((AbstractIdDeleteModelAdapter<?>) value)
 					.getEntity());
 		} else if (value == null) {
-			getEntity().setParent(null);
+			getEntityMarkDirty().setParent(null);
 		}
 	}
 	

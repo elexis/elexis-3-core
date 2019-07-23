@@ -33,7 +33,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public void setMandator(boolean value) {
-		getEntity().setMandator(value);
+		getEntityMarkDirty().setMandator(value);
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public void setUser(boolean value) {
-		getEntity().setUser(value);
+		getEntityMarkDirty().setUser(value);
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public void setPerson(boolean value) {
-		getEntity().setPerson(value);
+		getEntityMarkDirty().setPerson(value);
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public void setPatient(boolean value) {
-		getEntity().setPatient(value);
+		getEntityMarkDirty().setPatient(value);
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public void setLaboratory(boolean value) {
-		getEntity().setLaboratory(value);
+		getEntityMarkDirty().setLaboratory(value);
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public void setOrganization(boolean value) {
-		getEntity().setOrganisation(value);
+		getEntityMarkDirty().setOrganisation(value);
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public void setDescription1(String value) {
-		getEntity().setDescription1(value);
+		getEntityMarkDirty().setDescription1(value);
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public void setDescription2(String value) {
-		getEntity().setDescription2(value);
+		getEntityMarkDirty().setDescription2(value);
 	}
 
 	@Override
@@ -113,7 +113,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public void setDescription3(String value) {
-		getEntity().setDescription3(value);
+		getEntityMarkDirty().setDescription3(value);
 	}
 
 	@Override
@@ -123,7 +123,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public void setCode(String value) {
-		getEntity().setCode(value);
+		getEntityMarkDirty().setCode(value);
 	}
 
 	@Override
@@ -133,7 +133,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public void setCountry(Country value) {
-		getEntity().setCountry(value);
+		getEntityMarkDirty().setCountry(value);
 	}
 
 	@Override
@@ -143,7 +143,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public void setZip(String value) {
-		getEntity().setZip(value);
+		getEntityMarkDirty().setZip(value);
 	}
 
 	@Override
@@ -153,7 +153,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public void setCity(String value) {
-		getEntity().setCity(value);
+		getEntityMarkDirty().setCity(value);
 	}
 
 	@Override
@@ -163,7 +163,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public void setStreet(String value) {
-		getEntity().setStreet(value);
+		getEntityMarkDirty().setStreet(value);
 	}
 
 	@Override
@@ -173,7 +173,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public void setPhone1(String value) {
-		getEntity().setPhone1(value);
+		getEntityMarkDirty().setPhone1(value);
 	}
 
 	@Override
@@ -183,7 +183,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public void setPhone2(String value) {
-		getEntity().setPhone2(value);
+		getEntityMarkDirty().setPhone2(value);
 	}
 
 	@Override
@@ -193,7 +193,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public void setFax(String value) {
-		getEntity().setFax(value);
+		getEntityMarkDirty().setFax(value);
 	}
 
 	@Override
@@ -203,7 +203,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public void setEmail(String value) {
-		getEntity().setEmail(value);
+		getEntityMarkDirty().setEmail(value);
 	}
 
 	@Override
@@ -213,7 +213,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public void setWebsite(String value) {
-		getEntity().setWebsite(value);
+		getEntityMarkDirty().setWebsite(value);
 	}
 
 	@Override
@@ -223,7 +223,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public void setMobile(String value) {
-		getEntity().setMobile(value);
+		getEntityMarkDirty().setMobile(value);
 	}
 
 	@Override
@@ -233,7 +233,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public void setComment(String value) {
-		getEntity().setComment(value);
+		getEntityMarkDirty().setComment(value);
 	}
 
 	@Override
@@ -243,7 +243,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public void setGroup(String value) {
-		getEntity().setGruppe(value);
+		getEntityMarkDirty().setGruppe(value);
 	}
 
 	@Override
@@ -281,7 +281,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 		address.setContact(this);
 		@SuppressWarnings("unchecked")
 		ZusatzAdresse addresse = ((AbstractIdModelAdapter<ZusatzAdresse>) address).getEntity();
-		getEntity().getAddresses().put(address.getId(), addresse);
+		getEntityMarkDirty().getAddresses().put(address.getId(), addresse);
 		return address;
 	}
 
@@ -295,7 +295,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public void setPostalAddress(String value) {
-		getEntity().setAnschrift(value);
+		getEntityMarkDirty().setAnschrift(value);
 	}
 
 	@Override
@@ -337,7 +337,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 		relatedContact.setMyContact(this);
 		@SuppressWarnings("unchecked")
 		KontaktAdressJoint kaj = ((AbstractIdModelAdapter<KontaktAdressJoint>) relatedContact).getEntity();
-		getEntity().getRelatedContacts().put(kaj.getId(), kaj);
+		getEntityMarkDirty().getRelatedContacts().put(kaj.getId(), kaj);
 		return relatedContact;
 	}
 }

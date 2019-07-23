@@ -28,9 +28,9 @@ public class Recipe extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.enti
 	@Override
 	public void setPatient(IPatient value){
 		if (value != null) {
-			getEntity().setPatient(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
+			getEntityMarkDirty().setPatient(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
 		} else {
-			getEntity().setPatient(null);
+			getEntityMarkDirty().setPatient(null);
 		}
 	}
 	
@@ -42,9 +42,9 @@ public class Recipe extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.enti
 	@Override
 	public void setMandator(IMandator value){
 		if (value != null) {
-			getEntity().setMandant(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
+			getEntityMarkDirty().setMandant(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
 		} else {
-			getEntity().setMandant(null);
+			getEntityMarkDirty().setMandant(null);
 		}
 	}
 	
@@ -55,7 +55,7 @@ public class Recipe extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.enti
 	
 	@Override
 	public void setDate(LocalDateTime value){
-		getEntity().setDatum(value.toLocalDate());
+		getEntityMarkDirty().setDatum(value.toLocalDate());
 	}
 	
 	@Override
@@ -79,9 +79,9 @@ public class Recipe extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.enti
 	@Override
 	public void setDocument(IDocumentLetter value){
 		if (value != null) {
-			getEntity().setBrief(((AbstractIdModelAdapter<Brief>) value).getEntity());
+			getEntityMarkDirty().setBrief(((AbstractIdModelAdapter<Brief>) value).getEntity());
 		} else {
-			getEntity().setBrief(null);
+			getEntityMarkDirty().setBrief(null);
 		}
 	}
 }

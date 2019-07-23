@@ -27,7 +27,7 @@ public class FreeTextDiagnosis
 	
 	@Override
 	public void setText(String value){
-		getEntity().setText(value);
+		getEntityMarkDirty().setText(value);
 	}
 	
 	@Override

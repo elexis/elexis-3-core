@@ -39,7 +39,7 @@ public class CustomService
 	
 	@Override
 	public void setPrice(Money value){
-		getEntity().setSalePrice(value.getCentsAsString());
+		getEntityMarkDirty().setSalePrice(value.getCentsAsString());
 	}
 	
 	@Override
@@ -55,7 +55,7 @@ public class CustomService
 	
 	@Override
 	public void setNetPrice(Money value){
-		getEntity().setBasePrice(value.getCentsAsString());
+		getEntityMarkDirty().setBasePrice(value.getCentsAsString());
 	}
 	
 	@Override
@@ -94,7 +94,7 @@ public class CustomService
 	
 	@Override
 	public void setCode(String value){
-		getEntity().setCode(value);
+		getEntityMarkDirty().setCode(value);
 	}
 	
 	@Override
@@ -104,7 +104,7 @@ public class CustomService
 	
 	@Override
 	public void setText(String value){
-		getEntity().setDescription(value);
+		getEntityMarkDirty().setDescription(value);
 	}
 	
 	@Override

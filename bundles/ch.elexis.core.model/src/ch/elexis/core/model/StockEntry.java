@@ -30,8 +30,8 @@ public class StockEntry extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.
 			() -> new IllegalStateException("Could not get store to string for [" + article + "]"));
 		String[] split = storeToString.split(IStoreToStringContribution.DOUBLECOLON);
 		if (split != null && split.length == 2) {
-			getEntity().setArticleType(split[0]);
-			getEntity().setArticleId(split[1]);
+			getEntityMarkDirty().setArticleType(split[0]);
+			getEntityMarkDirty().setArticleId(split[1]);
 		} else {
 			throw new IllegalStateException("Could not set article [" + storeToString + "]");
 		}
@@ -44,7 +44,7 @@ public class StockEntry extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.
 	
 	@Override
 	public void setMinimumStock(int minStock){
-		getEntity().setMinimumStock(minStock);
+		getEntityMarkDirty().setMinimumStock(minStock);
 	}
 	
 	@Override
@@ -54,7 +54,7 @@ public class StockEntry extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.
 	
 	@Override
 	public void setCurrentStock(int currentStock){
-		getEntity().setCurrentStock(currentStock);
+		getEntityMarkDirty().setCurrentStock(currentStock);
 	}
 	
 	@Override
@@ -64,7 +64,7 @@ public class StockEntry extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.
 	
 	@Override
 	public void setMaximumStock(int maxStock){
-		getEntity().setMaximumStock(maxStock);
+		getEntityMarkDirty().setMaximumStock(maxStock);
 	}
 	
 	@Override
@@ -74,7 +74,7 @@ public class StockEntry extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.
 	
 	@Override
 	public void setFractionUnits(int fractionUnits){
-		getEntity().setFractionUnits(fractionUnits);
+		getEntityMarkDirty().setFractionUnits(fractionUnits);
 	}
 	
 	@Override
@@ -88,10 +88,10 @@ public class StockEntry extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.
 	@Override
 	public void setProvider(IContact provider){
 		if (provider instanceof AbstractIdDeleteModelAdapter) {
-			getEntity()
+			getEntityMarkDirty()
 				.setProvider((Kontakt) ((AbstractIdDeleteModelAdapter<?>) provider).getEntity());
 		} else if (provider == null) {
-			getEntity().setProvider(null);
+			getEntityMarkDirty().setProvider(null);
 		}
 	}
 	
@@ -106,11 +106,11 @@ public class StockEntry extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.
 	@Override
 	public void setStock(IStock stock){
 		if (stock instanceof AbstractIdModelAdapter) {
-			getEntity()
+			getEntityMarkDirty()
 				.setStock((ch.elexis.core.jpa.entities.Stock) ((AbstractIdModelAdapter<?>) stock)
 					.getEntity());
 		} else if (stock == null) {
-			getEntity().setStock(null);
+			getEntityMarkDirty().setStock(null);
 		}
 	}
 	
