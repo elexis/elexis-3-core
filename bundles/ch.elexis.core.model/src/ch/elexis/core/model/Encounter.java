@@ -132,7 +132,9 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 		addChanged(diagnosis);
 		@SuppressWarnings("unchecked")
 		Diagnosis diag = ((AbstractIdModelAdapter<Diagnosis>) diagnosis).getEntity();
-		getEntityMarkDirty().getDiagnoses().add(diag);
+		if (!getEntity().getDiagnoses().contains(diag)) {
+			getEntityMarkDirty().getDiagnoses().add(diag);
+		}
 	}
 	
 	@Override

@@ -344,7 +344,7 @@ public class ModelUtil {
 		if (storeToString.isPresent()) {
 			String[] parts = storeToString.get().split(IStoreToStringContribution.DOUBLECOLON);
 			INamedQuery<IDiagnosisReference> query = CoreModelServiceHolder.get()
-				.getNamedQuery(IDiagnosisReference.class, "code", "diagnosisClass");
+				.getNamedQuery(IDiagnosisReference.class, true, "code", "diagnosisClass");
 			List<IDiagnosisReference> existing = query.executeWithParameters(
 				query.getParameterMap("code", diagnosis.getCode(), "diagnosisClass", parts[0]));
 			if (!existing.isEmpty()) {
