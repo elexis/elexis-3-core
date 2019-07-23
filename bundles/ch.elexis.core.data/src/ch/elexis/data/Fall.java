@@ -273,7 +273,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	 */
 	public @Nullable Kontakt getCostBearer(){
 		String costBearerId = get(FLD_KOSTENTRAEGER);
-		if (costBearerId.length() > 0) {
+		if (costBearerId != null && costBearerId.length() > 0) {
 			Kontakt costBearer = Kontakt.load(costBearerId);
 			if (costBearer.isAvailable()) {
 				return costBearer;
