@@ -61,6 +61,7 @@ import ch.elexis.data.Query;
 public class Test_HL7_parser {
 	
 	private static Path workDir = null;
+	private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception{}
@@ -392,7 +393,6 @@ public class Test_HL7_parser {
 			System.out.println(String.format("Skipping test for language %s produced %s",
 				locale.getLanguage(), item.getGroup()));
 		}
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		assertEquals("2018-01-27 11:40:08", format.format(labResult.getAnalyseTime().getTime())); // 20180127114008
 		assertEquals("2018-01-24 17:42:00",
 			format.format(labResult.getObservationTime().getTime())); // 20180127114008
@@ -457,8 +457,10 @@ public class Test_HL7_parser {
 			default:
 				break;
 			}
-			assertEquals(1520430605000l, labResult.getAnalyseTime().getTimeAsLong());
-			assertEquals(1520316000000l, labResult.getObservationTime().getTimeAsLong());
+			assertEquals("2018-03-07 14:50:05",
+				format.format(labResult.getAnalyseTime().getTime())); // 1520430605000l
+			assertEquals("2018-03-06 07:00:00",
+				format.format(labResult.getObservationTime().getTime())); // 1520316000000l		
 		}
 		
 		assertTrue(spernExists);
