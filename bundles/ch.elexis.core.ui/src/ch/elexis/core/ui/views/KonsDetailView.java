@@ -39,7 +39,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.ISaveablePart2;
@@ -64,7 +63,6 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.IPersistentObject;
-import ch.elexis.core.model.ISticker;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -72,7 +70,6 @@ import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.data.UiMandant;
-import ch.elexis.core.ui.data.UiSticker;
 import ch.elexis.core.ui.dialogs.AssignStickerDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
@@ -89,6 +86,7 @@ import ch.elexis.core.ui.util.IKonsExtension;
 import ch.elexis.core.ui.util.IKonsMakro;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
+import ch.elexis.core.ui.views.controls.StickerComposite;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Fall;
@@ -96,7 +94,6 @@ import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Rechnungssteller;
-import ch.elexis.data.Sticker;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.VersionedResource;
@@ -137,7 +134,7 @@ public class KonsDetailView extends ViewPart
 	int displayedVersion;
 	Font emFont;
 	Composite cDesc;
-	Composite cEtiketten;
+	StickerComposite stickerComposite;
 	private int[] sashWeights = null;
 	private SashForm sash;
 	private int[] diagAndChargeSashWeights = null;
@@ -267,9 +264,8 @@ public class KonsDetailView extends ViewPart
 		form = tk.createForm(sash);
 		form.getBody().setLayout(new GridLayout(1, true));
 		form.setText(NO_CONS_SELECTED);
-		cEtiketten = new Composite(form.getBody(), SWT.NONE);
-		cEtiketten.setLayout(new RowLayout(SWT.HORIZONTAL));
-		cEtiketten.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		stickerComposite = StickerComposite.createWrappedStickerComposite(form.getBody(), tk);
+		
 		cDesc = new Composite(form.getBody(), SWT.NONE);
 		cDesc.setLayout(new RowLayout(SWT.HORIZONTAL));
 		cDesc.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -431,24 +427,14 @@ public class KonsDetailView extends ViewPart
 				}
 			}
 		}
-		for (Control cc : cEtiketten.getChildren()) {
-			cc.dispose();
-		}
+
 		if (pat == null) {
 			pat = ElexisEventDispatcher.getSelectedPatient();
 		}
 		actPat = pat;
 		if (pat != null) {
 			form.setText(pat.getPersonalia() + StringTool.space + "(" + pat.getAlter() + ")");
-			List<ISticker> etis = pat.getStickers();
-			if (etis != null && etis.size() > 0) {
-				// Point size = form.getHead().getSize();
-				for (ISticker et : etis) {
-					if (et != null) {
-						new UiSticker((Sticker) et).createForm(cEtiketten);
-					}
-				}
-			}
+			stickerComposite.setPatient(pat);
 			updateFallCombo();
 		}
 		form.layout();

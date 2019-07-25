@@ -102,6 +102,7 @@ import ch.elexis.core.ui.util.WidgetFactory;
 import ch.elexis.core.ui.views.Messages;
 import ch.elexis.core.ui.views.contribution.IViewContribution;
 import ch.elexis.core.ui.views.contribution.ViewContributionHelper;
+import ch.elexis.core.ui.views.controls.StickerComposite;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.BezugsKontakt;
 import ch.elexis.data.Kontakt;
@@ -217,6 +218,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	private boolean bLocked = true;
 	private Composite cUserfields;
 	Hyperlink hHA;
+	StickerComposite stickerComposite;
 	
 	void recreateUserpanel(){
 		// cUserfields.setRedraw(false);
@@ -451,6 +453,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		tk = UiDesk.getToolkit();
 		form = tk.createScrolledForm(this);
 		form.getBody().setLayout(new GridLayout());
+		stickerComposite = StickerComposite.createWrappedStickerComposite(form.getBody(), tk);
+		
 		cUserfields = new Composite(form.getBody(), SWT.NONE);
 		cUserfields.setLayout(new GridLayout());
 		cUserfields.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -801,7 +805,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			setUnlocked(false);
 			return;
 		}
-		
+		stickerComposite.setPatient(actPatient);
 		form.setText(StringTool.unNull(actPatient.getName()) + StringConstants.SPACE
 			+ StringTool.unNull(actPatient.getVorname()) + " (" //$NON-NLS-1$
 			+ actPatient.getPatCode() + ")"); //$NON-NLS-1$
