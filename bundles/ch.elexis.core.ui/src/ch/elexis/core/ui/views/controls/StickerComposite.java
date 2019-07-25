@@ -12,6 +12,7 @@ package ch.elexis.core.ui.views.controls;
 
 import java.util.List;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuAdapter;
 import org.eclipse.swt.events.MenuEvent;
@@ -22,6 +23,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -29,11 +31,14 @@ import org.eclipse.ui.forms.widgets.ColumnLayout;
 import org.eclipse.ui.forms.widgets.ColumnLayoutData;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.TableWrapData;
+import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.ISticker;
+import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.data.UiSticker;
+import ch.elexis.core.ui.dialogs.AssignStickerDialog;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Sticker;
 
@@ -56,6 +61,19 @@ public class StickerComposite extends Composite {
 		this.setVisible(false);
 	}
 	
+	public static StickerComposite createWrappedStickerComposite(Composite parent, FormToolkit tk){
+		Composite wrapper = new Composite(parent, SWT.NONE);
+		TableWrapLayout wlayout = new TableWrapLayout();
+		wlayout.bottomMargin = 0;
+		wlayout.topMargin = 0;
+		wrapper.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		wrapper.setLayout(wlayout);
+		wrapper.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
+		StickerComposite stickerComposite = new StickerComposite(wrapper, SWT.NONE, tk);
+		stickerComposite.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
+		return stickerComposite;
+	}
+	
 	public void setPatient(final Patient p){
 		for (Control cc : getChildren()) {
 			cc.dispose();
@@ -72,9 +90,26 @@ public class StickerComposite extends Composite {
 					stickerForm.setMenu(menu);
 					stickerForm.setLayoutData(new ColumnLayoutData());
 					
+					final MenuItem miAdd = new MenuItem(menu, SWT.NONE);
+					miAdd.setText("Sticker hinzufügen");
+					miAdd.addSelectionListener(new SelectionAdapter() {
+						
+						@Override
+						public void widgetSelected(SelectionEvent e){
+							
+							AssignStickerDialog assignStickerDialog =
+								new AssignStickerDialog(getShell(), p);
+							if (assignStickerDialog.open() == MessageDialog.OK) {
+								// refresh
+								setPatient(p);
+								getParent().getParent().layout(true);
+							}
+						}
+						
+					});
 					final MenuItem miRemove = new MenuItem(menu, SWT.NONE);
 					miRemove.setData("sticker", et);
-					miRemove.setText("remove Sticker");
+					miRemove.setText("Sticker entfernen");
 					miRemove.addSelectionListener(new SelectionAdapter() {
 						
 						@Override
@@ -82,7 +117,9 @@ public class StickerComposite extends Composite {
 							MenuItem mi = (MenuItem) e.getSource();
 							ISticker et = (ISticker) mi.getData("sticker");
 							p.removeSticker(et);
-							layout(true);
+							// refresh
+							setPatient(p);
+							getParent().getParent().layout(true);
 						}
 						
 					});
@@ -90,8 +127,10 @@ public class StickerComposite extends Composite {
 						
 						@Override
 						public void menuShown(MenuEvent e){
-							miRemove.setEnabled(CoreHub.acl
-								.request(AccessControlDefaults.KONTAKT_ETIKETTE));
+							miRemove.setEnabled(
+								CoreHub.acl.request(AccessControlDefaults.KONTAKT_ETIKETTE));
+							miAdd.setEnabled(
+								CoreHub.acl.request(AccessControlDefaults.KONTAKT_ETIKETTE));
 						}
 					});
 					
@@ -115,6 +154,7 @@ public class StickerComposite extends Composite {
 		GridData gd2 = null;
 		
 		Composite cImg = new Composite(ret, SWT.NONE);
+		cImg.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		if (img != null) {
 			cImg.setBackgroundImage(img);
 			gd1 = new GridData(img.getBounds().width, img.getBounds().height);
@@ -132,6 +172,7 @@ public class StickerComposite extends Composite {
 		UiSticker stu = new UiSticker((Sticker) st);
 		ret.setBackground(stu.getBackground());
 		lbl.setForeground(stu.getForeground());
+		lbl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		return ret;
 	}
 	
