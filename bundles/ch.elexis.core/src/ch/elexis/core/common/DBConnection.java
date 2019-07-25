@@ -10,7 +10,6 @@
  ******************************************************************************/
 package ch.elexis.core.common;
 
-import ch.rgw.tools.JdbcLink;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,6 +33,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.StringUtils;
+
+import ch.rgw.tools.JdbcLink;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -71,6 +72,10 @@ public class DBConnection implements Serializable {
 		}
 		
 		public static Optional<DBType> valueOfDriver(String driver) {
+			// compatibility for old mysql driver string
+			if (driver.equals("com.mysql.jdbc.Driver")) {
+				return Optional.of(MySQL);
+			}
 			for (DBType dbType : values()) {
 				if (dbType.driverName.equals(driver)) {
 					return Optional.of(dbType);
