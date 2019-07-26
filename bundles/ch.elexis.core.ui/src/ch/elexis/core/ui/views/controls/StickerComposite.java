@@ -153,13 +153,13 @@ public class StickerComposite extends Composite {
 		GridData gd1 = null;
 		GridData gd2 = null;
 		
-		Composite cImg = new Composite(ret, SWT.NONE);
-		cImg.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+		Composite cImg = new Composite(ret, SWT.NONE);	
 		if (img != null) {
 			cImg.setBackgroundImage(img);
 			gd1 = new GridData(img.getBounds().width, img.getBounds().height);
 			gd2 = new GridData(SWT.DEFAULT, img.getBounds().height);
 		} else {
+			cImg.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 			gd1 = new GridData(getFont().getFontData()[0].getHeight(), 8);
 			gd2 = new GridData(SWT.DEFAULT, SWT.DEFAULT);
 		}
