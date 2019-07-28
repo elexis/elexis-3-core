@@ -589,9 +589,7 @@ public class RnDialogs {
 		@Override
 		public int open() {
 			if (rn != null) {
-				InvoiceState invoiceState = rn.getInvoiceState();
-				if (InvoiceState.CANCELLED.equals(invoiceState)
-						|| InvoiceState.DEPRECIATED.equals(invoiceState)) {
+				if (Rechnung.isStorno(rn) || Rechnung.hasStornoBeforeDate(rn, new TimeTool())) {
 					SWTHelper.alert(Messages.RnActions_stornoAction,
 						Messages.RnActions_stornoActionNotPossibleText);
 					return TitleAreaDialog.CANCEL;
