@@ -1019,4 +1019,27 @@ public class Rechnung extends PersistentObject {
 		}
 		return false;
 	}
+	
+	public static boolean isStorno(Rechnung rechnung){
+		InvoiceState invoiceState = rechnung.getInvoiceState();
+		return  InvoiceState.CANCELLED.equals(invoiceState)
+				|| InvoiceState.DEPRECIATED.equals(invoiceState);
+	}
+	
+	public static boolean hasStornoBeforeDate(Rechnung rechnung, TimeTool date){
+		boolean stornoSet = false;
+		TimeTool stornoDate = new TimeTool();
+		List<Zahlung> zahlungen = rechnung.getZahlungen();
+		for (Zahlung zahlung : zahlungen) {
+			if (zahlung.getBemerkung().equals("Storno")) {
+				stornoSet = true;
+				stornoDate.set(zahlung.getDatum());
+				break;
+			}
+		}
+		if (stornoSet && stornoDate.isBeforeOrEqual(date)) {
+			return true;
+		}
+		return false;
+	}
 }
