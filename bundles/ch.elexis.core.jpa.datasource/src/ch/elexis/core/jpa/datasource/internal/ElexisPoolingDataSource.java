@@ -73,6 +73,9 @@ public class ElexisPoolingDataSource extends PoolingDataSource implements DataSo
 		properties.put("user", username);
 		properties.put("password", password);
 		
+		log.info("db connection pool [" + driver + ", " + connection + ", " + username
+			+ "] initialization");
+		
 		ConnectionFactory connectionFactory =
 			new DriverConnectionFactory(driver, connection, properties);
 		
