@@ -234,7 +234,7 @@
             <column name="ID" type="VARCHAR(25)">
                 <constraints primaryKey="true" primaryKeyName="CONSTRAINT_E75"/>
             </column>
-            <column name="LASTUPDARE" type="BIGINT"/>
+            <column name="LASTUPDATE" type="BIGINT"/>
             <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
             <column name="PARENT" type="VARCHAR(20)"/>
             <column name="CODE" type="VARCHAR(20)"/>
