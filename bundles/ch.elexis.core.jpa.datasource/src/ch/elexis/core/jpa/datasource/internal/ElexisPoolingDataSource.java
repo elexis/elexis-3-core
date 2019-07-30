@@ -11,6 +11,7 @@ import org.apache.commons.dbcp.ConnectionFactory;
 import org.apache.commons.dbcp.DriverConnectionFactory;
 import org.apache.commons.dbcp.PoolableConnectionFactory;
 import org.apache.commons.dbcp.PoolingDataSource;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.GenericObjectPool;
 import org.slf4j.Logger;
@@ -61,10 +62,10 @@ public class ElexisPoolingDataSource extends PoolingDataSource implements DataSo
 	
 	private ObjectPool<Connection> createConnectionPool(DBConnection dbConnection)
 		throws InstantiationException, IllegalAccessException, ClassNotFoundException{
-		String driverName = dbConnection.rdbmsType.driverName;
-		String username = dbConnection.username;
-		String password = dbConnection.password;
-		String connection = dbConnection.connectionString;
+		String driverName = StringUtils.defaultString(dbConnection.rdbmsType.driverName);
+		String username = StringUtils.defaultString(dbConnection.username);
+		String password = StringUtils.defaultString(dbConnection.password);
+		String connection = StringUtils.defaultString(dbConnection.connectionString);
 		
 		Driver driver = (Driver) Class.forName(driverName).newInstance();
 		
