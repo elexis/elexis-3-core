@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 
-import org.eclipse.core.commands.Category;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.IHandler;
@@ -142,7 +141,6 @@ public class GlobalActions {
 	private static IWorkbenchHelpSystem help;
 	private static Logger logger;
 	private static ICommandService cmdService;
-	private static Category cmdCategory;
 	/**
 	 * Open the preferences dialog. This a copy of the same internal eclipse where we just want to have a large dialog action
 	 */
@@ -208,7 +206,6 @@ public class GlobalActions {
 		}
 		logger = LoggerFactory.getLogger(this.getClass());
 		cmdService = (ICommandService) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getService(ICommandService.class);
-		cmdCategory = cmdService.getCategory("ch.elexis.core.ui.commands.kategorie");
 		mainWindow = window;
 		help = Hub.plugin.getWorkbench().getHelpSystem();
 		exitAction = ActionFactory.QUIT.create(window);
@@ -407,9 +404,6 @@ public class GlobalActions {
 			@Override
 			public void run(){
 				Command cmd = cmdService.getCommand("ch.elexis.core.ui.commands.printContactLabel");
-				if (!cmd.isDefined()) {
-					  cmd.define(Messages.GlobalActions_PrintContactLabel, Messages.GlobalActions_PrintContactLabelToolTip, cmdCategory);
-				}
 				
 				try {
 					cmd.executeWithChecks(new ExecutionEvent());
@@ -429,9 +423,6 @@ public class GlobalActions {
 			@Override
 			public void run(){
 				Command cmd = cmdService.getCommand("ch.elexis.core.ui.commands.printAddressLabel");
-				if (!cmd.isDefined()) {
-					  cmd.define(Messages.GlobalActions_PrintAddressLabel, Messages.GlobalActions_PrintAddressLabelToolTip, cmdCategory);
-				}
 				
 				try {
 					cmd.executeWithChecks(new ExecutionEvent());
@@ -451,9 +442,6 @@ public class GlobalActions {
 			@Override
 			public void run(){
 				Command cmd = cmdService.getCommand("ch.elexis.core.ui.commands.printVersionedLabel");
-				if (!cmd.isDefined()) {
-					  cmd.define(Messages.GlobalActions_PrintVersionedLabel, Messages.GlobalActions_PrintVersionedLabelToolTip, cmdCategory);
-				}
 				
 				try {
 					cmd.executeWithChecks(new ExecutionEvent());
@@ -473,9 +461,6 @@ public class GlobalActions {
 			@Override
 			public void run(){
 				Command cmd = cmdService.getCommand("ch.elexis.core.ui.commands.printPatientLabel");
-				if (!cmd.isDefined()) {
-					  cmd.define(Messages.GlobalActions_PrintLabel, Messages.GlobalActions_PrintLabelToolTip, cmdCategory);
-				}
 				
 				try {
 					cmd.executeWithChecks(new ExecutionEvent());
