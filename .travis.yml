@@ -6,8 +6,20 @@ language: java
 
 install: mvn -V -DskipTests=true -Dmaven.javadoc.skip=true -B validate
 
+matrix:
+  include:
+  - name: "Deutsch"
+    env: NL=de_CH
+  - name: "English"
+    env: NL=en_US
+  - name: "Français"
+    env: NL=fr_CH
+  allow_failures:
+  - name: "English"
+  - name: "Français"
+
 script:
-  - mvn -V --quiet clean verify -Dall-archs=true
+  - mvn -V --quiet clean verify -Dall-archs=true -DNL=$NL --fail-at-end clean verify
 
 notifications:
   email:
