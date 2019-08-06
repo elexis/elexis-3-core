@@ -780,7 +780,7 @@
             categoryId="ch.elexis.core.ui.commands.kategorie"
             defaultHandler="ch.elexis.core.ui.commands.PrintContactLabelHandler"
             id="ch.elexis.core.ui.commands.printContactLabel"
-            name="%elexis.printContactLabel">
+            name="Print address label">
       </command>
    </extension>
       <extension
