@@ -63,7 +63,6 @@ Service-Component: OSGI-INF/ch.elexis.core.services.holder.CoreModelServiceHolde
  OSGI-INF/ch.elexis.core.services.holder.LabServiceHolder.xml,
  OSGI-INF/ch.elexis.core.services.XidService.xml,
  OSGI-INF/ch.elexis.core.services.holder.XidServiceHolder.xml,
- OSGI-INF/ch.elexis.core.services.ContactService.xml,
  OSGI-INF/ch.elexis.core.services.AccountService.xml,
  OSGI-INF/ch.elexis.core.services.holder.AccountServiceHolder.xml
 Export-Package: ch.elexis.core.services.holder
