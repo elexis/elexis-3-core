@@ -52,11 +52,12 @@ public class StickerComposite extends Composite {
 		ColumnLayout cwl = new ColumnLayout();
 		cwl.maxNumColumns = 4;
 		cwl.horizontalSpacing = 1;
-		cwl.bottomMargin = 1;
-		cwl.topMargin = 1;
+		cwl.bottomMargin = 10;
+		cwl.topMargin = 0;
 		cwl.rightMargin = 1;
 		cwl.leftMargin = 1;
 		setLayout(cwl);
+		setBackground(parent.getBackground());
 		this.toolkit = toolkit;
 		this.setVisible(false);
 	}
@@ -78,6 +79,7 @@ public class StickerComposite extends Composite {
 		for (Control cc : getChildren()) {
 			cc.dispose();
 		}
+		this.setVisible(false);
 		List<ISticker> etis = p.getStickers();
 		if (etis == null)
 			return;
@@ -90,23 +92,7 @@ public class StickerComposite extends Composite {
 					stickerForm.setMenu(menu);
 					stickerForm.setLayoutData(new ColumnLayoutData());
 					
-					final MenuItem miAdd = new MenuItem(menu, SWT.NONE);
-					miAdd.setText("Sticker hinzufügen");
-					miAdd.addSelectionListener(new SelectionAdapter() {
-						
-						@Override
-						public void widgetSelected(SelectionEvent e){
-							
-							AssignStickerDialog assignStickerDialog =
-								new AssignStickerDialog(getShell(), p);
-							if (assignStickerDialog.open() == MessageDialog.OK) {
-								// refresh
-								setPatient(p);
-								getParent().getParent().layout(true);
-							}
-						}
-						
-					});
+					MenuItem miAdd = createMenuItemAdd(p, menu);
 					final MenuItem miRemove = new MenuItem(menu, SWT.NONE);
 					miRemove.setData("sticker", et);
 					miRemove.setText("Sticker entfernen");
@@ -137,9 +123,35 @@ public class StickerComposite extends Composite {
 				}
 			}
 		} else {
-			this.setVisible(false);
+			this.setVisible(true);
+			Menu menu = new Menu(this);
+		    setMenu(menu);
+			createMenuItemAdd(p, menu);
 		}
 		layout();
+	}
+
+	private MenuItem createMenuItemAdd(final Patient p, Menu menu){
+		final MenuItem miAdd = new MenuItem(menu, SWT.NONE);
+		miAdd.setText("Sticker hinzufügen");
+		miAdd.addSelectionListener(new SelectionAdapter() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				
+				AssignStickerDialog assignStickerDialog =
+					new AssignStickerDialog(getShell(), p);
+				if (assignStickerDialog.open() == MessageDialog.OK) {
+					// refresh
+					setPatient(p);
+					getParent().getParent().layout(true);
+				}
+			}
+			
+		});
+		miAdd.setEnabled(
+			CoreHub.acl.request(AccessControlDefaults.KONTAKT_ETIKETTE));
+		return miAdd;
 	}
 	
 	public Composite createForm(Composite parent, ISticker st){
