@@ -48,7 +48,9 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
@@ -162,7 +164,8 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 		scrldfrm.setText(StringTool.unNull(p.getName()) + StringConstants.SPACE + StringTool.unNull(p.getVorname())
 				+ " (" + p.getPatCode() + ")");
 		compClientCustomText.updateClientCustomArea();
-		stickerComposite.setPatient(p);
+		stickerComposite
+			.setPatient(CoreModelServiceHolder.get().load(p.getId(), IPatient.class).orElse(null));
 		inpZusatzAdresse.clear();
 		for (BezugsKontakt za : p.getBezugsKontakte()) {
 			inpZusatzAdresse.add(za);
