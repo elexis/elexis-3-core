@@ -118,6 +118,7 @@ public class MedicationComposite extends Composite
 	private DateTime timeStopped;
 	private DateTime dateStopped;
 	private Button btnStopMedication;
+	private Button btnToggleDetailComposite;
 	private Label lblLastDisposalLink;
 	private Label lblDailyTherapyCost;
 	
@@ -292,6 +293,21 @@ public class MedicationComposite extends Composite
 				tablesComposite.layout();
 				
 				updateUi(patient, false);
+			}
+		});
+		
+		btnToggleDetailComposite = new Button(compositeState, SWT.FLAT | SWT.TOGGLE);
+		btnToggleDetailComposite.setImage(Images.IMG_LOCK_CO.getImage());
+		btnToggleDetailComposite.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				if (btnToggleDetailComposite.getSelection()) {
+					Object selectedObj = selectedMedication.getValue();
+					if (selectedObj instanceof MedicationTableViewerItem) {
+						showMedicationDetailComposite(
+							(MedicationTableViewerItem) selectedMedication.getValue());
+					}
+				}
 			}
 		});
 	}
@@ -680,7 +696,12 @@ public class MedicationComposite extends Composite
 	 * 
 	 * @param presc
 	 */
-	private void showMedicationDetailComposite(MedicationTableViewerItem presc){
+	public void showMedicationDetailComposite(MedicationTableViewerItem presc){
+		// freezes the toggle for composite detail view
+		if (presc == null && btnToggleDetailComposite != null
+			&& btnToggleDetailComposite.getSelection()) {
+			return;
+		}
 		boolean showDetailComposite = presc != null;
 		
 		compositeMedicationDetail.setVisible(showDetailComposite);

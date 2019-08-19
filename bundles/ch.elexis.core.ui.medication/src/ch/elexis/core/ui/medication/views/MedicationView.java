@@ -25,7 +25,14 @@ public class MedicationView extends ViewPart implements IRefreshable {
 	
 	private MedicationComposite tpc;
 	
-	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
+	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this) {
+		public void partActivated(org.eclipse.ui.IWorkbenchPartReference partRef){
+			super.partActivated(partRef);
+			if (tpc != null && !tpc.isDisposed()) {
+				tpc.showMedicationDetailComposite(null);
+			}
+		};
+	};
 	
 	public static final String PART_ID = "ch.elexis.core.ui.medication.views.MedicationView"; //$NON-NLS-1$
 	

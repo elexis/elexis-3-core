@@ -226,6 +226,7 @@ public class Messages {
 	public static String Mandanten_password = ch.elexis.core.l10n.Messages.Mandanten_password;
 	public static String Mandanten_pleaseSelectBiller = ch.elexis.core.l10n.Messages.Mandanten_pleaseSelectBiller;
 	public static String Mandanten_selectBiller = ch.elexis.core.l10n.Messages.Mandanten_selectBiller;
+	public static String Medication_headerComment = ch.elexis.core.l10n.Messages.Medication_headerComment;
 	public static String PreferenceConstants_general = ch.elexis.core.l10n.Messages.PreferenceConstants_general;
 	public static String PreferenceConstants_illness = ch.elexis.core.l10n.Messages.PreferenceConstants_illness;
 	public static String PrinterPreferencePage_ChosePrinterAlways = ch.elexis.core.l10n.Messages.PrinterPreferencePage_ChosePrinterAlways;

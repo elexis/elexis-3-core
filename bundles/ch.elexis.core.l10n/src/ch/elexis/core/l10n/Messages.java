@@ -2454,6 +2454,7 @@ public class Messages extends NLS {
 	public static String MaritalStatus_UNKNOWN;
 	public static String MaritalStatus_UNMARRIED;
 	public static String MaritalStatus_WIDOWED;
+	public static String Medication_headerComment;
 	public static String MedicationComposite_btnCheckButton_text;
 	public static String MedicationComposite_btnConfirm;
 	public static String MedicationComposite_btnIsFixmedication_toolTipText;

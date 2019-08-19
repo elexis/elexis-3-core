@@ -43,7 +43,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IMemento;
@@ -75,10 +74,8 @@ import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
-import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.holder.BillingServiceHolder;
-import ch.elexis.core.services.holder.StickerServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.IActivationListener;
@@ -101,6 +98,7 @@ import ch.elexis.core.ui.util.IKonsExtension;
 import ch.elexis.core.ui.util.IKonsMakro;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
+import ch.elexis.core.ui.views.controls.StickerComposite;
 import ch.elexis.core.utils.CoreUtil;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
@@ -144,7 +142,7 @@ public class KonsDetailView extends ViewPart
 	int displayedVersion;
 	Font emFont;
 	Composite cDesc;
-	Composite cEtiketten;
+	StickerComposite stickerComposite;
 	private int[] sashWeights = null;
 	private SashForm sash;
 	private int[] diagAndChargeSashWeights = null;
@@ -385,9 +383,8 @@ public class KonsDetailView extends ViewPart
 		form = tk.createForm(sash);
 		form.getBody().setLayout(new GridLayout(1, true));
 		form.setText(NO_CONS_SELECTED);
-		cEtiketten = new Composite(form.getBody(), SWT.NONE);
-		cEtiketten.setLayout(new RowLayout(SWT.HORIZONTAL));
-		cEtiketten.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		stickerComposite = StickerComposite.createWrappedStickerComposite(form.getBody(), tk);
+		
 		cDesc = new Composite(form.getBody(), SWT.NONE);
 		cDesc.setLayout(new RowLayout(SWT.HORIZONTAL));
 		cDesc.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -556,21 +553,11 @@ public class KonsDetailView extends ViewPart
 				}
 			}
 		}
-		for (Control cc : cEtiketten.getChildren()) {
-			cc.dispose();
-		}
+
 		actPat = pat;
 		if (pat != null) {
 			form.setText(pat.getLabel() + StringTool.space + "(" + pat.getAgeInYears() + ")");
-			List<ISticker> etis = StickerServiceHolder.get().getStickers(pat);
-			if (etis != null && etis.size() > 0) {
-				// Point size = form.getHead().getSize();
-				for (ISticker et : etis) {
-					if (et != null) {
-						CoreUiUtil.createForm(cEtiketten, et);
-					}
-				}
-			}
+			stickerComposite.setPatient(pat);
 			updateFallCombo();
 		}
 		form.layout();

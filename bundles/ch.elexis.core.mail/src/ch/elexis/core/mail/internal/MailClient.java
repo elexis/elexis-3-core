@@ -1,6 +1,7 @@
 package ch.elexis.core.mail.internal;
 
 import java.io.File;
+import java.net.ConnectException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -244,7 +245,8 @@ public class MailClient implements IMailClient {
 	private void handleException(MessagingException e){
 		if (e instanceof AuthenticationFailedException) {
 			lastError = ErrorTyp.AUTHENTICATION;
-		} else if (e.getNextException() instanceof UnknownHostException) {
+		} else if (e.getNextException() instanceof UnknownHostException
+			|| e.getNextException() instanceof ConnectException) {
 			lastError = ErrorTyp.CONNECTION;
 		} else if (e instanceof AddressException) {
 			lastError = ErrorTyp.ADDRESS;

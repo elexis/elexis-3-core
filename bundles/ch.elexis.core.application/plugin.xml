@@ -432,6 +432,12 @@
             id="ch.elexis.core.application.perspectives.StockManagementPerspective"
             name="%elexis.stockManagementPerspective">
       </perspective>
+      <perspective
+            class="ch.elexis.core.application.perspectives.BBSPerspective"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/tafel.jpg"
+            id="ch.elexis.SchwarzesBrettV1.0"
+            name="%elexis.bbsView">
+      </perspective>
    </extension>
    <extension
          id="ElexisApp"
@@ -470,7 +476,7 @@
             icon="rechnung_perspective"
             name="%sidebar.bills"/>
       <Perspektive
-            ID="ch.elexis.SchwarzesBrett"
+            ID="ch.elexis.SchwarzesBrettV1.0"
             icon="bbs_perspective"
             name="%sidebar.bbs"/>
       <Perspektive

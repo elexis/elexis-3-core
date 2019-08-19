@@ -673,6 +673,10 @@ public class BillingProposalView extends ViewPart {
 			if (direction == DESCENDING) {
 				rc = -rc;
 			}
+			// If not already sorted by date, do secondary sorting by date
+			if (propertyIndex != 2 && rc == 0) {
+				rc = left.getDate().compareTo(right.getDate());
+			}
 			return rc;
 		}
 	}
