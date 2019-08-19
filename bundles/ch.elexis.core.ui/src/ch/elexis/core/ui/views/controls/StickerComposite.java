@@ -86,6 +86,7 @@ public class StickerComposite extends Composite {
 					Composite stickerForm = CoreUiUtil.createForm(this, et);
 					if (toolkit != null) {
 						toolkit.adapt(stickerForm);
+						stickerForm.setBackground(CoreUiUtil.getColorForString(et.getBackground()));
 					}
 					Menu menu = new Menu(stickerForm);
 					stickerForm.setMenu(menu);
