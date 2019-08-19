@@ -21,6 +21,7 @@ import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.IInvoiceBilled;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IPayment;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.builder.IAccountTransactionBuilder;
@@ -281,5 +282,18 @@ public class InvoiceService implements IInvoiceService {
 		HashSet<IInvoice> uniqueInvoices = new HashSet<IInvoice>();
 		invoicebilled.forEach(ib -> uniqueInvoices.add(ib.getInvoice()));
 		return new ArrayList<IInvoice>(uniqueInvoices);
+	}
+	
+	@Override
+	public boolean hasStornoBeforeDate(IInvoice invoice, LocalDate date){
+		List<IPayment> zahlungen = invoice.getPayments();
+		for (IPayment zahlung : zahlungen) {
+			if (zahlung.getRemark().equals("Storno")) {
+				if (zahlung.getDate().isBefore(date) || zahlung.getDate().equals(date)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

@@ -1,10 +1,12 @@
 package ch.elexis.core.services;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.InvoiceState;
 import ch.rgw.tools.Result;
 
 public interface IInvoiceService {
@@ -41,4 +43,13 @@ public interface IInvoiceService {
 	 * @return
 	 */
 	public Optional<IInvoice> getInvoiceWithNumber(String number);
+	
+	/**
+	 * Test if the invoice was in state {@link InvoiceState#CANCELLED} before the provided date.
+	 * 
+	 * @param invoice
+	 * @param date
+	 * @return
+	 */
+	public boolean hasStornoBeforeDate(IInvoice invoice, LocalDate date);
 }
