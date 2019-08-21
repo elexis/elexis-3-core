@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Import-Package: javax.xml.bind,
+ org.slf4j;version="1.6.6"
+Bundle-ActivationPolicy: lazy
