@@ -484,13 +484,13 @@ public abstract class PersistentObject implements IPersistentObject {
 			
 			@Override
 			public void settingRemoved(String key){
-				String userId = CoreHub.actUser.getWrappedId();
+				String userId = (CoreHub.actUser != null) ? CoreHub.actUser.getWrappedId() : "null";
 				Trace.addTraceEntry("W userCfg ["+userId+"] key [" + key + "] => removed");
 			}
 			
 			@Override
 			public void settingWritten(String key, String value){
-				String userId = CoreHub.actUser.getWrappedId();
+				String userId = (CoreHub.actUser != null) ? CoreHub.actUser.getWrappedId() : "null";
 				Trace.addTraceEntry("W userCfg ["+userId+"] key [" + key + "] => value [" + value + "]");
 			}
 			
