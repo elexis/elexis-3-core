@@ -469,7 +469,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		CoreHub.globalCfg.setSettingChangedListener(new ISettingChangedListener() {
 			
 			@Override
-			public void settingDeleted(String key){
+			public void settingRemoved(String key){
 				Trace.addTraceEntry("W globalCfg key [" + key + "] => removed");
 			}
 			
@@ -477,12 +477,29 @@ public abstract class PersistentObject implements IPersistentObject {
 			public void settingWritten(String key, String value){
 				Trace.addTraceEntry("W globalCfg key [" + key + "] => value [" + value + "]");
 			}
+			
+		});
+		
+		CoreHub.userCfg.setSettingChangedListener(new ISettingChangedListener() {
+			
+			@Override
+			public void settingRemoved(String key){
+				String userId = CoreHub.actUser.getWrappedId();
+				Trace.addTraceEntry("W userCfg ["+userId+"] key [" + key + "] => removed");
+			}
+			
+			@Override
+			public void settingWritten(String key, String value){
+				String userId = CoreHub.actUser.getWrappedId();
+				Trace.addTraceEntry("W userCfg ["+userId+"] key [" + key + "] => value [" + value + "]");
+			}
+			
 		});
 		
 		// Zugriffskontrolle initialisieren
 		VersionInfo vi = new VersionInfo(CoreHub.globalCfg.get("dbversion", "0.0.0"));
-		log.info("Verlangte Datenbankversion: " + CoreHub.DBVersion);
-		log.info("Gefundene Datenbankversion: " + vi.version());
+		log.info("Verlangte Datenbankversion: {}", CoreHub.DBVersion);
+		log.info("Gefundene Datenbankversion: {}", vi.version());
 		if (vi.isOlder(CoreHub.DBVersion)) {
 			log.warn("Ältere Version der Datenbank gefunden ");
 			if (!DBUpdate.doUpdate()) {
