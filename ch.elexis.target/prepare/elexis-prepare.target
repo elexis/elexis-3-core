@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis" sequenceNumber="1562576843">
+<target name="Elexis" sequenceNumber="1566803084">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.swt.nl_de" version="4.8.0.v20180815020001"/>
@@ -34,7 +34,7 @@
       <repository location="https://download.eclipse.org/technology/babel/update-site/R0.16.0/photon"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.18.0.v20190227-1016"/>
+      <unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.18.0.v20190808-1809"/>
       <repository location="http://download.eclipse.org/e4/snapshots/org.eclipse.e4.tools/latest/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
@@ -70,9 +70,9 @@
       <repository location="http://download.eclipse.org/releases/2018-09/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.nebula.cwt.feature.feature.group" version="1.1.0.201812241324"/>
-      <unit id="org.eclipse.nebula.widgets.cdatetime.feature.feature.group" version="1.3.0.201812241324"/>
-      <unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="1.2.0.201812241324"/>
+      <unit id="org.eclipse.nebula.cwt.feature.feature.group" version="1.1.0.201907151344"/>
+      <unit id="org.eclipse.nebula.widgets.cdatetime.feature.feature.group" version="1.4.0.201907151344"/>
+      <unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="1.2.0.201907151344"/>
       <repository location="http://download.eclipse.org/nebula/releases/latest/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
@@ -129,10 +129,12 @@
       <unit id="com.sun.activation.javax.activation" version="1.2.0"/>
       <unit id="com.sun.xml.bind.jaxb-osgi" version="2.3.2"/>
       <unit id="jaxb-api" version="2.4.0.b1808300359"/>
+      <unit id="jakarta.xml.ws-api" version="2.3.2"/>
+      <unit id="jakarta.xml.soap-api" version="1.4.1"/>
       <unit id="org.springframework.spring-web" version="4.3.8.RELEASE"/>
       <unit id="woodstox-core-asl" version="4.4.1"/>
       <unit id="javax.xml.stream.stax-api" version="1.0.0.2"/>
-      <unit id="stax2-api" version="3.1.4"/>
+      <unit id="stax2-api" version="4.1.0"/>
       <unit id="net.sf.saxon.Saxon-HE" version="9.6.0.4"/>
       <unit id="com.phloc.commons" version="4.4.6"/>
       <unit id="com.phloc.schematron" version="2.7.1"/>

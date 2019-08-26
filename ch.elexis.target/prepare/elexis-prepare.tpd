@@ -133,6 +133,9 @@ location "http://download.elexis.info/elexis-server/elexis-server-dependencies" 
 	com.sun.activation.javax.activation [1.2.0,1.2.0]
 	com.sun.xml.bind.jaxb-osgi
 	jaxb-api
+	// jaxws
+	jakarta.xml.ws-api
+	jakarta.xml.soap-api
 	// 
 	org.springframework.spring-web
 	woodstox-core-asl
