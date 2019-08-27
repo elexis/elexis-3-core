@@ -23,7 +23,6 @@ import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -35,7 +34,9 @@ import org.eclipse.swt.widgets.MenuItem;
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
@@ -46,7 +47,6 @@ import ch.elexis.core.ui.locks.LockRequestingRestrictedAction;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus.IMenuPopulator;
 import ch.elexis.core.ui.views.Messages;
-import ch.elexis.data.Patient;
 import ch.rgw.tools.ExHandler;
 
 public class PatientMenuPopulator implements IMenuPopulator, IMenuListener {
@@ -82,31 +82,31 @@ public class PatientMenuPopulator implements IMenuPopulator, IMenuListener {
 			}
 
 		};
-		delPatAction = new LockRequestingRestrictedAction<Patient>(AccessControlDefaults.KONTAKT_DELETE,
+		delPatAction =
+			new LockRequestingRestrictedAction<IPatient>(AccessControlDefaults.KONTAKT_DELETE,
 				Messages.PatientMenuPopulator_DeletePatientAction) {
-
-			@Override
-			public void doRun(Patient p) {
-				if (MessageDialog.openConfirm(mine.getViewSite().getShell(),
+				
+				@Override
+				public void doRun(IPatient p){
+					if (MessageDialog.openConfirm(mine.getViewSite().getShell(),
 						Messages.PatientMenuPopulator_DeletePatientConfirm, p.getLabel()) == true) {
-					if (p.delete(false) == false) {
-						SWTHelper.alert(Messages.PatientMenuPopulator_DeletePatientRejectCaption,
+						List<ICoverage> coverages = p.getCoverages();
+						if (coverages.isEmpty()) {
+							CoreModelServiceHolder.get().delete(p);
+							mine.reload();
+						} else {
+							SWTHelper.alert(
+								Messages.PatientMenuPopulator_DeletePatientRejectCaption,
 								Messages.PatientMenuPopulator_DeletePatientRejectBody);
-					} else {
-						mine.reload();
+						}
 					}
 				}
-			}
-
-			@Override
-			public Patient getTargetedObject() {
-				StructuredSelection selection = (StructuredSelection) structuredViewer.getSelection();
-				if (selection != null) {
-					return (Patient) selection.getFirstElement();
+				
+				@Override
+				public IPatient getTargetedObject(){
+					return mine.getSelectedPatient();
 				}
-				return null;
-			}
-		};
+			};
 		exportKGAction = new Action(Messages.PatientMenuPopulator_ExportEMRAction, Action.AS_DROP_DOWN_MENU) { // $NON-NLS-1$
 			Menu menu = null;
 
