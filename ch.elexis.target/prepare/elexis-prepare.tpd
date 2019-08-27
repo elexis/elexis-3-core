@@ -136,6 +136,7 @@ location "http://download.elexis.info/elexis-server/elexis-server-dependencies" 
 	// jaxws
 	jakarta.xml.ws-api
 	jakarta.xml.soap-api
+	jakarta.jws-api
 	// 
 	org.springframework.spring-web
 	woodstox-core-asl
