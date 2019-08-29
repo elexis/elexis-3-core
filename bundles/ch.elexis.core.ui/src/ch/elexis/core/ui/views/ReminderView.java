@@ -111,6 +111,8 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 	
 	private long cvHighestLastUpdate = 0l;
 	
+	private int filterDueDateDays =
+		CoreHub.userCfg.get(Preferences.USR_REMINDER_FILTER_DUE_DAYS, -1);
 	private boolean autoSelectPatient =
 		CoreHub.userCfg.get(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, false);
 	private boolean showOnlyDueReminders =
@@ -300,6 +302,17 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		Action labelFilter = new Action("Anzeige filtern") {};
 		labelFilter.setEnabled(false);
 		
+		MenuManager timeFilterSubMenu = new MenuManager("Zeitraum Anzeige");
+		FilterTimeAction action30 = new FilterTimeAction(30);
+		FilterTimeAction action60 = new FilterTimeAction(60);
+		FilterTimeAction action90 = new FilterTimeAction(90);
+		action30.setOthers(Arrays.asList(action60, action90));
+		action60.setOthers(Arrays.asList(action30, action90));
+		action90.setOthers(Arrays.asList(action30, action60));
+		timeFilterSubMenu.add(action30);
+		timeFilterSubMenu.add(action60);
+		timeFilterSubMenu.add(action90);
+		
 		Action labelResponsibility = new Action("Anzeige erweitern") {};
 		labelResponsibility.setEnabled(false);
 		
@@ -314,7 +327,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		}
 		return Arrays.asList(new ActionContributionItem(newReminderAction), null,
 			new ActionContributionItem(labelSorter), new ActionContributionItem(sortByDueDate),
-			null, new ActionContributionItem(labelFilter),
+			null, new ActionContributionItem(labelFilter), timeFilterSubMenu,
 			new ActionContributionItem(showOnlyOwnDueReminderToggleAction), typeFilterSubMenu, null,
 			new ActionContributionItem(labelResponsibility),
 			new ActionContributionItem(showSelfCreatedReminderAction),
@@ -758,6 +771,43 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		}
 	}
 	
+	private class FilterTimeAction extends Action {
+		
+		private List<FilterTimeAction> others;
+		private int days;
+		
+		public FilterTimeAction(int days){
+			super(String.format("nächste %d Tage", days), Action.AS_CHECK_BOX);
+			this.days = days;
+			if (filterDueDateDays == days) {
+				setChecked(true);
+			}
+		}
+		
+		public void setOthers(List<FilterTimeAction> list){
+			this.others = list;
+		}
+		
+		@Override
+		public void run(){
+			if (isChecked()) {
+				CoreHub.userCfg.set(Preferences.USR_REMINDER_FILTER_DUE_DAYS, days);
+				filterDueDateDays = days;
+				cv.notify(CommonViewer.Message.update_keeplabels);
+			} else {
+				CoreHub.userCfg.set(Preferences.USR_REMINDER_FILTER_DUE_DAYS, -1);
+				filterDueDateDays = -1;
+				cv.notify(CommonViewer.Message.update_keeplabels);
+			}
+			
+			if (others != null) {
+				for (FilterTimeAction other : others) {
+					other.setChecked(false);
+				}
+			}
+		}
+	}
+	
 	private class ReminderViewCommonContentProvider extends CommonContentProviderAdapter {
 		
 		private Comparator<Reminder> comparator;
@@ -774,15 +824,20 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			if (showAllReminders
 				&& CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS)) {
 				qbe.clear();
+				if(filterDueDateDays != -1) {
+					applyDueDateFilter(qbe);
+				}
 				reminders.addAll(qbe.execute());
 			} else {
 				reminders.addAll(Reminder.findOpenRemindersResponsibleFor(CoreHub.actUser,
-					showOnlyDueReminders, null, false));
+					showOnlyDueReminders, filterDueDateDays, null, false));
 				
 				if (showSelfCreatedReminders) {
 					qbe.clear();
 					qbe.add(Reminder.FLD_CREATOR, Query.EQUALS, CoreHub.actUser.getId());
-					
+					if (filterDueDateDays != -1) {
+						applyDueDateFilter(qbe);
+					}
 					reminders.addAll(qbe.execute());
 				}
 			}
@@ -829,9 +884,16 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			return resultList.toArray();
 		}
 		
+		private void applyDueDateFilter(Query<Reminder> qbe){
+			TimeTool dueDateDays = new TimeTool();
+			dueDateDays.addDays(filterDueDateDays);
+			qbe.add(Reminder.FLD_DUE, Query.NOT_EQUAL, "");
+			qbe.add(Reminder.FLD_DUE, Query.LESS_OR_EQUAL,
+				dueDateDays.toString(TimeTool.DATE_COMPACT));
+		}
+		
 		public void setComparator(Comparator<Reminder> comparator){
 			this.comparator = comparator;
 		}
-		
 	}
 }

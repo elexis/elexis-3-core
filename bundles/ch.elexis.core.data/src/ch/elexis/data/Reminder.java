@@ -527,6 +527,12 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	 */
 	public static List<Reminder> findOpenRemindersResponsibleFor(@NonNull Anwender anwender,
 		final boolean onlyDue, final Patient patient, final boolean onlyPopup){
+		return findOpenRemindersResponsibleFor(anwender, onlyDue, -1, patient, onlyPopup);
+	}
+	
+	public static List<Reminder> findOpenRemindersResponsibleFor(@NonNull Anwender anwender,
+		final boolean onlyDue, final int dueDays, final Patient patient, final boolean onlyPopup){
+		
 		if (anwender == null) {
 			anwender = CoreHub.actUser;
 		}
@@ -536,7 +542,12 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 		// which resolve to multiple occurences of the same element, due to the left join
 		DBConnection dbConnection = getDefaultConnection();
 		StringBuilder query = new StringBuilder(PS_REMINDERS_BASE);
-		if (onlyDue) {
+		if (dueDays > 0) {
+			TimeTool dueDaysDate = new TimeTool();
+			dueDaysDate.addDays(dueDays);
+			query.append(" AND r.DateDue != '' AND r.DateDue <= "
+				+ JdbcLink.wrap(dueDaysDate.toString(TimeTool.DATE_COMPACT)));
+		} else if (onlyDue) {
 			query.append(" AND r.DateDue != '' AND r.DateDue <= "
 				+ JdbcLink.wrap(new TimeTool().toString(TimeTool.DATE_COMPACT)));
 		}

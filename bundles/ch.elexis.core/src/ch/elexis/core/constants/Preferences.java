@@ -139,6 +139,7 @@ public class Preferences {
 	public static final String USR_REMINDER_PAT_LABEL_CHOOSEN = "reminder/patientlabel/choosen";
 	public static final String USR_REMINDER_PAT_LABEL_AVAILABLE = "reminder/patientlabel/available";
 	public static final String USR_REMINDER_AUTO_SELECT_PATIENT = "reminder/autoSelectPatient"; //$NON-NLS-1$
+	public static final String USR_REMINDER_FILTER_DUE_DAYS = "reminder/filterDueDays"; //$NON-NLS-1$
 	public static final String USR_REMINDER_DEFAULT_PATIENT_RELATED =
 		"reminder/defaultPatientRelated"; //$NON-NLS-1$
 	public static final String USR_REMINDER_SELECTED_RESPONSIBLES_DEFAULT = "reminder/defaultSelectedResponsibles"; //$NON-NLS-1$
