@@ -97,7 +97,7 @@ public class ElexisDataSourceService implements IElexisDataSource {
 			Optional<DBType> dbTypeType = DBConnection.DBType.valueOfIgnoreCase(dbType);
 			if (dbTypeType.isPresent()) {
 				return new ElexisEnvironmentDBConnection(dbTypeType.get(), dbHost, dbDatabase,
-					dbUsername, dbPassword);
+					dbUsername, dbPassword, env.get(DB_JDBC_PARAMETER_STRING));
 			} else {
 				log.warn(
 					"Can not resolve dbType [{}], ignoring environment variable set connection",
@@ -112,12 +112,16 @@ public class ElexisDataSourceService implements IElexisDataSource {
 		private static final long serialVersionUID = -3727881455745909885L;
 		
 		public ElexisEnvironmentDBConnection(DBType dbType, String dbHost, String dbDatabase,
-			String dbUsername, String dbPassword){
+			String dbUsername, String dbPassword, String jdbcParameterString){
 			rdbmsType = dbType;
 			databaseName = dbDatabase;
 			username = dbUsername;
 			password = dbPassword;
-			connectionString = "jdbc:" + dbType.driverName + "//" + dbHost + "/" + dbDatabase;
+			connectionString =
+				"jdbc:" + dbType.dbType.toLowerCase() + "://" + dbHost + "/" + dbDatabase;
+			if (isNotBlank(jdbcParameterString)) {
+				connectionString += "?" + jdbcParameterString;
+			}
 		}
 		
 	}
