@@ -50,7 +50,7 @@ public class CoreUtil {
 	
 	/**
 	 * Get a {@link DBConnection} form various sources. Sources are checked in following order.<br/>
-	 * <li>System Property - RunFromScratch</li>
+	 * <li>System Property - RunFromScratch (initializes a fresh h2 database)</li>
 	 * <li>System Property - ch.elexis.dbSpec, etc.</li>
 	 * <li>Provided Settings</li> <br />
 	 * 

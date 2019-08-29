@@ -65,7 +65,7 @@ public class ElexisPoolingDataSource extends PoolingDataSource implements DataSo
 		String driverName = StringUtils.defaultString(dbConnection.rdbmsType.driverName);
 		String username = StringUtils.defaultString(dbConnection.username);
 		String password = StringUtils.defaultString(dbConnection.password);
-		String connection = StringUtils.defaultString(dbConnection.connectionString);
+		String jdbcString = StringUtils.defaultString(dbConnection.connectionString);
 		
 		Driver driver = (Driver) Class.forName(driverName).newInstance();
 		
@@ -73,11 +73,11 @@ public class ElexisPoolingDataSource extends PoolingDataSource implements DataSo
 		properties.put("user", username);
 		properties.put("password", password);
 		
-		log.info("db connection pool [" + driver + ", " + connection + ", " + username
+		log.info("db connection pool [" + driver + ", " + jdbcString + ", " + username
 			+ "] initialization");
 		
 		ConnectionFactory connectionFactory =
-			new DriverConnectionFactory(driver, connection, properties);
+			new DriverConnectionFactory(driver, jdbcString, properties);
 		
 		GenericObjectPool<Connection> connectionPool = new GenericObjectPool<>(null);
 		connectionPool.setMaxActive(32);
