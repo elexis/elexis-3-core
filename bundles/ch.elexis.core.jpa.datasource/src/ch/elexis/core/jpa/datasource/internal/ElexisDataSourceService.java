@@ -49,7 +49,11 @@ public class ElexisDataSourceService implements IElexisDataSource {
 		DBConnection connection = getEnvironmentProvidedDbConnection();
 		if (connection != null) {
 			log.info("Initializing Database connection via environment variables.");
-			setDBConnection(connection);
+			IStatus setDBConnection = setDBConnection(connection);
+			if (!setDBConnection.isOK()) {
+				log.error("Error setting db connection", setDBConnection.getMessage());
+				System.out.println("ERROR " + setDBConnection.getMessage());
+			}
 		}
 		
 	}
