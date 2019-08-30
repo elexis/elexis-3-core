@@ -49,6 +49,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -102,7 +103,6 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 	private IAction sortByDueDate;
 	private RestrictedAction showOthersRemindersAction;
 	private RestrictedAction selectPatientAction;
-	private boolean bVisible;
 	
 	private ReminderLabelProvider reminderLabelProvider = new ReminderLabelProvider();
 	
@@ -147,7 +147,8 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			// clear selection before update
 			cv.getViewerWidget().setSelection(StructuredSelection.EMPTY);
 			
-			if (bVisible) {
+			Control control = cv.getViewerWidget().getControl();
+			if (control != null && !control.isDisposed() && control.isVisible()) {
 				cv.notify(CommonViewer.Message.update);
 			}
 			/**
@@ -181,7 +182,8 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			public void runInUi(ElexisEvent ev){
 				refreshUserConfiguration();
 				
-				if (bVisible) {
+				Control control = cv.getViewerWidget().getControl();
+				if (control != null && !control.isDisposed() && control.isVisible()) {
 					cv.notify(CommonViewer.Message.update);
 				}
 				
@@ -296,6 +298,8 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				}
 			}
 		});
+		
+		ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_user, eeli_reminder);
 	}
 	
 	private List<IContributionItem> createActionList(){
@@ -357,6 +361,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 	
 	@Override
 	public void dispose(){
+		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat, eeli_user, eeli_reminder);
 		GlobalEventDispatcher.removeActivationListener(this, getViewSite().getPart());
 		CoreHub.userCfg.set(Preferences.USR_REMINDERSOPEN,
 			showOnlyOwnDueReminderToggleAction.isChecked());
@@ -606,14 +611,11 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 	}
 	
 	public void visible(final boolean mode){
-		bVisible = mode;
 		if (mode) {
-			ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_user, eeli_reminder);
 			CoreHub.heart.addListener(this);
 			heartbeat();
 			refreshUserConfiguration();
 		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_pat, eeli_user, eeli_reminder);
 			CoreHub.heart.removeListener(this);
 		}
 	}
