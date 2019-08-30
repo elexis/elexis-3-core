@@ -612,6 +612,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 	
 	public void visible(final boolean mode){
 		if (mode) {
+			cv.notify(CommonViewer.Message.update);
 			CoreHub.heart.addListener(this);
 			heartbeat();
 			refreshUserConfiguration();
