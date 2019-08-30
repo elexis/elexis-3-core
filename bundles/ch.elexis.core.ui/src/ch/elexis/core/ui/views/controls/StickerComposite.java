@@ -184,7 +184,7 @@ public class StickerComposite extends Composite {
 		UiSticker stu = new UiSticker((Sticker) st);
 		ret.setBackground(stu.getBackground());
 		lbl.setForeground(stu.getForeground());
-		lbl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+		lbl.setBackground(stu.getBackground());
 		return ret;
 	}
 	
