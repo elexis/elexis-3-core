@@ -16,11 +16,11 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 
-import ch.elexis.data.PersistentObject;
+import ch.elexis.core.model.WithExtInfo;
 
 public class ExtInfoPropertyPage extends PropertyPage implements IWorkbenchPropertyPage {
 	
-	private PersistentObject po;
+	private WithExtInfo po;
 	
 	@Override
 	protected Control createContents(Composite parent){
@@ -33,15 +33,7 @@ public class ExtInfoPropertyPage extends PropertyPage implements IWorkbenchPrope
 		header.setText("Definierte Felder in ExtInfo:");
 		header.setLayoutData(new GridData(SWT.FILL, SWT.LEFT, true, false, 2, 1));
 		
-		Map<Object, Object> extinfo = null;
-		try {
-			extinfo = po.getMap(PersistentObject.FLD_EXTINFO);
-		} catch (Exception e) {
-			// we ignore any exception here, as it might be coming
-			// from a missing ExtInfo (like in Leistunbsblock) or
-			// something else
-		}
-		
+		Map<Object, Object> extinfo = po.getMap();
 		if (extinfo == null || extinfo.size() == 0) {
 			Label lab = new Label(comp, SWT.None);
 			lab.setText("Keine.");
@@ -68,7 +60,7 @@ public class ExtInfoPropertyPage extends PropertyPage implements IWorkbenchPrope
 	
 	private void init(){
 		IAdaptable adapt = getElement();
-		po = (PersistentObject) adapt.getAdapter(PersistentObject.class);
+		po = (WithExtInfo) adapt.getAdapter(WithExtInfo.class);
 	}
 	
 }

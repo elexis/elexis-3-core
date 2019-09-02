@@ -830,7 +830,7 @@
                name="%details">
             <enabledWhen>
                <instanceof
-                     value="ch.elexis.data.Patient">
+                     value="ch.elexis.core.model.IPatient">
                </instanceof>
             </enabledWhen>
          </page>
@@ -841,7 +841,7 @@
                name="%address">
             <enabledWhen>
                <instanceof
-                     value="ch.elexis.data.Patient">
+                     value="ch.elexis.core.model.IPatient">
                </instanceof>
             </enabledWhen>
          </page>
@@ -852,7 +852,7 @@
                name="XID">
             <enabledWhen>
                <instanceof
-                     value="ch.elexis.data.PersistentObject">
+                     value="ch.elexis.core.model.Identifiable">
                </instanceof>
             </enabledWhen>
          </page>
@@ -861,6 +861,11 @@
                icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/emblem-symbolic-link-2.png"
                id="at.medevit.elexis.properties.propertyPage.ExtInfoPropertyPage"
                name="ExtInfo">
+            <enabledWhen>
+               <instanceof
+                     value="ch.elexis.core.model.WithExtInfo">
+               </instanceof>
+            </enabledWhen>
          </page>
       </extension>
       <extension

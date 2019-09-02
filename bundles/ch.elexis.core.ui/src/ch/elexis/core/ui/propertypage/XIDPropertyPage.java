@@ -1,7 +1,6 @@
 package ch.elexis.core.ui.propertypage;
 
-import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.swt.SWT;
@@ -14,12 +13,14 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 
-import ch.elexis.data.PersistentObject;
-import ch.elexis.data.Xid;
+import ch.elexis.core.model.IXid;
+import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.IXidService.IXidDomain;
+import ch.elexis.core.services.holder.XidServiceHolder;
 
 public class XIDPropertyPage extends PropertyPage implements IWorkbenchPropertyPage {
 	
-	private PersistentObject po;
+	private Identifiable po;
 	
 	public XIDPropertyPage(){
 		super();
@@ -36,7 +37,7 @@ public class XIDPropertyPage extends PropertyPage implements IWorkbenchPropertyP
 		header.setText("Für dieses Objekt definierte XIDs:");
 		header.setLayoutData(new GridData(SWT.FILL, SWT.LEFT, true, false, 2, 1));
 		
-		Set<String> domains = Xid.getXIDDomains();
+		List<IXidDomain> domains = XidServiceHolder.get().getDomains();
 		
 		if (domains.size() == 0) {
 			Label lab = new Label(comp, SWT.None);
@@ -44,14 +45,16 @@ public class XIDPropertyPage extends PropertyPage implements IWorkbenchPropertyP
 			lab.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 			return comp;
 		}
-		for (Iterator<String> iterator = domains.iterator(); iterator.hasNext();) {
-			String string = (String) iterator.next();
+		for (IXidDomain domain : domains) {
 			Label lab = new Label(comp, SWT.None);
-			lab.setText(Xid.getSimpleNameForXIDDomain(string));
+			lab.setText(domain.getSimpleName());
 			lab.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 			
 			Text txt = new Text(comp, SWT.None);
-			txt.setText(po.getXid(string));
+			IXid xid = XidServiceHolder.get().getXid(po, domain.getDomainName());
+			if (xid != null) {
+				txt.setText(xid.getDomainId());
+			}
 			txt.setEditable(false);
 			txt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		}
@@ -61,7 +64,7 @@ public class XIDPropertyPage extends PropertyPage implements IWorkbenchPropertyP
 	
 	private void init(){
 		IAdaptable adapt = getElement();
-		po = (PersistentObject) adapt.getAdapter(PersistentObject.class);
+		po = (Identifiable) adapt.getAdapter(Identifiable.class);
 	}
 	
 }

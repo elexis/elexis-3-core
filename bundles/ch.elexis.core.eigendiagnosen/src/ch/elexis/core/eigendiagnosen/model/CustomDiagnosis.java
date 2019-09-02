@@ -1,6 +1,7 @@
 package ch.elexis.core.eigendiagnosen.model;
 
 import java.util.List;
+import java.util.Map;
 
 import ch.elexis.core.eigendiagnosen.Messages;
 import ch.elexis.core.eigendiagnosen.model.service.ModelUtil;
@@ -67,6 +68,11 @@ public class CustomDiagnosis extends
 	@Override
 	public void setExtInfo(Object key, Object value){
 		extInfoHandler.setExtInfo(key, value);
+	}
+	
+	@Override
+	public Map<Object, Object> getMap(){
+		return extInfoHandler.getMap();
 	}
 	
 	@Override

@@ -16,16 +16,18 @@ import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.types.Country;
 import ch.elexis.core.ui.locks.IUnlockable;
-import ch.elexis.data.Patient;
 
 public class PatientAddressPage extends PropertyPage implements IWorkbenchPropertyPage, IUnlockable {
 	
-	private Patient pat;
+	private IPatient pat;
 	private Text textStrasse;
 	private Text textPostleitzahl;
 	private Text textOrtschaft;
-	private TableCombo tableCombo;
+	private TableComboViewer countryComboViewer;
 	
 	public PatientAddressPage(){}
 	
@@ -63,8 +65,8 @@ public class PatientAddressPage extends PropertyPage implements IWorkbenchProper
 		lblLand.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblLand.setText("Land");
 		
-		TableComboViewer countryComboViewer = new TableComboViewer(comp);
-		tableCombo = countryComboViewer.getTableCombo();
+		countryComboViewer = new TableComboViewer(comp);
+		TableCombo tableCombo = countryComboViewer.getTableCombo();
 		tableCombo.setTableWidthPercentage(90);
 		tableCombo.setShowFontWithinSelection(false);
 		tableCombo.setShowColorWithinSelection(false);
@@ -73,21 +75,16 @@ public class PatientAddressPage extends PropertyPage implements IWorkbenchProper
 		tableCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		countryComboViewer.setLabelProvider(new CountryComboLabelProvider());
 		countryComboViewer.setContentProvider(new ArrayContentProvider());
-		String[] items = new String[] {
-			"CH", "FL", "AT", "DE", "FR", "IT"
+		Country[] items = new Country[] {
+			Country.CH, Country.LI, Country.AT, Country.DE, Country.FR, Country.IT
 		};
 		countryComboViewer.setInput(items);
 		
 		super.setTitle(pat.getLabel());
-		textStrasse.setText(pat.get(Patient.FLD_STREET));
-		textPostleitzahl.setText(pat.get(Patient.FLD_ZIP));
-		textOrtschaft.setText(pat.get(Patient.FLD_PLACE));
-		String country = pat.get(Patient.FLD_COUNTRY).trim();
-		for (int i = 0; i < items.length; i++) {
-			if (country.equalsIgnoreCase(items[i])) {
-				countryComboViewer.setSelection(new StructuredSelection(items[i]), true);
-			}
-		}
+		textStrasse.setText(pat.getStreet());
+		textPostleitzahl.setText(pat.getZip());
+		textOrtschaft.setText(pat.getCity());
+		countryComboViewer.setSelection(new StructuredSelection(pat.getCountry()));
 		
 		setUnlocked(LocalLockServiceHolder.get().isLocked(pat));
 		
@@ -96,20 +93,19 @@ public class PatientAddressPage extends PropertyPage implements IWorkbenchProper
 	
 	private void init(){
 		IAdaptable adapt = getElement();
-		pat = (Patient) adapt.getAdapter(Patient.class);
+		pat = (IPatient) adapt.getAdapter(IPatient.class);
 	}
 	
 	@Override
 	protected void performApply(){
-		String[] fields = {
-			Patient.FLD_STREET, Patient.FLD_COUNTRY, Patient.FLD_ZIP, Patient.FLD_PLACE
-		};
-		String[] values =
-			{
-				textStrasse.getText(), tableCombo.getText(), textPostleitzahl.getText(),
-				textOrtschaft.getText()
-			};
-		pat.set(fields, values);
+		pat.setStreet(textStrasse.getText());
+		StructuredSelection countrySel = (StructuredSelection) countryComboViewer.getSelection();
+		if (!countrySel.isEmpty()) {
+			pat.setCountry((Country) countrySel.getFirstElement());
+		}
+		pat.setZip(textPostleitzahl.getText());
+		pat.setCity(textOrtschaft.getText());
+		CoreModelServiceHolder.get().save(pat);
 	}
 	
 	@Override
@@ -123,6 +119,6 @@ public class PatientAddressPage extends PropertyPage implements IWorkbenchProper
 		textStrasse.setEditable(unlocked);
 		textPostleitzahl.setEditable(unlocked);
 		textOrtschaft.setEditable(unlocked);
-		tableCombo.setEnabled(unlocked);
+		countryComboViewer.getControl().setEnabled(unlocked);
 	}
 }

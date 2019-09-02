@@ -5,41 +5,40 @@
 
 package ch.elexis.core.ui.propertypage;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.nebula.widgets.cdatetime.CDT;
 import org.eclipse.nebula.widgets.cdatetime.CDateTime;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
-import org.eclipse.ui.statushandlers.StatusManager;
 
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.Patient;
-import ch.elexis.data.Person;
 
 public class PatientPropertyPage extends PropertyPage implements IWorkbenchPropertyPage, IUnlockable {
 	
 	public static final String ID = "at.medevit.elexis.properties.propertyPage.PatientPropertyPage";
 	
-	private Patient pat;
+	private IPatient pat;
 	private Text textVorname;
 	private Text textNachname;
 	private Text textTelefon1;
@@ -50,7 +49,7 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 	private Text textBemerkungen;
 	private CDateTime geburtsdatum;
 	
-	private Combo comboGeschlecht;
+	private ComboViewer comboGeschlecht;
 	
 	public PatientPropertyPage(){
 		super();
@@ -84,11 +83,17 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		String toolTip = String.format(Messages.Patient_male_female_tooltip,
 			Messages.Patient_male_short, Messages.Patient_female_short, Messages.Patient_male_long,
 			Messages.Patient_female_long);
-		comboGeschlecht = new Combo(comp, SWT.NONE);
-		comboGeschlecht.setItems(new String[] {
-			Messages.Patient_male_short, Messages.Patient_female_short
+		comboGeschlecht = new ComboViewer(comp, SWT.NONE);
+		comboGeschlecht.setContentProvider(ArrayContentProvider.getInstance());
+		comboGeschlecht.setInput(Gender.values());
+		comboGeschlecht.setLabelProvider(new LabelProvider() {
+			@Override
+			public String getText(Object element){
+				return ((Gender) element).value();
+			}
 		});
-		comboGeschlecht.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboGeschlecht.getControl()
+			.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblGeburtsdatum = new Label(comp, SWT.NONE);
 		lblGeburtsdatum.setText(Messages.KontaktDetailDialog_labelBirthdate);
@@ -146,20 +151,16 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		textBemerkungen.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		super.setTitle(pat.getLabel());
-		textVorname.setText(pat.getName());
-		textNachname.setText(pat.getVorname());
+		textVorname.setText(pat.getFirstName());
+		textNachname.setText(pat.getLastName());
 		geburtsdatum.setSelection(getGeburtsdatum());
-		if (pat.getGeschlecht().trim().equalsIgnoreCase(Patient.MALE)) {
-			comboGeschlecht.setText(Messages.Patient_male_short);
-		} else {
-			comboGeschlecht.setText(Messages.Patient_female_short);
-		}
-		textTelefon1.setText(pat.get(Patient.FLD_PHONE1));
-		textTelefon2.setText(pat.get(Patient.FLD_PHONE2));
-		textFax.setText(pat.get(Patient.FLD_FAX));
-		textHandy.setText(pat.get(Patient.FLD_MOBILEPHONE));
-		textEmail.setText(pat.get(Patient.FLD_E_MAIL));
-		textBemerkungen.setText(pat.getBemerkung());
+		comboGeschlecht.setSelection(new StructuredSelection(pat.getGender()));
+		textTelefon1.setText(pat.getPhone1());
+		textTelefon2.setText(pat.getPhone2());
+		textFax.setText(pat.getFax());
+		textHandy.setText(pat.getMobile());
+		textEmail.setText(pat.getEmail());
+		textBemerkungen.setText(pat.getComment());
 		
 		setUnlocked(LocalLockServiceHolder.get().isLocked(pat));
 		
@@ -168,59 +169,43 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 	
 	private void init(){
 		IAdaptable adapt = getElement();
-		pat = (Patient) adapt.getAdapter(Patient.class);
+		pat = (IPatient) adapt.getAdapter(IPatient.class);
 	}
 	
 	private Date getGeburtsdatum(){
-		DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
-		try {
-			return df.parse(pat.getGeburtsdatum());
-		} catch (ParseException e) {
-			Status status =
-				new Status(IStatus.WARNING, "at.medevit.elexis.properties", e.getLocalizedMessage());
-			StatusManager.getManager().handle(status, StatusManager.LOG);
+		LocalDateTime dob = pat.getDateOfBirth();
+		if (dob != null) {
+			return Date.from(dob.atZone(ZoneId.systemDefault()).toInstant());
+		} else {
+			return null;
 		}
-		return null;
 	}
 	
 	@Override
 	protected void performApply(){
-		Date bd = geburtsdatum.getSelection();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(bd);
-		
-		int geschlechtSelection = comboGeschlecht.getSelectionIndex();
-		String geschlecht = Patient.MALE;
-		
-		if (geschlechtSelection == 1
-			|| comboGeschlecht.getText().contentEquals(Messages.Patient_female_short)) {
-			geschlecht = Patient.FEMALE; // German w for weiblich = female
-		} else if (geschlechtSelection == 0
-			|| comboGeschlecht.getText().contentEquals(Messages.Patient_male_short)) {
-			geschlecht = Patient.MALE;
-		} else if (geschlechtSelection == -1) {
+		StructuredSelection genderSelection = (StructuredSelection) comboGeschlecht.getSelection();
+		if (genderSelection != null && !genderSelection.isEmpty()) {
+			pat.setGender((Gender) genderSelection.getFirstElement());
+		} else {
 			SWTHelper.showError(Messages.PatientErfassenDialog_Error_Sex,
 				Messages.PatientErfassenDialog_Sex_must_be_specified);
 			return;
 		}
-		pat.set(Patient.FLD_SEX, geschlecht);
 		
-		String bdS =
-			cal.get(Calendar.DAY_OF_MONTH) + "." + (cal.get(Calendar.MONTH) + 1) + "."
-				+ cal.get(Calendar.YEAR);
-		String[] fields =
-			{
-				Patient.FLD_FIRSTNAME, Person.NAME, Person.BIRTHDATE, Patient.FLD_E_MAIL,
-				Patient.FLD_PHONE1, Patient.FLD_PHONE2, Patient.FLD_MOBILEPHONE,
-				Patient.FLD_REMARK, Patient.FLD_FAX
-			};
-		String[] values =
-			{
-				textNachname.getText(), textVorname.getText(), bdS, textEmail.getText(),
-				textTelefon1.getText(), textTelefon2.getText(), textHandy.getText(),
-				textBemerkungen.getText(), textFax.getText()
-			};
-		pat.set(fields, values);
+		Date bd = geburtsdatum.getSelection();
+		if (bd != null) {
+			pat.setDateOfBirth(LocalDateTime.ofInstant(bd.toInstant(), ZoneId.systemDefault()));
+		}
+		
+		pat.setLastName(textNachname.getText());
+		pat.setFirstName(textVorname.getText());
+		pat.setEmail(textEmail.getText());
+		pat.setPhone1(textTelefon1.getText());
+		pat.setPhone2(textTelefon2.getText());
+		pat.setMobile(textHandy.getText());
+		pat.setComment(textBemerkungen.getText());
+		pat.setFax(textFax.getText());
+		CoreModelServiceHolder.get().save(pat);
 	}
 	
 	@Override
@@ -240,7 +225,6 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		textEmail.setEditable(unlocked);
 		textBemerkungen.setEditable(unlocked);
 		geburtsdatum.setEditable(unlocked);
-		comboGeschlecht.setEnabled(unlocked);
-		
+		comboGeschlecht.getControl().setEnabled(unlocked);
 	}
 }
