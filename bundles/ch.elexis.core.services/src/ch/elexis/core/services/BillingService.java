@@ -10,6 +10,8 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.ac.AccessControlDefaults;
 import ch.elexis.core.model.IBillable;
@@ -30,6 +32,8 @@ import ch.rgw.tools.Result.SEVERITY;
 
 @Component
 public class BillingService implements IBillingService {
+	
+	private static Logger logger = LoggerFactory.getLogger(BillingService.class);
 	
 	@Reference
 	private IAccessControlService accessControlService;
@@ -123,6 +127,7 @@ public class BillingService implements IBillingService {
 	@Override
 	public Result<IBilled> bill(IBillable billable, IEncounter encounter, double amount){
 		IBillable beforeAdjust = billable;
+		logger.info("Billing [" + amount + "] of [" + billable + "] on [" + encounter + "]");
 		for (IBillableAdjuster iBillableAdjuster : billableAdjusters) {
 			billable = iBillableAdjuster.adjust(billable, encounter);
 		}
