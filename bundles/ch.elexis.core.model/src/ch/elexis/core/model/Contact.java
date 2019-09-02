@@ -2,6 +2,7 @@ package ch.elexis.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -268,6 +269,11 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 		extInfoHandler.setExtInfo(key, value);
 	}
 
+	@Override
+	public Map<Object, Object> getMap(){
+		return extInfoHandler.getMap();
+	}
+	
 	@Override
 	public List<IAddress> getAddress() {
 		CoreModelServiceHolder.get().refresh(this);

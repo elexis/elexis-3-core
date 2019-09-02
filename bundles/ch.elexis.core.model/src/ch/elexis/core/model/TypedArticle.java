@@ -1,6 +1,7 @@
 package ch.elexis.core.model;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -193,6 +194,11 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	@Override
 	public void setExtInfo(Object key, Object value){
 		extInfoHandler.setExtInfo(key, value);
+	}
+	
+	@Override
+	public Map<Object, Object> getMap(){
+		return extInfoHandler.getMap();
 	}
 	
 	@Override

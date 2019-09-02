@@ -1,5 +1,7 @@
 package ch.elexis.core.model;
 
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.entities.Behandlung;
@@ -152,6 +154,11 @@ public class InvoiceBilled extends AbstractIdDeleteModelAdapter<VerrechnetCopy>
 	@Override
 	public Object getExtInfo(Object key){
 		return extInfoHandler.getExtInfo(key);
+	}
+	
+	@Override
+	public Map<Object, Object> getMap(){
+		return extInfoHandler.getMap();
 	}
 	
 	@Override

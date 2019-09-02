@@ -10,6 +10,8 @@
  */
 package ch.elexis.core.model;
 
+import java.util.Map;
+
 
 /**
  * <!-- begin-user-doc -->
@@ -37,5 +39,15 @@ public interface WithExtInfo {
 	 * @generated
 	 */
 	void setExtInfo(Object key, Object value);
+
+	/**
+	 * <!-- begin-user-doc --> <b>Modifications to the returned map are not persisted.</b> Use
+	 * {@link #setExtInfo(Object, Object)} to handle persistent sets <!-- end-user-doc -->
+	 * 
+	 * @model kind="operation" type="ch.elexis.core.types.Map&lt;org.eclipse.emf.ecore.EJavaObject,
+	 *        org.eclipse.emf.ecore.EJavaObject&gt;"
+	 * @generated
+	 */
+	Map<Object, Object> getMap();
 
 } // WithExtInfo

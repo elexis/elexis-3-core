@@ -1,6 +1,7 @@
 package ch.elexis.core.model;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 import ch.elexis.core.jpa.entities.DefaultSignature;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
@@ -29,6 +30,11 @@ public class ArticleDefaultSignature
 	@Override
 	public void setExtInfo(Object key, Object value){
 		extInfoHandler.setExtInfo(key, value);
+	}
+	
+	@Override
+	public Map<Object, Object> getMap(){
+		return extInfoHandler.getMap();
 	}
 	
 	@Override

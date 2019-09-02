@@ -1,6 +1,7 @@
 package ch.elexis.core.model;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Optional;
 
 import ch.elexis.core.jpa.entities.Kontakt;
@@ -183,6 +184,11 @@ public class Prescription
 	@Override
 	public void setExtInfo(Object key, Object value){
 		extInfoHandler.setExtInfo(key, value);
+	}
+	
+	@Override
+	public Map<Object, Object> getMap(){
+		return extInfoHandler.getMap();
 	}
 	
 	@Override

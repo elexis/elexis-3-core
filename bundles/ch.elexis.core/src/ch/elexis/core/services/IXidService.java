@@ -24,11 +24,10 @@ public interface IXidService {
 	public IXidDomain getDomain(String name);
 	
 	/**
-	 * 
-	 * @param name
+	 *
 	 * @return
 	 */
-	public List<IXidDomain> getDomains(String name);
+	public List<IXidDomain> getDomains();
 	
 	/**
 	 * 

@@ -1,5 +1,6 @@
 package ch.elexis.core.model;
 
+import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
@@ -208,6 +209,11 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 	@Override
 	public void setExtInfo(Object key, Object value){
 		extInfoHandler.setExtInfo(key, value);
+	}
+	
+	@Override
+	public Map<Object, Object> getMap(){
+		return extInfoHandler.getMap();
 	}
 	
 	@Override

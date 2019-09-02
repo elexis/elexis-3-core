@@ -373,6 +373,7 @@
         <genParameters ecoreParameter="model.ecore#//WithExtInfo/setExtInfo/key"/>
         <genParameters ecoreParameter="model.ecore#//WithExtInfo/setExtInfo/value"/>
       </genOperations>
+      <genOperations ecoreOperation="model.ecore#//WithExtInfo/getMap"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IRole">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IRole/systemRole"/>
