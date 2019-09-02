@@ -318,7 +318,8 @@ public abstract class AbstractModelService implements IModelService {
 	 */
 	protected void setDbObject(Object adapter, EntityWithId entity){
 		if (adapter instanceof AbstractIdModelAdapter<?>) {
-			// synchronous change event will set the entity, including entity of this model adapter
+			((AbstractIdModelAdapter<?>) adapter).setEntity(entity);
+			// synchronous change event will set the entity in all entity model adapter known to EntityChangeEventListener
 			sendEntityChangeEvent(entity);
 		}
 	}
