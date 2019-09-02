@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Import-Package:  javax.jws,
+ javax.jws.soap,
+ javax.xml.bind,
+ javax.xml.bind.annotation,
+ javax.xml.bind.annotation.adapters,
+ javax.xml.ws,
+ javax.activation,
+ org.slf4j
+Comment:Java 9+ support
