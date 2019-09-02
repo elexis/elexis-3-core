@@ -100,6 +100,9 @@ location "http://download.elexis.info/elexis/master/p2/target/" {
 	javax.interceptor-api
 	com.sun.xml.bind.jaxb-osgi
 	jaxb-api
+	jakarta.xml.ws-api
+	jakarta.xml.soap-api
+	jakarta.jws-api
 	// 
 	org.springframework.spring-web
 	woodstox-core-asl
