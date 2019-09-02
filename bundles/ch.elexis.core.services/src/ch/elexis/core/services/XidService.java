@@ -23,7 +23,9 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.model.XidQuality;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.internal.TransientXid;
 
 @Component
 public class XidService implements IXidService {
@@ -53,7 +55,7 @@ public class XidService implements IXidService {
 	}
 	
 	@Override
-	public List<IXidDomain> getDomains(String name){
+	public List<IXidDomain> getDomains(){
 		return new ArrayList<>(domains.values());
 	}
 	
@@ -193,6 +195,10 @@ public class XidService implements IXidService {
 	
 	@Override
 	public IXid getXid(Identifiable identifiable, String domain){
+		if (ELEXIS.equals(domain)) {
+			return new TransientXid(ELEXIS, identifiable.getId(),
+				XidQuality.ASSIGNMENT_LOCAL_QUALITY_GUID, identifiable);
+		}
 		// ignore type here, as Kontakt and subtypes lead to not finding the Xid
 		// objectid should be unique
 		INamedQuery<IXid> query =
