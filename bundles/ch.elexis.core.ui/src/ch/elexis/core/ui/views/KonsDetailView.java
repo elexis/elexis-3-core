@@ -411,6 +411,7 @@ public class KonsDetailView extends ViewPart
 						.load(((Mandant) ksl.getSelection()).getId(), IMandator.class).orElse(null);
 					if (mandator != null) {
 						actEncounter.setMandator(mandator);
+						CoreModelServiceHolder.get().save(actEncounter);
 					}
 					setKons(actEncounter);
 				}
