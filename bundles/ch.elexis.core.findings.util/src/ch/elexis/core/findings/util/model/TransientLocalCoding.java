@@ -93,7 +93,7 @@ public class TransientLocalCoding implements ILocalCoding {
 	
 	@Override
 	public Long getLastupdate(){
-		return null;
+		return 0L;
 	}
 	
 }

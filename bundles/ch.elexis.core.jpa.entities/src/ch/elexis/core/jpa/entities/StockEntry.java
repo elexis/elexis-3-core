@@ -183,7 +183,7 @@ public class StockEntry extends AbstractEntityWithId implements EntityWithId, En
 	
 	@Override
 	public Long getLastupdate(){
-		return lastupdate;
+		return lastupdate != null ? lastupdate : 0L;
 	}
 	
 	@Override

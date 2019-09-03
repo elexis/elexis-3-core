@@ -79,7 +79,7 @@ public class VKPreis extends AbstractEntityWithId implements EntityWithId {
 	
 	@Override
 	public Long getLastupdate(){
-		return lastupdate;
+		return lastupdate != null ? lastupdate : 0L;
 	}
 	
 	@Override

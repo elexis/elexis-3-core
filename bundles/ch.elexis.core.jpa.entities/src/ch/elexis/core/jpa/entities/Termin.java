@@ -285,7 +285,7 @@ public class Termin extends AbstractEntityWithId implements EntityWithId, Entity
 	
 	@Override
 	public Long getLastupdate(){
-		return lastupdate;
+		return lastupdate != null ? lastupdate : 0L;
 	}
 	
 	@Override

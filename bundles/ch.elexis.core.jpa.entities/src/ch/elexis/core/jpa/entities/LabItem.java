@@ -257,7 +257,7 @@ public class LabItem extends AbstractEntityWithId implements EntityWithId, Entit
 	
 	@Override
 	public Long getLastupdate(){
-		return lastupdate;
+		return lastupdate != null ? lastupdate : 0L;
 	}
 	
 	@Override

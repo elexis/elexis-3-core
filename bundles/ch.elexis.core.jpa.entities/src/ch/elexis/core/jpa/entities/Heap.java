@@ -82,7 +82,7 @@ public class Heap extends AbstractEntityWithId implements EntityWithId, EntityWi
 	
 	@Override
 	public Long getLastupdate(){
-		return lastupdate;
+		return lastupdate != null ? lastupdate : 0L;
 	}
 	
 	@Override

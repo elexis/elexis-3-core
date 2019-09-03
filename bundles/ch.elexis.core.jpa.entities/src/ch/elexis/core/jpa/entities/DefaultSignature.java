@@ -158,7 +158,7 @@ public class DefaultSignature extends AbstractEntityWithId
 	
 	@Override
 	public Long getLastupdate(){
-		return lastupdate;
+		return lastupdate != null ? lastupdate : 0L;
 	}
 	
 	@Override

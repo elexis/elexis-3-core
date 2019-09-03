@@ -75,7 +75,7 @@ public class Task extends AbstractEntityWithId implements EntityWithId, EntityWi
 	}
 	
 	public Long getLastupdate(){
-		return lastupdate;
+		return lastupdate != null ? lastupdate : 0L;
 	}
 	
 	public void setLastupdate(Long lastupdate){

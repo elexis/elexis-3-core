@@ -202,7 +202,7 @@ public class Stock extends AbstractEntityWithId implements EntityWithId, EntityW
 	
 	@Override
 	public Long getLastupdate(){
-		return lastupdate;
+		return lastupdate != null ? lastupdate : 0L;
 	}
 	
 	@Override
