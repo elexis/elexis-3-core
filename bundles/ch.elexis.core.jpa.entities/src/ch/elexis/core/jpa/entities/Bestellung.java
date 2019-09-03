@@ -56,7 +56,7 @@ public class Bestellung extends AbstractEntityWithId implements EntityWithId, En
 	
 	@Override
 	public Long getLastupdate(){
-		return lastupdate != null ? lastupdate : 0L;
+		return lastupdate;
 	}
 	
 	@Override

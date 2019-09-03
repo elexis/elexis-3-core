@@ -245,7 +245,7 @@ public class Fall extends AbstractEntityWithId
 	
 	@Override
 	public Long getLastupdate(){
-		return lastupdate != null ? lastupdate : 0L;
+		return lastupdate;
 	}
 	
 	@Override

@@ -73,7 +73,7 @@ public class RFE extends AbstractEntityWithId implements EntityWithId, EntityWit
 	
 	@Override
 	public Long getLastupdate(){
-		return lastupdate != null ? lastupdate : 0L;
+		return lastupdate;
 	}
 	
 	@Override
