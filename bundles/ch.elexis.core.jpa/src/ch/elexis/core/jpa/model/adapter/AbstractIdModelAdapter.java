@@ -88,7 +88,7 @@ public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements 
 	
 	@Override
 	public Long getLastupdate(){
-		return getEntity().getLastupdate();
+		return getEntity().getLastupdate() != null ? getEntity().getLastupdate() : 0L;
 	}
 	
 	@Override
