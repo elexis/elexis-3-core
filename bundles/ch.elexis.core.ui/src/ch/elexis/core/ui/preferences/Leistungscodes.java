@@ -85,18 +85,24 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.BillingSystem;
 import ch.elexis.data.Fall;
 import ch.elexis.data.PersistentObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
 public class Leistungscodes extends PreferencePage implements IWorkbenchPreferencePage {
+	public Leistungscodes() {
+	}
+	private static Logger log = LoggerFactory.getLogger(Leistungscodes.class);
 	private static final String DEFINITIONSDELIMITER = ";"; //$NON-NLS-1$
 	private static final String ARGUMENTSSDELIMITER = ":"; //$NON-NLS-1$
 	private static final String ITEMDELIMITER = "\t"; //$NON-NLS-1$
 	private static final String FOURLINESPLACEHOLDER = "\n\n\n\nd"; //$NON-NLS-1$
-	List<IConfigurationElement> lo =
+	List<IConfigurationElement> list_RnOutputters =
 		Extensions.getExtensions(ExtensionPointConstantsData.RECHNUNGS_MANAGER); //$NON-NLS-1$
-	List<IConfigurationElement> ll =
+	List<IConfigurationElement> liste_CS_codes =
 		Extensions.getExtensions(ExtensionPointConstantsUi.VERRECHNUNGSCODE); //$NON-NLS-1$
 	String[] systeme = CoreHub.globalCfg.nodes(Preferences.LEISTUNGSCODES_CFG_KEY);
 	Table table;
@@ -128,9 +134,14 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				if (at.open() == Dialog.OK) {
 					String[] result = at.getResult();
 					String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + result[0]; //$NON-NLS-1$
+					log.info("Dialog.OK localized values: name {} leistung {} ausgabe {}", result[0], result[1], result[2]);
+					String leistungscode = getDbAusgabeName(result[1]);
+					String rnOutputter = getDbAusgabeName(result[2]);
+					log.info("Dialog.OK dbNames values: name {} leistung {} ausgabe {}", result[0], leistungscode, rnOutputter);
+
 					CoreHub.globalCfg.set(key + "/name", result[0]); //$NON-NLS-1$
-					CoreHub.globalCfg.set(key + "/leistungscodes", result[1]); //$NON-NLS-1$
-					CoreHub.globalCfg.set(key + "/standardausgabe", result[2]); //$NON-NLS-1$
+					CoreHub.globalCfg.set(key + "/leistungscodes", leistungscode); //$NON-NLS-1$
+					CoreHub.globalCfg.set(key + "/standardausgabe", rnOutputter); //$NON-NLS-1$
 					CoreHub.globalCfg.set(key + "/bedingungen", result[3]); //$NON-NLS-1$
 					CoreHub.globalCfg.set(key + "/fakultativ", result[4]); //$NON-NLS-1$
 					CoreHub.globalCfg.set(key + "/unused", result[5]); //$NON-NLS-1$
@@ -178,7 +189,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					for (String s1 : systeme) {
 						if (s1.equals(ssel)) {
 							String[] pre = new String[9];
-							
+							log.info("ssel {} cs {} rn {}", ssel, BillingSystem.getCodeSystem(s1),
+									BillingSystem.getDefaultPrintSystem(s1));
 							pre[0] = s1;
 							pre[1] = BillingSystem.getCodeSystem(s1);
 							pre[2] = BillingSystem.getDefaultPrintSystem(s1);
@@ -194,10 +206,15 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 							AbrechnungsTypDialog at = new AbrechnungsTypDialog(getShell(), pre);
 							if (at.open() == Dialog.OK) {
 								String[] result = at.getResult();
+								log.info("DoubleClick Okay: name '{}'  localized leistung: '{}' ausgabe: '{}'", result[0], result[1], result[2]);
+								String leistungscode = getDbLeistungscodeName(result[1]);
+								String rnOutputter = getDbAusgabeName(result[2]);
 								String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + result[0]; //$NON-NLS-1$
+								log.info("Dialog.OK db values: name '{}' leistung '{}' ausgabe '{}' key '{}'", 
+										result[0], leistungscode, rnOutputter, key);
 								CoreHub.globalCfg.set(key + "/name", result[0]); //$NON-NLS-1$
-								CoreHub.globalCfg.set(key + "/leistungscodes", result[1]); //$NON-NLS-1$
-								CoreHub.globalCfg.set(key + "/standardausgabe", result[2]); //$NON-NLS-1$
+								CoreHub.globalCfg.set(key + "/leistungscodes", leistungscode); //$NON-NLS-1$
+								CoreHub.globalCfg.set(key + "/standardausgabe", rnOutputter); //$NON-NLS-1$
 								CoreHub.globalCfg.set(key + "/bedingungen", result[3]); //$NON-NLS-1$
 								CoreHub.globalCfg.set(key + "/fakultativ", result[4]); //$NON-NLS-1$
 								CoreHub.globalCfg.set(key + "/unused", result[5]); //$NON-NLS-1$
@@ -317,8 +334,10 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				TableItem it = new TableItem(table, SWT.NONE);
 				String name = CoreHub.globalCfg.get(cfgkey + "name", "default"); //$NON-NLS-1$ //$NON-NLS-2$
 				it.setText(0, name);
-				it.setText(1, CoreHub.globalCfg.get(cfgkey + "leistungscodes", "?")); //$NON-NLS-1$ //$NON-NLS-2$
-				it.setText(2, CoreHub.globalCfg.get(cfgkey + "standardausgabe", "?")); //$NON-NLS-1$ //$NON-NLS-2$
+				String code = CoreHub.globalCfg.get(cfgkey + "leistungscodes", "?");//$NON-NLS-1$ //$NON-NLS-2$
+				String ausgabe =  CoreHub.globalCfg.get(cfgkey + "standardausgabe", "?");//$NON-NLS-1$ //$NON-NLS-2$
+				it.setText(1,  getLocalizedLeistungscode(code)); //$NON-NLS-1$ //$NON-NLS-2$
+				it.setText(2, getLocalizedAusgabe(ausgabe)); 
 				StringBuilder sql = new StringBuilder();
 				TimeTool actdat = new TimeTool();
 				MultiplikatorList multis = new MultiplikatorList("VK_PREISE", name); //$NON-NLS-1$
@@ -334,7 +353,59 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			}
 		}
 	}
-	
+
+	private String getLocalizedAusgabe(String ausgabe) {
+		String localizedName = "unknown: " + ausgabe;
+		for (IConfigurationElement ic : list_RnOutputters) {
+			String name = ic.getAttribute("name");
+			if (!name.contentEquals(ausgabe)) {
+				continue;
+			}
+			localizedName = ic.getAttribute("localizedName"); //$NON-NLS-1$
+			return localizedName == null ? name : localizedName;
+		}
+		return localizedName;
+	}
+
+	private String getDbAusgabeName(String ausgabe) {
+		String dbName = "unknown: " + ausgabe;
+		for (IConfigurationElement ic : list_RnOutputters) {
+			String name = ic.getAttribute("name");
+			String localizedName = ic.getAttribute("localizedName");
+			if (! (name.contentEquals(ausgabe) || ( localizedName != null && localizedName.contentEquals(ausgabe)))) {
+				continue;
+			}
+			return name;
+		}
+		return dbName;
+	}
+
+	private String getDbLeistungscodeName(String Leistungscode) {
+		String dbName = "unknown: " + Leistungscode;
+		for (IConfigurationElement ic : liste_CS_codes) {
+			String name = ic.getAttribute("name");
+			String localizedName = ic.getAttribute("localizedName");
+			if (! (name.contentEquals(Leistungscode) || ( localizedName != null && localizedName.contentEquals(Leistungscode)))) {
+				continue;
+			}
+			return name;
+		}
+		return dbName;
+	}
+
+	private String getLocalizedLeistungscode(String code) {
+		String localizedName = "unknown: " + code;
+		for (IConfigurationElement ic : liste_CS_codes) {
+			String name = ic.getAttribute("name");
+			if (!name.contentEquals(code)) {
+				continue;
+			}
+			localizedName = ic.getAttribute("localizedName"); //$NON-NLS-1$
+			return localizedName == null ? name : localizedName;
+		}
+		return localizedName;
+	}
+
 	public void init(final IWorkbench workbench){
 		// *** at the moment do just nothing
 	}
@@ -745,16 +816,20 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			new Label(upperPartComp, SWT.NONE).setText(Messages.Leistungscodes_billingSystemLabel);
 			cbLstg = new Combo(upperPartComp, SWT.READ_ONLY);
 			cbLstg.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			for (IConfigurationElement ic : ll) {
-				cbLstg.add(ic.getAttribute("name")); //$NON-NLS-1$
+			for (IConfigurationElement ic : liste_CS_codes) {
+				String name = ic.getAttribute("name");  //$NON-NLS-1$
+				log.trace("cbLstg name {} -> {}", name, getLocalizedLeistungscode(name));
+				cbLstg.add(getLocalizedLeistungscode(name));
 			}
 			
 			// *** label/combo for default output for bills
 			new Label(upperPartComp, SWT.NONE).setText(Messages.Leistungscodes_defaultOutputLabel);
 			cbRechn = new Combo(upperPartComp, SWT.READ_ONLY);
 			cbRechn.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			for (IConfigurationElement ic : lo) {
-				cbRechn.add(ic.getAttribute("name")); //$NON-NLS-1$
+			for (IConfigurationElement ic : list_RnOutputters) {
+				String name = ic.getAttribute("name");  //$NON-NLS-1$
+				log.trace("cbRechn name {} -> {}", name, getLocalizedLeistungscode(name));
+				cbRechn.add(getLocalizedAusgabe(name));
 			}
 			
 			// *** label/combo for law
@@ -783,9 +858,10 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			// *** setting the values
 			String name = "default"; //$NON-NLS-1$
 			if (result != null) {
+				log.info("set values: name {} leistung {} ausgabe {}", result[0], result[1], result[2]);
 				tName.setText(result[0]);
-				cbLstg.setText(result[1]);
-				cbRechn.setText(result[2]);
+				cbLstg.setText(getLocalizedLeistungscode(result[1]));
+				cbRechn.setText(getLocalizedAusgabe(result[2]));
 				boolean checked = true;
 				if ((result[6] == null) || (result[6].isEmpty())
 					|| (result[6].equalsIgnoreCase("0")) || (result[6].equalsIgnoreCase("false"))) //$NON-NLS-1$ //$NON-NLS-2$
@@ -1013,6 +1089,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			result[0] = tName.getText();
 			result[1] = cbLstg.getText();
 			result[2] = cbRechn.getText();
+			log.info("localized values: name {} leistung {} ausgabe {}", tName.getText(), cbLstg.getText(), cbRechn.getText());
 			result[3] = StringTool.join(ldRequirements.getAll(), DEFINITIONSDELIMITER);
 			result[4] = StringTool.join(ldOptional.getAll(), DEFINITIONSDELIMITER);
 			if (ldUnused != null) {
@@ -1642,8 +1719,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				if (l[1].equals("T")) { //$NON-NLS-1$
 					type = Messages.Leistungscodes_text;
 				} else if (l[1].equals("K")) { //$NON-NLS-1$
-					type = Messages.Leistungscodes_contact;
-				} else if (l[1].equals("D")) { //$NON-NLS-1$
+					type = Messages.Leistungscodes_contact;				} else if (l[1].equals("D")) { //$NON-NLS-1$
 					type = Messages.Leistungscodes_date;
 				} else if (l[1].equals("TM")) { //$NON-NLS-1$
 					type = Messages.Leistungscodes_textMultipleLines;

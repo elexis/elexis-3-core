@@ -38,7 +38,14 @@
          <attribute name="name" type="string">
             <annotation>
                <documentation>
-                  
+                  Unter diesem Namen wird der Wert in der Datenbank gespeichert
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="localizedName" type="string">
+            <annotation>
+               <documentation>
+                  Unter diesem Namen wird der Wert der Benutzer in seiner Sprache angezeigt. Typischerweise  wird das via %localizedName in den plugin*properties gemacht.
                </documentation>
                <appinfo>
                   <meta.attribute translatable="true"/>
@@ -134,8 +141,18 @@
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Unter diesem Namen wird der Wert in der Datenbank gespeichert
                </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="localizedName" type="string">
+            <annotation>
+               <documentation>
+                  Unter diesem Namen wird der Wert der Benutzer in seiner Sprache angezeigt. Typischerweise  wird das via %localizedName in den plugin*properties gemacht.
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="ElementFactory" type="string">

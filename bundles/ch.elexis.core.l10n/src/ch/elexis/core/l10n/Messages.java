@@ -873,7 +873,6 @@ public class Messages extends NLS {
 	public static String KontaktFieldEditor_PleaseSelect;
 	public static String KontaktFieldEditor_PleaseSelectContact;
 	public static String KontaktFieldEditor_SelectContact;
-	public static String MultiplikatorEditor_5;
 	public static String MultiplikatorEditor_BegiNDate;
 	public static String MultiplikatorEditor_add;
 	public static String MultiplikatorEditor_from;

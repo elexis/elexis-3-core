@@ -532,7 +532,8 @@
          point="ch.elexis.core.data.RechnungsManager">
       <Rechnung
             name="Fall-Standard"
-            outputter="ch.elexis.core.ui.views.rechnung.DefaultOutputter">
+            outputter="ch.elexis.core.ui.views.rechnung.DefaultOutputter"
+            localizedName="%RechnungsManager_Standard_Fall">
       </Rechnung>
    </extension>
    <extension
@@ -809,6 +810,7 @@
                    CodeSelectorFactory="ch.elexis.core.ui.eigenleistung.EigenleistungCodeSelectorFactory"
                    elexisClassName="ch.elexis.data.Eigenleistung"
                    name="Eigenleistung"
+                   localizedName="%Leistungen.Eigenleistung"
                    statistics="ch.elexis.data.Eigenleistung"
                    system="Eigenleistung">
       </Leistung>
@@ -818,6 +820,7 @@
                    ImporterClass="ch.elexis.core.ui.views.codesystems.BlockImporter"
                    elexisClassName="ch.elexis.data.Leistungsblock"
                    name="Block"
+                   localizedName="%Leistungen.Block"
                    system="Block">
              </Leistung>
       </extension>

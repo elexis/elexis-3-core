@@ -58,8 +58,9 @@ public class MultiplikatorEditor extends Composite {
 					
 					MultiplikatorList multis = new MultiplikatorList("VK_PREISE", typeName);
 					multis.insertMultiplikator(t, mul);
-					list.add(Messages.MultiplikatorEditor_from + t.toString(TimeTool.DATE_GER)
-						+ Messages.MultiplikatorEditor_5 + mul); //$NON-NLS-1$ //$NON-NLS-2$
+					list.add(String.format("%s %s: %s", //$NON-NLS-1$ 
+							Messages.MultiplikatorEditor_from, t.toString(TimeTool.DATE_GER),
+									mul));
 				}
 			}
 		});
@@ -98,8 +99,9 @@ public class MultiplikatorEditor extends Composite {
 			list.removeAll();
 			for (String[] s : daten) {
 				dis.set(s[0]);
-				list.add(Messages.MultiplikatorEditor_from + dis.toString(TimeTool.DATE_GER)
-					+ Messages.MultiplikatorEditor_5 + s[1]); //$NON-NLS-1$ //$NON-NLS-2$
+				list.add(String.format("%s %s: %s", //$NON-NLS-1$ 
+						Messages.MultiplikatorEditor_from, dis.toString(TimeTool.DATE_GER),
+							 s[1]));
 			}
 			
 		} catch (Exception ex) {
