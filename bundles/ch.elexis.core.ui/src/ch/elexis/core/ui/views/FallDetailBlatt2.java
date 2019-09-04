@@ -302,7 +302,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				String newval = ((Text) e.getSource()).getText();
 				IFall fall = getSelectedFall();
 				if (fall != null) {
-					fall.set(LABEL, newval);
+					fall.set(Fall.FLD_BEZEICHNUNG, newval);
 					fireSelectedFallUpdateEvent();
 				}
 				super.focusLost(e);
@@ -964,7 +964,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			String newValue = tBezeichnung.getText();
 			if (newValue != null && !newValue.isEmpty()
 				&& !newValue.equals(Messages.FallDetailBlatt2_29)) {
-				actFall.set(LABEL, newValue);
+				actFall.set(Fall.FLD_BEZEICHNUNG, newValue);
 			}
 			if (dpBis.getSelection() == null) {
 				// This must be called to enable the user to delete a given endDate
