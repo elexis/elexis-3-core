@@ -261,7 +261,7 @@ public class BillingSystem {
 					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/bedingungen", //$NON-NLS-1$
 						"Fallnummer:T"); //$NON-NLS-1$
 					BillingSystem.setConfigurationValue("IV", BillingSystem.CFG_BILLINGLAW,
-						BillingLaw.IVG.name());
+						BillingLaw.IV.name());
 					
 					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/name", MV_NAME); //$NON-NLS-1$
 					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/leistungscodes", //$NON-NLS-1$
@@ -270,7 +270,7 @@ public class BillingSystem {
 						Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/standardausgabe", //$NON-NLS-1$
 						CONST_TARMED_DRUCKER);
 					BillingSystem.setConfigurationValue("MV", BillingSystem.CFG_BILLINGLAW,
-						BillingLaw.MVG.name());
+						BillingLaw.MV.name());
 					
 					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/name", //$NON-NLS-1$
 						PRIVATE_NAME);
