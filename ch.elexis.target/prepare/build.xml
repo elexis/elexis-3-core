@@ -125,7 +125,7 @@ To build an alternate target platform (eg., Juno) for JBT:
 	<!-- should work on osx-cocoa32, win32, lin32, lin64 -->
 	<target name="get.eclipse">
 		<!-- NOTE: must use same platform (50M) or SDK (103M - 168M) version as feature version on target platform, or will get install/update conflicts -->
-		<property name="eclipse.version" value="4.5.1" />
+		<property name="eclipse.version" value="4.12" />
 		<property name="eclipse.URL" value="http://download.elexis.info/elexis-server/eclipse" />
 
 		<if>
