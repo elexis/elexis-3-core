@@ -14,7 +14,6 @@ public class Messages  {
 	public static String KontaktFieldEditor_PleaseSelect = ch.elexis.core.l10n.Messages.KontaktFieldEditor_PleaseSelect;
 	public static String KontaktFieldEditor_PleaseSelectContact = ch.elexis.core.l10n.Messages.KontaktFieldEditor_PleaseSelectContact;
 	public static String KontaktFieldEditor_SelectContact = ch.elexis.core.l10n.Messages.KontaktFieldEditor_SelectContact;
-	public static String MultiplikatorEditor_5 = ch.elexis.core.l10n.Messages.MultiplikatorEditor_5;
 	public static String MultiplikatorEditor_BegiNDate = ch.elexis.core.l10n.Messages.MultiplikatorEditor_BegiNDate;
 	public static String MultiplikatorEditor_NewMultipilcator = ch.elexis.core.l10n.Messages.MultiplikatorEditor_NewMultipilcator;
 	public static String MultiplikatorEditor_PleaseEnterBeginDate = ch.elexis.core.l10n.Messages.MultiplikatorEditor_PleaseEnterBeginDate;

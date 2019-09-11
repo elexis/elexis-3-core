@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="ch.elexis" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="ch.elexis.core.data" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appinfo>
+      <appInfo>
          <meta.schema plugin="ch.elexis.core.data" id="RechnungsManager" name="RechnungsManager"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          Hier können sich plugins für Rechnungserstellung und -export einbinden. Diese erhalten eine Rechnung in generischem Format und können daraus Papier- und Datenversionen erstellen.
       </documentation>
@@ -12,9 +12,9 @@
 
    <element name="extension">
       <annotation>
-         <appinfo>
+         <appInfo>
             <meta.element />
-         </appinfo>
+         </appInfo>
       </annotation>
       <complexType>
          <sequence>
@@ -37,11 +37,8 @@
          <attribute name="name" type="string">
             <annotation>
                <documentation>
-                  
+                  Unter diesem Namen wird der Wert in der DB gespeichert
                </documentation>
-               <appinfo>
-                  <meta.attribute translatable="true"/>
-               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -61,54 +58,65 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="java" basedOn=":ch.elexis.core.data.interfaces.IRnOutputter"/>
-               </appinfo>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="localizedName" type="string">
+            <annotation>
+               <documentation>
+                  Unter diesem Namen wird der Wert der Benutzer in seiner Sprache angezeigt. Typischerweise
+                  wird das via %localizedName in den plugin*properties gemacht.
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
    </element>
 
    <annotation>
-      <appinfo>
-         <meta.section type="apiInfo"/>
-      </appinfo>
-      <documentation>
-         [Geben Sie hier die API-Informationen ein.]
-      </documentation>
-   </annotation>
-
-   <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="since"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          0.2.5
       </documentation>
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="examples"/>
-      </appinfo>
+      </appInfo>
       <documentation>
-         elexis-arzttarife-schweiz
+         ch.elexis.base.ch.arzttarife
       </documentation>
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         ch.elexis.base.ch.arzttarife
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
          <meta.section type="implementation"/>
-      </appinfo>
+      </appInfo>
       <documentation>
-         [Geben Sie hier Informationen zur bereitgestellten Implementierung dieses Erweiterungspunkts ein.]
+         See ch.elexis.core.ui.views.rechnung.DefaultOutputter
       </documentation>
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="copyright"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          (c) 2006 by G. Weirich and Elexis.
       </documentation>

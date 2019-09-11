@@ -11,12 +11,13 @@ public enum BillingLaw implements ILocalizedEnum {
 				// Krankenversicherung
 		UVG,	// https://www.admin.ch/opc/de/classified-compilation/19810038/index.html
 				// Unfallversicherung
-		IVG,	// https://www.admin.ch/opc/de/classified-compilation/19590131/index.html
+		IV,		// https://www.admin.ch/opc/de/classified-compilation/19590131/index.html
 				// Invalidenversicherung
-		MVG,	// https://www.admin.ch/opc/de/classified-compilation/19920155/index.html
+		MV,		// https://www.admin.ch/opc/de/classified-compilation/19920155/index.html
 				// Militärversicherung 
 		VVG,	// https://www.admin.ch/opc/de/classified-compilation/19080008/index.html
 				// Versicherungsvertrag
+		privat,
 		NONE,
 		OTHER;
 	
