@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Rocketchat Appender
+Bundle-SymbolicName: ch.elexis.core.logback.rocketchat
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: elexis.ch
+Fragment-Host: ch.qos.logback.classic;bundle-version="1.0.7"
+Automatic-Module-Name: ch.elexis.core.logback.rocketchat
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ClassPath: .

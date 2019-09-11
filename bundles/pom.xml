@@ -45,6 +45,7 @@
     <module>ch.elexis.core.hl7.v2x</module>
     <module>ch.elexis.core.importer.div</module>
     <module>ch.elexis.core.jcifs</module>
+    <module>ch.elexis.core.logback.rocketchat</module>
     <module>ch.elexis.core.logging.default_configuration</module>
     <module>ch.elexis.core.logging.osgi</module>
     <module>ch.elexis.core.mail.ui</module>
