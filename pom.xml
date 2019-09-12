@@ -9,6 +9,11 @@
 
     <repositories>
       <repository>
+        <id>elexis.3.server</id>
+        <url>http://download.elexis.info/elexis-server/master/p2/elexis-server/</url>
+        <layout>p2</layout>
+      </repository>
+      <repository>
         <id>elexis.3.target</id>
         <url>http://download.elexis.info/elexis/${git.target.branch}/p2/target</url>
         <layout>p2</layout>
