@@ -135,6 +135,10 @@ location "http://download.elexis.info/mirror.4.elexis/snapshot" {
 	org.slf4j.nop [1.7.2,1.7.3)
 }
 
+location "http://download.elexis.info/elexis-server/master/p2/elexis-server/" {
+	javax.mail
+}
+
 location "http://download.elexis.info/elexis-server/elexis-server-dependencies" {
 	// java 11
 	// javax.transaction
