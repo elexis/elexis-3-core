@@ -106,7 +106,7 @@
 						</dependency>
 						<dependency>
 							<type>eclipse-plugin</type>
-							<artifactId>com.eclipsesource.jaxrs.jersey-min</artifactId>
+							<artifactId>com.eclipsesource.jaxrs.jersey-all-nojavax</artifactId>
 							<version>0.0.0</version>
 						</dependency>
 						<dependency>

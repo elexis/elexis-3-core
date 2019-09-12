@@ -68,7 +68,6 @@ location "http://download.elexis.info/elexis/f11106/p2/target/" {
 
 	com.eclipsesource.jaxrs.consumer
 	com.eclipsesource.jaxrs.jersey-all-nojavax
-	com.eclipsesource.jaxrs.jersey-min
 	com.google.gson
 	
 	org.apache.httpcomponents.httpcore
