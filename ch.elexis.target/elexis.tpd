@@ -41,6 +41,7 @@ location "http://download.elexis.info/elexis/f11106/p2/target/" {
 	
 	osgi.enterprise
 	javax.persistence
+	javax.mail
 	org.eclipse.persistence.asm
 	org.eclipse.persistence.antlr
 	org.eclipse.persistence.core
