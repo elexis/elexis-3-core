@@ -14,5 +14,5 @@ Service-Component: OSGI-INF/*.xml
 Bundle-ActivationPolicy: lazy
 Export-Package: jcifs,
  jcifs.smb
-Require-Bundle: bcprov;bundle-version="1.61.0"
+Require-Bundle: bcprov;bundle-version="1.46.0"
 Bundle-Vendor: elexis.info
