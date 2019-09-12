@@ -91,6 +91,7 @@ location "http://download.eclipse.org/nebula/releases/latest/" {
 location "http://medevit.github.io/osgi-jax-rs-connector/5.3.100/" {
 	com.eclipsesource.jaxrs.consumer
 	com.eclipsesource.jaxrs.jersey-all-nojavax
+	com.eclipsesource.jaxrs.jersey-min
 	com.google.gson
 }
 
