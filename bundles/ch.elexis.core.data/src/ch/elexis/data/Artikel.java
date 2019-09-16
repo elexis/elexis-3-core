@@ -250,6 +250,17 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 		set(FLD_EAN, ean);
 	}
 	
+	public boolean isVaccination(){
+		String atcCode = getATC_code();
+		if (atcCode != null && atcCode.length() > 4) {
+			if (atcCode.toUpperCase().startsWith("J07")
+				&& !atcCode.toUpperCase().startsWith("J07AX")) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public String getATC_code(){
 		String ATC_code = get(FLD_ATC_CODE);
 		return ATC_code;

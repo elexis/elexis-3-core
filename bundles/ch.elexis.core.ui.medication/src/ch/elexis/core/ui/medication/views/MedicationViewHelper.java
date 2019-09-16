@@ -117,7 +117,7 @@ public class MedicationViewHelper {
 		List<Prescription> result = new ArrayList<Prescription>();
 		for (Prescription p : tmpPrescs) {
 			if (p.getArtikel() != null && p.getArtikel().getATC_code() != null) {
-				if (p.getArtikel().getATC_code().toUpperCase().startsWith("J07")) {
+				if (p.getArtikel().isVaccination()) {
 					continue;
 				}
 			}

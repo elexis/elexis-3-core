@@ -1038,7 +1038,7 @@ public class MedicationComposite extends Composite
 		}
 		
 		private boolean isVaccination(PersistentObject article){
-			return (((Artikel) article).getATC_code().startsWith("J07"));
+			return ((Artikel) article).isVaccination();
 		}
 		
 		public boolean accept(PersistentObject o){
