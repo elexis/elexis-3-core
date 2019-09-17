@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis" sequenceNumber="1568708495">
+<target name="Elexis" sequenceNumber="1568712453">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.swt.nl_de" version="4.8.0.v20190126080931"/>
@@ -121,6 +121,7 @@
       <unit id="org.apache.commons.dbcp" version="1.4.0.v201204271417"/>
       <unit id="org.apache.commons.pool" version="1.6.0.v201204271246"/>
       <unit id="osgi.enterprise" version="4.2.0.v201108120515"/>
+      <unit id="org.bouncycastle.bcprov" version="1.59.0.v20180328-2148"/>
       <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180905201904/repository/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
@@ -148,7 +149,6 @@
       <unit id="jakarta.xml.soap-api" version="1.4.1"/>
       <unit id="jakarta.jws-api" version="1.1.1"/>
       <unit id="org.json" version="20140107.0.0"/>
-      <unit id="bcprov" version="1.55.0"/>
       <unit id="org.springframework.spring-web" version="4.3.8.RELEASE"/>
       <unit id="woodstox-core-asl" version="4.4.1"/>
       <unit id="javax.xml.stream.stax-api" version="1.0.0.2"/>
