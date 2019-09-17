@@ -294,13 +294,6 @@
          unpack="false"/>
 
    <plugin
-         id="bcprov"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.core.databinding.property"
          download-size="0"
          install-size="0"
@@ -1275,6 +1268,13 @@
 
    <plugin
          id="jakarta.xml.ws-api"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bouncycastle.bcprov"
          download-size="0"
          install-size="0"
          version="0.0.0"
