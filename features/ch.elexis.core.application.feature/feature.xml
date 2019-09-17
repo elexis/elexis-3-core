@@ -656,13 +656,6 @@
          unpack="false"/>
 
    <plugin
-         id="bouncycastle.bcprov-jdk14"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.apache.commons.jexl"
          download-size="0"
          install-size="0"
