@@ -71,7 +71,7 @@
 					<dependencies>
 						<dependency>
 							<type>eclipse-plugin</type>
-							<artifactId>bcprov</artifactId>
+							<artifactId>org.bouncycastle.bcprov</artifactId>
 							<version>0.0.0</version>
 						</dependency>
 						<dependency>
