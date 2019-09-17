@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis" sequenceNumber="1568275658">
+<target name="Elexis" sequenceNumber="1568708933">
   <locations>
+    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="bcprov" version="1.55.0"/>
+      <repository location="http://download.elexis.info/elexis-server/elexis-server-dependencies"/>
+    </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.100.v20180827-1352"/>
       <unit id="org.eclipse.rcp.feature.group" version="4.9.0.v20180906-1121"/>
@@ -171,9 +175,6 @@
       <unit id="batik.util" version="1.6.0.1"/>
       <unit id="batik.xml" version="1.6.0.1"/>
       <unit id="org.json" version="20140107.0.0"/>
-      <unit id="bcprov" version="1.63.0"/>
-      <unit id="bouncycastle.bcmail-jdk14" version="138.0.0"/>
-      <unit id="bouncycastle.bcprov-jdk14" version="138.0.0"/>
       <unit id="bsf" version="2.4.0"/>
       <unit id="c3p0" version="0.9.1.1"/>
       <unit id="c3p0.source" version="0.9.1.1"/>

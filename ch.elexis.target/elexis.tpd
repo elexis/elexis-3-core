@@ -1,5 +1,9 @@
 target "Elexis" with source allEnvironments
 
+location "http://download.elexis.info/elexis-server/elexis-server-dependencies" {
+	bcprov [1.55.0,1.55.0]
+}
+
 location "http://download.elexis.info/elexis/f11106/p2/target/" {
 	org.eclipse.equinox.executable.feature.group
 	org.eclipse.rcp.feature.group
@@ -178,9 +182,6 @@ location "http://download.elexis.info/elexis/f11106/p2/target/" {
 	batik.util 1.6.0.1
 	batik.xml 1.6.0.1
 	org.json
-	bcprov
-	bouncycastle.bcmail-jdk14 138.0.0
-	bouncycastle.bcprov-jdk14 138.0.0
 	bsf 2.4.0
 	c3p0 0.9.1.1
 	c3p0.source 0.9.1.1

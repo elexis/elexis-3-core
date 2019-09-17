@@ -154,7 +154,7 @@ location "http://download.elexis.info/elexis-server/elexis-server-dependencies" 
 	jakarta.jws-api
 	//
 	org.json
-	bcprov [1.61.0,2.0.0)
+	bcprov [1.55.0,1.55.0]
 	org.springframework.spring-web
 	woodstox-core-asl
 	javax.xml.stream.stax-api
@@ -225,8 +225,6 @@ location "http://download.elexis.info/elexis.3.3rdparty.libraries/snapshot" {
 	batik.transcoder 1.6.0.1
 	batik.util 1.6.0.1
 	batik.xml 1.6.0.1
-	bouncycastle.bcmail-jdk14 138.0.0
-	bouncycastle.bcprov-jdk14 138.0.0
 	bsf 2.4.0
 	c3p0 0.9.1.1
 	c3p0.source 0.9.1.1
