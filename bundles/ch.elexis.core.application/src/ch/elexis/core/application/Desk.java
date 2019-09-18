@@ -67,12 +67,17 @@ public class Desk implements IApplication {
 		Optional<DBConnection> connection = CoreUtil.getDBConnection(CoreHub.localCfg);
 		try {
 			if (PersistentObject.connect(CoreHub.localCfg) == false) {
-				log.error(PersistentObject.class.getName() + " initialization failed.");
+				log.error(PersistentObject.class.getName() + " po connect failed.");
 			}
+
 			if (datasource.isPresent() && connection.isPresent()) {
 				IStatus setDBConnection = datasource.get().setDBConnection(connection.get());
+				
 				if(!setDBConnection.isOK()) {
 					log.error("Error setting db connection", setDBConnection.getMessage());
+				}
+				else if (!PersistentObject.legacyPostInitDB()){
+					log.error(PersistentObject.class.getName() + " po data initialization failed.");
 				}
 			} else {
 				String connstring = (connection.isPresent()) ? connection.get().connectionString : "";
