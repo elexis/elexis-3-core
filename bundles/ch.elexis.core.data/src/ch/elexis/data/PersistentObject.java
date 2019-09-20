@@ -414,46 +414,40 @@ public abstract class PersistentObject implements IPersistentObject {
 			CoreHub.globalCfg = new SqlSettings(connection.getJdbcLink(), "CONFIG");
 			String created = CoreHub.globalCfg.get("created", null);
 			log.debug("Database version " + created);
-		} else {
-			log.debug("No Version found. Creating new Database");
-			Stm stm = null;
-			try (InputStream is =
-				PersistentObject.class.getResourceAsStream("/rsc/createDB.script")) {
-				stm = connection.getStatement();
-				if (stm.execScript(is, true, true) == true) {
-					executeDBInitScriptForClass(User.class, null);
-					executeDBInitScriptForClass(Role.class, null);
-					
-					PersistentObjectUtil.initializeGlobalCfg(connection);
-					Mandant.initializeAdministratorUser();
-					CoreHub.pin.initializeGrants();
-					CoreHub.pin.initializeGlobalPreferences();
-					Mandant bypassMandator = PersistentObjectUtil.autoCreateFirstMandant(connection.isRunningFromScratch());
-					
-					if (bypassMandator == null) {
-						cod.requestInitialMandatorConfiguration();
-						MessageEvent.fireInformation("Neue Datenbank", //$NON-NLS-1$
-							"Es wurde eine neue Datenbank angelegt."); //$NON-NLS-1$
-					} else {
-						// When running from Scratch or bypassing the first mandant we
-						// do not want to pop up any message dialog before
-						// Elexis finished the startup. A log entry is okay
-						log.info(
-								"Bypassed mandator initialization dialog, auto-created Mandator [{}] {}", //$NON-NLS-1$
-								bypassMandator.getId(), bypassMandator.getPersonalia());
-					}
-					CoreHub.globalCfg.flush();
-					CoreHub.localCfg.flush();
+		} 	
+		return true;
+	}
+
+	public static boolean legacyPostInitDB(){
+		// globalCfg is null for the firstStart
+		// created is null after aborted firstStart
+		if (CoreHub.globalCfg == null || CoreHub.globalCfg.get("created", null) == null) {
+			log.info("PO data initialization");
+			try {
+				PersistentObjectUtil.initializeGlobalCfg(defaultConnection);
+				Mandant.initializeAdministratorUser();
+				CoreHub.pin.initializeGrants();
+				CoreHub.pin.initializeGlobalPreferences();
+				Mandant bypassMandator = PersistentObjectUtil
+					.autoCreateFirstMandant(defaultConnection.isRunningFromScratch());
+				
+				if (bypassMandator == null) {
+					cod.requestInitialMandatorConfiguration();
+					MessageEvent.fireInformation("Neue Datenbank", //$NON-NLS-1$
+						"Es wurde eine neue Datenbank angelegt."); //$NON-NLS-1$
 				} else {
-					log.error("Kein create script für Datenbanktyp " + connection.getDBFlavor()
-						+ " gefunden.");
-					return false;
+					// When running from Scratch or bypassing the first mandant we
+					// do not want to pop up any message dialog before
+					// Elexis finished the startup. A log entry is okay
+					log.info(
+						"Bypassed mandator initialization dialog, auto-created Mandator [{}] {}", //$NON-NLS-1$
+						bypassMandator.getId(), bypassMandator.getPersonalia());
 				}
+				CoreHub.globalCfg.flush();
+				CoreHub.localCfg.flush();
 			} catch (Throwable ex) {
 				ExHandler.handle(ex);
 				return false;
-			} finally {
-				connection.releaseStatement(stm);
 			}
 		}
 		
@@ -496,7 +490,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			if (!DBUpdate.doUpdate()) {
 				String msg = String.format(
 						"Datenbank '%1s':\nUpdate auf '%2s' von '%3s' schlug fehlt.\nWollen Sie trotzdem fortsetzen?",
-						connection.getDBConnectString(), vi.version().toString(), CoreHub.DBVersion);
+						defaultConnection.getDBConnectString(), vi.version().toString(), CoreHub.DBVersion);
 				log.error(msg);
 				if (!cod.openQuestion("Datenbank update failed ", msg)) {
 					System.exit(8);
@@ -512,7 +506,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		if (vi.isNewerMinor(v2)) {
 			String msg = String.format(
 				"Die Datenbank %1s ist für eine neuere Elexisversion '%2s' als die aufgestartete '%3s'. Wollen Sie trotzdem fortsetzen?",
-				connection.getDBConnectString(), vi.version().toString(), v2.version().toString());
+				defaultConnection.getDBConnectString(), vi.version().toString(), v2.version().toString());
 			log.error(msg);
 			if (!cod.openQuestion("Diskrepanz in der Datenbank-Version ", msg)) {
 				System.exit(2);

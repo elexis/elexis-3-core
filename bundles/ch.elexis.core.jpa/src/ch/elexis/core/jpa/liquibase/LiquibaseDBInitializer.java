@@ -76,7 +76,7 @@ public class LiquibaseDBInitializer {
 		try {
 			DatabaseMetaData metaData = con.getMetaData();
 			
-			result = metaData.getTables(null, null, "%", new String[] {
+			result = metaData.getTables(con.getCatalog(), null, "%", new String[] {
 				"TABLE"
 			});
 			

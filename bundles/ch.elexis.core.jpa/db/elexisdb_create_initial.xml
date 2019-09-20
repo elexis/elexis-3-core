@@ -1447,4 +1447,45 @@
 			<column name="wert" value="liquibase" />
 		</insert>
 	</changeSet>
+	<changeSet author="thomas (generated)" id="1527175239251-197">
+		<insert tableName="user_">
+			<column name="ID" value="Administrator" />
+			<column name="IS_ADMINISTRATOR" value="1" />
+			<column name="SALT" value="1254bb9a05856b9e" />
+			<column name="HASHED_PASSWORD" value="b94a0b6fc7be97e0a1585ac85e814d3852668968" />
+		</insert>
+	</changeSet>
+	<changeSet author="thomas (generated)" id="1527175239251-198">
+		<insert tableName="ROLE">
+			<column name="ID" value="user" />
+			<column name="ISSYSTEMROLE" value="1" />
+		</insert>
+		<insert tableName="ROLE">
+			<column name="ID" value="user_external" />
+			<column name="ISSYSTEMROLE" value="1" />
+		</insert>
+		<insert tableName="ROLE">
+			<column name="ID" value="executive_doctor" />
+			<column name="ISSYSTEMROLE" value="1" />
+		</insert>
+		<insert tableName="ROLE">
+			<column name="ID" value="doctor" />
+			<column name="ISSYSTEMROLE" value="1" />
+		</insert>
+		<insert tableName="ROLE">
+			<column name="ID" value="assistant" />
+			<column name="ISSYSTEMROLE" value="1" />
+		</insert>
+		<insert tableName="ROLE">
+			<column name="ID" value="patient" />
+			<column name="ISSYSTEMROLE" value="1" />
+		</insert>
+	</changeSet>
+	<changeSet author="thomas (generated)" id="1527175239251-199">
+		<insert tableName="RIGHT_">
+			<column name="ID" value="root" />
+			<column name="NAME" value="root" />
+			<column name="PARENTID" value="" />
+		</insert>
+	</changeSet>	
 </databaseChangeLog>
