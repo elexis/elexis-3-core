@@ -179,21 +179,34 @@ public class TextContainer {
 	}
 	
 	private Brief loadTemplate(String name){
+		Mandant mandantor = ElexisEventDispatcher.getSelectedMandator();
 		Query<Brief> qbe = new Query<Brief>(Brief.class);
 		qbe.add(Brief.FLD_TYPE, Query.EQUALS, Brief.TEMPLATE);
 		qbe.and();
 		qbe.add(Brief.FLD_SUBJECT, Query.EQUALS, name);
 		qbe.startGroup();
-		qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, CoreHub.actMandant.getId());
-		qbe.or();
+		if(mandantor != null) {
+			qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, mandantor.getId());
+			qbe.or();			
+		}
 		qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, StringTool.leer);
 		qbe.endGroup();
 		List<Brief> list = qbe.execute();
-		if ((list == null) || (list.size() == 0)) {
-			return null;
+		Brief ret = null;
+		if (list != null && !list.isEmpty()) {
+			ret = list.get(0);
+			if (list.size() > 1) {
+				if(mandantor != null) {
+					for (Brief brief : list) {
+						if (mandantor.getId().equals(brief.get(Brief.FLD_DESTINATION_ID))) {
+							ret = brief;
+							break;
+						}
+					}					
+				}
+			}
 		}
-		Brief template = list.get(0);
-		return template;
+		return ret;
 	}
 	
 	/**
