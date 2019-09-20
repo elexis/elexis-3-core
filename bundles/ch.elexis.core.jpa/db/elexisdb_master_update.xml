@@ -7,5 +7,10 @@
     xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog dbchangelog-3.1.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext dbchangelog-ext.xsd">
+    
+    <property name="blob_type" value="bytea" dbms="postgresql"/>
+	<property name="blob_type" value="blob" dbms="mysql"/>
+	<property name="blob_type" value="blob" dbms="h2"/>
+	
     <include file="/db/elexisdb_create_optional.xml"/>
 </databaseChangeLog>
