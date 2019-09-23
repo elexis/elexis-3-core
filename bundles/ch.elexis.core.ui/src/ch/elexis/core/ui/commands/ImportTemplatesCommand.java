@@ -15,7 +15,6 @@ import org.eclipse.ui.PlatformUI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -27,7 +26,6 @@ import ch.elexis.core.ui.views.textsystem.TextTemplateView;
 import ch.elexis.core.ui.views.textsystem.model.TextTemplate;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Mandant;
-import ch.elexis.data.Query;
 import ch.rgw.tools.ExHandler;
 
 public class ImportTemplatesCommand extends AbstractHandler {
@@ -75,7 +73,8 @@ public class ImportTemplatesCommand extends AbstractHandler {
 							
 						// check existence of same template
 						List<Brief> equivalentTemplates =
-							findExistingEquivalentTemplates(sysTemplate != null, name, mimeType);
+							TextTemplate.findExistingTemplates(sysTemplate != null, name, mimeType,
+								mandantId);
 						boolean replaceExisting = false;
 						if (equivalentTemplates != null && !equivalentTemplates.isEmpty()) {
 							TextTemplateImportConflictDialog ttiConflictDialog =
@@ -147,27 +146,5 @@ public class ImportTemplatesCommand extends AbstractHandler {
 			}
 		}
 		return null;
-	}
-	
-	private List<Brief> findExistingEquivalentTemplates(boolean isSysTemplate, String name,
-		String mimeType){
-		Query<Brief> qbe = new Query<Brief>(Brief.class);
-		qbe.add(Brief.FLD_SUBJECT, Query.EQUALS, name);
-		qbe.add(Brief.FLD_MIME_TYPE, Query.EQUALS, mimeType);
-		qbe.add(Brief.FLD_TYPE, Query.EQUALS, Brief.TEMPLATE);
-		
-		// treat as system template
-		if (isSysTemplate) {
-			qbe.startGroup();
-			qbe.addToken(Brief.FLD_DESTINATION_ID + " is NULL");
-			qbe.or();
-			qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, StringConstants.EMPTY);
-			qbe.endGroup();
-		} else {
-			// treat as form template
-			qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, mandantId);
-		}
-		
-		return qbe.execute();
 	}
 }

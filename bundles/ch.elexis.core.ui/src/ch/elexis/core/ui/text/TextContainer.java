@@ -78,6 +78,7 @@ import ch.elexis.core.ui.dialogs.DocumentSelectDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.preferences.TextTemplatePreferences;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.core.ui.views.textsystem.model.TextTemplate;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
@@ -179,34 +180,9 @@ public class TextContainer {
 	}
 	
 	private Brief loadTemplate(String name){
-		Mandant mandantor = ElexisEventDispatcher.getSelectedMandator();
-		Query<Brief> qbe = new Query<Brief>(Brief.class);
-		qbe.add(Brief.FLD_TYPE, Query.EQUALS, Brief.TEMPLATE);
-		qbe.and();
-		qbe.add(Brief.FLD_SUBJECT, Query.EQUALS, name);
-		qbe.startGroup();
-		if(mandantor != null) {
-			qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, mandantor.getId());
-			qbe.or();			
-		}
-		qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, StringTool.leer);
-		qbe.endGroup();
-		List<Brief> list = qbe.execute();
-		Brief ret = null;
-		if (list != null && !list.isEmpty()) {
-			ret = list.get(0);
-			if (list.size() > 1) {
-				if(mandantor != null) {
-					for (Brief brief : list) {
-						if (mandantor.getId().equals(brief.get(Brief.FLD_DESTINATION_ID))) {
-							ret = brief;
-							break;
-						}
-					}					
-				}
-			}
-		}
-		return ret;
+		Mandant mandator = ElexisEventDispatcher.getSelectedMandator();
+		return TextTemplate.findExistingTemplate(name,
+			(mandator != null ? mandator.getId() : null));
 	}
 	
 	/**
