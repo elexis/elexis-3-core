@@ -1,5 +1,9 @@
 package ch.elexis.core.ui.views.textsystem.model;
 
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.ui.dialogs.DocumentSelectDialog;
@@ -8,6 +12,8 @@ import ch.elexis.core.ui.views.textsystem.TextTemplatePrintSettings;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
+import ch.elexis.data.Query;
+import ch.rgw.tools.StringTool;
 
 public class TextTemplate {
 	private enum UPDATE_TYPE {
@@ -282,5 +288,81 @@ public class TextTemplate {
 		if (tray != null)
 			setTray(tray);
 		
+	}
+	
+	/**
+	 * Find an existing template with matching name. If the mandantId is provided, and a template
+	 * with matching mandantId is found it is preferred to templates without mandantId.
+	 * 
+	 * @param name
+	 * @param mandantId
+	 * @return
+	 */
+	public static Brief findExistingTemplate(String name, String mandantId){
+		Query<Brief> qbe = new Query<Brief>(Brief.class);
+		qbe.add(Brief.FLD_TYPE, Query.EQUALS, Brief.TEMPLATE);
+		qbe.and();
+		qbe.add(Brief.FLD_SUBJECT, Query.EQUALS, name);
+		qbe.startGroup();
+		if (mandantId != null) {
+			qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, mandantId);
+			qbe.or();
+		}
+		qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, StringTool.leer);
+		qbe.endGroup();
+		List<Brief> list = qbe.execute();
+		Brief ret = null;
+		if (list != null && !list.isEmpty()) {
+			ret = list.get(0);
+			if (list.size() > 1) {
+				if (mandantId != null) {
+					for (Brief brief : list) {
+						if (mandantId.equals(brief.get(Brief.FLD_DESTINATION_ID))) {
+							ret = brief;
+							break;
+						} else if (ret == null) {
+							if (StringUtils.isEmpty(brief.get(Brief.FLD_DESTINATION_ID))) {
+								ret = brief;
+							}
+						}
+					}
+				}
+			}
+		}
+		return ret;
+	}
+	
+	/**
+	 * Find existing templates matching the provided parameters.
+	 * 
+	 * @param isSysTemplate
+	 * @param name
+	 * @param mimeType
+	 * @param mandantId
+	 * @return
+	 */
+	public static List<Brief> findExistingTemplates(boolean isSysTemplate, String name,
+		String mimeType, String mandantId){
+		Query<Brief> qbe = new Query<Brief>(Brief.class);
+		qbe.add(Brief.FLD_SUBJECT, Query.EQUALS, name);
+		qbe.add(Brief.FLD_TYPE, Query.EQUALS, Brief.TEMPLATE);
+		if (mimeType != null) {
+			qbe.add(Brief.FLD_MIME_TYPE, Query.EQUALS, mimeType);
+		}
+		if (isSysTemplate) {
+			qbe.add(Brief.FLD_KONSULTATION_ID, Query.EQUALS, Brief.SYS_TEMPLATE);
+		} else {
+			qbe.add(Brief.FLD_KONSULTATION_ID, Query.NOT_EQUAL, Brief.SYS_TEMPLATE);
+		}
+		if (mandantId != null) {
+			qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, mandantId);
+		} else {
+			qbe.startGroup();
+			qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, StringTool.leer);
+			qbe.or();
+			qbe.addToken(Brief.FLD_DESTINATION_ID + " is NULL");
+			qbe.endGroup();
+		}
+		return qbe.execute();
 	}
 }
