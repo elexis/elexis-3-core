@@ -25,7 +25,7 @@ public class AbstractPersistentObjectTest {
 	protected JdbcLink link;
 	protected String testUserName;
 	protected final String PASSWORD = "password";
-	
+
 	@Parameters(name = "{0}")
 	public static Collection<JdbcLink[]> data() throws IOException{
 		return AllDataTests.getConnections();
@@ -33,6 +33,7 @@ public class AbstractPersistentObjectTest {
 	
 	public AbstractPersistentObjectTest(JdbcLink link){
 		this(link, false);
+
 	}
 	
 	public AbstractPersistentObjectTest(JdbcLink link, boolean deleteTables){
@@ -42,8 +43,6 @@ public class AbstractPersistentObjectTest {
 			PersistentObject.deleteAllTables();
 		}
 		PersistentObject.clearCache();
-		PersistentObject.connect(link);
-		User.initTables();
 		
 		// reset the datasource
 		IElexisDataSource elexisDataSource =
@@ -63,6 +62,9 @@ public class AbstractPersistentObjectTest {
 		dbConnection.connectionString = link.getConnectString();
 		elexisDataSource.setDBConnection(dbConnection);
 		
+		PersistentObject.connect(link);
+		User.initTables();
+
 		if (testUserName == null) {
 			testUserName = "ut_user_" + link.DBFlavor;
 		}

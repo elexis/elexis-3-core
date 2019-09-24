@@ -50,6 +50,7 @@ public class LiquibaseDBInitializer {
 				logger.info("Initialize database [" + connection + "] with liquibase");
 				liquibase.update("");
 			} else {
+				logger.info("Synchronize liquibase log of database [" + connection + "]");
 				liquibase.changeLogSync("");
 			}
 		} catch (LiquibaseException | SQLException e) {
@@ -76,7 +77,7 @@ public class LiquibaseDBInitializer {
 		try {
 			DatabaseMetaData metaData = con.getMetaData();
 			
-			result = metaData.getTables(null, null, "%", new String[] {
+			result = metaData.getTables(con.getCatalog(), null, "%", new String[] {
 				"TABLE"
 			});
 			

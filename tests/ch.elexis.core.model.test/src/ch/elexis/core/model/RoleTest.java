@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.test.AbstractTest;
 
 public class RoleTest extends AbstractTest {
@@ -17,6 +18,7 @@ public class RoleTest extends AbstractTest {
 		coreModelService.save(role);
 		
 		IQuery<IRole> query = coreModelService.getQuery(IRole.class);
+		query.and("id", COMPARATOR.EQUALS, "testRole");
 		assertEquals(role, query.executeSingleResult().get());
 	}
 }

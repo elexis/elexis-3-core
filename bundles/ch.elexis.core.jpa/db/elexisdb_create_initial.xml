@@ -24,7 +24,7 @@
             <column name="LASTIMPORT" type="CHAR(8)"/>
             <column name="VALIDFROM" type="CHAR(8)"/>
             <column name="VALIDTO" type="CHAR(8)"/>
-            <column name="EXTINFO" type="BLOB"/>
+            <column name="EXTINFO" type="${blob_type}"/>
             <column name="ATC_CODE" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
@@ -32,7 +32,7 @@
         <createTable tableName="ARTIKEL_DETAILS">
             <column name="ARTICLE_ID" type="VARCHAR(25)"/>
             <column name="NOTES" type="CLOB"/>
-            <column name="IMAGE" type="BLOB"/>
+            <column name="IMAGE" type="${blob_type}"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-5">
@@ -97,7 +97,7 @@
             <column name="LEISTUNGEN" type="VARCHAR(25)"/>
             <column name="BILLABLE" type="CHAR(1)" defaultValue="1"/>
             <column name="ZEIT" type="CHAR(6)" defaultValue="000000"/>
-            <column name="EINTRAG" type="BLOB"/>
+            <column name="EINTRAG" type="${blob_type}"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-9">
@@ -121,7 +121,7 @@
             <column defaultValueComputed="NULL" name="LASTUPDATE" type="BIGINT"/>
             <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
             <column name="DATUM" type="CHAR(8)"/>
-            <column name="CONTENTS" type="BLOB"/>
+            <column name="CONTENTS" type="${blob_type}"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-11">
@@ -184,7 +184,7 @@
             <column name="SUBSYSTEM" type="VARCHAR(25)"/>
             <column name="VALID_FROM" type="CHAR(8)"/>
             <column name="VALID_UNTIL" type="CHAR(8)"/>
-            <column name="EXTINFO" type="BLOB"/>
+            <column name="EXTINFO" type="${blob_type}"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-14">
@@ -240,7 +240,7 @@
             <column name="CODE" type="VARCHAR(20)"/>
             <column name="TITLE" type="VARCHAR(80)"/>
             <column name="COMMENT" type="CLOB"/>
-            <column name="EXTINFO" type="BLOB"/>
+            <column name="EXTINFO" type="${blob_type}"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-19">
@@ -272,7 +272,7 @@
             <column name="RFE" type="CHAR(4)"/>
             <column name="DIAG" type="CHAR(4)"/>
             <column name="PROC" type="CHAR(4)"/>
-            <column name="EXTINFO" type="BLOB"/>
+            <column name="EXTINFO" type="${blob_type}"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-21">
@@ -285,7 +285,7 @@
             <column name="STARTDATE" type="VARCHAR(20)"/>
             <column name="NUMBER" type="VARCHAR(10)"/>
             <column defaultValue="1" name="STATUS" type="CHAR(1)"/>
-            <column name="EXTINFO" type="BLOB"/>
+            <column name="EXTINFO" type="${blob_type}"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-22">
@@ -323,7 +323,7 @@
             <column name="PARENT" type="VARCHAR(25)"/>
             <column name="TITLE" type="VARCHAR(80)"/>
             <column name="DATE" type="CHAR(8)"/>
-            <column name="CONTENTS" type="BLOB"/>
+            <column name="CONTENTS" type="${blob_type}"/>
             <column name="KEYWORDS" type="VARCHAR(255)"/>
             <column name="MIMETYPE" type="VARCHAR(80)"/>
             <column name="REFS" type="CLOB"/>
@@ -345,7 +345,7 @@
             <column name="SUBSYSTEM" type="VARCHAR(25)"/>
             <column name="VALID_FROM" type="CHAR(8)"/>
             <column name="VALID_UNTIL" type="CHAR(8)"/>
-            <column name="EXTINFO" type="BLOB"/>
+            <column name="EXTINFO" type="${blob_type}"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-29">
@@ -367,7 +367,7 @@
             <column name="DATUM" type="CHAR(8)"/>
             <column name="PREFIX" type="VARCHAR(80)"/>
             <column name="TITLE" type="VARCHAR(80)"/>
-            <column name="BILD" type="BLOB"/>
+            <column name="BILD" type="${blob_type}"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-31">
@@ -454,7 +454,7 @@
             <column name="GRUND" type="VARCHAR(80)"/>
             <column name="GESETZ" type="VARCHAR(20)"/>
             <column name="STATUS" type="VARCHAR(80)"/>
-            <column name="EXTINFO" type="BLOB"/>
+            <column name="EXTINFO" type="${blob_type}"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-39">
@@ -464,7 +464,7 @@
             </column>
             <column name="LASTUPDATE" type="BIGINT"/>
             <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
-            <column name="INHALT" type="BLOB"/>
+            <column name="INHALT" type="${blob_type}"/>
             <column name="DATUM" type="CHAR(8)"/>
         </createTable>
     </changeSet>
@@ -476,7 +476,7 @@
             <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
             <column name="DATUM" type="CHAR(8)"/>
             <column name="LASTUPDATE" type="BIGINT"/>
-            <column name="CONTENTS" type="BLOB"/>
+            <column name="CONTENTS" type="${blob_type}"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-41">
@@ -517,7 +517,7 @@
             <column name="ICDCODE" type="VARCHAR(10)"/>
             <column name="ENCODED" type="CLOB"/>
             <column name="ICDTXT" type="CLOB"/>
-            <column name="EXTINFO" type="BLOB"/>
+            <column name="EXTINFO" type="${blob_type}"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-45">
@@ -554,13 +554,13 @@
             <column name="PATIENTNR" type="VARCHAR(40)"/>
             <column name="ANSCHRIFT" type="CLOB"/>
             <column name="BEMERKUNG" type="CLOB"/>
-            <column name="DIAGNOSEN" type="BLOB"/>
-            <column name="PERSANAMNESE" type="BLOB"/>
-            <column name="SYSANAMNESE" type="BLOB"/>
-            <column name="FAMANAMNESE" type="BLOB"/>
+            <column name="DIAGNOSEN" type="${blob_type}"/>
+            <column name="PERSANAMNESE" type="${blob_type}"/>
+            <column name="SYSANAMNESE" type="${blob_type}"/>
+            <column name="FAMANAMNESE" type="${blob_type}"/>
             <column name="RISIKEN" type="CLOB"/>
             <column name="ALLERGIEN" type="CLOB"/>
-            <column name="EXTINFO" type="BLOB"/>
+            <column name="EXTINFO" type="${blob_type}"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-46">
@@ -669,7 +669,7 @@
             <column name="FLAGS" type="VARCHAR(10)"/>
             <column name="ORIGIN" type="VARCHAR(30)"/>
             <column name="KOMMENTAR" type="CLOB"/>
-            <column name="EXTINFO" type="BLOB"/>
+            <column name="EXTINFO" type="${blob_type}"/>
             <column name="UNIT" type="VARCHAR(255)"/>
             <column name="ANALYSETIME" type="VARCHAR(24)"/>
             <column name="OBSERVATIONTIME" type="VARCHAR(24)"/>
@@ -698,7 +698,7 @@
             <column name="VK_PREIS" type="CHAR(8)"/>
             <column defaultValue="100" name="SCALE" type="CHAR(4)"/>
             <column defaultValue="100" name="SCALE2" type="CHAR(4)"/>
-            <column name="DETAIL" type="BLOB"/>
+            <column name="DETAIL" type="${blob_type}"/>
             <column name="USERID" type="VARCHAR(25)"/>
         </createTable>
     </changeSet>
@@ -714,7 +714,7 @@
             <column name="TYP" type="VARCHAR(20)"/>
             <column name="USERID" type="VARCHAR(25)"/>
             <column name="STATION" type="VARCHAR(255)"/>
-            <column name="EXTINFO" type="BLOB"/>
+            <column name="EXTINFO" type="${blob_type}"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-56">
@@ -728,7 +728,7 @@
             <column name="OBJECTTYPE" type="VARCHAR(80)"/>
             <column name="DATUM" type="CHAR(8)"/>
             <column name="OUTPUTTER" type="VARCHAR(80)"/>
-            <column name="EXTINFO" type="BLOB"/>
+            <column name="EXTINFO" type="${blob_type}"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-57">
@@ -747,7 +747,7 @@
             <column name="DOSIS" type="VARCHAR(255)"/>
             <column name="ANZAHL" type="CHAR(3)"/>
             <column name="BEMERKUNG" type="VARCHAR(255)"/>
-            <column name="EXTINFO" type="BLOB"/>
+            <column name="EXTINFO" type="${blob_type}"/>
             <column name="PRESCTYPE" type="CHAR(2)"/>
             <column name="SORTORDER" type="CHAR(3)"/>
             <column name="PRESCDATE" type="CHAR(8)"/>
@@ -770,7 +770,7 @@
             <column name="RNDATUMBIS" type="CHAR(8)"/>
             <column name="BETRAG" type="CHAR(8)"/>
             <column name="STATUSDATUM" type="CHAR(8)"/>
-            <column name="EXTINFO" type="BLOB"/>
+            <column name="EXTINFO" type="${blob_type}"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-59">
@@ -791,7 +791,7 @@
             <column name="PRIORITY" type="CHAR(1)"/>
             <column name="ACTIONTYPE" type="CHAR(2)"/>
             <column name="SUBJECT" type="VARCHAR(160)"/>
-            <column name="EXTINFO" type="BLOB"/>
+            <column name="EXTINFO" type="${blob_type}"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-60">
@@ -842,7 +842,7 @@
             </column>
             <column defaultValueComputed="NULL" name="LASTUPDATE" type="BIGINT"/>
             <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
-            <column name="EXTINFO" type="BLOB"/>
+            <column name="EXTINFO" type="${blob_type}"/>
             <column defaultValue="0" name="ISSYSTEMROLE" type="CHAR(1)"/>
         </createTable>
     </changeSet>
@@ -933,7 +933,7 @@
             <column name="KEYSTORE" type="CLOB"/>
             <column name="TOTP" type="CHAR(16)"/>
             <column name="ALLOW_EXTERNAL" type="CHAR(1)"/>
-            <column name="EXTINFO" type="BLOB"/>
+            <column name="EXTINFO" type="${blob_type}"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-75">
@@ -1447,4 +1447,45 @@
 			<column name="wert" value="liquibase" />
 		</insert>
 	</changeSet>
+	<changeSet author="thomas (generated)" id="1527175239251-197">
+		<insert tableName="user_">
+			<column name="ID" value="Administrator" />
+			<column name="IS_ADMINISTRATOR" value="1" />
+			<column name="SALT" value="1254bb9a05856b9e" />
+			<column name="HASHED_PASSWORD" value="b94a0b6fc7be97e0a1585ac85e814d3852668968" />
+		</insert>
+	</changeSet>
+	<changeSet author="thomas (generated)" id="1527175239251-198">
+		<insert tableName="ROLE">
+			<column name="ID" value="user" />
+			<column name="ISSYSTEMROLE" value="1" />
+		</insert>
+		<insert tableName="ROLE">
+			<column name="ID" value="user_external" />
+			<column name="ISSYSTEMROLE" value="1" />
+		</insert>
+		<insert tableName="ROLE">
+			<column name="ID" value="executive_doctor" />
+			<column name="ISSYSTEMROLE" value="1" />
+		</insert>
+		<insert tableName="ROLE">
+			<column name="ID" value="doctor" />
+			<column name="ISSYSTEMROLE" value="1" />
+		</insert>
+		<insert tableName="ROLE">
+			<column name="ID" value="assistant" />
+			<column name="ISSYSTEMROLE" value="1" />
+		</insert>
+		<insert tableName="ROLE">
+			<column name="ID" value="patient" />
+			<column name="ISSYSTEMROLE" value="1" />
+		</insert>
+	</changeSet>
+	<changeSet author="thomas (generated)" id="1527175239251-199">
+		<insert tableName="RIGHT_">
+			<column name="ID" value="root" />
+			<column name="NAME" value="root" />
+			<column name="PARENTID" value="" />
+		</insert>
+	</changeSet>	
 </databaseChangeLog>

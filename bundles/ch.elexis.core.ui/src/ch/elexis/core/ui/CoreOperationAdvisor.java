@@ -34,6 +34,7 @@ import ch.elexis.core.ui.dialogs.LoginDialog;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.SqlWithUiRunner;
 import ch.elexis.core.ui.wizards.DBConnectWizard;
+import ch.elexis.core.utils.CoreUtil;
 import ch.elexis.data.Anwender;
 
 public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
@@ -81,7 +82,7 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	
 	@Override
 	public void openInformation(String title, String message){
-		if (isDisplayAvailable()) {
+		if (isDisplayAvailable() && !CoreUtil.isTestMode()) {
 			InfoDialogRunnable runnable = new InfoDialogRunnable(title, message);
 			Display.getDefault().syncExec(runnable);
 			return;
@@ -91,7 +92,7 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	
 	@Override
 	public boolean openQuestion(String title, String message){
-		if (isDisplayAvailable()) {
+		if (isDisplayAvailable() && !CoreUtil.isTestMode()) {
 			QuestionDialogRunnable runnable = new QuestionDialogRunnable(title, message);
 			Display.getDefault().syncExec(runnable);
 			return runnable.getResult();

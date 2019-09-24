@@ -472,7 +472,7 @@
 			<column name="CODE" type="VARCHAR(20)" />
 			<column name="TITLE" type="VARCHAR(80)" />
 			<column name="COMMENT" type="CLOB" />
-			<column name="EXTINFO" type="BLOB" />
+			<column name="EXTINFO" type="${blob_type}" />
 		</createTable>
 	</changeSet>
 	<changeSet author="thomas"
@@ -533,7 +533,7 @@
 			<column name="EVENING" type="CHAR(10)" />
 			<column name="NIGHT" type="CHAR(10)" />
 			<column name="COMMENT" type="CLOB" />
-			<column name="EXTINFO" type="BLOB" />
+			<column name="EXTINFO" type="${blob_type}" />
 		</createTable>
 	</changeSet>
 	<changeSet author="thomas" id="manual_idx_IDXATCCODE">
@@ -588,7 +588,7 @@
             <column name="VACCINE" type="CHAR(1)"/>
             <column name="VERKAUFSEINHEIT" type="VARCHAR(4)"/>
             <column name="PRODNO" type="VARCHAR(10)"/>
-            <column name="EXTINFO" type="BLOB"/>
+            <column name="EXTINFO" type="${blob_type}"/>
         </createTable>
         <insert tableName="ARTIKELSTAMM_CH">
        		<column name="ID" value="VERSION"/>
@@ -781,7 +781,7 @@
 		</preConditions>
         <createTable tableName="TARMED_EXTENSION">
             <column name="CODE" type="VARCHAR(32)"/>
-            <column name="LIMITS" type="BLOB"/>
+            <column name="LIMITS" type="${blob_type}"/>
             <column name="MED_INTERPRET" type="CLOB"/>
             <column name="TECH_INTERPRET" type="CLOB"/>
             <column name="ID" type="VARCHAR(25)"/>
@@ -957,7 +957,7 @@
             <column name="VK_PREIS" type="CHAR(8)"/>
             <column defaultValue="100" name="SCALE" type="CHAR(4)"/>
             <column defaultValue="100" name="SCALE2" type="CHAR(4)"/>
-            <column name="DETAIL" type="BLOB"/>
+            <column name="DETAIL" type="${blob_type}"/>
             <column name="USERID" type="VARCHAR(25)"/>
         </createTable>
     </changeSet>
@@ -1025,7 +1025,7 @@
             <column name="ICDCODE" type="VARCHAR(10)"/>
             <column name="ENCODED" type="CLOB"/>
             <column name="ICDTXT" type="CLOB"/>
-			<column name="EXTINFO" type="BLOB" />
+			<column name="EXTINFO" type="${blob_type}" />
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="manual_idx_ICD1">
@@ -1105,7 +1105,7 @@
             <column name="STARTDATE" type="VARCHAR(20)"/>
             <column name="NUMBER" type="VARCHAR(10)"/>
             <column defaultValue="1" name="STATUS" type="CHAR(1)"/>
-			<column name="EXTINFO" type="BLOB" />
+			<column name="EXTINFO" type="${blob_type}" />
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="manual_idx_CH_ELEXIS_ICPC_EPISODES1">
@@ -1163,7 +1163,7 @@
             <column name="RFE" type="CHAR(4)"/>
             <column name="DIAG" type="CHAR(4)"/>
             <column name="PROC" type="CHAR(4)"/>
-			<column name="EXTINFO" type="BLOB" />
+			<column name="EXTINFO" type="${blob_type}" />
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="manual_idx_CH_ELEXIS_ICPC_ENCOUNTER1">
@@ -1208,7 +1208,7 @@
             <column name="MIMETYPE" type="VARCHAR(255)"/>
             <column name="KEYWORDS" type="VARCHAR(255)"/>
             <column name="PATH" type="VARCHAR(255)"/>
-            <column name="DOC" type="BLOB"/>
+            <column name="DOC" type="${blob_type}"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-146">
@@ -1286,7 +1286,7 @@
             <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
             <column name="MANDANTID" type="VARCHAR(25)"/>
             <column name="NAME" type="VARCHAR(30)"/>
-            <column name="LEISTUNGEN" type="BLOB"/>
+            <column name="LEISTUNGEN" type="${blob_type}"/>
             <column name="MACRO" type="VARCHAR(30)"/>
             <column name="CODEELEMENTS" type="CLOB"/>
         </createTable>
@@ -1503,7 +1503,7 @@ DROP TABLE TEMP_ETIKETTEN_OBJCLASS_LINK;
             <column name="PATIENTID" type="VARCHAR(25)"/>
             <column name="NAME" type="VARCHAR(80)"/>
             <column name="DATUM" type="CHAR(8)"/>
-            <column name="BEFUNDE" type="BLOB"/>
+            <column name="BEFUNDE" type="${blob_type}"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas" id="1527175239251-128">

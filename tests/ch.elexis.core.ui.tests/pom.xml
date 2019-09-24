@@ -37,6 +37,16 @@
 							<groupId>ch.elexis.core</groupId>
 							<artifactId>ch.elexis.core.application.feature</artifactId>
 						</dependency>
+						<dependency>
+							<type>eclipse-feature</type>
+							<groupId>ch.elexis.core</groupId>
+							<artifactId>ch.elexis.core.common.feature</artifactId>
+						</dependency>
+						<dependency>
+							<type>eclipse-feature</type>
+							<groupId>ch.elexis.core</groupId>
+							<artifactId>ch.elexis.core.persistence.feature</artifactId>
+						</dependency>
 					</dependencies>
 					<bundleStartLevel>
 						<bundle>
