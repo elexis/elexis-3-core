@@ -1,6 +1,7 @@
 package ch.elexis.data;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.rgw.tools.JdbcLink;
@@ -38,6 +39,8 @@ public class Trace {
 				+ Long.toString(System.currentTimeMillis()) + ", "
 				+ connection.wrapFlavored(_workstation) + ", " + connection.wrapFlavored(_username)
 				+ ", " + connection.wrapFlavored(_action) + ")");
+		} catch (Exception e) {
+			LoggerFactory.getLogger(Trace.class).error("Catched this - FIX IT", e);
 		} finally {
 			connection.releaseStatement(statement);
 		}
