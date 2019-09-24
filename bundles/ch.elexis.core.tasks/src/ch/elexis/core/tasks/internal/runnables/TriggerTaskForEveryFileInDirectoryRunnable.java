@@ -88,6 +88,7 @@ public class TriggerTaskForEveryFileInDirectoryRunnable implements IIdentifiedRu
 			}
 			
 		} catch (IOException e) {
+			logger.debug("--DEBUG--", e);
 			throw new TaskException(TaskException.EXECUTION_ERROR, e.getMessage());
 		}
 		
