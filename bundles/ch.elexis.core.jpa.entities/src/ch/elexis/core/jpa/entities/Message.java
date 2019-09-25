@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
@@ -33,11 +32,11 @@ public class Message extends AbstractEntityWithId implements EntityWithId, Entit
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
 	
-	@JoinColumn(name = "ORIGIN")
-	protected Kontakt origin;
+	@Column(length = 25)
+	protected String origin;
 	
-	@JoinColumn(name = "DESTINATION")
-	protected Kontakt destination;
+	@Column(length = 25)
+	protected String destination;
 	
 	@Column
 	protected LocalDateTime dateTime;
@@ -50,19 +49,19 @@ public class Message extends AbstractEntityWithId implements EntityWithId, Entit
 	@Lob
 	protected String messageCodes;
 	
-	public Kontakt getOrigin(){
+	public String getOrigin(){
 		return origin;
 	}
 	
-	public void setOrigin(Kontakt origin){
+	public void setOrigin(String origin){
 		this.origin = origin;
 	}
 	
-	public Kontakt getDestination(){
+	public String getDestination(){
 		return destination;
 	}
 	
-	public void setDestination(Kontakt destination){
+	public void setDestination(String destination){
 		this.destination = destination;
 	}
 	
