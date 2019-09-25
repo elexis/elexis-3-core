@@ -20,10 +20,6 @@ import java.util.Map;
  * A representation of the model object '<em><b>IMessage</b></em>'.
  * <!-- end-user-doc -->
  *
- * <!-- begin-model-doc -->
- * A message sent between the involved message parties (see IMessageParty)
- * <!-- end-model-doc -->
- *
  * <p>
  * The following features are supported:
  * </p>
@@ -43,53 +39,59 @@ import java.util.Map;
  */
 public interface IMessage extends Identifiable, Deleteable {
 	/**
-	 * Returns the value of the '<em><b>Sender</b></em>' reference.
+	 * Returns the value of the '<em><b>Sender</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Sender</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Sender</em>' reference.
-	 * @see #setSender(IMessageParty)
+	 * <!-- begin-model-doc -->
+	 * The sender of the message. Possibly a userid that may be resolved to an IUser or another identifier (e.g. a station or system name).
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Sender</em>' attribute.
+	 * @see #setSender(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIMessage_Sender()
 	 * @model required="true"
 	 * @generated
 	 */
-	IMessageParty getSender();
+	String getSender();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IMessage#getSender <em>Sender</em>}' reference.
+	 * Sets the value of the '{@link ch.elexis.core.model.IMessage#getSender <em>Sender</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Sender</em>' reference.
+	 * @param value the new value of the '<em>Sender</em>' attribute.
 	 * @see #getSender()
 	 * @generated
 	 */
-	void setSender(IMessageParty value);
+	void setSender(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Receiver</b></em>' reference list.
-	 * The list contents are of type {@link ch.elexis.core.model.IMessageParty}.
+	 * Returns the value of the '<em><b>Receiver</b></em>' attribute list.
+	 * The list contents are of type {@link java.lang.String}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Receiver</em>' reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Receiver</em>' reference list.
+	 * <!-- begin-model-doc -->
+	 * The list of receivers. If empty, send message to everybody.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Receiver</em>' attribute list.
 	 * @see ch.elexis.core.model.ModelPackage#getIMessage_Receiver()
-	 * @model required="true"
+	 * @model
 	 * @generated
 	 */
-	List<IMessageParty> getReceiver();
+	List<String> getReceiver();
 
 	/**
 	 * Returns the value of the '<em><b>Sender Accepts Answer</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * wether the sender of this message will accept or handle answer (e.g. a message sent by the system to an IUser will not necessarily be handled)
+	 * wether the sender of this message will accept or handle an answer, i.e. unidirectional communication.
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Sender Accepts Answer</em>' attribute.
 	 * @see #setSenderAcceptsAnswer(boolean)
@@ -226,7 +228,7 @@ public interface IMessage extends Identifiable, Deleteable {
 	 * @model
 	 * @generated
 	 */
-	void addReceiver(IMessageParty addReceiver);
+	void addMessageCode(String key, String value);
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -234,6 +236,14 @@ public interface IMessage extends Identifiable, Deleteable {
 	 * @model
 	 * @generated
 	 */
-	void addMessageCode(String key, String value);
+	void addReceiver(String receiver);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	void addReceiver(IUser receiver);
 
 } // IMessage

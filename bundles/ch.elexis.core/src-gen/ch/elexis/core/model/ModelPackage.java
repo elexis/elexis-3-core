@@ -6233,7 +6233,7 @@ public interface ModelPackage extends EPackage {
 	int IMESSAGE__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Sender</b></em>' reference.
+	 * The feature id for the '<em><b>Sender</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -6242,7 +6242,7 @@ public interface ModelPackage extends EPackage {
 	int IMESSAGE__SENDER = IDENTIFIABLE_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Receiver</b></em>' reference list.
+	 * The feature id for the '<em><b>Receiver</b></em>' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -6303,43 +6303,6 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IMESSAGE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 8;
-
-	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.IMessageParty <em>IMessage Party</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.IMessageParty
-	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIMessageParty()
-	 * @generated
-	 */
-	int IMESSAGE_PARTY = 63;
-
-	/**
-	 * The feature id for the '<em><b>Identifier</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IMESSAGE_PARTY__IDENTIFIER = 0;
-
-	/**
-	 * The feature id for the '<em><b>Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IMESSAGE_PARTY__TYPE = 1;
-
-	/**
-	 * The number of structural features of the '<em>IMessage Party</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IMESSAGE_PARTY_FEATURE_COUNT = 2;
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}'.
@@ -10218,26 +10181,26 @@ public interface ModelPackage extends EPackage {
 	EClass getIMessage();
 
 	/**
-	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IMessage#getSender <em>Sender</em>}'.
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IMessage#getSender <em>Sender</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Sender</em>'.
+	 * @return the meta object for the attribute '<em>Sender</em>'.
 	 * @see ch.elexis.core.model.IMessage#getSender()
 	 * @see #getIMessage()
 	 * @generated
 	 */
-	EReference getIMessage_Sender();
+	EAttribute getIMessage_Sender();
 
 	/**
-	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IMessage#getReceiver <em>Receiver</em>}'.
+	 * Returns the meta object for the attribute list '{@link ch.elexis.core.model.IMessage#getReceiver <em>Receiver</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Receiver</em>'.
+	 * @return the meta object for the attribute list '<em>Receiver</em>'.
 	 * @see ch.elexis.core.model.IMessage#getReceiver()
 	 * @see #getIMessage()
 	 * @generated
 	 */
-	EReference getIMessage_Receiver();
+	EAttribute getIMessage_Receiver();
 
 	/**
 	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IMessage#isSenderAcceptsAnswer <em>Sender Accepts Answer</em>}'.
@@ -10293,38 +10256,6 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getIMessage_MessagePriority();
-
-	/**
-	 * Returns the meta object for class '{@link ch.elexis.core.model.IMessageParty <em>IMessage Party</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>IMessage Party</em>'.
-	 * @see ch.elexis.core.model.IMessageParty
-	 * @generated
-	 */
-	EClass getIMessageParty();
-
-	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IMessageParty#getIdentifier <em>Identifier</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Identifier</em>'.
-	 * @see ch.elexis.core.model.IMessageParty#getIdentifier()
-	 * @see #getIMessageParty()
-	 * @generated
-	 */
-	EAttribute getIMessageParty_Identifier();
-
-	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IMessageParty#getType <em>Type</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Type</em>'.
-	 * @see ch.elexis.core.model.IMessageParty#getType()
-	 * @see #getIMessageParty()
-	 * @generated
-	 */
-	EAttribute getIMessageParty_Type();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}'.
@@ -13501,20 +13432,20 @@ public interface ModelPackage extends EPackage {
 		EClass IMESSAGE = eINSTANCE.getIMessage();
 
 		/**
-		 * The meta object literal for the '<em><b>Sender</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Sender</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference IMESSAGE__SENDER = eINSTANCE.getIMessage_Sender();
+		EAttribute IMESSAGE__SENDER = eINSTANCE.getIMessage_Sender();
 
 		/**
-		 * The meta object literal for the '<em><b>Receiver</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Receiver</b></em>' attribute list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference IMESSAGE__RECEIVER = eINSTANCE.getIMessage_Receiver();
+		EAttribute IMESSAGE__RECEIVER = eINSTANCE.getIMessage_Receiver();
 
 		/**
 		 * The meta object literal for the '<em><b>Sender Accepts Answer</b></em>' attribute feature.
@@ -13555,32 +13486,6 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IMESSAGE__MESSAGE_PRIORITY = eINSTANCE.getIMessage_MessagePriority();
-
-		/**
-		 * The meta object literal for the '{@link ch.elexis.core.model.IMessageParty <em>IMessage Party</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see ch.elexis.core.model.IMessageParty
-		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIMessageParty()
-		 * @generated
-		 */
-		EClass IMESSAGE_PARTY = eINSTANCE.getIMessageParty();
-
-		/**
-		 * The meta object literal for the '<em><b>Identifier</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute IMESSAGE_PARTY__IDENTIFIER = eINSTANCE.getIMessageParty_Identifier();
-
-		/**
-		 * The meta object literal for the '<em><b>Type</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute IMESSAGE_PARTY__TYPE = eINSTANCE.getIMessageParty_Type();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.

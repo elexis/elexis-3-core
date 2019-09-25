@@ -899,26 +899,34 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IMessage" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A message sent between the involved message parties (see IMessageParty)"/>
-    </eAnnotations>
     <eOperations name="setSender">
       <eParameters name="user" eType="#//IUser"/>
-    </eOperations>
-    <eOperations name="addReceiver">
-      <eParameters name="addReceiver" eType="#//IMessageParty"/>
     </eOperations>
     <eOperations name="addMessageCode">
       <eParameters name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       <eParameters name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eOperations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="sender" lowerBound="1"
-        eType="#//IMessageParty"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="receiver" lowerBound="1"
-        upperBound="-1" eType="#//IMessageParty"/>
+    <eOperations name="addReceiver">
+      <eParameters name="receiver" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
+    <eOperations name="addReceiver">
+      <eParameters name="receiver" eType="#//IUser"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sender" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The sender of the message. Possibly a userid that may be resolved to an IUser or another identifier (e.g. a station or system name)."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="receiver" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The list of receivers. If empty, send message to everybody."/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="senderAcceptsAnswer" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="wether the sender of this message will accept or handle answer (e.g. a message sent by the system to an IUser will not necessarily be handled)"/>
+        <details key="documentation" value="wether the sender of this message will accept or handle an answer, i.e. unidirectional communication."/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="createDateTime" eType="ecore:EDataType types.ecore#//LocalDateTime"/>
@@ -938,18 +946,5 @@
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="messagePriority" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
         defaultValueLiteral="0"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="IMessageParty" abstract="true" interface="true">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A station, user or other type if message party."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="identifier" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        changeable="false"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
-        changeable="false" defaultValueLiteral="0">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The message party type: 0=user (default), 1=station; more to follow on requirement"/>
-      </eAnnotations>
-    </eStructuralFeatures>
   </eClassifiers>
 </ecore:EPackage>

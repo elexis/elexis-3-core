@@ -3,11 +3,9 @@ package ch.elexis.core.services;
 import org.eclipse.core.runtime.IStatus;
 
 import ch.elexis.core.model.IMessage;
-import ch.elexis.core.model.IMessageParty;
-import ch.elexis.core.model.message.MessageParty;
 
 /**
- * Handles transportation of an {@link IMessage} between {@link IMessageParty} participants.
+ * Handles transportation of an {@link IMessage}
  */
 public interface IMessageService {
 	
@@ -18,7 +16,7 @@ public interface IMessageService {
 	 * @param receiver
 	 * @return
 	 */
-	IMessage prepare(MessageParty sender, MessageParty... receiver);
+	IMessage prepare(String sender, String... receiver);
 	
 	/**
 	 * Send the message

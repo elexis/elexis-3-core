@@ -328,10 +328,6 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIMessageAdapter();
 			}
 			@Override
-			public Adapter caseIMessageParty(IMessageParty object) {
-				return createIMessagePartyAdapter();
-			}
-			@Override
 			public <T> Adapter caseComparable(Comparable<T> object) {
 				return createComparableAdapter();
 			}
@@ -1220,20 +1216,6 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIMessageAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IMessageParty <em>IMessage Party</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see ch.elexis.core.model.IMessageParty
-	 * @generated
-	 */
-	public Adapter createIMessagePartyAdapter() {
 		return null;
 	}
 
