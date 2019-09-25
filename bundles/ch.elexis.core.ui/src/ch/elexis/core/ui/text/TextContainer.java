@@ -60,9 +60,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
+import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.text.ITextResolver;
 import ch.elexis.core.data.interfaces.text.ReplaceCallback;
@@ -948,6 +948,8 @@ public class TextContainer {
 			// set sticker for this template if not to ask for addressee
 			DocumentSelectDialog.setDontAskForAddresseeForThisTemplate(brief,
 				std.dontShowAddresseeSelection);
+			ElexisEventDispatcher.getInstance()
+				.fire(new ElexisEvent(null, Brief.class, ElexisEvent.EVENT_RELOAD));
 		}
 	}
 	
@@ -1093,25 +1095,12 @@ public class TextContainer {
 					selectedMand = lMands.get(i - 1);
 				}
 			}
-			Query<Brief> qbe = new Query<Brief>(Brief.class);
-			qbe.add(Brief.FLD_TYPE, Query.EQUALS, Brief.TEMPLATE);
-			if (selectedMand != null) {
-				qbe.startGroup();
-				qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, selectedMand.getId());
-				qbe.or();
-				qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, StringTool.leer);
-				qbe.endGroup();
-				qbe.and();
-			}
-			qbe.add(Brief.FLD_GELOESCHT, Query.NOT_EQUAL, StringConstants.ONE);
-			qbe.add(Brief.FLD_SUBJECT, Query.EQUALS, title);
-			List<Brief> l = qbe.execute();
-			if (l.size() > 0) {
+			List<Brief> existing = TextTemplate.findExistingTemplates(bSysTemplate, title, null, (selectedMand != null ? selectedMand.getId() : null));
+			if (existing.size() > 0) {
 				if (MessageDialog.openQuestion(getShell(),
 					Messages.TextContainer_TemplateExistsCaption,
 					Messages.TextContainer_TemplateExistsBody)) {
-					Brief old = l.get(0);
-					old.delete();
+					existing.forEach(b -> b.delete());
 				} else {
 					return;
 				}
