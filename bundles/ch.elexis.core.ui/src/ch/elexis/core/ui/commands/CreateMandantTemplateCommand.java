@@ -10,6 +10,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.views.textsystem.TextTemplateView;
 import ch.elexis.core.ui.views.textsystem.model.TextTemplate;
@@ -45,7 +46,8 @@ public class CreateMandantTemplateCommand extends AbstractHandler {
 					new TextTemplate(specTemplate.getBetreff(), "", specTemplate.getMimeType());
 				specTextTemplate.addFormTemplateReference(specTemplate);
 				
-				refreshTextTemplateView(specTextTemplate);
+				ElexisEventDispatcher.getInstance().fire(new ElexisEvent(Brief.class, null,
+					ElexisEvent.EVENT_RELOAD, ElexisEvent.PRIORITY_NORMAL));
 			}
 		}
 		return null;
