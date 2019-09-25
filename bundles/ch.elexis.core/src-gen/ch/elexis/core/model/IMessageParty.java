@@ -17,15 +17,15 @@ package ch.elexis.core.model;
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * A user or station that either sends or receives a message. XOR user or stationId.
+ * A station, user or other type if message party.
  * <!-- end-model-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link ch.elexis.core.model.IMessageParty#getUser <em>User</em>}</li>
- *   <li>{@link ch.elexis.core.model.IMessageParty#getStationId <em>Station Id</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IMessageParty#getIdentifier <em>Identifier</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IMessageParty#getType <em>Type</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIMessageParty()
@@ -34,33 +34,29 @@ package ch.elexis.core.model;
  */
 public interface IMessageParty {
 	/**
-	 * Returns the value of the '<em><b>User</b></em>' reference.
+	 * Returns the value of the '<em><b>Identifier</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>User</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>User</em>' reference.
-	 * @see ch.elexis.core.model.ModelPackage#getIMessageParty_User()
+	 * @return the value of the '<em>Identifier</em>' attribute.
+	 * @see ch.elexis.core.model.ModelPackage#getIMessageParty_Identifier()
 	 * @model changeable="false"
 	 * @generated
 	 */
-	IUser getUser();
+	String getIdentifier();
 
 	/**
-	 * Returns the value of the '<em><b>Station Id</b></em>' attribute.
+	 * Returns the value of the '<em><b>Type</b></em>' attribute.
+	 * The default value is <code>"0"</code>.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Station Id</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Station Id</em>' attribute.
-	 * @see ch.elexis.core.model.ModelPackage#getIMessageParty_StationId()
-	 * @model changeable="false"
+	 * <!-- begin-model-doc -->
+	 * The message party type: 0=user (default), 1=station; more to follow on requirement
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Type</em>' attribute.
+	 * @see ch.elexis.core.model.ModelPackage#getIMessageParty_Type()
+	 * @model default="0" required="true" changeable="false"
 	 * @generated
 	 */
-	String getStationId();
+	int getType();
 
 } // IMessageParty

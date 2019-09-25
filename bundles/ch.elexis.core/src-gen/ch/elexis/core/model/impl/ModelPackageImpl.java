@@ -4424,8 +4424,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getIMessageParty_User() {
-		return (EReference)iMessagePartyEClass.getEStructuralFeatures().get(0);
+	public EAttribute getIMessageParty_Identifier() {
+		return (EAttribute)iMessagePartyEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -4434,7 +4434,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIMessageParty_StationId() {
+	public EAttribute getIMessageParty_Type() {
 		return (EAttribute)iMessagePartyEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -4911,8 +4911,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iMessageEClass, IMESSAGE__MESSAGE_PRIORITY);
 
 		iMessagePartyEClass = createEClass(IMESSAGE_PARTY);
-		createEReference(iMessagePartyEClass, IMESSAGE_PARTY__USER);
-		createEAttribute(iMessagePartyEClass, IMESSAGE_PARTY__STATION_ID);
+		createEAttribute(iMessagePartyEClass, IMESSAGE_PARTY__IDENTIFIER);
+		createEAttribute(iMessagePartyEClass, IMESSAGE_PARTY__TYPE);
 	}
 
 	/**
@@ -5768,8 +5768,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEParameter(op, ecorePackage.getEString(), "value", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iMessagePartyEClass, IMessageParty.class, "IMessageParty", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getIMessageParty_User(), this.getIUser(), null, "user", null, 0, 1, IMessageParty.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIMessageParty_StationId(), ecorePackage.getEString(), "stationId", null, 0, 1, IMessageParty.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIMessageParty_Identifier(), ecorePackage.getEString(), "identifier", null, 0, 1, IMessageParty.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIMessageParty_Type(), ecorePackage.getEInt(), "type", "0", 1, 1, IMessageParty.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

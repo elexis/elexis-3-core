@@ -8,24 +8,35 @@ import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.message.MessageParty;
 import ch.elexis.core.services.IModelService;
 
-public class IMessageBuilder extends AbstractBuilder<IMessage>{
-
-	public IMessageBuilder(IModelService modelService, IUser sender, IUser receiver) {
-		this(modelService, new MessageParty(sender), new MessageParty(receiver));
+public class IMessageBuilder extends AbstractBuilder<IMessage> {
+	
+	public IMessageBuilder(IModelService modelService, IUser sender, IUser receiver){
+		this(modelService, new MessageParty(sender.getId(), 0),
+			new MessageParty(receiver.getId(), 0));
 	}
 	
-	public IMessageBuilder(IModelService modelService, IMessageParty sender, IUser receiver) {
-		this(modelService, sender, new MessageParty(receiver));
+	public IMessageBuilder(IModelService modelService, IMessageParty sender, IUser receiver){
+		this(modelService, sender, new MessageParty(receiver.getId(), 0));
 	}
 	
-	public IMessageBuilder(IModelService modelService, IMessageParty sender, IMessageParty receiver){
+	public IMessageBuilder(IModelService modelService, IMessageParty sender,
+		IMessageParty receiver){
+		this(modelService, sender, new IMessageParty[] {
+			receiver
+		});
+	}
+	
+	public IMessageBuilder(IModelService modelService, IMessageParty sender,
+		IMessageParty... receiver){
 		super(modelService);
 		
 		object = modelService.create(IMessage.class);
 		object.setSender(sender);
-		object.addReceiver(receiver);
 		object.setDeleted(false);
 		object.setCreateDateTime(LocalDateTime.now());
+		for (IMessageParty iMessageParty : receiver) {
+			object.addReceiver(iMessageParty);
+		}
 	}
 	
 }

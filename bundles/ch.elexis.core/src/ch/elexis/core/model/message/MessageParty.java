@@ -1,31 +1,34 @@
 package ch.elexis.core.model.message;
 
 import ch.elexis.core.model.IMessageParty;
-import ch.elexis.core.model.IUser;
 
 public class MessageParty implements IMessageParty {
 	
-	private final IUser user;
-	private final String stationIdentifier;
+	private final String identifier;
+	private final int type;
 	
-	public MessageParty(IUser user){
-		this.user = user;
-		this.stationIdentifier = null;
+	public static class MessagePartyType {
+		public static final int USER = 0;
+		public static final int STATION = 1;
 	}
 	
-	public MessageParty(String stationIdentifier){
-		this.stationIdentifier = stationIdentifier;
-		this.user = null;
+	public MessageParty(String identifier){
+		this(identifier, MessagePartyType.USER);
+	}
+	
+	public MessageParty(String identifier, int type){
+		this.identifier = identifier;
+		this.type = type;
 	}
 	
 	@Override
-	public IUser getUser(){
-		return user;
+	public String getIdentifier(){
+		return identifier;
 	}
 	
 	@Override
-	public String getStationId(){
-		return stationIdentifier;
+	public int getType(){
+		return type;
 	}
 	
 }

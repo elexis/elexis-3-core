@@ -18,6 +18,7 @@ import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.model.message.MessageParty;
 import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.services.INamedQuery;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 
 public class Message extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Message>
 		implements Identifiable, IMessage {
@@ -32,17 +33,21 @@ public class Message extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	@Override
 	public IMessageParty getSender(){
 		Kontakt origin = getEntity().getOrigin();
-		return findFirstUserForContact(origin).map(e -> new MessageParty(e)).orElse(null);
+		return findFirstUserForContact(origin).map(e -> new MessageParty(e.getId(), 0))
+			.orElse(null);
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setSender(IMessageParty value){
-		IUser user = value.getUser();
-		if(user != null) {
-			IContact assignedContact = user.getAssignedContact();
-			Kontakt entity = ((AbstractIdModelAdapter<Kontakt>) assignedContact).getEntity();
-			getEntityMarkDirty().setOrigin(entity);
+		String identifier = value.getIdentifier();
+		if (value.getType() == 0) {
+			Optional<IUser> user = CoreModelServiceHolder.get().load(identifier, IUser.class);
+			if (user.isPresent()) {
+				IContact assignedContact = user.get().getAssignedContact();
+				Kontakt entity = ((AbstractIdModelAdapter<Kontakt>) assignedContact).getEntity();
+				getEntityMarkDirty().setOrigin(entity);
+			}
 		}
 		// TODO support for station, silently ignored by now
 	}
@@ -54,7 +59,7 @@ public class Message extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	 */
 	@Override
 	public void setSender(IUser user){
-		setSender(new MessageParty(user));
+		setSender(new MessageParty(user.getId(), 0));
 	}
 	
 	@Override
@@ -62,19 +67,26 @@ public class Message extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 		// TODO support for station
 		Kontakt destination = getEntity().getDestination();
 		Optional<MessageParty> messageParty =
-			findFirstUserForContact(destination).map(e -> new MessageParty(e));
+			findFirstUserForContact(destination).map(e -> new MessageParty(e.getId(), 0));
 		return (messageParty.isPresent()) ? Collections.singletonList(messageParty.get())
 				: new ArrayList<>();
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public void addReceiver(IMessageParty user){
+	public void addReceiver(IMessageParty messageParty){
 		List<IMessageParty> receiver = getReceiver();
-		receiver.add(user);
+		receiver.add(messageParty);
 		// TODO suppport multiple receivers
-		Kontakt contact = ((AbstractIdModelAdapter<Kontakt>) user.getUser().getAssignedContact()).getEntity();
-		getEntityMarkDirty().setDestination(contact);
+		String identifier = messageParty.getIdentifier();
+		if (messageParty.getType() == 0) {
+			Optional<IUser> user = CoreModelServiceHolder.get().load(identifier, IUser.class);
+			if (user.isPresent()) {
+				Kontakt contact =
+					((AbstractIdModelAdapter<Kontakt>) user.get().getAssignedContact()).getEntity();
+				getEntityMarkDirty().setDestination(contact);
+			}
+		}
 	}
 	
 	@Override

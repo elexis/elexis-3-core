@@ -630,8 +630,8 @@
       </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IMessageParty">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IMessageParty/user"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IMessageParty/stationId"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IMessageParty/identifier"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IMessageParty/type"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

@@ -941,11 +941,15 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IMessageParty" abstract="true" interface="true">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A user or station that either sends or receives a message. XOR user or stationId."/>
+      <details key="documentation" value="A station, user or other type if message party."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="user" eType="#//IUser"
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="identifier" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         changeable="false"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="stationId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        changeable="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        changeable="false" defaultValueLiteral="0">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The message party type: 0=user (default), 1=station; more to follow on requirement"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
 </ecore:EPackage>

@@ -27,14 +27,15 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.IMessage;
 import ch.elexis.core.model.IUser;
-import ch.elexis.core.model.builder.IMessageBuilder;
 import ch.elexis.core.model.message.MessageCode;
 import ch.elexis.core.model.message.MessageParty;
+import ch.elexis.core.model.message.MessageParty.MessagePartyType;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable.ReturnParameter;
 import ch.elexis.core.model.tasks.IIdentifiedRunnableFactory;
 import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.services.IContextService;
+import ch.elexis.core.services.IMessageService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
@@ -56,7 +57,6 @@ public class TaskServiceImpl implements ITaskService {
 	private Logger logger;
 	
 	private IModelService taskModelService;
-	private IModelService coreModelService;
 	
 	private ExecutorService parallelExecutorService;
 	private ExecutorService singletonExecutorService;
@@ -73,14 +73,12 @@ public class TaskServiceImpl implements ITaskService {
 	@Reference
 	private IContextService contextService;
 	
+	@Reference
+	private IMessageService messageService;
+	
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.tasks.model)")
 	private void setModelService(IModelService modelService){
 		taskModelService = modelService;
-	}
-	
-	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private void setCoreModelService(IModelService modelService){
-		coreModelService = modelService;
 	}
 	
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, bind = "bindRunnableWithContextFactory", unbind = "unbindRunnableWithContextFactory")
@@ -245,12 +243,12 @@ public class TaskServiceImpl implements ITaskService {
 	}
 	
 	@Override
-	public boolean removeTaskDescriptor(ITaskDescriptor taskDescriptor) throws TaskException {
-
+	public boolean removeTaskDescriptor(ITaskDescriptor taskDescriptor) throws TaskException{
+		
 		if (taskDescriptor == null) {
 			throw new TaskException(TaskException.PARAMETERS_MISSING);
 		}
-
+		
 		setActive(taskDescriptor, false);
 		return taskModelService.remove(taskDescriptor);
 	}
@@ -278,10 +276,10 @@ public class TaskServiceImpl implements ITaskService {
 	}
 	
 	private void sendMessageToOwner(ITask task, IUser owner, TaskState state){
-		IMessage message = new IMessageBuilder(coreModelService,
-			new MessageParty(contextService.getRootContext().getStationIdentifier()), owner)
-				.build();
-		message.addMessageCode(MessageCode.Key.SenderSubId, "ch.elexis.core.tasks.taskservice");
+		IMessage message = messageService
+			.prepare(new MessageParty(contextService.getRootContext().getStationIdentifier(),
+				MessagePartyType.STATION), new MessageParty(owner.getId()));
+		message.addMessageCode(MessageCode.Key.SenderSubId, "tasks.taskservice");
 		message.setSenderAcceptsAnswer(false);
 		
 		String resultText;
@@ -301,7 +299,7 @@ public class TaskServiceImpl implements ITaskService {
 		}
 		message.setMessageText(sb.toString());
 		
-		coreModelService.save(message);
+		messageService.send(message);
 	}
 	
 	@Override
@@ -378,7 +376,7 @@ public class TaskServiceImpl implements ITaskService {
 	@Override
 	public void setActive(ITaskDescriptor taskDescriptor, boolean active) throws TaskException{
 		
-		if(taskDescriptor.isActive() == active) {
+		if (taskDescriptor.isActive() == active) {
 			return;
 		}
 		
@@ -411,7 +409,7 @@ public class TaskServiceImpl implements ITaskService {
 			// will be supplied by the other task invoking us (we don't know about the
 			// supplied parameters)
 			return;
-		} 
+		}
 		
 		if (TaskTriggerType.SYSTEM_EVENT == taskDescriptor.getTriggerType()) {
 			// we will not check activation here, no formal required parameters
@@ -450,9 +448,10 @@ public class TaskServiceImpl implements ITaskService {
 	}
 	
 	@Override
-	public Optional<ITask> findLatestExecution(ITaskDescriptor taskDescriptor) {
+	public Optional<ITask> findLatestExecution(ITaskDescriptor taskDescriptor){
 		IQuery<ITask> query = taskModelService.getQuery(ITask.class);
-		query.and(ModelPackage.Literals.ITASK__DESCRIPTOR_ID, COMPARATOR.EQUALS, taskDescriptor.getId());
+		query.and(ModelPackage.Literals.ITASK__DESCRIPTOR_ID, COMPARATOR.EQUALS,
+			taskDescriptor.getId());
 		query.orderBy("lastupdate", ORDER.DESC);
 		query.limit(1);
 		List<ITask> result = query.execute();

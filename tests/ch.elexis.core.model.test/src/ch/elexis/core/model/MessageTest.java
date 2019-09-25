@@ -28,7 +28,7 @@ public class MessageTest extends AbstractTest {
 		
 		IMessage message = coreModelService.create(IMessage.class);
 		message.setSender(user);
-		message.addReceiver(new MessageParty(user));
+		message.addReceiver(new MessageParty(user.getId()));
 		message.setCreateDateTime(LocalDateTime.now());
 		message.setMessageText(
 			"That makes me angry, and when Dr. Evil gets angry Mr. Bigglesworth gets upset. And when Mr. Bigglesworth gets upset, people DIE!");
