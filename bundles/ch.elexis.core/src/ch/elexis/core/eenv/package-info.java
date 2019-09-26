@@ -1,4 +1,4 @@
 /**
- * Interfaces for the elexis-environment
+ * Elexis-Environment interfaces
  */
 package ch.elexis.core.eenv;

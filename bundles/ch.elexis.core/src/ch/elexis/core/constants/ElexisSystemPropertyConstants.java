@@ -32,4 +32,10 @@ public class ElexisSystemPropertyConstants {
 	 * REST URL of the elexis server, e.g. http://localhost:8380/services"
 	 */
 	public static final String ELEXIS_SERVER_REST_INTERFACE_URL = "elexisServerUrl";
+	
+	/**
+	 * Elexis-Environment: Entry hostname of the elexis environment. If passed as system property,
+	 * overrides both environment variable and Config stored value.
+	 */
+	public static final String EE_HOSTNAME = "EE_HOSTNAME";
 }

@@ -8,7 +8,7 @@ public interface IElexisEnvironmentService {
 	public static final String CFG_EE_HOSTNAME = "EE_HOSTNAME";
 	
 	/** 
-	 * @return
+	 * @return the entry hostname of the elexis-environment
 	 */
 	public String getHostname();
 	
@@ -19,7 +19,7 @@ public interface IElexisEnvironmentService {
 	
 	/**
 	 * @param key
-	 * @return a property provided by the elexis-environment
+	 * @return a property provided by the elexis-environment or <code>null</code> if not found
 	 */
 	public String getProperty(String key);
 	

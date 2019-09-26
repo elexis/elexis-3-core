@@ -16,6 +16,11 @@ public class ElexisEnvironmentPropertyConstants {
 	public static String DB_TYPE = "DB_TYPE";
 	public static String DB_USERNAME = "DB_USERNAME";
 	public static String DB_PASSWORD = "DB_PASSWORD";
-
+	
 	public static String DB_JDBC_PARAMETER_STRING = "DB_JDBC_PARAMETER_STRING";
+	
+	/**
+	 * Elexis-Environment: Entry hostname of the elexis environment
+	 */
+	public static String EE_HOSTNAME = "EE_HOSTNAME";
 }
