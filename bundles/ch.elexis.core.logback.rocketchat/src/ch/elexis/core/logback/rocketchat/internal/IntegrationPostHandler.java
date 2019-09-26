@@ -1,4 +1,4 @@
-package ch.elexis.core.logback.rocketchat;
+package ch.elexis.core.logback.rocketchat.internal;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -34,7 +34,7 @@ public class IntegrationPostHandler {
 		this.attachment = attachment;
 	}
 	
-	public int post(String url) throws MalformedURLException, IOException{
+	public int post(String url) throws MalformedURLException, IOException{		
 		Level logLevel = eventObject.getLevel();
 		if (logLevel == null) {
 			logLevel = Level.INFO;
