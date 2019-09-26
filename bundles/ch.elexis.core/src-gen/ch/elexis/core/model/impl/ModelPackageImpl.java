@@ -5368,6 +5368,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		op = addEOperation(iArticleEClass, null, "setCode", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "code", 0, 1, IS_UNIQUE, IS_ORDERED);
 
+		addEOperation(iArticleEClass, ecorePackage.getEBoolean(), "isVaccination", 0, 1, IS_UNIQUE, IS_ORDERED);
+
 		initEClass(iArticleDefaultSignatureEClass, IArticleDefaultSignature.class, "IArticleDefaultSignature", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIArticleDefaultSignature_AtcCode(), ecorePackage.getEString(), "atcCode", null, 0, 1, IArticleDefaultSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIArticleDefaultSignature_Morning(), ecorePackage.getEString(), "morning", null, 0, 1, IArticleDefaultSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

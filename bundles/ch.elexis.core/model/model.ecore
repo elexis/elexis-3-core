@@ -398,6 +398,7 @@
     <eOperations name="setCode">
       <eParameters name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eOperations>
+    <eOperations name="isVaccination" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="gtin" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
         <details key="attributeName" value="ean"/>

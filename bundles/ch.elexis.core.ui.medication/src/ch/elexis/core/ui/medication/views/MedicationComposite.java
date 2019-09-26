@@ -1020,10 +1020,6 @@ public class MedicationComposite extends Composite
 			this.parentShell = parentShell;
 		}
 		
-		private boolean isVaccination(IArticle article){
-			return article.getAtcCode().startsWith("J07");
-		}
-		
 		@Override
 		public void dropped(List<Object> list, DropTargetEvent e){
 			for (Object object : list) {
@@ -1054,6 +1050,10 @@ public class MedicationComposite extends Composite
 					refresh();
 				}
 			}
+		}
+		
+		private boolean isVaccination(IArticle article){
+			return article.isVaccination();
 		}
 		
 		@Override

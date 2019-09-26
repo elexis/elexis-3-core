@@ -41,6 +41,7 @@ import ch.elexis.core.ui.util.CoreUiUtil;
 public class StickerComposite extends Composite {
 	
 	private FormToolkit toolkit;
+	private IPatient actPatient;
 	
 	public StickerComposite(Composite parent, int style, FormToolkit toolkit){
 		super(parent, style);
@@ -71,12 +72,13 @@ public class StickerComposite extends Composite {
 		return stickerComposite;
 	}
 	
-	public void setPatient(final IPatient p){
+	public void setPatient(IPatient p) {
+		this.actPatient = p;
 		for (Control cc : getChildren()) {
 			cc.dispose();
 		}
 		this.setVisible(false);
-		List<ISticker> etis = StickerServiceHolder.get().getStickers(p);
+		List<ISticker> etis = StickerServiceHolder.get().getStickers(actPatient);
 		if (etis == null)
 			return;
 		if (etis.size() > 0) {
@@ -92,7 +94,7 @@ public class StickerComposite extends Composite {
 					stickerForm.setMenu(menu);
 					stickerForm.setLayoutData(new ColumnLayoutData());
 					
-					MenuItem miAdd = createMenuItemAdd(p, menu);
+					MenuItem miAdd = createMenuItemAdd(menu);
 					final MenuItem miRemove = new MenuItem(menu, SWT.NONE);
 					miRemove.setData("sticker", et);
 					miRemove.setText("Sticker entfernen");
@@ -102,9 +104,9 @@ public class StickerComposite extends Composite {
 						public void widgetSelected(SelectionEvent e){
 							MenuItem mi = (MenuItem) e.getSource();
 							ISticker et = (ISticker) mi.getData("sticker");
-							StickerServiceHolder.get().removeSticker(et, p);
+							StickerServiceHolder.get().removeSticker(et, actPatient);
 							// refresh
-							setPatient(p);
+							setPatient(actPatient);
 							getParent().getParent().layout(true);
 						}
 						
@@ -126,12 +128,12 @@ public class StickerComposite extends Composite {
 			this.setVisible(true);
 			Menu menu = new Menu(this);
 		    setMenu(menu);
-			createMenuItemAdd(p, menu);
+			createMenuItemAdd(menu);
 		}
 		layout();
 	}
 
-	private MenuItem createMenuItemAdd(final IPatient p, Menu menu){
+	private MenuItem createMenuItemAdd(Menu menu) {
 		final MenuItem miAdd = new MenuItem(menu, SWT.NONE);
 		miAdd.setText("Sticker hinzufügen");
 		miAdd.addSelectionListener(new SelectionAdapter() {
@@ -140,10 +142,10 @@ public class StickerComposite extends Composite {
 			public void widgetSelected(SelectionEvent e){
 				
 				AssignStickerDialog assignStickerDialog =
-					new AssignStickerDialog(getShell(), p);
+						new AssignStickerDialog(getShell(), actPatient);
 				if (assignStickerDialog.open() == MessageDialog.OK) {
 					// refresh
-					setPatient(p);
+					setPatient(actPatient);
 					getParent().getParent().layout(true);
 				}
 			}

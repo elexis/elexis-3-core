@@ -1,10 +1,13 @@
 package ch.elexis.data;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.rgw.tools.JdbcLink;
-import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.net.NetTool;
 
 /**
@@ -32,14 +35,20 @@ public class Trace {
 		String _action = (StringUtils.isEmpty(action)) ? "" : action;
 		
 		JdbcLink connection = PersistentObject.getConnection();
-		Stm statement = connection.getStatement();
+		
+		String insertStatement = "INSERT INTO " + TABLENAME + " VALUES(?, ?, ?, ?)";
+		
+		PreparedStatement statement = connection.getPreparedStatement(insertStatement);
 		try {
-			statement.exec("INSERT INTO " + TABLENAME + " VALUES("
-				+ Long.toString(System.currentTimeMillis()) + ", "
-				+ connection.wrapFlavored(_workstation) + ", " + connection.wrapFlavored(_username)
-				+ ", " + connection.wrapFlavored(_action) + ")");
+			statement.setString(1, Long.toString(System.currentTimeMillis()));
+			statement.setString(2, _workstation);
+			statement.setString(3, _username);
+			statement.setString(4, _action);
+			statement.execute();
+		} catch (SQLException e) {
+			LoggerFactory.getLogger(Trace.class).error("Catched this - FIX IT", e);
 		} finally {
-			connection.releaseStatement(statement);
+			connection.releasePreparedStatement(statement);
 		}
 	}
 	

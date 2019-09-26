@@ -42,6 +42,7 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
@@ -77,17 +78,19 @@ public class TextTemplateView extends ViewPart {
 	private List<TextTemplate> templates;
 	private List<TextTemplate> requiredTemplates;
 	
+	private ElexisUiEventListenerImpl reloadListener =
+		new ElexisUiEventListenerImpl(Brief.class, ElexisEvent.EVENT_RELOAD) {
+			@Override
+			public void runInUi(ElexisEvent ev){
+				refresh();
+			}
+		};
+	
 	public TextTemplateView(){
 		initActiveTextPlugin();
 		loadRequiredAndExistingTemplates();
 		
-		ElexisEventDispatcher.getInstance()
-			.addListeners(new ElexisUiEventListenerImpl(Brief.class, ElexisEvent.EVENT_RELOAD) {
-				@Override
-				public void runInUi(ElexisEvent ev){
-					refresh();
-				}
-		});
+		ElexisEventDispatcher.getInstance().addListeners(reloadListener);
 	}
 	
 	private void loadRequiredAndExistingTemplates(){
@@ -530,6 +533,11 @@ public class TextTemplateView extends ViewPart {
 		// TODO Auto-generated method stub
 	}
 	
+	@Override
+	public void dispose(){
+		ElexisEventDispatcher.getInstance().removeListeners(reloadListener);
+	}
+	
 	private void initActiveTextPlugin(){
 		if (plugin == null) {
 			String ExtensionToUse = CoreHub.localCfg.get(Preferences.P_TEXTMODUL, null);
@@ -591,7 +599,7 @@ public class TextTemplateView extends ViewPart {
 			}
 		}
 		templates = txtTemplates;
-		if (tableViewer != null) {
+		if (tableViewer != null && !tableViewer.getControl().isDisposed()) {
 			tableViewer.setInput(templates);
 			tableViewer.refresh(true);
 		}

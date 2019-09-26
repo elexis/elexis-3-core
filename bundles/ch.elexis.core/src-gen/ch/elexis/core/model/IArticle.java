@@ -10,10 +10,11 @@
  */
 package ch.elexis.core.model;
 
+import java.util.List;
+
 import ch.elexis.core.types.ArticleSubTyp;
 import ch.elexis.core.types.ArticleTyp;
 import ch.rgw.tools.Money;
-import java.util.List;
 
 
 /**
@@ -384,5 +385,13 @@ public interface IArticle extends Identifiable, IBillable, Deleteable, WithExtIn
 	 * @generated
 	 */
 	void setCode(String code);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	boolean isVaccination();
 
 } // IArticle

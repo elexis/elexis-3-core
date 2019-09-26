@@ -114,8 +114,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 					adjusters.add((IVerrechenbarAdjuster) o);
 				}
 			} catch (CoreException e) {
-				// just log the failed instantiation
-				ExHandler.handle(e);
+				log.warn("{} [{}]", e.getMessage(), elem.toString());
 			}
 		}
 	}

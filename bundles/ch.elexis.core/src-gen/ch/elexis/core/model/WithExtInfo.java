@@ -43,9 +43,7 @@ public interface WithExtInfo {
 	/**
 	 * <!-- begin-user-doc --> <b>Modifications to the returned map are not persisted.</b> Use
 	 * {@link #setExtInfo(Object, Object)} to handle persistent sets <!-- end-user-doc -->
-	 * 
-	 * @model kind="operation" type="ch.elexis.core.types.Map&lt;org.eclipse.emf.ecore.EJavaObject,
-	 *        org.eclipse.emf.ecore.EJavaObject&gt;"
+	 * @model kind="operation" type="ch.elexis.core.types.Map&lt;org.eclipse.emf.ecore.EJavaObject, org.eclipse.emf.ecore.EJavaObject&gt;"
 	 * @generated
 	 */
 	Map<Object, Object> getMap();

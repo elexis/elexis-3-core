@@ -304,6 +304,7 @@
       <genOperations ecoreOperation="model.ecore#//IArticle/setCode">
         <genParameters ecoreParameter="model.ecore#//IArticle/setCode/code"/>
       </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IArticle/isVaccination"/>
     </genClasses>
     <genClasses ecoreClass="model.ecore#//IArticleDefaultSignature">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IArticleDefaultSignature/atcCode"/>
