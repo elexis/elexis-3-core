@@ -7,7 +7,7 @@ public interface IElexisEnvironmentService {
 	 */
 	public static final String CFG_EE_HOSTNAME = "EE_HOSTNAME";
 	
-	/** 
+	/**
 	 * @return the entry hostname of the elexis-environment
 	 */
 	public String getHostname();
@@ -22,5 +22,9 @@ public interface IElexisEnvironmentService {
 	 * @return a property provided by the elexis-environment or <code>null</code> if not found
 	 */
 	public String getProperty(String key);
+	
+	default String getRocketchatIntegrationBaseUrl(){
+		return "https://" + getHostname() + "/chat/hooks/";
+	}
 	
 }

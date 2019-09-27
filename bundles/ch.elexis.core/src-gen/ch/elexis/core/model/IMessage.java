@@ -31,6 +31,7 @@ import java.util.Map;
  *   <li>{@link ch.elexis.core.model.IMessage#getMessageText <em>Message Text</em>}</li>
  *   <li>{@link ch.elexis.core.model.IMessage#getMessageCodes <em>Message Codes</em>}</li>
  *   <li>{@link ch.elexis.core.model.IMessage#getMessagePriority <em>Message Priority</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IMessage#getPreferredTransporters <em>Preferred Transporters</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIMessage()
@@ -213,6 +214,22 @@ public interface IMessage extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	void setMessagePriority(int value);
+
+	/**
+	 * Returns the value of the '<em><b>Preferred Transporters</b></em>' attribute list.
+	 * The list contents are of type {@link java.lang.String}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * By default the MessageService tries to send over all transporters (ordered by priority descending) until one successfully sends it.
+	 * Providing transporter ids here overrides the transporter selection and their order.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Preferred Transporters</em>' attribute list.
+	 * @see ch.elexis.core.model.ModelPackage#getIMessage_PreferredTransporters()
+	 * @model
+	 * @generated
+	 */
+	List<String> getPreferredTransporters();
 
 	/**
 	 * <!-- begin-user-doc -->

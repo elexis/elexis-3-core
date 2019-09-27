@@ -6296,13 +6296,22 @@ public interface ModelPackage extends EPackage {
 	int IMESSAGE__MESSAGE_PRIORITY = IDENTIFIABLE_FEATURE_COUNT + 7;
 
 	/**
+	 * The feature id for the '<em><b>Preferred Transporters</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMESSAGE__PREFERRED_TRANSPORTERS = IDENTIFIABLE_FEATURE_COUNT + 8;
+
+	/**
 	 * The number of structural features of the '<em>IMessage</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMESSAGE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 8;
+	int IMESSAGE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 9;
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}'.
@@ -10258,6 +10267,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIMessage_MessagePriority();
 
 	/**
+	 * Returns the meta object for the attribute list '{@link ch.elexis.core.model.IMessage#getPreferredTransporters <em>Preferred Transporters</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Preferred Transporters</em>'.
+	 * @see ch.elexis.core.model.IMessage#getPreferredTransporters()
+	 * @see #getIMessage()
+	 * @generated
+	 */
+	EAttribute getIMessage_PreferredTransporters();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13486,6 +13506,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IMESSAGE__MESSAGE_PRIORITY = eINSTANCE.getIMessage_MessagePriority();
+
+		/**
+		 * The meta object literal for the '<em><b>Preferred Transporters</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IMESSAGE__PREFERRED_TRANSPORTERS = eINSTANCE.getIMessage_PreferredTransporters();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.

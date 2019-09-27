@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.model.IMessage;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.message.MessageCode;
+import ch.elexis.core.model.message.TransientMessage;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable.ReturnParameter;
 import ch.elexis.core.model.tasks.IIdentifiedRunnableFactory;
@@ -274,7 +275,7 @@ public class TaskServiceImpl implements ITaskService {
 	}
 	
 	private void sendMessageToOwner(ITask task, IUser owner, TaskState state){
-		IMessage message = messageService
+		TransientMessage message = messageService
 			.prepare(contextService.getRootContext().getStationIdentifier(), owner.getId());
 		message.addMessageCode(MessageCode.Key.SenderSubId, "tasks.taskservice");
 		message.setSenderAcceptsAnswer(false);

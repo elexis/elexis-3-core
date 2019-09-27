@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="ch.elexis.core.services.eenv.RocketchatMessageTransporter">
+   <service>
+      <provide interface="ch.elexis.core.services.IMessageTransporter"/>
+   </service>
+   <reference cardinality="1..1" field="contextService" interface="ch.elexis.core.services.IContextService" name="contextService"/>
+   <reference cardinality="1..1" field="elexisEnvironmentService" interface="ch.elexis.core.eenv.IElexisEnvironmentService" name="elexisEnvironmentService"/>
+   <implementation class="ch.elexis.core.services.eenv.RocketchatMessageTransporter"/>
+</scr:component>

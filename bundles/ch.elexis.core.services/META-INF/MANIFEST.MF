@@ -21,6 +21,7 @@ Import-Package: bsh,
  jcifs.smb,
  org.apache.commons.codec;version="1.9.0",
  org.apache.commons.lang3;version="3.7.0",
+ org.json,
  org.slf4j
 Service-Component: OSGI-INF/ch.elexis.core.services.holder.CoreModelServiceHolder.xml,
  OSGI-INF/ch.elexis.core.services.OrderService.xml,
@@ -65,5 +66,7 @@ Service-Component: OSGI-INF/ch.elexis.core.services.holder.CoreModelServiceHolde
  OSGI-INF/ch.elexis.core.services.holder.XidServiceHolder.xml,
  OSGI-INF/ch.elexis.core.services.AccountService.xml,
  OSGI-INF/ch.elexis.core.services.holder.AccountServiceHolder.xml,
- OSGI-INF/ch.elexis.core.services.eenv.ElexisEnvironmentServiceActivator.xml
+ OSGI-INF/ch.elexis.core.services.eenv.ElexisEnvironmentServiceActivator.xml,
+ OSGI-INF/ch.elexis.core.services.MessageService.xml,
+ OSGI-INF/ch.elexis.core.services.eenv.RocketchatMessageTransporter.xml
 Export-Package: ch.elexis.core.services.holder

@@ -148,5 +148,10 @@ public class Message extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 		}
 		return Optional.empty();
 	}
+
+	@Override
+	public List<String> getPreferredTransporters(){
+		return Collections.emptyList();
+	}
 	
 }

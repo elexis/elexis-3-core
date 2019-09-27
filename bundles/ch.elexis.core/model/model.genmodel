@@ -619,6 +619,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IMessage/messageText"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IMessage/messageCodes"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IMessage/messagePriority"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IMessage/preferredTransporters"/>
       <genOperations ecoreOperation="model.ecore#//IMessage/setSender">
         <genParameters ecoreParameter="model.ecore#//IMessage/setSender/user"/>
       </genOperations>

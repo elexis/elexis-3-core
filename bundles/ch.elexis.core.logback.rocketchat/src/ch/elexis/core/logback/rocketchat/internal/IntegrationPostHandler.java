@@ -12,6 +12,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.json.JSONObject;
 
 import ch.qos.logback.classic.Level;
@@ -34,7 +36,7 @@ public class IntegrationPostHandler {
 		this.attachment = attachment;
 	}
 	
-	public int post(String url) throws MalformedURLException, IOException{		
+	public IStatus post(URL url) throws MalformedURLException, IOException{
 		Level logLevel = eventObject.getLevel();
 		if (logLevel == null) {
 			logLevel = Level.INFO;
@@ -78,7 +80,6 @@ public class IntegrationPostHandler {
 		}
 		
 		return send(json.toString().getBytes(), url);
-		
 	}
 	
 	private String parseException(ILoggingEvent eventObject2){
@@ -126,8 +127,8 @@ public class IntegrationPostHandler {
 		}
 	}
 	
-	private int send(byte[] postDataBytes, String url) throws MalformedURLException, IOException{
-		HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
+	private IStatus send(byte[] postDataBytes, URL url) throws MalformedURLException, IOException{
+		HttpURLConnection con = (HttpURLConnection) url.openConnection();
 		con.setRequestMethod("POST");
 		con.setDoInput(true);
 		con.setDoOutput(true);
@@ -136,6 +137,11 @@ public class IntegrationPostHandler {
 		con.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
 		con.getOutputStream().write(postDataBytes);
 		
-		return con.getResponseCode();
+		int responseCode = con.getResponseCode();
+		if (responseCode == 200) {
+			return Status.OK_STATUS;
+		}
+		return new Status(Status.ERROR, "", "Error sending, with response code: " + responseCode);
 	}
+	
 }
