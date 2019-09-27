@@ -8,5 +8,5 @@ Fragment-Host: ch.qos.logback.classic;bundle-version="1.0.7"
 Automatic-Module-Name: ch.elexis.core.logback.rocketchat
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: .
-Import-Package: org.eclipse.core.runtime,
- org.json
+Import-Package: org.json
+Require-Bundle: org.eclipse.equinox.common
