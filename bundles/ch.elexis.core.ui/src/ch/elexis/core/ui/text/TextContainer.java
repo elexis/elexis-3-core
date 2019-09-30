@@ -29,6 +29,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipInputStream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -112,6 +113,9 @@ public class TextContainer {
 		+ "]?[-a-zA-ZäöüÄÖÜéàè_ ]+(\\.[-a-zA-Z0-9äöüÄÖÜéàè_ ]+)+\\]";
 	public static final String MATCH_GENDERIZE =
 		"\\[[" + DONT_SHOW_REPLACEMENT_ERRORS + "]?[a-zA-Z]+:mwn?:[^\\[]+\\]"; //$NON-NLS-1$
+	public static final String MATCH_EXISTS =
+		"\\[[" + DONT_SHOW_REPLACEMENT_ERRORS //$NON-NLS-1$
+			+ "]?[a-zA-Z\\.]+:exists?:[-a-zA-Z0-9\\.]:?[^\\]]*\\]";
 	//public static final String MATCH_IDATACCESS = "\\[[-_a-zA-Z0-9]+:[-a-zA-Z0-9]+:[-a-zA-Z0-9\\.]+:[-a-zA-Z0-9\\.]:?.*\\]"; //$NON-NLS-1$
 	public static final String MATCH_IDATACCESS = "\\[[" + DONT_SHOW_REPLACEMENT_ERRORS //$NON-NLS-1$
 		+ "]?[-_a-zA-Z0-9]+:[-a-zA-Z0-9]+:[-a-zA-Z0-9\\.]+:[-a-zA-Z0-9\\.]:?[^\\]]*\\]";
@@ -269,6 +273,11 @@ public class TextContainer {
 					public Object replace(final String in){
 						return replaceIndirectFields(ret,
 							in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
+					}
+				});
+				plugin.findOrReplace(MATCH_EXISTS, new ReplaceCallback() {
+					public String replace(final String in){
+						return exists(ret, in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
 					}
 				});
 				plugin.findOrReplace(MATCH_GENDERIZE, new ReplaceCallback() {
@@ -490,6 +499,44 @@ public class TextContainer {
 			SWTHelper.showError("Fehler beim Ausführen des Scripts", e.getMessage());
 			return "??SCRIPT ERROR??";
 		}
+	}
+	
+	/**
+	 * Format für Exists: [Feld:exists:text]
+	 */
+	private String exists(Brief brief, String in){
+		String inl = in;
+		if (inl.substring(0, 1).equalsIgnoreCase(DONT_SHOW_REPLACEMENT_ERRORS)) {
+			inl = inl.substring(1);
+		}
+		String[] q = inl.split(":"); //$NON-NLS-1$
+		Object o = resolveObject(brief, q[0]);
+		if (o == null) {
+			String[] tokens = q[0].split("\\."); //$NON-NLS-1$
+			if (tokens.length >= 2) {
+				String firstToken = tokens[0];
+				// resolve the first field
+				IPersistentObject first = resolveObject(brief, firstToken);
+				if (first != null) {
+					IPersistentObject current = first;
+					for (int i = 1; i < tokens.length; i++) {
+						IPersistentObject next = resolveIndirectObject(current, tokens[i]);
+						if (next == null && current instanceof PersistentObject) {
+							String value = readFromPo((PersistentObject) current, tokens[i], false);
+							if (StringUtils.isNotEmpty(value)) {
+								break;
+							}
+						}
+						current = next;
+					}
+					o = current;
+				}
+			}
+		}
+		if (o != null) {
+			return q[2];
+		}
+		return "";
 	}
 	
 	/**
