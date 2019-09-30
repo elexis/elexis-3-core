@@ -452,6 +452,14 @@ public class TextContainer {
 			Fall fall = (Fall) parent;
 			
 			return fall.getReferencedObject(fieldl);
+		} else if (parent instanceof Mandant) {
+			String fieldl = field;
+			if (fieldl.substring(0, 1).equalsIgnoreCase(DONT_SHOW_REPLACEMENT_ERRORS)) {
+				fieldl = fieldl.substring(1);
+			}
+			Mandant mandant = (Mandant) parent;
+			
+			return mandant.getReferencedObject(fieldl);
 		} else {
 			// not yet supported
 			return null;
