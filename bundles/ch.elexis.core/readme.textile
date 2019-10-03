@@ -14,6 +14,8 @@ Elexis supports different code elements for billing or medical information.
 
 h4. Service Interfaces
 
+OSGi service interfaces provide access to the business logic. The interfaces are defined in the **ch.elexis.core.services** package. Many services are accessible via service holder classes, exported by the **ch.elexis.core.services** bundle. 
+
 * **ch.elexis.core.services.ICodeElementService**, a central service for accessing different types of *ICodeElementServiceContribution* implementations. Additional methods for transforming *ICodeElement* instances from and to string are provided.
 * **ch.elexis.core.services.ICodeElementServiceContribution**, implementations provide methods to load a specific *ICodeElement* implementation (tarif, article, diagnosis, etc.) by code. The contribution is identified by the code system string and the *CodeElementTyp*.
 
