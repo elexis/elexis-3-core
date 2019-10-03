@@ -2,7 +2,11 @@ h2. Business Model
 
 The business model interfaces defined as EMF ecore model (model/model.ecore) of this bundle. Additionally service interfaces that provide additional functionality to those model objects are defined.
 
-The JPA based implementation of this model is provided in other bundles. See <a href="../ch.elexis.core.jpa/readme.textile">ch.elexis.core.jpa</a>.
+The following diagram shows the basic components using the lab importer as example.
+
+<img src="core_model_example.png" alt="" height="60%"/>
+
+The JPA based implementation of this model is provided in other bundles. See <a href="../ch.elexis.core.jpa/readme.textile">ch.elexis.core.jpa</a>. **For hints on usage of the model taking a look at the test fragments is recommended.**
 
 h3. Code Elements
 
@@ -15,13 +19,13 @@ h4. Service Interfaces
 
 h3. Billing
 
-Code Elements for billing must implement the interface *ch.elexis.core.model.IBillable*.
+Code Elements for billing must implement the interface *ch.elexis.core.model.IBillable*. Typical implementations are articles or health care services. 
 
 h4. Optifier
 
 The *ch.elexis.core.model.IBillableOptifier* implementation contains the logic how a *ch.elexis.core.model.IBilled* instance is created representing the billed amount of the *ch.elexis.core.model.IBillable*.
 
-The *ch.elexis.core.model.billable.AbstractOptifier* provides the method to add the *ch.elexis.core.model.IBillable* to the billed of an *ch.elexis.core.model.IEncounter*. If it was billed before that information will be updated. Sub classes need to implement the *setPrice* method to apply the price of the *ch.elexis.core.model.IBillable* to an *ch.elexis.core.model.IBilled* instance.
+The *ch.elexis.core.model.billable.AbstractOptifier* provides the method to add the *ch.elexis.core.model.IBillable* to the list of billed of an *ch.elexis.core.model.IEncounter*. If the same IBillable was billed before that information will be updated. Sub classes need to implement the *setPrice* method to apply the price of the *ch.elexis.core.model.IBillable* to an *ch.elexis.core.model.IBilled* instance.
 
 h4. Verifier
 

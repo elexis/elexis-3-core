@@ -1,9 +1,9 @@
 h2. Persistence Model
 
-It represents the Implementation of the business model interfaces defined in this bundle. Implementation bundles are.
+Represents the implementation of the business model interfaces defined in this bundle. It is represented by the following bundles.
 
-* **ch.elexis.core.jpa** contains the actual database table definition, an logic to initialize and update it (based on liquibase). Also contains an **ch.elexis.core.jpa.entitymanager.IElexisEntityManager** implementation for managed (ThreadLocal) JPA EntityManager access.
-* **ch.elexis.core.jpa.entities** the elexis JPA persistence unit containing all known entities is defined in this bundle.  
+* **ch.elexis.core.jpa** contains the actual database table definition, and logic to initialize and update the database (based on liquibase). Also contains an **ch.elexis.core.jpa.entitymanager.IElexisEntityManager** implementation for managed (ThreadLocal) JPA EntityManager access.
+* **ch.elexis.core.jpa.entities** the elexis JPA persistence unit definition, **all** known entities are defined in this bundle.  
 * **ch.elexis.core.jpa.datasource** provides the configured database connection (JDBC connection pool) for the JPA Implementation.
 
 The JPA persistence is based on the following interfaces and classes. 
@@ -16,7 +16,7 @@ h3. Service Interfaces
 
 h3. Abstract Classes
 
-* **ch.elexis.core.jpa.model.adapter.AbstractModelService**, service implementation for load, query and save model objects. Helps with creation of *ch.elexis.core.services.IModelService* services. Implementations are made public as OSGi Services.
+* **ch.elexis.core.jpa.model.adapter.AbstractModelService**, service implementation for load, query and save model objects. Helps with creation of *ch.elexis.core.services.IModelService* services. Implementations are made public as OSGi services.
 * **ch.elexis.core.jpa.model.adapter.AbstractModelAdapterFactory**, model factory implementation used to create new model instances. Maps the public model to the model implementation and the JPA Entity definition. It is used within the model service implementation an should not be made public.
 * **ch.elexis.core.jpa.model.adapter.AbstractModelQuery**, JPA based query implementation for building complex queries on model objects. It is used within the model service implementation an should not be made public.
 
@@ -26,7 +26,7 @@ h3. Model and JPA Entity
 
 The persistence bundle contains the model service implementations, and has a public API for usage of the model. It is best practice that the public API is mostly interfaces defining the model. The actual implementation should be internal. All JPA entities need to be implemented and registered (META-INF/persistence.xml) in the *ch.elexis.core.jpa.entities* bundle.
 
-The model interfaces can be coded, or or generated via an EMF model. If the model is generated, the resulting interfaces shall be plain Java without dependencies on EObject.
+The model interfaces can be coded, or generated via an EMF model. If the model is generated, the resulting interfaces shall be plain Java without dependencies on EObject.
 
 The benefits of using a EMF model to specify the public API are.
 * model property literals can be used on queries
@@ -42,3 +42,9 @@ If a EMF model is used to specify the model, the following settings of the genmo
 The actual model implementation will typically extend the *ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter* or one of its sub classes. This makes the implementation an adapter class, which adapts the JPA Entity to the model interface.
 
 h2. Query
+
+The **ch.elexis.core.services.IModelService** implementations provide access to queries on their model. There are different query implementations available for executing specific queries.
+
+* **ch.elexis.core.services.IQuery** used to build queries with dynamic constraints.
+* **ch.elexis.core.services.INamedQuery** used to create named queries that are defined on the entity implementation. Used for queries with static constraints.
+* **ch.elexis.core.services.INativeQuery** used to create complex native queries.
