@@ -15,6 +15,7 @@ package ch.elexis.data;
 import java.util.Objects;
 
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.model.IPersistentObject;
 import ch.rgw.tools.JdbcLink;
 
 /**
@@ -130,4 +131,16 @@ public class Mandant extends Anwender {
 		return Kontakt.TABLENAME;
 	}
 	
+	public IPersistentObject getReferencedObject(String fieldl){
+		if (fieldl != null) {
+			if ("Responsible".equals(fieldl)) {
+				String responsibleId =
+					(String) getExtInfoStoredObjectByKey("ch.elexis.tarmedprefs.responsible");
+				if (responsibleId != null && !responsibleId.isEmpty()) {
+					return Mandant.load(responsibleId);
+				}
+			}
+		}
+		return null;
+	}
 }
