@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="ch.elexis.core.services.MessageService">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.2.0" name="ch.elexis.core.services.MessageService">
    <service>
       <provide interface="ch.elexis.core.services.IMessageService"/>
    </service>
    <reference bind="setMessageTransporter" cardinality="0..n" interface="ch.elexis.core.services.IMessageTransporter" name="MessageTransporter" policy="dynamic" policy-option="greedy" unbind="unsetMessageTransporter"/>
-   <reference cardinality="1..1" field="contextService" interface="ch.elexis.core.services.IContextService" name="contextService"/>
    <implementation class="ch.elexis.core.services.MessageService"/>
 </scr:component>

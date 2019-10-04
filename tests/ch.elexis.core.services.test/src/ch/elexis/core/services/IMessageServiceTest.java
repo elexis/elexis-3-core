@@ -23,8 +23,8 @@ public class IMessageServiceTest extends AbstractServiceTest {
 		message.setMessageText("internalDatabaseMessage_explicitScheme_fromUser");
 		message.addMessageCode(MessageCode.Key.SenderSubId, "tests.messageServiceTest");
 		ObjectStatus status = service.send(message);
-		assertEquals("internaldb", status.getObject());
-		assertTrue(status.isOK());
+		assertTrue(status.getMessage(), status.isOK());
+		assertEquals(status.getMessage(), "internaldb", status.getObject());
 	}
 	
 	@Test
@@ -35,7 +35,7 @@ public class IMessageServiceTest extends AbstractServiceTest {
 		message.setMessageText("internalDatabaseMessage_internalScheme_fromUser");
 		message.addMessageCode(MessageCode.Key.SenderSubId, "tests.messageServiceTest");
 		ObjectStatus status = service.send(message);
-		assertTrue(status.isOK());
+		assertTrue(status.getMessage(), status.isOK());
 	}
 	
 }
