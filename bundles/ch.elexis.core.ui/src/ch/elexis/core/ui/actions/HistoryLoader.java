@@ -39,7 +39,7 @@ import ch.rgw.tools.VersionedResource;
  */
 public class HistoryLoader extends BackgroundJob {
 	StringBuilder sb;
-	List<IEncounter> lKons;
+	private List<IEncounter> lKons;
 	KonsFilter filter;
 	IFilter globalFilter;
 	private final int currentPage;
@@ -66,7 +66,7 @@ public class HistoryLoader extends BackgroundJob {
 		final boolean multiline, final int currentPage, final int pageSize){
 		super(Messages.HistoryLoader_LoadKonsMessage); //$NON-NLS-1$
 		this.sb = sb;
-		this.lKons = paramlKons;
+		this.lKons = new ArrayList<IEncounter>(paramlKons);
 		this.multiline = multiline;
 		this.setPriority(Job.DECORATE);
 		this.setUser(false);
