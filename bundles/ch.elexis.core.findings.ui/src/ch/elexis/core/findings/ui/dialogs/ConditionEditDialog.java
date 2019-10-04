@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Shell;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
 import ch.elexis.core.findings.ui.composites.ConditionComposite;
+import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 
 
 public class ConditionEditDialog extends TitleAreaDialog {
@@ -56,6 +57,7 @@ public class ConditionEditDialog extends TitleAreaDialog {
 	protected void okPressed(){
 		conditionComposite.udpateModel();
 		condition = conditionComposite.getCondition();
+		FindingsServiceComponent.getService().saveFinding(condition.get());
 		super.okPressed();
 	}
 	

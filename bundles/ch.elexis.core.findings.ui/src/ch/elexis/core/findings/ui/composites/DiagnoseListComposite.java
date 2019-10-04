@@ -32,6 +32,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ToolBar;
 
 import ca.odell.glazedlists.BasicEventList;
@@ -149,7 +150,7 @@ public class DiagnoseListComposite extends Composite {
 				if (selection instanceof StructuredSelection && !selection.isEmpty()) {
 					ICondition condition =
 						(ICondition) ((StructuredSelection) selection).getFirstElement();
-					AcquireLockBlockingUi.aquireAndRun((IPersistentObject) condition,
+					AcquireLockBlockingUi.aquireAndRun(condition,
 						new ILockHandler() {
 							@Override
 							public void lockFailed(){
@@ -159,7 +160,8 @@ public class DiagnoseListComposite extends Composite {
 							@Override
 							public void lockAcquired(){
 								ConditionEditDialog dialog =
-									new ConditionEditDialog(condition, getShell());
+									new ConditionEditDialog(condition,
+										Display.getDefault().getActiveShell());
 								if (dialog.open() == Dialog.OK) {
 									dialog.getCondition().ifPresent(c -> {
 										source.getNatTable().refresh();
