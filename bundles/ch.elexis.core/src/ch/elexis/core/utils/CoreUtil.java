@@ -103,6 +103,7 @@ public class CoreUtil {
 			if (!StringUtils
 				.isEmpty((String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING))) {
 				String url = (String) hConn.get(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING);
+				url = applyMySqlTimeZoneWorkaround(url);
 				ret.connectionString = url;
 				DBConnection.getHostName(url).ifPresent(h -> ret.hostName = h);
 				DBConnection.getDatabaseName(url).ifPresent(db -> ret.databaseName = db);
@@ -133,6 +134,24 @@ public class CoreUtil {
 			}
 		}
 		return Optional.empty();
+	}
+	
+	/**
+	 * @since 3.8 due to mysql jdbc update a timezone problem may exist, see e.g.
+	 *        https://github.com/elexis/elexis-3-core/issues/273 - we fix this by adding this
+	 *        parameter if not yet included
+	 */
+	private static String applyMySqlTimeZoneWorkaround(String dbConnectString){
+		if (dbConnectString.startsWith("jdbc:mysql:")
+			&& !dbConnectString.contains("serverTimezone")) {
+			if (dbConnectString.contains("?")) {
+				dbConnectString += "&serverTimezone=Europe/Zurich";
+			} else {
+				dbConnectString += "?serverTimezone=Europe/Zurich";
+			}
+			logger.info("MySQL dbConnection string correction [{}]", dbConnectString);
+		}
+		return dbConnectString;
 	}
 	
 	/**
