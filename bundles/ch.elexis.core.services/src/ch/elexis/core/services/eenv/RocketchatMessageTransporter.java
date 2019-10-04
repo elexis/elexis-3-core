@@ -7,7 +7,9 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -19,6 +21,7 @@ import ch.elexis.core.eenv.IElexisEnvironmentService;
 import ch.elexis.core.model.message.TransientMessage;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IMessageTransporter;
+import ch.elexis.core.services.internal.Bundle;
 
 @Component
 public class RocketchatMessageTransporter implements IMessageTransporter {
@@ -36,28 +39,18 @@ public class RocketchatMessageTransporter implements IMessageTransporter {
 	private IContextService contextService;
 	
 	@Override
-	public int getDefaultPriority(){
-		return 10;
-	}
-	
-	@Override
-	public String getId(){
+	public String getUriScheme(){
 		return "rocketchat";
 	}
 	
 	@Override
-	public IStatus send(TransientMessage message){
-		if (message.isSenderIsUser()) {
-			return sendFromUserSender(message);
-		}
-		
-		return sendFromStationSender(message);
+	public boolean isExternal(){
+		return false;
 	}
 	
-	private IStatus sendFromUserSender(TransientMessage message){
-		// TODO where to get integrationtoken from? what if we are user - not elexis-server?
-		// is the user logged in to rocketchat?
-		return new Status(Status.ERROR, "", "Not yet implemented");
+	@Override
+	public IStatus send(TransientMessage message){
+		return sendFromStationSender(message);
 	}
 	
 	private IStatus sendFromStationSender(TransientMessage message){
@@ -73,24 +66,30 @@ public class RocketchatMessageTransporter implements IMessageTransporter {
 				return send(integrationUrl, jsonMessage.getBytes());
 				
 			} catch (IOException e) {
-				e.printStackTrace();
+				return new Status(Status.ERROR, Bundle.ID, e.getMessage());
 			}
 		}
 		
-		return new Status(Status.ERROR, "",
+		return new Status(Status.ERROR, Bundle.ID,
 			"No webhook integration token [" + CTX_ROCKETCHAT_STATION_INTEGRATION_TOKEN
 				+ "] found in root context or malformed url.");
 	}
 	
 	private String prepareRocketchatMessage(TransientMessage message){
 		JSONObject json = new JSONObject();
-		json.put("username", contextService.getStationIdentifier());
+		json.put("username", message.getSender());
 		
 		StringBuilder header = new StringBuilder();
-		message.getReceiver().forEach(c -> header.append("@" + c + " "));
-		header.append("|");
-		message.getMessageCodes().entrySet()
-			.forEach(c -> header.append(c.getKey() + ":" + c.getValue() + " "));
+		header
+			.append("@" + message.getReceiver().substring(message.getReceiver().indexOf(':') + 1));
+		
+		Set<Entry<String, String>> entrySet = message.getMessageCodes().entrySet();
+		if (!entrySet.isEmpty()) {
+			header.append(" | ");
+			message.getMessageCodes().entrySet()
+				.forEach(c -> header.append(c.getKey() + ":" + c.getValue() + " "));
+		}
+		
 		json.put("text", header.toString());
 		
 		Map<String, Object> params = new HashMap<>();
@@ -116,7 +115,8 @@ public class RocketchatMessageTransporter implements IMessageTransporter {
 		if (responseCode == 200) {
 			return Status.OK_STATUS;
 		}
-		return new Status(Status.ERROR, "", "Error sending, with response code: " + responseCode);
+		return new Status(Status.ERROR, Bundle.ID,
+			"Error sending, with response code: " + responseCode);
 	}
 	
 }

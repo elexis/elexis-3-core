@@ -25,7 +25,6 @@ import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.model.IMessage;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.message.MessageCode;
 import ch.elexis.core.model.message.TransientMessage;
@@ -275,8 +274,9 @@ public class TaskServiceImpl implements ITaskService {
 	}
 	
 	private void sendMessageToOwner(ITask task, IUser owner, TaskState state){
-		TransientMessage message = messageService
-			.prepare(contextService.getRootContext().getStationIdentifier(), owner.getId());
+		TransientMessage message = messageService.prepare(
+			"Task-Service@" + contextService.getRootContext().getStationIdentifier(),
+			IMessageService.INTERNAL_MESSAGE_URI_SCHEME + owner.getId());
 		message.addMessageCode(MessageCode.Key.SenderSubId, "tasks.taskservice");
 		message.setSenderAcceptsAnswer(false);
 		

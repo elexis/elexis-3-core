@@ -1,107 +1,92 @@
 package ch.elexis.core.services;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
-import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.message.TransientMessage;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
-import ch.elexis.core.status.StatusUtil;
+import ch.elexis.core.services.internal.Bundle;
+import ch.elexis.core.status.ObjectStatus;
 
 @Component
 public class MessageService implements IMessageService {
 	
-	@Reference
-	private IContextService contextService;
-	
-	/**
-	 * all transporters available
-	 */
-	private List<IMessageTransporter> messageTransporters;
-	/**
-	 * transporters considered for default message transportation
-	 */
-	private List<IMessageTransporter> defaultTransporters;
+	private Map<String, IMessageTransporter> messageTransporters;
 	
 	public MessageService(){
-		messageTransporters = new ArrayList<>();
-		defaultTransporters = new ArrayList<>();
+		messageTransporters = new HashMap<>();
 	}
 	
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
 	public void setMessageTransporter(IMessageTransporter messageTransporter){
-		if (!messageTransporters.contains(messageTransporter)) {
-			messageTransporters.add(messageTransporter);
-			if (messageTransporter.getDefaultPriority() >= 0) {
-				defaultTransporters.add(messageTransporter);
-			}
-			Collections.sort(defaultTransporters);
+		if (!messageTransporters.containsKey(messageTransporter.getUriScheme())) {
+			messageTransporters.put(messageTransporter.getUriScheme(), messageTransporter);
 		}
 	}
 	
 	public void unsetMessageTransporter(IMessageTransporter messageTransporter){
-		if (messageTransporters.contains(messageTransporter)) {
-			messageTransporters.remove(messageTransporter);
-			if (messageTransporter.getDefaultPriority() >= 0) {
-				defaultTransporters.remove(messageTransporter);
-			}
-			Collections.sort(defaultTransporters);
+		if (messageTransporters.containsKey(messageTransporter.getUriScheme())) {
+			messageTransporters.remove(messageTransporter.getUriScheme());
 		}
 	}
 	
 	@Override
-	public TransientMessage prepare(String sender, String... receiver){
-		boolean senderIsUser = CoreModelServiceHolder.get().load(sender, IUser.class).isPresent();
-		return new TransientMessage(sender, senderIsUser, receiver);
+	public TransientMessage prepare(String sender, String receiver){
+		return new TransientMessage(sender, receiver);
 	}
 	
 	@Override
-	public TransientMessage prepare(IUser sender, String... receiver){
-		return new TransientMessage(sender.getId(), true, receiver);
+	public List<String> getSupportedUriSchemes(){
+		return new ArrayList<String>(messageTransporters.keySet());
 	}
 	
 	@Override
-	public List<IMessageTransporter> getAvailableTransporters(){
-		return new ArrayList<IMessageTransporter>(messageTransporters);
-	}
-	
-	@Override
-	public IStatus send(TransientMessage message){
-		List<IMessageTransporter> consideredTransporters;
-		List<String> preferredTransporters = message.getPreferredTransporters();
-		if (preferredTransporters.isEmpty()) {
-			consideredTransporters = defaultTransporters;
+	public ObjectStatus send(TransientMessage message){
+		
+		String receiver = message.getReceiver();
+		int indexOf = receiver.indexOf(':');
+		if (indexOf <= 0) {
+			return new ObjectStatus(Status.ERROR, Bundle.ID,
+				"No transporter uri scheme found in receiver [" + receiver + "]", null);
+		}
+		
+		String uriScheme = receiver.substring(0, indexOf);
+		IMessageTransporter messageTransporter = null;
+		if (uriScheme.equals(INTERNAL_MESSAGE_URI_SCHEME)) {
+			messageTransporter = selectInternalSchemeTransporter();
 		} else {
-			consideredTransporters = new ArrayList<>();
-			// TODO populate
+			messageTransporter = messageTransporters.get(uriScheme);
 		}
 		
-		IStatus status = null;
-		for (IMessageTransporter messageTransporter : consideredTransporters) {
-			status = messageTransporter.send(message);
-			if (status.isOK()) {
-				return status;
-			} else {
-				StatusUtil.logStatus(LoggerFactory.getLogger(getClass()), status);
-			}
-			// if CANCEL or ERROR continue
+		if (messageTransporter == null) {
+			return new ObjectStatus(Status.ERROR, Bundle.ID,
+				"No transporter found for uri scheme found  [" + uriScheme + "]", null);
 		}
 		
-		if (status == null) {
-			status = new Status(Status.ERROR, "", "No message transporter found");
+		return new ObjectStatus(messageTransporter.send(message),
+			messageTransporter.getUriScheme());
+	}
+	
+	/**
+	 * Select a transporter for an internal message. Currently we prefer the rocketchat transporter
+	 * (if available).
+	 * 
+	 * @return the transporter or <code>null</code> if none available
+	 */
+	private IMessageTransporter selectInternalSchemeTransporter(){
+		IMessageTransporter messageTransporter = messageTransporters.get("rocketchat");
+		if (messageTransporter == null) {
+			messageTransporter = messageTransporters.get("internaldb");
 		}
-		
-		return status;
+		return messageTransporter;
 	}
 	
 }

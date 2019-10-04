@@ -5,19 +5,12 @@ import org.eclipse.core.runtime.IStatus;
 import ch.elexis.core.model.IMessage;
 import ch.elexis.core.model.message.TransientMessage;
 
-public interface IMessageTransporter extends Comparable<IMessageTransporter> {
+public interface IMessageTransporter {
 	
 	/**
-	 * @return the default priority of this transporter, higher value is higher priority. If the
-	 *         priority is lower than 0, the transporter is not added as a default transporter, and
-	 *         may only be addressed via {@link IMessage#getPreferredTransporters()}
+	 * @return the uri scheme denominator
 	 */
-	int getDefaultPriority();
-	
-	/**
-	 * @return a unique identifier
-	 */
-	String getId();
+	String getUriScheme();
 	
 	/**
 	 * Try to send an {@link IMessage}.
@@ -30,8 +23,11 @@ public interface IMessageTransporter extends Comparable<IMessageTransporter> {
 	 */
 	IStatus send(TransientMessage message);
 	
-	@Override
-	default int compareTo(IMessageTransporter other){
-		return Integer.compare(getDefaultPriority(), other.getDefaultPriority());
-	}
+	/**
+	 * 
+	 * @return whether a message transported with this transporter "leaves the site boundary". E.g.
+	 *         an SMS transporter
+	 */
+	boolean isExternal();
+	
 }

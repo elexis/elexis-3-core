@@ -1,51 +1,38 @@
 package ch.elexis.core.model.message;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import ch.elexis.core.model.IUser;
 
 public class TransientMessage {
 	
-	private final String id;
 	private final String sender;
-	private final boolean senderIsUser;
-	private List<String> receiver = new ArrayList<>();
+	private final String receiver;
 	private boolean senderAcceptsAnswer;
 	private LocalDateTime createDateTime;
 	private String messageText;
 	private Map<String, String> messageCodes = new HashMap<>();
 	private int priority;
-	private List<String> preferredTransporters = new ArrayList<>();
+	/**
+	 * Allow this message to leave the internal system, e.g. SMS or mail message
+	 */
+	private boolean alllowExternal = false;
 	
-	public TransientMessage(String sender, boolean senderIsUser, String[] receiver){
+	public TransientMessage(String sender, String receiver){
 		this.sender = sender;
-		this.senderIsUser = senderIsUser;
-		this.receiver.addAll(Arrays.asList(receiver));
-		this.id = UUID.randomUUID().toString();
+		this.receiver = receiver;
 		senderAcceptsAnswer = true;
 		createDateTime = LocalDateTime.now();
 		priority = 0;
-	}
-	
-	public String getId(){
-		return id;
 	}
 	
 	public String getSender(){
 		return sender;
 	}
 	
-	public boolean isSenderIsUser(){
-		return senderIsUser;
-	}
-	
-	public List<String> getReceiver(){
+	public String getReceiver(){
 		return receiver;
 	}
 	
@@ -97,16 +84,12 @@ public class TransientMessage {
 		messageCodes.put(key, value);
 	}
 	
-	public void addReceiver(String receiver){
-		this.receiver.add(receiver);
+	public boolean isAlllowExternal(){
+		return alllowExternal;
 	}
 	
-	public void addReceiver(IUser receiver){
-		this.receiver.add(receiver.getId());
-	}
-	
-	public List<String> getPreferredTransporters(){
-		return preferredTransporters;
+	public void setAlllowExternal(boolean alllowExternal){
+		this.alllowExternal = alllowExternal;
 	}
 	
 }

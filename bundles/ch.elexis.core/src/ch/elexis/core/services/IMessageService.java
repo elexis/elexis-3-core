@@ -2,46 +2,44 @@ package ch.elexis.core.services;
 
 import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
-
-import ch.elexis.core.model.IMessage;
-import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.message.TransientMessage;
+import ch.elexis.core.status.ObjectStatus;
 
 /**
- * Handles transportation of an {@link IMessage}
+ * Transport a message from a sender to a receiver
  */
 public interface IMessageService {
 	
-	/**
-	 * @return the available message transporters
-	 */
-	List<IMessageTransporter> getAvailableTransporters();
+	public static final String INTERNAL_MESSAGE_URI_SCHEME = "internal";
 	
 	/**
-	 * Create an {@link IMessage} object for further parameterization
-	 * 
-	 * @param sender
-	 * @param receiver
-	 * @return
+	 * @return a list of all supported uri schemes
 	 */
-	TransientMessage prepare(String sender, String... receiver);
+	List<String> getSupportedUriSchemes();
 	
 	/**
-	 * Convenience method for {@link #prepare(String, String...)}
 	 * 
 	 * @param sender
-	 * @param receiver
+	 *            a string which may or may be not resolvable to a user or supported scheme
+	 * @param recipientUri
+	 *            a recipient URI scheme and the user.<br>
+	 *            For internal communication either explicitly select the transporter e.g.
+	 *            <code>internaldb:user</code>, <code>rocketchat:user</code> or use the implicit
+	 *            {@link #INTERNAL_MESSAGE_URI_SCHEME} to leave the choice to the system.<br>
+	 *            For external communication use <code>mailto:user@bla.com</code> or
+	 *            <code>sms:+4133423</code> (if available). A message has to be explicitly marked
+	 *            with {@link TransientMessage#setAlllowExternal(boolean)} to use an external
+	 *            transporter.
 	 * @return
 	 */
-	TransientMessage prepare(IUser sender, String... receiver);
+	TransientMessage prepare(String sender, String recipientUri);
 	
 	/**
 	 * Try to send the message.
 	 * 
 	 * @param message
-	 * @return
+	 * @return if the message was sent successfully and the explicit transporter uri scheme used
 	 */
-	IStatus send(TransientMessage message);
+	ObjectStatus send(TransientMessage message);
 	
 }

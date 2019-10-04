@@ -1,6 +1,7 @@
 package ch.elexis.core.services;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.osgi.service.component.annotations.Component;
 
 import ch.elexis.core.model.IMessage;
@@ -18,25 +19,29 @@ public class InternalDatabaseMessageTransporter implements IMessageTransporter {
 	public IStatus send(TransientMessage message){
 		
 		IMessage idbMessage = CoreModelServiceHolder.get().create(IMessage.class);
-		// TODO copy all
+		idbMessage.setSender(message.getSender());
+		idbMessage.setMessageText(message.getMessageText());
+		idbMessage.setMessageCodes(message.getMessageCodes());
+		idbMessage.setMessagePriority(message.getMessagePriority());
+		idbMessage.setCreateDateTime(message.getCreateDateTime());
+		idbMessage.setSenderAcceptsAnswer(message.isSenderAcceptsAnswer());
 		
-//		IMessage persistedMessage = CoreModelServiceHolder.get().create(IMessage.class);
+		boolean save = CoreModelServiceHolder.get().save(idbMessage);
+		if (save) {
+			return Status.OK_STATUS;
+		}
 		
-//		boolean result = CoreModelServiceHolder.get().save(message);
-//		if(result) {
-//			return Status.OK_STATUS;
-//		}
-		return ObjectStatus.ERROR_STATUS(message.getId());
-	}
-
-	@Override
-	public int getDefaultPriority(){
-		return 0;
-	}
-
-	@Override
-	public String getId(){
-		return "internaldatabase";
+		return ObjectStatus.ERROR_STATUS(idbMessage.getId());
 	}
 	
+	@Override
+	public String getUriScheme(){
+		return "internaldb";
+	}
+	
+	@Override
+		public boolean isExternal(){
+			return false;
+		}
+
 }
