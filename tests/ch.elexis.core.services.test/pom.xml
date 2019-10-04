@@ -49,6 +49,11 @@
                 <id>org.slf4j.nop</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
+              <requirement>
+				<type>eclipse-plugin</type>
+				<id>ch.elexis.core.test.context</id>
+				<versionRange>0.0.0</versionRange>
+			  </requirement>
             </extraRequirements>
           </dependency-resolution>
         </configuration>
@@ -62,11 +67,6 @@
           <showEclipseLog>true</showEclipseLog>
           <argLine>-Delexis.test.mode=true</argLine>
           <dependencies>
-            <dependency>
-            	<type>eclipse-plugin</type>
-            	<artifactId>ch.elexis.core.test.context</artifactId>
-              	<version>0.0.0</version>
-            </dependency>
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.bouncycastle.bcprov</artifactId>
