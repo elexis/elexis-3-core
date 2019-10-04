@@ -23,8 +23,20 @@ public interface IElexisEnvironmentService {
 	 */
 	public String getProperty(String key);
 	
+	default String getBaseUrl(){
+		return "https://" + getHostname();
+	}
+	
+	default String getRocketchatBaseUrl(){
+		return getBaseUrl() + "/chat";
+	}
+	
 	default String getRocketchatIntegrationBaseUrl(){
-		return "https://" + getHostname() + "/chat/hooks/";
+		return getRocketchatBaseUrl() + "/hooks/";
+	}
+	
+	default String getBookstackBaseUrl(){
+		return getBaseUrl() + "/bookstack";
 	}
 	
 }

@@ -18,6 +18,9 @@
    <feature url="features/ch.elexis.core.tasks.feature_1.0.0.qualifier.jar" id="ch.elexis.core.tasks.feature" version="1.0.0.qualifier">
       <category name="elexis_3_core"/>
    </feature>
+   <feature id="ch.elexis.core.ui.eenv.feature">
+      <category name="elexis_3_core"/>
+   </feature>
    <bundle id="ch.elexis.core.data.tests" version="0.0.0"/>
    <bundle id="ch.elexis.core.ui.usage" version="0.0.0"/>
    <bundle id="ch.elexis.core.test" version="0.0.0"/>
