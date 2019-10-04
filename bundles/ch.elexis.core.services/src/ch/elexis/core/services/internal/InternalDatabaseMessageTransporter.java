@@ -1,4 +1,4 @@
-package ch.elexis.core.services;
+package ch.elexis.core.services.internal;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -6,6 +6,7 @@ import org.osgi.service.component.annotations.Component;
 
 import ch.elexis.core.model.IMessage;
 import ch.elexis.core.model.message.TransientMessage;
+import ch.elexis.core.services.IMessageTransporter;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.status.ObjectStatus;
 
@@ -40,8 +41,8 @@ public class InternalDatabaseMessageTransporter implements IMessageTransporter {
 	}
 	
 	@Override
-		public boolean isExternal(){
-			return false;
-		}
-
+	public boolean isExternal(){
+		return false;
+	}
+	
 }

@@ -68,7 +68,7 @@ public class MessageService implements IMessageService {
 		
 		if (messageTransporter == null) {
 			return new ObjectStatus(Status.ERROR, Bundle.ID,
-				"No transporter found for uri scheme found  [" + uriScheme + "]", null);
+				"No transporter found for uri scheme [" + uriScheme + "]", null);
 		}
 		
 		return new ObjectStatus(messageTransporter.send(message),
