@@ -15,16 +15,26 @@
    <feature url="features/ch.elexis.core.common.feature_0.0.0.jar" id="ch.elexis.core.common.feature" version="0.0.0">
       <category name="elexis_3_core"/>
    </feature>
-   <feature url="features/ch.elexis.core.tasks.feature_1.0.0.qualifier.jar" id="ch.elexis.core.tasks.feature" version="1.0.0.qualifier">
+   <feature url="features/ch.elexis.core.tasks.feature_1.0.0.qualifier.jar" id="ch.elexis.core.tasks.feature" version="0.0.0">
       <category name="elexis_3_core"/>
    </feature>
-   <feature id="ch.elexis.core.ui.eenv.feature">
-      <category name="elexis_3_core"/>
+   <feature id="ch.elexis.core.ui.eenv.feature" version="0.0.0">
+      <category name="divers"/>
    </feature>
-   <bundle id="ch.elexis.core.data.tests" version="0.0.0"/>
+   <bundle id="ch.elexis.core.data.tests" version="0.0.0">
+      <category name="test"/>
+   </bundle>
    <bundle id="ch.elexis.core.ui.usage" version="0.0.0"/>
-   <bundle id="ch.elexis.core.test" version="0.0.0"/>
-   <bundle id="ch.elexis.core.model.test" version="0.0.0"/>
-   <bundle id="ch.elexis.core.services.test" version="0.0.0"/>
+   <bundle id="ch.elexis.core.test" version="0.0.0">
+      <category name="test"/>
+   </bundle>
+   <bundle id="ch.elexis.core.model.test" version="0.0.0">
+      <category name="test"/>
+   </bundle>
+   <bundle id="ch.elexis.core.services.test" version="0.0.0">
+      <category name="test"/>
+   </bundle>
    <category-def name="elexis_3_core" label="Elexis 3 Kern"/>
+   <category-def name="divers" label="Sonstige"/>
+   <category-def name="test" label="test [invisible]"/>
 </site>
