@@ -259,15 +259,19 @@ public class TaskServiceImpl implements ITaskService {
 			
 			ITaskDescriptor taskDescriptor =
 				findTaskDescriptorByIdOrReferenceId(task.getDescriptorId()).orElse(null);
-			OwnerTaskNotification ownerNotification = taskDescriptor.getOwnerNotification();
-			
-			TaskState state = task.getState();
-			if (OwnerTaskNotification.WHEN_FINISHED == ownerNotification
-				|| (OwnerTaskNotification.WHEN_FINISHED_FAILED == ownerNotification
-					&& TaskState.FAILED == state)) {
-				sendMessageToOwner(task, taskDescriptor.getOwner(), state);
-			}
-			
+			if(taskDescriptor != null) {
+				OwnerTaskNotification ownerNotification = taskDescriptor.getOwnerNotification();
+				IUser owner = taskDescriptor.getOwner();
+				
+				TaskState state = task.getState();
+				if (OwnerTaskNotification.WHEN_FINISHED == ownerNotification
+					|| (OwnerTaskNotification.WHEN_FINISHED_FAILED == ownerNotification
+						&& TaskState.FAILED == state)) {
+					sendMessageToOwner(task, owner, state);
+				}
+			} else {
+				logger.error("could not load taskdescriptor by id [{}]", task.getDescriptorId());
+			}			
 		}
 		
 		logger.debug("notify {}", task);
