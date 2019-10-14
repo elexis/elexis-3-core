@@ -15,6 +15,7 @@ import java.util.concurrent.RejectedExecutionException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
@@ -259,7 +260,7 @@ public class TaskServiceImpl implements ITaskService {
 			
 			ITaskDescriptor taskDescriptor =
 				findTaskDescriptorByIdOrReferenceId(task.getDescriptorId()).orElse(null);
-			if(taskDescriptor != null) {
+			if (taskDescriptor != null) {
 				OwnerTaskNotification ownerNotification = taskDescriptor.getOwnerNotification();
 				IUser owner = taskDescriptor.getOwner();
 				
@@ -271,7 +272,7 @@ public class TaskServiceImpl implements ITaskService {
 				}
 			} else {
 				logger.error("could not load taskdescriptor by id [{}]", task.getDescriptorId());
-			}			
+			}
 		}
 		
 		logger.debug("notify {}", task);
@@ -280,7 +281,7 @@ public class TaskServiceImpl implements ITaskService {
 	private void sendMessageToOwner(ITask task, IUser owner, TaskState state){
 		TransientMessage message = messageService.prepare(
 			"Task-Service@" + contextService.getRootContext().getStationIdentifier(),
-			IMessageService.INTERNAL_MESSAGE_URI_SCHEME + owner.getId());
+			IMessageService.INTERNAL_MESSAGE_URI_SCHEME + ":" + owner.getId());
 		message.addMessageCode(MessageCode.Key.SenderSubId, "tasks.taskservice");
 		message.setSenderAcceptsAnswer(false);
 		
@@ -301,7 +302,10 @@ public class TaskServiceImpl implements ITaskService {
 		}
 		message.setMessageText(sb.toString());
 		
-		messageService.send(message);
+		IStatus status = messageService.send(message);
+		if (!status.isOK()) {
+			logger.warn("Could not send message to owner [{}]", status.getMessage());
+		}
 	}
 	
 	@Override
