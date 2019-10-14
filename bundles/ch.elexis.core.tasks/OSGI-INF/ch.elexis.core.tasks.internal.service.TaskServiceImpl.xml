@@ -3,9 +3,9 @@
    <service>
       <provide interface="ch.elexis.core.tasks.model.ITaskService"/>
    </service>
-   <reference bind="setCoreModelService" interface="ch.elexis.core.services.IModelService" name="CoreModelService" target="(service.model.name=ch.elexis.core.model)"/>
    <reference bind="setModelService" interface="ch.elexis.core.services.IModelService" name="ModelService" target="(service.model.name=ch.elexis.core.tasks.model)"/>
    <reference cardinality="1..1" field="contextService" interface="ch.elexis.core.services.IContextService" name="contextService"/>
+   <reference cardinality="1..1" field="messageService" interface="ch.elexis.core.services.IMessageService" name="messageService"/>
    <reference bind="bindRunnableWithContextFactory" cardinality="0..n" field="runnableWithContextFactories" interface="ch.elexis.core.model.tasks.IIdentifiedRunnableFactory" name="runnableWithContextFactories" policy="dynamic" unbind="unbindRunnableWithContextFactory"/>
    <implementation class="ch.elexis.core.tasks.internal.service.TaskServiceImpl"/>
 </scr:component>
