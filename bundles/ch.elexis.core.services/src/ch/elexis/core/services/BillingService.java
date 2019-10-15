@@ -26,7 +26,6 @@ import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
 
@@ -34,6 +33,9 @@ import ch.rgw.tools.Result.SEVERITY;
 public class BillingService implements IBillingService {
 	
 	private static Logger logger = LoggerFactory.getLogger(BillingService.class);
+	
+	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
+	private IModelService coreModelService;
 	
 	@Reference
 	private IAccessControlService accessControlService;
@@ -120,7 +122,7 @@ public class BillingService implements IBillingService {
 					msg = "Diese Behandlung ist nicht von Ihnen";
 				}
 			}
-			return new Result<IEncounter>(SEVERITY.WARNING, 0, msg, encounter, false);
+			return new Result<>(SEVERITY.WARNING, 0, msg, encounter, false);
 		}
 	}
 	
@@ -179,16 +181,15 @@ public class BillingService implements IBillingService {
 	
 	private Result<IBilled> translateResult(Result<IBillable> verificationResult){
 		Result<IBilled> ret = new Result<>();
-		verificationResult.getMessages().forEach(msg -> {
-			ret.addMessage(msg.getSeverity(), msg.getText());
-		});
+		verificationResult.getMessages()
+			.forEach(msg -> ret.addMessage(msg.getSeverity(), msg.getText()));
 		return ret;
 	}
 	
 	@Override
 	public Optional<IBillingSystemFactor> getBillingSystemFactor(String system, LocalDate date){
 		IQuery<IBillingSystemFactor> query =
-			CoreModelServiceHolder.get().getQuery(IBillingSystemFactor.class);
+			coreModelService.getQuery(IBillingSystemFactor.class);
 		query.and(ModelPackage.Literals.IBILLING_SYSTEM_FACTOR__SYSTEM, COMPARATOR.EQUALS, system);
 		query.and(ModelPackage.Literals.IBILLING_SYSTEM_FACTOR__VALID_FROM,
 			COMPARATOR.LESS_OR_EQUAL, date);
@@ -205,22 +206,22 @@ public class BillingService implements IBillingService {
 		}
 		
 		IQuery<IBillingSystemFactor> query =
-			CoreModelServiceHolder.get().getQuery(IBillingSystemFactor.class);
+				coreModelService.getQuery(IBillingSystemFactor.class);
 		query.and(ModelPackage.Literals.IBILLING_SYSTEM_FACTOR__SYSTEM, COMPARATOR.EQUALS, system);
 		List<IBillingSystemFactor> existingWithSystem = query.execute();
 		for (IBillingSystemFactor iBillingSystemFactor : existingWithSystem) {
 			if (iBillingSystemFactor.getValidTo() == null
 				|| iBillingSystemFactor.getValidTo().isAfter(from)) {
 				iBillingSystemFactor.setValidTo(from);
-				CoreModelServiceHolder.get().save(iBillingSystemFactor);
+				coreModelService.save(iBillingSystemFactor);
 			}
 		}
 		IBillingSystemFactor billingSystemFactor =
-			CoreModelServiceHolder.get().create(IBillingSystemFactor.class);
+			coreModelService.create(IBillingSystemFactor.class);
 		billingSystemFactor.setFactor(factor);
 		billingSystemFactor.setSystem(system);
 		billingSystemFactor.setValidFrom(from);
 		billingSystemFactor.setValidTo(to);
-		CoreModelServiceHolder.get().save(billingSystemFactor);
+		coreModelService.save(billingSystemFactor);
 	}
 }
