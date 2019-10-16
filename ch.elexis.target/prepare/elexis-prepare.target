@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis" sequenceNumber="1568968426">
+<target name="Elexis" sequenceNumber="1571214960">
   <locations>
+    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.eclipse.swt.chromium.feature.feature.group" version="0.10.2.201908130308"/>
+      <repository location="http://dl.maketechnology.io/chromium-swt/rls/repository"/>
+    </location>
+    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="com.make.chromium.cef.feature.feature.group" version="0.4.0.201908130254"/>
+      <repository location="http://dl.maketechnology.io/chromium-cef/rls/repository"/>
+    </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.swt.nl_de" version="4.8.0.v20190126080931"/>
       <unit id="org.eclipse.swt.nl_fr" version="4.8.0.v20190126080931"/>
@@ -34,7 +42,7 @@
       <repository location="https://download.eclipse.org/technology/babel/update-site/R0.16.1/photon/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.18.0.v20190917-1740"/>
+      <unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.18.0.v20190927-1557"/>
       <repository location="http://download.eclipse.org/e4/snapshots/org.eclipse.e4.tools/latest/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
@@ -53,6 +61,10 @@
       <unit id="org.eclipse.e4.tools.compat" version="4.7.200.v20180821-1411"/>
       <unit id="org.eclipse.e4.tools.services" version="4.8.100.v20180821-1411"/>
       <unit id="org.eclipse.e4.tools.emf.ui" version="4.6.100.v20180823-1503"/>
+      <unit id="org.eclipse.pde.core" version="3.12.100.v20180829-1412"/>
+      <unit id="org.eclipse.jdt.junit.runtime" version="3.4.800.v20180829-0645"/>
+      <unit id="org.eclipse.jdt.junit4.runtime" version="1.1.800.v20180829-0645"/>
+      <unit id="org.eclipse.pde.junit.runtime" version="3.5.300.v20180827-1331"/>
       <repository location="http://download.eclipse.org/eclipse/updates/4.9/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">

@@ -1,5 +1,15 @@
 target "Elexis" with source allEnvironments
 
+// temporary test
+location "http://dl.maketechnology.io/chromium-swt/rls/repository" {
+	org.eclipse.swt.chromium.feature.feature.group
+}
+
+// temporary test
+location "http://dl.maketechnology.io/chromium-cef/rls/repository" {
+	com.make.chromium.cef.feature.feature.group
+}
+
 // We a mirror http://download.eclipse.org/technology/babel/update-site/R0.16.0/photon as
 // it was really unreliable when building on the Jenkins
 location "https://download.eclipse.org/technology/babel/update-site/R0.16.1/photon/" {
@@ -51,7 +61,12 @@ location "http://download.eclipse.org/eclipse/updates/4.9/" {
 	org.eclipse.e4.tools
 	org.eclipse.e4.tools.compat
 	org.eclipse.e4.tools.services
-	org.eclipse.e4.tools.emf.ui
+	org.eclipse.e4.tools.emf.ui	
+	// Required plug-in 'org.eclipse.jdt.junit.runtime' could not be found.
+	org.eclipse.pde.core
+	org.eclipse.jdt.junit.runtime
+	org.eclipse.jdt.junit4.runtime
+	org.eclipse.pde.junit.runtime
 }
 
 location "http://download.eclipse.org/releases/2018-09/" {
