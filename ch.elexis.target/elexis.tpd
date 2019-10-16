@@ -1,6 +1,11 @@
 target "Elexis" with source allEnvironments
 
 location "http://download.elexis.info/elexis/master/p2/target/" {
+	// TESTING ONLY
+	org.eclipse.swt.chromium.feature.feature.group
+	com.make.chromium.cef.feature.feature.group
+	// TESTING ONLY
+	
 	org.eclipse.equinox.executable.feature.group
 	org.eclipse.rcp.feature.group
 	org.eclipse.platform.feature.group

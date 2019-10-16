@@ -11,6 +11,15 @@
             name="Chat"
             restorable="true">
       </e4view>
+            <e4view
+            allowMultiple="false"
+            category="ch.elexis.core.ui.eenv.category"
+            class="ch.elexis.core.ui.eenv.part.RocketchatPartChromium"
+            icon="rsc/rocketchat.png"
+            id="ch.elexis.core.ui.eenv.part.rocketchatpartchromium"
+            name="Chat (Chromium)"
+            restorable="true">
+      </e4view>
         <e4view
             allowMultiple="true"
             category="ch.elexis.core.ui.eenv.category"
