@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.core.ui.chromium.views.BrowserView">
+         <command
+               commandId="ch.elexis.core.ui.chromium.handler.OpenUrlHandler"
+               icon="icon://IMG_WEB"
+               label="Adresse eingeben"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            category="ch.elexis.core.ui.eenv.category"
+            class="ch.elexis.core.ui.chromium.views.BrowserView"
+            icon="icon://IMG_WEB"
+            id="ch.elexis.core.ui.chromium.views.BrowserView"
+            name="Chromium"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="ch.elexis.core.ui.chromium.handler.OpenUrlHandler"
+            commandId="ch.elexis.core.ui.chromium.handler.OpenUrlHandler">
+      </handler>
+   </extension>
+
+</plugin>
