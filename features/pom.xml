@@ -21,6 +21,7 @@
     <module>ch.elexis.core.logging.feature</module>
     <module>ch.elexis.core.ui.eenv.feature</module>
     <module>ch.elexis.core.ui.feature</module>
+    <module>ch.elexis.core.ui.chromium.feature</module>
     <module>ch.elexis.core.ui.p2.feature</module>
 </modules>
 </project>

@@ -55,6 +55,7 @@
     <module>ch.elexis.core.scripting.beanshell</module>
     <module>ch.elexis.core.tasks</module> 
     <module>ch.elexis.core.ui.contacts</module>
+    <module>ch.elexis.core.ui.chromium</module>
     <module>ch.elexis.core.ui.dbcheck</module>
     <module>ch.elexis.core.ui.documents</module>
     <module>ch.elexis.core.ui.eigenartikel</module>

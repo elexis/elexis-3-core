@@ -21,6 +21,9 @@
    <feature id="ch.elexis.core.ui.eenv.feature" version="0.0.0">
       <category name="divers"/>
    </feature>
+   <feature id="ch.elexis.core.ui.chromium.feature" arch="x86_64">
+      <category name="divers"/>
+   </feature>
    <bundle id="ch.elexis.core.data.tests" version="0.0.0">
       <category name="test"/>
    </bundle>
