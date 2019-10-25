@@ -13,6 +13,7 @@ package ch.elexis.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -22,9 +23,12 @@ import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.data.nopo.adapter.ArtikelAdapter;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.jdt.Nullable;
-import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.prescription.Constants;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.model.prescription.Methods;
@@ -210,7 +214,7 @@ public class Prescription extends PersistentObject {
 	public String getSimpleLabel(){
 		Artikel art = getArtikel();
 		if (art != null) {
-			return getArtikel().getLabel();
+			return art.getLabel();
 		} else {
 			return "Fehler";
 		}
@@ -229,6 +233,11 @@ public class Prescription extends PersistentObject {
 		String art = get(FLD_ARTICLE);
 		if (StringTool.isNothing(art)) {
 			return Artikel.load(get(FLD_ARTICLE_ID));
+		}
+		Optional<Identifiable> article =
+			ch.elexis.core.data.service.StoreToStringServiceHolder.get().loadFromString(art);
+		if (article.isPresent()) {
+			return new ArtikelAdapter((IArticle) article.get());
 		}
 		return (Artikel) CoreHub.poFactory.createFromString(art);
 	}
