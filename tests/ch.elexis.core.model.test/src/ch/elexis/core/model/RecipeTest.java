@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ch.elexis.core.model.builder.IPrescriptionBuilder;
+import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.test.AbstractTest;
 
 public class RecipeTest extends AbstractTest {
@@ -56,6 +57,29 @@ public class RecipeTest extends AbstractTest {
 		assertEquals(recipe.getMandator(), loaded.get().getMandator());
 		assertEquals(recipe.getDate(), loaded.get().getDate());
 		assertEquals(LocalDateTime.of(2000, 2, 2, 0, 0), loaded.get().getDate());
+		
+		coreModelService.remove(recipe);
+	}
+	
+	@Test
+	public void prescriptions(){
+		IRecipe recipe = coreModelService.create(IRecipe.class);
+		assertNotNull(recipe);
+		assertTrue(recipe instanceof IRecipe);
+		
+		recipe.setDate(LocalDateTime.of(2000, 2, 2, 0, 0));
+		recipe.setPatient(patient);
+		recipe.setMandator(mandator);
+		coreModelService.save(recipe);
+		assertTrue(recipe.getPrescriptions().isEmpty());
+		
+		prescription.setEntryType(EntryType.RECIPE);
+		prescription.setRecipe(recipe);
+		coreModelService.save(prescription);
+		assertFalse(recipe.getPrescriptions().isEmpty());
+		
+		recipe.removePrescription(prescription);
+		assertTrue(recipe.getPrescriptions().isEmpty());
 		
 		coreModelService.remove(recipe);
 	}

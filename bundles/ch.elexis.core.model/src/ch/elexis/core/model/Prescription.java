@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import ch.elexis.core.jpa.entities.Kontakt;
+import ch.elexis.core.jpa.entities.Rezept;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
@@ -173,7 +174,20 @@ public class Prescription
 	
 	@Override
 	public void setRecipe(IRecipe value){
-		getEntityMarkDirty().setRezeptID(value.getId());
+		if (value instanceof AbstractIdModelAdapter) {
+			// remove from existing
+			if (getRecipe() != null) {
+				Rezept oldEntity =
+					((AbstractIdModelAdapter<Rezept>) getRecipe()).getEntityMarkDirty();
+				oldEntity.getPrescriptions().remove(getEntity());
+				addChanged(getRecipe());
+			}
+			Rezept valueEntity = ((AbstractIdModelAdapter<Rezept>) value).getEntity();
+			// set both sides
+			getEntityMarkDirty().setRezeptID(value.getId());
+			valueEntity.getPrescriptions().add(getEntity());
+			addChanged(value);
+		}
 	}
 	
 	@Override
