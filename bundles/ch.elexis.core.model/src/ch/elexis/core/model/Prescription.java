@@ -221,6 +221,19 @@ public class Prescription
 		} else {
 			extInfoHandler.setExtInfo(Constants.FLD_EXT_VERRECHNET_ID, null);
 		}
-		
+	}
+	
+	@Override
+	public String getLabel(){
+		return getSimpleLabel() + " " + getDosageInstruction();
+	}
+	
+	private String getSimpleLabel(){
+		IArticle art = getArticle();
+		if (art != null) {
+			return art.getLabel();
+		} else {
+			return "?";
+		}
 	}
 }
