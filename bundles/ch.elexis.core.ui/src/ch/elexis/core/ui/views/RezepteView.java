@@ -53,7 +53,11 @@ import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.data.interfaces.IOutputter;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IPrescription;
+import ch.elexis.core.model.IRecipe;
+import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
@@ -65,8 +69,8 @@ import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.dialogs.MediDetailDialog;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.util.PersistentObjectDragSource;
-import ch.elexis.core.ui.util.PersistentObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
@@ -100,7 +104,7 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 	private ViewMenus menus;
 	private Action printAction;
 	private Patient actPatient;
-	private PersistentObjectDropTarget dropTarget;
+	private GenericObjectDropTarget dropTarget;
 	private final ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 		
 		public void runInUi(ElexisEvent ev){
@@ -237,43 +241,78 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 		tv.setInput(getViewSite());
 		
 		/* Implementation Drag&Drop */
-		PersistentObjectDropTarget.IReceiver dtr = new PersistentObjectDropTarget.IReceiver() {
+		GenericObjectDropTarget.IReceiver dtr = new GenericObjectDropTarget.IReceiver() {
 			
-			public boolean accept(PersistentObject o){
-				// TODO Auto-generated method stub
-				return true;
+			@Override
+			public void dropped(List<Object> list, DropTargetEvent e){
+				for (Object obj : list) {
+					Rezept actR = (Rezept) ElexisEventDispatcher.getSelected(Rezept.class);
+					if (actR == null) {
+						SWTHelper.showError(Messages.RezepteView_NoPrescriptionSelected, //$NON-NLS-1$
+							Messages.RezepteView_PleaseChoosaAPrescription); //$NON-NLS-1$
+						return;
+					}
+					if (obj instanceof Identifiable) {
+						if (obj instanceof IArticle) {
+							IRecipe recipe = CoreModelServiceHolder.get()
+								.load(actR.getId(), IRecipe.class).orElse(null);
+							IArticle art = (IArticle) obj;
+							IPrescription ret =
+								CoreModelServiceHolder.get().create(IPrescription.class);
+							ret.setArticle(art);
+							ret.setPatient(recipe.getPatient());
+							ret.setDosageInstruction("");
+							ret.setRemark("");
+							ret.setEntryType(EntryType.RECIPE);
+							ret.setRecipe(recipe);
+							CoreModelServiceHolder.get().save(ret);
+							
+							refresh();
+						} else if (obj instanceof IPrescription) {
+							IRecipe recipe = CoreModelServiceHolder.get()
+								.load(actR.getId(), IRecipe.class).orElse(null);
+							IPrescription pre = (IPrescription) obj;
+							
+							IPrescription ret =
+								CoreModelServiceHolder.get().create(IPrescription.class);
+							ret.setArticle(pre.getArticle());
+							ret.setPatient(recipe.getPatient());
+							ret.setDosageInstruction(pre.getDosageInstruction());
+							ret.setRemark(pre.getRemark());
+							ret.setEntryType(EntryType.RECIPE);
+							ret.setRecipe(recipe);
+							CoreModelServiceHolder.get().save(ret);
+							
+							refresh();
+						}
+					} else {
+						if (obj instanceof Artikel) {
+							Artikel art = (Artikel) obj;
+							
+							Prescription p = new Prescription(art, actR.getPatient(),
+								StringConstants.EMPTY, StringConstants.EMPTY);
+							actR.addPrescription(p);
+							refresh();
+						} else if (obj instanceof Prescription) {
+							Prescription pre = (Prescription) obj;
+							Prescription now = new Prescription(pre.getArtikel(), actR.getPatient(),
+								pre.getDosis(), pre.getBemerkung());
+							actR.addPrescription(now);
+							refresh();
+						}
+					}
+				}
 			}
 			
-			public void dropped(PersistentObject o, DropTargetEvent ev){
-				Rezept actR = (Rezept) ElexisEventDispatcher.getSelected(Rezept.class);
-				if (actR == null) {
-					SWTHelper.showError(Messages.RezepteView_NoPrescriptionSelected, //$NON-NLS-1$
-						Messages.RezepteView_PleaseChoosaAPrescription); //$NON-NLS-1$
-					return;
-				}
-				if (o instanceof Artikel) {
-					Artikel art = (Artikel) o;
-					
-					Prescription p =
-						new Prescription(art, actR.getPatient(), StringConstants.EMPTY,
-							StringConstants.EMPTY);
-					actR.addPrescription(p);
-					refresh();
-				} else if (o instanceof Prescription) {
-					Prescription pre = (Prescription) o;
-					Prescription now =
-						new Prescription(pre.getArtikel(), actR.getPatient(), pre.getDosis(),
-							pre.getBemerkung());
-					actR.addPrescription(now);
-					refresh();
-				}
-				
+			@Override
+			public boolean accept(List<Object> list){
+				return true;
 			}
 		};
 		
 		// final TextTransfer textTransfer = TextTransfer.getInstance();
 		// Transfer[] types = new Transfer[] {textTransfer};
-		dropTarget = new PersistentObjectDropTarget("Rezept", lvRpLines.getControl(), dtr); //$NON-NLS-1$
+		dropTarget = new GenericObjectDropTarget("Rezept", lvRpLines.getControl(), dtr); //$NON-NLS-1$
 		
 		lvRpLines.setContentProvider(new RezeptContentProvider());
 		lvRpLines.setLabelProvider(new RezeptLabelProvider());
