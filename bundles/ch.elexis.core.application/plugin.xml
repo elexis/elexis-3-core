@@ -372,6 +372,12 @@
             id="ch.elexis.core.ui.views.rechnung.InvoiceCorrectionView"
             name="Rechnungskorrektur (beta)">
       </view>
+      <view
+            class="ch.elexis.core.ui.views.ReminderListsView"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/bell__exclamation.png"
+            id="ch.elexis.core.ui.views.reminderlistsview"
+            name="Pendenzen (beta)">
+      </view>      
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">
