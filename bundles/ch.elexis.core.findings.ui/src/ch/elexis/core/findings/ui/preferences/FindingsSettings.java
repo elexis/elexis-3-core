@@ -54,7 +54,12 @@ public class FindingsSettings extends FieldEditorPreferencePage
 		setPreferenceStore(new SettingsPreferenceStore(CoreHub.globalCfg));
 		setMessage("Globale Befunde Einstellungen");
 		// initialize the model
-		FindingsServiceComponent.getService().findById("", IObservation.class);
+		if (FindingsServiceComponent.getService() != null) {
+			FindingsServiceComponent.getService().findById("", IObservation.class);
+		} else {
+			getLogger().warn("FindingsService is null - not found.");
+			setErrorMessage("Befunde Service konnte nicht geladen werden.");
+		}
 	}
 	
 	@Override
@@ -83,6 +88,9 @@ public class FindingsSettings extends FieldEditorPreferencePage
 			new BooleanFieldEditor(IMigratorService.ALLERGYINTOLERANCE_SETTINGS_USE_STRUCTURED,
 				"Allergien strukturiert anzeigen", getFieldEditorParent());
 		addField(allergyIntoleranceStructFieldEditor);
+		
+		getControl().setEnabled(FindingsServiceComponent.getService() != null);
+		
 	}
 	
 	private Logger getLogger(){
