@@ -93,8 +93,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 	private int filterDueDateDays = CoreHub.userCfg.get(Preferences.USR_REMINDER_FILTER_DUE_DAYS, -1);
 	private boolean autoSelectPatient = CoreHub.userCfg.get(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, false);
 	private boolean showOnlyDueReminders = CoreHub.userCfg.get(Preferences.USR_REMINDERSOPEN, false);
-	private boolean showAllReminders = (CoreHub.userCfg.get(Preferences.USR_REMINDEROTHERS, false)
-			&& CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS));
 	private boolean showSelfCreatedReminders = CoreHub.userCfg.get(Preferences.USR_REMINDEROWN, false);
 
 	private Composite viewParent;
@@ -419,6 +417,8 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 				refresh();
 			}
 		});
+		actPatient = ElexisEventDispatcher.getSelectedPatient();
+		viewerSelectionComposite.loadSelection();
 		updateViewerSelection((StructuredSelection) viewerSelectionComposite.getSelection());
 
 		refreshUserConfiguration();
@@ -449,8 +449,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 		generalViewer.getTable().setMenu(menuManager.createContextMenu(generalViewer.getTable()));
 
 		ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_user, eeli_reminder);
-		actPatient = ElexisEventDispatcher.getSelectedPatient();
-		refresh();
 	}
 
 	@Override
@@ -1006,6 +1004,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 					}
 					fireSelectionChanged();
 					manager.update(true);
+					saveSelection();
 				}
 			});
 			manager.add(new Action("alle Patienten", Action.AS_CHECK_BOX) {
@@ -1023,6 +1022,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 					}
 					fireSelectionChanged();
 					manager.update(true);
+					saveSelection();
 				}
 			});
 			manager.add(new Action("allgemein", Action.AS_CHECK_BOX) {
@@ -1041,9 +1041,35 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 					}
 					fireSelectionChanged();
 					manager.update(true);
+					saveSelection();
 				}
 			});
 			manager.createControl(this);
+		}
+
+		private void saveSelection() {
+			List<String> selectedIds = currentSelection.stream().map(action -> action.getId())
+					.collect(Collectors.toList());
+			StringJoiner sj = new StringJoiner(",");
+			selectedIds.forEach(id -> sj.add(id));
+			CoreHub.userCfg.set(Preferences.USR_REMINDER_VIEWER_SELECTION, sj.toString());
+		}
+
+		public void loadSelection() {
+			currentSelection.clear();
+			String[] loadedIds = CoreHub.userCfg.get(Preferences.USR_REMINDER_VIEWER_SELECTION, "").split(",");
+			for (String id : loadedIds) {
+				for (IContributionItem item : manager.getItems()) {
+					if (item.getId().equals(id)) {
+						IAction action = ((ActionContributionItem) item).getAction();
+						action.setChecked(true);
+						currentSelection.add((Action) action);
+					}
+				}
+				fireSelectionChanged();
+				manager.update(true);
+				layout();
+			}
 		}
 
 		@Override
