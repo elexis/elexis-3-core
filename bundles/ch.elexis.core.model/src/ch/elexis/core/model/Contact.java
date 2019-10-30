@@ -12,7 +12,6 @@ import ch.elexis.core.jpa.entities.KontaktAdressJoint;
 import ch.elexis.core.jpa.entities.ZusatzAdresse;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
-import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
 import ch.elexis.core.model.format.PostalAddress;
 import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.util.internal.ModelUtil;
@@ -20,13 +19,10 @@ import ch.elexis.core.types.Country;
 
 public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements IdentifiableWithXid, IContact {
 
-	private ExtInfoHandler extInfoHandler;
-
 	public Contact(Kontakt entity) {
 		super(entity);
-		extInfoHandler = new ExtInfoHandler(this);
 	}
-
+	
 	@Override
 	public boolean isMandator() {
 		return getEntity().isMandator();

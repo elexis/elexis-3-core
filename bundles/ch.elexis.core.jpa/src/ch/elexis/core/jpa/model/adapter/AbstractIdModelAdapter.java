@@ -8,13 +8,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import ch.elexis.core.jpa.entities.EntityWithExtInfo;
 import ch.elexis.core.jpa.entities.EntityWithId;
+import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.model.WithExtInfo;
 import ch.elexis.core.services.IModelService;
 
 public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements Identifiable {
 	
 	protected List<Identifiable> changedList;
+	protected ExtInfoHandler extInfoHandler;
 	
 	/**
 	 * Used in json serialization
@@ -26,6 +30,8 @@ public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements 
 	
 	private boolean dirty;
 	
+	
+	@SuppressWarnings("unchecked")
 	public AbstractIdModelAdapter(T entity){
 		this.dirty = false;
 		this.entity = entity;
@@ -35,6 +41,9 @@ public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements 
 			throw new IllegalStateException(
 				"Model " + entity + " is no subclass of "
 					+ EntityWithId.class.getSimpleName());
+		}
+		if (this instanceof WithExtInfo && entity instanceof EntityWithExtInfo) {
+			extInfoHandler = new ExtInfoHandler((AbstractIdModelAdapter<? extends EntityWithExtInfo>) this);
 		}
 	}
 	
@@ -73,6 +82,9 @@ public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements 
 	public void setEntity(EntityWithId entity){
 		if (!dirty) {
 			this.entity = (T) entity;
+		}
+		if (extInfoHandler != null) {
+			extInfoHandler.resetExtInfo();
 		}
 	}
 	
