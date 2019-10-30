@@ -63,7 +63,7 @@ public class MedicationTableViewerItem {
 		this.prescription = prescription;
 		article = prescription.getArticle();
 		dosis = prescription.getDosageInstruction();
-		remark = prescription.getDisposalComment();
+		remark = prescription.getRemark();
 		sortOrder = prescription.getSortOrder();
 		prescriptor = prescription.getPrescriptor();
 		
