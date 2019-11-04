@@ -86,7 +86,8 @@ public class TaskServiceTest {
 	@Ignore("TODO fix test case")
 	@Test
 	public void triggerManual_HelloWorld() throws Exception {
-		taskDescriptor = taskService.createTaskDescriptor(owner, rwcLogContext);
+		taskDescriptor = taskService.createTaskDescriptor(rwcLogContext);
+		taskDescriptor.setOwner(owner);
 		taskDescriptor.setReferenceId("manual_helloWorld");
 		taskDescriptor.setRunContextParameter("testKey", "testValue");
 		taskService.setActive(taskDescriptor, true);
@@ -107,7 +108,8 @@ public class TaskServiceTest {
 
 	public void triggerManual_Misthios() throws Exception {
 		IIdentifiedRunnable rwcMisthios = taskService.instantiateRunnableById("misthios");
-		taskDescriptor = taskService.createTaskDescriptor(owner, rwcMisthios);
+		taskDescriptor = taskService.createTaskDescriptor(rwcMisthios);
+		taskDescriptor.setOwner(owner);
 		taskDescriptor.setReferenceId("manual_helloWorld_misthios");
 		Map<String, Serializable> context = new HashMap<>();
 		context.put("bundle_url",
@@ -135,7 +137,8 @@ public class TaskServiceTest {
 	public void triggerFSChange() throws TaskException, IOException, InterruptedException {
 		IIdentifiedRunnable rwcDeleteFile = taskService
 				.instantiateRunnableById(IdentifiedRunnableIdConstants.DELETEFILE);
-		taskDescriptor = taskService.createTaskDescriptor(owner, rwcDeleteFile);
+		taskDescriptor = taskService.createTaskDescriptor(rwcDeleteFile);
+		taskDescriptor.setOwner(owner);
 		taskDescriptor.setRunContext(runContext);
 		taskDescriptor.setTriggerType(TaskTriggerType.FILESYSTEM_CHANGE);
 		taskDescriptor.setTriggerParameter(IIdentifiedRunnable.RunContextParameter.STRING_URL,
@@ -165,7 +168,8 @@ public class TaskServiceTest {
 				.instantiateRunnableById(IdentifiedRunnableIdConstants.DELETEFILE);
 		Path createFile = Files.createTempFile(tempDirectory, "test", "txt");
 
-		taskDescriptor = taskService.createTaskDescriptor(owner, rwcDeleteFile);
+		taskDescriptor = taskService.createTaskDescriptor(rwcDeleteFile);
+		taskDescriptor.setOwner(owner);
 		taskDescriptor.setTriggerType(TaskTriggerType.CRON);
 		taskDescriptor.setRunContextParameter(IIdentifiedRunnable.RunContextParameter.STRING_URL,
 				createFile.toString());
@@ -185,7 +189,8 @@ public class TaskServiceTest {
 	 * @throws TaskException
 	 */
 	public void triggerSysEvent_PatientChange() throws TaskException {
-		taskDescriptor = taskService.createTaskDescriptor(owner, rwcLogContext);
+		taskDescriptor = taskService.createTaskDescriptor(rwcLogContext);
+		taskDescriptor.setOwner(owner);
 		taskDescriptor.setTriggerType(TaskTriggerType.SYSTEM_EVENT);
 		taskDescriptor.setTriggerParameter("eventClass", "ch.elexis.data.Patient");
 		taskDescriptor.setTriggerParameter("eventType", "EVENT_SELECTED");
@@ -204,7 +209,8 @@ public class TaskServiceTest {
 	 */
 	@Test
 	public void triggerSysEvent_LabItemCreate() throws TaskException, InterruptedException {
-		taskDescriptor = taskService.createTaskDescriptor(owner, rwcLogContext);
+		taskDescriptor = taskService.createTaskDescriptor(rwcLogContext);
+		taskDescriptor.setOwner(owner);
 		taskDescriptor.setTriggerType(TaskTriggerType.SYSTEM_EVENT);
 		taskDescriptor.setTriggerParameter("topic", ElexisEventTopics.PERSISTENCE_EVENT_CREATE);
 		taskDescriptor.setTriggerParameter(ElexisEventTopics.PROPKEY_CLASS, "ch.elexis.data.Patient");
@@ -231,7 +237,8 @@ public class TaskServiceTest {
 	 * @throws TaskException
 	 */
 	public void triggerJobState() throws TaskException {
-		taskDescriptor = taskService.createTaskDescriptor(owner, rwcLogContext);
+		taskDescriptor = taskService.createTaskDescriptor(rwcLogContext);
+		taskDescriptor.setOwner(owner);
 		taskDescriptor.setTriggerType(TaskTriggerType.OTHER_TASK);
 		taskDescriptor.setTriggerParameter("referenceId", "otherTaskReferenceId");
 		taskDescriptor.setTriggerParameter("taskState", "COMPLETED");

@@ -69,7 +69,6 @@
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//ITaskService">
       <genOperations ecoreOperation="model.ecore#//ITaskService/createTaskDescriptor">
-        <genParameters ecoreParameter="model.ecore#//ITaskService/createTaskDescriptor/owner"/>
         <genParameters ecoreParameter="model.ecore#//ITaskService/createTaskDescriptor/runnable"/>
       </genOperations>
       <genOperations ecoreOperation="model.ecore#//ITaskService/removeTaskDescriptor">

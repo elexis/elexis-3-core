@@ -10,8 +10,6 @@
  */
 package ch.elexis.core.tasks.model;
 
-import ch.elexis.core.model.IUser;
-
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.TaskException;
 
@@ -38,7 +36,7 @@ public interface ITaskService {
 	 * @model exceptions="ch.elexis.core.tasks.model.TaskException" runnableDataType="ch.elexis.core.tasks.model.IIdentifiedRunnable"
 	 * @generated
 	 */
-	ITaskDescriptor createTaskDescriptor(IUser owner, IIdentifiedRunnable runnable) throws TaskException;
+	ITaskDescriptor createTaskDescriptor(IIdentifiedRunnable runnable) throws TaskException;
 
 	/**
 	 * <!-- begin-user-doc -->

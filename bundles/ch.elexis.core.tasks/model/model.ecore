@@ -120,7 +120,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ITaskService" abstract="true" interface="true">
     <eOperations name="createTaskDescriptor" eType="#//ITaskDescriptor" eExceptions="#//TaskException">
-      <eParameters name="owner" eType="ecore:EClass ../../ch.elexis.core/model/model.ecore#//IUser"/>
       <eParameters name="runnable" eType="#//IIdentifiedRunnable"/>
     </eOperations>
     <eOperations name="removeTaskDescriptor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"

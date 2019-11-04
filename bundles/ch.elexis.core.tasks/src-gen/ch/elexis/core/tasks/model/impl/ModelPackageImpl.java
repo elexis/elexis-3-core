@@ -673,7 +673,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEClass(iTaskServiceEClass, ITaskService.class, "ITaskService", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		op = addEOperation(iTaskServiceEClass, this.getITaskDescriptor(), "createTaskDescriptor", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, theModelPackage_1.getIUser(), "owner", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIIdentifiedRunnable(), "runnable", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEException(op, this.getTaskException());
 

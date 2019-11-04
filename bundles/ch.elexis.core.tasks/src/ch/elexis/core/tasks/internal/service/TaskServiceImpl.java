@@ -223,15 +223,14 @@ public class TaskServiceImpl implements ITaskService {
 	}
 	
 	@Override
-	public ITaskDescriptor createTaskDescriptor(IUser owner, IIdentifiedRunnable identifiedRunnable)
+	public ITaskDescriptor createTaskDescriptor(IIdentifiedRunnable identifiedRunnable)
 		throws TaskException{
 		
-		if (owner == null || identifiedRunnable == null) {
+		if (identifiedRunnable == null) {
 			throw new TaskException(TaskException.PARAMETERS_MISSING);
 		}
 		
 		ITaskDescriptor taskDescriptor = taskModelService.create(ITaskDescriptor.class);
-		taskDescriptor.setOwner(owner);
 		taskDescriptor.setIdentifiedRunnableId(identifiedRunnable.getId());
 		String stationIdentifier = contextService.getRootContext().getStationIdentifier();
 		taskDescriptor.setRunner(StringUtils.abbreviate(stationIdentifier, 64));
@@ -268,7 +267,14 @@ public class TaskServiceImpl implements ITaskService {
 				if (OwnerTaskNotification.WHEN_FINISHED == ownerNotification
 					|| (OwnerTaskNotification.WHEN_FINISHED_FAILED == ownerNotification
 						&& TaskState.FAILED == state)) {
-					sendMessageToOwner(task, owner, state);
+					
+					if (owner != null) {
+						sendMessageToOwner(task, owner, state);
+					} else {
+						logger.warn("[{}] requested owner notification, but owner is null",
+							task.getDescriptorId());
+					}
+					
 				}
 			} else {
 				logger.error("could not load taskdescriptor by id [{}]", task.getDescriptorId());
