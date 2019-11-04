@@ -301,6 +301,7 @@
     </eGenericSuperTypes>
     <eGenericSuperTypes eClassifier="#//Deleteable"/>
     <eGenericSuperTypes eClassifier="#//Identifiable"/>
+    <eGenericSuperTypes eClassifier="#//WithAssignableId"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ICodeElement" abstract="true" interface="true">
     <eOperations name="getCodeSystemName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

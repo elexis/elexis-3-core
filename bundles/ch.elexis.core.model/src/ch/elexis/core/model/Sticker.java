@@ -13,6 +13,11 @@ public class Sticker extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	}
 	
 	@Override
+	public void setId(String id) {
+		getEntityMarkDirty().setId(id);
+	}
+	
+	@Override
 	public String getBackground(){
 		return getEntity().getBackground();
 	}

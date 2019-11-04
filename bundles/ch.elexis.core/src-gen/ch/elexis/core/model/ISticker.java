@@ -28,10 +28,10 @@ package ch.elexis.core.model;
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getISticker()
- * @model interface="true" abstract="true" superTypes="ch.elexis.core.types.Comparable&lt;ch.elexis.core.model.ISticker&gt; ch.elexis.core.model.Deleteable ch.elexis.core.model.Identifiable"
+ * @model interface="true" abstract="true" superTypes="ch.elexis.core.types.Comparable&lt;ch.elexis.core.model.ISticker&gt; ch.elexis.core.model.Deleteable ch.elexis.core.model.Identifiable ch.elexis.core.model.WithAssignableId"
  * @generated
  */
-public interface ISticker extends Comparable<ISticker>, Deleteable, Identifiable {
+public interface ISticker extends Comparable<ISticker>, Deleteable, Identifiable, WithAssignableId {
 	/**
 	 * Returns the value of the '<em><b>Background</b></em>' attribute.
 	 * <!-- begin-user-doc -->

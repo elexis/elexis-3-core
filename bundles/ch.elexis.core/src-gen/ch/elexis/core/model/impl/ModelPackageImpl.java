@@ -4948,6 +4948,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iStickerEClass.getEGenericSuperTypes().add(g1);
 		g1 = createEGenericType(this.getIdentifiable());
 		iStickerEClass.getEGenericSuperTypes().add(g1);
+		g1 = createEGenericType(this.getWithAssignableId());
+		iStickerEClass.getEGenericSuperTypes().add(g1);
 		iCodeElementBlockEClass.getESuperTypes().add(this.getIdentifiable());
 		iCodeElementBlockEClass.getESuperTypes().add(this.getDeleteable());
 		iCodeElementBlockEClass.getESuperTypes().add(this.getICodeElement());

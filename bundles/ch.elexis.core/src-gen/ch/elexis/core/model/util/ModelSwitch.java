@@ -231,6 +231,7 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseComparable(iSticker);
 				if (result == null) result = caseDeleteable(iSticker);
 				if (result == null) result = caseIdentifiable(iSticker);
+				if (result == null) result = caseWithAssignableId(iSticker);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
