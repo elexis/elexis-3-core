@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import ch.elexis.core.jpa.entities.Artikel;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
-import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
 import ch.elexis.core.model.article.Constants;
 import ch.elexis.core.model.billable.AbstractOptifier;
 import ch.elexis.core.model.billable.DefaultVerifier;
@@ -24,15 +23,12 @@ import ch.rgw.tools.Money;
 public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Artikel>
 		implements IdentifiableWithXid, IArticle {
 	
-	private ExtInfoHandler extInfoHandler;
-	
 	private static IBillableVerifier verifier;
 	
 	private static IBillableOptifier<TypedArticle> optifier;
 	
 	public TypedArticle(Artikel entity){
 		super(entity);
-		extInfoHandler = new ExtInfoHandler(this);
 	}
 	
 	@Override

@@ -9,7 +9,6 @@ import ch.elexis.core.jpa.entities.Fall;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
-import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
 import ch.elexis.core.model.messages.Messages;
 import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.util.internal.ModelUtil;
@@ -18,11 +17,8 @@ import ch.elexis.core.utils.CoreUtil;
 public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 		implements IdentifiableWithXid, ICoverage {
 	
-	private ExtInfoHandler extInfoHandler;
-	
 	public Coverage(Fall entity){
 		super(entity);
-		extInfoHandler = new ExtInfoHandler(this);
 	}
 	
 	@Override

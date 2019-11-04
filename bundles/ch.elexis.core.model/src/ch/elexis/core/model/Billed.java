@@ -11,7 +11,6 @@ import ch.elexis.core.jpa.entities.Verrechnet;
 import ch.elexis.core.jpa.entities.VerrechnetCopy;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
-import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
 import ch.elexis.core.model.service.holder.StoreToStringServiceHolder;
 import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.model.verrechnet.Constants;
@@ -21,11 +20,8 @@ import ch.rgw.tools.Money;
 public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 		implements IdentifiableWithXid, IBilled {
 	
-	private ExtInfoHandler extInfoHandler;
-	
 	public Billed(Verrechnet entity){
 		super(entity);
-		extInfoHandler = new ExtInfoHandler(this);
 	}
 	
 	@Override

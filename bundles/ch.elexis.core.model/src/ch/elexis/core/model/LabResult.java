@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
-import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
 import ch.elexis.core.model.util.internal.LabPathologicEvaluator;
 import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.services.IQuery;
@@ -22,11 +21,9 @@ public class LabResult extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.e
 		implements IdentifiableWithXid, ILabResult {
 	
 	private LabPathologicEvaluator labPathologicEvaluator;
-	private ExtInfoHandler extInfoHandler;
 
 	public LabResult(ch.elexis.core.jpa.entities.LabResult entity){
 		super(entity);
-		extInfoHandler = new ExtInfoHandler(this);
 	}
 	
 	@Override

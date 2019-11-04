@@ -10,7 +10,6 @@ import ch.elexis.core.jpa.entities.Fall;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
-import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
 import ch.elexis.core.model.InvoiceState.REJECTCODE;
 import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.util.internal.ModelUtil;
@@ -24,11 +23,8 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	
 	public static final String REJECTED = "Zurückgewiesen";
 	
-	private ExtInfoHandler extInfoHandler;
-	
 	public Invoice(ch.elexis.core.jpa.entities.Invoice entity){
 		super(entity);
-		extInfoHandler = new ExtInfoHandler(this);
 	}
 	
 	@Override

@@ -5,7 +5,6 @@ import java.util.Map;
 
 import ch.elexis.core.jpa.entities.DefaultSignature;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
-import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
 import ch.elexis.core.model.article.defaultsignature.Constants;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
@@ -14,12 +13,10 @@ public class ArticleDefaultSignature
 		extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.DefaultSignature>
 		implements IdentifiableWithXid, IArticleDefaultSignature {
 	
-	private ExtInfoHandler extInfoHandler;
 	private LocalDate endDate;
 	
 	public ArticleDefaultSignature(DefaultSignature entity){
 		super(entity);
-		extInfoHandler = new ExtInfoHandler(this);
 	}
 	
 	@Override

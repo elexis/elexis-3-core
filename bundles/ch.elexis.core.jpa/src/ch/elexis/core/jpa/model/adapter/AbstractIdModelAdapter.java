@@ -82,9 +82,9 @@ public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements 
 	public void setEntity(EntityWithId entity){
 		if (!dirty) {
 			this.entity = (T) entity;
-		}
-		if (extInfoHandler != null) {
-			extInfoHandler.resetExtInfo();
+			if (extInfoHandler != null) {
+				extInfoHandler.resetExtInfo();
+			}
 		}
 	}
 	

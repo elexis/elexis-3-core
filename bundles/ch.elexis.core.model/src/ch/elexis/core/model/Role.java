@@ -4,18 +4,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
-import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
 import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.util.internal.ModelUtil;
 
 public class Role extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Role>
 		implements IdentifiableWithXid, IRole {
 	
-	private ExtInfoHandler extInfoHandler;
-	
 	public Role(ch.elexis.core.jpa.entities.Role entity){
 		super(entity);
-		extInfoHandler = new ExtInfoHandler(this);
 	}
 	
 	@Override

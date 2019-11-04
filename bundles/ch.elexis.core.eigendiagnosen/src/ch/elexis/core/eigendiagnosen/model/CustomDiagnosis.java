@@ -7,7 +7,6 @@ import ch.elexis.core.eigendiagnosen.Messages;
 import ch.elexis.core.eigendiagnosen.model.service.ModelUtil;
 import ch.elexis.core.jpa.entities.Eigendiagnose;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
-import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
 import ch.elexis.core.model.IDiagnosisTree;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
@@ -18,11 +17,8 @@ public class CustomDiagnosis extends
 		AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Eigendiagnose>
 		implements IDiagnosisTree, WithExtInfo, Identifiable {
 	
-	private ExtInfoHandler extInfoHandler;
-	
 	public CustomDiagnosis(Eigendiagnose entity){
 		super(entity);
-		extInfoHandler = new ExtInfoHandler(this);
 	}
 	
 	@Override

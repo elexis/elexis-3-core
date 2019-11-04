@@ -18,11 +18,8 @@ public class Prescription
 		extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Prescription>
 		implements IdentifiableWithXid, IPrescription {
 	
-	private ExtInfoHandler extInfoHandler;
-	
 	public Prescription(ch.elexis.core.jpa.entities.Prescription entity){
 		super(entity);
-		extInfoHandler = new ExtInfoHandler(this);
 	}
 	
 	@Override
