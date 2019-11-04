@@ -39,6 +39,13 @@ public class BillingSystem implements IBillingSystem {
 		String defaultIfNotDefined){
 		String ret = ModelUtil.getConfig(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
 			+ billingSystemName + "/" + attributeName, defaultIfNotDefined); //$NON-NLS-1$
+		// compatibility with changed BillingLaw enum (ticket #15019)
+		if ("MVG".equals(ret)) {
+			return "MV";
+		}
+		if ("IVG".equals(ret)) {
+			return "IV";
+		}
 		return ret;
 	}
 	
