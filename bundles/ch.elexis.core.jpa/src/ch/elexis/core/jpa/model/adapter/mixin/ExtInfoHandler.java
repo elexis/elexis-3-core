@@ -45,6 +45,10 @@ public class ExtInfoHandler {
 		withExtInfo.getEntityMarkDirty().setExtInfo(JpaModelUtil.extInfoToBytes(extInfo));
 	}
 	
+	public void resetExtInfo(){
+		extInfo = null;
+	}
+	
 	/**
 	 * @return modifications to this map are not persisted. Use {@link #setExtInfo(Object, Object)}
 	 *         to handle persistent sets
