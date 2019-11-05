@@ -6,7 +6,9 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.swt.widgets.Shell;
 
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.laboratory.controls.LaborOrderViewerItem;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.ILockHandler;
@@ -16,12 +18,21 @@ import ch.elexis.data.LabResult;
 public class LaborResultOrderDeleteAction extends Action implements IAction {
 	
 	private List<?> selectedOrdersOrResults;
+	private final Shell shell;
 	private final StructuredViewer viewer;
 	
 	public LaborResultOrderDeleteAction(List<?> list, StructuredViewer viewer){
 		super(ch.elexis.core.l10n.Messages.LabResultOrOrderDeleteAction_title);
 		this.selectedOrdersOrResults = list;
 		this.viewer = viewer;
+		this.shell = viewer.getControl().getShell();
+	}
+	
+	public LaborResultOrderDeleteAction(List<?> list, Shell shell){
+		super(ch.elexis.core.l10n.Messages.LabResultOrOrderDeleteAction_title);
+		this.selectedOrdersOrResults = list;
+		this.viewer = null;
+		this.shell = shell;
 	}
 	
 	@Override
@@ -46,9 +57,9 @@ public class LaborResultOrderDeleteAction extends Action implements IAction {
 					+ object.getClass());
 			}
 			
-			boolean delete = MessageDialog.openConfirm(viewer.getControl().getShell(),
-				"Resultat/Verordnung entfernen", "Sollen Resultat [" + result + "] und Verordnung ["
-					+ order.get(LabOrder.FLD_ORDERID) + "] wirklich entfernt werden?");
+			boolean delete = MessageDialog.openConfirm(shell, "Resultat/Verordnung entfernen",
+				"Soll das Resultat [" + result
+					+ "] sowie die zugeh. Verordnung wirklich entfernt werden?");
 			
 			if (delete) {
 				AcquireLockBlockingUi.aquireAndRun(result, new ILockHandler() {
@@ -66,8 +77,10 @@ public class LaborResultOrderDeleteAction extends Action implements IAction {
 						if (viewer != null) {
 							viewer.refresh();
 						}
+						
 					}
 				});
+				ElexisEventDispatcher.reload(LabResult.class);
 			}
 		}
 	}
