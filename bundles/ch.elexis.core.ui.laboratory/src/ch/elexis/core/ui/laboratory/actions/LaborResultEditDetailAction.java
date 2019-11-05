@@ -7,6 +7,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.window.Window;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.laboratory.controls.LaborOrderViewerItem;
 import ch.elexis.core.ui.laboratory.dialogs.EditLabResultDialog;

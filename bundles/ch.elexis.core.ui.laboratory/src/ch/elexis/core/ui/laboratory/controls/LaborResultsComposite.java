@@ -28,8 +28,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import ch.elexis.core.data.interfaces.ILabItem;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.laboratory.actions.LaborParameterEditAction;
-import ch.elexis.core.ui.laboratory.actions.LaborResultDeleteAction;
 import ch.elexis.core.ui.laboratory.actions.LaborResultEditDetailAction;
+import ch.elexis.core.ui.laboratory.actions.LaborResultOrderDeleteAction;
 import ch.elexis.core.ui.laboratory.actions.LaborResultSetNonPathologicAction;
 import ch.elexis.core.ui.laboratory.actions.LaborResultSetPathologicAction;
 import ch.elexis.core.ui.laboratory.controls.model.LaborItemResults;
@@ -127,7 +127,7 @@ public class LaborResultsComposite extends Composite {
 					mgr.add(new LaborResultSetPathologicAction(results, viewer));
 					mgr.add(new LaborResultSetNonPathologicAction(results, viewer));
 					mgr.add(new LaborResultEditDetailAction(results, viewer));
-					mgr.add(new LaborResultDeleteAction(results, viewer));
+					mgr.add(new LaborResultOrderDeleteAction(results, viewer));
 					mgr.add(new Separator());
 					mgr.add(new LaborParameterEditAction(results, viewer));
 				}

@@ -2,7 +2,6 @@ package ch.elexis.core.ui.laboratory.controls;
 
 public class Messages {
 	public static String MultiLineTextCellEditor_title = ch.elexis.core.l10n.Messages.MultiLineTextCellEditor_title;
-	public static String LaborOrdersComposite_actionTitelRemoveWithResult = ch.elexis.core.l10n.Messages.LaborOrdersComposite_actionTitelRemoveWithResult;
 	public static String LaborOrdersComposite_columnDate = ch.elexis.core.l10n.Messages.LaborOrdersComposite_columnDate;
 	public static String LaborOrdersComposite_columnGroup = ch.elexis.core.l10n.Messages.LaborOrdersComposite_columnGroup;
 	public static String LaborOrdersComposite_columnOrdernumber = ch.elexis.core.l10n.Messages.LaborOrdersComposite_columnOrdernumber;

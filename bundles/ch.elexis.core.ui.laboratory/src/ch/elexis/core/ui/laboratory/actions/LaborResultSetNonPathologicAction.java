@@ -5,6 +5,7 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.StructuredViewer;
 
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.LabResultConstants;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.PathologicDescription;
