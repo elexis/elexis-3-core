@@ -34,12 +34,10 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.laboratory.actions.LabOrderSetObservationDateAction;
 import ch.elexis.core.ui.laboratory.actions.LaborResultEditDetailAction;
+import ch.elexis.core.ui.laboratory.actions.LaborResultOrderDeleteAction;
 import ch.elexis.core.ui.laboratory.controls.util.LabOrderEditingSupport;
-import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
-import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabOrder.State;
-import ch.elexis.data.LabResult;
 import ch.elexis.data.Patient;
 import ch.rgw.tools.TimeTool;
 
@@ -60,7 +58,6 @@ public class LaborOrdersComposite extends Composite {
 	private Patient actPatient;
 	private Composite toolComposite;
 	private ToolBarManager toolbar;
-	private GridData gd;
 	
 	public LaborOrdersComposite(Composite parent, int style){
 		super(parent, style);
@@ -120,9 +117,9 @@ public class LaborOrdersComposite extends Composite {
 				if (selection != null && !selection.isEmpty()) {
 					List<LaborOrderViewerItem> orders = selection.toList();
 					if (!orders.isEmpty()) {
-						mgr.add(new RemoveLaborOrdersAction(orders));
 						mgr.add(new LabOrderSetObservationDateAction(orders, viewer));
 						mgr.add(new LaborResultEditDetailAction(orders, viewer));
+						mgr.add(new LaborResultOrderDeleteAction(orders, viewer));
 					}
 				}
 			}
@@ -413,38 +410,4 @@ public class LaborOrdersComposite extends Composite {
 		}
 	}
 	
-	private static class RemoveLaborOrdersAction extends Action {
-		private List<?> selectedOrders;
-		
-		public RemoveLaborOrdersAction(List list){
-			super(Messages.LaborOrdersComposite_actionTitelRemoveWithResult);
-			selectedOrders = list;
-		}
-		
-		@Override
-		public void run(){
-			for (Object object : selectedOrders) {
-				if (object instanceof LaborOrderViewerItem) {
-					final LabResult result =
-						(LabResult) ((LaborOrderViewerItem) object).getLabResult();
-					if (result != null) {
-						AcquireLockBlockingUi.aquireAndRun(result, new ILockHandler() {
-							@Override
-							public void lockFailed(){
-								// do nothing
-							}
-							
-							@Override
-							public void lockAcquired(){
-								result.delete();
-								((LaborOrderViewerItem) object).deleteOrder();
-							}
-						});
-					} else {
-						((LaborOrderViewerItem) object).deleteOrder();
-					}
-				}
-			}
-		}
-	}
 }

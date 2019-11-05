@@ -2182,7 +2182,6 @@ public class Messages extends NLS {
 	public static String LaborMappingComposite_labelSelektorMessage;
 	public static String LaborMappingComposite_labelSelektorTitle;
 	public static String LaborOrdersComposite_NoPatientSelected;
-	public static String LaborOrdersComposite_actionTitelRemoveWithResult;
 	public static String LaborOrdersComposite_actionTooltipShowHistory;
 	public static String LaborOrdersComposite_columnDate;
 	public static String LaborOrdersComposite_columnGroup;
@@ -2250,6 +2249,7 @@ public class Messages extends NLS {
 	public static String LaborResultsComposite_columnParameter;
 	public static String LaborResultsComposite_columnReference;
 	public static String LaborResultsComposite_textResultTitle;
+	public static String LabResultOrOrderDeleteAction_title;
 	public static String LaborVerordnungDialog_alreadyOrdered;
 	public static String LaborVerordnungDialog_errorOrderNumber;
 	public static String LaborVerordnungDialog_labelOrderNumber;
@@ -2606,7 +2606,6 @@ public class Messages extends NLS {
 	public static String TimeTool_yearToFormat;
 	public static String TimeTool_yearsAgoFormat;
 	public static String TimeTool_yearsToFormat;
-	public static String LabResultDeleteAction_title;
 	public static String LabResultEvaluator_LabItemNoRefValue;
 	public static String SetPathologic;
 	public static String SetNonPathologic;
