@@ -63,6 +63,7 @@ public class CreatePrescriptionHelper {
 		
 		Optional<IArticleDefaultSignature> signature = Optional.empty();
 		if (defaultSignature.isPresent()) {
+			signature = defaultSignature;
 			if (CoreHub.userCfg.get(MEDICATION_SETTINGS_ALWAYS_SHOW_SIGNATURE_DIALOG, false)) {
 				signature = getSignatureWithDialog(defaultSignature);
 			}
