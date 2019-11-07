@@ -89,8 +89,8 @@ public class HL7ImporterIIdentifiedRunnable implements IIdentifiedRunnable {
 	public Map<String, Serializable> run(Map<String, Serializable> context, IProgressMonitor progressMonitor,
 			Logger logger) throws TaskException {
 
-		boolean bCreateLaboratoryIfNotExists = (boolean) context.get(RCP_BOOLEAN_CREATE_LABORATORY_IF_NOT_EXISTS);
-		boolean bMoveFile = (boolean) context.get(RCP_BOOLEAN_MOVE_FILE_AFTER_IMPORT);
+		boolean bCreateLaboratoryIfNotExists = Boolean.valueOf((String) context.get(RCP_BOOLEAN_CREATE_LABORATORY_IF_NOT_EXISTS));
+		boolean bMoveFile = Boolean.valueOf((String) context.get(RCP_BOOLEAN_MOVE_FILE_AFTER_IMPORT));
 		String urlString = (String) context.get(RunContextParameter.STRING_URL);
 		String labName = (String) context.get(RCP_STRING_IMPORTER_LABNAME);
 
