@@ -273,8 +273,8 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 				"LabResult [" + labresultId + "] could not be loaded");
 		}
 		
-		billAddCons = (boolean) runContext.get(Parameters.ADDCONS);
-		billAddConsSameDay = (boolean) runContext.get(Parameters.ADDCONS_SAMEDAY);
+		billAddCons = Boolean.valueOf((String) runContext.get(Parameters.ADDCONS));
+		billAddConsSameDay = Boolean.valueOf((String) runContext.get(Parameters.ADDCONS_SAMEDAY));
 		
 		ILabResult labResult = _labResult.get();
 		
