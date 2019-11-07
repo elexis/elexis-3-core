@@ -14,8 +14,7 @@ import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
 
-import java.io.Serializable;
-
+import com.cronutils.model.Cron;
 import java.util.Map;
 
 /**
@@ -210,7 +209,7 @@ public interface ITaskDescriptor extends Identifiable, Deleteable {
 	 * @model transient="true"
 	 * @generated
 	 */
-	Map<String, Serializable> getRunContext();
+	Map<String, String> getRunContext();
 
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.tasks.model.ITaskDescriptor#getRunContext <em>Run Context</em>}' attribute.
@@ -220,7 +219,7 @@ public interface ITaskDescriptor extends Identifiable, Deleteable {
 	 * @see #getRunContext()
 	 * @generated
 	 */
-	void setRunContext(Map<String, Serializable> value);
+	void setRunContext(Map<String, String> value);
 
 	/**
 	 * Returns the value of the '<em><b>Trigger Type</b></em>' attribute.
@@ -342,9 +341,20 @@ public interface ITaskDescriptor extends Identifiable, Deleteable {
 	 * <!-- begin-model-doc -->
 	 * Convenience method to set a single value of the runContext. 
 	 * <!-- end-model-doc -->
-	 * @model valueDataType="ch.elexis.core.tasks.model.Serializable"
+	 * @model
 	 * @generated
 	 */
-	void setRunContextParameter(String key, Serializable value);
+	void setRunContextParameter(String key, String value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * If TaskTriggerType.CRON this returns the cron configuration string as a parsed Cron object, else null
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" dataType="ch.elexis.core.tasks.model.Cron"
+	 * @generated
+	 */
+	Cron getCronTriggerTypeConfiguration();
 
 } // ITaskDescriptor

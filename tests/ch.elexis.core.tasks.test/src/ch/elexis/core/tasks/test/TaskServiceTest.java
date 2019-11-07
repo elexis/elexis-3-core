@@ -47,7 +47,7 @@ public class TaskServiceTest {
 	IUser owner;
 	ITaskDescriptor taskDescriptor;
 	IProgressMonitor progressMonitor;
-	Map<String, Serializable> runContext = new HashMap<>();
+	Map<String, String> runContext = new HashMap<>();
 
 	static Path tempDirectory;
 
@@ -111,7 +111,7 @@ public class TaskServiceTest {
 		taskDescriptor = taskService.createTaskDescriptor(rwcMisthios);
 		taskDescriptor.setOwner(owner);
 		taskDescriptor.setReferenceId("manual_helloWorld_misthios");
-		Map<String, Serializable> context = new HashMap<>();
+		Map<String, String> context = new HashMap<>();
 		context.put("bundle_url",
 				"https://gitlab.medelexis.ch/mdescher/elexis-misthios/raw/master/sample-misthios-bundle/");
 		taskDescriptor.setRunContext(context);

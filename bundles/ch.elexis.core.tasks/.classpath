@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/cron-utils-9.0.2.jar" sourcepath="lib-src/cron-utils-9.0.2-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/c3p0-0.9.5.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/quartz-2.3.0-SNAPSHOT.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/quartz-jobs-2.3.0-SNAPSHOT.jar"/>

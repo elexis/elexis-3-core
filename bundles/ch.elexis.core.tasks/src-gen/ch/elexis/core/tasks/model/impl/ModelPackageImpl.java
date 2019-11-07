@@ -24,6 +24,7 @@ import ch.elexis.core.tasks.model.TaskTriggerType;
 
 import ch.elexis.core.types.TypesPackage;
 
+import com.cronutils.model.Cron;
 import java.io.Serializable;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -124,6 +125,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EDataType serializableEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType cronEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -516,6 +524,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EDataType getCron() {
+		return cronEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public ModelFactory getModelFactory() {
 		return (ModelFactory)getEFactoryInstance();
 	}
@@ -577,6 +595,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iProgressMonitorEDataType = createEDataType(IPROGRESS_MONITOR);
 		loggerEDataType = createEDataType(LOGGER);
 		serializableEDataType = createEDataType(SERIALIZABLE);
+		cronEDataType = createEDataType(CRON);
 	}
 
 	/**
@@ -627,7 +646,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		EGenericType g1 = createEGenericType(ecorePackage.getEMap());
 		EGenericType g2 = createEGenericType(ecorePackage.getEString());
 		g1.getETypeArguments().add(g2);
-		g2 = createEGenericType(this.getSerializable());
+		g2 = createEGenericType(ecorePackage.getEString());
 		g1.getETypeArguments().add(g2);
 		initEAttribute(getITaskDescriptor_RunContext(), g1, "runContext", null, 0, 1, ITaskDescriptor.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getITaskDescriptor_TriggerType(), this.getTaskTriggerType(), "triggerType", "MANUAL", 0, 1, ITaskDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -646,7 +665,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		op = addEOperation(iTaskDescriptorEClass, null, "setRunContextParameter", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "key", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getSerializable(), "value", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "value", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		addEOperation(iTaskDescriptorEClass, this.getCron(), "getCronTriggerTypeConfiguration", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iTaskEClass, ITask.class, "ITask", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getITask_Id(), ecorePackage.getEString(), "id", null, 1, 1, ITask.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -765,6 +786,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEDataType(iProgressMonitorEDataType, IProgressMonitor.class, "IProgressMonitor", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(loggerEDataType, Logger.class, "Logger", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(serializableEDataType, Serializable.class, "Serializable", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(cronEDataType, Cron.class, "Cron", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

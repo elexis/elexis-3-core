@@ -15,6 +15,7 @@ import ch.elexis.core.model.tasks.TaskException;
 
 import ch.elexis.core.tasks.model.*;
 
+import com.cronutils.model.Cron;
 import java.io.Serializable;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -103,6 +104,8 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 				return createLoggerFromString(eDataType, initialValue);
 			case ModelPackage.SERIALIZABLE:
 				return createSerializableFromString(eDataType, initialValue);
+			case ModelPackage.CRON:
+				return createCronFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -132,6 +135,8 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 				return convertLoggerToString(eDataType, instanceValue);
 			case ModelPackage.SERIALIZABLE:
 				return convertSerializableToString(eDataType, instanceValue);
+			case ModelPackage.CRON:
+				return convertCronToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -284,6 +289,24 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	 * @generated
 	 */
 	public String convertSerializableToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Cron createCronFromString(EDataType eDataType, String initialValue) {
+		return (Cron)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertCronToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

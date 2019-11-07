@@ -53,8 +53,8 @@ public class TriggerTaskForEveryFileInDirectoryRunnable implements IIdentifiedRu
 	}
 	
 	@Override
-	public Map<String, Serializable> getDefaultRunContext(){
-		Map<String, Serializable> runContext = new HashMap<>();
+	public Map<String, String> getDefaultRunContext(){
+		Map<String, String> runContext = new HashMap<>();
 		runContext.put(RunContextParameter.STRING_URL, RunContextParameter.VALUE_MISSING_REQUIRED);
 		runContext.put(RunContextParameter.TASK_DESCRIPTOR_REFID,
 			RunContextParameter.VALUE_MISSING_REQUIRED);

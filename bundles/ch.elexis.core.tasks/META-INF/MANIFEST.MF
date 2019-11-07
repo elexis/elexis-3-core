@@ -6,7 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .,
  lib/quartz-2.3.0-SNAPSHOT.jar,
  lib/quartz-jobs-2.3.0-SNAPSHOT.jar,
- lib/c3p0-0.9.5.2.jar
+ lib/c3p0-0.9.5.2.jar,
+ lib/cron-utils-9.0.2.jar
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Automatic-Module-Name: ch.elexis.core.tasks
@@ -14,7 +15,25 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: ch.elexis.core.tasks,
  ch.elexis.core.tasks.model,
  ch.elexis.core.tasks.model.impl,
- ch.elexis.core.tasks.model.util
+ ch.elexis.core.tasks.model.util,
+ com.cronutils,
+ com.cronutils.builder,
+ com.cronutils.descriptor,
+ com.cronutils.descriptor.refactor,
+ com.cronutils.mapper,
+ com.cronutils.model,
+ com.cronutils.model.definition,
+ com.cronutils.model.field,
+ com.cronutils.model.field.constraint,
+ com.cronutils.model.field.definition,
+ com.cronutils.model.field.expression,
+ com.cronutils.model.field.expression.visitor,
+ com.cronutils.model.field.value,
+ com.cronutils.model.time,
+ com.cronutils.model.time.generator,
+ com.cronutils.parser,
+ com.cronutils.utils,
+ com.cronutils.validation
 Require-Bundle: org.eclipse.osgi.services;bundle-version="3.7.100",
  org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,

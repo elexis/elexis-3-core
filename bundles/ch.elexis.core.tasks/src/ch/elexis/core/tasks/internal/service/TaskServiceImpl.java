@@ -232,6 +232,8 @@ public class TaskServiceImpl implements ITaskService {
 		
 		ITaskDescriptor taskDescriptor = taskModelService.create(ITaskDescriptor.class);
 		taskDescriptor.setIdentifiedRunnableId(identifiedRunnable.getId());
+		taskDescriptor.setRunContext(identifiedRunnable.getDefaultRunContext());
+		
 		String stationIdentifier = contextService.getRootContext().getStationIdentifier();
 		taskDescriptor.setRunner(StringUtils.abbreviate(stationIdentifier, 64));
 		
@@ -429,8 +431,8 @@ public class TaskServiceImpl implements ITaskService {
 			return;
 		}
 		
-		Set<Entry<String, Serializable>> entrySet = runnable.getDefaultRunContext().entrySet();
-		for (Entry<String, Serializable> entry : entrySet) {
+		Set<Entry<String, String>> entrySet = runnable.getDefaultRunContext().entrySet();
+		for (Entry<String, String> entry : entrySet) {
 			if (IIdentifiedRunnable.RunContextParameter.VALUE_MISSING_REQUIRED
 				.equals(entry.getValue())) {
 				Serializable value = taskDescriptor.getRunContext().get(entry.getKey());

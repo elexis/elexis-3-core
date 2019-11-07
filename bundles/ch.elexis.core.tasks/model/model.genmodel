@@ -34,6 +34,7 @@
     <genDataTypes ecoreDataType="model.ecore#//IProgressMonitor"/>
     <genDataTypes ecoreDataType="model.ecore#//Logger"/>
     <genDataTypes ecoreDataType="model.ecore#//Serializable"/>
+    <genDataTypes ecoreDataType="model.ecore#//Cron"/>
     <genClasses image="false" ecoreClass="model.ecore#//ITaskDescriptor">
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITaskDescriptor/id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITaskDescriptor/referenceId"/>
@@ -54,6 +55,7 @@
         <genParameters ecoreParameter="model.ecore#//ITaskDescriptor/setRunContextParameter/key"/>
         <genParameters ecoreParameter="model.ecore#//ITaskDescriptor/setRunContextParameter/value"/>
       </genOperations>
+      <genOperations ecoreOperation="model.ecore#//ITaskDescriptor/getCronTriggerTypeConfiguration"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//ITask">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/id"/>

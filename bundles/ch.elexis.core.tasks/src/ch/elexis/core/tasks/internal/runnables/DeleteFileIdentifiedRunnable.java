@@ -47,7 +47,7 @@ public class DeleteFileIdentifiedRunnable implements IIdentifiedRunnable {
 	}
 	
 	@Override
-	public Map<String, Serializable> getDefaultRunContext(){
+	public Map<String, String> getDefaultRunContext(){
 		return Collections.singletonMap(RunContextParameter.STRING_URL,
 			RunContextParameter.VALUE_MISSING_REQUIRED);
 	}

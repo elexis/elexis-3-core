@@ -4,6 +4,12 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.cronutils.builder.CronBuilder;
+import com.cronutils.model.Cron;
+import com.cronutils.model.CronType;
+import com.cronutils.model.definition.CronDefinition;
+import com.cronutils.model.definition.CronDefinitionBuilder;
+import com.cronutils.parser.CronParser;
 import com.google.gson.Gson;
 
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
@@ -19,7 +25,7 @@ import ch.elexis.core.tasks.model.TaskTriggerType;
 public class TaskDescriptor
 		extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.TaskDescriptor>
 		implements Identifiable, ITaskDescriptor {
-
+	
 	private transient Gson gson;
 	
 	public TaskDescriptor(ch.elexis.core.jpa.entities.TaskDescriptor entity){
@@ -29,7 +35,8 @@ public class TaskDescriptor
 	
 	@Override
 	public String toString(){
-		return getEntity().getReferenceId()+" ("+getEntity().getId()+") isActive="+isActive();
+		return getEntity().getReferenceId() + " (" + getEntity().getId() + ") isActive="
+			+ isActive();
 	}
 	
 	@Override
@@ -73,7 +80,6 @@ public class TaskDescriptor
 		return getEntity().getRunnableId();
 	}
 	
-
 	@Override
 	public void setIdentifiedRunnableId(String value){
 		getEntity().setRunnableId(value);
@@ -81,7 +87,7 @@ public class TaskDescriptor
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Map<String, Serializable> getRunContext(){
+	public Map<String, String> getRunContext(){
 		String json = getEntity().getRunContext();
 		if (json != null) {
 			return gson.fromJson(json, Map.class);
@@ -90,14 +96,14 @@ public class TaskDescriptor
 	}
 	
 	@Override
-	public void setRunContext(Map<String, Serializable> value){
+	public void setRunContext(Map<String, String> value){
 		String json = gson.toJson(value);
 		getEntity().setRunContext(json);
 	}
 	
 	@Override
-	public void setRunContextParameter(String key, Serializable value){
-		Map<String, Serializable> runContext = getRunContext();
+	public void setRunContextParameter(String key, String value){
+		Map<String, String> runContext = getRunContext();
 		runContext.put(key, value);
 		setRunContext(runContext);
 	}
@@ -121,6 +127,21 @@ public class TaskDescriptor
 			return gson.fromJson(json, Map.class);
 		}
 		return new HashMap<>();
+	}
+	
+	@Override
+	public Cron getCronTriggerTypeConfiguration(){
+		if (TaskTriggerType.CRON.equals(getTriggerType())) {
+			CronDefinition cronDefinition =
+				CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ);
+			String cronExpression = getTriggerParameters().get("cron");
+			if (cronExpression != null) {
+				CronParser parser = new CronParser(cronDefinition);
+				return parser.parse(cronExpression);
+			}
+			return CronBuilder.cron(cronDefinition).instance();
+		}
+		return null;
 	}
 	
 	@Override
@@ -166,12 +187,12 @@ public class TaskDescriptor
 	public void setOwnerNotification(OwnerTaskNotification value){
 		getEntity().setNotificationType(value.getValue());
 	}
-
+	
 	@Override
 	public boolean addXid(String domain, String id, boolean updateIfExists){
 		throw new UnsupportedOperationException();
 	}
-
+	
 	@Override
 	public IXid getXid(String domain){
 		throw new UnsupportedOperationException();

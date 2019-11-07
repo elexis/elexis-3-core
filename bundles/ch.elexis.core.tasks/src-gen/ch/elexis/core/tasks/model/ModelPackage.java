@@ -412,6 +412,17 @@ public interface ModelPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '<em>Cron</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.cronutils.model.Cron
+	 * @see ch.elexis.core.tasks.model.impl.ModelPackageImpl#getCron()
+	 * @generated
+	 */
+	int CRON = 11;
+
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.tasks.model.ITaskDescriptor <em>ITask Descriptor</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -758,6 +769,17 @@ public interface ModelPackage extends EPackage {
 	EDataType getSerializable();
 
 	/**
+	 * Returns the meta object for data type '{@link com.cronutils.model.Cron <em>Cron</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Cron</em>'.
+	 * @see com.cronutils.model.Cron
+	 * @model instanceClass="com.cronutils.model.Cron"
+	 * @generated
+	 */
+	EDataType getCron();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1057,6 +1079,16 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType SERIALIZABLE = eINSTANCE.getSerializable();
+
+		/**
+		 * The meta object literal for the '<em>Cron</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see com.cronutils.model.Cron
+		 * @see ch.elexis.core.tasks.model.impl.ModelPackageImpl#getCron()
+		 * @generated
+		 */
+		EDataType CRON = eINSTANCE.getCron();
 
 	}
 
