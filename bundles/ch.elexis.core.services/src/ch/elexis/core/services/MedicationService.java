@@ -208,13 +208,13 @@ public class MedicationService implements IMedicationService {
 	}
 	
 	@Override
-	public void stopPrescription(IPrescription dropChangePrescription, LocalDateTime stopDateTime){
+	public void stopPrescription(IPrescription prescription, LocalDateTime stopDateTime){
 		if (stopDateTime == null) {
 			stopDateTime = LocalDateTime.now();
 		}
-		dropChangePrescription.setDateTo(stopDateTime);
+		prescription.setDateTo(stopDateTime);
 		if (ContextServiceHolder.get().getActiveUserContact().isPresent()) {
-			dropChangePrescription.setExtInfo(Constants.FLD_EXT_STOPPED_BY,
+			prescription.setExtInfo(Constants.FLD_EXT_STOPPED_BY,
 				ContextServiceHolder.get().getActiveUserContact().get().getId());
 		}
 	}
