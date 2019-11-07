@@ -51,6 +51,11 @@ public class ObjectStatus extends Status {
 		return new ObjectStatus(OK, unknownId, OK, "ok", null, object);
 	}
 	
+
+	public static final ObjectStatus OK_STATUS(String message, Object object) {
+		return new ObjectStatus(OK, unknownId, OK, message, null, object);
+	}
+	
 	/**
 	 * Default status without pluginId and default message
 	 * 
