@@ -41,6 +41,10 @@ public class LaborOrderViewerItem {
 		return (LabResult) order.getLabResult();
 	}
 	
+	public LabOrder getLabOrder() {
+		return order;
+	}
+	
 	public Optional<String> getLabResultString(){
 		if (hasLabResult()) {
 			if (labResultString == null) {
