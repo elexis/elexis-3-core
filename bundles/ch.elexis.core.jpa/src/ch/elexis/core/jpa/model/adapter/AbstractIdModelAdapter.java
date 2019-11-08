@@ -77,14 +77,16 @@ public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements 
 	 * is in dirty state.
 	 * 
 	 * @param entity
+	 * @param resetDirty
 	 */
 	@SuppressWarnings("unchecked")
-	public void setEntity(EntityWithId entity){
-		if (!dirty) {
+	public synchronized void setEntity(EntityWithId entity, boolean resetDirty){
+		if (!dirty || (dirty && resetDirty)) {
 			this.entity = (T) entity;
 			if (extInfoHandler != null) {
 				extInfoHandler.resetExtInfo();
 			}
+			dirty = false;
 		}
 	}
 	
@@ -124,10 +126,6 @@ public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements 
 	
 	public boolean isDirty(){
 		return dirty;
-	}
-	
-	public void resetDirty(){
-		dirty = false;
 	}
 	
 	protected Date toDate(LocalDateTime localDateTime){

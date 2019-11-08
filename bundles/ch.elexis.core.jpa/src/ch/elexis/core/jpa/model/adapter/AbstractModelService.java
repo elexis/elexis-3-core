@@ -120,7 +120,7 @@ public abstract class AbstractModelService implements IModelService {
 			EntityWithId reloadedDbObject =
 				em.find(dbObject.getClass(), dbObject.getId(), queryHints);
 			if (reloadedDbObject != null) {
-				setDbObject(identifiable, reloadedDbObject);
+				setDbObject(identifiable, reloadedDbObject, false);
 			}
 		}
 	}
@@ -170,8 +170,7 @@ public abstract class AbstractModelService implements IModelService {
 				// update model adapters and post events
 				if (identifiable instanceof AbstractIdModelAdapter) {
 					// clear dirty state before setting merged entity
-					((AbstractIdModelAdapter<?>) identifiable).resetDirty();
-					setDbObject(identifiable, merged);
+					setDbObject(identifiable, merged, true);
 				}
 				if (newlyCreatedObject) {
 					postElexisEvent(getCreateEvent(identifiable));
@@ -215,9 +214,7 @@ public abstract class AbstractModelService implements IModelService {
 				// update model adapters and post events
 				identifiables.stream().forEach(i -> {
 					if (i instanceof AbstractIdModelAdapter) {
-						// clear dirty state before setting merged entity
-						((AbstractIdModelAdapter<?>) i).resetDirty();
-						setDbObject(i, mergedEntities.get(i));
+						setDbObject(i, mergedEntities.get(i), true);
 					}
 				});
 				createdEvents.stream().forEach(e -> postElexisEvent(e));
@@ -316,9 +313,9 @@ public abstract class AbstractModelService implements IModelService {
 	 * @param adapter
 	 * @param merged
 	 */
-	protected void setDbObject(Object adapter, EntityWithId entity){
+	protected void setDbObject(Object adapter, EntityWithId entity, boolean resetDirty){
 		if (adapter instanceof AbstractIdModelAdapter<?>) {
-			((AbstractIdModelAdapter<?>) adapter).setEntity(entity);
+			((AbstractIdModelAdapter<?>) adapter).setEntity(entity, resetDirty);
 			// synchronous change event will set the entity in all entity model adapter known to EntityChangeEventListener
 			sendEntityChangeEvent(entity);
 		}

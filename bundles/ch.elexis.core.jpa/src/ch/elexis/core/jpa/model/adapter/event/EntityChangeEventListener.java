@@ -61,7 +61,7 @@ public class EntityChangeEventListener implements EventHandler {
 				if (reference != null) {
 					AbstractIdModelAdapter<?> adapter = reference.get();
 					if (adapter != null) {
-						adapter.setEntity(entity);
+						adapter.setEntity(entity, false);
 					} else {
 						iter.remove();
 					}
