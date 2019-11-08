@@ -16,6 +16,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.eclipse.persistence.annotations.Cache;
+import org.eclipse.persistence.annotations.Mutable;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.IntegerStringConverter;
@@ -56,9 +57,11 @@ public class Prescription extends AbstractEntityWithId
 	@Column(length = 255)
 	private String bemerkung;
 
+	@Mutable
 	@Column(length = 24)
 	private LocalDateTime dateFrom;
 
+	@Mutable
 	@Column(length = 24)
 	private LocalDateTime dateUntil;
 
