@@ -21,6 +21,7 @@ import org.eclipse.persistence.annotations.Mutable;
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.IntegerStringConverter;
 import ch.elexis.core.jpa.entities.converter.PrescriptionEntryTypeConverter;
+import ch.elexis.core.jpa.entities.converter.auto.LocalDateTimeConverter;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 import ch.elexis.core.model.prescription.EntryType;
@@ -57,12 +58,14 @@ public class Prescription extends AbstractEntityWithId
 	@Column(length = 255)
 	private String bemerkung;
 
-	@Mutable
 	@Column(length = 24)
+	@Mutable
+	@Convert(converter = LocalDateTimeConverter.class)
 	private LocalDateTime dateFrom;
 
-	@Mutable
 	@Column(length = 24)
+	@Mutable
+	@Convert(converter = LocalDateTimeConverter.class)
 	private LocalDateTime dateUntil;
 
 	@Column(length = 255)

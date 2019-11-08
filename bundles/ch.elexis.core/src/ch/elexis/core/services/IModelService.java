@@ -308,7 +308,8 @@ public interface IModelService {
 	
 	/**
 	 * Refresh the entity of the {@link Identifiable} with data from the L2 cache or if not loaded
-	 * the database.
+	 * the database. <b>If the {@link Identifiable} has unsaved changes, this will have no
+	 * effect.</b> Reload the {@link Identifiable} to reset changes.
 	 * 
 	 * @param Identifiable
 	 */
@@ -319,7 +320,8 @@ public interface IModelService {
 	/**
 	 * Refresh the entity of the {@link Identifiable} with data from the L2 cache or if not loaded
 	 * the database. With the refreshCache parameter the data is always loaded from the database and
-	 * the L2 cache is refreshed.
+	 * the L2 cache is refreshed. <b>If the {@link Identifiable} has unsaved changes, this will have
+	 * no effect.</b> Reload the {@link Identifiable} to reset changes.
 	 * 
 	 * @param Identifiable
 	 * @param refreshCache
