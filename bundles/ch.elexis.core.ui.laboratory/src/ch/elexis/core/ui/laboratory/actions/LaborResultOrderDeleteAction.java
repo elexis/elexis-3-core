@@ -50,8 +50,8 @@ public class LaborResultOrderDeleteAction extends Action implements IAction {
 				order = result.getLabOrder();
 			} else if (object instanceof LaborOrderViewerItem) {
 				// drop-in-replacement support for LaborOrdersComposite
-				result = (LabResult) ((LaborOrderViewerItem) object).getLabResult();
-				order = result.getLabOrder();
+				result = ((LaborOrderViewerItem) object).getLabResult();
+				order = ((LaborOrderViewerItem) object).getLabOrder();
 			} else {
 				throw new IllegalArgumentException("Unknown list entry type of class " //$NON-NLS-1$
 					+ object.getClass());
@@ -73,7 +73,9 @@ public class LaborResultOrderDeleteAction extends Action implements IAction {
 						if (result != null) {
 							result.delete();
 						}
-						order.delete();
+						if (order != null) {
+							order.delete();
+						}
 						if (viewer != null) {
 							viewer.refresh();
 						}
