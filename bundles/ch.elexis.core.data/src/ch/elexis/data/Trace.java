@@ -40,7 +40,7 @@ public class Trace {
 		
 		PreparedStatement statement = connection.getPreparedStatement(insertStatement);
 		try {
-			statement.setString(1, Long.toString(System.currentTimeMillis()));
+			statement.setLong(1, System.currentTimeMillis());
 			statement.setString(2, _workstation);
 			statement.setString(3, _username);
 			statement.setString(4, _action);
