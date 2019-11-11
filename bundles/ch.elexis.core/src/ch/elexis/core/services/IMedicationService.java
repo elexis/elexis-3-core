@@ -55,9 +55,21 @@ public interface IMedicationService {
 	 * 
 	 * @param prescription
 	 * @param stopDateTime
+	 * @param stopReason
 	 */
-	public void stopPrescription(IPrescription prescription, LocalDateTime stopDateTime);
+	public void stopPrescription(IPrescription prescription, LocalDateTime stopDateTime,
+		String stopReason);
 
+	/**
+	 * Stop the {@link IPrescription} at the provided stop date time, without a reason.
+	 * 
+	 * @param prescription
+	 * @param stopDateTime
+	 */
+	public default void stopPrescription(IPrescription prescription, LocalDateTime stopDateTime){
+		stopPrescription(prescription, stopDateTime, null);
+	}
+	
 	/**
 	 * Create a transient copy of the prescription.
 	 * 

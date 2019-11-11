@@ -35,6 +35,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
@@ -245,10 +246,11 @@ public class MediDetailDialog extends TitleAreaDialog {
 							newPrescription.setDosageInstruction(dosis);
 							newPrescription.setRemark(intakeOrder);
 							newPrescription.setDisposalComment(disposalComment);
+							CoreModelServiceHolder.get().save(newPrescription);
 							MedicationServiceHolder.get().stopPrescription(oldPrescription,
-								LocalDateTime.now());
-							oldPrescription
-								.setStopReason("Geändert durch " + CoreHub.actUser.getLabel());
+								LocalDateTime.now(),
+								"Geändert durch " + CoreHub.actUser.getLabel());
+							CoreModelServiceHolder.get().save(oldPrescription);
 							LocalLockServiceHolder.get().releaseLock(newPrescription);
 							ElexisEventDispatcher.getInstance().fire(new ElexisEvent(
 								newPrescription, Prescription.class, ElexisEvent.EVENT_UPDATE));

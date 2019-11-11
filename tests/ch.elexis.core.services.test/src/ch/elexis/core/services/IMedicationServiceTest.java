@@ -1,5 +1,6 @@
 package ch.elexis.core.services;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -52,16 +53,17 @@ public class IMedicationServiceTest extends AbstractServiceTest {
 		createdPrescriptions = new ArrayList<>();
 		createdPrescriptions
 			.add(new IPrescriptionBuilder(coreModelService, localArticle, patient, "0-1-1-0")
+				.entryType(EntryType.FIXED_MEDICATION)
 				.buildAndSave());
 		createdPrescriptions
 			.add(new IPrescriptionBuilder(coreModelService, localArticle, patient, "1-0-0-1")
-				.buildAndSave());
+				.entryType(EntryType.SYMPTOMATIC_MEDICATION).buildAndSave());
 		createdPrescriptions
 			.add(new IPrescriptionBuilder(coreModelService, localArticle, patient, "1-0-0-0")
-				.buildAndSave());
+				.entryType(EntryType.RESERVE_MEDICATION).buildAndSave());
 		createdPrescriptions
 			.add(new IPrescriptionBuilder(coreModelService, localArticle, patient, "0-0-0-1")
-				.buildAndSave());
+				.entryType(EntryType.FIXED_MEDICATION).buildAndSave());
 	}
 	
 	@After
@@ -75,21 +77,28 @@ public class IMedicationServiceTest extends AbstractServiceTest {
 	public void stopPatientPrescriptions(){
 		List<IPrescription> prescriptions = getPrescriptions(patient, "all");
 		LocalDateTime now = LocalDateTime.now();
-		prescriptions.forEach(pr -> medicationService.stopPrescription(pr, now));
+		for (IPrescription iPrescription : prescriptions) {
+			medicationService.stopPrescription(iPrescription, now, "test reason");
+		}
 		// changed but not saved
 		prescriptions.forEach(pr -> assertNotNull(pr.getDateTo()));
 		createdPrescriptions.forEach(pr -> assertNull(pr.getDateTo()));
 		
 		coreModelService.save(prescriptions);
 		// changed and saved
-		prescriptions.forEach(pr -> assertNotNull(pr.getDateTo()));
-		createdPrescriptions.forEach(pr -> assertNotNull(pr.getDateTo()));
+		for (IPrescription iPrescription : prescriptions) {
+			assertEquals("test reason", iPrescription.getStopReason());
+			assertNotNull(iPrescription.getDateTo());
+		}
+		for (IPrescription iPrescription : createdPrescriptions) {
+			assertEquals("test reason", iPrescription.getStopReason());
+			assertNotNull(iPrescription.getDateTo());
+		}
 	}
 	
 	private List<IPrescription> getPrescriptions(IPatient patient, String medicationType){
 		if ("all".equals(medicationType)) {
-			return patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION,
-				EntryType.RESERVE_MEDICATION, EntryType.SYMPTOMATIC_MEDICATION));
+			return patient.getMedication(Collections.emptyList());
 		} else if ("fix".equals(medicationType)) {
 			return patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION));
 		} else if ("reserve".equals(medicationType)) {

@@ -49,8 +49,7 @@ public class SetAsFixMedicationHandler extends AbstractHandler {
 							CoreModelServiceHolder.get().save(fixMedi);
 							
 							MedicationServiceHolder.get().stopPrescription(presc,
-								LocalDateTime.now());
-							presc.setStopReason("Umgestellt auf Fix Medikation");
+								LocalDateTime.now(), "Umgestellt auf Fix Medikation");
 							CoreModelServiceHolder.get().save(presc);
 						}
 					});

@@ -44,9 +44,9 @@ public class LocalDateTimeConverter implements AttributeConverter<LocalDateTime,
 			case 8:
 				return LocalDate.parse(dateValue, yyyyMMdd).atStartOfDay();
 			default:
+				log.warn("Using TimeTool to parse [{}]", dateValue);
 				return new TimeTool(dateValue, true).toLocalDateTime();
 			}
-
 		} catch (DateTimeParseException | TimeFormatException e) {
 			log.warn("Error parsing [{}], returning null.", dateValue, e);
 			return null;

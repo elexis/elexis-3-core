@@ -208,7 +208,8 @@ public class MedicationService implements IMedicationService {
 	}
 	
 	@Override
-	public void stopPrescription(IPrescription prescription, LocalDateTime stopDateTime){
+	public void stopPrescription(IPrescription prescription, LocalDateTime stopDateTime,
+		String stopReason){
 		if (stopDateTime == null) {
 			stopDateTime = LocalDateTime.now();
 		}
@@ -216,6 +217,9 @@ public class MedicationService implements IMedicationService {
 		if (ContextServiceHolder.get().getActiveUserContact().isPresent()) {
 			prescription.setExtInfo(Constants.FLD_EXT_STOPPED_BY,
 				ContextServiceHolder.get().getActiveUserContact().get().getId());
+		}
+		if (stopReason != null) {
+			prescription.setStopReason(stopReason);
 		}
 	}
 	

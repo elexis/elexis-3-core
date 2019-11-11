@@ -49,8 +49,7 @@ public class SetAsReserveMedicationHandler extends AbstractHandler {
 							CoreModelServiceHolder.get().save(reserveMedi);
 							
 							MedicationServiceHolder.get().stopPrescription(presc,
-								LocalDateTime.now());
-							presc.setStopReason("Umgestellt auf Reserve Medikation");
+								LocalDateTime.now(), "Umgestellt auf Reserve Medikation");
 							CoreModelServiceHolder.get().save(presc);
 						}
 					});

@@ -49,8 +49,7 @@ public class SetAsSymptomaticMedicationHandler extends AbstractHandler {
 							CoreModelServiceHolder.get().save(symptomaticMedi);
 							
 							MedicationServiceHolder.get().stopPrescription(presc,
-								LocalDateTime.now());
-							presc.setStopReason("Umgestellt auf Symtomatische Medikation");
+								LocalDateTime.now(), "Umgestellt auf Symtomatische Medikation");
 							CoreModelServiceHolder.get().save(presc);
 						}
 					});
