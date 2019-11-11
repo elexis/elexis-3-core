@@ -1,5 +1,7 @@
 package ch.elexis.core.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 
@@ -27,6 +29,6 @@ public class Mandator extends Contact implements IMandator {
 	
 	@Override
 	public String getLabel(){
-		return getDescription3();
+		return StringUtils.defaultString(getDescription3());
 	}
 }
