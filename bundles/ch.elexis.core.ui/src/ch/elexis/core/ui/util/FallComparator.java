@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.util;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -26,13 +27,19 @@ public class FallComparator implements Comparator<Object>
 			if (comp == 0) {
 				comp = ObjectUtils.compare(f1.getBillingSystem().getName(), f2.getBillingSystem().getName());
 				if (comp == 0) {
-					// compare beginn date
-					comp = f1.getDateFrom().compareTo(f2.getDateFrom());
-					if (comp == 0) {
-						comp = ObjectUtils.compare(f1.getDescription(), f2.getDescription());
+					LocalDate f1DateFrom = f1.getDateFrom();
+					LocalDate f2DateFrom = f2.getDateFrom();
+					if (f1DateFrom != null && f2DateFrom != null) {
+						// compare beginn date
+						comp = f1.getDateFrom().compareTo(f2.getDateFrom());
 						if (comp == 0) {
-							comp = ObjectUtils.compare(f1.getId(), f2.getId());
+							comp = ObjectUtils.compare(f1.getDescription(), f2.getDescription());
+							if (comp == 0) {
+								comp = ObjectUtils.compare(f1.getId(), f2.getId());
+							}
 						}
+					} else {
+						return f1.getLastupdate().compareTo(f2.getLastupdate());
 					}
 				}
 			}
