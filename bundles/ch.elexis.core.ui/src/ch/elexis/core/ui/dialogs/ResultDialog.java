@@ -35,15 +35,15 @@ public class ResultDialog {
 	}
 	
 	private static void showError(Result<?> result){
-		MessageDialog.openError(getShell(), "", getResultMessage(result));
+		MessageDialog.openError(getShell(), "Fehler", getResultMessage(result));
 	}
 	
 	private static void showWarninig(Result<?> result){
-		MessageDialog.openWarning(getShell(), "", getResultMessage(result));
+		MessageDialog.openWarning(getShell(), "Warnung", getResultMessage(result));
 	}
 	
 	private static void showInfo(Result<?> result){
-		MessageDialog.openInformation(getShell(), "", getResultMessage(result));
+		MessageDialog.openInformation(getShell(), "Info", getResultMessage(result));
 	}
 	
 	private static String getResultMessage(Result<?> result){
