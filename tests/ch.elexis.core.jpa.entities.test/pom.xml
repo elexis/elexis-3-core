@@ -340,7 +340,7 @@
               <autoStart>true</autoStart>
             </bundle>
             <bundle>
-              <id>javax.persistence</id>
+              <id>jakarta.persistence</id>
               <level>1</level>
               <autoStart>true</autoStart>
             </bundle>
