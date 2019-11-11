@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis" sequenceNumber="1571214960">
+<target name="Elexis" sequenceNumber="1573480672">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.swt.chromium.feature.feature.group" version="0.10.2.201908130308"/>
@@ -42,7 +42,7 @@
       <repository location="https://download.eclipse.org/technology/babel/update-site/R0.16.1/photon/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.18.0.v20190927-1557"/>
+      <unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.18.0.v20191029-1547"/>
       <repository location="http://download.eclipse.org/e4/snapshots/org.eclipse.e4.tools/latest/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
@@ -82,14 +82,14 @@
       <repository location="http://download.eclipse.org/releases/2018-09/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="javax.persistence" version="2.2.1.v201807122140"/>
-      <unit id="org.eclipse.persistence.asm" version="6.2.0.v201808041549"/>
+      <unit id="jakarta.persistence" version="2.2.3"/>
+      <unit id="org.eclipse.persistence.asm" version="7.1.0.v201909231451"/>
       <unit id="org.eclipse.persistence.antlr" version="3.5.2.v201711011707"/>
-      <unit id="org.eclipse.persistence.core" version="2.7.3.v20180807-4be1041"/>
-      <unit id="org.eclipse.persistence.jpa.jpql" version="2.7.3.v20180807-4be1041"/>
-      <unit id="org.eclipse.persistence.jpa" version="2.7.3.v20180807-4be1041"/>
-      <unit id="org.eclipse.persistence.extension" version="2.7.3.v20180807-4be1041"/>
-      <repository location="http://download.eclipse.org/rt/eclipselink/updates/2.7.3.v20180807-4be1041/"/>
+      <unit id="org.eclipse.persistence.core" version="2.7.5.v20191016-ea124dd158"/>
+      <unit id="org.eclipse.persistence.jpa.jpql" version="2.7.5.v20191016-ea124dd158"/>
+      <unit id="org.eclipse.persistence.jpa" version="2.7.5.v20191016-ea124dd158"/>
+      <unit id="org.eclipse.persistence.extension" version="2.7.5.v20191016-ea124dd158"/>
+      <repository location="http://download.eclipse.org/rt/eclipselink/updates/2.7.5.v20191016-ea124dd158/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.gemini.jpa.feature.feature.group" version="1.2.0.201307051903"/>

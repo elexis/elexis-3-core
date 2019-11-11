@@ -83,8 +83,9 @@ location "http://download.eclipse.org/releases/2018-09/" {
 	org.jsoup
 }
 
-location "http://download.eclipse.org/rt/eclipselink/updates/2.7.3.v20180807-4be1041/" {
-	javax.persistence
+// keep this version in sync with ch.elexis.core.jpa.entities pom.xml static weaving version
+location "http://download.eclipse.org/rt/eclipselink/updates/2.7.5.v20191016-ea124dd158/" {
+	jakarta.persistence
 	org.eclipse.persistence.asm
 	org.eclipse.persistence.antlr
 	org.eclipse.persistence.core
