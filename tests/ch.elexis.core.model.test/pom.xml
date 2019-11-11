@@ -149,7 +149,7 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>javax.persistence</artifactId>
+              <artifactId>jakarta.persistence</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -455,7 +455,7 @@
               <autoStart>true</autoStart>
             </bundle>
             <bundle>
-              <id>javax.persistence</id>
+              <id>jakarta.persistence</id>
               <level>1</level>
               <autoStart>true</autoStart>
             </bundle>
