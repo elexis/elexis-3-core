@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis" sequenceNumber="1571227545">
+<target name="Elexis" sequenceNumber="1573482171">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.swt.chromium.feature.feature.group" version="0.10.2.201908130308"/>
@@ -44,14 +44,14 @@
       <unit id="org.eclipse.ui.nl_fr" version="4.8.0.v20190126080931"/>
       <unit id="org.eclipse.ui.nl_it" version="4.8.0.v20190126080931"/>
       <unit id="osgi.enterprise" version="4.2.0.v201108120515"/>
-      <unit id="javax.persistence" version="2.2.1.v201807122140"/>
+      <unit id="jakarta.persistence" version="2.2.3"/>
       <unit id="javax.mail" version="1.4.0.v201005080615"/>
-      <unit id="org.eclipse.persistence.asm" version="6.2.0.v201808041549"/>
+      <unit id="org.eclipse.persistence.asm" version="7.1.0.v201909231451"/>
       <unit id="org.eclipse.persistence.antlr" version="3.5.2.v201711011707"/>
-      <unit id="org.eclipse.persistence.core" version="2.7.3.v20180807-4be1041"/>
-      <unit id="org.eclipse.persistence.jpa.jpql" version="2.7.3.v20180807-4be1041"/>
-      <unit id="org.eclipse.persistence.jpa" version="2.7.3.v20180807-4be1041"/>
-      <unit id="org.eclipse.persistence.extension" version="2.7.3.v20180807-4be1041"/>
+      <unit id="org.eclipse.persistence.core" version="2.7.5.v20191016-ea124dd158"/>
+      <unit id="org.eclipse.persistence.jpa.jpql" version="2.7.5.v20191016-ea124dd158"/>
+      <unit id="org.eclipse.persistence.jpa" version="2.7.5.v20191016-ea124dd158"/>
+      <unit id="org.eclipse.persistence.extension" version="2.7.5.v20191016-ea124dd158"/>
       <unit id="org.eclipse.gemini.jpa.feature.feature.group" version="1.2.0.201307051903"/>
       <unit id="org.bouncycastle.bcprov" version="1.59.0.v20180328-2148"/>
       <unit id="ch.qos.logback.classic" version="1.0.7.v20121108-1250"/>

@@ -45,7 +45,7 @@ location "http://download.elexis.info/elexis/master/p2/target/" {
 	org.eclipse.ui.nl_it
 	
 	osgi.enterprise
-	javax.persistence
+	jakarta.persistence
 	javax.mail
 	org.eclipse.persistence.asm
 	org.eclipse.persistence.antlr
