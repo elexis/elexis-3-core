@@ -22,7 +22,7 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
 
 @Component
 public class StickerService implements IStickerService {
-
+	
 	@Reference(target = "(id=default)")
 	private IElexisEntityManager entityManager;
 	
@@ -63,21 +63,31 @@ public class StickerService implements IStickerService {
 	}
 	
 	@Override
-	public List<ISticker> getStickers(Identifiable identifiable) {
+	public boolean hasSticker(Identifiable identifiable, ISticker iSticker){
+		EntityManager em = (EntityManager) entityManager.getEntityManager(true);
+		TypedQuery<StickerObjectLink> query =
+			em.createNamedQuery("StickerObjectLink.obj.etikette", StickerObjectLink.class);
+		query.setParameter("obj", identifiable.getId());
+		query.setParameter("etikette", iSticker.getId());
+		return query.getResultList().isEmpty() ? false : true;
+	}
+	
+	@Override
+	public List<ISticker> getStickers(Identifiable identifiable){
 		return getStickersForId(identifiable.getId());
 	}
-
+	
 	@Override
-	public Optional<ISticker> getSticker(Identifiable identifiable) {
+	public Optional<ISticker> getSticker(Identifiable identifiable){
 		List<ISticker> stickers = getStickers(identifiable);
 		if (stickers != null && !stickers.isEmpty()) {
 			return Optional.of(stickers.get(0));
 		}
 		return Optional.empty();
 	}
-
+	
 	@Override
-	public void addSticker(ISticker sticker, Identifiable identifiable) {
+	public void addSticker(ISticker sticker, Identifiable identifiable){
 		EntityManager em = (EntityManager) entityManager.getEntityManager(false);
 		try {
 			StickerObjectLink link = new StickerObjectLink();
@@ -85,15 +95,15 @@ public class StickerService implements IStickerService {
 			link.setObj(identifiable.getId());
 			
 			em.getTransaction().begin();
-			EntityWithId merged = em.merge(link);
+			em.merge(link);
 			em.getTransaction().commit();
 		} finally {
 			entityManager.closeEntityManager(em);
 		}
 	}
-
+	
 	@Override
-	public void removeSticker(ISticker sticker, Identifiable identifiable) {
+	public void removeSticker(ISticker sticker, Identifiable identifiable){
 		StickerObjectLink stickerObjectLink =
 			getStickerObjectLink(identifiable.getId(), sticker.getId());
 		if (stickerObjectLink != null) {
@@ -108,7 +118,7 @@ public class StickerService implements IStickerService {
 			}
 		}
 	}
-
+	
 	private List<StickerClassLink> getStickerClassLinksForSticker(String id){
 		EntityManager em = (EntityManager) entityManager.getEntityManager(true);
 		TypedQuery<StickerClassLink> query =
@@ -118,23 +128,23 @@ public class StickerService implements IStickerService {
 	}
 	
 	@Override
-	public boolean isStickerAddableToClass(Class<?> clazz, ISticker sticker) {
+	public boolean isStickerAddableToClass(Class<?> clazz, ISticker sticker){
 		String type = getTypeForClass(clazz);
-		if(type != null) {
+		if (type != null) {
 			List<StickerClassLink> classLinks = getStickerClassLinksForSticker(sticker.getId());
 			for (StickerClassLink stickerClassLink : classLinks) {
 				if (type.equals(stickerClassLink.getObjclass())) {
 					return true;
 				}
-			}			
+			}
 		} else {
 			throw new IllegalStateException("Could not get type for [" + clazz + "]");
 		}
 		return false;
 	}
-
+	
 	@Override
-	public void setStickerAddableToClass(Class<?> clazz, ISticker sticker) {
+	public void setStickerAddableToClass(Class<?> clazz, ISticker sticker){
 		String type = getTypeForClass(clazz);
 		if (type != null) {
 			EntityManager em = (EntityManager) entityManager.getEntityManager(false);
@@ -144,7 +154,7 @@ public class StickerService implements IStickerService {
 				link.setSticker(sticker.getId());
 				
 				em.getTransaction().begin();
-				EntityWithId merged = em.merge(link);
+				em.merge(link);
 				em.getTransaction().commit();
 			} finally {
 				entityManager.closeEntityManager(em);
@@ -153,7 +163,7 @@ public class StickerService implements IStickerService {
 			throw new IllegalStateException("Could not get type for [" + clazz + "]");
 		}
 	}
-
+	
 	private class StickerSorter implements Comparator<ISticker> {
 		@Override
 		public int compare(ISticker s1, ISticker s2){
@@ -161,7 +171,7 @@ public class StickerService implements IStickerService {
 				.compareTo(Integer.valueOf(s1.getImportance()));
 		}
 	}
-
+	
 	@Override
 	public List<ISticker> getStickersForClass(Class<?> clazz){
 		String type = getTypeForClass(clazz);
@@ -172,15 +182,15 @@ public class StickerService implements IStickerService {
 			query.setParameter("objclass", type);
 			
 			List<StickerClassLink> results = query.getResultList();
-			List<String> stickerIds = results.parallelStream()
-				.map(item -> item.getSticker()).collect(Collectors.toList());
+			List<String> stickerIds = results.parallelStream().map(item -> item.getSticker())
+				.collect(Collectors.toList());
 			
 			return iModelService.findAllById(stickerIds, ISticker.class);
 		} else {
 			throw new IllegalStateException("Could not get type for [" + clazz + "]");
 		}
 	}
-
+	
 	private String getTypeForClass(Class<?> clazz){
 		if (EntityWithId.class.isAssignableFrom(clazz)) {
 			return storeToStringServcie.getTypeForEntity(clazz);

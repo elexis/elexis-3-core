@@ -7,7 +7,16 @@ import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.Identifiable;
 
 public interface IStickerService {
-
+	
+	/**
+	 * Whether the identifiable is tagged with the given sticker
+	 * 
+	 * @param identifiable
+	 * @param iSticker
+	 * @return
+	 */
+	public boolean hasSticker(Identifiable identifiable, ISticker iSticker);
+	
 	/**
 	 * Get all stickers for the {@link Identifiable}.
 	 * 
@@ -15,7 +24,7 @@ public interface IStickerService {
 	 * @return
 	 */
 	public List<ISticker> getStickers(Identifiable identifiable);
-
+	
 	/**
 	 * Get the sticker with the highest importance for the {@link Identifiable}.
 	 * 
@@ -23,11 +32,11 @@ public interface IStickerService {
 	 * @return
 	 */
 	public Optional<ISticker> getSticker(Identifiable identifiable);
-
+	
 	public void addSticker(ISticker sticker, Identifiable identifiable);
-
+	
 	public void removeSticker(ISticker sticker, Identifiable identifiable);
-
+	
 	/**
 	 * Determine whether an ISticker is applicable to the given clazz
 	 * 
@@ -36,7 +45,7 @@ public interface IStickerService {
 	 * @return
 	 */
 	public boolean isStickerAddableToClass(Class<?> clazz, ISticker sticker);
-
+	
 	public void setStickerAddableToClass(Class<?> clazz, ISticker sticker);
 	
 	/**

@@ -117,4 +117,9 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	public void setAdministrator(boolean value){
 		getEntityMarkDirty().setAdministrator(value);
 	}
+	
+	@Override
+	public String getLabel(){
+		return getId();
+	}
 }

@@ -62,9 +62,12 @@ public class IStickerServiceTest extends AbstractServiceTest {
 		service.addSticker(newSticker, patient.get());
 		List<ISticker> patientStickers = service.getStickers(patient.get());
 		assertTrue(patientStickers.contains(newSticker));
+		assertTrue(service.hasSticker(patient.get(), newSticker));
+		
 		service.removeSticker(newSticker, patient.get());
 		patientStickers = service.getStickers(patient.get());
 		assertFalse(patientStickers.contains(newSticker));
+		assertFalse(service.hasSticker(patient.get(), newSticker));
 	}
 	
 	@Ignore(value="Not yet implemented the required mapping")

@@ -18,6 +18,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @IdClass(StickerObjectLinkId.class)
 @Cache(expiry = 15000)
 @NamedQuery(name = "StickerObjectLink.obj", query = "SELECT st FROM StickerObjectLink st WHERE st.obj = :obj")
+@NamedQuery(name = "StickerObjectLink.obj.etikette", query = "SELECT st FROM StickerObjectLink st WHERE st.obj = :obj AND st.etikette = :etikette")
 public class StickerObjectLink implements EntityWithId {
 	
 	// Transparently updated by the EntityListener
