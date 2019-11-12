@@ -67,6 +67,7 @@ import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.issue.Priority;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Type;
+import ch.elexis.core.services.holder.LocalLockServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.dialogs.ReminderDetailDialog;
@@ -93,6 +94,8 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 	private int filterDueDateDays = CoreHub.userCfg.get(Preferences.USR_REMINDER_FILTER_DUE_DAYS, -1);
 	private boolean autoSelectPatient = CoreHub.userCfg.get(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, false);
 	private boolean showOnlyDueReminders = CoreHub.userCfg.get(Preferences.USR_REMINDERSOPEN, false);
+	private boolean showAllReminders = (CoreHub.userCfg.get(Preferences.USR_REMINDEROTHERS, false)
+		&& CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS));
 	private boolean showSelfCreatedReminders = CoreHub.userCfg.get(Preferences.USR_REMINDEROWN, false);
 
 	private Composite viewParent;
@@ -147,10 +150,10 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 			StructuredSelection sel = (StructuredSelection) getSelection();
 			if (sel != null && sel.size() == 1 && sel.getFirstElement() instanceof Reminder) {
 				Reminder r = (Reminder) sel.getFirstElement();
-				LockResponse lockResponse = CoreHub.getLocalLockService().acquireLock(r);
+				LockResponse lockResponse = LocalLockServiceHolder.get().acquireLock(r);
 				if (lockResponse.isOk()) {
 					r.delete();
-					CoreHub.getLocalLockService().releaseLock(r);
+					LocalLockServiceHolder.get().releaseLock(r);
 				} else {
 					LockResponseHelper.showInfo(lockResponse, r, null);
 				}
@@ -178,8 +181,8 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 			int retVal = erd.open();
 			if (retVal == Dialog.OK) {
 				Reminder reminder = erd.getReminder();
-				CoreHub.getLocalLockService().acquireLock(reminder);
-				CoreHub.getLocalLockService().releaseLock(reminder);
+				LocalLockServiceHolder.get().acquireLock(reminder);
+				LocalLockServiceHolder.get().releaseLock(reminder);
 			}
 			refresh();
 		}
@@ -199,7 +202,23 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 			CoreHub.userCfg.set(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, autoSelectPatient);
 		}
 	};
-
+	
+	private Action showOthersRemindersAction =
+		new RestrictedAction(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS,
+			Messages.ReminderView_foreignAction, Action.AS_CHECK_BOX) {
+			{
+				setToolTipText(Messages.ReminderView_foreignTooltip);
+				setImageDescriptor(Images.IMG_ACHTUNG.getImageDescriptor());
+			}
+			
+			@Override
+			public void doRun(){
+				showAllReminders = showOthersRemindersAction.isChecked();
+				CoreHub.userCfg.set(Preferences.USR_REMINDEROTHERS, showAllReminders);
+				refresh();
+			}
+		};
+	
 	private Action showSelfCreatedReminderAction = new Action(Messages.ReminderView_myRemindersAction,
 			Action.AS_CHECK_BOX) { // $NON-NLS-1$
 		{
@@ -443,6 +462,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 		menuManager.add(timeFilterSubMenu);
 		menuManager.add(showOnlyOwnDueReminderToggleAction);
 		menuManager.add(showSelfCreatedReminderAction);
+		menuManager.add(showOthersRemindersAction);
 
 		currentPatientViewer.getTable().setMenu(menuManager.createContextMenu(currentPatientViewer.getTable()));
 		generalPatientViewer.getTable().setMenu(menuManager.createContextMenu(generalPatientViewer.getTable()));
@@ -548,27 +568,40 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 
 	private void refreshCurrentPatientInput() {
 		if (actPatient != null) {
-			List<Reminder> reminders = Reminder.findOpenRemindersResponsibleFor(
-				CoreHub.getLoggedInContact(), showOnlyDueReminders,
-					filterDueDateDays, actPatient, false);
-
 			Query<Reminder> query = new Query<>(Reminder.class, null, null, Reminder.TABLENAME,
-					new String[] { Reminder.FLD_DUE, Reminder.FLD_PRIORITY, Reminder.FLD_ACTION_TYPE,
-							Reminder.FLD_CREATOR, Reminder.FLD_KONTAKT_ID });
-			if (showSelfCreatedReminders) {
-				query.add(Reminder.FLD_CREATOR, Query.EQUALS, CoreHub.getLoggedInContact().getId());
+					new String[] { Reminder.FLD_DUE,
+					Reminder.FLD_PRIORITY, Reminder.FLD_ACTION_TYPE, Reminder.FLD_CREATOR,
+					Reminder.FLD_KONTAKT_ID
+				});
+			List<Reminder> reminders = Collections.emptyList();
+			if (showAllReminders
+				&& CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS)) {
 				query.add(Reminder.FLD_KONTAKT_ID, Query.EQUALS, actPatient.getId());
 				if (filterDueDateDays != -1) {
 					applyDueDateFilter(query);
 				}
-				reminders.addAll(query.execute());
+				reminders = query.execute();
+			} else {
+				reminders = Reminder.findOpenRemindersResponsibleFor(CoreHub.getLoggedInContact(),
+					showOnlyDueReminders, filterDueDateDays, actPatient, false);
+				
+				if (showSelfCreatedReminders) {
+					query.add(Reminder.FLD_CREATOR, Query.EQUALS,
+						CoreHub.getLoggedInContact().getId());
+					query.add(Reminder.FLD_KONTAKT_ID, Query.EQUALS, actPatient.getId());
+					if (filterDueDateDays != -1) {
+						applyDueDateFilter(query);
+					}
+					reminders.addAll(query.execute());
+				}
 			}
+			List<Reminder> input = reminders;
 			Display.getDefault().asyncExec(() -> {
 				if (currentPatientViewer != null && !currentPatientViewer.getTable().isDisposed()) {
-					currentPatientViewer.setInput(reminders);
+					currentPatientViewer.setInput(input);
 					viewerSelectionComposite.setCount(SELECTIONCOMP_CURRENTPATIENT_ID,
 							currentPatientViewer.getTable().getItemCount());
-					if (reminders.size() < 5) {
+					if (input.size() < 5) {
 						if (((GridData) currentPatientViewer.getTable().getLayoutData()).heightHint != 125) {
 							((GridData) currentPatientViewer.getTable().getLayoutData()).heightHint = 125;
 							currentPatientViewer.getTable().getParent().layout(true, true);
