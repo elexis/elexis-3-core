@@ -1,5 +1,6 @@
 package ch.elexis.data;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -33,11 +34,11 @@ public class AbstractPersistentObjectTest {
 	
 	public AbstractPersistentObjectTest(JdbcLink link){
 		this(link, false);
-
 	}
 	
 	public AbstractPersistentObjectTest(JdbcLink link, boolean deleteTables){
 		this.link = link;
+		assertNotNull(link);
 		if (deleteTables) {
 			PersistentObject.connect(link);
 			PersistentObject.deleteAllTables();
