@@ -42,21 +42,11 @@ public interface IBillingSystem {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Name</em>' attribute.
-	 * @see #setName(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIBillingSystem_Name()
-	 * @model
+	 * @model changeable="false"
 	 * @generated
 	 */
 	String getName();
-	
-	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IBillingSystem#getName <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Name</em>' attribute.
-	 * @see #getName()
-	 * @generated
-	 */
-	void setName(String value);
 	
 	/**
 	 * Returns the value of the '<em><b>Law</b></em>' attribute.
@@ -67,20 +57,10 @@ public interface IBillingSystem {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Law</em>' attribute.
-	 * @see #setLaw(BillingLaw)
 	 * @see ch.elexis.core.model.ModelPackage#getIBillingSystem_Law()
-	 * @model dataType="ch.elexis.core.types.BillingLaw"
+	 * @model dataType="ch.elexis.core.types.BillingLaw" changeable="false"
 	 * @generated
 	 */
 	BillingLaw getLaw();
-	
-	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IBillingSystem#getLaw <em>Law</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Law</em>' attribute.
-	 * @see #getLaw()
-	 * @generated
-	 */
-	void setLaw(BillingLaw value);
 	
 } // IBillingSystem

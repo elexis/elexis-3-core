@@ -11,6 +11,7 @@ import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.model.messages.Messages;
 import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
+import ch.elexis.core.model.service.holder.IBillingSystemServiceHolder;
 import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.utils.CoreUtil;
 
@@ -93,7 +94,8 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 	
 	@Override
 	public IBillingSystem getBillingSystem(){
-		return new BillingSystem(getEntity().getGesetz());
+		return IBillingSystemServiceHolder.get().getBillingSystem(getEntity().getGesetz())
+			.orElse(null);
 	}
 	
 	@Override

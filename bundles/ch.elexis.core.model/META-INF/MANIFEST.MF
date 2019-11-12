@@ -25,4 +25,5 @@ Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/ch.elexis.core.model.service.holder.CoreModelServiceHolder.xml,
  OSGI-INF/ch.elexis.core.model.service.CoreModelService.xml,
  OSGI-INF/ch.elexis.core.model.service.holder.ContextServiceHolder.xml,
- OSGI-INF/ch.elexis.core.model.service.holder.StoreToStringServiceHolder.xml
+ OSGI-INF/ch.elexis.core.model.service.holder.StoreToStringServiceHolder.xml,
+ OSGI-INF/ch.elexis.core.model.service.holder.IBillingSystemServiceHolder.xml

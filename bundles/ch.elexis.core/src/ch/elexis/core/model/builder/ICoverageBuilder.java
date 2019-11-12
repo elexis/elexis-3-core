@@ -3,10 +3,9 @@ package ch.elexis.core.model.builder;
 import java.time.LocalDate;
 import java.util.Arrays;
 
-import ch.elexis.core.model.IBillingSystem;
+import ch.elexis.core.model.BillingSystem;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IPatient;
-import ch.elexis.core.model.ch.BillingLaw;
 import ch.elexis.core.services.IModelService;
 
 public class ICoverageBuilder extends AbstractBuilder<ICoverage> {
@@ -23,24 +22,9 @@ public class ICoverageBuilder extends AbstractBuilder<ICoverage> {
 		object.setDescription(label);
 		object.setReason(reason);
 		object.setDateFrom(LocalDate.now());
-		object.setBillingSystem(new IBillingSystem() {
-			
-			@Override
-			public void setName(String value){}
-			
-			@Override
-			public void setLaw(BillingLaw value){}
-			
-			@Override
-			public String getName(){
-				return billingSystem;
-			}
-			
-			@Override
-			public BillingLaw getLaw(){
-				return null;
-			}
-		});
+		// only to transport the name of the IBillingSystem,
+		// not validating whether it exists
+		object.setBillingSystem(new BillingSystem(billingSystem, null));
 		
 		patient.addCoverage(object);
 	}

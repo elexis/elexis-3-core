@@ -1,8 +1,10 @@
 package ch.elexis.core.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import ch.elexis.core.model.IBillingSystem;
+import ch.elexis.core.model.ch.BillingLaw;
 
 public interface IBillingSystemService {
 	
@@ -23,11 +25,38 @@ public interface IBillingSystemService {
 	 * 
 	 * @param billingSystem
 	 * @return
-	 * @since 3.6 moved from {@link Fall}
 	 */
 	public String getDefaultPrintSystem(IBillingSystem system);
 	
 	public List<String> getBillingSystemConstants(IBillingSystem billingSystem);
 	
 	public String getBillingSystemConstant(IBillingSystem billingSystem, String name);
+	
+	/**
+	 * Find a billing system by its name
+	 * 
+	 * @param gesetz
+	 * @return
+	 */
+	public Optional<IBillingSystem> getBillingSystem(String gesetz);
+	
+	/**
+	 * Find all installed billing systems.
+	 * 
+	 * @return an Array with the names of all configured billing systems
+	 */
+	public List<IBillingSystem> getBillingSystems();
+	
+	/**
+	 * Adds a new {@link IBillingSystem} or modifies the parameters of an already existing
+	 * 
+	 * @param name to identify the billing system
+	 * @param serviceCode
+	 * @param defaultPrinter
+	 * @param requirements
+	 * @param law
+	 * @return the {@link IBillingSystem} just added or modified
+	 */
+	public IBillingSystem addOrModifyBillingSystem(String name, String serviceCode,
+		String defaultPrinter, String requirements, BillingLaw law);
 }
