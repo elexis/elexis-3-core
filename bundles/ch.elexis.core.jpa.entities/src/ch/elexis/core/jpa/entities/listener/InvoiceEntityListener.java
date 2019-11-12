@@ -31,10 +31,10 @@ public class InvoiceEntityListener {
 			.getEntityManager(false);
 		try {
 			em.getTransaction().begin();
-			Config invoiceNr = em.find(Config.class, "RechnungsNummer");
+			Config invoiceNr = em.find(Config.class, "RechnungsNr");
 			if (invoiceNr == null) {
 				Config invoiceNrConfig = new Config();
-				invoiceNrConfig.setParam("RechnungsNummer");
+				invoiceNrConfig.setParam("RechnungsNr");
 				invoiceNrConfig.setWert("1");
 				em.persist(invoiceNrConfig);
 				ret = 1;
