@@ -36,7 +36,7 @@ public class CoverageTest extends AbstractTest {
 		assertEquals(patient, coverage.getPatient());
 		assertEquals("testCoverage", coverage.getDescription());
 		assertEquals("testReason", coverage.getReason());
-		assertEquals("testBillingSystem", coverage.getBillingSystem().getName());
+		assertEquals("KVG", coverage.getBillingSystem().getName());
 		assertNotNull(coverage.getDateFrom());
 		assertNull(coverage.getDateTo());
 		

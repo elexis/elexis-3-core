@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
 
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
@@ -20,6 +21,8 @@ import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.model.builder.IUserBuilder;
+import ch.elexis.core.model.ch.BillingLaw;
+import ch.elexis.core.services.IBillingSystemService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.types.Gender;
@@ -115,12 +118,27 @@ public abstract class AbstractTest {
 		assertFalse(patient.isMandator());
 	}
 	
+	public static final String KVG_NAME = Messages.Fall_KVG_Name;
+	public static final String UVG_NAME = Messages.Fall_UVG_Name;
+	public static final String MV_NAME = Messages.Fall_MV_Name;
+	public static final String IV_NAME = Messages.Fall_IV_Name;
+	private static final String KVG_REQUIREMENTS = Messages.Fall_KVGRequirements; //$NON-NLS-1$
+	public static final String UVG_REQUIREMENTS = Messages.Fall_UVGRequirements; //$NON-NLS-1$
+	public static final String CONST_TARMED_DRUCKER = Messages.Fall_TarmedPrinter; //$NON-NLS-1$
+	public static final String CONST_TARMED_LEISTUNG = Messages.Fall_TarmedLeistung; //$NON-NLS-1$
+	public static final String VVG_NAME = Messages.Fall_VVG_Name;
+	public static final String PRIVATE_NAME = Messages.Fall_Private_Name; //$NON-NLS-1$	
+	
 	public void createCoverage(){
+		IBillingSystemService billingSystemService = OsgiServiceUtil.getService(IBillingSystemService.class).get();
+		billingSystemService.addOrModifyBillingSystem(KVG_NAME, CONST_TARMED_LEISTUNG, CONST_TARMED_DRUCKER, KVG_REQUIREMENTS, BillingLaw.KVG);
+		billingSystemService.addOrModifyBillingSystem(UVG_NAME, CONST_TARMED_LEISTUNG, CONST_TARMED_DRUCKER, UVG_REQUIREMENTS, BillingLaw.UVG);
+		
 		if (patient == null) {
 			createPatient();
 		}
 		coverage = new ICoverageBuilder(coreModelService, patient, "testCoverage", "testReason",
-			"testBillingSystem").buildAndSave();
+			"KVG").buildAndSave();
 	}
 	
 	public void createEncounter(){
