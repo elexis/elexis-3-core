@@ -95,9 +95,10 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 	
 	@Override
 	public IBillingSystem getBillingSystem(){
-		IBillingSystem billingSystem = IBillingSystemServiceHolder.get().getBillingSystem(getEntity().getGesetz()).orElse(null);
-		if(billingSystem == null) {
-			IBillingSystemServiceHolder.get().getDefaultBillingSystem();
+		IBillingSystem billingSystem = IBillingSystemServiceHolder.get()
+			.getBillingSystem(getEntity().getGesetz()).orElse(null);
+		if (billingSystem == null) {
+			billingSystem = IBillingSystemServiceHolder.get().getDefaultBillingSystem();
 		}
 		return billingSystem;
 	}
@@ -106,12 +107,12 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 	public void setBillingSystem(IBillingSystem value){
 		getEntityMarkDirty().setGesetz(value.getName());
 	}
-
+	
 	@Override
 	public IContact getCostBearer(){
 		return ModelUtil.getAdapter(getEntity().getKostentrKontakt(), IContact.class);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setCostBearer(IContact value){
@@ -122,7 +123,7 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 			getEntityMarkDirty().setKostentrKontakt(null);
 		}
 	}
-
+	
 	@Override
 	public IContact getGuarantor(){
 		if (getEntity().getGarantKontakt() == null) {
@@ -146,7 +147,7 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 	public String getInsuranceNumber(){
 		return getEntity().getVersNummer();
 	}
-
+	
 	@Override
 	public void setInsuranceNumber(String value){
 		getEntityMarkDirty().setVersNummer(value);
