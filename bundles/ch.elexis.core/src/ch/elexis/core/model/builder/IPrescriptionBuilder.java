@@ -6,11 +6,13 @@ import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
 
 public class IPrescriptionBuilder extends AbstractBuilder<IPrescription> {
 	
-	public IPrescriptionBuilder(IModelService modelService, IArticle article, IPatient patient,
+	public IPrescriptionBuilder(IModelService modelService, IContextService context,
+		IArticle article, IPatient patient,
 		String dosageInstruction){
 		super(modelService);
 		
@@ -20,6 +22,9 @@ public class IPrescriptionBuilder extends AbstractBuilder<IPrescription> {
 		object.setArticle(article);
 		object.setDosageInstruction(dosageInstruction);
 		object.setEntryType(EntryType.FIXED_MEDICATION);
+		if (context != null) {
+			object.setPrescriptor(context.getActiveUserContact().orElse(null));
+		}
 	}
 	
 	public IPrescriptionBuilder entryType(EntryType entryType){

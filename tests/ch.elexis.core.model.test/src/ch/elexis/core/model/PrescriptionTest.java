@@ -35,7 +35,8 @@ public class PrescriptionTest extends AbstractTest {
 	@Test
 	public void createFindDelete(){
 		IPrescription prescription =
-			new IPrescriptionBuilder(coreModelService, localArticle, patient, "1-0-0-1").buildAndSave();
+			new IPrescriptionBuilder(coreModelService, null, localArticle, patient, "1-0-0-1")
+				.buildAndSave();
 		assertEquals(patient, prescription.getPatient());
 		assertEquals(localArticle, prescription.getArticle());
 		assertEquals("1-0-0-1", prescription.getDosageInstruction());
@@ -51,7 +52,7 @@ public class PrescriptionTest extends AbstractTest {
 	@Test
 	public void patientGetMedication(){
 		IPrescription prescription =
-			new IPrescriptionBuilder(coreModelService, localArticle, patient, "1-0-0-1")
+			new IPrescriptionBuilder(coreModelService, null, localArticle, patient, "1-0-0-1")
 				.buildAndSave();
 		assertEquals(patient, prescription.getPatient());
 		assertEquals(localArticle, prescription.getArticle());

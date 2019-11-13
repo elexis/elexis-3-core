@@ -409,7 +409,8 @@ public class TestDatabaseInitializer {
 		
 		if (!isPrescriptionInitialized) {
 			prescription =
-				new IPrescriptionBuilder(modelService, article, patient, "1-1-1-1").buildAndSave();
+				new IPrescriptionBuilder(modelService, null, article, patient, "1-1-1-1")
+					.buildAndSave();
 			
 			isPrescriptionInitialized = true;
 		}

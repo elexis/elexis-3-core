@@ -57,7 +57,9 @@ import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IRecipe;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.model.builder.IPrescriptionBuilder;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
@@ -258,10 +260,9 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 								.load(actR.getId(), IRecipe.class).orElse(null);
 							IArticle art = (IArticle) obj;
 							IPrescription ret =
-								CoreModelServiceHolder.get().create(IPrescription.class);
-							ret.setArticle(art);
-							ret.setPatient(recipe.getPatient());
-							ret.setDosageInstruction("");
+								new IPrescriptionBuilder(CoreModelServiceHolder.get(),
+									ContextServiceHolder.get(), art, recipe.getPatient(), "")
+										.build();
 							ret.setRemark("");
 							ret.setEntryType(EntryType.RECIPE);
 							ret.setRecipe(recipe);
@@ -274,10 +275,9 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 							IPrescription pre = (IPrescription) obj;
 							
 							IPrescription ret =
-								CoreModelServiceHolder.get().create(IPrescription.class);
-							ret.setArticle(pre.getArticle());
-							ret.setPatient(recipe.getPatient());
-							ret.setDosageInstruction(pre.getDosageInstruction());
+								new IPrescriptionBuilder(CoreModelServiceHolder.get(),
+									ContextServiceHolder.get(), pre.getArticle(),
+									recipe.getPatient(), pre.getDosageInstruction()).build();
 							ret.setRemark(pre.getRemark());
 							ret.setEntryType(EntryType.RECIPE);
 							ret.setRecipe(recipe);
@@ -375,27 +375,27 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 	
 	private void makeActions(){
 		newRpAction = new Action(Messages.RezepteView_newPrescriptionAction) { //$NON-NLS-1$
-				{
-					setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
-					setToolTipText(Messages.RezepteView_newPrescriptonTooltip); //$NON-NLS-1$
+			{
+				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
+				setToolTipText(Messages.RezepteView_newPrescriptonTooltip); //$NON-NLS-1$
+			}
+			
+			@Override
+			public void run(){
+				Patient act = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
+				if (act == null) {
+					MessageBox mb =
+						new MessageBox(getViewSite().getShell(), SWT.ICON_INFORMATION | SWT.OK);
+					mb.setText(Messages.RezepteView_newPrescriptionError); //$NON-NLS-1$
+					mb.setMessage(Messages.RezepteView_noPatientSelected); //$NON-NLS-1$
+					mb.open();
+					return;
 				}
-				
-				@Override
-				public void run(){
-					Patient act = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
-					if (act == null) {
-						MessageBox mb =
-							new MessageBox(getViewSite().getShell(), SWT.ICON_INFORMATION | SWT.OK);
-						mb.setText(Messages.RezepteView_newPrescriptionError); //$NON-NLS-1$
-						mb.setMessage(Messages.RezepteView_noPatientSelected); //$NON-NLS-1$
-						mb.open();
-						return;
-					}
-					Fall fall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
-					if (fall == null) {
-						Konsultation k = act.getLetzteKons(false);
-						if (k == null) {
-							SWTHelper.alert(Messages.RezepteView_noCaseSelected, //$NON-NLS-1$
+				Fall fall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
+				if (fall == null) {
+					Konsultation k = act.getLetzteKons(false);
+					if (k == null) {
+						SWTHelper.alert(Messages.RezepteView_noCaseSelected, //$NON-NLS-1$
 							Messages.RezepteView_pleaseCreateOrChooseCase); //$NON-NLS-1$							
 						return;
 					}
@@ -404,103 +404,100 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 				tv.refresh();
 				doSelectNewRezept(rezept);
 				doAddLine();
-				}
-			};
+			}
+		};
 		deleteRpAction = new Action(Messages.RezepteView_deletePrescriptionActiom) { //$NON-NLS-1$
-				@Override
-				public void run(){
-					Rezept rp = (Rezept) ElexisEventDispatcher.getSelected(Rezept.class);
-					if (MessageDialog.openConfirm(getViewSite().getShell(),
-						Messages.RezepteView_deletePrescriptionActiom, //$NON-NLS-1$
-						MessageFormat.format(Messages.RezepteView_deletePrescriptionConfirm, rp //$NON-NLS-1$
-							.getDate()))) {
-						rp.delete();
-						tv.refresh();
-					}
+			@Override
+			public void run(){
+				Rezept rp = (Rezept) ElexisEventDispatcher.getSelected(Rezept.class);
+				if (MessageDialog.openConfirm(getViewSite().getShell(),
+					Messages.RezepteView_deletePrescriptionActiom, //$NON-NLS-1$
+					MessageFormat.format(Messages.RezepteView_deletePrescriptionConfirm, rp //$NON-NLS-1$
+						.getDate()))) {
+					rp.delete();
+					tv.refresh();
 				}
-			};
+			}
+		};
 		removeLineAction = new Action(Messages.RezepteView_deleteLineAction) { //$NON-NLS-1$
-				@Override
-				public void run(){
-					Rezept rp = (Rezept) ElexisEventDispatcher.getSelected(Rezept.class);
-					IStructuredSelection sel = (IStructuredSelection) lvRpLines.getSelection();
-					Prescription p = (Prescription) sel.getFirstElement();
-					if ((rp != null) && (p != null)) {
-						rp.removePrescription(p);
-						lvRpLines.refresh();
-					}
-					/*
-					 * RpZeile z=(RpZeile)sel.getFirstElement(); if((rp!=null) && (z!=null)){
-					 * rp.removeLine(z); lvRpLines.refresh(); }
-					 */
+			@Override
+			public void run(){
+				Rezept rp = (Rezept) ElexisEventDispatcher.getSelected(Rezept.class);
+				IStructuredSelection sel = (IStructuredSelection) lvRpLines.getSelection();
+				Prescription p = (Prescription) sel.getFirstElement();
+				if ((rp != null) && (p != null)) {
+					rp.removePrescription(p);
+					lvRpLines.refresh();
 				}
-			};
+				/*
+				 * RpZeile z=(RpZeile)sel.getFirstElement(); if((rp!=null) && (z!=null)){
+				 * rp.removeLine(z); lvRpLines.refresh(); }
+				 */
+			}
+		};
 		addLineAction = new Action(Messages.RezepteView_newLineAction) { //$NON-NLS-1$
-				@Override
-				public void run(){
-					doAddLine();
-				}
-			};
+			@Override
+			public void run(){
+				doAddLine();
+			}
+		};
 		printAction = new Action(Messages.RezepteView_printAction) { //$NON-NLS-1$
-				@Override
-				public void run(){
-					try {
-						RezeptBlatt rp =
-							(RezeptBlatt) getViewSite().getPage().showView(RezeptBlatt.ID);
-						Rezept actR = (Rezept) ElexisEventDispatcher.getSelected(Rezept.class);
-						Brief rpBrief = actR.getBrief();
-						if (rpBrief == null)
-							// not yet created - just create a new Rezept
+			@Override
+			public void run(){
+				try {
+					RezeptBlatt rp = (RezeptBlatt) getViewSite().getPage().showView(RezeptBlatt.ID);
+					Rezept actR = (Rezept) ElexisEventDispatcher.getSelected(Rezept.class);
+					Brief rpBrief = actR.getBrief();
+					if (rpBrief == null)
+						// not yet created - just create a new Rezept
+						rp.createRezept(actR);
+					else {
+						// Brief for Rezept already exists:
+						// ask if it should be recreated or just shown
+						String[] dialogButtonLabels = {
+							Messages.RezepteView_RecreatePrescription,
+							Messages.RezepteView_ShowPrescription,
+							Messages.RezepteView_PrescriptionCancel
+						};
+						MessageDialog msg =
+							new MessageDialog(null, Messages.RezepteView_CreatePrescription, //$NON-NLS-1$
+								null, Messages.RezepteView_ReallyWantToRecreatePrescription, //$NON-NLS-1$
+								MessageDialog.WARNING, dialogButtonLabels, 2);
+						int result = msg.open();
+						switch (result) {
+						case 0: // recreate rezept
 							rp.createRezept(actR);
-						else {
-							// Brief for Rezept already exists:
-							// ask if it should be recreated or just shown
-							String[] dialogButtonLabels =
-								{
-									Messages.RezepteView_RecreatePrescription,
-									Messages.RezepteView_ShowPrescription,
-									Messages.RezepteView_PrescriptionCancel
-								};
-							MessageDialog msg =
-								new MessageDialog(null, Messages.RezepteView_CreatePrescription, //$NON-NLS-1$
-									null, Messages.RezepteView_ReallyWantToRecreatePrescription, //$NON-NLS-1$
-									MessageDialog.WARNING, dialogButtonLabels, 2);
-							int result = msg.open();
-							switch (result) {
-							case 0: // recreate rezept
-								rp.createRezept(actR);
-								break;
-							case 1: // open rezept
-								rp.loadRezeptFromDatabase(actR, rpBrief);
-								break;
-							case 2: // cancel or closebox - do nothing
-								break;
-							}
+							break;
+						case 1: // open rezept
+							rp.loadRezeptFromDatabase(actR, rpBrief);
+							break;
+						case 2: // cancel or closebox - do nothing
+							break;
 						}
-					} catch (Exception ex) {
-						ExHandler.handle(ex);
 					}
+				} catch (Exception ex) {
+					ExHandler.handle(ex);
 				}
-			};
-		changeMedicationAction =
-			new RestrictedAction(AccessControlDefaults.MEDICATION_MODIFY,
-				Messages.RezepteView_ChangeLink) { //$NON-NLS-1$
-				{
-					setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
-					setToolTipText(Messages.RezepteView_ChangeTooltip); //$NON-NLS-1$
+			}
+		};
+		changeMedicationAction = new RestrictedAction(AccessControlDefaults.MEDICATION_MODIFY,
+			Messages.RezepteView_ChangeLink) { //$NON-NLS-1$
+			{
+				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
+				setToolTipText(Messages.RezepteView_ChangeTooltip); //$NON-NLS-1$
+			}
+			
+			public void doRun(){
+				Rezept rp = (Rezept) ElexisEventDispatcher.getSelected(Rezept.class);
+				IStructuredSelection sel = (IStructuredSelection) lvRpLines.getSelection();
+				Prescription pr = (Prescription) sel.getFirstElement();
+				if (pr != null) {
+					new MediDetailDialog(getViewSite().getShell(), CoreModelServiceHolder.get()
+						.load(pr.getId(), IPrescription.class).orElse(null)).open();
+					lvRpLines.refresh();
 				}
-				
-				public void doRun(){
-					Rezept rp = (Rezept) ElexisEventDispatcher.getSelected(Rezept.class);
-					IStructuredSelection sel = (IStructuredSelection) lvRpLines.getSelection();
-					Prescription pr = (Prescription) sel.getFirstElement();
-					if (pr != null) {
-						new MediDetailDialog(getViewSite().getShell(), CoreModelServiceHolder.get()
-							.load(pr.getId(), IPrescription.class).orElse(null)).open();
-						lvRpLines.refresh();
-					}
-				}
-			};
+			}
+		};
 		addLineAction.setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
 		printAction.setImageDescriptor(Images.IMG_PRINTER.getImageDescriptor());
 		deleteRpAction.setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
@@ -540,12 +537,13 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 			Rezept actRezept = (Rezept) ElexisEventDispatcher.getSelected(Rezept.class);
 			Patient global = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
 			if (global != null) {
-				if ((actRezept == null) || (!actRezept.getPatient().getId().equals(global.getId()))) {
-					eeli_pat.catchElexisEvent(new ElexisEvent(global, Patient.class,
-						ElexisEvent.EVENT_SELECTED));
+				if ((actRezept == null)
+					|| (!actRezept.getPatient().getId().equals(global.getId()))) {
+					eeli_pat.catchElexisEvent(
+						new ElexisEvent(global, Patient.class, ElexisEvent.EVENT_SELECTED));
 				} else {
-					eeli_rp.catchElexisEvent(new ElexisEvent(actRezept, Rezept.class,
-						ElexisEvent.EVENT_SELECTED));
+					eeli_rp.catchElexisEvent(
+						new ElexisEvent(actRezept, Rezept.class, ElexisEvent.EVENT_SELECTED));
 				}
 				addLineAction.setEnabled(actRezept != null);
 			}
@@ -568,7 +566,8 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 		public void dispose(){ /* leer */
 		}
 		
-		public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput){ /* leer */
+		public void inputChanged(final Viewer viewer, final Object oldInput,
+			final Object newInput){ /* leer */
 		}
 	}
 	

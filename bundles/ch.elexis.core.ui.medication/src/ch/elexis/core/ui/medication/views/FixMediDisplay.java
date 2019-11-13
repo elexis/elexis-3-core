@@ -173,8 +173,8 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 								}
 								IPrescription prescription =
 									new IPrescriptionBuilder(CoreModelServiceHolder.get(),
-										pre.getArticle(), activePatient.get(),
-										pre.getDosageInstruction()).build();
+										ContextServiceHolder.get(), pre.getArticle(),
+										activePatient.get(), pre.getDosageInstruction()).build();
 								prescription.setRemark(pre.getRemark());
 								CoreModelServiceHolder.get().save(prescription);
 								ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD,

@@ -52,17 +52,17 @@ public class IMedicationServiceTest extends AbstractServiceTest {
 		
 		createdPrescriptions = new ArrayList<>();
 		createdPrescriptions
-			.add(new IPrescriptionBuilder(coreModelService, localArticle, patient, "0-1-1-0")
+			.add(new IPrescriptionBuilder(coreModelService, null, localArticle, patient, "0-1-1-0")
 				.entryType(EntryType.FIXED_MEDICATION)
 				.buildAndSave());
 		createdPrescriptions
-			.add(new IPrescriptionBuilder(coreModelService, localArticle, patient, "1-0-0-1")
+			.add(new IPrescriptionBuilder(coreModelService, null, localArticle, patient, "1-0-0-1")
 				.entryType(EntryType.SYMPTOMATIC_MEDICATION).buildAndSave());
 		createdPrescriptions
-			.add(new IPrescriptionBuilder(coreModelService, localArticle, patient, "1-0-0-0")
+			.add(new IPrescriptionBuilder(coreModelService, null, localArticle, patient, "1-0-0-0")
 				.entryType(EntryType.RESERVE_MEDICATION).buildAndSave());
 		createdPrescriptions
-			.add(new IPrescriptionBuilder(coreModelService, localArticle, patient, "0-0-0-1")
+			.add(new IPrescriptionBuilder(coreModelService, null, localArticle, patient, "0-0-0-1")
 				.entryType(EntryType.FIXED_MEDICATION).buildAndSave());
 	}
 	

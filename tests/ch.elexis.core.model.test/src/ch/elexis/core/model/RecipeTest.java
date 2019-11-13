@@ -27,7 +27,8 @@ public class RecipeTest extends AbstractTest {
 		createMandator();
 		createLocalArticle();
 		
-		prescription = new IPrescriptionBuilder(coreModelService, localArticle, patient, "1-0-0-1")
+		prescription =
+			new IPrescriptionBuilder(coreModelService, null, localArticle, patient, "1-0-0-1")
 			.buildAndSave();
 	}
 	

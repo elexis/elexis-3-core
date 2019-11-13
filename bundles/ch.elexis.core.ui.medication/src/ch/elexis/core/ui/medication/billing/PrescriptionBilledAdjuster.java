@@ -98,7 +98,8 @@ public class PrescriptionBilledAdjuster implements IBilledAdjuster {
 	private IPrescription createDispensationPrescription(IArticle article, IPatient patient,
 		IBilled billed){
 		IPrescription prescription =
-			new IPrescriptionBuilder(CoreModelServiceHolder.get(), article, patient, "").build();
+			new IPrescriptionBuilder(CoreModelServiceHolder.get(), ContextServiceHolder.get(),
+				article, patient, "").build();
 		prescription.setExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID,
 			billed.getId());
 		billed.setExtInfo(ch.elexis.core.model.verrechnet.Constants.FLD_EXT_PRESC_ID,

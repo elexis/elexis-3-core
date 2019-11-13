@@ -87,9 +87,10 @@ public class CreatePrescriptionHelper {
 	
 	public void createPrescriptionFromSignature(IArticleDefaultSignature signature){
 		// create medication entry
-		IPrescription prescription = new IPrescriptionBuilder(CoreModelServiceHolder.get(), article,
-			ContextServiceHolder.get().getActivePatient().get(),
-			signature.getSignatureAsDosisString()).build();
+		IPrescription prescription =
+			new IPrescriptionBuilder(CoreModelServiceHolder.get(), ContextServiceHolder.get(),
+				article, ContextServiceHolder.get().getActivePatient().get(),
+				signature.getSignatureAsDosisString()).build();
 		prescription.setDisposalComment(signature.getComment());
 		prescription.setEntryType(signature.getMedicationType());
 		// a new symptomatic medication can have a stop date
