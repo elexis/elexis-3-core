@@ -66,7 +66,8 @@ public class Result<T> {
 	}
 	
 	/**
-	 * Den "eigentlichen" Rückgabewert der Methode abholen
+	 * Get the contained object itself. If there are multiple results (i.e. list entries), this
+	 * fetches the result object with the highest severity.
 	 * 
 	 * @return
 	 */
@@ -205,6 +206,10 @@ public class Result<T> {
 	
 	public void addMessage(SEVERITY severity, String message){
 		list.add(new msg(0, message, severity, null));
+	}
+	
+	public void addMessage(SEVERITY severity, String message, T object){
+		list.add(new msg(0, message, severity, object));
 	}
 	
 }

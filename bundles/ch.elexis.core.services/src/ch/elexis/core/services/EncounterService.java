@@ -75,7 +75,7 @@ public class EncounterService implements IEncounterService {
 			return editableResult;
 		}
 		
-		Result<IEncounter> result = new Result<IEncounter>();
+		Result<IEncounter> result = new Result<IEncounter>(encounter);
 		
 		ICoverage encounterCovearage = encounter.getCoverage();
 		encounter.setCoverage(coverage);
