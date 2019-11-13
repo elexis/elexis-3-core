@@ -3,6 +3,7 @@ package ch.elexis.core.model;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import ch.elexis.core.jpa.entities.Fall;
@@ -94,8 +95,11 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall>
 	
 	@Override
 	public IBillingSystem getBillingSystem(){
-		return IBillingSystemServiceHolder.get().getBillingSystem(getEntity().getGesetz())
-			.orElse(null);
+		IBillingSystem billingSystem = IBillingSystemServiceHolder.get().getBillingSystem(getEntity().getGesetz()).orElse(null);
+		if(billingSystem == null) {
+			IBillingSystemServiceHolder.get().getDefaultBillingSystem();
+		}
+		return billingSystem;
 	}
 	
 	@Override

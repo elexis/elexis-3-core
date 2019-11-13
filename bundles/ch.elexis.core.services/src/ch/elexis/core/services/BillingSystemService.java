@@ -9,6 +9,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.BillingSystem;
 import ch.elexis.core.model.IBillingSystem;
 import ch.elexis.core.model.ch.BillingLaw;
@@ -56,6 +57,16 @@ public class BillingSystemService implements IBillingSystemService {
 			}
 		}
 		return ""; //$NON-NLS-1$
+	}
+	
+	@Override
+	public IBillingSystem getDefaultBillingSystem(){
+		Optional<IBillingSystem> billingSystem = getBillingSystem("KVG");
+		if (billingSystem.isPresent()) {
+			return billingSystem.get();
+		}
+		return addOrModifyBillingSystem(Messages.Fall_KVG_Name, Messages.Fall_TarmedLeistung,
+			Messages.Fall_TarmedPrinter, Messages.Fall_KVGRequirements, BillingLaw.KVG);
 	}
 	
 	@Override

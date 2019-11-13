@@ -33,6 +33,13 @@ public interface IBillingSystemService {
 	public String getBillingSystemConstant(IBillingSystem billingSystem, String name);
 	
 	/**
+	 * Returns the default billing system, which is always asserted to be available
+	 * 
+	 * @return
+	 */
+	public IBillingSystem getDefaultBillingSystem();
+	
+	/**
 	 * Find a billing system by its name
 	 * 
 	 * @param gesetz
@@ -50,7 +57,8 @@ public interface IBillingSystemService {
 	/**
 	 * Adds a new {@link IBillingSystem} or modifies the parameters of an already existing
 	 * 
-	 * @param name to identify the billing system
+	 * @param name
+	 *            to identify the billing system
 	 * @param serviceCode
 	 * @param defaultPrinter
 	 * @param requirements

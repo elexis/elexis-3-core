@@ -362,6 +362,8 @@ public class BillingSystem {
 	 * @param ausgabe
 	 * @param requirements
 	 * @since 3.6 moved from {@link Fall}
+	 * @since 3.8 @deprecated
+	 * @deprecated use {@link ch.elexis.core.services.BillingSystemService#addOrModifyBillingSystem}
 	 */
 	public static void createAbrechnungssystem(final String systemname, final String codesystem,
 		final String ausgabe, final String... requirements){
