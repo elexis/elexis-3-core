@@ -6,6 +6,8 @@
    <reference bind="setBillableAdjuster" cardinality="0..n" interface="ch.elexis.core.services.IBillableAdjuster" name="BillableAdjuster" policy="dynamic" policy-option="greedy" unbind="unsetBillableAdjuster"/>
    <reference bind="setBilledAdjuster" cardinality="0..n" interface="ch.elexis.core.services.IBilledAdjuster" name="BilledAdjuster" policy="dynamic" policy-option="greedy" unbind="unsetBilledAdjuster"/>
    <reference cardinality="1..1" field="accessControlService" interface="ch.elexis.core.services.IAccessControlService" name="accessControlService"/>
+   <reference cardinality="1..1" field="contextService" interface="ch.elexis.core.services.IContextService" name="contextService"/>
    <reference cardinality="1..1" field="coreModelService" interface="ch.elexis.core.services.IModelService" name="coreModelService" target="(service.model.name=ch.elexis.core.model)"/>
+   <reference cardinality="1..1" field="stockService" interface="ch.elexis.core.services.IStockService" name="stockService"/>
    <implementation class="ch.elexis.core.services.BillingService"/>
 </scr:component>

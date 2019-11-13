@@ -195,7 +195,7 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 		return false;
 	}
 	
-	private Result<IBilled> addTarifToKons(IBillable tarif, IEncounter kons) throws TaskException{
+	private Result<?> addTarifToKons(IBillable tarif, IEncounter kons) throws TaskException{
 		// see RochePreferencePage.LABORRESULTS_BILL_ADDCONS
 		if (billAddCons) {
 			synchronized (kons) {
@@ -212,7 +212,7 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 				if (addCons) {
 					IBillable consVerrechenbar = getKonsVerrechenbar(kons);
 					if (consVerrechenbar != null) {
-						Result<IBilled> result =
+						Result<?> result =
 							BillingServiceHolder.get().bill(consVerrechenbar, kons, 1);
 						if (!result.isOK()) {
 							throw new TaskException(TaskException.EXECUTION_ERROR, result);
@@ -224,7 +224,7 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 		
 		logger
 			.info(String.format("Adding EAL tarif [%s] to [%s]", tarif.getCode(), kons.getLabel()));
-		Result<IBilled> result = BillingServiceHolder.get().bill(tarif, kons, 1);
+		Result<?> result = BillingServiceHolder.get().bill(tarif, kons, 1);
 		if (!result.isOK()) {
 			throw new TaskException(TaskException.EXECUTION_ERROR, result);
 		}
@@ -316,7 +316,7 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 						Optional<IEncounter> kons = getKonsultation(labResult.getPatient());
 						if (kons.isPresent()
 							&& EncounterServiceHolder.get().isEditable(kons.get())) {
-							Result<IBilled> addTarifToKons = addTarifToKons(tarif, kons.get());
+							Result<?> addTarifToKons = addTarifToKons(tarif, kons.get());
 							return Collections.singletonMap(ReturnParameter.RESULT_DATA,
 								addTarifToKons.toString());
 						} else {

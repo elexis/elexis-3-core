@@ -634,7 +634,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						addPersistentObject((PersistentObject) object);
 					} else if (object instanceof IBillable) {
 						IBillable billable = (IBillable) object;
-						Result<IBilled> billResult =
+						Result<?> billResult =
 								BillingServiceHolder.get().bill(billable, actEncounter, 1.0);
 						if (!billResult.isOK()) {
 							ResultDialog.show(billResult);
@@ -647,7 +647,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						for (ICodeElement element : elements) {
 							if (element instanceof IBillable) {
 								Display.getDefault().asyncExec(() -> {
-									Result<IBilled> billResult = BillingServiceHolder.get()
+									Result<?> billResult = BillingServiceHolder.get()
 										.bill((IBillable) element, actEncounter, 1.0);
 									if (!billResult.isOK()) {
 										ResultDialog.show(billResult);
@@ -1057,7 +1057,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						return;
 					}
 					double diff = changeAnzahl - billed.getAmount();
-					Result<IBilled> result =
+					Result<?> result =
 						BillingServiceHolder.get().bill(billable, actEncounter, diff);
 					if(!result.isOK()) {
 						ResultDialog.show(result);

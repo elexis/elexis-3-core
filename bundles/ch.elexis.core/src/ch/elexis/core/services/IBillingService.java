@@ -12,7 +12,8 @@ import ch.rgw.tools.Result;
 public interface IBillingService {
 	
 	/**
-	 * Get a {@link IBillingSystemFactor} for the system at the provided date, empty if no such factor is defined.
+	 * Get a {@link IBillingSystemFactor} for the system at the provided date, empty if no such
+	 * factor is defined.
 	 * 
 	 * @param system
 	 * @param date
@@ -47,4 +48,15 @@ public interface IBillingService {
 	 * @return a Result, that may contain a message even if its ok
 	 */
 	public Result<IBilled> bill(IBillable billable, IEncounter encounter, double amount);
+	
+	/**
+	 * Remove a billed service from the encounter. This will only work if the encounter is editable.
+	 * This method additionally takes care of side-effects like e.g. returning an article to stock
+	 * if removed
+	 * 
+	 * @param billed
+	 * @param encounter
+	 * @return
+	 */
+	public Result<?> removeBilled(IBilled billed, IEncounter encounter);
 }

@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.ac.AccessControlDefaults;
+import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBillableOptifier;
 import ch.elexis.core.model.IBilled;
@@ -22,8 +24,11 @@ import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.model.verrechnet.Constants;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.rgw.tools.Result;
@@ -39,6 +44,12 @@ public class BillingService implements IBillingService {
 	
 	@Reference
 	private IAccessControlService accessControlService;
+	
+	@Reference
+	private IStockService stockService;
+	
+	@Reference
+	private IContextService contextService;
 	
 	private List<IBilledAdjuster> billedAdjusters = new ArrayList<>();
 	
@@ -179,6 +190,37 @@ public class BillingService implements IBillingService {
 		}
 	}
 	
+	@Override
+	public Result<?> removeBilled(IBilled billed, IEncounter encounter){
+		Result<IEncounter> editable = isEditable(encounter);
+		if(!editable.isOK()) {
+			return editable;
+		}
+		
+		encounter.removeBilled(billed);
+		
+		IBillable billable = billed.getBillable();
+		if(billable instanceof IArticle) {
+			
+			// TODO stock return via event
+			IArticle article = (IArticle) billable;
+			String mandatorId = contextService.getActiveMandator().map(m->m.getId()).orElse(null);
+			stockService.performSingleReturn(article, (int) billed.getAmount(), mandatorId);
+			
+			// TODO prescription via event
+			Object prescId = billed.getExtInfo(Constants.FLD_EXT_PRESC_ID);
+			if(prescId instanceof String) {
+				IPrescription prescription = coreModelService.load((String)prescId, IPrescription.class).orElse(null);
+				if(prescription != null && EntryType.SELF_DISPENSED == prescription.getEntryType()) {
+					coreModelService.remove(prescription);
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, prescription);
+				}
+			}
+		}
+		
+		return Result.OK();
+	}
+
 	private Result<IBilled> translateResult(Result<IBillable> verificationResult){
 		Result<IBilled> ret = new Result<>();
 		verificationResult.getMessages()

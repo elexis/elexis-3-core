@@ -14,6 +14,8 @@ import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.IBillingSystemFactor;
+import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
@@ -33,6 +35,7 @@ import ch.elexis.core.services.holder.CoverageServiceHolder;
 import ch.elexis.core.text.model.Samdas;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
+import ch.rgw.tools.Result.SEVERITY;
 
 @Component
 public class EncounterService implements IEncounterService {
@@ -41,23 +44,26 @@ public class EncounterService implements IEncounterService {
 	private IAccessControlService accessControlService;
 	
 	@Reference
+	private ICodeElementService codeElementService;
+	
+	@Reference
 	private IBillingService billingService;
 	
 	@Override
 	public boolean isEditable(IEncounter encounter){
 		boolean editable = false;
-		if(encounter != null) {
+		if (encounter != null) {
 			boolean hasRight =
-					accessControlService.request(AccessControlDefaults.ADMIN_KONS_EDIT_IF_BILLED);
-				if (hasRight) {
-					// user has right to change encounter. in this case, the user
-					// may change the text even if the encounter has already been
-					// billed, so don't check if it is billed
-					editable = isEditableInternal(encounter);
-				} else {
-					// normal case, check all
-					editable = billingService.isEditable(encounter).isOK();
-				}
+				accessControlService.request(AccessControlDefaults.ADMIN_KONS_EDIT_IF_BILLED);
+			if (hasRight) {
+				// user has right to change encounter. in this case, the user
+				// may change the text even if the encounter has already been
+				// billed, so don't check if it is billed
+				editable = isEditableInternal(encounter);
+			} else {
+				// normal case, check all
+				editable = billingService.isEditable(encounter).isOK();
+			}
 		}
 		return editable;
 	}
@@ -65,49 +71,55 @@ public class EncounterService implements IEncounterService {
 	public Result<IEncounter> transferToCoverage(IEncounter encounter, ICoverage coverage,
 		boolean ignoreEditable){
 		Result<IEncounter> editableResult = billingService.isEditable(encounter);
-		if (ignoreEditable || editableResult.isOK()) {
-			ICoverage encounterCovearage = encounter.getCoverage();
-			encounter.setCoverage(coverage);
-			if (encounterCovearage != null) {
-				ch.elexis.core.services.ICodeElementService codeElementService =
-					CodeElementServiceHolder.get();
-				HashMap<Object, Object> context = getCodeElementServiceContext(encounter);
-				List<IBilled> encounterBilled = encounter.getBilled();
-				for (IBilled billed : encounterBilled) {
-					IBillable billable = billed.getBillable();
-					// TODO update after getFactor and getPoints methods are established
-					// tarmed needs to be recharged
-					//					if (isTarmed(billed)) {
-					//						// make sure verrechenbar is matching for the kons
-					//						Optional<ICodeElement> matchingVerrechenbar =
-					//							codeElementService.createFromString(billable.getCodeSystemName(),
-					//								billable.getCode(), context);
-					//						if (matchingVerrechenbar.isPresent()) {
-					//							int amount = billed.getZahl();
-					//							removeLeistung(billed);
-					//							for (int i = 0; i < amount; i++) {
-					//								addLeistung((IVerrechenbar) matchingVerrechenbar.get());
-					//							}
-					//						} else {
-					//							MessageEvent.fireInformation("Info",
-					//								"Achtung: durch den Fall wechsel wurde die Position "
-					//									+ billable.getCode()
-					//									+ " automatisch entfernt, da diese im neuen Fall nicht vorhanden ist.");
-					//							removeLeistung(billed);
-					//						}
-					//					} else {
-					//						TimeTool date = new TimeTool(billed.getKons().getDatum());
-					//						double factor = billable.getFactor(date, f);
-					//						billed.set(Verrechnet.SCALE_SELLING, Double.toString(factor));
-					//					}
-				}
-			}
-			CoreModelServiceHolder.get().save(encounter);
-			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, encounter);
-		} else if (!editableResult.isOK()) {
+		if (!editableResult.isOK() && !ignoreEditable) {
 			return editableResult;
 		}
-		return new Result<IEncounter>(encounter);
+		
+		Result<IEncounter> result = new Result<IEncounter>();
+		
+		ICoverage encounterCovearage = encounter.getCoverage();
+		encounter.setCoverage(coverage);
+		if (encounterCovearage != null) {
+			ch.elexis.core.services.ICodeElementService codeElementService =
+				CodeElementServiceHolder.get();
+			HashMap<Object, Object> context = getCodeElementServiceContext(encounter);
+			List<IBilled> encounterBilled = encounter.getBilled();
+			for (IBilled billed : encounterBilled) {
+				IBillable billable = billed.getBillable();
+				
+				// TODO there should be a central codeSystemName registry
+				if ("Tarmed".equals(billable.getCodeSystemName())) {
+					Optional<ICodeElement> matchingIBillable = codeElementService
+						.loadFromString(billable.getCodeSystemName(), billable.getCode(), context);
+					if (matchingIBillable.isPresent()) {
+						double amount = billed.getAmount();
+						billingService.removeBilled(billed, encounter);
+						for (int i = 0; i < amount; i++) {
+							billingService.bill((IBillable) matchingIBillable.get(), encounter, 1);
+						}
+					} else {
+						encounter.removeBilled(billed);
+						String message = "Achtung: durch den Fall wechsel wurde die Position "
+							+ billable.getCode()
+							+ " automatisch entfernt, da diese im neuen Fall nicht vorhanden ist.";
+						result.addMessage(SEVERITY.WARNING, message);
+					}
+					
+				} else {
+					Optional<IBillingSystemFactor> systemFactor = billingService
+						.getBillingSystemFactor(billable.getCodeSystemName(), encounter.getDate());
+					if (systemFactor.isPresent()) {
+						billed.setFactor(systemFactor.get().getFactor());
+					} else {
+						billed.setFactor(1.0);
+					}
+					CoreModelServiceHolder.get().save(billed);
+				}
+			}
+		}
+		CoreModelServiceHolder.get().save(encounter);
+		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, encounter);
+		return result;
 	}
 	
 	private HashMap<Object, Object> getCodeElementServiceContext(IEncounter encounter){
@@ -132,8 +144,7 @@ public class EncounterService implements IEncounterService {
 		boolean checkMandant =
 			!accessControlService.request(AccessControlDefaults.LSTG_CHARGE_FOR_ALL);
 		boolean mandatorOK = true;
-		IMandator activeMandator =
-			ContextServiceHolder.get().getActiveMandator().orElse(null);
+		IMandator activeMandator = ContextServiceHolder.get().getActiveMandator().orElse(null);
 		boolean mandatorLoggedIn = (activeMandator != null);
 		
 		// if m is null, ignore checks (return true)
@@ -150,7 +161,7 @@ public class EncounterService implements IEncounterService {
 			return false;
 		}
 	}
-
+	
 	@Override
 	public Optional<IEncounter> getLatestEncounter(IPatient patient, boolean create){
 		if (!ContextServiceHolder.get().getActiveMandator().isPresent()) {
@@ -196,8 +207,7 @@ public class EncounterService implements IEncounterService {
 		ICoverage coverage = new ICoverageBuilder(CoreModelServiceHolder.get(), patient,
 			CoverageServiceHolder.get().getDefaultCoverageLabel(),
 			CoverageServiceHolder.get().getDefaultCoverageReason(),
-			CoverageServiceHolder.get().getDefaultCoverageLaw())
-				.buildAndSave();
+			CoverageServiceHolder.get().getDefaultCoverageLaw()).buildAndSave();
 		Optional<IMandator> activeMandator = ContextServiceHolder.get().getActiveMandator();
 		if (activeMandator.isPresent()) {
 			return Optional.of(
@@ -224,10 +234,11 @@ public class EncounterService implements IEncounterService {
 	public Optional<IEncounter> getLatestEncounter(IPatient patient){
 		INativeQuery nativeQuery =
 			CoreModelServiceHolder.get().getNativeQuery(ENCOUNTER_LAST_QUERY);
-		Iterator<?> result = nativeQuery.executeWithParameters(
-			nativeQuery.getIndexedParameterMap(Integer.valueOf(1),
-				patient.getId()))
-			.iterator();
+		Iterator<?> result =
+			nativeQuery
+				.executeWithParameters(
+					nativeQuery.getIndexedParameterMap(Integer.valueOf(1), patient.getId()))
+				.iterator();
 		if (result.hasNext()) {
 			String next = result.next().toString();
 			return CoreModelServiceHolder.get().load(next, IEncounter.class);
@@ -237,8 +248,7 @@ public class EncounterService implements IEncounterService {
 	
 	private String getVersionRemark(){
 		String remark = "edit";
-		java.util.Optional<IUser> activeUser =
-			ContextServiceHolder.get().getActiveUser();
+		java.util.Optional<IUser> activeUser = ContextServiceHolder.get().getActiveUser();
 		if (activeUser.isPresent()) {
 			remark = activeUser.get().getLabel();
 		}
@@ -258,7 +268,7 @@ public class EncounterService implements IEncounterService {
 		}
 		return ret;
 	}
-
+	
 	@Override
 	public List<IEncounter> getAllEncountersForPatient(IPatient patient){
 		IQuery<ICoverage> query = CoreModelServiceHolder.get().getQuery(ICoverage.class);

@@ -55,6 +55,7 @@ import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.IBillingService;
 import ch.elexis.core.text.model.Samdas;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
@@ -855,6 +856,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 * @param ls
 	 *            die Verrechenbar
 	 * @return Ein Optifier- Resultat
+	 * @since 3.8 deprecated
+	 * @deprecated use {@link IBillingService#removeBilled(ch.elexis.core.model.IBilled, ch.elexis.core.model.IEncounter)}
 	 */
 	
 	public Result<Verrechnet> removeLeistung(Verrechnet ls){
@@ -889,6 +892,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 * Eine verrechenbare Leistung zu dieser Konsultation zufügen
 	 * 
 	 * @return ein Verifier-Resultat.
+	 * @since 3.8 deprecated
+	 * @deprecated use {@link IBillingService#bill(ch.elexis.core.model.IBillable, ch.elexis.core.model.IEncounter, double)}
 	 */
 	public Result<IVerrechenbar> addLeistung(IVerrechenbar l){
 		if (isEditable(true)) {
