@@ -26,9 +26,11 @@ With OOMP 1.3.0 the https-URL did not work and you must add the Elexis.setup via
 # Pressing **Next>** again you can verify the tasks being executed !images/oomphTasks.png! and start the installation with **Finish**. This will take a while.
 # After the basic product installation was done, the newly installed Eclipse IDE is started and the setup tasks are executed (source checkout, IDE configuration etc.).
 # If you some of your variables were wrong (e.g. wrong path for a Java JDK). The setup will not complete and you must correct the choices, via "Help..Performe Setup Tasks". There press **Back>** to be able to review the variables.
-# Open ch.elexis.target/juno-target.target, wait for "Resolving Target Definition" to finish, then pressing **Set as Target Platform**
+# Right click on  ch.elexis.target/elexis.tpd and select "Set as Target Platform", wait for "Resolving Target Definition" to finish,
 # Rebuild everything via the menu Project..Clean
-# Open the menu "Run..Debug Configuration" and select in the left selection pane the "Eclipse application/ElexisCore_RunFromScratch" item. !images/debug_configuration.png! 
+# Double-click on ch.elexis.core.p2site/Elexis.product. Click (somewhere near the top right) on the button "Launch an Eclipse application in Debug mode"
+# If a window "Errors in Workspace" pops up, ignore or correct the errors.
+# If you want to restart debugging, then open the menu "Run..Debug Configuration" and select in the left selection pane the "Eclipse application/Elexis.product" item. Adapt the arguments etc to suit your needs "Startoptionen":https://wiki.elexis.info/Startoptionen contains hints for commonly used option !images/debug_configuration.png!
 # Press Debug to launch a very minimal Elexis.
 
 h2. Troubleshooting
