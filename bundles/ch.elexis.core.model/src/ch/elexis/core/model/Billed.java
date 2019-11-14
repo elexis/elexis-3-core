@@ -25,6 +25,11 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 	}
 	
 	@Override
+	public String getLabel(){
+		return getText();
+	}
+	
+	@Override
 	public IBillable getBillable(){
 		Optional<String> storeToString = getBillableStoreToString();
 		if (storeToString.isPresent()) {

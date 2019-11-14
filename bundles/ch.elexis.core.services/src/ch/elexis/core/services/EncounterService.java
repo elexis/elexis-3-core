@@ -84,6 +84,16 @@ public class EncounterService implements IEncounterService {
 				CodeElementServiceHolder.get();
 			HashMap<Object, Object> context = getCodeElementServiceContext(encounter);
 			List<IBilled> encounterBilled = encounter.getBilled();
+			
+			// test if all required IBillable types are resolvable
+			for (IBilled billed : encounterBilled) {
+				IBillable billable = billed.getBillable();
+				if (billable == null) {
+					String message = "Could not resolve billable for billed [" + billed + "]";
+					return new Result<IEncounter>(SEVERITY.ERROR, 0, message, encounter, false);
+				}
+			}
+			
 			for (IBilled billed : encounterBilled) {
 				IBillable billable = billed.getBillable();
 				
