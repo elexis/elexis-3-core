@@ -91,7 +91,7 @@ public class CreatePrescriptionHelper {
 			new IPrescriptionBuilder(CoreModelServiceHolder.get(), ContextServiceHolder.get(),
 				article, ContextServiceHolder.get().getActivePatient().get(),
 				signature.getSignatureAsDosisString()).build();
-		prescription.setDisposalComment(signature.getComment());
+		prescription.setRemark(signature.getComment());
 		prescription.setEntryType(signature.getMedicationType());
 		// a new symptomatic medication can have a stop date
 		if (EntryType.SYMPTOMATIC_MEDICATION.equals(signature.getMedicationType())
