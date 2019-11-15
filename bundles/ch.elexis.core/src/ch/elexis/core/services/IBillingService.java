@@ -8,6 +8,7 @@ import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IBillingSystemFactor;
 import ch.elexis.core.model.IEncounter;
 import ch.rgw.tools.Result;
+import ch.rgw.tools.Result.SEVERITY;
 
 public interface IBillingService {
 	
@@ -45,7 +46,8 @@ public interface IBillingService {
 	 * @param billable
 	 * @param encounter
 	 * @param amount
-	 * @return a Result, that may contain a message even if its ok
+	 * @return a {@link Result} that returns a {@link SEVERITY#WARNING} if only a partial amount
+	 *         could be billed
 	 */
 	public Result<IBilled> bill(IBillable billable, IEncounter encounter, double amount);
 	

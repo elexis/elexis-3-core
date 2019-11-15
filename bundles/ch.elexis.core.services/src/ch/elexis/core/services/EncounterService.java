@@ -112,7 +112,7 @@ public class EncounterService implements IEncounterService {
 						String message = "Achtung: durch den Fall wechsel wurde die Position "
 							+ billable.getCode()
 							+ " automatisch entfernt, da diese im neuen Fall nicht vorhanden ist.";
-						result.addMessage(SEVERITY.WARNING, message);
+						result.addMessage(SEVERITY.WARNING, message, encounter);
 					}
 					
 				} else {

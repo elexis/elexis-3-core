@@ -11,6 +11,7 @@
 package ch.elexis.core.model;
 
 import ch.rgw.tools.Result;
+import ch.rgw.tools.Result.SEVERITY;
 
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>IBillable
@@ -22,8 +23,11 @@ import ch.rgw.tools.Result;
  * @generated
  */
 public interface IBillableOptifier<T extends IBillable> {
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> 
+	 * The returned result is of {@link SEVERITY#WARNING if only a partial amount could be billed.}
+	 * <!-- end-user-doc -->
 	 * @model type="ch.elexis.core.types.Result&lt;ch.elexis.core.model.IBilled&gt;"
 	 * @generated
 	 */
