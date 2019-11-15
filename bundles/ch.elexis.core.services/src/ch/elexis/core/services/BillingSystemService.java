@@ -73,8 +73,15 @@ public class BillingSystemService implements IBillingSystemService {
 	public Optional<IBillingSystem> getBillingSystem(String name){
 		String billingSystemName = getConfigurationValue(name, "name", null);
 		if (billingSystemName != null) {
-			BillingLaw law =
-				BillingLaw.valueOf(getConfigurationValue(name, CFG_KEY_BILLINGLAW, null));
+			String configuredLaw = getConfigurationValue(name, CFG_KEY_BILLINGLAW, null);
+			// compatibility with changed BillingLaw enum (ticket #15019)
+			if ("MVG".equals(configuredLaw)) {
+				configuredLaw = "MV";
+			}
+			if ("IVG".equals(configuredLaw)) {
+				configuredLaw = "IV";
+			}
+			BillingLaw law = BillingLaw.valueOf(configuredLaw);
 			BillingSystem billingSystem = new BillingSystem(name, law);
 			// TODO more attributes
 			return Optional.of(billingSystem);
