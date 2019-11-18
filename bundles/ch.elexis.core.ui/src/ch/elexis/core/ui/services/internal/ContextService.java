@@ -104,6 +104,7 @@ public class ContextService implements IContextService, EventHandler {
 	@Activate
 	public void activate(){
 		root = new Context();
+		contexts = new ConcurrentHashMap<>();
 		eventDispatcherListener = new SelectionEventDispatcherListener();
 		reloadEventDispatcherListener = new ReloadEventDispatcherListener();
 		lockingEventDispatcherListener = new LockingEventDispatcherListener();
