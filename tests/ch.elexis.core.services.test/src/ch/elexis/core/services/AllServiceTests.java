@@ -16,10 +16,11 @@ import ch.elexis.core.utils.OsgiServiceUtil;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-	AccessControlServiceTest.class, IConfigServiceTest.class, IElexisEnvironmentServiceTest.class,
-	ILabServiceTest.class, IStoreToStringServiceTest.class, IStickerServiceTest.class,
-	IAppointmentServiceTest.class, IUserServiceTest.class, IMessageServiceTest.class,
-	IVirtualFilesystemServiceTest.class, IXidServiceTest.class, IMedicationServiceTest.class
+	AccessControlServiceTest.class, IAppointmentServiceTest.class, IConfigServiceTest.class,
+	IElexisEnvironmentServiceTest.class, ILabServiceTest.class, IStoreToStringServiceTest.class,
+	IStickerServiceTest.class, IAppointmentServiceTest.class, IUserServiceTest.class,
+	IMessageServiceTest.class, IVirtualFilesystemServiceTest.class, IXidServiceTest.class,
+	IMedicationServiceTest.class
 })
 public class AllServiceTests {
 	

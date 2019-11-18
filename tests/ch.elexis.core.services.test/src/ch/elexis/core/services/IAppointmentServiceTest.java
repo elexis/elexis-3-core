@@ -13,9 +13,12 @@ import java.util.stream.Collectors;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ch.elexis.core.model.IAppointment;
+import ch.elexis.core.model.agenda.Area;
+import ch.elexis.core.model.agenda.AreaType;
 import ch.elexis.core.model.builder.IAppointmentBuilder;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.types.AppointmentState;
@@ -26,6 +29,13 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 	
 	private IAppointmentService appointmentService = OsgiServiceUtil.getService(IAppointmentService.class).get();
 	private IAppointment savedAppointment;
+	
+	@BeforeClass
+	public static void beforeClass() {
+		IConfigService iConfigService = OsgiServiceUtil.getService(IConfigService.class).get();
+		iConfigService.set("agenda/bereiche", "Notfall,MPA,OP,Arzt 1,Arzt 2");
+		iConfigService.set("agenda/bereich/Arzt 1/type", "CONTACT/be5370812884c8fc5019123");
+	}
 	
 	@Before
 	public void before(){	
@@ -93,6 +103,20 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 		assertEquals(0,  coreModelService.getQuery(IAppointment.class).execute().size());
 		
 		//@todo delete with linkgroup
+	}
+	
+	@Test
+	public void getAreas() {
+		List<Area> areas = appointmentService.getAreas();
+		assertEquals(5, areas.size());
+		for (Area area : areas) {
+			if("Arzt 1".equals(area.getName())) {
+				assertEquals(AreaType.CONTACT, area.getType());
+				assertEquals("be5370812884c8fc5019123", area.getContactId());
+			} else {
+				assertEquals(AreaType.GENERIC, area.getType());
+			}
+		}
 	}
 	
 	@After

@@ -2,6 +2,7 @@ package ch.elexis.core.services;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
@@ -15,6 +16,8 @@ import org.osgi.service.component.annotations.Reference;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.Messages;
 import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.model.agenda.Area;
+import ch.elexis.core.model.agenda.AreaType;
 import ch.elexis.core.model.builder.IAppointmentBuilder;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
@@ -29,7 +32,10 @@ public class AppointmentService implements IAppointmentService {
 	
 	public static final String AG_TERMINTYPEN = "agenda/TerminTypen"; //$NON-NLS-1$
 	public static final String AG_TERMINSTATUS = "agenda/TerminStatus"; //$NON-NLS-1$
-
+	public static final String AG_BEREICHE = "agenda/bereiche"; //$NON-NLS-1$
+	public static final String AG_BEREICH_PREFIX = "agenda/bereich/"; //$NON-NLS-1$
+	public static final String AG_BEREICH_TYPE_POSTFIX = "/type"; //$NON-NLS-1$
+	
 	private static final int TYPE_FREE = 0; //frei
 	private static final int TYPE_RESERVED = 1; //reserviert
 	private static final int TYPE_DEFAULT = 2; //standard
@@ -49,18 +55,15 @@ public class AppointmentService implements IAppointmentService {
 	@Override
 	public IAppointment clone(IAppointment appointment){
 		/**
-		 * DEPRECATED JPA		
-//		Termin ret =
-//				new Termin(get(FLD_BEREICH), get(FLD_TAG), getStartMinute(), getStartMinute()
-//					+ getDauer(), getType(), getStatus(), get(FLD_PRIORITY));
-//			Kontakt k = getKontakt();
-//			if (k != null) {
-//				ret.setKontakt(getKontakt());
-//			}
-//			return ret;
- * **/
-		return new IAppointmentBuilder(iModelService, appointment.getSchedule(), appointment.getStartTime(),  appointment.getEndTime(),
-			appointment.getType(), appointment.getState(), appointment.getPriority(), appointment.getSubjectOrPatient()).buildAndSave();
+		 * DEPRECATED JPA // Termin ret = // new Termin(get(FLD_BEREICH), get(FLD_TAG),
+		 * getStartMinute(), getStartMinute() // + getDauer(), getType(), getStatus(),
+		 * get(FLD_PRIORITY)); // Kontakt k = getKontakt(); // if (k != null) { //
+		 * ret.setKontakt(getKontakt()); // } // return ret;
+		 **/
+		return new IAppointmentBuilder(iModelService, appointment.getSchedule(),
+			appointment.getStartTime(), appointment.getEndTime(), appointment.getType(),
+			appointment.getState(), appointment.getPriority(), appointment.getSubjectOrPatient())
+				.buildAndSave();
 	}
 	
 	@Activate
@@ -77,7 +80,7 @@ public class AppointmentService implements IAppointmentService {
 		}
 	}
 	
-	private  List<IAppointment> getLinkedAppoinments(IAppointment orig){
+	private List<IAppointment> getLinkedAppoinments(IAppointment orig){
 		if (StringTool.isNothing(orig.getLinkgroup())) {
 			return Collections.singletonList(orig);
 		}
@@ -100,8 +103,7 @@ public class AppointmentService implements IAppointmentService {
 				iModelService.delete(linked.get(0));
 			} else {
 				if (appointment.getId().equals(appointment.getLinkgroup())) {
-					if (linked.size() > 1)
-					{
+					if (linked.size() > 1) {
 						int index = 0;
 						IAppointment moveto = linked.get(index);
 						while (moveto.getId().equals(appointment.getLinkgroup())) {
@@ -111,7 +113,7 @@ public class AppointmentService implements IAppointmentService {
 						moveto.setReason(appointment.getReason());
 						//TODO created by not working
 						//moveto.set(Termin.FLD_CREATOR, get(Termin.FLD_CREATOR));
-						moveto.setCreatedBy(appointment.getCreatedBy()); 
+						moveto.setCreatedBy(appointment.getCreatedBy());
 						moveto.setExtension(appointment.getExtension());
 						iModelService.save(moveto);
 						
@@ -129,69 +131,29 @@ public class AppointmentService implements IAppointmentService {
 		}
 		return true;
 		/**
-		 * DEPRECATED JPA		
-//		boolean confirmed = !askForConfirmation;
-//		if (checkLock()) {
-//			return false;
-//		}
-//		String linkgroup = get(FLD_LINKGROUP); //$NON-NLS-1$
-//		boolean isLinked = linkgroup != null && !linkgroup.isEmpty();
-//		
-//		if (isLinked && askForConfirmation) {
-//			MessageDialog msd =
-//				new MessageDialog(UiDesk.getTopShell(), Messages.Termin_deleteSeries, null,
-//					Messages.Termin_thisAppIsPartOfSerie, MessageDialog.QUESTION, new String[] {
-//						Messages.Termin_yes, Messages.Termin_no
-//					}, 1);
-//			int retval = msd.open();
-//			if (retval == SWT.DEFAULT)
-//			{
-//				return false;
-//			}
-//			confirmed = (retval == Dialog.OK);
-//		}
-//		if (isLinked) {
-//			List<Termin> linked = getLinked(this);
-//			if (confirmed) {
-//				// delete whole series
-//				for (Termin ae : (List<Termin>) linked) {
-//					ae.set(new String[] {
-//						FLD_LASTEDIT, FLD_DELETED
-//					}, new String[] {
-//						createTimeStamp(), StringConstants.ONE
-//					});
-//				}
-//			} else {
-//				if (getId().equals(linkgroup)) {
-//					// move root information
-//					if (linked.size() > 1) {
-//						int index = 0;
-//						Termin moveto = linked.get(index);
-//						while (moveto.getId().equals(linkgroup)) {
-//							moveto = linked.get(++index);
-//						}
-//						moveto.set(Termin.FLD_PATIENT, get(Termin.FLD_PATIENT));
-//						moveto.set(Termin.FLD_GRUND, get(Termin.FLD_GRUND));
-//						moveto.set(Termin.FLD_CREATOR, get(Termin.FLD_CREATOR));
-//						moveto.set(Termin.FLD_EXTENSION, get(Termin.FLD_EXTENSION));
-//						for (Termin termin : linked) {
-//							termin.set(Termin.FLD_LINKGROUP, moveto.getId());
-//						}
-//					}
-//				}
-//				// delete this
-//				set(new String[] {
-//					FLD_DELETED, FLD_LASTEDIT
-//				}, StringConstants.ONE, createTimeStamp());
-//			}
-//		} else {
-//			// delete this
-//			set(new String[] {
-//				FLD_DELETED, FLD_LASTEDIT
-//			}, StringConstants.ONE, createTimeStamp());
-//		}
-//		return true;
-**/
+		 * DEPRECATED JPA // boolean confirmed = !askForConfirmation; // if (checkLock()) { //
+		 * return false; // } // String linkgroup = get(FLD_LINKGROUP); //$NON-NLS-1$ // boolean
+		 * isLinked = linkgroup != null && !linkgroup.isEmpty(); // // if (isLinked &&
+		 * askForConfirmation) { // MessageDialog msd = // new MessageDialog(UiDesk.getTopShell(),
+		 * Messages.Termin_deleteSeries, null, // Messages.Termin_thisAppIsPartOfSerie,
+		 * MessageDialog.QUESTION, new String[] { // Messages.Termin_yes, Messages.Termin_no // },
+		 * 1); // int retval = msd.open(); // if (retval == SWT.DEFAULT) // { // return false; // }
+		 * // confirmed = (retval == Dialog.OK); // } // if (isLinked) { // List<Termin> linked =
+		 * getLinked(this); // if (confirmed) { // // delete whole series // for (Termin ae :
+		 * (List<Termin>) linked) { // ae.set(new String[] { // FLD_LASTEDIT, FLD_DELETED // }, new
+		 * String[] { // createTimeStamp(), StringConstants.ONE // }); // } // } else { // if
+		 * (getId().equals(linkgroup)) { // // move root information // if (linked.size() > 1) { //
+		 * int index = 0; // Termin moveto = linked.get(index); // while
+		 * (moveto.getId().equals(linkgroup)) { // moveto = linked.get(++index); // } //
+		 * moveto.set(Termin.FLD_PATIENT, get(Termin.FLD_PATIENT)); // moveto.set(Termin.FLD_GRUND,
+		 * get(Termin.FLD_GRUND)); // moveto.set(Termin.FLD_CREATOR, get(Termin.FLD_CREATOR)); //
+		 * moveto.set(Termin.FLD_EXTENSION, get(Termin.FLD_EXTENSION)); // for (Termin termin :
+		 * linked) { // termin.set(Termin.FLD_LINKGROUP, moveto.getId()); // } // } // } // //
+		 * delete this // set(new String[] { // FLD_DELETED, FLD_LASTEDIT // }, StringConstants.ONE,
+		 * createTimeStamp()); // } // } else { // // delete this // set(new String[] { //
+		 * FLD_DELETED, FLD_LASTEDIT // }, StringConstants.ONE, createTimeStamp()); // } // return
+		 * true;
+		 **/
 	}
 	
 	@Override
@@ -201,7 +163,7 @@ public class AppointmentService implements IAppointmentService {
 		query.and("tag", COMPARATOR.EQUALS, date);
 		
 		List<IAppointment> resList = query.execute();
-
+		
 		String typReserved = getType(AppointmentType.BOOKED);
 		String stateEmpty = getState(AppointmentState.EMPTY);
 		String stateDefault = getState(AppointmentState.DEFAULT);
@@ -233,7 +195,7 @@ public class AppointmentService implements IAppointmentService {
 			LocalDateTime startTime =
 				date.atStartOfDay().plusMinutes(TimeTool.getMinutesFromTimeString(from));
 			LocalDateTime endTime =
-					date.atStartOfDay().plusMinutes(TimeTool.getMinutesFromTimeString(until));
+				date.atStartOfDay().plusMinutes(TimeTool.getMinutesFromTimeString(until));
 			iAppointment.setStartTime(startTime);
 			iAppointment.setType(typReserved);
 			iAppointment.setState(stateEmpty);
@@ -293,5 +255,23 @@ public class AppointmentService implements IAppointmentService {
 		String tt = StringTool.join(states, ",") + "," + state;
 		iConfigService.set(AG_TERMINSTATUS, tt);
 		states = iConfigService.getAsList(AG_TERMINSTATUS, null);
+	}
+	
+	@Override
+	public List<Area> getAreas(){
+		List<Area> ret = new ArrayList<>();
+		List<String> areas = iConfigService.getAsList(AG_BEREICHE, null);
+		areas.forEach(entry -> {
+			String typeString =
+				iConfigService.get(AG_BEREICH_PREFIX + entry + AG_BEREICH_TYPE_POSTFIX, null);
+			AreaType type = AreaType.GENERIC;
+			String contactId = null;
+			if (typeString != null) {
+				type = AreaType.CONTACT;
+				contactId = typeString.substring(AreaType.CONTACT.name().length() + 1);
+			}
+			ret.add(new Area(entry, type, contactId));
+		});
+		return ret;
 	}
 }

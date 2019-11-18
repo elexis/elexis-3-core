@@ -1,8 +1,10 @@
 package ch.elexis.core.services;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import ch.elexis.core.model.IAppointment;
+import ch.elexis.core.model.agenda.Area;
 import ch.elexis.core.types.AppointmentState;
 import ch.elexis.core.types.AppointmentType;
 
@@ -28,7 +30,7 @@ public interface IAppointmentService {
 	public boolean delete(IAppointment appointment, boolean whole);
 	
 	/**
-	 * Updates the boundaries and check whether the only entries are appointments if yes also check 
+	 * Updates the boundaries and check whether the only entries are appointments if yes also check
 	 * whether some boundaries are missing
 	 * 
 	 * @param schedule
@@ -65,4 +67,11 @@ public interface IAppointmentService {
 	 * @param periodType
 	 */
 	public void addState(String state);
+	
+	/**
+	 * Get all defined areas.
+	 * 
+	 * @return
+	 */
+	public List<Area> getAreas();
 }
