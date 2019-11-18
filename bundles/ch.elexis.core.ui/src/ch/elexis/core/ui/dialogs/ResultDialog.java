@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
+import ch.elexis.core.l10n.Messages;
 
 public class ResultDialog {
 	
@@ -35,15 +36,15 @@ public class ResultDialog {
 	}
 	
 	private static void showError(Result<?> result){
-		MessageDialog.openError(getShell(), "Fehler", getResultMessage(result));
+		MessageDialog.openError(getShell(), Messages.ResultDialog_Error, getResultMessage(result));
 	}
 	
 	private static void showWarninig(Result<?> result){
-		MessageDialog.openWarning(getShell(), "Warnung", getResultMessage(result));
+		MessageDialog.openWarning(getShell(), Messages.ResultDialog_Warning, getResultMessage(result));
 	}
 	
 	private static void showInfo(Result<?> result){
-		MessageDialog.openInformation(getShell(), "Info", getResultMessage(result));
+		MessageDialog.openInformation(getShell(), Messages.ResultDialog_Info, getResultMessage(result));
 	}
 	
 	private static String getResultMessage(Result<?> result){

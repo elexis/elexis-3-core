@@ -5,6 +5,9 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 
 	public static final String BUNDLE_NAME = "ch.elexis.core.l10n.messages";
+	public static String ResultDialog_Error;
+	public static String ResultDialog_Warning;
+	public static String ResultDialog_Info;
 	public static String AddressType_SECONDARY_RESIDENCE;
 	public static String AddressType_HOLIDAY_HOME;
 	public static String AddressType_PRINCIPAL_RESIDENCE;
