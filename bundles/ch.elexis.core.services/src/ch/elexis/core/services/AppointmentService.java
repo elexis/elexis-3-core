@@ -43,7 +43,6 @@ public class AppointmentService implements IAppointmentService {
 	private static final int STATE_EMPTY = 0; //leer
 	private static final int STATE_DEFAULT = 1; //standard
 	
-	private List<String> types = null;
 	private List<String> states = null;
 	
 	@Reference
@@ -69,7 +68,7 @@ public class AppointmentService implements IAppointmentService {
 	@Activate
 	public void activate(){
 		//@TODO server support ?
-		types = iConfigService.getAsList(AG_TERMINTYPEN, null);
+		List<String> types = getTypes();
 		states = iConfigService.getAsList(AG_TERMINSTATUS, null);
 		if (types == null || types.size() < 3) {
 			types = Arrays.asList(Messages.Appointment_Range_Free,
@@ -210,6 +209,7 @@ public class AppointmentService implements IAppointmentService {
 	
 	@Override
 	public String getType(AppointmentType type){
+		List<String> types = getTypes();
 		if (type != null) {
 			switch (type) {
 			case BOOKED:
@@ -244,9 +244,8 @@ public class AppointmentService implements IAppointmentService {
 	
 	@Override
 	public void addType(String type){
-		String tt = StringTool.join(types, ",") + "," + type;
+		String tt = StringTool.join(getTypes(), ",") + "," + type;
 		iConfigService.set(AG_TERMINTYPEN, tt);
-		types = iConfigService.getAsList(AG_TERMINTYPEN, null);
 	}
 	
 	@Override
@@ -273,5 +272,10 @@ public class AppointmentService implements IAppointmentService {
 			ret.add(new Area(entry, type, contactId));
 		});
 		return ret;
+	}
+	
+	@Override
+	public List<String> getTypes(){
+		return new ArrayList<String>(iConfigService.getAsList(AG_TERMINTYPEN, null));
 	}
 }

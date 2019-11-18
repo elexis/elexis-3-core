@@ -74,4 +74,11 @@ public interface IAppointmentService {
 	 * @return
 	 */
 	public List<Area> getAreas();
+	
+	/**
+	 * Get all configured type strings
+	 * 
+	 * @return
+	 */
+	public List<String> getTypes();
 }

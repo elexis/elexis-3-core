@@ -27,29 +27,36 @@ import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class IAppointmentServiceTest extends AbstractServiceTest {
 	
-	private IAppointmentService appointmentService = OsgiServiceUtil.getService(IAppointmentService.class).get();
+	private IAppointmentService appointmentService =
+		OsgiServiceUtil.getService(IAppointmentService.class).get();
 	private IAppointment savedAppointment;
 	
 	@BeforeClass
-	public static void beforeClass() {
+	public static void beforeClass(){
 		IConfigService iConfigService = OsgiServiceUtil.getService(IConfigService.class).get();
 		iConfigService.set("agenda/bereiche", "Notfall,MPA,OP,Arzt 1,Arzt 2");
 		iConfigService.set("agenda/bereich/Arzt 1/type", "CONTACT/be5370812884c8fc5019123");
+		iConfigService.set("agenda/TerminTypen",
+			"frei,gesperrt,Notfall,Selbstzahler,Neuer Pat,Kontrolle,Termin,Checkup,OP,24h-BD / ApneaLink,Medicosearch,Sperrung,Sitzung,Reminder,Sonografie");
 	}
 	
 	@Before
-	public void before(){	
-		savedAppointment = new IAppointmentBuilder(coreModelService, "Notfall", LocalDateTime.of(2018, 01, 02, 9, 0),  LocalDateTime.of(2018, 01, 02, 9, 30),
-			appointmentService.getType(AppointmentType.BOOKED), appointmentService.getState(AppointmentState.DEFAULT)).buildAndSave();
+	public void before(){
+		savedAppointment = new IAppointmentBuilder(coreModelService, "Notfall",
+			LocalDateTime.of(2018, 01, 02, 9, 0), LocalDateTime.of(2018, 01, 02, 9, 30),
+			appointmentService.getType(AppointmentType.BOOKED),
+			appointmentService.getState(AppointmentState.DEFAULT)).buildAndSave();
 	}
 	
 	@Test
-	public void testCommon() {
-		Optional<IAppointment> load = coreModelService.load(savedAppointment.getId(), IAppointment.class);
+	public void testCommon(){
+		Optional<IAppointment> load =
+			coreModelService.load(savedAppointment.getId(), IAppointment.class);
 		assertTrue(load.isPresent());
 		assertEquals(30, load.get().getDurationMinutes().intValue());
 		assertEquals(appointmentService.getType(AppointmentType.BOOKED), load.get().getType());
-		assertEquals(1,  coreModelService.getQuery(IAppointment.class).execute().size());
+		assertEquals(1, coreModelService.getQuery(IAppointment.class).execute().size());
+		assertEquals(15, appointmentService.getTypes().size());
 	}
 	
 	@Test
@@ -63,14 +70,16 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 		List<IAppointment> results = query.execute();
 		
 		// check boundaries sorted by start time
-		assertEquals(3,  results.size());
-		results = results.stream().sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime())).collect(Collectors.toList());
-		assertEquals(LocalDateTime.of(2018, 01, 02, 0, 0),  results.get(0).getStartTime());
-		assertEquals(LocalDateTime.of(2018, 01, 02, 8, 0),  results.get(0).getEndTime());
-		assertEquals(LocalDateTime.of(2018, 01, 02, 9, 0),  results.get(1).getStartTime());
-		assertEquals(LocalDateTime.of(2018, 01, 02, 9, 30),  results.get(1).getEndTime());
-		assertEquals(LocalDateTime.of(2018, 01, 02, 18, 0),  results.get(2).getStartTime());
-		assertEquals(LocalDateTime.of(2018, 01, 02, 23, 59),  results.get(2).getEndTime());
+		assertEquals(3, results.size());
+		results =
+			results.stream().sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
+				.collect(Collectors.toList());
+		assertEquals(LocalDateTime.of(2018, 01, 02, 0, 0), results.get(0).getStartTime());
+		assertEquals(LocalDateTime.of(2018, 01, 02, 8, 0), results.get(0).getEndTime());
+		assertEquals(LocalDateTime.of(2018, 01, 02, 9, 0), results.get(1).getStartTime());
+		assertEquals(LocalDateTime.of(2018, 01, 02, 9, 30), results.get(1).getEndTime());
+		assertEquals(LocalDateTime.of(2018, 01, 02, 18, 0), results.get(2).getStartTime());
+		assertEquals(LocalDateTime.of(2018, 01, 02, 23, 59), results.get(2).getEndTime());
 	}
 	
 	@Test
@@ -79,7 +88,7 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 		assertEquals(1, coreModelService.getQuery(IAppointment.class).execute().size());
 		appointmentService.updateBoundaries("Notfall", LocalDate.of(2018, 01, 02));
 		//@todo on server its always 3
-		assertEquals(1, coreModelService.getQuery(IAppointment.class).execute().size());	
+		assertEquals(1, coreModelService.getQuery(IAppointment.class).execute().size());
 	}
 	
 	@Test
@@ -98,19 +107,19 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 	@Test
 	public void testDelete(){
 		// delete single
-		assertEquals(1,  coreModelService.getQuery(IAppointment.class).execute().size());
+		assertEquals(1, coreModelService.getQuery(IAppointment.class).execute().size());
 		appointmentService.delete(savedAppointment, false);
-		assertEquals(0,  coreModelService.getQuery(IAppointment.class).execute().size());
+		assertEquals(0, coreModelService.getQuery(IAppointment.class).execute().size());
 		
 		//@todo delete with linkgroup
 	}
 	
 	@Test
-	public void getAreas() {
+	public void getAreas(){
 		List<Area> areas = appointmentService.getAreas();
 		assertEquals(5, areas.size());
 		for (Area area : areas) {
-			if("Arzt 1".equals(area.getName())) {
+			if ("Arzt 1".equals(area.getName())) {
 				assertEquals(AreaType.CONTACT, area.getType());
 				assertEquals("be5370812884c8fc5019123", area.getContactId());
 			} else {
