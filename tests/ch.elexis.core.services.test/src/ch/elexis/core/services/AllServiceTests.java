@@ -20,7 +20,7 @@ import ch.elexis.core.utils.OsgiServiceUtil;
 	IElexisEnvironmentServiceTest.class, ILabServiceTest.class, IStoreToStringServiceTest.class,
 	IStickerServiceTest.class, IAppointmentServiceTest.class, IUserServiceTest.class,
 	IMessageServiceTest.class, IVirtualFilesystemServiceTest.class, IXidServiceTest.class,
-	IMedicationServiceTest.class
+	IMedicationServiceTest.class, ITextReplacementServiceTest.class
 })
 public class AllServiceTests {
 	
