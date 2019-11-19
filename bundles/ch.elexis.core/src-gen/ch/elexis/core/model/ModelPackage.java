@@ -3019,13 +3019,31 @@ public interface ModelPackage extends EPackage {
 	int ISTICKER__IMAGE = TypesPackage.COMPARABLE_FEATURE_COUNT + 6;
 
 	/**
+	 * The feature id for the '<em><b>Attached To</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTICKER__ATTACHED_TO = TypesPackage.COMPARABLE_FEATURE_COUNT + 7;
+
+	/**
+	 * The feature id for the '<em><b>Attached To Data</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTICKER__ATTACHED_TO_DATA = TypesPackage.COMPARABLE_FEATURE_COUNT + 8;
+
+	/**
 	 * The number of structural features of the '<em>ISticker</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ISTICKER_FEATURE_COUNT = TypesPackage.COMPARABLE_FEATURE_COUNT + 7;
+	int ISTICKER_FEATURE_COUNT = TypesPackage.COMPARABLE_FEATURE_COUNT + 9;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ICodeElement <em>ICode Element</em>}' class.
@@ -7835,6 +7853,28 @@ public interface ModelPackage extends EPackage {
 	EReference getISticker_Image();
 
 	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.ISticker#getAttachedTo <em>Attached To</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Attached To</em>'.
+	 * @see ch.elexis.core.model.ISticker#getAttachedTo()
+	 * @see #getISticker()
+	 * @generated
+	 */
+	EReference getISticker_AttachedTo();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ISticker#getAttachedToData <em>Attached To Data</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Attached To Data</em>'.
+	 * @see ch.elexis.core.model.ISticker#getAttachedToData()
+	 * @see #getISticker()
+	 * @generated
+	 */
+	EAttribute getISticker_AttachedToData();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.ICodeElement <em>ICode Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -11620,6 +11660,22 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference ISTICKER__IMAGE = eINSTANCE.getISticker_Image();
+
+		/**
+		 * The meta object literal for the '<em><b>Attached To</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ISTICKER__ATTACHED_TO = eINSTANCE.getISticker_AttachedTo();
+
+		/**
+		 * The meta object literal for the '<em><b>Attached To Data</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ISTICKER__ATTACHED_TO_DATA = eINSTANCE.getISticker_AttachedToData();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.ICodeElement <em>ICode Element</em>}' class.

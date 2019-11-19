@@ -289,6 +289,9 @@
   <eClassifiers xsi:type="ecore:EClass" name="IDocumentLetter" abstract="true" interface="true"
       eSuperTypes="#//IDocument"/>
   <eClassifiers xsi:type="ecore:EClass" name="ISticker" abstract="true" interface="true">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A sticker is a piece of information that may be attached to an Identifiable. It can either exist for itself, or as an attachedTo (bound to an identifiable) instance."/>
+    </eAnnotations>
     <eOperations name="getLabel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="background" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="foreground" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -296,6 +299,18 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="importance" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="image" eType="#//IImage"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attachedTo" eType="#//Identifiable"
+        transient="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="If not null this is an attached instance of a sticker. "/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="attachedToData" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        transient="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="optionally attached data on an attached sticker instance"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eGenericSuperTypes eClassifier="ecore:EClass types.ecore#//Comparable">
       <eTypeArguments eClassifier="#//ISticker"/>
     </eGenericSuperTypes>

@@ -1,8 +1,8 @@
 package ch.elexis.core.services;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -18,7 +18,6 @@ import ch.elexis.core.jpa.entities.StickerObjectLink;
 import ch.elexis.core.jpa.entities.StickerObjectLinkId;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.Identifiable;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
 
 @Component
 public class StickerService implements IStickerService {
@@ -45,36 +44,56 @@ public class StickerService implements IStickerService {
 		return em.find(StickerObjectLink.class, new StickerObjectLinkId(id, etikette));
 	}
 	
-	/**
-	 * Get all {@link ISticker} linked to the provided object id. The returned list is sorted by
-	 * {@link ISticker#getImportance()}.
-	 * 
-	 * @param id
-	 * @return
-	 */
-	private List<ISticker> getStickersForId(String id){
-		List<StickerObjectLink> stickerObjectLinks = getStickerObjectLinksForId(id);
-		List<ISticker> loadedStickers = stickerObjectLinks
-			.stream().map(sol -> CoreModelServiceHolder.get()
-				.load(sol.getEtikette(), ISticker.class).orElse(null))
-			.filter(Objects::nonNull).collect(Collectors.toList());
-		loadedStickers.sort(new StickerSorter());
-		return loadedStickers;
-	}
-	
 	@Override
 	public boolean hasSticker(Identifiable identifiable, ISticker iSticker){
+		List<StickerObjectLink> entries = findAttachments(identifiable, iSticker);
+		return entries.isEmpty() ? false : true;
+	}
+	
+	private List<StickerObjectLink> findAttachments(Identifiable identifiable, ISticker iSticker){
 		EntityManager em = (EntityManager) entityManager.getEntityManager(true);
 		TypedQuery<StickerObjectLink> query =
 			em.createNamedQuery("StickerObjectLink.obj.etikette", StickerObjectLink.class);
 		query.setParameter("obj", identifiable.getId());
 		query.setParameter("etikette", iSticker.getId());
-		return query.getResultList().isEmpty() ? false : true;
+		return query.getResultList();
 	}
 	
 	@Override
 	public List<ISticker> getStickers(Identifiable identifiable){
-		return getStickersForId(identifiable.getId());
+		List<StickerObjectLink> stickerObjectLinks =
+			getStickerObjectLinksForId(identifiable.getId());
+		List<ISticker> loadedStickers = new ArrayList<>();
+		for (StickerObjectLink link : stickerObjectLinks) {
+			ISticker sticker = loadStickerForStickerObjectLink(link, identifiable);
+			if (sticker != null) {
+				loadedStickers.add(sticker);
+			}
+		}
+		loadedStickers.sort(new StickerSorter());
+		return loadedStickers;
+	}
+	
+	@Override
+	public ISticker getSticker(Identifiable identifiable, ISticker sticker){
+		List<StickerObjectLink> resultList = findAttachments(identifiable, sticker);
+		if (resultList.isEmpty()) {
+			return null;
+		}
+		StickerObjectLink stickerObjectLink = resultList.get(0);
+		return loadStickerForStickerObjectLink(stickerObjectLink, identifiable);
+	}
+	
+	private ISticker loadStickerForStickerObjectLink(StickerObjectLink stickerObjectLink,
+		Identifiable identifiable){
+		ISticker sticker =
+			iModelService.load(stickerObjectLink.getEtikette(), ISticker.class).orElse(null);
+		if (sticker != null) {
+			sticker.setAttachedTo(identifiable);
+			sticker.setAttachedToData(stickerObjectLink.getData());
+			return sticker;
+		}
+		return null;
 	}
 	
 	@Override
@@ -87,12 +106,13 @@ public class StickerService implements IStickerService {
 	}
 	
 	@Override
-	public void addSticker(ISticker sticker, Identifiable identifiable){
+	public void addSticker(ISticker sticker, Identifiable identifiable, String data){
 		EntityManager em = (EntityManager) entityManager.getEntityManager(false);
 		try {
 			StickerObjectLink link = new StickerObjectLink();
 			link.setEtikette(sticker.getId());
 			link.setObj(identifiable.getId());
+			link.setData(data);
 			
 			em.getTransaction().begin();
 			em.merge(link);
@@ -100,6 +120,12 @@ public class StickerService implements IStickerService {
 		} finally {
 			entityManager.closeEntityManager(em);
 		}
+		
+	}
+	
+	@Override
+	public void addSticker(ISticker sticker, Identifiable identifiable){
+		addSticker(sticker, identifiable, null);
 	}
 	
 	@Override

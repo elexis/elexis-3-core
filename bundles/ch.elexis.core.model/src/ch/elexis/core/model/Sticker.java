@@ -1,5 +1,7 @@
 package ch.elexis.core.model;
 
+import javax.persistence.Transient;
+
 import ch.elexis.core.jpa.entities.DbImage;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
@@ -7,6 +9,12 @@ import ch.elexis.core.model.util.internal.ModelUtil;
 
 public class Sticker extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Sticker>
 		implements IdentifiableWithXid, ISticker {
+	
+	@Transient
+	private Identifiable attachedToIdentifiable;
+	
+	@Transient
+	private String attachedToData;
 	
 	public Sticker(ch.elexis.core.jpa.entities.Sticker entity){
 		super(entity);
@@ -109,5 +117,26 @@ public class Sticker extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	@Override
 	public String getLabel(){
 		return getEntity().getName();
+	}
+	
+	
+	@Override
+	public Identifiable getAttachedTo(){
+		return attachedToIdentifiable;
+	}
+	
+	@Override
+	public void setAttachedTo(Identifiable identifiable){
+		this.attachedToIdentifiable = identifiable;
+	}
+	
+	@Override
+	public String getAttachedToData(){
+		return this.attachedToData;
+	}
+	
+	@Override
+	public void setAttachedToData(String attachedToData){
+		this.attachedToData = attachedToData;
 	}
 }

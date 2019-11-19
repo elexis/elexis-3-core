@@ -225,6 +225,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ISticker/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ISticker/importance"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ISticker/image"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ISticker/attachedTo"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ISticker/attachedToData"/>
       <genOperations ecoreOperation="model.ecore#//ISticker/getLabel"/>
     </genClasses>
     <genClasses ecoreClass="model.ecore#//ICodeElement">

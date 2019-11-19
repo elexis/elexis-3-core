@@ -2004,6 +2004,26 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EReference getISticker_AttachedTo() {
+		return (EReference)iStickerEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getISticker_AttachedToData() {
+		return (EAttribute)iStickerEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getICodeElement() {
 		return iCodeElementEClass;
 	}
@@ -4595,6 +4615,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iStickerEClass, ISTICKER__NAME);
 		createEAttribute(iStickerEClass, ISTICKER__IMPORTANCE);
 		createEReference(iStickerEClass, ISTICKER__IMAGE);
+		createEReference(iStickerEClass, ISTICKER__ATTACHED_TO);
+		createEAttribute(iStickerEClass, ISTICKER__ATTACHED_TO_DATA);
 
 		iCodeElementEClass = createEClass(ICODE_ELEMENT);
 		createEAttribute(iCodeElementEClass, ICODE_ELEMENT__CODE);
@@ -5268,6 +5290,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getISticker_Name(), ecorePackage.getEString(), "name", null, 0, 1, ISticker.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getISticker_Importance(), ecorePackage.getEInt(), "importance", null, 0, 1, ISticker.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getISticker_Image(), this.getIImage(), null, "image", null, 0, 1, ISticker.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getISticker_AttachedTo(), this.getIdentifiable(), null, "attachedTo", null, 0, 1, ISticker.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getISticker_AttachedToData(), ecorePackage.getEString(), "attachedToData", null, 0, 1, ISticker.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		addEOperation(iStickerEClass, ecorePackage.getEString(), "getLabel", 0, 1, IS_UNIQUE, IS_ORDERED);
 

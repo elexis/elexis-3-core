@@ -32,6 +32,9 @@ public class StickerObjectLink implements EntityWithId {
 	@Column(length = 25, nullable = false)
 	private String etikette;
 	
+	@Column(length = 256, nullable = true)
+	private String data;
+	
 	public String getObj(){
 		return obj;
 	}
@@ -46,6 +49,14 @@ public class StickerObjectLink implements EntityWithId {
 	
 	public void setEtikette(String stickerId){
 		this.etikette = stickerId;
+	}
+	
+	public String getData(){
+		return data;
+	}
+	
+	public void setData(String data){
+		this.data = data;
 	}
 
 	@Override

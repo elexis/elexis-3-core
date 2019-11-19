@@ -1876,4 +1876,18 @@ DROP TABLE TEMP_ETIKETTEN_OBJCLASS_LINK;
 			<where>param='dbversion'</where>
 		</update>
 	</changeSet>
+
+	<changeSet author="marco"
+		id="manual_table_ETIKETTEN_OBJECT_LINK_ADD_DATA">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="ETIKETTEN_OBJECT_LINK"
+					columnName="DATA" />
+			</not>
+		</preConditions>
+		<addColumn tableName="ETIKETTEN_OBJECT_LINK">
+			<column name="DATA" type="VARCHAR(256)" />
+		</addColumn>
+	</changeSet>
+	
 </databaseChangeLog>
