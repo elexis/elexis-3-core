@@ -65,6 +65,7 @@ import ch.elexis.data.Mandant;
 import ch.elexis.data.Query;
 import ch.rgw.tools.ExHandler;
 
+import ch.rgw.tools.StringTool;
 public class TextTemplateView extends ViewPart {
 	public static final String ID = "ch.elexis.views.textsystem.TextTemplateView"; //$NON-NLS-1$
 	
@@ -139,7 +140,7 @@ public class TextTemplateView extends ViewPart {
 		
 		// create TextTemplate model for the form template
 		TextTemplate formTemplate =
-			new TextTemplate(template.getBetreff(), "", template.getMimeType());
+			new TextTemplate(template.getBetreff(), StringTool.leer, template.getMimeType());
 		formTemplate.addFormTemplateReference(template);
 		return formTemplate;
 	}
@@ -235,7 +236,7 @@ public class TextTemplateView extends ViewPart {
 	private void createColumns(final Composite parent){
 		String[] titles =
 			{
-				"", "Name der Vorlage", "Typ", "Mandant", "Adressabfrage", "Drucker/Schacht",
+				StringTool.leer, "Name der Vorlage", "Typ", "Mandant", "Adressabfrage", "Drucker/Schacht",
 				"Beschreibung"
 			};
 		int[] bounds = {
@@ -364,7 +365,7 @@ public class TextTemplateView extends ViewPart {
 			public String getText(Object element){
 				if (element instanceof TextTemplate) {
 					TextTemplate template = (TextTemplate) element;
-					String label = "";
+					String label = StringTool.leer;
 					String printer = template.getPrinter();
 					String tray = template.getTray();
 					if (printer != null) {
@@ -484,7 +485,7 @@ public class TextTemplateView extends ViewPart {
 			
 			//all
 			if (index == -1) {
-				template.setMandant("");
+				template.setMandant(StringTool.leer);
 			} else {
 				// specific mandant only
 				Mandant mandant = mandants.get(index);

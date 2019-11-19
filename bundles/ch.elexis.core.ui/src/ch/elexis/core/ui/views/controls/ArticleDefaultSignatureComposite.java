@@ -41,6 +41,7 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.CreatePrescriptionHelper;
 import ch.rgw.tools.TimeTool;
 
+import ch.rgw.tools.StringTool;
 public class ArticleDefaultSignatureComposite extends Composite {
 	
 	private WritableValue<IArticleDefaultSignature> signatureItem =
@@ -122,7 +123,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		compositeDayTimeDosage.setLayout(layout);
 		txtSignatureMorning = new Text(compositeDayTimeDosage, SWT.BORDER);
 		txtSignatureMorning.setMessage(Messages.ArticleDefaultSignatureComposite_morning);
-		txtSignatureMorning.setToolTipText(""); //$NON-NLS-1$
+		txtSignatureMorning.setToolTipText(StringTool.leer); //$NON-NLS-1$
 		txtSignatureMorning.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label label = new Label(compositeDayTimeDosage, SWT.None);
@@ -168,7 +169,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 					stackLayoutDosage.topControl = compositeFreeTextDosage;
 				} else {
 					stackLayoutDosage.topControl = compositeDayTimeDosage;
-					txtFreeTextDosage.setText(""); //$NON-NLS-1$
+					txtFreeTextDosage.setText(StringTool.leer); //$NON-NLS-1$
 				}
 				stackCompositeDosage.layout();
 			};
@@ -225,7 +226,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		lblCalcEndDate.setText("(" + Messages.ArticleDefaultSignatureComposite_date_none + ")");
 		lblCalcEndDate.setData(null);
 		Text txtEnddate = new Text(compositeMedicationTypeDetail, SWT.BORDER | SWT.CENTER);
-		txtEnddate.setText("");
+		txtEnddate.setText(StringTool.leer);
 		gd = new GridData(SWT.FILL, SWT.CENTER, false, false);
 		gd.widthHint = 30;
 		txtEnddate.setLayoutData(gd);

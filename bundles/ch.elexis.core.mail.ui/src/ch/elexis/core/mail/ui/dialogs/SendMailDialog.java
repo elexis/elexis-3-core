@@ -37,18 +37,19 @@ import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
 
+import ch.rgw.tools.StringTool;
 public class SendMailDialog extends TitleAreaDialog {
 	
 	private ComboViewer accountsViewer;
 	private MailAccount account;
 	private Text toText;
-	private String toString = "";
+	private String toString = StringTool.leer;
 	private Text subjectText;
-	private String subjectString = "";
+	private String subjectString = StringTool.leer;
 	private Text textText;
-	private String textString = "";
+	private String textString = StringTool.leer;
 	private Label attachmentsLabel;
-	private String attachmentsString = "";
+	private String attachmentsString = StringTool.leer;
 	
 	public SendMailDialog(Shell parentShell){
 		super(parentShell);

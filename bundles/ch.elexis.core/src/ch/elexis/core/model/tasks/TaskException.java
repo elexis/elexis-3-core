@@ -2,6 +2,7 @@ package ch.elexis.core.model.tasks;
 
 import ch.rgw.tools.Result;
 
+import ch.rgw.tools.StringTool;
 public class TaskException extends Exception {
 	/**
 	 * The task service was rejecting the execution of this task
@@ -48,7 +49,7 @@ public class TaskException extends Exception {
 	}
 	
 	public TaskException(int exceptionCode, @SuppressWarnings("rawtypes") Result result) {
-		this(exceptionCode, (result != null) ? result.toString() : "");
+		this(exceptionCode, (result != null) ? result.toString() : StringTool.leer);
 	}
 	
 	public int getExceptionCode(){

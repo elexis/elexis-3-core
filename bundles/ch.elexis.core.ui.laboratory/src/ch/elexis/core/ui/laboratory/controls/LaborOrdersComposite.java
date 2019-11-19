@@ -41,6 +41,7 @@ import ch.elexis.data.LabOrder.State;
 import ch.elexis.data.Patient;
 import ch.rgw.tools.TimeTool;
 
+import ch.rgw.tools.StringTool;
 public class LaborOrdersComposite extends Composite {
 	
 	private final FormToolkit tk = UiDesk.getToolkit();
@@ -78,7 +79,7 @@ public class LaborOrdersComposite extends Composite {
 		toolComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		
 		toolbar = new ToolBarManager();
-		toolbar.add(new Action("", Action.AS_CHECK_BOX) {
+		toolbar.add(new Action(StringTool.leer, Action.AS_CHECK_BOX) {
 			
 			@Override
 			public String getText(){
@@ -137,7 +138,7 @@ public class LaborOrdersComposite extends Composite {
 				if (element instanceof LaborOrderViewerItem) {
 					return LabOrder.getStateLabel(((LaborOrderViewerItem) element).getState());
 				}
-				return ""; //$NON-NLS-1$
+				return StringTool.leer; //$NON-NLS-1$
 			}
 		});
 		
@@ -157,7 +158,7 @@ public class LaborOrdersComposite extends Composite {
 						return "???";
 					}
 				}
-				return ""; //$NON-NLS-1$
+				return StringTool.leer; //$NON-NLS-1$
 			}
 		});
 		
@@ -170,9 +171,9 @@ public class LaborOrdersComposite extends Composite {
 			@Override
 			public String getText(Object element){
 				if (element instanceof LaborOrderViewerItem) {
-					return ((LaborOrderViewerItem) element).getOrderId().orElse("");
+					return ((LaborOrderViewerItem) element).getOrderId().orElse(StringTool.leer);
 				}
-				return ""; //$NON-NLS-1$
+				return StringTool.leer; //$NON-NLS-1$
 			}
 		});
 		
@@ -185,9 +186,9 @@ public class LaborOrdersComposite extends Composite {
 			@Override
 			public String getText(Object element){
 				if (element instanceof LaborOrderViewerItem) {
-					return ((LaborOrderViewerItem) element).getOrderGroupName().orElse("");
+					return ((LaborOrderViewerItem) element).getOrderGroupName().orElse(StringTool.leer);
 				}
-				return ""; //$NON-NLS-1$
+				return StringTool.leer; //$NON-NLS-1$
 			}
 		});
 		
@@ -200,9 +201,9 @@ public class LaborOrdersComposite extends Composite {
 			@Override
 			public String getText(Object element){
 				if (element instanceof LaborOrderViewerItem) {
-					return ((LaborOrderViewerItem) element).getLabItemLabel().orElse("");
+					return ((LaborOrderViewerItem) element).getLabItemLabel().orElse(StringTool.leer);
 				}
-				return ""; //$NON-NLS-1$
+				return StringTool.leer; //$NON-NLS-1$
 			}
 		});
 		
@@ -215,7 +216,7 @@ public class LaborOrdersComposite extends Composite {
 				if (element instanceof LaborOrderViewerItem) {
 					return ((LaborOrderViewerItem) element).getLabResultString().orElse("?");
 				}
-				return ""; //$NON-NLS-1$
+				return StringTool.leer; //$NON-NLS-1$
 			}
 		});
 		
@@ -289,8 +290,8 @@ public class LaborOrdersComposite extends Composite {
 					
 					@Override
 					public int compare(LaborOrderViewerItem lo1, LaborOrderViewerItem lo2){
-						String prio1 = lo1.getLabItemPrio().orElse("");
-						String prio2 = lo2.getLabItemPrio().orElse("");
+						String prio1 = lo1.getLabItemPrio().orElse(StringTool.leer);
+						String prio2 = lo2.getLabItemPrio().orElse(StringTool.leer);
 						return prio1.compareTo(prio2);
 					}
 				});
@@ -367,8 +368,8 @@ public class LaborOrdersComposite extends Composite {
 						return labOrder2.getTime().compareTo(labOrder1.getTime());
 					}
 				case 2:
-					String orderId1 = labOrder1.getOrderId().orElse("");
-					String orderId2 = labOrder2.getOrderId().orElse("");
+					String orderId1 = labOrder1.getOrderId().orElse(StringTool.leer);
+					String orderId2 = labOrder2.getOrderId().orElse(StringTool.leer);
 					
 					if (composite.isRevert()) {
 						try {
@@ -387,19 +388,19 @@ public class LaborOrdersComposite extends Composite {
 					}
 				case 3:
 					if (composite.isRevert()) {
-						return labOrder1.getOrderGroupName().orElse("")
-							.compareTo(labOrder2.getOrderGroupName().orElse(""));
+						return labOrder1.getOrderGroupName().orElse(StringTool.leer)
+							.compareTo(labOrder2.getOrderGroupName().orElse(StringTool.leer));
 					} else {
-						return labOrder2.getOrderGroupName().orElse("")
-							.compareTo(labOrder1.getOrderGroupName().orElse(""));
+						return labOrder2.getOrderGroupName().orElse(StringTool.leer)
+							.compareTo(labOrder1.getOrderGroupName().orElse(StringTool.leer));
 					}
 				case 4:
 					if (composite.isRevert()) {
-						return labOrder1.getLabItemLabel().orElse("")
-							.compareTo(labOrder2.getLabItemLabel().orElse(""));
+						return labOrder1.getLabItemLabel().orElse(StringTool.leer)
+							.compareTo(labOrder2.getLabItemLabel().orElse(StringTool.leer));
 					} else {
-						return labOrder2.getLabItemLabel().orElse("")
-							.compareTo(labOrder1.getLabItemLabel().orElse(""));
+						return labOrder2.getLabItemLabel().orElse(StringTool.leer)
+							.compareTo(labOrder1.getLabItemLabel().orElse(StringTool.leer));
 					}
 				default:
 					return 0;

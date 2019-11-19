@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Label;
 
 import ch.elexis.core.ui.UiDesk;
 
+import ch.rgw.tools.StringTool;
 public class TestDBConnectionGroup extends Group {
 	
 	private Label lblTestResult;
@@ -49,7 +50,7 @@ public class TestDBConnectionGroup extends Group {
 		new Label(this, SWT.NONE);
 		
 		lblTestResult = new Label(this, SWT.BORDER | SWT.WRAP);
-		lblTestResult.setText("");
+		lblTestResult.setText(StringTool.leer);
 		GridData gd_lblTestResult = new GridData(SWT.FILL, SWT.TOP, true, true, 1, 1);
 		gd_lblTestResult.minimumHeight = 60;
 		lblTestResult.setLayoutData(gd_lblTestResult);

@@ -148,7 +148,7 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 		for (int i = 0; i < hints.length; i++) { // make KontaktErfassenDialog
 			// happy
 			if (hints[i] == null) {
-				hints[i] = "";
+				hints[i] = StringTool.leer;
 			}
 		}
 		if (!StringTool.isNothing(hints[HINT_BIRTHDATE])) {

@@ -30,6 +30,7 @@ import ch.rgw.tools.Tree;
  * 
  * @see ch.rgw.tools.Tree
  */
+import ch.rgw.tools.StringTool;
 @Deprecated
 public class TreeLoader<T> extends AbstractDataLoaderJob {
 	private String parentColumn;
@@ -94,7 +95,7 @@ public class TreeLoader<T> extends AbstractDataLoaderJob {
 	@SuppressWarnings("unchecked")//$NON-NLS-1$
 	private void loadChildren(Tree<T> branch, String parent){
 		qbe.clear();
-		qbe.add(parentColumn, "=", parent); //$NON-NLS-1$
+		qbe.add(parentColumn, StringTool.equals, parent); //$NON-NLS-1$
 		List<T> list = load();
 		for (T t : list) {
 			Tree<T> ch = branch.add(t);

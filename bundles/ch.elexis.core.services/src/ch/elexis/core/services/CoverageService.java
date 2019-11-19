@@ -30,7 +30,7 @@ public class CoverageService implements ICoverageService {
 		String reqs = BillingSystemServiceHolder.get().getRequirements(coverage.getBillingSystem());
 		if (reqs != null) {
 			for (String req : reqs.split(";")) { //$NON-NLS-1$
-				String localReq = ""; //$NON-NLS-1$
+				String localReq = StringTool.leer; //$NON-NLS-1$
 				String[] r = req.split(":"); //$NON-NLS-1$
 				if ((r[1].equalsIgnoreCase("X")) && (r.length > 2)) { //$NON-NLS-1$
 					// *** support for additional field types (checkboxes with

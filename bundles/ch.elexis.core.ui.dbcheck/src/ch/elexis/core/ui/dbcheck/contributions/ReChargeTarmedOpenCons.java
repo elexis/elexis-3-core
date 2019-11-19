@@ -27,6 +27,7 @@ import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.TimeTool;
 
+import ch.rgw.tools.StringTool;
 public class ReChargeTarmedOpenCons extends ExternalMaintenance {
 	
 	private List<String> problems = new ArrayList<>();
@@ -203,10 +204,10 @@ public class ReChargeTarmedOpenCons extends ExternalMaintenance {
 		if (problems != null && !problems.isEmpty()) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("\nProblems:\n");
-			problems.stream().forEach(problem -> sb.append(problem + "\n"));
+			problems.stream().forEach(problem -> sb.append(problem + StringTool.lf));
 			return sb.toString();
 		}
-		return "";
+		return StringTool.leer;
 	}
 	
 	private void addProblem(String prefix, Konsultation cons){

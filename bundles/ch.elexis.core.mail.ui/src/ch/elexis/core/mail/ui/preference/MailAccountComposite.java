@@ -42,6 +42,7 @@ import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
 
+import ch.rgw.tools.StringTool;
 public class MailAccountComposite extends Composite {
 
 	private WritableValue value;
@@ -76,7 +77,7 @@ public class MailAccountComposite extends Composite {
 			if (s != null && !s.isEmpty()) {
 				return ValidationStatus.ok();
 			}
-			return ValidationStatus.error("");
+			return ValidationStatus.error(StringTool.leer);
 		});
 		Binding binding = context.bindValue(target, model, targetToModel, null);
 		ControlDecorationSupport.create(binding, SWT.TOP | SWT.LEFT);
@@ -147,7 +148,7 @@ public class MailAccountComposite extends Composite {
 			if (s != null && !s.isEmpty()) {
 				return ValidationStatus.ok();
 			}
-			return ValidationStatus.error("");
+			return ValidationStatus.error(StringTool.leer);
 		});
 		binding = context.bindValue(target, model, targetToModel, null);
 		ControlDecorationSupport.create(binding, SWT.TOP | SWT.LEFT);
@@ -164,7 +165,7 @@ public class MailAccountComposite extends Composite {
 			if (s != null && !s.isEmpty()) {
 				return ValidationStatus.ok();
 			}
-			return ValidationStatus.error("");
+			return ValidationStatus.error(StringTool.leer);
 		});
 		binding = context.bindValue(target, model, targetToModel, null);
 		ControlDecorationSupport.create(binding, SWT.TOP | SWT.LEFT);

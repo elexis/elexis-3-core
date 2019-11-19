@@ -50,14 +50,14 @@ public class AccountTransaction extends PersistentObject {
 		private int numeric;
 		private String name;
 		
-		public static Account UNKNOWN = new Account(-1, "");
+		public static Account UNKNOWN = new Account(-1, StringTool.leer);
 		private static HashMap<Integer, Account> localCache;
 		
 		private static List<Account> loadAccounts(){
 			List<Account> ret = new ArrayList<>();
 			ret.add(UNKNOWN);
 			if (CoreHub.globalCfg != null) {
-				String accountsString = CoreHub.globalCfg.get(ACCOUNTS_CONFIG, ""); //$NON-NLS-1$
+				String accountsString = CoreHub.globalCfg.get(ACCOUNTS_CONFIG, StringTool.leer); //$NON-NLS-1$
 				if (accountsString != null && !accountsString.isEmpty()) {
 					String[] accounts = accountsString.split("\\|\\|"); //$NON-NLS-1$
 					for (String string : accounts) {
@@ -105,7 +105,7 @@ public class AccountTransaction extends PersistentObject {
 		
 		public static void addAccount(Account newAccount){
 			if (CoreHub.globalCfg != null) {
-				String existingString = CoreHub.globalCfg.get(ACCOUNTS_CONFIG, "");
+				String existingString = CoreHub.globalCfg.get(ACCOUNTS_CONFIG, StringTool.leer);
 				StringBuilder sb = new StringBuilder();
 				sb.append(existingString);
 				if (sb.length() > 0) {

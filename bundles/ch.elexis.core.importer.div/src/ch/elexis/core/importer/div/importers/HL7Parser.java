@@ -97,7 +97,7 @@ public class HL7Parser {
 	public Result<Object> parse(final HL7Reader hl7Reader, ILabItemResolver labItemResolver,
 		ILabContactResolver labContactResolver, boolean createPatientIfNotFound){
 		final TimeTool transmissionTime = new TimeTool();
-		String orderId = "";
+		String orderId = StringTool.leer;
 		
 		ILabContactResolver labResolver = labContactResolver != null ? labContactResolver : this.labContactResolver;
 
@@ -171,8 +171,8 @@ public class HL7Parser {
 						if (hl7LabResult.isNumeric() == false) {
 							typ = LabItemTyp.TEXT;
 						}
-						String refMale = "";
-						String refFemale = "";
+						String refMale = StringTool.leer;
+						String refFemale = StringTool.leer;
 						if (pat.getGender().equals(Gender.MALE)) {
 							refMale = hl7LabResult.getRange();
 						} else {
@@ -210,7 +210,7 @@ public class HL7Parser {
 						TransientLabResult importedResult =
 							new TransientLabResult.Builder(pat, labor, labItem, "text")
 								.date(obrDateTime)
-								.comment(StringTool.unNull(hl7LabResult.getValue()) + "\n"
+								.comment(StringTool.unNull(hl7LabResult.getValue()) + StringTool.lf
 									+ StringTool.unNull(hl7LabResult.getComment()))
 								.flags(flag).rawAbnormalFlags(hl7LabResult.getRawAbnormalFlag())
 								.unit(hl7LabResult.getUnit()).ref(hl7LabResult.getRange())
@@ -248,13 +248,13 @@ public class HL7Parser {
 							}
 						}
 						date = new TimeTool(hl7EncData.getDate());
-						String dateString = date.toString(TimeTool.DATETIME_XML).replace(":", "");
-						dateString = dateString.replace("-", "");
+						String dateString = date.toString(TimeTool.DATETIME_XML).replace(":", StringTool.leer);
+						dateString = dateString.replace("-", StringTool.leer);
 						String title = "Lab-" + dateString + "-" + hl7EncData.getSequence();
 						
-						String fileType = "";
-						if (hl7EncData.getName().contains("/")) {
-							String[] split = hl7EncData.getName().split("/");
+						String fileType = StringTool.leer;
+						if (hl7EncData.getName().contains(StringTool.slash)) {
+							String[] split = hl7EncData.getName().split(StringTool.slash);
 							if (split.length == 2) {
 								fileType = split[1];
 								title = title + "." + fileType;
@@ -268,8 +268,8 @@ public class HL7Parser {
 						ILabItem labItem =
 							labImportUtil.getDocumentLabItem(liShort, liName, labor).orElse(null);
 						if (labItem == null) {
-							labItem = labImportUtil.createLabItem(liShort, liName, labor, "", "",
-								fileType, LabItemTyp.DOCUMENT, hl7EncData.getGroup(), "");
+							labItem = labImportUtil.createLabItem(liShort, liName, labor, StringTool.leer, StringTool.leer,
+								fileType, LabItemTyp.DOCUMENT, hl7EncData.getGroup(), StringTool.leer);
 						}
 						
 						TransientLabResult importedResult =
@@ -299,7 +299,7 @@ public class HL7Parser {
 							.orElse(null);
 						if (labItem == null) {
 							labItem = labImportUtil.createLabItem(HL7Constants.COMMENT_CODE,
-								HL7Constants.COMMENT_NAME, labor, "", "", "", LabItemTyp.TEXT,
+								HL7Constants.COMMENT_NAME, labor, StringTool.leer, StringTool.leer, StringTool.leer, LabItemTyp.TEXT,
 								HL7Constants.COMMENT_GROUP, Integer.toString(number));
 						}
 						
@@ -330,7 +330,7 @@ public class HL7Parser {
 				if (labItem == null) {
 					labItem =
 						labImportUtil.createLabItem("NOTE", Messages.HL7Parser_LabItem_Note_Name,
-							labor, "", "", "", LabItemTyp.TEXT, "AA", "1");
+							labor, StringTool.leer, StringTool.leer, StringTool.leer, LabItemTyp.TEXT, "AA", "1");
 					logger.debug("LabItem created [{}]", labItem);
 				}
 				
@@ -484,7 +484,7 @@ public class HL7Parser {
 				if (res == null) {
 					res = r;
 				} else {
-					res.add(r.getSeverity(), 1, "", null, true); //$NON-NLS-1$
+					res.add(r.getSeverity(), 1, StringTool.leer, null, true); //$NON-NLS-1$
 				}
 			}
 		}

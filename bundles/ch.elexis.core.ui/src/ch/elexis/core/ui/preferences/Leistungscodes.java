@@ -133,7 +133,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				AbrechnungsTypDialog at = new AbrechnungsTypDialog(getShell(), null);
 				if (at.open() == Dialog.OK) {
 					String[] result = at.getResult();
-					String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + result[0]; //$NON-NLS-1$
+					String key = Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash + result[0]; //$NON-NLS-1$
 					log.info("Dialog.OK localized values: name {} leistung {} ausgabe {}", result[0], result[1], result[2]);
 					String leistungscode = getDbAusgabeName(result[1]);
 					String rnOutputter = getDbAusgabeName(result[2]);
@@ -209,7 +209,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 								log.info("DoubleClick Okay: name '{}'  localized leistung: '{}' ausgabe: '{}'", result[0], result[1], result[2]);
 								String leistungscode = getDbLeistungscodeName(result[1]);
 								String rnOutputter = getDbAusgabeName(result[2]);
-								String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + result[0]; //$NON-NLS-1$
+								String key = Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash + result[0]; //$NON-NLS-1$
 								log.info("Dialog.OK db values: name '{}' leistung '{}' ausgabe '{}' key '{}'", 
 										result[0], leistungscode, rnOutputter, key);
 								CoreHub.globalCfg.set(key + "/name", result[0]); //$NON-NLS-1$
@@ -330,7 +330,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		// *** and rebuild the table contents
 		if (systeme != null) {
 			for (String s : systeme) {
-				String cfgkey = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + s + "/"; //$NON-NLS-1$ //$NON-NLS-2$
+				String cfgkey = Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash + s + StringTool.slash; //$NON-NLS-1$ //$NON-NLS-2$
 				TableItem it = new TableItem(table, SWT.NONE);
 				String name = CoreHub.globalCfg.get(cfgkey + "name", "default"); //$NON-NLS-1$ //$NON-NLS-2$
 				it.setText(0, name);
@@ -715,8 +715,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 						// *** SCRIPT-variant, is directly passed through
 					} else {
 						// *** simple listing, line by line
-						String tmp = result[1].replaceAll("\r\n", DEFINITIONSDELIMITER); //$NON-NLS-1$
-						tmp = tmp.replaceAll("\n", DEFINITIONSDELIMITER); //$NON-NLS-1$
+						String tmp = result[1].replaceAll(StringTool.crlf, DEFINITIONSDELIMITER); //$NON-NLS-1$
+						tmp = tmp.replaceAll(StringTool.lf, DEFINITIONSDELIMITER); //$NON-NLS-1$
 						tmp = tmp.replaceAll("\r", DEFINITIONSDELIMITER); //$NON-NLS-1$
 						if ((tmp.isEmpty()) || (tmp.split(DEFINITIONSDELIMITER).length < 2)) {
 							errorString = errorString + Messages.Leistungscodes_ErrorAtLeast2Items;
@@ -916,7 +916,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 						InputDialog inp = new InputDialog(getShell(),
 							l + Messages.Leistungscodes_add, msg, StringTool.leer, null); //$NON-NLS-1$
 						if (inp.open() == Dialog.OK) {
-							String[] req = inp.getValue().split("="); //$NON-NLS-1$
+							String[] req = inp.getValue().split(StringTool.equals); //$NON-NLS-1$
 							if (req.length != 2) {
 								SWTHelper.showError(Messages.Leistungscodes_badEntry,
 									Messages.Leistungscodes_explainEntry);
@@ -1056,7 +1056,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		private void removeRequiredStringGesetzFromFallExtInfo(){
 			String selection = ldConstants.getSelection();
 			if (selection != null && StringUtils.containsIgnoreCase(selection, "Gesetz")) {
-				String[] split = selection.split("=");
+				String[] split = selection.split(StringTool.equals);
 				String message = MessageFormat
 					.format("Remove the selected field [{0}] from all Faelle?\nPlease validate that a law is set!", split[0]);
 				boolean performDelete =
@@ -1128,7 +1128,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		final String tempCaseID = "marlovits-14x@8w1"; //$NON-NLS-1$
 		
 		JdbcLink j = PersistentObject.getConnection();
-		String minID = ""; //$NON-NLS-1$
+		String minID = StringTool.leer; //$NON-NLS-1$
 		try {
 			// *** get just any case
 			minID = j.queryString("select id from faelle limit 1"); //$NON-NLS-1$
@@ -1745,14 +1745,14 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				if (opt.trim().equalsIgnoreCase("(SQL)")) { //$NON-NLS-1$
 					opt = (l.length >= 4) ? "   (SQL: " + l[3].replaceAll(ITEMDELIMITER, "; ") + ")" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 							: StringTool.leer;
-					return type + " " + l[0] + opt; //$NON-NLS-1$
+					return type + StringTool.space + l[0] + opt; //$NON-NLS-1$
 				} else {
-					return type + " " + l[0] + opt; //$NON-NLS-1$
+					return type + StringTool.space + l[0] + opt; //$NON-NLS-1$
 				}
 			} else {
 				String opt = (l.length >= 3) ? "   (" + l[2].replaceAll(ITEMDELIMITER, "; ") + ")" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 						: StringTool.leer;
-				return "? " + " " + l[0] + opt; //$NON-NLS-1$ //$NON-NLS-2$
+				return "? " + StringTool.space + l[0] + opt; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 		
@@ -1779,7 +1779,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				fieldName = fields[0];
 				fieldType = fields[1];
 				optionsIn = fields.length > 2 ? fields[2] : StringTool.leer;
-				optionsIn = optionsIn.replaceAll(ITEMDELIMITER, "\n"); //$NON-NLS-1$
+				optionsIn = optionsIn.replaceAll(ITEMDELIMITER, StringTool.lf); //$NON-NLS-1$
 				
 				if (fieldType.equalsIgnoreCase("K")) { //$NON-NLS-1$
 					ll = Messages.Leistungscodes_contactHL;
@@ -1872,8 +1872,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				}
 				
 				// *** append options as ;-delimited list
-				options = options.replaceAll("\r\n", ITEMDELIMITER); //$NON-NLS-1$
-				options = (options.replaceAll("\n", ITEMDELIMITER)).replaceAll("\r", ITEMDELIMITER); //$NON-NLS-1$ //$NON-NLS-2$
+				options = options.replaceAll(StringTool.crlf, ITEMDELIMITER); //$NON-NLS-1$
+				options = (options.replaceAll(StringTool.lf, ITEMDELIMITER)).replaceAll("\r", ITEMDELIMITER); //$NON-NLS-1$ //$NON-NLS-2$
 				req = req + ARGUMENTSSDELIMITER + options;
 				
 				// *** return result

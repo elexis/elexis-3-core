@@ -88,6 +88,7 @@ import ch.rgw.tools.IFilter;
  * @author gerry
  * 
  */
+import ch.rgw.tools.StringTool;
 public class FallListeView extends ViewPart implements IActivationListener, ISaveablePart2 {
 	private static boolean noPatientHandled = true;
 	public static final String ID = "ch.elexis.FallListeView"; //$NON-NLS-1$
@@ -114,7 +115,7 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 			setFall(f, null);
 		}
 	};
-	private IAction filterClosedAction = new Action("", Action.AS_CHECK_BOX) {
+	private IAction filterClosedAction = new Action(StringTool.leer, Action.AS_CHECK_BOX) {
 		private ViewerFilter closedFilter;
 		{
 			setToolTipText(Messages.FaelleView_ShowOnlyOpenCase);

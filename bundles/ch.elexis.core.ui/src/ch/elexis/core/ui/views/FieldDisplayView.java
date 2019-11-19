@@ -76,7 +76,7 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 		form = tk.createScrolledForm(parent);
 		form.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		form.getBody().setLayout(new GridLayout());
-		text = tk.createText(form.getBody(), "", SWT.MULTI | SWT.V_SCROLL); //$NON-NLS-1$
+		text = tk.createText(form.getBody(), StringTool.leer, SWT.MULTI | SWT.V_SCROLL); //$NON-NLS-1$
 		text.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		text.addFocusListener(new FocusAdapter() {
 			
@@ -156,7 +156,7 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 							text.setText(po.get(myField));
 						}
 					} else if (ev.getType() == ElexisEvent.EVENT_DESELECTED) {
-						text.setText(""); //$NON-NLS-1$
+						text.setText(StringTool.leer); //$NON-NLS-1$
 						
 					}
 					

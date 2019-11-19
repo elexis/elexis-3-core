@@ -73,10 +73,10 @@ public class DBConnectFirstPage extends WizardPage {
 		FormText alt = tk.createFormText(body, false);
 		StringBuilder old = new StringBuilder();
 		old.append("<form>"); //$NON-NLS-1$
-		String driver = "";
-		String user = "";
-		String typ = "";
-		String connectString = "";
+		String driver = StringTool.leer;
+		String user = StringTool.leer;
+		String typ = StringTool.leer;
+		String connectString = StringTool.leer;
 		Hashtable<Object, Object> hConn = null;
 		String cnt = CoreHub.localCfg.get(Preferences.CFG_FOLDED_CONNECTION, null);
 		if (cnt != null) {
@@ -141,7 +141,7 @@ public class DBConnectFirstPage extends WizardPage {
 					server.setEnabled(false);
 					dbName.setEnabled(true);
 					defaultUser = "sa"; //$NON-NLS-1$
-					defaultPassword = ""; //$NON-NLS-1$
+					defaultPassword = StringTool.leer; //$NON-NLS-1$
 					break;
 				default:
 					break;
@@ -155,11 +155,11 @@ public class DBConnectFirstPage extends WizardPage {
 		});
 		tk.adapt(dbTypes, true, true);
 		tk.createLabel(body, Messages.DBConnectFirstPage_serevrAddress); //$NON-NLS-1$
-		server = tk.createText(body, "", SWT.BORDER); //$NON-NLS-1$
+		server = tk.createText(body, StringTool.leer, SWT.BORDER); //$NON-NLS-1$
 		TableWrapData twr = new TableWrapData(TableWrapData.FILL_GRAB);
 		server.setLayoutData(twr);
 		tk.createLabel(body, Messages.DBConnectFirstPage_databaseName); //$NON-NLS-1$
-		dbName = tk.createText(body, "", SWT.BORDER); //$NON-NLS-1$
+		dbName = tk.createText(body, StringTool.leer, SWT.BORDER); //$NON-NLS-1$
 		TableWrapData twr2 = new TableWrapData(TableWrapData.FILL_GRAB);
 		dbName.setLayoutData(twr2);
 		setControl(form);

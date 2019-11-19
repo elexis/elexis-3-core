@@ -9,6 +9,7 @@ import ch.elexis.core.model.article.defaultsignature.Constants;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 
+import ch.rgw.tools.StringTool;
 public class ArticleDefaultSignature
 		extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.DefaultSignature>
 		implements IdentifiableWithXid, IArticleDefaultSignature {
@@ -109,7 +110,7 @@ public class ArticleDefaultSignature
 	@Override
 	public void setFreeText(String value){
 		if (value == null) {
-			value = "";
+			value = StringTool.leer;
 		}
 		setExtInfo(Constants.EXT_FLD_FREETEXT, value);
 	}

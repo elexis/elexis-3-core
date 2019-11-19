@@ -31,6 +31,7 @@ import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
 
+import ch.rgw.tools.StringTool;
 public class MahnlaufCommand extends AbstractHandler {
 	private static final String STR_STATUS_DATUM = "StatusDatum"; //$NON-NLS-1$
 	private static final String STR_MANDANT_I_D = "MandantID"; //$NON-NLS-1$
@@ -56,8 +57,8 @@ public class MahnlaufCommand extends AbstractHandler {
 	
 	private void performMahnlaufForMandant(String mandantId){
 		Query<Rechnung> qbe = new Query<Rechnung>(Rechnung.class);
-		qbe.add(STR_RN_STATUS, "=", Integer.toString(RnStatus.OFFEN_UND_GEDRUCKT)); //$NON-NLS-1$
-		qbe.add(STR_MANDANT_I_D, "=", mandantId); //$NON-NLS-1$
+		qbe.add(STR_RN_STATUS, StringTool.equals, Integer.toString(RnStatus.OFFEN_UND_GEDRUCKT)); //$NON-NLS-1$
+		qbe.add(STR_MANDANT_I_D, StringTool.equals, mandantId); //$NON-NLS-1$
 		
 		TimeTool tt = new TimeTool();
 		// Rechnung zu 1. Mahnung
@@ -81,8 +82,8 @@ public class MahnlaufCommand extends AbstractHandler {
 		}
 		// 1. Mahnung zu 2. Mahnung
 		qbe.clear();
-		qbe.add(STR_RN_STATUS, "=", Integer.toString(RnStatus.MAHNUNG_1_GEDRUCKT)); //$NON-NLS-1$
-		qbe.add(STR_MANDANT_I_D, "=", mandantId); //$NON-NLS-1$
+		qbe.add(STR_RN_STATUS, StringTool.equals, Integer.toString(RnStatus.MAHNUNG_1_GEDRUCKT)); //$NON-NLS-1$
+		qbe.add(STR_MANDANT_I_D, StringTool.equals, mandantId); //$NON-NLS-1$
 		tt = new TimeTool();
 		days = rnsSettings.get(Preferences.RNN_DAYSUNTIL2ND, 10);
 		try {
@@ -103,8 +104,8 @@ public class MahnlaufCommand extends AbstractHandler {
 		}
 		// 2. Mahnung zu 3. Mahnung
 		qbe.clear();
-		qbe.add(STR_RN_STATUS, "=", Integer.toString(RnStatus.MAHNUNG_2_GEDRUCKT)); //$NON-NLS-1$
-		qbe.add(STR_MANDANT_I_D, "=", mandantId); //$NON-NLS-1$
+		qbe.add(STR_RN_STATUS, StringTool.equals, Integer.toString(RnStatus.MAHNUNG_2_GEDRUCKT)); //$NON-NLS-1$
+		qbe.add(STR_MANDANT_I_D, StringTool.equals, mandantId); //$NON-NLS-1$
 		tt = new TimeTool();
 		days = rnsSettings.get(Preferences.RNN_DAYSUNTIL3RD, 10);
 		try {

@@ -11,6 +11,7 @@ import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.services.INamedQuery;
 
+import ch.rgw.tools.StringTool;
 public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Bestellung>
 		implements IdentifiableWithXid, IOrder {
 	
@@ -103,7 +104,7 @@ public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 				return parts[0];
 			}
 		}
-		return "";
+		return StringTool.leer;
 	}
 	
 	@Override
@@ -119,9 +120,9 @@ public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 			throw new IllegalStateException("Can not update id without timestamp");
 		}
 		Optional<IContact> activeUser = ModelUtil.getActiveUserContact();
-		String id = (name != null ? name : "") + ":"
-			+ (timestamp != null ? timestamp.format(timestampFormatter) : "") + ":"
-			+ (activeUser.isPresent() ? activeUser.get().getId() : "");
+		String id = (name != null ? name : StringTool.leer) + ":"
+			+ (timestamp != null ? timestamp.format(timestampFormatter) : StringTool.leer) + ":"
+			+ (activeUser.isPresent() ? activeUser.get().getId() : StringTool.leer);
 		getEntityMarkDirty().setId(id);
 	}
 	

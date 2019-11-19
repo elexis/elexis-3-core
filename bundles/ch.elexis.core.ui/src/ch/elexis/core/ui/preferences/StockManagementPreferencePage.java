@@ -56,6 +56,7 @@ import ch.elexis.data.Mandant;
 import ch.elexis.data.Query;
 import ch.elexis.data.Stock;
 
+import ch.rgw.tools.StringTool;
 public class StockManagementPreferencePage extends PreferencePage
 		implements IWorkbenchPreferencePage {
 	private DataBindingContext m_bindingContext;
@@ -145,7 +146,7 @@ public class StockManagementPreferencePage extends PreferencePage
 		mntmAddStock.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				Stock stock = new Stock("", Integer.MAX_VALUE);
+				Stock stock = new Stock(StringTool.leer, Integer.MAX_VALUE);
 				tableViewer.add(stock);
 				tableViewer.setSelection(new StructuredSelection(stock));
 			}
@@ -283,7 +284,7 @@ public class StockManagementPreferencePage extends PreferencePage
 				if (ret == Window.OK) {
 					Mandant p = (Mandant) ks.getSelection();
 					s.setOwner(p);
-					String label = (p != null) ? p.getLabel() : "";
+					String label = (p != null) ? p.getLabel() : StringTool.leer;
 					lblOwnerText.setText(label);
 				} else {
 					s.setOwner(null);
@@ -313,11 +314,11 @@ public class StockManagementPreferencePage extends PreferencePage
 				if (ret == Window.OK) {
 					Kontakt p = (Kontakt) ks.getSelection();
 					s.setResponsible(p);
-					String label = (p != null) ? p.getLabel() : "";
+					String label = (p != null) ? p.getLabel() : StringTool.leer;
 					lblResponsibleText.setText(label);
 				} else {
 					s.setResponsible(null);
-					lblResponsibleText.setText("");
+					lblResponsibleText.setText(StringTool.leer);
 				}
 			}
 		});
@@ -455,7 +456,7 @@ public class StockManagementPreferencePage extends PreferencePage
 					}
 				} else {
 					CoreHub.globalCfg.remove(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER);
-					lblDefaultArticleProvider.setText("");
+					lblDefaultArticleProvider.setText(StringTool.leer);
 				}
 			}
 		});
@@ -464,7 +465,7 @@ public class StockManagementPreferencePage extends PreferencePage
 		lblDefaultArticleProvider
 			.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		String id = CoreHub.globalCfg.get(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
-		lblDefaultArticleProvider.setText("");
+		lblDefaultArticleProvider.setText(StringTool.leer);
 		new Label(compDefaultProvider, SWT.NONE);
 		if (id != null) {
 			Kontakt load = Kontakt.load(id);
@@ -483,13 +484,13 @@ public class StockManagementPreferencePage extends PreferencePage
 				if (owner != null) {
 					lblOwnerText.setText(owner.getLabel());
 				} else {
-					lblOwnerText.setText("");
+					lblOwnerText.setText(StringTool.leer);
 				}
 				Kontakt responsible = stock.getResponsible();
 				if (responsible != null) {
 					lblResponsibleText.setText(responsible.getLabel());
 				} else {
-					lblResponsibleText.setText("");
+					lblResponsibleText.setText(StringTool.leer);
 				}
 				String machineUuid = stock.getDriverUuid();
 				if (machineUuid != null && !machineUuid.isEmpty()) {
@@ -497,11 +498,11 @@ public class StockManagementPreferencePage extends PreferencePage
 						.getInfoStringForDriver(UUID.fromString(machineUuid), false);
 					lblMachineuuid.setText(info);
 				} else {
-					lblMachineuuid.setText("");
+					lblMachineuuid.setText(StringTool.leer);
 				}
 			} else {
-				lblOwnerText.setText("");
-				lblResponsibleText.setText("");
+				lblOwnerText.setText(StringTool.leer);
+				lblResponsibleText.setText(StringTool.leer);
 			}
 		});
 		

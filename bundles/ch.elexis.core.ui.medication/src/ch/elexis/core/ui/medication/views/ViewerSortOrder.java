@@ -8,6 +8,7 @@ import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.rgw.tools.TimeTool;
 
+import ch.rgw.tools.StringTool;
 public enum ViewerSortOrder {
 		MANUAL("manuell", 0, new ManualViewerComparator()),
 		DEFAULT("standard", 1, new DefaultViewerComparator());
@@ -84,10 +85,10 @@ public enum ViewerSortOrder {
 				String l1 = p1.getArtikelLabel();
 				String l2 = p2.getArtikelLabel();
 				if (l1 == null) {
-					l1 = "";
+					l1 = StringTool.leer;
 				}
 				if (l2 == null) {
-					l2 = "";
+					l2 = StringTool.leer;
 				}
 				rc = l1.compareTo(l2);
 				break;
@@ -126,11 +127,11 @@ public enum ViewerSortOrder {
 			case 6:
 				String stopReason1 = p1.getStopReason();
 				if (stopReason1 == null)
-					stopReason1 = "";
+					stopReason1 = StringTool.leer;
 				
 				String stopReason2 = p2.getStopReason();
 				if (stopReason2 == null)
-					stopReason2 = "";
+					stopReason2 = StringTool.leer;
 				
 				rc = stopReason1.compareTo(stopReason2);
 				break;

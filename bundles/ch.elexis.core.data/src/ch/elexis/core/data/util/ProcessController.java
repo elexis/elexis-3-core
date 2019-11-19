@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.rgw.tools.ExHandler;
 
+import ch.rgw.tools.StringTool;
 public class ProcessController {
 	private String proc_result;
 	private String proc_err;
@@ -46,7 +47,7 @@ public class ProcessController {
 	public boolean run(String program, String command, String inputStr){
 		Process p;
 		
-		log.info("executing " + program + " " + command + ", " + inputStr);
+		log.info("executing " + program + StringTool.space + command + ", " + inputStr);
 		
 		try {
 			p = Runtime.getRuntime().exec(new String[] {
@@ -106,7 +107,7 @@ public class ProcessController {
 		
 		OutputStream os;
 		
-		String fullLine = "";
+		String fullLine = StringTool.leer;
 		
 		/**
 		 * Constructor for the ProcessStreamReader object
@@ -145,7 +146,7 @@ public class ProcessController {
 				BufferedReader br = new BufferedReader(isr);
 				String line = null;
 				while ((line = br.readLine()) != null) {
-					fullLine = fullLine + line + "\n";
+					fullLine = fullLine + line + StringTool.lf;
 				}
 				
 			} catch (IOException ioe) {

@@ -17,6 +17,7 @@ import ch.elexis.core.ui.views.textsystem.model.TextTemplate;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Mandant;
 
+import ch.rgw.tools.StringTool;
 public class CreateMandantTemplateCommand extends AbstractHandler {
 	
 	@Override
@@ -43,7 +44,7 @@ public class CreateMandantTemplateCommand extends AbstractHandler {
 				specTemplate.save(template.loadBinary(), template.getMimeType());
 				
 				TextTemplate specTextTemplate =
-					new TextTemplate(specTemplate.getBetreff(), "", specTemplate.getMimeType());
+					new TextTemplate(specTemplate.getBetreff(), StringTool.leer, specTemplate.getMimeType());
 				specTextTemplate.addFormTemplateReference(specTemplate);
 				
 				ElexisEventDispatcher.getInstance().fire(new ElexisEvent(Brief.class, null,

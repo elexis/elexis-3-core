@@ -6,6 +6,7 @@ import ch.elexis.core.ui.dbcheck.refintegrity.RefIntegrityCheck;
 import ch.elexis.core.ui.dbcheck.refintegrity.RefIntegrityCheckMySQL;
 import ch.elexis.core.ui.dbcheck.refintegrity.RefIntegrityCheckPGSQL;
 
+import ch.rgw.tools.StringTool;
 public class RefIntegrityCheckExec extends CheckExec {
 	
 	public static RefIntegrityCheck ric = null;
@@ -37,12 +38,12 @@ public class RefIntegrityCheckExec extends CheckExec {
 	public static String getOutputLog(){
 		if (ric != null)
 			return ric.getOutputLog();
-		return "";
+		return StringTool.leer;
 	}
 	
 	public static String getErrorLog(){
 		if (ric != null)
 			return ric.getErrorLog();
-		return "";
+		return StringTool.leer;
 	}
 }

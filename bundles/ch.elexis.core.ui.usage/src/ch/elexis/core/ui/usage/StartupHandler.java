@@ -24,7 +24,8 @@ import ch.elexis.core.ui.usage.settings.UsageSettings;
 import ch.elexis.core.ui.usage.util.StatisticsManager;
 import ch.elexis.core.ui.util.PerspectiveUtil;
 
-@Component(property = EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE)
+import ch.rgw.tools.StringTool;
+@Component(property = EventConstants.EVENT_TOPIC + StringTool.equals + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE)
 public class StartupHandler implements EventHandler {
 	
 	@Override

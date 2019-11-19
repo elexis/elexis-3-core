@@ -15,6 +15,7 @@ import ch.rgw.tools.TimeTool;
  * @author med1
  *
  */
+import ch.rgw.tools.StringTool;
 public class FileUtil {
 	
 	/**
@@ -25,7 +26,7 @@ public class FileUtil {
 	 */
 	public static String removeInvalidChars(String filename){
 		if (filename != null) {
-			return filename.replaceAll("[\\\\/:*?\"<>|]", "");
+			return filename.replaceAll("[\\\\/:*?\"<>|]", StringTool.leer);
 		}
 		return filename;
 	}

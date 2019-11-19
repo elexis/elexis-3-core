@@ -24,6 +24,7 @@ import org.eclipse.emf.common.util.Enumerator;
  * @model
  * @generated
  */
+import ch.rgw.tools.StringTool;
 public enum ContactType implements Enumerator {
 		/**
 		 * The '<em><b>PERSON</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc
@@ -53,7 +54,7 @@ public enum ContactType implements Enumerator {
 		 * @generated
 		 * @ordered
 		 */
-		MANDATOR(2, "MANDATOR", ""),
+		MANDATOR(2, "MANDATOR", StringTool.leer),
 		/**
 		 * The '<em><b>LABORATORY</b></em>' literal object. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->

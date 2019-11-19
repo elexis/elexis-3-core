@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import ch.elexis.core.data.interfaces.IFall;
 import ch.rgw.tools.TimeTool;
 
+import ch.rgw.tools.StringTool;
 public class InvoiceHistoryEntryDTO {
 	Object base;
 	Object item;
@@ -247,6 +248,6 @@ public class InvoiceHistoryEntryDTO {
 			return leistungDTOs.stream().map(item -> item.getText())
 				.collect(Collectors.joining(", "));
 		}
-		return "";
+		return StringTool.leer;
 	}
 }

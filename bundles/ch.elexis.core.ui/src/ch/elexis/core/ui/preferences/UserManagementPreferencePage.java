@@ -86,6 +86,7 @@ import ch.elexis.data.Rechnungssteller;
 import ch.elexis.data.Role;
 import ch.elexis.data.User;
 
+import ch.rgw.tools.StringTool;
 public class UserManagementPreferencePage extends PreferencePage
 		implements IWorkbenchPreferencePage, IUnlockable {
 	private TableViewer tableViewerUsers;
@@ -170,7 +171,7 @@ public class UserManagementPreferencePage extends PreferencePage
 						null, iiv);
 					int retVal = id.open();
 					if (retVal == Dialog.OK) {
-						User newUser = new User(null, id.getValue(), "");
+						User newUser = new User(null, id.getValue(), StringTool.leer);
 						updateUserList();
 						tableViewerUsers.setSelection(new StructuredSelection(newUser));
 					}
@@ -438,7 +439,7 @@ public class UserManagementPreferencePage extends PreferencePage
 					Person p = (Person) ks.getSelection();
 					p.set(Anwender.FLD_IS_USER, StringConstants.ONE);
 					user.setAssignedContact(p);
-					linkContact.setText(p.getPersonalia() + " " + CHANGE_LINK);
+					linkContact.setText(p.getPersonalia() + StringTool.space + CHANGE_LINK);
 				}
 			}
 		});
@@ -505,7 +506,7 @@ public class UserManagementPreferencePage extends PreferencePage
 					Mandant mand = Mandant.load(ac.getId());
 					mand.setRechnungssteller(kontakt);
 					linkRechnungssteller
-						.setText(mand.getRechnungssteller().getLabel() + " " + CHANGE_LINK);
+						.setText(mand.getRechnungssteller().getLabel() + StringTool.space + CHANGE_LINK);
 				}
 			}
 		});
@@ -634,7 +635,7 @@ public class UserManagementPreferencePage extends PreferencePage
 			@Override
 			public String getColumnText(Object element, int columnIndex){
 				Mandant m = (Mandant) element;
-				return m.getName() + " " + m.getVorname();
+				return m.getName() + StringTool.space + m.getVorname();
 			}
 		});
 		updateRoles();
@@ -683,7 +684,7 @@ public class UserManagementPreferencePage extends PreferencePage
 			Anwender anw = user.getAssignedContact();
 			wvAnwender.setValue(anw);
 			String text = (anw != null) ? anw.getPersonalia() : "Nicht gesetzt";
-			linkContact.setText(text + " " + CHANGE_LINK);
+			linkContact.setText(text + StringTool.space + CHANGE_LINK);
 			
 			userInfoLabel.setText(text + " [" + user.getId() + "]");
 			
@@ -717,7 +718,7 @@ public class UserManagementPreferencePage extends PreferencePage
 					
 					Rechnungssteller rs = m.getRechnungssteller();
 					String rst = (rs != null) ? rs.getLabel() : "Nicht gesetzt";
-					linkRechnungssteller.setText(rst + " " + CHANGE_LINK);
+					linkRechnungssteller.setText(rst + StringTool.space + CHANGE_LINK);
 				}
 			}
 		}

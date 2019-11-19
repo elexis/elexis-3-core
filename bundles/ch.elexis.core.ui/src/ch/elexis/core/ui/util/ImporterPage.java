@@ -119,7 +119,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 				return doImport(monitor);
 			} catch (Exception e) {
 				return new Status(Status.ERROR, Hub.PLUGIN_ID, Messages.ImporterPage_importError
-					+ " " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
+					+ StringTool.space + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}
@@ -147,7 +147,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 			final Label lFile = new Label(this, SWT.NONE);
 			tFname = new Text(this, SWT.BORDER);
 			tFname.setText(CoreHub.localCfg
-				.get("ImporterPage/" + home.getTitle() + "/filename", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				.get("ImporterPage/" + home.getTitle() + "/filename", StringTool.leer)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			home.results = new String[1];
 			home.results[0] = tFname.getText();
 			lFile.setText(Messages.ImporterPage_file); //$NON-NLS-1$
@@ -210,7 +210,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 			lFile.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			tFname.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			tFname
-				.setText(CoreHub.localCfg.get("ImporterPage/" + home.getTitle() + "/dirname", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				.setText(CoreHub.localCfg.get("ImporterPage/" + home.getTitle() + "/dirname", StringTool.leer)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			home.results = new String[1];
 			home.results[0] = tFname.getText();
 			Button bFile = new Button(this, SWT.PUSH);
@@ -254,7 +254,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 			lSource.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			tSource.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			tSource.setText(CoreHub.localCfg.get(
-				"ImporterPage/" + home.getTitle() + "/ODBC-Source", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				"ImporterPage/" + home.getTitle() + "/ODBC-Source", StringTool.leer)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			home.results = new String[1];
 			home.results[0] = tSource.getText();
 			Button bSource = new Button(this, SWT.PUSH);
@@ -295,7 +295,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 			tSource.setEditable(false);
 			lSource.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			tSource.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			tSource.setText(""); //$NON-NLS-1$
+			tSource.setText(StringTool.leer); //$NON-NLS-1$
 			if (preset != null) {
 				tSource.setText(preset[0]);
 			}

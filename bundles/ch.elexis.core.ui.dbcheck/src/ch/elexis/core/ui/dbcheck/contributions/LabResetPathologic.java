@@ -14,6 +14,7 @@ import ch.elexis.data.LabResult;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 
+import ch.rgw.tools.StringTool;
 public class LabResetPathologic extends ExternalMaintenance {
 	
 	private List<String> problems = new ArrayList<>();
@@ -29,7 +30,7 @@ public class LabResetPathologic extends ExternalMaintenance {
 		for (LabResult labResult : results) {
 			if (pm.isCanceled()) {
 				addProblem("Cancelled.", labResult);
-				return getProblemsString() + "\n" + changedCount + " Werte wurden geändert.\n "
+				return getProblemsString() + StringTool.lf + changedCount + " Werte wurden geändert.\n "
 					+ allCount + " Werte insgesamt.";
 			}
 			
@@ -86,9 +87,9 @@ public class LabResetPathologic extends ExternalMaintenance {
 		if (problems != null && !problems.isEmpty()) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("\nProblems:\n");
-			problems.stream().forEach(problem -> sb.append(problem + "\n"));
+			problems.stream().forEach(problem -> sb.append(problem + StringTool.lf));
 			return sb.toString();
 		}
-		return "";
+		return StringTool.leer;
 	}
 }

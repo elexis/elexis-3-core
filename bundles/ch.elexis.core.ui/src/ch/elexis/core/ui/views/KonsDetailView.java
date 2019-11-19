@@ -613,7 +613,7 @@ public class KonsDetailView extends ViewPart
 				if (biller.getId().equals(mandator.getId())) {
 					sb.append("(").append(mandator.getDescription3()).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
 				} else {
-					sb.append("(").append(mandator.getDescription3()).append("/").append( //$NON-NLS-1$ //$NON-NLS-2$
+					sb.append("(").append(mandator.getDescription3()).append(StringTool.slash).append( //$NON-NLS-1$ //$NON-NLS-2$
 						biller.getDescription3()).append(")"); //$NON-NLS-1$
 				}
 				hlMandant
@@ -632,7 +632,7 @@ public class KonsDetailView extends ViewPart
 			diagnosesDisplay.setEnabled(true);
 			if (BillingServiceHolder.get().isEditable(encounter).isOK()) {
 				text.setEnabled(true);
-				text.setToolTipText("");
+				text.setToolTipText(StringTool.leer);
 				lBeh.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
 				lBeh.setBackground(defaultBackground);
 			} else {
@@ -653,7 +653,7 @@ public class KonsDetailView extends ViewPart
 			hlMandant.setBackground(hlMandant.getParent().getBackground());
 			diagnosesDisplay.clear();
 			billedDisplay.clear();
-			text.setText(""); //$NON-NLS-1$
+			text.setText(StringTool.leer); //$NON-NLS-1$
 			text.setEnabled(false);
 			billedDisplay.setEnabled(false);
 			diagnosesDisplay.setEnabled(false);
@@ -679,7 +679,7 @@ public class KonsDetailView extends ViewPart
 	}
 	
 	void setKonsText(final IEncounter encounter, final int version){
-		String ntext = ""; //$NON-NLS-1$
+		String ntext = StringTool.leer; //$NON-NLS-1$
 		if ((version >= 0) && (version <= encounter.getVersionedEntry().getHeadVersion())) {
 			VersionedResource vr = encounter.getVersionedEntry();
 			ResourceItem entry = vr.getVersion(version);
@@ -691,7 +691,7 @@ public class KonsDetailView extends ViewPart
 				.append(" (").append(entry.remark).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
 			versionDisplayAction.setText(sb.toString());
 		} else {
-			versionDisplayAction.setText("");
+			versionDisplayAction.setText(StringTool.leer);
 		}
 		text.setText(ntext);
 		text.setKons(encounter);

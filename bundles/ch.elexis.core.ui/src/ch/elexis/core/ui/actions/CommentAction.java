@@ -9,12 +9,13 @@ import org.eclipse.swt.widgets.Shell;
 import ch.elexis.core.ui.dialogs.base.InputDialog;
 import ch.elexis.core.ui.icons.Images;
 
+import ch.rgw.tools.StringTool;
 public class CommentAction extends Action {
 	private String comment;
 	private final Shell shell;
 	
 	public CommentAction(Shell shell, String comment){
-		super("", Action.AS_PUSH_BUTTON);
+		super(StringTool.leer, Action.AS_PUSH_BUTTON);
 		Assert.isNotNull(shell);
 		this.shell = shell;
 		this.comment = comment;

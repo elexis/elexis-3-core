@@ -5,6 +5,7 @@ import org.eclipse.jface.action.Action;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.icons.Images;
 
+import ch.rgw.tools.StringTool;
 public class ShowEigenartikelProductsAction extends Action {
 	
 	public static final String FILTER_CFG = "ShowEigenartikelProductsAction.showProducts";
@@ -18,7 +19,7 @@ public class ShowEigenartikelProductsAction extends Action {
 		this.eal = eal;
 		this.eigenartikelSelector = eigenartikelSelector;
 		setImageDescriptor(Images.IMG_CARDS.getImageDescriptor());
-		setToolTipText("");		
+		setToolTipText(StringTool.leer);		
 		setChecked(CoreHub.userCfg.get(ShowEigenartikelProductsAction.FILTER_CFG, false));
 		execute();
 	}

@@ -2,6 +2,7 @@ package ch.elexis.core.common;
 
 import java.util.Date;
 
+import ch.rgw.tools.StringTool;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
@@ -96,7 +97,7 @@ public class InstanceStatus {
 
 	@Override
 	public String toString() {
-		String identifier = getIdentifier() != null ? " @ " + getIdentifier() : "";
+		String identifier = getIdentifier() != null ? " @ " + getIdentifier() : StringTool.leer;
 		String ret = "[" + getUuid() + "] " + getActiveUser() + identifier + " (Version " + getVersion() + " @ "
 				+ getOperatingSystem() + ") ";
 		if (getState() != STATE.ACTIVE) {

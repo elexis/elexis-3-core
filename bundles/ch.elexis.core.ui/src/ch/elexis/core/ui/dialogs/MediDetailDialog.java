@@ -44,6 +44,7 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Prescription;
 
+import ch.rgw.tools.StringTool;
 public class MediDetailDialog extends TitleAreaDialog {
 	private IPrescription prescription;
 	private String dosis, intakeOrder, disposalComment;
@@ -209,8 +210,8 @@ public class MediDetailDialog extends TitleAreaDialog {
 			stackLayoutDosage.topControl = compositeDayTimeDosage;
 		}
 		
-		txtIntakeOrder.setText(intakeOrder == null ? "" : intakeOrder);
-		txtDisposalComment.setText(disposalComment == null ? "" : disposalComment);
+		txtIntakeOrder.setText(intakeOrder == null ? StringTool.leer : intakeOrder);
+		txtDisposalComment.setText(disposalComment == null ? StringTool.leer : disposalComment);
 	}
 	
 	@Override
@@ -318,7 +319,7 @@ public class MediDetailDialog extends TitleAreaDialog {
 	 */
 	public String[] getDosageArray(String dosage){
 		String[] retVal = new String[4];
-		Arrays.fill(retVal, "");
+		Arrays.fill(retVal, StringTool.leer);
 		if (dosage != null) {
 			// Match stuff like '1/2', '7/8'
 			if (dosage.matches("^[0-9]/[0-9]$")) {

@@ -33,9 +33,10 @@ import ch.elexis.data.PersistentObject;
  * @deprecated use {@link GenericObjectDropTarget} instead
  * 
  */
+import ch.rgw.tools.StringTool;
 public class PersistentObjectDropTarget implements DropTargetListener, ICodeSelectorTarget {
 	IReceiver rc;
-	String name = "";
+	String name = StringTool.leer;
 	private final Color normalColor;
 	private final Color highlightColor;
 	private final Control mine;
@@ -69,7 +70,7 @@ public class PersistentObjectDropTarget implements DropTargetListener, ICodeSele
 	}
 	
 	public PersistentObjectDropTarget(Control target, IReceiver r){
-		this("", target, r, true);
+		this(StringTool.leer, target, r, true);
 	}
 	
 	public PersistentObjectDropTarget(String name, Control target, IReceiver r){

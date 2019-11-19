@@ -8,6 +8,7 @@ import ch.elexis.core.model.IArticle;
 import ch.elexis.data.Artikel;
 import ch.rgw.tools.Money;
 
+import ch.rgw.tools.StringTool;
 public class ArtikelAdapter extends Artikel {
 	
 	private IArticle article;
@@ -48,7 +49,7 @@ public class ArtikelAdapter extends Artikel {
 	
 	@Override
 	public String getPharmaCode(){
-		String ret = "";
+		String ret = StringTool.leer;
 		try {
 			Method method = article.getClass().getMethod("getPHAR");
 			ret = (String) method.invoke(article);

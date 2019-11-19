@@ -13,9 +13,10 @@ import org.slf4j.Logger;
 import ch.elexis.core.jdt.NonNull;
 
 // TODO refactor ...
+import ch.rgw.tools.StringTool;
 public class StatusUtil {
 	public static void printStatus(Logger log, IStatus status) {
-		print(log, "", status);
+		print(log, StringTool.leer, status);
 	}
 
 	public static void print(Logger log, String indent, IStatus status) {
@@ -31,7 +32,7 @@ public class StatusUtil {
 	}
 
 	public static void printStatus(PrintStream out, IStatus status) {
-		print(out, "", status);
+		print(out, StringTool.leer, status);
 	}
 
 	public static String printStatus(IStatus status) {
@@ -109,7 +110,7 @@ public class StatusUtil {
 			sb.append("[MULTISTATUS] ");
 		}
 		if (prependMessage != null) {
-			sb.append(prependMessage + " ");
+			sb.append(prependMessage + StringTool.space);
 		}
 		sb.append("(c" + status.getCode() + "/s" + status.getSeverity() + ") ");
 		sb.append(status.getMessage());

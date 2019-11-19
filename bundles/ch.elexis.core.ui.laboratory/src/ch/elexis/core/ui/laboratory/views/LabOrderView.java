@@ -24,6 +24,7 @@ import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabOrder.State;
 import ch.elexis.data.Patient;
 
+import ch.rgw.tools.StringTool;
 public class LabOrderView extends ViewPart implements ICallback {
 	public static final String ID = "ch.elexis.core.ui.laboratory.LabOrderView"; //$NON-NLS-1$
 	private static final String LABORDER_PLACEHOLDER = "[Verordnung]";
@@ -90,13 +91,13 @@ public class LabOrderView extends ViewPart implements ICallback {
 		for (String groupKey : keySet) {
 			List<LabOrder> gLabOrders = groupMap.get(groupKey);
 			// add group name
-			usedRows.add(createRow(groupKey, "", ""));
+			usedRows.add(createRow(groupKey, StringTool.leer, StringTool.leer));
 			
 			for (LabOrder labOrder : gLabOrders) {
 				// only interested in those with status ORDERED
 				if (labOrder.getState() == State.ORDERED) {
 					LabItem labItem = labOrder.getLabItem();
-					String ref = "";
+					String ref = StringTool.leer;
 					if (Patient.FEMALE.equals(patientGender)) {
 						ref = labItem.getRefW();
 					} else {
@@ -110,7 +111,7 @@ public class LabOrderView extends ViewPart implements ICallback {
 	}
 	
 	/**
-	 * Create a row with 4 places inserting the passed values. Not given fields are field with ""
+	 * Create a row with 4 places inserting the passed values. Not given fields are field with StringTool.leer
 	 * 
 	 * @param value
 	 *            name [idx 0]
@@ -118,17 +119,17 @@ public class LabOrderView extends ViewPart implements ICallback {
 	 *            reference (male or female) if given [idx 1]
 	 * @param unit
 	 *            will only be displayed if reference is present [idx 1]
-	 * @return Example: {@code new String[] "Kalium", "3.5-5.5 mmol/L", "", ""}
+	 * @return Example: {@code new String[] "Kalium", "3.5-5.5 mmol/L", StringTool.leer, StringTool.leer}
 	 */
 	private String[] createRow(String value, String ref, String unit){
 		// init array filled with empty strings
 		String[] row = new String[4];
-		Arrays.fill(row, "");
+		Arrays.fill(row, StringTool.leer);
 		
 		row[0] = value;
 		// add ref with unit if given
 		if (!ref.isEmpty()) {
-			row[1] = ref + " " + unit;
+			row[1] = ref + StringTool.space + unit;
 		}
 		return row;
 	}

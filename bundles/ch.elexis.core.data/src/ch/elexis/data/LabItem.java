@@ -278,7 +278,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 			String var = matcher.group();
 			String[] fields = var.split("\\."); //$NON-NLS-1$
 			if (fields.length > 1) {
-				String repl = "\"" + pat.get(fields[1].replaceFirst("\\]", StringTool.leer)) + "\""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				String repl = StringTool.backslash + pat.get(fields[1].replaceFirst("\\]", StringTool.leer)) + StringTool.backslash; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				// formel=matcher.replaceFirst(repl);
 				matcher.appendReplacement(sb, repl);
 				bMatched = true;
@@ -423,7 +423,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		
 		if (formula == null || formula.isEmpty()) {
 			String[] refWEntry = get(REF_FEMALE_OR_TEXT).split("##");
-			formula = refWEntry.length > 1 ? refWEntry[1] : "";
+			formula = refWEntry.length > 1 ? refWEntry[1] : StringTool.leer;
 			
 			if (formula != null && !formula.isEmpty()) {
 				setFormula(formula);
@@ -458,7 +458,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		get(fields, vals);
 		sb.append(vals[0]).append(", ").append(vals[1]); //$NON-NLS-1$
 		if (StringConstants.ZERO.equals(vals[5])) {
-			sb.append(" (").append(vals[2]).append("/").append(getRefW()).append(StringTool.space) //$NON-NLS-1$ //$NON-NLS-2$
+			sb.append(" (").append(vals[2]).append(StringTool.slash).append(getRefW()).append(StringTool.space) //$NON-NLS-1$ //$NON-NLS-2$
 				.append(vals[4]).append(")"); //$NON-NLS-1$
 		} else {
 			sb.append(" (").append(getRefW()).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -544,23 +544,23 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		String refW, String unit){
 		Query<LabItem> qbe = new Query<LabItem>(LabItem.class);
 		if (laborId != null && laborId.length() > 0) {
-			qbe.add("LaborID", "=", laborId); //$NON-NLS-1$ //$NON-NLS-2$
+			qbe.add("LaborID", StringTool.equals, laborId); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		if (shortDesc != null && shortDesc.length() > 0) {
 			// none case sensitive matching for kuerzel
-			qbe.add("kuerzel", "=", shortDesc, true); //$NON-NLS-1$ //$NON-NLS-2$
+			qbe.add("kuerzel", StringTool.equals, shortDesc, true); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		if (refM != null && refM.length() > 0) {
 			// none case sensitive matching for ref male
-			qbe.add("RefMann", "=", refM, true); //$NON-NLS-1$ //$NON-NLS-2$
+			qbe.add("RefMann", StringTool.equals, refM, true); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		if (refW != null && refW.length() > 0) {
 			// none case sensitive matching for ref female
-			qbe.add("RefFrauOrTx", "=", refW, true); //$NON-NLS-1$ //$NON-NLS-2$
+			qbe.add("RefFrauOrTx", StringTool.equals, refW, true); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		if (unit != null && unit.length() > 0) {
 			// none case sensitive matching for unit
-			qbe.add("Einheit", "=", unit, true); //$NON-NLS-1$ //$NON-NLS-2$
+			qbe.add("Einheit", StringTool.equals, unit, true); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return qbe.execute();
 	}

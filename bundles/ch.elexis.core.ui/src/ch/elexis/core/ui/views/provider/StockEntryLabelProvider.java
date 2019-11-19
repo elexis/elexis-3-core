@@ -20,6 +20,7 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.StockEntry;
 
+import ch.rgw.tools.StringTool;
 public class StockEntryLabelProvider extends LabelProvider
 		implements ITableLabelProvider, ITableColorProvider {
 	
@@ -48,15 +49,15 @@ public class StockEntryLabelProvider extends LabelProvider
 						return code;
 					}
 				}
-				return "";
+				return StringTool.leer;
 			case 2:
-				return (article != null) ? article.getGtin() : "";
+				return (article != null) ? article.getGtin() : StringTool.leer;
 			case 3:
-				return (article != null) ? article.getLabel() : "";
+				return (article != null) ? article.getLabel() : StringTool.leer;
 			case 4:
 				return (article != null && article.getSellingPrice() != null)
 						? article.getSellingPrice().toString()
-						: "";
+						: StringTool.leer;
 			case 5:
 				return Integer.toString(se.getMinimumStock());
 			case 6:

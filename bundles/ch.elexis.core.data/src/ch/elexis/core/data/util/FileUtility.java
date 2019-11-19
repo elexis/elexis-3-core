@@ -19,6 +19,7 @@ import ch.elexis.core.utils.FileUtil;
  * @author med1
  *
  */
+import ch.rgw.tools.StringTool;
 public class FileUtility {
 	public static String DIRECTORY_SEPARATOR = File.separator;
 	
@@ -26,7 +27,7 @@ public class FileUtility {
 	
 	private static String getCorrectSeparators(final String pathOrFilename){
 		return pathOrFilename.replace("\\", DIRECTORY_SEPARATOR).replace("//", //$NON-NLS-1$ //$NON-NLS-2$
-			DIRECTORY_SEPARATOR).replace("/", DIRECTORY_SEPARATOR); //$NON-NLS-1$
+			DIRECTORY_SEPARATOR).replace(StringTool.slash, DIRECTORY_SEPARATOR); //$NON-NLS-1$
 	}
 	
 	private static String removeMultipleSeparators(String pathOrFilename){
@@ -45,7 +46,7 @@ public class FileUtility {
 	 */
 	public static String getCorrectPath(String path) throws IllegalArgumentException{
 		if (path == null) {
-			return ""; //$NON-NLS-1$
+			return StringTool.leer; //$NON-NLS-1$
 		}
 		path = getCorrectSeparators(path);
 		path = removeMultipleSeparators(path);
@@ -87,7 +88,7 @@ public class FileUtility {
 		String correctFilenamePath = getCorrectSeparators(filenamePath);
 		
 		if (correctFilenamePath.indexOf(DIRECTORY_SEPARATOR) < 0) {
-			return ""; //$NON-NLS-1$
+			return StringTool.leer; //$NON-NLS-1$
 		}
 		return correctFilenamePath.substring(0,
 			correctFilenamePath.lastIndexOf(DIRECTORY_SEPARATOR));
@@ -132,6 +133,6 @@ public class FileUtility {
 			
 		}
 		
-		return ""; //$NON-NLS-1$
+		return StringTool.leer; //$NON-NLS-1$
 	}
 }

@@ -3,6 +3,7 @@ package ch.elexis.core.data.util;
 /**
  * This class can be used for simple benchmarks.
  */
+import ch.rgw.tools.StringTool;
 public class BenchmarkTimer {
 	
 	private long startTime = 0;
@@ -41,15 +42,15 @@ public class BenchmarkTimer {
 		if (seconds < 10)
 			sec = "0" + seconds;
 		else
-			sec = "" + seconds;
+			sec = StringTool.leer + seconds;
 		if (minutes < 10)
 			min = "0" + minutes;
 		else
-			min = "" + minutes;
+			min = StringTool.leer + minutes;
 		if (hours < 10)
 			hrs = "0" + hours;
 		else
-			hrs = "" + hours;
+			hrs = StringTool.leer + hours;
 		
 		if (hours == 0)
 			return min + " min, " + sec + " sec";

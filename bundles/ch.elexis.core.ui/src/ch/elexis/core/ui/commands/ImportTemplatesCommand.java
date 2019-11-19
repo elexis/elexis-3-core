@@ -28,6 +28,7 @@ import ch.elexis.data.Brief;
 import ch.elexis.data.Mandant;
 import ch.rgw.tools.ExHandler;
 
+import ch.rgw.tools.StringTool;
 public class ImportTemplatesCommand extends AbstractHandler {
 	private static Logger logger = LoggerFactory.getLogger(ImportTemplatesCommand.class);
 	private String mandantId = null;
@@ -111,7 +112,7 @@ public class ImportTemplatesCommand extends AbstractHandler {
 							// add general form tempalte
 							if (sysTemplate == null) {
 								template.setAdressat(mandant.getId());
-								TextTemplate tt = new TextTemplate(name, "", mimeType);
+								TextTemplate tt = new TextTemplate(name, StringTool.leer, mimeType);
 								tt.addFormTemplateReference(template);
 								ttView.update(tt);
 							} else {

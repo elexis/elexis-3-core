@@ -14,6 +14,7 @@ import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 
+import ch.rgw.tools.StringTool;
 public class Prescription
 		extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Prescription>
 		implements IdentifiableWithXid, IPrescription {
@@ -222,7 +223,7 @@ public class Prescription
 	
 	@Override
 	public String getLabel(){
-		return getSimpleLabel() + " " + getDosageInstruction();
+		return getSimpleLabel() + StringTool.space + getDosageInstruction();
 	}
 	
 	private String getSimpleLabel(){

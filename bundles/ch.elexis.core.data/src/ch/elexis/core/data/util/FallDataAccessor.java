@@ -10,6 +10,7 @@ import ch.elexis.data.Kontakt;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.Result;
 
+import ch.rgw.tools.StringTool;
 public class FallDataAccessor implements IDataAccess {
 	private static final String KOSTENTRAEGER_UMLAUT = Fall.FLD_EXT_KOSTENTRAEGER;
 	private static final String KOSTENTRAEGER_KUERZEL_UMLAUT = "KostenträgerKürzel";
@@ -54,7 +55,7 @@ public class FallDataAccessor implements IDataAccess {
 	@Override
 	public Result<Object> getObject(String descriptor, PersistentObject dependentObject,
 		String dates, String[] params){
-		Result<Object> result = new Result<Object>(""); //$NON-NLS-1$
+		Result<Object> result = new Result<Object>(StringTool.leer); //$NON-NLS-1$
 		
 		Fall fall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
 		Kontakt costBearer = fall.getCostBearer();

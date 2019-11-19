@@ -7,6 +7,7 @@ import ch.elexis.core.types.Country;
 import ch.elexis.core.ui.contacts.extension.ContactGeonamesExtensionPoint;
 import ch.elexis.core.ui.contacts.interfaces.IContactGenoameService;
 
+import ch.rgw.tools.StringTool;
 public class ContactGeonames {
 	
 	private static Country currentCountryCode;
@@ -50,7 +51,7 @@ public class ContactGeonames {
 	public static String getDialPrefix(){
 		if (currentService != null)
 			return currentService.getDialPrefix();
-		return "";
+		return StringTool.leer;
 	}
 	
 	public static Country getCurrentCountryCode(){

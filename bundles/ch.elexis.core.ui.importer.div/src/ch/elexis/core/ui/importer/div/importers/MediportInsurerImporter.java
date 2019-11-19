@@ -14,6 +14,7 @@ import ch.elexis.data.Kontakt;
 import ch.elexis.data.Organisation;
 import ch.elexis.data.Query;
 
+import ch.rgw.tools.StringTool;
 public class MediportInsurerImporter {
 	private static Logger log = LoggerFactory.getLogger(MediportInsurerImporter.class);
 	
@@ -41,7 +42,7 @@ public class MediportInsurerImporter {
 		List<Organisation> insurerList = new ArrayList<Organisation>();
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(csvInStream));
-			String line = "";
+			String line = StringTool.leer;
 			int lineNo = 0;
 			
 			while ((line = reader.readLine()) != null) {
@@ -76,7 +77,7 @@ public class MediportInsurerImporter {
 				contactQuery.add(Kontakt.FLD_PLACE, Query.EQUALS, city);
 				List<Kontakt> contactList = contactQuery.execute();
 				if (contactList != null && !contactList.isEmpty()) {
-					log.warn("Kontakt [" + org + " " + dept + ", " + street + ", " + city
+					log.warn("Kontakt [" + org + StringTool.space + dept + ", " + street + ", " + city
 						+ "] existiert bereits. Wird nicht imporiert.");
 					continue;
 				}

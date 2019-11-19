@@ -49,6 +49,7 @@ import ch.rgw.tools.MimeTool;
 import ch.rgw.tools.TimeSpan;
 import ch.rgw.tools.TimeTool;
 
+import ch.rgw.tools.StringTool;
 public class DisplayLabDokumenteDialog extends TitleAreaDialog {
 	private final String title;
 	private final java.util.List<LabResult> labResultList;
@@ -145,7 +146,7 @@ public class DisplayLabDokumenteDialog extends TitleAreaDialog {
 					}
 					
 					if(fileExtension == null) {
-						fileExtension = "";
+						fileExtension = StringTool.leer;
 					}
 					
 					File temp = File.createTempFile("lab" + counter, "doc." + fileExtension); //$NON-NLS-1$ //$NON-NLS-2$

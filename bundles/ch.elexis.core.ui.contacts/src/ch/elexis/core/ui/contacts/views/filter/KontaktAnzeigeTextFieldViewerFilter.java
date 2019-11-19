@@ -15,6 +15,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 
 import ch.elexis.core.model.IContact;
 
+import ch.rgw.tools.StringTool;
 public class KontaktAnzeigeTextFieldViewerFilter extends ViewerFilter {
 	
 	private String searchString;
@@ -36,14 +37,14 @@ public class KontaktAnzeigeTextFieldViewerFilter extends ViewerFilter {
 					return true;
 			}
 		} else {
-			String desc1 = (k.getDescription1() != null) ? k.getDescription1().toLowerCase() : "";
-			String desc2 = (k.getDescription2() != null) ? k.getDescription2().toLowerCase() : "";
+			String desc1 = (k.getDescription1() != null) ? k.getDescription1().toLowerCase() : StringTool.leer;
+			String desc2 = (k.getDescription2() != null) ? k.getDescription2().toLowerCase() : StringTool.leer;
 			
 			String[] searchListComma = searchString.split(",");
 			for (String string : searchListComma) {
-				if (string.contains(" ")) {
-					String searchA = desc1 + " " + desc2;
-					String searchB = desc2 + " " + desc1;
+				if (string.contains(StringTool.space)) {
+					String searchA = desc1 + StringTool.space + desc2;
+					String searchB = desc2 + StringTool.space + desc1;
 					if (searchA.matches(".*" + string + ".*")
 						|| searchB.matches(".*" + string + ".*"))
 						return true;
@@ -64,7 +65,7 @@ public class KontaktAnzeigeTextFieldViewerFilter extends ViewerFilter {
 			searchString = s.toLowerCase(); //$NON-NLS-1$ //$NON-NLS-2$
 		// filter "dirty" characters
 		if (searchString != null)
-			searchString = searchString.replaceAll("[^#$, a-zA-Z0-9]", "");
+			searchString = searchString.replaceAll("[^#$, a-zA-Z0-9]", StringTool.leer);
 	}
 	
 }

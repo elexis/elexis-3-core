@@ -11,6 +11,7 @@ import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 
+import ch.rgw.tools.StringTool;
 public class ContactSelectionLabelProvider extends DefaultLabelProvider {
 	
 	private static DateTimeFormatter dateOfBirthFormatter =
@@ -31,7 +32,7 @@ public class ContactSelectionLabelProvider extends DefaultLabelProvider {
 				label = label + " (" + dateOfBirthString + ")";
 			}
 			if (contact.isUser()) {
-				label = StringUtils.defaultString(contact.getDescription1()) + " "
+				label = StringUtils.defaultString(contact.getDescription1()) + StringTool.space
 					+ StringUtils.defaultString(contact.getDescription2()) + " - " + label;
 			}
 			return label;

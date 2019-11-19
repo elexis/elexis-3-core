@@ -27,6 +27,7 @@ import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.data.Kontakt;
 import ch.rgw.io.Settings;
 
+import ch.rgw.tools.StringTool;
 public class KontaktFieldEditor extends FieldEditor {
 	private Label contactLabel;
 	private Settings cfg;
@@ -65,7 +66,7 @@ public class KontaktFieldEditor extends FieldEditor {
 		if (contactLabel == null) {
 			return;
 		}
-		selected = Kontakt.load(cfg.get(getPreferenceName(), ""));
+		selected = Kontakt.load(cfg.get(getPreferenceName(), StringTool.leer));
 		if (selected.isValid()) {
 			contactLabel.setText(selected.getLabel());
 		} else {

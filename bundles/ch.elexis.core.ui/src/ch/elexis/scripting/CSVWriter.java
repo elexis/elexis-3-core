@@ -48,6 +48,7 @@ import java.util.List;
  * @author Glen Smith
  * 
  */
+import ch.rgw.tools.StringTool;
 public class CSVWriter {
 	
 	private Writer rawWriter;
@@ -75,7 +76,7 @@ public class CSVWriter {
 	public static final char NO_QUOTE_CHARACTER = '\u0000';
 	
 	/** Default line terminator uses platform encoding. */
-	public static final String DEFAULT_LINE_END = "\n";
+	public static final String DEFAULT_LINE_END = StringTool.lf;
 	
 	private static final SimpleDateFormat TIMESTAMP_FORMATTER = new SimpleDateFormat(
 		"dd-MMM-yyyy HH:mm:ss");
@@ -115,7 +116,7 @@ public class CSVWriter {
 	 *            the character to use for quoted elements
 	 */
 	public CSVWriter(Writer writer, char separator, char quotechar){
-		this(writer, separator, quotechar, "\n");
+		this(writer, separator, quotechar, StringTool.lf);
 	}
 	
 	/**
@@ -200,7 +201,7 @@ public class CSVWriter {
 	private static String getColumnValue(ResultSet rs, int colType, int colIndex)
 		throws SQLException, IOException{
 		
-		String value = "";
+		String value = StringTool.leer;
 		
 		switch (colType) {
 		case Types.BIT:
@@ -229,7 +230,7 @@ public class CSVWriter {
 		case Types.NUMERIC:
 			BigDecimal bd = rs.getBigDecimal(colIndex);
 			if (bd != null) {
-				value = "" + bd.doubleValue();
+				value = StringTool.leer + bd.doubleValue();
 			}
 			break;
 		case Types.INTEGER:
@@ -237,7 +238,7 @@ public class CSVWriter {
 		case Types.SMALLINT:
 			int intValue = rs.getInt(colIndex);
 			if (!rs.wasNull()) {
-				value = "" + intValue;
+				value = StringTool.leer + intValue;
 			}
 			break;
 		case Types.JAVA_OBJECT:
@@ -271,11 +272,11 @@ public class CSVWriter {
 			value = rs.getString(colIndex);
 			break;
 		default:
-			value = "";
+			value = StringTool.leer;
 		}
 		
 		if (value == null) {
-			value = "";
+			value = StringTool.leer;
 		}
 		
 		return value;

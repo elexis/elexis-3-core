@@ -96,7 +96,7 @@ public class KontaktDetailDialog extends TitleAreaDialog {
 			liSex = SWTHelper.createLabeledField(ret, LBL_SEX, LabeledInputField.Typ.TEXT);
 			if (vals != null) {
 				/*
-				 * liGebDat.setText(vals[2]==null ? "" : vals[2]); liSex.setText(vals[3]==null ? ""
+				 * liGebDat.setText(vals[2]==null ? StringTool.leer : vals[2]); liSex.setText(vals[3]==null ? StringTool.leer
 				 * : vals[3]); liStrasse.setText(vals[4]); liPlz.setText(vals[5]);
 				 */
 				liName.setText(StringTool.unNull(vals[0]));

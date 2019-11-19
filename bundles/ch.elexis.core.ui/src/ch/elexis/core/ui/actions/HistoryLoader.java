@@ -37,6 +37,7 @@ import ch.rgw.tools.VersionedResource;
  * @author Gerry
  * 
  */
+import ch.rgw.tools.StringTool;
 public class HistoryLoader extends BackgroundJob {
 	StringBuilder sb;
 	private List<IEncounter> lKons;
@@ -153,13 +154,13 @@ public class HistoryLoader extends BackgroundJob {
 					if (multiline) {
 						// TODO use system line separator
 						// replace Windows line separator
-						s = s.replaceAll("\r\n", "<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
+						s = s.replaceAll(StringTool.crlf, "<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
 						// replace remaining "manual" line separators
-						s = s.replaceAll("\n", "<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
+						s = s.replaceAll(StringTool.lf, "<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					
 				} else {
-					s = ""; //$NON-NLS-1$
+					s = StringTool.leer; //$NON-NLS-1$
 				}
 				String label = maskHTML(k.getLabel());
 				// make kons text grey if kons Fall is not the selected Fall

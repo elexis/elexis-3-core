@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.ui.util.SWTHelper;
 
+import ch.rgw.tools.StringTool;
 public class TextTemplateImportConflictDialog extends TitleAreaDialog {
 	private String name;
 	private Button btnReplace, btnChangeName, btnSkip;
@@ -77,7 +78,7 @@ public class TextTemplateImportConflictDialog extends TitleAreaDialog {
 	}
 	
 	private void clearAndDisableTextField(){
-		txtNewName.setText("");
+		txtNewName.setText(StringTool.leer);
 		txtNewName.setEnabled(false);
 	}
 	

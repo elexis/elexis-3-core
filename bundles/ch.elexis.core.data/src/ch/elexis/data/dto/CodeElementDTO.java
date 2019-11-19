@@ -2,6 +2,7 @@ package ch.elexis.data.dto;
 
 import ch.elexis.core.data.interfaces.ICodeElement;
 
+import ch.rgw.tools.StringTool;
 public class CodeElementDTO implements ICodeElement {
 	
 	private String codeSystemName;
@@ -55,6 +56,6 @@ public class CodeElementDTO implements ICodeElement {
 	
 	@Override
 	public String toString(){
-		return this.codeSystemName + " (" + this.code + ") " + (text != null ? text : "");
+		return this.codeSystemName + " (" + this.code + ") " + (text != null ? text : StringTool.leer);
 	}
 }

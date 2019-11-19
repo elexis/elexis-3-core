@@ -11,6 +11,7 @@ import ch.elexis.core.ui.dbcheck.syntactic.SyntacticCheck;
 import ch.elexis.core.ui.dbcheck.syntactic.SyntacticCheckMySQL;
 import ch.elexis.core.ui.dbcheck.syntactic.SyntacticCheckPGSQL;
 
+import ch.rgw.tools.StringTool;
 public class SyntacticCheckExec extends CheckExec {
 	
 	public static SyntacticCheck sc = null;
@@ -41,12 +42,12 @@ public class SyntacticCheckExec extends CheckExec {
 	public static String getOutputLog(){
 		if (sc != null)
 			return sc.getOutputLog();
-		return "";
+		return StringTool.leer;
 	}
 	
 	public static String getErrorLog(){
 		if (sc != null)
 			return sc.getErrorLog();
-		return "";
+		return StringTool.leer;
 	}
 }

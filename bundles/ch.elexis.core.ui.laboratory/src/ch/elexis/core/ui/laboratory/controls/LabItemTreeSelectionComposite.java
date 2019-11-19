@@ -33,6 +33,7 @@ import ch.elexis.data.LabGroup;
 import ch.elexis.data.LabItem;
 import ch.elexis.data.Query;
 
+import ch.rgw.tools.StringTool;
 public class LabItemTreeSelectionComposite extends Composite {
 	// height of laborViewer
 	private static final int LINES_TO_SHOW = 20;
@@ -72,7 +73,7 @@ public class LabItemTreeSelectionComposite extends Composite {
 					filter.setSearchText(filterText.getText());
 					laborViewer.refresh();
 				} else {
-					filter.setSearchText(""); //$NON-NLS-1$
+					filter.setSearchText(StringTool.leer); //$NON-NLS-1$
 					laborViewer.refresh();
 				}
 				restoreLeafCheckState();

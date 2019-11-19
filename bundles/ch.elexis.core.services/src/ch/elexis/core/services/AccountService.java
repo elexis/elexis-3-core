@@ -11,12 +11,13 @@ import org.osgi.service.component.annotations.Reference;
 import ch.elexis.core.model.IAccount;
 import ch.elexis.core.services.internal.Account;
 
+import ch.rgw.tools.StringTool;
 @Component
 public class AccountService implements IAccountService {
 	private static final String ACCOUNTS_CONFIG = "ch.elexis.core.data/accounttransaction/accounts"; //$NON-NLS-1$
 	private static final String ACCOUNTS_SEPARATOR = "||"; //$NON-NLS-1$
 	
-	public Account UNKNOWN = new Account(-1, "");
+	public Account UNKNOWN = new Account(-1, StringTool.leer);
 	private HashMap<Integer, IAccount> localCache;
 
 	@Reference
@@ -25,7 +26,7 @@ public class AccountService implements IAccountService {
 	private List<IAccount> loadAccounts(){
 		List<IAccount> ret = new ArrayList<>();
 		ret.add(UNKNOWN);
-		String accountsString = configService.get(ACCOUNTS_CONFIG, ""); //$NON-NLS-1$
+		String accountsString = configService.get(ACCOUNTS_CONFIG, StringTool.leer); //$NON-NLS-1$
 		if (accountsString != null && !accountsString.isEmpty()) {
 			String[] accounts = accountsString.split("\\|\\|"); //$NON-NLS-1$
 			for (String string : accounts) {
@@ -74,7 +75,7 @@ public class AccountService implements IAccountService {
 	
 	@Override
 	public void addAccount(IAccount newAccount){
-		String existingString = configService.get(ACCOUNTS_CONFIG, "");
+		String existingString = configService.get(ACCOUNTS_CONFIG, StringTool.leer);
 		StringBuilder sb = new StringBuilder();
 		sb.append(existingString);
 		if (sb.length() > 0) {

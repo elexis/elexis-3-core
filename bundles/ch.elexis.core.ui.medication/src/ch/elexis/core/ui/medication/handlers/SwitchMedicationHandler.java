@@ -75,7 +75,7 @@ public class SwitchMedicationHandler extends AbstractHandler {
 		for (int i = 0; i < nameParts.length; i++) {
 			String s = nameParts[i];
 			if (i > 0) {
-				sbFilterName.append(" ");
+				sbFilterName.append(StringTool.space);
 			}
 			
 			// matches upper cases, dash an probably number but not only numbers

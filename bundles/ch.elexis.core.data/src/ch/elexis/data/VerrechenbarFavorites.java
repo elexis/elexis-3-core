@@ -15,6 +15,7 @@ import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 
+import ch.rgw.tools.StringTool;
 public class VerrechenbarFavorites {
 	
 	public static final String USER_CFG_FAVORITES = "verrechenbar/favoriten";
@@ -42,7 +43,7 @@ public class VerrechenbarFavorites {
 		if (favorites == null) {
 			favorites = new ArrayList<VerrechenbarFavorites.Favorite>();
 			
-			String favs = CoreHub.userCfg.get(USER_CFG_FAVORITES, "");
+			String favs = CoreHub.userCfg.get(USER_CFG_FAVORITES, StringTool.leer);
 			String[] entries = favs.split(";");
 			for (int i = 0; i < entries.length; i++) {
 				String entry = entries[i];
@@ -88,7 +89,7 @@ public class VerrechenbarFavorites {
 			} else {
 				storeToString = po.storeToString();
 			}
-			VerrechenbarFavorites.getFavorites().add(new Favorite(storeToString, "", 0));
+			VerrechenbarFavorites.getFavorites().add(new Favorite(storeToString, StringTool.leer, 0));
 		} else {
 			if (fav == null)
 				return;
@@ -106,7 +107,7 @@ public class VerrechenbarFavorites {
 	 */
 	public static Favorite isFavorite(IPersistentObject po){
 		for (Favorite favorite : getFavorites()) {
-			String comparator = "";
+			String comparator = StringTool.leer;
 			if (po instanceof Leistungsblock) {
 				comparator =
 					Leistungsblock.class.getName() + StringConstants.DOUBLECOLON + po.getId();

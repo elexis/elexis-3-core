@@ -60,6 +60,7 @@ import ch.rgw.io.FileTool;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.MimeTool;
 
+import ch.rgw.tools.StringTool;
 public class TextView extends ViewPart implements IActivationListener {
 	public final static String ID = "ch.elexis.TextView"; //$NON-NLS-1$
 	TextContainer txt;
@@ -334,7 +335,7 @@ public class TextView extends ViewPart implements IActivationListener {
 							});
 							String filename = fdl.open();
 							if (filename != null) {
-								if (FileTool.getExtension(filename).equals("")) { //$NON-NLS-1$
+								if (FileTool.getExtension(filename).equals(StringTool.leer)) { //$NON-NLS-1$
 									filename += ".odt"; //$NON-NLS-1$
 								}
 								File file = new File(filename);
@@ -422,7 +423,7 @@ public class TextView extends ViewPart implements IActivationListener {
 			log.debug("TextView.saveAs"); //$NON-NLS-1$
 			InputDialog il =
 				new InputDialog(getViewSite().getShell(), Messages.TextView_saveText,
-					Messages.TextView_enterTitle, "", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					Messages.TextView_enterTitle, StringTool.leer, null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			if (il.open() == Dialog.OK) {
 				actBrief.setBetreff(il.getValue());
 				return actBrief.save(txt.getPlugin().storeToByteArray(), txt.getPlugin()
@@ -452,7 +453,7 @@ public class TextView extends ViewPart implements IActivationListener {
 	}
 	
 	void setName(){
-		String n = ""; //$NON-NLS-1$
+		String n = StringTool.leer; //$NON-NLS-1$
 		if (actBrief == null) {
 			setPartName(Messages.TextView_noLetterSelected); //$NON-NLS-1$
 		} else {

@@ -18,6 +18,7 @@ import ch.elexis.data.Verrechnet;
  * @author Lucia
  *
  */
+import ch.rgw.tools.StringTool;
 public class CheckKonsultationValidity extends ExternalMaintenance {
 	
 	@Override
@@ -33,7 +34,7 @@ public class CheckKonsultationValidity extends ExternalMaintenance {
 		for (Konsultation k : kons) {
 			if (k.getFall() == null || !k.getFall().exists()) {
 				output.append("Kons.ID: " + k.getLabel() + " (" + k.getId() + ") , Datum: "
-					+ k.getDatum() + "\n");
+					+ k.getDatum() + StringTool.lf);
 				counter++;
 			}
 		}
@@ -59,7 +60,7 @@ public class CheckKonsultationValidity extends ExternalMaintenance {
 					output.append("Kons.ID: " + v.getKons().getLabel() + " (" + v.getKons().getId()
 						+ "), Patient: " + v.getKons().getFall().getPatient().getLabel()
 						+ ", LeistungsCode: " + v.get(Verrechnet.LEISTG_CODE) + ", Klasse: "
-						+ v.get(Verrechnet.CLASS) + "\n");
+						+ v.get(Verrechnet.CLASS) + StringTool.lf);
 					counter++;
 				}
 			}

@@ -49,6 +49,7 @@ import ch.rgw.tools.TimeTool;
  * 
  * @since 3.0.0 major rewrites
  */
+import ch.rgw.tools.StringTool;
 public class Hub extends AbstractUIPlugin {
 	// Globale Konstanten
 	public static final String APPLICATION_NAME = "Elexis"; //$NON-NLS-1$
@@ -150,7 +151,7 @@ public class Hub extends AbstractUIPlugin {
 		if (CoreHub.actUser == null) {
 			sb.append(Messages.Hub_nouserloggedin);
 		} else {
-			sb.append(" ").append(CoreHub.actUser.getLabel()); //$NON-NLS-1$
+			sb.append(StringTool.space).append(CoreHub.actUser.getLabel()); //$NON-NLS-1$
 		}
 		if (CoreHub.actMandant == null) {
 			sb.append(Messages.Hub_nomandantor);

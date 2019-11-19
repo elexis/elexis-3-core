@@ -58,6 +58,7 @@ import ch.rgw.tools.TimeTool;
  * @author thomas
  *
  */
+import ch.rgw.tools.StringTool;
 public class BillingUtil {
 	
 	public static String BILLINGCHECK_ENABLED_CFG = "ch.elexis.core.data/billablecheck/";
@@ -926,7 +927,7 @@ public class BillingUtil {
 					msg message : rechnungResult.getMessages()) {
 						if (message.getSeverity() != SEVERITY.OK) {
 							if (output.length() > 0) {
-								output.append("\n");
+								output.append(StringTool.lf);
 							}
 							output.append(message.getText());
 						}
@@ -979,7 +980,7 @@ public class BillingUtil {
 		
 		private void addToOutput(StringBuilder output, String warning){
 			if (output.length() > 0) {
-				output.append("\n");
+				output.append(StringTool.lf);
 			}
 			if (warning.length() > 0) {
 				output.append(warning);

@@ -34,6 +34,7 @@ import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
 
+import ch.rgw.tools.StringTool;
 @Component
 public class BillingService implements IBillingService {
 	
@@ -123,7 +124,7 @@ public class BillingService implements IBillingService {
 		if (ok) {
 			return new Result<>(encounter);
 		} else {
-			String msg = "";
+			String msg = StringTool.leer;
 			if (!mandatorLoggedIn) {
 				msg = "Es ist kein Mandant eingeloggt";
 			} else {

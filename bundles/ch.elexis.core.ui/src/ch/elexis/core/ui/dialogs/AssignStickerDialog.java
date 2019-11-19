@@ -45,6 +45,7 @@ import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 
+import ch.rgw.tools.StringTool;
 public class AssignStickerDialog extends TitleAreaDialog {
 	Identifiable mine;
 	TableViewer viewer;
@@ -127,7 +128,7 @@ public class AssignStickerDialog extends TitleAreaDialog {
 			@Override
 			public String getText(Object element){
 				ISticker s = (ISticker) element;
-				return s.getImportance() + "";
+				return s.getImportance() + StringTool.leer;
 			}
 			
 			@Override

@@ -16,6 +16,7 @@ import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.TimeTool;
 
+import ch.rgw.tools.StringTool;
 public class FallDTO implements IFall {
 	private final IFall iFall; // source
 	
@@ -142,7 +143,7 @@ public class FallDTO implements IFall {
 		if (value instanceof String) {
 			return (String) value;
 		}
-		return "";
+		return StringTool.leer;
 	}
 	
 	@Override

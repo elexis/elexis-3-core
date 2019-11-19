@@ -82,6 +82,7 @@ import ch.elexis.data.BestellungEntry;
  * @author Daniel Lutz
  *
  */
+import ch.rgw.tools.StringTool;
 public class OrderImportDialog extends TitleAreaDialog {
 	private static final String ALLE_MARKIEREN = " Alle markieren ";
 	private static final int DIFF_SPINNER_MIN = 1;
@@ -419,11 +420,11 @@ public class OrderImportDialog extends TitleAreaDialog {
 		
 		String ean = eanText.getText().trim();
 		// remove silly characters from scanner
-		ean = ean.replaceAll(new Character(SWT.CR).toString(), "");
-		ean = ean.replaceAll(new Character(SWT.LF).toString(), "");
-		ean = ean.replaceAll(new Character((char) 0).toString(), "");
+		ean = ean.replaceAll(new Character(SWT.CR).toString(), StringTool.leer);
+		ean = ean.replaceAll(new Character(SWT.LF).toString(), StringTool.leer);
+		ean = ean.replaceAll(new Character((char) 0).toString(), StringTool.leer);
 		
-		eanText.setText("");
+		eanText.setText(StringTool.leer);
 		diffSpinner.setSelection(DIFF_SPINNER_DEFAULT);
 		
 		OrderElement orderElement = findOrderElementByEAN(ean);
@@ -554,7 +555,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 	
 	private class CheckboxLabelProvider extends BaseLabelProvider {
 		public String getText(Object element){
-			String text = "";
+			String text = StringTool.leer;
 			
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
@@ -569,7 +570,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 	
 	private class AmountLabelProvider extends BaseLabelProvider {
 		public String getText(Object element){
-			String text = "";
+			String text = StringTool.leer;
 			
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
@@ -582,7 +583,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 	
 	private class StockLabelProvider extends BaseLabelProvider {
 		public String getText(Object element){
-			String text = "";
+			String text = StringTool.leer;
 			
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
@@ -606,7 +607,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 	
 	private class PharamcodeLabelProvider extends BaseLabelProvider {
 		public String getText(Object element){
-			String text = "";
+			String text = StringTool.leer;
 			
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
@@ -619,7 +620,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 	
 	private class EANLabelProvider extends BaseLabelProvider {
 		public String getText(Object element){
-			String text = "";
+			String text = StringTool.leer;
 			
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;
@@ -632,7 +633,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 	
 	private class DescriptionLabelProvider extends BaseLabelProvider {
 		public String getText(Object element){
-			String text = "";
+			String text = StringTool.leer;
 			
 			if (element instanceof OrderElement) {
 				OrderElement orderElement = (OrderElement) element;

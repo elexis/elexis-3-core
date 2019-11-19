@@ -30,6 +30,7 @@ import ch.elexis.core.ui.text.EnhancedTextField;
 /**
  * Benutzerspezifische Einstellungen
  */
+import ch.rgw.tools.StringTool;
 public class UserTextPref extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	
 	public static final String ID = "ch.elexis.preferences.UserPreferences"; //$NON-NLS-1$
@@ -57,7 +58,7 @@ public class UserTextPref extends FieldEditorPreferencePage implements IWorkbenc
 		}
 		Set<String> makroNames = makros.keySet();
 		for (String name : makroNames) {
-			addField(new BooleanFieldEditor(EnhancedTextField.MACRO_ENABLED + "/"
+			addField(new BooleanFieldEditor(EnhancedTextField.MACRO_ENABLED + StringTool.slash
 				+ makros.get(name), name, getFieldEditorParent()));
 		}
 	}
@@ -95,14 +96,14 @@ public class UserTextPref extends FieldEditorPreferencePage implements IWorkbenc
 			String clazz = iConfigurationElement.getAttribute("KonsMakro");
 			if (clazz != null && !clazz.isEmpty() && !name.equals("enabled")) {
 				boolean enabled =
-					CoreHub.userCfg.get(EnhancedTextField.MACRO_ENABLED + "/" + clazz, false);
+					CoreHub.userCfg.get(EnhancedTextField.MACRO_ENABLED + StringTool.slash + clazz, false);
 				// set disabled as default ...
 				if (!enabled) {
-					CoreHub.userCfg.set(EnhancedTextField.MACRO_ENABLED + "/" + clazz, false);
+					CoreHub.userCfg.set(EnhancedTextField.MACRO_ENABLED + StringTool.slash + clazz, false);
 				}
 			} else if (clazz != null && !clazz.isEmpty() && name.equals("enabled")) {
 				// set enabled for makros with name enabled
-				CoreHub.userCfg.set(EnhancedTextField.MACRO_ENABLED + "/" + clazz, true);
+				CoreHub.userCfg.set(EnhancedTextField.MACRO_ENABLED + StringTool.slash + clazz, true);
 			}
 		}
 	}

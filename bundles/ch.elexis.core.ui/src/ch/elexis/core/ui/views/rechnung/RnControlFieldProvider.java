@@ -93,7 +93,7 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 	private HyperlinkAdapter /* hlStatus, */ hlPatient;
 	private Label /* hDateFrom, hDateUntil, */ lPatient;
 	Text tNr, tBetrag;
-	String oldSelectedBillingSystem = ""; //$NON-NLS-1$
+	String oldSelectedBillingSystem = StringTool.leer; //$NON-NLS-1$
 	
 	Patient actPatient;
 	
@@ -248,7 +248,7 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 			ret[1] = actPatient.getId();
 		}
 		ret[2] = tNr.getText();
-		ret[3] = tBetrag.getText().replaceAll("\\.", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		ret[3] = tBetrag.getText().replaceAll("\\.", StringTool.leer); //$NON-NLS-1$ //$NON-NLS-2$
 		if (StringTool.isNothing(ret[2])) {
 			ret[2] = null;
 		} else { // Wenn RnNummer gegeben ist, alles andere auf Standard.
@@ -276,7 +276,7 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 	
 	public void clearValues(){
 		cbStat.select(0);
-		tNr.setText(""); //$NON-NLS-1$
+		tNr.setText(StringTool.leer); //$NON-NLS-1$
 		actPatient = null;
 		lPatient.setText(ALLE);
 	}

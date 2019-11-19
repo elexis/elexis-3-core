@@ -444,7 +444,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 					int zahl = verrechnet.getZahl();
 					Money preis = verrechnet.getNettoPreis();
 					preis.multiply(zahl);
-					return "  - " + zahl + " " + verrechnet.getLabel() + " (" + preis.toString() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					return "  - " + zahl + StringTool.space + verrechnet.getLabel() + " (" + preis.toString() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						+ ")"; //$NON-NLS-1$
 				} else {
 					return element.toString();
@@ -481,7 +481,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 							new HashMap<Konsultation, List<VerrechnetCopy>>();
 						// prepare heading label that will look like this dd.MM.yyyy (cancelled) - amountOfMoney
 						StringBuilder sbHeadingLabel = new StringBuilder();
-						sbHeadingLabel.append(Messages.AccountView_bill + " " + actRn.getDatumRn()); //$NON-NLS-1$
+						sbHeadingLabel.append(Messages.AccountView_bill + StringTool.space + actRn.getDatumRn()); //$NON-NLS-1$
 						sbHeadingLabel.append(Messages.RechnungsBlatt_stornoLabel);
 						
 						// store all verrechnetCopies and add label with sum of all cancelled items
@@ -548,7 +548,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 					int amount = vc.getZahl();
 					Money price = vc.getNettoPreis();
 					price.multiply(amount);
-					return "  - " + amount + " " + vc.getLabel() + " (" + price.toString() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					return "  - " + amount + StringTool.space + vc.getLabel() + " (" + price.toString() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						+ ")"; //$NON-NLS-1$
 				} else if (element instanceof Konsultation) {
 					return "Konsultation " + ((Konsultation) element).getDatum();
@@ -647,7 +647,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 			Kontakt adressat = actRn.getFall().getInvoiceRecipient();
 			rnAdressat
 				.setText(Messages.RechnungsBlatt_adressee
-					+ ((adressat != null) ? adressat.getLabel() : ""));
+					+ ((adressat != null) ? adressat.getLabel() : StringTool.leer));
 			form.setText(actRn.getLabel());
 			List<String> trace = actRn.getTrace(Rechnung.STATUS_CHANGED);
 			for (String s : trace) {
@@ -665,7 +665,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 				}
 				tRejects.setText(rjj.toString());
 			} else {
-				tRejects.setText("");
+				tRejects.setText(StringTool.leer);
 			}
 			List<String> outputs = actRn.getTrace(Rechnung.OUTPUT);
 			for (String o : outputs) {

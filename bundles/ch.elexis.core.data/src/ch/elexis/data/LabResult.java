@@ -96,7 +96,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT LW.ID, LW." + OBSERVATIONTIME + ", LW." + DATE + ", LW." + TIME + ", ");
 		sb.append("LI." + LabItem.GROUP + ", LI." + LabItem.SHORTNAME + ", ");
-		sb.append("LW." + PATHODESC + ", LW." + ITEM_ID  + ", LW." + FLAGS + ", LW." + RESULT + " ");
+		sb.append("LW." + PATHODESC + ", LW." + ITEM_ID  + ", LW." + FLAGS + ", LW." + RESULT + StringTool.space);
 		sb.append("FROM " + TABLENAME + " AS LW LEFT JOIN ");
 		sb.append(LabItem.LABITEMS + " AS LI ON LW." + ITEM_ID + "=LI.ID ");
 		sb.append("WHERE LW." + PATIENT_ID + " LIKE ? AND LW.DELETED = '0'");
@@ -419,7 +419,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	 * @since 3.1
 	 */
 	private static TimeTool translateDateTime(String time, String date){
-		if ((time == null) || ("".equals(time))) //$NON-NLS-1$
+		if ((time == null) || (StringTool.leer.equals(time))) //$NON-NLS-1$
 			time = "000000"; //$NON-NLS-1$
 		while (time.length() < 6) {
 			time += StringConstants.ZERO;
@@ -904,7 +904,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 		if (origin != null && origin.exists()) {
 			set(ORIGIN_ID, origin.getId());
 		} else {
-			set(ORIGIN_ID, ""); //$NON-NLS-1$
+			set(ORIGIN_ID, StringTool.leer); //$NON-NLS-1$
 		}
 	}
 	
@@ -1035,7 +1035,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	private static String getNotNull(ResultSet set, int index) throws SQLException{
 		String ret = set.getString(index);
 		if (ret == null) {
-			ret = "";
+			ret = StringTool.leer;
 		}
 		return ret;
 	}

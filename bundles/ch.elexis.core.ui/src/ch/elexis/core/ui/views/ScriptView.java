@@ -62,6 +62,7 @@ import ch.rgw.tools.ExHandler;
  * @author gerry
  * 
  */
+import ch.rgw.tools.StringTool;
 public class ScriptView extends ViewPart {
 	public static final String ID = "ch.elexis.scriptsView"; //$NON-NLS-1$
 	private IAction newScriptAction, editScriptAction, removeScriptAction, execScriptAction,
@@ -203,7 +204,7 @@ public class ScriptView extends ViewPart {
 							null);
 					if (inp.open() == Dialog.OK) {
 						try {
-							Script.create(inp.getValue(), "");
+							Script.create(inp.getValue(), StringTool.leer);
 						} catch (ElexisException e) {
 							ExHandler.handle(e);
 							SWTHelper.showError("Fehler bei Scripterstellung", e.getMessage());
@@ -338,7 +339,7 @@ public class ScriptView extends ViewPart {
 			for (Text text : inputs) {
 				String varname = (String) text.getData("varname");
 				String varcontents = text.getText();
-				sb.append(varname).append("=").append(varcontents).append(",");
+				sb.append(varname).append(StringTool.equals).append(varcontents).append(",");
 			}
 			sb.deleteCharAt(sb.length() - 1);
 			result = sb.toString();

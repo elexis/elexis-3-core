@@ -19,6 +19,7 @@ import ch.elexis.data.LabResult;
 import ch.elexis.data.Patient;
 import ch.rgw.tools.TimeTool;
 
+import ch.rgw.tools.StringTool;
 public class LaborResultsLabelProvider extends ColumnLabelProvider {
 	
 	private TreeViewerColumn column;
@@ -49,7 +50,7 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 				}
 			}
 		}
-		return ""; //$NON-NLS-1$
+		return StringTool.leer; //$NON-NLS-1$
 	}
 	
 	private String getResultString(LabResult labResult){
@@ -123,7 +124,7 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 		StringBuilder sb = new StringBuilder();
 		String comment = labResult.getComment();
 		if (!comment.isEmpty()) {
-			sb.append("\n").append(comment);
+			sb.append(StringTool.lf).append(comment);
 		}
 		return sb.toString();
 	}
@@ -148,7 +149,7 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 							sb.append(" - "); //$NON-NLS-1$
 							sb.append(getResultString(labResult));
 							sb.append(getUnitAndReferenceString(labResult));
-							sb.append("\n").append(getPathologicString(labResult));
+							sb.append(StringTool.lf).append(getPathologicString(labResult));
 							sb.append(getCommentString(labResult));
 						} else {
 							sb.append(",\n"); //$NON-NLS-1$
@@ -156,7 +157,7 @@ public class LaborResultsLabelProvider extends ColumnLabelProvider {
 							sb.append(" - "); //$NON-NLS-1$
 							sb.append(getResultString(labResult));
 							sb.append(getUnitAndReferenceString(labResult));
-							sb.append("\n").append(getPathologicString(labResult));
+							sb.append(StringTool.lf).append(getPathologicString(labResult));
 							sb.append(getCommentString(labResult));
 						}
 					}

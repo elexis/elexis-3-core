@@ -14,6 +14,7 @@ import ch.elexis.data.Mandant;
  * @author thomas
  *
  */
+import ch.rgw.tools.StringTool;
 public class MailAccount {
 	
 	private static final String SEPARATOR = ",";
@@ -128,7 +129,7 @@ public class MailAccount {
 		if (parts != null && parts.length > 2) {
 			ret = new MailAccount();
 			for (String string : parts) {
-				String[] subParts = string.split("=");
+				String[] subParts = string.split(StringTool.equals);
 				if (subParts != null && subParts.length == 2) {
 					setField(subParts[0], subParts[1], ret);
 				}

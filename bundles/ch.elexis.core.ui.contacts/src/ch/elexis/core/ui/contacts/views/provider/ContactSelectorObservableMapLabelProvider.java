@@ -23,6 +23,7 @@ import ch.elexis.core.data.interfaces.IPerson;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.icons.Images;
 
+import ch.rgw.tools.StringTool;
 public class ContactSelectorObservableMapLabelProvider extends ObservableMapLabelProvider
 		implements ITableLabelProvider {
 		
@@ -66,7 +67,7 @@ public class ContactSelectorObservableMapLabelProvider extends ObservableMapLabe
 		case ORGANIZATION:
 			sb = new StringBuilder();
 			if (contact.getDescription1() != null) {
-				sb.append(contact.getDescription1() + " ");
+				sb.append(contact.getDescription1() + StringTool.space);
 			}
 			if (contact.getDescription2() != null)
 				sb.append(contact.getDescription2());
@@ -75,7 +76,7 @@ public class ContactSelectorObservableMapLabelProvider extends ObservableMapLabe
 			IPerson person = (IPerson) contact;
 			sb = new StringBuilder();
 			if (person.getTitel() != null)
-				sb.append(person.getTitel() + " ");
+				sb.append(person.getTitel() + StringTool.space);
 			sb.append(contact.getDescription1() + ", ");
 			sb.append(contact.getDescription2());
 			if (person.getTitelSuffix() != null)
@@ -100,7 +101,7 @@ public class ContactSelectorObservableMapLabelProvider extends ObservableMapLabe
 		case UNKNOWN:
 			return "?";
 		default:
-			return "";
+			return StringTool.leer;
 		}
 	}
 }

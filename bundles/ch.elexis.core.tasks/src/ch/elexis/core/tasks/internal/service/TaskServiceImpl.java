@@ -50,6 +50,7 @@ import ch.elexis.core.tasks.model.OwnerTaskNotification;
 import ch.elexis.core.tasks.model.TaskState;
 import ch.elexis.core.tasks.model.TaskTriggerType;
 
+import ch.rgw.tools.StringTool;
 @Component(immediate = true)
 public class TaskServiceImpl implements ITaskService {
 	
@@ -306,7 +307,7 @@ public class TaskServiceImpl implements ITaskService {
 		StringBuilder sb = new StringBuilder();
 		sb.append(task.getLabel());
 		if (StringUtils.isNotBlank(resultText)) {
-			sb.append("\n" + resultText);
+			sb.append(StringTool.lf + resultText);
 		}
 		message.setMessageText(sb.toString());
 		

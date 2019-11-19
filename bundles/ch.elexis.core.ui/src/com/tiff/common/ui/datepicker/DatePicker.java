@@ -59,6 +59,7 @@ import org.eclipse.swt.widgets.TypedListener;
  * @author <a href="mailto:andy@tiff.ru">Andrey Onistchuk</a>
  * @version $Revision: 1.2 $
  */
+import ch.rgw.tools.StringTool;
 public class DatePicker extends Composite {
 	
 	// ~ Inner Classes ----------------------------------------------------------
@@ -337,7 +338,7 @@ public class DatePicker extends Composite {
 							: SWT.COLOR_BLACK));
 				}
 				
-				drawTextImage(gc, "" + day, p.x, p.y, colSize, rowSize);
+				drawTextImage(gc, StringTool.leer + day, p.x, p.y, colSize, rowSize);
 				day++;
 			}
 			

@@ -36,6 +36,7 @@ import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.MailAccount.TYPE;
 import ch.elexis.core.mail.MailMessage;
 
+import ch.rgw.tools.StringTool;
 @Component
 public class MailClient implements IMailClient {
 	
@@ -69,7 +70,7 @@ public class MailClient implements IMailClient {
 	@Override
 	public Optional<MailAccount> getAccount(String id){
 		MailAccount ret = null;
-		String accountString = CoreHub.globalCfg.get(CONFIG_ACCOUNT + "/" + id, null);
+		String accountString = CoreHub.globalCfg.get(CONFIG_ACCOUNT + StringTool.slash + id, null);
 		if (accountString != null) {
 			ret = MailAccount.from(accountString);
 		}
@@ -91,7 +92,7 @@ public class MailClient implements IMailClient {
 	public void saveAccount(MailAccount account){
 		if (account != null && account.getId() != null) {
 			addAccountId(account.getId());
-			CoreHub.globalCfg.set(CONFIG_ACCOUNT + "/" + account.getId(), account.toString());
+			CoreHub.globalCfg.set(CONFIG_ACCOUNT + StringTool.slash + account.getId(), account.toString());
 			CoreHub.globalCfg.flush();
 		}
 	}
@@ -121,7 +122,7 @@ public class MailClient implements IMailClient {
 	public void removeAccount(MailAccount account){
 		if (account != null && account.getId() != null) {
 			removeAccountId(account.getId());
-			CoreHub.globalCfg.remove(CONFIG_ACCOUNT + "/" + account.getId());
+			CoreHub.globalCfg.remove(CONFIG_ACCOUNT + StringTool.slash + account.getId());
 			CoreHub.globalCfg.flush();
 		}
 	}

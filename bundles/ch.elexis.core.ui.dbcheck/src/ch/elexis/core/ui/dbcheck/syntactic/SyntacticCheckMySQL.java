@@ -17,6 +17,7 @@ import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.JdbcLinkSyntaxException;
 import ch.rgw.tools.Log;
 
+import ch.rgw.tools.StringTool;
 public class SyntacticCheckMySQL extends SyntacticCheck {
 	
 	private static Log logger = Log.get(SyntacticCheckMySQL.class.getName());
@@ -49,7 +50,7 @@ public class SyntacticCheckMySQL extends SyntacticCheck {
 					rsColl =
 						stmColl
 							.query("SELECT table_collation FROM information_schema.tables WHERE UPPER(table_name) = \""
-								+ tables[l].toUpperCase() + "\"");
+								+ tables[l].toUpperCase() + StringTool.backslash);
 				} catch (JdbcLinkSyntaxException je) {
 					errlog.append(tables[l] + ": SynErr: Tabelle nicht gefunden!\n");
 					continue;
@@ -60,7 +61,7 @@ public class SyntacticCheckMySQL extends SyntacticCheck {
 				}
 				String collation = rsColl.getString(1);
 				if (!collation.equalsIgnoreCase("utf8_general_ci")) {
-					oklog.append(" " + collation + " inkorrekt, erwarte utf8_general_ci\n");
+					oklog.append(StringTool.space + collation + " inkorrekt, erwarte utf8_general_ci\n");
 					errlog.append(tables[l] + ": Collation " + collation
 						+ " inkorrekt, erwarte utf8_general_ci\n");
 					fixScript.append("ALTER TABLE " + tables[l]
@@ -87,18 +88,18 @@ public class SyntacticCheckMySQL extends SyntacticCheck {
 				for (int k = 0; k < fields.length; k++) {
 					boolean ok = false;
 					
-					oklog.append(tables[i] + ": Erwarte " + fields[k] + " " + fieldType[k] + "...");
+					oklog.append(tables[i] + ": Erwarte " + fields[k] + StringTool.space + fieldType[k] + "...");
 					
 					Stm stm = j.getStatement();
 					ResultSet rs = null;
 					
 					try {
-						rs = stm.query("DESCRIBE " + tables[i].toLowerCase() + " " + fields[k]);
+						rs = stm.query("DESCRIBE " + tables[i].toLowerCase() + StringTool.space + fields[k]);
 						
 					} catch (JdbcLinkSyntaxException je) {
 						// We have no lowercase here, but uppercase!
 						try {
-							rs = stm.query("DESCRIBE " + tables[i] + " " + fields[k]);
+							rs = stm.query("DESCRIBE " + tables[i] + StringTool.space + fields[k]);
 						} catch (JdbcLinkSyntaxException je2) {
 							// We still did not find the table, assume its missing!
 							continue;
@@ -111,21 +112,21 @@ public class SyntacticCheckMySQL extends SyntacticCheck {
 							&& isCompatible(rs.getString(2), fieldType[k])) {
 							oklog.append(" OK\n");
 						} else {
-							oklog.append(" erhalte " + rs.getString(1) + " " + rs.getString(2)
-								+ "\n");
-							errlog.append(tables[i] + ": SynErr: FeldTyp " + rs.getString(1) + " "
-								+ rs.getString(2) + " inkorrekt, erwarte " + fields[k] + " "
-								+ fieldType[k] + "\n");
+							oklog.append(" erhalte " + rs.getString(1) + StringTool.space + rs.getString(2)
+								+ StringTool.lf);
+							errlog.append(tables[i] + ": SynErr: FeldTyp " + rs.getString(1) + StringTool.space
+								+ rs.getString(2) + " inkorrekt, erwarte " + fields[k] + StringTool.space
+								+ fieldType[k] + StringTool.lf);
 							fixScript.append("ALTER TABLE " + tables[i] + " MODIFY " + fields[k]
-								+ " " + fieldType[k] + ";\n");
+								+ StringTool.space + fieldType[k] + ";\n");
 						}
 						
 					}
 					if (!ok) {
 						oklog.append(" not found\n");
-						errlog.append(tables[i] + ": SynErr: Feld " + fields[k] + " "
+						errlog.append(tables[i] + ": SynErr: Feld " + fields[k] + StringTool.space
 							+ fieldType[k] + " nicht gefunden!\n");
-						fixScript.append("ALTER TABLE " + tables[i] + " ADD " + fields[k] + " "
+						fixScript.append("ALTER TABLE " + tables[i] + " ADD " + fields[k] + StringTool.space
 							+ fieldType[k]);
 					}
 					

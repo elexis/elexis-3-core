@@ -15,6 +15,7 @@ import ch.elexis.core.ui.dbcheck.model.TableDescriptor;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 
+import ch.rgw.tools.StringTool;
 public class RefIntegrityCheckMySQL extends RefIntegrityCheck {
 	
 	public RefIntegrityCheckMySQL(){
@@ -39,13 +40,13 @@ public class RefIntegrityCheckMySQL extends RefIntegrityCheck {
 				if (!(refIntErrors == null) && refIntErrors.length > 0) {
 					for (int k = 0; k < refIntErrors.length; k = k + 2) {
 						String description = refIntErrors[k];
-						System.out.println(tables[i] + " " + description + " " + k);
+						System.out.println(tables[i] + StringTool.space + description + StringTool.space + k);
 						String query = refIntErrors[k + 1];
 						Stm stm = j.getStatement();
 						ResultSet rs = stm.query(query.toLowerCase());
 						while (rs.next()) {
-							errlog.append(tables[i] + ": " + rs.getString(1) + " " + description
-								+ "\n");
+							errlog.append(tables[i] + ": " + rs.getString(1) + StringTool.space + description
+								+ StringTool.lf);
 						}
 					}
 				}

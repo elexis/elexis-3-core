@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import ch.rgw.tools.StringTool;
 public class TestUtil {
 
 	public static String loadFile(Class<?> classLoader, String resourceName) throws IOException{
@@ -16,7 +17,7 @@ public class TestUtil {
 		}
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
 			while ((line = reader.readLine()) != null) {
-				sb.append(line + "\n");
+				sb.append(line + StringTool.lf);
 			}
 		}
 		return sb.toString();

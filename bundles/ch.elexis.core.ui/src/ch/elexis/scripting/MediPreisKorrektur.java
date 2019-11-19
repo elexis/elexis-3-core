@@ -23,6 +23,7 @@ import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
 
+import ch.rgw.tools.StringTool;
 public class MediPreisKorrektur {
 	FileWriter writer;
 	
@@ -67,8 +68,8 @@ public class MediPreisKorrektur {
 				StringBuilder sb = new StringBuilder();
 				sb.append("Konversion beendet. ").append(i)
 					.append(" Konsultationen wurden umgerechnet\n").append("Alter Betrag: ")
-					.append(old.getAmountAsString()).append("\n").append("Neuer Betrag: ")
-					.append(changed.getAmountAsString()).append("\n");
+					.append(old.getAmountAsString()).append(StringTool.lf).append("Neuer Betrag: ")
+					.append(changed.getAmountAsString()).append(StringTool.lf);
 				return sb.toString();
 			} else {
 				return "\nabgebrochen.";

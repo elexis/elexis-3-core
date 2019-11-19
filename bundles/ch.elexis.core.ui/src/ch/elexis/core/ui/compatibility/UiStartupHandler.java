@@ -15,7 +15,8 @@ import org.osgi.service.event.EventHandler;
 
 import ch.elexis.core.ui.UiDesk;
 
-@Component(property = EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE)
+import ch.rgw.tools.StringTool;
+@Component(property = EventConstants.EVENT_TOPIC + StringTool.equals + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE)
 public class UiStartupHandler implements EventHandler {
 	
 	@Override

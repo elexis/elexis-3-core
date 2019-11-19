@@ -51,6 +51,7 @@ import ch.elexis.data.LabGroup;
 import ch.elexis.data.LabItem;
 import ch.elexis.data.Query;
 
+import ch.rgw.tools.StringTool;
 public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferencePage {
 	public static final String SHOW_GROUPS_ONLY = "lab/showGroupsOnly"; //$NON-NLS-1$
 	
@@ -135,7 +136,7 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 					new InputDialog(
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 						Messages.LabGroupPrefs_newLabGroup,
-						Messages.LabGroupPrefs_selectNameForLabGroup, "", null); //$NON-NLS-1$
+						Messages.LabGroupPrefs_selectNameForLabGroup, StringTool.leer, null); //$NON-NLS-1$
 				int rc = dialog.open();
 				if (rc == Window.OK) {
 					String name = dialog.getValue();
@@ -361,7 +362,7 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 				sb.append(item.getGroup());
 				sb.append(" - "); //$NON-NLS-1$
 				sb.append(item.get("titel")); //$NON-NLS-1$
-				sb.append(" (").append(item.getRefM()).append("/").append(item.getRefW()) //$NON-NLS-1$ //$NON-NLS-2$
+				sb.append(" (").append(item.getRefM()).append(StringTool.slash).append(item.getRefW()) //$NON-NLS-1$ //$NON-NLS-2$
 					.append(")"); //$NON-NLS-1$
 				sb.append(" [").append(item.getEinheit()).append("]"); //$NON-NLS-1$ //$NON-NLS-2$
 				

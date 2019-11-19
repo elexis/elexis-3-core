@@ -19,6 +19,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
+import ch.rgw.tools.StringTool;
 public class NatTableCustomCellPainter extends TextPainter {
 	
 	BackgroundPainter bgPainter = new BackgroundPainter();
@@ -59,7 +60,7 @@ public class NatTableCustomCellPainter extends TextPainter {
 			//draw every line by itself
 			int yStartPos = rectangle.y
 				+ CellStyleUtil.getVerticalAlignmentPadding(cellStyle, rectangle, contentHeight);
-			String[] lines = text.split("\n"); //$NON-NLS-1$
+			String[] lines = text.split(StringTool.lf); //$NON-NLS-1$
 			for (String line : lines) {
 				int lineContentWidth = Math.min(getLengthFromCache(gc, line), rectangle.width);
 				
@@ -95,7 +96,7 @@ public class NatTableCustomCellPainter extends TextPainter {
 		if (parts != null && parts.length > 0) {
 			for (String string : parts) {
 				if (string.startsWith("<strong>")) {
-					string = string.replaceAll("<strong>", "");
+					string = string.replaceAll("<strong>", StringTool.leer);
 					ret.add(new TextPart(string, TextPart.PartStyle.BOLD));
 				} else {
 					ret.add(new TextPart(string, TextPart.PartStyle.NORMAL));

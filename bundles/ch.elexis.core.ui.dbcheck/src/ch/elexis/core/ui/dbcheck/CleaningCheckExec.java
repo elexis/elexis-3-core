@@ -7,6 +7,7 @@ package ch.elexis.core.ui.dbcheck;
 import ch.elexis.core.ui.dbcheck.cleaning.CleaningCheck;
 import ch.elexis.core.ui.dbcheck.cleaning.CleaningCheckPGSQL;
 
+import ch.rgw.tools.StringTool;
 public class CleaningCheckExec extends CheckExec {
 	/**
 	 * Execute cleaning scripts
@@ -16,7 +17,7 @@ public class CleaningCheckExec extends CheckExec {
 	public static String doCleaning(){
 		
 		if (sqlDriver.equalsIgnoreCase(MYSQL_DB)) {
-			return "";
+			return StringTool.leer;
 			
 		}
 		if (sqlDriver.equalsIgnoreCase(POSTG_DB)) {

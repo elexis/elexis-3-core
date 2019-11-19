@@ -25,6 +25,7 @@ import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 
+import ch.rgw.tools.StringTool;
 @Component
 public class MedicationService implements IMedicationService {
 	
@@ -48,7 +49,7 @@ public class MedicationService implements IMedicationService {
 			// Match stuff like '1/2', '7/8', '~1,2'
 			// System.out.println(dosis.matches(special_num_at_start));
 			if (dosis.matches(special_num_at_start)) {
-				list.add(getNum(dosis.replace("~", "")));
+				list.add(getNum(dosis.replace("~", StringTool.leer)));
 			} else if (dosis.matches("[0-9½¼]+([xX][0-9]+(/[0-9]+)?|)")) { //$NON-NLS-1$
 				String[] dose = dosis.split("[xX]"); //$NON-NLS-1$
 				float count = getNum(dose[0]);
@@ -62,8 +63,8 @@ public class MedicationService implements IMedicationService {
 				if (StringUtils.countMatches(dosis, "-") > 1 && sub_list.size() > 0) {
 					return sub_list;
 				}
-				sub_list = getDosageAsFloats(dosis, "/");
-				if (StringUtils.countMatches(dosis, "/") > 1 && sub_list.size() > 0) {
+				sub_list = getDosageAsFloats(dosis, StringTool.slash);
+				if (StringUtils.countMatches(dosis, StringTool.slash) > 1 && sub_list.size() > 0) {
 					return sub_list;
 				}
 				if (dosis.indexOf('-') != -1 || dosis.indexOf('/') != -1) {
@@ -146,7 +147,7 @@ public class MedicationService implements IMedicationService {
 			}
 			// matching for values like 2x1, 2,5x1 or 20x1
 			else if (n.toLowerCase().matches("^[0-9][,.]*[0-9]*x[0-9][,.]*[0-9]*$")) {
-				n = n.replace("\\s", "");
+				n = n.replace("\\s", StringTool.leer);
 				String[] nums = n.toLowerCase().split("x");
 				float num1 = Float.parseFloat(nums[0].replace(",", "."));
 				float num2 = Float.parseFloat(nums[1].replace(",", "."));
@@ -160,7 +161,7 @@ public class MedicationService implements IMedicationService {
 			// any other digit-letter combination. replaces comma with dot and removes all non-digit chars. i.e. 1,5 p. Day becomes 1.5
 			else {
 				n = n.replace(",", ".");
-				n = n.replaceAll("[^\\d.]", "");
+				n = n.replaceAll("[^\\d.]", StringTool.leer);
 				if (n.endsWith(".")) {
 					n = n.substring(0, n.length() - 1);
 				}

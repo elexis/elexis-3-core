@@ -20,6 +20,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import javax.xml.bind.annotation.XmlElement;
+import ch.rgw.tools.StringTool;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
@@ -516,7 +517,7 @@ public class BillingProposalView extends ViewPart {
 				if (costBearer != null) {
 					item.insurerName = costBearer.getLabel(true);
 				} else {
-					item.insurerName = "";
+					item.insurerName = StringTool.leer;
 				}
 			}
 			

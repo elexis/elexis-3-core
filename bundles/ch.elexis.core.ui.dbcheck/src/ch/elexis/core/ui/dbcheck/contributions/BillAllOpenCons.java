@@ -24,6 +24,7 @@ import ch.elexis.data.Rechnung;
 import ch.elexis.data.Rechnungssteller;
 import ch.rgw.tools.TimeTool;
 
+import ch.rgw.tools.StringTool;
 public class BillAllOpenCons extends ExternalMaintenance {
 	
 	public enum BillStrategies implements IBillStrategy {
@@ -241,10 +242,10 @@ public class BillAllOpenCons extends ExternalMaintenance {
 		if (problems != null && !problems.isEmpty()) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("\nProblems:\n");
-			problems.stream().forEach(problem -> sb.append(problem + "\n"));
+			problems.stream().forEach(problem -> sb.append(problem + StringTool.lf));
 			return sb.toString();
 		}
-		return "";
+		return StringTool.leer;
 	}
 	
 	@Override

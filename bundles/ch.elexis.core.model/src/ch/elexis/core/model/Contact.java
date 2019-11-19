@@ -17,6 +17,7 @@ import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.types.Country;
 
+import ch.rgw.tools.StringTool;
 public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements IdentifiableWithXid, IContact {
 
 	public Contact(Kontakt entity) {
@@ -246,12 +247,12 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 	@Override
 	public String getLabel() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(getDescription1()).append(" ").append(StringUtils.defaultString(getDescription2()));
+		sb.append(getDescription1()).append(StringTool.space).append(StringUtils.defaultString(getDescription2()));
 		if (!StringUtils.isBlank(getDescription3())) {
 			sb.append("(").append(getDescription3()).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		sb.append(", ").append(StringUtils.defaultString(getStreet())).append(", ") //$NON-NLS-1$ //$NON-NLS-2$
-				.append(StringUtils.defaultString(getZip())).append(" ").append(StringUtils.defaultString(getCity()));
+				.append(StringUtils.defaultString(getZip())).append(StringTool.space).append(StringUtils.defaultString(getCity()));
 		return sb.toString();
 	}
 

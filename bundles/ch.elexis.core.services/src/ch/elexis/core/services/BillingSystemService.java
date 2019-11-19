@@ -14,6 +14,7 @@ import ch.elexis.core.model.BillingSystem;
 import ch.elexis.core.model.IBillingSystem;
 import ch.elexis.core.model.ch.BillingLaw;
 
+import ch.rgw.tools.StringTool;
 @Component
 public class BillingSystemService implements IBillingSystemService {
 	
@@ -24,21 +25,21 @@ public class BillingSystemService implements IBillingSystemService {
 	
 	@Override
 	public String getRequirements(IBillingSystem system){
-		String value = configService.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+		String value = configService.get(Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash //$NON-NLS-1$
 			+ system.getName() + "/bedingungen", null);
 		return value;
 	}
 	
 	@Override
 	public String getDefaultPrintSystem(IBillingSystem system){
-		String value = configService.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+		String value = configService.get(Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash //$NON-NLS-1$
 			+ system.getName() + "/standardausgabe", null);
 		return value;
 	}
 	
 	@Override
 	public List<String> getBillingSystemConstants(IBillingSystem billingSystem){
-		String bc = configService.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+		String bc = configService.get(Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash //$NON-NLS-1$
 			+ billingSystem + "/constants", null); //$NON-NLS-1$
 		if (bc == null) {
 			return Collections.emptyList();
@@ -51,12 +52,12 @@ public class BillingSystemService implements IBillingSystemService {
 	public String getBillingSystemConstant(IBillingSystem billingSystem, String name){
 		List<String> constants = getBillingSystemConstants(billingSystem);
 		for (String bc : constants) {
-			String[] val = bc.split("="); //$NON-NLS-1$
+			String[] val = bc.split(StringTool.equals); //$NON-NLS-1$
 			if (val[0].equalsIgnoreCase(name)) {
 				return val[1];
 			}
 		}
-		return ""; //$NON-NLS-1$
+		return StringTool.leer; //$NON-NLS-1$
 	}
 	
 	@Override
@@ -111,15 +112,15 @@ public class BillingSystemService implements IBillingSystemService {
 	
 	private String getConfigurationValue(String billingSystemName, String attributeName,
 		String defaultIfNotDefined){
-		String ret = configService.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
-			+ billingSystemName + "/" + attributeName, defaultIfNotDefined); //$NON-NLS-1$
+		String ret = configService.get(Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash //$NON-NLS-1$
+			+ billingSystemName + StringTool.slash + attributeName, defaultIfNotDefined); //$NON-NLS-1$
 		return ret;
 	}
 	
 	private void setConfigurationValue(String billingSystemName, String attributeName,
 		String attributeValue){
-		String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + billingSystemName; //$NON-NLS-1$
-		configService.set(key + "/" + attributeName, attributeValue);
+		String key = Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash + billingSystemName; //$NON-NLS-1$
+		configService.set(key + StringTool.slash + attributeName, attributeValue);
 	}
 	
 }

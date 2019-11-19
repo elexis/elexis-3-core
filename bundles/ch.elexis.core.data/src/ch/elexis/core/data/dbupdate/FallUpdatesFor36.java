@@ -22,6 +22,7 @@ import ch.elexis.data.BillingSystem;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Query;
 
+import ch.rgw.tools.StringTool;
 public class FallUpdatesFor36 {
 	
 	protected static Logger log = LoggerFactory.getLogger(FallUpdatesFor36.class);
@@ -84,7 +85,7 @@ public class FallUpdatesFor36 {
 								log.error("Could not resolve law [{}] from billing systeem [{}]",
 									abrechnungsSystemGesetz, abrechnungssystem);
 								errors.append(
-									"Fehler Gesetz-Konfiguration für " + abrechnungssystem + "\n");
+									"Fehler Gesetz-Konfiguration für " + abrechnungssystem + StringTool.lf);
 							}
 						} else {
 							log.error("No gesetz constant found for billing system [{}]",
@@ -97,11 +98,11 @@ public class FallUpdatesFor36 {
 						if (requirements != null && requirements.contains("Kostenträger:K")) {
 							BillingSystem.moveCostBearerFromExtinfoToDBRow(abrechnungssystem,
 								"Kostenträger");
-							requirements = requirements.replace("Kostenträger:K:;", "");
-							requirements = requirements.replace("Kostenträger:K:", "");
-							requirements = requirements.replace("Kostenträger:K;", "");
-							requirements = requirements.replace("Kostenträger:K", "");
-							CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+							requirements = requirements.replace("Kostenträger:K:;", StringTool.leer);
+							requirements = requirements.replace("Kostenträger:K:", StringTool.leer);
+							requirements = requirements.replace("Kostenträger:K;", StringTool.leer);
+							requirements = requirements.replace("Kostenträger:K", StringTool.leer);
+							CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash //$NON-NLS-1$
 								+ abrechnungssystem + "/bedingungen", requirements); //$NON-NLS-1$
 						} else {
 							log.error("Could not find cost bearer entry for billing system [{}]",

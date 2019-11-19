@@ -44,6 +44,7 @@ import ch.elexis.data.PersistentObject;
  * @author thomas
  *
  */
+import ch.rgw.tools.StringTool;
 public class GenericSelectionComposite extends Composite implements ISelectionProvider {
 	
 	private ListenerList selectionListeners = new ListenerList();
@@ -103,7 +104,7 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 			}
 			selectLabel.setText(sb.toString());
 		} else {
-			selectLabel.setText("");
+			selectLabel.setText(StringTool.leer);
 		}
 		getParent().layout();
 	}
@@ -229,7 +230,7 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 			} else if (object != null) {
 				return object.toString();
 			} else {
-				return "";
+				return StringTool.leer;
 			}
 		}
 	}

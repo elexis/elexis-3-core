@@ -23,6 +23,7 @@ import ch.elexis.data.Reminder;
  * {@link Hub#start(org.osgi.framework.BundleContext)}, de-registered within
  * {@link Hub#stop(org.osgi.framework.BundleContext)}
  */
+import ch.rgw.tools.StringTool;
 public class PatientEventListener extends ElexisEventListenerImpl {
 	
 	public PatientEventListener(){
@@ -42,7 +43,7 @@ public class PatientEventListener extends ElexisEventListenerImpl {
 				if (list.size() != 0) {
 					StringBuilder sb = new StringBuilder();
 					for (Reminder r : list) {
-						sb.append(r.getSubject()+"\n");
+						sb.append(r.getSubject()+StringTool.lf);
 						sb.append(r.getMessage()+"\n\n");
 					}
 					MessageEvent.fireInformation(Messages.PatientEventListener_0,

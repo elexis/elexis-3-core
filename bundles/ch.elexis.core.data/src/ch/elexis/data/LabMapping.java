@@ -14,6 +14,7 @@ import ch.elexis.core.types.LabItemTyp;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.VersionInfo;
 
+import ch.rgw.tools.StringTool;
 public class LabMapping extends PersistentObject {
 	
 	private static Logger logger = LoggerFactory.getLogger(LabMapping.class);
@@ -255,7 +256,7 @@ public class LabMapping extends PersistentObject {
 				notImported.append(line);
 				notImported.append(" -> "); //$NON-NLS-1$
 				notImported.append(reason);
-				notImported.append("\n"); //$NON-NLS-1$
+				notImported.append(StringTool.lf); //$NON-NLS-1$
 				continue;
 			} else if (parts[0].equalsIgnoreCase("CONTACT_NAME")) { //$NON-NLS-1$
 				// skip description line
@@ -273,7 +274,7 @@ public class LabMapping extends PersistentObject {
 				notImported.append(line);
 				notImported.append(" -> "); //$NON-NLS-1$
 				notImported.append(reason);
-				notImported.append("\n"); //$NON-NLS-1$
+				notImported.append(StringTool.lf); //$NON-NLS-1$
 				continue;
 			} else {
 				labor = origins.get(0);
@@ -288,7 +289,7 @@ public class LabMapping extends PersistentObject {
 			String labItemUnit = parts[7];
 			String labItemTyp = parts[8];
 			String labItemGroup = parts[9];
-			String labItemBillingCode = "";
+			String labItemBillingCode = StringTool.leer;
 			if (parts.length > 10) {
 				labItemBillingCode = parts[10];
 			}
@@ -300,7 +301,7 @@ public class LabMapping extends PersistentObject {
 				notImported.append(line);
 				notImported.append(" -> "); //$NON-NLS-1$
 				notImported.append(reason);
-				notImported.append("\n"); //$NON-NLS-1$
+				notImported.append(StringTool.lf); //$NON-NLS-1$
 				continue;
 			}
 			
@@ -324,7 +325,7 @@ public class LabMapping extends PersistentObject {
 				notImported.append(line);
 				notImported.append(" -> "); //$NON-NLS-1$
 				notImported.append(reason);
-				notImported.append("\n"); //$NON-NLS-1$
+				notImported.append(StringTool.lf); //$NON-NLS-1$
 				continue;
 			} else {
 				labItem = items.get(0);
@@ -396,7 +397,7 @@ public class LabMapping extends PersistentObject {
 		List<LabItem> labItems = null;
 		if (loinc != null && !loinc.isEmpty()) {
 			Query<LabItem> qli = new Query<LabItem>(LabItem.class);
-			qli.add(LabItem.LOINCCODE, "=", loinc.trim()); //$NON-NLS-1$
+			qli.add(LabItem.LOINCCODE, StringTool.equals, loinc.trim()); //$NON-NLS-1$
 			labItems = qli.execute();
 			if (labItems.size() == 1) {
 				return labItems;

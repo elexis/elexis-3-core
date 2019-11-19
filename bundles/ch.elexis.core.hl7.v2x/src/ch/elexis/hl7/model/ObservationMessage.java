@@ -7,30 +7,31 @@ import java.util.Vector;
 
 import ch.elexis.hl7.util.HL7Helper;
 
+import ch.rgw.tools.StringTool;
 public class ObservationMessage {
 	
 	// MSH
 	String sendingApplication; // MSH-3
 	String sendingFacility; // MSH-4
 	Date dateTimeOfMessage = null; // MSH-7
-	String messageControlID = ""; // MSH-10
+	String messageControlID = StringTool.leer; // MSH-10
 	
 	// PID
 	String patientId; // PID-3
 	String alternatePatientId; // PID-4
 	String patientName; // PID-5
-	String patientLastName = ""; // PID-5-2
-	String patientFirstName = ""; // PID-5-3
-	String patientBirthdate = ""; // PID-7
-	String patientSex = ""; // PID-8
+	String patientLastName = StringTool.leer; // PID-5-2
+	String patientFirstName = StringTool.leer; // PID-5-3
+	String patientBirthdate = StringTool.leer; // PID-7
+	String patientSex = StringTool.leer; // PID-8
 	// optional NTE following PID
 	// see http://hl7-definition.caristix.com:9010/Default.aspx?version=HL7+v2.5&segment=OBX
-	String patientNotesAndComments = "";
+	String patientNotesAndComments = StringTool.leer;
 	
 	// ORC
 	String orderNumber; // ORC-2
-	String orderNumberPlacer = ""; // ORC-2
-	String orderNumberFiller = ""; // ORC-3
+	String orderNumberPlacer = StringTool.leer; // ORC-2
+	String orderNumberFiller = StringTool.leer; // ORC-3
 	Date dateTimeOfTransaction = null; // ORC-9
 	
 	// OBX
@@ -64,7 +65,7 @@ public class ObservationMessage {
 		this.patientLastName = _patientLastName;
 		this.patientFirstName = _patientFirstName;
 		this.patientNotesAndComments = _patientNotesAndComments;
-		this.patientName = _patientLastName + " " + _patientFirstName;
+		this.patientName = _patientLastName + StringTool.space + _patientFirstName;
 		this.patientBirthdate = _patientBirthDate;
 		this.patientSex = _patientSex;
 		this.alternatePatientId = _alternatePatientId;

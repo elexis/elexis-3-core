@@ -26,9 +26,10 @@ import org.eclipse.swt.widgets.Control;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.model.Identifiable;
 
+import ch.rgw.tools.StringTool;
 public class IdentifiableDropTarget implements DropTargetListener {
 	IReceiver receiver;
-	String name = "";
+	String name = StringTool.leer;
 	
 	public IdentifiableDropTarget(Control target, IReceiver receiver){
 		this.receiver = receiver;

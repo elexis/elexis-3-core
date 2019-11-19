@@ -37,6 +37,7 @@ import ch.elexis.core.model.IOrder;
 import ch.elexis.core.services.IQuery;
 import ch.rgw.tools.TimeTool;
 
+import ch.rgw.tools.StringTool;
 public class SelectBestellungDialog extends SelectionDialog {
 	
 	private IStructuredContentProvider fContentProvider;
@@ -133,7 +134,7 @@ public class SelectBestellungDialog extends SelectionDialog {
 				if (order.isDone()) {
 					return "*";
 				} else {
-					return "";
+					return StringTool.leer;
 				}
 			}
 		});

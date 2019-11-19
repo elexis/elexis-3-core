@@ -34,6 +34,7 @@ import ch.elexis.data.LabItem;
 import ch.elexis.data.LabMapping;
 import ch.elexis.data.Query;
 
+import ch.rgw.tools.StringTool;
 public class MergeLabItemDialog extends TitleAreaDialog {
 	
 	private TableViewer destinationItems;
@@ -78,7 +79,7 @@ public class MergeLabItemDialog extends TitleAreaDialog {
 					destinationFilter.setSearchText(destinationFilterTxt.getText());
 					destinationItems.refresh();
 				} else {
-					destinationFilter.setSearchText(""); //$NON-NLS-1$
+					destinationFilter.setSearchText(StringTool.leer); //$NON-NLS-1$
 					destinationItems.refresh();
 				}
 			}
@@ -106,7 +107,7 @@ public class MergeLabItemDialog extends TitleAreaDialog {
 					sourceFilter.setSearchText(sourceFilterTxt.getText());
 					sourceItems.refresh();
 				} else {
-					sourceFilter.setSearchText(""); //$NON-NLS-1$
+					sourceFilter.setSearchText(StringTool.leer); //$NON-NLS-1$
 					sourceItems.refresh();
 				}
 			}
@@ -166,7 +167,7 @@ public class MergeLabItemDialog extends TitleAreaDialog {
 	
 	private void deleteMappings(LabItem li){
 		Query<LabMapping> qbe = new Query<LabMapping>(LabMapping.class);
-		qbe.add(LabMapping.FLD_LABITEMID, "=", li.getId()); //$NON-NLS-1$ //$NON-NLS-2$
+		qbe.add(LabMapping.FLD_LABITEMID, StringTool.equals, li.getId()); //$NON-NLS-1$ //$NON-NLS-2$
 		List<LabMapping> list = qbe.execute();
 		for (LabMapping po : list) {
 			po.delete();

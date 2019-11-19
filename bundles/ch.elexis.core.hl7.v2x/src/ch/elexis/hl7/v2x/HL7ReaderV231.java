@@ -62,7 +62,7 @@ public class HL7ReaderV231 extends HL7Reader {
 			MSH msh = (MSH) message.get("MSH");
 			sender = msh.getMsh4_SendingFacility().getNamespaceID().getValue();
 			if (sender == null) {
-				sender = "";
+				sender = StringTool.leer;
 			}
 		} catch (HL7Exception e) {
 			throw new ElexisException(e.getMessage(), e);
@@ -98,12 +98,12 @@ public class HL7ReaderV231 extends HL7Reader {
 					String commentNTE = getComments(obs, i);
 					
 					// groupe and sequence
-					String group = "";
-					String sequence = "";
+					String group = StringTool.leer;
+					String sequence = StringTool.leer;
 					for (int k = 0; k < 2; k++) {
 						CE ce = obr.getObr4_UniversalServiceID();
 						if (ce != null) {
-							String code = "";
+							String code = StringTool.leer;
 							if (ce.getCe3_NameOfCodingSystem() != null)
 								code = ce.getCe3_NameOfCodingSystem().getValue();
 							
@@ -130,7 +130,7 @@ public class HL7ReaderV231 extends HL7Reader {
 				return ce.getCe2_Text().getValue();
 			}
 		}
-		return "";
+		return StringTool.leer;
 	}
 	
 	private String getSequence(String code, CE ce){
@@ -139,15 +139,15 @@ public class HL7ReaderV231 extends HL7Reader {
 				return ce.getCe1_Identifier().getValue();
 			}
 		}
-		return "";
+		return StringTool.leer;
 	}
 	
 	private void setPatient(ORU_R01 oru, final boolean createIfNotFound)
 		throws ParseException, HL7Exception{
 		List<? extends IPatient> list = new ArrayList<IPatient>();
-		String lastName = ""; //$NON-NLS-1$
-		String firstName = ""; //$NON-NLS-1$
-		String birthDate = ""; //$NON-NLS-1$
+		String lastName = StringTool.leer; //$NON-NLS-1$
+		String firstName = StringTool.leer; //$NON-NLS-1$
+		String birthDate = StringTool.leer; //$NON-NLS-1$
 		String sex = Gender.FEMALE.value();
 		pat = null;
 		
@@ -169,7 +169,7 @@ public class HL7ReaderV231 extends HL7Reader {
 				if (StringTool.isNothing(patid)) {
 					patid = patid_alternative;
 					if (patid == null) {
-						patid = "";
+						patid = StringTool.leer;
 					}
 				}
 			}
@@ -179,7 +179,7 @@ public class HL7ReaderV231 extends HL7Reader {
 			}
 			
 			// String[] pidflds = patid.split("[\\^ ]+"); //$NON-NLS-1$
-			// String pid = "";
+			// String pid = StringTool.leer;
 			// if (pidflds.length > 0)
 			// pid = pidflds[pidflds.length - 1];
 			
@@ -192,12 +192,12 @@ public class HL7ReaderV231 extends HL7Reader {
 			if (familyLastName.getFn1_FamilyName().getValue() != null
 				|| familyLastName.getFn2_LastNamePrefix().getValue() != null)
 				lastName = pid.getPid5_PatientName(0).getFamilyLastName().getFn2_LastNamePrefix()
-					.getValue() + " "
+					.getValue() + StringTool.space
 					+ pid.getPid5_PatientName(0).getFamilyLastName().getFn1_FamilyName().getValue();
 			if (pid.getPid5_PatientName(0).getGivenName().getValue() != null)
 				firstName = pid.getPid5_PatientName(0).getGivenName().getValue();
-			String patientName = firstName + " " + lastName;
-			String patientNotesAndComments = "";
+			String patientName = firstName + StringTool.space + lastName;
+			String patientNotesAndComments = StringTool.leer;
 			
 			observation =
 				new ObservationMessage(sendingApplication, sendingFacility, dateTimeOfMessage,
@@ -280,9 +280,9 @@ public class HL7ReaderV231 extends HL7Reader {
 			AbstractPrimitive comment = nte.getNte3_Comment(0);
 			if (comment != null) {
 				if (commentNTE != null) {
-					commentNTE += "\n";
+					commentNTE += StringTool.lf;
 				} else {
-					commentNTE = "";
+					commentNTE = StringTool.leer;
 				}
 				if (comment.getValue() != null) {
 					commentNTE += comment.getValue();
@@ -296,12 +296,12 @@ public class HL7ReaderV231 extends HL7Reader {
 		String sequence, String defaultDateTime) throws ParseException{
 		OBX obx = obs.getOBX();
 		String valueType = obx.getObx2_ValueType().getValue();
-		String name = "";
-		String itemCode = "";
-		String unit = "";
-		String range = "";
-		String observationTime = "";
-		String status = "";
+		String name = StringTool.leer;
+		String itemCode = StringTool.leer;
+		String unit = StringTool.leer;
+		String range = StringTool.leer;
+		String observationTime = StringTool.leer;
+		String status = StringTool.leer;
 		Boolean flag;
 		String rawAbnormalFlags;
 		
@@ -331,7 +331,7 @@ public class HL7ReaderV231 extends HL7Reader {
 					name = obx.getObx3_ObservationIdentifier().getCe2_Text().getValue();
 				}
 			}
-			String value = "";
+			String value = StringTool.leer;
 			Object tmp = obx.getObx5_ObservationValue(0).getData();
 			
 			if (tmp instanceof ST) {

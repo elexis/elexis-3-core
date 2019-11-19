@@ -50,15 +50,15 @@ public class BillingSystem {
 	
 	public static String getConfigurationValue(String billingSystemName, String attributeName,
 		String defaultIfNotDefined){
-		String ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
-			+ billingSystemName + "/" + attributeName, defaultIfNotDefined); //$NON-NLS-1$
+		String ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash //$NON-NLS-1$
+			+ billingSystemName + StringTool.slash + attributeName, defaultIfNotDefined); //$NON-NLS-1$
 		return ret;
 	}
 	
 	public static void setConfigurationValue(String billingSystemName, String attributeName,
 		String attributeValue){
-		String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + billingSystemName; //$NON-NLS-1$
-		CoreHub.globalCfg.set(key + "/" + attributeName, attributeValue);
+		String key = Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash + billingSystemName; //$NON-NLS-1$
+		CoreHub.globalCfg.set(key + StringTool.slash + attributeName, attributeValue);
 	}
 	
 	/**
@@ -68,7 +68,7 @@ public class BillingSystem {
 	 *            String, the name of the billing system to be tested
 	 */
 	public static boolean isDisabled(final String billingSystemName){
-		String ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+		String ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash //$NON-NLS-1$
 			+ billingSystemName + "/disabled", "0"); //$NON-NLS-1$ //$NON-NLS-2$
 		return !ret.equalsIgnoreCase("0");
 	}
@@ -86,7 +86,7 @@ public class BillingSystem {
 	 * @since 3.6 moved from {@link Fall}
 	 */
 	public static String getUnused(final String billingSystem){
-		String ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+		String ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash //$NON-NLS-1$
 			+ billingSystem + "/unused", null); //$NON-NLS-1$
 		return ret;
 	}
@@ -103,7 +103,7 @@ public class BillingSystem {
 	 * @since 3.6 moved from {@link Fall}
 	 */
 	public static String getOptionals(final String billingSystem){
-		String ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+		String ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash //$NON-NLS-1$
 			+ billingSystem + "/fakultativ", null); //$NON-NLS-1$
 		return ret;
 	}
@@ -122,7 +122,7 @@ public class BillingSystem {
 	 * @deprecated use {@link ch.elexis.core.services.BillingSystemService#getRequirements(ch.elexis.core.model.IBillingSystem)}
 	 */
 	public static String getRequirements(final String billingSystem){
-		String ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+		String ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash //$NON-NLS-1$
 			+ billingSystem + "/bedingungen", null); //$NON-NLS-1$
 		return ret;
 	}
@@ -134,7 +134,7 @@ public class BillingSystem {
 	 * @since 3.6 moved from {@link Fall}
 	 */
 	public static String[] getBillingSystemConstants(final String billingSystem){
-		String bc = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+		String bc = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash //$NON-NLS-1$
 			+ billingSystem + "/constants", null); //$NON-NLS-1$
 		if (bc == null) {
 			return new String[0];
@@ -154,12 +154,12 @@ public class BillingSystem {
 		final String constant){
 		String[] c = getBillingSystemConstants(billingSystem);
 		for (String bc : c) {
-			String[] val = bc.split("="); //$NON-NLS-1$
+			String[] val = bc.split(StringTool.equals); //$NON-NLS-1$
 			if (val[0].equalsIgnoreCase(constant)) {
 				return val[1];
 			}
 		}
-		return ""; //$NON-NLS-1$
+		return StringTool.leer; //$NON-NLS-1$
 	}
 	
 	/**
@@ -173,14 +173,14 @@ public class BillingSystem {
 	 */
 	public static void addBillingSystemConstant(final String billingSystem, final String constant){
 		if (constant.indexOf('=') != -1) {
-			String bc = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+			String bc = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash //$NON-NLS-1$
 				+ billingSystem + "/constants", null); //$NON-NLS-1$
 			if (bc != null) {
 				bc += "#" + constant; //$NON-NLS-1$
 			} else {
 				bc = constant;
 			}
-			CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/" + billingSystem //$NON-NLS-1$
+			CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash + billingSystem //$NON-NLS-1$
 				+ "/constants", bc); //$NON-NLS-1$
 		}
 	}
@@ -193,15 +193,15 @@ public class BillingSystem {
 	 */
 	public static void removeBillingSystemConstant(final String billingSystem,
 		final String constant){
-		String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+		String key = Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash //$NON-NLS-1$
 			+ billingSystem + "/constants";
 		String bc = CoreHub.globalCfg.get(key, null); //$NON-NLS-1$
 		if (bc != null) {
-			bc = bc.replaceAll(constant, ""); //$NON-NLS-1$
+			bc = bc.replaceAll(constant, StringTool.leer); //$NON-NLS-1$
 			bc = bc.replaceAll("##", "#"); //$NON-NLS-1$ //$NON-NLS-2$
-			bc = bc.replaceFirst("#$", ""); //$NON-NLS-1$ //$NON-NLS-2$
-			bc = bc.replaceFirst("^#", ""); //$NON-NLS-1$ //$NON-NLS-2$
-			CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/" + billingSystem //$NON-NLS-1$
+			bc = bc.replaceFirst("#$", StringTool.leer); //$NON-NLS-1$ //$NON-NLS-2$
+			bc = bc.replaceFirst("^#", StringTool.leer); //$NON-NLS-1$ //$NON-NLS-2$
+			CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash + billingSystem //$NON-NLS-1$
 				+ "/constants", bc); //$NON-NLS-1$
 		} else {
 			log.error("[" + key + "] is null");
@@ -367,7 +367,7 @@ public class BillingSystem {
 	 */
 	public static void createAbrechnungssystem(final String systemname, final String codesystem,
 		final String ausgabe, final String... requirements){
-		String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + systemname; //$NON-NLS-1$
+		String key = Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash + systemname; //$NON-NLS-1$
 		CoreHub.globalCfg.set(key + "/name", systemname); //$NON-NLS-1$
 		CoreHub.globalCfg.set(key + "/leistungscodes", codesystem); //$NON-NLS-1$
 		CoreHub.globalCfg.set(key + "/standardausgabe", ausgabe); //$NON-NLS-1$
@@ -381,7 +381,7 @@ public class BillingSystem {
 	 * @since 3.6 moved from {@link Fall}
 	 */
 	public static void removeAbrechnungssystem(final String systemName){
-		CoreHub.globalCfg.remove(Preferences.LEISTUNGSCODES_CFG_KEY + "/" + systemName); //$NON-NLS-1$
+		CoreHub.globalCfg.remove(Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash + systemName); //$NON-NLS-1$
 		CoreHub.globalCfg.flush();
 	}
 	
@@ -392,11 +392,11 @@ public class BillingSystem {
 	 * @since 3.6 moved from {@link Fall}
 	 */
 	public static String getCodeSystem(final String billingSystem){
-		String ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+		String ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash //$NON-NLS-1$
 			+ billingSystem + "/leistungscodes", null); //$NON-NLS-1$
 		if (ret == null) { // compatibility
 			BillingSystem.getAbrechnungsSysteme();
-			ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+			ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash //$NON-NLS-1$
 				+ billingSystem + "/leistungscodes", "?"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return ret;
@@ -411,11 +411,11 @@ public class BillingSystem {
 	 * @deprecated use {@link ch.elexis.core.services.BillingSystemService#getDefaultPrintSystem)}
 	 */
 	public static String getDefaultPrintSystem(final String billingSystem){
-		String ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+		String ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash //$NON-NLS-1$
 			+ billingSystem + "/standardausgabe", null); //$NON-NLS-1$
 		if (ret == null) { // compatibility
 			BillingSystem.getAbrechnungsSysteme();
-			ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+			ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash //$NON-NLS-1$
 				+ billingSystem + "/standardausgabe", "?"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return ret;
@@ -429,7 +429,7 @@ public class BillingSystem {
 	 */
 	public static String getRequirementsBySystem(String abrechnungsSystem){
 		String req = BillingSystem.getRequirements(abrechnungsSystem);
-		return req == null ? "" : req;
+		return req == null ? StringTool.leer : req;
 	}
 	
 	/**

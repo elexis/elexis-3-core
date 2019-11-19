@@ -24,13 +24,14 @@ import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 
+import ch.rgw.tools.StringTool;
 public class MedicationViewerHelper {
 	
 	public static TableViewerColumn createTypeColumn(TableViewer viewer, TableColumnLayout layout,
 		int columnIndex){
 		TableViewerColumn ret = new TableViewerColumn(viewer, SWT.NONE);
 		TableColumn tblclmnStateDisposition = ret.getColumn();
-		tblclmnStateDisposition.setToolTipText(Messages.MedicationComposite_column_sortBy + " " 
+		tblclmnStateDisposition.setToolTipText(Messages.MedicationComposite_column_sortBy + StringTool.space 
 			+ Messages.MedicationComposite_column_type);
 		layout.setColumnData(tblclmnStateDisposition, new ColumnPixelData(20, false, false));
 		tblclmnStateDisposition.addSelectionListener(
@@ -38,7 +39,7 @@ public class MedicationViewerHelper {
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
 			@Override
 			public String getText(Object element){
-				return "";
+				return StringTool.leer;
 			}
 			
 			@Override
@@ -55,7 +56,7 @@ public class MedicationViewerHelper {
 		final TableColumn tblclmnArticle = ret.getColumn();
 		layout.setColumnData(tblclmnArticle, new ColumnPixelData(250, true, true));
 		tblclmnArticle.setText(Messages.TherapieplanComposite_tblclmnArticle_text);
-		tblclmnArticle.setToolTipText(Messages.MedicationComposite_column_sortBy + " "
+		tblclmnArticle.setToolTipText(Messages.MedicationComposite_column_sortBy + StringTool.space
 			+ Messages.TherapieplanComposite_tblclmnArticle_text);
 		tblclmnArticle
 			.addSelectionListener(getSelectionAdapter(viewer, tblclmnArticle, columnIndex));
@@ -70,7 +71,7 @@ public class MedicationViewerHelper {
 			@Override
 			public String getToolTipText(Object element){
 				MedicationTableViewerItem pres = (MedicationTableViewerItem) element;
-				String label = "";
+				String label = StringTool.leer;
 				
 				if (pres.isActiveMedication()) {
 					String date = pres.getBeginDate();
@@ -81,7 +82,7 @@ public class MedicationViewerHelper {
 					String endDate = pres.getEndDate();
 					if (endDate != null && !endDate.isEmpty()) {
 						String reason = pres.getStopReason() == null ? "?" : pres.getStopReason();
-						label += ("\n" + MessageFormat.format(
+						label += (StringTool.lf + MessageFormat.format(
 							Messages.MedicationComposite_stopDateAndReason, endDate, reason));
 					}
 				} else {
@@ -142,7 +143,7 @@ public class MedicationViewerHelper {
 		layout.setColumnData(tblclmnEnacted, new ColumnPixelData(60, true, true));
 		tblclmnEnacted.setImage(Images.resize(Images.IMG_NEXT_WO_SHADOW.getImage(),
 			ImageSize._12x12_TableColumnIconSize));
-		tblclmnEnacted.setToolTipText(Messages.MedicationComposite_column_sortBy + " "
+		tblclmnEnacted.setToolTipText(Messages.MedicationComposite_column_sortBy + StringTool.space
 			+ Messages.MedicationComposite_column_beginDate);
 		tblclmnEnacted
 			.addSelectionListener(getSelectionAdapter(viewer, tblclmnEnacted, columnIndex));
@@ -164,11 +165,11 @@ public class MedicationViewerHelper {
 		layout.setColumnData(tblclmnComment,
 			new ColumnWeightData(1, ColumnWeightData.MINIMUM_WIDTH, true));
 		tblclmnComment.setText(Messages.TherapieplanComposite_tblclmnComment_text);
-		tblclmnComment.setToolTipText(Messages.MedicationComposite_column_sortBy + " "
+		tblclmnComment.setToolTipText(Messages.MedicationComposite_column_sortBy + StringTool.space
 			+ Messages.TherapieplanComposite_tblclmnComment_text);
 		tblclmnComment
 			.addSelectionListener(getSelectionAdapter(viewer, tblclmnComment, columnIndex));
-		tblclmnComment.setToolTipText(Messages.MedicationComposite_column_sortBy + " "
+		tblclmnComment.setToolTipText(Messages.MedicationComposite_column_sortBy + StringTool.space
 			+ Messages.TherapieplanComposite_tblclmnComment_text);
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
 			
@@ -189,7 +190,7 @@ public class MedicationViewerHelper {
 		layout.setColumnData(tblclmnStop, stopColumnPixelData);
 		tblclmnStop.setImage(Images.resize(Images.IMG_ARROWSTOP_WO_SHADOW.getImage(),
 			ImageSize._12x12_TableColumnIconSize));
-		tblclmnStop.setToolTipText(Messages.MedicationComposite_column_sortBy + " "
+		tblclmnStop.setToolTipText(Messages.MedicationComposite_column_sortBy + StringTool.space
 			+ Messages.MedicationComposite_column_endDate);
 		tblclmnStop.addSelectionListener(getSelectionAdapter(viewer, tblclmnStop, columnIndex));
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
@@ -200,7 +201,7 @@ public class MedicationViewerHelper {
 					&& pres.getEntryType() != EntryType.SELF_DISPENSED) {
 					return pres.getEndDate();
 				}
-				return "";
+				return StringTool.leer;
 			}
 		});
 		return ret;
@@ -215,7 +216,7 @@ public class MedicationViewerHelper {
 			new ColumnWeightData(1, ColumnWeightData.MINIMUM_WIDTH, true);
 		layout.setColumnData(tblclmnReason, reasonColumnWeightData);
 		tblclmnReason.setText(Messages.MedicationComposite_stopReason);
-		tblclmnReason.setToolTipText(Messages.MedicationComposite_column_sortBy + " "
+		tblclmnReason.setToolTipText(Messages.MedicationComposite_column_sortBy + StringTool.space
 			+ Messages.MedicationComposite_stopReason);
 		tblclmnReason.addSelectionListener(getSelectionAdapter(viewer, tblclmnReason, columnIndex));
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
@@ -229,7 +230,7 @@ public class MedicationViewerHelper {
 						return stopReason;
 					}
 				}
-				return "";
+				return StringTool.leer;
 			}
 		});
 		return ret;
@@ -269,7 +270,7 @@ public class MedicationViewerHelper {
 	//				// SLLOW
 	//				MedicationTableViewerItem pres = (MedicationTableViewerItem) element;
 	//				if (!pres.isFixedMediation() || pres.isReserveMedication())
-	//					return "";
+	//					return StringTool.leer;
 	//					
 	//				TimeTool tt = pres.getSuppliedUntilDate();
 	//				if (tt != null && tt.isAfterOrEqual(new TimeTool())) {

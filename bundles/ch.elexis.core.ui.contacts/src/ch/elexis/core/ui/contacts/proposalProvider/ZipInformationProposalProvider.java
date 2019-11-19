@@ -17,6 +17,7 @@ import org.eclipse.jface.fieldassist.ContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 
+import ch.rgw.tools.StringTool;
 public class ZipInformationProposalProvider implements IContentProposalProvider {
 	
 	public IContentProposal[] getProposals(String contents, int position){
@@ -37,7 +38,7 @@ public class ZipInformationProposalProvider implements IContentProposalProvider 
 		List<String> result = ContactGeonames.getCityByZip(content);
 		if (result.size() >= 1)
 			return result.get(0);
-		return "";
+		return StringTool.leer;
 	}
 	
 }

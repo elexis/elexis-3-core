@@ -302,9 +302,9 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		String recText = record.getText();
 		if ((pos == -1) || pos > recText.length()) {
 			pos = recText.length();
-			recText += "\n" + text;
+			recText += StringTool.lf + text;
 		} else {
-			recText = recText.substring(0, pos) + "\n" + text + recText.substring(pos);
+			recText = recText.substring(0, pos) + StringTool.lf + text + recText.substring(pos);
 		}
 		record.setText(recText);
 		// ++pos because \n has been added
@@ -646,7 +646,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	}
 	
 	public String getStatusText(){
-		String statusText = "";
+		String statusText = StringTool.leer;
 		
 		Rechnung rechnung = getRechnung();
 		if (rechnung != null) {
@@ -669,7 +669,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	
 	public String getVerboseLabel(){
 		StringBuilder ret = new StringBuilder();
-		ret.append(getFall().getPatient().getName()).append(" ")
+		ret.append(getFall().getPatient().getName()).append(StringTool.space)
 			.append(getFall().getPatient().getVorname()).append(", ")
 			.append(getFall().getPatient().getGeburtsdatum()).append(" - ").append(getDatum());
 		return ret.toString();
@@ -780,7 +780,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			if (dgid == null) {
 				log.warn(
 					"Requested delete of diagnosis which could not be resolved [{}] in consultation [{}]",
-					dg.getCode() + "/" + dg.getClass().getName(), getId());
+					dg.getCode() + StringTool.slash + dg.getClass().getName(), getId());
 			} else {
 				StringBuilder sql = new StringBuilder();
 				sql.append("DELETE FROM BEHDL_DG_JOINT WHERE BehandlungsID=").append(getWrappedId())
@@ -955,7 +955,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 * @return Username of the author or an empty string.
 	 */
 	public String getAuthor(){
-		String author = "";
+		String author = StringTool.leer;
 		VersionedResource resource = this.getEintrag();
 		if (resource != null) {
 			ResourceItem item = resource.getVersion(resource.getHeadVersion());
@@ -1232,7 +1232,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	
 	public static IDiagnose getDefaultDiagnose(){
 		IDiagnose ret = null;
-		String diagnoseId = CoreHub.userCfg.get(Preferences.USR_DEFDIAGNOSE, "");
+		String diagnoseId = CoreHub.userCfg.get(Preferences.USR_DEFDIAGNOSE, StringTool.leer);
 		if (diagnoseId.length() > 1) {
 			ret = (IDiagnose) CoreHub.poFactory.createFromString(diagnoseId);
 		}

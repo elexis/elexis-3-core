@@ -209,7 +209,7 @@ public class TextContainer {
 	
 	public Brief createFromTemplateName(final Konsultation kons, final String templatenameRaw,
 		final String typ, final Kontakt adressat, final String subject){
-		String suffix = CoreHub.localCfg.get(TextTemplatePreferences.SUFFIX_STATION, "");
+		String suffix = CoreHub.localCfg.get(TextTemplatePreferences.SUFFIX_STATION, StringTool.leer);
 		Brief template = loadTemplate(templatenameRaw + suffix);
 		if (template == null && suffix.length() > 0) {
 			template = loadTemplate(templatenameRaw);
@@ -341,7 +341,7 @@ public class TextContainer {
 			if (showErrors) {
 				return WARNING_SIGN + bl + WARNING_SIGN;
 			} else {
-				return "";
+				return StringTool.leer;
 			}
 		}
 		return readFromPo(o, q[1], showErrors);
@@ -368,7 +368,7 @@ public class TextContainer {
 			if (showErrors) {
 				return WARNING_SIGN + fieldl + WARNING_SIGN;
 			} else {
-				return "";
+				return StringTool.leer;
 			}
 		}
 		
@@ -381,7 +381,7 @@ public class TextContainer {
 			if (showErrors) {
 				return WARNING_SIGN + fieldl + WARNING_SIGN;
 			} else {
-				return "";
+				return StringTool.leer;
 			}
 		}
 		
@@ -393,7 +393,7 @@ public class TextContainer {
 				if (showErrors) {
 					return WARNING_SIGN + fieldl + WARNING_SIGN;
 				} else {
-					return "";
+					return StringTool.leer;
 				}
 			}
 			current = next;
@@ -423,7 +423,7 @@ public class TextContainer {
 			if (showErrors) {
 				return WARNING_SIGN + name + WARNING_SIGN;
 			} else {
-				return "";
+				return StringTool.leer;
 			}
 		}
 		
@@ -537,7 +537,7 @@ public class TextContainer {
 		if (o != null) {
 			return q[2];
 		}
-		return "";
+		return StringTool.leer;
 	}
 	
 	/**
@@ -557,7 +557,7 @@ public class TextContainer {
 			if (showErrors) {
 				return "???";
 			} else {
-				return "";
+				return StringTool.leer;
 			}
 		}
 		if (q.length != 3) {
@@ -568,16 +568,16 @@ public class TextContainer {
 			if (showErrors) {
 				return Messages.TextContainer_FieldTypeForContactsOnly;
 			} else {
-				return "";
+				return StringTool.leer;
 			}
 		}
 		Kontakt k = (Kontakt) o;
-		String[] g = q[2].split("/"); //$NON-NLS-1$
+		String[] g = q[2].split(StringTool.slash); //$NON-NLS-1$
 		if (g.length < 2) {
 			if (showErrors) {
 				return Messages.TextContainer_BadFieldDefinition;
 			} else {
-				return "";
+				return StringTool.leer;
 			}
 		}
 		if (k.istPerson()) {
@@ -599,7 +599,7 @@ public class TextContainer {
 				if (showErrors) {
 					return Messages.TextContainer_FieldTypeForPersonsOnly;
 				} else {
-					return "";
+					return StringTool.leer;
 				}
 			}
 			return g[2];
@@ -700,7 +700,7 @@ public class TextContainer {
 		String sqlPrefix = sql.split(":")[0];
 		String[] sqlPrefixParts = sqlPrefix.split("\\|");
 		String fieldDelimiter = "	"; // default: tab
-		String rowDelimiter = "\n"; // default: newline
+		String rowDelimiter = StringTool.lf; // default: newline
 		if (sqlPrefixParts.length > 1) {
 			fieldDelimiter = sqlPrefixParts[1];
 			// replace escape sequences
@@ -771,19 +771,19 @@ public class TextContainer {
 			if (showErrors) {
 				return "[???" + bl + " ***" + e1.getMessage() + "*** ???]";
 			} else {
-				return "";
+				return StringTool.leer;
 			}
 		}
 		
 		// create result by reading rows/fields and extracting hashTable fields
 		// from extInfo
-		String fieldContent = "";
-		String result = "";
-		String lRowDelimiter = "";
+		String fieldContent = StringTool.leer;
+		String result = StringTool.leer;
+		String lRowDelimiter = StringTool.leer;
 		try {
 			// loop through all rows of resultSet
 			while (rs.next()) {
-				String delimiter = "";
+				String delimiter = StringTool.leer;
 				result = result + lRowDelimiter;
 				lRowDelimiter = rowDelimiter;
 				// loop through columns
@@ -803,7 +803,7 @@ public class TextContainer {
 							i++;
 							byte[] blob = rs.getBytes(i);
 							if (blob == null) {
-								fieldContent = "";
+								fieldContent = StringTool.leer;
 							} else {
 								// get hashTable, read field
 								Hashtable<Object, Object> ht = fold(blob);
@@ -811,7 +811,7 @@ public class TextContainer {
 							}
 						}
 						// append field to result
-						result = result + delimiter + (fieldContent == null ? "" : fieldContent);
+						result = result + delimiter + (fieldContent == null ? StringTool.leer : fieldContent);
 						delimiter = fieldDelimiter;
 					} catch (Exception e) {
 						// this just catches the case where i > num of
@@ -829,7 +829,7 @@ public class TextContainer {
 			if (showErrors) {
 				return "[???" + bl + " ***" + e.getMessage() + "*** ???]";
 			} else {
-				return "";
+				return StringTool.leer;
 			}
 		}
 		// aufräumen
@@ -860,7 +860,7 @@ public class TextContainer {
 	private String convertSpecialCharacters(final String in){
 		// \ddd how to replace octal values?
 		String result = in;
-		result = result.replaceAll("\\\\n", "\n");
+		result = result.replaceAll("\\\\n", StringTool.lf);
 		result = result.replaceAll("\\\\t", "\t");
 		result = result.replaceAll("\\\\b", "\b");
 		result = result.replaceAll("\\\\r", "\r");

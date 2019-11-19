@@ -405,7 +405,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 					BlockElementViewerItem item = (BlockElementViewerItem) element;
 					return Integer.toString(item.getCount());
 				}
-				return "";
+				return StringTool.leer;
 			}
 		});
 		
@@ -417,7 +417,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 					BlockElementViewerItem item = (BlockElementViewerItem) element;
 					return item.getCode();
 				}
-				return "";
+				return StringTool.leer;
 			}
 		});
 		
@@ -429,7 +429,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 					BlockElementViewerItem item = (BlockElementViewerItem) element;
 					return item.getText();
 				}
-				return "";
+				return StringTool.leer;
 			}
 			
 			@Override

@@ -10,9 +10,10 @@
  ******************************************************************************/
 package ch.elexis.core.text.model;
 
+import ch.rgw.tools.StringTool;
 public class Macro {
 	
 	public static String resolve(String key){
-		return "";
+		return StringTool.leer;
 	}
 }

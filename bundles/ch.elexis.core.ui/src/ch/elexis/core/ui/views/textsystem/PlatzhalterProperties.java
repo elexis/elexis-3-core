@@ -17,6 +17,7 @@ import java.util.Map;
 
 import ch.elexis.core.ui.util.Log;
 
+import ch.rgw.tools.StringTool;
 public class PlatzhalterProperties extends AbstractProperties {
 	private static final long serialVersionUID = -6366568655870957480L;
 	
@@ -37,9 +38,9 @@ public class PlatzhalterProperties extends AbstractProperties {
 	 * @return
 	 */
 	public List<PlatzhalterTreeData> getList(){
-		PlatzhalterTreeData root = new PlatzhalterTreeData("root", "", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		PlatzhalterTreeData root = new PlatzhalterTreeData("root", StringTool.leer, StringTool.leer); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		PlatzhalterTreeData noKategorie =
-			new PlatzhalterTreeData(Messages.PlatzhalterProperties_label_no_category, "", //$NON-NLS-2$ //$NON-NLS-1$
+			new PlatzhalterTreeData(Messages.PlatzhalterProperties_label_no_category, StringTool.leer, //$NON-NLS-2$ //$NON-NLS-1$
 				Messages.PlatzhalterProperties_tooltip_no_category);
 		
 		KategorieProperties katProperties = new KategorieProperties();
@@ -52,7 +53,7 @@ public class PlatzhalterProperties extends AbstractProperties {
 			String keyString = (String) keyEnumeration.nextElement();
 			String value = getProperty(keyString);
 			String category = noKategorie.getName();
-			String name = ""; //$NON-NLS-1$
+			String name = StringTool.leer; //$NON-NLS-1$
 			int openBracket = keyString.indexOf("["); //$NON-NLS-1$
 			int closeBracket = keyString.lastIndexOf("]"); //$NON-NLS-1$
 			int firstPoint = keyString.indexOf("."); //$NON-NLS-1$
@@ -98,7 +99,7 @@ public class PlatzhalterProperties extends AbstractProperties {
 				}
 				if (categoryPtd == null) {
 					String description = katProperties.getDescription(category);
-					categoryPtd = new PlatzhalterTreeData(category, "", //$NON-NLS-1$
+					categoryPtd = new PlatzhalterTreeData(category, StringTool.leer, //$NON-NLS-1$
 						description);
 					catTreeMap.put(category, categoryPtd);
 					root.addChild(categoryPtd);

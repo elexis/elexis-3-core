@@ -44,6 +44,7 @@ import ch.elexis.data.Rechnung;
 import ch.elexis.data.Rechnungssteller;
 import ch.rgw.tools.Result;
 
+import ch.rgw.tools.StringTool;
 public class BillingProposalViewCreateBillsHandler extends AbstractHandler implements IHandler {
 	
 	@Override
@@ -102,7 +103,7 @@ public class BillingProposalViewCreateBillsHandler extends AbstractHandler imple
 								}
 								errorneousInfo.append(messages.get(i).getText());
 							}
-							errorneousInfo.append("\n");
+							errorneousInfo.append(StringTool.lf);
 							errorneous++;
 						}
 					}

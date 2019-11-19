@@ -14,6 +14,7 @@ import ch.elexis.data.PersistentObject;
 import ch.rgw.compress.CompEx;
 import ch.rgw.tools.JdbcLink.Stm;
 
+import ch.rgw.tools.StringTool;
 public class FixBestellungen217 extends ExternalMaintenance {
 	
 	@Override
@@ -56,7 +57,7 @@ public class FixBestellungen217 extends ExternalMaintenance {
 								existingBestellung.set("Liste", content);
 								updateCnt++;
 							} else {
-								existingBestellung.set("Liste", "");
+								existingBestellung.set("Liste", StringTool.leer);
 								updateCnt++;
 							}
 						}

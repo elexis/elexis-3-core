@@ -38,6 +38,7 @@ import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.rgw.tools.TimeTool;
 
+import ch.rgw.tools.StringTool;
 public class LabResultEditingSupport extends EditingSupport {
 	
 	protected final String SMALLER = "<";
@@ -124,7 +125,7 @@ public class LabResultEditingSupport extends EditingSupport {
 							String editedValue = (String) value;
 							if (editedValue.startsWith(SMALLER) || editedValue.startsWith(BIGGER)) {
 								String nrValue =
-									editedValue.replace(SMALLER, "").replace(BIGGER, "");
+									editedValue.replace(SMALLER, StringTool.leer).replace(BIGGER, StringTool.leer);
 								editedValue = nrValue.trim();
 							}
 							Float.parseFloat(editedValue);
@@ -159,7 +160,7 @@ public class LabResultEditingSupport extends EditingSupport {
 	
 	@Override
 	protected Object getValue(Object element){
-		return ""; //$NON-NLS-1$
+		return StringTool.leer; //$NON-NLS-1$
 	}
 	
 	private TimeTool getDate() {

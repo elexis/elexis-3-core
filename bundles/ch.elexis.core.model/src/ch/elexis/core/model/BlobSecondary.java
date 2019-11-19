@@ -8,6 +8,7 @@ import ch.elexis.core.jpa.entities.Heap2;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.util.JpaModelUtil;
 
+import ch.rgw.tools.StringTool;
 public class BlobSecondary extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Heap2>
 		implements IdentifiableWithXid, IBlobSecondary {
 	
@@ -29,7 +30,7 @@ public class BlobSecondary extends AbstractIdDeleteModelAdapter<ch.elexis.core.j
 	public String getStringContent(){
 		byte[] comp = getContent();
 		if ((comp == null) || (comp.length == 0)) {
-			return "";
+			return StringTool.leer;
 		}
 		byte[] exp = JpaModelUtil.getExpanded(comp);
 		try {

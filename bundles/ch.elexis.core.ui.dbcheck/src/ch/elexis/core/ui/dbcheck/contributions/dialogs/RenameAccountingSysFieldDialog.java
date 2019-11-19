@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.data.BillingSystem;
 
+import ch.rgw.tools.StringTool;
 public class RenameAccountingSysFieldDialog extends TitleAreaDialog {
 	private Text txtNewName;
 	private ComboViewer cViewerAccSys, cViewerField;
@@ -77,7 +78,7 @@ public class RenameAccountingSysFieldDialog extends TitleAreaDialog {
 		cmbField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		cViewerField.setContentProvider(ArrayContentProvider.getInstance());
 		cViewerField.setLabelProvider(new LabelProvider());
-		cViewerField.setInput("");
+		cViewerField.setInput(StringTool.leer);
 		
 		Label lblNewName = new Label(area, SWT.NONE);
 		lblNewName.setText("Umbenennen zu");

@@ -20,6 +20,7 @@ import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.types.VatInfo;
 import ch.rgw.tools.Money;
 
+import ch.rgw.tools.StringTool;
 public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Artikel>
 		implements IdentifiableWithXid, IArticle {
 	
@@ -142,7 +143,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 		} else if (isTyp(ArticleTyp.MIGEL)) {
 			return (String) getExtInfo("unit");
 		}
-		return "";
+		return StringTool.leer;
 	}
 	
 	@Override

@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
+import ch.rgw.tools.StringTool;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -50,7 +51,7 @@ public class DBConnection implements Serializable {
 		@XmlEnumValue("MYSQL")
 		MySQL(JdbcLink.MYSQL_DRIVER_CLASS_NAME, "mySQl", "3306"), @XmlEnumValue("PostgreSQL")
 		PostgreSQL(JdbcLink.POSTGRESQL_DRIVER_CLASS_NAME, "PostgreSQL", "5432"), @XmlEnumValue("H2")
-		H2(JdbcLink.H2_DRIVER_CLASS_NAME, "H2", "");
+		H2(JdbcLink.H2_DRIVER_CLASS_NAME, "H2", StringTool.leer);
 
 		public final String driverName;
 		public final String dbType;
@@ -158,7 +159,7 @@ public class DBConnection implements Serializable {
 			m.marshal(this, sw);
 			return sw.toString();
 		} catch (JAXBException | IOException e) {
-			return "";
+			return StringTool.leer;
 		}
 	}
 
@@ -196,11 +197,11 @@ public class DBConnection implements Serializable {
 		URI uri = URI.create(url);
 		String path = uri.getPath();
 		if (!StringUtils.isBlank(path)) {
-			if (path.startsWith("/")) {
+			if (path.startsWith(StringTool.slash)) {
 				path = path.substring(1);
 			}
-			if (path.contains("/")) {
-				path = path.substring(0, path.indexOf("/"));
+			if (path.contains(StringTool.slash)) {
+				path = path.substring(0, path.indexOf(StringTool.slash));
 			}
 			return Optional.of(path);
 		}

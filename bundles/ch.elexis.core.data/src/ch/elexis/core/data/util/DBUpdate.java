@@ -43,6 +43,7 @@ import ch.rgw.tools.VersionInfo;
  * @author Gerry
  * 
  */
+import ch.rgw.tools.StringTool;
 public class DBUpdate {
 	
 	private static final String ALTER_TABLE = "ALTER TABLE ";
@@ -535,7 +536,7 @@ public class DBUpdate {
 		
 		try (InputStream inputStream = DBUpdate.class.getResourceAsStream(resourceName)) {
 			return new BufferedReader(new InputStreamReader(inputStream)).lines()
-				.filter(s -> !s.startsWith("#")).collect(Collectors.joining("\n"));
+				.filter(s -> !s.startsWith("#")).collect(Collectors.joining(StringTool.lf));
 		} catch (IOException e) {
 			log.error("Error reading input file [{}] for version [{}]." + resourceName, version);
 			return null;

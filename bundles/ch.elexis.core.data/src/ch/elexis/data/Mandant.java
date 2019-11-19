@@ -24,6 +24,7 @@ import ch.rgw.tools.JdbcLink;
  * @author gerry
  * 
  */
+import ch.rgw.tools.StringTool;
 public class Mandant extends Anwender {
 	
 	public static final String BILLER = "Rechnungssteller";
@@ -122,7 +123,7 @@ public class Mandant extends Anwender {
 	}
 	
 	public String getMandantLabel(){
-		return getName() + " " + getVorname() + " (" + getLabel() + ")";
+		return getName() + StringTool.space + getVorname() + " (" + getLabel() + ")";
 	}
 	
 	@Override

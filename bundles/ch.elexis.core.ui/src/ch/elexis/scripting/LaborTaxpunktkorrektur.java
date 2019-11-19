@@ -86,7 +86,7 @@ public class LaborTaxpunktkorrektur {
 							changed.addMoney(v.getBruttoPreis().multiply(v.getZahl()));
 						}
 					}
-					writer.write("konvertierte " + k.getVerboseLabel() + "\n");
+					writer.write("konvertierte " + k.getVerboseLabel() + StringTool.lf);
 					i++;
 				}
 				

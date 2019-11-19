@@ -168,7 +168,7 @@ public class CoreHub implements BundleActivator {
 	 *         retrieved
 	 */
 	public static String getBasePath(){
-		return FrameworkUtil.getBundle(CoreHub.class).getEntry("/").toString();
+		return FrameworkUtil.getBundle(CoreHub.class).getEntry(StringTool.slash).toString();
 	}
 	
 	/**
@@ -270,7 +270,7 @@ public class CoreHub implements BundleActivator {
 		try (InputStream inputStream = new URL(url_name).openConnection().getInputStream()) {
 			if (inputStream != null) {
 				prop.load(inputStream);
-				elexis_version = prop.getProperty("elexis.version").replace("-SNAPSHOT", "");
+				elexis_version = prop.getProperty("elexis.version").replace("-SNAPSHOT", StringTool.leer);
 			}
 		} catch (IOException e) {
 			elexis_version = plugin.Version;
@@ -304,7 +304,7 @@ public class CoreHub implements BundleActivator {
 		String config = "default"; //$NON-NLS-1$
 		for (String s : args) {
 			if (s.startsWith("--use-config=")) { //$NON-NLS-1$
-				String[] c = s.split("="); //$NON-NLS-1$
+				String[] c = s.split(StringTool.equals); //$NON-NLS-1$
 				config = c[1];
 			}
 		}
@@ -368,8 +368,8 @@ public class CoreHub implements BundleActivator {
 	
 	public static String getId(){
 		StringBuilder sb = new StringBuilder();
-		sb.append(APPLICATION_NAME).append(" v.").append(Version).append("\n")
-			.append(CoreHubHelper.getRevision(true, plugin)).append("\n")
+		sb.append(APPLICATION_NAME).append(" v.").append(Version).append(StringTool.lf)
+			.append(CoreHubHelper.getRevision(true, plugin)).append(StringTool.lf)
 			.append(System.getProperty("os.name")).append(StringConstants.SLASH)
 			.append(System.getProperty("os.version")).append(StringConstants.SLASH)
 			.append(System.getProperty("os.arch")); //$NON-NLS-1$

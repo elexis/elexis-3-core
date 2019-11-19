@@ -79,7 +79,7 @@ public class ODDBView extends ViewPart implements ISaveablePart2 {
 			return ret.toString();
 		} catch (IOException e) {
 			ExHandler.handle(e);
-			return "";
+			return StringTool.leer;
 		}
 	}
 	

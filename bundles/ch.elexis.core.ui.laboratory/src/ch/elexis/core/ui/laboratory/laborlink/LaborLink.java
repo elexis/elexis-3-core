@@ -32,6 +32,7 @@ import ch.elexis.data.LabItem;
 import ch.elexis.data.Patient;
 import ch.rgw.tools.TimeTool;
 
+import ch.rgw.tools.StringTool;
 public class LaborLink implements IKonsExtension {
 	public static final String PROVIDER_ID = "laborlink";
 	
@@ -80,7 +81,7 @@ public class LaborLink implements IKonsExtension {
 					new LaborVerordnungDialog(UiDesk.getTopShell(), patient, date);
 				if (dialog.open() == LaborVerordnungDialog.OK) {
 					// insert XRef
-					textField.insertXRef(-1, "Labor", PROVIDER_ID, "");
+					textField.insertXRef(-1, "Labor", PROVIDER_ID, StringTool.leer);
 				}
 			}
 		};

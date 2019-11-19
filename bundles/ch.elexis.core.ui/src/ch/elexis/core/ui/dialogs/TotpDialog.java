@@ -41,6 +41,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.User;
 
+import ch.rgw.tools.StringTool;
 public class TotpDialog extends TitleAreaDialog {
 	
 	protected static Logger log = LoggerFactory.getLogger(TotpDialog.class);
@@ -78,7 +79,7 @@ public class TotpDialog extends TitleAreaDialog {
 		
 		String issuer = "Elexis";
 		
-		String selfContactId = CoreHub.globalCfg.get(Preferences.SELFCONTACT_ID, "");
+		String selfContactId = CoreHub.globalCfg.get(Preferences.SELFCONTACT_ID, StringTool.leer);
 		if (!StringUtils.isEmpty(selfContactId)) {
 			Kontakt selfContact = Kontakt.load(selfContactId);
 			if (selfContact.isAvailable()) {

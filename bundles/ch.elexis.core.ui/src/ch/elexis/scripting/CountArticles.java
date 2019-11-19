@@ -28,6 +28,7 @@ import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
 
+import ch.rgw.tools.StringTool;
 public class CountArticles {
 	HashMap<IVerrechenbar, Integer> paid = new HashMap<IVerrechenbar, Integer>();
 	HashMap<IVerrechenbar, Integer> unpaid = new HashMap<IVerrechenbar, Integer>();
@@ -145,10 +146,10 @@ public class CountArticles {
 				.append(":\n")
 				.append("Bezahlte Artikel: ")
 				.append(mPaid.getAmountAsString())
-				.append("\n")
+				.append(StringTool.lf)
 				.append("Unbezahlte Artikel: ")
 				.append(mUnpaid.getAmountAsString())
-				.append("\n")
+				.append(StringTool.lf)
 				.append(
 					"(Jeweils per Stichtag "
 						+ new TimeTool(referenceDate).toString(TimeTool.DATE_GER)).append(")\n");

@@ -20,6 +20,7 @@ import ch.elexis.core.ui.views.rechnung.Messages;
 import ch.rgw.io.Settings;
 import ch.rgw.tools.Money;
 
+import ch.rgw.tools.StringTool;
 public class InvoiceListBottomComposite extends Composite {
 	
 	private static final String REMINDER_3 = Messages.RechnungsListeView_reminder3; //$NON-NLS-1$
@@ -86,10 +87,10 @@ public class InvoiceListBottomComposite extends Composite {
 		Composite cSum = fSum.getBody();
 		cSum.setLayout(new GridLayout(2, false));
 		tk.createLabel(cSum, Messages.RechnungsListeView_patInList); //$NON-NLS-1$
-		 totalPatientsInListText = tk.createText(cSum, "", SWT.BORDER | SWT.READ_ONLY); //$NON-NLS-1$
+		 totalPatientsInListText = tk.createText(cSum, StringTool.leer, SWT.BORDER | SWT.READ_ONLY); //$NON-NLS-1$
 		totalPatientsInListText.setLayoutData(new GridData(100, SWT.DEFAULT));
 		tk.createLabel(cSum, Messages.RechnungsListeView_accountsInList); //$NON-NLS-1$
-		tSumInvoiceInList = tk.createText(cSum, "", SWT.BORDER | SWT.READ_ONLY); //$NON-NLS-1$
+		tSumInvoiceInList = tk.createText(cSum, StringTool.leer, SWT.BORDER | SWT.READ_ONLY); //$NON-NLS-1$
 		tSumInvoiceInList.setLayoutData(new GridData(100, SWT.DEFAULT));
 		tk.createLabel(cSum, Messages.RechnungsListeView_sumInList); //$NON-NLS-1$
 		tSum = SWTHelper.createText(tk, cSum, 1, SWT.BORDER | SWT.READ_ONLY);

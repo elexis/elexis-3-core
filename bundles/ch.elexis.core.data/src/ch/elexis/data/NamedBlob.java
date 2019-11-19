@@ -32,6 +32,7 @@ import ch.rgw.tools.TimeTool;
  * @author Gerry
  * 
  */
+import ch.rgw.tools.StringTool;
 public class NamedBlob extends PersistentObject {
 	
 	public static final String TABLENAME = "HEAP";
@@ -69,7 +70,7 @@ public class NamedBlob extends PersistentObject {
 	public String getString(){
 		byte[] comp = getBinary(CONTENTS);
 		if ((comp == null) || (comp.length == 0)) {
-			return "";
+			return StringTool.leer;
 		}
 		byte[] exp = CompEx.expand(comp);
 		try {

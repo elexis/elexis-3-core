@@ -49,6 +49,7 @@ import ch.elexis.data.User;
  * @author marco
  * 
  */
+import ch.rgw.tools.StringTool;
 @Component
 public class LocalLockService implements ILocalLockService {
 	
@@ -83,7 +84,7 @@ public class LocalLockService implements ILocalLockService {
 		inst.setUuid(getSystemUuid());
 		inst.setVersion(CoreHub.readElexisBuildVersion());
 		inst.setOperatingSystem(
-			System.getProperty("os.name") + "/" + System.getProperty("os.version") + "/"
+			System.getProperty("os.name") + StringTool.slash + System.getProperty("os.version") + StringTool.slash
 				+ System.getProperty("os.arch") + "/J" + System.getProperty("java.version"));
 	}
 	
@@ -95,8 +96,8 @@ public class LocalLockService implements ILocalLockService {
 			logger.info("Operating against elexis-server instance on " + restUrl);
 			ils = new ElexisServerLockService(restUrl);
 			iis = new ElexisServerInstanceService(restUrl);
-			String identId = CoreHub.localCfg.get(Preferences.STATION_IDENT_ID, "");
-			String identTxt = CoreHub.localCfg.get(Preferences.STATION_IDENT_TEXT, "");
+			String identId = CoreHub.localCfg.get(Preferences.STATION_IDENT_ID, StringTool.leer);
+			String identTxt = CoreHub.localCfg.get(Preferences.STATION_IDENT_TEXT, StringTool.leer);
 			inst.setIdentifier(identTxt + " [" + identId + "]");
 		} else {
 			standalone = true;

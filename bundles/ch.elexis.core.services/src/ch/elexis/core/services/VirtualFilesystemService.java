@@ -11,6 +11,7 @@ import org.osgi.service.component.annotations.Component;
 
 import ch.elexis.core.services.internal.VirtualFilesystemHandle;
 
+import ch.rgw.tools.StringTool;
 @Component
 public class VirtualFilesystemService implements IVirtualFilesystemService {
 	
@@ -47,7 +48,7 @@ public class VirtualFilesystemService implements IVirtualFilesystemService {
 			}
 			
 			if (StringUtils.startsWith(urlString, "\\\\")) {
-				String replaced = urlString.replace("\\", "/");
+				String replaced = urlString.replace("\\", StringTool.slash);
 				return isValidURL("smb:" + replaced);
 			}
 		}

@@ -15,6 +15,7 @@ import ch.elexis.core.ui.dbcheck.model.TableDescriptor;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 
+import ch.rgw.tools.StringTool;
 public class RefIntegrityCheckPGSQL extends RefIntegrityCheck {
 	
 	public RefIntegrityCheckPGSQL(){
@@ -43,8 +44,8 @@ public class RefIntegrityCheckPGSQL extends RefIntegrityCheck {
 						Stm stm = j.getStatement();
 						ResultSet rs = stm.query(query);
 						while (rs.next()) {
-							errlog.append(tables[i] + ": " + rs.getString(1) + " " + description
-								+ "\n");
+							errlog.append(tables[i] + ": " + rs.getString(1) + StringTool.space + description
+								+ StringTool.lf);
 						}
 					}
 				}

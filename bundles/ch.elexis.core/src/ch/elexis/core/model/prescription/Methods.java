@@ -4,18 +4,19 @@ import java.util.Arrays;
 
 import ch.elexis.core.services.IMedicationService;
 
+import ch.rgw.tools.StringTool;
 public class Methods {
 	/**
 	 * 
 	 * @return the signature split into a string array with 4 elements; will always return an array
-	 *         of 4 elements, where empty entries are of type String ""
+	 *         of 4 elements, where empty entries are of type String StringTool.leer
 	 * @since 3.1.0
 	 * @since 3.2.0 relocated from Prescription
 	 * @deprecated use {@link IMedicationService} method instead.
 	 */
 	public static String[] getSignatureAsStringArray(String signature){
 		String[] daytimeSignature = new String[4];
-		Arrays.fill(daytimeSignature, "");
+		Arrays.fill(daytimeSignature, StringTool.leer);
 		if (signature != null) {
 			// Match stuff like '1/2', '7/8'
 			//			if (signature.matches("^[0-9]/[0-9]$")) {
@@ -31,7 +32,7 @@ public class Methods {
 					System.arraycopy(split, 0, daytimeSignature, 0, split.length);
 					return getDayTimeOrFreetextSignatureArray(daytimeSignature);
 				}
-			} else if (signature.indexOf("/") != -1) {
+			} else if (signature.indexOf(StringTool.slash) != -1) {
 				String[] split = signature.split("[/]"); //$NON-NLS-1$
 				if (split.length > 0 && split.length < 5) {
 					System.arraycopy(split, 0, daytimeSignature, 0, split.length);
@@ -61,7 +62,7 @@ public class Methods {
 	 */
 	private static String[] getDayTimeOrFreetextSignatureArray(String[] signature){
 		String[] values = new String[4];
-		Arrays.fill(values, "");
+		Arrays.fill(values, StringTool.leer);
 		
 		String morn = signature[0];
 		String noon = signature[1];

@@ -62,6 +62,7 @@ import ch.rgw.tools.ExHandler;
 /**
  * Eine alternative, platzsparendere Fälle-View
  */
+import ch.rgw.tools.StringTool;
 public class FaelleView extends ViewPart implements IRefreshable {
 	public static final String ID = "ch.elexis.schoebufaelle"; //$NON-NLS-1$
 	TableViewer tv;
@@ -261,7 +262,7 @@ public class FaelleView extends ViewPart implements IRefreshable {
 			}
 			
 		};
-		filterClosedAction = new Action("", Action.AS_CHECK_BOX) {
+		filterClosedAction = new Action(StringTool.leer, Action.AS_CHECK_BOX) {
 			private ViewerFilter closedFilter;
 			{
 				setToolTipText(Messages.FaelleView_ShowOnlyOpenCase); //$NON-NLS-1$

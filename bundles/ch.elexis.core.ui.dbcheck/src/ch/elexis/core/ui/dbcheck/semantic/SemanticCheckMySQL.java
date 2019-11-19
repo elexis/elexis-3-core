@@ -12,6 +12,7 @@ import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLinkSyntaxException;
 import ch.rgw.tools.JdbcLink.Stm;
 
+import ch.rgw.tools.StringTool;
 public class SemanticCheckMySQL extends SemanticCheck {
 	
 	public SemanticCheckMySQL(){
@@ -52,7 +53,7 @@ public class SemanticCheckMySQL extends SemanticCheck {
 							} catch (JdbcLinkSyntaxException je2) {
 								// We still did not find the table, assume its missing!
 								errlog.append(tables[i] + ": Semantischer Fehler bei Query <<"
-									+ query + ">> auf ID " + ((rs!=null) ? rs.getString(1) : rs) + "\n");
+									+ query + ">> auf ID " + ((rs!=null) ? rs.getString(1) : rs) + StringTool.lf);
 								continue;
 							}
 						}

@@ -87,10 +87,10 @@ public class BezugsKontaktAuswahl extends Dialog {
 		new Label(ret, SWT.NONE)
 			.setText(Messages.Patientenblatt2_pleaseEnterKindOfRelationship); //$NON-NLS-1$
 		
-		new Label(ret, SWT.NONE).setText(srcLabel + " " + Messages.Bezugskontakt_Is); //$NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(srcLabel + StringTool.space + Messages.Bezugskontakt_Is); //$NON-NLS-1$
 		cbBezugSrc = new Combo(ret, SWT.NONE);
 		cbBezugSrc.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		String bez = CoreHub.globalCfg.get(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, ""); //$NON-NLS-1$
+		String bez = CoreHub.globalCfg.get(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, StringTool.leer); //$NON-NLS-1$
 		
 		String[] items = getBezugKonkaktTypes(bez);
 		
@@ -139,13 +139,13 @@ public class BezugsKontaktAuswahl extends Dialog {
 
 		String[] bezugKontaktTypes = getBezugKontaktTypes();
 		
-		new Label(dynComposite, SWT.NONE).setText(Messages.Bezugskontakt_RelationFrom + " "); //$NON-NLS-1$
+		new Label(dynComposite, SWT.NONE).setText(Messages.Bezugskontakt_RelationFrom + StringTool.space); //$NON-NLS-1$
 		cbTypeDest = new Combo(dynComposite, SWT.READ_ONLY);
 		cbTypeDest.setEnabled(!locked);
 		cbTypeDest.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		cbTypeDest.setItems(bezugKontaktTypes);
 		
-		new Label(dynComposite, SWT.NONE).setText(Messages.Bezugskontakt_RelationTo + " "); //$NON-NLS-1$
+		new Label(dynComposite, SWT.NONE).setText(Messages.Bezugskontakt_RelationTo + StringTool.space); //$NON-NLS-1$
 		cbTypeSrc = new Combo(dynComposite, SWT.READ_ONLY);
 		cbTypeSrc.setEnabled(!locked);
 		cbTypeSrc.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -214,7 +214,7 @@ public class BezugsKontaktAuswahl extends Dialog {
 		String[] items = cbBezugSrc.getItems();
 		String nitem = selectedBezugKontaktRelation.getName();
 		if (StringTool.getIndex(items, nitem) == -1) {
-			String res = CoreHub.globalCfg.get(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, "")
+			String res = CoreHub.globalCfg.get(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, StringTool.leer)
 				+ Patientenblatt2.SPLITTER + selectedBezugKontaktRelation.getCfgString();
 			CoreHub.globalCfg.set(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, res);
 		}

@@ -18,6 +18,7 @@ import java.util.Hashtable;
 
 import ch.elexis.data.PersistentObject;
 
+import ch.rgw.tools.StringTool;
 public class Counter {
 	private ArrayList<Float> list = new ArrayList<Float>();
 	private Hashtable<Object, Integer> hash = new Hashtable<Object, Integer>();
@@ -89,7 +90,7 @@ public class Counter {
 		for (ObjCounter oc : cnt) {
 			sb.append(oc.count).append("\t\t"); //$NON-NLS-1$
 			PersistentObject po = (PersistentObject) oc.obj;
-			sb.append(po.getLabel()).append("\n"); //$NON-NLS-1$
+			sb.append(po.getLabel()).append(StringTool.lf); //$NON-NLS-1$
 		}
 		return sb.toString();
 	}

@@ -82,7 +82,7 @@ public abstract class HL7Reader {
 				.append(":\n")
 				.append(Messages.HL7_Lab).append(lastName).append(StringTool.space)
 				.append(firstName).append("(").append(sex).append("),").append(birthDate)
-				.append("\n").append(Messages.HL7_Database).append(pat.getLabel());
+				.append(StringTool.lf).append(Messages.HL7_Database).append(pat.getLabel());
 			pat = null;
 			logger.warn(sb.toString());
 			
@@ -118,8 +118,8 @@ public abstract class HL7Reader {
 	
 	public String parseTextValue(String value){
 		String text = value;
-		text = text.replaceAll("\\\\.br\\\\", "\n");
-		text = text.replaceAll("\\\\.BR\\\\", "\n");
+		text = text.replaceAll("\\\\.br\\\\", StringTool.lf);
+		text = text.replaceAll("\\\\.BR\\\\", StringTool.lf);
 		
 		// only return parsed value if it contains reasonable input
 		if (text != null && !text.isEmpty()) {
@@ -180,7 +180,7 @@ public abstract class HL7Reader {
 			if (name2 != null) {
 				orcMessage.getNames().add(name2);
 				if (name != null) {
-					orcMessage.getNames().add(name + " " + name2);
+					orcMessage.getNames().add(name + StringTool.space + name2);
 				}
 			}
 		}

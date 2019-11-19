@@ -16,6 +16,7 @@ package ch.elexis.data;
 
 import ch.rgw.tools.TimeTool;
 
+import ch.rgw.tools.StringTool;
 public class DayMessage extends PersistentObject {
 	public boolean isNew = false;
 	static {
@@ -44,7 +45,7 @@ public class DayMessage extends PersistentObject {
 	}
 	
 	public String getLabel(){
-		return get("Date") + " " + getMessage();
+		return get("Date") + StringTool.space + getMessage();
 	}
 	
 	public static DayMessage load(String day){

@@ -36,12 +36,13 @@ import ch.elexis.core.ui.util.SWTHelper;
  * @author Gerry
  * 
  */
+import ch.rgw.tools.StringTool;
 public abstract class ActiveControl extends Composite {
 	private Label lbl;
 	protected Control ctl;
 	protected Composite controllers;
-	protected String textContents = "";
-	private String labelContents = "";
+	protected String textContents = StringTool.leer;
+	private String labelContents = StringTool.leer;
 	private LinkedList<ActiveControlListener> listeners;
 	private HashMap<String, Object> properties = new HashMap<String, Object>();
 	private int flags;
@@ -84,7 +85,7 @@ public abstract class ActiveControl extends Composite {
 			setLayout(new GridLayout(2, false));
 		}
 		flags = displayBits;
-		labelContents = displayName == null ? "" : displayName;
+		labelContents = displayName == null ? StringTool.leer : displayName;
 		if ((displayBits & HIDE_LABEL) == 0) {
 			lbl = new Label(this, SWT.NONE);
 			lbl.setText(displayName);
@@ -156,7 +157,7 @@ public abstract class ActiveControl extends Composite {
 	}
 	
 	public void clear(){
-		textContents = "";
+		textContents = StringTool.leer;
 		push();
 	}
 	

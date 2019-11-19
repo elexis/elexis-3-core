@@ -3,6 +3,7 @@ package ch.elexis.core.tasks.internal.service;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.slf4j.Logger;
 
+import ch.rgw.tools.StringTool;
 public class LogProgressMonitor implements IProgressMonitor {
 	
 	private Logger logger;
@@ -28,7 +29,7 @@ public class LogProgressMonitor implements IProgressMonitor {
 	
 	private void log(){
 		if (logger.isDebugEnabled()) {
-			String msg = name + " [" + worked + "/" + totalWork + "]";
+			String msg = name + " [" + worked + StringTool.slash + totalWork + "]";
 			if (cancelled) {
 				msg = "-CNCLD- " + msg;
 			}
@@ -68,7 +69,7 @@ public class LogProgressMonitor implements IProgressMonitor {
 	
 	@Override
 	public void subTask(String name){
-		this.name = this.name + "/" + name;
+		this.name = this.name + StringTool.slash + name;
 	}
 	
 	@Override

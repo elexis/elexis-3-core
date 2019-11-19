@@ -17,6 +17,7 @@ import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.ResourceAccessor;
 
+import ch.rgw.tools.StringTool;
 public class LiquibaseDBUpdater {
 
 	private static Logger logger = LoggerFactory.getLogger(LiquibaseDBUpdater.class);
@@ -41,7 +42,7 @@ public class LiquibaseDBUpdater {
 
 			Liquibase liquibase = new Liquibase(changelogXmlUrl, resourceAccessor, targetDb);
 			logger.info("Updating database [" + connection + "] with liquibase");
-			liquibase.update("");
+			liquibase.update(StringTool.leer);
 		} catch (LiquibaseException | SQLException e) {
 			// log and try to carry on
 			logger.warn("Exception on DB init.", e);

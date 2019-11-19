@@ -149,7 +149,7 @@ public class TextTemplate {
 	
 	public void setMandant(String mandantId){
 		if (mandantId == null) {
-			mandantId = "";
+			mandantId = StringTool.leer;
 		}
 		this.mandantId = mandantId;
 		updateTemplateReference(UPDATE_TYPE.MANDANT);
@@ -159,14 +159,14 @@ public class TextTemplate {
 	
 	public void setMandant(Mandant mandant){
 		if (mandant == null) {
-			setMandant("");
+			setMandant(StringTool.leer);
 		} else {
 			setMandant(mandant.getId());
 		}
 	}
 	
 	public Mandant getMandant(){
-		Mandant ret = (mandantId == "" ? null : Mandant.load(mandantId));
+		Mandant ret = (mandantId == StringTool.leer ? null : Mandant.load(mandantId));
 		if (ret != null && ret.exists()) {
 			return ret;
 		}
@@ -256,7 +256,7 @@ public class TextTemplate {
 				DocumentSelectDialog.setDontAskForAddresseeForThisTemplate(bt, !askForAddress);
 				break;
 			case SYS_TEMPLATE:
-				String sysTemplate = systemTemplate ? Brief.SYS_TEMPLATE : "";
+				String sysTemplate = systemTemplate ? Brief.SYS_TEMPLATE : StringTool.leer;
 				bt.set(Brief.FLD_KONSULTATION_ID, sysTemplate);
 				break;
 			default:
@@ -275,11 +275,11 @@ public class TextTemplate {
 		
 		if (systemTemplate || mandantId == null || mandantId.isEmpty()) {
 			cfgTemplateBase =
-				TextTemplatePrintSettings.TXT_TEMPLATE_PREFIX_PUBLIC + type + "/" + name;
+				TextTemplatePrintSettings.TXT_TEMPLATE_PREFIX_PUBLIC + type + StringTool.slash + name;
 		} else {
 			cfgTemplateBase =
-				TextTemplatePrintSettings.TXT_TEMPLATE_PREFIX_PRIVATE + mandantId + "/" + type
-					+ "/" + name;
+				TextTemplatePrintSettings.TXT_TEMPLATE_PREFIX_PRIVATE + mandantId + StringTool.slash + type
+					+ StringTool.slash + name;
 		}
 		
 		if (printer != null)

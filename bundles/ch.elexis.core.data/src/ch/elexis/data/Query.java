@@ -51,7 +51,7 @@ import ch.rgw.tools.TimeTool;
 public class Query<T> {
 	private static Logger log = LoggerFactory.getLogger(Query.class);
 	
-	public static final String EQUALS = "=";
+	public static final String EQUALS = StringTool.equals;
 	public static final String GREATER = ">";
 	public static final String LESS = "<";
 	public static final String LESS_OR_EQUAL = "<=";
@@ -66,7 +66,7 @@ public class Query<T> {
 	private StringBuilder sql;
 	private PersistentObject template;
 	private Method load;
-	private String lastQuery = "";
+	private String lastQuery = StringTool.leer;
 	private final LinkedList<IFilter> postQueryFilters = new LinkedList<IFilter>();
 	private String ordering;
 	private final ArrayList<String> exttables = new ArrayList<String>(2);
@@ -269,7 +269,7 @@ public class Query<T> {
 		sql.append(" FROM ").append(table);
 		
 		String cns = template.getConstraint();
-		if (cns.equals("")) {
+		if (cns.equals(StringTool.leer)) {
 			if (includeDeletedEntriesInQuery) {
 				link = " WHERE ";
 			} else {
@@ -346,7 +346,7 @@ public class Query<T> {
 	 * @param feld
 	 *            Das Feld, für das die Bedingung gilt
 	 * @param operator
-	 *            Vergleich (z.B. "=", "LIKE", ">", "<")
+	 *            Vergleich (z.B. StringTool.equals, "LIKE", ">", "<")
 	 * @param wert
 	 *            Der Wert, der gesucht wird. Für Wildcard suche kann der Wert % enthalten, der
 	 *            Operator muss dann aber "LIKE" sein.
@@ -369,7 +369,7 @@ public class Query<T> {
 			wert = (wert == null) ? StringConstants.EMPTY : wert;
 			if (operator.equalsIgnoreCase("LIKE") && !wert.matches("[0-9]{8,8}")) {
 				StringBuilder sb = null;
-				wert = wert.replaceAll("%", "");
+				wert = wert.replaceAll("%", StringTool.leer);
 				final String filler = "%%%%%%%%";
 				// are we looking for the year?
 				if (wert.matches("[0-9]{3,}")) {
@@ -381,7 +381,7 @@ public class Query<T> {
 					// as in 01.02.1932
 					wert = wert.replaceAll("[^0-9]([0-9])\\.", "0$1.");
 					// remove dots
-					sb = new StringBuilder(wert.replaceAll("\\.", ""));
+					sb = new StringBuilder(wert.replaceAll("\\.", StringTool.leer));
 					// String must consist of 8 or more digits (ddmmYYYY)
 					sb.append(filler);
 					// convert to YYYYmmdd format
@@ -426,9 +426,9 @@ public class Query<T> {
 		}
 		
 		if (wert == null) {
-			if (operator.equalsIgnoreCase("is") || operator.equals("=")) {
+			if (operator.equalsIgnoreCase("is") || operator.equals(StringTool.equals)) {
 				// let's be a bit fault tolerant
-				operator = "";
+				operator = StringTool.leer;
 			} else if(NOT_EQUAL.equalsIgnoreCase(operator)){
 				operator = "NOT";
 			}
@@ -509,7 +509,7 @@ public class Query<T> {
 	 *            Die Felder, die in die abfrage eingesetzt werden sollen
 	 * @param values
 	 *            die Werte, nach denen gesucht werden soll. Wenn values für ein Feld leer ist (null
-	 *            oder ""), dann wird dieses Feld aus der Abfrage weggelassen
+	 *            oder StringTool.leer), dann wird dieses Feld aus der Abfrage weggelassen
 	 * @param exact
 	 *            false, wenn die Abfrage mit LIKE erfolgen soll, sonst mit =
 	 * @return eine Liste mit den gefundenen Objekten

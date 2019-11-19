@@ -41,7 +41,7 @@ public class PatientenListeControlFieldProvider extends DefaultControlFieldProvi
 		String field0 = null;
 		String field1 = null;
 		
-		if (lastFiltered.length >= 2 && lastFiltered[0].contains(" ")) {
+		if (lastFiltered.length >= 2 && lastFiltered[0].contains(StringTool.space)) {
 			Pattern pattern = Pattern.compile("^(\\S+) +(.*)$");
 			Matcher matcher = pattern.matcher(lastFiltered[0]);
 			if (matcher.matches()) {
@@ -80,7 +80,7 @@ public class PatientenListeControlFieldProvider extends DefaultControlFieldProvi
 		String field0 = null;
 		String field1 = null;
 		
-		if (lastFiltered.length >= 2 && lastFiltered[0].contains(" ")) {
+		if (lastFiltered.length >= 2 && lastFiltered[0].contains(StringTool.space)) {
 			Pattern pattern = Pattern.compile("^(\\S+) +(.*)$");
 			Matcher matcher = pattern.matcher(lastFiltered[0]);
 			if (matcher.matches()) {

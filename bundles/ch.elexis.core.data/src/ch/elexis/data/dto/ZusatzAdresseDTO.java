@@ -3,16 +3,17 @@ package ch.elexis.data.dto;
 
 import ch.elexis.core.types.AddressType;
 
+import ch.rgw.tools.StringTool;
 public class ZusatzAdresseDTO {
-	private String id = "";
-	private String kontaktId = "";
-	private String street1 = "";
-	private String street2 = "";
+	private String id = StringTool.leer;
+	private String kontaktId = StringTool.leer;
+	private String street1 = StringTool.leer;
+	private String street2 = StringTool.leer;
 	private AddressType addressType = AddressType.PRINCIPAL_RESIDENCE;
-	private String place = "";
-	private String zip = "";
-	private String country = "";
-	private String postalAddress = "";
+	private String place = StringTool.leer;
+	private String zip = StringTool.leer;
+	private String country = StringTool.leer;
+	private String postalAddress = StringTool.leer;
 	
 	public void setId(String id){
 		this.id = id;

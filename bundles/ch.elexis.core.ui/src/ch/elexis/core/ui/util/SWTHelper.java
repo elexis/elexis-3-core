@@ -438,7 +438,7 @@ public class SWTHelper {
 		if (lines > 1) {
 			lNum = SWT.MULTI | SWT.WRAP;
 		}
-		Text ret = tk.createText(parent, "", lNum | flags | SWT.BORDER); //$NON-NLS-1$
+		Text ret = tk.createText(parent, StringTool.leer, lNum | flags | SWT.BORDER); //$NON-NLS-1$
 		GridData gd = getFillGridData(1, true, 1, true);
 		int h = Math.round(ret.getFont().getFontData()[0].height);
 		gd.minimumHeight = (lines + 1) * (h + 2);

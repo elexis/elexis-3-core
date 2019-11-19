@@ -22,6 +22,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 
+import ch.rgw.tools.StringTool;
 public abstract class PagingComposite extends Composite {
 	private int currentPage;
 	private volatile boolean isLazyLoadingBusy;
@@ -49,7 +50,7 @@ public abstract class PagingComposite extends Composite {
 		
 		ToolBar toolBar = new ToolBar(main, SWT.RIGHT | SWT.FLAT);
 		ToolItem prevToolItem = new ToolItem(toolBar, SWT.PUSH);
-		prevToolItem.setToolTipText("");
+		prevToolItem.setToolTipText(StringTool.leer);
 		prevToolItem.setImage(Images.IMG_PREVIOUS.getImage());
 		prevToolItem.addSelectionListener(new SelectionAdapter() {
 			
@@ -60,11 +61,11 @@ public abstract class PagingComposite extends Composite {
 		});
 		
 		textToolItem = new ToolItem(toolBar, SWT.PUSH | SWT.CENTER);
-		textToolItem.setToolTipText("");
-		textToolItem.setText("");
+		textToolItem.setToolTipText(StringTool.leer);
+		textToolItem.setText(StringTool.leer);
 		
 		ToolItem nextToolItem = new ToolItem(toolBar, SWT.PUSH);
-		nextToolItem.setToolTipText("");
+		nextToolItem.setToolTipText(StringTool.leer);
 		nextToolItem.setImage(Images.IMG_NEXT.getImage());
 		nextToolItem.addSelectionListener(new SelectionAdapter() {
 			
@@ -108,7 +109,7 @@ public abstract class PagingComposite extends Composite {
 		if (!isDisposed()) {
 			setVisible(currentPage > 0);
 			if (textToolItem != null) {
-				textToolItem.setText(currentPage + "/" + maxPage);
+				textToolItem.setText(currentPage + StringTool.slash + maxPage);
 				textToolItem.setToolTipText("Gesamtanzahl: " + elementsCount);
 			}
 			

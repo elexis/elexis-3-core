@@ -71,7 +71,8 @@ import ch.elexis.data.User;
  * @author thomas
  *
  */
-@Component(property = EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE)
+import ch.rgw.tools.StringTool;
+@Component(property = EventConstants.EVENT_TOPIC + StringTool.equals + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE)
 public class ContextService implements IContextService, EventHandler {
 	
 	private static Logger logger = LoggerFactory.getLogger(ContextService.class);

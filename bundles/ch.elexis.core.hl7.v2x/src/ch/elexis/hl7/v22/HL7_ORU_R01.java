@@ -52,6 +52,7 @@ import ch.elexis.hl7.v26.Messages;
  * @author tony
  * 
  */
+import ch.rgw.tools.StringTool;
 public class HL7_ORU_R01 extends HL7Writer {
 	
 	final String uniqueMessageControlID;
@@ -174,12 +175,12 @@ public class HL7_ORU_R01 extends HL7Writer {
 				PID pid = oru.getPATIENT_RESULT().getPATIENT().getPID();
 				String pid2_patientId =
 					pid.getPid2_PatientIDExternalID().getCk1_IDNumber().getValue();
-				if ((pid2_patientId == null) || ("".equals(pid2_patientId)))
+				if ((pid2_patientId == null) || (StringTool.leer.equals(pid2_patientId)))
 					pid2_patientId =
 						pid.getPid3_PatientIDInternalID(0).getCm_pat_id1_IDNumber().getValue();
 				String pid4_alternatePatientId = pid.getPid4_AlternatePatientID().getValue();
-				String pid5_patientLastName = "";
-				String pid5_patientFirstName = "";
+				String pid5_patientLastName = StringTool.leer;
+				String pid5_patientFirstName = StringTool.leer;
 				if (pid.getPid5_PatientName().getName() != null)
 					pid5_patientLastName = pid.getPid5_PatientName().getFamilyName().getValue();
 				if (pid.getPid5_PatientName().getFamilyName() != null)
@@ -188,7 +189,7 @@ public class HL7_ORU_R01 extends HL7Writer {
 				String pid8_patientSex = pid.getPid8_Sex().getValue();
 				FT[] nteAfterPid_patientNotesAndCommentsArray =
 					oru.getPATIENT_RESULT().getPATIENT().getNTE().getComment();
-				String nteAfterPid_patientNotesAndComments = String.join("\n",
+				String nteAfterPid_patientNotesAndComments = String.join(StringTool.lf,
 						(nteAfterPid_patientNotesAndCommentsArray.length > 0)
 								? nteAfterPid_patientNotesAndCommentsArray[0].getValue()
 								: null);
@@ -208,19 +209,19 @@ public class HL7_ORU_R01 extends HL7Writer {
 				
 				int obscount = oru.getPATIENT_RESULT().getORDER_OBSERVATIONReps();
 				for (int j = 0; j < obscount; j++) {
-					String appendedTX = ""; //$NON-NLS-1$
+					String appendedTX = StringTool.leer; //$NON-NLS-1$
 					OBR obr = oru.getPATIENT_RESULT().getORDER_OBSERVATION(j).getOBR();
 					String obrDateOfObservation =
 						obr.getObr7_ObservationDateTime().getComponent(0).toString();
 					
-					if ((obrDateOfObservation == null) || ("".equals(obrDateOfObservation)))
+					if ((obrDateOfObservation == null) || (StringTool.leer.equals(obrDateOfObservation)))
 						obrDateOfObservation = obr.getObr22_ResultsReportStatusChangeDateTime()
 							.getComponent(0).toString();
 					
-					if ((obrDateOfObservation == null) || ("".equals(obrDateOfObservation)))
+					if ((obrDateOfObservation == null) || (StringTool.leer.equals(obrDateOfObservation)))
 						obrDateOfObservation = orc9_dateTimeOfTransaction;
 					
-					if ((obrDateOfObservation == null) || ("".equals(obrDateOfObservation)))
+					if ((obrDateOfObservation == null) || (StringTool.leer.equals(obrDateOfObservation)))
 						obrDateOfObservation = msh7_dateTimeOfMessage;
 					
 					// Order Comments
@@ -231,9 +232,9 @@ public class HL7_ORU_R01 extends HL7Writer {
 						AbstractPrimitive comment = nte.getNte3_Comment(0);
 						if (comment != null) {
 							if (orderCommentNTE != null) {
-								orderCommentNTE += "\n";
+								orderCommentNTE += StringTool.lf;
 							} else {
-								orderCommentNTE = "";
+								orderCommentNTE = StringTool.leer;
 							}
 							orderCommentNTE += comment.getValue();
 						}
@@ -255,9 +256,9 @@ public class HL7_ORU_R01 extends HL7Writer {
 							AbstractPrimitive comment = nte.getNte3_Comment(0);
 							if (comment != null) {
 								if (commentNTE != null) {
-									commentNTE += "\n";
+									commentNTE += StringTool.lf;
 								} else {
-									commentNTE = "";
+									commentNTE = StringTool.leer;
 								}
 								commentNTE += comment.getValue();
 							}
@@ -290,7 +291,7 @@ public class HL7_ORU_R01 extends HL7Writer {
 							String name =
 								obx.getObx3_ObservationIdentifier().getCe2_Text().getValue();
 							
-							String valueST = ""; //$NON-NLS-1$
+							String valueST = StringTool.leer; //$NON-NLS-1$
 							Object value = obx.getObx5_ObservationValue().getData();
 							if (value instanceof ST) {
 								valueST =
@@ -304,20 +305,20 @@ public class HL7_ORU_R01 extends HL7Writer {
 								dateOfObservation, commentNTE, null, null);
 							observation.add(strData);
 						} else if (HL7Constants.OBX_VALUE_TYPE_TX.equals(valueType)) {
-							String valueTX = ""; //$NON-NLS-1$
+							String valueTX = StringTool.leer; //$NON-NLS-1$
 							Object value = obx.getObx5_ObservationValue().getData();
 							if (value instanceof TX) {
 								valueTX =
 									((TX) obx.getObx5_ObservationValue().getData()).getValue();
 							}
-							appendedTX += valueTX + "\n"; //$NON-NLS-1$
+							appendedTX += valueTX + StringTool.lf; //$NON-NLS-1$
 						} else if (HL7Constants.OBX_VALUE_TYPE_FT.equals(valueType)) {
 							String kuerzel =
 								obx.getObx3_ObservationIdentifier().getCe1_Identifier().getValue();
 							String name =
 								obx.getObx3_ObservationIdentifier().getCe2_Text().getValue();
 							
-							String valueST = ""; //$NON-NLS-1$
+							String valueST = StringTool.leer; //$NON-NLS-1$
 							Object value = obx.getObx5_ObservationValue().getData();
 							if (value instanceof ST) {
 								ST st = (ST) value;

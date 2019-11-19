@@ -24,6 +24,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.data.dto.InvoiceCorrectionDTO;
 import ch.elexis.data.dto.InvoiceHistoryEntryDTO;
 
+import ch.rgw.tools.StringTool;
 public class InvoiceCorrectionWizard extends Wizard {
 	
 	Page1 page1;
@@ -218,7 +219,7 @@ public class InvoiceCorrectionWizard extends Wizard {
 				int i = invoiceCorrectionDTO.getHistory().indexOf(element);
 				return String.valueOf(++i) + ".   " + ((InvoiceHistoryEntryDTO) element).getText();
 			}
-			return "";
+			return StringTool.leer;
 		}
 	}
 }

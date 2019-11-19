@@ -10,6 +10,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLinkSyntaxException;
 
+import ch.rgw.tools.StringTool;
 public abstract class CheckExec {
 	public static String MYSQL_DB = JdbcLink.MYSQL_DRIVER_CLASS_NAME;
 	public static String POSTG_DB = JdbcLink.POSTGRESQL_DRIVER_CLASS_NAME;
@@ -33,7 +34,7 @@ public abstract class CheckExec {
 	}
 	
 	public static String getDBVersion(){
-		String version = "";
+		String version = StringTool.leer;
 		if (sqlDriver.equalsIgnoreCase(MYSQL_DB)) {
 			try {
 				version = j.queryString("SELECT wert FROM config WHERE param=\"dbversion\"");

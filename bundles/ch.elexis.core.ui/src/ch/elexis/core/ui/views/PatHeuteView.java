@@ -295,15 +295,15 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 		Composite bottom = form.getBody();
 		bottom.setLayout(new GridLayout(2, false));
 		tk.createLabel(bottom, Messages.PatHeuteView_consultations); //$NON-NLS-1$
-		tPat = tk.createText(bottom, "", SWT.BORDER); //$NON-NLS-1$
+		tPat = tk.createText(bottom, StringTool.leer, SWT.BORDER); //$NON-NLS-1$
 		tPat.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tPat.setEditable(false);
 		tk.createLabel(bottom, Messages.PatHeuteView_accTime); //$NON-NLS-1$
-		tTime = tk.createText(bottom, "", SWT.BORDER); //$NON-NLS-1$
+		tTime = tk.createText(bottom, StringTool.leer, SWT.BORDER); //$NON-NLS-1$
 		tTime.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tTime.setEditable(false);
 		tk.createLabel(bottom, Messages.PatHeuteView_accAmount); //$NON-NLS-1$
-		tMoney = tk.createText(bottom, "", SWT.BORDER); //$NON-NLS-1$
+		tMoney = tk.createText(bottom, StringTool.leer, SWT.BORDER); //$NON-NLS-1$
 		tMoney.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tMoney.setEditable(false);
 		// Group grpSel=new Group(parent,SWT.BORDER);
@@ -315,10 +315,10 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 		Composite cSel = fSel.getBody();
 		cSel.setLayout(new GridLayout(2, false));
 		tk.createLabel(cSel, Messages.PatHeuteView_accTime); //$NON-NLS-1$
-		tTime2 = tk.createText(cSel, "", SWT.BORDER); //$NON-NLS-1$
+		tTime2 = tk.createText(cSel, StringTool.leer, SWT.BORDER); //$NON-NLS-1$
 		tTime2.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tk.createLabel(cSel, Messages.PatHeuteView_accAmount); //$NON-NLS-1$
-		tMoney2 = tk.createText(cSel, "", SWT.BORDER); //$NON-NLS-1$
+		tMoney2 = tk.createText(cSel, StringTool.leer, SWT.BORDER); //$NON-NLS-1$
 		tMoney2.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tTime2.setEditable(false);
 		tMoney2.setEditable(false);
@@ -365,8 +365,8 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 	
 	private void selection(final Konsultation k){
 		if (k == null) {
-			tTime2.setText("");
-			tMoney2.setText("");
+			tTime2.setText(StringTool.leer);
+			tMoney2.setText(StringTool.leer);
 		} else {
 			try {
 				tTime2.setText(Integer.toString(k.getMinutes()));
@@ -482,7 +482,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 									text = st.v.getText();
 								}
 								if (text == null) {
-									text = ""; //$NON-NLS-1$
+									text = StringTool.leer; //$NON-NLS-1$
 								} else {
 									text = text.replaceAll(";", ","); //$NON-NLS-1$ //$NON-NLS-2$
 								}
@@ -492,12 +492,12 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 									sb.append("Codesystem?");
 								}
 								sb.append("; ").append( //$NON-NLS-1$
-									code == null ? "" : code) //$NON-NLS-1$
+									code == null ? StringTool.leer : code) //$NON-NLS-1$
 									.append("; ").append(text).append(";") //$NON-NLS-1$ //$NON-NLS-2$
 									.append(st.num).append(";").append( //$NON-NLS-1$
 										st.cost.getAmountAsString()).append(";").append( //$NON-NLS-1$
 										st.sum.getAmountAsString()).append(";").append( //$NON-NLS-1$
-										st.getGewinn().getAmountAsString()).append("\r\n"); //$NON-NLS-1$
+										st.getGewinn().getAmountAsString()).append(StringTool.crlf); //$NON-NLS-1$
 								fw.write(sb.toString());
 							}
 							fw.close();
@@ -653,16 +653,16 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 				sb.append("Folgende Konsultationen enthalten ungültige Leistungen: \n");
 				for (Konsultation k : corruptKons) {
 					sb.append(k.getLabel() + ", " + k.getFall().getPatient().getLabel());
-					sb.append("\n");
+					sb.append(StringTool.lf);
 				}
-				sb.append("\n");
+				sb.append(StringTool.lf);
 			}
 			
 			if (missingCaseKons.size() > 0) {
 				sb.append("Folgende Konsultationen sind keinem Fall zugewiesen: \n");
 				for (Konsultation k : missingCaseKons) {
 					sb.append(k.getLabel());
-					sb.append("\n");
+					sb.append(StringTool.lf);
 				}
 			}
 			
@@ -857,7 +857,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 			for (int i = 0; i < kons.length; i++) {
 				table[i + 1] = new String[2];
 				Konsultation k = kons[i];
-				table[i + 1][0] = k.getFall().getPatient().getLabel() + "\n" //$NON-NLS-1$
+				table[i + 1][0] = k.getFall().getPatient().getLabel() + StringTool.lf //$NON-NLS-1$
 					+ k.getLabel();
 				StringBuilder sb = new StringBuilder();
 				List<Verrechnet> lstg = k.getLeistungen();
@@ -874,8 +874,8 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 						}
 					}
 					subsum.addMoney(preis);
-					sb.append(num).append(" ").append(v.getLabel()).append(" ") //$NON-NLS-1$ //$NON-NLS-2$
-						.append(preis.getAmountAsString()).append("\n"); //$NON-NLS-1$
+					sb.append(num).append(StringTool.space).append(v.getLabel()).append(StringTool.space) //$NON-NLS-1$ //$NON-NLS-2$
+						.append(preis.getAmountAsString()).append(StringTool.lf); //$NON-NLS-1$
 				}
 				sb.append(Messages.PatHeuteView_total).append(subsum.getAmountAsString()); //$NON-NLS-1$
 				total.addMoney(subsum);

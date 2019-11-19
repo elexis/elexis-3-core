@@ -32,6 +32,7 @@ import ch.rgw.tools.ExHandler;
  * @author gerry
  * 
  */
+import ch.rgw.tools.StringTool;
 public class DatabaseCleaner {
 	
 	OutputStream osw;
@@ -84,7 +85,7 @@ public class DatabaseCleaner {
 			if (true) {
 				blame(rn, Messages.DatabaseCleaner_NoCaseForBill); //$NON-NLS-1$
 				Query<Konsultation> qk = new Query<Konsultation>(Konsultation.class);
-				qk.add("RechnungsID", "=", rn.getId());
+				qk.add("RechnungsID", StringTool.equals, rn.getId());
 				List<Konsultation> lk = qk.execute();
 				for (Konsultation k : lk) {
 					Fall f = k.getFall();
@@ -105,7 +106,7 @@ public class DatabaseCleaner {
 	
 	void blame(PersistentObject o, String msg){
 		try {
-			osw.write(("\r\n" + msg + ": " + o.getId() + ", " + o.getLabel() + "\r\n").getBytes("iso-8859-1")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+			osw.write((StringTool.crlf + msg + ": " + o.getId() + ", " + o.getLabel() + StringTool.crlf).getBytes("iso-8859-1")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 			purgeList.add(o);
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
@@ -114,7 +115,7 @@ public class DatabaseCleaner {
 	
 	void note(String msg){
 		try {
-			osw.write(("  -- " + msg + "\r\n").getBytes("iso-8859-1")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			osw.write(("  -- " + msg + StringTool.crlf).getBytes("iso-8859-1")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
 		}

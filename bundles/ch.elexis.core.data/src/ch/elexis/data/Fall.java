@@ -162,7 +162,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 		String reqs = BillingSystem.getRequirements(getAbrechnungsSystem());
 		if (reqs != null) {
 			for (String req : reqs.split(";")) { //$NON-NLS-1$
-				String localReq = ""; //$NON-NLS-1$
+				String localReq = StringTool.leer; //$NON-NLS-1$
 				String[] r = req.split(":"); //$NON-NLS-1$
 				if ((r[1].equalsIgnoreCase("X")) && (r.length > 2)) { //$NON-NLS-1$
 					// *** support for additional field types (checkboxes with
@@ -437,7 +437,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	
 	/** Feststellen, ob der Fall noch offen ist */
 	public boolean isOpen(){
-		if (getEndDatum().equals("")) { //$NON-NLS-1$
+		if (getEndDatum().equals(StringTool.leer)) { //$NON-NLS-1$
 			return true;
 		}
 		return false;
@@ -473,7 +473,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	
 	public String getRequirements(){
 		String req = BillingSystem.getRequirements(getAbrechnungsSystem());
-		return req == null ? "" : req; //$NON-NLS-1$
+		return req == null ? StringTool.leer : req; //$NON-NLS-1$
 	}
 	
 	/**
@@ -488,7 +488,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	
 	public String getOptionals(){
 		String req = BillingSystem.getOptionals(getAbrechnungsSystem());
-		return req == null ? "" : req; //$NON-NLS-1$
+		return req == null ? StringTool.leer : req; //$NON-NLS-1$
 	}
 	
 	/**
@@ -504,7 +504,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	
 	public String getUnused(){
 		String req = BillingSystem.getUnused(getAbrechnungsSystem());
-		return req == null ? "" : req; //$NON-NLS-1$
+		return req == null ? StringTool.leer : req; //$NON-NLS-1$
 	}
 	
 	/**
@@ -674,7 +674,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 			return checkNull((String) extinfo.get(name));
 		log.warn("Invalid object in Fall.getInfoString(" + name + "), not castable to String: "
 			+ extinfo.get(name), new Throwable("Invalid object"));
-		return "";
+		return StringTool.leer;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -737,7 +737,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	 */
 	public String getRequirements(final String billingSystem){
 		String req = BillingSystem.getRequirements(getAbrechnungsSystem());
-		return req == null ? "" : req; //$NON-NLS-1$
+		return req == null ? StringTool.leer : req; //$NON-NLS-1$
 	}
 	
 	/**

@@ -32,6 +32,7 @@ import ch.elexis.core.ui.util.Log;
  * @author nowhow
  * 
  */
+import ch.rgw.tools.StringTool;
 public abstract class AbstractProperties extends Properties {
 	private static final long serialVersionUID = -9019950244305182074L;
 	
@@ -48,7 +49,7 @@ public abstract class AbstractProperties extends Properties {
 	 * Returns location of the properties file inside of the elexis plugin
 	 */
 	private String getPlatzhalterFilenamePath() throws IOException{
-		URL url = Platform.getBundle("ch.elexis.core.data").getEntry("/"); //$NON-NLS-1$ //$NON-NLS-2$
+		URL url = Platform.getBundle("ch.elexis.core.data").getEntry(StringTool.slash); //$NON-NLS-1$ //$NON-NLS-2$
 		url = FileLocator.toFileURL(url);
 		String bundleLocation = url.getPath();
 		return bundleLocation + File.separator + DIRECTORY + File.separator + getFilename();

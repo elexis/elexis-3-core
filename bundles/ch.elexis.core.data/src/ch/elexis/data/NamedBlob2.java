@@ -24,6 +24,7 @@ import ch.rgw.tools.TimeTool;
  * @author Gerry
  * 
  */
+import ch.rgw.tools.StringTool;
 public class NamedBlob2 extends PersistentObject {
 	public static final String FLD_DATUM = "Datum";
 	public static final String FLD_CONTENTS = "Contents";
@@ -87,7 +88,7 @@ public class NamedBlob2 extends PersistentObject {
 	public String getString(){
 		byte[] comp = getBinary(FLD_CONTENTS);
 		if ((comp == null) || (comp.length == 0)) {
-			return "";
+			return StringTool.leer;
 		}
 		byte[] exp = CompEx.expand(comp);
 		try {

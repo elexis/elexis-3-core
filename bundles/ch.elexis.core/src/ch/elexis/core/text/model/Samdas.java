@@ -32,6 +32,7 @@ import ch.rgw.tools.TimeTool;
  * XML-Schema, das die Übertragung medizinischer Krankengeschichten (Elecronic medical record, EMR)
  * zwischen verschiedenen Endanwendungen ermöglicht. Diese Klasse ist ein API dafür
  */
+import ch.rgw.tools.StringTool;
 public class Samdas {
 	public static final String ELEM_ROOT = "EMR"; //$NON-NLS-1$
 	public static final String ELEM_TEXT = "text"; //$NON-NLS-1$
@@ -111,7 +112,7 @@ public class Samdas {
 	public String getRecordText(){
 		Element rec = getRecordElement();
 		String ret = rec.getChildText(ELEM_TEXT, ns);
-		return ret == null ? "" : ret; //$NON-NLS-1$
+		return ret == null ? StringTool.leer : ret; //$NON-NLS-1$
 	}
 	
 	public Element getRecordElement(){
