@@ -346,9 +346,13 @@ public class DocumentStore {
 	}
 	
 	public Optional<Identifiable> getPersistenceObject(IDocument document){
-		Optional<Object> po = getService(document.getStoreId()).getPersistenceObject(document);
-		if (po.isPresent()) {
-			return Optional.of((Identifiable) po.get());
+		if (document instanceof Identifiable) {
+			return Optional.of(document);
+		} else {
+			Optional<Object> po = getService(document.getStoreId()).getPersistenceObject(document);
+			if (po.isPresent()) {
+				return Optional.of((Identifiable) po.get());
+			}
 		}
 		return Optional.empty();
 	}

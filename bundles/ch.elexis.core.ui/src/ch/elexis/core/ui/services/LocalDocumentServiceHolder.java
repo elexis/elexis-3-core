@@ -10,6 +10,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.services.ILocalDocumentService;
 import ch.elexis.core.services.ILocalDocumentService.ILoadHandler;
 import ch.elexis.core.services.ILocalDocumentService.ISaveHandler;
@@ -68,6 +69,40 @@ public class LocalDocumentServiceHolder {
 					LoggerFactory.getLogger(getClass())
 						.warn("Document is empty - id: " + brief.getId());
 					return new ByteArrayInputStream(new byte[0]);
+				} catch (Exception e) {
+					LoggerFactory.getLogger(getClass()).error("Error loading document", e);
+				}
+				return null;
+			}
+		});
+		
+		service.registerSaveHandler(IDocumentLetter.class, new ISaveHandler() {
+			@Override
+			public boolean save(Object documentSource, ILocalDocumentService service){
+				IDocumentLetter letter = (IDocumentLetter) documentSource;
+				Optional<InputStream> content = service.getContent(letter);
+				if (content.isPresent()) {
+					try {
+						letter.setContent(content.get());
+						return true;
+					} finally {
+						try {
+							content.get().close();
+						} catch (IOException e) {
+							// ignore
+						}
+					}
+				}
+				return false;
+			}
+		});
+		
+		service.registerLoadHandler(IDocumentLetter.class, new ILoadHandler() {
+			@Override
+			public InputStream load(Object documentSource){
+				IDocumentLetter letter = (IDocumentLetter) documentSource;
+				try {
+					return letter.getContent();
 				} catch (Exception e) {
 					LoggerFactory.getLogger(getClass()).error("Error loading document", e);
 				}

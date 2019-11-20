@@ -59,7 +59,7 @@ public class LocalDocumentService implements ILocalDocumentService {
 			}
 		}
 		
-		ILoadHandler loadHandler = registeredLoadHandler.get(documentSource.getClass());
+		ILoadHandler loadHandler = getRegisteredLoadHandler(documentSource.getClass());
 		if (loadHandler == null) {
 			throw new IllegalStateException("No load handler for [" + documentSource + "]");
 		}
@@ -75,6 +75,20 @@ public class LocalDocumentService implements ILocalDocumentService {
 			return ret;
 		}
 		return Optional.empty();
+	}
+	
+	private ILoadHandler getRegisteredLoadHandler(Class<? extends Object> clazz){
+		ILoadHandler matchingHandler = registeredLoadHandler.get(clazz);
+		if (matchingHandler == null) {
+			Class<?>[] interfaces = clazz.getInterfaces();
+			for (Class<?> interfaze : interfaces) {
+				matchingHandler = registeredLoadHandler.get(interfaze);
+				if(matchingHandler != null) {
+					break;
+				}
+			}
+		}
+		return matchingHandler;
 	}
 	
 	@Override
@@ -364,9 +378,22 @@ public class LocalDocumentService implements ILocalDocumentService {
 		registeredLoadHandler.put(clazz, saveHandler);
 	}
 	
+	private ISaveHandler getRegisteredSaveHandler(Class<? extends Object> clazz){
+		ISaveHandler matchingHandler = registeredSaveHandler.get(clazz);
+		if (matchingHandler == null) {
+			Class<?>[] interfaces = clazz.getInterfaces();
+			for (Class<?> interfaze : interfaces) {
+				matchingHandler = registeredSaveHandler.get(interfaze);
+				if (matchingHandler != null) {
+					break;
+				}
+			}
+		}
+		return matchingHandler;
+	}
 	@Override
 	public boolean save(Object documentSource) throws IllegalStateException{
-		ISaveHandler saveHandler = registeredSaveHandler.get(documentSource.getClass());
+		ISaveHandler saveHandler = getRegisteredSaveHandler(documentSource.getClass());
 		if(saveHandler != null) {
 			return saveHandler.save(documentSource, this);
 		}
