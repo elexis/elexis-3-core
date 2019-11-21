@@ -276,6 +276,7 @@ public class AppointmentService implements IAppointmentService {
 	
 	@Override
 	public List<String> getTypes(){
-		return new ArrayList<String>(iConfigService.getAsList(AG_TERMINTYPEN, null));
+		return new ArrayList<String>(
+			iConfigService.getAsList(AG_TERMINTYPEN, Collections.emptyList()));
 	}
 }
