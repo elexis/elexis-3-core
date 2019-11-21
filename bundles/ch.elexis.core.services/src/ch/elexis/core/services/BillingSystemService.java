@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.l10n.Messages;
@@ -81,10 +82,15 @@ public class BillingSystemService implements IBillingSystemService {
 			if ("IVG".equals(configuredLaw)) {
 				configuredLaw = "IV";
 			}
-			BillingLaw law = BillingLaw.valueOf(configuredLaw);
-			BillingSystem billingSystem = new BillingSystem(name, law);
-			// TODO more attributes
-			return Optional.of(billingSystem);
+			if (configuredLaw != null) {
+				BillingLaw law = BillingLaw.valueOf(configuredLaw);
+				BillingSystem billingSystem = new BillingSystem(name, law);
+				// TODO more attributes
+				return Optional.of(billingSystem);
+			} else {
+				LoggerFactory.getLogger(getClass())
+					.warn("Could not determine law for billing system [" + name + "]");
+			}
 		}
 		
 		return Optional.empty();
