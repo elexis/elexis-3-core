@@ -15,6 +15,7 @@ import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
 
 import com.cronutils.model.Cron;
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -209,7 +210,7 @@ public interface ITaskDescriptor extends Identifiable, Deleteable {
 	 * @model transient="true"
 	 * @generated
 	 */
-	Map<String, String> getRunContext();
+	Map<String, Serializable> getRunContext();
 
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.tasks.model.ITaskDescriptor#getRunContext <em>Run Context</em>}' attribute.
@@ -219,7 +220,7 @@ public interface ITaskDescriptor extends Identifiable, Deleteable {
 	 * @see #getRunContext()
 	 * @generated
 	 */
-	void setRunContext(Map<String, String> value);
+	void setRunContext(Map<String, Serializable> value);
 
 	/**
 	 * Returns the value of the '<em><b>Trigger Type</b></em>' attribute.

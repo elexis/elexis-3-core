@@ -21,8 +21,9 @@
       <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/IN_PROGRESS"/>
       <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/CANCELLED"/>
       <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/ON_HOLD"/>
-      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/FAILED"/>
       <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/COMPLETED"/>
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/COMPLETED_WARN"/>
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/FAILED"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="model.ecore#//OwnerTaskNotification">
       <genEnumLiterals ecoreEnumLiteral="model.ecore#//OwnerTaskNotification/NEVER"/>
@@ -68,6 +69,11 @@
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/runContext"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/finished"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/descriptorId"/>
+      <genOperations ecoreOperation="model.ecore#//ITask/getResultEntryAsTypedList">
+        <genParameters ecoreParameter="model.ecore#//ITask/getResultEntryAsTypedList/key"/>
+        <genParameters ecoreParameter="model.ecore#//ITask/getResultEntryAsTypedList/clazz"/>
+        <genTypeParameters ecoreTypeParameter="model.ecore#//ITask/getResultEntryAsTypedList/T"/>
+      </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//ITaskService">
       <genOperations ecoreOperation="model.ecore#//ITaskService/createTaskDescriptor">

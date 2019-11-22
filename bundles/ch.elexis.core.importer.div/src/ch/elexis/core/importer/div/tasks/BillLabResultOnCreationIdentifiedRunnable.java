@@ -253,8 +253,8 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 	}
 	
 	@Override
-	public Map<String, String> getDefaultRunContext(){
-		Map<String, String> defaultRunContext = new HashMap<>();
+	public Map<String, Serializable> getDefaultRunContext(){
+		Map<String, Serializable> defaultRunContext = new HashMap<>();
 		defaultRunContext.put(RunContextParameter.IDENTIFIABLE_ID,
 			RunContextParameter.VALUE_MISSING_REQUIRED);
 		defaultRunContext.put(Parameters.ADDCONS_SAMEDAY, Boolean.TRUE.toString());

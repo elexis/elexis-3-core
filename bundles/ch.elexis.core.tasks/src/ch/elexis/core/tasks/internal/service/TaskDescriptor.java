@@ -87,7 +87,7 @@ public class TaskDescriptor
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Map<String, String> getRunContext(){
+	public Map<String, Serializable> getRunContext(){
 		String json = getEntity().getRunContext();
 		if (json != null) {
 			return gson.fromJson(json, Map.class);
@@ -96,14 +96,14 @@ public class TaskDescriptor
 	}
 	
 	@Override
-	public void setRunContext(Map<String, String> value){
+	public void setRunContext(Map<String, Serializable> value){
 		String json = gson.toJson(value);
 		getEntity().setRunContext(json);
 	}
 	
 	@Override
 	public void setRunContextParameter(String key, String value){
-		Map<String, String> runContext = getRunContext();
+		Map<String, Serializable> runContext = getRunContext();
 		runContext.put(key, value);
 		setRunContext(runContext);
 	}

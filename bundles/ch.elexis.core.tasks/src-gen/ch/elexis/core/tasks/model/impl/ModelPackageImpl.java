@@ -38,6 +38,7 @@ import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
+import org.eclipse.emf.ecore.ETypeParameter;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 import org.slf4j.Logger;
@@ -646,7 +647,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		EGenericType g1 = createEGenericType(ecorePackage.getEMap());
 		EGenericType g2 = createEGenericType(ecorePackage.getEString());
 		g1.getETypeArguments().add(g2);
-		g2 = createEGenericType(ecorePackage.getEString());
+		g2 = createEGenericType(this.getSerializable());
 		g1.getETypeArguments().add(g2);
 		initEAttribute(getITaskDescriptor_RunContext(), g1, "runContext", null, 0, 1, ITaskDescriptor.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getITaskDescriptor_TriggerType(), this.getTaskTriggerType(), "triggerType", "MANUAL", 0, 1, ITaskDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -690,6 +691,18 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getITask_RunContext(), g1, "runContext", null, 0, 1, ITask.class, IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getITask_Finished(), ecorePackage.getEBoolean(), "finished", "false", 1, 1, ITask.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getITask_DescriptorId(), ecorePackage.getEString(), "descriptorId", null, 1, 1, ITask.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		op = addEOperation(iTaskEClass, null, "getResultEntryAsTypedList", 0, 1, IS_UNIQUE, IS_ORDERED);
+		ETypeParameter t1 = addETypeParameter(op, "T");
+		addEParameter(op, ecorePackage.getEString(), "key", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(ecorePackage.getEJavaClass());
+		g2 = createEGenericType(t1);
+		g1.getETypeArguments().add(g2);
+		addEParameter(op, g1, "clazz", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(theTypesPackage.getList());
+		g2 = createEGenericType(t1);
+		g1.getETypeArguments().add(g2);
+		initEOperation(op, g1);
 
 		initEClass(iTaskServiceEClass, ITaskService.class, "ITaskService", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -772,8 +785,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEEnumLiteral(taskStateEEnum, TaskState.IN_PROGRESS);
 		addEEnumLiteral(taskStateEEnum, TaskState.CANCELLED);
 		addEEnumLiteral(taskStateEEnum, TaskState.ON_HOLD);
-		addEEnumLiteral(taskStateEEnum, TaskState.FAILED);
 		addEEnumLiteral(taskStateEEnum, TaskState.COMPLETED);
+		addEEnumLiteral(taskStateEEnum, TaskState.COMPLETED_WARN);
+		addEEnumLiteral(taskStateEEnum, TaskState.FAILED);
 
 		initEEnum(ownerTaskNotificationEEnum, OwnerTaskNotification.class, "OwnerTaskNotification");
 		addEEnumLiteral(ownerTaskNotificationEEnum, OwnerTaskNotification.NEVER);

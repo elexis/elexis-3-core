@@ -299,6 +299,7 @@ public class TaskServiceImpl implements ITaskService {
 				(String) task.getResult().get(ReturnParameter.FAILED_TASK_EXCEPTION_MESSAGE);
 			message.addMessageCode(MessageCode.Key.Severity, MessageCode.Value.Severity_WARN);
 		} else {
+			// TODO handle result type
 			resultText = (String) task.getResult().get(ReturnParameter.RESULT_DATA);
 			message.addMessageCode(MessageCode.Key.Severity, MessageCode.Value.Severity_INFO);
 		}
@@ -324,6 +325,8 @@ public class TaskServiceImpl implements ITaskService {
 			taskDescriptor.getId(), taskDescriptor.getReferenceId(), runContext);
 		
 		ITask task = new Task(taskDescriptor, triggerType, progressMonitor, runContext);
+		
+		// TODO test if all runContext parameters are satisfied, else reject execution
 		
 		try {
 			if (taskDescriptor.isSingleton()) {
@@ -431,8 +434,8 @@ public class TaskServiceImpl implements ITaskService {
 			return;
 		}
 		
-		Set<Entry<String, String>> entrySet = runnable.getDefaultRunContext().entrySet();
-		for (Entry<String, String> entry : entrySet) {
+		Set<Entry<String, Serializable>> entrySet = runnable.getDefaultRunContext().entrySet();
+		for (Entry<String, Serializable> entry : entrySet) {
 			if (IIdentifiedRunnable.RunContextParameter.VALUE_MISSING_REQUIRED
 				.equals(entry.getValue())) {
 				Serializable value = taskDescriptor.getRunContext().get(entry.getKey());

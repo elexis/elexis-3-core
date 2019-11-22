@@ -77,16 +77,6 @@ public enum TaskState implements Enumerator {
 	ON_HOLD(40, "ON_HOLD", "ON_HOLD"),
 
 	/**
-	 * The '<em><b>FAILED</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #FAILED_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	FAILED(90, "FAILED", "FAILED"),
-
-	/**
 	 * The '<em><b>COMPLETED</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -94,7 +84,26 @@ public enum TaskState implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	COMPLETED(50, "COMPLETED", "COMPLETED");
+	COMPLETED(50, "COMPLETED", "COMPLETED"), /**
+	 * The '<em><b>COMPLETED WARN</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The task completed successfully, but not flawless. I.e. there were warnings somebody should consider.
+	 * <!-- end-model-doc -->
+	 * @see #COMPLETED_WARN_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	COMPLETED_WARN(55, "COMPLETED_WARN", "COMPLETED_WARN"), /**
+	 * The '<em><b>FAILED</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #FAILED_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	FAILED(90, "FAILED", "FAILED");
 
 	/**
 	 * The '<em><b>DRAFT</b></em>' literal value.
@@ -172,21 +181,6 @@ public enum TaskState implements Enumerator {
 	public static final int ON_HOLD_VALUE = 40;
 
 	/**
-	 * The '<em><b>FAILED</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>FAILED</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @see #FAILED
-	 * @model
-	 * @generated
-	 * @ordered
-	 */
-	public static final int FAILED_VALUE = 90;
-
-	/**
 	 * The '<em><b>COMPLETED</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -202,6 +196,35 @@ public enum TaskState implements Enumerator {
 	public static final int COMPLETED_VALUE = 50;
 
 	/**
+	 * The '<em><b>COMPLETED WARN</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The task completed successfully, but not flawless. I.e. there were warnings somebody should consider.
+	 * <!-- end-model-doc -->
+	 * @see #COMPLETED_WARN
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int COMPLETED_WARN_VALUE = 55;
+
+	/**
+	 * The '<em><b>FAILED</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>FAILED</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #FAILED
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FAILED_VALUE = 90;
+
+	/**
 	 * An array of all the '<em><b>Task State</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -214,8 +237,9 @@ public enum TaskState implements Enumerator {
 			IN_PROGRESS,
 			CANCELLED,
 			ON_HOLD,
-			FAILED,
 			COMPLETED,
+			COMPLETED_WARN,
+			FAILED,
 		};
 
 	/**
@@ -277,8 +301,9 @@ public enum TaskState implements Enumerator {
 			case IN_PROGRESS_VALUE: return IN_PROGRESS;
 			case CANCELLED_VALUE: return CANCELLED;
 			case ON_HOLD_VALUE: return ON_HOLD;
-			case FAILED_VALUE: return FAILED;
 			case COMPLETED_VALUE: return COMPLETED;
+			case COMPLETED_WARN_VALUE: return COMPLETED_WARN;
+			case FAILED_VALUE: return FAILED;
 		}
 		return null;
 	}

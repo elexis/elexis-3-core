@@ -38,7 +38,8 @@ public interface IIdentifiedRunnable {
 		
 		/**
 		 * Run-Context parameter value: Denotes that a value for the given key is missing (no
-		 * default applicable)and required for execution
+		 * default applicable)and required for execution. If for any entry of the runContext this
+		 * value is set, execution by the TaskService will be rejected.
 		 */
 		public static final String VALUE_MISSING_REQUIRED = "missingRequired";
 	}
@@ -50,15 +51,23 @@ public interface IIdentifiedRunnable {
 		private ReturnParameter(){}
 		
 		/**
-		 * The class that is being delivered within {@link #RESULT_DATA}, if <code>null</code>
-		 * assume {@link String}
+		 * The full class name that is being delivered within {@link #RESULT_DATA} or
+		 * {@link #RESULT_DATA_LIST}, if <code>null</code> assume {@link String}
 		 */
 		public static final String RESULT_CLASS = "resultClass";
 		
 		/**
-		 * The actual result data, can be casted to {@link #RESULT_CLASS}
+		 * The actual result data for a single object. Object can be casted to
+		 * {@link #RESULT_CLASS}. If multiple result objects are required, use
+		 * {@link #RESULT_DATA_LIST}
 		 */
 		public static final String RESULT_DATA = "resultData";
+		
+		/**
+		 * The actual result data for multiple objects. Each object can be casted to
+		 * {@link #RESULT_CLASS}. If a single result object is required use {@link #RESULT_DATA}
+		 */
+		public static final String RESULT_DATA_LIST = "resultDataList";
 		
 		/**
 		 * The existence of this key does advise the task system to not persist the tasks results.
@@ -67,6 +76,13 @@ public interface IIdentifiedRunnable {
 		 * logged. A single task may still use this as return value.
 		 */
 		public static final String MARKER_DO_NOT_PERSIST = "markerDoNotPersist";
+		
+		/**
+		 * The existence of this key does advise the task system that there was a warning during
+		 * execution. That is, the task completed successfully, but not "flawlessly". The task
+		 * object will be marked accordingly.
+		 */
+		public static final String MARKER_WARN = "markerWarn";
 		
 		/**
 		 * If the task throws an exception (task fails), the message of the exception is returned
@@ -97,7 +113,7 @@ public interface IIdentifiedRunnable {
 	 * 
 	 * @return
 	 */
-	Map<String, String> getDefaultRunContext();
+	Map<String, Serializable> getDefaultRunContext();
 	
 	/**
 	 * Execute the task. If no exception is thrown during execution, it is assumed that the task

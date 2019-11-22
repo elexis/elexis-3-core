@@ -32,7 +32,7 @@ public class LogResultContextIdentifiedRunnable implements IIdentifiedRunnable {
 	}
 	
 	@Override
-	public Map<String, String> getDefaultRunContext(){
+	public Map<String, Serializable> getDefaultRunContext(){
 		return Collections.emptyMap();
 	}
 	

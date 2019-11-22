@@ -75,12 +75,12 @@ public class HL7ImporterIIdentifiedRunnable implements IIdentifiedRunnable {
 	}
 
 	@Override
-	public Map<String, String> getDefaultRunContext() {
-		Map<String, String> defaultRunContext = new HashMap<>();
+	public Map<String, Serializable> getDefaultRunContext() {
+		Map<String, Serializable> defaultRunContext = new HashMap<>();
 		defaultRunContext.put(RunContextParameter.STRING_URL, RunContextParameter.VALUE_MISSING_REQUIRED);
-		defaultRunContext.put(RCP_BOOLEAN_CREATE_PATIENT_IF_NOT_EXISTS, Boolean.toString(false));
-		defaultRunContext.put(RCP_BOOLEAN_CREATE_LABORATORY_IF_NOT_EXISTS, Boolean.toString(true));
-		defaultRunContext.put(RCP_BOOLEAN_MOVE_FILE_AFTER_IMPORT, Boolean.toString(true));
+		defaultRunContext.put(RCP_BOOLEAN_CREATE_PATIENT_IF_NOT_EXISTS, Boolean.FALSE);
+		defaultRunContext.put(RCP_BOOLEAN_CREATE_LABORATORY_IF_NOT_EXISTS, Boolean.TRUE);
+		defaultRunContext.put(RCP_BOOLEAN_MOVE_FILE_AFTER_IMPORT, Boolean.TRUE);
 		defaultRunContext.put(RCP_STRING_IMPORTER_LABNAME, "myLab");
 		return defaultRunContext;
 	}
@@ -89,8 +89,8 @@ public class HL7ImporterIIdentifiedRunnable implements IIdentifiedRunnable {
 	public Map<String, Serializable> run(Map<String, Serializable> context, IProgressMonitor progressMonitor,
 			Logger logger) throws TaskException {
 
-		boolean bCreateLaboratoryIfNotExists = Boolean.valueOf((String) context.get(RCP_BOOLEAN_CREATE_LABORATORY_IF_NOT_EXISTS));
-		boolean bMoveFile = Boolean.valueOf((String) context.get(RCP_BOOLEAN_MOVE_FILE_AFTER_IMPORT));
+		boolean bCreateLaboratoryIfNotExists = (boolean) context.get(RCP_BOOLEAN_CREATE_LABORATORY_IF_NOT_EXISTS);
+		boolean bMoveFile = (boolean) context.get(RCP_BOOLEAN_MOVE_FILE_AFTER_IMPORT);
 		String urlString = (String) context.get(RunContextParameter.STRING_URL);
 		String labName = (String) context.get(RCP_STRING_IMPORTER_LABNAME);
 

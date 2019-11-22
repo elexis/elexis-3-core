@@ -15,6 +15,7 @@ import ch.elexis.core.model.Identifiable;
 import java.io.Serializable;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -129,10 +130,7 @@ public interface ITask extends Identifiable, Deleteable {
 	/**
 	 * Returns the value of the '<em><b>Result</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Result</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
+	 * Result is de-serialized out of a json string. Numeric entries are always returned as doubles.
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Result</em>' attribute.
 	 * @see ch.elexis.core.tasks.model.ModelPackage#getITask_Result()
@@ -200,5 +198,14 @@ public interface ITask extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	String getDescriptorId();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model type="ch.elexis.core.types.List&lt;T&gt;" many="false"
+	 * @generated
+	 */
+	<T> List<T> getResultEntryAsTypedList(String key, Class<T> clazz);
+
 
 } // ITask

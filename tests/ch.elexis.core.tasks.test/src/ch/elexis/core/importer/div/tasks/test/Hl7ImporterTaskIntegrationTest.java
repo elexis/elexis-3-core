@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -208,7 +209,7 @@ public class Hl7ImporterTaskIntegrationTest {
 		IIdentifiedRunnable watcherRunnable = TaskServiceHolder.get()
 			.instantiateRunnableById(IdentifiedRunnableIdConstants.TRIGGER_TASK_FOR_EVERY_FILE);
 		assertNotNull(watcherRunnable);
-		Map<String, String> watcherRunContext = watcherRunnable.getDefaultRunContext();
+		Map<String, Serializable> watcherRunContext = watcherRunnable.getDefaultRunContext();
 		watcherRunContext.put(RunContextParameter.STRING_URL, url);
 		watcherRunContext.put(RunContextParameter.TASK_DESCRIPTOR_REFID, "hl7Importer_a");
 		watcherRunContext.put("fileExtensionFilter", "hl7");

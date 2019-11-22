@@ -1,9 +1,12 @@
 package ch.elexis.core.tasks.internal.service;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -13,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.model.IXid;
@@ -144,8 +148,20 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	}
 	
 	@Override
+	public <T> List<T> getResultEntryAsTypedList(String key, Class<T> clazz){
+		List<?> list = (List<?>) getResult().get(key);
+		if (list != null && !list.isEmpty()) {
+			String json = gson.toJson(list);
+			Type type = TypeToken.getParameterized(ArrayList.class, clazz).getType();
+			return gson.fromJson(json, type);
+		}
+		return Collections.emptyList();
+	}
+	
+	@Override
 	public boolean isFinished(){
-		return (TaskState.COMPLETED == getState() || TaskState.FAILED == getState());
+		return (TaskState.COMPLETED == getState() || TaskState.COMPLETED_WARN == getState()
+			|| TaskState.FAILED == getState());
 	}
 	
 	private void removeTaskRecord(){
@@ -182,6 +198,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 				
 				setState(TaskState.IN_PROGRESS);
 				long beginTimeMillis = System.currentTimeMillis();
+				// TODO what if it runs forever?
 				Map<String, Serializable> result =
 					runnableWithContext.run(effectiveRunContext, progressMonitor, logger);
 				long endTimeMillis = System.currentTimeMillis();
@@ -191,8 +208,12 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 					result.put("runnableExecDuration",
 						Long.toString(endTimeMillis - beginTimeMillis));
 				}
+				
 				setResult(result);
-				setState(TaskState.COMPLETED);
+				TaskState exitState =
+					(result.containsKey(ReturnParameter.MARKER_WARN)) ? TaskState.COMPLETED_WARN
+							: TaskState.COMPLETED;
+				setState(exitState);
 				
 				if (effectiveRunContext.containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)
 					|| getResult().containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)) {
