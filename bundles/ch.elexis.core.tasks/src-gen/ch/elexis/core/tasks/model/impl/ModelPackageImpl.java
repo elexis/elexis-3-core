@@ -425,8 +425,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getITask_DescriptorId() {
-		return (EAttribute)iTaskEClass.getEStructuralFeatures().get(9);
+	public EReference getITask_TaskDescriptor() {
+		return (EReference)iTaskEClass.getEStructuralFeatures().get(9);
 	}
 
 	/**
@@ -581,7 +581,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iTaskEClass, ITASK__PROGRESS_MONITOR);
 		createEAttribute(iTaskEClass, ITASK__RUN_CONTEXT);
 		createEAttribute(iTaskEClass, ITASK__FINISHED);
-		createEAttribute(iTaskEClass, ITASK__DESCRIPTOR_ID);
+		createEReference(iTaskEClass, ITASK__TASK_DESCRIPTOR);
 
 		iTaskServiceEClass = createEClass(ITASK_SERVICE);
 
@@ -690,7 +690,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		g1.getETypeArguments().add(g2);
 		initEAttribute(getITask_RunContext(), g1, "runContext", null, 0, 1, ITask.class, IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getITask_Finished(), ecorePackage.getEBoolean(), "finished", "false", 1, 1, ITask.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getITask_DescriptorId(), ecorePackage.getEString(), "descriptorId", null, 1, 1, ITask.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getITask_TaskDescriptor(), this.getITaskDescriptor(), null, "taskDescriptor", null, 1, 1, ITask.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		op = addEOperation(iTaskEClass, null, "getResultEntryAsTypedList", 0, 1, IS_UNIQUE, IS_ORDERED);
 		ETypeParameter t1 = addETypeParameter(op, "T");

@@ -250,6 +250,13 @@ public class TaskServiceImpl implements ITaskService {
 		}
 		
 		setActive(taskDescriptor, false);
+		
+		IQuery<ITask> taskQuery = taskModelService.getQuery(ITask.class, true);
+		taskQuery.and(ModelPackage.Literals.ITASK__TASK_DESCRIPTOR, COMPARATOR.EQUALS,
+			taskDescriptor);
+		List<ITask> execute = taskQuery.execute();
+		execute.stream().forEach(task -> taskModelService.remove(task));
+		
 		return taskModelService.remove(taskDescriptor);
 	}
 	
@@ -259,27 +266,22 @@ public class TaskServiceImpl implements ITaskService {
 			
 			triggeredTasks.remove(task);
 			
-			ITaskDescriptor taskDescriptor =
-				findTaskDescriptorByIdOrReferenceId(task.getDescriptorId()).orElse(null);
-			if (taskDescriptor != null) {
-				OwnerTaskNotification ownerNotification = taskDescriptor.getOwnerNotification();
-				IUser owner = taskDescriptor.getOwner();
+			ITaskDescriptor taskDescriptor = task.getTaskDescriptor();
+			OwnerTaskNotification ownerNotification = taskDescriptor.getOwnerNotification();
+			IUser owner = taskDescriptor.getOwner();
+			
+			TaskState state = task.getState();
+			if (OwnerTaskNotification.WHEN_FINISHED == ownerNotification
+				|| (OwnerTaskNotification.WHEN_FINISHED_FAILED == ownerNotification
+					&& TaskState.FAILED == state)) {
 				
-				TaskState state = task.getState();
-				if (OwnerTaskNotification.WHEN_FINISHED == ownerNotification
-					|| (OwnerTaskNotification.WHEN_FINISHED_FAILED == ownerNotification
-						&& TaskState.FAILED == state)) {
-					
-					if (owner != null) {
-						sendMessageToOwner(task, owner, state);
-					} else {
-						logger.warn("[{}] requested owner notification, but owner is null",
-							task.getDescriptorId());
-					}
-					
+				if (owner != null) {
+					sendMessageToOwner(task, owner, state);
+				} else {
+					logger.warn("[{}] requested owner notification, but owner is null",
+						task.getTaskDescriptor().getId());
 				}
-			} else {
-				logger.error("could not load taskdescriptor by id [{}]", task.getDescriptorId());
+				
 			}
 		}
 		
@@ -467,8 +469,7 @@ public class TaskServiceImpl implements ITaskService {
 	@Override
 	public Optional<ITask> findLatestExecution(ITaskDescriptor taskDescriptor){
 		IQuery<ITask> query = taskModelService.getQuery(ITask.class);
-		query.and(ModelPackage.Literals.ITASK__DESCRIPTOR_ID, COMPARATOR.EQUALS,
-			taskDescriptor.getId());
+		query.and(ModelPackage.Literals.ITASK__TASK_DESCRIPTOR, COMPARATOR.EQUALS, taskDescriptor);
 		query.orderBy("lastupdate", ORDER.DESC);
 		query.limit(1);
 		List<ITask> result = query.execute();

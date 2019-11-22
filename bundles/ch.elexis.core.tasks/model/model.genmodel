@@ -68,7 +68,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/progressMonitor"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/runContext"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/finished"/>
-      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/descriptorId"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ITask/taskDescriptor"/>
       <genOperations ecoreOperation="model.ecore#//ITask/getResultEntryAsTypedList">
         <genParameters ecoreParameter="model.ecore#//ITask/getResultEntryAsTypedList/key"/>
         <genParameters ecoreParameter="model.ecore#//ITask/getResultEntryAsTypedList/clazz"/>

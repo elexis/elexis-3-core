@@ -40,6 +40,7 @@ public interface ITaskService {
 
 	/**
 	 * <!-- begin-user-doc -->
+	 * Removing a task descriptor also removes all ITask entries that reference to it.
 	 * <!-- end-user-doc -->
 	 * @model exceptions="ch.elexis.core.tasks.model.TaskException"
 	 * @generated

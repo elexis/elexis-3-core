@@ -132,8 +132,8 @@
         <details key="documentation" value="The task has finished its execution."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="descriptorId" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" changeable="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="taskDescriptor" lowerBound="1"
+        eType="#//ITaskDescriptor" changeable="false"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ITaskService" abstract="true" interface="true">
     <eOperations name="createTaskDescriptor" eType="#//ITaskDescriptor" eExceptions="#//TaskException">

@@ -8,7 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
@@ -38,8 +40,9 @@ public class Task extends AbstractEntityWithId implements EntityWithId, EntityWi
 	@Column
 	protected int triggerEvent = 0;
 	
-	@Column(length = 32)
-	protected String descriptorId;
+	@JoinColumn(name="descriptor")
+	@ManyToOne
+	protected TaskDescriptor taskDescriptor;
 	
 	@Column
 	@Lob
@@ -98,12 +101,12 @@ public class Task extends AbstractEntityWithId implements EntityWithId, EntityWi
 		this.triggerEvent = triggerEvent;
 	}
 	
-	public String getDescriptorId(){
-		return descriptorId;
+	public TaskDescriptor getTaskDescriptor(){
+		return taskDescriptor;
 	}
 	
-	public void setDescriptorId(String descriptorId){
-		this.descriptorId = descriptorId;
+	public void setTaskDescriptor(TaskDescriptor taskDescriptor){
+		this.taskDescriptor = taskDescriptor;
 	}
 	
 	public String getRunContext(){

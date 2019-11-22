@@ -19,12 +19,14 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
+import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable.ReturnParameter;
 import ch.elexis.core.tasks.internal.model.service.ContextServiceHolder;
 import ch.elexis.core.tasks.internal.model.service.CoreModelServiceHolder;
+import ch.elexis.core.tasks.internal.model.service.TaskModelAdapterFactory;
 import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.TaskState;
@@ -57,6 +59,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	 *            {@link ITaskDescriptor#getRunContext()} 3. overlay with runContext value as
 	 *            provided
 	 */
+	@SuppressWarnings("unchecked")
 	public Task(ITaskDescriptor taskDescriptor, TaskTriggerType triggerType,
 		IProgressMonitor progressMonitor, Map<String, String> runContext){
 		this(new ch.elexis.core.jpa.entities.Task());
@@ -65,7 +68,9 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		
 		getEntity().setState(TaskState.DRAFT.getValue());
 		getEntity().setTriggerEvent(triggerType.getValue());
-		getEntity().setDescriptorId(taskDescriptor.getId());
+		getEntity().setTaskDescriptor(
+			((AbstractIdModelAdapter<ch.elexis.core.jpa.entities.TaskDescriptor>) taskDescriptor)
+				.getEntityMarkDirty());
 		if (runContext != null) {
 			getEntity().setRunContext(gson.toJson(runContext));
 		}
@@ -127,8 +132,10 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	}
 	
 	@Override
-	public String getDescriptorId(){
-		return getEntity().getDescriptorId();
+	public ITaskDescriptor getTaskDescriptor(){
+		Optional<Identifiable> adapter = TaskModelAdapterFactory.getInstance()
+			.getModelAdapter(getEntity().getTaskDescriptor(), ITaskDescriptor.class, true, false);
+		return (ITaskDescriptor) adapter.orElse(null);
 	}
 	
 	@Override
@@ -175,69 +182,58 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		Thread.currentThread().setName(taskId);
 		
 		getEntity().setRunAt(LocalDateTime.now());
-		Optional<ITaskDescriptor> originTaskDescriptor = TaskServiceHolder.get()
-			.findTaskDescriptorByIdOrReferenceId(getEntity().getDescriptorId());
-		if (originTaskDescriptor.isPresent()) {
+		setState(TaskState.READY);
+		
+		ITaskDescriptor originTaskDescriptor = getTaskDescriptor();
+		String runnableWithContextId = originTaskDescriptor.getIdentifiedRunnableId();
+				
+		try {
+			IIdentifiedRunnable runnableWithContext =
+				TaskServiceHolder.get().instantiateRunnableById(runnableWithContextId);
 			
-			setState(TaskState.READY);
-			String runnableWithContextId = originTaskDescriptor.get().getIdentifiedRunnableId();
+			Map<String, Serializable> effectiveRunContext = new HashMap<>();
+			effectiveRunContext.putAll(runnableWithContext.getDefaultRunContext());
+			effectiveRunContext.putAll(originTaskDescriptor.getRunContext());
+			effectiveRunContext.putAll(getRunContext());
 			
-			// TODO persist executing station
+			getEntity().setRunContext(gson.toJson(effectiveRunContext));
+			// TODO validate all required parameters are set, validate url
 			
-			try {
-				IIdentifiedRunnable runnableWithContext =
-					TaskServiceHolder.get().instantiateRunnableById(runnableWithContextId);
-				
-				Map<String, Serializable> effectiveRunContext = new HashMap<>();
-				effectiveRunContext.putAll(runnableWithContext.getDefaultRunContext());
-				effectiveRunContext.putAll(originTaskDescriptor.get().getRunContext());
-				effectiveRunContext.putAll(getRunContext());
-				
-				getEntity().setRunContext(gson.toJson(effectiveRunContext));
-				// TODO validate all required parameters are set, validate url
-				
-				setState(TaskState.IN_PROGRESS);
-				long beginTimeMillis = System.currentTimeMillis();
-				// TODO what if it runs forever?
-				Map<String, Serializable> result =
-					runnableWithContext.run(effectiveRunContext, progressMonitor, logger);
-				long endTimeMillis = System.currentTimeMillis();
-				if (result == null || !result.containsKey("runnableExecDuration")) {
-					// returned map may be unmodifiable
-					result = new HashMap<>(result);
-					result.put("runnableExecDuration",
-						Long.toString(endTimeMillis - beginTimeMillis));
-				}
-				
-				setResult(result);
-				TaskState exitState =
-					(result.containsKey(ReturnParameter.MARKER_WARN)) ? TaskState.COMPLETED_WARN
-							: TaskState.COMPLETED;
-				setState(exitState);
-				
-				if (effectiveRunContext.containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)
-					|| getResult().containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)) {
-					// only if completion was successful
-					removeTaskRecord();
-				}
-				
-			} catch (Exception e) {
-				setResult(Collections.singletonMap(
-					IIdentifiedRunnable.ReturnParameter.FAILED_TASK_EXCEPTION_MESSAGE,
-					e.getMessage()));
-				logger.warn(e.getMessage(), e);
-				setState(TaskState.FAILED);
+			setState(TaskState.IN_PROGRESS);
+			long beginTimeMillis = System.currentTimeMillis();
+			// TODO what if it runs forever?
+			Map<String, Serializable> result =
+				runnableWithContext.run(effectiveRunContext, progressMonitor, logger);
+			long endTimeMillis = System.currentTimeMillis();
+			if (result == null || !result.containsKey("runnableExecDuration")) {
+				// returned map may be unmodifiable
+				result = new HashMap<>(result);
+				result.put("runnableExecDuration", Long.toString(endTimeMillis - beginTimeMillis));
 			}
 			
-			if (progressMonitor != null) {
-				progressMonitor.done();
+			setResult(result);
+			TaskState exitState =
+				(result.containsKey(ReturnParameter.MARKER_WARN)) ? TaskState.COMPLETED_WARN
+						: TaskState.COMPLETED;
+			setState(exitState);
+			
+			if (effectiveRunContext.containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)
+				|| getResult().containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)) {
+				// only if completion was successful
+				removeTaskRecord();
 			}
 			
-		} else {
-			logger.warn("Could not resolve task descriptor [{}]", getEntity().getDescriptorId());
+		} catch (Exception e) {
+			setResult(Collections.singletonMap(
+				IIdentifiedRunnable.ReturnParameter.FAILED_TASK_EXCEPTION_MESSAGE, e.getMessage()));
+			logger.warn(e.getMessage(), e);
 			setState(TaskState.FAILED);
 		}
 		
+		if (progressMonitor != null) {
+			progressMonitor.done();
+		}
+				
 	}
 	
 	@Override

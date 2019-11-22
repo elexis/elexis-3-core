@@ -294,13 +294,13 @@ public interface ModelPackage extends EPackage {
 	int ITASK__FINISHED = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 9;
 
 	/**
-	 * The feature id for the '<em><b>Descriptor Id</b></em>' attribute.
+	 * The feature id for the '<em><b>Task Descriptor</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ITASK__DESCRIPTOR_ID = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 10;
+	int ITASK__TASK_DESCRIPTOR = ch.elexis.core.model.ModelPackage.IDENTIFIABLE_FEATURE_COUNT + 10;
 
 	/**
 	 * The number of structural features of the '<em>ITask</em>' class.
@@ -663,15 +663,15 @@ public interface ModelPackage extends EPackage {
 	EAttribute getITask_Finished();
 
 	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.tasks.model.ITask#getDescriptorId <em>Descriptor Id</em>}'.
+	 * Returns the meta object for the reference '{@link ch.elexis.core.tasks.model.ITask#getTaskDescriptor <em>Task Descriptor</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Descriptor Id</em>'.
-	 * @see ch.elexis.core.tasks.model.ITask#getDescriptorId()
+	 * @return the meta object for the reference '<em>Task Descriptor</em>'.
+	 * @see ch.elexis.core.tasks.model.ITask#getTaskDescriptor()
 	 * @see #getITask()
 	 * @generated
 	 */
-	EAttribute getITask_DescriptorId();
+	EReference getITask_TaskDescriptor();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.tasks.model.ITaskService <em>ITask Service</em>}'.
@@ -983,12 +983,12 @@ public interface ModelPackage extends EPackage {
 		EAttribute ITASK__FINISHED = eINSTANCE.getITask_Finished();
 
 		/**
-		 * The meta object literal for the '<em><b>Descriptor Id</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Task Descriptor</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ITASK__DESCRIPTOR_ID = eINSTANCE.getITask_DescriptorId();
+		EReference ITASK__TASK_DESCRIPTOR = eINSTANCE.getITask_TaskDescriptor();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.tasks.model.ITaskService <em>ITask Service</em>}' class.

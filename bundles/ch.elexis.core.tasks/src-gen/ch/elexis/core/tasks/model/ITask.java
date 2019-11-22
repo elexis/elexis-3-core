@@ -42,7 +42,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  *   <li>{@link ch.elexis.core.tasks.model.ITask#getProgressMonitor <em>Progress Monitor</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITask#getRunContext <em>Run Context</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITask#isFinished <em>Finished</em>}</li>
- *   <li>{@link ch.elexis.core.tasks.model.ITask#getDescriptorId <em>Descriptor Id</em>}</li>
+ *   <li>{@link ch.elexis.core.tasks.model.ITask#getTaskDescriptor <em>Task Descriptor</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.tasks.model.ModelPackage#getITask()
@@ -185,19 +185,15 @@ public interface ITask extends Identifiable, Deleteable {
 	boolean isFinished();
 
 	/**
-	 * Returns the value of the '<em><b>Descriptor Id</b></em>' attribute.
+	 * Returns the value of the '<em><b>Task Descriptor</b></em>' reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Descriptor Id</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Descriptor Id</em>' attribute.
-	 * @see ch.elexis.core.tasks.model.ModelPackage#getITask_DescriptorId()
+	 * @return the value of the '<em>Task Descriptor</em>' reference.
+	 * @see ch.elexis.core.tasks.model.ModelPackage#getITask_TaskDescriptor()
 	 * @model required="true" changeable="false"
 	 * @generated
 	 */
-	String getDescriptorId();
+	ITaskDescriptor getTaskDescriptor();
 
 	/**
 	 * <!-- begin-user-doc -->

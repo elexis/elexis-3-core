@@ -1889,5 +1889,23 @@ DROP TABLE TEMP_ETIKETTEN_OBJCLASS_LINK;
 			<column name="DATA" type="VARCHAR(256)" />
 		</addColumn>
 	</changeSet>
+
+	<changeSet author="marco" id="manual_TASK_FK_DESCRIPTOR">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists
+					foreignKeyName="TASKDESCRIPTOR_FK_ID" />
+			</not>
+		</preConditions>
+		<renameColumn tableName="TASK"
+			oldColumnName="DESCRIPTORID" newColumnName="DESCRIPTOR" />
+		<modifyDataType tableName="TASK"
+			columnName="DESCRIPTOR" newDataType="VARCHAR(25)" />
+		<addNotNullConstraint tableName="TASK"
+			columnName="DESCRIPTOR" />
+		<addForeignKeyConstraint constraintName="TASKDESCRIPTOR_FK_ID"
+			referencedTableName="TASKDESCRIPTOR" baseColumnNames="DESCRIPTOR" baseTableName="TASK"
+			referencedColumnNames="ID" />
+	</changeSet>
 	
 </databaseChangeLog>
