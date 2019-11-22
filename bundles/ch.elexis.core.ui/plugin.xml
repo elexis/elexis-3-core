@@ -336,6 +336,17 @@
                style="push">
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.core.ui.medication.views.MedicationView">
+         <command
+               commandId="ch.elexis.core.ui.PrintMedicationHistory"
+               icon="icon://IMG_DOCUMENT_PDF"
+               label="Medikation-Verlauf als Pdf"
+               style="push"
+               tooltip="Medikation-Verlauf als Pdf">
+         </command>
+      </menuContribution>
    </extension>
       <extension
          point="org.eclipse.ui.preferencePages">
@@ -757,6 +768,11 @@
       <command
             id="ch.elexis.core.ui.command.openCompendium"
             name="%open.compendium">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.commands.PrintMedicationHistoryHandler"
+            id="ch.elexis.core.ui.PrintMedicationHistory"
+            name="Print medication history">
       </command>
    </extension>
       <extension
