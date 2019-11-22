@@ -5,6 +5,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
 
+import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.model.IContact;
@@ -150,7 +152,6 @@ public class Context implements IContext {
 	
 	@Override
 	public String getStationIdentifier(){
-		// TODO Auto-generated method stub
-		return null;
+		return CoreHub.localCfg.get(Preferences.STATION_IDENT_ID, null);
 	}
 }
