@@ -119,12 +119,17 @@ public class Person extends Kontakt {
 		throws PersonDataException{
 		name = name.trim();
 		vorname = vorname.trim();
-		if ((StringTool.isNothing(name)) || (!name.matches("[" + StringTool.wordChars + "\\s-]+"))) { //$NON-NLS-1$ //$NON-NLS-2$
-			throw new PersonDataException(PersonDataException.CAUSE.LASTNAME);
+		if (StringTool.isNothing(name)) { //$NON-NLS-1$ //$NON-NLS-2$
+			throw new PersonDataException(PersonDataException.CAUSE.LASTNAME,
+				Messages.GlobalMessage_valueNotSet);
+		}
+		if (!name.matches("[" + StringTool.wordChars + "\\s-]+")) {
+			throw new PersonDataException(PersonDataException.CAUSE.LASTNAME,
+				Messages.GlobalMessage_noNumericValue);
 		}
 		if ((!StringTool.isNothing(vorname))
 			&& (!vorname.matches("[" + StringTool.wordChars + "\\s-]+"))) { //$NON-NLS-1$ //$NON-NLS-2$
-			throw new PersonDataException(PersonDataException.CAUSE.FIRSTNAME);
+			throw new PersonDataException(PersonDataException.CAUSE.FIRSTNAME, Messages.GlobalMessage_noNumericValue);
 		}
 		String dat = StringTool.leer;
 		if (gebDat != null) {
@@ -256,7 +261,12 @@ public class Person extends Kontakt {
 		public CAUSE cause;
 		
 		PersonDataException(CAUSE cause){
-			super(causes[cause.ordinal()]);
+			super("'" + causes[cause.ordinal()] + "'");
+			this.cause = cause;
+		}
+		
+		PersonDataException(CAUSE cause, String additional){
+			super("'" +  causes[cause.ordinal()] + "'\n\n" + additional);
 			this.cause = cause;
 		}
 	}
