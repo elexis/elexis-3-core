@@ -91,7 +91,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 		getPreferenceStore().setValue(Preferences.USR_DEFCASEREASON, Fall.getDefaultCaseReason());
 		getPreferenceStore().setValue(Preferences.USR_DEFLAW, Fall.getDefaultCaseLaw());
 		// read the sorting for this user form prefs, convert to LinkedList for editing
-		String topItemsSortingStr = CoreHub.userCfg.get(Preferences.USR_TOPITEMSSORTING, "");
+		String topItemsSortingStr = CoreHub.userCfg.get(Preferences.USR_TOPITEMSSORTING, StringTool.leer);
 		String[] topItemsSorting = topItemsSortingStr.split(PREFSDELIMITER_REGEX);
 		topItemsLinkedList = new LinkedList<String>(Arrays.asList(topItemsSorting));
 	}
@@ -129,7 +129,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 		diagnoseLbl.setText(Messages.UserCasePreferences_DefaultDiagnose);
 		diagnoseTxt = new Text(diagnoseParent, SWT.BORDER);
 		diagnoseTxt.setEditable(false);
-		String diagnoseId = CoreHub.userCfg.get(Preferences.USR_DEFDIAGNOSE, "");
+		String diagnoseId = CoreHub.userCfg.get(Preferences.USR_DEFDIAGNOSE, StringTool.leer);
 		if (diagnoseId.length() > 1) {
 			PersistentObject diagnose = CoreHub.poFactory.createFromString(diagnoseId);
 			if (diagnose != null)
@@ -148,8 +148,8 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 						CoreHub.userCfg.set(Preferences.USR_DEFDIAGNOSE, diagnose.storeToString());
 						diagnoseTxt.setText(diagnose.getLabel());
 					} else {
-						CoreHub.userCfg.set(Preferences.USR_DEFDIAGNOSE, "");
-						diagnoseTxt.setText("");
+						CoreHub.userCfg.set(Preferences.USR_DEFDIAGNOSE, StringTool.leer);
+						diagnoseTxt.setText(StringTool.leer);
 					}
 				}
 			}
@@ -159,8 +159,8 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 		diagnoseDelBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				CoreHub.userCfg.set(Preferences.USR_DEFDIAGNOSE, "");
-				diagnoseTxt.setText("");
+				CoreHub.userCfg.set(Preferences.USR_DEFDIAGNOSE, StringTool.leer);
+				diagnoseTxt.setText(StringTool.leer);
 			}
 		});
 		
@@ -226,7 +226,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 		infoTxt.setText(Messages.UserCasePreferences_InfoLabelForSortingBillingSystems);
 		
 		Label lllabel2 = new Label(getFieldEditorParent(), SWT.NONE);
-		lllabel2.setText(""); //$NON-NLS-1$
+		lllabel2.setText(StringTool.leer); //$NON-NLS-1$
 		Composite sorterListComp = new Composite(getFieldEditorParent(), SWT.NONE);
 		GridLayout sorterListLayout = new GridLayout();
 		sorterListLayout.marginWidth = 0;
@@ -326,7 +326,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 	void moveItemToPresorted(){
 		String[] selStr = sorterList2.getSelection();
 		topItemsLinkedList.add(selStr[0]);
-		topItemsLinkedList.remove(""); //$NON-NLS-1$ // remove any empty items
+		topItemsLinkedList.remove(StringTool.leer); //$NON-NLS-1$ // remove any empty items
 		sorterList2.setItems(sortBillingSystems(BillingSystem.getAbrechnungsSysteme(), topItemsLinkedList,
 			true));
 		sorterList2.select(topItemsLinkedList.size() - 1);
@@ -336,7 +336,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 	void moveItemToNotPresorted(){
 		String[] selStr = sorterList2.getSelection();
 		topItemsLinkedList.remove(selStr[0]);
-		topItemsLinkedList.remove(""); //$NON-NLS-1$ // remove any empty items
+		topItemsLinkedList.remove(StringTool.leer); //$NON-NLS-1$ // remove any empty items
 		sorterList2.setItems(sortBillingSystems(BillingSystem.getAbrechnungsSysteme(), topItemsLinkedList,
 			true));
 		int newSel = sorterList2.indexOf(selStr[0]);
@@ -370,7 +370,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 	void setButtonEnabling(){
 		// get separator and current sel position
 		int separatorPos;
-		if ((topItemsLinkedList.size() > 0) && (!topItemsLinkedList.get(0).equalsIgnoreCase(""))) //$NON-NLS-1$
+		if ((topItemsLinkedList.size() > 0) && (!topItemsLinkedList.get(0).equalsIgnoreCase(StringTool.leer))) //$NON-NLS-1$
 			separatorPos = topItemsLinkedList.size();
 		else
 			separatorPos = -1;
@@ -399,11 +399,11 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 	
 	public static int getBillingSystemsMenuSeparatorPos(String[] input){
 		// read the sorting for this user form prefs, convert to LinkedList for editing
-		String topItemsSortingStr = CoreHub.userCfg.get(Preferences.USR_TOPITEMSSORTING, ""); //$NON-NLS-1$
+		String topItemsSortingStr = CoreHub.userCfg.get(Preferences.USR_TOPITEMSSORTING, StringTool.leer); //$NON-NLS-1$
 		String[] topItemsSorting = topItemsSortingStr.split(PREFSDELIMITER_REGEX);
 		LinkedList<String> lTopItemsLinkedList =
 			new LinkedList<String>(Arrays.asList(topItemsSorting));
-		if ((lTopItemsLinkedList.size() > 0) && (!lTopItemsLinkedList.get(0).equalsIgnoreCase(""))) //$NON-NLS-1$
+		if ((lTopItemsLinkedList.size() > 0) && (!lTopItemsLinkedList.get(0).equalsIgnoreCase(StringTool.leer))) //$NON-NLS-1$
 			return lTopItemsLinkedList.size();
 		else
 			return -1;
@@ -420,7 +420,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 	 */
 	public static String[] sortBillingSystems(String[] input){
 		// read the sorting for this user form prefs, convert to LinkedList for editing
-		String topItemsSortingStr = CoreHub.userCfg.get(Preferences.USR_TOPITEMSSORTING, ""); //$NON-NLS-1$
+		String topItemsSortingStr = CoreHub.userCfg.get(Preferences.USR_TOPITEMSSORTING, StringTool.leer); //$NON-NLS-1$
 		String[] topItemsSorting = topItemsSortingStr.split(PREFSDELIMITER_REGEX);
 		LinkedList<String> lTopItemsLinkedList =
 			new LinkedList<String>(Arrays.asList(topItemsSorting));
@@ -475,11 +475,11 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 		
 		// now append the sorted items to the copied top items
 		if (alwaysShowSeparator
-			|| ((topItemsSorting.size() > 0) && (!topItemsSorting.get(0).equalsIgnoreCase("")))) { //$NON-NLS-1$
+			|| ((topItemsSorting.size() > 0) && (!topItemsSorting.get(0).equalsIgnoreCase(StringTool.leer)))) { //$NON-NLS-1$
 			lTopItemsSorting.add(MENUSEPARATOR);
 		}
 		lTopItemsSorting.addAll(sortedList);
-		lTopItemsSorting.remove(""); //$NON-NLS-1$
+		lTopItemsSorting.remove(StringTool.leer); //$NON-NLS-1$
 		
 		String[] output = new String[lTopItemsSorting.size()];
 		lTopItemsSorting.toArray(output);

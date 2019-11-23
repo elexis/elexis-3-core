@@ -124,7 +124,7 @@ public class UserPreferences extends PreferencePage implements IWorkbenchPrefere
 					blob.put(ims.getNode());
 					SWTHelper.showInfo(Messages.UserPreferences_ConfigSaved,
 						MessageFormat.format(Messages.UserPreferences_ConfigWasSaved, name));
-					cbUserSave.setText(""); //$NON-NLS-1$
+					cbUserSave.setText(StringTool.leer); //$NON-NLS-1$
 				}
 			}
 		});

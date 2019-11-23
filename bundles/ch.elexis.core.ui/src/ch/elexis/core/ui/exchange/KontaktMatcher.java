@@ -246,7 +246,7 @@ public class KontaktMatcher {
 					Messages.KontaktMatcher_PersonNotFound,
 					name + StringTool.space + vorname
 						+ (StringTool.isNothing(gebdat) ? StringTool.leer : SEP + gebdat) + SEP
-						+ strasse + SEP + plz + " " + ort,
+						+ strasse + SEP + plz + StringTool.space + ort,
 					resolve1, hints);
 			}
 			return null;
@@ -258,9 +258,9 @@ public class KontaktMatcher {
 		if (createMode == CreateMode.ASK) {
 			return (Person) KontaktSelektor.showInSync(Person.class,
 				Messages.KontaktMatcher_PersonNotUnique,
-				name + " " + vorname
+				name + StringTool.space + vorname
 					+ (StringTool.isNothing(gebdat) ? StringTool.leer : SEP + gebdat) + SEP
-					+ strasse + SEP + plz + " " + ort,
+					+ strasse + SEP + plz + StringTool.space + ort,
 				resolve1, hints);
 		} else {
 			return (Person) matchAddress(found.toArray(new Kontakt[0]), strasse, plz, ort, natel);
@@ -333,13 +333,13 @@ public class KontaktMatcher {
 	 * 
 	 * @param str
 	 *            a string containing possibly zip and possibly place
-	 * @return always a two element array, [0] is zip or "", [1] is place or ""
+	 * @return always a two element array, [0] is zip or StringTool.leer, [1] is place or StringTool.leer
 	 */
 	public static String[] normalizeAddress(String str){
 		String[] ret = str.split("\\s+", 2); //$NON-NLS-1$
 		if (ret.length < 2) {
 			String[] rx = new String[2];
-			rx[0] = "";
+			rx[0] = StringTool.leer;
 			rx[1] = ret[0];
 			return rx;
 		}

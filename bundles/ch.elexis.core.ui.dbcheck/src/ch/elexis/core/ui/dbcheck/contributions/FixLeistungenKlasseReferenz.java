@@ -12,6 +12,7 @@ import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 import ch.elexis.data.Verrechnet;
 
+import ch.rgw.tools.StringTool;
 public class FixLeistungenKlasseReferenz extends ExternalMaintenance {
 	
 	public FixLeistungenKlasseReferenz(){}
@@ -77,7 +78,7 @@ public class FixLeistungenKlasseReferenz extends ExternalMaintenance {
 			if (art.exists()) {
 				ver.set(Verrechnet.CLASS, art.get(Artikel.FLD_KLASSE));
 				output.append("Fixing Klasse entry for " + ver.getLabel() + " to "
-					+ art.get(Artikel.FLD_KLASSE) + "\n");
+					+ art.get(Artikel.FLD_KLASSE) + StringTool.lf);
 			}
 		}
 		pm.worked(1);

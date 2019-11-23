@@ -21,6 +21,7 @@ import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.ResourceAccessor;
 
+import ch.rgw.tools.StringTool;
 public class LiquibaseDBInitializer {
 
 	private static Logger logger = LoggerFactory.getLogger(LiquibaseDBInitializer.class);
@@ -48,10 +49,10 @@ public class LiquibaseDBInitializer {
 			// else sync the changelog as the db already exists
 			if (isFirstStart(connection)) {
 				logger.info("Initialize database [" + connection + "] with liquibase");
-				liquibase.update("");
+				liquibase.update(StringTool.leer);
 			} else {
 				logger.info("Synchronize liquibase log of database [" + connection + "]");
-				liquibase.changeLogSync("");
+				liquibase.changeLogSync(StringTool.leer);
 			}
 		} catch (LiquibaseException | SQLException e) {
 			// log and try to carry on

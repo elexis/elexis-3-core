@@ -6,13 +6,14 @@ import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.ui.text.MimeTypeUtil;
 import ch.elexis.data.Mandant;
 
+import ch.rgw.tools.StringTool;
 public class TextTemplatePrintSettings {
 	public static final String TXT_TEMPLATE_PREFIX_PUBLIC = "texttemplates/public/";
 	public static final String TXT_TEMPLATE_PREFIX_PRIVATE = "texttemplates/private/";
 	public static final String TXT_TEMPLATE_PRINTER_SUFFIX = "/printer";
 	public static final String TXT_TEMPLATE_TRAY_SUFFIX = "/tray";
 	
-	private static final String SEPARATOR = "/";
+	private static final String SEPARATOR = StringTool.slash;
 	private String printer;
 	private String tray;
 	

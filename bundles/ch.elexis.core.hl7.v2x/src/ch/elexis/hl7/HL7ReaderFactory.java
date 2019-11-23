@@ -34,6 +34,7 @@ import ch.elexis.hl7.v2x.HL7ReaderV25;
 import ch.elexis.hl7.v2x.HL7ReaderV251;
 import ch.elexis.hl7.v2x.HL7ReaderV26;
 
+import ch.rgw.tools.StringTool;
 public enum HL7ReaderFactory {
 		
 		INSTANCE;
@@ -127,7 +128,7 @@ public enum HL7ReaderFactory {
 		String separator = "\r";
 		String[] splitted = hl7Message.split(separator);
 		if (splitted.length < 2) {
-			separator = "\n";
+			separator = StringTool.lf;
 			splitted = hl7Message.split(separator);
 		}
 		

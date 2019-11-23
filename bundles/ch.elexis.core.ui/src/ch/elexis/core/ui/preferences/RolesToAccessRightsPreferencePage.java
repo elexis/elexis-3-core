@@ -62,6 +62,7 @@ import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.data.Query;
 import ch.elexis.data.Role;
 
+import ch.rgw.tools.StringTool;
 public class RolesToAccessRightsPreferencePage extends PreferencePage
 		implements IWorkbenchPreferencePage, IValueChangeListener {
 	private DataBindingContext m_bindingContext;
@@ -265,7 +266,7 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 					cell.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
 					break;
 				default:
-					cell.setText("");
+					cell.setText(StringTool.leer);
 					cell.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
 				}
 			}
@@ -279,7 +280,7 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 			TreeColumn tc = tvc.getColumn();
 			tc.setData("role", role);
 			tc.setWidth(20);
-			tc.setText(role.getLabel().charAt(0) + "");
+			tc.setText(role.getLabel().charAt(0) + StringTool.leer);
 			String translation = role.getTranslatedLabel();
 			if (translation != null && translation.length() > 0) {
 				tc.setToolTipText(translation);
@@ -414,7 +415,7 @@ public class RolesToAccessRightsPreferencePage extends PreferencePage
 	@Override
 	public void handleValueChange(ValueChangeEvent event){
 		Role r = (Role) wv.getValue();
-		txtRoleName.setText((r == null) ? "" : r.getRoleName());
+		txtRoleName.setText((r == null) ? StringTool.leer : r.getRoleName());
 	}
 	
 	private void refreshViewer(){

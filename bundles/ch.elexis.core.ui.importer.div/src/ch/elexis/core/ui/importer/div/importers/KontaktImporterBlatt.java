@@ -84,7 +84,7 @@ public class KontaktImporterBlatt extends Composite {
 			public void widgetSelected(final SelectionEvent e){
 				FileDialog fd = new FileDialog(getShell(), SWT.OPEN);
 				String file = fd.open();
-				lbFileName.setText(file == null ? "" : file); //$NON-NLS-1$
+				lbFileName.setText(file == null ? StringTool.leer : file); //$NON-NLS-1$
 				filename = lbFileName.getText();
 			}
 		});
@@ -149,7 +149,7 @@ public class KontaktImporterBlatt extends Composite {
 			if (row.length != 7) {
 				continue;
 			}
-			log.info(Messages.KontaktImporterBlatt_Importing + StringTool.join(row, " "));
+			log.info(Messages.KontaktImporterBlatt_Importing + StringTool.join(row, StringTool.space));
 			// Please keep in sync with doc/import.textile !!
 			String bagnr = StringTool.getSafe(row, 0);
 			String name = StringTool.getSafe(row, 1);
@@ -177,15 +177,15 @@ public class KontaktImporterBlatt extends Composite {
 	String[] splitAdress(final String adr){
 		String[] ret = new String[3];
 		String[] m1 = adr.split("\\s*,\\s*"); //$NON-NLS-1$
-		String[] plzOrt = m1[m1.length - 1].split(" ", 2); //$NON-NLS-1$
+		String[] plzOrt = m1[m1.length - 1].split(StringTool.space, 2); //$NON-NLS-1$
 		if (m1.length == 1) {
-			ret[0] = ""; //$NON-NLS-1$
+			ret[0] = StringTool.leer; //$NON-NLS-1$
 			
 		} else {
 			ret[0] = m1[0];
 		}
 		ret[1] = plzOrt[0];
-		ret[2] = plzOrt.length > 1 ? plzOrt[1] : ""; //$NON-NLS-1$
+		ret[2] = plzOrt.length > 1 ? plzOrt[1] : StringTool.leer; //$NON-NLS-1$
 		return ret;
 	}
 	
@@ -278,10 +278,10 @@ public class KontaktImporterBlatt extends Composite {
 			// Please keep in sync with doc/import.textile !!
 			VCard vcard = new VCard(new FileInputStream(file));
 			String name, vorname, tel, email, title;
-			String gebdat = ""; //$NON-NLS-1$
-			String strasse = ""; //$NON-NLS-1$
-			String plz = ""; //$NON-NLS-1$
-			String ort = ""; //$NON-NLS-1$
+			String gebdat = StringTool.leer; //$NON-NLS-1$
+			String strasse = StringTool.leer; //$NON-NLS-1$
+			String plz = StringTool.leer; //$NON-NLS-1$
+			String ort = StringTool.leer; //$NON-NLS-1$
 			String fqname = vcard.getElement("N"); //$NON-NLS-1$
 			if (fqname == null) {
 				return false;

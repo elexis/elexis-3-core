@@ -29,6 +29,7 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.data.Artikel;
 
+import ch.rgw.tools.StringTool;
 public class ArtikelContextMenu {
 	private IAction deleteAction, createAction, editAction;
 	CommonViewer cv;
@@ -96,10 +97,10 @@ public class ArtikelContextMenu {
 				InputDialog inp =
 					new InputDialog(cv.getViewerWidget().getControl().getShell(), art.getClass()
 						.getName() + Messages.ArtikelContextMenu_create,
-						Messages.ArtikelContextMenu_pleaseEnterNameForArticle, "", null); //$NON-NLS-1$
+						Messages.ArtikelContextMenu_pleaseEnterNameForArticle, StringTool.leer, null); //$NON-NLS-1$
 				if (inp.open() == InputDialog.OK) {
 					String name = inp.getValue();
-					Artikel n = new Artikel(name, art.getCodeSystemName(), ""); //$NON-NLS-1$
+					Artikel n = new Artikel(name, art.getCodeSystemName(), StringTool.leer); //$NON-NLS-1$
 					if (add == null) {
 						EditEigenartikelUi.executeWithParams(n);
 					} else {

@@ -19,6 +19,7 @@ import org.eclipse.ui.internal.WorkbenchMessages;
 import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.Query;
 
+import ch.rgw.tools.StringTool;
 public class BlockSelektor extends FilteredItemsSelectionDialog {
 	
 	private boolean ignoreErrors;
@@ -31,7 +32,7 @@ public class BlockSelektor extends FilteredItemsSelectionDialog {
 			@Override
 			public String getText(Object element){
 				if (element == null) {
-					return "";
+					return StringTool.leer;
 				}
 				return ((Leistungsblock) element).getLabel();
 			}
@@ -57,8 +58,8 @@ public class BlockSelektor extends FilteredItemsSelectionDialog {
 	protected Control createDialogArea(Composite parent){
 		String oldListLabel = WorkbenchMessages.FilteredItemsSelectionDialog_listLabel;
 		
-		setMessage("");
-		WorkbenchMessages.FilteredItemsSelectionDialog_listLabel = ""; //$NON-NLS-1$
+		setMessage(StringTool.leer);
+		WorkbenchMessages.FilteredItemsSelectionDialog_listLabel = StringTool.leer; //$NON-NLS-1$
 		Control ret = super.createDialogArea(parent);
 		
 		WorkbenchMessages.FilteredItemsSelectionDialog_listLabel = oldListLabel;

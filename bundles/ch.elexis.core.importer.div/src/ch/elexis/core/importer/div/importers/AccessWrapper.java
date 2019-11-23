@@ -32,9 +32,10 @@ import ch.rgw.tools.JdbcLink;
  * @author Gerry Weirich
  *
  */
+import ch.rgw.tools.StringTool;
 public class AccessWrapper {
 	private Database db;
-	private static String ImportPrefix = "";
+	private static String ImportPrefix = StringTool.leer;
 	
 	/*
 	 * Open the mdbFile using sensible default
@@ -55,7 +56,7 @@ public class AccessWrapper {
 	/*
 	 * Set a prefix for the imported tablesnames
 	 * 
-	 * @param prefix prefix to be used. Default to ""
+	 * @param prefix prefix to be used. Default to StringTool.leer
 	 */
 	public void setPrefixForImportedTableNames(String prefix){
 		ImportPrefix = prefix;
@@ -85,7 +86,7 @@ public class AccessWrapper {
 		StringBuilder sb = new StringBuilder();
 		sb.append("CREATE TABLE ").append(insertName).append("(");//$NON-NLS-1$ //$NON-NLS-2$
 		for (Column c : cols) {
-			sb.append(c.getName()).append(" ");
+			sb.append(c.getName()).append(StringTool.space);
 			switch (c.getType()) {
 			case MEMO:
 				sb.append("TEXT");//$NON-NLS-1$

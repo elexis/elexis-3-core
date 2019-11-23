@@ -34,6 +34,7 @@ import ch.rgw.tools.Tree;
  * 
  * @param <T>
  */
+import ch.rgw.tools.StringTool;
 @Deprecated
 public class LazyTreeLoader<T> extends AbstractDataLoaderJob implements LazyTreeListener {
 	String parentColumn;
@@ -68,7 +69,7 @@ public class LazyTreeLoader<T> extends AbstractDataLoaderJob implements LazyTree
 		}
 		result = new LazyTree<T>(null, null, filter, this);
 		qbe.clear();
-		qbe.add(parentColumn, "=", "NIL"); //$NON-NLS-1$ //$NON-NLS-2$
+		qbe.add(parentColumn, StringTool.equals, "NIL"); //$NON-NLS-1$ //$NON-NLS-2$
 		List<T> list = load();
 		for (T t : list) {
 			((LazyTree) result).add(t, this);
@@ -92,7 +93,7 @@ public class LazyTreeLoader<T> extends AbstractDataLoaderJob implements LazyTree
 		qbe.clear();
 		PersistentObject obj = (PersistentObject) l.contents;
 		if (obj != null) {
-			qbe.add(parentColumn, "=", parentField == null ? obj.getId() : obj.get(parentField)); //$NON-NLS-1$
+			qbe.add(parentColumn, StringTool.equals, parentField == null ? obj.getId() : obj.get(parentField)); //$NON-NLS-1$
 			List ret = load();
 			for (PersistentObject o : (List<PersistentObject>) ret) {
 				l.add(o, this);

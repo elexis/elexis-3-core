@@ -154,7 +154,7 @@ public class SearchView extends ViewPart implements ISaveablePart2 {
 				if (element instanceof PersistentObject) {
 					PersistentObject po = (PersistentObject) element;
 					String type = "?"; //$NON-NLS-1$
-					String label = ""; //$NON-NLS-1$
+					String label = StringTool.leer; //$NON-NLS-1$
 					if (po instanceof Konsultation) {
 						type = Messages.SearchView_consultation; //$NON-NLS-1$
 						

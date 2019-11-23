@@ -45,6 +45,7 @@ import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 
+import ch.rgw.tools.StringTool;
 public class DocumentsMetaDataDialog extends TitleAreaDialog {
 	
 	private static Logger logger = LoggerFactory.getLogger(DocumentsMetaDataDialog.class);
@@ -160,7 +161,7 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 						MessageFormat.format(Messages.DocumentMetaDataDialog_deleteCategoryConfirm,
 						((ICategory) selection).getName()),
 						Messages.DocumentMetaDataDialog_deleteCategoryText,
-						"", null);
+						StringTool.leer, null);
 				if (id.open() == Dialog.OK) {
 					try {
 						document.setCategory((ICategory) selection);

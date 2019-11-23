@@ -19,18 +19,19 @@ package ch.elexis.core.constants;
  * @author gerry
  * 
  */
+import ch.rgw.tools.StringTool;
 public class StringConstants {
-	public static final String SLASH = "/"; //$NON-NLS-1$
+	public static final String SLASH = StringTool.slash; //$NON-NLS-1$
 	public static final String BACKSLASH = "\\"; //$NON-NLS-1$
-	public static final String SPACE = " "; //$NON-NLS-1$
-	public static final String EMPTY = ""; //$NON-NLS-1$
+	public static final String SPACE = StringTool.space; //$NON-NLS-1$
+	public static final String EMPTY = StringTool.leer; //$NON-NLS-1$
 	public static final String COMMA = ","; //$NON-NLS-1$
 	public static final String COLON = ":"; //$NON-NLS-1$
 	public static final String DASH = "-";
 	public static final String DOUBLECOLON = "::"; //$NON-NLS-1$
 	public static final String SEMICOLON = ";";
-	public static final String CRLF = "\r\n";
-	public static final String LF = "\n";
+	public static final String CRLF = StringTool.crlf;
+	public static final String LF = StringTool.lf;
 	
 	public static final String VERSION_LITERAL = "VERSION"; //$NON-NLS-1$
 	

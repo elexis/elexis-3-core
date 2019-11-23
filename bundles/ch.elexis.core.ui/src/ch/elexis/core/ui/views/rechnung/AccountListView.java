@@ -52,6 +52,7 @@ import ch.rgw.tools.Money;
  * TODO reloading the list is not yet possible
  */
 
+import ch.rgw.tools.StringTool;
 public class AccountListView extends ViewPart implements IActivationListener, ISaveablePart2 {
 	
 	public static final String ID = "ch.elexis.views.rechnung.AccountListView"; //$NON-NLS-1$
@@ -147,11 +148,11 @@ public class AccountListView extends ViewPart implements IActivationListener, IS
 			
 			public String getColumnText(Object element, int columnIndex){
 				if (!(element instanceof AccountListEntry)) {
-					return ""; //$NON-NLS-1$
+					return StringTool.leer; //$NON-NLS-1$
 				}
 				
 				AccountListEntry entry = (AccountListEntry) element;
-				String text = ""; //$NON-NLS-1$
+				String text = StringTool.leer; //$NON-NLS-1$
 				
 				switch (columnIndex) {
 				case NAME:

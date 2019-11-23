@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Label;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.data.Kontakt;
 
+import ch.rgw.tools.StringTool;
 public class KontaktSelectionComposite extends Composite implements ISelectionProvider {
 	
 	private ListenerList selectionListeners = new ListenerList();
@@ -94,7 +95,7 @@ public class KontaktSelectionComposite extends Composite implements ISelectionPr
 			});
 			selectLabel.setText(sb.toString());
 		} else {
-			selectLabel.setText(""); //$NON-NLS-1$
+			selectLabel.setText(StringTool.leer); //$NON-NLS-1$
 		}
 		getParent().layout();
 	}

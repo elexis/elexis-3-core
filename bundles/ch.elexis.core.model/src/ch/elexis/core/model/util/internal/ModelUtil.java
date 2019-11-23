@@ -46,6 +46,7 @@ import ch.rgw.tools.MimeTool;
  * @author thomas
  *
  */
+import ch.rgw.tools.StringTool;
 public class ModelUtil {
 	
 	private static Logger logger = LoggerFactory.getLogger(ModelUtil.class);
@@ -390,14 +391,14 @@ public class ModelUtil {
 				sb.append(kontakt.getDescription1());
 			}
 			if (StringUtils.isNotBlank(sb.toString())) {
-				sb.append(" ");
+				sb.append(StringTool.space);
 			}
 			if (StringUtils.isNoneEmpty(kontakt.getDescription2())) {
 				sb.append(kontakt.getDescription2());
 			}
 			
 			if (kontakt.getDob() != null) {
-				sb.append(" ").append(defaultDateFormatter.format(kontakt.getDob()));
+				sb.append(StringTool.space).append(defaultDateFormatter.format(kontakt.getDob()));
 			}
 			
 			if (StringUtils.isNoneEmpty(kontakt.getTitel())) {

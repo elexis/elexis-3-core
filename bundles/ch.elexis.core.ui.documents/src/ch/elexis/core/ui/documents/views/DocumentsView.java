@@ -92,6 +92,7 @@ import ch.rgw.tools.TimeTool;
  * the selected patient. On double-click they are opened with their associated application.
  */
 
+import ch.rgw.tools.StringTool;
 public class DocumentsView extends ViewPart implements IActivationListener {
 	private static Logger logger = LoggerFactory.getLogger(DocumentsView.class);
 	
@@ -101,7 +102,7 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 	public static String importAction_ID = "ch.elexis.omnivore.data.DocumentView.importAction";
 	private final String[] colLabels =
 		{
-			"", Messages.DocumentView_categoryColumn, Messages.DocumentView_stateColumn,
+			StringTool.leer, Messages.DocumentView_categoryColumn, Messages.DocumentView_stateColumn,
 			Messages.DocumentView_lastChangedColumn,
 			Messages.DocumentView_dateCreatedColumn,
 			Messages.DocumentView_titleColumn,
@@ -109,7 +110,7 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 		};
 	private final String colWidth = "20,80,80,80,80,50,150,500";
 	private final String sortSettings = "0,1,-1,false";
-	private String searchTitle = "";
+	private String searchTitle = StringTool.leer;
 	
 	private DocumentsViewerComparator ovComparator;
 	private Action doubleClickAction;
@@ -334,9 +335,9 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 			IDocument dh = (IDocument) obj;
 			switch (index) {
 			case 0:
-				return "";
+				return StringTool.leer;
 			case 1:
-				return "";
+				return StringTool.leer;
 			case 2:
 				return dh.getStatus().getName();
 			case 3:

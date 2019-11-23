@@ -120,7 +120,7 @@ public class DBConnection {
 	 * @return
 	 */
 	public boolean directConnect(){
-		String msg = "Connecting to DB using " + dbFlavor + " " + dbConnectString + " " + dbUser;
+		String msg = "Connecting to DB using " + dbFlavor + StringTool.space + dbConnectString + StringTool.space + dbUser;
 		logger.info(msg);
 		
 		if (dbFlavor.equalsIgnoreCase("mysql"))

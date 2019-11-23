@@ -59,6 +59,7 @@ import ch.elexis.core.ui.preferences.SettingsPreferenceStore;
 import ch.elexis.core.ui.views.Messages;
 import ch.elexis.data.BezugsKontaktRelation;
 
+import ch.rgw.tools.StringTool;
 public class BezugsKontaktSettings extends PreferencePage implements IWorkbenchPreferencePage {
 
 	private TableViewer tableViewer;
@@ -110,7 +111,7 @@ public class BezugsKontaktSettings extends PreferencePage implements IWorkbenchP
 			mntmAddBezugsKontaktRelation.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e){
-					BezugsKontaktRelation bezugsKontaktRelation = new BezugsKontaktRelation("",
+					BezugsKontaktRelation bezugsKontaktRelation = new BezugsKontaktRelation(StringTool.leer,
 						RelationshipType.AGENERIC, RelationshipType.AGENERIC);
 					tableViewer.add(bezugsKontaktRelation);
 					tableViewer.setSelection(new StructuredSelection(bezugsKontaktRelation));
@@ -162,7 +163,7 @@ public class BezugsKontaktSettings extends PreferencePage implements IWorkbenchP
 						if (tableData != null && !tableData.equals(element)
 							&& !tableData.getName().isEmpty()
 							&& newName.equalsIgnoreCase(tableData.getName())) {
-							MessageDialog.openError(UiDesk.getTopShell(), "",
+							MessageDialog.openError(UiDesk.getTopShell(), StringTool.leer,
 								Messages.Bezugskontakt_NameMustBeUnique);
 							return;
 						}
@@ -311,7 +312,7 @@ public class BezugsKontaktSettings extends PreferencePage implements IWorkbenchP
 		});
 		;
 		tableViewer.setInput(loadBezugKonkaktTypes(
-			CoreHub.globalCfg.get(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, "")));
+			CoreHub.globalCfg.get(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, StringTool.leer)));
 		return container;
 	}
 	
@@ -388,7 +389,7 @@ public class BezugsKontaktSettings extends PreferencePage implements IWorkbenchP
 			BezugsKontaktRelation initalBezugKonktaktRelation =
 				getInitalBezugKontakt(bezugsKontaktRelation.getId());
 			if (initalBezugKonktaktRelation != null) {
-				boolean ret = MessageDialog.openQuestion(UiDesk.getTopShell(), "",
+				boolean ret = MessageDialog.openQuestion(UiDesk.getTopShell(), StringTool.leer,
 					Messages.Bezugskontakt_ConfirmUpdateExisting);
 				if (ret) {
 					updateExistingEntriesIds.add(bezugsKontaktRelation.getId());

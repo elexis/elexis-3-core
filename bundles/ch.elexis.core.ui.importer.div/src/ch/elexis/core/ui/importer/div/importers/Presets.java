@@ -267,14 +267,14 @@ public class Presets {
 			pat.set(new String[] {
 				"Strasse", "Plz", "Ort", "Land", "Telefon1", "Telefon2", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 				"Natel", "E-Mail", "Titel", "Gruppe", "Zusatz"}, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-				strasse, plz, ort, land.equalsIgnoreCase(Messages.Presets_Switzerland) ? "CH" : "", //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+				strasse, plz, ort, land.equalsIgnoreCase(Messages.Presets_Switzerland) ? "CH" : StringTool.leer, //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 				telp1, telp2, tel3, email, titel, arztn, zusatz);
 			if (!StringTool.isNothing(ahvnr)) {
 				pat.addXid(XidConstants.DOMAIN_AHV, ahvnr, true);
 			}
 			if (!StringTool.isNothing(kk)) {
 				Query<Kontakt> qbe = new Query<Kontakt>(Kontakt.class);
-				qbe.add("Bezeichnung1", "=", kk); //$NON-NLS-1$ //$NON-NLS-2$
+				qbe.add("Bezeichnung1", StringTool.equals, kk); //$NON-NLS-1$ //$NON-NLS-2$
 				List<Kontakt> res = qbe.execute();
 				Kontakt k = null;
 				if (res.size() > 0) {
@@ -292,7 +292,7 @@ public class Presets {
 			}
 			if (!StringTool.isNothing(unfallvers)) {
 				Query<Kontakt> qbe = new Query<Kontakt>(Kontakt.class);
-				qbe.add("Bezeichnung1", "=", unfallvers); //$NON-NLS-1$ //$NON-NLS-2$
+				qbe.add("Bezeichnung1", StringTool.equals, unfallvers); //$NON-NLS-1$ //$NON-NLS-2$
 				List<Kontakt> res = qbe.execute();
 				Kontakt k = null;
 				if (res.size() > 0) {
@@ -351,7 +351,7 @@ public class Presets {
 			pat.set("Telefon2", StringTool.getSafe(row, 8)); //$NON-NLS-1$
 			if (!StringTool.isNothing(StringTool.getSafe(row, 10))) {
 				Organisation org =
-					KontaktMatcher.findOrganisation(row[10], null, "", "", "", CreateMode.CREATE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					KontaktMatcher.findOrganisation(row[10], null, StringTool.leer, StringTool.leer, StringTool.leer, CreateMode.CREATE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				Fall fall =
 					pat.neuerFall(Fall.getDefaultCaseLabel(), Fall.getDefaultCaseReason(),
 						Messages.Presets_KVGAbkuerzung);
@@ -360,7 +360,7 @@ public class Presets {
 			}
 			if (!StringTool.isNothing(StringTool.getSafe(row, 11))) {
 				Organisation org =
-					KontaktMatcher.findOrganisation(row[11], null, "", "", "", CreateMode.CREATE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					KontaktMatcher.findOrganisation(row[11], null, StringTool.leer, StringTool.leer, StringTool.leer, CreateMode.CREATE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				Fall fall =
 					pat.neuerFall(Fall.getDefaultCaseLabel(), Fall.getDefaultCaseReason(),
 						Messages.Presets_UVGAbkuerzung);

@@ -29,6 +29,7 @@ import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Kontakt;
 
+import ch.rgw.tools.StringTool;
 public class Verifier {
 	
 	public static Kontakt verify(Kontakt k, String t, String m){
@@ -78,7 +79,7 @@ public class Verifier {
 			for (Kontakt k : list) {
 				TableItem it = new TableItem(table, SWT.NONE);
 				it.setText(0, k.getLabel(true));
-				it.setText(1, k.get("Strasse") + " " + k.get("Ort")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				it.setText(1, k.get("Strasse") + StringTool.space + k.get("Ort")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 			return table;
 		}

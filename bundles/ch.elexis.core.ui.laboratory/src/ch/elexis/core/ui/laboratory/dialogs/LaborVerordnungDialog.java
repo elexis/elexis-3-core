@@ -49,6 +49,7 @@ import ch.elexis.data.Query;
 import ch.elexis.data.Reminder;
 import ch.rgw.tools.TimeTool;
 
+import ch.rgw.tools.StringTool;
 public class LaborVerordnungDialog extends TitleAreaDialog {
 	private static final String LAST_SELECTED_USER = LaborLink.PROVIDER_ID + "/last_selected_user"; //$NON-NLS-1$
 	private static final String PREV_PRINT_SETTING = LaborLink.PROVIDER_ID + "/prev_print_setting"; //$NON-NLS-1$
@@ -76,7 +77,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 	}
 	
 	private void selectLastSelectedUser(){
-		String id = CoreHub.userCfg.get(LAST_SELECTED_USER, ""); //$NON-NLS-1$
+		String id = CoreHub.userCfg.get(LAST_SELECTED_USER, StringTool.leer); //$NON-NLS-1$
 		Anwender user = Anwender.load(id);
 		if (user != null && user.exists()) {
 			StructuredSelection newSelection = new StructuredSelection(user);
@@ -86,7 +87,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 	
 	private void saveLastSelectedUser(){
 		Anwender user = getSelectedUser();
-		String id = ""; //$NON-NLS-1$
+		String id = StringTool.leer; //$NON-NLS-1$
 		if (user != null) {
 			id = user.getId();
 		}
@@ -248,11 +249,11 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 		StringBuilder message = new StringBuilder("Labor"); //$NON-NLS-1$
 		StringBuilder params = new StringBuilder();
 		if (orders != null && !orders.isEmpty()) {
-			message.append(" ")
+			message.append(StringTool.space)
 				.append(
 					ch.elexis.core.ui.laboratory.controls.Messages.LaborOrdersComposite_columnOrdernumber)
 				.append(": ").append(orders.get(0).get(LabOrder.FLD_ORDERID)); //$NON-NLS-1$
-			params.append(LabOrder.FLD_ORDERID + "=" + orders.get(0).get(LabOrder.FLD_ORDERID));
+			params.append(LabOrder.FLD_ORDERID + StringTool.equals + orders.get(0).get(LabOrder.FLD_ORDERID));
 		}
 		Reminder reminder = new Reminder(patient, date.toString(TimeTool.DATE_ISO),
 			Visibility.ALWAYS, params.toString(), message.toString()); //$NON-NLS-1$
@@ -350,12 +351,12 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 	private static class NoAnwender extends Anwender {
 		@Override
 		public String getId(){
-			return "";
+			return StringTool.leer;
 		}
 		
 		@Override
 		public String getLabel(){
-			return "";
+			return StringTool.leer;
 		}
 		
 		@Override

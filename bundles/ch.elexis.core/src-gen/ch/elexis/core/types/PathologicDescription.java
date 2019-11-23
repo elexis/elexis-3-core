@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
  * @author thomas
  *
  */
+import ch.rgw.tools.StringTool;
 public class PathologicDescription {
 	
 	public enum Description {
@@ -52,23 +53,23 @@ public class PathologicDescription {
 			ret.reference = parts[1];
 		} else if (parts.length == 1 && !parts[0].isEmpty()) {
 			ret.description = Description.valueOf(parts[0]);
-			ret.reference = "";
+			ret.reference = StringTool.leer;
 		}
 		return ret;
 	}
 	
 	public PathologicDescription(Description description){
-		this(description, "");
+		this(description, StringTool.leer);
 	}
 	
 	public PathologicDescription(Description description, String reference){
 		this.description = description;
-		this.reference = (reference != null) ? StringUtils.abbreviate(reference, 90) : "";
+		this.reference = (reference != null) ? StringUtils.abbreviate(reference, 90) : StringTool.leer;
 	}
 	
 	private PathologicDescription(){
 		description = Description.UNKNOWN;
-		reference = "";
+		reference = StringTool.leer;
 	}
 	
 	@Override

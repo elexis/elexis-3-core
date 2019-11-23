@@ -44,6 +44,7 @@ import ch.elexis.data.Role;
  * @author gerry
  * 		
  */
+import ch.rgw.tools.StringTool;
 public class ACE implements Serializable {
 	private static final long serialVersionUID = 34320020090119L;
 	
@@ -211,7 +212,7 @@ public class ACE implements Serializable {
 		sp.append(getName());
 		ACE parent = getParent();
 		while ((parent != null) && (!parent.equals(ACE.ACE_ROOT))) {
-			sp.insert(0, parent.getName() + "/"); //$NON-NLS-1$
+			sp.insert(0, parent.getName() + StringTool.slash); //$NON-NLS-1$
 			parent = parent.getParent();
 		}
 		return sp.toString();
@@ -227,7 +228,7 @@ public class ACE implements Serializable {
 			return ACE_ROOT_LITERAL;
 		int valCan = Math.abs(getCanonicalName().hashCode());
 		int valNam = Math.abs(getName().hashCode());
-		BigInteger valI = new BigInteger(valCan + "" + valNam);
+		BigInteger valI = new BigInteger(valCan + StringTool.leer + valNam);
 		return valI.toString(16);
 	}
 	
@@ -268,7 +269,7 @@ public class ACE implements Serializable {
 	
 	@Override
 	public String toString(){
-		return getUniqueHashFromACE() + " " + getName() + " " + getCanonicalName();
+		return getUniqueHashFromACE() + StringTool.space + getName() + StringTool.space + getCanonicalName();
 	}
 	
 	/**

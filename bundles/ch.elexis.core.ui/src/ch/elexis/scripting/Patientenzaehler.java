@@ -31,6 +31,7 @@ import ch.rgw.tools.TimeTool;
 
 import com.tiff.common.ui.datepicker.DatePicker;
 
+import ch.rgw.tools.StringTool;
 public class Patientenzaehler extends TitleAreaDialog {
 	DatePicker dpVon, dpBis;
 	public int kons, cases, men, women;
@@ -75,7 +76,7 @@ public class Patientenzaehler extends TitleAreaDialog {
 		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
 		qbe.add("Datum", ">=", ttVon.toString(TimeTool.DATE_COMPACT));
 		qbe.add("Datum", "<=", ttBis.toString(TimeTool.DATE_COMPACT));
-		qbe.add("MandantID", "=", CoreHub.actMandant.getId());
+		qbe.add("MandantID", StringTool.equals, CoreHub.actMandant.getId());
 		HashMap<String, Patient> maenner = new HashMap<String, Patient>();
 		HashMap<String, Patient> frauen = new HashMap<String, Patient>();
 		HashMap<String, Fall> faelle = new HashMap<String, Fall>();

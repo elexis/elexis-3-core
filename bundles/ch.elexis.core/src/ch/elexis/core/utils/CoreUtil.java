@@ -68,7 +68,7 @@ public class CoreUtil {
 			}
 			ret.rdbmsType = DBType.H2;
 			ret.username = "sa";
-			ret.password = "";
+			ret.password = StringTool.leer;
 			return Optional.of(ret);
 		}
 		
@@ -77,11 +77,11 @@ public class CoreUtil {
 			dbConnection.username =
 				System.getProperty(ElexisSystemPropertyConstants.CONN_DB_USERNAME) != null
 						? System.getProperty(ElexisSystemPropertyConstants.CONN_DB_USERNAME)
-						: "";
+						: StringTool.leer;
 			dbConnection.password =
 				System.getProperty(ElexisSystemPropertyConstants.CONN_DB_PASSWORD) != null
 						? System.getProperty(ElexisSystemPropertyConstants.CONN_DB_PASSWORD)
-						: "";
+						: StringTool.leer;
 			
 			if (System.getProperty(ElexisSystemPropertyConstants.CONN_DB_FLAVOR) != null) {
 				String flavorString =
@@ -93,7 +93,7 @@ public class CoreUtil {
 			dbConnection.connectionString =
 				System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC) != null
 						? System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC)
-						: "";
+						: StringTool.leer;
 			return Optional.of(dbConnection);
 		}
 		
@@ -126,7 +126,7 @@ public class CoreUtil {
 				StringBuilder sb = new StringBuilder();
 				for (Object object : hConn.keySet()) {
 					if (object instanceof String) {
-						sb.append("\n").append(object).append("->").append(hConn.get(object));
+						sb.append(StringTool.lf).append(object).append("->").append(hConn.get(object));
 					}
 				}
 				logger.error(

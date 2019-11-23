@@ -34,6 +34,7 @@ import ch.elexis.core.utils.CoreUtil;
 import ch.rgw.io.Settings;
 import ch.rgw.io.SysSettings;
 
+import ch.rgw.tools.StringTool;
 @Component
 public class ConfigService implements IConfigService {
 	
@@ -72,7 +73,7 @@ public class ConfigService implements IConfigService {
 		String config = "default"; //$NON-NLS-1$
 		for (String s : args) {
 			if (s.startsWith("--use-config=")) { //$NON-NLS-1$
-				String[] c = s.split("="); //$NON-NLS-1$
+				String[] c = s.split(StringTool.equals); //$NON-NLS-1$
 				config = c[1];
 			}
 		}

@@ -15,6 +15,7 @@ import ch.elexis.core.ui.dbcheck.model.DBModel;
 import ch.elexis.core.ui.dbcheck.model.TableDescriptor;
 import ch.rgw.tools.JdbcLink;
 
+import ch.rgw.tools.StringTool;
 public class SyntacticCheckPGSQL extends SyntacticCheck {
 	public SyntacticCheckPGSQL(){
 		oklog = new StringBuilder();
@@ -45,7 +46,7 @@ public class SyntacticCheckPGSQL extends SyntacticCheck {
 				String[] fieldType = tableDetail.getFieldTypes(version);
 				for (int k = 0; k < fields.length; k++) {
 					boolean ok = false;
-					oklog.append(tables[i] + ": Erwarte " + fields[k] + " " + fieldType[k] + "...");
+					oklog.append(tables[i] + ": Erwarte " + fields[k] + StringTool.space + fieldType[k] + "...");
 					
 					ResultSet rs =
 						conn.getMetaData().getColumns(conn.getCatalog(), "%",
@@ -57,16 +58,16 @@ public class SyntacticCheckPGSQL extends SyntacticCheck {
 							&& isCompatible(dataType, fieldType[k])) {
 							oklog.append(" OK\n");
 						} else {
-							oklog.append(" erhalte " + rs.getString(4) + " " + dataType + "\n");
-							errlog.append(tables[i] + ": SynErr: FeldTyp " + rs.getString(4) + " "
-								+ dataType + " inkorrekt, erwarte " + fields[k] + " "
-								+ fieldType[k] + "\n");
+							oklog.append(" erhalte " + rs.getString(4) + StringTool.space + dataType + StringTool.lf);
+							errlog.append(tables[i] + ": SynErr: FeldTyp " + rs.getString(4) + StringTool.space
+								+ dataType + " inkorrekt, erwarte " + fields[k] + StringTool.space
+								+ fieldType[k] + StringTool.lf);
 						}
 						
 					}
 					if (!ok) {
 						oklog.append(" nicht gefunden\n");
-						errlog.append(tables[i] + ": SynErr: Feld " + fields[k] + " "
+						errlog.append(tables[i] + ": SynErr: Feld " + fields[k] + StringTool.space
 							+ fieldType[k] + " nicht gefunden!\n");
 					}
 					

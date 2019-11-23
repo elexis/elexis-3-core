@@ -144,7 +144,7 @@ public class Rechnung extends PersistentObject {
 							+ pat.getVorname()
 							+ ", "
 							+ pat.getGeburtsdatum()
-							+ "\n"
+							+ StringTool.lf
 							+ "fehlte das Häkchen für 'Person' in der Kontaktdatenbank.\n\nIch korrigiere das selbst.");
 				pat.set(Kontakt.FLD_IS_PERSON, StringConstants.ONE);
 			}
@@ -166,7 +166,7 @@ public class Rechnung extends PersistentObject {
 						String msg =
 							"Eine Konsultation vom " + b.getDatum().toString()
 								+ " für\nPatient Nr. " + pat.getPatCode() + ", " + pat.getName()
-								+ ", " + pat.getVorname() + ", " + pat.getGeburtsdatum() + "\n"
+								+ ", " + pat.getVorname() + ", " + pat.getGeburtsdatum() + StringTool.lf
 								+ "enthält mindestens eine Leistung zum Preis 0.00.\n"
 								+ "\nDie Ärztekasse würde so eine Rechnung zurückgeben.\n\n";
 						if (cod.openQuestion("WARNUNG: Leistung zu Fr. 0.00 !", msg
@@ -386,7 +386,7 @@ public class Rechnung extends PersistentObject {
 	/** Eine Liste aller Konsultationen dieser Rechnung holen */
 	public List<Konsultation> getKonsultationen(){
 		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
-		qbe.add("RechnungsID", "=", getId());
+		qbe.add("RechnungsID", StringTool.equals, getId());
 		qbe.orderBy(false, new String[] {
 			"Datum"
 		});
@@ -929,10 +929,10 @@ public class Rechnung extends PersistentObject {
 		String[] vals = get(true, CASE_ID, BILL_NUMBER, BILL_DATE, BILL_AMOUNT_CENTS);
 		
 		StringBuilder sb = new StringBuilder();
-		sb.append(vals[1]).append(" ").append(vals[2]);
+		sb.append(vals[1]).append(StringTool.space).append(vals[2]);
 		Fall fall = Fall.load(vals[0]);
 		if ((fall != null) && fall.exists()) {
-			sb.append(": ").append(fall.getPatient().getLabel()).append(" ");
+			sb.append(": ").append(fall.getPatient().getLabel()).append(StringTool.space);
 		}
 		int value = checkZero(vals[3]);
 		sb.append(new Money(value));

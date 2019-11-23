@@ -24,6 +24,7 @@ import ch.elexis.core.model.IArticle;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.data.Interaction;
 
+import ch.rgw.tools.StringTool;
 public class InteractionLink {
 	
 	/**
@@ -31,7 +32,7 @@ public class InteractionLink {
 	 */
 	private Link interactionLink = null;
 	static Logger logger = LoggerFactory.getLogger(InteractionLink.class);
-	private String destUrl = "";
+	private String destUrl = StringTool.leer;
 	private static int lastUpTime;
 
 	public InteractionLink(Composite parent, int style){
@@ -45,23 +46,23 @@ public class InteractionLink {
 	}
 	
 	private void setSuppressed() {
-		interactionLink.setText(""); //$NON-NLS-1$
+		interactionLink.setText(StringTool.leer); //$NON-NLS-1$
 		interactionLink.setToolTipText(Messages.SuppressInteractionCheckTooltip);
 		interactionLink.setForeground(UiDesk.getColorRegistry().get(UiDesk.COL_BLACK));
 
 	}
 	
 	public String updateAtcs(List<IArticle> gtins){
-		interactionLink.setText(""); //$NON-NLS-1$
+		interactionLink.setText(StringTool.leer); //$NON-NLS-1$
 		if (CoreHub.userCfg.get(Preferences.USR_SUPPRESS_INTERACTION_CHECK, true)) {
 			setSuppressed();
-			return ""; //$NON-NLS-1$
+			return StringTool.leer; //$NON-NLS-1$
 		}
 
-		String severity = " "; //$NON-NLS-1$
+		String severity = StringTool.space; //$NON-NLS-1$
 		Color color = UiDesk.getColor(UiDesk.COL_WHITE);
 		String epha = Messages.VerrDetailDialog_InteractionEpha;
-		String tooltip = ""; //$NON-NLS-1$
+		String tooltip = StringTool.leer; //$NON-NLS-1$
 		StringBuilder buildUrl = new StringBuilder(Messages.VerrDetailDialog_InteractionBaseURL);
 		
 		ArrayList<String> atcs = new ArrayList<String>();
@@ -74,10 +75,10 @@ public class InteractionLink {
 			}
 		});
 		if (atcs.size() > 1) {
-			destUrl = buildUrl.toString().replaceAll(",+$", "");
+			destUrl = buildUrl.toString().replaceAll(",+$", StringTool.leer);
 			logger.info("For {} ATCs {} set destUrl to {}", atcs.size(), atcs, destUrl);
 		} else {
-			destUrl = "";
+			destUrl = StringTool.leer;
 		}
 		
 		// Reset tooltip text and color to nothing
@@ -136,7 +137,7 @@ public class InteractionLink {
 					}
 				}
 			});
-			if (!severity.contentEquals(" ")) {//$NON-NLS-1$
+			if (!severity.contentEquals(StringTool.space)) {//$NON-NLS-1$
 				color = UiDesk.getColorFromRGB(Interaction.Colors.get(severity));
 				interactionLink.setText(epha + ": " + Interaction.Ratings.get(severity)); //$NON-NLS-1$
 				interactionLink.setBackground(color);

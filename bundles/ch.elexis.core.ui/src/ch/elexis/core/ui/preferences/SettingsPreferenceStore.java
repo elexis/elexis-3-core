@@ -30,6 +30,7 @@ import ch.rgw.io.Settings;
  * 
  * @author Gerry
  */
+import ch.rgw.tools.StringTool;
 public class SettingsPreferenceStore implements IPreferenceStore {
 	/**
 	 * The default context is the context where getDefault and setDefault methods will search. This
@@ -85,7 +86,7 @@ public class SettingsPreferenceStore implements IPreferenceStore {
 		if (z == null) {
 			z = base.get(field + SETTINGS_PREFERENCE_STORE_DEFAULT, null);
 			if (z == null) {
-				z = ""; //$NON-NLS-1$
+				z = StringTool.leer; //$NON-NLS-1$
 			}
 		}
 		return z;

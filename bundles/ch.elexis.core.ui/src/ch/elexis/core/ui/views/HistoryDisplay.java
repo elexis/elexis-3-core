@@ -51,6 +51,7 @@ import ch.elexis.data.Konsultation;
  * @author Gerry
  * 
  */
+import ch.rgw.tools.StringTool;
 public class HistoryDisplay extends Composite implements BackgroundJobListener,
 		ElexisEventListener {
 	FormText text;
@@ -225,7 +226,7 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 								true);
 						}
 					} else {
-						text.setText(ContextServiceHolder.get().getActivePatient().orElse(null) != null ? ""
+						text.setText(ContextServiceHolder.get().getActivePatient().orElse(null) != null ? StringTool.leer
 								: Messages.HistoryDisplay_NoPatientSelected,
 							false, false);
 					}
@@ -244,7 +245,7 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 						+ " bis " + toDate
 						+ "</span></p>";
 				}
-				return "";
+				return StringTool.leer;
 				
 			}
 		});

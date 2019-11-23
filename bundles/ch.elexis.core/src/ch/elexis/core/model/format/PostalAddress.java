@@ -111,8 +111,8 @@ public class PostalAddress {
 			zeileList.add(tokenizer.nextToken());
 		}
 		// Zeilen interpretieren (so gut es geht)
-		String plzOrt = ""; //$NON-NLS-1$
-		String nameVorname = ""; //$NON-NLS-1$
+		String plzOrt = StringTool.leer; //$NON-NLS-1$
+		String nameVorname = StringTool.leer; //$NON-NLS-1$
 		final int len = zeileList.size();
 		switch (len) {
 		case 0: // Kann gar nicht sein, aber man weiss ja nie!
@@ -126,7 +126,7 @@ public class PostalAddress {
 			break;
 		case 3: // NameVorname, Adr1, Ortsangaben ODER Anrede, NameVorname,
 			// Ortsangaben
-			if (zeileList.get(0).indexOf(" ") < 0) { //$NON-NLS-1$
+			if (zeileList.get(0).indexOf(StringTool.space) < 0) { //$NON-NLS-1$
 				// Erste Zeile Anrede
 				salutation = zeileList.get(0);
 				nameVorname = zeileList.get(1);
@@ -141,7 +141,7 @@ public class PostalAddress {
 		case 4: // NameVorname, Adr1, Adr2, Ortsangaben ODER Anrede,
 			// NameVorname, Adr1,
 			// Ortsangaben
-			if (zeileList.get(0).indexOf(" ") < 0) { //$NON-NLS-1$
+			if (zeileList.get(0).indexOf(StringTool.space) < 0) { //$NON-NLS-1$
 				// Erste Zeile Anrede
 				salutation = zeileList.get(0);
 				nameVorname = zeileList.get(1);
@@ -169,7 +169,7 @@ public class PostalAddress {
 		// NameVorname aufteilen. Z.B. Von Allmen Christoph
 		if (!StringTool.isNothing(nameVorname)) {
 			nameVorname = nameVorname.trim();
-			int index = nameVorname.lastIndexOf(" "); // Z.B. Von Allmen Christoph //$NON-NLS-1$
+			int index = nameVorname.lastIndexOf(StringTool.space); // Z.B. Von Allmen Christoph //$NON-NLS-1$
 			if (index > 0) {
 				lastName = nameVorname.substring(0, index);
 				firstName = nameVorname.substring(index + 1);
@@ -186,7 +186,7 @@ public class PostalAddress {
 			plzOrt = plzOrt.substring(index + 1);
 			city = plzOrt;
 		}
-		if (plzOrt.indexOf(" ") > 0) { //$NON-NLS-1$
+		if (plzOrt.indexOf(StringTool.space) > 0) { //$NON-NLS-1$
 			// Read zip code
 			int index = plzOrt.indexOf(StringConstants.SPACE);
 			zip = plzOrt.substring(0, index);

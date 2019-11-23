@@ -13,6 +13,7 @@ package ch.elexis.core.exceptions;
 
 import java.util.logging.Logger;
 
+import ch.rgw.tools.StringTool;
 public class ElexisException extends Exception {
 	private static final long serialVersionUID = -4535064606049686854L;
 	private static Logger log = Logger.getLogger(ElexisException.class.getName());
@@ -35,7 +36,7 @@ public class ElexisException extends Exception {
 		super(errmsg);
 		this.clazz = clazz;
 		this.errcode = errcode;
-		log.severe(clazz.getName() + ": " + errmsg + " " + Integer.toString(errcode));
+		log.severe(clazz.getName() + ": " + errmsg + StringTool.space + Integer.toString(errcode));
 	}
 	
 	public ElexisException(String errmsg, Throwable throwable){

@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import ch.rgw.tools.StringTool;
 public class HL7Helper {
 	private static final String DTM_DATE_TIME_PATTERN = "yyyyMMddHHmmss"; //$NON-NLS-1$
 	
@@ -64,7 +65,7 @@ public class HL7Helper {
 	}
 	
 	public static String determineName(List<String> possibleNames){
-		String ret = "";
+		String ret = StringTool.leer;
 		for (String possibleName : possibleNames) {
 			if (possibleName != null && !"null".equals(possibleName)) {
 				int possibleNonDigitCount = getNonDigitCharacters(possibleName);

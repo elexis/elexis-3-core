@@ -90,7 +90,7 @@ public class TarmedTaxpunktkorrektur {
 							v.setStandardPreis();
 							changed.addMoney(v.getBruttoPreis().multiply(v.getZahl()));
 						}
-						writer.write("konvertierte " + k.getVerboseLabel() + "\n");
+						writer.write("konvertierte " + k.getVerboseLabel() + StringTool.lf);
 					}
 					i++;
 				}

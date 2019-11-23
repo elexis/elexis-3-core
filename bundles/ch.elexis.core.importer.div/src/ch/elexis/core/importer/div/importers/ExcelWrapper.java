@@ -35,6 +35,7 @@ import ch.rgw.tools.TimeTool;
  * @author Gerry
  * 
  */
+import ch.rgw.tools.StringTool;
 public class ExcelWrapper {
 	private Class<?>[] types;
 	private Sheet sheet;
@@ -116,7 +117,7 @@ public class ExcelWrapper {
 			if (cell != null) {
 				switch (cell.getCellType()) {
 				case Cell.CELL_TYPE_BLANK:
-					ret.add(""); //$NON-NLS-1$
+					ret.add(StringTool.leer); //$NON-NLS-1$
 					break;
 				case Cell.CELL_TYPE_BOOLEAN:
 					ret.add(Boolean.toString(cell.getBooleanCellValue()));
@@ -131,7 +132,7 @@ public class ExcelWrapper {
 								TimeTool tt = new TimeTool(date.getTime());
 								ret.add(tt.toString(TimeTool.FULL_MYSQL));
 							} else {
-								ret.add(""); //$NON-NLS-1$
+								ret.add(StringTool.leer); //$NON-NLS-1$
 							}
 						} else if (types[i].equals(Double.class)) {
 							ret.add(Double.toString(cell.getNumericCellValue()));
@@ -163,7 +164,7 @@ public class ExcelWrapper {
 				
 			} else {
 				// empty cell
-				ret.add(""); //$NON-NLS-1$
+				ret.add(StringTool.leer); //$NON-NLS-1$
 			}
 		}
 		return ret;
@@ -201,6 +202,6 @@ public class ExcelWrapper {
 		if (row.size() > col) {
 			return row.get(col);
 		}
-		return ""; //$NON-NLS-1$
+		return StringTool.leer; //$NON-NLS-1$
 	}
 }

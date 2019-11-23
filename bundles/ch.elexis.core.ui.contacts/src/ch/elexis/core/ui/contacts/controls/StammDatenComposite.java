@@ -66,6 +66,7 @@ import ch.elexis.core.ui.contacts.views.provider.TableDecoratingLabelProvider;
 import ch.elexis.core.ui.icons.Images;
 
 // TODO Use icons from elexis?
+import ch.rgw.tools.StringTool;
 public class StammDatenComposite extends AbstractComposite {
 	
 	private static Logger log = LoggerFactory.getLogger(StammDatenComposite.class);
@@ -418,7 +419,7 @@ public class StammDatenComposite extends AbstractComposite {
 			if (kontakt.getCode() != null) {
 				lblCode.setText("#" + kontakt.getCode());
 			} else {
-				lblCode.setText("");
+				lblCode.setText(StringTool.leer);
 			}
 			break;
 		case ORGANIZATION:
@@ -434,7 +435,7 @@ public class StammDatenComposite extends AbstractComposite {
 			txtFirstName.setMessage("Bezeichnung 1");
 			txtFamilyName.setMessage("Bezeichnung 2");
 			lblHeadline.setText(ORGANIZATION_LABEL);
-			lblCode.setText("");
+			lblCode.setText(StringTool.leer);
 			break;
 		default:
 			break;
@@ -496,7 +497,7 @@ public class StammDatenComposite extends AbstractComposite {
 		public void focusLost(FocusEvent e){
 			Text text = ((Text) e.widget);
 			if (text.getText().equalsIgnoreCase(ContactGeonames.getDialPrefix()))
-				text.setText("");
+				text.setText(StringTool.leer);
 		}
 		
 		@Override

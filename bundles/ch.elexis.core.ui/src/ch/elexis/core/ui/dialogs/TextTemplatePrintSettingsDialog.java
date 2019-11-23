@@ -35,6 +35,7 @@ import ch.elexis.core.ui.dialogs.base.InputDialog;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 
+import ch.rgw.tools.StringTool;
 public class TextTemplatePrintSettingsDialog extends TitleAreaDialog {
 	private ComboViewer cvPrinters, cvTrays;
 	private List<PrintService> printServices;
@@ -121,7 +122,7 @@ public class TextTemplatePrintSettingsDialog extends TitleAreaDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e){
 				InputDialog dlg = new InputDialog(getParentShell(), "Zusätzlicher Schacht",
-					"Bitten den Namen des zusätzlichen Schacht konfigurieren.", "", null, SWT.NONE);
+					"Bitten den Namen des zusätzlichen Schacht konfigurieren.", StringTool.leer, null, SWT.NONE);
 				if (dlg.open() == Window.OK) {
 					if (dlg.getValue() != null && !dlg.getValue().isEmpty()) {
 						addCustomMediaTray(dlg.getValue());
@@ -200,7 +201,7 @@ public class TextTemplatePrintSettingsDialog extends TitleAreaDialog {
 		IStructuredSelection selMediaTray = (IStructuredSelection) cvTrays.getSelection();
 		if (selMediaTray != null) {
 			if (selMediaTray.isEmpty()) {
-				selTray = "";
+				selTray = StringTool.leer;
 			} else {
 				selTray = ((MediaTray) selMediaTray.getFirstElement()).toString();
 			}

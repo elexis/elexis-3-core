@@ -625,7 +625,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 			// und wenn ja, entsprechende Formatierung anwenden.
 			else if (e.text.matches("[\\*/_]")) { //$NON-NLS-1$
 				int start = e.start;
-				String t = ""; //$NON-NLS-1$
+				String t = StringTool.leer; //$NON-NLS-1$
 				while (--start >= 0) {
 					t = text.getTextRange(start, 1);
 					if (t.equals(e.text)) {
@@ -653,7 +653,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 		
 		private boolean isMakroEnabled(IKonsMakro extMakro){
 			UserTextPref.setMakroEnabledDefaults();
-			return CoreHub.userCfg.get(EnhancedTextField.MACRO_ENABLED + "/"
+			return CoreHub.userCfg.get(EnhancedTextField.MACRO_ENABLED + StringTool.slash
 				+ extMakro.getClass().getName(), false);
 		}
 		

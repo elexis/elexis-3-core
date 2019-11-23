@@ -9,6 +9,7 @@ import ch.elexis.core.ui.exchange.KontaktMatcher.CreateMode;
 import ch.elexis.data.Patient;
 import ch.rgw.tools.TimeTool;
 
+import ch.rgw.tools.StringTool;
 public class ImporterPatientResolver extends AbstractHL7PatientResolver {
 	
 	private TimeTool convertTool = new TimeTool();
@@ -18,7 +19,7 @@ public class ImporterPatientResolver extends AbstractHL7PatientResolver {
 		String sender){
 		
 		// resolve with full data
-		Patient pat = KontaktMatcher.findPatient(lastname, firstname, birthDate, "", "", "", "", "", CreateMode.FAIL);
+		Patient pat = KontaktMatcher.findPatient(lastname, firstname, birthDate, StringTool.leer, StringTool.leer, StringTool.leer, StringTool.leer, StringTool.leer, CreateMode.FAIL);
 		// try to resolve with only the beginning of the name
 		if (pat == null) {
 			String shortLastname = lastname;
@@ -29,7 +30,7 @@ public class ImporterPatientResolver extends AbstractHL7PatientResolver {
 			if (firstname.length() > 3) {
 				shortFirstname = firstname.substring(0, 3);
 			}
-			pat = KontaktMatcher.findPatient(shortLastname, shortFirstname, birthDate, "", "", "", "", "",
+			pat = KontaktMatcher.findPatient(shortLastname, shortFirstname, birthDate, StringTool.leer, StringTool.leer, StringTool.leer, StringTool.leer, StringTool.leer,
 					CreateMode.FAIL);
 		}
 		// user decides
@@ -38,12 +39,12 @@ public class ImporterPatientResolver extends AbstractHL7PatientResolver {
 			String birthStr = convertTool.toString(TimeTool.DATE_GER);
 			if (sender != null) {
 				pat = (Patient) KontaktSelektor.showInSync(Patient.class,
-					Messages.HL7_SelectPatient, Messages.HL7_WhoIs + lastname + " " + firstname
-						+ " ," + birthStr + "?\n" + Messages.HL7_Lab + " " + sender);
+					Messages.HL7_SelectPatient, Messages.HL7_WhoIs + lastname + StringTool.space + firstname
+						+ " ," + birthStr + "?\n" + Messages.HL7_Lab + StringTool.space + sender);
 			} else {
 				pat =
 					(Patient) KontaktSelektor.showInSync(Patient.class, Messages.HL7_SelectPatient,
-						Messages.HL7_WhoIs + lastname + " " + firstname + " ," + birthStr + "?");
+						Messages.HL7_WhoIs + lastname + StringTool.space + firstname + " ," + birthStr + "?");
 			}
 		}
 		if (pat != null) {

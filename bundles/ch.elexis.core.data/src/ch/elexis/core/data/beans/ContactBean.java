@@ -27,6 +27,7 @@ import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Person;
 import ch.rgw.tools.TimeTool;
 
+import ch.rgw.tools.StringTool;
 public class ContactBean extends BeanPersistentObject<Kontakt>
 		implements IContact, IPerson, IPatient {
 	
@@ -242,8 +243,8 @@ public class ContactBean extends BeanPersistentObject<Kontakt>
 	
 	@Override
 	public String getLabel(){
-		return getDescription1() + " " + getDescription2() + ", " + getStreet() + ", " + getZip()
-			+ " " + getCity();
+		return getDescription1() + StringTool.space + getDescription2() + ", " + getStreet() + ", " + getZip()
+			+ StringTool.space + getCity();
 	}
 	
 	@Override
@@ -360,7 +361,7 @@ public class ContactBean extends BeanPersistentObject<Kontakt>
 			vs = "u";
 			break;
 		default:
-			vs = "";
+			vs = StringTool.leer;
 		}
 		entity.set(Person.SEX, vs);
 		firePropertyChange("gender", old, value);

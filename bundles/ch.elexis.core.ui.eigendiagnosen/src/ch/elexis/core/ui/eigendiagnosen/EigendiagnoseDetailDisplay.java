@@ -67,9 +67,9 @@ public class EigendiagnoseDetailDisplay implements IDetailDisplay {
 			tblPls.reload(diag);
 			tComment.setText(diag.getDescription());
 		} else {
-			form.setText("");
+			form.setText(StringTool.leer);
 			tblPls.reload((Identifiable) null);
-			tComment.setText("");
+			tComment.setText(StringTool.leer);
 		}
 	}
 	

@@ -15,6 +15,7 @@ import ch.elexis.core.ui.dbcheck.model.TableDescriptor;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 
+import ch.rgw.tools.StringTool;
 public class SemanticCheckPGSQL extends SemanticCheck {
 	
 	public SemanticCheckPGSQL(){
@@ -43,7 +44,7 @@ public class SemanticCheckPGSQL extends SemanticCheck {
 						ResultSet rs = stm.query("SELECT * FROM " + tables[i] + " WHERE " + query);
 						while (rs.next()) {
 							errlog.append(tables[i] + ": Semantischer Fehler bei Query <<" + query
-								+ ">> auf ID " + rs.getString(1) + "\n");
+								+ ">> auf ID " + rs.getString(1) + StringTool.lf);
 						}
 					}
 				}

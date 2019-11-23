@@ -50,6 +50,7 @@ import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.ui.editors.ContactSelectionDialogCellEditor;
 import ch.elexis.core.ui.util.CoreUiUtil;
 
+import ch.rgw.tools.StringTool;
 public class StockDetailComposite extends Composite {
 	
 	private WritableValue<IArticle> wvArtikel = new WritableValue<>(null, IArticle.class);
@@ -438,11 +439,11 @@ public class StockDetailComposite extends Composite {
 		protected Object getValue(Object element){
 			IStock stock = (IStock) element;
 			if (stock == null || wvArtikel.getValue() == null) {
-				return "";
+				return StringTool.leer;
 			}
 			IStockEntry se = stockEntries.get(stock);
 			if (se == null) {
-				return "";
+				return StringTool.leer;
 			}
 			
 			int value = 0;

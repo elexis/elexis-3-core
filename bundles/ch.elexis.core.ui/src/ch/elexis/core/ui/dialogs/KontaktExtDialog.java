@@ -39,6 +39,7 @@ import ch.elexis.data.Kontakt;
  * @author Gerry
  * 
  */
+import ch.rgw.tools.StringTool;
 public class KontaktExtDialog extends TitleAreaDialog {
 	private String[] fieldDefinitions;
 	private Kontakt actKontact;
@@ -113,7 +114,7 @@ public class KontaktExtDialog extends TitleAreaDialog {
 			savedValues = new String[fieldDefinitions.length];
 			values = new Text[fieldDefinitions.length];
 			for (int i = 0; i < fieldDefinitions.length; i++) {
-				String[] val = fieldDefinitions[i].split("="); //$NON-NLS-1$
+				String[] val = fieldDefinitions[i].split(StringTool.equals); //$NON-NLS-1$
 				String key = val[0];
 				fields[i] = key;
 				if (val.length == 2) {
@@ -139,7 +140,7 @@ public class KontaktExtDialog extends TitleAreaDialog {
 				String msg_key_tooltip = "KontaktExtInfo_" + key + "_tooltip"; //$NON-NLS-1$ //$NON-NLS-2$
 				msg_key_tooltip = msg_key_tooltip.replaceAll("[^a-zA-Z0-9_]", "_");
 				String label_text = key;
-				String tooltip_text = "";
+				String tooltip_text = StringTool.leer;
 				try {
 					label_text = ResourceBundle.getBundle(ch.elexis.core.l10n.Messages.BUNDLE_NAME)
 							.getString(msg_key_label);

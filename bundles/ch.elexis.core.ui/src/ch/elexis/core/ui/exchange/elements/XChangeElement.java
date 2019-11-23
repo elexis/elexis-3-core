@@ -29,6 +29,7 @@ import ch.rgw.tools.XMLTool;
  * @author gerry
  * 
  */
+import ch.rgw.tools.StringTool;
 public abstract class XChangeElement {
 	public static final String ATTR_ID = "id";
 	public static final String ATTR_DATE = "date";
@@ -119,7 +120,7 @@ public abstract class XChangeElement {
 	 */
 	public String getAttr(final String name){
 		String ret = ex.getAttributeValue(name);
-		return ret == null ? "" : ret;
+		return ret == null ? StringTool.leer : ret;
 	}
 	
 	/**

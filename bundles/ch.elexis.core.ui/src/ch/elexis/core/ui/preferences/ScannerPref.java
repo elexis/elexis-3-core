@@ -35,6 +35,7 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.actions.ScannerEvents;
 
+import ch.rgw.tools.StringTool;
 public class ScannerPref extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	public static final String ID = "ch.elexis.preferences.ScannerPrefs"; //$NON-NLS-1$
 	
@@ -128,7 +129,7 @@ public class ScannerPref extends FieldEditorPreferencePage implements IWorkbench
 		btnClear.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				txtTest.setText(""); //$NON-NLS-1$
+				txtTest.setText(StringTool.leer); //$NON-NLS-1$
 				txtTest.setFocus();
 			}
 			

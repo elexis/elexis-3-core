@@ -27,6 +27,7 @@ import ch.rgw.tools.VersionedResource;
 import ch.rgw.tools.VersionedResource.ResourceItem;
 import ch.rgw.tools.XMLTool;
 
+import ch.rgw.tools.StringTool;
 public class RecordElement extends XChangeElement {
 	static final String ELEMENT_TEXT = "text";
 	static final String ATTR_AUTHOR = "author";
@@ -81,7 +82,7 @@ public class RecordElement extends XChangeElement {
 		StringBuilder sb = new StringBuilder();
 		sb.append(Messages.RecordElement_EntryDate).append(getAttr(ATTR_DATE))
 			.append(Messages.RecordElement_CreatedBy).append( //$NON-NLS-1$ //$NON-NLS-2$
-				getAttr(ATTR_AUTHOR)).append("\n");
+				getAttr(ATTR_AUTHOR)).append(StringTool.lf);
 		List<Element> children = getElement().getChildren();
 		if (children != null) {
 			for (Element child : children) {
@@ -89,7 +90,7 @@ public class RecordElement extends XChangeElement {
 					continue;
 				}
 				sb.append(child.getName()).append(":\n");
-				sb.append(child.getText()).append("\n");
+				sb.append(child.getText()).append(StringTool.lf);
 			}
 		}
 		Element eText = getElement().getChild(ELEMENT_TEXT);

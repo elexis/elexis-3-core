@@ -35,6 +35,7 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.views.controls.StockDetailComposite;
 
+import ch.rgw.tools.StringTool;
 public class EigenartikelComposite extends Composite implements IUnlockable {
 	
 	private WritableValue<IArticle> drugPackageEigenartikel =
@@ -92,7 +93,7 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		grpDrugPackages = new Group(this, SWT.NONE);
 		grpDrugPackages.setLayout(new GridLayout(1, false));
 		grpDrugPackages.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true, 2, 1));
-		grpDrugPackages.setText("");
+		grpDrugPackages.setText(StringTool.leer);
 		
 		if (includeDeleteOption) {
 			Composite compDpSelector = new Composite(grpDrugPackages, SWT.NONE);

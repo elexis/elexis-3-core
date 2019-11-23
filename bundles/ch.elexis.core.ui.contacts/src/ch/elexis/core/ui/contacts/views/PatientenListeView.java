@@ -85,6 +85,7 @@ import ch.elexis.data.Query;
  * @author gerry
  * 
  */
+import ch.rgw.tools.StringTool;
 public class PatientenListeView extends ViewPart implements IActivationListener, ISaveablePart2, HeartListener {
 	private CommonViewer cv;
 	private ViewerConfigurer vc;
@@ -217,7 +218,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 
 	private void collectUserFields() {
 		ArrayList<String> fields = new ArrayList<String>();
-		initiated = !("".equals(CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWPATNR, "")));
+		initiated = !(StringTool.leer.equals(CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWPATNR, StringTool.leer)));
 		if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWPATNR, false)) {
 			fields.add("code" + Query.EQUALS + Messages.PatientenListeView_PatientNr); // $NON-NLS-1$
 		}

@@ -217,7 +217,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		newAction.setToolTipText(Messages.VerrechnungsDisplay_AddItem);
 		toolBarManager.add(newAction);
 
-		toolBarManager.add(new Action("", Action.AS_CHECK_BOX) {
+		toolBarManager.add(new Action(StringTool.leer, Action.AS_CHECK_BOX) {
 			
 			@Override
 			public ImageDescriptor getImageDescriptor(){
@@ -358,7 +358,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			
 			@Override
 			public String getText(Object element){
-				return "";
+				return StringTool.leer;
 			}
 			
 			@Override
@@ -381,7 +381,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					IBilled billed = (IBilled) element;
 					return Double.toString(billed.getAmount());
 				}
-				return "";
+				return StringTool.leer;
 			}
 		});
 		
@@ -393,7 +393,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					IBilled billed = (IBilled) element;
 					return getServiceCode(billed);
 				}
-				return "";
+				return StringTool.leer;
 			}
 		});
 		
@@ -405,7 +405,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					IBilled billed = (IBilled) element;
 					return billed.getText();
 				}
-				return "";
+				return StringTool.leer;
 			}
 			
 			@Override
@@ -427,7 +427,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					Money price = billed.getTotal();
 					return price.getAmountAsString();
 				}
-				return "";
+				return StringTool.leer;
 			}
 		});
 		
@@ -435,7 +435,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element){
-				return "";
+				return StringTool.leer;
 			}
 			
 			@Override
@@ -499,7 +499,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					Messages.VerrechnungsDisplay_Amount, sum.getAmountAsString(),
 					Messages.VerrechnungsDisplay_Time, sumMinutes));
 		} else {
-			billedLabel.setText("");
+			billedLabel.setText(StringTool.leer);
 		}
 		layout();
 	}
@@ -527,7 +527,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					StringBuilder sb = new StringBuilder();
 					diff.forEach(r -> {
 						if (sb.length() > 0) {
-							sb.append("\n");
+							sb.append(StringTool.lf);
 						}
 						sb.append(r);
 					});
@@ -662,7 +662,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 							StringBuilder sb = new StringBuilder();
 							diff.forEach(r -> {
 								if (sb.length() > 0) {
-									sb.append("\n");
+									sb.append(StringTool.lf);
 								}
 								sb.append(r);
 							});
@@ -730,7 +730,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			if (billable instanceof ICustomService || (billable instanceof IArticle
 				&& ((IArticle) billable).getTyp() == ArticleTyp.EIGENARTIKEL)) {
 				if (billable.getId().equals(ret)) {
-					ret = "";
+					ret = StringTool.leer;
 				}
 			}
 		}

@@ -26,6 +26,7 @@ import ch.elexis.data.Reminder;
  * 
  * @since 3.7
  */
+import ch.rgw.tools.StringTool;
 public class ReminderListSelectionDialog extends ListSelectionDialog {
 	
 	private Label detailLabel;
@@ -55,7 +56,7 @@ public class ReminderListSelectionDialog extends ListSelectionDialog {
 				if (!arg0.getSelection().isEmpty()) {
 					Reminder reminder =
 						(Reminder) ((IStructuredSelection) arg0.getSelection()).getFirstElement();
-					sb.append("    "+reminder.getSubject() + "\n");
+					sb.append("    "+reminder.getSubject() + StringTool.lf);
 					sb.append("    "+reminder.getMessage());
 				}
 				detailLabel.setText(sb.toString());

@@ -16,6 +16,7 @@ import ch.elexis.data.Konsultation;
 import ch.elexis.data.Leistungsblock;
 import ch.rgw.tools.Result;
 
+import ch.rgw.tools.StringTool;
 public class BlockMakro implements IKonsMakro {
 	
 	@Override
@@ -49,7 +50,7 @@ public class BlockMakro implements IKonsMakro {
 			StringBuilder sb = new StringBuilder();
 			diff.forEach(r -> {
 				if (sb.length() > 0) {
-					sb.append("\n");
+					sb.append(StringTool.lf);
 				}
 				sb.append(r);
 			});

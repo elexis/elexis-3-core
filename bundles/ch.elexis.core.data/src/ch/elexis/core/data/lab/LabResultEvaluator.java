@@ -12,6 +12,7 @@ import ch.elexis.core.types.PathologicDescription;
 import ch.elexis.core.types.PathologicDescription.Description;
 import ch.elexis.data.LabResult;
 
+import ch.rgw.tools.StringTool;
 public class LabResultEvaluator {
 	
 	private LabResultEvaluationResult evaluateTextualResult(LabResult labResult,
@@ -58,7 +59,7 @@ public class LabResultEvaluator {
 		Gender gender = labResult.getPatient().getGender();
 		
 		Description description = Description.PATHO_REF;
-		String refValue = "";
+		String refValue = StringTool.leer;
 		if (Gender.MALE == gender) {
 			refValue = labResult.getRefMale();
 			if (StringUtils.isEmpty(refValue)) {

@@ -53,6 +53,7 @@ import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.SortedList;
 import ch.elexis.core.ui.views.TextView;
 
+import ch.rgw.tools.StringTool;
 public class PlatzhalterView extends ViewPart {
 	public static final String ID = "ch.elexis.views.textsystem.Platzhalterview"; //$NON-NLS-1$
 	
@@ -257,7 +258,7 @@ public class PlatzhalterView extends ViewPart {
 	 */
 	@SuppressWarnings("unchecked")
 	private SortedList<PlatzhalterTreeData> getTreeData(){
-		PlatzhalterTreeData root = new PlatzhalterTreeData("Root", "", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		PlatzhalterTreeData root = new PlatzhalterTreeData("Root", StringTool.leer, StringTool.leer); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		
 		// Basis Platzhalter
 		PlatzhalterProperties props = new PlatzhalterProperties();
@@ -285,10 +286,10 @@ public class PlatzhalterView extends ViewPart {
 				PlatzhalterTreeData treeData =
 						root.getChild(typeName);
 				if(treeData == null) {
-					treeData = new PlatzhalterTreeData(typeName, "", "");
+					treeData = new PlatzhalterTreeData(typeName, StringTool.leer, StringTool.leer);
 				}
 				treeData
-					.addChild(new PlatzhalterTreeData(name, "[" + typeName + "." + name + "]", ""));
+					.addChild(new PlatzhalterTreeData(name, "[" + typeName + "." + name + "]", StringTool.leer));
 			}
 		}
 		
@@ -297,7 +298,7 @@ public class PlatzhalterView extends ViewPart {
 			Extensions.getClasses(ExtensionPointConstantsData.DATA_ACCESS, "DataAccess", "class");//$NON-NLS-1$ //$NON-NLS-2$
 		for (IDataAccess dataAccess : dataAccessList) {
 			PlatzhalterTreeData treeData =
-				new PlatzhalterTreeData(dataAccess.getName(), "", dataAccess.getDescription()); //$NON-NLS-1$
+				new PlatzhalterTreeData(dataAccess.getName(), StringTool.leer, dataAccess.getDescription()); //$NON-NLS-1$
 			if (dataAccess.getList() != null) {
 				for (Element element : dataAccess.getList()) {
 					treeData.addChild(new PlatzhalterTreeData(element.getName(), element

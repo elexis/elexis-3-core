@@ -52,6 +52,7 @@ import ch.elexis.data.Patient;
 import ch.elexis.data.Reminder;
 import ch.rgw.tools.TimeTool;
 
+import ch.rgw.tools.StringTool;
 public class ReminderDetailDialog extends TitleAreaDialog {
 	
 	private static final String TX_ALL = Messages.EditReminderDialog_all; //$NON-NLS-1$
@@ -525,7 +526,7 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 			due = dateDue.toString(TimeTool.DATE_GER);
 		}
 		if (reminder == null) {
-			reminder = new Reminder(null, due, Visibility.ALWAYS, "", "");
+			reminder = new Reminder(null, due, Visibility.ALWAYS, StringTool.leer, StringTool.leer);
 		}
 		
 		String contactId =

@@ -36,6 +36,7 @@ import ch.elexis.core.model.IXid;
 import ch.elexis.core.services.ICodeElementService.CodeElementTyp;
 import ch.elexis.core.services.ICodeElementServiceContribution;
 
+import ch.rgw.tools.StringTool;
 public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 	
 	private List<IDiagnosis> diagnoses = new ArrayList<IDiagnosis>();
@@ -58,7 +59,7 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 			@Override
 			public String getText(Object element){
 				if (element == null) {
-					return "";
+					return StringTool.leer;
 				}
 				return ((IDiagnose) element).getLabel();
 			}
@@ -68,9 +69,9 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 			@Override
 			public String getText(Object element){
 				if (element == null) {
-					return "";
+					return StringTool.leer;
 				}
-				return ((IDiagnose) element).getCodeSystemName() + " "
+				return ((IDiagnose) element).getCodeSystemName() + StringTool.space
 					+ ((IDiagnose) element).getLabel();
 			}
 		});
@@ -81,7 +82,7 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 		String oldListLabel = WorkbenchMessages.FilteredItemsSelectionDialog_listLabel;
 		
 		setMessage(Messages.DiagnoseSelektorDialog_Message);
-		WorkbenchMessages.FilteredItemsSelectionDialog_listLabel = ""; //$NON-NLS-1$
+		WorkbenchMessages.FilteredItemsSelectionDialog_listLabel = StringTool.leer; //$NON-NLS-1$
 		Control ret = super.createDialogArea(parent);
 		
 		WorkbenchMessages.FilteredItemsSelectionDialog_listLabel = oldListLabel;
@@ -163,22 +164,22 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 		
 		@Override
 		public String getCodeSystemName(){
-			return "";
+			return StringTool.leer;
 		}
 		
 		@Override
 		public String getCodeSystemCode(){
-			return "";
+			return StringTool.leer;
 		}
 		
 		@Override
 		public String getId(){
-			return "";
+			return StringTool.leer;
 		}
 		
 		@Override
 		public String getCode(){
-			return "";
+			return StringTool.leer;
 		}
 		
 		@Override

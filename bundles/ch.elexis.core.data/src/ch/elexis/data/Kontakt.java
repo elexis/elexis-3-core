@@ -472,7 +472,7 @@ public class Kontakt extends PersistentObject {
 	 * 
 	 * @param elem
 	 *            Name des Elements
-	 * @return Wert oder "" wenn das Element nicht vorhanden ist oder die Rechte nicht zum Lesen
+	 * @return Wert oder StringTool.leer wenn das Element nicht vorhanden ist oder die Rechte nicht zum Lesen
 	 *         ausreichen
 	 */
 	public String getInfoString(String elem){

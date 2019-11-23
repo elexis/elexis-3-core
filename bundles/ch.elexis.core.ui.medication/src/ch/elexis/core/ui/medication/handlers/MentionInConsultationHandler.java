@@ -21,6 +21,7 @@ import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.text.model.Samdas.Record;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 
+import ch.rgw.tools.StringTool;
 public class MentionInConsultationHandler extends AbstractHandler {
 	@SuppressWarnings("unchecked")
 	@Override
@@ -44,13 +45,13 @@ public class MentionInConsultationHandler extends AbstractHandler {
 				encounter.ifPresent(enc -> {
 					StringBuilder sb = new StringBuilder();
 					for (IPrescription presc : prescriptions) {
-						String articleLabel = "";
+						String articleLabel = StringTool.leer;
 						if (presc.getArticle() != null) {
 							articleLabel = presc.getArticle().getLabel();
 						}
-						sb.append("\n");
+						sb.append(StringTool.lf);
 						sb.append("Medikation: " + articleLabel + ", "
-							+ presc.getDosageInstruction() + " " + getType(presc.getEntryType()));
+							+ presc.getDosageInstruction() + StringTool.space + getType(presc.getEntryType()));
 					}
 					
 					Samdas samdas = new Samdas(enc.getVersionedEntry().getHead());
@@ -78,7 +79,7 @@ public class MentionInConsultationHandler extends AbstractHandler {
 		case RECIPE:
 			return "(Rezeptiert)";
 		default:
-			return "";
+			return StringTool.leer;
 		}
 	}
 }

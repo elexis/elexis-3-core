@@ -182,10 +182,10 @@ public class DBConnectSelectionConnectionWizardPage extends DBConnectWizardPage 
 	}
 	
 	private void createEntityArea(Group grpEntity){
-		String driver = "";
-		String user = "";
-		String typ = "";
-		String connection = "";
+		String driver = StringTool.leer;
+		String user = StringTool.leer;
+		String typ = StringTool.leer;
+		String connection = StringTool.leer;
 		
 		Composite typArea = new Composite(grpEntity, SWT.NONE);
 		typArea.setLayout(new GridLayout(2, false));

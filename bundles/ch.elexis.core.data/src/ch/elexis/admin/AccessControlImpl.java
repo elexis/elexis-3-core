@@ -349,11 +349,11 @@ public class AccessControlImpl extends AbstractAccessControl {
 	private String remove(String group, Anwender user){
 		String g = (String) user.getInfoElement(KEY_GROUPS);
 		if (g != null) {
-			g = g.replaceAll(user.getId(), ""); //$NON-NLS-1$
-			g = g.replaceAll("\\s*,*$", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			g = g.replaceAll(user.getId(), StringTool.leer); //$NON-NLS-1$
+			g = g.replaceAll("\\s*,*$", StringTool.leer); //$NON-NLS-1$ //$NON-NLS-2$
 			return g;
 		}
-		return ""; //$NON-NLS-1$
+		return StringTool.leer; //$NON-NLS-1$
 	}
 	
 	/**

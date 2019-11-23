@@ -81,7 +81,7 @@ public class WikiView extends ViewPart implements ISaveablePart2 {
 			tokens[i] = tokens[i].substring(0, 1).toUpperCase() + tokens[i].substring(1);
 		}
 		
-		String wikiName = StringTool.join(tokens, "");
+		String wikiName = StringTool.join(tokens, StringTool.leer);
 		return wikiName;
 	}
 	

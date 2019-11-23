@@ -37,6 +37,7 @@ import ch.elexis.core.ui.views.rechnung.Messages;
 import ch.elexis.data.BillingSystem;
 import ch.elexis.data.Patient;
 
+import ch.rgw.tools.StringTool;
 public class InvoiceListHeaderComposite extends Composite {
 	
 	private final static String ALL_PATIENTS_LABEL = Messages.RnControlFieldProvider_allPatients;
@@ -140,7 +141,7 @@ public class InvoiceListHeaderComposite extends Composite {
 		
 		lblLimitWarn = new Label(this, SWT.NONE);
 		lblLimitWarn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		lblLimitWarn.setText("");
+		lblLimitWarn.setText(StringTool.leer);
 		defaultBackgroundColor = lblLimitWarn.getBackground();
 		
 		Label btnClear = new Label(this, SWT.FLAT);
@@ -280,8 +281,8 @@ public class InvoiceListHeaderComposite extends Composite {
 	private void clearValues(){
 		comboViewerStatus.setSelection(new StructuredSelection(InvoiceState.OPEN));
 		comboViewerType.setSelection(new StructuredSelection(ALL_ELEMENTS_LABEL));
-		txtInvoiceno.setText("");
-		txtAmount.setText("");
+		txtInvoiceno.setText(StringTool.leer);
+		txtAmount.setText(StringTool.leer);
 		actPatient = null;
 		lblPatientname.setText(ALL_PATIENTS_LABEL);
 	}
@@ -352,8 +353,8 @@ public class InvoiceListHeaderComposite extends Composite {
 				"Result set was limited to " + queryLimit + ", you do not see all results!");
 			lblLimitWarn.setBackground(UiDesk.getColor(UiDesk.COL_RED));
 		} else {
-			lblLimitWarn.setText("");
-			lblLimitWarn.setToolTipText("");
+			lblLimitWarn.setText(StringTool.leer);
+			lblLimitWarn.setToolTipText(StringTool.leer);
 			lblLimitWarn.setBackground(defaultBackgroundColor);
 		}
 	}

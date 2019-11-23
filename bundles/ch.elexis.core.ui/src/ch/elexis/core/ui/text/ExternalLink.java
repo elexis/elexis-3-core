@@ -23,6 +23,7 @@ import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.util.IKonsExtension;
 
+import ch.rgw.tools.StringTool;
 public class ExternalLink implements IKonsExtension {
 	public static final String ID = "ch.elexis.text.ExternalLink"; //$NON-NLS-1$
 	
@@ -41,7 +42,7 @@ public class ExternalLink implements IKonsExtension {
 	public boolean doXRef(String refProvider, String refID){
 		try {
 			int r = refID.lastIndexOf('.');
-			String ext = ""; //$NON-NLS-1$
+			String ext = StringTool.leer; //$NON-NLS-1$
 			if (r != -1) {
 				ext = refID.substring(r + 1);
 			}

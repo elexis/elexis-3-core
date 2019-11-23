@@ -16,6 +16,7 @@ import ch.elexis.data.LabItem;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.PersistentObject;
 
+import ch.rgw.tools.StringTool;
 public class LabItemLabelProvider extends ColumnLabelProvider implements ILabelProvider {
 	public enum ItemLabelFields {
 			REFERENCES, KUERZEL, NAME, GROUP, UNIT
@@ -70,7 +71,7 @@ public class LabItemLabelProvider extends ColumnLabelProvider implements ILabelP
 	}
 	
 	private String getItemLabelField(ItemLabelFields itemLabelField, LabItem element){
-		String ret = "";
+		String ret = StringTool.leer;
 		String[] values = ((LabItem) element).get(true, LabItem.SHORTNAME, LabItem.TITLE,
 			LabItem.GROUP, LabItem.UNIT);
 			

@@ -43,6 +43,7 @@ import ch.rgw.tools.Log;
  * </ARTIKEL> <br>
  * 
  */
+import ch.rgw.tools.StringTool;
 public class XML2Database {
 	// TODO -> to delete?
 	protected static Log log = Log.get(XML2Database.class.getName());
@@ -92,7 +93,7 @@ public class XML2Database {
 		private void writeCloseSign(boolean newLine){
 			buffer.append(">");
 			if (newLine) {
-				buffer.append("\n");
+				buffer.append(StringTool.lf);
 			}
 			elementOpened = false;
 		}
@@ -117,9 +118,9 @@ public class XML2Database {
 		
 		private void addAttribute(final String attribute, final String value){
 			if (elementOpened) {
-				buffer.append(" " + attribute + "=\"" + value + "\"");
+				buffer.append(StringTool.space + attribute + "=\"" + value + StringTool.backslash);
 			} else {
-				throw new IllegalAddException("");
+				throw new IllegalAddException(StringTool.leer);
 			}
 		}
 		
@@ -204,7 +205,7 @@ public class XML2Database {
 				tableNode.getAttributes().getNamedItem(CLASS_ATTRIBUTE).getNodeValue();
 			Class javaClass = Class.forName(className);
 			String uidValue = null;
-			String uidVersion = "";
+			String uidVersion = StringTool.leer;
 			
 			// Read fields
 			List<DataField> fieldList = new Vector<DataField>();

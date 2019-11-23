@@ -31,6 +31,7 @@ import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.JdbcLinkException;
 
+import ch.rgw.tools.StringTool;
 public class SqlWithUiRunner {
 	static Log log = Log.get("SqlWithUiRunner");
 	
@@ -46,7 +47,7 @@ public class SqlWithUiRunner {
 		sqlStrings = new ArrayList<String>();
 		for (int i = 0; i < sql.length; i++) {
 			String sqlString = sql[i];
-			sqlString = sqlString.replaceAll("\r", "");
+			sqlString = sqlString.replaceAll("\r", StringTool.leer);
 			String[] parts = sqlString.split("\n\n");
 			for (String part : parts) {
 				sqlStrings.add(part);

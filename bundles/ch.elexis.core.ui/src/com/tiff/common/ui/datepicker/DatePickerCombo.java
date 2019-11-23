@@ -57,6 +57,7 @@ import org.eclipse.swt.widgets.TypedListener;
  * @author <a href="mailto:andy@tiff.ru">Andrey Onistchuk</a>
  * @version $Revision: 1.1 $
  */
+import ch.rgw.tools.StringTool;
 public class DatePickerCombo extends Composite {
 	// ~ Static methods ---------------------------------------------------------
 	
@@ -437,7 +438,7 @@ public class DatePickerCombo extends Composite {
 			Date date = dp.getDate();
 			
 			if (date == null) {
-				text.setText("");
+				text.setText(StringTool.leer);
 			} else {
 				text.setText(getFormat().format(date));
 				text.selectAll();
@@ -830,7 +831,7 @@ public class DatePickerCombo extends Composite {
 			text.selectAll();
 			dp.setDate(date);
 		} else {
-			text.setText("");
+			text.setText(StringTool.leer);
 		}
 		
 		dp.setDate(date);

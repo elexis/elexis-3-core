@@ -174,7 +174,7 @@ public class AppointmentService implements IAppointmentService {
 		}
 		
 		Hashtable<String, String> map = StringTool.foldStrings(
-			ConfigServiceHolder.get().get("agenda/tagesvorgaben" + "/" + schedule, null));
+			ConfigServiceHolder.get().get("agenda/tagesvorgaben" + StringTool.slash + schedule, null));
 		if (map == null) {
 			map = new Hashtable<String, String>();
 		}
@@ -188,7 +188,7 @@ public class AppointmentService implements IAppointmentService {
 		String[] flds = ds.split("\r*\n\r*"); //$NON-NLS-1$
 		for (String fld : flds) {
 			String from = fld.substring(0, 4);
-			String until = fld.replaceAll("-", "").substring(4); //$NON-NLS-1$ //$NON-NLS-2$
+			String until = fld.replaceAll("-", StringTool.leer).substring(4); //$NON-NLS-1$ //$NON-NLS-2$
 			// Lege Termine für die Tagesgrenzen an
 			IAppointment iAppointment = CoreModelServiceHolder.get().create(IAppointment.class);
 			LocalDateTime startTime =

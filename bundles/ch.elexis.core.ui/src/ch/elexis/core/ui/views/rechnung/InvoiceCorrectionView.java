@@ -232,7 +232,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 				&& !invoiceCorrectionDTO.getErrors().isEmpty()) {
 				StringBuilder builder = new StringBuilder();
 				for (ElexisException e : invoiceCorrectionDTO.getErrors()) {
-					builder.append("\n" + e.getMessage());
+					builder.append(StringTool.lf + e.getMessage());
 				}
 				MessageDialog.openWarning(getSite().getShell(), "Rechnungskorrektur",
 					"Die Rechnung " + invoiceCorrectionDTO.getInvoiceNumber()
@@ -365,7 +365,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 			gd1.marginHeight = 0;
 			body.setLayout(gd1);
 			
-			ExpandableComposite expandable = WidgetFactory.createExpandableComposite(tk, form, ""); //$NON-NLS-1$
+			ExpandableComposite expandable = WidgetFactory.createExpandableComposite(tk, form, StringTool.leer); //$NON-NLS-1$
 			expandable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 			expandable.setExpanded(false);
 			expandable.setText("Rechnungsangaben");
@@ -398,7 +398,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 					Text text = new Text(group, SWT.BORDER | SWT.READ_ONLY);
 					text.setBackground(colWhite);
 					text.setLayoutData(gd);
-					text.setText(detailText != null ? detailText : "");
+					text.setText(detailText != null ? detailText : StringTool.leer);
 				}
 			}
 			new Label(group, SWT.NONE).setText("Bemerkung");
@@ -409,7 +409,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 			txtMulti.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
 			txtMulti.setLayoutData(gd2);
 			txtMulti.setText(invoiceCorrectionDTO.getBemerkung() != null
-					? invoiceCorrectionDTO.getBemerkung() : "");
+					? invoiceCorrectionDTO.getBemerkung() : StringTool.leer);
 			
 			if (invoiceCorrectionDTO.getNewInvoiceNumber() != null) {
 				if (!invoiceCorrectionDTO.getNewInvoiceNumber().isEmpty()) {
@@ -525,7 +525,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 			gd1.marginWidth = 0;
 			gd1.marginHeight = 0;
 			body.setLayout(gd1);
-			ExpandableComposite expandable = WidgetFactory.createExpandableComposite(tk, form, ""); //$NON-NLS-1$
+			ExpandableComposite expandable = WidgetFactory.createExpandableComposite(tk, form, StringTool.leer); //$NON-NLS-1$
 			expandable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 			expandable.setExpanded(false);
 			expandable.setText("Fallangaben");
@@ -586,7 +586,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 				gd1.marginHeight = 1;
 				body.setLayout(gd1);
 				ExpandableComposite expandable =
-					WidgetFactory.createExpandableComposite(tk, form, ""); //$NON-NLS-1$
+					WidgetFactory.createExpandableComposite(tk, form, StringTool.leer); //$NON-NLS-1$
 				expandable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 				expandable.setExpanded(false);
 				expandable.addExpansionListener(new ExpansionAdapter() {
@@ -1056,7 +1056,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 					return leistungDTO.getPrice() != null
 							? leistungDTO.getPrice().getAmountAsString() : "0";
 				default:
-					return "";
+					return StringTool.leer;
 				}
 				
 			}
@@ -1212,7 +1212,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 				case 0:
 					return diagnosesDTO.getLabel();
 				default:
-					return "";
+					return StringTool.leer;
 				}
 			}
 		}
@@ -1376,7 +1376,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 								txtBemerkung.append(actualInvoice.getBemerkung());
 							}
 							if (txtBemerkung.length() > 0) {
-								txtBemerkung.append("\n");
+								txtBemerkung.append(StringTool.lf);
 							}
 							txtBemerkung.append(invoiceCorrectionDTO.getOutputText());
 							actualInvoice.setBemerkung(txtBemerkung.toString());
@@ -1404,7 +1404,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 		if (actualInvoice != null && invoiceCorrectionDTO != null) {
 			
 			actualInvoice.setExtInfoStoredObjectByKey(Rechnung.INVOICE_CORRECTION,
-				StringUtils.isEmpty(invoiceCorrectionDTO.getNewInvoiceNumber()) ? ""
+				StringUtils.isEmpty(invoiceCorrectionDTO.getNewInvoiceNumber()) ? StringTool.leer
 						: invoiceCorrectionDTO.getNewInvoiceNumber());
 		}
 	}

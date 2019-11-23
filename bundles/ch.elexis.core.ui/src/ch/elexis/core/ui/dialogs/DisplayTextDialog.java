@@ -31,6 +31,7 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Patient;
 
+import ch.rgw.tools.StringTool;
 public class DisplayTextDialog extends TitleAreaDialog {
 	String t, m, cnt;
 	Boolean hS = true;
@@ -68,7 +69,7 @@ public class DisplayTextDialog extends TitleAreaDialog {
 		} else {
 			cnt = cnt.replaceAll("<", "&lt;");
 			cnt = cnt.replaceAll(">", "&gt;");
-			cnt = cnt.replaceAll("\n", "<br />");
+			cnt = cnt.replaceAll(StringTool.lf, "<br />");
 			cnt = cnt.replaceAll("\\*\\.(.{1,30})\\.\\*", "<b>$1</b>");
 			cnt = cnt.replaceAll("\\\\\\.br\\\\", "<br/>");
 			cnt = cnt.replaceAll("\\\\\\.BR\\\\", "<br/>");

@@ -95,6 +95,7 @@ import ch.elexis.data.Reminder;
 import ch.rgw.io.Settings;
 import ch.rgw.tools.TimeTool;
 
+import ch.rgw.tools.StringTool;
 public class ReminderView extends ViewPart implements IActivationListener, HeartListener {
 	
 	public static final String ID = "ch.elexis.reminderview"; //$NON-NLS-1$
@@ -165,7 +166,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 						if (list.size() != 0) {
 							StringBuilder sb = new StringBuilder();
 							for (Reminder r : list) {
-								sb.append(r.getSubject() + "\n");
+								sb.append(r.getSubject() + StringTool.lf);
 								sb.append(r.getMessage() + "\n\n");
 							}
 							SWTHelper.alert(Messages.ReminderView_importantRemindersCaption,
@@ -891,7 +892,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		private void applyDueDateFilter(Query<Reminder> qbe){
 			TimeTool dueDateDays = new TimeTool();
 			dueDateDays.addDays(filterDueDateDays);
-			qbe.add(Reminder.FLD_DUE, Query.NOT_EQUAL, "");
+			qbe.add(Reminder.FLD_DUE, Query.NOT_EQUAL, StringTool.leer);
 			qbe.add(Reminder.FLD_DUE, Query.LESS_OR_EQUAL,
 				dueDateDays.toString(TimeTool.DATE_COMPACT));
 		}

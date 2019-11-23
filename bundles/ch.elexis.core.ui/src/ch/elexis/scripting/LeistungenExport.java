@@ -26,6 +26,7 @@ import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.TimeTool;
 
+import ch.rgw.tools.StringTool;
 public class LeistungenExport {
 	class patums {
 		String ID;
@@ -119,13 +120,13 @@ public class LeistungenExport {
 						String gesetz = fall.getConfiguredBillingSystemLaw().name();
 						String abr = fall.getAbrechnungsSystem();
 						Kontakt kt = fall.getGarant();
-						String rechnungsempfaenger = "";
+						String rechnungsempfaenger = StringTool.leer;
 						if (kt != null) {
 							rechnungsempfaenger = fall.getGarant().getLabel();
 						}
 						Kontakt costBearer = fall.getCostBearer();
-						String kostentraeger = "";
-						String versnr = "";
+						String kostentraeger = StringTool.leer;
+						String versnr = StringTool.leer;
 						if (costBearer != null) {
 							kostentraeger = costBearer.getLabel();
 							versnr = fall.getRequiredString("Versicherungsnummer");
@@ -136,7 +137,7 @@ public class LeistungenExport {
 							for (Verrechnet v : vr) {
 								String[] col = new String[cols.length];
 								for (int i = 0; i < cols.length; i++) {
-									col[i] = "";
+									col[i] = StringTool.leer;
 								}
 								col[UUID] = v.getId();
 								col[PatientID] = pat.getId();

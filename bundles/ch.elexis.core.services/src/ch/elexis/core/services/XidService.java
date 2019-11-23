@@ -27,6 +27,7 @@ import ch.elexis.core.model.XidQuality;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.internal.TransientXid;
 
+import ch.rgw.tools.StringTool;
 @Component
 public class XidService implements IXidService {
 	
@@ -80,7 +81,7 @@ public class XidService implements IXidService {
 				if (spl.length < 2) {
 					logger.error("Fehler in XID-Domain " + domainString);
 				}
-				String simpleName = "";
+				String simpleName = StringTool.leer;
 				if (spl.length >= 3) {
 					simpleName = spl[2];
 				}
@@ -113,7 +114,7 @@ public class XidService implements IXidService {
 			if (domainName.matches(".*[;#].*")) {
 				logger.error("XID Domain " + domainName + " ungültig");
 			} else {
-				XidDomain created = new XidDomain(domainName, simpleName == null ? "" : simpleName,
+				XidDomain created = new XidDomain(domainName, simpleName == null ? StringTool.leer : simpleName,
 						quality, "Kontakt");
 				domains.put(domainName, created);
 				if (simpleName != null) {

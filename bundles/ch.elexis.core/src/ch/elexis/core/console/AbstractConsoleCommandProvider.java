@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
  * method. And every sub-method to sub-method (separated with a single underscore) is treated same.
  * 
  */
+import ch.rgw.tools.StringTool;
 public abstract class AbstractConsoleCommandProvider implements CommandProvider {
 	
 	public final Logger logger = LoggerFactory.getLogger(getClass());
@@ -49,7 +50,7 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 				methods.put(method.getName(), method);
 			} else if (method.getName().startsWith("_")) {
 				CmdAdvisor advisor = method.getDeclaredAnnotation(CmdAdvisor.class);
-				String description = (advisor != null) ? advisor.description() : "";
+				String description = (advisor != null) ? advisor.description() : StringTool.leer;
 				commandsHelp.put(method.getName().substring(1), description);
 			}
 			
@@ -90,7 +91,7 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 		
 		subArguments = Arrays.copyOfRange(arguments, i, arguments.length);
 		
-		String joinedArguments = String.join(" ", arguments);
+		String joinedArguments = String.join(StringTool.space, arguments);
 		ci.println("--( " + new Date() + " )---[cmd: " + joinedArguments + "]"
 			+ getRelativeFixedLengthSeparator(joinedArguments, 100, "-"));
 		
@@ -106,7 +107,7 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 				} else if (clazz.equals(List.class)) {
 					result = method.invoke(this, Arrays.asList(subArguments));
 				} else if (clazz.equals(String.class)) {
-					result = method.invoke(this, subArguments.length > 0 ? subArguments[0] : "");
+					result = method.invoke(this, subArguments.length > 0 ? subArguments[0] : StringTool.leer);
 				} else {
 					ci.println("invalid parameter type " + clazz);
 				}
@@ -143,12 +144,12 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 	public String getRelativeFixedLengthSeparator(String value, int determinedLength,
 		String separator){
 		if (value == null) {
-			return "";
+			return StringTool.leer;
 		}
 		if (value.length() > determinedLength) {
 			determinedLength = value.length() + 1;
 		}
-		return String.join("", Collections.nCopies(determinedLength - value.length(), separator));
+		return String.join(StringTool.leer, Collections.nCopies(determinedLength - value.length(), separator));
 	}
 	
 	public void fail(String message){
@@ -169,7 +170,7 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 	
 	@Override
 	public String getHelp(){
-		return getHelp("");
+		return getHelp(StringTool.leer);
 	}
 	
 	public void printHelp(String... sub){
@@ -181,7 +182,7 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 		help.append("---"); //$NON-NLS-1$
 		help.append(header);
 		help.append("---"); //$NON-NLS-1$
-		help.append("\n");
+		help.append(StringTool.lf);
 	}
 	
 	/** Private helper method for getHelp. Formats the command descriptions. */
@@ -190,7 +191,7 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 		help.append(command);
 		help.append(" - "); //$NON-NLS-1$
 		help.append(description);
-		help.append("\n");
+		help.append(StringTool.lf);
 	}
 	
 	public String getHelp(String... sub){
@@ -199,12 +200,12 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 			return printOverviewHelp();
 		}
 		if (StringUtils.isBlank(sub[0])) {
-			return "";
+			return StringTool.leer;
 		}
 		String[] methodSignatures = methods.keySet().toArray(new String[] {});
 		
-		sb.append(StringUtils.join(sub, " "));
-		sb.append(" ");
+		sb.append(StringUtils.join(sub, StringTool.space));
+		sb.append(StringTool.space);
 		
 		Set<String> relevant = new HashSet<>();
 		for (int i = 0; i < methodSignatures.length; i++) {
@@ -221,20 +222,20 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 		}
 		
 		if (relevant.isEmpty()) {
-			return "Sub/Command not found: " + StringUtils.join(sub, " ");
+			return "Sub/Command not found: " + StringUtils.join(sub, StringTool.space);
 		}
 		
 		// flatten the set (prevents mulitple entries) to a list
 		List<String> helpList = new ArrayList<>(relevant);
 		Collections.sort(helpList, Comparator.naturalOrder());
 		
-		sb.append("(" + helpList.stream().reduce((u, t) -> u + " | " + t).orElse("") + ")\n");
+		sb.append("(" + helpList.stream().reduce((u, t) -> u + " | " + t).orElse(StringTool.leer) + ")\n");
 		for (String string : helpList) {
 			String methodKey = "__"+StringUtils.join(sub, "_")+"_"+string;
 			Method method = methods.get(methodKey);
 			if(method!=null) {
 				CmdAdvisor declaredAnnotation = method.getDeclaredAnnotation(CmdAdvisor.class);
-				addCommand(string, (declaredAnnotation!=null) ? declaredAnnotation.description(): "", sb);
+				addCommand(string, (declaredAnnotation!=null) ? declaredAnnotation.description(): StringTool.leer, sb);
 			} else {
 				sb.append("\t"+string+" - [see subcommand]\n");
 			}

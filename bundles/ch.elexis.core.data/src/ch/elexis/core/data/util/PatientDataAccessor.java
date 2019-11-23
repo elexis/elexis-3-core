@@ -10,6 +10,7 @@ import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.Result;
 
+import ch.rgw.tools.StringTool;
 public class PatientDataAccessor implements IDataAccess {
 	private static final String GESETZVERTRETER_UMLAUT = "Gesetzlicher Vertreter";
 	private static final String GESETZVERTRETER_KUERZEL_UMLAUT = "Gesetzlicher Vertreter Kürzel";
@@ -67,7 +68,7 @@ public class PatientDataAccessor implements IDataAccess {
 	@Override
 	public Result<Object> getObject(String descriptor, PersistentObject dependentObject,
 		String dates, String[] params){
-		Result<Object> result = new Result<Object>("");
+		Result<Object> result = new Result<Object>(StringTool.leer);
 		
 		Patient patient = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
 		

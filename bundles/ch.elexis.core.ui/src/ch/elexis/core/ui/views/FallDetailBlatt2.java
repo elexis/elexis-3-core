@@ -228,7 +228,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				boolean isDisabled = BillingSystem.isDisabled(abrechungsMethodeStr);
 				IFall fall = getSelectedFall();
 				// get previously selected item/gesetz if we need to reset
-				String gesetz = ""; //$NON-NLS-1$
+				String gesetz = StringTool.leer; //$NON-NLS-1$
 				if (fall != null)
 					gesetz = fall.getAbrechnungsSystem();
 				if (ch.rgw.tools.StringTool.isNothing(gesetz))
@@ -601,7 +601,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		cAbrechnung.setItems(Abrechnungstypen);
 		if (f == null) {
 			form.setText(Messages.FallDetailBlatt2_NoCaseSelected); //$NON-NLS-1$
-			tBezeichnung.setText("");
+			tBezeichnung.setText(StringTool.leer);
 			tBezeichnung.setMessage(Messages.FallDetailBlatt2_29);
 			cReason.select(0);
 			return;
@@ -760,7 +760,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		String delim = StringTool.leer;
 		for (int uhi = 0; uhi < unusedHashStringArray.length; uhi++) {
 			String unusedItem = unusedHashStringArray[uhi];
-			String[] itemParts = unusedItem.split("="); //$NON-NLS-1$
+			String[] itemParts = unusedItem.split(StringTool.equals); //$NON-NLS-1$
 			String controlName = itemParts[0];
 			String[] controlDefParts = itemParts[1].split(ARGUMENTSSDELIMITER);
 			String controlType = controlDefParts[0];
@@ -813,7 +813,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		for (int i = 0; i < arr.length; i++) {
 			String subkey = (String) arr[i];
 			String abrSystem = getSelectedFall().getAbrechnungsSystem();
-			String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + abrSystem; //$NON-NLS-1$
+			String key = Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash + abrSystem; //$NON-NLS-1$
 			String bed = CoreHub.globalCfg.get(key + "/bedingungen", StringTool.leer); //$NON-NLS-1$
 			boolean isAlreadyShown = false;
 			if (subkey.equalsIgnoreCase(FallConstants.FLD_EXTINFO_BILLING))
@@ -994,7 +994,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	 * @param fieldList
 	 *            this is the fieldList from the prefs for required OR optional fields
 	 * @param TitleBarText
-	 *            if not "" and not null then show a bar-separator on top of the fields
+	 *            if not StringTool.leer and not null then show a bar-separator on top of the fields
 	 * @param deletable
 	 *            is this deletable? - show delete button
 	 *            <p>
@@ -1095,8 +1095,8 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 						// textContainer.replaceSQLClause(dummyBrief, "SQL:" +
 						// r[3]);
 						String itemsStr = (String) TextContainer.replaceSQLClause("SQL:" + r[3]); //$NON-NLS-1$
-						itemsStr = itemsStr.replaceAll("\r\n", ITEMDELIMITER); //$NON-NLS-1$
-						itemsStr = (itemsStr.replaceAll("\n", ITEMDELIMITER)).replaceAll("\r", //$NON-NLS-1$//$NON-NLS-2$
+						itemsStr = itemsStr.replaceAll(StringTool.crlf, ITEMDELIMITER); //$NON-NLS-1$
+						itemsStr = (itemsStr.replaceAll(StringTool.lf, ITEMDELIMITER)).replaceAll("\r", //$NON-NLS-1$//$NON-NLS-2$
 							ITEMDELIMITER);
 						items = itemsStr.split(ITEMDELIMITER);
 					}
@@ -1432,7 +1432,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					@SuppressWarnings("unchecked")
 					Map<Object, Object> ht = f.getMap("extinfo"); //$NON-NLS-1$
 					if (SWTHelper.askYesNo(StringTool.leer,
-						Messages.FallDetailBlatt2_DoYouWantToDeleteThisData + key + "/" //$NON-NLS-1$
+						Messages.FallDetailBlatt2_DoYouWantToDeleteThisData + key + StringTool.slash //$NON-NLS-1$
 							+ ht.get(key) + Messages.FallDetailBlatt2_reallyFromTheCase)) { //$NON-NLS-2$ //$NON-NLS-3$
 						ht.remove(key);
 						f.setMap("extinfo", ht); //$NON-NLS-1$

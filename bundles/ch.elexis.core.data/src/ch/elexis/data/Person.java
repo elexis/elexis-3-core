@@ -40,7 +40,7 @@ public class Person extends Kontakt {
 	public static final String FEMALE = "w"; //$NON-NLS-1$
 	
 	static {
-		addMapping(Kontakt.TABLENAME, NAME + "=" + Kontakt.FLD_NAME1, FIRSTNAME + "="
+		addMapping(Kontakt.TABLENAME, NAME + StringTool.equals + Kontakt.FLD_NAME1, FIRSTNAME + StringTool.equals
 			+ Kontakt.FLD_NAME2, "Zusatz 		=" + Kontakt.FLD_NAME3,
 			BIRTHDATE + "=	S:D:Geburtsdatum", SEX, MOBILE + "=NatelNr", //$NON-NLS-1$ //$NON-NLS-2$
 			Kontakt.FLD_IS_PERSON, TITLE, FLD_TITLE_SUFFIX);

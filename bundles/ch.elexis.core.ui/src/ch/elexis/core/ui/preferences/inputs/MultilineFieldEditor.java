@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.ui.util.SWTHelper;
 
+import ch.rgw.tools.StringTool;
 public class MultilineFieldEditor extends StringFieldEditor {
 	Text textField;
 	int numOfLines;
@@ -80,7 +81,7 @@ public class MultilineFieldEditor extends StringFieldEditor {
 		if (textField != null) {
 			String value = getPreferenceStore().getString(getPreferenceName());
 			if (isStringList) {
-				value = value.replaceAll(",", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				value = value.replaceAll(",", StringTool.lf); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			textField.setText(value);
 		}

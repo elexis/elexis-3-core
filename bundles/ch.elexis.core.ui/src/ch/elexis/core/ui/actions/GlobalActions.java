@@ -862,7 +862,7 @@ public class GlobalActions {
 				prn.startPage();
 				FontMetrics fmt = gc.getFontMetrics();
 				String pers = k.getPostAnschrift(true);
-				String[] lines = pers.split("\n"); //$NON-NLS-1$
+				String[] lines = pers.split(StringTool.lf); //$NON-NLS-1$
 				for (String line : lines) {
 					gc.drawString(line, 0, y);
 					y += fmt.getHeight();
@@ -890,7 +890,7 @@ public class GlobalActions {
 	 * @return a PrinterData object describing the selected printer
 	 */
 	private PrinterData getPrinterData(final String type){
-		String cfgPrefix = "Drucker/" + type + "/"; //$NON-NLS-1$ //$NON-NLS-2$ $NON-NLS-2$
+		String cfgPrefix = "Drucker/" + type + StringTool.slash; //$NON-NLS-1$ //$NON-NLS-2$ $NON-NLS-2$
 		
 		PrinterData pd = null;
 		String printer = CoreHub.localCfg.get(cfgPrefix + "Name", null); //$NON-NLS-1$

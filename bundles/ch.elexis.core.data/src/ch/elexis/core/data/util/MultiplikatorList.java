@@ -207,7 +207,7 @@ public class MultiplikatorList {
 	
 	private static String[] getEigenleistungUseMultiSystems(){
 		String systems =
-			CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS, "");
+			CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS, StringTool.leer);
 		return systems.split("\\|\\|");
 	}
 	
@@ -223,7 +223,7 @@ public class MultiplikatorList {
 	
 	public static void setEigenleistungUseMulti(String system){
 		String systems =
-			CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS, "");
+			CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS, StringTool.leer);
 		if (!systems.isEmpty()) {
 			systems = systems.concat("||");
 		}

@@ -53,6 +53,7 @@ import ch.elexis.data.PersistentObject;
 import ch.elexis.data.VerrechenbarFavorites;
 import ch.elexis.data.VerrechenbarFavorites.Favorite;
 
+import ch.rgw.tools.StringTool;
 public class FavoritenComposite extends Composite {
 	
 	private TableViewer tv;
@@ -273,7 +274,7 @@ public class FavoritenComposite extends Composite {
 	private class ColorizedLabelProvider extends LabelProvider implements IColorProvider {
 		@Override
 		public String getText(Object element){
-			return "";
+			return StringTool.leer;
 		}
 		
 		@Override

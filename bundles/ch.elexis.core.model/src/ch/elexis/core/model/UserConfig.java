@@ -6,6 +6,7 @@ import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 
+import ch.rgw.tools.StringTool;
 public class UserConfig extends AbstractIdModelAdapter<ch.elexis.core.jpa.entities.Userconfig>
 		implements IdentifiableWithXid, IUserConfig {
 	
@@ -20,7 +21,7 @@ public class UserConfig extends AbstractIdModelAdapter<ch.elexis.core.jpa.entiti
 	
 	@Override
 	public String getLabel(){
-		return getEntity().getOwnerId() + " " + getEntity().getParam() + " -> "
+		return getEntity().getOwnerId() + StringTool.space + getEntity().getParam() + " -> "
 			+ getEntity().getValue();
 	}
 	

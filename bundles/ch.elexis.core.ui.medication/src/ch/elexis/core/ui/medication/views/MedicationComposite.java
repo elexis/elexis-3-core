@@ -79,6 +79,7 @@ import ch.elexis.core.ui.util.CreatePrescriptionHelper;
 import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.views.controls.InteractionLink;
 
+import ch.rgw.tools.StringTool;
 public class MedicationComposite extends Composite
 		implements ISelectionProvider, ISelectionChangedListener {
 	
@@ -185,8 +186,8 @@ public class MedicationComposite extends Composite
 	}
 	
 	private void clearSearchFilter(){
-		txtSearch.setText("");
-		medicationHistoryFilter.setSearchText("");
+		txtSearch.setText(StringTool.leer);
+		medicationHistoryFilter.setSearchText(StringTool.leer);
 	}
 	
 	private void medicationTableComposite(IWorkbenchPartSite partSite){
@@ -738,7 +739,7 @@ public class MedicationComposite extends Composite
 	}
 	
 	private void showSearchFilterComposite(boolean show){
-		medicationHistoryFilter.setSearchText("");
+		medicationHistoryFilter.setSearchText(StringTool.leer);
 		compositeSearchFilterLayoutData.exclude = !show;
 		compositeSearchFilter.setVisible(show);
 		this.layout(true);
@@ -772,7 +773,7 @@ public class MedicationComposite extends Composite
 		
 		contentProviderComp.refresh();
 		selectedMedication.setValue(null);
-		lblLastDisposalLink.setText("");
+		lblLastDisposalLink.setText(StringTool.leer);
 		showMedicationDetailComposite(null);
 		
 		if (medicationInput != null) {
@@ -781,7 +782,7 @@ public class MedicationComposite extends Composite
 			interactionLink.updateAtcs(MedicationViewHelper.getAllGtins(medicationInput));
 		
 		} else {
-			lblDailyTherapyCost.setText("");
+			lblDailyTherapyCost.setText(StringTool.leer);
 			interactionLink.updateAtcs(Collections.emptyList());
 		}
 	}
@@ -803,17 +804,17 @@ public class MedicationComposite extends Composite
 			&& signatureArray[2].isEmpty() && signatureArray[3].isEmpty();
 		if (isFreetext) {
 			txtFreeText.setText(signatureArray[0]);
-			txtMorning.setText("");
-			txtNoon.setText("");
-			txtEvening.setText("");
-			txtNight.setText("");
+			txtMorning.setText(StringTool.leer);
+			txtNoon.setText(StringTool.leer);
+			txtEvening.setText(StringTool.leer);
+			txtNight.setText(StringTool.leer);
 			
 			if (stackLayoutDosage.topControl == compositeDayTimeDosage) {
 				stackLayoutDosage.topControl = compositeFreeTextDosage;
 				stackCompositeDosage.layout();
 			}
 		} else {
-			txtFreeText.setText("");
+			txtFreeText.setText(StringTool.leer);
 			txtMorning.setText(signatureArray[0]);
 			txtNoon.setText(signatureArray[1]);
 			txtEvening.setText(signatureArray[2]);
@@ -907,7 +908,7 @@ public class MedicationComposite extends Composite
 	public void setLastDisposal(Identifiable identifiable){
 		lastDisposal.setValue(identifiable);
 		if (identifiable != null) {
-			String label = "";
+			String label = StringTool.leer;
 			if (identifiable instanceof IRecipe) {
 				IRecipe rp = (IRecipe) identifiable;
 				label = MessageFormat.format(Messages.MedicationComposite_recipeFrom,
@@ -923,7 +924,7 @@ public class MedicationComposite extends Composite
 			}
 			lblLastDisposalLink.setText(label);
 		} else {
-			lblLastDisposalLink.setText("");
+			lblLastDisposalLink.setText(StringTool.leer);
 		}
 	}
 	

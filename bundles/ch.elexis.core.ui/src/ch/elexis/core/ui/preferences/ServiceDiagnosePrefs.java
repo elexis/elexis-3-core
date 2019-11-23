@@ -47,6 +47,7 @@ import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.views.IDetailDisplay;
 
+import ch.rgw.tools.StringTool;
 public class ServiceDiagnosePrefs extends PreferencePage implements IWorkbenchPreferencePage {
 	private static final String FAVORITES = "Favoriten";
 	private ComboViewer cmbViewer;
@@ -188,7 +189,7 @@ public class ServiceDiagnosePrefs extends PreferencePage implements IWorkbenchPr
 		TableViewerColumn tvCol = new TableViewerColumn(viewer, SWT.NONE);
 		tvCol.setLabelProvider(new ColumnLabelProvider());
 		TableColumn column = tvCol.getColumn();
-		column.setText("");
+		column.setText(StringTool.leer);
 		column.setWidth(150);
 		column.setResizable(false);
 		column.setMoveable(false);

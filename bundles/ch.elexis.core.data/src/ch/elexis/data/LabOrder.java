@@ -21,6 +21,7 @@ import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.VersionInfo;
 
+import ch.rgw.tools.StringTool;
 public class LabOrder extends PersistentObject implements Comparable<LabOrder>, ILabOrder {
 	
 	public static final String FLD_USER = "userid"; //$NON-NLS-1$
@@ -175,14 +176,14 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder>, 
 	}
 	
 	public LabResult createResult(){
-		LabResult result = new LabResult(getPatient(), null, getLabItem(), "", null);
+		LabResult result = new LabResult(getPatient(), null, getLabItem(), StringTool.leer, null);
 		result.setObservationTime(getObservationTime());
 		setLabResult(result);
 		return result;
 	}
 	
 	public LabResult createResult(Kontakt origin){
-		LabResult result = new LabResult(getPatient(), null, getLabItem(), "", null, origin);
+		LabResult result = new LabResult(getPatient(), null, getLabItem(), StringTool.leer, null, origin);
 		result.setObservationTime(getObservationTime());
 		setLabResult(result);
 		return result;
@@ -235,7 +236,7 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder>, 
 		for (Reminder reminder : reminders) {
 			String params = reminder.get(Reminder.FLD_PARAMS);
 			if (params.startsWith(LabOrder.FLD_ORDERID)) {
-				String[] parts = params.split("="); //$NON-NLS-1$
+				String[] parts = params.split(StringTool.equals); //$NON-NLS-1$
 				if (parts.length == 2) {
 					if (parts[1].equals(get(FLD_ORDERID))) {
 						reminder.setStatus(ProcessStatus.CLOSED);

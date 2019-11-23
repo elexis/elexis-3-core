@@ -58,6 +58,7 @@ import ch.rgw.tools.Log;
  * @author gerry
  * 
  */
+import ch.rgw.tools.StringTool;
 public class LabNotSeenView extends ViewPart implements HeartListener {
 	public final static String ID = "ch.elexis.LabNotSeenView"; //$NON-NLS-1$
 	CheckboxTableViewer tv;
@@ -160,7 +161,7 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 		
 		public String getColumnText(final Object element, final int columnIndex){
 			if (element instanceof String) {
-				return columnIndex == 0 ? (String) element : ""; //$NON-NLS-1$
+				return columnIndex == 0 ? (String) element : StringTool.leer; //$NON-NLS-1$
 			}
 			LabResult lr = (LabResult) element;
 			switch (columnIndex) {

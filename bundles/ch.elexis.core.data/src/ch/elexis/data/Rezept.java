@@ -109,7 +109,7 @@ public class Rezept extends PersistentObject {
 		if (m == null) {
 			return getDate() + " (unbekannt)";
 		}
-		return getDate() + " " + m.getLabel();
+		return getDate() + StringTool.space + m.getLabel();
 	}
 	
 	/**

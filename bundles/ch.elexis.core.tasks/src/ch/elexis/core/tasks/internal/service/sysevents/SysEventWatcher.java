@@ -20,7 +20,8 @@ import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.ITaskService;
 import ch.elexis.core.tasks.model.TaskTriggerType;
 
-@Component(property = EventConstants.EVENT_TOPIC + "=" + ElexisEventTopics.BASE + "*")
+import ch.rgw.tools.StringTool;
+@Component(property = EventConstants.EVENT_TOPIC + StringTool.equals + ElexisEventTopics.BASE + "*")
 public class SysEventWatcher implements EventHandler {
 	
 	private static Map<String, Set<ITaskDescriptor>> incurred;

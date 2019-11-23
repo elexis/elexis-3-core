@@ -174,7 +174,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	
 	/**
 	 * the possible states of a tristate checkbox: true/checked, false/unchecked, undefined/ "filled
-	 * with a square"/"partly selected"
+	 * with a squareStringTool.slashpartly selected"
 	 * 
 	 * @since 3.0.0
 	 */
@@ -207,7 +207,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * If the property elexis-run-mode is set to RunFromScratch then the connected database will be
 	 * wiped out and initialized with default values for the mandant (007, topsecret). For mysql and
 	 * postgresql this will only work if the database is empty! Therefore you mus call something
-	 * like ""drop database miniDB; create dabase miniDB;" before starting Elexis.
+	 * like StringTool.leerdrop database miniDB; create dabase miniDB;" before starting Elexis.
 	 * 
 	 * @return true on success
 	 *
@@ -676,7 +676,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return ein Constraint für eine Select-Abfrage
 	 */
 	protected String getConstraint(){
-		return "";
+		return StringTool.leer;
 	}
 	
 	/**
@@ -832,7 +832,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		if (res.size() > 0) {
 			return res.get(0).get(Xid.FLD_ID_IN_DOMAIN);
 		}
-		return "";
+		return StringTool.leer;
 	}
 	
 	/**
@@ -1134,7 +1134,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			int ix = mapped.indexOf(':', 5);
 			if (ix == -1) {
 				log.error("Fehlerhaftes Mapping bei " + field);
-				return MAPPING_ERROR_MARKER + " " + field + "**";
+				return MAPPING_ERROR_MARKER + StringTool.space + field + "**";
 			}
 			table = mapped.substring(4, ix);
 			mapped = mapped.substring(ix + 1);
@@ -1150,7 +1150,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				PersistentObjectFactory fac = new PersistentObjectFactory();
 				for (String[] s : list) {
 					PersistentObject po = fac.createFromString(objdef + s[0], getDBConnection());
-					sb.append(po.getLabel()).append("\n");
+					sb.append(po.getLabel()).append(StringTool.lf);
 				}
 				return sb.toString();
 			}
@@ -1164,7 +1164,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				PersistentObjectFactory fac = new PersistentObjectFactory();
 				for (String s : list) {
 					PersistentObject po = fac.createFromString(objdef + s, getDBConnection());
-					sb.append(po.getLabel()).append("\n");
+					sb.append(po.getLabel()).append(StringTool.lf);
 				}
 				return sb.toString();
 			}
@@ -1191,7 +1191,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				Method mx = getClass().getMethod(method, new Class[0]);
 				Object ro = mx.invoke(this, new Object[0]);
 				if (ro == null) {
-					return "";
+					return StringTool.leer;
 				} else if (ro instanceof String) {
 					return (String) ro;
 				} else if (ro instanceof Integer) {
@@ -1229,7 +1229,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				}
 				getDBConnection().getCache().put(key, res, getCacheTime());
 				if (res == null) {
-					res = "";
+					res = StringTool.leer;
 				}
 			}
 		} catch (SQLException ex) {
@@ -1438,7 +1438,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		if (newVal == null)
 			throw new IllegalArgumentException(
 				"PersistentObject.setTriStateBoolean(): param newVal == null");
-		String saveVal = "";
+		String saveVal = StringTool.leer;
 		if (newVal == TristateBoolean.TRUE)
 			saveVal = StringConstants.ONE;
 		if (newVal == TristateBoolean.FALSE)
@@ -1500,7 +1500,7 @@ public abstract class PersistentObject implements IPersistentObject {
 						.append(" AND ");
 				}
 				
-				sql.append(m[1]).append("=").append(getWrappedId());
+				sql.append(m[1]).append(StringTool.equals).append(getWrappedId());
 				if (m.length > 3) {
 					sql.append(" ORDER by ").append(m[3]);
 					if (reverse) {
@@ -1544,7 +1544,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			for (String ex : extra) {
 				sql.append(",").append(ex);
 			}
-			sql.append(" FROM ").append(abfr[3]).append(" WHERE ").append(abfr[2]).append("=")
+			sql.append(" FROM ").append(abfr[3]).append(" WHERE ").append(abfr[2]).append(StringTool.equals)
 				.append(getWrappedId());
 			
 			Stm stm = getDBConnection().getStatement();
@@ -1604,7 +1604,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				mapped = mapped.substring(i + 1);
 			}
 			sql.append(mapped);
-			sql.append("=NULL, " + FLD_LASTUPDATE + "=" + Long.toString(ts) + " WHERE ID=")
+			sql.append("=NULL, " + FLD_LASTUPDATE + StringTool.equals + Long.toString(ts) + " WHERE ID=")
 				.append(getWrappedId());
 			getDBConnection().exec(sql.toString());
 			return true;
@@ -1649,7 +1649,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				params.append("[");
 				params.append(value);
 				params.append("]");
-				dbConnection.doTrace(cmd + " " + params);
+				dbConnection.doTrace(cmd + StringTool.space + params);
 			}
 			
 			pst.setLong(2, ts);
@@ -1659,7 +1659,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			return true;
 		} catch (Exception ex) {
 			ElexisStatus status = new ElexisStatus(ElexisStatus.ERROR, CoreHub.PLUGIN_ID,
-				ElexisStatus.CODE_NONE, "Fehler bei: " + cmd + "(" + field + "=" + value + ")", ex,
+				ElexisStatus.CODE_NONE, "Fehler bei: " + cmd + "(" + field + StringTool.equals + value + ")", ex,
 				ElexisStatus.LOG_ERRORS);
 			throw new PersistenceException(status); // See api doc. check this
 													// whether it breaks
@@ -1816,7 +1816,7 @@ public abstract class PersistentObject implements IPersistentObject {
 						.append(getDBConnection().getJdbcLink().wrapFlavored(objectId));
 					if (extra != null) {
 						for (String s : extra) {
-							String[] def = s.split("=");
+							String[] def = s.split(StringTool.equals);
 							if (def.length != 2) {
 								log.error("Fehlerhafter Aufruf addToList " + s);
 								return 0;
@@ -1877,7 +1877,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			// Name Joint
 			if (m.length > 3) {
 				StringBuilder sql = new StringBuilder(200);
-				sql.append("DELETE FROM ").append(m[3]).append(" WHERE ").append(m[2]).append("=")
+				sql.append("DELETE FROM ").append(m[3]).append(" WHERE ").append(m[2]).append(StringTool.equals)
 					.append(getWrappedId());
 				if (dbConnection.isTrace()) {
 					String sq = sql.toString();
@@ -1908,8 +1908,8 @@ public abstract class PersistentObject implements IPersistentObject {
 			//m: m[1] FremdID, m[2] eigene ID, m[3] table
 			if (m.length > 3) {
 				StringBuilder sql = new StringBuilder(200);
-				sql.append("DELETE FROM ").append(m[3]).append(" WHERE ").append(m[2]).append("=")
-					.append(getWrappedId()).append(" AND ").append(m[1]).append("=")
+				sql.append("DELETE FROM ").append(m[3]).append(" WHERE ").append(m[2]).append(StringTool.equals)
+					.append(getWrappedId()).append(" AND ").append(m[1]).append(StringTool.equals)
 					.append(getDBConnection().getJdbcLink().wrapFlavored(oID));
 				if (dbConnection.isTrace()) {
 					String sq = sql.toString();
@@ -2092,7 +2092,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		}
 		String[] m = mapped.split(":");// m[1] FremdID, m[2] eigene ID, m[3]
 		// Name Joint
-		getDBConnection().exec("DELETE FROM " + m[3] + " WHERE " + m[2] + "=" + getWrappedId());
+		getDBConnection().exec("DELETE FROM " + m[3] + " WHERE " + m[2] + StringTool.equals + getWrappedId());
 		return true;
 	}
 	
@@ -2158,7 +2158,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			params.append("[");
 			params.append(StringTool.join(values, ", "));
 			params.append("]");
-			dbConnection.doTrace(cmd + " " + params);
+			dbConnection.doTrace(cmd + StringTool.space + params);
 		}
 		try {
 			pst.setLong(fields.length + 1, System.currentTimeMillis());
@@ -2170,7 +2170,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			StringBuilder sb = new StringBuilder();
 			sb.append("Fehler bei ").append(cmd).append("\nFelder:\n");
 			for (int i = 0; i < fields.length; i++) {
-				sb.append(fields[i]).append("=").append(values[i]).append("\n");
+				sb.append(fields[i]).append(StringTool.equals).append(values[i]).append(StringTool.lf);
 			}
 			ElexisStatus status = new ElexisStatus(ElexisStatus.ERROR, CoreHub.PLUGIN_ID,
 				ElexisStatus.CODE_NONE, sb.toString(), ex, ElexisStatus.LOG_ERRORS);
@@ -2189,7 +2189,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	/**
 	 * @param checkNulls
 	 *            wether the returned values should be <code>null</code> safe, that is no
-	 *            <code>null</code> values, but only ""
+	 *            <code>null</code> values, but only StringTool.leer
 	 * @param fields
 	 * @return array containing the required fields in order
 	 * @since 3.1
@@ -2291,13 +2291,13 @@ public abstract class PersistentObject implements IPersistentObject {
 				case 'D':
 					String dat = rs.getString(mapped.substring(4));
 					if (dat == null) {
-						return "";
+						return StringTool.leer;
 					}
 					TimeTool t = new TimeTool();
 					if (t.set(dat) == true) {
 						return t.toString(TimeTool.DATE_GER);
 					} else {
-						return "";
+						return StringTool.leer;
 					}
 				case 'N':
 					int val = rs.getInt(mapped.substring(4));
@@ -2305,7 +2305,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				case 'C':
 					InputStream is = rs.getBinaryStream(mapped.substring(4));
 					if (is == null) {
-						return "";
+						return StringTool.leer;
 					}
 					byte[] exp = CompEx.expand(is);
 					return exp != null ? StringTool.createString(exp) : null;
@@ -2343,8 +2343,8 @@ public abstract class PersistentObject implements IPersistentObject {
 						ret = t.toString(TimeTool.DATE_COMPACT);
 						pst.setString(num, ret);
 					} else {
-						ret = "";
-						pst.setString(num, "");
+						ret = StringTool.leer;
+						pst.setString(num, StringTool.leer);
 					}
 					
 				} else if (typ.startsWith("C")) { // string enocding
@@ -2556,14 +2556,14 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * 
 	 * @param in
 	 *            name of the field to retrieve
-	 * @return the field contents or "" if it was null
+	 * @return the field contents or StringTool.leer if it was null
 	 */
 	public static String checkNull(final Object in){
 		if (in == null) {
-			return "";
+			return StringTool.leer;
 		}
 		if (!(in instanceof String)) {
-			return "";
+			return StringTool.leer;
 		}
 		return (String) in;
 	}
@@ -2637,7 +2637,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @since 3.1
 	 */
 	public void refreshLastUpdateAndSendUpdateEvent(@Nullable String updatedAttribute){
-		getDBConnection().exec("UPDATE " + getTableName() + " SET " + FLD_LASTUPDATE + "="
+		getDBConnection().exec("UPDATE " + getTableName() + " SET " + FLD_LASTUPDATE + StringTool.equals
 			+ Long.toString(System.currentTimeMillis()) + " WHERE ID=" + getWrappedId());
 		ElexisEventDispatcher.getInstance()
 			.fire(new ElexisEvent(this, getClass(), ElexisEvent.EVENT_UPDATE, updatedAttribute));
@@ -3143,7 +3143,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			// und dort nicht die System-Variable lower_case_table_names nicht
 			// gesetzt ist
 			// Anmerkung von Niklaus Giger
-			log.error("Tabelle " + tableName + " " + nrFounds + "-mal gefunden!!");
+			log.error("Tabelle " + tableName + StringTool.space + nrFounds + "-mal gefunden!!");
 		}
 		return nrFounds == 1;
 	}
@@ -3160,7 +3160,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	public static String ts(Object in){
 		if (in == null)
-			return "";
+			return StringTool.leer;
 		if (in instanceof String)
 			return (String) in;
 		if (in instanceof Boolean) {
@@ -3184,7 +3184,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			return (String) inList.stream().map(o -> o.toString())
 				.reduce((u, t) -> u + StringConstants.COMMA + t).get();
 		}
-		return "";
+		return StringTool.leer;
 	}
 	
 	/**
@@ -3200,7 +3200,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	public void putInCache(String field, Object value){
 		String key = getKey(field);
 		if (value == null)
-			value = "";
+			value = StringTool.leer;
 		getDBConnection().getCache().put(key, value, getCacheTime());
 	}
 	

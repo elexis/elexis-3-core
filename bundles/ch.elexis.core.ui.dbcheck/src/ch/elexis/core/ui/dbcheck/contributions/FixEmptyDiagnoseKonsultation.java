@@ -15,6 +15,7 @@ import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Query;
 
+import ch.rgw.tools.StringTool;
 public class FixEmptyDiagnoseKonsultation extends ExternalMaintenance {
 	private HashMap<Mandant, Integer> missingMap;
 	private HashMap<Mandant, String> mandantDiagnoseMap;
@@ -39,7 +40,7 @@ public class FixEmptyDiagnoseKonsultation extends ExternalMaintenance {
 				Mandant mandant = k.getMandant();
 				
 				String diagnoseId =
-					CoreHub.getUserSetting(mandant).get(Preferences.USR_DEFDIAGNOSE, "");
+					CoreHub.getUserSetting(mandant).get(Preferences.USR_DEFDIAGNOSE, StringTool.leer);
 				String diagnoseLabel = null;
 				
 				// add the diagnose if default diagnose is defined
@@ -75,11 +76,11 @@ public class FixEmptyDiagnoseKonsultation extends ExternalMaintenance {
 			
 			// no default diagnose set
 			if (diagnose == null) {
-				output.append(mandant.getVorname() + " " + mandant.getName() + " ("
+				output.append(mandant.getVorname() + StringTool.space + mandant.getName() + " ("
 					+ mandant.getLabel() + "): " + result
 					+ " Konsultationen ohne Diagnose (keine Standarddiagnose definiert)\n");
 			} else {
-				output.append(mandant.getVorname() + " " + mandant.getName() + " ("
+				output.append(mandant.getVorname() + StringTool.space + mandant.getName() + " ("
 					+ mandant.getLabel() + "): " + result
 					+ " Konsultationen mit Standarddiagnose (" + diagnose + ") vervollständigt\n");
 			}

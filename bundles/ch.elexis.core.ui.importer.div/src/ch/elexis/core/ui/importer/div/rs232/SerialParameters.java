@@ -36,6 +36,7 @@ import gnu.io.SerialPort;
 /**
  * A class that stores parameters for serial ports.
  */
+import ch.rgw.tools.StringTool;
 public class SerialParameters {
 	
 	private String portName;
@@ -52,7 +53,7 @@ public class SerialParameters {
 	 */
 	public SerialParameters(){
 		this(
-			"", //$NON-NLS-1$
+			StringTool.leer, //$NON-NLS-1$
 			9600, SerialPort.FLOWCONTROL_NONE, SerialPort.FLOWCONTROL_NONE, SerialPort.DATABITS_8,
 			SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
 		

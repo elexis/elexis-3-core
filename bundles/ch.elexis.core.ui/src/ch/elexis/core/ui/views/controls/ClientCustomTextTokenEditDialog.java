@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Text;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.data.Patient;
 
+import ch.rgw.tools.StringTool;
 public class ClientCustomTextTokenEditDialog extends TitleAreaDialog {
 	
 	String _token;
@@ -79,12 +80,12 @@ public class ClientCustomTextTokenEditDialog extends TitleAreaDialog {
 			Patient pat = ElexisEventDispatcher.getSelectedPatient();
 			
 			if (arr[1] == null || pat == null) {
-				txtTokenText.setText("");
+				txtTokenText.setText(StringTool.leer);
 				return area;
 			}
 
 			String result = pat.get(arr[1]);
-			txtTokenText.setText((result != null) ? result : "");
+			txtTokenText.setText((result != null) ? result : StringTool.leer);
 		} 
 		
 		return area;

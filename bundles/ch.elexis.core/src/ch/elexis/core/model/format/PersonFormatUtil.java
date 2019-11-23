@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.types.Gender;
 
+import ch.rgw.tools.StringTool;
 public class PersonFormatUtil {
 	
 	private static DateTimeFormatter defaultDateFormatter =
@@ -24,7 +25,7 @@ public class PersonFormatUtil {
 		if (dob != null) {
 			return dob.format(defaultDateFormatter);
 		}
-		return "";
+		return StringTool.leer;
 	}
 	
 	/**
@@ -60,7 +61,7 @@ public class PersonFormatUtil {
 			sb.append(person.getLastName());
 		}
 		if (StringUtils.isNotBlank(sb.toString())) {
-			sb.append(" ");
+			sb.append(StringTool.space);
 		}
 		if (StringUtils.isNoneEmpty(person.getFirstName())) {
 			sb.append(person.getFirstName());

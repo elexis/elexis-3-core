@@ -11,6 +11,7 @@ import ch.rgw.tools.TimeTool;
  * Stores the default signature for an ATC code or a specific article
  *
  */
+import ch.rgw.tools.StringTool;
 public class ArticleDefaultSignature extends PersistentObject {
 	
 	public static final String FLD_ATC_CODE = "atccode";
@@ -99,7 +100,7 @@ public class ArticleDefaultSignature extends PersistentObject {
 			sb.append("ARTICLE [" + article.getLabel() + "] ");
 		}
 		sb.append(getSignatureMorning()).append("-").append(getSignatureNoon()).append("-")
-			.append(getSignatureEvening()).append("-").append(getSignatureNight()).append(" ")
+			.append(getSignatureEvening()).append("-").append(getSignatureNight()).append(StringTool.space)
 			.append(getSignatureComment());
 		return null;
 	}
@@ -229,7 +230,7 @@ public class ArticleDefaultSignature extends PersistentObject {
 	
 	public void setSignatureFreeText(String text){
 		if (text == null) {
-			text = "";
+			text = StringTool.leer;
 		}
 		setExtInfoStoredObjectByKey(EXT_FLD_FREETEXT, text);
 	}

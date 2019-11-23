@@ -60,6 +60,7 @@ import ch.elexis.data.Person;
 import ch.elexis.data.Xid;
 import ch.elexis.data.Xid.XIDDomain;
 
+import ch.rgw.tools.StringTool;
 public class KontaktBlatt extends Composite implements IActivationListener, IUnlockable {
 	
 	private static final String IS_USER = "istAnwender";
@@ -126,9 +127,9 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 						XIDDomain xd = Xid.getDomain(dom);
 						if ((k.istPerson() && xd.isDisplayedFor(Person.class))
 							|| (k.istOrganisation() && xd.isDisplayedFor(Organisation.class))) {
-							extFlds.add(Xid.getSimpleNameForXIDDomain(dom) + "=" + dom); //$NON-NLS-1$
+							extFlds.add(Xid.getSimpleNameForXIDDomain(dom) + StringTool.equals + dom); //$NON-NLS-1$
 						} else if (k.istOrganisation() && xd.isDisplayedFor(Labor.class)) {
-							extFlds.add(Xid.getSimpleNameForXIDDomain(dom) + "=" + dom);
+							extFlds.add(Xid.getSimpleNameForXIDDomain(dom) + StringTool.equals + dom);
 						}
 					}
 					KontaktExtDialog dlg = new KontaktExtDialog(UiDesk.getTopShell(), (Kontakt) po,
@@ -246,7 +247,7 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 					def[0].setLabel(BEZEICHNUNG);
 					def[1].setLabel(ZUSATZ);
 					def[2].setLabel(ANSPRECHPERSON);
-					def[3].setText(""); //$NON-NLS-1$
+					def[3].setText(StringTool.leer); //$NON-NLS-1$
 					def[10].setLabel(TEL_DIREKT);
 					setOrganisationFieldsVisible(true);
 				} else if (type.equals("istLabor")) { //$NON-NLS-1$

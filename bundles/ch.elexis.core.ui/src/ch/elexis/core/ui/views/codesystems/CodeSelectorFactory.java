@@ -82,6 +82,7 @@ import ch.rgw.tools.ExHandler;
  * @author Gerry
  * 
  */
+import ch.rgw.tools.StringTool;
 public abstract class CodeSelectorFactory implements IExecutableExtension {
 	private static final String CAPTION_ERROR = Messages.CodeSelectorFactory_error; //$NON-NLS-1$
 	/** Anzahl der in den oberen zwei Listen zu haltenden Elemente */
@@ -525,7 +526,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 							StringBuilder sb = new StringBuilder();
 							diff.forEach(r -> {
 								if (sb.length() > 0) {
-									sb.append("\n");
+									sb.append(StringTool.lf);
 								}
 								sb.append(r);
 							});

@@ -11,6 +11,7 @@ import ch.elexis.core.ui.dbcheck.semantic.SemanticCheck;
 import ch.elexis.core.ui.dbcheck.semantic.SemanticCheckMySQL;
 import ch.elexis.core.ui.dbcheck.semantic.SemanticCheckPGSQL;
 
+import ch.rgw.tools.StringTool;
 public class SemanticCheckExec extends CheckExec {
 	
 	public static SemanticCheck sc = null;
@@ -40,12 +41,12 @@ public class SemanticCheckExec extends CheckExec {
 	public static String getOutputLog(){
 		if (sc != null)
 			return sc.getOutputLog();
-		return "";
+		return StringTool.leer;
 	}
 	
 	public static String getErrorLog(){
 		if (sc != null)
 			return sc.getErrorLog();
-		return "";
+		return StringTool.leer;
 	}
 }

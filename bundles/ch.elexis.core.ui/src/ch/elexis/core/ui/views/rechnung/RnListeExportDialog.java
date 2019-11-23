@@ -39,6 +39,7 @@ import ch.rgw.tools.Money;
 import ch.rgw.tools.Tree;
 
 //201512211341js: Info: This dialog starts the generation of output ONLY AFTER [OK] has been pressed.
+import ch.rgw.tools.StringTool;
 class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 	ArrayList<Rechnung> rnn;
 	private Logger log = LoggerFactory.getLogger(RnActions.class);
@@ -110,7 +111,7 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 			}
 		});
 		tDirName = new Text(cSaveCopy, SWT.BORDER | SWT.READ_ONLY);
-		tDirName.setText(CoreHub.localCfg.get("rechnung/RnListExportDirname", "")); //$NON-NLS-1$
+		tDirName.setText(CoreHub.localCfg.get("rechnung/RnListExportDirname", StringTool.leer)); //$NON-NLS-1$
 		tDirName.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		return ret;
 	}
@@ -140,7 +141,7 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 	}
 	
 	public void CSVWriteTable(){
-		String pathToSave = RnListExportDirname + "/" + RnListExportFileName;
+		String pathToSave = RnListExportDirname + StringTool.slash + RnListExportFileName;
 		CSVWriter csv = null;
 		int nrLines = 0;
 		try {
@@ -187,7 +188,7 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 				Fall fall = rn.getFall();
 				Patient p = fall.getPatient();
 				String[] line = new String[header.length];
-				line[0] = ""; //201512210402js: Leere Spalte zum Eintragen der gewünschten Aktion.
+				line[0] = StringTool.leer; //201512210402js: Leere Spalte zum Eintragen der gewünschten Aktion.
 				line[1] = rn.getNr();
 				line[2] = rn.getDatumRn();
 				line[3] = rn.getDatumVon();
@@ -214,9 +215,9 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 				String a = statuschgs.toString();
 				if (a != null && a.length() > 1) {
 					//Die Uhrzeiten rauswerfen:
-					a = a.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", "");
-					//", " durch "\n" ersetzen (Man könnte auch noch prüfen, ob danach eine Zahl/ein Datum kommt - die dann aber behalten werden muss.)
-					a = a.replaceAll(", ", "\n");
+					a = a.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", StringTool.leer);
+					//", " durch StringTool.lf ersetzen (Man könnte auch noch prüfen, ob danach eine Zahl/ein Datum kommt - die dann aber behalten werden muss.)
+					a = a.replaceAll(", ", StringTool.lf);
 					//Führende und Trailende [] bei der Ausgabe (!) rauswerfen
 					line[12] = a.substring(1, a.length() - 1);
 				}
@@ -226,9 +227,9 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 					if (rnStatus != null && rnStatus.length() > 1) {
 						//Die Uhrzeiten rauswerfen:
 						rnStatus =
-							rnStatus.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", "");
-						//", " durch "\n" ersetzen (Man könnte auch noch prüfen, ob danach eine Zahl/ein Datum kommt - die dann aber behalten werden muss.)
-						rnStatus = rnStatus.replaceAll(", ", "\n");
+							rnStatus.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", StringTool.leer);
+						//", " durch StringTool.lf ersetzen (Man könnte auch noch prüfen, ob danach eine Zahl/ein Datum kommt - die dann aber behalten werden muss.)
+						rnStatus = rnStatus.replaceAll(", ", StringTool.lf);
 						//Führende und Trailende [] bei der Ausgabe (!) rauswerfen
 						line[13] = rnStatus.substring(1, rnStatus.length() - 1);
 					}
@@ -237,9 +238,9 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 				String rnOutput = outputs.toString();
 				if (rnOutput != null && rnOutput.length() > 1) {
 					//Die Uhrzeiten rauswerfen:
-					rnOutput = rnOutput.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", "");
-					//", " durch "\n" ersetzen (Man könnte auch noch prüfen, ob danach eine Zahl/ein Datum kommt - die dann aber behalten werden muss.)
-					rnOutput = rnOutput.replaceAll(", ", "\n");
+					rnOutput = rnOutput.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", StringTool.leer);
+					//", " durch StringTool.lf ersetzen (Man könnte auch noch prüfen, ob danach eine Zahl/ein Datum kommt - die dann aber behalten werden muss.)
+					rnOutput = rnOutput.replaceAll(", ", StringTool.lf);
 					//Führende und Trailende [] bei der Ausgabe (!) rauswerfen
 					line[14] = rnOutput.substring(1, rnOutput.length() - 1);
 				}
@@ -247,9 +248,9 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 				String rnPayment = payments.toString();
 				if (rnPayment != null && rnPayment.length() > 1) {
 					//Die Uhrzeiten rauswerfen:
-					rnPayment = rnPayment.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", "");
-					//", " durch "\n" ersetzen (Man könnte auch noch prüfen, ob danach eine Zahl/ein Datum kommt - die dann aber behalten werden muss.)
-					rnPayment = rnPayment.replaceAll(", ", "\n");
+					rnPayment = rnPayment.replaceAll(", [0-9][0-9]:[0-9][0-9]:[0-9][0-9]", StringTool.leer);
+					//", " durch StringTool.lf ersetzen (Man könnte auch noch prüfen, ob danach eine Zahl/ein Datum kommt - die dann aber behalten werden muss.)
+					rnPayment = rnPayment.replaceAll(", ", StringTool.lf);
 					//Führende und Trailende [] bei der Ausgabe (!) rauswerfen
 					line[15] = rnPayment.substring(1, rnPayment.length() - 1);
 				}
@@ -280,9 +281,9 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 				//201512210146js: Das Folgende ist aus BillSummary - dort wird dafür keine Funktion bereitgestellt,
 				// TODO: Prüfen, ob das eine Redundanz DORT und HIER ist vs. obenn erwähnter getKontostand(), getAccountExcess() etc.
 				// maybe called from foreign thread
-				String totalText = ""; //$NON-NLS-1$
-				String paidText = ""; //$NON-NLS-1$
-				String openText = ""; //$NON-NLS-1$
+				String totalText = StringTool.leer; //$NON-NLS-1$
+				String paidText = StringTool.leer; //$NON-NLS-1$
+				String openText = StringTool.leer; //$NON-NLS-1$
 				// Davon, dass p != null ist, darf man eigentlich ausgehen, da ja Rechnungen zu p gehören etc.
 				if (p != null) {
 					Money total = new Money(0);

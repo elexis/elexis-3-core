@@ -297,7 +297,7 @@ public class GenericImporterBlatt extends Composite {
 			 */
 			private void loadAvailableFields(){
 				PersistentObject type = getSelectedType();
-				StringBuilder excelFieldsStrings = new StringBuilder("");
+				StringBuilder excelFieldsStrings = new StringBuilder(StringTool.leer);
 
 				inputAvailableFields = new ArrayList<Field>();
 				if (type != null) {
@@ -321,7 +321,7 @@ public class GenericImporterBlatt extends Composite {
 				if (type == null) {
 						return;
 				}
-				StringBuilder fields = new StringBuilder("");
+				StringBuilder fields = new StringBuilder(StringTool.leer);
 				for (int i = 0; i < dbAvailableFields.size(); i++) {
 					if (fields.toString().length() >= 1) fields.append(",");
 					fields.append(dbAvailableFields.get(i).name);
@@ -1065,7 +1065,7 @@ public class GenericImporterBlatt extends Composite {
 					}
 					
 					public String getColumnText(Object element, int columnIndex){
-						String text = ""; //$NON-NLS-1$
+						String text = StringTool.leer; //$NON-NLS-1$
 						
 						// commonly used variables
 						int fieldIndex;
@@ -1107,18 +1107,18 @@ public class GenericImporterBlatt extends Composite {
 									} else {
 										// values differ, show both values
 										if (dbValue != null) {
-											text = inputValue + "/" + dbValue; //$NON-NLS-1$
+											text = inputValue + StringTool.slash + dbValue; //$NON-NLS-1$
 										} else {
-											text = inputValue + "/"; //$NON-NLS-1$
+											text = inputValue + StringTool.slash; //$NON-NLS-1$
 										}
 									}
 								} else {
 									if (dbValue != null) {
 										// only dbValue available
-										text = "/" + dbValue; //$NON-NLS-1$
+										text = StringTool.slash + dbValue; //$NON-NLS-1$
 									} else {
 										// no value available
-										text = "/"; //$NON-NLS-1$
+										text = StringTool.slash; //$NON-NLS-1$
 									}
 								}
 								
@@ -1257,7 +1257,7 @@ public class GenericImporterBlatt extends Composite {
 				// first column: image
 				TableColumn imageColumn = new TableColumn(table, SWT.LEFT);
 				imageColumn.setWidth(IMAGE_COLUMN_WIDTH);
-				imageColumn.setText(""); //$NON-NLS-1$
+				imageColumn.setText(StringTool.leer); //$NON-NLS-1$
 				
 				if (mappingPage.isPageComplete()) {
 					int columnsCount = mappingPage.inputChosenFields.size();
@@ -1273,7 +1273,7 @@ public class GenericImporterBlatt extends Composite {
 						String dbName = mappingPage.dbChosenFields.get(i).name;
 						String name = dbName;
 						if (!inputName.equals(dbName)) {
-							name = inputName + "/" + name; //$NON-NLS-1$
+							name = inputName + StringTool.slash + name; //$NON-NLS-1$
 						}
 						columns[i].setText(name);
 					}
@@ -1321,7 +1321,7 @@ public class GenericImporterBlatt extends Composite {
 								// get value from excel, eliminate leading and trailing white space
 								value = row.get(index).trim();
 							} else {
-								value = ""; //$NON-NLS-1$
+								value = StringTool.leer; //$NON-NLS-1$
 							}
 							rowMap.put(key, value);
 						}
@@ -1367,7 +1367,7 @@ public class GenericImporterBlatt extends Composite {
 				for (KeyFields keyField : keyFields) {
 					String name = keyField.dbName;
 					String value = inputObject.get(keyField.inputName);
-					query.add(name, "=", value); //$NON-NLS-1$
+					query.add(name, StringTool.equals, value); //$NON-NLS-1$
 				}
 				List<PersistentObject> dbObjects = query.execute();
 				if (dbObjects != null && dbObjects.size() > 0) {
@@ -1598,7 +1598,7 @@ public class GenericImporterBlatt extends Composite {
 				}
 				
 				public String getColumnText(Object element, int columnIndex){
-					String text = ""; //$NON-NLS-1$
+					String text = StringTool.leer; //$NON-NLS-1$
 					
 					// commonly used variables
 					int fieldIndex;
@@ -1618,7 +1618,7 @@ public class GenericImporterBlatt extends Composite {
 								key = mappingPage.inputChosenFields.get(fieldIndex).name;
 								text = inputObject.get(key);
 							} else {
-								text = ""; //$NON-NLS-1$
+								text = StringTool.leer; //$NON-NLS-1$
 							}
 							break;
 						case SyncElement.DB_ONLY:
@@ -1627,7 +1627,7 @@ public class GenericImporterBlatt extends Composite {
 								key = mappingPage.dbChosenFields.get(fieldIndex).name;
 								text = dbObject.get(key);
 							} else {
-								text = ""; //$NON-NLS-1$
+								text = StringTool.leer; //$NON-NLS-1$
 							}
 							break;
 						case SyncElement.DIFF:

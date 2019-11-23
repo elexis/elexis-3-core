@@ -73,6 +73,7 @@ import ch.elexis.data.Query;
 /**
  * @since 3.0.0
  */
+import ch.rgw.tools.StringTool;
 public class ContactSelectorView extends ViewPart implements ITabbedPropertySheetPageContributor {
 	
 	public static final String ID = "ch.elexis.core.ui.contacts.views.ContactSelectorView";
@@ -226,14 +227,14 @@ public class ContactSelectorView extends ViewPart implements ITabbedPropertyShee
 		
 		@Override
 		public void keyPressed(KeyEvent e){
-			text.setMessage("");
+			text.setMessage(StringTool.leer);
 		}
 		
 		public void keyReleased(KeyEvent ke){
 			String txt = text.getText();
 			
-			// We have a formula, if the string starts with "="
-			if (txt.startsWith("=")) {
+			// We have a formula, if the string starts with StringTool.equals
+			if (txt.startsWith(StringTool.equals)) {
 				String formula;
 				if (txt.contains(";")) {
 					formula = txt.substring(1, txt.indexOf(";"));
@@ -247,11 +248,11 @@ public class ContactSelectorView extends ViewPart implements ITabbedPropertyShee
 					try {
 						Expression expr = jexl.createExpression(formula);
 						Object result = expr.evaluate(new MapContext());
-						text.setText("");
-						text.setMessage(formula + "=" + result + "");
+						text.setText(StringTool.leer);
+						text.setMessage(formula + StringTool.equals + result + StringTool.leer);
 						result = null;
 					} catch (JexlException e) {
-						text.setText("");
+						text.setText(StringTool.leer);
 						text.setMessage("Invalid expression: " + formula);
 					}
 				}

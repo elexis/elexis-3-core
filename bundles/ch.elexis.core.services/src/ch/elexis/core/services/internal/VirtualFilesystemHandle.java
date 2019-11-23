@@ -26,6 +26,7 @@ import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
 import jcifs.smb.SmbFileFilter;
 
+import ch.rgw.tools.StringTool;
 public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 
 	private static final String ERROR_MESSAGE_CAN_NOT_HANDLE = "Can not handle type";
@@ -223,7 +224,7 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 			}
 		} catch (URISyntaxException e) {
 		}
-		return "";
+		return StringTool.leer;
 	}
 
 	@Override
@@ -293,13 +294,13 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 
 	@Override
 	public IVirtualFilesystemHandle subDir(String subdir) throws IOException {
-		return subFile(subdir + "/");
+		return subFile(subdir + StringTool.slash);
 	}
 
 	@Override
 	public IVirtualFilesystemHandle subFile(String subFile) throws IOException {
 
-		if(StringUtils.isBlank(subFile) || subFile.startsWith("/")) {
+		if(StringUtils.isBlank(subFile) || subFile.startsWith(StringTool.slash)) {
 			throw new IllegalArgumentException();
 		}
 		

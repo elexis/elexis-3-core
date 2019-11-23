@@ -23,6 +23,7 @@ import ch.elexis.data.Query;
  * @author Marco Descher
  * 
  */
+import ch.rgw.tools.StringTool;
 public class FixPharmacodeLessSeven extends ExternalMaintenance {
 	
 	public static final String PHARMACODE_EXTINFO_ID = "Pharmacode";
@@ -70,7 +71,7 @@ public class FixPharmacodeLessSeven extends ExternalMaintenance {
 					}
 					sb.append(subId);
 					output.append("Korrigiere " + artikel.getName() + " von " + subId + " auf "
-						+ sb.toString() + "\n");
+						+ sb.toString() + StringTool.lf);
 					artikel.set(Artikel.FLD_SUB_ID, sb.toString());
 					articleExtInfo.put(PHARMACODE_EXTINFO_ID, sb.toString());
 					artikel.setMap(Artikel.FLD_EXTINFO, articleExtInfo);

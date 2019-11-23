@@ -65,7 +65,7 @@ public class FixMultipleDiagnosis extends ExternalMaintenance {
 						fw.write(diagnoseSts + ";");
 					}
 					diagMap.put(konsultation.getId(), diagnosen);
-					fw.write("\n");
+					fw.write(StringTool.lf);
 				} else {
 					sb.append("[" + konsultation.getId() + "] 0 diagnosis entries\n");
 				}
@@ -109,8 +109,8 @@ public class FixMultipleDiagnosis extends ExternalMaintenance {
 				ArrayList<IDiagnose> diagnosen = kons.getDiagnosen();
 				int should = diagnosisEntries.size();
 				if (diagnosen.size() != should) {
-					sb.append("[" + split[0] + "] # of diagnosis entries mismatch " + should + " "
-						+ diagnosen.size() + "\n");
+					sb.append("[" + split[0] + "] # of diagnosis entries mismatch " + should + StringTool.space
+						+ diagnosen.size() + StringTool.lf);
 					resultOk = false;
 				} else {
 					for (IDiagnose iDiagnose : diagnosen) {
@@ -118,7 +118,7 @@ public class FixMultipleDiagnosis extends ExternalMaintenance {
 							+ StringConstants.DOUBLECOLON + iDiagnose.getCode())) {
 							sb.append("[" + split[0] + "] missing " + iDiagnose.getClass().getName()
 								+ StringConstants.DOUBLECOLON + iDiagnose.getCode()
-								+ "\n");
+								+ StringTool.lf);
 							resultOk = false;
 						}
 					}
@@ -137,7 +137,7 @@ public class FixMultipleDiagnosis extends ExternalMaintenance {
 		
 		sb.append("--> No of unique diagnoses matches: "
 			+ Boolean.toString(parseLong == uniqueDiagnosen.size()));
-		sb.append("Result is equivalent " + resultOk + "\n");
+		sb.append("Result is equivalent " + resultOk + StringTool.lf);
 		return sb.toString();
 	}
 	

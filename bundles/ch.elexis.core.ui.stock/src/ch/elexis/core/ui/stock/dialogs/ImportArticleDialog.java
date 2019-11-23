@@ -117,7 +117,7 @@ public class ImportArticleDialog extends TitleAreaDialog {
 		
 		tFilePath = new Text(ret, SWT.BORDER);
 		tFilePath.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		tFilePath.setText("");
+		tFilePath.setText(StringTool.leer);
 		Button btnBrowse = new Button(ret, SWT.NONE);
 		btnBrowse.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -133,7 +133,7 @@ public class ImportArticleDialog extends TitleAreaDialog {
 		btnBrowse.setText("auswählen..");
 		
 		reportLink = new Link(ret, SWT.NONE);
-		reportLink.setText("");
+		reportLink.setText(StringTool.leer);
 		reportLink.setVisible(false);
 		reportLink.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, true, 3, 1));
 		// Event handling when users click on links.
@@ -330,15 +330,15 @@ public class ImportArticleDialog extends TitleAreaDialog {
 					
 					buf.append(lastRow);
 					buf.append(" Artikel gelesen.");
-					buf.append("\n");
-					buf.append("\n");
+					buf.append(StringTool.lf);
+					buf.append(StringTool.lf);
 					buf.append(importCount);
 					buf.append(" Artikel erfolgreich nach Lager '");
 					buf.append(stock.getLabel());
 					buf.append("' importiert.");
-					buf.append("\n");
+					buf.append(StringTool.lf);
 					if (articleNotFoundInStock > 0) {
-						buf.append("\n");
+						buf.append(StringTool.lf);
 						buf.append(articleNotFoundInStock);
 						buf.append(" Artikel nicht im Lager '");
 						buf.append(stock.getLabel());
@@ -346,12 +346,12 @@ public class ImportArticleDialog extends TitleAreaDialog {
 					}
 					
 					if (articleNotFoundByGtin > 0) {
-						buf.append("\n");
+						buf.append(StringTool.lf);
 						buf.append(articleNotFoundByGtin);
 						buf.append(" Artikel nicht in der Datenbank gefunden.");
 					}
 					if (unexpectedErrors > 0) {
-						buf.append("\n");
+						buf.append(StringTool.lf);
 						buf.append(unexpectedErrors);
 						buf.append(" Artikel konnten nicht verarbeitet werden.");
 					}
@@ -371,7 +371,7 @@ public class ImportArticleDialog extends TitleAreaDialog {
 			reportBuilder.append(col2);
 			reportBuilder.append(";");
 			reportBuilder.append(col3);
-			reportBuilder.append("\n");
+			reportBuilder.append(StringTool.lf);
 		}
 	}
 	

@@ -46,6 +46,7 @@ import ch.elexis.core.ui.locks.IUnlockable;
 /**
  * A List of objects with UI (definable hyperlinks) Replaces DynamicListDisplay
  */
+import ch.rgw.tools.StringTool;
 public class ListDisplay<T> extends Composite implements IUnlockable {
 	public interface LDListener {
 		public void hyperlinkActivated(String l);
@@ -65,7 +66,7 @@ public class ListDisplay<T> extends Composite implements IUnlockable {
 		Clipboard clip = new Clipboard(UiDesk.getDisplay());
 		StringBuilder sb = new StringBuilder();
 		for (String s : list.getItems()) {
-			sb.append(s).append("\n");
+			sb.append(s).append(StringTool.lf);
 		}
 		clip.setContents(new Object[] {
 			sb.toString()

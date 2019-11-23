@@ -48,6 +48,7 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
 
+import ch.rgw.tools.StringTool;
 public class ClientCustomTextComposite extends Composite {
 	
 	private StyledText txtClientCustomText;
@@ -132,7 +133,7 @@ public class ClientCustomTextComposite extends Composite {
 			}
 		});
 		
-		btnEditCustomText = toolkit.createButton(this, "", SWT.TOGGLE);
+		btnEditCustomText = toolkit.createButton(this, StringTool.leer, SWT.TOGGLE);
 		TableWrapData twd_btnEditCustomText =
 			new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
 		twd_btnEditCustomText.valign = TableWrapData.MIDDLE;
@@ -166,7 +167,7 @@ public class ClientCustomTextComposite extends Composite {
 		if (editMode) {
 			// Edit the variable usage
 			txtClientCustomText.setText(CoreHub.globalCfg.get(
-				ClientCustomTextComposite.class.getName(), ""));
+				ClientCustomTextComposite.class.getName(), StringTool.leer));
 		} else {
 			CoreHub.globalCfg.set(ClientCustomTextComposite.class.getName(),
 				txtClientCustomText.getText());
@@ -180,7 +181,7 @@ public class ClientCustomTextComposite extends Composite {
 		styleList.clear();
 		String outputParsed =
 			findAndReplaceTemplates(CoreHub.globalCfg.get(
-				ClientCustomTextComposite.class.getName(), ""));
+				ClientCustomTextComposite.class.getName(), StringTool.leer));
 		String output = initializeStyleRanges(outputParsed);
 		txtClientCustomText.setText(output);
 		txtClientCustomText.setStyleRanges(styleList.toArray(new StyleRange[0]));
@@ -294,12 +295,12 @@ public class ClientCustomTextComposite extends Composite {
 			return "ERR";
 		if (arr[0].equalsIgnoreCase("Patient")) {
 			if (arr[1] == null)
-				return "";
+				return StringTool.leer;
 			Patient pat = ElexisEventDispatcher.getSelectedPatient();
 			if (pat == null)
-				return "";
+				return StringTool.leer;
 			String result = pat.get(arr[1]);
-			return (result != null) ? result : "";
+			return (result != null) ? result : StringTool.leer;
 		} else {
 			return "ERR";
 		}

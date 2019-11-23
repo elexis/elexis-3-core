@@ -23,6 +23,7 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.util.IScannerListener;
 
+import ch.rgw.tools.StringTool;
 public class ScannerEvents implements Listener {
 	private static int BUF_LIMIT = 500;
 	private static int BUF_MINIMUM = 30;
@@ -72,9 +73,9 @@ public class ScannerEvents implements Listener {
 	 */
 	private String getBarcode(StringBuffer strBuf){
 		String barcode = strBuf.toString();
-		barcode = barcode.replaceAll(new Character(SWT.CR).toString(), ""); //$NON-NLS-1$
-		barcode = barcode.replaceAll(new Character(SWT.LF).toString(), ""); //$NON-NLS-1$
-		barcode = barcode.replaceAll(new Character((char) 0).toString(), ""); //$NON-NLS-1$
+		barcode = barcode.replaceAll(new Character(SWT.CR).toString(), StringTool.leer); //$NON-NLS-1$
+		barcode = barcode.replaceAll(new Character(SWT.LF).toString(), StringTool.leer); //$NON-NLS-1$
+		barcode = barcode.replaceAll(new Character((char) 0).toString(), StringTool.leer); //$NON-NLS-1$
 		if (barcode.length() > barcodeLength) {
 			return barcode.substring(barcode.length() - barcodeLength);
 		}

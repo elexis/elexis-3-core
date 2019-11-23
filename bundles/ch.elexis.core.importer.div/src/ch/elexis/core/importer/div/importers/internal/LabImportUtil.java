@@ -56,6 +56,7 @@ import ch.rgw.tools.TimeTool;
  * @author thomashu
  * 
  */
+import ch.rgw.tools.StringTool;
 @Component
 public class LabImportUtil implements ILabImportUtil {
 	
@@ -301,7 +302,7 @@ public class LabImportUtil implements ILabImportUtil {
 			// case 1 try to find mandant via orc message
 			if (orcMessage != null && !orcMessage.getNames().isEmpty()) {
 				for (String name : orcMessage.getNames()) {
-					String[] splitNames = name.split(" ");
+					String[] splitNames = name.split(StringTool.space);
 					int size = splitNames.length;
 					if (size > 1) {
 						IQuery<IMandator> query = modelService.getQuery(IMandator.class);

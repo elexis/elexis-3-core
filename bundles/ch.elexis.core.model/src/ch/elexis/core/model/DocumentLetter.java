@@ -21,12 +21,13 @@ import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.types.DocumentStatus;
 
+import ch.rgw.tools.StringTool;
 public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 		implements IdentifiableWithXid, IDocumentLetter {
 	
 	private ICategory category;
 	private DocumentStatus status;
-	private String storeId = "";
+	private String storeId = StringTool.leer;
 	private List<IHistory> history;
 	private String keywords;
 	

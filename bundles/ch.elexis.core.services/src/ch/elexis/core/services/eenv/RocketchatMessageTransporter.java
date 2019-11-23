@@ -23,6 +23,7 @@ import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IMessageTransporter;
 import ch.elexis.core.services.internal.Bundle;
 
+import ch.rgw.tools.StringTool;
 @Component
 public class RocketchatMessageTransporter implements IMessageTransporter {
 	
@@ -87,7 +88,7 @@ public class RocketchatMessageTransporter implements IMessageTransporter {
 		if (!entrySet.isEmpty()) {
 			header.append(" | ");
 			message.getMessageCodes().entrySet()
-				.forEach(c -> header.append(c.getKey() + ":" + c.getValue() + " "));
+				.forEach(c -> header.append(c.getKey() + ":" + c.getValue() + StringTool.space));
 		}
 		
 		json.put("text", header.toString());

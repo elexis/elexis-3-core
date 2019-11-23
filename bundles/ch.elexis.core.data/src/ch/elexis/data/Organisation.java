@@ -44,7 +44,7 @@ public class Organisation extends Kontakt {
 	static {
 		addMapping(
 			Kontakt.TABLENAME, 
-			FLD_NAME +	"="+	Kontakt.FLD_NAME1,
+			FLD_NAME +	StringTool.equals+	Kontakt.FLD_NAME1,
 			FLD_ZUSATZ1 + 					"=Bezeichnung2", //$NON-NLS-1$
 			FLD_ZUSATZ2 +					"=ExtInfo", //$NON-NLS-1$
 			FLD_CONTACT_PERSON +			"=Bezeichnung3",

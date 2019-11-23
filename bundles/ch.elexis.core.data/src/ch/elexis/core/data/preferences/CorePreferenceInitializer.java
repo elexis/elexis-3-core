@@ -37,7 +37,7 @@ public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 		CoreHub.localCfg.set(Preferences.DB_CONNECT + SETTINGS_PREFERENCE_STORE_DEFAULT,
 			"jdbc:h2:" + base + "/db;MODE=MySQL"); //$NON-NLS-1$ //$NON-NLS-2$
 		CoreHub.localCfg.set(Preferences.DB_USERNAME + SETTINGS_PREFERENCE_STORE_DEFAULT, "sa"); //$NON-NLS-1$
-		CoreHub.localCfg.set(Preferences.DB_PWD + SETTINGS_PREFERENCE_STORE_DEFAULT, ""); //$NON-NLS-1$
+		CoreHub.localCfg.set(Preferences.DB_PWD + SETTINGS_PREFERENCE_STORE_DEFAULT, StringTool.leer); //$NON-NLS-1$
 		CoreHub.localCfg.set(Preferences.DB_TYP + SETTINGS_PREFERENCE_STORE_DEFAULT, "mysql"); //$NON-NLS-1$
 		// Ablauf
 		File userhome = new File(System.getProperty("user.home") + File.separator + "elexis"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -65,12 +65,12 @@ public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 		// Texterstellung
 		if (System.getProperty("os.name").toLowerCase().startsWith("win")) { //$NON-NLS-1$ //$NON-NLS-2$
 			if (CoreHub.localCfg.get(Preferences.P_TEXTMODUL, null) == null
-				|| CoreHub.localCfg.get(Preferences.P_TEXTMODUL, "").equals(StringTool.leer)) {
+				|| CoreHub.localCfg.get(Preferences.P_TEXTMODUL, StringTool.leer).equals(StringTool.leer)) {
 				CoreHub.localCfg.set(Preferences.P_TEXTMODUL, "NOA-Text"); //$NON-NLS-1$
 			}
 		} else {
 			if (CoreHub.localCfg.get(Preferences.P_TEXTMODUL, null) == null
-				|| CoreHub.localCfg.get(Preferences.P_TEXTMODUL, "").equals(StringTool.leer)) {
+				|| CoreHub.localCfg.get(Preferences.P_TEXTMODUL, StringTool.leer).equals(StringTool.leer)) {
 				CoreHub.localCfg.set(Preferences.P_TEXTMODUL, "OpenOffice Wrapper");
 			}
 		}

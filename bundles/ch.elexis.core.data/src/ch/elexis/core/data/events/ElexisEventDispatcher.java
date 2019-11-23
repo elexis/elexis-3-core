@@ -54,6 +54,7 @@ import ch.elexis.data.PersistentObject;
  * @since 3.7 move from Eclipse job to ScheduledExecutorService
  * @since 3.8 must explicitly {@link #start()} queue execution
  */
+import ch.rgw.tools.StringTool;
 public final class ElexisEventDispatcher implements Runnable {
 	private  Logger log = LoggerFactory.getLogger(ElexisEventDispatcher.class);
 	
@@ -420,7 +421,7 @@ public final class ElexisEventDispatcher implements Runnable {
 				&& filter.getObjectClass().getName() != null) {
 				sb.append(filter.type).append(" / ").append(filter.getObjectClass().getName());
 			}
-			sb.append("\n");
+			sb.append(StringTool.lf);
 			
 		}
 		sb.append("\n--------------\n");

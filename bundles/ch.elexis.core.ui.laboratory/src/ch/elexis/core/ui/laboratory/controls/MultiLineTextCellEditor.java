@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import ch.rgw.tools.StringTool;
 public class MultiLineTextCellEditor extends DialogCellEditor {
 	
 	public class MultiLineTextDialog extends StatusDialog {
@@ -64,7 +65,7 @@ public class MultiLineTextCellEditor extends DialogCellEditor {
 		if (getValue() != null) {
 			result = dialog.open(getValue().toString());
 		} else {
-			result = dialog.open(""); //$NON-NLS-1$
+			result = dialog.open(StringTool.leer); //$NON-NLS-1$
 		}
 		
 		if (result == Dialog.OK) {

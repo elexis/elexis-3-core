@@ -101,7 +101,7 @@ public class Brief extends PersistentObject {
 				bhdl = bh.getId();
 				pat = bh.getFall().getPatient().getId();
 			}
-			String dst = "";
+			String dst = StringTool.leer;
 			if (dest != null) {
 				dst = dest.getId();
 			}
@@ -309,7 +309,7 @@ public class Brief extends PersistentObject {
 			
 			@Override
 			public String read(){
-				return "";
+				return StringTool.leer;
 			}
 			
 			@Override
@@ -476,7 +476,7 @@ public class Brief extends PersistentObject {
 				byte[] ret = CompEx.expand(raw);
 				return StringTool.createString(ret);
 			}
-			return "";
+			return StringTool.leer;
 		}
 		
 		public void save(String contents){
@@ -485,7 +485,7 @@ public class Brief extends PersistentObject {
 		}
 		
 		public void save(byte[] contents){
-			System.out.println("Setting binary of " + getId() + " " + contents.length);
+			System.out.println("Setting binary of " + getId() + StringTool.space + contents.length);
 			setBinary(CONTENTS, contents);
 		}
 		

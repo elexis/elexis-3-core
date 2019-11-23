@@ -11,6 +11,7 @@ import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IRecipe;
 import ch.elexis.core.model.prescription.EntryType;
 
+import ch.rgw.tools.StringTool;
 public interface IMedicationService {
 	
 	/**
@@ -93,7 +94,7 @@ public interface IMedicationService {
 	/**
 	 * 
 	 * @return the signature split into a string array with 4 elements; will always return an array
-	 *         of 4 elements, where empty entries are of type String ""
+	 *         of 4 elements, where empty entries are of type String StringTool.leer
 	 */
 	public String[] getSignatureAsStringArray(String signature);
 }

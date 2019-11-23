@@ -45,7 +45,7 @@ public class AddressFormatUtil {
 		} else if (person.getGender().equals(Gender.FEMALE)) {
 			salutation = Messages.KontakteView_SalutationF;
 		} else {
-			salutation = ""; //$NON-NLS-1$
+			salutation = StringTool.leer; //$NON-NLS-1$
 		}
 		ret.append(salutation);
 		ret.append(StringTool.space);

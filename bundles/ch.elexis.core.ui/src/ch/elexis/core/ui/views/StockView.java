@@ -103,6 +103,7 @@ import ch.elexis.scripting.CSVWriter;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
 
+import ch.rgw.tools.StringTool;
 public class StockView extends ViewPart implements ISaveablePart2, IActivationListener {
 	public StockView(){}
 	
@@ -167,7 +168,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 			}
 		});
 		ToolBarManager tbm = new ToolBarManager();
-		tbm.add(new Action("", Action.AS_CHECK_BOX) {
+		tbm.add(new Action(StringTool.leer, Action.AS_CHECK_BOX) {
 			@Override
 			public ImageDescriptor getImageDescriptor(){
 				return Images.IMG_FILTER.getImageDescriptor();
@@ -457,7 +458,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 							msg.append(success);
 							msg.append(" Artikel wurden erfolgreich exportiert.");
 							if (errorUnkownArticle > 0) {
-								msg.append("\n");
+								msg.append(StringTool.lf);
 								msg.append(errorUnkownArticle);
 								msg.append(
 									" Artikel konnten nicht exportiert werden (Unbekannte Artikel Typen).");

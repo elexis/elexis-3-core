@@ -94,6 +94,7 @@ import ch.rgw.tools.ExHandler;
  * 
  * @author Gerry
  */
+import ch.rgw.tools.StringTool;
 public class RezepteView extends ViewPart implements IActivationListener, ISaveablePart2 {
 	public static final String ID = "ch.elexis.Rezepte"; //$NON-NLS-1$
 	private final FormToolkit tk = UiDesk.getToolkit();
@@ -261,9 +262,9 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 							IArticle art = (IArticle) obj;
 							IPrescription ret =
 								new IPrescriptionBuilder(CoreModelServiceHolder.get(),
-									ContextServiceHolder.get(), art, recipe.getPatient(), "")
+									ContextServiceHolder.get(), art, recipe.getPatient(), StringTool.leer)
 										.build();
-							ret.setRemark("");
+							ret.setRemark(StringTool.leer);
 							ret.setEntryType(EntryType.RECIPE);
 							ret.setRecipe(recipe);
 							CoreModelServiceHolder.get().save(ret);

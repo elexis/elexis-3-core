@@ -17,9 +17,10 @@ import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 
+import ch.rgw.tools.StringTool;
 @Component(service = {
 	EventHandler.class, EntityChangeEventListener.class
-}, property = EventConstants.EVENT_TOPIC + "=" + ElexisEventTopics.PERSISTENCE_EVENT_ENTITYCHANGED)
+}, property = EventConstants.EVENT_TOPIC + StringTool.equals + ElexisEventTopics.PERSISTENCE_EVENT_ENTITYCHANGED)
 public class EntityChangeEventListener implements EventHandler {
 	
 	private static Logger logger = LoggerFactory.getLogger(EntityChangeEventListener.class);

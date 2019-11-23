@@ -13,6 +13,7 @@ import ch.elexis.data.Script;
 import ch.elexis.scripting.beanshell.internal.MultiClassLoader;
 import ch.rgw.tools.ExHandler;
 
+import ch.rgw.tools.StringTool;
 public class Interpreter implements ch.elexis.core.data.interfaces.scripting.Interpreter,
 		IExecutableExtension {
 	private bsh.Interpreter scripter = new bsh.Interpreter();
@@ -51,13 +52,13 @@ public class Interpreter implements ch.elexis.core.data.interfaces.scripting.Int
 			throw (new ElexisException(Script.class, e.getMessage(),
 				ElexisException.EE_UNEXPECTED_RESPONSE));
 		} catch (ParseException e) {
-			String msg = "";
+			String msg = StringTool.leer;
 			if (e != null) {
 				try {
 					msg = e.getMessage();
 					// msg = e.getErrorText();
 					if (msg == null) {
-						msg = "";
+						msg = StringTool.leer;
 					}
 				} catch (Exception ex) {
 					ExHandler.handle(ex);

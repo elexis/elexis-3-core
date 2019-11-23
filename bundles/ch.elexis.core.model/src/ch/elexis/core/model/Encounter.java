@@ -19,6 +19,7 @@ import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.rgw.tools.VersionedResource;
 
+import ch.rgw.tools.StringTool;
 public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 		implements IdentifiableWithXid, IEncounter {
 
@@ -205,7 +206,7 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung>
 	}
 	
 	private String getInvoiceStateText(){
-		String statusText = "";
+		String statusText = StringTool.leer;
 		
 		IInvoice rechnung = getInvoice();
 		if (rechnung != null) {

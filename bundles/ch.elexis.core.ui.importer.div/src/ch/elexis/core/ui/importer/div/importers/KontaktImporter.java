@@ -23,6 +23,7 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Query;
 
+import ch.rgw.tools.StringTool;
 public class KontaktImporter extends ImporterPage {
 	KontaktImporterBlatt importer;
 	
@@ -69,11 +70,11 @@ public class KontaktImporter extends ImporterPage {
 			StringBuilder s1 = new StringBuilder();
 			StringBuilder s2 = new StringBuilder();
 			s1.append(found.get("Bezeichnung1")).append(", ").append(found.get("Bezeichnung2")) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				.append(" - ").append(found.get("Strasse")).append(" ") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				.append(found.get("Plz")).append(" ").append(found.get("Ort")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				.append(" - ").append(found.get("Strasse")).append(StringTool.space) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				.append(found.get("Plz")).append(StringTool.space).append(found.get("Ort")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			
 			s2.append(name).append(", ").append(vorname).append(" - ") //$NON-NLS-1$ //$NON-NLS-2$
-				.append(strasse).append(" ").append(plz).append(" ").append(ort); //$NON-NLS-1$ //$NON-NLS-2$
+				.append(strasse).append(StringTool.space).append(plz).append(StringTool.space).append(ort); //$NON-NLS-1$ //$NON-NLS-2$
 			
 			if (SWTHelper.askYesNo(Messages.KontaktImporter_AskSameTitle,
 				Messages.KontaktImporter_AskSameText1 + s1.toString()

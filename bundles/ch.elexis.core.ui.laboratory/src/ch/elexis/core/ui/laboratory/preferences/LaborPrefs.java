@@ -70,6 +70,7 @@ import ch.elexis.data.LabMapping;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.Query;
 
+import ch.rgw.tools.StringTool;
 public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePage {
 	
 	// DynamicListDisplay params;
@@ -107,7 +108,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 				viewerFilter.setSearchText(filterTxt.getText());
 				tableViewer.refresh();
 			} else {
-				viewerFilter.setSearchText(""); //$NON-NLS-1$
+				viewerFilter.setSearchText(StringTool.leer); //$NON-NLS-1$
 				tableViewer.refresh();
 			}
 		});
@@ -170,7 +171,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 			public int compare(Viewer viewer, Object e1, Object e2){
 				LabItem li1 = (LabItem) e1;
 				LabItem li2 = (LabItem) e2;
-				String s1 = "", s2 = ""; //$NON-NLS-1$ //$NON-NLS-2$
+				String s1 = StringTool.leer, s2 = StringTool.leer; //$NON-NLS-1$ //$NON-NLS-2$
 				switch (sortC) {
 				case 1:
 					s1 = li1.getKuerzel();
@@ -429,7 +430,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 	private boolean deleteResults(LabItem li){
 		boolean ret = true;
 		Query<LabResult> qbe = new Query<LabResult>(LabResult.class);
-		qbe.add(LabResult.ITEM_ID, "=", li.getId()); //$NON-NLS-1$ //$NON-NLS-2$
+		qbe.add(LabResult.ITEM_ID, StringTool.equals, li.getId()); //$NON-NLS-1$ //$NON-NLS-2$
 		List<LabResult> list = qbe.execute();
 		for (LabResult po : list) {
 			if (LocalLockServiceHolder.get().acquireLock(po).isOk()) {
@@ -444,7 +445,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 	
 	private void deleteMappings(LabItem li){
 		Query<LabMapping> qbe = new Query<LabMapping>(LabMapping.class);
-		qbe.add(LabMapping.FLD_LABITEMID, "=", li.getId()); //$NON-NLS-1$ //$NON-NLS-2$
+		qbe.add(LabMapping.FLD_LABITEMID, StringTool.equals, li.getId()); //$NON-NLS-1$ //$NON-NLS-2$
 		List<LabMapping> list = qbe.execute();
 		for (LabMapping po : list) {
 			po.delete();

@@ -16,6 +16,7 @@ import ch.elexis.core.ui.dbcheck.external.ExternalMaintenance;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Query;
 
+import ch.rgw.tools.StringTool;
 public class RenameAccountingSystemField extends ExternalMaintenance {
 	private static final String DESCRIPTION = "Feld aus Abrechnungssystem umbenennen [3341]";
 	private static final String REQUIRED = "/bedingungen";
@@ -80,7 +81,7 @@ public class RenameAccountingSystemField extends ExternalMaintenance {
 			
 			//update configuration of accounting system
 			pm.subTask("Globale Einstellungen werden aktualisiert... ");
-			String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + accountingSystem;
+			String key = Preferences.LEISTUNGSCODES_CFG_KEY + StringTool.slash + accountingSystem;
 			String updatedConfig = updateFieldConfiguration(key, currFieldName, newFieldName);
 			pm.worked(1);
 			
@@ -114,9 +115,9 @@ public class RenameAccountingSystemField extends ExternalMaintenance {
 	}
 	
 	private boolean openRenameAccountingSysFieldDialog(){
-		accountingSystem = "";
-		currFieldName = "";
-		newFieldName = "";
+		accountingSystem = StringTool.leer;
+		currFieldName = StringTool.leer;
+		newFieldName = StringTool.leer;
 		
 		final Display display = Display.getDefault();
 		display.syncExec(new Runnable() {

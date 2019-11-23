@@ -20,6 +20,7 @@ import ch.rgw.tools.TimeTool;
  * @since 3.8
  * @author Niklaus Giger <niklaus.giger@member.fsf.org>
  */
+import ch.rgw.tools.StringTool;
 class PersistentObjectUtil {
 
 	/**
@@ -56,9 +57,9 @@ class PersistentObjectUtil {
 					"0061 555 55 55", //$NON-NLS-1$
 					"0061 555 55 56", "10, Baker Street", "9999", "Elexikon"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		} else {
-			String firstMandantName = System.getProperty(ElexisSystemPropertyConstants.FIRST_MANDANT_NAME, ""); //$NON-NLS-1$
-			String firstMandantEmail = System.getProperty(ElexisSystemPropertyConstants.FIRST_MANDANT_EMAIL, ""); //$NON-NLS-1$
-			String firstMandantPassword = System.getProperty(ElexisSystemPropertyConstants.FIRST_MANDANT_PASSWORD, ""); //$NON-NLS-1$
+			String firstMandantName = System.getProperty(ElexisSystemPropertyConstants.FIRST_MANDANT_NAME, StringTool.leer); //$NON-NLS-1$
+			String firstMandantEmail = System.getProperty(ElexisSystemPropertyConstants.FIRST_MANDANT_EMAIL, StringTool.leer); //$NON-NLS-1$
+			String firstMandantPassword = System.getProperty(ElexisSystemPropertyConstants.FIRST_MANDANT_PASSWORD, StringTool.leer); //$NON-NLS-1$
 			// The FirstMandantDialog requires
 			// * a name
 			// * a password

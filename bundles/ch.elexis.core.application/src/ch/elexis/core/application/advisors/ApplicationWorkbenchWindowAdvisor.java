@@ -29,6 +29,7 @@ import ch.elexis.core.ui.actions.ScannerEvents;
  * Hier können Funktionen aufgerufen werden, die unmittelbar vor dem öffnen des Hauptfensters
  * erfolgen sollen. Im Wesentlichen werden hier die Menue und Toolbars gesetzt
  */
+import ch.rgw.tools.StringTool;
 public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	
 	public ApplicationWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer){
@@ -48,7 +49,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		configurer.setShowCoolBar(true);
 		configurer.setShowStatusLine(true);
 		configurer.setShowProgressIndicator(true);
-		configurer.setTitle(Hub.APPLICATION_NAME + " " + CoreHub.readElexisBuildVersion());
+		configurer.setTitle(Hub.APPLICATION_NAME + StringTool.space + CoreHub.readElexisBuildVersion());
 		configurer.setShowFastViewBars(true);
 		if (CoreHub.localCfg.get(Preferences.SHOWPERSPECTIVESELECTOR, Boolean.toString(false))
 			.equals(Boolean.toString(true))) {

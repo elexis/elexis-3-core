@@ -62,6 +62,7 @@ import ch.rgw.tools.Money;
  * This view shows the current patient's account
  */
 
+import ch.rgw.tools.StringTool;
 public class BillSummary extends ViewPart implements IActivationListener, ElexisEventListener,
 		ISaveablePart2 {
 	
@@ -168,15 +169,15 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 		generalArea.setLayout(new GridLayout(2, false));
 		
 		tk.createLabel(generalArea, Messages.BillSummary_total); //$NON-NLS-1$
-		totalLabel = tk.createLabel(generalArea, ""); //$NON-NLS-1$
+		totalLabel = tk.createLabel(generalArea, StringTool.leer); //$NON-NLS-1$
 		totalLabel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		
 		tk.createLabel(generalArea, Messages.BillSummary_paid); //$NON-NLS-1$
-		paidLabel = tk.createLabel(generalArea, ""); //$NON-NLS-1$
+		paidLabel = tk.createLabel(generalArea, StringTool.leer); //$NON-NLS-1$
 		paidLabel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		
 		tk.createLabel(generalArea, Messages.BillSummary_open2); //$NON-NLS-1$
-		openLabel = tk.createLabel(generalArea, ""); //$NON-NLS-1$
+		openLabel = tk.createLabel(generalArea, StringTool.leer); //$NON-NLS-1$
 		openLabel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		
 		// bills
@@ -234,11 +235,11 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 			
 			public String getColumnText(Object element, int columnIndex){
 				if (!(element instanceof Rechnung)) {
-					return ""; //$NON-NLS-1$
+					return StringTool.leer; //$NON-NLS-1$
 				}
 				
 				Rechnung rechnung = (Rechnung) element;
-				String text = ""; //$NON-NLS-1$
+				String text = StringTool.leer; //$NON-NLS-1$
 				
 				switch (columnIndex) {
 				case NUMBER:
@@ -301,7 +302,7 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 	private void setPatient(Patient patient){
 		actPatient = patient;
 		
-		String title = ""; //$NON-NLS-1$
+		String title = StringTool.leer; //$NON-NLS-1$
 		if (actPatient != null) {
 			title = actPatient.getLabel();
 		} else {
@@ -323,9 +324,9 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 			return;
 		}
 		
-		String totalText = ""; //$NON-NLS-1$
-		String paidText = ""; //$NON-NLS-1$
-		String openText = ""; //$NON-NLS-1$
+		String totalText = StringTool.leer; //$NON-NLS-1$
+		String paidText = StringTool.leer; //$NON-NLS-1$
+		String openText = StringTool.leer; //$NON-NLS-1$
 		
 		if (actPatient != null) {
 			Money total = new Money(0);
@@ -408,7 +409,7 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 	 * AccountEntry(TimeTool date, Money amount, String remarks) { this.date = date; this.amount =
 	 * amount; this.remarks = remarks;
 	 * 
-	 * if (remarks == null) { remarks = ""; } } }
+	 * if (remarks == null) { remarks = StringTool.leer; } } }
 	 */
 	
 	private void makeActions(){
@@ -426,7 +427,7 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 	}
 	
 	private void exportToClipboard(){
-		String clipboardText = ""; //$NON-NLS-1$
+		String clipboardText = StringTool.leer; //$NON-NLS-1$
 		String lineSeparator = System.getProperty("line.separator"); //$NON-NLS-1$
 		
 		if (actPatient != null) {

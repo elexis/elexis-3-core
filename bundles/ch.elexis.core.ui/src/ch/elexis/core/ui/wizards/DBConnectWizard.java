@@ -162,10 +162,10 @@ public class DBConnectWizard extends Wizard {
 	
 	private String parseHostname(String connectionString){
 		int i = connectionString.indexOf("//")+2;
-		if(i==-1) return "";
+		if(i==-1) return StringTool.leer;
 		String woHeader = connectionString.substring(i);
 		int ij = woHeader.indexOf(":");
-		if(ij==-1) return "";
+		if(ij==-1) return StringTool.leer;
 		return woHeader.substring(0, ij);
 	}
 

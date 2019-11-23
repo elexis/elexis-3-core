@@ -170,7 +170,7 @@ public class Anwender extends Person {
 			hashSet.remove(m);
 		}
 		List<String> edList = hashSet.stream().map(p -> p.getLabel()).collect(Collectors.toList());
-		setExtInfoStoredObjectByKey(FLD_EXTINFO_MANDATORS, edList.isEmpty() ? "" : ts(edList));
+		setExtInfoStoredObjectByKey(FLD_EXTINFO_MANDATORS, edList.isEmpty() ? StringTool.leer : ts(edList));
 	}
 
 	@Override

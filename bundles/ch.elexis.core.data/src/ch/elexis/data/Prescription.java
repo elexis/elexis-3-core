@@ -168,7 +168,7 @@ public class Prescription extends PersistentObject {
 			TimeTool timetool = new TimeTool(timestamp);
 			return timetool.toString(TimeTool.DATE_GER);
 		}
-		return "";
+		return StringTool.leer;
 	}
 	
 	public String getBeginTime(){
@@ -177,7 +177,7 @@ public class Prescription extends PersistentObject {
 			TimeTool timetool = new TimeTool(timestamp);
 			return timetool.toString(TimeTool.FULL_GER);
 		}
-		return "";
+		return StringTool.leer;
 	}
 	
 	public void setEndDate(String date){
@@ -194,7 +194,7 @@ public class Prescription extends PersistentObject {
 			TimeTool timetool = new TimeTool(timestamp);
 			return timetool.toString(TimeTool.DATE_GER);
 		}
-		return "";
+		return StringTool.leer;
 	}
 	
 	public String getEndTime(){
@@ -203,12 +203,12 @@ public class Prescription extends PersistentObject {
 			TimeTool timetool = new TimeTool(timestamp);
 			return timetool.toString(TimeTool.FULL_GER);
 		}
-		return "";
+		return StringTool.leer;
 	}
 	
 	@Override
 	public String getLabel(){
-		return getSimpleLabel() + " " + getDosis();
+		return getSimpleLabel() + StringTool.space + getDosis();
 	}
 	
 	public String getSimpleLabel(){
@@ -274,7 +274,7 @@ public class Prescription extends PersistentObject {
 			// Match stuff like '1/2', '7/8', '~1,2'
 			// System.out.println(dosis.matches(special_num_at_start));
 			if (dosis.matches(special_num_at_start))  {
-				list.add(getNum(dosis.replace("~", "")));
+				list.add(getNum(dosis.replace("~", StringTool.leer)));
 			} else if (dosis.matches("[0-9½¼]+([xX][0-9]+(/[0-9]+)?|)")) { //$NON-NLS-1$
 				String[] dose = dosis.split("[xX]"); //$NON-NLS-1$
 				float count = getNum(dose[0]);
@@ -289,8 +289,8 @@ public class Prescription extends PersistentObject {
 			    {
 					return sub_list;
 			    }
-				sub_list = getDoseAsFloats(dosis, "/");
-			    if (StringUtils.countMatches(dosis, "/") > 1 && sub_list.size() > 0)
+				sub_list = getDoseAsFloats(dosis, StringTool.slash);
+			    if (StringUtils.countMatches(dosis, StringTool.slash) > 1 && sub_list.size() > 0)
 			    {
 					return sub_list;
 			    }
@@ -344,7 +344,7 @@ public class Prescription extends PersistentObject {
 	/**
 	 * 
 	 * @return the signature split into a string array with 4 elements; will always return an array
-	 *         of 4 elements, where empty entries are of type String ""
+	 *         of 4 elements, where empty entries are of type String StringTool.leer
 	 * @since 3.1.0
 	 * @since 3.2.0 relocated to {@link Methods#getSignatureAsStringArray(String)}
 	 */
@@ -561,7 +561,7 @@ public class Prescription extends PersistentObject {
 			}
 			// matching for values like 2x1, 2,5x1 or 20x1
 			else if (n.toLowerCase().matches("^[0-9][,.]*[0-9]*x[0-9][,.]*[0-9]*$")) {
-				n = n.replace("\\s", "");
+				n = n.replace("\\s", StringTool.leer);
 				String[] nums = n.toLowerCase().split("x");
 				float num1 = Float.parseFloat(nums[0].replace(",", "."));
 				float num2 = Float.parseFloat(nums[1].replace(",", "."));
@@ -575,7 +575,7 @@ public class Prescription extends PersistentObject {
 			// any other digit-letter combination. replaces comma with dot and removes all non-digit chars. i.e. 1,5 p. Day becomes 1.5
 			else {
 				n = n.replace(",", ".");
-				n = n.replaceAll("[^\\d.]", "");
+				n = n.replaceAll("[^\\d.]", StringTool.leer);
 				if (n.endsWith(".")) {
 					n = n.substring(0, n.length() - 1);
 				}
@@ -693,7 +693,7 @@ public class Prescription extends PersistentObject {
 			// this is necessary due to a past impl. where self dispensed was not set as entry type
 			if (rezeptId.equals(Prescription.FLD_REZEPTID_VAL_DIREKTABGABE)) {
 				setEntryType(EntryType.SELF_DISPENSED);
-				set(FLD_REZEPT_ID, "");
+				set(FLD_REZEPT_ID, StringTool.leer);
 				return EntryType.SELF_DISPENSED;
 			}
 			setEntryType(EntryType.RECIPE);

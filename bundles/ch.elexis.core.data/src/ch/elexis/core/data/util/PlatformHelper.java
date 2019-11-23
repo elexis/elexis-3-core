@@ -24,17 +24,18 @@ import org.eclipse.core.runtime.Platform;
  * @deprecated moved to ch.elexis.core.utils
  *
  */
+import ch.rgw.tools.StringTool;
 public class PlatformHelper {
 	public static String getBasePath(String pluginID){
 		try {
-			URL url = Platform.getBundle(pluginID).getEntry("/");
+			URL url = Platform.getBundle(pluginID).getEntry(StringTool.slash);
 			url = FileLocator.toFileURL(url);
 			String bundleLocation = url.getPath();
 			File file = new File(bundleLocation);
 			bundleLocation = file.getAbsolutePath();
 			return bundleLocation;
 		} catch (Throwable throwable) {
-			return "";
+			return StringTool.leer;
 		}
 	}
 }

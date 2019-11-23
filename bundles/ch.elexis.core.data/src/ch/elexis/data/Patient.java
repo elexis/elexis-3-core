@@ -315,7 +315,7 @@ public class Patient extends Person {
 		}
 		
 		if (konsDate != null) {
-			qbe.add("Datum", "=", new TimeTool(konsDate).toString(TimeTool.DATE_COMPACT));
+			qbe.add("Datum", StringTool.equals, new TimeTool(konsDate).toString(TimeTool.DATE_COMPACT));
 		}
 		
 		Fall[] faelle = getFaelle();

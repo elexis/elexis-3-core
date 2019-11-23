@@ -28,6 +28,7 @@ import ch.elexis.core.ui.views.textsystem.model.TextTemplate;
 import ch.elexis.data.Brief;
 import ch.rgw.tools.ExHandler;
 
+import ch.rgw.tools.StringTool;
 public class ImportSelectedTemplateCommand extends AbstractHandler {
 	private static Logger logger = LoggerFactory.getLogger(ImportSelectedTemplateCommand.class);
 	
@@ -72,7 +73,7 @@ public class ImportSelectedTemplateCommand extends AbstractHandler {
 					List<Brief> existing = TextTemplate.findExistingTemplates(
 						textTemplate.isSystemTemplate(),
 						textTemplate.getName(), (String) null,
-						textTemplate.getMandant() != null ? textTemplate.getMandant().getId() : "");
+						textTemplate.getMandant() != null ? textTemplate.getMandant().getId() : StringTool.leer);
 					if(!existing.isEmpty()) {
 						if (MessageDialog.openQuestion(HandlerUtil.getActiveShell(event),
 							"Vorlagen existieren",

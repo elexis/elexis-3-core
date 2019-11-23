@@ -30,6 +30,7 @@ import ch.elexis.data.LabItem;
 import ch.elexis.data.LabMapping;
 import ch.elexis.data.Labor;
 
+import ch.rgw.tools.StringTool;
 public class LaborMappingComposite extends Composite {
 	
 	protected TableViewer viewer;
@@ -148,7 +149,7 @@ public class LaborMappingComposite extends Composite {
 				} else if (element instanceof TransientLabMapping) {
 					return ((TransientLabMapping) element).getOrigin().getLabel(true);
 				}
-				return ""; //$NON-NLS-1$
+				return StringTool.leer; //$NON-NLS-1$
 			}
 		});
 		
@@ -163,7 +164,7 @@ public class LaborMappingComposite extends Composite {
 				} else if (element instanceof TransientLabMapping) {
 					return ((TransientLabMapping) element).getItemName();
 				}
-				return ""; //$NON-NLS-1$
+				return StringTool.leer; //$NON-NLS-1$
 			}
 		});
 		column.setEditingSupport(new ItemNameEditingSupport(viewer));
@@ -195,7 +196,7 @@ public class LaborMappingComposite extends Composite {
 			} else if (element instanceof TransientLabMapping) {
 				return ((TransientLabMapping) element).getItemName();
 			}
-			return ""; //$NON-NLS-1$
+			return StringTool.leer; //$NON-NLS-1$
 		}
 		
 		@Override

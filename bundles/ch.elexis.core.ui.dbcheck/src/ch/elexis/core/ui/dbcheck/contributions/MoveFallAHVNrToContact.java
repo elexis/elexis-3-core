@@ -16,6 +16,7 @@ import ch.elexis.data.Xid;
  * As defined in bug 1439 - https://redmine.medelexis.ch/issues/1439 We have to move all definitions
  * of an AHV number allocated to a Fall to the respective contact.
  */
+import ch.rgw.tools.StringTool;
 public class MoveFallAHVNrToContact extends ExternalMaintenance {
 	
 	public static final String AHV_NUMMER = "AHV-Nummer";
@@ -40,7 +41,7 @@ public class MoveFallAHVNrToContact extends ExternalMaintenance {
 			
 			if (patAhvNummer.length() < 1 && ahvNummer.length() > 1) {
 				output
-					.append("Setze AHV Nummer für " + pat.getLabel() + " auf " + ahvNummer + "\n");
+					.append("Setze AHV Nummer für " + pat.getLabel() + " auf " + ahvNummer + StringTool.lf);
 				pat.addXid(XidConstants.DOMAIN_AHV, ahvNummer, true);
 			}
 			
@@ -48,7 +49,7 @@ public class MoveFallAHVNrToContact extends ExternalMaintenance {
 			if (extinfo.containsKey(AHV_NUMMER)) {
 				extinfo.remove(AHV_NUMMER);
 				fall.setMap(Fall.FLD_EXTINFO, extinfo);
-				output.append("Entferne AHV-Nummer Eintrag aus Fall " + fall.getLabel() + "\n");
+				output.append("Entferne AHV-Nummer Eintrag aus Fall " + fall.getLabel() + StringTool.lf);
 			}
 			
 			pm.worked(1);

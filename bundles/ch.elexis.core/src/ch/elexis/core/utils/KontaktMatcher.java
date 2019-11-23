@@ -93,13 +93,13 @@ public class KontaktMatcher {
 	 * 
 	 * @param str
 	 *            a string containing possibly zip and possibly place
-	 * @return always a two element array, [0] is zip or "", [1] is place or ""
+	 * @return always a two element array, [0] is zip or StringTool.leer, [1] is place or StringTool.leer
 	 */
 	public static String[] normalizeAddress(String str){
 		String[] ret = str.split("\\s+", 2); //$NON-NLS-1$
 		if (ret.length < 2) {
 			String[] rx = new String[2];
-			rx[0] = "";
+			rx[0] = StringTool.leer;
 			rx[1] = ret[0];
 			return rx;
 		}

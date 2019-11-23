@@ -12,6 +12,7 @@ package ch.elexis.core.data.util;
 
 import java.io.File;
 
+import ch.rgw.tools.StringTool;
 public class UtilFile {
 	public static String DIRECTORY_SEPARATOR = File.separator;
 	
@@ -19,7 +20,7 @@ public class UtilFile {
 	
 	private static String getCorrectSeparators(final String pathOrFilename){
 		return pathOrFilename.replace("\\", DIRECTORY_SEPARATOR).replace("//", //$NON-NLS-1$ //$NON-NLS-2$
-			DIRECTORY_SEPARATOR).replace("/", DIRECTORY_SEPARATOR); //$NON-NLS-1$
+			DIRECTORY_SEPARATOR).replace(StringTool.slash, DIRECTORY_SEPARATOR); //$NON-NLS-1$
 	}
 	
 	private static String removeMultipleSeparators(String pathOrFilename){
@@ -38,7 +39,7 @@ public class UtilFile {
 	 */
 	public static String getCorrectPath(String path) throws IllegalArgumentException{
 		if (path == null) {
-			return ""; //$NON-NLS-1$
+			return StringTool.leer; //$NON-NLS-1$
 		}
 		path = getCorrectSeparators(path);
 		path = removeMultipleSeparators(path);
@@ -68,7 +69,7 @@ public class UtilFile {
 		String correctFilenamePath = getCorrectSeparators(filenamePath);
 		
 		if (correctFilenamePath.indexOf(DIRECTORY_SEPARATOR) < 0) {
-			return "";
+			return StringTool.leer;
 		}
 		return correctFilenamePath.substring(0,
 			correctFilenamePath.lastIndexOf(DIRECTORY_SEPARATOR));

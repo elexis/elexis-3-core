@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 
+import ch.rgw.tools.StringTool;
 public class DiagnosisReference
 		extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Diagnosis>
 		implements IdentifiableWithXid, IDiagnosisReference {
@@ -40,7 +41,7 @@ public class DiagnosisReference
 	
 	@Override
 	public String getDescription(){
-		return "";
+		return StringTool.leer;
 	}
 	
 	@Override

@@ -15,6 +15,7 @@ import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.ui.views.controls.ArticleDefaultSignatureComposite;
 
+import ch.rgw.tools.StringTool;
 public class ArticleDefaultSignatureTitleAreaDialog extends TitleAreaDialog {
 	
 	private IArticle article;
@@ -111,7 +112,7 @@ public class ArticleDefaultSignatureTitleAreaDialog extends TitleAreaDialog {
 	        return number;
 	    }
 
-	    return number.replaceAll("\\.?0*$", "");
+	    return number.replaceAll("\\.?0*$", StringTool.leer);
 	}
 	
 }

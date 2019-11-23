@@ -196,7 +196,7 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 		this.hints = h;
 		for (int i = 0; i < hints.length; i++) {
 			if (hints[i] == null) {
-				hints[i] = "";
+				hints[i] = StringTool.leer;
 			}
 		}
 		if (!StringUtils.isBlank(hints[HINT_BIRTHDATE])) {

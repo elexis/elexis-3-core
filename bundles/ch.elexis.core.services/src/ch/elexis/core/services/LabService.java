@@ -68,7 +68,7 @@ public class LabService implements ILabService {
 				evaluate(labResult.getItem(), labResult.getPatient(), new TimeTool(time));
 		}
 		
-		if (evaluationResult == null || "".equals(evaluationResult) //$NON-NLS-1$
+		if (evaluationResult == null || StringTool.leer.equals(evaluationResult) //$NON-NLS-1$
 			|| "?formel?".equals(evaluationResult)) { //$NON-NLS-1$
 			return Result.ERROR(evaluationResult);
 		}
@@ -123,7 +123,7 @@ public class LabService implements ILabService {
 		if (formula.startsWith("SCRIPT:")) {
 			log.warn("Script elements currently not supported, returning empty String. LabItem ["
 				+ labItem.getId() + "]");
-			return "";
+			return StringTool.leer;
 		}
 		boolean bMatched = false;
 		labresults = sortResultsDescending(labresults);
@@ -147,7 +147,7 @@ public class LabService implements ILabService {
 			if (fields.length > 1) {
 				String val = getPersistentObjectAttributeMapping(patient,
 					fields[1].replaceFirst("\\]", StringTool.leer));
-				String repl = "\"" + val + "\"";
+				String repl = StringTool.backslash + val + StringTool.backslash;
 				matcher.appendReplacement(sb, repl);
 				bMatched = true;
 			}

@@ -25,6 +25,7 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Kontakt;
 
+import ch.rgw.tools.StringTool;
 public class EtiketteDruckenDialog extends TitleAreaDialog implements ICallback {
 	final Kontakt kontakt;
 	final String template;
@@ -91,7 +92,7 @@ public class EtiketteDruckenDialog extends TitleAreaDialog implements ICallback 
 			return false;
 		}
 		
-		String printer = CoreHub.localCfg.get("Drucker/Etiketten/Name", "");
+		String printer = CoreHub.localCfg.get("Drucker/Etiketten/Name", StringTool.leer);
 		String tray = CoreHub.localCfg.get("Drucker/Etiketten/Schacht", null);
 		
 		return text.getPlugin().print(printer, tray, false);

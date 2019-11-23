@@ -13,6 +13,7 @@ import ch.rgw.tools.net.NetTool;
 /**
  * Trace actions done in the system by a user.
  */
+import ch.rgw.tools.StringTool;
 public class Trace {
 	
 	public static final String TABLENAME = "traces";
@@ -32,7 +33,7 @@ public class Trace {
 		}
 		String _workstation = (StringUtils.isEmpty(workstation)) ? "unknown"
 				: StringUtils.abbreviate(workstation, 40);
-		String _action = (StringUtils.isEmpty(action)) ? "" : action;
+		String _action = (StringUtils.isEmpty(action)) ? StringTool.leer : action;
 		
 		JdbcLink connection = PersistentObject.getConnection();
 		

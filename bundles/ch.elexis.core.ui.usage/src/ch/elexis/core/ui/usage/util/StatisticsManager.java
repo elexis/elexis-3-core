@@ -29,6 +29,7 @@ import ch.elexis.core.ui.usage.model.ModelFactory;
 import ch.elexis.core.ui.usage.model.Statistics;
 import ch.rgw.tools.TimeTool;
 
+import ch.rgw.tools.StringTool;
 public enum StatisticsManager {
 	
 		INSTANCE;
@@ -185,7 +186,7 @@ public enum StatisticsManager {
 			os.close();
 			return aString;
 		} catch (IOException e) {
-			LoggerFactory.getLogger(StatisticsManager.class).error("", e);
+			LoggerFactory.getLogger(StatisticsManager.class).error(StringTool.leer, e);
 		}
 		return null;
 	}

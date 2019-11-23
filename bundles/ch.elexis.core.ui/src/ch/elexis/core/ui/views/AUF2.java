@@ -54,6 +54,7 @@ import ch.rgw.tools.ExHandler;
  * @author gerry
  * 
  */
+import ch.rgw.tools.StringTool;
 public class AUF2 extends ViewPart implements IActivationListener {
 	public static final String ID = "ch.elexis.auf"; //$NON-NLS-1$
 	TableViewer tv;
@@ -121,7 +122,7 @@ public class AUF2 extends ViewPart implements IActivationListener {
 					AUF auf = (AUF) selection.getFirstElement();
 					sb.append(auf.storeToString()).append(","); //$NON-NLS-1$
 				}
-				event.data = sb.toString().replace(",$", ""); //$NON-NLS-1$ //$NON-NLS-2$
+				event.data = sb.toString().replace(",$", StringTool.leer); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		});
 	}

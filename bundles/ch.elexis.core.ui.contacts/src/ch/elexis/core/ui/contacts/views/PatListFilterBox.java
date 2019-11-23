@@ -57,6 +57,7 @@ import ch.rgw.tools.IFilter;
  * @author Gerry
  * 
  */
+import ch.rgw.tools.StringTool;
 public class PatListFilterBox extends ListDisplay<PersistentObject> implements IFilter {
 	PersistentObjectDropTarget dropTarget;
 	private static final String ETIKETTE = Messages.PatListFilterBox_Sticker; //$NON-NLS-1$
@@ -258,13 +259,13 @@ public class PatListFilterBox extends ListDisplay<PersistentObject> implements I
 			ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			ret.setLayout(new GridLayout(3, false));
 			new Label(ret, SWT.NONE).setText(Messages.PatListFilterBox_Field3); //$NON-NLS-1$
-			new Label(ret, SWT.NONE).setText(" "); //$NON-NLS-1$
+			new Label(ret, SWT.NONE).setText(StringTool.space); //$NON-NLS-1$
 			new Label(ret, SWT.NONE).setText(Messages.PatListFilterBox_VValue); //$NON-NLS-1$
 			tFeld = new Text(ret, SWT.BORDER);
 			tFeld.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			cbOp = new Combo(ret, SWT.SINGLE | SWT.READ_ONLY);
 			cbOp.setItems(new String[] {
-				"=", "LIKE", "Regexp" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				StringTool.equals, "LIKE", "Regexp" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			});
 			cbOp.select(0);
 			tValue = new Text(ret, SWT.BORDER);

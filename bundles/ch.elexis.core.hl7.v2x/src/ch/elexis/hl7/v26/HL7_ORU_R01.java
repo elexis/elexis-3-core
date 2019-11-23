@@ -57,6 +57,7 @@ import ch.elexis.hl7.model.ObservationMessage;
 import ch.elexis.hl7.model.StringData;
 import ch.elexis.hl7.model.TextData;
 
+import ch.rgw.tools.StringTool;
 public class HL7_ORU_R01 extends HL7Writer {
 	
 	// constants for OBR-47
@@ -134,13 +135,13 @@ public class HL7_ORU_R01 extends HL7Writer {
 			String pid2_patientId = pid.getPid2_PatientID().getCx1_IDNumber().getValue();
 			String pid4_alternatePatientId =
 				pid.getPid4_AlternatePatientIDPID(0).getCx1_IDNumber().getValue();
-			String tmp1 = "";
-			String tmp2 = "";
+			String tmp1 = StringTool.leer;
+			String tmp2 = StringTool.leer;
 			if (pid.getPid5_PatientName(0).getName() != null)
 				tmp1 = pid.getPid5_PatientName(0).getFamilyName().getFn1_Surname().getValue();
 			if (pid.getPid5_PatientName(0).getFamilyName() != null)
 				tmp2 = pid.getPid5_PatientName(0).getGivenName().getValue();
-			String pid5_patientName = tmp1 + " " + tmp2;
+			String pid5_patientName = tmp1 + StringTool.space + tmp2;
 			String nteAfterPid_patientNotesAndComments = readPatientNotesAndComments(oru.getPATIENT_RESULT().getPATIENT());
 			String orc2_placerOrderNumber =
 				oru.getPATIENT_RESULT().getORDER_OBSERVATION().getORC().getOrc2_PlacerOrderNumber()
@@ -152,7 +153,7 @@ public class HL7_ORU_R01 extends HL7Writer {
 			
 			int obscount = oru.getPATIENT_RESULT().getORDER_OBSERVATIONReps();
 			for (int j = 0; j < obscount; j++) {
-				String appendedTX = ""; //$NON-NLS-1$
+				String appendedTX = StringTool.leer; //$NON-NLS-1$
 				OBR obr = oru.getPATIENT_RESULT().getORDER_OBSERVATION(j).getOBR();
 				String obrDateOfObservation = obr.getObr7_ObservationDateTime().getValue();
 				
@@ -163,9 +164,9 @@ public class HL7_ORU_R01 extends HL7Writer {
 					AbstractPrimitive comment = nte.getNte3_Comment(0);
 					if (comment != null) {
 						if (orderCommentNTE != null) {
-							orderCommentNTE += "\n";
+							orderCommentNTE += StringTool.lf;
 						} else {
-							orderCommentNTE = "";
+							orderCommentNTE = StringTool.leer;
 						}
 						orderCommentNTE += comment.getValue();
 					}
@@ -187,9 +188,9 @@ public class HL7_ORU_R01 extends HL7Writer {
 						AbstractPrimitive comment = nte.getNte3_Comment(0);
 						if (comment != null) {
 							if (commentNTE != null) {
-								commentNTE += "\n";
+								commentNTE += StringTool.lf;
 							} else {
-								commentNTE = "";
+								commentNTE = StringTool.leer;
 							}
 							commentNTE += comment.getValue();
 						}
@@ -202,7 +203,7 @@ public class HL7_ORU_R01 extends HL7Writer {
 					for (int k = 0; k < 2; k++) {
 						CWE cwe = obr.getObr47_FillerSupplementalServiceInformation(k);
 						if (cwe != null) {
-							String code = "";
+							String code = StringTool.leer;
 							if (cwe.getCwe3_NameOfCodingSystem() != null)
 								code = cwe.getCwe3_NameOfCodingSystem().getValue();
 							if (CODINGSYSTEM_DORNER_GROUP_CODE.equalsIgnoreCase(code)) {
@@ -241,7 +242,7 @@ public class HL7_ORU_R01 extends HL7Writer {
 					} else if (HL7Constants.OBX_VALUE_TYPE_ST.equals(valueType)) {
 						String name = obx.getObx4_ObservationSubID().getValue();
 						
-						String valueST = ""; //$NON-NLS-1$
+						String valueST = StringTool.leer; //$NON-NLS-1$
 						Object value = obx.getObx5_ObservationValue(0).getData();
 						if (value instanceof ST) {
 							valueST = ((ST) obx.getObx5_ObservationValue(0).getData()).getValue();
@@ -253,19 +254,19 @@ public class HL7_ORU_R01 extends HL7Writer {
 						observation.add(new StringData(name, unit, valueST, range,
 							dateOfObservation, commentNTE, group, sequence));
 					} else if (HL7Constants.OBX_VALUE_TYPE_TX.equals(valueType)) {
-						String valueTX = ""; //$NON-NLS-1$
+						String valueTX = StringTool.leer; //$NON-NLS-1$
 						Object value = obx.getObx5_ObservationValue(0).getData();
 						if (value instanceof TX) {
 							valueTX = ((TX) obx.getObx5_ObservationValue(0).getData()).getValue();
 						}
-						appendedTX += valueTX + "\n"; //$NON-NLS-1$
+						appendedTX += valueTX + StringTool.lf; //$NON-NLS-1$
 					} else if (HL7Constants.OBX_VALUE_TYPE_FT.equals(valueType)) {
-						String valueFT = ""; //$NON-NLS-1$
+						String valueFT = StringTool.leer; //$NON-NLS-1$
 						Object value = obx.getObx5_ObservationValue(0).getData();
 						if (value instanceof FT) {
 							valueFT = ((FT) obx.getObx5_ObservationValue(0).getData()).getValue();
 						}
-						appendedTX += parseTextValue(valueFT) + "\n"; //$NON-NLS-1$
+						appendedTX += parseTextValue(valueFT) + StringTool.lf; //$NON-NLS-1$
 					} else {
 						addError(MessageFormat.format("Value type {0} is not implemented!", //$NON-NLS-1$
 							valueType));
@@ -294,8 +295,8 @@ public class HL7_ORU_R01 extends HL7Writer {
 	
 	public String parseTextValue(String value){
 		String text = value;
-		text = text.replaceAll("\\\\.br\\\\", "\n");
-		text = text.replaceAll("\\\\.BR\\\\", "\n");
+		text = text.replaceAll("\\\\.br\\\\", StringTool.lf);
+		text = text.replaceAll("\\\\.BR\\\\", StringTool.lf);
 		
 		// only return parsed value if it contains reasonable input
 		if (text != null && !text.isEmpty()) {
@@ -310,7 +311,7 @@ public class HL7_ORU_R01 extends HL7Writer {
 			FT comment = patient.getNTE(i).getComment(0);
 			sb.append(comment.toString());
 			if (patient.getNTEReps() > i) {
-				sb.append("\n");
+				sb.append(StringTool.lf);
 			}
 		}
 		return sb.toString();
@@ -478,9 +479,9 @@ public class HL7_ORU_R01 extends HL7Writer {
 		}
 		
 		if (refValue == null)
-			return "";
-		if (refValue == "")
-			return "";
+			return StringTool.leer;
+		if (refValue == StringTool.leer)
+			return StringTool.leer;
 		
 		if (resultat != null) {
 			Double doubleObj = null;
@@ -644,7 +645,7 @@ public class HL7_ORU_R01 extends HL7Writer {
 		// OBX-6: Units <LabItems.EINHEIT>
 		obx.getObx6_Units().getCwe1_Identifier().setValue(laborItem.getEinheit());
 		// OBX-7: References Range <LabItems.REFMANN>, bzw <LabItems.REFFRAU> je nach Geschlecht
-		String refRange = "";
+		String refRange = StringTool.leer;
 		if (patient.isMale()) {
 			refRange = laborItem.getRefMann();
 		} else {
@@ -672,6 +673,6 @@ public class HL7_ORU_R01 extends HL7Writer {
 	private void fillNTE(final NTE nte, final HL7LaborWert laborWert) throws DataTypeException,
 		HL7Exception{
 		nte.getNte1_SetIDNTE().setValue("1"); //$NON-NLS-1$
-		nte.getNte3_Comment(0).setValue(laborWert.getKommentar().replace("\n", ";"));
+		nte.getNte3_Comment(0).setValue(laborWert.getKommentar().replace(StringTool.lf, ";"));
 	}
 }

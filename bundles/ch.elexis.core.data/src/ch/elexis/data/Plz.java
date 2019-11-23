@@ -46,7 +46,7 @@ public class Plz extends PersistentObject {
 			"Plz", "Ort", "Kanton"
 		}, f);
 		StringBuilder ret = new StringBuilder();
-		ret.append(f[0]).append(" ").append(f[1]).append(" ").append(f[2]);
+		ret.append(f[0]).append(StringTool.space).append(f[1]).append(StringTool.space).append(f[2]);
 		return ret.toString();
 	}
 	

@@ -23,6 +23,7 @@ import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.TimeTool;
 
+import ch.rgw.tools.StringTool;
 @SuppressWarnings("deprecation")
 public class AllDataAccessor implements IDataAccess {
 	
@@ -96,18 +97,18 @@ public class AllDataAccessor implements IDataAccess {
 				sb.append(date.toString(TimeTool.DATE_GER));
 				
 				if (withFall) {
-					sb.append(" ");
+					sb.append(StringTool.space);
 					sb.append(kons.getMandant().getLabel(false));
 					sb.append(" - ");
 					sb.append(fall.getBezeichnung());
-					sb.append(" ");
+					sb.append(StringTool.space);
 				}
 				
-				sb.append("\n"); //$NON-NLS-1$
+				sb.append(StringTool.lf); //$NON-NLS-1$
 				
 				Samdas samdas = new Samdas(kons.getEintrag().getHead());
 				sb.append(samdas.getRecordText());
-				sb.append("\n"); //$NON-NLS-1$
+				sb.append(StringTool.lf); //$NON-NLS-1$
 			}
 		}
 		

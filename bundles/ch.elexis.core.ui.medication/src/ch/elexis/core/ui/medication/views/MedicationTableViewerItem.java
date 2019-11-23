@@ -27,6 +27,7 @@ import ch.elexis.core.ui.icons.Images;
  * Maps an element of type {@link IPrescription} for presentation within the MedicationTableViewer.
  * Used for performance reasons.
  */
+import ch.rgw.tools.StringTool;
 public class MedicationTableViewerItem {
 	
 	private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -90,11 +91,11 @@ public class MedicationTableViewerItem {
 	}
 	
 	public String getBeginDate(){
-		return dateFrom != null ? dateFormatter.format(dateFrom) : "";
+		return dateFrom != null ? dateFormatter.format(dateFrom) : StringTool.leer;
 	}
 	
 	public String getEndDate(){
-		return dateUntil != null ? dateFormatter.format(dateUntil) : "";
+		return dateUntil != null ? dateFormatter.format(dateUntil) : StringTool.leer;
 	}
 	
 	public Date getEndTime(){
@@ -106,7 +107,7 @@ public class MedicationTableViewerItem {
 	}
 	
 	public String getDosis(){
-		return dosis != null ? dosis : "";
+		return dosis != null ? dosis : StringTool.leer;
 	}
 	
 	public IPrescription getPrescription(){
@@ -302,12 +303,12 @@ public class MedicationTableViewerItem {
 			if (reason != null) {
 				item.stopReason = reason;
 			} else {
-				item.stopReason = "";
+				item.stopReason = StringTool.leer;
 			}
 		}
 		
 		private void resolvePrescriptorLabel(){
-			item.prescriptorLabel = "";
+			item.prescriptorLabel = StringTool.leer;
 			if (item.prescriptor != null) {
 				item.prescriptorLabel = item.prescriptor.getLabel();
 			}
@@ -318,7 +319,7 @@ public class MedicationTableViewerItem {
 			if (comment != null) {
 				item.disposalComment = comment;
 			} else {
-				item.disposalComment = "";
+				item.disposalComment = StringTool.leer;
 			}
 		}
 	}

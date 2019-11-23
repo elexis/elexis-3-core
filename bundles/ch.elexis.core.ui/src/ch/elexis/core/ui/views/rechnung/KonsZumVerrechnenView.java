@@ -110,6 +110,7 @@ import ch.rgw.tools.Tree;
  * @author Gerry
  * 
  */
+import ch.rgw.tools.StringTool;
 public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 	public static final String ID = "ch.elexis.BehandlungenVerrechnenView"; //$NON-NLS-1$
 	CommonViewer cv;
@@ -285,7 +286,7 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 					(org.eclipse.swt.widgets.Tree) (event.widget);
 				TreeItem obj = theWidget.getSelection()[0];
 				TreeItem parent = obj.getParentItem();
-				String viewID = "";
+				String viewID = StringTool.leer;
 				if (parent == null) {
 					// no parent at all -> must be patient
 					viewID = UiResourceConstants.PatientDetailView2_ID;

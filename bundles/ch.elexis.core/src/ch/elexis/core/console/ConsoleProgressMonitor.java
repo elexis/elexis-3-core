@@ -3,6 +3,7 @@ package ch.elexis.core.console;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.osgi.framework.console.CommandInterpreter;
 
+import ch.rgw.tools.StringTool;
 public class ConsoleProgressMonitor implements IProgressMonitor {
 
 	private CommandInterpreter ci;
@@ -27,7 +28,7 @@ public class ConsoleProgressMonitor implements IProgressMonitor {
 	}
 
 	private void printStatus() {
-		String msg = name + " [" + worked + "/" + totalWork + "]";
+		String msg = name + " [" + worked + StringTool.slash + totalWork + "]";
 		if (cancelled) {
 			msg = "-CNCLD- " + msg;
 		}

@@ -10,6 +10,7 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.importer.div.importers.dialog.QueryOverwriteDialog;
 
+import ch.rgw.tools.StringTool;
 public class DefaultLabImportUiHandler extends ImportHandler {
 	
 	@Override
@@ -50,7 +51,7 @@ public class DefaultLabImportUiHandler extends ImportHandler {
 		public void run(){
 			StringBuilder message = new StringBuilder();
 			message.append("Alter Wert\n").append(oldResult.getLabel());
-			message.append("\n");
+			message.append(StringTool.lf);
 			message.append("Neuer Wert\n").append(newResult.getLabel());
 			message.append("\n\n");
 			message.append(Messages.HL7Parser_AskOverwrite);

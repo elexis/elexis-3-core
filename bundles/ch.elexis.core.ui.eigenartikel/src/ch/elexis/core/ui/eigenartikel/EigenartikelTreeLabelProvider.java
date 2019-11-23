@@ -6,6 +6,7 @@ import ch.elexis.core.data.service.StockServiceHolder;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.services.IStockService.Availability;
 
+import ch.rgw.tools.StringTool;
 public class EigenartikelTreeLabelProvider extends LabelProvider {
 	
 	@Override
@@ -13,15 +14,15 @@ public class EigenartikelTreeLabelProvider extends LabelProvider {
 		IArticle ea = (IArticle) element;
 		String name = ea.getName();
 		if (!ea.isProduct()) {
-			String label = "";
-			label += ea.getPackageSize() + " "
-				+ (ea.getPackageUnit() != null ? ea.getPackageUnit() : "");
+			String label = StringTool.leer;
+			label += ea.getPackageSize() + StringTool.space
+				+ (ea.getPackageUnit() != null ? ea.getPackageUnit() : StringTool.leer);
 			Availability availability =
 				StockServiceHolder.get().getCumulatedAvailabilityForArticle(ea);
 			if (availability != null) {
 				label += " (" + availability.toString() + ")";
 			}
-			return name +" " +label;
+			return name +StringTool.space +label;
 		}
 		return name;
 	}

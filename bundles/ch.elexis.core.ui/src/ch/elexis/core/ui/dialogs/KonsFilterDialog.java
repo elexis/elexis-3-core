@@ -112,7 +112,7 @@ public class KonsFilterDialog extends TitleAreaDialog {
 		String cc = tBed.getText();
 		if (!StringTool.isNothing(cc)) {
 			StringTool.tokenizer tk =
-				new StringTool.tokenizer(cc, " ", StringTool.tokenizer.DOUBLE_QUOTED_TOKENS); //$NON-NLS-1$
+				new StringTool.tokenizer(cc, StringTool.space, StringTool.tokenizer.DOUBLE_QUOTED_TOKENS); //$NON-NLS-1$
 			try {
 				List<String> tokens = tk.tokenize();
 				int last = 0;

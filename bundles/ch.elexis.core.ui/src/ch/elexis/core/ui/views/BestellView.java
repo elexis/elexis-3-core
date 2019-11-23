@@ -93,6 +93,7 @@ import ch.elexis.data.Bestellung;
 import ch.elexis.data.Kontakt;
 import ch.rgw.tools.ExHandler;
 
+import ch.rgw.tools.StringTool;
 public class BestellView extends ViewPart implements ISaveablePart2 {
 	
 	public static final String ID = "ch.elexis.BestellenView"; //$NON-NLS-1$
@@ -521,7 +522,7 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 					StringBuilder sb = new StringBuilder();
 					for (IOrderEntry noSupItem : noSupplierItems) {
 						sb.append(noSupItem.getArticle().getLabel());
-						sb.append("\n");
+						sb.append(StringTool.lf);
 					}
 					runOrder =
 						SWTHelper.askYesNo(Messages.BestellView_NoSupplierArticle, MessageFormat

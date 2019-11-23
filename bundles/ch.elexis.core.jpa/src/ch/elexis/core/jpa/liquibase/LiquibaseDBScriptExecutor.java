@@ -22,6 +22,7 @@ import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ResourceAccessor;
 
+import ch.rgw.tools.StringTool;
 public class LiquibaseDBScriptExecutor {
 
 	private static Logger logger = LoggerFactory.getLogger(LiquibaseDBScriptExecutor.class);
@@ -44,7 +45,7 @@ public class LiquibaseDBScriptExecutor {
 				DatabaseFactory.getInstance().findCorrectDatabaseImplementation(database);
 			
 			Liquibase liquibase = new Liquibase(changeId, resourceAccessor, targetDb);
-			liquibase.update("");
+			liquibase.update(StringTool.leer);
 			return true;
 		} catch (LiquibaseException | SQLException e) {
 			// log and try to carry on

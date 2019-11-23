@@ -16,6 +16,7 @@ import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.PathologicDescription;
 import ch.elexis.core.types.PathologicDescription.Description;
 
+import ch.rgw.tools.StringTool;
 public class LabPathologicEvaluator {
 	
 	private static Pattern refValuesPattern = Pattern.compile("\\((.*?)\\)"); //$NON-NLS-1$
@@ -159,8 +160,8 @@ public class LabPathologicEvaluator {
 	private boolean isUsingItemRef(ILabResult labResult, Gender gender){
 		boolean useLocalRefs = ModelUtil.isUserConfig(ModelUtil.getActiveUserContact().orElse(null),
 			Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
-		String localRef = "";
-		String ref = "";
+		String localRef = StringTool.leer;
+		String ref = StringTool.leer;
 		if (gender == Gender.MALE) {
 			localRef = labResult.getItem().getReferenceMale();
 			ref = labResult.getReferenceMale();
@@ -188,7 +189,7 @@ public class LabPathologicEvaluator {
 		Gender gender = labResult.getPatient().getGender();
 		
 		Description description = Description.PATHO_REF;
-		String refValue = "";
+		String refValue = StringTool.leer;
 		if (Gender.MALE == gender) {
 			refValue = labResult.getReferenceMale();
 			if (StringUtils.isEmpty(refValue)) {

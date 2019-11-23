@@ -35,6 +35,7 @@ import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
 
+import ch.rgw.tools.StringTool;
 @Component
 public class InvoiceService implements IInvoiceService {
 	
@@ -76,7 +77,7 @@ public class InvoiceService implements IInvoiceService {
 							+ " für\nPatient Nr. " + pat.getPatientNr() + ", " + pat.getLastName()
 							+ ", " + pat.getFirstName() + ", "
 							+ pat.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
-							+ "\n" + "enthält mindestens eine Leistung zum Preis 0.00.\n"
+							+ StringTool.lf + "enthält mindestens eine Leistung zum Preis 0.00.\n"
 							+ "\nDie Ärztekasse würde so eine Rechnung zurückgeben.\n\n";
 						return result.add(Result.SEVERITY.WARNING, 1, msg
 							+ "Diese Rechnung wird jetzt nicht erstellt."

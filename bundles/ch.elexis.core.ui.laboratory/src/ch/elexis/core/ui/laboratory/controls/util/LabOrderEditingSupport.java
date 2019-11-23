@@ -31,6 +31,7 @@ import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabResult;
 import ch.rgw.tools.TimeTool;
 
+import ch.rgw.tools.StringTool;
 public class LabOrderEditingSupport extends EditingSupport {
 	protected final String SMALLER = "<";
 	protected final String BIGGER = ">";
@@ -59,7 +60,7 @@ public class LabOrderEditingSupport extends EditingSupport {
 							String editedValue = (String) value;
 							if (editedValue.startsWith(SMALLER) || editedValue.startsWith(BIGGER)) {
 								String nrValue =
-									editedValue.replace(SMALLER, "").replace(BIGGER, "");
+									editedValue.replace(SMALLER, StringTool.leer).replace(BIGGER, StringTool.leer);
 								editedValue = nrValue.trim();
 							}
 							Float.parseFloat(editedValue);
@@ -162,7 +163,7 @@ public class LabOrderEditingSupport extends EditingSupport {
 				}
 			}
 		}
-		return ""; //$NON-NLS-1$
+		return StringTool.leer; //$NON-NLS-1$
 	}
 	
 	@Override

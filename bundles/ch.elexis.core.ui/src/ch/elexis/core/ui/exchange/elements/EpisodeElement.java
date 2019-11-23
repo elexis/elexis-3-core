@@ -64,7 +64,7 @@ public class EpisodeElement extends XChangeElement {
 		if (text != null) {
 			return text.getText();
 		}
-		return "";
+		return StringTool.leer;
 	}
 	
 	public String getDiagnosis(){
@@ -75,7 +75,7 @@ public class EpisodeElement extends XChangeElement {
 			String ret = de.getCode() + " (" + de.getCodeSystem() + ")";
 			return ret;
 		}
-		return "";
+		return StringTool.leer;
 	}
 	
 	static class DiagnosisElement extends XChangeElement {

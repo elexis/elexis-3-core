@@ -24,6 +24,7 @@ import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.ui.medication.handlers.ApplyCustomSortingHandler;
 import ch.rgw.tools.Money;
 
+import ch.rgw.tools.StringTool;
 public class MedicationViewHelper {
 	private static final int FILTER_PRESCRIPTION_AFTER_N_DAYS = 30;
 	
@@ -72,7 +73,7 @@ public class MedicationViewHelper {
 		
 		double rounded = Math.round(100.0 * cost) / 100.0;
 		if (canCalculate) {
-			return TTCOST +" "+Double.toString(rounded);
+			return TTCOST +StringTool.space+Double.toString(rounded);
 		} else {
 			if (rounded == 0.0) {
 				return TTCOST + " ?";

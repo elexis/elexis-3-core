@@ -175,7 +175,7 @@ public class Script extends NamedBlob2 {
 						repl = repl.replace('\"', ' ');
 						repl = repl.replace('\n', ' ');
 						repl = repl.replace('\r', ' ');
-						matcher.appendReplacement(sb, "\"" + repl + "\"");
+						matcher.appendReplacement(sb, StringTool.backslash + repl + StringTool.backslash);
 						bMatched = true;
 					}
 				}
@@ -230,7 +230,7 @@ public class Script extends NamedBlob2 {
 				String[] parameters = params.split("\\s*,\\s*");
 				for (int i = 0; i < parameters.length; i++) {
 					String parm = parameters[i].trim();
-					String[] p = parm.split("=");
+					String[] p = parm.split(StringTool.equals);
 					if (p.length == 2) {
 						script = script.replaceAll("\\" + p[0], p[1]);
 					} else {
