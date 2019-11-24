@@ -525,6 +525,10 @@ public class Messages extends NLS {
 	public static String GlobalActions_ac_openhandbook;
 	public static String GlobalActions_plaBill;
 	public static String GlobalActions_saveasstartperspective;
+	
+	public static String GlobalMessage_noNumericValue;
+	public static String GlobalMessage_valueNotSet;
+
 	public static String HistoryLoader_LoadKonsMessage;
 	public static String HistoryLoader_Sorting;
 	public static String ListLoader_CouldntLoadData;

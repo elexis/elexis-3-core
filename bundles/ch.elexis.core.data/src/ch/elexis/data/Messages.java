@@ -47,6 +47,9 @@ public final class Messages{
 	public static String GlobalActions_SecondForToday = ch.elexis.core.l10n.Messages.GlobalActions_SecondForToday;
 	public static String GlobalActions_SecondForTodayQuestion = ch.elexis.core.l10n.Messages.GlobalActions_SecondForTodayQuestion;
 	
+	public static String GlobalMessage_noNumericValue = ch.elexis.core.l10n.Messages.GlobalMessage_noNumericValue;
+	public static String GlobalMessage_valueNotSet = ch.elexis.core.l10n.Messages.GlobalMessage_valueNotSet;
+	
 	public static String LabItem_defaultGroup = ch.elexis.core.l10n.Messages.LabItem_defaultGroup;
 	public static String LabItem_longOwnLab = ch.elexis.core.l10n.Messages.LabItem_longOwnLab;
 	public static String LabItem_shortOwnLab = ch.elexis.core.l10n.Messages.LabItem_shortOwnLab;
