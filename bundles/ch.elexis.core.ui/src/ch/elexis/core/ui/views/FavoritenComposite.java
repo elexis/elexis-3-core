@@ -1,5 +1,7 @@
 package ch.elexis.core.ui.views;
 
+import java.util.Optional;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -39,17 +41,19 @@ import org.eclipse.swt.widgets.TableItem;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.interfaces.ICodeElement;
-import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.data.events.ElexisEvent;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.service.StoreToStringServiceHolder;
+import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.model.ICodeElementBlock;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.ICodeSelectorTarget;
 import ch.elexis.core.ui.actions.Messages;
+import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.util.PersistentObjectDragSource;
-import ch.elexis.data.Leistungsblock;
-import ch.elexis.data.PersistentObject;
 import ch.elexis.data.VerrechenbarFavorites;
 import ch.elexis.data.VerrechenbarFavorites.Favorite;
 
@@ -59,6 +63,14 @@ public class FavoritenComposite extends Composite {
 	private Transfer[] types = new Transfer[] {
 		TextTransfer.getInstance()
 	};
+	
+	private ElexisUiEventListenerImpl reloadListener =
+		new ElexisUiEventListenerImpl(Favorite.class, ElexisEvent.EVENT_RELOAD) {
+			@Override
+			public void runInUi(ElexisEvent ev){
+				update();
+			}
+		};
 	
 	/**
 	 * Create the composite.
@@ -99,13 +111,13 @@ public class FavoritenComposite extends Composite {
 				TableItem item = (TableItem) event.item;
 				
 				Favorite fav = (Favorite) item.getData();
-				IPersistentObject cfs = fav.getPersistentObject();
+				Optional<Identifiable> cfs = fav.getObject();
 				
 				String simpleName = "?";
 				String label = "?";
-				if (cfs != null) {
-					simpleName = cfs.getClass().getSimpleName();
-					label = cfs.getLabel();
+				if (cfs.isPresent()) {
+					simpleName = cfs.get().getClass().getSimpleName();
+					label = cfs.get().getLabel();
 				}
 				
 				/* center column 1 vertically */
@@ -143,14 +155,17 @@ public class FavoritenComposite extends Composite {
 					StructuredSelection ss = (StructuredSelection) tv.getSelection();
 					if (!ss.isEmpty()) {
 						Favorite fav = (Favorite) ss.getFirstElement();
-						IPersistentObject po = fav.getPersistentObject();
-						if (po instanceof Leistungsblock) {
-							Leistungsblock lb = (Leistungsblock) po;
-							for (ICodeElement iCodeElement : lb.getElements()) {
-								target.codeSelected((PersistentObject) iCodeElement);
+						Optional<Identifiable> po = fav.getObject();
+						if (po.isPresent()) {
+							if (po.get() instanceof ICodeElementBlock) {
+								ICodeElementBlock lb = (ICodeElementBlock) po.get();
+								for (ch.elexis.core.model.ICodeElement iCodeElement : lb
+									.getElements()) {
+									target.codeSelected(iCodeElement);
+								}
+							} else {
+								target.codeSelected(po.get());
 							}
-						} else {
-							target.codeSelected((PersistentObject) po);
 						}
 					}
 				}
@@ -206,7 +221,7 @@ public class FavoritenComposite extends Composite {
 			public void run(){
 				StructuredSelection selection = (StructuredSelection) tv.getSelection();
 				Favorite fav = (Favorite) selection.getFirstElement();
-				VerrechenbarFavorites.setFavorite(fav.getPersistentObject(), false);
+				VerrechenbarFavorites.setFavorite(fav.getObject(), false);
 				tv.refresh();
 			}
 		});
@@ -223,39 +238,43 @@ public class FavoritenComposite extends Composite {
 					event.data = null;
 				} else {
 					Favorite fav = (Favorite) ss.getFirstElement();
-					if (fav.getPersistentObject() instanceof Leistungsblock) {
-						Leistungsblock lb = (Leistungsblock) fav.getPersistentObject();
-						if (lb != null) {
-							event.data = lb.storeToString();
-						}
-					} else {
-						event.data = fav.getStoreToString();
+					Optional<Identifiable> favObj = fav.getObject();
+					if (favObj.isPresent()) {
+						event.data = StoreToStringServiceHolder.getStoreToString(favObj.get());
 					}
 				}
 			}
 			
 			public void dragStart(final DragSourceEvent event){
-				StructuredSelection ss = (StructuredSelection) tv.getSelection();
-				if (ss.isEmpty()) {
-					PersistentObjectDragSource.setDraggedObject(null);
-					event.doit = false;
-				} else {
-					Favorite fav = (Favorite) ss.getFirstElement();
-					if (fav.getPersistentObject() instanceof Leistungsblock) {
-						Leistungsblock lb = (Leistungsblock) fav.getPersistentObject();
-						PersistentObjectDragSource.setDraggedObject(lb);
-					} else {
-						PersistentObjectDragSource
-							.setDraggedObject((PersistentObject) fav.getPersistentObject());
-					}
-					event.doit = true;
-				}
+				// TODO ...
+				//				StructuredSelection ss = (StructuredSelection) tv.getSelection();
+				//				if (ss.isEmpty()) {
+				//					PersistentObjectDragSource.setDraggedObject(null);
+				//					event.doit = false;
+				//				} else {
+				//					Favorite fav = (Favorite) ss.getFirstElement();
+				//					if (fav.getPersistentObject() instanceof Leistungsblock) {
+				//						Leistungsblock lb = (Leistungsblock) fav.getPersistentObject();
+				//						PersistentObjectDragSource.setDraggedObject(lb);
+				//					} else {
+				//						PersistentObjectDragSource
+				//							.setDraggedObject((PersistentObject) fav.getPersistentObject());
+				//					}
+				//					event.doit = true;
+				//				}
 			}
 		});
 		
 		tv.setContentProvider(new ArrayContentProvider());
 		tv.setLabelProvider(new ColorizedLabelProvider());
 		tv.setInput(VerrechenbarFavorites.getFavorites());
+		
+		ElexisEventDispatcher.getInstance().addListeners(reloadListener);
+	}
+	
+	@Override
+	public void dispose(){
+		ElexisEventDispatcher.getInstance().removeListeners(reloadListener);
 	}
 	
 	@Override
@@ -279,11 +298,11 @@ public class FavoritenComposite extends Composite {
 		@Override
 		public Color getBackground(Object element){
 			Favorite fav = (Favorite) element;
-			ICodeElement v = (ICodeElement) fav.getPersistentObject();
-			if (v == null) {
+			Optional<Identifiable> v = fav.getObject();
+			if (!v.isPresent()) {
 				return null;
 			}
-			String codeSystemName = v.getCodeSystemName();
+			String codeSystemName = ((ICodeElement) v.get()).getCodeSystemName();
 			if (codeSystemName == null) {
 				return null;
 			}

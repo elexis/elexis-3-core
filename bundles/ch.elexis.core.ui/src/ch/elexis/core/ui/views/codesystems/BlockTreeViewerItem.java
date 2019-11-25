@@ -7,7 +7,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
-import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.ICodeElementBlock;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.data.VerrechenbarFavorites;
@@ -69,8 +68,7 @@ public class BlockTreeViewerItem {
 		public Image getImage(Object element){
 			if (element instanceof BlockTreeViewerItem) {
 				BlockTreeViewerItem item = (BlockTreeViewerItem) element;
-				Favorite fav = VerrechenbarFavorites
-					.isFavorite(NoPoUtil.loadAsPersistentObject(item.getBlock()));
+				Favorite fav = VerrechenbarFavorites.isFavorite(item.getBlock());
 				if (fav != null)
 					return Images.IMG_STAR.getImage();
 			}

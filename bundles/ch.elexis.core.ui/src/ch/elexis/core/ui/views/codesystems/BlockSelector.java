@@ -54,7 +54,6 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.ICodeElementBlock;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.builder.ICodeElementBlockBuilder;
@@ -101,7 +100,7 @@ public class BlockSelector extends CodeSelectorFactory {
 			if (firstElement instanceof BlockTreeViewerItem) {
 				selected = ((BlockTreeViewerItem) firstElement).getBlock();
 			}
-			tvfa.updateSelection(NoPoUtil.loadAsPersistentObject((Identifiable) selected));
+			tvfa.updateSelection((Identifiable) selected);
 			ContextServiceHolder.get().getRootContext().setTyped(selected);
 		}
 	};

@@ -3,17 +3,20 @@ package ch.elexis.data;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
+import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.jdt.Nullable;
-import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.model.ICodeElementBlock;
+import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.IStoreToStringService;
 
 public class VerrechenbarFavorites {
 	
@@ -29,7 +32,7 @@ public class VerrechenbarFavorites {
 				favorites = null;
 			};
 		};
-		
+	
 	static {
 		ElexisEventDispatcher.getInstance().addListeners(eeli_pat);
 	}
@@ -69,25 +72,22 @@ public class VerrechenbarFavorites {
 		}
 		CoreHub.userCfg.set(USER_CFG_FAVORITES, sb.toString());
 		CoreHub.userCfg.flush();
+		ElexisEventDispatcher.reload(Favorite.class);
 	}
 	
 	/**
+	 * Add or remove the object to or from the {@link Favorite}s of the user. The
+	 * {@link IStoreToStringService} must be able to create a store to string from the object.
+	 * 
+	 * @param billable
 	 * @param val
-	 *            toggle element as favorite of the user
-	 * @since 3.1
 	 */
-	public static void setFavorite(IPersistentObject po, boolean val){
-		Favorite fav = VerrechenbarFavorites.isFavorite(po);
+	public static void setFavorite(Object object, boolean val){
+		Favorite fav = VerrechenbarFavorites.isFavorite(object);
 		if (val) {
 			if (fav != null)
 				return;
-			String storeToString;
-			if (po instanceof Leistungsblock) {
-				storeToString =
-					Leistungsblock.class.getName() + StringConstants.DOUBLECOLON + po.getId();
-			} else {
-				storeToString = po.storeToString();
-			}
+			String storeToString = StoreToStringServiceHolder.getStoreToString(object);
 			VerrechenbarFavorites.getFavorites().add(new Favorite(storeToString, "", 0));
 		} else {
 			if (fav == null)
@@ -100,19 +100,14 @@ public class VerrechenbarFavorites {
 	}
 	
 	/**
+	 * Test if the object is a {@link Favorite} of the user.
 	 * 
-	 * @return the {@link Favorite} if a favorite {@link VerrechenbarAdapter} of this user, else
-	 *         null
+	 * @param billable
+	 * @return
 	 */
-	public static Favorite isFavorite(IPersistentObject po){
+	public static Favorite isFavorite(Object object){
 		for (Favorite favorite : getFavorites()) {
-			String comparator = "";
-			if (po instanceof Leistungsblock) {
-				comparator =
-					Leistungsblock.class.getName() + StringConstants.DOUBLECOLON + po.getId();
-			} else {
-				comparator = po.storeToString();
-			}
+			String comparator = StoreToStringServiceHolder.getStoreToString(object);
 			if (comparator.equalsIgnoreCase(favorite.storeToString)) {
 				return favorite;
 			}
@@ -142,8 +137,6 @@ public class VerrechenbarFavorites {
 		String macroString;
 		int order;
 		
-		private PersistentObjectFactory pof = new PersistentObjectFactory();
-		
 		public Favorite(String storeToString, String macroString, int order){
 			this.storeToString = storeToString;
 			this.macroString = macroString;
@@ -165,17 +158,17 @@ public class VerrechenbarFavorites {
 		
 		public String getMacroString(){
 			if (storeToString.startsWith(Leistungsblock.class.getName())) {
-				Leistungsblock po = (Leistungsblock) getPersistentObject();
-				return (po != null) ? po.getMacro() : macroString;
+				ICodeElementBlock block = (ICodeElementBlock) getObject().orElse(null);
+				return (block != null) ? block.getMacro() : macroString;
 			}
 			return macroString;
 		}
 		
 		public void setMacroString(String macroString){
 			if (storeToString.startsWith(Leistungsblock.class.getName())) {
-				Leistungsblock po = (Leistungsblock) getPersistentObject();
-				if (po != null) {
-					po.setMacro(macroString);
+				ICodeElementBlock block = (ICodeElementBlock) getObject().orElse(null);
+				if (block != null) {
+					block.setMacro(macroString);
 				} else {
 					log.warn("Could not set macroString " + macroString
 						+ " to Leistungsblock  as po is null.");
@@ -193,11 +186,13 @@ public class VerrechenbarFavorites {
 		}
 		
 		/**
-		 * @return the {@link IPersistentObject} as resolved via {@link #storeToString},
-		 *         <code>null</code> if erroneous
+		 * Get the {@link Identifiable} referenced by this {@link Favorite} using an
+		 * {@link IStoreToStringService}.
+		 * 
+		 * @return
 		 */
-		public @Nullable IPersistentObject getPersistentObject(){
-			return pof.createFromString(storeToString);
+		public Optional<Identifiable> getObject(){
+			return StoreToStringServiceHolder.get().loadFromString(storeToString);
 		}
 	}
 }
