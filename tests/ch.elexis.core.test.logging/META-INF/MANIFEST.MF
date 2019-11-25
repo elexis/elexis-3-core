@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Logging Configuration for Tests
+Bundle-SymbolicName: ch.elexis.core.test.logging
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: elexis.ch
+Fragment-Host: ch.qos.logback.classic
+Automatic-Module-Name: ch.elexis.core.test.logging
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ClassPath: rsc/,
+ .
