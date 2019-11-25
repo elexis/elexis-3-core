@@ -276,7 +276,13 @@ public class AppointmentService implements IAppointmentService {
 	
 	@Override
 	public List<String> getTypes(){
-		return new ArrayList<String>(
+		List<String> ret = new ArrayList<String>(
 			iConfigService.getAsList(AG_TERMINTYPEN, Collections.emptyList()));
+		if (ret.isEmpty() || ret.size() < 3) {
+			ret = Arrays.asList(Messages.Appointment_Range_Free, Messages.Appointment_Range_Locked,
+				Messages.Appointment_Normal_Appointment);
+			iConfigService.setFromList(AG_TERMINTYPEN, ret);
+		}
+		return ret;
 	}
 }
