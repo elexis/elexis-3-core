@@ -102,6 +102,7 @@ import ch.elexis.core.ui.views.controls.StickerComposite;
 import ch.elexis.core.utils.CoreUtil;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
+import ch.rgw.tools.Result;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.VersionedResource;
@@ -918,8 +919,12 @@ public class KonsDetailView extends ViewPart
 											Messages.KonsDetailView_No
 									}, 0); // $NON-NLS-1$
 								if (msd.open() == Window.OK) {
-									EncounterServiceHolder.get().transferToCoverage(actEncounter,
+									Result<IEncounter> transferResult = EncounterServiceHolder.get().transferToCoverage(actEncounter,
 										changeToCoverage, false);
+									if(!transferResult.isOK()) {
+										SWTHelper.alert("Error", transferResult.toString());
+									}
+									
 								} else {
 									ignoreSelectionEventOnce();
 									comboViewerFall
