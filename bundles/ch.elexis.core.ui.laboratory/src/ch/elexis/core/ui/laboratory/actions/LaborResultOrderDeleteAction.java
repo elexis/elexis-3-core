@@ -37,9 +37,7 @@ public class LaborResultOrderDeleteAction extends Action implements IAction {
 	
 	@Override
 	public void run(){
-		
-		boolean askForConfirmation = selectedOrdersOrResults.size() == 1;
-		
+				
 		for (Object object : selectedOrdersOrResults) {
 			
 			LabResult result;
@@ -60,12 +58,9 @@ public class LaborResultOrderDeleteAction extends Action implements IAction {
 					+ object.getClass());
 			}
 			
-			boolean delete = true;
-			if (askForConfirmation) {
-				delete = MessageDialog.openConfirm(shell, "Resultat/Verordnung entfernen",
-					"Soll das Resultat [" + result
-						+ "] sowie die zugeh. Verordnung wirklich entfernt werden?");
-			}
+			boolean delete = MessageDialog.openConfirm(shell, "Resultat/Verordnung entfernen",
+				"Soll das Resultat [" + result
+					+ "] sowie die zugeh. Verordnung wirklich entfernt werden?");
 			
 			if (delete) {
 				AcquireLockBlockingUi.aquireAndRun(result, new ILockHandler() {
