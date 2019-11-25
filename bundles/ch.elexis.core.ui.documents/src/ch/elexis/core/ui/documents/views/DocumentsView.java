@@ -33,10 +33,12 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -71,7 +73,9 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.documents.FilterCategory;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.Identifiable;
@@ -99,15 +103,15 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 	private Tree table;
 	
 	public static String importAction_ID = "ch.elexis.omnivore.data.DocumentView.importAction";
+	
 	private final String[] colLabels =
 		{
-			"", Messages.DocumentView_categoryColumn, Messages.DocumentView_stateColumn,
+			"", "", Messages.DocumentView_categoryColumn,
 			Messages.DocumentView_lastChangedColumn,
-			Messages.DocumentView_dateCreatedColumn,
 			Messages.DocumentView_titleColumn,
-			Messages.DocumentsView_extensionColumn, Messages.DocumentView_keywordsColumn
+			Messages.DocumentView_keywordsColumn
 		};
-	private final String colWidth = "20,80,80,80,80,50,150,500";
+	private final String colWidth = "20,20,100,100,200,500";
 	private final String sortSettings = "0,1,-1,false";
 	private String searchTitle = "";
 	
@@ -198,7 +202,7 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 					if (iDocument.getTitle().toLowerCase().contains(searchText)) {
 						return true;
 					}
-					if (iDocument.getKeywords().toLowerCase().contains(searchText.toLowerCase()))
+					if (iDocument.getKeywords() != null && iDocument.getKeywords().toLowerCase().contains(searchText.toLowerCase()))
 					{
 						return true;
 					}
@@ -213,14 +217,39 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 	class ViewContentProvider implements ITreeContentProvider {
 		
 		private Map<ICategory, List<IDocument>> documentsMap = new HashMap<>();
+		private FilterCategory selectedFilter = new FilterCategory();
 		
 		public void inputChanged(Viewer v, Object oldInput, Object newInput){
+			documentsMap.clear();
 			if (newInput instanceof Patient) {
-				documentsMap = DocumentStoreServiceHolder.getService()
-					.getDocumentsByPatientId(((Patient) newInput).getId());
-				
-			} else {
-				documentsMap.clear();
+				loadByFilterCategory((Patient) newInput);
+			} 
+		}
+		
+		public ViewContentProvider selectFilterCategory(ISelection selection){
+			StructuredSelection sel = (StructuredSelection) selection;
+			selectedFilter = new FilterCategory();
+			if (selection != null) {
+				Object element = sel.getFirstElement();
+				if (element instanceof FilterCategory) {
+					selectedFilter = (FilterCategory) element;
+				}
+			}
+			
+			Patient patient = ElexisEventDispatcher.getSelectedPatient();
+			loadByFilterCategory(patient);
+			return this;
+		}
+
+		private void loadByFilterCategory(Patient patient){
+			if (patient != null) {
+				if (selectedFilter.isAll()) {
+					documentsMap = DocumentStoreServiceHolder.getService()
+						.getDocumentsByPatientId(patient.getId());
+					viewer.refresh(true);
+				} else {
+					loadElementsByCategory(patient.getId(), selectedFilter);
+				}
 			}
 		}
 		
@@ -228,9 +257,9 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 			if (iDocument != null) {
 				ICategory cachedCategory = removeElementsByCachedCategory(iDocument);
 				if (!iDocument.getCategory().equals(cachedCategory)) {
-					loadElementsByCategory(iDocument, cachedCategory);
+					loadElementsByCategory(iDocument.getPatient().getId(), cachedCategory);
 				}
-				loadElementsByCategory(iDocument, iDocument.getCategory());
+				loadElementsByCategory(iDocument.getPatient().getId(), iDocument.getCategory());
 			}
 		}
 		
@@ -256,13 +285,15 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 			return null;
 		}
 		
-		private void loadElementsByCategory(IDocument iDocument, ICategory iCategory){
-			List<IDocument> iDocuments = DocumentStoreServiceHolder.getService()
-				.getDocumentsByCategory(iDocument.getPatient().getId(), iCategory);
-			if (!iDocuments.isEmpty()) {
-				documentsMap.put(iCategory, iDocuments);
-				viewer.refresh(true);
+		private void loadElementsByCategory(String patientId, ICategory iCategory){
+			if (!(iCategory instanceof FilterCategory) || documentsMap.get(iCategory) == null) {
+				List<IDocument> iDocuments = DocumentStoreServiceHolder.getService()
+					.getDocumentsByCategory(patientId, iCategory);
+				if (!iDocuments.isEmpty()) {
+					documentsMap.put(new FilterCategory(iDocuments.get(0).getCategory()), iDocuments);
+				}
 			}
+			viewer.refresh(true);
 		}
 		
 		private void removeElement(IDocument iDocument){
@@ -296,8 +327,15 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 		
 		
 		public Object[] getElements(Object parent){
-			List<ICategory> keys = new ArrayList<>(documentsMap.keySet());
-			return keys.toArray();
+			if (selectedFilter.isAll()) {
+				List<ICategory> keys = new ArrayList<>(documentsMap.keySet());
+				return keys.toArray();
+			} else if (documentsMap.containsKey(selectedFilter)) {
+				return new Object[] {
+					selectedFilter
+				};
+			}
+			return new Object[0];
 		}
 		
 		public Object[] getChildren(Object parentElement){
@@ -324,7 +362,7 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider {
 		public String getColumnText(Object obj, int index){
 			if (obj instanceof ICategory) {
-				if (index == 1) {
+				if (index == 2) {
 					return ((ICategory) obj).getName();
 				}
 				return null;
@@ -336,18 +374,14 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 			case 0:
 				return "";
 			case 1:
-				return "";
+				return dh.getStatus().getName().substring(0,1);
 			case 2:
-				return dh.getStatus().getName();
+				return "";
 			case 3:
 				return new TimeTool(dh.getLastchanged()).toString(TimeTool.FULL_GER);
 			case 4:
-				return new TimeTool(dh.getCreated()).toString(TimeTool.DATE_GER);
-			case 5:
 				return dh.getTitle();
-			case 6:
-				return dh.getExtension();
-			case 7:
+			case 5:
 				return dh.getKeywords();
 			default:
 				return "?";
@@ -355,7 +389,7 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 		}
 		
 		public Image getColumnImage(Object obj, int index){
-			if (index == 5) {
+			if (index == 4) {
 				if (obj instanceof IDocument
 					&& LocalDocumentServiceHolder.getService().isPresent()) {
 					Optional<Identifiable> opt = DocumentStoreServiceHolder.getService()
@@ -366,7 +400,7 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 					}
 				}
 			}
-			else if (index == 1 && obj instanceof ICategory) {
+			else if (index == 2 && obj instanceof ICategory) {
 				return Images.IMG_FOLDER.getImage();
 			}
 			return null;
@@ -422,7 +456,10 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1));
 		
 		viewer = new TreeViewer(table);
-		viewer.setContentProvider(new ViewContentProvider());
+		
+		DocumentsFilterBarComposite filterBarComposite = addFilterBar(parent);
+
+		viewer.setContentProvider(new ViewContentProvider().selectFilterCategory(filterBarComposite.getSelection()));
 		viewer.setLabelProvider(new ViewLabelProvider());
 		viewer.setUseHashlookup(true);
 		viewer.addFilter(new ViewFilterProvider());
@@ -556,6 +593,30 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 		getSite().setSelectionProvider(viewer);
 		
 		viewer.setInput(ElexisEventDispatcher.getSelectedPatient());
+	}
+
+	private DocumentsFilterBarComposite addFilterBar(Composite parent){
+		
+		List<FilterCategory> filters = new ArrayList<>();
+		filters.add(new FilterCategory(null, "Alle"));
+		filters.add(new FilterCategory(BriefConstants.UNKNOWN, "Briefe"));
+		filters.add(new FilterCategory(BriefConstants.AUZ, "Auf"));
+		filters.add(new FilterCategory(BriefConstants.RP, "Rezepte"));
+		
+		DocumentsFilterBarComposite filterBarComposite = new DocumentsFilterBarComposite(parent, SWT.NONE, filters);
+		filterBarComposite
+			.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+		filterBarComposite.addSelectionChangedListener(new ISelectionChangedListener() {
+			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event){
+				ViewContentProvider cp = (ViewContentProvider) viewer.getContentProvider();
+				if (cp != null) {
+					cp.selectFilterCategory(event.getSelection());
+				}
+			}
+		});
+		return filterBarComposite;
 	}
 	
 	private SelectionListener getSelectionAdapter(final TreeColumn column, final int index){

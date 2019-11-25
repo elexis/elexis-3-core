@@ -71,12 +71,12 @@ public class DocumentStore {
 		Map<ICategory, List<IDocument>> map = new HashMap<>();
 		List<IDocument> documents = getDocuments(patientId, null, null, null);
 		for (IDocument iDocument : documents) {
-			List<IDocument> categoryDocuments = map.get(iDocument.getCategory());
+			List<IDocument> categoryDocuments = map.get(new FilterCategory(iDocument.getCategory()));
 			if (categoryDocuments == null) {
 				categoryDocuments = new ArrayList<>();
 			}
 			categoryDocuments.add(iDocument);
-			map.put(iDocument.getCategory(), categoryDocuments);
+			map.put(new FilterCategory(iDocument.getCategory()), categoryDocuments);
 		}
 		return map;
 	}

@@ -13,6 +13,7 @@ package ch.elexis.core.ui.documents.views;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -187,7 +188,7 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 		tKeywords.setEnabled(keywordsCrudAllowed);
 		tTitle.setText(document.getTitle());
 		
-		tKeywords.setText(document.getKeywords());
+		tKeywords.setText(Objects.toString(document.getKeywords(), ""));
 		Object cbSelection =
 			document.getCategory() != null ? document.getCategory() : cbCategories.getElementAt(0);
 		if (cbSelection != null) {
@@ -211,10 +212,6 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 	
 	@Override
 	protected void okPressed(){
-		if (keywordsCrudAllowed) {
-			keywords = tKeywords.getText();
-		}
-		
 		title = tTitle.getText();
 		StructuredSelection comboSelection = (StructuredSelection) cbCategories.getSelection();
 		if (document != null) {
@@ -223,7 +220,11 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 				document.setCategory((ICategory) comboSelection.getFirstElement());
 			}
 			document.setTitle(title);
-			document.setKeywords(tKeywords.getText());
+			
+			if (keywordsCrudAllowed) {
+				keywords = tKeywords.getText();
+				document.setKeywords(keywords);
+			}
 		}
 		super.okPressed();
 	}
