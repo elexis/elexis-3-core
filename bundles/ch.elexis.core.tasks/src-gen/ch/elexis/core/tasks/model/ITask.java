@@ -203,5 +203,24 @@ public interface ITask extends Identifiable, Deleteable {
 	 */
 	<T> List<T> getResultEntryAsTypedList(String key, Class<T> clazz);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	<T> T getResultEntryTyped(String key, Class<T> clazz);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The task isFinished and finished with either TaskState.COMPLETED or TaskState.COMPLETED_WARN
+	 * <!-- end-model-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	boolean isSucceeded();
+
 
 } // ITask

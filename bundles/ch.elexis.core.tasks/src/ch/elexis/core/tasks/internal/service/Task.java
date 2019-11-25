@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -166,6 +167,22 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	}
 	
 	@Override
+	public <T> T getResultEntryTyped(String key, Class<T> clazz){
+		String json = getEntity().getResult();
+		if (json != null) {
+			JSONObject map = new JSONObject(json);
+			String valueToString = JSONObject.valueToString(map.get(key));
+			return gson.fromJson(valueToString, clazz);
+		}
+		return null;
+	}
+	
+	@Override
+	public boolean isSucceeded(){
+		return (TaskState.COMPLETED == getState() || TaskState.COMPLETED_WARN == getState());
+	}
+	
+	@Override
 	public boolean isFinished(){
 		return (TaskState.COMPLETED == getState() || TaskState.COMPLETED_WARN == getState()
 			|| TaskState.FAILED == getState());
@@ -186,7 +203,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		
 		ITaskDescriptor originTaskDescriptor = getTaskDescriptor();
 		String runnableWithContextId = originTaskDescriptor.getIdentifiedRunnableId();
-				
+		
 		try {
 			IIdentifiedRunnable runnableWithContext =
 				TaskServiceHolder.get().instantiateRunnableById(runnableWithContextId);
@@ -233,7 +250,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		if (progressMonitor != null) {
 			progressMonitor.done();
 		}
-				
+		
 	}
 	
 	@Override

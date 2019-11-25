@@ -74,6 +74,12 @@
         <genParameters ecoreParameter="model.ecore#//ITask/getResultEntryAsTypedList/clazz"/>
         <genTypeParameters ecoreTypeParameter="model.ecore#//ITask/getResultEntryAsTypedList/T"/>
       </genOperations>
+      <genOperations ecoreOperation="model.ecore#//ITask/getResultEntryTyped">
+        <genParameters ecoreParameter="model.ecore#//ITask/getResultEntryTyped/key"/>
+        <genParameters ecoreParameter="model.ecore#//ITask/getResultEntryTyped/clazz"/>
+        <genTypeParameters ecoreTypeParameter="model.ecore#//ITask/getResultEntryTyped/T"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//ITask/isSucceeded"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//ITaskService">
       <genOperations ecoreOperation="model.ecore#//ITaskService/createTaskDescriptor">
