@@ -13,7 +13,7 @@ public interface IMessageService {
 	public static final String INTERNAL_MESSAGE_URI_SCHEME = "internal";
 	
 	/**
-	 * @return a list of all supported uri schemes
+	 * @return a list of all supported URI schemes
 	 */
 	List<String> getSupportedUriSchemes();
 	
@@ -38,7 +38,9 @@ public interface IMessageService {
 	 * Try to send the message.
 	 * 
 	 * @param message
-	 * @return if the message was sent successfully and the explicit transporter uri scheme used
+	 * @return if the message was sent successfully, an optional message id as
+	 *         {@link ObjectStatus#getMessage()} and the explicit transporter URI scheme used in
+	 *         {@link ObjectStatus#getObject()}
 	 */
 	ObjectStatus send(TransientMessage message);
 	

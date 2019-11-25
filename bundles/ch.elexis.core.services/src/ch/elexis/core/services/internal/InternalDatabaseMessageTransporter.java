@@ -1,7 +1,6 @@
 package ch.elexis.core.services.internal;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.osgi.service.component.annotations.Component;
 
 import ch.elexis.core.model.IMessage;
@@ -29,10 +28,10 @@ public class InternalDatabaseMessageTransporter implements IMessageTransporter {
 		
 		boolean save = CoreModelServiceHolder.get().save(idbMessage);
 		if (save) {
-			return Status.OK_STATUS;
+			return ObjectStatus.OK_STATUS(idbMessage.getId(), null);
 		}
 		
-		return ObjectStatus.ERROR_STATUS(idbMessage.getId());
+		return ObjectStatus.ERROR_STATUS("Could not save message", null);
 	}
 	
 	@Override

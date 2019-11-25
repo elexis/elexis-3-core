@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.IStatus;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -45,7 +45,7 @@ public class MessageService implements IMessageService {
 	
 	@Override
 	public List<String> getSupportedUriSchemes(){
-		return new ArrayList<String>(messageTransporters.keySet());
+		return new ArrayList<>(messageTransporters.keySet());
 	}
 	
 	@Override
@@ -54,7 +54,7 @@ public class MessageService implements IMessageService {
 		String receiver = message.getReceiver();
 		int indexOf = receiver.indexOf(':');
 		if (indexOf <= 0) {
-			return new ObjectStatus(Status.ERROR, Bundle.ID,
+			return new ObjectStatus(IStatus.ERROR, Bundle.ID,
 				"No transporter uri scheme found in receiver [" + receiver + "]", null);
 		}
 		
@@ -67,8 +67,16 @@ public class MessageService implements IMessageService {
 		}
 		
 		if (messageTransporter == null) {
-			return new ObjectStatus(Status.ERROR, Bundle.ID,
+			return new ObjectStatus(IStatus.ERROR, Bundle.ID,
 				"No transporter found for uri scheme [" + uriScheme + "]", null);
+		}
+		
+		if (messageTransporter.isExternal()) {
+			if (!message.isAlllowExternal()) {
+				return new ObjectStatus(IStatus.ERROR, Bundle.ID,
+					"Selected transporter is external, but message not marked as allowExternal, rejecting send.",
+					null);
+			}
 		}
 		
 		return new ObjectStatus(messageTransporter.send(message),

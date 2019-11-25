@@ -17,9 +17,10 @@ public interface IMessageTransporter {
 	 * 
 	 * @param message
 	 *            to send
-	 * @return {@link IStatus#OK} if the message could be sent, {@link IStatus#CANCEL} if message
-	 *         not supported by this transporter (e.g. sender is not valid), or
-	 *         {@link IStatus#ERROR} if any other failure
+	 * @return {@link ObjectStatus#OK} with the message ID as {@link IStatus#getMessage()} if the
+	 *         message could be sent; {@link IStatus#CANCEL} if the message not supported by this
+	 *         transporter (e.g. sender is not valid), or {@link IStatus#ERROR} with reason message
+	 *         on failure
 	 */
 	IStatus send(TransientMessage message);
 	

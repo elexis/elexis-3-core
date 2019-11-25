@@ -92,4 +92,9 @@ public class TransientMessage {
 		this.alllowExternal = alllowExternal;
 	}
 	
+	@Override
+	public String toString(){
+		return String.format("%s [%s -> %s] %s", createDateTime, sender, receiver, messageText);
+	}
+	
 }

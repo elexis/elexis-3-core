@@ -2,7 +2,6 @@ package ch.elexis.core.services.eenv;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
@@ -54,8 +53,8 @@ public class RocketchatMessageTransporter implements IMessageTransporter {
 	}
 	
 	private IStatus sendFromStationSender(TransientMessage message){
-		Optional<String> authorizationToken = contextService
-			.getNamed(CTX_ROCKETCHAT_STATION_INTEGRATION_TOKEN).map(e -> e.toString());
+		Optional<String> authorizationToken =
+			contextService.getNamed(CTX_ROCKETCHAT_STATION_INTEGRATION_TOKEN).map(Object::toString);
 		if (authorizationToken.isPresent()) {
 			try {
 				URL integrationUrl =
@@ -66,11 +65,11 @@ public class RocketchatMessageTransporter implements IMessageTransporter {
 				return send(integrationUrl, jsonMessage.getBytes());
 				
 			} catch (IOException e) {
-				return new Status(Status.ERROR, Bundle.ID, e.getMessage());
+				return new Status(IStatus.ERROR, Bundle.ID, e.getMessage());
 			}
 		}
 		
-		return new Status(Status.ERROR, Bundle.ID,
+		return new Status(IStatus.ERROR, Bundle.ID,
 			"No webhook integration token [" + CTX_ROCKETCHAT_STATION_INTEGRATION_TOKEN
 				+ "] found in root context or malformed url.");
 	}
@@ -101,7 +100,7 @@ public class RocketchatMessageTransporter implements IMessageTransporter {
 		return json.toString();
 	}
 	
-	private IStatus send(URL url, byte[] postDataBytes) throws MalformedURLException, IOException{
+	private IStatus send(URL url, byte[] postDataBytes) throws IOException{
 		HttpURLConnection con = (HttpURLConnection) url.openConnection();
 		con.setRequestMethod("POST");
 		con.setDoInput(true);
@@ -115,7 +114,7 @@ public class RocketchatMessageTransporter implements IMessageTransporter {
 		if (responseCode == 200) {
 			return Status.OK_STATUS;
 		}
-		return new Status(Status.ERROR, Bundle.ID,
+		return new Status(IStatus.ERROR, Bundle.ID,
 			"Error sending, with response code: " + responseCode);
 	}
 	
