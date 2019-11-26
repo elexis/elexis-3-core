@@ -1984,6 +1984,7 @@ public class Messages extends NLS {
 	public static String ArticleSubTyp_PHARMA;
 	public static String ArticleSubTyp_UNKNOWN;
 	public static String ArticleSubTyp_COMPLEMENTARY;
+	public static String ArticleSubTyp_COMPLEMENTARY_REDUCED;
 	public static String ArticleSubTyp_ADDITIVE;
 	public static String EigendiagnoseSelector_Shortcut_Label;
 	public static String EigendiagnoseSelector_Text_Label;

@@ -41,7 +41,8 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 		ArticleTyp typ = getTyp();
 		if (typ == ArticleTyp.EIGENARTIKEL) {
 			ArticleSubTyp subTyp = getSubTyp();
-			if (subTyp == ArticleSubTyp.COMPLEMENTARY) {
+			if (subTyp == ArticleSubTyp.COMPLEMENTARY
+				|| subTyp == ArticleSubTyp.COMPLEMENTARY_REDUCED) {
 				return "590";
 			} else if (subTyp == ArticleSubTyp.ADDITIVE) {
 				return "406";
@@ -204,6 +205,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 			switch (subTyp) {
 			case PHARMA:
 			case MAGISTERY:
+			case COMPLEMENTARY_REDUCED:
 				return VatInfo.VAT_CH_ISMEDICAMENT;
 			case NONPHARMA:
 			case COMPLEMENTARY:
