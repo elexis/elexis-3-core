@@ -34,6 +34,7 @@ import ch.elexis.core.ui.databinding.SavingUpdateValueStrategy;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.views.controls.StockDetailComposite;
+import ch.rgw.tools.Money;
 
 public class EigenartikelComposite extends Composite implements IUnlockable {
 	
@@ -78,14 +79,7 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 	}
 	
 	public void setEigenartikel(IArticle eigenartikel){
-		IArticle current = this.drugPackageEigenartikel.getValue();
-		if (current != null) {
-			if (current.equals(eigenartikel)) {
-				this.drugPackageEigenartikel.setValue(eigenartikel);
-			}
-		} else {
-			this.drugPackageEigenartikel.setValue(eigenartikel);
-		}
+		this.drugPackageEigenartikel.setValue(eigenartikel);
 	}
 	
 	private void createArticlePart(){
@@ -273,13 +267,18 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		//		//
 		ISWTObservableValue observeTextTxtpubPriceObserveWidget =
 			WidgetProperties.text(SWT.Modify).observe(txtpubPrice);
-		IObservableValue<String> drugPackageEigenartikelVKPreisObserveDetailValue =
-			PojoProperties.value(IArticle.class, "sellingPrice", String.class)
+		IObservableValue<Money> drugPackageEigenartikelVKPreisObserveDetailValue =
+			PojoProperties.value(IArticle.class, "sellingPrice", Money.class)
 				.observeDetail(drugPackageEigenartikel);
+		SavingUpdateValueStrategy target2ModelStrategy =
+			new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), drugPackageEigenartikel);
+		target2ModelStrategy.setConverter(new String2MoneyConverter());
+		UpdateValueStrategy model2TargetStrategy = new UpdateValueStrategy<>();
+		model2TargetStrategy.setConverter(new Money2StringConverter());
 		bindingContext.bindValue(observeTextTxtpubPriceObserveWidget,
 			drugPackageEigenartikelVKPreisObserveDetailValue,
-			new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), drugPackageEigenartikel),
-			null);
+			target2ModelStrategy,
+			model2TargetStrategy);
 		//		//
 		ISWTObservableValue observeTextTxtMeasurementUnitObserveWidget =
 			WidgetProperties.text(SWT.Modify).observe(txtMeasurementUnit);

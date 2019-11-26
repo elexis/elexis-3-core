@@ -177,7 +177,7 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
  		container.setLayout(layout);
 		
 		compProduct = new Composite(container, SWT.None);		
-		//		compProduct.setLayout(new GridLayout(1, false));
+		compProduct.setLayout(new GridLayout(1, false));
 		
 		ToolBar toolBar = new ToolBar(compProduct, SWT.BORDER | SWT.FLAT | SWT.RIGHT);
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

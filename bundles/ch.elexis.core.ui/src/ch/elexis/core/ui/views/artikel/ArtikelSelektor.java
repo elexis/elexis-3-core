@@ -64,7 +64,7 @@ public class ArtikelSelektor extends ViewPart implements ISaveablePart2 {
 				if (description.isPresent()) {
 					CTabItem ci = new CTabItem(ctab, SWT.NONE);
 					ci.setText(description.get().getCodeSystemName());
-					ci.setData(description); //$NON-NLS-1$					
+					ci.setData(description.get()); //$NON-NLS-1$					
 				}
 			}
 		}
