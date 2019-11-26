@@ -284,8 +284,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				IStructuredSelection selection = viewer.getStructuredSelection();
 				if (selection != null && !selection.isEmpty()
 					&& (selection.getFirstElement() instanceof IBilled)) {
-					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
-						selection.getFirstElement());
+					ContextServiceHolder.get().getRootContext()
+						.setTyped(selection.getFirstElement());
 				}
 			}
 		});
