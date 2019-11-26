@@ -52,7 +52,8 @@
     <module>ch.elexis.core.mail</module>
     <module>ch.elexis.core.product</module>
     <module>ch.elexis.core.scripting.beanshell</module>
-    <module>ch.elexis.core.tasks</module> 
+    <module>ch.elexis.core.tasks</module>
+    <module>ch.elexis.core.ui.tasks</module>
     <module>ch.elexis.core.ui.contacts</module>
     <module>ch.elexis.core.ui.chromium</module>
     <module>ch.elexis.core.ui.dbcheck</module>
