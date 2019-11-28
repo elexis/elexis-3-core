@@ -5,18 +5,18 @@ import java.util.ResourceBundle;
 import ch.elexis.core.interfaces.ILocalizedEnum;
 
 public enum EigenartikelTyp implements ILocalizedEnum {
-	
-		UNKNOWN('U'), PHARMA('P'), NONPHARMA('N'), MAGISTERY('M'), COMPLEMENTARY('C'),
-		ADDITIVE('A');
-	
+
+	UNKNOWN('U'), PHARMA('P'), NONPHARMA('N'), MAGISTERY('M'), COMPLEMENTARY('C'), ADDITIVE('A'),
+	COMPLEMENTARY_REDUCED('K');
+
 	final char type;
-	
-	private EigenartikelTyp(char state){
+
+	private EigenartikelTyp(char state) {
 		this.type = state;
 	}
-	
+
 	@Override
-	public String getLocaleText(){
+	public String getLocaleText() {
 		try {
 			return ResourceBundle.getBundle(ch.elexis.core.l10n.Messages.BUNDLE_NAME)
 					.getString(EigenartikelTyp.class.getSimpleName() + "_" + this.name());
@@ -24,12 +24,12 @@ public enum EigenartikelTyp implements ILocalizedEnum {
 			return this.name();
 		}
 	}
-	
-	public char getTypeChar(){
+
+	public char getTypeChar() {
 		return type;
 	}
-	
-	public static EigenartikelTyp byCharSafe(String statusIn){
+
+	public static EigenartikelTyp byCharSafe(String statusIn) {
 		if (statusIn != null && statusIn.length() > 0) {
 			for (EigenartikelTyp eaTyp : EigenartikelTyp.values()) {
 				if (eaTyp.type == statusIn.toUpperCase().charAt(0)) {
@@ -39,5 +39,5 @@ public enum EigenartikelTyp implements ILocalizedEnum {
 		}
 		return EigenartikelTyp.UNKNOWN;
 	}
-	
+
 }

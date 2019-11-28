@@ -67,7 +67,7 @@ public class Eigenartikel extends Artikel {
 	
 	@Override
 	public String getCodeSystemCode(){
-		if (getTyp() == EigenartikelTyp.COMPLEMENTARY) {
+		if (getTyp() == EigenartikelTyp.COMPLEMENTARY || getTyp() == EigenartikelTyp.COMPLEMENTARY_REDUCED) {
 			return "590";
 		} else if (getTyp() == EigenartikelTyp.ADDITIVE) {
 			return "406";
@@ -140,6 +140,7 @@ public class Eigenartikel extends Artikel {
 		switch (eat) {
 		case PHARMA:
 		case MAGISTERY:
+		case COMPLEMENTARY_REDUCED:
 			return VatInfo.VAT_CH_ISMEDICAMENT;
 		case NONPHARMA:
 		case COMPLEMENTARY:

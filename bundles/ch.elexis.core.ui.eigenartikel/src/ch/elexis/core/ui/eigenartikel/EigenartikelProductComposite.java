@@ -80,7 +80,7 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 		Combo comboProductType = comboViewerProductType.getCombo();
 		
 		GridData gd_comboProductType = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_comboProductType.widthHint = 150;
+		gd_comboProductType.widthHint = 300;
 		comboProductType.setLayoutData(gd_comboProductType);
 		comboViewerProductType.setContentProvider(ArrayContentProvider.getInstance());
 		comboViewerProductType.setLabelProvider(new LabelProvider() {
@@ -105,7 +105,7 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 		
 		txtAtcCode = new Text(compAtcCode, SWT.BORDER);
 		GridData gd_txtAtcCode = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_txtAtcCode.widthHint = 80;
+		gd_txtAtcCode.widthHint = 300;
 		txtAtcCode.setLayoutData(gd_txtAtcCode);
 		txtAtcCode.setTextLimit(8);
 		new Label(compAtcCode, SWT.NONE);
