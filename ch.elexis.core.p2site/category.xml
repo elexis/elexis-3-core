@@ -37,6 +37,9 @@
    <bundle id="ch.elexis.core.services.test" version="0.0.0">
       <category name="test"/>
    </bundle>
+   <bundle id="ch.elexis.core.test.context" version="0.0.0">
+      <category name="test"/>
+   </bundle>
    <category-def name="elexis_3_core" label="Elexis 3 Kern"/>
    <category-def name="divers" label="Sonstige"/>
    <category-def name="test" label="test [invisible]"/>
