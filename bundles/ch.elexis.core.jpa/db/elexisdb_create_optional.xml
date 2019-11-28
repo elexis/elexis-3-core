@@ -1897,11 +1897,11 @@ DROP TABLE TEMP_ETIKETTEN_OBJCLASS_LINK;
 					foreignKeyName="TASKDESCRIPTOR_FK_ID" />
 			</not>
 		</preConditions>
-		<renameColumn tableName="TASK" columnDataType="VARCHAR"
+		<renameColumn tableName="TASK" columnDataType="VARCHAR(32)"
 			oldColumnName="DESCRIPTORID" newColumnName="DESCRIPTOR" />
 		<modifyDataType tableName="TASK"
 			columnName="DESCRIPTOR" newDataType="VARCHAR(25)" />
-		<addNotNullConstraint tableName="TASK" columnDataType="VARCHAR"
+		<addNotNullConstraint tableName="TASK" columnDataType="VARCHAR(25)"
 			columnName="DESCRIPTOR" />
 		<addForeignKeyConstraint constraintName="TASKDESCRIPTOR_FK_ID"
 			referencedTableName="TASKDESCRIPTOR" baseColumnNames="DESCRIPTOR" baseTableName="TASK"
