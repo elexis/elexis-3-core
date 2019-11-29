@@ -15,6 +15,7 @@ Bundle-Vendor: medevit.at
 Import-Package: ch.elexis.admin,
  ch.elexis.core.data.activator,
  ch.elexis.core.data.events,
+ ch.elexis.core.ui,
  ch.elexis.core.ui.actions,
  ch.elexis.core.ui.events,
  ch.elexis.core.ui.icons,
