@@ -1,7 +1,6 @@
 package ch.elexis.core.ui.documents.views;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.action.Action;
@@ -77,7 +76,8 @@ public class DocumentsFilterBarComposite extends Composite implements ISelection
 		if (currentSelection != null && currentSelection.getFilter() != null) {
 			return new StructuredSelection(currentSelection.getFilter());
 		}
-		return new StructuredSelection(Optional.empty());
+		// use all if none is selected
+		return new StructuredSelection(filters.get(0));
 	}
 	
 	@Override
@@ -97,7 +97,7 @@ public class DocumentsFilterBarComposite extends Composite implements ISelection
 		private FilterCategory filter;
 		
 		public DocumentTypeAction(FilterCategory filter){
-			super(filter.getLbl(), Action.AS_RADIO_BUTTON);
+			super(filter.getLabel(), Action.AS_RADIO_BUTTON);
 			this.filter = filter;
 		}
 		

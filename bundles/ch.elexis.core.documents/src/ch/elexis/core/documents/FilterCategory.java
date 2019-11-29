@@ -7,12 +7,7 @@ import ch.elexis.core.model.ICategory;
 public class FilterCategory implements ICategory {
 	
 	private String name;
-	private String lbl;
-	
-	public FilterCategory(){
-		this.name = null;
-		this.lbl = "Alle";
-	}
+	private String label;
 	
 	public FilterCategory(ICategory category){
 		this.name = category.getName();
@@ -20,7 +15,7 @@ public class FilterCategory implements ICategory {
 	
 	public FilterCategory(String name, String lbl){
 		this.name = name;
-		this.lbl = lbl;
+		this.label = lbl;
 	}
 	
 	@Override
@@ -33,18 +28,21 @@ public class FilterCategory implements ICategory {
 		this.name = name;
 	}
 	
-	public String getLbl(){
-		return lbl;
+	public String getLabel(){
+		return label;
 	}
 	
-	public boolean isAll(){
-		return name == null;
+	public void setLabel(String label){
+		this.label = label;
 	}
-	
 	
 	@Override
 	public int hashCode(){
 		return Objects.hash(name);
+	}
+	
+	public boolean isAll(){
+		return name == null;
 	}
 	
 	@Override

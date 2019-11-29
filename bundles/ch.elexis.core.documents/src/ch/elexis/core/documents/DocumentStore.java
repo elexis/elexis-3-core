@@ -68,15 +68,21 @@ public class DocumentStore {
 	}
 	
 	public Map<ICategory, List<IDocument>> getDocumentsByPatientId(String patientId){
+		Map<String, FilterCategory> categoryMap = new HashMap<>();
 		Map<ICategory, List<IDocument>> map = new HashMap<>();
 		List<IDocument> documents = getDocuments(patientId, null, null, null);
 		for (IDocument iDocument : documents) {
-			List<IDocument> categoryDocuments = map.get(new FilterCategory(iDocument.getCategory()));
+			FilterCategory filterCategory = categoryMap.get(iDocument.getCategory().getName());
+			if (filterCategory == null) {
+				filterCategory = new FilterCategory(iDocument.getCategory());
+				categoryMap.put(iDocument.getCategory().getName(), filterCategory);
+			}
+			List<IDocument> categoryDocuments = map.get(filterCategory);
 			if (categoryDocuments == null) {
 				categoryDocuments = new ArrayList<>();
 			}
 			categoryDocuments.add(iDocument);
-			map.put(new FilterCategory(iDocument.getCategory()), categoryDocuments);
+			map.put(filterCategory, categoryDocuments);
 		}
 		return map;
 	}

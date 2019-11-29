@@ -30,6 +30,7 @@ import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -79,8 +80,6 @@ import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.Identifiable;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher;
-import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.documents.Messages;
 import ch.elexis.core.ui.documents.handler.DocumentCrudHandler;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
@@ -96,7 +95,7 @@ import ch.rgw.tools.TimeTool;
  * the selected patient. On double-click they are opened with their associated application.
  */
 
-public class DocumentsView extends ViewPart implements IActivationListener {
+public class DocumentsView extends ViewPart {
 	private static Logger logger = LoggerFactory.getLogger(DocumentsView.class);
 	
 	private TreeViewer viewer;
@@ -125,6 +124,7 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 		@Override
 		public void runInUi(ElexisEvent ev){
 			viewer.setInput(ev.getObject());
+			viewer.expandAll();
 		}
 		
 	};
@@ -217,7 +217,7 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 	class ViewContentProvider implements ITreeContentProvider {
 		
 		private Map<ICategory, List<IDocument>> documentsMap = new HashMap<>();
-		private FilterCategory selectedFilter = new FilterCategory();
+		private FilterCategory selectedFilter = null;
 		
 		public void inputChanged(Viewer v, Object oldInput, Object newInput){
 			documentsMap.clear();
@@ -228,16 +228,14 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 		
 		public ViewContentProvider selectFilterCategory(ISelection selection){
 			StructuredSelection sel = (StructuredSelection) selection;
-			selectedFilter = new FilterCategory();
 			if (selection != null) {
 				Object element = sel.getFirstElement();
 				if (element instanceof FilterCategory) {
 					selectedFilter = (FilterCategory) element;
+					viewer.refresh(true);
+					viewer.expandAll();
 				}
 			}
-			
-			Patient patient = ElexisEventDispatcher.getSelectedPatient();
-			loadByFilterCategory(patient);
 			return this;
 		}
 
@@ -264,12 +262,14 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 		}
 		
 		public void createElement(IDocument iDocument){
-			List<IDocument> iDocuments = documentsMap.get(iDocument.getCategory());
+			FilterCategory filterCategory = new FilterCategory(iDocument.getCategory());
+			List<IDocument> iDocuments =
+				documentsMap.get(filterCategory);
 			if (iDocuments == null) {
 				iDocuments = new ArrayList<>();
 			}
 			iDocuments.add(iDocument);
-			documentsMap.put(iDocument.getCategory(), iDocuments);
+			documentsMap.put(filterCategory, iDocuments);
 			viewer.refresh(true);
 		}
 		
@@ -349,7 +349,7 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 		public Object getParent(Object element){
 			if (element instanceof IDocument) {
 				IDocument dh = (IDocument) element;
-				return dh.getCategory();
+				return new FilterCategory(dh.getCategory());
 			}
 			return null;
 		}
@@ -582,15 +582,15 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 				
 			}
 		});
-		
-
-		GlobalEventDispatcher.addActivationListener(this, this);
 
 		MenuManager menuManager = new MenuManager();
 		viewer.getControl().setMenu(menuManager.createContextMenu(viewer.getControl()));
 		getSite().registerContextMenu(menuManager,
 			viewer);
 		getSite().setSelectionProvider(viewer);
+		
+		ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_doc_delete, eeli_doc_edit,
+			eeli_doc_create, eeli_doc_reload);
 		
 		viewer.setInput(ElexisEventDispatcher.getSelectedPatient());
 	}
@@ -673,7 +673,8 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 	
 	@Override
 	public void dispose(){
-		GlobalEventDispatcher.removeActivationListener(this, this);
+		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat, eeli_doc_delete,
+			eeli_doc_edit, eeli_doc_create, eeli_doc_reload);
 		//saveSortSettings();
 		super.dispose();
 	}
@@ -715,18 +716,6 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 		viewer.refresh();
 	}
 	
-	@Override
-	public void visible(boolean mode){
-		if (mode) {
-			ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_doc_delete,
-				eeli_doc_edit, eeli_doc_create, eeli_doc_reload);
-			viewer.setInput(ElexisEventDispatcher.getSelectedPatient());
-		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_pat, eeli_doc_delete,
-				eeli_doc_edit, eeli_doc_create, eeli_doc_reload);
-		}
-	}
-	
 	private void makeActions(){
 		doubleClickAction = new Action() {
 			public void run(){
@@ -748,10 +737,12 @@ public class DocumentsView extends ViewPart implements IActivationListener {
 									new ExecutionEvent(command, Collections.EMPTY_MAP, null, null));
 							} catch (ExecutionException | NotDefinedException | NotEnabledException
 									| NotHandledException e) {
+								MessageDialog.openError(getSite().getShell(), "Fehler",
+									"Das Dokument konnte nicht geöffnet werden.");
 								e.printStackTrace();
 							}
 						});
-					viewer.refresh();
+					viewer.refresh(obj);
 				}
 			}
 		};
