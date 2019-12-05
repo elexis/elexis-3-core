@@ -215,7 +215,7 @@ public class User extends PersistentObject {
 	 * @param attemptedPassword
 	 * @return
 	 */
-	public boolean verifyPassword(String attemptedPassword){
+	public boolean verifyPassword(char[] attemptedPassword){
 		boolean ret = false;
 		String[] values = get(false, FLD_HASHED_PASSWORD, FLD_SALT);
 		try {

@@ -98,4 +98,5 @@
     <eLiterals name="EMPTY"/>
     <eLiterals name="DEFAULT" value="1"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="charArray" instanceClassName="char[]"/>
 </ecore:EPackage>

@@ -82,6 +82,7 @@
     <genDataTypes ecoreDataType="types.ecore#//Optional">
       <genTypeParameters ecoreTypeParameter="types.ecore#//Optional/T"/>
     </genDataTypes>
+    <genDataTypes ecoreDataType="types.ecore#//charArray"/>
     <genClasses image="false" ecoreClass="types.ecore#//Comparable">
       <genTypeParameters ecoreTypeParameter="types.ecore#//Comparable/T"/>
     </genClasses>

@@ -267,10 +267,6 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		public Image getColumnImage(final Object element, final int columnIndex) {
 			if (element instanceof IPatient) {
 				IPatient pat = (IPatient) element;
-
-				//				if (Reminder.findRemindersDueFor(pat, CoreHub.actUser, false).size() > 0) {
-				//					return Images.IMG_AUSRUFEZ.getImage();
-				//				}
 				ISticker sticker = StickerServiceHolder.get().getSticker(pat).orElse(null);
 				if (sticker != null && sticker.getImage() != null) {
 					return CoreUiUtil.getImageAsIcon(sticker.getImage());

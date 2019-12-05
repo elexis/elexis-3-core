@@ -64,7 +64,7 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 	private Type actionType = Type.COMMON;
 	private TimeTool dateDue = null;
 	@SuppressWarnings("rawtypes")
-	private List responsibles = Collections.singletonList(CoreHub.actUser);
+	private List responsibles = Collections.singletonList(CoreHub.getLoggedInContact());
 	
 	private Text txtSubject;
 	private Text txtDescription;
@@ -447,7 +447,7 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 			boolean defaultResponsibleSelf =
 				CoreHub.userCfg.get(Preferences.USR_REMINDER_DEFAULT_RESPONSIBLE_SELF, false);
 			if (defaultResponsibleSelf) {
-				responsibles = Collections.singletonList(CoreHub.actUser);
+				responsibles = Collections.singletonList(CoreHub.getLoggedInContact());
 			} else {
 				List<String> defResponsibles = CoreHub.userCfg
 					.getAsList(Preferences.USR_REMINDER_SELECTED_RESPONSIBLES_DEFAULT);

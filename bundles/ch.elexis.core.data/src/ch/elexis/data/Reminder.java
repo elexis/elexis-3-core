@@ -169,12 +169,12 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 		final String params, final String msg){
 		create(null);
 		if (ident == null) {
-			ident = CoreHub.actUser;
+			ident = CoreHub.getLoggedInContact();
 		}
 		set(new String[] {
 			FLD_KONTAKT_ID, FLD_CREATOR, FLD_DUE, FLD_STATUS, FLD_VISIBILITY, FLD_PARAMS, FLD_MESSAGE
 		}, new String[] {
-			ident.getId(), CoreHub.actUser.getId(), due,
+			ident.getId(), CoreHub.getLoggedInContact().getId(), due,
 			Byte.toString((byte) Visibility.ALWAYS.numericValue()),
 			Byte.toString((byte) visibility.numericValue()), params, msg
 		});
@@ -534,7 +534,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 		final boolean onlyDue, final int dueDays, final Patient patient, final boolean onlyPopup){
 		
 		if (anwender == null) {
-			anwender = CoreHub.actUser;
+			anwender = CoreHub.getLoggedInContact();
 		}
 		Set<Reminder> ret = new HashSet<Reminder>();
 		// we have to apply a set, as there may exist

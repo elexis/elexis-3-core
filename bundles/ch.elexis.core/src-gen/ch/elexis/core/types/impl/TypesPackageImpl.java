@@ -300,6 +300,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	private EDataType optionalEDataType = null;
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType charArrayEDataType = null;
+
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
@@ -696,6 +703,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EDataType getcharArray() {
+		return charArrayEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getResult() {
 		return resultEClass;
 	}
@@ -770,6 +787,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		mimeTypeEDataType = createEDataType(MIME_TYPE);
 		invoiceRejectCodeEDataType = createEDataType(INVOICE_REJECT_CODE);
 		optionalEDataType = createEDataType(OPTIONAL);
+		charArrayEDataType = createEDataType(CHAR_ARRAY);
 	}
 
 	/**
@@ -892,6 +910,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEDataType(mimeTypeEDataType, MimeType.class, "MimeType", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(invoiceRejectCodeEDataType, REJECTCODE.class, "InvoiceRejectCode", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(optionalEDataType, Optional.class, "Optional", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(charArrayEDataType, char[].class, "charArray", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

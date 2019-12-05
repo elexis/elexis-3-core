@@ -18,7 +18,7 @@ public class UserService implements IUserService {
 	private IModelService modelService;
 	
 	@Override
-	public boolean verifyPassword(IUser user, String attemptedPassword){
+	public boolean verifyPassword(IUser user, char[] attemptedPassword){
 		boolean ret = false;
 		
 		if (user != null) {

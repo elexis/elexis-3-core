@@ -33,8 +33,8 @@ public class DBLog extends PersistentObject {
 			typ = TYP.UNKNOWN;
 		}
 		String user = "?";
-		if (CoreHub.actUser != null) {
-			user = CoreHub.actUser.getId();
+		if (CoreHub.getLoggedInContact() != null) {
+			user = CoreHub.getLoggedInContact().getId();
 		}
 		String hostname = "?";
 		if (NetTool.hostname != null) {

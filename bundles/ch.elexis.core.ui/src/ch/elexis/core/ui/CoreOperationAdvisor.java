@@ -35,7 +35,6 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.SqlWithUiRunner;
 import ch.elexis.core.ui.wizards.DBConnectWizard;
 import ch.elexis.core.utils.CoreUtil;
-import ch.elexis.data.Anwender;
 
 public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	
@@ -59,9 +58,9 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	
 	@Override
 	public void adaptForUser(){
-		if (CoreHub.actUser != null) {
+		if (CoreHub.getLoggedInContact() != null) {
 			initialPerspectiveString =
-				CoreHub.localCfg.get(CoreHub.actUser + GlobalActions.DEFAULTPERSPECTIVECFG, null);
+				CoreHub.localCfg.get(CoreHub.getLoggedInContact() + GlobalActions.DEFAULTPERSPECTIVECFG, null);
 			boolean fixLayoutChecked =
 				CoreHub.userCfg.get(Preferences.USR_FIX_LAYOUT, Preferences.USR_FIX_LAYOUT_DEFAULT);
 			if (GlobalActions.fixLayoutAction != null) {
@@ -149,7 +148,7 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 			 * -Dch.elexis.password=test as command line parameters to elexis.
 			 */
 			log.error("Bypassing LoginDialog with username " + username);
-			if (!Anwender.login(username, password)) {
+			if (!CoreHub.login(username, password.toCharArray())) {
 				log.error("Authentication failed. Exiting");
 			}
 		} else {

@@ -867,7 +867,7 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 			text.getPlugin().createContainer(ret, this);
 			text.getPlugin().showMenu(false);
 			text.getPlugin().showToolbar(false);
-			text.createFromTemplateName(null, TT_LIST, Brief.UNKNOWN, CoreHub.actUser,
+			text.createFromTemplateName(null, TT_LIST, Brief.UNKNOWN, CoreHub.getLoggedInContact(),
 				Messages.KonsZumVerrechnenView_billsTitle); //$NON-NLS-1$ //$NON-NLS-2$
 			Tree[] all = (Tree[]) tSelection.getChildren().toArray(new Tree[0]);
 			String[][] table = new String[all.length][];

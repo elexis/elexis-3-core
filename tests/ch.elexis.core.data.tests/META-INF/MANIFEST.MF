@@ -19,3 +19,5 @@ Bundle-ClassPath: .,
 Import-Package: ch.elexis.core.data.activator,
  ch.elexis.core.data.interfaces
 Export-Package: ch.elexis.admin
+Service-Component: OSGI-INF/ch.elexis.data.service.internal.CsvLoginService.xml
+Bundle-ActivationPolicy: lazy

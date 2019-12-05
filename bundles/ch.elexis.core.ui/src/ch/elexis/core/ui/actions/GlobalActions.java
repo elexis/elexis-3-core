@@ -16,7 +16,6 @@ import static ch.elexis.admin.AccessControlDefaults.AC_CONNECT;
 import static ch.elexis.admin.AccessControlDefaults.AC_HELP;
 import static ch.elexis.admin.AccessControlDefaults.AC_IMORT;
 import static ch.elexis.admin.AccessControlDefaults.AC_LOGIN;
-import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_ADDRESS_LABEL;
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_KG_COVER_SHEET;
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_XRAY;
 
@@ -91,7 +90,6 @@ import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.constants.UiPreferenceConstants;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.dialogs.DateSelectorDialog;
-import ch.elexis.core.ui.dialogs.EtiketteDruckenDialog;
 import ch.elexis.core.ui.dialogs.LoginDialog;
 import ch.elexis.core.ui.dialogs.NeuerFallDialog;
 import ch.elexis.core.ui.dialogs.SelectFallDialog;
@@ -288,9 +286,8 @@ public class GlobalActions {
 			@Override
 			public void run(){
 				// String
-				// perspektive=CoreHub.actUser.getInfoString("StartPerspektive");
 				String perspektive =
-					CoreHub.localCfg.get(CoreHub.actUser + DEFAULTPERSPECTIVECFG, null);
+					CoreHub.localCfg.get(CoreHub.getLoggedInContact() + DEFAULTPERSPECTIVECFG, null);
 				if (StringTool.isNothing(perspektive)) {
 					perspektive = UiResourceConstants.PatientPerspektive_ID;
 				}
@@ -312,8 +309,7 @@ public class GlobalActions {
 			@Override
 			public void run(){
 				IPerspectiveDescriptor p = mainWindow.getActivePage().getPerspective();
-				CoreHub.localCfg.set(CoreHub.actUser + DEFAULTPERSPECTIVECFG, p.getId());
-				// CoreHub.actUser.setInfoElement("StartPerspektive",p.getId());
+				CoreHub.localCfg.set(CoreHub.getLoggedInContact() + DEFAULTPERSPECTIVECFG, p.getId());
 			}
 			
 		};

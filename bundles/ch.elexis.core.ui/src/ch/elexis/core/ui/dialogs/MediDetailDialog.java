@@ -249,7 +249,7 @@ public class MediDetailDialog extends TitleAreaDialog {
 							CoreModelServiceHolder.get().save(newPrescription);
 							MedicationServiceHolder.get().stopPrescription(oldPrescription,
 								LocalDateTime.now(),
-								"Geändert durch " + CoreHub.actUser.getLabel());
+								"Geändert durch " + CoreHub.getLoggedInContact().getLabel());
 							CoreModelServiceHolder.get().save(oldPrescription);
 							LocalLockServiceHolder.get().releaseLock(newPrescription);
 							ElexisEventDispatcher.getInstance().fire(new ElexisEvent(

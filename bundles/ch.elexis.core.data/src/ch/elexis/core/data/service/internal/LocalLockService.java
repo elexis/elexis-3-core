@@ -28,18 +28,19 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.server.ElexisServerInstanceService;
 import ch.elexis.core.data.server.ElexisServerLockService;
+import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockRequest;
 import ch.elexis.core.lock.types.LockRequest.Type;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.server.IInstanceService;
 import ch.elexis.core.server.ILockService;
 import ch.elexis.core.services.ILocalLockService;
 import ch.elexis.data.PersistentObject;
-import ch.elexis.data.User;
 
 /**
  * ILocalLockService implementation. Managing locks of PersistentObjects, or Identifiable.</br>
@@ -140,7 +141,7 @@ public class LocalLockService implements ILocalLockService {
 	}
 	
 	private LockResponse releaseLock(String storeToString){
-		User user = (User) ElexisEventDispatcher.getSelected(User.class);
+		IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
 		LockInfo lil = new LockInfo(storeToString, user.getId(), systemUuid.toString());
 		LockRequest lockRequest = new LockRequest(LockRequest.Type.RELEASE, lil);
 		return acquireOrReleaseLocks(lockRequest);
@@ -215,7 +216,7 @@ public class LocalLockService implements ILocalLockService {
 			return LockResponse.DENIED(null);
 		}
 		
-		User user = (User) ElexisEventDispatcher.getSelected(User.class);
+		IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
 		LockInfo lockInfo = new LockInfo(storeToString, user.getId(), systemUuid.toString());
 		LockRequest lockRequest = new LockRequest(LockRequest.Type.ACQUIRE, lockInfo);
 		return acquireOrReleaseLocks(lockRequest);
@@ -364,7 +365,7 @@ public class LocalLockService implements ILocalLockService {
 		}
 		logger.debug("Checking lock on [" + object + "]");
 		
-		User user = (User) ElexisEventDispatcher.getSelected(User.class);
+		IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
 		LockInfo lockInfo =
 			new LockInfo(StoreToStringServiceHolder.getStoreToString(object), user.getId(),
 				systemUuid.toString());
@@ -452,7 +453,7 @@ public class LocalLockService implements ILocalLockService {
 				}
 				
 				if (iis != null) {
-					User u = (User) ElexisEventDispatcher.getSelected(User.class);
+					IUser u = ContextServiceHolder.get().getActiveUser().orElse(null);
 					inst.setActiveUser((u != null) ? u.getId() : "NO USER ACTIVE");
 					iis.updateStatus(inst);
 				}

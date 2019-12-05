@@ -11,7 +11,7 @@ public interface IUserService {
 	 * @param attemptedPassword
 	 * @return <code>true</code> if password matched
 	 */
-	public boolean verifyPassword(IUser user, String attemptedPassword);
+	public boolean verifyPassword(IUser user, char[] attemptedPassword);
 	
 	/**
 	 * Set the password for a given user. Will store the password in encrypted format. Performs save

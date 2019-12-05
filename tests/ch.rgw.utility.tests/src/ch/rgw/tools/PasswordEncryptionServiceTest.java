@@ -18,15 +18,16 @@ public class PasswordEncryptionServiceTest {
 	@Test
 	public void testGeneratAndAuthenticatePassword() throws NoSuchAlgorithmException,
 		InvalidKeySpecException{
-		byte[] encryptedPassword = pes.getEncryptedPassword(PASSWORD, SALT.getBytes());
-		assertTrue(pes.authenticate(PASSWORD, encryptedPassword, SALT.getBytes()));
+		byte[] encryptedPassword =
+			pes.getEncryptedPassword(PASSWORD.toCharArray(), SALT.getBytes());
+		assertTrue(pes.authenticate(PASSWORD.toCharArray(), encryptedPassword, SALT.getBytes()));
 	}
 	
 	@Test
 	public void testGenerateAndAuthenticateHexStoredPassword() throws NoSuchAlgorithmException,
 		InvalidKeySpecException, DecoderException{
 		String hexEncryptedPassword = pes.getEncryptedPasswordAsHexString(PASSWORD, SALT);
-		assertTrue(pes.authenticate(PASSWORD, hexEncryptedPassword, SALT));
+		assertTrue(pes.authenticate(PASSWORD.toCharArray(), hexEncryptedPassword, SALT));
 	}
 	
 }

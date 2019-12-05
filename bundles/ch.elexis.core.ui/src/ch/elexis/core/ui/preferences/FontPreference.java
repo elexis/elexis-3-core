@@ -50,7 +50,7 @@ public class FontPreference extends FieldEditorPreferencePage implements IWorkbe
 		boolean ret = super.performOk();
 		UiDesk.updateFont(Preferences.USR_DEFAULTFONT);
 		ElexisEventDispatcher.getInstance().fire(
-			new ElexisEvent(CoreHub.actUser, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
+			new ElexisEvent(CoreHub.getLoggedInContact(), Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
 		return ret;
 	}
 	

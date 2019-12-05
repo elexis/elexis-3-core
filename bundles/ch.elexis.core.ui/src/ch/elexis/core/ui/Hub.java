@@ -147,10 +147,10 @@ public class Hub extends AbstractUIPlugin {
 	public static void setWindowText(Patient pat){
 		StringBuilder sb = new StringBuilder();
 		sb.append("Elexis ").append(CoreHub.readElexisBuildVersion()).append(" - "); //$NON-NLS-1$ //$NON-NLS-2$
-		if (CoreHub.actUser == null) {
+		if (CoreHub.getLoggedInContact() == null) {
 			sb.append(Messages.Hub_nouserloggedin);
 		} else {
-			sb.append(" ").append(CoreHub.actUser.getLabel()); //$NON-NLS-1$
+			sb.append(" ").append(CoreHub.getLoggedInContact().getLabel()); //$NON-NLS-1$
 		}
 		if (CoreHub.actMandant == null) {
 			sb.append(Messages.Hub_nomandantor);
@@ -169,7 +169,7 @@ public class Hub extends AbstractUIPlugin {
 			sb.append("  / ").append(pat.getLabel()).append(" (").append(alter).append(") - ") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				.append("[").append(nr).append("]"); //$NON-NLS-1$ //$NON-NLS-2$
 			
-			if (Reminder.findForPatient(pat, CoreHub.actUser).size() != 0) {
+			if (Reminder.findForPatient(pat, CoreHub.getLoggedInContact()).size() != 0) {
 				sb.append(Messages.Hub_message_reminders);
 			}
 			String act = new TimeTool().toString(TimeTool.DATE_COMPACT);

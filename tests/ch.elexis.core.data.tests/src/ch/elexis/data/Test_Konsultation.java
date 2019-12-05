@@ -9,8 +9,9 @@ import org.junit.Test;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.service.ContextServiceHolder;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.ch.BillingLaw;
 import ch.rgw.tools.JdbcLink;
 
@@ -28,8 +29,7 @@ public class Test_Konsultation extends AbstractPersistentObjectTest {
 	public void before(){
 		User user = User.load(testUserName);
 		// set user and Mandant in system
-		ElexisEventDispatcher.getInstance()
-			.fire(new ElexisEvent(user, User.class, ElexisEvent.EVENT_SELECTED));
+		ContextServiceHolder.get().setActiveUser(CoreModelServiceHolder.get().load(user.getId(), IUser.class).orElse(null));
 		Mandant m = new Mandant("Mandant", "Erwin", "26.07.1979", "m");
 		CoreHub.setMandant(m);
 		

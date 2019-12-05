@@ -469,13 +469,13 @@ public abstract class PersistentObject implements IPersistentObject {
 			
 			@Override
 			public void settingRemoved(String key){
-				String userId = (CoreHub.actUser != null) ? CoreHub.actUser.getWrappedId() : "null";
+				String userId = (CoreHub.getLoggedInContact() != null) ? CoreHub.getLoggedInContact().getWrappedId() : "null";
 				Trace.addTraceEntry("W userCfg ["+userId+"] key [" + key + "] => removed");
 			}
 			
 			@Override
 			public void settingWritten(String key, String value){
-				String userId = (CoreHub.actUser != null) ? CoreHub.actUser.getWrappedId() : "null";
+				String userId = (CoreHub.getLoggedInContact() != null) ? CoreHub.getLoggedInContact().getWrappedId() : "null";
 				Trace.addTraceEntry("W userCfg ["+userId+"] key [" + key + "] => value [" + value + "]");
 			}
 			
@@ -1702,7 +1702,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	protected void setVersionedResource(final String field, final String entry){
 		String lockid = lock("VersionedResource", true);
 		VersionedResource old = getVersionedResource(field, true);
-		if (old.update(entry, CoreHub.actUser.getLabel()) == true) {
+		if (old.update(entry, CoreHub.getLoggedInContact().getLabel()) == true) {
 			getDBConnection().getCache().put(getKey(field), old, getCacheTime());
 			setBinary(field, old.serialize());
 		}

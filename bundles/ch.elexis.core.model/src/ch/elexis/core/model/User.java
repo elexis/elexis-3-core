@@ -1,14 +1,20 @@
 package ch.elexis.core.model;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.codec.DecoderException;
+import org.slf4j.LoggerFactory;
+
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.entities.Role;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.model.util.internal.ModelUtil;
+import ch.rgw.tools.PasswordEncryptionService;
 
 public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.User>
 		implements IdentifiableWithXid, IUser {
@@ -121,5 +127,27 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	@Override
 	public String getLabel(){
 		return getId();
+	}
+
+	@Override
+	public IUser login(String username, char[] password){
+		if (isDeleted() || !username.equals(getUsername()) || !isActive()) {
+			return null;
+		}
+		
+		try {
+			if (!new PasswordEncryptionService().authenticate(password, getHashedPassword(),
+				getSalt())) {
+				return null;
+			}
+		} catch (NoSuchAlgorithmException | InvalidKeySpecException | DecoderException e) {
+			LoggerFactory.getLogger(IUser.class).error("Error verifying password", e);
+		}
+		return this;
+	}
+	
+	@Override
+	public boolean isInternal(){
+		return true;
 	}
 }

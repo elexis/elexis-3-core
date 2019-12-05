@@ -14,10 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
 import ch.elexis.core.data.util.IRunnableWithProgress;
 import ch.elexis.core.data.util.SqlRunner;
-import ch.elexis.data.Anwender;
 
 public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	private Logger log = LoggerFactory.getLogger(CoreOperationAdvisor.class);
@@ -60,7 +60,7 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 			 * as command line parameters to elexis.
 			 */
 			log.error("Bypassing LoginDialog with username " + username);
-			if (!Anwender.login(username, password)) {
+			if (!CoreHub.login(username, password.toCharArray())) {
 				log.error("Authentication failed. Exiting");
 			}
 		}

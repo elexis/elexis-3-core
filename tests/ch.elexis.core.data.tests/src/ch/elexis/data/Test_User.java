@@ -45,7 +45,7 @@ public class Test_User extends AbstractPersistentObjectTest {
 		Role userRole = Role.load(RoleConstants.SYSTEMROLE_LITERAL_USER);
 		assertTrue(user.getAssignedRoles().contains(userRole));
 		assertTrue(user.isActive());
-		assertTrue(user.verifyPassword("password"));
+		assertTrue(user.verifyPassword("password".toCharArray()));
 		
 		assertTrue(user.delete());
 		assertFalse(user.exists());

@@ -69,7 +69,7 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 							LocalLock lock = new LocalLock(object);
 							if (!lock.tryLock()) {
 								if ((service.contains(object)
-									&& lock.hasLock(CoreHub.actUser.getLabel()))
+									&& lock.hasLock(CoreHub.getLoggedInContact().getLabel()))
 									|| MessageDialog.openQuestion(parentShell,
 										Messages.StartEditLocalDocumentHandler_warning,
 										Messages.StartEditLocalDocumentHandler_alreadyOpenStart

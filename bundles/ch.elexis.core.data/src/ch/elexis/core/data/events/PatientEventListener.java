@@ -37,7 +37,7 @@ public class PatientEventListener extends ElexisEventListenerImpl {
 			 * Preferences.USR_SHOWPATCHGREMINDER condition.
 			 */
 			if (CoreHub.userCfg.get(Preferences.USR_SHOWPATCHGREMINDER, false)) {
-				List<Reminder> list = Reminder.findOpenRemindersResponsibleFor(CoreHub.actUser,
+				List<Reminder> list = Reminder.findOpenRemindersResponsibleFor(CoreHub.getLoggedInContact(),
 					false, (Patient) ev.getObject(), true);
 				if (list.size() != 0) {
 					StringBuilder sb = new StringBuilder();

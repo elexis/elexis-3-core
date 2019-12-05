@@ -20,7 +20,6 @@ import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.exceptions.PersistenceException;
-import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
@@ -61,7 +60,7 @@ public class Application implements IApplication {
 		String password = System.getProperty(ElexisSystemPropertyConstants.LOGIN_PASSWORD);
 		log.debug("Starting Login as " + username);
 		if (username != null && password != null) {
-			if (!Anwender.login(username, password)) {
+			if (!CoreHub.login(username, password.toCharArray())) {
 				log.error("Authentication failed. Exiting.");
 				System.exit(1);
 			}
@@ -71,7 +70,7 @@ public class Application implements IApplication {
 		}
 		
 		// check if there is a valid user
-		if ((CoreHub.actUser == null) || !CoreHub.actUser.isValid()) {
+		if ((CoreHub.getLoggedInContact() == null) || !CoreHub.getLoggedInContact().isValid()) {
 			// no valid user, exit (don't consider this as an error)
 			log.warn("Exit because no valid user logged-in");
 			PersistentObject.disconnect();

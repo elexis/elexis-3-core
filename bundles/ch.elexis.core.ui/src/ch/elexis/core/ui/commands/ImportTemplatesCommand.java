@@ -106,7 +106,7 @@ public class ImportTemplatesCommand extends AbstractHandler {
 							}
 						} else {
 							Brief template =
-								new Brief(name, null, CoreHub.actUser, null, null, Brief.TEMPLATE);
+								new Brief(name, null, CoreHub.getLoggedInContact(), null, null, Brief.TEMPLATE);
 							template.save(contentToStore, mimeType);
 							// add general form tempalte
 							if (sysTemplate == null) {

@@ -254,14 +254,14 @@ public class TextContainer {
 			if (plugin.createEmptyDocument()) {
 				Brief brief =
 					new Brief(subject == null ? Messages.TextContainer_EmptyDocument : subject,
-						null, CoreHub.actUser, adressat, kons, typ);
+						null, CoreHub.getLoggedInContact(), adressat, kons, typ);
 				addBriefToKons(brief, kons);
 				return brief;
 			}
 		} else {
 			if (plugin.loadFromByteArray(template.loadBinary(), true) == true) {
 				final Brief ret = new Brief(subject == null ? template.getBetreff() : subject, null,
-					CoreHub.actUser, adressat, kons, typ);
+					CoreHub.getLoggedInContact(), adressat, kons, typ);
 				plugin.initTemplatePrintSettings(template.getBetreff());
 				
 				plugin.findOrReplace(MATCH_TEMPLATE, new ReplaceCallback() {
@@ -615,7 +615,7 @@ public class TextContainer {
 		if (kl.equalsIgnoreCase("Mandant")) { //$NON-NLS-1$
 			ret = CoreHub.actMandant;
 		} else if (kl.equalsIgnoreCase("Anwender")) { //$NON-NLS-1$
-			ret = CoreHub.actUser;
+			ret = CoreHub.getLoggedInContact();
 		} else if (kl.equalsIgnoreCase("Adressat")) { //$NON-NLS-1$
 			ret = actBrief.getAdressat();
 		} else {
@@ -929,7 +929,7 @@ public class TextContainer {
 			if (ksl.open() == Dialog.OK) {
 				log.debug(
 					"ch.elexis.views/TextContainer.java saveBrief(): about to brief = new Brief(...)");
-				brief = new Brief(Messages.TextContainer_Letter, null, CoreHub.actUser,
+				brief = new Brief(Messages.TextContainer_Letter, null, CoreHub.getLoggedInContact(),
 					(Kontakt) ksl.getSelection(), Konsultation.getAktuelleKons(), typ);
 			}
 		}
@@ -991,7 +991,7 @@ public class TextContainer {
 		if (std.open() == Dialog.OK) {
 			String title = std.title;
 			Brief brief =
-				new Brief(title, null, CoreHub.actUser, std.selectedMand, null, Brief.TEMPLATE);
+				new Brief(title, null, CoreHub.getLoggedInContact(), std.selectedMand, null, Brief.TEMPLATE);
 			if (std.bSysTemplate) {
 				brief.set(Brief.FLD_KONSULTATION_ID, "SYS"); //$NON-NLS-1$
 			}

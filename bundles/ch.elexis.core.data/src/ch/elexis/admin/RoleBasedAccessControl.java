@@ -18,9 +18,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.model.IRole;
+import ch.elexis.core.model.IUser;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Role;
 import ch.elexis.data.User;
@@ -55,6 +57,17 @@ public class RoleBasedAccessControl extends AbstractAccessControl {
 	
 	protected static boolean queryRightForRole(Role r, ACE ace){
 		return queryRight(QUERY_RIGHT_FOR_ROLE, r.getWrappedId(), ace);
+	}
+	
+	protected static boolean queryRightForRoles(List<IRole> roles, @NonNull ACE ace){
+		if (roles != null) {
+			for (IRole role : roles) {
+				if (queryRightForRole(Role.load(role.getId()), ace)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	private static boolean queryRight(String qs, String objId, ACE ace){
@@ -122,10 +135,15 @@ public class RoleBasedAccessControl extends AbstractAccessControl {
 			return false;
 		
 		if (user == null) {
-			user = (User) ElexisEventDispatcher.getSelected(User.class);
-			if (user == null) {
+			IUser iUser = ContextServiceHolder.get().getActiveUser().orElse(null);
+			if (iUser == null) {
 				return false;
 			}
+			if (!iUser.isInternal()) {
+				return iUser.isAdministrator()
+					|| RoleBasedAccessControl.queryRightForRoles(iUser.getRoles(), ace);
+			}
+			user = User.load(iUser.getId());
 		}
 		
 		if (user.isAdministrator())

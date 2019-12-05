@@ -333,7 +333,7 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 							
 							@Override
 							public void lockAcquired(){
-								pr.setStopReason("Geändert durch " + CoreHub.actUser.getLabel());
+								pr.setStopReason("Geändert durch " + CoreHub.getLoggedInContact().getLabel());
 								CoreModelServiceHolder.get().delete(pr);
 							}
 						});

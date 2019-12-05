@@ -210,7 +210,7 @@ public class LabResultEditingSupport extends EditingSupport {
 		TimeTool now = new TimeTool();
 		Patient patient = ElexisEventDispatcher.getSelectedPatient();
 		LabOrder order =
-			new LabOrder(CoreHub.actUser, findMandant(patient), patient, item, null,
+			new LabOrder(CoreHub.getLoggedInContact(), findMandant(patient), patient, item, null,
 				LabOrder.getNextOrderId(),
 				"Eingabe", now);
 		LabResult result = order.createResult(origin);
