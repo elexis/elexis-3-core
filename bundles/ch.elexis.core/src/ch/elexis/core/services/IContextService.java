@@ -30,10 +30,15 @@ public interface IContextService {
 	/**
 	 * Set the active {@link IUser} of the root context.
 	 * 
-	 * @return
+	 * @param user
+	 *            or <code>null</code> to unset
 	 */
-	default public void setActiveUser(IUser object){
-		getRootContext().setTyped(object);
+	default public void setActiveUser(IUser user){
+		if (user != null) {
+			getRootContext().setTyped(user);
+		} else {
+			getRootContext().removeTyped(IUser.class);
+		}
 	}
 	
 	/**
@@ -58,10 +63,15 @@ public interface IContextService {
 	/**
 	 * Set the active {@link IPatient} of the root context.
 	 * 
-	 * @return
+	 * @param patient
+	 *            or <code>null</code> to unset
 	 */
-	default public void setActivePatient(IPatient object){
-		getRootContext().setTyped(object);
+	default public void setActivePatient(IPatient patient){
+		if (patient != null) {
+			getRootContext().setTyped(patient);
+		} else {
+			getRootContext().removeTyped(IPatient.class);
+		}
 	}
 	
 	/**
@@ -76,10 +86,15 @@ public interface IContextService {
 	/**
 	 * Set the active {@link IMandator} of the root context.
 	 * 
-	 * @return
+	 * @param mandator
+	 *            or <code>null</code> to unset
 	 */
-	default public void setActiveMandator(IMandator object){
-		getRootContext().setTyped(object);
+	default public void setActiveMandator(IMandator mandator){
+		if (mandator != null) {
+			getRootContext().setTyped(mandator);
+		} else {
+			getRootContext().removeTyped(IMandator.class);
+		}
 	}
 	
 	/**
@@ -94,18 +109,24 @@ public interface IContextService {
 	/**
 	 * Set the active {@link ICoverage} of the root context.
 	 * 
-	 * @return
+	 * @param coverage
+	 *            or <code>null</code> to unset
 	 */
-	default public void setActiveCoverage(ICoverage object){
-		getRootContext().setTyped(object);
+	default public void setActiveCoverage(ICoverage coverage){
+		if (coverage != null) {
+			getRootContext().setTyped(coverage);
+		} else {
+			getRootContext().removeTyped(ICoverage.class);
+		}
 	}
 	
 	/**
-	 * Get the station identifier. 
+	 * Get the station identifier.
+	 * 
 	 * @return
 	 * @see IContext#getStationIdentifier()
 	 */
-	default public String getStationIdentifier() {
+	default public String getStationIdentifier(){
 		return getRootContext().getStationIdentifier();
 	}
 	
@@ -115,7 +136,7 @@ public interface IContextService {
 	 * @param clazz
 	 * @return
 	 */
-	default public <T> Optional<T> getTyped(Class<T> clazz) {
+	default public <T> Optional<T> getTyped(Class<T> clazz){
 		return getRootContext().getTyped(clazz);
 	}
 	

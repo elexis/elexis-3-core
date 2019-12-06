@@ -29,7 +29,7 @@ public interface IContext {
 	/**
 	 * Set an {@link Object} identified by its type in the context.
 	 * 
-	 * @param object
+	 * @param object must not be <code>null</code>
 	 */
 	public void setTyped(Object object);
 	

@@ -72,6 +72,8 @@ public class Context implements IContext {
 				}
 			}
 			updateElexisEventDispatcher(object);
+		} else {
+			throw new IllegalArgumentException("object must not be null, use #removeTyped");
 		}
 	}
 	
