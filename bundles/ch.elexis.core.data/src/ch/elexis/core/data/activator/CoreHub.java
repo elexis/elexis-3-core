@@ -504,6 +504,7 @@ public class CoreHub implements BundleActivator {
 	 * @return <code>true</code> erfolgreich angemeldet, {@link CoreHub#getLoggedInContact()}
 	 *         gesetzt, else <code>false</code>
 	 * @since 3.1 queries {@link User}
+	 * @since 3.8 moved from Anwender to CoreHub
 	 */
 	public static boolean login(final String username, char[] password){
 		((LocalLockService) LocalLockServiceHolder.get()).reconfigure();
