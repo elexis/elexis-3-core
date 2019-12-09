@@ -13,14 +13,12 @@ import java.util.Collections;
 import java.util.List;
 
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.service.ContextServiceHolder;
-import ch.elexis.core.data.service.CoreModelServiceHolder;
-import ch.elexis.core.model.IUser;
+import ch.elexis.core.data.events.ElexisEvent;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Visibility;
 import ch.rgw.tools.JdbcLink;
@@ -43,9 +41,15 @@ public class Test_Reminder extends AbstractPersistentObjectTest {
 		} else {
 			anwender = user.getAssignedContact();
 		}
+		
+		/*
+		 *  Only for testing purpose user selected event fired without real user set/login 
+		 *  in the ElexisContext or 'old' CoreHub.actUser
+		*/
 		// set user and Mandant in system
-		ContextServiceHolder.get().setActiveUser(
-			CoreModelServiceHolder.get().load(user.getId(), IUser.class).orElse(null));
+		ElexisEventDispatcher.getInstance()
+			.fire(new ElexisEvent(user, User.class, ElexisEvent.EVENT_SELECTED)); // can be removed
+		
 		Mandant m = new Mandant("Mandant", "Erwin", "26.07.1979", "m");
 		patient = new Patient("Mia", "Krank", "22041982", "w");
 		CoreHub.setMandant(m);
@@ -91,7 +95,6 @@ public class Test_Reminder extends AbstractPersistentObjectTest {
 	}
 	
 	@Test
-	@Ignore
 	public void testFindOpenRemindersResponsibleFor(){
 		reminderA = new Reminder(null, new TimeTool().toString(TimeTool.DATE_GER),
 			Visibility.ALWAYS, "", "TestMessage");
