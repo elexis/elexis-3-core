@@ -16,6 +16,9 @@ public class ContextServiceHolder {
 	}
 	
 	public static IContextService get(){
+		if (contextService == null) {
+			throw new IllegalStateException("No IContextService available");
+		}
 		return contextService;
 	}
 }
