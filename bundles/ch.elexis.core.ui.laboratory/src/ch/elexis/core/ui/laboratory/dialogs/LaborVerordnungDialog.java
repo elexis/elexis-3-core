@@ -223,7 +223,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 		TimeTool now = new TimeTool();
 		if (items != null) {
 			for (GroupItem groupItem : items) {
-				LabOrder order = new LabOrder(CoreHub.actUser, CoreHub.actMandant, patient,
+				LabOrder order = new LabOrder(CoreHub.getLoggedInContact(), CoreHub.actMandant, patient,
 					groupItem.getLabItem(), null, orderId.getText(), groupItem.getGroupname(), now);
 				order.setObservationTimeWithResults(date);
 				ret.add(order);

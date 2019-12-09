@@ -670,7 +670,7 @@ public class MedicationComposite extends Composite
 					// apply stop reason if set
 					if (txtStopComment.getText() == null || txtStopComment.getText().isEmpty()) {
 						oldPrescription
-							.setStopReason("Geändert durch " + CoreHub.actUser.getLabel());
+							.setStopReason("Geändert durch " + CoreHub.getLoggedInContact().getLabel());
 					} else {
 						oldPrescription.setStopReason(txtStopComment.getText());
 					}

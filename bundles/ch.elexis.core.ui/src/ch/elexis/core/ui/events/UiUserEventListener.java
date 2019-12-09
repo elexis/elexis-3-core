@@ -18,19 +18,21 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.dialogs.ReminderListSelectionDialog;
+import ch.elexis.data.Anwender;
 import ch.elexis.data.Reminder;
-import ch.elexis.data.User;
 
 public class UiUserEventListener extends ElexisUiEventListenerImpl {
 	
 	public UiUserEventListener(){
-		super(User.class);
+		// IUser
+		super(Anwender.class);
 	}
 	
 	@Override
 	public void runInUi(final ElexisEvent ev){
-		if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
-			final List<Reminder> reminderList = Reminder.findToShowOnStartup(CoreHub.actUser);
+		// Benutzer 
+		if (ev.getType() == ElexisEvent.EVENT_USER_CHANGED) {
+			final List<Reminder> reminderList = Reminder.findToShowOnStartup(CoreHub.getLoggedInContact());
 			
 			if (reminderList.size() > 0) {
 				// must be called inside display thread

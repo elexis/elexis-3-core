@@ -13,10 +13,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.model.RoleConstants;
 import ch.elexis.data.AbstractPersistentObjectTest;
-import ch.elexis.data.Anwender;
 import ch.elexis.data.Person;
 import ch.elexis.data.Query;
 import ch.elexis.data.Right;
@@ -34,7 +33,7 @@ public class RoleBasedAccessControlTest extends AbstractPersistentObjectTest {
 	
 	@Before
 	public void before() throws Exception{
-		user = (User) ElexisEventDispatcher.getSelected(User.class);
+		ContextServiceHolder.get().getActiveUser().ifPresent(u -> user = User.load(u.getId()));
 		assertNotNull(user);
 	}
 	
@@ -106,7 +105,7 @@ public class RoleBasedAccessControlTest extends AbstractPersistentObjectTest {
 	public void testUserLock(){
 		user.setActive(false);
 		CoreHub.logoffAnwender();
-		boolean rightFalse = Anwender.login(testUserName, PASSWORD);
+		boolean rightFalse = CoreHub.login(testUserName, PASSWORD.toCharArray());
 		assertFalse(rightFalse);
 		
 		// activate user again

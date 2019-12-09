@@ -77,7 +77,7 @@ public class BestellBlatt extends ViewPart implements ICallback {
 		if (actBest == null) {
 			SWTHelper.showError(ERRMSG_CAPTION, ERRMSG_BODY + "'" + TT_ORDER + "'"); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
-			actBest.setPatient(CoreHub.actUser);
+			actBest.setPatient(CoreHub.getLoggedInContact());
 			text.getPlugin().insertTable("[" + TT_ORDER + "]", //$NON-NLS-1$ //$NON-NLS-2$
 				ITextPlugin.FIRST_ROW_IS_HEADER | ITextPlugin.GRID_VISIBLE, tbl, null);
 			if (text.getPlugin().isDirectOutput()) {

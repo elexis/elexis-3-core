@@ -42,7 +42,7 @@ public abstract class AbstractCoreOperationAdvisor {
 	 * Adapt the context to the change of a user login. That is e.g. de-/activate menus according to
 	 * user rights etc. This was originally done in GlobalActions#adaptForUser()
 	 * 
-	 * Called within {@link Anwender#login(String, String)}
+	 * Called within {@link CoreHub#login(String, String)}
 	 */
 	public abstract void adaptForUser();
 	

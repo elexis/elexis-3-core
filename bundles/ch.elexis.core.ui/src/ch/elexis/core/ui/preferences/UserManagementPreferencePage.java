@@ -57,11 +57,12 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.ILocalLockService.Status;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.RestrictedAction;
@@ -192,14 +193,17 @@ public class UserManagementPreferencePage extends PreferencePage
 			
 			@Override
 			public void doRun(User user){
-				User currentUser = (User) ElexisEventDispatcher.getSelected(User.class);
-				if (currentUser.equals(user)) {
-					MessageDialog.openWarning(getShell(), "Warnung", "Dieser Benutzer ist gerade eingeloggt und kann daher nicht entfernt werden!");
-				} else {
-					user.delete();
-					updateUserList();
-					wvUser.setValue(null);
-					wvAnwender.setValue(null);
+				IUser currentUser =  ContextServiceHolder.get().getActiveUser().orElse(null);
+				if (currentUser != null) {
+					if (currentUser.getId().equals(user.getId())) {
+						MessageDialog.openWarning(getShell(), "Warnung",
+							"Dieser Benutzer ist gerade eingeloggt und kann daher nicht entfernt werden!");
+					} else {
+						user.delete();
+						updateUserList();
+						wvUser.setValue(null);
+						wvAnwender.setValue(null);
+					}
 				}
 			}
 		};

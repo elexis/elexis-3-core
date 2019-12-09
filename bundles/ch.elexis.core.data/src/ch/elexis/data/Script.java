@@ -243,7 +243,7 @@ public class Script extends NamedBlob2 {
 			scripter.setValue("actFall", ElexisEventDispatcher.getSelected(Fall.class));
 			scripter.setValue("actKons", ElexisEventDispatcher.getSelected(Konsultation.class));
 			scripter.setValue("actMandant", CoreHub.actMandant);
-			scripter.setValue("actUser", CoreHub.actUser);
+			scripter.setValue("actUser", CoreHub.getLoggedInContact());
 			
 			scripter.setValue("Elexis", CoreHub.plugin);
 			return scripter.run(parsed, showErrors);

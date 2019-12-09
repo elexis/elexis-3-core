@@ -530,7 +530,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 		
 		@Override
 		public IStatus execute(final IProgressMonitor monitor){
-			if (CoreHub.actUser == null) {
+			if (CoreHub.getLoggedInContact() == null) {
 				return Status.CANCEL_STATUS;
 			}
 			corruptKons = new HashSet<Konsultation>();
@@ -848,7 +848,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 				}
 			}
 			text.createFromTemplateName(null, TT_BILLING_LIST, //$NON-NLS-1$
-				Brief.UNKNOWN, CoreHub.actUser, Messages.PatHeuteView_billing); //$NON-NLS-1$
+				Brief.UNKNOWN, CoreHub.getLoggedInContact(), Messages.PatHeuteView_billing); //$NON-NLS-1$
 			String[][] table = new String[kons.length + add][];
 			table[0] = new String[2];
 			table[0][0] = Messages.PatHeuteView_consultation; //$NON-NLS-1$

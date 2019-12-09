@@ -56,7 +56,7 @@ public class LocalLock {
 					return false;
 				} else {
 					StringBuilder sb = new StringBuilder();
-					String user = (CoreHub.actUser != null) ? CoreHub.actUser.getLabel() : "system";
+					String user = (CoreHub.getLoggedInContact() != null) ? CoreHub.getLoggedInContact().getLabel() : "system";
 					sb.append("INSERT INTO CONFIG (param,wert) VALUES (") //$NON-NLS-1$
 						.append(JdbcLink.wrap(lockString)).append(",") //$NON-NLS-1$
 						.append(JdbcLink.wrap(

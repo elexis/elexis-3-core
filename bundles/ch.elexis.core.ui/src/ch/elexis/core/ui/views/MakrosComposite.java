@@ -60,7 +60,7 @@ public class MakrosComposite extends Composite {
 		
 		CLabel lblHeader = new CLabel(this, SWT.NONE);
 		lblHeader.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-		lblHeader.setText("Makros des Anwender " + CoreHub.actUser.getLabel());
+		lblHeader.setText("Makros des Anwender " + CoreHub.getLoggedInContact().getLabel());
 
 		
 		SashForm sash = new SashForm(this, SWT.HORIZONTAL);
@@ -76,7 +76,7 @@ public class MakrosComposite extends Composite {
 		viewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		viewer.setContentProvider(new ArrayContentProvider());
 		viewer.setLabelProvider(new DefaultLabelProvider());
-		viewer.setInput(getUserMakros(CoreHub.actUser));
+		viewer.setInput(getUserMakros(CoreHub.getLoggedInContact()));
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event){
@@ -155,7 +155,7 @@ public class MakrosComposite extends Composite {
 	private void addCopyToUserActions(IMenuManager manager){
 		List<Anwender> users = CoreHub.getUserList();
 		for (Anwender anwender : users) {
-			if (anwender.equals(CoreHub.actUser)) {
+			if (anwender.equals(CoreHub.getLoggedInContact())) {
 				continue;
 			}
 			manager.add(new CopyToUserAction(anwender, viewer));
@@ -182,10 +182,10 @@ public class MakrosComposite extends Composite {
 			if (in.open() == Dialog.OK) {
 				StringBuilder name = new StringBuilder(in.getValue());
 				name.reverse();
-				MakroDetailComposite.saveMakro(new MakroDTO(CoreHub.actUser.getId(),
+				MakroDetailComposite.saveMakro(new MakroDTO(CoreHub.getLoggedInContact().getId(),
 					"makros/" + name.toString(), in.getValue(), "Neues Makro"));
 				if (viewer != null) {
-					viewer.setInput(getUserMakros(CoreHub.actUser));
+					viewer.setInput(getUserMakros(CoreHub.getLoggedInContact()));
 				}
 			}
 		}
@@ -220,7 +220,7 @@ public class MakrosComposite extends Composite {
 						}
 					}
 					if (viewer != null) {
-						viewer.setInput(getUserMakros(CoreHub.actUser));
+						viewer.setInput(getUserMakros(CoreHub.getLoggedInContact()));
 					}
 				}
 			}
@@ -242,7 +242,7 @@ public class MakrosComposite extends Composite {
 		@Override
 		public void run(){
 			if (viewer != null) {
-				viewer.setInput(getUserMakros(CoreHub.actUser));
+				viewer.setInput(getUserMakros(CoreHub.getLoggedInContact()));
 			}
 		}
 	}

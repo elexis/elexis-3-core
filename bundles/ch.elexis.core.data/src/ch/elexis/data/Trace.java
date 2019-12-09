@@ -6,7 +6,8 @@ import java.sql.SQLException;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.service.ContextServiceHolder;
+import ch.elexis.core.model.IUser;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.net.NetTool;
 
@@ -19,7 +20,7 @@ public class Trace {
 	
 	public static void addTraceEntry(String username, String workstation, String action){
 		if (StringUtils.isEmpty(username)) {
-			User user = (User) ElexisEventDispatcher.getSelected(User.class);
+			IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
 			if (user != null) {
 				username = user.getId();
 			}

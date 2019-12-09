@@ -155,6 +155,6 @@ public class MakroDetailComposite extends Composite {
 	}
 	
 	private static boolean isCurrentUser(MakroDTO makro){
-		return makro.getMakroUserId().equals(CoreHub.actUser.getId());
+		return makro.getMakroUserId().equals(CoreHub.getLoggedInContact().getId());
 	}
 }

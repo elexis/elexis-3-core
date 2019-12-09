@@ -14,11 +14,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import javax.security.auth.login.LoginException;
 
 import org.eclipse.equinox.internal.app.CommandLineArgs;
 import org.osgi.framework.Bundle;
@@ -40,18 +44,28 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.Heartbeat;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
 import ch.elexis.core.data.events.PatientEventListener;
+import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
 import ch.elexis.core.data.interfaces.ShutdownJob;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.interfaces.scripting.Interpreter;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
 import ch.elexis.core.data.server.ElexisServerEventService;
+import ch.elexis.core.data.service.ContextServiceHolder;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.service.PoOrderService;
 import ch.elexis.core.data.service.StockCommissioningSystemService;
 import ch.elexis.core.data.service.StockService;
+import ch.elexis.core.data.service.internal.LocalLockService;
 import ch.elexis.core.data.services.IOrderService;
 import ch.elexis.core.data.services.IStockCommissioningSystemService;
 import ch.elexis.core.data.services.IStockService;
+import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IUser;
+import ch.elexis.core.services.IContextService;
+import ch.elexis.core.services.IExternalLoginService;
+import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
@@ -121,7 +135,6 @@ public class CoreHub implements BundleActivator {
 	/** Mandantspezifische EInstellungen (Werden in der Datenbank gespeichert) */
 	public static Settings mandantCfg;
 	
-	public static Anwender actUser; // TODO set
 	/**
 	 * @deprecated please use {@link ElexisEventDispatcher#getSelectedMandator()} to retrieve
 	 *             current mandator
@@ -156,6 +169,22 @@ public class CoreHub implements BundleActivator {
 	 * The listener for patient events
 	 */
 	private final PatientEventListener eeli_pat = new PatientEventListener();
+	
+	
+	/**
+	 * Returns the actual contact of the logged in User. Use it only for PO compatibility instead
+	 * use {@link IContextService#getActiveUser()} directly.
+	 * 
+	 * @return the {@link Anwender} or null if no contact is present
+	 * @since 3.8
+	 */
+	public static @Nullable Anwender getLoggedInContact(){
+		Optional<IContact> userContact = ContextServiceHolder.get().getActiveUserContact();
+		if (userContact.isPresent()) {
+			return Anwender.load(userContact.get().getId());
+		}
+		return null;
+	}
 	
 	public static boolean isTooManyInstances(){
 		return tooManyInstances;
@@ -465,12 +494,91 @@ public class CoreHub implements BundleActivator {
 	}
 	
 	/**
+	 * Login: Anwender anmelden, passenden Mandanten anmelden. (Jeder Anwender ist entweder selber
+	 * ein Mandant oder ist einem Mandanten zugeordnet)
+	 * 
+	 * @param username
+	 *            Kurzname
+	 * @param password
+	 *            Passwort
+	 * @return <code>true</code> erfolgreich angemeldet, {@link CoreHub#getLoggedInContact()}
+	 *         gesetzt, else <code>false</code>
+	 * @since 3.1 queries {@link User}
+	 */
+	public static boolean login(final String username, char[] password){
+		((LocalLockService) LocalLockServiceHolder.get()).reconfigure();
+		((ElexisServerEventService) CoreHub.getElexisServerEventService()).reconfigure();
+
+		CoreHub.logoffAnwender();
+		
+		Optional<IExternalLoginService> externalLoginService =
+			OsgiServiceUtil.getService(IExternalLoginService.class);
+		
+		IUser user = null;
+		if (externalLoginService.isPresent()) {
+			try {
+				user = externalLoginService.get().login(username, password);
+			} catch (LoginException e) {
+				log.info("Login to external system failed", e);
+			}
+		}
+		if (user == null) {
+			// fallback internal login
+			log.info("login to internal db");
+			Optional<IUser> dbUser = CoreModelServiceHolder.get().load(username, IUser.class);
+			if (dbUser.isPresent()) {
+				user = dbUser.get().login(username, password);
+			}
+			if (user == null) {
+				return false;
+			}
+		}
+	
+		// check anwender is valid
+		Anwender anwender = Anwender.load(user.getAssignedContact().getId());
+		if (anwender == null) {
+			log.error("username: {}", username, new LoginException("anwender is null"));
+			return false;
+		}
+		
+		if (!anwender.isValid()) {
+			log.error("username: {}", username,
+				new LoginException("anwender is invalid or deleted"));
+			return false;
+		}
+		
+		if (!anwender.istAnwender()) {
+			log.error("username: {}", username,
+				new LoginException("anwender is not a istAnwender"));
+			return false;
+		}
+		
+		//security - reset password in memory
+		Arrays.fill(password, '*');
+		
+		// set user in system
+		ContextServiceHolder.get().setActiveUser(user);
+		ElexisEventDispatcher.getInstance()
+			.fire(new ElexisEvent(CoreHub.getLoggedInContact(), Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
+
+		CoreOperationExtensionPoint.getCoreOperationAdvisor().adaptForUser();
+		
+		CoreHub.getLoggedInContact().setInitialMandator();
+
+		CoreHub.userCfg = getUserSetting(CoreHub.getLoggedInContact());
+
+		CoreHub.heart.resume(true);
+
+		return true;
+	}
+	
+	/**
 	 * Perform the required tasks to log off the current {@link Anwender}
 	 * 
 	 * @since 3.1 moved from {@link Anwender} class
 	 */
 	public static void logoffAnwender(){
-		if (CoreHub.actUser == null)
+		if (CoreHub.getLoggedInContact() == null)
 			return;
 		
 		if (CoreHub.userCfg != null) {
@@ -481,11 +589,11 @@ public class CoreHub implements BundleActivator {
 		
 		CoreHub.setMandant(null);
 		CoreHub.heart.suspend();
-		CoreHub.actUser = null;
+		ContextServiceHolder.get().setActiveUser(null);
 		ElexisEventDispatcher.getInstance()
 			.fire(new ElexisEvent(null, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
 		ElexisEventDispatcher.getInstance()
-			.fire(new ElexisEvent(null, User.class, ElexisEvent.EVENT_DESELECTED));
+			.fire(new ElexisEvent(null, IUser.class, ElexisEvent.EVENT_DESELECTED));
 		CoreHub.userCfg = CoreHub.localCfg;
 	}
 	

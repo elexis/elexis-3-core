@@ -113,7 +113,7 @@ public class BBSView extends ViewPart implements ISelectionChangedListener, ISav
 				}
 				Tree item = (Tree) sel[0];
 				BBSEntry en = (BBSEntry) (item).contents;
-				BBSEntry ne = new BBSEntry(en.getTopic(), CoreHub.actUser, en, input.getText());
+				BBSEntry ne = new BBSEntry(en.getTopic(), CoreHub.getLoggedInContact(), en, input.getText());
 				Tree child = item.add(ne);
 				((TreeViewer) headlines.getViewerWidget()).add(sel[0], child);
 				((TreeViewer) headlines.getViewerWidget()).setSelection(new StructuredSelection(
@@ -177,7 +177,7 @@ public class BBSView extends ViewPart implements ISelectionChangedListener, ISav
 				public void widgetSelected(SelectionEvent e){
 					new BBSEntry(
 						headlines.getConfigurer().getControlFieldProvider().getValues()[0],
-						CoreHub.actUser, null, Messages.BBSView_22); //$NON-NLS-1$
+						CoreHub.getLoggedInContact(), null, Messages.BBSView_22); //$NON-NLS-1$
 					loader.invalidate();
 					headlines.notify(CommonViewer.Message.update);
 					setDisplay();

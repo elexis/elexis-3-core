@@ -102,7 +102,7 @@ public class MandantSelectionContributionItem {
 	
 	private void adaptForAnwender(Anwender anwender){
 		if (anwender == null) {
-			anwender = CoreHub.actUser;
+			anwender = CoreHub.getLoggedInContact();
 			if (anwender == null)
 				return;
 		}

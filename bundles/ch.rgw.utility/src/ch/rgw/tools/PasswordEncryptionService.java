@@ -29,7 +29,7 @@ import org.apache.commons.codec.binary.Hex;
  */
 public class PasswordEncryptionService {
 	
-	public boolean authenticate(String attemptedPassword, byte[] encryptedPassword, byte[] salt)
+	public boolean authenticate(char[] attemptedPassword, byte[] encryptedPassword, byte[] salt)
 		throws NoSuchAlgorithmException, InvalidKeySpecException{
 		// Encrypt the clear-text password using the same salt that was used to
 		// encrypt the original password
@@ -40,13 +40,14 @@ public class PasswordEncryptionService {
 		return Arrays.equals(encryptedPassword, encryptedAttemptedPassword);
 	}
 	
-	public boolean authenticate(String attemptedPassword, String encryptedPassword, String salt)
+	public boolean authenticate(char[] attemptedPassword, String encryptedPassword, String salt)
 		throws NoSuchAlgorithmException, InvalidKeySpecException, DecoderException{
-		return authenticate(attemptedPassword, Hex.decodeHex(encryptedPassword.toCharArray()),
+		return authenticate(attemptedPassword,
+			Hex.decodeHex(encryptedPassword.toCharArray()),
 			Hex.decodeHex(salt.toCharArray()));
 	}
 	
-	public byte[] getEncryptedPassword(String password, byte[] salt)
+	public byte[] getEncryptedPassword(char[] password, byte[] salt)
 		throws NoSuchAlgorithmException, InvalidKeySpecException{
 		// PBKDF2 with SHA-1 as the hashing algorithm. Note that the NIST
 		// specifically names SHA-1 as an acceptable hashing algorithm for PBKDF2
@@ -60,7 +61,7 @@ public class PasswordEncryptionService {
 		// http://blog.crackpassword.com/2010/09/smartphone-forensics-cracking-blackberry-backup-passwords/
 		int iterations = 20000;
 		
-		KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterations, derivedKeyLength);
+		KeySpec spec = new PBEKeySpec(password, salt, iterations, derivedKeyLength);
 		SecretKeyFactory f = SecretKeyFactory.getInstance(algorithm);
 		
 		return f.generateSecret(spec).getEncoded();
@@ -68,7 +69,8 @@ public class PasswordEncryptionService {
 	
 	public String getEncryptedPasswordAsHexString(String password, String salt)
 		throws NoSuchAlgorithmException, InvalidKeySpecException, DecoderException{
-		byte[] encryptedPassword = getEncryptedPassword(password, Hex.decodeHex(salt.toCharArray()));
+		byte[] encryptedPassword =
+			getEncryptedPassword(password.toCharArray(), Hex.decodeHex(salt.toCharArray()));
 		return Hex.encodeHexString(encryptedPassword);
 	}
 	

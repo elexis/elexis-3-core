@@ -16,7 +16,7 @@ import ch.elexis.data.Role;
 import ch.elexis.data.User;
 
 /**
- * @since 3.1 replaced the original AccessControl, which is kept in {@link AccessControlImpl}
+ * @since 3.1 replaced the original AccessControl, which is kept in the removed AccessControlImpl
  */
 public abstract class AbstractAccessControl {
 	

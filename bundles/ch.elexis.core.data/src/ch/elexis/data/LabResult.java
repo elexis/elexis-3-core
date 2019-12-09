@@ -236,7 +236,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 					labResult.getId());
 				time = new TimeTool();
 			}
-			new LabOrder(CoreHub.actUser.getId(), mandantId, pat.getId(), item, labResult.getId(),
+			new LabOrder(CoreHub.getLoggedInContact().getId(), mandantId, pat.getId(), item, labResult.getId(),
 				orderId, groupName, time);
 		} else {
 			((LabOrder) labOrder).setLabResultIdAsString(labResult.getId());

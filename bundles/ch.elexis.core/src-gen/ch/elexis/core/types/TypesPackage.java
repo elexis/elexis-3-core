@@ -432,6 +432,15 @@ public interface TypesPackage extends EPackage {
 	int OPTIONAL = 33;
 
 	/**
+	 * The meta object id for the '<em>char Array</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getcharArray()
+	 * @generated
+	 */
+	int CHAR_ARRAY = 34;
+
+	/**
 	 * The meta object id for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -810,6 +819,16 @@ public interface TypesPackage extends EPackage {
 	EDataType getOptional();
 
 	/**
+	 * Returns the meta object for data type '<em>char Array</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>char Array</em>'.
+	 * @model instanceClass="char[]"
+	 * @generated
+	 */
+	EDataType getcharArray();
+
+	/**
 	 * Returns the meta object for class '{@link ch.rgw.tools.Result <em>Result</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1171,6 +1190,15 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType OPTIONAL = eINSTANCE.getOptional();
+
+		/**
+		 * The meta object literal for the '<em>char Array</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getcharArray()
+		 * @generated
+		 */
+		EDataType CHAR_ARRAY = eINSTANCE.getcharArray();
 
 		/**
 		 * The meta object literal for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.

@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.ILoginNews;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
@@ -95,7 +96,7 @@ public class LoginDialog extends TitleAreaDialog {
 	
 	@Override
 	protected void okPressed(){
-		if (Anwender.login(usr.getText(), pwd.getText()) == true) {
+		if (CoreHub.login(usr.getText(), pwd.getTextChars()) == true) {
 			super.okPressed();
 		} else {
 			setMessage(Messages.LoginDialog_4, IMessageProvider.ERROR);
@@ -105,7 +106,7 @@ public class LoginDialog extends TitleAreaDialog {
 	
 	@Override
 	protected void cancelPressed(){
-		CoreHub.actUser = null;
+		ContextServiceHolder.get().setActiveUser(null);
 		CoreHub.actMandant = null;
 		super.cancelPressed();
 	}

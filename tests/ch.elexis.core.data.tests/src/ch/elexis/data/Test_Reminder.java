@@ -17,8 +17,9 @@ import org.junit.Test;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.service.ContextServiceHolder;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Visibility;
 import ch.rgw.tools.JdbcLink;
@@ -42,8 +43,8 @@ public class Test_Reminder extends AbstractPersistentObjectTest {
 			anwender = user.getAssignedContact();
 		}
 		// set user and Mandant in system
-		ElexisEventDispatcher.getInstance()
-			.fire(new ElexisEvent(user, User.class, ElexisEvent.EVENT_SELECTED));
+		ContextServiceHolder.get().setActiveUser(
+			CoreModelServiceHolder.get().load(user.getId(), IUser.class).orElse(null));
 		Mandant m = new Mandant("Mandant", "Erwin", "26.07.1979", "m");
 		patient = new Patient("Mia", "Krank", "22041982", "w");
 		CoreHub.setMandant(m);
@@ -92,33 +93,33 @@ public class Test_Reminder extends AbstractPersistentObjectTest {
 	public void testFindOpenRemindersResponsibleFor(){
 		reminderA = new Reminder(null, new TimeTool().toString(TimeTool.DATE_GER),
 			Visibility.ALWAYS, "", "TestMessage");
-		reminderA.setResponsible(Collections.singletonList(CoreHub.actUser));
+		reminderA.setResponsible(Collections.singletonList(CoreHub.getLoggedInContact()));
 		reminderA.set(Reminder.FLD_STATUS, Integer.toString(ProcessStatus.CLOSED.numericValue()));
 		
 		reminderB = new Reminder(null, new TimeTool().toString(TimeTool.DATE_GER),
 			Visibility.ALWAYS, "", "TestMessage");
-		reminderB.setResponsible(Collections.singletonList(CoreHub.actUser));
+		reminderB.setResponsible(Collections.singletonList(CoreHub.getLoggedInContact()));
 		List<Reminder> findOpenRemindersResponsibleFor =
-			Reminder.findOpenRemindersResponsibleFor(CoreHub.actUser, false, null, false);
+			Reminder.findOpenRemindersResponsibleFor(CoreHub.getLoggedInContact(), false, null, false);
 		assertEquals(1, findOpenRemindersResponsibleFor.size());
 		
 		reminderC = new Reminder(patient, new TimeTool().toString(TimeTool.DATE_GER),
 			Visibility.ALWAYS, "", "TestMessage");
 		reminderC.setResponsible(null);
 		assertEquals(2,
-			Reminder.findOpenRemindersResponsibleFor(CoreHub.actUser, false, null, false).size());
+			Reminder.findOpenRemindersResponsibleFor(CoreHub.getLoggedInContact(), false, null, false).size());
 		assertEquals(1,
 			Reminder.findOpenRemindersResponsibleFor(null, false, patient, false).size());
 		
 		Reminder popupReminder = new Reminder(patient, new TimeTool().toString(TimeTool.DATE_GER),
 			Visibility.POPUP_ON_PATIENT_SELECTION, "", "TestMessage");
-		popupReminder.setResponsible(Collections.singletonList(CoreHub.actUser));
+		popupReminder.setResponsible(Collections.singletonList(CoreHub.getLoggedInContact()));
 		assertEquals(3,
-			Reminder.findOpenRemindersResponsibleFor(CoreHub.actUser, false, null, false).size());
+			Reminder.findOpenRemindersResponsibleFor(CoreHub.getLoggedInContact(), false, null, false).size());
 		assertEquals(1,
-			Reminder.findOpenRemindersResponsibleFor(CoreHub.actUser, false, null, true).size());
+			Reminder.findOpenRemindersResponsibleFor(CoreHub.getLoggedInContact(), false, null, true).size());
 		assertEquals(1,
-			Reminder.findOpenRemindersResponsibleFor(CoreHub.actUser, false, patient, true).size());
+			Reminder.findOpenRemindersResponsibleFor(CoreHub.getLoggedInContact(), false, patient, true).size());
 		
 		TimeTool timeTool = new TimeTool(LocalDate.now().minusDays(1));
 		Reminder dueReminder = new Reminder(null, timeTool.toString(TimeTool.DATE_GER),
@@ -137,30 +138,30 @@ public class Test_Reminder extends AbstractPersistentObjectTest {
 	public void testFindAllUserIsResponsibleFor(){
 		reminderA = new Reminder(null, new TimeTool().toString(TimeTool.DATE_GER),
 			Visibility.ALWAYS, "", "TestMessage");
-		reminderA.setResponsible(Collections.singletonList(CoreHub.actUser));
+		reminderA.setResponsible(Collections.singletonList(CoreHub.getLoggedInContact()));
 		reminderA.set(Reminder.FLD_STATUS, Integer.toString(ProcessStatus.CLOSED.numericValue()));
 		
 		reminderB = new Reminder(null, new TimeTool().toString(TimeTool.DATE_GER),
 			Visibility.ALWAYS, "", "TestMessage");
-		reminderB.setResponsible(Collections.singletonList(CoreHub.actUser));
+		reminderB.setResponsible(Collections.singletonList(CoreHub.getLoggedInContact()));
 		
 		reminderC = new Reminder(null, null, Visibility.ALWAYS, "", "TestMessage");
 		reminderC.setResponsible(null);
 		
-		assertEquals(3, Reminder.findAllUserIsResponsibleFor(CoreHub.actUser, false).size());
-		assertEquals(2, Reminder.findAllUserIsResponsibleFor(CoreHub.actUser, true).size());
+		assertEquals(3, Reminder.findAllUserIsResponsibleFor(CoreHub.getLoggedInContact(), false).size());
+		assertEquals(2, Reminder.findAllUserIsResponsibleFor(CoreHub.getLoggedInContact(), true).size());
 	}
 	
 	@Test
 	public void testFindRemindersDueFor(){
 		reminderA = new Reminder(null, new TimeTool().toString(TimeTool.DATE_GER),
 			Visibility.ALWAYS, "", "TestMessage");
-		reminderA.setResponsible(Collections.singletonList(CoreHub.actUser));
+		reminderA.setResponsible(Collections.singletonList(CoreHub.getLoggedInContact()));
 		reminderA.set(Reminder.FLD_DUE, new TimeTool().toString(TimeTool.DATE_GER));
 		
 		reminderB = new Reminder(null, new TimeTool().toString(TimeTool.DATE_GER),
 			Visibility.ALWAYS, "", "TestMessage");
-		reminderB.setResponsible(Collections.singletonList(CoreHub.actUser));
+		reminderB.setResponsible(Collections.singletonList(CoreHub.getLoggedInContact()));
 		TimeTool timeTool = new TimeTool();
 		timeTool.addDays(-2);
 		reminderB.set(Reminder.FLD_DUE, timeTool.toString(TimeTool.DATE_GER));
@@ -169,7 +170,7 @@ public class Test_Reminder extends AbstractPersistentObjectTest {
 		reminderC.setResponsible(null);
 		
 		List<Reminder> findRemindersDueFor =
-			Reminder.findRemindersDueFor(null, CoreHub.actUser, false);
+			Reminder.findRemindersDueFor(null, CoreHub.getLoggedInContact(), false);
 		assertEquals(2, findRemindersDueFor.size());
 	}
 	

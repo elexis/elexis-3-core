@@ -108,7 +108,7 @@ public class Verrechnet extends PersistentObject {
 		String[] values = new String[] {
 			kons.getId(), iv.getText(), iv.getId(), iv.getClass().getName(), Integer.toString(zahl),
 			iv.getKosten(dat).getCentsAsString(), Integer.toString(tp), Double.toString(factor),
-			Long.toString(preis), "100", "100", CoreHub.actUser.getId()
+			Long.toString(preis), "100", "100", CoreHub.getLoggedInContact().getId()
 		};
 		create(null, fields, values);
 		

@@ -169,6 +169,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createInvoiceRejectCodeFromString(eDataType, initialValue);
 			case TypesPackage.OPTIONAL:
 				return createOptionalFromString(eDataType, initialValue);
+			case TypesPackage.CHAR_ARRAY:
+				return createcharArrayFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -242,6 +244,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertInvoiceRejectCodeToString(eDataType, instanceValue);
 			case TypesPackage.OPTIONAL:
 				return convertOptionalToString(eDataType, instanceValue);
+			case TypesPackage.CHAR_ARRAY:
+				return convertcharArrayToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -796,6 +800,24 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	public String convertOptionalToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public char[] createcharArrayFromString(EDataType eDataType, String initialValue) {
+		return (char[])super.createFromString(initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertcharArrayToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(instanceValue);
 	}
 

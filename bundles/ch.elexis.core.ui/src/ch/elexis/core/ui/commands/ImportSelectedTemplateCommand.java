@@ -85,7 +85,7 @@ public class ImportSelectedTemplateCommand extends AbstractHandler {
 						}
 					}
 					
-					Brief bTemplate = new Brief(textTemplate.getName(), null, CoreHub.actUser,
+					Brief bTemplate = new Brief(textTemplate.getName(), null, CoreHub.getLoggedInContact(),
 						textTemplate.getMandant(), null, Brief.TEMPLATE);
 					if (textTemplate.isSystemTemplate()) {
 						bTemplate.set(Brief.FLD_KONSULTATION_ID, Brief.SYS_TEMPLATE);

@@ -241,5 +241,21 @@ public interface IUser extends Deleteable, Identifiable {
 	 * @generated
 	 */
 	void removeRole(IRole role);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model passwordDataType="ch.elexis.core.types.charArray"
+	 * @generated
+	 */
+	IUser login(String username, char[] password);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	boolean isInternal();
 	
 } // IUser

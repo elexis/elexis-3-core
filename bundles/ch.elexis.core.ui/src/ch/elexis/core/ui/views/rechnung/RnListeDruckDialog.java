@@ -74,7 +74,7 @@ public class RnListeDruckDialog extends TitleAreaDialog implements ICallback {
 		text.getPlugin().createContainer(ret, this);
 		text.getPlugin().showMenu(false);
 		text.getPlugin().showToolbar(false);
-		text.createFromTemplateName(null, TT_LIST, Brief.UNKNOWN, CoreHub.actUser,
+		text.createFromTemplateName(null, TT_LIST, Brief.UNKNOWN, CoreHub.getLoggedInContact(),
 			Messages.RnActions_bills); //$NON-NLS-1$ //$NON-NLS-2$
 		text.getPlugin().insertText("[Titel]", //$NON-NLS-1$
 			Messages.RnActions_billsListPrintetAt + new TimeTool().toString(TimeTool.DATE_GER)

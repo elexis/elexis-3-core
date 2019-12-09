@@ -265,7 +265,7 @@ public final class ElexisEvent implements Comparable<ElexisEvent> {
 	 * @return
 	 */
 	public static ElexisEvent createUserEvent(){
-		return new ElexisEvent(CoreHub.actUser, Anwender.class, EVENT_USER_CHANGED);
+		return new ElexisEvent(CoreHub.getLoggedInContact(), Anwender.class, EVENT_USER_CHANGED);
 	}
 	
 	/**

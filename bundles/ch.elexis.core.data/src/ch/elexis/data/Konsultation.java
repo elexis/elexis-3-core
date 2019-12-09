@@ -757,7 +757,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		
 		// Statistik nachführen
 		getFall().getPatient().countItem(dg);
-		CoreHub.actUser.countItem(dg);
+		CoreHub.getLoggedInContact().countItem(dg);
 		
 		refreshLastUpdateAndSendUpdateEvent(FLD_JOINT_DIAGNOSEN);
 	}
@@ -933,8 +933,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 					ElexisEventDispatcher.update(this);
 					// Statistik nachführen
 					getFall().getPatient().countItem(l);
-					CoreHub.actUser.countItem(l);
-					CoreHub.actUser.statForString("LeistungenMFU", l.getCodeSystemName());
+					CoreHub.getLoggedInContact().countItem(l);
+					CoreHub.getLoggedInContact().statForString("LeistungenMFU", l.getCodeSystemName());
 				}
 				return result;
 			} else {

@@ -161,7 +161,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 					
 					public void run(){
 						List<Reminder> list = Reminder.findOpenRemindersResponsibleFor(
-							CoreHub.actUser, false, (Patient) ev.getObject(), true);
+							CoreHub.getLoggedInContact(), false, (Patient) ev.getObject(), true);
 						if (list.size() != 0) {
 							StringBuilder sb = new StringBuilder();
 							for (Reminder r : list) {
@@ -819,7 +819,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		@Override
 		public Object[] getElements(final Object inputElement){
 			// Display reminders only if one is logged in
-			if (CoreHub.actUser == null) {
+			if (CoreHub.getLoggedInContact() == null) {
 				return new Object[0];
 			}
 			
@@ -833,12 +833,12 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				}
 				reminders.addAll(qbe.execute());
 			} else {
-				reminders.addAll(Reminder.findOpenRemindersResponsibleFor(CoreHub.actUser,
+				reminders.addAll(Reminder.findOpenRemindersResponsibleFor(CoreHub.getLoggedInContact(),
 					showOnlyDueReminders, filterDueDateDays, null, false));
 				
 				if (showSelfCreatedReminders) {
 					qbe.clear();
-					qbe.add(Reminder.FLD_CREATOR, Query.EQUALS, CoreHub.actUser.getId());
+					qbe.add(Reminder.FLD_CREATOR, Query.EQUALS, CoreHub.getLoggedInContact().getId());
 					if (filterDueDateDays != -1) {
 						applyDueDateFilter(qbe);
 					}

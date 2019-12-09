@@ -15,23 +15,22 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
-
-import javax.security.auth.login.LoginException;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
-import ch.elexis.core.data.server.ElexisServerEventService;
-import ch.elexis.core.data.service.LocalLockServiceHolder;
-import ch.elexis.core.data.service.internal.LocalLockService;
+import ch.elexis.core.data.service.ContextServiceHolder;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.jdt.NonNull;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.RoleConstants;
-import ch.rgw.io.SqlSettings;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
 
@@ -198,94 +197,22 @@ public class Anwender extends Person {
 	 * Initializes the first user to the system, the administrator
 	 */
 	protected static void initializeAdministratorUser(){
-		new User();
-		
+		new User(); // compatibility - needed because of static db inits
 		Anwender admin = new Anwender();
 		admin.create(null);
 		admin.set(new String[] {
 			Person.NAME, FLD_LABEL, Kontakt.FLD_IS_USER
 		}, ADMINISTRATOR, ADMINISTRATOR, StringConstants.ONE);
-		User.load(ADMINISTRATOR).setAssignedContact(admin);
-		
-		CoreHub.actUser = admin;
-		ElexisEventDispatcher.getInstance().fire(
-			new ElexisEvent(admin, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
-	}
-	
-	/**
-	 * Login: Anwender anmelden, passenden Mandanten anmelden. (Jeder Anwender
-	 * ist entweder selber ein Mandant oder ist einem Mandanten zugeordnet)
-	 * 
-	 * @param username
-	 *            Kurzname
-	 * @param password
-	 *            Passwort
-	 * @return <code>true</code> erfolgreich angemeldet, CoreHub.actUser
-	 *         gesetzt, else <code>false</code>
-	 * @since 3.1 queries {@link User}
-	 */
-	public static boolean login(final String username, final String password) {
-		((LocalLockService) LocalLockServiceHolder.get()).reconfigure();
-		((ElexisServerEventService) CoreHub.getElexisServerEventService()).reconfigure();
-
-		CoreHub.logoffAnwender();
-
-		// check if user exists
-		User user = User.load(username);
-		if (!user.exists()) {
-			return false;
+		Optional<IUser> user = CoreModelServiceHolder.get().load(ADMINISTRATOR, IUser.class);
+		if (user.isPresent()) {
+			user.get().setAssignedContact(
+				CoreModelServiceHolder.get().load(admin.getId(), IContact.class).orElse(null));
+			ContextServiceHolder.get().setActiveUser(user.get());
+			ElexisEventDispatcher.getInstance()
+				.fire(new ElexisEvent(admin, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
+		} else {
+			throw new IllegalStateException("Incorrect DB state - No admin user found!");
 		}
-		
-		if(!username.equals(user.get(FLD_ID))) {
-			return false;
-		}
-
-		// is the user currently active, or locked?
-		if (!user.isActive()) {
-			return false;
-		}
-
-		// check if password is valid
-		boolean result = user.verifyPassword(password);
-		if (!result) {
-			return false;
-		}
-
-		// check anwender is valid
-		Anwender anwender = Anwender.load(user.getAssignedContactId());
-		if (anwender == null) {
-			log.error("username: {}", username, new LoginException("anwender is null"));
-			return false;
-		}
-		
-		if (!anwender.isValid()) {
-			log.error("username: {}", username,
-				new LoginException("anwender is invalid or deleted"));
-			return false;
-		}
-		
-		if (!anwender.istAnwender()) {
-			log.error("username: {}", username,
-				new LoginException("anwender is not a istAnwender"));
-			return false;
-		}
-		
-		// set user in system
-		CoreHub.actUser = anwender;
-		ElexisEventDispatcher.getInstance().fire(new ElexisEvent(user, User.class, ElexisEvent.EVENT_SELECTED));
-		ElexisEventDispatcher.getInstance()
-			.fire(new ElexisEvent(CoreHub.actUser, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
-
-		cod.adaptForUser();
-
-		CoreHub.actUser.setInitialMandator();
-
-		CoreHub.userCfg = new SqlSettings(getConnection(), "USERCONFIG", "Param", "Value",
-				"UserID=" + CoreHub.actUser.getWrappedId());
-
-		CoreHub.heart.resume(true);
-
-		return true;
 	}
 	
 	/**
@@ -295,7 +222,11 @@ public class Anwender extends Person {
 		CoreHub.logoffAnwender();
 	}
 	
-	private void setInitialMandator(){
+	/**
+	 * Sets the initial {@link Mandant}. Should be used carefully. Only {@link CoreHub} use it after
+	 * login.
+	 */
+	public void setInitialMandator(){
 		Mandant initialMandator = null;
 		List<Mandant> workingFor = getExecutiveDoctorsWorkingFor();
 		if (workingFor != null && !workingFor.isEmpty()) {
@@ -310,7 +241,7 @@ public class Anwender extends Person {
 		if (initialMandator != null) {
 			CoreHub.setMandant(initialMandator);
 		} else {
-			Mandant m = Mandant.load(CoreHub.actUser.getId());
+			Mandant m = Mandant.load(CoreHub.getLoggedInContact().getId());
 			if ((m != null) && m.isValid()) {
 				CoreHub.setMandant(m);
 			} else {

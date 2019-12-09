@@ -2,11 +2,9 @@ package ch.elexis.core.data.server;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.jdt.Nullable;
-import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.data.PersistentObject;
-import ch.elexis.data.User;
 
 /**
  * Maps internal {@link ElexisEvent} instances to outgoing ElexisEvent instances sent to
@@ -35,9 +33,8 @@ public class ServerEventMapper {
 				object.getClass().getName());
 		}
 		
-		IPersistentObject user = ElexisEventDispatcher.getSelected(User.class);
-		remoteEvent.getProperties().put(ElexisEventTopics.PROPKEY_USER, user.getId());
-		
+		ContextServiceHolder.get().getActiveUser().ifPresent(
+			u -> remoteEvent.getProperties().put(ElexisEventTopics.PROPKEY_USER, u.getId()));
 		return remoteEvent;
 	}
 	

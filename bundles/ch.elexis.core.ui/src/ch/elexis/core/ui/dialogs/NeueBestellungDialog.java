@@ -45,7 +45,7 @@ public class NeueBestellungDialog extends TitleAreaDialog {
 	
 	private int calcMaxAllowedLength(){
 		int timestampAndSeparators = 16;
-		int reserved = CoreHub.actUser.getId().length() + timestampAndSeparators;
+		int reserved = CoreHub.getLoggedInContact().getId().length() + timestampAndSeparators;
 		return 80 - reserved;
 	}
 	

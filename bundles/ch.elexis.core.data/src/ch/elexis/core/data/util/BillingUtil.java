@@ -913,7 +913,7 @@ public class BillingUtil {
 					"invoice correction: no konsultations exists for invoice id [{}]- a new invoice will not be created.",
 					rechnung.getNr());
 				output.append("Die Rechnung " + rechnung.getNr() + " wurde erfolgreich durch "
-					+ CoreHub.actUser.getLabel()
+					+ CoreHub.getLoggedInContact().getLabel()
 					+ " korrigiert.\nEs wurde keine neue Rechnung erstellt.");
 				historyEntryDTO.setIgnored(true);
 			}
@@ -942,7 +942,7 @@ public class BillingUtil {
 						"invoice correction: create new invoice with number [{}] old invoice number [{}] ",
 						newRechnung.getNr(), rechnung.getNr());
 					output.append("Die Rechnung " + rechnung.getNr() + " wurde erfolgreich durch "
-						+ CoreHub.actUser.getLabel() + " korrigiert.\nNeue Rechnungsnummer lautet: "
+						+ CoreHub.getLoggedInContact().getLabel() + " korrigiert.\nNeue Rechnungsnummer lautet: "
 						+ invoiceCorrectionDTO.getNewInvoiceNumber());
 				}
 			}

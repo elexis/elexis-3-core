@@ -604,7 +604,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				chMultiline.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 			}
 			// *** +++++ styled text not yet ok - just for testing now
-			if (cHasStyledCheckbox & (CoreHub.actUser.getLabel().equalsIgnoreCase("a"))) { //$NON-NLS-1$
+			if (cHasStyledCheckbox & (CoreHub.getLoggedInContact().getLabel().equalsIgnoreCase("a"))) { //$NON-NLS-1$
 				chStyled = new Button(ret, SWT.CHECK);
 				chStyled.setText(Messages.Leistungscodes_SaveAsStyledText);
 				chStyled.setSelection(cIsStyledChecked);
