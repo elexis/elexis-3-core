@@ -101,7 +101,11 @@ public class BlockSelector extends CodeSelectorFactory {
 				selected = ((BlockTreeViewerItem) firstElement).getBlock();
 			}
 			tvfa.updateSelection((Identifiable) selected);
-			ContextServiceHolder.get().getRootContext().setTyped(selected);
+			if (selected != null) {
+				ContextServiceHolder.get().getRootContext().setTyped(selected);
+			} else {
+				ContextServiceHolder.get().getRootContext().removeTyped(ICodeElementBlock.class);
+			}
 		}
 	};
 	
