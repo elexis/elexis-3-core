@@ -37,11 +37,14 @@ public class CodeElementServiceHolder {
 			ContextServiceHolder.get().getRootContext().getTyped(IEncounter.class);
 		if (consultation.isPresent()) {
 			ret.put(ContextKeys.CONSULTATION, consultation.get());
+			ret.put(ContextKeys.COVERAGE, consultation.get().getCoverage());
 		}
-		Optional<ICoverage> coverage =
-			ContextServiceHolder.get().getRootContext().getTyped(ICoverage.class);
-		if (coverage.isPresent()) {
-			ret.put(ContextKeys.COVERAGE, coverage.get());
+		if (ret.get(ContextKeys.COVERAGE) == null) {
+			Optional<ICoverage> coverage =
+				ContextServiceHolder.get().getRootContext().getTyped(ICoverage.class);
+			if (coverage.isPresent()) {
+				ret.put(ContextKeys.COVERAGE, coverage.get());
+			}
 		}
 		return ret;
 	}
