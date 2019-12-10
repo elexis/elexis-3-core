@@ -13,8 +13,8 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
-import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
+import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
+import ch.elexis.core.data.extension.ICoreOperationAdvisor;
 import ch.elexis.core.data.util.IRunnableWithProgress;
 import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.model.ch.BillingLaw;
@@ -130,15 +130,14 @@ public class FallUpdatesFor36 {
 					message.append(
 						"Bitte deaktivieren Sie, falls notwendig, manuell die Kostenträger-Auswahl.\nSiehe https://wiki.elexis.info/Ab4cf3");
 					
-					CoreOperationExtensionPoint.getCoreOperationAdvisor().openInformation(
+					CoreOperationAdvisorHolder.get().openInformation(
 						"Aktualisierung Abrechnungssystem - Automatische Übernahme",
 						message.toString());
 				}
 				
 			};
 			
-			AbstractCoreOperationAdvisor cod =
-				CoreOperationExtensionPoint.getCoreOperationAdvisor();
+			ICoreOperationAdvisor cod = CoreOperationAdvisorHolder.get();
 			cod.showProgress(irwp, "Abrechnungssystem-Konfiguration aktualisieren");
 		}
 	}

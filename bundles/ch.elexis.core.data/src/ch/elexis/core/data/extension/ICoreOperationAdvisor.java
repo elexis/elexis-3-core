@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 MEDEVIT <office@medevit.at>.
+ * Copyright (c) 2019 MEDEVIT <office@medevit.at>.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,9 +16,9 @@ import ch.elexis.data.Anwender;
 import ch.elexis.data.PersistentObject;
 
 /**
- * @since 3.0.0
+ * @since 3.8 replaced AbstractCoreOperationAdvisor
  */
-public abstract class AbstractCoreOperationAdvisor {
+public interface ICoreOperationAdvisor {
 	
 	/**
 	 * Configure the database connection, originally done by DBConnectWizard. Has to
@@ -27,7 +27,7 @@ public abstract class AbstractCoreOperationAdvisor {
 	 * Elexis will shutdown after this connection is configured and will have to be restarted.
 	 * Called by {@link PersistentObject#connect(ch.rgw.io.Settings)}
 	 */
-	public abstract void requestDatabaseConnectionConfiguration();
+	public void requestDatabaseConnectionConfiguration();
 	
 	/**
 	 * Has to create the initial mandator for the system. This was originally done in
@@ -36,7 +36,7 @@ public abstract class AbstractCoreOperationAdvisor {
 	 * Elexis will continue operation after the initialization. Called by
 	 * {@link PersistentObject#connect(ch.rgw.tools.JdbcLink)}
 	 */
-	public abstract void requestInitialMandatorConfiguration();
+	public void requestInitialMandatorConfiguration();
 	
 	/**
 	 * Adapt the context to the change of a user login. That is e.g. de-/activate menus according to
@@ -44,7 +44,7 @@ public abstract class AbstractCoreOperationAdvisor {
 	 * 
 	 * Called within {@link CoreHub#login(String, String)}
 	 */
-	public abstract void adaptForUser();
+	public void adaptForUser();
 	
 	/**
 	 * Ask the user a question to be answered with yes or no. This is analogous to
@@ -56,7 +56,7 @@ public abstract class AbstractCoreOperationAdvisor {
 	 *            the message
 	 * @return <code>true</code> if the user said yes, else <code>false</code>
 	 */
-	public abstract boolean openQuestion(String title, String message);
+	public boolean openQuestion(String title, String message);
 	
 	/**
 	 * Present an information to the user. This is analogous to
@@ -66,7 +66,7 @@ public abstract class AbstractCoreOperationAdvisor {
 	 * @param message
 	 * @since 3.6
 	 */
-	public abstract void openInformation(String title, String message);
+	public void openInformation(String title, String message);
 	
 	/**
 	 * Perform the login. May use {@link Anwender#login(String, String)} to initialize the log-in.
@@ -80,14 +80,14 @@ public abstract class AbstractCoreOperationAdvisor {
 	 * @param shell
 	 *            and object castable to org.eclipse.swt.widgets.Shell
 	 */
-	public abstract void performLogin(Object shell);
+	public void performLogin(Object shell);
 	
 	/**
 	 * UI only
 	 * 
 	 * @return the initial perspective to be opened to the user
 	 */
-	public abstract String getInitialPerspective();
+	public String getInitialPerspective();
 	
 	/**
 	 * Perform the database update.
@@ -99,7 +99,7 @@ public abstract class AbstractCoreOperationAdvisor {
 	 * @return <code>true</code> if the update was successful, in this case the global variable
 	 *         {@link CoreHub#DBVersion} will be updated
 	 */
-	public abstract boolean performDatabaseUpdate(String[] array, String pluginId);
+	public boolean performDatabaseUpdate(String[] array, String pluginId);
 	
 	/**
 	 * Provide progress information to the user
@@ -108,5 +108,5 @@ public abstract class AbstractCoreOperationAdvisor {
 	 * @param taskName
 	 * @since 3.6 added taskName
 	 */
-	public abstract void showProgress(IRunnableWithProgress irwp, String taskName);
+	public void showProgress(IRunnableWithProgress irwp, String taskName);
 }

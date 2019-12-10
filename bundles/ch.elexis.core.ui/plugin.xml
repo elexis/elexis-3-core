@@ -526,12 +526,6 @@
             </variable>
          </sourceProvider>
       </extension>
-   <extension
-         point="ch.elexis.core.data.coreOperation">
-      <coreOperation
-            advisor="ch.elexis.core.ui.CoreOperationAdvisor">
-      </coreOperation>
-   </extension>
       <extension
             point="ch.elexis.core.data.OutputLogDescriptor">
          <OutputLogDescriptor

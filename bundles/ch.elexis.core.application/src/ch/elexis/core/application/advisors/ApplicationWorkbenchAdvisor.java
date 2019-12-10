@@ -24,8 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
-import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
+import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
@@ -42,9 +41,6 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	
 	private Logger log = LoggerFactory.getLogger(ApplicationWorkbenchAdvisor.class.getName());
 	
-	protected static AbstractCoreOperationAdvisor cod =
-		CoreOperationExtensionPoint.getCoreOperationAdvisor();
-
 	@Override
 	public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(
 		final IWorkbenchWindowConfigurer configurer){
@@ -68,10 +64,10 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	public IAdaptable getDefaultPageInput(){
 		return super.getDefaultPageInput();
 	}
-		
+	
 	@Override
 	public String getInitialWindowPerspectiveId(){
-		String initPerspective = cod.getInitialPerspective();
+		String initPerspective = CoreOperationAdvisorHolder.get().getInitialPerspective();
 		
 		// avoid that nothing opens up after login in case the stored perspective can't be found
 		IPerspectiveRegistry perspectiveRegistry =

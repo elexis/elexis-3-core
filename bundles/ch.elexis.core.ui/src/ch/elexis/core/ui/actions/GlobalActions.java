@@ -73,7 +73,7 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
+import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.util.BillingUtil;
 import ch.elexis.core.data.util.ResultAdapter;
@@ -340,7 +340,7 @@ public class GlobalActions {
 					if (dlg.open() == Dialog.CANCEL) {
 						exitAction.run();
 					}
-					CoreOperationExtensionPoint.getCoreOperationAdvisor().adaptForUser();
+					CoreOperationAdvisorHolder.get().adaptForUser();
 				} catch (Exception ex) {
 					ExHandler.handle(ex);
 				}

@@ -44,7 +44,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.Heartbeat;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
 import ch.elexis.core.data.events.PatientEventListener;
-import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
+import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.interfaces.ShutdownJob;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.interfaces.scripting.Interpreter;
@@ -562,7 +562,7 @@ public class CoreHub implements BundleActivator {
 		ElexisEventDispatcher.getInstance()
 			.fire(new ElexisEvent(CoreHub.getLoggedInContact(), Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
 
-		CoreOperationExtensionPoint.getCoreOperationAdvisor().adaptForUser();
+		CoreOperationAdvisorHolder.get().adaptForUser();
 		
 		CoreHub.getLoggedInContact().setInitialMandator();
 

@@ -34,6 +34,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.interfaces.IArticle;
 import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.data.interfaces.IDiagnose;
@@ -1215,7 +1216,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		if ((actLetzte != null)
 			&& actLetzte.getDatum().equals(new TimeTool().toString(TimeTool.DATE_GER))) {
 			
-			if (cod.openQuestion(Messages.GlobalActions_SecondForToday,
+			if (CoreOperationAdvisorHolder.get().openQuestion(Messages.GlobalActions_SecondForToday,
 				Messages.GlobalActions_SecondForTodayQuestion) == false) {
 				return;
 			}

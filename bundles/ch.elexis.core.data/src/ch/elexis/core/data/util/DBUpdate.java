@@ -26,8 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
-import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
+import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.data.BezugsKontakt;
 import ch.elexis.data.Brief;
@@ -52,9 +51,6 @@ public class DBUpdate {
 	 * Changeset is located in external file
 	 */
 	private static final String FILE_LOCATED = "FILE";
-	
-	private static AbstractCoreOperationAdvisor cod =
-		CoreOperationExtensionPoint.getCoreOperationAdvisor();
 	
 	//@formatter:off
 	static final String[] versions = {
@@ -498,8 +494,8 @@ public class DBUpdate {
 		log.info(
 			"Start DBUpdate from Version " + dbv + " to Version " + versions[versions.length - 1]);
 		
-		boolean success =
-			cod.performDatabaseUpdate(sqlStrings.toArray(new String[0]), CoreHub.PLUGIN_ID);
+		boolean success = CoreOperationAdvisorHolder.get()
+			.performDatabaseUpdate(sqlStrings.toArray(new String[0]), CoreHub.PLUGIN_ID);
 		
 		// update version if all updates are successful
 		if (success) {

@@ -59,8 +59,7 @@ import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
-import ch.elexis.core.data.extension.CoreOperationExtensionPoint;
+import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.ISticker;
 import ch.elexis.core.data.interfaces.IXid;
@@ -164,9 +163,6 @@ public abstract class PersistentObject implements IPersistentObject {
 	public void setDBConnection(DBConnection connection){
 		this.connection = connection;
 	}
-	
-	protected static AbstractCoreOperationAdvisor cod =
-		CoreOperationExtensionPoint.getCoreOperationAdvisor();
 	
 	public static enum FieldType {
 			TEXT, LIST, JOINT
@@ -310,7 +306,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			log.error("Error determining current work directory", e);
 		}
 		if (StringTool.leer.equals(dbConnection.getDBDriver())) {
-			cod.requestDatabaseConnectionConfiguration();
+			CoreOperationAdvisorHolder.get().requestDatabaseConnectionConfiguration();
 			MessageEvent.fireInformation("Datenbankverbindung geändert",
 				"Bitte starten Sie Elexis erneut");
 			System.exit(0);
@@ -414,10 +410,10 @@ public abstract class PersistentObject implements IPersistentObject {
 			CoreHub.globalCfg = new SqlSettings(connection.getJdbcLink(), "CONFIG");
 			String created = CoreHub.globalCfg.get("created", null);
 			log.debug("Database version " + created);
-		} 	
+		}
 		return true;
 	}
-
+	
 	public static boolean legacyPostInitDB(){
 		// globalCfg is null for the firstStart
 		// created is null after aborted firstStart
@@ -432,7 +428,7 @@ public abstract class PersistentObject implements IPersistentObject {
 					.autoCreateFirstMandant(defaultConnection.isRunningFromScratch());
 				
 				if (bypassMandator == null) {
-					cod.requestInitialMandatorConfiguration();
+					CoreOperationAdvisorHolder.get().requestInitialMandatorConfiguration();
 					MessageEvent.fireInformation("Neue Datenbank", //$NON-NLS-1$
 						"Es wurde eine neue Datenbank angelegt."); //$NON-NLS-1$
 				} else {
@@ -469,14 +465,19 @@ public abstract class PersistentObject implements IPersistentObject {
 			
 			@Override
 			public void settingRemoved(String key){
-				String userId = (CoreHub.getLoggedInContact() != null) ? CoreHub.getLoggedInContact().getWrappedId() : "null";
-				Trace.addTraceEntry("W userCfg ["+userId+"] key [" + key + "] => removed");
+				String userId = (CoreHub.getLoggedInContact() != null)
+						? CoreHub.getLoggedInContact().getWrappedId()
+						: "null";
+				Trace.addTraceEntry("W userCfg [" + userId + "] key [" + key + "] => removed");
 			}
 			
 			@Override
 			public void settingWritten(String key, String value){
-				String userId = (CoreHub.getLoggedInContact() != null) ? CoreHub.getLoggedInContact().getWrappedId() : "null";
-				Trace.addTraceEntry("W userCfg ["+userId+"] key [" + key + "] => value [" + value + "]");
+				String userId = (CoreHub.getLoggedInContact() != null)
+						? CoreHub.getLoggedInContact().getWrappedId()
+						: "null";
+				Trace.addTraceEntry(
+					"W userCfg [" + userId + "] key [" + key + "] => value [" + value + "]");
 			}
 			
 		});
@@ -489,10 +490,12 @@ public abstract class PersistentObject implements IPersistentObject {
 			log.warn("Ältere Version der Datenbank gefunden ");
 			if (!DBUpdate.doUpdate()) {
 				String msg = String.format(
-						"Datenbank '%1s':\nUpdate auf '%2s' von '%3s' schlug fehlt.\nWollen Sie trotzdem fortsetzen?",
-						defaultConnection.getDBConnectString(), vi.version().toString(), CoreHub.DBVersion);
+					"Datenbank '%1s':\nUpdate auf '%2s' von '%3s' schlug fehlt.\nWollen Sie trotzdem fortsetzen?",
+					defaultConnection.getDBConnectString(), vi.version().toString(),
+					CoreHub.DBVersion);
 				log.error(msg);
-				if (!cod.openQuestion("Datenbank update failed ", msg)) {
+				if (!CoreOperationAdvisorHolder.get().openQuestion("Datenbank update failed ",
+					msg)) {
 					System.exit(8);
 				} else {
 					log.error("User continues with failed Elexis database update");
@@ -506,9 +509,11 @@ public abstract class PersistentObject implements IPersistentObject {
 		if (vi.isNewerMinor(v2)) {
 			String msg = String.format(
 				"Die Datenbank %1s ist für eine neuere Elexisversion '%2s' als die aufgestartete '%3s'. Wollen Sie trotzdem fortsetzen?",
-				defaultConnection.getDBConnectString(), vi.version().toString(), v2.version().toString());
+				defaultConnection.getDBConnectString(), vi.version().toString(),
+				v2.version().toString());
 			log.error(msg);
-			if (!cod.openQuestion("Diskrepanz in der Datenbank-Version ", msg)) {
+			if (!CoreOperationAdvisorHolder.get()
+				.openQuestion("Diskrepanz in der Datenbank-Version ", msg)) {
 				System.exit(2);
 			} else {
 				log.error("User continues with Elexis / database version mismatch");
@@ -526,7 +531,8 @@ public abstract class PersistentObject implements IPersistentObject {
 					"Your locale [%1s] does not match the required database locale [%2s]. Ignore?",
 					locale.toString(), dbStoredLocale);
 				log.error(msg);
-				if (!cod.openQuestion("Difference in locale setting ", msg)) {
+				if (!CoreOperationAdvisorHolder.get().openQuestion("Difference in locale setting ",
+					msg)) {
 					System.exit(2);
 				} else {
 					log.error("User continues with difference locale set");
@@ -872,7 +878,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	public List<IXid> getXids(){
 		Query<Xid> qbe = new Query<Xid>(Xid.class);
 		qbe.add(Xid.FLD_OBJECT, Query.EQUALS, getId());
-		return (List<IXid>)(List<?>) qbe.execute();
+		return (List<IXid>) (List<?>) qbe.execute();
 	}
 	
 	/**
@@ -1117,8 +1123,8 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	public @Nullable String get(final String field){
 		if (getId() == null || getId().isEmpty()) {
-			log.error("Get with no ID on object of type [{}] and field [{}]", this.getClass().getName(), field,
-					new Throwable());
+			log.error("Get with no ID on object of type [{}] and field [{}]",
+				this.getClass().getName(), field, new Throwable());
 		}
 		DBConnection dbConnection = getDBConnection();
 		String key = getKey(field);
@@ -3110,7 +3116,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		// schon H2-DB gesehen hat, wo entweder alles gross oder alles klein war
 		try (Connection conn = defaultConnection.getConnection()) {
 			final String myCatalog = conn.getCatalog();
-			if(myCatalog == null) {
+			if (myCatalog == null) {
 				log.error("No catalog information available");
 			}
 			DatabaseMetaData dmd = conn.getMetaData();
@@ -3236,14 +3242,14 @@ public abstract class PersistentObject implements IPersistentObject {
 			defaultConnection.releaseStatement(stm);
 		}
 	}
-
+	
 	/**
-	 * Clear all attributes that have been cached for this entity. Must be re-implemented by
-	 * a subclass to support. See e.g. Reminder
+	 * Clear all attributes that have been cached for this entity. Must be re-implemented by a
+	 * subclass to support. See e.g. Reminder
 	 */
 	public void clearCachedAttributes(){
 		throw new UnsupportedOperationException(
 			"Not implemented for class " + getClass().getName());
 	}
-
+	
 }

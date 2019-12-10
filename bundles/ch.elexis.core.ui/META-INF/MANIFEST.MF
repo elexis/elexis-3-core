@@ -93,4 +93,5 @@ Service-Component: OSGI-INF/ch.elexis.core.ui.services.LocalDocumentServiceHolde
  OSGI-INF/ch.elexis.core.ui.compatibility.UiStartupHandler.xml,
  OSGI-INF/ch.elexis.core.ui.services.internal.ContextService.xml,
  OSGI-INF/ch.elexis.core.ui.util.CoreUiUtil.xml,
- OSGI-INF/ch.elexis.core.ui.services.EncounterServiceHolder.xml
+ OSGI-INF/ch.elexis.core.ui.services.EncounterServiceHolder.xml,
+ OSGI-INF/ch.elexis.core.ui.internal.CoreOperationAdvisor.xml

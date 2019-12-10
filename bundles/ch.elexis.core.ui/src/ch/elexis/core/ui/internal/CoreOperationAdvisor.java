@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 MEDEVIT <office@medevit.at>.
+ * Copyright (c) 2019 MEDEVIT <office@medevit.at>.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     MEDEVIT <office@medevit.at> - initial API and implementation
  ******************************************************************************/
-package ch.elexis.core.ui;
+package ch.elexis.core.ui.internal;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -19,14 +19,17 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
-import ch.elexis.core.data.extension.AbstractCoreOperationAdvisor;
+import ch.elexis.core.data.extension.ICoreOperationAdvisor;
 import ch.elexis.core.data.util.IRunnableWithProgress;
+import ch.elexis.core.ui.Messages;
+import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.dialogs.ErsterMandantDialog;
@@ -36,7 +39,8 @@ import ch.elexis.core.ui.util.SqlWithUiRunner;
 import ch.elexis.core.ui.wizards.DBConnectWizard;
 import ch.elexis.core.utils.CoreUtil;
 
-public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
+@Component
+public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 	
 	public String initialPerspectiveString;
 	private Logger log = LoggerFactory.getLogger(CoreOperationAdvisor.class);
@@ -59,8 +63,8 @@ public class CoreOperationAdvisor extends AbstractCoreOperationAdvisor {
 	@Override
 	public void adaptForUser(){
 		if (CoreHub.getLoggedInContact() != null) {
-			initialPerspectiveString =
-				CoreHub.localCfg.get(CoreHub.getLoggedInContact() + GlobalActions.DEFAULTPERSPECTIVECFG, null);
+			initialPerspectiveString = CoreHub.localCfg
+				.get(CoreHub.getLoggedInContact() + GlobalActions.DEFAULTPERSPECTIVECFG, null);
 			boolean fixLayoutChecked =
 				CoreHub.userCfg.get(Preferences.USR_FIX_LAYOUT, Preferences.USR_FIX_LAYOUT_DEFAULT);
 			if (GlobalActions.fixLayoutAction != null) {

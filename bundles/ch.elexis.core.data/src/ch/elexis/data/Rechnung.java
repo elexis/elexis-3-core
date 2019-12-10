@@ -28,6 +28,7 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
@@ -75,9 +76,8 @@ public class Rechnung extends PersistentObject {
 	
 	static {
 		addMapping(TABLENAME, BILL_NUMBER, CASE_ID, MANDATOR_ID, "RnDatum=S:D:RnDatum", BILL_STATE,
-			"StatusDatum=S:D:StatusDatum", "RnDatumVon=S:D:RnDatumVon",
-			"RnDatumBis=S:D:RnDatumBis", "Betragx100=Betrag", FLD_EXTINFO,
-			"Zahlungen=LIST:RechnungsID:ZAHLUNGEN:Datum");
+			"StatusDatum=S:D:StatusDatum", "RnDatumVon=S:D:RnDatumVon", "RnDatumBis=S:D:RnDatumBis",
+			"Betragx100=Betrag", FLD_EXTINFO, "Zahlungen=LIST:RechnungsID:ZAHLUNGEN:Datum");
 	}
 	
 	public Rechnung(final String nr, final Mandant m, final Fall f, final String von,
@@ -104,15 +104,15 @@ public class Rechnung extends PersistentObject {
 	public static Result<Rechnung> build(final List<Konsultation> behandlungen){
 		System.out.println("js Rechnung: build() begin");
 		
-		System.out
-			.println("js Rechnung: build(): TO DO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		System.out
-			.println("js Rechnung: build(): TO DO: Apparently, Rechnung.build() uses local checking algorithms,");
-		System.out
-			.println("js Rechnung: build(): TO DO: Event though Validator.checkBill() offers more structured ones.");
+		System.out.println(
+			"js Rechnung: build(): TO DO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		System.out.println(
+			"js Rechnung: build(): TO DO: Apparently, Rechnung.build() uses local checking algorithms,");
+		System.out.println(
+			"js Rechnung: build(): TO DO: Event though Validator.checkBill() offers more structured ones.");
 		System.out.println("js Rechnung: build(): TO DO: Why are both of them in the code?");
-		System.out
-			.println("js Rechnung: build(): TO DO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		System.out.println(
+			"js Rechnung: build(): TO DO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		
 		Result<Rechnung> result = new Result<Rechnung>();
 		
@@ -133,19 +133,9 @@ public class Rechnung extends PersistentObject {
 		for (Konsultation b : behandlungen) {
 			Patient pat = b.getFall().getPatient();
 			if (!pat.istPerson()) {
-				MessageEvent
-					.fireInformation(
-						"Hinweis",
-						"Bei Patient Nr. "
-							+ pat.getPatCode()
-							+ ", "
-							+ pat.getName()
-							+ ", "
-							+ pat.getVorname()
-							+ ", "
-							+ pat.getGeburtsdatum()
-							+ "\n"
-							+ "fehlte das Häkchen für 'Person' in der Kontaktdatenbank.\n\nIch korrigiere das selbst.");
+				MessageEvent.fireInformation("Hinweis", "Bei Patient Nr. " + pat.getPatCode() + ", "
+					+ pat.getName() + ", " + pat.getVorname() + ", " + pat.getGeburtsdatum() + "\n"
+					+ "fehlte das Häkchen für 'Person' in der Kontaktdatenbank.\n\nIch korrigiere das selbst.");
 				pat.set(Kontakt.FLD_IS_PERSON, StringConstants.ONE);
 			}
 		}
@@ -159,29 +149,23 @@ public class Rechnung extends PersistentObject {
 			else {
 				List<Verrechnet> lstg = b.getLeistungen();
 				for (Verrechnet l : lstg) {
-					if (l.getNettoPreis().isZero()
-						&& CoreHub.userCfg
-							.get(Preferences.LEISTUNGSCODES_BILLING_ZERO_CHECK, false)) {
+					if (l.getNettoPreis().isZero() && CoreHub.userCfg
+						.get(Preferences.LEISTUNGSCODES_BILLING_ZERO_CHECK, false)) {
 						Patient pat = b.getFall().getPatient();
-						String msg =
-							"Eine Konsultation vom " + b.getDatum().toString()
-								+ " für\nPatient Nr. " + pat.getPatCode() + ", " + pat.getName()
-								+ ", " + pat.getVorname() + ", " + pat.getGeburtsdatum() + "\n"
-								+ "enthält mindestens eine Leistung zum Preis 0.00.\n"
-								+ "\nDie Ärztekasse würde so eine Rechnung zurückgeben.\n\n";
-						if (cod.openQuestion("WARNUNG: Leistung zu Fr. 0.00 !", msg
-							+ "Soll die Rechnung trotzdem erstellt werden?")) {
+						String msg = "Eine Konsultation vom " + b.getDatum().toString()
+							+ " für\nPatient Nr. " + pat.getPatCode() + ", " + pat.getName() + ", "
+							+ pat.getVorname() + ", " + pat.getGeburtsdatum() + "\n"
+							+ "enthält mindestens eine Leistung zum Preis 0.00.\n"
+							+ "\nDie Ärztekasse würde so eine Rechnung zurückgeben.\n\n";
+						if (CoreOperationAdvisorHolder.get().openQuestion("WARNUNG: Leistung zu Fr. 0.00 !",
+							msg + "Soll die Rechnung trotzdem erstellt werden?")) {
 							// do nothing
 						} else {
-							return result
-								.add(
-									Result.SEVERITY.WARNING,
-									1,
-									msg
-										+ "Diese Rechnung wird jetzt nicht erstellt."
-										+ "\n\nBitte prüfen Sie die verrechneten Leistungen,"
-										+ "oder verschieben Sie die Konsultation zu einem später zu verrechnenden Fall!",
-									null, true);
+							return result.add(Result.SEVERITY.WARNING, 1, msg
+								+ "Diese Rechnung wird jetzt nicht erstellt."
+								+ "\n\nBitte prüfen Sie die verrechneten Leistungen,"
+								+ "oder verschieben Sie die Konsultation zu einem später zu verrechnenden Fall!",
+								null, true);
 						}
 					}
 				}
@@ -208,9 +192,8 @@ public class Rechnung extends PersistentObject {
 			}
 			Mandant bm = b.getMandant();
 			if ((bm == null) || (!bm.isValid())) {
-				result =
-					result.add(Result.SEVERITY.ERROR, 1,
-						"Ungültiger Mandant bei Konsultation " + b.getLabel(), ret, true);
+				result = result.add(Result.SEVERITY.ERROR, 1,
+					"Ungültiger Mandant bei Konsultation " + b.getLabel(), ret, true);
 				continue;
 			}
 			if (m == null) {
@@ -218,18 +201,16 @@ public class Rechnung extends PersistentObject {
 				ret.set(MANDATOR_ID, m.getId());
 			} else {
 				if (!bm.getRechnungssteller().getId().equals(m.getRechnungssteller().getId())) {
-					result =
-						result.add(Result.SEVERITY.ERROR, 2,
-							"Die Liste enthält unterschiedliche Rechnungssteller " + b.getLabel(),
-							ret, true);
+					result = result.add(Result.SEVERITY.ERROR, 2,
+						"Die Liste enthält unterschiedliche Rechnungssteller " + b.getLabel(), ret,
+						true);
 					continue;
 				}
 			}
 			Fall bf = b.getFall();
 			if (bf == null) {
-				result =
-					result.add(Result.SEVERITY.ERROR, 3,
-						"Fehlender Fall bei Konsultation " + b.getLabel(), ret, true);
+				result = result.add(Result.SEVERITY.ERROR, 3,
+					"Fehlender Fall bei Konsultation " + b.getLabel(), ret, true);
 				continue;
 			}
 			if (f == null) {
@@ -238,9 +219,8 @@ public class Rechnung extends PersistentObject {
 				f.setBillingDate(null); // ggf. Rechnungsvorschlag löschen
 			} else {
 				if (!f.getId().equals(bf.getId())) {
-					result =
-						result.add(Result.SEVERITY.ERROR, 4,
-							"Die Liste enthält unterschiedliche Faelle " + b.getLabel(), ret, true);
+					result = result.add(Result.SEVERITY.ERROR, 4,
+						"Die Liste enthält unterschiedliche Faelle " + b.getLabel(), ret, true);
 					continue;
 				}
 			}
@@ -249,9 +229,8 @@ public class Rechnung extends PersistentObject {
 				diagnosen = b.getDiagnosen();
 			}
 			if (actDate.set(b.getDatum()) == false) {
-				result =
-					result.add(Result.SEVERITY.ERROR, 5,
-						"Ungültiges Datum bei Konsultation " + b.getLabel(), ret, true);
+				result = result.add(Result.SEVERITY.ERROR, 5,
+					"Ungültiges Datum bei Konsultation " + b.getLabel(), ret, true);
 				continue;
 			}
 			if (actDate.isBefore(startDate)) {
@@ -268,16 +247,14 @@ public class Rechnung extends PersistentObject {
 			}
 		}
 		if (f == null) {
-			result =
-				result.add(Result.SEVERITY.ERROR, 8, "Die Rechnung hat keinen zugehörigen Fall ("
-					+ getRnDesc(ret) + ")", ret, true);
+			result = result.add(Result.SEVERITY.ERROR, 8,
+				"Die Rechnung hat keinen zugehörigen Fall (" + getRnDesc(ret) + ")", ret, true);
 			// garant=CoreHub.actMandant;
 		} else {
 			if (CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_BILLING_STRICT, true)
 				&& !f.isValid()) {
-				result =
-					result.add(Result.SEVERITY.ERROR, 8, "Die Rechnung hat keinen gültigen Fall ("
-						+ getRnDesc(ret) + ")", ret, true);
+				result = result.add(Result.SEVERITY.ERROR, 8,
+					"Die Rechnung hat keinen gültigen Fall (" + getRnDesc(ret) + ")", ret, true);
 			}
 			// garant=f.getGarant();
 			
@@ -286,9 +263,8 @@ public class Rechnung extends PersistentObject {
 		// check if there are any Konsultationen
 		if (CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_BILLING_STRICT, true)) {
 			if ((diagnosen == null) || (diagnosen.size() == 0)) {
-				result =
-					result.add(Result.SEVERITY.ERROR, 6, "Die Rechnung enthält keine Diagnose ("
-						+ getRnDesc(ret) + ")", ret, true);
+				result = result.add(Result.SEVERITY.ERROR, 6,
+					"Die Rechnung enthält keine Diagnose (" + getRnDesc(ret) + ")", ret, true);
 			}
 		}
 		/*
@@ -325,9 +301,9 @@ public class Rechnung extends PersistentObject {
 		if (ret.getOffenerBetrag().isZero()) {
 			ret.setStatus(RnStatus.BEZAHLT);
 		} else {
-			if(f!=null) {
-				new AccountTransaction(f.getPatient(), ret, summe.negate(), Datum, "Rn " + nr
-					+ " erstellt.");
+			if (f != null) {
+				new AccountTransaction(f.getPatient(), ret, summe.negate(), Datum,
+					"Rn " + nr + " erstellt.");
 			}
 		}
 		
@@ -426,13 +402,13 @@ public class Rechnung extends PersistentObject {
 			} else {
 				setStatus(InvoiceState.DEPRECIATED.getState());
 			}
-		} else if (reopen && InvoiceState.CANCELLED.equals(invoiceState)){
+		} else if (reopen && InvoiceState.CANCELLED.equals(invoiceState)) {
 			// if bill is canceled ensure that all kons are opened
 			kons = removeBillFromKons();
 		}
 		return kons;
 	}
-
+	
 	private List<Konsultation> removeBillFromKons(){
 		List<Konsultation> kons = new ArrayList<>();
 		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
@@ -490,11 +466,11 @@ public class Rechnung extends PersistentObject {
 			if ((diff > 500) || ((diff * 50) > oldVal)) {
 				Money old = new Money(oldVal);
 				String nr = checkNull(get(BILL_NUMBER));
-				String message =
-					"Der errechnete Rechnungsbetrag (" + betrag.getAmountAsString()
-						+ ") weicht vom Rechnungsbetrag (" + old.getAmountAsString()
-						+ ") ab. Trotzdem weiterfahren?";
-				if (!cod.openQuestion("Differenz bei der Rechnung " + nr, message)) {
+				String message = "Der errechnete Rechnungsbetrag (" + betrag.getAmountAsString()
+					+ ") weicht vom Rechnungsbetrag (" + old.getAmountAsString()
+					+ ") ab. Trotzdem weiterfahren?";
+				if (!CoreOperationAdvisorHolder.get()
+					.openQuestion("Differenz bei der Rechnung " + nr, message)) {
 					return false;
 				}
 			}
@@ -746,18 +722,18 @@ public class Rechnung extends PersistentObject {
 	 * @return internal invoice remarks
 	 * @since 3.7
 	 */
-	public String getInternalRemarks() {
+	public String getInternalRemarks(){
 		return checkNull(getExtInfoStoredObjectByKey(FLD_EXT_INTERNAL_REMARKS));
 	}
 	
 	/**
-	 * @param internalRemarks, not visible on invoice
+	 * @param internalRemarks,
+	 *            not visible on invoice
 	 * @since 3.7
 	 */
-	public void setInternalRemarks(final String internalRemarks) {
+	public void setInternalRemarks(final String internalRemarks){
 		setExtInfoStoredObjectByKey(FLD_EXT_INTERNAL_REMARKS, internalRemarks);
 	}
-
 	
 	/**
 	 * EIn Trace-Eintrag ist eine Notiz über den Verlauf. (Z.B. Statusänderungen, Zahlungen,
@@ -1036,8 +1012,8 @@ public class Rechnung extends PersistentObject {
 	
 	public static boolean isStorno(Rechnung rechnung){
 		InvoiceState invoiceState = rechnung.getInvoiceState();
-		return  InvoiceState.CANCELLED.equals(invoiceState)
-				|| InvoiceState.DEPRECIATED.equals(invoiceState);
+		return InvoiceState.CANCELLED.equals(invoiceState)
+			|| InvoiceState.DEPRECIATED.equals(invoiceState);
 	}
 	
 	public static boolean hasStornoBeforeDate(Rechnung rechnung, TimeTool date){
