@@ -27,7 +27,6 @@ import org.osgi.service.component.annotations.Component;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.services.IConflictHandler;
@@ -49,9 +48,9 @@ public class LocalDocumentService implements ILocalDocumentService {
 	public Optional<File> add(Object documentSource, IConflictHandler conflictHandler)
 		throws IllegalStateException{
 		boolean readOnly = false;
-		if (documentSource instanceof IPersistentObject) {
+		if (documentSource != null) {
 			LockResponse result =
-				LocalLockServiceHolder.get().acquireLock((IPersistentObject) documentSource);
+				LocalLockServiceHolder.get().acquireLock(documentSource);
 			if (result.isOk()) {
 				managedLocks.put(documentSource, result);
 			} else {
@@ -126,7 +125,7 @@ public class LocalDocumentService implements ILocalDocumentService {
 	private void removeManaged(Object documentSource){
 		LockResponse lock = managedLocks.get(documentSource);
 		if (lock != null) {
-			LocalLockServiceHolder.get().releaseLock((IPersistentObject) documentSource);
+			LocalLockServiceHolder.get().releaseLock(documentSource);
 			managedLocks.remove(documentSource);
 		}
 		managedFiles.remove(documentSource);
@@ -299,7 +298,8 @@ public class LocalDocumentService implements ILocalDocumentService {
 			Method mimeMethod = null;
 			Method[] methods = documentSource.getClass().getMethods();
 			for (Method method : methods) {
-				if (method.getName().toLowerCase().contains("mime")) {
+				if (method.getName().toLowerCase().contains("mime")
+					&& method.getReturnType() == String.class) {
 					mimeMethod = method;
 					break;
 				}
@@ -341,18 +341,21 @@ public class LocalDocumentService implements ILocalDocumentService {
 	}
 	
 	private String getFileEnding(String mime){
-		if (mime.length() < 5) {
-			return mime;
-		} else {
-			String ret = MimeTool.getExtension(mime);
-			if (ret.length() > 5) {
-				return getDefaultFileEnding();
-			} else if (ret.isEmpty()) {
-				return FilenameUtils.getExtension(mime);
+		if (mime != null) {
+			if (mime.length() < 5) {
+				return mime;
 			} else {
-				return ret;
+				String ret = MimeTool.getExtension(mime);
+				if (ret.length() > 5) {
+					return getDefaultFileEnding();
+				} else if (ret.isEmpty()) {
+					return FilenameUtils.getExtension(mime);
+				} else {
+					return ret;
+				}
 			}
 		}
+		return getDefaultFileEnding();
 	}
 	
 	private String getDefaultFileEnding(){
