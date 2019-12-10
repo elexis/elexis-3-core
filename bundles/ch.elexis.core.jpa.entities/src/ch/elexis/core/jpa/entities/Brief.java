@@ -72,7 +72,7 @@ public class Brief extends AbstractEntityWithId implements EntityWithId, EntityW
 	@Column(length = 30)
 	protected String typ;
 
-	@Column(length = 80)
+	@Column(length = 80, name = "MimeType")
 	protected String mimetype;
 
 	@OneToOne(cascade = CascadeType.ALL)
