@@ -19,7 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
+
+import javax.inject.Inject;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -28,6 +29,8 @@ import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -63,6 +66,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
@@ -72,22 +76,21 @@ import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.documents.FilterCategory;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.IDocument;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.documents.Messages;
 import ch.elexis.core.ui.documents.handler.DocumentCrudHandler;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.Patient;
 import ch.rgw.tools.TimeTool;
 
 /**
@@ -103,79 +106,45 @@ public class DocumentsView extends ViewPart {
 	
 	public static String importAction_ID = "ch.elexis.omnivore.data.DocumentView.importAction";
 	
-	private final String[] colLabels =
-		{
-			"", "", Messages.DocumentView_categoryColumn,
-			Messages.DocumentView_lastChangedColumn,
-			Messages.DocumentView_titleColumn,
-			Messages.DocumentView_keywordsColumn
-		};
+	private final String[] colLabels = {
+		"", "", Messages.DocumentView_categoryColumn, Messages.DocumentView_lastChangedColumn,
+		Messages.DocumentView_titleColumn, Messages.DocumentView_keywordsColumn
+	};
 	private final String colWidth = "20,20,100,100,200,500";
 	private final String sortSettings = "0,1,-1,false";
 	private String searchTitle = "";
 	
 	private DocumentsViewerComparator ovComparator;
 	private Action doubleClickAction;
-
 	
-	private final ElexisUiEventListenerImpl eeli_pat = new ElexisUiEventListenerImpl(Patient.class,
-		ElexisEvent.EVENT_SELECTED) {
-		
-		@Override
-		public void runInUi(ElexisEvent ev){
-			viewer.setInput(ev.getObject());
-			viewer.expandAll();
+	@Inject
+	void activePatient(@Optional IPatient patient){
+		if (viewer != null && !viewer.getControl().isDisposed()) {
+			Display.getDefault().asyncExec(() -> {
+				viewer.setInput(patient);
+				viewer.expandAll();
+			});
 		}
-		
-	};
+	}
 	
-	private final ElexisUiEventListenerImpl eeli_doc_edit =
-		new ElexisUiEventListenerImpl(IDocument.class, ElexisEvent.EVENT_UPDATE) {
-			
-			@Override
-			public void runInUi(ElexisEvent ev){
-				ViewContentProvider viewContentProvider =
-					(ViewContentProvider) viewer.getContentProvider();
-				viewContentProvider.updateElement((IDocument) ev.getGenericObject());
-			}
-			
-		};
-	
-	private final ElexisUiEventListenerImpl eeli_doc_create =
-		new ElexisUiEventListenerImpl(IDocument.class, ElexisEvent.EVENT_CREATE) {
-			
-			@Override
-			public void runInUi(ElexisEvent ev){
-				ViewContentProvider viewContentProvider =
-					(ViewContentProvider) viewer.getContentProvider();
-				viewContentProvider.createElement((IDocument) ev.getGenericObject());
-			}
-			
-		};
-	
-	private final ElexisUiEventListenerImpl eeli_doc_delete =
-		new ElexisUiEventListenerImpl(IDocument.class, ElexisEvent.EVENT_DELETE) {
-			
-		@Override
-		public void runInUi(ElexisEvent ev){
-				ViewContentProvider viewContentProvider =
-					(ViewContentProvider) viewer.getContentProvider();
-				viewContentProvider.removeElement((IDocument) ev.getGenericObject());
+	@Optional
+	@Inject
+	void udpateDocument(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IDocument document){
+		//TODO the event update is not type safe
+		if (document != null && viewer != null && !viewer.getControl().isDisposed()) {
+			ViewContentProvider viewContentProvider =
+				(ViewContentProvider) viewer.getContentProvider();
+			viewContentProvider.updateElement(document);
 		}
-			
-	};
+	}
 	
-	private final ElexisUiEventListenerImpl eeli_doc_reload =
-		new ElexisUiEventListenerImpl(IDocument.class, ElexisEvent.EVENT_RELOAD) {
-			
-			@Override
-			public void runInUi(ElexisEvent ev){
-				viewer.refresh();
-			}
-			
-		};
-
-
+	@Inject
+	void reloadDocument(@Optional @UIEventTopic(ElexisEventTopics.EVENT_RELOAD) IDocument document){
+		if (viewer != null && !viewer.getControl().isDisposed()) {
+			viewer.refresh();
+		}
+	}
+	
 	class ViewFilterProvider extends ViewerFilter {
 		
 		@Override
@@ -202,8 +171,8 @@ public class DocumentsView extends ViewPart {
 					if (iDocument.getTitle().toLowerCase().contains(searchText)) {
 						return true;
 					}
-					if (iDocument.getKeywords() != null && iDocument.getKeywords().toLowerCase().contains(searchText.toLowerCase()))
-					{
+					if (iDocument.getKeywords() != null && iDocument.getKeywords().toLowerCase()
+						.contains(searchText.toLowerCase())) {
 						return true;
 					}
 				}
@@ -221,9 +190,9 @@ public class DocumentsView extends ViewPart {
 		
 		public void inputChanged(Viewer v, Object oldInput, Object newInput){
 			documentsMap.clear();
-			if (newInput instanceof Patient) {
-				loadByFilterCategory((Patient) newInput);
-			} 
+			if (newInput instanceof IPatient) {
+				loadByFilterCategory((IPatient) newInput);
+			}
 		}
 		
 		public ViewContentProvider selectFilterCategory(ISelection selection){
@@ -238,15 +207,15 @@ public class DocumentsView extends ViewPart {
 			}
 			return this;
 		}
-
-		private void loadByFilterCategory(Patient patient){
-			if (patient != null) {
+		
+		private void loadByFilterCategory(IPatient newInput){
+			if (newInput != null) {
 				if (selectedFilter.isAll()) {
 					documentsMap = DocumentStoreServiceHolder.getService()
-						.getDocumentsByPatientId(patient.getId());
+						.getDocumentsByPatientId(newInput.getId());
 					viewer.refresh(true);
 				} else {
-					loadElementsByCategory(patient.getId(), selectedFilter);
+					loadElementsByCategory(newInput.getId(), selectedFilter);
 				}
 			}
 		}
@@ -263,8 +232,7 @@ public class DocumentsView extends ViewPart {
 		
 		public void createElement(IDocument iDocument){
 			FilterCategory filterCategory = new FilterCategory(iDocument.getCategory());
-			List<IDocument> iDocuments =
-				documentsMap.get(filterCategory);
+			List<IDocument> iDocuments = documentsMap.get(filterCategory);
 			if (iDocuments == null) {
 				iDocuments = new ArrayList<>();
 			}
@@ -290,7 +258,8 @@ public class DocumentsView extends ViewPart {
 				List<IDocument> iDocuments = DocumentStoreServiceHolder.getService()
 					.getDocumentsByCategory(patientId, iCategory);
 				if (!iDocuments.isEmpty()) {
-					documentsMap.put(new FilterCategory(iDocuments.get(0).getCategory()), iDocuments);
+					documentsMap.put(new FilterCategory(iDocuments.get(0).getCategory()),
+						iDocuments);
 				}
 			}
 			viewer.refresh(true);
@@ -324,7 +293,6 @@ public class DocumentsView extends ViewPart {
 		}
 		
 		public void dispose(){}
-		
 		
 		public Object[] getElements(Object parent){
 			if (selectedFilter.isAll()) {
@@ -374,7 +342,7 @@ public class DocumentsView extends ViewPart {
 			case 0:
 				return "";
 			case 1:
-				return dh.getStatus().getName().substring(0,1);
+				return dh.getStatus().getName().substring(0, 1);
 			case 2:
 				return "";
 			case 3:
@@ -392,15 +360,14 @@ public class DocumentsView extends ViewPart {
 			if (index == 4) {
 				if (obj instanceof IDocument
 					&& LocalDocumentServiceHolder.getService().isPresent()) {
-					Optional<Identifiable> opt = DocumentStoreServiceHolder.getService()
+					java.util.Optional<Identifiable> opt = DocumentStoreServiceHolder.getService()
 						.getPersistenceObject((IDocument) obj);
 					if (opt.isPresent()
 						&& LocalDocumentServiceHolder.getService().get().contains(opt.get())) {
 						return Images.IMG_EDIT.getImage();
 					}
 				}
-			}
-			else if (index == 2 && obj instanceof ICategory) {
+			} else if (index == 2 && obj instanceof ICategory) {
 				return Images.IMG_FOLDER.getImage();
 			}
 			return null;
@@ -458,8 +425,9 @@ public class DocumentsView extends ViewPart {
 		viewer = new TreeViewer(table);
 		
 		DocumentsFilterBarComposite filterBarComposite = addFilterBar(parent);
-
-		viewer.setContentProvider(new ViewContentProvider().selectFilterCategory(filterBarComposite.getSelection()));
+		
+		viewer.setContentProvider(
+			new ViewContentProvider().selectFilterCategory(filterBarComposite.getSelection()));
 		viewer.setLabelProvider(new ViewLabelProvider());
 		viewer.setUseHashlookup(true);
 		viewer.addFilter(new ViewFilterProvider());
@@ -532,6 +500,7 @@ public class DocumentsView extends ViewPart {
 		};
 		viewer.addDragSupport(DND.DROP_COPY, dragTransferTypes, new DragSourceAdapter() {
 			private boolean failure;
+			
 			@Override
 			public void dragStart(DragSourceEvent event){
 				IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
@@ -574,27 +543,22 @@ public class DocumentsView extends ViewPart {
 			public void dragFinished(DragSourceEvent event){
 				if (!failure) {
 					super.dragFinished(event);
-				}
-				else {
+				} else {
 					SWTHelper.showError(Messages.DocumentView_exportErrorCaption,
 						Messages.DocumentView_exportErrorEmptyText);
 				}
 				
 			}
 		});
-
+		
 		MenuManager menuManager = new MenuManager();
 		viewer.getControl().setMenu(menuManager.createContextMenu(viewer.getControl()));
-		getSite().registerContextMenu(menuManager,
-			viewer);
+		getSite().registerContextMenu(menuManager, viewer);
 		getSite().setSelectionProvider(viewer);
 		
-		ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_doc_delete, eeli_doc_edit,
-			eeli_doc_create, eeli_doc_reload);
-		
-		viewer.setInput(ElexisEventDispatcher.getSelectedPatient());
+		viewer.setInput(ContextServiceHolder.get().getActivePatient().orElse(null));
 	}
-
+	
 	private DocumentsFilterBarComposite addFilterBar(Composite parent){
 		
 		List<FilterCategory> filters = new ArrayList<>();
@@ -603,9 +567,9 @@ public class DocumentsView extends ViewPart {
 		filters.add(new FilterCategory(BriefConstants.AUZ, "Auf"));
 		filters.add(new FilterCategory(BriefConstants.RP, "Rezepte"));
 		
-		DocumentsFilterBarComposite filterBarComposite = new DocumentsFilterBarComposite(parent, SWT.NONE, filters);
-		filterBarComposite
-			.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+		DocumentsFilterBarComposite filterBarComposite =
+			new DocumentsFilterBarComposite(parent, SWT.NONE, filters);
+		filterBarComposite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 		filterBarComposite.addSelectionChangedListener(new ISelectionChangedListener() {
 			
 			@Override
@@ -673,13 +637,9 @@ public class DocumentsView extends ViewPart {
 	
 	@Override
 	public void dispose(){
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat, eeli_doc_delete,
-			eeli_doc_edit, eeli_doc_create, eeli_doc_reload);
 		//saveSortSettings();
 		super.dispose();
 	}
-
-	
 	
 	/**
 	 * Passing the focus request to the viewer's control.
@@ -729,9 +689,8 @@ public class DocumentsView extends ViewPart {
 								.getWorkbench().getService(ICommandService.class);
 							Command command = commandService
 								.getCommand("ch.elexis.core.ui.command.startEditLocalDocument");
-							PlatformUI.getWorkbench().getService(IEclipseContext.class)
-								.set(command.getId().concat(".selection"),
-									new StructuredSelection(po));
+							PlatformUI.getWorkbench().getService(IEclipseContext.class).set(
+								command.getId().concat(".selection"), new StructuredSelection(po));
 							try {
 								command.executeWithChecks(
 									new ExecutionEvent(command, Collections.EMPTY_MAP, null, null));
@@ -742,7 +701,7 @@ public class DocumentsView extends ViewPart {
 								e.printStackTrace();
 							}
 						});
-					viewer.refresh(obj);
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, dh);
 				}
 			}
 		};

@@ -20,6 +20,9 @@ import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.BriefExternUtil;
 import ch.elexis.core.data.util.LocalLock;
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IConflictHandler;
 import ch.elexis.core.services.ILocalDocumentService;
 import ch.elexis.core.services.ILocalLockService.Status;
@@ -41,20 +44,26 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 			List<?> selected = selection.toList();
 			Shell parentShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			for (Object object : selected) {
+				object = getAsPersistentObject(object);
 				// direct extern open if Brief on file system
 				if (object instanceof Brief && BriefExternUtil.isExternFile()) {
 					Optional<File> file = BriefExternUtil.getExternFile((Brief) object);
 					if (file.isPresent()) {
 						Program.launch(file.get().getAbsolutePath());
 					} else {
-						MessageDialog.openError(parentShell, Messages.StartEditLocalDocumentHandler_errortitle,
+						MessageDialog.openError(parentShell,
+							Messages.StartEditLocalDocumentHandler_errortitle,
 							Messages.StartEditLocalDocumentHandler_errormessage);
 					}
 				} else {
-					LocalDocumentServiceHolder.getService().ifPresent(service -> {
+					Optional<ILocalDocumentService> localDocumentService =
+						LocalDocumentServiceHolder.getService();
+					if (localDocumentService.isPresent()) {
+						ILocalDocumentService service = localDocumentService.get();
 						if (LocalLockServiceHolder.get().getStatus() == Status.REMOTE) {
-							AcquireLockUi.aquireAndRun((IPersistentObject) object,
-								new ILockHandler() {
+							if (object instanceof IPersistentObject) {
+								IPersistentObject lockObject = (IPersistentObject) object;
+								AcquireLockUi.aquireAndRun(lockObject, new ILockHandler() {
 									@Override
 									public void lockFailed(){
 										// no action required ...
@@ -62,9 +71,23 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 									
 									@Override
 									public void lockAcquired(){
-										startEditLocal(object, service, parentShell);
+										startEditLocal(lockObject, service, parentShell);
 									}
 								});
+							} else if (object instanceof Identifiable) {
+								Identifiable lockObject = (Identifiable) object;
+								AcquireLockUi.aquireAndRun(lockObject, new ILockHandler() {
+									@Override
+									public void lockFailed(){
+										// no action required ...
+									}
+									
+									@Override
+									public void lockAcquired(){
+										startEditLocal(lockObject, service, parentShell);
+									}
+								});
+							}
 						} else {
 							LocalLock lock = new LocalLock(object);
 							if (!lock.tryLock()) {
@@ -80,19 +103,26 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 										MessageDialog.openError(parentShell,
 											Messages.StartEditLocalDocumentHandler_errortitle,
 											Messages.StartEditLocalDocumentHandler_errormessage);
-										return;
+										return null;
 									}
 								} else {
-									return;
+									return null;
 								}
 							}
 							startEditLocal(object, service, parentShell);
 						}
-					});
+					}
 				}
 			}
 		}
 		return null;
+	}
+	
+	private Object getAsPersistentObject(Object object){
+		if (object instanceof IDocumentLetter) {
+			return NoPoUtil.loadAsPersistentObject((IDocumentLetter) object);
+		}
+		return object;
 	}
 	
 	private void startEditLocal(Object object, ILocalDocumentService service, Shell parentShell){

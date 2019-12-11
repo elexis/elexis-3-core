@@ -28,6 +28,7 @@ import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
@@ -41,6 +42,7 @@ import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.data.Anwender;
+import ch.elexis.data.Brief;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
@@ -422,6 +424,8 @@ public class ContextService implements IContextService, EventHandler {
 			return Optional.of(ICoverage.class);
 		} else if (elexisClazz == Prescription.class) {
 			return Optional.of(IPrescription.class);
+		} else if (elexisClazz == Brief.class) {
+			return Optional.of(IDocumentLetter.class);
 		}
 		return Optional.empty();
 	}
