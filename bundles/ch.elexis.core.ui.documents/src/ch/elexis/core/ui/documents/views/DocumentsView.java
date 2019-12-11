@@ -12,13 +12,13 @@
 
 package ch.elexis.core.ui.documents.views;
 
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -130,16 +130,40 @@ public class DocumentsView extends ViewPart {
 	@Optional
 	@Inject
 	void udpateDocument(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IDocument document){
-		//TODO the event update is not type safe
 		if (document != null && viewer != null && !viewer.getControl().isDisposed()) {
 			ViewContentProvider viewContentProvider =
 				(ViewContentProvider) viewer.getContentProvider();
 			viewContentProvider.updateElement(document);
+			viewer.refresh();
 		}
 	}
 	
+	@Optional
 	@Inject
-	void reloadDocument(@Optional @UIEventTopic(ElexisEventTopics.EVENT_RELOAD) IDocument document){
+	void deleteDocument(@UIEventTopic(ElexisEventTopics.EVENT_DELETE) IDocument document){
+		if (viewer != null && !viewer.getControl().isDisposed()) {
+			ViewContentProvider viewContentProvider =
+				(ViewContentProvider) viewer.getContentProvider();
+			viewContentProvider.updateElement(document);
+			viewer.setSelection(new StructuredSelection());
+			viewer.refresh();
+		}
+	}
+	
+	@Optional
+	@Inject
+	void createDocument(@UIEventTopic(ElexisEventTopics.EVENT_CREATE) IDocument document){
+		if (viewer != null && !viewer.getControl().isDisposed()) {
+			ViewContentProvider viewContentProvider =
+				(ViewContentProvider) viewer.getContentProvider();
+			viewContentProvider.updateElement(document);
+			viewer.refresh();
+		}
+	}
+	
+	@Optional
+	@Inject
+	void reloadDocument(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) IDocument document){
 		if (viewer != null && !viewer.getControl().isDisposed()) {
 			viewer.refresh();
 		}
@@ -222,11 +246,31 @@ public class DocumentsView extends ViewPart {
 		
 		public void updateElement(IDocument iDocument){
 			if (iDocument != null) {
-				ICategory cachedCategory = removeElementsByCachedCategory(iDocument);
-				if (!iDocument.getCategory().equals(cachedCategory)) {
-					loadElementsByCategory(iDocument.getPatient().getId(), cachedCategory);
+				removeFromCategories(iDocument);
+				FilterCategory filterCategory = new FilterCategory(iDocument.getCategory());
+				List<IDocument> categoryDocuments = documentsMap.get(filterCategory);
+				if (categoryDocuments != null) {
+					if (!categoryDocuments.contains(iDocument) && !iDocument.isDeleted()) {
+						categoryDocuments.add(iDocument);
+					} else if (categoryDocuments.contains(iDocument) && iDocument.isDeleted()) {
+						categoryDocuments.remove(iDocument);
+					}
+				} else if (!iDocument.isDeleted()){
+					categoryDocuments = new ArrayList<>();
+					categoryDocuments.add(iDocument);
+					documentsMap.put(filterCategory, categoryDocuments);
 				}
-				loadElementsByCategory(iDocument.getPatient().getId(), iDocument.getCategory());
+			}
+		}
+		
+		private void removeFromCategories(IDocument iDocument){
+			Set<ICategory> categories = new HashSet<>(documentsMap.keySet());
+			for (ICategory category : categories) {
+				List<IDocument> categoryDocuments = documentsMap.get(category);
+				categoryDocuments.remove(iDocument);
+				if (categoryDocuments.isEmpty()) {
+					documentsMap.remove(category);
+				}
 			}
 		}
 		
@@ -241,18 +285,6 @@ public class DocumentsView extends ViewPart {
 			viewer.refresh(true);
 		}
 		
-		private Entry<ICategory, IDocument> searchElementById(String id){
-			for (Entry<ICategory, List<IDocument>> entry : documentsMap.entrySet()) {
-				for (IDocument iDocument : entry.getValue()) {
-					if (id.equals(iDocument.getId())) {
-						return new AbstractMap.SimpleEntry<ICategory, IDocument>(entry.getKey(),
-							iDocument);
-					}
-				}
-			}
-			return null;
-		}
-		
 		private void loadElementsByCategory(String patientId, ICategory iCategory){
 			if (!(iCategory instanceof FilterCategory) || documentsMap.get(iCategory) == null) {
 				List<IDocument> iDocuments = DocumentStoreServiceHolder.getService()
@@ -263,33 +295,6 @@ public class DocumentsView extends ViewPart {
 				}
 			}
 			viewer.refresh(true);
-		}
-		
-		private void removeElement(IDocument iDocument){
-			if (iDocument != null && iDocument.getId() != null && iDocument.getCategory() != null) {
-				Entry<ICategory, IDocument> entry = searchElementById(iDocument.getId());
-				if (entry != null) {
-					List<IDocument> iDocuments = documentsMap.get(entry.getKey());
-					if (iDocuments != null) {
-						iDocuments.remove(iDocument);
-						if (iDocuments.isEmpty()) {
-							documentsMap.remove(entry.getKey());
-						}
-						viewer.remove(iDocument);
-					}
-				}
-			}
-		}
-		
-		private ICategory removeElementsByCachedCategory(IDocument iDocument){
-			if (iDocument != null && iDocument.getId() != null && iDocument.getCategory() != null) {
-				Entry<ICategory, IDocument> entry = searchElementById(iDocument.getId());
-				if (entry != null) {
-					documentsMap.remove(entry.getKey());
-					return entry.getKey();
-				}
-			}
-			return null;
 		}
 		
 		public void dispose(){}
@@ -488,8 +493,6 @@ public class DocumentsView extends ViewPart {
 							}
 						}
 					}
-					
-					viewer.refresh();
 				}
 			}
 			

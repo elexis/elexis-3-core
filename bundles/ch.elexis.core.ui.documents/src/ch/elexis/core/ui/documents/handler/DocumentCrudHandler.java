@@ -22,11 +22,13 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.documents.Messages;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
 import ch.elexis.core.ui.documents.service.LocalLockServiceHolder;
@@ -188,6 +190,8 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 				openMetaDataDialogNoLocking(shell, document, file, eventType);
 			}
 		}
+		// publish changes
+		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, document);
 	}
 	
 	private Optional<IDocument> openMetaDataDialogNoLocking(Shell shell, IDocument document,
