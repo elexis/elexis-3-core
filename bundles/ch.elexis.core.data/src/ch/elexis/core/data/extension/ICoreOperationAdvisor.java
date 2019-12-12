@@ -12,6 +12,7 @@ package ch.elexis.core.data.extension;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.IRunnableWithProgress;
+import ch.elexis.core.jdt.Nullable;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.PersistentObject;
 
@@ -73,14 +74,15 @@ public interface ICoreOperationAdvisor {
 	 * Required Post-Condition: {@link CoreHub#actUser} and {@link CoreHub#actMandant} have to
 	 * contain valid elements.
 	 * 
-	 * UI-useage: Presents either the user a dialog prompting for username/password or uses the
+	 * UI-usage: Presents either the user a dialog prompting for username/password or uses the
 	 * System.properties ch.elexis.username and ch.elexis.password to bypass the login dialog. The
 	 * second is needed for automated GUI tests.
 	 * 
 	 * @param shell
-	 *            and object castable to org.eclipse.swt.widgets.Shell
+	 *            an object castable to org.eclipse.swt.widgets.Shell or <code>null</code>
+	 * @return if the login was successful
 	 */
-	public void performLogin(Object shell);
+	public boolean performLogin(@Nullable Object shell);
 	
 	/**
 	 * UI only

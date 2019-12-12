@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005-2011, G. Weirich and Elexis
+ * Copyright (c) 2005-2019, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,26 +11,31 @@
  *    
  *******************************************************************************/
 
-package ch.elexis.core.ui.dialogs;
+package ch.elexis.core.ui.services.internal;
 
 import java.util.List;
+import java.util.Optional;
+
+import javax.security.auth.login.LoginException;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.ContextServiceHolder;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.ui.ILoginNews;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -38,12 +43,13 @@ import ch.elexis.data.Anwender;
 import ch.elexis.data.Query;
 import ch.rgw.tools.ExHandler;
 
-public class LoginDialog extends TitleAreaDialog {
-	Text usr, pwd;
-	boolean hasUsers;
-	ButtonEnabler be = new ButtonEnabler();
+public class LocalUserLoginDialog extends TitleAreaDialog {
 	
-	public LoginDialog(Shell parentShell){
+	private Text usr, pwd;
+	private boolean hasUsers;
+	private IUser user;
+	
+	public LocalUserLoginDialog(Shell parentShell){
 		super(parentShell);
 		
 		Query<Anwender> qbe = new Query<Anwender>(Anwender.class);
@@ -96,16 +102,44 @@ public class LoginDialog extends TitleAreaDialog {
 	
 	@Override
 	protected void okPressed(){
-		if (CoreHub.login(usr.getText(), pwd.getTextChars()) == true) {
-			super.okPressed();
-		} else {
-			setMessage(Messages.LoginDialog_4, IMessageProvider.ERROR);
-			// getButton(IDialogConstants.OK_ID).setEnabled(false);
+		
+		// load by local database
+		String username = usr.getText();
+		IUser _user = null;
+		Optional<IUser> dbUser = CoreModelServiceHolder.get().load(username, IUser.class);
+		if (dbUser.isPresent()) {
+			_user = dbUser.get().login(username, pwd.getTextChars());
 		}
+		if (_user != null && _user.isActive()) {
+			Anwender anwender = Anwender.load(_user.getAssignedContact().getId());
+			if (anwender != null) {
+				if (anwender.isValid()) {
+					if (anwender.istAnwender()) {
+						user = _user;
+						super.okPressed();
+						return;
+					} else {
+						LoggerFactory.getLogger(getClass()).error("username: {}", username,
+							new LoginException("anwender is not a istAnwender"));
+					}
+				} else {
+					LoggerFactory.getLogger(getClass()).error("username: {}", username,
+						new LoginException("anwender is invalid or deleted"));
+				}
+				
+			} else {
+				LoggerFactory.getLogger(getClass()).error("username: {}", username,
+					new LoginException("anwender is null"));
+			}
+		}
+		
+		setMessage(Messages.LoginDialog_4, IMessageProvider.ERROR);
+		
 	}
 	
 	@Override
 	protected void cancelPressed(){
+		// GlobalActions.exitAction?
 		ContextServiceHolder.get().setActiveUser(null);
 		CoreHub.actMandant = null;
 		super.cancelPressed();
@@ -120,18 +154,8 @@ public class LoginDialog extends TitleAreaDialog {
 		
 	}
 	
-	class ButtonEnabler implements ModifyListener {
-		
-		@Override
-		public void modifyText(ModifyEvent e){
-			if (usr.getText().length() == 0 || pwd.getText().length() == 0) {
-				// getButton(IDialogConstants.OK_ID).setEnabled(false);
-			} else {
-				// getButton(IDialogConstants.OK_ID).setEnabled(true);
-			}
-			
-		}
-		
+	public IUser getUser(){
+		return user;
 	}
 	
 }

@@ -13,6 +13,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.model.RoleConstants;
 import ch.elexis.data.AbstractPersistentObjectTest;
@@ -104,8 +105,7 @@ public class RoleBasedAccessControlTest extends AbstractPersistentObjectTest {
 	@Test
 	public void testUserLock(){
 		user.setActive(false);
-		CoreHub.logoffAnwender();
-		boolean rightFalse = CoreHub.login(testUserName, PASSWORD.toCharArray());
+		boolean rightFalse = CoreOperationAdvisorHolder.get().performLogin(null);
 		assertFalse(rightFalse);
 		
 		// activate user again

@@ -11,6 +11,10 @@
 package ch.elexis.core.ui.internal;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Comparator;
+import java.util.List;
+
+import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -20,27 +24,36 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
+import ch.elexis.core.data.events.ElexisEvent;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.extension.ICoreOperationAdvisor;
+import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.util.IRunnableWithProgress;
-import ch.elexis.core.ui.Messages;
+import ch.elexis.core.model.IUser;
+import ch.elexis.core.services.ILoginContributor;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.dialogs.ErsterMandantDialog;
-import ch.elexis.core.ui.dialogs.LoginDialog;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.SqlWithUiRunner;
 import ch.elexis.core.ui.wizards.DBConnectWizard;
 import ch.elexis.core.utils.CoreUtil;
+import ch.elexis.data.Anwender;
 
 @Component
 public class CoreOperationAdvisor implements ICoreOperationAdvisor {
+	
+	@Reference(cardinality = ReferenceCardinality.AT_LEAST_ONE)
+	private List<ILoginContributor> loginServices;
 	
 	public String initialPerspectiveString;
 	private Logger log = LoggerFactory.getLogger(CoreOperationAdvisor.class);
@@ -142,28 +155,41 @@ public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 	}
 	
 	@Override
-	public void performLogin(Object shell){
-		String username = System.getProperty(ElexisSystemPropertyConstants.LOGIN_USERNAME);
-		String password = System.getProperty(ElexisSystemPropertyConstants.LOGIN_PASSWORD);
-		if (username != null && password != null) {
-			/*
-			 * Allow bypassing the login dialog, eg. for automated GUI-tests. Example: when having a
-			 * demoDB you may login directly by passing -vmargs -Dch.elexis.username=test
-			 * -Dch.elexis.password=test as command line parameters to elexis.
-			 */
-			log.error("Bypassing LoginDialog with username " + username);
-			if (!CoreHub.login(username, password.toCharArray())) {
-				log.error("Authentication failed. Exiting");
+	public boolean performLogin(Object shell){
+		
+		CoreHub.reconfigureServices();
+		CoreHub.logoffAnwender();
+		
+		loginServices.sort(Comparator.comparing(ILoginContributor::getPriority));
+		IUser user = null;
+		
+		for (ILoginContributor loginService : loginServices) {
+			try {
+				user = loginService.performLogin(shell);
+				if (user != null) {
+					break;
+				}
+			} catch (LoginException le) {
+				log.warn("Unable to login with loginService [{}]: {} - skipping",
+					loginService.getClass().getName(), le.getMessage(), le);
 			}
-		} else {
-			LoginDialog dlg = new LoginDialog((Shell) shell);
-			dlg.create();
-			dlg.getShell().setText(Messages.LoginDialog_loginHeader);
-			dlg.setTitle(Messages.LoginDialog_notLoggedIn);
-			dlg.setMessage(Messages.LoginDialog_enterUsernamePass);
-			dlg.open();
-			// TODO adaptForUser
 		}
+		
+		if (user != null && user.isActive()) {
+			// set user in system
+			ContextServiceHolder.get().setActiveUser(user);
+			ElexisEventDispatcher.getInstance().fire(new ElexisEvent(CoreHub.getLoggedInContact(),
+				Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
+			
+			CoreOperationAdvisorHolder.get().adaptForUser();
+			CoreHub.getLoggedInContact().setInitialMandator();
+			CoreHub.userCfg = CoreHub.getUserSetting(CoreHub.getLoggedInContact());
+			CoreHub.heart.resume(true);
+			
+			return true;
+		}
+		
+		return false;
 	}
 	
 	@Override

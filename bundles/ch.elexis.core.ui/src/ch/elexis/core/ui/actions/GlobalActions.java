@@ -90,7 +90,6 @@ import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.constants.UiPreferenceConstants;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.dialogs.DateSelectorDialog;
-import ch.elexis.core.ui.dialogs.LoginDialog;
 import ch.elexis.core.ui.dialogs.NeuerFallDialog;
 import ch.elexis.core.ui.dialogs.SelectFallDialog;
 import ch.elexis.core.ui.icons.Images;
@@ -329,22 +328,15 @@ public class GlobalActions {
 							w.close();
 						}
 					}
-					CoreHub.logoffAnwender();
 					
-					LoginDialog dlg = new LoginDialog(win.getShell());
-					dlg.create();
-					dlg.setTitle(Messages.GlobalActions_LoginDialogTitle); //$NON-NLS-1$
-					dlg.setMessage(Messages.GlobalActions_LoginDialogMessage); //$NON-NLS-1$
-					// dlg.getButton(IDialogConstants.CANCEL_ID).setText("Beenden");
-					dlg.getShell().setText(Messages.GlobalActions_LoginDialogShelltext); //$NON-NLS-1$
-					if (dlg.open() == Dialog.CANCEL) {
+					boolean performLogin =
+						CoreOperationAdvisorHolder.get().performLogin(win.getShell());
+					if (!performLogin) {
 						exitAction.run();
 					}
-					CoreOperationAdvisorHolder.get().adaptForUser();
 				} catch (Exception ex) {
 					ExHandler.handle(ex);
 				}
-				System.out.println("login"); //$NON-NLS-1$
 			}
 		};
 		importAction = new RestrictedAction(AC_IMORT, Messages.GlobalActions_Import) { //$NON-NLS-1$

@@ -13,7 +13,8 @@ import org.junit.runners.Parameterized.Parameters;
 
 import ch.elexis.core.common.DBConnection;
 import ch.elexis.core.common.DBConnection.DBType;
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.constants.ElexisSystemPropertyConstants;
+import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.services.IElexisDataSource;
 import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.rgw.tools.JdbcLink;
@@ -77,7 +78,10 @@ public class AbstractPersistentObjectTest {
 			new Mandant("ut_mandator_" + link.DBFlavor, PASSWORD);
 		}
 		
-		boolean succ = CoreHub.login(testUserName, PASSWORD.toCharArray());
+		System.setProperty(ElexisSystemPropertyConstants.LOGIN_USERNAME, testUserName);
+		System.setProperty(ElexisSystemPropertyConstants.LOGIN_PASSWORD, PASSWORD);
+		
+		boolean succ = CoreOperationAdvisorHolder.get().performLogin(null);
 		assertTrue(succ);
 	}
 	

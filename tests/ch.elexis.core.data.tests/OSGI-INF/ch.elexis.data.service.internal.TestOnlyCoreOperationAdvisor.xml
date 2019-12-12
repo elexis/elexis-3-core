@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="ch.elexis.data.service.internal.TestOnlyCoreOperationAdvisor">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="ch.elexis.data.service.internal.TestOnlyCoreOperationAdvisor">
    <service>
       <provide interface="ch.elexis.core.data.extension.ICoreOperationAdvisor"/>
    </service>
+   <reference cardinality="1..n" field="loginServices" interface="ch.elexis.core.services.ILoginContributor" name="loginServices"/>
    <implementation class="ch.elexis.data.service.internal.TestOnlyCoreOperationAdvisor"/>
 </scr:component>

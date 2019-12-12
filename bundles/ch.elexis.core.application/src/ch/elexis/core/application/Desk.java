@@ -142,7 +142,7 @@ public class Desk implements IApplication {
 		context.applicationRunning();
 		
 		// perform login
-		cod.performLogin(UiDesk.getDisplay().getActiveShell());
+		cod.performLogin(new Shell(UiDesk.getDisplay()));
 		if ((CoreHub.getLoggedInContact() == null) || !CoreHub.getLoggedInContact().isValid()) {
 			// no valid user, exit (don't consider this as an error)
 			log.warn("Exit because no valid user logged-in"); //$NON-NLS-1$
