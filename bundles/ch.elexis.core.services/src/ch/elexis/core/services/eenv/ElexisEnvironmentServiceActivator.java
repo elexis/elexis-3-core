@@ -16,17 +16,13 @@ import ch.elexis.core.eenv.IElexisEnvironmentService;
 import ch.elexis.core.services.IConfigService;
 
 /**
- * Programmatically register the {@link ElexisEnvironmentService} if conditions are met. That is, 
- * an Elexis-Environment host value is passed.
+ * Programmatically register the {@link ElexisEnvironmentService} if conditions are met. That is, an
+ * Elexis-Environment host value is passed.
  */
 @Component
 public class ElexisEnvironmentServiceActivator {
 	
 	private ServiceRegistration<IElexisEnvironmentService> serviceRegistration;
-	
-	private String elexisEnvironmentHost;
-	
-	private Logger log = LoggerFactory.getLogger(getClass());
 	
 	@Reference
 	private IConfigService configService;
@@ -34,10 +30,10 @@ public class ElexisEnvironmentServiceActivator {
 	@Activate
 	public void activate(){
 		// 1. try via system property
-		elexisEnvironmentHost =
+		String elexisEnvironmentHost =
 			System.getProperty(ElexisSystemPropertyConstants.EE_HOSTNAME);
 		// 2. if empty fetch via environment variable
-		if(StringUtils.isBlank(elexisEnvironmentHost)) {
+		if (StringUtils.isBlank(elexisEnvironmentHost)) {
 			elexisEnvironmentHost = System.getenv(ElexisEnvironmentPropertyConstants.EE_HOSTNAME);
 		}
 		// 3. if empty fetch via config service
@@ -46,12 +42,13 @@ public class ElexisEnvironmentServiceActivator {
 				configService.get(IElexisEnvironmentService.CFG_EE_HOSTNAME, null);
 		}
 		
+		Logger log = LoggerFactory.getLogger(getClass());
+		
 		if (StringUtils.isNotBlank(elexisEnvironmentHost)) {
-	
 			try {
 				// activate the service
-				ElexisEnvironmentService elexisEnvironmentService = new ElexisEnvironmentService(
-					elexisEnvironmentHost);
+				ElexisEnvironmentService elexisEnvironmentService =
+					new ElexisEnvironmentService(elexisEnvironmentHost);
 				serviceRegistration =
 					FrameworkUtil.getBundle(ElexisEnvironmentServiceActivator.class)
 						.getBundleContext().registerService(IElexisEnvironmentService.class,
@@ -63,6 +60,7 @@ public class ElexisEnvironmentServiceActivator {
 			} catch (Exception e) {
 				log.warn("Initializing elexis-environment failed", e);
 			}
+			
 		} else {
 			log.debug("No elexis-environment configured");
 		}

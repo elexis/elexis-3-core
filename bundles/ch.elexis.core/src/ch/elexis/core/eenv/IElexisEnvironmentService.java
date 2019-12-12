@@ -39,4 +39,8 @@ public interface IElexisEnvironmentService {
 		return getBaseUrl() + "/bookstack";
 	}
 	
+	default String getKeycloakBaseUrl(){
+		return getBaseUrl() + "/keycloak";
+	}
+	
 }
