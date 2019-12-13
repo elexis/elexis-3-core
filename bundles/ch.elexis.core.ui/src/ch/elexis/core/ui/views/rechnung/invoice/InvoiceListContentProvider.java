@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -57,6 +58,8 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 	private TimeTool invoiceDateTo;
 	private TimeTool invoiceStateDateFrom;
 	private TimeTool invoiceStateDateTo;
+	private TimeTool invoiceOutputDateFrom;
+	private TimeTool invoiceOutputDateTo;
 	
 	public InvoiceListContentProvider(TableViewer tableViewerInvoiceList,
 		InvoiceListHeaderComposite invoiceListHeaderComposite,
@@ -112,12 +115,16 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 						invoiceDateTo = rfd.getInvoiceDateTo();
 						invoiceStateDateFrom = rfd.getInvoiceStateDateFrom();
 						invoiceStateDateTo = rfd.getInvoiceStateDateTo();
+						invoiceOutputDateFrom = rfd.getInvoiceOutputDateFrom();
+						invoiceOutputDateTo = rfd.getInvoiceOutputDateTo();
 					}
 				} else {
 					invoiceDateFrom = null;
 					invoiceDateTo = null;
 					invoiceStateDateFrom = null;
 					invoiceDateTo = null;
+					invoiceOutputDateFrom = null;
+					invoiceOutputDateTo = null;
 				}
 				reload();
 			};
@@ -223,7 +230,42 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 					new Money(owingAmounts).getAmountAsString());
 			}
 			
+			applyPostFilter();
 			structuredViewer.setInput(currentContent);
+		}
+
+		private void applyPostFilter(){
+			// apply filter for ExtInfo - can be slow 500 invoices processed in 5 minutes
+			if (invoiceOutputDateFrom != null) {
+				int dateFrom =
+					NumberUtils.toInt(invoiceOutputDateFrom.toString(TimeTool.DATE_COMPACT));
+				int dateTo = invoiceOutputDateTo != null
+						? NumberUtils.toInt(invoiceOutputDateTo.toString(TimeTool.DATE_COMPACT))
+						: 0;
+				if (dateFrom > 0) {
+					currentContent = currentContent.parallelStream().filter(i -> {
+						Rechnung r = Rechnung.getFromNr(i.getInvoiceNumber());
+						if (r != null) {
+							List<String> outputs = r.getTrace(Rechnung.OUTPUT);
+							// check for the first occurrence of date which matches with invoiceOutputDateFrom_To
+							for (String output : outputs) {
+								if (output != null) {
+									// convert GER to ISO date
+									String[] datePart = output.split(",|\\.", 4);
+									if (datePart.length > 2) {
+										int date = NumberUtils
+											.toInt(datePart[2] + datePart[1] + datePart[0]);
+										if (date >= dateFrom && (dateTo == 0 || date <= dateTo)) {
+											return true;
+										}
+									}
+								}
+							}
+						}
+						return false;
+					}).collect(Collectors.toList());
+				}
+			}
 		}
 	};
 	
