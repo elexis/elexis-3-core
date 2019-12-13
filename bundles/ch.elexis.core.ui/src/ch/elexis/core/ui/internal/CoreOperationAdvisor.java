@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +53,7 @@ import ch.elexis.data.Anwender;
 @Component
 public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 	
-	@Reference(cardinality = ReferenceCardinality.AT_LEAST_ONE)
+	@Reference(cardinality = ReferenceCardinality.AT_LEAST_ONE, policyOption = ReferencePolicyOption.GREEDY)
 	private List<ILoginContributor> loginServices;
 	
 	public String initialPerspectiveString;
