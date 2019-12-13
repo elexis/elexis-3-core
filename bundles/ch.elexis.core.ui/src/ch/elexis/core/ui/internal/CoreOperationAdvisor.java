@@ -161,7 +161,7 @@ public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 		CoreHub.reconfigureServices();
 		CoreHub.logoffAnwender();
 		
-		loginServices.sort(Comparator.comparing(ILoginContributor::getPriority));
+		loginServices.sort(Comparator.comparingInt(ILoginContributor::getPriority).reversed());
 		IUser user = null;
 		
 		for (ILoginContributor loginService : loginServices) {
