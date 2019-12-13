@@ -332,6 +332,8 @@ public class Messages extends NLS {
 	public static String RnFilterDialog_fromDate;
 	public static String RnFilterDialog_stateDate;
 	public static String RnFilterDialog_untilDate;
+	public static String RnFilterDialog_outputDate;
+	public static String RnFilterDialog_outputDateInfo;
 	public static String RnOutputDialog_markAsCopy;
 	public static String RnOutputDialog_outputBillCaption;
 	public static String RnOutputDialog_outputBillMessage;

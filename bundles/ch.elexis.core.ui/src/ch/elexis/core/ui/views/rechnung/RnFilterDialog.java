@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.DateInput;
 import ch.elexis.core.ui.util.MoneyInput;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -34,12 +35,14 @@ public class RnFilterDialog extends TitleAreaDialog {
 	static final String UNTIL = Messages.RnFilterDialog_untilDate; //$NON-NLS-1$
 	String[] ret;
 	MoneyInput miVon, miBis;
-	DateInput diRnVon, diRnBis, diStatVon, diStatBis;
+	DateInput diRnVon, diRnBis, diStatVon, diStatBis, diOutVon, diOutBis;
 	
 	private TimeTool invoiceDateFrom;
 	private TimeTool invoiceDateTo;
 	private TimeTool invoiceStateDateFrom;
 	private TimeTool invoiceStateDateTo;
+	private TimeTool invoiceOutputDateFrom;
+	private TimeTool invoiceOutputDateTo;
 	
 	private boolean includeMoneySelector;
 	
@@ -63,18 +66,31 @@ public class RnFilterDialog extends TitleAreaDialog {
 	protected Control createDialogArea(final Composite parent){
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		ret.setLayout(new GridLayout(3, false));
+		ret.setLayout(new GridLayout(4, false));
 		if (includeMoneySelector) {
 			new Label(ret, SWT.NONE).setText(Messages.RnFilterDialog_amount); //$NON-NLS-1$
 			miVon = new MoneyInput(ret, FROM);
 			miBis = new MoneyInput(ret, UNTIL);
 		}
-		new Label(ret, SWT.NONE).setText(Messages.RnFilterDialog_billDate); //$NON-NLS-1$
+		Label lblBillDate = new Label(ret, SWT.NONE);
+		lblBillDate.setText(Messages.RnFilterDialog_billDate); //$NON-NLS-1$
+		lblBillDate.setLayoutData(SWTHelper.getFillGridData(2, false, 1, true));
 		diRnVon = new DateInput(ret, FROM);
 		diRnBis = new DateInput(ret, UNTIL);
-		new Label(ret, SWT.NONE).setText(Messages.RnFilterDialog_stateDate); //$NON-NLS-1$
+		
+		Label lblStateDate = new Label(ret, SWT.NONE);
+		lblStateDate.setText(Messages.RnFilterDialog_stateDate); //$NON-NLS-1$
+		lblStateDate.setLayoutData(SWTHelper.getFillGridData(2, false, 1, true));
 		diStatVon = new DateInput(ret, FROM);
 		diStatBis = new DateInput(ret, UNTIL);
+		
+		Label lblOutputDate = new Label(ret, SWT.NONE);
+		lblOutputDate.setText(Messages.RnFilterDialog_outputDate); //$NON-NLS-1$
+		Label lblOutputDateInfo = new Label(ret, SWT.NONE);
+		lblOutputDateInfo.setImage(Images.IMG_ACHTUNG.getImage());
+		lblOutputDateInfo.setToolTipText(Messages.RnFilterDialog_outputDateInfo);
+		diOutVon = new DateInput(ret, FROM);
+		diOutBis = new DateInput(ret, UNTIL);
 		return ret;
 	}
 	
@@ -100,6 +116,14 @@ public class RnFilterDialog extends TitleAreaDialog {
 	
 	public TimeTool getInvoiceStateDateTo(){
 		return invoiceStateDateTo;
+	}
+	
+	public TimeTool getInvoiceOutputDateFrom(){
+		return invoiceOutputDateFrom;
+	}
+	
+	public TimeTool getInvoiceOutputDateTo(){
+		return invoiceOutputDateTo;
 	}
 	
 	@Override
@@ -142,6 +166,9 @@ public class RnFilterDialog extends TitleAreaDialog {
 			al.add("StatusDatum <=" + PersistentObject.getConnection() //$NON-NLS-1$
 				.wrapFlavored(invoiceStateDateTo.toString(TimeTool.DATE_COMPACT)));
 		}
+		invoiceOutputDateFrom = diOutVon.getDate();
+		invoiceOutputDateTo = diOutBis.getDate();
+		
 		if (al.size() > 0) {
 			ret = al.toArray(new String[0]);
 		} else {
