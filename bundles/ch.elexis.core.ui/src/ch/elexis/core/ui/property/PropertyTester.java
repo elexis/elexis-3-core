@@ -15,8 +15,7 @@ public class PropertyTester extends org.eclipse.core.expressions.PropertyTester 
 		if ("documenteditlocal".equals(property)) { //$NON-NLS-1$
 			// no local copy / local edit if brief extern
 			if (CoreHub.globalCfg.get(Preferences.P_TEXT_EXTERN_FILE, false)
-				&& BriefExternUtil.isValidExternPath(
-					CoreHub.globalCfg.get(Preferences.P_TEXT_EXTERN_FILE_PATH, null), false)) {
+				&& BriefExternUtil.isValidExternPath(BriefExternUtil.getExternFilePath(), false)) {
 				return false;
 			}
 			return CoreHub.localCfg.get(Preferences.P_TEXT_EDIT_LOCAL, false);

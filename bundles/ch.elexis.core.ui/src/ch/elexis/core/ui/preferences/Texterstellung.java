@@ -43,10 +43,10 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.BriefExternUtil;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.services.ILocalDocumentService;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
@@ -178,6 +178,7 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 	}
 	
 	private void updateExternPathDeco(String path){
+		path = BriefExternUtil.getAsExternFilePath(path);
 		if (BriefExternUtil.isValidExternPath(path, false)) {
 			externPathDeco.hide();
 			allExtern.setEnabled(true);
@@ -211,7 +212,8 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 	@Override
 	public boolean performOk(){
 		if (externPath != null && !externPath.isDisposed()
-			&& BriefExternUtil.isValidExternPath(externPath.getText(), false)) {
+			&& BriefExternUtil.isValidExternPath(
+				BriefExternUtil.getAsExternFilePath(externPath.getText()), false)) {
 			CoreHub.globalCfg.set(Preferences.P_TEXT_EXTERN_FILE_PATH, externPath.getText());
 			CoreHub.globalCfg.flush();
 		}

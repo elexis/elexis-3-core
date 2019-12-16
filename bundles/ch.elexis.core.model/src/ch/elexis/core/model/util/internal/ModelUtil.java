@@ -38,6 +38,7 @@ import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IStoreToStringContribution;
+import ch.elexis.core.utils.CoreUtil;
 import ch.rgw.tools.MimeTool;
 
 /**
@@ -79,12 +80,26 @@ public class ModelUtil {
 	 */
 	public static boolean isExternFile(){
 		if (isConfig(Preferences.P_TEXT_EXTERN_FILE, false)) {
-			String path = getConfig(Preferences.P_TEXT_EXTERN_FILE_PATH, null);
+			String path = getExternFilePath();
 			if (path != null) {
 				return pathExistsAndCanWrite(path, true);
 			}
 		}
 		return false;
+	}
+	
+	public static String getExternFilePath(){
+		return getAsExternFilePath(getConfig(Preferences.P_TEXT_EXTERN_FILE_PATH, null));
+	}
+	
+	private static String getAsExternFilePath(String path){
+		if (path != null && path.contains("[home]")) {
+			path = path.replace("[home]", CoreUtil.getWritableUserDir().getAbsolutePath());
+			LoggerFactory.getLogger(ModelUtil.class)
+				.warn("Replaced [home] -> [" + CoreUtil.getWritableUserDir().getAbsolutePath()
+					+ "] in extern file path result is [" + path + "]");
+		}
+		return path;
 	}
 	
 	/**
@@ -95,7 +110,7 @@ public class ModelUtil {
 	 * @return
 	 */
 	public static Optional<File> getExternFile(DocumentLetter documentBrief){
-		String path = getConfig(Preferences.P_TEXT_EXTERN_FILE_PATH, null);
+		String path = getExternFilePath();
 		if (pathExistsAndCanWrite(path, true)) {
 			File dir = new File(path);
 			StringBuilder sb = new StringBuilder();
@@ -126,7 +141,7 @@ public class ModelUtil {
 	 * @return
 	 */
 	public static Optional<File> createExternFile(DocumentLetter documentBrief){
-		String path = getConfig(Preferences.P_TEXT_EXTERN_FILE_PATH, null);
+		String path = getExternFilePath();
 		if (pathExistsAndCanWrite(path, true)) {
 			File dir = new File(path);
 			IPatient patient = documentBrief.getPatient();
