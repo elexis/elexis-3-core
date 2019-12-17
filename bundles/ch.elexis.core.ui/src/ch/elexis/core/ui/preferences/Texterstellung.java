@@ -16,6 +16,7 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -176,6 +177,7 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 	}
 	
 	private void updateExternPathDeco(String path){
+		path = BriefExternUtil.getAsExternFilePath(path);
 		if (BriefExternUtil.isValidExternPath(path, false)) {
 			externPathDeco.hide();
 			allExtern.setEnabled(true);
@@ -209,7 +211,8 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 	@Override
 	public boolean performOk(){
 		if (externPath != null && !externPath.isDisposed()
-			&& BriefExternUtil.isValidExternPath(externPath.getText(), false)) {
+			&& BriefExternUtil.isValidExternPath(
+				BriefExternUtil.getAsExternFilePath(externPath.getText()), false)) {
 			CoreHub.globalCfg.set(Preferences.P_TEXT_EXTERN_FILE_PATH, externPath.getText());
 			CoreHub.globalCfg.flush();
 		}

@@ -33,8 +33,7 @@ public class BriefExternUtil {
 	 */
 	public static boolean isExternFile(){
 		if (CoreHub.globalCfg.get(Preferences.P_TEXT_EXTERN_FILE, false)) {
-			boolean ret = isValidExternPath(
-				CoreHub.globalCfg.get(Preferences.P_TEXT_EXTERN_FILE_PATH, null), true);
+			boolean ret = isValidExternPath(getExternFilePath(), true);
 			if (!ret) {
 				ElexisEventDispatcher.getInstance()
 					.fireMessageEvent(new MessageEvent(MessageType.WARN, "Brief Extern",
@@ -52,7 +51,7 @@ public class BriefExternUtil {
 	 * @return Brief or empty if no such file is found
 	 */
 	public static Optional<File> getExternFile(Brief brief){
-		String path = CoreHub.globalCfg.get(Preferences.P_TEXT_EXTERN_FILE_PATH, null);
+		String path = getExternFilePath();
 		if (isValidExternPath(path, true)) {
 			File dir = new File(path);
 			StringBuilder sb = new StringBuilder();
@@ -83,7 +82,7 @@ public class BriefExternUtil {
 	 * @return
 	 */
 	public static Optional<File> createExternFile(Brief brief){
-		String path = CoreHub.globalCfg.get(Preferences.P_TEXT_EXTERN_FILE_PATH, null);
+		String path = getExternFilePath();
 		if (isValidExternPath(path, true)) {
 			File dir = new File(path);
 			Person patient = brief.getPatient();
@@ -110,6 +109,21 @@ public class BriefExternUtil {
 			}
 		}
 		return Optional.empty();
+	}
+	
+	public static String getExternFilePath(){
+		return getAsExternFilePath(
+			CoreHub.globalCfg.get(Preferences.P_TEXT_EXTERN_FILE_PATH, null));
+	}
+	
+	public static String getAsExternFilePath(String path){
+		if (path != null && path.contains("[home]")) {
+			path = path.replace("[home]", CoreHub.getWritableUserDir().getAbsolutePath());
+			LoggerFactory.getLogger(BriefExternUtil.class)
+				.warn("Replaced [home] -> [" + CoreHub.getWritableUserDir().getAbsolutePath()
+					+ "] in extern file path result is [" + path + "]");
+		}
+		return path;
 	}
 	
 	private static String evaluateExtension(String input){

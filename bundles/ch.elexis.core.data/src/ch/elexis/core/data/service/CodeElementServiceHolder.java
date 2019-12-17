@@ -38,10 +38,13 @@ public class CodeElementServiceHolder {
 		IPersistentObject consultation = ElexisEventDispatcher.getSelected(Konsultation.class);
 		if (consultation != null) {
 			ret.put(ContextKeys.CONSULTATION, consultation);
+			ret.put(ContextKeys.COVERAGE, ((Konsultation) consultation).getFall());
 		}
-		IPersistentObject coverage = ElexisEventDispatcher.getSelected(Fall.class);
-		if (coverage != null) {
-			ret.put(ContextKeys.COVERAGE, coverage);
+		if (ret.get(ContextKeys.COVERAGE) == null) {
+			IPersistentObject coverage = ElexisEventDispatcher.getSelected(Fall.class);
+			if (coverage != null) {
+				ret.put(ContextKeys.COVERAGE, coverage);
+			}
 		}
 		return ret;
 	}
