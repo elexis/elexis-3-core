@@ -269,8 +269,21 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					}
 					
 				}
+				
+				// auto select accident if uvg is selected
+				if ("UVG".equals(abrechungsMethodeStr)) {
+					int idx = ArrayUtils.indexOf(Reasons, FallConstants.TYPE_ACCIDENT);
+					if (idx > -1) {
+						fall.setGrund(Reasons[idx]);
+						
+						int ix = cReason.indexOf(Reasons[idx]);
+						if (ix == -1) {
+							ix = 0;
+						}
+						cReason.select(ix);
+					}
+				}
 			}
-			
 		});
 		
 		// focus listener needed because view may be created BEFORE a user is active
@@ -607,15 +620,6 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			return;
 		}
 		
-		String billingSystem = f.getAbrechnungsSystem();
-		// auto select accident if uvg is selected
-		if ("UVG".equals(billingSystem)) {
-			int idx = ArrayUtils.indexOf(Reasons, FallConstants.TYPE_ACCIDENT);
-			if (idx > -1) {
-				f.setGrund(Reasons[idx]);
-			}
-		}
-		
 		form.setText(f.getLabel());
 		
 		// *** set Fallbezeichnung
@@ -629,6 +633,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		}
 		cReason.select(ix);
 		
+		String billingSystem = f.getAbrechnungsSystem();
 		cAbrechnung.setText(billingSystem);
 		
 		// *** set startDate/EndDate
