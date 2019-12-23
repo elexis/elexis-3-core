@@ -451,7 +451,7 @@ public class TextView extends ViewPart implements IActivationListener {
 		
 	}
 	
-	void setName(){
+	public void setName(){
 		String n = ""; //$NON-NLS-1$
 		if (actBrief == null) {
 			setPartName(Messages.TextView_noLetterSelected); //$NON-NLS-1$

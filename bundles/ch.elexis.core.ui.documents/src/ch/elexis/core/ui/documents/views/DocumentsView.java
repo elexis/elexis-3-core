@@ -27,12 +27,16 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.e4.core.commands.ECommandService;
+import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -91,6 +95,7 @@ import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.data.AUF;
 import ch.rgw.tools.TimeTool;
 
 /**
@@ -168,6 +173,13 @@ public class DocumentsView extends ViewPart {
 			viewer.refresh();
 		}
 	}
+	
+	@SuppressWarnings("restriction")
+	@Inject
+	ECommandService commandService;
+	@SuppressWarnings("restriction")
+	@Inject
+	EHandlerService handlerService;
 	
 	class ViewFilterProvider extends ViewerFilter {
 		
@@ -396,8 +408,14 @@ public class DocumentsView extends ViewPart {
 	public void createPartControl(Composite parent){
 		parent.setLayout(new GridLayout(4, false));
 		
-		final Text tSearch = new Text(parent, SWT.BORDER);
-		tSearch.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+		Composite filterComposite = new Composite(parent, SWT.NONE);
+		GridData data = new GridData(GridData.FILL_HORIZONTAL);
+		filterComposite.setLayoutData(data);
+		filterComposite.setLayout(new GridLayout(2, false));
+		
+		final Text tSearch = new Text(filterComposite, SWT.BORDER);
+		data = new GridData(GridData.FILL_HORIZONTAL);
+		tSearch.setLayoutData(data);
 		tSearch.setMessage(Messages.DocumentView_searchLabel);
 		// Add search listener
 		ModifyListener searchListener = new ModifyListener() {
@@ -413,6 +431,7 @@ public class DocumentsView extends ViewPart {
 		};
 		tSearch.addModifyListener(searchListener);
 		
+		createFlatMenu(filterComposite);
 		// Table to display documents
 		table = new Tree(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		TreeColumn[] cols = new TreeColumn[colLabels.length];
@@ -560,6 +579,55 @@ public class DocumentsView extends ViewPart {
 		getSite().setSelectionProvider(viewer);
 		
 		viewer.setInput(ContextServiceHolder.get().getActivePatient().orElse(null));
+	}
+
+	private void createFlatMenu(Composite filterComposite){
+		ToolBarManager tMenuManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL | SWT.WRAP);
+		tMenuManager.add(new Action("Neuer Brief", Action.AS_PUSH_BUTTON) {
+			@SuppressWarnings("restriction")
+			@Override
+			public void run(){
+				ParameterizedCommand cmd =
+					commandService.createCommand("ch.elexis.core.ui.commands.BriefNew", null);
+				if (cmd != null) {
+					handlerService.executeHandler(cmd);
+				}
+				super.run();
+			}
+		});
+		tMenuManager.add(new Action("AUF", Action.AS_PUSH_BUTTON) {
+			@SuppressWarnings("restriction")
+			@Override
+			public void run(){
+				ParameterizedCommand cmd =
+					commandService.createCommand("ch.elexis.core.ui.commands.AufNew", null);
+				if (cmd != null) {
+					Object createdAuf = handlerService.executeHandler(cmd);
+					if (createdAuf instanceof AUF) {
+						// print
+						cmd = commandService.createCommand("ch.elexis.core.ui.commands.AufPrint",
+							null);
+						if (cmd != null) {
+							handlerService.executeHandler(cmd);
+						}
+					}
+				}
+				super.run();
+			}
+		});
+		tMenuManager.add(new Action("Import", Action.AS_PUSH_BUTTON) {
+			@SuppressWarnings("restriction")
+			@Override
+			public void run(){
+				ParameterizedCommand cmd =
+					commandService.createCommand(DocumentCrudHandler.CMD_NEW_DOCUMENT, null);
+				if (cmd != null) {
+					handlerService.executeHandler(cmd);
+				}
+				super.run();
+			}
+		});
+		tMenuManager.createControl(filterComposite);
 	}
 	
 	private DocumentsFilterBarComposite addFilterBar(Composite parent){
