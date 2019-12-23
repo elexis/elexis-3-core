@@ -141,4 +141,7 @@ public class EditAUFDialog extends TitleAreaDialog {
 		super.okPressed();
 	}
 	
+	public AUF getAuf(){
+		return auf;
+	}
 }

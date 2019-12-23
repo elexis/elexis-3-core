@@ -57,7 +57,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
@@ -68,8 +70,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
-import ch.elexis.core.ui.dialogs.DocumentSelectDialog;
-import ch.elexis.core.ui.dialogs.SelectFallDialog;
+import ch.elexis.core.ui.commands.BriefNewHandler;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.LockRequestingAction;
@@ -77,6 +78,7 @@ import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
+import ch.elexis.core.ui.util.viewers.CommonViewer.Message;
 import ch.elexis.core.ui.util.viewers.CommonViewer.PoDoubleClickListener;
 import ch.elexis.core.ui.util.viewers.DefaultContentProvider;
 import ch.elexis.core.ui.util.viewers.DefaultControlFieldProvider;
@@ -84,9 +86,6 @@ import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.data.Brief;
-import ch.elexis.data.Fall;
-import ch.elexis.data.Konsultation;
-import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
@@ -413,62 +412,12 @@ public class BriefAuswahl extends ViewPart implements
 		briefNeuAction = new Action(Messages.BriefAuswahlNewButtonText) { //$NON-NLS-1$
 			@Override
 			public void run(){
-				Patient pat = ElexisEventDispatcher.getSelectedPatient();
-				if (pat == null) {
-					MessageDialog.openInformation(UiDesk.getTopShell(),
-						Messages.BriefAuswahlNoPatientSelected,
-						Messages.BriefAuswahlNoPatientSelected);
-					return;
-				}
-				
-				Fall selectedFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
-				if (selectedFall == null) {
-					SelectFallDialog sfd = new SelectFallDialog(UiDesk.getTopShell());
-					sfd.open();
-					if (sfd.result != null) {
-						ElexisEventDispatcher.fireSelectionEvent(sfd.result);
-					} else {
-						MessageDialog.openInformation(UiDesk.getTopShell(),
-							Messages.TextView_NoCaseSelected, //$NON-NLS-1$
-							Messages.TextView_SaveNotPossibleNoCaseAndKonsSelected); //$NON-NLS-1$
-						return;
-					}
-				}
-				
-				Konsultation selectedKonsultation =
-					(Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
-				if (selectedKonsultation == null) {
-					Konsultation k = pat.getLetzteKons(false);
-					if (k == null) {
-						k = ((Fall) ElexisEventDispatcher.getSelected(Fall.class))
-							.neueKonsultation();
-						k.setMandant(CoreHub.actMandant);
-					}
-					ElexisEventDispatcher.fireSelectionEvent(k);
-				}
-				
-				TextView tv = null;
+				IHandlerService handlerService =
+					(IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
 				try {
-					DocumentSelectDialog bs = new DocumentSelectDialog(getViewSite().getShell(),
-						CoreHub.actMandant, DocumentSelectDialog.TYPE_CREATE_DOC_WITH_TEMPLATE);
-					if (bs.open() == Dialog.OK) {
-						tv = (TextView) getSite().getPage().showView(TextView.ID);
-						// trick: just supply a dummy address for creating the doc
-						Kontakt address = null;
-						if (DocumentSelectDialog
-							.getDontAskForAddresseeForThisTemplate(bs.getSelectedDocument()))
-							address = Kontakt.load("-1"); //$NON-NLS-1$
-						tv.createDocument(bs.getSelectedDocument(), bs.getBetreff(), address);
-						tv.setName();
-						CTabItem sel = ctab.getSelection();
-						if (sel != null) {
-							CommonViewer cv = (CommonViewer) sel.getData();
-							cv.notify(CommonViewer.Message.update_keeplabels);
-						}
-						
-					}
-				} catch (Exception ex) {
-					ExHandler.handle(ex);
+					handlerService.executeCommand(BriefNewHandler.CMD_ID, null);
+				} catch (Exception e) {
+					LoggerFactory.getLogger(BriefAuswahl.class).error("cannot execute cmd", e);
 				}
 			}
 		};
@@ -767,5 +716,15 @@ public class BriefAuswahl extends ViewPart implements
 	
 	public ElexisEvent getElexisEventFilter(){
 		return template;
+	}
+	
+	public void refreshCV(Message updateKeeplabels){
+		if (ctab != null && !ctab.isDisposed()) {
+			CTabItem sel = ctab.getSelection();
+			if (sel != null) {
+				CommonViewer cv = (CommonViewer) sel.getData();
+				cv.notify(updateKeeplabels);
+			}
+		}
 	}
 }

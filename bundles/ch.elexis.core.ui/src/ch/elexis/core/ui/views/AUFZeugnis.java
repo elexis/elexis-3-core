@@ -27,7 +27,6 @@ import ch.elexis.core.ui.text.EditLocalDocumentUtil;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.ITextPlugin.Parameter;
 import ch.elexis.core.ui.text.TextContainer;
-import ch.elexis.data.AUF;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Konsultation;
 
@@ -60,7 +59,7 @@ public class AUFZeugnis extends ViewPart implements ICallback, IActivationListen
 		text.setFocus();
 	}
 	
-	public void createAUZ(final AUF auf){
+	public void createAUZ(){
 		actBrief =
 			text.createFromTemplateName(Konsultation.getAktuelleKons(), TT_AUF_CERT, Brief.AUZ, //$NON-NLS-1$
 				null, null);

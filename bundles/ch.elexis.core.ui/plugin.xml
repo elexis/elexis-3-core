@@ -793,6 +793,21 @@
             id="ch.elexis.core.ui.PrintMedicationHistory"
             name="Print medication history">
       </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.commands.BriefNewHandler"
+            id="ch.elexis.core.ui.commands.BriefNew"
+            name="%elexis.briefNew">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.commands.AufNewHandler"
+            id="ch.elexis.core.ui.commands.AufNew"
+            name="%elexis.aufNew">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.commands.AufPrintHandler"
+            id="ch.elexis.core.ui.commands.AufPrint"
+            name="%elexis.aufPrint">
+      </command>
    </extension>
       <extension
             point="ch.elexis.core.ui.KonsExtension">

@@ -28,25 +28,26 @@ import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
+import ch.elexis.core.ui.commands.AufNewHandler;
+import ch.elexis.core.ui.commands.AufPrintHandler;
 import ch.elexis.core.ui.dialogs.EditAUFDialog;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.data.AUF;
-import ch.elexis.data.Fall;
-import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
-import ch.rgw.tools.ExHandler;
 
 /**
  * Arbeitsunfähigkeitszeugnisse erstellen und verwalten.
@@ -146,36 +147,13 @@ public class AUF2 extends ViewPart implements IActivationListener {
 			
 			@Override
 			public void run(){
-				Patient pat = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
-				if (pat == null) {
-					SWTHelper.showError(Messages.AUF2_NoPatientSelected, //$NON-NLS-1$
-						Messages.AUF2_PleaseDoSelectPatient); //$NON-NLS-1$
-					return;
+				IHandlerService handlerService =
+					(IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
+				try {
+					handlerService.executeCommand(AufNewHandler.CMD_ID, null);
+				} catch (Exception e) {
+					LoggerFactory.getLogger(BriefAuswahl.class).error("cannot execute cmd", e);
 				}
-				Konsultation kons =
-					(Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
-				Fall fall = null;
-				if (kons != null) {
-					fall = kons.getFall();
-					if (fall == null) {
-						SWTHelper.showError(Messages.AUF2_noCaseSelected, Messages.AUF2_selectCase); //$NON-NLS-1$ //$NON-NLS-2$
-						return;
-						
-					}
-					if (!fall.getPatient().equals(pat)) {
-						kons = null;
-					}
-				}
-				if (kons == null) {
-					kons = pat.getLetzteKons(false);
-					if (kons == null) {
-						SWTHelper.showError(Messages.AUF2_noCaseSelected, Messages.AUF2_selectCase); //$NON-NLS-1$ //$NON-NLS-2$
-						return;
-					}
-					fall = kons.getFall();
-				}
-				new EditAUFDialog(getViewSite().getShell(), null, fall).open();
-				tv.refresh(false);
 			}
 		};
 		delAUF = new Action(Messages.AUF2_delete) { //$NON-NLS-1$
@@ -219,14 +197,13 @@ public class AUF2 extends ViewPart implements IActivationListener {
 			
 			@Override
 			public void run(){
+				IHandlerService handlerService =
+					(IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
 				try {
-					AUFZeugnis az = (AUFZeugnis) getViewSite().getPage().showView(AUFZeugnis.ID);
-					AUF actAUF = (ch.elexis.data.AUF) ElexisEventDispatcher.getSelected(AUF.class);
-					az.createAUZ(actAUF);
-				} catch (Exception ex) {
-					ExHandler.handle(ex);
+					handlerService.executeCommand(AufPrintHandler.CMD_ID, null);
+				} catch (Exception e) {
+					LoggerFactory.getLogger(BriefAuswahl.class).error("cannot execute cmd", e);
 				}
-				
 			}
 		};
 	}
@@ -273,6 +250,12 @@ public class AUF2 extends ViewPart implements IActivationListener {
 					null, ElexisEvent.EVENT_SELECTED));
 		} else {
 			ElexisEventDispatcher.getInstance().removeListeners(eli_auf, eli_pat);
+		}
+	}
+	
+	public void refreshTable(boolean updateLbls){
+		if (tv != null) {
+			tv.refresh(updateLbls);
 		}
 	}
 	
