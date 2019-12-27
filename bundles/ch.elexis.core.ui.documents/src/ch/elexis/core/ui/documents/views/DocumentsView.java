@@ -81,6 +81,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.documents.FilterCategory;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.BriefConstants;
@@ -584,6 +585,9 @@ public class DocumentsView extends ViewPart {
 	private void createFlatMenu(Composite filterComposite){
 		ToolBarManager tMenuManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL | SWT.WRAP);
 		tMenuManager.add(new Action("Neuer Brief", Action.AS_PUSH_BUTTON) {
+			{
+				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
+			}
 			@SuppressWarnings("restriction")
 			@Override
 			public void run(){
@@ -595,7 +599,10 @@ public class DocumentsView extends ViewPart {
 				super.run();
 			}
 		});
-		tMenuManager.add(new Action("AUF", Action.AS_PUSH_BUTTON) {
+		tMenuManager.add(new Action("AUF erstellen und drucken") {
+			{
+				setImageDescriptor(Images.IMG_VIEW_WORK_INCAPABLE.getImageDescriptor());
+			}
 			@SuppressWarnings("restriction")
 			@Override
 			public void run(){
@@ -604,6 +611,7 @@ public class DocumentsView extends ViewPart {
 				if (cmd != null) {
 					Object createdAuf = handlerService.executeHandler(cmd);
 					if (createdAuf instanceof AUF) {
+						ElexisEventDispatcher.fireSelectionEvent((AUF) createdAuf);
 						// print
 						cmd = commandService.createCommand("ch.elexis.core.ui.commands.AufPrint",
 							null);
@@ -616,6 +624,9 @@ public class DocumentsView extends ViewPart {
 			}
 		});
 		tMenuManager.add(new Action("Import", Action.AS_PUSH_BUTTON) {
+			{
+				setImageDescriptor(Images.IMG_IMPORT.getImageDescriptor());
+			}
 			@SuppressWarnings("restriction")
 			@Override
 			public void run(){

@@ -5,13 +5,11 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.dialogs.EditAUFDialog;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.core.ui.views.AUF2;
 import ch.elexis.core.ui.views.Messages;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
@@ -53,11 +51,6 @@ public class AufNewHandler extends AbstractHandler implements IHandler {
 			new EditAUFDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), null,
 				fall);
 		if (dlg.open() == Dialog.OK) {
-			IViewPart viewPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-				.getActivePage().findView(AUF2.ID);
-			if (viewPart instanceof AUF2) {
-				((AUF2) viewPart).refreshTable(false);
-			}
 			return dlg.getAuf();
 		}
 		return null;

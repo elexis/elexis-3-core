@@ -13,6 +13,7 @@
 package ch.elexis.core.ui.views;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -20,6 +21,7 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.dnd.DND;
@@ -65,6 +67,15 @@ public class AUF2 extends ViewPart implements IActivationListener {
 			boolean bSelect = (ev.getType() == ElexisEvent.EVENT_SELECTED);
 			modAUF.setEnabled(bSelect);
 			delAUF.setEnabled(bSelect);
+			
+			if (bSelect && tv != null) {
+				// refresh & select only if not already selected
+				if (ev.getObject() instanceof AUF && !Objects.equals(tv.getStructuredSelection(),
+					new StructuredSelection(ev.getObject()))) {
+					tv.refresh(false);
+					tv.setSelection(new StructuredSelection(ev.getObject()));
+				}
+			}
 		}
 	};
 	private ElexisEventListener eli_pat = new ElexisUiEventListenerImpl(Patient.class) {
@@ -150,7 +161,10 @@ public class AUF2 extends ViewPart implements IActivationListener {
 				IHandlerService handlerService =
 					(IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
 				try {
-					handlerService.executeCommand(AufNewHandler.CMD_ID, null);
+					Object createdAuf = handlerService.executeCommand(AufNewHandler.CMD_ID, null);
+					if (createdAuf instanceof AUF) {
+						ElexisEventDispatcher.fireSelectionEvent((AUF) createdAuf);
+					}
 				} catch (Exception e) {
 					LoggerFactory.getLogger(BriefAuswahl.class).error("cannot execute cmd", e);
 				}
@@ -252,11 +266,4 @@ public class AUF2 extends ViewPart implements IActivationListener {
 			ElexisEventDispatcher.getInstance().removeListeners(eli_auf, eli_pat);
 		}
 	}
-	
-	public void refreshTable(boolean updateLbls){
-		if (tv != null) {
-			tv.refresh(updateLbls);
-		}
-	}
-	
 }
