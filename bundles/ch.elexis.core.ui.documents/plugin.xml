@@ -62,6 +62,11 @@
             id="ch.elexis.core.ui.documents.send"
             name="%command.name.8">
       </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.documents.handler.FlatViewHandler"
+            id="ch.elexis.core.ui.documents.commandFlatView"
+            name="%command.name.9">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -205,6 +210,12 @@
                icon="icon://IMG_MAIL_SEND"
                label="%command.label.8"
                style="pulldown">
+         </command>
+         <command
+               commandId="ch.elexis.core.ui.documents.commandFlatView"
+               icon="icon://IMG_FILTER"
+               label="%command.label.10"
+               style="toggle">
          </command>
       </menuContribution>
       <menuContribution

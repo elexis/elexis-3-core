@@ -81,6 +81,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.documents.FilterCategory;
 import ch.elexis.core.exceptions.ElexisException;
@@ -105,6 +106,10 @@ import ch.rgw.tools.TimeTool;
  */
 
 public class DocumentsView extends ViewPart {
+	
+	public static final String ID = "ch.elexis.core.ui.documents.views.DocumentsView";
+	public static final String SETTING_FLAT_VIEW = "documentsView/flatView";
+	
 	private static Logger logger = LoggerFactory.getLogger(DocumentsView.class);
 	
 	private TreeViewer viewer;
@@ -122,6 +127,7 @@ public class DocumentsView extends ViewPart {
 	
 	private DocumentsViewerComparator ovComparator;
 	private Action doubleClickAction;
+	private boolean bFlat = false;
 	
 	@Inject
 	void activePatient(@Optional IPatient patient){
@@ -258,7 +264,8 @@ public class DocumentsView extends ViewPart {
 		}
 		
 		public void updateElement(IDocument iDocument){
-			if (iDocument != null) {
+			// also called after category creation - that call will be ignored
+			if (iDocument != null && !"text/category".equals(iDocument.getMimeType())) {
 				removeFromCategories(iDocument);
 				FilterCategory filterCategory = new FilterCategory(iDocument.getCategory());
 				List<IDocument> categoryDocuments = documentsMap.get(filterCategory);
@@ -287,17 +294,6 @@ public class DocumentsView extends ViewPart {
 			}
 		}
 		
-		public void createElement(IDocument iDocument){
-			FilterCategory filterCategory = new FilterCategory(iDocument.getCategory());
-			List<IDocument> iDocuments = documentsMap.get(filterCategory);
-			if (iDocuments == null) {
-				iDocuments = new ArrayList<>();
-			}
-			iDocuments.add(iDocument);
-			documentsMap.put(filterCategory, iDocuments);
-			viewer.refresh(true);
-		}
-		
 		private void loadElementsByCategory(String patientId, ICategory iCategory){
 			if (!(iCategory instanceof FilterCategory) || documentsMap.get(iCategory) == null) {
 				List<IDocument> iDocuments = DocumentStoreServiceHolder.getService()
@@ -313,6 +309,19 @@ public class DocumentsView extends ViewPart {
 		public void dispose(){}
 		
 		public Object[] getElements(Object parent){
+			Object[] categories = getFilteredCategories();
+			if (bFlat) {
+				// single category - load its children
+				if (categories.length == 1) {
+					return getChildren(categories[0]);
+				} else {
+					return documentsMap.values().stream().flatMap(e -> e.stream()).toArray();
+				}
+			}
+			return categories;
+		}
+
+		private Object[] getFilteredCategories(){
 			if (selectedFilter.isAll()) {
 				List<ICategory> keys = new ArrayList<>(documentsMap.keySet());
 				return keys.toArray();
@@ -325,7 +334,8 @@ public class DocumentsView extends ViewPart {
 		}
 		
 		public Object[] getChildren(Object parentElement){
-			if (parentElement instanceof ICategory && documentsMap.containsKey(parentElement)) {
+			if (parentElement instanceof ICategory
+				&& documentsMap.containsKey(parentElement)) {
 				return documentsMap.get(parentElement).toArray();
 			} else {
 				return new Object[0];
@@ -362,7 +372,7 @@ public class DocumentsView extends ViewPart {
 			case 1:
 				return dh.getStatus().getName().substring(0, 1);
 			case 2:
-				return "";
+				return bFlat ? dh.getCategory().getName() : "";
 			case 3:
 				return new TimeTool(dh.getLastchanged()).toString(TimeTool.FULL_GER);
 			case 4:
@@ -450,6 +460,8 @@ public class DocumentsView extends ViewPart {
 		viewer = new TreeViewer(table);
 		
 		DocumentsFilterBarComposite filterBarComposite = addFilterBar(parent);
+		
+		bFlat = CoreHub.userCfg.get(SETTING_FLAT_VIEW, false);
 		
 		viewer.setContentProvider(
 			new ViewContentProvider().selectFilterCategory(filterBarComposite.getSelection()));
@@ -669,6 +681,7 @@ public class DocumentsView extends ViewPart {
 		SelectionAdapter selectionAdapter = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
+				ovComparator.setBFlat(bFlat);
 				ovComparator.setColumn(index);
 				viewer.getTree().setSortDirection(ovComparator.getDirection());
 				viewer.getTree().setSortColumn(column);
@@ -795,5 +808,13 @@ public class DocumentsView extends ViewPart {
 				doubleClickAction.run();
 			}
 		});
+	}
+	
+	public void switchFlatView(boolean bFlat){
+		this.bFlat = bFlat;
+		if (viewer != null) {
+			CoreHub.userCfg.set(SETTING_FLAT_VIEW, bFlat);
+			viewer.refresh();
+		}
 	}
 }
