@@ -13,6 +13,7 @@
 package ch.elexis.core.ui.documents.views;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -114,8 +115,6 @@ public class DocumentsView extends ViewPart {
 	
 	private TreeViewer viewer;
 	private Tree table;
-	
-	public static String importAction_ID = "ch.elexis.omnivore.data.DocumentView.importAction";
 	
 	private final String[] colLabels = {
 		"", "", Messages.DocumentView_categoryColumn, Messages.DocumentView_lastChangedColumn,
@@ -315,7 +314,8 @@ public class DocumentsView extends ViewPart {
 				if (categories.length == 1) {
 					return getChildren(categories[0]);
 				} else {
-					return documentsMap.values().stream().flatMap(e -> e.stream()).toArray();
+					return Arrays.stream(categories).flatMap(o -> Arrays.stream(getChildren(o)))
+						.toArray();
 				}
 			}
 			return categories;
@@ -598,7 +598,7 @@ public class DocumentsView extends ViewPart {
 		ToolBarManager tMenuManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL | SWT.WRAP);
 		tMenuManager.add(new Action("Neuer Brief", Action.AS_PUSH_BUTTON) {
 			{
-				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
+				setImageDescriptor(Images.IMG_DOCUMENT_ADD.getImageDescriptor());
 			}
 			@SuppressWarnings("restriction")
 			@Override
