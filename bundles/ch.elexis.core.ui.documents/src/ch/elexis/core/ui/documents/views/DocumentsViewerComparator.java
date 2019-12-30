@@ -1,5 +1,7 @@
 package ch.elexis.core.ui.documents.views;
 
+import java.util.Objects;
+
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
@@ -20,6 +22,7 @@ public class DocumentsViewerComparator extends ViewerComparator {
 	private int propertyIndex;
 	private int direction = DESCENDING;
 	private int catDirection;
+	private boolean bFlat;
 	
 	public DocumentsViewerComparator(){
 		this.propertyIndex = 0;
@@ -37,7 +40,7 @@ public class DocumentsViewerComparator extends ViewerComparator {
 			direction = DESCENDING;
 		}
 		
-		if (column == 1) {
+		if (column == 2) {
 			catDirection = direction;
 		}
 	}
@@ -66,32 +69,37 @@ public class DocumentsViewerComparator extends ViewerComparator {
 
 			switch (propertyIndex) {
 			case 1:
-				rc = cat1.compareTo(cat2);
-				break;
-			case 2:
-				if (cat1.equals(cat2)) {
+				if (bFlat || cat1.equals(cat2)) {
 					rc = dh1.getStatus().getName().compareTo(dh2.getStatus().getName());
 				} else {
 					compareCategories = true;
 				}
 				break;
+			case 2:
+				if (bFlat) {
+					rc = cat1.compareToIgnoreCase(cat2);
+				} else {
+					compareCategories = true;
+				}
+				break;
 			case 3:
-				if (cat1.equals(cat2)) {
+				if (bFlat || cat1.equals(cat2)) {
 					rc = dh1.getLastchanged().compareTo(dh2.getLastchanged());
 				} else {
 					compareCategories = true;
 				}
 				break;
 			case 4:
-				if (cat1.equals(cat2)) {
-					rc = dh1.getCreated().compareTo(dh2.getCreated());
+				if (bFlat || cat1.equals(cat2)) {
+					rc = dh1.getTitle().compareToIgnoreCase(dh2.getTitle());
 				} else {
 					compareCategories = true;
 				}
 				break;
 			case 5:
-				if (cat1.equals(cat2)) {
-					rc = dh1.getTitle().toLowerCase().compareTo(dh2.getTitle().toLowerCase());
+				if (bFlat || cat1.equals(cat2)) {
+					rc = Objects.toString(dh1.getKeywords(), "")
+						.compareToIgnoreCase(Objects.toString(dh2.getKeywords(), ""));
 				} else {
 					compareCategories = true;
 				}
@@ -103,8 +111,8 @@ public class DocumentsViewerComparator extends ViewerComparator {
 		
 
 		// If not in category column and values were not from same category
-		if (compareCategories) {
-			rc = cat1.compareTo(cat2);
+		if (!bFlat && compareCategories) {
+			rc = cat1.compareToIgnoreCase(cat2);
 			if (catDirection == DESCENDING) {
 				rc = -rc;
 			}
@@ -136,5 +144,9 @@ public class DocumentsViewerComparator extends ViewerComparator {
 	
 	public int getPropertyIndex(){
 		return propertyIndex;
+	}
+	
+	public void setBFlat(boolean bFlat){
+		this.bFlat = bFlat;
 	}
 }
