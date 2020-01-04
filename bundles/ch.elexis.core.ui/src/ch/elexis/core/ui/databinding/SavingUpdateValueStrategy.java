@@ -7,7 +7,7 @@ import org.eclipse.core.runtime.IStatus;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IModelService;
 
-public class SavingUpdateValueStrategy extends UpdateValueStrategy {
+public class SavingUpdateValueStrategy<S, D> extends UpdateValueStrategy<S, D> {
 	private boolean autoSave;
 	private IModelService modelService;
 	private IObservableValue<?> observable;
@@ -25,7 +25,7 @@ public class SavingUpdateValueStrategy extends UpdateValueStrategy {
 	@SuppressWarnings("rawtypes")
 	@Override
 	protected IStatus doSet(IObservableValue observableValue, Object value){
-		IStatus ret = super.doSet(observableValue, value);
+		IStatus ret = super.doSet(observableValue, (D) value);
 		if (autoSave) {
 			if (observable.getValue() instanceof Identifiable) {
 				modelService.save((Identifiable) observable.getValue());
