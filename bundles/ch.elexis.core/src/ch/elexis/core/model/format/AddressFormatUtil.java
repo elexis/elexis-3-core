@@ -39,15 +39,7 @@ public class AddressFormatUtil {
 	public static String getSingleLine(IPerson person){
 		StringBuilder ret = new StringBuilder();
 		
-		String salutation;
-		if (person.getGender().equals(Gender.MALE)) {
-			salutation = Messages.KontakteView_SalutationM;
-		} else if (person.getGender().equals(Gender.FEMALE)) {
-			salutation = Messages.KontakteView_SalutationF;
-		} else {
-			salutation = ""; //$NON-NLS-1$
-		}
-		ret.append(salutation);
+		ret.append(PersonFormatUtil.getSalutation(person));
 		ret.append(StringTool.space);
 		
 		// name with title

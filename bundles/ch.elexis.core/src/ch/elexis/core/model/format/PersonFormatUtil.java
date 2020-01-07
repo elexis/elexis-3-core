@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 
 import org.apache.commons.lang3.StringUtils;
 
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.types.Gender;
 
@@ -79,5 +80,15 @@ public class PersonFormatUtil {
 			sb.append(",").append(person.getTitel());
 		}
 		return sb.toString();
+	}
+	
+	public static String getSalutation(IPerson person){
+		if (person.getGender().equals(Gender.MALE)) {
+			return Messages.KontakteView_SalutationM;
+		} else if (person.getGender().equals(Gender.FEMALE)) {
+			return Messages.KontakteView_SalutationF;
+		} else {
+			return ""; //$NON-NLS-1$
+		}
 	}
 }
