@@ -14,6 +14,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
+import javax.xml.transform.URIResolver;
+
 /**
  * Interface definition for transformation implementations.
  * 
@@ -48,6 +50,11 @@ public interface IFormattedOutput {
 	 * 
 	 * @throws FormattedOutputException
 	 */
+	public default void transform(Object input, InputStream xslt, OutputStream output,
+		Map<String, String> transformerParameters){
+		transform(input, xslt, output, transformerParameters, null);
+	}
+	
 	public void transform(Object input, InputStream xslt, OutputStream output,
-		Map<String, String> transformerParameters);
+		Map<String, String> transformerParameters, URIResolver resolver);
 }
