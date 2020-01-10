@@ -36,6 +36,36 @@
                optional="true">
          </commandParameter>
       </command>
+      <command
+            defaultHandler="ch.elexis.core.mail.ui.handlers.SendMailNoUiHandler"
+            id="ch.elexis.core.mail.ui.sendMailNoUi"
+            name="Send E-Mail">
+         <commandParameter
+               id="ch.elexis.core.mail.ui.sendMailNoUi.mandant"
+               name="text"
+               optional="true">
+         </commandParameter>
+         <commandParameter
+               id="ch.elexis.core.mail.ui.sendMailNoUi.attachments"
+               name="attachments"
+               optional="true">
+         </commandParameter>
+         <commandParameter
+               id="ch.elexis.core.mail.ui.sendMailNoUi.to"
+               name="to"
+               optional="true">
+         </commandParameter>
+         <commandParameter
+               id="ch.elexis.core.mail.ui.sendMailNoUi.subject"
+               name="subject"
+               optional="true">
+         </commandParameter>
+         <commandParameter
+               id="ch.elexis.core.mail.ui.sendMailNoUi.text"
+               name="text"
+               optional="true">
+         </commandParameter>
+      </command>
    </extension>
    <extension
          point="org.eclipse.core.expressions.propertyTesters">
