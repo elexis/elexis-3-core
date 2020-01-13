@@ -520,7 +520,6 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 					setToolTipText(Messages.KonsZumVerrechnenView_createInvoices); //$NON-NLS-1$
 				}
 				
-				@SuppressWarnings("unchecked")
 				@Override
 				public void run(){
 					if (((StructuredSelection) tvSel.getSelection()).size() > 0) {
@@ -530,25 +529,7 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 							return;
 						}
 					}
-					// Handler.execute(getViewSite(), "bill.create", tSelection);
 					ErstelleRnnCommand.ExecuteWithParams(getViewSite(), tSelection);
-					/*
-					 * IHandlerService handlerService = (IHandlerService)
-					 * getViewSite().getService(IHandlerService.class); ICommandService cmdService =
-					 * (ICommandService) getViewSite().getService(ICommandService.class); try {
-					 * Command command = cmdService.getCommand("bill.create"); Parameterization px =
-					 * new Parameterization(command.getParameter
-					 * ("ch.elexis.RechnungErstellen.parameter" ), new
-					 * TreeToStringConverter().convertToString(tSelection)); ParameterizedCommand
-					 * parmCommand = new ParameterizedCommand(command, new Parameterization[] { px
-					 * });
-					 * 
-					 * handlerService.executeCommand(parmCommand, null);
-					 * 
-					 * } catch (Exception ex) { throw new RuntimeException("add.command not found");
-					 * }
-					 */
-					
 					tvSel.refresh();
 				}
 			};

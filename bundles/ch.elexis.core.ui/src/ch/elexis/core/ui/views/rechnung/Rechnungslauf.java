@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.status.ElexisStatus;
-import ch.elexis.core.ui.commands.Handler;
+import ch.elexis.core.ui.commands.ErstelleRnnCommand;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
@@ -107,7 +107,7 @@ public class Rechnungslauf implements IRunnableWithProgress {
 		
 		if (skip) {
 			monitor.subTask(Messages.Rechnungslauf_creatingBills); //$NON-NLS-1$
-			Handler.executeWithProgress(kzv.getViewSite(), "bill.create", kzv.tSelection, monitor); //$NON-NLS-1$
+			ErstelleRnnCommand.ExecuteWithParams(kzv.getViewSite(), kzv.tSelection);
 		}
 		monitor.done();
 	}
