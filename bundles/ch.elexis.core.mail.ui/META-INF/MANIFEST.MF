@@ -21,6 +21,6 @@ Import-Package: ch.elexis.core.data.events,
  ch.elexis.core.ui.icons,
  ch.elexis.data,
  ch.rgw.tools,
- org.apache.commons.lang3;version="3.7.0",
+ org.apache.commons.lang;version="2.6.0",
  org.slf4j
 Service-Component: OSGI-INF/ch.elexis.core.mail.ui.client.MailClientComponent.xml
