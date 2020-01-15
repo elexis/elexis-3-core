@@ -221,7 +221,9 @@ public class FavoritenComposite extends Composite {
 			public void run(){
 				StructuredSelection selection = (StructuredSelection) tv.getSelection();
 				Favorite fav = (Favorite) selection.getFirstElement();
-				VerrechenbarFavorites.setFavorite(fav.getObject(), false);
+				fav.getObject().ifPresent(obj -> {
+					VerrechenbarFavorites.setFavorite(obj, false);
+				});
 				tv.refresh();
 			}
 		});
