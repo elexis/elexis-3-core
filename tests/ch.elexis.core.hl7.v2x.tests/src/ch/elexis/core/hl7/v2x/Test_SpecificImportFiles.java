@@ -71,6 +71,35 @@ public class Test_SpecificImportFiles {
 		assertEquals(LabResultStatus.FINAL, lrd.getResultStatus());
 	}
 	
+	@Test
+	public void test_V251_OUL_R22_17300() throws IOException, ElexisException{
+		File importFile = new File(PlatformHelper.getBasePath("ch.elexis.core.hl7.v2x.tests"),
+			"rsc/LabCube/9885_LabCube_CelltacMEK6500_20191128093117_034358.hl7");
+		
+		List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(importFile);
+		assertNotNull(hl7Readers);
+		assertEquals(1, hl7Readers.size());
+		HL7Reader reader = hl7Readers.get(0);
+		assertEquals(HL7ReaderV251.class, reader.getClass());
+		
+		ObservationMessage observationMsg = reader.readObservation(resolver, false);
+		List<IValueType> observations = observationMsg.getObservations();
+		System.out.println("Observations [" + observations.size() + "]");
+		assertEquals(18, observations.size());
+		
+		LabResultData lrd = (LabResultData) observations.get(3);
+		assertEquals("Granulozyten", lrd.getName());
+		assertEquals("GR%", lrd.getCode());
+		assertEquals("60.4", lrd.getValue());
+		assertEquals("40-74", lrd.getRange());
+		assertTrue(lrd.isNumeric());
+		assertFalse(lrd.isPlainText());
+		assertEquals("%", lrd.getUnit());
+		assertEquals("", lrd.getComment());
+		assertEquals("", lrd.getGroup());
+		assertEquals(LabResultStatus.FINAL, lrd.getResultStatus());
+	}
+	
 	/**
 	 * @throws IOException 
 	 * @throws ElexisException 

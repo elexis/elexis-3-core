@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -82,7 +84,7 @@ public enum HL7ReaderFactory {
 			
 			while (stringIterator.hasNext()) {
 				String next = stringIterator.next();
-				next = assureSaveMSH9Access(next);
+				next = assureSaveMessage(next);
 				Message hl7Message = p.parse(next);
 				messageList.add(hl7Message);
 				ret.add(getReaderForMessage(hl7Message));
@@ -123,14 +125,58 @@ public enum HL7ReaderFactory {
 		return new ByteArrayInputStream(bytes);
 	}
 	
-	private String assureSaveMSH9Access(String hl7Message){
+	private String assureSaveMessage(String hl7Message){
+		String ret = assureSaveMSH9Access(hl7Message); 
+		ret = assureSaveORC(ret);
+		return ret;
+	}
+	
+	private String[] getLines(String hl7Message){
 		String separator = "\r";
 		String[] splitted = hl7Message.split(separator);
 		if (splitted.length < 2) {
 			separator = "\n";
 			splitted = hl7Message.split(separator);
 		}
+		// make sure no new lines at beginning of string
+		for (int i = 0; i < splitted.length; i++) {
+			splitted[i] = splitted[i].replaceAll("\n", "");
+		}
+		return splitted;
+	}
+	
+	private int getIndexOfSegment(String[] splittedMessage, String segmentStart){
+		int index = 0;
+		boolean found = false;
+		for (; index < splittedMessage.length; index++) {
+			if (splittedMessage[index].startsWith(segmentStart)) {
+				found = true;
+				break;
+			}
+		}
+		return found ? index : -1;
+	}
+	
+	private String assureSaveORC(String hl7Message){
+		String[] splitted = getLines(hl7Message);
+		if (splitted.length < 2) {
+			throw new IllegalArgumentException("Could not split message");
+		}
+		List<String> splittedList = new ArrayList<>(Arrays.asList(splitted));
+		String[] mshPart = splitted[0].split("\\|", -1);
 		
+		if (mshPart[8].contains("OUL^R22")) {
+			int orcIndex = getIndexOfSegment(splitted, "ORC|");
+			int obrIndex = getIndexOfSegment(splitted, "OBR|");
+			if (orcIndex > 0 && obrIndex > 0 && orcIndex < obrIndex) {
+				Collections.swap(splittedList, orcIndex, obrIndex);
+			}
+		}
+		return joinStrings(splittedList.toArray(new String[splittedList.size()]), "\r\n");
+	}
+	
+	private String assureSaveMSH9Access(String hl7Message){
+		String[] splitted = getLines(hl7Message);
 		if (splitted.length < 2) {
 			throw new IllegalArgumentException("Could not split message");
 		}
@@ -168,7 +214,7 @@ public enum HL7ReaderFactory {
 			splitted[0] = joinStrings(mshPart, "|");
 		}
 		
-		return joinStrings(splitted, separator);
+		return joinStrings(splitted, "\r\n");
 	}
 	
 	private String joinStrings(String[] array, String separator){
