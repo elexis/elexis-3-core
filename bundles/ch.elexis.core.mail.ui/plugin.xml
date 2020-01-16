@@ -39,10 +39,10 @@
       <command
             defaultHandler="ch.elexis.core.mail.ui.handlers.SendMailNoUiHandler"
             id="ch.elexis.core.mail.ui.sendMailNoUi"
-            name="Send E-Mail">
+            name="Send E-Mail no UI">
          <commandParameter
                id="ch.elexis.core.mail.ui.sendMailNoUi.mandant"
-               name="text"
+               name="mandant"
                optional="true">
          </commandParameter>
          <commandParameter
@@ -63,6 +63,11 @@
          <commandParameter
                id="ch.elexis.core.mail.ui.sendMailNoUi.text"
                name="text"
+               optional="true">
+         </commandParameter>
+         <commandParameter
+               id="ch.elexis.core.mail.ui.sendMailNoUi.accountid"
+               name="accountid"
                optional="true">
          </commandParameter>
       </command>

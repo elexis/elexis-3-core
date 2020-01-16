@@ -21,6 +21,7 @@ import ch.elexis.data.Mandant;
  * Handler for sending an Email without UI. The command execution returns a String with the result
  * of sending the mail, which is empty on success. The mail can be specified via the command
  * parameters.
+ * <li>ch.elexis.core.mail.ui.sendMailNoUi.accountid</li>
  * <li>ch.elexis.core.mail.ui.sendMailNoUi.mandant</li>
  * <li>ch.elexis.core.mail.ui.sendMailNoUi.attachments</li>
  * <li>ch.elexis.core.mail.ui.sendMailNoUi.to</li>
@@ -35,13 +36,19 @@ public class SendMailNoUiHandler extends AbstractHandler implements IHandler {
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException{
-		MailAccount mailAccount =
-			getMailAccount(event.getParameter("ch.elexis.core.mail.ui.sendMailNoUi.mandant"));
+		MailAccount mailAccount = null;
+		String accountId = event.getParameter("ch.elexis.core.mail.ui.sendMailNoUi.accountid");
+		if (StringUtils.isNoneBlank(accountId)) {
+			mailAccount = MailClientComponent.getMailClient().getAccount(accountId).orElse(null);
+		}
 		if (mailAccount == null) {
-			Mandant mandant =
-				Mandant.load(event.getParameter("ch.elexis.core.mail.ui.sendMailNoUi.mandant"));
-			return "No account for mandant ["
-				+ mandant.getLabel(false) + "]";
+			mailAccount =
+				getMailAccount(event.getParameter("ch.elexis.core.mail.ui.sendMailNoUi.mandant"));
+			if (mailAccount == null) {
+				Mandant mandant =
+					Mandant.load(event.getParameter("ch.elexis.core.mail.ui.sendMailNoUi.mandant"));
+				return "No account for mandant [" + mandant.getLabel(false) + "]";
+			}
 		}
 		
 		String attachments = event.getParameter("ch.elexis.core.mail.ui.sendMailNoUi.attachments");
