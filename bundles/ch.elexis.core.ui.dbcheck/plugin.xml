@@ -82,6 +82,9 @@
             <ExternalMaintenance
                   MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.MoveInvoiceRemarksToInternalRemarks">
             </ExternalMaintenance>
+            <ExternalMaintenance
+                  MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.CovercardFixFallFields">
+            </ExternalMaintenance>
    </extension>
 
 </plugin>
