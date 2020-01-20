@@ -38,7 +38,7 @@ public class SendMailNoUiHandler extends AbstractHandler implements IHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException{
 		MailAccount mailAccount = null;
 		String accountId = event.getParameter("ch.elexis.core.mail.ui.sendMailNoUi.accountid");
-		if (StringUtils.isNoneBlank(accountId)) {
+		if (StringUtils.isNotBlank(accountId)) {
 			mailAccount = MailClientComponent.getMailClient().getAccount(accountId).orElse(null);
 		}
 		if (mailAccount == null) {
