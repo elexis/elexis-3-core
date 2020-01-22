@@ -11,9 +11,25 @@
 package ch.elexis.core.findings;
 
 public interface ICoding {
+	
+	/**
+	 * Get the code system can be a uri or oid.
+	 * 
+	 * @return
+	 */
 	public String getSystem();
 	
+	/**
+	 * Get the code.
+	 * 
+	 * @return
+	 */
 	public String getCode();
 
+	/**
+	 * Get the string that describes the code.
+	 * 
+	 * @return
+	 */
 	public String getDisplay();
 }
