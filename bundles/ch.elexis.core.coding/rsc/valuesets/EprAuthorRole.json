@@ -1,0 +1,411 @@
+{
+    "valueSets": [{
+        "valueSet": [{
+            "ident": "ch-epr-",
+            "id": "2.16.756.5.30.1.127.3.10.1.1.3",
+            "name": "EprAuthorRole",
+            "displayName": "EprAuthorRole",
+            "statusCode": "pending",
+            "versionLabel": "20170415",
+            "effectiveDate": "2017-04-15T17:10:29",
+            "desc": [{
+                "language": "de-CH",
+                "content": "Rolle des Autors (2.16.756.5.30.1.127.3.10.1) gemäss &lt;a class=\"\" title=\"\" target=\"_blank\" href=\"https:\/\/www.bag.admin.ch\/dam\/bag\/de\/dokumente\/nat-gesundheitsstrategien\/strategie-ehealth\/gesetzgebung-elektronisches-patientendossier\/gesetze\/SR%20816.111.1_anhang%203.pdf.download.pdf\/SR%20816.111.1_Anhang%203_DE.pdf\"&gt;Anhang 3 EPDG&lt;\/a&gt;\n&lt;br clear=\"none\"\/&gt;\n&lt;br clear=\"none\"\/&gt;Dieser Code definiert die Rolle des Authors innerhalb der Institution, z.B Arzt, Pflegefachperson, Therapeut, etc. Dieser Wert soll in Kombination mit anderen Attributen eine eindeutige Kategorisierung der Dokumente ermöglichen. Dies ist ein Sub-Attribut von epd_xds_author.&lt;br clear=\"none\"\/&gt;Dieses Sub-Attribut ist zwingend erforderlich.&lt;br clear=\"none\"\/&gt;"
+            }],
+            "sourceCodeSystem": [{
+                "id": "2.16.840.1.113883.6.96",
+                "identifierName": "SNOMED&#160;Clinical&#160;Terms",
+                "canonicalUri": "http:\/\/snomed.info\/sct",
+                "canonicalUriDSTU2": "http:\/\/snomed.info\/sct",
+                "canonicalUriSTU3": "http:\/\/snomed.info\/sct",
+                "canonicalUriR4": "http:\/\/snomed.info\/sct"
+            }],
+            "publishingAuthority": [{
+                "name": "eHealth Suisse",
+                "addrLine": [{
+                    "content": "Schwarzenburgstrasse 165"
+                }, {
+                    "content": "CH-3003 Bern"
+                }, {
+                    "type": "uri",
+                    "content": "www.e-health-suisse.ch"
+                }]
+            }],
+            "copyright": [{
+                "language": "en-US",
+                "content": "This artefact includes content from SNOMED Clinical Terms® (SNOMED CT®) which is copyright of the International Health Terminology Standards Development Organisation (IHTSDO). Implementers of these artefacts must have the appropriate SNOMED CT Affiliate license - for more information contact http:\/\/www.snomed.org\/snomed-ct\/getsnomed-ct or info@snomed.org."
+            }],
+            "conceptList": [{
+                "concept": [{
+                    "code": "46255001",
+                    "codeSystem": "2.16.840.1.113883.6.96",
+                    "displayName": "Pharmacist (occupation)",
+                    "level": "0",
+                    "type": "L",
+                    "designation": [{
+                        "language": "de-CH",
+                        "type": "preferred",
+                        "displayName": "Apotheker"
+                    }, {
+                        "language": "fr-CH",
+                        "type": "preferred",
+                        "displayName": "Pharmacien"
+                    }, {
+                        "language": "it-CH",
+                        "type": "preferred",
+                        "displayName": "Farmacista"
+                    }, {
+                        "language": "en-US",
+                        "type": "preferred",
+                        "displayName": "Pharmacist"
+                    }]
+                }, {
+                    "code": "309343006",
+                    "codeSystem": "2.16.840.1.113883.6.96",
+                    "displayName": "Physician (occupation)",
+                    "level": "0",
+                    "type": "L",
+                    "designation": [{
+                        "language": "de-CH",
+                        "type": "preferred",
+                        "displayName": "Arzt"
+                    }, {
+                        "language": "fr-CH",
+                        "type": "preferred",
+                        "displayName": "Médecin"
+                    }, {
+                        "language": "it-CH",
+                        "type": "preferred",
+                        "displayName": "Medico"
+                    }, {
+                        "language": "en-US",
+                        "type": "preferred",
+                        "displayName": "Physician "
+                    }]
+                }, {
+                    "code": "3842006",
+                    "codeSystem": "2.16.840.1.113883.6.96",
+                    "displayName": "Chiropractor (occupation)",
+                    "level": "0",
+                    "type": "L",
+                    "designation": [{
+                        "language": "de-CH",
+                        "type": "preferred",
+                        "displayName": "Chiropraktiker"
+                    }, {
+                        "language": "fr-CH",
+                        "type": "preferred",
+                        "displayName": "Chiropracteur"
+                    }, {
+                        "language": "it-CH",
+                        "type": "preferred",
+                        "displayName": "Chiropratico"
+                    }, {
+                        "language": "en-US",
+                        "type": "preferred",
+                        "displayName": "Chiropractor"
+                    }]
+                }, {
+                    "code": "159033005",
+                    "codeSystem": "2.16.840.1.113883.6.96",
+                    "displayName": "Dietitian (occupation)",
+                    "level": "0",
+                    "type": "L",
+                    "designation": [{
+                        "language": "de-CH",
+                        "type": "preferred",
+                        "displayName": "Ernährungsberater"
+                    }, {
+                        "language": "fr-CH",
+                        "type": "preferred",
+                        "displayName": "Diététicien"
+                    }, {
+                        "language": "it-CH",
+                        "type": "preferred",
+                        "displayName": "Nutrizionista"
+                    }, {
+                        "language": "en-US",
+                        "type": "preferred",
+                        "displayName": "Dietitian"
+                    }]
+                }, {
+                    "code": "309453006",
+                    "codeSystem": "2.16.840.1.113883.6.96",
+                    "displayName": "Registered midwife (occupation)",
+                    "level": "0",
+                    "type": "L",
+                    "designation": [{
+                        "language": "de-CH",
+                        "type": "preferred",
+                        "displayName": "Hebamme"
+                    }, {
+                        "language": "fr-CH",
+                        "type": "preferred",
+                        "displayName": "Sage-femme"
+                    }, {
+                        "language": "it-CH",
+                        "type": "preferred",
+                        "displayName": "Ostetrica"
+                    }, {
+                        "language": "en-US",
+                        "type": "preferred",
+                        "displayName": "Midwife"
+                    }]
+                }, {
+                    "code": "224609002",
+                    "codeSystem": "2.16.840.1.113883.6.96",
+                    "displayName": "Complementary health worker (occupation)",
+                    "level": "0",
+                    "type": "L",
+                    "designation": [{
+                        "language": "de-CH",
+                        "type": "preferred",
+                        "displayName": "Komplementärmediziner"
+                    }, {
+                        "language": "fr-CH",
+                        "type": "preferred",
+                        "displayName": "Thérapeute en médecine alternative et complémentaire"
+                    }, {
+                        "language": "it-CH",
+                        "type": "preferred",
+                        "displayName": "Terapista complementare"
+                    }, {
+                        "language": "en-US",
+                        "type": "preferred",
+                        "displayName": "Complementary therapist"
+                    }]
+                }, {
+                    "code": "116154003",
+                    "codeSystem": "2.16.840.1.113883.6.96",
+                    "displayName": "Patient (person)",
+                    "level": "0",
+                    "type": "L",
+                    "designation": [{
+                        "language": "de-CH",
+                        "type": "preferred",
+                        "displayName": "Patient"
+                    }, {
+                        "language": "fr-CH",
+                        "type": "preferred",
+                        "displayName": "Patient"
+                    }, {
+                        "language": "it-CH",
+                        "type": "preferred",
+                        "displayName": "Paziente"
+                    }, {
+                        "language": "en-US",
+                        "type": "preferred",
+                        "displayName": "Patient"
+                    }]
+                }, {
+                    "code": "106292003",
+                    "codeSystem": "2.16.840.1.113883.6.96",
+                    "displayName": "Professional nurse (occupation)",
+                    "level": "0",
+                    "type": "L",
+                    "designation": [{
+                        "language": "de-CH",
+                        "type": "preferred",
+                        "displayName": "Pflegefachperson"
+                    }, {
+                        "language": "fr-CH",
+                        "type": "preferred",
+                        "displayName": "Infirmier"
+                    }, {
+                        "language": "it-CH",
+                        "type": "preferred",
+                        "displayName": "Infermiere professionale"
+                    }, {
+                        "language": "en-US",
+                        "type": "preferred",
+                        "displayName": "Professional nurse"
+                    }]
+                }, {
+                    "code": "59944000",
+                    "codeSystem": "2.16.840.1.113883.6.96",
+                    "displayName": "Psychologist (occupation)",
+                    "level": "0",
+                    "type": "L",
+                    "designation": [{
+                        "language": "de-CH",
+                        "type": "preferred",
+                        "displayName": "Psychologe"
+                    }, {
+                        "language": "fr-CH",
+                        "type": "preferred",
+                        "displayName": "Psychologue"
+                    }, {
+                        "language": "it-CH",
+                        "type": "preferred",
+                        "displayName": "Psicologo"
+                    }, {
+                        "language": "en-US",
+                        "type": "preferred",
+                        "displayName": "Psychologist "
+                    }]
+                }, {
+                    "code": "158933003",
+                    "codeSystem": "2.16.840.1.113883.6.96",
+                    "displayName": "Social caseworker (general) (occupation)",
+                    "level": "0",
+                    "type": "L",
+                    "designation": [{
+                        "language": "de-CH",
+                        "type": "preferred",
+                        "displayName": "Sozialdienstmitarbeiter"
+                    }, {
+                        "language": "fr-CH",
+                        "type": "preferred",
+                        "displayName": "Assistant social"
+                    }, {
+                        "language": "it-CH",
+                        "type": "preferred",
+                        "displayName": "Assistente sociale"
+                    }, {
+                        "language": "en-US",
+                        "type": "preferred",
+                        "displayName": "Social worker"
+                    }]
+                }, {
+                    "code": "159026005",
+                    "codeSystem": "2.16.840.1.113883.6.96",
+                    "displayName": "Speech\/language therapist (occupation)",
+                    "level": "0",
+                    "type": "L",
+                    "designation": [{
+                        "language": "de-CH",
+                        "type": "preferred",
+                        "displayName": "Logopäde"
+                    }, {
+                        "language": "fr-CH",
+                        "type": "preferred",
+                        "displayName": "Logopédiste"
+                    }, {
+                        "language": "it-CH",
+                        "type": "preferred",
+                        "displayName": "Logopedista"
+                    }, {
+                        "language": "en-US",
+                        "type": "preferred",
+                        "displayName": "Speech therapist"
+                    }]
+                }, {
+                    "code": "36682004",
+                    "codeSystem": "2.16.840.1.113883.6.96",
+                    "displayName": "Physiotherapist (occupation)",
+                    "level": "0",
+                    "type": "L",
+                    "designation": [{
+                        "language": "de-CH",
+                        "type": "preferred",
+                        "displayName": "Physiotherapeut"
+                    }, {
+                        "language": "fr-CH",
+                        "type": "preferred",
+                        "displayName": "Physiothérapeute"
+                    }, {
+                        "language": "it-CH",
+                        "type": "preferred",
+                        "displayName": "Fisioterapista"
+                    }, {
+                        "language": "en-US",
+                        "type": "preferred",
+                        "displayName": "Physiotherapist"
+                    }]
+                }, {
+                    "code": "80546007",
+                    "codeSystem": "2.16.840.1.113883.6.96",
+                    "displayName": "Occupational therapist (occupation)",
+                    "level": "0",
+                    "type": "L",
+                    "designation": [{
+                        "language": "de-CH",
+                        "type": "preferred",
+                        "displayName": "Ergotherapeut"
+                    }, {
+                        "language": "fr-CH",
+                        "type": "preferred",
+                        "displayName": "Ergothérapeute"
+                    }, {
+                        "language": "it-CH",
+                        "type": "preferred",
+                        "displayName": "Ergoterapista"
+                    }, {
+                        "language": "en-US",
+                        "type": "preferred",
+                        "displayName": "Occupational therapist"
+                    }]
+                }, {
+                    "code": "225726006",
+                    "codeSystem": "2.16.840.1.113883.6.96",
+                    "displayName": "Lactation consultant (occupation)",
+                    "level": "0",
+                    "type": "L",
+                    "designation": [{
+                        "language": "de-CH",
+                        "type": "preferred",
+                        "displayName": "Stillberaterin"
+                    }, {
+                        "language": "fr-CH",
+                        "type": "preferred",
+                        "displayName": "Consultante en lactation"
+                    }, {
+                        "language": "it-CH",
+                        "type": "preferred",
+                        "displayName": "Consulente per l'allattamento"
+                    }, {
+                        "language": "en-US",
+                        "type": "preferred",
+                        "displayName": "Breast Feeding Consultant"
+                    }]
+                }, {
+                    "code": "106289002",
+                    "codeSystem": "2.16.840.1.113883.6.96",
+                    "displayName": "Dentist (occupation)",
+                    "level": "0",
+                    "type": "L",
+                    "designation": [{
+                        "language": "de-CH",
+                        "type": "preferred",
+                        "displayName": "Zahnarzt"
+                    }, {
+                        "language": "fr-CH",
+                        "type": "preferred",
+                        "displayName": "Dentiste"
+                    }, {
+                        "language": "it-CH",
+                        "type": "preferred",
+                        "displayName": "Dentista"
+                    }, {
+                        "language": "en-US",
+                        "type": "preferred",
+                        "displayName": "Dentist"
+                    }]
+                }, {
+                    "code": "133932002",
+                    "codeSystem": "2.16.840.1.113883.6.96",
+                    "displayName": "Caregiver (person)",
+                    "level": "0",
+                    "type": "L",
+                    "designation": [{
+                        "language": "de-CH",
+                        "type": "preferred",
+                        "displayName": "Andere Gesundheitsfachperson"
+                    }, {
+                        "language": "fr-CH",
+                        "type": "preferred",
+                        "displayName": "Autre professionnel de la santé"
+                    }, {
+                        "language": "it-CH",
+                        "type": "preferred",
+                        "displayName": "Altri professionisti della salute"
+                    }, {
+                        "language": "en-US",
+                        "type": "preferred",
+                        "displayName": "Other Caregiver"
+                    }]
+                }]
+            }]
+        }]
+    }]
+}
