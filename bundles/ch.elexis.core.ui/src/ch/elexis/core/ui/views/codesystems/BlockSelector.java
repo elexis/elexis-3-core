@@ -103,8 +103,6 @@ public class BlockSelector extends CodeSelectorFactory {
 			tvfa.updateSelection((Identifiable) selected);
 			if (selected != null) {
 				ContextServiceHolder.get().getRootContext().setTyped(selected);
-			} else {
-				ContextServiceHolder.get().getRootContext().removeTyped(ICodeElementBlock.class);
 			}
 		}
 	};
