@@ -22,6 +22,7 @@ import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
@@ -125,6 +126,14 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		@org.eclipse.e4.core.di.annotations.Optional ICodeElementBlock block){
 		if (block != null && !form.isDisposed()) {
 			display(block);
+		}
+	}
+	
+	@org.eclipse.e4.core.di.annotations.Optional
+	@Inject
+	public void update(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) ICodeElementBlock block){
+		if (block != null && master.getValue() != null && master.getValue().equals(block)) {
+			updateViewerInput(block);
 		}
 	}
 	
