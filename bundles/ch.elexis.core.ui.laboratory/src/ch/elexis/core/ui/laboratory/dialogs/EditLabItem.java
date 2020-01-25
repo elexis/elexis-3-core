@@ -142,12 +142,12 @@ public class EditLabItem extends TitleAreaDialog {
 		iRef = new Text(ret, SWT.BORDER);
 		iRef.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		iRef.setTextLimit(80);
-		iRef.setEnabled(actLabItem != null && !actLabItem.isNoReferenceValueItem());
+		iRef.setEnabled(actLabItem == null || !actLabItem.isNoReferenceValueItem());
 		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelRefFemale);
 		iRfF = new Text(ret, SWT.BORDER);
 		iRfF.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		iRfF.setTextLimit(80);
-		iRfF.setEnabled(actLabItem != null && !actLabItem.isNoReferenceValueItem());
+		iRfF.setEnabled(actLabItem == null || !actLabItem.isNoReferenceValueItem());
 		WidgetFactory.createLabel(ret, Messages.EditLabItem_labelUnit);
 		noRefValues = new Button(grp, SWT.CHECK);
 		noRefValues.setText(ch.elexis.core.l10n.Messages.LabResultEvaluator_LabItemNoRefValue);
@@ -158,6 +158,7 @@ public class EditLabItem extends TitleAreaDialog {
 				iRfF.setEnabled(!noRefValues.getSelection());
 			}
 		});
+		noRefValues.setSelection(actLabItem != null && actLabItem.isNoReferenceValueItem());
 		iUnit = new Text(ret, SWT.BORDER);
 		iUnit.setLayoutData(SWTHelper.getFillGridData(3, true, 1, false));
 		iUnit.setTextLimit(25);
