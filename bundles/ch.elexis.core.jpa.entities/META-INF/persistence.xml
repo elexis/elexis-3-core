@@ -37,6 +37,7 @@
 		<class>ch.elexis.core.jpa.entities.Config</class>
 		<class>ch.elexis.core.jpa.entities.DefaultSignature</class>
 		<class>ch.elexis.core.jpa.entities.Diagnosis</class>
+		<class>ch.elexis.core.jpa.entities.DBLog</class>
 		<class>ch.elexis.core.jpa.entities.DbImage</class>
 		<class>ch.elexis.core.jpa.entities.DocHandle</class>
 		<class>ch.elexis.core.jpa.entities.Eigenleistung</class>

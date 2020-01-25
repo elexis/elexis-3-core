@@ -1,6 +1,7 @@
 package ch.elexis.core.jpa.model.adapter;
 
 import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEvent;
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.jpa.entities.DBLog;
 import ch.elexis.core.jpa.entities.EntityWithDeleted;
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.model.Deleteable;
@@ -37,6 +39,7 @@ import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.INativeQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.IStoreToStringContribution;
 
 public abstract class AbstractModelService implements IModelService {
 	
@@ -336,6 +339,7 @@ public abstract class AbstractModelService implements IModelService {
 	public void delete(Deleteable deletable){
 		deletable.setDeleted(true);
 		save((Identifiable) deletable);
+		createDBLog((Identifiable) deletable);
 		postEvent(ElexisEventTopics.EVENT_DELETE, deletable);
 	}
 	
@@ -348,10 +352,40 @@ public abstract class AbstractModelService implements IModelService {
 				identifiables.add((Identifiable) item);
 			});
 			save(identifiables);
-			
 			identifiables.forEach(item -> {
+				createDBLog(item);
 				postEvent(ElexisEventTopics.EVENT_DELETE, item);
 			});
+		}
+	}
+	
+	/**
+	 * Creates a db log uses the active transaction if exists otherwise creates a new one
+	 * 
+	 * @param identifiable
+	 */
+	private void createDBLog(Identifiable identifiable){
+		if (this instanceof IStoreToStringContribution) {
+			Optional<String> storeToString =
+				((IStoreToStringContribution) this).storeToString(identifiable);
+			if (storeToString.isPresent()) {
+				DBLog dbLog = new DBLog();
+				dbLog.setUserId("todo"); //TODO ContextServiceHolder.get().getActiveUserContact();
+				dbLog.setOid(storeToString.get());
+				dbLog.setTyp("DELETE");
+				dbLog.setDatum(LocalDate.now());
+				dbLog.setStation("todo"); //TODO NetTool.hostname
+				
+				// use active transaction if exists
+				EntityManager em = getEntityManager(false);
+				if (!em.getTransaction().isActive()) {
+					em.getTransaction().begin();
+					em.merge(dbLog);
+					em.getTransaction().commit();
+				} else {
+					em.merge(dbLog);
+				}
+			}
 		}
 	}
 	

@@ -93,4 +93,44 @@ public class DBLog extends AbstractEntityWithId
 	public void setLastupdate(Long lastupdate){
 		this.lastupdate = lastupdate;
 	}
+	
+	public String getOid(){
+		return oid;
+	}
+	
+	public void setOid(String oid){
+		this.oid = oid;
+	}
+	
+	public LocalDate getDatum(){
+		return datum;
+	}
+	
+	public void setDatum(LocalDate datum){
+		this.datum = datum;
+	}
+	
+	public String getTyp(){
+		return typ;
+	}
+	
+	public void setTyp(String typ){
+		this.typ = typ;
+	}
+	
+	public String getUserId(){
+		return userId;
+	}
+	
+	public void setUserId(String userId){
+		this.userId = userId;
+	}
+	
+	public String getStation(){
+		return station;
+	}
+	
+	public void setStation(String station){
+		this.station = station;
+	}
 }
