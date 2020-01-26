@@ -20,7 +20,10 @@ import ch.elexis.core.findings.codes.IValueSetContribution;
 public class ChEprValueSetsContribution implements IValueSetContribution {
 	
 	private String[] names = {
-		"EprAuthorRole"
+		"EprAuthorRole", "EprDocumentAvailabilityStatus", "EprDocumentClassCode",
+		"EprDocumentConfidentialityCode", "EprDocumentFormatCode", "EprDocumentLanguage",
+		"EprDocumentMimeType", "EprDocumentPracticeSettingCode", "EprDocumentTypeCode", "EprGender",
+		"EprHealthcareFacilityTypeCode",
 	};
 	
 	private List<String> ids;
