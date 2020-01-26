@@ -2,13 +2,12 @@ package ch.elexis.core.coding.internal.model;
 
 import java.util.List;
 
-public class ValueSetList {
-	
-	public List<ValueSet> valueSet;
+public class ConceptList {
+	public List<Concept> concept;
 	
 	@Override
 	public String toString(){
-		return "ValueSetList [valueSet=" + valueSet + "]";
+		return "ConceptList [concept=" + concept + "]";
 	}
 	
 }
