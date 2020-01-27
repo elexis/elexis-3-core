@@ -11,6 +11,7 @@ import org.junit.runners.Suite.SuiteClasses;
 import ch.elexis.core.findings.AllergyIntoleranceTest;
 import ch.elexis.core.findings.ConditionTest;
 import ch.elexis.core.findings.CreateFindingsTest;
+import ch.elexis.core.findings.DocumentReferenceTest;
 import ch.elexis.core.findings.EncounterTest;
 import ch.elexis.core.findings.FamilyMemberHistoryTest;
 import ch.elexis.core.findings.FindingsServiceComponent;
@@ -24,7 +25,7 @@ import ch.elexis.core.findings.codings.CodingServiceTest;
 @SuiteClasses({
 	FindingsServiceTest.class, CreateFindingsTest.class, EncounterTest.class, ConditionTest.class,
 	CodingServiceTest.class, ProcedureRequestTest.class, ObservationTest.class,
-	FamilyMemberHistoryTest.class, AllergyIntoleranceTest.class
+	FamilyMemberHistoryTest.class, AllergyIntoleranceTest.class, DocumentReferenceTest.class
 })
 public class AllTests {
 	public static final String PATIENT_ID = "defaultPatient";

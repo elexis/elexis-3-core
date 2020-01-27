@@ -3,6 +3,7 @@ package ch.elexis.core.findings.fhir.model.service;
 import ch.elexis.core.findings.IAllergyIntolerance;
 import ch.elexis.core.findings.IClinicalImpression;
 import ch.elexis.core.findings.ICondition;
+import ch.elexis.core.findings.IDocumentReference;
 import ch.elexis.core.findings.IEncounter;
 import ch.elexis.core.findings.IFamilyMemberHistory;
 import ch.elexis.core.findings.ILocalCoding;
@@ -56,5 +57,8 @@ public class FindingsModelAdapterFactory extends AbstractModelAdapterFactory {
 		addMapping(new MappingEntry(IProcedureRequest.class,
 			ch.elexis.core.findings.fhir.model.ProcedureRequest.class,
 			ch.elexis.core.jpa.entities.ProcedureRequest.class));
+		addMapping(new MappingEntry(IDocumentReference.class,
+			ch.elexis.core.findings.fhir.model.DocumentReference.class,
+			ch.elexis.core.jpa.entities.DocumentReference.class));
 	}
 }

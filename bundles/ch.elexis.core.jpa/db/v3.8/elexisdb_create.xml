@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="thomas" id="manual_table_CH_ELEXIS_CORE_FINDINGS_DOCUMENTREFERENCE">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists
+					tableName="CH_ELEXIS_CORE_FINDINGS_DOCUMENTREFERENCE" />
+			</not>
+		</preConditions>
+		<createTable tableName="CH_ELEXIS_CORE_FINDINGS_DOCUMENTREFERENCE">
+			<column name="ID" type="VARCHAR(25)">
+				<constraints primaryKey="true"
+					primaryKeyName="CONSTRAINT_PK_CH_ELEXIS_CORE_FINDINGS_DOCUMENTREFERENCE" />
+			</column>
+			<column name="LASTUPDATE" type="BIGINT" />
+			<column defaultValue="0" name="DELETED" type="CHAR(1)" />
+
+			<column name="PATIENTID" type="VARCHAR(80)" />
+			<column name="DOCUMENTID" type="VARCHAR(80)" />
+			<column name="DOCUMENTSTOREID" type="VARCHAR(80)" />
+			<column name="CONTENT" type="CLOB" />
+		</createTable>
+    </changeSet>
+	<changeSet author="thomas"
+		id="manual_idx1_CH_ELEXIS_CORE_FINDINGS_DOCUMENTREFERENCE">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists
+					indexName="CH_ELEXIS_CORE_FINDINGS_DOCUMENTREFERENCE_IDX1" />
+			</not>
+		</preConditions>
+		<createIndex
+			indexName="CH_ELEXIS_CORE_FINDINGS_DOCUMENTREFERENCE_IDX1"
+			tableName="CH_ELEXIS_CORE_FINDINGS_DOCUMENTREFERENCE">
+			<column name="PATIENTID" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="thomas"
+		id="manual_idx2_CH_ELEXIS_CORE_FINDINGS_DOCUMENTREFERENCE">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists
+					indexName="CH_ELEXIS_CORE_FINDINGS_DOCUMENTREFERENCE_IDX2" />
+			</not>
+		</preConditions>
+		<createIndex
+			indexName="CH_ELEXIS_CORE_FINDINGS_DOCUMENTREFERENCE_IDX2"
+			tableName="CH_ELEXIS_CORE_FINDINGS_DOCUMENTREFERENCE">
+			<column name="DOCUMENTID" />
+		</createIndex>
+	</changeSet>
+</databaseChangeLog>

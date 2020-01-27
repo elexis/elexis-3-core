@@ -13,4 +13,6 @@
 	<property name="blob_type" value="blob" dbms="h2"/>
 	
     <include file="/db/elexisdb_create_optional.xml"/>
+    
+    <include file="/db/v3.8/elexisdb_create.xml"/>
 </databaseChangeLog>

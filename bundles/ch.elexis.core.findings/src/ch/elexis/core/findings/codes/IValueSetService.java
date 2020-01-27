@@ -1,6 +1,9 @@
 package ch.elexis.core.findings.codes;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import ch.elexis.core.findings.ICoding;
 
@@ -30,4 +33,13 @@ public interface IValueSetService {
 	 */
 	public List<ICoding> getValueSetByName(String name);
 	
+	/**
+	 * Convert the list of {@link ICoding} to a map with {@link ICoding#getCode()} as keys;
+	 * 
+	 * @param coding
+	 * @return
+	 */
+	public default Map<String, ICoding> asMap(List<ICoding> coding){
+		return coding.stream().collect(Collectors.toMap(ICoding::getCode, Function.identity()));
+	}
 }
