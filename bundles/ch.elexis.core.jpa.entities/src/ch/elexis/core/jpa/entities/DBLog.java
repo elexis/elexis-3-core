@@ -7,6 +7,8 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -23,6 +25,10 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 public class DBLog extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
+	public static enum Type {
+			DELETE, UNDELETE, UNKNOWN
+	};
+	
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
 	
@@ -46,7 +52,8 @@ public class DBLog extends AbstractEntityWithId
 	protected LocalDate datum;
 
 	@Column(length = 20)
-	protected String typ;
+	@Enumerated(EnumType.STRING)
+	protected Type typ;
 	
 	@Column(length = 25)
 	protected String userId;
@@ -110,11 +117,11 @@ public class DBLog extends AbstractEntityWithId
 		this.datum = datum;
 	}
 	
-	public String getTyp(){
+	public Type getTyp(){
 		return typ;
 	}
 	
-	public void setTyp(String typ){
+	public void setTyp(Type typ){
 		this.typ = typ;
 	}
 	

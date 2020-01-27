@@ -32,7 +32,9 @@ import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.jpa.entities.DBLog;
 import ch.elexis.core.jpa.entities.EntityWithDeleted;
 import ch.elexis.core.jpa.entities.EntityWithId;
+import ch.elexis.core.jpa.model.service.holder.ContextServiceHolder;
 import ch.elexis.core.model.Deleteable;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.INamedQuery;
@@ -40,6 +42,7 @@ import ch.elexis.core.services.INativeQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IStoreToStringContribution;
+import ch.rgw.tools.net.NetTool;
 
 public abstract class AbstractModelService implements IModelService {
 	
@@ -365,27 +368,26 @@ public abstract class AbstractModelService implements IModelService {
 	 * @param identifiable
 	 */
 	private void createDBLog(Identifiable identifiable){
-		if (this instanceof IStoreToStringContribution) {
-			Optional<String> storeToString =
-				((IStoreToStringContribution) this).storeToString(identifiable);
-			if (storeToString.isPresent()) {
-				DBLog dbLog = new DBLog();
-				dbLog.setUserId("todo"); //TODO ContextServiceHolder.get().getActiveUserContact();
-				dbLog.setOid(storeToString.get());
-				dbLog.setTyp("DELETE");
-				dbLog.setDatum(LocalDate.now());
-				dbLog.setStation("todo"); //TODO NetTool.hostname
-				
-				// use active transaction if exists
-				EntityManager em = getEntityManager(false);
-				if (!em.getTransaction().isActive()) {
-					em.getTransaction().begin();
-					em.merge(dbLog);
-					em.getTransaction().commit();
-				} else {
-					em.merge(dbLog);
-				}
-			}
+		DBLog dbLog = new DBLog();
+		dbLog.setUserId(ContextServiceHolder.isPresent()
+				? ContextServiceHolder.get().getActiveUserContact().map(IContact::getId).orElse("?")
+				: "?");
+		dbLog.setOid(this instanceof IStoreToStringContribution
+				? ((IStoreToStringContribution) this).storeToString(identifiable)
+					.orElse(identifiable.getId())
+				: identifiable.getId());
+		dbLog.setTyp(DBLog.Type.DELETE);
+		dbLog.setDatum(LocalDate.now());
+		dbLog.setStation(Optional.ofNullable(NetTool.hostname).orElse("?"));
+		
+		EntityManager em = getEntityManager(false);
+		if (!em.getTransaction().isActive()) {
+			em.getTransaction().begin();
+			em.merge(dbLog);
+			em.getTransaction().commit();
+		} else {
+			// use active transaction
+			em.merge(dbLog);
 		}
 	}
 	
