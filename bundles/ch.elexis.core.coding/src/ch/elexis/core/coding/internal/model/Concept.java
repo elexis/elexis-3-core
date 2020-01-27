@@ -24,10 +24,14 @@ public class Concept implements ICoding {
 	@Override
 	public String getDisplay(){
 		return designation != null
-				? designation.stream().filter(i -> JsonValueSet.LANGUAGE_DEFAULT.equals(i.language))
-					.findFirst()
+				? designation.stream().filter(i -> isMatchingLanguage(i)).findFirst()
 					.map(i -> i.displayName).orElse(null)
 				: null;
+	}
+	
+	private boolean isMatchingLanguage(Designation designation){
+		String systemLanguage = JsonValueSet.getSystemLanguage();
+		return systemLanguage.equals(designation.language);
 	}
 	
 	@Override

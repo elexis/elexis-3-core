@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -19,8 +21,6 @@ import ch.elexis.core.coding.internal.model.ValueSets;
 import ch.elexis.core.findings.ICoding;
 
 public class JsonValueSet {
-	
-	public static final String LANGUAGE_DEFAULT = "de-CH";
 	
 	public static Optional<JsonValueSet> load(String name){
 		try {
@@ -36,8 +36,8 @@ public class JsonValueSet {
 				}
 			}
 		} catch (JsonSyntaxException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LoggerFactory.getLogger(JsonValueSet.class)
+				.error("Error oasing valueset [" + name + "]");
 		}
 		return Optional.empty();
 	}
@@ -69,4 +69,20 @@ public class JsonValueSet {
 		return "JsonValueSet [valueSet=" + valueSet + "]";
 	}
 	
+	public static String getSystemLanguage(){
+		String language = Locale.getDefault().getLanguage();
+		if (language != null) {
+			switch (language) {
+			case "de":
+				return "de-CH";
+			case "fr":
+				return "fr-CH";
+			case "it":
+				return "it-CH";
+			case "en":
+				return "en-US";
+			}
+		}
+		return "de-CH";
+	}
 }

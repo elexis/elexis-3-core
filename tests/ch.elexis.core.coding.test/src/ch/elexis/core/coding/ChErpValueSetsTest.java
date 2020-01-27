@@ -17,6 +17,7 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 
+import ch.elexis.core.coding.internal.JsonValueSet;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.codes.IValueSetContribution;
 
@@ -55,7 +56,28 @@ public class ChErpValueSetsTest {
 		ICoding coding = findCoding(codes, "46255001");
 		assertNotNull(coding);
 		assertEquals("2.16.840.1.113883.6.96", coding.getSystem());
-		assertEquals("Apotheker", coding.getDisplay());
+		String systemLanguage = JsonValueSet.getSystemLanguage();
+		if (systemLanguage.startsWith("de")) {
+			assertEquals("Apotheker", coding.getDisplay());
+		} else if (systemLanguage.startsWith("en")) {
+			assertEquals("Pharmacist", coding.getDisplay());
+		}
+	}
+	
+	@Test
+	public void getEprDocumentClassCode(){
+		List<ICoding> codes = contribution.getValueSetByName("EprDocumentClassCode");
+		assertNotNull(codes);
+		assertFalse(codes.isEmpty());
+		ICoding coding = findCoding(codes, "1261000195102");
+		assertNotNull(coding);
+		assertEquals("2.16.840.1.113883.6.96", coding.getSystem());
+		String systemLanguage = JsonValueSet.getSystemLanguage();
+		if (systemLanguage.startsWith("de")) {
+			assertEquals("Zuweisungen/Überweisungen", coding.getDisplay());
+		} else if (systemLanguage.startsWith("en")) {
+			assertEquals("Clinical Care Referrals", coding.getDisplay());
+		}
 	}
 	
 	private ICoding findCoding(List<ICoding> codes, String string){
