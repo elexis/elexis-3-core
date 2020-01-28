@@ -453,6 +453,16 @@ public class ArticleDefaultSignatureComposite extends Composite {
 			} else if (btnDispensation.getSelection()) {
 				signature.setDisposalType(EntryType.SELF_DISPENSED);
 			}
+			if (lblCalcEndDate != null) {
+				TimeTool endDateTimeTool = lblCalcEndDate.getData() instanceof TimeTool
+						? (TimeTool) lblCalcEndDate.getData()
+						: null;
+				if (endDateTimeTool != null) {
+					signature.setEndDate(endDateTimeTool.toLocalDate());
+				} else {
+					signature.setEndDate(null);
+				}
+			}
 		}
 		updateMedicationTypeDetails();
 	}
