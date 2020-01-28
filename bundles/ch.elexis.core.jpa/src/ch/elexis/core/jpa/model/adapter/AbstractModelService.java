@@ -33,6 +33,7 @@ import ch.elexis.core.jpa.entities.DBLog;
 import ch.elexis.core.jpa.entities.EntityWithDeleted;
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.model.service.holder.ContextServiceHolder;
+import ch.elexis.core.jpa.model.service.holder.StoreToStringServiceHolder;
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.Identifiable;
@@ -41,7 +42,6 @@ import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.INativeQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.IStoreToStringContribution;
 import ch.rgw.tools.net.NetTool;
 
 public abstract class AbstractModelService implements IModelService {
@@ -369,13 +369,10 @@ public abstract class AbstractModelService implements IModelService {
 	 */
 	private void createDBLog(Identifiable identifiable){
 		DBLog dbLog = new DBLog();
-		dbLog.setUserId(ContextServiceHolder.isPresent()
-				? ContextServiceHolder.get().getActiveUserContact().map(IContact::getId).orElse("?")
-				: "?");
-		dbLog.setOid(this instanceof IStoreToStringContribution
-				? ((IStoreToStringContribution) this).storeToString(identifiable)
-					.orElse(identifiable.getId())
-				: identifiable.getId());
+		dbLog.setUserId(
+			ContextServiceHolder.getActiveUserContact().map(IContact::getId).orElse("?"));
+		dbLog.setOid(
+			StoreToStringServiceHolder.getStoreToString(identifiable).orElse(identifiable.getId()));
 		dbLog.setTyp(DBLog.Type.DELETE);
 		dbLog.setDatum(LocalDate.now());
 		dbLog.setStation(Optional.ofNullable(NetTool.hostname).orElse("?"));

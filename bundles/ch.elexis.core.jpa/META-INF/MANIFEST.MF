@@ -36,4 +36,5 @@ Export-Package: ch.elexis.core.jpa.model.adapter,
 Service-Component: OSGI-INF/ch.elexis.core.jpa.model.adapter.event.EntityChangeEventListenerHolder.xml,
  OSGI-INF/ch.elexis.core.jpa.model.adapter.event.EntityChangeEventListener.xml,
  OSGI-INF/ch.elexis.core.jpa.entitymanager.ElexisEntityManger.xml,
- OSGI-INF/ch.elexis.core.jpa.model.service.holder.ContextServiceHolder.xml
+ OSGI-INF/ch.elexis.core.jpa.model.service.holder.ContextServiceHolder.xml,
+ OSGI-INF/ch.elexis.core.jpa.model.service.holder.StoreToStringServiceHolder.xml

@@ -1,8 +1,11 @@
 package ch.elexis.core.jpa.model.service.holder;
 
+import java.util.Optional;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.services.IContextService;
 
 
@@ -25,5 +28,9 @@ public class ContextServiceHolder {
 	
 	public static boolean isPresent(){
 		return contextService != null;
+	}
+	
+	public static Optional<IContact> getActiveUserContact(){
+		return isPresent() ? contextService.getActiveUserContact() : Optional.empty();
 	}
 }
