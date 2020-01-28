@@ -58,8 +58,9 @@ public class PrintTakingsListHandler extends AbstractHandler {
 				RezeptBlatt rpb = (RezeptBlatt) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 					.getActivePage().showView(RezeptBlatt.ID);
 				rpb.createEinnahmeliste((Patient) NoPoUtil.loadAsPersistentObject(patient),
-					(Prescription[]) NoPoUtil.loadAsPersistentObject(
-						prescRecipes.toArray(new IPrescription[prescRecipes.size()])));
+					NoPoUtil.loadAsPersistentObject(
+						prescRecipes.toArray(new IPrescription[prescRecipes.size()]),
+						Prescription.class));
 			} catch (PartInitException e) {
 				log.error("Error outputting recipe", e);
 			}

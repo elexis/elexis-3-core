@@ -1,5 +1,6 @@
 package ch.elexis.core.data.util;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -70,14 +71,15 @@ public class NoPoUtil {
 	 * @param identifiable
 	 * @return
 	 */
-	public static PersistentObject[] loadAsPersistentObject(Identifiable[] identifiables){
+	@SuppressWarnings("unchecked")
+	public static <T> T[] loadAsPersistentObject(Identifiable[] identifiables, Class<T> type){
 		if (identifiables != null && identifiables.length > 0) {
-			PersistentObject[] ret = new PersistentObject[identifiables.length];
+			T[] ret = (T[]) Array.newInstance(type, identifiables.length);
 			for (int i = 0; i < identifiables.length; i++) {
-				ret[i] = loadAsPersistentObject(identifiables[i]);
+				ret[i] = (T) loadAsPersistentObject(identifiables[i]);
 			}
 			return ret;
 		}
-		return new PersistentObject[0];
+		return (T[]) Array.newInstance(type, 0);
 	}
 }
