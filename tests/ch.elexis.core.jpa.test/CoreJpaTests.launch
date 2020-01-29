@@ -12,6 +12,7 @@
 <booleanAttribute key="clearwslog" value="false"/>
 <stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/pde-junit"/>
 <booleanAttribute key="default" value="false"/>
+<setAttribute key="deselected_workspace_bundles"/>
 <booleanAttribute key="includeOptional" value="false"/>
 <stringAttribute key="location" value="${workspace_loc}/../junit-workspace"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
@@ -33,8 +34,86 @@
 <stringAttribute key="pde.version" value="3.3"/>
 <stringAttribute key="product" value="org.eclipse.platform.ide"/>
 <booleanAttribute key="run_in_ui_thread" value="false"/>
-<stringAttribute key="selected_target_plugins" value="bcprov@default:default,ch.qos.logback.classic@default:default,ch.qos.logback.core@default:default,ch.qos.logback.slf4j@default:false,com.eclipsesource.jaxrs.jersey-all-nojavax@default:default,com.google.gson@default:default,com.mysql.cj@default:default,com.sun.activation.javax.activation@default:default,javax.el@default:default,javax.enterprise.cdi-api@default:default,javax.inject@default:default,javax.interceptor-api@default:default,javax.persistence@1:true,javax.servlet@default:default,javax.transaction-api@default:default,javax.xml@3:true,jaxb-api@default:default,org.apache.commons.beanutils@default:default,org.apache.commons.codec@default:default,org.apache.commons.collections@default:default,org.apache.commons.dbcp@default:default,org.apache.commons.lang3@default:default,org.apache.commons.logging@default:default,org.apache.commons.pool@default:default,org.apache.felix.scr@1:true,org.eclipse.ant.core@default:default,org.eclipse.core.contenttype@default:default,org.eclipse.core.expressions@default:default,org.eclipse.core.filesystem.linux.x86_64@default:false,org.eclipse.core.filesystem@default:default,org.eclipse.core.jobs@default:default,org.eclipse.core.resources@default:default,org.eclipse.core.runtime@default:true,org.eclipse.core.variables@default:default,org.eclipse.emf.common@default:default,org.eclipse.emf.ecore@default:default,org.eclipse.equinox.app@default:default,org.eclipse.equinox.common@2:true,org.eclipse.equinox.ds@1:true,org.eclipse.equinox.event@1:true,org.eclipse.equinox.preferences@default:default,org.eclipse.equinox.registry@default:default,org.eclipse.gemini.jpa@3:true,org.eclipse.osgi.compatibility.state@default:false,org.eclipse.osgi.services@default:default,org.eclipse.osgi.util@default:default,org.eclipse.osgi@-1:true,org.eclipse.persistence.antlr@default:default,org.eclipse.persistence.asm@default:default,org.eclipse.persistence.core@default:default,org.eclipse.persistence.extension@default:false,org.eclipse.persistence.jpa.jpql@default:default,org.eclipse.persistence.jpa@default:default,org.h2@default:default,org.hamcrest.core@default:default,org.jdom@default:default,org.junit@default:default,org.postgresql.jdbc42@default:default,org.slf4j.api@default:default,org.slf4j.nop@default:false,osgi.enterprise@3:true"/>
-<stringAttribute key="selected_workspace_plugins" value="ch.elexis.core.jpa.datasource@3:true,ch.elexis.core.jpa.entities.test@default:false,ch.elexis.core.jpa.entities@3:true,ch.elexis.core.jpa.logging.slf4j@default:false,ch.elexis.core.jpa.test@default:false,ch.elexis.core.jpa@default:default,ch.elexis.core.l10n@default:default,ch.elexis.core.logging.default_configuration@default:false,ch.elexis.core@default:default,ch.rgw.utility.tests@default:false,ch.rgw.utility@default:default"/>
+<setAttribute key="selected_target_bundles">
+<setEntry value="ch.qos.logback.classic@default:default"/>
+<setEntry value="ch.qos.logback.core@default:default"/>
+<setEntry value="ch.qos.logback.slf4j@default:false"/>
+<setEntry value="com.eclipsesource.jaxrs.jersey-all-nojavax@default:default"/>
+<setEntry value="com.google.gson@default:default"/>
+<setEntry value="com.mysql.cj@default:default"/>
+<setEntry value="com.sun.activation.javax.activation@default:default"/>
+<setEntry value="jakarta.persistence@default:default"/>
+<setEntry value="javax.el@default:default"/>
+<setEntry value="javax.enterprise.cdi-api@default:default"/>
+<setEntry value="javax.inject@default:default"/>
+<setEntry value="javax.interceptor-api@default:default"/>
+<setEntry value="javax.servlet@default:default"/>
+<setEntry value="javax.transaction-api@default:default"/>
+<setEntry value="javax.xml@3:true"/>
+<setEntry value="jaxb-api@default:default"/>
+<setEntry value="org.apache.commons.beanutils@default:default"/>
+<setEntry value="org.apache.commons.codec@default:default"/>
+<setEntry value="org.apache.commons.collections@default:default"/>
+<setEntry value="org.apache.commons.dbcp@default:default"/>
+<setEntry value="org.apache.commons.lang3@default:default"/>
+<setEntry value="org.apache.commons.logging@default:default"/>
+<setEntry value="org.apache.commons.pool@default:default"/>
+<setEntry value="org.apache.felix.scr@1:true"/>
+<setEntry value="org.bouncycastle.bcprov@default:default"/>
+<setEntry value="org.eclipse.ant.core@default:default"/>
+<setEntry value="org.eclipse.core.contenttype@default:default"/>
+<setEntry value="org.eclipse.core.expressions@default:default"/>
+<setEntry value="org.eclipse.core.filesystem.linux.x86_64@default:false"/>
+<setEntry value="org.eclipse.core.filesystem@default:default"/>
+<setEntry value="org.eclipse.core.jobs@default:default"/>
+<setEntry value="org.eclipse.core.resources@default:default"/>
+<setEntry value="org.eclipse.core.runtime@default:true"/>
+<setEntry value="org.eclipse.core.variables@default:default"/>
+<setEntry value="org.eclipse.emf.common@default:default"/>
+<setEntry value="org.eclipse.emf.ecore@default:default"/>
+<setEntry value="org.eclipse.equinox.app@default:default"/>
+<setEntry value="org.eclipse.equinox.common@2:true"/>
+<setEntry value="org.eclipse.equinox.ds@1:true"/>
+<setEntry value="org.eclipse.equinox.event@1:true"/>
+<setEntry value="org.eclipse.equinox.preferences@default:default"/>
+<setEntry value="org.eclipse.equinox.registry@default:default"/>
+<setEntry value="org.eclipse.gemini.jpa@3:true"/>
+<setEntry value="org.eclipse.osgi.compatibility.state@default:false"/>
+<setEntry value="org.eclipse.osgi.services@default:default"/>
+<setEntry value="org.eclipse.osgi.util@default:default"/>
+<setEntry value="org.eclipse.osgi@-1:true"/>
+<setEntry value="org.eclipse.persistence.antlr@default:default"/>
+<setEntry value="org.eclipse.persistence.asm@default:default"/>
+<setEntry value="org.eclipse.persistence.core@default:default"/>
+<setEntry value="org.eclipse.persistence.extension@default:false"/>
+<setEntry value="org.eclipse.persistence.jpa.jpql@default:default"/>
+<setEntry value="org.eclipse.persistence.jpa@default:default"/>
+<setEntry value="org.h2@default:default"/>
+<setEntry value="org.hamcrest.core@default:default"/>
+<setEntry value="org.jdom@default:default"/>
+<setEntry value="org.json@default:default"/>
+<setEntry value="org.junit@default:default"/>
+<setEntry value="org.postgresql.jdbc42@default:default"/>
+<setEntry value="org.slf4j.api@default:default"/>
+<setEntry value="org.slf4j.nop@default:false"/>
+<setEntry value="osgi.enterprise@3:true"/>
+</setAttribute>
+<setAttribute key="selected_workspace_bundles">
+<setEntry value="ch.elexis.core.jpa.datasource@3:true"/>
+<setEntry value="ch.elexis.core.jpa.entities.test@default:false"/>
+<setEntry value="ch.elexis.core.jpa.entities@3:true"/>
+<setEntry value="ch.elexis.core.jpa.logging.slf4j@default:false"/>
+<setEntry value="ch.elexis.core.jpa.test@default:false"/>
+<setEntry value="ch.elexis.core.jpa@default:default"/>
+<setEntry value="ch.elexis.core.l10n@default:default"/>
+<setEntry value="ch.elexis.core.logback.rocketchat@default:default"/>
+<setEntry value="ch.elexis.core.logging.default_configuration@default:false"/>
+<setEntry value="ch.elexis.core@default:default"/>
+<setEntry value="ch.rgw.utility.tests@default:false"/>
+<setEntry value="ch.rgw.utility@default:default"/>
+<setEntry value="jaxb-api-impl-import-java9@default:default"/>
+<setEntry value="org.osgi.framework.system.packages.extra@default:default"/>
+</setAttribute>
 <booleanAttribute key="show_selected_only" value="false"/>
 <booleanAttribute key="tracing" value="false"/>
 <booleanAttribute key="useCustomFeatures" value="false"/>
