@@ -152,37 +152,6 @@
 			</build>
 		</profile>
 		<profile>
-			<id>linux-x86</id>
-			<activation>
-				<os>
-					<name>Linux</name>
-					<arch>x86</arch>
-				</os>
-			</activation>
-			<properties>
-				<classifier>linux/gtk/x86</classifier>
-			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>target-platform-configuration</artifactId>
-						<version>${tycho.version}</version>
-						<configuration>
-							<pomDependencies>consider</pomDependencies>
-							<environments>
-								<environment>
-									<os>linux</os>
-									<ws>gtk</ws>
-									<arch>x86</arch>
-								</environment>
-							</environments>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
 			<id>macosx</id>
 			<activation>
 				<os>
@@ -229,11 +198,6 @@
 						<configuration>
 							<pomDependencies>consider</pomDependencies>
 							<environments>
-								<environment>
-									<os>linux</os>
-									<ws>gtk</ws>
-									<arch>x86</arch>
-								</environment>
 								<environment>
 									<os>linux</os>
 									<ws>gtk</ws>
