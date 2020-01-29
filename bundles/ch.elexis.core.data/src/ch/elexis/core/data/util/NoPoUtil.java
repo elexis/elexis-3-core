@@ -53,11 +53,13 @@ public class NoPoUtil {
 	 * @param identifiable
 	 * @return
 	 */
-	public static List<PersistentObject> loadAsPersistentObject(List<Identifiable> identifiables){
+	@SuppressWarnings("unchecked")
+	public static <T> List<T> loadAsPersistentObject(List<Identifiable> identifiables,
+		Class<T> type){
 		if (identifiables != null && !identifiables.isEmpty()) {
-			List<PersistentObject> ret = new ArrayList<>();
+			List<T> ret = new ArrayList<>();
 			for (Identifiable identifiable : identifiables) {
-				ret.add(loadAsPersistentObject(identifiable));
+				ret.add((T) loadAsPersistentObject(identifiable));
 			}
 			return ret;
 		}
