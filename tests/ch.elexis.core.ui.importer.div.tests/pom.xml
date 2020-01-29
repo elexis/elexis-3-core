@@ -1,6 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>ch.elexis.core</groupId>
@@ -19,7 +18,7 @@
 				<configuration>
 					<application>ch.elexis.core.application.ElexisApp</application>
 					<testClass>ch.elexis.importer.div.AllTests</testClass>
-					<argLine>${elexis.ui.test.vmargs} -DdoNotFailOnMissingOmnivore</argLine>
+					<argLine>${elexis.ui.test.vmargs} ${os-jvm-flags} -DdoNotFailOnMissingOmnivore</argLine>
 					<useUIThread>true</useUIThread>
 					<useUIHarness>true</useUIHarness>
 					<dependencies>
