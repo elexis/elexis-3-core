@@ -23,6 +23,7 @@ import ch.elexis.core.findings.IAllergyIntolerance;
 import ch.elexis.core.findings.IClinicalImpression;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
+import ch.elexis.core.findings.IDocumentReference;
 import ch.elexis.core.findings.IEncounter;
 import ch.elexis.core.findings.IFamilyMemberHistory;
 import ch.elexis.core.findings.IFinding;
@@ -109,9 +110,13 @@ public class ModelUtil {
 	public static void setCodingsToConcept(CodeableConcept codeableConcept, List<ICoding> coding){
 		codeableConcept.getCoding().clear();
 		for (ICoding iCoding : coding) {
-			codeableConcept.addCoding(
-				new Coding(iCoding.getSystem(), iCoding.getCode(), iCoding.getDisplay()));
+			setCodingToConcept(codeableConcept, iCoding);
 		}
+	}
+
+	public static void setCodingToConcept(CodeableConcept codeableConcept, ICoding iCoding){
+		codeableConcept.addCoding(
+			new Coding(iCoding.getSystem(), iCoding.getCode(), iCoding.getDisplay()));
 	}
 	
 	public static List<ICoding> getCodingsFromConcept(CodeableConcept codeableConcept){
@@ -304,6 +309,12 @@ public class ModelUtil {
 			fhirClinicalImpression.setId(
 				new IdType(fhirClinicalImpression.getClass().getSimpleName(), created.getId()));
 			ModelUtil.saveResource(fhirClinicalImpression, created);
+		} else if (type.equals(IDocumentReference.class)) {
+			org.hl7.fhir.dstu3.model.DocumentReference fhirDocumentReference =
+				new org.hl7.fhir.dstu3.model.DocumentReference();
+			fhirDocumentReference.setId(
+				new IdType(fhirDocumentReference.getClass().getSimpleName(), created.getId()));
+			ModelUtil.saveResource(fhirDocumentReference, created);
 		} else {
 			LoggerFactory.getLogger(ModelUtil.class)
 				.error("Could not initialize unknown type [" + type + "]");

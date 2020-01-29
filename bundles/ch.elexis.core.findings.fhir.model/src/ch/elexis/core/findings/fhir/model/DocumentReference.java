@@ -2,12 +2,14 @@ package ch.elexis.core.findings.fhir.model;
 
 import java.util.Optional;
 
+import org.hl7.fhir.dstu3.model.DomainResource;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 
 import ca.uhn.fhir.model.primitive.IdDt;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IDocumentReference;
+import ch.elexis.core.findings.util.fhir.accessor.DocumentReferenceAccessor;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IXid;
 
@@ -15,7 +17,7 @@ public class DocumentReference
 		extends AbstractFindingModelAdapter<ch.elexis.core.jpa.entities.DocumentReference>
 		implements IDocumentReference {
 	
-	//	private DocumentReferenceAccessor accessor = new DocumentReferenceAccessor();
+	private DocumentReferenceAccessor accessor = new DocumentReferenceAccessor();
 	
 	public DocumentReference(ch.elexis.core.jpa.entities.DocumentReference entity){
 		super(entity);
@@ -69,37 +71,49 @@ public class DocumentReference
 	
 	@Override
 	public ICoding getDocumentClass(){
-		// TODO Auto-generated method stub
-		return null;
+		return loadResource().map(i -> accessor.getDocumentClass((DomainResource) i)).get().stream()
+			.findFirst().orElse(null);
 	}
 	
 	@Override
 	public void setDocumentClass(ICoding coding){
-		// TODO Auto-generated method stub
-		
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			accessor.setDocumentClass((DomainResource) resource.get(), coding);
+			saveResource(resource.get());
+		}
 	}
 	
 	@Override
 	public ICoding getPracticeSetting(){
-		// TODO Auto-generated method stub
-		return null;
+		return loadResource().map(i -> accessor.getPracticeSetting((DomainResource) i)).get()
+			.stream().findFirst().orElse(null);
 	}
 	
 	@Override
 	public void setPracticeSetting(ICoding coding){
-		// TODO Auto-generated method stub
-		
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			accessor.setPracticeSetting((DomainResource) resource.get(), coding);
+			saveResource(resource.get());
+		}
 	}
 	
 	@Override
 	public ICoding getFacilityType(){
-		// TODO Auto-generated method stub
-		return null;
+		return loadResource()
+			.map(i -> accessor.getFacilityType((DomainResource) i)).get().stream().findFirst()
+			.orElse(null);
+		
 	}
 	
 	@Override
 	public void setFacilityType(ICoding coding){
-		// TODO Auto-generated method stub
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			accessor.setFacilityType((DomainResource) resource.get(), coding);
+			saveResource(resource.get());
+		}
 		
 	}
 	
