@@ -1,6 +1,7 @@
 package ch.elexis.core.jpa.model.adapter;
 
 import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,15 +29,20 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEvent;
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.jpa.entities.DBLog;
 import ch.elexis.core.jpa.entities.EntityWithDeleted;
 import ch.elexis.core.jpa.entities.EntityWithId;
+import ch.elexis.core.jpa.model.service.holder.ContextServiceHolder;
+import ch.elexis.core.jpa.model.service.holder.StoreToStringServiceHolder;
 import ch.elexis.core.model.Deleteable;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.INativeQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.rgw.tools.net.NetTool;
 
 public abstract class AbstractModelService implements IModelService {
 	
@@ -336,6 +342,7 @@ public abstract class AbstractModelService implements IModelService {
 	public void delete(Deleteable deletable){
 		deletable.setDeleted(true);
 		save((Identifiable) deletable);
+		createDBLog((Identifiable) deletable);
 		postEvent(ElexisEventTopics.EVENT_DELETE, deletable);
 	}
 	
@@ -348,10 +355,36 @@ public abstract class AbstractModelService implements IModelService {
 				identifiables.add((Identifiable) item);
 			});
 			save(identifiables);
-			
 			identifiables.forEach(item -> {
+				createDBLog(item);
 				postEvent(ElexisEventTopics.EVENT_DELETE, item);
 			});
+		}
+	}
+	
+	/**
+	 * Creates a db log uses the active transaction if exists otherwise creates a new one
+	 * 
+	 * @param identifiable
+	 */
+	private void createDBLog(Identifiable identifiable){
+		DBLog dbLog = new DBLog();
+		dbLog.setUserId(
+			ContextServiceHolder.getActiveUserContact().map(IContact::getId).orElse("?"));
+		dbLog.setOid(
+			StoreToStringServiceHolder.getStoreToString(identifiable).orElse(identifiable.getId()));
+		dbLog.setTyp(DBLog.Type.DELETE);
+		dbLog.setDatum(LocalDate.now());
+		dbLog.setStation(Optional.ofNullable(NetTool.hostname).orElse("?"));
+		
+		EntityManager em = getEntityManager(false);
+		if (!em.getTransaction().isActive()) {
+			em.getTransaction().begin();
+			em.merge(dbLog);
+			em.getTransaction().commit();
+		} else {
+			// use active transaction
+			em.merge(dbLog);
 		}
 	}
 	
