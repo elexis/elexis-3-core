@@ -84,4 +84,29 @@ public class NoPoUtil {
 		}
 		return (T[]) Array.newInstance(type, 0);
 	}
+	
+	/**
+	 * Load {@link Identifiable} implementations for the provided {@link PersistentObject}s using
+	 * the {@link IStoreToStringService}.
+	 * 
+	 * @param <T>
+	 * @param persistentObjects
+	 * @param type
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> List<T> loadAsIdentifiable(List<PersistentObject> persistentObjects,
+		Class<T> type){
+		if (persistentObjects != null && !persistentObjects.isEmpty()) {
+			List<T> ret = new ArrayList<>();
+			for (PersistentObject persistentObject : persistentObjects) {
+				StoreToStringServiceHolder.get().loadFromString(persistentObject.storeToString())
+					.ifPresent(identifiable -> {
+						ret.add((T) identifiable);
+					});
+			}
+			return ret;
+		}
+		return Collections.emptyList();
+	}
 }

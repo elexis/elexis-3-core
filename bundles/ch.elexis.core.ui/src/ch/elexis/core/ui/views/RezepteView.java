@@ -53,6 +53,7 @@ import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.data.interfaces.IOutputter;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IRecipe;
@@ -554,12 +555,14 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 	
 	private static class RezeptContentProvider implements IStructuredContentProvider {
 		
+		@SuppressWarnings("unchecked")
 		public Object[] getElements(final Object inputElement){
 			Rezept rp = (Rezept) ElexisEventDispatcher.getSelected(Rezept.class);
 			if (rp == null) {
 				return new Prescription[0];
 			}
-			List<Prescription> list = rp.getLines();
+			List<IPrescription> list = NoPoUtil.loadAsIdentifiable(
+				(List<PersistentObject>) (List<?>) rp.getLines(), IPrescription.class);
 			return list.toArray();
 		}
 		
@@ -575,8 +578,8 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 		
 		@Override
 		public String getText(final Object element){
-			if (element instanceof Prescription) {
-				Prescription z = (Prescription) element;
+			if (element instanceof IPrescription) {
+				IPrescription z = (IPrescription) element;
 				return z.getLabel();
 			}
 			return "?"; //$NON-NLS-1$
