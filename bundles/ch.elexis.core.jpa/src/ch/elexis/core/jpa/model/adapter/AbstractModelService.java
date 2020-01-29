@@ -377,7 +377,7 @@ public abstract class AbstractModelService implements IModelService {
 		dbLog.setDatum(LocalDate.now());
 		dbLog.setStation(Optional.ofNullable(NetTool.hostname).orElse("?"));
 		
-		EntityManager em = getEntityManager(false);
+		EntityManager em = getEntityManager(true);
 		if (!em.getTransaction().isActive()) {
 			em.getTransaction().begin();
 			em.merge(dbLog);
