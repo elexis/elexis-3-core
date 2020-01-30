@@ -113,15 +113,22 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 	
 	private Optional<IEncounter> getKonsultation(IPatient patient){
 		IEncounter kons = EncounterServiceHolder.get().getLatestEncounter(patient).orElse(null);
-		
 		boolean editable = EncounterServiceHolder.get().isEditable(kons);
-		if (kons == null || !editable || hasToBeToday(kons) || !isOnlyOneKonsToday(patient)) {
+		
+		boolean valHasToBeToday = hasToBeToday(kons);
+		boolean valIsOnlyOneKonsToday = isOnlyOneKonsToday(patient);
+		
+		if (kons == null || !editable || valHasToBeToday || !valIsOnlyOneKonsToday) {
 			
 			if (encounterSelector != null) {
 				String konsId = encounterSelector.createOrOpenConsultation(patient);
 				if (konsId != null) {
 					return coreModelService.load(konsId, IEncounter.class);
 				}
+			} else {
+				logger.warn(
+					"encounterSelector==null: kons={}, editable={}, hasToBeToday={}, isOnlyOneKonsToday={}",
+					kons, editable, valHasToBeToday, valIsOnlyOneKonsToday);
 			}
 			
 		}
