@@ -81,7 +81,7 @@ public class TaskServiceImpl implements ITaskService {
 	}
 	
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, bind = "bindRunnableWithContextFactory", unbind = "unbindRunnableWithContextFactory")
-	private List<IIdentifiedRunnableFactory> runnableWithContextFactories;
+	private volatile List<IIdentifiedRunnableFactory> runnableWithContextFactories;
 	
 	/**
 	 * do not execute these instances, they are used for documentation listing only

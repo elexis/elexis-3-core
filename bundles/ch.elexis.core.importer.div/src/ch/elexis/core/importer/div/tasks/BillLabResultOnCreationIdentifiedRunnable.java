@@ -24,6 +24,7 @@ import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
+import ch.elexis.core.model.tasks.SerializableBoolean;
 import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.services.ICodeElementService;
 import ch.elexis.core.services.ICodeElementService.ContextKeys;
@@ -257,8 +258,8 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 		Map<String, Serializable> defaultRunContext = new HashMap<>();
 		defaultRunContext.put(RunContextParameter.IDENTIFIABLE_ID,
 			RunContextParameter.VALUE_MISSING_REQUIRED);
-		defaultRunContext.put(Parameters.ADDCONS_SAMEDAY, Boolean.TRUE.toString());
-		defaultRunContext.put(Parameters.ADDCONS, Boolean.FALSE.toString());
+		defaultRunContext.put(Parameters.ADDCONS, Boolean.FALSE);
+		defaultRunContext.put(Parameters.ADDCONS_SAMEDAY, Boolean.TRUE);
 		return defaultRunContext;
 	}
 	
@@ -273,18 +274,8 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 				"LabResult [" + labresultId + "] could not be loaded");
 		}
 		
-		Serializable value = runContext.get(Parameters.ADDCONS);
-		if(value instanceof Boolean) {
-			billAddCons = (boolean) value;
-		} else if(value instanceof String) {
-			billAddCons = Boolean.valueOf((String) value);			
-		}
-		value = runContext.get(Parameters.ADDCONS_SAMEDAY);
-		if (value instanceof Boolean) {
-			billAddConsSameDay = (boolean) value;
-		} else if (value instanceof String) {
-			billAddConsSameDay = Boolean.valueOf((String) value);
-		}
+		billAddCons = SerializableBoolean.valueOf(runContext, Parameters.ADDCONS);
+		billAddConsSameDay = SerializableBoolean.valueOf(runContext, Parameters.ADDCONS_SAMEDAY);
 		
 		ILabResult labResult = _labResult.get();
 		
