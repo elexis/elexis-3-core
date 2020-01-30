@@ -70,6 +70,7 @@
 <setEntry value="org.apache.felix.scr@1:true"/>
 <setEntry value="org.apache.httpcomponents.httpclient@default:default"/>
 <setEntry value="org.apache.httpcomponents.httpcore@default:default"/>
+<setEntry value="org.beanshell.bsh@default:default"/>
 <setEntry value="org.bouncycastle.bcprov@default:default"/>
 <setEntry value="org.eclipse.ant.core@default:default"/>
 <setEntry value="org.eclipse.core.contenttype@default:default"/>
@@ -121,6 +122,7 @@
 <setEntry value="ch.elexis.core.findings.util@default:default"/>
 <setEntry value="ch.elexis.core.findings@default:default"/>
 <setEntry value="ch.elexis.core.hapi.fhir@default:default"/>
+<setEntry value="ch.elexis.core.jcifs@default:default"/>
 <setEntry value="ch.elexis.core.jpa.datasource@3:true"/>
 <setEntry value="ch.elexis.core.jpa.entities.test@default:false"/>
 <setEntry value="ch.elexis.core.jpa.entities@3:true"/>
@@ -130,7 +132,11 @@
 <setEntry value="ch.elexis.core.l10n@default:default"/>
 <setEntry value="ch.elexis.core.logback.rocketchat@default:false"/>
 <setEntry value="ch.elexis.core.logging.default_configuration@default:false"/>
+<setEntry value="ch.elexis.core.model@default:default"/>
+<setEntry value="ch.elexis.core.services@default:default"/>
 <setEntry value="ch.elexis.core@default:default"/>
+<setEntry value="ch.elexis.omnivore.model@default:default"/>
+<setEntry value="ch.elexis.omnivore@default:default"/>
 <setEntry value="ch.rgw.utility.tests@default:false"/>
 <setEntry value="ch.rgw.utility@default:default"/>
 <setEntry value="jaxb-api-impl-import-java9@default:false"/>

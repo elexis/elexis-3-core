@@ -1,5 +1,6 @@
 package ch.elexis.core.findings;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -11,6 +12,7 @@ import org.junit.Test;
 
 import ch.elexis.core.findings.codings.ValueSetServiceComponent;
 import ch.elexis.core.findings.test.AllTests;
+import ch.elexis.core.model.IDocument;
 
 public class DocumentReferenceTest {
 	
@@ -51,5 +53,27 @@ public class DocumentReferenceTest {
 		assertTrue(practiceSettingValueSet.containsKey(reloaded.getPracticeSetting().getCode()));
 		assertTrue(documentClassValueSet.containsKey(reloaded.getDocumentClass().getCode()));
 		assertTrue(facilityTypeValueSet.containsKey(reloaded.getFacilityType().getCode()));
+	}
+	
+	@Test
+	public void setDocument(){
+		IDocumentReference reference =
+			FindingsServiceComponent.getService().create(IDocumentReference.class);
+		assertNotNull(reference);
+		reference.setPatientId(AllTests.PATIENT_ID);
+		
+		IDocument document =
+			DocumentStoreComponent.getService().createDocument(AllTests.PATIENT_ID, "test", "test");
+		
+		reference.setDocument(document);
+		FindingsServiceComponent.getService().saveFinding(reference);
+		
+		IDocumentReference reloaded = FindingsServiceComponent.getService()
+			.findById(reference.getId(), IDocumentReference.class)
+			.orElseThrow(() -> new IllegalStateException("IDocumentReference not found"));
+		
+		IDocument reloadedDocument = reloaded.getDocument();
+		assertNotNull(reloadedDocument);
+		assertEquals(document.getId(), reloadedDocument.getId());
 	}
 }
