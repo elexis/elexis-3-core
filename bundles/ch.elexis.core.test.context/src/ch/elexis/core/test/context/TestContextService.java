@@ -22,6 +22,7 @@ public class TestContextService implements IContextService {
 				return new TestContext();
 			}
 		};
+		contexts = new ConcurrentHashMap<String, TestContext>();
 	}
 	
 	private ConcurrentHashMap<String, TestContext> contexts;

@@ -49,6 +49,8 @@ public class TestDatabaseInitializer {
 	
 	private static boolean isDbInitialized = false;
 	
+	private static IUser user;
+	
 	private static boolean isPatientInitialized = false;
 	private static IPatient patient;
 	
@@ -359,7 +361,7 @@ public class TestDatabaseInitializer {
 			mandant.setUser(true);
 			modelService.save(mandant);
 			
-			IUser user = new IUserBuilder(modelService, "tst", mandantPerson).buildAndSave();
+			user = new IUserBuilder(modelService, "tst", mandantPerson).buildAndSave();
 			Optional<IRole> doctorRole = modelService.load("doctor", IRole.class);
 			if (doctorRole.isPresent()) {
 				user.addRole(doctorRole.get());
@@ -374,6 +376,10 @@ public class TestDatabaseInitializer {
 	
 	public static IMandator getMandant(){
 		return mandant;
+	}
+	
+	public static IUser getUser(){
+		return user;
 	}
 	
 	/**
