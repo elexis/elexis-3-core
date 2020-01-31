@@ -3,6 +3,8 @@ package ch.elexis.core.importer.div.importers.multifile;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +56,25 @@ public class MultiFileParser implements IMultiFileParser {
 		}
 	}
 	
+	/**
+	 * Can be overridden to change order of file import from directory.
+	 * 
+	 * @param iVirtualFilesystemHandles
+	 * @return
+	 */
+	protected IVirtualFilesystemHandle[] sortListHandles(
+		IVirtualFilesystemHandle[] iVirtualFilesystemHandles){
+		Arrays.parallelSort(iVirtualFilesystemHandles,
+			new Comparator<IVirtualFilesystemHandle>() {
+				
+				@Override
+				public int compare(IVirtualFilesystemHandle left, IVirtualFilesystemHandle right){
+					return left.getName().compareTo(right.getName());
+				}
+			});
+		return iVirtualFilesystemHandles;
+	}
+	
 	@Override
 	public Result<Object> importFromHandle(IVirtualFilesystemHandle fileHandle,
 		IFileImportStrategyFactory importStrategyFactory, HL7Parser hl7parser,
@@ -70,7 +91,7 @@ public class MultiFileParser implements IMultiFileParser {
 			// directory import
 			Result<Object> results = new Result<>();
 			try {
-				IVirtualFilesystemHandle[] listHandles = fileHandle.listHandles();
+				IVirtualFilesystemHandle[] listHandles = sortListHandles(fileHandle.listHandles());
 				for (IVirtualFilesystemHandle childHandle : listHandles) {
 					if("hl7".equalsIgnoreCase(childHandle.getExtension())) {
 						Result<Object> importFromHandle = importFromHandle(childHandle,

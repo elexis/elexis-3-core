@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.importer.div.service.holder.LabImportUtilHolder;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.ILaboratory;
@@ -63,6 +64,12 @@ public class HL7Parser {
 	private ILabContactResolver labContactResolver;
 	private ImportHandler importHandler;
 	private boolean importEncapsulatedData;
+	
+	public HL7Parser(String mylab, HL7PatientResolver patientResolver, ImportHandler importHandler,
+		ILabContactResolver labContactResolver, boolean importEncapsulatedData){
+		this(mylab, patientResolver, LabImportUtilHolder.get(), importHandler, labContactResolver,
+			importEncapsulatedData);
+	}
 	
 	public HL7Parser(String mylab, HL7PatientResolver patientResolver, ILabImportUtil labImportUtil,
 		ImportHandler importHandler, ILabContactResolver labContactResolver,

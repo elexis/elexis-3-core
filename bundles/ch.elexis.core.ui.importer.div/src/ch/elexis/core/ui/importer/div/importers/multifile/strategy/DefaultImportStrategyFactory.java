@@ -33,6 +33,8 @@ public class DefaultImportStrategyFactory extends BasicFileImportStrategyFactory
 	
 	private ILabContactResolver labContactResolver;
 	
+	private String pdfImportCategory;
+	
 	@Override
 	public Map<IVirtualFilesystemHandle, IFileImportStrategy> createImportStrategyMap(IVirtualFilesystemHandle hl7File){
 		Map<IVirtualFilesystemHandle, IFileImportStrategy> ret = super.createImportStrategyMap(hl7File);
@@ -48,6 +50,9 @@ public class DefaultImportStrategyFactory extends BasicFileImportStrategyFactory
 		if (!matchingFiles.isEmpty()) {
 			DefaultLabImportUiHandler defaultLabImportUiHandler = new DefaultLabImportUiHandler();
 			DefaultPDFImportStrategy pdfImportStrategy = new DefaultPDFImportStrategy(defaultLabImportUiHandler);
+			if (pdfImportCategory != null) {
+				pdfImportStrategy.setPDFImportCategory(pdfImportCategory);
+			}
 			for (IVirtualFilesystemHandle mFile : matchingFiles) {
 				String type = FileTool.getExtension(mFile.getName()).toLowerCase();
 				if ("pdf".equals(type)) {
@@ -72,6 +77,11 @@ public class DefaultImportStrategyFactory extends BasicFileImportStrategyFactory
 	@Override
 	public IFileImportStrategyFactory setMoveAfterImport(boolean value){
 		this.moveAfterImport = value;
+		return this;
+	}
+	
+	public IFileImportStrategyFactory setPDFImportCategory(String category){
+		this.pdfImportCategory = category;
 		return this;
 	}
 	

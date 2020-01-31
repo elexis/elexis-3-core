@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,6 +61,8 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 
 	private ImportHandler defaultImportHandler;
 
+	private String pdfImportCategory;
+	
 	public DefaultPDFImportStrategy(ImportHandler defaultImportHandler) {
 		this.defaultImportHandler = defaultImportHandler;
 	}
@@ -116,15 +119,23 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 
 		String titel = generatePDFTitle(fileHandle.getName(), dateTime);
 
-		TransientLabResult importResult = new TransientLabResult.Builder(patient, myLab, labItem, titel).date(dateTime)
-				.build(LabImportUtilHolder.get());
-
-		String orderId = LabImportUtilHolder.get().importLabResults(Collections.singletonList(importResult),
-				importHandler);
-
+		String orderId = "noorder";
+		
 		// add doc to document manager
 		try {
-			addDocument(titel, labName, dateTime, fileHandle, fileHandle.getName());
+			String category =
+				StringUtils.isNotBlank(pdfImportCategory) ? pdfImportCategory : labName;
+			if (addDocument(titel, category, dateTime, fileHandle, fileHandle.getName())) {
+				TransientLabResult importResult =
+					new TransientLabResult.Builder(patient, myLab, labItem, titel).date(dateTime)
+						.build(LabImportUtilHolder.get());
+				
+				orderId = LabImportUtilHolder.get()
+					.importLabResults(Collections.singletonList(importResult), importHandler);
+			} else {
+				log.error("pdf [{}] already present in document manager (omnivore)",
+					fileHandle.getAbsolutePath());
+			}
 		} catch (IOException | IllegalStateException | ElexisException e) {
 			log.error("error saving pdf [{}] in document manager (omnivore)",
 				fileHandle.getAbsolutePath(), e);
@@ -220,6 +231,11 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 				OmnivoreDocumentStoreServiceHolder.get().saveDocument(document, is);
 			}
 			return true;
+		} else {
+			log.warn("Overwriting existing lab document [" + title + "]");
+			try (InputStream is = fileHandle.openInputStream()) {
+				OmnivoreDocumentStoreServiceHolder.get().saveDocument(existing.get(0), is);
+			}
 		}
 		return false;
 	}
@@ -262,6 +278,11 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 	 */
 	public IFileImportStrategy setLabContactResolver(ILabContactResolver resolver) {
 		// currently no use for a contact resolver here
+		return this;
+	}
+	
+	public DefaultPDFImportStrategy setPDFImportCategory(String category){
+		this.pdfImportCategory = category;
 		return this;
 	}
 }
