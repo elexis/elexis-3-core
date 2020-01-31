@@ -21,6 +21,8 @@ import com.google.gson.reflect.TypeToken;
 
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
@@ -116,9 +118,9 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		getEntity().setState(state.getValue());
 		
 		if (TaskState.READY == state) {
-			String userId = ContextServiceHolder.get().getActiveUser().map(u -> u.getId())
-				.orElse("!!!NO-USER!!!");
-			logger.warn("activeUserId = {}, state = {}", userId, getState());
+			String userId = ContextServiceHolder.get().getActiveUser().map(u -> u.getId()).orElse(null);
+			String mandatorId = ContextServiceHolder.get().getActiveMandator().map(u -> u.getId()).orElse(null);
+			logger.warn("activeUserId = {}, activeMandatorId = {}, state = {}", userId, mandatorId, getState());
 		} else if (TaskState.FAILED == state) {
 			logger.warn("state = {}", getState());
 		} else if (TaskState.COMPLETED == state) {
@@ -203,7 +205,14 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		
 		Thread.currentThread().setName(taskId);
 		ITaskDescriptor originTaskDescriptor = getTaskDescriptor();
+		
 		ContextServiceHolder.get().setActiveUser(originTaskDescriptor.getOwner());
+		IContact user_assignedContact = originTaskDescriptor.getOwner().getAssignedContact();
+		if (user_assignedContact != null && user_assignedContact.isMandator()) {
+			IMandator mandator = CoreModelServiceHolder.get()
+				.load(user_assignedContact.getId(), IMandator.class).orElse(null);
+			ContextServiceHolder.get().setActiveMandator(mandator);
+		}
 		
 		getEntity().setRunAt(LocalDateTime.now());
 		setState(TaskState.READY);
@@ -255,6 +264,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 			setState(TaskState.FAILED);
 		} finally {
 			ContextServiceHolder.get().setActiveUser(null);
+			ContextServiceHolder.get().setActiveMandator(null);
 			
 			if (progressMonitor != null) {
 				progressMonitor.done();

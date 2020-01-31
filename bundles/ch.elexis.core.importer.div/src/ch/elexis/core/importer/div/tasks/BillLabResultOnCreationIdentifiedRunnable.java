@@ -113,12 +113,12 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 	
 	private Optional<IEncounter> getKonsultation(IPatient patient){
 		IEncounter kons = EncounterServiceHolder.get().getLatestEncounter(patient).orElse(null);
-		boolean editable = EncounterServiceHolder.get().isEditable(kons);
+		Result<IEncounter> editable = BillingServiceHolder.get().isEditable(kons);
 		
 		boolean failsEncounterHasToBeTodayConstraint = failsEncounterHasToBeTodayConstraint(kons);
 		boolean valIsOnlyOneKonsToday = isOnlyOneKonsToday(patient);
 		
-		if (kons == null || !editable || failsEncounterHasToBeTodayConstraint
+		if (kons == null || !editable.isOK() || failsEncounterHasToBeTodayConstraint
 			|| !valIsOnlyOneKonsToday) {
 			
 			if (encounterSelector != null) {
@@ -130,6 +130,9 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 				logger.warn(
 					"encounterSelector==null: kons={}, editable={}, failsEncounterHasToBeTodayConstraint={}, isOnlyOneKonsToday={}",
 					kons, editable, failsEncounterHasToBeTodayConstraint, valIsOnlyOneKonsToday);
+				if(!editable.isOK()) {
+					logger.warn("editable = false, message = "+editable);
+				}
 			}
 			
 		}
