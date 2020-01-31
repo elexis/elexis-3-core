@@ -10,8 +10,8 @@ Require-Bundle: ch.elexis.core.findings;bundle-version="1.0.0",
  org.eclipse.equinox.ds,
  org.junit,
  ch.elexis.core.coding;bundle-version="1.0.0",
- ch.elexis.omnivore.model;bundle-version="3.8.0",
- ch.elexis.core.model;bundle-version="1.0.0"
+ ch.elexis.core.model;bundle-version="1.0.0",
+ ch.elexis.core.data;bundle-version="3.8.0"
 Bundle-ActivationPolicy: lazy
 Import-Package: org.apache.commons.io;version="2.4.0"
 Service-Component: OSGI-INF/ch.elexis.core.findings.codings.ValueSetServiceComponent.xml,

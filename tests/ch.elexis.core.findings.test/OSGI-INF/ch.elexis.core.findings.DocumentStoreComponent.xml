@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="ch.elexis.core.findings.DocumentStoreComponent">
-   <reference bind="setIDocumentStore" interface="ch.elexis.core.services.IDocumentStore" name="IDocumentStore" target="(storeid=ch.elexis.data.store.omnivore)" unbind="unsetIDocumentStore"/>
+   <reference bind="setIDocumentStore" interface="ch.elexis.core.services.IDocumentStore" name="IDocumentStore" target="(storeid=ch.elexis.data.store.brief)" unbind="unsetIDocumentStore"/>
    <implementation class="ch.elexis.core.findings.DocumentStoreComponent"/>
 </scr:component>

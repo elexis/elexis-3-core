@@ -9,7 +9,7 @@ import ch.elexis.core.services.IDocumentStore;
 public class DocumentStoreComponent {
 	private static IDocumentStore documentStore;
 	
-	@Reference(target = "(storeid=ch.elexis.data.store.omnivore)")
+	@Reference(target = "(storeid=ch.elexis.data.store.brief)")
 	public void setIDocumentStore(IDocumentStore documentStore){
 		DocumentStoreComponent.documentStore = documentStore;
 	}
