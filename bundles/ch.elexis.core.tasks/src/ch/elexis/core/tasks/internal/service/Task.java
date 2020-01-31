@@ -23,10 +23,12 @@ import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable.ReturnParameter;
+import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.tasks.internal.model.service.ContextServiceHolder;
 import ch.elexis.core.tasks.internal.model.service.CoreModelServiceHolder;
 import ch.elexis.core.tasks.internal.model.service.TaskModelAdapterFactory;
@@ -118,9 +120,12 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		getEntity().setState(state.getValue());
 		
 		if (TaskState.READY == state) {
-			String userId = ContextServiceHolder.get().getActiveUser().map(u -> u.getId()).orElse(null);
-			String mandatorId = ContextServiceHolder.get().getActiveMandator().map(u -> u.getId()).orElse(null);
-			logger.warn("state = {}, activeUserId = {}, activeMandatorId = {}", getState(), userId, mandatorId);
+			String userId =
+				ContextServiceHolder.get().getActiveUser().map(u -> u.getId()).orElse(null);
+			String mandatorId =
+				ContextServiceHolder.get().getActiveMandator().map(u -> u.getId()).orElse(null);
+			logger.warn("state = {}, activeUserId = {}, activeMandatorId = {}", getState(), userId,
+				mandatorId);
 		} else if (TaskState.FAILED == state) {
 			logger.warn("state = {}", getState());
 		} else if (TaskState.COMPLETED == state) {
@@ -206,20 +211,25 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		Thread.currentThread().setName(taskId);
 		ITaskDescriptor originTaskDescriptor = getTaskDescriptor();
 		
-		ContextServiceHolder.get().setActiveUser(originTaskDescriptor.getOwner());
-		IContact user_assignedContact = originTaskDescriptor.getOwner().getAssignedContact();
-		if (user_assignedContact != null && user_assignedContact.isMandator()) {
-			IMandator mandator = CoreModelServiceHolder.get()
-				.load(user_assignedContact.getId(), IMandator.class).orElse(null);
-			ContextServiceHolder.get().setActiveMandator(mandator);
-		}
-		
-		getEntity().setRunAt(LocalDateTime.now());
-		setState(TaskState.READY);
-		
-		String runnableWithContextId = originTaskDescriptor.getIdentifiedRunnableId();
-		
 		try {
+			IUser owner = originTaskDescriptor.getOwner();
+			if (owner == null) {
+				throw new TaskException(TaskException.EXECUTION_REJECTED, "No task owner defined");
+			}
+			
+			ContextServiceHolder.get().setActiveUser(owner);
+			IContact user_assignedContact = owner.getAssignedContact();
+			if (user_assignedContact != null && user_assignedContact.isMandator()) {
+				IMandator mandator = CoreModelServiceHolder.get()
+					.load(user_assignedContact.getId(), IMandator.class).orElse(null);
+				ContextServiceHolder.get().setActiveMandator(mandator);
+			}
+			
+			getEntity().setRunAt(LocalDateTime.now());
+			setState(TaskState.READY);
+			
+			String runnableWithContextId = originTaskDescriptor.getIdentifiedRunnableId();
+			
 			IIdentifiedRunnable runnableWithContext =
 				TaskServiceHolder.get().instantiateRunnableById(runnableWithContextId);
 			
