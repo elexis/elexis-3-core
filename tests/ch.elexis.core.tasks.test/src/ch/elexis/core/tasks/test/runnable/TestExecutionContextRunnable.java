@@ -9,6 +9,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.slf4j.Logger;
 
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.TaskException;
@@ -46,6 +47,10 @@ public class TestExecutionContextRunnable implements IIdentifiedRunnable {
 		IUser user = contextService.getActiveUser()
 			.orElseThrow(() -> new TaskException(TaskException.EXECUTION_ERROR, "No active user"));
 		assertEquals("testUser", user.getId());
+		
+		IMandator mandator = contextService.getActiveMandator().orElseThrow(
+			() -> new TaskException(TaskException.EXECUTION_ERROR, "No active mandator"));
+		assertEquals(user.getAssignedContact().getId(), mandator.getId());
 		
 		return null;
 	}

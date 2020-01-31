@@ -24,7 +24,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import ch.elexis.core.common.ElexisEventTopics;
-import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.builder.IContactBuilder;
@@ -56,7 +55,7 @@ public class TaskServiceTest {
 	public TaskServiceTest(){
 		taskService = TaskServiceHolder.get();
 		IPerson contact = new IContactBuilder.PersonBuilder(CoreModelServiceHolder.get(), "first",
-			"last", LocalDate.now(), Gender.MALE).buildAndSave();
+			"last", LocalDate.now(), Gender.MALE).mandator().buildAndSave();
 		owner = new IUserBuilder(CoreModelServiceHolder.get(), "testUser", contact).buildAndSave();
 	}
 	

@@ -12,19 +12,23 @@ import ch.elexis.core.services.IContextService;
 @Component
 public class TestContextService implements IContextService {
 	
-	private IContext rootContext;
-	
-	private ConcurrentHashMap<String, TestContext> contexts;
+	private ThreadLocal<IContext> rootContext;
 	
 	@Activate
 	public void activate(){
-		rootContext = new TestContext();
-		contexts = new ConcurrentHashMap<>();
+		rootContext = new ThreadLocal<IContext>() {
+			@Override
+			protected IContext initialValue(){
+				return new TestContext();
+			}
+		};
 	}
+	
+	private ConcurrentHashMap<String, TestContext> contexts;
 	
 	@Override
 	public IContext getRootContext(){
-		return rootContext;
+		return rootContext.get();
 	}
 	
 	@Override
@@ -34,7 +38,7 @@ public class TestContextService implements IContextService {
 	
 	@Override
 	public IContext createNamedContext(String name){
-		TestContext context = new TestContext((TestContext) rootContext, name);
+		TestContext context = new TestContext((TestContext) rootContext.get(), name);
 		contexts.put(name, context);
 		return context;
 	}

@@ -14,4 +14,5 @@ Require-Bundle: org.junit,
 Bundle-ClassPath: lib/awaitility-3.1.6.jar,
  .
 Import-Package: ch.elexis.core.importer.div.tasks
-Service-Component: OSGI-INF/ch.elexis.core.importer.div.tasks.test.mock.MockOmnivoreDocumentStore.xml
+Service-Component: OSGI-INF/ch.elexis.core.importer.div.tasks.test.mock.MockOmnivoreDocumentStore.xml,
+ OSGI-INF/ch.elexis.core.tasks.test.runnable.TestExecutionContextIdentifiedRunnableFactory.xml

@@ -10,10 +10,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 
 import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.interfaces.IReferenceDataImporter;
-import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILaboratory;
-import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IUser;
@@ -21,7 +19,6 @@ import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.model.builder.ILabItemBuilder;
 import ch.elexis.core.model.builder.IUserBuilder;
-import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
@@ -32,13 +29,9 @@ public class Hl7ImporterTaskIntegrationTestUtil {
 	static IUser prepareEnvironment(){
 		IPerson _mandator = new IContactBuilder.PersonBuilder(CoreModelServiceHolder.get(), "Elisa",
 			"Mandatore", LocalDate.of(2000, 12, 1), Gender.FEMALE).mandator().buildAndSave();
-		IMandator mandator =
-			CoreModelServiceHolder.get().load(_mandator.getId(), IMandator.class).get();
-		ContextServiceHolder.get().setActiveMandator(mandator);
 		
 		IUser testUser =
 			new IUserBuilder(CoreModelServiceHolder.get(), "user_ctx", _mandator).buildAndSave();
-		ContextServiceHolder.get().setActiveUser(testUser);
 		
 		// the patient associated with the import file(s)
 		IPatient patient = new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(), "Hans",
