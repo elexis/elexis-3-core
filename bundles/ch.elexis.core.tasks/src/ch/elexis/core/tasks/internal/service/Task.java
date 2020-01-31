@@ -114,7 +114,12 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	
 	private void setState(TaskState state){
 		getEntity().setState(state.getValue());
-		if (TaskState.FAILED == state) {
+		
+		if (TaskState.READY == state) {
+			String userId = ContextServiceHolder.get().getActiveUser().map(u -> u.getId())
+				.orElse("!!!NO-USER!!!");
+			logger.warn("activeUserId = {}, state = {}", userId, getState());
+		} else if (TaskState.FAILED == state) {
 			logger.warn("state = {}", getState());
 		} else if (TaskState.COMPLETED == state) {
 			logger.info("state = {} result = [{}]", getState(), getResult());
@@ -197,11 +202,12 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	public void run(){
 		
 		Thread.currentThread().setName(taskId);
+		ITaskDescriptor originTaskDescriptor = getTaskDescriptor();
+		ContextServiceHolder.get().setActiveUser(originTaskDescriptor.getOwner());
 		
 		getEntity().setRunAt(LocalDateTime.now());
 		setState(TaskState.READY);
 		
-		ITaskDescriptor originTaskDescriptor = getTaskDescriptor();
 		String runnableWithContextId = originTaskDescriptor.getIdentifiedRunnableId();
 		
 		try {
@@ -222,11 +228,13 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 			Map<String, Serializable> result =
 				runnableWithContext.run(effectiveRunContext, progressMonitor, logger);
 			long endTimeMillis = System.currentTimeMillis();
-			if (result == null || !result.containsKey("runnableExecDuration")) {
+			if (result == null) {
+				result = new HashMap<String, Serializable>();
+			} else {
 				// returned map may be unmodifiable
-				result = new HashMap<>(result);
-				result.put("runnableExecDuration", Long.toString(endTimeMillis - beginTimeMillis));
+				result = new HashMap<String, Serializable>(result);
 			}
+			result.put("runnableExecDuration", Long.toString(endTimeMillis - beginTimeMillis));
 			
 			setResult(result);
 			TaskState exitState =
@@ -245,10 +253,12 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 				IIdentifiedRunnable.ReturnParameter.FAILED_TASK_EXCEPTION_MESSAGE, e.getMessage()));
 			logger.warn(e.getMessage(), e);
 			setState(TaskState.FAILED);
-		}
-		
-		if (progressMonitor != null) {
-			progressMonitor.done();
+		} finally {
+			ContextServiceHolder.get().setActiveUser(null);
+			
+			if (progressMonitor != null) {
+				progressMonitor.done();
+			}
 		}
 		
 	}

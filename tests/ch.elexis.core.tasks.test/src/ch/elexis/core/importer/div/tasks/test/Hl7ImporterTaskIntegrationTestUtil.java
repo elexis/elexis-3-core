@@ -29,7 +29,7 @@ import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class Hl7ImporterTaskIntegrationTestUtil {
 	
-	static void prepareEnvironment(){
+	static IUser prepareEnvironment(){
 		IPerson _mandator = new IContactBuilder.PersonBuilder(CoreModelServiceHolder.get(), "Elisa",
 			"Mandatore", LocalDate.of(2000, 12, 1), Gender.FEMALE).mandator().buildAndSave();
 		IMandator mandator =
@@ -47,9 +47,10 @@ public class Hl7ImporterTaskIntegrationTestUtil {
 		patient.setPatientNr("5083");
 		CoreModelServiceHolder.get().save(patient);
 		
-		ICoverage coverage = new ICoverageBuilder(CoreModelServiceHolder.get(), patient,
+		new ICoverageBuilder(CoreModelServiceHolder.get(), patient,
 			"testLabel", "testReason", "KVG").buildAndSave();
 		
+		return testUser;
 	}
 	
 	static ILaboratory configureLabAndLabItemBilling(){

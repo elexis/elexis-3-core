@@ -29,7 +29,6 @@ import ch.elexis.core.model.tasks.IIdentifiedRunnable.RunContextParameter;
 import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
-import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.LabServiceHolder;
 import ch.elexis.core.tasks.IdentifiedRunnableIdConstants;
@@ -78,7 +77,7 @@ public class Hl7ImporterTaskIntegrationTest {
 		final IVirtualFilesystemHandle hl7Archived = archiveDir.subFile(hl7.getName());
 		final IVirtualFilesystemHandle pdfArchived = archiveDir.subFile(pdf.getName());
 		
-		Hl7ImporterTaskIntegrationTestUtil.prepareEnvironment();
+		IUser owner = Hl7ImporterTaskIntegrationTestUtil.prepareEnvironment();
 		
 		Callable<Void> pushFiles = () -> {
 			pdf.copyTo(pdfTarget);
@@ -86,7 +85,7 @@ public class Hl7ImporterTaskIntegrationTest {
 			return null;
 		};
 		
-		localFilesystemImport(tempDirectoryVfs.toString(), pushFiles);
+		localFilesystemImport(owner, tempDirectoryVfs.toString(), pushFiles);
 		
 		// import was successful, files was moved to archive
 		System.out.println(tempDirectoryVfs.getAbsolutePath());
@@ -103,22 +102,20 @@ public class Hl7ImporterTaskIntegrationTest {
 	 * Test the automatic import of hl7 files. This is realized by chaining tasks. The first task
 	 * watches a given directory for changes, and on every file found it starts a subsequent task -
 	 * the importer. A third task, bills created LabResults
+	 * @param owner 
 	 * 
 	 * @param pushFiles
 	 * @param url
 	 * @throws Exception
 	 */
 	
-	public void localFilesystemImport(String urlString, Callable<Void> pushFiles) throws Exception{
-		
-		IUser activeUser = ContextServiceHolder.get().getActiveUser().get();
-		assertNotNull(activeUser);
+	public void localFilesystemImport(IUser owner, String urlString, Callable<Void> pushFiles) throws Exception{
 		
 		ILaboratory laboratory = Hl7ImporterTaskIntegrationTestUtil.configureLabAndLabItemBilling();
 		
-		ITaskDescriptor watcherTaskDescriptor = initDirectoryWatcherTask(activeUser, urlString);
-		ITaskDescriptor hl7ImporterTaskDescriptor = initHl7ImporterTask(activeUser);
-		ITaskDescriptor billLabResultsTaskDescriptor = initBillLabResultTask(activeUser);
+		ITaskDescriptor watcherTaskDescriptor = initDirectoryWatcherTask(owner, urlString);
+		ITaskDescriptor hl7ImporterTaskDescriptor = initHl7ImporterTask(owner);
+		ITaskDescriptor billLabResultsTaskDescriptor = initBillLabResultTask(owner);
 		
 		pushFiles.call();
 		

@@ -115,10 +115,11 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 		IEncounter kons = EncounterServiceHolder.get().getLatestEncounter(patient).orElse(null);
 		boolean editable = EncounterServiceHolder.get().isEditable(kons);
 		
-		boolean valHasToBeToday = hasToBeToday(kons);
+		boolean failsEncounterHasToBeTodayConstraint = failsEncounterHasToBeTodayConstraint(kons);
 		boolean valIsOnlyOneKonsToday = isOnlyOneKonsToday(patient);
 		
-		if (kons == null || !editable || valHasToBeToday || !valIsOnlyOneKonsToday) {
+		if (kons == null || !editable || failsEncounterHasToBeTodayConstraint
+			|| !valIsOnlyOneKonsToday) {
 			
 			if (encounterSelector != null) {
 				String konsId = encounterSelector.createOrOpenConsultation(patient);
@@ -127,8 +128,8 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 				}
 			} else {
 				logger.warn(
-					"encounterSelector==null: kons={}, editable={}, hasToBeToday={}, isOnlyOneKonsToday={}",
-					kons, editable, valHasToBeToday, valIsOnlyOneKonsToday);
+					"encounterSelector==null: kons={}, editable={}, failsEncounterHasToBeTodayConstraint={}, isOnlyOneKonsToday={}",
+					kons, editable, failsEncounterHasToBeTodayConstraint, valIsOnlyOneKonsToday);
 			}
 			
 		}
@@ -192,9 +193,10 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 		return false;
 	}
 	
-	private boolean hasToBeToday(IEncounter kons){
+	private boolean failsEncounterHasToBeTodayConstraint(IEncounter kons){
 		// see RochePreferencePage.LABORRESULTS_BILL_ADDCONS_SAMEDAY
 		if (billAddConsSameDay) {
+			// constraint is active
 			TimeTool konsDate = new TimeTool(kons.getDate());
 			if (!konsDate.isSameDay(new TimeTool())) {
 				return true;

@@ -13,7 +13,7 @@ public interface IIdentifiedRunnable {
 	
 	/**
 	 * Standardized key values for run parameters {@link Map} passed to the
-	 * {@link IIdentifiedRunnable}
+	 * {@link IIdentifiedRunnable}. Be sure to handle serialized boolean values using {@link SerializableBoolean}
 	 */
 	public final class RunContextParameter {
 		private RunContextParameter(){}

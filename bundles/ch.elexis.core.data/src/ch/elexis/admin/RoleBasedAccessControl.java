@@ -131,12 +131,14 @@ public class RoleBasedAccessControl extends AbstractAccessControl {
 	 * @return <code>true</code> if access granted
 	 */
 	public boolean request(@Nullable User user, @Nullable ACE ace){
-		if (ace == null)
+		if (ace == null) {
 			return false;
+		}
 		
 		if (user == null) {
 			IUser iUser = ContextServiceHolder.get().getActiveUser().orElse(null);
 			if (iUser == null) {
+				log.warn("ACE [{}]request on null user", ace, new Throwable());
 				return false;
 			}
 			if (!iUser.isInternal()) {
