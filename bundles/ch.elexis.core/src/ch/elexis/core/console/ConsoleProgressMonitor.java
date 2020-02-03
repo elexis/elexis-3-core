@@ -27,6 +27,10 @@ public class ConsoleProgressMonitor implements IProgressMonitor {
 	}
 
 	private void printStatus() {
+		if(name == null && worked == 0 && totalWork == 0) {
+			return;
+		}
+		
 		String msg = name + " [" + worked + "/" + totalWork + "]";
 		if (cancelled) {
 			msg = "-CNCLD- " + msg;

@@ -284,8 +284,6 @@ public class TaskServiceImpl implements ITaskService {
 				
 			}
 		}
-		
-		logger.debug("notify {}", task);
 	}
 	
 	private void sendMessageToOwner(ITask task, IUser owner, TaskState state){

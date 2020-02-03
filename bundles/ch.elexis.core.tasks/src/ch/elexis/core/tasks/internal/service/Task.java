@@ -69,7 +69,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		IProgressMonitor progressMonitor, Map<String, String> runContext){
 		this(new ch.elexis.core.jpa.entities.Task());
 		
-		taskId = ((taskDescriptor.isSingleton()) ? "Task-S-" : "Task-") + getId();
+		taskId = ((taskDescriptor.isSingleton()) ? "Task-S-" : "Task---") + getId();
 		
 		getEntity().setState(TaskState.DRAFT.getValue());
 		getEntity().setTriggerEvent(triggerType.getValue());
