@@ -23,7 +23,6 @@
 	<modules>
 		<!--
 		<module>ch.elexis.core.jpa.test</module>
-		<module>ch.elexis.core.importer.div.test</module>
 -->
 		<module>ch.elexis.core.jcifs.test</module>
 		<module>ch.elexis.core.jpa.entities.test</module>

@@ -4,11 +4,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import ch.elexis.core.importer.div.tasks.test.Hl7ImporterTaskIntegrationTest;
-
 @RunWith(Suite.class)
 @SuiteClasses({
-	TaskServiceTest.class, Hl7ImporterTaskIntegrationTest.class
+	TaskServiceTest.class
 })
 public class AllTests {
 	
