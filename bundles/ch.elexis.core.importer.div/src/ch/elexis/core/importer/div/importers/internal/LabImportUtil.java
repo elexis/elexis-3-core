@@ -197,8 +197,8 @@ public class LabImportUtil implements ILabImportUtil {
 		if (date == null && analyseTime == null && observationTime == null) {
 			throw new IllegalArgumentException("No timestamp specified.");
 		}
-		
-		IQuery<ILabResult> query = modelService.getQuery(ILabResult.class);
+
+		IQuery<ILabResult> query = modelService.getQuery(ILabResult.class, true, false);
 		query.and(ModelPackage.Literals.ILAB_RESULT__PATIENT, COMPARATOR.EQUALS, patient);
 		query.and(ModelPackage.Literals.ILAB_RESULT__ITEM, COMPARATOR.EQUALS, item);
 		if (date != null) {
