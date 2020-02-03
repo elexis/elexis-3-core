@@ -111,30 +111,38 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 		return true;
 	}
 	
-	private Optional<IEncounter> getKonsultation(IPatient patient){
+	/**
+	 * Retrieve a consultation that meets the requirements to be billed upon
+	 * 
+	 * @param patient
+	 * @return
+	 */
+	private Optional<IEncounter> getKonsultationValidated(IPatient patient){
 		IEncounter kons = EncounterServiceHolder.get().getLatestEncounter(patient).orElse(null);
-		Result<IEncounter> editable = BillingServiceHolder.get().isEditable(kons);
 		
-		boolean failsEncounterHasToBeTodayConstraint = failsEncounterHasToBeTodayConstraint(kons);
-		boolean valIsOnlyOneKonsToday = isOnlyOneKonsToday(patient);
-		
-		if (kons == null || !editable.isOK() || failsEncounterHasToBeTodayConstraint
-			|| !valIsOnlyOneKonsToday) {
-			
-			if (encounterSelector != null) {
-				String konsId = encounterSelector.createOrOpenConsultation(patient);
-				if (konsId != null) {
-					return coreModelService.load(konsId, IEncounter.class);
-				}
-			} else {
-				logger.warn(
-					"encounterSelector==null: kons={}, editable={}, failsEncounterHasToBeTodayConstraint={}, isOnlyOneKonsToday={}",
-					kons, editable, failsEncounterHasToBeTodayConstraint, valIsOnlyOneKonsToday);
-				if(!editable.isOK()) {
-					logger.warn("editable = false, message = "+editable);
+		if (kons != null) {
+			Result<IEncounter> editable = BillingServiceHolder.get().isEditable(kons);
+			boolean failsEncounterHasToBeTodayConstraint = true;
+			boolean valIsOnlyOneKonsToday = false;
+			if (editable.isOK()) {
+				failsEncounterHasToBeTodayConstraint = failsEncounterHasToBeTodayConstraint(kons);
+				valIsOnlyOneKonsToday = isOnlyOneKonsToday(patient);
+				if (!failsEncounterHasToBeTodayConstraint && valIsOnlyOneKonsToday) {
+					return Optional.ofNullable(kons);
 				}
 			}
-			
+			logger.debug(
+				"editable={},failsEncounterHasToBeTodayConstraint={},valIsOnlyOneKonsToday={}",
+				editable.isOK(), failsEncounterHasToBeTodayConstraint, valIsOnlyOneKonsToday);
+		}
+		
+		if (encounterSelector != null) {
+			String konsId = encounterSelector.createOrOpenConsultation(patient);
+			if (konsId != null) {
+				return coreModelService.load(konsId, IEncounter.class);
+			}
+		} else {
+			logger.warn("encounterSelector==null: kons={}", kons);
 		}
 		return Optional.ofNullable(kons);
 	}
@@ -326,9 +334,9 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 				IBillable tarif = getLabor2009TarifByCode(ealCode);
 				if (tarif != null) {
 					synchronized (addTarifLock) {
-						Optional<IEncounter> kons = getKonsultation(labResult.getPatient());
-						if (kons.isPresent()
-							&& EncounterServiceHolder.get().isEditable(kons.get())) {
+						Optional<IEncounter> kons =
+							getKonsultationValidated(labResult.getPatient());
+						if (kons.isPresent()) {
 							Result<?> addTarifToKons = addTarifToKons(tarif, kons.get());
 							return Collections.singletonMap(ReturnParameter.RESULT_DATA,
 								addTarifToKons.toString());
@@ -347,6 +355,8 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 					throw new TaskException(TaskException.EXECUTION_ERROR, errorString);
 				}
 			}
+		} else {
+			logger.debug("No mapping present or is not to charge");
 		}
 		// no mapping found or not to charge
 		return Collections.singletonMap(ReturnParameter.MARKER_DO_NOT_PERSIST, true);
