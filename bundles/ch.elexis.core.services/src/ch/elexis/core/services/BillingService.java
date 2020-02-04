@@ -31,6 +31,7 @@ import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.model.verrechnet.Constants;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
 
@@ -140,6 +141,7 @@ public class BillingService implements IBillingService {
 	@Override
 	public Result<IBilled> bill(IBillable billable, IEncounter encounter, double amount){
 		IBillable beforeAdjust = billable;
+		CoreModelServiceHolder.get().refresh(encounter, true);
 		logger.info("Billing [" + amount + "] of [" + billable + "] on [" + encounter + "]");
 		for (IBillableAdjuster iBillableAdjuster : billableAdjusters) {
 			billable = iBillableAdjuster.adjust(billable, encounter);

@@ -9,18 +9,20 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.ILaboratory;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.test.initializer.TestDatabaseInitializer;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-	AccessControlServiceTest.class, IAppointmentServiceTest.class, IConfigServiceTest.class,
-	IElexisEnvironmentServiceTest.class, ILabServiceTest.class, IStoreToStringServiceTest.class,
-	IStickerServiceTest.class, IAppointmentServiceTest.class, IUserServiceTest.class,
-	IMessageServiceTest.class, IVirtualFilesystemServiceTest.class, IXidServiceTest.class,
-	IMedicationServiceTest.class, ITextReplacementServiceTest.class
+	AccessControlServiceTest.class, IAppointmentServiceTest.class, IBillingServiceTest.class,
+	IConfigServiceTest.class, IElexisEnvironmentServiceTest.class, ILabServiceTest.class,
+	IStoreToStringServiceTest.class, IStickerServiceTest.class, IAppointmentServiceTest.class,
+	IUserServiceTest.class, IMessageServiceTest.class, IVirtualFilesystemServiceTest.class,
+	IXidServiceTest.class, IMedicationServiceTest.class, ITextReplacementServiceTest.class
 })
 public class AllServiceTests {
 	
@@ -56,5 +58,13 @@ public class AllServiceTests {
 	
 	public static IArticle getEigenartikel(){
 		return tdb.getArticle();
+	}
+	
+	public static ICoverage getCoverage(){
+		return tdb.getFall();
+	}
+	
+	public static IMandator getMandator(){
+		return tdb.getMandant();
 	}
 }

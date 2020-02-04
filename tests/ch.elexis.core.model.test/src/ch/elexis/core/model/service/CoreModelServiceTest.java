@@ -11,6 +11,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import javax.persistence.EntityManager;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,8 +21,10 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.IRelatedContact;
 import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQuery;
@@ -267,6 +271,36 @@ public class CoreModelServiceTest {
 		//modelService.refresh(dbP1); if automatically registerEntityChangeEvent is used we dont need this
 		assertEquals("Mustermann1", dbP1.getLastName());
 		assertEquals("Mustermann1", patient.getLastName());
+	}
+	
+	@Test
+	public void deepCascadedRefresh(){
+		IContact contact = modelService.create(IContact.class);
+		contact.setDescription1("testContact");
+		IRelatedContact relatedContact1 = modelService.create(IRelatedContact.class);
+		contact.addRelatedContact(relatedContact1);
+		IRelatedContact relatedContact2 = modelService.create(IRelatedContact.class);
+		contact.addRelatedContact(relatedContact2);
+		assertEquals(2, contact.getRelatedContacts().size());
+		modelService.save(contact);
+		
+		EntityManager em = (EntityManager) OsgiServiceUtil.getService(IElexisEntityManager.class)
+			.get().getEntityManager(true);
+		em.getTransaction().begin();
+		int executeUpdate =
+			em.createNativeQuery("UPDATE kontakt_adress_joint SET DELETED='1' WHERE ID='"
+				+ relatedContact2.getId() + "'")
+				.executeUpdate();
+		assertEquals(1, executeUpdate);
+		em.getTransaction().commit();
+		
+		// detached objects not updated
+		assertEquals(2, contact.getRelatedContacts().size());
+		assertTrue(contact.getRelatedContacts().contains(relatedContact2));
+		// refresh with deep cascaded refresh
+		modelService.refresh(contact, true);
+		assertEquals(1, contact.getRelatedContacts().size());
+		assertFalse(contact.getRelatedContacts().contains(relatedContact2));
 	}
 	
 	private class CreatePerson implements Runnable {

@@ -337,6 +337,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 	@Override
 	public IRelatedContact addRelatedContact(IRelatedContact relatedContact) {
 		relatedContact.setMyContact(this);
+		addChanged(relatedContact);
 		@SuppressWarnings("unchecked")
 		KontaktAdressJoint kaj = ((AbstractIdModelAdapter<KontaktAdressJoint>) relatedContact).getEntity();
 		getEntityMarkDirty().getRelatedContacts().put(kaj.getId(), kaj);

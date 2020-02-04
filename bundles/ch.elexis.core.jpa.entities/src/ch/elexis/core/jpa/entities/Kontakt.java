@@ -228,7 +228,7 @@ public class Kontakt extends AbstractEntityWithId
 	/**
 	 * Contacts we relate to (egress reference)
 	 */
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "myKontakt")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "myKontakt", cascade = CascadeType.REFRESH)
 	@MapKey(name = "id")
 	protected Map<String, KontaktAdressJoint> relatedContacts = new HashMap<>();
 
