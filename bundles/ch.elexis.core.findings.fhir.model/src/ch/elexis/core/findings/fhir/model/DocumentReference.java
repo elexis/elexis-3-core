@@ -9,6 +9,7 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IDocumentReference;
+import ch.elexis.core.findings.fhir.model.service.DocumentStoreHolder;
 import ch.elexis.core.findings.util.fhir.accessor.DocumentReferenceAccessor;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IXid;
@@ -59,14 +60,14 @@ public class DocumentReference
 	
 	@Override
 	public IDocument getDocument(){
-		// TODO Auto-generated method stub
-		return null;
+		return DocumentStoreHolder.getDocument(getEntity().getDocumentStoreId(),
+			getEntity().getDocumentId()).orElse(null);
 	}
 	
 	@Override
 	public void setDocument(IDocument document){
-		// TODO Auto-generated method stub
-		
+		getEntity().setDocumentStoreId(document.getStoreId());
+		getEntity().setDocumentId(document.getId());
 	}
 	
 	@Override
