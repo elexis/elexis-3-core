@@ -20,6 +20,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.Cache;
 import org.eclipse.persistence.annotations.Mutable;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
@@ -31,6 +32,7 @@ import ch.rgw.tools.VersionedResource;
 @Entity
 @Table(name = "behandlungen")
 @EntityListeners(EntityWithIdListener.class)
+@Cache(expiry = 15000)
 @NamedQuery(name = "Behandlung.fall", query = "SELECT b FROM Behandlung b WHERE b.deleted = false AND b.fall = :fall")
 public class Behandlung extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
