@@ -124,7 +124,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 				ContextServiceHolder.get().getActiveUser().map(u -> u.getId()).orElse(null);
 			String mandatorId =
 				ContextServiceHolder.get().getActiveMandator().map(u -> u.getId()).orElse(null);
-			logger.warn("state = {}, activeUserId = {}, activeMandatorId = {}", getState(), userId,
+			logger.info("state = {}, activeUserId = {}, activeMandatorId = {}", getState(), userId,
 				mandatorId);
 		} else if (TaskState.FAILED == state) {
 			logger.warn("state = {}", getState());
