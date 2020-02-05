@@ -23,4 +23,8 @@ public class ElexisEnvironmentPropertyConstants {
 	 * Elexis-Environment: Entry hostname of the elexis environment
 	 */
 	public static String EE_HOSTNAME = "EE_HOSTNAME";
+	/**
+	 * The organisation name, replace '__' with space
+	 */
+	public static String ORGANISATION_NAME = "ORGANISATION_NAME";
 }
