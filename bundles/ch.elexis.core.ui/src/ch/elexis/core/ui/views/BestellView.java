@@ -680,6 +680,7 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 		for (IArticle article : articlesToOrder) {
 			// SINGLE SHOT ORDER
 			actOrder.addEntry(article, null, null, 1);
+			CoreModelServiceHolder.get().save(actOrder);
 		}
 		if (tv != null && !tv.getControl().isDisposed()) {
 			tv.refresh();

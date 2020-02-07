@@ -22,8 +22,7 @@ public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 	public List<IOrderEntry> getEntries(){
 		INamedQuery<IOrderEntry> query =
 			ModelUtil.getModelService().getNamedQuery(IOrderEntry.class, "bestellung");
-		return query.executeWithParameters(
-			query.getParameterMap("bestellung", this));
+		return query.executeWithParameters(query.getParameterMap("bestellung", this));
 	}
 	
 	@Override
@@ -40,6 +39,7 @@ public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 		IOrderEntry orderEntry = findOrderEntry(stock, article);
 		if (orderEntry != null) {
 			orderEntry.setAmount(orderEntry.getAmount() + amount);
+			addChanged(orderEntry);
 		} else {
 			orderEntry = ModelUtil.getModelService().create(IOrderEntry.class);
 			orderEntry.setArticle(article);
@@ -63,7 +63,9 @@ public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 	private IOrderEntry findOrderEntry(IStock stock, IArticle article){
 		List<IOrderEntry> entries = getEntries();
 		for (IOrderEntry iOrderEntry : entries) {
-			if (iOrderEntry.getStock().equals(stock) && iOrderEntry.getArticle().equals(article)) {
+			if (((iOrderEntry.getStock() == null && stock == null)
+				|| (iOrderEntry.getStock().equals(stock)))
+				&& iOrderEntry.getArticle().equals(article)) {
 				return iOrderEntry;
 			}
 		}
