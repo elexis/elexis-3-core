@@ -103,6 +103,15 @@ public class TaskServiceImpl implements ITaskService {
 		if (runnableIdToFactoryMap == null) {
 			runnableIdToFactoryMap = new HashMap<>();
 		}
+		
+		try {
+			runnableWithContextFactory.initialize(this);
+		} catch (Exception e) {
+			logger.warn("Error binding [{}], skipping.",
+				runnableWithContextFactory.getClass().getName(), e);
+			return;
+		}
+		
 		List<IIdentifiedRunnable> providedRunnables =
 			runnableWithContextFactory.getProvidedRunnables();
 		for (IIdentifiedRunnable iIdentifiedRunnable : providedRunnables) {
