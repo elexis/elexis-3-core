@@ -19,7 +19,7 @@ public class EigenleistungLoader extends FlatDataLoader {
 	
 	public EigenleistungLoader(CommonViewer cv){
 		super(cv, new Query<Eigenleistung>(Eigenleistung.class));
-		setOrderFields(Eigenleistung.CODE, Eigenleistung.BEZEICHNUNG);
+		setOrderFields(Eigenleistung.BEZEICHNUNG, Eigenleistung.CODE);
 	}
 	
 }
