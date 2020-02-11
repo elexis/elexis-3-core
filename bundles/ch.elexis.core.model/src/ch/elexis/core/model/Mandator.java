@@ -29,6 +29,11 @@ public class Mandator extends Contact implements IMandator {
 	
 	@Override
 	public String getLabel(){
-		return StringUtils.defaultString(getDescription3());
+		if (StringUtils.isNotBlank(getDescription3())) {
+			return getDescription3();
+		} else {
+			return StringUtils.defaultString(getDescription1()) + " "
+				+ StringUtils.defaultString(getDescription2());
+		}
 	}
 }

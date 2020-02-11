@@ -612,10 +612,10 @@ public class KonsDetailView extends ViewPart
 			} else {
 				IContact biller = mandator.getBiller();
 				if (biller.getId().equals(mandator.getId())) {
-					sb.append("(").append(mandator.getDescription3()).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
+					sb.append("(").append(mandator.getLabel()).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
 				} else {
-					sb.append("(").append(mandator.getDescription3()).append("/").append( //$NON-NLS-1$ //$NON-NLS-2$
-						biller.getDescription3()).append(")"); //$NON-NLS-1$
+					sb.append("(").append(mandator.getLabel()).append("/").append( //$NON-NLS-1$ //$NON-NLS-2$
+						biller.getLabel()).append(")"); //$NON-NLS-1$
 				}
 				hlMandant
 					.setBackground(UiMandant.getColorForMandator(Mandant.load(mandator.getId())));
