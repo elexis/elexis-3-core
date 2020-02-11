@@ -141,7 +141,7 @@ public class IntegrationPostHandler {
 		if (responseCode == 200) {
 			return Status.OK_STATUS;
 		}
-		return new Status(Status.ERROR, "", "Error sending, with response code: " + responseCode);
+		return new Status(Status.ERROR, "ch.elexis.core.logback.rocketchat", "Error sending, with response code: " + responseCode);
 	}
 	
 }
