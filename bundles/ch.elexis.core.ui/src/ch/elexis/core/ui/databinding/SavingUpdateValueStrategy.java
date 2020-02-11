@@ -18,8 +18,9 @@ public class SavingUpdateValueStrategy<S, D> extends UpdateValueStrategy<S, D> {
 		this.autoSave = true;
 	}
 	
-	public void setAutoSave(boolean value){
+	public SavingUpdateValueStrategy setAutoSave(boolean value){
 		autoSave = value;
+		return this;
 	}
 	
 	@SuppressWarnings("rawtypes")
