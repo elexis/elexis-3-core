@@ -55,6 +55,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.ICodeElementBlock;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.builder.ICodeElementBlockBuilder;
 import ch.elexis.core.services.IQuery;
@@ -82,8 +83,11 @@ import ch.elexis.data.Mandant;
 
 public class BlockSelector extends CodeSelectorFactory {
 	protected static final String BLOCK_ONLY_FILTER_ENABLED = "blockselector/blockonlyfilter";
+	protected static final String BLOCK_FILTER_ONLY_MANDATOR =
+		"blockselector/blockfilteronlymandator";
 	
-	private IAction deleteAction, createAction, exportAction, copyAction, searchBlocksOnly;
+	private IAction deleteAction, createAction, exportAction, copyAction, searchBlocksOnly,
+			searchFilterMandator;
 	private CommonViewer cv;
 	private MenuManager mgr;
 	static SelectorPanelProvider slp;
@@ -150,7 +154,7 @@ public class BlockSelector extends CodeSelectorFactory {
 		}
 		
 		slp = new SelectorPanelProvider(lbName, true);
-		slp.addActions(createAction, exportAction, searchBlocksOnly);
+		slp.addActions(createAction, exportAction, searchBlocksOnly, searchFilterMandator);
 		ViewerConfigurer vc =
 			new ViewerConfigurer(new BlockContentProvider(this, cv),
 				new BlockTreeViewerItem.ColorizedLabelProvider(), slp,
@@ -276,6 +280,23 @@ public class BlockSelector extends CodeSelectorFactory {
 				CoreHub.userCfg.set(BLOCK_ONLY_FILTER_ENABLED, isChecked());
 			};
 		};
+		searchFilterMandator = new Action("Nur Blöcke des aktiven Mandanten", Action.AS_CHECK_BOX) {
+			{
+				setImageDescriptor(Images.IMG_PERSON.getImageDescriptor());
+				setToolTipText("Nur Blöcke des aktiven Mandanten");
+				setChecked(CoreHub.userCfg.get(BLOCK_FILTER_ONLY_MANDATOR, false));
+			}
+			
+			public void run(){
+				CoreHub.userCfg.set(BLOCK_FILTER_ONLY_MANDATOR, isChecked());
+				
+				if (cv.getConfigurer().getContentProvider() instanceof BlockContentProvider) {
+					BlockContentProvider blockContentProvider =
+						(BlockContentProvider) cv.getConfigurer().getContentProvider();
+					blockContentProvider.refreshViewer();
+				}
+			};
+		};
 	}
 	
 	public static class BlockContentProvider implements
@@ -328,12 +349,24 @@ public class BlockSelector extends CodeSelectorFactory {
 			}
 			query.orderBy("name", ORDER.ASC);
 			blockItemMap = new HashMap<>();
-			List<BlockTreeViewerItem> list = query.execute().stream().map(b -> {
+			List<BlockTreeViewerItem> list =
+				query.execute().stream().filter(b -> applyMandatorFilter(b)).map(b -> {
 				BlockTreeViewerItem item = BlockTreeViewerItem.of(b);
 				blockItemMap.put(b, item);
 				return item;
 			}).collect(Collectors.toList());
 			return list.toArray();
+		}
+		
+		private boolean applyMandatorFilter(ICodeElementBlock b){
+			if (selector.searchFilterMandator.isChecked()) {
+				IMandator mandator = ContextServiceHolder.get().getActiveMandator().orElse(null);
+				IMandator blockMandator = b.getMandator();
+				if (blockMandator != null && mandator != null) {
+					return blockMandator.getId().equals(mandator.getId());
+				}
+			}
+			return true;
 		}
 		
 		public void dispose(){

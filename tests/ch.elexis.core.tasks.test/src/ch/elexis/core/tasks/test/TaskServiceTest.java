@@ -32,6 +32,7 @@ import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.tasks.IdentifiedRunnableIdConstants;
 import ch.elexis.core.tasks.internal.model.service.CoreModelServiceHolder;
+import ch.elexis.core.tasks.internal.runnables.LogResultContextIdentifiedRunnable;
 import ch.elexis.core.tasks.internal.service.TaskServiceHolder;
 import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
@@ -69,6 +70,7 @@ public class TaskServiceTest {
 	public void before() throws TaskException{
 		rwcLogContext =
 			taskService.instantiateRunnableById(IdentifiedRunnableIdConstants.LOGRESULTCONTEXT);
+		assertTrue(rwcLogContext instanceof LogResultContextIdentifiedRunnable);
 	}
 	
 	private Callable<Boolean> taskDone(ITask task){
@@ -80,17 +82,17 @@ public class TaskServiceTest {
 			}
 		};
 	}
-	
+
 	/**
 	 * Check the context the runnable is executed in
 	 * 
 	 * @throws TaskException
 	 */
 	@Test
-	public void testRunnableExecutionContext() throws TaskException{
+	public void runnableExecutionContext() throws TaskException{
 		IIdentifiedRunnable testExecContextRunnable =
 			taskService.instantiateRunnableById(TestExecutionContextRunnable.ID);
-		assertNotNull(testExecContextRunnable);
+		assertTrue(testExecContextRunnable instanceof TestExecutionContextRunnable);
 		taskDescriptor = taskService.createTaskDescriptor(testExecContextRunnable);
 		
 		taskDescriptor.setSingleton(true);

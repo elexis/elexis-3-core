@@ -9,8 +9,8 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +26,10 @@ public class AddArticleToOrderHandler extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException{
 		IWorkbenchPage activePage =
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			
+			HandlerUtil.getActiveWorkbenchWindow(event).getActivePage();
+		// activate after BestellView usage, needed for selection provider
+		IWorkbenchPart activePart = activePage.getActivePart();
+		
 		List<IArticle> articlesToOrder = getArticlesToOrder(
 			HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection());
 		if (articlesToOrder.isEmpty()) {
@@ -43,6 +45,7 @@ public class AddArticleToOrderHandler extends AbstractHandler {
 			} else {
 				log.error("Cant't load BestellView to add articles to order");
 			}
+			activePage.activate(activePart);
 		} catch (PartInitException e) {
 			log.error("Cant't load BestellView to add articles to order", e);
 		}
@@ -60,20 +63,21 @@ public class AddArticleToOrderHandler extends AbstractHandler {
 	@SuppressWarnings("unchecked")
 	private List<IArticle> getArticlesToOrder(ISelection selection){
 		List<IArticle> articlesToOrder = new ArrayList<>();
-		
-		if (selection == null || selection.isEmpty()) {
-			return articlesToOrder;
-		}
-		
-		// add all selected articles to order list
-		IStructuredSelection structSelcection = (IStructuredSelection) selection;
-		List<MedicationTableViewerItem> mtvItems = structSelcection.toList();
-		for (MedicationTableViewerItem mtvItem : mtvItems) {
-			IPrescription p = mtvItem.getPrescription();
-			if (p != null) {
-				IArticle arti = p.getArticle();
-				if (arti != null) {
-					articlesToOrder.add(arti);
+		if (selection != null) {
+			if (selection == null || selection.isEmpty()) {
+				return articlesToOrder;
+			}
+			
+			// add all selected articles to order list
+			IStructuredSelection structSelcection = (IStructuredSelection) selection;
+			List<MedicationTableViewerItem> mtvItems = structSelcection.toList();
+			for (MedicationTableViewerItem mtvItem : mtvItems) {
+				IPrescription p = mtvItem.getPrescription();
+				if (p != null) {
+					IArticle arti = p.getArticle();
+					if (arti != null) {
+						articlesToOrder.add(arti);
+					}
 				}
 			}
 		}
