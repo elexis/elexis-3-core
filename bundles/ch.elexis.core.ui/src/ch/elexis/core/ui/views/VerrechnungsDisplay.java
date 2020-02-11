@@ -553,7 +553,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		if (billable instanceof Artikel) {
 			Artikel a = (Artikel) billable;
 			int abgabeEinheit = a.getAbgabeEinheit();
-			if (abgabeEinheit > 0 && abgabeEinheit < a.getPackungsGroesse()) {
+			if (abgabeEinheit > 0 && abgabeEinheit < Math.abs(a.getPackungsGroesse())) {
 				return true;
 			}
 		}
