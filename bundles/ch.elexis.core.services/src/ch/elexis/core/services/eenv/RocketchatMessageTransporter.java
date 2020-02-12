@@ -18,6 +18,7 @@ import org.osgi.service.component.annotations.Reference;
 
 import ch.elexis.core.eenv.IElexisEnvironmentService;
 import ch.elexis.core.model.message.TransientMessage;
+import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IMessageTransporter;
 import ch.elexis.core.services.internal.Bundle;
@@ -28,14 +29,14 @@ public class RocketchatMessageTransporter implements IMessageTransporter {
 	/**
 	 * The webhook integration token to use to send messages as station to rocketchat.
 	 */
-	public static final String CTX_ROCKETCHAT_STATION_INTEGRATION_TOKEN =
+	public static final String CFG_ROCKETCHAT_STATION_INTEGRATION_TOKEN =
 		"rocketchat-station-integration-token";
 	
 	@Reference
 	private IElexisEnvironmentService elexisEnvironmentService;
 	
 	@Reference
-	private IContextService contextService;
+	private IConfigService configService;
 	
 	@Override
 	public String getUriScheme(){
@@ -53,13 +54,12 @@ public class RocketchatMessageTransporter implements IMessageTransporter {
 	}
 	
 	private IStatus sendFromStationSender(TransientMessage message){
-		Optional<String> authorizationToken =
-			contextService.getNamed(CTX_ROCKETCHAT_STATION_INTEGRATION_TOKEN).map(Object::toString);
-		if (authorizationToken.isPresent()) {
+		String integrationToken =
+			configService.getLocal(CFG_ROCKETCHAT_STATION_INTEGRATION_TOKEN, null);
+		if (integrationToken != null) {
 			try {
-				URL integrationUrl =
-					new URL(elexisEnvironmentService.getRocketchatIntegrationBaseUrl()
-						+ authorizationToken.get());
+				URL integrationUrl = new URL(
+					elexisEnvironmentService.getRocketchatIntegrationBaseUrl() + integrationToken);
 				
 				String jsonMessage = prepareRocketchatMessage(message);
 				return send(integrationUrl, jsonMessage.getBytes());
@@ -70,8 +70,8 @@ public class RocketchatMessageTransporter implements IMessageTransporter {
 		}
 		
 		return new Status(IStatus.ERROR, Bundle.ID,
-			"No webhook integration token [" + CTX_ROCKETCHAT_STATION_INTEGRATION_TOKEN
-				+ "] found in root context or malformed url.");
+			"No webhook integration token [" + CFG_ROCKETCHAT_STATION_INTEGRATION_TOKEN
+				+ "] found in local config or malformed url.");
 	}
 	
 	private String prepareRocketchatMessage(TransientMessage message){
