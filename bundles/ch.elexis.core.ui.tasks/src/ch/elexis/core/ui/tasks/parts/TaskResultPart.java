@@ -25,7 +25,11 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.deferred.DeferredContentProvider;
+import org.eclipse.jface.viewers.deferred.SetModel;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -50,6 +54,7 @@ public class TaskResultPart implements IDoubleClickListener {
 	private Composite tableViewerComposite;
 	private Table tableResults;
 	private TableViewer tableViewerResults;
+	private SetModel inputModel;
 	
 	@PostConstruct
 	public void createControls(Composite parent, EMenuService menuService){
@@ -72,8 +77,8 @@ public class TaskResultPart implements IDoubleClickListener {
 		tableResults = tableViewerResults.getTable();
 		tableResults.setHeaderVisible(true);
 		tableResults.setLinesVisible(true);
-		LazyTaskResultContentProvider contentProvider =
-			new LazyTaskResultContentProvider(tableViewerResults);
+		DeferredContentProvider contentProvider =
+			new DeferredContentProvider(ITaskComparators.ofLastUpdate().reversed());
 		tableViewerResults.setContentProvider(contentProvider);
 		tableViewerResults.setUseHashlookup(true);
 		tableViewerResults.addDoubleClickListener(this);
@@ -97,6 +102,21 @@ public class TaskResultPart implements IDoubleClickListener {
 		TableColumn tblclmnLastupdate = tvcLastUpdate.getColumn();
 		tcLayout.setColumnData(tblclmnLastupdate, new ColumnPixelData(150, true, true));
 		tblclmnLastupdate.setText("Aktualisiert");
+		tblclmnLastupdate.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				tableResults.setSortColumn(tblclmnLastupdate);
+				if (tableResults.getSortDirection() == SWT.DOWN) {
+					contentProvider.setSortOrder(ITaskComparators.ofLastUpdate());
+					tableResults.setSortDirection(SWT.UP);
+				} else {
+					contentProvider.setSortOrder(ITaskComparators.ofLastUpdate().reversed());
+					tableResults.setSortDirection(SWT.DOWN);
+				}
+			}
+		});
+		tableResults.setSortColumn(tblclmnLastupdate);
+		tableResults.setSortDirection(SWT.DOWN);
 		
 		TableViewerColumn tvcOwner = new TableViewerColumn(tableViewerResults, SWT.NONE);
 		tvcOwner.setLabelProvider(new ColumnLabelProvider() {
@@ -136,8 +156,8 @@ public class TaskResultPart implements IDoubleClickListener {
 			}
 		});
 		TableColumn tblclmnTrigger = tvcTrigger.getColumn();
-		tcLayout.setColumnData(tblclmnTrigger, new ColumnPixelData(16, true, true));
-		tblclmnTrigger.setText("Auslöser");
+		tcLayout.setColumnData(tblclmnTrigger, new ColumnPixelData(18, true, true));
+		tblclmnTrigger.setText("Trigger");
 		
 		TableViewerColumn tvcTaskDescriptor = new TableViewerColumn(tableViewerResults, SWT.NONE);
 		tvcTaskDescriptor.setLabelProvider(new ColumnLabelProvider() {
@@ -154,6 +174,19 @@ public class TaskResultPart implements IDoubleClickListener {
 		TableColumn tblclmnTaskDescriptor = tvcTaskDescriptor.getColumn();
 		tcLayout.setColumnData(tblclmnTaskDescriptor, new ColumnPixelData(100, true, true));
 		tblclmnTaskDescriptor.setText("Vorlage");
+		tblclmnTaskDescriptor.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				tableResults.setSortColumn(tblclmnTaskDescriptor);
+				if (tableResults.getSortDirection() == SWT.DOWN) {
+					contentProvider.setSortOrder(ITaskComparators.ofTaskDescriptorId());
+					tableResults.setSortDirection(SWT.UP);
+				} else {
+					contentProvider.setSortOrder(ITaskComparators.ofTaskDescriptorId().reversed());
+					tableResults.setSortDirection(SWT.DOWN);
+				}
+			}
+		});
 		
 		tableViewerResults.addSelectionChangedListener(event -> {
 			IStructuredSelection selection = tableViewerResults.getStructuredSelection();
@@ -163,15 +196,18 @@ public class TaskResultPart implements IDoubleClickListener {
 		menuService.registerContextMenu(tableResults,
 			"ch.elexis.core.ui.tasks.popupmenu.tableresults");
 		
+		inputModel = new SetModel();
+		
 		refresh();
 	}
 	
 	public void refresh(){
+		inputModel.clear();
 		IQuery<ITask> taskQuery = TaskModelServiceHolder.get().getQuery(ITask.class);
 		List<ITask> results = taskQuery.execute();
+		inputModel.addAll(results);
 		// add filter
-		tableViewerResults.setInput(results);
-		tableViewerResults.setItemCount(results.size());
+		tableViewerResults.setInput(inputModel);
 	}
 	
 	@Focus

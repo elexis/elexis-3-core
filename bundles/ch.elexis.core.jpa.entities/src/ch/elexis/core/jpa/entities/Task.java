@@ -2,6 +2,7 @@ package ch.elexis.core.jpa.entities;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -41,7 +42,7 @@ public class Task extends AbstractEntityWithId implements EntityWithId, EntityWi
 	protected int triggerEvent = 0;
 	
 	@JoinColumn(name="descriptor")
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.REFRESH)
 	protected TaskDescriptor taskDescriptor;
 	
 	@Column
