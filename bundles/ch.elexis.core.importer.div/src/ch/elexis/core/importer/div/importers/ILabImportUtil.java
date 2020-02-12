@@ -108,7 +108,9 @@ public interface ILabImportUtil {
 	void updateLabResult(ILabResult iLabResult, TransientLabResult transientLabResult);
 	
 	/**
-	 * Find or set the {@link ILaboratory} this identifier is linked to via an {@link IXid}.
+	 * Find or set the {@link ILaboratory} this identifier is linked to via an {@link IXid}. If none
+	 * can be found use the {@link IContactResolver} to select the required contact. If a contact is
+	 * returned here, it will be be added the resp. Xid.
 	 * 
 	 * @param identifier
 	 * @param contactResolver
