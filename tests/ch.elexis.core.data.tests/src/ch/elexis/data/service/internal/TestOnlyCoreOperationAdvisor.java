@@ -4,9 +4,13 @@ import java.util.List;
 
 import javax.security.auth.login.LoginException;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
@@ -24,6 +28,13 @@ public class TestOnlyCoreOperationAdvisor implements ICoreOperationAdvisor {
 	
 	@Reference(cardinality = ReferenceCardinality.AT_LEAST_ONE)
 	private List<ILoginContributor> loginServices;
+	
+	private Logger logger;
+	
+	@Activate
+	public void activate(){
+		logger = LoggerFactory.getLogger(getClass());
+	}
 	
 	@Override
 	public void requestDatabaseConnectionConfiguration(){
@@ -45,14 +56,16 @@ public class TestOnlyCoreOperationAdvisor implements ICoreOperationAdvisor {
 	
 	@Override
 	public boolean openQuestion(String title, String message){
-		// TODO Auto-generated method stub
+		System.out
+			.println(getClass().getName() + "#openQuestion - answer=false title=[" + title + "]");
+		logger.warn("openQuestion - answer=false [{} - {}]", title, message);
 		return false;
 	}
 	
 	@Override
 	public void openInformation(String title, String message){
-		// TODO Auto-generated method stub
-		
+		System.out.println(getClass().getName() + "#openInformation - title=[" + title + "]");
+		logger.info("openInformation [{} - {}]", title, message);
 	}
 	
 	@Override
