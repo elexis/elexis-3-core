@@ -46,7 +46,15 @@ public class HL7ImporterIIdentifiedRunnable implements IIdentifiedRunnable {
 	 * run parameter: create laboratory if not exists, default: <code>false</code>
 	 */
 	public static final String RCP_BOOLEAN_CREATE_LABORATORY_IF_NOT_EXISTS = "createLaboratoryIfNotExists";
-
+	/**
+	 * run parameter: overwrite existing lab results, default: <code>true</code>
+	 */
+	public static final String RCP_BOOLEAN_OVERWRITE_EXISTING_RESULTS = "overwriteExistingResults";
+	/**
+	 * run parameter: import encapsulated data, default: <code>true</code>
+	 */
+	public static final String RCP_BOOLEAN_IMPORT_ENCAPSULATED_DATA = "importEncapsulatedData";
+	
 	/**
 	 * run parameter: move hl7 file after successful import, default:
 	 * <code>true</code>
@@ -81,6 +89,8 @@ public class HL7ImporterIIdentifiedRunnable implements IIdentifiedRunnable {
 		defaultRunContext.put(RCP_BOOLEAN_CREATE_PATIENT_IF_NOT_EXISTS, Boolean.FALSE);
 		defaultRunContext.put(RCP_BOOLEAN_CREATE_LABORATORY_IF_NOT_EXISTS, Boolean.TRUE);
 		defaultRunContext.put(RCP_BOOLEAN_MOVE_FILE_AFTER_IMPORT, Boolean.TRUE);
+		defaultRunContext.put(RCP_BOOLEAN_OVERWRITE_EXISTING_RESULTS, Boolean.TRUE);
+		defaultRunContext.put(RCP_BOOLEAN_IMPORT_ENCAPSULATED_DATA, Boolean.TRUE);
 		defaultRunContext.put(RCP_STRING_IMPORTER_LABNAME, "myLab");
 		return defaultRunContext;
 	}
@@ -91,20 +101,19 @@ public class HL7ImporterIIdentifiedRunnable implements IIdentifiedRunnable {
 
 		boolean bCreateLaboratoryIfNotExists = (boolean) context.get(RCP_BOOLEAN_CREATE_LABORATORY_IF_NOT_EXISTS);
 		boolean bMoveFile = (boolean) context.get(RCP_BOOLEAN_MOVE_FILE_AFTER_IMPORT);
+		boolean importEncData = (boolean) context.get(RCP_BOOLEAN_IMPORT_ENCAPSULATED_DATA);
+		boolean overwriteExistingResults = (boolean) context.get(RCP_BOOLEAN_OVERWRITE_EXISTING_RESULTS);
 		String urlString = (String) context.get(RunContextParameter.STRING_URL);
 		String labName = (String) context.get(RCP_STRING_IMPORTER_LABNAME);
 
-		// TODO make configurable
-		final boolean CFG_IMPORT_ENCDATA = false;
-
-		MyImportHandler myImportHandler = new MyImportHandler();
-		HL7ImporterLabContactResolver labContactResolver = new HL7ImporterLabContactResolver(coreModelService, logger,
+		MyImportHandler myImportHandler = new MyImportHandler(logger, overwriteExistingResults);
+		HL7ImporterLabContactResolver labContactResolver = new HL7ImporterLabContactResolver(coreModelService, labimportUtil, logger,
 				bCreateLaboratoryIfNotExists);
 		IFileImportStrategyFactory importStrategyFactory = new HL7ImportStrategyFactory(logger, myImportHandler)
 				.setMoveAfterImport(bMoveFile).setLabContactResolver(labContactResolver);
 		MultiFileParser multiFileParser = new MultiFileParser(labName);
 		HL7Parser hl7Parser = new HL7Parser(labName, new HL7ImporterPatientResolver(coreModelService, logger),
-				labimportUtil, myImportHandler, labContactResolver, CFG_IMPORT_ENCDATA);
+				labimportUtil, myImportHandler, labContactResolver, importEncData);
 
 		IVirtualFilesystemHandle fileHandle;
 		try {
@@ -121,11 +130,24 @@ public class HL7ImporterIIdentifiedRunnable implements IIdentifiedRunnable {
 	}
 
 	private class MyImportHandler extends ImportHandler {
-
+		
+		private final boolean overwriteExistingResults;
+		private final Logger logger;
+		
+		public MyImportHandler(Logger logger, boolean overwriteExistingResults){
+			this.logger = logger;
+			this.overwriteExistingResults = overwriteExistingResults;
+		}
+		
 		@Override
-		public OverwriteState askOverwrite(IPatient patient, ILabResult oldResult, TransientLabResult newResult) {
-			// TODO make configurable
-			return null;
+		public OverwriteState askOverwrite(IPatient patient, ILabResult oldResult,
+			TransientLabResult newResult){
+			if (overwriteExistingResults) {
+				logger.warn("Overwriting labResult [{}] old value [{}] new value [{}]", patient,
+					oldResult, newResult);
+				return OverwriteState.OVERWRITE;
+			}
+			return OverwriteState.IGNORE;
 		}
 	}
 
