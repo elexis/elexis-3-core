@@ -10,17 +10,13 @@ import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.services.IServiceConstants;
 
 import ch.elexis.core.tasks.model.ITask;
+import ch.elexis.core.ui.tasks.internal.TaskModelServiceHolder;
 
 public class RemoveIdentifiableHandler {
 	
 	@Execute
 	public void execute(@Optional @Named(IServiceConstants.ACTIVE_SELECTION) List<ITask> task){
-		System.out.println("a" + task);
+		TaskModelServiceHolder.get().remove(task);
 	}
-	
-//	@Execute
-//	public void execute(@Named(IServiceConstants.ACTIVE_SELECTION) ITask task){
-//		System.out.println("b" + task);
-//	}
 		
 }

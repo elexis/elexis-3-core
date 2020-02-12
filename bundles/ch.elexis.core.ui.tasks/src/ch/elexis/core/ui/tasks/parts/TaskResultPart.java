@@ -197,17 +197,15 @@ public class TaskResultPart implements IDoubleClickListener {
 			"ch.elexis.core.ui.tasks.popupmenu.tableresults");
 		
 		inputModel = new SetModel();
+		tableViewerResults.setInput(inputModel);
 		
 		refresh();
 	}
 	
 	public void refresh(){
-		inputModel.clear();
 		IQuery<ITask> taskQuery = TaskModelServiceHolder.get().getQuery(ITask.class);
 		List<ITask> results = taskQuery.execute();
-		inputModel.addAll(results);
-		// add filter
-		tableViewerResults.setInput(inputModel);
+		inputModel.set(results.toArray());
 	}
 	
 	@Focus
@@ -218,7 +216,9 @@ public class TaskResultPart implements IDoubleClickListener {
 	@Optional
 	@Inject
 	void deleteTask(@UIEventTopic(ElexisEventTopics.EVENT_DELETE) ITask iTask){
-		tableViewerResults.remove(iTask);
+		inputModel.removeAll(new ITask[] {
+			iTask
+		});
 	}
 	
 	@Override
