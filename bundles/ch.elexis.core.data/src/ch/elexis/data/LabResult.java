@@ -1017,6 +1017,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 					itemMap.put(date, resultList);
 				}
 				LabResult labResult = new LabResult(val_id);
+				labResult.putInCache(OBSERVATIONTIME, resi.getString(2));
 				labResult.putInCache(PATHODESC, resi.getString(7));
 				labResult.putInCache(ITEM_ID, resi.getString(8));
 				labResult.putInCache(FLAGS, resi.getString(9));
