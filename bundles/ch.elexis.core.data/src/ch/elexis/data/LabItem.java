@@ -156,6 +156,11 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		return getLabel();
 	}
 	
+	@Override
+	public int getCacheTime(){
+		return 60;
+	}
+	
 	/**
 	 * This is the value that will be used for a LabResult if there is no other unit value
 	 * available. The effective unit value is moved to the LabResult.

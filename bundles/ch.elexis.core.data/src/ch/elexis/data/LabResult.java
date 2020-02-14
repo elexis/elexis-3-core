@@ -95,11 +95,15 @@ public class LabResult extends PersistentObject implements ILabResult {
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT LW.ID, LW." + OBSERVATIONTIME + ", LW." + DATE + ", LW." + TIME + ", ");
-		sb.append("LI." + LabItem.GROUP + ", LI." + LabItem.SHORTNAME + ", ");
-		sb.append("LW." + PATHODESC + ", LW." + ITEM_ID  + ", LW." + FLAGS + ", LW." + RESULT + " ");
+		sb.append("LW." + PATHODESC + ", LW." + ITEM_ID + ", LW." + FLAGS + ", LW." + RESULT
+			+ ", LW." + UNIT + ", LW." + REFMALE + ", LW." + REFFEMALE + ", ");
+		sb.append(
+			"LI." + LabItem.GROUP + ", LI." + LabItem.SHORTNAME + ", LI." + LabItem.UNIT + ", LI."
+				+ LabItem.TITLE + ", LI." + LabItem.REF_MALE + ", LI." + LabItem.REF_FEMALE_OR_TEXT
+				+ ", LI." + LabItem.DIGITS + ", LI." + LabItem.PRIO + " ");
 		sb.append("FROM " + TABLENAME + " AS LW LEFT JOIN ");
 		sb.append(LabItem.LABITEMS + " AS LI ON LW." + ITEM_ID + "=LI.ID ");
-		sb.append("WHERE LW." + PATIENT_ID + " LIKE ? AND LW.DELETED = '0'");
+		sb.append("WHERE LW." + PATIENT_ID + " = ? AND LW.DELETED = '0'");
 		QUERY_GROUP_ORDER = sb.toString();
 	}
 	
@@ -245,6 +249,11 @@ public class LabResult extends PersistentObject implements ILabResult {
 		labResult.sendElexisEvent(ElexisEvent.EVENT_CREATE);
 		
 		return labResult;
+	}
+	
+	@Override
+	public int getCacheTime(){
+		return 60;
 	}
 	
 	/**
@@ -984,23 +993,39 @@ public class LabResult extends PersistentObject implements ILabResult {
 			ResultSet resi = ps.executeQuery();
 			
 			while ((resi != null) && (resi.next() == true)) {
+				// result values
 				String val_id = resi.getString(1); // ID
 				String val_ot = resi.getString(2); // Observationtime
 				String val_date = resi.getString(3); // datum
 				String val_time = resi.getString(4); // zeit
-				String val_group = getNotNull(resi, 5); // grupppe
-				String val_item = getNotNull(resi, 6); // kurzel
+				String val_pathodesc = resi.getString(5); // pathologic description
+				String val_itemid = resi.getString(6); // item id
+				String val_flags = resi.getString(7); // result flags
+				String val_result = resi.getString(8); // result
+				String val_unit = resi.getString(9); // einheit
+				String val_refmale = resi.getString(10); // ref male
+				String val_reffemale = resi.getString(11); // ref female
 				
-				HashMap<String, HashMap<String, List<LabResult>>> groupMap = ret.get(val_group);
+				// item values
+				String val_itemgroup = getNotNull(resi, 12); // grupppe
+				String val_itemshortname = getNotNull(resi, 13); // kurzel
+				String val_itemunit = getNotNull(resi, 14); // einheit
+				String val_itemtitle = getNotNull(resi, 15); // titel
+				String val_itemrefmale = getNotNull(resi, 16); // ref male
+				String val_itemreffemale = getNotNull(resi, 17); // ref female
+				String val_itemdigits = getNotNull(resi, 18); // digits
+				String val_itemprio = getNotNull(resi, 19); // prio
+				
+				HashMap<String, HashMap<String, List<LabResult>>> groupMap = ret.get(val_itemgroup);
 				if (groupMap == null) {
 					groupMap = new HashMap<String, HashMap<String, List<LabResult>>>();
-					ret.put(val_group, groupMap);
+					ret.put(val_itemgroup, groupMap);
 				}
 				
-				HashMap<String, List<LabResult>> itemMap = groupMap.get(val_item);
+				HashMap<String, List<LabResult>> itemMap = groupMap.get(val_itemshortname);
 				if (itemMap == null) {
 					itemMap = new HashMap<String, List<LabResult>>();
-					groupMap.put(val_item, itemMap);
+					groupMap.put(val_itemshortname, itemMap);
 				}
 				
 				TimeTool time = null;
@@ -1016,12 +1041,28 @@ public class LabResult extends PersistentObject implements ILabResult {
 					resultList = new ArrayList<LabResult>();
 					itemMap.put(date, resultList);
 				}
+				// cache result properties
 				LabResult labResult = new LabResult(val_id);
-				labResult.putInCache(OBSERVATIONTIME, resi.getString(2));
-				labResult.putInCache(PATHODESC, resi.getString(7));
-				labResult.putInCache(ITEM_ID, resi.getString(8));
-				labResult.putInCache(FLAGS, resi.getString(9));
-				labResult.putInCache(RESULT, resi.getString(10));
+				labResult.putInCache(OBSERVATIONTIME, val_ot);
+				labResult.putInCache(PATHODESC, val_pathodesc);
+				labResult.putInCache(ITEM_ID, val_itemid);
+				labResult.putInCache(FLAGS, val_flags);
+				labResult.putInCache(RESULT, val_result);
+				labResult.putInCache(UNIT, val_unit);
+				labResult.putInCache(REFMALE, val_refmale);
+				labResult.putInCache(REFFEMALE, val_reffemale);
+				
+				// cache item properties
+				LabItem item = new LabItem(val_itemid);
+				item.putInCache(LabItem.SHORTNAME, val_itemshortname);
+				item.putInCache(LabItem.TITLE, val_itemtitle);
+				item.putInCache(LabItem.GROUP, val_itemgroup);
+				item.putInCache(LabItem.UNIT, val_itemunit);
+				item.putInCache(LabItem.REF_MALE, val_itemrefmale);
+				item.putInCache(LabItem.REF_FEMALE_OR_TEXT, val_itemreffemale);
+				item.putInCache(LabItem.PRIO, val_itemprio);
+				item.putInCache(LabItem.DIGITS, val_itemdigits);
+
 				resultList.add(labResult);
 			}
 		} catch (SQLException e) {
