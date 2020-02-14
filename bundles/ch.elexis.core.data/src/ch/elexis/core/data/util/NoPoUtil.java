@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.StringJoiner;
+
+import org.apache.commons.lang.StringUtils;
 
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.model.Identifiable;
@@ -108,5 +111,50 @@ public class NoPoUtil {
 			return ret;
 		}
 		return Collections.emptyList();
+	}
+	
+	/**
+	 * Get a database search String for a Elexis date database value. <br />
+	 * Used for S:D: mapped values in Query#add, copied and slightly adapted.
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static String getElexisDateSearchString(String value){
+		StringBuilder sb = null;
+		String ret = value.replaceAll("%", "");
+		final String filler = "%%%%%%%%";
+		// are we looking for the year?
+		if (ret.matches("[0-9]{3,}")) {
+			sb = new StringBuilder(ret);
+			sb.append(filler);
+			ret = sb.substring(0, 8);
+		} else {
+			// replace single digits as in 1.2.1932 with double digits
+			// as in 01.02.1932
+			int dotCount = StringUtils.countMatches(ret, ".");
+			String[] parts = ret.split("\\.");
+			StringJoiner sj = new StringJoiner("");
+			for (String string : parts) {
+				if (string.length() == 1 && Character.isDigit(string.charAt(0))) {
+					sj.add("0" + string);
+				} else {
+					sj.add(string);
+				}
+			}
+			// remove dots
+			sb = new StringBuilder(sj.toString());
+			int lengthNoDots = sb.length();
+			// String must consist of 8 or more digits (ddmmYYYY)
+			sb.append(filler);
+			if (dotCount == 1 && lengthNoDots == 6) {
+				// convert to YYYYmmdd format
+				ret = sb.substring(2, 6) + sb.substring(0, 2) + sb.substring(6, 8);
+			} else {
+				// convert to YYYYmmdd format
+				ret = sb.substring(4, 8) + sb.substring(2, 4) + sb.substring(0, 2);
+			}
+		}
+		return ret;
 	}
 }

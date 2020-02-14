@@ -51,10 +51,13 @@ import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.format.AddressFormatUtil;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.StickerServiceHolder;
 import ch.elexis.core.types.Gender;
@@ -78,6 +81,7 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldListener;
 import ch.elexis.core.ui.views.Messages;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
+import ch.rgw.tools.StringTool;
 
 /**
  * Display of Patients
@@ -159,7 +163,21 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		//		plfb.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		//		((GridData) plfb.getLayoutData()).heightHint = 0;
 
-		dcfp = new DefaultControlFieldProvider(cv, currentUserFields);
+		dcfp = new DefaultControlFieldProvider(cv, currentUserFields) {
+			@Override
+			public void setQuery(IQuery<?> query){
+				for (int i = 0; i < dbFields.length; i++) {
+					if (!lastFiltered[i].equals(StringTool.leer)) {
+						if ("dob".equals(dbFields[i])) {
+							query.and(dbFields[i], COMPARATOR.LIKE,
+								NoPoUtil.getElexisDateSearchString(lastFiltered[i]), true);
+						} else {
+							query.and(dbFields[i], COMPARATOR.LIKE, lastFiltered[i] + "%", true);
+						}
+					}
+				}
+			}
+		};
 		updateFocusField();
 
 		vc = new ViewerConfigurer(plcp, new PatLabelProvider(), dcfp,
