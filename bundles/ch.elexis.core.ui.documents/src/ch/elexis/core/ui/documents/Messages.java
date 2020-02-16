@@ -23,7 +23,10 @@ public class Messages {
 	public static String DocumentView_exportErrorText = ch.elexis.core.l10n.Messages.DocumentView_exportErrorText;
 	public static String DocumentsView_extensionColumn = ch.elexis.core.l10n.Messages.DocumentsView_extensionColumn;
 	public static String DocumentView_exportErrorEmptyText = ch.elexis.core.l10n.Messages.DocumentView_exportErrorEmptyText;
-	
+	public static String DocumentsView_Author = ch.elexis.core.l10n.Messages.DocumentsView_Author;
+	public static String DocumentsView_DocumentClass = ch.elexis.core.l10n.Messages.DocumentsView_DocumentClass;
+	public static String DocumentsView_PracticeSetting = ch.elexis.core.l10n.Messages.DocumentsView_PracticeSetting;
+
 	public static String DocumentMetaDataDialog_title = ch.elexis.core.l10n.Messages.DocumentMetaDataDialog_title;
 	public static String DocumentMetaDataDialog_titleMessage = ch.elexis.core.l10n.Messages.DocumentMetaDataDialog_titleMessage;
 	public static String DocumentMetaDataDialog_newCategory = ch.elexis.core.l10n.Messages.DocumentMetaDataDialog_newCategory;

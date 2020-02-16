@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.findings.IAllergyIntolerance;
 import ch.elexis.core.findings.IClinicalImpression;
 import ch.elexis.core.findings.ICondition;
+import ch.elexis.core.findings.IDocumentReference;
 import ch.elexis.core.findings.IEncounter;
 import ch.elexis.core.findings.IFamilyMemberHistory;
 import ch.elexis.core.findings.IFinding;
@@ -145,5 +146,15 @@ public class FindingsService implements IFindingsService {
 	@Override
 	public <T extends IFinding> Optional<T> findById(String id, Class<T> clazz, boolean skipChecks){
 		return findingsModelService.load(id, clazz, skipChecks);
+	}
+	
+	@Override
+	public <T extends IFinding> List<T> getDocumentFindings(String documentid, Class<T> filter){
+		if (filter.isAssignableFrom(IDocumentReference.class)) {
+			INamedQuery<T> query =
+				findingsModelService.getNamedQuery(filter, "documentid");
+			return query.executeWithParameters(query.getParameterMap("documentid", documentid));
+		}
+		return Collections.emptyList();
 	}
 }

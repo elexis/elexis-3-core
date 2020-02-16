@@ -14,6 +14,7 @@ package ch.elexis.core.ui.documents.views;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -38,10 +39,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.findings.ICoding;
+import ch.elexis.core.findings.IDocumentReference;
+import ch.elexis.core.findings.util.FindingsServiceHolder;
+import ch.elexis.core.findings.util.ValueSetServiceHolder;
 import ch.elexis.core.model.ICategory;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.services.IDocumentStore.Capability;
 import ch.elexis.core.ui.documents.Messages;
+import ch.elexis.core.ui.documents.provider.CodingElementComparer;
+import ch.elexis.core.ui.documents.provider.CodingLabelProvider;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -52,8 +60,12 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 	
 	String file;
 	IDocument document;
+	IDocumentReference documentReference;
 	Text tTitle;
 	Text tKeywords;
+	Text tAuthor;
+	ComboViewer cbPracticeSetting;
+	ComboViewer cbDocumentClass;
 	
 	ComboViewer cbCategories;
 	public String title;
@@ -66,11 +78,17 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 	public DocumentsMetaDataDialog(IDocument document, Shell parent){
 		super(parent);
 		this.document = document;
+		this.documentReference = getDocumentReference(document).orElse(null);
 		
 		categoryCrudAllowed =
 			DocumentStoreServiceHolder.getService().isAllowed(document, Capability.CATEGORY);
 		keywordsCrudAllowed =
 			DocumentStoreServiceHolder.getService().isAllowed(document, Capability.KEYWORDS);
+	}
+	
+	@Override
+	protected boolean isResizable(){
+		return true;
 	}
 	
 	@Override
@@ -198,7 +216,57 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 			cbCategories.setSelection(new StructuredSelection(cbSelection), true);
 			
 		}
+		
+		new Label(ret, SWT.NONE).setText(Messages.DocumentsView_Author);
+		tAuthor = SWTHelper.createText(ret, 1, SWT.NONE);
+		tAuthor.setText(Optional.ofNullable(document.getAuthor()).map(IContact::getLabel).orElse(""));
+		
+		createUIDocumentReferences(ret);
 		return ret;
+	}
+
+	private void createUIDocumentReferences(Composite ret){
+		if (ValueSetServiceHolder.getIValueSetService() != null) {
+			new Label(ret, SWT.NONE).setText(Messages.DocumentsView_DocumentClass);
+			cbDocumentClass = new ComboViewer(ret, SWT.SINGLE | SWT.READ_ONLY);
+			cbDocumentClass.setContentProvider(ArrayContentProvider.getInstance());
+			cbDocumentClass.setComparer(new CodingElementComparer());
+			cbDocumentClass.setLabelProvider(new CodingLabelProvider());
+			cbDocumentClass.setInput(ValueSetServiceHolder.getIValueSetService()
+				.getValueSetByName("EprDocumentClassCode"));
+			
+			new Label(ret, SWT.NONE).setText(Messages.DocumentsView_PracticeSetting);
+			cbPracticeSetting = new ComboViewer(ret, SWT.SINGLE | SWT.READ_ONLY);
+			cbPracticeSetting.setContentProvider(ArrayContentProvider.getInstance());
+			cbPracticeSetting.setLabelProvider(new CodingLabelProvider());
+			cbPracticeSetting.setComparer(new CodingElementComparer());
+			cbPracticeSetting.setInput(ValueSetServiceHolder.getIValueSetService()
+				.getValueSetByName("EprDocumentPracticeSettingCode"));
+			
+			// load selections
+			if (documentReference != null) {
+				Optional.ofNullable(documentReference.getDocumentClass())
+					.ifPresent(o -> cbDocumentClass.setSelection(new StructuredSelection(o), true));
+				Optional.ofNullable(documentReference.getPracticeSetting()).ifPresent(
+					o -> cbPracticeSetting.setSelection(new StructuredSelection(o), true));
+			}
+		}
+	}
+	
+	public Optional<IDocumentReference> getDocumentReference(IDocument document){
+		if (FindingsServiceHolder.getiFindingsService() != null && document != null
+			&& document.getId() != null) {
+			List<IDocumentReference> documentReferences =
+				FindingsServiceHolder.getiFindingsService().getDocumentFindings(document.getId(),
+					IDocumentReference.class);
+			if (documentReferences.size() > 1) {
+				LoggerFactory.getLogger(getClass())
+					.warn("Got more than one DocumentReferences for document id ["
+						+ document.getId() + "] using first");
+			}
+			return documentReferences.stream().findFirst();
+		}
+		return Optional.empty();
 	}
 	
 	@Override
@@ -225,8 +293,33 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 				keywords = tKeywords.getText();
 				document.setKeywords(keywords);
 			}
+			updateDocumentReferences();
 		}
 		super.okPressed();
+	}
+
+	private void updateDocumentReferences(){
+		if (ValueSetServiceHolder.getIValueSetService() != null
+			&& FindingsServiceHolder.getiFindingsService() != null) {
+			if (documentReference == null) {
+				documentReference =
+					FindingsServiceHolder.getiFindingsService().create(IDocumentReference.class);
+			}
+			ICoding codingDocClass =
+				(ICoding) ((StructuredSelection) cbDocumentClass.getSelection()).getFirstElement();
+			ICoding codingPracSetting =
+				(ICoding) ((StructuredSelection) cbPracticeSetting.getSelection())
+					.getFirstElement();
+			if (codingDocClass != null) {
+				documentReference.setDocumentClass(codingDocClass);
+			}
+			if (codingPracSetting != null) {
+				documentReference.setPracticeSetting(codingPracSetting);
+			}
+			documentReference.setPatientId(document.getPatient().getId());
+			documentReference.setDocument(document);
+			FindingsServiceHolder.getiFindingsService().saveFinding(documentReference);
+		}
 	}
 	
 	private ICategory findComboElementByName(String name){

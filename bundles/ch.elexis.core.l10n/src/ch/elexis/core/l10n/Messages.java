@@ -1898,6 +1898,9 @@ public class Messages extends NLS {
 	public static String DocumentView_titleColumn;
 	public static String DocumentsView_Title;
 	public static String DocumentsView_extensionColumn;
+	public static String DocumentsView_Author;
+	public static String DocumentsView_DocumentClass;
+	public static String DocumentsView_PracticeSetting;
 	public static String DokumentKategorie_dokumentKategorien;
 	public static String EditLabItemDialog_errorRefFemaleNotAbsolute;
 	public static String EditLabItemDialog_errorRefMaleNotAbsolute;
