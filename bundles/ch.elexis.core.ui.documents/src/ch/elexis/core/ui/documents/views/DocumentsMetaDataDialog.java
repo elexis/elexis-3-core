@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
@@ -234,6 +235,8 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 			cbDocumentClass.setLabelProvider(new CodingLabelProvider());
 			cbDocumentClass.setInput(ValueSetServiceHolder.getIValueSetService()
 				.getValueSetByName("EprDocumentClassCode"));
+			cbDocumentClass.getControl()
+				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			
 			new Label(ret, SWT.NONE).setText(Messages.DocumentsView_PracticeSetting);
 			cbPracticeSetting = new ComboViewer(ret, SWT.SINGLE | SWT.READ_ONLY);
@@ -242,6 +245,8 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 			cbPracticeSetting.setComparer(new CodingElementComparer());
 			cbPracticeSetting.setInput(ValueSetServiceHolder.getIValueSetService()
 				.getValueSetByName("EprDocumentPracticeSettingCode"));
+			cbPracticeSetting.getControl()
+				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			
 			// load selections
 			if (documentReference != null) {
