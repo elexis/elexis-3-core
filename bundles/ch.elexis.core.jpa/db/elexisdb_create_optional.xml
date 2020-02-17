@@ -1907,5 +1907,16 @@ DROP TABLE TEMP_ETIKETTEN_OBJCLASS_LINK;
 			referencedTableName="TASKDESCRIPTOR" baseColumnNames="DESCRIPTOR" baseTableName="TASK"
 			referencedColumnNames="ID" />
 	</changeSet>
+
+	<changeSet author="marco" id="manual_idxResult_Laborder">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="idxResult" tableName="LABORDER" />
+			</not>
+		</preConditions>
+		<createIndex indexName="idxResult" tableName="LABORDER">
+			<column name="Result" />
+		</createIndex>
+	</changeSet>
 	
 </databaseChangeLog>
