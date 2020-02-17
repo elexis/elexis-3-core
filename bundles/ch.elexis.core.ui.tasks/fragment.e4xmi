@@ -3,13 +3,14 @@
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_yKaBgA9_EeqCRvaXdJ-ZfQ" featurename="descriptors" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="basic:PartDescriptor" xmi:id="_9ho_gA9_EeqCRvaXdJ-ZfQ" elementId="ch.elexis.core.ui.tasks.parts.TaskResultPart" label="Tasks" iconURI="platform:/plugin/ch.elexis.core.ui.tasks/rsc/icons/screwdriver.png" category="General" closeable="true" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.TaskResultPart">
       <tags>View</tags>
-      <handlers xmi:id="_Y9WCgA-HEeqCRvaXdJ-ZfQ" elementId="ch.elexis.core.ui.tasks.handler.taskresultpart.refresh" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.TaskResultPartRefreshHandler" command="_UKR8IA-HEeqCRvaXdJ-ZfQ"/>
-      <handlers xmi:id="_I-_qcA--EeqCRvaXdJ-ZfQ" elementId="ch.elexis.core.ui.tasks.handler.identifiable.remove" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.RemoveIdentifiableHandler" command="_CbdE8A--EeqCRvaXdJ-ZfQ"/>
+      <handlers xmi:id="_Y9WCgA-HEeqCRvaXdJ-ZfQ" elementId="ch.elexis.core.ui.tasks.handler.taskresultpart.refresh" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.handlers.TaskResultPartRefreshHandler" command="_UKR8IA-HEeqCRvaXdJ-ZfQ"/>
+      <handlers xmi:id="_I-_qcA--EeqCRvaXdJ-ZfQ" elementId="ch.elexis.core.ui.tasks.handler.identifiable.remove" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.handlers.RemoveIdentifiableHandler" command="_CbdE8A--EeqCRvaXdJ-ZfQ"/>
       <menus xsi:type="menu:PopupMenu" xmi:id="_5Yz_wA-9EeqCRvaXdJ-ZfQ" elementId="ch.elexis.core.ui.tasks.popupmenu.tableresults">
         <children xsi:type="menu:HandledMenuItem" xmi:id="_MuBg8A--EeqCRvaXdJ-ZfQ" elementId="ch.elexis.core.ui.tasks.handledmenuitem.lschen" label="L&#xf6;schen" iconURI="icon://IMG_BOMB" command="_CbdE8A--EeqCRvaXdJ-ZfQ"/>
       </menus>
       <toolbar xmi:id="_DEarkA-AEeqCRvaXdJ-ZfQ" elementId="ch.elexis.core.ui.tasks.toolbar.0">
-        <children xsi:type="menu:HandledToolItem" xmi:id="_vRnV0A-HEeqCRvaXdJ-ZfQ" elementId="ch.elexis.core.ui.tasks.handledtoolitem.0" iconURI="icon://IMG_REFRESH" command="_UKR8IA-HEeqCRvaXdJ-ZfQ"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_vRnV0A-HEeqCRvaXdJ-ZfQ" elementId="ch.elexis.core.ui.tasks.handledtoolitem.0" iconURI="icon://IMG_REFRESH" tooltip="Refresh View" command="_UKR8IA-HEeqCRvaXdJ-ZfQ"/>
+        <children xsi:type="menu:DirectToolItem" xmi:id="__a4IUFGGEeqQlOVlpEDNRg" elementId="ch.elexis.core.ui.tasks.directtoolitem.0" iconURI="icon://IMG_ACHTUNG" tooltip="Show Failures Only" type="Check" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.handlers.TaskResultPartTableFilterHandler"/>
       </toolbar>
     </elements>
     <elements xsi:type="basic:PartDescriptor" xmi:id="_LHyLYBBMEeqCRvaXdJ-ZfQ" elementId="ch.elexis.core.ui.tasks.partdescriptor.taskdetail" label="Task Detail" allowMultiple="true" closeable="true" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.TaskDetailPart"/>

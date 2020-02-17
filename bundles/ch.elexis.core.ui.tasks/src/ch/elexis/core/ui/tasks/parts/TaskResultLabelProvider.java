@@ -41,6 +41,8 @@ public class TaskResultLabelProvider extends ColumnLabelProvider {
 			return Images.IMG_ACHTUNG;
 		case FAILED:
 			return Images.IMG_AUSRUFEZ;
+		case DRAFT:
+			// TODO
 		default:
 			break;
 		}

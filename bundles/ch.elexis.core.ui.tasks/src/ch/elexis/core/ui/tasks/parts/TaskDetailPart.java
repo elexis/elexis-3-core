@@ -1,6 +1,7 @@
 
 package ch.elexis.core.ui.tasks.parts;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
@@ -33,7 +34,14 @@ public class TaskDetailPart {
 		ITask task = (ITask) part.getTransientData().get("task");
 		part.setIconURI(TaskResultLabelProvider.getInstance().getIconURI(task));
 		
-		String runAt = task.getRunAt().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
+		String runAt;
+		LocalDateTime _runAt = task.getRunAt();
+		if(_runAt != null) {
+			runAt = _runAt.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
+		} else {
+			runAt = "queued";
+		}
+	
 		String partLabel = task.getTaskDescriptor().getReferenceId() + " - " + runAt;
 		part.setLabel(partLabel);
 		

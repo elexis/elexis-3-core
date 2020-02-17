@@ -1,5 +1,5 @@
 
-package ch.elexis.core.ui.tasks.parts;
+package ch.elexis.core.ui.tasks.parts.handlers;
 
 import java.util.List;
 

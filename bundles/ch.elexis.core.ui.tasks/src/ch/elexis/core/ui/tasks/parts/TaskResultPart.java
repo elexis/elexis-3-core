@@ -55,6 +55,7 @@ public class TaskResultPart implements IDoubleClickListener {
 	private Table tableResults;
 	private TableViewer tableViewerResults;
 	private SetModel inputModel;
+	private DeferredContentProvider contentProvider;
 	
 	@PostConstruct
 	public void createControls(Composite parent, EMenuService menuService){
@@ -77,8 +78,7 @@ public class TaskResultPart implements IDoubleClickListener {
 		tableResults = tableViewerResults.getTable();
 		tableResults.setHeaderVisible(true);
 		tableResults.setLinesVisible(true);
-		DeferredContentProvider contentProvider =
-			new DeferredContentProvider(ITaskComparators.ofLastUpdate().reversed());
+		contentProvider = new DeferredContentProvider(ITaskComparators.ofLastUpdate().reversed());
 		tableViewerResults.setContentProvider(contentProvider);
 		tableViewerResults.setUseHashlookup(true);
 		tableViewerResults.addDoubleClickListener(this);
@@ -202,6 +202,10 @@ public class TaskResultPart implements IDoubleClickListener {
 		refresh();
 	}
 	
+	public DeferredContentProvider getContentProvider(){
+		return contentProvider;
+	}
+	
 	public void refresh(){
 		IQuery<ITask> taskQuery = TaskModelServiceHolder.get().getQuery(ITask.class);
 		List<ITask> results = taskQuery.execute();
@@ -219,6 +223,7 @@ public class TaskResultPart implements IDoubleClickListener {
 		inputModel.removeAll(new ITask[] {
 			iTask
 		});
+		tableResults.deselectAll();
 	}
 	
 	@Override
