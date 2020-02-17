@@ -28,9 +28,13 @@ import java.util.Set;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
@@ -321,6 +325,19 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 					return sb.toString();
 				} else {
 					return element.toString();
+				}
+			}
+		});
+		buchungen.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
+			public void doubleClick(DoubleClickEvent event){
+				ISelection selection = event.getSelection();
+				if (selection instanceof StructuredSelection
+					&& !((StructuredSelection) selection).isEmpty()) {
+					ElexisEventDispatcher.clearSelection(Zahlung.class);
+					ElexisEventDispatcher
+						.fireSelectionEvent(
+							(PersistentObject) ((StructuredSelection) selection).getFirstElement());
 				}
 			}
 		});
