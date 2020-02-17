@@ -19,6 +19,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Table(name = "CH_ELEXIS_CORE_FINDINGS_DOCUMENTREFERENCE")
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "DocumentReference.patientid", query = "SELECT dr FROM DocumentReference dr WHERE dr.deleted = false AND dr.patientid = :patientid")
+@NamedQuery(name = "DocumentReference.documentid", query = "SELECT dr FROM DocumentReference dr WHERE dr.deleted = false AND dr.documentid = :documentid")
 public class DocumentReference extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener

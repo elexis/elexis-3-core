@@ -42,7 +42,17 @@ public interface IFindingsService {
 	 */
 	public <T extends IFinding> List<T> getConsultationsFindings(String consultationId,
 		Class<T> filter);
-
+	
+	/**
+	 * Find {@link IFinding} instances referring to the documentid. With the filter parameter the
+	 * type of the {@link IFinding} instances that are looked up can be limited.
+	 * 
+	 * @param documentid
+	 * @param filter
+	 * @return
+	 */
+	public <T extends IFinding> List<T> getDocumentFindings(String documentid, Class<T> filter);
+	
 	/**
 	 * Save the {@link IFinding} instance to a persistent state.
 	 * 

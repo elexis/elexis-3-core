@@ -99,7 +99,7 @@ public class ValueSetService implements IValueSetService {
 	
 	@Override
 	public List<ICoding> getValueSet(String id){
-		if (idContributionMap.get(id) != null) {
+		if (idContributionMap != null && idContributionMap.get(id) != null) {
 			return idContributionMap.get(id).getValueSet(id);
 		}
 		return Collections.emptyList();
@@ -107,7 +107,7 @@ public class ValueSetService implements IValueSetService {
 	
 	@Override
 	public List<ICoding> getValueSetByName(String name){
-		if (nameContributionMap.get(name) != null) {
+		if (nameContributionMap != null && nameContributionMap.get(name) != null) {
 			return nameContributionMap.get(name).getValueSetByName(name);
 		}
 		return Collections.emptyList();
