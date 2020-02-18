@@ -3,7 +3,7 @@
    <service>
       <provide interface="ch.elexis.core.services.IMessageTransporter"/>
    </service>
-   <reference cardinality="1..1" field="contextService" interface="ch.elexis.core.services.IContextService" name="contextService"/>
+   <reference cardinality="1..1" field="configService" interface="ch.elexis.core.services.IConfigService" name="configService"/>
    <reference cardinality="1..1" field="elexisEnvironmentService" interface="ch.elexis.core.eenv.IElexisEnvironmentService" name="elexisEnvironmentService"/>
    <implementation class="ch.elexis.core.services.eenv.RocketchatMessageTransporter"/>
 </scr:component>
