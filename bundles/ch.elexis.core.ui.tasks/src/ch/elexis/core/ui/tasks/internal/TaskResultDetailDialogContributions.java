@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.tasks.internal;
 
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
 import org.osgi.service.component.annotations.Component;
@@ -20,12 +21,12 @@ public class TaskResultDetailDialogContributions implements ITaskResultDetailCon
 	private volatile List<ITaskResultDetailContributor> taskResultDetailDialogContributors;
 	
 	@Override
-	public void createDetailCompositeForTask(Composite parent, ITask task){
+	public void createDetailCompositeForTask(Composite parent, ITask task, Map<String, Object> e4Services){
 		String identifiedRunnableId = task.getTaskDescriptor().getIdentifiedRunnableId();
 		
 		for (ITaskResultDetailContributor contribution : taskResultDetailDialogContributors) {
 			if (identifiedRunnableId.equals(contribution.getIdentifiedRunnableId())) {
-				contribution.createDetailCompositeForTask(parent, task);
+				contribution.createDetailCompositeForTask(parent, task, e4Services);
 				return;
 			}
 		}

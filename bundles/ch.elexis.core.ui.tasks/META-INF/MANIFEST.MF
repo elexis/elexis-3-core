@@ -11,9 +11,13 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.110.0",
  ch.elexis.core.tasks,
  ch.elexis.core.ui.icons;bundle-version="3.3.0",
  org.eclipse.e4.ui.model.workbench;bundle-version="2.1.100.v20180904-1914",
- org.eclipse.e4.core.di
+ org.eclipse.e4.core.di,
+ org.eclipse.ui.forms,
+ org.eclipse.e4.core.commands;bundle-version="0.12.300"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Service-Component: OSGI-INF/ch.elexis.core.ui.tasks.internal.TaskModelServiceHolder.xml,OSGI-INF/ch.elexis.core.ui.tasks.internal.TaskResultDetailDialogContributions.xml
+Service-Component: OSGI-INF/ch.elexis.core.ui.tasks.internal.TaskModelServiceHolder.xml,
+ OSGI-INF/ch.elexis.core.ui.tasks.internal.TaskResultDetailDialogContributions.xml,
+ OSGI-INF/ch.elexis.core.ui.tasks.internal.detailcontributors.HL7ImporterIdentifiedRunnableContributor.xml
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.annotation;version="1.0.0";resolution:=optional,
  javax.inject;version="1.0.0",
@@ -21,5 +25,6 @@ Import-Package: javax.annotation;version="1.0.0";resolution:=optional,
  org.eclipse.e4.ui.di,
  org.eclipse.e4.ui.services,
  org.eclipse.e4.ui.workbench.modeling,
- org.osgi.service.component.annotations;version="1.3.0"
+ org.osgi.service.component.annotations;version="1.3.0",
+ org.slf4j;version="1.6.6"
 Automatic-Module-Name: ch.elexis.core.ui.tasks

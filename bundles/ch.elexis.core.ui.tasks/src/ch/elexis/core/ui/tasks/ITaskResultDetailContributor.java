@@ -1,5 +1,7 @@
 package ch.elexis.core.ui.tasks;
 
+import java.util.Map;
+
 import org.eclipse.swt.widgets.Composite;
 
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
@@ -20,7 +22,8 @@ public interface ITaskResultDetailContributor {
 	 *
 	 * @param parent
 	 * @param task
+	 * @param e4Services provided services (e.g. ECommandService via key ECommandService.class.getName())
 	 */
-	void createDetailCompositeForTask(Composite parent, ITask task);
+	void createDetailCompositeForTask(Composite parent, ITask task, Map<String, Object> e4Services);
 	
 }
