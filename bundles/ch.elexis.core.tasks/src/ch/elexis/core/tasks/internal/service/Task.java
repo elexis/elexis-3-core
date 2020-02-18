@@ -252,8 +252,8 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 			TaskState exitState =
 				(result.containsKey(ReturnParameter.MARKER_WARN)) ? TaskState.COMPLETED_WARN
 						: TaskState.COMPLETED;
-			setState(exitState);
 			getEntity().setFinishedAt(System.currentTimeMillis());
+			setState(exitState);
 			
 			if (effectiveRunContext.containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)
 				|| getResult().containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)) {
@@ -265,6 +265,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 			setResult(Collections.singletonMap(
 				IIdentifiedRunnable.ReturnParameter.FAILED_TASK_EXCEPTION_MESSAGE, e.getMessage()));
 			logger.warn(e.getMessage(), e);
+			getEntity().setFinishedAt(System.currentTimeMillis());
 			setState(TaskState.FAILED);
 		} finally {
 			ContextServiceHolder.get().setActiveUser(null);
