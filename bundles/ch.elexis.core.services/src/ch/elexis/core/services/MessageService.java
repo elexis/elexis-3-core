@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -23,8 +21,7 @@ public class MessageService implements IMessageService {
 	
 	private Map<String, IMessageTransporter> messageTransporters;
 	
-	@Activate
-	public void activate(){
+	public MessageService(){
 		messageTransporters = new HashMap<>();
 	}
 	
@@ -82,14 +79,7 @@ public class MessageService implements IMessageService {
 			}
 		}
 		
-		IStatus result;
-		try {
-			result = messageTransporter.send(message);
-		} catch (Exception e) {
-			result = new Status(Status.ERROR, "ch.elexis.core.services", e.getMessage(), e);
-		}
-		
-		return new ObjectStatus(result,
+		return new ObjectStatus(messageTransporter.send(message),
 			messageTransporter.getUriScheme());
 	}
 	
