@@ -17,6 +17,8 @@ import org.slf4j.LoggerFactory;
 import bsh.EvalError;
 import bsh.Interpreter;
 import ch.elexis.core.constants.TextContainerConstants;
+import ch.elexis.core.jpa.entities.LabOrder;
+import ch.elexis.core.jpa.entities.LabResult;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabMapping;

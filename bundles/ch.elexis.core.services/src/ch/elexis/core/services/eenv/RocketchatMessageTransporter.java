@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
@@ -19,7 +18,6 @@ import org.osgi.service.component.annotations.Reference;
 import ch.elexis.core.eenv.IElexisEnvironmentService;
 import ch.elexis.core.model.message.TransientMessage;
 import ch.elexis.core.services.IConfigService;
-import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IMessageTransporter;
 import ch.elexis.core.services.internal.Bundle;
 
