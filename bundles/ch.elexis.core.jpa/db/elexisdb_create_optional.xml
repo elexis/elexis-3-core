@@ -1918,5 +1918,21 @@ DROP TABLE TEMP_ETIKETTEN_OBJCLASS_LINK;
 			<column name="Result" />
 		</createIndex>
 	</changeSet>
+
+	<changeSet author="marco" id="manual_TASK_UPDATE_TIMELOG">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="TASK" columnName="FINISHEDAT" />
+			</not>
+		</preConditions>
+		<modifyDataType tableName="TASK" columnName="CREATEDAT"
+			newDataType="BIGINT" />
+		<modifyDataType tableName="TASK" columnName="RUNAT"
+			newDataType="BIGINT" />
+		<addColumn tableName="TASK">
+			<column name="FINISHEDAT" type="BIGINT" />
+		</addColumn>
+	</changeSet>
+	
 	
 </databaseChangeLog>

@@ -13,8 +13,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
+import ch.elexis.core.jpa.entities.converter.TimeMillisConverter;
 import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
@@ -41,6 +43,15 @@ public class Task extends AbstractEntityWithId implements EntityWithId, EntityWi
 	@Column
 	protected int triggerEvent = 0;
 	
+	@Column
+	protected Long createdAt;
+	
+	@Column
+	protected Long runAt;
+	
+	@Column
+	protected Long finishedAt;
+	
 	@JoinColumn(name="descriptor")
 	@ManyToOne(cascade = CascadeType.REFRESH)
 	protected TaskDescriptor taskDescriptor;
@@ -55,12 +66,6 @@ public class Task extends AbstractEntityWithId implements EntityWithId, EntityWi
 	
 	@Column(length = 64)
 	protected String runner;
-	
-	@Column(length = 24)
-	protected LocalDateTime createdAt;
-	
-	@Column(length = 24)
-	protected LocalDateTime runAt;
 	
 	public String getId(){
 		return id;
@@ -134,19 +139,43 @@ public class Task extends AbstractEntityWithId implements EntityWithId, EntityWi
 		this.runner = runner;
 	}
 	
-	public LocalDateTime getCreatedAt(){
+	public Long getCreatedAt(){
 		return createdAt;
 	}
 	
-	public void setCreatedAt(LocalDateTime createdAt){
+	public void setCreatedAt(Long createdAt){
 		this.createdAt = createdAt;
 	}
 	
-	public LocalDateTime getRunAt(){
+	@Transient
+	public LocalDateTime getCreatedAtLocalDateTime() {
+		return TimeMillisConverter.convertOptionalMillisToLocalDateTime(getCreatedAt());
+	}
+	
+	public Long getRunAt(){
 		return runAt;
 	}
 	
-	public void setRunAt(LocalDateTime runAt){
+	public void setRunAt(Long runAt){
 		this.runAt = runAt;
 	}
+	
+	@Transient
+	public LocalDateTime getRunAtLocalDateTime() {
+		return TimeMillisConverter.convertOptionalMillisToLocalDateTime(getRunAt());
+	}
+	
+	public Long getFinishedAt(){
+		return finishedAt;
+	}
+	
+	@Transient
+	public LocalDateTime getFinishedAtLocalDateTime() {
+		return TimeMillisConverter.convertOptionalMillisToLocalDateTime(getFinishedAt());
+	}
+	
+	public void setFinishedAt(Long finishedAt){
+		this.finishedAt = finishedAt;
+	}
+	
 }

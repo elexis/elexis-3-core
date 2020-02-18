@@ -1,34 +1,97 @@
 package ch.elexis.core.ui.tasks.internal;
 
+import java.time.format.DateTimeFormatter;
+
+import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.tasks.model.ITask;
 
 public class GenericTaskResultDetailComposite {
 	
-	private Text txt;
+	private final DateTimeFormatter dtf;
+	
+	private Text txtRunContext;
+	private Text txtResult;
+	
+	private static Font boldFont;
 	
 	public GenericTaskResultDetailComposite(Composite parent, ITask task){
+		dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy dd:HH:mm.ss");
+		
 		Composite container = new Composite(parent, SWT.NONE);
-		container.setLayout(new GridLayout(1, false));
+		container.setLayout(new GridLayout(2, false));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		txt = new Text(container, SWT.BORDER);
-		txt.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		Label taskHeader = new Label(container, SWT.NONE);
+		taskHeader.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		if (boldFont == null) {
+			FontDescriptor boldDescriptor =
+				FontDescriptor.createFrom(taskHeader.getFont()).setStyle(SWT.BOLD);
+			boldFont = boldDescriptor.createFont(taskHeader.getDisplay());
+		}
+		taskHeader.setFont(boldFont);
+		taskHeader.setText(task.getState().getName() + ": " + task.getId() + " ("
+			+ task.getTaskDescriptor().getReferenceId() + ")");
 		
-		StringBuilder sb = new StringBuilder();
-		sb.append(task.getId()+"\n");
-		sb.append("Created at: "+task.getCreatedAt()+"\n");
-		sb.append("Run at: "+task.getRunAt()+"\n");
+		Label lblCreated = new Label(container, SWT.NONE);
+		lblCreated.setText("created ");
 		
-		sb.append(task.getResult());
+		Label valCreated = new Label(container, SWT.NONE);
+		valCreated.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		valCreated.setText(dtf.format(task.getCreatedAt()));
 		
-		txt.setText(sb.toString());
+		Label lblLblrun = new Label(container, SWT.NONE);
+		lblLblrun.setText("run");
 		
+		Label valRun = new Label(container, SWT.NONE);
+		valRun.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		if(task.getRunAt() != null) {
+			valRun.setText(dtf.format(task.getRunAt()) + " on " + task.getRunner());
+		}
+		
+		Label lblFinished = new Label(container, SWT.NONE);
+		lblFinished.setText("finished");
+		
+		Label valFinished = new Label(container, SWT.NONE);
+		valFinished.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		if(task.getFinishedAt() != null) {
+			valFinished.setText(dtf.format(task.getFinishedAt()));
+		}
+		
+		Label lblTrigger = new Label(container, SWT.NONE);
+		lblTrigger.setText("trigger");
+		
+		Label valTrigger = new Label(container, SWT.NONE);
+		valTrigger.setText(task.getTriggerEvent().getName());
+		
+		Label lblResult = new Label(container, SWT.NONE);
+		lblResult.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
+		lblResult.setText("result");
+		
+		txtResult = new Text(container, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
+		txtResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		StringBuilder sbResult = new StringBuilder();
+		task.getResult().forEach((k, v) -> sbResult.append("* "+k + ": " + v + "\n"));
+		txtResult.setText(sbResult.toString());
+		
+		Label lblRunContext = new Label(container, SWT.NONE);
+		lblRunContext.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
+		lblRunContext.setText("runcontext");
+		
+		txtRunContext = new Text(container, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
+		txtRunContext.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		StringBuilder sbRunContext = new StringBuilder();
+		task.getRunContext().forEach((k, v) -> sbRunContext.append("* "+k + ": " + v + "\n"));
+		txtRunContext.setText(sbRunContext.toString());
+		
+
 	}
 	
 }

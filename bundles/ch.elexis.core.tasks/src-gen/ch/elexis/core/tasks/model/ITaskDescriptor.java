@@ -282,7 +282,7 @@ public interface ITaskDescriptor extends Identifiable, Deleteable {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * The station that will run this task. Valid values are empty, stationId or SERVER. Empty defines that any station may run this task.
+	 * The station that will run this task. Valid values are empty, stationId or ELEXIS-SERVER. Empty defines that any station may run this task.
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Runner</em>' attribute.
 	 * @see #setRunner(String)

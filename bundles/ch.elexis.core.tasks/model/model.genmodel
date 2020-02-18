@@ -64,11 +64,13 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/triggerEvent"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/createdAt"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/runAt"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/finishedAt"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/result"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/progressMonitor"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/runContext"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/finished"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ITask/taskDescriptor"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITask/runner"/>
       <genOperations ecoreOperation="model.ecore#//ITask/getResultEntryAsTypedList">
         <genParameters ecoreParameter="model.ecore#//ITask/getResultEntryAsTypedList/key"/>
         <genParameters ecoreParameter="model.ecore#//ITask/getResultEntryAsTypedList/clazz"/>

@@ -38,11 +38,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
  *   <li>{@link ch.elexis.core.tasks.model.ITask#getTriggerEvent <em>Trigger Event</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITask#getCreatedAt <em>Created At</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITask#getRunAt <em>Run At</em>}</li>
+ *   <li>{@link ch.elexis.core.tasks.model.ITask#getFinishedAt <em>Finished At</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITask#getResult <em>Result</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITask#getProgressMonitor <em>Progress Monitor</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITask#getRunContext <em>Run Context</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITask#isFinished <em>Finished</em>}</li>
  *   <li>{@link ch.elexis.core.tasks.model.ITask#getTaskDescriptor <em>Task Descriptor</em>}</li>
+ *   <li>{@link ch.elexis.core.tasks.model.ITask#getRunner <em>Runner</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.tasks.model.ModelPackage#getITask()
@@ -128,6 +130,17 @@ public interface ITask extends Identifiable, Deleteable {
 	LocalDateTime getRunAt();
 
 	/**
+	 * Returns the value of the '<em><b>Finished At</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Finished At</em>' attribute.
+	 * @see ch.elexis.core.tasks.model.ModelPackage#getITask_FinishedAt()
+	 * @model dataType="ch.elexis.core.types.LocalDateTime" changeable="false"
+	 * @generated
+	 */
+	LocalDateTime getFinishedAt();
+
+	/**
 	 * Returns the value of the '<em><b>Result</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * Result is de-serialized out of a json string. Numeric entries are always returned as doubles.
@@ -194,6 +207,20 @@ public interface ITask extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	ITaskDescriptor getTaskDescriptor();
+
+	/**
+	 * Returns the value of the '<em><b>Runner</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The station this task was run on
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Runner</em>' attribute.
+	 * @see ch.elexis.core.tasks.model.ModelPackage#getITask_Runner()
+	 * @model required="true" changeable="false"
+	 * @generated
+	 */
+	String getRunner();
 
 	/**
 	 * <!-- begin-user-doc -->

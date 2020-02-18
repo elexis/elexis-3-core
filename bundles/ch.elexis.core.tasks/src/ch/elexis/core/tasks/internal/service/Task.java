@@ -82,7 +82,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		String stationIdentifier =
 			ContextServiceHolder.get().getRootContext().getStationIdentifier();
 		getEntity().setRunner(StringUtils.abbreviate(stationIdentifier, 64));
-		getEntity().setCreatedAt(LocalDateTime.now());
+		getEntity().setCreatedAt(System.currentTimeMillis());
 		
 		logger = LoggerFactory.getLogger(
 			"Task [" + getId() + "] (" + taskDescriptor.getIdentifiedRunnableId() + ") ");
@@ -225,7 +225,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 				ContextServiceHolder.get().setActiveMandator(mandator);
 			}
 			
-			getEntity().setRunAt(LocalDateTime.now());
+			getEntity().setRunAt(System.currentTimeMillis());
 			setState(TaskState.READY);
 			
 			String runnableWithContextId = originTaskDescriptor.getIdentifiedRunnableId();
@@ -240,26 +240,20 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 			
 			getEntity().setRunContext(gson.toJson(effectiveRunContext));
 			// TODO validate all required parameters are set, validate url
-			
 			setState(TaskState.IN_PROGRESS);
-			long beginTimeMillis = System.currentTimeMillis();
 			// TODO what if it runs forever?
 			Map<String, Serializable> result =
 				runnableWithContext.run(effectiveRunContext, progressMonitor, logger);
-			long endTimeMillis = System.currentTimeMillis();
 			if (result == null) {
-				result = new HashMap<String, Serializable>();
-			} else {
-				// returned map may be unmodifiable
-				result = new HashMap<String, Serializable>(result);
+				result = Collections.emptyMap();
 			}
-			result.put("runnableExecDuration", Long.toString(endTimeMillis - beginTimeMillis));
 			
 			setResult(result);
 			TaskState exitState =
 				(result.containsKey(ReturnParameter.MARKER_WARN)) ? TaskState.COMPLETED_WARN
 						: TaskState.COMPLETED;
 			setState(exitState);
+			getEntity().setFinishedAt(System.currentTimeMillis());
 			
 			if (effectiveRunContext.containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)
 				|| getResult().containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)) {
@@ -299,13 +293,22 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	}
 	
 	@Override
+	public String getRunner(){
+		return getEntity().getRunner();
+	}
+	
+	@Override
 	public LocalDateTime getCreatedAt(){
-		return getEntity().getCreatedAt();
+		return getEntity().getCreatedAtLocalDateTime();
 	}
 	
 	@Override
 	public LocalDateTime getRunAt(){
-		return getEntity().getRunAt();
+		return getEntity().getRunAtLocalDateTime();
 	}
 	
+	@Override
+	public LocalDateTime getFinishedAt(){
+		return getEntity().getFinishedAtLocalDateTime();
+	}
 }

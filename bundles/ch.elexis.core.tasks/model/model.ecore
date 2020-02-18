@@ -63,7 +63,7 @@
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="runner" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The station that will run this task. Valid values are empty, stationId or SERVER. Empty defines that any station may run this task."/>
+        <details key="documentation" value="The station that will run this task. Valid values are empty, stationId or ELEXIS-SERVER. Empty defines that any station may run this task."/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="singleton" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
@@ -124,6 +124,8 @@
         <details key="documentation" value="the time execution was started (i.e. the run method was called)"/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="finishedAt" eType="ecore:EDataType ../../ch.elexis.core/model/types.ecore#//LocalDateTime"
+        changeable="false"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="result" changeable="false"
         transient="true">
       <eGenericType eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EMap">
@@ -149,6 +151,12 @@
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="taskDescriptor" lowerBound="1"
         eType="#//ITaskDescriptor" changeable="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="runner" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" changeable="false">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The station this task was run on"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ITaskService" abstract="true" interface="true">
     <eOperations name="createTaskDescriptor" eType="#//ITaskDescriptor" eExceptions="#//TaskException">
