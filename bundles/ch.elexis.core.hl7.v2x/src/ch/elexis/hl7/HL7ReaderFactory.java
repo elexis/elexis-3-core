@@ -116,6 +116,17 @@ public enum HL7ReaderFactory {
 						+ match.getName() + " - trying to use ISO-8859-1 instead");
 						
 				return new ByteArrayInputStream(new String(bytes, "ISO-8859-1").getBytes());
+			} else if (match.getName().contains("Big5")) {
+				CharsetMatch[] allMatches = detector.detectAll();
+				for (CharsetMatch charsetMatch : allMatches) {
+					if (charsetMatch.getName().equals("ISO-8859-1") && charsetMatch.getConfidence() > 25) {
+						logger.warn("Reading HL7 file " + fileHandle.getAbsolutePath()
+							+ " with unlikely encoding "
+								+ match.getName() + " - trying to use ISO-8859-1 instead");
+
+						return new ByteArrayInputStream(new String(bytes, "ISO-8859-1").getBytes());
+					}
+				}
 			}
 			logger.info("Reading HL7 file " + fileHandle.getAbsolutePath() + " encoded " + match.getName()
 				+ " language " + match.getLanguage());
