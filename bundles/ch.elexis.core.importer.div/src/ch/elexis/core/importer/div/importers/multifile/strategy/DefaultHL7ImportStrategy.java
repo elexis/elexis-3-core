@@ -13,6 +13,7 @@ import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.rgw.tools.Result;
+import ch.rgw.tools.Result.SEVERITY;
 import ch.rgw.tools.TimeTool;
 
 /**
@@ -36,8 +37,6 @@ public class DefaultHL7ImportStrategy implements IFileImportStrategy {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Result<Object> execute(IVirtualFilesystemHandle file, Map<String, Object> context, HL7Parser hl7Parser, IPersistenceHandler persistenceHandler) throws IOException{
-		String myLab = (String) context.get(IMultiFileParser.CTX_LABNAME);
-
 		Result<Object> result = null;
 		
 		if (testMode) {
@@ -50,7 +49,9 @@ public class DefaultHL7ImportStrategy implements IFileImportStrategy {
 			}
 			
 			if (moveAfterImport) {
-				FileImportStrategyUtil.moveAfterImport(result.isOK(), file);
+				IVirtualFilesystemHandle fhAfterMove = FileImportStrategyUtil.moveAfterImport(result.isOK(), file);
+				// 779 is a randomly assigned Result code to identify the url entry 
+				result.addMessage(779, result.isOK() ? SEVERITY.OK: SEVERITY.WARNING, "url", fhAfterMove.getAbsolutePath());
 			}
 		} else {
 			if (labContactResolver != null) {
@@ -61,7 +62,9 @@ public class DefaultHL7ImportStrategy implements IFileImportStrategy {
 			}
 			
 			if (moveAfterImport) {
-				FileImportStrategyUtil.moveAfterImport(result.isOK(), file);
+				IVirtualFilesystemHandle fhAfterMove = FileImportStrategyUtil.moveAfterImport(result.isOK(), file);
+				// 779 is a randomly assigned Result code to identify the url entry 
+				result.addMessage(779, result.isOK() ? SEVERITY.OK: SEVERITY.WARNING, "url", fhAfterMove.getAbsolutePath());
 			}
 		}
 		

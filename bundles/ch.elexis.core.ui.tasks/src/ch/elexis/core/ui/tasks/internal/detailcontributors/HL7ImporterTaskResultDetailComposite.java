@@ -24,6 +24,7 @@ import ch.elexis.core.model.tasks.IIdentifiedRunnable.ReturnParameter;
 import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.tasks.model.ITask;
+import ch.elexis.core.ui.icons.Images;
 
 public class HL7ImporterTaskResultDetailComposite {
 	
@@ -43,8 +44,7 @@ public class HL7ImporterTaskResultDetailComposite {
 		Label lblStatus = new Label(container, SWT.NONE);
 		lblStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		final String fileUrl =
-			(String) task.getRunContext().get(IIdentifiedRunnable.RunContextParameter.STRING_URL);
+		final String fileUrl = task.getResultEntryTyped(ReturnParameter.STRING_URL, String.class);
 		String fileName = "???";
 		
 		try {
@@ -60,12 +60,14 @@ public class HL7ImporterTaskResultDetailComposite {
 		} else {
 			text.append("Die Datei " + fileName + " konnte nicht automatisch importiert werden.");
 			text.append("\n\n");
-			text.append("Grund: " + task.getResultEntryTyped(
-				ReturnParameter.FAILED_TASK_EXCEPTION_MESSAGE, String.class) + "\n");
+			// TODO what if not found?
+			text.append("Grund: "
+				+ task.getResultEntryTyped(ReturnParameter.RESULT_DATA, String.class) + "\n");
 		}
 		lblStatus.setText(text.toString());
 		
 		Button btnManualImport = new Button(container, SWT.NONE);
+		btnManualImport.setImage(Images.IMG_HAND.getImage());
 		btnManualImport.setText("Datei manuell importieren");
 		btnManualImport.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -95,6 +97,7 @@ public class HL7ImporterTaskResultDetailComposite {
 				super.widgetSelected(e);
 			}
 		});
+		btnArchive.setEnabled(!task.isSucceeded());
 		
 	}
 	

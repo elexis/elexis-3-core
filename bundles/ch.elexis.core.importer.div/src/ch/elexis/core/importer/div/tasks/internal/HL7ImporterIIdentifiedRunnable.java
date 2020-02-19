@@ -118,12 +118,19 @@ public class HL7ImporterIIdentifiedRunnable implements IIdentifiedRunnable {
 		IVirtualFilesystemHandle fileHandle;
 		try {
 			fileHandle = vfsService.of(urlString);
-			Result<?> result = multiFileParser.importFromHandle(fileHandle, importStrategyFactory, hl7Parser,
-					new DefaultPersistenceHandler());
-			if(!result.isOK()) {
-				throw new TaskException(TaskException.EXECUTION_ERROR, result.toString());
+			Result<?> result = multiFileParser.importFromHandle(fileHandle, importStrategyFactory,
+				hl7Parser, new DefaultPersistenceHandler());
+			// 779 is a randomly assigned Result code to identify the url entry 
+			String newFileUrl = result.getMessages().stream().filter(e -> e.getCode() == 779)
+				.findFirst().map(e -> e.getObject().toString()).orElse(null);
+			
+			Map<String, Serializable> resultMap = new HashMap<String, Serializable>();
+			if (!result.isOK()) {
+				resultMap.put(ReturnParameter.MARKER_WARN, null);
 			}
-			return Collections.singletonMap(IIdentifiedRunnable.ReturnParameter.RESULT_DATA, result.toString());
+			resultMap.put(ReturnParameter.RESULT_DATA, result.toString());
+			resultMap.put(ReturnParameter.STRING_URL, newFileUrl);
+			return resultMap;
 		} catch (IOException e) {
 			throw new TaskException(TaskException.EXECUTION_ERROR, e);
 		}

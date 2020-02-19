@@ -24,11 +24,16 @@ public class TaskResultDetailDialogContributions implements ITaskResultDetailCon
 	public void createDetailCompositeForTask(Composite parent, ITask task, Map<String, Object> e4Services){
 		String identifiedRunnableId = task.getTaskDescriptor().getIdentifiedRunnableId();
 		
-		for (ITaskResultDetailContributor contribution : taskResultDetailDialogContributors) {
-			if (identifiedRunnableId.equals(contribution.getIdentifiedRunnableId())) {
-				contribution.createDetailCompositeForTask(parent, task, e4Services);
-				return;
+		// detail contributions are only shown for TaskState#COMPLETED and TaskState#COMPLETED_WARN
+		if(task.isFinished() && !task.isFailed()) {
+
+			for (ITaskResultDetailContributor contribution : taskResultDetailDialogContributors) {
+				if (identifiedRunnableId.equals(contribution.getIdentifiedRunnableId())) {
+					contribution.createDetailCompositeForTask(parent, task, e4Services);
+					return;
+				}
 			}
+			
 		}
 		
 		new GenericTaskResultDetailComposite(parent, task);
