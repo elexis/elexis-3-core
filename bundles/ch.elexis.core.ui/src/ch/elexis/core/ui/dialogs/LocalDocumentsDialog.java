@@ -166,7 +166,9 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 		if (getPatientMethod != null) {
 			try {
 				Person patient = (Person) getPatientMethod.invoke(element, new Object[0]);
-				return patient.getLabel(true);
+				if (patient != null) {
+					return patient.getLabel(true);
+				}
 			} catch (IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException e) {
 				// ignore ? will be returned
