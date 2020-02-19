@@ -34,12 +34,12 @@ public class VirtualFileHandle_FileDirectory_Test extends AbstractVirtualFileHan
 		testDirectory = new File(tempDirectory.toFile(), "subDir/");
 		assertTrue(testDirectory.mkdir());
 		testDirectory.deleteOnExit();
-		testHandle = service.of(testDirectory);
+		testDirectoryHandle = service.of(testDirectory);
 	}
 
 	@Test(expected = IOException.class)
 	public void testOpenOutputStream() throws IOException {
-		testHandle.openOutputStream();
+		testDirectoryHandle.openOutputStream();
 	}
 
 	@Test
@@ -55,15 +55,15 @@ public class VirtualFileHandle_FileDirectory_Test extends AbstractVirtualFileHan
 
 	@Test
 	public void testGetParent() throws IOException {
-		IVirtualFilesystemHandle parent = testHandle.getParent();
+		IVirtualFilesystemHandle parent = testDirectoryHandle.getParent();
 		assertEquals(tempDirectory.toFile(), parent.toFile().get());
 	}
 
 	@Test
 	public void testListHandles() throws IOException {
-		File file = new File(testHandle.toFile().get(), "listingFile.txt");
+		File file = new File(testDirectoryHandle.toFile().get(), "listingFile.txt");
 		assertTrue(file.createNewFile());
-		IVirtualFilesystemHandle[] listHandles = testHandle.listHandles();
+		IVirtualFilesystemHandle[] listHandles = testDirectoryHandle.listHandles();
 		assertEquals(1, listHandles.length);
 		assertEquals(file, listHandles[0].toFile().get());
 		assertTrue(file.delete());
@@ -71,11 +71,11 @@ public class VirtualFileHandle_FileDirectory_Test extends AbstractVirtualFileHan
 
 	@Test
 	public void testListHandlesIVirtualFilesystemhandleFilter() throws IOException {
-		File file = new File(testHandle.toFile().get(), "listingFile.txt");
+		File file = new File(testDirectoryHandle.toFile().get(), "listingFile.txt");
 		assertTrue(file.createNewFile());
-		File file2 = new File(testHandle.toFile().get(), "listingFile.txta");
+		File file2 = new File(testDirectoryHandle.toFile().get(), "listingFile.txta");
 		assertTrue(file2.createNewFile());
-		IVirtualFilesystemHandle[] listHandles = testHandle
+		IVirtualFilesystemHandle[] listHandles = testDirectoryHandle
 				.listHandles(handle -> "txt".equalsIgnoreCase(handle.getExtension()));
 		assertEquals(1, listHandles.length);
 		assertEquals(file, listHandles[0].toFile().get());
@@ -85,52 +85,52 @@ public class VirtualFileHandle_FileDirectory_Test extends AbstractVirtualFileHan
 
 	@Test
 	public void testDelete() throws IOException {
-		testHandle.delete();
+		testDirectoryHandle.delete();
 		assertFalse(testDirectory.exists());
 		assertTrue(testDirectory.mkdir());
 	}
 
 	@Test
 	public void testToURL() throws MalformedURLException {
-		assertEquals(testDirectory.toURI().toURL(), testHandle.toURL());
+		assertEquals(testDirectory.toURI().toURL(), testDirectoryHandle.toURL());
 	}
 
 	@Test
 	public void testIsDirectory() throws IOException {
-		assertTrue(testHandle.isDirectory());
+		assertTrue(testDirectoryHandle.isDirectory());
 	}
 
 	@Test
 	public void testToFile() {
-		assertEquals(testDirectory, testHandle.toFile().get());
+		assertEquals(testDirectory, testDirectoryHandle.toFile().get());
 	}
 
 	@Test
 	public void testGetExtension() {
-		assertEquals("", testHandle.getExtension());
+		assertEquals("", testDirectoryHandle.getExtension());
 	}
 
 	@Test
 	public void testExists() throws IOException {
 		assertTrue(testDirectory.delete());
-		assertFalse(testHandle.exists());
+		assertFalse(testDirectoryHandle.exists());
 		assertTrue(testDirectory.mkdir());
-		assertTrue(testHandle.exists());
+		assertTrue(testDirectoryHandle.exists());
 	}
 
 	@Test
 	public void testGetName() {
-		assertEquals("", testHandle.getName());
+		assertEquals("subDir", testDirectoryHandle.getName());
 	}
 
 	@Test
 	public void testCanRead() {
-		assertTrue(testHandle.canRead());
+		assertTrue(testDirectoryHandle.canRead());
 	}
 
 	@Test
 	public void testGetAbsolutePath() {
-		assertEquals(testDirectory.toURI().toString(), testHandle.getAbsolutePath());
+		assertEquals(testDirectory.toURI().toString(), testDirectoryHandle.getAbsolutePath());
 	}
 
 	@Test
@@ -145,7 +145,7 @@ public class VirtualFileHandle_FileDirectory_Test extends AbstractVirtualFileHan
 
 	@Test
 	public void testSubDir() throws IOException {
-		IVirtualFilesystemHandle subDir = testHandle.subDir("subdir");
+		IVirtualFilesystemHandle subDir = testDirectoryHandle.subDir("subdir");
 		assertFalse(subDir.exists());
 		subDir.mkdir();
 		assertTrue(subDir.exists());
@@ -153,18 +153,18 @@ public class VirtualFileHandle_FileDirectory_Test extends AbstractVirtualFileHan
 
 	@Test
 	public void testSubFile() throws IOException {
-		IVirtualFilesystemHandle subFile = testHandle.subFile("subfile");
+		IVirtualFilesystemHandle subFile = testDirectoryHandle.subFile("subfile");
 		assertFalse(subFile.exists());
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void testSubFileWithStartingSlash() throws IOException {
-		testHandle.subFile("/bla/foo.txt");
+		testDirectoryHandle.subFile("/bla/foo.txt");
 	}
 
 	public void testMkdir() throws IOException {
 		// TODO behavior?
-		testHandle.mkdir();
+		testDirectoryHandle.mkdir();
 	}
 
 }

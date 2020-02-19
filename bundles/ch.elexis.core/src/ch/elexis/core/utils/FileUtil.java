@@ -44,20 +44,20 @@ public class FileUtil {
 		}
 	}
 	
+	
 	/**
 	 * Move the file to a new parent directory of the current file path
 	 * 
 	 * @param fileHandle
-	 * @param parentDirName
+	 * @param subDirName name of the subdir relative to fileHandle location
+	 * @return fileHandle representing the new location
 	 * @throws IOException
 	 */
-	public static void moveFileToParentDir(IVirtualFilesystemHandle fileHandle,
-		String parentDirName) throws IOException{
+	public static IVirtualFilesystemHandle moveFileToSubDir(IVirtualFilesystemHandle fileHandle,
+		String subDirName) throws IOException{
 		IVirtualFilesystemHandle rootDir = fileHandle.getParent();
-		IVirtualFilesystemHandle subDir = getOrCreateSubdir(rootDir, parentDirName);
-		if (subDir != null) {
-			moveToDir(fileHandle, subDir);
-		}
+		IVirtualFilesystemHandle subDir = getOrCreateSubdir(rootDir, subDirName);
+		return moveToDir(fileHandle, subDir);
 	}
 	
 	private static void moveToDir(File file, File subDir){
@@ -89,7 +89,14 @@ public class FileUtil {
 		return subDir;
 	}
 	
-	private static void moveToDir(IVirtualFilesystemHandle file, IVirtualFilesystemHandle subDir)
+	/**
+	 * Move a file to an existing subDir, if the file already exists
+	 * @param file
+	 * @param subDir
+	 * @return the new handle of the moved file
+	 * @throws IOException
+	 */
+	public static IVirtualFilesystemHandle moveToDir(IVirtualFilesystemHandle file, IVirtualFilesystemHandle subDir)
 		throws IOException{
 		
 		IVirtualFilesystemHandle newFile = subDir.subFile(file.getName());
@@ -103,6 +110,8 @@ public class FileUtil {
 		}
 		
 		file.moveTo(newFile);
+		
+		return newFile;
 	}
 	
 	private static IVirtualFilesystemHandle getOrCreateSubdir(IVirtualFilesystemHandle dir,

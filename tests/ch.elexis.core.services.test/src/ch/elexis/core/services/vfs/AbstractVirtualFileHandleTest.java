@@ -12,12 +12,12 @@ import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandl
 
 public abstract class AbstractVirtualFileHandleTest {
 
-	static IVirtualFilesystemHandle testHandle;	
+	static IVirtualFilesystemHandle testDirectoryHandle;	
 	static IVirtualFilesystemService service;	
 	
 	@Test
 	public void testOpenInputStream() throws IOException{
-		try (InputStream is = testHandle.openInputStream()) {
+		try (InputStream is = testDirectoryHandle.openInputStream()) {
 			String string = IOUtils.toString(is, Charset.defaultCharset());
 			System.out.println(string);
 		}
