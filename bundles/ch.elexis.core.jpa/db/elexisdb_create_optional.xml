@@ -1934,5 +1934,35 @@ DROP TABLE TEMP_ETIKETTEN_OBJCLASS_LINK;
 		</addColumn>
 	</changeSet>
 	
-	
+	<changeSet author="thomas"
+		id="manual_table_TARMED_DEFINITIONEN_ID_LASTUPDATE_DELETED">
+		<preConditions onFail="MARK_RAN">
+			<and>
+				<tableExists tableName="TARMED_DEFINITIONEN" />
+				<not>
+					<columnExists tableName="TARMED_DEFINITIONEN"
+						columnName="ID" />
+				</not>
+			</and>
+		</preConditions>
+		<addColumn tableName="TARMED_DEFINITIONEN">
+			<column name="ID" type="VARCHAR(25)" />
+			<column name="LASTUPDATE" type="BIGINT" />
+			<column defaultValue="0" name="DELETED" type="CHAR(1)" />
+		</addColumn>
+	</changeSet>
+
+	<changeSet author="thomas"
+		id="manual_table_CH_ELEXIS_EIGENDIAGNOSEN_FIXLASTUPDARE">
+		<preConditions onFail="MARK_RAN">
+			<and>
+				<tableExists tableName="CH_ELEXIS_EIGENDIAGNOSEN" />
+				<columnExists tableName="CH_ELEXIS_EIGENDIAGNOSEN"
+					columnName="LASTUPDARE" />
+			</and>
+		</preConditions>
+		<renameColumn tableName="CH_ELEXIS_EIGENDIAGNOSEN"
+			columnDataType="BIGINT" oldColumnName="LASTUPDARE"
+			newColumnName="LASTUPDATE" />
+	</changeSet>
 </databaseChangeLog>
