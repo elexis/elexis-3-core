@@ -1,5 +1,8 @@
 package ch.elexis.core.model.builder;
 
+import java.util.List;
+
+import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.ICodeElementBlock;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.services.IModelService;
@@ -29,4 +32,13 @@ public class ICodeElementBlockBuilder extends AbstractBuilder<ICodeElementBlock>
 		return this;
 	}
 	
+	public ICodeElementBlockBuilder text(String text){
+		object.setText(text);
+		return this;
+	}
+	
+	public AbstractBuilder<ICodeElementBlock> elements(List<ICodeElement> elements){
+		elements.forEach(e -> object.addElement(e));
+		return this;
+	}
 }

@@ -78,8 +78,6 @@ import ch.elexis.core.ui.util.viewers.SelectorPanelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ContentType;
-import ch.elexis.data.Leistungsblock;
-import ch.elexis.data.Mandant;
 
 public class BlockSelector extends CodeSelectorFactory {
 	protected static final String BLOCK_ONLY_FILTER_ENABLED = "blockselector/blockonlyfilter";
@@ -247,11 +245,11 @@ public class BlockSelector extends CodeSelectorFactory {
 			@Override
 			public void run(){
 				Object o = cv.getSelection()[0];
-				if (o instanceof Leistungsblock) {
-					Leistungsblock sourceBlock = (Leistungsblock) o;
+				if (o instanceof BlockTreeViewerItem) {
+					ICodeElementBlock sourceBlock = ((BlockTreeViewerItem) o).getBlock();
 					InputDialog inputDlg = new InputDialog(Display.getDefault().getActiveShell(),
 						"Block kopieren", "Bitte den Namen der Kopie eingeben bzw. bestätigen",
-						sourceBlock.getName() + " Kopie", new IInputValidator() {
+						sourceBlock.getText() + " Kopie", new IInputValidator() {
 							
 							@Override
 							public String isValid(String newText){
@@ -261,9 +259,9 @@ public class BlockSelector extends CodeSelectorFactory {
 						}, SWT.BORDER);
 					if (inputDlg.open() == Window.OK) {
 						String newName = inputDlg.getValue();
-						Leistungsblock newBlock = new Leistungsblock(newName,
-							Mandant.load(sourceBlock.get(Leistungsblock.FLD_MANDANT_ID)));
-						sourceBlock.getElements().forEach(e -> newBlock.addElement(e));
+						new ICodeElementBlockBuilder(CoreModelServiceHolder.get(),
+							sourceBlock.getCode()).mandator(sourceBlock.getMandator()).text(newName)
+								.elements(sourceBlock.getElements()).buildAndSave();
 						cv.notify(CommonViewer.Message.update);
 					}
 				}
