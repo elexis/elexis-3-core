@@ -4,11 +4,12 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.entities.Rezept;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
-import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
 import ch.elexis.core.model.prescription.Constants;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.model.util.internal.ModelUtil;
@@ -91,7 +92,7 @@ public class Prescription
 	
 	@Override
 	public String getDosageInstruction(){
-		return getEntity().getDosis();
+		return StringUtils.defaultString(getEntity().getDosis());
 	}
 	
 	@Override
