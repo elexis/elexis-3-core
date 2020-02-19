@@ -41,6 +41,8 @@ public class TaskResultLabelProvider extends ColumnLabelProvider {
 			return Images.IMG_ACHTUNG;
 		case FAILED:
 			return Images.IMG_AUSRUFEZ;
+		case QUEUED:
+			return Images.IMG_CLOCK;
 		case DRAFT:
 			// TODO
 		default:
