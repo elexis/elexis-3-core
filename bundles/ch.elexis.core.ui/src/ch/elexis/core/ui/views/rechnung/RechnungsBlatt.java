@@ -26,6 +26,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.NotEnabledException;
+import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -45,12 +51,17 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.handlers.IHandlerService;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.StringConstants;
@@ -89,6 +100,7 @@ import ch.elexis.data.VerrechnetCopy;
 import ch.elexis.data.Zahlung;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
+import ch.rgw.tools.TimeTool;
 
 public class RechnungsBlatt extends Composite implements IActivationListener {
 	
@@ -334,10 +346,38 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 				ISelection selection = event.getSelection();
 				if (selection instanceof StructuredSelection
 					&& !((StructuredSelection) selection).isEmpty()) {
-					ElexisEventDispatcher.clearSelection(Zahlung.class);
-					ElexisEventDispatcher
-						.fireSelectionEvent(
-							(PersistentObject) ((StructuredSelection) selection).getFirstElement());
+					Zahlung zahlung = (Zahlung) ((StructuredSelection) selection).getFirstElement();
+					// get the command
+					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+					ICommandService cmdService =
+						(ICommandService) window.getService(ICommandService.class);
+					Command cmd =
+						cmdService.getCommand("ch.elexis.ebanking_ch.command.openESRWithInvoiceId");
+					if (cmd != null) {
+						try {
+							// create the parameter
+							HashMap<String, Object> param = new HashMap<String, Object>();
+							param.put("ch.elexis.ebanking_ch.command.openESR.InvoiceId",
+								zahlung.getRechnung().getId());
+							param.put("ch.elexis.ebanking_ch.command.openESR.PaymentDate",
+								new TimeTool(zahlung.getDatum()).toString(TimeTool.DATE_COMPACT));
+							// build the parameterized command
+							ParameterizedCommand pc =
+								ParameterizedCommand.generateCommand(cmd, param);
+							// execute the command
+							IHandlerService handlerService =
+								(IHandlerService) PlatformUI.getWorkbench()
+									.getActiveWorkbenchWindow().getService(IHandlerService.class);
+							handlerService.executeCommand(pc, null);
+						} catch (ExecutionException | NotDefinedException | NotEnabledException
+								| NotHandledException e) {
+							LoggerFactory.getLogger(getClass())
+								.error("Error executing open esr command", e);
+						}
+					} else {
+						LoggerFactory.getLogger(getClass())
+							.warn("No open esr command found, ebanking not installed");
+					}
 				}
 			}
 		});
