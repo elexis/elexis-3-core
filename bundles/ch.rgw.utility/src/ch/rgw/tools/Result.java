@@ -35,6 +35,10 @@ public class Result<T> {
 	
 	List<msg> list = new ArrayList<msg>();
 	private SEVERITY severity = SEVERITY.OK;
+	
+	/**
+	 * Random code assignable as required
+	 */
 	private int code;
 	
 	public SEVERITY getSeverity(){
@@ -83,7 +87,7 @@ public class Result<T> {
 				}
 			}
 		}
-		return result.result;
+		return result.object;
 	}
 	
 	/**
@@ -156,13 +160,13 @@ public class Result<T> {
 		int code;
 		String text;
 		SEVERITY severity;
-		T result;
+		T object;
 		
 		msg(int c, String t, SEVERITY s, T r){
 			code = c;
 			text = t;
 			severity = s;
-			result = r;
+			object = r;
 		}
 		
 		public SEVERITY getSeverity(){
@@ -176,14 +180,23 @@ public class Result<T> {
 		public String getText(){
 			return text;
 		}
+		
+		public T getObject(){
+			return object;
+		}
+		
+		@Override
+		public String toString(){
+			return "msg (" + severity + ") " + code + " - " + text + " - " + object;
+		}
 	}
 	
 	/**
 	 * Return the result as String, cr-separated list of entries
 	 */
 	public String toString(){
-		return "Result " + severity + " "
-			+ list.stream().map(x -> x.text).reduce((x, y) -> x + "," + y).get();
+		return "Result (" + severity + ") msgs: "
+			+ list.stream().map(x -> x.text + "/" + x.code).reduce((x, y) -> x + " , " + y).get();
 	}
 	
 	/**
@@ -206,6 +219,10 @@ public class Result<T> {
 	
 	public void addMessage(SEVERITY severity, String message){
 		list.add(new msg(0, message, severity, null));
+	}
+	
+	public void addMessage(int code, SEVERITY severity, String message, T object){
+		list.add(new msg(code, message, severity, object));
 	}
 	
 	public void addMessage(SEVERITY severity, String message, T object){

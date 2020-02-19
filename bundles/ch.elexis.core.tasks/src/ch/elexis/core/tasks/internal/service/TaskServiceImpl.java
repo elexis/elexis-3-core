@@ -282,7 +282,7 @@ public class TaskServiceImpl implements ITaskService {
 			TaskState state = task.getState();
 			if (OwnerTaskNotification.WHEN_FINISHED == ownerNotification
 				|| (OwnerTaskNotification.WHEN_FINISHED_FAILED == ownerNotification
-					&& TaskState.FAILED == state)) {
+					&& ( TaskState.FAILED == state || TaskState.COMPLETED_WARN == state) )) {
 				
 				if (owner != null) {
 					sendMessageToOwner(task, owner, state);
@@ -333,7 +333,7 @@ public class TaskServiceImpl implements ITaskService {
 		logger.info("[{}] trigger taskDesc [{}/{}] runContext [{}]", triggerType,
 			taskDescriptor.getId(), taskDescriptor.getReferenceId(), runContext);
 		
-		ITask task = new Task(taskDescriptor, triggerType, progressMonitor, runContext);
+		Task task = new Task(taskDescriptor, triggerType, progressMonitor, runContext);
 		
 		// TODO test if all runContext parameters are satisfied, else reject execution
 		
@@ -350,6 +350,8 @@ public class TaskServiceImpl implements ITaskService {
 			// TODO triggering failed, where to show?
 			throw new TaskException(TaskException.EXECUTION_REJECTED, re);
 		}
+		
+		task.setState(TaskState.QUEUED);
 		
 		return task;
 	}

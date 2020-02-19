@@ -30,6 +30,9 @@ public enum TaskState implements Enumerator {
 	 * The '<em><b>DRAFT</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The task object was just created.
+	 * <!-- end-model-doc -->
 	 * @see #DRAFT_VALUE
 	 * @generated
 	 * @ordered
@@ -37,9 +40,23 @@ public enum TaskState implements Enumerator {
 	DRAFT(0, "DRAFT", "DRAFT"),
 
 	/**
+	 * The '<em><b>QUEUED</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The task has been queued. Depending on its type (singleton or not) it is added to a specific queue.
+	 * <!-- end-model-doc -->
+	 * @see #QUEUED_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	QUEUED(5, "QUEUED", "QUEUED"), /**
 	 * The '<em><b>READY</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Task is ready for execution. This happens prior to instantiating the identified runnable to execute.
+	 * <!-- end-model-doc -->
 	 * @see #READY_VALUE
 	 * @generated
 	 * @ordered
@@ -50,6 +67,9 @@ public enum TaskState implements Enumerator {
 	 * The '<em><b>IN PROGRESS</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The task is executing the identified runnable.
+	 * <!-- end-model-doc -->
 	 * @see #IN_PROGRESS_VALUE
 	 * @generated
 	 * @ordered
@@ -80,6 +100,9 @@ public enum TaskState implements Enumerator {
 	 * The '<em><b>COMPLETED</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The task successfully and purposefully executed.
+	 * <!-- end-model-doc -->
 	 * @see #COMPLETED_VALUE
 	 * @generated
 	 * @ordered
@@ -89,7 +112,7 @@ public enum TaskState implements Enumerator {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * The task completed successfully, but not flawless. I.e. there were warnings somebody should consider.
+	 * The task completed successfully, but not purposeful. That is the outcome did not meet the business expectations.
 	 * <!-- end-model-doc -->
 	 * @see #COMPLETED_WARN_VALUE
 	 * @generated
@@ -99,6 +122,9 @@ public enum TaskState implements Enumerator {
 	 * The '<em><b>FAILED</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The task completed successfully, but not purposeful. That is the outcome did not meet the business expectations.
+	 * <!-- end-model-doc -->
 	 * @see #FAILED_VALUE
 	 * @generated
 	 * @ordered
@@ -113,12 +139,29 @@ public enum TaskState implements Enumerator {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The task object was just created.
+	 * <!-- end-model-doc -->
 	 * @see #DRAFT
 	 * @model
 	 * @generated
 	 * @ordered
 	 */
 	public static final int DRAFT_VALUE = 0;
+
+	/**
+	 * The '<em><b>QUEUED</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The task has been queued. Depending on its type (singleton or not) it is added to a specific queue.
+	 * <!-- end-model-doc -->
+	 * @see #QUEUED
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int QUEUED_VALUE = 5;
 
 	/**
 	 * The '<em><b>READY</b></em>' literal value.
@@ -128,6 +171,9 @@ public enum TaskState implements Enumerator {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Task is ready for execution. This happens prior to instantiating the identified runnable to execute.
+	 * <!-- end-model-doc -->
 	 * @see #READY
 	 * @model
 	 * @generated
@@ -143,6 +189,9 @@ public enum TaskState implements Enumerator {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The task is executing the identified runnable.
+	 * <!-- end-model-doc -->
 	 * @see #IN_PROGRESS
 	 * @model
 	 * @generated
@@ -188,6 +237,9 @@ public enum TaskState implements Enumerator {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The task successfully and purposefully executed.
+	 * <!-- end-model-doc -->
 	 * @see #COMPLETED
 	 * @model
 	 * @generated
@@ -200,7 +252,7 @@ public enum TaskState implements Enumerator {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * The task completed successfully, but not flawless. I.e. there were warnings somebody should consider.
+	 * The task completed successfully, but not purposeful. That is the outcome did not meet the business expectations.
 	 * <!-- end-model-doc -->
 	 * @see #COMPLETED_WARN
 	 * @model
@@ -217,6 +269,9 @@ public enum TaskState implements Enumerator {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The task completed successfully, but not purposeful. That is the outcome did not meet the business expectations.
+	 * <!-- end-model-doc -->
 	 * @see #FAILED
 	 * @model
 	 * @generated
@@ -233,6 +288,7 @@ public enum TaskState implements Enumerator {
 	private static final TaskState[] VALUES_ARRAY =
 		new TaskState[] {
 			DRAFT,
+			QUEUED,
 			READY,
 			IN_PROGRESS,
 			CANCELLED,
@@ -297,6 +353,7 @@ public enum TaskState implements Enumerator {
 	public static TaskState get(int value) {
 		switch (value) {
 			case DRAFT_VALUE: return DRAFT;
+			case QUEUED_VALUE: return QUEUED;
 			case READY_VALUE: return READY;
 			case IN_PROGRESS_VALUE: return IN_PROGRESS;
 			case CANCELLED_VALUE: return CANCELLED;

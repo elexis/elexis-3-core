@@ -102,7 +102,12 @@
     </eOperations>
     <eOperations name="isSucceeded" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The task isFinished and finished with either TaskState.COMPLETED or TaskState.COMPLETED_WARN"/>
+        <details key="documentation" value="The task is successfully and purposefully finished."/>
+      </eAnnotations>
+    </eOperations>
+    <eOperations name="isFailed" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The task is successfully and purposefully finished."/>
       </eAnnotations>
     </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
@@ -146,7 +151,7 @@
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" changeable="false"
         defaultValueLiteral="false">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The task has finished its execution."/>
+        <details key="documentation" value="The task has finished its execution, the resulting states may be TaskState.FINISHED, TaskState.COMPLETED and TaskState.COMPLETED_WARN"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="taskDescriptor" lowerBound="1"
@@ -250,18 +255,43 @@
     <eLiterals name="OTHER_TASK" value="4"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="TaskState">
-    <eLiterals name="DRAFT"/>
-    <eLiterals name="READY" value="10"/>
-    <eLiterals name="IN_PROGRESS" value="20"/>
-    <eLiterals name="CANCELLED" value="30"/>
-    <eLiterals name="ON_HOLD" value="40"/>
-    <eLiterals name="COMPLETED" value="50"/>
-    <eLiterals name="COMPLETED_WARN" value="55" literal="COMPLETED_WARN">
+    <eLiterals name="DRAFT">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The task completed successfully, but not flawless. I.e. there were warnings somebody should consider."/>
+        <details key="documentation" value="The task object was just created."/>
       </eAnnotations>
     </eLiterals>
-    <eLiterals name="FAILED" value="90"/>
+    <eLiterals name="QUEUED" value="5">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The task has been queued. Depending on its type (singleton or not) it is added to a specific queue."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="READY" value="10">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Task is ready for execution. This happens prior to instantiating the identified runnable to execute."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="IN_PROGRESS" value="20">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The task is executing the identified runnable."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="CANCELLED" value="30"/>
+    <eLiterals name="ON_HOLD" value="40"/>
+    <eLiterals name="COMPLETED" value="50">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The task successfully and purposefully executed."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="COMPLETED_WARN" value="55" literal="COMPLETED_WARN">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The task completed successfully, but not purposeful. That is the outcome did not meet the business expectations."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="FAILED" value="90">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The task completed successfully, but not purposeful. That is the outcome did not meet the business expectations."/>
+      </eAnnotations>
+    </eLiterals>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="OwnerTaskNotification">
     <eLiterals name="NEVER"/>

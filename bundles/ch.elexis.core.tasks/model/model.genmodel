@@ -17,6 +17,7 @@
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="model.ecore#//TaskState">
       <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/DRAFT"/>
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/QUEUED"/>
       <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/READY"/>
       <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/IN_PROGRESS"/>
       <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/CANCELLED"/>
@@ -82,6 +83,7 @@
         <genTypeParameters ecoreTypeParameter="model.ecore#//ITask/getResultEntryTyped/T"/>
       </genOperations>
       <genOperations ecoreOperation="model.ecore#//ITask/isSucceeded"/>
+      <genOperations ecoreOperation="model.ecore#//ITask/isFailed"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//ITaskService">
       <genOperations ecoreOperation="model.ecore#//ITaskService/createTaskDescriptor">

@@ -188,7 +188,7 @@ public interface ITask extends Identifiable, Deleteable {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * The task has finished its execution.
+	 * The task has finished its execution, the resulting states may be TaskState.FINISHED, TaskState.COMPLETED and TaskState.COMPLETED_WARN
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Finished</em>' attribute.
 	 * @see ch.elexis.core.tasks.model.ModelPackage#getITask_Finished()
@@ -242,12 +242,23 @@ public interface ITask extends Identifiable, Deleteable {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * The task isFinished and finished with either TaskState.COMPLETED or TaskState.COMPLETED_WARN
+	 * The task is successfully and purposefully finished.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation"
 	 * @generated
 	 */
 	boolean isSucceeded();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The task is successfully and purposefully finished.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	boolean isFailed();
 
 
 } // ITask

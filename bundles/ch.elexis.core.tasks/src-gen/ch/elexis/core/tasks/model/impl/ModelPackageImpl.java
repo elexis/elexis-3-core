@@ -740,6 +740,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		addEOperation(iTaskEClass, ecorePackage.getEBoolean(), "isSucceeded", 0, 1, IS_UNIQUE, IS_ORDERED);
 
+		addEOperation(iTaskEClass, ecorePackage.getEBoolean(), "isFailed", 0, 1, IS_UNIQUE, IS_ORDERED);
+
 		initEClass(iTaskServiceEClass, ITaskService.class, "ITaskService", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		op = addEOperation(iTaskServiceEClass, this.getITaskDescriptor(), "createTaskDescriptor", 0, 1, IS_UNIQUE, IS_ORDERED);
@@ -817,6 +819,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		initEEnum(taskStateEEnum, TaskState.class, "TaskState");
 		addEEnumLiteral(taskStateEEnum, TaskState.DRAFT);
+		addEEnumLiteral(taskStateEEnum, TaskState.QUEUED);
 		addEEnumLiteral(taskStateEEnum, TaskState.READY);
 		addEEnumLiteral(taskStateEEnum, TaskState.IN_PROGRESS);
 		addEEnumLiteral(taskStateEEnum, TaskState.CANCELLED);

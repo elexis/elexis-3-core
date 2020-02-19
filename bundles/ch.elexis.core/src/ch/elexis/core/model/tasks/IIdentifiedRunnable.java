@@ -13,7 +13,8 @@ public interface IIdentifiedRunnable {
 	
 	/**
 	 * Standardized key values for run parameters {@link Map} passed to the
-	 * {@link IIdentifiedRunnable}. Be sure to handle serialized boolean values using {@link SerializableBoolean}
+	 * {@link IIdentifiedRunnable}. Be sure to handle serialized boolean values using
+	 * {@link SerializableBoolean}
 	 */
 	public final class RunContextParameter {
 		private RunContextParameter(){}
@@ -70,6 +71,13 @@ public interface IIdentifiedRunnable {
 		public static final String RESULT_DATA_LIST = "resultDataList";
 		
 		/**
+		 * If the context should in any way transport a resource that is representable as url. This
+		 * can both mean a file resolvable url, or a http url. Usage form is up to the
+		 * implementation.
+		 */
+		public static final String STRING_URL = "url";
+		
+		/**
 		 * The existence of this key does advise the task system to not persist the tasks results.
 		 * Use this e.g. to not "log" an empty run. (e.g. a directory watcher that found nothing).
 		 * When setting this to the run context, every successful execution of the task will NOT be
@@ -79,14 +87,14 @@ public interface IIdentifiedRunnable {
 		
 		/**
 		 * The existence of this key does advise the task system that there was a warning during
-		 * execution. That is, the task completed successfully, but not "flawlessly". The task
-		 * object will be marked accordingly.
+		 * execution. That is, the task completed successfully, but not "as intended for successful
+		 * outcome". The task object will be marked TaskState.COMPLETED_WARN.
 		 */
 		public static final String MARKER_WARN = "markerWarn";
 		
 		/**
 		 * If the task throws an exception (task fails), the message of the exception is returned
-		 * using this key.
+		 * using this key. This is only set if TaskState == FAILED
 		 */
 		public static final String FAILED_TASK_EXCEPTION_MESSAGE = "exceptionMessage";
 	}

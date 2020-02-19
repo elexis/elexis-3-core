@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,7 +117,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		return TaskState.get(val);
 	}
 	
-	private void setState(TaskState state){
+	void setState(TaskState state){
 		getEntity().setState(state.getValue());
 		
 		if (TaskState.READY == state) {
@@ -183,15 +184,24 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		String json = getEntity().getResult();
 		if (json != null) {
 			JSONObject map = new JSONObject(json);
-			String valueToString = JSONObject.valueToString(map.get(key));
-			return gson.fromJson(valueToString, clazz);
+			try {
+				String valueToString = JSONObject.valueToString(map.get(key));
+				return gson.fromJson(valueToString, clazz);
+			} catch (JSONException e) {
+				// do nothing
+			}
 		}
 		return null;
 	}
 	
 	@Override
 	public boolean isSucceeded(){
-		return (TaskState.COMPLETED == getState() || TaskState.COMPLETED_WARN == getState());
+		return TaskState.COMPLETED == getState();
+	}
+	
+	@Override
+	public boolean isFailed(){
+		return TaskState.FAILED == getState();
 	}
 	
 	@Override
