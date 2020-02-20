@@ -145,6 +145,8 @@ public class DocumentsView extends ViewPart {
 			ViewContentProvider viewContentProvider =
 				(ViewContentProvider) viewer.getContentProvider();
 			viewContentProvider.updateElement(document);
+			//the selection of TreeItem is disposed after updating a document with a dialog
+			table.deselectAll();
 			viewer.refresh();
 		}
 	}

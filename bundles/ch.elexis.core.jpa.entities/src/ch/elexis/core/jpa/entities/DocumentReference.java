@@ -34,6 +34,12 @@ public class DocumentReference extends AbstractEntityWithId implements EntityWit
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
 	
+	@Column(length = 80)
+	private String authorId;
+	
+	@Column(length = 512)
+	private String keywords;
+	
 	@Override
 	public boolean isDeleted(){
 		return deleted;
@@ -106,5 +112,21 @@ public class DocumentReference extends AbstractEntityWithId implements EntityWit
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+	
+	public void setAuthorId(String authorId){
+		this.authorId = authorId;
+	}
+	
+	public String getAuthorId(){
+		return authorId;
+	}
+	
+	public void setKeywords(String keywords){
+		this.keywords = keywords;
+	}
+	
+	public String getKeywords(){
+		return keywords;
 	}
 }

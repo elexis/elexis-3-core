@@ -19,6 +19,10 @@ import java.util.Optional;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.fieldassist.ContentProposalAdapter;
+import org.eclipse.jface.fieldassist.IContentProposal;
+import org.eclipse.jface.fieldassist.IContentProposalListener;
+import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelection;
@@ -27,7 +31,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
@@ -48,14 +51,20 @@ import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.services.IDocumentStore.Capability;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.documents.Messages;
-import ch.elexis.core.ui.documents.provider.CodingElementComparer;
-import ch.elexis.core.ui.documents.provider.CodingLabelProvider;
+import ch.elexis.core.ui.documents.provider.AuthorContentProposalProvider;
+import ch.elexis.core.ui.documents.provider.CodingContentProposal;
+import ch.elexis.core.ui.documents.provider.DocumentClassProposalProvider;
+import ch.elexis.core.ui.documents.provider.PracticeSettingProposalProvider;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.proposals.IdentifiableContentProposal;
 import ch.elexis.core.ui.util.SWTHelper;
 
 public class DocumentsMetaDataDialog extends TitleAreaDialog {
+	
+	private static final String PROPOSAL_RET_OBJ = "PROPOSAL_RET_OBJ";
 	
 	private static Logger logger = LoggerFactory.getLogger(DocumentsMetaDataDialog.class);
 	
@@ -65,8 +74,8 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 	Text tTitle;
 	Text tKeywords;
 	Text tAuthor;
-	ComboViewer cbPracticeSetting;
-	ComboViewer cbDocumentClass;
+	Text tPracticeSetting;
+	Text tDocumentClass;
 	
 	ComboViewer cbCategories;
 	public String title;
@@ -74,17 +83,20 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 	public String category;
 	
 	private final boolean categoryCrudAllowed;
-	private final boolean keywordsCrudAllowed;
 	
 	public DocumentsMetaDataDialog(IDocument document, Shell parent){
 		super(parent);
+		
+		Objects.requireNonNull(FindingsServiceHolder.getiFindingsService(),
+			"Findings-Service not installed.");
+		Objects.requireNonNull(ValueSetServiceHolder.getIValueSetService(),
+			"ValueSet-Service not installed.");
+		
 		this.document = document;
-		this.documentReference = getDocumentReference(document).orElse(null);
+		this.documentReference = getOrCreateDocumentReference(document);
 		
 		categoryCrudAllowed =
 			DocumentStoreServiceHolder.getService().isAllowed(document, Capability.CATEGORY);
-		keywordsCrudAllowed =
-			DocumentStoreServiceHolder.getService().isAllowed(document, Capability.KEYWORDS);
 	}
 	
 	@Override
@@ -202,12 +214,8 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 		});
 		new Label(ret, SWT.NONE).setText(Messages.DocumentsView_Title);
 		tTitle = SWTHelper.createText(ret, 1, SWT.NONE);
-		new Label(ret, SWT.NONE).setText(Messages.DocumentView_keywordsColumn);
-		tKeywords = SWTHelper.createText(ret, 4, SWT.NONE);
-		tKeywords.setEnabled(keywordsCrudAllowed);
 		tTitle.setText(document.getTitle());
 		
-		tKeywords.setText(Objects.toString(document.getKeywords(), ""));
 		Object cbSelection =
 			document.getCategory() != null ? document.getCategory() : cbCategories.getElementAt(0);
 		if (cbSelection != null) {
@@ -218,60 +226,97 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 			
 		}
 		
-		new Label(ret, SWT.NONE).setText(Messages.DocumentsView_Author);
-		tAuthor = SWTHelper.createText(ret, 1, SWT.NONE);
-		tAuthor.setText(Optional.ofNullable(document.getAuthor()).map(IContact::getLabel).orElse(""));
-		
 		createUIDocumentReferences(ret);
 		return ret;
 	}
 
 	private void createUIDocumentReferences(Composite ret){
-		if (ValueSetServiceHolder.getIValueSetService() != null) {
-			new Label(ret, SWT.NONE).setText(Messages.DocumentsView_DocumentClass);
-			cbDocumentClass = new ComboViewer(ret, SWT.SINGLE | SWT.READ_ONLY);
-			cbDocumentClass.setContentProvider(ArrayContentProvider.getInstance());
-			cbDocumentClass.setComparer(new CodingElementComparer());
-			cbDocumentClass.setLabelProvider(new CodingLabelProvider());
-			cbDocumentClass.setInput(ValueSetServiceHolder.getIValueSetService()
-				.getValueSetByName("EprDocumentClassCode"));
-			cbDocumentClass.getControl()
-				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-			
-			new Label(ret, SWT.NONE).setText(Messages.DocumentsView_PracticeSetting);
-			cbPracticeSetting = new ComboViewer(ret, SWT.SINGLE | SWT.READ_ONLY);
-			cbPracticeSetting.setContentProvider(ArrayContentProvider.getInstance());
-			cbPracticeSetting.setLabelProvider(new CodingLabelProvider());
-			cbPracticeSetting.setComparer(new CodingElementComparer());
-			cbPracticeSetting.setInput(ValueSetServiceHolder.getIValueSetService()
-				.getValueSetByName("EprDocumentPracticeSettingCode"));
-			cbPracticeSetting.getControl()
-				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-			
-			// load selections
-			if (documentReference != null) {
-				Optional.ofNullable(documentReference.getDocumentClass())
-					.ifPresent(o -> cbDocumentClass.setSelection(new StructuredSelection(o), true));
-				Optional.ofNullable(documentReference.getPracticeSetting()).ifPresent(
-					o -> cbPracticeSetting.setSelection(new StructuredSelection(o), true));
+		new Label(ret, SWT.NONE).setText(Messages.DocumentView_keywordsColumn);
+		tKeywords = SWTHelper.createText(ret, 4, SWT.NONE);
+		tKeywords.setText(Optional
+			.ofNullable(Objects.toString(documentReference.getKeywords(), document.getKeywords()))
+			.orElse(""));
+		
+		new Label(ret, SWT.NONE).setText(Messages.DocumentsView_Author);
+		tAuthor = SWTHelper.createText(ret, 1, SWT.NONE);
+		IContact author = Optional.ofNullable(documentReference.getAuthorId())
+			.map(o -> CoreModelServiceHolder.get().load(o, IContact.class).orElse(null))
+			.orElse(document.getAuthor());
+		if (author != null) {
+			tAuthor.setText(author.getLabel());
+			tAuthor.setData(PROPOSAL_RET_OBJ, author);
+		}
+		ContentProposalAdapter tAuthorContentProposal = new ContentProposalAdapter(tAuthor,
+			new TextContentAdapter(), new AuthorContentProposalProvider(), null, null);
+		tAuthorContentProposal.addContentProposalListener(new IContentProposalListener() {
+			@SuppressWarnings("unchecked")
+			@Override
+			public void proposalAccepted(IContentProposal proposal){
+				tAuthor.setText(proposal.getLabel());
+				tAuthor.setData(PROPOSAL_RET_OBJ,
+					((IdentifiableContentProposal<IContact>) proposal).getIdentifiable());
 			}
+		});
+		
+		new Label(ret, SWT.NONE).setText(Messages.DocumentsView_DocumentClass);
+		tDocumentClass = SWTHelper.createText(ret, 1, SWT.NONE);
+		ContentProposalAdapter tDocumentClassContentProposal =
+			new ContentProposalAdapter(tDocumentClass, new TextContentAdapter(),
+				new DocumentClassProposalProvider(), null, null);
+		tDocumentClassContentProposal.addContentProposalListener(new IContentProposalListener() {
+			@Override
+			public void proposalAccepted(IContentProposal proposal){
+				tDocumentClass.setText(proposal.getLabel());
+				tDocumentClass.setData(PROPOSAL_RET_OBJ, ((CodingContentProposal) proposal).getCoding());
+				tDocumentClass.setSelection(tDocumentClass.getText().length());
+			}
+		});
+		ICoding docClassCode = documentReference.getDocumentClass();
+		if (docClassCode != null) {
+			tDocumentClass.setText(docClassCode.getDisplay());
+			tDocumentClass.setData(PROPOSAL_RET_OBJ, docClassCode);
+		}
+		
+
+		new Label(ret, SWT.NONE).setText(Messages.DocumentsView_PracticeSetting);
+		tPracticeSetting = SWTHelper.createText(ret, 1, SWT.NONE);
+		ContentProposalAdapter tPracticeSettingContentProposal =
+			new ContentProposalAdapter(tPracticeSetting, new TextContentAdapter(),
+				new PracticeSettingProposalProvider(), null, null);
+		tPracticeSettingContentProposal.addContentProposalListener(new IContentProposalListener() {
+			@Override
+			public void proposalAccepted(IContentProposal proposal){
+				tPracticeSetting.setText(proposal.getLabel());
+				tPracticeSetting.setData(PROPOSAL_RET_OBJ, ((CodingContentProposal) proposal).getCoding());
+				tPracticeSetting.setSelection(tPracticeSetting.getText().length());
+			}
+		});
+		ICoding pracSetttingCode = documentReference.getPracticeSetting();
+		if (pracSetttingCode != null) {
+			tPracticeSetting.setText(pracSetttingCode.getDisplay());
+			tPracticeSetting.setData(PROPOSAL_RET_OBJ, pracSetttingCode);
 		}
 	}
 	
-	public Optional<IDocumentReference> getDocumentReference(IDocument document){
-		if (FindingsServiceHolder.getiFindingsService() != null && document != null
-			&& document.getId() != null) {
-			List<IDocumentReference> documentReferences =
-				FindingsServiceHolder.getiFindingsService().getDocumentFindings(document.getId(),
-					IDocumentReference.class);
-			if (documentReferences.size() > 1) {
-				LoggerFactory.getLogger(getClass())
-					.warn("Got more than one DocumentReferences for document id ["
-						+ document.getId() + "] using first");
-			}
-			return documentReferences.stream().findFirst();
+	private IDocumentReference getOrCreateDocumentReference(IDocument document){
+		List<IDocumentReference> documentReferences = FindingsServiceHolder.getiFindingsService()
+			.getDocumentFindings(document.getId(), IDocumentReference.class);
+		if (documentReferences.size() > 1) {
+			LoggerFactory.getLogger(getClass())
+				.warn("Got more than one DocumentReferences for document id [" + document.getId()
+					+ "] using first");
 		}
-		return Optional.empty();
+		if (!documentReferences.isEmpty()) {
+			return documentReferences.get(0);
+		}
+		
+		// no document reference found - create new entry with mandatory fields
+		IDocumentReference documentReference =
+			FindingsServiceHolder.getiFindingsService().create(IDocumentReference.class);
+		documentReference.setPatientId(document.getPatient().getId());
+		documentReference.setDocument(document);
+		FindingsServiceHolder.getiFindingsService().saveFinding(documentReference);
+		return documentReference;
 	}
 	
 	@Override
@@ -293,38 +338,28 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 				document.setCategory((ICategory) comboSelection.getFirstElement());
 			}
 			document.setTitle(title);
+			keywords = tKeywords.getText();
+			document.setKeywords(keywords);
+			document.setAuthor((IContact) tAuthor.getData(PROPOSAL_RET_OBJ));
 			
-			if (keywordsCrudAllowed) {
-				keywords = tKeywords.getText();
-				document.setKeywords(keywords);
-			}
 			updateDocumentReferences();
 		}
 		super.okPressed();
 	}
 
 	private void updateDocumentReferences(){
-		if (ValueSetServiceHolder.getIValueSetService() != null
-			&& FindingsServiceHolder.getiFindingsService() != null) {
-			if (documentReference == null) {
-				documentReference =
-					FindingsServiceHolder.getiFindingsService().create(IDocumentReference.class);
-			}
-			ICoding codingDocClass =
-				(ICoding) ((StructuredSelection) cbDocumentClass.getSelection()).getFirstElement();
-			ICoding codingPracSetting =
-				(ICoding) ((StructuredSelection) cbPracticeSetting.getSelection())
-					.getFirstElement();
-			if (codingDocClass != null) {
-				documentReference.setDocumentClass(codingDocClass);
-			}
-			if (codingPracSetting != null) {
-				documentReference.setPracticeSetting(codingPracSetting);
-			}
-			documentReference.setPatientId(document.getPatient().getId());
-			documentReference.setDocument(document);
-			FindingsServiceHolder.getiFindingsService().saveFinding(documentReference);
-		}
+		
+		documentReference.setKeywords(tKeywords.getText());
+		documentReference.setAuthorId(
+			Optional.ofNullable((IContact) tAuthor.getData(PROPOSAL_RET_OBJ)).map(IContact::getId)
+				.orElse(null));
+		
+		Optional.ofNullable(tPracticeSetting.getData(PROPOSAL_RET_OBJ))
+			.ifPresent(o -> documentReference.setPracticeSetting((ICoding) o));
+
+		Optional.ofNullable(tDocumentClass.getData(PROPOSAL_RET_OBJ))
+			.ifPresent(o -> documentReference.setDocumentClass((ICoding) o));
+		FindingsServiceHolder.getiFindingsService().saveFinding(documentReference);
 	}
 	
 	private ICategory findComboElementByName(String name){

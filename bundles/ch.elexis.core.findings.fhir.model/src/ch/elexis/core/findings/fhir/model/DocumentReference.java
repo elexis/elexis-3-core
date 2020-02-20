@@ -129,4 +129,24 @@ public class DocumentReference
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public String getAuthorId(){
+		return getEntity().getAuthorId();
+	}
+	
+	@Override
+	public void setAuthorId(String authorId){
+		getEntity().setAuthorId(authorId);
+	}
+	
+	@Override
+	public String getKeywords(){
+		return getEntity().getKeywords();
+	}
+	
+	@Override
+	public void setKeywords(String keywords){
+		getEntity().setKeywords(keywords);
+	}
 }
