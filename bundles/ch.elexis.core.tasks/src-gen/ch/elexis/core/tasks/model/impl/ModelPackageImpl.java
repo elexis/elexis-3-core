@@ -742,6 +742,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		addEOperation(iTaskEClass, ecorePackage.getEBoolean(), "isFailed", 0, 1, IS_UNIQUE, IS_ORDERED);
 
+		op = addEOperation(iTaskEClass, null, "setStateCompletedManual", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "remark", 0, 1, IS_UNIQUE, IS_ORDERED);
+
 		initEClass(iTaskServiceEClass, ITaskService.class, "ITaskService", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		op = addEOperation(iTaskServiceEClass, this.getITaskDescriptor(), "createTaskDescriptor", 0, 1, IS_UNIQUE, IS_ORDERED);
@@ -826,6 +829,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEEnumLiteral(taskStateEEnum, TaskState.ON_HOLD);
 		addEEnumLiteral(taskStateEEnum, TaskState.COMPLETED);
 		addEEnumLiteral(taskStateEEnum, TaskState.COMPLETED_WARN);
+		addEEnumLiteral(taskStateEEnum, TaskState.COMPLETED_MANUAL);
 		addEEnumLiteral(taskStateEEnum, TaskState.FAILED);
 
 		initEEnum(ownerTaskNotificationEEnum, OwnerTaskNotification.class, "OwnerTaskNotification");

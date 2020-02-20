@@ -2,7 +2,6 @@ package ch.elexis.core.importer.div.tasks.internal;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +23,7 @@ import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.rgw.tools.Result;
+import ch.rgw.tools.Result.CODE;
 
 /**
  * 
@@ -120,16 +120,17 @@ public class HL7ImporterIIdentifiedRunnable implements IIdentifiedRunnable {
 			fileHandle = vfsService.of(urlString);
 			Result<?> result = multiFileParser.importFromHandle(fileHandle, importStrategyFactory,
 				hl7Parser, new DefaultPersistenceHandler());
-			// 779 is a randomly assigned Result code to identify the url entry 
-			String newFileUrl = result.getMessages().stream().filter(e -> e.getCode() == 779)
-				.findFirst().map(e -> e.getObject().toString()).orElse(null);
-			
+
 			Map<String, Serializable> resultMap = new HashMap<String, Serializable>();
+			@SuppressWarnings("rawtypes")
+			Result.msg fileUrl = result.removeMsgEntry("url", CODE.URL);
+			if(fileUrl != null) {
+				resultMap.put(ReturnParameter.STRING_URL, (String) fileUrl.getObject());
+			}
 			if (!result.isOK()) {
 				resultMap.put(ReturnParameter.MARKER_WARN, null);
 			}
 			resultMap.put(ReturnParameter.RESULT_DATA, result.toString());
-			resultMap.put(ReturnParameter.STRING_URL, newFileUrl);
 			return resultMap;
 		} catch (IOException e) {
 			throw new TaskException(TaskException.EXECUTION_ERROR, e);

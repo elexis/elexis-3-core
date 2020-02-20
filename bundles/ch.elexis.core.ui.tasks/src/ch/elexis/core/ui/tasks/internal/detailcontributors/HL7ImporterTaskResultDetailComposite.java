@@ -19,55 +19,42 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable.ReturnParameter;
 import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.tasks.model.ITask;
-import ch.elexis.core.ui.icons.Images;
+import ch.rgw.tools.Result;
 
 public class HL7ImporterTaskResultDetailComposite {
 	
 	private ECommandService commandService;
 	private EHandlerService handlerService;
+	private IVirtualFilesystemService vfsService;
+	
+	private Button btnManualImport;
+	private Button btnArchive;
+	private Label lblStatus;
+	private String fileUrl;
 	
 	public HL7ImporterTaskResultDetailComposite(Composite parent, ITask task,
 		Map<String, Object> e4Services, IVirtualFilesystemService vfsService){
 		
+		this.vfsService = vfsService;
 		commandService = (ECommandService) e4Services.get(ECommandService.class.getName());
 		handlerService = (EHandlerService) e4Services.get(EHandlerService.class.getName());
 		
+		fileUrl = task.getResultEntryTyped(ReturnParameter.STRING_URL, String.class);
+		
 		Composite container = new Composite(parent, SWT.NONE);
-		container.setLayout(new GridLayout(1, false));
+		container.setLayout(new GridLayout(2, false));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		Label lblStatus = new Label(container, SWT.NONE);
-		lblStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		lblStatus = new Label(container, SWT.WRAP);
+		GridData gd_lblStatus = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
+		gd_lblStatus.heightHint = 60;
+		lblStatus.setLayoutData(gd_lblStatus);
 		
-		final String fileUrl = task.getResultEntryTyped(ReturnParameter.STRING_URL, String.class);
-		String fileName = "???";
-		
-		try {
-			IVirtualFilesystemHandle importFileHandle = vfsService.of(fileUrl);
-			fileName = importFileHandle.getName();
-		} catch (IOException e) {
-			LoggerFactory.getLogger(getClass()).warn("Error parsing url", e);
-		}
-		
-		StringBuilder text = new StringBuilder();
-		if (task.isSucceeded()) {
-			text.append("Die Datei " + fileName + " wurde erfolgreich importiert.");
-		} else {
-			text.append("Die Datei " + fileName + " konnte nicht automatisch importiert werden.");
-			text.append("\n\n");
-			// TODO what if not found?
-			text.append("Grund: "
-				+ task.getResultEntryTyped(ReturnParameter.RESULT_DATA, String.class) + "\n");
-		}
-		lblStatus.setText(text.toString());
-		
-		Button btnManualImport = new Button(container, SWT.NONE);
-		btnManualImport.setImage(Images.IMG_HAND.getImage());
+		btnManualImport = new Button(container, SWT.NONE);
 		btnManualImport.setText("Datei manuell importieren");
 		btnManualImport.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -76,29 +63,81 @@ public class HL7ImporterTaskResultDetailComposite {
 					.singletonMap("ch.elexis.laborimport.hl7.allg.importFile.fileUrl", fileUrl);
 				ParameterizedCommand command = commandService
 					.createCommand("ch.elexis.laborimport.hl7.allg.importFile", params);
-				Object executeHandler = handlerService.executeHandler(command);
-				MessageBox dialog = new MessageBox(parent.getShell(), SWT.OK);
-				dialog.setText("Result");
-				dialog.setMessage((executeHandler != null) ? executeHandler.toString() : "");
+				@SuppressWarnings("rawtypes")
+				Result result = (Result) handlerService.executeHandler(command);
+				String message;
+				if (result.isOK()) {
+					message = "Import erfolgreich.";
+				} else {
+					message = (String) result.getMessages().get(0);
+					task.setStateCompletedManual("manual import");
+				}
+				
+				MessageBox dialog =
+					new MessageBox(parent.getShell(), result.isOK() ? SWT.OK : SWT.ERROR);
+				dialog.setText("Info");
+				dialog.setMessage(message);
 				dialog.open();
-				// TODO mark task as manually fixed?
+				setTask(task);
 			}
 		});
-		btnManualImport.setEnabled(!task.isSucceeded());
 		
-		Button btnArchive = new Button(container, SWT.NONE);
+		btnArchive = new Button(container, SWT.NONE);
 		btnArchive.setText("Datei archivieren");
 		btnArchive.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				MessageBox dialog = new MessageBox(parent.getShell(), SWT.OK);
-				dialog.setText("Not yet implemented");
+				Map<String, Serializable> params = Collections
+					.singletonMap("ch.elexis.laborimport.hl7.allg.archiveFile.fileUrl", fileUrl);
+				ParameterizedCommand command = commandService
+					.createCommand("ch.elexis.laborimport.hl7.allg.archiveFile", params);
+				@SuppressWarnings("rawtypes")
+				Result result = (Result) handlerService.executeHandler(command);
+				String message;
+				if (result.isOK()) {
+					message = "Archivierung erfolgreich.";
+				} else {
+					message = (String) result.getMessages().get(0);
+					task.setStateCompletedManual("manual archive");
+				}
+				
+				MessageBox dialog =
+					new MessageBox(parent.getShell(), result.isOK() ? SWT.OK : SWT.ERROR);
+				dialog.setText("Info");
+				dialog.setMessage(message);
 				dialog.open();
-				super.widgetSelected(e);
+				setTask(task);
 			}
 		});
-		btnArchive.setEnabled(!task.isSucceeded());
 		
+		setTask(task);
+	}
+	
+	private void setTask(ITask task){
+		fileUrl = task.getResultEntryTyped(ReturnParameter.STRING_URL, String.class);
+		IVirtualFilesystemHandle importFileHandle = null;
+		String fileName;
+		try {
+			importFileHandle = vfsService.of(fileUrl);
+			fileName = importFileHandle.getName();
+		} catch (IOException e) {
+			fileName = e.getMessage();
+			LoggerFactory.getLogger(getClass()).warn("Error parsing url", e);
+		}
+		
+		StringBuilder text = new StringBuilder();
+		if (task.isSucceeded()) {
+			text.append("Die Datei [" + fileName + "] wurde erfolgreich importiert.");
+		} else {
+			text.append("Die Datei [" + fileName + "] konnte nicht automatisch importiert werden.");
+			text.append("\n\n");
+			text.append("Grund: "
+				+ task.getResultEntryTyped(ReturnParameter.RESULT_DATA, String.class) + "\n");
+		}
+		lblStatus.setText(text.toString());
+		
+		btnManualImport.setEnabled(!task.isSucceeded() && (importFileHandle != null));
+		btnArchive.setEnabled(!task.isSucceeded() && (importFileHandle != null));
 	}
 	
 }

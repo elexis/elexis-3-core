@@ -39,12 +39,12 @@ public class TaskResultLabelProvider extends ColumnLabelProvider {
 			return Images.IMG_TICK;
 		case COMPLETED_WARN:
 			return Images.IMG_ACHTUNG;
+		case COMPLETED_MANUAL:
+			return Images.IMG_HAND;
 		case FAILED:
 			return Images.IMG_AUSRUFEZ;
 		case QUEUED:
 			return Images.IMG_CLOCK;
-		case DRAFT:
-			// TODO
 		default:
 			break;
 		}

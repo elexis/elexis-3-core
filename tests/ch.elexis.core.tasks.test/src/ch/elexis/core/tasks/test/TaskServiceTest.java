@@ -1,7 +1,6 @@
 package ch.elexis.core.tasks.test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -10,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -29,6 +29,7 @@ import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.model.builder.IUserBuilder;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
+import ch.elexis.core.model.tasks.IIdentifiedRunnable.ReturnParameter;
 import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.tasks.IdentifiedRunnableIdConstants;
 import ch.elexis.core.tasks.internal.model.service.CoreModelServiceHolder;
@@ -73,27 +74,27 @@ public class TaskServiceTest {
 		assertTrue(rwcLogContext instanceof LogResultContextIdentifiedRunnable);
 	}
 	
+	private ITaskDescriptor taskDescriptorOf(String id) throws TaskException{
+		IIdentifiedRunnable testExecContextRunnable = taskService.instantiateRunnableById(id);
+		if (TestExecutionContextRunnable.ID.equals(id)) {
+			assertTrue(testExecContextRunnable instanceof TestExecutionContextRunnable);
+		}
+		return taskService.createTaskDescriptor(testExecContextRunnable);
+	}
+	
 	private Callable<Boolean> taskDone(ITask task){
 		return new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception{
-				return (TaskState.FAILED == task.getState())
-					|| (TaskState.COMPLETED == task.getState());
+				return task.isFinished();
 			}
 		};
 	}
-
-	/**
-	 * Check the context the runnable is executed in
-	 * 
-	 * @throws TaskException
-	 */
+	
+	// Check the context the runnable is executed in
 	@Test
 	public void runnableExecutionContext() throws TaskException{
-		IIdentifiedRunnable testExecContextRunnable =
-			taskService.instantiateRunnableById(TestExecutionContextRunnable.ID);
-		assertTrue(testExecContextRunnable instanceof TestExecutionContextRunnable);
-		taskDescriptor = taskService.createTaskDescriptor(testExecContextRunnable);
+		taskDescriptor = taskDescriptorOf(TestExecutionContextRunnable.ID);
 		
 		taskDescriptor.setSingleton(true);
 		taskDescriptor.setOwner(owner);
@@ -103,6 +104,27 @@ public class TaskServiceTest {
 			taskService.trigger(taskDescriptor, progressMonitor, TaskTriggerType.MANUAL, null);
 		Awaitility.await().atMost(2, TimeUnit.SECONDS).until(taskDone(task));
 		assertEquals(TaskState.COMPLETED, task.getState());
+	}
+	
+	// Check COMPLETED_WARN manual resolve
+	@Test
+	public void completedWarnWithManualResolution() throws TaskException{
+		taskDescriptor = taskDescriptorOf(TestExecutionContextRunnable.ID);
+		
+		taskDescriptor.setSingleton(true);
+		taskDescriptor.setOwner(owner);
+		taskDescriptor
+			.setRunContext(Collections.singletonMap(ReturnParameter.MARKER_WARN, Boolean.TRUE));
+		taskService.setActive(taskDescriptor, true);
+		ITask task =
+			taskService.trigger(taskDescriptor, progressMonitor, TaskTriggerType.MANUAL, null);
+		Awaitility.await().atMost(2, TimeUnit.SECONDS).until(taskDone(task));
+		assertEquals(TaskState.COMPLETED_WARN, task.getState());
+		
+		task.setStateCompletedManual("test");
+		assertEquals(TaskState.COMPLETED_MANUAL, task.getState());
+		String manualMessage = (String) task.getResult().get(TaskState.COMPLETED_MANUAL.name());
+		assertTrue(manualMessage.endsWith(":test"));
 	}
 	
 	/**
@@ -192,12 +214,12 @@ public class TaskServiceTest {
 	 * @throws IOException
 	 */
 	@Test
-	@Ignore
 	public void triggerCron() throws TaskException, IOException{
 		
 		IIdentifiedRunnable rwcDeleteFile =
 			taskService.instantiateRunnableById(IdentifiedRunnableIdConstants.DELETEFILE);
 		Path createFile = Files.createTempFile(tempDirectory, "test", "txt");
+		createFile.toFile().deleteOnExit();
 		
 		taskDescriptor = taskService.createTaskDescriptor(rwcDeleteFile);
 		taskDescriptor.setOwner(owner);
@@ -211,7 +233,10 @@ public class TaskServiceTest {
 		Callable<Boolean> c = () -> {
 			return !createFile.toFile().exists();
 		};
+
 		Awaitility.await().atMost(10, TimeUnit.SECONDS).until(c);
+		Optional<ITask> execution = taskService.findLatestExecution(taskDescriptor);
+		assertEquals(TaskState.COMPLETED, execution.get().getState());
 	}
 	
 	/**

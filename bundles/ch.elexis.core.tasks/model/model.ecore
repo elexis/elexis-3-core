@@ -110,6 +110,12 @@
         <details key="documentation" value="The task is successfully and purposefully finished."/>
       </eAnnotations>
     </eOperations>
+    <eOperations name="setStateCompletedManual">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation"/>
+      </eAnnotations>
+      <eParameters name="remark" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         changeable="false" iD="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="state" lowerBound="1" eType="#//TaskState"
@@ -285,6 +291,11 @@
     <eLiterals name="COMPLETED_WARN" value="55" literal="COMPLETED_WARN">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The task completed successfully, but not purposeful. That is the outcome did not meet the business expectations."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="COMPLETED_MANUAL" value="58">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The task completed successfully, but not purposeful. A user intervened to fix the situation, leading to this state."/>
       </eAnnotations>
     </eLiterals>
     <eLiterals name="FAILED" value="90">

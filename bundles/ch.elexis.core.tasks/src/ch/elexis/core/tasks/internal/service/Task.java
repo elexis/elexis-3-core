@@ -160,7 +160,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Map<String, ?> getResult(){
+	public Map<String, Serializable> getResult(){
 		String json = getEntity().getResult();
 		if (json != null) {
 			return gson.fromJson(json, Map.class);
@@ -192,6 +192,18 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 			}
 		}
 		return null;
+	}
+	
+	@Override
+	public void setStateCompletedManual(String remark){
+		String userId = ContextServiceHolder.get().getActiveUser().map(u -> u.getId()).orElse(null);
+		String stationId = ContextServiceHolder.get().getStationIdentifier();
+		String note = System.currentTimeMillis() + "#" + userId + "@" + stationId + ":" + remark;
+		
+		setState(TaskState.COMPLETED_MANUAL);
+		Map<String, Serializable> result = getResult();
+		result.put(TaskState.COMPLETED_MANUAL.name(), note);
+		setResult(result);
 	}
 	
 	@Override

@@ -192,6 +192,8 @@
         <setEntry value="ch.elexis.connector.be"/>
         <setEntry value="ch.elexis.connector.medicosearch"/>
         <setEntry value="ch.elexis.core.application"/>
+        <setEntry value="ch.elexis.core.coding"/>
+        <setEntry value="ch.elexis.core.coding.test"/>
         <setEntry value="ch.elexis.core.data"/>
         <setEntry value="ch.elexis.core.data.tests"/>
         <setEntry value="ch.elexis.core.documents"/>
@@ -211,7 +213,9 @@
         <setEntry value="ch.elexis.core.findings.util.test"/>
         <setEntry value="ch.elexis.core.hapi.fhir"/>
         <setEntry value="ch.elexis.core.hl7.v2x.tests"/>
+        <setEntry value="ch.elexis.core.jcifs.test"/>
         <setEntry value="ch.elexis.core.jpa.entities.test"/>
+        <setEntry value="ch.elexis.core.jpa.test"/>
         <setEntry value="ch.elexis.core.logging.default_configuration"/>
         <setEntry value="ch.elexis.core.logging.osgi"/>
         <setEntry value="ch.elexis.core.mail"/>
@@ -226,6 +230,7 @@
         <setEntry value="ch.elexis.core.ui.dbcheck"/>
         <setEntry value="ch.elexis.core.ui.documents"/>
         <setEntry value="ch.elexis.core.ui.eenv"/>
+        <setEntry value="ch.elexis.core.ui.eenv.win32.win32.x86_64"/>
         <setEntry value="ch.elexis.core.ui.eigenartikel"/>
         <setEntry value="ch.elexis.core.ui.eigendiagnosen"/>
         <setEntry value="ch.elexis.core.ui.icons"/>
@@ -307,6 +312,7 @@
         <setEntry value="ch.elexis.rezept.zurrose_test"/>
         <setEntry value="ch.elexis.stickynotes"/>
         <setEntry value="ch.elexis.support.dbshaker"/>
+        <setEntry value="ch.elexis.tasks.integration.test"/>
         <setEntry value="ch.elexis.timer"/>
         <setEntry value="ch.gpb.elexis.cst"/>
         <setEntry value="ch.itmed.fop.printing"/>
@@ -345,6 +351,7 @@
         <setEntry value="ch.pharmed.phmprescriber_test"/>
         <setEntry value="ch.priaid"/>
         <setEntry value="ch.priaid.test"/>
+        <setEntry value="ch.rgw.utility.tests"/>
         <setEntry value="ch.unibe.iam.scg.archie"/>
         <setEntry value="ch.unibe.iam.scg.archie.samples"/>
         <setEntry value="ch.weirich.templator.pages"/>
@@ -431,7 +438,8 @@
         <setEntry value="jaxb-api@default:default"/>
         <setEntry value="jaxen@default:default"/>
         <setEntry value="net.java.dev.jna.platform@default:default"/>
-        <setEntry value="org.apache.ant@default:default"/>
+        <setEntry value="org.apache.ant*1.10.5.v20180808-0324@default:default"/>
+        <setEntry value="org.apache.ant*1.7.0@default:default"/>
         <setEntry value="org.apache.avalon.framework.avalon-framework-api@default:default"/>
         <setEntry value="org.apache.batik.constants@default:default"/>
         <setEntry value="org.apache.batik.css@default:default"/>
@@ -595,14 +603,11 @@
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
         <setEntry value="ch.elexis.core.hl7.v2x@default:default"/>
-        <setEntry value="ch.elexis.core.importer.div.test@default:false"/>
         <setEntry value="ch.elexis.core.importer.div@default:default"/>
-        <setEntry value="ch.elexis.core.jcifs.test@default:false"/>
         <setEntry value="ch.elexis.core.jcifs@default:default"/>
         <setEntry value="ch.elexis.core.jpa.datasource@3:true"/>
         <setEntry value="ch.elexis.core.jpa.entities@3:true"/>
         <setEntry value="ch.elexis.core.jpa.logging.slf4j@default:false"/>
-        <setEntry value="ch.elexis.core.jpa.test@default:false"/>
         <setEntry value="ch.elexis.core.jpa@default:default"/>
         <setEntry value="ch.elexis.core.l10n@default:default"/>
         <setEntry value="ch.elexis.core.logback.rocketchat@default:false"/>
@@ -614,10 +619,7 @@
         <setEntry value="ch.elexis.core.test.context@default:false"/>
         <setEntry value="ch.elexis.core.test.logging@default:false"/>
         <setEntry value="ch.elexis.core.test@default:default"/>
-        <setEntry value="ch.elexis.core.ui.eenv.win32.win32.x86_64@default:false"/>
         <setEntry value="ch.elexis.core@default:default"/>
-        <setEntry value="ch.elexis.tasks.integration.test@default:default"/>
-        <setEntry value="ch.rgw.utility.tests@default:false"/>
         <setEntry value="ch.rgw.utility@default:default"/>
         <setEntry value="jaxb-api-impl-import-java9@default:false"/>
     </setAttribute>

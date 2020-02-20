@@ -119,6 +119,17 @@ public enum TaskState implements Enumerator {
 	 * @ordered
 	 */
 	COMPLETED_WARN(55, "COMPLETED_WARN", "COMPLETED_WARN"), /**
+	 * The '<em><b>COMPLETED MANUAL</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The task completed successfully, but not purposeful. A user intervened to fix the situation, leading to this state.
+	 * <!-- end-model-doc -->
+	 * @see #COMPLETED_MANUAL_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	COMPLETED_MANUAL(58, "COMPLETED_MANUAL", "COMPLETED_MANUAL"), /**
 	 * The '<em><b>FAILED</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -262,6 +273,20 @@ public enum TaskState implements Enumerator {
 	public static final int COMPLETED_WARN_VALUE = 55;
 
 	/**
+	 * The '<em><b>COMPLETED MANUAL</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The task completed successfully, but not purposeful. A user intervened to fix the situation, leading to this state.
+	 * <!-- end-model-doc -->
+	 * @see #COMPLETED_MANUAL
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int COMPLETED_MANUAL_VALUE = 58;
+
+	/**
 	 * The '<em><b>FAILED</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -295,6 +320,7 @@ public enum TaskState implements Enumerator {
 			ON_HOLD,
 			COMPLETED,
 			COMPLETED_WARN,
+			COMPLETED_MANUAL,
 			FAILED,
 		};
 
@@ -360,6 +386,7 @@ public enum TaskState implements Enumerator {
 			case ON_HOLD_VALUE: return ON_HOLD;
 			case COMPLETED_VALUE: return COMPLETED;
 			case COMPLETED_WARN_VALUE: return COMPLETED_WARN;
+			case COMPLETED_MANUAL_VALUE: return COMPLETED_MANUAL;
 			case FAILED_VALUE: return FAILED;
 		}
 		return null;

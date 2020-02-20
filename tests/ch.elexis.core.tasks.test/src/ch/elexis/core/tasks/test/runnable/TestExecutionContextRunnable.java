@@ -15,6 +15,9 @@ import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.services.IContextService;
 
+/**
+ * Returns the runContext as result
+ */
 public class TestExecutionContextRunnable implements IIdentifiedRunnable {
 	
 	public static final String ID = "testExecutionContextRunnable";
@@ -52,7 +55,7 @@ public class TestExecutionContextRunnable implements IIdentifiedRunnable {
 			() -> new TaskException(TaskException.EXECUTION_ERROR, "No active mandator"));
 		assertEquals(user.getAssignedContact().getId(), mandator.getId());
 		
-		return null;
+		return runContext;
 	}
 	
 }

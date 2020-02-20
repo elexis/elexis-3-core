@@ -260,5 +260,13 @@ public interface ITask extends Identifiable, Deleteable {
 	 */
 	boolean isFailed();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	void setStateCompletedManual(String remark);
+
 
 } // ITask

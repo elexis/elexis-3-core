@@ -13,6 +13,7 @@
 package ch.rgw.tools;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -32,6 +33,12 @@ public class Result<T> {
 	public enum SEVERITY {
 			OK, WARNING, ERROR, FATAL
 	};
+	
+	public final class CODE {
+		private CODE() {};
+		// transport an url string as part of this result, msg text should be url
+		public static final int URL = 779;
+	}
 	
 	List<msg> list = new ArrayList<msg>();
 	private SEVERITY severity = SEVERITY.OK;
@@ -215,6 +222,27 @@ public class Result<T> {
 	
 	public static final Result<String> ERROR(String text){
 		return new Result<String>(SEVERITY.ERROR, 0, text, text, false);
+	}
+	
+	/**
+	 * Remove a msg entry from the msg list if both text and code match.
+	 * Only removes the first to match
+	 * 
+	 * @param text
+	 * @param code
+	 * @return the removed entry or <code>null</code> if none found
+	 */
+	public msg removeMsgEntry(String text, int code){
+		Iterator<Result<T>.msg> iterator = list.iterator();
+		msg entry = null;
+		while (iterator.hasNext()) {
+			Result<T>.msg msg = iterator.next();
+			if (text.equals(msg.text) && code == msg.code) {
+				entry = msg;
+				iterator.remove();
+			}
+		}
+		return entry;
 	}
 	
 	public void addMessage(SEVERITY severity, String message){

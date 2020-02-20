@@ -24,6 +24,7 @@
       <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/ON_HOLD"/>
       <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/COMPLETED"/>
       <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/COMPLETED_WARN"/>
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/COMPLETED_MANUAL"/>
       <genEnumLiterals ecoreEnumLiteral="model.ecore#//TaskState/FAILED"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="model.ecore#//OwnerTaskNotification">
@@ -84,6 +85,9 @@
       </genOperations>
       <genOperations ecoreOperation="model.ecore#//ITask/isSucceeded"/>
       <genOperations ecoreOperation="model.ecore#//ITask/isFailed"/>
+      <genOperations ecoreOperation="model.ecore#//ITask/setStateCompletedManual">
+        <genParameters ecoreParameter="model.ecore#//ITask/setStateCompletedManual/remark"/>
+      </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//ITaskService">
       <genOperations ecoreOperation="model.ecore#//ITaskService/createTaskDescriptor">

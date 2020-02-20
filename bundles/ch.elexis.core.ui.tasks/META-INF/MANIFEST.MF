@@ -19,7 +19,8 @@ Service-Component: OSGI-INF/ch.elexis.core.ui.tasks.internal.TaskModelServiceHol
  OSGI-INF/ch.elexis.core.ui.tasks.internal.TaskResultDetailDialogContributions.xml,
  OSGI-INF/ch.elexis.core.ui.tasks.internal.detailcontributors.HL7ImporterIdentifiedRunnableContributor.xml
 Bundle-ActivationPolicy: lazy
-Import-Package: javax.annotation;version="1.0.0";resolution:=optional,
+Import-Package: ch.rgw.tools,
+ javax.annotation;version="1.0.0";resolution:=optional,
  javax.inject;version="1.0.0",
  org.eclipse.e4.core.di.annotations;version="1.6.0",
  org.eclipse.e4.ui.di,
