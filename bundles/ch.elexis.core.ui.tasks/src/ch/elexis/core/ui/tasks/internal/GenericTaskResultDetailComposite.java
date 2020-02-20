@@ -1,5 +1,7 @@
 package ch.elexis.core.ui.tasks.internal;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.format.DateTimeFormatter;
 
 import org.eclipse.jface.resource.FontDescriptor;
@@ -11,6 +13,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import com.cronutils.utils.StringUtils;
+
+import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.tasks.model.ITask;
 
 public class GenericTaskResultDetailComposite {
@@ -52,7 +57,7 @@ public class GenericTaskResultDetailComposite {
 		
 		Label valRun = new Label(container, SWT.NONE);
 		valRun.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		if(task.getRunAt() != null) {
+		if (task.getRunAt() != null) {
 			valRun.setText(dtf.format(task.getRunAt()) + " on " + task.getRunner());
 		}
 		
@@ -61,7 +66,7 @@ public class GenericTaskResultDetailComposite {
 		
 		Label valFinished = new Label(container, SWT.NONE);
 		valFinished.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		if(task.getFinishedAt() != null) {
+		if (task.getFinishedAt() != null) {
 			valFinished.setText(dtf.format(task.getFinishedAt()));
 		}
 		
@@ -78,7 +83,13 @@ public class GenericTaskResultDetailComposite {
 		txtResult = new Text(container, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
 		txtResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		StringBuilder sbResult = new StringBuilder();
-		task.getResult().forEach((k, v) -> sbResult.append("* "+k + ": " + v + "\n"));
+		task.getResult().forEach((k, v) -> {
+			String value = (String) v;
+			if (IIdentifiedRunnable.ReturnParameter.STRING_URL.equals(k)) {
+				value = hidePasswordInUrlString((String) v);
+			}
+			sbResult.append("- " + k + ": " + value + "\n");
+		});
 		txtResult.setText(sbResult.toString());
 		
 		Label lblRunContext = new Label(container, SWT.NONE);
@@ -88,10 +99,31 @@ public class GenericTaskResultDetailComposite {
 		txtRunContext = new Text(container, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
 		txtRunContext.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		StringBuilder sbRunContext = new StringBuilder();
-		task.getRunContext().forEach((k, v) -> sbRunContext.append("* "+k + ": " + v + "\n"));
+		task.getRunContext().forEach((k, v) -> {
+			String value = (String) v;
+			if (IIdentifiedRunnable.RunContextParameter.STRING_URL.equals(k)) {
+				value = hidePasswordInUrlString((String) v);
+			}
+			sbRunContext.append("- " + k + ": " + value + "\n");
+		});
 		txtRunContext.setText(sbRunContext.toString());
 		
-
+	}
+	
+	private String hidePasswordInUrlString(String urlString){
+		URL url;
+		try {
+			url = new URL(urlString);
+		} catch (MalformedURLException e) {
+			return e.getMessage();
+		}
+		
+		String userInfo = url.getUserInfo();
+		if (StringUtils.isEmpty(userInfo)) {
+			return url.toString();
+		}
+		String replacement = userInfo.substring(0, userInfo.indexOf(':')) + ":***";
+		return urlString.replace(userInfo, replacement);
 	}
 	
 }
