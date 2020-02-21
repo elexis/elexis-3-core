@@ -112,7 +112,8 @@ public class Prescription
 	
 	@Override
 	public String getStopReason(){
-		return (String) extInfoHandler.getExtInfo(Constants.FLD_EXT_STOP_REASON);
+		return StringUtils
+			.defaultString((String) extInfoHandler.getExtInfo(Constants.FLD_EXT_STOP_REASON));
 	}
 	
 	@Override
@@ -132,7 +133,8 @@ public class Prescription
 	
 	@Override
 	public String getDisposalComment(){
-		return (String) extInfoHandler.getExtInfo(Constants.FLD_EXT_DISPOSAL_COMMENT);
+		return StringUtils
+			.defaultString((String) extInfoHandler.getExtInfo(Constants.FLD_EXT_DISPOSAL_COMMENT));
 	}
 	
 	@Override
