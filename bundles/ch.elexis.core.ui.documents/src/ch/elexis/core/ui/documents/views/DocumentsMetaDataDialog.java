@@ -71,8 +71,8 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 	private static Logger logger = LoggerFactory.getLogger(DocumentsMetaDataDialog.class);
 	
 	String file;
-	IDocument document;
-	IDocumentReference documentReference;
+	final IDocument document;
+	final IDocumentReference documentReference;
 	Text tTitle;
 	Text tKeywords;
 	Text tAuthor;
@@ -95,7 +95,7 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 			"ValueSet-Service not installed.");
 		
 		this.document = document;
-		this.documentReference = getOrCreateDocumentReference(document);
+		this.documentReference = findDocumentReference();
 		
 		categoryCrudAllowed =
 			DocumentStoreServiceHolder.getService().isAllowed(document, Capability.CATEGORY);
@@ -299,7 +299,7 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 			documentReference.getPracticeSetting());
 	}
 	
-	private IDocumentReference getOrCreateDocumentReference(IDocument document){
+	private IDocumentReference findDocumentReference(){
 		List<IDocumentReference> documentReferences = FindingsServiceHolder.getiFindingsService()
 			.getDocumentFindings(document.getId(), IDocumentReference.class);
 		if (documentReferences.size() > 1) {
@@ -307,17 +307,12 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 				.warn("Got more than one DocumentReferences for document id [" + document.getId()
 					+ "] using first");
 		}
-		if (!documentReferences.isEmpty()) {
+		if (documentReferences.isEmpty()) {
+			// no document reference found - create new entry
+			return FindingsServiceHolder.getiFindingsService().create(IDocumentReference.class);
+		} else {
 			return documentReferences.get(0);
 		}
-		
-		// no document reference found - create new entry with mandatory fields
-		IDocumentReference documentReference =
-			FindingsServiceHolder.getiFindingsService().create(IDocumentReference.class);
-		documentReference.setPatientId(document.getPatient().getId());
-		documentReference.setDocument(document);
-		FindingsServiceHolder.getiFindingsService().saveFinding(documentReference);
-		return documentReference;
 	}
 	
 	@Override
@@ -333,23 +328,22 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 	protected void okPressed(){
 		title = tTitle.getText();
 		StructuredSelection comboSelection = (StructuredSelection) cbCategories.getSelection();
-		if (document != null) {
-			if (comboSelection != null)
-			{
-				document.setCategory((ICategory) comboSelection.getFirstElement());
-			}
-			document.setTitle(title);
-			keywords = tKeywords.getText();
-			document.setKeywords(keywords);
-			document.setAuthor((IContact) AutoCompleteTextUtil.getData(tAuthor));
-			
-			updateDocumentReferences();
+		
+		if (comboSelection != null) {
+			document.setCategory((ICategory) comboSelection.getFirstElement());
 		}
+		document.setTitle(title);
+		keywords = tKeywords.getText();
+		document.setKeywords(keywords);
+		document.setAuthor((IContact) AutoCompleteTextUtil.getData(tAuthor));
+		
+		saveDocumentReference();
 		super.okPressed();
 	}
 
-	private void updateDocumentReferences(){
-		
+	private void saveDocumentReference(){
+		documentReference.setPatientId(document.getPatient().getId());
+		documentReference.setDocument(document);
 		documentReference.setKeywords(tKeywords.getText());
 		documentReference.setAuthorId(
 			Optional.ofNullable((IContact) AutoCompleteTextUtil.getData(tAuthor))

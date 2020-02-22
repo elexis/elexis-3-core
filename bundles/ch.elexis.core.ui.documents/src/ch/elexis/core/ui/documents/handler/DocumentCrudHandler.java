@@ -190,8 +190,6 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 				openMetaDataDialogNoLocking(shell, document, file, eventType);
 			}
 		}
-		// publish changes
-		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, document);
 	}
 	
 	private Optional<IDocument> openMetaDataDialogNoLocking(Shell shell, IDocument document,
@@ -204,6 +202,8 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 					.saveDocument(document, file != null ? new FileInputStream(file) : null);
 				ElexisEventDispatcher.getInstance().fire(new ElexisEvent(savedDocument,
 					IDocument.class, eventType, ElexisEvent.PRIORITY_NORMAL));
+				// publish changes
+				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, document);
 				return Optional.of(savedDocument);
 			} catch (FileNotFoundException e) {
 				logger.error("file not found", e);
