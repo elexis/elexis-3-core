@@ -1,43 +1,19 @@
 package ch.elexis.core.ui.documents.provider;
 
-import org.eclipse.jface.fieldassist.IContentProposal;
+import org.eclipse.jface.fieldassist.ContentProposal;
 
 import ch.elexis.core.findings.ICoding;
 
-public class CodingContentProposal implements IContentProposal {
+public class CodingContentProposal extends ContentProposal {
 	
 	private final ICoding coding;
 	
-	public CodingContentProposal(ICoding coding){
-		super();
+	public CodingContentProposal(String label, ICoding coding){
+		super(label, null);
 		this.coding = coding;
-	}
-	
-	@Override
-	public String getContent(){
-		// TODO Auto-generated method stub
-		return coding.getCode();
-	}
-	
-	@Override
-	public int getCursorPosition(){
-		return 0;
-	}
-	
-	@Override
-	public String getLabel(){
-		// TODO Auto-generated method stub
-		return coding.getDisplay();
-	}
-	
-	@Override
-	public String getDescription(){
-		// TODO Auto-generated method stub
-		return coding.getSystem();
 	}
 	
 	public ICoding getCoding(){
 		return coding;
 	}
-	
 }

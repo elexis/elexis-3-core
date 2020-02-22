@@ -13,6 +13,7 @@
 package ch.elexis.core.ui.dialogs;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -35,7 +36,9 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
@@ -425,7 +428,21 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		super.okPressed();
 	}
 	
+	/**
+	 * Use getContact()
+	 * 
+	 * @return
+	 * @deprecated @since 3.8
+	 */
+	@Deprecated
 	public Kontakt getResult(){
 		return newKontakt;
+	}
+	
+	public Optional<IContact> getContact(){
+		if (newKontakt != null && newKontakt.exists()) {
+			return CoreModelServiceHolder.get().load(newKontakt.getId(), IContact.class);
+		}
+		return Optional.empty();
 	}
 }

@@ -9,16 +9,26 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
 
 import ch.elexis.core.findings.util.ValueSetServiceHolder;
 
-public class PracticeSettingProposalProvider implements IContentProposalProvider {
+public class ValueSetProposalProvider implements IContentProposalProvider {
+	
+	public static final String EPRDOCUMENT_CLASSCODE = "EprDocumentClassCode";
+	public static final String EPRDOCUMENT_PRACTICESETTINGCODE = "EprDocumentPracticeSettingCode";
+	
+	private final String valueSetName;
+	
+	public ValueSetProposalProvider(String valueSetName){
+		this.valueSetName = valueSetName;
+	}
 	
 	@Override
 	public IContentProposal[] getProposals(String searchString, int position){
 		List<IContentProposal> ret = new ArrayList<IContentProposal>();
 		if (searchString != null && !searchString.isEmpty()) {
 			return ValueSetServiceHolder.getIValueSetService()
-				.getValueSetByName("EprDocumentPracticeSettingCode").stream()
-				.filter(o -> o.getDisplay().startsWith(searchString))
-				.map(o -> new CodingContentProposal(o))
+				.getValueSetByName(valueSetName).stream()
+				.filter(
+					o -> o.getDisplay().toLowerCase().startsWith(searchString.trim().toLowerCase()))
+				.map(o -> new CodingContentProposal(o.getDisplay(), o))
 				.toArray(ContentProposal[]::new);
 			
 		}

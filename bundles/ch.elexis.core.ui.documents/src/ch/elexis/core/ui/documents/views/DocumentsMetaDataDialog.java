@@ -16,18 +16,21 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
-import org.eclipse.jface.fieldassist.ContentProposalAdapter;
-import org.eclipse.jface.fieldassist.IContentProposal;
-import org.eclipse.jface.fieldassist.IContentProposalListener;
-import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -52,19 +55,18 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.services.IDocumentStore.Capability;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.dialogs.KontaktErfassenDialog;
 import ch.elexis.core.ui.documents.Messages;
 import ch.elexis.core.ui.documents.provider.AuthorContentProposalProvider;
-import ch.elexis.core.ui.documents.provider.CodingContentProposal;
-import ch.elexis.core.ui.documents.provider.DocumentClassProposalProvider;
-import ch.elexis.core.ui.documents.provider.PracticeSettingProposalProvider;
+import ch.elexis.core.ui.documents.provider.ValueSetProposalProvider;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
+import ch.elexis.core.ui.documents.util.AutoCompleteTextUtil;
+import ch.elexis.core.ui.documents.util.ContactLabelUtil;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.proposals.IdentifiableContentProposal;
 import ch.elexis.core.ui.util.SWTHelper;
 
 public class DocumentsMetaDataDialog extends TitleAreaDialog {
-	
-	private static final String PROPOSAL_RET_OBJ = "PROPOSAL_RET_OBJ";
 	
 	private static Logger logger = LoggerFactory.getLogger(DocumentsMetaDataDialog.class);
 	
@@ -239,63 +241,57 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 		
 		new Label(ret, SWT.NONE).setText(Messages.DocumentsView_Author);
 		tAuthor = SWTHelper.createText(ret, 1, SWT.NONE);
-		IContact author = Optional.ofNullable(documentReference.getAuthorId())
-			.map(o -> CoreModelServiceHolder.get().load(o, IContact.class).orElse(null))
-			.orElse(document.getAuthor());
-		if (author != null) {
-			tAuthor.setText(author.getLabel());
-			tAuthor.setData(PROPOSAL_RET_OBJ, author);
-		}
-		ContentProposalAdapter tAuthorContentProposal = new ContentProposalAdapter(tAuthor,
-			new TextContentAdapter(), new AuthorContentProposalProvider(), null, null);
-		tAuthorContentProposal.addContentProposalListener(new IContentProposalListener() {
-			@SuppressWarnings("unchecked")
+		
+		AutoCompleteTextUtil.addAutoCompleteSupport(tAuthor, new AuthorContentProposalProvider(),
+			Optional.ofNullable(documentReference.getAuthorId())
+				.map(o -> CoreModelServiceHolder.get().load(o, IContact.class).orElse(null))
+				.orElse(document.getAuthor()));
+		
+		MenuManager menuManager = new MenuManager();
+		menuManager.add(new Action("Neuen Kontakt Erstellen") {
 			@Override
-			public void proposalAccepted(IContentProposal proposal){
-				tAuthor.setText(proposal.getLabel());
-				tAuthor.setData(PROPOSAL_RET_OBJ,
-					((IdentifiableContentProposal<IContact>) proposal).getIdentifiable());
+			public void run(){
+				KontaktErfassenDialog dlg = new KontaktErfassenDialog(UiDesk.getTopShell(),
+					ContactLabelUtil.getContactHints(tAuthor.getText()));
+				if (dlg.open() == Window.OK) {
+					if (dlg.getContact().isPresent()) {
+						AutoCompleteTextUtil.setValue(tAuthor, dlg.getContact().get());
+					} else {
+						MessageDialog.openWarning(getParentShell(), "",
+							"Der Kontakt konnte nicht angelegt werden.");
+					}
+				}
+			}
+			
+			@Override
+			public boolean isEnabled(){
+				return !(AutoCompleteTextUtil.getData(tAuthor) instanceof IContact);
 			}
 		});
+		menuManager.addMenuListener(new IMenuListener() {
+			@Override
+			public void menuAboutToShow(IMenuManager manager){
+				IContributionItem[] items = manager.getItems();
+				for (IContributionItem iContributionItem : items) {
+					iContributionItem.update();
+				}
+			}
+		});
+		tAuthor.setMenu(menuManager.createContextMenu(tAuthor));
 		
 		new Label(ret, SWT.NONE).setText(Messages.DocumentsView_DocumentClass);
 		tDocumentClass = SWTHelper.createText(ret, 1, SWT.NONE);
-		ContentProposalAdapter tDocumentClassContentProposal =
-			new ContentProposalAdapter(tDocumentClass, new TextContentAdapter(),
-				new DocumentClassProposalProvider(), null, null);
-		tDocumentClassContentProposal.addContentProposalListener(new IContentProposalListener() {
-			@Override
-			public void proposalAccepted(IContentProposal proposal){
-				tDocumentClass.setText(proposal.getLabel());
-				tDocumentClass.setData(PROPOSAL_RET_OBJ, ((CodingContentProposal) proposal).getCoding());
-				tDocumentClass.setSelection(tDocumentClass.getText().length());
-			}
-		});
-		ICoding docClassCode = documentReference.getDocumentClass();
-		if (docClassCode != null) {
-			tDocumentClass.setText(docClassCode.getDisplay());
-			tDocumentClass.setData(PROPOSAL_RET_OBJ, docClassCode);
-		}
 		
+		AutoCompleteTextUtil.addAutoCompleteSupport(tDocumentClass,
+			new ValueSetProposalProvider(ValueSetProposalProvider.EPRDOCUMENT_CLASSCODE),
+			documentReference.getDocumentClass());
 
 		new Label(ret, SWT.NONE).setText(Messages.DocumentsView_PracticeSetting);
 		tPracticeSetting = SWTHelper.createText(ret, 1, SWT.NONE);
-		ContentProposalAdapter tPracticeSettingContentProposal =
-			new ContentProposalAdapter(tPracticeSetting, new TextContentAdapter(),
-				new PracticeSettingProposalProvider(), null, null);
-		tPracticeSettingContentProposal.addContentProposalListener(new IContentProposalListener() {
-			@Override
-			public void proposalAccepted(IContentProposal proposal){
-				tPracticeSetting.setText(proposal.getLabel());
-				tPracticeSetting.setData(PROPOSAL_RET_OBJ, ((CodingContentProposal) proposal).getCoding());
-				tPracticeSetting.setSelection(tPracticeSetting.getText().length());
-			}
-		});
-		ICoding pracSetttingCode = documentReference.getPracticeSetting();
-		if (pracSetttingCode != null) {
-			tPracticeSetting.setText(pracSetttingCode.getDisplay());
-			tPracticeSetting.setData(PROPOSAL_RET_OBJ, pracSetttingCode);
-		}
+		
+		AutoCompleteTextUtil.addAutoCompleteSupport(tPracticeSetting,
+			new ValueSetProposalProvider(ValueSetProposalProvider.EPRDOCUMENT_PRACTICESETTINGCODE),
+			documentReference.getPracticeSetting());
 	}
 	
 	private IDocumentReference getOrCreateDocumentReference(IDocument document){
@@ -340,7 +336,7 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 			document.setTitle(title);
 			keywords = tKeywords.getText();
 			document.setKeywords(keywords);
-			document.setAuthor((IContact) tAuthor.getData(PROPOSAL_RET_OBJ));
+			document.setAuthor((IContact) AutoCompleteTextUtil.getData(tAuthor));
 			
 			updateDocumentReferences();
 		}
@@ -351,13 +347,14 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 		
 		documentReference.setKeywords(tKeywords.getText());
 		documentReference.setAuthorId(
-			Optional.ofNullable((IContact) tAuthor.getData(PROPOSAL_RET_OBJ)).map(IContact::getId)
+			Optional.ofNullable((IContact) AutoCompleteTextUtil.getData(tAuthor))
+				.map(IContact::getId)
 				.orElse(null));
 		
-		Optional.ofNullable(tPracticeSetting.getData(PROPOSAL_RET_OBJ))
+		Optional.ofNullable(AutoCompleteTextUtil.getData(tPracticeSetting))
 			.ifPresent(o -> documentReference.setPracticeSetting((ICoding) o));
 
-		Optional.ofNullable(tDocumentClass.getData(PROPOSAL_RET_OBJ))
+		Optional.ofNullable(AutoCompleteTextUtil.getData(tDocumentClass))
 			.ifPresent(o -> documentReference.setDocumentClass((ICoding) o));
 		FindingsServiceHolder.getiFindingsService().saveFinding(documentReference);
 	}
