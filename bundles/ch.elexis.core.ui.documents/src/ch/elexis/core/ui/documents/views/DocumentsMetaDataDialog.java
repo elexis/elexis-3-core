@@ -248,7 +248,12 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 				.orElse(document.getAuthor()));
 		
 		MenuManager menuManager = new MenuManager();
-		menuManager.add(new Action("Neuen Kontakt Erstellen") {
+		
+		menuManager.add(new Action(ch.elexis.core.l10n.Messages.KontaktDetailDialog_newContact) {
+			{
+				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
+			}
+			
 			@Override
 			public void run(){
 				KontaktErfassenDialog dlg = new KontaktErfassenDialog(UiDesk.getTopShell(),
