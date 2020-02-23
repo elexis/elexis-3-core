@@ -146,7 +146,6 @@ public class BriefDocumentStore implements IDocumentStore {
 		ICategory iCategory =
 			categoryName != null ? new CategoryDocumentDTO(categoryName) : getCategoryDefault();
 		letter.setCategory(iCategory);
-		modelService.save(letter);
 		return letter;
 	}
 	

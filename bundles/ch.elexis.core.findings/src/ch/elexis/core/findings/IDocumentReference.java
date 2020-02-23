@@ -19,4 +19,12 @@ public interface IDocumentReference extends IFinding {
 	public ICoding getFacilityType();
 	
 	public void setFacilityType(ICoding coding);
+	
+	public String getAuthorId();
+	
+	public void setAuthorId(String authorId);
+	
+	public String getKeywords();
+	
+	public void setKeywords(String keywords);
 }

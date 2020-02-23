@@ -52,4 +52,22 @@
 			<column name="DOCUMENTID" />
 		</createIndex>
 	</changeSet>
+	<changeSet author="sezer"
+		id="manual_table_CH_ELEXIS_CORE_FINDINGS_DOCUMENTREFERENCE_AUTHORID_KEYWORDS">
+		<preConditions onFail="MARK_RAN">
+			<and>
+				<tableExists tableName="CH_ELEXIS_CORE_FINDINGS_DOCUMENTREFERENCE" />
+				<not>
+					<columnExists tableName="CH_ELEXIS_CORE_FINDINGS_DOCUMENTREFERENCE"
+						columnName="AUTHORID" />
+					<columnExists tableName="CH_ELEXIS_CORE_FINDINGS_DOCUMENTREFERENCE"
+						columnName="KEYWORDS" />	
+				</not>
+			</and>
+		</preConditions>
+		<addColumn tableName="CH_ELEXIS_CORE_FINDINGS_DOCUMENTREFERENCE">
+			<column name="AUTHORID" type="VARCHAR(80)" />
+			<column name="KEYWORDS" type="VARCHAR(512)" />
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>

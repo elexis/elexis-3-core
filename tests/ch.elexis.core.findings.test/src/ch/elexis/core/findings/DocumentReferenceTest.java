@@ -10,6 +10,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
+import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.findings.codings.ValueSetServiceComponent;
 import ch.elexis.core.findings.test.AllTests;
 import ch.elexis.core.model.IDocument;
@@ -56,7 +57,7 @@ public class DocumentReferenceTest {
 	}
 	
 	@Test
-	public void setDocument(){
+	public void setDocument() throws ElexisException{
 		IDocumentReference reference =
 			FindingsServiceComponent.getService().create(IDocumentReference.class);
 		assertNotNull(reference);
@@ -64,7 +65,7 @@ public class DocumentReferenceTest {
 		
 		IDocument document =
 			DocumentStoreComponent.getService().createDocument(AllTests.PATIENT_ID, "test", "test");
-		
+		DocumentStoreComponent.getService().saveDocument(document);
 		reference.setDocument(document);
 		FindingsServiceComponent.getService().saveFinding(reference);
 		
