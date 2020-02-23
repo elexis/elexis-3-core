@@ -33,9 +33,9 @@ public class AuthorContentProposalProvider implements IContentProposalProvider {
 				
 				// label filter
 				if (firstSpace != -1) {
+					String searchPart = searchString.substring(firstSpace + 1);
 					res = res.stream()
-						.filter(
-							i -> i.getLabel().toLowerCase().startsWith(searchString.toLowerCase()))
+						.filter(i -> i.getLabel().toLowerCase().contains(searchPart.toLowerCase()))
 						.collect(Collectors.toList());
 				}
 				
