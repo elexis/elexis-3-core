@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="ch.elexis.core.persistence.feature"
-      label="Feature"
+      label="Core JPA Persistence Feature"
       version="1.0.0.qualifier"
       provider-name="medevit.at">
 
