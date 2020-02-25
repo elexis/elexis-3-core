@@ -10,7 +10,7 @@
 	<repositories>
 		<repository>
 			<id>elexis.3.target</id>
-			<url>http://download.elexis.info/elexis/${git.target.branch}/p2/target</url>
+			<url>https://download.elexis.info/elexis/${git.target.branch}/p2/target</url>
 			<layout>p2</layout>
 		</repository>
 	</repositories>
@@ -18,8 +18,8 @@
 		<tycho.version>1.6.0</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
-		<git.target.branch>master</git.target.branch>
-		<git.core.branch>master</git.core.branch>
+		<git.target.branch>3.8</git.target.branch>
+		<git.core.branch>3.8</git.core.branch>
 		<!-- vvv required empty vvv-->
 		<os-jvm-flags/>
 	</properties>
@@ -314,9 +314,9 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
 					<encoding>UTF-8</encoding>
 					<consoleOutput>false</consoleOutput>
 					<failsOnError>false</failsOnError>
-					<headerLocation>https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/epl-v10.html</headerLocation>
-					<configLocation>https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/checkstyle.xml</configLocation>
-					<suppressionsLocation>https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/checkstyle-suppressions.xml</suppressionsLocation>
+					<headerLocation>https://raw.githubusercontent.com/elexis/elexis-3-core/3.8/ch.elexis.core.releng/epl-v10.html</headerLocation>
+					<configLocation>https://raw.githubusercontent.com/elexis/elexis-3-core/3.8/ch.elexis.core.releng/checkstyle.xml</configLocation>
+					<suppressionsLocation>https://raw.githubusercontent.com/elexis/elexis-3-core/3.8/ch.elexis.core.releng/checkstyle-suppressions.xml</suppressionsLocation>
 				</configuration>
 				<version>2.17</version>
 			</plugin>
@@ -518,9 +518,9 @@ Without it Maven would put two versions of each class file into the jars
 					<encoding>UTF-8</encoding>
 					<consoleOutput>false</consoleOutput>
 					<failsOnError>false</failsOnError>
-					<headerLocation>https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/epl-v10.html</headerLocation>
-					<configLocation>https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/checkstyle.xml</configLocation>
-					<suppressionsLocation>https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/checkstyle-suppressions.xml</suppressionsLocation>
+					<headerLocation>https://raw.githubusercontent.com/elexis/elexis-3-core/3.8/ch.elexis.core.releng/epl-v10.html</headerLocation>
+					<configLocation>https://raw.githubusercontent.com/elexis/elexis-3-core/3.8/ch.elexis.core.releng/checkstyle.xml</configLocation>
+					<suppressionsLocation>https://raw.githubusercontent.com/elexis/elexis-3-core/3.8/ch.elexis.core.releng/checkstyle-suppressions.xml</suppressionsLocation>
 				</configuration>
 				<reportSets>
 					<reportSet>
