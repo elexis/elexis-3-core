@@ -86,6 +86,7 @@ import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
+import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Person;
 import ch.elexis.data.Query;
@@ -470,6 +471,14 @@ public class TextContainer {
 			Mandant mandant = (Mandant) parent;
 			
 			return mandant.getReferencedObject(fieldl);
+		} else if (parent instanceof Patient) {
+			String fieldl = field;
+			if (fieldl.substring(0, 1).equalsIgnoreCase(DONT_SHOW_REPLACEMENT_ERRORS)) {
+				fieldl = fieldl.substring(1);
+			}
+			Patient patient = (Patient) parent;
+			
+			return patient.getReferencedObject(fieldl);
 		} else {
 			// not yet supported
 			return null;
