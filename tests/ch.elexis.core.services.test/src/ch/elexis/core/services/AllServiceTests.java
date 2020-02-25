@@ -13,6 +13,7 @@ import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.test.initializer.TestDatabaseInitializer;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
@@ -20,7 +21,7 @@ import ch.elexis.core.utils.OsgiServiceUtil;
 @SuiteClasses({
 	AccessControlServiceTest.class, IAppointmentServiceTest.class, IBillingServiceTest.class,
 	IConfigServiceTest.class, IElexisEnvironmentServiceTest.class, ILabServiceTest.class,
-	IStoreToStringServiceTest.class, IStickerServiceTest.class, IAppointmentServiceTest.class,
+	IStoreToStringServiceTest.class, IStickerServiceTest.class,
 	IUserServiceTest.class, IMessageServiceTest.class, IVirtualFilesystemServiceTest.class,
 	IXidServiceTest.class, IMedicationServiceTest.class, ITextReplacementServiceTest.class
 })
@@ -66,5 +67,9 @@ public class AllServiceTests {
 	
 	public static IMandator getMandator(){
 		return tdb.getMandant();
+	}
+
+	public static IUser getUser(){
+		return tdb.getUser();
 	}
 }

@@ -4,19 +4,26 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.ICustomService;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IFreeTextDiagnosis;
+import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.builder.IEncounterBuilder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.InvoiceServiceHolder;
 import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
@@ -45,6 +52,11 @@ public class IBillingServiceTest extends AbstractServiceTest {
 	@AfterClass
 	public static void afterClass(){
 		CoreModelServiceHolder.get().remove(encounter);
+	}
+	
+	@After
+	public void after() {
+		cleanup();
 	}
 	
 	@Test
@@ -76,6 +88,44 @@ public class IBillingServiceTest extends AbstractServiceTest {
 		assertEquals(1, billedList.size());
 		assertEquals(1, billedList.get(0).getAmount(), 0d);
 		assertEquals(1024, billedList.get(0).getPrice().getCents());
+	}
+	
+	@Test
+	public void isNonEditableCoverageHasEndDate(){
+		createTestMandantPatientFallBehandlung();
+		ContextServiceHolder.get().setActiveMandator(testMandators.get(0));
+		
+		Result<IEncounter> isEditable = billingService.isEditable(testEncounters.get(0));
+		assertTrue(isEditable.toString(), isEditable.isOK());
+		
+		ICoverage fall = testEncounters.get(0).getCoverage();
+		fall.setDateTo(LocalDate.now());
+		coreModelService.save(fall);
+		
+		Result<IEncounter> result = billingService.isEditable(testEncounters.get(0));
+		assertFalse(result.toString(), result.isOK());
+	}
+	
+	@Test
+	public void isNonEditableAsInvoiceIsSet(){
+		createTestMandantPatientFallBehandlung();
+		ContextServiceHolder.get().setActiveUser(AllServiceTests.getUser());
+		ContextServiceHolder.get().setActiveMandator(testMandators.get(0));
+		
+		Result<IEncounter> isEditable = billingService.isEditable(testEncounters.get(0));
+		assertTrue(isEditable.toString(), isEditable.isOK());
+		
+		IFreeTextDiagnosis diagnosis = coreModelService.create(IFreeTextDiagnosis.class);
+		diagnosis.setDescription("test");
+		diagnosis.setText("testText");
+		coreModelService.save(diagnosis);
+		testEncounters.get(0).addDiagnosis(diagnosis);
+		coreModelService.save(testEncounters.get(0));
+		Result<IInvoice> invoice = InvoiceServiceHolder.get().invoice(testEncounters);
+		assertTrue(invoice.toString(), invoice.isOK());
+
+		Result<IEncounter> result = billingService.isEditable(testEncounters.get(0));
+		assertFalse(result.toString(), result.isOK());
 	}
 	
 }
