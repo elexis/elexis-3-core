@@ -57,22 +57,23 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 	
 	private static final int MAX_WAIT = 40;
 	
-	private static Logger logger =
-		LoggerFactory.getLogger(BillLabResultOnCreationIdentifiedRunnable.class);
-	
-	private static Object addTarifLock = new Object();
+	private static Logger logger;
+	private static Object addTarifLock;
 	
 	private final IModelService coreModelService;
 	
 	private final EncounterSelector encounterSelector;
 	
-	private boolean billAddCons = false;
-	private boolean billAddConsSameDay = true;
+	private boolean autoBillTarmed00_0010IfNotAlreadyBilledOnEncounter = false;
+	private boolean onlyUseTodaysEncounterForBilling = true;
 	
 	public BillLabResultOnCreationIdentifiedRunnable(IModelService coreModelService,
 		EncounterSelector encounterSelection){
 		this.coreModelService = coreModelService;
 		this.encounterSelector = encounterSelection;
+		
+		logger = LoggerFactory.getLogger(BillLabResultOnCreationIdentifiedRunnable.class);
+		addTarifLock = new Object();
 	}
 	
 	public interface EncounterSelector {
@@ -117,9 +118,10 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 	 * @param patient
 	 * @return
 	 */
-	private Optional<IEncounter> getKonsultationValidated(IPatient patient){
-		IEncounter kons = EncounterServiceHolder.get().getLatestEncounter(patient).orElse(null);
+	private Optional<IEncounter> getBillableEncounter(IPatient patient){
+		IEncounter validEncounter = null;
 		
+		IEncounter kons = EncounterServiceHolder.get().getLatestEncounter(patient).orElse(null);
 		if (kons != null) {
 			Result<IEncounter> editable = BillingServiceHolder.get().isEditable(kons);
 			boolean failsEncounterHasToBeTodayConstraint = true;
@@ -128,7 +130,7 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 				failsEncounterHasToBeTodayConstraint = failsEncounterHasToBeTodayConstraint(kons);
 				valIsOnlyOneKonsToday = isOnlyOneKonsToday(patient);
 				if (!failsEncounterHasToBeTodayConstraint && valIsOnlyOneKonsToday) {
-					return Optional.ofNullable(kons);
+					validEncounter = kons;
 				}
 			}
 			logger.debug(
@@ -139,12 +141,12 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 		if (encounterSelector != null) {
 			String konsId = encounterSelector.createOrOpenConsultation(patient);
 			if (konsId != null) {
-				return coreModelService.load(konsId, IEncounter.class);
+				validEncounter = coreModelService.load(konsId, IEncounter.class).get();
 			}
 		} else {
 			logger.warn("encounterSelector==null: kons={}", kons);
 		}
-		return Optional.ofNullable(kons);
+		return Optional.ofNullable(validEncounter);
 	}
 	
 	private List<IEncounter> getOpenKons(IPatient patient){
@@ -186,7 +188,7 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 	
 	private boolean isOnlyOneKonsToday(IPatient patient){
 		// if today kons option is not set do not lookup ...
-		if (!billAddConsSameDay) {
+		if (!onlyUseTodaysEncounterForBilling) {
 			// TODO task? who is the active mandator?
 			return true;
 		}
@@ -206,7 +208,7 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 	
 	private boolean failsEncounterHasToBeTodayConstraint(IEncounter kons){
 		// see RochePreferencePage.LABORRESULTS_BILL_ADDCONS_SAMEDAY
-		if (billAddConsSameDay) {
+		if (onlyUseTodaysEncounterForBilling) {
 			// constraint is active
 			TimeTool konsDate = new TimeTool(kons.getDate());
 			if (!konsDate.isSameDay(new TimeTool())) {
@@ -218,7 +220,7 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 	
 	private Result<?> addTarifToKons(IBillable tarif, IEncounter kons) throws TaskException{
 		// see RochePreferencePage.LABORRESULTS_BILL_ADDCONS
-		if (billAddCons) {
+		if (autoBillTarmed00_0010IfNotAlreadyBilledOnEncounter) {
 			synchronized (kons) {
 				List<IBilled> leistungen = kons.getBilled();
 				boolean addCons = true;
@@ -294,8 +296,10 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 				"LabResult [" + labresultId + "] could not be loaded");
 		}
 		
-		billAddCons = SerializableBoolean.valueOf(runContext, Parameters.ADDCONS);
-		billAddConsSameDay = SerializableBoolean.valueOf(runContext, Parameters.ADDCONS_SAMEDAY);
+		autoBillTarmed00_0010IfNotAlreadyBilledOnEncounter =
+			SerializableBoolean.valueOf(runContext, Parameters.ADDCONS);
+		onlyUseTodaysEncounterForBilling =
+			SerializableBoolean.valueOf(runContext, Parameters.ADDCONS_SAMEDAY);
 		
 		ILabResult labResult = _labResult.get();
 		
@@ -332,27 +336,29 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 				labResult.getOrigin().getLabel()));
 			if (ealCode != null && !ealCode.isEmpty()) {
 				IBillable tarif = getLabor2009TarifByCode(ealCode);
-				if (tarif != null) {
-					synchronized (addTarifLock) {
-						Optional<IEncounter> kons =
-							getKonsultationValidated(labResult.getPatient());
-						if (kons.isPresent()) {
-							Result<?> addTarifToKons = addTarifToKons(tarif, kons.get());
-							return Collections.singletonMap(ReturnParameter.RESULT_DATA,
-								addTarifToKons.toString());
-						} else {
-							String errorString = String.format(
-								"Could not add tarif [%s] for result of patient [%s] because no valid kons found.",
-								ealCode, labResult.getPatient().getLabel());
-							logger.warn(errorString);
-							throw new TaskException(TaskException.EXECUTION_ERROR, errorString);
-						}
-					}
-				} else {
+				if (tarif == null) {
 					String errorString = String.format("Item %s: EAL tarif [%s] does not exist.",
 						labResult.getItem().getLabel(), ealCode);
 					logger.warn(errorString);
 					throw new TaskException(TaskException.EXECUTION_ERROR, errorString);
+				}
+				
+				synchronized (addTarifLock) {
+					Optional<IEncounter> kons = getBillableEncounter(labResult.getPatient());
+					if (kons.isPresent()) {
+						Result<?> addTarifToKons = addTarifToKons(tarif, kons.get());
+						return Collections.singletonMap(ReturnParameter.RESULT_DATA,
+							addTarifToKons.toString());
+					} else {
+						String errorString = String.format(
+							"Could not add tarif [%s] for result of patient [%s] because no billable kons found.",
+							ealCode, labResult.getPatient().getLabel());
+						logger.warn(errorString);
+						Map<String, Serializable> resultMap = new HashMap<String, Serializable>();
+						resultMap.put(ReturnParameter.MARKER_WARN, null);
+						resultMap.put(ReturnParameter.RESULT_DATA, errorString);
+						return resultMap;
+					}
 				}
 			}
 		} else {
