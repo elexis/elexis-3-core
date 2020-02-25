@@ -35,6 +35,7 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.jdt.Nullable;
@@ -803,5 +804,14 @@ public class Patient extends Person {
 	public IPatient toIPatient() {
 		return CoreModelServiceHolder.get().load(getId(), IPatient.class)
 				.orElseThrow(() -> new IllegalStateException("Could not convert patient [" + getId() + "]"));
+	}
+	
+	public IPersistentObject getReferencedObject(String fieldl){
+		if (fieldl != null) {
+			if ("Stammarzt".equals(fieldl)) {
+				return getStammarzt();
+			}
+		}
+		return null;
 	}
 }
