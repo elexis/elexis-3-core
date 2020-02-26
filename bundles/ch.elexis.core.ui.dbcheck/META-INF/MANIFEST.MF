@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Datenbank Service Tool
 Bundle-SymbolicName: ch.elexis.core.ui.dbcheck;singleton:=true
-Bundle-Version: 3.8.0.qualifier
+Bundle-Version: 3.9.0.qualifier
 Bundle-Activator: ch.elexis.core.ui.dbcheck.Activator
 Bundle-Vendor: medevit.at
 Require-Bundle: org.eclipse.ui,

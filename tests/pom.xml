@@ -12,7 +12,7 @@
 	<parent>
 		<groupId>ch.elexis.core</groupId>
 		<artifactId>elexis-3-core</artifactId>
-		<version>3.8.0-SNAPSHOT</version>
+		<version>3.9.0-SNAPSHOT</version>
 	</parent>
 	<properties>
 		<tycho.showEclipseLog>false</tycho.showEclipseLog>
@@ -55,13 +55,13 @@
 		<dependency>
 			<groupId>ch.elexis.core</groupId>
 			<artifactId>ch.elexis.core.application.feature</artifactId>
-			<version>3.8.0-SNAPSHOT</version>
+			<version>3.9.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>ch.elexis.core</groupId>
 			<artifactId>ch.elexis.core.common.feature</artifactId>
-			<version>3.8.0-SNAPSHOT</version>
+			<version>3.9.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
