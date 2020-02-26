@@ -16,7 +16,14 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import ch.elexis.core.data.service.ContextServiceHolder;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.builder.IContactBuilder;
+import ch.elexis.core.types.Gender;
 import ch.elexis.data.Labor;
+import ch.rgw.tools.TimeTool;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -32,6 +39,15 @@ public class AllTests {
 	@BeforeClass
 	public static void beforeClass(){
 		testLab = new Labor("HL7_Test", "HL7_Test");
+		
+		TimeTool timeTool = new TimeTool();
+		IPerson _mandator =
+			new IContactBuilder.PersonBuilder(CoreModelServiceHolder.get(), "mandator1 " + timeTool.toString(),
+				"Anton" + timeTool.toString(), timeTool.toLocalDate(), Gender.MALE).mandator()
+					.buildAndSave();
+		IMandator mandator = CoreModelServiceHolder.get().load(_mandator.getId(), IMandator.class).get();
+		ContextServiceHolder.get().setActiveMandator(mandator);
+		
 	}
 	
 	public static Test suite() throws ClassNotFoundException{
