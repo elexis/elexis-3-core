@@ -49,29 +49,27 @@ public class LocalDocumentService implements ILocalDocumentService {
 		throws IllegalStateException{
 		boolean readOnly = false;
 		if (documentSource != null) {
-			LockResponse result =
-				LocalLockServiceHolder.get().acquireLock(documentSource);
+			LockResponse result = LocalLockServiceHolder.get().acquireLock(documentSource);
 			if (result.isOk()) {
 				managedLocks.put(documentSource, result);
 			} else {
 				readOnly = true;
 			}
-		}
-		
-		ILoadHandler loadHandler = getRegisteredLoadHandler(documentSource.getClass());
-		if (loadHandler == null) {
-			throw new IllegalStateException("No load handler for [" + documentSource + "]");
-		}
-		
-		String fileName = getFileName(documentSource);
-		InputStream in = loadHandler.load(documentSource);
-		if (in != null) {
-			Optional<File> ret = writeLocalFile(fileName, in,
-				conflictHandler, readOnly);
-			ret.ifPresent(file -> {
-				managedFiles.put(documentSource, file);
-			});
-			return ret;
+			
+			ILoadHandler loadHandler = getRegisteredLoadHandler(documentSource.getClass());
+			if (loadHandler == null) {
+				throw new IllegalStateException("No load handler for [" + documentSource + "]");
+			}
+			
+			String fileName = getFileName(documentSource);
+			InputStream in = loadHandler.load(documentSource);
+			if (in != null) {
+				Optional<File> ret = writeLocalFile(fileName, in, conflictHandler, readOnly);
+				ret.ifPresent(file -> {
+					managedFiles.put(documentSource, file);
+				});
+				return ret;
+			}
 		}
 		return Optional.empty();
 	}
