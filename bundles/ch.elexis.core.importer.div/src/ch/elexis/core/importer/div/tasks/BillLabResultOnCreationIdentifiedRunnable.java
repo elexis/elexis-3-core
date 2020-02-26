@@ -57,8 +57,8 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 	
 	private static final int MAX_WAIT = 40;
 	
+	private static Object addTarifLock = new Object();
 	private static Logger logger;
-	private static Object addTarifLock;
 	
 	private final IModelService coreModelService;
 	
@@ -73,7 +73,6 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 		this.encounterSelector = encounterSelection;
 		
 		logger = LoggerFactory.getLogger(BillLabResultOnCreationIdentifiedRunnable.class);
-		addTarifLock = new Object();
 	}
 	
 	public interface EncounterSelector {
