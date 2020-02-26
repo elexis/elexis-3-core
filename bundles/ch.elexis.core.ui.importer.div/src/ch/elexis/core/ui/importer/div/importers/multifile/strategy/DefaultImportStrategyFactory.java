@@ -30,6 +30,8 @@ public class DefaultImportStrategyFactory extends BasicFileImportStrategyFactory
 	
 	private ILabContactResolver labContactResolver;
 	
+	private String pdfImportCategory;
+
 	@Override
 	public Map<File, IFileImportStrategy> createImportStrategyMap(File hl7File){
 		Map<File, IFileImportStrategy> ret = super.createImportStrategyMap(hl7File);
@@ -38,6 +40,9 @@ public class DefaultImportStrategyFactory extends BasicFileImportStrategyFactory
 		// matching files for this hl7 file, probably pdf
 		if (!matchingFiles.isEmpty()) {
 			DefaultPDFImportStrategy pdfImportStrategy = new DefaultPDFImportStrategy();
+			if (pdfImportCategory != null) {
+				pdfImportStrategy.setPDFImportCategory(pdfImportCategory);
+			}
 			for (File mFile : matchingFiles) {
 				String type = FileTool.getExtension(mFile.getName()).toLowerCase();
 				if ("pdf".equals(type)) {
@@ -65,6 +70,11 @@ public class DefaultImportStrategyFactory extends BasicFileImportStrategyFactory
 		return this;
 	}
 	
+	public IFileImportStrategyFactory setPDFImportCategory(String category) {
+		this.pdfImportCategory = category;
+		return this;
+	}
+
 	/**
 	 * Add the {@link ILabContactResolver} that should be used on import.
 	 * 

@@ -60,7 +60,7 @@ public class MultiFileParser implements IMultiFileParser {
 	public Result<Object> importFromDirectory(File directory,
 		IFileImportStrategyFactory importStrategyFactory, HL7Parser hl7parser, IPersistenceHandler persistenceHandler){
 		Result<Object> results = new Result<>();
-		for (File file : directory.listFiles()) {
+		for (File file : sortListFiles(directory.listFiles())) {
 			String extension = FileTool.getExtension(file.getName()).toLowerCase();
 			if (extension.equals("hl7")) {
 				results.add(importFromFile(file, importStrategyFactory, hl7parser, persistenceHandler));
@@ -84,5 +84,10 @@ public class MultiFileParser implements IMultiFileParser {
 	
 	public boolean inTestMode(){
 		return testMode;
+	}
+
+	protected File[] sortListFiles(File[] files) {
+		// default no sorting
+		return files;
 	}
 }
