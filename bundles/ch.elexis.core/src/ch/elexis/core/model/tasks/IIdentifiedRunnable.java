@@ -60,13 +60,14 @@ public interface IIdentifiedRunnable {
 		/**
 		 * The actual result data for a single object. Object can be casted to
 		 * {@link #RESULT_CLASS}. If multiple result objects are required, use
-		 * {@link #RESULT_DATA_LIST}
+		 * {@link #RESULT_DATA_LIST}. Do not use both.
 		 */
 		public static final String RESULT_DATA = "resultData";
 		
 		/**
 		 * The actual result data for multiple objects. Each object can be casted to
-		 * {@link #RESULT_CLASS}. If a single result object is required use {@link #RESULT_DATA}
+		 * {@link #RESULT_CLASS}. If a single result object is required use {@link #RESULT_DATA}. Do
+		 * not use both.
 		 */
 		public static final String RESULT_DATA_LIST = "resultDataList";
 		
@@ -133,8 +134,9 @@ public interface IIdentifiedRunnable {
 	 *            or <code>null</code>
 	 * @param logger
 	 *            or <code>null</code>
-	 * @return a map or <code>null</code>
-	 * @throw {@link TaskException} if there was an error executing this task
+	 * @return a map or <code>null</code>, use {@link ResultStatusAdapter} for extended analysis
+	 *         (e.g. if task completed successfully)
+	 * @throw {@link TaskException} if there was a technical error executing this task
 	 */
 	Map<String, Serializable> run(Map<String, Serializable> runContext,
 		IProgressMonitor progressMonitor, Logger logger) throws TaskException;
