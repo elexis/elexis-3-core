@@ -67,6 +67,10 @@
             id="ch.elexis.core.ui.documents.commandFlatView"
             name="%command.name.9">
       </command>
+      <command
+            id="ch.elexis.core.ui.documents.commandSendToCancerRegister"
+            name="Senden an Krebsregister">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -175,6 +179,27 @@
                   </test>
                </visibleWhen>
             </command>
+            <command
+                  commandId="ch.elexis.core.ui.documents.commandSendToCancerRegister"
+                  label="an Krebsregister"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <with
+                        variable="org.eclipse.ui.selection">
+                     <count
+                           value="1">
+                     </count>
+                     <iterate>
+                        <test
+                              args="pdf"
+                              forcePluginActivation="true"
+                              property="ch.elexis.core.ui.documents.isMimeType">
+                        </test>
+                     </iterate>
+                  </with>
+               </visibleWhen>
+            </command>
          </menu>
       </menuContribution>
       <menuContribution
@@ -232,6 +257,27 @@
                </test>
             </visibleWhen>
          </command>
+         <command
+               commandId="ch.elexis.core.ui.documents.commandSendToCancerRegister"
+               label="an Krebsregister"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="org.eclipse.ui.selection">
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <test
+                           args="pdf"
+                           forcePluginActivation="true"
+                           property="ch.elexis.core.ui.documents.isMimeType">
+                     </test>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
       </menuContribution>
    </extension>
    <extension
@@ -253,6 +299,20 @@
             class="ch.elexis.core.ui.documents.handler.DocumentSendAsMailHandler"
             commandId="ch.elexis.core.ui.documents.commandSendAsMail">
       </handler>
+      <handler
+            class="ch.elexis.core.ui.documents.handler.DocumentSendToCancerRegister"
+            commandId="ch.elexis.core.ui.documents.commandSendToCancerRegister">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="ch.elexis.core.ui.documents.tester.DocumentsPropertyTester"
+            id="ch.elexis.core.ui.documents.propertyTester"
+            namespace="ch.elexis.core.ui.documents"
+            properties="isMimeType"
+            type="java.lang.Object">
+      </propertyTester>
    </extension>
 
 </plugin>
