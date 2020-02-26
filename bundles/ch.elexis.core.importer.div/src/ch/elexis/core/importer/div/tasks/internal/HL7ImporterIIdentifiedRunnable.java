@@ -18,6 +18,7 @@ import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrat
 import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
+import ch.elexis.core.model.tasks.SerializableBoolean;
 import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IVirtualFilesystemService;
@@ -99,10 +100,14 @@ public class HL7ImporterIIdentifiedRunnable implements IIdentifiedRunnable {
 	public Map<String, Serializable> run(Map<String, Serializable> context, IProgressMonitor progressMonitor,
 			Logger logger) throws TaskException {
 
-		boolean bCreateLaboratoryIfNotExists = (boolean) context.get(RCP_BOOLEAN_CREATE_LABORATORY_IF_NOT_EXISTS);
-		boolean bMoveFile = (boolean) context.get(RCP_BOOLEAN_MOVE_FILE_AFTER_IMPORT);
-		boolean importEncData = (boolean) context.get(RCP_BOOLEAN_IMPORT_ENCAPSULATED_DATA);
-		boolean overwriteExistingResults = (boolean) context.get(RCP_BOOLEAN_OVERWRITE_EXISTING_RESULTS);
+		boolean bCreateLaboratoryIfNotExists =
+			SerializableBoolean.valueOf(context, RCP_BOOLEAN_CREATE_LABORATORY_IF_NOT_EXISTS);
+		boolean bMoveFile =
+			SerializableBoolean.valueOf(context, RCP_BOOLEAN_MOVE_FILE_AFTER_IMPORT);
+		boolean importEncData =
+			SerializableBoolean.valueOf(context, RCP_BOOLEAN_IMPORT_ENCAPSULATED_DATA);
+		boolean overwriteExistingResults =
+			SerializableBoolean.valueOf(context, RCP_BOOLEAN_OVERWRITE_EXISTING_RESULTS);
 		String urlString = (String) context.get(RunContextParameter.STRING_URL);
 		String labName = (String) context.get(RCP_STRING_IMPORTER_LABNAME);
 
