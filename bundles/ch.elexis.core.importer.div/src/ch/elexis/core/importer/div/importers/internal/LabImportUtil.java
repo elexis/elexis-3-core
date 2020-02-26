@@ -519,7 +519,7 @@ public class LabImportUtil implements ILabImportUtil {
 		ILabOrder labOrder, String orderId, IMandator mandator, TimeTool observationTime){
 		
 		logger.debug("Creating result with patient [" + patient + "] labitem [" + labItem
-			+ "] origin [" + laboratory + "]");
+			+ "] origin [" + laboratory + "] observationTime [" + observationTime + "]");
 		
 		ILabResult labResult = modelService.create(ILabResult.class);
 		labResult.setPatient(patient);
