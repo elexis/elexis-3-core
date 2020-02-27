@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jpa.entities.Brief;
@@ -129,7 +130,7 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	
 	@Override
 	public String getStoreId(){
-		return storeId;
+		return StringUtils.isNotEmpty(storeId) ? storeId : "ch.elexis.data.store.brief";
 	}
 	
 	@Override

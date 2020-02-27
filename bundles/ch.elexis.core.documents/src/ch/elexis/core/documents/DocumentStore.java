@@ -340,7 +340,7 @@ public class DocumentStore {
 		}
 		
 		MessageEvent.fireError(Messages.DocumentStore_storeError,
-			Messages.DocumentStore_storeErrorText + " " + storeId);
+			Messages.DocumentStore_storeErrorText + " [" + storeId + "]");
 		return new EmptyDocumentStore();
 	}
 	
