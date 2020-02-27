@@ -273,7 +273,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				// auto select accident if uvg is selected
 				if ("UVG".equals(abrechungsMethodeStr)) {
 					int idx = ArrayUtils.indexOf(Reasons, FallConstants.TYPE_ACCIDENT);
-					if (idx > -1) {
+					if (fall != null && idx > -1) {
 						fall.setGrund(Reasons[idx]);
 						
 						int ix = cReason.indexOf(Reasons[idx]);
