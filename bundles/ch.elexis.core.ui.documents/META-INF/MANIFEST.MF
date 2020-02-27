@@ -21,6 +21,7 @@ Import-Package: ch.elexis.admin,
  ch.elexis.core.findings,
  ch.elexis.core.findings.codes,
  ch.elexis.core.findings.util,
+ ch.elexis.core.findings.util.fhir,
  ch.elexis.core.services.holder,
  ch.elexis.core.ui,
  ch.elexis.core.ui.actions,
@@ -39,5 +40,6 @@ Import-Package: ch.elexis.admin,
  org.osgi.service.component.annotations,
  org.slf4j;version="1.7.2"
 Service-Component: OSGI-INF/ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder.xml,
- OSGI-INF/ch.elexis.core.ui.documents.service.LocalLockServiceHolder.xml
+ OSGI-INF/ch.elexis.core.ui.documents.service.LocalLockServiceHolder.xml,
+ OSGI-INF/ch.elexis.core.ui.documents.service.FhirTransformersHolder.xml
 Bundle-ActivationPolicy: lazy

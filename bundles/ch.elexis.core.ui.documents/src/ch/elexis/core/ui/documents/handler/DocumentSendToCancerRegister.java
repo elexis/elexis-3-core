@@ -1,6 +1,9 @@
 package ch.elexis.core.ui.documents.handler;
 
+import static ch.elexis.core.constants.XidConstants.DOMAIN_AHV;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -13,11 +16,13 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IXid;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
@@ -30,6 +35,14 @@ public class DocumentSendToCancerRegister extends AbstractHandler implements IHa
 	public Object execute(ExecutionEvent event) throws ExecutionException{
 		Optional<IPatient> activePatient = ContextServiceHolder.get().getActivePatient();
 		if (activePatient.isPresent()) {
+			IXid ahv = activePatient.get().getXid(DOMAIN_AHV);
+			if (ahv == null || (ahv.getDomainId() == null || ahv.getDomainId().length() < 13)) {
+				MessageDialog.openInformation(Display.getDefault().getActiveShell(),
+					"Senden an Krebsregister",
+					"Der Patient hat keine AHV Nummer mit min. 13 Zeichen.");
+				return null;
+			}
+			
 			ISelection selection = HandlerUtil.getCurrentSelection(event);
 			if (selection instanceof StructuredSelection
 				&& !((StructuredSelection) selection).isEmpty()) {
@@ -39,7 +52,13 @@ public class DocumentSendToCancerRegister extends AbstractHandler implements IHa
 				if (author.isPresent()) {
 					FhirChCrlDocumentBundle fhirBundle = new FhirChCrlDocumentBundle(iDocument,
 						activePatient.get(), author.get());
-					fhirBundle.writeTo(new File(CoreHub.getWritableUserDir(), "krg_test.xml"));
+					try {
+						fhirBundle.writeTo(new File(CoreHub.getWritableUserDir(), "krg_test.xml"));
+					} catch (IOException e) {
+						LoggerFactory.getLogger(getClass()).error("Couldn ot create file", e);
+						MessageDialog.openInformation(Display.getDefault().getActiveShell(),
+							"Senden an Krebsregister", "Datei konnte nicht erstellt werden");
+					}
 				} else {
 					MessageDialog.openInformation(Display.getDefault().getActiveShell(),
 						"Senden an Krebsregister", "Kein Autor Mandant ausgewählt");
