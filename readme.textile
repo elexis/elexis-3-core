@@ -115,6 +115,13 @@ are contained and inter-dependent as follows:
 
 !FeatureStructure.png!
 
+h3. Guidelines for developing a new plugin/feature
+
+New plugins and features should follow the E4 (eclipse 4) guideline. A good tutorial is from "Lars Vogel":https://www.vogella.com/tutorials/EclipseRCP/article.html
+
+The ch.elexis.core.ui.tasks follows new e4 implementation rules. Analyse its working and adapt it to your problem.
+
+
 h3. Generate Javadoc
 
 Elexis uses Javadoc go documents its API interface. The Eclipse IDE offers built-in support for reading the javadoc for a given method or class and provides also helper to generate it.
@@ -143,12 +150,8 @@ We do this for all new major version, eg. 3.3 -> 3.4. See also http://www.mojoha
 Steps to follow are:
 
 * Update the version in master pom.xml
-* Run @mvn -N versions:update-child-modules@
-* Update the version in the following files
-** ch.elexis.core.p2site/category.xml
-** ch.elexis.core.application/META-INF/MANIFEST.MF
-** ch.elexis.core.console.application/META-INF/MANIFEST.MF
-** other manifests if build fails
+* Run @mvn org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=3.9.0-SNAPSHOT@
+* Test and check whether the old version number is still present in other files.
 
 h2. Localisation / translation
 
