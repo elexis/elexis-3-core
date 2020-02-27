@@ -84,18 +84,18 @@ public class CovercardFixFallFields extends ExternalMaintenance {
 				+ billingSystem + "/bedingungen", requirements);
 		}
 		String optionals = BillingSystem.getOptionals(billingSystem);
-		if (optionals == null || !optionals.contains("VEKANr")) {
-			if (StringUtils.isNotBlank(optionals)) {
+		if(optionals == null) {
+			optionals = "VEKANr:T";
+		} else {
+			if(!optionals.contains("VEKANr")) {
 				if (optionals.endsWith(":")) {
 					optionals = optionals.substring(0, optionals.length() - 1);
 				}
 				optionals += ";VEKANr:T";
-			} else {
-				optionals = "VEKANr:T";
 			}
-			CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
-				+ billingSystem + "/fakultativ", optionals);
 		}
+		CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+				+ billingSystem + "/fakultativ", optionals);
 	}
 	
 	private void updateCovercardBillingSystem(){
