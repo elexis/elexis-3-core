@@ -131,7 +131,16 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 				orderId = labImportUtil.importLabResults(Collections.singletonList(importResult),
 						importHandler);
 			} else {
-				log.error("pdf [{}] already present in document manager (omnivore)", file.getAbsolutePath());
+				log.warn("pdf [{}] already present in document manager (omnivore), replacing", file.getAbsolutePath());
+				Patient pat = Patient.load(patient.getId());
+				List<IOpaqueDocument> documentList = this.docManager.listDocuments(pat, category, titel, null,
+						new TimeSpan(dateTime.toString(TimeTool.DATE_GER) + "-" + dateTime.toString(TimeTool.DATE_GER)), //$NON-NLS-1$
+						null);
+				documentList.forEach(iop -> {
+					this.docManager.removeDocument(iop.getGUID());
+				});
+				this.docManager.addDocument(new GenericDocument(pat, titel, category, file,
+						dateTime.toString(TimeTool.DATE_GER), file.getName(), FileTool.getExtension(file.getName())));
 			}
 		} catch (IOException | ElexisException e) {
 			log.error(
