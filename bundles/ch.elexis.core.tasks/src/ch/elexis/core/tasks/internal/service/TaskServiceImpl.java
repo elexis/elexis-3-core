@@ -81,22 +81,13 @@ public class TaskServiceImpl implements ITaskService {
 	
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, bind = "bindRunnableWithContextFactory", unbind = "unbindRunnableWithContextFactory")
 	private volatile List<IIdentifiedRunnableFactory> runnableWithContextFactories;
-	
-	/**
-	 * do not execute these instances, they are used for documentation listing only
-	 */
-	private List<IIdentifiedRunnable> identifiedRunnables;
-	
+
 	protected void bindRunnableWithContextFactory(
 		IIdentifiedRunnableFactory runnableWithContextFactory){
 		if (runnableWithContextFactories == null) {
 			runnableWithContextFactories = new ArrayList<>();
 		}
 		runnableWithContextFactories.add(runnableWithContextFactory);
-		
-		if (identifiedRunnables == null) {
-			identifiedRunnables = new ArrayList<>();
-		}
 		
 		try {
 			runnableWithContextFactory.initialize(this);
@@ -105,22 +96,11 @@ public class TaskServiceImpl implements ITaskService {
 				runnableWithContextFactory.getClass().getName(), e);
 			return;
 		}
-		
-		List<IIdentifiedRunnable> providedRunnables =
-			runnableWithContextFactory.getProvidedRunnables();
-		for (IIdentifiedRunnable iIdentifiedRunnable : providedRunnables) {
-			identifiedRunnables.add(iIdentifiedRunnable);
-		}
 	}
 	
 	protected void unbindRunnableWithContextFactory(
 		IIdentifiedRunnableFactory runnableWithContextFactory){
 		runnableWithContextFactories.remove(runnableWithContextFactory);
-		List<IIdentifiedRunnable> providedRunnables =
-			runnableWithContextFactory.getProvidedRunnables();
-		for (IIdentifiedRunnable iIdentifiedRunnable : providedRunnables) {
-			identifiedRunnables.remove(iIdentifiedRunnable);
-		}
 	}
 	
 	@Activate
@@ -452,7 +432,9 @@ public class TaskServiceImpl implements ITaskService {
 	
 	@Override
 	public List<IIdentifiedRunnable> getIdentifiedRunnables(){
-		return identifiedRunnables;
+		List<IIdentifiedRunnable> providedRunnables = new ArrayList<IIdentifiedRunnable>();
+				runnableWithContextFactories.stream().forEach(f -> providedRunnables.addAll(f.getProvidedRunnables()));
+		return providedRunnables;
 	}
 	
 	@Override
