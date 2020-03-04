@@ -3,7 +3,6 @@ package ch.elexis.core.tasks.internal.service;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -88,8 +87,6 @@ public class TaskServiceImpl implements ITaskService {
 	 */
 	private List<IIdentifiedRunnable> identifiedRunnables;
 	
-	private Map<String, IIdentifiedRunnableFactory> runnableIdToFactoryMap;
-	
 	protected void bindRunnableWithContextFactory(
 		IIdentifiedRunnableFactory runnableWithContextFactory){
 		if (runnableWithContextFactories == null) {
@@ -99,9 +96,6 @@ public class TaskServiceImpl implements ITaskService {
 		
 		if (identifiedRunnables == null) {
 			identifiedRunnables = new ArrayList<>();
-		}
-		if (runnableIdToFactoryMap == null) {
-			runnableIdToFactoryMap = new HashMap<>();
 		}
 		
 		try {
@@ -115,7 +109,6 @@ public class TaskServiceImpl implements ITaskService {
 		List<IIdentifiedRunnable> providedRunnables =
 			runnableWithContextFactory.getProvidedRunnables();
 		for (IIdentifiedRunnable iIdentifiedRunnable : providedRunnables) {
-			runnableIdToFactoryMap.put(iIdentifiedRunnable.getId(), runnableWithContextFactory);
 			identifiedRunnables.add(iIdentifiedRunnable);
 		}
 	}
@@ -126,7 +119,6 @@ public class TaskServiceImpl implements ITaskService {
 		List<IIdentifiedRunnable> providedRunnables =
 			runnableWithContextFactory.getProvidedRunnables();
 		for (IIdentifiedRunnable iIdentifiedRunnable : providedRunnables) {
-			runnableIdToFactoryMap.remove(iIdentifiedRunnable.getId());
 			identifiedRunnables.remove(iIdentifiedRunnable);
 		}
 	}
@@ -377,11 +369,9 @@ public class TaskServiceImpl implements ITaskService {
 			throw new TaskException(TaskException.RWC_INVALID_ID);
 		}
 		
-		IIdentifiedRunnableFactory iIdentifiedRunnableFactory =
-			runnableIdToFactoryMap.get(runnableId);
-		if (iIdentifiedRunnableFactory != null) {
-			List<IIdentifiedRunnable> providedRunnables =
-				iIdentifiedRunnableFactory.getProvidedRunnables();
+		
+		for (IIdentifiedRunnableFactory iIdentifiedRunnableFactory : runnableWithContextFactories) {
+			List<IIdentifiedRunnable> providedRunnables = iIdentifiedRunnableFactory.getProvidedRunnables();
 			for (IIdentifiedRunnable iIdentifiedRunnable : providedRunnables) {
 				if (runnableId.equalsIgnoreCase(iIdentifiedRunnable.getId())) {
 					return iIdentifiedRunnable;
