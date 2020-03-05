@@ -35,6 +35,7 @@ import java.time.LocalDateTime;
  *   <li>{@link ch.elexis.core.model.IAppointment#getCreated <em>Created</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getLastEdit <em>Last Edit</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getStateHistory <em>State History</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IAppointment#isRecurring <em>Recurring</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIAppointment()
@@ -385,11 +386,30 @@ public interface IAppointment extends IPeriod {
 	void setStateHistory(String value);
 
 	/**
+	 * Returns the value of the '<em><b>Recurring</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Recurring</em>' attribute.
+	 * @see ch.elexis.core.model.ModelPackage#getIAppointment_Recurring()
+	 * @model changeable="false"
+	 * @generated
+	 */
+	boolean isRecurring();
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation"
 	 * @generated
 	 */
 	IContact getContact();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	String getStateHistoryFormatted(String formatPattern);
 
 } // IAppointment

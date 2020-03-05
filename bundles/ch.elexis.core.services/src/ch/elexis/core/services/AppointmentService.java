@@ -68,15 +68,7 @@ public class AppointmentService implements IAppointmentService {
 	@Activate
 	public void activate(){
 		//@TODO server support ?
-		List<String> types = getTypes();
-		states = iConfigService.getAsList(AG_TERMINSTATUS, null);
-		if (types == null || types.size() < 3) {
-			types = Arrays.asList(Messages.Appointment_Range_Free,
-				Messages.Appointment_Range_Locked, Messages.Appointment_Normal_Appointment);
-		}
-		if (states == null || states.size() < 2) {
-			states = Arrays.asList("-", Messages.Appointment_Planned_Appointment);
-		}
+		states = getStates();
 	}
 	
 	private List<IAppointment> getLinkedAppoinments(IAppointment orig){
@@ -282,6 +274,15 @@ public class AppointmentService implements IAppointmentService {
 			ret = Arrays.asList(Messages.Appointment_Range_Free, Messages.Appointment_Range_Locked,
 				Messages.Appointment_Normal_Appointment);
 			iConfigService.setFromList(AG_TERMINTYPEN, ret);
+		}
+		return ret;
+	}
+	
+	@Override
+	public List<String> getStates(){
+		List<String> ret = iConfigService.getAsList(AG_TERMINSTATUS, null);
+		if (ret == null || ret.size() < 2) {
+			ret = Arrays.asList("-", Messages.Appointment_Planned_Appointment);
 		}
 		return ret;
 	}

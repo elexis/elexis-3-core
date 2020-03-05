@@ -542,7 +542,11 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/created"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/lastEdit"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/stateHistory"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IAppointment/recurring"/>
       <genOperations ecoreOperation="model.ecore#//IAppointment/getContact"/>
+      <genOperations ecoreOperation="model.ecore#//IAppointment/getStateHistoryFormatted">
+        <genParameters ecoreParameter="model.ecore#//IAppointment/getStateHistoryFormatted/formatPattern"/>
+      </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IImage">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IImage/date"/>

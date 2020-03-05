@@ -239,6 +239,9 @@ public class PredicateHandler {
 			} else if (value instanceof Integer) {
 				return Optional
 					.of(criteriaBuilder.greaterThan(rootQuery.get(attribute), (Integer) value));
+			} else if (value instanceof Long) {
+				return Optional
+					.of(criteriaBuilder.greaterThan(rootQuery.get(attribute), (Long) value));
 			} else if (value instanceof LocalDateTime) {
 				return Optional.of(
 					criteriaBuilder.greaterThan(rootQuery.get(attribute), (LocalDateTime) value));
@@ -259,6 +262,9 @@ public class PredicateHandler {
 			} else if (value instanceof Integer) {
 				return Optional.of(criteriaBuilder.greaterThanOrEqualTo(rootQuery.get(attribute),
 					(Integer) value));
+			} else if (value instanceof Long) {
+				return Optional.of(
+					criteriaBuilder.greaterThanOrEqualTo(rootQuery.get(attribute), (Long) value));
 			} else if (value instanceof LocalDateTime) {
 				return Optional.of(criteriaBuilder.greaterThanOrEqualTo(rootQuery.get(attribute),
 					(LocalDateTime) value));
@@ -279,6 +285,9 @@ public class PredicateHandler {
 			} else if (value instanceof Integer) {
 				return Optional
 					.of(criteriaBuilder.lessThan(rootQuery.get(attribute), (Integer) value));
+			} else if (value instanceof Long) {
+				return Optional
+					.of(criteriaBuilder.lessThan(rootQuery.get(attribute), (Long) value));
 			} else if (value instanceof LocalDateTime) {
 				return Optional
 					.of(criteriaBuilder.lessThan(rootQuery.get(attribute), (LocalDateTime) value));
@@ -299,6 +308,9 @@ public class PredicateHandler {
 			} else if (value instanceof Integer) {
 				return Optional.of(
 					criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute), (Integer) value));
+			} else if (value instanceof Long) {
+				return Optional
+					.of(criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute), (Long) value));
 			} else if (value instanceof LocalDateTime) {
 				return Optional.of(criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute),
 					(LocalDateTime) value));

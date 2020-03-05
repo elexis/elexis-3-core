@@ -81,4 +81,11 @@ public interface IAppointmentService {
 	 * @return
 	 */
 	public List<String> getTypes();
+	
+	/**
+	 * Get all configured state strings
+	 * 
+	 * @return
+	 */
+	public List<String> getStates();
 }
