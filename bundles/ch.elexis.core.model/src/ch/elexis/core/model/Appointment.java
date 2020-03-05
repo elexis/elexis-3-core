@@ -1,13 +1,20 @@
 package ch.elexis.core.model;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.entities.Termin;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.rgw.tools.StringTool;
 
 public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 		implements IdentifiableWithXid, IAppointment {
@@ -18,7 +25,7 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 	
 	@Override
 	public String getReason(){
-		return getEntity().getGrund();
+		return StringUtils.defaultString(getEntity().getGrund());
 	}
 	
 	@Override
@@ -34,6 +41,9 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 	@Override
 	public void setState(String value){
 		getEntityMarkDirty().setTerminStatus(value);
+		getEntityMarkDirty()
+			.setStatusHistory(getStateHistory() + StringTool.lf
+				+ toMinutesTimeStamp(LocalDateTime.now()) + ";" + value);
 	}
 	
 	@Override
@@ -129,7 +139,14 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 
 	@Override
 	public String getSubjectOrPatient(){
-		return getEntity().getPatId();
+		// ids do not contain spaces, do not perform expensive load from db
+		if (getEntity().getPatId() != null && !getEntity().getPatId().contains(" ")) {
+			IContact contact = getContact();
+			if (contact != null) {
+				return contact.getLabel();
+			}
+		}
+		return StringUtils.defaultString(getEntity().getPatId());
 	}
 
 	@Override
@@ -179,8 +196,8 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 	
 	@Override
 	public IContact getContact(){
-		return CoreModelServiceHolder.get().load(getSubjectOrPatient(), IContact.class)
-			.orElse(null);
+		return CoreModelServiceHolder.get()
+			.load(getEntity().getPatId(), IContact.class, false, false).orElse(null);
 	}
 
 	@Override
@@ -205,11 +222,54 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 
 	@Override
 	public String getStateHistory(){
-		return getEntity().getStatusHistory();
+		return StringUtils.defaultString(getEntity().getStatusHistory());
 	}
 
 	@Override
 	public void setStateHistory(String value){
 		getEntityMarkDirty().setStatusHistory(value);
+	}
+	
+	@Override
+	public String getStateHistoryFormatted(String formatPattern){
+		if (StringUtils.isNotBlank(getStateHistory())) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatPattern);
+			StringBuilder sb = new StringBuilder();
+			
+			String lines[] = getStateHistory().split(StringTool.lf);
+			for (String l : lines) {
+				String f[] = l.split(";");
+				if (f.length != 2)
+					continue;
+				
+				LocalDateTime tt = fromMinutesTimeStamp(f[0]);
+				sb.append(formatter.format(tt)).append(": ").append(f[1]).append(StringTool.lf);
+			}
+			return sb.toString();
+		}
+		return "";
+	}
+	
+	private LocalDateTime fromMinutesTimeStamp(String timestamp){
+		if (StringUtils.isNotBlank(timestamp) && StringUtils.isNumeric(timestamp)) {
+			long minutes = Long.parseLong(timestamp);
+			return LocalDateTime.ofInstant(Instant.ofEpochSecond(minutes * 60),
+				ZoneId.systemDefault());
+		}
+		return LocalDateTime.ofInstant(Instant.ofEpochSecond(0L), ZoneId.systemDefault());
+	}
+	
+	private String toMinutesTimeStamp(LocalDateTime localDateTime){
+		long minutes = ZonedDateTime.of(localDateTime, ZoneId.systemDefault()).toEpochSecond() / 60;
+		return Long.toString(minutes);
+	}
+	
+	@Override
+	public boolean isRecurring(){
+		if (!StringUtils.isBlank(getLinkgroup())) {
+			return CoreModelServiceHolder.get().load(getLinkgroup(), IAppointment.class)
+				.isPresent();
+		}
+		return false;
 	}
 }

@@ -776,6 +776,9 @@
   <eClassifiers xsi:type="ecore:EClass" name="IAppointment" abstract="true" interface="true"
       eSuperTypes="#//IPeriod">
     <eOperations name="getContact" eType="#//IContact"/>
+    <eOperations name="getStateHistoryFormatted" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eParameters name="formatPattern" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="reason" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
         <details key="attributeName" value="grund"/>
@@ -827,6 +830,8 @@
         <details key="attributeName" value="statusHistory"/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="recurring" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        changeable="false"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IImage" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable #//WithAssignableId">

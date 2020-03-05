@@ -5519,13 +5519,22 @@ public interface ModelPackage extends EPackage {
 	int IAPPOINTMENT__STATE_HISTORY = IPERIOD_FEATURE_COUNT + 13;
 
 	/**
+	 * The feature id for the '<em><b>Recurring</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT__RECURRING = IPERIOD_FEATURE_COUNT + 14;
+
+	/**
 	 * The number of structural features of the '<em>IAppointment</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT_FEATURE_COUNT = IPERIOD_FEATURE_COUNT + 14;
+	int IAPPOINTMENT_FEATURE_COUNT = IPERIOD_FEATURE_COUNT + 15;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -10482,6 +10491,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIAppointment_StateHistory();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#isRecurring <em>Recurring</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Recurring</em>'.
+	 * @see ch.elexis.core.model.IAppointment#isRecurring()
+	 * @see #getIAppointment()
+	 * @generated
+	 */
+	EAttribute getIAppointment_Recurring();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13692,6 +13712,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IAPPOINTMENT__STATE_HISTORY = eINSTANCE.getIAppointment_StateHistory();
+
+		/**
+		 * The meta object literal for the '<em><b>Recurring</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT__RECURRING = eINSTANCE.getIAppointment_Recurring();
 
 	}
 
