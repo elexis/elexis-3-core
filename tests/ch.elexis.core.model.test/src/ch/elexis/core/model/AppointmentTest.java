@@ -49,7 +49,7 @@ public class AppointmentTest extends AbstractTest {
 		
 		assertEquals(begin, stored.getStartTime());
 		assertEquals(end, stored.getEndTime());
-		assertEquals(patient.getId(), stored.getSubjectOrPatient());
+		assertEquals(patient.getLabel(), stored.getSubjectOrPatient());
 		assertEquals(15, stored.getDurationMinutes().intValue());
 		assertEquals("geplant", stored.getState());
 		assertEquals("gesperrt", stored.getType());
