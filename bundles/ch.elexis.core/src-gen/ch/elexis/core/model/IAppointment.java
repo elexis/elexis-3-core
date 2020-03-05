@@ -190,13 +190,13 @@ public interface IAppointment extends IPeriod {
 	void setCreatedBy(IUser value);
 
 	/**
-	 * Returns the value of the '<em><b>Subject Or Patient</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Subject Or Patient</b></em>' attribute. <!-- begin-user-doc
+	 * -->
 	 * <p>
-	 * If the meaning of the '<em>Subject Or Patient</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * Get the subject text, or the label of the patient.
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Subject Or Patient</em>' attribute.
 	 * @see #setSubjectOrPatient(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIAppointment_SubjectOrPatient()
@@ -206,10 +206,15 @@ public interface IAppointment extends IPeriod {
 	String getSubjectOrPatient();
 
 	/**
-	 * Sets the value of the '{@link ch.elexis.core.model.IAppointment#getSubjectOrPatient <em>Subject Or Patient</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link ch.elexis.core.model.IAppointment#getSubjectOrPatient
+	 * <em>Subject Or Patient</em>}' attribute. <!-- begin-user-doc -->
+	 * <p>
+	 * Set the subject text, or the id of the patient.
+	 * </p>
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Subject Or Patient</em>' attribute.
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Subject Or Patient</em>' attribute.
 	 * @see #getSubjectOrPatient()
 	 * @generated
 	 */

@@ -143,6 +143,10 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 		if (getEntity().getPatId() != null && !getEntity().getPatId().contains(" ")) {
 			IContact contact = getContact();
 			if (contact != null) {
+				if (contact.isPatient()) {
+					contact = CoreModelServiceHolder.get()
+						.load(getEntity().getPatId(), IPatient.class, false, false).orElse(null);
+				}
 				return contact.getLabel();
 			}
 		}
