@@ -19,6 +19,9 @@ import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.Table;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.Metamodel;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.eclipse.persistence.config.HintValues;
@@ -472,5 +475,31 @@ public abstract class AbstractModelService implements IModelService {
 		Class<T> definitionClazz, boolean refreshCache, String queryName){
 		return new NamedQuery<>(returnValueclazz, definitionClazz, refreshCache, adapterFactory,
 			(EntityManager) getEntityManager(true), queryName);
+	}
+	
+	@Override
+	public <T> long getHighestLastUpdate(Class<T> clazz){
+		INativeQuery nativeQuery = getNativeQuery("SELECT MAX(LASTUPDATE) FROM "
+			+ getTableName(getEntityManager(true), getEntityClass(clazz)));
+		Optional<?> result = nativeQuery.executeWithParameters(Collections.emptyMap()).findFirst();
+		if (result.isPresent()) {
+			return (Long) result.get();
+		}
+		return 0;
+	}
+	
+	private <T> String getTableName(EntityManager em, Class<T> entityClass){
+		/*
+		 * Check if the specified class is present in the metamodel.
+		 * Throws IllegalArgumentException if not.
+		 */
+		Metamodel meta = em.getMetamodel();
+		EntityType<T> entityType = meta.entity(entityClass);
+		
+		//Check whether @Table annotation is present on the class.
+		Table t = entityClass.getAnnotation(Table.class);
+		
+		String tableName = (t == null) ? entityType.getName().toUpperCase() : t.name();
+		return tableName;
 	}
 }

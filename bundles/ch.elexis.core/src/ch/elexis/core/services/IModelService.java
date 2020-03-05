@@ -355,4 +355,14 @@ public interface IModelService {
 	 * 
 	 */
 	public void clearCache();
+	
+	/**
+	 * Get the highest last update from the table of type clazz. This always results in a db
+	 * statement.
+	 * 
+	 * @param <T>
+	 * @param clazz
+	 * @return
+	 */
+	public <T> long getHighestLastUpdate(Class<T> clazz);
 }

@@ -303,6 +303,23 @@ public class CoreModelServiceTest {
 		assertFalse(contact.getRelatedContacts().contains(relatedContact2));
 	}
 	
+	@Test
+	public void getLastUpdate() {
+		IPatient patient = modelService.create(IPatient.class);
+		patient.setFirstName("Max");
+		patient.setLastName("Mustermann");
+		modelService.save(patient);
+		
+		long lastUpdate = modelService.getHighestLastUpdate(IPatient.class);
+		assertTrue(lastUpdate != 0);
+		
+		patient.setFirstName("Maxi");
+		modelService.save(patient);
+		long modifiedlastUpdate = modelService.getHighestLastUpdate(IPatient.class);
+		assertTrue(modifiedlastUpdate != 0);
+		assertTrue(modifiedlastUpdate > lastUpdate);
+	}
+	
 	private class CreatePerson implements Runnable {
 		private int index;
 		
