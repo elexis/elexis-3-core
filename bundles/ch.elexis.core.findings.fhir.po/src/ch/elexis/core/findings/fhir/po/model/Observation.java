@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang.StringUtils;
 import org.hl7.fhir.dstu3.model.DomainResource;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 
@@ -367,7 +368,7 @@ public class Observation extends AbstractFhirPersistentObject implements IObserv
 	@Override
 	public ObservationType getObservationType(){
 		String type = get(FLD_TYPE);
-		return type != null ? ObservationType.valueOf(type) : null;
+		return StringUtils.isNotEmpty(type) ? ObservationType.valueOf(type) : null;
 	}
 	
 	@Override

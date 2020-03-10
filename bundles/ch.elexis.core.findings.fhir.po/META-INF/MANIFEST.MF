@@ -27,6 +27,7 @@ Import-Package: ca.uhn.fhir.context,
  ch.rgw.io,
  ch.rgw.tools,
  org.apache.commons.io,
+ org.apache.commons.lang;version="2.6.0",
  org.hl7.fhir.dstu3.model,
  org.hl7.fhir.instance.model.api
 Service-Component: OSGI-INF/ch.elexis.core.findings.fhir.po.service.FindingsService.xml,
