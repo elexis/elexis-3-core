@@ -181,4 +181,10 @@ public class KeycloakUser implements IUser {
 		return false;
 	}
 
+	@Override
+	public String toString() {
+		return getClass().getName() + ": " + getLabel() + " assignedContactId=" + assignedContactId + ", roles="
+				+ roles;
+	}
+
 }
