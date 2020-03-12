@@ -1,7 +1,5 @@
 package ch.elexis.core.eenv;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -14,7 +12,6 @@ import ch.elexis.core.services.IModelService;
 
 public class KeycloakUser implements IUser {
 
-	private final ZoneOffset zone;
 	private final IModelService coreModelService;
 
 	private final String preferredUsername;
@@ -48,7 +45,6 @@ public class KeycloakUser implements IUser {
 		this.expirationTime = expirationTime;
 		this.roles = roles;
 
-		zone = ZoneOffset.of("Europe/Zurich");
 		this.coreModelService = coreModelService;
 	}
 
@@ -136,8 +132,7 @@ public class KeycloakUser implements IUser {
 
 	@Override
 	public boolean isActive() {
-		long nowEpochSecond = LocalDateTime.now().toEpochSecond(zone);
-		return expirationTime > nowEpochSecond;
+		return expirationTime > (System.currentTimeMillis() / 1000);
 	}
 
 	@Override
