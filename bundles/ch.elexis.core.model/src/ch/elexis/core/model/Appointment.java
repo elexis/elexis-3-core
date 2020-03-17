@@ -276,4 +276,19 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 		}
 		return false;
 	}
+	
+	private static DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+	private static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm");
+	
+	@Override
+	public String getLabel(){
+		StringBuilder sb = new StringBuilder();
+		LocalDateTime start = getStartTime();
+		LocalDateTime end = getEndTime();
+		sb.append(dayFormatter.format(start)).append(",");
+		sb.append(timeFormatter.format(start)).append("-").append(timeFormatter.format(end))
+			.append(" ").append(getSubjectOrPatient())
+			.append(" (").append(getType()).append(",").append(getState()).append(") ");
+		return sb.toString();
+	}
 }
