@@ -157,6 +157,8 @@
          install-size="0"
          version="0.0.0"
          fragment="true"
+         os="win32"
+         arch="x86"
          unpack="false"/>
 
    <plugin
@@ -165,6 +167,8 @@
          install-size="0"
          version="0.0.0"
          fragment="true"
+         os="win32"
+         arch="x86_64"
          unpack="false"/>
 
 </feature>
