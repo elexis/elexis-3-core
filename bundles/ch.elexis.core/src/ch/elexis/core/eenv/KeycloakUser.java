@@ -115,7 +115,10 @@ public class KeycloakUser implements IUser {
 
 	@Override
 	public IContact getAssignedContact() {
-		return coreModelService.load(assignedContactId, IContact.class).orElse(null);
+		if (assignedContactId != null) {
+			return coreModelService.load(assignedContactId, IContact.class).orElse(null);
+		}
+		return null;
 	}
 
 	@Override
