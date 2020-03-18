@@ -12,6 +12,8 @@ import org.eclipse.e4.ui.model.application.ui.basic.MTrimBar;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +42,8 @@ public class ElexisProcessor {
 		updateToolbar();
 		
 		updateInjectViews();
+		
+		updateE4Views();
 	}
 	
 	/**
@@ -62,7 +66,10 @@ public class ElexisProcessor {
 		"ch.elexis.core.ui.medication.views.MedicationView", "ch.elexis.icpc.encounterView",
 		"ch.elexis.icpc.episodesView", "ch.elexis.omnivore.views.OmnivoreView",
 		"ch.elexis.omnivoredirect_view", "ch.elexis.schoebufaelle", "ch.elexis.HistoryView",
-		"ch.elexis.core.ui.documents.views.DocumentsView",
+		"ch.elexis.core.ui.documents.views.DocumentsView"
+	};
+	
+	private String[] e4ViewIds = {
 		"at.medevit.elexis.agenda.ui.view.agenda", "at.medevit.elexis.agenda.ui.view.parallel",
 		"at.medevit.elexis.agenda.ui.view.week"
 	};
@@ -75,6 +82,20 @@ public class ElexisProcessor {
 				List<String> tags = mPart.getTags();
 				if (!tags.contains("inject")) {
 					tags.add("inject");
+				}
+			}
+		}
+	}
+	
+	private void updateE4Views(){
+		for (String viewId : e4ViewIds) {
+			List<MPart> foundParts =
+				eModelService.findElements(mApplication, viewId, MPart.class, null);
+			for (MPart mPart : foundParts) {
+				// remove references to old CompatibilityView part
+				if (mPart.getContributionURI() == null
+					|| mPart.getContributionURI().endsWith("CompatibilityView")) {
+					EcoreUtil.delete((EObject) mPart);
 				}
 			}
 		}
