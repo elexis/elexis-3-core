@@ -142,7 +142,7 @@ location "https://download.eclipse.org/tools/orbit/downloads/drops/R201809052019
 	org.bouncycastle.bcprov
 }
 
-location "https://download.elexis.info/mirror.4.elexis/snapshot" {
+location "https://download.elexis.info/mirror.4.elexis/release" {
 	javax.ws.rs [1.1.1,1.1.2)
 	org.slf4j.api [1.7.2,1.7.3)
 	org.slf4j.ext [1.7.2,1.7.3)

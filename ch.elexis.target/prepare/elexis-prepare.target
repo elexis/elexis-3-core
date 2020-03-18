@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis" sequenceNumber="1582733266">
+<target name="Elexis" sequenceNumber="1584020980">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.swt.chromium.feature.feature.group" version="0.10.2.201908130308"/>
@@ -144,7 +144,7 @@
       <unit id="org.slf4j.jul" version="1.7.2.v20121108-1250"/>
       <unit id="org.slf4j.log4j" version="1.7.2.v20130115-1340"/>
       <unit id="org.slf4j.nop" version="1.7.2.v201212060727"/>
-      <repository location="https://download.elexis.info/mirror.4.elexis/snapshot"/>
+      <repository location="https://download.elexis.info/mirror.4.elexis/release"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="javax.mail" version="1.4.0.v201005080615"/>
