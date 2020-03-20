@@ -251,7 +251,7 @@ public class AppointmentService implements IAppointmentService {
 	@Override
 	public List<Area> getAreas(){
 		List<Area> ret = new ArrayList<>();
-		List<String> areas = iConfigService.getAsList(AG_BEREICHE, null);
+		List<String> areas = iConfigService.getAsList(AG_BEREICHE);
 		areas.forEach(entry -> {
 			String typeString =
 				iConfigService.get(AG_BEREICH_PREFIX + entry + AG_BEREICH_TYPE_POSTFIX, null);

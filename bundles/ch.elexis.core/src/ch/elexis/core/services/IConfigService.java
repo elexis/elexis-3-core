@@ -1,5 +1,6 @@
 package ch.elexis.core.services;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -265,6 +266,17 @@ public interface IConfigService {
 	 * @return the stored entries, defaultValue if not set
 	 */
 	public List<String> getAsList(String key, List<String> defaultValue);
+	
+	/**
+	 * Retrieve a value as a list for a global configuration entry. Retains the
+	 * order it was persisted.
+	 * 
+	 * @param key identifying the configuration entry
+	 * @return the stored entries, or an empty, immutable list
+	 */
+	public default List<String> getAsList(String key) {
+		return getAsList(key, Collections.emptyList());
+	}
 	
 	/**
 	 * Retrieve a value as a list for a contact specific configuration entry. Retains the order it
