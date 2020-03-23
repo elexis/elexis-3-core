@@ -25,6 +25,7 @@ import ch.elexis.hl7.model.IValueType;
 import ch.elexis.hl7.model.LabResultData;
 import ch.elexis.hl7.model.LabResultData.LabResultStatus;
 import ch.elexis.hl7.model.ObservationMessage;
+import ch.elexis.hl7.v2x.HL7ReaderV231;
 import ch.elexis.hl7.v2x.HL7ReaderV25;
 import ch.elexis.hl7.v2x.HL7ReaderV251;
 import ch.elexis.hl7.v2x.HL7ReaderV26;
@@ -158,5 +159,38 @@ public class Test_SpecificImportFiles {
 		assertEquals("", lrd.getComment());
 		assertEquals("", lrd.getGroup());
 		assertEquals(LabResultStatus.UNDEFINED, lrd.getResultStatus());
+	}
+	
+	@Test
+	public void test_Zybio_ORU_R01_Z3() throws IOException, ElexisException{
+		File importFile = new File(PlatformHelper.getBasePath("ch.elexis.core.hl7.v2x.tests"),
+			"rsc/Zybio/HL7_Zybio_Z3.hl7");
+		
+		List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(importFile);
+		assertNotNull(hl7Readers);
+		assertEquals(1, hl7Readers.size());
+		HL7Reader reader = hl7Readers.get(0);
+		assertEquals(HL7ReaderV231.class, reader.getClass());
+		
+		ObservationMessage observationMsg = reader.readObservation(resolver, false);
+		List<IValueType> observations = observationMsg.getObservations();
+		System.out.println("Observations [" + observations.size() + "]");
+		assertEquals(22, observations.size());
+		
+		// OBX|6|NM|6790-2^WBC^LN||7.16|10^9/L|3.5000-9.5000|N|||F
+		LabResultData obs = (LabResultData) observations.get(1);
+		assertEquals("WBC", obs.getName());
+		assertEquals("6790-2", obs.getCode());
+		assertEquals("7.16", obs.getValue());
+		assertEquals("N", obs.getRawAbnormalFlag());
+		assertEquals("3.5000-9.5000", obs.getRange());
+		assertFalse(obs.getFlag());
+		assertTrue(obs.isNumeric());
+		assertFalse(obs.isPlainText());
+		// TODO error in hl7 data, 10^9/L gets interpreted as identifier 10 and text 9/L
+		//		assertEquals("mg/L", lrd.getUnit());
+		assertEquals(null, obs.getComment());
+		assertEquals("", obs.getGroup());
+		assertEquals(LabResultStatus.FINAL, obs.getResultStatus());
 	}
 }
