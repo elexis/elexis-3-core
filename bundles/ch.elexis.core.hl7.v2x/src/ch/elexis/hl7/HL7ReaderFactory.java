@@ -194,6 +194,13 @@ public enum HL7ReaderFactory {
 		
 		String[] mshPart = splitted[0].split("\\|", -1);
 		
+		if (mshPart[1].length() < 4) {
+			logger
+				.warn("Replacing msg header encoding characters [" + mshPart[1] + "] with default");
+			mshPart[1] = "^~\\&";
+			splitted[0] = joinStrings(mshPart, "|");
+		}
+		
 		if (!mshPart[8].equals("ORU^R01") && !mshPart[11].startsWith("2.5")
 			&& !mshPart[11].startsWith("2.6")) {
 			mshPart[8] = "ORU^R01";
