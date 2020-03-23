@@ -11,4 +11,5 @@ Require-Bundle: org.junit;bundle-version="[4.0.0,5.0.0)",
  ch.elexis.core.model;bundle-version="1.0.0"
 Import-Package: ch.elexis.core.model,
  ch.elexis.core.model.builder,
- ch.elexis.core.utils
+ ch.elexis.core.utils,
+ org.apache.commons.io;version="2.5.0"

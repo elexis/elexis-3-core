@@ -249,6 +249,7 @@ public enum HL7ReaderFactory {
 	private HL7Reader loadMessage(String message) throws HL7Exception{
 		Parser p = new PipeParser();
 		p.setValidationContext(new NoValidation());
+		message = assureSaveMessage(message);
 		Message hl7Msg = p.parse(message);
 		
 		messageList.add(hl7Msg);

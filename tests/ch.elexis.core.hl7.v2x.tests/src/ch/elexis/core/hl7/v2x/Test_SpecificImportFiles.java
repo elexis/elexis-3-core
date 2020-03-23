@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -165,7 +166,7 @@ public class Test_SpecificImportFiles {
 	public void test_Zybio_ORU_R01_Z3() throws IOException, ElexisException{
 		File importFile = new File(PlatformHelper.getBasePath("ch.elexis.core.hl7.v2x.tests"),
 			"rsc/Zybio/HL7_Zybio_Z3.hl7");
-		
+		// test from file
 		List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(importFile);
 		assertNotNull(hl7Readers);
 		assertEquals(1, hl7Readers.size());
@@ -174,7 +175,6 @@ public class Test_SpecificImportFiles {
 		
 		ObservationMessage observationMsg = reader.readObservation(resolver, false);
 		List<IValueType> observations = observationMsg.getObservations();
-		System.out.println("Observations [" + observations.size() + "]");
 		assertEquals(22, observations.size());
 		
 		// OBX|6|NM|6790-2^WBC^LN||7.16|10^9/L|3.5000-9.5000|N|||F
@@ -192,5 +192,16 @@ public class Test_SpecificImportFiles {
 		assertEquals(null, obs.getComment());
 		assertEquals("", obs.getGroup());
 		assertEquals(LabResultStatus.FINAL, obs.getResultStatus());
+		
+		// test from String, was missing HL7ReaderFactory#assureSaveMessage
+		String importString =
+			IOUtils.toString(getClass().getResourceAsStream("/rsc/Zybio/HL7_Zybio_Z3.hl7"),
+				"UTF-8");
+		reader = HL7ReaderFactory.INSTANCE.getReader(importString);
+		assertEquals(HL7ReaderV231.class, reader.getClass());
+		
+		observationMsg = reader.readObservation(resolver, false);
+		observations = observationMsg.getObservations();
+		assertEquals(22, observations.size());
 	}
 }
