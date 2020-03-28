@@ -19,6 +19,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.events.ElexisEvent;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IObservation;
@@ -193,6 +195,9 @@ public class FindingsEditDialog extends TitleAreaDialog {
 					"Fehler bei der Generierung des Texts der Beobachtung.");
 			}
 		}
+		ElexisEventDispatcher.getInstance()
+				.fire(new ElexisEvent(iFinding, IObservation.class, ElexisEvent.EVENT_UPDATE,
+						ElexisEvent.PRIORITY_NORMAL));
 		super.okPressed();
 	}
 	
