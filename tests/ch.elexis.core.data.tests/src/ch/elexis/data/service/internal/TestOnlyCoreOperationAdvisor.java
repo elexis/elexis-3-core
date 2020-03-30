@@ -71,6 +71,8 @@ public class TestOnlyCoreOperationAdvisor implements ICoreOperationAdvisor {
 	@Override
 	public boolean performLogin(Object shell){
 		
+		System.out.println("ATTENTION - login handled by " + getClass().getName());
+		
 		CoreHub.reconfigureServices();
 		CoreHub.logoffAnwender();
 		
