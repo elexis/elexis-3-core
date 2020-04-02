@@ -187,6 +187,7 @@ public class AppointmentService implements IAppointmentService {
 				date.atStartOfDay().plusMinutes(TimeTool.getMinutesFromTimeString(from));
 			LocalDateTime endTime =
 				date.atStartOfDay().plusMinutes(TimeTool.getMinutesFromTimeString(until));
+			iAppointment.setSchedule(schedule);
 			iAppointment.setStartTime(startTime);
 			iAppointment.setType(typReserved);
 			iAppointment.setState(stateEmpty);
