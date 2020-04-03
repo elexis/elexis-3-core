@@ -26,6 +26,9 @@ public class AddVerrechenbarToLeistungsblockAction extends Action {
 	public void run() {
 		AddElementToBlockDialog adb = new AddElementToBlockDialog(UiDesk.getTopShell());
 		if (adb.open() == Dialog.OK) {
+			if(adb.getResult() == null) {
+				return;
+			}
 			ICodeElement ice = (ICodeElement) ElexisEventDispatcher.getSelected(clazz);
 			Leistungsblock lb = adb.getResult();
 			lb.addElement(ice);
