@@ -29,6 +29,11 @@ location "https://ftp.fau.de/eclipse/technology/babel/update-site/R0.17.0/2019-0
 	org.eclipse.equinox.p2.ui.nl_it
 }
 
+location "https://download.eclipse.org/eclipse/updates/4.9/R-4.9-201809060745" {
+	// https://redmine.medelexis.ch/issues/18799
+	org.eclipse.e4.ui.workbench.addons.swt
+}
+
 location "http://download.eclipse.org/e4/snapshots/org.eclipse.e4.tools/latest/" {
 	org.eclipse.e4.tools.spies.feature.feature.group
 }
@@ -108,7 +113,7 @@ location "http://download.elexis.info/elexis-server/1.7/p2/elexis-server" {
 	info.elexis.server.hapi.fhir
 }
 
-location "http://download.elexis.info/mirror.4.elexis/snapshot" {
+location "http://download.elexis.info/mirror.4.elexis/release" {
 	javax.ws.rs [1.1.1,1.1.2)
 	org.slf4j.api [1.7.2,1.7.3)
 	org.slf4j.ext [1.7.2,1.7.3)
