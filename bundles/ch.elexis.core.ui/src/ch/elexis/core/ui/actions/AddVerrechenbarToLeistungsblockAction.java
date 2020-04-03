@@ -41,6 +41,9 @@ public class AddVerrechenbarToLeistungsblockAction extends Action {
 	public void run() {
 		AddElementToBlockDialog adb = new AddElementToBlockDialog(UiDesk.getTopShell());
 		if (adb.open() == Dialog.OK) {
+			if(adb.getResult() == null) {
+				return;
+			}
 			ICodeElementBlock block = CoreModelServiceHolder.get()
 				.load(adb.getResult().getId(), ICodeElementBlock.class).orElse(null);
 			Optional<?> selected = Optional.empty();
