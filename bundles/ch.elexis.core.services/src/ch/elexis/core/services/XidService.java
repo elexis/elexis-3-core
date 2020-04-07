@@ -146,7 +146,8 @@ public class XidService implements IXidService {
 		// the type is unknown here
 		INamedQuery<IXid> query =
 			CoreModelServiceHolder.get().getNamedQuery(IXid.class, "domain", "domainid");
-		List<IXid> xids = query.executeWithParameters(query.getParameterMap(domainName, domainId));
+		List<IXid> xids = query.executeWithParameters(
+			query.getParameterMap("domain", domainName, "domainid", domainId));
 		// filter results, getObject will filter by type
 		List<T> ret = xids.parallelStream().map(iXid -> iXid.getObject(clazz))
 			.filter(Objects::nonNull).collect(Collectors.toList());
