@@ -3,6 +3,7 @@ package ch.elexis.core.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -80,6 +81,29 @@ public class AppointmentTest extends AbstractTest {
 		query.and("tag", COMPARATOR.GREATER_OR_EQUAL, begin.plusDays(1).toLocalDate());
 		assertNull(query.executeSingleResult().orElse(null));
 		
+		coreModelService.remove(appointment);
+	}
+	
+	@Test
+	public void setStateIncludesStateHistory() {
+		LocalDateTime begin = LocalDateTime.of(2018, 9, 24, 13, 23);
+		LocalDateTime end = begin.plus(Duration.ofMinutes(15));
+		
+		IAppointment appointment = coreModelService.create(IAppointment.class);
+		appointment.setReason("reason");
+		appointment.setStartTime(begin);
+		appointment.setEndTime(end);
+		appointment.setState("started");
+		coreModelService.save(appointment);
+		
+		assertTrue(appointment.getStateHistory().contains("started"));
+		
+		appointment.setState("modified");
+		coreModelService.save(appointment);
+		
+		assertTrue(appointment.getStateHistory().contains("started"));
+		assertTrue(appointment.getStateHistory().contains("modified"));
+			
 		coreModelService.remove(appointment);
 	}
 }
