@@ -1,5 +1,6 @@
 package ch.elexis.core.services;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -46,7 +47,7 @@ public interface ICodeElementServiceContribution {
 	 * @return
 	 */
 	public default Optional<ICodeElement> loadFromCode(String code){
-		return loadFromCode(code, null);
+		return loadFromCode(code, Collections.emptyMap());
 	}
 	
 	/**

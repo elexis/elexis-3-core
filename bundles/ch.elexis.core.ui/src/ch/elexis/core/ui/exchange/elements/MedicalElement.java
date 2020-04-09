@@ -93,7 +93,7 @@ public class MedicalElement extends XChangeElement {
 		risks = p.get(Patient.FLD_ALLERGIES); //$NON-NLS-1$
 		if (!StringTool.isNothing(risks)) {
 			for (String r : risks.split("[\\n\\r]+")) {
-				add(new RiskElement().asExporter(sender, r));
+				add(new RiskElement().asExporter(sender, r, "allergy"));
 			}
 		}
 		return this;

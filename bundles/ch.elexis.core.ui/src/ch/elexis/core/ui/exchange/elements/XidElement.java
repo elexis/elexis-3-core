@@ -40,7 +40,7 @@ public class XidElement extends XChangeElement {
 	};
 	
 	public enum XIDMATCH {
-		NONE, POSSIBLE, SURE
+			NONE, POSSIBLE, SURE
 	};
 	
 	@Override
@@ -71,7 +71,7 @@ public class XidElement extends XChangeElement {
 		asExporter(home);
 		setAttribute(ATTR_ID, XMLTool.idToXMLID(li.getId()));
 		StringBuilder domainRoot = new StringBuilder(FindingElement.XIDBASE);
-		Labor lab = ((LabItem)li).getLabor();
+		Labor lab = ((LabItem) li).getLabor();
 		if (lab == null || (!lab.isValid())) {
 			domainRoot.append("unknown");
 		} else {
@@ -111,9 +111,8 @@ public class XidElement extends XChangeElement {
 		for (IXid xid : xids) {
 			int val = xid.getQuality();
 			int v1 = val & 3;
-			Identity ident =
-				new Identity()
-					.asExporter(home, xid.getDomain(), xid.getDomainId(), v1, isUUID(xid));
+			Identity ident = new Identity().asExporter(home, xid.getDomain(), xid.getDomainId(), v1,
+				isUUID(xid));
 			add(ident);
 		}
 		return this;
@@ -129,9 +128,8 @@ public class XidElement extends XChangeElement {
 			if (xid.getDomain().equals(domain)) {
 				bDomain = true;
 			}
-			Identity ident =
-				new Identity().asExporter(sender, xid.getDomain(), xid.getDomainId(),
-					getPureQuality(xid), isUUID(xid));
+			Identity ident = new Identity().asExporter(sender, xid.getDomain(), xid.getDomainId(),
+				getPureQuality(xid), isUUID(xid));
 			add(ident);
 		}
 		if (bDomain == false) {
@@ -145,10 +143,14 @@ public class XidElement extends XChangeElement {
 		add(new Identity().asExporter(sender, domain, domainID, quality, isGuid));
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<Identity> getIdentities(){
+		return (List<Identity>) getChildren(ELEMENT_IDENTITY, Identity.class);
+	}
+
 	public void setMainID(String domain){
 		Identity best = null;
-		List<Identity> idents = (List<Identity>) getChildren(ELEMENT_IDENTITY, Identity.class);
-		for (Identity cand : idents) {
+		for (Identity cand : getIdentities()) {
 			if (domain != null) {
 				if (cand.getAttr(ATTR_IDENTITY_DOMAIN).equalsIgnoreCase(domain)) {
 					best = cand;
@@ -180,9 +182,8 @@ public class XidElement extends XChangeElement {
 			}
 		}
 		if (best == null || (!best.isGuid())) {
-			best =
-				new Identity().asExporter(sender, XidConstants.DOMAIN_ELEXIS, StringTool.unique("xidID"),
-					Xid.ASSIGNMENT_LOCAL, true);
+			best = new Identity().asExporter(sender, XidConstants.DOMAIN_ELEXIS,
+				StringTool.unique("xidID"), Xid.ASSIGNMENT_LOCAL, true);
 			add(best);
 		}
 		setAttribute(ATTR_ID, XMLTool.idToXMLID(best.getAttr(ATTR_IDENTITY_DOMAIN_ID)));
@@ -291,6 +292,14 @@ public class XidElement extends XChangeElement {
 			return this;
 		}
 		
+		public String getDomain() {
+			return getAttr(ATTR_IDENTITY_DOMAIN);
+		}
+		
+		public String getDomainId() {
+			return getAttr(ATTR_IDENTITY_DOMAIN_ID);
+		}
+		
 		public int getQuality(){
 			String sq = getAttr(ATTR_IDENTITY_QUALITY);
 			int idx = StringTool.getIndex(IDENTITY_QUALITIES, sq);
@@ -301,4 +310,5 @@ public class XidElement extends XChangeElement {
 			return Boolean.parseBoolean(getAttr(ATTR_ISGUID));
 		}
 	}
+
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.ICodeElement;
 
 /**
@@ -36,8 +37,8 @@ public interface ICodeElementService {
 	
 	/**
 	 * Load a {@link ICodeElement} instance using its String representation, generated using the
-	 * {@link ICodeElementService#storeToString(ICodeElement)} method (this is NOT equivalent to
-	 * the storeToString created by the {@link IStoreToStringService}).<br/>
+	 * {@link ICodeElementService#storeToString(ICodeElement)} method (this is NOT equivalent to the
+	 * storeToString created by the {@link IStoreToStringService}).<br/>
 	 * <br/>
 	 * The returned {@link ICodeElement} will have the same SystemName and Code property, the rest
 	 * can differ from the {@link ICodeElement} used to generate the String. New imports of the
@@ -45,7 +46,8 @@ public interface ICodeElementService {
 	 * object.
 	 * 
 	 * @param storeToString
-	 * @param context may be <code>null</code>
+	 * @param context
+	 *            may be <code>null</code>
 	 * @return
 	 */
 	public default Optional<ICodeElement> loadFromString(String storeToString,
@@ -74,22 +76,33 @@ public interface ICodeElementService {
 	
 	/**
 	 * Load a {@link ICodeElement} instance using its String representation, generated using the
-	 * {@link ICodeElementService#storeToString(ICodeElement)} method (this is NOT equivalent to
-	 * the storeToString created by the {@link IStoreToStringService}).<br/>
+	 * {@link ICodeElementService#storeToString(ICodeElement)} method (this is NOT equivalent to the
+	 * storeToString created by the {@link IStoreToStringService}).<br/>
 	 * <br/>
 	 * The returned {@link ICodeElement} will have the same SystemName and Code property, the rest
 	 * can differ from the {@link ICodeElement} used to generate the String. New imports of the
 	 * {@link ICodeElement} dataset, or some value in the context can also change the returned
 	 * object.
 	 * 
-	 * @param system the code system name, e.g. "Eigenartikel"
-	 * @param code the code to load from, dependent on the code system
-	 * @param context may be <code>null</code>
+	 * @param system
+	 *            the code system name, e.g. "Eigenartikel"
+	 * @param code
+	 *            the code to load from, dependent on the code system
+	 * @param context
+	 *            may be <code>null</code>
 	 * @return
 	 */
 	public Optional<ICodeElement> loadFromString(String system, String code,
 		Map<Object, Object> context);
 	
+	/**
+	 * Try to find an {@link IArticle} by a provided GTIN.
+	 * 
+	 * @param gtin
+	 * @return
+	 */
+	public Optional<IArticle> findArticleByGtin(String gtin);
+
 	/**
 	 * Get all available {@link ICodeElementServiceContribution}s available.
 	 * 
