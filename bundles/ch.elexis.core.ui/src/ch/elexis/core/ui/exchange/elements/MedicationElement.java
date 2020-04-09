@@ -12,6 +12,8 @@
 
 package ch.elexis.core.ui.exchange.elements;
 
+import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.core.ui.exchange.elements.XidElement.Identity;
 import ch.elexis.data.Artikel;
@@ -63,7 +65,7 @@ public class MedicationElement extends XChangeElement {
 	
 	public String getLastDate(){
 		String last = getAttr(ATTRIB_ENDDATE);
-		if(last == null) {
+		if(StringUtils.isBlank(last)) {
 			return null;
 		}
 		return new TimeTool(last).toString(TimeTool.DATE_GER);
