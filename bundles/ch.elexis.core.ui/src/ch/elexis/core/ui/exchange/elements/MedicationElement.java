@@ -63,6 +63,9 @@ public class MedicationElement extends XChangeElement {
 	
 	public String getLastDate(){
 		String last = getAttr(ATTRIB_ENDDATE);
+		if(last == null) {
+			return null;
+		}
 		return new TimeTool(last).toString(TimeTool.DATE_GER);
 	}
 	
