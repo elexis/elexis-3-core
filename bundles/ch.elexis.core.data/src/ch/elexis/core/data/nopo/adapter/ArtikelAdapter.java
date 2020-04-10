@@ -3,6 +3,8 @@ package ch.elexis.core.data.nopo.adapter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.apache.commons.lang.StringUtils;
+
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.data.Artikel;
@@ -56,7 +58,7 @@ public class ArtikelAdapter extends Artikel {
 				| IllegalArgumentException | InvocationTargetException e) {
 			// ignore no pharmacode available ...
 		}
-		if (ret.isEmpty()) {
+		if (StringUtils.isBlank(ret)) {
 			Object value = article.getExtInfo(FLD_PHARMACODE);
 			if (value instanceof String && ((String) value).length() == 7) {
 				ret = (String) value;
