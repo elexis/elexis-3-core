@@ -14,6 +14,7 @@ package ch.elexis.core.ui.exchange.elements;
 
 import org.apache.commons.lang3.StringUtils;
 
+import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.core.ui.exchange.elements.XidElement.Identity;
 import ch.elexis.data.Artikel;
@@ -32,6 +33,7 @@ public class MedicationElement extends XChangeElement {
 	public static final String ATTRIB_FREQUENCY = "frequency";
 	public static final String ATTRIB_SUBSTANCE = "substance";
 	public static final String ATTRIB_REMARK = "remark";
+	public static final String ATTRIB_TYPE = "type";
 	public static final String ELEMENT_XID = "xid";
 	public static final String ELEMENT_META = "meta";
 	
@@ -53,6 +55,7 @@ public class MedicationElement extends XChangeElement {
 		setAttribute(ATTRIB_FREQUENCY, dose);
 		setAttribute(ATTRIB_PRODUCT, art.getLabel());
 		setAttribute(ATTRIB_REMARK, remark);
+		setAttribute(ATTRIB_TYPE, pr.getEntryType().name());
 		add(new XidElement().asExporter(parent, art));
 		parent.getContainer().addChoice(this, pr.getLabel(), pr);
 		return this;
@@ -76,7 +79,7 @@ public class MedicationElement extends XChangeElement {
 	}
 	
 	public String getDosage(){
-		return getAttr(ATTRIB_DOSAGE);
+		return getAttr(ATTRIB_FREQUENCY);
 	}
 	
 	public String getSubstance(){

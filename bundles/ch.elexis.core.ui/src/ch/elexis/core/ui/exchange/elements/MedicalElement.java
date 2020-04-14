@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.exchange.elements;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -80,8 +81,10 @@ public class MedicalElement extends XChangeElement {
 			}
 			
 		}
-		List<Prescription> medis = p.getMedication(EntryType.FIXED_MEDICATION);
-		for (Prescription medi : medis) {
+		List<Prescription> relevantMedis = new ArrayList<Prescription>();
+		relevantMedis.addAll(p.getMedication(EntryType.FIXED_MEDICATION));
+		relevantMedis.addAll(p.getMedication(EntryType.RESERVE_MEDICATION));
+		for (Prescription medi : relevantMedis) {
 			add(new MedicationElement().asExporter(parent, medi));
 		}
 		String risks = p.get(Patient.FLD_RISKS); //$NON-NLS-1$
