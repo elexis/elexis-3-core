@@ -191,7 +191,11 @@ public abstract class ImporterPage implements IExecutableExtension {
 							tFname.setText(fileNames[0]);
 						}
 
-						home.results = fileNames;
+						home.results = new String[fileNames.length];
+						for (int i = 0; i < fileNames.length; i++) {
+							home.results[i] = fdl.getFilterPath()+"/"+fileNames[i];
+						}
+						
 						CoreHub.localCfg.set(
 							"ImporterPage/" + home.getTitle() + "/filename", fileNames[0]); //$NON-NLS-1$ //$NON-NLS-2$
 					}
