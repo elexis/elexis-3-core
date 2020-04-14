@@ -25,6 +25,7 @@ public class IXidServiceTest extends AbstractServiceTest {
 		
 		List<IXid> xids = service.getXids(patient);
 		assertEquals("domainId", xids.get(0).getDomainId());
+		assertEquals("first", service.findObject("domain", "domainId", IPatient.class).get().getFirstName());
 		
 		coreModelService.remove(patient);
 	}
