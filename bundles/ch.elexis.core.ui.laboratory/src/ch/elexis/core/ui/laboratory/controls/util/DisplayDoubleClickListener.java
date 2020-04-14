@@ -15,7 +15,6 @@ import ch.elexis.core.ui.dialogs.DisplayLabDokumenteDialog;
 import ch.elexis.core.ui.dialogs.DisplayTextDialog;
 import ch.elexis.core.ui.laboratory.controls.LaborResultsComposite;
 import ch.elexis.core.ui.laboratory.controls.Messages;
-import ch.elexis.data.LabItem;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.Patient;
 
@@ -57,7 +56,7 @@ public class DisplayDoubleClickListener implements IDoubleClickListener {
 			// Linux: nicht getestet
 			try {
 				if (dialogFont == null) {
-					dialogFont = new Font(null, "Courier New", 9, SWT.NORMAL); //$NON-NLS-1$
+					dialogFont = new Font(null, "Courier New", 11, SWT.NORMAL); //$NON-NLS-1$
 				}
 			} catch (Exception ex) {
 				// Do nothing -> Use System Default font
