@@ -32,6 +32,7 @@ import ch.rgw.tools.XMLTool;
 public abstract class XChangeElement {
 	public static final String ATTR_ID = "id";
 	public static final String ATTR_DATE = "date";
+	public static final String ATTR_VALUE = "value";
 	protected XChangeExporter sender;
 	private XChangeImporter reader;
 	protected Element ex;
