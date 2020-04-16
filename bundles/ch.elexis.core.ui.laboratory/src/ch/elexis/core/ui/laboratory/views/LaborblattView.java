@@ -31,7 +31,6 @@ import ch.elexis.core.ui.text.ITextPlugin;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.data.Brief;
-import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
 
 public class LaborblattView extends ViewPart implements ICallback {
@@ -60,7 +59,8 @@ public class LaborblattView extends ViewPart implements ICallback {
 	public boolean createLaborblatt(final Patient pat, final String[] header,
 		final TreeItem[] rows, int[] skipColumnsIndex){
 		Brief br =
-			text.createFromTemplateName(Konsultation.getAktuelleKons(), TT_LABPAPER, Brief.LABOR,
+			text.createFromTemplateName(text.getAktuelleKons(), TT_LABPAPER,
+				Brief.LABOR,
 				pat, null);
 		if (br == null) {
 			return false;
@@ -118,7 +118,8 @@ public class LaborblattView extends ViewPart implements ICallback {
 	
 	public boolean createLaborblatt(final Patient pat, final String[] header, final TableItem[] rows){
 		Brief br =
-			text.createFromTemplateName(Konsultation.getAktuelleKons(), TT_LABPAPER, Brief.LABOR,
+			text.createFromTemplateName(text.getAktuelleKons(), TT_LABPAPER,
+				Brief.LABOR,
 				pat, null);
 		if (br == null) {
 			return false;
@@ -162,7 +163,8 @@ public class LaborblattView extends ViewPart implements ICallback {
 	
 	@SuppressWarnings("unchecked")
 	public boolean createLaborblatt(Patient pat, Document doc){
-		/* Brief br= */text.createFromTemplateName(Konsultation.getAktuelleKons(), TT_LABPAPER,
+		/* Brief br= */text.createFromTemplateName(text.getAktuelleKons(),
+			TT_LABPAPER,
 			Brief.LABOR, pat, null);
 		
 		ArrayList<String[]> rows = new ArrayList<String[]>();

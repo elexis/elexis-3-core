@@ -76,6 +76,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.dialogs.DocumentSelectDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
+import ch.elexis.core.ui.dialogs.SelectFallDialog;
 import ch.elexis.core.ui.preferences.TextTemplatePreferences;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.textsystem.model.TextTemplate;
@@ -1282,4 +1283,32 @@ public class TextContainer {
 		
 	}
 	
+	/**
+	 * Get the active cons of the selected patient, creates coverage and cons if no coverage is
+	 * available. If coverage without cons is available the user is asked in which coverage the cons
+	 * should be created. This should be used to get the cons for
+	 * {@link TextContainer#createFromTemplate(Konsultation, Brief, String, Kontakt, String)} and
+	 * {@link TextContainer#createFromTemplateName(Konsultation, String, String, Kontakt, String)}
+	 * 
+	 * @return
+	 */
+	public Konsultation getAktuelleKons(){
+		Konsultation ret = Konsultation.getAktuelleKons();
+		if (ret == null) {
+			SelectFallDialog sfd = new SelectFallDialog(UiDesk.getTopShell());
+			sfd.open();
+			if (sfd.result != null) {
+				ElexisEventDispatcher.fireSelectionEvent(sfd.result);
+			} else {
+				MessageDialog.openInformation(UiDesk.getTopShell(),
+					ch.elexis.core.ui.views.Messages.TextView_NoCaseSelected, //$NON-NLS-1$
+					ch.elexis.core.ui.views.Messages.TextView_SaveNotPossibleNoCaseAndKonsSelected); //$NON-NLS-1$
+				return null;
+			}
+			ret = ((Fall) ElexisEventDispatcher.getSelected(Fall.class)).neueKonsultation();
+			ret.setMandant(CoreHub.actMandant);
+			ElexisEventDispatcher.fireSelectionEvent(ret);
+		}
+		return ret;
+	}
 }

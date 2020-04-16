@@ -35,7 +35,6 @@ import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.ITextPlugin.Parameter;
 import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.data.Brief;
-import ch.elexis.data.Konsultation;
 import ch.elexis.data.OutputLog;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Prescription;
@@ -115,10 +114,9 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		if (actBrief != null) {
 			CoreHub.getLocalLockService().releaseLock(actBrief);
 		}
-		actBrief =
-			text.createFromTemplateName(Konsultation.getAktuelleKons(), template, Brief.RP,
-				(Patient) ElexisEventDispatcher.getSelected(Patient.class),
-				template + " " + rp.getDate());
+		actBrief = text.createFromTemplateName(text.getAktuelleKons(), template, Brief.RP,
+			(Patient) ElexisEventDispatcher.getSelected(Patient.class),
+			template + " " + rp.getDate());
 		updateTextLock();
 		List<Prescription> lines = rp.getLines();
 		String[][] fields = new String[lines.size()][];
@@ -157,8 +155,9 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 			CoreHub.getLocalLockService().releaseLock(actBrief);
 		}
 		TimeTool now = new TimeTool();
-		actBrief = text.createFromTemplateName(Konsultation.getAktuelleKons(), template,
-			Brief.UNKNOWN, (Patient) ElexisEventDispatcher.getSelected(Patient.class),
+		actBrief = text.createFromTemplateName(text.getAktuelleKons(), template, Brief.UNKNOWN,
+			(Patient) ElexisEventDispatcher
+				.getSelected(Patient.class),
 			template + " " + now.toString(TimeTool.DATE_GER));
 		updateTextLock();
 		List<Prescription> lines = Arrays.asList(prescriptions);
