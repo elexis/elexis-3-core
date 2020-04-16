@@ -10,7 +10,7 @@
 	<repositories>
 		<repository>
 			<id>elexis.3.target</id>
-			<url>http://download.elexis.info/elexis/${git.target.branch}/p2/target</url>
+			<url>https://download.elexis.info/elexis/${git.target.branch}/p2/target</url>
 			<layout>p2</layout>
 		</repository>
 	</repositories>
@@ -492,15 +492,6 @@ Without it Maven would put two versions of each class file into the jars
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-p2-plugin</artifactId>
 					<version>${tycho.version}</version>
-					<configuration>
-						<corelineMode>warn</corelineMode>
-						<corelineReplace>none</corelineReplace>
-						<corelineRepositories>
-							<repository>
-								<url>http://download.eclipse.org/eclipse/updates/3.8</url>
-							</repository>
-						</corelineRepositories>
-					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
