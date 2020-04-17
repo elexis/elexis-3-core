@@ -51,7 +51,7 @@ public class JCifsTest {
 	public static String PREFIX_AUTH_WIN2KSRV =
 		"smb://unittest:Unit_Test_17@win2k12srv.medelexis.ch/smb_for_unittests/";
 	private static String server = "gitlab.medelexis.ch";
-	private static boolean skipTest = true;
+	private static boolean skipTest = false;
 	
 	@Parameters(name = "{index}: {0}")
 	public static Iterable<String> data(){
