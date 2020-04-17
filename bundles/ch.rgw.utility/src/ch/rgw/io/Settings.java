@@ -492,12 +492,8 @@ public abstract class Settings implements Serializable, Cloneable {
 		return false;
 	}
 	
-	public void set(String key, boolean value){
-		if (value == true) {
-			set(key, "1");
-		} else {
-			set(key, "0");
-		}
+	public boolean set(String key, boolean value){
+		return set(key, value ? "1" : "0");
 	}
 	
 	/**
