@@ -11,7 +11,7 @@
 <pluginRepositories>
   <pluginRepository>
     <id>tycho-staged</id>
-    <url>https://oss.sonatype.org/content/repositories/orgeclipsetycho-1061/</url>
+    <url>https://oss.sonatype.org/content/repositories/orgeclipsetycho-1062/</url>
   </pluginRepository>
 </pluginRepositories>
 	<repositories>
