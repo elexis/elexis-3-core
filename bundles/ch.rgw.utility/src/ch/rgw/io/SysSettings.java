@@ -83,10 +83,8 @@ public class SysSettings extends Settings {
 	 */
 	public void write_xml(String file){
 		String errMsg = "\nSysSettings: Error writing: " + file;
-		try {
-			FileOutputStream os = new FileOutputStream(file);
+		try (FileOutputStream os = new FileOutputStream(file)) {
 			getRoot().exportSubtree(os);
-			os.close();
 		} catch (FileNotFoundException e) {
 			log.warn(e.getMessage() + errMsg);
 		} catch (BackingStoreException e) {
@@ -104,12 +102,9 @@ public class SysSettings extends Settings {
 	 * @throws Exception
 	 */
 	public void read_xml(String file){
-		FileInputStream is;
 		String errMsg = "\nSysSettings: Error reading: " + file;
-		try {
-			is = new FileInputStream(file);
+		try (FileInputStream is = new FileInputStream(file)) {
 			Preferences.importPreferences(is);
-			is.close();
 		} catch (FileNotFoundException e) {
 			log.warn(e.getMessage() + errMsg);
 		} catch (InvalidPreferencesFormatException e) {

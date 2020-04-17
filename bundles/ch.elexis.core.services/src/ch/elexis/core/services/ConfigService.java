@@ -247,7 +247,9 @@ public class ConfigService implements IConfigService {
 	
 	@Override
 	public boolean setLocal(String key, String value){
-		return localConfig.set(key, value);
+		boolean result = localConfig.set(key, value);
+		localConfig.flush();
+		return result;
 	}
 	
 	@Override
@@ -289,8 +291,9 @@ public class ConfigService implements IConfigService {
 	
 	@Override
 	public boolean setLocal(String key, boolean value){
-		localConfig.set(key, value);
-		return true;
+		boolean result =  localConfig.set(key, value);
+		localConfig.flush();
+		return result;
 	}
 	
 	@Override
