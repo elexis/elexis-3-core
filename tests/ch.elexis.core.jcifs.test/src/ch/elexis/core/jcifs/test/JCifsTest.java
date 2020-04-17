@@ -51,14 +51,18 @@ public class JCifsTest {
 	public static String PREFIX_AUTH_WIN2KSRV =
 		"smb://unittest:Unit_Test_17@win2k12srv.medelexis.ch/smb_for_unittests/";
 	private static String server = "gitlab.medelexis.ch";
+	private static boolean skipTest = true;
 	
 	@Parameters(name = "{index}: {0}")
 	public static Iterable<String> data(){
 		String nonDefaultServer = System.getProperty(JCFS_TEST_SERVER, "");
-		if (nonDefaultServer.isBlank() && !nonDefaultServer.contentEquals("true") ) {
+		if (nonDefaultServer.isEmpty() && !nonDefaultServer.contentEquals("true")) {
 			LoggerFactory.getLogger(JCifsTest.class)
 				.warn("Skipping Tests as JCFS_TEST_SERVER not defined or <= 5 chars");
-			return Arrays.asList(new String[] { });
+			skipTest = true;
+			return Arrays.asList(new String[] {
+				PREFIX_NOAUTH_SAMBA
+			});
 		}
 		if (!nonDefaultServer.contentEquals("true")) {
 			server = nonDefaultServer;
@@ -84,6 +88,7 @@ public class JCifsTest {
 	
 	@BeforeClass
 	public static void beforeClass(){
+		if (skipTest) { return; }; // Avoid error  No tests found in maven builds
 		try {
 			servicesAreReachable = InetAddress.getByName(server).isReachable(300)
 				|| InetAddress.getAllByName(server)[0].isReachable(300);
