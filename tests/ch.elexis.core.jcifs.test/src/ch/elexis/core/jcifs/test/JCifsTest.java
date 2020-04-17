@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,6 +25,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.LoggerFactory;
 
 import jcifs.CloseableIterator;
 import jcifs.SmbResource;
@@ -33,20 +35,40 @@ import jcifs.smb.SmbFile;
 @RunWith(Parameterized.class)
 public class JCifsTest {
 	
+	// Must be defined as system property to run the tests
+	// expects IP or name of server to test
+	public static final String JCFS_TEST_SERVER = "elexisJcfsTest";
+	
 	/**
 	 * NOAUTH is expected to read, but not modify
 	 */
-	public static final String PREFIX_NOAUTH_SAMBA = "smb://gitlab.medelexis.ch/tests/";
+	public static String PREFIX_NOAUTH_SAMBA = "smb://gitlab.medelexis.ch/tests/";
 //	public static final String PREFIX_NOAUTH_WIN2KSRV = "smb://win2k12srv.medelexis.ch/smb_for_unittests/";
 	// bug see https://github.com/AgNO3/jcifs-ng/issues/105
 	
-	public static final String PREFIX_AUTH_SAMBA =
+	public static String PREFIX_AUTH_SAMBA =
 		"smb://unittest:unittest@gitlab.medelexis.ch/tests/";
-	public static final String PREFIX_AUTH_WIN2KSRV =
+	public static String PREFIX_AUTH_WIN2KSRV =
 		"smb://unittest:Unit_Test_17@win2k12srv.medelexis.ch/smb_for_unittests/";
+	private static String server = "gitlab.medelexis.ch";
 	
 	@Parameters(name = "{index}: {0}")
 	public static Iterable<String> data(){
+		String nonDefaultServer = System.getProperty(JCFS_TEST_SERVER, "");
+		if (nonDefaultServer.isBlank() && !nonDefaultServer.contentEquals("true") ) {
+			LoggerFactory.getLogger(JCifsTest.class)
+				.warn("Skipping Tests as JCFS_TEST_SERVER not defined or <= 5 chars");
+			return Arrays.asList(new String[] { });
+		}
+		if (!nonDefaultServer.contentEquals("true")) {
+			server = nonDefaultServer;
+			PREFIX_NOAUTH_SAMBA = "smb://" + server + "/tests";
+			PREFIX_AUTH_SAMBA = "smb://unittest:unittest@" + server + "/tests";
+			PREFIX_AUTH_WIN2KSRV =
+				"smb://unittest:Unit_Test_17@win2k12srv." + server + "/smb_for_unittests/";
+		} else {
+			server = "gitlab.medelexis.ch"; // default
+		}
 		return Arrays.asList(new String[] {
 			PREFIX_NOAUTH_SAMBA, PREFIX_AUTH_SAMBA, PREFIX_AUTH_WIN2KSRV
 		});
@@ -63,7 +85,12 @@ public class JCifsTest {
 	@BeforeClass
 	public static void beforeClass(){
 		try {
-			servicesAreReachable = InetAddress.getByName("gitlab.medelexis.ch").isReachable(300);
+			servicesAreReachable = InetAddress.getByName(server).isReachable(300)
+				|| InetAddress.getAllByName(server)[0].isReachable(300);
+			if (!servicesAreReachable) {
+				LoggerFactory.getLogger(JCifsTest.class).error("Skipping Tests as server " + server
+					+ " did not respond in 300 ms");
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 			servicesAreReachable = false;
