@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="ch.elexis.jre.feature"
+      label="%Bundle-Name"
+      version="3.9.0.qualifier"
+      provider-name="%Bundle-Vendor">
+
+   <plugin
+         id="ch.elexis.jre.macosx.x86_64"
+         version="0.0.0"
+         optional="true"
+         os="macosx"
+         arch="x86_64"
+         unpack="true"/>
+
+   <plugin
+         id="ch.elexis.jre.linux.x86_64"
+         version="0.0.0"
+         optional="true"
+         os="linux"
+         arch="x86_64"
+         unpack="true"/>
+
+   <plugin
+         id="ch.elexis.jre.win32.x86"
+         version="0.0.0"
+         optional="true"
+         os="win32"
+         arch="x86"
+         unpack="true"/>
+
+   <plugin
+         id="ch.elexis.jre.win32.x86_64"
+         version="0.0.0"
+         optional="true"
+         os="win32"
+         arch="x86_64"
+         unpack="true"/>
+   
+</feature>

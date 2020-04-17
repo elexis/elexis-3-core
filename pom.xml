@@ -7,6 +7,13 @@
 	<packaging>pom</packaging>
 	<name>Elexis-Core</name>
 
+
+<pluginRepositories>
+  <pluginRepository>
+    <id>tycho-staged</id>
+    <url>https://oss.sonatype.org/content/repositories/orgeclipsetycho-1061/</url>
+  </pluginRepository>
+</pluginRepositories>
 	<repositories>
 		<repository>
 			<id>elexis.3.target</id>
@@ -15,13 +22,14 @@
 		</repository>
 	</repositories>
 	<properties>
-		<tycho.version>1.6.0</tycho.version>
+		<tycho.version>1.7.0</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
 		<git.target.branch>master</git.target.branch>
 		<git.core.branch>master</git.core.branch>
 		<!-- vvv required empty vvv-->
 		<os-jvm-flags/>
+		<jarsigner.plugin.version>3.0.0</jarsigner.plugin.version>
 	</properties>
 
 	<organization>
@@ -51,7 +59,8 @@
 
 	<modules>
 		<module>ch.elexis.target</module>
-		<module>bundles</module>
+		<module>jre.bundles</module>
+		<module>bundles</module> 
 		<module>features</module>
 		<module>tests</module>
 		<module>ch.elexis.core.p2site</module>

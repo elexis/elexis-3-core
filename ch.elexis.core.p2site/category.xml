@@ -27,6 +27,9 @@
    <bundle id="ch.elexis.core.data.tests" version="0.0.0">
       <category name="test"/>
    </bundle>
+   <feature url="features/ch.elexis.jre.feature_0.0.0.jar" id="ch.elexis.jre.feature" version="0.0.0" >
+      <category name="elexis_3_core"/>
+   </feature>
    <bundle id="ch.elexis.core.ui.usage" version="0.0.0"/>
    <bundle id="ch.elexis.core.test" version="0.0.0">
       <category name="test"/>
