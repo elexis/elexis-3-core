@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>ch.elexis.core</groupId>
+    <artifactId>elexis-3-core</artifactId>
+    <version>3.9.0-SNAPSHOT</version>
+    <relativePath>..</relativePath>
+  </parent>
+
+  <artifactId>elexis-3-jre</artifactId>
+  <version>11.0.3</version> <!-- aka JDK version -->
+	<packaging>pom</packaging>
+
+	<properties>
+		<download.url>https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.3%2B7</download.url>
+		<!-- to test locally, place files in a local directory
+		<download.url>file:///Users/.../zulu/</download.url>
+    -->
+    <download.file>OpenJDK11U-${download.jre_type}_hotspot_${project.version}_7.${download.type}</download.file>
+ 		<download.unzippedFolder>${download.file}</download.unzippedFolder>
+		<download.type>zip</download.type>
+		<jre.folder>jre</jre.folder>
+	</properties>
+
+	<modules>
+    <module>ch.elexis.jre.macosx.x86_64</module>
+    <module>ch.elexis.jre.win32.x86</module>
+    <module>ch.elexis.jre.win32.x86_64</module>
+    <module>ch.elexis.jre.linux.x86_64</module>
+	</modules>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+					<resolver>p2</resolver>
+					<pomDependencies>consider</pomDependencies>
+				</configuration>
+			</plugin>
+      <plugin>
+        <groupId>com.googlecode.maven-download-plugin</groupId>
+        <artifactId>download-maven-plugin</artifactId>
+        <version>1.4.2</version>
+        <executions>
+          <execution>
+            <id>Download OpenJDK ${project.version}: ${project.build.directory} from ${download.url}/${download.file}</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>wget</goal>
+            </goals>
+            <configuration>
+              <url>${download.url}/${download.file}</url>
+              <unpack>false</unpack>
+              <outputDirectory>${project.build.directory}/downloaded</outputDirectory>
+              <md5>${download.md5}</md5>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<echo message="Unzip ${download.type}"/>
+								<ac:if xmlns:ac="antlib:net.sf.antcontrib">
+									<equals arg1="${download.type}" arg2="tar.gz"/> 
+									<then>
+                    <untar src="${project.build.directory}/downloaded/${download.file}" dest="${project.build.directory}/downloads/" compression="gzip" />
+									</then>
+									<else>
+										<unzip dest="${project.build.directory}/downloads/" src="${project.build.directory}/downloaded/${download.file}"/>
+									</else>
+								</ac:if>
+							<ac:if xmlns:ac="antlib:net.sf.antcontrib">
+									<equals arg1="${download.jre_type}" arg2="jre_x64_mac"/> 
+									<then>
+                    <echo message="Move jre for MacOSX into ${jre.folder}/Contents"/>
+                    <move file="${project.build.directory}/downloads/jdk-11.0.3+7-jre/Contents" tofile="${project.build.directory}/downloads/${jre.folder}/Contents" />
+                  </then>
+                  <else>
+                    <echo message="Move jre to ${project.build.directory}/downloads/${jre.folder}"/>
+                    <move file="${project.build.directory}/downloads/jdk-11.0.3+7-jre/" tofile="${project.build.directory}/downloads/${jre.folder}/"/>
+                  </else>
+                </ac:if>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+      			    <dependency>
+            			<groupId>ant-contrib</groupId>
+            			<artifactId>ant-contrib</artifactId>
+            			<version>1.0b3</version>
+            			<exclusions>
+      <exclusion>
+        <groupId>ant</groupId>
+        <artifactId>ant</artifactId>
+      </exclusion>
+    </exclusions>
+          			</dependency>
+        		</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<id>process-p2.inf</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/templates</outputDirectory>
+							<overwrite>true</overwrite>
+							<resources>
+								<resource>
+									<directory>${project.basedir}/src/main/template</directory>
+									<includes>
+										<include>**/*</include>
+									</includes>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-packaging-plugin</artifactId>
+				<configuration>
+					<additionalFileSets>
+						<!-- include jre -->
+						<fileSet>
+							<directory>${project.build.directory}/downloads/</directory>
+							<includes>
+								<include>${jre.folder}/**/*</include>
+							</includes>
+							<excludes>
+								<!-- bin -->
+								<exclude>${jre.folder}/bin/rmid</exclude>
+								<exclude>${jre.folder}/bin/rmiregistry</exclude>
+								<exclude>${jre.folder}/bin/tnameserv</exclude>
+								<exclude>${jre.folder}/bin/keytool</exclude>
+								<exclude>${jre.folder}/bin/policytool</exclude>
+								<exclude>${jre.folder}/bin/orbd</exclude>
+								<exclude>${jre.folder}/bin/servertool</exclude>
+								<exclude>${jre.folder}/bin/javaws</exclude>
+								<exclude>${jre.folder}/bin/pack200</exclude>
+								<exclude>${jre.folder}/bin/unpack200</exclude>
+
+								<!-- bin [Microsoft Windows] -->
+								<exclude>${jre.folder}/bin/rmid.exe</exclude>
+								<exclude>${jre.folder}/bin/rmiregistry.exe</exclude>
+								<exclude>${jre.folder}/bin/tnameserv.exe</exclude>
+								<exclude>${jre.folder}/bin/keytool.exe</exclude>
+								<exclude>${jre.folder}/bin/policytool.exe</exclude>
+								<exclude>${jre.folder}/bin/orbd.exe</exclude>
+								<exclude>${jre.folder}/bin/servertool.exe</exclude>
+								<exclude>${jre.folder}/bin/javaws.exe</exclude>
+								<exclude>${jre.folder}/bin/kinit.exe</exclude>
+								<exclude>${jre.folder}/bin/klist.exe</exclude>
+								<exclude>${jre.folder}/bin/ktab.exe</exclude>
+
+								<!-- lib/ext -->
+								<exclude>${jre.folder}/lib/ext/cldrdata.jar</exclude>
+								<exclude>${jre.folder}/lib/ext/jaccess.jar</exclude>
+								<exclude>${jre.folder}/lib/ext/nashorn.jar</exclude>
+								<exclude>${jre.folder}/lib/ext/zipfs.jar</exclude>
+							</excludes>
+						</fileSet>
+						<!-- filter p2.inf w/ correct version info -->
+						<fileSet>
+							<directory>${project.build.directory}/templates/</directory>
+							<includes>
+								<include>**/*</include>
+							</includes>
+						</fileSet>
+					</additionalFileSets>
+				</configuration>
+			</plugin>
+		</plugins>
+		</pluginManagement>
+	</build>
+</project>

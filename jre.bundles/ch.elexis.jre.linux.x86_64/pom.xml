@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>ch.elexis.core</groupId>
+    <artifactId>elexis-3-jre</artifactId>
+    <version>11.0.3</version> <!-- aka JDK version -->
+    <relativePath>..</relativePath>
+  </parent>
+
+  <artifactId>ch.elexis.jre.linux.x86_64</artifactId>
+  <packaging>eclipse-plugin</packaging>
+
+  <properties>
+    <download.jre_type>jre_x64_linux</download.jre_type>
+    <download.type>tar.gz</download.type>
+    <download.md5>ccee67bba9676e4560b52d4a2d308a45</download.md5>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>target-platform-configuration</artifactId>
+        <configuration>
+          <resolver>p2</resolver>
+          <pomDependencies>consider</pomDependencies>
+          <environments>
+            <environment>
+              <os>linux</os>
+              <ws>gtk</ws>
+              <arch>x86_64</arch>
+            </environment>
+          </environments>
+        </configuration>
+      </plugin>
+        <plugin>
+        <groupId>com.googlecode.maven-download-plugin</groupId>
+        <artifactId>download-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+</project>

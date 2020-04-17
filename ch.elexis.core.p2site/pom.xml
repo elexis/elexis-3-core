@@ -79,6 +79,16 @@
 					<products>
 						<product>
 							<id>ch.elexis.core.application.ElexisApp</id>
+							<attachId>ElexisApp</attachId>
+							<rootFolder />
+							<rootFolders>
+								<macosx>Elexis3.app</macosx>
+								<win32 />
+							</rootFolders>
+						</product>
+						<product>
+							<id>ch.elexis.core.application.ElexisAppWithJre</id>
+							<attachId>ElexisAppWithJre</attachId>
 							<rootFolder />
 							<rootFolders>
 								<macosx>Elexis3.app</macosx>

@@ -1,0 +1,11 @@
+instructions.configure = \
+  org.eclipse.equinox.p2.touchpoint.eclipse.setJvm(jvm:../Eclipse/plugins/ch.elexis.jre.macosx.x86_64_${version}/Contents/Home/lib/server/libjvm.dylib);
+
+instructions.unconfigure = \
+  org.eclipse.equinox.p2.touchpoint.eclipse.setJvm(null);
+
+instructions.install = \
+  org.eclipse.equinox.p2.touchpoint.eclipse.chmod(targetDir:${installFolder}/plugins/ch.elexis.jre.macosx.x86_64_${version}/Contents/Home/,targetFile:bin,permissions:755,options:-R);\
+  org.eclipse.equinox.p2.touchpoint.eclipse.chmod(targetDir:${installFolder}/plugins/ch.elexis.jre.macosx.x86_64_${version}/Contents/Home/lib,targetFile:jspawnhelper,permissions:755);\
+  org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/plugins/ch.elexis.jre.macosx.x86_64_${version}/Contents/MacOS);\
+  org.eclipse.equinox.p2.touchpoint.natives.ln(linkTarget:../Home/lib/jli/libjli.dylib,targetDir:${installFolder}/plugins/ch.elexis.jre.macosx.x86_64_${version}/Contents/MacOS,linkName:libjli.dylib,force:true);

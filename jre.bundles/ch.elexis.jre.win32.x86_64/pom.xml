@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>ch.elexis.core</groupId>
+    <artifactId>elexis-3-jre</artifactId>
+    <version>11.0.3</version> <!-- aka JDK version, must match value in META-INF/MANIFEST.MF-->
+    <relativePath>..</relativePath>
+  </parent>
+
+  <artifactId>ch.elexis.jre.win32.x86_64</artifactId>
+  <packaging>eclipse-plugin</packaging>
+
+  <properties>
+    <download.jre_type>jre_x64_windows</download.jre_type>
+    <download.type>zip</download.type>
+    <download.file>OpenJDK11U-${download.jre_type}_hotspot_${project.version}_7.${download.type}</download.file>
+    <download.md5>e4b7f66946f5baa97c297a4604f58b37</download.md5>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>target-platform-configuration</artifactId>
+        <configuration>
+          <resolver>p2</resolver>
+          <pomDependencies>consider</pomDependencies>
+          <environments>
+            <environment>
+              <os>win32</os>
+              <ws>win32</ws>
+              <arch>x86_64</arch>
+            </environment>
+          </environments>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.googlecode.maven-download-plugin</groupId>
+        <artifactId>download-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
