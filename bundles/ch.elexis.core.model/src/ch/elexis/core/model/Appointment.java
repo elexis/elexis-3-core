@@ -201,8 +201,9 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 	
 	@Override
 	public IContact getContact(){
-		return CoreModelServiceHolder.get()
-			.load(getEntity().getPatId(), IContact.class, false, false).orElse(null);
+		return getEntity().getPatId() != null && !getEntity().getPatId().contains(
+			" ") ? CoreModelServiceHolder.get()
+				.load(getEntity().getPatId(), IContact.class, false, false).orElse(null) : null;
 	}
 
 	@Override
