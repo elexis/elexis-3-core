@@ -11,6 +11,7 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.model.article.IArticle;
 import ch.elexis.core.services.ICodeElementService;
 import ch.elexis.core.services.ICodeElementServiceContribution;
 
@@ -46,5 +47,24 @@ public class CodeElementService implements ICodeElementService {
 					+ "]");
 		}
 		return Optional.empty();
+	}
+
+	@Override
+	public Optional<IArticle> findArticleByGtin(String gtin){
+		// TODO select specific contributions
+		for (ICodeElementServiceContribution contribution : contributions.values()) {
+			Optional<ICodeElement> loadFromCode = contribution.createFromCode(gtin,null);
+			if (loadFromCode.isPresent()) {
+				if (loadFromCode.get() instanceof IArticle) {
+					return loadFromCode.map(IArticle.class::cast);
+				} else {
+					LoggerFactory.getLogger(getClass()).warn(
+						"Found article for gtin [{}] but is not castable to IArticle [{}]", gtin,
+						loadFromCode.get().getClass().getName());
+				}
+			}
+		}
+		return Optional.empty();
+
 	}
 }

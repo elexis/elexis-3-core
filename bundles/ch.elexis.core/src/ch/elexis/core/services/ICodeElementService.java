@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Optional;
 
 import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.model.article.IArticle;
 
 /**
  * Interface for a service that can be used to load and store {@link ICodeElement} instances.
@@ -80,4 +81,13 @@ public interface ICodeElementService {
 	 */
 	public Optional<ICodeElement> createFromString(String system, String code,
 		HashMap<Object, Object> context);
+	
+	/**
+	 * Try to find an {@link IArticle} by a provided GTIN.
+	 * 
+	 * @param gtin
+	 * @return
+	 */
+	public Optional<IArticle> findArticleByGtin(String gtin);
+
 }

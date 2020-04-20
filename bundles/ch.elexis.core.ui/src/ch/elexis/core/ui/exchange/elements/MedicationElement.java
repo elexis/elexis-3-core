@@ -12,7 +12,10 @@
 
 package ch.elexis.core.ui.exchange.elements;
 
+import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.ui.exchange.XChangeExporter;
+import ch.elexis.core.ui.exchange.elements.XidElement.Identity;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Prescription;
 import ch.rgw.tools.StringTool;
@@ -29,6 +32,7 @@ public class MedicationElement extends XChangeElement {
 	public static final String ATTRIB_FREQUENCY = "frequency";
 	public static final String ATTRIB_SUBSTANCE = "substance";
 	public static final String ATTRIB_REMARK = "remark";
+	public static final String ATTRIB_TYPE = "type";
 	public static final String ELEMENT_XID = "xid";
 	public static final String ELEMENT_META = "meta";
 	
@@ -50,6 +54,7 @@ public class MedicationElement extends XChangeElement {
 		setAttribute(ATTRIB_FREQUENCY, dose);
 		setAttribute(ATTRIB_PRODUCT, art.getLabel());
 		setAttribute(ATTRIB_REMARK, remark);
+		setAttribute(ATTRIB_TYPE, pr.getEntryType().name());
 		add(new XidElement().asExporter(parent, art));
 		parent.getContainer().addChoice(this, pr.getLabel(), pr);
 		return this;
@@ -62,6 +67,9 @@ public class MedicationElement extends XChangeElement {
 	
 	public String getLastDate(){
 		String last = getAttr(ATTRIB_ENDDATE);
+		if(StringUtils.isBlank(last)) {
+			return null;
+		}
 		return new TimeTool(last).toString(TimeTool.DATE_GER);
 	}
 	
@@ -70,10 +78,33 @@ public class MedicationElement extends XChangeElement {
 	}
 	
 	public String getDosage(){
-		return getAttr(ATTRIB_DOSAGE);
+		return getAttr(ATTRIB_FREQUENCY);
 	}
 	
 	public String getSubstance(){
 		return getAttr(ATTRIB_SUBSTANCE);
+	}
+	
+	public String getRemark() {
+		return getAttr(ATTRIB_REMARK);
+	}
+	
+	public String getProduct() {
+		return getAttr(ATTRIB_PRODUCT);
+	}
+	
+	/**
+	 * @return the GTIN if found or <code>null</code>
+	 */
+	public String getGtin(){
+		return getXid().getIdentities().stream()
+			.filter(i -> "www.xid.ch/id/ean".equalsIgnoreCase(i.getDomain())).findFirst()
+			.map(Identity::getDomainId).orElse(null);
+	}
+	
+	public String getPharmacode() {
+		return getXid().getIdentities().stream()
+				.filter(i -> "www.xid.ch/id/pharmacode/ch".equalsIgnoreCase(i.getDomain())).findFirst()
+				.map(Identity::getDomainId).orElse(null);
 	}
 }

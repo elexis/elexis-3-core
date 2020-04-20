@@ -48,6 +48,7 @@ public class ContactElement extends XChangeElement {
 	public static final String VALUE_ORGANIZATION = "organization"; //$NON-NLS-1$
 	public static final String VALUE_MALE = "male"; //$NON-NLS-1$
 	public static final String VALUE_FEMALE = "female"; //$NON-NLS-1$
+	public static final String ATTR_REMARK = "remark"; //$NON-NLS-1$
 	
 	public void add(AddressElement ae){
 		super.add(ae);
@@ -87,6 +88,10 @@ public class ContactElement extends XChangeElement {
 		} else {
 			setAttribute(ATTR_TYPE, VALUE_ORGANIZATION);
 			setAttribute(ATTR_LASTNAME, k.getLabel());
+		}
+		String bemerkung = k.getBemerkung();
+		if (!StringTool.isNothing(bemerkung)) {
+			setAttribute(ATTR_REMARK, bemerkung);
 		}
 		add(new AddressElement().asExporter(parent, k.getAnschrift(), "default")); //$NON-NLS-1$
 		parent.getContainer().addMapping(this, k);

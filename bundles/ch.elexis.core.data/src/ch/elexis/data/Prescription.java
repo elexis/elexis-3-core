@@ -87,16 +87,26 @@ public class Prescription extends PersistentObject {
 			FLD_REMARK, FLD_COUNT, FLD_PRESC_TYPE, FLD_SORT_ORDER, FLD_EXTINFO, FLD_PRESCRIPTOR);
 	}
 	
-	public Prescription(Artikel a, Patient p, String dosage, String remark){
+	public Prescription(Artikel article, Patient patient, String dosage, String remark){
+		this(article.storeToString(), patient.getId(), dosage, remark);
+	}
+	
+	/**
+	 * @param articleStoreToString
+	 * @param patientId
+	 * @param dosage
+	 * @param remark
+	 * @since 3.7
+	 */
+	public Prescription(String articleStoreToString, String patientId, String dosage, String remark) {
 		create(null);
-		String article = a.storeToString();
 		String dateNow = new TimeTool().toString(TimeTool.DATE_GER);
 		IPersistentObject prescriptor = ElexisEventDispatcher.getSelected(Anwender.class);
 		
 		set(new String[] {
 			FLD_ARTICLE, FLD_PATIENT_ID, FLD_DOSAGE, FLD_REMARK, FLD_DATE_PRESC,
 			FLD_SORT_ORDER, FLD_PRESCRIPTOR
-		}, article, p.getId(), dosage, remark, dateNow, "999", prescriptor.getId());
+		}, articleStoreToString, patientId, dosage, remark, dateNow, "999", prescriptor.getId());
 		setBeginDate(null);
 	}
 	

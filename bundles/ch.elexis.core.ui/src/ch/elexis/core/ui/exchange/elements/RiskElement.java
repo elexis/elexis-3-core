@@ -20,6 +20,7 @@ public class RiskElement extends XChangeElement {
 	public static final String ATTR_FIRSTMENTIONED = "firstMentioned";
 	public static final String ATTR_SUBSTANCE = "substance";
 	public static final String ATTR_RELEVANCE = "relevance";
+	public static final String ATTR_TYPE = "type";
 	public static String ELEMENT_META = "meta";
 	
 	@Override
@@ -27,9 +28,24 @@ public class RiskElement extends XChangeElement {
 		return XMLNAME;
 	}
 	
-	public RiskElement asExporter(XChangeExporter parent, String name){
+	public RiskElement asExporter(XChangeExporter parent, String name) {
+		return asExporter(parent, name, null);
+	}
+	
+	/**
+	 * 
+	 * @param parent
+	 * @param name
+	 * @param type a specific risk type. e.g. "allergy"
+	 * @return
+	 * @since 3.7
+	 */
+	public RiskElement asExporter(XChangeExporter parent, String name, String type){
 		asExporter(parent);
 		setAttribute(ATTR_SUBSTANCE, name);
+		if(type != null) {
+			setAttribute(ATTR_TYPE, type);
+		}
 		parent.getContainer().addChoice(this, name);
 		return this;
 	}
