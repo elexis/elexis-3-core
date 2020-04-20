@@ -8,8 +8,7 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog dbchangelog-3.1.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext dbchangelog-ext.xsd">
     
-    <property name="blob_type" value="bytea" dbms="postgresql"/>
-    <property name="blob_type" value="blob" dbms="mysql, h2, mariadb"/>
+    <include file="/db/set_liquibase_properties.xml"/>
     <include file="/db/elexisdb_create_optional.xml"/>
     
     <include file="/db/v3.8/elexisdb_create.xml"/>
