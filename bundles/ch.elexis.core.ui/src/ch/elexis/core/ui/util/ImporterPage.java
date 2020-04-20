@@ -142,6 +142,14 @@ public abstract class ImporterPage implements IExecutableExtension {
 		};
 		
 		public FileBasedImporter(final Composite parent, final ImporterPage home){
+			this(parent, home, false);
+		}
+		
+		/**
+		 * @since 3.7
+		 */
+		public FileBasedImporter(final Composite parent, final ImporterPage home,
+			boolean supportMultiFileSelection){
 			super(parent, SWT.BORDER);
 			setLayout(new GridLayout(1, false));
 			final Label lFile = new Label(this, SWT.NONE);
@@ -170,15 +178,26 @@ public abstract class ImporterPage implements IExecutableExtension {
 			bFile.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(final SelectionEvent e){
-					FileDialog fdl = new FileDialog(parent.getShell(), SWT.OPEN);
+					int style = (supportMultiFileSelection) ? SWT.OPEN | SWT.MULTI : SWT.OPEN;
+					FileDialog fdl = new FileDialog(parent.getShell(), style);
 					fdl.setFilterExtensions(filterExts);
 					fdl.setFilterNames(filterNames);
-					String filename = fdl.open();
-					if (filename != null) {
-						tFname.setText(filename);
-						home.results[0] = filename;
+					fdl.open();
+					String[] fileNames = fdl.getFileNames();
+					if (fileNames != null && fileNames.length > 0) {
+						if(fileNames.length > 1) {
+							tFname.setText(fileNames[0]+" and more ...");
+						} else {
+							tFname.setText(fileNames[0]);
+						}
+
+						home.results = new String[fileNames.length];
+						for (int i = 0; i < fileNames.length; i++) {
+							home.results[i] = fdl.getFilterPath()+"/"+fileNames[i];
+						}
+						
 						CoreHub.localCfg.set(
-							"ImporterPage/" + home.getTitle() + "/filename", filename); //$NON-NLS-1$ //$NON-NLS-2$
+							"ImporterPage/" + home.getTitle() + "/filename", fileNames[0]); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				}
 			});
