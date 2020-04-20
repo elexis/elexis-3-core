@@ -82,6 +82,9 @@
             <ExternalMaintenance
                   MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.CovercardFixFallFields">
             </ExternalMaintenance>
+            <ExternalMaintenance
+                  MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.PopulateAnschriftColumnInKontaktTable">
+            </ExternalMaintenance>
    </extension>
 
 </plugin>
