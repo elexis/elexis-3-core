@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.0.qualifier
-Bundle-Name: Osgi Framework Extender
-Fragment-Host: system.bundle; extension:=framework
-Bundle-SymbolicName: org.osgi.framework.system.packages.extra
-Export-Package: com.sun.source.tree,com.sun.source.util

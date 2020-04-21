@@ -11,7 +11,8 @@ Go to "Jenkins-CI Builds":https://download.elexis.info/elexis/master/products.
 
 Download and unzip the zip file for your machine.
 
-Install Oracle java 1.8 from "http://www.java.com/de/download/manual.jsp":http://www.java.com/de/download/manual.jsp
+Install OpenJDK java 1.11 via your distribution or directly 
+from "https://jdk.java.net/java-se-ri/11":https://jdk.java.net/java-se-ri/11
 
 Start the Elexis3 application.
 
@@ -21,17 +22,7 @@ h2. Building
 
 h3. Maven based build
 
-You need Java 1.8+. Maven >= 3.3. Then you should be able to generate the application and p2 update site using the following calls:
-
-On Debian 10 (buster) there is no OpenJDK 8 available anymore. You can install it with the following steps
-
-bc. wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | sudo apt-key add
-sudo add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb
-sudo apt-get update && sudo apt-get install adoptopenjdk-8-hotspot
-sudo update-alternatives --config java # select adoptopenjdk8
-java --version # should now show a Java 8 version
-
-
+You need Java 1.11+ to compile Elexis. Maven >= 3.3. Then you should be able to generate the application and p2 update site using the following calls:
 
 @git clone https://github.com/elexis/elexis-3-core@
 @mvn -V clean verify  -Dtycho.localArtifacts=ignore -Dmaven.test.skip=true -P all-archs@

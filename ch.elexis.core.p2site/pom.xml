@@ -30,7 +30,8 @@
                     <phase>verify</phase>
                     <configuration>
                     <target>
-                        <exec executable="/bin/bash" failonerror="true">
+                        <exec executable="/usr/bin/env" failonerror="true">
+                          <arg value="bash" />
                           <arg value="${project.basedir}/start_h2_first_linux_x86_64.sh" />
                           <arg value="${project.build.directory}/products/ch.elexis.core.application.ElexisApp/${classifier}/Elexis3" />
                         </exec>

@@ -25,7 +25,7 @@ notifications:
   email:
   - niklaus.giger@member.fsf.org
 
-jdk: openjdk8 # oraclejdk8 is no longer supported by travis-ci
+jdk: openjdk11
 
 cache:
   directories:
