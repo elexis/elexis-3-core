@@ -77,10 +77,11 @@ public class MedicalElement extends XChangeElement {
 		List<Brief> lBriefe = qb.execute();
 		if ((lBriefe != null) && (lBriefe.size()) > 0) {
 			for (Brief b : lBriefe) {
-				addDocument(new DocumentElement().asExporter(sender, b));
+				addDocument(new DocumentElement().asExporter(sender, b,
+					DocumentElement.VAL_DOCUMENT_TYPE_LETTER));
 			}
-			
 		}
+				
 		List<Prescription> relevantMedis = new ArrayList<Prescription>();
 		relevantMedis.addAll(p.getMedication(EntryType.FIXED_MEDICATION));
 		relevantMedis.addAll(p.getMedication(EntryType.RESERVE_MEDICATION));

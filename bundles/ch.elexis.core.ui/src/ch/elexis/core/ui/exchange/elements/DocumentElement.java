@@ -14,6 +14,7 @@ package ch.elexis.core.ui.exchange.elements;
 
 import org.jdom.Element;
 
+import ch.elexis.core.model.IDocument;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Kontakt;
@@ -31,6 +32,10 @@ public class DocumentElement extends XChangeElement {
 	public static final String ATTR_DATE = "date";
 	public static final String ATTR_RECORDREF = "recordref";
 	
+	public static final String ATTR_DOCUMENT_TYPE = "doctype";
+	public static final String VAL_DOCUMENT_TYPE_LETTER = "letter";
+	public static final String VAL_DOCUMENT_TYPE_OMNIVORE = "omnivore";
+	
 	public static final String ELEMENT_XID = "xid";
 	public static final String ELEMENT_HINT = "hint";
 	public static final String ELEMENT_CONTENTS = "contents";
@@ -43,12 +48,13 @@ public class DocumentElement extends XChangeElement {
 		return XMLNAME;
 	}
 	
-	public DocumentElement asExporter(XChangeExporter parent, Brief b){
+	public DocumentElement asExporter(XChangeExporter parent, Brief b, String documentType){
 		asExporter(parent);
 		setAttribute(ATTR_MIMETYPE, b.getMimeType());
 		setDefaultXid(b.getId());
 		setAttribute(ATTR_PLACEMENT, PLACEMENT_INFILE);
 		parent.addBinary(getID(), b.loadBinary());
+		setAttribute(ATTR_DOCUMENT_TYPE, documentType);
 		
 		setTitle(b.getLabel());
 		setDestination(b.getAdressat());
