@@ -40,10 +40,11 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 	
 	@Override
 	public void setState(String value){
-		getEntityMarkDirty().setTerminStatus(value);
-		getEntityMarkDirty()
-			.setStatusHistory(getStateHistory() + StringTool.lf
+		if (value != null && !value.equals(getState())) {
+			getEntityMarkDirty().setTerminStatus(value);
+			getEntityMarkDirty().setStatusHistory(getStateHistory() + StringTool.lf
 				+ toMinutesTimeStamp(LocalDateTime.now()) + ";" + value);
+		}
 	}
 	
 	@Override
@@ -279,7 +280,7 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 	}
 	
 	private static DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-	private static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm");
+	private static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 	
 	@Override
 	public String getLabel(){
