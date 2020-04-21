@@ -12,7 +12,11 @@
 
 package ch.elexis.core.ui.exchange.elements;
 
+import java.io.IOException;
+
+import org.apache.commons.io.IOUtils;
 import org.jdom.Element;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.ui.exchange.XChangeExporter;
@@ -49,17 +53,10 @@ public class DocumentElement extends XChangeElement {
 	}
 	
 	public DocumentElement asExporter(XChangeExporter parent, Brief b, String documentType){
-		asExporter(parent);
-		setAttribute(ATTR_MIMETYPE, b.getMimeType());
-		setDefaultXid(b.getId());
-		setAttribute(ATTR_PLACEMENT, PLACEMENT_INFILE);
-		parent.addBinary(getID(), b.loadBinary());
-		setAttribute(ATTR_DOCUMENT_TYPE, documentType);
+		asExporter(parent, b.getMimeType(), b.getId(), b.loadBinary(), documentType, b.getBetreff(), b.getDatum());
 		
-		setTitle(b.getLabel());
 		setDestination(b.getAdressat());
 		setOriginator(Kontakt.load(b.get("AbsenderID")));
-		setDate(b.getDatum());
 		
 		String idex = b.get("BehandlungsID");
 		if (idex != null) {
@@ -70,6 +67,38 @@ public class DocumentElement extends XChangeElement {
 		return this;
 	}
 	
+	public DocumentElement asExporter(XChangeExporter parent, IDocument iDocument,
+		String documentType){
+		byte[] content = null;
+		try {
+			content = IOUtils.toByteArray(iDocument.getContent());
+		} catch (IOException e) {
+			LoggerFactory.getLogger(getClass())
+				.warn(iDocument.getId() + " Error serializing to byte array", e);
+		}
+		
+		TimeTool created = new TimeTool(iDocument.getCreated());
+		asExporter(parent, iDocument.getMimeType(), iDocument.getId(), content, documentType,
+			iDocument.getTitle(), created.toString(TimeTool.DATE_GER));
+		setAttribute(ATTR_ORIGIN, iDocument.getAuthor().getId());
+		parent.getContainer().addChoice(this, iDocument.getLabel(), iDocument);
+		return this;
+	}
+	
+	private DocumentElement asExporter(XChangeExporter parent, String mimetype, String id,
+		byte[] binary, String documentType, String title, String date){
+		asExporter(parent);
+		setAttribute(ATTR_MIMETYPE, mimetype);
+		setDefaultXid(id);
+		setAttribute(ATTR_PLACEMENT, PLACEMENT_INFILE);
+		parent.addBinary(getID(), binary);
+		setAttribute(ATTR_DOCUMENT_TYPE, documentType);
+		setTitle(title);
+		setDate(date);
+		
+		return this;
+	}
+
 	public void setTitle(String title){
 		setAttribute(ATTR_TITLE, title);
 	}
