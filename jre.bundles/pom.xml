@@ -26,7 +26,6 @@
 
 	<modules>
     <module>ch.elexis.jre.macosx.x86_64</module>
-    <module>ch.elexis.jre.win32.x86</module>
     <module>ch.elexis.jre.win32.x86_64</module>
     <module>ch.elexis.jre.linux.x86_64</module>
 	</modules>

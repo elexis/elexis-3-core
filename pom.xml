@@ -6,14 +6,6 @@
 	<version>3.9.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Elexis-Core</name>
-
-
-<pluginRepositories>
-  <pluginRepository>
-    <id>tycho-staged</id>
-    <url>https://oss.sonatype.org/content/repositories/orgeclipsetycho-1061/</url>
-  </pluginRepository>
-</pluginRepositories>
 	<repositories>
 		<repository>
 			<id>elexis.3.target</id>
@@ -66,37 +58,6 @@
 		<module>ch.elexis.core.p2site</module>
 	</modules>
 	<profiles>
-		<profile>
-			<id>windows-x86</id>
-			<activation>
-				<os>
-					<family>windows</family>
-					<arch>x86</arch>
-				</os>
-			</activation>
-			<properties>
-				<classifier>win32/win32/x86</classifier>
-			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>target-platform-configuration</artifactId>
-						<version>${tycho.version}</version>
-						<configuration>
-							<pomDependencies>consider</pomDependencies>
-							<environments>
-								<environment>
-									<os>win32</os>
-									<ws>win32</ws>
-									<arch>x86</arch>
-								</environment>
-							</environments>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
 		<profile>
 			<id>windows-x86_64</id>
 			<activation>
@@ -211,11 +172,6 @@
 									<os>linux</os>
 									<ws>gtk</ws>
 									<arch>x86_64</arch>
-								</environment>
-								<environment>
-									<os>win32</os>
-									<ws>win32</ws>
-									<arch>x86</arch>
 								</environment>
 								<environment>
 									<os>win32</os>
