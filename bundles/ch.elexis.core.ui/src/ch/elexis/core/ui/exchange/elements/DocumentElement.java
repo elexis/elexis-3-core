@@ -80,7 +80,9 @@ public class DocumentElement extends XChangeElement {
 		TimeTool created = new TimeTool(iDocument.getCreated());
 		asExporter(parent, iDocument.getMimeType(), iDocument.getId(), content, documentType,
 			iDocument.getTitle(), created.toString(TimeTool.DATE_GER));
-		setAttribute(ATTR_ORIGIN, iDocument.getAuthor().getId());
+		if (iDocument.getAuthor() != null) {
+			setAttribute(ATTR_ORIGIN, iDocument.getAuthor().getId());
+		}
 		parent.getContainer().addChoice(this, iDocument.getLabel(), iDocument);
 		return this;
 	}
