@@ -1,5 +1,0 @@
-instructions.configure = \
-  org.eclipse.equinox.p2.touchpoint.eclipse.setJvm(jvm:plugins/ch.elexis.jre.win32.x86_${version}/jre/bin);
-
-instructions.unconfigure = \
-  org.eclipse.equinox.p2.touchpoint.eclipse.setJvm(null);

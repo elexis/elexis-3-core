@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: %Bundle-Name
-Bundle-SymbolicName: ch.elexis.jre.win32.x86;singleton:=true
-Bundle-Version: 11.0.3
-Bundle-Vendor: %Bundle-Vendor
-Eclipse-PlatformFilter: (& (osgi.os=win32) (osgi.arch=x86))
-Eclipse-BundleShape: dir
