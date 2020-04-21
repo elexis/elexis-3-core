@@ -79,6 +79,7 @@
 					<products>
 						<product>
 							<id>ch.elexis.core.application.ElexisApp</id>
+							<attachId>ElexisApp</attachId>
 							<rootFolder />
 							<rootFolders>
 								<macosx>Elexis3.app</macosx>
