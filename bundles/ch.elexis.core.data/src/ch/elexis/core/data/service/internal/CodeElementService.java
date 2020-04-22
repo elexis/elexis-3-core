@@ -53,7 +53,8 @@ public class CodeElementService implements ICodeElementService {
 	public Optional<IArticle> findArticleByGtin(String gtin){
 		// TODO select specific contributions
 		for (ICodeElementServiceContribution contribution : contributions.values()) {
-			Optional<ICodeElement> loadFromCode = contribution.createFromCode(gtin,null);
+			Optional<ICodeElement> loadFromCode =
+				contribution.createFromCode(gtin, new HashMap<Object, Object>());
 			if (loadFromCode.isPresent()) {
 				if (loadFromCode.get() instanceof IArticle) {
 					return loadFromCode.map(IArticle.class::cast);
