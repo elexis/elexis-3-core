@@ -19,7 +19,7 @@ matrix:
   - name: "Français"
 
 script:
-  - mvn -V --quiet clean verify -Dall-archs=true -DNL=$NL --fail-at-end clean verify
+  - mvn -V --quiet clean verify -Dall-archs=true -DNL=$NL --fail-at-end clean verify  -Dtycho.localArtifacts=ignore
 
 notifications:
   email:
