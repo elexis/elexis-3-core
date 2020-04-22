@@ -14,13 +14,16 @@ package ch.elexis.core.ui.exchange.elements;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 
 import org.apache.commons.io.IOUtils;
 import org.jdom.Element;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.IDocument;
+import ch.elexis.core.services.IDocumentStore;
 import ch.elexis.core.ui.exchange.XChangeExporter;
+import ch.elexis.core.ui.services.OmnivoreDocumentStoreServiceHolder;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Kontakt;
 import ch.rgw.tools.TimeTool;
@@ -71,17 +74,30 @@ public class DocumentElement extends XChangeElement {
 	public DocumentElement asExporter(XChangeExporter parent, IDocument iDocument,
 		String documentType){
 		byte[] content = null;
-		try (InputStream is = iDocument.getContent()) {
-			content = IOUtils.toByteArray(is);
-		} catch (IOException e) {
+		
+		Optional<IDocumentStore> docStore = OmnivoreDocumentStoreServiceHolder.get();
+		if(!docStore.isPresent()) {
 			LoggerFactory.getLogger(getClass())
-				.warn(iDocument.getId() + " Error serializing to byte array", e);
+			.warn(getID()+" No omnivore document store found, cannot access document content.");
+			return this;
+		}
+		
+		Optional<InputStream> loadContent = docStore.get().loadContent(iDocument);
+		if (loadContent.isPresent()) {
+			try (InputStream is = loadContent.get()) {
+				content = IOUtils.toByteArray(is);
+			} catch (IOException e) {
+				LoggerFactory.getLogger(getClass())
+					.warn(iDocument.getId() + " Error serializing to byte array", e);
+			}
+		} else {
+			LoggerFactory.getLogger(getClass()).warn(getID() + " loadContent is not present");
 		}
 		
 		TimeTool created = new TimeTool(iDocument.getCreated());
 		asExporter(parent, iDocument.getMimeType(), iDocument.getId(), content, documentType,
 			iDocument.getTitle(), created.toString(TimeTool.DATE_GER));
-		setAttribute(ATTR_ORIGIN, iDocument.getAuthor().getId());
+		// not supported in 3.7 setAttribute(ATTR_ORIGIN, iDocument.getAuthor().getId());
 		parent.getContainer().addChoice(this, iDocument.getLabel(), iDocument);
 		return this;
 	}
