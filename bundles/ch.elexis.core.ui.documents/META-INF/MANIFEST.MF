@@ -4,7 +4,7 @@ Bundle-Name: Documents
 Bundle-SymbolicName: ch.elexis.core.ui.documents;singleton:=true
 Bundle-Version: 3.2.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: ch.elexis.core.documents;bundle-version="1.0.0",
+Require-Bundle: ch.elexis.core.documents;bundle-version="3.2.0",
  org.eclipse.ui,
  org.eclipse.core.runtime,
  ch.elexis.core;bundle-version="3.2.0",

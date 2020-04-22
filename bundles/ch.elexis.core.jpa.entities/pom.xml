@@ -84,28 +84,42 @@
 							<pluginExecutions>
 								<pluginExecution>
 									<pluginExecutionFilter>
-										<groupId>de.empulse.eclipselink</groupId>
-										<artifactId>staticweave-maven-plugin</artifactId>
-										<versionRange>[1.0,)</versionRange>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-dependency-plugin
+										</artifactId>
+										<versionRange>
+											[2.5.1,)
+										</versionRange>
 										<goals>
-											<goal>weave</goal>
+											<goal>
+												copy-dependencies
+											</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<execute />
+										<ignore></ignore>
 									</action>
 								</pluginExecution>
 								<pluginExecution>
 									<pluginExecutionFilter>
-										<groupId>org.bsc.maven</groupId>
-										<artifactId>maven-processor-plugin</artifactId>
-										<versionRange>[1.0,)</versionRange>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-antrun-plugin
+										</artifactId>
+										<versionRange>
+											[1.7,)
+										</versionRange>
 										<goals>
-											<goal>process</goal>
+											<goal>run</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<execute />
+										<ignore></ignore>
 									</action>
 								</pluginExecution>
 							</pluginExecutions>

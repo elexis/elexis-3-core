@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>ch.elexis.core</groupId>
 		<artifactId>ch.elexis.core.tests</artifactId>
-		<version>3.8.0-SNAPSHOT</version>
+		<version>3.9.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>ch.elexis.core.jpa.test</artifactId>
 	<version>1.0.0-SNAPSHOT</version>

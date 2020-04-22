@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: jaxb-api bind implementation fragment
-Bundle-SymbolicName: jaxb-api-impl-import-java9
-Bundle-Version: 1.0.0.qualifier
-Fragment-Host: jaxb-api;bundle-version="2.4.0"
-Automatic-Module-Name: jaxb-api-bind
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Multi-Release: true

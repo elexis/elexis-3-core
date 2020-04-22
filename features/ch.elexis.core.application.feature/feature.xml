@@ -589,13 +589,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.equinox.p2.extensionlocation"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.equinox.frameworkadmin"
          download-size="0"
          install-size="0"
@@ -1187,32 +1180,11 @@
          unpack="false"/>
 
    <plugin
-         id="com.sun.xml.bind.jaxb-osgi"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="com.sun.activation.javax.activation"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
-   <plugin
-         id="org.osgi.framework.system.packages.extra"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="jaxb-api-impl-import-java9"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
 
    <plugin
          id="org.postgresql.jdbc42"

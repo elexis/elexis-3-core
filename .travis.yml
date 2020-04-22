@@ -19,13 +19,13 @@ matrix:
   - name: "Français"
 
 script:
-  - mvn -V --quiet clean verify -Dall-archs=true -DNL=$NL --fail-at-end clean verify
+  - mvn -V --quiet clean verify -Dall-archs=true -DNL=$NL --fail-at-end clean verify  -Dtycho.localArtifacts=ignore
 
 notifications:
   email:
   - niklaus.giger@member.fsf.org
 
-jdk: openjdk8 # oraclejdk8 is no longer supported by travis-ci
+jdk: openjdk11
 
 cache:
   directories:
@@ -41,7 +41,6 @@ services:
 env:
   global:
   - PGPASSWORD=elexisTest
-  - JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
   - PATH=$(echo "$PATH" | sed -e 's/:\/usr\/local\/lib\/jvm\/openjdk11\/bin//')
 # Try to start xvfb as indicated by https://docs.travis-ci.com/user/gui-and-headless-browsers/#using-xvfb-directly
 #  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x24"

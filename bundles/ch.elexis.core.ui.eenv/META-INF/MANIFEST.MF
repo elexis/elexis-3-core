@@ -7,10 +7,11 @@ Bundle-Vendor: elexis.info
 Require-Bundle: org.eclipse.ui;bundle-version="3.110.0",
  org.eclipse.swt,
  ch.elexis.core,
- org.eclipse.swt.chromium;bundle-version="0.10.2";resolution:=optional
+ org.eclipse.swt.chromium;bundle-version="0.10.2";resolution:=optional,
+ javax.annotation;bundle-version="1.2.0"
 Automatic-Module-Name: ch.elexis.core.ui.eenv
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Import-Package: javax.annotation,
+Import-Package: javax.activation,
  javax.inject;version="1.0.0",
  org.eclipse.e4.core.di.annotations;version="1.6.0",
  org.eclipse.e4.ui.di

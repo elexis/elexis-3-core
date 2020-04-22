@@ -58,6 +58,9 @@ Export-Package: ch.elexis.core.ac,
  ch.elexis.core.utils
 Import-Package: javax.ws.rs;version="[2.0.0,2.1.0)",
  javax.ws.rs.core;version="[2.0.0,2.1.0)",
+ javax.xml.bind,
+ javax.xml.bind.annotation;version="2.3.0",
+ javax.xml.bind.annotation.adapters;version="2.3.0",
  org.apache.commons.lang3;version="3.1.0",
  org.slf4j;version="1.6.6"
 Bundle-Activator: ch.elexis.core.internal.Activator
