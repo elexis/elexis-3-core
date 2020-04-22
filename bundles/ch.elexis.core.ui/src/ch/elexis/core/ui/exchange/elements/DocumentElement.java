@@ -13,6 +13,7 @@
 package ch.elexis.core.ui.exchange.elements;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.jdom.Element;
@@ -70,8 +71,8 @@ public class DocumentElement extends XChangeElement {
 	public DocumentElement asExporter(XChangeExporter parent, IDocument iDocument,
 		String documentType){
 		byte[] content = null;
-		try {
-			content = IOUtils.toByteArray(iDocument.getContent());
+		try (InputStream is = iDocument.getContent()) {
+			content = IOUtils.toByteArray(is);
 		} catch (IOException e) {
 			LoggerFactory.getLogger(getClass())
 				.warn(iDocument.getId() + " Error serializing to byte array", e);
