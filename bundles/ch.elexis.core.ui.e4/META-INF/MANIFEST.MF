@@ -1,13 +1,17 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Core UI for e4
-Bundle-SymbolicName: ch.elexis.core.ui.e4
+Bundle-SymbolicName: ch.elexis.core.ui.e4;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: medevit.at
-Automatic-Module-Name: ch.elexis.core.ui.e4
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: ch.elexis.core.ui.e4.locks,
+ ch.elexis.core.ui.e4.util,
+ ch.elexis.core.ui.e4.views.controls
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.15.0",
- org.eclipse.osgi.services;bundle-version="3.7.100";visibility:=reexport
+ org.eclipse.osgi.services;bundle-version="3.7.100";visibility:=reexport,
+ org.eclipse.e4.ui.model.workbench;bundle-version="2.1.100.v20180904-1914"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
 Import-Package: ch.elexis.core.l10n;version="3.5.0.qualifier",
  ch.elexis.core.lock.types,
  ch.elexis.core.model,
@@ -15,6 +19,8 @@ Import-Package: ch.elexis.core.l10n;version="3.5.0.qualifier",
  ch.elexis.core.services.holder,
  org.eclipse.e4.core.contexts;version="1.7.0",
  org.eclipse.e4.core.di;version="1.7.0",
+ org.eclipse.e4.core.di.annotations;version="1.6.0",
+ org.eclipse.e4.ui.di,
  org.eclipse.e4.ui.model.application,
  org.eclipse.e4.ui.model.application.ui,
  org.eclipse.e4.ui.workbench,
@@ -29,8 +35,4 @@ Import-Package: ch.elexis.core.l10n;version="3.5.0.qualifier",
  org.eclipse.swt.widgets,
  org.osgi.service.component.annotations;version="1.3.0",
  org.slf4j
-Export-Package: ch.elexis.core.ui.e4.locks,
- ch.elexis.core.ui.e4.util,
- ch.elexis.core.ui.e4.views.controls
-Service-Component: OSGI-INF/ch.elexis.core.ui.e4.util.CoreUiUtil.xml
-Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: ch.elexis.core.ui.e4
