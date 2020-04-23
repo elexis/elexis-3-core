@@ -12,3 +12,4 @@ workspace/
 profile.tmp
 .polyglot.build.properties
 bundles/ch.elexis.core.data/rsc/version.properties
+jre.bundles/downloaded/

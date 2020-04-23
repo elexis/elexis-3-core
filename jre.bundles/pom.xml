@@ -10,24 +10,35 @@
   </parent>
 
   <artifactId>elexis-3-jre</artifactId>
-  <version>11.0.3</version> <!-- aka JDK version -->
+  <!--version>11.0.3</version>  aka JDK version -->
+  <version>1.8.252</version> <!-- aka JDK version -->
 	<packaging>pom</packaging>
 
 	<properties>
-		<download.url>https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.3%2B7</download.url>
-		<!-- to test locally, place files in a local directory
-		<download.url>file:///Users/.../zulu/</download.url>
+    <realJdkVersion>jdk8u252-b09</realJdkVersion>
+    <!-- See https://adoptopenjdk.net/installation.html
+      z.B. für MacOS
+    https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u252-b09.1/OpenJDK8U-jre_x64_mac_hotspot_8u252b09.tar.gz
     -->
-    <download.file>OpenJDK11U-${download.jre_type}_hotspot_${project.version}_7.${download.type}</download.file>
+    <!-- Hier die Definition für Java8
+      <version>8.252</version>
+    -->
+		<download.url>https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/${realJdkVersion}</download.url>
+    <download.file>OpenJDK8U-${download.jre_type}_hotspot_8u252b09.${download.type}</download.file>
+    <!-- Hier die Defintion für Java 11
+      <!version>11.0.3</version>
+		<download.url>https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.3%2B7</download.url>
+    <download.file>OpenJDK11U-${download.jre_type}_hotspot_${realJdkVersion_7.${download.type}</download.file>
+   -->
  		<download.unzippedFolder>${download.file}</download.unzippedFolder>
 		<download.type>zip</download.type>
 		<jre.folder>jre</jre.folder>
 	</properties>
 
 	<modules>
+    <module>ch.elexis.jre.linux.x86_64</module>
     <module>ch.elexis.jre.macosx.x86_64</module>
     <module>ch.elexis.jre.win32.x86_64</module>
-    <module>ch.elexis.jre.linux.x86_64</module>
 	</modules>
 
 	<build>
@@ -48,7 +59,7 @@
         <version>1.4.2</version>
         <executions>
           <execution>
-            <id>Download OpenJDK ${project.version}: ${project.build.directory} from ${download.url}/${download.file}</id>
+            <id>Download OpenJDK ${realJdkVersion}: ${project.build.directory} from ${download.url}/${download.file}</id>
             <phase>process-resources</phase>
             <goals>
               <goal>wget</goal>
@@ -56,7 +67,7 @@
             <configuration>
               <url>${download.url}/${download.file}</url>
               <unpack>false</unpack>
-              <outputDirectory>${project.build.directory}/downloaded</outputDirectory>
+              <outputDirectory>${project.basedir}/../downloaded</outputDirectory>
               <md5>${download.md5}</md5>
             </configuration>
           </execution>
@@ -78,21 +89,25 @@
 								<ac:if xmlns:ac="antlib:net.sf.antcontrib">
 									<equals arg1="${download.type}" arg2="tar.gz"/> 
 									<then>
-                    <untar src="${project.build.directory}/downloaded/${download.file}" dest="${project.build.directory}/downloads/" compression="gzip" />
+                    <untar src="${project.basedir}/../downloaded/${download.file}" dest="${project.build.directory}/downloads/" compression="gzip" />
 									</then>
 									<else>
-										<unzip dest="${project.build.directory}/downloads/" src="${project.build.directory}/downloaded/${download.file}"/>
+										<unzip src="${project.basedir}/../downloaded/${download.file}" dest="${project.build.directory}/downloads/" />
 									</else>
 								</ac:if>
 							<ac:if xmlns:ac="antlib:net.sf.antcontrib">
 									<equals arg1="${download.jre_type}" arg2="jre_x64_mac"/> 
 									<then>
+                    <!--
+                    /opt/rm/2795/elexis-3-core/jre.bundles/ch.elexis.jre.macosx.x86_64/target/downloads/jdk-jdk8u252-b09-jre/Contents
+                    /opt/rm/2795/elexis-3-core/jre.bundles/ch.elexis.jre.macosx.x86_64/target/downloads/jdk8u252-b09-jre/
+                    -->
                     <echo message="Move jre for MacOSX into ${jre.folder}/Contents"/>
-                    <move file="${project.build.directory}/downloads/jdk-11.0.3+7-jre/Contents" tofile="${project.build.directory}/downloads/${jre.folder}/Contents" />
+                    <move file="${project.build.directory}/downloads/${realJdkVersion}-jre/Contents" tofile="${project.build.directory}/downloads/${jre.folder}/Contents" />
                   </then>
                   <else>
                     <echo message="Move jre to ${project.build.directory}/downloads/${jre.folder}"/>
-                    <move file="${project.build.directory}/downloads/jdk-11.0.3+7-jre/" tofile="${project.build.directory}/downloads/${jre.folder}/"/>
+                    <move file="${project.build.directory}/downloads/${realJdkVersion}-jre/" tofile="${project.build.directory}/downloads/${jre.folder}/"/>
                   </else>
                 </ac:if>
 							</target>
