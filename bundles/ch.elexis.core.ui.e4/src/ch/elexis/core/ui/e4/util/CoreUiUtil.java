@@ -3,47 +3,54 @@ package ch.elexis.core.ui.e4.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.InjectionException;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
+import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
-import org.osgi.service.component.annotations.Component;
 import org.osgi.service.event.Event;
-import org.osgi.service.event.EventConstants;
-import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Component(property = EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE)
-public class CoreUiUtil implements EventHandler {
+import ch.elexis.core.services.IContextService;
+
+public class CoreUiUtil {
 	
 	private static Logger logger = LoggerFactory.getLogger(CoreUiUtil.class);
 	
 	private static Object lock = new Object();
 	
-	private static IEclipseContext applicationContext;
-	
 	private static IEclipseContext serviceContext;
 	
 	private static List<Object> delayedInjection = new ArrayList<>();
 	
-	@Override
-	public void handleEvent(Event event){
+	@Inject
+	@Optional
+	public void subscribeAppStartupComplete(
+		@UIEventTopic(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE) Event event,
+		IContextService contextService, UISynchronize sync){
+		
 		synchronized (lock) {
 			Object property = event.getProperty("org.eclipse.e4.data");
 			if (property instanceof MApplication) {
 				MApplication application = (MApplication) property;
-				CoreUiUtil.applicationContext = application.getContext();
+				// A RAP application has one application context per client
+				// the resp. context service implementation considers this
+				contextService.getRootContext().setNamed("applicationContext",
+					application.getContext());
 				
 				if (!delayedInjection.isEmpty()) {
 					for (Object object : delayedInjection) {
-						Display.getDefault().asyncExec(() -> {
+						sync.asyncExec(() -> {
 							injectServices(object);
 						});
 					}
@@ -54,23 +61,33 @@ public class CoreUiUtil implements EventHandler {
 	}
 	
 	private static void injectServices(Object object){
-		if (serviceContext == null) {
-			BundleContext bundleContext =
-				FrameworkUtil.getBundle(CoreUiUtil.class).getBundleContext();
-			CoreUiUtil.serviceContext = EclipseContextFactory.getServiceContext(bundleContext);
-		}
+		assertServiceContext();
 		try {
 			ContextInjectionFactory.inject(object, serviceContext);
 		} catch (InjectionException e) {
 			logger.warn("Service injection failure ", e);
 		}
-		if (applicationContext != null) {
+		if (getApplicationContext() != null) {
 			try {
-				ContextInjectionFactory.inject(object, applicationContext);
+				ContextInjectionFactory.inject(object, getApplicationContext());
 			} catch (InjectionException e) {
 				logger.warn("Application context injection failure ", e);
 			}
 		}
+	}
+	
+	private static void assertServiceContext(){
+		if (serviceContext == null) {
+			BundleContext bundleContext =
+				FrameworkUtil.getBundle(CoreUiUtil.class).getBundleContext();
+			CoreUiUtil.serviceContext = EclipseContextFactory.getServiceContext(bundleContext);
+		}
+	}
+	
+	private static IEclipseContext getApplicationContext(){
+		IContextService iContextService = serviceContext.get(IContextService.class);
+		return (IEclipseContext) iContextService.getRootContext().getNamed("applicationContext")
+			.orElse(null);
 	}
 	
 	public static void injectServices(Object object, IEclipseContext context){
@@ -94,8 +111,9 @@ public class CoreUiUtil implements EventHandler {
 	 * @param fixMediDisplay
 	 */
 	public static void injectServicesWithContext(Object object){
+		assertServiceContext();
 		synchronized (lock) {
-			if (applicationContext != null) {
+			if (getApplicationContext() != null) {
 				injectServices(object);
 			} else {
 				delayedInjection.add(object);
