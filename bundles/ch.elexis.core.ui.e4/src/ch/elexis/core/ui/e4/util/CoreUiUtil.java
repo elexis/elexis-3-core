@@ -104,7 +104,7 @@ public class CoreUiUtil {
 	 */
 	public static void injectServicesWithContext(Object object){
 		synchronized (lock) {
-			if (getApplicationContext() != null) {
+			if (getApplicationContext().isPresent()) {
 				injectServices(object);
 			} else {
 				delayedInjection.add(object);
