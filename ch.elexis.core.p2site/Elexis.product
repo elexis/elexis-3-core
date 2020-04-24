@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Elexis OpenSource" uid="ch.elexis.core.application.ElexisApp" id="ch.elexis.core.application.product" application="ch.elexis.core.application.ElexisApp" version="3.9.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="Elexis OpenSource" uid="Elexis3" id="ch.elexis.core.application.product" application="ch.elexis.core.application.ElexisApp" version="3.9.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="rsc/elexislogo2.png"/>
@@ -49,7 +49,7 @@
    </plugins>
 
    <features>
-      <feature id="ch.elexis.jre.feature"  installMode="root"/>
+      <feature id="ch.elexis.jre.feature" installMode="root"/>
       <feature id="ch.elexis.core.application.feature" installMode="root"/>
       <feature id="ch.elexis.core.common.feature" installMode="root"/>
       <feature id="ch.elexis.core.logging.feature" installMode="root"/>
