@@ -55,6 +55,7 @@ import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISticker;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.format.AddressFormatUtil;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
@@ -108,7 +109,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 
 	@Inject
 	void changedMandator(
-		@Optional @UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IContact mandator){
+		@Optional @UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user){
 		if (created) {
 			Display.getDefault().asyncExec(() -> {
 				userChanged();
