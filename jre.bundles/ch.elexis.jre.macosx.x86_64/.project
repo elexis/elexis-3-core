@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>ch.elexis.jre.macosx.x86_64</name>
+	<comment>OpenJDK JRE bundle for Elexis under MacOSX</comment>
+	<projects>
+	</projects>
+	<buildSpec>
+	</buildSpec>
+	<natures>
+	</natures>
+</projectDescription>

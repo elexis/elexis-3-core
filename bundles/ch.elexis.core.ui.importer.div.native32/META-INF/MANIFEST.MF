@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Native32 bit libraries for importer.div
-Bundle-SymbolicName: ch.elexis.core.ui.importer.div.native32
-Bundle-Version: 3.2.0.qualifier
-Bundle-Vendor: elexis.info
-Fragment-Host: ch.elexis.core.ui.importer.div;bundle-version="3.2.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Eclipse-PlatformFilter: (& (osgi.os=win32) (osgi.arch=x86))
