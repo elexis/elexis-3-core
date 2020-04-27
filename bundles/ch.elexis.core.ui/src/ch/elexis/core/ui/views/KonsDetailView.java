@@ -191,7 +191,7 @@ public class KonsDetailView extends ViewPart
 	
 	@Inject
 	void changedMandator(
-		@Optional @UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IContact mandator){
+		@Optional @UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser mandator){
 		if (created) {
 			Display.getDefault().asyncExec(() -> {
 				adaptMenus();

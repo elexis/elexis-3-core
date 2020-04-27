@@ -138,6 +138,8 @@ public class ContextService implements IContextService, EventHandler {
 				((Context) getRootContext()).setEclipseContext(applicationContext);
 			}
 		}
+		// set initial values for injection
+		applicationContext.set(IUser.class, getRootContext().getTyped(IUser.class).orElse(null));
 	}
 	
 	@Override
@@ -321,9 +323,11 @@ public class ContextService implements IContextService, EventHandler {
 				}
 			}
 			
-			postEvent(ElexisEventTopics.EVENT_USER_CHANGED,
-				getModelObjectForPersistentObject(object));
+			IUser user = root.getTyped(IUser.class).orElse(null);
+			postEvent(ElexisEventTopics.EVENT_USER_CHANGED, user);
 		}
+
+
 	}
 	
 	private class MandatorChangedEventDispatcherListener extends ElexisEventListenerImpl {
