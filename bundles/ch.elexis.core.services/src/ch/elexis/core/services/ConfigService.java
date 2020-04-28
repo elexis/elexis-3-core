@@ -191,6 +191,17 @@ public class ConfigService implements IConfigService {
 	}
 	
 	@Override
+	public boolean setActiveUserContact(String key, String value){
+		Optional<IContact> activeUser = contextService.getActiveUserContact();
+		if (activeUser.isPresent()) {
+			return set(activeUser.get(), key, value);
+		} else {
+			LoggerFactory.getLogger(getClass()).warn("No active user available");
+		}
+		return false;
+	}
+	
+	@Override
 	public boolean set(IContact contact, String key, boolean value){
 		return set(contact, key, (value) ? "1" : "0");
 	}

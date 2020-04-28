@@ -90,6 +90,18 @@ public interface IConfigService {
 	public void setActiveMandator(String key, String value);
 	
 	/**
+	 * Convenience method wrapping {@link #set(IContact, String, String)} fetching the current user
+	 * contact from {@link IContextService}
+	 * 
+	 * @param key
+	 *            identifying the configuration entry
+	 * @param value
+	 *            to set
+	 * @return <code>true</code> if value was successfully set
+	 */
+	public boolean setActiveUserContact(String key, String value);
+	
+	/**
 	 * Set a contact specific configuration entry. Overwrites existing value. Performs save
 	 * operation.
 	 * 
@@ -154,17 +166,6 @@ public interface IConfigService {
 	public String getLocal(String key, String defaultValue);
 	
 	/**
-	 * Get a stored value for the current active {@link IMandator} configuration.
-	 * The current mandator is resolved via the {@link IContextService}
-	 * 
-	 * @param key
-	 * @param defaultValue to return if no active mandator found or entry does not
-	 *                     exist
-	 * @return
-	 */
-	public String getActiveMandator(String key, String defaultValue);
-	
-	/**
 	 * Convenience method wrapping {@link #get(String, String)}
 	 * 
 	 * @param key
@@ -187,6 +188,17 @@ public interface IConfigService {
 	public boolean getLocal(String key, boolean defaultValue);
 	
 	/**
+	 * Get a stored value for the current active {@link IMandator} configuration.
+	 * The current mandator is resolved via the {@link IContextService}
+	 * 
+	 * @param key
+	 * @param defaultValue to return if no active mandator found or entry does not
+	 *                     exist
+	 * @return
+	 */
+	public String getActiveMandator(String key, String defaultValue);
+
+	/**
 	 * Convenience method wrapping {@link #getActiveMandator(String, String)}
 	 * 
 	 * @param key
@@ -198,6 +210,8 @@ public interface IConfigService {
 	public boolean getActiveMandator(String key, boolean defaultValue);
 	
 	/**
+	 * Convenience method wrapping {@link #get(IContact, String, String)}, fetching the current user
+	 * via {@link IContextService}
 	 * 
 	 * @param key
 	 * @param defaultValue
