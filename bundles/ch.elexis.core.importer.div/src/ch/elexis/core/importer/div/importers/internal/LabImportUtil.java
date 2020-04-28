@@ -518,14 +518,14 @@ public class LabImportUtil implements ILabImportUtil {
 		String result, String comment, String refVal, ILaboratory laboratory, String subId,
 		ILabOrder labOrder, String orderId, IMandator mandator, TimeTool observationTime){
 		
-		logger.debug("Creating result with patient [" + patient + "] labitem [" + labItem
-			+ "] origin [" + laboratory + "] observationTime [" + observationTime + "]");
+		logger.debug("Creating result with patient [" + patient.getId() + "] labitem [" + labItem
+			+ "] origin [" + laboratory + "] observationTime [" + observationTime + "] labOrder ["
+			+ labOrder + "]");
 		
 		ILabResult labResult = modelService.create(ILabResult.class);
 		labResult.setPatient(patient);
 		labResult.setDate(date.toLocalDate());
 		labResult.setItem(labItem);
-		labResult.setObservationTime(observationTime.toLocalDateTime());
 		labResult.setOrigin(laboratory);
 		if (patient.getGender() == Gender.FEMALE) {
 			labResult.setReferenceFemale(refVal);
@@ -537,6 +537,12 @@ public class LabImportUtil implements ILabImportUtil {
 		
 		// create new ILabOrder or set result in existing
 		if (labOrder == null) {
+			if (observationTime == null) {
+				logger.warn(
+					"Could not resolve observation time and time for ILabResult [{}], defaulting to now.",
+					labResult.getId());
+				observationTime = new TimeTool();
+			}
 			ILabOrder order = modelService.create(ILabOrder.class);
 			order.setItem(labItem);
 			order.setPatient(patient);
