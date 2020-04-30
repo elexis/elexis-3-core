@@ -14,8 +14,6 @@
    </configIni>
 
    <launcherArgs>
-      <programArgsLin>--launcher.GTK_version 2
-      </programArgsLin>
       <vmArgs>-Xms256m -Xmx1024m -Duser.language=de -Duser.region=CH  -Dfile.encoding=utf-8 -Dorg.eclipse.gemini.refreshBundles=false
       </vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts=false -Dfile.encoding=utf-8
