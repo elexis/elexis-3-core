@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 echo running: $0 $1
 APP=$1
 if [ -z "$APP" ]; then
@@ -31,7 +31,6 @@ rm -rfv $HOME/elexis/demoDB
 rm -rfv $HOME/elexis/*lock.*
 rm -rfv $ELEXIS_LOG
 ls -l $APP
-SEARCH_PATTERN="Bypassing LoginDialog with username mustermann"
 SEARCH_PATTERN=Bypassing
 COMMAND="${APP} -consoleLog -nl en_US -vmargs \
 -Duser.language=en -Duser.region=US \
@@ -44,6 +43,7 @@ MAX_WAIT=50
 wait_for_bypassing() {
   for counter in $(seq 1 $MAX_WAIT)
   do
+    declare -i nr_connections
     sleep 1
     echo Checking $counter time
     nr_connections=`egrep -c $SEARCH_PATTERN $ELEXIS_LOG`

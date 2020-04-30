@@ -8,7 +8,8 @@ stages:
 
 build:
   stage: build
-  script: 
+  script:
+  - unset JAVA_HOME
   - env
   - xvfb-run mvn -V clean verify -B -Pall-archs -DelexisJcfsTest=true
   - jo token="$WEBHOOK_TOKEN" info="elexis-3-core $CI_JOB_ID $ORIGIN_BRANCH $CI_COMMIT_REF_NAME $CI_COMMIT_SHA" binary=%$(find ch.elexis.core.p2site/target/ch.elexis.core.p2site*.zip) destDir=elexis/$CI_COMMIT_REF_NAME/p2/elexis-3-core | curl -k -H "Content-Type:application/json" -X POST -d @- $WEBHOOK_URL/deploy-zip
