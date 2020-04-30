@@ -1,7 +1,13 @@
 target "Elexis" with source allEnvironments
 
 location "https://download.elexis.info/mirror.4.elexis/release" {
-		javax.ws.rs [1.1.1,1.1.2)
+	javax.ws.rs [1.1.1,1.1.2)
+	org.slf4j.api [1.7.2,1.7.3)
+	org.slf4j.ext [1.7.2,1.7.3)
+	org.slf4j.jcl [1.7.2,1.7.3)
+	org.slf4j.jul [1.7.2,1.7.3)
+	org.slf4j.log4j [1.7.2,1.7.3)
+	org.slf4j.nop [1.7.2,1.7.3)
 }
 
 location "https://download.elexis.info/elexis/3.8/p2/target/" {
@@ -105,13 +111,6 @@ location "https://download.elexis.info/elexis/3.8/p2/target/" {
 	org.apache.poi.ooxml.schemas
 	org.apache.xmlbeans
 	org.dom4j
-
-	org.slf4j.api
-	org.slf4j.ext
-	org.slf4j.jcl
-	org.slf4j.jul
-	org.slf4j.log4j
-	org.slf4j.nop
 
 	// java 11
 	com.sun.activation.javax.activation [1.2.0,1.2.0]
