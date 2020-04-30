@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis" sequenceNumber="1588246760">
+<target name="Elexis" sequenceNumber="1588247631">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.swt.chromium.feature.feature.group" version="0.10.2.201908130308"/>
@@ -70,6 +70,7 @@
       <unit id="ch.qos.logback.classic" version="1.1.2.v20171220-1825"/>
       <unit id="ch.qos.logback.core" version="1.1.2.v20200204-2150"/>
       <unit id="ch.qos.logback.slf4j" version="1.1.2.v20160301-0943"/>
+      <unit id="org.slf4j.api" version="1.7.30.v20200204-2150"/>
       <unit id="org.eclipse.emf.sdk.feature.group" version="2.21.0.v20200205-0529"/>
       <unit id="org.eclipse.mylyn.wikitext_feature.feature.group" version="3.0.36.202002070035"/>
       <unit id="org.hamcrest.core" version="1.3.0.v20180420-1519"/>
@@ -108,6 +109,11 @@
       <repository location="https://medevit.github.io/osgi-jax-rs-connector/5.3.100/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.slf4j.ext" version="1.7.30.v20200204-2150"/>
+      <unit id="org.slf4j.jcl" version="1.7.2.v20130115-1340"/>
+      <unit id="org.slf4j.jul" version="1.7.2.v20121108-1250"/>
+      <unit id="org.slf4j.log4j" version="1.7.2.v20130115-1340"/>
+      <unit id="org.slf4j.nop" version="1.7.2.v201212060727"/>
       <unit id="org.apache.httpcomponents.httpcore" version="4.4.12.v20200108-1212"/>
       <unit id="org.apache.httpcomponents.httpclient" version="4.5.10.v20200114-1512"/>
       <unit id="edu.emory.mathcs.backport" version="3.1.0.v201505121915"/>
@@ -137,12 +143,6 @@
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="javax.ws.rs" version="1.1.1.v20130318-1750"/>
-      <unit id="org.slf4j.api" version="1.7.2.v20121108-1250"/>
-      <unit id="org.slf4j.ext" version="1.7.2.v20121108-1250"/>
-      <unit id="org.slf4j.jcl" version="1.7.2.v20130115-1340"/>
-      <unit id="org.slf4j.jul" version="1.7.2.v20121108-1250"/>
-      <unit id="org.slf4j.log4j" version="1.7.2.v20130115-1340"/>
-      <unit id="org.slf4j.nop" version="1.7.2.v201212060727"/>
       <repository location="https://download.elexis.info/mirror.4.elexis/release"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
