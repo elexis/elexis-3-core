@@ -36,8 +36,8 @@
 <!--
 		<module>ch.elexis.core.tasks.test</module>
 		<module>ch.elexis.core.ui.importer.div.tests</module>
--->
 		<module>ch.elexis.core.ui.tests</module>
+-->
 		<module>ch.rgw.utility.tests</module>
 	</modules>
 
