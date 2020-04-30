@@ -12,7 +12,6 @@ Multi-Release: true
 Require-Bundle: org.eclipse.osgi.services;bundle-version="3.7.100",
  org.eclipse.core.runtime;bundle-version="3.5.0",
  ch.elexis.core.l10n,
- org.eclipse.equinox.ds;bundle-version="1.5.0",
  org.eclipse.equinox.event;bundle-version="1.4.0",
  org.eclipse.emf.ecore;visibility:=reexport,
  ch.elexis.core;visibility:=reexport,
