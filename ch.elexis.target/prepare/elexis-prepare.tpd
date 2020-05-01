@@ -47,6 +47,7 @@ location "https://download.eclipse.org/e4/snapshots/org.eclipse.e4.tools/latest/
 }
 
 location "https://download.eclipse.org/eclipse/updates/4.15/" {
+	org.eclipse.equinox.p2.user.ui.feature.group
 	org.eclipse.equinox.executable.feature.group
 	org.eclipse.rcp.feature.group
 	org.eclipse.platform.feature.group

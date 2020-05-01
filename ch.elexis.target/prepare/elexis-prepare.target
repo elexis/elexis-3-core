@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis" sequenceNumber="1588250743">
+<target name="Elexis" sequenceNumber="1588320152">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.swt.chromium.feature.feature.group" version="0.10.2.201908130308"/>
@@ -46,6 +46,7 @@
       <repository location="https://download.eclipse.org/e4/snapshots/org.eclipse.e4.tools/latest/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.eclipse.equinox.p2.user.ui.feature.group" version="2.4.700.v20200222-1600"/>
       <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.700.v20200207-2156"/>
       <unit id="org.eclipse.rcp.feature.group" version="4.15.0.v20200305-0155"/>
       <unit id="org.eclipse.platform.feature.group" version="4.15.0.v20200305-0155"/>
