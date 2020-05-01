@@ -12,7 +12,7 @@
       <id>verify-elexis-startup</id>
       <activation>
         <property>
-           <name>!skipTests</name>
+           <name>runStartupScript</name>
         </property>
         <os>
           <name>Linux</name>
