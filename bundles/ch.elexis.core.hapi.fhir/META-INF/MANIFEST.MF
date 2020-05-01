@@ -17,7 +17,7 @@ Bundle-ClassPath: .,
  lib/org.hl7.fhir.r4-4.1.0.jar,
  lib/commons-text-1.7.jar
 Require-Bundle: woodstox-core-asl;bundle-version="4.4.1",
- org.slf4j.api;bundle-version="1.7.2",
+ org.slf4j.api,
  ch.qos.logback.classic;bundle-version="1.0.7",
  net.sf.saxon.Saxon-HE;bundle-version="9.6.0",
  com.phloc.commons;bundle-version="4.4.6",

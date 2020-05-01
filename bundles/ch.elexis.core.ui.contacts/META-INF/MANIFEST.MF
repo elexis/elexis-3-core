@@ -36,5 +36,5 @@ Export-Package: ch.elexis.core.ui.contacts.dialogs,
 Import-Package: ch.elexis.core.services.holder,
  ch.elexis.data,
  javax.inject;version="1.0.0",
- org.slf4j;version="1.7.2"
+ org.slf4j
 Bundle-ClassPath: .
