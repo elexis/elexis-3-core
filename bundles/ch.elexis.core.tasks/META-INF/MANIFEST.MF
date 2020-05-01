@@ -52,4 +52,4 @@ Import-Package: ch.elexis.core.jpa.model.adapter,
  javax.persistence.criteria;version="2.2.0",
  org.apache.commons.lang3;version="3.7.0",
  org.json,
- org.slf4j;version="1.7.2"
+ org.slf4j

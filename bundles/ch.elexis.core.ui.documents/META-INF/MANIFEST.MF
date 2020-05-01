@@ -39,7 +39,7 @@ Import-Package: ch.elexis.admin,
  org.eclipse.e4.core.commands,
  org.eclipse.e4.core.di.annotations;version="1.6.0",
  org.osgi.service.component.annotations,
- org.slf4j;version="1.7.2"
+ org.slf4j
 Service-Component: OSGI-INF/ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder.xml,
  OSGI-INF/ch.elexis.core.ui.documents.service.LocalLockServiceHolder.xml,
  OSGI-INF/ch.elexis.core.ui.documents.service.FhirTransformersHolder.xml
