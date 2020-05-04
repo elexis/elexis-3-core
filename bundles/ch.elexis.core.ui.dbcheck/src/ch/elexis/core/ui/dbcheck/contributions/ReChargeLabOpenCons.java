@@ -12,13 +12,9 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
-import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
-import ch.elexis.core.data.service.CoreModelServiceHolder;
-import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.ICodeElement;
-import ch.elexis.core.model.IEncounter;
-import ch.elexis.core.services.IBillingService;
+import ch.elexis.core.model.IPersistentObject;
 import ch.elexis.core.services.ICodeElementService;
 import ch.elexis.core.services.ICodeElementService.ContextKeys;
 import ch.elexis.core.ui.dbcheck.external.ExternalMaintenance;
@@ -37,14 +33,10 @@ public class ReChargeLabOpenCons extends ExternalMaintenance {
 	
 	private ServiceReference<ICodeElementService> codeServiceRef;
 	
-	private IBillingService billingService;
-	
-	private ServiceReference<IBillingService> billingServiceRef;
-	
 	@Override
 	public String executeMaintenance(IProgressMonitor pm, String DBVersion){
 		StringJoiner sj = new StringJoiner("\n");
-		if (initCodeElementService() && initBillingService()) {
+		if (initCodeElementService()) {
 			Query<Patient> queryPatients = new Query<>(Patient.class);
 			List<Patient> patients = queryPatients.execute();
 			
@@ -63,26 +55,19 @@ public class ReChargeLabOpenCons extends ExternalMaintenance {
 								String ealCode = ((LabItem) labResult.getItem()).getBillingCode();
 								if (ealCode != null && !ealCode.isEmpty()) {
 									Konsultation openKons = openKonsultationMap
-										.get(labResult.getObservationTime().toLocalDate());
+											.get(labResult.getObservationTime().toLocalDate());
 									if (openKons != null) {
-										Optional<ICodeElement> matchingVerrechenbar =
-											codeElementService.loadFromString("EAL 2009", ealCode,
-												getContext(openKons));
+										Optional<ICodeElement> matchingVerrechenbar = codeElementService
+												.createFromString("EAL 2009", ealCode, getContext(openKons));
 										if (matchingVerrechenbar.isPresent()) {
-											if (!isAlreadyBilled(openKons,
-												matchingVerrechenbar.get())) {
-												Optional<IEncounter> encounter =
-													CoreModelServiceHolder.get()
-														.load(openKons.getId(), IEncounter.class);
-												billingService.bill(
-													(IBillable) matchingVerrechenbar.get(),
-													encounter.get(), 1.0);
+											if (!isAlreadyBilled(openKons, matchingVerrechenbar.get())) {
+												openKons.addLeistung((IVerrechenbar) matchingVerrechenbar.get());
 											}
 										}
 									} else {
 										sj.add("No open cons to bill [" + ealCode + "] on date ["
-											+ labResult.getObservationTime().toLocalDate()
-											+ "] of pat [" + patient.getPatCode() + "]");
+												+ labResult.getObservationTime().toLocalDate() + "] of pat ["
+												+ patient.getPatCode() + "]");
 									}
 								}
 							}
@@ -94,7 +79,6 @@ public class ReChargeLabOpenCons extends ExternalMaintenance {
 			
 			pm.done();
 			deInitCodeElementService();
-			deInitBillingService();
 		}
 		return sj.toString();
 	}
@@ -116,7 +100,7 @@ public class ReChargeLabOpenCons extends ExternalMaintenance {
 		for (Fall fall : patient.getFaelle()) {
 			if (fall.isOpen()) {
 				for (Konsultation konsultation : fall.getBehandlungen(false)) {
-					if (konsultation.isBillable()) {
+					if (konsultation.isBillable() && konsultation.getRechnung() == null) {
 						ret.put(konsultation.getDateTime().toLocalDate(), konsultation);
 					}
 				}
@@ -152,27 +136,6 @@ public class ReChargeLabOpenCons extends ExternalMaintenance {
 		codeServiceRef = context.getServiceReference(ICodeElementService.class);
 		if (codeServiceRef != null) {
 			codeElementService = context.getService(codeServiceRef);
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	private void deInitBillingService(){
-		BundleContext context =
-			FrameworkUtil.getBundle(ReChargeTarmedOpenCons.class).getBundleContext();
-		if (billingServiceRef != null) {
-			context.ungetService(billingServiceRef);
-			billingService = null;
-		}
-	}
-	
-	private boolean initBillingService(){
-		BundleContext context =
-			FrameworkUtil.getBundle(ReChargeTarmedOpenCons.class).getBundleContext();
-		billingServiceRef = context.getServiceReference(IBillingService.class);
-		if (billingServiceRef != null) {
-			billingService = context.getService(billingServiceRef);
 			return true;
 		} else {
 			return false;
