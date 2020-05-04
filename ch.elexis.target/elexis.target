@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis" sequenceNumber="1588326449">
+<target name="Elexis" sequenceNumber="1588574290">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="javax.ws.rs" version="1.1.1.v20130318-1750"/>
@@ -16,7 +16,6 @@
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.swt.chromium.feature.feature.group" version="0.10.2.201908130308"/>
       <unit id="com.make.chromium.cef.feature.feature.group" version="0.4.0.201908130254"/>
-      <unit id="org.eclipse.equinox.ds" version="1.6.100.v20191001-1333"/>
       <unit id="org.eclipse.equinox.p2.ui" version="2.5.800.v20200213-1530"/>
       <unit id="org.eclipse.equinox.p2.user.ui.feature.group" version="2.4.700.v20200222-1600"/>
       <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.700.v20200207-2156"/>
@@ -108,7 +107,7 @@
       <unit id="org.apache.poi.ooxml" version="3.9.0.v201405241905"/>
       <unit id="org.apache.poi.ooxml.schemas" version="3.9.0.v201405241750"/>
       <unit id="org.apache.xmlbeans" version="2.3.0.v201605172150"/>
-      <unit id="org.dom4j" version="1.6.1.v20190321-1528"/>
+      <unit id="org.dom4j" version="1.6.1.v20170815-1500"/>
       <unit id="com.sun.activation.javax.activation" version="1.2.0"/>
       <unit id="javax.transaction-api" version="1.3.0"/>
       <unit id="javax.enterprise.cdi-api" version="2.0.0.SP1"/>

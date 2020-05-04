@@ -16,7 +16,6 @@ location "https://download.elexis.info/elexis/3.8/p2/target/" {
 	com.make.chromium.cef.feature.feature.group
 	// TESTING ONLY
 	
-	org.eclipse.equinox.ds
 	org.eclipse.equinox.p2.ui
 	org.eclipse.equinox.p2.user.ui.feature.group
 	org.eclipse.equinox.executable.feature.group
