@@ -85,6 +85,9 @@
             <ExternalMaintenance
                   MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.PopulateAnschriftColumnInKontaktTable">
             </ExternalMaintenance>
+            <ExternalMaintenance
+                  MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.ReChargeLabOpenCons">
+            </ExternalMaintenance>
    </extension>
 
 </plugin>
