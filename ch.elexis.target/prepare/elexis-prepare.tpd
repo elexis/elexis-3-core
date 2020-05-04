@@ -47,7 +47,6 @@ location "https://download.eclipse.org/e4/snapshots/org.eclipse.e4.tools/latest/
 }
 
 location "https://download.eclipse.org/eclipse/updates/4.15/" {
-	org.eclipse.equinox.ds
 	org.eclipse.equinox.p2.user.ui.feature.group
 	org.eclipse.equinox.executable.feature.group
 	org.eclipse.rcp.feature.group
@@ -62,7 +61,7 @@ location "https://download.eclipse.org/eclipse/updates/4.15/" {
 	org.eclipse.e4.tools
 	org.eclipse.e4.tools.compat
 	org.eclipse.e4.tools.services
-	org.eclipse.e4.tools.emf.ui	
+	org.eclipse.e4.tools.emf.ui
 	// Required plug-in 'org.eclipse.jdt.junit.runtime' could not be found.
 	org.eclipse.pde.core
 	org.eclipse.jdt.junit.runtime
@@ -83,6 +82,7 @@ location "https://download.eclipse.org/releases/2020-03/" {
 	ca.odell.glazedlists
 	org.jsoup
 	com.google.guava [21.0.0.v20170206-1425,21.0.0.v20170206-1425]
+	org.slf4j.api [1.7.30.v20200204-2150,1.7.30.v20200204-2150]
 }
 
 // keep this version in sync with ch.elexis.core.jpa.entities pom.xml static weaving version
@@ -136,18 +136,24 @@ location "https://download.eclipse.org/tools/orbit/downloads/drops/R202002241832
 	org.apache.poi.ooxml
 	org.apache.poi.ooxml.schemas
 	org.apache.xmlbeans
-	org.dom4j [1.6.1.v20190321-1528,1.6.1.v20190321-1528]
+	
 	org.apache.commons.dbcp
 	org.apache.commons.pool
 	osgi.enterprise
 	org.bouncycastle.bcprov
-	org.slf4j.api
 	org.slf4j.ext
 	org.slf4j.jcl
 	org.slf4j.jul
 	org.slf4j.log4j
 	org.slf4j.nop
 	javax.ws.rs
+	//  this org.dom4j build seems to run only with Java 10
+	//  thus we refer to the old version in the subsequent orbit repo
+	//	org.dom4j [1.6.1.v20190321-1528,1.6.1.v20190321-1528]
+}
+
+location "https://download.eclipse.org/tools/orbit/downloads/drops/R20180905201904/repository/" {
+	org.dom4j [1.6.1.v20170815-1500,1.6.1.v20170815-1500]
 }
 
 //location "https://download.elexis.info/mirror.4.elexis/release" {

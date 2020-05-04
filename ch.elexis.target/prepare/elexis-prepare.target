@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis" sequenceNumber="1588325140">
+<target name="Elexis" sequenceNumber="1588572455">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.swt.chromium.feature.feature.group" version="0.10.2.201908130308"/>
@@ -46,7 +46,6 @@
       <repository location="https://download.eclipse.org/e4/snapshots/org.eclipse.e4.tools/latest/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.equinox.ds" version="1.6.100.v20191001-1333"/>
       <unit id="org.eclipse.equinox.p2.user.ui.feature.group" version="2.4.700.v20200222-1600"/>
       <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.700.v20200207-2156"/>
       <unit id="org.eclipse.rcp.feature.group" version="4.15.0.v20200305-0155"/>
@@ -81,6 +80,7 @@
       <unit id="ca.odell.glazedlists" version="1.9.0.v201303080712"/>
       <unit id="org.jsoup" version="1.8.3.v20181012-1713"/>
       <unit id="com.google.guava" version="21.0.0.v20170206-1425"/>
+      <unit id="org.slf4j.api" version="1.7.30.v20200204-2150"/>
       <repository location="https://download.eclipse.org/releases/2020-03/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
@@ -130,12 +130,10 @@
       <unit id="org.apache.poi.ooxml" version="3.9.0.v201405241905"/>
       <unit id="org.apache.poi.ooxml.schemas" version="3.9.0.v201405241750"/>
       <unit id="org.apache.xmlbeans" version="2.3.0.v201605172150"/>
-      <unit id="org.dom4j" version="1.6.1.v20190321-1528"/>
       <unit id="org.apache.commons.dbcp" version="1.4.0.v201204271417"/>
       <unit id="org.apache.commons.pool" version="1.6.0.v201204271246"/>
       <unit id="osgi.enterprise" version="4.2.0.v201108120515"/>
       <unit id="org.bouncycastle.bcprov" version="1.64.0.v20191109-0815"/>
-      <unit id="org.slf4j.api" version="1.7.30.v20200204-2150"/>
       <unit id="org.slf4j.ext" version="1.7.30.v20200204-2150"/>
       <unit id="org.slf4j.jcl" version="1.7.2.v20130115-1340"/>
       <unit id="org.slf4j.jul" version="1.7.2.v20121108-1250"/>
@@ -143,6 +141,10 @@
       <unit id="org.slf4j.nop" version="1.7.2.v201212060727"/>
       <unit id="javax.ws.rs" version="2.1.1.v20200204-1659"/>
       <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20200224183213/repository/"/>
+    </location>
+    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.dom4j" version="1.6.1.v20170815-1500"/>
+      <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20180905201904/repository/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="javax.mail" version="1.4.0.v201005080615"/>
