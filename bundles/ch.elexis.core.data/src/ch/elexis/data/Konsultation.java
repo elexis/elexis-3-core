@@ -1164,6 +1164,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 * 
 	 * @param initialText
 	 *            the initial text to be set, or null if no initial text should be set.
+	 * @deprecated handled in command ch.elexis.core.ui.command.encounter.create
+	 * @since 3.8
 	 */
 	public static void neueKons(final String initialText){
 		Patient actPatient = ElexisEventDispatcher.getSelectedPatient();

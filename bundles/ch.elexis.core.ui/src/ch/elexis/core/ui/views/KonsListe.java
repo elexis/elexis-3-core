@@ -104,7 +104,7 @@ public class KonsListe extends ViewPart implements IRefreshable, ISaveablePart2 
 		liste.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		makeActions();
 		menus = new ViewMenus(getViewSite());
-		menus.createToolbar(GlobalActions.neueKonsAction, filterAction);
+		menus.createToolbar(filterAction);
 	//	ElexisEventDispatcher.getInstance().addListeners(eeli_fall, eeli_pat, eeli_kons);
 		getSite().getPage().addPartListener(udpateOnVisible);
 	}
