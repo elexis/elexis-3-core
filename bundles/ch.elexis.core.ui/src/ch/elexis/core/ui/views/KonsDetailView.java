@@ -117,8 +117,10 @@ import ch.rgw.tools.VersionedResource.ResourceItem;
  */
 public class KonsDetailView extends ViewPart
 		implements IActivationListener, ISaveablePart2, IUnlockable {
-	private static final String NO_CONS_SELECTED = Messages.KonsDetailView_NoConsSelected; // $NON-NLS-1$
+	
 	public static final String ID = "ch.elexis.Konsdetail"; //$NON-NLS-1$
+	
+	private static final String NO_CONS_SELECTED = Messages.KonsDetailView_NoConsSelected; // $NON-NLS-1$
 	public static final String CFG_VERTRELATION = "vertrelation"; //$NON-NLS-1$
 	public static final String CFG_HORIZRELATION = "horizrelation"; //$NON-NLS-1$
 	
@@ -479,18 +481,19 @@ public class KonsDetailView extends ViewPart
 		} : diagAndChargeSashWeights);
 		
 		makeActions();
-		ViewMenus menu = new ViewMenus(getViewSite());
+		IViewSite viewSite = getViewSite();
+		ViewMenus menu = new ViewMenus(viewSite);
 		menu.createMenu(versionDisplayAction, versionFwdAction, versionBackAction,
-			GlobalActions.neueKonsAction, GlobalActions.delKonsAction, GlobalActions.redateAction,
+			GlobalActions.delKonsAction, GlobalActions.redateAction,
 			assignStickerAction, purgeAction);
 		
 		sash.setWeights(sashWeights == null ? new int[] {
 			80, 20
 		} : sashWeights);
 		
-		menu.createToolbar(GlobalActions.neueKonsAction, saveAction);
+		menu.createToolbar(saveAction);
 		//		GlobalEventDispatcher.addActivationListener(this, this);
-		text.connectGlobalActions(getViewSite());
+		text.connectGlobalActions(viewSite);
 		adaptMenus();
 		// initialize with currently selected encounter
 		created = true;

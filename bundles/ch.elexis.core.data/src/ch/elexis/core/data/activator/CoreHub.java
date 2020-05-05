@@ -58,6 +58,7 @@ import ch.elexis.core.data.services.IStockService;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
@@ -139,7 +140,10 @@ public class CoreHub implements BundleActivator {
 	/** Der Initialisierer für die Voreinstellungen */
 	public static final CorePreferenceInitializer pin = new CorePreferenceInitializer();
 	
-	/** Die zentrale Zugriffskontrolle */
+	/** Die zentrale Zugriffskontrolle
+	 * @deprecated use {@link IAccessControlService}
+	 */	
+	@Deprecated
 	public static final AbstractAccessControl acl = new RoleBasedAccessControl();
 	
 	/** Stock Service **/

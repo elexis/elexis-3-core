@@ -347,6 +347,24 @@
                tooltip="Medikation-Verlauf als Pdf">
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.HistoryView">
+         <command
+               commandId="ch.elexis.core.ui.command.encounter.create"
+               icon="icon://IMG_NEW"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.Konsdetail">
+         <command
+               commandId="ch.elexis.core.ui.command.encounter.create"
+               icon="icon://IMG_NEW"
+               style="push">
+         </command>
+      </menuContribution>
    </extension>
       <extension
          point="org.eclipse.ui.preferencePages">

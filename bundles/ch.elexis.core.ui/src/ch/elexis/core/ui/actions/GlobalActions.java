@@ -133,7 +133,7 @@ public class GlobalActions {
 			showBlatt;
 	public static IAction printRoeBlatt;
 	public static IAction openFallaction, closeFallAction, filterAction, makeBillAction, planeRechnungAction;
-	public static RestrictedAction delKonsAction, delFallAction, reopenFallAction, neueKonsAction;
+	public static RestrictedAction delKonsAction, delFallAction, reopenFallAction;
 	public static LockedAction<Konsultation> moveBehandlungAction, redateAction;
 	public static IAction neuerFallAction;
 	
@@ -684,23 +684,6 @@ public class GlobalActions {
 			@Override
 			public Fall getTargetedObject(){
 				return (Fall) ElexisEventDispatcher.getSelected(Fall.class);
-			}
-		};
-		neueKonsAction = new RestrictedAction(AccessControlDefaults.KONS_CREATE,
-			Messages.GlobalActions_NewKons) {
-			{
-				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
-				setToolTipText(Messages.GlobalActions_NewKonsToolTip); //$NON-NLS-1$
-			}
-			
-			@Override
-			public void doRun(){
-				Konsultation.neueKons(null);
-				IPersistentObject kons = ElexisEventDispatcher.getSelected(Konsultation.class);
-				if (kons != null && kons.exists()) {
-					LocalLockServiceHolder.get().acquireLock(kons);
-					LocalLockServiceHolder.get().releaseLock(kons);
-				}
 			}
 		};
 		neuerFallAction = new Action(Messages.GlobalActions_NewCase) { //$NON-NLS-1$
