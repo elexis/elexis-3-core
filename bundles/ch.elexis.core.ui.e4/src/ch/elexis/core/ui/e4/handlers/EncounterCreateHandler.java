@@ -4,7 +4,6 @@ package ch.elexis.core.ui.e4.handlers;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.e4.core.di.annotations.Execute;
 
 import ch.elexis.core.ac.AccessControlDefaults;
@@ -35,8 +34,7 @@ public class EncounterCreateHandler extends RestrictedHandler {
 	
 	@Execute
 	public void execute(IContextService contextService, IConfigService configService,
-		IEncounterService encounterService, IBillingSystemService billingSystemService)
-		throws ExecutionException{
+		IEncounterService encounterService, IBillingSystemService billingSystemService) {
 		
 		// determine coverage
 		ICoverage coverage = contextService.getActiveCoverage().orElse(null);
