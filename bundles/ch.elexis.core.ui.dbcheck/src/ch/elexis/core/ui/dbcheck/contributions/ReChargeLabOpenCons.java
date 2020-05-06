@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
@@ -63,7 +64,7 @@ public class ReChargeLabOpenCons extends ExternalMaintenance {
 								String ealCode = ((LabItem) labResult.getItem()).getBillingCode();
 								if (ealCode != null && !ealCode.isEmpty()) {
 									Konsultation openKons = openKonsultationMap
-										.get(labResult.getObservationTime().toLocalDate());
+										.get(getLocalDate(labResult));
 									if (openKons != null) {
 										Optional<ICodeElement> matchingVerrechenbar =
 											codeElementService.loadFromString("EAL 2009", ealCode,
@@ -97,6 +98,17 @@ public class ReChargeLabOpenCons extends ExternalMaintenance {
 			deInitBillingService();
 		}
 		return sj.toString();
+	}
+	
+	private LocalDate getLocalDate(LabResult labResult){
+		if (labResult.getObservationTime() != null) {
+			return labResult.getObservationTime().toLocalDate();
+		} else if (labResult.getDateTime() != null) {
+			return labResult.getDateTime().toLocalDate();
+		}
+		LoggerFactory.getLogger(getClass())
+			.warn("No local date for lab result [" + labResult.getId() + "]");
+		return LocalDate.MIN;
 	}
 	
 	private boolean isAlreadyBilled(Konsultation openKons, ICodeElement iCodeElement){
