@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Core UI for e4
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: ch.elexis.core.ui.e4;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: medevit.at
+Bundle-Vendor: %Bundle-Vendor
 Export-Package: ch.elexis.core.ui.e4.locks,
  ch.elexis.core.ui.e4.util,
  ch.elexis.core.ui.e4.views.controls
