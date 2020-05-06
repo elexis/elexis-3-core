@@ -63,8 +63,9 @@ public class ReChargeLabOpenCons extends ExternalMaintenance {
 							if (mapping != null && mapping.isCharge()) {
 								String ealCode = ((LabItem) labResult.getItem()).getBillingCode();
 								if (ealCode != null && !ealCode.isEmpty()) {
-									Konsultation openKons = openKonsultationMap
-										.get(getLocalDate(labResult));
+									LocalDate labResultLocalDate = getLocalDate(labResult);
+									Konsultation openKons =
+										openKonsultationMap.get(labResultLocalDate);
 									if (openKons != null) {
 										Optional<ICodeElement> matchingVerrechenbar =
 											codeElementService.loadFromString("EAL 2009", ealCode,
@@ -82,8 +83,8 @@ public class ReChargeLabOpenCons extends ExternalMaintenance {
 										}
 									} else {
 										sj.add("No open cons to bill [" + ealCode + "] on date ["
-											+ labResult.getObservationTime().toLocalDate()
-											+ "] of pat [" + patient.getPatCode() + "]");
+											+ labResultLocalDate + "] of pat ["
+											+ patient.getPatCode() + "]");
 									}
 								}
 							}
