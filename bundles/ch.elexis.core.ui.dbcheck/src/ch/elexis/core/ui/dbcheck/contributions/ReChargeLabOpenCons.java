@@ -50,13 +50,13 @@ public class ReChargeLabOpenCons extends ExternalMaintenance {
 					List<LabResult> labResults = queryLabResults.execute();
 					for (LabResult labResult : labResults) {
 						if (labResult.getOrigin() != null && labResult.getItem() != null) {
-							LabMapping mapping = LabMapping.getByContactAndItemId(
-								labResult.getOrigin().getId(), labResult.getItem().getId());
+							LabMapping mapping = LabMapping.getByContactAndItemId(labResult.getOrigin().getId(),
+									labResult.getItem().getId());
 							if (mapping != null && mapping.isCharge()) {
 								String ealCode = ((LabItem) labResult.getItem()).getBillingCode();
 								if (ealCode != null && !ealCode.isEmpty()) {
-									Konsultation openKons = openKonsultationMap
-											.get(getLocalDate(labResult));
+									LocalDate labResultLocalDate = getLocalDate(labResult);
+									Konsultation openKons = openKonsultationMap.get(labResultLocalDate);
 									if (openKons != null) {
 										Optional<ICodeElement> matchingVerrechenbar = codeElementService
 												.createFromString("EAL 2009", ealCode, getContext(openKons));
@@ -66,9 +66,8 @@ public class ReChargeLabOpenCons extends ExternalMaintenance {
 											}
 										}
 									} else {
-										sj.add("No open cons to bill [" + ealCode + "] on date ["
-												+ labResult.getObservationTime().toLocalDate() + "] of pat ["
-												+ patient.getPatCode() + "]");
+										sj.add("No open cons to bill [" + ealCode + "] on date [" + labResultLocalDate
+												+ "] of pat [" + patient.getPatCode() + "]");
 									}
 								}
 							}
