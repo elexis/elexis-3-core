@@ -10,7 +10,7 @@ import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.ILoginContributor;
 
-@Component(immediate = true)
+@Component(property = "id=login.dialog")
 public class LoginDialogLoginContributor implements ILoginContributor {
 	
 	@Override

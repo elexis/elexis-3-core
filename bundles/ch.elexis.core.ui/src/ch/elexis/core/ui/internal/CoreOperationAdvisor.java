@@ -11,8 +11,6 @@
 package ch.elexis.core.ui.internal;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Comparator;
-import java.util.List;
 
 import javax.security.auth.login.LoginException;
 
@@ -25,8 +23,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,8 +49,11 @@ import ch.elexis.data.Anwender;
 @Component
 public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 	
-	@Reference(cardinality = ReferenceCardinality.AT_LEAST_ONE, policyOption = ReferencePolicyOption.GREEDY)
-	private List<ILoginContributor> loginServices;
+	@Reference(target = "(id=login.envvars)")
+	private ILoginContributor loginEnv;
+	
+	@Reference(target = "(id=login.dialog)")
+	private ILoginContributor loginDialog;
 	
 	public String initialPerspectiveString;
 	private Logger log = LoggerFactory.getLogger(CoreOperationAdvisor.class);
@@ -161,18 +160,20 @@ public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 		CoreHub.reconfigureServices();
 		CoreHub.logoffAnwender();
 		
-		loginServices.sort(Comparator.comparingInt(ILoginContributor::getPriority).reversed());
+		// try login env first then show dialog 
 		IUser user = null;
-		
-		for (ILoginContributor loginService : loginServices) {
+		try {
+			user = loginEnv.performLogin(shell);
+		} catch (LoginException le) {
+			log.warn("Unable to login with loginService [{}]: {} - skipping",
+				loginEnv.getClass().getName(), le.getMessage(), le);
+		}
+		if (user == null) {
 			try {
-				user = loginService.performLogin(shell);
-				if (user != null) {
-					break;
-				}
+				user = loginDialog.performLogin(shell);
 			} catch (LoginException le) {
 				log.warn("Unable to login with loginService [{}]: {} - skipping",
-					loginService.getClass().getName(), le.getMessage(), le);
+					loginDialog.getClass().getName(), le.getMessage(), le);
 			}
 		}
 		
