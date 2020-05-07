@@ -23,7 +23,7 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
  * 
  * @since 3.8 extracted from CoreOperationAdvisor
  */
-@Component(immediate = true)
+@Component(property = "id=login.envvars")
 public class EnvVarsLoginContributor implements ILoginContributor {
 	
 	@Override

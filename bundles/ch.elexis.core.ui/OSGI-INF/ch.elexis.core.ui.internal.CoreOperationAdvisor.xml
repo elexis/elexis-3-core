@@ -3,6 +3,7 @@
    <service>
       <provide interface="ch.elexis.core.data.extension.ICoreOperationAdvisor"/>
    </service>
-   <reference cardinality="1..n" field="loginServices" interface="ch.elexis.core.services.ILoginContributor" name="loginServices" policy-option="greedy"/>
+   <reference cardinality="1..1" field="loginDialog" interface="ch.elexis.core.services.ILoginContributor" name="loginDialog" target="(id=login.dialog)"/>
+   <reference cardinality="1..1" field="loginEnv" interface="ch.elexis.core.services.ILoginContributor" name="loginEnv" target="(id=login.envvars)"/>
    <implementation class="ch.elexis.core.ui.internal.CoreOperationAdvisor"/>
 </scr:component>
