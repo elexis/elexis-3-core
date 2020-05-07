@@ -47,7 +47,7 @@ public class ICoverageBuilder extends AbstractBuilder<ICoverage> {
 		this.patient = patient;
 		
 		object = modelService.create(ICoverage.class);
-		object.setDateFrom(LocalDate.now());
+		object.setPatient(patient);
 		object.setDateFrom(LocalDate.now());
 		
 		String label = getDefaultCoverageLabel(configService);
