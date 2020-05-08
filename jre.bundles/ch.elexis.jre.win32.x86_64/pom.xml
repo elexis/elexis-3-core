@@ -13,11 +13,12 @@
   <packaging>eclipse-plugin</packaging>
 
   <properties>
+    <realJdkVersion>jdk8u252-b09.1</realJdkVersion>
     <download.jre_type>jre_x64_windows</download.jre_type>
-    <download.type>zip</download.type>
-    <download.md5>7c103d29b0a77914b41e137d0206c7ab</download.md5>
+                                                                                      <download.file>OpenJDK8U-jre_x64_windows_hotspot_8u252b09.zip</download.file>
+    <download.url>https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u252-b09.1/OpenJDK8U-jre_x64_windows_hotspot_8u252b09.zip</download.url>
+    <download.sha256>582f58290c66d6fb7e437a92a91695d25386e2497f684715e6e1b8702a69a804</download.sha256>
   </properties>
-
   <build>
     <plugins>
       <plugin>
