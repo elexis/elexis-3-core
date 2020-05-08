@@ -167,7 +167,6 @@ location "https://download.eclipse.org/tools/orbit/downloads/drops/R201809052019
 //}
 
 location "https://download.elexis.info/elexis-server/elexis-server-dependencies" {
-	javax.mail
 	// java 11
 	// javax.transaction
 	javax.transaction-api [1.3.0,1.3.0]
