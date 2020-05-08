@@ -32,7 +32,7 @@
                     <target>
                         <exec executable="/bin/bash" failonerror="true">
                           <arg value="${project.basedir}/start_h2_first_linux_x86_64.sh" />
-                          <arg value="${project.build.directory}/products/ch.elexis.core.application.ElexisApp/${classifier}/Elexis3" />
+                          <arg value="${project.build.directory}/products/Elexis3/${classifier}/Elexis3" />
                         </exec>
                       </target>
                     </configuration>
@@ -78,7 +78,7 @@
 				<configuration>
 					<products>
 						<product>
-							<id>ch.elexis.core.application.ElexisApp</id>
+              <id>Elexis3</id> <!-- Name of final EXE/zip file -->
 							<attachId>ElexisApp</attachId>
 							<rootFolder />
 							<rootFolders>

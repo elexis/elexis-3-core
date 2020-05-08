@@ -14,7 +14,7 @@
 		</repository>
 	</repositories>
 	<properties>
-		<tycho.version>1.6.0</tycho.version>
+		<tycho.version>1.7.0</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
 		<git.target.branch>3.8</git.target.branch>
@@ -49,6 +49,7 @@
 	<description>Elexis-Server for headless operation</description>
 
 	<modules>
+		<module>jre.bundles</module>
 		<module>ch.elexis.target</module>
 		<module>bundles</module>
 		<module>features</module>
