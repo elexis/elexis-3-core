@@ -2,7 +2,8 @@ package ch.elexis.core.ui.documents.handler;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
@@ -196,16 +197,16 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 		File file, int eventType){
 		DocumentsMetaDataDialog documentsMetaDataDialog =
 			new DocumentsMetaDataDialog(document, shell);
-		if (documentsMetaDataDialog.open() == Dialog.OK) {
-			try {
-				IDocument savedDocument = DocumentStoreServiceHolder.getService()
-					.saveDocument(document, file != null ? new FileInputStream(file) : null);
+		if (documentsMetaDataDialog.open() == Dialog.OK && file != null) {
+			try (InputStream fin = new FileInputStream(file)) {
+				IDocument savedDocument =
+					DocumentStoreServiceHolder.getService().saveDocument(document, fin);
 				ElexisEventDispatcher.getInstance().fire(new ElexisEvent(savedDocument,
 					IDocument.class, eventType, ElexisEvent.PRIORITY_NORMAL));
 				// publish changes
 				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, document);
 				return Optional.of(savedDocument);
-			} catch (FileNotFoundException e) {
+			} catch (IOException e) {
 				logger.error("file not found", e);
 				SWTHelper.showError(Messages.DocumentView_importErrorCaption,
 					Messages.DocumentView_importErrorText2);
