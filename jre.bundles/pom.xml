@@ -85,7 +85,7 @@
                         <equals arg1="${download.jre_type}" arg2="jre_x64_mac"/>
                         <then>
                           <untar src="${project.basedir}/../downloaded/${download.file}" dest="${project.build.directory}/downloads/" compression="gzip" />
-                          <echo message="Move ${project.build.directory}/downloads/${jreDirectoryInJdk} for MacOSX into ${project.build.directory}/downloads/Contents"/>
+                          <echo message="Move jre for MacOSX into ${project.build.directory}/downloads/${jre.folder}/Contents"/>
                           <move file="${project.build.directory}/downloads/${jreDirectoryInJdk}/Contents" tofile="${project.build.directory}/downloads/${jre.folder}/Contents" />
                         </then>
                         <else>

@@ -15,6 +15,7 @@
   <properties>
     <download.jre_type>jre_x64_mac</download.jre_type>
     <download.type>tar.gz</download.type>
+    <jre.folder></jre.folder>
     <realJdkVersion>jdk8u252-b09-1</realJdkVersion>
                                                                                       <download.file>OpenJDK8U-jre_x64_mac_hotspot_8u252b09.tar.gz</download.file>
     <download.url>https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u252-b09.1/OpenJDK8U-jre_x64_mac_hotspot_8u252b09.tar.gz</download.url>
