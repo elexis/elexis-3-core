@@ -22,7 +22,11 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -36,6 +40,7 @@ import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.services.ILoginContributor;
 import ch.elexis.core.ui.ILoginNews;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -49,12 +54,17 @@ public class LocalUserLoginDialog extends TitleAreaDialog {
 	private boolean hasUsers;
 	private IUser user;
 	
-	public LocalUserLoginDialog(Shell parentShell){
+	private ILoginContributor elexisEnvironmentLoginContributor;
+	
+	public LocalUserLoginDialog(Shell parentShell,
+		ILoginContributor elexisEnvironmentLoginContributor){
 		super(parentShell);
 		
 		Query<Anwender> qbe = new Query<Anwender>(Anwender.class);
 		List<Anwender> list = qbe.execute();
 		hasUsers = (list.size() > 1);
+		
+		this.elexisEnvironmentLoginContributor = elexisEnvironmentLoginContributor;
 	}
 	
 	@Override
@@ -62,8 +72,8 @@ public class LocalUserLoginDialog extends TitleAreaDialog {
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ret.setLayout(new GridLayout(2, false));
-		Label lu = new Label(ret, SWT.NONE);
 		
+		Label lu = new Label(ret, SWT.NONE);
 		lu.setText(Messages.LoginDialog_0);
 		usr = new Text(ret, SWT.BORDER);
 		usr.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -73,6 +83,20 @@ public class LocalUserLoginDialog extends TitleAreaDialog {
 		if (hasUsers == false) {
 			usr.setText("Administrator"); //$NON-NLS-1$
 			pwd.setText("admin"); //$NON-NLS-1$
+		}
+		
+		if (elexisEnvironmentLoginContributor != null) {
+			Button btnLoginElexisEnv = new Button(ret, SWT.NONE);
+			GridData gd_btnLoginElexisEnv = new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
+			btnLoginElexisEnv.setLayoutData(gd_btnLoginElexisEnv);
+			btnLoginElexisEnv.setText("Elexis-Environment Login");
+			btnLoginElexisEnv.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e){
+					setReturnCode(302);
+					close();
+				}
+			});
 		}
 		
 		@SuppressWarnings("unchecked")
