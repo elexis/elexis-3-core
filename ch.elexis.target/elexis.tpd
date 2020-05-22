@@ -57,7 +57,6 @@ location "https://download.elexis.info/elexis/3.8/p2/target/" {
 	
 	osgi.enterprise
 	jakarta.persistence
-	javax.mail
 	org.eclipse.persistence.asm
 	org.eclipse.persistence.antlr
 	org.eclipse.persistence.core
@@ -113,6 +112,9 @@ location "https://download.elexis.info/elexis/3.8/p2/target/" {
 	org.apache.poi.ooxml.schemas
 	org.apache.xmlbeans
 	org.dom4j
+	com.fasterxml.jackson.core.jackson-core
+	com.fasterxml.jackson.core.jackson-databind
+	com.fasterxml.jackson.core.jackson-annotations
 
 	// java 11
 	com.sun.activation.javax.activation [1.2.0,1.2.0]
