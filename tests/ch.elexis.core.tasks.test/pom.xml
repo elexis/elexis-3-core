@@ -156,11 +156,6 @@
 						</dependency>
 						<dependency>
 							<type>eclipse-plugin</type>
-							<artifactId>javax.mail</artifactId>
-							<version>0.0.0</version>
-						</dependency>
-						<dependency>
-							<type>eclipse-plugin</type>
 							<artifactId>jakarta.persistence</artifactId>
 							<version>0.0.0</version>
 						</dependency>
