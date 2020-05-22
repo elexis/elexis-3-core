@@ -427,13 +427,17 @@ public class CoreHub implements BundleActivator {
 			.fire(new ElexisEvent(newMandant, Mandant.class, ElexisEvent.EVENT_MANDATOR_CHANGED));
 	}
 	
+	/**
+	 * 
+	 * @param user
+	 * @return
+	 * @since 3.8 a Kontakt does not have to formally declare IS_USER anymore, any Kontakt can have
+	 *        user config entries
+	 */
 	public static Settings getUserSetting(Kontakt user){
-		if (StringConstants.ONE.equals(user.get(Kontakt.FLD_IS_USER))) {
-			Settings settings = new SqlSettings(PersistentObject.getConnection(), "USERCONFIG",
-				"Param", "Value", "UserID=" + user.getWrappedId());
-			return settings;
-		}
-		return null;
+		Settings settings = new SqlSettings(PersistentObject.getConnection(), "USERCONFIG", "Param",
+			"Value", "UserID=" + user.getWrappedId());
+		return settings;
 	}
 	
 	public Bundle getBundle(){

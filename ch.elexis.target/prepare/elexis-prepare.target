@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis" sequenceNumber="1588930283">
+<target name="Elexis" sequenceNumber="1589879850">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.swt.chromium.feature.feature.group" version="0.10.2.201908130308"/>
       <repository location="https://dl.maketechnology.io/chromium-swt/rls/repository"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="com.make.chromium.cef.feature.feature.group" version="0.4.0.201908130254"/>
+      <unit id="com.make.chromium.cef.feature.feature.group" version="0.4.0.202005172227"/>
       <repository location="https://dl.maketechnology.io/chromium-cef/rls/repository"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
@@ -130,6 +130,9 @@
       <unit id="org.apache.poi.ooxml" version="3.9.0.v201405241905"/>
       <unit id="org.apache.poi.ooxml.schemas" version="3.9.0.v201405241750"/>
       <unit id="org.apache.xmlbeans" version="2.3.0.v201605172150"/>
+      <unit id="com.fasterxml.jackson.core.jackson-core" version="2.9.9.v20190906-1522"/>
+      <unit id="com.fasterxml.jackson.core.jackson-databind" version="2.9.93.v20190906-1522"/>
+      <unit id="com.fasterxml.jackson.core.jackson-annotations" version="2.9.9.v20190906-1522"/>
       <unit id="org.apache.commons.dbcp" version="1.4.0.v201204271417"/>
       <unit id="org.apache.commons.pool" version="1.6.0.v201204271246"/>
       <unit id="osgi.enterprise" version="4.2.0.v201108120515"/>
