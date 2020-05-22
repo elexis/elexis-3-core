@@ -8,6 +8,16 @@ public interface IElexisEnvironmentService {
 	public static final String CFG_EE_HOSTNAME = "EE_HOSTNAME";
 	
 	/**
+	 * The Open-Id secret to use for the elexis rcp client
+	 */
+	public static final String EE_RCP_OPENID_SECRET = "EE_RCP_OPENID_SECRET";
+	
+	/**
+	 * The RSA public key used by the Keycloak ElexisEnvironment realm
+	 */
+	public static final String EE_KC_REALM_PUBLIC_KEY = "EE_KC_REALM_PUBLIC_KEY";
+	
+	/**
 	 * @return the entry hostname of the elexis-environment
 	 */
 	public String getHostname();

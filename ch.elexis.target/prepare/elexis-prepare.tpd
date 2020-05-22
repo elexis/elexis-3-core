@@ -137,6 +137,10 @@ location "https://download.eclipse.org/tools/orbit/downloads/drops/R202002241832
 	org.apache.poi.ooxml.schemas
 	org.apache.xmlbeans
 	
+	com.fasterxml.jackson.core.jackson-core
+	com.fasterxml.jackson.core.jackson-databind
+	com.fasterxml.jackson.core.jackson-annotations
+	
 	org.apache.commons.dbcp
 	org.apache.commons.pool
 	osgi.enterprise
