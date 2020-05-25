@@ -38,13 +38,7 @@ public class ElexisEnvironmentLoginContributor implements ILoginContributor {
 		// TODO what if clientSecret not yet set?
 		String realmPublicKey =
 			elexisEnvironmentService.getProperty(IElexisEnvironmentService.EE_KC_REALM_PUBLIC_KEY);
-		
-		//		final String apiSecret = "ad03191d-63ee-4c94-8be0-d5f2ae3d049a";
-		//		final String baseUrl = "https://ee.medevit.at/keycloak";
-		
-//		final String realmPublicKey =
-//			"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4579OpoV09ysbmM3Yuwm5TflaM1BszUS8YuCI8B7BgIwwewvecpruUJdFeEJ3HF6pQJh90aApQ+h+P3M45wFY9ZjM3bJNnoMe+ydxPfwZZSN7WgXc+slRzAS1TtPmP8Hc5hbimry39odLQKIpl5ZMVBQ1lqmDCFOyj+Kug1BNVWoRk3r3S9VNhgZivviqKW8ti2qJZ+Zv8liiS4s0dVEU8eS0D70TUQ8NyI9QsR7tAbGeihX70x4OwGD6fst4DjDKsY62DYfjF4sMWfWxYLZAdhwY4xD/YXl2Ylz+mrhFHEAB+k00X1Td4v929Df8uonrtuuY7jTjGRruMkASfTjuQIDAQAB";
-		
+
 		ElexisEnvironmentLoginDialog loginTitleAreaDialog =
 			new ElexisEnvironmentLoginDialog((Shell) shell, clientSecret, baseUrl, realmPublicKey);
 		loginTitleAreaDialog.open();
