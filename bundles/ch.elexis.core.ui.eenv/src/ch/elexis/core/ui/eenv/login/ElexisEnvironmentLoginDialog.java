@@ -141,6 +141,8 @@ public class ElexisEnvironmentLoginDialog extends Dialog {
 				(OpenIdOAuth2AccessToken) oauthService.getAccessToken(code);
 			Jws<Claims> jwsClaim = jwtParser.parseClaimsJws(accessToken.getAccessToken());
 			
+			logger.debug("accessToken [{}]", accessToken.getAccessToken());
+			
 			String preferredUsername = jwsClaim.getBody().get("preferred_username", String.class);
 			String name = jwsClaim.getBody().get("given_name", String.class);
 			String familyName = jwsClaim.getBody().get("family_name", String.class);
