@@ -196,8 +196,10 @@ public class ElexisEnvironmentLoginDialog extends Dialog {
 	}
 	
 	private void validateAssignedContactId(String assignedContactId){
-		Optional<IContact> assignedContact =
-			CoreModelServiceHolder.get().load(assignedContactId, IContact.class);
+		Optional<IContact> assignedContact = Optional.empty();
+		if (assignedContactId != null) {
+			assignedContact = CoreModelServiceHolder.get().load(assignedContactId, IContact.class);
+		}
 		if (!assignedContact.isPresent()) {
 			throw new IllegalStateException(
 				"Invalid assignedContactId [" + assignedContactId + "]");
