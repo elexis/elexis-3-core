@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,7 @@ import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
+import ch.rgw.tools.TimeTool;
 
 @Component
 public class InvoiceService implements IInvoiceService {
@@ -295,5 +297,18 @@ public class InvoiceService implements IInvoiceService {
 			}
 		}
 		return false;
+	}
+	
+	@Override
+	public String getCombinedId(IInvoice invoice){
+		IPatient patient = invoice.getCoverage().getPatient();
+		String pid;
+		if (ConfigServiceHolder.get().get("PatIDMode", "number").equals("number")) {
+			pid = StringUtils.leftPad(patient.getCode(), 6, '0');
+		} else {
+			pid = new TimeTool(patient.getDateOfBirth()).toString(TimeTool.DATE_COMPACT);
+		}
+		String nr = StringUtils.leftPad(invoice.getNumber(), 6, '0');
+		return pid + nr;
 	}
 }
