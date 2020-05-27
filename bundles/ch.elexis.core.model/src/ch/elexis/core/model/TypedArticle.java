@@ -47,6 +47,8 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 			} else if (subTyp == ArticleSubTyp.ADDITIVE) {
 				return "406";
 			}
+		} else if (typ == ArticleTyp.MIGEL) {
+			return "452";
 		}
 		return IArticle.super.getCodeSystemCode();
 	}

@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.InvoiceState;
 import ch.rgw.tools.Result;
 
@@ -52,4 +53,13 @@ public interface IInvoiceService {
 	 * @return
 	 */
 	public boolean hasStornoBeforeDate(IInvoice invoice, LocalDate date);
+	
+	/**
+	 * Get a unique id by combining {@link IPatient} code and {@link IInvoice} number for the
+	 * invoice. Patient code and invoice number are padded with 0 characters, result will have 12
+	 * characters.
+	 * 
+	 * @return
+	 */
+	public String getCombinedId(IInvoice invoice);
 }

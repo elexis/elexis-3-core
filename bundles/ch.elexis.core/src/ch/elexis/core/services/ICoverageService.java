@@ -6,7 +6,17 @@ import ch.elexis.core.model.ICoverage;
 public interface ICoverageService {
 	
 	public static enum Tiers {
-			PAYANT, GARANT
+			PAYANT("TP"), GARANT("TG");
+		
+		private String shortName;
+		
+		private Tiers(String string){
+			this.shortName = string;
+		}
+		
+		public String getShortName(){
+			return shortName;
+		}
 	};
 	
 	/**
