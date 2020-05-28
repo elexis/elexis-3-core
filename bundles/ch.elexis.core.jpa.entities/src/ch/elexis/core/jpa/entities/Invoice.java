@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -88,15 +89,15 @@ public class Invoice extends AbstractEntityWithId
 	@Column(length = 8, name = "Betrag")
 	protected String amount;
 
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "rechnungid")
 	private List<VerrechnetCopy> invoiceBilled = new ArrayList<>();
 	
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "rechnungsid")
 	private List<Behandlung> encounters = new ArrayList<>();
 	
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "rechnungsid")
 	private List<Zahlung> payments = new ArrayList<>();
 	

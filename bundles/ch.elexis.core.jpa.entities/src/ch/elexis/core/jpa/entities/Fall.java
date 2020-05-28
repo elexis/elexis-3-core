@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -90,7 +91,7 @@ public class Fall extends AbstractEntityWithId
 	@Column(length = 25)
 	private String versNummer;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "fall")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "fall", cascade = CascadeType.REFRESH)
 	protected List<Behandlung> consultations = new ArrayList<>();
 
 	public String getBetriebsNummer() {
