@@ -2,12 +2,10 @@ package ch.elexis.core.jpa.entities;
 
 import java.time.LocalDate;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
@@ -55,7 +53,6 @@ public class Termin extends AbstractEntityWithId implements EntityWithId, Entity
 	@Column(length = 4)
 	private String dauer;
 
-	@Basic(fetch = FetchType.LAZY)
 	@Lob()
 	private String grund;
 
@@ -80,14 +77,12 @@ public class Termin extends AbstractEntityWithId implements EntityWithId, Entity
 	@Column(length = 10)
 	private String flags;
 
-	@Basic(fetch = FetchType.LAZY)
 	@Lob()
 	private String extension;
 
 	@Column(length = 50)
 	private String linkgroup;
 
-	@Basic(fetch = FetchType.LAZY)
 	@Lob()
 	private String statusHistory;
 

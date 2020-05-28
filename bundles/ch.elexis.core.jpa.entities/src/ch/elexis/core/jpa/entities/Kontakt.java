@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -80,11 +79,9 @@ public class Kontakt extends AbstractEntityWithId
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
 	
-	@Basic(fetch = FetchType.LAZY)
 	@Lob
 	protected byte[] extInfo;
 	
-	@Basic(fetch = FetchType.LAZY)
 	@Lob()
 	@Column(name = "allergien")
 	protected String allergies;
@@ -188,7 +185,6 @@ public class Kontakt extends AbstractEntityWithId
 	@Column(length = 6, name = "plz")
 	protected String zip;
 
-	@Basic(fetch = FetchType.LAZY)
 	@Lob()
 	@Column(name = "risiken")
 	protected String risk;
@@ -196,7 +192,6 @@ public class Kontakt extends AbstractEntityWithId
 	@Column(length = 255, name = "strasse")
 	protected String street;
 
-	@Basic(fetch = FetchType.LAZY)
 	@Lob()
 	protected byte[] sysAnamnese;
 

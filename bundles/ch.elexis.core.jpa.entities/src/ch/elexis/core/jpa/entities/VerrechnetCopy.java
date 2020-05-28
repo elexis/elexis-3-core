@@ -1,11 +1,9 @@
 package ch.elexis.core.jpa.entities;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -81,7 +79,6 @@ public class VerrechnetCopy extends AbstractEntityWithId
 	@JoinColumn(name = "userID")
 	private Kontakt user;
 
-	@Basic(fetch = FetchType.LAZY)
 	@Lob
 	private byte[] detail;
 

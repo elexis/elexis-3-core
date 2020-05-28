@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -56,7 +55,6 @@ public class Invoice extends AbstractEntityWithId
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
 	
-	@Basic(fetch = FetchType.LAZY)
 	@Lob
 	protected byte[] extInfo;
 	

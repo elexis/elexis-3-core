@@ -9,7 +9,6 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -79,7 +78,6 @@ public class Brief extends AbstractEntityWithId implements EntityWithId, EntityW
 	@PrimaryKeyJoinColumn
 	protected Heap content;
 
-	@Basic(fetch = FetchType.LAZY)
 	@Lob()
 	protected String path;
 
