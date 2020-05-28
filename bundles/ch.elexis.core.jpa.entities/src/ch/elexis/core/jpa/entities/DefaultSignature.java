@@ -1,11 +1,9 @@
 package ch.elexis.core.jpa.entities;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
@@ -33,7 +31,6 @@ public class DefaultSignature extends AbstractEntityWithId
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
 	
-	@Basic(fetch = FetchType.LAZY)
 	@Lob
 	protected byte[] extInfo;
 	
@@ -58,7 +55,6 @@ public class DefaultSignature extends AbstractEntityWithId
 	@Column(length = 10)
 	private String night;
 
-	@Basic(fetch = FetchType.LAZY)
 	@Lob()
 	private String comment;
 	

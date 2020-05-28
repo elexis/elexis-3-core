@@ -3,7 +3,6 @@ package ch.elexis.core.jpa.entities;
 import java.util.Collection;
 import java.util.HashSet;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -44,7 +43,6 @@ public class User extends AbstractEntityWithId
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
 	
-	@Basic(fetch = FetchType.LAZY)
 	@Lob
 	protected byte[] extInfo;
 	
@@ -70,7 +68,6 @@ public class User extends AbstractEntityWithId
 	@Column(name = "allow_external")
 	protected boolean allowExternal;
 	
-	@Basic(fetch = FetchType.LAZY)
 	@Lob()
 	protected String keystore;
 	
