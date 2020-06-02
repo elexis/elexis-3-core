@@ -459,7 +459,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 				value = evaluteWithOrderContext(orders.get(0));
 			}
 			if (value == null || value.equals("?formel?")) { //$NON-NLS-1$
-				TimeTool time = getTransmissionTime();
+				TimeTool time = getObservationTime();
 				if (time == null) {
 					time = getDateTime();
 				}
