@@ -1,6 +1,5 @@
 package ch.elexis.core.services;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -62,12 +61,9 @@ public class LabService implements ILabService {
 				evaluate(labOrder.get().getItem(), labResult.getPatient(), labresults);
 		}
 		if (evaluationResult == null || evaluationResult.equals("?formel?")) { //$NON-NLS-1$
-			LocalDateTime time = labResult.getTransmissionTime();
-			if (time == null) {
-				time = labResult.getObservationTime();
-			}
 			evaluationResult =
-				evaluate(labResult.getItem(), labResult.getPatient(), new TimeTool(time));
+				evaluate(labResult.getItem(), labResult.getPatient(),
+					new TimeTool(labResult.getObservationTime()));
 		}
 		
 		if (evaluationResult == null || "".equals(evaluationResult) //$NON-NLS-1$
