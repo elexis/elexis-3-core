@@ -25,7 +25,7 @@ stage 'Build'
 // to allow specifying another host instead of localhost to reenable -Delexis.run.dbtests=true
 
 wrap([$class: 'Xvfb']) {
-  sh "mvn clean install -Drepo_variant=${env.VARIANT} -Dtycho.localArtifacts=ignore -Pall-archs"
+  sh "mvn clean install -Drepo_variant=${env.VARIANT} -Dtycho.localArtifacts=ignore"
 }
 
 step([$class: 'ArtifactArchiver', artifacts:  "*p2site/target/repository/**", fingerprint: true])

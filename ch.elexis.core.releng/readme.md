@@ -11,7 +11,7 @@ This project contains utilities needed for the release engineering for elexis-3.
 * Java 8
 * Maven >= 3.3 (We are using 3.5.2)
 * As IDE we use Eclipse Oxygen, for the target we use Eclipse Neon
-* A fast way to setup a working development environment for Elexis 3 is documented in [ch.elexis.sdk](/ch.elexis.sdk/) 
+* A fast way to setup a working development environment for Elexis 3 is documented in [ch.elexis.sdk](/ch.elexis.sdk/)
 
 ## Building using the Eclipse IDE
 
@@ -24,7 +24,7 @@ This project contains utilities needed for the release engineering for elexis-3.
 ## headless build (aka command line)
 
 * `export JAVA_HOME=/opt/java-oracle/1.8.0_144` # Set your Java home
-* ` mvn clean verify -V -DskipTests=true -Dmaven.javadoc.skip=true all-archs` # compiles and create packages
+* ` mvn clean verify -V -DskipTests=true -Dmaven.javadoc.skip=true` # compiles and create packages
 
 This creates directories like `ch.elexis.core.releng/product/target/products/ch.elexis.core.application.product/linux/gtk/x86_64` where you find the executable `Elexis 3` application.
 
@@ -70,8 +70,8 @@ Because of limitations in the Windows environment, be aware that the splash bmp 
 
 * I use of then git option `--dry-run` before doing a push to double check, the opertions that will be performed
 
-* When merging a branch or when others committed changes before I pushed my commits I 
-	
+* When merging a branch or when others committed changes before I pushed my commits I
+
 	git pull		# get latest commits
 	git rebase		# ensure that my commits come at the end, this avoids like merged changes from ..
 	git push 		# now this should work without problems
@@ -80,7 +80,7 @@ Because of limitations in the Windows environment, be aware that the splash bmp 
 
 	git tag release/3.1.4
 	git push --tags
-	
+
 * To remove local and remote tags
 
 	export tags_to_delete=`git tag -l | grep J-E3C`
