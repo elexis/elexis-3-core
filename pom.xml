@@ -1,4 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ch.elexis.core</groupId>
@@ -49,8 +49,8 @@
 	<description>Elexis-Server for headless operation</description>
 
 	<modules>
-		<module>jre.bundles</module>
 		<module>ch.elexis.target</module>
+		<module>jre.bundles</module>
 		<module>bundles</module>
 		<module>features</module>
 		<module>tests</module>
@@ -68,25 +68,6 @@
 			<properties>
 				<classifier>win32/win32/x86_64</classifier>
 			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>target-platform-configuration</artifactId>
-						<version>${tycho.version}</version>
-						<configuration>
-							<pomDependencies>consider</pomDependencies>
-							<environments>
-								<environment>
-									<os>win32</os>
-									<ws>win32</ws>
-									<arch>x86_64</arch>
-								</environment>
-							</environments>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
 		</profile>
 		<profile>
 			<id>linux-x86_64</id>
@@ -99,26 +80,6 @@
 			<properties>
 				<classifier>linux/gtk/x86_64</classifier>
 			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>target-platform-configuration</artifactId>
-						<version>${tycho.version}</version>
-						<configuration>
-							<executionEnvironment>JavaSE-1.8</executionEnvironment>
-							<pomDependencies>consider</pomDependencies>
-							<environments>
-								<environment>
-									<os>linux</os>
-									<ws>gtk</ws>
-									<arch>x86_64</arch>
-								</environment>
-							</environments>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
 		</profile>
 		<profile>
 			<id>macosx</id>
@@ -131,35 +92,10 @@
 				<classifier>macosx/cocoa/x86_64</classifier>
 				<os-jvm-flags>-XstartOnFirstThread</os-jvm-flags>
 			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>target-platform-configuration</artifactId>
-						<version>${tycho.version}</version>
-						<configuration>
-							<pomDependencies>consider</pomDependencies>
-							<environments>
-								<environment>
-									<os>macosx</os>
-									<ws>cocoa</ws>
-									<arch>x86_64</arch>
-								</environment>
-							</environments>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
 		</profile>
-		<profile>
-			<id>all-archs</id>
-			<activation>
-				<property>
-					<name>all-archs</name>
-				</property>
-			</activation>
-			<build>
-				<plugins>
+	</profiles>
+	<build>
+		<plugins>
 					<plugin>
 						<groupId>org.eclipse.tycho</groupId>
 						<artifactId>target-platform-configuration</artifactId>
@@ -185,12 +121,6 @@
 							</environments>
 						</configuration>
 					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
-	<build>
-		<plugins>
 			<plugin>
 				<!--https://books.sonatype.com/mcookbook/reference/ch02s03.html#ex-groovy-script-ex -->
 				<groupId>org.codehaus.gmavenplus</groupId>

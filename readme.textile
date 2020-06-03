@@ -24,7 +24,7 @@ h3. Maven based build
 You need Java 1.8+. Maven >= 3.3. Then you should be able to generate the application and p2 update site using the following calls:
 
 @git clone https://github.com/elexis/elexis-3-core@
-@mvn -V clean verify  -Dtycho.localArtifacts=ignore -Dmaven.test.skip=true -P all-archs@
+@mvn -V clean verify  -Dtycho.localArtifacts=ignore -Dmaven.test.skip=true@
 
 Explanation of the used options
 * -V: emits version of Java, Maven, GUI-Toolkit, Architecture. Handy when you ask a problem
@@ -32,17 +32,16 @@ Explanation of the used options
 * verify: Compile, test and build a P2-site including products. But does NOT install maven artefacts
 * -Dtycho.localArtifacts=ignore: Do not use any locally built maven artefacts
 * -Dmaven.test.skip=true: Skip unit tests (Use it only if you want to speed up the build)
-* -P all-archs: This a work-around for bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=491951. We will get rid of around April 2018 when its fix will be in the next Oxygen Release
 * --quiet: Used for travis builds to generate Quiet output - only show errors. Without it the log would bee too long and make the travis-build fail.
 
-It will be built for your OS/Window-System/Architecture combination. You will find the executables under @ch.elexis.core.p2site/target/products/ch.elexis.core.application.ElexisApp/*/*/*@ 
+It will be built for your OS/Window-System/Architecture combination. You will find the executables under @ch.elexis.core.p2site/target/products/ch.elexis.core.application.ElexisApp/*/*/*@
 
 Note: This will fail in MacOSX. Build instructions for Mac:
 
 @Install Homebrew@
 @brew install homebrew/versions/maven30@
 @git clone https://github.com/elexis/elexis-3-core@
-@mvn clean install -Pall-archs -Dmaven.test.skip=true@
+@mvn clean install -Dmaven.test.skip=true@
 
 h3. Continuos Intergration builds
 
@@ -126,7 +125,7 @@ h3. Generate Javadoc
 
 Elexis uses Javadoc go documents its API interface. The Eclipse IDE offers built-in support for reading the javadoc for a given method or class and provides also helper to generate it.
 
-This is accomplished by calling @mvn -DforceContextQualifier=javadoc javadoc:javadoc@. It generates a complete javadoc. The generated output can be search at "target/site/apidocs/index.html":target/site/apidocs/index.html. 
+This is accomplished by calling @mvn -DforceContextQualifier=javadoc javadoc:javadoc@. It generates a complete javadoc. The generated output can be search at "target/site/apidocs/index.html":target/site/apidocs/index.html.
 
 Even when theses javadoc are not used often, they provide a convenient way to get an overview over methods, packages, etc.
 
