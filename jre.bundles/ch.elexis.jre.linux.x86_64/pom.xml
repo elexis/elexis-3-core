@@ -13,12 +13,12 @@
   <packaging>eclipse-plugin</packaging>
 
   <properties>
-    <realJdkVersion>jdk8u252-b09</realJdkVersion>
+    <!--okay https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u252-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u252b09.tar.gz
+         bad https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u252-b09.1/OpenJDK8U-jre_x64_linux_hotspot_8u252b09.tar.gz
+    -->
     <download.jre_type>jre_x64_linux</download.jre_type>
     <download.type>tar.gz</download.type>
-                                                                                    <download.file>OpenJDK8U-jre_x64_linux_hotspot_8u252b09.tar.gz</download.file>
-    <download.url>https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u252-b09/OpenJDK8U-jre_x64_linux_hotspot_8u252b09.tar.gz</download.url>
-    <download.sha256>a93be303ed62398dba9acb0376fb3caf8f488fcde80dc62d0a8e46256b3adfb1</download.sha256>
+    <download.md5>1a0f37d2b9542738ca5d3c28224c9873</download.md5>
   </properties>
 
   <build>

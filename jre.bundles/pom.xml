@@ -10,19 +10,27 @@
   </parent>
 
   <artifactId>elexis-3-jre</artifactId>
+  <!--version>11.0.3</version>  aka JDK version -->
   <version>1.8.252</version> <!-- aka JDK version -->
 	<packaging>pom</packaging>
 
 	<properties>
-    <!-- For java 1.8.252 we have two small different versions of adoptJDK
-        realJdkVersion jdk8u252-b09.1 ffor windows and mac, but
-        realJdkVersion jdk8u252-b09 (without .1) for linux
-      https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u252-b09.1/OpenJDK8U-jre_x86-32_windows_hotspot_8u252b09.zip 582f58290c66d6fb7e437a92a91695d25386e2497f684715e6e1b8702a69a804
-      https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u252-b09/OpenJDK8U-jre_x64_linux_hotspot_8u252b09.tar.gz     a93be303ed62398dba9acb0376fb3caf8f488fcde80dc62d0a8e46256b3adfb1
-    https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u252-b09.1/OpenJDK8U-jre_x64_mac_hotspot_8u252b09.tar.gz     23daa316ebcd965197e74dff011708a050516cd108a27a40e5b5cfa3c88beaba
+    <realJdkVersion>jdk8u252-b09</realJdkVersion>
+    <!-- See https://adoptopenjdk.net/installation.html
+      z.B. für MacOS
+    https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u252-b09.1/OpenJDK8U-jre_x64_mac_hotspot_8u252b09.tar.gz
     -->
-    <realJdkVersion>jre8u252-b09</realJdkVersion>
-    <jreDirectoryInJdk>jdk8u252-b09-jre</jreDirectoryInJdk>
+    <!-- Hier die Definition für Java8
+      <version>8.252</version>
+    -->
+		<download.url>https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/${realJdkVersion}</download.url>
+    <download.file>OpenJDK8U-${download.jre_type}_hotspot_8u252b09.${download.type}</download.file>
+    <!-- Hier die Defintion für Java 11
+      <!version>11.0.3</version>
+		<download.url>https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.3%2B7</download.url>
+    <download.file>OpenJDK11U-${download.jre_type}_hotspot_${realJdkVersion_7.${download.type}</download.file>
+   -->
+ 		<download.unzippedFolder>${download.file}</download.unzippedFolder>
 		<download.type>zip</download.type>
 		<jre.folder>jre</jre.folder>
 	</properties>
@@ -51,16 +59,16 @@
         <version>1.4.2</version>
         <executions>
           <execution>
-            <id>Download OpenJDK ${realJdkVersion}: ${project.build.directory} from ${download.url}</id>
+            <id>Download OpenJDK ${realJdkVersion}: ${project.build.directory} from ${download.url}/${download.file}</id>
             <phase>process-resources</phase>
             <goals>
               <goal>wget</goal>
             </goals>
             <configuration>
-              <url>${download.url}</url>
+              <url>${download.url}/${download.file}</url>
               <unpack>false</unpack>
               <outputDirectory>${project.basedir}/../downloaded</outputDirectory>
-              <sha256>${download.sha256}</sha256>
+              <md5>${download.md5}</md5>
             </configuration>
           </execution>
         </executions>
@@ -77,28 +85,31 @@
 						</goals>
 						<configuration>
 							<target>
-								<echo message="Unzip ${download.type} ${project.basedir}/../downloaded/${download.file}"/>
+								<echo message="Unzip ${download.type}"/>
 								<ac:if xmlns:ac="antlib:net.sf.antcontrib">
-									<equals arg1="${download.type}" arg2="tar.gz"/> 
+									<equals arg1="${download.type}" arg2="tar.gz"/>
 									<then>
-                    <ac:if xmlns:ac="antlib:net.sf.antcontrib">
-                        <equals arg1="${download.jre_type}" arg2="jre_x64_mac"/>
-                        <then>
-                          <untar src="${project.basedir}/../downloaded/${download.file}" dest="${project.build.directory}/downloads/" compression="gzip" />
-                          <echo message="Move jre for MacOSX into ${project.build.directory}/downloads/${jre.folder}/Contents"/>
-                          <move file="${project.build.directory}/downloads/${jreDirectoryInJdk}/Contents" tofile="${project.build.directory}/downloads/${jre.folder}/Contents" />
-                        </then>
-                        <else>
-                          <untar src="${project.basedir}/../downloaded/${download.file}" dest="${project.build.directory}/downloads" compression="gzip" />
-                          <move file="${project.build.directory}/downloads/${jreDirectoryInJdk}/" tofile="${project.build.directory}/downloads/${jre.folder}/"/>
-                        </else>
-                    </ac:if>
-                  </then>
+                    <untar src="${project.basedir}/../downloaded/${download.file}" dest="${project.build.directory}/downloads/" compression="gzip" />
+									</then>
 									<else>
-										<unzip src="${project.basedir}/../downloaded/${download.file}" dest="${project.build.directory}/downloads" />
-										<move file="${project.build.directory}/downloads/${jreDirectoryInJdk}/" tofile="${project.build.directory}/downloads/${jre.folder}/"/>
+										<unzip src="${project.basedir}/../downloaded/${download.file}" dest="${project.build.directory}/downloads/" />
 									</else>
 								</ac:if>
+							<ac:if xmlns:ac="antlib:net.sf.antcontrib">
+									<equals arg1="${download.jre_type}" arg2="jre_x64_mac"/>
+									<then>
+                    <!--
+                    /opt/rm/2795/elexis-3-core/jre.bundles/ch.elexis.jre.macosx.x86_64/target/downloads/jdk-jdk8u252-b09-jre/Contents
+                    /opt/rm/2795/elexis-3-core/jre.bundles/ch.elexis.jre.macosx.x86_64/target/downloads/jdk8u252-b09-jre/
+                    -->
+                    <echo message="Move jre for MacOSX into ${jre.folder}/Contents"/>
+                    <move file="${project.build.directory}/downloads/${realJdkVersion}-jre/Contents" tofile="${project.build.directory}/downloads/${jre.folder}/Contents" />
+                  </then>
+                  <else>
+                    <echo message="Move jre to ${project.build.directory}/downloads/${jre.folder}"/>
+                    <move file="${project.build.directory}/downloads/${realJdkVersion}-jre/" tofile="${project.build.directory}/downloads/${jre.folder}/"/>
+                  </else>
+                </ac:if>
 							</target>
 						</configuration>
 					</execution>
