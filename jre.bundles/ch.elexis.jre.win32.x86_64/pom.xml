@@ -5,7 +5,7 @@
   <parent>
     <groupId>ch.elexis.core</groupId>
     <artifactId>elexis-3-jre</artifactId>
-    <version>11.0.3</version> <!-- aka JDK version, must match value in META-INF/MANIFEST.MF-->
+    <version>1.8.252</version> <!-- aka JDK version -->
     <relativePath>..</relativePath>
   </parent>
 
@@ -15,8 +15,7 @@
   <properties>
     <download.jre_type>jre_x64_windows</download.jre_type>
     <download.type>zip</download.type>
-    <download.file>OpenJDK11U-${download.jre_type}_hotspot_${project.version}_7.${download.type}</download.file>
-    <download.md5>e4b7f66946f5baa97c297a4604f58b37</download.md5>
+    <download.md5>7c103d29b0a77914b41e137d0206c7ab</download.md5>
   </properties>
 
   <build>

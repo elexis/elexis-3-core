@@ -5,7 +5,7 @@
   <parent>
     <groupId>ch.elexis.core</groupId>
     <artifactId>elexis-3-jre</artifactId>
-    <version>11.0.3</version> <!-- aka JDK version -->
+    <version>1.8.252</version> <!-- aka JDK version -->
     <relativePath>..</relativePath>
   </parent>
 
@@ -15,7 +15,7 @@
   <properties>
     <download.jre_type>jre_x64_mac</download.jre_type>
     <download.type>tar.gz</download.type>
-    <download.md5>01e03d6c0d00d86d38a37ada4f70cc16</download.md5>
+    <download.md5>df4258607842c7b1ec843daeab979f1f</download.md5>
     <jre.folder></jre.folder>
   </properties>
 

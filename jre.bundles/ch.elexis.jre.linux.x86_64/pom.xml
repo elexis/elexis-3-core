@@ -5,7 +5,7 @@
   <parent>
     <groupId>ch.elexis.core</groupId>
     <artifactId>elexis-3-jre</artifactId>
-    <version>11.0.3</version> <!-- aka JDK version -->
+    <version>1.8.252</version> <!-- aka JDK version -->
     <relativePath>..</relativePath>
   </parent>
 
@@ -13,9 +13,12 @@
   <packaging>eclipse-plugin</packaging>
 
   <properties>
+    <!--okay https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u252-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u252b09.tar.gz
+         bad https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u252-b09.1/OpenJDK8U-jre_x64_linux_hotspot_8u252b09.tar.gz
+    -->
     <download.jre_type>jre_x64_linux</download.jre_type>
     <download.type>tar.gz</download.type>
-    <download.md5>ccee67bba9676e4560b52d4a2d308a45</download.md5>
+    <download.md5>1a0f37d2b9542738ca5d3c28224c9873</download.md5>
   </properties>
 
   <build>
