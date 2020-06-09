@@ -8,12 +8,12 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.service.OrderServiceHolder;
 import ch.elexis.core.data.service.StockServiceHolder;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.services.IStockService.Availability;
+import ch.elexis.core.services.holder.OrderServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.data.UiMandant;
 import ch.elexis.core.ui.icons.Images;
