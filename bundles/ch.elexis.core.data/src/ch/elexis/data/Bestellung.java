@@ -22,6 +22,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IOrder;
 import ch.elexis.core.data.interfaces.IOrderEntry;
 import ch.elexis.core.data.interfaces.IStock;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.jdt.Nullable;
 import ch.rgw.tools.TimeTool;
 
@@ -192,5 +193,19 @@ public class Bestellung extends PersistentObject implements IOrder {
 			ret.set("1.1.1970");
 		}
 		return ret;
+	}
+	
+	/**
+	 * Convenience conversion method, loads object via model service
+	 * 
+	 * @return
+	 * @since 3.8
+	 * @throws IllegalStateException
+	 *             if entity could not be loaded
+	 */
+	public ch.elexis.core.model.IOrder toIOrder(){
+		return CoreModelServiceHolder.get().load(getId(), ch.elexis.core.model.IOrder.class)
+			.orElseThrow(
+				() -> new IllegalStateException("Could not convert order [" + getId() + "]"));
 	}
 }
