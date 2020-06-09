@@ -27,6 +27,7 @@ import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.constants.Elexis;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.ShutdownJob;
@@ -146,7 +147,7 @@ public class Hub extends AbstractUIPlugin {
 	 */
 	public static void setWindowText(Patient pat){
 		StringBuilder sb = new StringBuilder();
-		sb.append("Elexis ").append(CoreHub.readElexisBuildVersion()).append(" - "); //$NON-NLS-1$ //$NON-NLS-2$
+		sb.append("Elexis ").append(Elexis.VERSION).append(" - "); //$NON-NLS-1$ //$NON-NLS-2$
 		if (CoreHub.getLoggedInContact() == null) {
 			sb.append(Messages.Hub_nouserloggedin);
 		} else {

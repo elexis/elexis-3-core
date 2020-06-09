@@ -1,7 +1,34 @@
 package ch.elexis.core.constants;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Properties;
+
+import org.slf4j.LoggerFactory;
+
 public final class Elexis {
 	
-	public static String Version = "3.8.0.qualifier"; //$NON-NLS-1$
+	public static final String VERSION;
 	public static final String APPLICATION_NAME = "Elexis Core"; //$NON-NLS-1$
+	
+	static {
+		VERSION = initElexisBuildVersion();
+	}
+	
+	private static String initElexisBuildVersion(){
+		Properties prop = new Properties();
+		String url_name = "platform:/plugin/ch.elexis.core.data/rsc/version.properties";
+		try (InputStream inputStream = new URL(url_name).openConnection().getInputStream()) {
+			if (inputStream != null) {
+				prop.load(inputStream);
+				return prop.getProperty("elexis.version").replace("-SNAPSHOT", "");
+			}
+		} catch (IOException e) {
+			LoggerFactory.getLogger(Elexis.class).error("Init error", e);
+			e.printStackTrace();
+			return "error";
+		}
+		return "unknown";
+	}
 }
