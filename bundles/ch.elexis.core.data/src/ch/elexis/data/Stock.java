@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import ch.elexis.core.data.interfaces.IStock;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
 
 /**
  * A Stock is the definition of a storage for articles. A stock is referred to by {@link StockEntry}
@@ -167,5 +168,17 @@ public class Stock extends PersistentObject implements IStock {
 	
 	public void setDriverConfig(String driverConfig){
 		set(FLD_DRIVER_CONFIG, driverConfig);
+	}
+	
+	/**
+	 * Convenience conversion method, loads object via model service
+	 * 
+	 * @return
+	 * @since 3.8
+	 * @throws IllegalStateException if entity could not be loaded
+	 */
+	public ch.elexis.core.model.IStock toIStock() {
+		return CoreModelServiceHolder.get().load(getId(), ch.elexis.core.model.IStock.class)
+				.orElseThrow(() -> new IllegalStateException("Could not convert stock [" + getId() + "]"));
 	}
 }

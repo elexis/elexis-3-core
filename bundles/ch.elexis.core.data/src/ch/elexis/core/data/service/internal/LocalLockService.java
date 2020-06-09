@@ -1,8 +1,5 @@
 package ch.elexis.core.data.service.internal;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -10,25 +7,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.UUID;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.eclipsesource.jaxrs.consumer.ConsumerFactory;
-
 import ch.elexis.core.common.InstanceStatus;
 import ch.elexis.core.common.InstanceStatus.STATE;
-import ch.elexis.core.constants.ElexisSystemPropertyConstants;
-import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.constants.Elexis;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.server.ElexisServerInstanceService;
-import ch.elexis.core.data.server.ElexisServerLockService;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.data.status.ElexisStatus;
@@ -38,8 +29,8 @@ import ch.elexis.core.lock.types.LockRequest.Type;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
-import ch.elexis.core.server.IInstanceService;
 import ch.elexis.core.server.ILockService;
+import ch.elexis.core.services.IElexisServerService;
 import ch.elexis.core.services.ILocalLockService;
 import ch.elexis.data.PersistentObject;
 
@@ -54,61 +45,24 @@ import ch.elexis.data.PersistentObject;
 @Component
 public class LocalLockService implements ILocalLockService {
 	
-	private ILockService ils;
-	private IInstanceService iis;
-	private InstanceStatus inst;
+	@Reference
+	private IElexisServerService elexisServerService;
 	
 	private final HashMap<String, Integer> lockCount = new HashMap<String, Integer>();
 	private final HashMap<String, LockInfo> locks = new HashMap<String, LockInfo>();
-	private boolean standalone = false;
 	private Logger logger = LoggerFactory.getLogger(LocalLockService.class);
-	
-	/**
-	 * A unique id for this instance of Elexis. Changes on every restart
-	 */
-	private static final UUID systemUuid = UUID.randomUUID();
 	
 	private Timer timer;
 	
-	/**
-	 * Construct a new LocalLockService. Application code should access via
-	 * {@link CoreHub#getLocalLockService()} and <b>NOT</b> create its own instance.
-	 * 
-	 */
-	public LocalLockService(){
-		ils = new DenyAllLockService();
+	@Activate
+	public void activate(){
 		timer = new Timer();
 		timer.schedule(new LockRefreshTask(), 10000, 10000);
-		
-		inst = new InstanceStatus();
-		inst.setState(InstanceStatus.STATE.ACTIVE);
-		inst.setUuid(getSystemUuid());
-		inst.setVersion(Elexis.VERSION);
-		inst.setOperatingSystem(
-			System.getProperty("os.name") + "/" + System.getProperty("os.version") + "/"
-				+ System.getProperty("os.arch") + "/J" + System.getProperty("java.version"));
-	}
-	
-	public void reconfigure(){
-		final String restUrl =
-			System.getProperty(ElexisSystemPropertyConstants.ELEXIS_SERVER_REST_INTERFACE_URL);
-		if (restUrl != null && restUrl.length() > 0) {
-			standalone = false;
-			logger.info("Operating against elexis-server instance on " + restUrl);
-			ils = new ElexisServerLockService(restUrl);
-			iis = new ElexisServerInstanceService(restUrl);
-			String identId = CoreHub.localCfg.get(Preferences.STATION_IDENT_ID, "");
-			String identTxt = CoreHub.localCfg.get(Preferences.STATION_IDENT_TEXT, "");
-			inst.setIdentifier(identTxt + " [" + identId + "]");
-		} else {
-			standalone = true;
-			logger.info("Operating in stand-alone mode.");
-		}
 	}
 	
 	@Override
 	public LockResponse releaseAllLocks(){
-		if (standalone) {
+		if (elexisServerService.isStandalone()) {
 			return LockResponse.OK;
 		}
 		
@@ -143,7 +97,8 @@ public class LocalLockService implements ILocalLockService {
 	
 	private LockResponse releaseLock(String storeToString){
 		IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
-		LockInfo lil = new LockInfo(storeToString, user.getId(), systemUuid.toString());
+		LockInfo lil = new LockInfo(storeToString, user.getId(),
+			elexisServerService.getSystemUuid().toString());
 		LockRequest lockRequest = new LockRequest(LockRequest.Type.RELEASE, lil);
 		return acquireOrReleaseLocks(lockRequest);
 	}
@@ -218,18 +173,19 @@ public class LocalLockService implements ILocalLockService {
 		}
 		
 		IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
-		LockInfo lockInfo = new LockInfo(storeToString, user.getId(), systemUuid.toString());
+		LockInfo lockInfo = new LockInfo(storeToString, user.getId(),
+			elexisServerService.getSystemUuid().toString());
 		LockRequest lockRequest = new LockRequest(LockRequest.Type.ACQUIRE, lockInfo);
 		return acquireOrReleaseLocks(lockRequest);
 	}
 	
 	@Override
 	public LockResponse acquireOrReleaseLocks(LockRequest lockRequest){
-		if (standalone) {
+		if (elexisServerService.isStandalone()) {
 			return LockResponse.OK(lockRequest.getLockInfo());
 		}
 		
-		if (ils == null) {
+		if (elexisServerService == null) {
 			String message =
 				"System not configured for standalone mode, and elexis-server not available!";
 			logger.error(message);
@@ -267,7 +223,7 @@ public class LocalLockService implements ILocalLockService {
 					}
 				}
 				
-				LockResponse lr = ils.acquireOrReleaseLocks(lockRequest);
+				LockResponse lr = elexisServerService.acquireOrReleaseLocks(lockRequest);
 				if (!lr.isOk()) {
 					return lr;
 				}
@@ -349,7 +305,7 @@ public class LocalLockService implements ILocalLockService {
 			return false;
 		}
 		
-		if (standalone) {
+		if (elexisServerService.isStandalone()) {
 			return true;
 		}
 		// check local locks first
@@ -367,9 +323,8 @@ public class LocalLockService implements ILocalLockService {
 		logger.debug("Checking lock on [" + object + "]");
 		
 		IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
-		LockInfo lockInfo =
-			new LockInfo(StoreToStringServiceHolder.getStoreToString(object), user.getId(),
-				systemUuid.toString());
+		LockInfo lockInfo = new LockInfo(StoreToStringServiceHolder.getStoreToString(object),
+			user.getId(), elexisServerService.getSystemUuid().toString());
 		LockRequest lockRequest = new LockRequest(LockRequest.Type.INFO, lockInfo);
 		
 		return isLocked(lockRequest);
@@ -381,7 +336,7 @@ public class LocalLockService implements ILocalLockService {
 			return false;
 		}
 		
-		if (standalone) {
+		if (elexisServerService.isStandalone()) {
 			return true;
 		}
 		// check local locks first
@@ -390,7 +345,7 @@ public class LocalLockService implements ILocalLockService {
 		}
 		
 		try {
-			return ils.isLocked(lockRequest);
+			return elexisServerService.isLocked(lockRequest);
 		} catch (Exception e) {
 			logger.error("Catched exception in isLocked: ", e);
 			return false;
@@ -410,7 +365,7 @@ public class LocalLockService implements ILocalLockService {
 	
 	@Override
 	public String getSystemUuid(){
-		return systemUuid.toString();
+		return elexisServerService.getSystemUuid().toString();
 	}
 	
 	@Override
@@ -421,51 +376,18 @@ public class LocalLockService implements ILocalLockService {
 	}
 	
 	private class LockRefreshTask extends TimerTask {
-		private ILockService restService;
 		
 		@Override
 		public void run(){
 			try {
-				final String restUrl = System
-					.getProperty(ElexisSystemPropertyConstants.ELEXIS_SERVER_REST_INTERFACE_URL);
-				if (restUrl != null && !restUrl.isEmpty()) {
-					final String testRestUrl = restUrl + "/elexis/lockservice/lockInfo";
-					// if service is available but we are not using it -> use it
-					// if service not available but we are using it -> dont use it
-					if (testRestUrl(testRestUrl) && ils instanceof DenyAllLockService
-						&& restService != null) {
-						ils = restService;
-						iis = ConsumerFactory.createConsumer(restUrl, IInstanceService.class);
-						// publish change
-						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(null,
-							ILocalLockService.class, ElexisEvent.EVENT_RELOAD));
-					} else if (!testRestUrl(testRestUrl) && !(ils instanceof DenyAllLockService)) {
-						restService = ils;
-						iis = null;
-						ils = new DenyAllLockService();
-						// publish change
-						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(null,
-							ILocalLockService.class, ElexisEvent.EVENT_RELOAD));
-					}
-				}
-				
-				if (standalone) {
-					return;
-				}
-				
-				if (iis != null) {
-					IUser u = ContextServiceHolder.get().getActiveUser().orElse(null);
-					inst.setActiveUser((u != null) ? u.getId() : "NO USER ACTIVE");
-					iis.updateStatus(inst);
-				}
-				
 				// verify and update the locks
 				boolean publishUpdate = false;
 				synchronized (locks) {
 					List<String> lockKeys = new ArrayList<String>();
 					lockKeys.addAll(locks.keySet());
 					for (String key : lockKeys) {
-						boolean success = ils.isLocked(new LockRequest(Type.INFO, locks.get(key)));
+						boolean success = elexisServerService
+							.isLocked(new LockRequest(Type.INFO, locks.get(key)));
 						if (!success) {
 							publishUpdate = true;
 							releaseLock(locks.get(key).getElementStoreToString());
@@ -480,45 +402,14 @@ public class LocalLockService implements ILocalLockService {
 				LoggerFactory.getLogger(LockRefreshTask.class).error("Execution error", e);
 			}
 		}
-		
-		private boolean testRestUrl(String restUrl){
-			try {
-				URL url = new URL(restUrl);
-				HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
-				urlConn.connect();
-				
-				return (urlConn.getResponseCode() >= 200 && urlConn.getResponseCode() < 300);
-			} catch (IOException e) {
-				return false;
-			}
-		}
-	}
-	
-	private class DenyAllLockService implements ILockService {
-		
-		@Override
-		public LockResponse acquireOrReleaseLocks(LockRequest request){
-			return LockResponse
-				.DENIED(getLockInfo(request.getLockInfo().getElementStoreToString()));
-		}
-		
-		@Override
-		public boolean isLocked(LockRequest request){
-			return false;
-		}
-		
-		@Override
-		public LockInfo getLockInfo(String storeToString){
-			return new LockInfo(storeToString, "LockService", "DenyAllLockService");
-		}
-		
 	}
 	
 	@Override
 	public Status getStatus(){
-		if (standalone) {
+		if (elexisServerService.isStandalone()) {
 			return Status.STANDALONE;
-		} else if (ils == null || ils instanceof DenyAllLockService) {
+		} else if (elexisServerService == null) {
+			// TODO verify
 			return Status.LOCAL;
 		}
 		return Status.REMOTE;
@@ -527,9 +418,10 @@ public class LocalLockService implements ILocalLockService {
 	@Override
 	public void shutdown(){
 		timer.cancel();
-		if (iis != null) {
-			inst.setState(STATE.SHUTTING_DOWN);
-			iis.updateStatus(inst);
+		if (elexisServerService != null) {
+			InstanceStatus instanceStatus = elexisServerService.createInstanceStatus();
+			instanceStatus.setState(STATE.SHUTTING_DOWN);
+			elexisServerService.updateInstanceStatus(instanceStatus);
 		}
 	}
 }

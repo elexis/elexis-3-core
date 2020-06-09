@@ -334,7 +334,7 @@ public class StockService implements IStockService {
 	}
 	
 	@Override
-	public List<? extends IStockEntry> findAllStockEntriesForArticle(String storeToString){
+	public List<IStockEntry> findAllStockEntriesForArticle(String storeToString){
 		String[] vals = storeToString.split(StringConstants.DOUBLECOLON);
 		INamedQuery<IStockEntry> query = CoreModelServiceHolder.get()
 			.getNamedQuery(IStockEntry.class, "articleId", "articleType");
@@ -343,7 +343,7 @@ public class StockService implements IStockService {
 	}
 	
 	@Override
-	public List<? extends IStockEntry> findAllStockEntriesForStock(IStock stock){
+	public List<IStockEntry> findAllStockEntriesForStock(IStock stock){
 		IQuery<IStockEntry> query = CoreModelServiceHolder.get().getQuery(IStockEntry.class);
 		query.and("stock", COMPARATOR.EQUALS, stock);
 		return query.execute();

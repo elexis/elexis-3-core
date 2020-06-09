@@ -47,13 +47,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.interfaces.IStockEntry;
 import ch.elexis.core.data.service.CodeElementServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.data.service.StockServiceHolder;
 import ch.elexis.core.importer.div.importers.ExcelWrapper;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.services.ICodeElementService.CodeElementTyp;
 import ch.elexis.core.services.ICodeElementServiceContribution;
 import ch.elexis.core.ui.icons.Images;
@@ -276,13 +276,13 @@ public class ImportArticleDialog extends TitleAreaDialog {
 						if (opArticle.isPresent()) {
 							// check if article is present in stock
 							IStockEntry stockEntry =
-								CoreHub.getStockService().findStockEntryForArticleInStock(stock,
+								StockServiceHolder.get().findStockEntryForArticleInStock(stock.toIStock(),
 									((Artikel) opArticle.get()).storeToString());
 							
 							String result = "MODIFY";
 							if (stockEntry == null) {
 								PersistentObject article = (PersistentObject) opArticle.get();
-								stockEntry = CoreHub.getStockService().storeArticleInStock(stock,
+								stockEntry = StockServiceHolder.get().storeArticleInStock(stock.toIStock(),
 									article.storeToString());
 								result = "ADDITION";
 							}

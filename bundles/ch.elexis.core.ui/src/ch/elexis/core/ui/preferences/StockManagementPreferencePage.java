@@ -48,6 +48,7 @@ import org.eclipse.ui.dialogs.ListDialog;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.holder.StockCommissioningServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.icons.Images;
@@ -340,7 +341,7 @@ public class StockManagementPreferencePage extends PreferencePage
 					return;
 				}
 				List<UUID> allDrivers =
-					CoreHub.getStockCommissioningSystemService().listAllAvailableDrivers();
+					StockCommissioningServiceHolder.get().listAllAvailableDrivers();
 				if (allDrivers.size() == 0) {
 					MessageDialog.openInformation(UiDesk.getTopShell(), "No drivers found",
 						"There are no stock commissioning system drivers available.");
@@ -355,7 +356,7 @@ public class StockManagementPreferencePage extends PreferencePage
 				ld.setLabelProvider(new LabelProvider() {
 					@Override
 					public String getText(Object element){
-						return CoreHub.getStockCommissioningSystemService()
+						return StockCommissioningServiceHolder.get()
 							.getInfoStringForDriver((UUID) element, true);
 					}
 				});
@@ -374,7 +375,7 @@ public class StockManagementPreferencePage extends PreferencePage
 				}
 				if (ics != null) {
 					s.setDriverUuid(ics.toString());
-					lblMachineuuid.setText(CoreHub.getStockCommissioningSystemService()
+					lblMachineuuid.setText(StockCommissioningServiceHolder.get()
 						.getInfoStringForDriver(ics, false));
 				} else {
 					s.setDriverUuid(null);
@@ -493,7 +494,7 @@ public class StockManagementPreferencePage extends PreferencePage
 				}
 				String machineUuid = stock.getDriverUuid();
 				if (machineUuid != null && !machineUuid.isEmpty()) {
-					String info = CoreHub.getStockCommissioningSystemService()
+					String info = StockCommissioningServiceHolder.get()
 						.getInfoStringForDriver(UUID.fromString(machineUuid), false);
 					lblMachineuuid.setText(info);
 				} else {
