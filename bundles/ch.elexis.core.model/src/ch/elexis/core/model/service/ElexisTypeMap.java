@@ -121,6 +121,7 @@ public class ElexisTypeMap {
 		classToStsMap.put(Leistungsblock.class, TYPE_LEISTUNGSBLOCK);
 		
 		// uni-directional mappable
+		stsToClassMap.put(TYPE_ARTIKEL, Artikel.class);
 		stsToClassMap.put(TYPE_MEDIKAMENT, Artikel.class);
 		stsToClassMap.put(TYPE_EIGENARTIKEL, Artikel.class);
 		stsToClassMap.put(TYPE_EIGENARTIKEL_LEGACY, Artikel.class);
