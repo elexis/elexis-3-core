@@ -44,13 +44,12 @@ import ch.elexis.core.data.interfaces.scripting.Interpreter;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
-import ch.elexis.core.data.service.PoOrderService;
-import ch.elexis.core.data.services.IOrderService;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IContextService;
+import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
@@ -136,9 +135,6 @@ public class CoreHub implements BundleActivator {
 	 */	
 	@Deprecated
 	public static final AbstractAccessControl acl = new RoleBasedAccessControl();
-	
-	/** Order Service **/
-	private static final IOrderService orderService = new PoOrderService();
 	
 	/**
 	 * The listener for patient events
@@ -477,10 +473,6 @@ public class CoreHub implements BundleActivator {
 		ElexisEventDispatcher.getInstance()
 			.fire(new ElexisEvent(null, IUser.class, ElexisEvent.EVENT_DESELECTED));
 		CoreHub.userCfg = CoreHub.localCfg;
-	}
-	
-	public static IOrderService getOrderService(){
-		return orderService;
 	}
 	
 }
