@@ -45,7 +45,9 @@ public class OrderService implements IOrderService {
 		}
 		int toOrder = max - current;
 		if (toOrder > 0) {
-			return order.addEntry(ise.getArticle(), ise.getStock(), ise.getProvider(), toOrder);
+			 IOrderEntry orderEntry = order.addEntry(ise.getArticle(), ise.getStock(), ise.getProvider(), toOrder);
+			 CoreModelServiceHolder.get().save(orderEntry);
+			 return orderEntry;
 		}
 		return null;
 	}
