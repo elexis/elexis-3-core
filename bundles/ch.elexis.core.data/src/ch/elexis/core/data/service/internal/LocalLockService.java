@@ -23,6 +23,7 @@ import ch.elexis.core.common.InstanceStatus;
 import ch.elexis.core.common.InstanceStatus.STATE;
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.constants.Elexis;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -82,7 +83,7 @@ public class LocalLockService implements ILocalLockService {
 		inst = new InstanceStatus();
 		inst.setState(InstanceStatus.STATE.ACTIVE);
 		inst.setUuid(getSystemUuid());
-		inst.setVersion(CoreHub.readElexisBuildVersion());
+		inst.setVersion(Elexis.VERSION);
 		inst.setOperatingSystem(
 			System.getProperty("os.name") + "/" + System.getProperty("os.version") + "/"
 				+ System.getProperty("os.arch") + "/J" + System.getProperty("java.version"));
