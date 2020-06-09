@@ -12,12 +12,9 @@ package ch.elexis.core.data.activator;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -82,7 +79,7 @@ public class CoreHub implements BundleActivator {
 	/*
 	 * This version is needed to compare the DB
 	 */
-	public static String Version = Elexis.Version;
+	public static String Version = Elexis.VERSION;
 	public static final String APPLICATION_NAME = Elexis.APPLICATION_NAME; //$NON-NLS-1$
 	static final String neededJRE = "1.8.0"; //$NON-NLS-1$
 	public static final String DBVersion = "3.7.0"; //$NON-NLS-1$
@@ -90,7 +87,6 @@ public class CoreHub implements BundleActivator {
 	protected static Logger log = LoggerFactory.getLogger(CoreHub.class.getName());
 	
 	private static String LocalCfgFile = null;
-	private static String elexis_version = null;
 	
 	private BundleContext context;
 	
@@ -279,29 +275,6 @@ public class CoreHub implements BundleActivator {
 					localCfg.write_xml(LocalCfgFile);
 				}
 			});
-	}
-	
-	/*
-	 * We use maven resources filtering replace in rsc/version.properties the property
-	 * ${pom.version} by the current build version and place it into the file /version.properties of
-	 * each jar file.
-	 * 
-	 * See http://maven.apache.org /plugins/maven-resources-plugin/examples/filter.html
-	 */
-	public static String readElexisBuildVersion(){
-		if ( elexis_version != null ) { return elexis_version; }
-		Properties prop = new Properties();
-		String url_name = "platform:/plugin/ch.elexis.core.data/rsc/version.properties";
-		try (InputStream inputStream = new URL(url_name).openConnection().getInputStream()) {
-			if (inputStream != null) {
-				prop.load(inputStream);
-				elexis_version = prop.getProperty("elexis.version").replace("-SNAPSHOT", "");
-			}
-		} catch (IOException e) {
-			elexis_version = plugin.Version;
-			// log.warn("Error reading build version information from [{}]", url_name, e);
-		}
-		return elexis_version;
 	}
 	
 	@Override
