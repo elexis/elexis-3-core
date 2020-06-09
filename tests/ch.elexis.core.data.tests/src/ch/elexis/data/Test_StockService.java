@@ -1,17 +1,7 @@
 package ch.elexis.data;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.List;
-
-import org.junit.Before;
 import org.junit.Ignore;
-import org.junit.Test;
 
-import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.interfaces.IStockEntry;
-import ch.elexis.core.data.service.StockService;
-import ch.elexis.core.data.services.IStockService.Availability;
 import ch.elexis.core.services.IStockService;
 import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.rgw.tools.JdbcLink;

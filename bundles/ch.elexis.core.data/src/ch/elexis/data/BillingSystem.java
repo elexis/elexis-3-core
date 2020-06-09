@@ -119,7 +119,7 @@ public class BillingSystem {
 	 *         numeric RS Radios, saved as string RN Radios, saved as numeric, selected index
 	 * @since 3.6 moved from {@link Fall}
 	 * @since 3.8 @deprecated
-	 * @deprecated use {@link ch.elexis.core.services.BillingSystemService#getRequirements(ch.elexis.core.model.IBillingSystem)}
+	 * @deprecated use ch.elexis.core.services.BillingSystemService#getRequirements(ch.elexis.core.model.IBillingSystem)
 	 */
 	public static String getRequirements(final String billingSystem){
 		String ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
@@ -363,7 +363,7 @@ public class BillingSystem {
 	 * @param requirements
 	 * @since 3.6 moved from {@link Fall}
 	 * @since 3.8 @deprecated
-	 * @deprecated use {@link ch.elexis.core.services.BillingSystemService#addOrModifyBillingSystem}
+	 * @deprecated use  ch.elexis.core.services.BillingSystemService#addOrModifyBillingSystem
 	 */
 	public static void createAbrechnungssystem(final String systemname, final String codesystem,
 		final String ausgabe, final String... requirements){

@@ -1,4 +1,4 @@
-package ch.elexis.core.data.server;
+package ch.elexis.core.services.es;
 
 import org.glassfish.jersey.client.ClientConfig;
 

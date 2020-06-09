@@ -72,14 +72,14 @@ public interface IStockService {
 	 * @param stock
 	 * @return
 	 */
-	public List<? extends IStockEntry> findAllStockEntriesForStock(IStock stock);
+	public List<IStockEntry> findAllStockEntriesForStock(IStock stock);
 
 	/**
 	 * 
 	 * @param article
 	 * @return all {@link IStockEntry} existing for a given article
 	 */
-	public List<? extends IStockEntry> findAllStockEntriesForArticle(String article);
+	public List<IStockEntry> findAllStockEntriesForArticle(String article);
 
 	/**
 	 * Find the preferred stock entry for an article. That is, if there is a
@@ -99,8 +99,10 @@ public interface IStockService {
 
 	/**
 	 * 
-	 * @param stock
-	 * @param article
+	 * Find the stock entry (if existing) for an article in the given stock.
+	 * 
+	 * @param stock to look for
+	 * @param article to look for in stock
 	 * @return <code>null</code> if article is not stocked in this
 	 *         {@link IStock}, else the respective {@link IStockEntry}
 	 */

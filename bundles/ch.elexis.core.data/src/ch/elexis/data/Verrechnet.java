@@ -27,9 +27,10 @@ import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.interfaces.IVerrechnetAdjuster;
-import ch.elexis.core.data.services.IStockService;
+import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.verrechnet.Constants;
+import ch.elexis.core.services.holder.StockServiceHolder;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
@@ -72,8 +73,6 @@ public class Verrechnet extends PersistentObject {
 	// keep a list of all ch.elexis.VerrechnetAdjuster extensions
 	private static ArrayList<IVerrechnetAdjuster> adjusters = new ArrayList<IVerrechnetAdjuster>();
 	
-	private IStockService stockService = CoreHub.getStockService();
-	
 	static {
 		addMapping(TABLENAME, KONSULTATION + "=Behandlung", LEISTG_TXT, LEISTG_CODE, CLASS, COUNT,
 			COST_BUYING, SCALE_TP_SELLING, SCALE_SELLING, PRICE_SELLING, SCALE, SCALE2,
@@ -114,7 +113,8 @@ public class Verrechnet extends PersistentObject {
 		
 		if (iv instanceof Artikel) {
 			Mandant mandant = ElexisEventDispatcher.getSelectedMandator();
-			stockService.performSingleDisposal((Artikel) iv, 1,
+			String storeToString = StoreToStringServiceHolder.getStoreToString((Artikel) iv);
+			StockServiceHolder.get().performSingleDisposal(storeToString, 1,
 				mandant != null ? mandant.getId() : null);
 		}
 		// call the adjusters
@@ -379,8 +379,9 @@ public class Verrechnet extends PersistentObject {
 		if (vv instanceof Artikel) {
 			Mandant mandant = ElexisEventDispatcher.getSelectedMandator();
 			Artikel art = (Artikel) vv;
-			stockService.performSingleReturn(art, vorher, mandant != null ? mandant.getId() : null);
-			stockService.performSingleDisposal(art, neuAnzahl,
+			String artSts = StoreToStringServiceHolder.getStoreToString(art);
+			StockServiceHolder.get().performSingleReturn(artSts, vorher, mandant != null ? mandant.getId() : null);
+			StockServiceHolder.get().performSingleDisposal(artSts, neuAnzahl,
 				mandant != null ? mandant.getId() : null);
 		}
 	}

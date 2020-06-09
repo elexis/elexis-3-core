@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IArticle;
 import ch.elexis.core.data.interfaces.IFall;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
@@ -417,5 +418,17 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 		String pharmacode = getExt(FLD_PHARMACODE);
 		String ean = get(FLD_EAN);
 		return ean + "_" + pharmacode;
+	}
+	
+	/**
+	 * Convenience conversion method, loads object via model service
+	 * 
+	 * @return
+	 * @since 3.8
+	 * @throws IllegalStateException if entity could not be loaded
+	 */
+	public ch.elexis.core.model.IArticle toIArticle() {
+		return CoreModelServiceHolder.get().load(getId(), ch.elexis.core.model.IArticle.class)
+				.orElseThrow(() -> new IllegalStateException("Could not convert article [" + getId() + "]"));
 	}
 }

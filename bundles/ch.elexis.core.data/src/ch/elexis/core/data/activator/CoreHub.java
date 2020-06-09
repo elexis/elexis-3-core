@@ -42,21 +42,16 @@ import ch.elexis.core.data.interfaces.ShutdownJob;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.interfaces.scripting.Interpreter;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
-import ch.elexis.core.data.server.ElexisServerEventService;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.service.PoOrderService;
-import ch.elexis.core.data.service.StockCommissioningSystemService;
-import ch.elexis.core.data.service.StockService;
-import ch.elexis.core.data.service.internal.LocalLockService;
 import ch.elexis.core.data.services.IOrderService;
-import ch.elexis.core.data.services.IStockCommissioningSystemService;
-import ch.elexis.core.data.services.IStockService;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IContextService;
+import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
@@ -142,20 +137,8 @@ public class CoreHub implements BundleActivator {
 	@Deprecated
 	public static final AbstractAccessControl acl = new RoleBasedAccessControl();
 	
-	/** Stock Service **/
-	private static final StockService stockService = new StockService();
-	
 	/** Order Service **/
 	private static final IOrderService orderService = new PoOrderService();
-	
-	/** Event Service to transport Events to the Elexis Server */
-	private static ElexisServerEventService elexisServerEventService;
-	
-	/**
-	 * Stock commissioning system service
-	 */
-	private static final IStockCommissioningSystemService stockCommissioningSystemService =
-		new StockCommissioningSystemService();
 	
 	/**
 	 * The listener for patient events
@@ -254,9 +237,7 @@ public class CoreHub implements BundleActivator {
 		this.context = context;
 		log.debug("Starting " + CoreHub.class.getName());
 		plugin = this;
-		
-		elexisServerEventService = new ElexisServerEventService();
-		
+				
 		startUpBundle();
 		setUserDir(userDir);
 		heart = Heartbeat.getInstance();
@@ -470,8 +451,7 @@ public class CoreHub implements BundleActivator {
 	 * @since 3.8
 	 */
 	public static void reconfigureServices() {
-		((LocalLockService) LocalLockServiceHolder.get()).reconfigure();
-		((ElexisServerEventService) CoreHub.getElexisServerEventService()).reconfigure();
+		ElexisServerServiceHolder.get().reconfigure();
 	}
 	
 	/**
@@ -499,19 +479,8 @@ public class CoreHub implements BundleActivator {
 		CoreHub.userCfg = CoreHub.localCfg;
 	}
 	
-	public static IStockService getStockService(){
-		return stockService;
-	}
-	
-	public static IStockCommissioningSystemService getStockCommissioningSystemService(){
-		return stockCommissioningSystemService;
-	}
-	
 	public static IOrderService getOrderService(){
 		return orderService;
 	}
 	
-	public static ElexisServerEventService getElexisServerEventService(){
-		return elexisServerEventService;
-	}
 }

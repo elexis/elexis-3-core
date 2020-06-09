@@ -16,8 +16,8 @@ import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
-import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.services.IStockService.Availability;
+import ch.elexis.core.services.IStockService.Availability;
+import ch.elexis.core.services.holder.StockServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
@@ -39,9 +39,9 @@ public class ArtikelLabelProvider extends DefaultLabelProvider implements ITable
 		if (element instanceof Artikel) {
 			Artikel art = (Artikel) element;
 			String ret = art.getInternalName();
-			Integer amount = CoreHub.getStockService().getCumulatedStockForArticle(art);
+			Long amount = StockServiceHolder.get().getCumulatedStockForArticle(art.toIArticle());
 			if (amount != null) {
-				ret += " (" + Integer.toString(amount) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+				ret += " (" + Long.toString(amount) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			return ret;
 		}
@@ -55,7 +55,7 @@ public class ArtikelLabelProvider extends DefaultLabelProvider implements ITable
 		if (element instanceof Artikel) {
 			Artikel art = (Artikel) element;
 			Availability availability =
-				CoreHub.getStockService().getCumulatedAvailabilityForArticle(art);
+				StockServiceHolder.get().getCumulatedAvailabilityForArticle(art.toIArticle());
 			if (availability != null) {
 				switch (availability) {
 				case CRITICAL_STOCK:

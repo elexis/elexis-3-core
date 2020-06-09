@@ -29,6 +29,7 @@ import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.server.ServerEventMapper;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
@@ -204,10 +205,10 @@ public final class ElexisEventDispatcher implements Runnable {
 				eventQueue.offer(ee);
 			}
 			
-			if (CoreHub.getElexisServerEventService().deliversRemoteEvents()) {
+			if (ElexisServerServiceHolder.get().deliversRemoteEvents()) {
 				ch.elexis.core.common.ElexisEvent mapEvent = ServerEventMapper.mapEvent(ee);
 				if(mapEvent!=null) {
-					CoreHub.getElexisServerEventService().postEvent(mapEvent);
+					ElexisServerServiceHolder.get().postEvent(mapEvent);
 				}
 			}
 		}

@@ -57,6 +57,7 @@ import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.IBillingService;
+import ch.elexis.core.services.holder.StockServiceHolder;
 import ch.elexis.core.text.model.Samdas;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
@@ -870,7 +871,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 				if (v instanceof Artikel) {
 					IArticle art = (IArticle) v;
 					Mandant mandator = ElexisEventDispatcher.getSelectedMandator();
-					CoreHub.getStockService().performSingleReturn(art, z,
+					String artSts = StoreToStringServiceHolder.getStoreToString(art);
+					StockServiceHolder.get().performSingleReturn(artSts, z,
 						mandator != null ? mandator.getId() : null);
 					
 					Object prescId = ls.getDetail(Verrechnet.FLD_EXT_PRESC_ID);

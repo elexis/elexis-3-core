@@ -10,7 +10,7 @@ import ch.elexis.core.common.ElexisEvent;
 
 @Path("/elexis/eventservice")
 public interface IEventService {
-
+	
 	@POST
 	@Path("/postEvent")
 	@Consumes(MediaType.APPLICATION_XML)
