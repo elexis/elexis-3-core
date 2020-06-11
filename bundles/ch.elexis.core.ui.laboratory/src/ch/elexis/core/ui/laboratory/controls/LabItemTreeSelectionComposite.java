@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -98,7 +99,7 @@ public class LabItemTreeSelectionComposite extends Composite {
 							}
 						}
 					} else if (event.getElement() instanceof Group) {
-						toRemove.addAll(((Group) event.getElement()).items);
+						toRemove.addAll(((Group) event.getElement()).getItems());
 					}
 					checkState.removeAll(toRemove);
 				} else if (event.getChecked()) {
@@ -150,7 +151,7 @@ public class LabItemTreeSelectionComposite extends Composite {
 						checkState.add((GroupItem) checked[i]);
 					} else
 						if ((checked[i] instanceof Group) && (event.getElement() == checked[i])) {
-						checkState.addAll(((Group) checked[i]).items);
+						checkState.addAll(((Group) checked[i]).getItems());
 					}
 				}
 			}
@@ -245,7 +246,8 @@ public class LabItemTreeSelectionComposite extends Composite {
 	public static class Group {
 		String name;
 		String shortName;
-		List<GroupItem> items;
+		private List<GroupItem> items;
+		private boolean sorted;
 		
 		Group(String name, List<LabItem> labItems){
 			this.name = name;
@@ -258,6 +260,7 @@ public class LabItemTreeSelectionComposite extends Composite {
 			} else {
 				shortName = "? " + name + " ?"; //$NON-NLS-1$ //$NON-NLS-2$
 			}
+			sorted = false;
 		}
 		
 		public void addItem(LabItem labItem){
@@ -273,6 +276,21 @@ public class LabItemTreeSelectionComposite extends Composite {
 			
 			List<LabItem> labItems = labGroup.getItems();
 			items = createGroupItems(labItems);
+		}
+		
+		public List<GroupItem> getItems(){
+			if (!sorted) {
+				Collections.sort(items, new Comparator<GroupItem>() {
+					@Override
+					public int compare(GroupItem left, GroupItem right){
+						String prio1 = left.getLabItemPrio().orElse("");
+						String prio2 = right.getLabItemPrio().orElse("");
+						return prio1.compareTo(prio2);
+					}
+				});
+				sorted = true;
+			}
+			return items;
 		}
 		
 		private List<GroupItem> createGroupItems(List<LabItem> labItems){
@@ -312,6 +330,13 @@ public class LabItemTreeSelectionComposite extends Composite {
 
 		public void setGroupname(String groupname){
 			this.groupname = groupname;
+		}
+		
+		public Optional<String> getLabItemPrio(){
+			if (labItem != null) {
+				return Optional.ofNullable(labItem.getPrio());
+			}
+			return Optional.empty();
 		}
 	}
 	
@@ -371,7 +396,7 @@ public class LabItemTreeSelectionComposite extends Composite {
 		public Object[] getChildren(Object parentElement){
 			if (parentElement instanceof Group) {
 				Group group = (Group) parentElement;
-				return group.items.toArray();
+				return group.getItems().toArray();
 			} else {
 				return null;
 			}
