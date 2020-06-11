@@ -48,7 +48,7 @@ public class LaborOrdersComposite extends Composite {
 	
 	private TableViewer viewer;
 	
-	private int sortColumn = 1;
+	private int sortColumn = -1;
 	private boolean revert = false;
 	
 	private boolean reloadPending;
@@ -402,7 +402,14 @@ public class LaborOrdersComposite extends Composite {
 							.compareTo(labOrder1.getLabItemLabel().orElse(""));
 					}
 				default:
-					return 0;
+					// sort by time and item prio
+					int timeCompare = labOrder2.getTime().compareTo(labOrder1.getTime());
+					if (timeCompare == 0) {
+						String prio1 = labOrder1.getLabItemPrio().orElse("");
+						String prio2 = labOrder2.getLabItemPrio().orElse("");
+						return prio1.compareTo(prio2);
+					}
+					return timeCompare;
 				}
 			} else {
 				return 0;
