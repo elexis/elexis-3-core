@@ -43,4 +43,9 @@ public abstract class AbstractEntityWithId implements EntityWithId {
 			return false;
 		return true;
 	}
+	
+	@Override
+	public String toString(){
+		return getClass().getName() + " id=[" + getId() + "]";
+	}
 }
