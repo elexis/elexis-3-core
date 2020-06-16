@@ -21,7 +21,8 @@ Require-Bundle: ch.elexis.core.data,
  org.eclipse.jface.databinding,
  org.eclipse.core.databinding.beans,
  org.eclipse.core.runtime,
- ch.elexis.core.findings.templates
+ ch.elexis.core.findings.templates,
+ ch.elexis.core.ui.dbcheck
 Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/ch.elexis.core.findings.ui.services.FindingsServiceComponent.xml,
  OSGI-INF/ch.elexis.core.findings.ui.services.CodingServiceComponent.xml,
