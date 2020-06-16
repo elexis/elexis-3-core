@@ -75,6 +75,14 @@ public class StockService implements IStockService {
 		}
 		
 		if (se.getStock().isCommissioningSystem()) {
+
+			boolean suspendOutlay =
+				configService.getLocal(Preferences.INVENTORY_MACHINE_SUSPEND_OUTLAY,
+					Preferences.INVENTORY_MACHINE_SUSPEND_OUTLAY_DEFAULT);
+			if(suspendOutlay) {
+				return Status.OK_STATUS;
+			}
+			
 			int sellingUnit = article.getSellingSize();
 			boolean isPartialUnitOutput =
 				(sellingUnit > 0 && sellingUnit < article.getPackageSize());
@@ -87,6 +95,7 @@ public class StockService implements IStockService {
 					}
 			}
 			return StockCommissioningServiceHolder.get().performArticleOutlay(se, count, null);
+			
 		} else {
 			LockResponse lr = LocalLockServiceHolder.get().acquireLockBlocking(se, 1,
 				new NullProgressMonitor());
