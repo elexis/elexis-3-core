@@ -92,6 +92,14 @@ public class StockService implements IStockService {
 		}
 		
 		if (se.getStock().isCommissioningSystem()) {
+			
+			boolean suspendOutlay =
+				CoreHub.localCfg.get(Preferences.INVENTORY_MACHINE_SUSPEND_OUTLAY,
+					Preferences.INVENTORY_MACHINE_SUSPEND_OUTLAY_DEFAULT);
+			if (suspendOutlay) {
+				return Status.OK_STATUS;
+			}
+			
 			int sellingUnit = article.getSellingUnit();
 			boolean isPartialUnitOutput =
 				(sellingUnit > 0 && sellingUnit < article.getPackageUnit());
