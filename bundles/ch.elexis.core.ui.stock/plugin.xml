@@ -22,6 +22,57 @@
             id="ch.elexis.core.ui.stock.actions.openImport"
             name="Artikel import">
       </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.stock.handler.StockSCSToggleArticleOutlay"
+            description="%stock.scs.toggleOutlayActive.description"
+            id="ch.elexis.core.ui.stock.command.scs.toggleOutlayActive"
+            name="%stock.scs.toggleOutlayActive">
+         <state
+               class="ch.elexis.core.ui.stock.handler.StockSCSToggleArticleOutlayState"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.ui.main.toolbar">
+         <toolbar
+               id="ch.elexis.toolbar1">
+            <command
+                  commandId="ch.elexis.core.ui.stock.command.scs.toggleOutlayActive"
+                  icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/drawer--arrow.png"
+                  label="%stock.scs.toggleOutlayActive"
+                  style="toggle"
+                  tooltip="%stock.scs.toggleOutlayActive.description">
+               <visibleWhen
+                     checkEnabled="false">
+                  <test
+                        property="ch.elexis.core.ui.stock.isSCSAvailable">
+                  </test>
+               </visibleWhen>
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="ch.elexis.core.ui.stock.command.scs.toggleOutlayActive"
+            schemeId="ch.elexis.ui.keybindingScheme"
+            sequence="M1+SHIFT+R">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="ch.elexis.core.ui.stock.propertytester.PropertyTester"
+            id="ch.elexis.core.ui.stock.propertytester.PropertyTester"
+            namespace="ch.elexis.core.ui.stock"
+            properties="isSCSAvailable"
+            type="java.lang.Object">
+      </propertyTester>
    </extension>
 
 </plugin>
