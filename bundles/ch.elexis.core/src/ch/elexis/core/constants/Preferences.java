@@ -186,6 +186,9 @@ public class Preferences {
 	public static final String INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES =
 		"inventory/machineOutlayPartialPackages"; //$NON-NLS-1$
 	public static final boolean INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES_DEFAULT = false;
+	// Should the stock commissioning system suspend its outlay
+	public static final String INVENTORY_MACHINE_SUSPEND_OUTLAY = "inventory/machineOutlaySuspended";  //$NON-NLS-1$
+	public static final boolean INVENTORY_MACHINE_SUSPEND_OUTLAY_DEFAULT = false;
 	public static final String INVENTORY_ORDER_TRIGGER = "inventory/order_trigger";
 	public static final int INVENTORY_ORDER_TRIGGER_EQUAL = 1;
 	public static final int INVENTORY_ORDER_TRIGGER_BELOW = 0;

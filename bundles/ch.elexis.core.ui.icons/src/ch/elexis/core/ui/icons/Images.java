@@ -281,7 +281,10 @@ public enum Images {
 		IMG_BAGGAGE_CART_BOX,
 		IMG_HAND,
 		IMG_CLOCK,
-		IMG_TASK, IMG_SCANNER;
+		IMG_TASK, 
+		IMG_SCANNER,
+		IMG_DRAWER,
+		IMG_DRAWER_ARROW;
 		
 	private Images(){}
 	
