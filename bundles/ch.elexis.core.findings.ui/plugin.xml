@@ -95,5 +95,11 @@
                style="push">
          </command>
       </menuContribution>
-    </extension>  
+    </extension>
+   <extension
+         point="ch.elexis.core.ui.dbcheck.ExternalMaintenance">
+      <ExternalMaintenance
+            MaintenanceCode="ch.elexis.core.findings.ui.dbcheck.ObservationsCleanup">
+      </ExternalMaintenance>
+   </extension>  
 </plugin>
