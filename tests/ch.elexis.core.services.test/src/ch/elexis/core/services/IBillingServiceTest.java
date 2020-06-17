@@ -14,16 +14,20 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.ICustomService;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IFreeTextDiagnosis;
 import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.InvoiceServiceHolder;
+import ch.elexis.core.services.holder.StockServiceHolder;
+import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
@@ -33,17 +37,24 @@ public class IBillingServiceTest extends AbstractServiceTest {
 	private IBillingService billingService =
 		OsgiServiceUtil.getService(IBillingService.class).get();
 	
-	private static ICustomService customBillable;
+	private static ICustomService customService;
+	private static IArticle customArticle;
 	private static IEncounter encounter;
 	
 	@BeforeClass
 	public static void beforeClass(){
-		customBillable = CoreModelServiceHolder.get().create(ICustomService.class);
-		customBillable.setText("test service");
-		customBillable.setCode("1234");
-		customBillable.setNetPrice(new Money(512));
-		customBillable.setPrice(new Money(1024));
-		coreModelService.save(customBillable);
+		customService = coreModelService.create(ICustomService.class);
+		customService.setText("test service");
+		customService.setCode("1234");
+		customService.setNetPrice(new Money(512));
+		customService.setPrice(new Money(1024));
+		coreModelService.save(customService);
+		
+		customArticle = coreModelService.create(IArticle.class);
+		customArticle.setText("test article");
+		customArticle.setGtin("0123456789012");
+		customArticle.setTyp(ArticleTyp.EIGENARTIKEL);
+		coreModelService.save(customArticle);
 		
 		encounter = new IEncounterBuilder(CoreModelServiceHolder.get(),
 			AllServiceTests.getCoverage(), AllServiceTests.getMandator()).buildAndSave();
@@ -55,13 +66,13 @@ public class IBillingServiceTest extends AbstractServiceTest {
 	}
 	
 	@After
-	public void after() {
+	public void after(){
 		cleanup();
 	}
 	
 	@Test
-	public void bill() throws InterruptedException{
-		Result<IBilled> billed = billingService.bill(customBillable, encounter, 1.0);
+	public void billCustomService() throws InterruptedException{
+		Result<IBilled> billed = billingService.bill(customService, encounter, 1.0);
 		assertTrue(billed.isOK());
 		List<IBilled> billedList = encounter.getBilled();
 		
@@ -81,7 +92,7 @@ public class IBillingServiceTest extends AbstractServiceTest {
 		assertEquals(1, executeUpdate);
 		em.getTransaction().commit();
 		
-		billed = billingService.bill(customBillable, encounter, 1.0);
+		billed = billingService.bill(customService, encounter, 1.0);
 		
 		billedList = encounter.getBilled();
 		assertFalse(billedList.get(0).isDeleted());
@@ -123,9 +134,24 @@ public class IBillingServiceTest extends AbstractServiceTest {
 		coreModelService.save(testEncounters.get(0));
 		Result<IInvoice> invoice = InvoiceServiceHolder.get().invoice(testEncounters);
 		assertTrue(invoice.toString(), invoice.isOK());
-
+		
 		Result<IEncounter> result = billingService.isEditable(testEncounters.get(0));
 		assertFalse(result.toString(), result.isOK());
+	}
+	
+	@Test
+	public void billArticleAndDecrementStock(){
+		IStockEntry stockEntry = StockServiceHolder.get()
+			.storeArticleInStock(StockServiceHolder.get().getDefaultStock(), customArticle);
+		assertEquals(1, stockEntry.getCurrentStock());
+		
+		Result<IBilled> billed = billingService.bill(customArticle, encounter, 1.0);
+		assertTrue(billed.isOK());
+		CoreModelServiceHolder.get().remove(billed.get());
+		
+		stockEntry = StockServiceHolder.get().findStockEntryForArticleInStock(
+			StockServiceHolder.get().getDefaultStock(), customArticle);
+		assertEquals(0, stockEntry.getCurrentStock());
 	}
 	
 }

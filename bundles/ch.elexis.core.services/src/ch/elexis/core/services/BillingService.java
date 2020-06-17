@@ -1,10 +1,13 @@
 package ch.elexis.core.services;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.eclipse.core.runtime.IStatus;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -32,6 +35,7 @@ import ch.elexis.core.model.verrechnet.Constants;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.status.StatusUtil;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
 
@@ -153,6 +157,15 @@ public class BillingService implements IBillingService {
 				IBillableOptifier optifier = billable.getOptifier();
 				Result<IBilled> optifierResult = optifier.add(billable, encounter, amount);
 				
+				if (billable instanceof IArticle) {
+					IStatus status =
+						stockService.performSingleDisposal((IArticle) billable, doubleToInt(amount),
+							contextService.getActiveMandator().map(m -> m.getId()).orElse(null));
+					if (!status.isOK()) {
+						StatusUtil.logStatus(logger, status, true);
+					}
+				}
+				
 				// TODO refactor
 				if (!optifierResult.isOK() && optifierResult.getCode() == 11) {
 					String initialResult = optifierResult.toString();
@@ -190,6 +203,18 @@ public class BillingService implements IBillingService {
 				+ "' konnte im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.",
 				null, false);
 		}
+	}
+	
+	/**
+	 * Get double as int rounded half up.
+	 * 
+	 * @param value
+	 * @return
+	 */
+	private int doubleToInt(double value){
+		BigDecimal bd = new BigDecimal(value);
+		bd = bd.setScale(0, RoundingMode.HALF_UP);
+		return bd.intValue();
 	}
 	
 	@Override

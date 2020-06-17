@@ -13,18 +13,31 @@ public interface IStockService {
 	public enum Availability {
 		IN_STOCK, CRITICAL_STOCK, OUT_OF_STOCK
 	}
-
+	
 	/**
-	 * Store an article in stock. This operation is idempotent. Each article may
-	 * exist only once per stock.
+	 * Store an article in stock. This operation is idempotent. Each article may exist only once per
+	 * stock.
+	 * 
+	 * @param stock
+	 *            the stock to store the article in
+	 * @param article
+	 * @return an stock entry with {@link IStockEntry#getCurrentStock()} increased by one if
+	 *         existing, or total 1 if not yet on stock, <code>null</code> if article could not be
+	 *         found or other error
+	 */
+	public IStockEntry storeArticleInStock(IStock stock, IArticle article);
+	
+	/**
+	 * Store an article in stock. This operation is idempotent. Each article may exist only once per
+	 * stock.
 	 * 
 	 * @param stock
 	 *            the stock to store the article in
 	 * @param article
 	 *            the store to string of the article
-	 * @return an {@link IStockEntry} if created or found existing, or
-	 *         <code>null</code> in case of error
-	 * 
+	 * @return an stock entry with {@link IStockEntry#getCurrentStock()} increased by one if
+	 *         existing, or total 1 if not yet on stock, <code>null</code> if article could not be
+	 *         found or other error
 	 */
 	public IStockEntry storeArticleInStock(IStock stock, String article);
 
@@ -101,12 +114,27 @@ public interface IStockService {
 	 * 
 	 * Find the stock entry (if existing) for an article in the given stock.
 	 * 
-	 * @param stock to look for
-	 * @param article to look for in stock
-	 * @return <code>null</code> if article is not stocked in this
-	 *         {@link IStock}, else the respective {@link IStockEntry}
+	 * @param stock
+	 *            to look for
+	 * @param article
+	 *            store to string of article to look for
+	 * @return <code>null</code> if article is not stocked in this {@link IStock}, else the
+	 *         respective {@link IStockEntry}
 	 */
 	public IStockEntry findStockEntryForArticleInStock(IStock stock, String article);
+	
+	/**
+	 * 
+	 * Find the stock entry (if existing) for an article in the given stock.
+	 * 
+	 * @param stock
+	 *            to look for
+	 * @param article
+	 *            to look for in stock
+	 * @return <code>null</code> if article is not stocked in this {@link IStock}, else the
+	 *         respective {@link IStockEntry}
+	 */
+	public IStockEntry findStockEntryForArticleInStock(IStock stock, IArticle article);
 
 	/**
 	 * Perform a single disposal of an article. The article will be withdrawn
