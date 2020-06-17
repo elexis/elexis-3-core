@@ -45,7 +45,6 @@ public class ElexisServerService implements IElexisServerService {
 	private boolean standalone = false;
 	
 	private String restUrl;
-	final String testRestUrl = restUrl + "/elexis/lockservice/lockInfo";
 	private Timer timer;
 	
 	private IEventService eventService = new NoRemoteEventService();
@@ -203,7 +202,9 @@ public class ElexisServerService implements IElexisServerService {
 	 */
 	private boolean validateConnection(){
 		try {
+			String testRestUrl = restUrl + "/elexis/lockservice/lockInfo";
 			URL url = new URL(testRestUrl);
+			
 			HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
 			urlConn.connect();
 			
