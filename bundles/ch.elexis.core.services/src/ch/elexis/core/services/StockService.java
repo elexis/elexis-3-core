@@ -33,8 +33,14 @@ public class StockService implements IStockService {
 	
 	private static Logger log = LoggerFactory.getLogger(StockService.class);
 	
+	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
+	private IModelService coreModelService;
+	
 	@Reference
 	private IConfigService configService;
+	
+	@Reference
+	private IStoreToStringService storeToStringService;
 	
 	@Override
 	public Long getCumulatedStockForArticle(IArticle article){
@@ -127,7 +133,7 @@ public class StockService implements IStockService {
 					}
 					se.setFractionUnits(rest);
 				}
-				
+				coreModelService.save(se);
 				LocalLockServiceHolder.get().releaseLock(se);
 				return Status.OK_STATUS;
 			}
@@ -184,6 +190,7 @@ public class StockService implements IStockService {
 				}
 				se.setFractionUnits(rest);
 			}
+			coreModelService.save(se);
 			LocalLockServiceHolder.get().releaseLock(se);
 			return Status.OK_STATUS;
 		}
@@ -291,6 +298,12 @@ public class StockService implements IStockService {
 	}
 	
 	@Override
+	public IStockEntry findStockEntryForArticleInStock(IStock stock, IArticle article){
+		String articleSts = storeToStringService.storeToString(article).orElse(null);
+		return findStockEntryForArticleInStock(stock, articleSts);
+	}
+	
+	@Override
 	public IStockEntry findStockEntryForArticleInStock(IStock iStock, String storeToString){
 		String[] vals = storeToString.split(StringConstants.DOUBLECOLON);
 		INamedQuery<IStockEntry> query = CoreModelServiceHolder.get()
@@ -309,22 +322,31 @@ public class StockService implements IStockService {
 	}
 	
 	@Override
+	public IStockEntry storeArticleInStock(IStock stock, IArticle article){
+		String articleSts = storeToStringService.storeToString(article).orElse(null);
+		return storeArticleInStock(stock, articleSts);
+	}
+	
+	@Override
 	public IStockEntry storeArticleInStock(IStock stock, String article){
 		IStockEntry stockEntry = findStockEntryForArticleInStock(stock, article);
 		if (stockEntry != null) {
-			return stockEntry;
+			stockEntry.setCurrentStock(stockEntry.getCurrentStock() + 1);
+		} else {
+			IArticle loadArticle = loadArticle(article);
+			if (loadArticle == null) {
+				return null;
+			}
+			stockEntry = CoreModelServiceHolder.get().create(IStockEntry.class);
+			stockEntry.setStock(stock);
+			stockEntry.setCurrentStock(1);
+			stockEntry.setArticle(loadArticle);
+			
 		}
-		IArticle loadArticle = loadArticle(article);
-		if (loadArticle == null) {
-			return null;
-		}
-		IStockEntry entry = CoreModelServiceHolder.get().create(IStockEntry.class);
-		entry.setStock(stock);
-		entry.setArticle(loadArticle);
-		CoreModelServiceHolder.get().save((Identifiable) entry);
-		LocalLockServiceHolder.get().acquireLock(entry);
-		LocalLockServiceHolder.get().releaseLock(entry);
-		return entry;
+		CoreModelServiceHolder.get().save((Identifiable) stockEntry);
+		LocalLockServiceHolder.get().acquireLock(stockEntry);
+		LocalLockServiceHolder.get().releaseLock(stockEntry);
+		return stockEntry;
 	}
 	
 	@Override

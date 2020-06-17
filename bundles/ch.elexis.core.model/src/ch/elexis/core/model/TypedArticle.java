@@ -269,7 +269,8 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 				protected void setPrice(TypedArticle billable, IBilled billed){
 					billed.setFactor(1.0);
 					billed.setNetPrice(billable.getPurchasePrice());
-					billed.setPoints(billable.getSellingPrice().getCents());
+					Money sellingPrice = billable.getSellingPrice();
+					billed.setPoints(sellingPrice != null ? sellingPrice.getCents() : 0);
 				}
 			};
 		}
