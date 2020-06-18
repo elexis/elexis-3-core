@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -285,6 +286,13 @@ public class LabItemTreeSelectionComposite extends Composite {
 					public int compare(GroupItem left, GroupItem right){
 						String prio1 = left.getLabItemPrio().orElse("");
 						String prio2 = right.getLabItemPrio().orElse("");
+						if (StringUtils.isNumeric(prio1) && StringUtils.isNumeric(prio2)) {
+							try {
+								return Integer.valueOf(prio1).compareTo(Integer.valueOf(prio2));
+							} catch (NumberFormatException nfe) {
+								// ignore
+							}
+						}
 						return prio1.compareTo(prio2);
 					}
 				});
