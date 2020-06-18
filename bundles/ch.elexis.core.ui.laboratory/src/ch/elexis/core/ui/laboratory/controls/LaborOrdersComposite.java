@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -407,6 +408,13 @@ public class LaborOrdersComposite extends Composite {
 					if (timeCompare == 0) {
 						String prio1 = labOrder1.getLabItemPrio().orElse("");
 						String prio2 = labOrder2.getLabItemPrio().orElse("");
+						if (StringUtils.isNumeric(prio1) && StringUtils.isNumeric(prio2)) {
+							try {
+								return Integer.valueOf(prio1).compareTo(Integer.valueOf(prio2));
+							} catch (NumberFormatException nfe) {
+								// ignore
+							}
+						}
 						return prio1.compareTo(prio2);
 					}
 					return timeCompare;
