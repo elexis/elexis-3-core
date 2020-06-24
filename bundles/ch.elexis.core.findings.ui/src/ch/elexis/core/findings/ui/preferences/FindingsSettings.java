@@ -11,7 +11,10 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.slf4j.Logger;
@@ -39,6 +42,8 @@ import ch.elexis.data.Query;
 public class FindingsSettings extends FieldEditorPreferencePage
 		implements IWorkbenchPreferencePage {
 	
+	public static final String ROWSAREDATES = "findingsui/settings/rowsaredates";
+	
 	private BooleanFieldEditor diagStructFieldEditor;
 	
 	private BooleanFieldEditor persAnamneseStructFieldEditor;
@@ -48,6 +53,12 @@ public class FindingsSettings extends FieldEditorPreferencePage
 	private BooleanFieldEditor famAnamneseStructFieldEditor;
 	
 	private BooleanFieldEditor allergyIntoleranceStructFieldEditor;
+	
+	private BooleanFieldEditor rowsAreDatesFieldEditor;
+	
+	public FindingsSettings(){
+		super(GRID);
+	}
 	
 	@Override
 	public void init(IWorkbench workbench){
@@ -64,6 +75,24 @@ public class FindingsSettings extends FieldEditorPreferencePage
 	
 	@Override
 	protected void createFieldEditors(){
+		Label label = new Label(getFieldEditorParent(), SWT.NONE);
+		label.setText("Anzeige Einstellungen");
+		label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 3, 1));
+		
+		rowsAreDatesFieldEditor = new BooleanFieldEditor(ROWSAREDATES,
+			"Datum in Zeilen anzeigen (bei Änderung View neu öffnen)", getFieldEditorParent());
+		addField(rowsAreDatesFieldEditor);
+		
+		label = new Label(getFieldEditorParent(), SWT.NONE);
+		label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 3, 1));
+		
+		label = new Label(getFieldEditorParent(), SWT.SEPARATOR | SWT.HORIZONTAL);
+		label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 3, 1));
+		
+		label = new Label(getFieldEditorParent(), SWT.NONE);
+		label.setText("Daten konvertieren und strukturierte Anzeige verwenden.");
+		label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 3, 1));
+		
 		diagStructFieldEditor =
 			new BooleanFieldEditor(IMigratorService.DIAGNOSE_SETTINGS_USE_STRUCTURED,
 				"Diagnosen strukturiert anzeigen", getFieldEditorParent());
