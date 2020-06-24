@@ -22,6 +22,8 @@ public class DynamicDataProvider implements IDataProvider {
 	private List<LocalDateTime> shownDates;
 	private HashMap<LocalDateTime, List<IFinding>[]> shownFindings;
 	
+	private boolean rowsAreDates;
+	
 	public DynamicDataProvider(){
 		currentFindings = new ArrayList<>();
 		shownFindings = new HashMap<>();
@@ -31,11 +33,22 @@ public class DynamicDataProvider implements IDataProvider {
 	
 	@Override
 	public Object getDataValue(int columnIndex, int rowIndex){
-		if (rowIndex >= 0 && rowIndex < shownDates.size()) {
-			List<IFinding>[] findings = shownFindings.get(shownDates.get(rowIndex));
-			if (findings != null && columnIndex < findings.length) {
-				if (findings[columnIndex] != null) {
-					return findings[columnIndex];
+		if (rowsAreDates) {
+			if (columnIndex >= 0 && rowIndex >= 0 && rowIndex < shownDates.size()) {
+				List<IFinding>[] findings = shownFindings.get(shownDates.get(rowIndex));
+				if (findings != null && columnIndex < findings.length) {
+					if (findings[columnIndex] != null) {
+						return findings[columnIndex];
+					}
+				}
+			}
+		} else {
+			if (columnIndex >= 0 && rowIndex >= 0 && columnIndex < shownDates.size()) {
+				List<IFinding>[] findings = shownFindings.get(shownDates.get(columnIndex));
+				if (findings != null && rowIndex < findings.length) {
+					if (findings[rowIndex] != null) {
+						return findings[rowIndex];
+					}
 				}
 			}
 		}
@@ -44,7 +57,11 @@ public class DynamicDataProvider implements IDataProvider {
 	
 	@Override
 	public int getRowCount(){
-		return shownFindings.size();
+		if (rowsAreDates) {
+			return shownDates.size();
+		} else {
+			return shownCodings.size();
+		}
 	}
 	
 	@Override
@@ -54,7 +71,11 @@ public class DynamicDataProvider implements IDataProvider {
 	
 	@Override
 	public int getColumnCount(){
-		return shownCodings.size();
+		if (rowsAreDates) {
+			return shownCodings.size();
+		} else {
+			return shownFindings.size();
+		}
 	}
 	
 	public void reload(Patient selectedPatient){
@@ -131,5 +152,17 @@ public class DynamicDataProvider implements IDataProvider {
 	
 	public List<LocalDateTime> getShownDates(){
 		return shownDates;
+	}
+	
+	public List<ICoding> getShownCodings(){
+		return shownCodings;
+	}
+	
+	public void setRowsAreDates(boolean value){
+		this.rowsAreDates = value;
+	}
+	
+	public boolean isRowsAreDates(){
+		return this.rowsAreDates;
 	}
 }

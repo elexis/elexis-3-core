@@ -79,7 +79,6 @@ public class FindingsEditDialog extends TitleAreaDialog {
 			StringBuilder sb = new StringBuilder();
 			refChildrens.stream().forEach(o -> sb.append(o.getCoding().get(0).getDisplay())
 				.append((o).isDeleted()).append(","));
-			System.out.println("children -> " + sb.toString());
 			// use reverse order for references to create ui components
 			Collections.reverse(refChildrens);
 			List<ObservationComponent> compChildrens = item.getComponents();

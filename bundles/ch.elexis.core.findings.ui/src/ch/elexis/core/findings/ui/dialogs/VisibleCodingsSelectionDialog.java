@@ -36,6 +36,8 @@ public class VisibleCodingsSelectionDialog extends TitleAreaDialog {
 	public void create(){
 		super.create();
 		setTitle("Sichtbare Befunde Codes auswählen.");
+		setMessage(
+			"Definiert welche Codes bei der Ansicht der Werte zur Auswahl stehen.\nWenn kein Code ausgewählt ist, stehen alle zu Auswahl.");
 	}
 	
 	@Override
