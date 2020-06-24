@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.ui.views.nattable;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,8 +20,8 @@ public class DynamicDataProvider implements IDataProvider {
 	private List<IFinding> currentFindings;
 	
 	private List<ICoding> shownCodings;
-	private List<LocalDateTime> shownDates;
-	private HashMap<LocalDateTime, List<IFinding>[]> shownFindings;
+	private List<LocalDate> shownDates;
+	private HashMap<LocalDate, List<IFinding>[]> shownFindings;
 	
 	private boolean rowsAreDates;
 	
@@ -121,17 +122,18 @@ public class DynamicDataProvider implements IDataProvider {
 				IObservation iObservation = (IObservation) iFinding;
 				int index = getCodingIndex(iObservation);
 				if (index != -1) {
-					LocalDateTime time = iObservation.getEffectiveTime().orElse(LocalDateTime.MIN);
-					List<IFinding>[] findings = shownFindings.get(time);
+					LocalDate date =
+						iObservation.getEffectiveTime().orElse(LocalDateTime.MIN).toLocalDate();
+					List<IFinding>[] findings = shownFindings.get(date);
 					if (findings == null) {
 						findings = (List<IFinding>[]) new List[shownCodings.size()];
-						shownDates.add(time);
+						shownDates.add(date);
 					}
 					if (findings[index] == null) {
 						findings[index] = new ArrayList<>();
 					}
 					findings[index].add(iObservation);
-					shownFindings.put(time, findings);
+					shownFindings.put(date, findings);
 				}
 			}
 		}
@@ -150,7 +152,7 @@ public class DynamicDataProvider implements IDataProvider {
 		return -1;
 	}
 	
-	public List<LocalDateTime> getShownDates(){
+	public List<LocalDate> getShownDates(){
 		return shownDates;
 	}
 	

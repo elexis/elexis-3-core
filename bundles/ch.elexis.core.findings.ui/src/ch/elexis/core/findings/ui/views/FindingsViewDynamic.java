@@ -197,6 +197,8 @@ public class FindingsViewDynamic extends ViewPart implements IActivationListener
 		
 		ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_find, eeli_code);
 		GlobalEventDispatcher.addActivationListener(this, this);
+		
+		refresh();
 	}
 	
 	public void setRowsAreDates(boolean value){
