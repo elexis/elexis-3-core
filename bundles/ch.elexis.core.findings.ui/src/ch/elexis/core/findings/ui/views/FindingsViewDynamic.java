@@ -1,7 +1,5 @@
 package ch.elexis.core.findings.ui.views;
 
-import java.util.Collections;
-
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -31,16 +29,20 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IFinding;
+import ch.elexis.core.findings.ui.preferences.FindingsSettings;
 import ch.elexis.core.findings.ui.util.FindingsUiUtil;
 import ch.elexis.core.findings.ui.views.nattable.DragAndDropSupport;
+import ch.elexis.core.findings.ui.views.nattable.DynamicCodingHeaderDataProvider;
+import ch.elexis.core.findings.ui.views.nattable.DynamicCodingRowDataProvider;
 import ch.elexis.core.findings.ui.views.nattable.DynamicDataProvider;
-import ch.elexis.core.findings.ui.views.nattable.DynamicHeaderDataProvider;
-import ch.elexis.core.findings.ui.views.nattable.DynamicRowDataProvider;
+import ch.elexis.core.findings.ui.views.nattable.DynamicDateHeaderDataProvider;
+import ch.elexis.core.findings.ui.views.nattable.DynamicDateRowDataProvider;
 import ch.elexis.core.findings.ui.views.nattable.FindingsNatTableTooltip;
 import ch.elexis.core.findings.ui.views.nattable.LabelDataProvider;
 import ch.elexis.core.findings.ui.views.nattable.NatTableWrapper;
@@ -57,8 +59,8 @@ public class FindingsViewDynamic extends ViewPart implements IActivationListener
 	
 	private NatTable natTable;
 	private DynamicDataProvider dataProvider;
-	private DynamicHeaderDataProvider headerDataProvider;
-	private DynamicRowDataProvider rowDataProvider;
+	private IDataProvider headerDataProvider;
+	private IDataProvider rowDataProvider;
 	
 	private final ElexisUiEventListenerImpl eeli_find =
 		new ElexisUiEventListenerImpl(IFinding.class,
@@ -103,9 +105,15 @@ public class FindingsViewDynamic extends ViewPart implements IActivationListener
 		
 		// NatTable setup
 		dataProvider = new DynamicDataProvider();
-		headerDataProvider = new DynamicHeaderDataProvider();
-		rowDataProvider = new DynamicRowDataProvider(dataProvider);
-		headerDataProvider.setShownCodings(Collections.emptyList());
+		if (CoreHub.globalCfg.get(FindingsSettings.ROWSAREDATES, false)) {
+			dataProvider.setRowsAreDates(true);
+			headerDataProvider = new DynamicCodingHeaderDataProvider(dataProvider);
+			rowDataProvider = new DynamicDateRowDataProvider(dataProvider);
+		} else {
+			dataProvider.setRowsAreDates(false);
+			headerDataProvider = new DynamicDateHeaderDataProvider(dataProvider);
+			rowDataProvider = new DynamicCodingRowDataProvider(dataProvider);
+		}
 		
 		// wrap the data provider with a label data provider
 		DataLayer bodyDataLayer =
@@ -192,6 +200,19 @@ public class FindingsViewDynamic extends ViewPart implements IActivationListener
 		GlobalEventDispatcher.addActivationListener(this, this);
 	}
 	
+	public void setRowsAreDates(boolean value){
+		if (dataProvider.isRowsAreDates() != value) {
+			dataProvider.setRowsAreDates(value);
+			if (value) {
+				headerDataProvider = new DynamicCodingHeaderDataProvider(dataProvider);
+				rowDataProvider = new DynamicDateRowDataProvider(dataProvider);
+			} else {
+				headerDataProvider = new DynamicDateHeaderDataProvider(dataProvider);
+				rowDataProvider = new DynamicCodingRowDataProvider(dataProvider);
+			}
+		}
+	}
+	
 	private void atachTooltip(){
 		DefaultToolTip toolTip = new FindingsNatTableTooltip(natTable, dataProvider);
 		toolTip.setPopupDelay(250);
@@ -201,7 +222,6 @@ public class FindingsViewDynamic extends ViewPart implements IActivationListener
 	
 	private void updateCodingsSelection(StructuredSelection selection){
 		dataProvider.setShownCodings(selection.toList());
-		headerDataProvider.setShownCodings(selection.toList());
 		natTable.refresh(true);
 	}
 	

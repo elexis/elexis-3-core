@@ -1,29 +1,25 @@
 package ch.elexis.core.findings.ui.views.nattable;
 
-import java.util.List;
-
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 
-import ch.elexis.core.findings.ICoding;
-
-public class DynamicHeaderDataProvider
+public class DynamicCodingHeaderDataProvider
 		implements IDataProvider {
 	
-	private List<ICoding> shownCodings;
+	private DynamicDataProvider dataProvider;
+	
+	public DynamicCodingHeaderDataProvider(DynamicDataProvider dataProvider){
+		this.dataProvider = dataProvider;
+	}
 	
 	@Override
 	public int getColumnCount(){
-		return shownCodings.size();
-	}
-	
-	public void setShownCodings(List<ICoding> showCodings){
-		this.shownCodings = showCodings;
+		return dataProvider.getShownCodings().size();
 	}
 	
 	@Override
 	public Object getDataValue(int columnIndex, int rowIndex){
-		if (columnIndex >= 0 && columnIndex <= shownCodings.size()) {
-			return shownCodings.get(columnIndex).getDisplay();
+		if (columnIndex >= 0 && columnIndex <= dataProvider.getShownCodings().size()) {
+			return dataProvider.getShownCodings().get(columnIndex).getDisplay();
 		}
 		return null;
 	}
