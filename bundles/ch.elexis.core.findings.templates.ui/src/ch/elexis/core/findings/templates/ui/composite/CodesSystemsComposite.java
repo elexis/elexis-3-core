@@ -28,9 +28,13 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ILocalCoding;
+import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.templates.ui.dlg.CodeCreateDialog;
+import ch.elexis.core.findings.templates.ui.dlg.MergeLocalCodeDialog;
 import ch.elexis.core.findings.templates.ui.util.FindingsServiceHolder;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.ui.icons.Images;
 
 public class CodesSystemsComposite extends Composite {
@@ -51,7 +55,7 @@ public class CodesSystemsComposite extends Composite {
 
 		
 		Button btnAdd = new Button(this, SWT.PUSH);
-		btnAdd.setText("Code erstellen..");
+		btnAdd.setImage(Images.IMG_NEW.getImage());
 		btnAdd.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, false, 2, 1));
 		btnAdd.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -132,11 +136,34 @@ public class CodesSystemsComposite extends Composite {
 				if (objects != null) {
 					for (Object o : objects) {
 						if (o instanceof ICoding) {
-							FindingsServiceHolder.codingService.removeLocalCoding((ICoding) o);
+							ICoding coding = (ICoding) o;
+							IQuery<IObservation> obsQuery = FindingsServiceHolder.findingsModelService.getQuery(IObservation.class);
+							obsQuery.and("content", COMPARATOR.LIKE, "%\"system\":\""
+								+ coding.getSystem() + "\",\"code\":\"" + coding.getCode() + "\"%");
+							List<IObservation> obsWithCode = obsQuery.execute();
+							if (obsWithCode.isEmpty() || MessageDialog.openQuestion(getShell(), "Code entfernen",
+									"Der Code wird noch in " + obsWithCode.size()
+										+ " Befunden verwendet.\nSoll er trotzdem entfernt werden?")) {
+								FindingsServiceHolder.codingService.removeLocalCoding((ICoding) o);
+							}
 						}
 					}
 					loadTable();
 				}
+			}
+		});
+		contextMenu.add(new Action("Codes vereinen") {
+			@Override
+			public void run(){
+				MergeLocalCodeDialog dialog = new MergeLocalCodeDialog(getShell());
+				dialog.create();
+				if (!((IStructuredSelection) tableViewer.getSelection()).isEmpty()) {
+					dialog.setSource(
+						(ILocalCoding) ((IStructuredSelection) tableViewer.getSelection())
+							.getFirstElement());
+				}
+				dialog.open();
+				loadTable();
 			}
 		});
 	}
