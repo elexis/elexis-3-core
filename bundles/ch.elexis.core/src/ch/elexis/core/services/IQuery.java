@@ -3,6 +3,7 @@ package ch.elexis.core.services;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 
@@ -110,6 +111,13 @@ public interface IQuery<T> {
 	 * @return
 	 */
 	public List<T> execute();
+	
+	/**
+	 * Execute the query and return a stream with the resulting objects.
+	 * 
+	 * @return
+	 */
+	public Stream<T> executeAsStream();
 	
 //	/**
 //	 * Set a limit on the number of results to be returned. This is equivalent to

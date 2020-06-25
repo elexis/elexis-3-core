@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -251,9 +252,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		predicateGroups.orPredicateGroups();
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<T> execute(){
+	private TypedQuery<?> getTypedQuery(){
 		// apply the predicate groups to the criteriaQuery
 		int groups = predicateGroups.getPredicateGroupsSize();
 		if (groups > 0) {
@@ -280,8 +279,23 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		if (limit > 0) {
 			query.setMaxResults(limit);
 		}
-		
-		List<T> ret = (List<T>) query.getResultStream().parallel()
+		return query;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Stream<T> executeAsStream(){
+		Stream<T> ret = getTypedQuery().getResultStream().map(
+			e -> (T) adapterFactory.getModelAdapter((EntityWithId) e, clazz, true).orElse(null));
+		// detach and clear L1 cache
+		entityManager.clear();
+		return ret;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<T> execute(){
+		List<T> ret = (List<T>) getTypedQuery().getResultStream().parallel()
 			.map(e -> adapterFactory.getModelAdapter((EntityWithId) e, clazz, true).orElse(null))
 			.filter(Objects::nonNull).collect(Collectors.toList());
 		// detach and clear L1 cache
