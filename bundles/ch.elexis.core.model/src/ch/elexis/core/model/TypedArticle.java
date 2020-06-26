@@ -44,7 +44,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 			if (subTyp == ArticleSubTyp.COMPLEMENTARY
 				|| subTyp == ArticleSubTyp.COMPLEMENTARY_REDUCED) {
 				return "590";
-			} else if (subTyp == ArticleSubTyp.ADDITIVE) {
+			} else if (subTyp == ArticleSubTyp.ADDITIVE || subTyp == ArticleSubTyp.COVID) {
 				return "406";
 			}
 		} else if (typ == ArticleTyp.MIGEL) {
