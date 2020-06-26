@@ -29,9 +29,8 @@ import ch.elexis.core.findings.ILocalCoding;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.templates.ui.util.FindingsServiceHolder;
+import ch.elexis.core.findings.templates.ui.util.FindingsTemplateUtil;
 import ch.elexis.core.findings.util.FindingsTextUtil;
-import ch.elexis.core.services.IQuery;
-import ch.elexis.core.services.IQuery.COMPARATOR;
 
 public class MergeLocalCodeDialog extends TitleAreaDialog {
 	
@@ -184,11 +183,7 @@ public class MergeLocalCodeDialog extends TitleAreaDialog {
 	}
 	
 	private void mergeLocalCode(ILocalCoding source, ILocalCoding destination){
-		IQuery<IObservation> obsQuery =
-			FindingsServiceHolder.findingsModelService.getQuery(IObservation.class);
-		obsQuery.and("content", COMPARATOR.LIKE,
-			"%\"system\":\"" + source.getSystem() + "\",\"code\":\"" + source.getCode() + "\"%");
-		List<IObservation> obsWithCode = obsQuery.execute();
+		List<IObservation> obsWithCode = FindingsTemplateUtil.getAllObservationsWithCode(source);
 		for (IObservation iObservation : obsWithCode) {
 			List<ICoding> coding = iObservation.getCoding();
 			coding = coding.stream().filter(c -> !(c.getSystem().equals(source.getSystem())

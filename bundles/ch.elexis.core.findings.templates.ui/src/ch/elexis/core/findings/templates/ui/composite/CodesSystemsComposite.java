@@ -33,8 +33,7 @@ import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.templates.ui.dlg.CodeCreateDialog;
 import ch.elexis.core.findings.templates.ui.dlg.MergeLocalCodeDialog;
 import ch.elexis.core.findings.templates.ui.util.FindingsServiceHolder;
-import ch.elexis.core.services.IQuery;
-import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.findings.templates.ui.util.FindingsTemplateUtil;
 import ch.elexis.core.ui.icons.Images;
 
 public class CodesSystemsComposite extends Composite {
@@ -137,10 +136,7 @@ public class CodesSystemsComposite extends Composite {
 					for (Object o : objects) {
 						if (o instanceof ICoding) {
 							ICoding coding = (ICoding) o;
-							IQuery<IObservation> obsQuery = FindingsServiceHolder.findingsModelService.getQuery(IObservation.class);
-							obsQuery.and("content", COMPARATOR.LIKE, "%\"system\":\""
-								+ coding.getSystem() + "\",\"code\":\"" + coding.getCode() + "\"%");
-							List<IObservation> obsWithCode = obsQuery.execute();
+							List<IObservation> obsWithCode = FindingsTemplateUtil.getAllObservationsWithCode(coding);
 							if (obsWithCode.isEmpty() || MessageDialog.openQuestion(getShell(), "Code entfernen",
 									"Der Code wird noch in " + obsWithCode.size()
 										+ " Befunden verwendet.\nSoll er trotzdem entfernt werden?")) {
