@@ -7,7 +7,7 @@ import ch.elexis.core.interfaces.ILocalizedEnum;
 public enum EigenartikelTyp implements ILocalizedEnum {
 
 	UNKNOWN('U'), PHARMA('P'), NONPHARMA('N'), MAGISTERY('M'), COMPLEMENTARY('C'), ADDITIVE('A'),
-	COMPLEMENTARY_REDUCED('K');
+	COMPLEMENTARY_REDUCED('K'), COVID('V');
 
 	final char type;
 

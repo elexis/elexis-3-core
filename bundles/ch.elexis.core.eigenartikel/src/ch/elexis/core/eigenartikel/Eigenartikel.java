@@ -69,7 +69,7 @@ public class Eigenartikel extends Artikel {
 	public String getCodeSystemCode(){
 		if (getTyp() == EigenartikelTyp.COMPLEMENTARY || getTyp() == EigenartikelTyp.COMPLEMENTARY_REDUCED) {
 			return "590";
-		} else if (getTyp() == EigenartikelTyp.ADDITIVE) {
+		} else if (getTyp() == EigenartikelTyp.ADDITIVE || getTyp() == EigenartikelTyp.COVID) {
 			return "406";
 		}
 		return super.getCodeSystemCode();
