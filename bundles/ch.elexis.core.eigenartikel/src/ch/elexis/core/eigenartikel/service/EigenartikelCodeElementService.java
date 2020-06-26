@@ -3,25 +3,71 @@ package ch.elexis.core.eigenartikel.service;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.model.builder.IArticleBuilder;
 import ch.elexis.core.model.localarticle.Constants;
 import ch.elexis.core.services.ICodeElementService.CodeElementTyp;
 import ch.elexis.core.services.ICodeElementServiceContribution;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.INamedQuery;
+import ch.elexis.core.types.ArticleSubTyp;
 import ch.elexis.core.types.ArticleTyp;
+import ch.rgw.tools.Money;
 
 @Component
 public class EigenartikelCodeElementService implements ICodeElementServiceContribution {
 	
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService coreModelService;
+	
+	@Activate
+	public void activate(){
+		ExecutorService initExec = Executors.newSingleThreadExecutor();
+		initExec.execute(() -> {
+			// wait for login
+			while (ElexisEventDispatcher.getSelectedMandator() == null) {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// ignore
+				}
+			}
+			// init covid article
+			INamedQuery<IArticle> query =
+				coreModelService.getNamedQuery(IArticle.class, "typ", "code");
+			
+			List<IArticle> found = query.executeWithParameters(
+				query.getParameterMap("typ", ArticleTyp.EIGENARTIKEL, "code", "3028"));
+			if (found.isEmpty()) {
+				IArticle product = new IArticleBuilder(CoreModelServiceHolder.get(),
+					"Ärztliche Pauschale SARS-CoV-2-Test nach Teststrategie BAG",
+					"3028",
+					ArticleTyp.EIGENARTIKEL).build();
+				product.setSubTyp(ArticleSubTyp.COVID);
+				CoreModelServiceHolder.get().save(product);
+				
+				IArticle article = new IArticleBuilder(CoreModelServiceHolder.get(),
+					"Ärztliche Pauschale SARS-CoV-2-Test nach Teststrategie BAG – Pauschale für Ärzte",
+					"3028", ArticleTyp.EIGENARTIKEL).build();
+				article.setSubTyp(ArticleSubTyp.COVID);
+				article.setSellingPrice(new Money(5000));
+				article.setProduct(product);
+				CoreModelServiceHolder.get().save(article);
+			}
+			initExec.shutdown();
+		});
+	}
 	
 	@Override
 	public String getSystem(){
