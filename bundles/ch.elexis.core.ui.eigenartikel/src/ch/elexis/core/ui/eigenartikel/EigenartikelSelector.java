@@ -32,6 +32,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.eigenartikel.Eigenartikel;
 import ch.elexis.core.eigenartikel.acl.ACLContributor;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.model.eigenartikel.EigenartikelTyp;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.ICodeSelectorTarget;
 import ch.elexis.core.ui.actions.RestrictedAction;
@@ -41,13 +42,15 @@ import ch.elexis.core.ui.locks.LockResponseHelper;
 import ch.elexis.core.ui.selectors.FieldDescriptor;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.CommonViewer.DoubleClickListener;
-import ch.elexis.core.ui.util.viewers.DefaultControlFieldProvider;
 import ch.elexis.core.ui.util.viewers.SelectorPanelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.DefaultButtonProvider;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
+import ch.elexis.data.Artikel;
 import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Query;
+import ch.rgw.tools.Money;
 
 public class EigenartikelSelector extends CodeSelectorFactory {
 
@@ -105,9 +108,31 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 			ElexisEvent.EVENT_RELOAD | ElexisEvent.EVENT_UPDATE | ElexisEvent.EVENT_SELECTED);
 		ElexisEventDispatcher.getInstance().addListeners(updateEventListener);
 		
+		initCovidArticle();
+
 		return new ViewerConfigurer(eal, alp, slp, dbp, swp);
 	}
 	
+	private void initCovidArticle() {
+		// init covid article
+		Query<Eigenartikel> query = new Query<>(Eigenartikel.class);
+		String found = query.findSingle(Artikel.FLD_SUB_ID, Query.EQUALS, "3028");
+		if (found == null) {
+			Eigenartikel product = new Eigenartikel("Ärztliche Pauschale SARS-CoV-2-Test nach Teststrategie BAG",
+					"Ärztliche Pauschale SARS-CoV-2-Test nach Teststrategie BAG");
+			product.setTyp(EigenartikelTyp.COVID);
+			product.set(Eigenartikel.FLD_SUB_ID, "3028");
+
+			Eigenartikel article = new Eigenartikel(
+					"Ärztliche Pauschale SARS-CoV-2-Test nach Teststrategie BAG – Pauschale für Ärzte",
+					"Ärztliche Pauschale SARS-CoV-2-Test nach Teststrategie BAG – Pauschale für Ärzte");
+			article.set(Eigenartikel.FLD_SUB_ID, "3028");
+			article.setTyp(EigenartikelTyp.COVID);
+			article.setVKPreis(new Money(5000));
+			article.set(Eigenartikel.FLD_EXTID, product.getId());
+		}
+	}
+
 	@Override
 	public Class<? extends PersistentObject> getElementClass(){
 		return Eigenartikel.class;
