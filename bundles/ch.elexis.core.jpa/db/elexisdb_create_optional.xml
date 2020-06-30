@@ -1976,4 +1976,24 @@ DROP TABLE TEMP_ETIKETTEN_OBJCLASS_LINK;
 			columnDataType="BIGINT" oldColumnName="LASTUPDARE"
 			newColumnName="LASTUPDATE" />
 	</changeSet>
+	
+	<changeSet author="thomas" id="ch_elexis_omnivore_data_pat_id_ispatient">
+	    <preConditions onFail="MARK_RAN">
+			<and>
+				<tableExists tableName="ch_elexis_omnivore_data" />
+				<tableExists tableName="kontakt" />
+			</and>
+		</preConditions>
+		<sql>
+<![CDATA[
+UPDATE kontakt SET istPerson = '1', istPatient = '1'
+WHERE kontakt.id IN (
+  SELECT DISTINCT PatID
+  FROM ch_elexis_omnivore_data
+  WHERE ch_elexis_omnivore_data.PatID = kontakt.id and kontakt.istPatient = '0'
+);
+]]>
+	    </sql>
+	</changeSet>
+	
 </databaseChangeLog>
