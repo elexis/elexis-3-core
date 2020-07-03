@@ -977,12 +977,6 @@
          </handler>
       </extension>
       <extension
-            point="org.eclipse.ui.startup">
-         <startup
-               class="ch.elexis.core.ui.startup.UiStartup">
-         </startup>
-      </extension>
-      <extension
             point="org.eclipse.core.expressions.propertyTesters">
          <propertyTester
                class="ch.elexis.core.ui.property.PropertyTester"

@@ -89,10 +89,11 @@ Import-Package: javax.annotation;version="1.2.0",
  org.eclipse.e4.ui.services,
  org.osgi.service.component.annotations;version="1.2.0",
  org.slf4j
-Service-Component: OSGI-INF/ch.elexis.core.ui.services.LocalDocumentServiceHolder.xml,
- OSGI-INF/ch.elexis.core.ui.compatibility.UiStartupHandler.xml,
+Service-Component: OSGI-INF/ch.elexis.core.ui.util.CoreUiUtil.xml,
+ OSGI-INF/ch.elexis.core.ui.services.internal.LoginDialogLoginContributor.xml,
  OSGI-INF/ch.elexis.core.ui.services.internal.ContextService.xml,
- OSGI-INF/ch.elexis.core.ui.util.CoreUiUtil.xml,
- OSGI-INF/ch.elexis.core.ui.services.EncounterServiceHolder.xml,
+ OSGI-INF/ch.elexis.core.ui.services.LocalDocumentServiceHolder.xml,
+ OSGI-INF/ch.elexis.core.ui.compatibility.UiStartupHandler.xml,
  OSGI-INF/ch.elexis.core.ui.internal.CoreOperationAdvisor.xml,
- OSGI-INF/ch.elexis.core.ui.services.internal.LoginDialogLoginContributor.xml
+ OSGI-INF/ch.elexis.core.ui.services.EncounterServiceHolder.xml,
+ OSGI-INF/ch.elexis.core.ui.startup.StartupHandler.xml
