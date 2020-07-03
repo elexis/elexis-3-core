@@ -8,12 +8,16 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
 import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 
@@ -23,10 +27,11 @@ import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
  * @author thomas
  *
  */
-public class UiStartup implements IStartup {
+@Component(property = EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE)
+public class StartupHandler implements EventHandler {
 	
 	@Override
-	public void earlyStartup(){
+	public void handleEvent(Event event){
 		PlatformUI.getWorkbench().addWorkbenchListener(new IWorkbenchListener() {
 			@Override
 			public boolean preShutdown(IWorkbench workbench, boolean forced){
