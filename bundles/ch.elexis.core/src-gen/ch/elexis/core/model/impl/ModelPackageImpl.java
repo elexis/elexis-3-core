@@ -5566,7 +5566,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEOperation(iBilledEClass, ecorePackage.getEDouble(), "getSecondaryScaleFactor", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		op = addEOperation(iBilledEClass, null, "copy", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getIInvoiceBilled(), "to", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIBilled(), "to", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iInvoiceBilledEClass, IInvoiceBilled.class, "IInvoiceBilled", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getIInvoiceBilled_Invoice(), this.getIInvoice(), null, "invoice", null, 0, 1, IInvoiceBilled.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

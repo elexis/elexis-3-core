@@ -420,5 +420,5 @@ public interface IBilled extends Identifiable, Deleteable, WithExtInfo {
 	 * @model
 	 * @generated
 	 */
-	void copy(IInvoiceBilled to);
+	void copy(IBilled to);
 } // IBilled
