@@ -11,11 +11,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -44,6 +42,7 @@ import ch.elexis.core.findings.util.commands.FindingDeleteCommand;
 import ch.elexis.core.findings.util.commands.ILockingProvider;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.ui.actions.CommentAction;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 
 public class FindingsUiUtil {
@@ -328,8 +327,7 @@ public class FindingsUiUtil {
 			
 			Command cmd = commandService.getCommand(commandId);
 			if(selection != null) {
-				PlatformUI.getWorkbench().getService(IEclipseContext.class)
-					.set(commandId.concat(".selection"), new StructuredSelection(selection));
+				CoreUiUtil.setCommandSelection(commandId, Collections.singletonList(selection));
 			}
 			ExecutionEvent ee = new ExecutionEvent(cmd, Collections.EMPTY_MAP, null, null);
 			return cmd.executeWithChecks(ee);
