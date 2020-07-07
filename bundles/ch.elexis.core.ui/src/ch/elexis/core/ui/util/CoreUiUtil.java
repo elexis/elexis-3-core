@@ -3,14 +3,19 @@ package ch.elexis.core.ui.util;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.InjectionException;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.workbench.UIEvents;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -22,6 +27,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Component;
@@ -31,9 +37,11 @@ import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.views.codesystems.ContributionAction;
 
 @Component(property = EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE)
 public class CoreUiUtil implements EventHandler {
@@ -222,5 +230,103 @@ public class CoreUiUtil implements EventHandler {
 		return ret;
 	}
 	
+	/**
+	 * This method queries the <i>org.eclipse.ui.menus</i> extensions, and looks for menu
+	 * contributions with a locationURI <i>popup:classname</i>. Found contributions are added to the
+	 * {@link IMenuManager}.
+	 * 
+	 * @param manager
+	 * @param objects
+	 */
+	public static void addCommandContributions(IMenuManager manager, Object[] selection,
+		String location){
+		java.util.List<IConfigurationElement> contributions =
+			Extensions.getExtensions("org.eclipse.ui.menus");
+		List<ContributionAction> contributionActions = new ArrayList<>();
+		for (IConfigurationElement contributionElement : contributions) {
+			String locationUri = contributionElement.getAttribute("locationURI");
+			if (location.equals(locationUri)) {
+				IConfigurationElement[] commands = contributionElement.getChildren("command");
+				if (commands.length > 0) {
+					for (IConfigurationElement iConfigurationElement : commands) {
+						getMenuContribution(iConfigurationElement, selection)
+							.ifPresent(a -> contributionActions.add(a));
+					}
+				}
+			}
+		}
+		if (!contributionActions.isEmpty()) {
+			manager.add(new Separator());
+			contributionActions.forEach(a -> manager.add(a));
+		}
+	}
 	
+	private static Optional<ContributionAction> getMenuContribution(
+		IConfigurationElement commandElement, Object[] selection){
+		ContributionAction action = new ContributionAction(commandElement);
+		// set selection before testing visibility
+		action.setSelection(selection);
+		if (action.isValid() && action.isVisible()) {
+			return Optional.of(action);
+		}
+		return Optional.empty();
+	}
+	
+	/**
+	 * Retrieve the selection for the commandId (added by
+	 * {@link CoreUiUtil#addCommandContributions(IMenuManager, Object[], String)}) from the
+	 * {@link IEclipseContext}. The named variable is removed from the context.
+	 * 
+	 * @param iEclipseContext
+	 * @param commandId
+	 * @return
+	 */
+	public static StructuredSelection getCommandSelection(IEclipseContext iEclipseContext,
+		String commandId){
+		return getCommandSelection(iEclipseContext, commandId, true);
+	}
+	
+	/**
+	 * Retrieve the selection for the commandId (added by
+	 * {@link CoreUiUtil#addCommandContributions(IMenuManager, Object[], String)}) from the
+	 * {@link IEclipseContext}. If the named variable is removed is specified with the remove
+	 * parameter.
+	 * 
+	 * @param iEclipseContext
+	 * @param commandId
+	 * @param remove
+	 * @return
+	 */
+	public static StructuredSelection getCommandSelection(IEclipseContext iEclipseContext,
+		String commandId, boolean remove){
+		StructuredSelection selection =
+			(StructuredSelection) iEclipseContext.get(commandId.concat(".selection"));
+		if (remove) {
+			iEclipseContext.remove(commandId.concat(".selection"));
+		}
+		return selection;
+	}
+	
+	/**
+	 * Set the selection for the commandId in the current {@link IEclipseContext}. Retrievable via
+	 * {@link CoreUiUtil#getCommandSelection(IEclipseContext, String)}.
+	 * 
+	 * @param commandId
+	 * @param selection
+	 */
+	public static void setCommandSelection(String commandId, Object[] selection){
+		PlatformUI.getWorkbench().getService(IEclipseContext.class)
+			.set(commandId.concat(".selection"), new StructuredSelection(selection));
+	}
+	
+	/**
+	 * Set the selection for the commandId in the current {@link IEclipseContext}. Retrievable via
+	 * {@link CoreUiUtil#getCommandSelection(IEclipseContext, String)}.
+	 * 
+	 * @param commandId
+	 * @param selection
+	 */
+	public static void setCommandSelection(String commandId, List<?> selection){
+		setCommandSelection(commandId, selection.toArray());
+	}
 }

@@ -4,13 +4,15 @@ import java.util.Collections;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.slf4j.LoggerFactory;
+
+import ch.elexis.core.ui.util.CoreUiUtil;
 
 /**
  * An Action that encapsulates a command menu contribution. Is used by {@link CodeSelectorFactory}
@@ -35,6 +37,9 @@ public class ContributionAction extends Action {
 	
 	public void setSelection(Object[] selection){
 		this.selection = selection;
+		if (selection != null) {
+			CoreUiUtil.setCommandSelection(commandId, selection);
+		}
 	}
 	
 	@Override
@@ -48,10 +53,6 @@ public class ContributionAction extends Action {
 				(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 			
 			Command cmd = commandService.getCommand(commandId);
-			if (selection != null) {
-				PlatformUI.getWorkbench().getService(IEclipseContext.class)
-					.set(commandId.concat(".selection"), new StructuredSelection(selection));
-			}
 			ExecutionEvent ee = new ExecutionEvent(cmd, Collections.EMPTY_MAP, null, null);
 			return cmd.executeWithChecks(ee);
 		} catch (Exception e) {
@@ -68,5 +69,21 @@ public class ContributionAction extends Action {
 	
 	public boolean isValid(){
 		return (commandId != null && !commandId.isEmpty()) && (label != null && !label.isEmpty());
+	}
+	
+	/**
+	 * Test if the contribution should be visible by testing {@link IHandler#isEnabled()}.
+	 * 
+	 * @return
+	 */
+	public boolean isVisible(){
+		ICommandService commandService =
+			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		Command cmd = commandService.getCommand(commandId);
+		IHandler handler = cmd.getHandler();
+		if (handler != null) {
+			return handler.isEnabled();
+		}
+		return true;
 	}
 }
