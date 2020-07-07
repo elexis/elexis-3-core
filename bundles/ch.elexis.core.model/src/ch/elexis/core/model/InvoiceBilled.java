@@ -240,7 +240,7 @@ public class InvoiceBilled extends AbstractIdDeleteModelAdapter<VerrechnetCopy>
 	}
 	
 	@Override
-	public void copy(IInvoiceBilled to){
+	public void copy(IBilled to){
 		throw new UnsupportedOperationException();
 	}
 }

@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.entities.Behandlung;
+import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.entities.Verrechnet;
 import ch.elexis.core.jpa.entities.VerrechnetCopy;
@@ -285,26 +286,43 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 	}
 	
 	@Override
-	public void copy(IInvoiceBilled to){
+	public void copy(IBilled to){
 		if (to instanceof AbstractIdDeleteModelAdapter) {
 			// IInvoiceBilled do not support set operations, so copy properties of the entities
-			@SuppressWarnings("unchecked")
-			VerrechnetCopy toEntity =
-				((AbstractIdDeleteModelAdapter<VerrechnetCopy>) to).getEntity();
-			toEntity.setKlasse(getEntity().getKlasse());
-			toEntity.setLeistungenCode(getEntity().getLeistungenCode());
-			toEntity.setLeistungenText(getEntity().getLeistungenText());
-			toEntity.setZahl(getEntity().getZahl());
-			toEntity.setEk_kosten(getEntity().getEk_kosten());
-			toEntity.setVk_tp(getEntity().getVk_tp());
-			toEntity.setVk_scale(getEntity().getVk_scale());
-			toEntity.setVk_preis(getEntity().getVk_preis());
-			toEntity.setScale(getEntity().getScale());
-			toEntity.setScale2(getEntity().getScale2());
-			
-			toEntity.setBehandlung(getEntity().getBehandlung());
-			toEntity.setExtInfo(getEntity().getExtInfo());
-			toEntity.setUser(getEntity().getUser());
+			EntityWithId toEntity = ((AbstractIdDeleteModelAdapter<?>) to).getEntity();
+			if (toEntity instanceof VerrechnetCopy) {
+				VerrechnetCopy verrechnetCopy = (VerrechnetCopy) toEntity;
+				verrechnetCopy.setKlasse(getEntity().getKlasse());
+				verrechnetCopy.setLeistungenCode(getEntity().getLeistungenCode());
+				verrechnetCopy.setLeistungenText(getEntity().getLeistungenText());
+				verrechnetCopy.setZahl(getEntity().getZahl());
+				verrechnetCopy.setEk_kosten(getEntity().getEk_kosten());
+				verrechnetCopy.setVk_tp(getEntity().getVk_tp());
+				verrechnetCopy.setVk_scale(getEntity().getVk_scale());
+				verrechnetCopy.setVk_preis(getEntity().getVk_preis());
+				verrechnetCopy.setScale(getEntity().getScale());
+				verrechnetCopy.setScale2(getEntity().getScale2());
+				
+				verrechnetCopy.setBehandlung(getEntity().getBehandlung());
+				verrechnetCopy.setExtInfo(getEntity().getExtInfo());
+				verrechnetCopy.setUser(getEntity().getUser());
+			} else if (toEntity instanceof Verrechnet) {
+				Verrechnet verrechnet = (Verrechnet) toEntity;
+				verrechnet.setKlasse(getEntity().getKlasse());
+				verrechnet.setLeistungenCode(getEntity().getLeistungenCode());
+				verrechnet.setLeistungenText(getEntity().getLeistungenText());
+				verrechnet.setZahl(getEntity().getZahl());
+				verrechnet.setEk_kosten(getEntity().getEk_kosten());
+				verrechnet.setVk_tp(getEntity().getVk_tp());
+				verrechnet.setVk_scale(getEntity().getVk_scale());
+				verrechnet.setVk_preis(getEntity().getVk_preis());
+				verrechnet.setScale(getEntity().getScale());
+				verrechnet.setScale2(getEntity().getScale2());
+				
+				verrechnet.setBehandlung(getEntity().getBehandlung());
+				verrechnet.setExtInfo(getEntity().getExtInfo());
+				verrechnet.setUser(getEntity().getUser());
+			}
 		}
 	}
 }
