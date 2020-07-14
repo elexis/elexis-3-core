@@ -34,4 +34,17 @@ public interface ILocalCoding extends ICoding, Identifiable, Deleteable {
 	 * @param display
 	 */
 	public void setDisplay(String display);
+	
+	/**
+	 * Set the prio attribute used for sorting findings.
+	 * 
+	 */
+	public void setPrio(int prio);
+	
+	/**
+	 * Get the prio attribute used for sorting findings.
+	 * 
+	 * @return
+	 */
+	public int getPrio();
 }

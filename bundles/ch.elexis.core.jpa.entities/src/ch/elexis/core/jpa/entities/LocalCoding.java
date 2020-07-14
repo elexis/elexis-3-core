@@ -66,6 +66,9 @@ public class LocalCoding extends AbstractEntityWithId implements EntityWithId, E
 	@Lob
 	private String mapped;
 
+	@Column
+	private int prio;
+	
 	public String getCode() {
 		return code;
 	}
@@ -88,5 +91,13 @@ public class LocalCoding extends AbstractEntityWithId implements EntityWithId, E
 
 	public void setMapped(String mapped) {
 		this.mapped = mapped;
+	}
+	
+	public int getPrio(){
+		return prio;
+	}
+	
+	public void setPrio(int prio){
+		this.prio = prio;
 	}
 }

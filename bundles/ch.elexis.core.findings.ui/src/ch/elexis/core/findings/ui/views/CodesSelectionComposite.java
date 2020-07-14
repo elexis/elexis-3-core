@@ -1,6 +1,7 @@
 package ch.elexis.core.findings.ui.views;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +21,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 
 import ch.elexis.core.findings.ICoding;
+import ch.elexis.core.findings.ILocalCoding;
 import ch.elexis.core.findings.ui.util.FindingsUiUtil;
 import ch.elexis.core.ui.UiDesk;
 
@@ -60,6 +62,18 @@ public class CodesSelectionComposite extends Composite implements ISelectionProv
 		if (visibleCodings.isEmpty()) {
 			visibleCodings = FindingsUiUtil.getAvailableCodings();
 		}
+		visibleCodings.sort(new Comparator<ICoding>() {
+			@Override
+			public int compare(ICoding arg0, ICoding arg1){
+				if (arg0 instanceof ILocalCoding && arg1 instanceof ILocalCoding) {
+					ILocalCoding left = (ILocalCoding) arg0;
+					ILocalCoding right = (ILocalCoding) arg1;
+					return Integer.valueOf(left.getPrio())
+						.compareTo(Integer.valueOf(right.getPrio()));
+				}
+				return 0;
+			}
+		});
 		manager.removeAll();
 		for (ICoding iCoding : visibleCodings) {
 			manager.add(new CodeSelectionAction(iCoding));

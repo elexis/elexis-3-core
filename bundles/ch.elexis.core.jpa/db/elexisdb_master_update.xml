@@ -12,4 +12,5 @@
     <include file="/db/elexisdb_create_optional.xml"/>
     
     <include file="/db/v3.8/elexisdb_create.xml"/>
+    <include file="/db/v3.8/elexisdb_update.xml"/>
 </databaseChangeLog>
