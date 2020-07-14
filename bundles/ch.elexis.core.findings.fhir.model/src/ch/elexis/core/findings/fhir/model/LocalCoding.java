@@ -119,4 +119,14 @@ public class LocalCoding
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public void setPrio(int prio){
+		getEntity().setPrio(prio);
+	}
+	
+	@Override
+	public int getPrio(){
+		return getEntity().getPrio();
+	}
 }

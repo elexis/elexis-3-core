@@ -1,5 +1,8 @@
 package ch.elexis.core.findings.ui.views;
 
+import java.util.Comparator;
+import java.util.List;
+
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -35,6 +38,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IFinding;
+import ch.elexis.core.findings.ILocalCoding;
 import ch.elexis.core.findings.ui.preferences.FindingsSettings;
 import ch.elexis.core.findings.ui.util.FindingsUiUtil;
 import ch.elexis.core.findings.ui.views.nattable.DragAndDropSupport;
@@ -222,7 +226,22 @@ public class FindingsViewDynamic extends ViewPart implements IActivationListener
 	}
 	
 	private void updateCodingsSelection(StructuredSelection selection){
-		dataProvider.setShownCodings(selection.toList());
+		@SuppressWarnings("unchecked")
+		List<ICoding> shownCodings = (List<ICoding>) selection.toList();
+		shownCodings.sort(new Comparator<ICoding>() {
+			
+			@Override
+			public int compare(ICoding arg0, ICoding arg1){
+				if (arg0 instanceof ILocalCoding && arg1 instanceof ILocalCoding) {
+					ILocalCoding left = (ILocalCoding) arg0;
+					ILocalCoding right = (ILocalCoding) arg1;
+					return Integer.valueOf(left.getPrio())
+						.compareTo(Integer.valueOf(right.getPrio()));
+				}
+				return 0;
+			}
+		});
+		dataProvider.setShownCodings(shownCodings);
 		natTable.refresh(true);
 	}
 	
