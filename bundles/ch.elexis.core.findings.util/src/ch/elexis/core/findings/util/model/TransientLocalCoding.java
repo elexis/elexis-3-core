@@ -13,6 +13,7 @@ public class TransientLocalCoding implements ILocalCoding {
 	private String code;
 	private String display;
 	private List<ICoding> mappedCodes;
+	private int prio = 0;
 	
 	public TransientLocalCoding(String system, String code, String display){
 		this.system = system;
@@ -96,4 +97,13 @@ public class TransientLocalCoding implements ILocalCoding {
 		return null;
 	}
 	
+	@Override
+	public void setPrio(int prio){
+		this.prio = prio;
+	}
+	
+	@Override
+	public int getPrio(){
+		return prio;
+	}
 }
