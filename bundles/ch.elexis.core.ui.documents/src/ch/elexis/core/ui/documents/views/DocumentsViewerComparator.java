@@ -25,7 +25,7 @@ public class DocumentsViewerComparator extends ViewerComparator {
 	private boolean bFlat;
 	
 	public DocumentsViewerComparator(){
-		this.propertyIndex = 0;
+		this.propertyIndex = 3;
 		direction = DESCENDING;
 		catDirection = -1;
 	}
