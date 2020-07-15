@@ -83,6 +83,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.documents.FilterCategory;
 import ch.elexis.core.exceptions.ElexisException;
@@ -115,6 +116,8 @@ public class DocumentsView extends ViewPart {
 	
 	private TreeViewer viewer;
 	private Tree table;
+	
+	private IStructuredSelection currentDragSelection;
 	
 	private final String[] colLabels = {
 		"", "", Messages.DocumentView_categoryColumn, Messages.DocumentView_lastChangedColumn,
@@ -496,6 +499,11 @@ public class DocumentsView extends ViewPart {
 			@Override
 			public void drop(DropTargetEvent event){
 				if (dropTransferTypes[0].isSupportedType(event.currentDataType)) {
+					// if flat drop from same view makes no sense
+					if (bFlat && currentDragSelection != null) {
+						return;
+					}
+					
 					String[] files = (String[]) event.data;
 					ICategory category = null;
 					if (event.item != null) {
@@ -513,6 +521,7 @@ public class DocumentsView extends ViewPart {
 					Command cmd = commandService.getCommand(DocumentCrudHandler.CMD_NEW_DOCUMENT);
 					if (files != null) {
 						for (String file : files) {
+							Object created = null;
 							try {
 								Map<String, String> params = new HashMap<>();
 								params.put(DocumentCrudHandler.PARAM_FILE_PATH, file);
@@ -521,9 +530,24 @@ public class DocumentsView extends ViewPart {
 										category.getName());
 								}
 								ExecutionEvent ev = new ExecutionEvent(cmd, params, null, null);
-								cmd.executeWithChecks(ev);
+								created = cmd.executeWithChecks(ev);
 							} catch (Exception e) {
 								logger.error("drop error", e);
+							}
+							// handle drop from same view
+							if (currentDragSelection != null) {
+								// if new document was created, delete source
+								if (created instanceof java.util.Optional
+									&& ((java.util.Optional<?>) created).isPresent()) {
+									// TODO change if drag of list is implemented in drag support
+									IDocument sourceDocument =
+										(IDocument) currentDragSelection.getFirstElement();
+									DocumentStoreServiceHolder.getService()
+										.removeDocument(sourceDocument);
+									ElexisEventDispatcher.getInstance()
+										.fire(new ElexisEvent(sourceDocument, IDocument.class,
+											ElexisEvent.EVENT_DELETE, ElexisEvent.PRIORITY_NORMAL));
+								}
 							}
 						}
 					}
@@ -549,6 +573,7 @@ public class DocumentsView extends ViewPart {
 				failure = false;
 				IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 				IDocument dh = (IDocument) selection.getFirstElement();
+				currentDragSelection = selection;
 				if (FileTransfer.getInstance().isSupportedType(event.dataType)) {
 					String title = dh.getTitle();
 					int end = dh.getTitle().lastIndexOf(".");
@@ -584,7 +609,7 @@ public class DocumentsView extends ViewPart {
 					SWTHelper.showError(Messages.DocumentView_exportErrorCaption,
 						Messages.DocumentView_exportErrorEmptyText);
 				}
-				
+				currentDragSelection = null;
 			}
 		});
 		

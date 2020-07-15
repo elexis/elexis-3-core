@@ -43,8 +43,8 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 	private static Logger logger = LoggerFactory.getLogger(DocumentCrudHandler.class);
 	
 	public static final String CMD_NEW_DOCUMENT = "ch.elexis.core.ui.documents.commandCreate";
-	private static final String CMD_UPDATE_DOCUMENT = "ch.elexis.core.ui.documents.commandUpdate";
-	private static final String CMD_DELETE_DOCUMENT = "ch.elexis.core.ui.documents.commandDelete";
+	public static final String CMD_UPDATE_DOCUMENT = "ch.elexis.core.ui.documents.commandUpdate";
+	public static final String CMD_DELETE_DOCUMENT = "ch.elexis.core.ui.documents.commandDelete";
 	
 	public static final String PARAM_DOC_CATEGORY = "documents.category";
 	public static final String PARAM_FILE_PATH = "documents.file.path";
@@ -74,7 +74,8 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 							DocumentStoreServiceHolder.getService().createDocument(null,
 							patient.getId(), path, category);
 						if (document != null) {
-							openMetaDataDialog(shell, document, file, ElexisEvent.EVENT_CREATE);
+							return openMetaDataDialog(shell, document, file,
+								ElexisEvent.EVENT_CREATE);
 						}
 					}
 				}
@@ -88,7 +89,7 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 					List<?> iDocuments = ((StructuredSelection) selection).toList();
 					for (Object documentToEdit : iDocuments) {
 						if (documentToEdit instanceof IDocument) {
-							openMetaDataDialog(shell, (IDocument) documentToEdit, null,
+							return openMetaDataDialog(shell, (IDocument) documentToEdit, null,
 								ElexisEvent.EVENT_UPDATE);
 						}
 					}
@@ -159,7 +160,8 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 		}
 	}
 	
-	private void openMetaDataDialog(Shell shell, IDocument document, File file, int eventType){
+	private Optional<IDocument> openMetaDataDialog(Shell shell, IDocument document, File file,
+		int eventType){
 		if (eventType == ElexisEvent.EVENT_CREATE) {
 			Optional<IDocument> newDocument =
 				openMetaDataDialogNoLocking(shell, document, file, eventType);
@@ -172,6 +174,7 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 					LocalLockServiceHolder.get().releaseLock(po);
 				});
 			});
+			return newDocument;
 		} else {
 			Optional<Identifiable> documentPo =
 				DocumentStoreServiceHolder.getService().getPersistenceObject(document);
@@ -188,9 +191,10 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 					}
 				});
 			} else {
-				openMetaDataDialogNoLocking(shell, document, file, eventType);
+				return openMetaDataDialogNoLocking(shell, document, file, eventType);
 			}
 		}
+		return Optional.empty();
 	}
 	
 	private Optional<IDocument> openMetaDataDialogNoLocking(Shell shell, IDocument document,
