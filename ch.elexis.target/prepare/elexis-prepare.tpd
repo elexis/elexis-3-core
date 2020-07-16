@@ -101,7 +101,7 @@ location "https://download.elexis.info/elexis-server/misc/gemini-jpa/" {
 	org.eclipse.gemini.jpa.feature.feature.group
 }
 
-location "https://download.eclipse.org/nebula/releases/2.3.0/" {
+location "https://download.eclipse.org/nebula/releases/2.4.1/" {
 	org.eclipse.nebula.cwt.feature.feature.group
 	org.eclipse.nebula.widgets.cdatetime.feature.feature.group
 	org.eclipse.nebula.widgets.tablecombo.feature.feature.group
