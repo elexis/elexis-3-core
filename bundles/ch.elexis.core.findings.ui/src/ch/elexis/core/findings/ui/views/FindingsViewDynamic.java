@@ -252,6 +252,7 @@ public class FindingsViewDynamic extends ViewPart implements IActivationListener
 	
 	public void codeRefresh(){
 		codeSelectionComposite.refresh();
+		updateCodingsSelection((StructuredSelection) codeSelectionComposite.getSelection());
 	}
 	
 	@Override
