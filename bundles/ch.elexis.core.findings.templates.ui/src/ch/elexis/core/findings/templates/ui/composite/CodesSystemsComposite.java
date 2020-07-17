@@ -32,6 +32,8 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchActionConstants;
 
+import ch.elexis.core.data.events.ElexisEvent;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ILocalCoding;
 import ch.elexis.core.findings.IObservation;
@@ -111,6 +113,8 @@ public class CodesSystemsComposite extends Composite {
 					((ILocalCoding) element).setPrio(Integer.parseInt((String) value));
 					FindingsServiceHolder.findingsModelService.save((ILocalCoding) element);
 					tableViewer.update((ILocalCoding) element, null);
+					ElexisEventDispatcher.getInstance()
+						.fire(new ElexisEvent(null, ICoding.class, ElexisEvent.EVENT_RELOAD));
 				}
 			}
 			
