@@ -14,6 +14,7 @@ import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.activation.MailcapCommandMap;
 import javax.mail.AuthenticationFailedException;
+import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
@@ -21,6 +22,7 @@ import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
@@ -227,7 +229,15 @@ public class MailClient implements IMailClient {
 				
 				Transport transport = session.getTransport();
 				transport.connect();
-				transport.sendMessage(mimeMessage, message.getToAddress());
+				// add recipients
+				List<InternetAddress> addressesList = new ArrayList<>();
+				mimeMessage.setRecipients(RecipientType.TO, message.getToAddress());
+				addressesList.addAll(Arrays.asList(message.getToAddress()));
+				mimeMessage.setRecipients(RecipientType.CC, message.getCcAddress());
+				addressesList.addAll(Arrays.asList(message.getCcAddress()));
+				
+				transport.sendMessage(mimeMessage,
+					addressesList.toArray(new InternetAddress[addressesList.size()]));
 				transport.close();
 			} else {
 				logger.warn("Invalid account type for sending [" + account.getType() + "].");

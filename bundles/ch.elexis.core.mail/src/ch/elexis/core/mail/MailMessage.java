@@ -7,6 +7,8 @@ import java.util.List;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Class representing a Message that can be sent using a {@link MailAccount} and a
  * {@link IMailClient}. <br />
@@ -19,6 +21,7 @@ import javax.mail.internet.InternetAddress;
 public class MailMessage {
 	
 	private String to;
+	private String cc;
 	private String subject;
 	private String text;
 	
@@ -32,6 +35,17 @@ public class MailMessage {
 	 */
 	public MailMessage to(String to){
 		setTo(to);
+		return this;
+	}
+	
+	/**
+	 * Set the cc address.
+	 * 
+	 * @param to
+	 * @return
+	 */
+	public MailMessage cc(String cc){
+		setCc(cc);
 		return this;
 	}
 	
@@ -67,17 +81,40 @@ public class MailMessage {
 	}
 	
 	/**
+	 * Get the to address.
+	 * 
+	 * @return
+	 */
+	public String getCc(){
+		return cc;
+	}
+	
+	/**
 	 * Get the to address as {@link InternetAddress}.
 	 * 
 	 * @return
 	 * @throws AddressException
 	 */
 	public InternetAddress[] getToAddress() throws AddressException{
-		return InternetAddress.parse(getTo());
+		if (StringUtils.isNotEmpty(getTo())) {
+			return InternetAddress.parse(getTo());
+		}
+		return new InternetAddress[0];
+	}
+	
+	public InternetAddress[] getCcAddress() throws AddressException{
+		if (StringUtils.isNotEmpty(getCc())) {
+			return InternetAddress.parse(getCc());
+		}
+		return new InternetAddress[0];
 	}
 	
 	public void setTo(String to){
 		this.to = to;
+	}
+	
+	public void setCc(String cc){
+		this.cc = cc;
 	}
 	
 	public String getSubject(){
