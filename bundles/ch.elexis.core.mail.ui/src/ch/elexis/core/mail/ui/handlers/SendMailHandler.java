@@ -56,7 +56,8 @@ public class SendMailHandler extends AbstractHandler implements IHandler {
 		}
 		
 		if (sendMailDialog.open() == Dialog.OK) {
-			MailMessage message = new MailMessage().to(sendMailDialog.getTo())
+			MailMessage message =
+				new MailMessage().to(sendMailDialog.getTo()).cc(sendMailDialog.getCc())
 				.subject(sendMailDialog.getSubject()).text(sendMailDialog.getText());
 			if (attachments != null && !attachments.isEmpty()) {
 				List<File> attachmentList = getAttachmentsList(attachments);

@@ -43,6 +43,8 @@ public class SendMailDialog extends TitleAreaDialog {
 	private MailAccount account;
 	private Text toText;
 	private String toString = "";
+	private Text ccText;
+	private String ccString = "";
 	private Text subjectText;
 	private String subjectString = "";
 	private Text textText;
@@ -69,7 +71,7 @@ public class SendMailDialog extends TitleAreaDialog {
 		
 		if (MailClientComponent.getMailClient() != null) {
 			Label lbl = new Label(container, SWT.NONE);
-			lbl.setText("Konto");
+			lbl.setText("Von");
 			accountsViewer = new ComboViewer(container);
 			accountsViewer.setContentProvider(ArrayContentProvider.getInstance());
 			accountsViewer.setLabelProvider(new LabelProvider());
@@ -101,7 +103,7 @@ public class SendMailDialog extends TitleAreaDialog {
 				}
 			});
 			MenuManager menuManager = new MenuManager();
-			menuManager.add(new Action("email von") {
+			menuManager.add(new Action("email zu Kontakt") {
 				@Override
 				public void run(){
 					KontaktSelektor selector =
@@ -130,6 +132,58 @@ public class SendMailDialog extends TitleAreaDialog {
 			});
 			toText.setMenu(menuManager.createContextMenu(toText));
 			
+			lbl = new Label(container, SWT.NONE);
+			lbl.setText("Cc");
+			ccText = new Text(container, SWT.BORDER);
+			ccText.setText(ccString);
+			ccText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+			ContentProposalAdapter ccAddressProposalAdapter = new ContentProposalAdapter(ccText,
+				new TextContentAdapter(), new MailAddressContentProposalProvider(), null, null);
+			ccAddressProposalAdapter.addContentProposalListener(new IContentProposalListener() {
+				@Override
+				public void proposalAccepted(IContentProposal proposal){
+					int index =
+						MailAddressContentProposalProvider.getLastAddressIndex(ccText.getText());
+					StringBuilder sb = new StringBuilder();
+					if (index != 0) {
+						sb.append(ccText.getText().substring(0, index)).append(", ")
+							.append(proposal.getContent());
+					} else {
+						sb.append(proposal.getContent());
+					}
+					ccText.setText(sb.toString());
+					ccText.setSelection(ccText.getText().length());
+				}
+			});
+			menuManager = new MenuManager();
+			menuManager.add(new Action("email zu Kontakt") {
+				@Override
+				public void run(){
+					KontaktSelektor selector =
+						new KontaktSelektor(getShell(), Kontakt.class, "Kontakt auswahl",
+							"Kontakt für die E-Mail Adresse auswählen", Kontakt.DEFAULT_SORT);
+					if (selector.open() == Dialog.OK) {
+						Kontakt selected = (Kontakt) selector.getSelection();
+						selected.set(Kontakt.FLD_E_MAIL, ccText.getSelectionText());
+					}
+				}
+				
+				@Override
+				public boolean isEnabled(){
+					String text = ccText.getSelectionText();
+					return text != null && !text.isEmpty() && text.contains("@");
+				}
+			});
+			menuManager.addMenuListener(new IMenuListener() {
+				@Override
+				public void menuAboutToShow(IMenuManager manager){
+					IContributionItem[] items = manager.getItems();
+					for (IContributionItem iContributionItem : items) {
+						iContributionItem.update();
+					}
+				}
+			});
+			ccText.setMenu(menuManager.createContextMenu(ccText));
 
 			lbl = new Label(container, SWT.NONE);
 			lbl.setText("Betreff");
@@ -255,6 +309,8 @@ public class SendMailDialog extends TitleAreaDialog {
 		}
 		toString = to;
 		
+		ccString = ccText.getText();
+		
 		subjectString = subjectText.getText();
 		
 		textString = textText.getText();
@@ -264,6 +320,10 @@ public class SendMailDialog extends TitleAreaDialog {
 	
 	public String getTo(){
 		return toString;
+	}
+	
+	public String getCc(){
+		return ccString;
 	}
 	
 	public String getSubject(){
