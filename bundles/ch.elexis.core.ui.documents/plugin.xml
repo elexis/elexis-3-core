@@ -71,6 +71,10 @@
             id="ch.elexis.core.ui.documents.commandSendToCancerRegister"
             name="Senden an Krebsregister">
       </command>
+      <command
+            id="ch.elexis.core.ui.documents.commandOpenSelection"
+            name="Open Selection Dialog">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -302,6 +306,10 @@
       <handler
             class="ch.elexis.core.ui.documents.handler.DocumentSendToCancerRegister"
             commandId="ch.elexis.core.ui.documents.commandSendToCancerRegister">
+      </handler>
+      <handler
+            class="ch.elexis.core.ui.documents.handler.OpenSelectionHandler"
+            commandId="ch.elexis.core.ui.documents.commandOpenSelection">
       </handler>
    </extension>
    <extension
