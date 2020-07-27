@@ -142,6 +142,9 @@ public class DocumentsView extends ViewPart {
 	@Inject
 	void udpateDocument(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IDocument document){
 		if (document != null && viewer != null && !viewer.getControl().isDisposed()) {
+			// reload to refresh entity from database
+			document = DocumentStoreServiceHolder.getService().loadDocument(document.getId(),
+				document.getStoreId()).get();
 			contentProvider.updateElement(document);
 			//the selection of TreeItem is disposed after updating a document with a dialog
 			table.deselectAll();
