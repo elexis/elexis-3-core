@@ -313,4 +313,26 @@ public class CoreUtil {
 		}
 		return userDir;
 	}
+	
+	/**
+	 * Return a directory suitable for temporary files. Most probably this will be a default tempdir
+	 * provided by the os. If none such exists, it will be the user dir.
+	 * 
+	 * @return always a valid and writable directory.
+	 */
+	public static File getTempDir(){
+		File ret = null;
+		String temp = System.getProperty("java.io.tmpdir"); //$NON-NLS-1$
+		if (!StringTool.isNothing(temp)) {
+			ret = new File(temp);
+			if (ret.exists() && ret.isDirectory()) {
+				return ret;
+			} else {
+				if (ret.mkdirs()) {
+					return ret;
+				}
+			}
+		}
+		return getWritableUserDir();
+	}
 }

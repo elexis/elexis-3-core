@@ -2,7 +2,6 @@ package ch.elexis.core.mail.ui.handlers;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -17,6 +16,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import ch.elexis.core.mail.AttachmentsUtil;
 import ch.elexis.core.mail.MailMessage;
 import ch.elexis.core.mail.ui.client.MailClientComponent;
 import ch.elexis.core.mail.ui.dialogs.SendMailDialog;
@@ -24,6 +24,7 @@ import ch.elexis.core.mail.ui.dialogs.SendMailDialog;
 /**
  * Handler for sending an Email. The mail can be specified via the command parameters.
  * <li>ch.elexis.core.mail.ui.sendMail.attachments</li>
+ * <li>ch.elexis.core.mail.ui.sendMail.documents</li>
  * <li>ch.elexis.core.mail.ui.sendMail.to</li>
  * <li>ch.elexis.core.mail.ui.sendMail.subject</li>
  * <li>ch.elexis.core.mail.ui.sendMail.text</li> <br />
@@ -38,9 +39,14 @@ public class SendMailHandler extends AbstractHandler implements IHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException{
 		SendMailDialog sendMailDialog = new SendMailDialog(HandlerUtil.getActiveShell(event));
+		sendMailDialog.create();
 		String attachments = event.getParameter("ch.elexis.core.mail.ui.sendMail.attachments");
 		if (attachments != null) {
 			sendMailDialog.setAttachments(attachments);
+		}
+		String documents = event.getParameter("ch.elexis.core.mail.ui.sendMail.documents");
+		if (documents != null) {
+			sendMailDialog.setDocuments(documents);
 		}
 		String to = event.getParameter("ch.elexis.core.mail.ui.sendMail.to");
 		if (to != null) {
@@ -59,8 +65,9 @@ public class SendMailHandler extends AbstractHandler implements IHandler {
 			MailMessage message =
 				new MailMessage().to(sendMailDialog.getTo()).cc(sendMailDialog.getCc())
 				.subject(sendMailDialog.getSubject()).text(sendMailDialog.getText());
+			attachments = sendMailDialog.getAttachments();
 			if (attachments != null && !attachments.isEmpty()) {
-				List<File> attachmentList = getAttachmentsList(attachments);
+				List<File> attachmentList = AttachmentsUtil.getAttachmentsFiles(attachments);
 				for (File file : attachmentList) {
 					message.addAttachment(file);
 				}
@@ -79,17 +86,6 @@ public class SendMailHandler extends AbstractHandler implements IHandler {
 			}
 		}
 		return false;
-	}
-	
-	private List<File> getAttachmentsList(String attachments){
-		List<File> ret = new ArrayList<File>();
-		if (attachments != null && !attachments.isEmpty()) {
-			String[] parts = attachments.split(":::");
-			for (String string : parts) {
-				ret.add(new File(string));
-			}
-		}
-		return ret;
 	}
 	
 	class MailSendRunnable implements IRunnableWithProgress {

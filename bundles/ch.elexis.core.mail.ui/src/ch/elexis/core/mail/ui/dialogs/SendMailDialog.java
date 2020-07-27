@@ -1,6 +1,5 @@
 package ch.elexis.core.mail.ui.dialogs;
 
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -49,8 +48,7 @@ public class SendMailDialog extends TitleAreaDialog {
 	private String subjectString = "";
 	private Text textText;
 	private String textString = "";
-	private Label attachmentsLabel;
-	private String attachmentsString = "";
+	private AttachmentsComposite attachments;
 	
 	public SendMailDialog(Shell parentShell){
 		super(parentShell);
@@ -191,12 +189,8 @@ public class SendMailDialog extends TitleAreaDialog {
 			subjectText.setText(subjectString);
 			subjectText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			
-			lbl = new Label(container, SWT.NONE);
-			lbl.setText("Anhang");
-			attachmentsLabel = new Label(container, SWT.NONE);
-			attachmentsLabel.setToolTipText(attachmentsString);
-			attachmentsLabel.setText(getAttachmentNames(attachmentsString));
-			attachmentsLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+			attachments = new AttachmentsComposite(container, SWT.NONE);
+			attachments.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 			
 			lbl = new Label(container, SWT.NONE);
 			lbl.setText("Text");
@@ -224,26 +218,14 @@ public class SendMailDialog extends TitleAreaDialog {
 		return area;
 	}
 	
-	public String getAttachmentNames(String attachmentAsString){
-		StringBuilder build = new StringBuilder();
-		if (attachmentAsString != null) {
-			String [] attachments = attachmentAsString.split(",\n");
-			for (String f : attachments)
-			{
-				if (build.length() > 0) {
-					build.append(",\n");
-				}
-				build.append(Paths.get(f).getFileName());
-				
-			}
-		}
-		return build.toString();
+	public void setAttachments(String attachments){
+		this.attachments.setAttachments(attachments);
+		getShell().layout(true, true);
 	}
 	
-	public void setAttachments(String attachments){
-		if (attachments != null && !attachments.isEmpty()) {
-			attachmentsString = attachments.replaceAll(":::", ",\n");
-		}
+	public void setDocuments(String documents){
+		this.attachments.setDocuments(documents);
+		getShell().layout(true, true);
 	}
 	
 	public void setTo(String to){
@@ -336,5 +318,9 @@ public class SendMailDialog extends TitleAreaDialog {
 	
 	public MailAccount getAccount(){
 		return account;
+	}
+	
+	public String getAttachments(){
+		return attachments.getAttachments();
 	}
 }
