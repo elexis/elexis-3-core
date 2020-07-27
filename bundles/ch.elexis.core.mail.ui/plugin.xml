@@ -35,6 +35,11 @@
                name="text"
                optional="true">
          </commandParameter>
+         <commandParameter
+               id="ch.elexis.core.mail.ui.sendMail.documents"
+               name="documents"
+               optional="true">
+         </commandParameter>
       </command>
       <command
             defaultHandler="ch.elexis.core.mail.ui.handlers.SendMailNoUiHandler"
@@ -68,6 +73,11 @@
          <commandParameter
                id="ch.elexis.core.mail.ui.sendMailNoUi.accountid"
                name="accountid"
+               optional="true">
+         </commandParameter>
+         <commandParameter
+               id="ch.elexis.core.mail.ui.sendMailNoUi.documents"
+               name="documents"
                optional="true">
          </commandParameter>
       </command>
