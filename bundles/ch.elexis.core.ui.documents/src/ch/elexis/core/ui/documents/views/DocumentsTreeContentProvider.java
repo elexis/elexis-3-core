@@ -29,6 +29,8 @@ public class DocumentsTreeContentProvider implements ITreeContentProvider {
 	
 	private TreeViewer viewer;
 	
+	private IPatient currentPatient;
+	
 	public DocumentsTreeContentProvider(TreeViewer viewer){
 		this.viewer = viewer;
 		this.flat = false;
@@ -39,9 +41,10 @@ public class DocumentsTreeContentProvider implements ITreeContentProvider {
 	}
 	
 	public void inputChanged(Viewer v, Object oldInput, Object newInput){
-		documentsMap.clear();
 		if (newInput instanceof IPatient) {
 			loadByFilterCategory((IPatient) newInput);
+		} else {
+			documentsMap.clear();
 		}
 	}
 	
@@ -61,17 +64,20 @@ public class DocumentsTreeContentProvider implements ITreeContentProvider {
 	}
 	
 	private void loadByFilterCategory(IPatient newInput){
-		if (newInput != null) {
-			if (selectedFilter.isAll()) {
-				documentsMap = DocumentStoreServiceHolder.getService()
-					.getDocumentsByPatientId(newInput.getId());
-				if (viewer != null) {
-					viewer.refresh(true);
+		if (newInput != currentPatient) {
+			if (newInput != null) {
+				if (selectedFilter.isAll()) {
+					documentsMap = DocumentStoreServiceHolder.getService()
+						.getDocumentsByPatientId(newInput.getId());
+					if (viewer != null) {
+						viewer.refresh(true);
+					}
+				} else {
+					loadElementsByCategory(newInput.getId(), selectedFilter);
 				}
-			} else {
-				loadElementsByCategory(newInput.getId(), selectedFilter);
 			}
 		}
+		currentPatient = newInput;
 	}
 	
 	public void updateElement(IDocument iDocument){
