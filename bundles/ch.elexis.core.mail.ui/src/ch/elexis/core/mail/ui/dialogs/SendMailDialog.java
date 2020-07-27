@@ -52,6 +52,7 @@ public class SendMailDialog extends TitleAreaDialog {
 	
 	public SendMailDialog(Shell parentShell){
 		super(parentShell);
+		setShellStyle(getShellStyle() | SWT.RESIZE);
 	}
 	
 	@Override

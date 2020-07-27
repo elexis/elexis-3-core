@@ -15,8 +15,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
+import ch.elexis.core.mail.internal.DocumentConverterServiceHolder;
 import ch.elexis.core.mail.internal.DocumentStoreServiceHolder;
 import ch.elexis.core.model.IDocument;
+import ch.elexis.core.services.IDocumentConverter;
 import ch.elexis.core.utils.CoreUtil;
 
 public class AttachmentsUtil {
@@ -35,6 +37,16 @@ public class AttachmentsUtil {
 	}
 	
 	private static Optional<File> getTempFile(IDocument iDocument){
+		String extension = iDocument.getExtension();
+		Optional<IDocumentConverter> converterService = DocumentConverterServiceHolder.get();
+		if (converterService.isPresent() && converterService.get().isAvailable()
+			&& extension != null && !extension.toLowerCase().endsWith("pdf")) {
+			Optional<File> converted =
+				DocumentConverterServiceHolder.get().get().convertToPdf(iDocument);
+			if (converted.isPresent()) {
+				return converted;
+			}
+		}
 		File tmpFile = new File(getAttachmentsFolder(), getFileName(iDocument));
 		try (FileOutputStream fout = new FileOutputStream(tmpFile)) {
 			Optional<InputStream> content =
@@ -56,21 +68,21 @@ public class AttachmentsUtil {
 		StringBuilder ret = new StringBuilder();
 		ret.append(iDocument.getPatient().getCode()).append("_");
 		
-		ret.append(iDocument.getPatient().getLastName()).append("_");
+		ret.append(iDocument.getPatient().getLastName()).append(" ");
 		ret.append(iDocument.getPatient().getFirstName()).append("_");
 		String title = iDocument.getTitle();
 		if (iDocument.getExtension() != null && title.endsWith(iDocument.getExtension())) {
 			title = title.substring(0, title.lastIndexOf('.'));
 		}
 		ret.append(title).append("_");
-		ret.append(new SimpleDateFormat("dd_MM_yyyy_HHmmss").format(iDocument.getLastchanged()));
+		ret.append(new SimpleDateFormat("ddMMyyyy_HHmmss").format(iDocument.getLastchanged()));
 		String extension = iDocument.getExtension();
 		if (extension.indexOf('.') != -1) {
 			extension = extension.substring(extension.lastIndexOf('.') + 1);
 		}
 		ret.append(".").append(extension);
 		
-		return ret.toString().replaceAll("[^a-züäöA-ZÜÄÖ0-9_\\.\\-]", "");
+		return ret.toString().replaceAll("[^a-züäöA-ZÜÄÖ0-9 _\\.\\-]", "");
 	}
 	
 	/**
