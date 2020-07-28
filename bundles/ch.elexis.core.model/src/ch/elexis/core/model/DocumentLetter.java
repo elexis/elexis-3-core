@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -235,5 +236,10 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 				IOUtils.closeQuietly(content);
 			}
 		}
+	}
+	
+	@Override
+	public String getLabel(){
+		return new SimpleDateFormat("dd.MM.yyyy").format(getLastchanged()) + " " + getTitle();
 	}
 }
