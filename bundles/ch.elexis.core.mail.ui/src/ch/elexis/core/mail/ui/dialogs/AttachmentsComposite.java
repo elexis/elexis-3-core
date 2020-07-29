@@ -85,7 +85,13 @@ public class AttachmentsComposite extends Composite {
 	}
 	
 	public String getAttachments(){
-		return attachments;
+		String ret = attachments;
+		if (StringUtils.isNotBlank(ret)) {
+			ret += ":::" + AttachmentsUtil.toAttachments(documents);
+		} else {
+			ret = AttachmentsUtil.toAttachments(documents);
+		}
+		return ret;
 	}
 	
 	public void addDocument(IDocument document){
