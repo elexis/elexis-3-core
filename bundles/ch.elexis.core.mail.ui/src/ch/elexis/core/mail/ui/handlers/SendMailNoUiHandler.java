@@ -1,7 +1,5 @@
 package ch.elexis.core.mail.ui.handlers;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,10 +60,7 @@ public class SendMailNoUiHandler extends AbstractHandler implements IHandler {
 		MailMessage message = new MailMessage().to(to).subject(StringUtils.defaultString(subject))
 			.text(StringUtils.defaultString(text));
 		if (attachments != null && !attachments.isEmpty()) {
-			List<File> attachmentList = getAttachmentsList(attachments);
-			for (File file : attachmentList) {
-				message.addAttachment(file);
-			}
+			message.setAttachments(attachments);
 		}
 		if (MailClientComponent.getMailClient().sendMail(mailAccount, message)) {
 			return null;
@@ -84,16 +79,5 @@ public class SendMailNoUiHandler extends AbstractHandler implements IHandler {
 			}
 		}
 		return null;
-	}
-	
-	private List<File> getAttachmentsList(String attachments){
-		List<File> ret = new ArrayList<File>();
-		if (attachments != null && !attachments.isEmpty()) {
-			String[] parts = attachments.split(":::");
-			for (String string : parts) {
-				ret.add(new File(string));
-			}
-		}
-		return ret;
 	}
 }

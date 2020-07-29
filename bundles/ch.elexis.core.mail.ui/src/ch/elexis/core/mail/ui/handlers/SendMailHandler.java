@@ -1,8 +1,7 @@
 package ch.elexis.core.mail.ui.handlers;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -13,13 +12,16 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import ch.elexis.core.mail.AttachmentsUtil;
 import ch.elexis.core.mail.MailMessage;
+import ch.elexis.core.mail.TaskUtil;
 import ch.elexis.core.mail.ui.client.MailClientComponent;
 import ch.elexis.core.mail.ui.dialogs.SendMailDialog;
+import ch.elexis.core.model.tasks.TaskException;
+import ch.elexis.core.tasks.model.ITask;
+import ch.elexis.core.tasks.model.ITaskDescriptor;
+import ch.elexis.core.tasks.model.TaskState;
 
 /**
  * Handler for sending an Email. The mail can be specified via the command parameters.
@@ -35,6 +37,8 @@ import ch.elexis.core.mail.ui.dialogs.SendMailDialog;
  *
  */
 public class SendMailHandler extends AbstractHandler implements IHandler {
+	
+	private ITask task;
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException{
@@ -63,82 +67,50 @@ public class SendMailHandler extends AbstractHandler implements IHandler {
 		
 		if (sendMailDialog.open() == Dialog.OK) {
 			MailMessage message =
-				new MailMessage().to(sendMailDialog.getTo()).cc(sendMailDialog.getCc())
-				.subject(sendMailDialog.getSubject()).text(sendMailDialog.getText());
-			attachments = sendMailDialog.getAttachments();
-			if (attachments != null && !attachments.isEmpty()) {
-				List<File> attachmentList = AttachmentsUtil.getAttachmentsFiles(attachments);
-				for (File file : attachmentList) {
-					message.addAttachment(file);
+					new MailMessage().to(sendMailDialog.getTo()).cc(sendMailDialog.getCc())
+					.subject(sendMailDialog.getSubject()).text(sendMailDialog.getText());
+			message.setAttachments(sendMailDialog.getAttachmentsString());
+			message.setDocuments(sendMailDialog.getDocumentsString());
+			Optional<ITaskDescriptor> taskDescriptor =
+				TaskUtil.createSendMailTaskDescriptor(sendMailDialog.getAccount().getId(), message);
+			if (taskDescriptor.isPresent()) {
+				try {
+					new ProgressMonitorDialog(HandlerUtil.getActiveShell(event)).run(false, false,
+						new IRunnableWithProgress() {
+							
+							@Override
+							public void run(IProgressMonitor monitor)
+								throws InvocationTargetException, InterruptedException{
+								try {
+									monitor.beginTask("Send Mail ...", IProgressMonitor.UNKNOWN);
+									task = TaskUtil.executeTaskSync(taskDescriptor.get(), monitor);
+									monitor.done();
+								} catch (TaskException e) {
+									MessageDialog.openError(HandlerUtil.getActiveShell(event),
+										"Fehler", "Versenden konnte nicht gestartet werden.");
+								}
+							}
+						});
+				} catch (InvocationTargetException | InterruptedException e) {
+					MessageDialog.openError(HandlerUtil.getActiveShell(event), "Fehler",
+						"Versenden konnte nicht gestartet werden.");
 				}
-			}
-			Display display = Display.getDefault();
-			try {
-				MailSendRunnable mailSendRunnable =
-					new MailSendRunnable(display, sendMailDialog, message, event);
-				new ProgressMonitorDialog(HandlerUtil.getActiveShell(event)).run(false, false,
-					mailSendRunnable);
-				
-				return mailSendRunnable.isSuccess();
-			} catch (InvocationTargetException | InterruptedException e) {
-				MessageDialog.openError(HandlerUtil.getActiveShell(event), "Fehler",
-					"Versenden konnte nicht gestartet werden.");
-			}
-		}
-		return false;
-	}
-	
-	class MailSendRunnable implements IRunnableWithProgress {
-		
-		private final Display display;
-		private final SendMailDialog sendMailDialog;
-		private final ExecutionEvent event;
-		private final MailMessage message;
-		private boolean success;
-		
-		public MailSendRunnable(Display display, SendMailDialog sendMailDialog, MailMessage message,
-			ExecutionEvent event){
-			this.display = display;
-			this.sendMailDialog = sendMailDialog;
-			this.event = event;
-			this.message = message;
-			this.success = false;
-		}
-		
-		public boolean isSuccess(){
-			return success;
-		}
-		
-		@Override
-		public void run(IProgressMonitor monitor)
-			throws InvocationTargetException, InterruptedException{
-			monitor.beginTask("Send Mail ...", IProgressMonitor.UNKNOWN);
-			if (MailClientComponent.getMailClient().sendMail(sendMailDialog.getAccount(),
-				message)) {
-				success = true;
-				// new OutputLog();
-				display.asyncExec(new Runnable() {
-					@Override
-					public void run(){
-						MessageDialog.openInformation(HandlerUtil.getActiveShell(event),
-							"E-Mail versand", "E-Mail erfolgreich versendet.");
-						
-					}
-				});
-			} else {
-				success = false;
-				display.asyncExec(new Runnable() {
-					
-					@Override
-					public void run(){
-						String errorMessage = MailClientComponent.getLastErrorMessage();
+				if (!task.isSucceeded()) {
+					String errorMessage = MailClientComponent.getLastErrorMessage();
+					if (errorMessage.isEmpty()) {
+						MessageDialog.openError(HandlerUtil.getActiveShell(event), "Fehler",
+							"Versenden konnte nicht gestartet werden.");
+					} else {
 						MessageDialog.openError(HandlerUtil.getActiveShell(event), "Fehler",
 							errorMessage);
 					}
-				});
+				} else {
+					MessageDialog.openInformation(HandlerUtil.getActiveShell(event),
+						"E-Mail versand", "E-Mail erfolgreich versendet.");
+				}
+				return task.getState() == TaskState.COMPLETED;
 			}
-			monitor.done();
 		}
-		
+		return false;
 	}
 }
