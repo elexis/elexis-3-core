@@ -27,7 +27,7 @@ public class MailClientComponent {
 	}
 	
 	public static String getLastErrorMessage(){
-		String message = "Kein Fehler";
+		String message = "";
 		if (mailClient != null) {
 			Optional<ErrorTyp> error = mailClient.getLastError();
 			if(error.isPresent()) {

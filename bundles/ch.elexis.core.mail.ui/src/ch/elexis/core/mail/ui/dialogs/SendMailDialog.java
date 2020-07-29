@@ -1,9 +1,12 @@
 package ch.elexis.core.mail.ui.dialogs;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
@@ -20,18 +23,29 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.IHandlerService;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.MailAccount.TYPE;
+import ch.elexis.core.mail.MailMessage;
+import ch.elexis.core.mail.TaskUtil;
 import ch.elexis.core.mail.ui.client.MailClientComponent;
+import ch.elexis.core.services.holder.StoreToStringServiceHolder;
+import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
@@ -50,9 +64,16 @@ public class SendMailDialog extends TitleAreaDialog {
 	private String textString = "";
 	private AttachmentsComposite attachments;
 	
+	private Command createOutboxCommand;
+	
 	public SendMailDialog(Shell parentShell){
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
+		
+		ICommandService commandService =
+			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		createOutboxCommand =
+			commandService.getCommand("at.medevit.elexis.outbox.ui.command.createElementNoUi");
 	}
 	
 	@Override
@@ -272,6 +293,48 @@ public class SendMailDialog extends TitleAreaDialog {
 		super.okPressed();
 	}
 	
+	@Override
+	protected void createButtonsForButtonBar(Composite parent){
+		Button outboxBtn = createButton(parent, -1, "in Oubox ablegen", false);
+		super.createButtonsForButtonBar(parent);
+		outboxBtn.setEnabled(createOutboxCommand != null && createOutboxCommand.isEnabled());
+		outboxBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				String validation = getValidation();
+				if (validation != null) {
+					setErrorMessage(validation);
+					return;
+				} else {
+					setErrorMessage(null);
+				}
+				createOutboxElement();
+			}
+			
+			private void createOutboxElement(){
+				MailMessage message =
+					new MailMessage().to(getTo()).cc(getCc()).subject(getSubject()).text(getText());
+				message.setAttachments(attachments.getAttachments());
+				message.setDocuments(attachments.getDocuments());
+				Optional<ITaskDescriptor> descriptor =
+					TaskUtil.createSendMailTaskDescriptor(account.getId(), message);
+				// now try to call the create outbox command, is not part of core ...
+				try {
+					HashMap<String, String> params = new HashMap<String, String>();
+					params.put("at.medevit.elexis.outbox.ui.command.createElementNoUi.dburi",
+						StoreToStringServiceHolder.getStoreToString(descriptor.get()));
+					ParameterizedCommand parametrizedCommmand =
+						ParameterizedCommand.generateCommand(createOutboxCommand, params);
+					PlatformUI.getWorkbench().getService(IHandlerService.class)
+						.executeCommand(parametrizedCommmand, null);
+				} catch (Exception ex) {
+					LoggerFactory.getLogger(getClass())
+						.warn("Create OutboxElement command not available");
+				}
+			}
+		});
+	}
+	
 	private String getValidation(){
 		StructuredSelection accountSelection = (StructuredSelection) accountsViewer.getSelection();
 		if (accountSelection == null || accountSelection.isEmpty()) {
@@ -321,7 +384,11 @@ public class SendMailDialog extends TitleAreaDialog {
 		return account;
 	}
 	
-	public String getAttachments(){
+	public String getAttachmentsString(){
 		return attachments.getAttachments();
+	}
+	
+	public String getDocumentsString(){
+		return attachments.getDocuments();
 	}
 }
