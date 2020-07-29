@@ -1,13 +1,14 @@
 package ch.elexis.core.mail;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import org.apache.commons.lang.StringUtils;
+
 
 /**
  * Class representing a Message that can be sent using a {@link MailAccount} and a
@@ -18,14 +19,21 @@ import org.apache.commons.lang.StringUtils;
  * @author thomas
  *
  */
-public class MailMessage {
+public class MailMessage implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5874662524515670629L;
 	
 	private String to;
 	private String cc;
 	private String subject;
 	private String text;
 	
-	private List<File> attachments;
+	private String attachmentsString;
+	
+	private String documentsString;
 	
 	/**
 	 * Set the to address.
@@ -139,7 +147,7 @@ public class MailMessage {
 	 * @return
 	 */
 	public boolean hasAttachments(){
-		return attachments != null && !attachments.isEmpty();
+		return StringUtils.isNotBlank(documentsString) || StringUtils.isNotBlank(attachmentsString);
 	}
 	
 	/**
@@ -148,18 +156,21 @@ public class MailMessage {
 	 * @return
 	 */
 	public List<File> getAttachments(){
-		return attachments;
+		String attachmentFilesString = attachmentsString;
+		if (StringUtils.isNotBlank(attachmentFilesString)
+			&& !StringUtils.isBlank(documentsString)) {
+			attachmentFilesString += ":::" + AttachmentsUtil.toAttachments(documentsString);
+		} else if (!StringUtils.isBlank(documentsString)) {
+			attachmentFilesString = AttachmentsUtil.toAttachments(documentsString);
+		}
+		return AttachmentsUtil.getAttachmentsFiles(attachmentFilesString);
 	}
 	
-	/**
-	 * Add an attachment.
-	 * 
-	 * @param attachment
-	 */
-	public void addAttachment(File attachment){
-		if (attachments == null) {
-			attachments = new ArrayList<File>();
-		}
-		attachments.add(attachment);
+	public void setAttachments(String attachments){
+		this.attachmentsString = attachments;
+	}
+	
+	public void setDocuments(String documents){
+		this.documentsString = documents;
 	}
 }
