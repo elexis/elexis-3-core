@@ -241,6 +241,14 @@ public interface ITask extends Identifiable, Deleteable {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	<T> T getRunContextEntryTyped(String key, Class<T> clazz);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * The task is successfully and purposefully finished.
 	 * <!-- end-model-doc -->

@@ -246,6 +246,8 @@ public class TaskServiceImpl implements ITaskService {
 		String stationIdentifier = contextService.getRootContext().getStationIdentifier();
 		taskDescriptor.setRunner(StringUtils.abbreviate(stationIdentifier, 64));
 		
+		contextService.getActiveUser().ifPresent(u -> taskDescriptor.setOwner(u));
+		
 		saveTaskDescriptor(taskDescriptor);
 		
 		return taskDescriptor;
@@ -336,6 +338,7 @@ public class TaskServiceImpl implements ITaskService {
 		Task task = new Task(taskDescriptor, triggerType, progressMonitor, runContext);
 		
 		// TODO test if all runContext parameters are satisfied, else reject execution
+		task.setState(TaskState.QUEUED);
 		
 		try {
 			if (taskDescriptor.isSingleton()) {
@@ -347,12 +350,10 @@ public class TaskServiceImpl implements ITaskService {
 			}
 			triggeredTasks.add(task);
 		} catch (RejectedExecutionException re) {
+			task.setState(TaskState.CANCELLED);
 			// TODO triggering failed, where to show?
 			throw new TaskException(TaskException.EXECUTION_REJECTED, re);
 		}
-		
-		task.setState(TaskState.QUEUED);
-		
 		return task;
 	}
 	
