@@ -195,6 +195,18 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	}
 	
 	@Override
+	public <T> T getRunContextEntryTyped(String key, Class<T> clazz){
+		Map<String, Serializable> map = getRunContext();
+		try {
+			String valueToString = JSONObject.valueToString(map.get(key));
+			return gson.fromJson(valueToString, clazz);
+		} catch (JSONException e) {
+			// do nothing
+		}
+		return null;
+	}
+	
+	@Override
 	public void setStateCompletedManual(String remark){
 		String userId = ContextServiceHolder.get().getActiveUser().map(u -> u.getId()).orElse(null);
 		String stationId = ContextServiceHolder.get().getStationIdentifier();
@@ -219,7 +231,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	@Override
 	public boolean isFinished(){
 		return (TaskState.COMPLETED == getState() || TaskState.COMPLETED_WARN == getState()
-			|| TaskState.FAILED == getState());
+			|| TaskState.FAILED == getState() || TaskState.CANCELLED == getState());
 	}
 	
 	private void removeTaskRecord(){
@@ -292,12 +304,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		} finally {
 			ContextServiceHolder.get().setActiveUser(null);
 			ContextServiceHolder.get().setActiveMandator(null);
-			
-			if (progressMonitor != null) {
-				progressMonitor.done();
-			}
 		}
-		
 	}
 	
 	@Override

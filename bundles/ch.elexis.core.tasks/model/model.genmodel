@@ -83,6 +83,11 @@
         <genParameters ecoreParameter="model.ecore#//ITask/getResultEntryTyped/clazz"/>
         <genTypeParameters ecoreTypeParameter="model.ecore#//ITask/getResultEntryTyped/T"/>
       </genOperations>
+      <genOperations ecoreOperation="model.ecore#//ITask/getRunContextEntryTyped">
+        <genParameters ecoreParameter="model.ecore#//ITask/getRunContextEntryTyped/key"/>
+        <genParameters ecoreParameter="model.ecore#//ITask/getRunContextEntryTyped/clazz"/>
+        <genTypeParameters ecoreTypeParameter="model.ecore#//ITask/getRunContextEntryTyped/T"/>
+      </genOperations>
       <genOperations ecoreOperation="model.ecore#//ITask/isSucceeded"/>
       <genOperations ecoreOperation="model.ecore#//ITask/isFailed"/>
       <genOperations ecoreOperation="model.ecore#//ITask/setStateCompletedManual">
