@@ -19,7 +19,7 @@ import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class LabOrderTest {
-	private IModelService modelSerice;
+	private IModelService modelService;
 	
 	private IPatient patient1;
 	private IPatient patient2;
@@ -31,26 +31,27 @@ public class LabOrderTest {
 	
 	@Before
 	public void before(){
-		modelSerice = OsgiServiceUtil.getService(IModelService.class).get();
+		modelService = OsgiServiceUtil.getService(IModelService.class,
+			"(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
 		
-		patient1 = modelSerice.create(IPatient.class);
+		patient1 = modelService.create(IPatient.class);
 		patient1.setDescription1("test patient 1");
-		modelSerice.save(patient1);
-		patient2 = modelSerice.create(IPatient.class);
+		modelService.save(patient1);
+		patient2 = modelService.create(IPatient.class);
 		patient2.setDescription1("test patient 2");
-		modelSerice.save(patient2);
-		item1 = modelSerice.create(ILabItem.class);
+		modelService.save(patient2);
+		item1 = modelService.create(ILabItem.class);
 		item1.setCode("testItem");
 		item1.setName("test item name");
 		item1.setReferenceFemale("<25");
 		item1.setReferenceMale("<30");
 		item1.setTyp(LabItemTyp.NUMERIC);
-		modelSerice.save(item1);
-		result1 = modelSerice.create(ILabResult.class);
+		modelService.save(item1);
+		result1 = modelService.create(ILabResult.class);
 		result1.setItem(item1);
 		result1.setPatient(patient1);
 		result1.setResult("result 1");
-		result2 = modelSerice.create(ILabResult.class);
+		result2 = modelService.create(ILabResult.class);
 		result2.setItem(item1);
 		result2.setPatient(patient2);
 		result2.setResult("result 2");
@@ -58,28 +59,28 @@ public class LabOrderTest {
 	
 	@After
 	public void after(){
-		modelSerice.remove(patient1);
-		modelSerice.remove(patient2);
-		modelSerice.remove(item1);
-		modelSerice.remove(result1);
-		modelSerice.remove(result2);
+		modelService.remove(patient1);
+		modelService.remove(patient2);
+		modelService.remove(item1);
+		modelService.remove(result1);
+		modelService.remove(result2);
 		
-		OsgiServiceUtil.ungetService(modelSerice);
-		modelSerice = null;
+		OsgiServiceUtil.ungetService(modelService);
+		modelService = null;
 	}
 	
 	@Test
 	public void create(){
-		ILabOrder order = modelSerice.create(ILabOrder.class);
+		ILabOrder order = modelService.create(ILabOrder.class);
 		assertNotNull(order);
 		assertTrue(order instanceof ILabOrder);
 		order.setItem(item1);
 		order.setPatient(patient1);
 		order.setState(LabOrderState.ORDERED);
-		assertTrue(modelSerice.save(order));
+		assertTrue(modelService.save(order));
 		assertNotNull(order.getOrderId());
 		
-		Optional<ILabOrder> loadedOrder = modelSerice.load(order.getId(), ILabOrder.class);
+		Optional<ILabOrder> loadedOrder = modelService.load(order.getId(), ILabOrder.class);
 		assertTrue(loadedOrder.isPresent());
 		assertFalse(order == loadedOrder.get());
 		assertEquals(order, loadedOrder.get());
@@ -87,38 +88,38 @@ public class LabOrderTest {
 		assertEquals(order.getPatient(), loadedOrder.get().getPatient());
 		assertEquals(order.getState(), loadedOrder.get().getState());
 		
-		ILabOrder order1 = modelSerice.create(ILabOrder.class);
+		ILabOrder order1 = modelService.create(ILabOrder.class);
 		order.setItem(item1);
 		order.setPatient(patient1);
-		assertTrue(modelSerice.save(order1));
+		assertTrue(modelService.save(order1));
 		assertEquals(1,
 			Integer.parseInt(order1.getOrderId()) - Integer.parseInt(order.getOrderId()));
 		
-		modelSerice.remove(order);
+		modelService.remove(order);
 	}
 	
 	@Test
 	public void query(){
-		ILabOrder order1 = modelSerice.create(ILabOrder.class);
+		ILabOrder order1 = modelService.create(ILabOrder.class);
 		order1.setItem(item1);
 		order1.setPatient(patient1);
 		order1.setResult(result1);
-		assertTrue(modelSerice.save(order1));
+		assertTrue(modelService.save(order1));
 		
-		ILabOrder order2 = modelSerice.create(ILabOrder.class);
+		ILabOrder order2 = modelService.create(ILabOrder.class);
 		order2.setItem(item1);
 		order2.setPatient(patient2);
 		order2.setResult(result2);
-		assertTrue(modelSerice.save(order2));
+		assertTrue(modelService.save(order2));
 		
-		IQuery<ILabOrder> query = modelSerice.getQuery(ILabOrder.class);
+		IQuery<ILabOrder> query = modelService.getQuery(ILabOrder.class);
 		query.and(ModelPackage.Literals.ILAB_ORDER__ITEM, COMPARATOR.EQUALS, item1);
 		List<ILabOrder> existing = query.execute();
 		assertNotNull(existing);
 		assertFalse(existing.isEmpty());
 		assertEquals(2, existing.size());
 		
-		query = modelSerice.getQuery(ILabOrder.class);
+		query = modelService.getQuery(ILabOrder.class);
 		query.and(ModelPackage.Literals.ILAB_ORDER__PATIENT, COMPARATOR.EQUALS, patient2);
 		existing = query.execute();
 		assertNotNull(existing);
@@ -131,7 +132,7 @@ public class LabOrderTest {
 		// test query via result
 		assertEquals(order1, result1.getLabOrder());
 		
-		modelSerice.remove(order1);
-		modelSerice.remove(order2);
+		modelService.remove(order1);
+		modelService.remove(order2);
 	}
 }

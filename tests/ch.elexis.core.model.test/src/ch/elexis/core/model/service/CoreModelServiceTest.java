@@ -37,7 +37,8 @@ public class CoreModelServiceTest {
 	
 	@Before
 	public void before() {
-		modelService = OsgiServiceUtil.getService(IModelService.class).get();
+		modelService = OsgiServiceUtil.getService(IModelService.class,
+			"(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
 		clearContacts();
 	}
 	

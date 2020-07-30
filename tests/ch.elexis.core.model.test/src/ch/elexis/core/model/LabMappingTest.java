@@ -29,7 +29,8 @@ public class LabMappingTest {
 	
 	@Before
 	public void before(){
-		modelService = OsgiServiceUtil.getService(IModelService.class).get();
+		modelService = OsgiServiceUtil.getService(IModelService.class,
+			"(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
 		
 		item1 = modelService.create(ILabItem.class);
 		item1.setCode("testItem1");
