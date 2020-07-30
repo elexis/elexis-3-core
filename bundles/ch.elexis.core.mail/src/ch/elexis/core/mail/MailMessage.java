@@ -8,7 +8,10 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import org.apache.commons.lang.StringUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import com.google.gson.Gson;
 
 /**
  * Class representing a Message that can be sent using a {@link MailAccount} and a
@@ -25,6 +28,18 @@ public class MailMessage implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 5874662524515670629L;
+	
+	private static Gson gson = new Gson();
+	
+	public static MailMessage fromJson(Serializable serializable){
+		try {
+			String valueToString = JSONObject.valueToString(serializable);
+			return gson.fromJson(valueToString, MailMessage.class);
+		} catch (JSONException e) {
+			// do nothing
+		}
+		return null;
+	}
 	
 	private String to;
 	private String cc;
