@@ -251,12 +251,14 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 				throw new TaskException(TaskException.EXECUTION_REJECTED, "No task owner defined");
 			}
 			
-			ContextServiceHolder.get().setActiveUser(owner);
-			IContact user_assignedContact = owner.getAssignedContact();
-			if (user_assignedContact != null && user_assignedContact.isMandator()) {
-				IMandator mandator = CoreModelServiceHolder.get()
-					.load(user_assignedContact.getId(), IMandator.class).orElse(null);
-				ContextServiceHolder.get().setActiveMandator(mandator);
+			if (isThreadLocalContextService()) {
+				ContextServiceHolder.get().setActiveUser(owner);
+				IContact user_assignedContact = owner.getAssignedContact();
+				if (user_assignedContact != null && user_assignedContact.isMandator()) {
+					IMandator mandator = CoreModelServiceHolder.get()
+						.load(user_assignedContact.getId(), IMandator.class).orElse(null);
+					ContextServiceHolder.get().setActiveMandator(mandator);
+				}
 			}
 			
 			getEntity().setRunAt(System.currentTimeMillis());
@@ -302,9 +304,16 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 			getEntity().setFinishedAt(System.currentTimeMillis());
 			setState(TaskState.FAILED);
 		} finally {
-			ContextServiceHolder.get().setActiveUser(null);
-			ContextServiceHolder.get().setActiveMandator(null);
+			if (isThreadLocalContextService()) {
+				ContextServiceHolder.get().setActiveUser(null);
+				ContextServiceHolder.get().setActiveMandator(null);
+			}
 		}
+	}
+	
+	private boolean isThreadLocalContextService(){
+		return !ContextServiceHolder.get().getClass().getName()
+			.startsWith("ch.elexis.core.ui.services");
 	}
 	
 	@Override
