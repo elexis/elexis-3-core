@@ -8,11 +8,18 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.MailAccount.TYPE;
 import ch.elexis.core.mail.MailMessage;
+import ch.elexis.core.mail.TaskUtil;
 import ch.elexis.core.mail.ui.client.MailClientComponent;
+import ch.elexis.core.model.tasks.TaskException;
+import ch.elexis.core.tasks.model.ITask;
+import ch.elexis.core.tasks.model.ITaskDescriptor;
+import ch.elexis.core.tasks.model.TaskState;
 import ch.elexis.data.Mandant;
 
 /**
@@ -62,11 +69,22 @@ public class SendMailNoUiHandler extends AbstractHandler implements IHandler {
 		if (attachments != null && !attachments.isEmpty()) {
 			message.setAttachments(attachments);
 		}
-		if (MailClientComponent.getMailClient().sendMail(mailAccount, message)) {
-			return null;
-		} else {
-			return MailClientComponent.getLastErrorMessage();
+		Optional<ITaskDescriptor> taskDescriptor =
+			TaskUtil.createSendMailTaskDescriptor(mailAccount.getId(), message);
+		if (taskDescriptor.isPresent()) {
+			try {
+				ITask task =
+					TaskUtil.executeTaskSync(taskDescriptor.get(), new NullProgressMonitor());
+				if (task.getState() == TaskState.COMPLETED) {
+					return null;
+				} else {
+					return MailClientComponent.getLastErrorMessage();
+				}
+			} catch (TaskException e) {
+				LoggerFactory.getLogger(TaskUtil.class).error("Error executing mail task", e);
+			}
 		}
+		return "Error executing mail task";
 	}
 	
 	private MailAccount getMailAccount(String mandantId){

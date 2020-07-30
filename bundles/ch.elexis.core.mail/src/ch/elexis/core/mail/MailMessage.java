@@ -185,7 +185,15 @@ public class MailMessage implements Serializable {
 		this.attachmentsString = attachments;
 	}
 	
+	public String getAttachmentsString(){
+		return attachmentsString;
+	}
+	
 	public void setDocuments(String documents){
 		this.documentsString = documents;
+	}
+	
+	public String getDocumentsString(){
+		return documentsString;
 	}
 }

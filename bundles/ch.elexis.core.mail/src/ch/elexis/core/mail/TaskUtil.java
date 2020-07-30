@@ -28,6 +28,10 @@ public class TaskUtil {
 		TaskUtil.taskService = taskService;
 	}
 	
+	public static Optional<ITaskDescriptor> getTaskDescriptor(String id){
+		return taskService.findTaskDescriptorByIdOrReferenceId(id);
+	}
+	
 	/**
 	 * Create a new {@link ITaskDescriptor} for sending the message using the account.
 	 * 
@@ -45,18 +49,36 @@ public class TaskUtil {
 			try {
 				ITaskDescriptor descriptor =
 					taskService.createTaskDescriptor(sendMailRunnable.get());
-				Map<String, Serializable> runContext = descriptor.getRunContext();
-				runContext.put("accountId", accountId);
-				runContext.put("message", message);
-				descriptor.setRunContext(runContext);
-				taskService.saveTaskDescriptor(descriptor);
-				return Optional.of(descriptor);
+				return Optional.of(configureTaskDescriptor(descriptor, accountId, message));
 			} catch (TaskException e) {
-				LoggerFactory.getLogger(TaskUtil.class)
-					.error("Error creating send mail task descriptor", e);
+				LoggerFactory.getLogger(TaskUtil.class).error("Error creating mail task descriptor",
+					e);
 			}
 		}
 		return Optional.empty();
+	}
+	
+	/**
+	 * Configure the {@link ITaskDescriptor} run context with accountId and message.
+	 * 
+	 * @param descriptor
+	 * @param accountId
+	 * @param message
+	 * @return
+	 */
+	public static ITaskDescriptor configureTaskDescriptor(ITaskDescriptor descriptor,
+		String accountId, MailMessage message){
+		try {
+			Map<String, Serializable> runContext = descriptor.getRunContext();
+			runContext.put("accountId", accountId);
+			runContext.put("message", message);
+			descriptor.setRunContext(runContext);
+			taskService.saveTaskDescriptor(descriptor);
+		} catch (TaskException e) {
+			LoggerFactory.getLogger(TaskUtil.class).error("Error configuring mail task descriptor",
+				e);
+		}
+		return descriptor;
 	}
 	
 	public static ITask executeTaskSync(ITaskDescriptor iTaskDescriptor,
