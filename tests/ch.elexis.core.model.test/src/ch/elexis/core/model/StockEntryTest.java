@@ -12,7 +12,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import ch.elexis.core.model.test.CoreModelServiceHolder;
 import ch.elexis.core.model.test.StoreToStringServiceHolder;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.INamedQuery;
@@ -31,7 +30,8 @@ public class StockEntryTest {
 	
 	@Before
 	public void before(){
-		modelService = OsgiServiceUtil.getService(IModelService.class).get();
+		modelService = OsgiServiceUtil.getService(IModelService.class,
+			"(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
 		
 		article = modelService.create(IArticle.class);
 		article.setName("test article");
@@ -114,7 +114,7 @@ public class StockEntryTest {
 		List<IStockEntry> existing = query.execute();
 		assertEquals(2, existing.size());
 
-		INamedQuery<Long> currentStock = CoreModelServiceHolder.get().getNamedQueryByName(
+		INamedQuery<Long> currentStock = modelService.getNamedQueryByName(
 			Long.class, IStockEntry.class, "StockEntry_SumCurrentStock.articleId.articleType");
 		String storeToString = StoreToStringServiceHolder.getStoreToString(article);
 		String[] parts = storeToString.split(IStoreToStringContribution.DOUBLECOLON);

@@ -22,7 +22,7 @@ import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class OrderEntryTest {
-	private IModelService modelSerice;
+	private IModelService modelService;
 	
 	private IArticle article, article1;
 	
@@ -34,53 +34,54 @@ public class OrderEntryTest {
 	
 	@Before
 	public void before(){
-		modelSerice = OsgiServiceUtil.getService(IModelService.class).get();
+		modelService = OsgiServiceUtil.getService(IModelService.class,
+			"(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
 		
-		article = modelSerice.create(IArticle.class);
+		article = modelService.create(IArticle.class);
 		article.setName("test article");
 		article.setCode("123456789");
 		article.setTyp(ArticleTyp.EIGENARTIKEL);
 		article.setGtin("0000001111111");
 		article.setPackageSize(12);
 		article.setSellingSize(12);
-		modelSerice.save(article);
+		modelService.save(article);
 		
-		article1 = modelSerice.create(IArticle.class);
+		article1 = modelService.create(IArticle.class);
 		article1.setName("test article 1");
 		article1.setCode("987654321");
 		article1.setTyp(ArticleTyp.EIGENARTIKEL);
 		article1.setGtin("1111112222222");
 		article1.setPackageSize(24);
 		article1.setSellingSize(24);
-		modelSerice.save(article1);
+		modelService.save(article1);
 		
-		stock = modelSerice.create(IStock.class);
+		stock = modelService.create(IStock.class);
 		stock.setCode("TST");
 		stock.setPriority(5);
-		modelSerice.save(stock);
+		modelService.save(stock);
 		
 		orderTimestamp = LocalDateTime.now();
 		
-		order = modelSerice.create(IOrder.class);
+		order = modelService.create(IOrder.class);
 		order.setTimestamp(orderTimestamp);
 		order.setName("TEST");
-		modelSerice.save(order);
+		modelService.save(order);
 	}
 	
 	@After
 	public void after(){
-		modelSerice.remove(order);
-		modelSerice.remove(article);
-		modelSerice.remove(article1);
-		modelSerice.remove(stock);
+		modelService.remove(order);
+		modelService.remove(article);
+		modelService.remove(article1);
+		modelService.remove(stock);
 		
-		OsgiServiceUtil.ungetService(modelSerice);
-		modelSerice = null;
+		OsgiServiceUtil.ungetService(modelService);
+		modelService = null;
 	}
 	
 	@Test
 	public void create(){
-		IOrderEntry entry = modelSerice.create(IOrderEntry.class);
+		IOrderEntry entry = modelService.create(IOrderEntry.class);
 		assertNotNull(entry);
 		assertTrue(entry instanceof IOrderEntry);
 		
@@ -88,10 +89,10 @@ public class OrderEntryTest {
 		entry.setStock(stock);
 		entry.setArticle(article);
 		entry.setAmount(5);
-		modelSerice.save(entry);
+		modelService.save(entry);
 		assertFalse(order.getEntries().isEmpty());
 		
-		Optional<IOrderEntry> loaded = modelSerice.load(entry.getId(), IOrderEntry.class);
+		Optional<IOrderEntry> loaded = modelService.load(entry.getId(), IOrderEntry.class);
 		assertTrue(loaded.isPresent());
 		assertFalse(entry == loaded.get());
 		assertEquals(entry, loaded.get());
@@ -100,12 +101,12 @@ public class OrderEntryTest {
 		assertEquals(entry.getOrder(), loaded.get().getOrder());
 		assertEquals(entry.getOrder().getTimestamp(), loaded.get().getOrder().getTimestamp());
 		
-		IOrderEntry entry2 = modelSerice.create(IOrderEntry.class);
+		IOrderEntry entry2 = modelService.create(IOrderEntry.class);
 		entry2.setStock(stock);
 		entry2.setArticle(article1);
 		entry2.setAmount(1);
 		order.addEntry(entry2);
-		modelSerice.save(order);
+		modelService.save(order);
 		assertEquals(2, order.getEntries().size());
 		
 		order.removeEntry(entry);
@@ -115,24 +116,24 @@ public class OrderEntryTest {
 	
 	@Test
 	public void query(){
-		IOrderEntry entry = modelSerice.create(IOrderEntry.class);
+		IOrderEntry entry = modelService.create(IOrderEntry.class);
 		entry.setOrder(order);
 		entry.setStock(stock);
 		entry.setArticle(article);
 		entry.setAmount(5);
-		modelSerice.save(entry);
+		modelService.save(entry);
 		
-		IOrderEntry entry1 = modelSerice.create(IOrderEntry.class);
+		IOrderEntry entry1 = modelService.create(IOrderEntry.class);
 		entry1.setOrder(order);
 		entry1.setStock(stock);
 		entry1.setArticle(article1);
 		entry1.setAmount(2);
-		modelSerice.save(entry1);
+		modelService.save(entry1);
 		
 		String storeToString = StoreToStringServiceHolder.getStoreToString(article);
 		String[] articleParts = storeToString.split(IStoreToStringContribution.DOUBLECOLON);
 		
-		IQuery<IOrderEntry> query = modelSerice.getQuery(IOrderEntry.class, true, false);
+		IQuery<IOrderEntry> query = modelService.getQuery(IOrderEntry.class, true, false);
 		query.and("articleId", COMPARATOR.EQUALS, articleParts[1]);
 		query.and("articleType", COMPARATOR.EQUALS, articleParts[0]);
 		List<IOrderEntry> existing = query.execute();

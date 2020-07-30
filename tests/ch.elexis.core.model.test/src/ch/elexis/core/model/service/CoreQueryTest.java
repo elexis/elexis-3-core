@@ -35,7 +35,8 @@ public class CoreQueryTest {
 	
 	@Before
 	public void before(){
-		modelService = OsgiServiceUtil.getService(IModelService.class).get();
+		modelService = OsgiServiceUtil.getService(IModelService.class,
+			"(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
 		clearContacts();
 		clearCoverages();
 	}
