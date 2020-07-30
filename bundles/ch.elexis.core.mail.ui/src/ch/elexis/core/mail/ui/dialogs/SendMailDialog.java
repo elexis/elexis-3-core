@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.jface.action.Action;
@@ -65,6 +66,10 @@ public class SendMailDialog extends TitleAreaDialog {
 	private AttachmentsComposite attachments;
 	
 	private Command createOutboxCommand;
+	private String accountId;
+	private String attachmentsString;
+	private String documentsString;
+	private boolean disableOutbox;
 	
 	public SendMailDialog(Shell parentShell){
 		super(parentShell);
@@ -98,6 +103,9 @@ public class SendMailDialog extends TitleAreaDialog {
 			accountsViewer.setInput(getSendMailAccounts());
 			accountsViewer.getControl()
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+			if (accountId != null) {
+				accountsViewer.setSelection(new StructuredSelection(accountId));
+			}
 			
 			lbl = new Label(container, SWT.NONE);
 			lbl.setText("An");
@@ -213,6 +221,8 @@ public class SendMailDialog extends TitleAreaDialog {
 			
 			attachments = new AttachmentsComposite(container, SWT.NONE);
 			attachments.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+			attachments.setAttachments(attachmentsString);
+			attachments.setDocuments(documentsString);
 			
 			lbl = new Label(container, SWT.NONE);
 			lbl.setText("Text");
@@ -220,18 +230,21 @@ public class SendMailDialog extends TitleAreaDialog {
 			GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 			gd.heightHint = 128;
 			textText.setLayoutData(gd);
+			textText.setText(textString);
 			
-			// set selected account for mandant
-			Mandant selectedMandant = ElexisEventDispatcher.getSelectedMandator();
-			if (selectedMandant != null) {
-				List<String> accounts = MailClientComponent.getMailClient().getAccounts();
-				for (String string : accounts) {
-					Optional<MailAccount> accountOptional =
-						MailClientComponent.getMailClient().getAccount(string);
-					if (accountOptional.isPresent()
-						&& accountOptional.get().isForMandant(selectedMandant.getId())) {
-						accountsViewer
-							.setSelection(new StructuredSelection(accountOptional.get().getId()));
+			if (accountId == null) {
+				// set selected account for mandant
+				Mandant selectedMandant = ElexisEventDispatcher.getSelectedMandator();
+				if (selectedMandant != null) {
+					List<String> accounts = MailClientComponent.getMailClient().getAccounts();
+					for (String string : accounts) {
+						Optional<MailAccount> accountOptional =
+							MailClientComponent.getMailClient().getAccount(string);
+						if (accountOptional.isPresent()
+							&& accountOptional.get().isForMandant(selectedMandant.getId())) {
+							accountsViewer.setSelection(
+								new StructuredSelection(accountOptional.get().getId()));
+						}
 					}
 				}
 			}
@@ -297,7 +310,8 @@ public class SendMailDialog extends TitleAreaDialog {
 	protected void createButtonsForButtonBar(Composite parent){
 		Button outboxBtn = createButton(parent, -1, "in Oubox ablegen", false);
 		super.createButtonsForButtonBar(parent);
-		outboxBtn.setEnabled(createOutboxCommand != null && createOutboxCommand.isEnabled());
+		outboxBtn.setEnabled(
+			!disableOutbox && createOutboxCommand != null && createOutboxCommand.isEnabled());
 		outboxBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
@@ -331,6 +345,8 @@ public class SendMailDialog extends TitleAreaDialog {
 					LoggerFactory.getLogger(getClass())
 						.warn("Create OutboxElement command not available");
 				}
+				// close dialog with cancel status, do not send mail
+				cancelPressed();
 			}
 		});
 	}
@@ -372,12 +388,20 @@ public class SendMailDialog extends TitleAreaDialog {
 		return ccString;
 	}
 	
+	public void setCc(String cc){
+		this.ccString = cc;
+	}
+	
 	public String getSubject(){
 		return subjectString;
 	}
 	
 	public String getText(){
 		return textString;
+	}
+	
+	public void setAccountId(String accountId){
+		this.accountId = accountId;
 	}
 	
 	public MailAccount getAccount(){
@@ -390,5 +414,26 @@ public class SendMailDialog extends TitleAreaDialog {
 	
 	public String getDocumentsString(){
 		return attachments.getDocuments();
+	}
+	
+	public void setMailMessage(MailMessage message){
+		setTo(StringUtils.defaultString(message.getTo()));
+		setCc(StringUtils.defaultString(message.getCc()));
+		setSubject(StringUtils.defaultString(message.getSubject()));
+		setText(StringUtils.defaultString(message.getText()));
+		attachmentsString = message.getAttachmentsString();
+		documentsString = message.getDocumentsString();
+	}
+	
+	public void disableOutbox(){
+		this.disableOutbox = true;
+	}
+	
+	public void setDocumentsString(String documents){
+		this.documentsString = documents;
+	}
+	
+	public void setAttachmentsString(String attachments){
+		this.attachmentsString = attachments;
 	}
 }

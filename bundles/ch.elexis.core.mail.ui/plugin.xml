@@ -81,6 +81,16 @@
                optional="true">
          </commandParameter>
       </command>
+      <command
+            defaultHandler="ch.elexis.core.mail.ui.handlers.SendMailTaskHandler"
+            id="ch.elexis.core.mail.ui.sendMailTask"
+            name="Open Send Mail Task">
+         <commandParameter
+               id="ch.elexis.core.mail.ui.sendMailTaskDescriptorId"
+               name="TaskDescriptorId"
+               optional="false">
+         </commandParameter>
+      </command>
    </extension>
    <extension
          point="org.eclipse.core.expressions.propertyTesters">
