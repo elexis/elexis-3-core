@@ -26,4 +26,5 @@ Import-Package: ch.elexis.core.documents,
  org.apache.commons.io;version="2.5.0",
  org.apache.commons.lang;version="2.6.0",
  org.eclipse.core.runtime;version="3.5.0",
+ org.eclipse.osgi.util;version="1.1.0",
  org.json
