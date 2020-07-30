@@ -16,6 +16,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.apache.commons.io,
  com.eclipsesource.jaxrs.consumer;bundle-version="5.3.1"
 Import-Package: bsh,
+ ch.elexis.core.tasks.model,
  com.google.common.cache;version="15.0.0",
  com.google.gson;version="2.8.5",
  javax.persistence,
