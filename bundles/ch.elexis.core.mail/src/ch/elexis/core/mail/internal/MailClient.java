@@ -27,16 +27,17 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import org.apache.commons.lang.StringUtils;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.mail.IMailClient;
 import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.MailAccount.TYPE;
 import ch.elexis.core.mail.MailMessage;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 
 @Component
 public class MailClient implements IMailClient {
@@ -71,7 +72,7 @@ public class MailClient implements IMailClient {
 	@Override
 	public Optional<MailAccount> getAccount(String id){
 		MailAccount ret = null;
-		String accountString = CoreHub.globalCfg.get(CONFIG_ACCOUNT + "/" + id, null);
+		String accountString = ConfigServiceHolder.get().get(CONFIG_ACCOUNT + "/" + id, null);
 		if (accountString != null) {
 			ret = MailAccount.from(accountString);
 		}
@@ -81,7 +82,7 @@ public class MailClient implements IMailClient {
 	@Override
 	public List<String> getAccounts(){
 		List<String> ret = new ArrayList<String>();
-		String accountIds = CoreHub.globalCfg.get(CONFIG_ACCOUNTS, null);
+		String accountIds = ConfigServiceHolder.get().get(CONFIG_ACCOUNTS, null);
 		if (accountIds != null) {
 			String[] currentIds = accountIds.split(ACCOUNTS_SEPARATOR);
 			ret.addAll(Arrays.asList(currentIds));
@@ -93,8 +94,8 @@ public class MailClient implements IMailClient {
 	public void saveAccount(MailAccount account){
 		if (account != null && account.getId() != null) {
 			addAccountId(account.getId());
-			CoreHub.globalCfg.set(CONFIG_ACCOUNT + "/" + account.getId(), account.toString());
-			CoreHub.globalCfg.flush();
+			ConfigServiceHolder.get().set(CONFIG_ACCOUNT + "/" + account.getId(),
+				account.toString());
 		}
 	}
 	
@@ -103,9 +104,9 @@ public class MailClient implements IMailClient {
 			throw new IllegalStateException(
 				"Id can not contain separator [" + ACCOUNTS_SEPARATOR + "]");
 		}
-		String accountIds = CoreHub.globalCfg.get(CONFIG_ACCOUNTS, null);
+		String accountIds = ConfigServiceHolder.get().get(CONFIG_ACCOUNTS, null);
 		if (accountIds == null) {
-			CoreHub.globalCfg.set(CONFIG_ACCOUNTS, id);
+			ConfigServiceHolder.get().set(CONFIG_ACCOUNTS, id);
 		} else {
 			String[] currentIds = accountIds.split(ACCOUNTS_SEPARATOR);
 			for (String string : currentIds) {
@@ -114,8 +115,7 @@ public class MailClient implements IMailClient {
 				}
 			}
 			// not already in list
-			CoreHub.globalCfg.set(CONFIG_ACCOUNTS, accountIds + ACCOUNTS_SEPARATOR + id);
-			CoreHub.globalCfg.flush();
+			ConfigServiceHolder.get().set(CONFIG_ACCOUNTS, accountIds + ACCOUNTS_SEPARATOR + id);
 		}
 	}
 	
@@ -123,13 +123,12 @@ public class MailClient implements IMailClient {
 	public void removeAccount(MailAccount account){
 		if (account != null && account.getId() != null) {
 			removeAccountId(account.getId());
-			CoreHub.globalCfg.remove(CONFIG_ACCOUNT + "/" + account.getId());
-			CoreHub.globalCfg.flush();
+			ConfigServiceHolder.get().set(CONFIG_ACCOUNT + "/" + account.getId(), null);
 		}
 	}
 	
 	private void removeAccountId(String id){
-		String accountIds = CoreHub.globalCfg.get(CONFIG_ACCOUNTS, null);
+		String accountIds = ConfigServiceHolder.get().get(CONFIG_ACCOUNTS, null);
 		if (accountIds != null) {
 			StringBuilder sb = new StringBuilder();
 			String[] currentIds = accountIds.split(ACCOUNTS_SEPARATOR);
@@ -142,8 +141,11 @@ public class MailClient implements IMailClient {
 				}
 			}
 			// write new list
-			CoreHub.globalCfg.set(CONFIG_ACCOUNTS, sb.toString());
-			CoreHub.globalCfg.flush();
+			if (StringUtils.isNotBlank(sb.toString())) {
+				ConfigServiceHolder.get().set(CONFIG_ACCOUNTS, sb.toString());
+			} else {
+				ConfigServiceHolder.get().set(CONFIG_ACCOUNTS, null);
+			}
 		}
 	}
 	

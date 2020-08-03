@@ -6,7 +6,7 @@ import javax.mail.Address;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
-import ch.elexis.data.Mandant;
+import ch.elexis.core.model.IMandator;
 
 /**
  * Class representing the configuration of a mail account.
@@ -262,7 +262,7 @@ public class MailAccount {
 	 * 
 	 * @param mandant
 	 */
-	public void addMandant(Mandant mandant){
+	public void addMandant(IMandator mandant){
 		String newId = mandant.getId();
 		if (mandants == null) {
 			mandants = new String(newId);
@@ -276,12 +276,12 @@ public class MailAccount {
 	 * 
 	 * @param mandant
 	 */
-	public void removeMandant(Mandant mandant){
+	public void removeMandant(IMandator mandant){
 		if (mandants != null) {
 			StringBuilder sb = new StringBuilder();
 			String[] ids = mandants.split("\\|\\|");
 			for (String string : ids) {
-				if (!string.equals(mandant)) {
+				if (!string.equals(mandant.getId())) {
 					if (sb.length() == 0) {
 						sb.append(string);
 					} else {

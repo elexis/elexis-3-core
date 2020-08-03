@@ -32,7 +32,7 @@ public class MailClientTest {
 	@Before
 	public void before(){
 		client = new MailClient();
-		server = SimpleSmtpServer.start();
+		server = SimpleSmtpServer.start(10025);
 	}
 	
 	@After
@@ -111,7 +111,7 @@ public class MailClientTest {
 		account.setUsername("testUser");
 		account.setPassword("testPassword");
 		account.setHost("localhost");
-		account.setPort("25");
+		account.setPort("10025");
 		
 		assertTrue(client.testAccount(account));
 	}
@@ -124,7 +124,7 @@ public class MailClientTest {
 		account.setUsername("sender@here.com");
 		account.setPassword("testPassword");
 		account.setHost("localhost");
-		account.setPort("25");
+		account.setPort("10025");
 		
 		MailMessage message = new MailMessage().to("receiver@there.com").subject("subject").text("text");
 		assertTrue(client.sendMail(account, message));
