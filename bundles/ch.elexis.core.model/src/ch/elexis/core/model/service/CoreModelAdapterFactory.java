@@ -75,6 +75,7 @@ import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.model.ITextTemplate;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.IXid;
@@ -93,6 +94,7 @@ import ch.elexis.core.model.Recipe;
 import ch.elexis.core.model.RelatedContact;
 import ch.elexis.core.model.Right;
 import ch.elexis.core.model.Role;
+import ch.elexis.core.model.TextTemplate;
 import ch.elexis.core.model.UserConfig;
 
 public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
@@ -221,6 +223,9 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 		
 		addMapping(new MappingEntry(IMessage.class, Message.class,
 			ch.elexis.core.jpa.entities.Message.class));
+		
+		addMapping(new MappingEntry(ITextTemplate.class, TextTemplate.class,
+			ch.elexis.core.jpa.entities.TextTemplate.class));
 	}
 	
 	private Object setContactDiscriminator(AbstractIdModelAdapter<?> adapter){

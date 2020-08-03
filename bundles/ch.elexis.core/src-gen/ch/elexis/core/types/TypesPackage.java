@@ -181,6 +181,16 @@ public interface TypesPackage extends EPackage {
 	int APPOINTMENT_STATE = 9;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.types.TextTemplateCategory <em>Text Template Category</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.types.TextTemplateCategory
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getTextTemplateCategory()
+	 * @generated
+	 */
+	int TEXT_TEMPLATE_CATEGORY = 10;
+
+	/**
 	 * The meta object id for the '<em>Money</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -188,7 +198,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getMoney()
 	 * @generated
 	 */
-	int MONEY = 10;
+	int MONEY = 11;
 
 	/**
 	 * The meta object id for the '<em>Gender</em>' data type.
@@ -198,7 +208,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getGender()
 	 * @generated
 	 */
-	int GENDER = 11;
+	int GENDER = 12;
 
 
 	/**
@@ -209,7 +219,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLabItemTyp()
 	 * @generated
 	 */
-	int LAB_ITEM_TYP = 12;
+	int LAB_ITEM_TYP = 13;
 
 
 	/**
@@ -220,7 +230,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getCountry()
 	 * @generated
 	 */
-	int COUNTRY = 13;
+	int COUNTRY = 14;
 
 
 	/**
@@ -231,7 +241,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getPathologicDescription()
 	 * @generated
 	 */
-	int PATHOLOGIC_DESCRIPTION = 14;
+	int PATHOLOGIC_DESCRIPTION = 15;
 
 
 	/**
@@ -242,7 +252,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLocalDateTime()
 	 * @generated
 	 */
-	int LOCAL_DATE_TIME = 15;
+	int LOCAL_DATE_TIME = 16;
 
 
 	/**
@@ -253,7 +263,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getInputStream()
 	 * @generated
 	 */
-	int INPUT_STREAM = 16;
+	int INPUT_STREAM = 17;
 
 	/**
 	 * The meta object id for the '<em>Output Stream</em>' data type.
@@ -263,7 +273,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getOutputStream()
 	 * @generated
 	 */
-	int OUTPUT_STREAM = 17;
+	int OUTPUT_STREAM = 18;
 
 
 	/**
@@ -274,7 +284,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLocalDate()
 	 * @generated
 	 */
-	int LOCAL_DATE = 18;
+	int LOCAL_DATE = 19;
 
 
 	/**
@@ -285,7 +295,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getXidQuality()
 	 * @generated
 	 */
-	int XID_QUALITY = 19;
+	int XID_QUALITY = 20;
 
 
 	/**
@@ -296,7 +306,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLabOrderState()
 	 * @generated
 	 */
-	int LAB_ORDER_STATE = 20;
+	int LAB_ORDER_STATE = 21;
 
 
 	/**
@@ -307,7 +317,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getArticleTyp()
 	 * @generated
 	 */
-	int ARTICLE_TYP = 21;
+	int ARTICLE_TYP = 22;
 
 
 	/**
@@ -318,7 +328,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getVatInfo()
 	 * @generated
 	 */
-	int VAT_INFO = 22;
+	int VAT_INFO = 23;
 
 
 	/**
@@ -329,7 +339,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getOrderEntryState()
 	 * @generated
 	 */
-	int ORDER_ENTRY_STATE = 23;
+	int ORDER_ENTRY_STATE = 24;
 
 	/**
 	 * The meta object id for the '<em>Article Sub Typ</em>' data type.
@@ -339,7 +349,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getArticleSubTyp()
 	 * @generated
 	 */
-	int ARTICLE_SUB_TYP = 24;
+	int ARTICLE_SUB_TYP = 25;
 
 	/**
 	 * The meta object id for the '<em>Versioned Resource</em>' data type.
@@ -349,7 +359,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getVersionedResource()
 	 * @generated
 	 */
-	int VERSIONED_RESOURCE = 25;
+	int VERSIONED_RESOURCE = 26;
 
 	/**
 	 * The meta object id for the '<em>Entry Type</em>' data type.
@@ -359,7 +369,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getEntryType()
 	 * @generated
 	 */
-	int ENTRY_TYPE = 26;
+	int ENTRY_TYPE = 27;
 
 	/**
 	 * The meta object id for the '<em>Invoice State</em>' data type.
@@ -369,7 +379,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getInvoiceState()
 	 * @generated
 	 */
-	int INVOICE_STATE = 27;
+	int INVOICE_STATE = 28;
 
 	/**
 	 * The meta object id for the '<em>Chrono Unit</em>' data type.
@@ -379,7 +389,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getChronoUnit()
 	 * @generated
 	 */
-	int CHRONO_UNIT = 28;
+	int CHRONO_UNIT = 29;
 
 	/**
 	 * The meta object id for the '<em>Billing Law</em>' data type.
@@ -389,7 +399,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getBillingLaw()
 	 * @generated
 	 */
-	int BILLING_LAW = 29;
+	int BILLING_LAW = 30;
 
 	/**
 	 * The meta object id for the '<em>Marital Status</em>' data type.
@@ -399,7 +409,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getMaritalStatus()
 	 * @generated
 	 */
-	int MARITAL_STATUS = 30;
+	int MARITAL_STATUS = 31;
 
 	/**
 	 * The meta object id for the '<em>Mime Type</em>' data type.
@@ -409,7 +419,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getMimeType()
 	 * @generated
 	 */
-	int MIME_TYPE = 31;
+	int MIME_TYPE = 32;
 
 	/**
 	 * The meta object id for the '<em>Invoice Reject Code</em>' data type.
@@ -419,7 +429,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getInvoiceRejectCode()
 	 * @generated
 	 */
-	int INVOICE_REJECT_CODE = 32;
+	int INVOICE_REJECT_CODE = 33;
 
 	/**
 	 * The meta object id for the '<em>Optional</em>' data type.
@@ -429,7 +439,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getOptional()
 	 * @generated
 	 */
-	int OPTIONAL = 33;
+	int OPTIONAL = 34;
 
 	/**
 	 * The meta object id for the '<em>char Array</em>' data type.
@@ -438,7 +448,7 @@ public interface TypesPackage extends EPackage {
 	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getcharArray()
 	 * @generated
 	 */
-	int CHAR_ARRAY = 34;
+	int CHAR_ARRAY = 35;
 
 	/**
 	 * The meta object id for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.
@@ -553,6 +563,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EEnum getAppointmentState();
+
+	/**
+	 * Returns the meta object for enum '{@link ch.elexis.core.types.TextTemplateCategory <em>Text Template Category</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Text Template Category</em>'.
+	 * @see ch.elexis.core.types.TextTemplateCategory
+	 * @generated
+	 */
+	EEnum getTextTemplateCategory();
 
 	/**
 	 * Returns the meta object for data type '{@link ch.rgw.tools.Money <em>Money</em>}'.
@@ -950,6 +970,16 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum APPOINTMENT_STATE = eINSTANCE.getAppointmentState();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.types.TextTemplateCategory <em>Text Template Category</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.types.TextTemplateCategory
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getTextTemplateCategory()
+		 * @generated
+		 */
+		EEnum TEXT_TEMPLATE_CATEGORY = eINSTANCE.getTextTemplateCategory();
 
 		/**
 		 * The meta object literal for the '<em>Money</em>' data type.

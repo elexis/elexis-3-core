@@ -43,6 +43,7 @@ import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.PathologicDescription;
 import ch.elexis.core.types.RelationshipType;
+import ch.elexis.core.types.TextTemplateCategory;
 import ch.elexis.core.types.TypesFactory;
 import ch.elexis.core.types.TypesPackage;
 import ch.elexis.core.types.VatInfo;
@@ -130,6 +131,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EEnum appointmentStateEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum textTemplateCategoryEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -463,6 +471,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EEnum getTextTemplateCategory() {
+		return textTemplateCategoryEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EDataType getMoney() {
 		return moneyEDataType;
 	}
@@ -761,6 +779,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		documentStatusEEnum = createEEnum(DOCUMENT_STATUS);
 		appointmentTypeEEnum = createEEnum(APPOINTMENT_TYPE);
 		appointmentStateEEnum = createEEnum(APPOINTMENT_STATE);
+		textTemplateCategoryEEnum = createEEnum(TEXT_TEMPLATE_CATEGORY);
 
 		// Create data types
 		moneyEDataType = createEDataType(MONEY);
@@ -884,6 +903,9 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEEnum(appointmentStateEEnum, AppointmentState.class, "AppointmentState");
 		addEEnumLiteral(appointmentStateEEnum, AppointmentState.EMPTY);
 		addEEnumLiteral(appointmentStateEEnum, AppointmentState.DEFAULT);
+
+		initEEnum(textTemplateCategoryEEnum, TextTemplateCategory.class, "TextTemplateCategory");
+		addEEnumLiteral(textTemplateCategoryEEnum, TextTemplateCategory.MAIL);
 
 		// Initialize data types
 		initEDataType(moneyEDataType, Money.class, "Money", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
