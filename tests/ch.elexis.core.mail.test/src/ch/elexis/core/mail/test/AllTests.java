@@ -4,11 +4,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 import ch.elexis.core.mail.MailAccountTest;
+import ch.elexis.core.mail.MailTextTemplateTest;
 import ch.elexis.core.mail.internal.MailClientTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	MailAccountTest.class, MailClientTest.class
+	MailAccountTest.class, MailClientTest.class, MailTextTemplateTest.class
 })
 public class AllTests {
 	
