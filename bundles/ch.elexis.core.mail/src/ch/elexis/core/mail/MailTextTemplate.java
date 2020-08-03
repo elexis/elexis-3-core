@@ -10,6 +10,7 @@ import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.builder.AbstractBuilder;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.TextTemplateCategory;
@@ -21,6 +22,7 @@ public class MailTextTemplate {
 		IQuery<ITextTemplate> query = CoreModelServiceHolder.get().getQuery(ITextTemplate.class);
 		query.and(ModelPackage.Literals.ITEXT_TEMPLATE__CATEGORY, COMPARATOR.EQUALS,
 			TextTemplateCategory.MAIL);
+		query.orderBy(ModelPackage.Literals.ITEXT_TEMPLATE__NAME, ORDER.ASC);
 		List<ITextTemplate> allTemplates = query.execute();
 		if (ContextServiceHolder.get().getActiveUser().isPresent()) {
 			if (!ContextServiceHolder.get().getActiveUser().get().isAdministrator()) {

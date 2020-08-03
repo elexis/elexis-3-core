@@ -39,17 +39,17 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.MailAccount.TYPE;
 import ch.elexis.core.mail.MailMessage;
 import ch.elexis.core.mail.TaskUtil;
 import ch.elexis.core.mail.ui.client.MailClientComponent;
+import ch.elexis.core.model.IMandator;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.data.Kontakt;
-import ch.elexis.data.Mandant;
 
 public class SendMailDialog extends TitleAreaDialog {
 	
@@ -234,7 +234,8 @@ public class SendMailDialog extends TitleAreaDialog {
 			
 			if (accountId == null) {
 				// set selected account for mandant
-				Mandant selectedMandant = ElexisEventDispatcher.getSelectedMandator();
+				IMandator selectedMandant =
+					ContextServiceHolder.get().getActiveMandator().orElse(null);
 				if (selectedMandant != null) {
 					List<String> accounts = MailClientComponent.getMailClient().getAccounts();
 					for (String string : accounts) {

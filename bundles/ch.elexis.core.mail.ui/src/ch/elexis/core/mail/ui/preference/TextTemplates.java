@@ -9,6 +9,7 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -18,6 +19,9 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import ch.elexis.core.mail.MailTextTemplate;
+import ch.elexis.core.mail.ui.dialogs.TextTemplateDialog;
+import ch.elexis.core.model.ITextTemplate;
 import ch.elexis.core.ui.icons.Images;
 
 public class TextTemplates extends PreferencePage implements IWorkbenchPreferencePage {
@@ -38,34 +42,55 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 		templatesViewer = new ComboViewer(parentComposite);
 		templatesViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		templatesViewer.setContentProvider(new ArrayContentProvider());
-		templatesViewer.setLabelProvider(new LabelProvider());
+		templatesViewer.setLabelProvider(new LabelProvider() {
+			@Override
+			public String getText(Object element){
+				if (element instanceof ITextTemplate) {
+					return ((ITextTemplate) element).getName()
+						+ (((ITextTemplate) element).getMandator() != null
+								? " (" + ((ITextTemplate) element).getMandator().getLabel() + ")"
+								: "");
+				}
+				return super.getText(element);
+			}
+		});
 		updateTemplatesCombo();
 		templatesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event){
-				int index = templatesViewer.getCombo().getSelectionIndex();
 				
+
 			}
 		});
 		
 		ToolBar accountsTool = new ToolBar(parentComposite, SWT.NONE);
 		
 		ToolBarManager accountsToolMgr = new ToolBarManager(accountsTool);
-		accountsToolMgr.add(new NewTextTemplateAction());
+		accountsToolMgr.add(new AddTextTemplateAction());
 		accountsToolMgr.update(true);
 		
 		return parentComposite;
 	}
 	
 	private void updateTemplatesCombo(){
-		// TODO Auto-generated method stub
-		
+		templatesViewer.setInput(MailTextTemplate.load());
+		templatesViewer.refresh();
 	}
 	
-	private class NewTextTemplateAction extends Action {
+	private class AddTextTemplateAction extends Action {
 		@Override
 		public ImageDescriptor getImageDescriptor(){
 			return Images.IMG_NEW.getImageDescriptor();
+		}
+		
+		@Override
+		public void run(){
+			TextTemplateDialog dialog = new TextTemplateDialog(getShell());
+			if (dialog.open() == Window.OK) {
+				new MailTextTemplate.Builder().mandator(dialog.getMandator()).name(dialog.getName())
+					.buildAndSave();
+				updateTemplatesCombo();
+			}
 		}
 	}
 }
