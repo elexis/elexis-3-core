@@ -38,6 +38,8 @@ import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.MailAccount.TYPE;
+import ch.elexis.core.model.IMandator;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
@@ -194,7 +196,9 @@ public class MailAccountComposite extends Composite {
 						"Mandanten für das Konto auswählen", Kontakt.DEFAULT_SORT);
 				if (selector.open() == Dialog.OK) {
 					Mandant selected = (Mandant) selector.getSelection();
-					getAccount().addMandant(selected);
+					getAccount().addMandant(
+						CoreModelServiceHolder.get().load(selected.getId(), IMandator.class)
+							.orElse(null));
 					updateUi();
 				}
 			}
@@ -206,7 +210,8 @@ public class MailAccountComposite extends Composite {
 					(IStructuredSelection) mandantViewer.getSelection();
 				if (selection != null && !selection.isEmpty()) {
 					Mandant selected = (Mandant) selection.getFirstElement();
-					getAccount().removeMandant(selected);
+					getAccount().removeMandant(CoreModelServiceHolder.get()
+						.load(selected.getId(), IMandator.class).orElse(null));
 					updateUi();
 				}
 			}

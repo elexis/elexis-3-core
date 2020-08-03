@@ -14,11 +14,11 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.mail.internal.DocumentConverterServiceHolder;
 import ch.elexis.core.mail.internal.DocumentStoreServiceHolder;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.services.IDocumentConverter;
+import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.utils.CoreUtil;
 
 public class AttachmentsUtil {
@@ -130,7 +130,7 @@ public class AttachmentsUtil {
 		StringJoiner sj = new StringJoiner(":::");
 		String[] parts = documents.split(":::");
 		for (String string : parts) {
-			Object loaded = StoreToStringServiceHolder.getLoadFromString(string);
+			Object loaded = StoreToStringServiceHolder.get().loadFromString(string);
 			if (loaded instanceof IDocument) {
 				getTempFile((IDocument) loaded).ifPresent(f -> {
 					sj.add(f.getAbsolutePath());
