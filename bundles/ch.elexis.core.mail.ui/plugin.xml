@@ -8,6 +8,12 @@
             id="ch.elexis.core.mail.ui.preference"
             name="E-Mail">
       </page>
+      <page
+            category="ch.elexis.core.mail.ui.preference"
+            class="ch.elexis.core.mail.ui.preference.TextTemplates"
+            id="ch.elexis.core.mail.ui.preference.texttemplates"
+            name="E-Mail Vorlagen">
+      </page>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
