@@ -97,14 +97,13 @@ public abstract class AbstractTest {
 	}
 	
 	public void createMandator(){
-		LocalDate dob = LocalDate.of(1979, 7, 26);
-		person = new IContactBuilder.PersonBuilder(coreModelService, "TestMandator", "TestMandator",
-			dob, Gender.FEMALE).mandator().buildAndSave();
-		assertTrue(person.isPerson());
-		assertFalse(person.isPatient());
-		assertFalse(person.isOrganization());
-		assertFalse(person.isLaboratory());
-		assertTrue(person.isMandator());
+		mandator = new IContactBuilder.MandatorBuilder(coreModelService, "TestMandator",
+			"TestMandator").buildAndSave();
+		assertFalse(mandator.isPerson());
+		assertFalse(mandator.isPatient());
+		assertFalse(mandator.isOrganization());
+		assertFalse(mandator.isLaboratory());
+		assertTrue(mandator.isMandator());
 	}
 	
 	public void createPatient(){

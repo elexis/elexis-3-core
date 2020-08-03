@@ -73,7 +73,6 @@
 <setEntry value="org.eclipse.emf.ecore@default:default"/>
 <setEntry value="org.eclipse.equinox.app@default:default"/>
 <setEntry value="org.eclipse.equinox.common@2:true"/>
-<setEntry value="org.eclipse.equinox.ds@1:true"/>
 <setEntry value="org.eclipse.equinox.event@1:true"/>
 <setEntry value="org.eclipse.equinox.preferences@default:default"/>
 <setEntry value="org.eclipse.equinox.registry@default:default"/>
@@ -106,13 +105,13 @@
 <setEntry value="ch.elexis.core.jpa.test@default:false"/>
 <setEntry value="ch.elexis.core.jpa@default:default"/>
 <setEntry value="ch.elexis.core.l10n@default:default"/>
-<setEntry value="ch.elexis.core.logback.rocketchat@default:default"/>
+<setEntry value="ch.elexis.core.logback.rocketchat@default:false"/>
 <setEntry value="ch.elexis.core.logging.default_configuration@default:false"/>
 <setEntry value="ch.elexis.core@default:default"/>
 <setEntry value="ch.rgw.utility.tests@default:false"/>
 <setEntry value="ch.rgw.utility@default:default"/>
-<setEntry value="jaxb-api-impl-import-java9@default:default"/>
-<setEntry value="org.osgi.framework.system.packages.extra@default:default"/>
+<setEntry value="jaxb-api-impl-import-java9@default:false"/>
+<setEntry value="org.osgi.framework.system.packages.extra@default:false"/>
 </setAttribute>
 <booleanAttribute key="show_selected_only" value="false"/>
 <booleanAttribute key="tracing" value="false"/>
