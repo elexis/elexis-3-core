@@ -76,6 +76,7 @@ import ch.elexis.core.model.IService;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.model.ITextTemplate;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.IXid;
@@ -533,6 +534,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass iMessageEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iTextTemplateEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -4444,6 +4452,56 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getITextTemplate() {
+		return iTextTemplateEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getITextTemplate_Category() {
+		return (EAttribute)iTextTemplateEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getITextTemplate_Mandator() {
+		return (EReference)iTextTemplateEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getITextTemplate_Name() {
+		return (EAttribute)iTextTemplateEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getITextTemplate_Template() {
+		return (EAttribute)iTextTemplateEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public ModelFactory getModelFactory() {
 		return (ModelFactory)getEFactoryInstance();
 	}
@@ -4913,6 +4971,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iMessageEClass, IMESSAGE__MESSAGE_CODES);
 		createEAttribute(iMessageEClass, IMESSAGE__MESSAGE_PRIORITY);
 		createEAttribute(iMessageEClass, IMESSAGE__PREFERRED_TRANSPORTERS);
+
+		iTextTemplateEClass = createEClass(ITEXT_TEMPLATE);
+		createEAttribute(iTextTemplateEClass, ITEXT_TEMPLATE__CATEGORY);
+		createEReference(iTextTemplateEClass, ITEXT_TEMPLATE__MANDATOR);
+		createEAttribute(iTextTemplateEClass, ITEXT_TEMPLATE__NAME);
+		createEAttribute(iTextTemplateEClass, ITEXT_TEMPLATE__TEMPLATE);
 	}
 
 	/**
@@ -5058,6 +5122,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iAccountTransactionEClass.getESuperTypes().add(this.getDeleteable());
 		iMessageEClass.getESuperTypes().add(this.getIdentifiable());
 		iMessageEClass.getESuperTypes().add(this.getDeleteable());
+		iTextTemplateEClass.getESuperTypes().add(this.getIdentifiable());
+		iTextTemplateEClass.getESuperTypes().add(this.getDeleteable());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(identifiableEClass, Identifiable.class, "Identifiable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -5786,6 +5852,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		op = addEOperation(iMessageEClass, null, "addReceiver", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIUser(), "receiver", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		initEClass(iTextTemplateEClass, ITextTemplate.class, "ITextTemplate", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getITextTemplate_Category(), theTypesPackage.getTextTemplateCategory(), "category", null, 0, 1, ITextTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getITextTemplate_Mandator(), this.getIMandator(), null, "mandator", null, 0, 1, ITextTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getITextTemplate_Name(), ecorePackage.getEString(), "name", null, 0, 1, ITextTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getITextTemplate_Template(), ecorePackage.getEString(), "template", null, 0, 1, ITextTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

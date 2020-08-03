@@ -645,5 +645,11 @@
         <genParameters ecoreParameter="model.ecore#//IMessage/addReceiver.1/receiver"/>
       </genOperations>
     </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//ITextTemplate">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITextTemplate/category"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//ITextTemplate/mandator"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITextTemplate/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ITextTemplate/template"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

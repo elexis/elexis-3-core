@@ -6341,6 +6341,70 @@ public interface ModelPackage extends EPackage {
 	int IMESSAGE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 9;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.ITextTemplate <em>IText Template</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.ITextTemplate
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getITextTemplate()
+	 * @generated
+	 */
+	int ITEXT_TEMPLATE = 63;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITEXT_TEMPLATE__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Category</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITEXT_TEMPLATE__CATEGORY = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Mandator</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITEXT_TEMPLATE__MANDATOR = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITEXT_TEMPLATE__NAME = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Template</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITEXT_TEMPLATE__TEMPLATE = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The number of structural features of the '<em>IText Template</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITEXT_TEMPLATE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -10327,6 +10391,60 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIMessage_PreferredTransporters();
 
 	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.ITextTemplate <em>IText Template</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IText Template</em>'.
+	 * @see ch.elexis.core.model.ITextTemplate
+	 * @generated
+	 */
+	EClass getITextTemplate();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ITextTemplate#getCategory <em>Category</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Category</em>'.
+	 * @see ch.elexis.core.model.ITextTemplate#getCategory()
+	 * @see #getITextTemplate()
+	 * @generated
+	 */
+	EAttribute getITextTemplate_Category();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.ITextTemplate#getMandator <em>Mandator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Mandator</em>'.
+	 * @see ch.elexis.core.model.ITextTemplate#getMandator()
+	 * @see #getITextTemplate()
+	 * @generated
+	 */
+	EReference getITextTemplate_Mandator();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ITextTemplate#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see ch.elexis.core.model.ITextTemplate#getName()
+	 * @see #getITextTemplate()
+	 * @generated
+	 */
+	EAttribute getITextTemplate_Name();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ITextTemplate#getTemplate <em>Template</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Template</em>'.
+	 * @see ch.elexis.core.model.ITextTemplate#getTemplate()
+	 * @see #getITextTemplate()
+	 * @generated
+	 */
+	EAttribute getITextTemplate_Template();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13590,6 +13708,48 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IMESSAGE__PREFERRED_TRANSPORTERS = eINSTANCE.getIMessage_PreferredTransporters();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.ITextTemplate <em>IText Template</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.ITextTemplate
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getITextTemplate()
+		 * @generated
+		 */
+		EClass ITEXT_TEMPLATE = eINSTANCE.getITextTemplate();
+
+		/**
+		 * The meta object literal for the '<em><b>Category</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ITEXT_TEMPLATE__CATEGORY = eINSTANCE.getITextTemplate_Category();
+
+		/**
+		 * The meta object literal for the '<em><b>Mandator</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ITEXT_TEMPLATE__MANDATOR = eINSTANCE.getITextTemplate_Mandator();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ITEXT_TEMPLATE__NAME = eINSTANCE.getITextTemplate_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Template</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ITEXT_TEMPLATE__TEMPLATE = eINSTANCE.getITextTemplate_Template();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.

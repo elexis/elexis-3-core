@@ -23,6 +23,7 @@
 		<class>ch.elexis.core.jpa.entities.converter.ReminderPriorityConverter</class>
 		<class>ch.elexis.core.jpa.entities.converter.ReminderTypeConverter</class>
 		<class>ch.elexis.core.jpa.entities.converter.ReminderProcessStatusConverter</class>
+		<class>ch.elexis.core.jpa.entities.converter.TextTemplateCategoryConverter</class>
 		<class>ch.elexis.core.jpa.entities.converter.VersionedResourceConverter</class>
 		<class>ch.elexis.core.jpa.entities.converter.auto.LocalDateConverter</class>
 		<class>ch.elexis.core.jpa.entities.converter.auto.LocalDateTimeConverter</class>
@@ -91,6 +92,7 @@
 		<class>ch.elexis.core.jpa.entities.TarmedKumulation</class>
 		<class>ch.elexis.core.jpa.entities.Task</class>
 		<class>ch.elexis.core.jpa.entities.TaskDescriptor</class>
+		<class>ch.elexis.core.jpa.entities.TextTemplate</class>
 		<class>ch.elexis.core.jpa.entities.Termin</class>
 		<class>ch.elexis.core.jpa.entities.User</class>
 		<class>ch.elexis.core.jpa.entities.Userconfig</class>

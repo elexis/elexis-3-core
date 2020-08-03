@@ -56,6 +56,9 @@
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//AppointmentState/EMPTY"/>
       <genEnumLiterals ecoreEnumLiteral="types.ecore#//AppointmentState/DEFAULT"/>
     </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="types.ecore#//TextTemplateCategory">
+      <genEnumLiterals ecoreEnumLiteral="types.ecore#//TextTemplateCategory/MAIL"/>
+    </genEnums>
     <genDataTypes ecoreDataType="types.ecore#//Money"/>
     <genDataTypes ecoreDataType="types.ecore#//Gender"/>
     <genDataTypes ecoreDataType="types.ecore#//LabItemTyp"/>

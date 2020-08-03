@@ -42,6 +42,7 @@ import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.PathologicDescription;
 import ch.elexis.core.types.RelationshipType;
+import ch.elexis.core.types.TextTemplateCategory;
 import ch.elexis.core.types.TypesFactory;
 import ch.elexis.core.types.TypesPackage;
 import ch.elexis.core.types.VatInfo;
@@ -121,6 +122,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createAppointmentTypeFromString(eDataType, initialValue);
 			case TypesPackage.APPOINTMENT_STATE:
 				return createAppointmentStateFromString(eDataType, initialValue);
+			case TypesPackage.TEXT_TEMPLATE_CATEGORY:
+				return createTextTemplateCategoryFromString(eDataType, initialValue);
 			case TypesPackage.MONEY:
 				return createMoneyFromString(eDataType, initialValue);
 			case TypesPackage.GENDER:
@@ -196,6 +199,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertAppointmentTypeToString(eDataType, instanceValue);
 			case TypesPackage.APPOINTMENT_STATE:
 				return convertAppointmentStateToString(eDataType, instanceValue);
+			case TypesPackage.TEXT_TEMPLATE_CATEGORY:
+				return convertTextTemplateCategoryToString(eDataType, instanceValue);
 			case TypesPackage.MONEY:
 				return convertMoneyToString(eDataType, instanceValue);
 			case TypesPackage.GENDER:
@@ -368,6 +373,26 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	public String convertAppointmentStateToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public TextTemplateCategory createTextTemplateCategoryFromString(EDataType eDataType, String initialValue) {
+		TextTemplateCategory result = TextTemplateCategory.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertTextTemplateCategoryToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

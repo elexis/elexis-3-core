@@ -70,4 +70,52 @@
 			<column name="KEYWORDS" type="VARCHAR(512)" />
 		</addColumn>
 	</changeSet>
+
+	<changeSet author="thomas"
+		id="manual_table_CH_ELEXIS_CORE_TEXTTEMPLATE">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="CH_ELEXIS_CORE_TEXTTEMPLATE" />
+			</not>
+		</preConditions>
+		<createTable tableName="CH_ELEXIS_CORE_TEXTTEMPLATE">
+			<column name="ID" type="VARCHAR(25)">
+				<constraints primaryKey="true"
+					primaryKeyName="CONSTRAINT_PK_CH_ELEXIS_CORE_TEXTTEMPLATE" />
+			</column>
+			<column name="LASTUPDATE" type="BIGINT" />
+			<column defaultValue="0" name="DELETED" type="CHAR(1)" />
+
+			<column name="MANDATORID" type="VARCHAR(80)" />
+			<column name="CATEGORY" type="VARCHAR(80)" />
+			<column name="NAME" type="VARCHAR(255)" />
+			<column name="TEMPLATE" type="CLOB" />
+		</createTable>
+	</changeSet>
+	<changeSet author="thomas"
+		id="manual_idx1_CH_ELEXIS_CORE_TEXTTEMPLATE">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists
+					indexName="CH_ELEXIS_CORE_TEXTTEMPLATE_IDX1" />
+			</not>
+		</preConditions>
+		<createIndex indexName="CH_ELEXIS_CORE_TEXTTEMPLATE_IDX1"
+			tableName="CH_ELEXIS_CORE_TEXTTEMPLATE">
+			<column name="CATEGORY" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="thomas"
+		id="manual_idx2_CH_ELEXIS_CORE_TEXTTEMPLATE">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists
+					indexName="CH_ELEXIS_CORE_TEXTTEMPLATE_IDX2" />
+			</not>
+		</preConditions>
+		<createIndex indexName="CH_ELEXIS_CORE_TEXTTEMPLATE_IDX2"
+			tableName="CH_ELEXIS_CORE_TEXTTEMPLATE">
+			<column name="NAME" />
+		</createIndex>
+	</changeSet>
 </databaseChangeLog>
