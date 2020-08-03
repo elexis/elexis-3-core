@@ -28,18 +28,18 @@ public class MandatorTest extends AbstractTest {
 
 	@Test
 	public void extInfoWithRefetch() {
-		assertTrue(person.isMandator());
-		assertTrue(person.getExtInfo("testKey") == null);
-		person.setMobile("011");
-		person.setExtInfo("testKey", "testValue");
+		assertTrue(mandator.isMandator());
+		assertTrue(mandator.getExtInfo("testKey") == null);
+		mandator.setMobile("011");
+		mandator.setExtInfo("testKey", "testValue");
 		
-		Optional<IMandator> loaded = coreModelService.load(person.getId(), IMandator.class);
+		Optional<IMandator> loaded = coreModelService.load(mandator.getId(), IMandator.class);
 		
 		// refetch
 		assertTrue(loaded.get().getMobile() == null);
 		assertTrue(loaded.get().getExtInfo("testKey") == null);
 		
-		coreModelService.save(person);
+		coreModelService.save(mandator);
 
 		assertEquals("011", loaded.get().getMobile()); // works
 		// the issue [16648] happened here - because of refetch the value of testKey was null if extInfoHandler won't be reseted after entity change
@@ -49,15 +49,15 @@ public class MandatorTest extends AbstractTest {
 	@Test
 	public void extInfoWithoutRefetch() {
 		// working solution without refetch
-		assertTrue(person.isMandator());
-		assertTrue(person.getExtInfo("testKey") == null);
-		assertTrue(person.getMobile() == null);
-		person.setMobile("01");
-		person.setExtInfo("testKey", "testValue");
+		assertTrue(mandator.isMandator());
+		assertTrue(mandator.getExtInfo("testKey") == null);
+		assertTrue(mandator.getMobile() == null);
+		mandator.setMobile("01");
+		mandator.setExtInfo("testKey", "testValue");
 	
-		Optional<IMandator> loaded = coreModelService.load(person.getId(), IMandator.class);
+		Optional<IMandator> loaded = coreModelService.load(mandator.getId(), IMandator.class);
 		// no refetch save directly
-		coreModelService.save(person);
+		coreModelService.save(mandator);
 		
 		assertEquals("01", loaded.get().getMobile());
 		assertEquals("testValue", loaded.get().getExtInfo("testKey"));
@@ -65,38 +65,38 @@ public class MandatorTest extends AbstractTest {
 	
 	@Test
 	public void extInfoMutlipleSaveAndRefresh() {
-		assertTrue(person.isMandator());
-		assertTrue(person.getExtInfo("testKey") == null);
-		assertTrue(person.getMobile() == null);
-		person.setMobile("01");
-		person.setExtInfo("testKey1", "testValue1");
+		assertTrue(mandator.isMandator());
+		assertTrue(mandator.getExtInfo("testKey") == null);
+		assertTrue(mandator.getMobile() == null);
+		mandator.setMobile("01");
+		mandator.setExtInfo("testKey1", "testValue1");
 	
-		Optional<IMandator> loaded = coreModelService.load(person.getId(), IMandator.class);
-		coreModelService.save(person);
+		Optional<IMandator> loaded = coreModelService.load(mandator.getId(), IMandator.class);
+		coreModelService.save(mandator);
 
 		assertEquals("01", loaded.get().getMobile());
 		assertEquals("testValue1", loaded.get().getExtInfo("testKey1"));
 		
 		// some more value changes
-		person.setExtInfo("testKey2", "testValue2");
-		person.setExtInfo("testKey3", "testValue3");
-		person.setMobile("02");
+		mandator.setExtInfo("testKey2", "testValue2");
+		mandator.setExtInfo("testKey3", "testValue3");
+		mandator.setMobile("02");
 		
 		// refresh changed object and db object
-		CoreModelServiceHolder.get().refresh(person);
-		loaded = coreModelService.load(person.getId(), IMandator.class);
+		CoreModelServiceHolder.get().refresh(mandator);
+		loaded = coreModelService.load(mandator.getId(), IMandator.class);
 		CoreModelServiceHolder.get().refresh(loaded.get());
 
 		// check changes is still present 
-		assertTrue(person.getExtInfo("testKey2") != null);
-		assertEquals("02", person.getMobile());
+		assertTrue(mandator.getExtInfo("testKey2") != null);
+		assertEquals("02", mandator.getMobile());
 		
 		// db object should consist db values
 		assertTrue(loaded.get().getExtInfo("testKey2") == null);
 		assertEquals("01", loaded.get().getMobile());
 		
 		// save changes to synchronize changed object with db object
-		coreModelService.save(person);
+		coreModelService.save(mandator);
 		
 		assertEquals("02", loaded.get().getMobile());
 		assertEquals("testValue1", loaded.get().getExtInfo("testKey1"));
@@ -112,7 +112,7 @@ public class MandatorTest extends AbstractTest {
 		assertEquals("testValue3", loaded.get().getExtInfo("testKey3"));
 		
 		// load again to ensure nothing get changed
-		loaded = coreModelService.load(person.getId(), IMandator.class);
+		loaded = coreModelService.load(mandator.getId(), IMandator.class);
 		
 		assertEquals("02", loaded.get().getMobile());
 		assertEquals("testValue1", loaded.get().getExtInfo("testKey1"));

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import ch.elexis.core.model.IAddress;
 import ch.elexis.core.model.ILaboratory;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
@@ -32,6 +33,15 @@ public class IContactBuilder {
 		}
 	}
 
+	public static class MandatorBuilder extends AbstractBuilder<IMandator> {
+		public MandatorBuilder(IModelService modelService, String firstName, String lastName){
+			super(modelService);
+			object = modelService.create(IMandator.class);
+			object.setDescription1(lastName);
+			object.setDescription2(firstName);
+		}
+	}
+	
 	public static class PatientBuilder extends AbstractBuilder<IPatient> {
 		public PatientBuilder(IModelService modelService, String firstName, String lastName, LocalDate dateOfBirth,
 				Gender sex) {
