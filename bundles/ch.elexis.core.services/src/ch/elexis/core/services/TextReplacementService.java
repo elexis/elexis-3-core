@@ -59,4 +59,8 @@ public class TextReplacementService implements ITextReplacementService {
 		return "?";
 	}
 	
+	@Override
+	public List<ITextPlaceholderResolver> getResolvers(){
+		return placeholderResolvers;
+	}
 }
