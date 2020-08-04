@@ -9,6 +9,8 @@ import org.osgi.service.component.annotations.Component;
 
 import ch.elexis.core.interfaces.ILocalizedEnum;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.format.AddressFormatUtil;
+import ch.elexis.core.model.format.PersonFormatUtil;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.text.ITextPlaceholderResolver;
 import ch.elexis.core.text.PlaceholderAttribute;
@@ -41,18 +43,25 @@ public class PatientTextPlaceholderResolver implements ITextPlaceholderResolver 
 		
 		PatientAttribute patientAttribut = searchEnum(PatientAttribute.class, lcAttribute);
 		switch (patientAttribut) {
+		case Anrede:
+			return PersonFormatUtil.getSalutation(patient);
 		case Name:
 			return patient.getLastName();
 		case Vorname:
 			return patient.getFirstName();
+		case Anschrift:
+			return AddressFormatUtil.getPostalAddress(patient, true);
+		case Anschriftzeile:
+			return AddressFormatUtil.getPostalAddress(patient, false);
 		default:
-			break;
+			return null;
 		}
-		return null;
 	}
 	
 	private enum PatientAttribute implements ILocalizedEnum {
-			Name("Tag des Termins im Format dd.MM.yyyy"), Vorname("Zugehöriger Bereich");
+			Name("Nachname des Patienten"), Vorname("Vorname des Patienten"),
+			Anrede("Anrede des Patienten"), Anschrift("Mehrzeilige Anschrift"),
+			Anschriftzeile("Einzeilige Anschrift");
 		
 		final String description;
 		
