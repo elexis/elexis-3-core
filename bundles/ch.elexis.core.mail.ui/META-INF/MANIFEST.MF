@@ -22,8 +22,11 @@ Import-Package: ch.elexis.core.model.tasks,
  ch.elexis.core.tasks.model,
  ch.elexis.core.ui.dialogs,
  ch.elexis.core.ui.icons,
+ ch.elexis.core.ui.text,
+ ch.elexis.core.ui.util,
  ch.elexis.data,
  ch.rgw.tools,
+ javax.inject;version="1.0.0",
  org.apache.commons.lang3;version="3.7.0",
  org.slf4j
 Service-Component: OSGI-INF/ch.elexis.core.mail.ui.client.MailClientComponent.xml

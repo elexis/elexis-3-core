@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ParameterizedCommand;
@@ -21,7 +23,9 @@ import org.eclipse.jface.fieldassist.IContentProposalListener;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -42,16 +46,23 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.MailAccount.TYPE;
 import ch.elexis.core.mail.MailMessage;
+import ch.elexis.core.mail.MailTextTemplate;
 import ch.elexis.core.mail.TaskUtil;
 import ch.elexis.core.mail.ui.client.MailClientComponent;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.ITextTemplate;
+import ch.elexis.core.services.ITextReplacementService;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.data.Kontakt;
 
 public class SendMailDialog extends TitleAreaDialog {
+	
+	@Inject
+	private ITextReplacementService textReplacement;
 	
 	private ComboViewer accountsViewer;
 	private MailAccount account;
@@ -70,10 +81,13 @@ public class SendMailDialog extends TitleAreaDialog {
 	private String attachmentsString;
 	private String documentsString;
 	private boolean disableOutbox;
+	private ComboViewer templatesViewer;
 	
 	public SendMailDialog(Shell parentShell){
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
+		
+		CoreUiUtil.injectServices(this);
 		
 		ICommandService commandService =
 			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
@@ -223,6 +237,45 @@ public class SendMailDialog extends TitleAreaDialog {
 			attachments.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 			attachments.setAttachments(attachmentsString);
 			attachments.setDocuments(documentsString);
+			
+			lbl = new Label(container, SWT.NONE);
+			lbl.setText("Vorlage");
+			templatesViewer = new ComboViewer(container);
+			templatesViewer.getControl()
+				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+			templatesViewer.setContentProvider(new ArrayContentProvider());
+			templatesViewer.setLabelProvider(new LabelProvider() {
+				@Override
+				public String getText(Object element){
+					if (element instanceof ITextTemplate) {
+						return ((ITextTemplate) element).getName()
+							+ (((ITextTemplate) element).getMandator() != null
+									? " (" + ((ITextTemplate) element).getMandator().getLabel()
+										+ ")"
+									: "");
+					}
+					return super.getText(element);
+				}
+			});
+			List<Object> templatesInput = new ArrayList<>();
+			templatesInput.add("Keine Vorlage");
+			templatesInput.addAll(MailTextTemplate.load());
+			templatesViewer.setInput(templatesInput);
+			templatesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+				@Override
+				public void selectionChanged(SelectionChangedEvent event){
+					if (event.getStructuredSelection() != null && event.getStructuredSelection()
+						.getFirstElement() instanceof ITextTemplate) {
+						ITextTemplate selectedTemplate =
+							(ITextTemplate) event.getStructuredSelection().getFirstElement();
+						textText.setText(textReplacement.performReplacement(
+							ContextServiceHolder.get().getRootContext(),
+							selectedTemplate.getTemplate()));
+					} else {
+						textText.setText("");
+					}
+				}
+			});
 			
 			lbl = new Label(container, SWT.NONE);
 			lbl.setText("Text");

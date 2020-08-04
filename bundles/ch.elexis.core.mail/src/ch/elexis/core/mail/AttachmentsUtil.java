@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.mail.internal.DocumentConverterServiceHolder;
 import ch.elexis.core.mail.internal.DocumentStoreServiceHolder;
 import ch.elexis.core.model.IDocument;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IDocumentConverter;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.utils.CoreUtil;
@@ -130,9 +131,9 @@ public class AttachmentsUtil {
 		StringJoiner sj = new StringJoiner(":::");
 		String[] parts = documents.split(":::");
 		for (String string : parts) {
-			Object loaded = StoreToStringServiceHolder.get().loadFromString(string);
-			if (loaded instanceof IDocument) {
-				getTempFile((IDocument) loaded).ifPresent(f -> {
+			Optional<Identifiable> loaded = StoreToStringServiceHolder.get().loadFromString(string);
+			if (loaded.isPresent() && loaded.get() instanceof IDocument) {
+				getTempFile((IDocument) loaded.get()).ifPresent(f -> {
 					sj.add(f.getAbsolutePath());
 				});
 			}
