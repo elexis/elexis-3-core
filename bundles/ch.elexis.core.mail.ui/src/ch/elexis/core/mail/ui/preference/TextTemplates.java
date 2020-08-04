@@ -7,8 +7,10 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -22,12 +24,16 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import ch.elexis.core.mail.MailTextTemplate;
 import ch.elexis.core.mail.ui.dialogs.TextTemplateDialog;
 import ch.elexis.core.model.ITextTemplate;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.text.TextTemplateComposite;
 
 public class TextTemplates extends PreferencePage implements IWorkbenchPreferencePage {
 	
 	private Composite parentComposite;
 	private ComboViewer templatesViewer;
+	
+	private TextTemplateComposite templateComposite;
 	
 	@Override
 	public void init(IWorkbench workbench){
@@ -58,8 +64,14 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 		templatesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event){
-				
-
+				if (event.getStructuredSelection() != null
+					&& event.getStructuredSelection().getFirstElement() instanceof ITextTemplate) {
+					templateComposite.save();
+					templateComposite.setTemplate(
+						(ITextTemplate) event.getStructuredSelection().getFirstElement());
+				} else {
+					templateComposite.setTemplate(null);
+				}
 			}
 		});
 		
@@ -67,9 +79,20 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 		
 		ToolBarManager accountsToolMgr = new ToolBarManager(accountsTool);
 		accountsToolMgr.add(new AddTextTemplateAction());
+		accountsToolMgr.add(new RemoveTextTemplateAction());
 		accountsToolMgr.update(true);
 		
+		templateComposite = new TextTemplateComposite(parentComposite, SWT.NONE);
+		templateComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+
 		return parentComposite;
+	}
+	
+	@Override
+	public boolean performOk(){
+		templateComposite.save();
+		return super.performOk();
 	}
 	
 	private void updateTemplatesCombo(){
@@ -87,8 +110,27 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 		public void run(){
 			TextTemplateDialog dialog = new TextTemplateDialog(getShell());
 			if (dialog.open() == Window.OK) {
-				new MailTextTemplate.Builder().mandator(dialog.getMandator()).name(dialog.getName())
+				ITextTemplate template = new MailTextTemplate.Builder()
+					.mandator(dialog.getMandator()).name(dialog.getName())
 					.buildAndSave();
+				updateTemplatesCombo();
+				templatesViewer.setSelection(new StructuredSelection(template));
+			}
+		}
+	}
+	
+	private class RemoveTextTemplateAction extends Action {
+		@Override
+		public ImageDescriptor getImageDescriptor(){
+			return Images.IMG_DELETE.getImageDescriptor();
+		}
+		
+		@Override
+		public void run(){
+			IStructuredSelection selection = templatesViewer.getStructuredSelection();
+			if (selection != null && selection.getFirstElement() instanceof ITextTemplate) {
+				templatesViewer.setSelection(new StructuredSelection());
+				CoreModelServiceHolder.get().remove((ITextTemplate) selection.getFirstElement());
 				updateTemplatesCombo();
 			}
 		}

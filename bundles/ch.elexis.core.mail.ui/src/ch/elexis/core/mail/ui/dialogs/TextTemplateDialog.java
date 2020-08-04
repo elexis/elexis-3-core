@@ -2,6 +2,7 @@ package ch.elexis.core.mail.ui.dialogs;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -22,6 +23,7 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 
 public class TextTemplateDialog extends Dialog {
@@ -29,6 +31,8 @@ public class TextTemplateDialog extends Dialog {
 	private IMandator mandator;
 	
 	private String name;
+	
+	private List<Object> list;
 	
 	public TextTemplateDialog(Shell parentShell){
 		super(parentShell);
@@ -64,6 +68,12 @@ public class TextTemplateDialog extends Dialog {
 		IQuery<IMandator> query = CoreModelServiceHolder.get().getQuery(IMandator.class);
 		query.and(ModelPackage.Literals.ICONTACT__MANDATOR, COMPARATOR.EQUALS, Boolean.TRUE);
 		content.addAll(query.execute());
+		if (ContextServiceHolder.get().getActiveUser().isPresent()) {
+			if (!ContextServiceHolder.get().getActiveUser().get().isAdministrator()) {
+				content = content.stream().filter(o -> isAllOrCurrentMandator(o))
+					.collect(Collectors.toList());
+			}
+		}
 		comboViewer.setInput(content);
 		comboViewer.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		comboViewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -81,6 +91,15 @@ public class TextTemplateDialog extends Dialog {
 			}
 		});
 		return container;
+	}
+	
+	private boolean isAllOrCurrentMandator(Object o){
+		if (o instanceof IMandator) {
+			if (ContextServiceHolder.get().getActiveMandator().isPresent()) {
+				return ContextServiceHolder.get().getActiveMandator().get().equals(o);
+			}
+		}
+		return true;
 	}
 	
 	public IMandator getMandator(){
