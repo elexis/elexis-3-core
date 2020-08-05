@@ -213,8 +213,19 @@ public class MailClient implements IMailClient {
 				Multipart multipart = new MimeMultipart();
 				// create the message part 
 				MimeBodyPart messageBodyPart = new MimeBodyPart();
-				messageBodyPart.setText(message.getText());
+				messageBodyPart.setText(message.getHtmlText(), "UTF-8", "html");
 				multipart.addBodyPart(messageBodyPart);
+				
+				if (message.hasImage()) {
+					File image = message.getImage();
+					if (image != null) {
+						messageBodyPart = new MimeBodyPart();
+						DataSource source = new FileDataSource(image);
+						messageBodyPart.setDataHandler(new DataHandler(source));
+						messageBodyPart.setHeader("Content-ID", message.getImageContentId());
+						multipart.addBodyPart(messageBodyPart);
+					}
+				}
 				
 				if (message.hasAttachments()) {
 					List<File> attachments = message.getAttachments();
