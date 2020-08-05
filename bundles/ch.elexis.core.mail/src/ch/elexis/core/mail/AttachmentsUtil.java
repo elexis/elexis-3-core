@@ -1,5 +1,6 @@
 package ch.elexis.core.mail;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.mail.internal.DocumentConverterServiceHolder;
 import ch.elexis.core.mail.internal.DocumentStoreServiceHolder;
 import ch.elexis.core.model.IDocument;
+import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IDocumentConverter;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
@@ -63,6 +65,24 @@ public class AttachmentsUtil {
 			return Optional.of(tmpFile);
 		}
 		return Optional.empty();
+	}
+	
+	private static File getTempFile(IImage iImage){
+		File tmpFile = new File(getAttachmentsFolder(), getFileName(iImage));
+		try (FileOutputStream fout = new FileOutputStream(tmpFile);
+				ByteArrayInputStream content = new ByteArrayInputStream(iImage.getImage())) {
+			IOUtils.copy(content, fout);
+		} catch (IOException e) {
+			logger.error("Could not export IImage.", e);
+		}
+		if (tmpFile != null && tmpFile.exists()) {
+			return tmpFile;
+		}
+		return null;
+	}
+	
+	private static String getFileName(IImage iImage){
+		return iImage.getTitle();
 	}
 	
 	private static String getFileName(IDocument iDocument){
@@ -155,5 +175,9 @@ public class AttachmentsUtil {
 			}
 		}
 		return sj.toString();
+	}
+	
+	public static File getAttachmentsFile(IImage iImage){
+		return getTempFile(iImage);
 	}
 }
