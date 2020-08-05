@@ -26,6 +26,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -36,11 +37,13 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.mail.MailTextTemplate;
+import ch.elexis.core.mail.PreferenceConstants;
 import ch.elexis.core.mail.ui.dialogs.TextTemplateDialog;
 import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.ITextTemplate;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.text.TextTemplateComposite;
@@ -51,6 +54,7 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 	private ComboViewer templatesViewer;
 	
 	private TextTemplateComposite templateComposite;
+	private Button defaultBtn;
 	
 	@Override
 	public void init(IWorkbench workbench){
@@ -84,10 +88,18 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 				if (event.getStructuredSelection() != null
 					&& event.getStructuredSelection().getFirstElement() instanceof ITextTemplate) {
 					templateComposite.save();
-					templateComposite.setTemplate(
-						(ITextTemplate) event.getStructuredSelection().getFirstElement());
+					ITextTemplate selectedTemplate = (ITextTemplate) event.getStructuredSelection().getFirstElement();
+					templateComposite.setTemplate(selectedTemplate);
+					String defaultTemplateId = ConfigServiceHolder.get().get(PreferenceConstants.PREF_DEFAULT_TEMPLATE, null);
+					if (defaultTemplateId != null
+						&& selectedTemplate.getId().equals(defaultTemplateId)) {
+						defaultBtn.setSelection(true);
+					} else {
+						defaultBtn.setSelection(false);
+					}
 				} else {
 					templateComposite.setTemplate(null);
+					defaultBtn.setSelection(false);
 				}
 			}
 		});
@@ -102,7 +114,11 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 		templateComposite = new TextTemplateComposite(parentComposite, SWT.NONE);
 		templateComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		
-		Button logoBtn = new Button(parentComposite, SWT.PUSH);
+		Composite buttonComposite = new Composite(parentComposite, SWT.NONE);
+		buttonComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		buttonComposite.setLayout(new RowLayout());
+		
+		Button logoBtn = new Button(buttonComposite, SWT.PUSH);
 		if (loadImage("elexismailpraxislogo").isPresent()) {
 			logoBtn.setText("Praxis Logo überschreiben");
 		} else {
@@ -139,6 +155,19 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 			
 		});
 
+		defaultBtn = new Button(buttonComposite, SWT.CHECK);
+		defaultBtn.setText("Als Standard Vorlage verwenden");
+		defaultBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e){
+				IStructuredSelection selectedTemplate = templatesViewer.getStructuredSelection();
+				if (selectedTemplate != null
+					&& selectedTemplate.getFirstElement() instanceof ITextTemplate)
+					ConfigServiceHolder.get().set(PreferenceConstants.PREF_DEFAULT_TEMPLATE,
+						((ITextTemplate) selectedTemplate.getFirstElement()).getId());
+			}
+		});
+		
 		return parentComposite;
 	}
 	

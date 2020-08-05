@@ -35,6 +35,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -47,11 +48,13 @@ import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.MailAccount.TYPE;
 import ch.elexis.core.mail.MailMessage;
 import ch.elexis.core.mail.MailTextTemplate;
+import ch.elexis.core.mail.PreferenceConstants;
 import ch.elexis.core.mail.TaskUtil;
 import ch.elexis.core.mail.ui.client.MailClientComponent;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.ITextTemplate;
 import ch.elexis.core.services.ITextReplacementService;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
@@ -299,6 +302,19 @@ public class SendMailDialog extends TitleAreaDialog {
 							accountsViewer.setSelection(
 								new StructuredSelection(accountOptional.get().getId()));
 						}
+					}
+				}
+			}
+			// set template if there is no text, and a default configured
+			String defaultTemplateId =
+				ConfigServiceHolder.get().get(PreferenceConstants.PREF_DEFAULT_TEMPLATE, null);
+			if (defaultTemplateId != null && StringUtils.isEmpty(textText.getText())) {
+				for (Object object : templatesInput) {
+					if (object instanceof ITextTemplate
+						&& ((ITextTemplate) object).getId().equals(defaultTemplateId)) {
+						Display.getDefault().asyncExec(() -> {
+							templatesViewer.setSelection(new StructuredSelection(object));
+						});
 					}
 				}
 			}
