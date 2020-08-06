@@ -378,7 +378,7 @@ public class SendMailDialog extends TitleAreaDialog {
 	
 	@Override
 	protected void createButtonsForButtonBar(Composite parent){
-		Button outboxBtn = createButton(parent, -1, "in Oubox ablegen", false);
+		Button outboxBtn = createButton(parent, -1, "in Outbox ablegen", false);
 		super.createButtonsForButtonBar(parent);
 		outboxBtn.setEnabled(
 			!disableOutbox && createOutboxCommand != null && createOutboxCommand.isEnabled());
