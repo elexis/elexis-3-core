@@ -37,6 +37,7 @@ public class AttachmentsComposite extends Composite {
 		
 		ToolBarManager mgr = new ToolBarManager();
 		mgr.add(new AddAttachmentAction(this));
+		mgr.add(new RemoveAttachmentAction(this));
 		ToolBar toolbar = mgr.createControl(this);
 		toolbar.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false));
 	}
