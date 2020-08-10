@@ -4,6 +4,7 @@ import java.nio.file.Paths;
 import java.util.Collections;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.commands.Command;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -11,6 +12,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 
 import ch.elexis.core.mail.AttachmentsUtil;
 import ch.elexis.core.model.IDocument;
@@ -21,9 +24,16 @@ public class AttachmentsComposite extends Composite {
 	private String attachmentsString = "";
 	private String attachments;
 	private String documents;
+	private Command createRocheLaborCommand;
+	private String postfix;
 	
 	public AttachmentsComposite(Composite parent, int style){
 		super(parent, style);
+		ICommandService commandService =
+			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		createRocheLaborCommand =
+			commandService.getCommand("at.medevit.elexis.roche.labor.CreatePdfSelection");
+		
 		createContent();
 	}
 	
@@ -38,6 +48,9 @@ public class AttachmentsComposite extends Composite {
 		ToolBarManager mgr = new ToolBarManager();
 		mgr.add(new AddAttachmentAction(this));
 		mgr.add(new RemoveAttachmentAction(this));
+		if (createRocheLaborCommand != null && createRocheLaborCommand.isEnabled()) {
+			mgr.add(new LaborAttachmentAction(this, createRocheLaborCommand));
+		}
 		ToolBar toolbar = mgr.createControl(this);
 		toolbar.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false));
 	}
@@ -114,5 +127,13 @@ public class AttachmentsComposite extends Composite {
 	
 	public String getDocuments(){
 		return documents;
+	}
+	
+	public void setPostfix(String text){
+		this.postfix = text;
+	}
+	
+	public String getPostfix(){
+		return postfix;
 	}
 }

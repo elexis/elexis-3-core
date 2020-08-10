@@ -16,6 +16,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposal;
@@ -145,6 +146,7 @@ public class SendMailDialog extends TitleAreaDialog {
 					}
 					toText.setText(sb.toString());
 					toText.setSelection(toText.getText().length());
+					attachments.setPostfix(toText.getText());
 				}
 			});
 			MenuManager menuManager = new MenuManager();
@@ -240,6 +242,7 @@ public class SendMailDialog extends TitleAreaDialog {
 			attachments.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 			attachments.setAttachments(attachmentsString);
 			attachments.setDocuments(documentsString);
+			attachments.setPostfix(toString);
 			
 			lbl = new Label(container, SWT.NONE);
 			lbl.setText("Vorlage");
@@ -380,6 +383,9 @@ public class SendMailDialog extends TitleAreaDialog {
 	protected void createButtonsForButtonBar(Composite parent){
 		Button outboxBtn = createButton(parent, -1, "in Outbox ablegen", false);
 		super.createButtonsForButtonBar(parent);
+		if (getButton(IDialogConstants.OK_ID) != null) {
+			getButton(IDialogConstants.OK_ID).setText("Senden");
+		}
 		outboxBtn.setEnabled(
 			!disableOutbox && createOutboxCommand != null && createOutboxCommand.isEnabled());
 		outboxBtn.addSelectionListener(new SelectionAdapter() {
