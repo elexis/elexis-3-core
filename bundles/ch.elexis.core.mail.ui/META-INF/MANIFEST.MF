@@ -31,4 +31,5 @@ Import-Package: ch.elexis.core.model.tasks,
  org.apache.commons.lang3;version="3.7.0",
  org.slf4j
 Service-Component: OSGI-INF/ch.elexis.core.mail.ui.client.MailClientComponent.xml,
- OSGI-INF/ch.elexis.core.mail.ui.handlers.BriefeDocumentStoreHolder.xml
+ OSGI-INF/ch.elexis.core.mail.ui.handlers.BriefeDocumentStoreHolder.xml,
+ OSGI-INF/ch.elexis.core.mail.ui.handlers.TaskServiceHolder.xml

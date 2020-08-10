@@ -76,6 +76,7 @@ public class SendMailNoUiHandler extends AbstractHandler implements IHandler {
 					TaskUtil.executeTaskSync(taskDescriptor.get(), new NullProgressMonitor());
 				if (task.isSucceeded()) {
 					OutboxUtil.getOrCreateElement(taskDescriptor.get(), true);
+					EncounterUtil.addMailToEncounter(taskDescriptor.get());
 					return null;
 				} else {
 					return MailClientComponent.getLastErrorMessage();

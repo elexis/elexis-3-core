@@ -1,5 +1,7 @@
 package ch.elexis.core.mail.ui.dialogs;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -78,6 +80,8 @@ public class SendMailDialog extends TitleAreaDialog {
 	private String documentsString;
 	private boolean disableOutbox;
 	private ComboViewer templatesViewer;
+	
+	private LocalDateTime sentTime;
 	
 	public SendMailDialog(Shell parentShell){
 		super(parentShell);
@@ -308,6 +312,15 @@ public class SendMailDialog extends TitleAreaDialog {
 					}
 				}
 			}
+			if (sentTime != null) {
+				accountsViewer.getCombo().setEnabled(false);
+				toText.setEditable(false);
+				ccText.setEditable(false);
+				subjectText.setEditable(false);
+				templatesViewer.getCombo().setEnabled(false);
+				textText.setEditable(false);
+				attachments.setEnabled(false);
+			}
 		}
 		
 		return area;
@@ -371,7 +384,22 @@ public class SendMailDialog extends TitleAreaDialog {
 		Button outboxBtn = createButton(parent, -1, "in Outbox ablegen", false);
 		super.createButtonsForButtonBar(parent);
 		if (getButton(IDialogConstants.OK_ID) != null) {
-			getButton(IDialogConstants.OK_ID).setText("Senden");
+			Button okButton = getButton(IDialogConstants.OK_ID);
+			okButton.setText("Senden");
+			if (sentTime != null) {
+				setTitle("E-Mail Anzeige");
+				setMessage(
+					"Diese E-Mail wurde versendet am "
+						+ sentTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+				// hide all buttons if already sent
+				for (Control control : parent.getChildren()) {
+					if (control instanceof Button) {
+						Button button = (Button) control;
+						((GridData) button.getLayoutData()).exclude = true;
+						button.setVisible(false);
+					}
+				}
+			}
 		}
 		outboxBtn.setEnabled(
 			!disableOutbox && OutboxUtil.isOutboxAvailable());
@@ -402,6 +430,7 @@ public class SendMailDialog extends TitleAreaDialog {
 				cancelPressed();
 			}
 		});
+		parent.layout();
 	}
 	
 	private String getValidation(){
@@ -488,5 +517,9 @@ public class SendMailDialog extends TitleAreaDialog {
 	
 	public void setAttachmentsString(String attachments){
 		this.attachmentsString = attachments;
+	}
+	
+	public void sent(LocalDateTime sentTime){
+		this.sentTime = sentTime;
 	}
 }

@@ -108,5 +108,12 @@
             type="java.lang.Object">
       </propertyTester>
    </extension>
+   <extension
+         point="ch.elexis.core.ui.KonsExtension">
+      <Link
+            KonsExtension="ch.elexis.core.mail.ui.cons.KonsExtension"
+            name="ch.elexis.core.mail.ui.cons">
+      </Link>
+   </extension>
 
 </plugin>
