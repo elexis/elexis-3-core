@@ -2036,5 +2036,16 @@ WHERE kontakt.id IN (
             <column name="MANDANT"/>
         </createIndex>
     </changeSet>
+    <changeSet author="thomas" id="manual_index_AT_MEDEVIT_ELEXIS_OUTBOX_IDX_OUTBOX3">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="AT_MEDEVIT_ELEXIS_OUTBOX"
+					indexName="AT_MEDEVIT_ELEXIS_OUTBOX_IDX_OUTBOX3" />
+			</not>
+		</preConditions>
+        <createIndex indexName="AT_MEDEVIT_ELEXIS_OUTBOX_IDX_OUTBOX3" tableName="AT_MEDEVIT_ELEXIS_OUTBOX">
+            <column name="URI"/>
+        </createIndex>
+    </changeSet>    
     
 </databaseChangeLog>
