@@ -31,6 +31,7 @@ public class SendMailTaskWithProgress {
 							task = TaskUtil.executeTaskSync(taskDescriptor, monitor);
 							if (task.isSucceeded()) {
 								OutboxUtil.getOrCreateElement(taskDescriptor, true);
+								EncounterUtil.addMailToEncounter(taskDescriptor);
 							}
 							monitor.done();
 						} catch (TaskException e) {

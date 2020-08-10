@@ -36,6 +36,12 @@ public class SendMailTaskHandler extends AbstractHandler implements IHandler {
 				sendMailDialog.setMailMessage(message);
 				sendMailDialog.setAccountId(accountId);
 				sendMailDialog.disableOutbox();
+				Optional<ITask> execution =
+					TaskServiceHolder.get().findLatestExecution(taskDescriptor.get());
+				if (execution.isPresent()) {
+					// setting sent will open in view mode ...
+					sendMailDialog.sent(execution.get().getFinishedAt());
+				}
 				if (sendMailDialog.open() == Dialog.OK) {
 					MailMessage sendMessage =
 						new MailMessage().to(sendMailDialog.getTo()).cc(sendMailDialog.getCc())
