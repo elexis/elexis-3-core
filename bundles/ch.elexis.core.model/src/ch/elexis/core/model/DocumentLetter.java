@@ -147,7 +147,7 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 
 	@Override
 	public void setExtension(String value){
-		// TODO Auto-generated method stub
+		getEntity().setMimetype(value);
 	}
 	
 	@Override
