@@ -29,6 +29,9 @@ public class SendMailTaskWithProgress {
 						try {
 							monitor.beginTask("Send Mail ...", IProgressMonitor.UNKNOWN);
 							task = TaskUtil.executeTaskSync(taskDescriptor, monitor);
+							if (task.isSucceeded()) {
+								OutboxUtil.getOrCreateElement(taskDescriptor, true);
+							}
 							monitor.done();
 						} catch (TaskException e) {
 							MessageDialog.openError(activeShell, "Fehler",

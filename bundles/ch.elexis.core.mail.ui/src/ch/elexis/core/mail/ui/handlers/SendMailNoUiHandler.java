@@ -19,7 +19,6 @@ import ch.elexis.core.mail.ui.client.MailClientComponent;
 import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
-import ch.elexis.core.tasks.model.TaskState;
 import ch.elexis.data.Mandant;
 
 /**
@@ -75,7 +74,8 @@ public class SendMailNoUiHandler extends AbstractHandler implements IHandler {
 			try {
 				ITask task =
 					TaskUtil.executeTaskSync(taskDescriptor.get(), new NullProgressMonitor());
-				if (task.getState() == TaskState.COMPLETED) {
+				if (task.isSucceeded()) {
+					OutboxUtil.getOrCreateElement(taskDescriptor.get(), true);
 					return null;
 				} else {
 					return MailClientComponent.getLastErrorMessage();

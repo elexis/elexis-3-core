@@ -1,15 +1,12 @@
 package ch.elexis.core.mail.ui.dialogs;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
@@ -40,10 +37,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
-import org.eclipse.ui.handlers.IHandlerService;
-import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.MailAccount.TYPE;
@@ -52,12 +45,12 @@ import ch.elexis.core.mail.MailTextTemplate;
 import ch.elexis.core.mail.PreferenceConstants;
 import ch.elexis.core.mail.TaskUtil;
 import ch.elexis.core.mail.ui.client.MailClientComponent;
+import ch.elexis.core.mail.ui.handlers.OutboxUtil;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.ITextTemplate;
 import ch.elexis.core.services.ITextReplacementService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.util.CoreUiUtil;
@@ -80,7 +73,6 @@ public class SendMailDialog extends TitleAreaDialog {
 	private String textString = "";
 	private AttachmentsComposite attachments;
 	
-	private Command createOutboxCommand;
 	private String accountId;
 	private String attachmentsString;
 	private String documentsString;
@@ -92,11 +84,6 @@ public class SendMailDialog extends TitleAreaDialog {
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 		
 		CoreUiUtil.injectServices(this);
-		
-		ICommandService commandService =
-			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-		createOutboxCommand =
-			commandService.getCommand("at.medevit.elexis.outbox.ui.command.createElementNoUi");
 	}
 	
 	@Override
@@ -387,7 +374,7 @@ public class SendMailDialog extends TitleAreaDialog {
 			getButton(IDialogConstants.OK_ID).setText("Senden");
 		}
 		outboxBtn.setEnabled(
-			!disableOutbox && createOutboxCommand != null && createOutboxCommand.isEnabled());
+			!disableOutbox && OutboxUtil.isOutboxAvailable());
 		outboxBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
@@ -408,18 +395,8 @@ public class SendMailDialog extends TitleAreaDialog {
 				message.setDocuments(attachments.getDocuments());
 				Optional<ITaskDescriptor> descriptor =
 					TaskUtil.createSendMailTaskDescriptor(account.getId(), message);
-				// now try to call the create outbox command, is not part of core ...
-				try {
-					HashMap<String, String> params = new HashMap<String, String>();
-					params.put("at.medevit.elexis.outbox.ui.command.createElementNoUi.dburi",
-						StoreToStringServiceHolder.getStoreToString(descriptor.get()));
-					ParameterizedCommand parametrizedCommmand =
-						ParameterizedCommand.generateCommand(createOutboxCommand, params);
-					PlatformUI.getWorkbench().getService(IHandlerService.class)
-						.executeCommand(parametrizedCommmand, null);
-				} catch (Exception ex) {
-					LoggerFactory.getLogger(getClass())
-						.warn("Create OutboxElement command not available");
+				if (descriptor.isPresent()) {
+					OutboxUtil.getOrCreateElement(descriptor.get(), false);
 				}
 				// close dialog with cancel status, do not send mail
 				cancelPressed();
