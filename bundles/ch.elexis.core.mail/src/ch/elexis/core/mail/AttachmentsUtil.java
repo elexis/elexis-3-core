@@ -98,7 +98,7 @@ public class AttachmentsUtil {
 		ret.append(title).append("_");
 		ret.append(new SimpleDateFormat("ddMMyyyy_HHmmss").format(iDocument.getLastchanged()));
 		String extension = iDocument.getExtension();
-		if (extension.indexOf('.') != -1) {
+		if (extension != null && extension.indexOf('.') != -1) {
 			extension = extension.substring(extension.lastIndexOf('.') + 1);
 		}
 		ret.append(".").append(extension);
