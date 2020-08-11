@@ -59,7 +59,7 @@ public class EigenartikelTreeContentProvider
 		if (!showProducts) {
 			query.and(ModelPackage.Literals.IARTICLE__PRODUCT, COMPARATOR.NOT_EQUALS, null);
 		}
-		query.orderBy(ModelPackage.Literals.IARTICLE__NAME, ORDER.DESC);
+		query.orderBy(ModelPackage.Literals.IARTICLE__NAME, ORDER.ASC);
 		return query.execute().toArray();
 	}
 	
