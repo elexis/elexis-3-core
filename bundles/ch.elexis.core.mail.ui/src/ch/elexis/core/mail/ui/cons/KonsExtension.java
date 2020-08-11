@@ -34,7 +34,7 @@ public class KonsExtension implements IKonsExtension {
 	
 	@Override
 	public boolean doLayout(StyleRange styleRange, String provider, String id){
-		styleRange.background = CoreUiUtil.getColorForString("ffffff");
+		styleRange.background = CoreUiUtil.getColorForString("a6ffaa");
 		return true;
 	}
 	
@@ -69,7 +69,7 @@ public class KonsExtension implements IKonsExtension {
 	public String updateXRef(String provider, String refID){
 		Optional<ITaskDescriptor> taskDescriptor = TaskServiceHolder.get().findTaskDescriptorByIdOrReferenceId(refID);
 		if (taskDescriptor.isPresent()) {
-			return "[ " + EncounterUtil.getTaskDescriptorText(taskDescriptor.get()) + " ]";
+			return EncounterUtil.getTaskDescriptorText(taskDescriptor.get());
 		}
 		return null;
 	}
