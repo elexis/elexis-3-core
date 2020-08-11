@@ -271,14 +271,14 @@ public class SendMailDialog extends TitleAreaDialog {
 					} else {
 						textText.setText("");
 					}
+					updateLayout();
 				}
 			});
 			
 			lbl = new Label(container, SWT.NONE);
 			lbl.setText("Text");
-			textText = new Text(container, SWT.BORDER | SWT.MULTI);
+			textText = new Text(container, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
 			GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-			gd.heightHint = 128;
 			textText.setLayoutData(gd);
 			textText.setText(textString);
 			
@@ -322,7 +322,7 @@ public class SendMailDialog extends TitleAreaDialog {
 				attachments.setEnabled(false);
 			}
 		}
-		
+		updateLayout();
 		return area;
 	}
 	
@@ -352,6 +352,7 @@ public class SendMailDialog extends TitleAreaDialog {
 		if (text != null && !text.isEmpty()) {
 			textString = text;
 		}
+		updateLayout();
 	}
 	
 	private List<String> getSendMailAccounts(){
@@ -505,6 +506,29 @@ public class SendMailDialog extends TitleAreaDialog {
 		setText(StringUtils.defaultString(message.getText()));
 		attachmentsString = message.getAttachmentsString();
 		documentsString = message.getDocumentsString();
+		
+		updateLayout();
+	}
+	
+	private void updateLayout(){
+		if (textText != null && !textText.isDisposed()) {
+			GridData gd = (GridData) textText.getLayoutData();
+			String text = textText.getText();
+			boolean defaultSet = false;
+			if (StringUtils.isNotBlank(text)) {
+				String[] lines = text.split("\n");
+				if (lines.length > 12) {
+					defaultSet = true;
+					gd.heightHint = SWT.DEFAULT;
+				}
+			}
+			if (!defaultSet) {
+				gd.heightHint = 250;
+			}
+			if (getShell() != null && !getShell().isDisposed()) {
+				getShell().layout();
+			}
+		}
 	}
 	
 	public void disableOutbox(){

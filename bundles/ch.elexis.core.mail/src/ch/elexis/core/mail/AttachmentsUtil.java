@@ -162,6 +162,24 @@ public class AttachmentsUtil {
 	}
 	
 	/**
+	 * Convert a {@link IDocument} reference String to a String that can be parsed by the mail
+	 * commands.
+	 * 
+	 * @param documents
+	 * @return
+	 */
+	public static String toAttachment(String document){
+		Optional<Identifiable> loaded = StoreToStringServiceHolder.get().loadFromString(document);
+		if (loaded.isPresent() && loaded.get() instanceof IDocument) {
+			Optional<File> file = getTempFile((IDocument) loaded.get());
+			if (file.isPresent()) {
+				return file.get().getAbsolutePath();
+			}
+		}
+		return "?";
+	}
+	
+	/**
 	 * Get a String representation for a list of {@link IDocument}.
 	 * 
 	 * @param iDocuments
