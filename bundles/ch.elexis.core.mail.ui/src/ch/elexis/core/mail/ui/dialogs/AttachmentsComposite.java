@@ -110,6 +110,7 @@ public class AttachmentsComposite extends Composite {
 						Program.launch((String) label.getData());
 					}
 				});
+				label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 				Label remove = new Label(attachmentsParent, SWT.NONE);
 				remove.setImage(Images.IMG_DELETE.getImage());
 				remove.setData(string);
@@ -123,6 +124,7 @@ public class AttachmentsComposite extends Composite {
 						setAttachments(removedString);
 					}
 				});
+				remove.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
 			}
 		}
 		if (StringUtils.isNotBlank(documents)) {
@@ -141,6 +143,7 @@ public class AttachmentsComposite extends Composite {
 						Program.launch(tmpFile);
 					}
 				});
+				label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 				Label remove = new Label(attachmentsParent, SWT.NONE);
 				remove.setImage(Images.IMG_DELETE.getImage());
 				remove.setData(string);
@@ -153,6 +156,7 @@ public class AttachmentsComposite extends Composite {
 						setDocuments(removedString);
 					};
 				});
+				remove.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
 			}
 		}
 		attachmentsParent.setRedraw(true);
