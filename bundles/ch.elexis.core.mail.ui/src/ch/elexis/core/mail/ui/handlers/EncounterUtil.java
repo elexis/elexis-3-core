@@ -33,7 +33,7 @@ public class EncounterUtil {
 	public static void addMailToEncounter(ITaskDescriptor taskDescriptor){
 		Optional<IEncounter> encounter = getActiveEncounter();
 		if (encounter.isPresent()) {
-			String label = "[ " + getTaskDescriptorText(taskDescriptor) + " ]"; //$NON-NLS-1$ //$NON-NLS-2$
+			String label = getTaskDescriptorText(taskDescriptor); //$NON-NLS-1$ //$NON-NLS-2$
 			Konsultation.load(encounter.get().getId()).addXRef(KonsExtension.EXTENSION_ID,
 				taskDescriptor.getId(), -1, label);
 		}
@@ -49,7 +49,8 @@ public class EncounterUtil {
 				sb.append("Mail an ").append(msg.getTo());
 				execution.ifPresent(task -> {
 					sb.append(" versendet "
-						+ task.getFinishedAt().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+						+ task.getFinishedAt()
+							.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
 				});
 				return sb.toString();
 			}
