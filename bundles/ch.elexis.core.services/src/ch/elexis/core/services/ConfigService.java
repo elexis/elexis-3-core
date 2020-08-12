@@ -53,7 +53,7 @@ public class ConfigService implements IConfigService {
 	public void activate(){
 		validateConfiguredDatabaseLocale();
 		
-		SysSettings cfg = new SysSettings(SysSettings.USER_SETTINGS, Desk.class);
+		SysSettings cfg = SysSettings.getOrCreate(SysSettings.USER_SETTINGS, Desk.class);
 		cfg.read_xml(CoreUtil.getWritableUserDir() + File.separator + getLocalConfigFileName());
 		localConfig = cfg;
 		

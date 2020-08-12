@@ -49,7 +49,6 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IContextService;
-import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
@@ -356,7 +355,7 @@ public class CoreHub implements BundleActivator {
 		String msg = "loadLocalCfg: Loading branch " + branch + " from " + LocalCfgFile;
 		System.out.println(msg);
 		log.debug(msg);
-		SysSettings cfg = new SysSettings(SysSettings.USER_SETTINGS, Desk.class);
+		SysSettings cfg = SysSettings.getOrCreate(SysSettings.USER_SETTINGS, Desk.class);
 		cfg.read_xml(LocalCfgFile);
 		CoreHub.localCfg = cfg;
 	}
