@@ -16,7 +16,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.InvalidPreferencesFormatException;
 import java.util.prefs.Preferences;
@@ -41,7 +43,25 @@ public class SysSettings extends Settings {
 	public static final int USER_SETTINGS = 0;
 	public static final int SYSTEM_SETTINGS = 1;
 	volatile int typ;
-	volatile Class clazz;
+	volatile Class<?> clazz;
+	
+	private static Map<String, SysSettings> instanceMap = new HashMap<>();
+	
+	/**
+	 * Get an existing instance for type and class, or create a new {@link SysSettings} that will be
+	 * returned on next call.
+	 * 
+	 * @param type
+	 * @param cl
+	 * @return
+	 */
+	public synchronized static SysSettings getOrCreate(int type, Class<?> cl){
+		String key = Integer.toString(type) + "|" + cl.getName();
+		if (!instanceMap.containsKey(key)) {
+			instanceMap.put(key, new SysSettings(type, cl));
+		}
+		return instanceMap.get(key);
+	}
 	
 	/**
 	 * Settings neu Anlegen oder einlesen
@@ -51,7 +71,7 @@ public class SysSettings extends Settings {
 	 * @param cl
 	 *            Basisklasse für den Settings-zweig
 	 */
-	public SysSettings(int type, Class cl){
+	public SysSettings(int type, Class<?> cl){
 		super();
 		typ = type;
 		clazz = cl;
@@ -81,7 +101,7 @@ public class SysSettings extends Settings {
 	 *            Dateiname
 	 * @throws Exception
 	 */
-	public void write_xml(String file){
+	public synchronized void write_xml(String file){
 		String errMsg = "\nSysSettings: Error writing: " + file;
 		try (FileOutputStream os = new FileOutputStream(file)) {
 			getRoot().exportSubtree(os);
@@ -101,7 +121,7 @@ public class SysSettings extends Settings {
 	 *            Dateiname
 	 * @throws Exception
 	 */
-	public void read_xml(String file){
+	public synchronized void read_xml(String file){
 		String errMsg = "\nSysSettings: Error reading: " + file;
 		try (FileInputStream is = new FileInputStream(file)) {
 			Preferences.importPreferences(is);
@@ -118,7 +138,7 @@ public class SysSettings extends Settings {
 	 * @see ch.rgw.IO.Settings#flush()
 	 */
 	protected void flush_absolute(){
-		Iterator it = iterator();
+		Iterator<?> it = iterator();
 		Preferences pr = getRoot();
 		while (it.hasNext()) {
 			String a = (String) it.next();
