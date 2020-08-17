@@ -347,6 +347,16 @@
                tooltip="Medikation-Verlauf als Pdf">
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.Konsdetail">
+         <command
+               commandId="ch.elexis.core.ui.BillActiveEncounter"
+               icon="icon://IMG_PERSPECTIVE_BILLS"
+               style="push"
+               tooltip="Konsultation verrechnen und ausgeben">
+         </command>
+      </menuContribution>
    </extension>
       <extension
          point="org.eclipse.ui.preferencePages">
@@ -774,6 +784,10 @@
             id="ch.elexis.core.ui.PrintMedicationHistory"
             name="Print medication history">
       </command>
+      <command
+            id="ch.elexis.core.ui.BillActiveEncounter"
+            name="Bill active encounter">
+      </command>
    </extension>
       <extension
             point="ch.elexis.core.ui.KonsExtension">
@@ -913,6 +927,22 @@
                class="ch.elexis.core.ui.commands.OpenCompendiumHandler"
                commandId="ch.elexis.core.ui.command.openCompendium">
          </handler>
+         <handler
+               class="ch.elexis.core.ui.commands.BillActiveEncounterHandler"
+               commandId="ch.elexis.core.ui.BillActiveEncounter">
+            <enabledWhen>
+               <and>
+                  <test
+                        args="Rechnungen/erstellen"
+                        property="ch.elexis.commands.propertyTester.ACE">
+                  </test>
+                  <test
+                        args="activeencounter"
+                        property="ch.elexis.core.ui.property.billable">
+                  </test>
+               </and>
+            </enabledWhen>
+         </handler>
       </extension>
       <extension
             point="org.eclipse.ui.startup">
@@ -926,7 +956,7 @@
                class="ch.elexis.core.ui.property.PropertyTester"
                id="ch.elexis.core.ui.propertyTester"
                namespace="ch.elexis.core.ui.property"
-               properties="documenteditlocal"
+               properties="documenteditlocal, billable"
                type="java.lang.Object">
          </propertyTester>
       </extension>
