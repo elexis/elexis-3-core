@@ -100,6 +100,28 @@ public class BillingUtil {
 	 * 
 	 */
 	public static IBillableCheck[] billableChecks = {
+		// Check already billed
+		new IBillableCheck() {
+			@Override
+			public boolean isBillable(Konsultation konsultation, Result<Konsultation> result){
+				boolean fail = konsultation.getRechnung() != null
+					&& !Rechnung.isStorno(konsultation.getRechnung());
+				if (fail) {
+					result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+				}
+				return !fail;
+			}
+			
+			@Override
+			public String getId(){
+				return "alreadyBilled";
+			}
+			
+			@Override
+			public String getDescription(){
+				return "Behandlung ist bereits verrechnet.";
+			}
+		},
 		// Check for zero sales.
 		new IBillableCheck() {
 			@Override
