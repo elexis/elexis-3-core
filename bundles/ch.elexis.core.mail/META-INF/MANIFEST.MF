@@ -15,7 +15,7 @@ Service-Component: OSGI-INF/ch.elexis.core.mail.internal.MailClient.xml,
 Require-Bundle: javax.mail.glassfish;bundle-version="1.4.1",
  org.eclipse.osgi.services;bundle-version="3.3.100",
  ch.rgw.utility;bundle-version="3.8.0",
- ch.elexis.core;bundle-version="3.9.0"
+ ch.elexis.core;bundle-version="3.8.0"
 Export-Package: ch.elexis.core.mail
 Automatic-Module-Name: ch.elexis.core.mail
 Import-Package: ch.elexis.core.documents,
