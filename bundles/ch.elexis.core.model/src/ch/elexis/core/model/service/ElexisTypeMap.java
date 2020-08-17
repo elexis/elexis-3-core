@@ -75,6 +75,7 @@ public class ElexisTypeMap {
 	public static final String TYPE_VERRECHNET = "ch.elexis.data.Verrechnet";
 	public static final String TYPE_FREETEXTDIAGNOSE = "ch.elexis.data.FreeTextDiagnose";
 	public static final String TYPE_LEISTUNGSBLOCK = "ch.elexis.data.Leistungsblock";
+	public static final String TYPE_MANDANT = "ch.elexis.data.Mandant";
 	
 	static {
 		stsToClassMap = new HashMap<String, Class<? extends EntityWithId>>();
@@ -132,6 +133,7 @@ public class ElexisTypeMap {
 		stsToClassMap.put(TYPE_PATIENT, Kontakt.class);
 		stsToClassMap.put(TYPE_PERSON, Kontakt.class);
 		stsToClassMap.put(TYPE_LABORATORY, Kontakt.class);
+		stsToClassMap.put(TYPE_MANDANT, Kontakt.class);
 	}
 	
 	/**
