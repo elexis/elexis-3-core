@@ -53,7 +53,7 @@ public class BillActiveEncounterHandler extends AbstractHandler implements IHand
 				}
 				MessageDialog.openInformation(HandlerUtil.getActiveShell(event),
 					"Nicht verrechenbar",
-					"Die Konsultatione kann nicht verrechnet werden.\n\n" + sb.toString());
+					"Die Konsultation kann nicht verrechnet werden.\n\n" + sb.toString());
 			}
 		}
 		return null;
