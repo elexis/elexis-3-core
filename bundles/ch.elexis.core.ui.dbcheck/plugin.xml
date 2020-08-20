@@ -50,9 +50,6 @@
             MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.LabResetPathologic">
       </ExternalMaintenance>
       <ExternalMaintenance
-            MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.CheckKonsultationValidity">
-      </ExternalMaintenance>
-      <ExternalMaintenance
             MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.FixEmptyDiagnoseKonsultation">
       </ExternalMaintenance>
       <ExternalMaintenance

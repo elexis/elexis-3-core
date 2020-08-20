@@ -13,17 +13,20 @@ import org.osgi.framework.ServiceReference;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.interfaces.ICodeElement;
-import ch.elexis.core.data.interfaces.IPersistentObject;
-import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
-import ch.elexis.core.data.services.ICodeElementService;
-import ch.elexis.core.data.services.ICodeElementService.ContextKeys;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.model.IBillable;
+import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.services.ICodeElementService;
+import ch.elexis.core.services.ICodeElementService.ContextKeys;
+import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.core.ui.dbcheck.external.ExternalMaintenance;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Query;
-import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.TimeTool;
 
@@ -53,33 +56,34 @@ public class ReChargeTarmedOpenCons extends ExternalMaintenance {
 				if (konsultation.getRechnung() != null)
 					continue;
 				
+				IEncounter encounter =
+					NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get();
+				
 				if (pm.isCanceled()) {
-					addProblem("Cancelled.", konsultation);
+					addProblem("Cancelled.", encounter);
 					return getProblemsString();
 				}
-				
-				List<Verrechnet> verrechnete = konsultation.getLeistungen();
-				List<Verrechnet> tarmedVerrechnet = getTarmedOnly(verrechnete);
-				for (Verrechnet tarmedVerr : tarmedVerrechnet) {
-					IVerrechenbar verrechenbar = tarmedVerr.getVerrechenbar();
+				List<IBilled> tarmedVerrechnet = getTarmedOnly(encounter.getBilled());
+				for (IBilled tarmedVerr : tarmedVerrechnet) {
+					IBillable verrechenbar = tarmedVerr.getBillable();
 					if (verrechenbar != null) {
 						// make sure we verrechenbar is matching for the kons
 						Optional<ICodeElement> matchingVerrechenbar =
-							codeElementService.createFromString(verrechenbar.getCodeSystemName(),
-								verrechenbar.getCode(), getContext(konsultation));
+							codeElementService.loadFromString(verrechenbar.getCodeSystemName(),
+								verrechenbar.getCode(), getContext(encounter));
 						if (matchingVerrechenbar.isPresent()) {
-							int amount = tarmedVerr.getZahl();
-							removeVerrechnet(konsultation, tarmedVerr);
-							addVerrechnet(konsultation, matchingVerrechenbar, amount);
+							double amount = tarmedVerr.getAmount();
+							removeVerrechnet(encounter, tarmedVerr);
+							addVerrechnet(encounter, matchingVerrechenbar, amount);
 						} else {
 							addProblem("Could not find matching Verrechenbar for ["
 								+ verrechenbar.getCodeSystemName() + "->" + verrechenbar.getCode()
-								+ "]", konsultation);
+								+ "]", encounter);
 						}
 					} else {
 						addProblem(
 							"Could not find Verrechenbar for [" + tarmedVerr.getLabel() + "]",
-							konsultation);
+							encounter);
 					}
 				}
 				count++;
@@ -111,46 +115,48 @@ public class ReChargeTarmedOpenCons extends ExternalMaintenance {
 		return endOfYear;
 	}
 	
-	private void addVerrechnet(Konsultation konsultation,
-		Optional<ICodeElement> matchingVerrechenbar, int amount){
+	private void addVerrechnet(IEncounter encounter, Optional<ICodeElement> matchingVerrechenbar,
+		double amount){
 		// no locking required, PersistentObject create events are passed to server (RH)
 		for (int i = 0; i < amount; i++) {
-			Result<IVerrechenbar> addRes =
-				konsultation.addLeistung((IVerrechenbar) matchingVerrechenbar.get());
+			Result<IBilled> addRes = BillingServiceHolder.get()
+				.bill((IBillable) matchingVerrechenbar.get(), encounter, amount);
 			if (!addRes.isOK()) {
 				addProblem("Could not add Verrechenbar [" + matchingVerrechenbar.get().getCode()
-					+ "]" + "[" + addRes.toString() + "]", konsultation);
+					+ "]" + "[" + addRes.toString() + "]", encounter);
 			}
 		}
 	}
 	
-	private void removeVerrechnet(Konsultation konsultation, Verrechnet tarmedVerr){
+	private void removeVerrechnet(IEncounter encounter, IBilled tarmedVerr){
 		// acquire lock before removing
 		LockResponse result = LocalLockServiceHolder.get().acquireLockBlocking(tarmedVerr, 10,
 			new NullProgressMonitor());
 		if (result.isOk()) {
-			Result<Verrechnet> removeRes = konsultation.removeLeistung(tarmedVerr);
+			
+			Result<?> removeRes =
+				BillingServiceHolder.get().removeBilled(tarmedVerr, encounter);
 			if (!removeRes.isOK()) {
 				addProblem("Could not remove Verrechnet [" + tarmedVerr.getLabel() + "]" + "["
-					+ removeRes.toString() + "]", konsultation);
+					+ removeRes.toString() + "]", encounter);
 			}
 			LockResponse releaseLock =
 				LocalLockServiceHolder.get().releaseLock(result.getLockInfo());
 			if (!releaseLock.isOk()) {
 				addProblem("Could not release lock for Verrechnet [" + tarmedVerr.getLabel() + "]"
-					+ "[" + removeRes.toString() + "]", konsultation);
+					+ "[" + removeRes.toString() + "]", encounter);
 			}
 		} else {
 			addProblem("Could not remove Verrechnet [" + tarmedVerr.getLabel() + "]"
-				+ "[ could not acquire lock ]", konsultation);
+				+ "[ could not acquire lock ]", encounter);
 		}
 	}
 	
-	private HashMap<Object, Object> getContext(Konsultation consultation){
+	private HashMap<Object, Object> getContext(IEncounter encounter){
 		HashMap<Object, Object> ret = new HashMap<>();
-		if (consultation != null) {
-			ret.put(ContextKeys.CONSULTATION, consultation);
-			IPersistentObject coverage = consultation.getFall();
+		if (encounter != null) {
+			ret.put(ContextKeys.CONSULTATION, encounter);
+			ICoverage coverage = encounter.getCoverage();
 			if (coverage != null) {
 				ret.put(ContextKeys.COVERAGE, coverage);
 			}
@@ -179,11 +185,11 @@ public class ReChargeTarmedOpenCons extends ExternalMaintenance {
 		}
 	}
 	
-	private List<Verrechnet> getTarmedOnly(List<Verrechnet> verrechnete){
-		List<Verrechnet> ret = new ArrayList<>();
-		for (Verrechnet verrechnet : verrechnete) {
-			String klasse = verrechnet.get(Verrechnet.CLASS);
-			if (klasse.endsWith("TarmedLeistung")) {
+	private List<IBilled> getTarmedOnly(List<IBilled> list){
+		List<IBilled> ret = new ArrayList<>();
+		for (IBilled verrechnet : list) {
+			IBillable billable = verrechnet.getBillable();
+			if (billable.getCodeSystemName().contains("Tarmed")) {
 				ret.add(verrechnet);
 			}
 		}
@@ -209,9 +215,9 @@ public class ReChargeTarmedOpenCons extends ExternalMaintenance {
 		return "";
 	}
 	
-	private void addProblem(String prefix, Konsultation cons){
+	private void addProblem(String prefix, IEncounter cons){
 		problems.add("[" + prefix + "]" + "[" + cons.getId() + "] - [" + cons.getLabel() + "] of ["
-			+ cons.getFall().getPatient().getLabel() + "]");
+			+ cons.getPatient().getLabel() + "]");
 	}
 	
 	@Override
