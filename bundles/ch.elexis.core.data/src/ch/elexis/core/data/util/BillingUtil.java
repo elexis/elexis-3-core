@@ -445,7 +445,7 @@ public class BillingUtil {
 	 * Sort the Encounters by year.
 	 * 
 	 * 
-	 * @param 
+	 * @param
 	 * @return
 	 */
 	public static Map<Integer, List<IEncounter>> getSortedEncountersByYear(
@@ -495,7 +495,7 @@ public class BillingUtil {
 		
 		BillCorrection billCorrection = new BillCorrection(invoiceCorrectionDTO, billCallback);
 		billCorrection.doCorrection();
-
+		
 	}
 	
 	public interface BillCallback {
@@ -609,24 +609,25 @@ public class BillingUtil {
 				LocalLockServiceHolder.get().releaseLock(po);
 			}
 		}
-
+		
 		private void removeDiagnose(Object base, Object item){
 			konsultation = Konsultation.load(((KonsultationDTO) base).getId());
 			diagnosesDTO = (DiagnosesDTO) item;
-			konsultation.removeDiagnose(diagnosesDTO.getiDiagnose());
-			log.debug(
-				"invoice correction: removed diagnose id [{}] from kons id [{}]",
+			NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get()
+				.removeDiagnosis(diagnosesDTO.getiDiagnose());
+			log.debug("invoice correction: removed diagnose id [{}] from kons id [{}]",
 				diagnosesDTO.getId(), konsultation.getId());
 		}
-
+		
 		private void addDiagnose(Object base, Object item){
 			konsultation = Konsultation.load(((KonsultationDTO) base).getId());
 			diagnosesDTO = (DiagnosesDTO) item;
-			konsultation.addDiagnose(diagnosesDTO.getiDiagnose());
+			NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get()
+				.addDiagnosis(diagnosesDTO.getiDiagnose());
 			log.debug("invoice correction: added diagnose id [{}] to kons id [{}]",
 				diagnosesDTO.getId(), konsultation.getId());
 		}
-
+		
 		private void changePriceLeistung(Object item){
 			leistungDTO = (LeistungDTO) item;
 			verrechnet = leistungDTO.getVerrechnet();
@@ -637,10 +638,8 @@ public class BillingUtil {
 				verrechnet.setSecondaryScale((int) (leistungDTO.getScale2() * 100));
 				if (tpOld != tp) {
 					verrechnet.setPoints(tp);
-					log.debug(
-						"invoice correction: price changed to [{}] for leistung id [{}]",
-						leistungDTO.getPrice().getAmountAsString(),
-						leistungDTO.getId());
+					log.debug("invoice correction: price changed to [{}] for leistung id [{}]",
+						leistungDTO.getPrice().getAmountAsString(), leistungDTO.getId());
 				}
 			} else {
 				log.warn(
@@ -648,7 +647,7 @@ public class BillingUtil {
 					leistungDTO.getId());
 			}
 		}
-
+		
 		private void changeCountLeistung(Object item){
 			leistungDTO = (LeistungDTO) item;
 			verrechnet = leistungDTO.getVerrechnet();
@@ -663,8 +662,7 @@ public class BillingUtil {
 				} else {
 					addToOutput(output, ret.getMessage());
 					success = false;
-					log.warn(
-						"invoice correction: cannot change count from leistung with id [{}]",
+					log.warn("invoice correction: cannot change count from leistung with id [{}]",
 						leistungDTO.getId());
 				}
 			}
@@ -704,7 +702,7 @@ public class BillingUtil {
 				"invoice correction: transfered kons id [{}] from fall id [{}] to fall id  [{}]",
 				konsultation.getId(), oldFall.getId(), fallToTransfer.getId());
 		}
-
+		
 		private void transferLeistungen(Object base, Object item, Object additional){
 			@SuppressWarnings("unchecked")
 			List<LeistungDTO> leistungenDTOs = (List<LeistungDTO>) item;
@@ -712,25 +710,22 @@ public class BillingUtil {
 			Fall fallToTransfer = Fall.load(((IFall) additional).getId());
 			List<LeistungDTO> removedleistungDTOs = new ArrayList<>();
 			for (LeistungDTO itemLeistung : leistungenDTOs) {
-				log.debug(
-					"invoice correction: transfer leistung id [{}] from kons id [{}]",
+				log.debug("invoice correction: transfer leistung id [{}] from kons id [{}]",
 					itemLeistung.getId(), konsultation.getId());
 				if (itemLeistung.getVerrechnet() != null) {
 					
 					acquireLock(locks, itemLeistung.getVerrechnet(), false);
-					Result<?> resRemove = BillingServiceHolder.get().removeBilled(
-						itemLeistung.getVerrechnet(),
-						NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get());
+					Result<?> resRemove =
+						BillingServiceHolder.get().removeBilled(itemLeistung.getVerrechnet(),
+							NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get());
 					
-					log.debug(
-						"invoice correction: removed leistung id [{}] from kons id [{}]",
+					log.debug("invoice correction: removed leistung id [{}] from kons id [{}]",
 						itemLeistung.getId(), konsultation.getId());
 					if (resRemove.isOK()) {
 						itemLeistung.setVerrechnet(null);
 						removedleistungDTOs.add(itemLeistung);
 					} else {
-						addToOutput(output, "Die Leistung "
-							+ itemLeistung.getVerrechnet().getText()
+						addToOutput(output, "Die Leistung " + itemLeistung.getVerrechnet().getText()
 							+ " konnte nicht auf einen neuen Fall/Konsultation transferiert werden. Das Entfernen der Leistung ist fehlgeschlagen.");
 						success = false;
 						log.warn(
@@ -742,21 +737,17 @@ public class BillingUtil {
 				}
 			}
 			if (!removedleistungDTOs.isEmpty()) {
-				Konsultation newKons =
-					konsultation.createCopy(fallToTransfer, rechnung);
+				Konsultation newKons = konsultation.createCopy(fallToTransfer, rechnung);
 				IEncounter newEncounter =
 					NoPoUtil.loadAsIdentifiable(newKons, IEncounter.class).get();
 				acquireLock(locks, newKons, true);
 				log.debug(
 					"invoice correction: copied kons from id [{}] to kons id [{}] and added kons to fall id [{}] ",
-					konsultation.getId(), newKons.getId(),
-					newKons.getFall().getId());
+					konsultation.getId(), newKons.getId(), newKons.getFall().getId());
 				for (LeistungDTO itemLeistung : removedleistungDTOs) {
-					Result<IBilled> resAddLeistung =
-						BillingServiceHolder.get().bill(itemLeistung.getIVerrechenbar(),
-							newEncounter, 1.0);
-					log.debug(
-						"invoice correction: add leistung id [{}] to kons id [{}]",
+					Result<IBilled> resAddLeistung = BillingServiceHolder.get()
+						.bill(itemLeistung.getIVerrechenbar(), newEncounter, 1.0);
+					log.debug("invoice correction: add leistung id [{}] to kons id [{}]",
 						itemLeistung.getId(), newKons.getId());
 					if (resAddLeistung.isOK()) {
 						verrechnet = EncounterServiceHolder.get()
@@ -799,11 +790,10 @@ public class BillingUtil {
 			if (!success) {
 				addToOutput(output,
 					"Nicht alle Leistungen konnten erfolgreich transferiert werden.");
-				log.warn(
-					"invoice correction: not all leistungen could be transfered.");
+				log.warn("invoice correction: not all leistungen could be transfered.");
 			}
 		}
-
+		
 		private void removeLeistung(Object base, Object item){
 			leistungDTO = (LeistungDTO) item;
 			if (leistungDTO.getVerrechnet() != null) {
@@ -811,15 +801,13 @@ public class BillingUtil {
 				Result<?> resRemove = BillingServiceHolder.get()
 					.removeBilled(leistungDTO.getVerrechnet(), CoreModelServiceHolder.get()
 						.load(((KonsultationDTO) base).getId(), IEncounter.class).get());
-				log.debug(
-					"invoice correction: removed leistung id [{}] from kons id [{}]",
+				log.debug("invoice correction: removed leistung id [{}] from kons id [{}]",
 					leistungDTO.getId(), ((KonsultationDTO) base).getId());
 				if (resRemove.isOK()) {
 					((LeistungDTO) item).setVerrechnet(null);
 				} else {
-					addToOutput(output,
-						"Die Leistung " + leistungDTO.getVerrechnet().getText()
-							+ " konnte nicht entfernt werden.");
+					addToOutput(output, "Die Leistung " + leistungDTO.getVerrechnet().getText()
+						+ " konnte nicht entfernt werden.");
 					success = false;
 					log.warn(
 						"invoice correction: cannot remove leistung with id [{}] from kons id [{}]",
@@ -827,19 +815,20 @@ public class BillingUtil {
 				}
 			}
 		}
-
+		
 		private void addLeistung(Object base, Object item){
 			konsultation = Konsultation.load(((KonsultationDTO) base).getId());
 			IEncounter encounter =
 				NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get();
 			leistungDTO = (LeistungDTO) item;
-			Result<IBilled> res = BillingServiceHolder.get().bill(leistungDTO.getIVerrechenbar(),
-				encounter, 1.0);
+			Result<IBilled> res =
+				BillingServiceHolder.get().bill(leistungDTO.getIVerrechenbar(), encounter, 1.0);
 			log.debug("invoice correction: added leistung id [{}] to kons id [{}]",
 				leistungDTO.getId(), ((KonsultationDTO) base).getId());
 			if (res.isOK()) {
-				verrechnet = EncounterServiceHolder.get().getBilledByBillable(encounter,
-					leistungDTO.getIVerrechenbar()).stream().findFirst().orElse(null);
+				verrechnet = EncounterServiceHolder.get()
+					.getBilledByBillable(encounter, leistungDTO.getIVerrechenbar()).stream()
+					.findFirst().orElse(null);
 				if (verrechnet != null) {
 					leistungDTO.setVerrechnet(verrechnet);
 					acquireLock(locks, verrechnet, false);
@@ -849,30 +838,28 @@ public class BillingUtil {
 				verrechnet = null;
 			}
 			if (verrechnet == null) {
-				addToOutput(output,
-					"Die Leistung " + leistungDTO.getIVerrechenbar().getText()
-						+ " konnte nicht verrechnet werden.");
+				addToOutput(output, "Die Leistung " + leistungDTO.getIVerrechenbar().getText()
+					+ " konnte nicht verrechnet werden.");
 				success = false;
-				log.warn(
-					"invoice correction: cannot add leistung with id [{}] to kons id [{}]",
+				log.warn("invoice correction: cannot add leistung with id [{}] to kons id [{}]",
 					leistungDTO.getId(), konsultation.getId());
 			}
 		}
-
+		
 		private void changeMandantKonsultation(Object base){
 			Konsultation.load(((KonsultationDTO) base).getId())
 				.setMandant(((KonsultationDTO) base).getMandant());
 			log.debug("invoice correction: changed mandant of kons id [{}]",
 				((KonsultationDTO) base).getId());
 		}
-
+		
 		private void changeDateKonsultation(Object base){
 			Konsultation.load(((KonsultationDTO) base).getId())
 				.setDatum(((KonsultationDTO) base).getDate(), true);
 			log.debug("invoice correction: changed date of kons id [{}]",
 				((KonsultationDTO) base).getId());
 		}
-
+		
 		private void transferKonsultations(){
 			releasedKonsultations.clear();
 			Konsultation[] consultations = srcFall.get().getBehandlungen(true);
@@ -891,8 +878,7 @@ public class BillingUtil {
 							releasedKonsultations.add(openedKons);
 							
 							// if validation of cons is failed the bill correction will be reseted
-							Result<?> result =
-								BillingUtil.getBillableResult(openedKons);
+							Result<?> result = BillingUtil.getBillableResult(openedKons);
 							if (!result.isOK()) {
 								StringBuilder preValidatioWarnings = new StringBuilder();
 								addToOutput(preValidatioWarnings, result);
@@ -905,7 +891,7 @@ public class BillingUtil {
 				}
 			}
 		}
-
+		
 		private void changeFall() throws ElexisException{
 			copyFall.get().persistDTO(invoiceCorrectionDTO.getFallDTO());
 			// at this point the fall must be opened
@@ -913,7 +899,7 @@ public class BillingUtil {
 			log.debug("invoice correction: persisted fall changes to id  [{}] ",
 				copyFall.get().getId());
 		}
-
+		
 		private void copyFall(){
 			srcFall = Optional.of(rechnung.getFall());
 			copyFall = Optional.of(srcFall.get().createCopy());
@@ -921,23 +907,20 @@ public class BillingUtil {
 			log.debug("invoice correction: copied fall from id [{}] to id [{}] ",
 				srcFall.get().getId(), copyFall.get().getId());
 		}
-
+		
 		private void createBill(InvoiceHistoryEntryDTO historyEntryDTO){
 			if (copyFall.isPresent()) {
 				if (invoiceCorrectionDTO.getFallDTO().getEndDatum() != null) {
-					copyFall.get().setEndDatum(
-						invoiceCorrectionDTO.getFallDTO().getEndDatum());
+					copyFall.get().setEndDatum(invoiceCorrectionDTO.getFallDTO().getEndDatum());
 					acquireLock(locks, copyFall.get(), false);
 				}
 				
 				// close fall if no kons exists
 				if ((srcFall.get().isOpen()
-					|| new TimeTool(srcFall.get().getEndDatum())
-						.after(new TimeTool()))
+					|| new TimeTool(srcFall.get().getEndDatum()).after(new TimeTool()))
 					&& srcFall.get().getBehandlungen(true).length == 0) {
 					acquireLock(locks, srcFall.get(), false);
-					srcFall.get()
-						.setEndDatum(new TimeTool().toString(TimeTool.DATE_GER));
+					srcFall.get().setEndDatum(new TimeTool().toString(TimeTool.DATE_GER));
 				}
 			}
 			if (releasedKonsultations.isEmpty()) {
@@ -948,9 +931,8 @@ public class BillingUtil {
 					+ CoreHub.getLoggedInContact().getLabel()
 					+ " korrigiert.\nEs wurde keine neue Rechnung erstellt.");
 				historyEntryDTO.setIgnored(true);
-			}
-			else {
-			
+			} else {
+				
 				Result<Rechnung> rechnungResult = Rechnung.build(releasedKonsultations);
 				if (!rechnungResult.isOK()) {
 					
@@ -974,12 +956,13 @@ public class BillingUtil {
 						"invoice correction: create new invoice with number [{}] old invoice number [{}] ",
 						newRechnung.getNr(), rechnung.getNr());
 					output.append("Die Rechnung " + rechnung.getNr() + " wurde erfolgreich durch "
-						+ CoreHub.getLoggedInContact().getLabel() + " korrigiert.\nNeue Rechnungsnummer lautet: "
+						+ CoreHub.getLoggedInContact().getLabel()
+						+ " korrigiert.\nNeue Rechnungsnummer lautet: "
 						+ invoiceCorrectionDTO.getNewInvoiceNumber());
 				}
 			}
 		}
-
+		
 		private boolean stornoBill(){
 			List<Konsultation> konsultations = billCallback.storno(rechnung);
 			if (konsultations != null) {
@@ -988,8 +971,7 @@ public class BillingUtil {
 				success = false;
 			}
 			
-			log.debug("invoice correction: storno invoice with number [{}] ",
-				rechnung.getNr());
+			log.debug("invoice correction: storno invoice with number [{}] ", rechnung.getNr());
 			return true;
 		}
 		
@@ -1032,6 +1014,6 @@ public class BillingUtil {
 			}
 			return false;
 		}
-
+		
 	}
 }
