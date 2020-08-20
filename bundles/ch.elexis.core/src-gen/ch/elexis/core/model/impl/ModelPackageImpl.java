@@ -3002,7 +3002,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIBilled_NetPrice() {
+	public EAttribute getIBilled_ScaledPrice() {
 		return (EAttribute)iBilledEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -3012,7 +3012,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIBilled_Text() {
+	public EAttribute getIBilled_NetPrice() {
 		return (EAttribute)iBilledEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -3022,7 +3022,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIBilled_Points() {
+	public EAttribute getIBilled_Text() {
 		return (EAttribute)iBilledEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -3032,7 +3032,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIBilled_Factor() {
+	public EAttribute getIBilled_Points() {
 		return (EAttribute)iBilledEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -3042,7 +3042,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIBilled_PrimaryScale() {
+	public EAttribute getIBilled_Factor() {
 		return (EAttribute)iBilledEClass.getEStructuralFeatures().get(8);
 	}
 
@@ -3052,7 +3052,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIBilled_SecondaryScale() {
+	public EAttribute getIBilled_PrimaryScale() {
 		return (EAttribute)iBilledEClass.getEStructuralFeatures().get(9);
 	}
 
@@ -3062,7 +3062,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIBilled_Code() {
+	public EAttribute getIBilled_SecondaryScale() {
 		return (EAttribute)iBilledEClass.getEStructuralFeatures().get(10);
 	}
 
@@ -3072,7 +3072,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIBilled_Total() {
+	public EAttribute getIBilled_Code() {
 		return (EAttribute)iBilledEClass.getEStructuralFeatures().get(11);
 	}
 
@@ -3082,8 +3082,18 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getIBilled_Total() {
+		return (EAttribute)iBilledEClass.getEStructuralFeatures().get(12);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EReference getIBilled_Biller() {
-		return (EReference)iBilledEClass.getEStructuralFeatures().get(12);
+		return (EReference)iBilledEClass.getEStructuralFeatures().get(13);
 	}
 
 	/**
@@ -4806,6 +4816,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEReference(iBilledEClass, IBILLED__ENCOUNTER);
 		createEAttribute(iBilledEClass, IBILLED__AMOUNT);
 		createEAttribute(iBilledEClass, IBILLED__PRICE);
+		createEAttribute(iBilledEClass, IBILLED__SCALED_PRICE);
 		createEAttribute(iBilledEClass, IBILLED__NET_PRICE);
 		createEAttribute(iBilledEClass, IBILLED__TEXT);
 		createEAttribute(iBilledEClass, IBILLED__POINTS);
@@ -5445,6 +5456,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEParameter(op, g1, "billable", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIEncounter(), "encounter", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEDouble(), "amount", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEBoolean(), "save", 0, 1, IS_UNIQUE, IS_ORDERED);
 		g1 = createEGenericType(theTypesPackage.getResult());
 		g2 = createEGenericType(this.getIBilled());
 		g1.getETypeArguments().add(g2);
@@ -5613,6 +5625,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEReference(getIBilled_Encounter(), this.getIEncounter(), null, "encounter", null, 0, 1, IBilled.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIBilled_Amount(), ecorePackage.getEDouble(), "amount", null, 0, 1, IBilled.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIBilled_Price(), theTypesPackage.getMoney(), "price", null, 0, 1, IBilled.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIBilled_ScaledPrice(), theTypesPackage.getMoney(), "scaledPrice", null, 0, 1, IBilled.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIBilled_NetPrice(), theTypesPackage.getMoney(), "netPrice", null, 0, 1, IBilled.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIBilled_Text(), ecorePackage.getEString(), "text", null, 0, 1, IBilled.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIBilled_Points(), ecorePackage.getEInt(), "points", null, 0, 1, IBilled.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

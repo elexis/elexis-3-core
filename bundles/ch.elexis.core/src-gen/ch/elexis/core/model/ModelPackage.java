@@ -4519,13 +4519,22 @@ public interface ModelPackage extends EPackage {
 	int IBILLED__PRICE = IDENTIFIABLE_FEATURE_COUNT + 4;
 
 	/**
+	 * The feature id for the '<em><b>Scaled Price</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBILLED__SCALED_PRICE = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
 	 * The feature id for the '<em><b>Net Price</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IBILLED__NET_PRICE = IDENTIFIABLE_FEATURE_COUNT + 5;
+	int IBILLED__NET_PRICE = IDENTIFIABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Text</b></em>' attribute.
@@ -4534,7 +4543,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IBILLED__TEXT = IDENTIFIABLE_FEATURE_COUNT + 6;
+	int IBILLED__TEXT = IDENTIFIABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Points</b></em>' attribute.
@@ -4543,7 +4552,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IBILLED__POINTS = IDENTIFIABLE_FEATURE_COUNT + 7;
+	int IBILLED__POINTS = IDENTIFIABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Factor</b></em>' attribute.
@@ -4552,7 +4561,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IBILLED__FACTOR = IDENTIFIABLE_FEATURE_COUNT + 8;
+	int IBILLED__FACTOR = IDENTIFIABLE_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Primary Scale</b></em>' attribute.
@@ -4561,7 +4570,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IBILLED__PRIMARY_SCALE = IDENTIFIABLE_FEATURE_COUNT + 9;
+	int IBILLED__PRIMARY_SCALE = IDENTIFIABLE_FEATURE_COUNT + 10;
 
 	/**
 	 * The feature id for the '<em><b>Secondary Scale</b></em>' attribute.
@@ -4570,7 +4579,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IBILLED__SECONDARY_SCALE = IDENTIFIABLE_FEATURE_COUNT + 10;
+	int IBILLED__SECONDARY_SCALE = IDENTIFIABLE_FEATURE_COUNT + 11;
 
 	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
@@ -4579,7 +4588,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IBILLED__CODE = IDENTIFIABLE_FEATURE_COUNT + 11;
+	int IBILLED__CODE = IDENTIFIABLE_FEATURE_COUNT + 12;
 
 	/**
 	 * The feature id for the '<em><b>Total</b></em>' attribute.
@@ -4588,7 +4597,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IBILLED__TOTAL = IDENTIFIABLE_FEATURE_COUNT + 12;
+	int IBILLED__TOTAL = IDENTIFIABLE_FEATURE_COUNT + 13;
 
 	/**
 	 * The feature id for the '<em><b>Biller</b></em>' reference.
@@ -4597,7 +4606,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IBILLED__BILLER = IDENTIFIABLE_FEATURE_COUNT + 13;
+	int IBILLED__BILLER = IDENTIFIABLE_FEATURE_COUNT + 14;
 
 	/**
 	 * The number of structural features of the '<em>IBilled</em>' class.
@@ -4606,7 +4615,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IBILLED_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 14;
+	int IBILLED_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 15;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IInvoiceBilled <em>IInvoice Billed</em>}' class.
@@ -4662,6 +4671,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IINVOICE_BILLED__PRICE = IBILLED__PRICE;
+
+	/**
+	 * The feature id for the '<em><b>Scaled Price</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILLED__SCALED_PRICE = IBILLED__SCALED_PRICE;
 
 	/**
 	 * The feature id for the '<em><b>Net Price</b></em>' attribute.
@@ -8991,6 +9009,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIBilled_Price();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IBilled#getScaledPrice <em>Scaled Price</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Scaled Price</em>'.
+	 * @see ch.elexis.core.model.IBilled#getScaledPrice()
+	 * @see #getIBilled()
+	 * @generated
+	 */
+	EAttribute getIBilled_ScaledPrice();
+
+	/**
 	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IBilled#getNetPrice <em>Net Price</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12638,6 +12667,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IBILLED__PRICE = eINSTANCE.getIBilled_Price();
+
+		/**
+		 * The meta object literal for the '<em><b>Scaled Price</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IBILLED__SCALED_PRICE = eINSTANCE.getIBilled_ScaledPrice();
 
 		/**
 		 * The meta object literal for the '<em><b>Net Price</b></em>' attribute feature.

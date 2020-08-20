@@ -280,6 +280,7 @@
         <genParameters ecoreParameter="model.ecore#//IBillableOptifier/add/billable"/>
         <genParameters ecoreParameter="model.ecore#//IBillableOptifier/add/encounter"/>
         <genParameters ecoreParameter="model.ecore#//IBillableOptifier/add/amount"/>
+        <genParameters ecoreParameter="model.ecore#//IBillableOptifier/add/save"/>
       </genOperations>
       <genOperations ecoreOperation="model.ecore#//IBillableOptifier/putContext">
         <genParameters ecoreParameter="model.ecore#//IBillableOptifier/putContext/key"/>
@@ -422,6 +423,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IBilled/encounter"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBilled/amount"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBilled/price"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBilled/scaledPrice"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBilled/netPrice"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBilled/text"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IBilled/points"/>

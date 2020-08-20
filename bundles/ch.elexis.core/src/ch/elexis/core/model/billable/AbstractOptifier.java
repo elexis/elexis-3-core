@@ -12,7 +12,7 @@ import ch.rgw.tools.Result;
 
 public abstract class AbstractOptifier<T extends IBillable> implements IBillableOptifier<T> {
 	
-	private IModelService coreModelService;
+	protected IModelService coreModelService;
 	
 	/**
 	 * Create an {@link AbstractOptifier} instance, and provide an {@link IModelService} for
@@ -25,7 +25,7 @@ public abstract class AbstractOptifier<T extends IBillable> implements IBillable
 	}
 	
 	@Override
-	public Result<IBilled> add(T billable, IEncounter encounter, double amount){
+	public Result<IBilled> add(T billable, IEncounter encounter, double amount, boolean save){
 		boolean added = false;
 		IBilled billed = null;
 		// lookup existing billed, add if found
@@ -34,7 +34,9 @@ public abstract class AbstractOptifier<T extends IBillable> implements IBillable
 			IBillable existing = iBilled.getBillable();
 			if (existing != null && existing.equals(billable)) {
 				iBilled.setAmount(iBilled.getAmount() + amount);
-				coreModelService.save(iBilled);
+				if (save) {
+					coreModelService.save(iBilled);
+				}
 				billed = iBilled;
 				added = true;
 				break;
@@ -44,7 +46,9 @@ public abstract class AbstractOptifier<T extends IBillable> implements IBillable
 			billed = new IBilledBuilder(coreModelService, billable, encounter).build();
 			setPrice(billable, billed);
 			billed.setAmount(amount);
-			coreModelService.save(billed);
+			if (save) {
+				coreModelService.save(billed);
+			}
 		}
 		return new Result<IBilled>(billed);
 	}

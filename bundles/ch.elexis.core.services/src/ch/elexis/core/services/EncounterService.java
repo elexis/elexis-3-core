@@ -70,6 +70,9 @@ public class EncounterService implements IEncounterService {
 	
 	public Result<IEncounter> transferToCoverage(IEncounter encounter, ICoverage coverage,
 		boolean ignoreEditable){
+		if (encounter.getCoverage().equals(coverage)) {
+			return Result.OK();
+		}
 		Result<IEncounter> editableResult = billingService.isEditable(encounter);
 		if (!editableResult.isOK() && !ignoreEditable) {
 			return editableResult;
@@ -213,7 +216,7 @@ public class EncounterService implements IEncounterService {
 		}
 	}
 	
-	public Optional<IEncounter> createCoverageAndEncounter(IPatient patient){
+	private Optional<IEncounter> createCoverageAndEncounter(IPatient patient){
 		ICoverage coverage = new ICoverageBuilder(CoreModelServiceHolder.get(), patient,
 			CoverageServiceHolder.get().getDefaultCoverageLabel(),
 			CoverageServiceHolder.get().getDefaultCoverageReason(),
@@ -287,5 +290,13 @@ public class EncounterService implements IEncounterService {
 		List<IEncounter> collect = coverages.stream().flatMap(cv -> cv.getEncounters().stream())
 			.sorted((c1, c2) -> c2.getDate().compareTo(c1.getDate())).collect(Collectors.toList());
 		return collect;
+	}
+	
+	@Override
+	public List<IBilled> getBilledByBillable(IEncounter encounter, IBillable billable){
+		INamedQuery<IBilled> query = CoreModelServiceHolder.get().getNamedQuery(IBilled.class,
+			"behandlung", "leistungenCode");
+		return query.executeWithParameters(
+			query.getParameterMap("behandlung", encounter, "leistungenCode", billable.getId()));
 	}
 }

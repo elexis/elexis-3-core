@@ -75,6 +75,14 @@ public class InvoiceBilled extends AbstractIdDeleteModelAdapter<VerrechnetCopy>
 	}
 	
 	@Override
+	public Money getScaledPrice(){
+		// do not include secondary as it is either 1 or the amount
+		int cents =
+			Math.toIntExact(Math.round(getPoints() * getFactor() * getPrimaryScaleFactor()));
+		return new Money(cents);
+	}
+	
+	@Override
 	public void setPrice(Money value){
 		throw new UnsupportedOperationException();
 	}

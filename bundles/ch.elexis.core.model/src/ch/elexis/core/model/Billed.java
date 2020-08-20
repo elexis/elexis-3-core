@@ -21,6 +21,8 @@ import ch.rgw.tools.Money;
 public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 		implements IdentifiableWithXid, IBilled {
 	
+	private IBillable billable;
+	
 	public Billed(Verrechnet entity){
 		super(entity);
 	}
@@ -32,12 +34,14 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 	
 	@Override
 	public IBillable getBillable(){
-		Optional<String> storeToString = getBillableStoreToString();
-		if (storeToString.isPresent()) {
-			return (IBillable) StoreToStringServiceHolder.get().loadFromString(storeToString.get())
-				.orElse(null);
+		if (billable == null) {
+			Optional<String> storeToString = getBillableStoreToString();
+			if (storeToString.isPresent()) {
+				billable = (IBillable) StoreToStringServiceHolder.get()
+					.loadFromString(storeToString.get()).orElse(null);
+			}
 		}
-		return null;
+		return billable;
 	}
 	
 	private Optional<String> getBillableStoreToString(){
@@ -57,6 +61,7 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 		if (split.length > 1) {
 			getEntityMarkDirty().setKlasse(split[0]);
 			getEntityMarkDirty().setLeistungenCode(split[1]);
+			billable = value;
 		}
 	}
 	
@@ -128,6 +133,14 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet>
 			setPoints(value.getCents());
 			setSecondaryScale(100);
 		}
+	}
+	
+	@Override
+	public Money getScaledPrice(){
+		// do not include secondary as it is either 1 or the amount
+		int cents =
+			Math.toIntExact(Math.round(getPoints() * getFactor() * getPrimaryScaleFactor()));
+		return new Money(cents);
 	}
 	
 	@Override
