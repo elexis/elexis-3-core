@@ -3,9 +3,9 @@ package ch.elexis.data.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.model.IDiagnosisReference;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -38,7 +38,9 @@ public class KonsultationDTO {
 			}
 		}
 		
-		for (IDiagnose iDiagnose : konsultation.getDiagnosen()) {
+		for (IDiagnosisReference iDiagnose : NoPoUtil
+			.loadAsIdentifiable(konsultation, IEncounter.class).get()
+			.getDiagnoses()) {
 			diagnosesDTOs.add(new DiagnosesDTO(iDiagnose));
 		}
 	}
