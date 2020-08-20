@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -23,6 +24,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Table(name = "LEISTUNGEN")
 @Cache(expiry = 15000)
 @EntityListeners(EntityWithIdListener.class)
+@NamedQuery(name = "Verrechnet.behandlung.leistungenCode", query = "SELECT v FROM Verrechnet v WHERE v.deleted = false AND v.behandlung = :behandlung AND v.leistungenCode = :leistungenCode")
 public class Verrechnet extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 	

@@ -6,8 +6,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -292,5 +294,49 @@ public class BillingService implements IBillingService {
 		billingSystemFactor.setValidFrom(from);
 		billingSystemFactor.setValidTo(to);
 		coreModelService.save(billingSystemFactor);
+	}
+	
+	@Override
+	public IStatus changeAmountValidated(IBilled billed, double newAmount){
+		double oldAmount = billed.getAmount();
+		if (newAmount == oldAmount) {
+			return Status.OK_STATUS;
+		}
+		
+		IEncounter encounter = billed.getEncounter();
+		if (newAmount == 0) {
+			removeBilled(billed, encounter);
+			return Status.OK_STATUS;
+		}
+		
+		double difference = newAmount - oldAmount;
+		if (difference > 0) {
+			IBillable billable = billed.getBillable();
+			for (int i = 0; i < difference; i++) {
+				Result<IBilled> result = bill(billable, encounter, 1.0);
+				if (!result.isOK()) {
+					String message = result.getMessages().stream().map(m -> m.getText())
+						.collect(Collectors.joining(", "));
+					return new Status(Status.ERROR, "ch.elexis.core.services", message);
+				}
+			}
+		} else if (difference < 0) {
+			changeAmount(billed, newAmount);
+		}
+		
+		return Status.OK_STATUS;
+	}
+	
+	@Override
+	public void changeAmount(IBilled billed, double newAmount){
+		double oldAmount = billed.getAmount();
+		billed.setAmount(newAmount);
+		IBillable billable = billed.getBillable();
+		if (billable instanceof IArticle) {
+			IArticle art = (IArticle) billable;
+			String mandatorId = contextService.getActiveMandator().map(m -> m.getId()).orElse(null);
+			stockService.performSingleReturn(art, (int) oldAmount, mandatorId);
+			stockService.performSingleDisposal(art, (int) newAmount, mandatorId);
+		}
 	}
 }

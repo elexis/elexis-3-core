@@ -324,6 +324,13 @@ public class ConfigService implements IConfigService {
 	}
 	
 	@Override
+	public boolean getActiveUserContact(String key, boolean defaultValue){
+		String defaultValueString = Boolean.toString(defaultValue);
+		String result = getActiveUserContact(key, defaultValueString);
+		return (result.equals("1") || result.equalsIgnoreCase(Boolean.TRUE.toString()));
+	}
+	
+	@Override
 	public ILocalLock getLocalLock(Object object){
 		return new LocalLock(object);
 	}

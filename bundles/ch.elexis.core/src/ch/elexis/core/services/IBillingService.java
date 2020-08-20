@@ -3,6 +3,8 @@ package ch.elexis.core.services;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import org.eclipse.core.runtime.IStatus;
+
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IBillingSystemFactor;
@@ -61,4 +63,23 @@ public interface IBillingService {
 	 * @return
 	 */
 	public Result<?> removeBilled(IBilled billed, IEncounter encounter);
+	
+	/**
+	 * Change the amount for this service or article, considering the rules given by the resp.
+	 * optifiers.
+	 * 
+	 * @param billed
+	 * @param newCount
+	 * @return
+	 */
+	public IStatus changeAmountValidated(IBilled billed, double newAmount);
+	
+	/**
+	 * Change the amount for this service or article. If it is an {@link IArticle}, the store will
+	 * be updated accordingly
+	 * 
+	 * @param newAmount
+	 *            new count this service is to be billed.
+	 */
+	void changeAmount(IBilled billed, double newAmount);
 }

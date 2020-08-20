@@ -3,6 +3,7 @@ package ch.elexis.core.services;
 import java.util.List;
 import java.util.Optional;
 
+import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
@@ -75,6 +76,15 @@ public interface IEncounterService {
 	 * @return
 	 */
 	public Money getSales(IEncounter encounter);
+	
+	/**
+	 * Get all {@link IBilled} of the {@link IEncounter} that match the provided {@link IBillable}.
+	 * 
+	 * @param newEncounter
+	 * @param iVerrechenbar
+	 * @return
+	 */
+	public List<IBilled> getBilledByBillable(IEncounter encounter, IBillable billable);
 	
 
 }

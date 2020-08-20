@@ -26,6 +26,7 @@ import ch.rgw.tools.Money;
  *   <li>{@link ch.elexis.core.model.IBilled#getEncounter <em>Encounter</em>}</li>
  *   <li>{@link ch.elexis.core.model.IBilled#getAmount <em>Amount</em>}</li>
  *   <li>{@link ch.elexis.core.model.IBilled#getPrice <em>Price</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IBilled#getScaledPrice <em>Scaled Price</em>}</li>
  *   <li>{@link ch.elexis.core.model.IBilled#getNetPrice <em>Net Price</em>}</li>
  *   <li>{@link ch.elexis.core.model.IBilled#getText <em>Text</em>}</li>
  *   <li>{@link ch.elexis.core.model.IBilled#getPoints <em>Points</em>}</li>
@@ -161,6 +162,20 @@ public interface IBilled extends Identifiable, Deleteable, WithExtInfo {
 	 * @generated
 	 */
 	void setPrice(Money value);
+
+	/**
+	 * Returns the value of the '<em><b>Scaled Price</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * Get the price of the billed without considering amount.
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Scaled Price</em>' attribute.
+	 * @see ch.elexis.core.model.ModelPackage#getIBilled_ScaledPrice()
+	 * @model dataType="ch.elexis.core.types.Money" changeable="false"
+	 * @generated
+	 */
+	Money getScaledPrice();
 
 	/**
 	 * Returns the value of the '<em><b>Net Price</b></em>' attribute.

@@ -219,6 +219,15 @@ public interface IConfigService {
 	 */
 	public String getActiveUserContact(String key, String defaultValue);
 
+	/**
+	 * Convenience method wrapping {@link #get(IContact, String, String)}, fetching the current user
+	 * via {@link IContextService}
+	 * 
+	 * @param key
+	 * @param defaultValue
+	 * @return
+	 */
+	public boolean getActiveUserContact(String key, boolean defaultValue);
 	
 	/**
 	 * Convenience method wrapping {@link #get(String, String)}
