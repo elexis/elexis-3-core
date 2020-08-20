@@ -102,7 +102,7 @@ public class Context implements IContext {
 		if (!ret.isPresent() && parent != null) {
 			ret = parent.getNamed(name);
 		}
-		if (ret.get() instanceof Supplier) {
+		if (ret.isPresent() && ret.get() instanceof Supplier) {
 			return Optional.ofNullable(((Supplier<?>) ret.get()).get());
 		}
 		return ret;
