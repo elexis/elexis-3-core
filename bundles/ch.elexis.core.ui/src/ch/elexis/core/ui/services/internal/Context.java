@@ -2,6 +2,7 @@ package ch.elexis.core.ui.services.internal;
 
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
 
@@ -100,6 +101,9 @@ public class Context implements IContext {
 		Optional<?> ret = Optional.ofNullable(context.get(name));
 		if (!ret.isPresent() && parent != null) {
 			ret = parent.getNamed(name);
+		}
+		if (ret.get() instanceof Supplier) {
+			return Optional.ofNullable(((Supplier<?>) ret.get()).get());
 		}
 		return ret;
 	}

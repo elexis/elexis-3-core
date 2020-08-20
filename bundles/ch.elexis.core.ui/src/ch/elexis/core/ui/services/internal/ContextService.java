@@ -5,10 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.workbench.UIEvents;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.swt.widgets.Display;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
@@ -26,6 +29,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
+import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IDocumentLetter;
@@ -41,6 +45,8 @@ import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.ui.dialogs.SelectFallNoObligationDialog;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Fall;
@@ -118,6 +124,38 @@ public class ContextService implements IContextService, EventHandler {
 		elexisEventDispatcher.addListeners(eventDispatcherListener, reloadEventDispatcherListener,
 			lockingEventDispatcherListener, userChangedEventDispatcherListener,
 			mandatorChangedEventDispatcherListener, compatibilityEventDispatcherListener);
+		
+		registerCoreUiSuppliers();
+	}
+	
+	private void registerCoreUiSuppliers(){
+		getRootContext().setNamed("SelectFallNoObligationDialog",
+			new Supplier<ICoverage>() {
+				private ICoverage ret;
+				
+				@Override
+				public synchronized ICoverage get(){
+					ret = null;
+					Optional<?> coverage = ContextServiceHolder.get()
+						.getNamed("SelectFallNoObligationDialog.coverage");
+					Optional<?> billable = ContextServiceHolder.get()
+						.getNamed("SelectFallNoObligationDialog.billable");
+					if (coverage.isPresent() && billable.isPresent()) {
+						Display.getDefault().syncExec(() -> {
+							SelectFallNoObligationDialog dlg = new SelectFallNoObligationDialog(
+								(ICoverage) coverage.get(), (IBillable) billable.get());
+							if (dlg.open() == Dialog.OK) {
+								ret = dlg.getCoverage();
+							}
+						});
+					} else {
+						logger.warn("SelectFallNoObligationDialog missing context parameter ["
+							+ coverage + "] [" + billable + "]");
+					}
+					return ret;
+				}
+			});
+		
 	}
 	
 	@Deactivate
