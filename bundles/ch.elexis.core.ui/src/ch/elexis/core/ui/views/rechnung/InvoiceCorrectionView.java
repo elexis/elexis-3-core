@@ -79,7 +79,6 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
-import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
@@ -89,6 +88,7 @@ import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IBillable;
+import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.dialogs.DateSelectorDialog;
@@ -110,7 +110,6 @@ import ch.elexis.core.ui.views.rechnung.InvoiceCorrectionWizard.Page2;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
-import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Rechnung;
 import ch.elexis.data.Rechnungssteller;
 import ch.elexis.data.dto.DiagnosesDTO;
@@ -870,7 +869,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 			};
 			
 			GenericObjectDropTarget dropTarget =
-				new GenericObjectDropTarget(Messages.VerrechnungsDisplay_doBill, table, dtr) {
+				new GenericObjectDropTarget("rechnungskorrektur", table, dtr) {
 					@Override
 					protected Control getHighLightControl(){
 						return tableViewer.getControl();
@@ -1112,26 +1111,37 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 			table.setHeaderVisible(true);
 			table.setLinesVisible(true);
 			
-			PersistentObjectDropTarget.IReceiver dtr = new PersistentObjectDropTarget.IReceiver() {
+			GenericObjectDropTarget.IReceiver dtr = new GenericObjectDropTarget.IReceiver() {
 				
-				public boolean accept(PersistentObject o){
+				@Override
+				public void dropped(List<Object> list, DropTargetEvent e){
+					for (Object object : list) {
+						if (object instanceof IDiagnosis) {
+							IDiagnosis art = (IDiagnosis) object;
+							DiagnosesDTO dto = new DiagnosesDTO(art);
+							konsultationDTO.getDiagnosesDTOs().add(dto);
+							invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(
+								OperationType.DIAGNOSE_ADD, konsultationDTO, dto));
+							tableViewer.refresh();
+							invoiceComposite.updateScrollBars();
+						}
+					}
+				}
+				
+				@Override
+				public boolean accept(List<Object> list){
 					return true;
 				}
 				
-				public void dropped(PersistentObject o, DropTargetEvent ev){
-					if (o instanceof IDiagnose) {
-						IDiagnose art = (IDiagnose) o;
-						DiagnosesDTO dto = new DiagnosesDTO(art);
-						konsultationDTO.getDiagnosesDTOs().add(dto);
-						invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(
-							OperationType.DIAGNOSE_ADD, konsultationDTO, dto));
-						tableViewer.refresh();
-						invoiceComposite.updateScrollBars();
-					}
-				}
 			};
-			PersistentObjectDropTarget dropTarget =
-				new PersistentObjectDropTarget("rechnungskorrekturBehandlungen", this, dtr); //$NON-NLS-1$
+			
+			GenericObjectDropTarget dropTarget =
+				new GenericObjectDropTarget("rechnungskorrekturBehandlungen", table, dtr) {
+					@Override
+					protected Control getHighLightControl(){
+						return tableViewer.getControl();
+					}
+				};
 			
 			MenuManager menuManager = new MenuManager();
 			menuManager.add(new Action() {
