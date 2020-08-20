@@ -1,16 +1,16 @@
 package ch.elexis.data.dto;
 
-import ch.elexis.core.data.interfaces.IDiagnose;
+import ch.elexis.core.model.IDiagnosis;
 
 public class DiagnosesDTO {
 	private final String id;
 	private String label;
-	private final IDiagnose iDiagnose;
+	private final IDiagnosis iDiagnose;
 	
-	public DiagnosesDTO(IDiagnose iDiagnose){
-		this.id = iDiagnose.getId();
-		this.label = iDiagnose.getLabel();
-		this.iDiagnose = iDiagnose;
+	public DiagnosesDTO(IDiagnosis iDiagnosis){
+		this.id = iDiagnosis.getId();
+		this.label = iDiagnosis.getLabel();
+		this.iDiagnose = iDiagnosis;
 	}
 	
 	public String getId(){
@@ -25,7 +25,7 @@ public class DiagnosesDTO {
 		return label;
 	}
 	
-	public IDiagnose getiDiagnose(){
+	public IDiagnosis getiDiagnose(){
 		return iDiagnose;
 	}
 }
