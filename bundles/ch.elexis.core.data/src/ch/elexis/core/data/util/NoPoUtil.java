@@ -9,8 +9,10 @@ import java.util.StringJoiner;
 
 import org.apache.commons.lang.StringUtils;
 
+import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IStoreToStringService;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.PersistentObjectFactory;
@@ -90,20 +92,19 @@ public class NoPoUtil {
 	
 	/**
 	 * Load {@link Identifiable} implementations for the provided {@link PersistentObject}s using
-	 * the {@link IStoreToStringService}.
+	 * the core {@link IModelService} and fallback to {@link IStoreToStringService}.
 	 * 
 	 * @param <T>
 	 * @param persistentObjects
 	 * @param type
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> List<T> loadAsIdentifiable(List<PersistentObject> persistentObjects,
 		Class<T> type){
 		if (persistentObjects != null && !persistentObjects.isEmpty()) {
 			List<T> ret = new ArrayList<>();
 			for (PersistentObject persistentObject : persistentObjects) {
-				StoreToStringServiceHolder.get().loadFromString(persistentObject.storeToString())
+				loadAsIdentifiable(persistentObject, type)
 					.ifPresent(identifiable -> {
 						ret.add((T) identifiable);
 					});
@@ -111,6 +112,33 @@ public class NoPoUtil {
 			return ret;
 		}
 		return Collections.emptyList();
+	}
+	
+	/**
+	 * Load {@link Identifiable} implementation for the provided {@link PersistentObject} using the
+	 * core {@link IModelService} and fallback to {@link IStoreToStringService}.
+	 * 
+	 * @param <T>
+	 * @param persistentObject
+	 * @param type
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> Optional<T> loadAsIdentifiable(PersistentObject persistentObject,
+		Class<T> type){
+		if (persistentObject != null) {
+			Optional<T> loaded = CoreModelServiceHolder.get().load(persistentObject.getId(), type);
+			if (loaded.isPresent()) {
+				return loaded;
+			} else {
+				loaded = (Optional<T>) StoreToStringServiceHolder.get()
+					.loadFromString(persistentObject.storeToString());
+				if (loaded.isPresent()) {
+					return loaded;
+				}
+			}
+		}
+		return Optional.empty();
 	}
 	
 	/**

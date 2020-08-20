@@ -1,20 +1,26 @@
 package ch.elexis.data.dto;
 
+import java.util.Optional;
+
 import ch.elexis.core.data.interfaces.IFall;
-import ch.elexis.core.data.interfaces.IVerrechenbar;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.model.IBillable;
+import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.IBillingSystemFactor;
+import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.Money;
-import ch.rgw.tools.TimeTool;
+import ch.rgw.tools.Result;
 
 public class LeistungDTO {
 	private final String id;
 	private String code;
 	private final String text;
 	private int count;
-	private IVerrechenbar iVerrechenbar;
+	private IBillable iVerrechenbar;
 	private long lastUpdate;
-	private Verrechnet verrechnet;
+	private IBilled verrechnet;
 	
 	private int tp = 0;
 	private double tpw = 1.0;
@@ -39,23 +45,23 @@ public class LeistungDTO {
 					+ verrechnet.getId() + "].",
 				e);
 		}
-		this.verrechnet = verrechnet;
+		this.verrechnet = NoPoUtil.loadAsIdentifiable(verrechnet, IBilled.class).get();
 		this.lastUpdate = verrechnet.getLastUpdate();
 		this.id = verrechnet.getId();
-		this.code = verrechnet.getCode();
+		this.code = this.verrechnet.getCode();
 		this.text = verrechnet.getText();
-		this.tp = Verrechnet.checkZero(verrechnet.get(Verrechnet.SCALE_TP_SELLING));
-		this.tpw = verrechnet.getTPW();
+		this.tp = this.verrechnet.getPoints();
+		this.tpw = this.verrechnet.getFactor();
 		this.count = verrechnet.getZahl();
-		this.iVerrechenbar = verrechnet.getVerrechenbar();
+		this.iVerrechenbar = this.verrechnet.getBillable();
 	}
 	
-	public LeistungDTO(IVerrechenbar iVerrechenbar, IFall fall){
+	public LeistungDTO(IBillable iVerrechenbar, IFall fall){
 		this.lastUpdate = System.currentTimeMillis();
 		this.id = iVerrechenbar.getId();
 		this.code = iVerrechenbar.getCode();
 		this.text = iVerrechenbar.getText();
-		this.tp = iVerrechenbar.getTP(new TimeTool(), fall);
+		this.tp = -1;
 		this.tpw = 1.0;
 		this.scale1 = 1.0;
 		this.scale2 = 1.0;
@@ -64,17 +70,33 @@ public class LeistungDTO {
 	}
 	
 	public void calcPrice(KonsultationDTO konsultationDTO, FallDTO fallDTO){
-		if (getVerrechnet() != null) {
-			tpw = getVerrechnet().getVerrechenbar()
-				.getFactor(new TimeTool(konsultationDTO.getDate()), fallDTO);
-		}
-		else if (iVerrechenbar != null) {
-			tpw = iVerrechenbar.getFactor(new TimeTool(konsultationDTO.getDate()), fallDTO);
-		}
-		if (verrechnet != null) {
+		if (verrechnet == null) {
+			@SuppressWarnings("unchecked")
+			Result<IBilled> result = iVerrechenbar.getOptifier().add(iVerrechenbar,
+				konsultationDTO.getTransientCopy(), 1.0, false);
+			if (result.isOK()) {
+				tp = result.get().getPoints();
+				tpw = result.get().getFactor();
+				scale1 = result.get().getPrimaryScaleFactor();
+				scale2 = result.get().getSecondaryScaleFactor();
+			}
+		} else {
+			tpw = getFactor();
 			scale1 = verrechnet.getPrimaryScaleFactor();
 			scale2 = verrechnet.getSecondaryScaleFactor();
 		}
+	}
+	
+	private double getFactor(){
+		if (iVerrechenbar != null) {
+			Optional<IBillingSystemFactor> billingFactor =
+				BillingServiceHolder.get().getBillingSystemFactor(iVerrechenbar.getCodeSystemName(),
+					verrechnet.getEncounter().getDate());
+			if (billingFactor.isPresent()) {
+				return billingFactor.get().getFactor();
+			}
+		}
+		return 1.0;
 	}
 	
 	public void setTp(int tp){
@@ -89,7 +111,7 @@ public class LeistungDTO {
 		return scale2;
 	}
 	
-	public Verrechnet getVerrechnet(){
+	public IBilled getVerrechnet(){
 		return verrechnet;
 	}
 	
@@ -105,7 +127,7 @@ public class LeistungDTO {
 		return text;
 	}
 	
-	public void setVerrechnet(Verrechnet verrechnet){
+	public void setVerrechnet(IBilled verrechnet){
 		this.verrechnet = verrechnet;
 	}
 	
@@ -125,11 +147,11 @@ public class LeistungDTO {
 		return count;
 	}
 	
-	public void setiVerrechenbar(IVerrechenbar iVerrechenbar){
+	public void setiVerrechenbar(IBillable iVerrechenbar){
 		this.iVerrechenbar = iVerrechenbar;
 	}
 	
-	public IVerrechenbar getIVerrechenbar(){
+	public IBillable getIVerrechenbar(){
 		return iVerrechenbar;
 	}
 	

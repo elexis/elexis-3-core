@@ -27,11 +27,14 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IFall;
-import ch.elexis.core.data.interfaces.IPersistentObject;
-import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.services.holder.BillingServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
@@ -330,12 +333,8 @@ public class BillingUtil {
 	 * @return
 	 */
 	public static Money getTotal(Konsultation konsultation){
-		Money total = new Money(0);
-		List<Verrechnet> leistungen = konsultation.getLeistungen();
-		for (Verrechnet verrechnet : leistungen) {
-			total.addMoney(verrechnet.getNettoPreis().multiply(verrechnet.getZahl()));
-		}
-		return total;
+		IEncounter encounter = NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get();
+		return EncounterServiceHolder.get().getSales(encounter);
 	}
 	
 	/**
@@ -519,8 +518,8 @@ public class BillingUtil {
 		private LeistungDTO leistungDTO = null;
 		private DiagnosesDTO diagnosesDTO = null;
 		private Konsultation konsultation = null;
-		private Verrechnet verrechnet = null;
-		private List<IPersistentObject> locks = new ArrayList<>();
+		private IBilled verrechnet = null;
+		private List<Object> locks = new ArrayList<>();
 		private final InvoiceCorrectionDTO invoiceCorrectionDTO;
 		private final BillCallback billCallback;
 		
@@ -606,7 +605,7 @@ public class BillingUtil {
 			}
 			
 			log.debug("release all locks: " + locks.size());
-			for (IPersistentObject po : locks) {
+			for (Object po : locks) {
 				LocalLockServiceHolder.get().releaseLock(po);
 			}
 		}
@@ -634,11 +633,10 @@ public class BillingUtil {
 			if (verrechnet != null) {
 				acquireLock(locks, verrechnet, false);
 				int tp = leistungDTO.getTp();
-				int tpOld = Verrechnet
-					.checkZero(verrechnet.get(Verrechnet.SCALE_TP_SELLING));
-				verrechnet.setSecondaryScaleFactor(leistungDTO.getScale2());
+				int tpOld = verrechnet.getPoints();
+				verrechnet.setSecondaryScale((int) (leistungDTO.getScale2() * 100));
 				if (tpOld != tp) {
-					verrechnet.setTP(tp);
+					verrechnet.setPoints(tp);
 					log.debug(
 						"invoice correction: price changed to [{}] for leistung id [{}]",
 						leistungDTO.getPrice().getAmountAsString(),
@@ -656,12 +654,12 @@ public class BillingUtil {
 			verrechnet = leistungDTO.getVerrechnet();
 			if (verrechnet != null) {
 				acquireLock(locks, verrechnet, false);
-				IStatus ret =
-					verrechnet.changeAnzahlValidated(leistungDTO.getCount());
+				IStatus ret = BillingServiceHolder.get().changeAmountValidated(verrechnet,
+					leistungDTO.getCount());
 				log.debug("invoice correction: changed count from leistung id [{}]",
 					leistungDTO.getId());
 				if (ret.isOK()) {
-					verrechnet.setSecondaryScaleFactor(leistungDTO.getScale2());
+					verrechnet.setSecondaryScale((int) (leistungDTO.getScale2() * 100));
 				} else {
 					addToOutput(output, ret.getMessage());
 					success = false;
@@ -687,7 +685,9 @@ public class BillingUtil {
 			acquireLock(locks, fallToTransfer, false);
 			acquireLock(locks, konsultation, false);
 			
-			konsultation.transferToFall(fallToTransfer, true, false);
+			EncounterServiceHolder.get().transferToCoverage(
+				NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get(),
+				NoPoUtil.loadAsIdentifiable(fallToTransfer, ICoverage.class).get(), true);
 			
 			Iterator<Konsultation> it = releasedKonsultations.iterator();
 			while (it.hasNext()) {
@@ -718,8 +718,9 @@ public class BillingUtil {
 				if (itemLeistung.getVerrechnet() != null) {
 					
 					acquireLock(locks, itemLeistung.getVerrechnet(), false);
-					Result<Verrechnet> resRemove =
-						konsultation.removeLeistung(itemLeistung.getVerrechnet());
+					Result<?> resRemove = BillingServiceHolder.get().removeBilled(
+						itemLeistung.getVerrechnet(),
+						NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get());
 					
 					log.debug(
 						"invoice correction: removed leistung id [{}] from kons id [{}]",
@@ -743,31 +744,35 @@ public class BillingUtil {
 			if (!removedleistungDTOs.isEmpty()) {
 				Konsultation newKons =
 					konsultation.createCopy(fallToTransfer, rechnung);
+				IEncounter newEncounter =
+					NoPoUtil.loadAsIdentifiable(newKons, IEncounter.class).get();
 				acquireLock(locks, newKons, true);
 				log.debug(
 					"invoice correction: copied kons from id [{}] to kons id [{}] and added kons to fall id [{}] ",
 					konsultation.getId(), newKons.getId(),
 					newKons.getFall().getId());
 				for (LeistungDTO itemLeistung : removedleistungDTOs) {
-					Result<IVerrechenbar> resAddLeistung =
-						newKons.addLeistung(itemLeistung.getIVerrechenbar());
+					Result<IBilled> resAddLeistung =
+						BillingServiceHolder.get().bill(itemLeistung.getIVerrechenbar(),
+							newEncounter, 1.0);
 					log.debug(
 						"invoice correction: add leistung id [{}] to kons id [{}]",
 						itemLeistung.getId(), newKons.getId());
 					if (resAddLeistung.isOK()) {
-						verrechnet =
-							newKons.getVerrechnet(itemLeistung.getIVerrechenbar());
+						verrechnet = EncounterServiceHolder.get()
+							.getBilledByBillable(newEncounter, itemLeistung.getIVerrechenbar())
+							.stream().findFirst().orElse(null);
 						if (verrechnet != null) {
 							itemLeistung.setVerrechnet(verrechnet);
-							if (verrechnet.getZahl() != itemLeistung.getCount()) {
-								IStatus ret = verrechnet
-									.changeAnzahlValidated(itemLeistung.getCount());
+							if (verrechnet.getAmount() != itemLeistung.getCount()) {
+								IStatus ret = BillingServiceHolder.get()
+									.changeAmountValidated(verrechnet, itemLeistung.getCount());
 								log.debug(
 									"invoice correction: count changed from [{}] to {[]} - for leistung id [{}]",
 									itemLeistung.getId());
 								if (ret.isOK()) {
-									verrechnet.setSecondaryScaleFactor(
-										itemLeistung.getScale2());
+									verrechnet
+										.setSecondaryScale((int) (itemLeistung.getScale2() * 100));
 								} else {
 									verrechnet = null;
 									log.warn(
@@ -803,9 +808,9 @@ public class BillingUtil {
 			leistungDTO = (LeistungDTO) item;
 			if (leistungDTO.getVerrechnet() != null) {
 				acquireLock(locks, leistungDTO.getVerrechnet(), false);
-				Result<Verrechnet> resRemove =
-					Konsultation.load(((KonsultationDTO) base).getId())
-						.removeLeistung(leistungDTO.getVerrechnet());
+				Result<?> resRemove = BillingServiceHolder.get()
+					.removeBilled(leistungDTO.getVerrechnet(), CoreModelServiceHolder.get()
+						.load(((KonsultationDTO) base).getId(), IEncounter.class).get());
 				log.debug(
 					"invoice correction: removed leistung id [{}] from kons id [{}]",
 					leistungDTO.getId(), ((KonsultationDTO) base).getId());
@@ -825,14 +830,16 @@ public class BillingUtil {
 
 		private void addLeistung(Object base, Object item){
 			konsultation = Konsultation.load(((KonsultationDTO) base).getId());
+			IEncounter encounter =
+				NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get();
 			leistungDTO = (LeistungDTO) item;
-			Result<IVerrechenbar> res =
-				konsultation.addLeistung(leistungDTO.getIVerrechenbar());
+			Result<IBilled> res = BillingServiceHolder.get().bill(leistungDTO.getIVerrechenbar(),
+				encounter, 1.0);
 			log.debug("invoice correction: added leistung id [{}] to kons id [{}]",
 				leistungDTO.getId(), ((KonsultationDTO) base).getId());
 			if (res.isOK()) {
-				verrechnet =
-					konsultation.getVerrechnet(leistungDTO.getIVerrechenbar());
+				verrechnet = EncounterServiceHolder.get().getBilledByBillable(encounter,
+					leistungDTO.getIVerrechenbar()).stream().findFirst().orElse(null);
 				if (verrechnet != null) {
 					leistungDTO.setVerrechnet(verrechnet);
 					acquireLock(locks, verrechnet, false);
@@ -874,7 +881,10 @@ public class BillingUtil {
 					if (openedKons.exists()) {
 						Rechnung bill = openedKons.getRechnung();
 						if (bill == null) {
-							openedKons.transferToFall(copyFall.get(), true, false);
+							EncounterServiceHolder.get().transferToCoverage(
+								NoPoUtil.loadAsIdentifiable(openedKons, IEncounter.class).get(),
+								NoPoUtil.loadAsIdentifiable(copyFall.get(), ICoverage.class).get(),
+								true);
 							log.debug(
 								"invoice correction: transfered kons id [{}] to copied fall id  [{}] ",
 								openedKons.getId(), copyFall.get().getId());
@@ -1008,8 +1018,8 @@ public class BillingUtil {
 			}
 		}
 		
-		private boolean acquireLock(List<IPersistentObject> currentLocks,
-			IPersistentObject persistentObjectToLock, boolean forceReleaseLock){
+		private boolean acquireLock(List<Object> currentLocks, Object persistentObjectToLock,
+			boolean forceReleaseLock){
 			if (!currentLocks.contains(persistentObjectToLock)) {
 				if (LocalLockServiceHolder.get().acquireLock(persistentObjectToLock).isOk()) {
 					if (!forceReleaseLock) {

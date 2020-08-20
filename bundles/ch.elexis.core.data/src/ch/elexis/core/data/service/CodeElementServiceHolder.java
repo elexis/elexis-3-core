@@ -10,14 +10,16 @@ import java.util.stream.Collectors;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.Statistics;
 import ch.elexis.core.services.ICodeElementService;
 import ch.elexis.core.services.ICodeElementService.ContextKeys;
-import ch.elexis.data.Fall;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.PersistentObject;
 
@@ -38,18 +40,19 @@ public class CodeElementServiceHolder {
 	}
 	
 	/**
-	 * Create a context map using the selection of {@link ElexisEventDispatcher}.
+	 * Create a context map using the selection of {@link IContextService}.
 	 * 
 	 * @return
 	 */
 	public static HashMap<Object, Object> createContext(){
 		HashMap<Object, Object> ret = new HashMap<>();
-		Optional<Konsultation> consultation =
-			ContextServiceHolder.get().getRootContext().getTyped(Konsultation.class);
+		Optional<IEncounter> consultation =
+			ContextServiceHolder.get().getRootContext().getTyped(IEncounter.class);
 		if (consultation.isPresent()) {
 			ret.put(ContextKeys.CONSULTATION, consultation.get());
 		}
-		Optional<Fall> coverage = ContextServiceHolder.get().getRootContext().getTyped(Fall.class);
+		Optional<ICoverage> coverage =
+			ContextServiceHolder.get().getRootContext().getTyped(ICoverage.class);
 		if (coverage.isPresent()) {
 			ret.put(ContextKeys.COVERAGE, coverage.get());
 		}
@@ -65,10 +68,10 @@ public class CodeElementServiceHolder {
 	public static HashMap<Object, Object> createContext(Konsultation consultation){
 		HashMap<Object, Object> ret = new HashMap<>();
 		if (consultation != null) {
-			ret.put(ContextKeys.CONSULTATION, consultation);
-		}
-		if (consultation != null) {
-			ret.put(ContextKeys.COVERAGE, consultation.getFall());
+			IEncounter encounter =
+				NoPoUtil.loadAsIdentifiable(consultation, IEncounter.class).get();
+			ret.put(ContextKeys.CONSULTATION, encounter);
+			ret.put(ContextKeys.COVERAGE, encounter.getCoverage());
 		}
 		return ret;
 	}

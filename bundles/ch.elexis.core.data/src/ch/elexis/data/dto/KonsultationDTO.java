@@ -4,10 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.elexis.core.data.interfaces.IDiagnose;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IMandator;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Verrechnet;
+import ch.rgw.tools.TimeTool;
 
 public class KonsultationDTO {
 	private final String id;
@@ -36,6 +41,14 @@ public class KonsultationDTO {
 		for (IDiagnose iDiagnose : konsultation.getDiagnosen()) {
 			diagnosesDTOs.add(new DiagnosesDTO(iDiagnose));
 		}
+	}
+	
+	public IEncounter getTransientCopy(){
+		IEncounter copy = CoreModelServiceHolder.get().create(IEncounter.class);
+		copy.setDate(new TimeTool(date).toLocalDate());
+		copy.setMandator(NoPoUtil.loadAsIdentifiable(mandant, IMandator.class).get());
+		
+		return copy;
 	}
 	
 	public List<ElexisException> getErrors(){
