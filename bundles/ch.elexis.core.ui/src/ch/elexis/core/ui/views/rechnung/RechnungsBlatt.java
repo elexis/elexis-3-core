@@ -69,10 +69,19 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
-import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.IDiagnosisReference;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.IInvoiceBilled;
 import ch.elexis.core.model.InvoiceState;
+import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -92,11 +101,8 @@ import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
-import ch.elexis.data.Query;
 import ch.elexis.data.Rechnung;
 import ch.elexis.data.RnStatus;
-import ch.elexis.data.Verrechnet;
-import ch.elexis.data.VerrechnetCopy;
 import ch.elexis.data.Zahlung;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
@@ -444,28 +450,17 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 			public Object[] getElements(Object inputElement){
 				List<Object> elements = new ArrayList<Object>();
 				if (actRn != null) {
-					List<Konsultation> konsultationen = actRn.getKonsultationen();
-					if (konsultationen != null) {
-						for (Konsultation konsultation : konsultationen) {
-							elements.add(konsultation);
-							
-							List<IDiagnose> diagnosen = konsultation.getDiagnosen();
-							if (diagnosen != null) {
-								for (IDiagnose diagnose : diagnosen) {
-									elements.add(diagnose);
-								}
-							}
-							
-							List<Verrechnet> leistungen = konsultation.getLeistungen();
-							if (leistungen != null) {
-								for (Verrechnet verrechnet : leistungen) {
-									elements.add(verrechnet);
-								}
-							}
+					IInvoice invoice = NoPoUtil.loadAsIdentifiable(actRn, IInvoice.class).get();
+					for (IEncounter encounter : invoice.getEncounters()) {
+						elements.add(encounter);
+						for (IDiagnosisReference diagnose : encounter.getDiagnoses()) {
+							elements.add(diagnose);
+						}
+						for (IBilled verrechnet : encounter.getBilled()) {
+							elements.add(verrechnet);
 						}
 					}
 				}
-				
 				return elements.toArray();
 			}
 			
@@ -479,30 +474,20 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		});
 		konsultationenViewer.setLabelProvider(new LabelProvider() {
 			public String getText(Object element){
-				if (element instanceof Konsultation) {
-					Konsultation konsultation = (Konsultation) element;
+				if (element instanceof IEncounter) {
 					
 					Money sum = new Money(0);
-					List<Verrechnet> leistungen = konsultation.getLeistungen();
-					if (leistungen != null) {
-						for (Verrechnet verrechnet : leistungen) {
-							int zahl = verrechnet.getZahl();
-							Money preis = verrechnet.getNettoPreis();
-							preis.multiply(zahl);
-							sum.addMoney(preis);
-						}
+					for (IBilled billed : ((IEncounter) element).getBilled()) {
+						sum.addMoney(billed.getTotal());
 					}
-					return konsultation.getLabel() + " (" + sum.toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-				} else if (element instanceof IDiagnose) {
-					IDiagnose diagnose = (IDiagnose) element;
+					return ((IEncounter) element).getLabel() + " (" + sum.toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+				} else if (element instanceof IDiagnosisReference) {
+					IDiagnosisReference diagnose = (IDiagnosisReference) element;
 					return "  - " + diagnose.getLabel(); //$NON-NLS-1$
-				} else if (element instanceof Verrechnet) {
-					Verrechnet verrechnet = (Verrechnet) element;
-					int zahl = verrechnet.getZahl();
-					Money preis = verrechnet.getNettoPreis();
-					preis.multiply(zahl);
-					return "  - " + zahl + " " + verrechnet.getLabel() + " (" + preis.toString() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						+ ")"; //$NON-NLS-1$
+				} else if (element instanceof IBilled) {
+					IBilled billed = (IBilled) element;
+					return "  - " + billed.getAmount() + " " + billed.getLabel() + " (" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+						+ billed.getTotal().toString() + ")"; //$NON-NLS-1$
 				} else {
 					return element.toString();
 				}
@@ -534,30 +519,29 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 				if (actRn != null) {
 					List<Konsultation> konsultationen = actRn.getKonsultationen();
 					if (konsultationen == null || konsultationen.isEmpty()) {
-						HashMap<Konsultation, List<VerrechnetCopy>> elementsMap =
-							new HashMap<Konsultation, List<VerrechnetCopy>>();
+						HashMap<IEncounter, List<IInvoiceBilled>> elementsMap =
+							new HashMap<IEncounter, List<IInvoiceBilled>>();
 						// prepare heading label that will look like this dd.MM.yyyy (cancelled) - amountOfMoney
 						StringBuilder sbHeadingLabel = new StringBuilder();
 						sbHeadingLabel.append(Messages.AccountView_bill + " " + actRn.getDatumRn()); //$NON-NLS-1$
 						sbHeadingLabel.append(Messages.RechnungsBlatt_stornoLabel);
 						
 						// store all verrechnetCopies and add label with sum of all cancelled items
-						Query<VerrechnetCopy> vcQuery =
-							new Query<VerrechnetCopy>(VerrechnetCopy.class);
-						vcQuery.add(VerrechnetCopy.RECHNUNGID, Query.EQUALS, actRn.getId());
-						List<VerrechnetCopy> vcList = vcQuery.execute();
+						IQuery<IInvoiceBilled> query =
+							CoreModelServiceHolder.get().getQuery(IInvoiceBilled.class);
+						query.and(ModelPackage.Literals.IINVOICE_BILLED__INVOICE, COMPARATOR.EQUALS,
+							NoPoUtil.loadAsIdentifiable(actRn, IInvoice.class).get());
+						List<IInvoiceBilled> vcList = query.execute();
 						Money sum = new Money(0);
-						for (VerrechnetCopy vc : vcList) {
+						for (IInvoiceBilled vc : vcList) {
 							// add amount of money this item/s cost
-							Money price = vc.getNettoPreis();
-							price.multiply(vc.getZahl());
-							sum.addMoney(price);
+							sum.addMoney(vc.getTotal());
 							// add verrechnet to map
 							addToMap(vc, elementsMap);
 						}
 						// add the map to the elements
-						Set<Konsultation> keys = elementsMap.keySet();
-						for (Konsultation konsultation : keys) {
+						Set<IEncounter> keys = elementsMap.keySet();
+						for (IEncounter konsultation : keys) {
 							if (konsultation != null) {
 								elements.add(konsultation);
 							} else {
@@ -574,39 +558,33 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 				return elements.toArray();
 			}
 			
-			private void addToMap(VerrechnetCopy copy,
-				HashMap<Konsultation, List<VerrechnetCopy>> elementsMap){
-				String konsId = copy.get(VerrechnetCopy.BEHANDLUNGID);
-				if (konsId != null && !konsId.isEmpty()) {
-					Konsultation kons = Konsultation.load(konsId);
-					if (kons != null && kons.exists()) {
-						List<VerrechnetCopy> list = elementsMap.get(kons);
-						if (list == null) {
-							list = new ArrayList<VerrechnetCopy>();
-						}
-						list.add(copy);
-						elementsMap.put(kons, list);
-					} else {
-						List<VerrechnetCopy> list = elementsMap.get(null);
-						if (list == null) {
-							list = new ArrayList<VerrechnetCopy>();
-						}
-						list.add(copy);
-						elementsMap.put(null, list);
+			private void addToMap(IInvoiceBilled copy,
+				HashMap<IEncounter, List<IInvoiceBilled>> elementsMap){
+				IEncounter encounter = copy.getEncounter();
+				if (encounter != null) {
+					List<IInvoiceBilled> list = elementsMap.get(encounter);
+					if (list == null) {
+						list = new ArrayList<IInvoiceBilled>();
 					}
+					list.add(copy);
+					elementsMap.put(encounter, list);
+				} else {
+					List<IInvoiceBilled> list = elementsMap.get(null);
+					if (list == null) {
+						list = new ArrayList<IInvoiceBilled>();
+					}
+					list.add(copy);
+					elementsMap.put(null, list);
 				}
 			}
 		});
 		stornoViewer.setLabelProvider(new LabelProvider() {
 			@Override
 			public String getText(Object element){
-				if (element instanceof VerrechnetCopy) {
-					VerrechnetCopy vc = (VerrechnetCopy) element;
-					int amount = vc.getZahl();
-					Money price = vc.getNettoPreis();
-					price.multiply(amount);
-					return "  - " + amount + " " + vc.getLabel() + " (" + price.toString() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						+ ")"; //$NON-NLS-1$
+				if (element instanceof IInvoiceBilled) {
+					IInvoiceBilled vc = (IInvoiceBilled) element;
+					return "  - " + vc.getAmount() + " " + vc.getLabel() + " (" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+						+ vc.getTotal().toString() + ")"; //$NON-NLS-1$
 				} else if (element instanceof Konsultation) {
 					return "Konsultation " + ((Konsultation) element).getDatum();
 				} else {

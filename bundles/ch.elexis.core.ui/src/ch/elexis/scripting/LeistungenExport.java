@@ -13,16 +13,16 @@ package ch.elexis.scripting;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.HashMap;
-import java.util.List;
 
-import ch.elexis.core.data.interfaces.IVerrechenbar;
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.IBillable;
+import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
-import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
-import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.TimeTool;
 
@@ -114,26 +114,11 @@ public class LeistungenExport {
 							patienten.put(pat.getId(), pu);
 						}
 						pu.anzahlKons += 1;
-						String fallid = fall.getId();
-						String Bezeichnung = fall.getBezeichnung();
-						String gesetz = fall.getConfiguredBillingSystemLaw().name();
-						String abr = fall.getAbrechnungsSystem();
-						Kontakt kt = fall.getGarant();
-						String rechnungsempfaenger = "";
-						if (kt != null) {
-							rechnungsempfaenger = fall.getGarant().getLabel();
-						}
-						Kontakt costBearer = fall.getCostBearer();
-						String kostentraeger = "";
-						String versnr = "";
-						if (costBearer != null) {
-							kostentraeger = costBearer.getLabel();
-							versnr = fall.getRequiredString("Versicherungsnummer");
-						}
-						List<Verrechnet> vr = k.getLeistungen();
+						IEncounter encounter =
+							NoPoUtil.loadAsIdentifiable((Konsultation) k, IEncounter.class).get();
 						Mandant m = k.getMandant();
 						if (m != null) {
-							for (Verrechnet v : vr) {
+							for (IBilled v : encounter.getBilled()) {
 								String[] col = new String[cols.length];
 								for (int i = 0; i < cols.length; i++) {
 									col[i] = "";
@@ -144,7 +129,7 @@ public class LeistungenExport {
 								col[KonsID] = k.getId();
 								col[Datum] = k.getDatum();
 								col[Mandant] = m.getId();
-								IVerrechenbar vv = v.getVerrechenbar();
+								IBillable vv = v.getBillable();
 								if (vv != null) {
 									col[CodeSystemName] = vv.getCodeSystemName();
 									col[CodeSystemCode] = vv.getCodeSystemCode();
@@ -164,7 +149,7 @@ public class LeistungenExport {
 									} else if (vv.getCodeSystemName().equals("MiGeL")) {
 										offset = Migel;
 									}
-									col[offset] = v.getNettoPreis().getAmountAsString();
+									col[offset] = v.getTotal().getAmountAsString();
 								}
 								out.writeNext(col);
 							}

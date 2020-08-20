@@ -17,20 +17,22 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.interfaces.IVerrechenbar;
-import ch.elexis.data.Artikel;
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IBillable;
+import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Query;
 import ch.elexis.data.Rechnung;
-import ch.elexis.data.Verrechnet;
 import ch.elexis.data.Zahlung;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
 
 public class CountArticles {
-	HashMap<IVerrechenbar, Integer> paid = new HashMap<IVerrechenbar, Integer>();
-	HashMap<IVerrechenbar, Integer> unpaid = new HashMap<IVerrechenbar, Integer>();
+	HashMap<IBillable, Double> paid = new HashMap<IBillable, Double>();
+	HashMap<IBillable, Double> unpaid = new HashMap<IBillable, Double>();
 	Money mPaid = new Money();
 	Money mUnpaid = new Money();
 	
@@ -71,30 +73,28 @@ public class CountArticles {
 						}
 					}
 				}
-				List<Verrechnet> vv = k.getLeistungen();
-				for (Verrechnet v : vv) {
-					IVerrechenbar iv = v.getVerrechenbar();
-					if (iv instanceof Artikel) {
-						Money price = v.getNettoPreis();
-						int count = v.getZahl();
-						price.multiply(count);
+				IEncounter encounter =
+					NoPoUtil.loadAsIdentifiable((Konsultation) k, IEncounter.class).get();
+				for (IBilled v : encounter.getBilled()) {
+					IBillable iv = v.getBillable();
+					if (iv instanceof IArticle) {
 						if (bPaid) {
-							mPaid.addMoney(price);
-							Integer sum = paid.get(iv);
+							mPaid.addMoney(v.getTotal());
+							Double sum = paid.get(iv);
 							if (sum == null) {
-								sum = new Integer(count);
+								sum = new Double(v.getAmount());
 								paid.put(iv, sum);
 							} else {
-								sum += count;
+								sum += v.getAmount();
 							}
 						} else {
-							mUnpaid.addMoney(price);
-							Integer sum = unpaid.get(iv);
+							mUnpaid.addMoney(v.getTotal());
+							Double sum = unpaid.get(iv);
 							if (sum == null) {
-								sum = new Integer(count);
+								sum = new Double(v.getAmount());
 								unpaid.put(iv, sum);
 							} else {
-								sum += count;
+								sum += v.getAmount();
 							}
 						}
 						
@@ -111,9 +111,9 @@ public class CountArticles {
 				cs.writeNext(new String[] {
 					"Bezahlte Artikel", "Anzahl"
 				});
-				for (Entry<IVerrechenbar, Integer> entry : paid.entrySet()) {
-					IVerrechenbar iv = entry.getKey();
-					Integer sum = entry.getValue();
+				for (Entry<IBillable, Double> entry : paid.entrySet()) {
+					IBillable iv = entry.getKey();
+					Double sum = entry.getValue();
 					cs.writeNext(new String[] {
 						iv.getText(), sum.toString()
 					});
@@ -125,9 +125,9 @@ public class CountArticles {
 				cs.writeNext(new String[] {
 					"Unbezahlte Artikel", "Anzahl"
 				});
-				for (Entry<IVerrechenbar, Integer> entry : unpaid.entrySet()) {
-					IVerrechenbar iv = entry.getKey();
-					Integer sum = entry.getValue();
+				for (Entry<IBillable, Double> entry : unpaid.entrySet()) {
+					IBillable iv = entry.getKey();
+					Double sum = entry.getValue();
 					cs.writeNext(new String[] {
 						iv.getText(), sum.toString()
 					});

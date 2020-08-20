@@ -74,8 +74,8 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
-import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.util.BillingUtil;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.data.util.ResultAdapter;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
@@ -83,7 +83,6 @@ import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.InvoiceServiceHolder;
-import ch.elexis.core.services.holder.LocalLockServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
@@ -95,6 +94,7 @@ import ch.elexis.core.ui.dialogs.SelectFallDialog;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.LockedAction;
 import ch.elexis.core.ui.locks.LockedRestrictedAction;
+import ch.elexis.core.ui.services.EncounterServiceHolder;
 import ch.elexis.core.ui.util.Importer;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.TemplateDrucker;
@@ -575,7 +575,12 @@ public class GlobalActions {
 				if (dlg.open() == Dialog.OK) {
 					Fall f = dlg.result;
 					if (f != null) {
-						element.setFall(f);
+						Result<IEncounter> result = EncounterServiceHolder.get().transferToCoverage(
+							NoPoUtil.loadAsIdentifiable(element, IEncounter.class).get(),
+							NoPoUtil.loadAsIdentifiable(f, ICoverage.class).get(), false);
+						if (!result.isOK()) {
+							SWTHelper.alert("Error", result.toString());
+						}
 						ElexisEventDispatcher.fireSelectionEvent(f);
 					}
 				}

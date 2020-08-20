@@ -15,7 +15,6 @@ import java.util.List;
 
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.ISticker;
-import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.BezugsKontakt;
@@ -29,7 +28,6 @@ import ch.elexis.data.Prescription;
 import ch.elexis.data.Query;
 import ch.elexis.data.Script;
 import ch.elexis.data.Sticker;
-import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.ExHandler;
 
 /**
@@ -48,22 +46,6 @@ public class PatFilterImpl implements IPatFilter {
 				return ACCEPT;
 			}
 			return REJECT;
-		} else if (o instanceof IVerrechenbar) {
-			IVerrechenbar iv = (IVerrechenbar) o;
-			Fall[] faelle = p.getFaelle();
-			for (Fall fall : faelle) {
-				Konsultation[] konsen = fall.getBehandlungen(false);
-				for (Konsultation k : konsen) {
-					List<Verrechnet> lv = k.getLeistungen();
-					for (Verrechnet v : lv) {
-						if (v.getVerrechenbar().equals(iv)) {
-							return ACCEPT;
-						}
-					}
-				}
-			}
-			return REJECT;
-			
 		} else if (o instanceof IDiagnose) {
 			IDiagnose diag = (IDiagnose) o;
 			Fall[] faelle = p.getFaelle();
