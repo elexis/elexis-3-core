@@ -68,4 +68,9 @@ public class DiagnosisReference
 		}
 		return null;
 	}
+	
+	@Override
+	public String getLabel(){
+		return getCode() + " " + getText();
+	}
 }
