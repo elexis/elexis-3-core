@@ -24,13 +24,16 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.ui.commands.ErstelleRnnCommand;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
-import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
 
@@ -357,17 +360,21 @@ public class Rechnungslauf implements IRunnableWithProgress {
 			for (Konsultation k : kons) {
 				if (accepted(k)) {
 					Money sum = new Money();
-					String konsFallId = k.get(Konsultation.FLD_CASE_ID);
-					List<Konsultation> matchingKons = new ArrayList<Konsultation>();
+					IEncounter encounter =
+						NoPoUtil.loadAsIdentifiable((Konsultation) k, IEncounter.class).get();
+					ICoverage encounterCoverage = encounter.getCoverage();
+					List<Konsultation> matchingKons = new ArrayList<>();
 					
 					for (Konsultation k2 : kons) {
-						String fallId = k2.get(Konsultation.FLD_CASE_ID);
+						IEncounter encounter2 =
+							NoPoUtil.loadAsIdentifiable((Konsultation) k2, IEncounter.class).get();
+						ICoverage encounter2Coverage = encounter.getCoverage();
 						
-						if ((fallId != null) && (fallId.equals(konsFallId))) {
+						if (encounterCoverage != null && encounter2Coverage != null
+							&& encounterCoverage.equals(encounter2Coverage)) {
 							matchingKons.add(k2);
-							List<Verrechnet> leistungen = k2.getLeistungen();
-							for (Verrechnet vr : leistungen) {
-								sum.addMoney(vr.getNettoPreis().multiply(vr.getZahl()));
+							for (IBilled vr : encounter2.getBilled()) {
+								sum.addMoney(vr.getTotal());
 							}
 						}
 					}

@@ -30,11 +30,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
-import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Tree;
 
@@ -139,10 +141,11 @@ public class VerrDetailDialog extends TitleAreaDialog {
 	}
 	
 	private Money calcKons(Konsultation k){
-		List<Verrechnet> list = k.getLeistungen();
+		IEncounter encounter =
+			NoPoUtil.loadAsIdentifiable((Konsultation) k, IEncounter.class).get();
 		Money ret = new Money();
-		for (Verrechnet v : list) {
-			ret.addMoney(v.getNettoPreis().multiply(v.getZahl()));
+		for (IBilled v : encounter.getBilled()) {
+			ret.addMoney(v.getTotal());
 		}
 		return ret;
 	}

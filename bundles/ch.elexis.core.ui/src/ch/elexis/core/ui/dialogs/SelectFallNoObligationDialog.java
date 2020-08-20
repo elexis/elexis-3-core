@@ -33,7 +33,9 @@ import org.eclipse.ui.PlatformUI;
 
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.interfaces.IVerrechenbar;
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.IBillable;
+import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.data.Fall;
@@ -42,15 +44,15 @@ public class SelectFallNoObligationDialog extends TitleAreaDialog {
 	
 	private static Fall lastSelectedFall;
 	
-	private IVerrechenbar noOblCode;
 	private Fall oblFall;
 	private Fall fall;
 	private ComboViewer noOblFallCombo;
+	private IBillable noOblCode;
 	
-	public SelectFallNoObligationDialog(Fall oblFall, IVerrechenbar code){
+	public SelectFallNoObligationDialog(ICoverage iCoverage, IBillable iBillable){
 		super(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
-		this.oblFall = oblFall;
-		this.noOblCode = code;
+		this.oblFall = Fall.load(iCoverage.getId());
+		this.noOblCode = iBillable;
 	}
 	
 	@Override
@@ -149,6 +151,10 @@ public class SelectFallNoObligationDialog extends TitleAreaDialog {
 	
 	public Fall getFall(){
 		return fall;
+	}
+	
+	public ICoverage getCoverage(){
+		return NoPoUtil.loadAsIdentifiable(fall, ICoverage.class).orElse(null);
 	}
 	
 	private class UpdateFallComboListener extends ElexisUiEventListenerImpl {

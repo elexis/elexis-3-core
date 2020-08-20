@@ -67,7 +67,11 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
-import ch.elexis.core.data.interfaces.IVerrechenbar;
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.IBillable;
+import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IService;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.AbstractDataLoaderJob;
@@ -101,7 +105,6 @@ import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
-import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.IFilter;
 import ch.rgw.tools.Money;
@@ -130,7 +133,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 	private double sumTime;
 	private double sumAll;
 	PersistentObjectDropTarget dropTarget;
-	ListDisplay<IVerrechenbar> ldFilter;
+	ListDisplay<IBillable> ldFilter;
 	// private double sumSelected;
 	private final Query<Konsultation> qbe;
 	Composite parent;
@@ -157,10 +160,10 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 		parent.setLayout(new GridLayout());
 		this.parent = parent;
 		makeActions();
-		ldFilter = new ListDisplay<IVerrechenbar>(parent, SWT.NONE, new ListDisplay.LDListener() {
+		ldFilter = new ListDisplay<IBillable>(parent, SWT.NONE, new ListDisplay.LDListener() {
 			
 			public String getLabel(final Object o){
-				return ((IVerrechenbar) o).getCode();
+				return ((IBillable) o).getCode();
 			}
 			
 			public void hyperlinkActivated(final String l){
@@ -369,16 +372,22 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 			tMoney2.setText("");
 		} else {
 			try {
-				tTime2.setText(Integer.toString(k.getMinutes()));
+				IEncounter encounter = NoPoUtil.loadAsIdentifiable(k, IEncounter.class).get();
+				tTime2.setText(Integer.toString(getMinutes(encounter)));
 				Money mon = new Money();
-				for (Verrechnet ver : k.getLeistungen()) {
-					mon = mon.addMoney(ver.getNettoPreis().multiply(ver.getZahl()));
+				for (IBilled billed : encounter.getBilled()) {
+					mon = mon.addMoney(billed.getTotal());
 				}
 				tMoney2.setText(mon.getAmountAsString());
 			} catch (NullPointerException e) {
 				// ignore -> handled during update
 			}
 		}
+	}
+	
+	private int getMinutes(IEncounter encounter){
+		return encounter.getBilled().stream().map(b -> b.getBillable())
+			.filter(b -> b instanceof IService).mapToInt(b -> ((IService) b).getMinutes()).sum();
 	}
 	
 	public void activation(final boolean mode){ /* leer */
@@ -431,22 +440,23 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 		
 		@Override
 		protected IStatus run(IProgressMonitor monitor){
-			HashMap<IVerrechenbar, StatCounter> counter = new HashMap<IVerrechenbar, StatCounter>();
+			HashMap<IBillable, StatCounter> counter = new HashMap<IBillable, StatCounter>();
 			monitor.beginTask(Messages.PatHeuteView_calculateStats, kons.length + 20); //$NON-NLS-1$
 			
 			System.out.println(Messages.PatHeuteView_consElexis + kons.length); //$NON-NLS-1$
 			int serviceCounter = 0;
 			
 			for (Konsultation k : kons) {
-				List<Verrechnet> list = k.getLeistungen();
+				IEncounter encounter = NoPoUtil.loadAsIdentifiable(k, IEncounter.class).get();
+				List<IBilled> list = encounter.getBilled();
 				serviceCounter += list.size();
-				for (Verrechnet v : list) {
-					StatCounter sc = counter.get(v.getVerrechenbar());
+				for (IBilled billed : list) {
+					StatCounter sc = counter.get(billed.getBillable());
 					if (sc == null) {
-						sc = new StatCounter(v.getVerrechenbar());
-						counter.put(v.getVerrechenbar(), sc);
+						sc = new StatCounter(billed.getBillable());
+						counter.put(billed.getBillable(), sc);
 					}
-					sc.add(v.getZahl(), v.getNettoPreis(), v.getKosten());
+					sc.add(billed.getAmount(), billed.getTotal(), billed.getNetPrice());
 				}
 				monitor.worked(1);
 				if (monitor.isCanceled()) {
@@ -516,7 +526,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 	}
 	
 	class KonsLoader extends AbstractDataLoaderJob {
-		IVerrechenbar[] lfiltered;
+		IBillable[] lfiltered;
 		Set<Konsultation> corruptKons;
 		Set<Konsultation> missingCaseKons;
 		
@@ -563,10 +573,11 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 			qbe.addPostQueryFilter(new IFilter() {
 				public boolean select(final Object toTest){
 					if (filterAction.isChecked()) {
-						Konsultation k = (Konsultation) toTest;
-						List<IVerrechenbar> lFilt = ldFilter.getAll();
-						for (Verrechnet v : k.getLeistungen()) {
-							if (lFilt.contains(v.getVerrechenbar())) {
+						IEncounter encounter = NoPoUtil
+							.loadAsIdentifiable((Konsultation) toTest, IEncounter.class).get();
+						List<IBillable> lFilt = ldFilter.getAll();
+						for (IBilled b : encounter.getBilled()) {
+							if (lFilt.contains(b.getBillable())) {
 								return true;
 							}
 						}
@@ -598,7 +609,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 				Konsultation[] ret = new Konsultation[list.size()];
 				
 				if (filterAction.isChecked()) {
-					lfiltered = ldFilter.getAll().toArray(new IVerrechenbar[0]);
+					lfiltered = ldFilter.getAll().toArray(new IBillable[0]);
 					if (lfiltered.length == 0) {
 						lfiltered = null;
 					}
@@ -612,24 +623,26 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 					}
 					try {
 						ret[i++] = (Konsultation) o;
+						IEncounter encounter =
+							NoPoUtil.loadAsIdentifiable((Konsultation) o, IEncounter.class).get();
 						if (lfiltered != null) {
-							List<Verrechnet> lstg = ((Konsultation) o).getLeistungen();
-							for (Verrechnet v : lstg) {
-								int num = v.getZahl();
-								Money preis = v.getEffPreis().multiply(num);
+							for (IBilled b : encounter.getBilled()) {
+								double num = b.getAmount();
+								Money preis = b.getTotal();
 								for (int j = 0; j < lfiltered.length; j++) {
-									if (lfiltered[j].equals(v.getVerrechenbar())) {
+									if (lfiltered[j].equals(b.getBillable())) {
 										sumAll += preis.getCents();
-										sumTime += v.getVerrechenbar().getMinutes();
+										if (b.getBillable() instanceof IService) {
+											sumTime += ((IService) b.getBillable()).getMinutes();
+										}
 									}
 								}
 							}
 						} else {
-							for (Verrechnet verr : ((Konsultation) o).getLeistungen()) {
-								sumAll +=
-									verr.getNettoPreis().multiply(verr.getZahl()).doubleValue();
+							for (IBilled b : encounter.getBilled()) {
+								sumAll += b.getTotal().doubleValue();
 							}
-							sumTime += ((Konsultation) o).getMinutes();
+							sumTime += getMinutes(encounter);
 						}
 						monitor.worked(1);
 						
@@ -705,26 +718,23 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 	};
 	
 	private static class StatCounter implements Comparable<StatCounter> {
-		IVerrechenbar v;
+		IBillable v;
 		Money sum;
 		Money cost;
-		int num;
+		double num;
 		
-		StatCounter(IVerrechenbar vv){
-			v = vv;
+		StatCounter(ch.elexis.core.model.IBillable iBillable){
+			v = iBillable;
 			sum = new Money();
 			cost = new Money();
 			num = 0;
 		}
 		
-		void add(int num, Money price, Money cost){
-			
-			Money totalPrice = price.multiply(num);
+		void add(double num, Money total, Money cost){
 			Money totalCost = cost.multiply(num);
 			this.num += num;
-			sum.addMoney(totalPrice);
+			sum.addMoney(total);
 			this.cost.addMoney(totalCost);
-			
 		}
 		
 		public int compareTo(StatCounter o){
@@ -734,7 +744,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 				v1 = v.getCodeSystemName();
 				vc1 = v.getCode();
 			}
-			IVerrechenbar iv = o.v;
+			IBillable iv = o.v;
 			if (iv != null) {
 				v2 = iv.getCodeSystemName();
 				vc2 = iv.getCode();
@@ -819,7 +829,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 	}
 	
 	class TerminListeDialog extends TitleAreaDialog implements ICallback {
-		IVerrechenbar[] lfiltered;
+		IBillable[] lfiltered;
 		int[] numLeistung;
 		Money[] perLeistung;
 		private TextContainer text;
@@ -839,7 +849,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 			text.getPlugin().showToolbar(false);
 			int add = 2;
 			if (filterAction.isChecked()) {
-				lfiltered = ldFilter.getAll().toArray(new IVerrechenbar[0]);
+				lfiltered = ldFilter.getAll().toArray(new IBillable[0]);
 				numLeistung = new int[lfiltered.length];
 				add += lfiltered.length;
 				perLeistung = new Money[lfiltered.length];
@@ -860,21 +870,21 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 				table[i + 1][0] = k.getFall().getPatient().getLabel() + "\n" //$NON-NLS-1$
 					+ k.getLabel();
 				StringBuilder sb = new StringBuilder();
-				List<Verrechnet> lstg = k.getLeistungen();
+				IEncounter encounter =
+					NoPoUtil.loadAsIdentifiable((Konsultation) k, IEncounter.class).get();
 				Money subsum = new Money();
-				for (Verrechnet v : lstg) {
-					int num = v.getZahl();
-					Money preis = v.getEffPreis().multiply(num);
+				for (IBilled b : encounter.getBilled()) {
+					Money preis = b.getTotal();
 					if (lfiltered != null) {
 						for (int j = 0; j < lfiltered.length; j++) {
-							if (lfiltered[j].equals(v.getVerrechenbar())) {
-								numLeistung[j] += num;
+							if (lfiltered[j].equals(b.getBillable())) {
+								numLeistung[j] += b.getAmount();
 								perLeistung[j].addMoney(preis);
 							}
 						}
 					}
 					subsum.addMoney(preis);
-					sb.append(num).append(" ").append(v.getLabel()).append(" ") //$NON-NLS-1$ //$NON-NLS-2$
+					sb.append(b.getAmount()).append(" ").append(b.getLabel()).append(" ") //$NON-NLS-1$ //$NON-NLS-2$
 						.append(preis.getAmountAsString()).append("\n"); //$NON-NLS-1$
 				}
 				sb.append(Messages.PatHeuteView_total).append(subsum.getAmountAsString()); //$NON-NLS-1$
@@ -932,13 +942,13 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 	
 	private final class DropReceiver implements PersistentObjectDropTarget.IReceiver {
 		public void dropped(final PersistentObject o, final DropTargetEvent ev){
-			if (o instanceof IVerrechenbar) {
-				ldFilter.add((IVerrechenbar) o);
+			if (o instanceof IBillable) {
+				ldFilter.add((IBillable) o);
 			}
 		}
 		
 		public boolean accept(final PersistentObject o){
-			if (o instanceof IVerrechenbar) {
+			if (o instanceof IBillable) {
 				return true;
 			}
 			return false;

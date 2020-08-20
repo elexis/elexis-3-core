@@ -8,10 +8,15 @@ import org.eclipse.ui.PlatformUI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.ui.services.EncounterServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.FallDetailView;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
+import ch.rgw.tools.Result;
 
 public class FallCopyCommand extends AbstractHandler {
 	private static Logger logger = LoggerFactory.getLogger(FallCopyCommand.class);
@@ -38,7 +43,14 @@ public class FallCopyCommand extends AbstractHandler {
 					logger.debug("trying to transfer consulations");
 					for (Konsultation cons : consultations) {
 						if (cons.isEditable(false)) {
-							cons.setFall(clone);
+							Result<IEncounter> result =
+								EncounterServiceHolder.get().transferToCoverage(
+									NoPoUtil.loadAsIdentifiable(cons, IEncounter.class).get(),
+									NoPoUtil.loadAsIdentifiable(clone, ICoverage.class).get(),
+									false);
+							if (!result.isOK()) {
+								SWTHelper.alert("Error", result.toString());
+							}
 						}
 					}
 				}

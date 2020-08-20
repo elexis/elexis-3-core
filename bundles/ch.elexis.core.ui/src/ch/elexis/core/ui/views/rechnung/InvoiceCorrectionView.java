@@ -54,6 +54,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
@@ -81,13 +82,13 @@ import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.interfaces.IPersistentObject;
-import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.BillingUtil;
 import ch.elexis.core.data.util.BillingUtil.BillCallback;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.IBillable;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.dialogs.DateSelectorDialog;
@@ -97,7 +98,7 @@ import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.locks.ToggleCurrentInvoiceLockHandler;
-import ch.elexis.core.ui.util.PersistentObjectDropTarget;
+import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.WidgetFactory;
 import ch.elexis.core.ui.views.FallDetailBlatt2;
@@ -842,28 +843,39 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 				
 			});
 			
-			PersistentObjectDropTarget.IReceiver dtr = new PersistentObjectDropTarget.IReceiver() {
+			GenericObjectDropTarget.IReceiver dtr = new GenericObjectDropTarget.IReceiver() {
 				
-				public boolean accept(PersistentObject o){
+				@Override
+				public void dropped(List<Object> list, DropTargetEvent e){
+					for (Object object : list) {
+						if (object instanceof IBillable) {
+							LeistungDTO leistungDTO = new LeistungDTO((IBillable) object,
+								invoiceCorrectionDTO.getFallDTO());
+							konsultationDTO.getLeistungDTOs().add(leistungDTO);
+							leistungDTO.calcPrice(konsultationDTO,
+								invoiceCorrectionDTO.getFallDTO());
+							invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(
+								OperationType.LEISTUNG_ADD, konsultationDTO, leistungDTO));
+							tableViewer.refresh();
+							invoiceComposite.updateScrollBars();
+						}
+					}
+				}
+				
+				@Override
+				public boolean accept(List<Object> list){
 					return true;
 				}
 				
-				public void dropped(PersistentObject o, DropTargetEvent ev){
-					if (o instanceof IVerrechenbar) {
-						IVerrechenbar art = (IVerrechenbar) o;
-						LeistungDTO leistungDTO =
-							new LeistungDTO(art, invoiceCorrectionDTO.getFallDTO());
-						konsultationDTO.getLeistungDTOs().add(leistungDTO);
-						leistungDTO.calcPrice(konsultationDTO, invoiceCorrectionDTO.getFallDTO());
-						invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(
-							OperationType.LEISTUNG_ADD, konsultationDTO, leistungDTO));
-						tableViewer.refresh();
-						invoiceComposite.updateScrollBars();
-					}
-				}
 			};
-			PersistentObjectDropTarget dropTarget =
-				new PersistentObjectDropTarget("rechnungskorrektur", this, dtr); //$NON-NLS-1$
+			
+			GenericObjectDropTarget dropTarget =
+				new GenericObjectDropTarget(Messages.VerrechnungsDisplay_doBill, table, dtr) {
+					@Override
+					protected Control getHighLightControl(){
+						return tableViewer.getControl();
+					}
+				};
 			
 			MenuManager menuManager = new MenuManager();
 			
