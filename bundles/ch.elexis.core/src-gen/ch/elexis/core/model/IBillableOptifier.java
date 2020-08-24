@@ -24,7 +24,12 @@ import ch.rgw.tools.Result;
 public interface IBillableOptifier<T extends IBillable> {
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * Add amount of a {@link IBillable} to the encounter resulting in an {@link IBilled}. If adding
+	 * was not successful the {@link Result} is not ok, and should contain the reason as message.
+	 * </p>
+	 * <!-- end-user-doc -->
 	 * 
 	 * @model type="ch.elexis.core.types.Result&lt;ch.elexis.core.model.IBilled&gt;"
 	 * @generated NOT
@@ -34,7 +39,17 @@ public interface IBillableOptifier<T extends IBillable> {
 	}
 	
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * Add amount of a {@link IBillable} to the encounter resulting in an {@link IBilled}. If adding
+	 * was not successful the {@link Result} is not ok, and should contain the reason as message.
+	 * <br />
+	 * <br />
+	 * If the save parameter is false, the changes are not persisted but a correct {@link IBillable}
+	 * is returned. But there is no guarantee that correct validation is performed.
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
 	 * @model type="ch.elexis.core.types.Result&lt;ch.elexis.core.model.IBilled&gt;"
 	 * @generated
 	 */

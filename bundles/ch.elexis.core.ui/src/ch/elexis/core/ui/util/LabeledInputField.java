@@ -931,11 +931,14 @@ public class LabeledInputField extends Composite {
 					def[i].setText(val);
 					break;
 				case CURRENCY:
-					Money money = new Money(PersistentObject.checkZero(val));
-					def[i].setText(money.getAmountAsString());
-					// double betr=PersistentObject.checkZeroDouble(val);
-					
-					// def[i].setText(Double.toString(betr/100.0));
+					if (val.contains(",") || val.contains(".")) {
+						val = val.replaceAll(",", ".");
+						Money money = new Money(PersistentObject.checkZeroDouble(val));
+						def[i].setText(money.getAmountAsString());
+					} else {
+						Money money = new Money(PersistentObject.checkZero(val));
+						def[i].setText(money.getAmountAsString());
+					}
 					break;
 				case CHECKBOX:
 					val = StringTool.unNull(val);
