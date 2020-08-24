@@ -22,7 +22,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @Table(name = "CH_ELEXIS_PRIVATRECHNUNG")
 @EntityListeners(EntityWithIdListener.class)
 @NamedQueries({
-	@NamedQuery(name = "PrivatLeistung.code", query = "SELECT pl FROM PrivatLeistung pl WHERE pl.deleted = false AND pl.code = :code"),
+	@NamedQuery(name = "PrivatLeistung.code", query = "SELECT pl FROM PrivatLeistung pl WHERE pl.deleted = false AND pl.shortName = :code"),
 	@NamedQuery(name = "PrivatLeistung.parent", query = "SELECT pl FROM PrivatLeistung pl WHERE pl.deleted = false AND pl.parent = :parent ORDER BY pl.shortName ASC")
 })
 
