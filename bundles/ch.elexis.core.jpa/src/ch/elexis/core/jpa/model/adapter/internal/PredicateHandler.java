@@ -249,9 +249,9 @@ public class PredicateHandler {
 				return Optional
 					.of(criteriaBuilder.greaterThan(rootQuery.get(attribute), (LocalDate) value));
 			} else if (value instanceof SingularAttribute) {
-				criteriaBuilder.greaterThan(rootQuery.get(attribute),
+				return Optional.of(criteriaBuilder.greaterThan(rootQuery.get(attribute),
 					valueRoot != null ? valueRoot.get((SingularAttribute) value)
-							: rootQuery.get((SingularAttribute) value));
+							: rootQuery.get((SingularAttribute) value)));
 			} else {
 				throw new IllegalStateException("[" + value + "] is not a known type");
 			}
@@ -272,9 +272,9 @@ public class PredicateHandler {
 				return Optional.of(criteriaBuilder.greaterThanOrEqualTo(rootQuery.get(attribute),
 					(LocalDate) value));
 			} else if (value instanceof SingularAttribute) {
-				criteriaBuilder.greaterThanOrEqualTo(rootQuery.get(attribute),
+				return Optional.of(criteriaBuilder.greaterThanOrEqualTo(rootQuery.get(attribute),
 					valueRoot != null ? valueRoot.get((SingularAttribute) value)
-							: rootQuery.get((SingularAttribute) value));
+							: rootQuery.get((SingularAttribute) value)));
 			} else {
 				throw new IllegalStateException("[" + value + "] is not a known type");
 			}
@@ -295,9 +295,9 @@ public class PredicateHandler {
 				return Optional
 					.of(criteriaBuilder.lessThan(rootQuery.get(attribute), (LocalDate) value));
 			} else if (value instanceof SingularAttribute) {
-				criteriaBuilder.lessThan(rootQuery.get(attribute),
+				return Optional.of(criteriaBuilder.lessThan(rootQuery.get(attribute),
 					valueRoot != null ? valueRoot.get((SingularAttribute) value)
-							: rootQuery.get((SingularAttribute) value));
+							: rootQuery.get((SingularAttribute) value)));
 			} else {
 				throw new IllegalStateException("[" + value + "] is not a known type");
 			}
@@ -318,9 +318,9 @@ public class PredicateHandler {
 				return Optional.of(
 					criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute), (LocalDate) value));
 			} else if (value instanceof SingularAttribute) {
-				criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute),
+				return Optional.of(criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute),
 					valueRoot != null ? valueRoot.get((SingularAttribute) value)
-							: rootQuery.get((SingularAttribute) value));
+							: rootQuery.get((SingularAttribute) value)));
 			} else {
 				throw new IllegalStateException("[" + value + "] is not a known type");
 			}

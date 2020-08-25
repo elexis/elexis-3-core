@@ -291,7 +291,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 		if (StringUtils.isNumeric(priceString)) {
 			return ModelUtil.getMoneyForCentString(priceString).orElse(null);
 		}
-		return null;
+		return new Money();
 	}
 	
 	@Override
@@ -305,7 +305,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 		if (StringUtils.isNumeric(priceString)) {
 			return ModelUtil.getMoneyForCentString(priceString).orElse(null);
 		}
-		return null;
+		return new Money();
 	}
 	
 	@Override
