@@ -395,8 +395,16 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	 * @since 3.6
 	 */
 	public BillingLaw getConfiguredBillingSystemLaw(){
-		return BillingLaw.valueOf(BillingSystem.getConfigurationValue(getAbrechnungsSystem(),
-			BillingSystem.CFG_BILLINGLAW, BillingLaw.KVG.name()));
+		String value = BillingSystem.getConfigurationValue(getAbrechnungsSystem(),
+			BillingSystem.CFG_BILLINGLAW, BillingLaw.KVG.name());
+		// compatibility with changed BillingLaw enum (ticket #15019)
+		if ("MVG".equals(value)) {
+			value = "MV";
+		}
+		if ("IVG".equals(value)) {
+			value = "IV";
+		}
+		return BillingLaw.valueOf(value);
 	}
 	
 	/**
