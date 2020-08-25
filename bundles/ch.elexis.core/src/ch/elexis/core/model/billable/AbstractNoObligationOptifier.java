@@ -76,7 +76,7 @@ public abstract class AbstractNoObligationOptifier<T extends IBillable>
 				}
 			}
 		}
-		return super.add(billable, encounter, amount);
+		return super.add(billable, encounter, amount, save);
 	}
 	
 	private Optional<IEncounter> getEncounterByDate(ICoverage coverage, LocalDate date){
