@@ -5,6 +5,8 @@ import java.util.HashMap;
 import ch.elexis.core.jpa.entities.Artikel;
 import ch.elexis.core.jpa.entities.ArtikelstammItem;
 import ch.elexis.core.jpa.entities.Behandlung;
+import ch.elexis.core.jpa.entities.Bestellung;
+import ch.elexis.core.jpa.entities.BestellungEntry;
 import ch.elexis.core.jpa.entities.Brief;
 import ch.elexis.core.jpa.entities.DocHandle;
 import ch.elexis.core.jpa.entities.Eigenleistung;
@@ -76,6 +78,8 @@ public class ElexisTypeMap {
 	public static final String TYPE_FREETEXTDIAGNOSE = "ch.elexis.data.FreeTextDiagnose";
 	public static final String TYPE_LEISTUNGSBLOCK = "ch.elexis.data.Leistungsblock";
 	public static final String TYPE_MANDANT = "ch.elexis.data.Mandant";
+	public static final String TYPE_BESTELLUNG = "ch.elexis.data.Bestellung";
+	public static final String TYPE_BESTELLUNGENTRY = "ch.elexis.data.BestellungEntry";
 	
 	static {
 		stsToClassMap = new HashMap<String, Class<? extends EntityWithId>>();
@@ -120,6 +124,10 @@ public class ElexisTypeMap {
 		classToStsMap.put(FreeTextDiagnosis.class, TYPE_FREETEXTDIAGNOSE);
 		stsToClassMap.put(TYPE_LEISTUNGSBLOCK, Leistungsblock.class);
 		classToStsMap.put(Leistungsblock.class, TYPE_LEISTUNGSBLOCK);
+		stsToClassMap.put(TYPE_BESTELLUNG, Bestellung.class);
+		classToStsMap.put(Bestellung.class, TYPE_BESTELLUNG);
+		stsToClassMap.put(TYPE_BESTELLUNGENTRY, BestellungEntry.class);
+		classToStsMap.put(BestellungEntry.class, TYPE_LEISTUNGSBLOCK);
 		
 		// uni-directional mappable
 		stsToClassMap.put(TYPE_ARTIKEL, Artikel.class);

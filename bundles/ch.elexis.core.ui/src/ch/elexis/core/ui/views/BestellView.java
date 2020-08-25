@@ -56,10 +56,6 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.service.ConfigServiceHolder;
-import ch.elexis.core.data.service.CoreModelServiceHolder;
-import ch.elexis.core.data.service.StockServiceHolder;
-import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IContact;
@@ -72,7 +68,11 @@ import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.OrderServiceHolder;
+import ch.elexis.core.services.holder.StockServiceHolder;
+import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
@@ -143,7 +143,8 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 					return;
 				}
 				se.setProvider((IContact) value);
-				getViewer().refresh();
+				ch.elexis.core.services.holder.CoreModelServiceHolder.get().save(se);
+				getViewer().refresh(element, true);
 			}
 			
 			@Override
