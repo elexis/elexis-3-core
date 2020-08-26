@@ -180,7 +180,8 @@ public class SelectBestellungDialog extends SelectionDialog {
 	 * @return int
 	 */
 	protected int getTableStyle(){
-		return SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION;
+		return SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION
+			| SWT.VIRTUAL;
 	}
 	
 	/*
