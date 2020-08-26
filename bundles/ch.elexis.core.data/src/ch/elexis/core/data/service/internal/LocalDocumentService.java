@@ -112,9 +112,9 @@ public class LocalDocumentService implements ILocalDocumentService {
 	}
 	
 	@Override
-	public void remove(Object documentSource){
+	public void remove(Object documentSource, boolean delete){
 		File file = managedFiles.get(documentSource);
-		if (file != null && file.exists()) {
+		if (delete && file != null && file.exists()) {
 			tryDelete(Paths.get(file.getAbsolutePath()));
 		}
 		removeManaged(documentSource);
