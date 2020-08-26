@@ -236,10 +236,12 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 							}
 						}
 					}
-					
-					for (IStockEntry iStockEntry : stockEntriesToOrder) {
-						actOrder.addEntry(iStockEntry.getArticle(), iStockEntry.getStock(),
-							iStockEntry.getProvider(), 1);
+					if (!stockEntriesToOrder.isEmpty()) {
+						for (IStockEntry iStockEntry : stockEntriesToOrder) {
+							actOrder.addEntry(iStockEntry.getArticle(), iStockEntry.getStock(),
+								iStockEntry.getProvider(), 1);
+						}
+						CoreModelServiceHolder.get().save(actOrder);
 					}
 					
 					tv.refresh();
