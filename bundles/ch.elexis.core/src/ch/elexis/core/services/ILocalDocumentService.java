@@ -69,7 +69,18 @@ public interface ILocalDocumentService {
 	 * 
 	 * @param documentSource
 	 */
-	public void remove(Object documentSource);
+	public default void remove(Object documentSource){
+		remove(documentSource, true);
+	}
+	
+	/**
+	 * Remove the document from the managed list. The delete parameter specified whether deleting
+	 * from filesystem should be done.
+	 * 
+	 * @param documentSource
+	 * @param delete
+	 */
+	public void remove(Object documentSource, boolean delete);
 	
 	/**
 	 * Remove the managed local document from the managed list. The conflict handler is used if the

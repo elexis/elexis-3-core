@@ -16,7 +16,9 @@ package ch.elexis.core.ui.views;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -46,6 +48,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.ISaveablePart2;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -62,6 +65,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.dialogs.DailyOrderDialog;
+import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.dialogs.NeueBestellungDialog;
 import ch.elexis.core.ui.dialogs.OrderImportDialog;
 import ch.elexis.core.ui.dialogs.SelectBestellungDialog;
@@ -271,6 +275,21 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 		
 	}
 	
+	private Map<Kontakt, List<BestellungEntry>> prepareOrderMap() {
+		Map<Kontakt, List<BestellungEntry>> ret = new HashMap<>();
+
+		List<BestellungEntry> list = actBestellung.getEntries();
+		for (BestellungEntry bestellungEntry : list) {
+			list = ret.get(bestellungEntry.getProvider());
+			if (list == null) {
+				list = new ArrayList<>();
+			}
+			list.add(bestellungEntry);
+			ret.put(bestellungEntry.getProvider(), list);
+		}
+		return ret;
+	}
+
 	private List<BestellungEntry> prepareOrderList(Kontakt receiver){
 		ArrayList<BestellungEntry> best = new ArrayList<BestellungEntry>();
 		List<BestellungEntry> list = actBestellung.getEntries();
@@ -462,17 +481,26 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 			@Override
 			public void run(){
 				if (actBestellung != null) {
-					
-					Kontakt receiver = null;
-					List<BestellungEntry> best = prepareOrderList(receiver);
-					
+					Map<Kontakt, List<BestellungEntry>> orderMap = prepareOrderMap();
 					try {
-						BestellBlatt bb =
-							(BestellBlatt) getViewSite().getPage().showView(BestellBlatt.ID);
-						bb.createOrder(receiver, best);
+						for (Kontakt receiver : orderMap.keySet()) {
+							List<BestellungEntry> entries = orderMap.get(receiver);
+							if (receiver == null) {
+								KontaktSelektor ksel = new KontaktSelektor(getViewSite().getShell(), Kontakt.class,
+										ch.elexis.core.ui.text.Messages.TextContainer_SelectDestinationHeader,
+										"Addressat für Einträge ohne Lieferanten", Kontakt.DEFAULT_SORT);
+								if (ksel.open() == Dialog.OK) {
+									receiver = (Kontakt) ksel.getSelection();
+								}
+							}
+							if (receiver != null) {
+								BestellBlatt bb = (BestellBlatt) getViewSite().getPage().showView(BestellBlatt.ID,
+										receiver.getId(), IWorkbenchPage.VIEW_CREATE);
+								bb.createOrder(receiver, entries);
+								entries.stream().forEach(oe -> oe.setState(BestellungEntry.STATE_ORDERED));
+							}
+						}
 						tv.refresh();
-						
-						Bestellung.markAsOrdered(best);
 					} catch (PartInitException e) {
 						ExHandler.handle(e);
 						

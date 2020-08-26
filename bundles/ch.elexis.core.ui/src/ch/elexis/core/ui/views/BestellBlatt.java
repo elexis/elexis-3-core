@@ -14,13 +14,21 @@ package ch.elexis.core.ui.views;
 
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_ORDER;
 
+import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.util.LocalLock;
+import ch.elexis.core.services.IConflictHandler;
+import ch.elexis.core.services.ILocalDocumentService;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 import ch.elexis.core.ui.text.ITextPlugin;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.TextContainer;
@@ -80,7 +88,43 @@ public class BestellBlatt extends ViewPart implements ICallback {
 			if (text.getPlugin().isDirectOutput()) {
 				text.getPlugin().print(null, null, true);
 				getSite().getPage().hideView(this);
+				return;
 			}
+			save();
+			openLocalDocument(this, actBest);
+		}
+	}
+
+	/**
+	 * Open the {@link Brief} as local document. Changes to the local document are
+	 * not saved.
+	 * 
+	 * @param view
+	 * @param brief
+	 */
+	private void openLocalDocument(BestellBlatt view, Brief brief) {
+		ILocalDocumentService service = LocalDocumentServiceHolder.getService().orElse(null);
+		if (service != null) {
+			Optional<File> file = service.add(brief, new IConflictHandler() {
+				@Override
+				public Result getResult() {
+					return Result.OVERWRITE;
+				}
+			});
+			if (file.isPresent()) {
+				Program.launch(file.get().getAbsolutePath());
+			} else {
+				MessageDialog.openError(getSite().getShell(),
+						ch.elexis.core.ui.commands.Messages.StartEditLocalDocumentHandler_errortitle,
+						ch.elexis.core.ui.commands.Messages.StartEditLocalDocumentHandler_errormessage);
+			}
+			if (service.contains(brief)) {
+				Optional<LocalLock> lock = LocalLock.getManagedLock(brief);
+				lock.ifPresent(localDocumentLock -> localDocumentLock.unlock());
+
+				service.remove(brief, false);
+			}
+			view.getSite().getPage().hideView(view);
 		}
 	}
 	
