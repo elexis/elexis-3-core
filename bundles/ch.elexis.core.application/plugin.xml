@@ -179,6 +179,7 @@
             name="%elexis.articleSelectorView">
       </view>
       <view
+            allowMultiple="true"
             category="ch.elexis.datenKategorie"
             class="ch.elexis.core.ui.views.BestellBlatt"
             icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/printer.png"

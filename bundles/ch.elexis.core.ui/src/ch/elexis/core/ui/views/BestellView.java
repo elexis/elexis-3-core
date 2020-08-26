@@ -17,7 +17,9 @@ import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.eclipse.core.runtime.CoreException;
@@ -48,6 +50,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.ISaveablePart2;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -57,6 +60,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IOrder;
@@ -77,6 +81,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.dialogs.DailyOrderDialog;
+import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.dialogs.NeueBestellungDialog;
 import ch.elexis.core.ui.dialogs.OrderImportDialog;
 import ch.elexis.core.ui.dialogs.SelectBestellungDialog;
@@ -291,6 +296,21 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 		
 	}
 	
+	private Map<IContact, List<IOrderEntry>> prepareOrderMap(){
+		Map<IContact, List<IOrderEntry>> ret = new HashMap<>();
+		
+		List<IOrderEntry> list = actOrder.getEntries();
+		for (IOrderEntry iOrderEntry : list) {
+			list = ret.get(iOrderEntry.getProvider());
+			if (list == null) {
+				list = new ArrayList<>();
+			}
+			list.add(iOrderEntry);
+			ret.put(iOrderEntry.getProvider(), list);
+		}
+		return ret;
+	}
+	
 	private List<IOrderEntry> prepareOrderList(IContact receiver){
 		ArrayList<IOrderEntry> best = new ArrayList<IOrderEntry>();
 		List<IOrderEntry> list = actOrder.getEntries();
@@ -486,15 +506,33 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 			@Override
 			public void run(){
 				if (actOrder != null) {
-					IContact receiver = null;
-					List<IOrderEntry> best = prepareOrderList(receiver);
+					Map<IContact, List<IOrderEntry>> orderMap = prepareOrderMap();
 					
 					try {
-						BestellBlatt bb =
-							(BestellBlatt) getViewSite().getPage().showView(BestellBlatt.ID);
-						bb.createOrder(receiver, best);
+						for (IContact receiver : orderMap.keySet()) {
+							List<IOrderEntry> entries = orderMap.get(receiver);
+							if (receiver == null) {
+								KontaktSelektor ksel = new KontaktSelektor(getViewSite().getShell(),
+									Kontakt.class,
+									ch.elexis.core.ui.text.Messages.TextContainer_SelectDestinationHeader,
+									"Addressat für Einträge ohne Lieferanten",
+									Kontakt.DEFAULT_SORT);
+								if (ksel.open() == Dialog.OK) {
+									receiver =
+										NoPoUtil.loadAsIdentifiable((Kontakt) ksel.getSelection(),
+											IContact.class).orElse(null);
+								}
+							}
+							if (receiver != null) {
+								BestellBlatt bb = (BestellBlatt) getViewSite().getPage()
+									.showView(BestellBlatt.ID, receiver.getId(),
+										IWorkbenchPage.VIEW_CREATE);
+								bb.createOrder(receiver, entries);
+								entries.stream()
+									.forEach(oe -> oe.setState(OrderEntryState.ORDERED));
+							}
+						}
 						tv.refresh();
-						best.stream().forEach(oe -> oe.setState(OrderEntryState.ORDERED));
 					} catch (PartInitException e) {
 						ExHandler.handle(e);
 					}
