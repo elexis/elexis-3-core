@@ -47,6 +47,7 @@ public class ConfigServicePreferenceStore extends EventManager implements IPrefe
 	 *            the scope to store to
 	 */
 	public ConfigServicePreferenceStore(Scope scope){
+		this.scope = scope;
 		CoreUiUtil.injectServices(this);
 		listeners = new ListenerList<>();
 	}
