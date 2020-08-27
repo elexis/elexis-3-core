@@ -56,6 +56,17 @@ public interface IConfigService {
 	public boolean setLocal(String key, boolean value);
 	
 	/**
+	 * Set a local configuration entry. Overwrites existing values.
+	 * 
+	 * @param key
+	 *            identifying the configuration entry
+	 * @param value
+	 *            to set
+	 * @return <code>true</code> if the value was successfully set
+	 */
+	public boolean setLocal(String name, int value);
+	
+	/**
 	 * Set a global configuration entry. Overwrites existing values. Performs save operation.
 	 * 
 	 * @param key
@@ -65,6 +76,20 @@ public interface IConfigService {
 	 * @return <code>true</code> if the value was successfully set
 	 */
 	public boolean set(String key, int value);
+	
+	/**
+	 * Set a contact specific configuration entry. Overwrites existing value. Performs save
+	 * operation.
+	 * 
+	 * @param contact
+	 *            the contact this configuration entry is accounted to, not <code>null</code>
+	 * @param key
+	 *            identifying the configuration entry
+	 * @param value
+	 *            to set
+	 * @return <code>true</code> if value was successfully set
+	 */
+	public boolean set(IContact contact, String key, int value);
 	
 	/**
 	 * Set a contact specific configuration entry. Overwrites existing value. Performs save
@@ -188,12 +213,23 @@ public interface IConfigService {
 	public boolean getLocal(String key, boolean defaultValue);
 	
 	/**
-	 * Get a stored value for the current active {@link IMandator} configuration.
-	 * The current mandator is resolved via the {@link IContextService}
+	 * Convenience method wrapping {@link #getLocal(String, String)}
 	 * 
 	 * @param key
-	 * @param defaultValue to return if no active mandator found or entry does not
-	 *                     exist
+	 *            identifying the configuration entry
+	 * @param defaultValue
+	 *            to return if configuration entry does not exist
+	 * @return
+	 */
+	public int getLocal(String key, int defaultValue);
+	
+	/**
+	 * Get a stored value for the current active {@link IMandator} configuration. The current
+	 * mandator is resolved via the {@link IContextService}
+	 * 
+	 * @param key
+	 * @param defaultValue
+	 *            to return if no active mandator found or entry does not exist
 	 * @return
 	 */
 	public String getActiveMandator(String key, String defaultValue);

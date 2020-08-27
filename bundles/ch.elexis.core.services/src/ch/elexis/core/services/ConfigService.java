@@ -124,6 +124,11 @@ public class ConfigService implements IConfigService {
 	}
 	
 	@Override
+	public boolean set(IContact contact, String key, int value){
+		return set(contact, key, Integer.toString(value));
+	}
+	
+	@Override
 	public boolean setFromList(String key, List<String> values){
 		String flattenedValue =
 			values.stream().map(o -> o.toString()).reduce((u, t) -> u + LIST_SEPARATOR + t).get();
@@ -308,12 +313,24 @@ public class ConfigService implements IConfigService {
 	}
 	
 	@Override
+	public boolean setLocal(String key, int value){
+		localConfig.set(key, value);
+		localConfig.flush();
+		return true;
+	}
+	
+	@Override
 	public String getLocal(String key, String defaultValue){
 		return localConfig.get(key, defaultValue);
 	}
 	
 	@Override
 	public boolean getLocal(String key, boolean defaultValue){
+		return localConfig.get(key, defaultValue);
+	}
+	
+	@Override
+	public int getLocal(String key, int defaultValue){
 		return localConfig.get(key, defaultValue);
 	}
 	
