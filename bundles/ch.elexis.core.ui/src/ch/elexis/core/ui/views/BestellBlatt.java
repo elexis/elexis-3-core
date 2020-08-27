@@ -17,6 +17,7 @@ import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_ORDER;
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.program.Program;
@@ -55,7 +56,9 @@ public class BestellBlatt extends ViewPart implements ICallback {
 	}
 	
 	public void createOrder(final IContact receiver, final List<IOrderEntry> toOrder){
-		String[][] tbl = new String[toOrder.size() + 2][];
+		List<IOrderEntry> orders =
+			toOrder.stream().filter(oe -> oe.getArticle() != null).collect(Collectors.toList());
+		String[][] tbl = new String[orders.size() + 2][];
 		int i = 1;
 		Money sum = new Money();
 		tbl[0] = new String[] {
@@ -63,7 +66,7 @@ public class BestellBlatt extends ViewPart implements ICallback {
 			Messages.BestellBlatt_Name, Messages.BestellBlatt_UnitPrice,
 			Messages.BestellBlatt_LinePrice
 		};
-		for (IOrderEntry orderEntry : toOrder) {
+		for (IOrderEntry orderEntry : orders) {
 			String[] row = new String[5];
 			row[0] = Integer.toString(orderEntry.getAmount());
 			row[1] = orderEntry.getArticle().getCode();
