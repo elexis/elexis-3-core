@@ -67,7 +67,8 @@ public class EventPerformanceStatisticHandler implements IPerformanceStatisticHa
 	}
 	
 	private String getEventKey(ElexisEvent ee, ElexisEventListener listener){
-		return ee.getObjectClass().getName() + "[" + getEventType(ee.getType()) + ", "
+		return (ee.getObjectClass() != null ? ee.getObjectClass().getName() : "noObjectClass") + "["
+			+ getEventType(ee.getType()) + ", "
 			+ getPriority(ee.getPriority()) + "] -> " + listener.getClass();
 	}
 	
