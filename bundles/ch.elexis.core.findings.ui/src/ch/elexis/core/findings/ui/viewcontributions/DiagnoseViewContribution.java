@@ -7,13 +7,13 @@ import java.util.stream.Collectors;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.migration.IMigratorService;
 import ch.elexis.core.findings.ui.composites.DiagnoseListComposite;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.views.contribution.IViewContribution;
 import ch.elexis.data.Patient;
 
@@ -34,7 +34,7 @@ public class DiagnoseViewContribution implements IViewContribution {
 	
 	@Override
 	public boolean isAvailable(){
-		return CoreHub.globalCfg.get(IMigratorService.DIAGNOSE_SETTINGS_USE_STRUCTURED, false);
+		return ConfigServiceHolder.getGlobal(IMigratorService.DIAGNOSE_SETTINGS_USE_STRUCTURED, false);
 	}
 	
 	@Override

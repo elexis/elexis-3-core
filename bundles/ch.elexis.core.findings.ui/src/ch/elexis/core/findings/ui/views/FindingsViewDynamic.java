@@ -32,7 +32,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
@@ -51,6 +50,7 @@ import ch.elexis.core.findings.ui.views.nattable.FindingsNatTableTooltip;
 import ch.elexis.core.findings.ui.views.nattable.LabelDataProvider;
 import ch.elexis.core.findings.ui.views.nattable.NatTableWrapper;
 import ch.elexis.core.findings.ui.views.nattable.NatTableWrapper.IDoubleClickListener;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
@@ -108,7 +108,7 @@ public class FindingsViewDynamic extends ViewPart implements IActivationListener
 		
 		// NatTable setup
 		dataProvider = new DynamicDataProvider();
-		if (CoreHub.globalCfg.get(FindingsSettings.ROWSAREDATES, false)) {
+		if (ConfigServiceHolder.getGlobal(FindingsSettings.ROWSAREDATES, false)) {
 			dataProvider.setRowsAreDates(true);
 			headerDataProvider = new DynamicCodingHeaderDataProvider(dataProvider);
 			rowDataProvider = new DynamicDateRowDataProvider(dataProvider);

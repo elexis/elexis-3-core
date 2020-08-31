@@ -34,6 +34,7 @@ import ch.elexis.core.data.extension.ICoreOperationAdvisor;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
 import ch.elexis.core.data.util.LocalLock;
 import ch.elexis.core.services.IElexisDataSource;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.utils.CoreUtil;
 import ch.elexis.data.PersistentObject;
@@ -178,10 +179,10 @@ public class Desk implements IApplication {
 	}
 		
 	protected void initIdentifiers(){
-		if (CoreHub.globalCfg.get(Preferences.INSTALLATION_TIMESTAMP, null) == null) {
+		if (ConfigServiceHolder.getGlobal(Preferences.INSTALLATION_TIMESTAMP, null) == null) {
 			LocalLock localLock = new LocalLock("initInstallationTimestamp");
 			if (localLock.tryLock()) {
-				CoreHub.globalCfg.set(Preferences.INSTALLATION_TIMESTAMP,
+				ConfigServiceHolder.setGlobal(Preferences.INSTALLATION_TIMESTAMP,
 					Long.toString(System.currentTimeMillis()));
 				CoreHub.globalCfg.flush();
 			}

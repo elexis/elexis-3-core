@@ -13,6 +13,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.interfaces.events.MessageEvent.MessageType;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Person;
@@ -32,7 +33,7 @@ public class BriefExternUtil {
 	 * @return
 	 */
 	public static boolean isExternFile(){
-		if (CoreHub.globalCfg.get(Preferences.P_TEXT_EXTERN_FILE, false)) {
+		if (ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE, false)) {
 			boolean ret = isValidExternPath(getExternFilePath(), true);
 			if (!ret) {
 				ElexisEventDispatcher.getInstance()
@@ -113,7 +114,7 @@ public class BriefExternUtil {
 	
 	public static String getExternFilePath(){
 		return getAsExternFilePath(
-			CoreHub.globalCfg.get(Preferences.P_TEXT_EXTERN_FILE_PATH, null));
+			ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE_PATH, null));
 	}
 	
 	public static String getAsExternFilePath(String path){

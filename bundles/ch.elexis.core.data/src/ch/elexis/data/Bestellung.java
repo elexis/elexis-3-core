@@ -18,12 +18,12 @@ import java.util.List;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IOrder;
 import ch.elexis.core.data.interfaces.IOrderEntry;
 import ch.elexis.core.data.interfaces.IStock;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.rgw.tools.TimeTool;
 
 public class Bestellung extends PersistentObject implements IOrder {
@@ -91,7 +91,7 @@ public class Bestellung extends PersistentObject implements IOrder {
 		
 		if (provider == null) {
 			String providerId =
-				CoreHub.globalCfg.get(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
+				ConfigServiceHolder.getGlobal(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
 			if (providerId != null) {
 				Kontakt defProvider = Kontakt.load(providerId);
 				if (defProvider.exists()) {

@@ -41,6 +41,7 @@ import ch.elexis.core.data.lab.LabResultEvaluationResult;
 import ch.elexis.core.data.lab.LabResultEvaluator;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.PathologicDescription;
@@ -824,7 +825,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 		TimeTool limit = new TimeTool();
 		try { // We need to catch wrong formatted numbers in KEEP_UNSEEN
 			limit.addHours(-24
-				* Integer.parseInt(CoreHub.globalCfg.get(
+				* Integer.parseInt(ConfigServiceHolder.getGlobal(
 					Preferences.LABSETTINGS_CFG_KEEP_UNSEEN_LAB_RESULTS,
 					Preferences.DAYS_TO_KEEP_UNSEEN_LAB_RESULTS)));
 		} catch (NumberFormatException nex) {

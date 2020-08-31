@@ -3,9 +3,9 @@ package ch.elexis.core.data.lab;
 import org.apache.commons.lang.StringUtils;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.ILabItem;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.PathologicDescription;
@@ -39,7 +39,7 @@ public class LabResultEvaluator {
 		String SELECTED_BASE =
 			(isAbsoluteItem) ? Preferences.LABSETTINGS_CFG_EVAL_PREFIX_TYPE_ABSOLUT
 					: Preferences.LABSETTINGS_CFG_EVAL_PREFIX_TYPE_TEXT;
-		if (CoreHub.globalCfg.get(
+		if (ConfigServiceHolder.getGlobal(
 			SELECTED_BASE
 				+ Preferences.LABSETTINGS_CFG_EVAL_REFVAL_NON_EQUAL_RESVAL_MEANS_PATHOLOGIC,
 			false)) {

@@ -18,6 +18,7 @@ import ch.elexis.core.data.extension.ICoreOperationAdvisor;
 import ch.elexis.core.data.util.IRunnableWithProgress;
 import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.model.ch.BillingLaw;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.data.BillingSystem;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Query;
@@ -34,9 +35,9 @@ public class FallUpdatesFor36 {
 	public static void transferLawAndCostBearerTo36Model(){
 		String CONFIG_KEY = "FallGesetzCostBearerMigratedTo36";
 		
-		String value = CoreHub.globalCfg.get(CONFIG_KEY, null);
+		String value = ConfigServiceHolder.getGlobal(CONFIG_KEY, null);
 		if (value == null) {
-			CoreHub.globalCfg.set(CONFIG_KEY, "-1"); // -1 == wip
+			ConfigServiceHolder.setGlobal(CONFIG_KEY, "-1"); // -1 == wip
 			CoreHub.globalCfg.flush();
 			
 			IRunnableWithProgress irwp = new IRunnableWithProgress() {
@@ -101,7 +102,7 @@ public class FallUpdatesFor36 {
 							requirements = requirements.replace("Kostenträger:K:", "");
 							requirements = requirements.replace("Kostenträger:K;", "");
 							requirements = requirements.replace("Kostenträger:K", "");
-							CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+							ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
 								+ abrechnungssystem + "/bedingungen", requirements); //$NON-NLS-1$
 						} else {
 							log.error("Could not find cost bearer entry for billing system [{}]",
@@ -113,7 +114,7 @@ public class FallUpdatesFor36 {
 						monitor2.worked(1);
 					}
 					
-					CoreHub.globalCfg.set(CONFIG_KEY, StringConstants.ONE);
+					ConfigServiceHolder.setGlobal(CONFIG_KEY, StringConstants.ONE);
 					CoreHub.globalCfg.flush();
 					monitor.done();
 					

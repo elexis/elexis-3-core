@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Display;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 
 /**
  * Vorgabewerte setzen, wo nötig. Bitte in den drei Funktionen dieser Klasse alle notwendigen
@@ -63,7 +64,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	 * 
 	 */
 	public void initializeGlobalPreferences(){
-		IPreferenceStore global = new SettingsPreferenceStore(CoreHub.globalCfg);
+		IPreferenceStore global = new ConfigServicePreferenceStore(Scope.GLOBAL);
 		global.setDefault(Preferences.ABL_TRACE, "none"); //$NON-NLS-1$
 		CoreHub.globalCfg.flush();
 	}

@@ -33,6 +33,7 @@ import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.model.InvoiceState;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.rgw.io.Settings;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
@@ -608,7 +609,7 @@ public class Rechnung extends PersistentObject {
 			return null;
 		}
 		// reset open reminder bookings if configured and bill will be fully payed
-		if (CoreHub.globalCfg.get(Preferences.RNN_REMOVE_OPEN_REMINDER, false)
+		if (ConfigServiceHolder.getGlobal(Preferences.RNN_REMOVE_OPEN_REMINDER, false)
 			&& shouldRemoveOpenReminders(betrag)) {
 			removeOpenReminders();
 		}
@@ -923,7 +924,7 @@ public class Rechnung extends PersistentObject {
 	public String getRnId(){
 		Patient p = getFall().getPatient();
 		String pid;
-		if (CoreHub.globalCfg.get("PatIDMode", "number").equals("number")) {
+		if (ConfigServiceHolder.getGlobal("PatIDMode", "number").equals("number")) {
 			pid = StringTool.pad(StringTool.LEFT, '0', p.getPatCode(), 6);
 		} else {
 			pid = new TimeTool(p.getGeburtsdatum()).toString(TimeTool.DATE_COMPACT);

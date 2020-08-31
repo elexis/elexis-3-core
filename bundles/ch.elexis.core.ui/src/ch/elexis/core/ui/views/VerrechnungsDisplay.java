@@ -95,6 +95,7 @@ import ch.elexis.core.model.IService;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.IBillingService;
 import ch.elexis.core.services.holder.BillingServiceHolder;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.ui.Hub;
@@ -465,7 +466,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			
 			if (codeName != null) {
 				String rgbColor =
-					CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_COLOR + codeName, defaultRGB);
+					ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_COLOR + codeName, defaultRGB);
 				color = UiDesk.getColorFromRGB(rgbColor);
 			}
 			return color;

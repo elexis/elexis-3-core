@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.util.IScannerListener;
 
 public class ScannerEvents implements Listener {
@@ -53,9 +53,9 @@ public class ScannerEvents implements Listener {
 	 * Codes werden neu geladen
 	 */
 	public void reloadCodes(){
-		prefixCode = CoreHub.globalCfg.get(Preferences.SCANNER_PREFIX_CODE, 0);
-		postfixCode = CoreHub.globalCfg.get(Preferences.SCANNER_POSTFIX_CODE, 0);
-		barcodeLength = CoreHub.globalCfg.get(Preferences.BARCODE_LENGTH, 13);
+		prefixCode = ConfigServiceHolder.getGlobal(Preferences.SCANNER_PREFIX_CODE, 0);
+		postfixCode = ConfigServiceHolder.getGlobal(Preferences.SCANNER_POSTFIX_CODE, 0);
+		barcodeLength = ConfigServiceHolder.getGlobal(Preferences.BARCODE_LENGTH, 13);
 	}
 	
 	public static void addListenerToDisplay(Display display){

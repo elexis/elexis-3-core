@@ -28,6 +28,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.usage.model.IStatistic;
 import ch.elexis.core.ui.usage.model.ModelPackage;
@@ -120,7 +121,7 @@ public class UsageSettings extends PreferencePage implements IWorkbenchPreferenc
 		checkSentStatistics
 			.setText(
 				"Nutzungsstatistik aktivieren und beim Beenden übermitteln (Neustart erforderlich)");
-		checkSentStatistics.setSelection(CoreHub.globalCfg.get(CONFIG_USAGE_STATISTICS, false));
+		checkSentStatistics.setSelection(ConfigServiceHolder.getGlobal(CONFIG_USAGE_STATISTICS, false));
 		
 		return main;
 	}
@@ -186,7 +187,7 @@ public class UsageSettings extends PreferencePage implements IWorkbenchPreferenc
 	
 	@Override
 	protected void performApply(){
-		CoreHub.globalCfg.set(CONFIG_USAGE_STATISTICS, checkSentStatistics.getSelection());
+		ConfigServiceHolder.setGlobal(CONFIG_USAGE_STATISTICS, checkSentStatistics.getSelection());
 	}
 	
 

@@ -32,6 +32,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.GlobalActions;
@@ -109,7 +110,7 @@ public class LeistungenView extends ViewPart implements IActivationListener, ISa
 				ColorDialog cd = new ColorDialog(UiDesk.getTopShell());
 				RGB selected = cd.open();
 				if (selected != null) {
-					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_COLOR + item.getText(),
+					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_COLOR + item.getText(),
 						UiDesk.createColor(selected));
 					setCTabItemColor(ctab.getSelection().getText());
 				}
@@ -153,7 +154,7 @@ public class LeistungenView extends ViewPart implements IActivationListener, ISa
 	}
 	
 	private void setCTabItemColor(String id){
-		String rgbColor = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_COLOR + id, defaultRGB);
+		String rgbColor = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_COLOR + id, defaultRGB);
 		Color color = UiDesk.getColorFromRGB(rgbColor);
 		ctab.setSelectionBackground(new Color[] {
 			UiDesk.getDisplay().getSystemColor(SWT.COLOR_WHITE), color

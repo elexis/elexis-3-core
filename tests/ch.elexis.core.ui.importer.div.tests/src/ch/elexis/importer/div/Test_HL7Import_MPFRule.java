@@ -24,6 +24,7 @@ import org.junit.runners.Parameterized;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.importer.div.importers.HL7Parser;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.PathologicDescription;
 import ch.elexis.core.types.PathologicDescription.Description;
@@ -44,11 +45,11 @@ public class Test_HL7Import_MPFRule {
 		this.isMFPRuleActive = isMFPRuleActive;
 		
 		if (isMFPRuleActive) {
-			CoreHub.globalCfg.setAsList(
+			ConfigServiceHolder.setGlobalAsList(
 				Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES,
 				Collections.singletonList(AllTests.testLab.getId()));
 		} else {
-			CoreHub.globalCfg.setAsList(
+			ConfigServiceHolder.setGlobalAsList(
 				Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES,
 				Collections.emptyList());
 		}

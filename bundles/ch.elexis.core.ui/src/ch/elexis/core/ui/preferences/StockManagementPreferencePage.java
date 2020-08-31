@@ -48,10 +48,12 @@ import org.eclipse.ui.dialogs.ListDialog;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.StockCommissioningServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Query;
@@ -398,7 +400,7 @@ public class StockManagementPreferencePage extends PreferencePage
 		btnMachineOutlayPartialPackages
 			.setText(Messages.StockManagementPreferencePage_btnMachineOutlayPartialPackages_text);
 		boolean outlayPartialPackages =
-			CoreHub.globalCfg.get(Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
+			ConfigServiceHolder.getGlobal(Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
 				Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES_DEFAULT);
 		btnMachineOutlayPartialPackages.setSelection(outlayPartialPackages);
 		
@@ -421,7 +423,7 @@ public class StockManagementPreferencePage extends PreferencePage
 		btnStoreAtMin = new Button(group1, SWT.RADIO);
 		btnStoreAtMin.setText(Messages.LagerverwaltungPrefs_orderWhenAtMin);
 		
-		int valInventoryOrderTrigger = CoreHub.globalCfg.get(Preferences.INVENTORY_ORDER_TRIGGER,
+		int valInventoryOrderTrigger = ConfigServiceHolder.getGlobal(Preferences.INVENTORY_ORDER_TRIGGER,
 			Preferences.INVENTORY_ORDER_TRIGGER_DEFAULT);
 		boolean isInventoryOrderEqualValue =
 			Preferences.INVENTORY_ORDER_TRIGGER_EQUAL == valInventoryOrderTrigger;
@@ -450,7 +452,7 @@ public class StockManagementPreferencePage extends PreferencePage
 				if (ret == Window.OK) {
 					Kontakt p = (Kontakt) ks.getSelection();
 					if (p != null) {
-						CoreHub.globalCfg.set(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER,
+						ConfigServiceHolder.setGlobal(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER,
 							p.getId());
 						lblDefaultArticleProvider.setText(p.getLabel());
 					}
@@ -464,7 +466,7 @@ public class StockManagementPreferencePage extends PreferencePage
 		lblDefaultArticleProvider = new Label(compDefaultProvider, SWT.NONE);
 		lblDefaultArticleProvider
 			.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		String id = CoreHub.globalCfg.get(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
+		String id = ConfigServiceHolder.getGlobal(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
 		lblDefaultArticleProvider.setText("");
 		new Label(compDefaultProvider, SWT.NONE);
 		if (id != null) {
@@ -513,7 +515,7 @@ public class StockManagementPreferencePage extends PreferencePage
 	 * Initialize the preference page.
 	 */
 	public void init(IWorkbench workbench){
-		setPreferenceStore(new SettingsPreferenceStore(CoreHub.globalCfg));
+		setPreferenceStore(new ConfigServicePreferenceStore(Scope.GLOBAL));
 		getPreferenceStore().setDefault(Preferences.INVENTORY_CHECK_ILLEGAL_VALUES,
 			Preferences.INVENTORY_CHECK_ILLEGAL_VALUES_DEFAULT);
 		getPreferenceStore().setDefault(

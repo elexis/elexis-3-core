@@ -28,6 +28,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.data.BezugsKontakt;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Leistungsblock;
@@ -457,7 +458,7 @@ public class DBUpdate {
 	 * @return
 	 */
 	public static boolean doUpdate(){
-		String dbv = CoreHub.globalCfg.get("dbversion", null);
+		String dbv = ConfigServiceHolder.getGlobal("dbversion", null);
 		if (dbv == null) {
 			log.error("Kann keine Version lesen");
 			
@@ -499,8 +500,8 @@ public class DBUpdate {
 		
 		// update version if all updates are successful
 		if (success) {
-			CoreHub.globalCfg.set("dbversion", CoreHub.DBVersion);
-			CoreHub.globalCfg.set("ElexisVersion", CoreHub.Version);
+			ConfigServiceHolder.setGlobal("dbversion", CoreHub.DBVersion);
+			ConfigServiceHolder.setGlobal("ElexisVersion", CoreHub.Version);
 			CoreHub.globalCfg.flush();
 			// create log message
 			log.info("DBUpdate from Version " + dbv + " to Version " + versions[versions.length - 1]

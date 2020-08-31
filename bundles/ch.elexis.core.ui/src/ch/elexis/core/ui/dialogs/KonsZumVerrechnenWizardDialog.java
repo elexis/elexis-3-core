@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.util.DayDateCombo;
 import ch.elexis.core.ui.util.MoneyInput;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -168,7 +169,7 @@ public class KonsZumVerrechnenWizardDialog extends TitleAreaDialog {
 			true, 1, false));
 		cbSkip = new Button(ret, SWT.CHECK);
 		cbSkip.setText(SKIPSELECTION);
-		cbSkip.setSelection(CoreHub.globalCfg.get(CFG_SKIP, false));
+		cbSkip.setSelection(ConfigServiceHolder.getGlobal(CFG_SKIP, false));
 		cbBefore.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
@@ -226,7 +227,7 @@ public class KonsZumVerrechnenWizardDialog extends TitleAreaDialog {
 		bQuartal = cbQuartal.getSelection();
 		bMarked = cbMarked.getSelection();
 		bSkip = cbSkip.getSelection();
-		CoreHub.globalCfg.set(CFG_SKIP, bSkip);
+		ConfigServiceHolder.setGlobal(CFG_SKIP, bSkip);
 		super.okPressed();
 	}
 	

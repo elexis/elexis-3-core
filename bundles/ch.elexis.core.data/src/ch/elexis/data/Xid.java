@@ -29,6 +29,7 @@ import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.IXid;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.rgw.tools.Log;
 import ch.rgw.tools.VersionInfo;
 
@@ -91,7 +92,7 @@ public class Xid extends PersistentObject implements IXid {
 		addMapping(TABLENAME, FLD_TYPE, FLD_OBJECT, FLD_DOMAIN, FLD_ID_IN_DOMAIN, FLD_QUALITY);
 		domains = new HashMap<String, XIDDomain>();
 		domainMap = new HashMap<String, String>();
-		String storedDomains = CoreHub.globalCfg.get("LocalXIDDomains", null);
+		String storedDomains = ConfigServiceHolder.getGlobal("LocalXIDDomains", null);
 		if (storedDomains == null) {
 			domains.put(ELEXIS, new XIDDomain(ELEXIS, "UUID", ELEXIS_QUALITY | QUALITY_GUID,
 					PersistentObject.class.getCanonicalName()));
@@ -421,7 +422,7 @@ public class Xid extends PersistentObject implements IXid {
 			sb.append(k).append("#").append(xd.getQuality()).append("#").append(xd.getSimpleName())
 				.append("#").append(xd.getDisplayOptions()).append(";");
 		}
-		CoreHub.globalCfg.set("LocalXIDDomains", sb.toString());
+		ConfigServiceHolder.setGlobal("LocalXIDDomains", sb.toString());
 	}
 	
 	/**

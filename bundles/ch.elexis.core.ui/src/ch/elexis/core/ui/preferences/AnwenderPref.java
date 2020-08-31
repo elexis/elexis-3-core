@@ -31,6 +31,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.preferences.inputs.PrefAccessDenied;
@@ -96,7 +97,7 @@ public class AnwenderPref extends PreferencePage implements IWorkbenchPreference
 		for (int i = 0; i < mands.length; i++) {
 			mands[i] = ml.get(i).getLabel();
 		}
-		String grp = CoreHub.globalCfg.get(Preferences.ACC_GROUPS, "Admin"); //$NON-NLS-1$
+		String grp = ConfigServiceHolder.getGlobal(Preferences.ACC_GROUPS, "Admin"); //$NON-NLS-1$
 		def =
 			new InputData[] {
 				new InputData(Messages.AnwenderPref_kuerzel, "Label", Typ.STRING, null), //$NON-NLS-1$

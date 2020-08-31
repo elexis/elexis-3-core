@@ -57,7 +57,6 @@ import org.eclipse.swt.widgets.Table;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
@@ -73,6 +72,7 @@ import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.OrderEntryState;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.actions.ScannerEvents;
 import ch.elexis.core.ui.text.ElexisText;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -714,7 +714,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 		@Override
 		public IContact getProvider(){
 			String providerId =
-				CoreHub.globalCfg.get(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
+				ConfigServiceHolder.getGlobal(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
 			if (providerId != null) {
 				Optional<IContact> defProvider =
 					CoreModelServiceHolder.get().load(providerId, IContact.class);

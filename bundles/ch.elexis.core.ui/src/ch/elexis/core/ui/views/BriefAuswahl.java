@@ -66,6 +66,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -123,7 +124,7 @@ public class BriefAuswahl extends ViewPart implements
 		StringBuilder sb = new StringBuilder();
 		sb.append(Messages.BriefAuswahlAllLetters).append(Brief.UNKNOWN).append(",") //$NON-NLS-1$
 			.append(Brief.AUZ).append(",").append(Brief.RP).append(",").append(Brief.LABOR); //$NON-NLS-1$ //$NON-NLS-2$
-		String cats = CoreHub.globalCfg.get(Preferences.DOC_CATEGORY, sb.toString());
+		String cats = ConfigServiceHolder.getGlobal(Preferences.DOC_CATEGORY, sb.toString());
 		parent.setLayout(new GridLayout());
 		
 		form = tk.createForm(parent);

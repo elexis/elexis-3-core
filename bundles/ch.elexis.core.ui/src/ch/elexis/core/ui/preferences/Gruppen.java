@@ -26,15 +26,15 @@ public class Gruppen extends FieldEditorPreferencePage implements IWorkbenchPref
 	
 	public Gruppen(){
 //		super(GRID);
-//		setPreferenceStore(new SettingsPreferenceStore(CoreHub.globalCfg));
+//		setPreferenceStore(new ConfigServicePreferenceStore(Scope.GLOBAL));
 //		setDescription(Messages.Gruppen_GruppenUndRechte);
 		setDescription("Bitte konfigurieren Sie die Daten in den entsprechenden Unterpunkten");
 	}
 	
 	public void init(IWorkbench workbench){
-//		String groups = CoreHub.globalCfg.get(Preferences.ACC_GROUPS, null);
+//		String groups = ConfigServiceHolder.getGlobal(Preferences.ACC_GROUPS, null);
 //		if (groups == null) {
-//			CoreHub.globalCfg.set(Preferences.ACC_GROUPS, StringConstants.ROLES_DEFAULT);
+//			ConfigServiceHolder.setGlobal(Preferences.ACC_GROUPS, StringConstants.ROLES_DEFAULT);
 //		}
 		
 	}

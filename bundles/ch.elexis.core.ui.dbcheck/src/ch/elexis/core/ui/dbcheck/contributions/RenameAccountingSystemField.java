@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Display;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.FallConstants;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dbcheck.contributions.dialogs.RenameAccountingSysFieldDialog;
 import ch.elexis.core.ui.dbcheck.contributions.dialogs.SelectValueAccountingSysFieldDialog;
@@ -150,15 +151,15 @@ public class RenameAccountingSystemField extends ExternalMaintenance {
 	 */
 	private String updateFieldConfiguration(String key, String currName, String newName){
 		String configKey = key + REQUIRED;
-		String config = CoreHub.globalCfg.get(configKey, null);
+		String config = ConfigServiceHolder.getGlobal(configKey, null);
 		// use optionals if requireds doesn't contain field
 		if (config == null || !config.contains(currName + SEPARATOR)) {
 			configKey = key + OPTIONAL;
-			config = CoreHub.globalCfg.get(configKey, null);
+			config = ConfigServiceHolder.getGlobal(configKey, null);
 		}
 		// rename field
 		String updatedConfig = config.replace(currName + SEPARATOR, newName + SEPARATOR);
-		CoreHub.globalCfg.set(configKey, updatedConfig);
+		ConfigServiceHolder.setGlobal(configKey, updatedConfig);
 		CoreHub.globalCfg.flush();
 		
 		return configKey;
