@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
@@ -207,7 +208,7 @@ public class MultiplikatorList {
 	
 	private static String[] getEigenleistungUseMultiSystems(){
 		String systems =
-			CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS, "");
+			ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS, "");
 		return systems.split("\\|\\|");
 	}
 	
@@ -223,12 +224,12 @@ public class MultiplikatorList {
 	
 	public static void setEigenleistungUseMulti(String system){
 		String systems =
-			CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS, "");
+			ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS, "");
 		if (!systems.isEmpty()) {
 			systems = systems.concat("||");
 		}
 		systems = systems.concat(system);
-		CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS, systems);
+		ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS, systems);
 		CoreHub.globalCfg.flush();
 	}
 	
@@ -243,7 +244,7 @@ public class MultiplikatorList {
 				sb.append(string);
 			}
 		}
-		CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS,
+		ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS,
 			sb.toString());
 		CoreHub.globalCfg.flush();
 	}

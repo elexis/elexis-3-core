@@ -48,6 +48,7 @@ import ch.elexis.core.data.util.BriefExternUtil;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.services.ILocalDocumentService;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -119,11 +120,11 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 		Button check = new Button(compExtern, SWT.CHECK);
 		check.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 2, 1));
 		check.setText(Messages.Texterstellung_external_save);
-		check.setSelection(CoreHub.globalCfg.get(Preferences.P_TEXT_EXTERN_FILE, false));
+		check.setSelection(ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE, false));
 		check.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				CoreHub.globalCfg.set(Preferences.P_TEXT_EXTERN_FILE, check.getSelection());
+				ConfigServiceHolder.setGlobal(Preferences.P_TEXT_EXTERN_FILE, check.getSelection());
 				externPath.setEnabled(check.getSelection());
 				allExtern.setEnabled(check.getSelection());
 				externPathDeco.hide();
@@ -131,7 +132,7 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 		});
 		externPath = new Text(compExtern, SWT.BORDER);
 		externPath.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		externPath.setText(CoreHub.globalCfg.get(Preferences.P_TEXT_EXTERN_FILE_PATH, StringUtils.EMPTY));
+		externPath.setText(ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE_PATH, StringUtils.EMPTY));
 		externPath.setEnabled(check.getSelection());
 		externPath.addModifyListener(new ModifyListener() {
 			@Override
@@ -214,7 +215,7 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 		if (externPath != null && !externPath.isDisposed()
 			&& BriefExternUtil.isValidExternPath(
 				BriefExternUtil.getAsExternFilePath(externPath.getText()), false)) {
-			CoreHub.globalCfg.set(Preferences.P_TEXT_EXTERN_FILE_PATH, externPath.getText());
+			ConfigServiceHolder.setGlobal(Preferences.P_TEXT_EXTERN_FILE_PATH, externPath.getText());
 			CoreHub.globalCfg.flush();
 		}
 		return super.performOk();

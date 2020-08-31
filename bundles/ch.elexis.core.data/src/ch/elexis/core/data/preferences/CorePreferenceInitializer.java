@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import ch.elexis.admin.ACE;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.data.Brief;
 import ch.elexis.data.DBConnection;
 import ch.rgw.tools.StringTool;
@@ -104,7 +105,7 @@ public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 	 * 
 	 */
 	public void initializeGlobalPreferences(){
-		CoreHub.globalCfg.set(Preferences.ABL_TRACE + SETTINGS_PREFERENCE_STORE_DEFAULT, "none");
+		ConfigServiceHolder.setGlobal(Preferences.ABL_TRACE + SETTINGS_PREFERENCE_STORE_DEFAULT, "none");
 		CoreHub.globalCfg.flush();
 	}
 	

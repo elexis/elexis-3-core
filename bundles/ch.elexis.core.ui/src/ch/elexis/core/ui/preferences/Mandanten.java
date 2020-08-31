@@ -37,6 +37,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.preferences.inputs.PrefAccessDenied;
@@ -78,7 +79,7 @@ public class Mandanten extends PreferencePage implements IWorkbenchPreferencePag
 					Combo source = (Combo) e.getSource();
 					String m = (source.getItem(source.getSelectionIndex()));
 					Mandant man = hMandanten.get(m);
-					lColor.setBackground(UiDesk.getColorFromRGB(CoreHub.globalCfg.get(
+					lColor.setBackground(UiDesk.getColorFromRGB(ConfigServiceHolder.getGlobal(
 						Preferences.USR_MANDATOR_COLORS_PREFIX + m, UiDesk.COL_GREY60)));
 					lfa.reload(man);
 				}
@@ -101,7 +102,7 @@ public class Mandanten extends PreferencePage implements IWorkbenchPreferencePag
 					RGB selected = cd.open();
 					String symbolic = UiDesk.createColor(selected);
 					l.setBackground(UiDesk.getColorFromRGB(symbolic));
-					CoreHub.globalCfg.set(
+					ConfigServiceHolder.setGlobal(
 						Preferences.USR_MANDATOR_COLORS_PREFIX
 							+ mandanten.getItem(mandanten.getSelectionIndex()), symbolic);
 				}
@@ -114,7 +115,7 @@ public class Mandanten extends PreferencePage implements IWorkbenchPreferencePag
 	}
 	
 	public void init(IWorkbench workbench){
-		String grp = CoreHub.globalCfg.get(Preferences.ACC_GROUPS, Messages.Mandanten_0);
+		String grp = ConfigServiceHolder.getGlobal(Preferences.ACC_GROUPS, Messages.Mandanten_0);
 		
 		def =
 			new InputData[] {

@@ -13,6 +13,7 @@ import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.migration.IMigratorService;
 import ch.elexis.core.findings.ui.composites.AllergyIntoleranceComposite;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.views.contribution.IViewContribution;
 import ch.elexis.data.Patient;
 
@@ -33,7 +34,7 @@ public class AllergyIntoleranceViewContribution implements IViewContribution {
 	
 	@Override
 	public boolean isAvailable(){
-		return CoreHub.globalCfg.get(IMigratorService.ALLERGYINTOLERANCE_SETTINGS_USE_STRUCTURED,
+		return ConfigServiceHolder.getGlobal(IMigratorService.ALLERGYINTOLERANCE_SETTINGS_USE_STRUCTURED,
 			false);
 	}
 	

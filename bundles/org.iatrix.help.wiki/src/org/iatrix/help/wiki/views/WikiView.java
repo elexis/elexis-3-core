@@ -21,6 +21,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.iatrix.help.wiki.Constants;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.rgw.tools.StringTool;
 
@@ -86,15 +87,15 @@ public class WikiView extends ViewPart implements ISaveablePart2 {
 	}
 	
 	private String getBaseUrl(){
-		return CoreHub.globalCfg.get(Constants.CFG_BASE_URL, Constants.DEFAULT_BASE_URL);
+		return ConfigServiceHolder.getGlobal(Constants.CFG_BASE_URL, Constants.DEFAULT_BASE_URL);
 	}
 	
 	private String getStartPage(){
-		return CoreHub.globalCfg.get(Constants.CFG_START_PAGE, Constants.DEFAULT_START_PAGE);
+		return ConfigServiceHolder.getGlobal(Constants.CFG_START_PAGE, Constants.DEFAULT_START_PAGE);
 	}
 	
 	private String getHandbookUri(){
-		return CoreHub.globalCfg.get(Constants.CFG_HANDBOOK, Constants.DEFAULT_HANDBOOK);
+		return ConfigServiceHolder.getGlobal(Constants.CFG_HANDBOOK, Constants.DEFAULT_HANDBOOK);
 	}
 	
 	/**

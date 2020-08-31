@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Test;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListSqlQuery;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
@@ -27,7 +27,7 @@ public class Test_InvoiceBillState {
 		Konsultation kons = patient.createFallUndKons();
 		Fall fall = kons.getFall();
 		// enable removing open reminders
-		CoreHub.globalCfg.set(Preferences.RNN_REMOVE_OPEN_REMINDER, true);
+		ConfigServiceHolder.setGlobal(Preferences.RNN_REMOVE_OPEN_REMINDER, true);
 		
 		// Rechnung MAHNUNG_1 full amount
 		Rechnung rechnung = new Rechnung("1", mandant, fall, kons.getDatum(), kons.getDatum(),

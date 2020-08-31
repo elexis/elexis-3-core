@@ -49,13 +49,15 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.types.LocalizeUtil;
 import ch.elexis.core.types.RelationshipType;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.contacts.dialogs.BezugsKontaktAuswahl;
 import ch.elexis.core.ui.contacts.views.Patientenblatt2;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.preferences.SettingsPreferenceStore;
+import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore;
+import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 import ch.elexis.core.ui.views.Messages;
 import ch.elexis.data.BezugsKontaktRelation;
 
@@ -311,7 +313,7 @@ public class BezugsKontaktSettings extends PreferencePage implements IWorkbenchP
 		});
 		;
 		tableViewer.setInput(loadBezugKonkaktTypes(
-			CoreHub.globalCfg.get(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, "")));
+			ConfigServiceHolder.getGlobal(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, "")));
 		return container;
 	}
 	
@@ -331,7 +333,7 @@ public class BezugsKontaktSettings extends PreferencePage implements IWorkbenchP
 	
 	@Override
 	public void init(IWorkbench workbench){
-		setPreferenceStore(new SettingsPreferenceStore(CoreHub.globalCfg));
+		setPreferenceStore(new ConfigServicePreferenceStore(Scope.GLOBAL));
 		
 	}
 	
@@ -361,7 +363,7 @@ public class BezugsKontaktSettings extends PreferencePage implements IWorkbenchP
 					}
 				}
 			}
-			CoreHub.globalCfg.set(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, cfg.toString());
+			ConfigServiceHolder.setGlobal(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, cfg.toString());
 		}
 		return super.performOk();
 	}

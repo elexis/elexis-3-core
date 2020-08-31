@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.types.LocalizeUtil;
 import ch.elexis.core.types.RelationshipType;
 import ch.elexis.core.ui.contacts.views.Patientenblatt2;
@@ -90,7 +91,7 @@ public class BezugsKontaktAuswahl extends Dialog {
 		new Label(ret, SWT.NONE).setText(srcLabel + " " + Messages.Bezugskontakt_Is); //$NON-NLS-1$
 		cbBezugSrc = new Combo(ret, SWT.NONE);
 		cbBezugSrc.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		String bez = CoreHub.globalCfg.get(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, ""); //$NON-NLS-1$
+		String bez = ConfigServiceHolder.getGlobal(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, ""); //$NON-NLS-1$
 		
 		String[] items = getBezugKonkaktTypes(bez);
 		
@@ -214,9 +215,9 @@ public class BezugsKontaktAuswahl extends Dialog {
 		String[] items = cbBezugSrc.getItems();
 		String nitem = selectedBezugKontaktRelation.getName();
 		if (StringTool.getIndex(items, nitem) == -1) {
-			String res = CoreHub.globalCfg.get(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, "")
+			String res = ConfigServiceHolder.getGlobal(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, "")
 				+ Patientenblatt2.SPLITTER + selectedBezugKontaktRelation.getCfgString();
-			CoreHub.globalCfg.set(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, res);
+			ConfigServiceHolder.setGlobal(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, res);
 		}
 		
 		super.okPressed();

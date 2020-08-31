@@ -40,13 +40,13 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.ICodeElementBlock;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.ICodeSelectorTarget;
@@ -310,7 +310,7 @@ public class FavoritenComposite extends Composite {
 			}
 			
 			String rgbColor =
-				CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_COLOR + codeSystemName, "ffffff");
+				ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_COLOR + codeSystemName, "ffffff");
 			return UiDesk.getColorFromRGB(rgbColor);
 			
 		}

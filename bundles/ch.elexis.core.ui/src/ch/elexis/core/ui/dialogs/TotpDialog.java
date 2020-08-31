@@ -36,7 +36,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.User;
@@ -78,7 +78,7 @@ public class TotpDialog extends TitleAreaDialog {
 		
 		String issuer = "Elexis";
 		
-		String selfContactId = CoreHub.globalCfg.get(Preferences.SELFCONTACT_ID, "");
+		String selfContactId = ConfigServiceHolder.getGlobal(Preferences.SELFCONTACT_ID, "");
 		if (!StringUtils.isEmpty(selfContactId)) {
 			Kontakt selfContact = Kontakt.load(selfContactId);
 			if (selfContact.isAvailable()) {

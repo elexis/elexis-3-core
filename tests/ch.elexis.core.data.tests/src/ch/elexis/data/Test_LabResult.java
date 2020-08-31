@@ -9,8 +9,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.LabResultConstants;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.PathologicDescription.Description;
 import ch.rgw.tools.TimeTool;
@@ -36,7 +36,7 @@ public class Test_LabResult {
 	
 	@Test
 	public void testEvaluationRulesForTypeAbsolute(){
-		CoreHub.globalCfg.set(Preferences.LABSETTINGS_CFG_EVAL_PREFIX_TYPE_ABSOLUT
+		ConfigServiceHolder.setGlobal(Preferences.LABSETTINGS_CFG_EVAL_PREFIX_TYPE_ABSOLUT
 			+ Preferences.LABSETTINGS_CFG_EVAL_REFVAL_NON_EQUAL_RESVAL_MEANS_PATHOLOGIC, false);
 		
 		LabResult result = new LabResult(patient, new TimeTool(), absoluteLabItem, REFVAL, "");
@@ -49,7 +49,7 @@ public class Test_LabResult {
 		assertTrue(result.isPathologicFlagIndetermined(null));
 		assertEquals(Description.UNKNOWN, result.getPathologicDescription().getDescription());
 		
-		CoreHub.globalCfg.set(Preferences.LABSETTINGS_CFG_EVAL_PREFIX_TYPE_ABSOLUT
+		ConfigServiceHolder.setGlobal(Preferences.LABSETTINGS_CFG_EVAL_PREFIX_TYPE_ABSOLUT
 			+ Preferences.LABSETTINGS_CFG_EVAL_REFVAL_NON_EQUAL_RESVAL_MEANS_PATHOLOGIC, true);
 		
 		result = new LabResult(patient, new TimeTool(), absoluteLabItem, REFVAL, "");

@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.preferences.Messages;
 import ch.elexis.core.ui.preferences.SettingsPreferenceStore;
@@ -122,9 +123,9 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 	
 	public void init(final IWorkbench workbench){
 		daysKeepUnseen =
-			CoreHub.globalCfg.get(Preferences.LABSETTINGS_CFG_KEEP_UNSEEN_LAB_RESULTS, null);
+			ConfigServiceHolder.getGlobal(Preferences.LABSETTINGS_CFG_KEEP_UNSEEN_LAB_RESULTS, null);
 		if (daysKeepUnseen == null || !isValidNumber(daysKeepUnseen)) {
-			CoreHub.globalCfg.set(Preferences.LABSETTINGS_CFG_KEEP_UNSEEN_LAB_RESULTS,
+			ConfigServiceHolder.setGlobal(Preferences.LABSETTINGS_CFG_KEEP_UNSEEN_LAB_RESULTS,
 				Preferences.DAYS_TO_KEEP_UNSEEN_LAB_RESULTS);
 			daysKeepUnseen = Preferences.DAYS_TO_KEEP_UNSEEN_LAB_RESULTS;
 		}
@@ -148,7 +149,7 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 	@Override
 	public boolean performOk(){
 		if (isValidNumber(txtKeepUnseen.getText())) {
-			CoreHub.globalCfg.set(Preferences.LABSETTINGS_CFG_KEEP_UNSEEN_LAB_RESULTS,
+			ConfigServiceHolder.setGlobal(Preferences.LABSETTINGS_CFG_KEEP_UNSEEN_LAB_RESULTS,
 				txtKeepUnseen.getText());
 			CoreHub.globalCfg.flush();
 		}

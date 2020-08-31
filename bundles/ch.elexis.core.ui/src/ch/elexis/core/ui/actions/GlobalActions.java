@@ -81,6 +81,7 @@ import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.InvoiceServiceHolder;
 import ch.elexis.core.ui.Hub;
@@ -251,7 +252,7 @@ public class GlobalActions {
 			@Override
 			public void doRun(){
 				Desktop desktop = Desktop.getDesktop();
-				String url = CoreHub.globalCfg.get(UiPreferenceConstants.CFG_HANDBOOK,
+				String url = ConfigServiceHolder.getGlobal(UiPreferenceConstants.CFG_HANDBOOK,
 					UiPreferenceConstants.DEFAULT_HANDBOOK);
 				if (Desktop.isDesktopSupported()) {
 					try {

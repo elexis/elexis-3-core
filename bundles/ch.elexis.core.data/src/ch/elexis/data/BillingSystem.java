@@ -22,6 +22,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.ch.BillingLaw;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.rgw.tools.StringTool;
 
 /**
@@ -50,7 +51,7 @@ public class BillingSystem {
 	
 	public static String getConfigurationValue(String billingSystemName, String attributeName,
 		String defaultIfNotDefined){
-		String ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+		String ret = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
 			+ billingSystemName + "/" + attributeName, defaultIfNotDefined); //$NON-NLS-1$
 		return ret;
 	}
@@ -58,7 +59,7 @@ public class BillingSystem {
 	public static void setConfigurationValue(String billingSystemName, String attributeName,
 		String attributeValue){
 		String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + billingSystemName; //$NON-NLS-1$
-		CoreHub.globalCfg.set(key + "/" + attributeName, attributeValue);
+		ConfigServiceHolder.setGlobal(key + "/" + attributeName, attributeValue);
 	}
 	
 	/**
@@ -68,7 +69,7 @@ public class BillingSystem {
 	 *            String, the name of the billing system to be tested
 	 */
 	public static boolean isDisabled(final String billingSystemName){
-		String ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+		String ret = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
 			+ billingSystemName + "/disabled", "0"); //$NON-NLS-1$ //$NON-NLS-2$
 		return !ret.equalsIgnoreCase("0");
 	}
@@ -86,7 +87,7 @@ public class BillingSystem {
 	 * @since 3.6 moved from {@link Fall}
 	 */
 	public static String getUnused(final String billingSystem){
-		String ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+		String ret = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
 			+ billingSystem + "/unused", null); //$NON-NLS-1$
 		return ret;
 	}
@@ -103,7 +104,7 @@ public class BillingSystem {
 	 * @since 3.6 moved from {@link Fall}
 	 */
 	public static String getOptionals(final String billingSystem){
-		String ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+		String ret = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
 			+ billingSystem + "/fakultativ", null); //$NON-NLS-1$
 		return ret;
 	}
@@ -122,7 +123,7 @@ public class BillingSystem {
 	 * @deprecated use ch.elexis.core.services.BillingSystemService#getRequirements(ch.elexis.core.model.IBillingSystem)
 	 */
 	public static String getRequirements(final String billingSystem){
-		String ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+		String ret = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
 			+ billingSystem + "/bedingungen", null); //$NON-NLS-1$
 		return ret;
 	}
@@ -134,7 +135,7 @@ public class BillingSystem {
 	 * @since 3.6 moved from {@link Fall}
 	 */
 	public static String[] getBillingSystemConstants(final String billingSystem){
-		String bc = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+		String bc = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
 			+ billingSystem + "/constants", null); //$NON-NLS-1$
 		if (bc == null) {
 			return new String[0];
@@ -173,14 +174,14 @@ public class BillingSystem {
 	 */
 	public static void addBillingSystemConstant(final String billingSystem, final String constant){
 		if (constant.indexOf('=') != -1) {
-			String bc = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+			String bc = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
 				+ billingSystem + "/constants", null); //$NON-NLS-1$
 			if (bc != null) {
 				bc += "#" + constant; //$NON-NLS-1$
 			} else {
 				bc = constant;
 			}
-			CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/" + billingSystem //$NON-NLS-1$
+			ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" + billingSystem //$NON-NLS-1$
 				+ "/constants", bc); //$NON-NLS-1$
 		}
 	}
@@ -195,13 +196,13 @@ public class BillingSystem {
 		final String constant){
 		String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
 			+ billingSystem + "/constants";
-		String bc = CoreHub.globalCfg.get(key, null); //$NON-NLS-1$
+		String bc = ConfigServiceHolder.getGlobal(key, null); //$NON-NLS-1$
 		if (bc != null) {
 			bc = bc.replaceAll(constant, ""); //$NON-NLS-1$
 			bc = bc.replaceAll("##", "#"); //$NON-NLS-1$ //$NON-NLS-2$
 			bc = bc.replaceFirst("#$", ""); //$NON-NLS-1$ //$NON-NLS-2$
 			bc = bc.replaceFirst("^#", ""); //$NON-NLS-1$ //$NON-NLS-2$
-			CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/" + billingSystem //$NON-NLS-1$
+			ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" + billingSystem //$NON-NLS-1$
 				+ "/constants", bc); //$NON-NLS-1$
 		} else {
 			log.error("[" + key + "] is null");
@@ -228,58 +229,58 @@ public class BillingSystem {
 				Extensions.getExtensions(ExtensionPointConstantsData.RECHNUNGS_MANAGER); //$NON-NLS-1$
 			for (IConfigurationElement ic : list) {
 				if (ic.getAttribute("name").startsWith("Tarmed")) { //$NON-NLS-1$ //$NON-NLS-2$
-					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/name", //$NON-NLS-1$
+					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/name", //$NON-NLS-1$
 						KVG_NAME);
-					CoreHub.globalCfg.set(
+					ConfigServiceHolder.setGlobal(
 						Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/leistungscodes", //$NON-NLS-1$
 						CONST_TARMED_LEISTUNG);
-					CoreHub.globalCfg.set(
+					ConfigServiceHolder.setGlobal(
 						Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/standardausgabe", //$NON-NLS-1$
 						CONST_TARMED_DRUCKER);
-					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/bedingungen", //$NON-NLS-1$
+					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/bedingungen", //$NON-NLS-1$
 						KVG_REQUIREMENTS);
 					BillingSystem.setConfigurationValue("KVG", BillingSystem.CFG_BILLINGLAW,
 						BillingLaw.KVG.name());
 					
-					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/name", //$NON-NLS-1$
+					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/name", //$NON-NLS-1$
 						UVG_NAME);
-					CoreHub.globalCfg.set(
+					ConfigServiceHolder.setGlobal(
 						Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/leistungscodes", //$NON-NLS-1$
 						CONST_TARMED_LEISTUNG);
-					CoreHub.globalCfg.set(
+					ConfigServiceHolder.setGlobal(
 						Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/standardausgabe", //$NON-NLS-1$
 						CONST_TARMED_DRUCKER);
-					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/bedingungen", //$NON-NLS-1$
+					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/bedingungen", //$NON-NLS-1$
 						UVG_REQUIREMENTS);
 					BillingSystem.setConfigurationValue("UVG", BillingSystem.CFG_BILLINGLAW,
 						BillingLaw.UVG.name());
 					
-					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/name", IV_NAME); //$NON-NLS-1$
-					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/leistungscodes", //$NON-NLS-1$
+					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/name", IV_NAME); //$NON-NLS-1$
+					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/leistungscodes", //$NON-NLS-1$
 						CONST_TARMED_LEISTUNG);
-					CoreHub.globalCfg.set(
+					ConfigServiceHolder.setGlobal(
 						Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/standardausgabe", //$NON-NLS-1$
 						CONST_TARMED_DRUCKER);
-					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/bedingungen", //$NON-NLS-1$
+					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/bedingungen", //$NON-NLS-1$
 						"Fallnummer:T"); //$NON-NLS-1$
 					BillingSystem.setConfigurationValue("IV", BillingSystem.CFG_BILLINGLAW,
 						BillingLaw.IV.name());
 					
-					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/name", MV_NAME); //$NON-NLS-1$
-					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/leistungscodes", //$NON-NLS-1$
+					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/name", MV_NAME); //$NON-NLS-1$
+					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/leistungscodes", //$NON-NLS-1$
 						CONST_TARMED_LEISTUNG);
-					CoreHub.globalCfg.set(
+					ConfigServiceHolder.setGlobal(
 						Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/standardausgabe", //$NON-NLS-1$
 						CONST_TARMED_DRUCKER);
 					BillingSystem.setConfigurationValue("MV", BillingSystem.CFG_BILLINGLAW,
 						BillingLaw.MV.name());
 					
-					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/name", //$NON-NLS-1$
+					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/name", //$NON-NLS-1$
 						PRIVATE_NAME);
-					CoreHub.globalCfg.set(
+					ConfigServiceHolder.setGlobal(
 						Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/leistungscodes", //$NON-NLS-1$
 						CONST_TARMED_LEISTUNG);
-					CoreHub.globalCfg.set(
+					ConfigServiceHolder.setGlobal(
 						Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/standardausgabe", //$NON-NLS-1$
 						CONST_TARMED_DRUCKER);
 					BillingSystem.setConfigurationValue("privat", BillingSystem.CFG_BILLINGLAW,
@@ -287,15 +288,15 @@ public class BillingSystem {
 					BillingSystem.setConfigurationValue("privat", BillingSystem.CFG_NOCOSTBEARER,
 						StringConstants.ONE);
 					
-					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/name", //$NON-NLS-1$
+					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/name", //$NON-NLS-1$
 						VVG_NAME);
-					CoreHub.globalCfg.set(
+					ConfigServiceHolder.setGlobal(
 						Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/leistungscodes", //$NON-NLS-1$
 						CONST_TARMED_LEISTUNG);
-					CoreHub.globalCfg.set(
+					ConfigServiceHolder.setGlobal(
 						Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/standardausgabe", //$NON-NLS-1$
 						CONST_TARMED_DRUCKER);
-					CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/bedingungen", //$NON-NLS-1$
+					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/bedingungen", //$NON-NLS-1$
 						KVG_REQUIREMENTS);
 					BillingSystem.setConfigurationValue("VVG", BillingSystem.CFG_BILLINGLAW,
 						BillingLaw.VVG.name());
@@ -368,10 +369,10 @@ public class BillingSystem {
 	public static void createAbrechnungssystem(final String systemname, final String codesystem,
 		final String ausgabe, final String... requirements){
 		String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + systemname; //$NON-NLS-1$
-		CoreHub.globalCfg.set(key + "/name", systemname); //$NON-NLS-1$
-		CoreHub.globalCfg.set(key + "/leistungscodes", codesystem); //$NON-NLS-1$
-		CoreHub.globalCfg.set(key + "/standardausgabe", ausgabe); //$NON-NLS-1$
-		CoreHub.globalCfg.set(key + "/bedingungen", StringTool.join(requirements, //$NON-NLS-1$
+		ConfigServiceHolder.setGlobal(key + "/name", systemname); //$NON-NLS-1$
+		ConfigServiceHolder.setGlobal(key + "/leistungscodes", codesystem); //$NON-NLS-1$
+		ConfigServiceHolder.setGlobal(key + "/standardausgabe", ausgabe); //$NON-NLS-1$
+		ConfigServiceHolder.setGlobal(key + "/bedingungen", StringTool.join(requirements, //$NON-NLS-1$
 			";")); //$NON-NLS-1$
 	}
 	
@@ -392,11 +393,11 @@ public class BillingSystem {
 	 * @since 3.6 moved from {@link Fall}
 	 */
 	public static String getCodeSystem(final String billingSystem){
-		String ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+		String ret = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
 			+ billingSystem + "/leistungscodes", null); //$NON-NLS-1$
 		if (ret == null) { // compatibility
 			BillingSystem.getAbrechnungsSysteme();
-			ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+			ret = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
 				+ billingSystem + "/leistungscodes", "?"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return ret;
@@ -411,11 +412,11 @@ public class BillingSystem {
 	 * @deprecated use {@link ch.elexis.core.services.BillingSystemService#getDefaultPrintSystem)}
 	 */
 	public static String getDefaultPrintSystem(final String billingSystem){
-		String ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+		String ret = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
 			+ billingSystem + "/standardausgabe", null); //$NON-NLS-1$
 		if (ret == null) { // compatibility
 			BillingSystem.getAbrechnungsSysteme();
-			ret = CoreHub.globalCfg.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+			ret = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
 				+ billingSystem + "/standardausgabe", "?"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return ret;

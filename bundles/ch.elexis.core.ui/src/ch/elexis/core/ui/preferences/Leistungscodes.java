@@ -65,6 +65,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
@@ -72,9 +74,10 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.MultiplikatorList;
-import ch.elexis.core.model.ch.BillingLaw;
-import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.ch.BillingLaw;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.dialogs.provider.ILocalizedEnumLabelProvider;
 import ch.elexis.core.ui.icons.Images;
@@ -85,9 +88,6 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.BillingSystem;
 import ch.elexis.data.Fall;
 import ch.elexis.data.PersistentObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
@@ -139,13 +139,13 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					String rnOutputter = getDbAusgabeName(result[2]);
 					log.info("Dialog.OK dbNames values: name {} leistung {} ausgabe {}", result[0], leistungscode, rnOutputter);
 
-					CoreHub.globalCfg.set(key + "/name", result[0]); //$NON-NLS-1$
-					CoreHub.globalCfg.set(key + "/leistungscodes", leistungscode); //$NON-NLS-1$
-					CoreHub.globalCfg.set(key + "/standardausgabe", rnOutputter); //$NON-NLS-1$
-					CoreHub.globalCfg.set(key + "/bedingungen", result[3]); //$NON-NLS-1$
-					CoreHub.globalCfg.set(key + "/fakultativ", result[4]); //$NON-NLS-1$
-					CoreHub.globalCfg.set(key + "/unused", result[5]); //$NON-NLS-1$
-					CoreHub.globalCfg.set(key + "/disabled", result[6]); //$NON-NLS-1$
+					ConfigServiceHolder.setGlobal(key + "/name", result[0]); //$NON-NLS-1$
+					ConfigServiceHolder.setGlobal(key + "/leistungscodes", leistungscode); //$NON-NLS-1$
+					ConfigServiceHolder.setGlobal(key + "/standardausgabe", rnOutputter); //$NON-NLS-1$
+					ConfigServiceHolder.setGlobal(key + "/bedingungen", result[3]); //$NON-NLS-1$
+					ConfigServiceHolder.setGlobal(key + "/fakultativ", result[4]); //$NON-NLS-1$
+					ConfigServiceHolder.setGlobal(key + "/unused", result[5]); //$NON-NLS-1$
+					ConfigServiceHolder.setGlobal(key + "/disabled", result[6]); //$NON-NLS-1$
 					BillingSystem.setConfigurationValue(result[0], BillingSystem.CFG_BILLINGLAW,
 						result[7]);
 					BillingSystem.setConfigurationValue(result[0], BillingSystem.CFG_NOCOSTBEARER,
@@ -212,13 +212,13 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 								String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + result[0]; //$NON-NLS-1$
 								log.info("Dialog.OK db values: name '{}' leistung '{}' ausgabe '{}' key '{}'", 
 										result[0], leistungscode, rnOutputter, key);
-								CoreHub.globalCfg.set(key + "/name", result[0]); //$NON-NLS-1$
-								CoreHub.globalCfg.set(key + "/leistungscodes", leistungscode); //$NON-NLS-1$
-								CoreHub.globalCfg.set(key + "/standardausgabe", rnOutputter); //$NON-NLS-1$
-								CoreHub.globalCfg.set(key + "/bedingungen", result[3]); //$NON-NLS-1$
-								CoreHub.globalCfg.set(key + "/fakultativ", result[4]); //$NON-NLS-1$
-								CoreHub.globalCfg.set(key + "/unused", result[5]); //$NON-NLS-1$
-								CoreHub.globalCfg.set(key + "/disabled", result[6]); //$NON-NLS-1$
+								ConfigServiceHolder.setGlobal(key + "/name", result[0]); //$NON-NLS-1$
+								ConfigServiceHolder.setGlobal(key + "/leistungscodes", leistungscode); //$NON-NLS-1$
+								ConfigServiceHolder.setGlobal(key + "/standardausgabe", rnOutputter); //$NON-NLS-1$
+								ConfigServiceHolder.setGlobal(key + "/bedingungen", result[3]); //$NON-NLS-1$
+								ConfigServiceHolder.setGlobal(key + "/fakultativ", result[4]); //$NON-NLS-1$
+								ConfigServiceHolder.setGlobal(key + "/unused", result[5]); //$NON-NLS-1$
+								ConfigServiceHolder.setGlobal(key + "/disabled", result[6]); //$NON-NLS-1$
 								BillingSystem.setConfigurationValue(result[0],
 									BillingSystem.CFG_BILLINGLAW, result[7]);
 								BillingSystem.setConfigurationValue(result[0],
@@ -306,13 +306,13 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		bRemoveOpenReminders.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e){
-				CoreHub.globalCfg.set(Preferences.RNN_REMOVE_OPEN_REMINDER,
+				ConfigServiceHolder.setGlobal(Preferences.RNN_REMOVE_OPEN_REMINDER,
 					bRemoveOpenReminders.getSelection());
 			}
 			
 		});
 		bRemoveOpenReminders
-			.setSelection(CoreHub.globalCfg.get(Preferences.RNN_REMOVE_OPEN_REMINDER, false));
+			.setSelection(ConfigServiceHolder.getGlobal(Preferences.RNN_REMOVE_OPEN_REMINDER, false));
 		bRemoveOpenReminders.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		
 		// *** populate the table with items
@@ -332,10 +332,10 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			for (String s : systeme) {
 				String cfgkey = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + s + "/"; //$NON-NLS-1$ //$NON-NLS-2$
 				TableItem it = new TableItem(table, SWT.NONE);
-				String name = CoreHub.globalCfg.get(cfgkey + "name", "default"); //$NON-NLS-1$ //$NON-NLS-2$
+				String name = ConfigServiceHolder.getGlobal(cfgkey + "name", "default"); //$NON-NLS-1$ //$NON-NLS-2$
 				it.setText(0, name);
-				String code = CoreHub.globalCfg.get(cfgkey + "leistungscodes", "?");//$NON-NLS-1$ //$NON-NLS-2$
-				String ausgabe =  CoreHub.globalCfg.get(cfgkey + "standardausgabe", "?");//$NON-NLS-1$ //$NON-NLS-2$
+				String code = ConfigServiceHolder.getGlobal(cfgkey + "leistungscodes", "?");//$NON-NLS-1$ //$NON-NLS-2$
+				String ausgabe =  ConfigServiceHolder.getGlobal(cfgkey + "standardausgabe", "?");//$NON-NLS-1$ //$NON-NLS-2$
 				it.setText(1,  getLocalizedLeistungscode(code)); //$NON-NLS-1$ //$NON-NLS-2$
 				it.setText(2, getLocalizedAusgabe(ausgabe)); 
 				StringBuilder sql = new StringBuilder();

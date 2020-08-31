@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.dbcheck.external.ExternalMaintenance;
 import ch.elexis.data.BillingSystem;
 import ch.elexis.data.Fall;
@@ -20,8 +21,8 @@ public class CovercardFixFallFields extends ExternalMaintenance {
 		StringBuilder output = new StringBuilder();
 		pm.beginTask("Bitte warten, Fälle werden geladen ...", IProgressMonitor.UNKNOWN);
 		
-		String billingSystemStd = CoreHub.globalCfg.get("covercard/billinginfo/std/method", null);
-		String billingSystemExc = CoreHub.globalCfg.get("covercard/billinginfo/exc/method", null);
+		String billingSystemStd = ConfigServiceHolder.getGlobal("covercard/billinginfo/std/method", null);
+		String billingSystemExc = ConfigServiceHolder.getGlobal("covercard/billinginfo/exc/method", null);
 		
 		updateCovercardBillingSystem();
 		
@@ -80,7 +81,7 @@ public class CovercardFixFallFields extends ExternalMaintenance {
 			} else {
 				requirements = "Versicherungsnummer:T";
 			}
-			CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+			ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
 				+ billingSystem + "/bedingungen", requirements);
 		}
 		String optionals = BillingSystem.getOptionals(billingSystem);
@@ -94,7 +95,7 @@ public class CovercardFixFallFields extends ExternalMaintenance {
 				optionals += ";VEKANr:T";
 			}
 		}
-		CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+		ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
 				+ billingSystem + "/fakultativ", optionals);
 	}
 	
@@ -109,7 +110,7 @@ public class CovercardFixFallFields extends ExternalMaintenance {
 				requirements = requirements.replace("Versicherten-Nummer:T", "");
 			}
 		}
-		CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+		ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
 			+ "Covercard" + "/bedingungen", requirements);
 		String optionals = BillingSystem.getOptionals("Covercard");
 		if (optionals == null || !optionals.contains("VEKANr")) {
@@ -118,7 +119,7 @@ public class CovercardFixFallFields extends ExternalMaintenance {
 			} else {
 				optionals = "VEKANr:T";
 			}
-			CoreHub.globalCfg.set(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+			ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
 				+ "Covercard" + "/fakultativ", optionals);
 		}
 	}

@@ -17,6 +17,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 
 public class LabEvaluationRulesPreferencePage extends PreferencePage
 		implements IWorkbenchPreferencePage {
@@ -77,7 +78,7 @@ public class LabEvaluationRulesPreferencePage extends PreferencePage
 		btnCheckNonStringEqualRefValResValIsPathologicAbsolute.addSelectionListener(
 			new LERSelectionAdapter(Preferences.LABSETTINGS_CFG_EVAL_PREFIX_TYPE_ABSOLUT
 				+ Preferences.LABSETTINGS_CFG_EVAL_REFVAL_NON_EQUAL_RESVAL_MEANS_PATHOLOGIC));
-		btnCheckNonStringEqualRefValResValIsPathologicAbsolute.setSelection(CoreHub.globalCfg.get(
+		btnCheckNonStringEqualRefValResValIsPathologicAbsolute.setSelection(ConfigServiceHolder.getGlobal(
 			Preferences.LABSETTINGS_CFG_EVAL_PREFIX_TYPE_ABSOLUT
 				+ Preferences.LABSETTINGS_CFG_EVAL_REFVAL_NON_EQUAL_RESVAL_MEANS_PATHOLOGIC,
 			false));
@@ -105,7 +106,7 @@ public class LabEvaluationRulesPreferencePage extends PreferencePage
 		btnCheckNonStringEqualRefValResValIsPathologicText.addSelectionListener(
 			new LERSelectionAdapter(Preferences.LABSETTINGS_CFG_EVAL_PREFIX_TYPE_TEXT
 				+ Preferences.LABSETTINGS_CFG_EVAL_REFVAL_NON_EQUAL_RESVAL_MEANS_PATHOLOGIC));
-		btnCheckNonStringEqualRefValResValIsPathologicText.setSelection(CoreHub.globalCfg.get(
+		btnCheckNonStringEqualRefValResValIsPathologicText.setSelection(ConfigServiceHolder.getGlobal(
 			Preferences.LABSETTINGS_CFG_EVAL_PREFIX_TYPE_TEXT
 				+ Preferences.LABSETTINGS_CFG_EVAL_REFVAL_NON_EQUAL_RESVAL_MEANS_PATHOLOGIC,
 			false));
@@ -128,7 +129,7 @@ public class LabEvaluationRulesPreferencePage extends PreferencePage
 		@Override
 		public void widgetSelected(SelectionEvent e){
 			Button button = (Button) e.getSource();
-			CoreHub.globalCfg.set(globalConfigurationKey, button.getSelection());
+			ConfigServiceHolder.setGlobal(globalConfigurationKey, button.getSelection());
 			super.widgetSelected(e);
 		}
 		

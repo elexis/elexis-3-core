@@ -21,6 +21,7 @@ Require-Bundle: ch.elexis.core.findings;bundle-version="1.0.0",
  ch.elexis.core.hapi.fhir;bundle-version="3.4.0"
 Import-Package: ch.elexis.core.findings.templates.model,
  ch.elexis.core.findings.templates.service,
+ ch.elexis.core.services.holder,
  ch.rgw.io,
  ch.rgw.tools,
  org.apache.commons.io

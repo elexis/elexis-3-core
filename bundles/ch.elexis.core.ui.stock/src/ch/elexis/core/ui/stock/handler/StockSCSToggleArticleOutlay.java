@@ -14,7 +14,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.menus.UIElement;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.service.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 
 public class StockSCSToggleArticleOutlay extends AbstractHandler

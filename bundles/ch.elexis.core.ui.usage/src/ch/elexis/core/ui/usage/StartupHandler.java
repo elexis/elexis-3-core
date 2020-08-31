@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventDispatcher.IPerformanceStatisticHandler;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.performance.EventPerformanceStatisticHandler;
 import ch.elexis.core.ui.usage.settings.UsageSettings;
 import ch.elexis.core.ui.usage.util.StatisticsManager;
@@ -29,7 +30,7 @@ public class StartupHandler implements EventHandler {
 	
 	@Override
 	public void handleEvent(Event event){
-		if (CoreHub.globalCfg.get(UsageSettings.CONFIG_USAGE_STATISTICS, false)) {
+		if (ConfigServiceHolder.getGlobal(UsageSettings.CONFIG_USAGE_STATISTICS, false)) {
 			registerNotifications();
 			StatisticsManager.INSTANCE.getStatistics().setFrom(new Date());
 			// add start perspective to statistics
@@ -39,7 +40,7 @@ public class StartupHandler implements EventHandler {
 					true);
 			}
 		}
-		if (CoreHub.globalCfg.get(UsageSettings.CONFIG_USAGE_STATISTICS, false)) {
+		if (ConfigServiceHolder.getGlobal(UsageSettings.CONFIG_USAGE_STATISTICS, false)) {
 			registerEventPerformance();
 		}
 	}

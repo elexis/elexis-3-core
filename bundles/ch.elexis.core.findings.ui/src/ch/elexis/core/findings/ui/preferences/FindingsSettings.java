@@ -20,7 +20,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.findings.IAllergyIntolerance;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
@@ -35,7 +34,8 @@ import ch.elexis.core.findings.migration.IMigratorService;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 import ch.elexis.core.findings.ui.services.MigratorServiceComponent;
 import ch.elexis.core.findings.util.model.TransientCoding;
-import ch.elexis.core.ui.preferences.SettingsPreferenceStore;
+import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore;
+import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
 
@@ -62,7 +62,7 @@ public class FindingsSettings extends FieldEditorPreferencePage
 	
 	@Override
 	public void init(IWorkbench workbench){
-		setPreferenceStore(new SettingsPreferenceStore(CoreHub.globalCfg));
+		setPreferenceStore(new ConfigServicePreferenceStore(Scope.GLOBAL));
 		setMessage("Globale Befunde Einstellungen");
 		// initialize the model
 		if (FindingsServiceComponent.getService() != null) {

@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
@@ -57,7 +58,7 @@ public class AccountTransaction extends PersistentObject {
 			List<Account> ret = new ArrayList<>();
 			ret.add(UNKNOWN);
 			if (CoreHub.globalCfg != null) {
-				String accountsString = CoreHub.globalCfg.get(ACCOUNTS_CONFIG, ""); //$NON-NLS-1$
+				String accountsString = ConfigServiceHolder.getGlobal(ACCOUNTS_CONFIG, ""); //$NON-NLS-1$
 				if (accountsString != null && !accountsString.isEmpty()) {
 					String[] accounts = accountsString.split("\\|\\|"); //$NON-NLS-1$
 					for (String string : accounts) {
@@ -105,14 +106,14 @@ public class AccountTransaction extends PersistentObject {
 		
 		public static void addAccount(Account newAccount){
 			if (CoreHub.globalCfg != null) {
-				String existingString = CoreHub.globalCfg.get(ACCOUNTS_CONFIG, "");
+				String existingString = ConfigServiceHolder.getGlobal(ACCOUNTS_CONFIG, "");
 				StringBuilder sb = new StringBuilder();
 				sb.append(existingString);
 				if (sb.length() > 0) {
 					sb.append(ACCOUNTS_SEPARATOR);
 				}
 				sb.append(newAccount.getNumeric()).append("|").append(newAccount.getName());
-				CoreHub.globalCfg.set(ACCOUNTS_CONFIG, sb.toString());
+				ConfigServiceHolder.setGlobal(ACCOUNTS_CONFIG, sb.toString());
 				// reset local cache
 				loadCache();
 			}
@@ -130,7 +131,7 @@ public class AccountTransaction extends PersistentObject {
 					}
 					sb.append(account.getNumeric()).append("|").append(account.getName());
 				}
-				CoreHub.globalCfg.set(ACCOUNTS_CONFIG, sb.toString());
+				ConfigServiceHolder.setGlobal(ACCOUNTS_CONFIG, sb.toString());
 				// reset local cache
 				loadCache();
 			}

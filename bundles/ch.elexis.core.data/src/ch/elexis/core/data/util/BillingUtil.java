@@ -33,6 +33,7 @@ import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.services.holder.BillingServiceHolder;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.elexis.data.Fall;
@@ -300,11 +301,11 @@ public class BillingUtil {
 	};
 	
 	public static boolean isCheckEnabled(IBillableCheck check){
-		return CoreHub.globalCfg.get(BILLINGCHECK_ENABLED_CFG + check.getId(), true);
+		return ConfigServiceHolder.getGlobal(BILLINGCHECK_ENABLED_CFG + check.getId(), true);
 	}
 	
 	public static void setCheckEnabled(IBillableCheck check, boolean enabled){
-		CoreHub.globalCfg.set(BILLINGCHECK_ENABLED_CFG + check.getId(), enabled);
+		ConfigServiceHolder.setGlobal(BILLINGCHECK_ENABLED_CFG + check.getId(), enabled);
 	}
 	
 	/**

@@ -6,6 +6,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.text.ITextResolver;
 import ch.elexis.core.findings.fhir.po.dataaccess.FindingsDataAccessor;
 import ch.elexis.core.findings.migration.IMigratorService;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.data.Patient;
 
 public class AllergiesResolver extends AbstractTextResolver implements ITextResolver {
@@ -13,7 +14,7 @@ public class AllergiesResolver extends AbstractTextResolver implements ITextReso
 	@Override
 	public Optional<String> resolve(Object object){
 		if (object instanceof Patient) {
-			if (CoreHub.globalCfg.get(IMigratorService.ALLERGYINTOLERANCE_SETTINGS_USE_STRUCTURED,
+			if (ConfigServiceHolder.getGlobal(IMigratorService.ALLERGYINTOLERANCE_SETTINGS_USE_STRUCTURED,
 				false)) {
 				return getFindingsText(object, FindingsDataAccessor.FINDINGS_PATIENT_ALLERGIES);
 			}

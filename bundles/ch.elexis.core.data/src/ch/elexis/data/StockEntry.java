@@ -6,6 +6,7 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IStockEntry;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 
 /**
  * 
@@ -39,7 +40,7 @@ public class StockEntry extends PersistentObject implements IStockEntry {
 	
 	public StockEntry(Stock stock, PersistentObject article){
 		String provider =
-			CoreHub.globalCfg.get(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
+			ConfigServiceHolder.getGlobal(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
 		String[] fields = new String[] {
 			FLD_STOCK, FLD_ARTICLE_TYPE, FLD_ARTICLE_ID, FLD_PROVIDER
 		};
@@ -103,7 +104,7 @@ public class StockEntry extends PersistentObject implements IStockEntry {
 	}
 	
 	public void setCurrentStock(int currentStock){
-		// ACHTUNG CoreHub.globalCfg.get(Preferences.INVENTORY_CHECK_ILLEGAL_VALUES
+		// ACHTUNG ConfigServiceHolder.getGlobal(Preferences.INVENTORY_CHECK_ILLEGAL_VALUES
 		/**
 		 * Istbestand setzen. Wenn INVENTORY_CHECK_ILLEGAL-VALUES gesetzt ist, erscheint eine
 		 * Warnung, wenn der Istbestand unter null komt.

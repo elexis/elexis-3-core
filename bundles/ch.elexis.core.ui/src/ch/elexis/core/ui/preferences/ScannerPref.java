@@ -32,8 +32,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.actions.ScannerEvents;
+import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 
 public class ScannerPref extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	public static final String ID = "ch.elexis.preferences.ScannerPrefs"; //$NON-NLS-1$
@@ -64,7 +64,7 @@ public class ScannerPref extends FieldEditorPreferencePage implements IWorkbench
 	TextScannerListener txtScannerListener;
 	Button backupDefaultButton;
 	
-	SettingsPreferenceStore prefs = new SettingsPreferenceStore(CoreHub.globalCfg);
+	ConfigServicePreferenceStore prefs = new ConfigServicePreferenceStore(Scope.GLOBAL);
 	
 	public ScannerPref(){
 		super(GRID);
@@ -149,7 +149,6 @@ public class ScannerPref extends FieldEditorPreferencePage implements IWorkbench
 	
 	@Override
 	public boolean performOk(){
-		prefs.flush();
 		boolean ok = super.performOk();
 		ScannerEvents.getInstance().reloadCodes();
 		return ok;

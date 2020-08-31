@@ -42,6 +42,7 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.AddBuchungDialog;
 import ch.elexis.core.ui.icons.Images;
@@ -165,10 +166,10 @@ public class ClientCustomTextComposite extends Composite {
 	private void setClientCustomAreaContent(boolean editMode){
 		if (editMode) {
 			// Edit the variable usage
-			txtClientCustomText.setText(CoreHub.globalCfg.get(
+			txtClientCustomText.setText(ConfigServiceHolder.getGlobal(
 				ClientCustomTextComposite.class.getName(), ""));
 		} else {
-			CoreHub.globalCfg.set(ClientCustomTextComposite.class.getName(),
+			ConfigServiceHolder.setGlobal(ClientCustomTextComposite.class.getName(),
 				txtClientCustomText.getText());
 			updateClientCustomArea();
 		}
@@ -179,7 +180,7 @@ public class ClientCustomTextComposite extends Composite {
 		tokenMap.clear();
 		styleList.clear();
 		String outputParsed =
-			findAndReplaceTemplates(CoreHub.globalCfg.get(
+			findAndReplaceTemplates(ConfigServiceHolder.getGlobal(
 				ClientCustomTextComposite.class.getName(), ""));
 		String output = initializeStyleRanges(outputParsed);
 		txtClientCustomText.setText(output);

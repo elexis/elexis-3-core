@@ -26,6 +26,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.data.Kontakt;
@@ -84,7 +85,7 @@ public class HL7LabImportRulesPreferencePage extends PreferencePage
 	}
 	
 	private Set<Labor> findAllLabsWithPathFlagMissingMeansNonPathologic(){
-		List<String> laboratoryIdList = CoreHub.globalCfg.getAsList(
+		List<String> laboratoryIdList = ConfigServiceHolder.getGlobalAsList(
 			Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES);
 		return new HashSet<Labor>(
 			laboratoryIdList.stream().map(id -> Labor.load(id)).collect(Collectors.toList()));
@@ -118,7 +119,7 @@ public class HL7LabImportRulesPreferencePage extends PreferencePage
 					findAllLabsWithPathFlagMissingMeansNonPathologic();
 				if (!findAllLabsWithPathFlagMissingMeansNonPathologic.contains(contact)) {
 					findAllLabsWithPathFlagMissingMeansNonPathologic.add(contact);
-					CoreHub.globalCfg.setAsList(
+					ConfigServiceHolder.setGlobalAsList(
 						Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES,
 						findAllLabsWithPathFlagMissingMeansNonPathologic.stream()
 							.map(l -> l.getId()).collect(Collectors.toList()));
@@ -142,7 +143,7 @@ public class HL7LabImportRulesPreferencePage extends PreferencePage
 				Set<Labor> findAllLabsWithPathFlagMissingMeansNonPathologic =
 					findAllLabsWithPathFlagMissingMeansNonPathologic();
 				findAllLabsWithPathFlagMissingMeansNonPathologic.remove(contact);
-				CoreHub.globalCfg.setAsList(
+				ConfigServiceHolder.setGlobalAsList(
 					Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES,
 					findAllLabsWithPathFlagMissingMeansNonPathologic.stream().map(l -> l.getId())
 						.collect(Collectors.toList()));

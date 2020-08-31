@@ -10,3 +10,4 @@ Require-Bundle: org.eclipse.ui,
  ch.rgw.utility,
  ch.elexis.core.data;bundle-version="3.2.0",
  ch.elexis.core.ui;bundle-version="3.2.0"
+Import-Package: ch.elexis.core.services.holder

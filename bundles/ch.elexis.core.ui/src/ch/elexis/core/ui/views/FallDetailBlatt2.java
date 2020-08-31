@@ -63,6 +63,7 @@ import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.FallConstants;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.locks.IUnlockable;
@@ -819,7 +820,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			String subkey = (String) arr[i];
 			String abrSystem = getSelectedFall().getAbrechnungsSystem();
 			String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + abrSystem; //$NON-NLS-1$
-			String bed = CoreHub.globalCfg.get(key + "/bedingungen", StringTool.leer); //$NON-NLS-1$
+			String bed = ConfigServiceHolder.getGlobal(key + "/bedingungen", StringTool.leer); //$NON-NLS-1$
 			boolean isAlreadyShown = false;
 			if (subkey.equalsIgnoreCase(FallConstants.FLD_EXTINFO_BILLING))
 				isAlreadyShown = true;
@@ -850,7 +851,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					}
 				}
 			}
-			String opt = CoreHub.globalCfg.get(key + "/fakultativ", StringTool.leer); //$NON-NLS-1$
+			String opt = ConfigServiceHolder.getGlobal(key + "/fakultativ", StringTool.leer); //$NON-NLS-1$
 			if (!isAlreadyShown) {
 				String[] optArr = opt.split(DEFINITIONSDELIMITER);
 				if (!opt.isEmpty()) {
