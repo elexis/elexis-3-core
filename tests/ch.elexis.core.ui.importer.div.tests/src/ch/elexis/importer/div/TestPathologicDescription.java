@@ -63,7 +63,7 @@ public class TestPathologicDescription {
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
 		// set the use local config to true
-		CoreHub.userCfg.set(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
+		ConfigServiceHolder.setUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
 		CoreHub.userCfg.flush();
 		
 		parseOneHL7file(new File(workDir.toString(), "Analytica/01TEST5005.hl7"), false, true);
@@ -122,7 +122,7 @@ public class TestPathologicDescription {
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
 		// set the use local config to true
-		CoreHub.userCfg.set(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
+		ConfigServiceHolder.setUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
 		CoreHub.userCfg.flush();
 		
 		parseOneHL7file(new File(workDir.toString(), "Analytica/0216370074_6417526401671.hl7"),
@@ -162,7 +162,7 @@ public class TestPathologicDescription {
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
 		// set the use local config to false
-		CoreHub.userCfg.set(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, false);
+		ConfigServiceHolder.setUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, false);
 		CoreHub.userCfg.flush();
 		// test if parser will read correct value
 		assertFalse(ConfigServiceHolder.get().get(
@@ -334,7 +334,7 @@ public class TestPathologicDescription {
 		removeAllPatientsAndDependants();
 		removeAllLaboWerte();
 		// set the use local config to false
-		CoreHub.userCfg.set(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, false);
+		ConfigServiceHolder.setUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, false);
 		CoreHub.userCfg.flush();
 		
 		parseOneHL7file(new File(workDir.toString(),

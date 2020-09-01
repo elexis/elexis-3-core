@@ -34,6 +34,7 @@ import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.interfaces.ITransferable;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.ch.BillingLaw;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.data.dto.FallDTO;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
@@ -719,17 +720,17 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	}
 	
 	public static String getDefaultCaseLabel(){
-		return CoreHub.userCfg.get(Preferences.USR_DEFCASELABEL,
+		return ConfigServiceHolder.getUser(Preferences.USR_DEFCASELABEL,
 			Preferences.USR_DEFCASELABEL_DEFAULT);
 	}
 	
 	public static String getDefaultCaseReason(){
-		return CoreHub.userCfg.get(Preferences.USR_DEFCASEREASON,
+		return ConfigServiceHolder.getUser(Preferences.USR_DEFCASEREASON,
 			Preferences.USR_DEFCASEREASON_DEFAULT);
 	}
 	
 	public static String getDefaultCaseLaw(){
-		return CoreHub.userCfg.get(Preferences.USR_DEFLAW,
+		return ConfigServiceHolder.getUser(Preferences.USR_DEFLAW,
 			BillingSystem.getAbrechnungsSysteme()[0]);
 	}
 	

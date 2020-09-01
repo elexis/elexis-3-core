@@ -38,12 +38,12 @@ import org.eclipse.ui.statushandlers.StatusManager;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -153,7 +153,7 @@ public class CodeDetailView extends ViewPart implements IActivationListener, ISa
 	}
 	
 	private void addAllPages(){
-		String settings = CoreHub.userCfg.get(Preferences.USR_SERVICES_DIAGNOSES_CODES, null);
+		String settings = ConfigServiceHolder.getUser(Preferences.USR_SERVICES_DIAGNOSES_CODES, null);
 		if (settings == null) {
 			new MakrosCTabItem(ctab, SWT.NONE);
 			new FavoritenCTabItem(ctab, SWT.None);

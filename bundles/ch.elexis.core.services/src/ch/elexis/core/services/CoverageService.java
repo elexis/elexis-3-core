@@ -191,7 +191,7 @@ public class CoverageService implements ICoverageService {
 				"defaultBillingSystem");
 		}
 		return "defaultBillingSystem";
-		//		return CoreHub.userCfg.get(Preferences.USR_DEFLAW,
+		//		return ConfigServiceHolder.getUser(Preferences.USR_DEFLAW,
 		//			BillingSystem.getAbrechnungsSysteme()[0]);
 	}
 }

@@ -17,8 +17,8 @@ import org.eclipse.swt.widgets.Label;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.issue.Visibility;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.views.Messages;
 
@@ -153,7 +153,7 @@ public class ReminderVisibilityAndPopupComposite extends Composite {
 		} else {
 			if (visibility == null) {
 				visibility = Visibility.ALWAYS;
-				boolean defaultPatientRelated = CoreHub.userCfg.get(Preferences.USR_REMINDER_DEFAULT_PATIENT_RELATED,
+				boolean defaultPatientRelated = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_DEFAULT_PATIENT_RELATED,
 						false);
 				if (withPatientRelation && defaultPatientRelated) {
 					visibility = Visibility.ON_PATIENT_SELECTION;

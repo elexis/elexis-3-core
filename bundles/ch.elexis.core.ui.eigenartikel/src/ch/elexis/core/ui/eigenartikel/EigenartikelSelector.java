@@ -39,6 +39,7 @@ import ch.elexis.core.eigenartikel.acl.ACLContributor;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.localarticle.Constants;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.ICodeSelectorTarget;
 import ch.elexis.core.ui.actions.RestrictedAction;
@@ -93,7 +94,7 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 		EigenartikelTreeContentProvider eal = new EigenartikelTreeContentProvider(commonViewer);
 		
 		ShowEigenartikelProductsAction seaoa = new ShowEigenartikelProductsAction(eal, this);
-		rearrangePackagesAction.setEnabled(CoreHub.userCfg.get(ShowEigenartikelProductsAction.FILTER_CFG, false));
+		rearrangePackagesAction.setEnabled(ConfigServiceHolder.getUser(ShowEigenartikelProductsAction.FILTER_CFG, false));
 		
 		FieldDescriptor<?>[] lbName = new FieldDescriptor<?>[] {
 			new FieldDescriptor<IArticle>(EigenartikelTreeContentProvider.FILTER_KEY)

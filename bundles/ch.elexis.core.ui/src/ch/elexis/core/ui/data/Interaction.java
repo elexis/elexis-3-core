@@ -32,6 +32,7 @@ import au.com.bytecode.opencsv.CSVReader;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
@@ -133,7 +134,7 @@ public class Interaction extends PersistentObject {
 				version.set(FLD_NAME1, VERSION);
 			}
 		}
-		if (!CoreHub.userCfg.get(Preferences.USR_SUPPRESS_INTERACTION_CHECK, true)) {
+		if (!ConfigServiceHolder.getUser(Preferences.USR_SUPPRESS_INTERACTION_CHECK, true)) {
 			importMappingFromCsv();
 		}
 	}

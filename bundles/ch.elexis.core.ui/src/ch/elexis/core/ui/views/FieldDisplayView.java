@@ -39,6 +39,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
 import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
@@ -46,7 +47,6 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.data.Anwender;
-import ch.elexis.data.Mandant;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
@@ -108,8 +108,8 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 		if (subid == null) {
 			subid = "defaultData"; //$NON-NLS-1$
 		}
-		nx = CoreHub.userCfg.get("FieldDisplayViewData/" + subid, null); //$NON-NLS-1$
-		canEdit = CoreHub.userCfg.get("FieldDisplayViewCanEdit/" + subid, 0); //$NON-NLS-1$
+		nx = ConfigServiceHolder.getUser("FieldDisplayViewData/" + subid, null); //$NON-NLS-1$
+		canEdit = ConfigServiceHolder.getUser("FieldDisplayViewCanEdit/" + subid, 0); //$NON-NLS-1$
 		setField(nx == null ? "Patient.Diagnosen" : nx, canEdit == null ? false //$NON-NLS-1$
 				: (canEdit != 0));
 		GlobalEventDispatcher.addActivationListener(this, getViewSite().getPart());
@@ -163,8 +163,8 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 				}
 			});
 		} else if (ev.getClass().equals(Anwender.class)) {
-			String nx = CoreHub.userCfg.get("FieldDisplayViewData/" + subid, null); //$NON-NLS-1$
-			Integer canEdit = CoreHub.userCfg.get("FieldDisplayViewCanEdit/" //$NON-NLS-1$
+			String nx = ConfigServiceHolder.getUser("FieldDisplayViewData/" + subid, null); //$NON-NLS-1$
+			Integer canEdit = ConfigServiceHolder.getUser("FieldDisplayViewCanEdit/" //$NON-NLS-1$
 				+ subid, 0);
 			setField(nx == null ? "Patient.Diagnosen" : nx, //$NON-NLS-1$
 				canEdit == null ? false : (canEdit != 0));
@@ -200,9 +200,9 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 				myField = def[1];
 				bCanEdit = canEdit;
 				setPartName(myField);
-				CoreHub.userCfg.set("FieldDisplayViewData/" + subid, myClass //$NON-NLS-1$
+				ConfigServiceHolder.setUser("FieldDisplayViewData/" + subid, myClass //$NON-NLS-1$
 					.getSimpleName() + "." + myField); //$NON-NLS-1$
-				CoreHub.userCfg.set("FieldDisplayViewCanEdit/" + subid, canEdit); //$NON-NLS-1$
+				ConfigServiceHolder.setUser("FieldDisplayViewCanEdit/" + subid, canEdit); //$NON-NLS-1$
 				
 			}
 		}

@@ -240,12 +240,12 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		bCheckZero.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e){
-				CoreHub.userCfg.set(Preferences.LEISTUNGSCODES_BILLING_ZERO_CHECK,
+				ConfigServiceHolder.setUser(Preferences.LEISTUNGSCODES_BILLING_ZERO_CHECK,
 					bCheckZero.getSelection());
 			}
 		});
 		bCheckZero.setSelection(
-			CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_BILLING_ZERO_CHECK, false));
+			ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_BILLING_ZERO_CHECK, false));
 		bCheckZero.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		
 		bStrictCheck = new Button(ret, SWT.CHECK);
@@ -253,12 +253,12 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		bStrictCheck.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e){
-				CoreHub.userCfg.set(Preferences.LEISTUNGSCODES_BILLING_STRICT,
+				ConfigServiceHolder.setUser(Preferences.LEISTUNGSCODES_BILLING_STRICT,
 					bStrictCheck.getSelection());
 			}
 		});
 		bStrictCheck
-			.setSelection(CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_BILLING_STRICT, true));
+			.setSelection(ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_BILLING_STRICT, true));
 		bStrictCheck.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		
 		final Button bOptify = new Button(ret, SWT.CHECK);
@@ -266,11 +266,11 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		bOptify.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e){
-				CoreHub.userCfg.set(Preferences.LEISTUNGSCODES_OPTIFY, bOptify.getSelection());
+				ConfigServiceHolder.setUser(Preferences.LEISTUNGSCODES_OPTIFY, bOptify.getSelection());
 			}
 			
 		});
-		bOptify.setSelection(CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_OPTIFY, true));
+		bOptify.setSelection(ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_OPTIFY, true));
 		bOptify.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		
 		final Button bOptifyXray = new Button(ret, SWT.CHECK);
@@ -278,12 +278,12 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		bOptifyXray.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e){
-				CoreHub.userCfg.set(Preferences.LEISTUNGSCODES_OPTIFY_XRAY,
+				ConfigServiceHolder.setUser(Preferences.LEISTUNGSCODES_OPTIFY_XRAY,
 					bOptifyXray.getSelection());
 			}
 			
 		});
-		bOptifyXray.setSelection(CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_OPTIFY_XRAY, true));
+		bOptifyXray.setSelection(ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_OPTIFY_XRAY, true));
 		bOptifyXray.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		
 		// *** checkbox for enforcing separate Fall for obligations and non obligations
@@ -292,12 +292,12 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		bObligation.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e){
-				CoreHub.userCfg.set(Preferences.LEISTUNGSCODES_OBLIGATION,
+				ConfigServiceHolder.setUser(Preferences.LEISTUNGSCODES_OBLIGATION,
 					bObligation.getSelection());
 			}
 			
 		});
-		bObligation.setSelection(CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_OBLIGATION, false));
+		bObligation.setSelection(ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_OBLIGATION, false));
 		bObligation.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		
 		// *** checkbox for removing open reminders if bill is fully payed

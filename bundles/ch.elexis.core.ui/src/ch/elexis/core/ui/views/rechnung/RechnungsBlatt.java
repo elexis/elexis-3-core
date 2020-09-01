@@ -81,6 +81,7 @@ import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
@@ -614,23 +615,23 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	
 	private void saveExpandedState(String field, boolean state){
 		if (state) {
-			CoreHub.userCfg.set(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES + field,
+			ConfigServiceHolder.setUser(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES + field,
 				USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_OPEN);
 		} else {
-			CoreHub.userCfg.set(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES + field,
+			ConfigServiceHolder.setUser(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES + field,
 				USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED);
 		}
 	}
 	
 	private void setExpandedState(ExpandableComposite ec, String field){
-		String mode = CoreHub.userCfg.get(USERSETTINGS2_EXPANDABLE_COMPOSITES,
+		String mode = ConfigServiceHolder.getUser(USERSETTINGS2_EXPANDABLE_COMPOSITES,
 			USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_REMEMBER_STATE);
 		if (mode.equals(USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_OPEN)) {
 			ec.setExpanded(true);
 		} else if (mode.equals(USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED)) {
 			ec.setExpanded(false);
 		} else {
-			String state = CoreHub.userCfg.get(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES + field,
+			String state = ConfigServiceHolder.getUser(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES + field,
 				USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED);
 			if (state.equals(USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED)) {
 				ec.setExpanded(false);

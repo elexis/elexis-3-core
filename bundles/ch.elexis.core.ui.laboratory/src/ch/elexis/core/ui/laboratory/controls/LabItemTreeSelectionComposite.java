@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.laboratory.preferences.LabGroupPrefs;
 import ch.elexis.data.LabGroup;
 import ch.elexis.data.LabItem;
@@ -206,7 +206,7 @@ public class LabItemTreeSelectionComposite extends Composite {
 			return allGroups;
 		}
 		
-		if (!CoreHub.userCfg.get(LabGroupPrefs.SHOW_GROUPS_ONLY, false)) {
+		if (!ConfigServiceHolder.getUser(LabGroupPrefs.SHOW_GROUPS_ONLY, false)) {
 			for (LabItem it : lItems) {
 				String groupName = it.getGroup();
 				Group group = allGroups.get(groupName);

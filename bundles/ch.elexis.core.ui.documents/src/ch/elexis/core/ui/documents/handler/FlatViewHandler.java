@@ -10,7 +10,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.documents.views.DocumentsView;
 
 public class FlatViewHandler extends AbstractHandler implements IElementUpdater {
@@ -21,14 +21,14 @@ public class FlatViewHandler extends AbstractHandler implements IElementUpdater 
 			.findView(DocumentsView.ID);
 		if (viewPart instanceof DocumentsView) {
 			((DocumentsView) viewPart)
-				.switchFlatView(!CoreHub.userCfg.get(DocumentsView.SETTING_FLAT_VIEW, false));
+				.switchFlatView(!ConfigServiceHolder.getUser(DocumentsView.SETTING_FLAT_VIEW, false));
 		}
 		return null;
 	}
 	
 	@Override
 	public void updateElement(UIElement element, Map parameters){
-		boolean bFlat = CoreHub.userCfg.get(DocumentsView.SETTING_FLAT_VIEW, false);
+		boolean bFlat = ConfigServiceHolder.getUser(DocumentsView.SETTING_FLAT_VIEW, false);
 		element.setChecked(bFlat);
 	}
 }

@@ -64,7 +64,6 @@ import org.eclipse.ui.statushandlers.StatusManager;
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.constants.XidConstants;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
@@ -76,6 +75,7 @@ import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.MaritalStatus;
 import ch.elexis.core.model.PatientConstants;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
@@ -451,7 +451,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				}
 			}));
 		
-		String[] userfields = CoreHub.userCfg.get(CFG_EXTRAFIELDS, StringConstants.EMPTY)
+		String[] userfields = ConfigServiceHolder.getUser(CFG_EXTRAFIELDS, StringConstants.EMPTY)
 			.split(StringConstants.COMMA);
 		for (String extfield : userfields) {
 			if (!StringTool.isNothing(extfield)) {

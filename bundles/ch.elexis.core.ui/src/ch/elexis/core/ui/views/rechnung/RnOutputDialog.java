@@ -37,6 +37,7 @@ import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.interfaces.IRnOutputter;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.InvoiceState;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -121,9 +122,9 @@ public class RnOutputDialog extends TitleAreaDialog {
 	
 	@Override
 	protected void okPressed(){
-		boolean activated = CoreHub.userCfg.get(Preferences.USR_SHOWPATCHGREMINDER, false);
+		boolean activated = ConfigServiceHolder.getUser(Preferences.USR_SHOWPATCHGREMINDER, false);
 		if (activated) {
-			CoreHub.userCfg.set(Preferences.USR_SHOWPATCHGREMINDER, false);
+			ConfigServiceHolder.setUser(Preferences.USR_SHOWPATCHGREMINDER, false);
 		}
 		int idx = cbLo.getSelectionIndex();
 		if (idx != -1) {
@@ -147,7 +148,7 @@ public class RnOutputDialog extends TitleAreaDialog {
 				new Properties());
 		}
 		if (activated) {
-			CoreHub.userCfg.set(Preferences.USR_SHOWPATCHGREMINDER, true);
+			ConfigServiceHolder.setUser(Preferences.USR_SHOWPATCHGREMINDER, true);
 		}
 		super.okPressed();
 	}

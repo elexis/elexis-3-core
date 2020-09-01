@@ -89,13 +89,43 @@ public class ConfigServiceHolder {
 	
 	// active user access methods
 	
-	public static String getActiveUser(String key, String defaultValue){
+	public static String getUser(String key, String defaultValue){
 		return configService.getActiveUserContact(key, defaultValue);
+	}
+	
+	public static boolean getUser(String key, boolean defaultValue){
+		return configService.getActiveUserContact(key, defaultValue);
+	}
+	
+	public static Integer getUser(String key, int defaultValue){
+		return configService.getActiveUserContact(key, defaultValue);
+	}
+	
+	public static boolean setUser(String key, String value){
+		return configService.setActiveUserContact(key, value);
+	}
+	
+	public static boolean setUser(String key, boolean value){
+		return configService.setActiveUserContact(key, value);
+	}
+	
+	public static boolean setUser(String key, int value){
+		return configService.setActiveUserContact(key, value);
+	}
+	
+	public static void setUserAsList(String key, List<String> values){
+		Optional<String> value =
+			values.stream().map(o -> o.toString()).reduce((u, t) -> u + "," + t);
+		if (value.isPresent()) {
+			configService.setActiveUserContact(key, value.get());
+		} else {
+			configService.setActiveUserContact(key, null);
+		}
 	}
 	
 	// active mandator access methods
 	
-	public static String getActiveMandator(String key, String defaultValue){
+	public static String getMandator(String key, String defaultValue){
 		return configService.getActiveMandator(key, defaultValue);
 	}
 	

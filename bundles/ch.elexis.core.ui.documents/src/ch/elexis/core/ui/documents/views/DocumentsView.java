@@ -89,6 +89,7 @@ import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.documents.Messages;
 import ch.elexis.core.ui.documents.handler.DocumentCrudHandler;
@@ -338,7 +339,7 @@ public class DocumentsView extends ViewPart {
 		viewer.setUseHashlookup(true);
 		viewer.addFilter(new ViewFilterProvider());
 		
-		bFlat = CoreHub.userCfg.get(SETTING_FLAT_VIEW, false);
+		bFlat = ConfigServiceHolder.getUser(SETTING_FLAT_VIEW, false);
 		contentProvider.setFlat(bFlat);
 		
 		ovComparator = new DocumentsViewerComparator();
@@ -587,9 +588,9 @@ public class DocumentsView extends ViewPart {
 	private void applySortDirection(){
 		String[] usrSortSettings = sortSettings.split(",");
 		
-		/*	if (CoreHub.userCfg.get(PreferencePage.SAVE_SORT_DIRECTION, false)) {
+		/*	if (ConfigServiceHolder.getUser(PreferencePage.SAVE_SORT_DIRECTION, false)) {
 				String sortSet =
-					CoreHub.userCfg.get(PreferencePage.USR_SORT_DIRECTION_SETTINGS, sortSettings);
+					ConfigServiceHolder.getUser(PreferencePage.USR_SORT_DIRECTION_SETTINGS, sortSettings);
 				usrSortSettings = sortSet.split(",");
 			}*/
 		
@@ -613,8 +614,8 @@ public class DocumentsView extends ViewPart {
 	private void applyUsersColumnWidthSetting(){
 		TreeColumn[] treeColumns = table.getColumns();
 		String[] userColWidth = colWidth.split(",");
-		/*if (CoreHub.userCfg.get(PreferencePage.SAVE_COLUM_WIDTH, false)) {
-			String ucw = CoreHub.userCfg.get(PreferencePage.USR_COLUMN_WIDTH_SETTINGS, colWidth);
+		/*if (ConfigServiceHolder.getUser(PreferencePage.SAVE_COLUM_WIDTH, false)) {
+			String ucw = ConfigServiceHolder.getUser(PreferencePage.USR_COLUMN_WIDTH_SETTINGS, colWidth);
 			userColWidth = ucw.split(",");
 		}*/
 		
@@ -646,7 +647,7 @@ public class DocumentsView extends ViewPart {
 				sb.append(tc.getWidth());
 				sb.append(",");
 			}
-			//	CoreHub.userCfg.set(PreferencePage.USR_COLUMN_WIDTH_SETTINGS, sb.toString());
+			//	ConfigServiceHolder.setUser(PreferencePage.USR_COLUMN_WIDTH_SETTINGS, sb.toString());
 			
 			//	saveSortSettings();
 		}
@@ -656,7 +657,7 @@ public class DocumentsView extends ViewPart {
 		int propertyIdx = ovComparator.getPropertyIndex();
 		int direction = ovComparator.getDirectionDigit();
 		int catDirection = ovComparator.getCategoryDirection();
-		CoreHub.userCfg.set(PreferencePage.USR_SORT_DIRECTION_SETTINGS, propertyIdx + "," + direction
+		ConfigServiceHolder.setUser(PreferencePage.USR_SORT_DIRECTION_SETTINGS, propertyIdx + "," + direction
 				+ "," + catDirection + "," + bFlat);
 	}*/
 	
@@ -706,7 +707,7 @@ public class DocumentsView extends ViewPart {
 	public void switchFlatView(boolean bFlat){
 		this.bFlat = bFlat;
 		if (viewer != null) {
-			CoreHub.userCfg.set(SETTING_FLAT_VIEW, bFlat);
+			ConfigServiceHolder.setUser(SETTING_FLAT_VIEW, bFlat);
 			contentProvider.setFlat(bFlat);
 			viewer.refresh();
 		}

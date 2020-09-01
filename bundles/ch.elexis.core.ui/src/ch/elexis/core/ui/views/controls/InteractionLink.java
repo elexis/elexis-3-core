@@ -18,9 +18,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.data.Interaction;
 
@@ -36,7 +36,7 @@ public class InteractionLink {
 
 	public InteractionLink(Composite parent, int style){
 		interactionLink = new Link(parent, style);
-		if (CoreHub.userCfg.get(Preferences.USR_SUPPRESS_INTERACTION_CHECK, true)) {
+		if (ConfigServiceHolder.getUser(Preferences.USR_SUPPRESS_INTERACTION_CHECK, true)) {
 			setSuppressed();
 		} else {
 			// parent.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
@@ -53,7 +53,7 @@ public class InteractionLink {
 	
 	public String updateAtcs(List<IArticle> gtins){
 		interactionLink.setText(""); //$NON-NLS-1$
-		if (CoreHub.userCfg.get(Preferences.USR_SUPPRESS_INTERACTION_CHECK, true)) {
+		if (ConfigServiceHolder.getUser(Preferences.USR_SUPPRESS_INTERACTION_CHECK, true)) {
 			setSuppressed();
 			return ""; //$NON-NLS-1$
 		}

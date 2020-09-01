@@ -31,14 +31,13 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.issue.ProcessStatus;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.preferences.inputs.DecoratedStringChooser;
 import ch.elexis.core.ui.util.DecoratedString;
 import ch.elexis.data.Reminder;
-import ch.rgw.io.Settings;
 
 public class ReminderPrefences extends PreferencePage implements IWorkbenchPreferencePage {
-	Settings cfg;
 	DecoratedString[] strings;
 	private Button showRemindersOnPatientSelectionEventBtn;
 	private ListViewer lViewerChoosen, lViewerAvailable;
@@ -51,7 +50,6 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 	
 	public ReminderPrefences(){
 		super(Messages.ReminderPrefences_Reminders);
-		cfg = CoreHub.userCfg.getBranch(Preferences.USR_REMINDERCOLORS, true);
 		strings = new DecoratedString[4];
 		strings[0] =
 			new DecoratedString(ProcessStatus.OPEN.getLocaleText(), ProcessStatus.OPEN.name());
@@ -62,7 +60,7 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 		strings[3] = new DecoratedString(ProcessStatus.OVERDUE.getLocaleText(),
 			ProcessStatus.OVERDUE.name());
 		
-		choosenFields = CoreHub.userCfg.get(Preferences.USR_REMINDER_PAT_LABEL_CHOOSEN,
+		choosenFields = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_PAT_LABEL_CHOOSEN,
 			Reminder.LabelFields.LASTNAME.toString()).split(",");
 		if (choosenFields.length == 3) {
 			availableFields = new String[] {};
@@ -81,14 +79,15 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 		int nrElementsInTop = 3;
 		ret.setLayout(new GridLayout(nrElementsInTop, true));
 		new Label(ret, SWT.NONE).setText(Messages.ReminderPrefences_SetColors);
-		DecoratedStringChooser chooser = new DecoratedStringChooser(ret, cfg, strings);
+		DecoratedStringChooser chooser =
+			new DecoratedStringChooser(ret, Preferences.USR_REMINDERCOLORS, strings);
 		chooser.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, nrElementsInTop, 1));
 
 		showRemindersOnPatientSelectionEventBtn = new Button(ret, SWT.CHECK);
 		showRemindersOnPatientSelectionEventBtn
 			.setText(Messages.ReminderPrefences_ShowPatientSelectionRedminders);
 		showRemindersOnPatientSelectionEventBtn
-			.setSelection(CoreHub.userCfg.get(Preferences.USR_SHOWPATCHGREMINDER, false));
+			.setSelection(ConfigServiceHolder.getUser(Preferences.USR_SHOWPATCHGREMINDER, false));
 		showRemindersOnPatientSelectionEventBtn
 			.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, nrElementsInTop, 1));
 		
@@ -97,11 +96,11 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 		defaultPatientRelated.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e){
-				CoreHub.userCfg.get(Preferences.USR_REMINDER_DEFAULT_PATIENT_RELATED, defaultPatientRelated.getSelection());
+				ConfigServiceHolder.getUser(Preferences.USR_REMINDER_DEFAULT_PATIENT_RELATED, defaultPatientRelated.getSelection());
 			}
 		});
 		defaultPatientRelated.setSelection(
-			CoreHub.userCfg.get(Preferences.USR_REMINDER_DEFAULT_PATIENT_RELATED, true));
+			ConfigServiceHolder.getUser(Preferences.USR_REMINDER_DEFAULT_PATIENT_RELATED, true));
 		defaultPatientRelated.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, nrElementsInTop, 1));
 		
 		defaultResponsibleSelf = new Button(ret, SWT.CHECK);
@@ -109,11 +108,11 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 		defaultResponsibleSelf.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e){
-				CoreHub.userCfg.get(Preferences.USR_REMINDER_DEFAULT_RESPONSIBLE_SELF, defaultResponsibleSelf.getSelection());
+				ConfigServiceHolder.getUser(Preferences.USR_REMINDER_DEFAULT_RESPONSIBLE_SELF, defaultResponsibleSelf.getSelection());
 			}
 		});
 		defaultResponsibleSelf.setSelection(
-			CoreHub.userCfg.get(Preferences.USR_REMINDER_DEFAULT_RESPONSIBLE_SELF, false));
+			ConfigServiceHolder.getUser(Preferences.USR_REMINDER_DEFAULT_RESPONSIBLE_SELF, false));
 		defaultResponsibleSelf.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, nrElementsInTop, 1));
 		
 		new Label(ret, SWT.NONE);
@@ -206,21 +205,20 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 	
 	@Override
 	protected void performApply(){
-		cfg.flush();
 		super.performApply();
 	}
 	
 	@Override
 	public boolean performOk(){
-		CoreHub.userCfg.set(Preferences.USR_SHOWPATCHGREMINDER,
+		ConfigServiceHolder.setUser(Preferences.USR_SHOWPATCHGREMINDER,
 			showRemindersOnPatientSelectionEventBtn.getSelection());
-		CoreHub.userCfg.set(Preferences.USR_REMINDER_DEFAULT_PATIENT_RELATED,
+		ConfigServiceHolder.setUser(Preferences.USR_REMINDER_DEFAULT_PATIENT_RELATED,
 			defaultPatientRelated.getSelection());
-		CoreHub.userCfg.set(Preferences.USR_REMINDER_DEFAULT_RESPONSIBLE_SELF,
+		ConfigServiceHolder.setUser(Preferences.USR_REMINDER_DEFAULT_RESPONSIBLE_SELF,
 			defaultResponsibleSelf.getSelection());
-		CoreHub.userCfg.set(Preferences.USR_REMINDER_PAT_LABEL_CHOOSEN,
+		ConfigServiceHolder.setUser(Preferences.USR_REMINDER_PAT_LABEL_CHOOSEN,
 			getListAsString(lViewerChoosen.getList().getItems()));
-		CoreHub.userCfg.set(Preferences.USR_REMINDER_PAT_LABEL_AVAILABLE,
+		ConfigServiceHolder.setUser(Preferences.USR_REMINDER_PAT_LABEL_AVAILABLE,
 			getListAsString(lViewerAvailable.getList().getItems()));
 		
 		CoreHub.userCfg.flush();
