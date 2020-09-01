@@ -184,7 +184,6 @@ public class Desk implements IApplication {
 			if (localLock.tryLock()) {
 				ConfigServiceHolder.setGlobal(Preferences.INSTALLATION_TIMESTAMP,
 					Long.toString(System.currentTimeMillis()));
-				CoreHub.globalCfg.flush();
 			}
 			localLock.unlock();
 		}

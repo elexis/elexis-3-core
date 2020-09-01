@@ -28,6 +28,10 @@ public class ConfigServiceHolder {
 		return configService;
 	}
 	
+	public static boolean isPresent(){
+		return configService != null;
+	}
+	
 	// global access methods
 	
 	public static String getGlobal(String key, String defaultValue){
@@ -93,5 +97,15 @@ public class ConfigServiceHolder {
 	
 	public static String getActiveMandator(String key, String defaultValue){
 		return configService.getActiveMandator(key, defaultValue);
+	}
+	
+	// local access methods
+	
+	public static boolean getLocal(String key, boolean defaultValue){
+		return configService.getLocal(key, defaultValue);
+	}
+	
+	public static String getLocal(String key, String defaultValue){
+		return configService.getLocal(key, defaultValue);
 	}
 }

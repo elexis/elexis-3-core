@@ -47,7 +47,6 @@ import org.eclipse.ui.dialogs.ListDialog;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.StockCommissioningServiceHolder;
 import ch.elexis.core.ui.UiDesk;
@@ -457,7 +456,8 @@ public class StockManagementPreferencePage extends PreferencePage
 						lblDefaultArticleProvider.setText(p.getLabel());
 					}
 				} else {
-					CoreHub.globalCfg.remove(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER);
+					ConfigServiceHolder.setGlobal(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER,
+						null);
 					lblDefaultArticleProvider.setText("");
 				}
 			}

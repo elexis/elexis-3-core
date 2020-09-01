@@ -66,7 +66,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	public void initializeGlobalPreferences(){
 		IPreferenceStore global = new ConfigServicePreferenceStore(Scope.GLOBAL);
 		global.setDefault(Preferences.ABL_TRACE, "none"); //$NON-NLS-1$
-		CoreHub.globalCfg.flush();
 	}
 	
 	@Override

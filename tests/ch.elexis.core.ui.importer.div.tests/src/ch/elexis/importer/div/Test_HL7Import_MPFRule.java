@@ -53,7 +53,6 @@ public class Test_HL7Import_MPFRule {
 				Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES,
 				Collections.emptyList());
 		}
-		CoreHub.globalCfg.flush();
 	}
 	
 	@Parameterized.Parameters(name = "{0}")

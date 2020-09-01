@@ -151,7 +151,6 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 		if (isValidNumber(txtKeepUnseen.getText())) {
 			ConfigServiceHolder.setGlobal(Preferences.LABSETTINGS_CFG_KEEP_UNSEEN_LAB_RESULTS,
 				txtKeepUnseen.getText());
-			CoreHub.globalCfg.flush();
 		}
 		CoreHub.userCfg.flush();
 		return super.performOk();

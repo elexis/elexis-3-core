@@ -106,7 +106,6 @@ public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 	 */
 	public void initializeGlobalPreferences(){
 		ConfigServiceHolder.setGlobal(Preferences.ABL_TRACE + SETTINGS_PREFERENCE_STORE_DEFAULT, "none");
-		CoreHub.globalCfg.flush();
 	}
 	
 	/**
