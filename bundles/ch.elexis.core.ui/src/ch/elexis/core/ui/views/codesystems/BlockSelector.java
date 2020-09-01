@@ -61,6 +61,7 @@ import ch.elexis.core.model.builder.ICodeElementBlockBuilder;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
@@ -271,22 +272,22 @@ public class BlockSelector extends CodeSelectorFactory {
 			{
 				setImageDescriptor(Images.IMG_FILTER.getImageDescriptor());
 				setToolTipText("Blockinhalt nicht durchsuchen");
-				setChecked(CoreHub.userCfg.get(BLOCK_ONLY_FILTER_ENABLED, false));
+				setChecked(ConfigServiceHolder.getUser(BLOCK_ONLY_FILTER_ENABLED, false));
 			}
 			
 			public void run(){
-				CoreHub.userCfg.set(BLOCK_ONLY_FILTER_ENABLED, isChecked());
+				ConfigServiceHolder.setUser(BLOCK_ONLY_FILTER_ENABLED, isChecked());
 			};
 		};
 		searchFilterMandator = new Action("Nur Blöcke des aktiven Mandanten", Action.AS_CHECK_BOX) {
 			{
 				setImageDescriptor(Images.IMG_PERSON.getImageDescriptor());
 				setToolTipText("Nur Blöcke des aktiven Mandanten");
-				setChecked(CoreHub.userCfg.get(BLOCK_FILTER_ONLY_MANDATOR, false));
+				setChecked(ConfigServiceHolder.getUser(BLOCK_FILTER_ONLY_MANDATOR, false));
 			}
 			
 			public void run(){
-				CoreHub.userCfg.set(BLOCK_FILTER_ONLY_MANDATOR, isChecked());
+				ConfigServiceHolder.setUser(BLOCK_FILTER_ONLY_MANDATOR, isChecked());
 				
 				if (cv.getConfigurer().getContentProvider() instanceof BlockContentProvider) {
 					BlockContentProvider blockContentProvider =

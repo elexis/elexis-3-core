@@ -44,6 +44,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.laboratory.dialogs.LabItemSelektor;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
@@ -182,11 +183,11 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 		
 		final Button showGroups = new Button(topArea, SWT.NONE | SWT.CHECK);
 		showGroups.setText(Messages.LabGroupPrefs_showLabGroupsOnly);
-		showGroups.setSelection(CoreHub.userCfg.get(SHOW_GROUPS_ONLY, false));
+		showGroups.setSelection(ConfigServiceHolder.getUser(SHOW_GROUPS_ONLY, false));
 		showGroups.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				CoreHub.userCfg.set(SHOW_GROUPS_ONLY, showGroups.getSelection());
+				ConfigServiceHolder.setUser(SHOW_GROUPS_ONLY, showGroups.getSelection());
 			}
 		});
 

@@ -57,6 +57,7 @@ import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.IBillingService;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.StockServiceHolder;
 import ch.elexis.core.text.model.Samdas;
 import ch.rgw.tools.ExHandler;
@@ -1237,7 +1238,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	
 	public static IDiagnose getDefaultDiagnose(){
 		IDiagnose ret = null;
-		String diagnoseId = CoreHub.userCfg.get(Preferences.USR_DEFDIAGNOSE, "");
+		String diagnoseId = ConfigServiceHolder.getUser(Preferences.USR_DEFDIAGNOSE, "");
 		if (diagnoseId.length() > 1) {
 			ret = (IDiagnose) CoreHub.poFactory.createFromString(diagnoseId);
 		}

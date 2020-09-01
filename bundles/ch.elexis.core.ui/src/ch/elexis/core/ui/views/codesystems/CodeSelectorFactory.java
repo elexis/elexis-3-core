@@ -57,6 +57,7 @@ import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.ICodeSelectorTarget;
@@ -176,9 +177,9 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 	public static void makeTabs(CTabFolder ctab, IViewSite site, String point){
 		String settings = null;
 		if (point.equals(ExtensionPointConstantsUi.VERRECHNUNGSCODE)) {
-			settings = CoreHub.userCfg.get(Preferences.USR_SERVICES_DIAGNOSES_SRV, null);
+			settings = ConfigServiceHolder.getUser(Preferences.USR_SERVICES_DIAGNOSES_SRV, null);
 		} else if (point.equals(ExtensionPointConstantsUi.DIAGNOSECODE)) {
-			settings = CoreHub.userCfg.get(Preferences.USR_SERVICES_DIAGNOSES_DIAGNOSE, null);
+			settings = ConfigServiceHolder.getUser(Preferences.USR_SERVICES_DIAGNOSES_DIAGNOSE, null);
 		}
 		
 		java.util.List<IConfigurationElement> list = Extensions.getExtensions(point);
@@ -203,7 +204,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 	 */
 	private static void addAllTabs(java.util.List<IConfigurationElement> list, CTabFolder ctab,
 		String point){
-		ITEMS_TO_SHOW_IN_MFU_LIST = CoreHub.userCfg.get(Preferences.USR_MFU_LIST_SIZE, 15);
+		ITEMS_TO_SHOW_IN_MFU_LIST = ConfigServiceHolder.getUser(Preferences.USR_MFU_LIST_SIZE, 15);
 		ctab.setSimple(false);
 		
 		//add favorites tab first
@@ -291,7 +292,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 			StringBuilder v = new StringBuilder();
 			v.append(Integer.toString(weights[0])).append(",").append(Integer.toString(weights[1])) //$NON-NLS-1$
 				.append(",").append(Integer.toString(weights[2])); //$NON-NLS-1$
-			CoreHub.userCfg.set(k, v.toString());
+			ConfigServiceHolder.setUser(k, v.toString());
 		}
 		
 	}
@@ -351,7 +352,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 			SashForm sash = new SashForm(this, SWT.VERTICAL | SWT.SMOOTH);
 			String cfgKey = "ansicht/codesystem/" + description.getCodeSystemName(); //$NON-NLS-1$
 			resizeListener = new ResizeListener(sash, cfgKey);
-			String sashW = CoreHub.userCfg.get(cfgKey, "20,20,60"); //$NON-NLS-1$
+			String sashW = ConfigServiceHolder.getUser(cfgKey, "20,20,60"); //$NON-NLS-1$
 			sashWeights = new int[3];
 			int i = 0;
 			for (String sw : sashW.split(",")) { //$NON-NLS-1$

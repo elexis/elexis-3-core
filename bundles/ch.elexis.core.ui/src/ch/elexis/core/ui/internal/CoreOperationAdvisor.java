@@ -36,6 +36,7 @@ import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.util.IRunnableWithProgress;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.ILoginContributor;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.UiResourceConstants;
@@ -79,7 +80,7 @@ public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 			initialPerspectiveString = CoreHub.localCfg
 				.get(CoreHub.getLoggedInContact() + GlobalActions.DEFAULTPERSPECTIVECFG, null);
 			boolean fixLayoutChecked =
-				CoreHub.userCfg.get(Preferences.USR_FIX_LAYOUT, Preferences.USR_FIX_LAYOUT_DEFAULT);
+				ConfigServiceHolder.getUser(Preferences.USR_FIX_LAYOUT, Preferences.USR_FIX_LAYOUT_DEFAULT);
 			if (GlobalActions.fixLayoutAction != null) {
 				GlobalActions.fixLayoutAction.setChecked(fixLayoutChecked);
 			}

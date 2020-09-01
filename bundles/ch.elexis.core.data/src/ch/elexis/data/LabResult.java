@@ -672,7 +672,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	 */
 	private String resolvePreferedRefValue(String localRef, String refField){
 		boolean useLocalRefs =
-			CoreHub.userCfg.get(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
+			ConfigServiceHolder.getUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
 		
 		if (useLocalRefs && localRef != null && !localRef.isEmpty()) {
 			return localRef;
@@ -695,7 +695,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	 */
 	private boolean isUsingItemRef(String refField){
 		boolean useLocalRefs =
-			CoreHub.userCfg.get(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
+			ConfigServiceHolder.getUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
 		String localRef;
 		if (REFMALE.equals(refField)) {
 			localRef = getItem().getReferenceMale();

@@ -23,10 +23,10 @@ import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.util.DecoratedString;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.rgw.io.Settings;
 
 /**
  * Ein Preference-Element zum EInstellen eines DecoratedStrings (Text mit Farbe und Icon)
@@ -36,7 +36,7 @@ import ch.rgw.io.Settings;
  */
 public class DecoratedStringChooser extends Composite {
 	
-	public DecoratedStringChooser(Composite parent, final Settings cfg,
+	public DecoratedStringChooser(Composite parent, final String prefix,
 		final DecoratedString[] strings){
 		super(parent, SWT.BORDER);
 		
@@ -57,9 +57,11 @@ public class DecoratedStringChooser extends Composite {
 			
 			String coldesc;
 			if(strings[i].getValue() != null) {
-				coldesc = cfg.get(strings[i].getValue(), "FFFFFF"); //$NON-NLS-1$
+				coldesc =
+					ConfigServiceHolder.getUser(prefix + "/" + strings[i].getValue(), "FFFFFF"); //$NON-NLS-1$
 			} else {
-				coldesc = cfg.get(strings[i].getText(), "FFFFFF"); //$NON-NLS-1$
+				coldesc =
+					ConfigServiceHolder.getUser(prefix + "/" + strings[i].getText(), "FFFFFF"); //$NON-NLS-1$
 			}
 
 			Color background = UiDesk.getColorFromRGB(coldesc);
@@ -77,9 +79,10 @@ public class DecoratedStringChooser extends Composite {
 						String symbolic = UiDesk.createColor(selected);
 						l.setBackground(UiDesk.getColorFromRGB(symbolic));
 						if(l.getData() != null) {
-							cfg.set((String) l.getData(), symbolic);
+							ConfigServiceHolder.setUser(prefix + "/" + (String) l.getData(),
+								symbolic);
 						} else {
-							cfg.set(l.getText(), symbolic);
+							ConfigServiceHolder.setUser(prefix + "/" + l.getText(), symbolic);
 						}
 					}
 				}

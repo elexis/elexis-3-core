@@ -13,6 +13,7 @@ import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.ch.BillingLaw;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.rgw.tools.JdbcLink;
 
 public class Test_Konsultation extends AbstractPersistentObjectTest {
@@ -52,11 +53,11 @@ public class Test_Konsultation extends AbstractPersistentObjectTest {
 	public void testConsultationCreation(){
 		// #5612 test default diagnosis
 		FreeTextDiagnose ftd = new FreeTextDiagnose("TextDefault", true);
-		CoreHub.userCfg.set(Preferences.USR_DEFDIAGNOSE, ftd.storeToString());
+		ConfigServiceHolder.setUser(Preferences.USR_DEFDIAGNOSE, ftd.storeToString());
 		Konsultation kons = new Konsultation(fall);
 		assertEquals(1, kons.getDiagnosen().size());
 		assertEquals(ftd.getId(), kons.getDiagnosen().get(0).getId());
-		CoreHub.userCfg.set(Preferences.USR_DEFDIAGNOSE, "");
+		ConfigServiceHolder.setUser(Preferences.USR_DEFDIAGNOSE, "");
 	}
 	
 	@Test

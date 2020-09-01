@@ -252,7 +252,7 @@ public class Rechnung extends PersistentObject {
 				"Die Rechnung hat keinen zugehörigen Fall (" + getRnDesc(ret) + ")", ret, true);
 			// garant=CoreHub.actMandant;
 		} else {
-			if (CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_BILLING_STRICT, true)
+			if (ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_BILLING_STRICT, true)
 				&& !f.isValid()) {
 				result = result.add(Result.SEVERITY.ERROR, 8,
 					"Die Rechnung hat keinen gültigen Fall (" + getRnDesc(ret) + ")", ret, true);
@@ -262,7 +262,7 @@ public class Rechnung extends PersistentObject {
 		}
 		
 		// check if there are any Konsultationen
-		if (CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_BILLING_STRICT, true)) {
+		if (ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_BILLING_STRICT, true)) {
 			if ((diagnosen == null) || (diagnosen.size() == 0)) {
 				result = result.add(Result.SEVERITY.ERROR, 6,
 					"Die Rechnung enthält keine Diagnose (" + getRnDesc(ret) + ")", ret, true);

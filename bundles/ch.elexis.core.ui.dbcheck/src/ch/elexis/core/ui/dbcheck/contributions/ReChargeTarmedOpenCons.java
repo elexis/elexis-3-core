@@ -24,6 +24,7 @@ import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.services.ICodeElementService;
 import ch.elexis.core.services.ICodeElementService.ContextKeys;
 import ch.elexis.core.services.holder.BillingServiceHolder;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.dbcheck.external.ExternalMaintenance;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Query;
@@ -45,8 +46,8 @@ public class ReChargeTarmedOpenCons extends ExternalMaintenance {
 		if (initCodeElementService()) {
 			// make sure not billing strict
 			boolean presetBillingStrict =
-				CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_BILLING_STRICT, false);
-			CoreHub.userCfg.set(Preferences.LEISTUNGSCODES_BILLING_STRICT, false);
+				ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_BILLING_STRICT, false);
+			ConfigServiceHolder.setUser(Preferences.LEISTUNGSCODES_BILLING_STRICT, false);
 			
 			List<Konsultation> consultations = getKonsultation(getBeginOfYear(), getEndOfYear());
 			pm.beginTask("Bitte warten, Tarmed Leistungen werden neu verrechnet",
@@ -90,7 +91,7 @@ public class ReChargeTarmedOpenCons extends ExternalMaintenance {
 				pm.worked(1);
 			}
 			
-			CoreHub.userCfg.set(Preferences.LEISTUNGSCODES_BILLING_STRICT, presetBillingStrict);
+			ConfigServiceHolder.setUser(Preferences.LEISTUNGSCODES_BILLING_STRICT, presetBillingStrict);
 			
 			pm.done();
 			deInitCodeElementService();

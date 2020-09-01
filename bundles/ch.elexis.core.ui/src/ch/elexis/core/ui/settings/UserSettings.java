@@ -9,6 +9,7 @@ import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EX
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 
 /**
  * 
@@ -27,10 +28,10 @@ public class UserSettings {
 	 */
 	public static void saveExpandedState(final String field, final boolean state){
 		if (state) {
-			CoreHub.userCfg.set(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES + field,
+			ConfigServiceHolder.setUser(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES + field,
 				USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_OPEN);
 		} else {
-			CoreHub.userCfg.set(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES + field,
+			ConfigServiceHolder.setUser(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES + field,
 				USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED);
 		}
 	}
@@ -46,7 +47,7 @@ public class UserSettings {
 	 */
 	public static void setExpandedState(final ExpandableComposite ec, final String field){
 		String mode =
-			CoreHub.userCfg.get(USERSETTINGS2_EXPANDABLE_COMPOSITES,
+			ConfigServiceHolder.getUser(USERSETTINGS2_EXPANDABLE_COMPOSITES,
 				USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_REMEMBER_STATE);
 		if (mode.equals(USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_OPEN)) {
 			ec.setExpanded(true);
@@ -54,7 +55,7 @@ public class UserSettings {
 			ec.setExpanded(false);
 		} else {
 			String state =
-				CoreHub.userCfg.get(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES + field,
+				ConfigServiceHolder.getUser(USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES + field,
 					USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED);
 			if (state.equals(USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_CLOSED)) {
 				ec.setExpanded(false);

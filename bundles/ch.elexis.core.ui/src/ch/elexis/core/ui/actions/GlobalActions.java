@@ -512,7 +512,7 @@ public class GlobalActions {
 			@Override
 			public void run(){
 				// store the current value in the user's configuration
-				CoreHub.userCfg.set(Preferences.USR_FIX_LAYOUT, fixLayoutAction.isChecked());
+				ConfigServiceHolder.setUser(Preferences.USR_FIX_LAYOUT, fixLayoutAction.isChecked());
 			}
 		};
 		makeBillAction = new Action(Messages.GlobalActions_MakeBill) { //$NON-NLS-1$

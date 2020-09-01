@@ -15,6 +15,7 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.dbcheck.contributions.dialogs.SelectBillingStrategyDialog;
 import ch.elexis.core.ui.dbcheck.external.ExternalMaintenance;
 import ch.elexis.data.Fall;
@@ -216,8 +217,8 @@ public class BillAllOpenCons extends ExternalMaintenance {
 		
 		// make sure not billing strict
 		boolean presetBillingStrict =
-			CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_BILLING_STRICT, false);
-		CoreHub.userCfg.set(Preferences.LEISTUNGSCODES_BILLING_STRICT, false);
+			ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_BILLING_STRICT, false);
+		ConfigServiceHolder.setUser(Preferences.LEISTUNGSCODES_BILLING_STRICT, false);
 		
 		Display display = Display.getDefault();
 		if (display != null) {
@@ -232,7 +233,7 @@ public class BillAllOpenCons extends ExternalMaintenance {
 			}
 		}
 		
-		CoreHub.userCfg.set(Preferences.LEISTUNGSCODES_BILLING_STRICT, presetBillingStrict);
+		ConfigServiceHolder.setUser(Preferences.LEISTUNGSCODES_BILLING_STRICT, presetBillingStrict);
 		
 		return "[" + count + "] Fälle abgerechnet" + getProblemsString(problems);
 	}

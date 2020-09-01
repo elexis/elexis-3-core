@@ -41,6 +41,7 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.SortedList;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.dialogs.DiagnoseSelektor;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -91,7 +92,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 		getPreferenceStore().setValue(Preferences.USR_DEFCASEREASON, Fall.getDefaultCaseReason());
 		getPreferenceStore().setValue(Preferences.USR_DEFLAW, Fall.getDefaultCaseLaw());
 		// read the sorting for this user form prefs, convert to LinkedList for editing
-		String topItemsSortingStr = CoreHub.userCfg.get(Preferences.USR_TOPITEMSSORTING, "");
+		String topItemsSortingStr = ConfigServiceHolder.getUser(Preferences.USR_TOPITEMSSORTING, "");
 		String[] topItemsSorting = topItemsSortingStr.split(PREFSDELIMITER_REGEX);
 		topItemsLinkedList = new LinkedList<String>(Arrays.asList(topItemsSorting));
 	}
@@ -100,17 +101,17 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 	public boolean performOk(){
 		super.performOk();
 		
-		CoreHub.userCfg.set(Preferences.USR_DEFCASELABEL,
+		ConfigServiceHolder.setUser(Preferences.USR_DEFCASELABEL,
 			getPreferenceStore().getString(Preferences.USR_DEFCASELABEL));
-		CoreHub.userCfg.set(Preferences.USR_DEFCASEREASON,
+		ConfigServiceHolder.setUser(Preferences.USR_DEFCASEREASON,
 			getPreferenceStore().getString(Preferences.USR_DEFCASEREASON));
-		CoreHub.userCfg.set(Preferences.USR_DEFLAW,
+		ConfigServiceHolder.setUser(Preferences.USR_DEFLAW,
 			getPreferenceStore().getString(Preferences.USR_DEFLAW));
 		// convert LinkedList for the sorting to comma delimited list and save to prefs
 		String[] topItemsSorting = new String[topItemsLinkedList.size()];
 		topItemsLinkedList.toArray(topItemsSorting);
 		String topItemsSortingStr = StringTool.join(topItemsSorting, PREFSDELIMITER);
-		CoreHub.userCfg.set(Preferences.USR_TOPITEMSSORTING, topItemsSortingStr);
+		ConfigServiceHolder.setUser(Preferences.USR_TOPITEMSSORTING, topItemsSortingStr);
 		return true;
 	}
 	
@@ -129,7 +130,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 		diagnoseLbl.setText(Messages.UserCasePreferences_DefaultDiagnose);
 		diagnoseTxt = new Text(diagnoseParent, SWT.BORDER);
 		diagnoseTxt.setEditable(false);
-		String diagnoseId = CoreHub.userCfg.get(Preferences.USR_DEFDIAGNOSE, "");
+		String diagnoseId = ConfigServiceHolder.getUser(Preferences.USR_DEFDIAGNOSE, "");
 		if (diagnoseId.length() > 1) {
 			PersistentObject diagnose = CoreHub.poFactory.createFromString(diagnoseId);
 			if (diagnose != null)
@@ -145,10 +146,10 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 					Object[] sel = dsl.getResult();
 					if (sel != null && sel.length > 0) {
 						PersistentObject diagnose = (PersistentObject) sel[0];
-						CoreHub.userCfg.set(Preferences.USR_DEFDIAGNOSE, diagnose.storeToString());
+						ConfigServiceHolder.setUser(Preferences.USR_DEFDIAGNOSE, diagnose.storeToString());
 						diagnoseTxt.setText(diagnose.getLabel());
 					} else {
-						CoreHub.userCfg.set(Preferences.USR_DEFDIAGNOSE, "");
+						ConfigServiceHolder.setUser(Preferences.USR_DEFDIAGNOSE, "");
 						diagnoseTxt.setText("");
 					}
 				}
@@ -159,7 +160,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 		diagnoseDelBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e){
-				CoreHub.userCfg.set(Preferences.USR_DEFDIAGNOSE, "");
+				ConfigServiceHolder.setUser(Preferences.USR_DEFDIAGNOSE, "");
 				diagnoseTxt.setText("");
 			}
 		});
@@ -199,13 +200,13 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 			@Override
 			public void widgetSelected(SelectionEvent e){
 				if (lastConsBtn.getSelection()) {
-					CoreHub.userCfg.set(Preferences.USR_DEFLOADCONSALL, true);
+					ConfigServiceHolder.setUser(Preferences.USR_DEFLOADCONSALL, true);
 				} else {
-					CoreHub.userCfg.set(Preferences.USR_DEFLOADCONSALL, false);
+					ConfigServiceHolder.setUser(Preferences.USR_DEFLOADCONSALL, false);
 				}
 			}
 		});
-		lastConsBtn.setSelection(CoreHub.userCfg.get(Preferences.USR_DEFLOADCONSALL, false));
+		lastConsBtn.setSelection(ConfigServiceHolder.getUser(Preferences.USR_DEFLOADCONSALL, false));
 		
 		fd = new FormData();
 		fd.top = new FormAttachment(0, 5);
@@ -399,7 +400,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 	
 	public static int getBillingSystemsMenuSeparatorPos(String[] input){
 		// read the sorting for this user form prefs, convert to LinkedList for editing
-		String topItemsSortingStr = CoreHub.userCfg.get(Preferences.USR_TOPITEMSSORTING, ""); //$NON-NLS-1$
+		String topItemsSortingStr = ConfigServiceHolder.getUser(Preferences.USR_TOPITEMSSORTING, ""); //$NON-NLS-1$
 		String[] topItemsSorting = topItemsSortingStr.split(PREFSDELIMITER_REGEX);
 		LinkedList<String> lTopItemsLinkedList =
 			new LinkedList<String>(Arrays.asList(topItemsSorting));
@@ -420,7 +421,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements
 	 */
 	public static String[] sortBillingSystems(String[] input){
 		// read the sorting for this user form prefs, convert to LinkedList for editing
-		String topItemsSortingStr = CoreHub.userCfg.get(Preferences.USR_TOPITEMSSORTING, ""); //$NON-NLS-1$
+		String topItemsSortingStr = ConfigServiceHolder.getUser(Preferences.USR_TOPITEMSSORTING, ""); //$NON-NLS-1$
 		String[] topItemsSorting = topItemsSortingStr.split(PREFSDELIMITER_REGEX);
 		LinkedList<String> lTopItemsLinkedList =
 			new LinkedList<String>(Arrays.asList(topItemsSorting));

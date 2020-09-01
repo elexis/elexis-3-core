@@ -207,6 +207,28 @@ public class ConfigService implements IConfigService {
 	}
 	
 	@Override
+	public boolean setActiveUserContact(String key, boolean value){
+		Optional<IContact> activeUser = contextService.getActiveUserContact();
+		if (activeUser.isPresent()) {
+			return set(activeUser.get(), key, value);
+		} else {
+			LoggerFactory.getLogger(getClass()).warn("No active user available");
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean setActiveUserContact(String key, int value){
+		Optional<IContact> activeUser = contextService.getActiveUserContact();
+		if (activeUser.isPresent()) {
+			return set(activeUser.get(), key, value);
+		} else {
+			LoggerFactory.getLogger(getClass()).warn("No active user available");
+		}
+		return false;
+	}
+	
+	@Override
 	public boolean set(IContact contact, String key, boolean value){
 		return set(contact, key, (value) ? "1" : "0");
 	}
@@ -345,6 +367,20 @@ public class ConfigService implements IConfigService {
 		String defaultValueString = Boolean.toString(defaultValue);
 		String result = getActiveUserContact(key, defaultValueString);
 		return (result.equals("1") || result.equalsIgnoreCase(Boolean.TRUE.toString()));
+	}
+	
+	@Override
+	public int getActiveUserContact(String key, int defaultValue){
+		if (contextService != null) {
+			Optional<IContact> activeUser = contextService.getActiveUserContact();
+			if (activeUser.isPresent()) {
+				return get(activeUser.get(), key, defaultValue);
+			}
+		} else {
+			LoggerFactory.getLogger(getClass())
+				.warn("IContextService not available, returning defaultValue");
+		}
+		return defaultValue;
 	}
 	
 	@Override

@@ -14,6 +14,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.medication.PreferenceConstants;
@@ -92,7 +93,7 @@ public class MedicationView extends ViewPart implements IRefreshable {
 	public void createPartControl(Composite parent){
 		tpc = new MedicationComposite(parent, SWT.NONE, getSite());
 		getSite().setSelectionProvider(tpc);
-		int sorter = CoreHub.userCfg.get(PreferenceConstants.PREF_MEDICATIONLIST_SORT_ORDER, 1);
+		int sorter = ConfigServiceHolder.getUser(PreferenceConstants.PREF_MEDICATIONLIST_SORT_ORDER, 1);
 		tpc.setViewerSortOrder(ViewerSortOrder.getSortOrderPerValue(sorter));
 		
 		getSite().getPage().addPartListener(udpateOnVisible);
@@ -106,7 +107,7 @@ public class MedicationView extends ViewPart implements IRefreshable {
 	
 	public void setMedicationTableViewerComparator(ViewerSortOrder order){
 		tpc.setViewerSortOrder(order);
-		CoreHub.userCfg.set(PreferenceConstants.PREF_MEDICATIONLIST_SORT_ORDER, order.val);
+		ConfigServiceHolder.setUser(PreferenceConstants.PREF_MEDICATIONLIST_SORT_ORDER, order.val);
 	}
 	
 	@Override

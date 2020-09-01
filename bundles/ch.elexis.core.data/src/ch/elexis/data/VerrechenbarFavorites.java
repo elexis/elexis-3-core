@@ -17,6 +17,7 @@ import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.ICodeElementBlock;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IStoreToStringService;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 
 public class VerrechenbarFavorites {
 	
@@ -45,7 +46,7 @@ public class VerrechenbarFavorites {
 		if (favorites == null) {
 			favorites = new ArrayList<VerrechenbarFavorites.Favorite>();
 			
-			String favs = CoreHub.userCfg.get(USER_CFG_FAVORITES, "");
+			String favs = ConfigServiceHolder.getUser(USER_CFG_FAVORITES, "");
 			String[] entries = favs.split(";");
 			for (int i = 0; i < entries.length; i++) {
 				String entry = entries[i];
@@ -70,7 +71,7 @@ public class VerrechenbarFavorites {
 			if (i != favorites.size() - 1)
 				sb.append(";");
 		}
-		CoreHub.userCfg.set(USER_CFG_FAVORITES, sb.toString());
+		ConfigServiceHolder.setUser(USER_CFG_FAVORITES, sb.toString());
 		CoreHub.userCfg.flush();
 		ElexisEventDispatcher.reload(Favorite.class);
 	}

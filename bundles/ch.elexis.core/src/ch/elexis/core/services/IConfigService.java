@@ -127,6 +127,28 @@ public interface IConfigService {
 	public boolean setActiveUserContact(String key, String value);
 	
 	/**
+	 * Convenience method wrapping {@link #set(IContact, String, int)} fetching the current user
+	 * contact from {@link IContextService}
+	 * 
+	 * @param key
+	 *            identifying the configuration entry
+	 * @param value
+	 *            to set
+	 * @return <code>true</code> if value was successfully set
+	 */
+	public boolean setActiveUserContact(String key, int value);
+	
+	/**
+	 * Convenience method wrapping {@link #set(IContact, String, boolean)} fetching the current user
+	 * contact from {@link IContextService}
+	 * 
+	 * @param key
+	 * @param value
+	 * @return
+	 */
+	public boolean setActiveUserContact(String key, boolean value);
+	
+	/**
 	 * Set a contact specific configuration entry. Overwrites existing value. Performs save
 	 * operation.
 	 * 
@@ -255,6 +277,16 @@ public interface IConfigService {
 	 */
 	public String getActiveUserContact(String key, String defaultValue);
 
+	/**
+	 * Convenience method wrapping {@link #get(IContact, String, String)}, fetching the current user
+	 * via {@link IContextService}
+	 * 
+	 * @param key
+	 * @param defaultValue
+	 * @return
+	 */
+	public int getActiveUserContact(String key, int defaultValue);
+	
 	/**
 	 * Convenience method wrapping {@link #get(IContact, String, String)}, fetching the current user
 	 * via {@link IContextService}

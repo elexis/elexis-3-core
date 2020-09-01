@@ -10,7 +10,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.CodeElementServiceHolder;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
@@ -27,6 +26,7 @@ import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.ICodeElementService.CodeElementTyp;
 import ch.elexis.core.services.ICodeElementServiceContribution;
 import ch.elexis.core.services.holder.BillingServiceHolder;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.ui.dialogs.PrescriptionSignatureTitleAreaDialog;
 import ch.elexis.data.PersistentObject;
@@ -64,7 +64,7 @@ public class CreatePrescriptionHelper {
 		Optional<IArticleDefaultSignature> signature = Optional.empty();
 		if (defaultSignature.isPresent()) {
 			signature = defaultSignature;
-			if (CoreHub.userCfg.get(MEDICATION_SETTINGS_ALWAYS_SHOW_SIGNATURE_DIALOG, false)) {
+			if (ConfigServiceHolder.getUser(MEDICATION_SETTINGS_ALWAYS_SHOW_SIGNATURE_DIALOG, false)) {
 				signature = getSignatureWithDialog(defaultSignature);
 			}
 		} else {
@@ -151,7 +151,7 @@ public class CreatePrescriptionHelper {
 	}
 	
 	private boolean shouldUpdateToArtikelstamm(){
-		return CoreHub.userCfg.get(MEDICATION_SETTINGS_DISPENSE_ARTIKELSTAMM_CONVERT, false);
+		return ConfigServiceHolder.getUser(MEDICATION_SETTINGS_DISPENSE_ARTIKELSTAMM_CONVERT, false);
 	}
 	
 	private boolean isEigenartikel(IArticle dispensationArticle){

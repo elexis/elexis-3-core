@@ -52,13 +52,13 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
 import ch.elexis.core.data.util.NoPoUtil;
-import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.format.AddressFormatUtil;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.StickerServiceHolder;
 import ch.elexis.core.types.Gender;
@@ -228,7 +228,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	}
 
 	private void updateFocusField() {
-		String ff = CoreHub.userCfg.get(Preferences.USR_PATLIST_FOCUSFIELD, null);
+		String ff = ConfigServiceHolder.getUser(Preferences.USR_PATLIST_FOCUSFIELD, null);
 		if (ff != null) {
 			dcfp.setFocusField(ff);
 		}
@@ -236,18 +236,18 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 
 	private void collectUserFields() {
 		ArrayList<String> fields = new ArrayList<String>();
-		initiated = !("".equals(CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWPATNR, "")));
-		if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWPATNR, false)) {
+		initiated = !("".equals(ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWPATNR, "")));
+		if (ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWPATNR, false)) {
 			fields.add("code" + Query.EQUALS + Messages.PatientenListeView_PatientNr); // $NON-NLS-1$
 		}
-		if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWNAME, true)) {
+		if (ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWNAME, true)) {
 			fields.add("description1" + Query.EQUALS + Messages.PatientenListeView_PatientName); // $NON-NLS-1$
 		}
-		if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWFIRSTNAME, true)) {
+		if (ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWFIRSTNAME, true)) {
 			fields
 				.add("description2" + Query.EQUALS + Messages.PatientenListeView_PantientFirstName); // $NON-NLS-1$
 		}
-		if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWDOB, true)) {
+		if (ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWDOB, true)) {
 			fields.add("dob" + Query.EQUALS + Messages.PatientenListeView_PatientBirthdate); // $NON-NLS-1$
 		}
 		currentUserFields = fields.toArray(new String[fields.size()]);
@@ -370,22 +370,22 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 				HashMap<String, String> ctlFields = new HashMap<String, String>();
 				String[] fx = vc.getControlFieldProvider().getValues();
 				int i = 0;
-				if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWPATNR, false)) {
+				if (ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWPATNR, false)) {
 					if (i < fx.length) {
 						ctlFields.put(Patient.FLD_PATID, fx[i++]);
 					}
 				}
-				if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWNAME, true)) {
+				if (ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWNAME, true)) {
 					if (i < fx.length) {
 						ctlFields.put(Patient.FLD_NAME, fx[i++]);
 					}
 				}
-				if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWFIRSTNAME, true)) {
+				if (ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWFIRSTNAME, true)) {
 					if (i < fx.length) {
 						ctlFields.put(Patient.FLD_FIRSTNAME, fx[i++]);
 					}
 				}
-				if (CoreHub.userCfg.get(Preferences.USR_PATLIST_SHOWDOB, true)) {
+				if (ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWDOB, true)) {
 					if (i < fx.length) {
 						ctlFields.put(Patient.FLD_DOB, fx[i++]);
 					}

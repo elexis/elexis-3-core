@@ -59,6 +59,7 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.text.model.SSDRange;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.ui.UiDesk;
@@ -229,7 +230,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 						if (in.open() == Dialog.OK) {
 							StringBuilder name = new StringBuilder(in.getValue());
 							name.reverse();
-							CoreHub.userCfg.set("makros/" + name, tx); //$NON-NLS-1$
+							ConfigServiceHolder.setUser("makros/" + name, tx); //$NON-NLS-1$
 							CoreHub.userCfg.flush();
 						}
 					}
@@ -554,7 +555,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 			dirty = true;
 			// }
 			
-			String macroKey = CoreHub.userCfg.get(MACRO_KEY, MACRO_KEY_DEFAULT);
+			String macroKey = ConfigServiceHolder.getUser(MACRO_KEY, MACRO_KEY_DEFAULT);
 			
 			// Wenn der macroKey gedrückt wurde, das Wort rückwärts von der
 			// aktuellen Position
@@ -572,7 +573,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 				}
 				// Dann prüfen, ob dieses Wort einem Makronamen entspricht
 				String code = s.toString();
-				String comp = CoreHub.userCfg.get("makros/" + code, null); //$NON-NLS-1$
+				String comp = ConfigServiceHolder.getUser("makros/" + code, null); //$NON-NLS-1$
 				if (comp != null) { // Ja -> Makri umwandeln
 					start += 1;
 					text.replaceTextRange(start, (e.end - start), comp);
@@ -653,7 +654,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 		
 		private boolean isMakroEnabled(IKonsMakro extMakro){
 			UserTextPref.setMakroEnabledDefaults();
-			return CoreHub.userCfg.get(EnhancedTextField.MACRO_ENABLED + "/"
+			return ConfigServiceHolder.getUser(EnhancedTextField.MACRO_ENABLED + "/"
 				+ extMakro.getClass().getName(), false);
 		}
 		

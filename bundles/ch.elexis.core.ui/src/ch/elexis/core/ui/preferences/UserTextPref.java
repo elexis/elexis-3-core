@@ -24,6 +24,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.text.EnhancedTextField;
 
@@ -65,7 +66,7 @@ public class UserTextPref extends FieldEditorPreferencePage implements IWorkbenc
 	@Override
 	public void init(IWorkbench workbench){
 		for (String field : fields) {
-			String value = CoreHub.userCfg.get(field, EnhancedTextField.MACRO_KEY_DEFAULT);
+			String value = ConfigServiceHolder.getUser(field, EnhancedTextField.MACRO_KEY_DEFAULT);
 			getPreferenceStore().setValue(field, value);
 		}
 		
@@ -95,14 +96,14 @@ public class UserTextPref extends FieldEditorPreferencePage implements IWorkbenc
 			String clazz = iConfigurationElement.getAttribute("KonsMakro");
 			if (clazz != null && !clazz.isEmpty() && !name.equals("enabled")) {
 				boolean enabled =
-					CoreHub.userCfg.get(EnhancedTextField.MACRO_ENABLED + "/" + clazz, false);
+					ConfigServiceHolder.getUser(EnhancedTextField.MACRO_ENABLED + "/" + clazz, false);
 				// set disabled as default ...
 				if (!enabled) {
-					CoreHub.userCfg.set(EnhancedTextField.MACRO_ENABLED + "/" + clazz, false);
+					ConfigServiceHolder.setUser(EnhancedTextField.MACRO_ENABLED + "/" + clazz, false);
 				}
 			} else if (clazz != null && !clazz.isEmpty() && name.equals("enabled")) {
 				// set enabled for makros with name enabled
-				CoreHub.userCfg.set(EnhancedTextField.MACRO_ENABLED + "/" + clazz, true);
+				ConfigServiceHolder.setUser(EnhancedTextField.MACRO_ENABLED + "/" + clazz, true);
 			}
 		}
 	}

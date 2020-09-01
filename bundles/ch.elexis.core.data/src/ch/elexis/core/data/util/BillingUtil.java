@@ -197,7 +197,7 @@ public class BillingUtil {
 			public boolean isBillable(Konsultation konsultation, Result<Konsultation> result){
 				Fall fall = konsultation.getFall();
 				boolean fail = (fall != null
-					&& CoreHub.userCfg.get(Preferences.LEISTUNGSCODES_BILLING_STRICT, true)
+					&& ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_BILLING_STRICT, true)
 					&& !fall.isValid());
 				if (fail) {
 					result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);

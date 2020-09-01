@@ -15,6 +15,7 @@ import java.util.List;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Reminder;
 
@@ -36,7 +37,7 @@ public class PatientEventListener extends ElexisEventListenerImpl {
 			 * ch.elexis.core.ui.views.ReminderView#eeli_pat will be called on opposite
 			 * Preferences.USR_SHOWPATCHGREMINDER condition.
 			 */
-			if (CoreHub.userCfg.get(Preferences.USR_SHOWPATCHGREMINDER, false)) {
+			if (ConfigServiceHolder.getUser(Preferences.USR_SHOWPATCHGREMINDER, false)) {
 				List<Reminder> list = Reminder.findOpenRemindersResponsibleFor(CoreHub.getLoggedInContact(),
 					false, (Patient) ev.getObject(), true);
 				if (list.size() != 0) {

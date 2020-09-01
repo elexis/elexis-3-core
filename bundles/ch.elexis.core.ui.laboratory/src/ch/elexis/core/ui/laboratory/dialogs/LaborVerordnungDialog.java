@@ -33,6 +33,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.ILabOrder;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.issue.Visibility;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.laboratory.controls.LabItemTreeSelectionComposite;
@@ -76,7 +77,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 	}
 	
 	private void selectLastSelectedUser(){
-		String id = CoreHub.userCfg.get(LAST_SELECTED_USER, ""); //$NON-NLS-1$
+		String id = ConfigServiceHolder.getUser(LAST_SELECTED_USER, ""); //$NON-NLS-1$
 		Anwender user = Anwender.load(id);
 		if (user != null && user.exists()) {
 			StructuredSelection newSelection = new StructuredSelection(user);
@@ -90,7 +91,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 		if (user != null) {
 			id = user.getId();
 		}
-		CoreHub.userCfg.set(LAST_SELECTED_USER, id);
+		ConfigServiceHolder.setUser(LAST_SELECTED_USER, id);
 	}
 	
 	@Override
@@ -178,7 +179,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 		btnPrint = new Button(composite, SWT.CHECK);
 		btnPrint.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		btnPrint.setText(Messages.LaborVerordnungDialog_printOrders);
-		btnPrint.setSelection(CoreHub.userCfg.get(PREV_PRINT_SETTING, false));
+		btnPrint.setSelection(ConfigServiceHolder.getUser(PREV_PRINT_SETTING, false));
 		
 		return composite;
 	}
@@ -298,7 +299,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 		
 		// save print settings
 		boolean doPrint = btnPrint.getSelection();
-		CoreHub.userCfg.set(PREV_PRINT_SETTING, doPrint);
+		ConfigServiceHolder.setUser(PREV_PRINT_SETTING, doPrint);
 		
 		if (doPrint) {
 			UiDesk.getDisplay().asyncExec(new Runnable() {

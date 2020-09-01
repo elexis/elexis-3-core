@@ -43,6 +43,7 @@ import ch.elexis.core.model.issue.Priority;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Type;
 import ch.elexis.core.model.issue.Visibility;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.controls.ReminderVisibilityAndPopupComposite;
 import ch.elexis.core.ui.icons.ImageSize;
@@ -191,9 +192,9 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 			}
 			
 			boolean defaultResponsibleSelf =
-				CoreHub.userCfg.get(Preferences.USR_REMINDER_DEFAULT_RESPONSIBLE_SELF, false);
+				ConfigServiceHolder.getUser(Preferences.USR_REMINDER_DEFAULT_RESPONSIBLE_SELF, false);
 			if (!defaultResponsibleSelf) {
-				CoreHub.userCfg.setAsList(Preferences.USR_REMINDER_SELECTED_RESPONSIBLES_DEFAULT,
+				ConfigServiceHolder.setUserAsList(Preferences.USR_REMINDER_SELECTED_RESPONSIBLES_DEFAULT,
 					persist);
 				CoreHub.userCfg.flush();
 			}
@@ -445,7 +446,7 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 			}
 		} else {
 			boolean defaultResponsibleSelf =
-				CoreHub.userCfg.get(Preferences.USR_REMINDER_DEFAULT_RESPONSIBLE_SELF, false);
+				ConfigServiceHolder.getUser(Preferences.USR_REMINDER_DEFAULT_RESPONSIBLE_SELF, false);
 			if (defaultResponsibleSelf) {
 				responsibles = Collections.singletonList(CoreHub.getLoggedInContact());
 			} else {

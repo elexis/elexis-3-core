@@ -41,6 +41,7 @@ import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
@@ -308,7 +309,7 @@ public class Patient extends Person {
 		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
 		
 		// if not configured otherwise load only consultations of active mandant
-		if (!CoreHub.userCfg.get(Preferences.USR_DEFLOADCONSALL, false)) {
+		if (!ConfigServiceHolder.getUser(Preferences.USR_DEFLOADCONSALL, false)) {
 			Mandant mandator = ElexisEventDispatcher.getSelectedMandator();
 			if (mandator != null) {
 				qbe.add(Konsultation.FLD_MANDATOR_ID, Query.EQUALS, mandator.getId());

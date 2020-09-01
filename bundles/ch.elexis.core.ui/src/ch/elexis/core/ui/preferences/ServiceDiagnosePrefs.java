@@ -42,6 +42,7 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.icons.Images;
@@ -212,7 +213,7 @@ public class ServiceDiagnosePrefs extends PreferencePage implements IWorkbenchPr
 		case Diagnose:
 			aInput.addAll(findPagesFor(ExtensionPointConstantsUi.DIAGNOSECODE, null));
 			settings =
-				CoreHub.userCfg.get(Preferences.USR_SERVICES_DIAGNOSES_DIAGNOSE,
+				ConfigServiceHolder.getUser(Preferences.USR_SERVICES_DIAGNOSES_DIAGNOSE,
 					getListAsString(aInput)).split(",");
 			break;
 		case Codes:
@@ -221,7 +222,7 @@ public class ServiceDiagnosePrefs extends PreferencePage implements IWorkbenchPr
 			aInput.addAll(findPagesFor(ExtensionPointConstantsUi.GENERICCODE, "Artikel"));
 			aInput.add(FAVORITES);
 			settings =
-				CoreHub.userCfg.get(Preferences.USR_SERVICES_DIAGNOSES_CODES,
+				ConfigServiceHolder.getUser(Preferences.USR_SERVICES_DIAGNOSES_CODES,
 					getListAsString(aInput)).split(",");
 			break;
 		default:
@@ -286,13 +287,13 @@ public class ServiceDiagnosePrefs extends PreferencePage implements IWorkbenchPr
 			
 			switch (type) {
 			case Leistungen:
-				CoreHub.userCfg.set(Preferences.USR_SERVICES_DIAGNOSES_SRV, listString);
+				ConfigServiceHolder.setUser(Preferences.USR_SERVICES_DIAGNOSES_SRV, listString);
 				break;
 			case Diagnose:
-				CoreHub.userCfg.set(Preferences.USR_SERVICES_DIAGNOSES_DIAGNOSE, listString);
+				ConfigServiceHolder.setUser(Preferences.USR_SERVICES_DIAGNOSES_DIAGNOSE, listString);
 				break;
 			case Codes:
-				CoreHub.userCfg.set(Preferences.USR_SERVICES_DIAGNOSES_CODES, listString);
+				ConfigServiceHolder.setUser(Preferences.USR_SERVICES_DIAGNOSES_CODES, listString);
 				break;
 			default:
 				break;
