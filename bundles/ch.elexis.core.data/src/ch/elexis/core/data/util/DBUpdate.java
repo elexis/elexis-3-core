@@ -502,7 +502,6 @@ public class DBUpdate {
 		if (success) {
 			ConfigServiceHolder.setGlobal("dbversion", CoreHub.DBVersion);
 			ConfigServiceHolder.setGlobal("ElexisVersion", CoreHub.Version);
-			CoreHub.globalCfg.flush();
 			// create log message
 			log.info("DBUpdate from Version " + dbv + " to Version " + versions[versions.length - 1]
 				+ " successful.");

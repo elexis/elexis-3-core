@@ -11,9 +11,9 @@ import org.eclipse.swt.graphics.Color;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.ICodeElementBlock;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 
 public class BlockElementViewerItem {
@@ -125,8 +125,8 @@ public class BlockElementViewerItem {
 				BlockElementViewerItem item = (BlockElementViewerItem) element;
 				String codeSystemName = item.getCodeSystemName();
 				if (codeSystemName != null) {
-					String rgbColor = CoreHub.globalCfg
-						.get(Preferences.LEISTUNGSCODES_COLOR + codeSystemName, "ffffff");
+					String rgbColor = ConfigServiceHolder
+						.getGlobal(Preferences.LEISTUNGSCODES_COLOR + codeSystemName, "ffffff");
 					return UiDesk.getColorFromRGB(rgbColor);
 				}
 			}

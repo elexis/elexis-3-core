@@ -216,7 +216,6 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 			&& BriefExternUtil.isValidExternPath(
 				BriefExternUtil.getAsExternFilePath(externPath.getText()), false)) {
 			ConfigServiceHolder.setGlobal(Preferences.P_TEXT_EXTERN_FILE_PATH, externPath.getText());
-			CoreHub.globalCfg.flush();
 		}
 		return super.performOk();
 	}

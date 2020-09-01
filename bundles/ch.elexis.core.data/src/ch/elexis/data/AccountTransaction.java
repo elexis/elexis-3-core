@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
@@ -57,7 +56,7 @@ public class AccountTransaction extends PersistentObject {
 		private static List<Account> loadAccounts(){
 			List<Account> ret = new ArrayList<>();
 			ret.add(UNKNOWN);
-			if (CoreHub.globalCfg != null) {
+			if (ConfigServiceHolder.isPresent()) {
 				String accountsString = ConfigServiceHolder.getGlobal(ACCOUNTS_CONFIG, ""); //$NON-NLS-1$
 				if (accountsString != null && !accountsString.isEmpty()) {
 					String[] accounts = accountsString.split("\\|\\|"); //$NON-NLS-1$
@@ -105,7 +104,7 @@ public class AccountTransaction extends PersistentObject {
 		}
 		
 		public static void addAccount(Account newAccount){
-			if (CoreHub.globalCfg != null) {
+			if (ConfigServiceHolder.isPresent()) {
 				String existingString = ConfigServiceHolder.getGlobal(ACCOUNTS_CONFIG, "");
 				StringBuilder sb = new StringBuilder();
 				sb.append(existingString);
@@ -120,7 +119,7 @@ public class AccountTransaction extends PersistentObject {
 		}
 		
 		public static void setAccounts(List<Account> accounts){
-			if (CoreHub.globalCfg != null) {
+			if (ConfigServiceHolder.isPresent()) {
 				StringBuilder sb = new StringBuilder();
 				for (Account account : accounts) {
 					if (account.getNumeric() == -1) {

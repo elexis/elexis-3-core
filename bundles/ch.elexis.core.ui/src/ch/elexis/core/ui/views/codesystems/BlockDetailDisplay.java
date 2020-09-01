@@ -69,7 +69,6 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.data.util.NoPoUtil;
@@ -81,6 +80,7 @@ import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.Hub;
@@ -447,8 +447,8 @@ public class BlockDetailDisplay implements IDetailDisplay {
 					BlockElementViewerItem item = (BlockElementViewerItem) element;
 					String codeSystemName = item.getCodeSystemName();
 					if (codeSystemName != null) {
-						String rgbColor = CoreHub.globalCfg
-							.get(Preferences.LEISTUNGSCODES_COLOR + codeSystemName, "ffffff");
+						String rgbColor = ConfigServiceHolder
+							.getGlobal(Preferences.LEISTUNGSCODES_COLOR + codeSystemName, "ffffff");
 						return UiDesk.getColorFromRGB(rgbColor);
 					}
 				}

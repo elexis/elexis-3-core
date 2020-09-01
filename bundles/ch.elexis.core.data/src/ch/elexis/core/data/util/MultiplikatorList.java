@@ -19,7 +19,6 @@ import java.util.Iterator;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
@@ -230,7 +229,6 @@ public class MultiplikatorList {
 		}
 		systems = systems.concat(system);
 		ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS, systems);
-		CoreHub.globalCfg.flush();
 	}
 	
 	public static void removeEigenleistungUseMulti(String system){
@@ -246,6 +244,5 @@ public class MultiplikatorList {
 		}
 		ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS,
 			sb.toString());
-		CoreHub.globalCfg.flush();
 	}
 }

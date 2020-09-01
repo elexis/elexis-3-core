@@ -26,7 +26,7 @@ import ch.elexis.core.ui.util.CoreUiUtil;
 public class ConfigServicePreferenceStore extends EventManager implements IPreferenceStore {
 	
 	public enum Scope {
-			GLOBAL, USER, MANDATOR, LOCAL
+			GLOBAL, USER, MANDATOR, LOCAL, CONTACT
 	}
 	
 	@Inject
@@ -39,6 +39,8 @@ public class ConfigServicePreferenceStore extends EventManager implements IPrefe
 	
 	private ListenerList<IPropertyChangeListener> listeners;
 	
+	private IContact contact;
+	
 	/**
 	 * Create a new instance of the receiver. Store the values in context to the {@link Scope} using
 	 * {@link IConfigService}.
@@ -50,6 +52,10 @@ public class ConfigServicePreferenceStore extends EventManager implements IPrefe
 		this.scope = scope;
 		CoreUiUtil.injectServices(this);
 		listeners = new ListenerList<>();
+	}
+	
+	public ConfigServicePreferenceStore(IContact iContact){
+		this.contact = iContact;
 	}
 	
 	@Override
@@ -74,23 +80,13 @@ public class ConfigServicePreferenceStore extends EventManager implements IPrefe
 	
 	@Override
 	public boolean getBoolean(String name){
-		if (scope == Scope.GLOBAL) {
-			return configService.get(name, BOOLEAN_DEFAULT_DEFAULT);
-		} else if (scope == Scope.MANDATOR) {
-			IMandator activeMandator = contextService.getActiveMandator()
-				.orElseThrow(() -> new IllegalStateException("No active mandator"));
-			return configService.get(activeMandator, name, BOOLEAN_DEFAULT_DEFAULT);
-		} else if (scope == Scope.USER) {
-			IContact activeUser = contextService.getActiveUserContact()
-				.orElseThrow(() -> new IllegalStateException("No active user contact"));
-			return configService.get(activeUser, name, BOOLEAN_DEFAULT_DEFAULT);
-		} else if (scope == Scope.LOCAL) {
-			return configService.getLocal(name, BOOLEAN_DEFAULT_DEFAULT);
-		} else {
-			throw new IllegalStateException("Unknown scope " + scope);
+		String value = getStringValue(name);
+		if (value == null) {
+			value = getDefaultStringValue(name);
 		}
+		return value == null ? BOOLEAN_DEFAULT_DEFAULT
+				: ("1".equals(value) || "true".equalsIgnoreCase(value));
 	}
-	
 
 	@Override
 	public boolean getDefaultBoolean(String name){
@@ -164,6 +160,8 @@ public class ConfigServicePreferenceStore extends EventManager implements IPrefe
 			value = configService.get(activeUser, name, null);
 		} else if (scope == Scope.LOCAL) {
 			value = configService.getLocal(name, null);
+		} else if (contact != null) {
+			value = configService.get(contact, name, null);
 		} else {
 			throw new IllegalStateException("Unknown scope " + scope);
 		}
@@ -183,6 +181,8 @@ public class ConfigServicePreferenceStore extends EventManager implements IPrefe
 			configService.set(activeUser, name, value);
 		} else if (scope == Scope.LOCAL) {
 			configService.setLocal(name, value);
+		} else if (contact != null) {
+			configService.set(contact, name, value);
 		} else {
 			throw new IllegalStateException("Unknown scope " + scope);
 		}
@@ -191,11 +191,9 @@ public class ConfigServicePreferenceStore extends EventManager implements IPrefe
 	@Override
 	public double getDouble(String name){
 		String value = getStringValue(name);
-		if (value == null) {
-			return DOUBLE_DEFAULT_DEFAULT;
-		}
 		try {
-			return Double.parseDouble(value);
+			return value == null ? Double.parseDouble(getDefaultStringValue(name))
+					: Double.parseDouble(value);
 		} catch (NumberFormatException e) {
 			return DOUBLE_DEFAULT_DEFAULT;
 		}
@@ -204,11 +202,9 @@ public class ConfigServicePreferenceStore extends EventManager implements IPrefe
 	@Override
 	public float getFloat(String name){
 		String value = getStringValue(name);
-		if (value == null) {
-			return FLOAT_DEFAULT_DEFAULT;
-		}
 		try {
-			return Float.parseFloat(value);
+			return value == null ? Float.parseFloat(getDefaultStringValue(name))
+					: Float.parseFloat(value);
 		} catch (NumberFormatException e) {
 			return FLOAT_DEFAULT_DEFAULT;
 		}
@@ -216,31 +212,21 @@ public class ConfigServicePreferenceStore extends EventManager implements IPrefe
 	
 	@Override
 	public int getInt(String name){
-		if (scope == Scope.GLOBAL) {
-			return configService.get(name, INT_DEFAULT_DEFAULT);
-		} else if (scope == Scope.MANDATOR) {
-			IMandator activeMandator = contextService.getActiveMandator()
-				.orElseThrow(() -> new IllegalStateException("No active mandator"));
-			return configService.get(activeMandator, name, INT_DEFAULT_DEFAULT);
-		} else if (scope == Scope.USER) {
-			IContact activeUser = contextService.getActiveUserContact()
-				.orElseThrow(() -> new IllegalStateException("No active user contact"));
-			return configService.get(activeUser, name, INT_DEFAULT_DEFAULT);
-		} else if (scope == Scope.LOCAL) {
-			return configService.getLocal(name, INT_DEFAULT_DEFAULT);
-		} else {
-			throw new IllegalStateException("Unknown scope " + scope);
+		String value = getStringValue(name);
+		try {
+			return value == null ? Integer.parseInt(getDefaultStringValue(name))
+					: Integer.parseInt(value);
+		} catch (NumberFormatException e) {
+			return INT_DEFAULT_DEFAULT;
 		}
 	}
 	
 	@Override
 	public long getLong(String name){
 		String value = getStringValue(name);
-		if (value == null) {
-			return LONG_DEFAULT_DEFAULT;
-		}
 		try {
-			return Long.parseLong(value);
+			return value == null ? Long.parseLong(getDefaultStringValue(name))
+					: Long.parseLong(value);
 		} catch (NumberFormatException e) {
 			return LONG_DEFAULT_DEFAULT;
 		}
@@ -249,7 +235,7 @@ public class ConfigServicePreferenceStore extends EventManager implements IPrefe
 	@Override
 	public String getString(String name){
 		String value = getStringValue(name);
-		return value == null ? STRING_DEFAULT_DEFAULT : value;
+		return value == null ? getDefaultString(name) : value;
 	}
 	
 	@Override
@@ -350,6 +336,8 @@ public class ConfigServicePreferenceStore extends EventManager implements IPrefe
 			configService.set(activeUser, name, value);
 		} else if (scope == Scope.LOCAL) {
 			configService.setLocal(name, value);
+		} else if (contact != null) {
+			configService.set(contact, name, value);
 		} else {
 			throw new IllegalStateException("Unknown scope " + scope);
 		}
@@ -393,6 +381,8 @@ public class ConfigServicePreferenceStore extends EventManager implements IPrefe
 			IContact activeUser = contextService.getActiveUserContact()
 				.orElseThrow(() -> new IllegalStateException("No active user contact"));
 			configService.set(activeUser, name, value);
+		} else if (contact != null) {
+			configService.set(contact, name, value);
 		} else {
 			throw new IllegalStateException("Unknown scope " + scope);
 		}

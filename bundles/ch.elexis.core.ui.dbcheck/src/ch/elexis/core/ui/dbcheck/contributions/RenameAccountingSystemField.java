@@ -7,7 +7,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.widgets.Display;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
@@ -160,8 +159,6 @@ public class RenameAccountingSystemField extends ExternalMaintenance {
 		// rename field
 		String updatedConfig = config.replace(currName + SEPARATOR, newName + SEPARATOR);
 		ConfigServiceHolder.setGlobal(configKey, updatedConfig);
-		CoreHub.globalCfg.flush();
-		
 		return configKey;
 	}
 	

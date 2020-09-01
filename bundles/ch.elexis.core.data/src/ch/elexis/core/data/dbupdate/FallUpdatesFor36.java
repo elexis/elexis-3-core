@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.extension.ICoreOperationAdvisor;
 import ch.elexis.core.data.util.IRunnableWithProgress;
@@ -38,7 +37,6 @@ public class FallUpdatesFor36 {
 		String value = ConfigServiceHolder.getGlobal(CONFIG_KEY, null);
 		if (value == null) {
 			ConfigServiceHolder.setGlobal(CONFIG_KEY, "-1"); // -1 == wip
-			CoreHub.globalCfg.flush();
 			
 			IRunnableWithProgress irwp = new IRunnableWithProgress() {
 				
@@ -115,7 +113,6 @@ public class FallUpdatesFor36 {
 					}
 					
 					ConfigServiceHolder.setGlobal(CONFIG_KEY, StringConstants.ONE);
-					CoreHub.globalCfg.flush();
 					monitor.done();
 					
 					String errorString = errors.toString();

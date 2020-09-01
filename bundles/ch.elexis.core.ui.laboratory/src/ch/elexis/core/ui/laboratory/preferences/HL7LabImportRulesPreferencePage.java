@@ -24,7 +24,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
@@ -93,7 +92,6 @@ public class HL7LabImportRulesPreferencePage extends PreferencePage
 	
 	@Override
 	protected void performApply(){
-		CoreHub.globalCfg.flush();
 		super.performApply();
 	}
 	
@@ -123,7 +121,6 @@ public class HL7LabImportRulesPreferencePage extends PreferencePage
 						Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES,
 						findAllLabsWithPathFlagMissingMeansNonPathologic.stream()
 							.map(l -> l.getId()).collect(Collectors.toList()));
-					CoreHub.globalCfg.flush();
 					labMPathMNonPathListViewer
 						.setInput(findAllLabsWithPathFlagMissingMeansNonPathologic());
 				}
@@ -147,7 +144,6 @@ public class HL7LabImportRulesPreferencePage extends PreferencePage
 					Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES,
 					findAllLabsWithPathFlagMissingMeansNonPathologic.stream().map(l -> l.getId())
 						.collect(Collectors.toList()));
-				CoreHub.globalCfg.flush();
 				labMPathMNonPathListViewer.remove(contact);
 			}
 		};

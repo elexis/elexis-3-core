@@ -15,7 +15,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 
@@ -137,7 +136,6 @@ public class LabEvaluationRulesPreferencePage extends PreferencePage
 	
 	@Override
 	protected void performApply(){
-		CoreHub.globalCfg.flush();
 		super.performApply();
 	}
 	
