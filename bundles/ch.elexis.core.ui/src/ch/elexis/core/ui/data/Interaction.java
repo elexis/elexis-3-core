@@ -134,7 +134,7 @@ public class Interaction extends PersistentObject {
 				version.set(FLD_NAME1, VERSION);
 			}
 		}
-		if (!ConfigServiceHolder.getUser(Preferences.USR_SUPPRESS_INTERACTION_CHECK, true)) {
+		if (!CoreHub.userCfg.get(Preferences.USR_SUPPRESS_INTERACTION_CHECK, true)) {
 			importMappingFromCsv();
 		}
 	}
