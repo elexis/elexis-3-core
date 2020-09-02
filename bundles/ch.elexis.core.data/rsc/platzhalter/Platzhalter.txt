@@ -31,7 +31,7 @@ Arbeitsunfähigkeit.[AUF.Grund]=Grund des aktuellen AUF (Unfall/ Krankheit).
 Arbeitsunfähigkeit.[AUF.Prozent]=Prozentsatz der aktuell ausgewählten Auftrag.
 Arbeitsunfähigkeit.[AUF.Zusatz]=Allfälliger Zusatztext.
 
-Fall.ArbeitgeberName=Name des Arbeitgebers, wenn eingetragen. Funktioniert nicht in allgemeinen Briefen.
+Fall.Arbeitgeber.Name=Name des Arbeitgebers, wenn eingetragen. Funktioniert nicht in allgemeinen Briefen.
 Fall.Fallnummer
 Fall.Gesetz=Bei KVG entspricht dies der Versicherungsnummer. Bei IV der AHV-Nummer. Funktioniert nur, wenn KK-Fall markiert beim Erstellen des Briefes.
 Fall.Grund=Krankheit oder Unfall.
