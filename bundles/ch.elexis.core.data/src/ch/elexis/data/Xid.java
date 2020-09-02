@@ -422,7 +422,11 @@ public class Xid extends PersistentObject implements IXid {
 			sb.append(k).append("#").append(xd.getQuality()).append("#").append(xd.getSimpleName())
 				.append("#").append(xd.getDisplayOptions()).append(";");
 		}
-		ConfigServiceHolder.setGlobal("LocalXIDDomains", sb.toString());
+		if (ConfigServiceHolder.isPresent()) {
+			ConfigServiceHolder.setGlobal("LocalXIDDomains", sb.toString());
+		} else {
+			CoreHub.globalCfg.set("LocalXIDDomains", sb.toString());
+		}
 	}
 	
 	/**
