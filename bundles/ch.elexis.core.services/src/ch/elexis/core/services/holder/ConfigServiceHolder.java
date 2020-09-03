@@ -87,6 +87,10 @@ public class ConfigServiceHolder {
 		return configService.set(key, value);
 	}
 	
+	public static List<String> getSubNodes(String key){
+		return configService.getSubNodes(key);
+	}
+	
 	// active user access methods
 	
 	public static String getUser(String key, String defaultValue){
