@@ -1,15 +1,19 @@
 package ch.elexis.core.services;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.equinox.internal.app.CommandLineArgs;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -27,6 +31,7 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
@@ -282,6 +287,23 @@ public class ConfigService implements IConfigService {
 		}
 		return defaultValue;
 	}
+	
+	public List<String> getSubNodes(String key){
+		Set<String> ret = new HashSet<>();
+		IQuery<IConfig> query = CoreModelServiceHolder.get().getQuery(IConfig.class);
+		query.and("param", COMPARATOR.LIKE, key + "/%");
+		List<IConfig> found = query.execute();
+		for (IConfig iConfig : found) {
+			String subNode = iConfig.getKey().substring(key.length() + 1);
+			if (StringUtils.isNotBlank(subNode)) {
+				// add only nodes not values
+				if (subNode.indexOf('/') != -1) {
+					ret.add(subNode.substring(0, subNode.indexOf('/')));
+				}
+			}
+		}
+		return new ArrayList<>(ret);
+	};
 	
 	@Override
 	public boolean setLocal(String key, String value){

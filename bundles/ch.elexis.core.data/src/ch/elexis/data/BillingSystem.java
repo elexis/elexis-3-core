@@ -223,8 +223,8 @@ public class BillingSystem {
 	 * @since 3.6 moved from {@link Fall}
 	 */
 	public static String[] getAbrechnungsSysteme(){
-		String[] ret = CoreHub.globalCfg.nodes(Preferences.LEISTUNGSCODES_CFG_KEY);
-		if ((ret == null) || (ret.length == 0)) {
+		List<String> ret = ConfigServiceHolder.getSubNodes(Preferences.LEISTUNGSCODES_CFG_KEY);
+		if ((ret == null) || ret.isEmpty()) {
 			List<IConfigurationElement> list =
 				Extensions.getExtensions(ExtensionPointConstantsData.RECHNUNGS_MANAGER); //$NON-NLS-1$
 			for (IConfigurationElement ic : list) {
@@ -313,14 +313,14 @@ public class BillingSystem {
 					break;
 				}
 			}
-			ret = CoreHub.globalCfg.nodes(Preferences.LEISTUNGSCODES_CFG_KEY);
+			ret = ConfigServiceHolder.getSubNodes(Preferences.LEISTUNGSCODES_CFG_KEY);
 			if (ret == null) {
 				return new String[] {
 					Messages.Fall_Undefined
 				};
 			}
 		}
-		return ret;
+		return ret.toArray(new String[ret.size()]);
 	}
 	
 	/**

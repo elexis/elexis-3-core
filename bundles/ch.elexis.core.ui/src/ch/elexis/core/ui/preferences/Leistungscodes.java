@@ -104,7 +104,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		Extensions.getExtensions(ExtensionPointConstantsData.RECHNUNGS_MANAGER); //$NON-NLS-1$
 	List<IConfigurationElement> liste_CS_codes =
 		Extensions.getExtensions(ExtensionPointConstantsUi.VERRECHNUNGSCODE); //$NON-NLS-1$
-	String[] systeme = CoreHub.globalCfg.nodes(Preferences.LEISTUNGSCODES_CFG_KEY);
+	List<String> systeme = ConfigServiceHolder.getSubNodes(Preferences.LEISTUNGSCODES_CFG_KEY);
 	Table table;
 	String[] tableCols = {
 		Messages.Leistungscodes_nameOfBillingSystem, Messages.Leistungscodes_billingSystem,
@@ -150,7 +150,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 						result[7]);
 					BillingSystem.setConfigurationValue(result[0], BillingSystem.CFG_NOCOSTBEARER,
 						result[8]);
-					systeme = CoreHub.globalCfg.nodes(Preferences.LEISTUNGSCODES_CFG_KEY);
+					systeme = ConfigServiceHolder.getSubNodes(Preferences.LEISTUNGSCODES_CFG_KEY);
 					reload();
 				}
 			}
@@ -164,7 +164,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					MessageFormat.format(Messages.Leistungscodes_reallyDelete, bName),
 					Messages.Leistungscodes_notUndoable)) {
 					BillingSystem.removeAbrechnungssystem(bName);
-					systeme = CoreHub.globalCfg.nodes(Preferences.LEISTUNGSCODES_CFG_KEY);
+					systeme = ConfigServiceHolder.getSubNodes(Preferences.LEISTUNGSCODES_CFG_KEY);
 					reload();
 				}
 			}
@@ -224,7 +224,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 								BillingSystem.setConfigurationValue(result[0],
 									BillingSystem.CFG_NOCOSTBEARER, result[8]);
 								systeme =
-									CoreHub.globalCfg.nodes(Preferences.LEISTUNGSCODES_CFG_KEY);
+									ConfigServiceHolder
+										.getSubNodes(Preferences.LEISTUNGSCODES_CFG_KEY);
 								reload();
 							}
 						}

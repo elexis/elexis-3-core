@@ -381,6 +381,14 @@ public interface IConfigService {
 	public List<String> getAsList(IContact contact, String key, List<String> defaultValue);
 	
 	/**
+	 * Get a list of all possible sub nodes for the provided key.
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public List<String> getSubNodes(String key);
+	
+	/**
 	 * Get a new {@link ILocalLock} instance for the provided object. Currently {@link String} and
 	 * {@link Identifiable} can be locked.
 	 * 
