@@ -314,7 +314,7 @@ public class BillingSystem {
 				}
 			}
 			ret = ConfigServiceHolder.getSubNodes(Preferences.LEISTUNGSCODES_CFG_KEY);
-			if (ret == null) {
+			if (ret.isEmpty()) {
 				return new String[] {
 					Messages.Fall_Undefined
 				};
