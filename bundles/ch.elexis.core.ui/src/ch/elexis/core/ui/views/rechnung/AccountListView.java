@@ -23,7 +23,10 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
@@ -45,6 +48,7 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
 import ch.rgw.tools.Money;
+import ch.rgw.tools.TimeTool;
 
 /**
  * This view shows the current patient's account
@@ -82,6 +86,8 @@ public class AccountListView extends ViewPart implements IActivationListener, IS
 	
 	private DataLoader loader;
 	
+	private AccountListEntryComparator comparator;
+	
 	public void createPartControl(Composite parent){
 		loader = new DataLoader();
 		
@@ -104,6 +110,14 @@ public class AccountListView extends ViewPart implements IActivationListener, IS
 			tc[i] = new TableColumn(table, SWT.NONE);
 			tc[i].setText(COLUMN_TEXT[i]);
 			tc[i].setWidth(COLUMN_WIDTH[i]);
+			final int columnIndex = i;
+			tc[i].addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e){
+					comparator.setColumn(columnIndex);
+					accountListViewer.refresh();
+				}
+			});
 		}
 		
 		accountListViewer.setContentProvider(new IStructuredContentProvider() {
@@ -182,7 +196,8 @@ public class AccountListView extends ViewPart implements IActivationListener, IS
 		
 		// viewer.setSorter(new NameSorter());
 		accountListViewer.setInput(getViewSite());
-		
+		comparator = new AccountListEntryComparator();
+		accountListViewer.setComparator(comparator);
 		/*
 		 * makeActions(); hookContextMenu(); hookDoubleClickAction(); contributeToActionBars();
 		 */
@@ -298,6 +313,39 @@ public class AccountListView extends ViewPart implements IActivationListener, IS
 			this.vorname = values[1];
 			this.geburtsdatum = values[2];
 			this.saldo = patient.getKontostand();
+		}
+	}
+	
+	private class AccountListEntryComparator extends ViewerComparator {
+		
+		private int propertyIndex;
+		
+		private int direction = 1;
+		
+		public void setColumn(int column){
+			if (column == propertyIndex) {
+				direction *= -1;
+			}
+			this.propertyIndex = column;
+		}
+		
+		@Override
+		public int compare(Viewer viewer, Object e1, Object e2){
+			AccountListEntry a1 = (AccountListEntry) e1;
+			AccountListEntry a2 = (AccountListEntry) e2;
+			
+			switch (propertyIndex) {
+			case NAME:
+				return a1.name.compareTo(a2.name) * direction;
+			case FIRSTNAME:
+				return a1.vorname.compareTo(a2.vorname) * direction;
+			case BIRTHDATE:
+				return new TimeTool(a1.geburtsdatum).compareTo(new TimeTool(a2.geburtsdatum))
+					* direction;
+			case SALDO:
+				return a1.saldo.compareTo(a2.saldo) * direction;
+			}
+			return super.compare(viewer, e1, e2);
 		}
 	}
 }
