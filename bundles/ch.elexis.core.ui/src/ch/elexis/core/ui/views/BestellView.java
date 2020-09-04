@@ -48,10 +48,10 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
@@ -508,33 +508,40 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 				if (actOrder != null) {
 					Map<IContact, List<IOrderEntry>> orderMap = prepareOrderMap();
 					
-					try {
-						for (IContact receiver : orderMap.keySet()) {
-							List<IOrderEntry> entries = orderMap.get(receiver);
-							if (receiver == null) {
-								KontaktSelektor ksel = new KontaktSelektor(getViewSite().getShell(),
-									Kontakt.class,
-									ch.elexis.core.ui.text.Messages.TextContainer_SelectDestinationHeader,
-									"Addressat für Einträge ohne Lieferanten",
-									Kontakt.DEFAULT_SORT);
-								if (ksel.open() == Dialog.OK) {
-									receiver =
-										NoPoUtil.loadAsIdentifiable((Kontakt) ksel.getSelection(),
-											IContact.class).orElse(null);
-								}
-							}
-							if (receiver != null) {
-								BestellBlatt bb = (BestellBlatt) getViewSite().getPage()
-									.showView(BestellBlatt.ID, receiver.getId(),
-										IWorkbenchPage.VIEW_CREATE);
-								bb.createOrder(receiver, entries);
-								entries.stream()
-									.forEach(oe -> oe.setState(OrderEntryState.ORDERED));
+					for (IContact receiver : orderMap.keySet()) {
+						List<IOrderEntry> entries = orderMap.get(receiver);
+						if (receiver == null) {
+							KontaktSelektor ksel = new KontaktSelektor(getViewSite().getShell(),
+								Kontakt.class,
+								ch.elexis.core.ui.text.Messages.TextContainer_SelectDestinationHeader,
+								"Addressat für Einträge ohne Lieferanten", Kontakt.DEFAULT_SORT);
+							if (ksel.open() == Dialog.OK) {
+								receiver =
+									NoPoUtil.loadAsIdentifiable((Kontakt) ksel.getSelection(),
+										IContact.class).orElse(null);
 							}
 						}
-						tv.refresh();
-					} catch (PartInitException e) {
-						ExHandler.handle(e);
+						if (receiver != null) {
+							final IContact printReceiver = receiver;
+							final Shell shell = getViewSite().getShell();
+							shell.getDisplay().asyncExec(() -> {
+								try {
+									BestellBlatt bb = (BestellBlatt) getViewSite().getPage()
+										.showView(BestellBlatt.ID, printReceiver.getId(),
+											IWorkbenchPage.VIEW_CREATE);
+									bb.createOrder(printReceiver, entries);
+									entries.stream()
+										.forEach(oe -> oe.setState(OrderEntryState.ORDERED));
+									tv.refresh();
+								} catch (Exception e) {
+									LoggerFactory.getLogger(getClass())
+										.error("Error printing order", e);
+									MessageDialog.openError(shell, "Fehler",
+										"Beim Druck der Bestellung an " + printReceiver.getLabel()
+											+ " ist ein Fehler aufgetren.");
+								}
+							});
+						}
 					}
 				}
 			}
