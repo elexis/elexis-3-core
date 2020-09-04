@@ -24,22 +24,23 @@ import org.eclipse.swt.widgets.Label;
 
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
+import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore;
 import ch.elexis.data.Kontakt;
-import ch.rgw.io.Settings;
 
 public class KontaktFieldEditor extends FieldEditor {
 	private Label contactLabel;
-	private Settings cfg;
 	private String defaultText = Messages.KontaktFieldEditor_PleaseSelect; //$NON-NLS-1$
 	private Kontakt selected;
+	private ConfigServicePreferenceStore store;
 	
 	protected KontaktFieldEditor(){
 		// no defaults
 	}
 	
-	public KontaktFieldEditor(Settings cfg, String name, String labelText, Composite parent){
+	public KontaktFieldEditor(ConfigServicePreferenceStore store, String name, String labelText,
+		Composite parent){
 		super(name, labelText, parent);
-		this.cfg = cfg;
+		this.store = store;
 	}
 	
 	@Override
@@ -65,7 +66,7 @@ public class KontaktFieldEditor extends FieldEditor {
 		if (contactLabel == null) {
 			return;
 		}
-		selected = Kontakt.load(cfg.get(getPreferenceName(), ""));
+		selected = Kontakt.load(store.getString(getPreferenceName()));
 		if (selected.isValid()) {
 			contactLabel.setText(selected.getLabel());
 		} else {
@@ -83,9 +84,9 @@ public class KontaktFieldEditor extends FieldEditor {
 	@Override
 	protected void doStore(){
 		if (selected == null) {
-			cfg.remove(getPreferenceName());
+			store.setValue(getPreferenceName(), null);
 		} else {
-			cfg.set(getPreferenceName(), selected.getId());
+			store.setValue(getPreferenceName(), selected.getId());
 		}
 		
 	}
