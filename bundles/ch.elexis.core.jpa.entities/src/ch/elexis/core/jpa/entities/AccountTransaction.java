@@ -19,9 +19,10 @@ import ch.elexis.core.jpa.entities.id.ElexisIdGenerator;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 
 @Entity
-@Table(name = "konto")
+@Table(name = "KONTO")
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "AccountTransaction.invoice", query = "SELECT at FROM AccountTransaction at WHERE at.deleted = false AND at.invoice = :invoice")
+@NamedQuery(name = "AccountTransaction.patient", query = "SELECT at FROM AccountTransaction at WHERE at.deleted = false AND at.patient = :patient")
 public class AccountTransaction extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted {
 	
