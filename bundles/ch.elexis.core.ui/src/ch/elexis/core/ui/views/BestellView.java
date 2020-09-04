@@ -48,7 +48,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.IWorkbenchPage;
@@ -522,25 +521,21 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 							}
 						}
 						if (receiver != null) {
-							final IContact printReceiver = receiver;
-							final Shell shell = getViewSite().getShell();
-							shell.getDisplay().asyncExec(() -> {
-								try {
-									BestellBlatt bb = (BestellBlatt) getViewSite().getPage()
-										.showView(BestellBlatt.ID, printReceiver.getId(),
-											IWorkbenchPage.VIEW_CREATE);
-									bb.createOrder(printReceiver, entries);
-									entries.stream()
-										.forEach(oe -> oe.setState(OrderEntryState.ORDERED));
-									tv.refresh();
-								} catch (Exception e) {
-									LoggerFactory.getLogger(getClass())
-										.error("Error printing order", e);
-									MessageDialog.openError(shell, "Fehler",
-										"Beim Druck der Bestellung an " + printReceiver.getLabel()
-											+ " ist ein Fehler aufgetren.");
-								}
-							});
+							try {
+								BestellBlatt bb =
+									(BestellBlatt) getViewSite().getPage().showView(BestellBlatt.ID,
+										receiver.getId(), IWorkbenchPage.VIEW_CREATE);
+								bb.createOrder(receiver, entries);
+								entries.stream()
+									.forEach(oe -> oe.setState(OrderEntryState.ORDERED));
+								tv.refresh();
+							} catch (Exception e) {
+								LoggerFactory.getLogger(getClass()).error("Error printing order",
+									e);
+								MessageDialog.openError(getViewSite().getShell(), "Fehler",
+									"Beim Druck der Bestellung an " + receiver.getLabel()
+										+ " ist ein Fehler aufgetren.");
+							}
 						}
 					}
 				}

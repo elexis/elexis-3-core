@@ -87,6 +87,7 @@ public class BestellBlatt extends ViewPart implements ICallback {
 			Kontakt.load(receiver.getId()), null);
 		if (actBest == null) {
 			SWTHelper.showError(ERRMSG_CAPTION, ERRMSG_BODY + "'" + TT_ORDER + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+			this.getSite().getPage().hideView(this);
 		} else {
 			actBest.setPatient(CoreHub.getLoggedInContact());
 			text.getPlugin().insertTable("[" + TT_ORDER + "]", //$NON-NLS-1$ //$NON-NLS-2$
