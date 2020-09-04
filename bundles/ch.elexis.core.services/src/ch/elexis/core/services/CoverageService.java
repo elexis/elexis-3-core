@@ -28,7 +28,7 @@ public class CoverageService implements ICoverageService {
 		// Check whether all user-defined requirements for this billing system
 		// are met
 		String reqs = BillingSystemServiceHolder.get().getRequirements(coverage.getBillingSystem());
-		if (reqs != null) {
+		if (StringUtils.isNotBlank(reqs)) {
 			for (String req : reqs.split(";")) { //$NON-NLS-1$
 				String localReq = ""; //$NON-NLS-1$
 				String[] r = req.split(":"); //$NON-NLS-1$
