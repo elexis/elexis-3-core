@@ -279,10 +279,11 @@ public class InvoiceListHeaderComposite extends Composite {
 	
 	private void clearValues(){
 		comboViewerStatus.setSelection(new StructuredSelection(InvoiceState.OPEN));
+		actPatient = null;
+		comboViewerBillingSystem.setSelection(new StructuredSelection(ALL_ELEMENTS_LABEL));
 		comboViewerType.setSelection(new StructuredSelection(ALL_ELEMENTS_LABEL));
 		txtInvoiceno.setText("");
 		txtAmount.setText("");
-		actPatient = null;
 		lblPatientname.setText(ALL_PATIENTS_LABEL);
 	}
 	
