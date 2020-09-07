@@ -39,6 +39,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -355,7 +356,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					fireSelectedFallUpdateEvent();
 				}
 			});
-		
+		dpVon.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		tk.createLabel(top, Messages.FallDetailBlatt2_EndDate); //$NON-NLS-1$
 		dpBis = new CDateTime(top, CDT.DATE_SHORT | CDT.DROP_DOWN | SWT.BORDER | CDT.TAB_FIELDS);
 		dpBis.setSelection(new Date());
@@ -368,6 +369,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					fireSelectedFallUpdateEvent();
 				}
 			});
+		dpBis.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		ddc = new DayDateCombo(top, Messages.FallDetailBlatt2_ProposeForBillingIn,
 			Messages.FallDetailBlatt2_DaysOrAfter, Messages.FallDetailBlatt2_ProposeForBillingNeg,
 			Messages.FallDetailBlatt2_DaysOrAfterNeg);
