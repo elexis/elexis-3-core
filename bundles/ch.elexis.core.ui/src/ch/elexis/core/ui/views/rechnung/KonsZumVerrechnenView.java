@@ -17,7 +17,6 @@ import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_LIST;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.commands.Command;
@@ -34,6 +33,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.nebula.widgets.cdatetime.CDT;
+import org.eclipse.nebula.widgets.cdatetime.CDateTime;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.dnd.DND;
@@ -43,6 +44,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -63,8 +65,6 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
-
-import com.tiff.common.ui.datepicker.DatePickerCombo;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
@@ -766,8 +766,8 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 	 * @author danlutz
 	 */
 	public class SelectDateDialog extends TitleAreaDialog {
-		DatePickerCombo dpFromDate;
-		DatePickerCombo dpToDate;
+		CDateTime dpFromDate;
+		CDateTime dpToDate;
 		
 		TimeTool fromDate = null;
 		TimeTool toDate = null;
@@ -793,8 +793,12 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 			new Label(com, SWT.NONE).setText(Messages.SelectDateDialog_from); //$NON-NLS-1$
 			new Label(com, SWT.NONE).setText(Messages.SelectDateDialog_to); //$NON-NLS-1$
 			
-			dpFromDate = new DatePickerCombo(com, SWT.NONE);
-			dpToDate = new DatePickerCombo(com, SWT.NONE);
+			dpFromDate =
+				new CDateTime(com, CDT.DATE_SHORT | CDT.DROP_DOWN | SWT.BORDER | CDT.TAB_FIELDS);
+			dpFromDate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+			dpToDate =
+				new CDateTime(com, CDT.DATE_SHORT | CDT.DROP_DOWN | SWT.BORDER | CDT.TAB_FIELDS);
+			dpToDate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			
 			return com;
 		}
@@ -806,17 +810,15 @@ public class KonsZumVerrechnenView extends ViewPart implements ISaveablePart2 {
 		 */
 		@Override
 		protected void okPressed(){
-			Date date = dpFromDate.getDate();
-			if (date == null) {
+			if (dpFromDate.getSelection() != null) {
+				fromDate = new TimeTool(dpFromDate.getSelection());
+			} else {
 				fromDate = new TimeTool(TimeTool.BEGINNING_OF_UNIX_EPOCH);
-			} else {
-				fromDate = new TimeTool(date.getTime());
 			}
-			date = dpToDate.getDate();
-			if (date == null) {
-				toDate = new TimeTool(TimeTool.END_OF_UNIX_EPOCH);
+			if (dpToDate.getSelection() != null) {
+				toDate = new TimeTool(dpToDate.getSelection());
 			} else {
-				toDate = new TimeTool(date.getTime());
+				toDate = new TimeTool(TimeTool.BEGINNING_OF_UNIX_EPOCH);
 			}
 			super.okPressed();
 		}
