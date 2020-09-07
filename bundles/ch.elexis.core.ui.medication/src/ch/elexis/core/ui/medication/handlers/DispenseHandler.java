@@ -11,6 +11,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.services.holder.ContextServiceHolder;
@@ -46,6 +48,8 @@ public class DispenseHandler extends AbstractHandler {
 				new CreatePrescriptionHelper(null, HandlerUtil.getActiveShell(event));
 			prescriptionHelper.selfDispense(prescription);
 		}
+		ContextServiceHolder.get().getTyped(IEncounter.class).ifPresent(
+			enc -> ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, enc));
 		return null;
 	}
 	
