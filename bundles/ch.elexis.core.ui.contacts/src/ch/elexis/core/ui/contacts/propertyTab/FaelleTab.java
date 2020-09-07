@@ -20,8 +20,7 @@ import org.eclipse.ui.SubActionBars;
 import org.eclipse.ui.views.properties.tabbed.AbstractPropertySection;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
-import ch.elexis.core.data.beans.ContactType;
-import ch.elexis.core.data.interfaces.IContact;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.contacts.controls.FaelleComposite;
 
@@ -68,7 +67,7 @@ public class FaelleTab extends AbstractPropertySection implements IFilter {
 	@Override
 	public boolean select(Object toTest){
 		IContact c = (IContact) toTest;
-		return (c.getContactType() == ContactType.PERSON);
+		return c.isPerson();
 	}
 	
 }

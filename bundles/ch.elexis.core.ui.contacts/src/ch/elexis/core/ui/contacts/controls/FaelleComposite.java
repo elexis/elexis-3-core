@@ -25,7 +25,7 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.interfaces.IContact;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.views.provider.FaelleContentProvider;

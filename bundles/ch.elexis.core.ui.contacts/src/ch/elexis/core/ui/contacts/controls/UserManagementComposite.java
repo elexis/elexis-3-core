@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
-import ch.elexis.core.data.beans.ContactBean;
+import ch.elexis.core.model.IContact;
 
 public class UserManagementComposite extends AbstractComposite {
 	
@@ -103,7 +103,7 @@ public class UserManagementComposite extends AbstractComposite {
 	}
 	
 	@Override
-	public void setContact(ContactBean contact){
+	public void setContact(IContact contact){
 		anwenderGroup.setVisible(contact.isUser());
 		gdAnwenderGroup.exclude = !contact.isUser();
 		mandantGroup.setVisible(contact.isMandator());

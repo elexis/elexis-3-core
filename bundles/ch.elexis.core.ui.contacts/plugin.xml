@@ -320,7 +320,7 @@
                id="ch.elexis.core.contacts.propertyTab.StammdatenTab"
                tab="ch.elexis.core.contacts.propertyTab.Stammdaten">
             <input
-                  type="ch.elexis.core.data.beans.ContactBean">
+                  type="ch.elexis.core.model.IContact">
             </input>
          </propertySection>
          <propertySection
@@ -329,7 +329,7 @@
                id="ch.elexis.core.contacts.propertyTab.UserManagementTab"
                tab="ch.elexis.core.contacts.propertyTab.UserManagement">
             <input
-                  type="ch.elexis.core.data.beans.ContactBean">
+                  type="ch.elexis.core.model.IContact">
             </input>
          </propertySection>
          <propertySection

@@ -11,7 +11,7 @@
 package ch.elexis.core.ui.contacts.controls;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
@@ -19,11 +19,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-import ch.elexis.core.data.beans.ContactBean;
+import ch.elexis.core.model.IContact;
 
 public abstract class AbstractComposite extends Composite {
 	
-	IObservableValue contactObservable = new WritableValue(null, ContactBean.class);
+	IObservableValue<IContact> contactObservable =
+		new WritableValue<IContact>(null, IContact.class);
 	
 	public AbstractComposite(Composite parent, int style){
 		super(parent, style);
@@ -32,10 +33,10 @@ public abstract class AbstractComposite extends Composite {
 	void bindValue(Text text, String property, DataBindingContext bindingContext){
 		IObservableValue textObserveWidget =
 			SWTObservables.observeDelayedValue(5, SWTObservables.observeText(text, SWT.Modify));
-		IObservableValue observeValue =
-			BeansObservables.observeDetailValue(contactObservable, property, String.class);
+		IObservableValue observeValue = 
+			PojoObservables.observeDetailValue(contactObservable, property, String.class);
 		bindingContext.bindValue(textObserveWidget, observeValue, null, null);
 	}
 	
-	public abstract void setContact(ContactBean k);
+	public abstract void setContact(IContact k);
 }
