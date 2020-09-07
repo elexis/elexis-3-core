@@ -96,7 +96,7 @@ public class MedicationTableComposite extends Composite {
 		MedicationViewerHelper.createDosageColumn(viewer, layout, 2);
 		MedicationViewerHelper.createBeginColumn(viewer, layout, 3);
 		MedicationViewerHelper.createIntakeCommentColumn(viewer, layout, 4);
-		MedicationViewerHelper.createMandantColumn(viewer, layout, 5);
+		MedicationViewerHelper.createMandantColumn(viewer, layout, 7);
 		
 		viewer.setContentProvider(new MedicationTableViewerContentProvider(viewer));
 	}
