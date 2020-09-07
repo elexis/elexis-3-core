@@ -11,10 +11,12 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.elexis.core.text.model.Samdas;
@@ -60,6 +62,7 @@ public class MentionInConsultationHandler extends AbstractHandler {
 					rec.setText(recText);
 					EncounterServiceHolder.get().updateVersionedEntry(enc, samdas);
 					CoreModelServiceHolder.get().save(enc);
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, enc);
 				});
 			}
 		}
