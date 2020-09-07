@@ -55,9 +55,9 @@ import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
-import ch.elexis.core.data.beans.ContactBeanFactory;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.interfaces.IContact;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.contacts.views.comparator.ContactSelectorViewerComparator;
 import ch.elexis.core.ui.contacts.views.dnd.ContactSelectorDragListener;
 import ch.elexis.core.ui.contacts.views.dnd.ContactSelectorDropListener;
@@ -65,10 +65,7 @@ import ch.elexis.core.ui.contacts.views.filter.KontaktAnzeigeTextFieldViewerFilt
 import ch.elexis.core.ui.contacts.views.filter.KontaktAnzeigeTypViewerFilter;
 import ch.elexis.core.ui.contacts.views.provider.ContactSelectorObservableMapLabelProvider;
 import ch.elexis.core.ui.contacts.views.provider.TableDecoratingLabelProvider;
-import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
-import ch.elexis.data.Person;
-import ch.elexis.data.Query;
 
 /**
  * @since 3.0.0
@@ -80,7 +77,7 @@ public class ContactSelectorView extends ViewPart implements ITabbedPropertyShee
 	private ObservableListContentProvider contentProvider = null;
 	
 	private TableViewer tableViewerContacts;
-	private WritableList contactList;
+	private WritableList<IContact> contactList;
 	
 	private Text txtFilter;
 	private KontaktAnzeigeTypViewerFilter filterAnzeigeTyp;
@@ -90,7 +87,7 @@ public class ContactSelectorView extends ViewPart implements ITabbedPropertyShee
 	private Label lblStatus;
 	
 	public ContactSelectorView(){
-		contactList = new WritableList();
+		contactList = new WritableList<IContact>();
 		contentProvider = new ObservableListContentProvider();
 		filterPositionTitle = new KontaktAnzeigeTextFieldViewerFilter();
 		loadContactsRunnable = new LoadContactsRunnable();
@@ -151,8 +148,8 @@ public class ContactSelectorView extends ViewPart implements ITabbedPropertyShee
 		
 		MenuManager menuManager = new MenuManager();
 		menuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-		tableViewerContacts.getTable().setMenu(
-			menuManager.createContextMenu(tableViewerContacts.getTable()));
+		tableViewerContacts.getTable()
+			.setMenu(menuManager.createContextMenu(tableViewerContacts.getTable()));
 		
 		getSite().registerContextMenu(menuManager, tableViewerContacts);
 		getSite().setSelectionProvider(tableViewerContacts);
@@ -175,11 +172,10 @@ public class ContactSelectorView extends ViewPart implements ITabbedPropertyShee
 		DataBindingContext bindingContext = new DataBindingContext();
 		
 		tableViewerContacts.setContentProvider(contentProvider);
-		IObservableMap[] observeMaps =
-			BeansObservables.observeMaps(contentProvider.getKnownElements(), IContact.class,
-				new String[] {
-					"description1", "description2", "mandator", "patient", "user"
-				});
+		IObservableMap[] observeMaps = BeansObservables
+			.observeMaps(contentProvider.getKnownElements(), IContact.class, new String[] {
+			// removed to make compatible with NoPo implementation
+			});
 		ILabelDecorator decorator =
 			PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator();
 		tableViewerContacts.setLabelProvider(new TableDecoratingLabelProvider(
@@ -199,8 +195,7 @@ public class ContactSelectorView extends ViewPart implements ITabbedPropertyShee
 	}
 	
 	@Override
-	public Object getAdapter(@SuppressWarnings("rawtypes")
-	Class adapter){
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter){
 		if (adapter == IPropertySheetPage.class)
 			return new TabbedPropertySheetPage(this);
 		return super.getAdapter(adapter);
@@ -275,34 +270,13 @@ public class ContactSelectorView extends ViewPart implements ITabbedPropertyShee
 	private class LoadContactsRunnable implements Runnable {
 		@Override
 		public void run(){
-			// Date d, e, f, g, h, i, j;
-			// d = new Date();
-			Query<Kontakt> qbe = new Query<Kontakt>(Kontakt.class, null, null, Kontakt.TABLENAME, new String[] {
-				Kontakt.FLD_DELETED, Kontakt.FLD_IS_PERSON, Kontakt.FLD_IS_ORGANIZATION,
-				Kontakt.FLD_IS_MANDATOR, Kontakt.FLD_IS_USER, Kontakt.FLD_IS_PATIENT,
-				Kontakt.FLD_NAME1, Kontakt.FLD_NAME2, Kontakt.FLD_NAME3, Person.BIRTHDATE,
-				Person.SEX, Patient.FLD_PATID, Person.TITLE, Person.FLD_TITLE_SUFFIX
-			});
-			// e = new Date();
-			List<Kontakt> qre = qbe.execute();
-			// f = new Date(); // 2598
-			List<? extends IContact> result = ContactBeanFactory.createContactBeans(qre);
-			// g = new Date();
-			lblStatus.setText(qbe.size() + " contacts found.");
-			// h = new Date(); // 4001 !!!
+			List<IContact> contacts =
+				CoreModelServiceHolder.get().getQuery(IContact.class).execute();
+			lblStatus.setText(contacts.size() + " contacts found.");
 			tableViewerContacts.getControl().setRedraw(false);
 			contactList.clear();
-			contactList.addAll(result);
-			// i = new Date();
-			// j = new Date();
+			contactList.addAll(contacts);
 			tableViewerContacts.getControl().setRedraw(true);
-			// System.out.println("d-e: "+(e.getTime()-d.getTime()));
-			// System.out.println("e-f: "+(f.getTime()-e.getTime()));
-			// System.out.println("f-g: "+(g.getTime()-f.getTime()));
-			// System.out.println("g-h: "+(h.getTime()-g.getTime()));
-			// System.out.println("h-i: "+(i.getTime()-h.getTime()));
-			// System.out.println("i-j: "+(j.getTime()-i.getTime()));
-			// System.out.println("sum: "+(i.getTime()-d.getTime()));
 		}
 	}
 	

@@ -28,7 +28,7 @@ public class StammdatenTab extends AbstractPropertySection {
 	/**
 	 * we need to use {@link ContactBean} as it fullfills both {@link IContact} and {@link IPerson}
 	 */
-	private ContactBean contact;
+	private IContact contact;
 	private StammDatenComposite sdc;
 	
 	public StammdatenTab(){}
@@ -45,7 +45,7 @@ public class StammdatenTab extends AbstractPropertySection {
 	public void setInput(IWorkbenchPart part, ISelection selection){
 		super.setInput(part, selection);
 		Object input = ((IStructuredSelection) selection).getFirstElement();
-		contact = (ContactBean) input;
+		contact = (IContact) input;
 		sdc.setContact(contact);
 	}
 	

@@ -16,7 +16,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.map.ObservableMap;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
@@ -53,7 +53,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.beans.ContactBean;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.types.ContactGender;
 import ch.elexis.core.types.Country;
 import ch.elexis.core.ui.contacts.proposalProvider.CityInformationProposalProvider;
@@ -70,7 +70,7 @@ public class StammDatenComposite extends AbstractComposite {
 	
 	private static Logger log = LoggerFactory.getLogger(StammDatenComposite.class);
 	
-	private ContactBean kontakt;
+	private IContact contact;
 	
 	private Label lblHeadline;
 	private Label lblContactType;
@@ -135,9 +135,8 @@ public class StammDatenComposite extends AbstractComposite {
 	public StammDatenComposite(Composite parent, int style){
 		super(parent, style);
 		decorator = PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator();
-		tdlp =
-			new TableDecoratingLabelProvider(new ContactSelectorObservableMapLabelProvider(
-				new ObservableMap[] {}), decorator);
+		tdlp = new TableDecoratingLabelProvider(
+			new ContactSelectorObservableMapLabelProvider(new ObservableMap[] {}), decorator);
 		
 		setLayout(new GridLayout(6, false));
 		
@@ -163,10 +162,9 @@ public class StammDatenComposite extends AbstractComposite {
 			gd_txtTitleFront.widthHint = 60;
 			txtTitleFront.setLayoutData(gd_txtTitleFront);
 			txtTitleFront.setMessage("Titel");
-			ContentProposalAdapter cpaTitleFront =
-				new ContentProposalAdapter(txtTitleFront, new TextContentAdapter(),
-					new TitleProposalProvider(TitleProposalProvider.TITLE_POSITION_PREFIX), null,
-					null);
+			ContentProposalAdapter cpaTitleFront = new ContentProposalAdapter(txtTitleFront,
+				new TextContentAdapter(),
+				new TitleProposalProvider(TitleProposalProvider.TITLE_POSITION_PREFIX), null, null);
 			cpaTitleFront.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 		}
 		
@@ -182,10 +180,9 @@ public class StammDatenComposite extends AbstractComposite {
 			gd_txtTitleBack.widthHint = 60;
 			txtTitleBack.setLayoutData(gd_txtTitleBack);
 			txtTitleBack.setMessage("Titel");
-			ContentProposalAdapter cpaTitleBack =
-				new ContentProposalAdapter(txtTitleBack, new TextContentAdapter(),
-					new TitleProposalProvider(TitleProposalProvider.TITLE_POSITION_SUFFIX), null,
-					null);
+			ContentProposalAdapter cpaTitleBack = new ContentProposalAdapter(txtTitleBack,
+				new TextContentAdapter(),
+				new TitleProposalProvider(TitleProposalProvider.TITLE_POSITION_SUFFIX), null, null);
 			cpaTitleBack.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 		}
 		
@@ -233,15 +230,14 @@ public class StammDatenComposite extends AbstractComposite {
 				@Override
 				public void selectionChanged(SelectionChangedEvent event){
 					Country selCountry =
-						(Country) ((StructuredSelection) event.getSelection())
-							.getFirstElement();
+						(Country) ((StructuredSelection) event.getSelection()).getFirstElement();
 					if (selCountry == Country.NDF) {
-						comboViewerCountry.getCombo().setForeground(
-							Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+						comboViewerCountry.getCombo()
+							.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 						ContactGeonames.setCountry(null);
 					} else {
-						comboViewerCountry.getCombo().setForeground(
-							Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
+						comboViewerCountry.getCombo()
+							.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
 						ContactGeonames.setCountry(selCountry);
 					}
 					
@@ -298,9 +294,8 @@ public class StammDatenComposite extends AbstractComposite {
 			txtStreet.setMessage("Strasse, Hausnummer");
 			txtStreet.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 			
-			ContentProposalAdapter cpaStreet =
-				new ContentProposalAdapter(txtStreet, new TextContentAdapter(), streetIP, null,
-					null);
+			ContentProposalAdapter cpaStreet = new ContentProposalAdapter(txtStreet,
+				new TextContentAdapter(), streetIP, null, null);
 			cpaStreet.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 		}
 		
@@ -397,13 +392,12 @@ public class StammDatenComposite extends AbstractComposite {
 	}
 	
 	@Override
-	public void setContact(ContactBean k){
-		this.kontakt = k;
-		contactObservable.setValue(kontakt);
+	public void setContact(IContact k){
+		this.contact = k;
+		contactObservable.setValue(contact);
 		
-		switch (kontakt.getContactType()) {
-		case PERSON:
-			lblContactType.setImage(tdlp.getColumnImage(kontakt, 0));
+		if (contact.isPerson()) {
+			lblContactType.setImage(tdlp.getColumnImage(contact, 0));
 			comboViewerSex.getCombo().setVisible(true);
 			gd_comboSex.exclude = false;
 			txtTitleBack.setVisible(true);
@@ -415,14 +409,15 @@ public class StammDatenComposite extends AbstractComposite {
 			lblHeadline.setText(PERSON_LABEL);
 			txtFirstName.setMessage("Vorname");
 			txtFamilyName.setMessage("Nachname");
-			if (kontakt.getCode() != null) {
-				lblCode.setText("#" + kontakt.getCode());
+			if (contact.getCode() != null) {
+				lblCode.setText("#" + contact.getCode());
 			} else {
 				lblCode.setText("");
 			}
-			break;
-		case ORGANIZATION:
-			lblContactType.setImage(tdlp.getColumnImage(kontakt, 0));
+		}
+		
+		if (contact.isOrganization()) {
+			lblContactType.setImage(tdlp.getColumnImage(contact, 0));
 			comboViewerSex.getCombo().setVisible(false);
 			gd_comboSex.exclude = true;
 			txtTitleFront.setVisible(false);
@@ -435,27 +430,23 @@ public class StammDatenComposite extends AbstractComposite {
 			txtFamilyName.setMessage("Bezeichnung 2");
 			lblHeadline.setText(ORGANIZATION_LABEL);
 			lblCode.setText("");
-			break;
-		default:
-			break;
 		}
+		
 		layout();
 	}
 	
 	protected void initDataBindings(){
 		DataBindingContext bindingContext = new DataBindingContext();
-		
-		Text[] control =
-			{
-				txtTitleFront, txtFirstName, txtFamilyName, txtTitleBack, txtZIP, txtCity,
-				txtStreet, txtTelefon, txtTelefon2, txtFax, txtEmail, txtWebsite, txtMobil,
-				txtNotes
-			};
-		String[] property =
-			{
-				"titel", "description2", "description1", "titelSuffix", "zip", "city", "street",
-				"phone1", "phone2", "fax", "email", "website", "mobile", "comment"
-			};
+
+		Text[] control = {
+			// TODO txtTitleFront, txtTitleBack
+			txtFirstName, txtFamilyName, txtZIP, txtCity, txtStreet, txtTelefon, txtTelefon2,
+			txtFax, txtEmail, txtWebsite, txtMobil, txtNotes
+		};
+		String[] property = {
+			"description2", "description1", "zip", "city", "street", "phone1", "phone2", "fax",
+			"email", "website", "mobile", "comment"
+		};
 		
 		for (int i = 0; i < control.length; i++) {
 			bindValue(control[i], property[i], bindingContext);
@@ -474,17 +465,16 @@ public class StammDatenComposite extends AbstractComposite {
 		//		bindingContext.bindValue(dateTimeObserveWidget, dateTimeObserveValue, targetToModel,
 		//			modelToTarget);
 		
-		// Warum liegt denn hier Stroh rum?
-		IObservableValue sexObserver = ViewersObservables.observeSingleSelection(comboViewerSex);
-		bindingContext.bindValue(sexObserver,
-			BeansObservables.observeDetailValue(contactObservable, "gender", ContactGender.class),
-			null, null);
+		//		IObservableValue sexObserver = ViewersObservables.observeSingleSelection(comboViewerSex);
+		//		bindingContext.bindValue(sexObserver,
+		//			BeansObservables.observeDetailValue(contactObservable, "gender", ContactGender.class),
+		//			null, null);
 		
 		IObservableValue countryObserver =
 			ViewersObservables.observeSingleSelection(comboViewerCountry);
 		bindingContext.bindValue(countryObserver,
-			BeansObservables.observeDetailValue(contactObservable, "country", Country.class),
-			null, null);
+			PojoObservables.observeDetailValue(contactObservable, "country", Country.class), null,
+			null);
 	}
 	
 	/**

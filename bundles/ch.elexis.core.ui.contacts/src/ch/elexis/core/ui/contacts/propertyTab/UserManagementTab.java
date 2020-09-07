@@ -19,7 +19,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.AbstractPropertySection;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
-import ch.elexis.core.data.beans.ContactBean;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.ui.contacts.controls.UserManagementComposite;
 
@@ -44,7 +43,7 @@ public class UserManagementTab extends AbstractPropertySection implements IFilte
 	public void setInput(IWorkbenchPart part, ISelection selection){
 		super.setInput(part, selection);
 		Object input = ((IStructuredSelection) selection).getFirstElement();
-		umc.setContact((ContactBean) input);
+		umc.setContact((IContact) input);
 	}
 	
 	@Override

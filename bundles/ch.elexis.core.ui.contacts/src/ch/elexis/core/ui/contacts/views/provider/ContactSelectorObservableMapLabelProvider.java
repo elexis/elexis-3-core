@@ -11,21 +11,22 @@
 package ch.elexis.core.ui.contacts.views.provider;
 
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 
 import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.jface.databinding.viewers.ObservableMapLabelProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-import ch.elexis.core.data.beans.ContactBean;
-import ch.elexis.core.data.interfaces.IContact;
-import ch.elexis.core.data.interfaces.IPerson;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IPerson;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.icons.Images;
 
 public class ContactSelectorObservableMapLabelProvider extends ObservableMapLabelProvider
 		implements ITableLabelProvider {
-		
+	
 	public ContactSelectorObservableMapLabelProvider(IObservableMap[] observeMaps){
 		super(observeMaps);
 	}
@@ -35,15 +36,18 @@ public class ContactSelectorObservableMapLabelProvider extends ObservableMapLabe
 	
 	@Override
 	public Image getColumnImage(Object element, int columnIndex){
-		ContactBean k = (ContactBean) element;
-		switch (k.getContactType()) {
-		case ORGANIZATION:
+		IContact k = (IContact) element;
+		
+		if (k.isOrganization()) {
 			return Images.IMG_ORGANISATION.getImage();
-		case PERSON:
-			IPerson p = (IPerson) k;
-			if (!p.isPatient()) {
+		}
+		
+		if (k.isPerson()) {
+			if (!k.isPatient()) {
 				return Images.IMG_PERSON_GREY.getImage();
 			}
+			
+			IPerson p = CoreModelServiceHolder.get().load(k.getId(), IPerson.class).get();
 			if (p.getGender() == null)
 				Images.IMG_EMPTY_TRANSPARENT.getImage();
 			switch (p.getGender()) {
@@ -54,16 +58,16 @@ public class ContactSelectorObservableMapLabelProvider extends ObservableMapLabe
 			default:
 				return Images.IMG_QUESTION_MARK.getImage();
 			}
-		default:
-			return Images.IMG_EMPTY_TRANSPARENT.getImage();
 		}
+		
+		return Images.IMG_EMPTY_TRANSPARENT.getImage();
 	}
 	
 	@Override
 	public String getColumnText(Object element, int columnIndex){
 		IContact contact = (IContact) element;
-		switch (contact.getContactType()) {
-		case ORGANIZATION:
+		
+		if (contact.isOrganization()) {
 			sb = new StringBuilder();
 			if (contact.getDescription1() != null) {
 				sb.append(contact.getDescription1() + " ");
@@ -71,8 +75,11 @@ public class ContactSelectorObservableMapLabelProvider extends ObservableMapLabe
 			if (contact.getDescription2() != null)
 				sb.append(contact.getDescription2());
 			return sb.toString();
-		case PERSON:
-			IPerson person = (IPerson) contact;
+		}
+		
+		if (contact.isPerson()) {
+			IPerson person =
+				CoreModelServiceHolder.get().load(contact.getId(), IPerson.class).get();
 			sb = new StringBuilder();
 			if (person.getTitel() != null)
 				sb.append(person.getTitel() + " ");
@@ -82,11 +89,11 @@ public class ContactSelectorObservableMapLabelProvider extends ObservableMapLabe
 				sb.append(", " + person.getTitelSuffix());
 			sb.append(" (" + geschlechtToLabel(person.getGender()) + ")");
 			if (person.getDateOfBirth() != null)
-				sb.append(", " + sdf.format(person.getDateOfBirth().getTime()));
+				sb.append(", " + person.getDateOfBirth().format(DateTimeFormatter.BASIC_ISO_DATE));
 			return sb.toString();
-		default:
-			return contact.getDescription1();
 		}
+		
+		return contact.getDescription1();
 	}
 	
 	private String geschlechtToLabel(Gender geschlecht){

@@ -14,7 +14,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.ui.PlatformUI;
 
-import ch.elexis.core.data.interfaces.IContact;
+import ch.elexis.core.model.IContact;
 
 public class KontaktAnzeigeTypViewerFilter extends ViewerFilter {
 	
@@ -32,27 +32,21 @@ public class KontaktAnzeigeTypViewerFilter extends ViewerFilter {
 	public KontaktAnzeigeTypViewerFilter(Viewer viewer){
 		KontaktAnzeigeTypViewerFilter.viewer = viewer;
 		
-		PlatformUI.getPreferenceStore().setDefault(
-			KontaktAnzeigeTypViewerFilter.class.getName() + ".showPatient", true);
+		PlatformUI.getPreferenceStore()
+			.setDefault(KontaktAnzeigeTypViewerFilter.class.getName() + ".showPatient", true);
 		
-		showPerson =
-			PlatformUI.getPreferenceStore().getBoolean(
-				KontaktAnzeigeTypViewerFilter.class.getName() + ".showPerson");
-		showPatient =
-			PlatformUI.getPreferenceStore().getBoolean(
-				KontaktAnzeigeTypViewerFilter.class.getName() + ".showPatient");
-		showOrganisation =
-			PlatformUI.getPreferenceStore().getBoolean(
-				KontaktAnzeigeTypViewerFilter.class.getName() + ".showOrganisation");
-		showMandant =
-			PlatformUI.getPreferenceStore().getBoolean(
-				KontaktAnzeigeTypViewerFilter.class.getName() + ".showMandant");
-		showAnwender =
-			PlatformUI.getPreferenceStore().getBoolean(
-				KontaktAnzeigeTypViewerFilter.class.getName() + ".showAnwender");
-		showDeleted =
-			PlatformUI.getPreferenceStore().getBoolean(
-				KontaktAnzeigeTypViewerFilter.class.getName() + ".showDeleted");
+		showPerson = PlatformUI.getPreferenceStore()
+			.getBoolean(KontaktAnzeigeTypViewerFilter.class.getName() + ".showPerson");
+		showPatient = PlatformUI.getPreferenceStore()
+			.getBoolean(KontaktAnzeigeTypViewerFilter.class.getName() + ".showPatient");
+		showOrganisation = PlatformUI.getPreferenceStore()
+			.getBoolean(KontaktAnzeigeTypViewerFilter.class.getName() + ".showOrganisation");
+		showMandant = PlatformUI.getPreferenceStore()
+			.getBoolean(KontaktAnzeigeTypViewerFilter.class.getName() + ".showMandant");
+		showAnwender = PlatformUI.getPreferenceStore()
+			.getBoolean(KontaktAnzeigeTypViewerFilter.class.getName() + ".showAnwender");
+		showDeleted = PlatformUI.getPreferenceStore()
+			.getBoolean(KontaktAnzeigeTypViewerFilter.class.getName() + ".showDeleted");
 	}
 	
 	@Override
@@ -61,12 +55,13 @@ public class KontaktAnzeigeTypViewerFilter extends ViewerFilter {
 		if (showDeleted && contact.isDeleted())
 			return true;
 		
-		switch (contact.getContactType()) {
-		case ORGANIZATION:
-			if (showOrganisation)
+		if (contact.isOrganization()) {
+			if (showOrganisation) {
 				return true;
-			break;
-		case PERSON:
+			}
+		}
+		
+		if (contact.isPerson()) {
 			if (showPerson) {
 				return true;
 			} else {
@@ -77,10 +72,9 @@ public class KontaktAnzeigeTypViewerFilter extends ViewerFilter {
 				if (contact.isMandator() && !contact.isDeleted() && showMandant)
 					return true;
 			}
-		default:
-			// TODO: Administrator is neither Organization nor Person?!
-			break;
 		}
+		
+		// TODO: Administrator is neither Organization nor Person?!
 		
 		return false;
 	}
@@ -101,8 +95,8 @@ public class KontaktAnzeigeTypViewerFilter extends ViewerFilter {
 	
 	public static void setShowPerson(boolean showPerson){
 		KontaktAnzeigeTypViewerFilter.showPerson = showPerson;
-		PlatformUI.getPreferenceStore().setValue(
-			KontaktAnzeigeTypViewerFilter.class.getName() + ".showPerson", showPerson);
+		PlatformUI.getPreferenceStore()
+			.setValue(KontaktAnzeigeTypViewerFilter.class.getName() + ".showPerson", showPerson);
 		refreshViewer();
 	}
 	
@@ -123,8 +117,8 @@ public class KontaktAnzeigeTypViewerFilter extends ViewerFilter {
 	
 	public static void setShowPatient(boolean showPatient){
 		KontaktAnzeigeTypViewerFilter.showPatient = showPatient;
-		PlatformUI.getPreferenceStore().setValue(
-			KontaktAnzeigeTypViewerFilter.class.getName() + ".showPatient", showPatient);
+		PlatformUI.getPreferenceStore()
+			.setValue(KontaktAnzeigeTypViewerFilter.class.getName() + ".showPatient", showPatient);
 		refreshViewer();
 	}
 	
@@ -134,8 +128,8 @@ public class KontaktAnzeigeTypViewerFilter extends ViewerFilter {
 	
 	public static void setShowMandant(boolean showMandant){
 		KontaktAnzeigeTypViewerFilter.showMandant = showMandant;
-		PlatformUI.getPreferenceStore().setValue(
-			KontaktAnzeigeTypViewerFilter.class.getName() + ".showMandant", showMandant);
+		PlatformUI.getPreferenceStore()
+			.setValue(KontaktAnzeigeTypViewerFilter.class.getName() + ".showMandant", showMandant);
 		refreshViewer();
 	}
 	
@@ -156,8 +150,8 @@ public class KontaktAnzeigeTypViewerFilter extends ViewerFilter {
 	
 	public static void setShowDeleted(boolean showDeleted){
 		KontaktAnzeigeTypViewerFilter.showDeleted = showDeleted;
-		PlatformUI.getPreferenceStore().setValue(
-			KontaktAnzeigeTypViewerFilter.class.getName() + ".showDeleted", showDeleted);
+		PlatformUI.getPreferenceStore()
+			.setValue(KontaktAnzeigeTypViewerFilter.class.getName() + ".showDeleted", showDeleted);
 		refreshViewer();
 	}
 	
