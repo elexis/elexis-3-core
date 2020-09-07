@@ -102,7 +102,7 @@ public class Prescription
 	
 	@Override
 	public String getRemark(){
-		return getEntity().getBemerkung();
+		return StringUtils.defaultString(getEntity().getBemerkung());
 	}
 	
 	@Override

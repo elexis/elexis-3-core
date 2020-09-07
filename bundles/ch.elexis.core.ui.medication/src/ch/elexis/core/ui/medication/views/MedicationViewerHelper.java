@@ -244,6 +244,8 @@ public class MedicationViewerHelper {
 		layout.setColumnData(tblclmnMandant, mandantColumnWeightData);
 		tblclmnMandant.setText(Messages.MedicationComposite_column_mandant);
 		tblclmnMandant.setToolTipText(Messages.MedicationComposite_column_mandant);
+		tblclmnMandant
+			.addSelectionListener(getSelectionAdapter(viewer, tblclmnMandant, columnIndex));
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
 			@Override
 			public String getText(Object element){

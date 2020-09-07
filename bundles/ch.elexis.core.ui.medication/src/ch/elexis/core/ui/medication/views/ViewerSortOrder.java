@@ -134,6 +134,17 @@ public enum ViewerSortOrder {
 				
 				rc = stopReason1.compareTo(stopReason2);
 				break;
+			case 7:
+				String prescriptor1 = p1.getPrescriptorLabel();
+				if (prescriptor1 == null)
+					prescriptor1 = "";
+				
+				String prescriptor2 = p2.getPrescriptorLabel();
+				if (prescriptor2 == null)
+					prescriptor2 = "";
+				
+				rc = prescriptor1.compareTo(prescriptor2);
+				break;
 			default:
 				rc = 0;
 			}
