@@ -15,6 +15,9 @@ package ch.elexis.core.ui.dialogs;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.nebula.widgets.cdatetime.CDT;
 import org.eclipse.nebula.widgets.cdatetime.CDateTime;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -36,16 +39,25 @@ public class DateSelectorDialog extends Dialog {
 		this(parent, selectedDate, null);
 	}
 	
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public DateSelectorDialog(Shell parentShell){
 		this(parentShell, new TimeTool());
 	}
 	
 	@Override
 	protected Control createDialogArea(Composite parent){
-		dp = new CDateTime(parent, CDT.DATE_SHORT | CDT.DROP_DOWN | CDT.TAB_FIELDS);
+		Composite ret = new Composite(parent, SWT.None);
+		ret.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		ret.setLayout(new GridLayout(1, false));
+		dp = new CDateTime(ret, CDT.TAB_FIELDS | CDT.DROP_DOWN | CDT.DATE_SHORT);
+		GridData gd_dp = new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1);
+		gd_dp.widthHint = 100;
+		dp.setLayoutData(gd_dp);
 		dp.setSelection(preSelectedDate.getTime());
 		getShell().setText(shellTitle);
-		return dp;
+		return ret;
 	}
 	
 	public TimeTool getSelectedDate(){
