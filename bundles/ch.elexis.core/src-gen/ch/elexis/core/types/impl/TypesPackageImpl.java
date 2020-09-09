@@ -17,9 +17,12 @@ import ch.elexis.core.model.MaritalStatus;
 import ch.elexis.core.model.MimeType;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.model.XidQuality;
+import ch.elexis.core.model.agenda.EndingType;
+import ch.elexis.core.model.agenda.SeriesType;
 import ch.elexis.core.model.ch.BillingLaw;
 import ch.elexis.core.model.prescription.EntryType;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
@@ -313,6 +316,27 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EDataType charArrayEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType seriesTypeEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType endingTypeEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType localTimeEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -731,6 +755,36 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EDataType getSeriesType() {
+		return seriesTypeEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EDataType getEndingType() {
+		return endingTypeEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EDataType getLocalTime() {
+		return localTimeEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getResult() {
 		return resultEClass;
 	}
@@ -807,6 +861,9 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		invoiceRejectCodeEDataType = createEDataType(INVOICE_REJECT_CODE);
 		optionalEDataType = createEDataType(OPTIONAL);
 		charArrayEDataType = createEDataType(CHAR_ARRAY);
+		seriesTypeEDataType = createEDataType(SERIES_TYPE);
+		endingTypeEDataType = createEDataType(ENDING_TYPE);
+		localTimeEDataType = createEDataType(LOCAL_TIME);
 	}
 
 	/**
@@ -933,6 +990,9 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEDataType(invoiceRejectCodeEDataType, REJECTCODE.class, "InvoiceRejectCode", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(optionalEDataType, Optional.class, "Optional", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(charArrayEDataType, char[].class, "charArray", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(seriesTypeEDataType, SeriesType.class, "SeriesType", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(endingTypeEDataType, EndingType.class, "EndingType", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(localTimeEDataType, LocalTime.class, "LocalTime", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

@@ -86,6 +86,9 @@
       <genTypeParameters ecoreTypeParameter="types.ecore#//Optional/T"/>
     </genDataTypes>
     <genDataTypes ecoreDataType="types.ecore#//charArray"/>
+    <genDataTypes ecoreDataType="types.ecore#//SeriesType"/>
+    <genDataTypes ecoreDataType="types.ecore#//EndingType"/>
+    <genDataTypes ecoreDataType="types.ecore#//LocalTime"/>
     <genClasses image="false" ecoreClass="types.ecore#//Comparable">
       <genTypeParameters ecoreTypeParameter="types.ecore#//Comparable/T"/>
     </genClasses>

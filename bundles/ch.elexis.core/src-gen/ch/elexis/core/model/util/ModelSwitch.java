@@ -494,15 +494,6 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ModelPackage.IAPPOINTMENT: {
-				IAppointment iAppointment = (IAppointment)theEObject;
-				T1 result = caseIAppointment(iAppointment);
-				if (result == null) result = caseIPeriod(iAppointment);
-				if (result == null) result = caseIdentifiable(iAppointment);
-				if (result == null) result = caseDeleteable(iAppointment);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case ModelPackage.IIMAGE: {
 				IImage iImage = (IImage)theEObject;
 				T1 result = caseIImage(iImage);
@@ -603,6 +594,25 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				T1 result = caseITextTemplate(iTextTemplate);
 				if (result == null) result = caseIdentifiable(iTextTemplate);
 				if (result == null) result = caseDeleteable(iTextTemplate);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IAPPOINTMENT: {
+				IAppointment iAppointment = (IAppointment)theEObject;
+				T1 result = caseIAppointment(iAppointment);
+				if (result == null) result = caseIPeriod(iAppointment);
+				if (result == null) result = caseIdentifiable(iAppointment);
+				if (result == null) result = caseDeleteable(iAppointment);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IAPPOINTMENT_SERIES: {
+				IAppointmentSeries iAppointmentSeries = (IAppointmentSeries)theEObject;
+				T1 result = caseIAppointmentSeries(iAppointmentSeries);
+				if (result == null) result = caseIAppointment(iAppointmentSeries);
+				if (result == null) result = caseIPeriod(iAppointmentSeries);
+				if (result == null) result = caseIdentifiable(iAppointmentSeries);
+				if (result == null) result = caseDeleteable(iAppointmentSeries);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1552,6 +1562,21 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseITextTemplate(ITextTemplate object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IAppointment Series</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IAppointment Series</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIAppointmentSeries(IAppointmentSeries object) {
 		return null;
 	}
 
