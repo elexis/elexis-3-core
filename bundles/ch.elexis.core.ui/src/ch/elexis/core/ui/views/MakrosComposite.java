@@ -92,7 +92,7 @@ public class MakrosComposite extends Composite {
 		
 		MenuManager menuManager = new MenuManager();
 		menuManager.add(new RemoveMakroAction(viewer));
-		MenuManager subMenu = new MenuManager("Marko zu Anwender kopieren");
+		MenuManager subMenu = new MenuManager("Makro zu Anwender kopieren");
 		subMenu.setRemoveAllWhenShown(true);
 		subMenu.addMenuListener(new IMenuListener() {
 			@Override
