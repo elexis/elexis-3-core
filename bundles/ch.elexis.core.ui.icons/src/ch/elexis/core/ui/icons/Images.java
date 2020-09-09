@@ -284,7 +284,8 @@ public enum Images {
 		IMG_TASK, 
 		IMG_SCANNER,
 		IMG_DRAWER,
-		IMG_DRAWER_ARROW;
+		IMG_DRAWER_ARROW,
+		IMG_ADD;
 		
 	private Images(){}
 	
