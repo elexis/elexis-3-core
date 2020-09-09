@@ -214,21 +214,6 @@
             <column name="VALIDTO" type="CHAR(8)"/>
         </createTable>
     </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-16">
-        <createTable tableName="CH_ELEXIS_ARZTTARIFE_CH_PHYSIO">
-            <column name="ID" type="VARCHAR(25)">
-                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_67"/>
-            </column>
-            <column name="LASTUPDATE" type="BIGINT"/>
-            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
-            <column name="VALIDFROM" type="CHAR(8)"/>
-            <column name="VALIDUNTIL" type="CHAR(8)"/>
-            <column name="TP" type="CHAR(8)"/>
-            <column name="ZIFFER" type="VARCHAR(6)"/>
-            <column name="TITEL" type="VARCHAR(255)"/>
-            <column name="DESCRIPTION" type="CLOB"/>
-        </createTable>
-    </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-18">
         <createTable tableName="CH_ELEXIS_EIGENDIAGNOSEN">
             <column name="ID" type="VARCHAR(25)">
