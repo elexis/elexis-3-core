@@ -2068,5 +2068,17 @@ WHERE kontakt.id IN (
 			<column name="DESCRIPTION" type="CLOB" />
 		</createTable>
 	</changeSet>
+    <changeSet author="thomas (generated)" id="1527175239251-93">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="CH_ELEXIS_ARZTTARIFE_CH_PHYSIO"
+					indexName="CHEACP" />
+			</not>
+		</preConditions>
+        <createIndex indexName="CHEACP" tableName="CH_ELEXIS_ARZTTARIFE_CH_PHYSIO">
+            <column name="ZIFFER"/>
+        </createIndex>
+    </changeSet>
+	
     
 </databaseChangeLog>
