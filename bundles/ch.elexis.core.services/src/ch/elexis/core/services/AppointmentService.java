@@ -1,27 +1,36 @@
 package ch.elexis.core.services;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Optional;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import ch.elexis.core.model.IAppointment;
+import ch.elexis.core.model.IAppointmentSeries;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.Messages;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.agenda.Area;
 import ch.elexis.core.model.agenda.AreaType;
+import ch.elexis.core.model.agenda.EndingType;
+import ch.elexis.core.model.agenda.SeriesType;
 import ch.elexis.core.model.builder.IAppointmentBuilder;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.internal.model.AppointmentSeries;
 import ch.elexis.core.types.AppointmentState;
 import ch.elexis.core.types.AppointmentType;
 import ch.rgw.tools.StringTool;
@@ -53,12 +62,6 @@ public class AppointmentService implements IAppointmentService {
 	
 	@Override
 	public IAppointment clone(IAppointment appointment){
-		/**
-		 * DEPRECATED JPA // Termin ret = // new Termin(get(FLD_BEREICH), get(FLD_TAG),
-		 * getStartMinute(), getStartMinute() // + getDauer(), getType(), getStatus(),
-		 * get(FLD_PRIORITY)); // Kontakt k = getKontakt(); // if (k != null) { //
-		 * ret.setKontakt(getKontakt()); // } // return ret;
-		 **/
 		return new IAppointmentBuilder(iModelService, appointment.getSchedule(),
 			appointment.getStartTime(), appointment.getEndTime(), appointment.getType(),
 			appointment.getState(), appointment.getPriority(), appointment.getSubjectOrPatient())
@@ -121,30 +124,6 @@ public class AppointmentService implements IAppointmentService {
 			iModelService.delete(appointment);
 		}
 		return true;
-		/**
-		 * DEPRECATED JPA // boolean confirmed = !askForConfirmation; // if (checkLock()) { //
-		 * return false; // } // String linkgroup = get(FLD_LINKGROUP); //$NON-NLS-1$ // boolean
-		 * isLinked = linkgroup != null && !linkgroup.isEmpty(); // // if (isLinked &&
-		 * askForConfirmation) { // MessageDialog msd = // new MessageDialog(UiDesk.getTopShell(),
-		 * Messages.Termin_deleteSeries, null, // Messages.Termin_thisAppIsPartOfSerie,
-		 * MessageDialog.QUESTION, new String[] { // Messages.Termin_yes, Messages.Termin_no // },
-		 * 1); // int retval = msd.open(); // if (retval == SWT.DEFAULT) // { // return false; // }
-		 * // confirmed = (retval == Dialog.OK); // } // if (isLinked) { // List<Termin> linked =
-		 * getLinked(this); // if (confirmed) { // // delete whole series // for (Termin ae :
-		 * (List<Termin>) linked) { // ae.set(new String[] { // FLD_LASTEDIT, FLD_DELETED // }, new
-		 * String[] { // createTimeStamp(), StringConstants.ONE // }); // } // } else { // if
-		 * (getId().equals(linkgroup)) { // // move root information // if (linked.size() > 1) { //
-		 * int index = 0; // Termin moveto = linked.get(index); // while
-		 * (moveto.getId().equals(linkgroup)) { // moveto = linked.get(++index); // } //
-		 * moveto.set(Termin.FLD_PATIENT, get(Termin.FLD_PATIENT)); // moveto.set(Termin.FLD_GRUND,
-		 * get(Termin.FLD_GRUND)); // moveto.set(Termin.FLD_CREATOR, get(Termin.FLD_CREATOR)); //
-		 * moveto.set(Termin.FLD_EXTENSION, get(Termin.FLD_EXTENSION)); // for (Termin termin :
-		 * linked) { // termin.set(Termin.FLD_LINKGROUP, moveto.getId()); // } // } // } // //
-		 * delete this // set(new String[] { // FLD_DELETED, FLD_LASTEDIT // }, StringConstants.ONE,
-		 * createTimeStamp()); // } // } else { // // delete this // set(new String[] { //
-		 * FLD_DELETED, FLD_LASTEDIT // }, StringConstants.ONE, createTimeStamp()); // } // return
-		 * true;
-		 **/
 	}
 	
 	@Override
@@ -286,5 +265,175 @@ public class AppointmentService implements IAppointmentService {
 			ret = Arrays.asList("-", Messages.Appointment_Planned_Appointment);
 		}
 		return ret;
+	}
+	
+	@Override
+	public Optional<IAppointmentSeries> getAppointmentSeries(IAppointment appointment){
+		if (appointment != null && appointment.isRecurring()) {
+			return Optional.of(new AppointmentSeries(appointment));
+		}
+		return Optional.empty();
+	}
+	
+	@Override
+	public IAppointmentSeries createAppointmentSeries(){
+		IAppointment appointment = CoreModelServiceHolder.get().create(IAppointment.class);
+		// set some default values
+		appointment.setSchedule(getAreas().get(0).getName());
+		appointment.setCreatedBy(ContextServiceHolder.get().getActiveUser().orElse(null));
+		LocalDate monday = LocalDate.now().with(DayOfWeek.MONDAY);
+		appointment.setStartTime(LocalDateTime.of(monday, LocalTime.of(8, 0, 0)));
+		appointment.setEndTime(LocalDateTime.of(monday, LocalTime.of(8, 30, 0)));
+		// mark as recurring root
+		appointment.setLinkgroup(appointment.getId());
+		IAppointmentSeries ret = new AppointmentSeries(appointment);
+		ret.setSeriesStartDate(appointment.getStartTime().toLocalDate());
+		ret.setSeriesStartTime(appointment.getStartTime().toLocalTime());
+		
+		ret.setSeriesType(SeriesType.WEEKLY);
+		ret.setSeriesPatternString("1," + Calendar.MONDAY);
+		ret.setEndingType(EndingType.ON_SPECIFIC_DATE);
+		ret.setSeriesEndDate(appointment.getStartTime().plusDays(7).toLocalDate());
+		ret.setSeriesEndTime(appointment.getEndTime().toLocalTime());
+		
+		Optional<IPatient> patient = ContextServiceHolder.get().getActivePatient();
+		appointment.setSubjectOrPatient(patient.isPresent() ? patient.get().getId() : "");
+		return ret;
+	}
+	
+	public List<IAppointment> saveAppointmentSeries(IAppointmentSeries appointmentSeries){
+		List<IAppointment> series = new ArrayList<>();
+		IAppointment root = appointmentSeries.getRootAppointment();
+		root.setType("series");
+		root.setStartTime(LocalDateTime.of(appointmentSeries.getSeriesStartDate(),
+			appointmentSeries.getSeriesStartTime()));
+		root.setEndTime(LocalDateTime.of(appointmentSeries.getSeriesStartDate(),
+			appointmentSeries.getSeriesEndTime()));
+		root.setExtension(appointmentSeries.getAsSeriesExtension());
+		
+		series.add(root);
+		series.addAll(createSubSequentDates(appointmentSeries));
+		CoreModelServiceHolder.get().save(series);
+		return series;
+	}
+	
+	private List<IAppointment> createSubSequentDates(IAppointmentSeries appointmentSeries){
+		List<IAppointment> ret = new ArrayList<>();
+		
+		TimeTool dateIncrementer = new TimeTool(LocalDateTime
+			.of(appointmentSeries.getSeriesStartDate(), appointmentSeries.getSeriesStartTime()));
+		
+		int occurences = 0;
+		TimeTool endingDate = null;
+		if (appointmentSeries.getEndingType().equals(EndingType.AFTER_N_OCCURENCES)) {
+			occurences = (Integer.parseInt(appointmentSeries.getEndingPatternString()) - 1);
+		} else {
+			endingDate =
+				new TimeTool(appointmentSeries.getSeriesEndDate());
+		}
+		
+		switch (appointmentSeries.getSeriesType()) {
+		case DAILY:
+			if (appointmentSeries.getEndingType().equals(EndingType.ON_SPECIFIC_DATE)) {
+				occurences = dateIncrementer.daysTo(endingDate) + 1;
+			}
+			for (int i = 0; i < occurences; i++) {
+				dateIncrementer.add(Calendar.DAY_OF_YEAR, 1);
+				ret.add(writeSubsequentDateEntry(appointmentSeries, dateIncrementer));
+			}
+			break;
+		case WEEKLY:
+			String[] separatedSeriesPattern = appointmentSeries.getSeriesPatternString().split(",");
+			int weekStepSize = Integer.parseInt(separatedSeriesPattern[0]);
+			System.out.println("week step size =" + weekStepSize);
+			// handle week 1
+			for (int i = 1; i < separatedSeriesPattern[1].length(); i++) {
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(dateIncrementer.getTime());
+				int dayValue = Integer.parseInt(separatedSeriesPattern[1].charAt(i) + "");
+				cal.set(Calendar.DAY_OF_WEEK, dayValue);
+				ret.add(writeSubsequentDateEntry(appointmentSeries, new TimeTool(cal.getTime())));
+			}
+			if (appointmentSeries.getEndingType().equals(EndingType.ON_SPECIFIC_DATE)) {
+				long milisecondsDiff = 0;
+				if (endingDate != null) {
+					milisecondsDiff =
+						endingDate.getTime().getTime() - dateIncrementer.getTime().getTime();
+				}
+				
+				int days = (int) (milisecondsDiff / (1000 * 60 * 60 * 24));
+				int weeks = days / 7;
+				occurences = weeks / weekStepSize;
+			}
+			// handle subsequent weeks
+			for (int i = 0; i < occurences; i++) {
+				dateIncrementer.add(Calendar.WEEK_OF_YEAR, weekStepSize);
+				for (int j = 0; j < separatedSeriesPattern[1].length(); j++) {
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(dateIncrementer.getTime());
+					int dayValue = Integer.parseInt(separatedSeriesPattern[1].charAt(j) + "");
+					cal.set(Calendar.DAY_OF_WEEK, dayValue);
+					ret.add(
+						writeSubsequentDateEntry(appointmentSeries, new TimeTool(cal.getTime())));
+				}
+			}
+			break;
+		case MONTHLY:
+			if (appointmentSeries.getEndingType().equals(EndingType.ON_SPECIFIC_DATE)
+				&& endingDate != null) {
+				occurences =
+					(endingDate.get(Calendar.YEAR) - dateIncrementer.get(Calendar.YEAR)) * 12
+						+ (endingDate.get(Calendar.MONTH) - dateIncrementer.get(Calendar.MONTH))
+						+ (endingDate.get(Calendar.DAY_OF_MONTH) >= dateIncrementer
+							.get(Calendar.DAY_OF_MONTH) ? 0 : -1);
+			}
+			for (int i = 0; i < occurences; i++) {
+				dateIncrementer.add(Calendar.MONTH, 1);
+				ret.add(writeSubsequentDateEntry(appointmentSeries, dateIncrementer));
+			}
+			break;
+		case YEARLY:
+			if (appointmentSeries.getEndingType().equals(EndingType.ON_SPECIFIC_DATE)
+				&& endingDate != null) {
+				int monthOccurences =
+					(endingDate.get(Calendar.YEAR) - dateIncrementer.get(Calendar.YEAR)) * 12
+						+ (endingDate.get(Calendar.MONTH) - dateIncrementer.get(Calendar.MONTH))
+						+ (endingDate.get(Calendar.DAY_OF_MONTH) >= dateIncrementer
+							.get(Calendar.DAY_OF_MONTH) ? 0 : -1);
+				occurences = (monthOccurences / 12);
+			}
+			for (int i = 0; i < occurences; i++) {
+				dateIncrementer.add(Calendar.YEAR, 1);
+				ret.add(writeSubsequentDateEntry(appointmentSeries, dateIncrementer));
+			}
+			break;
+		default:
+			break;
+		}
+		return ret;
+	}
+	
+	private IAppointment writeSubsequentDateEntry(IAppointmentSeries appointmentSeries,
+		TimeTool dateIncrementer){
+		IAppointment ret = CoreModelServiceHolder.get().create(IAppointment.class);
+		ret.setStartTime(dateIncrementer.toLocalDateTime());
+		ret.setEndTime(LocalDateTime.of(ret.getStartTime().toLocalDate(),
+			appointmentSeries.getSeriesEndTime()));
+		ret.setType("series");
+		ret.setSubjectOrPatient(appointmentSeries.getSubjectOrPatient());
+		ret.setSchedule(appointmentSeries.getSchedule());
+		ret.setLinkgroup(appointmentSeries.getRootAppointment().getId());
+		return ret;
+	}
+	
+	@Override
+	public void deleteAppointmentSeries(IAppointmentSeries appointmentSeries){
+		if (appointmentSeries != null && appointmentSeries.isPersistent()) {
+			IQuery<IAppointment> query = CoreModelServiceHolder.get().getQuery(IAppointment.class);
+			query.and("linkgroup", COMPARATOR.EQUALS,
+				appointmentSeries.getRootAppointment().getId());
+			List<IAppointment> appointments = query.execute();
+			CoreModelServiceHolder.get().delete(appointments);
+		}
 	}
 }

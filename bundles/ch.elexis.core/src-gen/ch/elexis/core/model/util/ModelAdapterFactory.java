@@ -276,10 +276,6 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIAddressAdapter();
 			}
 			@Override
-			public Adapter caseIAppointment(IAppointment object) {
-				return createIAppointmentAdapter();
-			}
-			@Override
 			public Adapter caseIImage(IImage object) {
 				return createIImageAdapter();
 			}
@@ -330,6 +326,14 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseITextTemplate(ITextTemplate object) {
 				return createITextTemplateAdapter();
+			}
+			@Override
+			public Adapter caseIAppointment(IAppointment object) {
+				return createIAppointmentAdapter();
+			}
+			@Override
+			public Adapter caseIAppointmentSeries(IAppointmentSeries object) {
+				return createIAppointmentSeriesAdapter();
 			}
 			@Override
 			public <T> Adapter caseComparable(Comparable<T> object) {
@@ -1234,6 +1238,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createITextTemplateAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IAppointmentSeries <em>IAppointment Series</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IAppointmentSeries
+	 * @generated
+	 */
+	public Adapter createIAppointmentSeriesAdapter() {
 		return null;
 	}
 

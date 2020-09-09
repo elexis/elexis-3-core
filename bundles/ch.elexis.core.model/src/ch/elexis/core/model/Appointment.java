@@ -273,7 +273,7 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin>
 	@Override
 	public boolean isRecurring(){
 		if (!StringUtils.isBlank(getLinkgroup())) {
-			return CoreModelServiceHolder.get().load(getLinkgroup(), IAppointment.class)
+			return CoreModelServiceHolder.get().load(getLinkgroup(), IAppointment.class, true)
 				.isPresent();
 		}
 		return false;

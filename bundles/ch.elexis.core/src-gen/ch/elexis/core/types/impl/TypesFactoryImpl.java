@@ -17,10 +17,13 @@ import ch.elexis.core.model.MaritalStatus;
 import ch.elexis.core.model.MimeType;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.model.XidQuality;
+import ch.elexis.core.model.agenda.EndingType;
+import ch.elexis.core.model.agenda.SeriesType;
 import ch.elexis.core.model.ch.BillingLaw;
 import ch.elexis.core.model.prescription.EntryType;
 import java.time.LocalDateTime;
 
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import org.eclipse.emf.ecore.EClass;
@@ -174,6 +177,12 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createOptionalFromString(eDataType, initialValue);
 			case TypesPackage.CHAR_ARRAY:
 				return createcharArrayFromString(eDataType, initialValue);
+			case TypesPackage.SERIES_TYPE:
+				return createSeriesTypeFromString(eDataType, initialValue);
+			case TypesPackage.ENDING_TYPE:
+				return createEndingTypeFromString(eDataType, initialValue);
+			case TypesPackage.LOCAL_TIME:
+				return createLocalTimeFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -251,6 +260,12 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertOptionalToString(eDataType, instanceValue);
 			case TypesPackage.CHAR_ARRAY:
 				return convertcharArrayToString(eDataType, instanceValue);
+			case TypesPackage.SERIES_TYPE:
+				return convertSeriesTypeToString(eDataType, instanceValue);
+			case TypesPackage.ENDING_TYPE:
+				return convertEndingTypeToString(eDataType, instanceValue);
+			case TypesPackage.LOCAL_TIME:
+				return convertLocalTimeToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -844,6 +859,60 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 */
 	public String convertcharArrayToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public SeriesType createSeriesTypeFromString(EDataType eDataType, String initialValue) {
+		return (SeriesType)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertSeriesTypeToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EndingType createEndingTypeFromString(EDataType eDataType, String initialValue) {
+		return (EndingType)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertEndingTypeToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public LocalTime createLocalTimeFromString(EDataType eDataType, String initialValue) {
+		return (LocalTime)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertLocalTimeToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
 	}
 
 	/**

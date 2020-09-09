@@ -451,6 +451,36 @@ public interface TypesPackage extends EPackage {
 	int CHAR_ARRAY = 35;
 
 	/**
+	 * The meta object id for the '<em>Series Type</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.agenda.SeriesType
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getSeriesType()
+	 * @generated
+	 */
+	int SERIES_TYPE = 36;
+
+	/**
+	 * The meta object id for the '<em>Ending Type</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.agenda.EndingType
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getEndingType()
+	 * @generated
+	 */
+	int ENDING_TYPE = 37;
+
+	/**
+	 * The meta object id for the '<em>Local Time</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see java.time.LocalTime
+	 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLocalTime()
+	 * @generated
+	 */
+	int LOCAL_TIME = 38;
+
+	/**
 	 * The meta object id for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -849,6 +879,39 @@ public interface TypesPackage extends EPackage {
 	EDataType getcharArray();
 
 	/**
+	 * Returns the meta object for data type '{@link ch.elexis.core.model.agenda.SeriesType <em>Series Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Series Type</em>'.
+	 * @see ch.elexis.core.model.agenda.SeriesType
+	 * @model instanceClass="ch.elexis.core.model.agenda.SeriesType"
+	 * @generated
+	 */
+	EDataType getSeriesType();
+
+	/**
+	 * Returns the meta object for data type '{@link ch.elexis.core.model.agenda.EndingType <em>Ending Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Ending Type</em>'.
+	 * @see ch.elexis.core.model.agenda.EndingType
+	 * @model instanceClass="ch.elexis.core.model.agenda.EndingType"
+	 * @generated
+	 */
+	EDataType getEndingType();
+
+	/**
+	 * Returns the meta object for data type '{@link java.time.LocalTime <em>Local Time</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Local Time</em>'.
+	 * @see java.time.LocalTime
+	 * @model instanceClass="java.time.LocalTime"
+	 * @generated
+	 */
+	EDataType getLocalTime();
+
+	/**
 	 * Returns the meta object for class '{@link ch.rgw.tools.Result <em>Result</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1229,6 +1292,36 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType CHAR_ARRAY = eINSTANCE.getcharArray();
+
+		/**
+		 * The meta object literal for the '<em>Series Type</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.agenda.SeriesType
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getSeriesType()
+		 * @generated
+		 */
+		EDataType SERIES_TYPE = eINSTANCE.getSeriesType();
+
+		/**
+		 * The meta object literal for the '<em>Ending Type</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.agenda.EndingType
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getEndingType()
+		 * @generated
+		 */
+		EDataType ENDING_TYPE = eINSTANCE.getEndingType();
+
+		/**
+		 * The meta object literal for the '<em>Local Time</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see java.time.LocalTime
+		 * @see ch.elexis.core.types.impl.TypesPackageImpl#getLocalTime()
+		 * @generated
+		 */
+		EDataType LOCAL_TIME = eINSTANCE.getLocalTime();
 
 		/**
 		 * The meta object literal for the '{@link ch.rgw.tools.Result <em>Result</em>}' class.

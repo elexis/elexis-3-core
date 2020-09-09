@@ -2,8 +2,10 @@ package ch.elexis.core.services;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import ch.elexis.core.model.IAppointment;
+import ch.elexis.core.model.IAppointmentSeries;
 import ch.elexis.core.model.agenda.Area;
 import ch.elexis.core.types.AppointmentState;
 import ch.elexis.core.types.AppointmentType;
@@ -88,4 +90,36 @@ public interface IAppointmentService {
 	 * @return
 	 */
 	public List<String> getStates();
+	
+	/**
+	 * Get the {@link IAppointmentSeries} representation of the {@link IAppointment}. Returns empty
+	 * if {@link IAppointment#isRecurring()} is not true.
+	 * 
+	 * @param termin
+	 * @return
+	 */
+	public Optional<IAppointmentSeries> getAppointmentSeries(IAppointment appointment);
+	
+	/**
+	 * Create a new {@link IAppointmentSeries} without persisting.
+	 * 
+	 * @return
+	 */
+	public IAppointmentSeries createAppointmentSeries();
+	
+	/**
+	 * Persist the {@link IAppointmentSeries}, resulting in a list of {@link IAppointment}
+	 * instances.
+	 * 
+	 * @return
+	 */
+	public List<IAppointment> saveAppointmentSeries(IAppointmentSeries appointmentSeries);
+	
+	/**
+	 * If the {@link IAppointmentSeries} is persistent, all {@link IAppointment} instances of the
+	 * series are deleted.
+	 * 
+	 * @param appointment
+	 */
+	public void deleteAppointmentSeries(IAppointmentSeries appointmentSeries);
 }

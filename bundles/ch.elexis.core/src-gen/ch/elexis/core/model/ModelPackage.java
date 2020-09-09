@@ -5361,7 +5361,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIImage()
 	 * @generated
 	 */
-	int IIMAGE = 51;
+	int IIMAGE = 50;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.WithAssignableId <em>With Assignable Id</em>}' class.
@@ -5371,7 +5371,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getWithAssignableId()
 	 * @generated
 	 */
-	int WITH_ASSIGNABLE_ID = 52;
+	int WITH_ASSIGNABLE_ID = 51;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.
@@ -5381,7 +5381,875 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAppointment()
 	 * @generated
 	 */
-	int IAPPOINTMENT = 50;
+	int IAPPOINTMENT = 63;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IIMAGE__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IIMAGE__DATE = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Prefix</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IIMAGE__PREFIX = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Title</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IIMAGE__TITLE = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Image</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IIMAGE__IMAGE = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Mime Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IIMAGE__MIME_TYPE = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The number of structural features of the '<em>IImage</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IIMAGE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The number of structural features of the '<em>With Assignable Id</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WITH_ASSIGNABLE_ID_FEATURE_COUNT = 0;
+
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IPrescription <em>IPrescription</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IPrescription
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPrescription()
+	 * @generated
+	 */
+	int IPRESCRIPTION = 52;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Patient</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__PATIENT = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Article</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__ARTICLE = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Date From</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__DATE_FROM = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Date To</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__DATE_TO = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Stop Reason</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__STOP_REASON = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Dosage Instruction</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__DOSAGE_INSTRUCTION = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The feature id for the '<em><b>Disposal Comment</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__DISPOSAL_COMMENT = IDENTIFIABLE_FEATURE_COUNT + 7;
+
+	/**
+	 * The feature id for the '<em><b>Remark</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__REMARK = IDENTIFIABLE_FEATURE_COUNT + 8;
+
+	/**
+	 * The feature id for the '<em><b>Entry Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__ENTRY_TYPE = IDENTIFIABLE_FEATURE_COUNT + 9;
+
+	/**
+	 * The feature id for the '<em><b>Applied</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__APPLIED = IDENTIFIABLE_FEATURE_COUNT + 10;
+
+	/**
+	 * The feature id for the '<em><b>Sort Order</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__SORT_ORDER = IDENTIFIABLE_FEATURE_COUNT + 11;
+
+	/**
+	 * The feature id for the '<em><b>Prescriptor</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__PRESCRIPTOR = IDENTIFIABLE_FEATURE_COUNT + 12;
+
+	/**
+	 * The feature id for the '<em><b>Recipe</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__RECIPE = IDENTIFIABLE_FEATURE_COUNT + 13;
+
+	/**
+	 * The feature id for the '<em><b>Billed</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION__BILLED = IDENTIFIABLE_FEATURE_COUNT + 14;
+
+	/**
+	 * The number of structural features of the '<em>IPrescription</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPRESCRIPTION_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 15;
+
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IRight <em>IRight</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IRight
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRight()
+	 * @generated
+	 */
+	int IRIGHT = 53;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRIGHT__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRIGHT__NAME = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Localized Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRIGHT__LOCALIZED_NAME = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Parent</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRIGHT__PARENT = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The number of structural features of the '<em>IRight</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRIGHT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IBillingSystem <em>IBilling System</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IBillingSystem
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBillingSystem()
+	 * @generated
+	 */
+	int IBILLING_SYSTEM = 54;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBILLING_SYSTEM__NAME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Law</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBILLING_SYSTEM__LAW = 1;
+
+	/**
+	 * The number of structural features of the '<em>IBilling System</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBILLING_SYSTEM_FEATURE_COUNT = 2;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IRecipe <em>IRecipe</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IRecipe
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRecipe()
+	 * @generated
+	 */
+	int IRECIPE = 55;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRECIPE__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Patient</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRECIPE__PATIENT = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Mandator</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRECIPE__MANDATOR = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRECIPE__DATE = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Prescriptions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRECIPE__PRESCRIPTIONS = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Document</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRECIPE__DOCUMENT = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The number of structural features of the '<em>IRecipe</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRECIPE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IBlobSecondary <em>IBlob Secondary</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IBlobSecondary
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBlobSecondary()
+	 * @generated
+	 */
+	int IBLOB_SECONDARY = 56;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBLOB_SECONDARY__DELETED = IBLOB__DELETED;
+
+	/**
+	 * The feature id for the '<em><b>Content</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBLOB_SECONDARY__CONTENT = IBLOB__CONTENT;
+
+	/**
+	 * The feature id for the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBLOB_SECONDARY__DATE = IBLOB__DATE;
+
+	/**
+	 * The number of structural features of the '<em>IBlob Secondary</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IBLOB_SECONDARY_FEATURE_COUNT = IBLOB_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IRelatedContact <em>IRelated Contact</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IRelatedContact
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRelatedContact()
+	 * @generated
+	 */
+	int IRELATED_CONTACT = 57;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRELATED_CONTACT__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>My Contact</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRELATED_CONTACT__MY_CONTACT = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Other Contact</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRELATED_CONTACT__OTHER_CONTACT = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Relationship Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRELATED_CONTACT__RELATIONSHIP_DESCRIPTION = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>My Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRELATED_CONTACT__MY_TYPE = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Other Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRELATED_CONTACT__OTHER_TYPE = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The number of structural features of the '<em>IRelated Contact</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IRELATED_CONTACT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IPayment <em>IPayment</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IPayment
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPayment()
+	 * @generated
+	 */
+	int IPAYMENT = 58;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPAYMENT__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Invoice</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPAYMENT__INVOICE = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Amount</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPAYMENT__AMOUNT = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Remark</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPAYMENT__REMARK = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPAYMENT__DATE = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The number of structural features of the '<em>IPayment</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPAYMENT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IAccountTransaction <em>IAccount Transaction</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IAccountTransaction
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAccountTransaction()
+	 * @generated
+	 */
+	int IACCOUNT_TRANSACTION = 59;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT_TRANSACTION__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Invoice</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT_TRANSACTION__INVOICE = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Payment</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT_TRANSACTION__PAYMENT = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Patient</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT_TRANSACTION__PATIENT = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Amount</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT_TRANSACTION__AMOUNT = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Remark</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT_TRANSACTION__REMARK = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT_TRANSACTION__DATE = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The feature id for the '<em><b>Account</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT_TRANSACTION__ACCOUNT = IDENTIFIABLE_FEATURE_COUNT + 7;
+
+	/**
+	 * The number of structural features of the '<em>IAccount Transaction</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT_TRANSACTION_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 8;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IAccount <em>IAccount</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IAccount
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAccount()
+	 * @generated
+	 */
+	int IACCOUNT = 60;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT__NAME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Numeric</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT__NUMERIC = 1;
+
+	/**
+	 * The number of structural features of the '<em>IAccount</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IACCOUNT_FEATURE_COUNT = 2;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IMessage <em>IMessage</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IMessage
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIMessage()
+	 * @generated
+	 */
+	int IMESSAGE = 61;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMESSAGE__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Sender</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMESSAGE__SENDER = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Receiver</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMESSAGE__RECEIVER = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Sender Accepts Answer</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMESSAGE__SENDER_ACCEPTS_ANSWER = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Create Date Time</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMESSAGE__CREATE_DATE_TIME = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Message Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMESSAGE__MESSAGE_TEXT = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Message Codes</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMESSAGE__MESSAGE_CODES = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The feature id for the '<em><b>Message Priority</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMESSAGE__MESSAGE_PRIORITY = IDENTIFIABLE_FEATURE_COUNT + 7;
+
+	/**
+	 * The feature id for the '<em><b>Preferred Transporters</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMESSAGE__PREFERRED_TRANSPORTERS = IDENTIFIABLE_FEATURE_COUNT + 8;
+
+	/**
+	 * The number of structural features of the '<em>IMessage</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMESSAGE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 9;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.ITextTemplate <em>IText Template</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.ITextTemplate
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getITextTemplate()
+	 * @generated
+	 */
+	int ITEXT_TEMPLATE = 62;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITEXT_TEMPLATE__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Category</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITEXT_TEMPLATE__CATEGORY = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Mandator</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITEXT_TEMPLATE__MANDATOR = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITEXT_TEMPLATE__NAME = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Template</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITEXT_TEMPLATE__TEMPLATE = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The number of structural features of the '<em>IText Template</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ITEXT_TEMPLATE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -5555,87 +6423,14 @@ public interface ModelPackage extends EPackage {
 	int IAPPOINTMENT_FEATURE_COUNT = IPERIOD_FEATURE_COUNT + 15;
 
 	/**
-	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * The meta object id for the '{@link ch.elexis.core.model.IAppointmentSeries <em>IAppointment Series</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IIMAGE__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Date</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IIMAGE__DATE = IDENTIFIABLE_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Prefix</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IIMAGE__PREFIX = IDENTIFIABLE_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Title</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IIMAGE__TITLE = IDENTIFIABLE_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>Image</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IIMAGE__IMAGE = IDENTIFIABLE_FEATURE_COUNT + 4;
-
-	/**
-	 * The feature id for the '<em><b>Mime Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IIMAGE__MIME_TYPE = IDENTIFIABLE_FEATURE_COUNT + 5;
-
-	/**
-	 * The number of structural features of the '<em>IImage</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IIMAGE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 6;
-
-	/**
-	 * The number of structural features of the '<em>With Assignable Id</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int WITH_ASSIGNABLE_ID_FEATURE_COUNT = 0;
-
-
-	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.IPrescription <em>IPrescription</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.IPrescription
-	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPrescription()
+	 * @see ch.elexis.core.model.IAppointmentSeries
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAppointmentSeries()
 	 * @generated
 	 */
-	int IPRESCRIPTION = 53;
+	int IAPPOINTMENT_SERIES = 64;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -5644,783 +6439,259 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IPRESCRIPTION__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+	int IAPPOINTMENT_SERIES__DELETED = IAPPOINTMENT__DELETED;
 
 	/**
-	 * The feature id for the '<em><b>Patient</b></em>' reference.
+	 * The feature id for the '<em><b>Start Time</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IPRESCRIPTION__PATIENT = IDENTIFIABLE_FEATURE_COUNT + 1;
+	int IAPPOINTMENT_SERIES__START_TIME = IAPPOINTMENT__START_TIME;
 
 	/**
-	 * The feature id for the '<em><b>Article</b></em>' reference.
+	 * The feature id for the '<em><b>End Time</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IPRESCRIPTION__ARTICLE = IDENTIFIABLE_FEATURE_COUNT + 2;
+	int IAPPOINTMENT_SERIES__END_TIME = IAPPOINTMENT__END_TIME;
 
 	/**
-	 * The feature id for the '<em><b>Date From</b></em>' attribute.
+	 * The feature id for the '<em><b>Reason</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IPRESCRIPTION__DATE_FROM = IDENTIFIABLE_FEATURE_COUNT + 3;
+	int IAPPOINTMENT_SERIES__REASON = IAPPOINTMENT__REASON;
 
 	/**
-	 * The feature id for the '<em><b>Date To</b></em>' attribute.
+	 * The feature id for the '<em><b>State</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IPRESCRIPTION__DATE_TO = IDENTIFIABLE_FEATURE_COUNT + 4;
+	int IAPPOINTMENT_SERIES__STATE = IAPPOINTMENT__STATE;
 
 	/**
-	 * The feature id for the '<em><b>Stop Reason</b></em>' attribute.
+	 * The feature id for the '<em><b>Type</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IPRESCRIPTION__STOP_REASON = IDENTIFIABLE_FEATURE_COUNT + 5;
+	int IAPPOINTMENT_SERIES__TYPE = IAPPOINTMENT__TYPE;
 
 	/**
-	 * The feature id for the '<em><b>Dosage Instruction</b></em>' attribute.
+	 * The feature id for the '<em><b>Duration Minutes</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IPRESCRIPTION__DOSAGE_INSTRUCTION = IDENTIFIABLE_FEATURE_COUNT + 6;
+	int IAPPOINTMENT_SERIES__DURATION_MINUTES = IAPPOINTMENT__DURATION_MINUTES;
 
 	/**
-	 * The feature id for the '<em><b>Disposal Comment</b></em>' attribute.
+	 * The feature id for the '<em><b>Schedule</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IPRESCRIPTION__DISPOSAL_COMMENT = IDENTIFIABLE_FEATURE_COUNT + 7;
+	int IAPPOINTMENT_SERIES__SCHEDULE = IAPPOINTMENT__SCHEDULE;
 
 	/**
-	 * The feature id for the '<em><b>Remark</b></em>' attribute.
+	 * The feature id for the '<em><b>Created By</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IPRESCRIPTION__REMARK = IDENTIFIABLE_FEATURE_COUNT + 8;
+	int IAPPOINTMENT_SERIES__CREATED_BY = IAPPOINTMENT__CREATED_BY;
 
 	/**
-	 * The feature id for the '<em><b>Entry Type</b></em>' attribute.
+	 * The feature id for the '<em><b>Subject Or Patient</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IPRESCRIPTION__ENTRY_TYPE = IDENTIFIABLE_FEATURE_COUNT + 9;
+	int IAPPOINTMENT_SERIES__SUBJECT_OR_PATIENT = IAPPOINTMENT__SUBJECT_OR_PATIENT;
 
 	/**
-	 * The feature id for the '<em><b>Applied</b></em>' attribute.
+	 * The feature id for the '<em><b>Priority</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IPRESCRIPTION__APPLIED = IDENTIFIABLE_FEATURE_COUNT + 10;
+	int IAPPOINTMENT_SERIES__PRIORITY = IAPPOINTMENT__PRIORITY;
 
 	/**
-	 * The feature id for the '<em><b>Sort Order</b></em>' attribute.
+	 * The feature id for the '<em><b>Treatment Reason</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IPRESCRIPTION__SORT_ORDER = IDENTIFIABLE_FEATURE_COUNT + 11;
+	int IAPPOINTMENT_SERIES__TREATMENT_REASON = IAPPOINTMENT__TREATMENT_REASON;
 
 	/**
-	 * The feature id for the '<em><b>Prescriptor</b></em>' reference.
+	 * The feature id for the '<em><b>Linkgroup</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IPRESCRIPTION__PRESCRIPTOR = IDENTIFIABLE_FEATURE_COUNT + 12;
+	int IAPPOINTMENT_SERIES__LINKGROUP = IAPPOINTMENT__LINKGROUP;
 
 	/**
-	 * The feature id for the '<em><b>Recipe</b></em>' reference.
+	 * The feature id for the '<em><b>Extension</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IPRESCRIPTION__RECIPE = IDENTIFIABLE_FEATURE_COUNT + 13;
+	int IAPPOINTMENT_SERIES__EXTENSION = IAPPOINTMENT__EXTENSION;
 
 	/**
-	 * The feature id for the '<em><b>Billed</b></em>' reference.
+	 * The feature id for the '<em><b>Created</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IPRESCRIPTION__BILLED = IDENTIFIABLE_FEATURE_COUNT + 14;
+	int IAPPOINTMENT_SERIES__CREATED = IAPPOINTMENT__CREATED;
 
 	/**
-	 * The number of structural features of the '<em>IPrescription</em>' class.
+	 * The feature id for the '<em><b>Last Edit</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IPRESCRIPTION_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 15;
+	int IAPPOINTMENT_SERIES__LAST_EDIT = IAPPOINTMENT__LAST_EDIT;
 
-
-	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.IRight <em>IRight</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.IRight
-	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRight()
-	 * @generated
-	 */
-	int IRIGHT = 54;
-
-	/**
-	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IRIGHT__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IRIGHT__NAME = IDENTIFIABLE_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Localized Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IRIGHT__LOCALIZED_NAME = IDENTIFIABLE_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Parent</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IRIGHT__PARENT = IDENTIFIABLE_FEATURE_COUNT + 3;
-
-	/**
-	 * The number of structural features of the '<em>IRight</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IRIGHT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 4;
-
-	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.IBillingSystem <em>IBilling System</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.IBillingSystem
-	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBillingSystem()
-	 * @generated
-	 */
-	int IBILLING_SYSTEM = 55;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IBILLING_SYSTEM__NAME = 0;
-
-	/**
-	 * The feature id for the '<em><b>Law</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IBILLING_SYSTEM__LAW = 1;
-
-	/**
-	 * The number of structural features of the '<em>IBilling System</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IBILLING_SYSTEM_FEATURE_COUNT = 2;
-
-	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.IRecipe <em>IRecipe</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.IRecipe
-	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRecipe()
-	 * @generated
-	 */
-	int IRECIPE = 56;
-
-	/**
-	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IRECIPE__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Patient</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IRECIPE__PATIENT = IDENTIFIABLE_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Mandator</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IRECIPE__MANDATOR = IDENTIFIABLE_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Date</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IRECIPE__DATE = IDENTIFIABLE_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>Prescriptions</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IRECIPE__PRESCRIPTIONS = IDENTIFIABLE_FEATURE_COUNT + 4;
-
-	/**
-	 * The feature id for the '<em><b>Document</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IRECIPE__DOCUMENT = IDENTIFIABLE_FEATURE_COUNT + 5;
-
-	/**
-	 * The number of structural features of the '<em>IRecipe</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IRECIPE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 6;
-
-	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.IBlobSecondary <em>IBlob Secondary</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.IBlobSecondary
-	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBlobSecondary()
-	 * @generated
-	 */
-	int IBLOB_SECONDARY = 57;
-
-	/**
-	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IBLOB_SECONDARY__DELETED = IBLOB__DELETED;
-
-	/**
-	 * The feature id for the '<em><b>Content</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IBLOB_SECONDARY__CONTENT = IBLOB__CONTENT;
-
-	/**
-	 * The feature id for the '<em><b>Date</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IBLOB_SECONDARY__DATE = IBLOB__DATE;
-
-	/**
-	 * The number of structural features of the '<em>IBlob Secondary</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IBLOB_SECONDARY_FEATURE_COUNT = IBLOB_FEATURE_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.IRelatedContact <em>IRelated Contact</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.IRelatedContact
-	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRelatedContact()
-	 * @generated
-	 */
-	int IRELATED_CONTACT = 58;
-
-	/**
-	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IRELATED_CONTACT__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>My Contact</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IRELATED_CONTACT__MY_CONTACT = IDENTIFIABLE_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Other Contact</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IRELATED_CONTACT__OTHER_CONTACT = IDENTIFIABLE_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Relationship Description</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IRELATED_CONTACT__RELATIONSHIP_DESCRIPTION = IDENTIFIABLE_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>My Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IRELATED_CONTACT__MY_TYPE = IDENTIFIABLE_FEATURE_COUNT + 4;
-
-	/**
-	 * The feature id for the '<em><b>Other Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IRELATED_CONTACT__OTHER_TYPE = IDENTIFIABLE_FEATURE_COUNT + 5;
-
-	/**
-	 * The number of structural features of the '<em>IRelated Contact</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IRELATED_CONTACT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 6;
-
-	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.IPayment <em>IPayment</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.IPayment
-	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPayment()
-	 * @generated
-	 */
-	int IPAYMENT = 59;
-
-	/**
-	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IPAYMENT__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Invoice</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IPAYMENT__INVOICE = IDENTIFIABLE_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Amount</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IPAYMENT__AMOUNT = IDENTIFIABLE_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Remark</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IPAYMENT__REMARK = IDENTIFIABLE_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>Date</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IPAYMENT__DATE = IDENTIFIABLE_FEATURE_COUNT + 4;
-
-	/**
-	 * The number of structural features of the '<em>IPayment</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IPAYMENT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 5;
-
-	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.IAccountTransaction <em>IAccount Transaction</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.IAccountTransaction
-	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAccountTransaction()
-	 * @generated
-	 */
-	int IACCOUNT_TRANSACTION = 60;
-
-	/**
-	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IACCOUNT_TRANSACTION__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Invoice</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IACCOUNT_TRANSACTION__INVOICE = IDENTIFIABLE_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Payment</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IACCOUNT_TRANSACTION__PAYMENT = IDENTIFIABLE_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Patient</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IACCOUNT_TRANSACTION__PATIENT = IDENTIFIABLE_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>Amount</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IACCOUNT_TRANSACTION__AMOUNT = IDENTIFIABLE_FEATURE_COUNT + 4;
-
-	/**
-	 * The feature id for the '<em><b>Remark</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IACCOUNT_TRANSACTION__REMARK = IDENTIFIABLE_FEATURE_COUNT + 5;
-
-	/**
-	 * The feature id for the '<em><b>Date</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IACCOUNT_TRANSACTION__DATE = IDENTIFIABLE_FEATURE_COUNT + 6;
-
-	/**
-	 * The feature id for the '<em><b>Account</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IACCOUNT_TRANSACTION__ACCOUNT = IDENTIFIABLE_FEATURE_COUNT + 7;
-
-	/**
-	 * The number of structural features of the '<em>IAccount Transaction</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IACCOUNT_TRANSACTION_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 8;
-
-	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.IAccount <em>IAccount</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.IAccount
-	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAccount()
-	 * @generated
-	 */
-	int IACCOUNT = 61;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IACCOUNT__NAME = 0;
-
-	/**
-	 * The feature id for the '<em><b>Numeric</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IACCOUNT__NUMERIC = 1;
-
-	/**
-	 * The number of structural features of the '<em>IAccount</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IACCOUNT_FEATURE_COUNT = 2;
-
-	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.IMessage <em>IMessage</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.IMessage
-	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIMessage()
-	 * @generated
-	 */
-	int IMESSAGE = 62;
-
-	/**
-	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IMESSAGE__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Sender</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IMESSAGE__SENDER = IDENTIFIABLE_FEATURE_COUNT + 1;
-
 	/**
-	 * The feature id for the '<em><b>Receiver</b></em>' attribute list.
+	 * The feature id for the '<em><b>State History</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMESSAGE__RECEIVER = IDENTIFIABLE_FEATURE_COUNT + 2;
+	int IAPPOINTMENT_SERIES__STATE_HISTORY = IAPPOINTMENT__STATE_HISTORY;
 
 	/**
-	 * The feature id for the '<em><b>Sender Accepts Answer</b></em>' attribute.
+	 * The feature id for the '<em><b>Recurring</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMESSAGE__SENDER_ACCEPTS_ANSWER = IDENTIFIABLE_FEATURE_COUNT + 3;
+	int IAPPOINTMENT_SERIES__RECURRING = IAPPOINTMENT__RECURRING;
 
 	/**
-	 * The feature id for the '<em><b>Create Date Time</b></em>' attribute.
+	 * The feature id for the '<em><b>Series Type</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMESSAGE__CREATE_DATE_TIME = IDENTIFIABLE_FEATURE_COUNT + 4;
+	int IAPPOINTMENT_SERIES__SERIES_TYPE = IAPPOINTMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Message Text</b></em>' attribute.
+	 * The feature id for the '<em><b>Ending Type</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMESSAGE__MESSAGE_TEXT = IDENTIFIABLE_FEATURE_COUNT + 5;
+	int IAPPOINTMENT_SERIES__ENDING_TYPE = IAPPOINTMENT_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Message Codes</b></em>' attribute.
+	 * The feature id for the '<em><b>Series Start Date</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMESSAGE__MESSAGE_CODES = IDENTIFIABLE_FEATURE_COUNT + 6;
+	int IAPPOINTMENT_SERIES__SERIES_START_DATE = IAPPOINTMENT_FEATURE_COUNT + 2;
 
 	/**
-	 * The feature id for the '<em><b>Message Priority</b></em>' attribute.
+	 * The feature id for the '<em><b>Series Start Time</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMESSAGE__MESSAGE_PRIORITY = IDENTIFIABLE_FEATURE_COUNT + 7;
+	int IAPPOINTMENT_SERIES__SERIES_START_TIME = IAPPOINTMENT_FEATURE_COUNT + 3;
 
 	/**
-	 * The feature id for the '<em><b>Preferred Transporters</b></em>' attribute list.
+	 * The feature id for the '<em><b>Series End Date</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
-	 */
-	int IMESSAGE__PREFERRED_TRANSPORTERS = IDENTIFIABLE_FEATURE_COUNT + 8;
-
-	/**
-	 * The number of structural features of the '<em>IMessage</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IMESSAGE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 9;
-
-	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.ITextTemplate <em>IText Template</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.ITextTemplate
-	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getITextTemplate()
-	 * @generated
 	 */
-	int ITEXT_TEMPLATE = 63;
+	int IAPPOINTMENT_SERIES__SERIES_END_DATE = IAPPOINTMENT_FEATURE_COUNT + 4;
 
 	/**
-	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * The feature id for the '<em><b>Series End Time</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ITEXT_TEMPLATE__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+	int IAPPOINTMENT_SERIES__SERIES_END_TIME = IAPPOINTMENT_FEATURE_COUNT + 5;
 
 	/**
-	 * The feature id for the '<em><b>Category</b></em>' attribute.
+	 * The feature id for the '<em><b>Series Pattern String</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ITEXT_TEMPLATE__CATEGORY = IDENTIFIABLE_FEATURE_COUNT + 1;
+	int IAPPOINTMENT_SERIES__SERIES_PATTERN_STRING = IAPPOINTMENT_FEATURE_COUNT + 6;
 
 	/**
-	 * The feature id for the '<em><b>Mandator</b></em>' reference.
+	 * The feature id for the '<em><b>Ending Pattern String</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ITEXT_TEMPLATE__MANDATOR = IDENTIFIABLE_FEATURE_COUNT + 2;
+	int IAPPOINTMENT_SERIES__ENDING_PATTERN_STRING = IAPPOINTMENT_FEATURE_COUNT + 7;
 
 	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Persistent</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ITEXT_TEMPLATE__NAME = IDENTIFIABLE_FEATURE_COUNT + 3;
+	int IAPPOINTMENT_SERIES__PERSISTENT = IAPPOINTMENT_FEATURE_COUNT + 8;
 
 	/**
-	 * The feature id for the '<em><b>Template</b></em>' attribute.
+	 * The feature id for the '<em><b>Root Appointment</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ITEXT_TEMPLATE__TEMPLATE = IDENTIFIABLE_FEATURE_COUNT + 4;
+	int IAPPOINTMENT_SERIES__ROOT_APPOINTMENT = IAPPOINTMENT_FEATURE_COUNT + 9;
 
 	/**
-	 * The number of structural features of the '<em>IText Template</em>' class.
+	 * The number of structural features of the '<em>IAppointment Series</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ITEXT_TEMPLATE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 5;
+	int IAPPOINTMENT_SERIES_FEATURE_COUNT = IAPPOINTMENT_FEATURE_COUNT + 10;
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}'.
@@ -10474,6 +10745,126 @@ public interface ModelPackage extends EPackage {
 	EAttribute getITextTemplate_Template();
 
 	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IAppointmentSeries <em>IAppointment Series</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IAppointment Series</em>'.
+	 * @see ch.elexis.core.model.IAppointmentSeries
+	 * @generated
+	 */
+	EClass getIAppointmentSeries();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointmentSeries#getSeriesType <em>Series Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Series Type</em>'.
+	 * @see ch.elexis.core.model.IAppointmentSeries#getSeriesType()
+	 * @see #getIAppointmentSeries()
+	 * @generated
+	 */
+	EAttribute getIAppointmentSeries_SeriesType();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointmentSeries#getEndingType <em>Ending Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Ending Type</em>'.
+	 * @see ch.elexis.core.model.IAppointmentSeries#getEndingType()
+	 * @see #getIAppointmentSeries()
+	 * @generated
+	 */
+	EAttribute getIAppointmentSeries_EndingType();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointmentSeries#getSeriesStartDate <em>Series Start Date</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Series Start Date</em>'.
+	 * @see ch.elexis.core.model.IAppointmentSeries#getSeriesStartDate()
+	 * @see #getIAppointmentSeries()
+	 * @generated
+	 */
+	EAttribute getIAppointmentSeries_SeriesStartDate();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointmentSeries#getSeriesStartTime <em>Series Start Time</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Series Start Time</em>'.
+	 * @see ch.elexis.core.model.IAppointmentSeries#getSeriesStartTime()
+	 * @see #getIAppointmentSeries()
+	 * @generated
+	 */
+	EAttribute getIAppointmentSeries_SeriesStartTime();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointmentSeries#getSeriesEndDate <em>Series End Date</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Series End Date</em>'.
+	 * @see ch.elexis.core.model.IAppointmentSeries#getSeriesEndDate()
+	 * @see #getIAppointmentSeries()
+	 * @generated
+	 */
+	EAttribute getIAppointmentSeries_SeriesEndDate();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointmentSeries#getSeriesEndTime <em>Series End Time</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Series End Time</em>'.
+	 * @see ch.elexis.core.model.IAppointmentSeries#getSeriesEndTime()
+	 * @see #getIAppointmentSeries()
+	 * @generated
+	 */
+	EAttribute getIAppointmentSeries_SeriesEndTime();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointmentSeries#getSeriesPatternString <em>Series Pattern String</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Series Pattern String</em>'.
+	 * @see ch.elexis.core.model.IAppointmentSeries#getSeriesPatternString()
+	 * @see #getIAppointmentSeries()
+	 * @generated
+	 */
+	EAttribute getIAppointmentSeries_SeriesPatternString();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointmentSeries#getEndingPatternString <em>Ending Pattern String</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Ending Pattern String</em>'.
+	 * @see ch.elexis.core.model.IAppointmentSeries#getEndingPatternString()
+	 * @see #getIAppointmentSeries()
+	 * @generated
+	 */
+	EAttribute getIAppointmentSeries_EndingPatternString();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointmentSeries#isPersistent <em>Persistent</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Persistent</em>'.
+	 * @see ch.elexis.core.model.IAppointmentSeries#isPersistent()
+	 * @see #getIAppointmentSeries()
+	 * @generated
+	 */
+	EAttribute getIAppointmentSeries_Persistent();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IAppointmentSeries#getRootAppointment <em>Root Appointment</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Root Appointment</em>'.
+	 * @see ch.elexis.core.model.IAppointmentSeries#getRootAppointment()
+	 * @see #getIAppointmentSeries()
+	 * @generated
+	 */
+	EReference getIAppointmentSeries_RootAppointment();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13787,6 +14178,96 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ITEXT_TEMPLATE__TEMPLATE = eINSTANCE.getITextTemplate_Template();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IAppointmentSeries <em>IAppointment Series</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IAppointmentSeries
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAppointmentSeries()
+		 * @generated
+		 */
+		EClass IAPPOINTMENT_SERIES = eINSTANCE.getIAppointmentSeries();
+
+		/**
+		 * The meta object literal for the '<em><b>Series Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT_SERIES__SERIES_TYPE = eINSTANCE.getIAppointmentSeries_SeriesType();
+
+		/**
+		 * The meta object literal for the '<em><b>Ending Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT_SERIES__ENDING_TYPE = eINSTANCE.getIAppointmentSeries_EndingType();
+
+		/**
+		 * The meta object literal for the '<em><b>Series Start Date</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT_SERIES__SERIES_START_DATE = eINSTANCE.getIAppointmentSeries_SeriesStartDate();
+
+		/**
+		 * The meta object literal for the '<em><b>Series Start Time</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT_SERIES__SERIES_START_TIME = eINSTANCE.getIAppointmentSeries_SeriesStartTime();
+
+		/**
+		 * The meta object literal for the '<em><b>Series End Date</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT_SERIES__SERIES_END_DATE = eINSTANCE.getIAppointmentSeries_SeriesEndDate();
+
+		/**
+		 * The meta object literal for the '<em><b>Series End Time</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT_SERIES__SERIES_END_TIME = eINSTANCE.getIAppointmentSeries_SeriesEndTime();
+
+		/**
+		 * The meta object literal for the '<em><b>Series Pattern String</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT_SERIES__SERIES_PATTERN_STRING = eINSTANCE.getIAppointmentSeries_SeriesPatternString();
+
+		/**
+		 * The meta object literal for the '<em><b>Ending Pattern String</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT_SERIES__ENDING_PATTERN_STRING = eINSTANCE.getIAppointmentSeries_EndingPatternString();
+
+		/**
+		 * The meta object literal for the '<em><b>Persistent</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT_SERIES__PERSISTENT = eINSTANCE.getIAppointmentSeries_Persistent();
+
+		/**
+		 * The meta object literal for the '<em><b>Root Appointment</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IAPPOINTMENT_SERIES__ROOT_APPOINTMENT = eINSTANCE.getIAppointmentSeries_RootAppointment();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.

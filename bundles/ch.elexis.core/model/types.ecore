@@ -102,4 +102,7 @@
   <eClassifiers xsi:type="ecore:EEnum" name="TextTemplateCategory">
     <eLiterals name="MAIL"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="SeriesType" instanceClassName="ch.elexis.core.model.agenda.SeriesType"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="EndingType" instanceClassName="ch.elexis.core.model.agenda.EndingType"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="LocalTime" instanceClassName="java.time.LocalTime"/>
 </ecore:EPackage>
