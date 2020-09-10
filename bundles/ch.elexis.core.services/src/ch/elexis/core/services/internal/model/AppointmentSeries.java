@@ -17,6 +17,7 @@ import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.agenda.EndingType;
 import ch.elexis.core.model.agenda.SeriesType;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.XidServiceHolder;
 
 public class AppointmentSeries implements IAppointmentSeries {
 	
@@ -28,19 +29,12 @@ public class AppointmentSeries implements IAppointmentSeries {
 	
 	private IAppointment rootAppointment;
 	
-	private IContact contact;
-	private String freeText; // if contact == null may contain freetext
-	
-	private String reason;
-	
 	private SeriesType seriesType;
 	private EndingType endingType;
 	private String seriesPatternString;
 	private String endingPatternString;
 	
 	private LocalDate endsOnDate;
-	
-	private String endsAfterNDates;
 	
 	private LocalDate startDate;
 	private LocalTime startTime;
@@ -61,11 +55,6 @@ public class AppointmentSeries implements IAppointmentSeries {
 		rootPresistent = foundRoot.isPresent();
 		rootAppointment = foundRoot.orElse(appointment);
 		
-		contact = rootAppointment.getContact();
-		if (contact == null) {
-			freeText = rootAppointment.getSubjectOrPatient();
-		}
-		reason = rootAppointment.getReason();
 		if (rootPresistent) {
 			parseSerienTerminConfigurationString(rootAppointment.getExtension());
 		}
@@ -110,9 +99,6 @@ public class AppointmentSeries implements IAppointmentSeries {
 				logger.error("unexpected exception", e);
 			}
 			break;
-		case AFTER_N_OCCURENCES:
-			endsAfterNDates = endingPatternString;
-			break;
 		default:
 			break;
 		}
@@ -121,12 +107,12 @@ public class AppointmentSeries implements IAppointmentSeries {
 	
 	@Override
 	public String getReason(){
-		return reason;
+		return appointment.getReason();
 	}
 	
 	@Override
 	public void setReason(String value){
-		reason = value;
+		appointment.setReason(value);
 	}
 	
 	@Override
@@ -136,8 +122,7 @@ public class AppointmentSeries implements IAppointmentSeries {
 	
 	@Override
 	public void setState(String value){
-		// TODO Auto-generated method stub
-		
+		appointment.setState(value);
 	}
 	
 	@Override
@@ -147,8 +132,7 @@ public class AppointmentSeries implements IAppointmentSeries {
 	
 	@Override
 	public void setType(String value){
-		// TODO Auto-generated method stub
-		
+		appointment.setType(value);
 	}
 	
 	@Override
@@ -158,12 +142,12 @@ public class AppointmentSeries implements IAppointmentSeries {
 	
 	@Override
 	public String getSchedule(){
-		return rootAppointment.getSchedule();
+		return appointment.getSchedule();
 	}
 	
 	@Override
 	public void setSchedule(String value){
-		rootAppointment.setSchedule(value);
+		appointment.setSchedule(value);
 	}
 	
 	@Override
@@ -173,18 +157,17 @@ public class AppointmentSeries implements IAppointmentSeries {
 	
 	@Override
 	public void setCreatedBy(IUser value){
-		// TODO Auto-generated method stub
-		
+		appointment.setCreatedBy(value);
 	}
 	
 	@Override
 	public String getSubjectOrPatient(){
-		return rootAppointment.getSubjectOrPatient();
+		return appointment.getSubjectOrPatient();
 	}
 	
 	@Override
 	public void setSubjectOrPatient(String value){
-		rootAppointment.setSubjectOrPatient(value);
+		appointment.setSubjectOrPatient(value);
 	}
 	
 	@Override
@@ -194,8 +177,7 @@ public class AppointmentSeries implements IAppointmentSeries {
 	
 	@Override
 	public void setPriority(int value){
-		// TODO Auto-generated method stub
-		
+		appointment.setPriority(value);
 	}
 	
 	@Override
@@ -205,8 +187,7 @@ public class AppointmentSeries implements IAppointmentSeries {
 	
 	@Override
 	public void setTreatmentReason(int value){
-		// TODO Auto-generated method stub
-		
+		appointment.setTreatmentReason(value);
 	}
 	
 	@Override
@@ -216,8 +197,7 @@ public class AppointmentSeries implements IAppointmentSeries {
 	
 	@Override
 	public void setLinkgroup(String value){
-		// TODO Auto-generated method stub
-		
+		appointment.setLinkgroup(value);
 	}
 	
 	@Override
@@ -227,8 +207,7 @@ public class AppointmentSeries implements IAppointmentSeries {
 	
 	@Override
 	public void setExtension(String value){
-		// TODO Auto-generated method stub
-		
+		appointment.setExtension(value);
 	}
 	
 	@Override
@@ -238,8 +217,7 @@ public class AppointmentSeries implements IAppointmentSeries {
 	
 	@Override
 	public void setCreated(String value){
-		// TODO Auto-generated method stub
-		
+		appointment.setCreated(value);
 	}
 	
 	@Override
@@ -249,8 +227,7 @@ public class AppointmentSeries implements IAppointmentSeries {
 	
 	@Override
 	public void setLastEdit(String value){
-		// TODO Auto-generated method stub
-		
+		appointment.setLastEdit(value);
 	}
 	
 	@Override
@@ -260,8 +237,7 @@ public class AppointmentSeries implements IAppointmentSeries {
 	
 	@Override
 	public void setStateHistory(String value){
-		// TODO Auto-generated method stub
-		
+		appointment.setStateHistory(value);
 	}
 	
 	@Override
@@ -271,7 +247,7 @@ public class AppointmentSeries implements IAppointmentSeries {
 	
 	@Override
 	public IContact getContact(){
-		return contact;
+		return appointment.getContact();
 	}
 	
 	@Override
@@ -286,7 +262,6 @@ public class AppointmentSeries implements IAppointmentSeries {
 	
 	@Override
 	public void setStartTime(LocalDateTime value){
-		// TODO Auto-generated method stub
 		
 	}
 	
@@ -312,32 +287,27 @@ public class AppointmentSeries implements IAppointmentSeries {
 	
 	@Override
 	public boolean addXid(String domain, String id, boolean updateIfExists){
-		// TODO Auto-generated method stub
-		return false;
+		return XidServiceHolder.get().addXid(appointment, domain, id, updateIfExists);
 	}
 	
 	@Override
 	public IXid getXid(String domain){
-		// TODO Auto-generated method stub
-		return null;
+		return XidServiceHolder.get().getXid(appointment, domain);
 	}
 	
 	@Override
 	public Long getLastupdate(){
-		// TODO Auto-generated method stub
-		return null;
+		return appointment.getLastupdate();
 	}
 	
 	@Override
 	public boolean isDeleted(){
-		// TODO Auto-generated method stub
-		return false;
+		return appointment.isDeleted();
 	}
 	
 	@Override
 	public void setDeleted(boolean value){
-		// TODO Auto-generated method stub
-		
+		appointment.setDeleted(value);
 	}
 	
 	@Override
@@ -450,7 +420,7 @@ public class AppointmentSeries implements IAppointmentSeries {
 			
 			switch (getEndingType()) {
 			case AFTER_N_OCCURENCES:
-				sb.append(endsAfterNDates);
+				sb.append(endingPatternString);
 				break;
 			case ON_SPECIFIC_DATE:
 				sb.append(dateFormatter.format(endsOnDate));
