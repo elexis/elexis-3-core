@@ -198,22 +198,6 @@
             <column defaultValueNumeric="0" name="LASTUPDATE" type="BIGINT"/>
         </createTable>
     </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-15">
-        <createTable tableName="CH_ELEXIS_ARZTTARIFE_CH_COMPLEMENTARY">
-            <column name="ID" type="VARCHAR(25)">
-                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_2E"/>
-            </column>
-            <column name="LASTUPDATE" type="BIGINT"/>
-            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
-            <column name="CHAPTER" type="VARCHAR(255)"/>
-            <column name="CODE" type="VARCHAR(16)"/>
-            <column name="CODETEXT" type="VARCHAR(255)"/>
-            <column name="DESCRIPTION" type="CLOB"/>
-            <column name="FIXEDVALUE" type="VARCHAR(16)"/>
-            <column name="VALIDFROM" type="CHAR(8)"/>
-            <column name="VALIDTO" type="CHAR(8)"/>
-        </createTable>
-    </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-18">
         <createTable tableName="CH_ELEXIS_EIGENDIAGNOSEN">
             <column name="ID" type="VARCHAR(25)">
@@ -1071,11 +1055,6 @@
     <changeSet author="thomas (generated)" id="1527175239251-104">
         <createIndex indexName="CH_ELEXIS_ICPC_IDX1" tableName="CH_ELEXIS_ICPC">
             <column name="COMPONENT"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="thomas (generated)" id="1527175239251-105">
-        <createIndex indexName="COMPLEMENTARYINDEX" tableName="CH_ELEXIS_ARZTTARIFE_CH_COMPLEMENTARY">
-            <column name="CODE"/>
         </createIndex>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-106">
