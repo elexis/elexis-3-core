@@ -144,6 +144,7 @@ public class AppointmentService implements IAppointmentService {
 			}
 		}
 		
+		@SuppressWarnings("unchecked")
 		Hashtable<String, String> map = StringTool.foldStrings(
 			ConfigServiceHolder.get().get("agenda/tagesvorgaben" + "/" + schedule, null));
 		if (map == null) {
@@ -420,8 +421,16 @@ public class AppointmentService implements IAppointmentService {
 		ret.setEndTime(LocalDateTime.of(ret.getStartTime().toLocalDate(),
 			appointmentSeries.getSeriesEndTime()));
 		ret.setType("series");
-		ret.setSubjectOrPatient(appointmentSeries.getSubjectOrPatient());
+		ret.setReason(appointmentSeries.getReason());
+		if (appointmentSeries.getContact() != null) {
+			ret.setSubjectOrPatient(appointmentSeries.getContact().getId());
+		} else {
+			ret.setSubjectOrPatient(appointmentSeries.getSubjectOrPatient());
+		}
 		ret.setSchedule(appointmentSeries.getSchedule());
+		ret.setState(appointmentSeries.getState());
+		ret.setCreatedBy(appointmentSeries.getCreatedBy());
+		ret.setTreatmentReason(appointmentSeries.getTreatmentReason());
 		ret.setLinkgroup(appointmentSeries.getRootAppointment().getId());
 		return ret;
 	}
