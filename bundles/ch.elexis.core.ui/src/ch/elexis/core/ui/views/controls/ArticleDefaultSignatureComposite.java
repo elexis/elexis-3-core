@@ -214,16 +214,8 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		compositeMedicationTypeDetail.setLayout(new GridLayout(4, false));
 		compositeMedicationTypeDetail
 			.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		Label lblEnddate = new Label(compositeMedicationTypeDetail, SWT.NONE);
-		lblEnddate.setText("Stoppdatum:");
 		
 		GridData gd = new GridData(SWT.FILL, SWT.CENTER, false, false);
-		lblCalcEndDate = new Label(compositeMedicationTypeDetail, SWT.NONE);
-		gd = new GridData(SWT.FILL, SWT.CENTER, false, false);
-		gd.widthHint = 80;
-		lblCalcEndDate.setLayoutData(gd);
-		lblCalcEndDate.setText("(" + Messages.ArticleDefaultSignatureComposite_date_none + ")");
-		lblCalcEndDate.setData(null);
 		Text txtEnddate = new Text(compositeMedicationTypeDetail, SWT.BORDER | SWT.CENTER);
 		txtEnddate.setText("");
 		gd = new GridData(SWT.FILL, SWT.CENTER, false, false);
@@ -233,6 +225,16 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		Label lblDays = new Label(compositeMedicationTypeDetail, SWT.NONE);
 		lblDays.setText("Tage");
 		
+		Label lblEnddate = new Label(compositeMedicationTypeDetail, SWT.NONE);
+		lblEnddate.setText("Stoppdatum:");
+		
+		lblCalcEndDate = new Label(compositeMedicationTypeDetail, SWT.NONE);
+		gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		gd.widthHint = 80;
+		lblCalcEndDate.setLayoutData(gd);
+		lblCalcEndDate.setText("(" + Messages.ArticleDefaultSignatureComposite_date_none + ")");
+		lblCalcEndDate.setData(null);
+
 		txtEnddate.addModifyListener(new ModifyListener() {
 			
 			@Override
