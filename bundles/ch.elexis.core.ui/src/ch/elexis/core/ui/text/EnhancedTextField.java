@@ -109,6 +109,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 	private List<IKonsMakro> externalMakros;
 	private int lastCurserPosition = 0;
 	private RangeTracker rangeTracker;
+	private boolean unlocked = false;
 	
 	public void setExternalMakros(List<IKonsMakro> makros){
 		externalMakros = makros;
@@ -198,6 +199,9 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 		text.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		text.addVerifyListener(new ETFVerifyListener());
 		text.addVerifyKeyListener(new ShortcutListener(this));
+		TransparentTextModificationLockHandler atmlh =
+			new TransparentTextModificationLockHandler(this);
+		text.addVerifyKeyListener(atmlh);
 		setBackground(UiDesk.getColor(UiDesk.COL_BLUE));
 		dropper = new ETFDropReceiver(this);
 		menuMgr = new MenuManager();
@@ -853,6 +857,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 	}
 
 	public void setEditable(boolean unlocked){
+		this.unlocked = unlocked;
 		text.setEditable(unlocked);
 		IContributionItem[] items = menuMgr.getItems();
 		for (IContributionItem iContributionItem : items) {
@@ -876,5 +881,13 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 		if (text != null && !text.isDisposed()) {
 			text.setBackground(color);
 		}
+	}
+	
+	protected boolean isUnlocked(){
+		return unlocked;
+	}
+	
+	protected IEncounter getEncounter(){
+		return actEncounter;
 	}
 }
