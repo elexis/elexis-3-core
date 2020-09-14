@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import com.eclipsesource.jaxrs.consumer.ConsumerFactory;
 
 import ch.elexis.core.common.ElexisEvent;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.common.InstanceStatus;
 import ch.elexis.core.constants.Elexis;
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
@@ -42,14 +43,16 @@ public class ElexisServerService implements IElexisServerService {
 	
 	private Logger log = LoggerFactory.getLogger(getClass());
 	private static final UUID systemUuid = UUID.randomUUID();
-	private boolean standalone = false;
+	private static boolean standalone;
 	
 	private String restUrl;
 	private Timer timer;
 	
-	private IEventService eventService = new NoRemoteEventService();
+	private IEventService eventService;
 	private IInstanceService instanceService;
-	private ILockService lockService = new DenyAllLockService();
+	private ILockService lockService;
+	
+	private ConnectionStatus connectionStatus;
 	
 	@Reference
 	private IConfigService configService;
@@ -58,9 +61,19 @@ public class ElexisServerService implements IElexisServerService {
 	
 	@Activate
 	public void activate(){
-		reconfigure();
+		standalone = false;
+		lockService = new DenyAllLockService();
+		eventService = new NoRemoteEventService();
+		instanceService = new NoRemoteInstanceService();
 		
-		if (!standalone) {
+		initializeProperties();
+		
+		if (standalone) {
+			// standalone mode, mock services
+			eventService = new NoRemoteEventService();
+			instanceService = new NoRemoteInstanceService();
+			lockService = new AcceptAllLockService();
+		} else {
 			timer = new Timer();
 			timer.schedule(new RefreshTask(this), 5000, 5000);
 			
@@ -70,8 +83,8 @@ public class ElexisServerService implements IElexisServerService {
 	}
 	
 	@Deactivate
-	public void deactivate() {
-		if(timer != null) {
+	public void deactivate(){
+		if (timer != null) {
 			timer.cancel();
 		}
 	}
@@ -81,8 +94,7 @@ public class ElexisServerService implements IElexisServerService {
 		return systemUuid;
 	}
 	
-	@Override
-	public String reconfigure(){
+	private void initializeProperties(){
 		restUrl =
 			System.getProperty(ElexisSystemPropertyConstants.ELEXIS_SERVER_REST_INTERFACE_URL);
 		if (restUrl != null && restUrl.length() > 0) {
@@ -92,42 +104,13 @@ public class ElexisServerService implements IElexisServerService {
 				log.error("Invalid elexis-server url [{}], not initializing remote es services.",
 					restUrl);
 				restUrl = null;
-				return null;
 			}
+			connectionStatus = ConnectionStatus.LOCAL;
 			log.info("Operating against elexis-server instance on " + restUrl);
 		} else {
 			standalone = true;
+			connectionStatus = ConnectionStatus.STANDALONE;
 			log.debug("No elexis-server url provided, operating in stand-alone mode.");
-		}
-		
-		verifyAndUpdateConnection();
-		
-		return restUrl;
-	}
-	
-	protected void verifyAndUpdateConnection() {
-		if(standalone) {
-			// standalone mode, mock services
-			eventService = new NoRemoteEventService();
-			instanceService = new NoRemoteInstanceService();
-			lockService = new AcceptAllLockService();
-			return;
-		}  
-		
-		if (validateConnection()) {
-			// connected to elexis-server, connection is up
-			eventService = ConsumerFactory.createConsumer(restUrl, new ElexisServerClientConfig(),
-				IEventService.class);
-			instanceService = ConsumerFactory.createConsumer(restUrl,
-				new ElexisServerClientConfig(), IInstanceService.class);
-			lockService = ConsumerFactory.createConsumer(restUrl, new ElexisServerClientConfig(),
-				ILockService.class);
-		} else {
-			// connected to elexis-server, connection is down
-			eventService = new NoRemoteEventService();
-			// TODO should we react otherwise here?
-			instanceService = new NoRemoteInstanceService();
-			lockService = new DenyAllLockService();
 		}
 	}
 	
@@ -195,24 +178,59 @@ public class ElexisServerService implements IElexisServerService {
 		return lockService.getLockInfo(storeToString);
 	}
 	
-	/**
-	 * Test the connection to the server, by a specific server url
-	 * 
-	 * @return <code>false</code> if connection could not be made
-	 */
-	private boolean validateConnection(){
+	@Override
+	public synchronized boolean validateElexisServerConnection(){
+		if (ConnectionStatus.STANDALONE == connectionStatus) {
+			throw new IllegalStateException();
+		}
+		
+		boolean connectionOk = false;
 		try {
 			String testRestUrl = restUrl + "/elexis/lockservice/lockInfo";
 			URL url = new URL(testRestUrl);
 			
 			HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+			urlConn.setConnectTimeout(1000);
+			urlConn.setReadTimeout(1500);
 			urlConn.connect();
 			
-			return (urlConn.getResponseCode() >= 200 && urlConn.getResponseCode() < 300);
+			connectionOk = (urlConn.getResponseCode() >= 200 && urlConn.getResponseCode() < 300);
 		} catch (IOException e) {
 			log.warn("Error connecting to elexis-server", e);
 		}
-		return false;
+		
+		if (connectionOk && connectionStatus != ConnectionStatus.REMOTE) {
+			// connected to elexis-server, connection is up
+			connectionStatus = ConnectionStatus.REMOTE;
+			eventService = ConsumerFactory.createConsumer(restUrl, new ElexisServerClientConfig(),
+				IEventService.class);
+			contextService.postEvent(ElexisEventTopics.EVENT_RELOAD, IEventService.class);
+			instanceService = ConsumerFactory.createConsumer(restUrl,
+				new ElexisServerClientConfig(), IInstanceService.class);
+			contextService.postEvent(ElexisEventTopics.EVENT_RELOAD, IInstanceService.class);
+			lockService = ConsumerFactory.createConsumer(restUrl, new ElexisServerClientConfig(),
+				ILockService.class);
+			contextService.postEvent(ElexisEventTopics.EVENT_RELOAD, ILockService.class);
+		}
+		
+		if (!connectionOk && connectionStatus != ConnectionStatus.LOCAL) {
+			// connected to elexis-server, connection is down
+			connectionStatus = ConnectionStatus.LOCAL;
+			eventService = new NoRemoteEventService();
+			contextService.postEvent(ElexisEventTopics.EVENT_RELOAD, IEventService.class);
+			// TODO should we react otherwise here?
+			instanceService = new NoRemoteInstanceService();
+			contextService.postEvent(ElexisEventTopics.EVENT_RELOAD, IInstanceService.class);
+			lockService = new DenyAllLockService();
+			contextService.postEvent(ElexisEventTopics.EVENT_RELOAD, ILockService.class);
+		}
+		
+		return connectionOk;
+	}
+	
+	@Override
+	public ConnectionStatus getConnectionStatus(){
+		return connectionStatus;
 	}
 	
 }

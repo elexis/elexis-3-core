@@ -14,7 +14,7 @@ public class RefreshTask extends TimerTask {
 	
 	@Override
 	public void run(){
-		elexisServerService.verifyAndUpdateConnection();
+		elexisServerService.validateElexisServerConnection();
 		
 		InstanceStatus instanceStatus = elexisServerService.createInstanceStatus();
 		elexisServerService.updateInstanceStatus(instanceStatus);

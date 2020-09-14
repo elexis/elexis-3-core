@@ -20,7 +20,8 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockResponse;
-import ch.elexis.core.services.ILocalLockService.Status;
+import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
+import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.data.PersistentObject;
 
 public class LockStatusDialog extends TitleAreaDialog {
@@ -71,10 +72,10 @@ public class LockStatusDialog extends TitleAreaDialog {
 		lblSystemUuid.setText("System UUID: " + LocalLockServiceHolder.get().getSystemUuid());
 		
 		Label lblLockStatus = new Label(container, SWT.NONE);
-		Status status = LocalLockServiceHolder.get().getStatus();
+		ConnectionStatus connectinStatus = ElexisServerServiceHolder.get().getConnectionStatus();
 		StringBuilder statusString = new StringBuilder();
-		statusString.append("Lock-Service: " + status.name());
-		if (status != Status.STANDALONE) {
+		statusString.append("Lock-Service: " + connectinStatus.name());
+		if (connectinStatus != ConnectionStatus.STANDALONE) {
 			statusString.append(" @ " + System
 				.getProperty(ElexisSystemPropertyConstants.ELEXIS_SERVER_REST_INTERFACE_URL));
 		}
@@ -92,7 +93,7 @@ public class LockStatusDialog extends TitleAreaDialog {
 			LockInfo lockInfo = (LockInfo) object;
 			LockResponse lockResponse = LocalLockServiceHolder.get().releaseLock(lockInfo);
 			if (!lockResponse.isOk()) {
-				setErrorMessage("Error releasing lock "+lockInfo.getElementStoreToString());
+				setErrorMessage("Error releasing lock " + lockInfo.getElementStoreToString());
 				error = true;
 				break;
 			}

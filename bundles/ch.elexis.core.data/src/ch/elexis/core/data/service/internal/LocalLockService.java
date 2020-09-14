@@ -29,7 +29,6 @@ import ch.elexis.core.lock.types.LockRequest.Type;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
-import ch.elexis.core.server.ILockService;
 import ch.elexis.core.services.IElexisServerService;
 import ch.elexis.core.services.ILocalLockService;
 import ch.elexis.data.PersistentObject;
@@ -402,17 +401,6 @@ public class LocalLockService implements ILocalLockService {
 				LoggerFactory.getLogger(LockRefreshTask.class).error("Execution error", e);
 			}
 		}
-	}
-	
-	@Override
-	public Status getStatus(){
-		if (elexisServerService.isStandalone()) {
-			return Status.STANDALONE;
-		} else if (elexisServerService == null) {
-			// TODO verify
-			return Status.LOCAL;
-		}
-		return Status.REMOTE;
 	}
 	
 	@Override

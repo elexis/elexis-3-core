@@ -13,13 +13,14 @@ import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.Identifiable;
-import ch.elexis.core.services.ILocalLockService;
+import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
+import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 
 public class AcquireLockBlockingUi {
 	private static Logger logger = LoggerFactory.getLogger(AcquireLockBlockingUi.class);
 	
 	public static void aquireAndRun(IPersistentObject lockPo, ILockHandler handler){
-		if (LocalLockServiceHolder.get().getStatus() == ILocalLockService.Status.STANDALONE) {
+		if (ElexisServerServiceHolder.get().getConnectionStatus() == ConnectionStatus.STANDALONE) {
 			handler.lockAcquired();
 			return;
 		}

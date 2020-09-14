@@ -10,40 +10,29 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventHandler;
 
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.service.LocalLockServiceHolder;
-import ch.elexis.core.services.ILocalLockService;
-import ch.elexis.core.services.ILocalLockService.Status;
+import com.google.common.base.Objects;
+
+import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.server.ILockService;
+import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
+import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.core.ui.Hub;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 
-public class LockStatusDialogHandler extends AbstractHandler implements IElementUpdater {
+@Component(property = org.osgi.service.event.EventConstants.EVENT_TOPIC + "="
+	+ ElexisEventTopics.EVENT_RELOAD)
+public class LockStatusDialogHandler extends AbstractHandler
+		implements IElementUpdater, EventHandler {
 	
 	public static final String COMMAND_ID = "ch.elexis.core.ui.locks.LockStatusDialog";
 	
 	private ImageDescriptor localIcon;
 	private ImageDescriptor remoteIcon;
 	private ImageDescriptor standaloneIcon;
-	
-	public LockStatusDialogHandler(){
-		ElexisEventDispatcher.getInstance().addListeners(
-			new ElexisUiEventListenerImpl(ILocalLockService.class, ElexisEvent.EVENT_RELOAD) {
-				private ICommandService commandService;
-				
-				@Override
-				public void runInUi(ElexisEvent ev){
-					if (commandService == null) {
-						commandService = (ICommandService) PlatformUI.getWorkbench()
-							.getService(ICommandService.class);
-					}
-					
-					commandService.refreshElements(COMMAND_ID, null);
-				}
-			});
-	}
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException{
@@ -63,14 +52,24 @@ public class LockStatusDialogHandler extends AbstractHandler implements IElement
 		if (localIcon == null || remoteIcon == null || standaloneIcon == null) {
 			prepareIcons();
 		}
-		ILocalLockService.Status status = LocalLockServiceHolder.get().getStatus();
+		ConnectionStatus connectionStatus = ElexisServerServiceHolder.get().getConnectionStatus();
 		
-		if (status == Status.STANDALONE) {
+		if (connectionStatus == ConnectionStatus.STANDALONE) {
 			element.setIcon(standaloneIcon);
-		} else if (status == Status.LOCAL) {
+		} else if (connectionStatus == ConnectionStatus.LOCAL) {
 			element.setIcon(localIcon);
-		} else if (status == Status.REMOTE) {
+		} else if (connectionStatus == ConnectionStatus.REMOTE) {
 			element.setIcon(remoteIcon);
+		}
+	}
+	
+	@Override
+	public void handleEvent(Event event){
+		Object property = event.getProperty(ElexisEventTopics.ECLIPSE_E4_DATA);
+		if (Objects.equal(property, ILockService.class)) {
+			ICommandService commandService =
+				(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+			commandService.refreshElements(COMMAND_ID, null);
 		}
 	}
 }
