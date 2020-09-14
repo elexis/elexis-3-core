@@ -253,15 +253,13 @@ public class KonsDetailView extends ViewPart
 					// ElexisEvent.EVENT_SELECTED
 					IEncounter deselectedKons = actEncounter;
 					setKons(encounter);
-					releaseAndRefreshLock(deselectedKons,
-						ToggleCurrentKonsultationLockHandler.COMMAND_ID);
+					releaseAndRefreshLock(deselectedKons);
 					setKons(encounter);
 				} else {
 					// ElexisEvent.EVENT_DESELECTED
 					IEncounter deselectedKons = actEncounter;
 					setKons(null);
-					releaseAndRefreshLock(deselectedKons,
-						ToggleCurrentKonsultationLockHandler.COMMAND_ID);
+					releaseAndRefreshLock(deselectedKons);
 				}
 			});
 		}
@@ -283,6 +281,7 @@ public class KonsDetailView extends ViewPart
 		if (created) {
 			if (encounter.equals(actEncounter)) {
 				setUnlocked(true);
+				refreshContributionItemState();
 			}
 		}
 	}
@@ -292,7 +291,9 @@ public class KonsDetailView extends ViewPart
 		@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_RELEASED) IEncounter encounter){
 		if (created) {
 			if (encounter.equals(actEncounter)) {
+				save();
 				setUnlocked(false);
+				refreshContributionItemState();
 			}
 		}
 	}
@@ -336,13 +337,17 @@ public class KonsDetailView extends ViewPart
 	//			}
 	//		};
 	
-	private void releaseAndRefreshLock(Object object, String commandId){
+	private void releaseAndRefreshLock(Object object){
 		if (object != null && LocalLockServiceHolder.get().isLockedLocal(object)) {
 			LocalLockServiceHolder.get().releaseLock(object);
 		}
+		refreshContributionItemState();
+	}
+	
+	private void refreshContributionItemState(){
 		ICommandService commandService =
 			(ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-		commandService.refreshElements(commandId, null);
+		commandService.refreshElements(ToggleCurrentKonsultationLockHandler.COMMAND_ID, null);
 	}
 	
 	@Override
