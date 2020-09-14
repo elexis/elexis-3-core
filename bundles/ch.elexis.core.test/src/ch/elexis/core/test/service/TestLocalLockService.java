@@ -90,12 +90,6 @@ public class TestLocalLockService implements ILocalLockService {
 	}
 	
 	@Override
-	public Status getStatus(){
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
 	public void shutdown(){
 		// TODO Auto-generated method stub
 		
