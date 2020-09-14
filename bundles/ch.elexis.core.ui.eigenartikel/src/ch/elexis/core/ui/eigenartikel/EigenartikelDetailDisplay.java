@@ -24,7 +24,8 @@ import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.eigenartikel.acl.ACLContributor;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IArticle;
-import ch.elexis.core.services.ILocalLockService.Status;
+import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
+import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.icons.Images;
@@ -183,7 +184,7 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		final ToolBarManager manager = new ToolBarManager(toolBar);
 		manager.add(createAction);
-		if (LocalLockServiceHolder.get().getStatus() != Status.STANDALONE) {
+		if (ElexisServerServiceHolder.get().getConnectionStatus() != ConnectionStatus.STANDALONE) {
 			manager.add(toggleLockAction);
 		}
 		manager.add(deleteAction);
@@ -192,14 +193,14 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 		
 		epc = new EigenartikelProductComposite(compProduct, SWT.None);
 		epc.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		epc.setUnlocked(LocalLockServiceHolder.get().getStatus() == Status.STANDALONE);
+		epc.setUnlocked(ElexisServerServiceHolder.get().getConnectionStatus() == ConnectionStatus.STANDALONE);
 		
 		compArticle = new Composite(container, SWT.None);		
 		compArticle.setLayout(new GridLayout(1, false));
 		
 		ec = new EigenartikelComposite(compArticle, SWT.None, false, null);
 		ec.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		ec.setUnlocked(LocalLockServiceHolder.get().getStatus() == Status.STANDALONE);
+		ec.setUnlocked(ElexisServerServiceHolder.get().getConnectionStatus() == ConnectionStatus.STANDALONE);
 		
 		layout.topControl = compProduct;
 		container.layout();
