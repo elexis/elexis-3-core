@@ -181,7 +181,7 @@ public class ElexisServerService implements IElexisServerService {
 	@Override
 	public synchronized boolean validateElexisServerConnection(){
 		if (ConnectionStatus.STANDALONE == connectionStatus) {
-			throw new IllegalStateException();
+			return true;
 		}
 		
 		boolean connectionOk = false;
