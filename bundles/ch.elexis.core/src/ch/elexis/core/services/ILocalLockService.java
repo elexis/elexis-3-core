@@ -9,17 +9,11 @@ import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.server.ILockService;
 
 /**
- * Additional convinience methods for locking with PersistentObject.
- * 
- * @author thomas
+ * Additional convenience methods for locking with PersistentObject.
  *
  */
 public interface ILocalLockService extends ILockService {
 
-	public enum Status {
-			LOCAL, REMOTE, STANDALONE
-	}
-	
 	public LockResponse acquireLock(Object object);
 	
 	public LockResponse releaseLock(Object object);
@@ -46,7 +40,5 @@ public interface ILocalLockService extends ILockService {
 	public LockResponse acquireLockBlocking(Object po, int msTimeout,
 		IProgressMonitor monitor);
 	
-	public Status getStatus();
-
 	public void shutdown();
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="ch.elexis.core.ui.locks.LockStatusDialogHandler">
+   <property name="event.topics" value="info/elexis/model/reload"/>
+   <service>
+      <provide interface="org.eclipse.ui.commands.IElementUpdater"/>
+      <provide interface="org.osgi.service.event.EventHandler"/>
+   </service>
+   <implementation class="ch.elexis.core.ui.locks.LockStatusDialogHandler"/>
+</scr:component>

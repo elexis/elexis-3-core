@@ -61,8 +61,9 @@ import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IUser;
-import ch.elexis.core.services.ILocalLockService.Status;
+import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.RestrictedAction;
@@ -193,7 +194,7 @@ public class UserManagementPreferencePage extends PreferencePage
 			
 			@Override
 			public void doRun(User user){
-				IUser currentUser =  ContextServiceHolder.get().getActiveUser().orElse(null);
+				IUser currentUser = ContextServiceHolder.get().getActiveUser().orElse(null);
 				if (currentUser != null) {
 					if (currentUser.getId().equals(user.getId())) {
 						MessageDialog.openWarning(getShell(), "Warnung",
@@ -209,7 +210,8 @@ public class UserManagementPreferencePage extends PreferencePage
 		};
 		popManager.add(deleteUserAction);
 		
-		if (!(Status.STANDALONE == LocalLockServiceHolder.get().getStatus())) {
+		if (!(ConnectionStatus.STANDALONE == ElexisServerServiceHolder.get()
+			.getConnectionStatus())) {
 			lockUserAction = new RestrictedAction(AccessControlDefaults.USER_CREATE,
 				Messages.Leistungscodes_editItem) {
 				
@@ -265,7 +267,8 @@ public class UserManagementPreferencePage extends PreferencePage
 			}
 		});
 		
-		if (!(Status.STANDALONE == LocalLockServiceHolder.get().getStatus())) {
+		if (!(ConnectionStatus.STANDALONE == ElexisServerServiceHolder.get()
+			.getConnectionStatus())) {
 			Button btnLock = new Button(compositeButtons, SWT.FLAT | SWT.TOGGLE);
 			btnLock.setSelection(
 				LocalLockServiceHolder.get().isLocked((IPersistentObject) wvUser.getValue()));
@@ -317,7 +320,8 @@ public class UserManagementPreferencePage extends PreferencePage
 			
 			StructuredSelection ss = (StructuredSelection) e.getSelection();
 			wvUser.setValue(ss == null ? null : (User) ss.getFirstElement());
-			setUnlocked(Status.STANDALONE == LocalLockServiceHolder.get().getStatus());
+			setUnlocked(ConnectionStatus.STANDALONE == ElexisServerServiceHolder.get()
+				.getConnectionStatus());
 			
 			compositeEdit.layout(true, true);
 		});
@@ -497,10 +501,11 @@ public class UserManagementPreferencePage extends PreferencePage
 						"Der selektierte Kontakt ist kein Mandant.");
 					return;
 				}
-
-				KontaktSelektor ks =
-					new KontaktSelektor(UiDesk.getTopShell(), Kontakt.class, "Rechnungs-Kontakt auswählen",
-						"Bitte selektieren Sie den dem Mandant zugeordneten Rechnungs-Kontakt", new String[] {});
+				
+				KontaktSelektor ks = new KontaktSelektor(UiDesk.getTopShell(), Kontakt.class,
+					"Rechnungs-Kontakt auswählen",
+					"Bitte selektieren Sie den dem Mandant zugeordneten Rechnungs-Kontakt",
+					new String[] {});
 				int ret = ks.open();
 				if (ret == Window.OK) {
 					Kontakt kontakt = (Kontakt) ks.getSelection();
@@ -650,7 +655,8 @@ public class UserManagementPreferencePage extends PreferencePage
 		
 		updateUserList();
 		
-		setUnlocked(Status.STANDALONE == LocalLockServiceHolder.get().getStatus());
+		setUnlocked(
+			ConnectionStatus.STANDALONE == ElexisServerServiceHolder.get().getConnectionStatus());
 		
 		sash.setWeights(new int[] {
 			1, 5

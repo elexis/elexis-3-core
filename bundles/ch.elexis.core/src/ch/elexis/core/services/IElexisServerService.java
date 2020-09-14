@@ -14,12 +14,14 @@ import ch.elexis.core.lock.types.LockResponse;
 
 public interface IElexisServerService {
 	
-	/**
-	 * Reconfigure the connection to the server
-	 * 
-	 * @return the elexis-server URL this service is operating against, or <code>null</code>
-	 */
-	public String reconfigure();
+	public enum ConnectionStatus {
+			/** Not connected to an ES */
+			STANDALONE,
+			/** Connected to an ES, and connection is live */
+			REMOTE,
+			/** Connected to an ES, but connection */
+			LOCAL
+	}
 	
 	/**
 	 * A unique id for this instance of Elexis. Changes on every restart.
@@ -53,6 +55,7 @@ public interface IElexisServerService {
 	
 	/**
 	 * Create a fresh, populated {@link InstanceStatus} object
+	 * 
 	 * @return
 	 */
 	public InstanceStatus createInstanceStatus();
@@ -95,4 +98,19 @@ public interface IElexisServerService {
 	 * @return
 	 */
 	public LockInfo getLockInfo(String storeToString);
+	
+	/**
+	 * Validate the connection to the server (applicable in non-standalone mode only). If the
+	 * connection to the server fails, switches to Local Mode
+	 * 
+	 * 
+	 * @return <code>true</code> if the connection to ES is live, else <code>false</code>
+	 */
+	public boolean validateElexisServerConnection();
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public ConnectionStatus getConnectionStatus();
 }

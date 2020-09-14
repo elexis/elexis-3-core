@@ -17,15 +17,15 @@ import org.eclipse.ui.PlatformUI;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IPersistentObject;
-import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.BriefExternUtil;
 import ch.elexis.core.data.util.LocalLock;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IConflictHandler;
+import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
 import ch.elexis.core.services.ILocalDocumentService;
-import ch.elexis.core.services.ILocalLockService.Status;
+import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
@@ -60,7 +60,7 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 						LocalDocumentServiceHolder.getService();
 					if (localDocumentService.isPresent()) {
 						ILocalDocumentService service = localDocumentService.get();
-						if (LocalLockServiceHolder.get().getStatus() == Status.REMOTE) {
+						if (ElexisServerServiceHolder.get().getConnectionStatus() == ConnectionStatus.REMOTE) {
 							if (object instanceof IPersistentObject) {
 								IPersistentObject lockObject = (IPersistentObject) object;
 								AcquireLockUi.aquireAndRun(lockObject, new ILockHandler() {

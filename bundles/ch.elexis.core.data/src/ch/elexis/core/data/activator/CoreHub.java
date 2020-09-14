@@ -446,7 +446,7 @@ public class CoreHub implements BundleActivator {
 	 * @since 3.8
 	 */
 	public static void reconfigureServices() {
-		ElexisServerServiceHolder.get().reconfigure();
+		ElexisServerServiceHolder.get().validateElexisServerConnection();
 	}
 	
 	/**
