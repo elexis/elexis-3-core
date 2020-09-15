@@ -287,8 +287,9 @@ public class KonsDetailView extends ViewPart
 					.load(encounter.getId(), IEncounter.class, false, true).get();
 				long db_lastupdate = db_encounter.getLastupdate();
 				if (db_lastupdate > actEncounter.getLastupdate()) {
-					CoreOperationAdvisorHolder.get().openInformation("Encounter changed",
-						"The encounter was updated. Reloading.");
+					CoreOperationAdvisorHolder.get().openInformation(
+						"Konsultation wurde aktualisiert",
+						"Die Konsultation wurde zwischenzeitlich aktualisiert.\nAktuelle Version wird geladen.");
 					text.setDirty(false);
 					LocalLockServiceHolder.get().releaseLock(encounter);
 					setKons(encounter);
