@@ -25,13 +25,15 @@ public class LockResponseHelper {
 			SWTHelper.showError(Messages.DenyLockPermanent_Title,
 				Messages.DenyLockPermanent_Message);
 		} else {
+			
 			if (log != null) {
-				log.warn("Unable to acquire lock for "
+				log.warn("Unable to " + lr.getLockRequestType() + " lock for "
 					+ ((object != null) ? getStoreToString(object) : "null") + " - "
 					+ lr.getLockInfo().getUser() + "@" + lr.getLockInfo().getSystemUuid());
 			}
-			String format = MessageFormat.format(Messages.DenyLock_Message,
-				lr.getLockInfo().getUser() + "@" + lr.getLockInfo().getSystemUuid());
+			String format =
+				MessageFormat.format(Messages.DenyLock_Message, getStoreToString(object),
+					lr.getLockInfo().getUser() + "@" + lr.getLockInfo().getSystemUuid());
 			SWTHelper.showError(Messages.DenyLock_Title, format);
 		}
 	}
