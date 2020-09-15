@@ -4,10 +4,12 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Optional;
@@ -306,16 +308,69 @@ public class AppointmentService implements IAppointmentService {
 		List<IAppointment> series = new ArrayList<>();
 		IAppointment root = appointmentSeries.getRootAppointment();
 		root.setType("series");
-		root.setStartTime(LocalDateTime.of(appointmentSeries.getSeriesStartDate(),
-			appointmentSeries.getSeriesStartTime()));
-		root.setEndTime(LocalDateTime.of(appointmentSeries.getSeriesStartDate(),
-			appointmentSeries.getSeriesEndTime()));
+		LocalDate rootStartDate = getRootTerminStartTime(appointmentSeries).toLocalDate();
+		appointmentSeries.setSeriesStartDate(rootStartDate);
+		root.setStartTime(
+			LocalDateTime.of(appointmentSeries.getSeriesStartDate(),
+				appointmentSeries.getSeriesStartTime()));
+		root.setEndTime(
+			LocalDateTime.of(appointmentSeries.getSeriesStartDate(),
+				appointmentSeries.getSeriesEndTime()));
 		root.setExtension(appointmentSeries.getAsSeriesExtension());
 		
 		series.add(root);
 		series.addAll(createSubSequentDates(appointmentSeries));
 		CoreModelServiceHolder.get().save(series);
 		return series;
+	}
+	
+	private TimeTool getRootTerminStartTime(IAppointmentSeries appointmentSeries){
+		LocalDateTime startdatetime = LocalDateTime.of(appointmentSeries.getSeriesStartDate(),
+			appointmentSeries.getSeriesStartTime());
+		Calendar cal = GregorianCalendar.from(startdatetime.atZone(ZoneId.systemDefault()));
+		TimeTool tt = new TimeTool(cal.getTime());
+		
+		switch (appointmentSeries.getSeriesType()) {
+		case DAILY:
+			return tt;
+			
+		case WEEKLY:
+			Calendar cal2 = Calendar.getInstance();
+			cal2.setTime(cal.getTime());
+			int firstDay = Integer.parseInt(appointmentSeries.getSeriesPatternString().split(",")[1].charAt(0) + "");
+			cal2.set(Calendar.DAY_OF_WEEK, firstDay);
+			TimeTool ret = new TimeTool(cal2.getTime());
+			return ret;
+			
+		case MONTHLY:
+			int monthDay = Integer.parseInt(appointmentSeries.getSeriesPatternString());
+			Calendar calendarMonth = Calendar.getInstance();
+			calendarMonth.clear();
+			calendarMonth.set(Calendar.YEAR, tt.get(TimeTool.YEAR));
+			if (tt.get(Calendar.DAY_OF_MONTH) <= monthDay) {
+				calendarMonth.set(Calendar.MONTH, tt.get(Calendar.MONTH));
+			} else {
+				calendarMonth.set(Calendar.MONTH, tt.get(Calendar.MONTH));
+				calendarMonth.add(Calendar.MONTH, 1);
+			}
+			calendarMonth.set(Calendar.DAY_OF_MONTH, monthDay);
+			return new TimeTool(calendarMonth.getTime());
+			
+		case YEARLY:
+			Calendar targetCal = Calendar.getInstance();
+			targetCal.clear();
+			targetCal.set(Calendar.YEAR, tt.get(TimeTool.YEAR));
+			int day = Integer.parseInt(appointmentSeries.getSeriesPatternString().substring(0, 2));
+			int month = Integer.parseInt(appointmentSeries.getSeriesPatternString().substring(2, 4));
+			targetCal.set(Calendar.DAY_OF_MONTH, day);
+			targetCal.set(Calendar.MONTH, month - 1);
+			TimeTool target = new TimeTool(targetCal.getTime());
+			if (tt.isBefore(target))
+				return target;
+			target.add(TimeTool.YEAR, 1);
+			return target;
+		}
+		return tt;
 	}
 	
 	private List<IAppointment> createSubSequentDates(IAppointmentSeries appointmentSeries){
@@ -346,7 +401,6 @@ public class AppointmentService implements IAppointmentService {
 		case WEEKLY:
 			String[] separatedSeriesPattern = appointmentSeries.getSeriesPatternString().split(",");
 			int weekStepSize = Integer.parseInt(separatedSeriesPattern[0]);
-			System.out.println("week step size =" + weekStepSize);
 			// handle week 1
 			for (int i = 1; i < separatedSeriesPattern[1].length(); i++) {
 				Calendar cal = Calendar.getInstance();
