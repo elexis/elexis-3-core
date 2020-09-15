@@ -27,16 +27,18 @@ public class LockInfo {
 	@XmlElement
 	private String systemUuid;
 	@XmlElement
-	private String systemLabel;
+	private String stationId;
+	@XmlElement
+	private String stationLabel;
 
 	public LockInfo() {
 	}
 
 	public LockInfo(String storeToString, String userId, String systemUuid) {
-		this(storeToString, userId, systemUuid, "");
+		this(storeToString, userId, systemUuid, "", "");
 	}
 	
-	public LockInfo(String storeToString, String userId, String systemUuid, String systemLabel) {
+	public LockInfo(String storeToString, String userId, String systemUuid, String stationId, String stationLabel) {
 		String[] split = storeToString.split(StringConstants.DOUBLECOLON);
 		if (split.length == 2) {
 			this.elementId = split[1];
@@ -44,7 +46,8 @@ public class LockInfo {
 			this.user = userId;
 			this.creationDate = new Date();
 			this.systemUuid = systemUuid;
-			this.systemLabel = systemLabel;
+			this.stationId = stationId;
+			this.stationLabel = stationLabel;
 		} else {
 			throw new IllegalArgumentException(storeToString);
 		}
@@ -80,8 +83,12 @@ public class LockInfo {
 		return systemUuid;
 	}
 	
-	public String getSystemLabel(){
-		return systemLabel;
+	public String getStationId(){
+		return stationId;
+	}
+	
+	public String getStationLabel(){
+		return stationLabel;
 	}
 
 	public static String getElementId(String storeToString) {
