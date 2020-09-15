@@ -35,6 +35,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.nebula.cwt.animation.effects.SetAlpha;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Color;
@@ -59,6 +60,8 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Objects;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.common.ElexisEventTopics;
@@ -279,7 +282,8 @@ public class KonsDetailView extends ViewPart
 	void lockedEncounter(
 		@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) IEncounter encounter){
 		if (created) {
-			if (encounter.equals(actEncounter)) {
+			if (Objects.equal(encounter, actEncounter)) {
+				setKons(encounter);
 				setUnlocked(true);
 				refreshContributionItemState();
 			}
@@ -290,7 +294,7 @@ public class KonsDetailView extends ViewPart
 	void unlockedEncounter(
 		@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_RELEASED) IEncounter encounter){
 		if (created) {
-			if (encounter.equals(actEncounter)) {
+			if (Objects.equal(encounter, actEncounter)) {
 				save();
 				setUnlocked(false);
 				refreshContributionItemState();
