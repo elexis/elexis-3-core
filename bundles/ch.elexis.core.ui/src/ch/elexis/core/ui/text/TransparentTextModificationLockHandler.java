@@ -19,7 +19,8 @@ import ch.elexis.core.ui.locks.LockResponseHelper;
 
 /**
  * This class handles transparent locking request and release on modification of the consultation
- * text. After the initial modification, the lock will be held for 1 minute.
+ * text. After the initial modification, the lock will be held for 1 minute, and if by the end the
+ * text is still locked, release the lock
  */
 class TransparentTextModificationLockHandler implements VerifyKeyListener {
 	
@@ -66,6 +67,7 @@ class TransparentTextModificationLockHandler implements VerifyKeyListener {
 						LockResponse releaseLock =
 							LocalLockServiceHolder.get().releaseLock(lockResponse.getLockInfo());
 						if (!releaseLock.isOk()) {
+							
 							LockResponseHelper.showInfo(releaseLock, encounter, logger);
 						}
 					}
