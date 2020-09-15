@@ -11,7 +11,6 @@ import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 
-
 public class LockResponseHelper {
 	
 	public static void showInfo(LockResponse lr, Object object, Logger log){
@@ -27,12 +26,14 @@ public class LockResponseHelper {
 				Messages.DenyLockPermanent_Title, Messages.DenyLockPermanent_Message);
 		} else {
 			if (log != null) {
-				log.warn("Unable to acquire lock for "
+				log.warn("Unable to " + lr.getLockRequestType() + " acquire lock for "
 					+ ((object != null) ? getStoreToString(object) : "null") + " - "
 					+ lr.getLockInfo().getUser() + "@" + lr.getLockInfo().getSystemUuid());
 			}
-			String format = MessageFormat.format(Messages.DenyLock_Message,
-				lr.getLockInfo().getUser() + "@" + lr.getLockInfo().getSystemUuid());
+			
+			String format =
+				MessageFormat.format(Messages.DenyLock_Message, getStoreToString(object),
+					lr.getLockInfo().getUser() + "@" + lr.getLockInfo().getSystemUuid());
 			MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.DenyLock_Title,
 				format);
 		}
