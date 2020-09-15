@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.InstanceStatus;
 import ch.elexis.core.common.InstanceStatus.STATE;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -29,6 +30,8 @@ import ch.elexis.core.lock.types.LockRequest.Type;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.IConfigService;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IElexisServerService;
 import ch.elexis.core.services.ILocalLockService;
 import ch.elexis.data.PersistentObject;
@@ -46,6 +49,12 @@ public class LocalLockService implements ILocalLockService {
 	
 	@Reference
 	private IElexisServerService elexisServerService;
+	
+	@Reference
+	private IContextService contextService;
+	
+	@Reference
+	private IConfigService configService;
 	
 	private final HashMap<String, Integer> lockCount = new HashMap<String, Integer>();
 	private final HashMap<String, LockInfo> locks = new HashMap<String, LockInfo>();
@@ -97,7 +106,8 @@ public class LocalLockService implements ILocalLockService {
 	private LockResponse releaseLock(String storeToString){
 		IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
 		LockInfo lil = new LockInfo(storeToString, user.getId(),
-			elexisServerService.getSystemUuid().toString());
+			elexisServerService.getSystemUuid().toString(), contextService.getStationIdentifier(),
+			configService.getLocal(Preferences.STATION_IDENT_TEXT, ""));
 		LockRequest lockRequest = new LockRequest(LockRequest.Type.RELEASE, lil);
 		return acquireOrReleaseLocks(lockRequest);
 	}
@@ -173,7 +183,8 @@ public class LocalLockService implements ILocalLockService {
 		
 		IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
 		LockInfo lockInfo = new LockInfo(storeToString, user.getId(),
-			elexisServerService.getSystemUuid().toString());
+			elexisServerService.getSystemUuid().toString(), contextService.getStationIdentifier(),
+			configService.getLocal(Preferences.STATION_IDENT_TEXT, ""));
 		LockRequest lockRequest = new LockRequest(LockRequest.Type.ACQUIRE, lockInfo);
 		return acquireOrReleaseLocks(lockRequest);
 	}
@@ -322,8 +333,10 @@ public class LocalLockService implements ILocalLockService {
 		logger.debug("Checking lock on [" + object + "]");
 		
 		IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
-		LockInfo lockInfo = new LockInfo(StoreToStringServiceHolder.getStoreToString(object),
-			user.getId(), elexisServerService.getSystemUuid().toString());
+		String storeToString = StoreToStringServiceHolder.getStoreToString(object);
+		LockInfo lockInfo = new LockInfo(storeToString, user.getId(),
+			elexisServerService.getSystemUuid().toString(), contextService.getStationIdentifier(),
+			configService.getLocal(Preferences.STATION_IDENT_TEXT, ""));
 		LockRequest lockRequest = new LockRequest(LockRequest.Type.INFO, lockInfo);
 		
 		return isLocked(lockRequest);
