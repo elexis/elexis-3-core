@@ -35,7 +35,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.nebula.cwt.animation.effects.SetAlpha;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Color;
@@ -68,8 +67,8 @@ import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.service.ContextServiceHolder;
-import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.IContact;
@@ -79,6 +78,7 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.holder.BillingServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.IActivationListener;
@@ -231,7 +231,7 @@ public class KonsDetailView extends ViewPart
 	void lockPreRelease(
 		@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_PRERELEASE) IEncounter encounter){
 		if (created) {
-			if (encounter.equals(actEncounter)) {
+			if (Objects.equal(encounter, actEncounter)) {
 				save();
 			}
 		}
@@ -283,9 +283,19 @@ public class KonsDetailView extends ViewPart
 		@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) IEncounter encounter){
 		if (created) {
 			if (Objects.equal(encounter, actEncounter)) {
-				setKons(encounter);
-				setUnlocked(true);
-				refreshContributionItemState();
+				IEncounter db_encounter = CoreModelServiceHolder.get()
+					.load(encounter.getId(), IEncounter.class, false, true).get();
+				long db_lastupdate = db_encounter.getLastupdate();
+				if (db_lastupdate > actEncounter.getLastupdate()) {
+					CoreOperationAdvisorHolder.get().openInformation("Encounter changed",
+						"The encounter was updated. Reloading.");
+					text.setDirty(false);
+					LocalLockServiceHolder.get().releaseLock(encounter);
+					setKons(encounter);
+				} else {
+					setUnlocked(true);
+					refreshContributionItemState();
+				}
 			}
 		}
 	}
@@ -295,7 +305,6 @@ public class KonsDetailView extends ViewPart
 		@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_RELEASED) IEncounter encounter){
 		if (created) {
 			if (Objects.equal(encounter, actEncounter)) {
-				save();
 				setUnlocked(false);
 				refreshContributionItemState();
 			}
