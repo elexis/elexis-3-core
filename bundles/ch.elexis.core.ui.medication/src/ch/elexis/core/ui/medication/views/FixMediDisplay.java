@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.medication.views;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -39,18 +41,22 @@ import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IArticleDefaultSignature;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.builder.IPrescriptionBuilder;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.LocalLockServiceHolder;
+import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.RestrictedAction;
-import ch.elexis.core.ui.dialogs.ArticleDefaultSignatureTitleAreaDialog;
 import ch.elexis.core.ui.dialogs.MediDetailDialog;
+import ch.elexis.core.ui.dialogs.PrescriptionSignatureTitleAreaDialog;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.medication.handlers.PrintRecipeHandler;
@@ -352,10 +358,58 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 			public void run(){
 				IPrescription pr = getSelection();
 				if (pr != null) {
-					ArticleDefaultSignatureTitleAreaDialog adtad =
-						new ArticleDefaultSignatureTitleAreaDialog(UiDesk.getTopShell(), pr);
-					adtad.open();
+					PrescriptionSignatureTitleAreaDialog adtad =
+						new PrescriptionSignatureTitleAreaDialog(UiDesk.getTopShell(),
+							pr.getArticle());
+					adtad.setMedicationTypeFix(true);
+					adtad.lookup();
+					if (adtad.open() == Window.OK) {
+						IArticleDefaultSignature signature = adtad.getSignature();
+						if (signature != null) {
+							applySignature(signature, pr);
+						}
+					}
 				}
+			}
+			
+			private void applySignature(IArticleDefaultSignature signature,
+				IPrescription prescription){
+				AcquireLockBlockingUi.aquireAndRun(prescription, new ILockHandler() {
+					@Override
+					public void lockAcquired(){
+						
+						// creates a history entry for a prescription, stops the old one with current date
+						IPrescription oldPrescription = prescription;
+						IPrescription newPrescription =
+							MedicationServiceHolder.get().createPrescriptionCopy(oldPrescription);
+						if (LocalLockServiceHolder.get().acquireLock(newPrescription).isOk()) {
+							
+							newPrescription
+								.setDosageInstruction(signature.getSignatureAsDosisString());
+							newPrescription.setRemark(signature.getComment());
+							newPrescription.setEntryType(signature.getMedicationType());
+							CoreModelServiceHolder.get().save(newPrescription);
+							
+							MedicationServiceHolder.get().stopPrescription(oldPrescription,
+								LocalDateTime.now(),
+								"Geändert durch " + CoreHub.getLoggedInContact().getLabel());
+							CoreModelServiceHolder.get().save(oldPrescription);
+							LocalLockServiceHolder.get().releaseLock(newPrescription);
+							
+							ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
+								oldPrescription);
+							ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
+								newPrescription);
+						}
+					}
+					
+					@Override
+					public void lockFailed(){
+						// do nothing
+						
+					}
+				});
+				
 			}
 		};
 		
