@@ -35,9 +35,7 @@ public class KontaktDetailView extends ViewPart implements ISaveablePart2 {
 		parent.setLayout(new FillLayout());
 		kb = new KontaktBlatt(parent, SWT.NONE, getViewSite());
 		ViewMenus menu = new ViewMenus(getViewSite());
-		menu.createMenu(GlobalActions.printKontaktEtikette);
 		menu.createToolbar(GlobalActions.printKontaktEtikette);
-		
 	}
 	
 	@Override
