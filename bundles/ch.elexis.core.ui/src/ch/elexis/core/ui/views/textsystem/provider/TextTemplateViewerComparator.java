@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.views.textsystem.provider;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
@@ -53,6 +54,13 @@ public class TextTemplateViewerComparator extends ViewerComparator {
 			}
 			break;
 		case 5:
+			String printertray1 = StringUtils.defaultString(template1.getPrinter()) + "/"
+				+ StringUtils.defaultString(template1.getTray());
+			String printertray2 = StringUtils.defaultString(template2.getPrinter()) + "/"
+				+ StringUtils.defaultString(template2.getTray());
+			rc = printertray1.compareTo(printertray2);
+			break;
+		case 6:
 			if (!template1.getDescription().isEmpty() || !template2.getDescription().isEmpty()) {
 				rc = template1.getDescription().compareToIgnoreCase(template2.getDescription());
 			}
