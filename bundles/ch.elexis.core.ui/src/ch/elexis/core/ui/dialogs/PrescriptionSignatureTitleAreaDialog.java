@@ -22,6 +22,7 @@ public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
 	private Button btnAsDefault;
 	private IArticleDefaultSignature signature;
 	private boolean medicationTypeFix;
+	private boolean performLookup;
 	
 	/**
 	 * Create the dialog.
@@ -64,13 +65,15 @@ public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
 		adsc.setToolbarVisible(false);
 		adsc.setOnLocationEnabled(false);
 		adsc.setArticleToBind(article, false);
+		if (performLookup) {
+			adsc.setArticleToBind(article, true);
+		}
 		if (signature != null) {
 			adsc.setSignature(signature);
 		}
 		if (medicationTypeFix) {
 			adsc.setMedicationTypeFix();
 		}
-		
 		return area;
 	}
 	
@@ -97,6 +100,17 @@ public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
 	
 	public void setMedicationTypeFix(boolean value){
 		this.medicationTypeFix = value;
+	}
+	
+	/**
+	 * Perform lookup for existing signature, and set its content if found.
+	 */
+	public void lookup(){
+		if (adsc != null && !adsc.isDisposed()) {
+			adsc.setArticleToBind(article, true);
+		} else {
+			performLookup = true;
+		}
 	}
 	
 	/**
