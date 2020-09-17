@@ -19,6 +19,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.Action;
@@ -72,11 +73,10 @@ import org.eclipse.ui.statushandlers.StatusManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.AccessControlDefaults;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
@@ -94,6 +94,7 @@ import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IService;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.IBillingService;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -102,6 +103,7 @@ import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.dialogs.ResultDialog;
+import ch.elexis.core.ui.dialogs.StatusDialog;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.IUnlockable;
@@ -543,7 +545,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				o = presc.getArtikel();
 			}
 			if (o instanceof IVerrechenbar) {
-				if (CoreHub.acl.request(AccessControlDefaults.LSTG_VERRECHNEN) == false) {
+				if (AccessControlServiceHolder.get().request(AccessControlDefaults.LSTG_VERRECHNEN) == false) {
 					SWTHelper.alert(Messages.VerrechnungsDisplay_missingRightsCaption, //$NON-NLS-1$
 						Messages.VerrechnungsDisplay_missingRightsBody); //$NON-NLS-1$
 				} else {
@@ -1061,11 +1063,10 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 							"Wenn der Preis bereits geändert wurde, darf die Anzahl nur ganzzahlig sein.");
 						return;
 					}
-					double diff = changeAnzahl - billed.getAmount();
-					Result<?> result =
-						BillingServiceHolder.get().bill(billable, actEncounter, diff);
-					if(!result.isOK()) {
-						ResultDialog.show(result);
+					
+					IStatus status = BillingServiceHolder.get().changeAmountValidated(billed, changeAnzahl);
+					if(!status.isOK()) {
+						StatusDialog.show(status);
 						return;
 					}
 					billed.setText(text);
@@ -1094,6 +1095,6 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	}
 	
 	public void adaptMenus(){
-		table.getMenu().setEnabled(CoreHub.acl.request(AccessControlDefaults.LSTG_VERRECHNEN));
+		table.getMenu().setEnabled(AccessControlServiceHolder.get().request(AccessControlDefaults.LSTG_VERRECHNEN));
 	}
 }

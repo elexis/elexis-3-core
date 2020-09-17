@@ -40,6 +40,7 @@ public class IBillingServiceTest extends AbstractServiceTest {
 	private static ICustomService customService;
 	private static IArticle customArticle;
 	private static IEncounter encounter;
+	private static IStockEntry customArticleStockEntry;
 	
 	@BeforeClass
 	public static void beforeClass(){
@@ -56,6 +57,10 @@ public class IBillingServiceTest extends AbstractServiceTest {
 		customArticle.setTyp(ArticleTyp.EIGENARTIKEL);
 		coreModelService.save(customArticle);
 		
+		customArticleStockEntry = StockServiceHolder.get()
+			.storeArticleInStock(StockServiceHolder.get().getDefaultStock(), customArticle);
+		assertEquals(1, customArticleStockEntry.getCurrentStock());
+		
 		encounter = new IEncounterBuilder(CoreModelServiceHolder.get(),
 			AllServiceTests.getCoverage(), AllServiceTests.getMandator()).buildAndSave();
 	}
@@ -67,6 +72,9 @@ public class IBillingServiceTest extends AbstractServiceTest {
 	
 	@After
 	public void after(){
+		customArticleStockEntry.setCurrentStock(1);
+		coreModelService.save(customArticleStockEntry);
+		
 		cleanup();
 	}
 	
@@ -99,6 +107,8 @@ public class IBillingServiceTest extends AbstractServiceTest {
 		assertEquals(1, billedList.size());
 		assertEquals(1, billedList.get(0).getAmount(), 0d);
 		assertEquals(1024, billedList.get(0).getPrice().getCents());
+		
+		coreModelService.remove(billed.get());
 	}
 	
 	@Test
@@ -141,17 +151,34 @@ public class IBillingServiceTest extends AbstractServiceTest {
 	
 	@Test
 	public void billArticleAndDecrementStock(){
-		IStockEntry stockEntry = StockServiceHolder.get()
-			.storeArticleInStock(StockServiceHolder.get().getDefaultStock(), customArticle);
-		assertEquals(1, stockEntry.getCurrentStock());
-		
 		Result<IBilled> billed = billingService.bill(customArticle, encounter, 1.0);
 		assertTrue(billed.isOK());
 		CoreModelServiceHolder.get().remove(billed.get());
 		
-		stockEntry = StockServiceHolder.get().findStockEntryForArticleInStock(
+		IStockEntry stockEntry = StockServiceHolder.get().findStockEntryForArticleInStock(
 			StockServiceHolder.get().getDefaultStock(), customArticle);
 		assertEquals(0, stockEntry.getCurrentStock());
+	}
+	
+	@Test
+	public void changeAmountCorrectlyModifiesStock(){
+		customArticleStockEntry.setCurrentStock(8);
+		coreModelService.save(customArticleStockEntry);
+		
+		Result<IBilled> billed = billingService.bill(customArticle, encounter, 1.0);
+		assertTrue(billed.isOK());
+		
+		billingService.changeAmountValidated(billed.get(), 4);
+		IStockEntry stockEntry = StockServiceHolder.get().findStockEntryForArticleInStock(
+			StockServiceHolder.get().getDefaultStock(), customArticle);
+		assertEquals(4, stockEntry.getCurrentStock());
+		
+		billingService.changeAmountValidated(billed.get(), 3);
+		stockEntry = StockServiceHolder.get().findStockEntryForArticleInStock(
+			StockServiceHolder.get().getDefaultStock(), customArticle);
+		assertEquals(5, stockEntry.getCurrentStock());
+		
+		CoreModelServiceHolder.get().remove(billed.get());
 	}
 	
 }
