@@ -14,6 +14,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.util.BillingUtil;
+import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.views.rechnung.RnOutputDialog;
 import ch.elexis.data.Fall;
@@ -33,10 +34,10 @@ public class BillActiveEncounterHandler extends AbstractHandler implements IHand
 		if (selectedEncounter != null) {
 			Result<Konsultation> result = BillingUtil.getBillableResult(selectedEncounter);
 			if (result.isOK()) {
-				List<Result<Rechnung>> results =
+				List<Result<IInvoice>> results =
 					BillingUtil.createBills(getBillMap(selectedEncounter));
 				if (!results.isEmpty() && results.get(0).isOK()) {
-					Rechnung invoice = results.get(0).get();
+					Rechnung invoice = Rechnung.load(results.get(0).get().getId());
 					new RnOutputDialog(UiDesk.getTopShell(), Collections.singletonList(invoice))
 						.open();
 				}

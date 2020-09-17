@@ -3,6 +3,7 @@ package ch.elexis.core.services;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +28,7 @@ import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.builder.IAccountTransactionBuilder;
 import ch.elexis.core.model.builder.IInvoiceBilledBuilder;
+import ch.elexis.core.model.builder.IPaymentBuilder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -257,8 +259,36 @@ public class InvoiceService implements IInvoiceService {
 	
 	@Override
 	public List<IEncounter> cancel(IInvoice invoice, boolean reopen){
-		// TODO Auto-generated method stub
-		return null;
+		InvoiceState invoiceState = invoice.getState();
+		List<IEncounter> ret = Collections.emptyList();
+		if (!InvoiceState.CANCELLED.equals(invoiceState)
+			&& !InvoiceState.DEPRECIATED.equals(invoiceState)) {
+			Money amount = invoice.getTotalAmount();
+			new IPaymentBuilder(CoreModelServiceHolder.get(), invoice, amount, "Storno")
+				.buildAndSave();
+			if (reopen) {
+				ret = removeEncounters(invoice);
+				
+				invoice.setState(InvoiceState.CANCELLED);
+				CoreModelServiceHolder.get().save(invoice);
+			} else {
+				invoice.setState(InvoiceState.DEPRECIATED);
+				CoreModelServiceHolder.get().save(invoice);
+			}
+		} else if (reopen && InvoiceState.CANCELLED.equals(invoiceState)) {
+			// if bill is canceled ensure that all kons are opened
+			ret = removeEncounters(invoice);
+		}
+		return ret;
+	}
+	
+	private List<IEncounter> removeEncounters(IInvoice invoice){
+		List<IEncounter> encounters = invoice.getEncounters();
+		for (IEncounter iEncounter : encounters) {
+			iEncounter.setInvoice(null);
+		}
+		CoreModelServiceHolder.get().save(encounters);
+		return encounters;
 	}
 	
 	@Override

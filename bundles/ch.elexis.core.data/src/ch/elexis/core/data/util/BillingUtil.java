@@ -32,10 +32,12 @@ import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.EncounterServiceHolder;
+import ch.elexis.core.services.holder.InvoiceServiceHolder;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
@@ -383,14 +385,16 @@ public class BillingUtil {
 	 * @param toBillMap
 	 * @return
 	 */
-	public static List<Result<Rechnung>> createBills(
+	public static List<Result<IInvoice>> createBills(
 		Map<Rechnungssteller, Map<Fall, List<Konsultation>>> toBillMap){
-		List<Result<Rechnung>> ret = new ArrayList<>();
+		List<Result<IInvoice>> ret = new ArrayList<>();
 		Set<Rechnungssteller> invoicers = toBillMap.keySet();
 		for (Rechnungssteller invoicer : invoicers) {
 			Set<Fall> faelle = toBillMap.get(invoicer).keySet();
 			for (Fall fall : faelle) {
-				ret.add(Rechnung.build(toBillMap.get(invoicer).get(fall)));
+				List<IEncounter> encounters = NoPoUtil
+					.loadAsIdentifiable(toBillMap.get(invoicer).get(fall), IEncounter.class);
+				ret.add(InvoiceServiceHolder.get().invoice(encounters));
 			}
 		}
 		return ret;
@@ -934,7 +938,8 @@ public class BillingUtil {
 				historyEntryDTO.setIgnored(true);
 			} else {
 				
-				Result<Rechnung> rechnungResult = Rechnung.build(releasedKonsultations);
+				Result<IInvoice> rechnungResult = InvoiceServiceHolder.get()
+					.invoice(NoPoUtil.loadAsIdentifiable(releasedKonsultations, IEncounter.class));
 				if (!rechnungResult.isOK()) {
 					
 					for (@SuppressWarnings("rawtypes")
@@ -951,7 +956,7 @@ public class BillingUtil {
 						+ (rechnungResult.get() != null ? rechnungResult.get().getId() : "null"));
 					log.error("invoice correction: error details: " + output.toString());
 				} else {
-					Rechnung newRechnung = rechnungResult.get();
+					Rechnung newRechnung = Rechnung.load(rechnungResult.get().getId());
 					invoiceCorrectionDTO.setNewInvoiceNumber(newRechnung.getNr());
 					log.debug(
 						"invoice correction: create new invoice with number [{}] old invoice number [{}] ",

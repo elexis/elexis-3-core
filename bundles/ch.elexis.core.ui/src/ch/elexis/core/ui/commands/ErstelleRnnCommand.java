@@ -36,13 +36,16 @@ import org.eclipse.ui.handlers.IHandlerService;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.util.BillingUtil;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.data.util.ResultAdapter;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.InvoiceServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.rechnung.Messages;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
-import ch.elexis.data.Rechnung;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Tree;
 
@@ -67,7 +70,7 @@ public class ErstelleRnnCommand extends AbstractHandler {
 			throw new ExecutionException("Bad parameter " + pe.getMessage()); //$NON-NLS-1$
 		}
 		IProgressMonitor monitor = Handler.getMonitor(eev);
-		Result<Rechnung> res = null;
+		Result<IInvoice> res = null;
 		for (Tree tPat = tSelection.getFirstChild(); tPat != null; tPat = tPat.getNextSibling()) {
 			int rejected = 0;
 			for (Tree tFall = tPat.getFirstChild(); tFall != null; tFall = tFall.getNextSibling()) {
@@ -85,8 +88,9 @@ public class ErstelleRnnCommand extends AbstractHandler {
 					toBill.add((Konsultation) t.contents);
 				}
 				
-				Map<Integer, List<Konsultation>> sortedByYears =
-					BillingUtil.getSortedByYear(toBill);
+				Map<Integer, List<IEncounter>> sortedByYears =
+					BillingUtil.getSortedEncountersByYear(
+						NoPoUtil.loadAsIdentifiable(toBill, IEncounter.class));
 				if (!BillingUtil.canBillYears(new ArrayList<>(sortedByYears.keySet()))) {
 					StringJoiner sj = new StringJoiner(", ");
 					sortedByYears.keySet().forEach(i -> sj.add(Integer.toString(i)));
@@ -96,7 +100,7 @@ public class ErstelleRnnCommand extends AbstractHandler {
 							+ sj.toString() + " erstellen?")) {
 						// bill each year separately
 						for (Integer year : sortedByYears.keySet()) {
-							res = Rechnung.build(sortedByYears.get(year));
+							res = InvoiceServiceHolder.get().invoice(sortedByYears.get(year));
 							if (monitor != null) {
 								monitor.worked(1);
 							}
@@ -114,7 +118,8 @@ public class ErstelleRnnCommand extends AbstractHandler {
 						}
 					}
 				} else {
-					res = Rechnung.build(toBill);
+					res = InvoiceServiceHolder.get()
+						.invoice(NoPoUtil.loadAsIdentifiable(toBill, IEncounter.class));
 					if (monitor != null) {
 						monitor.worked(1);
 					}

@@ -33,6 +33,7 @@ import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.model.InvoiceState;
+import ch.elexis.core.services.IInvoiceService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.rgw.io.Settings;
 import ch.rgw.tools.JdbcLink;
@@ -101,6 +102,8 @@ public class Rechnung extends PersistentObject {
 	 * einen Rechnungssteller hat, werden alle Konsultationen ungeachtet des Mandanten verrechnet
 	 * 
 	 * @return Ein Result mit ggf. der erstellten Rechnung als Inhalt
+	 * 
+	 * @deprecated use {@link IInvoiceService} to create invoices instead
 	 */
 	public static Result<Rechnung> build(final List<Konsultation> behandlungen){
 		System.out.println("js Rechnung: build() begin");
@@ -389,6 +392,7 @@ public class Rechnung extends PersistentObject {
 	 *            freigegeben, andernfalls bleiben sie abgeschlossen.
 	 * @return if reopen is true the released konsultations from the bill will be returned
 	 * @since 3.3
+	 * @deprecated {@link IInvoiceService} to cancel invoices instead
 	 */
 	public List<Konsultation> stornoBill(final boolean reopen){
 		InvoiceState invoiceState = InvoiceState.fromState(getStatus());
