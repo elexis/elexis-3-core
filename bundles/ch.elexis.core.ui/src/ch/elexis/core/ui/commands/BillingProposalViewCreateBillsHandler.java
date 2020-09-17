@@ -37,10 +37,10 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.util.BillingUtil;
+import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.ui.views.rechnung.BillingProposalView;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
-import ch.elexis.data.Rechnung;
 import ch.elexis.data.Rechnungssteller;
 import ch.rgw.tools.Result;
 
@@ -88,14 +88,14 @@ public class BillingProposalViewCreateBillsHandler extends AbstractHandler imple
 						BillingUtil.getGroupedBillable(billable);
 					monitor.worked(1);
 					// create all bills
-					List<Result<Rechnung>> results = BillingUtil.createBills(toBillMap);
+					List<Result<IInvoice>> results = BillingUtil.createBills(toBillMap);
 					// build information to show
-					for (Result<Rechnung> result : results) {
+					for (Result<IInvoice> result : results) {
 						if (result.isOK()) {
 							successful++;
 						} else {
 							errorneousInfo.append(result.getSeverity()).append(" -> ");
-							List<Result<Rechnung>.msg> messages = result.getMessages();
+							List<Result<IInvoice>.msg> messages = result.getMessages();
 							for (int i = 0; i < messages.size(); i++) {
 								if (i > 0) {
 									errorneousInfo.append(" / ");

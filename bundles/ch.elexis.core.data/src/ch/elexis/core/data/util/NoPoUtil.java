@@ -99,7 +99,7 @@ public class NoPoUtil {
 	 * @param type
 	 * @return
 	 */
-	public static <T> List<T> loadAsIdentifiable(List<PersistentObject> persistentObjects,
+	public static <T> List<T> loadAsIdentifiable(List<? extends PersistentObject> persistentObjects,
 		Class<T> type){
 		if (persistentObjects != null && !persistentObjects.isEmpty()) {
 			List<T> ret = new ArrayList<>();

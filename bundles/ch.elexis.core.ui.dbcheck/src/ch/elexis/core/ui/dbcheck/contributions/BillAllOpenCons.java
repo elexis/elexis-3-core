@@ -12,16 +12,17 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.widgets.Display;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.InvoiceServiceHolder;
 import ch.elexis.core.ui.dbcheck.contributions.dialogs.SelectBillingStrategyDialog;
 import ch.elexis.core.ui.dbcheck.external.ExternalMaintenance;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Query;
-import ch.elexis.data.Rechnung;
 import ch.elexis.data.Rechnungssteller;
 import ch.rgw.tools.TimeTool;
 
@@ -41,7 +42,8 @@ public class BillAllOpenCons extends ExternalMaintenance {
 					TimeTool now = new TimeTool();
 					for (Fall fall : qre) {
 						if (fall.isOpen()) {
-							Rechnung.build(Arrays.asList(fall.getBehandlungen(false)));
+							InvoiceServiceHolder.get().invoice(NoPoUtil.loadAsIdentifiable(
+								Arrays.asList(fall.getBehandlungen(false)), IEncounter.class));
 							fall.setEndDatum(now.toString(TimeTool.DATE_GER));
 							count++;
 						}
@@ -124,7 +126,8 @@ public class BillAllOpenCons extends ExternalMaintenance {
 							getConsultationByRechnungssteller(fall);
 						Set<Rechnungssteller> keys = consByRechnungssteller.keySet();
 						for (Rechnungssteller key : keys) {
-							Rechnung.build(consByRechnungssteller.get(key));
+							InvoiceServiceHolder.get().invoice(NoPoUtil.loadAsIdentifiable(
+								consByRechnungssteller.get(key), IEncounter.class));
 						}
 						fall.setEndDatum(new TimeTool().toString(TimeTool.DATE_GER));
 						LocalLockServiceHolder.get().releaseLock((fall));
