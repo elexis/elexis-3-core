@@ -1,9 +1,11 @@
 package ch.elexis.core.services.holder;
 
+import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import ch.elexis.core.services.IAccessControlService;
 
+@Component
 public class AccessControlServiceHolder {
 	
 	private static IAccessControlService accessControlService;
