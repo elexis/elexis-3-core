@@ -335,8 +335,13 @@ public class BillingService implements IBillingService {
 		if (billable instanceof IArticle) {
 			IArticle art = (IArticle) billable;
 			String mandatorId = contextService.getActiveMandator().map(m -> m.getId()).orElse(null);
-			stockService.performSingleReturn(art, (int) oldAmount, mandatorId);
-			stockService.performSingleDisposal(art, (int) newAmount, mandatorId);
+			double difference = newAmount - oldAmount;
+			if(difference > 0) {
+				stockService.performSingleDisposal(art, (int) difference, mandatorId);
+			} else if (difference < 0) {
+				difference *= -1;
+				stockService.performSingleReturn(art, (int) difference, mandatorId);
+			}
 		}
 	}
 }

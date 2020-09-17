@@ -69,6 +69,9 @@ public class StockService implements IStockService {
 	
 	@Override
 	public IStatus performSingleDisposal(IArticle article, int count, String mandatorId){
+		if (count < 0) {
+			throw new IllegalArgumentException();
+		}
 		if (article == null) {
 			return new Status(Status.ERROR, "ch.elexis.core.services", "Article is null");
 		}
@@ -144,6 +147,9 @@ public class StockService implements IStockService {
 	
 	@Override
 	public IStatus performSingleReturn(IArticle article, int count, String mandatorId){
+		if (count < 0) {
+			throw new IllegalArgumentException();
+		}
 		if (article == null) {
 			return new Status(Status.ERROR, "ch.elexis.core.services", "Article is null");
 		}
