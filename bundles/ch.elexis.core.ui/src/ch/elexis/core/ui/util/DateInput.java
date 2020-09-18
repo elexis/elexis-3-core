@@ -15,14 +15,15 @@ package ch.elexis.core.ui.util;
 import java.util.Date;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-import ch.rgw.tools.TimeTool;
-
 import com.tiff.common.ui.datepicker.DatePickerCombo;
+
+import ch.rgw.tools.TimeTool;
 
 public class DateInput extends Composite {
 	DatePickerCombo dpc;
@@ -65,5 +66,9 @@ public class DateInput extends Composite {
 	
 	public void setDate(TimeTool date){
 		dpc.setDate(date.getTime());
+	}
+	
+	public void addSelectionListener(SelectionListener listener){
+		dpc.addSelectionListener(listener);
 	}
 }
