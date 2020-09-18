@@ -618,8 +618,10 @@ public class BillingUtil {
 		private void removeDiagnose(Object base, Object item){
 			konsultation = Konsultation.load(((KonsultationDTO) base).getId());
 			diagnosesDTO = (DiagnosesDTO) item;
-			NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get()
-				.removeDiagnosis(diagnosesDTO.getiDiagnose());
+			IEncounter encounter =
+				NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get();
+			encounter.removeDiagnosis(diagnosesDTO.getiDiagnose());
+			CoreModelServiceHolder.get().save(encounter);
 			log.debug("invoice correction: removed diagnose id [{}] from kons id [{}]",
 				diagnosesDTO.getId(), konsultation.getId());
 		}
@@ -627,8 +629,10 @@ public class BillingUtil {
 		private void addDiagnose(Object base, Object item){
 			konsultation = Konsultation.load(((KonsultationDTO) base).getId());
 			diagnosesDTO = (DiagnosesDTO) item;
-			NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get()
-				.addDiagnosis(diagnosesDTO.getiDiagnose());
+			IEncounter encounter =
+				NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get();
+			encounter.addDiagnosis(diagnosesDTO.getiDiagnose());
+			CoreModelServiceHolder.get().save(encounter);
 			log.debug("invoice correction: added diagnose id [{}] to kons id [{}]",
 				diagnosesDTO.getId(), konsultation.getId());
 		}

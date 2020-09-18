@@ -49,6 +49,8 @@ public class KonsultationDTO {
 		IEncounter copy = CoreModelServiceHolder.get().create(IEncounter.class);
 		copy.setDate(new TimeTool(date).toLocalDate());
 		copy.setMandator(NoPoUtil.loadAsIdentifiable(mandant, IMandator.class).get());
+		copy.setCoverage(
+			CoreModelServiceHolder.get().load(id, IEncounter.class).get().getCoverage());
 		
 		return copy;
 	}
