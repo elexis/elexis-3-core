@@ -86,6 +86,7 @@ public class DBConnectNewOrEditConnectionWizardPage extends DBConnectWizardPage 
 				
 				getDBConnectWizard().getTargetedConnection().rdbmsType = selection;
 				getDBConnectWizard().getTargetedConnection().port = selection.defaultPort;
+				updateButtons();
 			}
 		});
 		Combo comboDBType = comboViewerDBType.getCombo();
@@ -103,6 +104,7 @@ public class DBConnectNewOrEditConnectionWizardPage extends DBConnectWizardPage 
 			@Override
 			public void modifyText(ModifyEvent e){
 				getDBConnectWizard().getTargetedConnection().databaseName = txtDBName.getText();
+				updateButtons();
 			}
 		});
 		
@@ -116,6 +118,7 @@ public class DBConnectNewOrEditConnectionWizardPage extends DBConnectWizardPage 
 			@Override
 			public void modifyText(ModifyEvent e){
 				getDBConnectWizard().getTargetedConnection().hostName = txtDBHost.getText();
+				updateButtons();
 			}
 		});
 		
@@ -129,6 +132,7 @@ public class DBConnectNewOrEditConnectionWizardPage extends DBConnectWizardPage 
 			@Override
 			public void modifyText(ModifyEvent e){
 				getDBConnectWizard().getTargetedConnection().port = txtDBPort.getText();
+				updateButtons();
 			}
 		});
 		
@@ -142,6 +146,7 @@ public class DBConnectNewOrEditConnectionWizardPage extends DBConnectWizardPage 
 			@Override
 			public void modifyText(ModifyEvent e){
 				getDBConnectWizard().getTargetedConnection().username = txtDBUsername.getText();
+				updateButtons();
 			}
 		});
 		
@@ -155,6 +160,7 @@ public class DBConnectNewOrEditConnectionWizardPage extends DBConnectWizardPage 
 			@Override
 			public void modifyText(ModifyEvent e){
 				getDBConnectWizard().getTargetedConnection().password = txtDBPassword.getText();
+				updateButtons();
 			}
 		});
 		new Label(group, SWT.NONE);
