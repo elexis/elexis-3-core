@@ -10,6 +10,7 @@
  ******************************************************************************/
 package ch.elexis.core.ui.wizards;
 
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
 
@@ -34,5 +35,11 @@ public class DBConnectWizardPage extends WizardPage {
 	
 	public TestDBConnectionGroup getTdbg(){
 		return tdbg;
+	}
+	
+	protected void updateButtons(){
+		if (getWizard() != null && getWizard().getContainer() instanceof WizardDialog) {
+			((WizardDialog) getWizard().getContainer()).updateButtons();
+		}
 	}
 }
