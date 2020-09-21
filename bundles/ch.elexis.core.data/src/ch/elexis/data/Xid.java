@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
+
 import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IPersistentObject;
@@ -93,6 +95,7 @@ public class Xid extends PersistentObject implements IXid {
 		domains = new HashMap<String, XIDDomain>();
 		domainMap = new HashMap<String, String>();
 		String storedDomains = CoreHub.globalCfg.get("LocalXIDDomains", null);
+		log.log("XID Domains [" + storedDomains + "]", Log.ERRORS);
 		if (storedDomains == null) {
 			domains.put(ELEXIS, new XIDDomain(ELEXIS, "UUID", ELEXIS_QUALITY | QUALITY_GUID,
 					PersistentObject.class.getCanonicalName()));
@@ -120,6 +123,7 @@ public class Xid extends PersistentObject implements IXid {
 					displayOptions));
 				domainMap.put(simpleName, spl[0]);
 			}
+			log.log("XID Domains [" + domains.size() + "]", Log.ERRORS);
 		}
 		VersionInfo vv = new ch.rgw.tools.VersionInfo(CoreHub.Version);
 		if (vv.isOlder("1.3.2")) {
@@ -328,6 +332,7 @@ public class Xid extends PersistentObject implements IXid {
 	 */
 	public static boolean localRegisterXIDDomain(final String domain, String simpleName,
 		final int quality){
+		log.log("XID Domain [" + domain + "] in [" + domains.size() + "]", Log.ERRORS);
 		if (domains.containsKey(domain)) {
 			log.log("XID Domain " + domain + " bereits registriert", Log.ERRORS);
 		} else {
@@ -448,20 +453,16 @@ public class Xid extends PersistentObject implements IXid {
 		String domain_name;
 		String simple_name;
 		int quality;
-		ArrayList<Class<? extends PersistentObject>> displayOptions =
+		
+		private String options;
+		private ArrayList<Class<? extends PersistentObject>> displayOptions =
 			new ArrayList<Class<? extends PersistentObject>>();
 		
-		@SuppressWarnings("unchecked")
 		public XIDDomain(String dname, String simplename, int quality, String options){
 			domain_name = dname;
 			simple_name = simplename;
 			this.quality = quality;
-			for (String op : options.split(",")) {
-				try {
-					Class clazz = Class.forName(op);
-					displayOptions.add(clazz);
-				} catch (Exception ex) {}
-			}
+			this.options = options;
 		}
 		
 		public String getSimpleName(){
@@ -481,25 +482,40 @@ public class Xid extends PersistentObject implements IXid {
 			return quality;
 		}
 		
+		@SuppressWarnings({
+			"unchecked", "rawtypes"
+		})
+		private List<Class<? extends PersistentObject>> displayOptions(){
+			if (displayOptions.isEmpty() && StringUtils.isNotEmpty(options)) {
+				for (String op : options.split(",")) {
+					try {
+						Class clazz = Class.forName(op);
+						displayOptions.add(clazz);
+					} catch (Exception ex) {}
+				}
+			}
+			return displayOptions;
+		}
+		
 		public void addDisplayOption(Class<? extends PersistentObject> clazz){
-			if (!displayOptions.contains(clazz)) {
-				displayOptions.add(clazz);
+			if (!displayOptions().contains(clazz)) {
+				displayOptions().add(clazz);
 				storeDomains();
 			}
 		}
 		
 		public void removeDisplayOption(Class<? extends PersistentObject> clazz){
-			displayOptions.remove(clazz);
+			displayOptions().remove(clazz);
 			storeDomains();
 		}
 		
 		public boolean isDisplayedFor(Class<? extends PersistentObject> clazz){
-			return displayOptions.contains(clazz);
+			return displayOptions().contains(clazz);
 		}
 		
 		String getDisplayOptions(){
 			StringBuilder r = new StringBuilder();
-			for (Class<? extends PersistentObject> clazz : displayOptions) {
+			for (Class<? extends PersistentObject> clazz : displayOptions()) {
 				r.append(clazz.getName()).append(",");
 			}
 			return r.toString();
