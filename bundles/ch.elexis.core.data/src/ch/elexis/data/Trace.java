@@ -2,6 +2,8 @@ package ch.elexis.data;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
@@ -18,39 +20,46 @@ public class Trace {
 	
 	public static final String TABLENAME = "traces";
 	
-	public static void addTraceEntry(String username, String workstation, String action){
-		if (StringUtils.isEmpty(username)) {
-			IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
-			if (user != null) {
-				username = user.getId();
+	private static ExecutorService executor = Executors.newSingleThreadExecutor();
+	
+	public static void addTraceEntry(final String username, final String workstation,
+		final String action){
+		executor.execute(() -> {
+			String _username = username;
+			if (StringUtils.isEmpty(username)) {
+				IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
+				if (user != null) {
+					_username = user.getId();
+				}
 			}
-		}
-		String _username =
-			(StringUtils.isEmpty(username)) ? "unknown" : StringUtils.abbreviate(username, 30);
-		
-		if (StringUtils.isEmpty(workstation)) {
-			workstation = NetTool.hostname;
-		}
-		String _workstation = (StringUtils.isEmpty(workstation)) ? "unknown"
-				: StringUtils.abbreviate(workstation, 40);
-		String _action = (StringUtils.isEmpty(action)) ? "" : action;
-		
-		JdbcLink connection = PersistentObject.getConnection();
-		
-		String insertStatement = "INSERT INTO " + TABLENAME + " VALUES(?, ?, ?, ?)";
-		
-		PreparedStatement statement = connection.getPreparedStatement(insertStatement);
-		try {
-			statement.setLong(1, System.currentTimeMillis());
-			statement.setString(2, _workstation);
-			statement.setString(3, _username);
-			statement.setString(4, _action);
-			statement.execute();
-		} catch (SQLException e) {
-			LoggerFactory.getLogger(Trace.class).error("Catched this - FIX IT", e);
-		} finally {
-			connection.releasePreparedStatement(statement);
-		}
+			_username = (StringUtils.isEmpty(_username)) ? "unknown"
+					: StringUtils.abbreviate(_username, 30);
+			
+			String _workstation = workstation;
+			if (StringUtils.isEmpty(workstation)) {
+				_workstation = NetTool.hostname;
+			}
+			_workstation = (StringUtils.isEmpty(_workstation)) ? "unknown"
+					: StringUtils.abbreviate(_workstation, 40);
+			String _action = (StringUtils.isEmpty(action)) ? "" : action;
+			
+			JdbcLink connection = PersistentObject.getConnection();
+			
+			String insertStatement = "INSERT INTO " + TABLENAME + " VALUES(?, ?, ?, ?)";
+			
+			PreparedStatement statement = connection.getPreparedStatement(insertStatement);
+			try {
+				statement.setLong(1, System.currentTimeMillis());
+				statement.setString(2, _workstation);
+				statement.setString(3, _username);
+				statement.setString(4, _action);
+				statement.execute();
+			} catch (SQLException e) {
+				LoggerFactory.getLogger(Trace.class).error("Catched this - FIX IT", e);
+			} finally {
+				connection.releasePreparedStatement(statement);
+			}
+		});
 	}
 	
 	public static void addTraceEntry(String action){
