@@ -17,8 +17,10 @@ public class Test_Trace extends AbstractPersistentObjectTest {
 	}
 	
 	@Test
-	public void testAddTraceEntry() throws SQLException{
+	public void testAddTraceEntry() throws SQLException, InterruptedException{
 		Trace.addTraceEntry("testUser", "testWorkstation", "testAction");
+		// trace is written async
+		Thread.sleep(10);
 		
 		Stm statement = link.getStatement();
 		ResultSet rs = statement
