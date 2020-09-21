@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +31,7 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IQuery.COMPARATOR;
@@ -38,6 +41,7 @@ import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.utils.CoreUtil;
 import ch.rgw.io.Settings;
 import ch.rgw.io.SysSettings;
+import ch.rgw.tools.net.NetTool;
 
 @Component
 public class ConfigService implements IConfigService {
@@ -54,6 +58,8 @@ public class ConfigService implements IConfigService {
 	
 	private Map<Object, LocalLock> managedLocks;
 	
+	private ExecutorService traceExecutor;
+	
 	@Activate
 	public void activate(){
 		validateConfiguredDatabaseLocale();
@@ -63,6 +69,8 @@ public class ConfigService implements IConfigService {
 		localConfig = cfg;
 		
 		managedLocks = new HashMap<>();
+		
+		traceExecutor = Executors.newSingleThreadExecutor();
 	}
 	
 	@Deactivate
@@ -70,6 +78,8 @@ public class ConfigService implements IConfigService {
 		SysSettings localCfg = (SysSettings) localConfig;
 		localCfg
 			.write_xml(CoreUtil.getWritableUserDir() + File.separator + getLocalConfigFileName());
+		
+		traceExecutor.shutdown();
 	}
 	
 	private String getLocalConfigFileName(){
@@ -109,13 +119,38 @@ public class ConfigService implements IConfigService {
 			IConfig _entry = entry.orElse(modelService.create(IConfig.class));
 			_entry.setKey(key);
 			_entry.setValue(value);
+			addTraceEntry("W globalCfg key [" + key + "] => value [" + value + "]");
 			return modelService.save(_entry);
 		} else {
 			if (entry.isPresent()) {
+				addTraceEntry("W globalCfg key [" + key + "] => removed");
 				return modelService.remove(entry.get());
 			}
 		}
 		return false;
+	}
+	
+	private void addTraceEntry(String action){
+		traceExecutor.execute(()-> {
+			String username = "unknown";
+				IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
+				if (user != null) {
+					username = StringUtils.abbreviate(user.getId(), 30);
+				}
+			
+			String workstation = "unknown";
+			if (StringUtils.isEmpty(workstation)) {
+				workstation = StringUtils.abbreviate(NetTool.hostname, 40);
+			}
+			String _action = (StringUtils.isEmpty(action)) ? "" : action;
+			
+			String insertStatement =
+				"INSERT INTO TRACES (logtime, workstation, username, action) VALUES("
+					+ System.currentTimeMillis() + ", '" + workstation + "', '" + username + "', '"
+					+ _action + "')";
+			
+			modelService.executeNativeUpdate(insertStatement, false);
+		});
 	}
 	
 	@Override
@@ -190,9 +225,13 @@ public class ConfigService implements IConfigService {
 					return ret;
 				});
 				config.setValue(value);
+				addTraceEntry("W userCfg [" + contact.getId() + "] key [" + key + "] => value ["
+					+ value + "]");
 				return CoreModelServiceHolder.get().save(config);
 			} else {
 				if (loaded.isPresent()) {
+					addTraceEntry(
+						"W userCfg [" + contact.getId() + "] key [" + key + "] => removed");
 					return CoreModelServiceHolder.get().remove(loaded.get());
 				}
 			}
