@@ -257,8 +257,7 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 		viewmenus = new ViewMenus(getViewSite());
 		viewmenus.createToolbar(newAction, dailyWizardAction, wizardAction, loadAction, printAction,
 			sendAction);
-		viewmenus.createMenu(newAction, dailyWizardAction, wizardAction, loadAction, printAction,
-			sendAction, exportClipboardAction);
+		viewmenus.createMenu(exportClipboardAction);
 		viewmenus.createViewerContextMenu(tv, new IAction[] {
 			removeAction
 		});
