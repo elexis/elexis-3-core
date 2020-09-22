@@ -283,6 +283,7 @@
                commandId="ch.elexis.core.ui.PrintBillingProposalView"
                icon="icon://IMG_PRINTER"
                label="Rechnungs-Vorschlag drucken"
+               tooltip="Rechnungs-Vorschlag drucken"
                style="push">
          </command>
       </menuContribution>
