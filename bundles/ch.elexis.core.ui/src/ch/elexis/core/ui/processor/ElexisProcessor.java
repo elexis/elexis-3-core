@@ -66,7 +66,7 @@ public class ElexisProcessor {
 		"ch.elexis.core.ui.medication.views.MedicationView", "ch.elexis.icpc.encounterView",
 		"ch.elexis.icpc.episodesView", "ch.elexis.omnivore.views.OmnivoreView",
 		"ch.elexis.omnivoredirect_view", "ch.elexis.schoebufaelle", "ch.elexis.HistoryView",
-		"ch.elexis.core.ui.documents.views.DocumentsView"
+		"ch.elexis.core.ui.documents.views.DocumentsView", "at.medevit.elexis.outbox.ui.view"
 	};
 	
 	private String[] e4ViewIds = {
