@@ -298,6 +298,8 @@ public class Messages {
 	public static String InvoiceListHeaderComposite_btnNewButton_text = ch.elexis.core.l10n.Messages.InvoiceListHeaderComposite_btnNewButton_text;
 	public static String InvoiceListHeaderComposite_btnLimit_toolTipText = ch.elexis.core.l10n.Messages.InvoiceListHeaderComposite_btnLimit_toolTipText;
 	public static String InvoiceListHeaderComposite_limitControlDecoration_descriptionText = ch.elexis.core.l10n.Messages.InvoiceListHeaderComposite_limitControlDecoration_descriptionText;
+	public static String InvoiceListHeaderComposite_queryLimit_toolTipText =
+		ch.elexis.core.l10n.Messages.InvoiceListHeaderComposite_queryLimit_toolTipText;
 	public static String StatusAendernDialog_btnStatusTemporrndern_text = ch.elexis.core.l10n.Messages.StatusAendernDialog_btnStatusTemporrndern_text;
 	public static String StatusAendernDialog_btnCheckButton_text = ch.elexis.core.l10n.Messages.StatusAendernDialog_btnCheckButton_text;
 	public static String InvoiceListHeaderComposite_txtAmount_toolTipText = ch.elexis.core.l10n.Messages.InvoiceListHeaderComposite_txtAmount_toolTipText;

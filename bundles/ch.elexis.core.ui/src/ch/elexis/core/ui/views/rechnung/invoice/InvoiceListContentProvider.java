@@ -164,8 +164,8 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			boolean limitReached = (queryLimit > 0 && countInvoicesWoLimit >= queryLimit);
 			if (limitReached) {
 				invoiceListHeaderComposite.setLimitWarning(queryLimit);
-				MessageDialog.openInformation(UiDesk.getTopShell(), "Query-Limit reached",
-					"Query limit of set. You will only see the first " + queryLimit + " results.");
+				MessageDialog.openInformation(UiDesk.getTopShell(), "Limit", String.format(
+					Messages.InvoiceListHeaderComposite_queryLimit_toolTipText, queryLimit));
 			} else {
 				invoiceListHeaderComposite.setLimitWarning(null);
 				structuredViewer.getTable().setItemCount(countInvoicesWoLimit);

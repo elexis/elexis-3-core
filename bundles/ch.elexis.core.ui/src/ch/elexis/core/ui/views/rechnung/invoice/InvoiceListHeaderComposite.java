@@ -350,7 +350,8 @@ public class InvoiceListHeaderComposite extends Composite {
 			float val = queryLimit / 1000f;
 			lblLimitWarn.setText(val + "k");
 			lblLimitWarn.setToolTipText(
-				"Result set was limited to " + queryLimit + ", you do not see all results!");
+				String.format(Messages.InvoiceListHeaderComposite_queryLimit_toolTipText,
+					queryLimit));
 			lblLimitWarn.setBackground(UiDesk.getColor(UiDesk.COL_RED));
 		} else {
 			lblLimitWarn.setText("");
