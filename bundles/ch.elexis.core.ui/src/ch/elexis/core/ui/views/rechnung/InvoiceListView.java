@@ -340,7 +340,6 @@ public class InvoiceListView extends ViewPart {
 		IMenuManager viewMenuManager = getViewSite().getActionBars().getMenuManager();
 		viewMenuManager.add(invoiceActions.printListeAction);
 		viewMenuManager.add(invoiceActions.addAccountExcessAction);
-		viewMenuManager.add(invoiceActions.exportListAction);
 
 		MenuManager menuManager = new MenuManager();
 		menuManager.add(invoiceActions.rnExportAction);
