@@ -196,7 +196,7 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 			if (!defaultResponsibleSelf) {
 				ConfigServiceHolder.setUserAsList(Preferences.USR_REMINDER_SELECTED_RESPONSIBLES_DEFAULT,
 					persist);
-				CoreHub.userCfg.flush();
+				
 			}
 		});
 		List<Object> inputList = new ArrayList<Object>();
@@ -450,8 +450,8 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 			if (defaultResponsibleSelf) {
 				responsibles = Collections.singletonList(CoreHub.getLoggedInContact());
 			} else {
-				List<String> defResponsibles = CoreHub.userCfg
-					.getAsList(Preferences.USR_REMINDER_SELECTED_RESPONSIBLES_DEFAULT);
+				List<String> defResponsibles = ConfigServiceHolder
+					.getUserAsList(Preferences.USR_REMINDER_SELECTED_RESPONSIBLES_DEFAULT);
 				if (defResponsibles.isEmpty()) {
 					responsibles = Collections.singletonList(TX_ALL);
 				} else {

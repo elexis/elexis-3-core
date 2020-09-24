@@ -30,10 +30,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IArticleDefaultSignature;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.ui.dialogs.ArticleDefaultSignatureTitleAreaDialog;
@@ -509,8 +509,9 @@ public class ArticleDefaultSignatureComposite extends Composite {
 			} else if (modelDisposalType == EntryType.SELF_DISPENSED) {
 				btnDispensation.setSelection(true);
 			} else {
-				if(CoreHub.userCfg
-						.get(CreatePrescriptionHelper.MEDICATION_SETTINGS_SIGNATURE_STD_DISPENSATION, false)) {
+				if (ConfigServiceHolder.getUser(
+					CreatePrescriptionHelper.MEDICATION_SETTINGS_SIGNATURE_STD_DISPENSATION,
+					false)) {
 					btnDispensation.setSelection(true);
 				} else {
 					btnNoDisposal.setSelection(true);

@@ -20,7 +20,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 
@@ -52,8 +52,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		
 		FontData[] small = new FontData[] {
 			new FontData("Helvetica", 7, SWT.NORMAL)}; //$NON-NLS-1$
-		CoreHub.userCfg
-			.set(
+		ConfigServiceHolder.setUser(
 				Preferences.USR_SMALLFONT + "_default", PreferenceConverter.getStoredRepresentation(small)); //$NON-NLS-1$
 	}
 	

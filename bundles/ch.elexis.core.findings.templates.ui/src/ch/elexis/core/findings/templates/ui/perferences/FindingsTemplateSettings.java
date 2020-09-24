@@ -6,12 +6,12 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
 import ch.elexis.core.findings.templates.ui.composite.FindingsComposite;
 import ch.elexis.core.findings.templates.ui.composite.FindingsDetailComposite;
 import ch.elexis.core.findings.templates.ui.util.FindingsServiceHolder;
-import ch.elexis.core.ui.preferences.SettingsPreferenceStore;
+import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore;
+import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 
 public class FindingsTemplateSettings extends FieldEditorPreferencePage
 		implements IWorkbenchPreferencePage {
@@ -20,7 +20,7 @@ public class FindingsTemplateSettings extends FieldEditorPreferencePage
 	
 	public FindingsTemplateSettings(){
 		super(GRID);
-		setPreferenceStore(new SettingsPreferenceStore(CoreHub.userCfg));
+		setPreferenceStore(new ConfigServicePreferenceStore(Scope.USER));
 	}
 	
 	@Override

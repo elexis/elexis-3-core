@@ -21,13 +21,14 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 import ch.elexis.data.Anwender;
 
 public class FontPreference extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	
 	public FontPreference(){
 		super(Messages.FontPreference_schriftarten, GRID);
-		setPreferenceStore(new SettingsPreferenceStore(CoreHub.userCfg));
+		setPreferenceStore(new ConfigServicePreferenceStore(Scope.USER));
 	}
 	
 	@Override

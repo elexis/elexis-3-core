@@ -29,7 +29,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.icons.Images;
@@ -67,8 +66,8 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 		} else {
 			String defValue = Reminder.LabelFields.PAT_ID.toString() + ","
 				+ Reminder.LabelFields.FIRSTNAME.toString();
-			availableFields = CoreHub.userCfg
-				.get(Preferences.USR_REMINDER_PAT_LABEL_AVAILABLE, defValue).split(",");
+			availableFields = ConfigServiceHolder
+				.getUser(Preferences.USR_REMINDER_PAT_LABEL_AVAILABLE, defValue).split(",");
 		}
 		
 	}
@@ -221,7 +220,6 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 		ConfigServiceHolder.setUser(Preferences.USR_REMINDER_PAT_LABEL_AVAILABLE,
 			getListAsString(lViewerAvailable.getList().getItems()));
 		
-		CoreHub.userCfg.flush();
 		return super.performOk();
 	}
 	

@@ -8,7 +8,6 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
@@ -72,7 +71,6 @@ public class VerrechenbarFavorites {
 				sb.append(";");
 		}
 		ConfigServiceHolder.setUser(USER_CFG_FAVORITES, sb.toString());
-		CoreHub.userCfg.flush();
 		ElexisEventDispatcher.reload(Favorite.class);
 	}
 	

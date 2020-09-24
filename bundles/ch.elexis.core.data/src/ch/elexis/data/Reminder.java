@@ -37,6 +37,7 @@ import ch.elexis.core.model.issue.Priority;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Type;
 import ch.elexis.core.model.issue.Visibility;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
@@ -219,9 +220,9 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	private String getConfiguredKontaktLabel(Kontakt k, boolean isPatientRelatedReminder){
 		if (isPatientRelatedReminder) {
 			StringBuilder sb = new StringBuilder();
-			String[] configLabel = CoreHub.userCfg
-				.get(Preferences.USR_REMINDER_PAT_LABEL_CHOOSEN, LabelFields.LASTNAME.toString())
-				.split(",");
+			String[] configLabel =
+				ConfigServiceHolder.getUser(Preferences.USR_REMINDER_PAT_LABEL_CHOOSEN,
+					LabelFields.LASTNAME.toString()).split(",");
 			
 			String[] values = k.get(true, configLabel);
 			for (int i = 0; i < values.length; i++) {

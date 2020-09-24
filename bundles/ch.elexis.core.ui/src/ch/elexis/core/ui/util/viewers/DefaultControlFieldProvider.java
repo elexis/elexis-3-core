@@ -223,9 +223,11 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 	 *            DB-Namen des Feldes
 	 */
 	public void setFocusField(String name){
-		for (int i = 0; i < dbFields.length; i++) {
-			if (dbFields[i].equals(name))
+		for (int i = 0; i < fields.length; i++) {
+			if (fields[i].equals(name)) {
 				focusField = i;
+				break;
+			}
 		}
 	}
 	

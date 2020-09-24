@@ -22,10 +22,10 @@ import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
+import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 import ch.elexis.core.ui.text.EnhancedTextField;
 
 /**
@@ -47,7 +47,7 @@ public class UserTextPref extends FieldEditorPreferencePage implements IWorkbenc
 
 	public UserTextPref(){
 		super(GRID);
-		setPreferenceStore(new SettingsPreferenceStore(CoreHub.userCfg));
+		setPreferenceStore(new ConfigServicePreferenceStore(Scope.USER));
 		setDescription(Messages.UserTextPref_UserPreferences);
 	}
 	

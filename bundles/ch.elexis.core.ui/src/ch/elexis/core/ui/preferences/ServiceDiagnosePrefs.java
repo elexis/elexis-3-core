@@ -39,7 +39,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
@@ -206,8 +205,8 @@ public class ServiceDiagnosePrefs extends PreferencePage implements IWorkbenchPr
 			aInput.add(FAVORITES);
 			
 			settings =
-				CoreHub.userCfg
-					.get(Preferences.USR_SERVICES_DIAGNOSES_SRV, getListAsString(aInput))
+				ConfigServiceHolder
+					.getUser(Preferences.USR_SERVICES_DIAGNOSES_SRV, getListAsString(aInput))
 					.split(",");
 			break;
 		case Diagnose:
