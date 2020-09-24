@@ -54,7 +54,6 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
@@ -235,7 +234,6 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 							StringBuilder name = new StringBuilder(in.getValue());
 							name.reverse();
 							ConfigServiceHolder.setUser("makros/" + name, tx); //$NON-NLS-1$
-							CoreHub.userCfg.flush();
 						}
 					}
 					

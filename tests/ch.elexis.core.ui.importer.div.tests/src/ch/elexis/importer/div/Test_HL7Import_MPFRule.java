@@ -22,7 +22,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.importer.div.importers.HL7Parser;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.types.LabItemTyp;
@@ -82,7 +81,6 @@ public class Test_HL7Import_MPFRule {
 		
 		// set the use local config to false
 		ConfigServiceHolder.setUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
-		CoreHub.userCfg.flush();
 		
 		LabItem liKrus = new LabItem("KRUS", "Kreatinin im Urin", AllTests.testLab, "> 60", "> 60",
 			"mmol/l", LabItemTyp.NUMERIC, "Urin", "42");

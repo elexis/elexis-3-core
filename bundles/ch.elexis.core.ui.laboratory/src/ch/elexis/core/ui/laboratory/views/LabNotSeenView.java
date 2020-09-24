@@ -43,6 +43,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.Heartbeat;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
 import ch.elexis.core.model.LabResultConstants;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.icons.Images;
@@ -132,8 +133,8 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 		ViewMenus menu = new ViewMenus(getViewSite());
 		menu.createToolbar(markPersonAction, markAllAction);
 		heartbeat();
-		CoreHub.heart.addListener(this, CoreHub.userCfg
-			.get(Preferences.LABSETTINGS_CFG_LABNEW_HEARTRATE, Heartbeat.FREQUENCY_HIGH));
+		CoreHub.heart.addListener(this, ConfigServiceHolder
+			.getUser(Preferences.LABSETTINGS_CFG_LABNEW_HEARTRATE, Heartbeat.FREQUENCY_HIGH));
 			
 		tv.setInput(this);
 	}

@@ -33,8 +33,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.ui.preferences.SettingsPreferenceStore;
+import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore;
+import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 
@@ -127,7 +127,7 @@ public class UiDesk {
 	public static void updateFont(String cfgName){
 		FontRegistry fr = JFaceResources.getFontRegistry();
 		FontData[] fd =
-			PreferenceConverter.getFontDataArray(new SettingsPreferenceStore(CoreHub.userCfg),
+			PreferenceConverter.getFontDataArray(new ConfigServicePreferenceStore(Scope.USER),
 				cfgName);
 		fr.put(cfgName, fd);
 	}
@@ -136,7 +136,7 @@ public class UiDesk {
 		FontRegistry fr = JFaceResources.getFontRegistry();
 		if (!fr.hasValueFor(cfgName)) {
 			FontData[] fd =
-				PreferenceConverter.getFontDataArray(new SettingsPreferenceStore(CoreHub.userCfg),
+				PreferenceConverter.getFontDataArray(new ConfigServicePreferenceStore(Scope.USER),
 					cfgName);
 			fr.put(cfgName, fd);
 		}

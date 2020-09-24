@@ -153,8 +153,8 @@ public class Rechnung extends PersistentObject {
 			else {
 				List<Verrechnet> lstg = b.getLeistungen();
 				for (Verrechnet l : lstg) {
-					if (l.getNettoPreis().isZero() && CoreHub.userCfg
-						.get(Preferences.LEISTUNGSCODES_BILLING_ZERO_CHECK, false)) {
+					if (l.getNettoPreis().isZero() && ConfigServiceHolder
+						.getUser(Preferences.LEISTUNGSCODES_BILLING_ZERO_CHECK, false)) {
 						Patient pat = b.getFall().getPatient();
 						String msg = "Eine Konsultation vom " + b.getDatum().toString()
 							+ " für\nPatient Nr. " + pat.getPatCode() + ", " + pat.getName() + ", "

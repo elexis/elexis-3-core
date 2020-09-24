@@ -117,6 +117,17 @@ public class ConfigServiceHolder {
 		return configService.setActiveUserContact(key, value);
 	}
 	
+	public static List<String> getUserAsList(String key){
+		String string = getUser(key, (String) null);
+		if (string != null) {
+			String[] split = string.split(",");
+			if (split != null && split.length > 0) {
+				return Arrays.asList(split);
+			}
+		}
+		return Collections.emptyList();
+	}
+	
 	public static void setUserAsList(String key, List<String> values){
 		Optional<String> value =
 			values.stream().map(o -> o.toString()).reduce((u, t) -> u + "," + t);

@@ -41,8 +41,9 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore;
+import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 import ch.elexis.core.ui.preferences.Messages;
-import ch.elexis.core.ui.preferences.SettingsPreferenceStore;
 import ch.elexis.core.ui.preferences.inputs.PrefAccessDenied;
 import ch.elexis.data.LabMapping;
 import ch.elexis.data.Query;
@@ -55,7 +56,7 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 	
 	public LabSettings(){
 		super(GRID);
-		setPreferenceStore(new SettingsPreferenceStore(CoreHub.userCfg));
+		setPreferenceStore(new ConfigServicePreferenceStore(Scope.USER));
 		// make sure default value is correct, in case no value is set yet
 		getPreferenceStore().setDefault(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
 	}
@@ -152,7 +153,6 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 			ConfigServiceHolder.setGlobal(Preferences.LABSETTINGS_CFG_KEEP_UNSEEN_LAB_RESULTS,
 				txtKeepUnseen.getText());
 		}
-		CoreHub.userCfg.flush();
 		return super.performOk();
 	}
 	

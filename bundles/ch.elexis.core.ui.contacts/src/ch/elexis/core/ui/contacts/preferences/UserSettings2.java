@@ -26,11 +26,11 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.contacts.views.Patientenblatt2;
+import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore;
+import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 import ch.elexis.core.ui.preferences.Messages;
-import ch.elexis.core.ui.preferences.SettingsPreferenceStore;
 import ch.elexis.core.ui.preferences.inputs.ComboFieldEditor;
 import ch.elexis.core.ui.preferences.inputs.MultilineFieldEditor;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -42,7 +42,7 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 	public static final String ALWAYS_CLOSED = Messages.UserSettings2_AlwaysClosed;
 	public static final String ALWAYS_OPEN = Messages.UserSettings2_AlwaysOpen;
 	
-	private SettingsPreferenceStore prefs = new SettingsPreferenceStore(CoreHub.userCfg);
+	private ConfigServicePreferenceStore prefs = new ConfigServicePreferenceStore(Scope.USER);
 	
 	private static final String[] patlistFocusFields = {
 		Patient.FLD_PATID, Patient.FLD_NAME, Patient.FLD_FIRSTNAME, Patient.BIRTHDATE,
@@ -102,8 +102,6 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 	
 	@Override
 	public boolean performOk(){
-		prefs.flush();
-		CoreHub.userCfg.flush();
 		SWTHelper.reloadViewPart(UiResourceConstants.PatientenListeView_ID);
 		return super.performOk();
 	}

@@ -18,7 +18,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.importer.div.importers.HL7Parser;
 import ch.elexis.core.model.LabResultConstants;
@@ -64,7 +63,6 @@ public class TestPathologicDescription {
 		removeAllLaboWerte();
 		// set the use local config to true
 		ConfigServiceHolder.setUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
-		CoreHub.userCfg.flush();
 		
 		parseOneHL7file(new File(workDir.toString(), "Analytica/01TEST5005.hl7"), false, true);
 		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
@@ -123,7 +121,6 @@ public class TestPathologicDescription {
 		removeAllLaboWerte();
 		// set the use local config to true
 		ConfigServiceHolder.setUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
-		CoreHub.userCfg.flush();
 		
 		parseOneHL7file(new File(workDir.toString(), "Analytica/0216370074_6417526401671.hl7"),
 			false, true);
@@ -163,7 +160,6 @@ public class TestPathologicDescription {
 		removeAllLaboWerte();
 		// set the use local config to false
 		ConfigServiceHolder.setUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, false);
-		CoreHub.userCfg.flush();
 		// test if parser will read correct value
 		assertFalse(ConfigServiceHolder.get().get(
 			ContextServiceHolder.get().getActiveUserContact().get(),
@@ -335,7 +331,6 @@ public class TestPathologicDescription {
 		removeAllLaboWerte();
 		// set the use local config to false
 		ConfigServiceHolder.setUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, false);
-		CoreHub.userCfg.flush();
 		
 		parseOneHL7file(new File(workDir.toString(),
 			"LabCube/5083_LabCube_DriChem7000_20180314131140_288107.hl7"), false, true);
