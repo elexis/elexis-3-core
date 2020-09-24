@@ -95,7 +95,6 @@ public class Xid extends PersistentObject implements IXid {
 		domains = new HashMap<String, XIDDomain>();
 		domainMap = new HashMap<String, String>();
 		String storedDomains = CoreHub.globalCfg.get("LocalXIDDomains", null);
-		log.log("XID Domains [" + storedDomains + "]", Log.ERRORS);
 		if (storedDomains == null) {
 			domains.put(ELEXIS, new XIDDomain(ELEXIS, "UUID", ELEXIS_QUALITY | QUALITY_GUID,
 					PersistentObject.class.getCanonicalName()));
@@ -123,7 +122,6 @@ public class Xid extends PersistentObject implements IXid {
 					displayOptions));
 				domainMap.put(simpleName, spl[0]);
 			}
-			log.log("XID Domains [" + domains.size() + "]", Log.ERRORS);
 		}
 		VersionInfo vv = new ch.rgw.tools.VersionInfo(CoreHub.Version);
 		if (vv.isOlder("1.3.2")) {
@@ -332,7 +330,6 @@ public class Xid extends PersistentObject implements IXid {
 	 */
 	public static boolean localRegisterXIDDomain(final String domain, String simpleName,
 		final int quality){
-		log.log("XID Domain [" + domain + "] in [" + domains.size() + "]", Log.ERRORS);
 		if (domains.containsKey(domain)) {
 			log.log("XID Domain " + domain + " bereits registriert", Log.ERRORS);
 		} else {

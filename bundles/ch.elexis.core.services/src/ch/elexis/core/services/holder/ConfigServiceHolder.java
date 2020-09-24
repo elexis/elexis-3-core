@@ -144,6 +144,14 @@ public class ConfigServiceHolder {
 		return configService.getActiveMandator(key, defaultValue);
 	}
 	
+	public static boolean getMandator(String key, boolean defaultValue){
+		return configService.getActiveMandator(key, defaultValue);
+	}
+	
+	public static void setMandator(String key, String value){
+		configService.setActiveMandator(key, value);
+	}
+	
 	// local access methods
 	
 	public static boolean getLocal(String key, boolean defaultValue){
