@@ -31,6 +31,8 @@ public class EntityChangeEventListener implements EventHandler {
 			new WeakHashMap<EntityWithId, List<WeakReference<AbstractIdModelAdapter<?>>>>();
 	}
 	
+	private int addCount;
+	
 	public void add(AbstractIdModelAdapter<?> adapter){
 		synchronized (listenerMap) {
 			EntityWithId entity = adapter.getEntity();
@@ -38,6 +40,34 @@ public class EntityChangeEventListener implements EventHandler {
 			
 			listeners.add(new WeakReference<AbstractIdModelAdapter<?>>(adapter));
 			listenerMap.put(entity, listeners);
+			
+			if (addCount++ > 10000) {
+				if(listenerMap.size() > 10000) {
+					cleanup();					
+				}
+				addCount = 0;
+			}
+		}
+	}
+	
+	private void cleanup(){
+		Iterator<EntityWithId> entitiesIter = listenerMap.keySet().iterator();
+		while (entitiesIter.hasNext()) {
+			EntityWithId entity = entitiesIter.next();
+			List<WeakReference<AbstractIdModelAdapter<?>>> listeners = listenerMap.get(entity);
+			Iterator<WeakReference<AbstractIdModelAdapter<?>>> iter = listeners.iterator();
+			while (iter.hasNext()) {
+				WeakReference<AbstractIdModelAdapter<?>> reference = iter.next();
+				if (reference != null) {
+					AbstractIdModelAdapter<?> adapter = reference.get();
+					if (adapter == null) {
+						iter.remove();
+					}
+				}
+			}
+			if (listeners.isEmpty()) {
+				entitiesIter.remove();
+			}
 		}
 	}
 	

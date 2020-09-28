@@ -1,7 +1,6 @@
 package ch.elexis.core.jpa.entities;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -69,11 +68,11 @@ public class Behandlung extends AbstractEntityWithId implements EntityWithId, En
 
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "behdl_dg_joint", joinColumns = @JoinColumn(name = "BehandlungsID"), inverseJoinColumns = @JoinColumn(name = "DiagnoseID"))
-	private List<Diagnosis> diagnoses = new ArrayList<>();
+	private List<Diagnosis> diagnoses;
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "behandlung")
-	private List<Verrechnet> billed = new ArrayList<>();
+	private List<Verrechnet> billed;
 
 	@Mutable
 	@Convert(converter = VersionedResourceConverter.class)
