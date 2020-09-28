@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public interface INamedQuery<R> {
 	/**
@@ -16,8 +17,17 @@ public interface INamedQuery<R> {
 	public List<R> executeWithParameters(Map<String, Object> parameters);
 
 	/**
-	 * Execute the query and return a single result. If more than one result is
-	 * available, a warning is logged, and the first result is returned.
+	 * Execute the query with the provided parameters and return a stream with the resulting
+	 * objects.
+	 * 
+	 * @param parameters
+	 * @return
+	 */
+	public Stream<R> executeAsStreamWithParameters(Map<String, Object> parameters);
+	
+	/**
+	 * Execute the query and return a single result. If more than one result is available, a warning
+	 * is logged, and the first result is returned.
 	 * 
 	 * @param parameters
 	 * @return

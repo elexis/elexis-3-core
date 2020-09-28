@@ -39,8 +39,9 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IInvoice#getPayedAmount <em>Payed Amount</em>}</li>
  *   <li>{@link ch.elexis.core.model.IInvoice#getDemandAmount <em>Demand Amount</em>}</li>
  *   <li>{@link ch.elexis.core.model.IInvoice#getRemark <em>Remark</em>}</li>
- *   <li>{@link ch.elexis.core.model.IInvoice#getPayments <em>Payments</em>}</li>
  *   <li>{@link ch.elexis.core.model.IInvoice#getStateDate <em>State Date</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IInvoice#getPayments <em>Payments</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IInvoice#getTransactions <em>Transactions</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIInvoice()
@@ -364,6 +365,18 @@ public interface IInvoice extends Identifiable, Deleteable, WithExtInfo {
 	 * @generated
 	 */
 	List<IPayment> getPayments();
+
+	/**
+	 * Returns the value of the '<em><b>Transactions</b></em>' reference list.
+	 * The list contents are of type {@link ch.elexis.core.model.IAccountTransaction}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Transactions</em>' reference list.
+	 * @see ch.elexis.core.model.ModelPackage#getIInvoice_Transactions()
+	 * @model changeable="false"
+	 * @generated
+	 */
+	List<IAccountTransaction> getTransactions();
 
 	/**
 	 * Returns the value of the '<em><b>State Date</b></em>' attribute.

@@ -91,8 +91,7 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	public List<IEncounter> getEncounters(){
 		CoreModelServiceHolder.get().refresh(this);
 		return getEntity().getEncounters().parallelStream().filter(b -> !b.isDeleted())
-			.map(b -> ModelUtil.getAdapter(b, IEncounter.class, true))
-			.collect(Collectors.toList());
+			.map(b -> ModelUtil.getAdapter(b, IEncounter.class, true)).collect(Collectors.toList());
 	}
 	
 	@Override
@@ -197,6 +196,14 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 		CoreModelServiceHolder.get().refresh(this);
 		return getEntity().getPayments().parallelStream().filter(p -> !p.isDeleted())
 			.map(p -> ModelUtil.getAdapter(p, IPayment.class, true)).collect(Collectors.toList());
+	}
+	
+	@Override
+	public List<IAccountTransaction> getTransactions(){
+		CoreModelServiceHolder.get().refresh(this);
+		return getEntity().getTransactions().parallelStream().filter(p -> !p.isDeleted())
+			.map(p -> ModelUtil.getAdapter(p, IAccountTransaction.class, true))
+			.collect(Collectors.toList());
 	}
 	
 	@Override
