@@ -282,14 +282,44 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		return query;
 	}
 	
+	private TypedQuery<Long> getSizeQuery(){
+		CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+		criteriaQuery = criteriaQuery.select(criteriaBuilder.count(rootQuery));
+		// apply the predicate groups to the criteriaQuery
+		int groups = predicateGroups.getPredicateGroupsSize();
+		if (groups > 0) {
+			if (groups == 2
+				&& (EntityWithDeleted.class.isAssignableFrom(entityClazz) && !includeDeleted)) {
+				andJoinGroups();
+				groups = predicateGroups.getPredicateGroupsSize();
+			}
+			
+			if (groups == 1) {
+				criteriaQuery =
+					criteriaQuery.where(predicateGroups.getCurrentPredicateGroup().getPredicate());
+			} else {
+				throw new IllegalStateException("Query has open groups [" + groups + "]");
+			}
+		}
+		TypedQuery<Long> query = entityManager.createQuery(criteriaQuery);
+		return query;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public Stream<T> executeAsStream(){
-		Stream<T> ret = getTypedQuery().getResultStream().map(
+		TypedQuery<?> query = getTypedQuery();
+		query.setHint(QueryHints.MAINTAIN_CACHE, HintValues.FALSE);
+		Stream<T> ret = query.getResultStream().map(
 			e -> (T) adapterFactory.getModelAdapter((EntityWithId) e, clazz, true).orElse(null));
 		// detach and clear L1 cache
 		entityManager.clear();
 		return ret;
+	}
+	
+	@Override
+	public long getSize(){
+		return getSizeQuery().getSingleResult();
 	}
 	
 	@SuppressWarnings("unchecked")
