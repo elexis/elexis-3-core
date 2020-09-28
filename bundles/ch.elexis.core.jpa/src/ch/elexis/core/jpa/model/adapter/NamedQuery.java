@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -63,6 +64,26 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 			// query result list can contain null values, we do not want to see them
 			return (List<R>) query.getResultList().parallelStream().filter(r -> r != null)
 				.collect(Collectors.toList());
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Stream<R> executeAsStreamWithParameters(Map<String, Object> parameters){
+		parameters.forEach((k, v) -> {
+			v = resolveValue(v);
+			query.setParameter(k, v);
+		});
+		query.setHint(QueryHints.MAINTAIN_CACHE, HintValues.FALSE);
+		if (returnValueClazz.equals(interfaceClazz)) {
+			Stream<R> ret = (Stream<R>) query
+				.getResultStream().map(e -> adapterFactory
+					.getModelAdapter((EntityWithId) e, interfaceClazz, true).orElse(null))
+				.filter(o -> o != null);
+			return ret;
+		} else {
+			// query result list can contain null values, we do not want to see them
+			return (Stream<R>) query.getResultStream().filter(r -> r != null);
 		}
 	}
 	
