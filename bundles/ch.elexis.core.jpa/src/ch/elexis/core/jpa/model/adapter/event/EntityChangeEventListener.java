@@ -41,8 +41,8 @@ public class EntityChangeEventListener implements EventHandler {
 			listeners.add(new WeakReference<AbstractIdModelAdapter<?>>(adapter));
 			listenerMap.put(entity, listeners);
 			
-			if (addCount++ > 10000) {
-				if(listenerMap.size() > 10000) {
+			if (addCount++ > 25000) {
+				if (listenerMap.size() > 25000) {
 					cleanup();					
 				}
 				addCount = 0;
