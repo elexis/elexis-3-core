@@ -1,7 +1,6 @@
 package ch.elexis.core.jpa.entities;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -37,7 +36,11 @@ import ch.elexis.core.model.InvoiceState;
 @NamedQuery(name = "Invoice.number", query = "SELECT i FROM Invoice i WHERE i.deleted = false AND i.number = :number")
 @NamedQuery(name = "Invoice.from.to.paid.notempty", query = "SELECT i FROM Invoice i WHERE i.deleted = false "
 	+ "AND i.invoiceDate >= :from AND i.invoiceDate <= :to AND NOT (i.state = ch.elexis.core.model.InvoiceState.PAID AND i.amount = '0')")
+@NamedQuery(name = "Invoice.from.to.paid.notempty.size", query = "SELECT COUNT(i.id) FROM Invoice i WHERE i.deleted = false "
+	+ "AND i.invoiceDate >= :from AND i.invoiceDate <= :to AND NOT (i.state = ch.elexis.core.model.InvoiceState.PAID AND i.amount = '0')")
 @NamedQuery(name = "Invoice.from.to.mandator.paid.notempty", query = "SELECT i FROM Invoice i WHERE i.deleted = false "
+	+ "AND i.mandator = :mandator AND i.invoiceDate >= :from AND i.invoiceDate <= :to AND NOT (i.state = ch.elexis.core.model.InvoiceState.PAID AND i.amount = '0')")
+@NamedQuery(name = "Invoice.from.to.mandator.paid.notempty.size", query = "SELECT  COUNT(i.id) FROM Invoice i WHERE i.deleted = false "
 	+ "AND i.mandator = :mandator AND i.invoiceDate >= :from AND i.invoiceDate <= :to AND NOT (i.state = ch.elexis.core.model.InvoiceState.PAID AND i.amount = '0')")
 public class Invoice extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
@@ -91,15 +94,19 @@ public class Invoice extends AbstractEntityWithId
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "rechnungid")
-	private List<VerrechnetCopy> invoiceBilled = new ArrayList<>();
+	private List<VerrechnetCopy> invoiceBilled;
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "rechnungsid")
-	private List<Behandlung> encounters = new ArrayList<>();
+	private List<Behandlung> encounters;
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "rechnungsid")
-	private List<Zahlung> payments = new ArrayList<>();
+	private List<Zahlung> payments;
+	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+	@JoinColumn(name = "rechnungsid")
+	private List<AccountTransaction> transactions;
 	
 	public String getNumber() {
 		return number;
@@ -223,5 +230,9 @@ public class Invoice extends AbstractEntityWithId
 	
 	public List<Zahlung> getPayments(){
 		return payments;
+	}
+	
+	public List<AccountTransaction> getTransactions(){
+		return transactions;
 	}
 }

@@ -1,7 +1,6 @@
 package ch.elexis.core.jpa.entities;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -92,7 +91,7 @@ public class Fall extends AbstractEntityWithId
 	private String versNummer;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "fall", cascade = CascadeType.REFRESH)
-	protected List<Behandlung> consultations = new ArrayList<>();
+	protected List<Behandlung> consultations;
 
 	public String getBetriebsNummer() {
 		return this.betriebsNummer;

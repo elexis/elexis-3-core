@@ -4926,22 +4926,31 @@ public interface ModelPackage extends EPackage {
 	int IINVOICE__REMARK = IDENTIFIABLE_FEATURE_COUNT + 14;
 
 	/**
-	 * The feature id for the '<em><b>Payments</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IINVOICE__PAYMENTS = IDENTIFIABLE_FEATURE_COUNT + 15;
-
-	/**
 	 * The feature id for the '<em><b>State Date</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IINVOICE__STATE_DATE = IDENTIFIABLE_FEATURE_COUNT + 16;
+	int IINVOICE__STATE_DATE = IDENTIFIABLE_FEATURE_COUNT + 15;
+
+	/**
+	 * The feature id for the '<em><b>Payments</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE__PAYMENTS = IDENTIFIABLE_FEATURE_COUNT + 16;
+
+	/**
+	 * The feature id for the '<em><b>Transactions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE__TRANSACTIONS = IDENTIFIABLE_FEATURE_COUNT + 17;
 
 	/**
 	 * The number of structural features of the '<em>IInvoice</em>' class.
@@ -4950,7 +4959,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IINVOICE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 17;
+	int IINVOICE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 18;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IStock <em>IStock</em>}' class.
@@ -9586,6 +9595,17 @@ public interface ModelPackage extends EPackage {
 	EReference getIInvoice_Payments();
 
 	/**
+	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IInvoice#getTransactions <em>Transactions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Transactions</em>'.
+	 * @see ch.elexis.core.model.IInvoice#getTransactions()
+	 * @see #getIInvoice()
+	 * @generated
+	 */
+	EReference getIInvoice_Transactions();
+
+	/**
 	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IInvoice#getStateDate <em>State Date</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13286,6 +13306,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference IINVOICE__PAYMENTS = eINSTANCE.getIInvoice_Payments();
+
+		/**
+		 * The meta object literal for the '<em><b>Transactions</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IINVOICE__TRANSACTIONS = eINSTANCE.getIInvoice_Transactions();
 
 		/**
 		 * The meta object literal for the '<em><b>State Date</b></em>' attribute feature.

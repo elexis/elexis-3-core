@@ -3281,7 +3281,17 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 */
 	@Override
 	public EReference getIInvoice_Payments() {
-		return (EReference)iInvoiceEClass.getEStructuralFeatures().get(14);
+		return (EReference)iInvoiceEClass.getEStructuralFeatures().get(15);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIInvoice_Transactions() {
+		return (EReference)iInvoiceEClass.getEStructuralFeatures().get(16);
 	}
 
 	/**
@@ -3291,7 +3301,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 */
 	@Override
 	public EAttribute getIInvoice_StateDate() {
-		return (EAttribute)iInvoiceEClass.getEStructuralFeatures().get(15);
+		return (EAttribute)iInvoiceEClass.getEStructuralFeatures().get(14);
 	}
 
 	/**
@@ -4963,8 +4973,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iInvoiceEClass, IINVOICE__PAYED_AMOUNT);
 		createEAttribute(iInvoiceEClass, IINVOICE__DEMAND_AMOUNT);
 		createEAttribute(iInvoiceEClass, IINVOICE__REMARK);
-		createEReference(iInvoiceEClass, IINVOICE__PAYMENTS);
 		createEAttribute(iInvoiceEClass, IINVOICE__STATE_DATE);
+		createEReference(iInvoiceEClass, IINVOICE__PAYMENTS);
+		createEReference(iInvoiceEClass, IINVOICE__TRANSACTIONS);
 
 		iStockEClass = createEClass(ISTOCK);
 		createEAttribute(iStockEClass, ISTOCK__CODE);
@@ -5796,8 +5807,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIInvoice_PayedAmount(), theTypesPackage.getMoney(), "payedAmount", null, 0, 1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIInvoice_DemandAmount(), theTypesPackage.getMoney(), "demandAmount", null, 0, 1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIInvoice_Remark(), ecorePackage.getEString(), "remark", null, 0, 1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIInvoice_Payments(), this.getIPayment(), null, "payments", null, 0, -1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIInvoice_StateDate(), theTypesPackage.getLocalDate(), "stateDate", null, 0, 1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIInvoice_Payments(), this.getIPayment(), null, "payments", null, 0, -1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIInvoice_Transactions(), this.getIAccountTransaction(), null, "transactions", null, 0, -1, IInvoice.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		op = addEOperation(iInvoiceEClass, null, "addTrace", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);

@@ -49,7 +49,6 @@ public interface IBillableOptifier<T extends IBillable> {
 	 * is returned. But there is no guarantee that correct validation is performed.
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @model type="ch.elexis.core.types.Result&lt;ch.elexis.core.model.IBilled&gt;"
 	 * @generated
 	 */
