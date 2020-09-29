@@ -10,7 +10,7 @@ public class AccountServiceHolder {
 	private static IAccountService accountService;
 	
 	@Reference
-	public void setAppointmentService(IAccountService accountService){
+	public void setAccountService(IAccountService accountService){
 		AccountServiceHolder.accountService = accountService;
 	}
 	

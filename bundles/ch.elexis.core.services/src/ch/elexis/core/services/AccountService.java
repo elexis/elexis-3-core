@@ -20,7 +20,7 @@ public class AccountService implements IAccountService {
 	private HashMap<Integer, IAccount> localCache;
 
 	@Reference
-	private ConfigService configService;
+	private IConfigService configService;
 	
 	private List<IAccount> loadAccounts(){
 		List<IAccount> ret = new ArrayList<>();

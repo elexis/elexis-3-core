@@ -3,7 +3,6 @@ package ch.elexis.core.services;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 
@@ -117,15 +116,7 @@ public interface IQuery<T> {
 	 * 
 	 * @return
 	 */
-	public Stream<T> executeAsStream();
-	
-	/**
-	 * Execute a count of the expected results of the query. Use to determine expected size of
-	 * {@link #executeAsStream()}.
-	 * 
-	 * @return
-	 */
-	public long getSize();
+	public IQueryCursor<T> executeAsCursor();
 	
 	/**
 	 * Execute the query and return a single result. If more than one result

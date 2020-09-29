@@ -36,11 +36,7 @@ import ch.elexis.core.model.InvoiceState;
 @NamedQuery(name = "Invoice.number", query = "SELECT i FROM Invoice i WHERE i.deleted = false AND i.number = :number")
 @NamedQuery(name = "Invoice.from.to.paid.notempty", query = "SELECT i FROM Invoice i WHERE i.deleted = false "
 	+ "AND i.invoiceDate >= :from AND i.invoiceDate <= :to AND NOT (i.state = ch.elexis.core.model.InvoiceState.PAID AND i.amount = '0')")
-@NamedQuery(name = "Invoice.from.to.paid.notempty.size", query = "SELECT COUNT(i.id) FROM Invoice i WHERE i.deleted = false "
-	+ "AND i.invoiceDate >= :from AND i.invoiceDate <= :to AND NOT (i.state = ch.elexis.core.model.InvoiceState.PAID AND i.amount = '0')")
 @NamedQuery(name = "Invoice.from.to.mandator.paid.notempty", query = "SELECT i FROM Invoice i WHERE i.deleted = false "
-	+ "AND i.mandator = :mandator AND i.invoiceDate >= :from AND i.invoiceDate <= :to AND NOT (i.state = ch.elexis.core.model.InvoiceState.PAID AND i.amount = '0')")
-@NamedQuery(name = "Invoice.from.to.mandator.paid.notempty.size", query = "SELECT  COUNT(i.id) FROM Invoice i WHERE i.deleted = false "
 	+ "AND i.mandator = :mandator AND i.invoiceDate >= :from AND i.invoiceDate <= :to AND NOT (i.state = ch.elexis.core.model.InvoiceState.PAID AND i.amount = '0')")
 public class Invoice extends AbstractEntityWithId
 		implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
