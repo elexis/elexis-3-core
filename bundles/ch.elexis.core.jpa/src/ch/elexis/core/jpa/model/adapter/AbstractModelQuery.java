@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -21,15 +20,18 @@ import javax.persistence.metamodel.SingularAttribute;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.persistence.config.HintValues;
 import org.eclipse.persistence.config.QueryHints;
+import org.eclipse.persistence.queries.ScrollableCursor;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jpa.entities.EntityWithDeleted;
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.model.adapter.internal.PredicateGroupStack;
 import ch.elexis.core.jpa.model.adapter.internal.PredicateHandler;
+import ch.elexis.core.jpa.model.adapter.internal.QueryCursor;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQueryCursor;
 import ch.elexis.core.services.ISubQuery;
 
 /**
@@ -305,21 +307,13 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		return query;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public Stream<T> executeAsStream(){
+	public IQueryCursor<T> executeAsCursor(){
 		TypedQuery<?> query = getTypedQuery();
 		query.setHint(QueryHints.MAINTAIN_CACHE, HintValues.FALSE);
-		Stream<T> ret = query.getResultStream().map(
-			e -> (T) adapterFactory.getModelAdapter((EntityWithId) e, clazz, true).orElse(null));
-		// detach and clear L1 cache
-		entityManager.clear();
-		return ret;
-	}
-	
-	@Override
-	public long getSize(){
-		return getSizeQuery().getSingleResult();
+		query.setHint(QueryHints.SCROLLABLE_CURSOR, HintValues.TRUE);
+		ScrollableCursor cursor = (ScrollableCursor) query.getSingleResult();
+		return new QueryCursor<T>(cursor, adapterFactory, clazz);
 	}
 	
 	@SuppressWarnings("unchecked")

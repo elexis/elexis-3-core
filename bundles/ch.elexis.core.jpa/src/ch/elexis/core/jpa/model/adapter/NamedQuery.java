@@ -4,17 +4,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import org.eclipse.persistence.config.HintValues;
 import org.eclipse.persistence.config.QueryHints;
+import org.eclipse.persistence.queries.ScrollableCursor;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jpa.entities.EntityWithId;
+import ch.elexis.core.jpa.model.adapter.internal.QueryCursor;
 import ch.elexis.core.services.INamedQuery;
+import ch.elexis.core.services.IQueryCursor;
 
 public class NamedQuery<R, T> implements INamedQuery<R> {
 	
@@ -24,6 +26,7 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 	
 	private Class<? extends EntityWithId> entityClazz;
 	private TypedQuery<?> query;
+	private EntityManager entityManager;
 	
 	public NamedQuery(Class<R> returnValueClazz, Class<T> interfaceClazz, boolean refreshCache,
 		AbstractModelAdapterFactory adapterFactory, EntityManager entityManager, String queryName){
@@ -31,6 +34,7 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 		this.interfaceClazz = interfaceClazz;
 		this.returnValueClazz = returnValueClazz;
 		this.entityClazz = adapterFactory.getEntityClass(interfaceClazz);
+		this.entityManager = entityManager;
 		
 		this.query = entityManager.createNamedQuery(queryName, entityClazz);
 		// update cache with results (https://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development/Querying/Query_Hints)
@@ -67,23 +71,20 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public Stream<R> executeAsStreamWithParameters(Map<String, Object> parameters){
+	public IQueryCursor<R> executeAsCursorWithParameters(Map<String, Object> parameters){
 		parameters.forEach((k, v) -> {
 			v = resolveValue(v);
 			query.setParameter(k, v);
 		});
 		query.setHint(QueryHints.MAINTAIN_CACHE, HintValues.FALSE);
+		query.setHint(QueryHints.SCROLLABLE_CURSOR, HintValues.TRUE);
 		if (returnValueClazz.equals(interfaceClazz)) {
-			Stream<R> ret = (Stream<R>) query
-				.getResultStream().map(e -> adapterFactory
-					.getModelAdapter((EntityWithId) e, interfaceClazz, true).orElse(null))
-				.filter(o -> o != null);
-			return ret;
+			ScrollableCursor cursor = (ScrollableCursor) query.getSingleResult();
+			return new QueryCursor<R>(cursor, adapterFactory, interfaceClazz);
 		} else {
-			// query result list can contain null values, we do not want to see them
-			return (Stream<R>) query.getResultStream().filter(r -> r != null);
+			ScrollableCursor cursor = (ScrollableCursor) query.getSingleResult();
+			return new QueryCursor<R>(cursor, null, null);
 		}
 	}
 	

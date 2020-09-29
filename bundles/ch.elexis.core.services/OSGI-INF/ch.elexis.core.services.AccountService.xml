@@ -3,6 +3,6 @@
    <service>
       <provide interface="ch.elexis.core.services.IAccountService"/>
    </service>
-   <reference cardinality="1..1" field="configService" interface="ch.elexis.core.services.ConfigService" name="configService"/>
+   <reference cardinality="1..1" field="configService" interface="ch.elexis.core.services.IConfigService" name="configService"/>
    <implementation class="ch.elexis.core.services.AccountService"/>
 </scr:component>

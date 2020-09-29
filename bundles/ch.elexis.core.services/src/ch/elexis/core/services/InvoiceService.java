@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
@@ -310,8 +309,8 @@ public class InvoiceService implements IInvoiceService {
 	public List<IInvoice> getInvoices(IEncounter encounter){
 		INamedQuery<IInvoiceBilled> query =
 			CoreModelServiceHolder.get().getNamedQuery(IInvoiceBilled.class, "encounter");
-		Stream<IInvoiceBilled> invoicebilled =
-			query.executeAsStreamWithParameters(query.getParameterMap("encounter", encounter));
+		List<IInvoiceBilled> invoicebilled =
+			query.executeWithParameters(query.getParameterMap("encounter", encounter));
 		HashSet<IInvoice> uniqueInvoices = new HashSet<IInvoice>();
 		invoicebilled.forEach(ib -> uniqueInvoices.add(ib.getInvoice()));
 		return new ArrayList<IInvoice>(uniqueInvoices);
