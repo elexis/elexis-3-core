@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
@@ -124,6 +125,8 @@ public class ContextService implements IContextService, EventHandler {
 		elexisEventDispatcher.addListeners(eventDispatcherListener, reloadEventDispatcherListener,
 			lockingEventDispatcherListener, userChangedEventDispatcherListener,
 			mandatorChangedEventDispatcherListener, compatibilityEventDispatcherListener);
+		
+		getRootContext().setNamed(IContext.STATION_IDENTIFIER, CoreHub.getStationIdentifier());
 		
 		registerCoreUiSuppliers();
 	}

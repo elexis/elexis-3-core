@@ -12,6 +12,9 @@ package ch.elexis.core.data.activator;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +39,6 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.Heartbeat;
-import ch.elexis.core.data.events.Heartbeat.HeartListener;
 import ch.elexis.core.data.events.PatientEventListener;
 import ch.elexis.core.data.interfaces.ShutdownJob;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
@@ -56,13 +58,11 @@ import ch.elexis.data.Mandant;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.PersistentObjectFactory;
 import ch.elexis.data.Query;
-import ch.rgw.io.LockFile;
 import ch.rgw.io.Settings;
 import ch.rgw.io.SqlSettings;
 import ch.rgw.io.SysSettings;
 import ch.rgw.tools.Log;
 import ch.rgw.tools.StringTool;
-import ch.rgw.tools.VersionInfo;
 
 /**
  * @since 3.0.0
@@ -74,7 +74,6 @@ public class CoreHub implements BundleActivator {
 	 */
 	public static String Version = Elexis.VERSION;
 	public static final String APPLICATION_NAME = Elexis.APPLICATION_NAME; //$NON-NLS-1$
-	static final String neededJRE = "1.8.0"; //$NON-NLS-1$
 	public static final String DBVersion = "3.7.0"; //$NON-NLS-1$
 	
 	protected static Logger log = LoggerFactory.getLogger(CoreHub.class.getName());
@@ -87,6 +86,8 @@ public class CoreHub implements BundleActivator {
 	public static CoreHub plugin;
 	
 	private static List<ShutdownJob> shutdownJobs = new LinkedList<>();
+	
+	private static String stationIdentifier;
 	
 	/** Factory für interne PersistentObjects */
 	public static final PersistentObjectFactory poFactory = new PersistentObjectFactory();
@@ -124,8 +125,6 @@ public class CoreHub implements BundleActivator {
 	@Deprecated
 	public static Mandant actMandant;
 	
-	private static boolean tooManyInstances;
-	
 	/** Der Initialisierer für die Voreinstellungen */
 	public static final CorePreferenceInitializer pin = new CorePreferenceInitializer();
 	
@@ -154,10 +153,6 @@ public class CoreHub implements BundleActivator {
 			return Anwender.load(userContact.get().getId());
 		}
 		return null;
-	}
-	
-	public static boolean isTooManyInstances(){
-		return tooManyInstances;
 	}
 	
 	/**
@@ -232,7 +227,7 @@ public class CoreHub implements BundleActivator {
 		this.context = context;
 		log.debug("Starting " + CoreHub.class.getName());
 		plugin = this;
-				
+
 		startUpBundle();
 		setUserDir(userDir);
 		heart = Heartbeat.getInstance();
@@ -286,58 +281,61 @@ public class CoreHub implements BundleActivator {
 			.equals(System.getProperty(ElexisSystemPropertyConstants.RUN_MODE))) {
 			config = UUID.randomUUID().toString();
 		}
+		
+		int instanceNo = initializeLock();
+		
 		loadLocalCfg(config);
+		
+		stationIdentifier = CoreHub.localCfg.get(Preferences.STATION_IDENT_ID,
+			"notset_" + System.currentTimeMillis());
+		if (instanceNo > 0) {
+			stationIdentifier += "$" + instanceNo;
+		}
 		
 		// Damit Anfragen auf userCfg und mandantCfg bei nicht eingeloggtem User
 		// keine NPE werfen
 		userCfg = localCfg;
 		mandantCfg = localCfg;
 		
-		// Java Version prüfen
-		VersionInfo vI = new VersionInfo(System.getProperty("java.version", "0.0.0")); //$NON-NLS-1$ //$NON-NLS-2$
-		log.info(getId() + "; Java: " + vI.version() + "\nencoding: "
-			+ System.getProperty("file.encoding"));
-		
-		if (vI.isOlder(neededJRE)) {
-			MessageEvent.fireLoggedError("Invalid Java version",
-				"Your Java version is older than " + neededJRE + ", please update.");
-		}
 		log.info("Basepath: " + getBasePath());
 		pin.initializeDefaultPreferences();
 		
 		heart = Heartbeat.getInstance();
-		initializeLock();
+		
 	}
 	
-	private static void initializeLock(){
-		final int timeoutSeconds = 600;
-		try {
-			final LockFile lockfile = new LockFile(userDir, "elexislock", 4, timeoutSeconds); //$NON-NLS-1$
-			final int n = lockfile.lock();
-			if (n == 0) {
-				MessageEvent.fireLoggedError("Too many instances",
-					"Too many concurrent instances of Elexis running. Check elexislock files in "
-						+ userDir);
-				tooManyInstances = true;
-			} else {
-				tooManyInstances = false;
-				HeartListener lockListener = new HeartListener() {
-					long timeSet;
-					
-					@Override
-					public void heartbeat(){
-						long now = System.currentTimeMillis();
-						if ((now - timeSet) > timeoutSeconds) {
-							lockfile.updateLock(n);
-							timeSet = now;
-						}
-					}
-				};
-				heart.addListener(lockListener, Heartbeat.FREQUENCY_LOW);
+	/**
+	 * Try to get one instance lock of the MAX_LOCKS available. If none is available
+	 * anymore, exit.
+	 * @return the instance
+	 */
+	private int initializeLock(){
+		final int MAX_LOCKS = 25;
+		
+		FileLock fileLock = null;
+		for (int i = 0; i < MAX_LOCKS; i++) {
+			// try to get a lock
+			String fileName = (i > 0) ? "elexislock." + i : "elexislock";
+			File lockFile = new File(getWritableUserDir(), fileName);
+			try {
+				// do not use try with resources, channel needs to stay open
+				@SuppressWarnings("resource")
+				FileChannel lockFileChannel = new RandomAccessFile(lockFile, "rw").getChannel();
+				fileLock = lockFileChannel.tryLock();
+				if (fileLock == null) {
+					lockFileChannel.close();
+					continue;
+				}
+				log.debug("Acquired lock on " + fileName);
+				return i;
+			} catch (IOException ioe) {
+				log.error("Can not aquire lock file in " + userDir + "; " + ioe.getMessage()); //$NON-NLS-1$
 			}
-		} catch (IOException ex) {
-			log.error("Can not aquire lock file in " + userDir + "; " + ex.getMessage()); //$NON-NLS-1$
 		}
+		
+		log.error("Could not initializeLock()");
+		System.exit(-250);
+		return -250;
 	}
 	
 	public static String getId(){
@@ -472,6 +470,10 @@ public class CoreHub implements BundleActivator {
 		ElexisEventDispatcher.getInstance()
 			.fire(new ElexisEvent(null, IUser.class, ElexisEvent.EVENT_DESELECTED));
 		CoreHub.userCfg = CoreHub.localCfg;
+	}
+
+	public static Object getStationIdentifier(){
+		return stationIdentifier;
 	}
 	
 }
