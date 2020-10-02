@@ -160,6 +160,17 @@ public class ConfigServiceHolder {
 		configService.setActiveMandator(key, value);
 	}
 	
+	public static List<String> getMandatorAsList(String key){
+		String string = getMandator(key, (String) null);
+		if (string != null) {
+			String[] split = string.split(",");
+			if (split != null && split.length > 0) {
+				return Arrays.asList(split);
+			}
+		}
+		return Collections.emptyList();
+	}
+	
 	// local access methods
 	
 	public static boolean getLocal(String key, boolean defaultValue){
