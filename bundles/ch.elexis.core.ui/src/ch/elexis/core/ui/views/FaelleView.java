@@ -235,7 +235,7 @@ public class FaelleView extends ViewPart implements IRefreshable {
 	
 	@Override
 	public void refresh(){
-		handleEventPatient(actPatient);
+		handleEventPatient(ContextServiceHolder.get().getActivePatient().orElse(null));
 	}
 	
 	private void makeActions(){
