@@ -21,4 +21,8 @@ public class ContextServiceHolder {
 		}
 		return contextService;
 	}
+	
+	public static boolean isAvailable(){
+		return contextService != null;
+	}
 }

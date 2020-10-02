@@ -148,7 +148,15 @@ public class ConfigServiceHolder {
 		return configService.getActiveMandator(key, defaultValue);
 	}
 	
+	public static int getMandator(String key, int defaultValue){
+		return configService.getActiveMandator(key, defaultValue);
+	}
+	
 	public static void setMandator(String key, String value){
+		configService.setActiveMandator(key, value);
+	}
+	
+	public static void setMandator(String key, boolean value){
 		configService.setActiveMandator(key, value);
 	}
 	
