@@ -106,13 +106,22 @@ public interface IConfigService {
 	public boolean set(IContact contact, String key, String value);
 	
 	/**
-	 * Set a contact specific configuration entry. Overwrites existing value. Performs save
+	 * Set a mandator contact specific configuration entry. Overwrites existing value. Performs save
 	 * operation. The current mandator is resolved via the {@link IContextService}
 	 * 
 	 * @param configMigrationdomainName
 	 * @param name
 	 */
 	public void setActiveMandator(String key, String value);
+	
+	/**
+	 * Set a mandator contact specific configuration entry. Overwrites existing value. Performs save
+	 * operation. The current mandator is resolved via the {@link IContextService}
+	 * 
+	 * @param key
+	 * @param value
+	 */
+	public void setActiveMandator(String key, boolean value);
 	
 	/**
 	 * Convenience method wrapping {@link #set(IContact, String, String)} fetching the current user
@@ -266,6 +275,16 @@ public interface IConfigService {
 	 * @return
 	 */
 	public boolean getActiveMandator(String key, boolean defaultValue);
+	
+	/**
+	 * Convenience method wrapping {@link #get(IContact, String, String)}, fetching the current
+	 * mandator via {@link IContextService}
+	 * 
+	 * @param key
+	 * @param defaultValue
+	 * @return
+	 */
+	public int getActiveMandator(String key, int defaultValue);
 	
 	/**
 	 * Convenience method wrapping {@link #get(IContact, String, String)}, fetching the current user

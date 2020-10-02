@@ -133,10 +133,12 @@ public class ConfigService implements IConfigService {
 	private void addTraceEntry(String action){
 		traceExecutor.execute(()-> {
 			String username = "unknown";
+			if (ContextServiceHolder.isAvailable()) {
 				IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
 				if (user != null) {
 					username = StringUtils.abbreviate(user.getId(), 30);
 				}
+			}
 			
 			String workstation = "unknown";
 			if (StringUtils.isEmpty(workstation)) {
@@ -376,6 +378,16 @@ public class ConfigService implements IConfigService {
 	}
 	
 	@Override
+	public void setActiveMandator(String key, boolean value){
+		Optional<IMandator> activeMandator = contextService.getActiveMandator();
+		if (activeMandator.isPresent()) {
+			set(activeMandator.get(), key, value);
+		} else {
+			LoggerFactory.getLogger(getClass()).warn("No active mandator available");
+		}
+	}
+	
+	@Override
 	public String getActiveUserContact(String key, String defaultValue){
 		if (contextService != null) {
 			Optional<IContact> activeUser = contextService.getActiveUserContact();
@@ -436,6 +448,20 @@ public class ConfigService implements IConfigService {
 			Optional<IContact> activeUser = contextService.getActiveUserContact();
 			if (activeUser.isPresent()) {
 				return get(activeUser.get(), key, defaultValue);
+			}
+		} else {
+			LoggerFactory.getLogger(getClass())
+				.warn("IContextService not available, returning defaultValue");
+		}
+		return defaultValue;
+	}
+	
+	@Override
+	public int getActiveMandator(String key, int defaultValue){
+		if (contextService != null) {
+			Optional<IMandator> activeMandator = contextService.getActiveMandator();
+			if (activeMandator.isPresent()) {
+				return get(activeMandator.get(), key, defaultValue);
 			}
 		} else {
 			LoggerFactory.getLogger(getClass())
