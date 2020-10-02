@@ -22,7 +22,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.findings.IClinicalImpression;
@@ -41,6 +40,7 @@ import ch.elexis.core.findings.ui.services.CodingServiceComponent;
 import ch.elexis.core.findings.util.commands.FindingDeleteCommand;
 import ch.elexis.core.findings.util.commands.ILockingProvider;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.actions.CommentAction;
 import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -65,7 +65,7 @@ public class FindingsUiUtil {
 	}
 	
 	public static List<ICoding> loadVisibleCodings(){
-		String visibleCodingsString = CoreHub.mandantCfg.get(CFG_VISIBLE_CODINGS, null);
+		String visibleCodingsString = ConfigServiceHolder.getMandator(CFG_VISIBLE_CODINGS, null);
 		List<ICoding> availableCodings = FindingsUiUtil.getAvailableCodings();
 		if (visibleCodingsString != null) {
 			List<ICoding> visible = new ArrayList<>();
@@ -91,11 +91,11 @@ public class FindingsUiUtil {
 			}
 			sb.append(iCoding.getCode());
 		}
-		CoreHub.mandantCfg.set(CFG_VISIBLE_CODINGS, sb.toString());
+		ConfigServiceHolder.setMandator(CFG_VISIBLE_CODINGS, sb.toString());
 	}
 	
 	public static List<ICoding> loadSelectedCodings(){
-		String selectedCodingsString = CoreHub.mandantCfg.get(CFG_SELECTED_CODINGS, null);
+		String selectedCodingsString = ConfigServiceHolder.getMandator(CFG_SELECTED_CODINGS, null);
 		if (selectedCodingsString != null) {
 			List<ICoding> selected = new ArrayList<>();
 			List<ICoding> availableCodings = FindingsUiUtil.getAvailableCodings();
@@ -122,7 +122,7 @@ public class FindingsUiUtil {
 			}
 			sb.append(iCoding.getCode());
 		}
-		CoreHub.mandantCfg.set(CFG_SELECTED_CODINGS, sb.toString());
+		ConfigServiceHolder.setMandator(CFG_SELECTED_CODINGS, sb.toString());
 	}
 	
 	public static void saveGroup(ICompositeSaveable iCompositeSaveable){
