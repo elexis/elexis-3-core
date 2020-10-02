@@ -97,7 +97,7 @@ public class FaelleView extends ViewPart implements IRefreshable {
 		if (patient != null && CoreUiUtil.isActiveControl(tv.getControl())) {
 			if (actPatient != patient) {
 				actPatient = patient;
-				tv.refresh();
+				tv.refresh(true);
 				ICoverage currentFall = ContextServiceHolder.get().getRootContext()
 					.getTyped(ICoverage.class).orElse(null);
 				if (currentFall != null) {
