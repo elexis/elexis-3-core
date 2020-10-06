@@ -18,6 +18,11 @@ public interface IElexisEnvironmentService {
 	public static final String EE_KC_REALM_PUBLIC_KEY = "EE_KC_REALM_PUBLIC_KEY";
 	
 	/**
+	 * Default station id of the Elexis-Server (can be overriden)
+	 */
+	public static final String ES_STATION_ID_DEFAULT = "ELEXIS-SERVER";
+	
+	/**
 	 * @return the entry hostname of the elexis-environment
 	 */
 	public String getHostname();
