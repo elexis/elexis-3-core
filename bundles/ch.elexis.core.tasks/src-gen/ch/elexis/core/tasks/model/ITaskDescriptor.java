@@ -342,10 +342,10 @@ public interface ITaskDescriptor extends Identifiable, Deleteable {
 	 * <!-- begin-model-doc -->
 	 * Convenience method to set a single value of the runContext. 
 	 * <!-- end-model-doc -->
-	 * @model
+	 * @model valueDataType="ch.elexis.core.tasks.model.Serializable"
 	 * @generated
 	 */
-	void setRunContextParameter(String key, String value);
+	void setRunContextParameter(String key, Serializable value);
 
 	/**
 	 * <!-- begin-user-doc -->
