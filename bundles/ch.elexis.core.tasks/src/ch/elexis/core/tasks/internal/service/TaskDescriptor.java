@@ -102,7 +102,7 @@ public class TaskDescriptor
 	}
 	
 	@Override
-	public void setRunContextParameter(String key, String value){
+	public void setRunContextParameter(String key, Serializable value){
 		Map<String, Serializable> runContext = getRunContext();
 		runContext.put(key, value);
 		setRunContext(runContext);

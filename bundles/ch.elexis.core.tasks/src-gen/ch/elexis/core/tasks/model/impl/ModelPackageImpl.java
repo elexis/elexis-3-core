@@ -688,7 +688,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		op = addEOperation(iTaskDescriptorEClass, null, "setRunContextParameter", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "key", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, ecorePackage.getEString(), "value", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getSerializable(), "value", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		addEOperation(iTaskDescriptorEClass, this.getCron(), "getCronTriggerTypeConfiguration", 0, 1, IS_UNIQUE, IS_ORDERED);
 
