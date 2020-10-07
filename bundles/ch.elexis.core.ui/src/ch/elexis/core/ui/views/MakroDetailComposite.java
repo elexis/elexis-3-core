@@ -1,5 +1,7 @@
 package ch.elexis.core.ui.views;
 
+import java.util.Optional;
+
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.value.WritableValue;
@@ -14,12 +16,12 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.data.PersistentObject;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.data.dto.MakroDTO;
-import ch.rgw.io.SqlSettings;
-import ch.rgw.tools.JdbcLink;
 
 public class MakroDetailComposite extends Composite {
 	
@@ -113,20 +115,15 @@ public class MakroDetailComposite extends Composite {
 	 * @param makro
 	 */
 	public static void saveMakro(MakroDTO makro){
-		if (isCurrentUser(makro)) {
-			// do not lose changes 
-			CoreHub.userCfg.flush();
-		}
 		
-		SqlSettings userSettings =
-			new SqlSettings(PersistentObject.getDefaultConnection().getJdbcLink(), "USERCONFIG",
-				"Param", "Value", "UserID=" + JdbcLink.wrap(makro.getMakroUserId()));
-		
-		userSettings.set(makro.getMakroParam(), makro.getMakroContent());
-		userSettings.flush();
-		if (isCurrentUser(makro)) {
-			// undo reloads
-			CoreHub.userCfg.undo();
+		Optional<IContact> userContact =
+			CoreModelServiceHolder.get().load(makro.getMakroUserId(), IContact.class);
+		if (userContact.isPresent()) {
+			ConfigServiceHolder.get().set(userContact.get(), makro.getMakroParam(),
+				makro.getMakroContent());
+		} else {
+			LoggerFactory.getLogger(MakroDetailComposite.class).warn("No user to save makro ["
+				+ makro.getMakroName() + "] userid [" + makro.getMakroUserId() + "]");
 		}
 	}
 	
@@ -136,25 +133,15 @@ public class MakroDetailComposite extends Composite {
 	 * @param makro
 	 */
 	public static void removeMakro(MakroDTO makro){
-		if (isCurrentUser(makro)) {
-			// do not lose changes 
-			CoreHub.userCfg.flush();
-		}
 		
-		SqlSettings userSettings =
-			new SqlSettings(PersistentObject.getDefaultConnection().getJdbcLink(), "USERCONFIG",
-				"Param", "Value", "UserID=" + JdbcLink.wrap(makro.getMakroUserId()));
-		
-		userSettings.remove(makro.getMakroParam());
-		userSettings.flush();
-		if (isCurrentUser(makro)) {
-			// undo reloads, but keeps changes so remove
-			CoreHub.userCfg.undo();
-			CoreHub.userCfg.remove(makro.getMakroParam());
+		Optional<IContact> userContact =
+			CoreModelServiceHolder.get().load(makro.getMakroUserId(), IContact.class);
+		if (userContact.isPresent()) {
+			ConfigServiceHolder.get().set(userContact.get(), makro.getMakroParam(),
+				null);
+		} else {
+			LoggerFactory.getLogger(MakroDetailComposite.class).warn("No user to remove makro ["
+				+ makro.getMakroName() + "] userid [" + makro.getMakroUserId() + "]");
 		}
-	}
-	
-	private static boolean isCurrentUser(MakroDTO makro){
-		return makro.getMakroUserId().equals(CoreHub.getLoggedInContact().getId());
 	}
 }
