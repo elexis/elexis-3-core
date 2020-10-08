@@ -28,7 +28,11 @@ public class SerializableBoolean {
 			}
 			throw new IllegalArgumentException("Could not interpret value [" + value + "]");
 		}
-		throw new IllegalArgumentException("Can not handle type " + value.getClass().getName());
+		if (value != null) {
+			throw new IllegalArgumentException("Can not handle type " + value.getClass().getName());
+		} else {
+			throw new IllegalArgumentException("Value is null");
+		}
 	}
 	
 }
