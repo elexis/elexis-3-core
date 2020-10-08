@@ -174,7 +174,7 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 					editable, failsEncounterHasToBeTodayConstraint, valIsOnlyOneKonsToday, autoAddBillableEncounter);
 		}
 
-		if (encounterSelector != null) {
+		if (validEncounter == null && encounterSelector != null) {
 			String konsId = encounterSelector.createOrOpenConsultation(patient);
 			if (konsId != null) {
 				validEncounter = coreModelService.load(konsId, IEncounter.class).get();
