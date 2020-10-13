@@ -82,6 +82,9 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		if (EntityWithDeleted.class.isAssignableFrom(entityClazz) && !includeDeleted) {
 			and(ModelPackage.Literals.DELETEABLE__DELETED, COMPARATOR.NOT_EQUALS, true);
 		}
+
+		MappingEntry mappingForInterface = adapterFactory.getMappingForInterface(clazz);
+		mappingForInterface.applyQueryPrecondition(this);
 	}
 	
 	/**
@@ -281,29 +284,6 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		if (limit > 0) {
 			query.setMaxResults(limit);
 		}
-		return query;
-	}
-	
-	private TypedQuery<Long> getSizeQuery(){
-		CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-		criteriaQuery = criteriaQuery.select(criteriaBuilder.count(rootQuery));
-		// apply the predicate groups to the criteriaQuery
-		int groups = predicateGroups.getPredicateGroupsSize();
-		if (groups > 0) {
-			if (groups == 2
-				&& (EntityWithDeleted.class.isAssignableFrom(entityClazz) && !includeDeleted)) {
-				andJoinGroups();
-				groups = predicateGroups.getPredicateGroupsSize();
-			}
-			
-			if (groups == 1) {
-				criteriaQuery =
-					criteriaQuery.where(predicateGroups.getCurrentPredicateGroup().getPredicate());
-			} else {
-				throw new IllegalStateException("Query has open groups [" + groups + "]");
-			}
-		}
-		TypedQuery<Long> query = entityManager.createQuery(criteriaQuery);
 		return query;
 	}
 	

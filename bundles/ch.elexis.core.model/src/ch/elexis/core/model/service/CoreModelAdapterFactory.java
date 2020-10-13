@@ -85,6 +85,7 @@ import ch.elexis.core.model.InvoiceBilled;
 import ch.elexis.core.model.Laboratory;
 import ch.elexis.core.model.Mandator;
 import ch.elexis.core.model.Message;
+import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.Organization;
 import ch.elexis.core.model.Patient;
 import ch.elexis.core.model.Payment;
@@ -96,6 +97,7 @@ import ch.elexis.core.model.Right;
 import ch.elexis.core.model.Role;
 import ch.elexis.core.model.TextTemplate;
 import ch.elexis.core.model.UserConfig;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 
 public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 	
@@ -138,19 +140,31 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 		addMapping(new MappingEntry(IPatient.class, Patient.class, Kontakt.class)
 			.adapterPreCondition(adapter -> ((Kontakt) adapter.getEntity()).isPatient()
 				&& ((Kontakt) adapter.getEntity()).isPerson())
-			.adapterInitializer(this::setContactDiscriminator));
+			.queryPreCondition(query -> {
+				query.and(ModelPackage.Literals.ICONTACT__PERSON, COMPARATOR.EQUALS, true);
+				query.and(ModelPackage.Literals.ICONTACT__PATIENT, COMPARATOR.EQUALS, true);
+			}).adapterInitializer(this::setContactDiscriminator));
 		addMapping(new MappingEntry(IPerson.class, Person.class, Kontakt.class)
 			.adapterPreCondition(adapter -> ((Kontakt) adapter.getEntity()).isPerson())
-			.adapterInitializer(this::setContactDiscriminator));
+			.queryPreCondition(query -> {
+				query.and(ModelPackage.Literals.ICONTACT__PERSON, COMPARATOR.EQUALS, true);
+			}).adapterInitializer(this::setContactDiscriminator));
 		addMapping(new MappingEntry(IOrganization.class, Organization.class, Kontakt.class)
 			.adapterPreCondition(adapter -> ((Kontakt) adapter.getEntity()).isOrganisation())
-			.adapterInitializer(this::setContactDiscriminator));
+			.queryPreCondition(query -> {
+				query.and(ModelPackage.Literals.ICONTACT__ORGANIZATION, COMPARATOR.EQUALS, true);
+				query.and(ModelPackage.Literals.ICONTACT__PERSON, COMPARATOR.EQUALS, false);
+			}).adapterInitializer(this::setContactDiscriminator));
 		addMapping(new MappingEntry(ILaboratory.class, Laboratory.class, Kontakt.class)
 			.adapterPreCondition(adapter -> ((Kontakt) adapter.getEntity()).isLaboratory())
-			.adapterInitializer(this::setContactDiscriminator));
+			.queryPreCondition(query -> {
+				query.and(ModelPackage.Literals.ICONTACT__LABORATORY, COMPARATOR.EQUALS, true);
+			}).adapterInitializer(this::setContactDiscriminator));
 		addMapping(new MappingEntry(IMandator.class, Mandator.class, Kontakt.class)
 			.adapterPreCondition(adapter -> ((Kontakt) adapter.getEntity()).isMandator())
-			.adapterInitializer(this::setContactDiscriminator));
+			.queryPreCondition(query -> {
+				query.and(ModelPackage.Literals.ICONTACT__MANDATOR, COMPARATOR.EQUALS, true);
+			}).adapterInitializer(this::setContactDiscriminator));
 		
 		addMapping(new MappingEntry(ICoverage.class, Coverage.class, Fall.class));
 		addMapping(new MappingEntry(IEncounter.class, Encounter.class, Behandlung.class));
