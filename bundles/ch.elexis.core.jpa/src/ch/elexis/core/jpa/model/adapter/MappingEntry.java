@@ -20,6 +20,7 @@ public class MappingEntry {
 	
 	private Predicate<AbstractIdModelAdapter<?>> preCondition;
 	private Consumer<AbstractIdModelAdapter<?>> initializer;
+	private Consumer<AbstractModelQuery<?>> queryPreCondition;
 	
 	public MappingEntry(Class<?> interfaceClass,
 		Class<? extends AbstractIdModelAdapter<?>> adapterClass,
@@ -50,6 +51,17 @@ public class MappingEntry {
 	 */
 	public MappingEntry adapterInitializer(Consumer<AbstractIdModelAdapter<?>> consumer){
 		initializer = consumer;
+		return this;
+	}
+	
+	/**
+	 * Add a {@link Consumer} that will be applied on initializing a new {@link AbstractModelQuery}.
+	 * 
+	 * @param consumer
+	 * @return
+	 */
+	public MappingEntry queryPreCondition(Consumer<AbstractModelQuery<?>> consumer){
+		queryPreCondition = consumer;
 		return this;
 	}
 	
@@ -88,4 +100,11 @@ public class MappingEntry {
 	public Class<? extends EntityWithId> getEntityClass(){
 		return entityClass;
 	}
+	
+	public void applyQueryPrecondition(AbstractModelQuery<?> abstractModelQuery){
+		if (queryPreCondition != null) {
+			queryPreCondition.accept(abstractModelQuery);
+		}
+	}
+	
 }

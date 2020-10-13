@@ -380,6 +380,22 @@ public class CoreQueryTest {
 		assertFalse(results.contains(patient2));
 	}
 	
+	@Test
+	public void compareExecuteCursorQuery(){
+		createContact("test1", "test1");
+		createContact("test2", "test2");
+		createPatient("patient1", "patient1", LocalDate.of(1999, 1, 1));
+		createPatient("patient2", "patient2", LocalDate.of(1999, 2, 2));
+		createPatient("patient2", "patient2", LocalDate.of(1999, 12, 12));
+		
+		List<IPatient> executeList = modelService.getQuery(IPatient.class).execute();
+		List<IPatient> cursorList = new ArrayList<>();
+		modelService.getQuery(IPatient.class).executeAsCursor()
+			.forEachRemaining(p -> cursorList.add(p));
+		assertTrue(executeList.size() == cursorList.size() && executeList.containsAll(cursorList)
+			&& cursorList.containsAll(executeList));
+	}
+	
 	private void clearContacts(){
 		IQuery<IContact> query = modelService.getQuery(IContact.class, true);
 		List<IContact> results = query.execute();
