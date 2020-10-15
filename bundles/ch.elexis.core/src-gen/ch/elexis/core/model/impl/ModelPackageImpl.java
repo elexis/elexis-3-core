@@ -6046,6 +6046,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	protected void createMappingAnnotations() {
 		String source = "http://elexis.info/jpa/entity/attribute/mapping";
 		addAnnotation
+		  (getIContact_Organization(),
+		   source,
+		   new String[] {
+			   "attributeName", "organisation"
+		   });
+		addAnnotation
 		  (getIPerson_DateOfBirth(),
 		   source,
 		   new String[] {

@@ -196,7 +196,7 @@ public interface IContact extends Identifiable, Deleteable, WithExtInfo {
 	 * @return the value of the '<em>Organization</em>' attribute.
 	 * @see #setOrganization(boolean)
 	 * @see ch.elexis.core.model.ModelPackage#getIContact_Organization()
-	 * @model
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='organisation'"
 	 * @generated
 	 */
 	boolean isOrganization();
