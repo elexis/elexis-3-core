@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.text.MessageFormat;
+import java.util.Hashtable;
 import java.util.List;
 
 import org.eclipse.core.runtime.Platform;
@@ -33,14 +34,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.ShutdownJob;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.NamedBlob;
 import ch.rgw.io.FileTool;
 import ch.rgw.io.InMemorySettings;
-import ch.rgw.io.Settings;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 
@@ -87,6 +87,7 @@ public class UserPreferences extends PreferencePage implements IWorkbenchPrefere
 		bLoad.setText(Messages.UserPreferences_LoadSettingsfrom);
 		bLoad.setLayoutData(new GridData(GridData.FILL));
 		bLoad.addSelectionListener(new SelectionAdapter() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public void widgetSelected(SelectionEvent arg0){
 				String name = cbUserLoad.getText();
@@ -95,8 +96,7 @@ public class UserPreferences extends PreferencePage implements IWorkbenchPrefere
 						Messages.UserPreferences_PleaseEnterName);
 				} else if (NamedBlob.exists(Messages.UserPreferences_14 + name)) {
 					NamedBlob blob = NamedBlob.load("UserCfg:" + name); //$NON-NLS-1$
-					InMemorySettings ims = new InMemorySettings(blob.getHashtable());
-					CoreHub.userCfg.overlay(ims, Settings.OVL_REPLACE);
+					ConfigServiceHolder.setUserFromMap(blob.getHashtable());
 				} else {
 					SWTHelper.showError(Messages.UserPreferences_KonfigNotFound,
 						MessageFormat.format(Messages.UserPreferences_ConfigWasNotFound, name));
@@ -111,6 +111,7 @@ public class UserPreferences extends PreferencePage implements IWorkbenchPrefere
 		bSave.setText(Messages.UserPreferences_SaveSettingsTo);
 		bSave.setLayoutData(new GridData(GridData.FILL));
 		bSave.addSelectionListener(new SelectionAdapter() {
+			@SuppressWarnings("rawtypes")
 			@Override
 			public void widgetSelected(SelectionEvent arg0){
 				String name = cbUserSave.getText();
@@ -119,9 +120,7 @@ public class UserPreferences extends PreferencePage implements IWorkbenchPrefere
 						Messages.UserPreferences_PleaseEnterName2);
 				} else {
 					NamedBlob blob = NamedBlob.load("UserCfg:" + name); //$NON-NLS-1$
-					InMemorySettings ims = new InMemorySettings();
-					ims.overlay(CoreHub.userCfg, Settings.OVL_REPLACE);
-					blob.put(ims.getNode());
+					blob.put((Hashtable) ConfigServiceHolder.getUserAsMap());
 					SWTHelper.showInfo(Messages.UserPreferences_ConfigSaved,
 						MessageFormat.format(Messages.UserPreferences_ConfigWasSaved, name));
 					cbUserSave.setText(""); //$NON-NLS-1$
