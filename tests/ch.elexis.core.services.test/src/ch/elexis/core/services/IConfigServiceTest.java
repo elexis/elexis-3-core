@@ -2,18 +2,26 @@ package ch.elexis.core.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
+import ch.elexis.core.model.IBlob;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.builder.IContactBuilder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
@@ -21,6 +29,81 @@ public class IConfigServiceTest extends AbstractServiceTest {
 
 	private IConfigService configService = OsgiServiceUtil.getService(IConfigService.class).get();
 
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testUserConfigBlob(){
+		IPerson person = new IContactBuilder.PersonBuilder(coreModelService, "TestPerson",
+			"TestPerson", LocalDate.now(), Gender.FEMALE).mandator().buildAndSave();
+		// save content to blob
+		configService.set(person, "test/userconfig", true);
+		configService.set(person, "test/user", person.getLabel());
+		
+		Map<Object, Object> configMap = configService.getAsMap(person);
+		assertEquals("1", ((Map<Object, Object>) configMap.get("test")).get("userconfig"));
+		assertEquals(person.getLabel(), ((Map<Object, Object>) configMap.get("test")).get("user"));
+		IBlob blob = CoreModelServiceHolder.get().create(IBlob.class);
+		blob.setId("UserCfg:test"); //$NON-NLS-1$
+		blob.setMapContent(configMap);
+		CoreModelServiceHolder.get().save(blob);
+		// clear
+		configService.set(person, "test/userconfig", null);
+		configService.set(person, "test/user", null);
+		assertFalse(configService.get(person, "test/userconfig", false));
+		// reload from blob
+		Map<Object, Object> map = blob.getMapContent();
+		configService.setFromMap(person, map);
+		assertTrue(configService.get(person, "test/userconfig", false));
+		assertEquals(person.getLabel(), configService.get(person, "test/user", ""));
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testUserConfigBlobCompatibility() throws IOException{
+		IPerson person = new IContactBuilder.PersonBuilder(coreModelService, "TestPerson",
+			"TestPerson", LocalDate.now(), Gender.FEMALE).mandator().buildAndSave();
+		// save old content to blob
+		IBlob blob = CoreModelServiceHolder.get().create(IBlob.class);
+		blob.setId("UserCfg:test"); //$NON-NLS-1$
+		try (InputStream in = IConfigServiceTest.class.getResourceAsStream("/rsc/usrcfg.blob")) {
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			IOUtils.copy(in, out);
+			blob.setContent(out.toByteArray());
+		}
+		assertNotEquals("1",
+			configService.get(person, "ch.elexis.omnivore//savesortdirection", ""));
+		// reload from blob
+		Map<Object, Object> blobMap = blob.getMapContent();
+		configService.setFromMap(person, blobMap);
+		assertEquals("1", configService.get(person, "ch.elexis.omnivore//savesortdirection", ""));
+		assertEquals("Allgemein", configService.get(person, "fall/std_label", ""));
+		// load as map and compare with map from blob
+		Map<Object, Object> configMap = configService.getAsMap(person);
+		assertTrue(mapsContentEquals(blobMap, configMap));
+		assertEquals("1",
+			((Map<Object, Object>) ((Map<Object, Object>) configMap.get("ch.elexis.omnivore"))
+				.get("")).get("savesortdirection"));
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	private boolean mapsContentEquals(Map<Object, Object> left, Map<Object, Object> right){
+		for (Object key : left.keySet()) {
+			if(left.get(key) instanceof Map) {
+				if (!mapsContentEquals((Map<Object, Object>) left.get(key),
+					(Map<Object, Object>) right.get(key))) {
+					return false;
+				}
+			} else {
+				if (!left.get(key).equals(right.get(key))) {
+					System.out.println("key [" + key + "] left [" + left.get(key) + "] right ["
+						+ right.get(key) + "]");
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
 	@Test
 	public void getSetUserconfig() {
 		IPerson person = new IContactBuilder.PersonBuilder(coreModelService, "TestPerson", "TestPerson", LocalDate.now(),
