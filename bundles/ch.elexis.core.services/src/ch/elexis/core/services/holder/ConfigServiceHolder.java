@@ -3,6 +3,7 @@ package ch.elexis.core.services.holder;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
@@ -136,6 +137,14 @@ public class ConfigServiceHolder {
 		} else {
 			configService.setActiveUserContact(key, null);
 		}
+	}
+	
+	public static void setUserFromMap(Map<Object, Object> map){
+		configService.setActiveUserContact(map);
+	}
+	
+	public static Map<Object, Object> getUserAsMap(){
+		return configService.getActiveUserContactAsMap();
 	}
 	
 	// active mandator access methods

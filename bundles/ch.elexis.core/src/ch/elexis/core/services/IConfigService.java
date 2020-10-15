@@ -3,6 +3,7 @@ package ch.elexis.core.services;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import ch.elexis.core.model.IContact;
@@ -196,6 +197,14 @@ public interface IConfigService {
 	 * @return <code>true</code> if value was successfully set
 	 */
 	public boolean setFromList(IContact contact, String key, List<String> values);
+	
+	/**
+	 * Set all contact specific configuration entries from the provided map. Overwrites existing
+	 * value. Performs save operation.
+	 * 
+	 * @param map
+	 */
+	public void setActiveUserContact(Map<Object, Object> map);
 	
 	/**
 	 * Get a stored value for a given global configuration entry, or return the value provided as
@@ -398,6 +407,30 @@ public interface IConfigService {
 	 * @return
 	 */
 	public List<String> getAsList(IContact contact, String key, List<String> defaultValue);
+	
+	/**
+	 * Get the whole config for a given contact as hierarchy of {@link Map}s.
+	 * 
+	 * @param contact
+	 * @return
+	 */
+	public Map<Object, Object> getAsMap(IContact contact);
+	
+	/**
+	 * Get the whole config for the active user contact as hierarchy of {@link Map}s.
+	 * 
+	 * @return
+	 */
+	public Map<Object, Object> getActiveUserContactAsMap();
+	
+	/**
+	 * Set all contact specific configuration entries from the provided map. Overwrites existing
+	 * value. Performs save operation.
+	 * 
+	 * @param person
+	 * @param map
+	 */
+	public void setFromMap(IContact person, Map<Object, Object> map);
 	
 	/**
 	 * Get a list of all possible sub nodes for the provided key.

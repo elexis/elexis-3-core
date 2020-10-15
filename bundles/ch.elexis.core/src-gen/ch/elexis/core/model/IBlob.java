@@ -11,6 +11,7 @@
 package ch.elexis.core.model;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 
 /**
@@ -99,5 +100,21 @@ public interface IBlob extends Identifiable, Deleteable, WithAssignableId {
 	 * @generated
 	 */
 	void setStringContent(String value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	Map<Object, Object> getMapContent();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	void setMapContent(Map<Object, Object> map);
 
 } // IBlob
