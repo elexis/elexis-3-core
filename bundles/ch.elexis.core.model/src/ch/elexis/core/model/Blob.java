@@ -1,6 +1,8 @@
 package ch.elexis.core.model;
 
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Map;
 
 import org.slf4j.LoggerFactory;
 
@@ -60,5 +62,19 @@ public class Blob extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	@Override
 	public void setId(String id){
 		getEntityMarkDirty().setId(id);
+	}
+	
+	@Override
+	public Map<Object, Object> getMapContent(){
+		byte[] comp = getContent();
+		if ((comp == null) || (comp.length == 0)) {
+			return Collections.emptyMap();
+		}
+		return JpaModelUtil.extInfoFromBytes(comp);
+	}
+	
+	@Override
+	public void setMapContent(Map<Object, Object> map){
+		setContent(JpaModelUtil.extInfoToBytes(map));
 	}
 }

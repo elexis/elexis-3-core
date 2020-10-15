@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -275,6 +276,16 @@ public class ConfigService implements IConfigService {
 	}
 	
 	@Override
+	public void setActiveUserContact(Map<Object, Object> map){
+		Optional<IContact> activeUser = contextService.getActiveUserContact();
+		if (activeUser.isPresent()) {
+			setFromMap(activeUser.get(), map);
+		} else {
+			LoggerFactory.getLogger(getClass()).warn("No active user available");
+		}
+	}
+	
+	@Override
 	public boolean set(IContact contact, String key, boolean value){
 		return set(contact, key, (value) ? "1" : "0");
 	}
@@ -309,7 +320,7 @@ public class ConfigService implements IConfigService {
 	public boolean get(IContact contact, String key, boolean defaultValue){
 		String value = get(contact, key, null);
 		if (value != null) {
-			return Boolean.parseBoolean(value);
+			return (value.equals("1") || value.equalsIgnoreCase(Boolean.TRUE.toString()));
 		}
 		return defaultValue;
 	}
@@ -345,6 +356,93 @@ public class ConfigService implements IConfigService {
 		}
 		return new ArrayList<>(ret);
 	};
+	
+	@Override
+	public Map<Object, Object> getActiveUserContactAsMap(){
+		if (contextService != null) {
+			Optional<IContact> activeUser = contextService.getActiveUserContact();
+			if (activeUser.isPresent()) {
+				return getAsMap(activeUser.get());
+			}
+		} else {
+			LoggerFactory.getLogger(getClass())
+				.warn("IContextService not available, returning defaultValue");
+		}
+		return null;
+	}
+	
+	@Override
+	public Map<Object, Object> getAsMap(IContact contact){
+		IQuery<IUserConfig> query = CoreModelServiceHolder.get().getQuery(IUserConfig.class);
+		query.and("ownerid", COMPARATOR.EQUALS, contact.getId());
+		List<IUserConfig> entries = query.execute();
+		Map<Object, Object> ret = buildMap(entries);
+		return ret;
+	}
+	
+	private Map<Object, Object> buildMap(List<IUserConfig> entries){
+		Hashtable<Object, Object> ret = new Hashtable<Object, Object>();
+		for (IUserConfig iUserConfig : entries) {
+			buildMap(iUserConfig.getKey(), iUserConfig.getValue(), ret);
+		}
+		return ret;
+	}
+	
+	/**
+	 * Build a hierarchy of maps for the key, with values as leafs. As long as ch.elexis.data is in
+	 * use {@link Hashtable} must be used as {@link Map} instances.
+	 * 
+	 * @param key
+	 * @param value
+	 * @param map
+	 */
+	private void buildMap(String key, Object value, Map<Object, Object> map){
+		if (key.indexOf("/") != -1) {
+			String currentKey = key.substring(0, key.indexOf("/"));
+			@SuppressWarnings("unchecked")
+			Hashtable<Object, Object> subMap = (Hashtable<Object, Object>) map.get(currentKey);
+			if (subMap == null) {
+				subMap = new Hashtable<Object, Object>();
+				map.put(currentKey, subMap);
+			}
+			buildMap(key.substring(key.indexOf("/") + 1), value, subMap);
+		} else {
+			map.put(key, value);
+		}
+	}
+	
+	@Override
+	public void setFromMap(IContact contact, Map<Object, Object> map){
+		map = flattenMap(map);
+		map.forEach((k, v) -> {
+			set(contact, (String) k, (String) v);
+		});
+	}
+	
+	/**
+	 * Flatten the map to keys of type String matching the param column in the db.
+	 * 
+	 * @param map
+	 * @return
+	 */
+	private Map<Object, Object> flattenMap(Map<Object, Object> map){
+		Map<Object, Object> ret = new HashMap<>();
+		flattenMap(map, ret, "");
+		return ret;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void flattenMap(Map<Object, Object> src, Map<Object, Object> dest, String parentkey){
+		for (Object key : src.keySet()) {
+			String currentKey =
+				StringUtils.isEmpty(parentkey) ? (String) key : parentkey + "/" + key;
+			if (src.get(key) instanceof Map) {
+				flattenMap((Map<Object, Object>) src.get(key), dest, currentKey);
+			} else {
+				dest.put(currentKey, src.get(key));
+			}
+		}
+	}
 	
 	@Override
 	public boolean setLocal(String key, String value){

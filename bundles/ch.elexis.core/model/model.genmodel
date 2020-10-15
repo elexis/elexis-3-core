@@ -395,6 +395,10 @@
       <genOperations ecoreOperation="model.ecore#//IBlob/setStringContent">
         <genParameters ecoreParameter="model.ecore#//IBlob/setStringContent/value"/>
       </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IBlob/getMapContent"/>
+      <genOperations ecoreOperation="model.ecore#//IBlob/setMapContent">
+        <genParameters ecoreParameter="model.ecore#//IBlob/setMapContent/map"/>
+      </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IEncounter">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IEncounter/timeStamp"/>
