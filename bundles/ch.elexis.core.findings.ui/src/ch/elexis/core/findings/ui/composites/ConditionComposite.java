@@ -1,7 +1,6 @@
 package ch.elexis.core.findings.ui.composites;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +28,7 @@ import ch.elexis.core.findings.ICondition.ConditionCategory;
 import ch.elexis.core.findings.ICondition.ConditionStatus;
 import ch.elexis.core.findings.ui.composites.CodingListComposite.CodingAdapter;
 import ch.elexis.core.findings.ui.composites.NoteListComposite.NotesAdapter;
+import ch.elexis.core.findings.ui.model.ConditionBeanAdapter;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 
 public class ConditionComposite extends Composite {
@@ -36,7 +36,7 @@ public class ConditionComposite extends Composite {
 	private ConditionCategory category;
 	
 	private Optional<ICondition> condition;
-	private WritableValue transientConditionValue;
+	private WritableValue<ConditionBeanAdapter> conditionValue;
 	
 	private ComboViewer statusViewer;
 	
@@ -103,29 +103,29 @@ public class ConditionComposite extends Composite {
 	}
 	
 	private void initDataBinding(){
-		transientConditionValue = new WritableValue();
+		conditionValue = new WritableValue<>();
 		DataBindingContext bindingContext = new DataBindingContext();
 		
 		IObservableValue targetObservable =
 			ViewersObservables.observeSingleSelection(statusViewer);
 		IObservableValue modelObservable = PojoObservables
-			.observeDetailValue(transientConditionValue, "status", TransientCondition.class);
+			.observeDetailValue(conditionValue, "status", ConditionStatus.class);
 		bindingContext.bindValue(targetObservable, modelObservable);
 		
 		targetObservable = SWTObservables.observeText(startTxt, SWT.Modify);
-		modelObservable = PojoObservables.observeDetailValue(transientConditionValue, "start",
-			TransientCondition.class);
+		modelObservable = PojoObservables.observeDetailValue(conditionValue, "start",
+			String.class);
 		bindingContext.bindValue(targetObservable, modelObservable);
 		
 		targetObservable = SWTObservables.observeText(endTxt, SWT.Modify);
-		modelObservable = PojoObservables.observeDetailValue(transientConditionValue, "end",
-			TransientCondition.class);
+		modelObservable = PojoObservables.observeDetailValue(conditionValue, "end",
+			String.class);
 		bindingContext.bindValue(targetObservable, modelObservable);
 		
 		targetObservable = SWTObservables.observeText(textTxt, SWT.Modify);
 		modelObservable =
-			PojoObservables.observeDetailValue(transientConditionValue, "text",
-				TransientCondition.class);
+			PojoObservables.observeDetailValue(conditionValue, "text",
+				String.class);
 		bindingContext.bindValue(targetObservable, modelObservable);
 		
 		setCondition(null);
@@ -138,198 +138,63 @@ public class ConditionComposite extends Composite {
 	public void setCondition(final ICondition condition){
 		this.condition = Optional.ofNullable(condition);
 		if (this.condition.isPresent()) {
-			transientConditionValue
-				.setValue(TransientCondition.fromCondition(this.condition.get()));
+			condition.setCategory(category);
+			conditionValue
+				.setValue(new ConditionBeanAdapter(condition));
 			// show coding if present
 			List<ICoding> coding = this.condition.get().getCoding();
 			if (coding != null && !coding.isEmpty()) {
 				textOrCodingFolder.setSelection(1);
 			}
 		} else {
-			TransientCondition emptyCondition = new TransientCondition();
+			ICondition emptyCondition =
+				FindingsServiceComponent.getService().create(ICondition.class);
 			emptyCondition.setStatus(ConditionStatus.ACTIVE);
 			emptyCondition.setDateRecorded(LocalDate.now());
-			transientConditionValue.setValue(emptyCondition);
+			emptyCondition.setCategory(category);
+			conditionValue.setValue(new ConditionBeanAdapter(emptyCondition));
+			this.condition = Optional.of(emptyCondition);
 		}
 		
 		// provide access adapter to notes composite 
 		notesComposite.setInput(new NotesAdapter() {
 			@Override
 			public void removeNote(String note){
-				if (transientConditionValue.getValue() != null) {
-					((TransientCondition) transientConditionValue.getValue()).removeNote(note);
+				if (conditionValue.getValue() != null) {
+					conditionValue.getValue().removeNote(note);
 				}
 			}
 			
 			@Override
 			public List<String> getNotes(){
-				if (transientConditionValue.getValue() != null) {
-					return ((TransientCondition) transientConditionValue.getValue()).getNotes();
+				if (conditionValue.getValue() != null) {
+					return conditionValue.getValue().getNotes();
 				}
 				return Collections.emptyList();
 			}
 			
 			@Override
 			public void addNote(String note){
-				if (transientConditionValue.getValue() != null) {
-					((TransientCondition) transientConditionValue.getValue()).addNote(note);
+				if (conditionValue.getValue() != null) {
+					conditionValue.getValue().addNote(note);
 				}
 			}
 		});
 		codingComposite.setInput(new CodingAdapter() {
 			@Override
 			public List<ICoding> getCoding(){
-				if (transientConditionValue.getValue() != null) {
-					return ((TransientCondition) transientConditionValue.getValue()).getCoding();
+				if (conditionValue.getValue() != null) {
+					return conditionValue.getValue().getCoding();
 				}
 				return Collections.emptyList();
 			}
 
 			@Override
 			public void setCoding(List<ICoding> coding){
-				if (transientConditionValue.getValue() != null) {
-					((TransientCondition) transientConditionValue.getValue()).setCoding(coding);
+				if (conditionValue.getValue() != null) {
+					conditionValue.getValue().setCoding(coding);
 				}
 			}
 		});
-	}
-	
-	/**
-	 * Creates a new ICondition if none set, and updates it with the actual values.
-	 */
-	public void udpateModel(){
-		if (!condition.isPresent()) {
-			condition = Optional
-				.of(FindingsServiceComponent.getService().create(ICondition.class));
-			condition.get().setCategory(category);
-		}
-		if (transientConditionValue.getValue() instanceof TransientCondition) {
-			((TransientCondition) transientConditionValue.getValue()).toCondition(condition.get());
-		}
-	}
-	
-	private static class TransientCondition {
-		
-		private String text;
-		private List<ICoding> coding = new ArrayList<>();
-		private ConditionStatus status;
-		private LocalDate dateRecorded;
-		private List<String> notes = new ArrayList<>();
-		
-		private String start;
-		private String end;
-		
-		public List<ICoding> getCoding(){
-			return coding;
-		}
-		
-
-		public void setCoding(List<ICoding> coding){
-			this.coding = coding;
-		}
-		
-		public String getText(){
-			return text;
-		}
-		
-
-		public void setText(String text){
-			this.text = text;
-		}
-		
-		
-		public ConditionStatus getStatus(){
-			return status;
-		}
-		
-
-		public void setStatus(ConditionStatus status){
-			this.status = status;
-		}
-		
-		public void setDateRecorded(LocalDate dateRecorded){
-			this.dateRecorded = dateRecorded;
-		}
-		
-		public LocalDate getDateRecorded(){
-			return dateRecorded;
-		}
-		
-		private void setNotes(List<String> notes){
-			this.notes = notes;
-		}
-		
-		public List<String> getNotes(){
-			return notes;
-		}
-		
-		public void addNote(String note){
-			notes.add(note);
-		}
-		
-		public void removeNote(String note){
-			notes.remove(note);
-		}
-		
-		public String getStart(){
-			return start;
-		}
-		
-		public void setStart(String start){
-			this.start = start;
-		}
-		
-		public String getEnd(){
-			return end;
-		}
-		
-		public void setEnd(String end){
-			this.end = end;
-		}
-		
-		public static TransientCondition fromCondition(ICondition condition){
-			TransientCondition ret = new TransientCondition();
-			ret.setStatus(condition.getStatus());
-			ret.setCoding(condition.getCoding());
-			condition.getDateRecorded().ifPresent(d -> ret.setDateRecorded(d));
-			condition.getText().ifPresent(t -> ret.setText(t));
-			ret.setNotes(new ArrayList<String>(condition.getNotes()));
-			condition.getStart().ifPresent(string -> ret.setStart(string));
-			condition.getEnd().ifPresent(string -> ret.setEnd(string));
-			return ret;
-		}
-		
-
-		public void toCondition(ICondition condition){
-			condition.setStatus(getStatus());
-			condition.setCoding(getCoding());
-			if(dateRecorded != null) {
-				condition.setDateRecorded(getDateRecorded());
-			}
-			if(text != null) {
-				condition.setText(getText());
-			}
-			if (start != null) {
-				condition.setStart(start);
-			}
-			if (end != null) {
-				condition.setEnd(end);
-			}
-			if (notes != null) {
-				List<String> existingNotes = condition.getNotes();
-				for (String string : existingNotes) {
-					// remove no longer contained notes
-					if (!notes.contains(string)) {
-						condition.removeNote(string);
-					}
-				}
-				for (String string : notes) {
-					// add new notes
-					if (!existingNotes.contains(string)) {
-						condition.addNote(string);
-					}
-				}
-			}
-		}
 	}
 }
