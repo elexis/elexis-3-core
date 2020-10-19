@@ -75,9 +75,16 @@ public class TableDecoratingLabelProvider extends DecoratingLabelProvider implem
 	
 	@Override
 	public Color getForeground(Object element){
-		IContact c = (IContact) element;
-		if (c.isDeleted())
-			return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
+		if (element instanceof ch.elexis.core.data.interfaces.IContact) {
+			ch.elexis.core.data.interfaces.IContact c =
+				(ch.elexis.core.data.interfaces.IContact) element;
+			if (c.isDeleted())
+				return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
+		} else if (element instanceof IContact) {
+			IContact c = (IContact) element;
+			if (c.isDeleted())
+				return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
+		}
 		return null;
 	}
 	
