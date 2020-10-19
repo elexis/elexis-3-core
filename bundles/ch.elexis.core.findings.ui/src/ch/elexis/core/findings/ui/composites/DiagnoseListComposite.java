@@ -38,7 +38,6 @@ import org.eclipse.swt.widgets.ToolBar;
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
@@ -277,13 +276,14 @@ public class DiagnoseListComposite extends Composite {
 		
 		@Override
 		public void run(){
-			AcquireLockUi.aquireAndRun((IPersistentObject) condition, new ILockHandler() {
+			AcquireLockUi.aquireAndRun(condition, new ILockHandler() {
 				@Override
 				public void lockFailed(){}
 				
 				@Override
 				public void lockAcquired(){
 					condition.setStatus(status);
+					FindingsServiceComponent.getService().saveFinding(condition);
 				}
 			});
 			
@@ -312,8 +312,9 @@ public class DiagnoseListComposite extends Composite {
 				if (dialog.open() == Dialog.OK) {
 					dialog.getCondition().ifPresent(c -> {
 						c.setPatientId(selectedPatient.getId());
+						FindingsServiceComponent.getService().saveFinding(c);
 						// touch after creation
-						LocalLockServiceHolder.get().acquireLock((IPersistentObject) c);
+						LocalLockServiceHolder.get().acquireLock(c);
 						dataList.add(c);
 						natTableWrapper.getNatTable().refresh();
 					});
@@ -341,7 +342,7 @@ public class DiagnoseListComposite extends Composite {
 				@SuppressWarnings("unchecked")
 				List<ICondition> list = ((StructuredSelection) selection).toList();
 				list.stream().forEach(c -> {
-					AcquireLockUi.aquireAndRun((IPersistentObject) c, new ILockHandler() {
+					AcquireLockUi.aquireAndRun(c, new ILockHandler() {
 						@Override
 						public void lockFailed(){}
 						

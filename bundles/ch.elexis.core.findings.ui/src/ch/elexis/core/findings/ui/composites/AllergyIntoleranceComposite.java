@@ -13,16 +13,16 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.findings.IAllergyIntolerance;
+import ch.elexis.core.findings.ui.model.AbstractBeanAdapter;
+import ch.elexis.core.findings.ui.model.AllergyIntoleranceBeanAdapter;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
-import ch.elexis.data.Patient;
 
 public class AllergyIntoleranceComposite extends Composite {
 	
 	private StyledText textOberservation = null;
 	
-	protected WritableValue item = new WritableValue(null, AllergyIntoleranceText.class);
+	protected WritableValue<AbstractBeanAdapter<IAllergyIntolerance>> item = new WritableValue<>();
 	
 	public AllergyIntoleranceComposite(Composite parent, int style){
 		super(parent, style);
@@ -39,7 +39,9 @@ public class AllergyIntoleranceComposite extends Composite {
 	
 	public void setInput(Optional<IAllergyIntolerance> input){
 		if (textOberservation != null) {
-			item.setValue(new AllergyIntoleranceText(input.isPresent() ? input.get() : null));
+			item.setValue(new AllergyIntoleranceBeanAdapter(input.isPresent() ? input.get()
+					: FindingsServiceComponent.getService().create(IAllergyIntolerance.class))
+						.autoSave(true));
 		}
 	}
 	
@@ -48,40 +50,9 @@ public class AllergyIntoleranceComposite extends Composite {
 		IObservableValue target =
 			WidgetProperties.text(SWT.Modify).observeDelayed(1500, textOberservation);
 		IObservableValue model =
-			PojoProperties.value(AllergyIntoleranceText.class, "text", String.class)
+			PojoProperties.value(AllergyIntoleranceBeanAdapter.class, "text", String.class)
 				.observeDetail(item);
 		
 		bindingContext.bindValue(target, model, null, null);
-	}
-	
-	class AllergyIntoleranceText {
-		IAllergyIntolerance iAllergyIntolerance;
-		
-		public AllergyIntoleranceText(IAllergyIntolerance iAllergyIntolerance){
-			super();
-			this.iAllergyIntolerance = iAllergyIntolerance;
-		}
-		
-		public void setText(String text){
-			if (iAllergyIntolerance == null && text != null && text.length() > 0) {
-				Patient patient = ElexisEventDispatcher.getSelectedPatient();
-				if (patient != null && patient.exists()) {
-					iAllergyIntolerance =
-						FindingsServiceComponent.getService().create(IAllergyIntolerance.class);
-					iAllergyIntolerance.setPatientId(patient.getId());
-				}
-			}
-			
-			if (iAllergyIntolerance != null) {
-				iAllergyIntolerance.setText(text);
-			}
-		}
-		
-		public String getText(){
-			if (iAllergyIntolerance != null) {
-				return iAllergyIntolerance.getText().orElse("");
-			}
-			return "";
-		}
 	}
 }

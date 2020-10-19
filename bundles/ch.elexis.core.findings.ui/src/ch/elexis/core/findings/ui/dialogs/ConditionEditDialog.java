@@ -55,7 +55,6 @@ public class ConditionEditDialog extends TitleAreaDialog {
 	
 	@Override
 	protected void okPressed(){
-		conditionComposite.udpateModel();
 		condition = conditionComposite.getCondition();
 		FindingsServiceComponent.getService().saveFinding(condition.get());
 		super.okPressed();
