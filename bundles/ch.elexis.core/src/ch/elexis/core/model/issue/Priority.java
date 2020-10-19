@@ -2,6 +2,8 @@ package ch.elexis.core.model.issue;
 
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.interfaces.ILocalizedEnum;
 import ch.elexis.core.interfaces.INumericEnum;
 
@@ -29,13 +31,18 @@ public enum Priority implements INumericEnum, ILocalizedEnum {
 	}
 
 	public static Priority byNumericSafe(String priority) {
-		int numeric = Integer.parseInt(priority);
-		for (Priority prio : Priority.values()) {
-			if (prio.numericValue() == numeric) {
-				return prio;
+		if (StringUtils.isNotBlank(priority)) {
+			try {
+				int numeric = Integer.parseInt(priority);
+				for (Priority prio : Priority.values()) {
+					if (prio.numericValue() == numeric) {
+						return prio;
+					}
+				}
+			} catch (NumberFormatException e) {
+				// ignore and return default
 			}
 		}
 		return Priority.MEDIUM;
 	}
-
 }
