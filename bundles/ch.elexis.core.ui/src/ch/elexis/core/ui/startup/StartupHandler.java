@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.startup;
 
+import java.util.Collection;
 import java.util.Collections;
 
 import org.eclipse.core.commands.Command;
@@ -8,7 +9,11 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.UIEvents;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
@@ -30,8 +35,16 @@ import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 @Component(property = EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE)
 public class StartupHandler implements EventHandler {
 	
+	private static IEclipseContext applicationContext;
+	
 	@Override
 	public void handleEvent(Event event){
+		Object property = event.getProperty("org.eclipse.e4.data");
+		if (property instanceof MApplication) {
+			MApplication application = (MApplication) property;
+			StartupHandler.applicationContext = application.getContext();
+		}
+		
 		PlatformUI.getWorkbench().addWorkbenchListener(new IWorkbenchListener() {
 			@Override
 			public boolean preShutdown(IWorkbench workbench, boolean forced){
@@ -54,6 +67,21 @@ public class StartupHandler implements EventHandler {
 							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 							Messages.UiStartup_errortitle,
 							Messages.UiStartup_errormessage);
+					}
+				}
+				// reset dirty of closed compatibility parts that would open save resources dialog (redmine #20724)
+				if (StartupHandler.applicationContext != null
+					&& StartupHandler.applicationContext.get(EPartService.class) != null) {
+					EPartService partService =
+						StartupHandler.applicationContext.get(EPartService.class);
+					Collection<MPart> dirtyParts = partService.getDirtyParts();
+					if (!dirtyParts.isEmpty()) {
+						for (MPart mPart : dirtyParts) {
+							if (mPart.getObject() == null && mPart.getContributionURI()
+								.endsWith("internal.e4.compatibility.CompatibilityView")) {
+								mPart.setDirty(false);
+							}
+						}
 					}
 				}
 				return true;
