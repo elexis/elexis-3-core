@@ -12,6 +12,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.ui.UiDesk;
 
@@ -20,6 +21,7 @@ public class UiStartupHandler implements EventHandler {
 	
 	@Override
 	public void handleEvent(Event event){
+		LoggerFactory.getLogger(getClass()).info("APPLICATION STARTUP COMPLETE");
 		Object property = event.getProperty("org.eclipse.e4.data");
 		if (property instanceof MApplication) {
 			MApplication application = (MApplication) property;

@@ -42,7 +42,7 @@ public class CoreUiUtil {
 	@Optional
 	public void subscribeAppStartupComplete(
 		@UIEventTopic(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE) Event event, UISynchronize sync){
-		
+		logger.info("APPLICATION STARTUP COMPLETE");
 		synchronized (lock) {
 			Object property = event.getProperty("org.eclipse.e4.data");
 			if (property instanceof MApplication) {

@@ -16,7 +16,6 @@ import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventDispatcher.IPerformanceStatisticHandler;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
@@ -30,6 +29,7 @@ public class StartupHandler implements EventHandler {
 	
 	@Override
 	public void handleEvent(Event event){
+		LoggerFactory.getLogger(getClass()).info("APPLICATION STARTUP COMPLETE");
 		if (ConfigServiceHolder.getGlobal(UsageSettings.CONFIG_USAGE_STATISTICS, false)) {
 			registerNotifications();
 			StatisticsManager.INSTANCE.getStatistics().setFrom(new Date());
