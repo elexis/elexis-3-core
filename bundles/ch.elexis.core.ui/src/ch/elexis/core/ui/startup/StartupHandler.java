@@ -76,14 +76,19 @@ public class StartupHandler implements EventHandler {
 					&& StartupHandler.applicationContext.get(EPartService.class) != null) {
 					EPartService partService =
 						StartupHandler.applicationContext.get(EPartService.class);
-					Collection<MPart> dirtyParts = partService.getDirtyParts();
-					if (!dirtyParts.isEmpty()) {
-						for (MPart mPart : dirtyParts) {
-							if (mPart.getObject() == null && mPart.getContributionURI()
-								.endsWith("internal.e4.compatibility.CompatibilityView")) {
-								mPart.setDirty(false);
+					try {
+						Collection<MPart> dirtyParts = partService.getDirtyParts();
+						if (!dirtyParts.isEmpty()) {
+							for (MPart mPart : dirtyParts) {
+								if (mPart.getObject() == null && mPart.getContributionURI()
+									.endsWith("internal.e4.compatibility.CompatibilityView")) {
+									mPart.setDirty(false);
+								}
 							}
 						}
+					} catch (IllegalStateException e) {
+						LoggerFactory.getLogger(getClass()).warn("Exception resetting dirty state",
+							e);
 					}
 				}
 				return true;
