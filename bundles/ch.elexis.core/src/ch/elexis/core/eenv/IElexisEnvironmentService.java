@@ -57,5 +57,9 @@ public interface IElexisEnvironmentService {
 	default String getKeycloakBaseUrl(){
 		return getBaseUrl() + "/keycloak";
 	}
+
+	default String getOcrMyPdfBaseUrl(){
+		return getBaseUrl() + "/ocrmypdf/";
+	}
 	
 }
