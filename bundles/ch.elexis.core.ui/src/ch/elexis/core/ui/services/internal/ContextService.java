@@ -112,6 +112,7 @@ public class ContextService implements IContextService, EventHandler {
 	
 	@Activate
 	public void activate(){
+		logger.info("ACTIVATE");
 		root = new Context();
 		contexts = new ConcurrentHashMap<>();
 		eventDispatcherListener = new SelectionEventDispatcherListener();
@@ -163,6 +164,7 @@ public class ContextService implements IContextService, EventHandler {
 	
 	@Deactivate
 	public void deactivate(){
+		logger.info("DEACTIVATE");
 		ElexisEventDispatcher.getInstance().removeListeners(eventDispatcherListener,
 			reloadEventDispatcherListener, lockingEventDispatcherListener,
 			userChangedEventDispatcherListener, mandatorChangedEventDispatcherListener,
@@ -173,9 +175,11 @@ public class ContextService implements IContextService, EventHandler {
 	public void handleEvent(Event event){
 		Object property = event.getProperty("org.eclipse.e4.data");
 		if (property instanceof MApplication) {
+			logger.info("APPLICATION STARTUP COMPLETE " + property);
 			MApplication application = (MApplication) property;
 			applicationContext = application.getContext();
 			if (getRootContext() != null) {
+				logger.info("SET APPLICATION CONTEXT " + applicationContext);
 				((Context) getRootContext()).setEclipseContext(applicationContext);
 			}
 		}

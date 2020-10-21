@@ -58,6 +58,7 @@ public class CoreUiUtil implements EventHandler {
 	
 	@Override
 	public void handleEvent(Event event){
+		logger.info("APPLICATION STARTUP COMPLETE");
 		synchronized (lock) {
 			Object property = event.getProperty("org.eclipse.e4.data");
 			if (property instanceof MApplication) {
