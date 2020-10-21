@@ -340,8 +340,11 @@ public class TaskServiceImpl implements ITaskService {
 		// TODO test if all runContext parameters are satisfied, else reject execution
 		task.setState(TaskState.QUEUED);
 		
+		boolean singletonRunnable =
+			instantiateRunnableById(taskDescriptor.getIdentifiedRunnableId()).isSingleton();
+		
 		try {
-			if (taskDescriptor.isSingleton()) {
+			if (singletonRunnable || taskDescriptor.isSingleton()) {
 				// TODO per runnable singletonExecutorService
 				// no need to share one singleton executor for all runnables
 				singletonExecutorService.execute((Runnable) task);
