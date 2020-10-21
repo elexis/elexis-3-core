@@ -1,7 +1,6 @@
 package ch.elexis.core.model.tasks;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -142,11 +141,10 @@ public interface IIdentifiedRunnable {
 		IProgressMonitor progressMonitor, Logger logger) throws TaskException;
 	
 	/**
-	 * 
-	 * @return
+	 * @return whether only one instance of this runnable must be executed at a given time
 	 */
-	default Map<String, String> getTaskDescriptorDefaults(){
-		return Collections.emptyMap();
+	default boolean isSingleton(){
+		return false;
 	}
 	
 }

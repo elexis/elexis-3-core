@@ -57,7 +57,7 @@ public class TaskDescriptor
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setOwner(IUser value){
-		if (value != null) {
+		if (value != null && value instanceof AbstractIdModelAdapter<?>) {
 			getEntity().setOwner(
 				((AbstractIdModelAdapter<ch.elexis.core.jpa.entities.User>) value).getEntity());
 		} else {

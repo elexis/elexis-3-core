@@ -308,7 +308,7 @@ public interface ITaskDescriptor extends Identifiable, Deleteable {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Whether concurrent executions of an instantiation of this ITaskDescriptor are allowed
+	 * Whether concurrent executions of an instantiation of this ITaskDescriptor are allowed. Even if this is set to false, if the reference IIdentifiedRunnable is singleton, it will be enforced to be true on execution.
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Singleton</em>' attribute.
 	 * @see #setSingleton(boolean)
