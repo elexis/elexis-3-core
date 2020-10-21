@@ -54,8 +54,9 @@ public interface IVirtualFilesystemService {
 		 * 
 		 * @param destination
 		 * @throws IOException
+		 * @return handle reflecting the location of the copied file
 		 */
-		public void copyTo(IVirtualFilesystemHandle destination) throws IOException;
+		public IVirtualFilesystemHandle copyTo(IVirtualFilesystemHandle destination) throws IOException;
 		
 		/**
 		 * 
@@ -138,11 +139,14 @@ public interface IVirtualFilesystemService {
 		public String getAbsolutePath();
 		
 		/**
+		 * Move this to the handle. If this is a file and handle is a directory, the filename is
+		 * kept and return references a file handle in the provided directory.
 		 * 
-		 * @param handle
+		 * @param handle the target handle of this
 		 * @throws IOException
+		 * @return the updated handle reflecting the new location
 		 */
-		public void moveTo(IVirtualFilesystemHandle handle) throws IOException;
+		public IVirtualFilesystemHandle moveTo(IVirtualFilesystemHandle target) throws IOException;
 		
 		/**
 		 * Only if {@link #isDirectory()}: Create a possibly not yet existing sub-directory handle.
