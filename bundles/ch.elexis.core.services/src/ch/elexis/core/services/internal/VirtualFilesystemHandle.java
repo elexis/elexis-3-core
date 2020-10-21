@@ -12,6 +12,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.List;
@@ -83,12 +84,19 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 	}
 	
 	@Override
-	public void copyTo(IVirtualFilesystemHandle destination) throws IOException{
+	public IVirtualFilesystemHandle copyTo(IVirtualFilesystemHandle target) throws IOException{
+		if (target.isDirectory()) {
+			URL targetUrl = new URL(target.toString() + this.getName());
+			target = new VirtualFilesystemHandle(targetUrl);
+			return copyTo(target);
+		}
+		
 		try (InputStream in = openInputStream()) {
-			try (OutputStream out = destination.openOutputStream()) {
+			try (OutputStream out = target.openOutputStream()) {
 				IOUtils.copy(in, out);
 			}
 		}
+		return target;
 	}
 	
 	@Override
@@ -287,20 +295,27 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 	}
 	
 	@Override
-	public void moveTo(IVirtualFilesystemHandle target) throws IOException{
+	public IVirtualFilesystemHandle moveTo(IVirtualFilesystemHandle target) throws IOException{
+		if (target.isDirectory()) {
+			URL targetUrl = new URL(target.toURL().toString() + this.getName());
+			target = new VirtualFilesystemHandle(targetUrl);
+			return moveTo(target);
+		}
+		
 		Optional<File> file = toFile();
 		if (file.isPresent()) {
 			Optional<File> _target = target.toFile();
 			if (_target.isPresent()) {
 				// from file to file
-				Files.move(file.get().toPath(), _target.get().toPath(),
+				Path path = Files.move(file.get().toPath(), _target.get().toPath(),
 					StandardCopyOption.REPLACE_EXISTING);
-				return;
+				return new VirtualFilesystemHandle(path.toFile());
 			}
 		}
-		
+		// TODO SMB if on same resource - use rename method
 		copyTo(target);
 		delete();
+		return target;
 	}
 	
 	@Override

@@ -15,7 +15,9 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -38,6 +40,11 @@ public class VirtualFileHandle_FileFile_Test extends AbstractVirtualFileHandleTe
 		testFile.deleteOnExit();
 		createPopulateTestFile();
 		testDirectoryHandle = service.of(testFile);
+	}
+	
+	@AfterClass
+	public static void afterClass() throws IOException {
+		FileUtils.deleteDirectory(testDirectory);
 	}
 	
 	private static void createPopulateTestFile() throws IOException {

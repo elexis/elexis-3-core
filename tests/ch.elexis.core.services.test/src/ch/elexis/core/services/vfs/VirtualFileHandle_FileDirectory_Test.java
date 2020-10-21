@@ -2,8 +2,8 @@ package ch.elexis.core.services.vfs;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,8 +11,9 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.apache.commons.io.FileUtils;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ch.elexis.core.services.IVirtualFilesystemService;
@@ -23,34 +24,41 @@ public class VirtualFileHandle_FileDirectory_Test extends AbstractVirtualFileHan
 
 	static Path tempDirectory;
 	static File testDirectory;
-	static File testSubDirectory;
 
 	// TODO change to directory
 
 	@BeforeClass
 	public static void beforeClass() throws IOException {
 		service = OsgiServiceUtil.getService(IVirtualFilesystemService.class).get();
-		tempDirectory = Files.createTempDirectory("virtualFilesystemTest_filefile");
+		tempDirectory = Files.createTempDirectory("virtualFilesystemTest_filedirectory");
 		testDirectory = new File(tempDirectory.toFile(), "subDir/");
 		assertTrue(testDirectory.mkdir());
 		testDirectory.deleteOnExit();
 		testDirectoryHandle = service.of(testDirectory);
+		assertTrue(testDirectoryHandle.isDirectory());
 	}
 
+	@AfterClass
+	public static void afterClass() throws IOException {
+		FileUtils.deleteDirectory(tempDirectory.toFile());
+	}
+	
 	@Test(expected = IOException.class)
 	public void testOpenOutputStream() throws IOException {
 		testDirectoryHandle.openOutputStream();
 	}
 
 	@Test
-	@Ignore
 	public void testCopyTo() throws IOException {
-//		File copyToFile = new File(testDirectory, "copyToFile");
-//		testHandle.copyTo(service.of(copyToFile));
-//		byte[] readAllBytes = Files.readAllBytes(copyToFile.toPath());
-//		assertArrayEquals("meaninglessTestText".getBytes(), readAllBytes);
-//		assertTrue(testHandle.exists());
-		fail();
+		File copyToFile = new File(testDirectory, "copyToFile");
+		copyToFile.createNewFile();
+		IVirtualFilesystemHandle srcFile = service.of(copyToFile);
+		IVirtualFilesystemHandle dstFile = srcFile.copyTo(testDirectoryHandle);
+		File _srcFile = srcFile.toFile().get();
+		File _dstFile = dstFile.toFile().get();
+		assertTrue(_srcFile.canRead());
+		assertTrue(_dstFile.canRead());
+		assertEquals(_srcFile.length(), _dstFile.length());
 	}
 
 	@Test
@@ -134,13 +142,16 @@ public class VirtualFileHandle_FileDirectory_Test extends AbstractVirtualFileHan
 	}
 
 	@Test
-	@Ignore
 	public void testMoveTo() throws IOException {
-//		File copyToFile = new File(testDirectory, "copyToFile");
-//		assertTrue(testHandle.moveTo(service.of(copyToFile)));
-//		byte[] readAllBytes = Files.readAllBytes(copyToFile.toPath());
-//		assertArrayEquals("meaninglessTestText".getBytes(), readAllBytes);
-//		assertFalse(testHandle.exists());
+		File moveToFile = new File(tempDirectory.toFile(), "moveToFile_2");
+		assertTrue(moveToFile.createNewFile());
+		
+		IVirtualFilesystemHandle vfh_moveTo = service.of(moveToFile);
+		IVirtualFilesystemHandle vfh_target = vfh_moveTo.moveTo(service.of(testDirectory));
+
+		assertNotEquals(vfh_moveTo, vfh_target);
+		assertFalse(moveToFile.exists());
+		assertTrue(vfh_target.toFile().get().exists());
 	}
 
 	@Test
