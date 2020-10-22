@@ -15,4 +15,3 @@ Import-Package: ch.elexis.core.jdt,
  org.osgi.service.component.annotations;version="1.2.0",
  org.slf4j
 Service-Component: OSGI-INF/ch.elexis.core.ui.icons.urihandler.IconURLStreamHandlerService.xml
-Bundle-Activator: ch.elexis.core.ui.icons.Activator
