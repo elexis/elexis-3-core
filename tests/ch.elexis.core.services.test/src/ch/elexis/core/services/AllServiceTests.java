@@ -41,6 +41,7 @@ public class AllServiceTests {
 		
 		tdb = new TestDatabaseInitializer(modelService, entityManager);
 		tdb.initializePatient();
+		tdb.initializeMandant();
 		tdb.initializeLabResult();
 		tdb.initializePrescription();
 	}
