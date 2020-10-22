@@ -110,6 +110,7 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 	private GenericObjectDropTarget dropTarget;
 	private final ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 		
+		@Override
 		public void runInUi(ElexisEvent ev){
 			if (tv != null && tv.getControl() != null && !tv.getControl().isDisposed()) {
 				if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
@@ -138,6 +139,7 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 	private final ElexisEventListener eeli_rp = new ElexisUiEventListenerImpl(Rezept.class,
 		ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_UPDATE) {
 		
+		@Override
 		public void runInUi(ElexisEvent ev){
 			if (tv != null && tv.getControl() != null && !tv.getControl().isDisposed()) {
 				if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
@@ -162,6 +164,7 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 		tv = new TableViewer(sash, SWT.V_SCROLL | SWT.FULL_SELECTION);
 		tv.setContentProvider(new IStructuredContentProvider() {
 			
+			@Override
 			public Object[] getElements(final Object inputElement){
 				Query<Rezept> qbe = new Query<Rezept>(Rezept.class);
 				/*
@@ -179,9 +182,11 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 				}
 			}
 			
+			@Override
 			public void dispose(){ /* leer */
 			}
 			
+			@Override
 			public void inputChanged(final Viewer viewer, final Object oldInput,
 				final Object newInput){ /* leer */
 			}
@@ -488,6 +493,7 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 				setToolTipText(Messages.RezepteView_ChangeTooltip); //$NON-NLS-1$
 			}
 			
+			@Override
 			public void doRun(){
 				Rezept rp = (Rezept) ElexisEventDispatcher.getSelected(Rezept.class);
 				IStructuredSelection sel = (IStructuredSelection) lvRpLines.getSelection();
@@ -527,11 +533,13 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 		}
 	}
 	
+	@Override
 	public void activation(final boolean mode){
 		// TODO Auto-generated method stub
 		
 	}
 	
+	@Override
 	public void visible(final boolean mode){
 		if (mode == true) {
 			ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_rp);
@@ -555,6 +563,7 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 	
 	private static class RezeptContentProvider implements IStructuredContentProvider {
 		
+		@Override
 		@SuppressWarnings("unchecked")
 		public Object[] getElements(final Object inputElement){
 			Rezept rp = (Rezept) ElexisEventDispatcher.getSelected(Rezept.class);
@@ -566,9 +575,11 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 			return list.toArray();
 		}
 		
+		@Override
 		public void dispose(){ /* leer */
 		}
 		
+		@Override
 		public void inputChanged(final Viewer viewer, final Object oldInput,
 			final Object newInput){ /* leer */
 		}
@@ -596,25 +607,31 @@ public class RezepteView extends ViewPart implements IActivationListener, ISavea
 	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
 	 * Gibt es da keine einfachere Methode?
 	 */
+	@Override
 	public int promptToSaveOnClose(){
 		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
 				: ISaveablePart2.NO;
 	}
 	
+	@Override
 	public void doSave(final IProgressMonitor monitor){ /* leer */
 	}
 	
+	@Override
 	public void doSaveAs(){ /* leer */
 	}
 	
+	@Override
 	public boolean isDirty(){
 		return true;
 	}
 	
+	@Override
 	public boolean isSaveAsAllowed(){
 		return false;
 	}
 	
+	@Override
 	public boolean isSaveOnCloseNeeded(){
 		return true;
 	}

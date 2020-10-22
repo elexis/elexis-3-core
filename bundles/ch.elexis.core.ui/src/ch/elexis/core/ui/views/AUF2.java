@@ -63,6 +63,7 @@ public class AUF2 extends ViewPart implements IActivationListener {
 	private Action newAUF, delAUF, modAUF, printAUF;
 	private ElexisEventListener eli_auf = new ElexisUiEventListenerImpl(AUF.class) {
 		
+		@Override
 		public void runInUi(ElexisEvent ev){
 			boolean bSelect = (ev.getType() == ElexisEvent.EVENT_SELECTED);
 			modAUF.setEnabled(bSelect);
@@ -80,6 +81,7 @@ public class AUF2 extends ViewPart implements IActivationListener {
 	};
 	private ElexisEventListener eli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 		
+		@Override
 		public void runInUi(ElexisEvent ev){
 			if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
 				tv.refresh();
@@ -113,6 +115,7 @@ public class AUF2 extends ViewPart implements IActivationListener {
 		GlobalEventDispatcher.addActivationListener(this, this);
 		tv.addSelectionChangedListener(GlobalEventDispatcher.getInstance().getDefaultListener());
 		tv.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
 			public void doubleClick(DoubleClickEvent event){
 				modAUF.run();
 			}
@@ -232,6 +235,7 @@ public class AUF2 extends ViewPart implements IActivationListener {
 	
 	class AUFContentProvider implements IStructuredContentProvider {
 		
+		@Override
 		public Object[] getElements(Object inputElement){
 			Patient pat = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
 			if (pat == null) {
@@ -244,18 +248,22 @@ public class AUF2 extends ViewPart implements IActivationListener {
 			return list.toArray();
 		}
 		
+		@Override
 		public void dispose(){ /* leer */
 		}
 		
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
 			/* leer */
 		}
 		
 	}
 	
+	@Override
 	public void activation(boolean mode){ /* egal */
 	}
 	
+	@Override
 	public void visible(boolean mode){
 		if (mode) {
 			ElexisEventDispatcher.getInstance().addListeners(eli_auf, eli_pat);

@@ -95,6 +95,7 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 	private ToolBar toolBar;
 	private TableColumnLayout tableLayout;
 	
+	@Override
 	public void setEnabled(boolean enabled) {
 		toolBar.setEnabled(enabled);
 		super.setEnabled(enabled);
@@ -182,6 +183,7 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 		
 		// connect double click on column to actions
 		table.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseDoubleClick(MouseEvent e){
 				int clickedIndex = -1;
 				// calculate column of click
@@ -373,19 +375,23 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 		MenuManager contextMenuManager = new MenuManager();
 		contextMenuManager.setRemoveAllWhenShown(true);
 		contextMenuManager.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager){
 				IStructuredSelection selection = viewer.getStructuredSelection();
 				if (!selection.isEmpty()) {
 					manager.add(new Action() {
 						
+						@Override
 						public ImageDescriptor getImageDescriptor(){
 							return Images.IMG_DELETE.getImageDescriptor();
 						};
 						
+						@Override
 						public String getText(){
 							return Messages.DiagnosenDisplay_RemoveDiagnoses;
 						};
 						
+						@Override
 						public void run(){
 							for (Object object : selection.toList()) {
 								if (object instanceof IDiagnosis) {

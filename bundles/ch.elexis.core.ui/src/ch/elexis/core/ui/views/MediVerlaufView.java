@@ -68,6 +68,7 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 	
 	private ElexisUiEventListenerImpl eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 		
+		@Override
 		public void runInUi(ElexisEvent ev){
 			reload();
 		}
@@ -130,15 +131,18 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 	
 	class MediVerlaufContentProvider implements IStructuredContentProvider {
 		
+		@Override
 		public Object[] getElements(final Object inputElement){
 			return mListe.toArray();
 		}
 		
+		@Override
 		public void dispose(){
 			// TODO Auto-generated method stub
 			
 		}
 		
+		@Override
 		public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput){
 			// TODO Auto-generated method stub
 			
@@ -148,11 +152,13 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 	
 	static class MediVerlaufLabelProvider extends LabelProvider implements ITableLabelProvider {
 		
+		@Override
 		public Image getColumnImage(final Object element, final int columnIndex){
 			// TODO Auto-generated method stub
 			return null;
 		}
 		
+		@Override
 		public String getColumnText(final Object element, final int columnIndex){
 			if (element instanceof MediAbgabe) {
 				MediAbgabe ma = (MediAbgabe) element;
@@ -184,6 +190,7 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 		try {
 			progressService.runInUI(PlatformUI.getWorkbench().getProgressService(),
 				new IRunnableWithProgress() {
+					@Override
 					public void run(final IProgressMonitor monitor)
 						throws InvocationTargetException, InterruptedException{
 						Patient sp = ElexisEventDispatcher.getSelectedPatient();
@@ -250,6 +257,7 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 			dosis = p.getDosis();
 		}
 		
+		@Override
 		public int compareTo(final MediAbgabe o){
 			int ret = 0;
 			switch (sortCol) {
@@ -299,11 +307,13 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 		}
 	}
 	
+	@Override
 	public void activation(final boolean mode){
 		// TODO Auto-generated method stub
 		
 	}
 	
+	@Override
 	public void visible(final boolean mode){
 		if (mode) {
 			ElexisEventDispatcher.getInstance().addListeners(eeli_pat);

@@ -81,6 +81,7 @@ public class ScriptView extends ViewPart {
 		tv = new TableViewer(form.getBody(), SWT.SINGLE | SWT.FULL_SELECTION);
 		tv.setContentProvider(new IStructuredContentProvider() {
 			
+			@Override
 			public Object[] getElements(Object inputElement){
 				SortedList<Script> sortedScripts = new SortedList<Script>(new ScriptComparator());
 				List<Script> scripts = Script.getScripts();
@@ -91,8 +92,10 @@ public class ScriptView extends ViewPart {
 				return sortedScripts.toArray();
 			}
 			
+			@Override
 			public void dispose(){}
 			
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput){}
 		});
 		tv.setLabelProvider(new LabelProvider() {

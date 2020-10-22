@@ -334,10 +334,12 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 	
 	private class BestellungLabelProvider extends LabelProvider implements ITableLabelProvider {
 		
+		@Override
 		public Image getColumnImage(final Object element, final int columnIndex){
 			return null;
 		}
 		
+		@Override
 		public String getColumnText(final Object element, final int columnIndex){
 			IOrderEntry entry = (IOrderEntry) element;
 			switch (columnIndex) {
@@ -685,25 +687,31 @@ public class BestellView extends ViewPart implements ISaveablePart2 {
 	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
 	 * Gibt es da keine einfachere Methode?
 	 */
+	@Override
 	public int promptToSaveOnClose(){
 		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
 				: ISaveablePart2.NO;
 	}
 	
+	@Override
 	public void doSave(final IProgressMonitor monitor){ /* leer */
 	}
 	
+	@Override
 	public void doSaveAs(){ /* leer */
 	}
 	
+	@Override
 	public boolean isDirty(){
 		return true;
 	}
 	
+	@Override
 	public boolean isSaveAsAllowed(){
 		return false;
 	}
 	
+	@Override
 	public boolean isSaveOnCloseNeeded(){
 		return true;
 	}

@@ -121,10 +121,12 @@ public class SearchView extends ViewPart implements ISaveablePart2 {
 		searchButton.setLayoutData(gd);
 		
 		searchButton.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e){
 				viewer.refresh();
 			}
 			
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e){
 				widgetSelected(e);
 			}
@@ -135,14 +137,17 @@ public class SearchView extends ViewPart implements ISaveablePart2 {
 		table.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		
 		viewer.setContentProvider(new IStructuredContentProvider() {
+			@Override
 			public void dispose(){
 				// nothing to do
 			}
 			
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput){
 				// nothing to do
 			}
 			
+			@Override
 			public Object[] getElements(Object inputElement){
 				return mainSearch();
 			}
@@ -150,6 +155,7 @@ public class SearchView extends ViewPart implements ISaveablePart2 {
 		
 		// simple default label provider
 		viewer.setLabelProvider(new LabelProvider() {
+			@Override
 			public String getText(Object element){
 				if (element instanceof PersistentObject) {
 					PersistentObject po = (PersistentObject) element;
@@ -190,23 +196,29 @@ public class SearchView extends ViewPart implements ISaveablePart2 {
 	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
 	 * Gibt es da keine einfachere Methode?
 	 */
+	@Override
 	public int promptToSaveOnClose(){
 		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
 				: ISaveablePart2.NO;
 	}
 	
+	@Override
 	public void doSave(IProgressMonitor monitor){ /* leer */}
 	
+	@Override
 	public void doSaveAs(){ /* leer */}
 	
+	@Override
 	public boolean isDirty(){
 		return true;
 	}
 	
+	@Override
 	public boolean isSaveAsAllowed(){
 		return false;
 	}
 	
+	@Override
 	public boolean isSaveOnCloseNeeded(){
 		return true;
 	}

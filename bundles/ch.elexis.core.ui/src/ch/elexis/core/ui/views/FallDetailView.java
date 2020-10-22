@@ -47,6 +47,7 @@ public class FallDetailView extends ViewPart implements ISaveablePart2 {
 	};
 	
 	private final ElexisEventListener eeli_fall = new ElexisUiEventListenerImpl(Fall.class) {
+		@Override
 		public void runInUi(final ElexisEvent ev){
 			Fall fall = (Fall) ev.getObject();
 			Fall deselectedFall = null;
@@ -112,25 +113,31 @@ public class FallDetailView extends ViewPart implements ISaveablePart2 {
 	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
 	 * Gibt es da keine einfachere Methode?
 	 */
+	@Override
 	public int promptToSaveOnClose(){
 		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
 				: ISaveablePart2.NO;
 	}
 	
+	@Override
 	public void doSave(IProgressMonitor monitor){ /* leer */
 	}
 	
+	@Override
 	public void doSaveAs(){ /* leer */
 	}
 	
+	@Override
 	public boolean isDirty(){
 		return true;
 	}
 	
+	@Override
 	public boolean isSaveAsAllowed(){
 		return false;
 	}
 	
+	@Override
 	public boolean isSaveOnCloseNeeded(){
 		return true;
 	}
