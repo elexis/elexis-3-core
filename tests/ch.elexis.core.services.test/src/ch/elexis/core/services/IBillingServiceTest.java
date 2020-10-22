@@ -23,6 +23,7 @@ import ch.elexis.core.model.IFreeTextDiagnosis;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.builder.IEncounterBuilder;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.InvoiceServiceHolder;
@@ -132,6 +133,8 @@ public class IBillingServiceTest extends AbstractServiceTest {
 		createTestMandantPatientFallBehandlung();
 		ContextServiceHolder.get().setActiveUser(AllServiceTests.getUser());
 		ContextServiceHolder.get().setActiveMandator(testMandators.get(0));
+		ConfigServiceHolder.get().set(testMandators.get(0),
+			ch.elexis.core.constants.Preferences.LEISTUNGSCODES_BILLING_STRICT, false);
 		
 		Result<IEncounter> isEditable = billingService.isEditable(testEncounters.get(0));
 		assertTrue(isEditable.toString(), isEditable.isOK());
