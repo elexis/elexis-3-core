@@ -18,5 +18,8 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 8
+    - run: sudo apt-get install xvfb
     - name: Build with Maven
       run: mvn -V clean verify  -Dtycho.localArtifacts=ignore
+    - name: Cleanup xvfb pidx
+      uses: bcomnes/cleanup-xvfb@v1
