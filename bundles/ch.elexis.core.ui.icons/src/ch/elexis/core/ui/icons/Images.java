@@ -24,6 +24,8 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.launch.Framework;
 
 import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.ui.icons.urihandler.IconURLConnection;
@@ -412,7 +414,7 @@ public enum Images {
 		ResourceBundle iconsetProperties = ResourceBundle.getBundle("iconset");
 		String fileName = iconsetProperties.getString(this.name());
 		URL url =
-			FileLocator.find(Activator.getContext().getBundle(), new Path("icons/" + is.name + "/"
+			FileLocator.find(FrameworkUtil.getBundle(Images.class), new Path("icons/" + is.name + "/"
 				+ fileName), null);
 		ret = url.openConnection().getInputStream();
 		
@@ -437,7 +439,8 @@ public enum Images {
 		}
 		
 		Path path = new Path("icons/" + is.name + "/" + fileName);
-		URL fileLocation = FileLocator.find(Activator.getContext().getBundle(), path, null);
+		
+		URL fileLocation = FileLocator.find(FrameworkUtil.getBundle(Images.class), path, null);
 		if (fileLocation == null)
 			return false;
 		ImageDescriptor id = ImageDescriptor.createFromURL(fileLocation);
