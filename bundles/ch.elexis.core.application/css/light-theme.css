@@ -1,0 +1,87 @@
+
+/*
+.MPartStack {
+	swt-tab-height: 30px;
+	swt-selected-tab-fill: green blue 100% 100%;
+	padding: 0px;
+	swt-shadow-visible: false;
+	color:blue;
+	swt-draw-custom-tab-content-background: true;
+}
+
+*/
+CTabFolder, CTabItem  {
+	background-color:white;
+}
+
+.MPartStack.active.noFocus > CTabItem:selected {
+	color: black;
+	background-color:white;
+}
+
+.active, CTabFolder:selected {
+	background-color:white;
+}
+
+Table,
+Tree {
+	swt-header-color: black;
+	swt-header-background-color: white;
+}
+
+Composite, 
+Shell,
+Tree,
+Table,
+ScrollComposite,
+/* Elexis specific widgets*/
+InputPanel,
+HistoryDisplay,
+EnhancedTextField, 
+EnhancedTextField ScrolledComposite
+{
+	background-color:white;
+	color:black;
+}
+
+.DragFeedback { background-color: #ff6900; } 
+
+Hyperlink, ImageHyperlink, Link {
+	background-color:white;
+	color: blue;
+}
+
+Button, Label, Text, Link, FormText, List, Combo, CCombo, StyleText, ScrolledComposite {
+	background-color:white;
+	color:black;
+}
+
+ToolBar {
+	background-color:inherit;
+}
+
+Form, FormHeading {
+	background-color: white;
+	color: black;
+}
+
+Form {
+	/* Bug 465148: Additional styling for the Form */
+	text-background-color: #ffffff;
+
+	tb-toggle-hover-color: #505050;
+	tb-toggle-color: #505050;
+	h-hover-full-color: #505050;
+	h-hover-light-color: #505050;
+	h-bottom-keyline-2-color: #eaeaea;
+	h-bottom-keyline-1-color: #eaeaea;
+}
+
+
+Section {
+	background-color: #ffffff;
+  	color: #505050;
+  	background-color-titlebar: #eaeaea;
+  	background-color-gradient-titlebar: #eaeaea;
+  	border-color-titlebar: #ffffff;
+}

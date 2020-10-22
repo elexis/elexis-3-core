@@ -140,7 +140,6 @@ public class LabeledInputField extends Composite {
 		
 		switch (typ) {
 		case LINK:
-			lbl.setForeground(UiDesk.getColorRegistry().get(UiDesk.COL_BLUE)); //$NON-NLS-1$
 			ctl = tk.createText(this, "", SWT.NONE);
 			ctl.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			break;

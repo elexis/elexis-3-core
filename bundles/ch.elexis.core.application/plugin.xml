@@ -556,9 +556,21 @@
              value="Elexis OpenSource">
        </property>
        <property
+             name="cssTheme"
+             value="elexis-light-theme">
+       </property>
+       <property
         name="rendererFactoryUri"
         value="bundleclass://ch.elexis.core.ui/ch.elexis.core.ui.renderer.ElexisRendererFactory">
       </property>
     </product>
  </extension>
+  <extension
+         point="org.eclipse.e4.ui.css.swt.theme">
+      <theme
+            basestylesheeturi="css/light-theme.css"
+            id="elexis-light-theme"
+            label="Light theme for Elexis">
+      </theme>
+   </extension>
 </plugin>
