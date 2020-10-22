@@ -25,7 +25,10 @@ import static ch.elexis.core.ui.actions.GlobalActions.reopenFallAction;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
@@ -88,7 +91,7 @@ import ch.rgw.tools.IFilter;
  * @author gerry
  * 
  */
-public class FallListeView extends ViewPart implements IActivationListener, ISaveablePart2 {
+public class FallListeView extends ViewPart implements IActivationListener {
 	private static boolean noPatientHandled = true;
 	public static final String ID = "ch.elexis.FallListeView"; //$NON-NLS-1$
 	CommonViewer fallViewer;
@@ -470,31 +473,8 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 		
 	}
 	
-	/***********************************************************************************************
-	 * Die folgenden 6 Methoden implementieren das Interface ISaveablePart2 Wir benötigen das
-	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
-	 * Gibt es da keine einfachere Methode?
-	 */
-	public int promptToSaveOnClose(){
-		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
-				: ISaveablePart2.NO;
-	}
-	
-	public void doSave(IProgressMonitor monitor){ /* leer */
-	}
-	
-	public void doSaveAs(){ /* leer */
-	}
-	
-	public boolean isDirty(){
-		return true;
-	}
-	
-	public boolean isSaveAsAllowed(){
-		return false;
-	}
-	
-	public boolean isSaveOnCloseNeeded(){
-		return true;
+	@Inject
+	public void setClosable(MPart part) {
+		part.setCloseable(GlobalActions.fixLayoutAction.isChecked());	
 	}
 }

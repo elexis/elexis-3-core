@@ -17,6 +17,7 @@ import javax.inject.Inject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.layout.GridLayout;
@@ -39,7 +40,7 @@ import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.data.Konsultation;
 
 
-public class KonsListe extends ViewPart implements IRefreshable, ISaveablePart2 {
+public class KonsListe extends ViewPart implements IRefreshable {
 	public static final String ID = "ch.elexis.HistoryView"; //$NON-NLS-1$
 	HistoryDisplay liste;
 	IPatient actPatient;
@@ -160,33 +161,10 @@ public class KonsListe extends ViewPart implements IRefreshable, ISaveablePart2 
 				}
 			};
 	}
-	
-	/*
-	 * Die folgenden 6 Methoden implementieren das Interface ISaveablePart2 Wir benötigen das
-	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
-	 * Gibt es da keine einfachere Methode?
-	 */
-	public int promptToSaveOnClose(){
-		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
-				: ISaveablePart2.NO;
-	}
-	
-	public void doSave(final IProgressMonitor monitor){ /* leer */
-	}
-	
-	public void doSaveAs(){ /* leer */
-	}
-	
-	public boolean isDirty(){
-		return true;
-	}
-	
-	public boolean isSaveAsAllowed(){
-		return false;
-	}
-	
-	public boolean isSaveOnCloseNeeded(){
-		return true;
+
+	@Inject
+	public void setClosable(MPart part) {
+		part.setCloseable(GlobalActions.fixLayoutAction.isChecked());	
 	}
 	
 	/**
