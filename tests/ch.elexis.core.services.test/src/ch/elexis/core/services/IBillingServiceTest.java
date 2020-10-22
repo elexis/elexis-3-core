@@ -133,7 +133,7 @@ public class IBillingServiceTest extends AbstractServiceTest {
 		createTestMandantPatientFallBehandlung();
 		ContextServiceHolder.get().setActiveUser(AllServiceTests.getUser());
 		ContextServiceHolder.get().setActiveMandator(testMandators.get(0));
-		ConfigServiceHolder.get().set(testMandators.get(0),
+		ConfigServiceHolder.get().set(ContextServiceHolder.get().getActiveUserContact().get(),
 			ch.elexis.core.constants.Preferences.LEISTUNGSCODES_BILLING_STRICT, false);
 		
 		Result<IEncounter> isEditable = billingService.isEditable(testEncounters.get(0));
