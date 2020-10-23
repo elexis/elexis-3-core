@@ -202,6 +202,7 @@ public class BriefAuswahl extends ViewPart implements
 	
 	public void relabel(){
 		UiDesk.asyncExec(new Runnable() {
+			@Override
 			public void run(){
 				Patient pat = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
 				if (form != null && !form.isDisposed()) {
@@ -664,11 +665,13 @@ public class BriefAuswahl extends ViewPart implements
 		}
 	}
 	
+	@Override
 	public void activation(final boolean mode){
 		// TODO Auto-generated method stub
 		
 	}
 	
+	@Override
 	public void visible(final boolean mode){
 		if (mode == true) {
 			ElexisEventDispatcher.getInstance().addListeners(this);
@@ -685,29 +688,36 @@ public class BriefAuswahl extends ViewPart implements
 	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
 	 * Gibt es da keine einfachere Methode?
 	 */
+	@Override
 	public int promptToSaveOnClose(){
 		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
 				: ISaveablePart2.NO;
 	}
 	
+	@Override
 	public void doSave(final IProgressMonitor monitor){ /* leer */
 	}
 	
+	@Override
 	public void doSaveAs(){ /* leer */
 	}
 	
+	@Override
 	public boolean isDirty(){
 		return true;
 	}
 	
+	@Override
 	public boolean isSaveAsAllowed(){
 		return false;
 	}
 	
+	@Override
 	public boolean isSaveOnCloseNeeded(){
 		return true;
 	}
 	
+	@Override
 	public void catchElexisEvent(ElexisEvent ev){
 		relabel();
 	}
@@ -715,6 +725,7 @@ public class BriefAuswahl extends ViewPart implements
 	private static ElexisEvent template = new ElexisEvent(null, Patient.class,
 		ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_DESELECTED);
 	
+	@Override
 	public ElexisEvent getElexisEventFilter(){
 		return template;
 	}

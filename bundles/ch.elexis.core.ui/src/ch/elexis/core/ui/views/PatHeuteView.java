@@ -140,6 +140,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 	private final ElexisEventListener eeli_kons =
 		new ElexisUiEventListenerImpl(Konsultation.class) {
 			
+			@Override
 			public void runInUi(ElexisEvent ev){
 				selection((Konsultation) ev.getObject());
 				
@@ -162,10 +163,12 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 		makeActions();
 		ldFilter = new ListDisplay<IBillable>(parent, SWT.NONE, new ListDisplay.LDListener() {
 			
+			@Override
 			public String getLabel(final Object o){
 				return ((IBillable) o).getCode();
 			}
 			
+			@Override
 			public void hyperlinkActivated(final String l){
 				if (l.equals(LEISTUNG_HINZU)) {
 					try {
@@ -390,9 +393,11 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 			.filter(b -> b instanceof IService).mapToInt(b -> ((IService) b).getMinutes()).sum();
 	}
 	
+	@Override
 	public void activation(final boolean mode){ /* leer */
 	}
 	
+	@Override
 	public void visible(final boolean mode){
 		if (mode == true) {
 			ElexisEventDispatcher.getInstance().addListeners(eeli_kons);
@@ -407,25 +412,31 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
 	 * Gibt es da keine einfachere Methode?
 	 */
+	@Override
 	public int promptToSaveOnClose(){
 		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
 				: ISaveablePart2.NO;
 	}
 	
+	@Override
 	public void doSave(final IProgressMonitor monitor){ /* leer */
 	}
 	
+	@Override
 	public void doSaveAs(){ /* leer */
 	}
 	
+	@Override
 	public boolean isDirty(){
 		return true;
 	}
 	
+	@Override
 	public boolean isSaveAsAllowed(){
 		return false;
 	}
 	
+	@Override
 	public boolean isSaveOnCloseNeeded(){
 		return true;
 	}
@@ -471,6 +482,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 			monitor.worked(20);
 			monitor.done();
 			UiDesk.asyncExec(new Runnable() {
+				@Override
 				public void run(){
 					FileDialog fd = new FileDialog(getSite().getShell(), SWT.SAVE);
 					fd.setFilterExtensions(new String[] {
@@ -571,6 +583,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 			qbe.orderBy(false, Konsultation.DATE, Konsultation.FLD_TIME);
 			
 			qbe.addPostQueryFilter(new IFilter() {
+				@Override
 				public boolean select(final Object toTest){
 					if (filterAction.isChecked()) {
 						IEncounter encounter = NoPoUtil
@@ -696,6 +709,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 		
 	}
 	
+	@Override
 	public void jobFinished(final BackgroundJob j){
 		if (j.isValid()) {
 			kons = (Konsultation[]) j.getData();
@@ -737,6 +751,7 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 			this.cost.addMoney(totalCost);
 		}
 		
+		@Override
 		public int compareTo(StatCounter o){
 			String v1 = null, v2 = null;
 			String vc1 = null, vc2 = null;
@@ -929,11 +944,13 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 			super.okPressed();
 		}
 		
+		@Override
 		public void save(){
 			// TODO Auto-generated method stub
 			
 		}
 		
+		@Override
 		public boolean saveAs(){
 			// TODO Auto-generated method stub
 			return false;
@@ -941,12 +958,14 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 	}
 	
 	private final class DropReceiver implements PersistentObjectDropTarget.IReceiver {
+		@Override
 		public void dropped(final PersistentObject o, final DropTargetEvent ev){
 			if (o instanceof IBillable) {
 				ldFilter.add((IBillable) o);
 			}
 		}
 		
+		@Override
 		public boolean accept(final PersistentObject o){
 			if (o instanceof IBillable) {
 				return true;

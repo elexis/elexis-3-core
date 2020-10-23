@@ -37,6 +37,7 @@ import ch.rgw.tools.ExHandler;
  */
 public class PatFilterImpl implements IPatFilter {
 	
+	@Override
 	public int accept(Patient p, PersistentObject o){
 		if (o instanceof Kontakt) {
 			Query<BezugsKontakt> qbe = new Query<BezugsKontakt>(BezugsKontakt.class);
@@ -115,6 +116,7 @@ public class PatFilterImpl implements IPatFilter {
 		return DONT_HANDLE;
 	}
 	
+	@Override
 	public boolean aboutToStart(PersistentObject filter){
 		if (filter instanceof Script) {
 			try {
@@ -129,6 +131,7 @@ public class PatFilterImpl implements IPatFilter {
 		
 	}
 	
+	@Override
 	public boolean finished(PersistentObject filter){
 		if (filter instanceof Script) {
 			try {

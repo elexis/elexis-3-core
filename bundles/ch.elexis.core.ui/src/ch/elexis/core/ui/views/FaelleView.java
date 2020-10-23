@@ -300,30 +300,36 @@ public class FaelleView extends ViewPart implements IRefreshable {
 				IEncounter.class);
 		}
 		
+		@Override
 		public void activate(){
 			bDaempfung = true;
 			konsFilterAction.setChecked(true);
 			bDaempfung = false;
 		}
 		
+		@Override
 		public void changed(){
 			// don't mind
 		}
 		
+		@Override
 		public void deactivate(){
 			bDaempfung = true;
 			konsFilterAction.setChecked(false);
 			bDaempfung = false;
 		}
 		
+		@Override
 		public IFilter getFilter(){
 			return this;
 		}
 		
+		@Override
 		public String getId(){
 			return "ch.elexis.FallFilter"; //$NON-NLS-1$
 		}
 		
+		@Override
 		public boolean select(final Object toTest){
 			if (mine == null) {
 				return true;

@@ -168,6 +168,7 @@ public class BBSView extends ViewPart implements ISelectionChangedListener, ISav
 	
 	class NewThread implements ViewerConfigurer.ButtonProvider {
 		
+		@Override
 		public Button createButton(Composite parent){
 			Button ret = new Button(parent, SWT.PUSH);
 			ret.setText(Messages.BBSView_21); //$NON-NLS-1$
@@ -187,12 +188,14 @@ public class BBSView extends ViewPart implements ISelectionChangedListener, ISav
 			return ret;
 		}
 		
+		@Override
 		public boolean isAlwaysEnabled(){
 			return false;
 		}
 		
 	}
 	
+	@Override
 	public void selectionChanged(SelectionChangedEvent event){
 		setDisplay();
 	}
@@ -202,23 +205,29 @@ public class BBSView extends ViewPart implements ISelectionChangedListener, ISav
 	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
 	 * Gibt es da keine einfachere Methode?
 	 */
+	@Override
 	public int promptToSaveOnClose(){
 		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
 				: ISaveablePart2.NO;
 	}
 	
+	@Override
 	public void doSave(IProgressMonitor monitor){ /* leer */}
 	
+	@Override
 	public void doSaveAs(){ /* leer */}
 	
+	@Override
 	public boolean isDirty(){
 		return true;
 	}
 	
+	@Override
 	public boolean isSaveAsAllowed(){
 		return false;
 	}
 	
+	@Override
 	public boolean isSaveOnCloseNeeded(){
 		return true;
 	}

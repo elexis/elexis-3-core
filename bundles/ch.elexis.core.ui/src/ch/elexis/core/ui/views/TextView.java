@@ -284,12 +284,14 @@ public class TextView extends ViewPart implements IActivationListener {
 			};
 		
 		showMenuAction = new Action(Messages.TextView_showMenu, Action.AS_CHECK_BOX) { //$NON-NLS-1$			
+				@Override
 				public void run(){
 					txt.getPlugin().showMenu(isChecked());
 				}
 			};
 		
 		showToolbarAction = new Action(Messages.TextView_Toolbar, Action.AS_CHECK_BOX) { //$NON-NLS-1$
+				@Override
 				public void run(){
 					txt.getPlugin().showToolbar(isChecked());
 				}
@@ -358,6 +360,7 @@ public class TextView extends ViewPart implements IActivationListener {
 					setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
 				}
 				
+				@Override
 				public void run(){
 					Patient pat = ElexisEventDispatcher.getSelectedPatient();
 					if (pat != null) {
@@ -411,6 +414,7 @@ public class TextView extends ViewPart implements IActivationListener {
 	
 	class SaveHandler implements ITextPlugin.ICallback {
 		
+		@Override
 		public void save(){
 			log.debug("TextView.save"); //$NON-NLS-1$
 			if (actBrief != null) {
@@ -418,6 +422,7 @@ public class TextView extends ViewPart implements IActivationListener {
 			}
 		}
 		
+		@Override
 		public boolean saveAs(){
 			log.debug("TextView.saveAs"); //$NON-NLS-1$
 			InputDialog il =
@@ -433,6 +438,7 @@ public class TextView extends ViewPart implements IActivationListener {
 		
 	}
 	
+	@Override
 	public void activation(boolean mode){
 		if (mode == false) {
 			if (actBrief != null) {
@@ -447,6 +453,7 @@ public class TextView extends ViewPart implements IActivationListener {
 		}
 	}
 	
+	@Override
 	public void visible(boolean mode){
 		
 	}

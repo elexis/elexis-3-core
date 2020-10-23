@@ -88,22 +88,26 @@ public class AUFZeugnis extends ViewPart implements ICallback, IActivationListen
 		return text;
 	}
 	
+	@Override
 	public void save(){
 		if (actBrief != null) {
 			actBrief.save(text.getPlugin().storeToByteArray(), text.getPlugin().getMimeType());
 		}
 	}
 	
+	@Override
 	public boolean saveAs(){
 		return true;
 	}
 	
+	@Override
 	public void activation(boolean mode){
 		if (mode == false) {
 			save();
 		}
 	}
 	
+	@Override
 	public void visible(boolean mode){}
 	
 }

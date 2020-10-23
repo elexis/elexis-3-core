@@ -237,17 +237,20 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		return createList(pres, TT_INTAKE_LIST, Messages.RezeptBlatt_6); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
+	@Override
 	public void save(){
 		if (actBrief != null) {
 			actBrief.save(text.getPlugin().storeToByteArray(), text.getPlugin().getMimeType());
 		}
 	}
 	
+	@Override
 	public boolean saveAs(){
 		// TODO Automatisch erstellter Methoden-Stub
 		return false;
 	}
 	
+	@Override
 	public void activation(boolean mode){
 		if (mode == false) {
 			save();
@@ -255,18 +258,22 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		
 	}
 	
+	@Override
 	public void visible(boolean mode){
 		
 	}
 	
+	@Override
 	public String getOutputterDescription(){
 		return "Druckerausgabe erstellt";
 	}
 	
+	@Override
 	public String getOutputterID(){
 		return "ch.elexis.RezeptBlatt";
 	}
 	
+	@Override
 	public Image getSymbol(){
 		return Images.IMG_PRINTER.getImage();
 	}
