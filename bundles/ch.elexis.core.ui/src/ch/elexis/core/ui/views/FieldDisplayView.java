@@ -92,11 +92,13 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 			
 		});
 		text.addKeyListener(new KeyListener() {
+			@Override
 			public void keyPressed(KeyEvent arg0){
 				arg0.doit = bCanEdit;
 				
 			}
 			
+			@Override
 			public void keyReleased(KeyEvent arg0){}
 		});
 		makeActions();
@@ -125,10 +127,12 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 		text.setFocus();
 	}
 	
+	@Override
 	public void activation(boolean mode){
 		
 	}
 	
+	@Override
 	public void visible(boolean mode){
 		if (mode) {
 			ElexisEventDispatcher.getInstance().addListeners(this);
@@ -141,10 +145,12 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 		
 	}
 	
+	@Override
 	public void catchElexisEvent(final ElexisEvent ev){
 		final PersistentObject po = ev.getObject();
 		if (po != null && ev.getObjectClass().equals(myClass)) {
 			UiDesk.asyncExec(new Runnable() {
+				@Override
 				public void run(){
 					if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
 						String val = po.get(myField);
@@ -175,10 +181,12 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 	final private ElexisEvent template = new ElexisEvent(null, myClass, ElexisEvent.EVENT_SELECTED
 		| ElexisEvent.EVENT_DESELECTED);
 	
+	@Override
 	public ElexisEvent getElexisEventFilter(){
 		return template;
 	}
 	
+	@Override
 	public void heartbeat(){
 		IPersistentObject mine = ElexisEventDispatcher.getSelected(myClass);
 		if (mine == null) {
@@ -266,6 +274,7 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 					setToolTipText(Messages.FieldDisplayView_DataTypeToolTip); //$NON-NLS-1$
 				}
 				
+				@Override
 				public void run(){
 					SelectDataDialog sdd = new SelectDataDialog();
 					if (sdd.open() == Dialog.OK) {

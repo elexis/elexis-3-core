@@ -132,6 +132,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 	
 	private ElexisEventListener eeli_reminder = new ElexisUiEventListenerImpl(Reminder.class,
 		ElexisEvent.EVENT_RELOAD | ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_UPDATE) {
+		@Override
 		public void catchElexisEvent(ElexisEvent ev){
 			cv.notify(CommonViewer.Message.update);
 		}
@@ -140,6 +141,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 	// 1079 - nur wenn der View offen ist werden bei Patienten-Wechsel die Reminders abgefragt!
 	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 		
+		@Override
 		public void runInUi(final ElexisEvent ev){
 			if (((Patient) ev.getObject()).equals(actPatient)) {
 				return;
@@ -159,6 +161,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			if (!ConfigServiceHolder.getUser(Preferences.USR_SHOWPATCHGREMINDER, true)) {
 				UiDesk.asyncExec(new Runnable() {
 					
+					@Override
 					public void run(){
 						List<Reminder> list = Reminder.findOpenRemindersResponsibleFor(
 							CoreHub.getLoggedInContact(), false, (Patient) ev.getObject(), true);
@@ -180,6 +183,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 	private ElexisEventListener eeli_user =
 		new ElexisUiEventListenerImpl(Anwender.class, ElexisEvent.EVENT_USER_CHANGED) {
 			
+			@Override
 			public void runInUi(ElexisEvent ev){
 				refreshUserConfiguration();
 				
@@ -254,6 +258,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		}
 		cv.create(vc, content, SWT.NONE, getViewSite());
 		cv.addDoubleClickListener(new CommonViewer.PoDoubleClickListener() {
+			@Override
 			public void doubleClicked(final PersistentObject obj, final CommonViewer cv){
 				Reminder reminder = (Reminder) obj;
 				AcquireLockBlockingUi.aquireAndRun(reminder, new ILockHandler() {
@@ -532,6 +537,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 				setToolTipText(Messages.ReminderView_activatePatientTooltip);
 			}
 			
+			@Override
 			public void doRun(){
 				Object[] sel = cv.getSelection();
 				if (sel != null && sel.length > 1) {
@@ -607,10 +613,12 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		}
 	}
 	
+	@Override
 	public void activation(final boolean mode){
 		/* egal */
 	}
 	
+	@Override
 	public void visible(final boolean mode){
 		if (mode) {
 			cv.notify(CommonViewer.Message.update);
@@ -622,6 +630,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		}
 	}
 	
+	@Override
 	public void heartbeat(){
 		long highestLastUpdate = PersistentObject.getHighestLastUpdate(Reminder.TABLENAME);
 		if (highestLastUpdate > cvHighestLastUpdate) {
@@ -639,6 +648,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		private Color colorOverdue;
 		private Color colorOpen;
 		
+		@Override
 		public Color getBackground(final Object element){
 			if (element instanceof Reminder) {
 				Reminder reminder = (Reminder) element;
@@ -675,6 +685,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 					Preferences.USR_REMINDERCOLORS + "/" + ProcessStatus.OPEN.name(), "00FF00")); //$NON-NLS-1$
 		}
 		
+		@Override
 		public Color getForeground(final Object element){
 			if (element instanceof Reminder) {
 				Reminder reminder = (Reminder) element;

@@ -140,12 +140,14 @@ public class BestellBlatt extends ViewPart implements ICallback {
 		
 	}
 	
+	@Override
 	public void save(){
 		if (actBest != null) {
 			actBest.save(text.getPlugin().storeToByteArray(), text.getPlugin().getMimeType());
 		}
 	}
 	
+	@Override
 	public boolean saveAs(){
 		// TODO Automatisch erstellter Methoden-Stub
 		return false;

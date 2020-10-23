@@ -52,8 +52,10 @@ public class TemplatePrintView extends ViewPart {
 		CTabItem ret = new CTabItem(ctab, SWT.NONE);
 		text = new TextContainer(getViewSite());
 		ret.setControl(text.getPlugin().createContainer(ctab, new ICallback() {
+			@Override
 			public void save(){}
 			
+			@Override
 			public boolean saveAs(){
 				return false;
 			}

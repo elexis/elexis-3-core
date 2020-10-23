@@ -182,6 +182,7 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 		}
 		if (showLoadingScreen) {
 			UiDesk.getDisplay().syncExec(new Runnable() {
+				@Override
 				public void run(){
 					if (!isDisposed()) {
 						scrolledComposite.setOrigin(0, 0);
@@ -206,8 +207,10 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 		actPatient = pat;
 	}
 	
+	@Override
 	public void jobFinished(BackgroundJob j){
 		UiDesk.getDisplay().asyncExec(new Runnable() {
+			@Override
 			public void run(){
 				String s = (String) loader.getData();
 				
@@ -252,9 +255,11 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 	
 	
 
+	@Override
 	public void catchElexisEvent(ElexisEvent ev){
 		UiDesk.asyncExec(new Runnable() {
 			
+			@Override
 			public void run(){
 				if (text != null && (!text.isDisposed())) {
 					text.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
@@ -266,6 +271,7 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener,
 	private final ElexisEvent eetemplate = new ElexisEvent(null, null,
 		ElexisEvent.EVENT_USER_CHANGED);
 	
+	@Override
 	public ElexisEvent getElexisEventFilter(){
 		return eetemplate;
 	}

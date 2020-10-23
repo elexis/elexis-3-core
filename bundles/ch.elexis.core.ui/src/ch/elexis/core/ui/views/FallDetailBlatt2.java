@@ -400,6 +400,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		btnCopyForPatient = new Button(top, SWT.CHECK);
 		btnCopyForPatient.setText(Messages.FallDetailBlatt2_CopyToPatient);
 		btnCopyForPatient.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e){
 				boolean b = btnCopyForPatient.getSelection();
 				getSelectedFall().setCopyForPatient(b);
@@ -506,9 +507,11 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			this.control = control;
 		}
 		
+		@Override
 		public void focusGained(final FocusEvent e){ /* nichts */
 		}
 		
+		@Override
 		public void focusLost(final FocusEvent e){
 			save();
 		}

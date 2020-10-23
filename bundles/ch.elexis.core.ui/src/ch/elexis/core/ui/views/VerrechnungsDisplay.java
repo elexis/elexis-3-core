@@ -515,6 +515,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	 * @deprecated for {@link ch.elexis.core.model.ICodeElement} instances direct use of
 	 *             {@link IBillingService} is recommended
 	 */
+	@Deprecated
 	public void addPersistentObject(PersistentObject o){
 		if (actEncounter != null) {
 			if (o instanceof Leistungsblock) {
@@ -746,6 +747,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		
 		contextMenuManager.setRemoveAllWhenShown(true);
 		contextMenuManager.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager){
 				IStructuredSelection selection = viewer.getStructuredSelection();
 				if (selection.size() > 1) {

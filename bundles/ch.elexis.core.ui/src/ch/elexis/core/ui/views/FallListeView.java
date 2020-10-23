@@ -101,6 +101,7 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 	private Konsultation actBehandlung;
 	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 		
+		@Override
 		public void runInUi(final ElexisEvent ev){
 			actPatient = (Patient) ev.getObject();
 			form.setText(actPatient.getPersonalia());
@@ -109,6 +110,7 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 	};
 	private ElexisEventListener eeli_fall = new ElexisUiEventListenerImpl(Fall.class) {
 		
+		@Override
 		public void runInUi(final ElexisEvent ev){
 			Fall f = (Fall) ev.getObject();
 			setFall(f, null);
@@ -155,6 +157,7 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 		sash.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ButtonProvider fallButton = new ButtonProvider() {
 			
+			@Override
 			public Button createButton(Composite parent1){
 				Button ret = tk.createButton(parent1, Messages.FallListeView_NewCase, SWT.PUSH); //$NON-NLS-1$
 				ret.addSelectionListener(new SelectionAdapter() {
@@ -175,6 +178,7 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 				return ret;
 			}
 			
+			@Override
 			public boolean isAlwaysEnabled(){
 				return false;
 			}
@@ -236,6 +240,7 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 			GlobalEventDispatcher.getInstance().getDefaultListener());
 		behandlViewer = new CommonViewer();
 		ButtonProvider behandlButton = new ButtonProvider() {
+			@Override
 			public Button createButton(Composite parent1){
 				Button ret = tk.createButton(parent1, Messages.FallListeView_NewKons, SWT.PUSH); //$NON-NLS-1$
 				ret.addSelectionListener(new SelectionAdapter() {
@@ -256,6 +261,7 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 				return ret;
 			}
 			
+			@Override
 			public boolean isAlwaysEnabled(){
 				return true;
 			}
@@ -324,6 +330,7 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 		MenuManager fallMenuMgr = new MenuManager();
 		fallMenuMgr.setRemoveAllWhenShown(true);
 		fallMenuMgr.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager){
 				manager.add(openFallaction);
 				manager.add(reopenFallAction);
@@ -342,6 +349,7 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 		MenuManager behdlMenuMgr = new MenuManager();
 		behdlMenuMgr.setRemoveAllWhenShown(true);
 		behdlMenuMgr.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager){
 				manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 				manager.add(delKonsAction);
@@ -422,10 +430,12 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 		super.dispose();
 	}
 	
+	@Override
 	public void activation(boolean mode){
 		// TODO Auto-generated method stub
 	}
 	
+	@Override
 	public void visible(boolean mode){
 		if (mode == true) {
 			ElexisEventDispatcher.getInstance().addListeners(eeli_fall, eeli_pat);
@@ -475,25 +485,31 @@ public class FallListeView extends ViewPart implements IActivationListener, ISav
 	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
 	 * Gibt es da keine einfachere Methode?
 	 */
+	@Override
 	public int promptToSaveOnClose(){
 		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
 				: ISaveablePart2.NO;
 	}
 	
+	@Override
 	public void doSave(IProgressMonitor monitor){ /* leer */
 	}
 	
+	@Override
 	public void doSaveAs(){ /* leer */
 	}
 	
+	@Override
 	public boolean isDirty(){
 		return true;
 	}
 	
+	@Override
 	public boolean isSaveAsAllowed(){
 		return false;
 	}
 	
+	@Override
 	public boolean isSaveOnCloseNeeded(){
 		return true;
 	}

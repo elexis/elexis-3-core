@@ -107,6 +107,7 @@ public class FavoritenComposite extends Composite {
 		});
 		
 		table.addListener(SWT.PaintItem, new Listener() {
+			@Override
 			public void handleEvent(Event event){
 				TableItem item = (TableItem) event.item;
 				
@@ -247,6 +248,7 @@ public class FavoritenComposite extends Composite {
 				}
 			}
 			
+			@Override
 			public void dragStart(final DragSourceEvent event){
 				// TODO ...
 				//				StructuredSelection ss = (StructuredSelection) tv.getSelection();

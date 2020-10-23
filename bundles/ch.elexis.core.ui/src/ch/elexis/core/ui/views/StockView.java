@@ -156,6 +156,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		filterText.setMessage("Filter");
 		filterText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		filterText.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyReleased(KeyEvent e){
 				if (!refreshUseFilter()) {
 					// reload all if empty
@@ -210,6 +211,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 				poes = new ReflectiveEditingSupport(viewer,
 					ModelPackage.Literals.ISTOCK_ENTRY__CURRENT_STOCK.getName(),
 					new NumericCellEditorValidator(), true) {
+					@Override
 					protected boolean canEdit(Object element){
 						boolean canEdit = super.canEdit(element);
 						if (canEdit) {
@@ -297,6 +299,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		
 		contextMenu.addMenuListener(new IMenuListener() {
 			
+			@Override
 			public void menuAboutToShow(IMenuManager manager){
 				manager.add(new CheckInOrderedAction(viewer));
 				manager.add(new DeleteStockEntryAction(viewer));
@@ -510,6 +513,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 			return Messages.StockView_PerformFullInventoryOnCommSystem;
 		}
 		
+		@Override
 		public void run(){
 			IStockEntry stockEntry = fetchSelection();
 			IStatus status = StockCommissioningServiceHolder.get()
@@ -554,6 +558,7 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 			return Messages.StockView_OutlayArticle;
 		}
 		
+		@Override
 		public void run(){
 			IStockEntry stockEntry = fetchSelection();
 			IStatus status =
@@ -753,31 +758,39 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
 	 * Gibt es da keine einfachere Methode?
 	 */
+	@Override
 	public int promptToSaveOnClose(){
 		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
 				: ISaveablePart2.NO;
 	}
 	
+	@Override
 	public void doSave(IProgressMonitor monitor){ /* leer */
 	}
 	
+	@Override
 	public void doSaveAs(){ /* leer */
 	}
 	
+	@Override
 	public boolean isDirty(){
 		return true;
 	}
 	
+	@Override
 	public boolean isSaveAsAllowed(){
 		return false;
 	}
 	
+	@Override
 	public boolean isSaveOnCloseNeeded(){
 		return true;
 	}
 	
+	@Override
 	public void activation(boolean mode){}
 	
+	@Override
 	public void visible(boolean mode){
 		List<IStockEntry> allEntries =
 			CoreModelServiceHolder.get().getQuery(IStockEntry.class).execute();
