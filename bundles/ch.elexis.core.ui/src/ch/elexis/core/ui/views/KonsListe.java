@@ -15,8 +15,10 @@ package ch.elexis.core.ui.views;
 import javax.inject.Inject;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
+import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
@@ -163,8 +165,18 @@ public class KonsListe extends ViewPart implements IRefreshable {
 	}
 
 	@Inject
-	public void setClosable(MPart part) {
-		part.setCloseable(GlobalActions.fixLayoutAction.isChecked());	
+	public void setClosable(MPart part, MApplication application) {
+		
+		part.setCloseable(!GlobalActions.fixLayoutAction.isChecked());
+		if (GlobalActions.fixLayoutAction.isChecked()) {
+			 // works as of 2020-03 (4.16)
+//			application.getTags().add("DisableDnDAddon");
+			// before 2020-03 you have to set this on each part separately
+			part.getTags().add("NoMove");
+		} else {
+			part.getTags().add("NoMove");
+		}
+		
 	}
 	
 	/**
