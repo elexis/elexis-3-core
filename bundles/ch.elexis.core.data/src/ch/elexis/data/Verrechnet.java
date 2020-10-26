@@ -370,7 +370,6 @@ public class Verrechnet extends PersistentObject {
 	 *            new count this service is to be billed.
 	 */
 	public void changeAnzahl(int newAmount){
-		setZahl(newAmount);
 		IVerrechenbar vv = getVerrechenbar();
 		if (vv instanceof Artikel) {
 			Artikel art = (Artikel) vv;
@@ -383,6 +382,7 @@ public class Verrechnet extends PersistentObject {
 				stockService.performSingleReturn(art, difference);
 			}
 		}
+		setZahl(newAmount);
 	}
 	
 	/**

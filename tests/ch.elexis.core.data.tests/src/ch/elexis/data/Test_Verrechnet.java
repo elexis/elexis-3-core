@@ -10,20 +10,26 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.interfaces.IVerrechenbar;
+import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.eigenartikel.Constants;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.Money;
+import ch.rgw.tools.Result;
 
 public class Test_Verrechnet extends AbstractPersistentObjectTest {
 	
 	private static Mandant mandant;
 	private static Patient patient;
 	private static Fall fall;
+	private static IStockEntry customArticleStockEntry;
+	private static Artikel article;
+	private static Stock defaultStock;
 	
 	public Test_Verrechnet(JdbcLink link){
 		super(link);
 	}
-
+	
 	@BeforeClass
 	public static void before(){
 		mandant = new Mandant("Mandant", "Erwin", "26.07.1979", "m");
@@ -31,6 +37,13 @@ public class Test_Verrechnet extends AbstractPersistentObjectTest {
 		patient = new Patient("Mustermann", "Max", "1.1.2000", "m");
 		fall = patient.neuerFall(Fall.getDefaultCaseLabel(), Fall.getDefaultCaseReason(),
 			Fall.getDefaultCaseLaw());
+		defaultStock = Stock.load(Stock.DEFAULT_STOCK_ID);
+		
+		article = new Artikel("Testartikel", "Eigenartikel");
+		customArticleStockEntry =
+			CoreHub.getStockService().storeArticleInStock(defaultStock, article.storeToString());
+		customArticleStockEntry.setCurrentStock(1);
+		assertEquals(1, customArticleStockEntry.getCurrentStock());
 	}
 	
 	@Test
@@ -83,4 +96,30 @@ public class Test_Verrechnet extends AbstractPersistentObjectTest {
 		assertEquals("Vorsorgeuntersuchungen gemäss Empfehlungen {SGP}'93, im 1. Monat",
 			vr.getText());
 	}
+	
+	@Test
+	public void changeAmountCorrectlyModifiesStock(){
+		customArticleStockEntry.setCurrentStock(8);
+		
+		CoreHub.setMandant(mandant);
+		Konsultation cons = new Konsultation(fall);
+		Result<IVerrechenbar> billed = cons.addLeistung(article);
+		assertTrue(billed.isOK());
+		
+		Verrechnet verrechnet = cons.getLeistungen().get(0);
+		IStatus changeAnzahlValidated = verrechnet.changeAnzahlValidated(4);
+		assertTrue(changeAnzahlValidated.isOK());
+		customArticleStockEntry = CoreHub.getStockService()
+			.findStockEntryForArticleInStock(defaultStock, article.storeToString());
+		assertEquals(4, customArticleStockEntry.getCurrentStock());
+		
+		changeAnzahlValidated = verrechnet.changeAnzahlValidated(3);
+		assertTrue(changeAnzahlValidated.isOK());
+		customArticleStockEntry = CoreHub.getStockService()
+			.findStockEntryForArticleInStock(defaultStock, article.storeToString());
+		assertEquals(5, customArticleStockEntry.getCurrentStock());
+		
+		verrechnet.delete();
+	}
+	
 }
