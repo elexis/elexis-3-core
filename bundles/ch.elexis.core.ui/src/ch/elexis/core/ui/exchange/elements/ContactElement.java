@@ -13,14 +13,20 @@
 package ch.elexis.core.ui.exchange.elements;
 
 import java.util.List;
+import java.util.StringJoiner;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.model.IPersistentObject;
+import ch.elexis.core.model.ISticker;
 import ch.elexis.core.ui.exchange.KontaktMatcher;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Organisation;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Person;
+import ch.elexis.data.Query;
+import ch.elexis.data.Sticker;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -94,6 +100,8 @@ public class ContactElement extends XChangeElement {
 			setAttribute(ATTR_REMARK, bemerkung);
 		}
 		add(new AddressElement().asExporter(parent, k.getAnschrift(), "default")); //$NON-NLS-1$
+		List<ISticker> stickers = k.getStickers();
+		addStickersMeta(stickers);
 		parent.getContainer().addMapping(this, k);
 		return this;
 	}
@@ -183,6 +191,7 @@ public class ContactElement extends XChangeElement {
 					ret = Organisation.load(cands.get(0).getId());
 				}
 			}
+			getStickersMeta(ret);
 			MedicalElement me =
 				(MedicalElement) getChild(MedicalElement.XMLNAME, MedicalElement.class);
 			me.doImport(ret);
@@ -190,4 +199,63 @@ public class ContactElement extends XChangeElement {
 		return ret;
 	}
 	
+	protected void getStickersMeta(Kontakt ret){
+		List<MetaElement> meta =
+			(List<MetaElement>) getChildren(MetaElement.XMLNAME, MetaElement.class);
+		if (meta != null && !meta.isEmpty()) {
+			for (MetaElement metaElement : meta) {
+				if ("stickers".equals(metaElement.getAttr(MetaElement.ATTR_NAME))) {
+					String stickersString = metaElement.getAttr(MetaElement.ATTR_VALUE);
+					if (stickersString != null) {
+						String[] stickerStrings = stickersString.split("\\|");
+						for (String stickerString : stickerStrings) {
+							String[] stickerParts = stickerString.split("::");
+							if (stickerParts != null && stickerParts.length > 1
+								&& StringUtils.isNotBlank(stickerParts[0])) {
+								Sticker sticker = getOrCreateSticker(stickerParts);
+								if (sticker != null) {
+									ret.addSticker(sticker);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	private Sticker getOrCreateSticker(String[] stickerParts){
+		Query<Sticker> query = new Query<>(Sticker.class);
+		query.add(Sticker.FLD_NAME, Query.EQUALS, stickerParts[0]);
+		List<Sticker> existing = query.execute();
+		if (existing.isEmpty()) {
+			Sticker ret = new Sticker(stickerParts[0], null, null);
+			if (stickerParts.length > 1 && StringUtils.isNotBlank(stickerParts[1])) {
+				ret.set(Sticker.FLD_VALUE, stickerParts[1]);
+			}
+			if (stickerParts.length > 2 && StringUtils.isNotBlank(stickerParts[2])) {
+				ret.set(Sticker.FLD_FOREGROUND, stickerParts[2]);
+			}
+			if (stickerParts.length > 3 && StringUtils.isNotBlank(stickerParts[3])) {
+				ret.set(Sticker.FLD_BACKGROUND, stickerParts[3]);
+			}
+			return ret;
+		} else {
+			return existing.get(0);
+		}
+	}
+	
+	private void addStickersMeta(List<ISticker> stickers){
+		if (stickers != null && !stickers.isEmpty()) {
+			StringJoiner sj = new StringJoiner("|");
+			stickers.stream().forEach(s -> sj.add(s.getLabel() + "::" + s.getWert() + "::"
+				+ s.getForeground() + "::" + s.getBackground()));
+			addMeta("stickers", sj.toString());
+		}
+	}
+	
+	public void addMeta(String name, String value){
+		MetaElement meta = new MetaElement().asExporter(sender, name, value);
+		add(meta);
+	}
 }
