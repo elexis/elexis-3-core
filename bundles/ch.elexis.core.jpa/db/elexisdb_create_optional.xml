@@ -2117,6 +2117,20 @@ WHERE kontakt.id IN (
 			<column name="CODE" />
 		</createIndex>
 	</changeSet>
-	
+	<changeSet author="thomas"
+		id="manual_table_CH_ELEXIS_OMNIVORE_DATA_CREATIONDATE">
+		<preConditions onFail="MARK_RAN">
+			<and>
+				<tableExists tableName="CH_ELEXIS_OMNIVORE_DATA" />
+				<not>
+					<columnExists tableName="CH_ELEXIS_OMNIVORE_DATA"
+						columnName="CREATIONDATE" />
+				</not>
+			</and>
+		</preConditions>
+		<addColumn tableName="CH_ELEXIS_OMNIVORE_DATA">
+			<column name="CREATIONDATE" type="CHAR(8)" />
+		</addColumn>
+	</changeSet>
     
 </databaseChangeLog>
