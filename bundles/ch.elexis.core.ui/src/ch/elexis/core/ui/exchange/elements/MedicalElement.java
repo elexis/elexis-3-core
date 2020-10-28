@@ -44,6 +44,7 @@ public class MedicalElement extends XChangeElement {
 	private MedicationsElement eMedications;
 	private RecordsElement eRecords;
 	private AnalysesElement eAnalyses;
+	private EpisodesElement eEpisodes;
 	
 	public String getXMLName(){
 		return XMLNAME;
@@ -52,13 +53,15 @@ public class MedicalElement extends XChangeElement {
 	public MedicalElement asExporter(XChangeExporter parent, Patient p){
 		asExporter(parent);
 		parent.getContainer().addMapping(this, p);
-		add(new AnamnesisElement(parent));
 		Fall[] faelle = p.getFaelle();
 		for (Fall fall : faelle) {
+			EpisodeElement episode = new EpisodeElement().asExporter(parent, fall);
+			addEpisode(episode);
+			
 			Konsultation[] kons = fall.getBehandlungen(false);
 			for (Konsultation k : kons) {
 				RecordElement record = new RecordElement().asExporter(parent, k);
-				getAnamnesis().link(k, record);
+				record.addEpisodeRef(episode);
 				addRecord(record);
 			}
 		}
@@ -165,6 +168,21 @@ public class MedicalElement extends XChangeElement {
 		eRecords.add(rc);
 	}
 	
+	public void addEpisode(EpisodeElement episode){
+		if (eEpisodes == null) {
+			eEpisodes = (EpisodesElement) getChild(XChangeContainer.ENCLOSE_EPISODES,
+				EpisodesElement.class);
+		}
+		if (eEpisodes == null) {
+			eEpisodes = new EpisodesElement();
+			eEpisodes.setReader(getReader());
+			eEpisodes.setWriter(getSender());
+			add(eEpisodes);
+			getContainer().addChoice(eEpisodes, "Faelle", eEpisodes); //$NON-NLS-1$
+		}
+		eEpisodes.add(episode);
+	}
+	
 	/**
 	 * Add a result
 	 * 
@@ -233,6 +251,20 @@ public class MedicalElement extends XChangeElement {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<EpisodeElement> getEpisodes(){
+		if (eEpisodes == null) {
+			eEpisodes = (EpisodesElement) getChild(XChangeContainer.ENCLOSE_EPISODES,
+				EpisodesElement.class);
+		}
+		if (eEpisodes != null) {
+			List<EpisodeElement> episodes = (List<EpisodeElement>) eEpisodes
+				.getChildren(EpisodeElement.XMLNAME, EpisodeElement.class);
+			return episodes;
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<FindingElement> getAnalyses(){
 		if (eAnalyses == null) {
 			eAnalyses =
@@ -266,7 +298,6 @@ public class MedicalElement extends XChangeElement {
 	
 	public String toString(){
 		StringBuilder ret = new StringBuilder();
-		ret.append(getAnamnesis().toString());
 		List<RecordElement> records = getRecords();
 		for (RecordElement record : records) {
 			ret.append("\n......\n").append(record.toString());
@@ -284,7 +315,6 @@ public class MedicalElement extends XChangeElement {
 	 */
 	public PersistentObject doImport(PersistentObject context){
 		Patient pat = Patient.load(context.getId());
-		AnamnesisElement elAnamnesis = getAnamnesis();
 		List<RecordElement> records = getRecords();
 		
 		return pat;

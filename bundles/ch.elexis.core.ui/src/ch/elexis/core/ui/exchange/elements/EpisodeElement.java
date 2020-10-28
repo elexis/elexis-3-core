@@ -12,11 +12,18 @@
 
 package ch.elexis.core.ui.exchange.elements;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import org.apache.commons.lang3.StringUtils;
 import org.jdom.Element;
 
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.ui.exchange.XChangeExporter;
+import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
+import ch.elexis.data.Kontakt;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.XMLTool;
@@ -43,6 +50,49 @@ public class EpisodeElement extends XChangeElement {
 		setAttribute(ATTR_TITLE, dg.getLabel());
 		InsuranceElement eInsurance = new InsuranceElement().asExporter(parent, k);
 		add(eInsurance);
+		return this;
+	}
+	
+	public EpisodeElement asExporter(XChangeExporter parent, Fall fall){
+		asExporter(parent);
+		XidElement eXid = new XidElement().asExporter(parent, fall);
+		add(eXid);
+		setAttribute(ATTR_BEGINDATE,
+			new TimeTool(fall.getBeginnDatum()).toString(TimeTool.DATE_ISO));
+		if (StringUtils.isNotBlank(fall.getEndDatum())) {
+			setAttribute(ATTR_ENDDATE,
+				new TimeTool(fall.getEndDatum()).toString(TimeTool.DATE_ISO));
+			
+		}
+		setAttribute(ATTR_ID, fall.getId());
+		Konsultation[] behandlungen = fall.getBehandlungen(false);
+		if (behandlungen != null && behandlungen.length > 0) {
+			Optional<IDiagnose> firstDiagnose = Arrays.asList(behandlungen).stream()
+				.flatMap(k -> k.getDiagnosen().stream()).findFirst();
+			if (firstDiagnose.isPresent()) {
+				DiagnosisElement eDiag =
+					new DiagnosisElement().asExporter(parent, firstDiagnose.get());
+				add(eDiag);
+			}
+		}
+		
+		setAttribute(ATTR_TITLE, fall.getBezeichnung());
+		InsuranceElement eInsurance = new InsuranceElement().asExporter(parent, fall);
+		add(eInsurance);
+		
+		Kontakt costBearer = fall.getCostBearer();
+		if (costBearer != null) {
+			parent.addContact(costBearer);
+			addMeta("costbearer", costBearer.getId());
+		}
+		if (StringUtils.isNotEmpty((String) fall.getExtInfoStoredObjectByKey("VEKANr"))) {
+			addMeta("vekanr", (String) fall.getExtInfoStoredObjectByKey("VEKANr"));
+		}
+		if (StringUtils.isNotEmpty((String) fall.getExtInfoStoredObjectByKey("Unfalldatum"))) {
+			TimeTool timeTool =
+				new TimeTool((String) fall.getExtInfoStoredObjectByKey("Unfalldatum"));
+			addMeta("accidentdate", timeTool.toString(TimeTool.DATE_ISO));
+		}
 		return this;
 	}
 	
@@ -76,6 +126,25 @@ public class EpisodeElement extends XChangeElement {
 			return ret;
 		}
 		return "";
+	}
+	
+	public void addMeta(String name, String value){
+		MetaElement meta = new MetaElement().asExporter(sender, name, value);
+		add(meta);
+	}
+	
+	public MetaElement getMeta(String name){
+		@SuppressWarnings("unchecked")
+		List<MetaElement> meta =
+			(List<MetaElement>) getChildren(MetaElement.XMLNAME, MetaElement.class);
+		if (meta != null && !meta.isEmpty()) {
+			for (MetaElement metaElement : meta) {
+				if (name.equals(metaElement.getAttr(MetaElement.ATTR_NAME))) {
+					return metaElement;
+				}
+			}
+		}
+		return null;
 	}
 	
 	static class DiagnosisElement extends XChangeElement {
