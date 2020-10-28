@@ -19,6 +19,7 @@ import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.interfaces.IXid;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.data.Artikel;
+import ch.elexis.data.Fall;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.LabItem;
 import ch.elexis.data.Labor;
@@ -108,6 +109,27 @@ public class XidElement extends XChangeElement {
 		}
 		setAttribute(ATTR_ID, XMLTool.idToXMLID(k.getId()));
 		List<IXid> xids = k.getXids();
+		for (IXid xid : xids) {
+			int val = xid.getQuality();
+			int v1 = val & 3;
+			Identity ident = new Identity().asExporter(home, xid.getDomain(), xid.getDomainId(), v1,
+				isUUID(xid));
+			add(ident);
+		}
+		return this;
+	}
+	
+	public XidElement asExporter(XChangeExporter home, Fall fall){
+		asExporter(home);
+		IXid best = fall.getXid();
+		String id = XMLTool.idToXMLID(fall.getId());
+		if ((best.getQuality() & 7) >= Xid.QUALITY_GUID) {
+			id = XMLTool.idToXMLID(best.getDomainId());
+		} else {
+			fall.addXid(XidConstants.DOMAIN_ELEXIS, id, true);
+		}
+		setAttribute(ATTR_ID, XMLTool.idToXMLID(fall.getId()));
+		List<IXid> xids = fall.getXids();
 		for (IXid xid : xids) {
 			int val = xid.getQuality();
 			int v1 = val & 3;
