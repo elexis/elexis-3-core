@@ -14,6 +14,7 @@ package ch.elexis.core.ui.exchange.elements;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.io.IOUtils;
@@ -137,6 +138,20 @@ public class DocumentElement extends XChangeElement {
 	public void addMeta(String name, String value){
 		MetaElement meta = new MetaElement().asExporter(sender, name, value);
 		add(meta);
+	}
+	
+	public MetaElement getMeta(String name){
+		@SuppressWarnings("unchecked")
+		List<MetaElement> meta =
+			(List<MetaElement>) getChildren(MetaElement.XMLNAME, MetaElement.class);
+		if (meta != null && !meta.isEmpty()) {
+			for (MetaElement metaElement : meta) {
+				if (name.equals(metaElement.getAttr(MetaElement.ATTR_NAME))) {
+					return metaElement;
+				}
+			}
+		}
+		return null;
 	}
 	
 	public void setDate(String date){

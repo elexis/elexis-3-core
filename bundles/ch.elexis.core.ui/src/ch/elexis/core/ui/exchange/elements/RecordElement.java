@@ -29,6 +29,7 @@ import ch.rgw.tools.XMLTool;
 
 public class RecordElement extends XChangeElement {
 	static final String ELEMENT_TEXT = "text";
+	static final String ELEMENT_EPISODE = "episode";
 	static final String ATTR_AUTHOR = "author";
 	static final String ATTR_RESPONSIBLE = "responsible";
 	static final String ATTR_DATE = "date";
@@ -74,6 +75,31 @@ public class RecordElement extends XChangeElement {
 		}
 		c.getContainer().addMapping(this, k);
 		return this;
+	}
+	
+	public void addEpisodeRef(EpisodeElement episode){
+		Element eEpisode = new Element(ELEMENT_EPISODE, getContainer().getNamespace());
+		eEpisode.setAttribute("ref", episode.getID());
+		getElement().addContent(eEpisode);
+	}
+	
+	public void addMeta(String name, String value){
+		MetaElement meta = new MetaElement().asExporter(sender, name, value);
+		add(meta);
+	}
+	
+	public MetaElement getMeta(String name){
+		@SuppressWarnings("unchecked")
+		List<MetaElement> meta =
+			(List<MetaElement>) getChildren(MetaElement.XMLNAME, MetaElement.class);
+		if (meta != null && !meta.isEmpty()) {
+			for (MetaElement metaElement : meta) {
+				if (name.equals(metaElement.getAttr(MetaElement.ATTR_NAME))) {
+					return metaElement;
+				}
+			}
+		}
+		return null;
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -12,6 +12,8 @@
 
 package ch.elexis.core.ui.exchange.elements;
 
+import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.data.Fall;
@@ -49,6 +51,38 @@ public class InsuranceElement extends XChangeElement {
 		return this;
 	}
 	
+	public InsuranceElement asExporter(XChangeExporter parent, Fall fall){
+		Kontakt garant = fall.getGarant();
+		setAttribute(ATTR_DATEFROM,
+			new TimeTool(fall.getBeginnDatum()).toString(TimeTool.DATE_ISO));
+		if (!fall.isOpen()) {
+			setAttribute(ATTR_DATEUNTIL,
+				new TimeTool(fall.getEndDatum()).toString(TimeTool.DATE_ISO));
+		}
+		setAttribute(ATTR_REASON, translateReason(fall.getGrund()));
+		ContactElement eGarant = parent.addContact(garant);
+		setAttribute(ATTR_COMPANYREF, eGarant.getID());
+		ContractElement eContract = new ContractElement().asExporter(parent, fall);
+		add(eContract);
+		return this;
+	}
+	
+	public String getReason(){
+		String value = getAttr(ATTR_REASON);
+		if ("accident".equals(value)) {
+			return FallConstants.TYPE_ACCIDENT;
+		} else if ("birthdefect".equals(value)) {
+			return FallConstants.TYPE_BIRTHDEFECT;
+		} else if ("disease".equals(value)) {
+			return FallConstants.TYPE_DISEASE;
+		} else if ("maternity".equals(value)) {
+			return FallConstants.TYPE_MATERNITY;
+		} else if ("prevention".equals(value)) {
+			return FallConstants.TYPE_PREVENTION;
+		}
+		return FallConstants.TYPE_OTHER;
+	}
+	
 	public String translateReason(String grund){
 		if (grund.equals(FallConstants.TYPE_ACCIDENT)) {
 			return "accident";
@@ -65,7 +99,7 @@ public class InsuranceElement extends XChangeElement {
 		}
 	}
 	
-	static class ContractElement extends XChangeElement {
+	public static class ContractElement extends XChangeElement {
 		public static final String XMLNAME = "contract";
 		public static final String ATTR_COUNTRY = "country";
 		public static final String ATTR_NAME = "name";
@@ -79,9 +113,18 @@ public class InsuranceElement extends XChangeElement {
 			asExporter(p);
 			setAttribute(ATTR_COUNTRY, "CH");
 			setAttribute(ATTR_NAME, fall.getAbrechnungsSystem());
-			setAttribute(ATTR_CASEID, fall.getId());
+			if (StringUtils.isNotEmpty(fall.getRequiredString("Versicherungsnummer"))) {
+				setAttribute(ATTR_CASEID, fall.getRequiredString("Versicherungsnummer"));
+			} else if (StringUtils.isNotEmpty(fall.getRequiredString("Unfallnummer"))) {
+				setAttribute(ATTR_CASEID, fall.getRequiredString("Unfallnummer"));
+			} else if (StringUtils.isNotEmpty(fall.getInfoString("Fallnummer"))) {
+				setAttribute(ATTR_CASEID, fall.getRequiredString("Fallnummer"));
+			}
 			return this;
 		}
 	}
 	
+	public ContractElement getContract(){
+		return (ContractElement) getChild(ContractElement.XMLNAME, ContractElement.class);
+	}
 }
