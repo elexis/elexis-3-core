@@ -29,6 +29,7 @@ import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.KonsFilter;
 import ch.elexis.core.ui.dialogs.KonsFilterDialog;
@@ -67,7 +68,7 @@ public class KonsListe extends ViewPart implements IRefreshable, ISaveablePart2 
 	
 	@Inject
 	void activePatient(@Optional IPatient patient){
-		if ((actPatient == null)
+		if ((actPatient == null || liste.lKons.isEmpty())
 			|| (patient != null && !actPatient.getId().equals(patient.getId()))) {
 			actPatient = patient;
 			restart(true);
@@ -76,9 +77,6 @@ public class KonsListe extends ViewPart implements IRefreshable, ISaveablePart2 
 	
 	@Inject
 	void activeCoverage(@Optional ICoverage iCoverage){
-		if (iCoverage != null) {
-			actPatient = iCoverage.getPatient();
-		}
 		restart(false);
 	}
 	
@@ -86,7 +84,6 @@ public class KonsListe extends ViewPart implements IRefreshable, ISaveablePart2 
 	@Inject
 	void changedCoverage(@UIEventTopic(ElexisEventTopics.BASE_MODEL + "*") ICoverage iCoverage){
 		if (iCoverage != null) {
-			actPatient = iCoverage.getPatient();
 			restart(false);
 		}
 	}
@@ -105,14 +102,12 @@ public class KonsListe extends ViewPart implements IRefreshable, ISaveablePart2 
 		makeActions();
 		menus = new ViewMenus(getViewSite());
 		menus.createToolbar(filterAction);
-	//	ElexisEventDispatcher.getInstance().addListeners(eeli_fall, eeli_pat, eeli_kons);
 		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 	
 	@Override
 	public void dispose(){
 		getSite().getPage().removePartListener(udpateOnVisible);
-	//	ElexisEventDispatcher.getInstance().removeListeners(eeli_fall, eeli_kons, eeli_pat);
 		liste.stop();
 		super.dispose();
 	}
@@ -125,7 +120,7 @@ public class KonsListe extends ViewPart implements IRefreshable, ISaveablePart2 
 	
 	@Override
 	public void refresh(){
-		//eeli_pat.catchElexisEvent(ElexisEvent.createPatientEvent());		
+		activePatient(ContextServiceHolder.get().getActivePatient().orElse(null));
 	}
 	
 	private void restart(Boolean isPatientEvent){
