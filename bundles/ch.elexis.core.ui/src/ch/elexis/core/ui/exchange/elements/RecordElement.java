@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.jdom.Element;
 
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.text.model.Samdas.Record;
 import ch.elexis.core.text.model.Samdas.XRef;
@@ -67,14 +68,24 @@ public class RecordElement extends XChangeElement {
 					getElement().addContent(eText);
 					List<XRef> xrefs = record.getXrefs();
 					for (XRef xref : xrefs) {
-						MarkupElement me = new MarkupElement().asExporter(c, xref);
-						add(me);
+						if (shouldAddXRef(xref)) {
+							MarkupElement me = new MarkupElement().asExporter(c, xref);
+							add(me);
+						}
 					}
 				}
 			}
 		}
 		c.getContainer().addMapping(this, k);
 		return this;
+	}
+	
+	private boolean shouldAddXRef(XRef xref){
+		// only add privatnotizen of current mandant
+		if (xref.getProvider().toLowerCase().contains("privatnotizen")) {
+			return xref.getID().startsWith(CoreHub.actMandant.getId());
+		}
+		return true;
 	}
 	
 	public void addEpisodeRef(EpisodeElement episode){
