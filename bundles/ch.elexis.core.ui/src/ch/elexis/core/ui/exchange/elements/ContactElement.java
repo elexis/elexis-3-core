@@ -227,7 +227,7 @@ public class ContactElement extends XChangeElement {
 		query.add(Sticker.FLD_NAME, Query.EQUALS, stickerParts[0]);
 		List<Sticker> existing = query.execute();
 		if (existing.isEmpty()) {
-			Sticker ret = new Sticker(stickerParts[0], null, null);
+			Sticker ret = new Sticker(stickerParts[0], "000000", "ffffff");
 			if (stickerParts.length > 1 && StringUtils.isNotBlank(stickerParts[1])) {
 				ret.set(Sticker.FLD_VALUE, stickerParts[1]);
 			}
