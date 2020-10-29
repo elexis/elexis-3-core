@@ -92,7 +92,7 @@ public class ContactElement extends XChangeElement {
 			
 		} else {
 			setAttribute(ATTR_TYPE, VALUE_ORGANIZATION);
-			setAttribute(ATTR_LASTNAME, k.getLabel());
+			setAttribute(ATTR_LASTNAME, k.getLabel(true));
 		}
 		String bemerkung = k.getBemerkung();
 		if (!StringTool.isNothing(bemerkung)) {
