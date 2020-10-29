@@ -306,7 +306,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 			if (element instanceof IPatient) {
 				IPatient pat = (IPatient) element;
 				ISticker et = StickerServiceHolder.get().getSticker(pat).orElse(null);
-				if (et != null) {
+				if (et != null && et.getBackground() != null) {
 					return CoreUiUtil.getColorForString(et.getBackground());
 				}
 			}
@@ -318,7 +318,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 			if (element instanceof IPatient) {
 				IPatient pat = (IPatient) element;
 				ISticker et = StickerServiceHolder.get().getSticker(pat).orElse(null);
-				if (et != null) {
+				if (et != null && et.getForeground() != null) {
 					return CoreUiUtil.getColorForString(et.getForeground());
 				}
 			}
