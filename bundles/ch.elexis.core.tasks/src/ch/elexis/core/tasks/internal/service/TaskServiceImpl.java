@@ -84,26 +84,22 @@ public class TaskServiceImpl implements ITaskService {
 	/**
 	 * do not execute these instances, they are used for documentation listing only
 	 */
-	private List<IIdentifiedRunnable> identifiedRunnables;
+	private List<IIdentifiedRunnable> identifiedRunnables =
+		Collections.synchronizedList(new ArrayList<>());
 	
-	private Map<String, IIdentifiedRunnableFactory> runnableIdToFactoryMap;
-	private List<IIdentifiedRunnableFactory> runnableWithContextFactories;
+	private Map<String, IIdentifiedRunnableFactory> runnableIdToFactoryMap =
+		Collections.synchronizedMap(new HashMap<>());
 	
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY, bind = "bindRunnableWithContextFactory", unbind = "unbindRunnableWithContextFactory")
-	protected synchronized void bindRunnableWithContextFactory(
+	private volatile List<IIdentifiedRunnableFactory> runnableWithContextFactories;
+	
+	protected void bindRunnableWithContextFactory(
 		IIdentifiedRunnableFactory runnableWithContextFactory){
 		if (runnableWithContextFactories == null) {
 			runnableWithContextFactories = new ArrayList<>();
 		}
 		logger.info("Binding " + runnableWithContextFactory.getClass().getName());
 		runnableWithContextFactories.add(runnableWithContextFactory);
-		
-		if (identifiedRunnables == null) {
-			identifiedRunnables = new ArrayList<>();
-		}
-		if (runnableIdToFactoryMap == null) {
-			runnableIdToFactoryMap = new HashMap<>();
-		}
 		
 		try {
 			runnableWithContextFactory.initialize(this);
@@ -123,7 +119,7 @@ public class TaskServiceImpl implements ITaskService {
 		
 	}
 	
-	protected synchronized void unbindRunnableWithContextFactory(
+	protected void unbindRunnableWithContextFactory(
 		IIdentifiedRunnableFactory runnableWithContextFactory){
 		runnableWithContextFactories.remove(runnableWithContextFactory);
 		List<IIdentifiedRunnable> providedRunnables =
@@ -395,7 +391,7 @@ public class TaskServiceImpl implements ITaskService {
 		
 		String reason;
 		if (iIdentifiedRunnableFactory == null) {
-			reason = "not registered factory found";
+			reason = "no registered factory found";
 		} else {
 			reason = "runnable id not found in factory ["
 				+ iIdentifiedRunnableFactory.getClass().getName() + "]";
