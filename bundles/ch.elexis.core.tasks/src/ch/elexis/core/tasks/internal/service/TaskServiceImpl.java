@@ -95,7 +95,7 @@ public class TaskServiceImpl implements ITaskService {
 		if (runnableWithContextFactories == null) {
 			runnableWithContextFactories = new ArrayList<>();
 		}
-		logger.debug("Binding "+runnableWithContextFactory.getClass().getName());
+		logger.info("Binding " + runnableWithContextFactory.getClass().getName());
 		runnableWithContextFactories.add(runnableWithContextFactory);
 		
 		if (identifiedRunnables == null) {
@@ -107,18 +107,20 @@ public class TaskServiceImpl implements ITaskService {
 		
 		try {
 			runnableWithContextFactory.initialize(this);
+			
+			List<IIdentifiedRunnable> providedRunnables =
+				runnableWithContextFactory.getProvidedRunnables();
+			for (IIdentifiedRunnable iIdentifiedRunnable : providedRunnables) {
+				runnableIdToFactoryMap.put(iIdentifiedRunnable.getId(), runnableWithContextFactory);
+				identifiedRunnables.add(iIdentifiedRunnable);
+			}
+			
 		} catch (Exception e) {
 			logger.warn("Error binding [{}], skipping.",
 				runnableWithContextFactory.getClass().getName(), e);
 			return;
 		}
 		
-		List<IIdentifiedRunnable> providedRunnables =
-			runnableWithContextFactory.getProvidedRunnables();
-		for (IIdentifiedRunnable iIdentifiedRunnable : providedRunnables) {
-			runnableIdToFactoryMap.put(iIdentifiedRunnable.getId(), runnableWithContextFactory);
-			identifiedRunnables.add(iIdentifiedRunnable);
-		}
 	}
 	
 	protected synchronized void unbindRunnableWithContextFactory(
@@ -391,8 +393,16 @@ public class TaskServiceImpl implements ITaskService {
 			}
 		}
 		
+		String reason;
+		if (iIdentifiedRunnableFactory == null) {
+			reason = "not registered factory found";
+		} else {
+			reason = "runnable id not found in factory ["
+				+ iIdentifiedRunnableFactory.getClass().getName() + "]";
+		}
+		
 		throw new TaskException(TaskException.RWC_NO_INSTANCE_FOUND,
-			"Could not instantiate runnable id [" + runnableId + "]");
+			"Could not instantiate runnable id [" + runnableId + "]: " + reason);
 	}
 	
 	@Override
