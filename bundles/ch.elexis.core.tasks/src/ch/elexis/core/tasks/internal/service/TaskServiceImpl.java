@@ -3,12 +3,12 @@ package ch.elexis.core.tasks.internal.service;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
@@ -16,7 +16,6 @@ import java.util.concurrent.RejectedExecutionException;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.osgi.framework.eventmgr.CopyOnWriteIdentityMap;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
@@ -81,18 +80,28 @@ public class TaskServiceImpl implements ITaskService {
 		taskModelService = modelService;
 	}
 	
-	private List<IIdentifiedRunnableFactory> runnableWithContextFactories = new CopyOnWriteArrayList<>();
-	private Map<String, IIdentifiedRunnableFactory> runnableIdToFactoryMap = new CopyOnWriteIdentityMap<>();
 	/**
 	 * do not execute these instances, they are used for documentation listing only
 	 */
-	private List<IIdentifiedRunnable> identifiedRunnables = new CopyOnWriteArrayList<>();
+	private List<IIdentifiedRunnable> identifiedRunnables;
 	
-	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, unbind = "unbindRunnableWithContextFactory")
-	private void bindRunnableWithContextFactory(
+	private Map<String, IIdentifiedRunnableFactory> runnableIdToFactoryMap;
+	private List<IIdentifiedRunnableFactory> runnableWithContextFactories;
+	
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, bind = "bindRunnableWithContextFactory", unbind = "unbindRunnableWithContextFactory")
+	protected synchronized void bindRunnableWithContextFactory(
 		IIdentifiedRunnableFactory runnableWithContextFactory){
-
+		if (runnableWithContextFactories == null) {
+			runnableWithContextFactories = new ArrayList<>();
+		}
 		runnableWithContextFactories.add(runnableWithContextFactory);
+		
+		if (identifiedRunnables == null) {
+			identifiedRunnables = new ArrayList<>();
+		}
+		if (runnableIdToFactoryMap == null) {
+			runnableIdToFactoryMap = new HashMap<>();
+		}
 		
 		try {
 			runnableWithContextFactory.initialize(this);
@@ -110,7 +119,7 @@ public class TaskServiceImpl implements ITaskService {
 		}
 	}
 	
-	protected void unbindRunnableWithContextFactory(
+	protected synchronized void unbindRunnableWithContextFactory(
 		IIdentifiedRunnableFactory runnableWithContextFactory){
 		runnableWithContextFactories.remove(runnableWithContextFactory);
 		List<IIdentifiedRunnable> providedRunnables =
@@ -274,7 +283,7 @@ public class TaskServiceImpl implements ITaskService {
 			TaskState state = task.getState();
 			if (OwnerTaskNotification.WHEN_FINISHED == ownerNotification
 				|| (OwnerTaskNotification.WHEN_FINISHED_FAILED == ownerNotification
-					&& (TaskState.FAILED == state || TaskState.COMPLETED_WARN == state))) {
+					&& ( TaskState.FAILED == state || TaskState.COMPLETED_WARN == state) )) {
 				
 				if (owner != null) {
 					sendMessageToOwner(task, owner, state);
