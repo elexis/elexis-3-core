@@ -54,7 +54,7 @@ import ch.elexis.core.tasks.model.TaskTriggerType;
 @Component(immediate = true)
 public class TaskServiceImpl implements ITaskService {
 	
-	private Logger logger;
+	private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	private IModelService taskModelService;
 	
@@ -134,9 +134,6 @@ public class TaskServiceImpl implements ITaskService {
 	
 	@Activate
 	private void activateComponent(){
-		logger = LoggerFactory.getLogger(getClass());
-		logger.debug("Activating");
-		
 		triggeredTasks = Collections.synchronizedList(new ArrayList<>());
 		parallelExecutorService = Executors.newCachedThreadPool();
 		singletonExecutorService = Executors.newSingleThreadExecutor();
