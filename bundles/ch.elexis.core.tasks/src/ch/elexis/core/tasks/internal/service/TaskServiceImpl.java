@@ -22,6 +22,7 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,12 +89,13 @@ public class TaskServiceImpl implements ITaskService {
 	private Map<String, IIdentifiedRunnableFactory> runnableIdToFactoryMap;
 	private List<IIdentifiedRunnableFactory> runnableWithContextFactories;
 	
-	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, bind = "bindRunnableWithContextFactory", unbind = "unbindRunnableWithContextFactory")
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY, bind = "bindRunnableWithContextFactory", unbind = "unbindRunnableWithContextFactory")
 	protected synchronized void bindRunnableWithContextFactory(
 		IIdentifiedRunnableFactory runnableWithContextFactory){
 		if (runnableWithContextFactories == null) {
 			runnableWithContextFactories = new ArrayList<>();
 		}
+		logger.debug("Binding "+runnableWithContextFactory.getClass().getName());
 		runnableWithContextFactories.add(runnableWithContextFactory);
 		
 		if (identifiedRunnables == null) {
@@ -283,7 +285,7 @@ public class TaskServiceImpl implements ITaskService {
 			TaskState state = task.getState();
 			if (OwnerTaskNotification.WHEN_FINISHED == ownerNotification
 				|| (OwnerTaskNotification.WHEN_FINISHED_FAILED == ownerNotification
-					&& ( TaskState.FAILED == state || TaskState.COMPLETED_WARN == state) )) {
+					&& (TaskState.FAILED == state || TaskState.COMPLETED_WARN == state))) {
 				
 				if (owner != null) {
 					sendMessageToOwner(task, owner, state);
