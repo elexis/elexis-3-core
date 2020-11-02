@@ -78,16 +78,19 @@ public class VirtualFileHandle_FileDirectory_Test extends AbstractVirtualFileHan
 	}
 
 	@Test
-	public void testListHandlesIVirtualFilesystemhandleFilter() throws IOException {
+	public void testListHandlesIVirtualFilesystemhandleFilter() throws IOException{
 		File file = new File(testDirectoryHandle.toFile().get(), "listingFile.txt");
 		assertTrue(file.createNewFile());
+		File file1 = new File(testDirectoryHandle.toFile().get(), "test file.txt");
+		assertTrue(file1.createNewFile());
 		File file2 = new File(testDirectoryHandle.toFile().get(), "listingFile.txta");
 		assertTrue(file2.createNewFile());
 		IVirtualFilesystemHandle[] listHandles = testDirectoryHandle
-				.listHandles(handle -> "txt".equalsIgnoreCase(handle.getExtension()));
-		assertEquals(1, listHandles.length);
+			.listHandles(handle -> "txt".equalsIgnoreCase(handle.getExtension()));
+		assertEquals(2, listHandles.length);
 		assertEquals(file, listHandles[0].toFile().get());
 		assertTrue(file.delete());
+		assertTrue(file1.delete());
 		assertTrue(file2.delete());
 	}
 

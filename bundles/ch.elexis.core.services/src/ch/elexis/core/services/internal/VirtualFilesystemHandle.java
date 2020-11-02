@@ -131,7 +131,7 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 		throws IOException{
 		
 		if (!isDirectory()) {
-			throw new IOException("not a directory [" + getAbsolutePath() + "]");
+			throw new IOException("not a directory [" + url + "]");
 		}
 		
 		Optional<File> file = toFile();
@@ -232,13 +232,11 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 	
 	@Override
 	public String getExtension(){
-		try {
-			String uri = url.toURI().toString();
-			int lastIndexOf = uri.lastIndexOf('.');
-			if (lastIndexOf > -1) {
-				return uri.substring(lastIndexOf + 1);
-			}
-		} catch (URISyntaxException e) {}
+		String _url = url.toString();
+		int lastIndexOf = _url.lastIndexOf('.');
+		if (lastIndexOf > -1) {
+			return _url.substring(lastIndexOf + 1);
+		}
 		return "";
 	}
 	
@@ -285,13 +283,7 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 	
 	@Override
 	public String getAbsolutePath(){
-		try {
-			return url.toURI().toURL().toString();
-		} catch (MalformedURLException | URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		return url.toString();
 	}
 	
 	@Override
