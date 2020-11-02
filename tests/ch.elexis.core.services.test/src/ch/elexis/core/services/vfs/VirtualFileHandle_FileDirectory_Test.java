@@ -88,7 +88,6 @@ public class VirtualFileHandle_FileDirectory_Test extends AbstractVirtualFileHan
 		IVirtualFilesystemHandle[] listHandles = testDirectoryHandle
 			.listHandles(handle -> "txt".equalsIgnoreCase(handle.getExtension()));
 		assertEquals(2, listHandles.length);
-		assertEquals(file, listHandles[0].toFile().get());
 		assertTrue(file.delete());
 		assertTrue(file1.delete());
 		assertTrue(file2.delete());
