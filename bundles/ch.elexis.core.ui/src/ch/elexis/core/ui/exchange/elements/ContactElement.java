@@ -92,7 +92,11 @@ public class ContactElement extends XChangeElement {
 			
 		} else {
 			setAttribute(ATTR_TYPE, VALUE_ORGANIZATION);
-			setAttribute(ATTR_LASTNAME, k.getLabel(true));
+			String name = k.get(Kontakt.FLD_NAME1);
+			if (StringUtils.isEmpty(name)) {
+				name = k.getLabel(false);
+			}
+			setAttribute(ATTR_LASTNAME, name);
 		}
 		String bemerkung = k.getBemerkung();
 		if (!StringTool.isNothing(bemerkung)) {
