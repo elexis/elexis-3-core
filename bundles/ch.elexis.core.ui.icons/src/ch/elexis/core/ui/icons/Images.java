@@ -25,7 +25,6 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.osgi.framework.FrameworkUtil;
-import org.osgi.framework.launch.Framework;
 
 import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.ui.icons.urihandler.IconURLConnection;
@@ -289,7 +288,19 @@ public enum Images {
 		IMG_DRAWER_ARROW,
 		IMG_ADD;
 		
-	private Images(){}
+	private int zoom;
+	
+	private Images(){
+		this.zoom = 100;
+		String deviceZoom = System.getProperty("org.eclipse.swt.internal.deviceZoom");
+		if (deviceZoom != null && !deviceZoom.isEmpty() && !"100".equals(deviceZoom)) {
+			try {
+				zoom = Integer.parseInt(deviceZoom);
+			} catch (NumberFormatException e) {
+				// ignore, contiue with zoom 100
+			}
+		}
+	}
 	
 	/**
 	 * Returns an image. Clients do not need to dispose the image, it will be disposed
@@ -413,12 +424,31 @@ public enum Images {
 		
 		ResourceBundle iconsetProperties = ResourceBundle.getBundle("iconset");
 		String fileName = iconsetProperties.getString(this.name());
-		URL url =
-			FileLocator.find(FrameworkUtil.getBundle(Images.class), new Path("icons/" + is.name + "/"
-				+ fileName), null);
+		
+		URL url = FileLocator.find(FrameworkUtil.getBundle(Images.class),
+			new Path("icons/" + is.name + "/" + fileName), null);
+		if (zoom != 100) {
+			URL zoomUrl = FileLocator.find(FrameworkUtil.getBundle(Images.class),
+				new Path("icons/" + is.name + "/" + getZoomFilename(fileName)), null);
+			if (zoomUrl != null) {
+				url = zoomUrl;
+			}
+		}
 		ret = url.openConnection().getInputStream();
 		
 		return ret;
+	}
+	
+	private String getZoomFilename(String fileName){
+		int dot = fileName.lastIndexOf('.');
+		if (dot != -1 && (zoom == 150 || zoom == 200)) {
+			String lead = fileName.substring(0, dot);
+			String tail = fileName.substring(dot);
+			
+			String x = zoom == 150 ? "@1.5x" : "@2x"; //$NON-NLS-1$ //$NON-NLS-2$
+			return lead + x + tail;
+		}
+		return fileName;
 	}
 	
 	/**
@@ -474,5 +504,4 @@ public enum Images {
 	public static Image resize(Image image, int width, int height){
 		return new Image(Display.getDefault(), image.getImageData().scaledTo(width, height));
 	}
-	
 }
