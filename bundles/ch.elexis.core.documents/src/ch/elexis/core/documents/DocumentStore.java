@@ -23,8 +23,9 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 
-import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.ITag;
@@ -233,14 +234,16 @@ public class DocumentStore {
 	
 	/**
 	 * Returns all categories from the given store of the document
-	 * 
-	 * @return
+	 * @param iDocument or <code>null</code>
+	 * @return if iDocument is <code>null</code> returns the omnivore store
+	 * @since 3.8
 	 */
-	public List<ICategory> getCategories(IDocument iDocument){
+	public List<ICategory> getCategories(@Nullable IDocument iDocument){
 		List<ICategory> results = new ArrayList<>();
 		Set<String> checkNames = new HashSet<>();
 		
-		IDocumentStore service = getService(iDocument.getStoreId());
+		String storeId = (iDocument!= null) ? iDocument.getStoreId() : "ch.elexis.data.store.omnivore";
+		IDocumentStore service = getService(storeId);
 		List<ICategory> categories = service.getCategories();
 		for (ICategory category : categories) {
 			if (checkNames.add(category.getName())) {
