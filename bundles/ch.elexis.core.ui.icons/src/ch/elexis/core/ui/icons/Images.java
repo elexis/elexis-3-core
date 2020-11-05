@@ -288,7 +288,21 @@ public enum Images {
 		IMG_DRAWER_ARROW,
 		IMG_ADD;
 		
+	private static int deviceZoom;
+	
 	private Images(){}
+	
+	private static void initDeviceZoom(){
+		deviceZoom = 100;
+		String deviceZoomProp = System.getProperty("org.eclipse.swt.internal.deviceZoom");
+		if (deviceZoomProp != null && !deviceZoomProp.isEmpty()) {
+			try {
+				deviceZoom = Integer.parseInt(deviceZoomProp);
+			} catch (NumberFormatException e) {
+				// ignore continue with 100
+			}
+		}
+	}
 	
 	/**
 	 * Returns an image. Clients do not need to dispose the image, it will be disposed
@@ -446,7 +460,7 @@ public enum Images {
 		return ret;
 	}
 	
-	String getFileNameWithZoom(String fileName, int zoom){
+	private static String getFileNameWithZoom(String fileName, int zoom){
 		int dot = fileName.lastIndexOf('.');
 		if (dot != -1 && (zoom == 150 || zoom == 200)) {
 			String lead = fileName.substring(0, dot);
@@ -475,14 +489,30 @@ public enum Images {
 		}
 		
 		Path path = new Path("icons/" + is.name + "/" + fileName);
-		
 		URL fileLocation = FileLocator.find(FrameworkUtil.getBundle(Images.class), path, null);
+		// lookup zoom image
+		if (getDeviceZoom() != 100) {
+			Path zoomPath =
+				new Path("icons/" + is.name + "/" + getFileNameWithZoom(fileName, getDeviceZoom()));
+			URL zoomFileLocation =
+				FileLocator.find(FrameworkUtil.getBundle(Images.class), zoomPath, null);
+			if (zoomFileLocation != null) {
+				fileLocation = zoomFileLocation;
+			}
+		}
 		if (fileLocation == null)
 			return false;
 		ImageDescriptor id = ImageDescriptor.createFromURL(fileLocation);
 		JFaceResources.getImageRegistry().put(name + is.name, id);
 		
 		return true;
+	}
+	
+	private static int getDeviceZoom(){
+		if (deviceZoom == 0) {
+			initDeviceZoom();
+		}
+		return deviceZoom;
 	}
 	
 	/**
