@@ -15,18 +15,40 @@ public class IconURLConnection extends URLConnection {
 	
 	private static Logger log = LoggerFactory.getLogger(IconURLConnection.class);
 	
-	String iconName;
+	private String iconName;
+	
+	private String iconPath;
+	
+	private int zoom;
 	
 	protected IconURLConnection(URL url){
 		super(url);
 		iconName = url.getAuthority();
+		zoom = 100;
+		iconPath = url.getPath();
+		if (iconPath != null && !iconPath.isEmpty()) {
+			zoom = getZoom();
+		}
+	}
+	
+	private int getZoom(){
+		if (iconPath.toLowerCase().endsWith("@2x.png")) {
+			return 200;
+		} else if (iconPath.toLowerCase().endsWith("@1.5x.png")) {
+			return 150;
+		}
+		return 100;
 	}
 	
 	@Override
 	public InputStream getInputStream() throws IOException{
 		try {
 			Images selectedIcon = Images.valueOf(iconName);
-			return selectedIcon.getImageAsInputStream(ImageSize._16x16_DefaultIconSize);
+			if (zoom == 100) {
+				return selectedIcon.getImageAsInputStream(ImageSize._16x16_DefaultIconSize);
+			} else {
+				return selectedIcon.getImageAsInputStream(ImageSize._16x16_DefaultIconSize, zoom);
+			}
 		} catch (IllegalArgumentException e) {
 			log.error("[ERROR] " + iconName + " not found, replacing with empty icon.");
 			return Images.IMG_CLEAR.getImageAsInputStream(ImageSize._16x16_DefaultIconSize);
