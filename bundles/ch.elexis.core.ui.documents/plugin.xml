@@ -242,7 +242,7 @@
          </command>
          <command
                commandId="ch.elexis.core.ui.documents.commandFlatView"
-               icon="icon://IMG_FILTER"
+               icon="icon://IMG_FILTER/icon.png"
                label="%command.label.10"
                style="toggle">
          </command>
