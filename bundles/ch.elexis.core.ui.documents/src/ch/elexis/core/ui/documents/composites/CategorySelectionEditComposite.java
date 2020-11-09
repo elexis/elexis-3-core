@@ -10,6 +10,7 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -201,6 +202,10 @@ public class CategorySelectionEditComposite extends Composite {
 	@Override
 	protected void checkSubclass(){
 		// Disable the check that prevents subclassing of SWT components
+	}
+	
+	public void addSelectionChangeListener(ISelectionChangedListener listener) {
+		cbCategories.addSelectionChangedListener(listener);
 	}
 	
 	public @Nullable ICategory getSelection(){
