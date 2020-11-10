@@ -57,8 +57,9 @@ public interface IFindingsService {
 	 * Save the {@link IFinding} instance to a persistent state.
 	 * 
 	 * @param finding
+	 * @return
 	 */
-	public void saveFinding(IFinding finding);
+	public boolean saveFinding(IFinding finding);
 
 	/**
 	 * Delete the {@link IFinding} instance from persistent state.
