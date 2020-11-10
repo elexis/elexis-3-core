@@ -2117,6 +2117,7 @@ WHERE kontakt.id IN (
 			<column name="CODE" />
 		</createIndex>
 	</changeSet>
+
 	<changeSet author="thomas"
 		id="manual_table_CH_ELEXIS_OMNIVORE_DATA_CREATIONDATE">
 		<preConditions onFail="MARK_RAN">
@@ -2132,5 +2133,52 @@ WHERE kontakt.id IN (
 			<column name="CREATIONDATE" type="CHAR(8)" />
 		</addColumn>
 	</changeSet>
+
+	<changeSet author="thomas (generated)" id="manual_table_CH_ELEXIS_ARZTTARIFE_CH_PANDEMIC">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists
+					tableName="CH_ELEXIS_ARZTTARIFE_CH_PANDEMIC" />
+			</not>
+		</preConditions>
+		<createTable
+			tableName="CH_ELEXIS_ARZTTARIFE_CH_PANDEMIC">
+			<column name="ID" type="VARCHAR(25)">
+				<constraints primaryKey="true"
+					primaryKeyName="CONSTRAINT_ID_CH_ELEXIS_ARZTTARIFE_CH_PANDEMIC" />
+			</column>
+			<column name="LASTUPDATE" type="BIGINT" />
+			<column defaultValue="0" name="DELETED" type="CHAR(1)" />
+			<column name="CODE" type="VARCHAR(25)" />
+			<column name="PANDEMIC" type="VARCHAR(25)" />
+			<column name="CHAPTER" type="VARCHAR(255)" />
+			<column name="TITLE" type="VARCHAR(255)" />
+			<column name="ORG" type="VARCHAR(255)" />
+			<column name="RULES" type="VARCHAR(255)" />
+			<column name="TAXPOINTS" type="VARCHAR(25)" />
+			<column name="CENTS" type="VARCHAR(25)" />
+			<column name="VALIDFROM" type="CHAR(8)" />
+			<column name="VALIDTO" type="CHAR(8)" />
+			<column name="DESCRIPTION" type="CLOB" />
+		</createTable>
+		<insert tableName="CH_ELEXIS_ARZTTARIFE_CH_PANDEMIC">
+       		<column name="ID" value="VERSION"/>
+       		<column name="CODE" value="0.0.1"/>
+    	</insert>
+	</changeSet>
+	<changeSet author="thomas (generated)" id="manual_idx_CH_ELEXIS_ARZTTARIFE_CH_PANDEMIC">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists
+					tableName="CH_ELEXIS_ARZTTARIFE_CH_PANDEMIC"
+					indexName="pandemic_code_idx" />
+			</not>
+		</preConditions>
+		<createIndex indexName="pandemic_code_idx"
+			tableName="CH_ELEXIS_ARZTTARIFE_CH_PANDEMIC">
+			<column name="CODE" />
+		</createIndex>
+	</changeSet>
+
     
 </databaseChangeLog>
