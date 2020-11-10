@@ -545,8 +545,6 @@ public class StockManagementPreferencePage extends PreferencePage
 			btnStoreBelow.getSelection() ? Preferences.INVENTORY_ORDER_TRIGGER_BELOW
 					: Preferences.INVENTORY_ORDER_TRIGGER_EQUAL);
 		
-		((SettingsPreferenceStore) getPreferenceStore()).flush();
-		
 		return super.performOk();
 	}
 	
