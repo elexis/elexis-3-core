@@ -127,8 +127,8 @@ public class FindingsService implements IFindingsService {
 	}
 	
 	@Override
-	public void saveFinding(IFinding finding){
-		findingsModelService.save(finding);
+	public boolean saveFinding(IFinding finding){
+		return findingsModelService.save(finding);
 	}
 	
 	@Override
