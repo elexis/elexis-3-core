@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.PersistentObjectFactory;
 
@@ -39,6 +40,8 @@ public class CodeSystemDescription {
 				SWTHelper.alert("Error", error); //$NON-NLS-1$
 				LoggerFactory.getLogger(CodeSystemDescription.class).error(error);
 				return Optional.empty();
+			} else {
+				CoreUiUtil.injectServicesWithContext(ret.codeSelectorFactory);
 			}
 			
 			String factoryName =
