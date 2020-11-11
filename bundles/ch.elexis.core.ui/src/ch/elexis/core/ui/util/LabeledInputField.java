@@ -931,7 +931,7 @@ public class LabeledInputField extends Composite {
 					def[i].setText(val);
 					break;
 				case CURRENCY:
-					if (val.contains(",") || val.contains(".")) {
+					if (val != null && (val.contains(",") || val.contains("."))) {
 						val = val.replaceAll(",", ".");
 						Money money = new Money(PersistentObject.checkZeroDouble(val));
 						def[i].setText(money.getAmountAsString());
