@@ -76,5 +76,7 @@
     <module>ch.elexis.core</module>
     <module>ch.rgw.utility</module>
     <module>org.iatrix.help.wiki</module>
+    <module>ch.elexis.core.pdfbox</module>
+    <module>ch.elexis.core.pdfbox.ui</module>
   </modules>
 </project>
