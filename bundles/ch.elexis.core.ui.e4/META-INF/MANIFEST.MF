@@ -4,7 +4,8 @@ Bundle-Name: Core UI for e4
 Bundle-SymbolicName: ch.elexis.core.ui.e4;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: medevit.at
-Export-Package: ch.elexis.core.ui.e4.locks,
+Export-Package: ch.elexis.core.ui.e4.events,
+ ch.elexis.core.ui.e4.locks,
  ch.elexis.core.ui.e4.util,
  ch.elexis.core.ui.e4.views.controls
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.15.0",
