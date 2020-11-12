@@ -225,6 +225,17 @@
                id="at.medevit.elexis.contacts.views.dynamic.KontaktAnzeigeTypFilterDynamicContribution">
          </dynamic>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.PatDetail_v2">
+         <command
+               commandId="at.medevit.elexis.contacts.core.command.SendMail"
+               icon="icon://IMG_MAIL_SEND"
+               label="E-Mail an Patienten"
+               style="push"
+               tooltip="E-Mail an Patienten">
+         </command>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -246,6 +257,11 @@
             defaultHandler="ch.elexis.core.ui.contacts.command.FocusIntelligentSearch"
             id="at.medevit.elexis.contacts.core.command.FocusIntelligentSearch"
             name="%command.focusIntelligentSearch.name">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.contacts.command.SendMailCommand"
+            id="at.medevit.elexis.contacts.core.command.SendMail"
+            name="send mail">
       </command>
    </extension>
    <extension
