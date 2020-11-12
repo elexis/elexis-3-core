@@ -2158,7 +2158,7 @@ WHERE kontakt.id IN (
 			<column name="TAXPOINTS" type="VARCHAR(25)" />
 			<column name="CENTS" type="VARCHAR(25)" />
 			<column name="VALIDFROM" type="CHAR(8)" />
-			<column name="VALIDTO" type="CHAR(8)" />
+			<column name="VALIDUNTIL" type="CHAR(8)" />
 			<column name="DESCRIPTION" type="CLOB" />
 		</createTable>
 		<insert tableName="CH_ELEXIS_ARZTTARIFE_CH_PANDEMIC">
