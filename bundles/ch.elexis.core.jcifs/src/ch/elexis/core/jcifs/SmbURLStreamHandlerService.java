@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.url.AbstractURLStreamHandlerService;
 import org.osgi.service.url.URLConstants;
