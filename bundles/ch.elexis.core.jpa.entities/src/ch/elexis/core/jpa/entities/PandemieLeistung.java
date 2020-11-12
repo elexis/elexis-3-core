@@ -72,7 +72,7 @@ public class PandemieLeistung extends AbstractEntityWithId
 	private LocalDate validFrom;
 	
 	@Column(length = 8)
-	private LocalDate validTo;
+	private LocalDate validUntil;
 	
 	public int getCents(){
 		return cents;
@@ -99,11 +99,11 @@ public class PandemieLeistung extends AbstractEntityWithId
 	}
 	
 	public LocalDate getValidTo(){
-		return validTo;
+		return validUntil;
 	}
 	
 	public void setValidTo(LocalDate validTo){
-		this.validTo = validTo;
+		this.validUntil = validTo;
 	}
 	
 	public String getCode(){
