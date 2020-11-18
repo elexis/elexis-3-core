@@ -6,7 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-	AppointmentTest.class, ConfigTest.class, ContactTest.class, CoverageTest.class,
+	AccountTransactionTest.class, AppointmentTest.class, ConfigTest.class, ContactTest.class, CoverageTest.class,
 	DbImageTest.class, DocumentBriefTest.class, EncounterTest.class, LabItemTest.class,
 	LabMappingTest.class, LaboratoryTest.class, LabOrderTest.class, LabResultTest.class,
 	OrderEntryTest.class, PatientTest.class, RoleTest.class, StockEntryTest.class, UserTest.class,
