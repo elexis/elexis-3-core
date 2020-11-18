@@ -12,17 +12,20 @@
 
 package org.iatrix.help.wiki.views;
 
-import org.eclipse.core.runtime.IProgressMonitor;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
 import org.iatrix.help.wiki.Constants;
 
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
-import ch.elexis.core.ui.actions.GlobalActions;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.rgw.tools.StringTool;
 
 /**
@@ -37,7 +40,7 @@ import ch.rgw.tools.StringTool;
  * @author Daniel Lutz <danlutz@watz.ch>
  */
 
-public class WikiView extends ViewPart implements ISaveablePart2 {
+public class WikiView extends ViewPart {
 	public static final String ID = "org.iatrix.help.wiki.views.WikiView"; //$NON-NLS-1$
 	
 	private Browser browser;
@@ -110,29 +113,9 @@ public class WikiView extends ViewPart implements ISaveablePart2 {
 		browser.setFocus();
 	}
 	
-	/* ******
-	 * Die folgenden 6 Methoden implementieren das Interface ISaveablePart2 Wir benötigen das
-	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
-	 * Gibt es da keine einfachere Methode?
-	 */
-	public int promptToSaveOnClose(){
-		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
-				: ISaveablePart2.NO;
-	}
-	
-	public void doSave(IProgressMonitor monitor){ /* leer */}
-	
-	public void doSaveAs(){ /* leer */}
-	
-	public boolean isDirty(){
-		return true;
-	}
-	
-	public boolean isSaveAsAllowed(){
-		return false;
-	}
-	
-	public boolean isSaveOnCloseNeeded(){
-		return true;
+	@Inject
+	public void setFixLayout(MPart part,
+		@Optional @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+		CoreUiUtil.updateFixLayout(part);
 	}
 }

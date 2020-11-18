@@ -23,7 +23,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.runtime.IProgressMonitor;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
@@ -38,21 +42,20 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.util.Extensions;
-import ch.elexis.core.ui.Hub;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.events.RefreshingPartListener;
@@ -60,6 +63,7 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.laboratory.controls.LaborOrdersComposite;
 import ch.elexis.core.ui.laboratory.controls.LaborResultsComposite;
 import ch.elexis.core.ui.laboratory.dialogs.LaborVerordnungDialog;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.Importer;
 import ch.elexis.core.ui.util.Log;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -85,7 +89,7 @@ import ch.rgw.tools.TimeTool;
  * 
  * @author gerry
  */
-public class LaborView extends ViewPart implements ISaveablePart2, IRefreshable {
+public class LaborView extends ViewPart implements IRefreshable {
 	
 	public static final String ID = "ch.elexis.Labor"; //$NON-NLS-1$
 	private static Log log = Log.get("LaborView"); //$NON-NLS-1$
@@ -524,38 +528,10 @@ public class LaborView extends ViewPart implements ISaveablePart2, IRefreshable 
 	
 	public void activation(final boolean mode){}
 	
-	/***********************************************************************************************
-	 * Die folgenden 6 Methoden implementieren das Interface ISaveablePart2 Wir benötigen das
-	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
-	 * Gibt es da keine einfachere Methode?
-	 */
-	@Override
-	public int promptToSaveOnClose(){
-		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
-				: ISaveablePart2.NO;
-	}
-	
-	@Override
-	public void doSave(final IProgressMonitor monitor){ /* leer */
-	}
-	
-	@Override
-	public void doSaveAs(){ /* leer */
-	}
-	
-	@Override
-	public boolean isDirty(){
-		return true;
-	}
-	
-	@Override
-	public boolean isSaveAsAllowed(){
-		return false;
-	}
-	
-	@Override
-	public boolean isSaveOnCloseNeeded(){
-		return true;
+	@Inject
+	public void setFixLayout(MPart part,
+		@Optional @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+		CoreUiUtil.updateFixLayout(part);
 	}
 	
 	public void reloadContents(final Class clazz){
