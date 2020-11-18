@@ -2179,6 +2179,19 @@ WHERE kontakt.id IN (
 			<column name="CODE" />
 		</createIndex>
 	</changeSet>
-
+	<changeSet author="marco" id="manual_idx_KONTO_PATIENTID">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists
+					tableName="KONTO"
+					indexName="patientid_idx" />
+			</not>
+		</preConditions>
+		<createIndex indexName="patientid_idx"
+			tableName="KONTO">
+			<column name="PATIENTID" />
+		</createIndex>
+	</changeSet>
+	
     
 </databaseChangeLog>
