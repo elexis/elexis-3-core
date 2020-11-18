@@ -13,6 +13,7 @@
 package ch.elexis.core.application.advisors;
 
 import static ch.elexis.admin.AccessControlDefaults.AC_SHOWVIEW;
+import static ch.elexis.core.ui.actions.GlobalActions.fixLayoutAction;
 import static ch.elexis.core.ui.actions.GlobalActions.perspectiveMenu;
 import static ch.elexis.core.ui.actions.GlobalActions.resetPerspectiveAction;
 
@@ -205,6 +206,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		GlobalActions.perspectiveMenu =
 			new MenuManager(Messages.ApplicationActionBarAdvisor_7, "openPerspective"); //$NON-NLS-1$
 		perspectiveMenu.add(resetPerspectiveAction);
+		perspectiveMenu.add(fixLayoutAction);
 		windowMenu.add(perspectiveMenu);
 		
 		GlobalActions.viewMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_9);
