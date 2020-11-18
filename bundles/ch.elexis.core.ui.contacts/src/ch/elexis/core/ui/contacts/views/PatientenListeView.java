@@ -18,10 +18,11 @@ import java.util.HashMap;
 import java.util.StringJoiner;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
@@ -41,7 +42,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PropertyDialogAction;
 import org.eclipse.ui.part.ViewPart;
@@ -63,7 +63,6 @@ import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.StickerServiceHolder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.actions.RestrictedAction;
@@ -90,7 +89,7 @@ import ch.rgw.tools.StringTool;
  * @author gerry
  * 
  */
-public class PatientenListeView extends ViewPart implements IActivationListener, ISaveablePart2, HeartListener {
+public class PatientenListeView extends ViewPart implements IActivationListener, HeartListener {
 	private CommonViewer cv;
 	private ViewerConfigurer vc;
 	private ViewMenus menus;
@@ -514,37 +513,10 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		// TODO Auto-generated method stub
 	}
 
-	/*
-	 * Die folgenden 6 Methoden implementieren das Interface ISaveablePart2 Wir
-	 * benötigen das Interface nur, um das Schliessen einer View zu verhindern,
-	 * wenn die Perspektive fixiert ist. Gibt es da keine einfachere Methode?
-	 */
-	@Override
-	public int promptToSaveOnClose() {
-		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL : ISaveablePart2.NO;
-	}
-
-	@Override
-	public void doSave(final IProgressMonitor monitor) { /* leer */
-	}
-
-	@Override
-	public void doSaveAs() { /* leer */
-	}
-
-	@Override
-	public boolean isDirty() {
-		return GlobalActions.fixLayoutAction.isChecked();
-	}
-
-	@Override
-	public boolean isSaveAsAllowed() {
-		return false;
-	}
-
-	@Override
-	public boolean isSaveOnCloseNeeded() {
-		return true;
+	@Inject
+	public void setFixLayout(MPart part,
+		@Optional @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+		CoreUiUtil.updateFixLayout(part);
 	}
 
 	@Override
