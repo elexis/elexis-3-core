@@ -152,6 +152,12 @@ public class Context implements IContext {
 	
 	public void setEclipseContext(IEclipseContext applicationContext){
 		this.eclipseContext = applicationContext;
+		// update with not present context
+		context.forEach((k, v) -> {
+			if (k instanceof String && v != null) {
+				eclipseContext.set(k, v);
+			}
+		});
 	}
 	
 	@Override

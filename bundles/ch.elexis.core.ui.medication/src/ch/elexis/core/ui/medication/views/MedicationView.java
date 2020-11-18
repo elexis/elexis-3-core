@@ -1,16 +1,18 @@
 package ch.elexis.core.ui.medication.views;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.common.ElexisEventTopics;
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.prescription.EntryType;
@@ -134,5 +136,11 @@ public class MedicationView extends ViewPart implements IRefreshable {
 	
 	public MedicationComposite getMedicationComposite(){
 		return tpc;
+	}
+	
+	@Optional
+	@Inject
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 }

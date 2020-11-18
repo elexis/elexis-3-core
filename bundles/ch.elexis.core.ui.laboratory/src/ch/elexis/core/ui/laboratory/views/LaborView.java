@@ -528,10 +528,10 @@ public class LaborView extends ViewPart implements IRefreshable {
 	
 	public void activation(final boolean mode){}
 	
+	@Optional
 	@Inject
-	public void setFixLayout(MPart part,
-		@Optional @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
-		CoreUiUtil.updateFixLayout(part);
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 	
 	public void reloadContents(final Class clazz){

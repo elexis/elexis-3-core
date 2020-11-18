@@ -339,11 +339,11 @@ public class CoreUiUtil implements EventHandler {
 	 * 
 	 * @param part
 	 */
-	public static void updateFixLayout(MPart part){
+	public static void updateFixLayout(MPart part, boolean state){
 		// make sure there is a change notification produced to update the ui
-		part.setCloseable(GlobalActions.fixLayoutAction.isChecked());
-		part.setCloseable(!GlobalActions.fixLayoutAction.isChecked());
-		if (GlobalActions.fixLayoutAction.isChecked()) {
+		part.setCloseable(state);
+		part.setCloseable(!state);
+		if (state) {
 			if (!part.getTags().contains("NoMove")) {
 				part.getTags().add("NoMove");
 			}

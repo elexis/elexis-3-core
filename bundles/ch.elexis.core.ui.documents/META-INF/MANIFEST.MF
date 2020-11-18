@@ -39,6 +39,7 @@ Import-Package: ch.elexis.admin,
  org.apache.commons.io;version="2.4.0",
  org.eclipse.e4.core.commands,
  org.eclipse.e4.core.di.annotations;version="1.6.0",
+ org.eclipse.e4.ui.model.application.ui.basic,
  org.osgi.service.component.annotations,
  org.slf4j
 Service-Component: OSGI-INF/ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder.xml,

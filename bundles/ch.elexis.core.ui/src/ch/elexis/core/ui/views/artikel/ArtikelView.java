@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -328,9 +329,9 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 		System.out.println(this.getClass().getName()+" visible "+mode);
 	}
 	
+	@Optional
 	@Inject
-	public void setFixLayout(MPart part,
-		@org.eclipse.e4.core.di.annotations.Optional @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
-		CoreUiUtil.updateFixLayout(part);
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 }

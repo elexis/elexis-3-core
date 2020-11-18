@@ -22,6 +22,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
@@ -401,10 +402,10 @@ public class AccountView extends ViewPart implements IActivationListener {
 		}
 	};
 	
+	@Optional
 	@Inject
-	public void setFixLayout(MPart part,
-		@org.eclipse.e4.core.di.annotations.Optional @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
-		CoreUiUtil.updateFixLayout(part);
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 	
 	/*

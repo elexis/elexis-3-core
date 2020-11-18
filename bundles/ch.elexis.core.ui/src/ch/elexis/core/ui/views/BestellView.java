@@ -684,10 +684,10 @@ public class BestellView extends ViewPart {
 		};
 	}
 	
+	@org.eclipse.e4.core.di.annotations.Optional
 	@Inject
-	public void setFixLayout(MPart part,
-		@org.eclipse.e4.core.di.annotations.Optional @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
-		CoreUiUtil.updateFixLayout(part);
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 	
 	public void addItemsToOrder(List<IArticle> articlesToOrder){

@@ -20,9 +20,11 @@ import static ch.elexis.core.ui.actions.GlobalActions.openFallaction;
 import static ch.elexis.core.ui.actions.GlobalActions.reopenFallAction;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -42,6 +44,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
@@ -236,6 +239,12 @@ public class FaelleView extends ViewPart implements IRefreshable {
 	@Override
 	public void refresh(){
 		handleEventPatient(ContextServiceHolder.get().getActivePatient().orElse(null));
+	}
+	
+	@Optional
+	@Inject
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 	
 	private void makeActions(){
