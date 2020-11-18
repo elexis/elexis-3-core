@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -26,6 +27,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -59,13 +61,13 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
@@ -83,7 +85,6 @@ import ch.elexis.core.services.holder.OrderServiceHolder;
 import ch.elexis.core.services.holder.StockCommissioningServiceHolder;
 import ch.elexis.core.services.holder.StockServiceHolder;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.dialogs.OrderImportDialog;
@@ -103,7 +104,7 @@ import ch.elexis.scripting.CSVWriter;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
 
-public class StockView extends ViewPart implements ISaveablePart2, IActivationListener {
+public class StockView extends ViewPart implements IActivationListener {
 	public StockView(){}
 	
 	public static final String ID = "ch.elexis.core.ui.views.StockView"; //$NON-NLS-1$
@@ -360,7 +361,6 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		viewMenus.createMenu(exportAction);
 		
 		GlobalEventDispatcher.addActivationListener(this, this);
-		CoreUiUtil.injectServices(this);
 	}
 	
 	@Optional
@@ -753,38 +753,10 @@ public class StockView extends ViewPart implements ISaveablePart2, IActivationLi
 		}
 	}
 	
-	/***********************************************************************************************
-	 * Die folgenden 6 Methoden implementieren das Interface ISaveablePart2 Wir benötigen das
-	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
-	 * Gibt es da keine einfachere Methode?
-	 */
-	@Override
-	public int promptToSaveOnClose(){
-		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
-				: ISaveablePart2.NO;
-	}
-	
-	@Override
-	public void doSave(IProgressMonitor monitor){ /* leer */
-	}
-	
-	@Override
-	public void doSaveAs(){ /* leer */
-	}
-	
-	@Override
-	public boolean isDirty(){
-		return true;
-	}
-	
-	@Override
-	public boolean isSaveAsAllowed(){
-		return false;
-	}
-	
-	@Override
-	public boolean isSaveOnCloseNeeded(){
-		return true;
+	@Inject
+	public void setFixLayout(MPart part,
+		@Optional @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+		CoreUiUtil.updateFixLayout(part);
 	}
 	
 	@Override

@@ -507,12 +507,16 @@ public class GlobalActions {
 		fixLayoutAction = new Action(Messages.GlobalActions_LockPerspectives, Action.AS_CHECK_BOX) { //$NON-NLS-1$
 			{
 				setToolTipText(Messages.GlobalActions_LockPerspectivesToolTip); //$NON-NLS-1$
+				setChecked(ConfigServiceHolder.getUser(Preferences.USR_FIX_LAYOUT, false));
 			}
 			
 			@Override
 			public void run(){
 				// store the current value in the user's configuration
 				ConfigServiceHolder.setUser(Preferences.USR_FIX_LAYOUT, fixLayoutAction.isChecked());
+				// update a named variable to trigger update of the ui
+				ContextServiceHolder.get().getRootContext().setNamed(Preferences.USR_FIX_LAYOUT,
+					fixLayoutAction.isChecked());
 			}
 		};
 		makeBillAction = new Action(Messages.GlobalActions_MakeBill) { //$NON-NLS-1$

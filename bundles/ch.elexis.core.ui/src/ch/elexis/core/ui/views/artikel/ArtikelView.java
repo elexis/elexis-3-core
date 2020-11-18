@@ -15,8 +15,11 @@ package ch.elexis.core.ui.views.artikel;
 import java.util.Hashtable;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
@@ -32,15 +35,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.data.util.Extensions;
-import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
@@ -55,7 +57,7 @@ import ch.elexis.core.ui.views.IDetailDisplay;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
 import ch.elexis.data.PersistentObject;
 
-public class ArtikelView extends ViewPart implements IActivationListener, ISaveablePart2 {
+public class ArtikelView extends ViewPart implements IActivationListener {
 	private static final String KEY_CE = "ce"; //$NON-NLS-1$
 	private static final String KEY_DETAIL = "detail"; //$NON-NLS-1$
 	public static final String ID = "ch.elexis.artikelview"; //$NON-NLS-1$
@@ -326,31 +328,9 @@ public class ArtikelView extends ViewPart implements IActivationListener, ISavea
 		System.out.println(this.getClass().getName()+" visible "+mode);
 	}
 	
-	/*
-	 * Die folgenden 6 Methoden implementieren das Interface ISaveablePart2 Wir benötigen das
-	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
-	 * Gibt es da keine einfachere Methode?
-	 */
-	public int promptToSaveOnClose(){
-		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
-				: ISaveablePart2.NO;
-	}
-	
-	public void doSave(IProgressMonitor monitor){ /* leer */
-	}
-	
-	public void doSaveAs(){ /* leer */
-	}
-	
-	public boolean isDirty(){
-		return true;
-	}
-	
-	public boolean isSaveAsAllowed(){
-		return false;
-	}
-	
-	public boolean isSaveOnCloseNeeded(){
-		return true;
+	@Inject
+	public void setFixLayout(MPart part,
+		@org.eclipse.e4.core.di.annotations.Optional @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+		CoreUiUtil.updateFixLayout(part);
 	}
 }

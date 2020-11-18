@@ -24,10 +24,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -52,7 +57,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.Form;
@@ -62,6 +66,7 @@ import org.eclipse.ui.part.ViewPart;
 import com.tiff.common.ui.datepicker.DatePickerCombo;
 
 import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
@@ -78,7 +83,6 @@ import ch.elexis.core.ui.actions.AbstractDataLoaderJob;
 import ch.elexis.core.ui.actions.BackgroundJob;
 import ch.elexis.core.ui.actions.BackgroundJob.BackgroundJobListener;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
-import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
@@ -86,6 +90,7 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.text.ITextPlugin;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.TextContainer;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.ListDisplay;
 import ch.elexis.core.ui.util.Log;
 import ch.elexis.core.ui.util.PersistentObjectDropTarget;
@@ -111,8 +116,7 @@ import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
-public class PatHeuteView extends ViewPart implements IActivationListener, ISaveablePart2,
-		BackgroundJobListener {
+public class PatHeuteView extends ViewPart implements IActivationListener, BackgroundJobListener {
 	public static final String ID = "ch.elexis.PatHeuteView"; //$NON-NLS-1$
 	static final String LEISTUNG_HINZU = Messages.PatHeuteView_add; //$NON-NLS-1$
 	static final String STAT_LEEREN = Messages.PatHeuteView_empty; //$NON-NLS-1$
@@ -407,38 +411,10 @@ public class PatHeuteView extends ViewPart implements IActivationListener, ISave
 		
 	}
 	
-	/*
-	 * Die folgenden 6 Methoden implementieren das Interface ISaveablePart2 Wir benötigen das
-	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
-	 * Gibt es da keine einfachere Methode?
-	 */
-	@Override
-	public int promptToSaveOnClose(){
-		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
-				: ISaveablePart2.NO;
-	}
-	
-	@Override
-	public void doSave(final IProgressMonitor monitor){ /* leer */
-	}
-	
-	@Override
-	public void doSaveAs(){ /* leer */
-	}
-	
-	@Override
-	public boolean isDirty(){
-		return true;
-	}
-	
-	@Override
-	public boolean isSaveAsAllowed(){
-		return false;
-	}
-	
-	@Override
-	public boolean isSaveOnCloseNeeded(){
-		return true;
+	@Inject
+	public void setFixLayout(MPart part,
+		@Optional @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+		CoreUiUtil.updateFixLayout(part);
 	}
 	
 	class StatLoader extends Job {

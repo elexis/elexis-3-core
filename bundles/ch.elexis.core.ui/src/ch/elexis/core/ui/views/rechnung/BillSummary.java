@@ -16,7 +16,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.eclipse.core.runtime.IProgressMonitor;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -36,13 +40,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TreeColumn;
-import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
@@ -50,6 +52,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.data.Patient;
@@ -62,8 +65,7 @@ import ch.rgw.tools.Money;
  * This view shows the current patient's account
  */
 
-public class BillSummary extends ViewPart implements IActivationListener, ElexisEventListener,
-		ISaveablePart2 {
+public class BillSummary extends ViewPart implements IActivationListener, ElexisEventListener {
 	
 	public static final String ID = "ch.elexis.views.rechnung.BillSummary"; //$NON-NLS-1$
 	
@@ -374,32 +376,10 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 		}
 	};
 	
-	/*
-	 * Die folgenden 6 Methoden implementieren das Interface ISaveablePart2 Wir benötigen das
-	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
-	 * Gibt es da keine einfachere Methode?
-	 */
-	public int promptToSaveOnClose(){
-		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
-				: ISaveablePart2.NO;
-	}
-	
-	public void doSave(IProgressMonitor monitor){ /* leer */
-	}
-	
-	public void doSaveAs(){ /* leer */
-	}
-	
-	public boolean isDirty(){
-		return true;
-	}
-	
-	public boolean isSaveAsAllowed(){
-		return false;
-	}
-	
-	public boolean isSaveOnCloseNeeded(){
-		return true;
+	@Inject
+	public void setFixLayout(MPart part,
+		@Optional @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+		CoreUiUtil.updateFixLayout(part);
 	}
 	
 	/*

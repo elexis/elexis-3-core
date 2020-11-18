@@ -12,6 +12,7 @@ import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.InjectionException;
 import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
@@ -41,6 +42,7 @@ import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.views.codesystems.ContributionAction;
 
 @Component(property = EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE)
@@ -329,5 +331,24 @@ public class CoreUiUtil implements EventHandler {
 	 */
 	public static void setCommandSelection(String commandId, List<?> selection){
 		setCommandSelection(commandId, selection.toArray());
+	}
+	
+	/**
+	 * Update the part tags to enable or disable closing and moving, depending on
+	 * {@link GlobalActions#fixLayoutAction} check state.
+	 * 
+	 * @param part
+	 */
+	public static void updateFixLayout(MPart part){
+		// make sure there is a change notification produced to update the ui
+		part.setCloseable(GlobalActions.fixLayoutAction.isChecked());
+		part.setCloseable(!GlobalActions.fixLayoutAction.isChecked());
+		if (GlobalActions.fixLayoutAction.isChecked()) {
+			if (!part.getTags().contains("NoMove")) {
+				part.getTags().add("NoMove");
+			}
+		} else {
+			part.getTags().remove("NoMove");
+		}
 	}
 }

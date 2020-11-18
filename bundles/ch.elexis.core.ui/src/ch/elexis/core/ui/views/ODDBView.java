@@ -17,23 +17,27 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.eclipse.core.runtime.IProgressMonitor;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationAdapter;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.ui.actions.GlobalActions;
+import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 
 /**
  * Diese View reichtet einen Browser aufs Arzneimittel-Kompendium ein.
  */
-public class ODDBView extends ViewPart implements ISaveablePart2 {
+public class ODDBView extends ViewPart {
 	public static final String ID = "ch.elexis.ODDBView";
 	Browser browser;
 	
@@ -83,36 +87,9 @@ public class ODDBView extends ViewPart implements ISaveablePart2 {
 		}
 	}
 	
-	/* ******
-	 * Die folgenden 6 Methoden implementieren das Interface ISaveablePart2 Wir benötigen das
-	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
-	 * Gibt es da keine einfachere Methode?
-	 */
-	@Override
-	public int promptToSaveOnClose(){
-		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
-				: ISaveablePart2.NO;
+	@Inject
+	public void setFixLayout(MPart part,
+		@Optional @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+		CoreUiUtil.updateFixLayout(part);
 	}
-	
-	@Override
-	public void doSave(IProgressMonitor monitor){ /* leer */}
-	
-	@Override
-	public void doSaveAs(){ /* leer */}
-	
-	@Override
-	public boolean isDirty(){
-		return true;
-	}
-	
-	@Override
-	public boolean isSaveAsAllowed(){
-		return false;
-	}
-	
-	@Override
-	public boolean isSaveOnCloseNeeded(){
-		return true;
-	}
-	
 }
