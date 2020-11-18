@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.InjectionException;
@@ -13,6 +14,9 @@ import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.workbench.UIEvents;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Control;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -110,5 +114,28 @@ public class CoreUiUtil {
 				delayedInjection.add(object);
 			}
 		}
+	}
+	
+	/**
+	 * Load a {@link Color} for the RGB color string. The color string is expected in hex format.
+	 * 
+	 * @param colorString
+	 * @return
+	 */
+	public static Color getColorForString(String colorString){
+		colorString = StringUtils.leftPad(colorString, 6, '0');
+		if (!JFaceResources.getColorRegistry().hasValueFor(colorString)) {
+			RGB rgb;
+			try {
+				rgb = new RGB(Integer.parseInt(colorString.substring(0, 2), 16),
+					Integer.parseInt(colorString.substring(2, 4), 16),
+					Integer.parseInt(colorString.substring(4, 6), 16));
+			} catch (NumberFormatException nex) {
+				logger.warn("Error parsing color string [" + colorString + "]", nex);
+				rgb = new RGB(100, 100, 100);
+			}
+			JFaceResources.getColorRegistry().put(colorString, rgb);
+		}
+		return JFaceResources.getColorRegistry().get(colorString);
 	}
 }
