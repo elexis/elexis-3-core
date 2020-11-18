@@ -14,7 +14,11 @@ package ch.elexis.core.ui.contacts.views;
 
 import java.util.HashMap;
 
-import org.eclipse.core.runtime.IProgressMonitor;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -22,22 +26,22 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.ui.actions.FlatDataLoader;
-import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.PersistentObjectLoader;
 import ch.elexis.core.ui.contacts.Activator;
 import ch.elexis.core.ui.dialogs.GenericPrintDialog;
 import ch.elexis.core.ui.dialogs.KontaktErfassenDialog;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.LockedRestrictedAction;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
@@ -54,7 +58,7 @@ import ch.elexis.data.Person;
 import ch.elexis.data.Query;
 import ch.rgw.tools.StringTool;
 
-public class KontakteView extends ViewPart implements ControlFieldListener, ISaveablePart2 {
+public class KontakteView extends ViewPart implements ControlFieldListener {
 	public static final String ID = "ch.elexis.Kontakte"; //$NON-NLS-1$
 	private CommonViewer cv;
 	private ViewerConfigurer vc;
@@ -151,31 +155,10 @@ public class KontakteView extends ViewPart implements ControlFieldListener, ISav
 		}
 	}
 
-	/*
-	 * Die folgenden 6 Methoden implementieren das Interface ISaveablePart2 Wir
-	 * benötigen das Interface nur, um das Schliessen einer View zu verhindern,
-	 * wenn die Perspektive fixiert ist. Gibt es da keine einfachere Methode?
-	 */
-	public int promptToSaveOnClose() {
-		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL : ISaveablePart2.NO;
-	}
-
-	public void doSave(IProgressMonitor monitor) { /* leer */
-	}
-
-	public void doSaveAs() { /* leer */
-	}
-
-	public boolean isDirty() {
-		return true;
-	}
-
-	public boolean isSaveAsAllowed() {
-		return false;
-	}
-
-	public boolean isSaveOnCloseNeeded() {
-		return true;
+	@Inject
+	public void setFixLayout(MPart part,
+		@Optional @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+		CoreUiUtil.updateFixLayout(part);
 	}
 
 	private void makeActions() {
