@@ -18,10 +18,11 @@ import java.util.Hashtable;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IToolBarManager;
@@ -46,7 +47,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IMemento;
-import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -64,6 +64,7 @@ import com.google.common.base.Objects;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -119,7 +120,7 @@ import ch.rgw.tools.VersionedResource.ResourceItem;
  * 
  */
 public class KonsDetailView extends ViewPart
-		implements IActivationListener, ISaveablePart2, IUnlockable {
+		implements IActivationListener, IUnlockable {
 	
 	public static final String ID = "ch.elexis.Konsdetail"; //$NON-NLS-1$
 	
@@ -843,38 +844,10 @@ public class KonsDetailView extends ViewPart
 		billedDisplay.adaptMenus();
 	}
 	
-	/*
-	 * Die folgenden 6 Methoden implementieren das Interface ISaveablePart2 Wir
-	 * benötigen das Interface nur, um das Schliessen einer View zu verhindern,
-	 * wenn die Perspektive fixiert ist. Gibt es da keine einfachere Methode?
-	 */
-	@Override
-	public int promptToSaveOnClose(){
-		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
-				: ISaveablePart2.NO;
-	}
-	
-	@Override
-	public void doSave(final IProgressMonitor monitor){ /* leer */
-	}
-	
-	@Override
-	public void doSaveAs(){ /* leer */
-	}
-	
-	@Override
-	public boolean isDirty(){
-		return true;
-	}
-	
-	@Override
-	public boolean isSaveAsAllowed(){
-		return false;
-	}
-	
-	@Override
-	public boolean isSaveOnCloseNeeded(){
-		return true;
+	@Inject
+	public void setFixLayout(MPart part,
+		@Optional @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+		CoreUiUtil.updateFixLayout(part);
 	}
 	
 	@Override

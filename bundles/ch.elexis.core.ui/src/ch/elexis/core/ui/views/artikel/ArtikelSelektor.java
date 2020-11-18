@@ -14,8 +14,11 @@ package ch.elexis.core.ui.views.artikel;
 
 import java.util.Optional;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -27,15 +30,15 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.part.ViewPart;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.service.StockServiceHolder;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.IStockEntry;
-import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.commands.EditEigenartikelUi;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
@@ -43,7 +46,7 @@ import ch.elexis.core.ui.views.codesystems.CodeSystemDescription;
 import ch.elexis.core.ui.views.provider.StockEntryLabelProvider;
 import ch.elexis.data.PersistentObject;
 
-public class ArtikelSelektor extends ViewPart implements ISaveablePart2 {
+public class ArtikelSelektor extends ViewPart {
 	public ArtikelSelektor(){}
 	
 	public static final String ID = "ch.elexis.ArtikelSelektor"; //$NON-NLS-1$
@@ -146,30 +149,10 @@ public class ArtikelSelektor extends ViewPart implements ISaveablePart2 {
 	//		
 	//	}
 	
-	/*
-	 * Die folgenden 6 Methoden implementieren das Interface ISaveablePart2 Wir benötigen das
-	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
-	 * Gibt es da keine einfachere Methode?
-	 */
-	public int promptToSaveOnClose(){
-		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
-				: ISaveablePart2.NO;
-	}
-	
-	public void doSave(final IProgressMonitor monitor){ /* leer */}
-	
-	public void doSaveAs(){ /* leer */}
-	
-	public boolean isDirty(){
-		return true;
-	}
-	
-	public boolean isSaveAsAllowed(){
-		return false;
-	}
-	
-	public boolean isSaveOnCloseNeeded(){
-		return true;
+	@Inject
+	public void setFixLayout(MPart part,
+		@org.eclipse.e4.core.di.annotations.Optional @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+		CoreUiUtil.updateFixLayout(part);
 	}
 	
 	private class TabSelectionListener extends SelectionAdapter {

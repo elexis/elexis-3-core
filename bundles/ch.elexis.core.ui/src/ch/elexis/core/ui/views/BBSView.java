@@ -11,7 +11,11 @@
  *******************************************************************************/
 package ch.elexis.core.ui.views;
 
-import org.eclipse.core.runtime.IProgressMonitor;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -26,16 +30,16 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.ViewPart;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.LazyTreeLoader;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.DefaultControlFieldProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
@@ -54,7 +58,7 @@ import ch.rgw.tools.Tree;
  * @author gerry
  */
 @Deprecated
-public class BBSView extends ViewPart implements ISelectionChangedListener, ISaveablePart2 {
+public class BBSView extends ViewPart implements ISelectionChangedListener {
 	public static final String ID = "ch.elexis.BBSView"; //$NON-NLS-1$
 	private CommonViewer headlines;
 	private ViewerConfigurer vc;
@@ -200,35 +204,9 @@ public class BBSView extends ViewPart implements ISelectionChangedListener, ISav
 		setDisplay();
 	}
 	
-	/*
-	 * Die folgenden 6 Methoden implementieren das Interface ISaveablePart2 Wir benötigen das
-	 * Interface nur, um das Schliessen einer View zu verhindern, wenn die Perspektive fixiert ist.
-	 * Gibt es da keine einfachere Methode?
-	 */
-	@Override
-	public int promptToSaveOnClose(){
-		return GlobalActions.fixLayoutAction.isChecked() ? ISaveablePart2.CANCEL
-				: ISaveablePart2.NO;
-	}
-	
-	@Override
-	public void doSave(IProgressMonitor monitor){ /* leer */}
-	
-	@Override
-	public void doSaveAs(){ /* leer */}
-	
-	@Override
-	public boolean isDirty(){
-		return true;
-	}
-	
-	@Override
-	public boolean isSaveAsAllowed(){
-		return false;
-	}
-	
-	@Override
-	public boolean isSaveOnCloseNeeded(){
-		return true;
+	@Inject
+	public void setFixLayout(MPart part,
+		@Optional @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+		CoreUiUtil.updateFixLayout(part);
 	}
 }

@@ -61,24 +61,16 @@ public class ElexisProcessor {
 		}
 	}
 	
-	private String[] injectViewIds = {
-		"ch.elexis.Konsdetail", "ch.elexis.PatListView",
-		"ch.elexis.core.ui.medication.views.MedicationView", "ch.elexis.icpc.encounterView",
-		"ch.elexis.icpc.episodesView", "ch.elexis.omnivore.views.OmnivoreView",
-		"ch.elexis.omnivoredirect_view", "ch.elexis.schoebufaelle", "ch.elexis.HistoryView",
-		"ch.elexis.core.ui.documents.views.DocumentsView", "at.medevit.elexis.outbox.ui.view"
-	};
-	
 	private String[] e4ViewIds = {
 		"at.medevit.elexis.agenda.ui.view.agenda", "at.medevit.elexis.agenda.ui.view.parallel",
 		"at.medevit.elexis.agenda.ui.view.week"
 	};
 	
 	private void updateInjectViews(){
-		for (String viewId : injectViewIds) {
-			List<MPart> foundParts =
-				eModelService.findElements(mApplication, viewId, MPart.class, null);
-			for (MPart mPart : foundParts) {
+		List<MPart> foundParts = eModelService.findElements(mApplication, null, MPart.class, null);
+		for (MPart mPart : foundParts) {
+			// add inject to all compatibility views
+			if (mPart.getContributionURI().endsWith("e4.compatibility.CompatibilityView")) {
 				List<String> tags = mPart.getTags();
 				if (!tags.contains("inject")) {
 					tags.add("inject");
