@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Spotlight Like Single Line Search UI
+Bundle-SymbolicName: ch.elexis.core.spotlight.ui;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: elexis.info
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.17.100",
+ org.eclipse.e4.ui.model.workbench;bundle-version="2.1.700.v20200113-1422",
+ org.eclipse.swt;bundle-version="3.114.0",
+ org.eclipse.jface;bundle-version="3.19.0",
+ org.eclipse.e4.core.di,
+ ch.elexis.core;bundle-version="3.9.0",
+ ch.elexis.core.services;bundle-version="1.0.0",
+ ch.elexis.core.ui.e4;bundle-version="1.0.0",
+ ch.elexis.core.spotlight,
+ ch.rgw.utility,
+ org.apache.commons.lang3;bundle-version="3.7.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: javax.inject;version="1.0.0",
+ org.eclipse.e4.ui.services
+Automatic-Module-Name: ch.elexis.core.spotlight.ui

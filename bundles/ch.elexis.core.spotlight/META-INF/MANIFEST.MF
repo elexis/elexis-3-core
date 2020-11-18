@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Spotlight Like Single Line Search
+Bundle-SymbolicName: ch.elexis.core.spotlight
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: elexis.info
+Automatic-Module-Name: ch.elexis.core.spotlight
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: ch.elexis.core.spotlight
+Import-Package: org.osgi.service.component.annotations
+Service-Component: OSGI-INF/ch.elexis.core.spotlight.internal.SpotlightService.xml,
+ OSGI-INF/ch.elexis.core.spotlight.internal.contributors.PatientCategorySpotlightResultContributor.xml
+Bundle-ActivationPolicy: lazy
+Require-Bundle: ch.elexis.core;bundle-version="3.9.0"

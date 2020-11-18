@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="ch.elexis.core.spotlight.internal.SpotlightService">
+   <service>
+      <provide interface="ch.elexis.core.spotlight.ISpotlightService"/>
+   </service>
+   <reference cardinality="1..n" field="resultContributors" interface="ch.elexis.core.spotlight.ISpotlightResultContributor" name="resultContributors" policy="dynamic" policy-option="greedy"/>
+   <implementation class="ch.elexis.core.spotlight.internal.SpotlightService"/>
+</scr:component>
