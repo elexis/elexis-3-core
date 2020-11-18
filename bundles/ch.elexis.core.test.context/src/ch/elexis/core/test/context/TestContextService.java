@@ -1,10 +1,15 @@
 package ch.elexis.core.test.context;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
 
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.IContextService;
@@ -13,6 +18,9 @@ import ch.elexis.core.services.IContextService;
 public class TestContextService implements IContextService {
 	
 	private ThreadLocal<IContext> rootContext;
+	
+	@Reference
+	private EventAdmin eventAdmin;
 	
 	@Activate
 	public void activate(){
@@ -55,9 +63,15 @@ public class TestContextService implements IContextService {
 	}
 	
 	@Override
-	public void postEvent(String eventTopic, Object object){
-		// TODO Auto-generated method stub
-		
+	public void postEvent(String topic, Object object){
+		if (eventAdmin != null) {
+			Map<String, Object> properites = new HashMap<>();
+			properites.put("org.eclipse.e4.data", object);
+			Event event = new Event(topic, properites);
+			eventAdmin.postEvent(event);
+		} else {
+			throw new IllegalStateException("No EventAdmin available");
+		}
 	}
 	
 }
