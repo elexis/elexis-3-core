@@ -14,6 +14,7 @@ package ch.elexis.core.ui.views.artikel;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -127,9 +128,9 @@ public class Artikeldetail extends ViewPart implements IActivationListener {
 		}
 	}
 	
+	@Optional
 	@Inject
-	public void setFixLayout(MPart part,
-		@org.eclipse.e4.core.di.annotations.Optional @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
-		CoreUiUtil.updateFixLayout(part);
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 }

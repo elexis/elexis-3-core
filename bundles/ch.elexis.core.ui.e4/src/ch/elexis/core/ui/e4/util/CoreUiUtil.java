@@ -13,6 +13,7 @@ import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Color;
@@ -115,6 +116,26 @@ public class CoreUiUtil {
 			}
 		}
 	}
+	
+	/**
+	 * Update the part tags to enable or disable closing and moving, depending on
+	 * {@link GlobalActions#fixLayoutAction} check state.
+	 * 
+	 * @param part
+	 */
+	public static void updateFixLayout(MPart part, boolean state){
+		// make sure there is a change notification produced to update the ui
+		part.setCloseable(state);
+		part.setCloseable(!state);
+		if (state) {
+			if (!part.getTags().contains("NoMove")) {
+				part.getTags().add("NoMove");
+			}
+		} else {
+			part.getTags().remove("NoMove");
+		}
+	}
+	
 	
 	/**
 	 * Load a {@link Color} for the RGB color string. The color string is expected in hex format.

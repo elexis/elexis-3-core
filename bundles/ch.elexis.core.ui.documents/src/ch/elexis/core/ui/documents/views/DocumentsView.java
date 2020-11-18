@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -32,6 +33,7 @@ import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
@@ -79,7 +81,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.documents.FilterCategory;
@@ -96,6 +98,7 @@ import ch.elexis.core.ui.documents.handler.DocumentCrudHandler;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.AUF;
 import ch.rgw.tools.TimeTool;
@@ -178,6 +181,12 @@ public class DocumentsView extends ViewPart {
 		if (viewer != null && !viewer.getControl().isDisposed()) {
 			viewer.refresh();
 		}
+	}
+	
+	@Optional
+	@Inject
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 	
 	@SuppressWarnings("restriction")

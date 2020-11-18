@@ -411,10 +411,10 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 		
 	}
 	
+	@Optional
 	@Inject
-	public void setFixLayout(MPart part,
-		@Optional @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
-		CoreUiUtil.updateFixLayout(part);
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 	
 	class StatLoader extends Job {

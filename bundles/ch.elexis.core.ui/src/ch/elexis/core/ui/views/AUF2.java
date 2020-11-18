@@ -15,6 +15,11 @@ package ch.elexis.core.ui.views;
 import java.util.List;
 import java.util.Objects;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -35,6 +40,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
@@ -45,6 +51,7 @@ import ch.elexis.core.ui.commands.AufPrintHandler;
 import ch.elexis.core.ui.dialogs.EditAUFDialog;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.data.AUF;
@@ -273,5 +280,11 @@ public class AUF2 extends ViewPart implements IActivationListener {
 		} else {
 			ElexisEventDispatcher.getInstance().removeListeners(eli_auf, eli_pat);
 		}
+	}
+	
+	@Optional
+	@Inject
+	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState){
+		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 }
