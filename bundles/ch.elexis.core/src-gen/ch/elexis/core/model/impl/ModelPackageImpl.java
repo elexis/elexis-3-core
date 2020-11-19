@@ -630,6 +630,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getIdentifiable_Lastupdate() {
+		return (EAttribute)identifiableEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getDeleteable() {
 		return deleteableEClass;
 	}
@@ -4664,6 +4674,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		// Create classes and their features
 		identifiableEClass = createEClass(IDENTIFIABLE);
+		createEAttribute(identifiableEClass, IDENTIFIABLE__LASTUPDATE);
 
 		deleteableEClass = createEClass(DELETEABLE);
 		createEAttribute(deleteableEClass, DELETEABLE__DELETED);
@@ -5280,6 +5291,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(identifiableEClass, Identifiable.class, "Identifiable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIdentifiable_Lastupdate(), ecorePackage.getELongObject(), "lastupdate", null, 1, 1, Identifiable.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		addEOperation(identifiableEClass, ecorePackage.getEString(), "getId", 0, 1, IS_UNIQUE, IS_ORDERED);
 
@@ -5292,8 +5304,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		op = addEOperation(identifiableEClass, this.getIXid(), "getXid", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "domain", 0, 1, IS_UNIQUE, IS_ORDERED);
-
-		addEOperation(identifiableEClass, ecorePackage.getELongObject(), "getLastupdate", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		op = addEOperation(identifiableEClass, null, "getChanged", 0, 1, IS_UNIQUE, IS_ORDERED);
 		g1 = createEGenericType(theTypesPackage.getList());

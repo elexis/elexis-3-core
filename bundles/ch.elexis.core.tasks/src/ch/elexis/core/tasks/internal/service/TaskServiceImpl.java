@@ -487,7 +487,7 @@ public class TaskServiceImpl implements ITaskService {
 	public Optional<ITask> findLatestExecution(ITaskDescriptor taskDescriptor){
 		IQuery<ITask> query = taskModelService.getQuery(ITask.class);
 		query.and(ModelPackage.Literals.ITASK__TASK_DESCRIPTOR, COMPARATOR.EQUALS, taskDescriptor);
-		query.orderBy("lastupdate", ORDER.DESC);
+		query.orderBy(ch.elexis.core.model.ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
 		query.limit(1);
 		List<ITask> result = query.execute();
 		return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
