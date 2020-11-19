@@ -190,12 +190,12 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 	
 	private void clearUpdateBalance(IPatient patient){
 		if (patient != null) {
-			INamedQuery<Long> namedQuery = coreModelService.getNamedQuery(Long.class,
+			INamedQuery<Number> namedQuery = coreModelService.getNamedQuery(Number.class,
 				IAccountTransaction.class, true, "balance.patient");
-			List<Long> balanceResult =
+			List<Number> balanceResult =
 				namedQuery.executeWithParameters(namedQuery.getParameterMap("patient", patient));
 			if (!balanceResult.isEmpty()) {
-				Long balance = balanceResult.get(0);
+				Long balance = balanceResult.get(0).longValue();
 				lblBalance.setText("CHF " + balance);
 				return;
 			}
