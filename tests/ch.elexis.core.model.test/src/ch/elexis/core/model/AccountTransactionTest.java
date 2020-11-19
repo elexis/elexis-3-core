@@ -42,13 +42,12 @@ public class AccountTransactionTest extends AbstractTest {
 		accountTransaction2.setDate(LocalDate.now());
 		coreModelService.save(accountTransaction2);
 		
-		INamedQuery<Long> namedQuery = coreModelService.getNamedQuery(Long.class,
+		INamedQuery<Number> namedQuery = coreModelService.getNamedQuery(Number.class,
 			IAccountTransaction.class, true, "balance.patient");
 		assertNotNull(namedQuery);
-		List<Long> executeWithParameters =
+		List<Number> executeWithParameters =
 			namedQuery.executeWithParameters(namedQuery.getParameterMap("patient", patient));
-		Long expectedResult = -100l;
-		assertEquals(expectedResult, executeWithParameters.get(0));
+		assertEquals(Long.valueOf("-100"), (Long) executeWithParameters.get(0).longValue());
 		
 		coreModelService.remove(accountTransaction);
 		coreModelService.remove(accountTransaction2);
