@@ -330,8 +330,8 @@ public class CoreQueryTest {
 	@Test
 	public void queryOrderByAndLastupdate(){
 		createContact("test1", "test1");
-		createContact("test2", "test2");
-		long currentTimeMillis = System.currentTimeMillis();
+		IContact createContact = createContact("test2", "test2");
+		long currentTimeMillis = createContact.getLastupdate();
 		createContact("test3", "test3");
 		createContact("test4", "test4");
 		
@@ -357,7 +357,7 @@ public class CoreQueryTest {
 		assertEquals("test2", ordered.get(2).getDescription1());
 		
 		query = modelService.getQuery(IContact.class);
-		query.and(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, COMPARATOR.GREATER_OR_EQUAL, currentTimeMillis);
+		query.and(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, COMPARATOR.GREATER, currentTimeMillis);
 		List<IContact> execute = query.execute();
 		assertEquals(2, execute.size());
 	}
