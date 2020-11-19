@@ -78,10 +78,7 @@ public class SpotlightShell extends Shell {
 			logo = JFaceResources.getImageRegistry().get(SEARCH_ICON);
 		}
 		lblIcon.setImage(logo);
-		GridData gd_lblIcon = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
-		gd_lblIcon.heightHint = 24;
-		gd_lblIcon.widthHint = 24;
-		lblIcon.setLayoutData(gd_lblIcon);
+		lblIcon.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		
 		txtSearchInput = new Text(this, SWT.None);
 		txtSearchInput.setBackground(this.getBackground());
@@ -96,9 +93,7 @@ public class SpotlightShell extends Shell {
 		}
 		txtSearchInput.setFont(biggerFont);
 		txtSearchInput.setMessage("Suchbegriff eingeben");
-		GridData gd_txtSearchInput = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		gd_txtSearchInput.heightHint = 24;
-		txtSearchInput.setLayoutData(gd_txtSearchInput);
+		txtSearchInput.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtSearchInput.setTextLimit(256);
 		txtSearchInput.addModifyListener(change -> {
 			spotlightService.setSearchTerm(((Text) change.widget).getText(), null);
